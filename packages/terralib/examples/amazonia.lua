@@ -22,7 +22,7 @@
 --
 -------------------------------------------------------------------------------------------
 
-import("fillcell")
+import("terralib")
 
 local projName = "amazonia.tview"
 
@@ -37,58 +37,60 @@ local project = Project{
 	title = "Amazonia database"
 }
 
-portos = project:addLayer {
-	layer = "portos",
-	file = filePath("PORTOS_AMZ_pt.shp", "fillcell")
+portos = Layer{
+	project = project,
+	name = "portos",
+	file = filePath("PORTOS_AMZ_pt.shp", "terralib")
 }
 
-roads = project:addLayer {
-	layer = "roads",
-	file = filePath("RODOVIAS_AMZ_lin.shp", "fillcell")
+roads = Layer{
+	project = project,
+	name = "roads",
+	file = filePath("RODOVIAS_AMZ_lin.shp", "terralib")
 }
 
-protected = project:addLayer {
-	layer = "protected",
-	file = filePath("TI_AMZ_pol.shp", "fillcell")
+protected = Layer{
+	project = project,
+	name = "protected",
+	file = filePath("TI_AMZ_pol.shp", "terralib")
 }
 
-prodes = project:addLayer {
-	layer = "prodes",
-	file = filePath("PRODES_5KM.tif", "fillcell")
+prodes = Layer{
+	project = project,
+	name = "prodes",
+	file = filePath("PRODES_5KM.tif", "terralib")
 }
 
-limite = project:addLayer {
-	layer = "limite",
-	file = filePath("LIMITE_AMZ_pol.shp", "fillcell")
+limite = Layer{
+	project = project,
+	name = "limite",
+	file = filePath("LIMITE_AMZ_pol.shp", "terralib")
 }
 
 --[[
 -- bug. o sistema nao pode enctonrar o caminho especificado
-project:addCellularLayer {
+cl = Layer{
+	project = project,
 	file = "mycells.shp",
 	input = "limite",
-	layer = "cells",
+	name = "cells",
 	output = "cells",
 	resolution = 100000000
 }
 --]]
 
-project:addCellularLayer {
+cl = Layer{
+	project = project,
 	file = "c:/mycells.shp", -- test also without c:
 	input = "limite",
-	layer = "cells",
+	name = "cells",
 	resolution = 10000000
 }
 
 --[[
-local cl = CellularLayer{
-	project = project,
-	layer = "cells"
-}
-
-cl:fillCells{
+cl:fill{
 	operation = "average",
-	layer = altimetria,
+	name = altimetria,
 	attribute = "height"
 }
 

@@ -22,7 +22,7 @@
 --
 -------------------------------------------------------------------------------------------
 
-import("fillcell")
+import("terralib")
 
 local projName = "cabecadeboi.tview"
 
@@ -37,26 +37,23 @@ local project = Project{
 	title = "Cabeca de Boi database"
 }
 
-altimetria = project:addLayer {
-	layer = "altimetria",
-	file = filePath("altimetria.tif", "fillcell")
+altimetria = Layer{
+	project = project,
+	name = "altimetria",
+	file = filePath("altimetria.tif", "terralib")
 }
 
 -- bug. possibly because we are using a tif as input for creating the cells
-project:addCellularLayer {
+cl = Layer{
+	project = project,
 	file = "mycells.shp",
-	input = "altimetria",
-	layer = "cells",
+	input = altimetria,
+	name = "cells",
 	output = "cells",
 	resolution = 9000,
 }
 
-local cl = CellularLayer{
-	project = project,
-	layer = "cells"
-}
-
-cl:fillCells{
+cl:fill{
 	operation = "average",
 	layer = altimetria,
 	attribute = "height"

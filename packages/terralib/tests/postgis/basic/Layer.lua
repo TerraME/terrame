@@ -23,26 +23,22 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	addLayer = function(unitTest)
+	Layer = function(unitTest)
 		local projName = "sampa_basic.tview"
 
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
-		-- ###################### 1 #############################
-		local proj1 = Project {
+		local proj1 = Project{
 			file = projName,
-			create = true,
-			author = "Avancini",
-			title = "SAMPA"
-		}		
+			clean = true
+		}
 
 		local layerName1 = "Sampa"
-		proj1:addLayer {
-			layer = layerName1,
+
+		Layer{
+			project = proj1,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
+
 		local layer1 = proj1:infoLayer(layerName1)
 		unitTest:assertEquals(layer1.name, layerName1)	
 		
@@ -72,9 +68,10 @@ return {
 		
 		local layerName2 = "SampaDB"	
 		
-		proj1:addLayer {
+		Layer{
+			project = proj1,
 			source = "postgis",
-			layer = layerName2,
+			name = layerName2,
 			-- host = host,
 			-- port = port,
 			user = user,
@@ -87,9 +84,10 @@ return {
 
 		-- ###################### 2 #############################
 		local layerName3 = "Another_SampaDB" 
-		proj1:addLayer {
+		Layer{
+			project = proj1,
 			source = "postgis",
-			layer = layerName3,
+			name = layerName3,
 			-- host = host,
 			-- port = port,
 			user = user,
@@ -116,9 +114,9 @@ return {
 		
 		-- local layerName4 = "SampaAdoDB" 
 		-- local adofilePath = 
-		-- proj1:addLayer {
+		-- proj1:addLayer{
 			-- source = "access",
-			-- layer = layerName4,
+			-- name = layerName4,
 			-- user = user,
 			-- password = password,
 			-- database = database,
@@ -127,27 +125,20 @@ return {
 		
 		-- ###################### END #############################	
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end		
-	end,
-	addCellularLayer = function(unitTest)
+
 		local projName = "cells_setores_2000.tview"
 
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
-		-- ###################### 1 #############################
-		local proj = Project {
+		local proj = Project{
 			file = projName,
-			create = true,
-			author = "Avancini",
-			title = "Setores"
+			clean = true
 		}		
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}	
 		
@@ -176,10 +167,11 @@ return {
 		local tl = TerraLib{}
 		tl:dropPgTable(pgData)
 		
-		proj:addCellularLayer {
+		Layer{
+			project = proj,
 			source = "postgis",
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 0.7,
 			user = user,
 			password = password,
@@ -197,10 +189,11 @@ return {
 		pgData.table = tName2
 		tl:dropPgTable(pgData)
 		
-		proj:addCellularLayer {
+		Layer{
+			project = proj,
 			source = "postgis",
 			input = layerName1,
-			layer = clName2,
+			name = clName2,
 			resolution = 0.7,
 			user = user,
 			password = password,
@@ -218,10 +211,11 @@ return {
 		pgData.table = tName3
 		tl:dropPgTable(pgData)
 		
-		proj:addCellularLayer {
+		Layer{
+			project = proj,
 			source = "postgis",
 			input = clName2,
-			layer = clName3,
+			name = clName3,
 			resolution = 0.7,
 			user = user,
 			password = password,
@@ -240,10 +234,11 @@ return {
 		
 		local clName4 = "New_Sampa_Cells"
 		
-		proj:addCellularLayer {
+		Layer{
+			project = proj,
 			source = "postgis",
 			input = clName2,
-			layer = clName4,
+			name = clName4,
 			resolution = 0.7,
 			user = user,
 			password = password,
@@ -261,7 +256,7 @@ return {
 
 		-- ###################### END #############################
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end	
 		
 		pgData.table = tName1

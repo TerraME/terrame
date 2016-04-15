@@ -24,282 +24,62 @@
 
 return {
 	Project = function(unitTest)
-		local projName = "amazonia"
-		
-		if isFile(projName..".tview") then
-			os.execute("rm -f "..projName..".tview")
-		end
-		-- ###################### 1 #############################
-		local proj1 = Project {
-			file = projName,
-			create = true,
+		local proj1 = Project{
+			file = "amazonia",
+			clean = true,
 			author = "Avancini",
 			title = "The Amazonia"
 		}
 		
 		unitTest:assertType(proj1, "Project")
-		unitTest:assert(isFile("amazonia.tview"))
+		unitTest:assertEquals(proj1.file, "amazonia.tview")
 		
-		-- ###################### 2 #############################
-		local proj1Info = proj1:info()
-		
-		local proj2 = Project {
-			file = projName,
-			create = false,
+		local proj2 = Project{
+			file = "amazonia"
 		}		
-		local proj2Info = proj2:info()
 
-		unitTest:assertEquals(proj1Info.author, proj2Info.author)
-		unitTest:assertEquals(proj1Info.title, proj2Info.title)
-		unitTest:assertEquals(proj1Info.file, proj2Info.file)
+		unitTest:assertEquals(proj1.author, proj2.author)
+		unitTest:assertEquals(proj1.title, proj2.title)
+		unitTest:assertEquals(proj1.file, proj2.file)
 
-		local proj3 = Project {
-			file = projName,
+		local proj3 = Project{
+			file = "amazonia.tview"
 		}
-		local proj3Info = proj3:info()
 
-		unitTest:assertEquals(proj1Info.author, proj3Info.author)
-		unitTest:assertEquals(proj1Info.title, proj3Info.title)
-		unitTest:assertEquals(proj1Info.file, proj3Info.file)
-		
-		if isFile(proj1Info.file) then
-			os.execute("rm -f "..proj1Info.file)
-		end		
-		
-		-- ###################### 3 #############################
+		unitTest:assertEquals(proj1.author, proj3.author)
+		unitTest:assertEquals(proj1.title, proj3.title)
+		unitTest:assertEquals(proj1.file, proj3.file)
+
+		unitTest:assertFile("amazonia.tview")
+
 		local proj4Name = "notitlenoauthor.tview"
 		
-		if isFile(proj4Name) then
-			os.execute("rm -f "..proj4Name)
-		end
-		
-		local proj4 = Project {
-			file = proj4Name,
-			create = true
+		local proj4 = Project{
+			file = proj4Name
 		}
-		local proj4Info = proj4:info()
 
-		unitTest:assertEquals(proj4Info.title, "<no title>")
-		unitTest:assertEquals(proj4Info.author, "<no author>")
+		unitTest:assertEquals(proj4.title, "<no title>")
+		unitTest:assertEquals(proj4.author, "<no author>")
+		unitTest:assertEquals(proj4.clean, false)
 
-		if isFile(proj4Name) then
-			os.execute("rm -f "..proj4Name)
-		end
+		unitTest:assertFile(proj4Name)
 	end,
-	addLayer = function(unitTest)
-		local projName = "setores_2000.tview"
-
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
-		-- ###################### 1 #############################
-		local proj1 = Project {
-			file = projName,
-			create = true,
+	__tostring = function(unitTest)
+		local proj1 = Project{
+			file = "tostring",
+			clean = true,
 			author = "Avancini",
-			title = "Setores"
-		}		
-		
-		local layerName1 = "Sampa"
-		proj1:addLayer {
-			layer = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			title = "The Amazonia"
 		}
-		local layer1 = proj1:infoLayer(layerName1)
-		unitTest:assertEquals(layer1.name, layerName1)
 		
-		-- ###################### 2 #############################
-		local proj2 = Project {
-			file = projName
-		}
-		local layer2 = proj2:infoLayer(layerName1)
+		unitTest:assertEquals(tostring(proj1), [[author    string [Avancini]
+clean     boolean [true]
+file      string [tostring.tview]
+layers    table of size 0
+terralib  TerraLib
+title     string [The Amazonia]
+]])
 
-		unitTest:assertEquals(layer2.name, layerName1)
-
-		-- ###################### 3 #############################
-		local layerName2 = "MG"
-		proj2:addLayer {
-			layer = layerName2,
-			file = filePath("MG_cities.shp", "terralib")
-		}
-		local layer1 = proj2:infoLayer(layerName1)
-		local layer2 = proj2:infoLayer(layerName2)
-
-		unitTest:assertEquals(layer1.name, layerName1)
-		unitTest:assertEquals(layer2.name, layerName2)
-		
-		-- ###################### 3.1 #############################
-		local layerName21 = "MG_2"
-		proj2:addLayer {
-			layer = layerName21,
-			file = filePath("MG_cities.shp", "terralib")
-		}
-		local layer21 = proj2:infoLayer(layerName21)
-		unitTest:assert(layer21.name ~= layer2.name)
-		unitTest:assertEquals(layer21.sid, layer2.sid)		
-		
-		-- ###################### 4 #############################
-		local layerName3 = "CBERS1"
-		proj2:addLayer {
-			layer = layerName3,
-			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
-		}		
-		local layer3 = proj2:infoLayer(layerName3)
-		
-		unitTest:assertEquals(layer3.name, layerName3)
-		
-		-- ###################### 5 #############################
-		local layerName4 = "CBERS2"
-		proj2:addLayer {
-			layer = layerName4,
-			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
-		}		
-		local layer4 = proj2:infoLayer(layerName4)
-		unitTest:assert(layer4.name ~= layer3.name)
-		unitTest:assertEquals(layer4.sid, layer3.sid)		
-		
-		-- ###################### END #############################
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
-		local terralib = TerraLib{}
-		terralib:finalize()			
-	end,
-	addCellularLayer = function(unitTest)
-		local projName = "cells_setores_2000.tview"
-
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
-		-- ###################### 1 #############################
-		local proj = Project {
-			file = projName,
-			create = true,
-			author = "Avancini",
-			title = "Setores"
-		}		
-
-		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
-			file = filePath("sampa.shp", "terralib")
-		}
-		
-		local layerName2 = "MG"
-		proj:addLayer {
-			layer = layerName2,
-			file = filePath("MG_cities.shp", "terralib")	
-		}
-
-		local layerName3 = "CBERS"
-		proj:addLayer {
-			layer = layerName3,
-			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
-		}		
-		
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
-		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
-		local fn1 = getFileName(filePath1)
-		fn1 = testDir.."/"..fn1	
-
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				os.execute("rm -f "..f)
-			end
-		end	
-		
-		local clName1 = "Sampa_Cells"
-		proj:addCellularLayer {
-			input = layerName1,
-			layer = clName1,
-			resolution = 0.7,
-			file = filePath1
-		}
-		local l1Info = proj:infoLayer(clName1)
-		
-		unitTest:assertEquals(l1Info.name, clName1)
-		
-		-- ###################### 2 #############################
-		local shp2 = "mg_cells.shp"
-		local filePath2 = testDir.."/"..shp2	
-		local fn2 = getFileName(filePath2)
-		fn2 = testDir.."/"..fn2	
-		
-		for i = 1, #exts do
-			local f = fn2..exts[i]
-			if isFile(f) then
-				os.execute("rm -f "..f)
-			end
-		end			
-		
-		local clName2 = "MG_Cells"
-		proj:addCellularLayer {
-			input = layerName2,
-			layer = clName2,
-			resolution = 1,
-			file = filePath2		
-		}
-		local l2Info = proj:infoLayer(clName2)
-		
-		unitTest:assertEquals(l2Info.name, clName2)
-		
-		-- ###################### 3 #############################
-		local shp3 = "another_sampa_cells.shp"
-		local filePath3 = testDir.."/"..shp3	
-		local fn3 = getFileName(filePath3)
-		fn3 = testDir.."/"..fn3	
-		
-		for i = 1, #exts do
-			local f = fn3..exts[i]
-			if isFile(f) then
-				os.execute("rm -f "..f)
-			end
-		end			
-		
-		local clName3 = "Another_Sampa_Cells"
-		proj:addCellularLayer {
-			input = layerName2,
-			layer = clName3,
-			resolution = 0.7,
-			file = filePath3		
-		}
-		local l3Info = proj:infoLayer(clName3)
-		
-		unitTest:assertEquals(l3Info.name, clName3)	
-
-		-- ###################### END #############################
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end		
-		
-		for i = 1, #exts do
-			local f1 = fn1..exts[i]
-			local f2 = fn2..exts[i]
-			local f3 = fn3..exts[i]
-			if isFile(f1) then
-				os.execute("rm -f "..f1)
-			end
-			if isFile(f2) then
-				os.execute("rm -f "..f2)
-			end
-			if isFile(f3) then
-				os.execute("rm -f "..f3)
-			end				
-		end		
-	end,
-	info = function(unitTest)
-		-- this is being tested on Project constructor
-		unitTest:assert(true)
-	end,
-	infoLayer = function(unitTest)
-		-- this is being tested on Project constructor
-		unitTest:assert(true)
-	end	
+		unitTest:assertFile("tostring.tview")
+	end
 }

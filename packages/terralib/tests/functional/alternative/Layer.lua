@@ -23,79 +23,342 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	CellularLayer = function(unitTest)
+	Layer = function(unitTest)
 		local noDataArguments = function()
-			local cl = CellularLayer()
+			local cl = Layer()
 		end
-		unitTest:assertError(noDataArguments, tableArgumentMsg())
-		
-		local attrProjectNonStringOrProject = function()
-			local cl = CellularLayer{project = 2, layer = "cells"}
-		end
-		unitTest:assertError(attrProjectNonStringOrProject, "The 'project' parameter must be a Project or a Project file path.")		
-
 		local attrLayerNonString = function()
-			local cl = CellularLayer{project = "myproj.tview", layer = false}
+			local cl = Layer{project = "myproj.tview", name = false}
 		end
-		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("layer", "string", false))
+		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", false))
 
-		local unnecessaryArgument = function()
-			local cl = CellularLayer{project = "myproj.tview", lauer = "cells"}
-		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("lauer", "layer"))
-		
 		local projNotExists = function()
-			local cl = CellularLayer{project = "myproj.tview", layer = "cells"}
+			local cl = Layer{project = "myproj.tview", name = "cells"}
 		end
-		unitTest:assertError(projNotExists, "The Project '".."myproj.tview".."'not found.")		
+		unitTest:assertError(projNotExists, "Project file '".."myproj.tview".."' does not exist.")		
 		
 		local projFile = "proj_celllayer.tview"
 		
-		if isFile(projFile) then
-			os.execute("rm -f "..projFile)
-		end
-		
 		local proj = Project{
 			file = projFile,
-			create = true,
-			author = "Avancini",
-			title = "CellLayer"
+			clean = true
 		}
 		
 		local layerName = "any"
 		local layerDoesNotExists = function()
-			local cl = CellularLayer {
+			local cl = Layer{
 				project = proj,
-				layer = layerName
+				name = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exists in the Project '"..projFile.."'.")
+		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in the Project '"..projFile.."'.")
 		
-		if isFile(projFile) then
-			os.execute("rm -f "..projFile)
-		end		
-	end,
-	fillCells = function(unitTest)
-		local projName = "cellular_layer_fillcells_alternative.tview"
+		unitTest:assertFile("proj_celllayer.tview")
 
+	
+		local projName = "amazonia2.tview"
+
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
+
+		local noDataInLayer = function()
+			Layer()
+		end
+		unitTest:assertError(noDataInLayer, tableArgumentMsg())
+
+		local attrLayerNonString = function()
+			Layer{
+				project = proj,
+				name = 123,
+				file = "myfile.shp",
+			}
+
+		end
+		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", 123))
+
+		local attrSourceNonString = function()
+			Layer{
+				project = proj,
+				name = "layer",
+				source = 123
+			}
+
+		end
+		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))	
+				
+		local noFilePass = function()
+			Layer{
+				project = proj,
+				name = "Linhares",
+				source = "tif"
+			}
+		end
+		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))	
+		
+		local nLayer = "any"
+		local layerNonExists = function()
+			proj:infoLayer(nLayer)
+		end
+		unitTest:assertError(layerNonExists, "Layer '"..nLayer.."' does not exist.")
+		
+		local layerName = "Sampa"
+		Layer{
+			project = proj,
+			name = layerName,
+			file = filePath("sampa.shp", "terralib")			
+		}
+		
+		local layerAlreadyExists = function()
+			Layer{
+				project = proj,
+				name = layerName,
+				file = filePath("sampa.shp", "terralib")	
+			}			
+		end
+		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName.."' already exists in the Project.")
+		
+		local sourceInvalid = function()
+			Layer{
+				project = proj,
+				name = layerName,
+				file = filePath("sampa.dbf", "terralib")	
+			}			
+		end
+		unitTest:assertError(sourceInvalid, "Source 'dbf' is invalid.")
+		
+		local layerFile = "linhares.shp"
+		local fileLayerNonExists = function()
+			Layer{
+				project = proj,
+				name = "Linhares",
+				file = layerFile	
+			}			
+		end
+		unitTest:assertError(fileLayerNonExists, mandatoryArgumentMsg("source"))			
+	
+		local filePath0 = filePath("sampa.shp", "terralib")
+		local source = "tif"
+		local inconsistentExtension = function()
+			Layer{
+				project = proj,
+				name = "Setores_New",
+				file = filePath0,
+				source = "tif"
+			}			
+		end
+		unitTest:assertError(inconsistentExtension, "File '"..filePath0.."' does not match to source '"..source.."'.")			
+		
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end
 		
-		local author = "Avancini"
-		local title = "Cellular Layer"
-	
-		local proj = Project {
+		local projName = "amazonia.tview"
+
+		local proj = Project{
 			file = projName,
-			create = true,
-			author = author,
-			title = title
+			clean = true
+		}	
+
+		local attrInputNonString = function()
+			Layer{
+				project = proj,
+				input = 123,
+				name = "cells",
+				resolution = 5e4
+			}
+		end
+		unitTest:assertError(attrInputNonString, incompatibleTypeMsg("input", "string", 123))
+
+		local attrLayerNonString = function()
+			Layer{
+				project = proj,
+				input = "amazonia-states",
+				name = 123,
+				resolution = 5e4
+			}
+		end
+		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", 123))
+
+		local attrBoxNonBoolean = function()
+			Layer{
+				project = proj,
+				input = "amazonia-states",
+				name = "cells",
+				resolution = 5e4,
+				box = 123
+			}
+		end
+		unitTest:assertError(attrBoxNonBoolean, incompatibleTypeMsg("box", "boolean", 123))
+
+		local attrResolutionNonNumber = function()
+			Layer{
+				project = proj,
+				input = "amazonia-states",
+				name = "cells",
+				resolution = false
+			}
+		end
+		unitTest:assertError(attrResolutionNonNumber, incompatibleTypeMsg("resolution", "number", false))
+
+		local attrResolutionNonPositive = function()
+			Layer{
+				project = proj,
+				input = "amazonia-states",
+				name = "cells",
+				resolution = 0
+			}
+		end
+		unitTest:assertError(attrResolutionNonPositive, positiveArgumentMsg("resolution", 0))
+
+		local unnecessaryArgument = function()
+			Layer{
+				project = proj,
+				input = "amazonia-states",
+				name = "cells",
+				resoltion = 200
+			}
+		end
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
+		
+		local noFilePass = function()
+			Layer{
+				project = proj,
+				input = "amazonia-states",
+				name = "cells",
+				resolution = 0.7		
+			}
+		end
+		unitTest:assertError(noFilePass, mandatoryArgumentMsg("source"))
+		
+		local attrSourceNonString = function()
+			Layer{
+				input = "amazonia-states",
+				project = proj,
+				name = "cells",
+				resolution = 0.7,				
+				name = "layer",
+				file = "cells.shp",
+				source = 123
+			}
+		end
+		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))
+
+		local layerName1 = "Sampa"
+		Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("sampa.shp", "terralib")
+		}
+		
+		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local shp1 = "setores_cells.shp"
+		local filePath1 = testDir.."/"..shp1	
+		local fn1 = getFileName(filePath1)
+		fn1 = testDir.."/"..fn1	
+
+		local exts = {".dbf", ".prj", ".shp", ".shx"}
+		
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end	
+		
+		local clName1 = "Setores_Cells"
+		Layer{
+			project = proj,
+			input = layerName1,
+			name = clName1,
+			resolution = 0.7,
+			file = filePath1
+		}
+		
+		local cellLayerAlreadyExists = function()
+			Layer{
+				project = proj,
+				input = layerName1,
+				name = clName1,
+				resolution = 0.7,
+				file = "setores_cells_x.shp"
+			}	
+		end
+		unitTest:assertError(cellLayerAlreadyExists, "Layer '"..clName1.."' already exists in the Project.")
+		
+		local cellLayerFileAlreadyExists = function()
+			Layer{
+				project = proj,
+				input = layerName1,
+				name = "CellLayerFileAlreadyExists",
+				resolution = 0.7,
+				file = filePath1
+			}	
+		end
+		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..filePath1.."' already exists.")
+		
+		local sourceInvalid = function()
+			Layer{
+				project = proj,
+				input = layerName1,
+				name = "cells",
+				resolution = 0.7,
+				file = filePath("sampa.dbf", "terralib")	
+			}			
+		end
+		unitTest:assertError(sourceInvalid, "Source 'dbf' is invalid.")
+
+		local filePath = filePath("sampa.shp", "terralib")
+		local source = "tif"
+		local inconsistentExtension = function()
+			Layer{
+				project = proj,
+				input = layerName1,
+				name = "cells",
+				resolution = 0.7,
+				file = filePath,
+				source = "tif"
+			}			
+		end
+		unitTest:assertError(inconsistentExtension, "File '"..filePath.."' not match to source '"..source.."'.")
+
+		local inLayer = "no_exists"
+		local inputNonExists = function()
+			Layer{
+				project = proj,
+				input = inLayer,
+				name = "cells",
+				resolution = 0.7,
+				file = "some.shp"
+			}
+		end
+		unitTest:assertError(inputNonExists, "Input layer 'no_exists' was not found.")		
+		
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end		
+		
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end
+	end,
+	fill = function(unitTest)
+		local projName = "cellular_layer_fillcells_alternative.tview"
+
+		local proj = Project{
+			file = projName,
+			clean = true
 		}		
 
 		local layerName1 = "Setores_2000"
-		proj:addLayer {
-			layer = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "fillcell")
+		Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}	
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
@@ -112,77 +375,73 @@ return{
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end			
 
-		proj:addCellularLayer {
+		local cl = Layer{
+			project = proj,
 			source = "shp",
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 30000,
 			file = filePath1
 		}	
 		
-		local cl = CellularLayer{
-			project = proj,
-			layer = clName1
-		}		
-		
 		local operationMandatory = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "population",
-				layer = "population"
+				name = "population"
 			}
 		end
 		unitTest:assertError(operationMandatory, mandatoryArgumentMsg("operation"))
 
 		local operationNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "distRoads",
 				operation = 2,
-				layer = "roads"
+				name = "roads"
 			}
 		end
 		unitTest:assertError(operationNotString, incompatibleTypeMsg("operation", "string", 2))
 
 		local layerMandatory = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "population",
 				operation = "area"
 			}
 		end
-		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("layer"))
+		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("name"))
 
 		local layerNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "distRoads",
 				operation = "area",
-				layer = 2
+				name = 2
 			}
 		end
-		unitTest:assertError(layerNotString, incompatibleTypeMsg("layer", "string", 2))
+		unitTest:assertError(layerNotString, incompatibleTypeMsg("name", "string", 2))
 	
 		local attributeMandatory = function()
-			cl:fillCells{
-				layer = "cells",
+			cl:fill{
+				name = "cells",
 				operation = "area"
 			}
 		end
 		unitTest:assertError(attributeMandatory, mandatoryArgumentMsg("attribute"))
 
 		local attributeNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = 2,
 				operation = "area",
-				layer = "cells"
+				name = "cells"
 			}
 		end
 		unitTest:assertError(attributeNotString, incompatibleTypeMsg("attribute", "string", 2))
 		
 		local outputMandatory = function()
-			cl:fillCells{
-				layer = "cells",
+			cl:fill{
+				name = "cells",
 				operation = "area",
 				attribute = "any"
 			}
@@ -190,10 +449,10 @@ return{
 		unitTest:assertError(outputMandatory, mandatoryArgumentMsg("output"))
 
 		local outputNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "any",
 				operation = "area",
-				layer = "cells",
+				name = "cells",
 				output = 2
 			}
 		end
@@ -201,29 +460,29 @@ return{
 		
 		local presenceLayerName = clName1.."_Presence"
 		local layerNotExists = function()
-			cl:fillCells{
+			cl:fill{
 				operation = "presence",
-				layer = "LayerNotExists",
+				name = "LayerNotExists",
 				attribute = "presence",
 				output = presenceLayerName
 			}
 		end
-		unitTest:assertError(layerNotExists, "The layer '".."LayerNotExists".."' not exists.")
+		unitTest:assertError(layerNotExists, "The layer '".."LayerNotExists".."' does not exist.")
 		
 		local attrAlreadyExists = function()
-			cl:fillCells{
+			cl:fill{
 				operation = "presence",
-				layer = layerName1,
+				name = layerName1,
 				attribute = "row",
 				output = presenceLayerName
 			}
 		end
-		unitTest:assertError(attrAlreadyExists, "The attribute '".."row".."' already exists in the CellularLayer.\nPlease set another name.")				
+		unitTest:assertError(attrAlreadyExists, "The attribute '".."row".."' already exists in the Layer.")				
 
 		local presenceSelectUnnecessary = function()
-			cl:fillCells{
+			cl:fill{
 				operation = "presence",
-				layer = layerName1,
+				name = layerName1,
 				attribute = "presence",
 				select = "FID",
 				output = presenceLayerName
@@ -233,10 +492,10 @@ return{
 		
 		local areaLayerName = clName1.."_Area"
 		local areaSelectUnnecessary = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "area",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = areaLayerName
 			}
@@ -245,10 +504,10 @@ return{
 		
 		local countLayerName = clName1.."_Count"
 		local countSelectUnnecessary = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "count",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = countLayerName
 			}
@@ -257,10 +516,10 @@ return{
 		
 		local distanceLayerName = clName1.."_Distance"
 		local distanceSelectUnnecessary = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "distance",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = distanceLayerName
 			}
@@ -269,10 +528,10 @@ return{
 		
 		local minValueLayerName = clName1.."_Minimum"
 		local selectNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				layer = layerName1,
+				name = layerName1,
 				select = 2,
 				output = minValueLayerName
 			}
@@ -280,10 +539,10 @@ return{
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		local defaultNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				layer = layerName1,
+				name = layerName1,
 				select = "row",
 				output = minValueLayerName,
 				default = false
@@ -292,10 +551,10 @@ return{
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
 		local dummyNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				layer = layerName1,
+				name = layerName1,
 				select = "row",
 				output = minValueLayerName,
 				dummy = false
@@ -304,10 +563,10 @@ return{
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		local unnecessaryArgument = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				layer = layerName1,
+				name = layerName1,
 				select = "row",
 				output = minValueLayerName,
 				dummy = 0,
@@ -318,10 +577,10 @@ return{
 		
 		local selected = "ITNOTEXISTS"
 		local selectNotExists = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				layer = layerName1,
+				name = layerName1,
 				select = selected,
 				output = minValueLayerName
 			}
@@ -330,10 +589,10 @@ return{
 		
 		local maxValueLayerName = clName1.."_Maximum"
 		local selectNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				layer = layerName1,
+				name = layerName1,
 				select = 2,
 				output = maxValueLayerName
 			}
@@ -341,10 +600,10 @@ return{
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		local defaultNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = maxValueLayerName,
 				default = false
@@ -353,10 +612,10 @@ return{
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
 		local dummyNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = maxValueLayerName,
 				dummy = false
@@ -365,10 +624,10 @@ return{
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		local unnecessaryArgument = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = maxValueLayerName,
 				defaut = 3
@@ -378,10 +637,10 @@ return{
 		
 		local percentageLayerName = clName1.."_Percentage"
 		local selectNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "percentage",
-				layer = layerName1,
+				name = layerName1,
 				select = 2,
 				output = percentageLayerName
 			}
@@ -389,10 +648,10 @@ return{
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		local defaultNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "percentage",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = percentageLayerName,
 				default = false
@@ -401,10 +660,10 @@ return{
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
 		local dummyNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "percentage",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = percentageLayerName,
 				dummy = false
@@ -413,10 +672,10 @@ return{
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		local unnecessaryArgument = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "percentage",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = percentageLayerName,
 				defaut = 3
@@ -426,10 +685,10 @@ return{
 		
 		local stdevLayerName = clName1.."_Stdev"
 		local selectNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				layer = layerName1,
+				name = layerName1,
 				select = 2,
 				output = stdevLayerName
 			}
@@ -437,10 +696,10 @@ return{
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		local defaultNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = stdevLayerName,
 				default = false
@@ -449,10 +708,10 @@ return{
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
 		local dummyNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = stdevLayerName,
 				dummy = false
@@ -461,10 +720,10 @@ return{
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		local defaultNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = stdevLayerName,
 				defaut = 3
@@ -474,10 +733,10 @@ return{
 		
 		local averageLayerName = clName1.."_Average"
 		local selectNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				layer = layerName1,
+				name = layerName1,
 				select = 2,
 				output = averageLayerName
 			}
@@ -485,10 +744,10 @@ return{
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		local areaNotBoolean = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = averageLayerName,
 				area = 2
@@ -497,10 +756,10 @@ return{
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
 		local defaultNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = averageLayerName,
 				default = false
@@ -509,10 +768,10 @@ return{
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
 		local dummyNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = averageLayerName,
 				dummy = false
@@ -521,10 +780,10 @@ return{
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		local unnecessaryArgument = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = averageLayerName,
 				defaut = 3
@@ -534,10 +793,10 @@ return{
 		
 		local majorityLayerName = clName1.."_Majority"
 		local selectNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "majority",
-				layer = layerName1,
+				name = layerName1,
 				select = 2,
 				output = majorityLayerName
 			}
@@ -545,10 +804,10 @@ return{
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		local areaNotBoolean = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "majority",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = majorityLayerName,
 				area = 2
@@ -557,10 +816,10 @@ return{
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
 		local defaultNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "majority",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = majorityLayerName,
 				default = false
@@ -569,10 +828,10 @@ return{
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
 		local dummyNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "majority",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = majorityLayerName,
 				dummy = false
@@ -581,10 +840,10 @@ return{
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		local unnecessaryArgument = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "majority",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = majorityLayerName,
 				defaut = 3
@@ -594,10 +853,10 @@ return{
 		
 		local sumLayerName = clName1.."_Sum"
 		local selectNotString = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				layer = layerName1,
+				name = layerName1,
 				select = 2,
 				output = sumLayerName
 			}
@@ -605,10 +864,10 @@ return{
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		local areaNotBoolean = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = sumLayerName,
 				area = 2
@@ -617,10 +876,10 @@ return{
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
 		local defaultNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = sumLayerName,
 				default = false
@@ -629,10 +888,10 @@ return{
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
 		local dummyNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = sumLayerName,
 				dummy = false
@@ -641,10 +900,10 @@ return{
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		local unnecessaryArgument = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = sumLayerName,
 				defaut = 3
@@ -653,10 +912,10 @@ return{
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 		
 		local normalizedNameWarning = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "max10allowed",
 				operation = "sum",
-				layer = layerName1,
+				name = layerName1,
 				select = "FID",
 				output = sumLayerName
 			}		
@@ -664,9 +923,11 @@ return{
 		unitTest:assertError(normalizedNameWarning,   "The 'attribute' lenght is more than 10 characters, it was changed to 'max10allow'.")
 
 		local localidades = "Localidades"
-		proj:addLayer {
-			layer = localidades,
-			file = filePath("Localidades_pt.shp", "fillcell")	
+
+		Layer{
+			project = proj,
+			name = localidades,
+			file = filePath("Localidades_pt.shp", "terralib")
 		}
 		
 		local presenceLayerName = clName1.."_Presence_2000"
@@ -680,16 +941,16 @@ return{
 		for i = 1, #exts do
 			local f = fn2..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end	
 
 		local cW = customWarning 
 		customWarning = function(msg) return end
 
-		cl:fillCells{
+		cl:fill{
 			operation = "presence",
-			layer = localidades,
+			name = localidades,
 			attribute = "presence2000",
 			output = presenceLayerName
 		}	
@@ -697,30 +958,32 @@ return{
 		local presenceLayerName2 = clName1.."_Presence_2001"
 		
 		local normalizedTrucatedError = function()
-			cl:fillCells{
+			cl:fill{
 				operation = "presence",
-				layer = localidades,
+				name = localidades,
 				attribute = "presence2001",
 				output = presenceLayerName2
 			}
 		end
-		unitTest:assertError(normalizedTrucatedError, "The attribute 'presence20' already exists in the CellularLayer.\nPlease set another name.")
+		unitTest:assertError(normalizedTrucatedError, "The attribute 'presence20' already exists in the Layer.")
 		
 		customWarning = cW
 		
 		-- RASTER TESTS ----------------------------------------------------------------
 		local layerName3 = "Desmatamento"
-		proj:addLayer {
-			layer = layerName3,
-			file = filePath("Desmatamento_2000.tif", "fillcell")		
-		}	
+
+		Layer{
+			project = proj,
+			name = layerName3,
+			file = filePath("Desmatamento_2000.tif", "terralib")
+		}
 
 		local raverageLayerName = clName1.."_Average"
 		local areaUnnecessary = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				layer = layerName3,
+				name = layerName3,
 				select = 0,
 				output = raverageLayerName,
 				area = 2
@@ -729,10 +992,10 @@ return{
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 		
 		local selectNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				layer = layerName3,
+				name = layerName3,
 				select = "0",
 				output = raverageLayerName
 			}
@@ -740,10 +1003,10 @@ return{
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
 		
 		local bandNotExists = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				layer = layerName3,
+				name = layerName3,
 				select = 9,
 				output = raverageLayerName
 			}
@@ -751,10 +1014,10 @@ return{
 		unitTest:assertError(bandNotExists, "The attribute selected '".."9".."' not exists in layer '"..layerName3.."'.")	
 		
 		local bandNegative = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				layer = layerName3,
+				name = layerName3,
 				select = -1,
 				output = raverageLayerName
 			}
@@ -763,10 +1026,10 @@ return{
 
 		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT) 
 		-- local layerNotIntersect = function()
-			-- cl:fillCells{
+			-- cl:fill{
 				-- attribute = "attr",
 				-- operation = "average",
-				-- layer = layerName3,
+				-- name = layerName3,
 				-- select = 0,
 				-- output = raverageLayerName
 			-- }
@@ -775,10 +1038,10 @@ return{
 		
 		local rminLayerName = clName1.."_Minimum"
 		local areaUnnecessary = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				layer = layerName3,
+				name = layerName3,
 				select = 0,
 				output = rminLayerName,
 				area = 2
@@ -787,10 +1050,10 @@ return{
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
 		
 		local selectNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				layer = layerName3,
+				name = layerName3,
 				select = "0",
 				output = rminLayerName
 			}
@@ -799,10 +1062,10 @@ return{
 
 		local rmaxLayerName = clName1.."_Maximum"
 		local areaUnnecessary = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				layer = layerName3,
+				name = layerName3,
 				select = 0,
 				output = rmaxLayerName,
 				area = 2
@@ -811,10 +1074,10 @@ return{
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
 		
 		local selectNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				layer = layerName3,
+				name = layerName3,
 				select = "0",
 				output = rmaxLayerName
 			}
@@ -823,10 +1086,10 @@ return{
 
 		local rpercentLayerName = clName1.."_Percentage"
 		local areaUnnecessary = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "percentage",
-				layer = layerName3,
+				name = layerName3,
 				select = 0,
 				output = rpercentLayerName,
 				area = 2
@@ -835,10 +1098,10 @@ return{
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
 		
 		local selectNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "percentage",
-				layer = layerName3,
+				name = layerName3,
 				select = "0",
 				output = rpercentLayerName
 			}
@@ -847,10 +1110,10 @@ return{
 
 		local rstdevLayerName = clName1.."_Stdev"
 		local areaUnnecessary = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				layer = layerName3,
+				name = layerName3,
 				select = 0,
 				output = rstdevLayerName,
 				area = 2
@@ -859,10 +1122,10 @@ return{
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
 		
 		local selectNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				layer = layerName3,
+				name = layerName3,
 				select = "0",
 				output = rstdevLayerName
 			}
@@ -871,10 +1134,10 @@ return{
 		
 		local rsumLayerName = clName1.."_Sum"
 		local areaUnnecessary = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				layer = layerName3,
+				name = layerName3,
 				select = 0,
 				output = rsumLayerName,
 				area = 2
@@ -883,10 +1146,10 @@ return{
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
 		
 		local selectNotNumber = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				layer = layerName3,
+				name = layerName3,
 				select = "0",
 				output = rsumLayerName
 			}
@@ -894,50 +1157,50 @@ return{
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
 
 		local op1NotAvailable = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "area",
-				layer = layerName3,
+				name = layerName3,
 				output = rstdevLayerName
 			}
 		end
 		unitTest:assertError(op1NotAvailable, "The operation '".."area".."' is not available to raster layer.")	
 
 		local op2NotAvailable = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "count",
-				layer = layerName3,
+				name = layerName3,
 				output = rstdevLayerName
 			}
 		end
 		unitTest:assertError(op2NotAvailable, "The operation '".."count".."' is not available to raster layer.")
 
 		local op3NotAvailable = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "distance",
-				layer = layerName3,
+				name = layerName3,
 				output = rstdevLayerName
 			}
 		end
 		unitTest:assertError(op3NotAvailable, "The operation '".."distance".."' is not available to raster layer.")	
 
 		local op4NotAvailable = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "majority",
-				layer = layerName3,
+				name = layerName3,
 				output = rstdevLayerName
 			}
 		end
 		unitTest:assertError(op4NotAvailable, "The operation '".."majority".."' is not available to raster layer.")	
 
 		local op5NotAvailable = function()
-			cl:fillCells{
+			cl:fill{
 				attribute = "attr",
 				operation = "presence",
-				layer = layerName3,
+				name = layerName3,
 				output = rstdevLayerName
 			}
 		end
@@ -948,17 +1211,17 @@ return{
 		tl:finalize()			
 		
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end			
 			local f = fn2..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end
  	end

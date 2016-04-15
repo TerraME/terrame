@@ -23,28 +23,25 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	addLayer = function(unitTest)
+	Layer = function(unitTest)
 		local projName = "sampa_alternative.tview"
 		
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
-		local proj1 = Project {
+		local proj1 = Project{
 			file = projName,
-			create = true,
+			clean = true,
 			author = "Avancini",
 			title = "SAMPA"
 		}
 
 		local layerName1 = "Sampa"
-		proj1:addLayer {
-			layer = layerName1,
+		Layer{
+			project = proj1,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
 		
-		local host = "localhost"
-		local port = "5432"
+		local host = nil -- "localhost"
+		local port = nil
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
@@ -69,11 +66,10 @@ return {
 		
 		local layerName2 = "SampaDB"	
 		
-		proj1:addLayer {
+		Layer{
+			project = proj1,
 			source = "postgis",
-			layer = layerName2,
-			-- host = host,
-			-- port = port,
+			name = layerName2,
 			user = user,
 			password = password,
 			database = database,
@@ -81,10 +77,10 @@ return {
 		}		
 		
 		local layerAlreadyExists = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = user,
 				password = password,
@@ -99,10 +95,10 @@ return {
 		proj1.layers[layerName2] = nil
 		
 		local sourceMandatory = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				-- source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = user,
 				password = password,
@@ -112,11 +108,11 @@ return {
 		end
 		unitTest:assertError(sourceMandatory, mandatoryArgumentMsg("source"))
 		
-		local layerMandatory = function()
-			proj1:addLayer {
+		local nameMandatory = function()
+			Layer{
+				project = proj1,
 				source = "postgis",
-				--layer = layerName2,
-				host = host,
+				--name = layerName2,
 				port = port,
 				user = user,
 				password = password,
@@ -124,13 +120,13 @@ return {
 				table = tableName			
 			}	
 		end
-		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("layer"))	
+		unitTest:assertError(nameMandatory, mandatoryArgumentMsg("name"))	
 
 		local userMandatory = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				--user = user,
 				password = password,
@@ -141,10 +137,10 @@ return {
 		unitTest:assertError(userMandatory, mandatoryArgumentMsg("user"))		
 
 		local passMandatory = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = user,
 				--password = password,
@@ -155,10 +151,10 @@ return {
 		unitTest:assertError(passMandatory, mandatoryArgumentMsg("password"))		
 
 		local dbMandatory = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = user,
 				password = password,
@@ -169,10 +165,10 @@ return {
 		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))		
 
 		local tableMandatory = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = user,
 				password = password,
@@ -183,10 +179,10 @@ return {
 		unitTest:assertError(tableMandatory, mandatoryArgumentMsg("table"))		
 
 		local fileUnnecessary = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = user,
 				password = password,
@@ -198,10 +194,10 @@ return {
 		unitTest:assertError(fileUnnecessary, unnecessaryArgumentMsg("file"))		
 		
 		local sourceNotString = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = 123,
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = user,
 				password = password,
@@ -212,10 +208,10 @@ return {
 		unitTest:assertError(sourceNotString, incompatibleTypeMsg("source", "string", 123))	
 
 		local layerNotString = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = 123,
-				host = host,
+				name = 123,
 				port = port,
 				user = user,
 				password = password,
@@ -223,12 +219,13 @@ return {
 				table = tableName			
 			}	
 		end
-		unitTest:assertError(layerNotString, incompatibleTypeMsg("layer", "string", 123))				
+		unitTest:assertError(layerNotString, incompatibleTypeMsg("name", "string", 123))				
 
 		local hostNotString = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
+				name = layerName2,
 				host = 123,
 				port = port,
 				user = user,
@@ -240,24 +237,24 @@ return {
 		unitTest:assertError(hostNotString, incompatibleTypeMsg("host", "string", 123))			
 		
 		local portNotString = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
-				port = 123,
+				name = layerName2,
+				port = "123",
 				user = user,
 				password = password,
 				database = database,
 				table = tableName			
 			}	
 		end
-		unitTest:assertError(portNotString, incompatibleTypeMsg("port", "string", 123))	
+		unitTest:assertError(portNotString, incompatibleTypeMsg("port", "number", "123"))	
 
 		local userNotString = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = 123,
 				password = password,
@@ -268,10 +265,10 @@ return {
 		unitTest:assertError(userNotString, incompatibleTypeMsg("user", "string", 123))		
 
 		local passNotString = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = user,
 				password = 123,
@@ -282,10 +279,10 @@ return {
 		unitTest:assertError(passNotString, incompatibleTypeMsg("password", "string", 123))	
 
 		local dbNotString = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = user,
 				password = password,
@@ -296,10 +293,10 @@ return {
 		unitTest:assertError(dbNotString, incompatibleTypeMsg("database", "string", 123))		
 
 		local tableNotString = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
-				host = host,
+				name = layerName2,
 				port = port,
 				user = user,
 				password = password,
@@ -311,9 +308,10 @@ return {
 		
 		local wrongHost = "inotexist"
 		local hostNonExists = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
+				name = layerName2,
 				host = wrongHost,
 				port = port,
 				user = user,
@@ -323,13 +321,14 @@ return {
 			}	
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.") -- TODO: "\n." (REVIEW)			
+								.."could not translate host name \""..wrongHost.."\" to address: Unknown server error\n.") -- TODO: "\n." (REVIEW)			
 		
-		local wrongPort = "2345"
+		local wrongPort = 2345
 		local portWrong = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
+				name = layerName2,
 				host = host,
 				port = wrongPort,
 				user = user,
@@ -342,9 +341,10 @@ return {
 		
 		local nonuser = "usernotexists"
 		local userNotExists = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
+				name = layerName2,
 				host = host,
 				port = port,
 				user = nonuser,
@@ -358,9 +358,10 @@ return {
 
 		local wrongPass = "passiswrong"
 		local passWrong = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
+				name = layerName2,
 				host = host,
 				port = port,
 				user = user,
@@ -371,12 +372,12 @@ return {
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.")								
-
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
-			proj1:addLayer {
+			Layer{
+				project = proj1,
 				source = "postgis",
-				layer = layerName2,
+				name = layerName2,
 				host = host,
 				port = port,
 				user = user,
@@ -391,9 +392,6 @@ return {
 			os.execute("rm -f "..projName)
 		end		
 		
-		tl:finalize()
-	end,
-	addCellularLayer = function(unitTest)
 		local projName = "amazonia.tview"
 
 		if isFile(projName) then
@@ -402,14 +400,15 @@ return {
 
 		local proj = Project{
 			file = projName,
-			create = true,
+			clean = true,
 			author = "Avancini",
 			title = "The Amazonia"
-		}	
+		}
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}	
 		
@@ -424,10 +423,11 @@ return {
 		local encoding = "CP1252"	
 		
 		local sourceMandatory = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				-- source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = user,
 				password = password,
@@ -438,10 +438,11 @@ return {
 		unitTest:assertError(sourceMandatory, mandatoryArgumentMsg("source"))
 		
 		local inputMandatory = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				--input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = user,
 				password = password,
@@ -452,10 +453,11 @@ return {
 		unitTest:assertError(inputMandatory, mandatoryArgumentMsg("input"))		
 		
 		local layerMandatory = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				--layer = clName1,
+				--name = clName1,
 				resolution = 0.7,
 				user = user,
 				password = password,
@@ -463,13 +465,14 @@ return {
 				table = tName1		
 			}
 		end
-		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("layer"))
+		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("name"))
 
 		local userMandatory = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				--user = user,
 				password = password,
@@ -480,10 +483,11 @@ return {
 		unitTest:assertError(userMandatory, mandatoryArgumentMsg("user"))	
 
 		local passMandatory = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = user,
 				--password = password,
@@ -494,10 +498,11 @@ return {
 		unitTest:assertError(passMandatory, mandatoryArgumentMsg("password"))		
 		
 		local dbMandatory = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = user,
 				password = password,
@@ -508,10 +513,11 @@ return {
 		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))		
 		
 		local sourceNotString = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = 123,
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = user,
 				password = password,
@@ -522,10 +528,11 @@ return {
 		unitTest:assertError(sourceNotString, incompatibleTypeMsg("source", "string", 123))		
 
 		local inputNotString = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = 123,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = user,
 				password = password,
@@ -536,10 +543,11 @@ return {
 		unitTest:assertError(inputNotString, incompatibleTypeMsg("input", "string", 123))
 
 		local layerNotString = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = 123,
+				name = 123,
 				resolution = 0.7,
 				user = user,
 				password = password,
@@ -547,13 +555,14 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(layerNotString, incompatibleTypeMsg("layer", "string", 123))		
+		unitTest:assertError(layerNotString, incompatibleTypeMsg("name", "string", 123))		
 		
 		local resNotNumber = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = "10000",
 				user = user,
 				password = password,
@@ -564,10 +573,11 @@ return {
 		unitTest:assertError(resNotNumber, incompatibleTypeMsg("resolution", "number", "10000"))
 		
 		local resMustBePositive = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = -1,
 				user = user,
 				password = password,
@@ -578,10 +588,11 @@ return {
 		unitTest:assertError(resMustBePositive, positiveArgumentMsg("resolution", -1))		
 
 		local hostNotString = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				host = 123,
 				user = user,
@@ -593,25 +604,27 @@ return {
 		unitTest:assertError(hostNotString, incompatibleTypeMsg("host", "string", 123))		
 		
 		local portNotString = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
-				port = 123,
+				port = "123",
 				user = user,
 				password = password,
 				database = database,
 				table = tName1
 			}
 		end
-		unitTest:assertError(portNotString, incompatibleTypeMsg("port", "string", 123))		
+		unitTest:assertError(portNotString, incompatibleTypeMsg("port", "number", "123"))		
 
 		local passNotString = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = user,
 				password = 123,
@@ -622,10 +635,11 @@ return {
 		unitTest:assertError(passNotString, incompatibleTypeMsg("password", "string", 123))		
 
 		local dbNotString = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = user,
 				password = password,
@@ -636,10 +650,11 @@ return {
 		unitTest:assertError(dbNotString, incompatibleTypeMsg("database", "string", 123))	
 
 		local tableNotString = function() 
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = user,
 				password = password,
@@ -650,10 +665,11 @@ return {
 		unitTest:assertError(tableNotString, incompatibleTypeMsg("table", "string", 123))		
 
 		local unnecessaryArgument = function()
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = user,
 				password = password,
@@ -665,10 +681,11 @@ return {
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("file"))
 		
 		local boxNonBoolean = function()
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				box = 123,
 				user = user,
@@ -681,10 +698,11 @@ return {
 		
 		local wrongHost = "inotexist"
 		local hostNonExists = function()
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				host = wrongHost,
 				user = user,
@@ -694,14 +712,15 @@ return {
 			}		
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.") -- TODO: "\n." (REVIEW)			
+								.."could not translate host name \""..wrongHost.."\" to address: Unknown server error\n.") -- TODO: "\n." (REVIEW)			
 		
-		local wrongPort = "2345"
+		local wrongPort = 2345
 		local portWrong = function()
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				port = wrongPort,
 				user = user,
@@ -714,10 +733,11 @@ return {
 		
 		local nonuser = "usernotexists"
 		local userNotExists = function()
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
 				user = nonuser,
 				password = password,
@@ -730,12 +750,12 @@ return {
 
 		local wrongPass = "passiswrong"
 		local passWrong = function()
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName1,
+				name = clName1,
 				resolution = 0.7,
-				host = host,
 				user = user,
 				password = wrongPass,
 				database = database,
@@ -747,7 +767,6 @@ return {
 
 		local pgData = {
 			type = "POSTGIS",
-			host = host,
 			port = port,
 			user = user,
 			password = password,
@@ -759,10 +778,11 @@ return {
 		local tl = TerraLib{}
 		tl:dropPgTable(pgData)	
 		
-		proj:addCellularLayer {
+		Layer{
+			project = proj,
 			source = "postgis",
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 0.7,
 			user = user,
 			password = password,
@@ -772,12 +792,12 @@ return {
 		
 		local clName2 = "Another_Setores_Cells"
 		local tableAlreadyExists = function()
-			proj:addCellularLayer{
+			Layer{
+				project = proj,
 				source = "postgis",
 				input = layerName1,
-				layer = clName2,
+				name = clName2,
 				resolution = 0.7,
-				host = host,
 				user = user,
 				password = password,
 				database = database,

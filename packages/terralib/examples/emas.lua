@@ -22,7 +22,7 @@
 --
 -------------------------------------------------------------------------------------------
 
-import("fillcell")
+import("terralib")
 
 local projName = "emas.tview"
 
@@ -37,42 +37,42 @@ local project = Project{
 	title = "Emas database"
 }
 
-firereak = project:addLayer {
-	layer = "firebreak",
-	file = filePath("firebreak_lin.shp", "fillcell")
+firereak = Layer{
+	project = project,
+	name = "firebreak",
+	file = filePath("firebreak_lin.shp", "terralib")
 }
 
-cover = project:addLayer {
-	layer = "cover",
-	file = filePath("accumulation_Nov94May00.tif", "fillcell")
+cover = Layer{
+	project = project,
+	name = "cover",
+	file = filePath("accumulation_Nov94May00.tif", "terralib")
 }
 
-river = project:addLayer {
-	layer = "river",
-	file = filePath("River_lin.shp", "fillcell")
+river = Layer{
+	project = project,
+	name = "river",
+	file = filePath("River_lin.shp", "terralib")
 }
 
-limit = project:addLayer {
-	layer = "limit",
-	file = filePath("Limit_pol.shp", "fillcell")
+limit = Layer{
+	project = project,
+	name = "limit",
+	file = filePath("Limit_pol.shp", "terralib")
 }
 
-project:addCellularLayer {
+cl = Layer{
+	project = project,
 	file = "emas.shp", -- test also without c:
 	input = "limit",
-	layer = "cells",
+	name = "cells",
 	resolution = 10000
 }
 
 --[[
-local cl = CellularLayer{
-	project = project,
-	layer = "cells"
-}
-
 cl:fillCells{
 	operation = "average",
-	layer = altimetria,
+	name = altimetria,
 	attribute = "height"
 }
 

@@ -23,27 +23,19 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	CellularLayer = function(unitTest)
+	Layer = function(unitTest)
 		local projName = "cellular_layer_basic.tview"
 
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
-		-- ###################### 1 #############################
-		local author = "Avancini"
-		local title = "Cellular Layer"
-	
-		local proj = Project {
+		local proj = Project{
 			file = projName,
-			create = true,
-			author = author,
-			title = title
-		}		
+			clean = true
+		}
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+
+		Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}	
 		
@@ -58,95 +50,278 @@ return {
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				print(f)
+				rmFile(f)
 			end
 		end			
 		
 		local clName1 = "Sampa_Cells"
 		
-		proj:addCellularLayer {
+		local cl = Layer{
+			project = proj,
 			source = "shp",
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 0.3,
 			file = filePath1
 		}	
 
-		local cl = CellularLayer{
-			project = proj,
-			layer = clName1
-		}		
-		
 		unitTest:assertEquals(projName, cl.project.file)
-		unitTest:assertEquals(clName1, cl.layer)
+		unitTest:assertEquals(clName1, cl.name)
 		
 		-- ###################### 2 #############################
 		proj = nil
-		local tl = TerraLib{}
-		tl:finalize()
 		
-		local cl2 = CellularLayer{
+		local cl2 = Layer{
 			project = projName,
-			layer = clName1
+			name = clName1
 		}
 		
 		local clProj = cl2.project
-		local clProjInfo = clProj:info()
-		
-		unitTest:assertEquals(clProjInfo.title, title)
-		unitTest:assertEquals(clProjInfo.author, author)
 		
 		local clLayerInfo = clProj:infoLayer(clName1)
 		unitTest:assertEquals(clLayerInfo.source, "shp")
 		unitTest:assertEquals(clLayerInfo.file, filePath1)
 	
 		-- ###################### END #############################
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
+		unitTest:assertFile(projName)
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
-		end		
-		
-		tl:finalize()		
-	end,
-	fillCells = function(unitTest)
-		local projName = "cellular_layer_basic.tview"
+		end
+
+		local projName = "setores_2000.tview"
 
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
 		
-		local author = "Avancini"
-		local title = "Cellular Layer"
-	
+		-- ###################### 1 #############################
+		local proj1 = Project {
+			file = projName
+		}		
+		
+		local layerName1 = "Sampa"
+		Layer{
+			project = proj1,
+			name = layerName1,
+			file = filePath("sampa.shp", "terralib")
+		}
+		local layer1 = proj1:infoLayer(layerName1)
+		unitTest:assertEquals(layer1.name, layerName1)
+		
+		-- ###################### 2 #############################
+		local proj2 = Project {
+			file = projName
+		}
+		local layer2 = proj2:infoLayer(layerName1)
+
+		unitTest:assertEquals(layer2.name, layerName1)
+
+		-- ###################### 3 #############################
+		local layerName2 = "MG"
+		Layer{
+			project = proj2,
+			name = layerName2,
+			file = filePath("MG_cities.shp", "terralib")
+		}
+		local layer1 = proj2:infoLayer(layerName1)
+		local layer2 = proj2:infoLayer(layerName2)
+
+		unitTest:assertEquals(layer1.name, layerName1)
+		unitTest:assertEquals(layer2.name, layerName2)
+		
+		-- ###################### 3.1 #############################
+		local layerName21 = "MG_2"
+		Layer{
+			project = proj2,
+			name = layerName21,
+			file = filePath("MG_cities.shp", "terralib")
+		}
+		local layer21 = proj2:infoLayer(layerName21)
+		unitTest:assert(layer21.name ~= layer2.name)
+		unitTest:assertEquals(layer21.sid, layer2.sid)		
+		
+		-- ###################### 4 #############################
+		local layerName3 = "CBERS1"
+		Layer{
+			project = proj2,
+			name = layerName3,
+			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
+		}		
+		local layer3 = proj2:infoLayer(layerName3)
+		
+		unitTest:assertEquals(layer3.name, layerName3)
+		
+		-- ###################### 5 #############################
+		local layerName4 = "CBERS2"
+		Layer{
+			project = proj2,
+			name = layerName4,
+			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
+		}		
+		local layer4 = proj2:infoLayer(layerName4)
+		unitTest:assert(layer4.name ~= layer3.name)
+		unitTest:assertEquals(layer4.sid, layer3.sid)		
+		
+		unitTest:assertFile(projName)
+		
+		local projName = "cells_setores_2000.tview"
+
+		-- ###################### 1 #############################
 		local proj = Project {
 			file = projName,
-			create = true,
-			author = author,
-			title = title
+			clean = true
+		}		
+
+		local layerName1 = "Sampa"
+		Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("sampa.shp", "terralib")
+		}
+		
+		local layerName2 = "MG"
+		Layer{
+			project = proj,
+			name = layerName2,
+			file = filePath("MG_cities.shp", "terralib")	
+		}
+
+		local layerName3 = "CBERS"
+		Layer{
+			project = proj,
+			name = layerName3,
+			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
+		}		
+		
+		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local shp1 = "sampa_cells.shp"
+		local filePath1 = testDir.."/"..shp1	
+		local fn1 = getFileName(filePath1)
+		fn1 = testDir.."/"..fn1	
+
+		local exts = {".dbf", ".prj", ".shp", ".shx"}
+		
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				rmFile(f)
+			end
+		end	
+		
+		local clName1 = "Sampa_Cells"
+		Layer{
+			project = proj,
+			input = layerName1,
+			name = clName1,
+			resolution = 0.7,
+			file = filePath1
+		}
+		local l1Info = proj:infoLayer(clName1)
+		
+		unitTest:assertEquals(l1Info.name, clName1)
+		
+		-- ###################### 2 #############################
+		local shp2 = "mg_cells.shp"
+		local filePath2 = testDir.."/"..shp2	
+		local fn2 = getFileName(filePath2)
+		fn2 = testDir.."/"..fn2	
+		
+		for i = 1, #exts do
+			local f = fn2..exts[i]
+			if isFile(f) then
+				rmFile(f)
+			end
+		end			
+		
+		local clName2 = "MG_Cells"
+		Layer{
+			project = proj,
+			input = layerName2,
+			name = clName2,
+			resolution = 1,
+			file = filePath2		
+		}
+		local l2Info = proj:infoLayer(clName2)
+		
+		unitTest:assertEquals(l2Info.name, clName2)
+		
+		-- ###################### 3 #############################
+		local shp3 = "another_sampa_cells.shp"
+		local filePath3 = testDir.."/"..shp3	
+		local fn3 = getFileName(filePath3)
+		fn3 = testDir.."/"..fn3	
+		
+		for i = 1, #exts do
+			local f = fn3..exts[i]
+			if isFile(f) then
+				rmFile(f)
+			end
+		end			
+		
+		local clName3 = "Another_Sampa_Cells"
+		Layer{
+			project = proj,
+			input = layerName2,
+			name = clName3,
+			resolution = 0.7,
+			file = filePath3		
+		}
+		local l3Info = proj:infoLayer(clName3)
+		
+		unitTest:assertEquals(l3Info.name, clName3)	
+
+		-- ###################### END #############################
+		if isFile(projName) then
+			rmFile(projName)
+		end		
+		
+		for i = 1, #exts do
+			local f1 = fn1..exts[i]
+			local f2 = fn2..exts[i]
+			local f3 = fn3..exts[i]
+			if isFile(f1) then
+				rmFile(f1)
+			end
+			if isFile(f2) then
+				rmFile(f2)
+			end
+			if isFile(f3) then
+				rmFile(f3)
+			end				
+		end
+	end,
+	fill = function(unitTest)
+		local projName = "cellular_layer_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
 		}		
 
 		local layerName1 = "Setores_2000"
-		proj:addLayer {
-			layer = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "fillcell")
+		Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}	
 		
 		local localidades = "Localidades"
-		proj:addLayer {
-			layer = localidades,
-			file = filePath("Localidades_pt.shp", "fillcell")	
+		Layer{
+			project = proj,
+			name = localidades,
+			file = filePath("Localidades_pt.shp", "terralib")	
 		}
 
 		local rodovias = "Rodovias"
-		proj:addLayer {
-			layer = rodovias,
-			file = filePath("Rodovias_lin.shp", "fillcell")	
+		Layer{
+			project = proj,
+			name = rodovias,
+			file = filePath("Rodovias_lin.shp", "terralib")	
 		}		
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
@@ -162,24 +337,18 @@ return {
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end			
 
-		proj:addCellularLayer {
+		local cl = Layer{
+			project = proj,
 			source = "shp",
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 30000,
 			file = filePath1
-		}	
-		
-		local cellSpaceLayerInfo = proj:infoLayer(clName1)
-		
-		local cl = CellularLayer{
-			project = proj,
-			layer = clName1
-		}		
+		}
 		
 		-- ###################### 1 #############################
 		local presenceLayerName = clName1.."_Presence"
@@ -192,13 +361,13 @@ return {
 		for i = 1, #exts do
 			local f = fn2..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end		
 
-		cl:fillCells{
+		cl:fill{
 			operation = "presence",
-			layer = localidades,
+			name = localidades,
 			attribute = "presence",
 			output = presenceLayerName
 		}	
@@ -218,13 +387,13 @@ return {
 		for i = 1, #exts do
 			local f = fn3..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end		
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "area",
-			layer = localidades,
+			name = localidades,
 			attribute = "area",
 			output = areaLayerName
 		}
@@ -244,13 +413,13 @@ return {
 		for i = 1, #exts do
 			local f = fn4..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end			
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "count",
-			layer = localidades,
+			name = localidades,
 			attribute = "count",
 			output = countLayerName
 		}
@@ -270,13 +439,13 @@ return {
 		-- for i = 1, #exts do
 			-- local f = fn5..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end
 		-- end	
 		
-		-- cl:fillCells{
+		-- cl:fill{
 			-- operation = "distance",
-			-- layer = localidades,
+			-- name = localidades,
 			-- attribute = "distance",
 			-- output = distanceLayerName
 		-- }
@@ -296,13 +465,13 @@ return {
 		for i = 1, #exts do
 			local f = fn6..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end		
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "minimum",
-			layer = localidades,
+			name = localidades,
 			attribute = "minimum",
 			output = minValueLayerName,
 			select = "UCS_FATURA"
@@ -323,13 +492,13 @@ return {
 		for i = 1, #exts do
 			local f = fn7..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "maximum",
-			layer = localidades,
+			name = localidades,
 			attribute = "maximum",
 			output = maxValueLayerName,
 			select = "UCS_FATURA"
@@ -350,13 +519,13 @@ return {
 		for i = 1, #exts do
 			local f = fn8..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end	
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "percentage",
-			layer = localidades,
+			name = localidades,
 			attribute = "percentage",
 			output = percentageLayerName,
 			select = "LOCALIDADE"
@@ -377,13 +546,13 @@ return {
 		for i = 1, #exts do
 			local f = fn9..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "stdev",
-			layer = localidades,
+			name = localidades,
 			attribute = "stdev",
 			output = stdevLayerName,
 			select = "UCS_FATURA"
@@ -404,13 +573,13 @@ return {
 		for i = 1, #exts do
 			local f = fn10..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "average",
-			layer = localidades,
+			name = localidades,
 			attribute = "mean",
 			output = meanLayerName,
 			select = "UCS_FATURA"
@@ -431,13 +600,13 @@ return {
 		for i = 1, #exts do
 			local f = fn11..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "average",
-			layer = localidades,
+			name = localidades,
 			attribute = "weighted",
 			output = weighLayerName,
 			select = "UCS_FATURA",
@@ -459,13 +628,13 @@ return {
 		for i = 1, #exts do
 			local f = fn12..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "majority",
-			layer = localidades,
+			name = localidades,
 			attribute = "high_inter",
 			output = intersecLayerName,
 			select = "UCS_FATURA",
@@ -487,13 +656,13 @@ return {
 		for i = 1, #exts do
 			local f = fn13..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "majority",
-			layer = localidades,
+			name = localidades,
 			attribute = "high_occur",
 			output = occurrenceLayerName,
 			select = "UCS_FATURA"
@@ -514,13 +683,13 @@ return {
 		for i = 1, #exts do
 			local f = fn14..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "sum",
-			layer = localidades,
+			name = localidades,
 			attribute = "sum",
 			output = sumLayerName,
 			select = "UCS_FATURA"
@@ -541,13 +710,13 @@ return {
 		for i = 1, #exts do
 			local f = fn15..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end	
 		
-		cl:fillCells{
+		cl:fill{
 			operation = "sum",
-			layer = localidades,
+			name = localidades,
 			attribute = "wsum",
 			output = wsumLayerName,
 			select = "UCS_FATURA",
@@ -560,9 +729,9 @@ return {
 
 		-- RASTER TESTS ------------------------------------------	issue #928
 		-- local desmatamento = "Desmatamento"
-		-- proj:addLayer {
-			-- layer = desmatamento,
-			-- file = filePath("Desmatamento_2000.tif", "fillcell")		
+		-- Layer{
+			-- name = desmatamento,
+			-- file = filePath("Desmatamento_2000.tif", "terralib")		
 		-- }	
 		
 		-- -- ###################### 15 #############################
@@ -576,13 +745,13 @@ return {
 		-- for i = 1, #exts do
 			-- local f = fn16..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end
 		-- end	
 		
-		-- cl:fillCells{
+		-- cl:fill{
 			-- operation = "average",
-			-- layer = desmatamento,
+			-- name = desmatamento,
 			-- attribute = "mean_0",
 			-- output = rmeanLayerName,
 			-- select = 0
@@ -603,13 +772,13 @@ return {
 		-- for i = 1, #exts do
 			-- local f = fn17..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end
 		-- end	
 		
-		-- cl:fillCells{
+		-- cl:fill{
 			-- operation = "minimum",
-			-- layer = desmatamento,
+			-- name = desmatamento,
 			-- attribute = "minimum_0",
 			-- output = rminLayerName,
 			-- select = 0
@@ -630,13 +799,13 @@ return {
 		-- for i = 1, #exts do
 			-- local f = fn18..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end
 		-- end	
 		
-		-- cl:fillCells{
+		-- cl:fill{
 			-- operation = "maximum",
-			-- layer = desmatamento,
+			-- name = desmatamento,
 			-- attribute = "maximum_0",
 			-- output = rmaxLayerName,
 			-- select = 0
@@ -657,13 +826,13 @@ return {
 		-- for i = 1, #exts do
 			-- local f = fn19..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end
 		-- end	
 		
-		-- cl:fillCells{
+		-- cl:fill{
 			-- operation = "percentage",
-			-- layer = desmatamento,
+			-- name = desmatamento,
 			-- attribute = "percent_0",
 			-- output = rpercentLayerName,
 			-- select = 0
@@ -684,13 +853,13 @@ return {
 		-- for i = 1, #exts do
 			-- local f = fn20..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end
 		-- end	
 		
-		-- cl:fillCells{
+		-- cl:fill{
 			-- operation = "stdev",
-			-- layer = desmatamento,
+			-- name = desmatamento,
 			-- attribute = "stdev_0",
 			-- output = rstdevLayerName,
 			-- select = 0
@@ -711,13 +880,13 @@ return {
 		-- for i = 1, #exts do
 			-- local f = fn21..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end
 		-- end	
 		
-		-- cl:fillCells{
+		-- cl:fill{
 			-- operation = "sum",
-			-- layer = desmatamento,
+			-- name = desmatamento,
 			-- attribute = "sum_0",
 			-- output = rsumLayerName,
 			-- select = 0
@@ -749,7 +918,7 @@ return {
 		for i = 1, #exts do
 			local f = fn22..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end	
 		
@@ -764,98 +933,118 @@ return {
 		tl:finalize()			
 		
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 			local f = fn2..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end		
 			local f = fn3..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end		
 			local f = fn4..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end	
 			-- local f = fn5..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end
 			local f = fn6..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end			
 			local f = fn7..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end				
 			local f = fn8..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end				
 			local f = fn9..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end				
 			local f = fn10..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end				
 			local f = fn11..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end				
 			local f = fn12..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end				
 			local f = fn13..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end				
 			local f = fn14..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end					
 			local f = fn15..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end				
 			-- local f = fn16..exts[i] -- issue #928
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end		
 			-- local f = fn17..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end				
 			-- local f = fn18..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end				
 			-- local f = fn19..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end				
 			-- local f = fn20..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end				
 			-- local f = fn21..exts[i]
 			-- if isFile(f) then
-				-- os.execute("rm -f "..f)
+				-- rmFile(f)
 			-- end				
 			local f = fn22..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end				
 		end			
+	end,
+	__tostring = function(unitTest)
+		local projName = "cellular_layer_print.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}		
+
+		local layerName1 = "Setores_2000"
+		local l = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		}
+		
+		unitTest:assertEquals(tostring(l), [[name     string [Setores_2000]
+project  Project
+]])
+		unitTest:assertFile(projName)
 	end
 }

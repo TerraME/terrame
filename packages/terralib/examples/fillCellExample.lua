@@ -22,10 +22,10 @@
 --
 -------------------------------------------------------------------------------------------
 
-import("fillcell")
+import("terralib")
 
 -- HUNK USED ONLY TO TEST
-local projName = "fillcell_example.tview"
+local projName = "terralib_example.tview"
 
 if isFile(projName) then
 	os.execute("rm -f "..projName)
@@ -40,27 +40,31 @@ local project = Project{
 }
 
 local polygons = "Setores"
-project:addLayer {
-	layer = polygons,
-	file = filePath("Setores_Censitarios_2000_pol.shp", "fillcell")
+Layer{
+	project = project,
+	name = polygons,
+	file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 }
 	
 local points = "Localidades"
-project:addLayer {
-	layer = points,
-	file = filePath("Localidades_pt.shp", "fillcell")	
+Layer{
+	project = project,
+	name = points,
+	file = filePath("Localidades_pt.shp", "terralib")	
 }
 
 local lines = "Rodovias"
-project:addLayer {
-	layer = lines,
-	file = filePath("Rodovias_lin.shp", "fillcell")	
+Layer{
+	project = project,
+	name = lines,
+	file = filePath("Rodovias_lin.shp", "terralib")	
 }
 
 local tif = "Desmatamento"
-project:addLayer {
-	layer = tif,
-	file = filePath("Desmatamento_2000.tif", "fillcell")		
+Layer{
+	project = project,
+	name = tif,
+	file = filePath("Desmatamento_2000.tif", "terralib")		
 }
 
 local host = "localhost"
@@ -88,20 +92,16 @@ terralib:dropPgTable(pgData)
 -- END HUNK
 
 local cellDbLayerName = "Setores_Cells_DB"
-project:addCellularLayer {
+cl = Layer{
+	project = project,
 	input = polygons,
-	layer = cellDbLayerName,
+	name = cellDbLayerName,
 	resolution = 2e4, -- 50x50km
 	source = "postgis",
 	user = user,
 	password = password,
 	database = database,
 	table = tableName
-}
-
-local cl = CellularLayer{
-	project = project,
-	layer = cellDbLayerName
 }
 
 local distLayer = cellDbLayerName.."_Distance"
@@ -111,17 +111,17 @@ pgData.table = distLayer
 terralib:dropPgTable(pgData)
 -- END HUNK
 
-cl:fillCells{
+cl:fill{
 	operation = "distance",
-	layer = points,
+	name = points,
 	attribute = "distpoints",
 	output = distLayer
 }
 
 -- TODO: OPERATION NOT IMPLEMENTED YET
--- cl:fillCells{
+-- cl:fill{
 	-- strategy = "lenght",
-	-- layer = "lines",
+	-- name = "lines",
 	-- attribute = "llenght"
 -- }
 
@@ -132,9 +132,9 @@ pgData.table = sumLayer
 terralib:dropPgTable(pgData)
 -- END HUNK
 
-cl:fillCells{
+cl:fill{
 	operation = "sum",
-	layer = polygons,
+	name = polygons,
 	attribute = "sum_population",
 	select = "Populacao",
 	output = sumLayer,
@@ -148,7 +148,7 @@ pgData.table = averageLayer
 terralib:dropPgTable(pgData)
 -- END HUNK
 
-cl:fillCells{
+cl:fill{
 	layer = polygons,
 	operation = "average",
 	attribute = "income",
@@ -164,7 +164,7 @@ pgData.table = rasterLayer
 terralib:dropPgTable(pgData)
 -- END HUNK
 
-cl:fillCells{
+cl:fill{
 	operation = "average",
 	layer = tif,
 	attribute = "raverage",
@@ -189,7 +189,8 @@ pgData.table = rasterLayer
 terralib:dropPgTable(pgData)
 
 if isFile(projName) then
-	os.execute("rm -f "..projName)
+	rmFile(projName)
 end
 
 terralib:finalize()
+

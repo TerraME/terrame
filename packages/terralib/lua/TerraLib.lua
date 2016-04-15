@@ -157,7 +157,7 @@ local function makeAndOpenDataSource(connInfo, type)
 	ds:setConnectionInfo(connInfo) 
 	ds:open()
 
-	return ds	
+	return ds
 end
 
 local function createLayer(name, dSetName, connInfo, type)
@@ -989,21 +989,19 @@ TerraLib_ = {
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)		
 		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
 	end,
-	
 	dropPgDatabase = function(self, data)
 		local connInfo = {}
 		connInfo.PG_DB_TO_DROP = data.database
 		connInfo.PG_HOST = data.host 
 		connInfo.PG_PORT = data.port 
 		connInfo.PG_USER = data.user
-		connInfo.PG_PASSWORD = data.pass
+		connInfo.PG_PASSWORD = data.password
 		connInfo.PG_CHECK_DB_EXISTENCE = data.database
 		
 		if binding.te.da.DataSource.exists("POSTGIS", connInfo) then
 			binding.te.da.DataSource.drop("POSTGIS", connInfo)
 		end
 	end,
-	
 	copyLayer = function(self, project, from, to)
 		loadProject(project, project.file)
 		
@@ -1032,8 +1030,7 @@ TerraLib_ = {
 		end
 		
 		if propertyExists(toDsInfo:getConnInfo(), toLayer:getDataSetName(), property, toDsInfo:getType()) then
-			customError("The attribute '"..property.."' already exists in the CellularLayer.\n"
-						.."Please set another name.")
+			customError("The attribute '"..property.."' already exists in the Layer.")
 		end		
 
 		if not propertyExists(fromDsInfo:getConnInfo(), fromLayer:getDataSetName(), select, fromDsInfo:getType()) then
