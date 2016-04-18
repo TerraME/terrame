@@ -76,18 +76,32 @@ UnitTest_ = {
 		mandatoryArgument(3, "number", tol)
 
 		if type(v1) == "number" and type(v2) == "number" then
-			if v1 <= v2 + tol and v1 >= v2 - tol then
+			local dist = math.abs(v1 - v2)
+			if dist <= tol then
 				self.success = self.success + 1
 			else 
 				self.fail = self.fail + 1
-				self:printError("Values should be equal, but got '"..v1.."' and '"..v2.."'.")
+				local msg = "Values should be equal, but got '"..v1.."' and '"..v2.."'."
+
+				if tol > 0 then
+					msg = msg.."\nThe maximum tolerance is "..tol..", but got "..dist.."."
+				end
+
+				self:printError(msg)
 			end
 		elseif type(v1) == "string" and type(v2) == "string" then
-			if levenshtein(v1, v2) <= tol then
+			local dist = levenshtein(v1, v2)
+			if dist <= tol then
 				self.success = self.success + 1
 			else 
 				self.fail = self.fail + 1
-				self:printError("Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'.")
+				local msg = "Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'."
+
+				if tol > 0 then
+					msg = msg.."\nThe maximum tolerance is "..tol..", but got "..dist.."."
+				end
+
+				self:printError(msg)
 			end
 		elseif type(v1) ~= type(v2) then
 			self.fail = self.fail + 1
@@ -366,7 +380,7 @@ UnitTest_ = {
 			elseif tolerance > 0 then
 				local message = "Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..self.log..s..file)
 					.."'\nand\n  '"..newImage.."'\nare different." -- SKIP
-					.."\nError ("..merror..") is greater than maximum tolerance ("..tolerance..")." -- SKIP
+					.."\nThe maximum tolerance is "..tolerance..", but got "..merror.."." -- SKIP
 				self:printError(message)
 				self.fail = self.fail + 1 -- SKIP
 			else
