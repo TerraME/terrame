@@ -27,10 +27,15 @@ return{
 		local noDataArguments = function()
 			local cl = Layer()
 		end
+
 		local attrLayerNonString = function()
 			local cl = Layer{project = "myproj.tview", name = false}
 		end
 		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", false))
+
+		if isFile("myproj.tview") then
+			rmFile("myproj.tview")
+		end
 
 		local projNotExists = function()
 			local cl = Layer{project = "myproj.tview", name = "cells"}
@@ -96,12 +101,6 @@ return{
 			}
 		end
 		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))	
-		
-		local nLayer = "any"
-		local layerNonExists = function()
-			proj:infoLayer(nLayer)
-		end
-		unitTest:assertError(layerNonExists, "Layer '"..nLayer.."' does not exist.")
 		
 		local layerName = "Sampa"
 		Layer{

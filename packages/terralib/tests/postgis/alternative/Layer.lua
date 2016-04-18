@@ -386,7 +386,7 @@ return {
 				table = tableWrong			
 			}	
 		end
-		unitTest:assertError(tableNotExists, "Is not possible add the Layer. The table '"..tableWrong.."' does not exists.")			
+		unitTest:assertError(tableNotExists, "Is not possible add the Layer. The table '"..tableWrong.."' does not exist.")
 
 		if isFile(projName) then
 			os.execute("rm -f "..projName)

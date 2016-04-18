@@ -970,7 +970,7 @@ TerraLib_ = {
 			layer = createLayer(name, data.table, connInfo, "POSTGIS")
 		else
 			releaseProject(project)
-			customError("Is not possible add the Layer. The table '"..data.table.."' does not exists.")
+			customError("Is not possible add the Layer. The table '"..data.table.."' does not exist.")
 		end
 		
 		project.layers[layer:getTitle()] = layer		
@@ -1320,3 +1320,4 @@ function TerraLib(data)
 		return data
 	end
 end
+

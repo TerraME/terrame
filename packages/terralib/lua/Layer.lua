@@ -22,7 +22,6 @@
 --
 -------------------------------------------------------------------------------------------
 
-
 -- TODO: create Common for this
 local SourceTypeMapper = {
 	OGR = "shp",
@@ -360,14 +359,15 @@ Layer_ = {
 		
 		if not project.layers[data.name] then
 			customError("The layer '"..data.name.."' does not exist.")
-		end		
-		
+		end
+	
 		if not data.table then
 			data.table = data.name
 		end
 		
-		local fromLayerInfo = project:infoLayer(data.name)
-		local repr = fromLayerInfo.rep
+		local layer = project.layers[data.name]
+		local info = project.terralib:getLayerInfo(project, layer)
+		local repr = info.rep
 		
 		switch(data, "operation"):caseof{
 			area = function()	
@@ -515,6 +515,17 @@ function Layer(data)
 		end
 
 		setmetatable(data, metaTableLayer_)
+		data.project.terralib:openProject(data.project, data.project.file)
+
+		local layer = data.project.layers[data.name]
+
+		local info = data.project.terralib:getLayerInfo(data.project, layer)
+		info.source = SourceTypeMapper[info.type]
+		info.type = nil
+
+		forEachElement(info, function(idx, value)
+			data[idx] = value
+		end)
 
 		return data
 	elseif data.input or data.resolution or data.box then

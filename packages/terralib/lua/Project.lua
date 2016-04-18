@@ -30,20 +30,7 @@ local SourceTypeMapper = {
 }
 
 Project_ = {
-	type_ = "Project",
-	infoLayer = function(self, name)
-		local layer = self.layers[name]
-		
-		if layer == nil then
-			customError("Layer '"..name.."' does not exist.")
-		end
-		
-		local info = self.terralib:getLayerInfo(self, layer)
-		info.source = SourceTypeMapper[info.type]
-		info.type = nil
-		
-		return info
-	end
+	type_ = "Project"
 }
 
 metaTableProject_ = {

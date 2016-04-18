@@ -50,7 +50,6 @@ return {
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				print(f)
 				rmFile(f)
 			end
 		end			
@@ -69,7 +68,6 @@ return {
 		unitTest:assertEquals(projName, cl.project.file)
 		unitTest:assertEquals(clName1, cl.name)
 		
-		-- ###################### 2 #############################
 		proj = nil
 		
 		local cl2 = Layer{
@@ -79,11 +77,9 @@ return {
 		
 		local clProj = cl2.project
 		
-		local clLayerInfo = clProj:infoLayer(clName1)
-		unitTest:assertEquals(clLayerInfo.source, "shp")
-		unitTest:assertEquals(clLayerInfo.file, filePath1)
+		unitTest:assertEquals(cl2.source, "shp")
+		unitTest:assertEquals(cl2.file, filePath1)
 	
-		-- ###################### END #############################
 		unitTest:assertFile(projName)
 		
 		for i = 1, #exts do
@@ -99,71 +95,58 @@ return {
 			rmFile(projName)
 		end
 		
-		-- ###################### 1 #############################
 		local proj1 = Project {
 			file = projName
 		}		
 		
 		local layerName1 = "Sampa"
-		Layer{
+		local layer1 = Layer{
 			project = proj1,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
-		local layer1 = proj1:infoLayer(layerName1)
 		unitTest:assertEquals(layer1.name, layerName1)
-		
-		-- ###################### 2 #############################
+					
 		local proj2 = Project {
 			file = projName
-		}
-		local layer2 = proj2:infoLayer(layerName1)
+		}		
 
-		unitTest:assertEquals(layer2.name, layerName1)
-
-		-- ###################### 3 #############################
 		local layerName2 = "MG"
-		Layer{
+		local layer2 = Layer{
 			project = proj2,
 			name = layerName2,
 			file = filePath("MG_cities.shp", "terralib")
 		}
-		local layer1 = proj2:infoLayer(layerName1)
-		local layer2 = proj2:infoLayer(layerName2)
 
 		unitTest:assertEquals(layer1.name, layerName1)
 		unitTest:assertEquals(layer2.name, layerName2)
 		
-		-- ###################### 3.1 #############################
 		local layerName21 = "MG_2"
-		Layer{
+		local layer21 = Layer{
 			project = proj2,
 			name = layerName21,
 			file = filePath("MG_cities.shp", "terralib")
 		}
-		local layer21 = proj2:infoLayer(layerName21)
+
 		unitTest:assert(layer21.name ~= layer2.name)
 		unitTest:assertEquals(layer21.sid, layer2.sid)		
 		
-		-- ###################### 4 #############################
 		local layerName3 = "CBERS1"
-		Layer{
+		local layer3 = Layer{
 			project = proj2,
 			name = layerName3,
 			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
 		}		
-		local layer3 = proj2:infoLayer(layerName3)
 		
 		unitTest:assertEquals(layer3.name, layerName3)
 		
-		-- ###################### 5 #############################
 		local layerName4 = "CBERS2"
-		Layer{
+		local layer4 = Layer{
 			project = proj2,
 			name = layerName4,
 			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
 		}		
-		local layer4 = proj2:infoLayer(layerName4)
+
 		unitTest:assert(layer4.name ~= layer3.name)
 		unitTest:assertEquals(layer4.sid, layer3.sid)		
 		
@@ -171,7 +154,6 @@ return {
 		
 		local projName = "cells_setores_2000.tview"
 
-		-- ###################### 1 #############################
 		local proj = Project {
 			file = projName,
 			clean = true
@@ -214,18 +196,16 @@ return {
 		end	
 		
 		local clName1 = "Sampa_Cells"
-		Layer{
+		local l1 = Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
 			resolution = 0.7,
 			file = filePath1
 		}
-		local l1Info = proj:infoLayer(clName1)
 		
-		unitTest:assertEquals(l1Info.name, clName1)
+		unitTest:assertEquals(l1.name, clName1)
 		
-		-- ###################### 2 #############################
 		local shp2 = "mg_cells.shp"
 		local filePath2 = testDir.."/"..shp2	
 		local fn2 = getFileName(filePath2)
@@ -239,18 +219,16 @@ return {
 		end			
 		
 		local clName2 = "MG_Cells"
-		Layer{
+		local l2 = Layer{
 			project = proj,
 			input = layerName2,
 			name = clName2,
 			resolution = 1,
 			file = filePath2		
 		}
-		local l2Info = proj:infoLayer(clName2)
 		
-		unitTest:assertEquals(l2Info.name, clName2)
+		unitTest:assertEquals(l2.name, clName2)
 		
-		-- ###################### 3 #############################
 		local shp3 = "another_sampa_cells.shp"
 		local filePath3 = testDir.."/"..shp3	
 		local fn3 = getFileName(filePath3)
@@ -264,18 +242,16 @@ return {
 		end			
 		
 		local clName3 = "Another_Sampa_Cells"
-		Layer{
+		local l3 = Layer{
 			project = proj,
 			input = layerName2,
 			name = clName3,
 			resolution = 0.7,
 			file = filePath3		
 		}
-		local l3Info = proj:infoLayer(clName3)
 		
-		unitTest:assertEquals(l3Info.name, clName3)	
+		unitTest:assertEquals(l3.name, clName3)	
 
-		-- ###################### END #############################
 		if isFile(projName) then
 			rmFile(projName)
 		end		
@@ -350,7 +326,6 @@ return {
 			file = filePath1
 		}
 		
-		-- ###################### 1 #############################
 		local presenceLayerName = clName1.."_Presence"
 
 		local shp2 = presenceLayerName..".shp"
@@ -372,11 +347,6 @@ return {
 			output = presenceLayerName
 		}	
 
-		local presenceLayerInfo = proj:infoLayer(presenceLayerName)
-		unitTest:assertEquals(presenceLayerInfo.source, "shp")
-		unitTest:assertEquals(presenceLayerInfo.file, filePath2)			
-		
-		-- ###################### 2 #############################
 		local areaLayerName = clName1.."_Area"
 		
 		local shp3 = areaLayerName..".shp"
@@ -398,11 +368,7 @@ return {
 			output = areaLayerName
 		}
 
-		local areaLayerInfo = proj:infoLayer(areaLayerName)
-		unitTest:assertEquals(areaLayerInfo.source, "shp")
-		unitTest:assertEquals(areaLayerInfo.file, filePath3)	
 
-		-- ###################### 3 #############################	
 		local countLayerName = clName1.."_Count"
 		
 		local shp4 = countLayerName..".shp"
@@ -424,11 +390,7 @@ return {
 			output = countLayerName
 		}
 		
-		local countLayerInfo = proj:infoLayer(countLayerName)
-		unitTest:assertEquals(countLayerInfo.source, "shp")
-		unitTest:assertEquals(countLayerInfo.file, filePath4)	
 		
-		-- ###################### 4 #############################	
 		-- local distanceLayerName = clName1.."_Distance"
 		
 		-- local shp5 = distanceLayerName..".shp"
@@ -450,11 +412,6 @@ return {
 			-- output = distanceLayerName
 		-- }
 		
-		-- local distanceLayerInfo = proj:infoLayer(distanceLayerName)
-		-- unitTest:assertEquals(distanceLayerInfo.source, "shp") -- SKIP
-		-- unitTest:assertEquals(distanceLayerInfo.file, filePath5) -- SKIP
-
-		-- ###################### 5 #############################	
 		local minValueLayerName = clName1.."_Minimum"
 		
 		local shp6 = minValueLayerName..".shp"
@@ -477,11 +434,6 @@ return {
 			select = "UCS_FATURA"
 		}
 		
-		local minValueLayerInfo = proj:infoLayer(minValueLayerName)	
-		unitTest:assertEquals(minValueLayerInfo.source, "shp")
-		unitTest:assertEquals(minValueLayerInfo.file, filePath6)
-
-		-- ###################### 6 #############################	
 		local maxValueLayerName = clName1.."_Maximum"
 		
 		local shp7 = maxValueLayerName..".shp"
@@ -504,11 +456,6 @@ return {
 			select = "UCS_FATURA"
 		}
 		
-		local maxValueLayerInfo = proj:infoLayer(maxValueLayerName)	
-		unitTest:assertEquals(maxValueLayerInfo.source, "shp")
-		unitTest:assertEquals(maxValueLayerInfo.file, filePath7)	
-
-		-- ###################### 7 #############################	
 		local percentageLayerName = clName1.."_Percentage"
 		
 		local shp8 = percentageLayerName..".shp"
@@ -531,11 +478,6 @@ return {
 			select = "LOCALIDADE"
 		}
 		
-		local percentageLayerInfo = proj:infoLayer(percentageLayerName)	
-		unitTest:assertEquals(percentageLayerInfo.source, "shp")
-		unitTest:assertEquals(percentageLayerInfo.file, filePath8)	
-
-		-- ###################### 8 #############################	
 		local stdevLayerName = clName1.."_Stdev"
 		
 		local shp9 = stdevLayerName..".shp"
@@ -558,11 +500,6 @@ return {
 			select = "UCS_FATURA"
 		}
 		
-		local stdevLayerInfo = proj:infoLayer(stdevLayerName)	
-		unitTest:assertEquals(stdevLayerInfo.source, "shp")
-		unitTest:assertEquals(stdevLayerInfo.file, filePath9)	
-
-		-- ###################### 9 #############################	
 		local meanLayerName = clName1.."_Average_Mean"
 		
 		local shp10 = meanLayerName..".shp"
@@ -585,11 +522,6 @@ return {
 			select = "UCS_FATURA"
 		}
 		
-		local meanLayerInfo = proj:infoLayer(meanLayerName)		
-		unitTest:assertEquals(meanLayerInfo.source, "shp")
-		unitTest:assertEquals(meanLayerInfo.file, filePath10)	
-		
-		-- ###################### 10 #############################	
 		local weighLayerName = clName1.."_Average_Weighted"
 		
 		local shp11 = weighLayerName..".shp"
@@ -613,11 +545,6 @@ return {
 			area = true
 		}
 		
-		local weighLayerInfo = proj:infoLayer(weighLayerName)	
-		unitTest:assertEquals(weighLayerInfo.source, "shp")
-		unitTest:assertEquals(weighLayerInfo.file, filePath11)	
-		
-		-- ###################### 11 #############################	
 		local intersecLayerName = clName1.."_Mojority_Intersection"
 		
 		local shp12 = intersecLayerName..".shp"
@@ -641,11 +568,6 @@ return {
 			area = true
 		}
 		
-		local intersecLayerInfo = proj:infoLayer(intersecLayerName)	
-		unitTest:assertEquals(intersecLayerInfo.source, "shp")
-		unitTest:assertEquals(intersecLayerInfo.file, filePath12)		
-
-		-- ###################### 12 #############################	
 		local occurrenceLayerName = clName1.."_Mojority_Occurrence"
 		
 		local shp13 = occurrenceLayerName..".shp"
@@ -668,11 +590,6 @@ return {
 			select = "UCS_FATURA"
 		}
 		
-		local occurrenceLayerInfo = proj:infoLayer(occurrenceLayerName)	
-		unitTest:assertEquals(occurrenceLayerInfo.source, "shp")
-		unitTest:assertEquals(occurrenceLayerInfo.file, filePath13)		
-
-		-- ###################### 13 #############################	
 		local sumLayerName = clName1.."_Sum"
 		
 		local shp14 = sumLayerName..".shp"
@@ -695,11 +612,6 @@ return {
 			select = "UCS_FATURA"
 		}
 		
-		local sumLayerInfo = proj:infoLayer(sumLayerName)
-		unitTest:assertEquals(sumLayerInfo.source, "shp")
-		unitTest:assertEquals(sumLayerInfo.file, filePath14)	
-
-		-- ###################### 14 #############################	
 		local wsumLayerName = clName1.."_Weighted_Sum"
 		
 		local shp15 = wsumLayerName..".shp"
@@ -723,10 +635,6 @@ return {
 			area = true
 		}
 		
-		local wsumLayerInfo = proj:infoLayer(wsumLayerName)	
-		unitTest:assertEquals(wsumLayerInfo.source, "shp")
-		unitTest:assertEquals(wsumLayerInfo.file, filePath15)	
-
 		-- RASTER TESTS ------------------------------------------	issue #928
 		-- local desmatamento = "Desmatamento"
 		-- Layer{
@@ -734,7 +642,6 @@ return {
 			-- file = filePath("Desmatamento_2000.tif", "terralib")		
 		-- }	
 		
-		-- -- ###################### 15 #############################
 		-- local rmeanLayerName = clName1.."_Mean_Raster"
 		
 		-- local shp16 = rmeanLayerName..".shp"
@@ -757,11 +664,6 @@ return {
 			-- select = 0
 		-- }		
 		
-		-- local rmeanLayerInfo = proj:infoLayer(rmeanLayerName)
-		-- unitTest:assertEquals(rmeanLayerInfo.source, "shp") -- SKIP
-		-- unitTest:assertEquals(rmeanLayerInfo.file, filePath16) -- SKIP		
-
-		-- -- ###################### 16 #############################
 		-- local rminLayerName = clName1.."_Minimum_Raster"
 		
 		-- local shp17 = rminLayerName..".shp"
@@ -784,11 +686,6 @@ return {
 			-- select = 0
 		-- }		
 
-		-- local rminLayerInfo = proj:infoLayer(rminLayerName)		
-		-- unitTest:assertEquals(rminLayerInfo.source, "shp") -- SKIP
-		-- unitTest:assertEquals(rminLayerInfo.file, filePath17) -- SKIP	
-		
-		-- -- ###################### 17 #############################
 		-- local rmaxLayerName = clName1.."_Maximum_Raster"
 		
 		-- local shp18 = rmaxLayerName..".shp"
@@ -811,11 +708,6 @@ return {
 			-- select = 0
 		-- }		
 
-		-- local rmaxLayerInfo = proj:infoLayer(rmaxLayerName)		
-		-- unitTest:assertEquals(rmaxLayerInfo.source, "shp") -- SKIP
-		-- unitTest:assertEquals(rmaxLayerInfo.file, filePath18) -- SKIP
-
-		-- -- ###################### 18 #############################
 		-- local rpercentLayerName = clName1.."_Percentage_Raster"
 		
 		-- local shp19 = rpercentLayerName..".shp"
@@ -838,11 +730,6 @@ return {
 			-- select = 0
 		-- }		
 
-		-- local rpercentLayerInfo = proj:infoLayer(rpercentLayerName)	
-		-- unitTest:assertEquals(rmaxLayerInfo.source, "shp") -- SKIP
-		-- unitTest:assertEquals(rmaxLayerInfo.file, filePath19) -- SKIP
-
-		-- -- ###################### 19 #############################
 		-- local rstdevLayerName = clName1.."_Stdev_Raster"
 		
 		-- local shp20 = rstdevLayerName..".shp"
@@ -865,11 +752,6 @@ return {
 			-- select = 0
 		-- }		
 
-		-- local rstdevLayerInfo = proj:infoLayer(rstdevLayerName)
-		-- unitTest:assertEquals(rmaxLayerInfo.source, "shp") -- SKIP
-		-- unitTest:assertEquals(rmaxLayerInfo.file, filePath20) -- SKIP
-
-		-- -- ###################### 20 #############################
 		-- local rsumLayerName = clName1.."_Sum_Raster"
 		
 		-- local shp21 = rstdevLayerName..".shp"
@@ -892,12 +774,6 @@ return {
 			-- select = 0
 		-- }		
 
-		-- local rsumLayerInfo = proj:infoLayer(rsumLayerName)
-		-- unitTest:assertEquals(rmaxLayerInfo.source, "shp") -- SKIP
-		-- unitTest:assertEquals(rmaxLayerInfo.file, filePath21) -- SKIP	
-
-		-- CELLULAR SPACE TESTS ---------------------------------------------------
-		-- ###################### 21 #############################
 		local cs = CellularSpace{
 			project = proj,
 			layer = sumLayerName
@@ -924,11 +800,14 @@ return {
 		
 		cs:save(cellSpaceLayerName, "past_sum")
 		
-		local cellSpaceLayerInfo = proj:infoLayer(cellSpaceLayerName)	
-		unitTest:assertEquals(cellSpaceLayerInfo.source, "shp")
-		unitTest:assertEquals(cellSpaceLayerInfo.file, filePath22)			
+		local cellSpaceLayer = Layer{
+			project = proj,
+			name = cellSpaceLayerName
+		}
+
+		unitTest:assertEquals(cellSpaceLayer.source, "shp")
+		unitTest:assertEquals(cellSpaceLayer.file, filePath22)			
 		
-		-- ###################### END #############################
 		local tl = TerraLib{}
 		tl:finalize()			
 		
@@ -1042,9 +921,14 @@ return {
 			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
 		
-		unitTest:assertEquals(tostring(l), [[name     string [Setores_2000]
+		unitTest:assertEquals(tostring(l), [[file     string [packages\terralib\data\Setores_Censitarios_2000
+_pol.shp]
+name     string [Setores_2000]
 project  Project
-]])
+rep      string [geometry]
+sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
+source   string [shp]
+]], 60)
 		unitTest:assertFile(projName)
 	end
 }

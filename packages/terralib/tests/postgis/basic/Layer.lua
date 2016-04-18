@@ -33,13 +33,12 @@ return {
 
 		local layerName1 = "Sampa"
 
-		Layer{
+		local layer1 = Layer{
 			project = proj1,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
 
-		local layer1 = proj1:infoLayer(layerName1)
 		unitTest:assertEquals(layer1.name, layerName1)	
 		
 		local host = "localhost"
@@ -68,7 +67,7 @@ return {
 		
 		local layerName2 = "SampaDB"	
 		
-		Layer{
+		local layer2 = Layer{
 			project = proj1,
 			source = "postgis",
 			name = layerName2,
@@ -79,12 +78,12 @@ return {
 			database = database,
 			table = tableName			
 		}	
-		local layer2 = proj1:infoLayer(layerName2)
+
 		unitTest:assertEquals(layer2.name, layerName2)	
 
-		-- ###################### 2 #############################
 		local layerName3 = "Another_SampaDB" 
-		Layer{
+
+		local layer3 = Layer{
 			project = proj1,
 			source = "postgis",
 			name = layerName3,
@@ -95,13 +94,12 @@ return {
 			database = database,
 			table = tableName			
 		}		
-		local layer3 = proj1:infoLayer(layerName3)
+
 		unitTest:assert(layer3.name ~= layer2.name)
 		unitTest:assertEquals(layer3.sid, layer2.sid)
 		
 		tl:dropPgTable(pgData)
-		
-		-- ###################### 3 #############################		
+
 		-- TODO: ADO DON'T WORK (REVIEW)
 		-- if _Gtme.isWindowsOS() then
 			-- local adoData = {
@@ -167,7 +165,7 @@ return {
 		local tl = TerraLib{}
 		tl:dropPgTable(pgData)
 		
-		Layer{
+		local l1 = Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
@@ -178,18 +176,16 @@ return {
 			database = database,
 			table = tName1
 		}	
-		local l1Info = proj:infoLayer(clName1)
 	
-		unitTest:assertEquals(l1Info.name, clName1)		
+		unitTest:assertEquals(l1.name, clName1)		
 
-		-- ###################### 2 #############################
 		local clName2 = "Another_Sampa_Cells"
 		local tName2 = "add_cellslayer_basic_another"
 		
 		pgData.table = tName2
 		tl:dropPgTable(pgData)
 		
-		Layer{
+		local l2 = Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
@@ -200,18 +196,16 @@ return {
 			database = database,
 			table = tName2
 		}	
-		local l2Info = proj:infoLayer(clName2)
-	
-		unitTest:assertEquals(l2Info.name, clName2)	
+
+		unitTest:assertEquals(l2.name, clName2)	
 		
-		-- ###################### 3 #############################
 		local clName3 = "Other_Sampa_Cells"
 		local tName3 = "add_cellslayer_basic_from_db"
 		
 		pgData.table = tName3
 		tl:dropPgTable(pgData)
 		
-		Layer{
+		local l3 = Layer{
 			project = proj,
 			source = "postgis",
 			input = clName2,
@@ -222,11 +216,9 @@ return {
 			database = database,
 			table = tName3
 		}	
-		local l3Info = proj:infoLayer(clName3)
 	
-		unitTest:assertEquals(l3Info.name, clName3)		
+		unitTest:assertEquals(l3.name, clName3)		
 
-		-- ###################### 4 #############################	
 		local newDbName = "new_pg_db_30032016"
 		pgData.database = newDbName
 		tl:dropPgDatabase(pgData)
@@ -234,7 +226,7 @@ return {
 		
 		local clName4 = "New_Sampa_Cells"
 		
-		Layer{
+		local layer4 = Layer{
 			project = proj,
 			source = "postgis",
 			input = clName2,
@@ -245,16 +237,14 @@ return {
 			database = newDbName
 		}
 		
-		local clLayer4 = proj:infoLayer(clName4)
-		unitTest:assertEquals(clLayer4.source, "postgis")
-		unitTest:assertEquals(clLayer4.host, host)
-		unitTest:assertEquals(clLayer4.port, port)
-		unitTest:assertEquals(clLayer4.user, user)
-		unitTest:assertEquals(clLayer4.password, password)
-		unitTest:assertEquals(clLayer4.database, newDbName)
-		unitTest:assertEquals(clLayer4.table, string.lower(clName4))		
+		unitTest:assertEquals(layer4.source, "postgis")
+		unitTest:assertEquals(layer4.host, host)
+		unitTest:assertEquals(layer4.port, port)
+		unitTest:assertEquals(layer4.user, user)
+		unitTest:assertEquals(layer4.password, password)
+		unitTest:assertEquals(layer4.database, newDbName)
+		unitTest:assertEquals(layer4.table, string.lower(clName4))		
 
-		-- ###################### END #############################
 		if isFile(projName) then
 			rmFile(projName)
 		end	
@@ -269,3 +259,4 @@ return {
 		tl:dropPgDatabase(pgData)
 	end
 }
+
