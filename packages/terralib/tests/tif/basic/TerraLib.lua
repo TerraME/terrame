@@ -23,24 +23,7 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	TerraLib = function(unitTest)
-		local t1 = TerraLib{}
-		local t2 = TerraLib{}
-		
-		unitTest:assertEquals(t1, t2)
-	end,
-	finalize = function(unitTest)
-		local tlib = TerraLib{}
-		tlib:finalize()
-		local t2 = TerraLib{}
-
-		unitTest:assert(tlib ~= t2)
-	end,
-	getVersion = function(unitTest)
-		local tlib = TerraLib{}
-		unitTest:assertEquals(tlib:getVersion(), "5.1.2")		
-	end,
-	openProject = function(unitTest)
+	addTifLayer = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
@@ -53,13 +36,17 @@ return {
 		
 		tl:createProject(proj, {})
 		
-		local proj2 = {}
+		local layerName = "TifLayer"
+		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+		tl:addTifLayer(proj, layerName, layerFile)
 		
-		tl:openProject(proj2, proj.file)
+		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
 		
-		unitTest:assertEquals(proj2.file, proj.file)
-		unitTest:assertEquals(proj2.title, proj.title)
-		unitTest:assertEquals(proj2.author, proj.author)
+		unitTest:assertEquals(layerInfo.name, layerName)
+		unitTest:assertEquals(layerInfo.file, layerFile)
+		unitTest:assertEquals(layerInfo.type, "GDAL")
+		unitTest:assertEquals(layerInfo.rep, "raster")
+		unitTest:assertNotNil(layerInfo.sid)
 		
 		rmFile(proj.file)
 	end

@@ -49,33 +49,6 @@ return {
 		
 		rmFile(proj.file)
 	end,
-	openProject = function(unitTest)
-		local tl = TerraLib{}
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-		
-		if isFile(proj.file) then
-			rmFile(proj.file)
-		end
-		
-		tl:createProject(proj, {})
-		
-		local proj2 = {}
-		
-		tl:openProject(proj2, proj.file)
-		
-		unitTest:assertEquals(proj2.file, proj.file)
-		unitTest:assertEquals(proj2.title, proj.title)
-		unitTest:assertEquals(proj2.author, proj.author)
-		
-		rmFile(proj.file)
-	end,
-	getLayerInfo = function(unitTest)
-		-- see in other functions e.g. addPgLayer() --
-		unitTest:assert(true)
-	end,
 	addShpLayer = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
@@ -103,37 +76,6 @@ return {
 		
 		rmFile(proj.file)
 	end,
-	addTifLayer = function(unitTest)
-		local tl = TerraLib{}
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-		
-		if isFile(proj.file) then
-			rmFile(proj.file)
-		end
-		
-		tl:createProject(proj, {})
-		
-		local layerName = "TifLayer"
-		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-		tl:addTifLayer(proj, layerName, layerFile)
-		
-		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
-		
-		unitTest:assertEquals(layerInfo.name, layerName)
-		unitTest:assertEquals(layerInfo.file, layerFile)
-		unitTest:assertEquals(layerInfo.type, "GDAL")
-		unitTest:assertEquals(layerInfo.rep, "raster")
-		unitTest:assertNotNil(layerInfo.sid)
-		
-		rmFile(proj.file)
-	end,
-	copyLayer = function(unitTest)
-		-- see in addPgLayer() test --
-		unitTest:assert(true)
-	end,
 	addShpCellSpaceLayer = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
@@ -150,8 +92,7 @@ return {
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
-		
-				
+
 		local clName = "Sampa_Cells"
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = clName..".shp"
@@ -206,7 +147,6 @@ return {
 		local layerName1 = "Para"
 		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
-		
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp = {}
@@ -502,7 +442,7 @@ return {
 			end
 		end
 		
-		operation = "percentage"
+		operation = "coverage"
 		attribute = "perc"
 		select = "ADMINISTRA"
 		area = nil
@@ -661,7 +601,7 @@ return {
 			end
 		end
 		
-		operation = "majority"
+		operation = "mode"
 		attribute = "majo_int"
 		select = "POPULACAO_"
 		area = true
@@ -701,7 +641,7 @@ return {
 			end
 		end
 		
-		operation = "majority"
+		operation = "mode"
 		attribute = "majo_occur"
 		select = "POPULACAO_"
 		area = false
@@ -829,7 +769,7 @@ return {
 			end
 		end
 		
-		operation = "percentage"
+		operation = "coverage"
 		attribute = "rperc"
 		select = 0
 		area = nil
@@ -1101,8 +1041,6 @@ return {
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
-		
-		unitTest:assert(true)
 		
 		rmFile(proj.file)
 	end,

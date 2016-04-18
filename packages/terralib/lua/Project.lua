@@ -46,8 +46,8 @@ metaTableProject_ = {
 -- created in another software of TerraLib family.
 -- @arg data.file A string with the file name to be used. If the
 -- file does not exist then it will be created. It it exists then it will be opened.
--- @arg author A string with the name of the Project's author.
--- @arg title A string with the title of the Project.
+-- @arg data.author A string with the name of the Project's author.
+-- @arg data.title A string with the title of the Project.
 -- @arg data.clean A boolean value indicating whether the project should be cleaned
 -- if it already exists.
 -- The default value is false.
@@ -74,7 +74,7 @@ function Project(data)
 
 	local terralib = TerraLib{}
 
-	data.terralib = terralib
+	data.terralib = TerraLib{}
 	data.layers = {}
 
 	if isFile(data.file) and data.clean then

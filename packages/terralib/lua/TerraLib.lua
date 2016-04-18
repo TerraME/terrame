@@ -24,8 +24,6 @@
 
 require("terralib_mod_binding_lua")
 
--- TODO: To document this
-
 local binding = terralib_mod_binding_lua
 local instance = nil
 local initialized = false
@@ -59,7 +57,7 @@ local OperationMapper = {
 	distance = binding.MIN_DISTANCE,
 	minimum = binding.MIN_VALUE,
 	maximum = binding.MAX_VALUE,
-	percentage = binding.PERCENT_EACH_CLASS,
+	coverage = binding.PERCENT_EACH_CLASS,
 	stdev = binding.STANDARD_DEVIATION,
 	mean = binding.MEAN,
 	weighted = binding.WEIGHTED,
@@ -76,7 +74,7 @@ local VectorAttributeCreatedMapper = {
 	distance = "min_distance",
 	minimum = "min_val",
 	maximum = "max_val",
-	percentage = "percent_area_class",
+	coverage = "percent_area_class",
 	stdev = "stand_dev",
 	mean = "mean",
 	weighted = "weigh_area",
@@ -90,7 +88,7 @@ local RasterAttributeCreatedMapper = {
 	mean = "_Mean",
 	minimum = "_Min_Value",
 	maximum = "_Max_Value",
-	percentage = "",
+	coverage = "",
 	stdev = "_Standard_Deviation",
 	sum = "_Sum"
 }
@@ -718,7 +716,7 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 		else
 			operation = "mean"
 		end
-	elseif operation == "majority" then
+	elseif operation == "mode" then
 		if area then 
 			operation = "intersection"
 		else
@@ -873,15 +871,36 @@ end
 
 TerraLib_ = {
 	type_ = "TerraLib",
-
+	--- Finalize TerraLib. This function is automatically executed in the end of any
+	-- simulation that uses TerraLib. It should be used only when the user wants to
+	-- reload TerraLib afterwards.
+	-- @usage import("terralib")
+	-- tl = TerraLib{}
+	-- tl:finalize()
 	finalize = function()
 		finalize()
 	end,
-	
+	--- Return the current TerraLib version.
+	-- @usage import("terralib")
+	-- tl = TerraLib{}
+	-- print(tl:getVersion())
 	getVersion = function()
 		return binding.te.common.Version.asString()
 	end,
-
+	--- Create a new Project.
+	-- @arg project The name of the project.
+	-- @arg layers A table where the layers will be stored.
+	-- @usage -- DONTRUN
+	-- import("terralib")
+	-- tl = TerraLib{}
+	--
+	-- proj = {
+	--     file = "myproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Avancini Rodrigo"
+	-- }
+	--
+	-- tl:createProject(proj, {})
 	createProject = function(self, project, layers)
 		if not isValidTviewExt(project.file) then
 			customError("Please, the file extension must be '.tview'.")
@@ -893,7 +912,14 @@ TerraLib_ = {
 		
 		saveProject(project, layers)
 	end,
-
+	--- Open a new project.
+	-- @arg project The name of the project.
+	-- @arg filePath The path for the project.
+	-- @usage -- DONTRUN
+	-- import("terralib")
+	-- tl = TerraLib{}
+	-- proj = {}
+	-- tl:openProject(proj2, "myproject.tview")
 	openProject = function(self, project, filePath)
 		if not isValidTviewExt(filePath) then
 			customError("Please, the file extension must be '.tview'.")
@@ -905,7 +931,38 @@ TerraLib_ = {
 		
 		loadProject(project, filePath)		
 	end,
-	
+	--- Return the information of a given layer.
+	-- @arg project The name of the project.
+	-- @arg layer The name of the layer.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	--
+	-- proj = {
+	--     file = "myproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Avancini Rodrigo"
+	-- }
+	--
+	-- tl:createProject(proj, {})
+	--	
+	-- local layerName1 = "SampaShp"
+	-- local layerFile1 = filePath("sampa.shp", "terralib")
+	-- tl:addShpLayer(proj, layerName1, layerFile1)		
+	--	
+	-- pgData = {
+	--     type = "POSTGIS",
+	--     host = "localhost",
+	--     port = "5432",
+	--     user = "postgres",
+	--     password = "postgres",
+	--     database = "terralib_save_test",
+	--     table = "sampa_cells",
+	--     encoding = "CP1252"	
+	-- }	
+	--	
+	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- 	
+	-- layerInfo = tl:getLayerInfo(proj, proj.layers[layerName2])		
 	getLayerInfo = function(self, project, layer)
 		local info = {}		
 		info.name = layer:getTitle()	
@@ -950,14 +1007,73 @@ TerraLib_ = {
 		
 		return info
 	end,
+	--- Add a shapefile layer to a given project.
+	-- @arg project The name of the project.
+	-- @arg name The name of the layer.
+	-- @arg filePath The path for the project.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib()
+	-- tl:createProject("project.tview", {})
+	-- tl:addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
 	addShpLayer = function(self, project, name, filePath)
 		addFileLayer(project, name, filePath, "OGR")
 	end,
-	
+	--- Add a new tiff layer to a given project.
+	-- @arg filePath The path for the project.
+	-- @arg name The name of the layer.
+	-- @arg project The name of the project.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	-- proj = {
+	--     file = "myproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Avancini Rodrigo"
+	-- }
+	--	
+	-- tl:createProject(proj, {})
+	--	
+	-- layerName = "TifLayer"
+	-- layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+	-- tl:addTifLayer(proj, layerName, layerFile)
 	addTifLayer = function(self, project, name, filePath)
 		addFileLayer(project, name, filePath, "GDAL")
 	end,
-	
+	--- Add a new PostgreSQL layer to a given project.
+	-- @arg project The name of the project.
+	-- @arg name The name of the layer.
+	-- @arg data.host Name of the host.
+	-- @arg data.port Port number.
+	-- @arg data.user The user name.
+	-- @arg data.password The password.
+	-- @arg data.database The database name.
+	-- @arg data.encoding The encoding of the table.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	--
+	-- proj = {
+	--     file = "myproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Avancini Rodrigo"
+	-- }
+	--
+	-- tl:createProject(proj, {})
+	--	
+	-- local layerName1 = "SampaShp"
+	-- local layerFile1 = filePath("sampa.shp", "terralib")
+	-- tl:addShpLayer(proj, layerName1, layerFile1)		
+	--	
+	-- pgData = {
+	--     type = "POSTGIS",
+	--     host = "localhost",
+	--     port = "5432",
+	--     user = "postgres",
+	--     password = "postgres",
+	--     database = "terralib_save_test",
+	--     table = "sampa_cells",
+	--     encoding = "CP1252"	
+	-- }	
+	--	
+	-- tl:addPgLayer(proj, "SampaPg", pgData)
 	addPgLayer = function(self, project, name, data)				
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 		
@@ -977,39 +1093,159 @@ TerraLib_ = {
 		saveProject(project, project.layers)		
 		releaseProject(project)		
 	end,
-	
-	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolultion, filePath) 
+	--- Create a new cellular layer into a shapefile.
+	-- @arg project The name of the project.
+	-- @arg filePath The path for the project.
+	-- @arg name The name of the layer.
+	-- @arg resolution The size of a cell.
+	-- @arg inputLayerTitle The name of the layer.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	-- proj = {
+	--     file = "myproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Avancini Rodrigo"
+	-- }
+	--
+	-- tl:createProject(proj, {})
+	--	
+	-- layerName1 = "SampaShp"
+	-- layerFile1 = filePath("sampa.shp", "terralib")
+	-- tl:addShpLayer(proj, layerName1, layerFile1)		
+	--
+	--	tl:addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
+	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath) 
 		loadProject(project, project.file)
 		
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
 		local dSetName = getFileName(connInfo.URI)
 		
-		createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, "OGR")
+		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR")
 		
 		self:addShpLayer(project, name, filePath)
 	end,
-	
-	addPgCellSpaceLayer = function(self, project, inputLayerTitle, name, resolultion, data) 
+	--- Add a new cellular layer to a PostgreSQL connection.
+	-- @arg project The name of the project.
+	-- @arg name The name of the layer.
+	-- @arg resolution The size of a cell.
+	-- @usage --DONTRUN
+	-- local proj = {
+	--     file = "myproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Avancini Rodrigo"
+	-- }
+	--
+	-- tl:createProject(proj, {})
+	--	
+	-- local layerName1 = "SampaShp"
+	-- local layerFile1 = filePath("sampa.shp", "terralib")
+	-- tl:addShpLayer(proj, layerName1, layerFile1)		
+	--	
+	-- local pgData = {
+	--     type = "POSTGIS",
+	--     host = "localhost",
+	--     port = "5432",
+	--     user = "postgres",
+	--     password = "postgres",
+	--     database = "terralib_save_test",
+	--     table = "sampa_cells",
+	--     encoding = "CP1252"	
+	-- }	
+	--	
+	-- local clName1 = "SampaPgCells"	
+	-- local resolution = 0.7
+	-- tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData)
+	addPgCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, data) 
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 
 		if not dataSetExists(connInfo, data.table, "POSTGIS") then
-			createCellSpaceLayer(inputLayer, name, data.table, resolultion, connInfo, "POSTGIS")
+			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS")
 		else
 			releaseProject(project)
 			customError("The table '"..data.table.."' already exists.")
 		end
 		
 		self:addPgLayer(project, name, data)	
-	end,	
-	
+	end,
+	--- Remove a PostreSQL table.
+	-- @arg data.host Name of the host.
+	-- @arg data.port Port number.
+	-- @arg data.user The user name.
+	-- @arg data.password The password.
+	-- @arg data.database The database name.
+	-- @arg data.encoding The encoding of the table.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	--
+	-- proj = {
+	--     file = "myproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Avancini Rodrigo"
+	-- }
+	--
+	-- tl:createProject(proj, {})
+	--	
+	-- local layerName1 = "SampaShp"
+	-- local layerFile1 = filePath("sampa.shp", "terralib")
+	-- tl:addShpLayer(proj, layerName1, layerFile1)		
+	--	
+	-- pgData = {
+	--     type = "POSTGIS",
+	--     host = "localhost",
+	--     port = "5432",
+	--     user = "postgres",
+	--     password = "postgres",
+	--     database = "terralib_save_test",
+	--     table = "sampa_cells",
+	--     encoding = "CP1252"	
+	-- }	
+	--	
+	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- 	
+	-- tl:dropPgTable(pgData)
 	dropPgTable = function(self, data)
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)		
 		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
 	end,
+	--- Remove a PostreSQL database.
+	-- @arg data.host Name of the host.
+	-- @arg data.port Port number.
+	-- @arg data.user The user name.
+	-- @arg data.password The password.
+	-- @arg data.database The database name.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	--
+	-- proj = {
+	--     file = "myproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Avancini Rodrigo"
+	-- }
+	--
+	-- tl:createProject(proj, {})
+	--	
+	-- local layerName1 = "SampaShp"
+	-- local layerFile1 = filePath("sampa.shp", "terralib")
+	-- tl:addShpLayer(proj, layerName1, layerFile1)		
+	--	
+	-- pgData = {
+	--     type = "POSTGIS",
+	--     host = "localhost",
+	--     port = "5432",
+	--     user = "postgres",
+	--     password = "postgres",
+	--     database = "terralib_save_test",
+	--     table = "sampa_cells",
+	--     encoding = "CP1252"	
+	-- }	
+	--	
+	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- 	
+	-- tl:dropPgDatabase(pgData)
 	dropPgDatabase = function(self, data)
 		local connInfo = {}
 		connInfo.PG_DB_TO_DROP = data.database
@@ -1023,6 +1259,39 @@ TerraLib_ = {
 			binding.te.da.DataSource.drop("POSTGIS", connInfo)
 		end
 	end,
+	--- Copy a given layer to another.
+	-- @arg project The name of the project.
+	-- @arg from The name input layer.
+	-- @arg to The name of the output layer.
+	-- 	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	--
+	-- proj = {
+	--     file = "myproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Avancini Rodrigo"
+	-- }
+	--
+	-- tl:createProject(proj, {})
+	--	
+	-- local layerName1 = "SampaShp"
+	-- local layerFile1 = filePath("sampa.shp", "terralib")
+	-- tl:addShpLayer(proj, layerName1, layerFile1)		
+	--	
+	-- pgData = {
+	--     type = "POSTGIS",
+	--     host = "localhost",
+	--     port = "5432",
+	--     user = "postgres",
+	--     password = "postgres",
+	--     database = "terralib_save_test",
+	--     table = "sampa_cells",
+	--     encoding = "CP1252"	
+	-- }	
+	--	
+	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- 	
+	-- tl:copyLayer(proj, layerName1, pgData)	
 	copyLayer = function(self, project, from, to)
 		loadProject(project, project.file)
 		
@@ -1031,7 +1300,37 @@ TerraLib_ = {
 		
 		releaseProject(project)	
 	end,
-	
+	--- Fill a given attribute in a layer.
+	-- @arg project The name of the project.
+	-- @arg operation Name of the operation.
+	-- @arg select The attribute to be used in the operation.
+	-- @arg area A boolean value indicating whether the area should be considered.
+	-- @arg default The default value.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	-- proj = {
+	--     file = "myproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Avancini Rodrigo"
+	-- }
+	--
+	--	
+	-- tl:createProject(proj, {})
+	--
+	-- layerName1 = "Para"
+	-- layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
+	-- tl:addShpLayer(proj, layerName1, layerFile1)		
+	--	
+	-- resolution = 60e3
+	-- tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, filePath1)
+	--	
+	-- clSet = tl:getDataSet(proj, clName)
+	--	
+	-- layerName2 = "Protection_Unit" 
+	-- layerFile2 = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
+	-- tl:addShpLayer(proj, layerName2, layerFile2)
+	--	
+	-- tl:attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
 	attributeFill = function(self, project, from, to, out, property, operation, select, area, default)
 		loadProject(project, project.file)
 
@@ -1091,7 +1390,7 @@ TerraLib_ = {
 		outDs = makeAndOpenDataSource(outConnInfo, outType)
 		local attrsRenamed = {}
 		
-		if operation == "percentage" then
+		if operation == "coverage" then
 			attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, property)
 		else
 			outDs:renameProperty(outDSetName, propCreatedName, property)
@@ -1120,7 +1419,11 @@ TerraLib_ = {
 		dseType = nil
 		collectgarbage("collect")		
 	end,
-	
+	--- Returns a given dataset from a layer.
+	-- @arg project The name of the project.
+	-- @arg layerName Name of the layer to be read.
+	-- @usage -- DONTRUN
+	-- ds = terralib:getDataSet("myproject.tview", "mylayer")
 	getDataSet = function(self, project, layerName)
 		loadProject(project, project.file)
 		
@@ -1149,7 +1452,11 @@ TerraLib_ = {
 		
 		return set
 	end,
-	
+	--- Save a given dataset.
+	-- @arg project The name of the project.
+	-- @arg fromLayerName The input layer name.
+	-- @arg toName The output layer name.
+	-- @arg attrs A table with the attributes to be saved.
 	saveDataSet = function(self, project, fromLayerName, toSet, toName, attrs)
 		loadProject(project, project.file)
 
@@ -1287,7 +1594,12 @@ TerraLib_ = {
 		outDs = nil		
 		collectgarbage("collect")		
 	end,
-	
+	--- Return the content of a shapefile.
+	-- @arg filePath The path for the file to be loaded.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	-- local shpPath = filePath("sampa.shp", "terralib")
+	-- dSet = tl:getShpByFilePath(shpPath)
 	getShpByFilePath = function(self, filePath)
 		local connInfo = createFileConnInfo(filePath)
 		local ds = makeAndOpenDataSource(connInfo, "OGR")
@@ -1310,10 +1622,17 @@ metaTableTerraLib_ = {
 	__index = TerraLib_,
 }
 
-function TerraLib(data)
+--- Type to access TerraLib. This type contains very basic functions that are used by
+-- other types of the package. These functions should be used with care, because
+-- they do not check any errors in their arguments. Because of that, such functions
+-- might stop with very strange errors.
+-- @usage -- DONTRUN
+-- TerraLib()
+function TerraLib()
 	if instance then
 		return instance
-	else	
+	else
+		local data = {}
 		setmetatable(data, metaTableTerraLib_)
 		instance = data
 		init()

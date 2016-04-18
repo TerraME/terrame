@@ -634,14 +634,14 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 		
-		local percentageLayerName = clName1.."_Percentage"
+		local coverageLayerName = clName1.."_Percentage"
 		local selectNotString = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "percentage",
+				operation = "coverage",
 				name = layerName1,
 				select = 2,
-				output = percentageLayerName
+				output = coverageLayerName
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -649,10 +649,10 @@ return{
 		local defaultNotNumber = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "percentage",
+				operation = "coverage",
 				name = layerName1,
 				select = "FID",
-				output = percentageLayerName,
+				output = coverageLayerName,
 				default = false
 			}
 		end
@@ -661,10 +661,10 @@ return{
 		local dummyNotNumber = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "percentage",
+				operation = "coverage",
 				name = layerName1,
 				select = "FID",
-				output = percentageLayerName,
+				output = coverageLayerName,
 				dummy = false
 			}
 		end
@@ -673,10 +673,10 @@ return{
 		local unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "percentage",
+				operation = "coverage",
 				name = layerName1,
 				select = "FID",
-				output = percentageLayerName,
+				output = coverageLayerName,
 				defaut = 3
 			}
 		end
@@ -790,14 +790,14 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 		
-		local majorityLayerName = clName1.."_Majority"
+		local modeLayerName = clName1.."_Majority"
 		local selectNotString = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "majority",
+				operation = "mode",
 				name = layerName1,
 				select = 2,
-				output = majorityLayerName
+				output = modeLayerName
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -805,10 +805,10 @@ return{
 		local areaNotBoolean = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "majority",
+				operation = "mode",
 				name = layerName1,
 				select = "FID",
-				output = majorityLayerName,
+				output = modeLayerName,
 				area = 2
 			}
 		end
@@ -817,10 +817,10 @@ return{
 		local defaultNotNumber = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "majority",
+				operation = "mode",
 				name = layerName1,
 				select = "FID",
-				output = majorityLayerName,
+				output = modeLayerName,
 				default = false
 			}
 		end
@@ -829,10 +829,10 @@ return{
 		local dummyNotNumber = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "majority",
+				operation = "mode",
 				name = layerName1,
 				select = "FID",
-				output = majorityLayerName,
+				output = modeLayerName,
 				dummy = false
 			}
 		end
@@ -841,10 +841,10 @@ return{
 		local unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "majority",
+				operation = "mode",
 				name = layerName1,
 				select = "FID",
-				output = majorityLayerName,
+				output = modeLayerName,
 				defaut = 3
 			}
 		end
@@ -1087,7 +1087,7 @@ return{
 		local areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "percentage",
+				operation = "coverage",
 				name = layerName3,
 				select = 0,
 				output = rpercentLayerName,
@@ -1099,7 +1099,7 @@ return{
 		local selectNotNumber = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "percentage",
+				operation = "coverage",
 				name = layerName3,
 				select = "0",
 				output = rpercentLayerName
@@ -1188,12 +1188,12 @@ return{
 		local op4NotAvailable = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "majority",
+				operation = "mode",
 				name = layerName3,
 				output = rstdevLayerName
 			}
 		end
-		unitTest:assertError(op4NotAvailable, "The operation '".."majority".."' is not available to raster layer.")	
+		unitTest:assertError(op4NotAvailable, "The operation '".."mode".."' is not available to raster layer.")	
 
 		local op5NotAvailable = function()
 			cl:fill{

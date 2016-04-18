@@ -40,7 +40,6 @@ return {
 		
 		tl:createProject(proj, {})
 		
-		-- // create a database 
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
@@ -65,7 +64,6 @@ return {
 		}	
 		
 		tl:copyLayer(proj, layerName1, pgData)
-		-- // create database end
 		
 		local layerName2 = "SampaPg"	
 		tl:addPgLayer(proj, layerName2, pgData)
@@ -439,7 +437,7 @@ return {
 		pgData.table = string.lower(percLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "percentage"
+		local operation = "coverage"
 		local attribute = "perc"
 		local select = "ADMINISTRA"
 		local area = nil
@@ -588,8 +586,8 @@ return {
 		pgData.table = string.lower(interLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "majority"
-		local attribute = "majority_int"
+		local operation = "mode"
+		local attribute = "mode_int"
 		local select = "POPULACAO_"
 		local area = true
 		local default = nil
@@ -604,7 +602,7 @@ return {
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
 							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "majority_int"))
+							(k == "weighted") or (k == "mode_int"))
 			unitTest:assertNotNil(v)
 		end		
 		
@@ -626,8 +624,8 @@ return {
 		pgData.table = string.lower(occurLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "majority"
-		local attribute = "majority_occur"
+		local operation = "mode"
+		local attribute = "mode_occur"
 		local select = "POPULACAO_"
 		local area = false
 		local default = nil
@@ -642,7 +640,7 @@ return {
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
 							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "majority_int") or (k == "majority_occur"))
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur"))
 			unitTest:assertNotNil(v)
 		end		
 		
@@ -681,7 +679,7 @@ return {
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
 							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "majority_int") or (k == "majority_occur") or
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum"))
 			unitTest:assertNotNil(v)
 		end		
@@ -720,7 +718,7 @@ return {
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
 							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "majority_int") or (k == "majority_occur") or
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum") or (k == "wsum"))
 			unitTest:assertNotNil(v)
 		end		
@@ -748,7 +746,7 @@ return {
 		pgData.table = string.lower(percTifLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "percentage"
+		local operation = "coverage"
 		local attribute = "rperc"
 		local select = 0
 		local area = nil
@@ -764,7 +762,7 @@ return {
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
 							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "majority_int") or (k == "majority_occur") or
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil))
 			unitTest:assertNotNil(v) 
 		end		
@@ -803,7 +801,7 @@ return {
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
 							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "majority_int") or (k == "majority_occur") or
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or 
 							(k == "rmean"))
 			unitTest:assertNotNil(v)
@@ -843,7 +841,7 @@ return {
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
 							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "majority_int") or (k == "majority_occur") or
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or 
 							(k == "rmean") or (k == "rmin"))
 			unitTest:assertNotNil(v)
@@ -883,7 +881,7 @@ return {
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
 							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "majority_int") or (k == "majority_occur") or
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or 
 							(k == "rmean") or (k == "rmin") or (k == "rmax"))
 			unitTest:assertNotNil(v)
@@ -923,7 +921,7 @@ return {
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
 							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "majority_int") or (k == "majority_occur") or
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or 
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev"))
 			unitTest:assertNotNil(v)
@@ -963,7 +961,7 @@ return {
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
 							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "majority_int") or (k == "majority_occur") or
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or 
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
 							(k == "rsum"))
@@ -1034,11 +1032,12 @@ return {
 	end,
 	saveDataSet = function(unitTest)
 		local tl = TerraLib{}
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-		
+		local proj = {
+			file = "myproject.tview",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
+		}
+
 		if isFile(proj.file) then
 			rmFile(proj.file)
 		end	

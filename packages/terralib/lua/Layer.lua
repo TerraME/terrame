@@ -244,7 +244,7 @@ Layer_ = {
 	-- There are several strategies for filling cells according to the geometry of the
 	-- input layer.
 	-- @arg data.select Name of an attribute from the input data. It is only required when
-	-- the selected operation needs a value associated to the geometry (average, sum, majority).
+	-- the selected operation needs a value associated to the geometry (average, sum, mode).
 	-- It can also be an integer value representing the band of the raster to be used.
 	-- If the raster has only one band then this value is optional.
 	-- @arg data.layer Name of an input layer belonging to the same Project. There are
@@ -253,23 +253,23 @@ Layer_ = {
 	-- Geometry & Using only geometry & Using attribute of objects with some overlap &
 	-- Using geometry and attribute \
 	-- Points & "count", "distance", "presence" & 
-	-- "average", "majority", "maximum", "minimum", "stdev", "sum" &
+	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
 	-- "value" \
 	-- Lines & "count", "distance", "length", "presence" &
-	-- "average", "majority", "maximum", "minimum", "stdev", "sum" &
-	-- "majority", "value" \
+	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
+	-- "mode", "value" \
 	-- Polygons & "area", "count", "distance", "presence" &
-	-- "average", "majority", "maximum", "minimum", "stdev", "sum" &
-	-- "average", "majority", "percentage", "value", "sum" \
+	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
+	-- "average", "mode", "coverage", "value", "sum" \
 	-- Raster & (none) &
-	-- "average", "majority", "maximum", "minimum", "percentage", "stdev", "sum" &
+	-- "average", "mode", "maximum", "minimum", "coverage", "stdev", "sum" &
 	-- (none) \
 	-- @arg data.operation The way to compute the attribute of each cell. See the
 	-- table below:
 	-- @tabular operation
 	-- Operation & Description & Mandatory arguments & Optional arguments \
 	-- "area" & Total overlay area between the cell and a layer of polygons. The created values
-	-- will range from zero to one, indicating a percentage of coverage. & attribute, layer & \
+	-- will range from zero to one, indicating its area of coverage. & attribute, layer & \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
@@ -283,7 +283,7 @@ Layer_ = {
 	-- "length" & Total length of overlay between the cell and a layer of lines. If there is
 	-- more than one line, it sums all lengths.
 	-- & attribute, layer & \
-	-- "majority" & More common qualitative value from the objects that have some intersection with
+	-- "mode" & More common qualitative value from the objects that have some intersection with
 	-- the cell, without taking into account their geometric properties. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select & 
 	-- default, dummy \
@@ -293,10 +293,10 @@ Layer_ = {
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
 	-- attribute, layer, select & default, dummy \
-	-- "percentage" & Percentages of each qualitative value covering the cell, using polygons or
+	-- "coverage" & Percentages of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, appending the value to
 	-- the attribute name. The sum of the created attribute values for a given cell will range
-	-- from zero to one, according to the percentage of coverage.
+	-- from zero to one, according to the coverage of coverage.
 	-- & attribute, layer, select & default, dummy \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
 	-- & attribute, layer & \
@@ -342,7 +342,7 @@ Layer_ = {
 	--
 	-- cl:fill{
 	--     attribute = "area2010_",
-	--     operation = "percentage",
+	--     operation = "coverage",
 	--     layer = "cover",
 	--     select = "cover2010"
 	-- }
@@ -385,7 +385,7 @@ Layer_ = {
 			-- length = function()
 				-- verifyUnnecessaryArguments(data, {"attribute", "name", "operation"})
 			-- end,
-			majority = function()
+			mode = function()
 				if repr == "geometry" then
 					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "name", "operation", "select", "output", "table"})
 					defaultTableValue(data, "area", false)
@@ -405,7 +405,7 @@ Layer_ = {
 			minimum = function()
 				validateGeomAndRasterData(data, repr)
 			end,
-			percentage = function()
+			coverage = function()
 				validateGeomAndRasterData(data, repr)
 			end,
 			presence = function()
@@ -441,6 +441,7 @@ metaTableLayer_ = {
 -- @arg data.project A file name with the TerraView project to be used, or a Project.
 -- @arg data.name A string with the layer name to be used.
 -- @arg data.source A string with the data source. See table below:
+-- @arg data.input TODO: verify.
 -- @tabular source
 -- Source & Description & Mandatory arguments & Optional arguments \
 -- "none" & Tries to open a Layer already stored in the Project & project, name & \

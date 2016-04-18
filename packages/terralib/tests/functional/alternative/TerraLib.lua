@@ -54,22 +54,10 @@ return {
 	addPgLayer = function(unitTest)
 		unitTest:assert(true)
 	end,
-	dropPgTable = function(unitTest)
-		unitTest:assert(true)
-	end,
-	dropPgDatabase = function(unitTest)
-		unitTest:assert(true)
-	end,	
 	copyLayer = function(unitTest)
 		unitTest:assert(true)
 	end,
 	addShpCellSpaceLayer = function(unitTest)
-		unitTest:assert(true)
-	end,
-	addPgCellSpaceLayer = function(unitTest)
-		unitTest:assert(true)
-	end,	
-	attributeFill = function(unitTest)
 		unitTest:assert(true)
 	end,
 	getDataSet = function(unitTest)

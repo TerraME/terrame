@@ -456,9 +456,9 @@ return {
 			select = "UCS_FATURA"
 		}
 		
-		local percentageLayerName = clName1.."_Percentage"
+		local coverageLayerName = clName1.."_Percentage"
 		
-		local shp8 = percentageLayerName..".shp"
+		local shp8 = coverageLayerName..".shp"
 		local filePath8 = testDir.."/"..shp8	
 		local fn8 = getFileName(filePath8)
 		fn8 = testDir.."/"..fn8	
@@ -471,10 +471,10 @@ return {
 		end	
 		
 		cl:fill{
-			operation = "percentage",
+			operation = "coverage",
 			name = localidades,
-			attribute = "percentage",
-			output = percentageLayerName,
+			attribute = "coverage",
+			output = coverageLayerName,
 			select = "LOCALIDADE"
 		}
 		
@@ -560,7 +560,7 @@ return {
 		end
 		
 		cl:fill{
-			operation = "majority",
+			operation = "mode",
 			name = localidades,
 			attribute = "high_inter",
 			output = intersecLayerName,
@@ -583,7 +583,7 @@ return {
 		end
 		
 		cl:fill{
-			operation = "majority",
+			operation = "mode",
 			name = localidades,
 			attribute = "high_occur",
 			output = occurrenceLayerName,
@@ -723,7 +723,7 @@ return {
 		-- end	
 		
 		-- cl:fill{
-			-- operation = "percentage",
+			-- operation = "coverage",
 			-- name = desmatamento,
 			-- attribute = "percent_0",
 			-- output = rpercentLayerName,
