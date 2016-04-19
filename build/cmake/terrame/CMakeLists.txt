@@ -205,7 +205,9 @@ if(QTLUA_FOUND)
 	message("QtLua found!")
 	message("library: ${QTLUA_LIBRARY}")
 	message("include: ${QTLUA_INCLUDE_DIR}")
-	set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${QTLUA_LIBRARY})
+    if(WIN32)
+        set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${QTLUA_LIBRARY})
+    endif()
 endif()
 
 find_package(QtLua-extras REQUIRED)
@@ -213,7 +215,9 @@ if(QTLUAEXTRAS_FOUND)
 	message("QtLua-extras found!")
 	message("library: ${QTLUAEXTRAS_LIBRARY}")
 	message("include: ${QTLUAEXTRAS_INCLUDE_DIR}")
-	set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${QTLUAEXTRAS_LIBRARY})
+    if(WIN32)
+        set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${QTLUAEXTRAS_LIBRARY})
+    endif()
 endif()
 
 #Set include directories location
@@ -323,6 +327,18 @@ if(APPLE)
             COMPONENT runtime
             PATTERN "cmake" EXCLUDE
             )
+
+    list(APPEND QTLUA_LIBS  ${TERRAME_DEPENDENCIES_DIR}/lib/libqtluae.0.1.dylib
+                            ${TERRAME_DEPENDENCIES_DIR}/lib/libqtluae.dylib
+                            ${TERRAME_DEPENDENCIES_DIR}/lib/libqtlua.dylib
+        )
+
+    install(FILES   ${QTLUA_LIBS}
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
+            COMPONENT runtime
+            )
+
+    install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E rename ${CMAKE_INSTALL_PREFIX}/${TERRAME_INSTALL_PREFIX}/lib/libqtluae.dylib ${CMAKE_INSTALL_PREFIX}/${TERRAME_INSTALL_PREFIX}/lib/qtluae.dylib)")
 
     install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
             DESTINATION ${TERRAME_INSTALL_PREFIX}/lib

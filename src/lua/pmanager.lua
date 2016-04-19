@@ -575,6 +575,8 @@ local function quitButtonClicked()
 end
 
 function _Gtme.packageManager()
+    _Gtme.loadLibraryPath()
+
 	require("qtluae")
 
 	dialog = qt.new_qobject(qt.meta.QDialog)
