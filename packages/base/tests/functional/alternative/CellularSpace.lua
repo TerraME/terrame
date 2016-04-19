@@ -224,7 +224,7 @@ return{
 		
 		local proj = terralib.Project{
 			file = projFile,
-			create = true,
+			clean = true,
 			author = "Avancini",
 			title = "CellSpace"
 		}

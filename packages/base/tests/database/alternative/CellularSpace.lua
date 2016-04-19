@@ -82,14 +82,15 @@ return{
 
 		local proj = terralib.Project {
 			file = projName,
-			create = true,
+			clean = true,
 			author = author,
 			title = title
 		}
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		terralib.Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
 
@@ -116,10 +117,11 @@ return{
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
 
-		proj:addCellularLayer {
+		terralib.Layer{
+			project = proj,
 			source = "postgis",
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 0.3,
 			user = user,
 			password = password,
@@ -182,7 +184,7 @@ return{
 		local error_func = function()
 			cs:loadNeighborhood{source = mfile}
 		end
-		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'mylayer'.")	
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: 'brazilstates.shp', GAL file layer: 'mylayer'.")	
 
 		local cs2 = CellularSpace{xdim = 10}
 
@@ -215,7 +217,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cells900x900'.")
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cabecadeboi900.shp'.")
 
 		mfile = filePath("cabecadeboi-neigh.gal", "base")
 
@@ -225,7 +227,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cells900x900'.")
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cabecadeboi900.shp'.")
 
 		mfile = filePath("cabecadeboi-neigh.gwt", "base")
 
@@ -235,7 +237,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cells900x900'.")		
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cabecadeboi900.shp'.")		
 	end,
 	save = function(unitTest)
 		-- ###################### PROJECT #############################
@@ -252,14 +254,15 @@ return{
 
 		local proj = terralib.Project {
 			file = projName,
-			create = true,
+			clean = true,
 			author = author,
 			title = title
 		}
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		terralib.Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
 
@@ -286,10 +289,11 @@ return{
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
 
-		proj:addCellularLayer {
+		terralib.Layer{
+			project = proj,
 			source = "postgis",
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 0.3,
 			user = user,
 			password = password,

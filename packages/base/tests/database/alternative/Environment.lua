@@ -24,7 +24,6 @@
 
 return{
 	loadNeighborhood = function(unitTest)
-		-- ###################### PROJECT #############################
 		local terralib = getPackage("terralib")
 
 		local projName = "environment_alt.tview"
@@ -36,16 +35,17 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = terralib.Project {
+		local proj = terralib.Project{
 			file = projName,
-			create = true,
+			clean = true,
 			author = author,
 			title = title
 		}
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		terralib.Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
 
@@ -72,10 +72,11 @@ return{
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
 
-		proj:addCellularLayer {
+		terralib.Layer{
+			project = proj,
 			source = "postgis",
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 0.3,
 			user = user,
 			password = password,
@@ -119,14 +120,18 @@ return{
 		end
 		unitTest:assertError(error_func, "CellularSpace with layer 'emas.shp' was not found in the Environment.")
 
-		local env = Environment{cs2, cs}
+		local cs = CellularSpace{
+			file = filePath("emas.shp")
+		}
+
+		local env = Environment{cs, cs2}
 
 		local error_func = function()
 			env:loadNeighborhood{
 				source = filePath("gpmAreaCellsPols.gpm", "base"),
 			}
 		end
-		unitTest:assertError(error_func, "CellularSpace with layer 'emas.shp' was not found in the Environment.")
+		unitTest:assertError(error_func, "CellularSpace with layer 'Limit_pol.shp' was not found in the Environment.")
 
 		local cs1 = CellularSpace{xdim = 10}
 		cs2 = CellularSpace{xdim = 10}

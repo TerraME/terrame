@@ -24,9 +24,9 @@
 
 return{
 	CellularSpace = function(unitTest)
-		local cs = CellularSpace{file = filePath("cabecadeboi.shp")}		
+		local cs = CellularSpace{file = filePath("cabecadeboi.shp")}
 
-		unitTest:assertEquals("cells90x90", cs.layer)
+		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
 		unitTest:assertEquals(10201, #cs.cells)
 
 		cs:createNeighborhood{name = "moore1"}
@@ -45,12 +45,12 @@ return{
 			forEachNeighbor(cell, "moore1", function(cell, neigh, weight)
 				countNeigh = countNeigh + 1
 				sumWeight = sumWeight + weight
-			end)						
+			end)
 
 			forEachNeighbor(cell, "moore2", function(cell, neigh, weight)
 				countNeigh = countNeigh + 1
 				sumWeight = sumWeight + weight
-			end)						
+			end)
 		end)
 
 		unitTest:assertEquals(160800, countNeigh)
@@ -76,9 +76,14 @@ return{
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(99, cell.y)
 		
+		-- in TerraLib 5 we have 
+		-- [11] (0, 10)
+		-- [12] (0, 100) -- this line was not here in TerraLib 4
+		-- [13] (0, 11)
+
 		cell = cs.cells[100]
 		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(99, cell.y)
+		unitTest:assertEquals(98, cell.y)
 
 		cell = cs:get(0, 100)
 		unitTest:assertEquals(0, cell.x)
@@ -86,7 +91,7 @@ return{
 		
 		cell = cs.cells[101]
 		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(100, cell.y)
+		unitTest:assertEquals(99, cell.y)
 
 		--[[
 		-- TODO: test the lines below using postgis
@@ -99,7 +104,7 @@ return{
 			database = mdatabase,
 			theme = "cells90x90"
 		}
-		unitTest:assertEquals(mdbType, cs.dbType)
+		unitTest:assertEquals(mdbType, cs.dbType) -- SKIP
 
 		-- no port
 		cs = CellularSpace{
@@ -110,7 +115,7 @@ return{
 			theme = "cells90x90",
 			autoload = false
 		}
-		unitTest:assertEquals(3306, cs.port)
+		unitTest:assertEquals(3306, cs.port) -- SKIP
 
 		-- no user
 		cs = CellularSpace{
@@ -121,7 +126,7 @@ return{
 			theme = "cells90x90",
 			autoload = false
 		}
-		unitTest:assertEquals("root", cs.user)
+		unitTest:assertEquals("root", cs.user) -- SKIP
 
 		-- with select
 		cs = CellularSpace{
@@ -136,14 +141,14 @@ return{
 		}
 
 		forEachCell(cs, function(cell) 
-			unitTest:assertType(cell.objectId_, "string")
-			unitTest:assertType(cell.x, "number")
-			unitTest:assertType(cell.y, "number")
-			unitTest:assertNotNil(cell.height_)
-			unitTest:assertNotNil(cell.soilWater)
-			unitTest:assertNil(cell.umatributoquenaofoiselecionado)
+			unitTest:assertType(cell.objectId_, "string") -- SKIP
+			unitTest:assertType(cell.x, "number") -- SKIP
+			unitTest:assertType(cell.y, "number") -- SKIP
+			unitTest:assertNotNil(cell.height_) -- SKIP
+			unitTest:assertNotNil(cell.soilWater) -- SKIP
+			unitTest:assertNil(cell.umatributoquenaofoiselecionado) -- SKIP
 		end)
-		unitTest:assertEquals(10201, #cs)
+		unitTest:assertEquals(10201, #cs) -- SKIP
 
 		-- with where
 		cs = CellularSpace{
@@ -159,19 +164,19 @@ return{
 		}
 
 		forEachCell(cs, function(cell) 
-			unitTest:assertType(cell.objectId_, "string")
-			unitTest:assertType(cell.x, "number")
-			unitTest:assertType(cell.y, "number")
-			unitTest:assert(cell.height_ > 100)		
-			unitTest:assertNotNil(cell.soilWater)
+			unitTest:assertType(cell.objectId_, "string") -- SKIP
+			unitTest:assertType(cell.x, "number") -- SKIP
+			unitTest:assertType(cell.y, "number") -- SKIP
+			unitTest:assert(cell.height_ > 100)		 -- SKIP
+			unitTest:assertNotNil(cell.soilWater) -- SKIP
 		end)
 
-		unitTest:assertEquals(5673, #cs)
+		unitTest:assertEquals(5673, #cs) -- SKIP
 		--]]
 
 		-- csv file
-		cs = CellularSpace{database = file("simple-cs.csv", "base"), dbType = "csv", sep = ";"}
-		cs = CellularSpace{database = file("simple-cs.csv", "base"), sep = ";"}
+		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), dbType = "csv", sep = ";"}
+		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), sep = ";"}
 
 		unitTest:assertType(cs, "CellularSpace")
 		unitTest:assertEquals(2500, #cs)
@@ -181,38 +186,31 @@ return{
 		end)
 
 		-- shp file
-		cs = CellularSpace{database = file("brazilstates.shp", "base")}
+		cs = CellularSpace{file = filePath("brazilstates.shp", "base")}
 
 		unitTest:assertNotNil(cs.cells[1])
 		unitTest:assertEquals(#cs.cells, 27)
 		unitTest:assertType(cs.cells[1], "Cell")
 
-		unitTest:assertEquals(cs.minRow, 0)
-		unitTest:assertEquals(cs.maxRow, 5256115)
+		unitTest:assertEquals(cs.yMin, 0)
+		unitTest:assertEquals(cs.yMax, 0)
 
-		unitTest:assertEquals(cs.minCol, 0)
-		unitTest:assertEquals(cs.maxCol, 5380443)
+		unitTest:assertEquals(cs.xMin, 0)
+		unitTest:assertEquals(cs.yMax, 0)
 
 		local valuesDefault = {
-			  500000,  2300000, 1300000,  300000,  2300000,
-			 1900000,  9600000,  300000, 4800000,  8700000,
-			 1000000,  1700000, 4300000, 5400000, 33700000,
-			16500000, 13300000, 2700000, 5200000,  2800000,
-			 6700000, 12600000, 7400000, 1600000,  3300000,
-			 2700000,  2600000
+			  2300000,  12600000, 2700000,  6700000,  5200000,
+			 16500000,  1900000,  5400000, 7400000,  3300000,
+			 8700000,  13300000, 2600000, 1300000, 300000,
+			9600000, 4800000, 1600000, 33700000,  1000000,
+			 2700000, 2800000, 300000, 500000,  1700000,
+			 4300000,  2300000
 		}
 
 		for i = 1, 27 do
 			unitTest:assertEquals(valuesDefault[i], cs.cells[i].POPUL)
 		end
 
-		cs = CellularSpace{database = file("brazilstates.shp", "base")}
-
-		unitTest:assertNotNil(cs.cells[1])
-		unitTest:assertEquals(#cs.cells, 27)
-		unitTest:assertType(cs.cells[1], "Cell")
-
-		-- ###################### PROJECT #############################
 		local terralib = getPackage("terralib")
 		
 		local projName = "cellspace_basic.tview"
@@ -224,16 +222,17 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = terralib.Project {
+		local proj = terralib.Project{
 			file = projName,
-			create = true,
+			clean = true,
 			author = author,
 			title = title
 		}
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		terralib.Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
 
@@ -261,10 +260,11 @@ return{
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
 
-		proj:addCellularLayer {
+		terralib.Layer{
+			project = proj,
 			source = "postgis",
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 0.3,
 			user = user,
 			password = password,
@@ -272,7 +272,6 @@ return{
 			table = tName1
 		}
 
-		-- ###################### 1 #############################
 		local cs = CellularSpace{
 			project = projName,
 			layer = clName1,
@@ -294,17 +293,14 @@ return{
 			unitTest:assertNil(cell.OGR_GEOMETRY)
 		end)
 		
-		-- ###################### 2 #############################
 		unitTest:assertEquals(303, #cs.cells)
 		
-		-- ###################### CLEANING #############################
 		if isFile(projName) then
 			rmFile(projName)
 		end
 
 		pgData.table = string.lower(tName1)
 		tl:dropPgTable(pgData)
-		-- ###################### PROJECT END #############################
 		
 		-- map file
 		local cs = CellularSpace{
@@ -325,8 +321,6 @@ return{
 		end)	
 	end,
 	createNeighborhood = function(unitTest)
-		debug.sethook()
-
 		-- neighborhood between two cellular spaces
 		local cs = CellularSpace{
 			file = filePath("cabecadeboi.shp", "base"),
@@ -421,8 +415,6 @@ return{
 		--]]
 	end,
 	loadNeighborhood = function(unitTest)
-		debug.sethook()
-
 		local cs = CellularSpace{
 			file = filePath("cabecadeboi.shp", "base")
 		}
@@ -467,8 +459,8 @@ return{
 		cs1:loadNeighborhood{source = filePath("cabecadeboi-neigh.gpm", "base")}
 
 		local sizes = {}
-		local minSize  = math.huge
-		local maxSize  = -math.huge
+		local minSize = math.huge
+		local maxSize = -math.huge
 		local minWeight = math.huge
 		local maxWeight = -math.huge
 		local sumWeight = 0
@@ -875,7 +867,6 @@ return{
 		unitTest:assertEquals(count, 7) 	
 	end,
 	save = function(unitTest)
-		-- ###################### PROJECT #############################
 		local terralib = getPackage("terralib")
 		
 		local projName = "cellspace_save_basic.tview"
@@ -889,14 +880,15 @@ return{
 
 		local proj = terralib.Project {
 			file = projName,
-			create = true,
+			clean = true,
 			author = author,
 			title = title
 		}
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		terralib.Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
 
@@ -924,10 +916,11 @@ return{
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
 
-		proj:addCellularLayer {
+		local layer = terralib.Layer{
+			project = proj,
 			source = "postgis",
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 0.3,
 			user = user,
 			password = password,
@@ -935,7 +928,6 @@ return{
 			table = tName1
 		}
 
-		-- ###################### 1 #############################
 		local cs = CellularSpace{
 			project = proj,
 			layer = clName1
@@ -949,30 +941,36 @@ return{
 
 		cs:save(cellSpaceLayerNameT0, "t0")
 
-		local cellSpaceLayerInfo = proj:infoLayer(cellSpaceLayerNameT0)
-		unitTest:assertEquals(cellSpaceLayerInfo.source, "postgis")
-		unitTest:assertEquals(cellSpaceLayerInfo.host, host)
-		unitTest:assertEquals(cellSpaceLayerInfo.port, port)
-		unitTest:assertEquals(cellSpaceLayerInfo.user, user)
-		unitTest:assertEquals(cellSpaceLayerInfo.password, password)
-		unitTest:assertEquals(cellSpaceLayerInfo.database, database)
-		unitTest:assertEquals(cellSpaceLayerInfo.table, cellSpaceLayerNameT0)	-- TODO: VERIFY LOWER CASE IF CHANGED
+		layer = terralib.Layer{
+			project = proj,
+			name = cellSpaceLayerNameT0
+		}
 
-		-- ###################### 2 #############################
+		unitTest:assertEquals(layer.source, "postgis")
+		unitTest:assertEquals(layer.host, host)
+		unitTest:assertEquals(layer.port, port)
+		unitTest:assertEquals(layer.user, user)
+		unitTest:assertEquals(layer.password, password)
+		unitTest:assertEquals(layer.database, database)
+		unitTest:assertEquals(layer.table, cellSpaceLayerNameT0)	-- TODO: VERIFY LOWER CASE IF CHANGED
+
 		local cellSpaceLayerName = clName1.."_CellSpace"
 
 		cs:save(cellSpaceLayerName)
 
-		local cellSpaceLayerInfo = proj:infoLayer(cellSpaceLayerName)
-		unitTest:assertEquals(cellSpaceLayerInfo.source, "postgis")
-		unitTest:assertEquals(cellSpaceLayerInfo.host, host)
-		unitTest:assertEquals(cellSpaceLayerInfo.port, port)
-		unitTest:assertEquals(cellSpaceLayerInfo.user, user)
-		unitTest:assertEquals(cellSpaceLayerInfo.password, password)
-		unitTest:assertEquals(cellSpaceLayerInfo.database, database)
-		unitTest:assertEquals(cellSpaceLayerInfo.table, cellSpaceLayerName)	-- TODO: VERIFY LOWER CASE IF CHANGED
+		local layer = terralib.Layer{
+			project = proj,
+			name = cellSpaceLayerName
+		}
 
-		-- ###################### 3 #############################
+		unitTest:assertEquals(layer.source, "postgis")
+		unitTest:assertEquals(layer.host, host)
+		unitTest:assertEquals(layer.port, port)
+		unitTest:assertEquals(layer.user, user)
+		unitTest:assertEquals(layer.password, password)
+		unitTest:assertEquals(layer.database, database)
+		unitTest:assertEquals(layer.table, cellSpaceLayerName)	-- TODO: VERIFY LOWER CASE IF CHANGED
+
 		local cs = CellularSpace{
 			project = proj,
 			layer = cellSpaceLayerNameT0
@@ -994,7 +992,6 @@ return{
 			unitTest:assertEquals(cell.t0, 2000)
 		end)
 
-		-- ###################### 4 #############################
 		-- DOUBLE PRECISION TEST
 		local num = 0.123456789012345
 
@@ -1013,7 +1010,6 @@ return{
 			unitTest:assertEquals(cell.number, num)
 		end)
 
-		-- ###################### 5 #############################
 		local cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameT0
@@ -1045,7 +1041,6 @@ return{
 			unitTest:assertNotNil(cell.geom)
 		end)
 		
-		-- ###################### CLEANING #############################
 		if isFile(projName) then
 			rmFile(projName)
 		end
@@ -1062,7 +1057,6 @@ return{
 		tl:dropPgTable(pgData)
 
 		tl:finalize()
-		-- ###################### PROJECT END #############################
 	end,
 	synchronize = function(unitTest)
 		local terralib = getPackage("terralib")
@@ -1078,14 +1072,15 @@ return{
 
 		local proj = terralib.Project {
 			file = projName,
-			create = true,
+			clean = true,
 			author = author,
 			title = title
 		}
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		terralib.Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
 

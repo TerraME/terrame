@@ -75,28 +75,24 @@ return{
 		unitTest:assert(not cs:deforest())
 		unitTest:assertEquals(cs:defor(), 150)
 		
-		-- ##### PROJECT ########################################
 		local terralib = getPackage("terralib")
 		
 		local projName = "cellspace.tview"
 
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = terralib.Project {
+		local proj = terralib.Project{
 			file = projName,
-			create = true,
+			clean = true,
 			author = author,
 			title = title
 		}		
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		local sampa = terralib.Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}		
 		
@@ -110,19 +106,19 @@ return{
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end			
 		
 		local clName1 = "Sampa_Cells"
-		proj:addCellularLayer {
+		local layer = terralib.Layer{
+			project = proj,
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 1,
 			file = filePath1
 		}
 		
-		-- ###################### 1 #############################
 		local cs = CellularSpace{
 			project = projName,
 			layer = clName1
@@ -132,16 +128,13 @@ return{
 		unitTest:assertEquals(clName1, cs.layer)
 		
 		local csProj = cs.project
-		local csProjInfo = csProj:info()
 		
-		unitTest:assertEquals(csProjInfo.title, title)
-		unitTest:assertEquals(csProjInfo.author, author)
+		unitTest:assertEquals(proj.title, title)
+		unitTest:assertEquals(proj.author, author)
 		
-		local csLayerInfo = csProj:infoLayer(clName1)
-		unitTest:assertEquals(csLayerInfo.source, "shp")
-		unitTest:assertEquals(csLayerInfo.file, filePath1)
+		unitTest:assertEquals(layer.source, "shp")
+		unitTest:assertEquals(layer.file, filePath1)
 		
-		-- ###################### 2 #############################
 		local cs = CellularSpace{
 			source = "shp",
 			file = filePath1
@@ -154,7 +147,6 @@ return{
 			unitTest:assertNotNil(cell.y)
 		end)
 
-		-- ###################### 3 #############################
 		local cs = CellularSpace{
 			project = projName,
 			layer = clName1,
@@ -176,15 +168,14 @@ return{
 			unitTest:assertNil(cell.OGR_GEOMETRY)
 		end)		
 		
-		-- ###################### END #############################
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end			
 		
@@ -1195,59 +1186,55 @@ yMin    number [0]
 		
 		local projName = "cellspace_save_basic.tview"
 
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
-		-- ###################### 1 #############################
-		local proj = terralib.Project {
+		local proj = terralib.Project{
 			file = projName,
-			create = true,
+			clean = true,
 			author = "Avancini",
 			title = "Setores"
-		}		
+		}
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		terralib.Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}	
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
+		local filePath1 = testDir.."/"..shp1
 		local fn1 = terralib.getFileName(filePath1)
-		fn1 = testDir.."/"..fn1	
+		fn1 = testDir.."/"..fn1
 
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
-		end	
-		
+		end
+
 		local clName1 = "Sampa_Cells"
-		proj:addCellularLayer {
+		terralib.Layer{
+			project = proj,
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 0.7,
 			file = filePath1
-		}	
-		
-		-- ###################### 1 #############################
+		}
+
 		local cs = CellularSpace{
 			project = proj,
 			layer = clName1
 		}
-		
+
 		forEachCell(cs, function(cell)
 			cell.t0 = 1000
-		end)		
-		
+		end)
+
 		local cellSpaceLayerNameT0 = clName1.."_CellSpace_T0"
-		
+
 		local shp2 = cellSpaceLayerNameT0..".shp"
 		local filePath2 = testDir.."/"..shp2	
 		local fn2 = terralib.getFileName(filePath2)
@@ -1256,17 +1243,20 @@ yMin    number [0]
 		for i = 1, #exts do
 			local f = fn2..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end		
 		
 		cs:save(cellSpaceLayerNameT0, "t0")
 
-		local cellSpaceLayerInfo = proj:infoLayer(cellSpaceLayerNameT0)
-		unitTest:assertEquals(cellSpaceLayerInfo.source, "shp")
-		unitTest:assertEquals(cellSpaceLayerInfo.file, filePath2)
+		local layer = terralib.Layer{
+			project = proj,
+			name = cellSpaceLayerNameT0
+		}
+
+		unitTest:assertEquals(layer.source, "shp")
+		unitTest:assertEquals(layer.file, filePath2)
 		
-		-- ###################### 2 #############################
 		-- issue #967
 		-- local cs = CellularSpace{
 			-- project = proj,
@@ -1289,7 +1279,6 @@ yMin    number [0]
 			-- unitTest:assertEquals(cell.t0, 2000) -- SKIP
 		-- end)
 		
-		-- ###################### 3 #############################
 		local cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameT0
@@ -1305,7 +1294,7 @@ yMin    number [0]
 		for i = 1, #exts do
 			local f = fn3..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end			
 		
@@ -1331,7 +1320,7 @@ yMin    number [0]
 		for i = 1, #exts do
 			local f = fn4..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end			
 		
@@ -1347,30 +1336,29 @@ yMin    number [0]
 			unitTest:assertNotNil(cell.geom)
 		end)		
 		
-		-- ###################### END #############################
 		local tl = terralib.TerraLib{}
 		tl:finalize()			
 		
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end		
+			rmFile(projName)
+		end
 
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 			local f = fn2..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 			local f = fn3..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end		
 			local f = fn4..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end				
 		end
 	end,

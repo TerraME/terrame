@@ -470,6 +470,8 @@ CellularSpace_ = {
 		self.xMin = math.min(self.xMin, cell.x)
 		self.xMax = math.max(self.xMax, cell.x)
 		self.yMax = math.max(self.yMax, cell.y)
+		self.index_id_ = nil
+		self.index_xy_ = nil
 	end,
 	--- Create a Neighborhood for each Cell of the CellularSpace.
 	-- @arg data.inmemory If true (default), a Neighborhood will be built and stored for

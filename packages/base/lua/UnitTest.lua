@@ -84,7 +84,7 @@ UnitTest_ = {
 				local msg = "Values should be equal, but got '"..v1.."' and '"..v2.."'."
 
 				if tol > 0 then
-					msg = msg.."\nThe maximum tolerance is "..tol..", but got "..dist.."."
+					msg = msg.."\nThe maximum tolerance is "..tol..", but got "..dist.."." -- SKIP
 				end
 
 				self:printError(msg)
@@ -98,7 +98,7 @@ UnitTest_ = {
 				local msg = "Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'."
 
 				if tol > 0 then
-					msg = msg.."\nThe maximum tolerance is "..tol..", but got "..dist.."."
+					msg = msg.."\nThe maximum tolerance is "..tol..", but got "..dist.."." -- SKIP
 				end
 
 				self:printError(msg)

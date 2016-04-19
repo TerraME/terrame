@@ -140,28 +140,28 @@ return{
 		world:notify()
 		world:notify()
 		
-		-- ##### PROJECT ########################################
 		local terralib = getPackage("terralib")
 		
 		local projName = "cellspace_basic_observer.tview"
 
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
 		
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = terralib.Project {
+		local proj = terralib.Project{
 			file = projName,
-			create = true,
+			clean = true,
 			author = author,
 			title = title
 		}		
 
 		local layerName1 = "Sampa"
-		proj:addLayer {
-			layer = layerName1,
+		terralib.Layer{
+			project = proj,
+			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}		
 		
@@ -175,14 +175,15 @@ return{
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end			
 		
 		local clName1 = "Sampa_Cells"
-		proj:addCellularLayer {
+		terralib.Layer{
+			project = proj,
 			input = layerName1,
-			layer = clName1,
+			name = clName1,
 			resolution = 1,
 			file = filePath1
 		}
@@ -227,18 +228,13 @@ return{
 		cs:notify()
     
 		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.059)
-
 		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
-
-		-- ###################### END #############################
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
+		unitTest:assertFile(projName)
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if isFile(f) then
-				os.execute("rm -f "..f)
+				rmFile(f)
 			end
 		end			
 		
