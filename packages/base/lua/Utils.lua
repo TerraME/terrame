@@ -656,7 +656,7 @@ end
 function forEachFile(directory, f)
 	if type(directory) == "string" then
 		if not isDir(directory) then
-			customError("Folder \""..directory.."\" is not a valid directory.") -- SKIP
+			customError("Directory '"..directory.."' is not valid or does not exist.")
 		end
 
 		if not pcall(function() directory = dir(directory) end) then

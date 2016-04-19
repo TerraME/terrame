@@ -186,19 +186,21 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
 
-		if not _Gtme.isWindowsOS() then
-			error_func = function()
-				forEachFile(filePath("", "base"))
-			end
-			unitTest:assertError(error_func, mandatoryArgumentMsg(2)) -- SKIP
-
-			error_func = function()
-				forEachFile(filePath("", "base"), 2)
-			end
-			unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2)) -- SKIP
-		else
-			unitTest:assert(true) -- SKIP
+		error_func = function()
+			forEachFile(filePath("", "base"))
 		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
+
+		error_func = function()
+			forEachFile("abcdef12345", function() end)
+		end
+		unitTest:assertError(error_func, "Directory 'abcdef12345' is not valid or does not exist.")
+
+
+		error_func = function()
+			forEachFile(filePath("", "base"), 2)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2))
 	end,
 	forEachNeighbor = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
