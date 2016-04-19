@@ -369,32 +369,15 @@ Environment_ = {
 	-- @arg data.bidirect A boolean value. If true then, for each relation from Cell a
 	-- to Cell b loaded from the file, it will also create
 	-- a relation from b to a. The default value is false.
-	-- @usage config = getConfig()
-	-- mhost = config.host
-	-- muser = config.user
-	-- mpassword = config.password
-	-- mport = config.port
-	--
-	--
-	-- cs = CellularSpace{
-	--     host = mhost,
-	--     user = muser,
-	--     password = mpassword,
-	--     port = mport,
-	--     database = "emas",
-	--     theme = "cells1000x1000"
+	-- @usage river = CellularSpace{
+	--     file = filePath("River_lin.shp")
 	-- }
 	--
-	-- cs2 = CellularSpace{
-	--     host = mhost,
-	--     user = muser,
-	--     password = mpassword,
-	--     port = mport,
-	--     database = "emas",
-	--     theme = "River"
+	-- emas = CellularSpace{
+	--     file = filePath("emas.shp")
 	-- }
 	--
-	-- env = Environment{cs, cs2}
+	-- env = Environment{emas, river}
 	-- env:loadNeighborhood{source = filePath("gpmlinesDbEmas.gpm", "base")}
 	-- @see Package:filePath
 	loadNeighborhood = function(self, data)

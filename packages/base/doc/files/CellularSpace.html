@@ -799,12 +799,12 @@ A multivalued set of <a href=../files/Cell.html>Cells</a>. It can be retrieved f
     
   
     <li>
-	  <strong>database</strong>: Name of the database or the location of a file. See <a href=../files/Package.html#filePath>filePath()</a> for loading CellularSpaces from packages.
+	  <strong>file</strong>: A string with a file name (if it is stored in the current directory), or the complete path to a given file.
     </li> 
     
   
     <li>
-	  <strong>host</strong>: String with the host where the database is stored. The default value is "localhost".
+	  <strong>geometry</strong>: A boolean value indicating whether the geometry should also be loaded. The default value is false. If true, each cell will have an attribute called geom with a TerraLib object.
     </li> 
     
   
@@ -889,22 +889,12 @@ A multivalued set of <a href=../files/Cell.html>Cells</a>. It can be retrieved f
     
   
     <li>
-	  <strong>layer</strong>: A string with the name of the database layer. This argument is necessary only when there are two or more themes with the same name in the database. The default value is "".
+	  <strong>layer</strong>: A string with the name of the layer stored in a TerraLib project.
     </li> 
     
   
     <li>
-	  <strong>password</strong>: A string with the password. The default value is "".
-    </li> 
-    
-  
-    <li>
-	  <strong>port</strong>: Number with the port of the connection. The default value is the standard port of the DBMS. For example, MySQL uses 3306 as standard port.
-    </li> 
-    
-  
-    <li>
-	  <strong>select</strong>: A table containing the names of the attributes to be retrieved (as default it will read all attributes). When retrieving a single attribute, you can use select = "attribute" instead of select = {"attribute"}. It is possible to rename attributes using "as", for example, select = {"lc as landcover"} reads lc from the database but replaces the name to landcover in the Cells. Attributes that contain "." in their names (for example, when the theme is composed by more than one table) will be read with "_" replacing "." in order to follow Lua syntax to manipulate data.
+	  <strong>project</strong>: A string with the name of the TerraLib project to be used.
     </li> 
     
   
@@ -914,7 +904,7 @@ A multivalued set of <a href=../files/Cell.html>Cells</a>. It can be retrieved f
     
   
     <li>
-	  <strong>source</strong>: A string with the name of the data source. It tries to infer the data source according to the extension of the argument database. When it does not have an extension or when the extension is not recognized it will read data from a MySQL database. TerraME always converts this string to lower case.
+	  <strong>source</strong>: A string with the name of the data source. It tries to infer the data source according to the arguments passed to the function.
     </li> 
     
       </span>
@@ -944,29 +934,6 @@ A multivalued set of <a href=../files/Cell.html>Cells</a>. It can be retrieved f
             <th>
             Optional arguments
             </th>
-          
-        
-        <tr>
-        
-          
-            <td>
-            "mdb"
-            </td>
-          
-          
-            <td>
-            Load from a Microsoft Access database (.mdb)  file.
-            </td>
-          
-          
-            <td>
-            database, theme
-            </td>
-          
-          
-            <td>
-            layer, select, where, ...
-            </td>
           
         
         <tr>
@@ -1006,12 +973,12 @@ A multivalued set of <a href=../files/Cell.html>Cells</a>. It can be retrieved f
           
           
             <td>
-            database
+            file
             </td>
           
           
             <td>
-            sep, ...
+            geometry, sep, source, ...
             </td>
           
         
@@ -1019,22 +986,22 @@ A multivalued set of <a href=../files/Cell.html>Cells</a>. It can be retrieved f
         
           
             <td>
-            "mysql"
+            "proj"
             </td>
           
           
             <td>
-            Load from a TerraLib database stored in a MySQL database.
+            Load from a layer within a TerraLib project. See the documentation of package terralib for more information.
             </td>
           
           
             <td>
-            database, theme
+            layer, project
             </td>
           
           
             <td>
-            host, layer, password, port, select, user, where, ...
+            geometry, source, ...
             </td>
           
         
@@ -1047,17 +1014,17 @@ A multivalued set of <a href=../files/Cell.html>Cells</a>. It can be retrieved f
           
           
             <td>
-            Load data from a shapefile. It requires three files with the same name and different extensions: .shp, .shx, and .dbf. The argument database must contain the file with extension .shp.
+            Load data from a shapefile. It requires three files with the same name and different extensions: .shp, .shx, and .dbf. The argument file must contain the extension .shp.
             </td>
           
           
             <td>
-            database
+            file
             </td>
           
           
             <td>
-            ...
+            geometry, source, ...
             </td>
           
         
@@ -1080,28 +1047,13 @@ A multivalued set of <a href=../files/Cell.html>Cells</a>. It can be retrieved f
           
           
             <td>
-            ydim, ...
+            geometry, ydim, ...
             </td>
           
         
         </tr>    
       </table>
       <span class="arg">
-    
-  
-    <li>
-	  <strong>theme</strong>: A string with the name of the theme to be loaded.
-    </li> 
-    
-  
-    <li>
-	  <strong>user</strong>: String with the username. The default value is "".
-    </li> 
-    
-  
-    <li>
-	  <strong>where</strong>: An SQL restriction on the properties of the Cells (as default it applies no restriction). Only the Cells that reflect the established criteria will be loaded. Note that SQL uses the operator "=" to compare values, instead of "==". This argument can only be used when reading data from a database.
-    </li> 
     
   
     <li>
@@ -1170,19 +1122,8 @@ Some attributes of CellularSpace have internal semantics. They can be used as <b
     <span class="id">ydim</span> = <span class="number">25</span>
 }
 
-<span class="id">config</span> = <span class="id">getConfig</span>()
-<span class="id">mhost</span> = <span class="id">config</span>.<span class="id">host</span>
-<span class="id">muser</span> = <span class="id">config</span>.<span class="id">user</span>
-<span class="id">mpassword</span> = <span class="id">config</span>.<span class="id">password</span>
-<span class="id">mport</span> = <span class="id">config</span>.<span class="id">port</span>
-
-<span class="id">cs2</span> = <span class="function">CellularSpace</span>{
-    <span class="id">host</span> = <span class="id">mhost</span>,
-    <span class="id">user</span> = <span class="id">muser</span>,
-    <span class="id">password</span> = <span class="id">mpassword</span>,
-    <span class="id">port</span> = <span class="id">mport</span>,
-    <span class="id">database</span> = <span class="string">"cabecadeboi"</span>,
-    <span class="id">theme</span> = <span class="string">"cells900x900"</span>
+<span class="id">states</span> = <span class="function">CellularSpace</span>{
+    <span class="id">file</span> = <span class="id">filePath</span>(<span class="string">"brazilstates.shp"</span>, <span class="string">"base"</span>)
 }</code></pre>
 
 
@@ -2143,19 +2084,8 @@ Load a <a href=../files/Neighborhood.html>Neighborhood</a> stored in an external
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">config</span> = <span class="id">getConfig</span>() 
-<span class="id">mhost</span> = <span class="id">config</span>.<span class="id">host</span>
-<span class="id">muser</span> = <span class="id">config</span>.<span class="id">user</span>
-<span class="id">mpassword</span> = <span class="id">config</span>.<span class="id">password</span>
-<span class="id">mport</span> = <span class="id">config</span>.<span class="id">port</span>
-
-<span class="id">cs</span> = <span class="function">CellularSpace</span>{
-    <span class="id">host</span> = <span class="id">mhost</span>,
-    <span class="id">user</span> = <span class="id">muser</span>,
-    <span class="id">password</span> = <span class="id">mpassword</span>,
-    <span class="id">port</span> = <span class="id">mport</span>,
-    <span class="id">database</span> = <span class="string">"cabecadeboi"</span>,
-    <span class="id">theme</span> = <span class="string">"cells900x900"</span>
+<pre class="example"><code><span class="id">cs</span> = <span class="function">CellularSpace</span>{
+    <span class="id">file</span> = <span class="id">filePath</span>(<span class="string">"cabecadeboi900.shp"</span>, <span class="string">"base"</span>)	
 }
 
 <span class="id">cs</span>:<span class="function">loadNeighborhood</span>{<span class="id">source</span> = <span class="id">filePath</span>(<span class="string">"cabecadeboi-neigh.gpm"</span>, <span class="string">"base"</span>)}</code></pre>
@@ -2288,22 +2218,12 @@ Save the attributes of a CellularSpace into the same database it was loaded from
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: Name of the TerraLib layer to store the saved attributes.
     </li> 
     
   
     <li>
 	  <strong>#2</strong>: A vector with the names of the attributes to be saved. When saving a single attribute, you can use attrNames = "attribute" instead of attrNames = {"attribute"}.
-    </li> 
-    
-  
-    <li>
-	  <strong>#3</strong>: A number indicating a temporal value to be stored in the database, which can be different from the simulation time.
-    </li> 
-    
-  
-    <li>
-	  <strong>#4</strong>: Name of the table to store the attributes of the <a href=../files/Cell.html>Cells</a>.
     </li> 
     
   

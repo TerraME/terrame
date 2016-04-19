@@ -53,7 +53,6 @@ VisualTable_ = {
 	end,
 	--- Update the VisualTable with the latest values of its target. It is usually recommended
     -- to use the VisualTable as action of an Event instead of calling this function explicitly.
-	-- @arg modelTime An optional argument that can be a number with the current time or an Event.
 	-- @usage cell = Cell{
 	--     temperature = 20,
 	--     humidity = 0.4

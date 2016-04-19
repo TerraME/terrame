@@ -1011,7 +1011,7 @@ An Event represents a time instant when the simulation engine must execute some 
     
   
     <li>
-	  <strong>start</strong>: A number representing the time instant when the Event will occur for the first time. The default value is 1. Whenever using types that use graphics (Chart, Map, Clock, etc.) as an action of the Event, start will be automatically reduced by the period. It guarantees that the object will draw the state of the model in the beginning of the simulation.
+	  <strong>start</strong>: A number representing the time instant when the Event will occur for the first time. The default value is one, except when using graphics (Chart, Map, Clock, etc.) as action. In this case the default value is zero, plotting the initial state of the simulation.
     </li> 
     
   

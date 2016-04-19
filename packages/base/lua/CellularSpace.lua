@@ -821,20 +821,8 @@ CellularSpace_ = {
 	-- "*.gpm" & Load a Neighborhood from a GPM (generalized proximity matrix) file. \
 	-- Any other & Load a Neighborhood from table stored in the same database of the 
 	-- CellularSpace. \
-	-- @usage -- DONTRUN
-	-- config = getConfig() 
-	-- mhost = config.host
-	-- muser = config.user
-	-- mpassword = config.password
-	-- mport = config.port
-	--
-	-- cs = CellularSpace{
-	--     host = mhost,
-	--     user = muser,
-	--     password = mpassword,
-	--     port = mport,
-	--     database = "cabecadeboi",
-	--     theme = "cells900x900"
+	-- @usage cs = CellularSpace{
+	--     file = filePath("cabecadeboi900.shp", "base")	
 	-- }
 	--
 	-- cs:loadNeighborhood{source = filePath("cabecadeboi-neigh.gpm", "base")}
@@ -925,9 +913,7 @@ CellularSpace_ = {
 		return self.cells[Random():integer(1, #self)]
 	end,
 	--- Save the attributes of a CellularSpace into the same database it was loaded from.
-	-- @arg time A number indicating a temporal value to be stored in the database, 
-	-- which can be different from the simulation time.
-	-- @arg outputTableName Name of the table to store the attributes of the Cells.
+	-- @arg newLayerName Name of the TerraLib layer to store the saved attributes.
 	-- @arg attrNames A vector with the names of the attributes to be saved.
 	-- When saving a single attribute, you can use
 	-- attrNames = "attribute" instead of attrNames = {"attribute"}.
@@ -1161,33 +1147,9 @@ metaTableCellularSpace_ = {
 -- represents the upper left location.
 -- See the table below with the description and the arguments of each data source.
 -- Calling Utils:forEachCell() traverses CellularSpaces.
--- @arg data.database Name of the database or the location of a
--- file. See Package:filePath() for loading CellularSpaces from packages.
--- @arg data.theme A string with the name of the theme to be loaded.
--- @arg data.source A string with the name of the data source. It tries to infer the data source
--- according to the extension of the argument database. When it does not have an extension or
--- when the extension is not recognized it will read data from a MySQL database.
--- TerraME always converts this string to lower case.
--- @arg data.host String with the host where the database is stored.
--- The default value is "localhost".
--- @arg data.port Number with the port of the connection. The default value is the standard port
--- of the DBMS. For example, MySQL uses 3306 as standard port.
--- @arg data.user String with the username. The default value is "".
 -- @arg data.sep A string with the file separator. The default value is ",".
--- @arg data.password A string with the password. The default value is "".
--- @arg data.layer A string with the name of the database layer. This argument is necessary only
--- when there are two or more themes with the same name in the database. The default value is "". 
--- @arg data.select A table containing the names of the attributes to be retrieved (as default it
--- will read all attributes). When retrieving a single attribute, you can use select = "attribute"
--- instead of select = {"attribute"}. It is possible to rename attributes using "as", for example,
--- select = {"lc as landcover"} reads lc from the database but replaces the name to landcover in
--- the Cells. Attributes that contain "." in their names (for example, when the theme is composed
--- by more than one table) will be
--- read with "_" replacing "." in order to follow Lua syntax to manipulate data.
--- @arg data.where An SQL restriction on the properties of the Cells (as default it applies no
--- restriction). Only the Cells that reflect the established criteria will be loaded. Note that SQL
--- uses the operator "=" to compare values, instead of "==". This argument can only be used when
--- reading data from a database.
+-- @arg data.layer A string with the name of the layer stored in a TerraLib project. 
+-- @arg data.project A string with the name of the TerraLib project to be used. 
 -- @arg data.attrname A string with an attribute name. It is useful for files that have only one attribute value for each cell but no attribute name.
 -- @arg data.... Any other attribute or function for the CellularSpace.
 -- @arg data.instance A Cell with the description of attributes and functions. 
@@ -1207,23 +1169,27 @@ metaTableCellularSpace_ = {
 -- number of occurrences in each of its Cells.
 -- @arg data.xdim Number of columns, in the case of creating a CellularSpace without needing to
 -- load from a database.
+-- @arg data.geometry A boolean value indicating whether the geometry should also be loaded.
+-- The default value is false. If true, each cell will have an attribute called geom with a TerraLib object. 
 -- @arg data.ydim Number of lines, in the case of creating a CellularSpace without needing to
 -- load from a database. The default value is equal to xdim.
+-- @arg data.file A string with a file name (if it is stored in the current directory), or the complete
+-- path to a given file.
+-- @arg data.source A string with the name of the data source. It tries to infer the data source
+-- according to the arguments passed to the function.
 -- @tabular source
 -- source & Description & Compulsory arguments & Optional arguments\
--- "mdb" & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer,
--- select, where, ... \
 -- "map" & Load from a text file where Cells are stored as numbers with its attribute value.
 -- & & sep, attrname \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
--- requires at least two attributes: x and y. & database & sep, ...\
--- "mysql" & Load from a TerraLib database stored in a MySQL database. & database, theme & host, 
--- layer, password, port, select, user, where, ... \
+-- requires at least two attributes: x and y. & file & source, sep, geometry, ...\
+-- "proj" & Load from a layer within a TerraLib project. See the documentation of package terralib for
+-- more information. & project, layer & source, geometry, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and 
--- different extensions: .shp, .shx, and .dbf. The argument database must contain the file with
--- extension .shp.& database & ... \
+-- different extensions: .shp, .shx, and .dbf. The argument file must contain the
+-- extension .shp. & file & source, geometry, ... \
 -- "virtual" & Create a rectangular CellularSpace from scratch. Cells will be instantiated with
--- only two attributes, x and y, starting from (0, 0). & xdim & ydim, ...
+-- only two attributes, x and y, starting from (0, 0). & xdim & ydim, geometry, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.
 -- @output cObj_ A pointer to a C++ representation of the CellularSpace. Never use this object.
 -- @output parent The Environment it belongs.
@@ -1236,19 +1202,8 @@ metaTableCellularSpace_ = {
 --     ydim = 25
 -- }
 --
--- config = getConfig()
--- mhost = config.host
--- muser = config.user
--- mpassword = config.password
--- mport = config.port
---
--- cs2 = CellularSpace{
---     host = mhost,
---     user = muser,
---     password = mpassword,
---     port = mport,
---     database = "cabecadeboi",
---     theme = "cells900x900"
+-- states = CellularSpace{
+--     file = filePath("brazilstates.shp", "base")
 -- }
 function CellularSpace(data)
 	verifyNamedTable(data)

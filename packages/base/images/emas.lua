@@ -1,12 +1,4 @@
 
-local config = getConfig()
-local mdbType = config.dbType
-local mhost = config.host
-local muser = config.user
-local mpassword = config.password
-local mport = config.port
-local mdatabase = "emas"
-
 NO_DATA	 = 0
 INACTIVE1   = 1
 INACTIVE2   = 2
@@ -18,9 +10,10 @@ FIREBREAK   = 7
 BURNING	 = 8
 BURNED	  = 9
 
-
 cell = Cell{
 	init = function(cell)
+		cell.accumulation = cell.accuation
+
 		if cell.firebreak == 1 then
 			cell.state = FIREBREAK
 		elseif cell.river == 1 then
@@ -34,13 +27,7 @@ cell = Cell{
 }
 
 cs = CellularSpace{
-	dbType = config.dbType,
-	host = config.host,
-	user = config.user,
-	password = config.password,
-	database = "emas",
-	theme = "cells1000x1000",
-	select = {"firebreak", "river", "accumulation", "fire", "state"},
+	file = filePath("emas.shp"),
 	instance = cell
 }
 

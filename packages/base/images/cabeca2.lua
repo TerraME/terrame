@@ -1,6 +1,6 @@
 
 local cs = CellularSpace{
-	file = filePath("cabecadeboi.shp")
+	file = filePath("cabecadeboi900.shp")
 }
 
 m = Map{
@@ -12,7 +12,7 @@ m = Map{
 	color = "Grays"
 }
 
-m:save("cabeca.bmp")
+m:save("cabeca2.bmp")
 
 clean()
 

@@ -1234,32 +1234,15 @@ Load a <a href=../files/Neighborhood.html>Neighborhood</a> between two different
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">config</span> = <span class="id">getConfig</span>()
-<span class="id">mhost</span> = <span class="id">config</span>.<span class="id">host</span>
-<span class="id">muser</span> = <span class="id">config</span>.<span class="id">user</span>
-<span class="id">mpassword</span> = <span class="id">config</span>.<span class="id">password</span>
-<span class="id">mport</span> = <span class="id">config</span>.<span class="id">port</span>
-
-
-<span class="id">cs</span> = <span class="function">CellularSpace</span>{
-    <span class="id">host</span> = <span class="id">mhost</span>,
-    <span class="id">user</span> = <span class="id">muser</span>,
-    <span class="id">password</span> = <span class="id">mpassword</span>,
-    <span class="id">port</span> = <span class="id">mport</span>,
-    <span class="id">database</span> = <span class="string">"emas"</span>,
-    <span class="id">theme</span> = <span class="string">"cells1000x1000"</span>
+<pre class="example"><code><span class="id">river</span> = <span class="function">CellularSpace</span>{
+    <span class="id">file</span> = <span class="id">filePath</span>(<span class="string">"River_lin.shp"</span>)
 }
 
-<span class="id">cs2</span> = <span class="function">CellularSpace</span>{
-    <span class="id">host</span> = <span class="id">mhost</span>,
-    <span class="id">user</span> = <span class="id">muser</span>,
-    <span class="id">password</span> = <span class="id">mpassword</span>,
-    <span class="id">port</span> = <span class="id">mport</span>,
-    <span class="id">database</span> = <span class="string">"emas"</span>,
-    <span class="id">theme</span> = <span class="string">"River"</span>
+<span class="id">emas</span> = <span class="function">CellularSpace</span>{
+    <span class="id">file</span> = <span class="id">filePath</span>(<span class="string">"emas.shp"</span>)
 }
 
-<span class="id">env</span> = <span class="function">Environment</span>{<span class="id">cs</span>, <span class="id">cs2</span>}
+<span class="id">env</span> = <span class="function">Environment</span>{<span class="id">emas</span>, <span class="id">river</span>}
 <span class="id">env</span>:<span class="function">loadNeighborhood</span>{<span class="id">source</span> = <span class="id">filePath</span>(<span class="string">"gpmlinesDbEmas.gpm"</span>, <span class="string">"base"</span>)}</code></pre>
 
 
