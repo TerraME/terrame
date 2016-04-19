@@ -1045,6 +1045,14 @@ local function loadPackgesLibPath()
 	end)	
 end
 
+function _Gtme.loadLibraryPath()
+    local ldpath = os.getenv("DYLD_LIBRARY_PATH")
+    if ldpath then
+        package.cpath = package.cpath..";"..ldpath.."/?.so"
+                                    ..";"..ldpath.."/?.dylib"
+    end
+end
+
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
@@ -1083,6 +1091,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	local package = "base"
 
 	loadPackgesLibPath()
+    _Gtme.loadLibraryPath()
 	
 	local argCount = 1
 	while argCount <= #arguments do
