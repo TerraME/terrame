@@ -322,6 +322,16 @@ if(APPLE)
         TmeInstallQtPlugins("qgif;qico;qjpeg;qmng;qtiff;qsvg;qsvgicon;qsqlite;qwindows;qcocoa")
     endif()
 
+    file(WRITE  ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
+                "[Paths]\nBinaries = MacOS\nPlugins = qtplugins"
+        )
+
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
+            DESTINATION terrame.app/Contents/Resources
+            COMPONENT runtime
+            )
+
+
     install(DIRECTORY ${TERRALIB_DIR}/lib
             DESTINATION ${TERRAME_INSTALL_PREFIX}
             COMPONENT runtime
