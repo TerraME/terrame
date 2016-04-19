@@ -77,7 +77,7 @@ UnitTest_ = {
 
 		if type(v1) == "number" and type(v2) == "number" then
 			local dist = math.abs(v1 - v2)
-			if dist <= tol then
+			if dist <= tol or v1 == v2 then
 				self.success = self.success + 1
 			else 
 				self.fail = self.fail + 1

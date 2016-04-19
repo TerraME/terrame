@@ -48,6 +48,7 @@ return{
 		local u = UnitTest{}
 		u:assertEquals(true, true)
 
+		unitTest:assertEquals(math.huge, math.huge)
 		unitTest:assertEquals(u.success, 1)
 		unitTest:assertEquals(u.test, 1)
 
