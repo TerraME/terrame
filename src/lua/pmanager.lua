@@ -195,9 +195,13 @@ end
 
 local function runButtonClicked()
 	disableAll()
-	local msg = "terrame -package "..comboboxPackages.currentText..
-	            " -example "..comboboxExamples.currentText
-	os.execute(msg)
+
+    local ok, res = _Gtme.execExample(comboboxExamples.currentText, comboboxPackages.currentText)
+
+    if not ok then
+       qt.dialog.msg_critical(res)
+    end
+
 	enableAll()
 end
 
