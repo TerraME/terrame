@@ -229,8 +229,12 @@ local function checkProject(self)
 	verifyUnnecessaryArguments(self, {"source", "layer", "project", "cObj_", "geometry"})
 	mandatoryTableArgument(self, "layer", "string")		
 	
-	if not (type(self.project) == "Project") then	
+	if not (type(self.project) == "Project") then
 		if type(self.project) == "string" then
+			if not string.endswith(self.project, ".tview") then
+				self.project = self.project..".tview"
+			end
+
 			if isFile(self.project) then
 				local file = self.project
 				self.project = terralib.Project{
@@ -1150,7 +1154,10 @@ metaTableCellularSpace_ = {
 -- @arg data.sep A string with the file separator. The default value is ",".
 -- @arg data.layer A string with the name of the layer stored in a TerraLib project. 
 -- @arg data.project A string with the name of the TerraLib project to be used. 
--- @arg data.attrname A string with an attribute name. It is useful for files that have only one attribute value for each cell but no attribute name.
+-- If this name does not ends with ".tview", this extension will be added to the name
+-- of the file.
+-- @arg data.attrname A string with an attribute name. It is useful for files that have 
+-- only one attribute value for each cell but no attribute name.
 -- @arg data.... Any other attribute or function for the CellularSpace.
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the

@@ -24,7 +24,9 @@
 
 return{
 	CellularSpace = function(unitTest)
-		local cs = CellularSpace{file = filePath("cabecadeboi.shp")}
+		local cs = CellularSpace{
+			file = filePath("cabecadeboi.shp")
+		}
 
 		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
 		unitTest:assertEquals(10201, #cs.cells)
@@ -211,14 +213,9 @@ return{
 			unitTest:assertEquals(valuesDefault[i], cs.cells[i].POPUL)
 		end
 
+		-- project
 		local terralib = getPackage("terralib")
-		
 		local projName = "cellspace_basic.tview"
-
-		if isFile(projName) then
-			rmFile(projName)
-		end
-		
 		local author = "Avancini"
 		local title = "Cellular Space"
 
@@ -230,6 +227,7 @@ return{
 		}
 
 		local layerName1 = "Sampa"
+
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
@@ -284,7 +282,7 @@ return{
 		end)
 
 		local cs = CellularSpace{
-			project = projName,
+			project = "cellspace_basic",
 			layer = clName1
 		}
 
@@ -292,12 +290,9 @@ return{
 			unitTest:assertNil(cell.geom)
 			unitTest:assertNil(cell.OGR_GEOMETRY)
 		end)
-		
-		unitTest:assertEquals(303, #cs.cells)
-		
-		if isFile(projName) then
-			rmFile(projName)
-		end
+
+		unitTest:assertEquals(303, #cs.cells)		
+		unitTest:assertFile(projName)
 
 		pgData.table = string.lower(tName1)
 		tl:dropPgTable(pgData)
@@ -453,8 +448,6 @@ return{
 		unitTest:assertEquals(121, #cs1)
 
 		local countTest = 1
-
---		forEachOrderedElement(cs1.cells[1], function(idx, v, value) print(idx.."  "..value) end)
 
 		cs1:loadNeighborhood{source = filePath("cabecadeboi-neigh.gpm", "base")}
 
@@ -868,17 +861,11 @@ return{
 	end,
 	save = function(unitTest)
 		local terralib = getPackage("terralib")
-		
 		local projName = "cellspace_save_basic.tview"
-
-		if isFile(projName) then
-			rmFile(projName)
-		end
-
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = terralib.Project {
+		local proj = terralib.Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -1060,13 +1047,7 @@ return{
 	end,
 	synchronize = function(unitTest)
 		local terralib = getPackage("terralib")
-
 		local projName = "cellspace_basic.tview"
-
-		if isFile(projName) then
-			rmFile(projName)
-		end
-
 		local author = "Avancini"
 		local title = "Cellular Space"
 

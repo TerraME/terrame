@@ -45,7 +45,9 @@ metaTableProject_ = {
 -- TerraME allows the modeler to create a Project from scratch or load one already
 -- created in another software of TerraLib family.
 -- @arg data.file A string with the file name to be used. If the
--- file does not exist then it will be created. It it exists then it will be opened.
+-- file does not exist then it will be created. If it exists then it will be opened.
+-- If this name does not ends with ".tview", this extension will be added to the name
+-- of the file.
 -- @arg data.author A string with the name of the Project's author.
 -- @arg data.title A string with the title of the Project.
 -- @arg data.clean A boolean value indicating whether the project should be cleaned
