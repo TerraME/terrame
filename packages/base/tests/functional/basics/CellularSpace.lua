@@ -136,7 +136,6 @@ return{
 		unitTest:assertEquals(layer.file, filePath1)
 		
 		local cs = CellularSpace{
-			source = "shp",
 			file = filePath1
 		}
 		

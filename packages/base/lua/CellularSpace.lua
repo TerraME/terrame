@@ -199,6 +199,7 @@ local function checkMap(self)
 				return filename:sub(1, i - 1)
 			end
 		end
+
 		return filename
 	end
 
@@ -207,11 +208,9 @@ end
 
 local function checkShape(self)
 	local dbf = self.file:sub(1, self.file:len() - 3).."dbf"
-	local f = io.open(dbf)
-	if not f then
-		customError("File '"..dbf.."' not found.")
-	else
-		io.close(f)
+
+	if not isFile(dbf) then
+		customError("File '"..dbf.."' was not found.")
 	end
 end
 
@@ -226,7 +225,6 @@ end
 
 local function checkProject(self)
 	defaultTableValue(self, "geometry", false)
-	verifyUnnecessaryArguments(self, {"source", "layer", "project", "cObj_", "geometry"})
 	mandatoryTableArgument(self, "layer", "string")		
 	
 	if not (type(self.project) == "Project") then
@@ -241,15 +239,15 @@ local function checkProject(self)
 					file = file
 				}
 			else
-				customError("The Project '"..self.project.."'not found.")
+				customError("Project '"..self.project.."' was not found.")
 			end
 		else
-			customError("The 'project' parameter must be a Project or a Project file path.")
+			customError("Argument 'project' must be a Project or file path to a Project.")
 		end
 	end
 		
 	if not self.project.layers[self.layer] then
-		customError("Layer '"..self.layer.."' does not exists in the Project '"..self.project.file.."'.")
+		customError("Layer '"..self.layer.."' does not exist in Project '"..self.project.file.."'.")
 	end	
 end
 
@@ -1215,66 +1213,65 @@ metaTableCellularSpace_ = {
 function CellularSpace(data)
 	verifyNamedTable(data)
 	
+	local candidates = {}
+
+	forEachOrderedElement(CellularSpaceDrivers, function(idx, value)
+		local all = true
+
+		forEachElement(value.compulsory, function(_, mvalue)
+			if data[mvalue] == nil then
+				all = false
+			end
+		end)
+
+		if value.extension and (not data.file or (type(data.file) == "string" and getExtension(data.file) ~= idx)) then
+			all = false
+		end
+
+		if all then
+			table.insert(candidates, idx)
+		end
+	end)
+
 	if data.source == nil then
-		if data.project then
-			data.source = "proj"
+		if #candidates == 0 then
+			customError("Not enough information to infer argument 'source'.")
+		elseif #candidates == 1 then
+			data.source = candidates[1]
 		else
-			local candidates = {}
-
-			forEachElement(CellularSpaceDrivers, function(idx, value)
-				local all = true
-
-				forEachElement(value.compulsory, function(_, mvalue)
-					if data[mvalue] == nil then
-						all = false
-					end
-				end)
-
-				if value.extension and (not data.file or getExtension(data.file) ~= idx) then
-					all = false
-				end
-
-				if all then
-					table.insert(candidates, idx)
-				end
+			local str = ""
+			forEachElement(candidates, function(idx, value)
+				str = str.."'"..value.."', "
 			end)
 
-			if #candidates == 0 then
-				customError("Not enough information to build the CellularSpace.")
-			elseif #candidates == 1 then
-				data.source = candidates[1]
-			else
-			-- TODO: unskip the lines below after updating to TerraLib 5
-			-- TODO: REVIEW THIS HUNK BECAUSE IT NEVER BEEN EXECTUTED, 'str' was global 
-				local str = "" -- SKIP
-				forEachElement(candidates, function(idx, value)
-					str = str..value..", " -- SKIP
-				end)
-				customError("More than one candidate: "..str) -- SKIP
-			end
+			str = string.sub(str, 1, -3).."."
+
+			customError("More than one candidate to argument 'source': "..str)
 		end
 	else
-		mandatoryTableArgument(data, "source", "string")
-		
-		if CellularSpaceDrivers[data.source] == nil then
-			local word = "It must be a string from the set ["
-			forEachOrderedElement(CellularSpaceDrivers, function(a)
-				word = word.."'"..a.."', "
-			end)
-			word = string.sub(word, 0, string.len(word) - 2).."]."
-			customError("'"..data.source.."' is an invalid value for argument 'source'. "..word)
-		elseif CellularSpaceDrivers[data.source].extension then
-			mandatoryTableArgument(data, "file", "string")
-			if getExtension(data.file) ~= data.source then
-				customError("source and file extension should be the same.")
-			end
+		if #candidates == 1 then
+			defaultTableValue(data, "source", candidates[1])
+		else
+			mandatoryTableArgument(data, "source", "string")
+		end
+	end
 
-			local f = io.open(data.file, "r") 
-			if not f then
-				resourceNotFoundError("file", data.file)
-			else
-				io.close(f)
-			end
+	if CellularSpaceDrivers[data.source] == nil then
+		local word = "It must be a string from the set ["
+		forEachOrderedElement(CellularSpaceDrivers, function(a)
+			word = word.."'"..a.."', "
+		end)
+		word = string.sub(word, 0, string.len(word) - 2).."]."
+		customError("'"..data.source.."' is an invalid value for argument 'source'. "..word)
+	elseif CellularSpaceDrivers[data.source].extension then
+		mandatoryTableArgument(data, "file", "string")
+
+		if getExtension(data.file) ~= data.source then
+			customError("source and file extension should be the same.")
+		end
+
+		if not isFile(data.file) then
+			resourceNotFoundError("file", data.file)
 		end
 	end
 

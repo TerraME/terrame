@@ -175,18 +175,6 @@ return{
 
 		unitTest:assertEquals(5673, #cs) -- SKIP
 		--]]
-
-		-- csv file
-		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), dbType = "csv", sep = ";"}
-		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), sep = ";"}
-
-		unitTest:assertType(cs, "CellularSpace")
-		unitTest:assertEquals(2500, #cs)
-
-		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.maxSugar, "number")
-		end)
-
 		-- shp file
 		cs = CellularSpace{file = filePath("brazilstates.shp", "base")}
 
@@ -201,12 +189,12 @@ return{
 		unitTest:assertEquals(cs.yMax, 0)
 
 		local valuesDefault = {
-			  2300000,  12600000, 2700000,  6700000,  5200000,
-			 16500000,  1900000,  5400000, 7400000,  3300000,
-			 8700000,  13300000, 2600000, 1300000, 300000,
+			2300000,  12600000, 2700000,  6700000,  5200000,
+			16500000,  1900000,  5400000, 7400000,  3300000,
+			8700000,  13300000, 2600000, 1300000, 300000,
 			9600000, 4800000, 1600000, 33700000,  1000000,
-			 2700000, 2800000, 300000, 500000,  1700000,
-			 4300000,  2300000
+			2700000, 2800000, 300000, 500000,  1700000,
+			4300000,  2300000
 		}
 
 		for i = 1, 27 do
@@ -305,7 +293,6 @@ return{
 		unitTest:assertEquals(#cs, 100)
 		
 		-- csv file
-		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), source = "csv", sep = ";"}
 		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), sep = ";"}
 
 		unitTest:assertType(cs, "CellularSpace")

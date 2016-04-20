@@ -29,7 +29,7 @@ return{
 				xdm = 0
 			}
 		end
-		unitTest:assertError(error_func, "Not enough information to build the CellularSpace.")
+		unitTest:assertError(error_func, "Not enough information to infer argument 'source'.")
 
 		local error_func = function()
 			local cs = CellularSpace{
@@ -193,28 +193,22 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("water", "number", "abc"))
 		
-		-- ###################### PROJECT #############################	
 		local terralib = getPackage("terralib")
 		
 		local projectNonStringOrProject = function()
 			local cs = CellularSpace{project = 2, layer = "cells"}
 		end
-		unitTest:assertError(projectNonStringOrProject, "The 'project' parameter must be a Project or a Project file path.")		
+		unitTest:assertError(projectNonStringOrProject, "Argument 'project' must be a Project or file path to a Project.")		
 
 		local layerNonString = function()
 			local cs = CellularSpace{project = "myproj.tview", layer = false}
 		end
 		unitTest:assertError(layerNonString, incompatibleTypeMsg("layer", "string", false))
 
-		local unnecessaryArgument = function()
-			local cs = CellularSpace{project = "myproj.tview", lauer = "cells"}
-		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("lauer", "layer"))
-		
 		local projNotExists = function()
 			local cs = CellularSpace{project = "myproj.tview", layer = "cells"}
 		end
-		unitTest:assertError(projNotExists, "The Project '".."myproj.tview".."'not found.")		
+		unitTest:assertError(projNotExists, "Project '".."myproj.tview".."' was not found.")		
 		
 		local projFile = "cellspace_alt.tview"
 		
@@ -236,7 +230,7 @@ return{
 				layer = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exists in the Project '"..projFile.."'.")
+		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'.")
 		
 		local geometryDefaultValue = function()
 			local cs = CellularSpace {

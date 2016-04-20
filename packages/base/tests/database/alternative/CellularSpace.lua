@@ -56,7 +56,7 @@ return{
  		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
  
  		local error_func = function()
- 			local cs = CellularSpace{file = "abc123.map", source = "map", sep = ";"}
+ 			local cs = CellularSpace{file = "abc123.map", sep = ";"}
  		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.map"))
 		
@@ -65,17 +65,31 @@ return{
  				file = "abc123.shp"
  			}
  		end
- 		unitTest:assertError(error_func, "File 'abc123.dbf' not found.")
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.shp"))
+
+		os.execute("touch abc123.shp")
+			
+		local error_func = function()
+ 			local cs = CellularSpace{
+ 				file = "abc123.shp"
+ 			}
+ 		end
+		unitTest:assertError(error_func, "File 'abc123.dbf' was not found.")
+
+		rmFile("abc123.shp")
+
+		local error_func = function()
+ 			local cs = CellularSpace{
+ 				file = "abc123.shp",
+				xdim = 10
+ 			}
+ 		end
+		unitTest:assertError(error_func, "More than one candidate to argument 'source': 'shp', 'virtual'.")
 	end,
 	loadNeighborhood = function(unitTest)
-		-- ###################### PROJECT #############################
 		local terralib = getPackage("terralib")
 
 		local projName = "cellspace_neigh_alt.tview"
-
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
 
 		local author = "Avancini"
 		local title = "Cellular Space"
@@ -161,16 +175,11 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
+		unitTest:assertFile(projName)
 		tl:dropPgTable(pgData)			
-		-- ###################### PROJECT END #############################
 		
 		-- GAL from shapefile
 		local cs = CellularSpace{
-			source = "shp",
 			file = filePath("brazilstates.shp", "base")
 		}		
 		
@@ -240,19 +249,14 @@ return{
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cabecadeboi900.shp'.")		
 	end,
 	save = function(unitTest)
-		-- ###################### PROJECT #############################
 		local terralib = getPackage("terralib")
 
 		local projName = "cellspace_save_alt.tview"
 
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = terralib.Project {
+		local proj = terralib.Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -332,10 +336,7 @@ return{
 		end
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
 		
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
-		
+		unitTest:assertFile(projName)
 		tl:dropPgTable(pgData)	
 	end
 }
