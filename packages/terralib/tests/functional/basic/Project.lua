@@ -50,6 +50,15 @@ return {
 		unitTest:assertEquals(proj1.title, proj3.title)
 		unitTest:assertEquals(proj1.file, proj3.file)
 
+		local proj3clean = Project{
+			file = "amazonia.tview",
+			clean = true
+		}
+
+		unitTest:assertEquals(proj1.author, proj3clean.author)
+		unitTest:assertEquals(proj1.title, proj3clean.title)
+		unitTest:assertEquals(proj1.file, proj3clean.file)
+
 		unitTest:assertFile("amazonia.tview")
 
 		local proj4Name = "notitlenoauthor.tview"

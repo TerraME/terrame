@@ -78,7 +78,16 @@ function Project(data)
 	data.layers = {}
 
 	if isFile(data.file) and data.clean then
+		local proj = Project{file = data.file}
 		rmFile(data.file)
+
+		if data.author == "<no author>" and proj.author ~= "<no author>" then
+			data.author = proj.author
+		end
+
+		if data.title == "<no title>" and proj.title ~= "<no title>" then
+			data.title = proj.title
+		end
 	end
 
 	if isFile(data.file) then
