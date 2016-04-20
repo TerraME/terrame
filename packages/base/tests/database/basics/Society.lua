@@ -59,12 +59,25 @@ return{
 
 		local nonFooAgent = Agent{}
 
-		local soc = Society {
+		local soc = Society{
 			instance = nonFooAgent,
 			file = filePath("brazilstates.shp", "base")
 		}
 
 		unitTest:assertEquals(#soc, 27)
+
+		local valuesDefault = {
+			  2300000,  12600000, 2700000,  6700000,  5200000,
+			 16500000,  1900000,  5400000, 7400000,  3300000,
+			 8700000,  13300000, 2600000, 1300000, 300000,
+			9600000, 4800000, 1600000, 33700000,  1000000,
+			 2700000, 2800000, 300000, 500000,  1700000,
+			 4300000,  2300000
+		}
+
+		for i = 1, 27 do
+			unitTest:assertEquals(valuesDefault[i], soc.agents[i].POPUL)
+		end
 	end
 }
 

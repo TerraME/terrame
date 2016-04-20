@@ -145,7 +145,6 @@ Society_ = {
 			agent.parent = self
 		end
 
-
 		table.insert(self.agents, agent)
 		if agent.id == nil then agent.id = tostring(self.autoincrement) end
 		self.autoincrement = self.autoincrement + 1
@@ -840,11 +839,9 @@ metaTableSociety_ = {
 -- source & Description & Compulsory arguments & Optional arguments \
 -- "volatile" & Create agents from scratch. This is the default value when using the argument
 -- quantity. & quantity, instance & ...\
--- "database" & Load agents from a database. This is the default value when using the argument
--- theme. & theme, database, instance & layer, host, password, select, where, user, port, ... \
+-- "shp" & Load agents from a shapefile. & file, instance &  ... \
 -- "csv" & Load agents from a csv file. This is the default value when value of argument
--- database ends with ".csv". & database, id, instance & sep, ...
--- @arg data.host Host where the database is stored (default is "localhost").
+-- database ends with ".csv". & file, id, instance & sep, ...
 -- @arg data.id The unique identifier attribute used when reading the Society from a file.
 -- @arg data.... Any other attribute or function for the Society.
 -- @arg data.instance An Agent with the description of attributes and functions. When using this
@@ -863,23 +860,9 @@ metaTableSociety_ = {
 -- boolean & Return the quantity of true values in its Agents. \
 -- string & Return a table with positions equal to the unique strings and values equal to the
 -- number of occurrences in each of its Agents.
--- @arg data.layer Name of the layer the theme was created from. It must be used to solve a
--- conflict when there are two themes with the same name (default is "").
--- @arg data.password The password (default is "").
--- @arg data.port Port number of the connection.
 -- @arg data.sep A string with the file separator for reading a CSV (default is ",").
 -- @arg data.quantity Number of Agents to be created. It is used when the Society will not be
 -- loaded from a file or database.
--- @arg data.select A table containing the names of the attributes to be retrieved (default is
--- all attributes). When retrieving a single attribute, you can use select = "attribute" instead
--- of select = {"attribute"}. It is possible to rename the attribute name using "as", for
--- example, select = {"currentage as age"} reads currentage from the database but replaces the
--- name to age in the Agents.
--- @arg data.theme Name of the theme to be loaded.
--- @arg data.user Username (default is "").
--- @arg data.where A SQL restriction on the properties of the Agents (default is "", applying
--- no restriction. Only the Agents that reflect the established criteria will be loaded). This
--- argument ignores the "as" flexibility of select.
 -- @output agents A vector of Agents pointed by the Society.
 -- @output instance The Agent that describes attributes and functions of each Agent belonging to
 -- the Society. This Agent must not be executed.
@@ -912,7 +895,7 @@ metaTableSociety_ = {
 --
 -- s = Society{
 --     instance = instance,
---     database = filePath("agents.csv", "base")
+--     file = filePath("agents.csv", "base")
 -- }
 --
 -- print(#s)

@@ -894,22 +894,7 @@ Type to create and manipulate a set of <a href=../files/Agent.html>Agents</a>. E
     
   
     <li>
-	  <strong>password</strong>: The password (default is "").
-    </li> 
-    
-  
-    <li>
-	  <strong>port</strong>: Port number of the connection.
-    </li> 
-    
-  
-    <li>
 	  <strong>quantity</strong>: Number of Agents to be created. It is used when the Society will not be loaded from a file or database.
-    </li> 
-    
-  
-    <li>
-	  <strong>select</strong>: A table containing the names of the attributes to be retrieved (default is all attributes). When retrieving a single attribute, you can use select = "attribute" instead of select = {"attribute"}. It is possible to rename the attribute name using "as", for example, select = {"currentage as age"} reads currentage from the database but replaces the name to age in the Agents.
     </li> 
     
   
@@ -1026,21 +1011,6 @@ Type to create and manipulate a set of <a href=../files/Agent.html>Agents</a>. E
     
   
     <li>
-	  <strong>theme</strong>: Name of the theme to be loaded.
-    </li> 
-    
-  
-    <li>
-	  <strong>user</strong>: Username (default is "").
-    </li> 
-    
-  
-    <li>
-	  <strong>where</strong>: A SQL restriction on the properties of the Agents (default is "", applying no restriction. Only the Agents that reflect the established criteria will be loaded). This argument ignores the "as" flexibility of select.
-    </li> 
-    
-  
-    <li>
 	  <strong>...</strong>: Any other attribute or function for the Society.
     </li> 
     
@@ -1113,7 +1083,7 @@ Some attributes of Society have internal semantics. They can be used as <b>read-
 
 <span class="id">s</span> = <span class="function">Society</span>{
     <span class="id">instance</span> = <span class="id">instance</span>,
-    <span class="id">database</span> = <span class="id">filePath</span>(<span class="string">"agents.csv"</span>, <span class="string">"base"</span>)
+    <span class="id">file</span> = <span class="id">filePath</span>(<span class="string">"agents.csv"</span>, <span class="string">"base"</span>)
 }
 
 <span class="id">print</span>(#<span class="id">s</span>)</code></pre>
