@@ -196,7 +196,7 @@ end
 local function runButtonClicked()
 	disableAll()
 
-    local ok, res = _Gtme.exampleExec(comboboxExamples.currentText, comboboxPackages.currentText)
+    local ok, res = _Gtme.execExample(comboboxExamples.currentText, comboboxPackages.currentText)
 
     if not ok then
        qt.dialog.msg_critical(res)

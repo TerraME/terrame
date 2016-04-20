@@ -1099,7 +1099,7 @@ local function findExample(example, packageName)
     return false, errMsg
 end
 
-function _Gtme.exampleExec(example, packageName)
+function _Gtme.execExample(example, packageName)
     local ok, res = findExample(example, packageName)
 
     if not ok then
