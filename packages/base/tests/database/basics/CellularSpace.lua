@@ -401,24 +401,6 @@ return{
 			file = filePath("cabecadeboi.shp", "base")
 		}
 
-		-- #197
-		--[[
-		cs:loadNeighborhood{source = "GPM_NAME"}
-
-		local countNeigh = 0
-		local sumWeight  = 0
-		forEachCell(cs, function(cell)
-			forEachNeighbor(cell, function(cell, neigh, weight)
-				unitTest:assertNotNil(neigh) -- SKIP
-				unitTest:assertNotNil(weight) -- SKIP
-				countNeigh = countNeigh + 1
-				sumWeight = sumWeight + weight
-			end)
-		end)
-		unitTest:assertEquals(80400, countNeigh) -- SKIP
-		unitTest:assertEquals(10201.00000602, sumWeight, 0.00001) -- SKIP
-		--]]
-
 		local cs1 = CellularSpace{
 			file = filePath("cabecadeboi900.shp", "base")	
 		}
