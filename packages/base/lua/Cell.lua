@@ -188,8 +188,8 @@ Cell_ = {
 	-- @usage cell = Cell{value = 5}
 	-- Chart{target = cell}
 	--
-	-- cell:notify()
-	-- cell:notify()
+	-- cell:notify(1)
+	-- cell:notify(2)
 	notify = function(self, modelTime)
 		if modelTime == nil then
 			modelTime = 0

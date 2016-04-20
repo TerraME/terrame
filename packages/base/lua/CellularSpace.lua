@@ -866,8 +866,8 @@ CellularSpace_ = {
 	--
 	-- Chart{target = cs}
 	--
-	-- cs:notify()
-	-- cs:notify()
+	-- cs:notify(1)
+	-- cs:notify(2)
 	notify = function(self, modelTime)
 		if modelTime == nil then
 			modelTime = 0

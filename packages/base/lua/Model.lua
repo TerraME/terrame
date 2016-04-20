@@ -32,17 +32,17 @@ Model_ = {
 	--     initialWater = 20,
 	--     flow = 1,
 	--     finalTime = 20,
+	--     execute = function(model)
+	--         model.water = model.water - model.flow
+	--     end,
 	--     init = function(model)
 	--         model.water = model.initialWater
 	--
-	--         Chart{target = model, select = "water"}
+	--         model.chart = Chart{target = model, select = "water"}
 	--
-	--         model:notify()
 	--         model.timer = Timer{
-	--             Event{action = function()
-	--                 model.water = model.water - model.flow
-	--                 model:notify()
-	--             end}
+	--             Event{action = model},
+	--             Event{action = model.chart}
 	--         }
 	--     end
 	-- }
@@ -219,9 +219,9 @@ Model_ = {
 	--         }
 	--
 	--         model.timer = Timer{
-	--             Event{action = function()
+	--             Event{action = function(ev)
 	--                 model.water = model.water - 1
-	--                 model:notify()
+	--                 model:notify(ev)
 	--             end}
 	--         }
 	--     end
@@ -274,14 +274,14 @@ Model_ = {
 --     init = function(model)
 --         model.water = model.initialWater
 --
---         Chart{target = model, select = "water"}
+--         model.chart = Chart{target = model, select = "water"}
 --
 --         model:notify()
 --         model.timer = Timer{
 --             Event{action = function()
 --                 model.water = model.water - model.flow
---                 model:notify()
---             end}
+--              end},
+--             Event{action = model.chart}
 --         }
 --     end
 -- }

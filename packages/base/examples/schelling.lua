@@ -18,7 +18,7 @@
 NDIM = 30
 NAGTS = 0.9
 PREFERENCE = 3
-MAX_TURNS = 5000
+MAX_TURNS = 500
 
 agent = Agent{
 	init = function(self)
@@ -119,4 +119,3 @@ timer = Timer{
 }
 
 timer:run(MAX_TURNS)
-

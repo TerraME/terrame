@@ -103,6 +103,6 @@ map = Map{
 
 forEachAgent(society, function(agent)
 	agent:execute()
-	map:notify()
+	map:update()
 end)
 

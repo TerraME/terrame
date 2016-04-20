@@ -9,7 +9,7 @@ c = Cell{
 	Q2 = 0
 }
 
-Chart{
+chart = Chart{
 	target = c
 }
 
@@ -32,8 +32,8 @@ t = Timer{
 
 		-- Report
 		print(c.Q1, c.Q2)
-		c:notify()
-	end}
+	end},
+	Event{action = chart}
 }
 
 t:run(100)

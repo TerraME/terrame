@@ -894,7 +894,7 @@ A multivalued set of <a href=../files/Cell.html>Cells</a>. It can be retrieved f
     
   
     <li>
-	  <strong>project</strong>: A string with the name of the TerraLib project to be used.
+	  <strong>project</strong>: A string with the name of the TerraLib project to be used. If this name does not ends with ".tview", this extension will be added to the name of the file.
     </li> 
     
   
@@ -2142,8 +2142,8 @@ Notify every Observer connected to the CellularSpace.<br><br></span>
 
 <span class="function">Chart</span>{<span class="id">target</span> = <span class="id">cs</span>}
 
-<span class="id">cs</span>:<span class="function">notify</span>()
-<span class="id">cs</span>:<span class="function">notify</span>()</code></pre>
+<span class="id">cs</span>:<span class="function">notify</span>(<span class="number">1</span>)
+<span class="id">cs</span>:<span class="function">notify</span>(<span class="number">2</span>)</code></pre>
 
 
 

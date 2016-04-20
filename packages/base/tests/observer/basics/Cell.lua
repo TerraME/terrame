@@ -67,13 +67,15 @@ return{
 		}
 		unitTest:assertType(c5, "Chart")
 
-		world:notify()
-
 		local t = Timer{
 			Event{action = function()
 				world.count = world.count + 1
-				world:notify()
-			end}
+			end},
+			Event{action = c1},
+			Event{action = c2},
+			Event{action = c3},
+			Event{action = c4},
+			Event{action = c5}
 		}
 
 		local ts = TextScreen{target = world}

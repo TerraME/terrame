@@ -135,9 +135,9 @@ Chart_ = {
 	--
 	-- chart = Chart{target = cs}
 	--
-	-- cs:notify()
-	-- cs:notify()
-	-- cs:notify()
+	-- chart:update(1)
+	-- chart:update(2)
+	-- chart:update(3)
 	-- chart:save("file.bmp")
 	-- rmFile("file.bmp")
 	save = function(self, file)

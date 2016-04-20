@@ -970,14 +970,14 @@ Some attributes of Model have internal semantics. They can be used as <b>read-on
     <span class="id">init</span> = <span class="reserved">function</span>(<span class="id">model</span>)
         <span class="id">model</span>.<span class="id">water</span> = <span class="id">model</span>.<span class="id">initialWater</span>
 
-        <span class="function">Chart</span>{<span class="id">target</span> = <span class="id">model</span>, <span class="id">select</span> = <span class="string">"water"</span>}
+        <span class="id">model</span>.<span class="id">chart</span> = <span class="function">Chart</span>{<span class="id">target</span> = <span class="id">model</span>, <span class="id">select</span> = <span class="string">"water"</span>}
 
         <span class="id">model</span>:<span class="id">notify</span>()
         <span class="id">model</span>.<span class="id">timer</span> = <span class="function">Timer</span>{
             <span class="function">Event</span>{<span class="id">action</span> = <span class="reserved">function</span>()
                 <span class="id">model</span>.<span class="id">water</span> = <span class="id">model</span>.<span class="id">water</span> - <span class="id">model</span>.<span class="id">flow</span>
-                <span class="id">model</span>:<span class="id">notify</span>()
-            <span class="reserved">end</span>}
+             <span class="reserved">end</span>},
+            <span class="function">Event</span>{<span class="id">action</span> = <span class="id">model</span>.<span class="id">chart</span>}
         }
     <span class="reserved">end</span>
 }
@@ -1102,17 +1102,17 @@ Function to show a graphical interface to configure the parameters of a given Mo
     <span class="id">initialWater</span> = <span class="number">20</span>,
     <span class="id">flow</span> = <span class="number">1</span>,
     <span class="id">finalTime</span> = <span class="number">20</span>,
+    <span class="id">execute</span> = <span class="reserved">function</span>(<span class="id">model</span>)
+        <span class="id">model</span>.<span class="id">water</span> = <span class="id">model</span>.<span class="id">water</span> - <span class="id">model</span>.<span class="id">flow</span>
+    <span class="reserved">end</span>,
     <span class="id">init</span> = <span class="reserved">function</span>(<span class="id">model</span>)
         <span class="id">model</span>.<span class="id">water</span> = <span class="id">model</span>.<span class="id">initialWater</span>
 
-        <span class="function">Chart</span>{<span class="id">target</span> = <span class="id">model</span>, <span class="id">select</span> = <span class="string">"water"</span>}
+        <span class="id">model</span>.<span class="id">chart</span> = <span class="function">Chart</span>{<span class="id">target</span> = <span class="id">model</span>, <span class="id">select</span> = <span class="string">"water"</span>}
 
-        <span class="id">model</span>:<span class="id">notify</span>()
         <span class="id">model</span>.<span class="id">timer</span> = <span class="function">Timer</span>{
-            <span class="function">Event</span>{<span class="id">action</span> = <span class="reserved">function</span>()
-                <span class="id">model</span>.<span class="id">water</span> = <span class="id">model</span>.<span class="id">water</span> - <span class="id">model</span>.<span class="id">flow</span>
-                <span class="id">model</span>:<span class="id">notify</span>()
-            <span class="reserved">end</span>}
+            <span class="function">Event</span>{<span class="id">action</span> = <span class="id">model</span>},
+            <span class="function">Event</span>{<span class="id">action</span> = <span class="id">model</span>.<span class="id">chart</span>}
         }
     <span class="reserved">end</span>
 }
@@ -1414,9 +1414,9 @@ Notify the Observers of the Model instance.<br><br></span>
         }
 
         <span class="id">model</span>.<span class="id">timer</span> = <span class="function">Timer</span>{
-            <span class="function">Event</span>{<span class="id">action</span> = <span class="reserved">function</span>()
+            <span class="function">Event</span>{<span class="id">action</span> = <span class="reserved">function</span>(<span class="id">ev</span>)
                 <span class="id">model</span>.<span class="id">water</span> = <span class="id">model</span>.<span class="id">water</span> - <span class="number">1</span>
-                <span class="id">model</span>:<span class="function">notify</span>()
+                <span class="id">model</span>:<span class="function">notify</span>(<span class="id">ev</span>)
             <span class="reserved">end</span>}
         }
     <span class="reserved">end</span>

@@ -458,8 +458,8 @@ Agent_ = {
 	-- }
 	--
 	-- Chart{target = agent}
-	-- agent:notify()
-	-- agent:notify()
+	-- agent:notify(1)
+	-- agent:notify(2)
 	notify = function(self, modelTime)
 		if modelTime == nil then
 			modelTime = 0
