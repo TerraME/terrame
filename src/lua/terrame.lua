@@ -1053,6 +1053,69 @@ function _Gtme.loadLibraryPath()
     end
 end
 
+local function findExample(example, packageName)
+    local file = example
+    local s = package.config:sub(1, 1)
+    local errMsg = nil
+    local exFullPath = ""
+
+    if file then
+        local info
+        xpcall(function() info = packageInfo(packageName).path end, function(err)
+            errMsg = err
+        end)
+
+        if errMsg then
+            return false, errMsg
+        end
+
+        exFullPath = info..s.."examples"..s..file..".lua"
+
+        if not isFile(exFullPath) then
+            errMsg = "Example '"..file.."' does not exist in package '"..packageName.."'."
+            errMsg = errMsg.."\nPlease use one from the list below:"
+        end
+    elseif packageName == "base" then
+        errMsg = "TerraME has the following examples:"
+    elseif #_Gtme.findExamples(package) == 0 then
+        errMsg = "Package '"..packageName.."' has no examples"
+        return false, errMsg
+    else
+        errMsg = "Package '"..package.."' has the following examples:"
+    end
+
+    if file and isFile(exFullPath) then
+        -- it only changes the file to point to the package and let it run as it
+        -- was a call such as "TerraME .../package/examples/example.lua"
+        return true, exFullPath
+    else
+        files = _Gtme.findExamples(packageName)
+
+        _Gtme.forEachElement(files, function(_, value)
+            errMsg = errMsg.."\n - "..value
+        end)
+    end
+
+    return false, errMsg
+end
+
+function _Gtme.exampleExec(example, packageName)
+    local ok, res = findExample(example, packageName)
+
+    if not ok then
+        return false, res
+    end
+
+    example = res
+
+    local success, result = _Gtme.myxpcall(function() dofile(example) end)
+    if not success then
+        return false, result
+    end
+
+    return success, _
+end
+
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
