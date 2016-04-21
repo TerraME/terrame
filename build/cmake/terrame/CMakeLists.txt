@@ -339,7 +339,7 @@ if(APPLE)
             )
 
     list(APPEND QTLUA_LIBS  ${TERRAME_DEPENDENCIES_DIR}/lib/libqtluae.0.1.dylib
-                            ${TERRAME_DEPENDENCIES_DIR}/lib/libqtluae.dylib
+                            ${TERRAME_DEPENDENCIES_DIR}/lib/qtluae.dylib
                             ${TERRAME_DEPENDENCIES_DIR}/lib/libqtlua.dylib
         )
 
@@ -347,8 +347,6 @@ if(APPLE)
             DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
             COMPONENT runtime
             )
-
-    install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E rename ${CMAKE_INSTALL_PREFIX}/${TERRAME_INSTALL_PREFIX}/lib/libqtluae.dylib ${CMAKE_INSTALL_PREFIX}/${TERRAME_INSTALL_PREFIX}/lib/qtluae.dylib)")
 
     install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
             DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
