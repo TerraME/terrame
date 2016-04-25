@@ -423,7 +423,6 @@ function _Gtme.buildConfig()
 
 		str = str.."password = \""..lineEditPassword.text.."\"\n"
 		str = str.."drop = true\n"
-		str = str.."dbType = \"mysql\"\n"
 
 		conf = io.open("config.lua", "w")
 		conf:write(str)

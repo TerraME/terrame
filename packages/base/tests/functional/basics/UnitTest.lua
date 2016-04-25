@@ -26,7 +26,7 @@
 
 return{
 	UnitTest = function(unitTest)
-		local u = UnitTest{sleep = 0.1, dbType = "Test"}
+		local u = UnitTest{sleep = 0.1, source = "Test"}
 
 		unitTest:assertType(u, "UnitTest")
 		unitTest:assertEquals(u.success, 0)
@@ -35,7 +35,7 @@ return{
 		unitTest:assertEquals(u.last_error, "")
 		unitTest:assertEquals(u.count_last, 0)
 		unitTest:assertEquals(u.sleep, 0.1)
-		unitTest:assertEquals(u.dbType, "test")
+		unitTest:assertEquals(u.source, "test")
 	end,
 	assert = function(unitTest)
 		local u = UnitTest{}
