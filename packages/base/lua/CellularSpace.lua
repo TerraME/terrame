@@ -1192,7 +1192,9 @@ metaTableCellularSpace_ = {
 -- more information. & project, layer & source, geometry, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and 
 -- different extensions: .shp, .shx, and .dbf. The argument file must contain the
--- extension .shp. & file & source, geometry, ... \
+-- extension .shp. Each loaded Cell will have its (x, y) location according to the attributes
+-- (row, col) or (Lin, Col) from the shapefile. The first pair keeps compatibility with TerraLib 5, 
+-- while the last one is related to TerraLib 4. & file & source, geometry, ... \
 -- "virtual" & Create a rectangular CellularSpace from scratch. Cells will be instantiated with
 -- only two attributes, x and y, starting from (0, 0). & xdim & ydim, geometry, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.
