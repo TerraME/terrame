@@ -26,6 +26,35 @@ local printError   = _Gtme.printError
 local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
+_Gtme.ignoredFile = function(fname)
+	local ignoredExtensions = {
+		".dbf",
+		".prj",
+		".shx",
+		".sbn",
+		".sbx",
+		".fbn",
+		".fbx",
+		".ain",
+		".aih",
+		".ixs",
+		".mxs",
+		".atx",
+		".shp.xml",
+		".cpg",
+		".qix"
+	}
+
+	local ignore = false
+	forEachElement(ignoredExtensions, function(_, ext)
+		if string.endswith(fname, ext) then
+			ignore = true
+		end
+	end)
+
+	return ignore
+end
+
 local function imageFiles(package)
 	local s = sessionInfo().separator
 	local imagepath = packageInfo(package).path..s.."images"
@@ -214,6 +243,17 @@ function _Gtme.executeDoc(package)
 
 		table.sort(mdata, function(a, b)
 			return a.file[1] < b.file[1]
+		end)
+
+		forEachOrderedElement(df, function(_, mvalue)	
+			if _Gtme.ignoredFile(mvalue) then
+				if filesdocumented[mvalue] == nil then
+					filesdocumented[mvalue] = 1
+				else
+					printError("File '"..mvalue.."' should not be documented")
+					doc_report.error_data = doc_report.error_data + 1
+				end
+			end
 		end)
 
 		forEachOrderedElement(df, function(_, mvalue)

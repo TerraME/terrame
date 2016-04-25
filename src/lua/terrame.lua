@@ -1312,6 +1312,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				local s = sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
+				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."sketch.lua")
 				local correct, errorMsg = xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
