@@ -29,20 +29,22 @@ return{
 
 		if not cf then
 			print([[
-===============================================================
-Error: The environment was not correctly configured to execute
-database tests. Please create file 'config.lua' in the current 
-directory and set the database access variables. For example:
+===================================================================
+Error: The environment was not correctly configured to run database
+tests in PostGIS environment. Please create file 'config.lua' in
+the current directory and set the database access variables.
+For example:
 
-user = "root"
-password = ""
-host = "localhost"
-port = 3306
-dbType = "mysql"
-===============================================================]])
+user = "myusername"
+password = "mypassword"
+host = "123.456.789.012"
+port = 5431
+
+Note that the only compulsory variable is the password. Other
+variables that use the default value must not exist.
+===================================================================]])
 			os.exit()
 		else
-			unitTest:assertNotNil(cf.dbType)
 			unitTest:assertNotNil(cf.password)
 		end
 	end

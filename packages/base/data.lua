@@ -1,6 +1,6 @@
 
 data{
-	file = {"brazilstates.dbf", "brazilstates.shp", "brazilstates.shx"},
+	file = "brazilstates.shp",
 	summary = "A shapefile describing the 27 Brazilian states.",
 	source = "IBGE (http://www.ibge.gov.br)"
 }
@@ -15,26 +15,26 @@ data{
 }
 
 data{
-	file = {"cabecadeboi.shp", "cabecadeboi.shx", "cabecadeboi.dbf"},
+	file = "cabecadeboi.shp",
 	image = "cabeca.bmp",
 	source = "TerraME team",
 	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil."
 }
 
 data{
-	file = {"Limit_pol.dbf", "Limit_pol.shp", "Limit_pol.shx"},
+	file = "Limit_pol.shp",
 	summary = "A polygons describing Emas National Park, in Goias, Brazil.",
 	source = "Rodolfo Almeida"
 }
 
 data{
-	file = {"River_lin.dbf", "River_lin.shp", "River_lin.shx"},
+	file = "River_lin.shp",
 	summary = "A line describing a river within Emas National Park, in Goias, Brazil.",
 	source = "Rodolfo Almeida"
 }
 
 data{
-	file = {"cabecadeboi900.shp", "cabecadeboi900.shx", "cabecadeboi900.dbf"},
+	file = "cabecadeboi900.shp",
 	image = "cabeca2.bmp",
 	source = "TerraME team",
 	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil, with a larger resolution."
@@ -73,17 +73,16 @@ data{
 }
 
 data{
-	file = {"amazonia.shp", "amazonia.shx", "amazonia.dbf"},
+	file = "amazonia.shp",
 	image = "amazonia.bmp",
 	source = "TerraME team",
 	summary = "Database with some data for the Amazonia region, in Brazil."
 }
 
 data{
-	file = {"emas.shp", "emas.shx", "emas.dbf"},
+	file = "emas.shp",
 	image = "emas.bmp",
 	source = "TerraME team",
 	reference = "Almeida, Rodolfo M., et al. 'Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil.' X Simposio Brasileiro de Geoinfoamatica (2008)",
 	summary = "Land cover data on Parque Nacional das Emas, Brazil."
 }
-

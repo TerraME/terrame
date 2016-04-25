@@ -92,10 +92,10 @@ observer = {
 }
 
 sketch = {
-	data = {arg = "-sketch", package = "nodatadotlua"},
-	font = {arg = "-sketch", package = "nofontdotlua"},
-	void = {arg = "-sketch", package = "nolua"},
-	test = {arg = "-sketch", package = "models"},
-	base = {arg = "-sketch"}
+	data     = {arg = "-sketch", package = "nodatadotlua"},
+	font     = {arg = "-sketch", package = "nofontdotlua"},
+	void     = {arg = "-sketch", package = "nolua"},
+	test     = {arg = "-sketch", package = "models"},
+	terralib = {arg = "-sketch", package = "terralib"},
+	base     = {arg = "-sketch"}
 }
-

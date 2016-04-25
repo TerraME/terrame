@@ -477,7 +477,7 @@ local metaTableUnitTest_ = {
 
 --- Type for testing packages. All its arguments (but sleep) are necessary only when the tests
 -- work with database access.
--- @arg data.dbType Name of the data source. See CellularSpace.
+-- @arg data.source Name of the data source. See CellularSpace.
 -- @arg data.host Name of the host. See CellularSpace.
 -- @arg data.port Number of the port. See CellularSpace.
 -- @arg data.password A password. See CellularSpace.
@@ -490,8 +490,8 @@ function UnitTest(data)
 
 	defaultTableValue(data, "unittest", false)
 
-	if data.dbType ~= nil then
-		data.dbType = string.lower(data.dbType)
+	if data.source ~= nil then
+		data.source = string.lower(data.source)
 	end
 
 	return data

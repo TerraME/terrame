@@ -191,6 +191,8 @@ local function verifyData(package, report)
 			_Gtme.print("File '"..idx.."' is already documented in 'data.lua'")
 		elseif isDir(dataDir..s..idx) then
 			_Gtme.print("Directory '"..idx.."' will be ignored")
+		elseif _Gtme.ignoredFile(idx) then
+			_Gtme.print("File '"..idx.."' does not need to be documented")
 		else
 			_Gtme.printWarning("Adding sketch for data file '"..idx.."'")
 			local str = "data{\n"

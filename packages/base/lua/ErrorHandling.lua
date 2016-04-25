@@ -151,7 +151,7 @@ end
 -- @arg attr A string with the name of the argument, or a number with its the position.
 -- @arg expectedTypesString A string with the possible type (or types).
 -- @arg gottenValue The value wrongly passed as argument.
--- @usage str = incompatibleTypeMsg("dbType", "string", 2)
+-- @usage str = incompatibleTypeMsg("source", "string", 2)
 -- print(str)
 function incompatibleTypeMsg(attr, expectedTypesString, gottenValue)
 	if type(attr) == "number" then
@@ -179,7 +179,7 @@ end
 -- @arg attr A string with the name of the argument or a number with its position.
 -- @arg expectedValues A string with the expected value(s) for the argument.
 -- @arg gottenValue The value wrongly passed as argument.
--- @usage str = incompatibleValueMsg("dbType", "one of {1, 3, 4}", 2)
+-- @usage str = incompatibleValueMsg("source", "one of {1, 3, 4}", 2)
 -- print(str)
 function incompatibleValueMsg(attr, expectedValues, gottenValue)
 	if expectedValues == nil then expectedValues = "nil" end

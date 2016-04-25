@@ -799,11 +799,6 @@ Type to create and manipulate a set of <a href=../files/Agent.html>Agents</a>. E
     
   
     <li>
-	  <strong>host</strong>: Host where the database is stored (default is "localhost").
-    </li> 
-    
-  
-    <li>
 	  <strong>id</strong>: The unique identifier attribute used when reading the Society from a file.
     </li> 
     
@@ -889,11 +884,6 @@ Type to create and manipulate a set of <a href=../files/Agent.html>Agents</a>. E
     
   
     <li>
-	  <strong>layer</strong>: Name of the layer the theme was created from. It must be used to solve a conflict when there are two themes with the same name (default is "").
-    </li> 
-    
-  
-    <li>
 	  <strong>quantity</strong>: Number of Agents to be created. It is used when the Society will not be loaded from a file or database.
     </li> 
     
@@ -963,22 +953,22 @@ Type to create and manipulate a set of <a href=../files/Agent.html>Agents</a>. E
         
           
             <td>
-            "database"
+            "shp"
             </td>
           
           
             <td>
-            Load agents from a database. This is the default value when using the argument theme.
+            Load agents from a shapefile.
             </td>
           
           
             <td>
-            database, instance, theme
+            file, instance
             </td>
           
           
             <td>
-            host, layer, password, port, select, user, where, ...
+            ...
             </td>
           
         
@@ -996,7 +986,7 @@ Type to create and manipulate a set of <a href=../files/Agent.html>Agents</a>. E
           
           
             <td>
-            database, id, instance
+            file, id, instance
             </td>
           
           

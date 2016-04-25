@@ -37,6 +37,8 @@ LogFile_ = {
 	-- }
 	--
 	-- log:update()
+	--
+	-- rmFile("agent.csv")
 	update = function(self)
 		self.target:notify()
 	end
@@ -99,7 +101,7 @@ function LogFile(data)
 			forEachOrderedElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
-				if not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim", "dbType"}) and string.sub(idx, -1, -1) ~= "_" then
+				if not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim", "source"}) and string.sub(idx, -1, -1) ~= "_" then
 					table.insert(data.select, idx)
 				end
 			end)

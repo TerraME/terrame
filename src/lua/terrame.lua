@@ -423,7 +423,6 @@ function _Gtme.buildConfig()
 
 		str = str.."password = \""..lineEditPassword.text.."\"\n"
 		str = str.."drop = true\n"
-		str = str.."dbType = \"mysql\"\n"
 
 		conf = io.open("config.lua", "w")
 		conf:write(str)
@@ -965,7 +964,7 @@ function _Gtme.traceback()
 		if _Gtme.isWindowsOS() then
 			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."lua")))
 		else
-			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("bin"..s.."lua")))
+			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("MacOS"..s.."lua")))
 		end
 
 		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages")))
@@ -1312,6 +1311,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				local s = sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
+				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."sketch.lua")
 				local correct, errorMsg = xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)

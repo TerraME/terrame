@@ -272,7 +272,6 @@ return{
 --[[
 		-- where plus createNeighborhood
 		cs = CellularSpace{
-			dbType = mdbType,
 			host = mhost,
 			user = muser,
 			password = mpassword,

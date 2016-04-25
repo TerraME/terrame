@@ -1,7 +1,6 @@
 
 cs = CellularSpace{
-	database = file("simple-cs.csv", "base"),
-	dbType = "csv",
+	file = filePath("simple-cs.csv", "base"),
 	sep = ";"
 }
 
