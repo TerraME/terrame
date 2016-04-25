@@ -762,7 +762,7 @@ function _Gtme.configure(self, modelName, package)
 	r = r.."\t\tresult = \"\\n\\ninstance = "..modelName.."{}\\n\\n\"\n"
 	r = r.."\tend\n"
 
-	r = r.."\tlocal execute = \"instance:execute()\"\n"
+	r = r.."\tlocal execute = \"instance:run()\"\n"
 	r = r..[[
 	local getFile = function(prefix)
 		local fname = prefix.."-instance.lua"
