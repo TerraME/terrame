@@ -237,9 +237,6 @@ return{
 				rmFile(f)
 			end
 		end			
-		
-		local tlib = terralib.TerraLib{}
-		tlib:finalize()		
 	end,
 	notify = function(unitTest)
 		local r = Random()

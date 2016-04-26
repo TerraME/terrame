@@ -1507,6 +1507,10 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		rmDir(_Gtme.tmpdirectory__)
 	end
 
+	local terralib = getPackage("terralib")
+	local tlib = terralib.TerraLib{}
+	tlib:finalize()
+
 	return true
 end
 

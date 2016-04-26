@@ -930,8 +930,6 @@ return{
 		tl:dropPgTable(pgData)
 		pgData.table = string.lower(cellSpaceLayerNameGeom2)
 		tl:dropPgTable(pgData)
-
-		tl:finalize()
 	end,
 	synchronize = function(unitTest)
 		local terralib = getPackage("terralib")

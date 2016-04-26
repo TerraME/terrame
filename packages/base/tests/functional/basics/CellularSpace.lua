@@ -177,9 +177,6 @@ return{
 				rmFile(f)
 			end
 		end			
-		
-		local tlib = terralib.TerraLib{}
-		tlib:finalize()
 	end, 
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -1334,9 +1331,6 @@ yMin    number [0]
 		forEachCell(cs, function(cell)
 			unitTest:assertNotNil(cell.geom)
 		end)		
-		
-		local tl = terralib.TerraLib{}
-		tl:finalize()			
 		
 		if isFile(projName) then
 			rmFile(projName)
