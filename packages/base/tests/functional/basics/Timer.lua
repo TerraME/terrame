@@ -203,7 +203,7 @@ return {
 
 		unitTest:assertEquals(tostring(t1), [[1       Event
 cObj_   userdata
-events  table of size 1
+events  vector of size 1
 round   number [1e-05]
 time    number [-inf]
 ]], 8)

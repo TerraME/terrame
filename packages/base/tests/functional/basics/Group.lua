@@ -126,7 +126,7 @@ return{
 			select = function(ag) return ag.age > 5 end
 		}
 		unitTest:assertEquals(tostring(g1), [[age     function
-agents  table of size 2
+agents  vector of size 2
 parent  Society
 select  function
 ]])

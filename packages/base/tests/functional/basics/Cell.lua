@@ -48,7 +48,7 @@ return {
 
 		unitTest:assertEquals(tostring(c1), [[cObj_  userdata
 dfg    Cell
-past   table of size 0
+past   vector of size 0
 s      string [alguem]
 t      number [4]
 twr    boolean [false]
@@ -70,11 +70,23 @@ y      number [0]
 
 		local c = cs.cells[1]
 
-		unitTest:assertEquals(tostring(c), [[agents     table of size 0
+		unitTest:assertEquals(tostring(c), [[agents     vector of size 0
 cObj_      userdata
 friends    Group
 parent     CellularSpace
-past       table of size 0
+past       vector of size 0
+placement  Group
+x          number [0]
+y          number [0]
+]])
+
+		c:synchronize()
+		
+		unitTest:assertEquals(tostring(c), [[agents     vector of size 0
+cObj_      userdata
+friends    Group
+parent     CellularSpace
+past       named table of size 4
 placement  Group
 x          number [0]
 y          number [0]

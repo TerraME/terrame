@@ -1566,7 +1566,11 @@ function _Gtme.tostring(self)
 		elseif mtype == "string" then
 			result = result.."string [".. value.."]"
 		elseif mtype == "table" then
-			result = result.."table of size "..#value..""
+			if _Gtme.getn(value) == #value then
+				result = result.."vector of size ".._Gtme.getn(value)..""
+			else
+				result = result.."named table of size ".._Gtme.getn(value)..""
+			end
 		else
 			result = result..mtype
 		end

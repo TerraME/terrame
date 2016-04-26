@@ -84,7 +84,7 @@ return {
 		unitTest:assertEquals(tostring(proj1), [[author    string [Avancini]
 clean     boolean [true]
 file      string [tostring.tview]
-layers    table of size 0
+layers    vector of size 0
 terralib  TerraLib
 title     string [The Amazonia]
 ]])

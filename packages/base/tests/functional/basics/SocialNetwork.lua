@@ -52,9 +52,9 @@ return{
 		local ag1 = Agent{id = "1"}
 
 		sntw:add(ag1)
-		unitTest:assertEquals(tostring(sntw), [[connections  table of size 0
+		unitTest:assertEquals(tostring(sntw), [[connections  named table of size 1
 count        number [1]
-weights      table of size 0
+weights      named table of size 1
 ]])
 	end,
 	add = function(unitTest)

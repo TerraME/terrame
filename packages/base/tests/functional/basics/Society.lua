@@ -191,15 +191,15 @@ return {
 			quantity = 2
 		}
 		unitTest:assertEquals(tostring(soc1), [[age            function
-agents         table of size 2
+agents         vector of size 2
 autoincrement  number [3]
 cObj_          userdata
 execute        function
 init           function
 instance       Agent
-messages       table of size 0
+messages       vector of size 0
 name           function
-placements     table of size 0
+placements     vector of size 0
 ]])
 
 		local aa = soc1.agents[2]
@@ -207,7 +207,7 @@ placements     table of size 0
 cObj_           userdata
 id              string [2]
 parent          Society
-socialnetworks  table of size 0
+socialnetworks  vector of size 0
 state_          State
 ]])
 	end,

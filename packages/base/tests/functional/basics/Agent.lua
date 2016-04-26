@@ -77,7 +77,7 @@ return{
 execute         function
 init            function
 name            string [nonfoo]
-socialnetworks  table of size 0
+socialnetworks  vector of size 0
 ]])
 
 		local predator = Agent{
@@ -97,12 +97,12 @@ socialnetworks  table of size 0
 		e:createPlacement()
 
 		unitTest:assertEquals(tostring(predators:sample()), [[cell            Cell
-cells           table of size 1
+cells           vector of size 1
 cObj_           userdata
 id              string [4]
 parent          Society
 placement       Trajectory
-socialnetworks  table of size 0
+socialnetworks  vector of size 0
 state_          State
 ]])
 	end,

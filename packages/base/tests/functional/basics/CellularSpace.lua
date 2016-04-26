@@ -192,7 +192,7 @@ return{
 			ydim = 20,
 			xyz = function() end,
 			vvv = 333}
-		unitTest:assertEquals(tostring(cs1), [[cells   table of size 200
+		unitTest:assertEquals(tostring(cs1), [[cells   vector of size 200
 cObj_   userdata
 load    function
 source  string [virtual]
