@@ -318,8 +318,8 @@ return {
 			}
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown server error\n.") -- TODO: "\n." (REVIEW)			
-		
+								.."could not translate host name \""..wrongHost.."\" to address: Unknown server error\n.")
+
 		local wrongPort = 2345
 		local portWrong = function()
 			Layer{
@@ -334,8 +334,8 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(portWrong, "Please check the port '"..wrongPort.."'.")			
-		
+		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 18)
+
 		local nonuser = "usernotexists"
 		local userNotExists = function()
 			Layer{
@@ -351,7 +351,7 @@ return {
 			}
 		end
 		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.") -- TODO: MESSAGE IS WRONG
+							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.")
 
 		local wrongPass = "passiswrong"
 		local passWrong = function()
@@ -710,8 +710,8 @@ return {
 			}
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown server error\n.") -- TODO: "\n." (REVIEW)			
-		
+								.."could not translate host name \""..wrongHost.."\" to address: Unknown server error\n.")
+
 		local wrongPort = 2345
 		local portWrong = function()
 			Layer{
@@ -727,7 +727,7 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(portWrong, "Please check the port '"..wrongPort.."'.")			
+		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 18)
 		
 		local nonuser = "usernotexists"
 		local userNotExists = function()
@@ -744,7 +744,7 @@ return {
 			}
 		end
 		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.") -- TODO: MESSAGE IS WRONG
+							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.")
 
 		local wrongPass = "passiswrong"
 		local passWrong = function()

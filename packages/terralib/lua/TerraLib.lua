@@ -119,9 +119,6 @@ local function createPgConnInfo(host, port, user, pass, database, encoding)
 
 	local errorMsg = checkConnectionParams("POSTGIS", connInfo)	
 	if errorMsg ~= "" then
-		if string.match(errorMsg, "connections on port "..port) then
-			errorMsg = "Please check the port '"..port.."'."
-		end
 		customError(errorMsg)
 	end
 	
