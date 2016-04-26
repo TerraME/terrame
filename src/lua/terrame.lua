@@ -1076,11 +1076,11 @@ local function findExample(example, packageName)
         end
     elseif packageName == "base" then
         errMsg = "TerraME has the following examples:"
-    elseif #_Gtme.findExamples(package) == 0 then
+    elseif #_Gtme.findExamples(packageName) == 0 then
         errMsg = "Package '"..packageName.."' has no examples"
         return false, errMsg
     else
-        errMsg = "Package '"..package.."' has the following examples:"
+        errMsg = "Package '"..packageName.."' has the following examples:"
     end
 
     if file and isFile(exFullPath) then
@@ -1113,6 +1113,51 @@ function _Gtme.execExample(example, packageName)
     end
 
     return success, _
+end
+
+function _Gtme.execConfigure(model, packageName)
+	local errMsg = nil
+	
+	if packageName ~= "base" then
+		import("base")
+	end
+
+	xpcall(function() import(packageName) end, function(err)
+		return false, err
+	end)
+
+	local models
+
+	xpcall(function() models = _Gtme.findModels(packageName) end, function(err)
+		return false, err
+	end)
+
+	if #models == 0 then
+		errMsg = "Package \""..packageName.."\" does not have any Model."
+		return false, errMsg
+	end
+
+	if model == nil then
+		errMsg = "You should indicate a Model to be used."
+		errMsg = errMsg.."\nPlease use one from the list below:"
+
+		_Gtme.forEachElement(models, function(_, value)
+			errMsg = errMsg.."\n - "..value
+		end)
+		return false, errMsg
+	elseif belong(model, models) then
+		graphicalInterface(packageName, model)
+		return true, _
+	else
+		errMsg = "Model '"..model.."' does not exist in package '"..packageName.."'."
+		errMsg = errMsg.."\nPlease use one from the list below:"
+		_Gtme.forEachElement(models, function(_, value)
+			errMsg = errMsg.."\n - "..value
+		end)
+		return false, errMsg
+	end
+
+	return false, "Unknow Error."
 end
 
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
