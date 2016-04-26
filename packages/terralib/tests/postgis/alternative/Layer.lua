@@ -25,7 +25,7 @@
 return {
 	Layer = function(unitTest)
 		local projName = "sampa_alternative.tview"
-		
+
 		local proj1 = Project{
 			file = projName,
 			clean = true,
@@ -39,7 +39,7 @@ return {
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
-		
+
 		local host = nil -- "localhost"
 		local port = nil
 		local user = "postgres"
@@ -47,7 +47,7 @@ return {
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 		local tableName = "sampa"
-		
+
 		local data = {
 			type = "POSTGIS",
 			host = host,
@@ -57,15 +57,13 @@ return {
 			database = database,
 			table = tableName, -- USED ONLY TO DROP
 			encoding = encoding
-			
 		}
-		
-		-- USED ONLY TO TESTS
+
 		local tl = TerraLib{}
 		tl:copyLayer(proj1, layerName1, data)
 		
-		local layerName2 = "SampaDB"	
-		
+		local layerName2 = "SampaDB"
+
 		Layer{
 			project = proj1,
 			source = "postgis",
@@ -73,9 +71,9 @@ return {
 			user = user,
 			password = password,
 			database = database,
-			table = tableName			
-		}		
-		
+			table = tableName
+		}
+
 		local layerAlreadyExists = function()
 			Layer{
 				project = proj1,
@@ -85,15 +83,14 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tableName			
-			}			
+				table = tableName
+			}
 		end
-		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName2.."' already exists in the Project.")			
-		
-		-- USED ONLY TO TESTS
-		tl:dropPgTable(data)		
+		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName2.."' already exists in the Project.")
+
+		tl:dropPgTable(data)
 		proj1.layers[layerName2] = nil
-		
+
 		local sourceMandatory = function()
 			Layer{
 				project = proj1,
@@ -103,11 +100,11 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
 		unitTest:assertError(sourceMandatory, mandatoryArgumentMsg("source"))
-		
+
 		local nameMandatory = function()
 			Layer{
 				project = proj1,
@@ -117,10 +114,10 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(nameMandatory, mandatoryArgumentMsg("name"))	
+		unitTest:assertError(nameMandatory, mandatoryArgumentMsg("name"))
 
 		local userMandatory = function()
 			Layer{
@@ -131,10 +128,10 @@ return {
 				--user = user,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(userMandatory, mandatoryArgumentMsg("user"))		
+		unitTest:assertError(userMandatory, mandatoryArgumentMsg("user"))
 
 		local passMandatory = function()
 			Layer{
@@ -145,10 +142,10 @@ return {
 				user = user,
 				--password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(passMandatory, mandatoryArgumentMsg("password"))		
+		unitTest:assertError(passMandatory, mandatoryArgumentMsg("password"))
 
 		local dbMandatory = function()
 			Layer{
@@ -159,10 +156,10 @@ return {
 				user = user,
 				password = password,
 				--database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))		
+		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))
 
 		local tableMandatory = function()
 			Layer{
@@ -173,10 +170,10 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				--table = tableName			
-			}	
+				--table = tableName
+			}
 		end
-		unitTest:assertError(tableMandatory, mandatoryArgumentMsg("table"))		
+		unitTest:assertError(tableMandatory, mandatoryArgumentMsg("table"))
 
 		local fileUnnecessary = function()
 			Layer{
@@ -189,10 +186,10 @@ return {
 				database = database,
 				table = tableName,
 				file = filePath("sampa.shp", "terralib")
-			}	
+			}
 		end
-		unitTest:assertError(fileUnnecessary, unnecessaryArgumentMsg("file"))		
-		
+		unitTest:assertError(fileUnnecessary, unnecessaryArgumentMsg("file"))
+
 		local sourceNotString = function()
 			Layer{
 				project = proj1,
@@ -202,10 +199,10 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(sourceNotString, incompatibleTypeMsg("source", "string", 123))	
+		unitTest:assertError(sourceNotString, incompatibleTypeMsg("source", "string", 123))
 
 		local layerNotString = function()
 			Layer{
@@ -216,10 +213,10 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(layerNotString, incompatibleTypeMsg("name", "string", 123))				
+		unitTest:assertError(layerNotString, incompatibleTypeMsg("name", "string", 123))
 
 		local hostNotString = function()
 			Layer{
@@ -231,11 +228,11 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(hostNotString, incompatibleTypeMsg("host", "string", 123))			
-		
+		unitTest:assertError(hostNotString, incompatibleTypeMsg("host", "string", 123))
+
 		local portNotString = function()
 			Layer{
 				project = proj1,
@@ -245,10 +242,10 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(portNotString, incompatibleTypeMsg("port", "number", "123"))	
+		unitTest:assertError(portNotString, incompatibleTypeMsg("port", "number", "123"))
 
 		local userNotString = function()
 			Layer{
@@ -259,10 +256,10 @@ return {
 				user = 123,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(userNotString, incompatibleTypeMsg("user", "string", 123))		
+		unitTest:assertError(userNotString, incompatibleTypeMsg("user", "string", 123))
 
 		local passNotString = function()
 			Layer{
@@ -273,10 +270,10 @@ return {
 				user = user,
 				password = 123,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(passNotString, incompatibleTypeMsg("password", "string", 123))	
+		unitTest:assertError(passNotString, incompatibleTypeMsg("password", "string", 123))
 
 		local dbNotString = function()
 			Layer{
@@ -287,10 +284,10 @@ return {
 				user = user,
 				password = password,
 				database = 123,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
-		unitTest:assertError(dbNotString, incompatibleTypeMsg("database", "string", 123))		
+		unitTest:assertError(dbNotString, incompatibleTypeMsg("database", "string", 123))
 
 		local tableNotString = function()
 			Layer{
@@ -301,11 +298,11 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = 123			
-			}	
+				table = 123
+			}
 		end
-		unitTest:assertError(tableNotString, incompatibleTypeMsg("table", "string", 123))	
-		
+		unitTest:assertError(tableNotString, incompatibleTypeMsg("table", "string", 123))
+
 		local wrongHost = "inotexist"
 		local hostNonExists = function()
 			Layer{
@@ -317,8 +314,8 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
 								.."could not translate host name \""..wrongHost.."\" to address: Unknown server error\n.") -- TODO: "\n." (REVIEW)			
@@ -334,8 +331,8 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
 		unitTest:assertError(portWrong, "Please check the port '"..wrongPort.."'.")			
 		
@@ -350,8 +347,8 @@ return {
 				user = nonuser,
 				password = password,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
 		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.") -- TODO: MESSAGE IS WRONG
@@ -367,11 +364,12 @@ return {
 				user = user,
 				password = wrongPass,
 				database = database,
-				table = tableName			
-			}	
+				table = tableName
+			}
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..user.."\"\n.")								
+							.."FATAL:  password authentication failed for user \""..user.."\"\n.")
+
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
 			Layer{
@@ -383,19 +381,19 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tableWrong			
-			}	
+				table = tableWrong
+			}
 		end
 		unitTest:assertError(tableNotExists, "Is not possible add the Layer. The table '"..tableWrong.."' does not exist.")
 
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end		
+			rmFile(projName)
+		end
 		
 		local projName = "amazonia.tview"
 
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
 
 		local proj = Project{
@@ -410,8 +408,8 @@ return {
 			project = proj,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
-		}	
-		
+		}
+
 		local clName1 = "Sampa_Cells"
 		local tName1 = "add_cellslayer_alternative"
 		
@@ -420,8 +418,8 @@ return {
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"	
-		
+		local encoding = "CP1252"
+
 		local sourceMandatory = function() 
 			Layer{
 				project = proj,
@@ -432,12 +430,12 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tName1		
+				table = tName1
 			}
 		end
 		unitTest:assertError(sourceMandatory, mandatoryArgumentMsg("source"))
-		
-		local inputMandatory = function() 
+
+		local inputMandatory = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -447,12 +445,12 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tName1		
+				table = tName1
 			}
 		end
-		unitTest:assertError(inputMandatory, mandatoryArgumentMsg("input"))		
-		
-		local layerMandatory = function() 
+		unitTest:assertError(inputMandatory, mandatoryArgumentMsg("input"))
+
+		local layerMandatory = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -462,12 +460,12 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tName1		
+				table = tName1
 			}
 		end
 		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("name"))
 
-		local userMandatory = function() 
+		local userMandatory = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -477,12 +475,12 @@ return {
 				--user = user,
 				password = password,
 				database = database,
-				table = tName1		
+				table = tName1
 			}
 		end
-		unitTest:assertError(userMandatory, mandatoryArgumentMsg("user"))	
+		unitTest:assertError(userMandatory, mandatoryArgumentMsg("user"))
 
-		local passMandatory = function() 
+		local passMandatory = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -492,12 +490,12 @@ return {
 				user = user,
 				--password = password,
 				database = database,
-				table = tName1		
+				table = tName1
 			}
 		end
-		unitTest:assertError(passMandatory, mandatoryArgumentMsg("password"))		
-		
-		local dbMandatory = function() 
+		unitTest:assertError(passMandatory, mandatoryArgumentMsg("password"))
+
+		local dbMandatory = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -507,12 +505,12 @@ return {
 				user = user,
 				password = password,
 				--database = database,
-				table = tName1		
+				table = tName1
 			}
 		end
-		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))		
-		
-		local sourceNotString = function() 
+		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))
+
+		local sourceNotString = function()
 			Layer{
 				project = proj,
 				source = 123,
@@ -522,12 +520,12 @@ return {
 				user = user,
 				password = password,
 				database = database,
-				table = tName1		
+				table = tName1
 			}
 		end
-		unitTest:assertError(sourceNotString, incompatibleTypeMsg("source", "string", 123))		
+		unitTest:assertError(sourceNotString, incompatibleTypeMsg("source", "string", 123))
 
-		local inputNotString = function() 
+		local inputNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -542,7 +540,7 @@ return {
 		end
 		unitTest:assertError(inputNotString, incompatibleTypeMsg("input", "string", 123))
 
-		local layerNotString = function() 
+		local layerNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -555,9 +553,9 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(layerNotString, incompatibleTypeMsg("name", "string", 123))		
-		
-		local resNotNumber = function() 
+		unitTest:assertError(layerNotString, incompatibleTypeMsg("name", "string", 123))
+
+		local resNotNumber = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -571,8 +569,8 @@ return {
 			}
 		end
 		unitTest:assertError(resNotNumber, incompatibleTypeMsg("resolution", "number", "10000"))
-		
-		local resMustBePositive = function() 
+
+		local resMustBePositive = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -585,9 +583,9 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(resMustBePositive, positiveArgumentMsg("resolution", -1))		
+		unitTest:assertError(resMustBePositive, positiveArgumentMsg("resolution", -1))
 
-		local hostNotString = function() 
+		local hostNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -601,9 +599,9 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(hostNotString, incompatibleTypeMsg("host", "string", 123))		
-		
-		local portNotString = function() 
+		unitTest:assertError(hostNotString, incompatibleTypeMsg("host", "string", 123))
+
+		local portNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -617,9 +615,9 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(portNotString, incompatibleTypeMsg("port", "number", "123"))		
+		unitTest:assertError(portNotString, incompatibleTypeMsg("port", "number", "123"))
 
-		local passNotString = function() 
+		local passNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -632,9 +630,9 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(passNotString, incompatibleTypeMsg("password", "string", 123))		
+		unitTest:assertError(passNotString, incompatibleTypeMsg("password", "string", 123))
 
-		local dbNotString = function() 
+		local dbNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -647,9 +645,9 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(dbNotString, incompatibleTypeMsg("database", "string", 123))	
+		unitTest:assertError(dbNotString, incompatibleTypeMsg("database", "string", 123))
 
-		local tableNotString = function() 
+		local tableNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -662,7 +660,7 @@ return {
 				table = 123
 			}
 		end
-		unitTest:assertError(tableNotString, incompatibleTypeMsg("table", "string", 123))		
+		unitTest:assertError(tableNotString, incompatibleTypeMsg("table", "string", 123))
 
 		local unnecessaryArgument = function()
 			Layer{
@@ -679,7 +677,7 @@ return {
 			}
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("file"))
-		
+
 		local boxNonBoolean = function()
 			Layer{
 				project = proj,
@@ -695,7 +693,7 @@ return {
 			}
 		end
 		unitTest:assertError(boxNonBoolean, incompatibleTypeMsg("box", "boolean", 123))
-		
+
 		local wrongHost = "inotexist"
 		local hostNonExists = function()
 			Layer{
@@ -709,7 +707,7 @@ return {
 				password = password,
 				database = database,
 				table = tName1
-			}		
+			}
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
 								.."could not translate host name \""..wrongHost.."\" to address: Unknown server error\n.") -- TODO: "\n." (REVIEW)			
@@ -763,7 +761,7 @@ return {
 			}
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..user.."\"\n.")								
+							.."FATAL:  password authentication failed for user \""..user.."\"\n.")
 
 		local pgData = {
 			type = "POSTGIS",
@@ -774,10 +772,10 @@ return {
 			table = tName1,
 			encoding = encoding
 		}
-		
+
 		local tl = TerraLib{}
-		tl:dropPgTable(pgData)	
-		
+		tl:dropPgTable(pgData)
+
 		Layer{
 			project = proj,
 			source = "postgis",
@@ -789,7 +787,7 @@ return {
 			database = database,
 			table = tName1
 		}
-		
+
 		local clName2 = "Another_Setores_Cells"
 		local tableAlreadyExists = function()
 			Layer{
@@ -804,12 +802,13 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(tableAlreadyExists, "The table '"..tName1.."' already exists.")		
+		unitTest:assertError(tableAlreadyExists, "The table '"..tName1.."' already exists.")
 
-		tl:dropPgTable(pgData)	
-		
+		tl:dropPgTable(pgData)
+
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end		
+			rmFile(projName)
+		end
 	end
 }
+
