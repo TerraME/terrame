@@ -86,7 +86,7 @@ return{
 		unitTest:assertEquals(t.block.level, 1)
 		unitTest:assertType(t.filter, "function")
 
-		unitTest:assertEquals(tostring(Tube), [[block            table of size 0
+		unitTest:assertEquals(tostring(Tube), [[block            named table of size 6
 checkZero        boolean [false]
 filter           Mandatory
 finalTime        number [10]
@@ -100,7 +100,7 @@ soilInf          Choice
 subwater         Choice
 ]])
 
-		unitTest:assertEquals(tostring(t), [[block            table of size 0
+		unitTest:assertEquals(tostring(t), [[block            named table of size 6
 checkZero        boolean [false]
 cObj_            userdata
 filter           function
