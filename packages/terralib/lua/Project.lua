@@ -69,8 +69,8 @@ function Project(data)
 	end
 	
 	defaultTableValue(data, "clean", false)
-	defaultTableValue(data, "title", "<no title>")
-	defaultTableValue(data, "author", "<no author>")
+	defaultTableValue(data, "title", "No title")
+	defaultTableValue(data, "author", "No author")
 
 	verifyUnnecessaryArguments(data, {"clean", "file", "author", "title"})
 
@@ -83,11 +83,11 @@ function Project(data)
 		local proj = Project{file = data.file}
 		rmFile(data.file)
 
-		if data.author == "<no author>" and proj.author ~= "<no author>" then
+		if data.author == "No author" and proj.author ~= "No author" then
 			data.author = proj.author
 		end
 
-		if data.title == "<no title>" and proj.title ~= "<no title>" then
+		if data.title == "No title" and proj.title ~= "No title" then
 			data.title = proj.title
 		end
 	end

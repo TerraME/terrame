@@ -62,16 +62,20 @@ return {
 		unitTest:assertFile("amazonia.tview")
 
 		local proj4Name = "notitlenoauthor.tview"
-		
+
+		if isFile(proj4Name) then
+			rmFile(proj4Name)
+		end
+
 		local proj4 = Project{
 			file = proj4Name
 		}
 
-		unitTest:assertEquals(proj4.title, "<no title>")
-		unitTest:assertEquals(proj4.author, "<no author>")
+		unitTest:assertEquals(proj4.title, "No title")
+		unitTest:assertEquals(proj4.author, "No author")
 		unitTest:assertEquals(proj4.clean, false)
-
-		unitTest:assertFile(proj4Name)
+		unitTest:assertType(proj4.layers, "table")
+		unitTest:assertEquals(getn(proj4.layers), 0)
 	end,
 	__tostring = function(unitTest)
 		local proj1 = Project{
