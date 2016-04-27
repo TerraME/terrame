@@ -138,17 +138,17 @@ local function addCellularLayer(self, data)
 				
 			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, data.file)
 		end,
-		tif = function()
-			mandatoryTableArgument(data, "file", "string")
+		--tif = function()
+		--	mandatoryTableArgument(data, "file", "string")
 			
-			verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "project", "file", "source"})
+		--	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "project", "file", "source"})
 				
-			if isFile(data.file) then
-				customError("File '"..data.file.."' already exists.")
-			end	
+		--	if isFile(data.file) then
+		--		customError("File '"..data.file.."' already exists.")
+		--	end	
 			
 			--self.terralib:addTifLayer(data.name, data.file)
-		end,
+		--end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")
 			mandatoryTableArgument(data, "password", "string")
