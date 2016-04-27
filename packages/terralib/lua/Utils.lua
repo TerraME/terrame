@@ -22,6 +22,8 @@
 --
 -------------------------------------------------------------------------------------------
 
+-- @header Some basic and useful functions to handle file names.
+
 --- Return the file name removing its path.
 -- @arg path A string with the file with the path.
 -- @usage import("terralib")

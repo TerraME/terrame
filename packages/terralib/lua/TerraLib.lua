@@ -1124,6 +1124,8 @@ TerraLib_ = {
 	end,
 	--- Add a new cellular layer to a PostgreSQL connection.
 	-- @arg project The name of the project.
+	-- @arg inputLayerTitle Name of the input layer.
+	-- @arg data The connection data, such as host, port, and user.
 	-- @arg name The name of the layer.
 	-- @arg resolution The size of a cell.
 	-- @usage --DONTRUN
@@ -1301,7 +1303,11 @@ TerraLib_ = {
 	-- @arg project The name of the project.
 	-- @arg operation Name of the operation.
 	-- @arg select The attribute to be used in the operation.
+	-- @arg from Name of the input layer with the data where the operations will take place.
+	-- @arg to Name of the reference layer with the elements to be copied to the output. 
+	-- @arg out Name of the layer to be created with the output.
 	-- @arg area A boolean value indicating whether the area should be considered.
+	-- @arg property Name of the attribute to be created.
 	-- @arg default The default value.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
@@ -1453,7 +1459,10 @@ TerraLib_ = {
 	-- @arg project The name of the project.
 	-- @arg fromLayerName The input layer name.
 	-- @arg toName The output layer name.
+	-- @arg toSet A table mapping the names of the attributes from the input to the output.
 	-- @arg attrs A table with the attributes to be saved.
+	-- @usage -- DONTRUN
+	-- saveDataSet(self, project, fromLayerName, toSet, toName, attrs)
 	saveDataSet = function(self, project, fromLayerName, toSet, toName, attrs)
 		loadProject(project, project.file)
 
@@ -1619,10 +1628,10 @@ metaTableTerraLib_ = {
 	__index = TerraLib_,
 }
 
---- Type to access TerraLib. This type contains very basic functions that are used by
--- other types of the package. These functions should be used with care, because
--- they do not check any errors in their arguments. Because of that, such functions
--- might stop with very strange errors.
+--- Type to access TerraLib. It contains very basic and low level functions that
+-- are used by the other types of the package. If needed, these functions should
+-- be used with care. Such functions mught stop with very strange errors because
+-- they do not check any errors in their arguments.
 -- @usage -- DONTRUN
 -- TerraLib()
 function TerraLib()
