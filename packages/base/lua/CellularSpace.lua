@@ -309,7 +309,25 @@ local function setCellsByTerraLibDataSet(self, dSet)
 	
 	self.cells = {}
 	self.cObj_:clear()
-	
+
+	for i = 0, #dSet do
+		local row = 0
+		local col = 0
+
+		if dSet[i].row then
+			row = tonumber(dSet[i].row)
+			col = tonumber(dSet[i].col)
+		elseif dSet[i].Lin then
+			row = tonumber(dSet[i].Lin)
+			col = tonumber(dSet[i].Col)
+		end
+
+		self.xMin = math.min(self.xMin, col)
+		self.xMax = math.max(self.xMax, row)
+		self.yMin = math.min(self.yMin, row)
+		self.yMax = math.max(self.yMax, col)		
+	end
+
 	for i = 0, #dSet do
 		local row = tonumber(dSet[i].row)
 		local col = tonumber(dSet[i].col)
@@ -317,6 +335,8 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		if not row then -- compatibility with shapes exported from TerraLLib 4
 			row = tonumber(dSet[i].Lin)
 			col = tonumber(dSet[i].Col)
+		else
+			row = self.xMax - row + self.xMin
 		end
 
 		local cell = Cell{id = tostring(i), x = col, y = row}
@@ -339,11 +359,6 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		end
 
 		table.insert(self.cells, cell)
-
-		self.xMin = math.min(self.xMin, cell.x)
-		self.xMax = math.max(self.xMax, cell.y)
-		self.yMin = math.min(self.yMin, cell.y)
-		self.yMax = math.max(self.yMax, cell.x)		
 	end
 end
 
