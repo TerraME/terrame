@@ -135,7 +135,7 @@ local function addCellularLayer(self, data)
 			if isFile(data.file) then
 				customError("File '"..data.file.."' already exists.")
 			end			
-				
+
 			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, data.file)
 		end,
 		--tif = function()
@@ -382,9 +382,10 @@ Layer_ = {
 			distance = function()
 				validateGeomData(data, repr)
 			end,
-			-- length = function()
-				-- verifyUnnecessaryArguments(data, {"attribute", "name", "operation"})
-			-- end,
+			length = function()
+				verifyUnnecessaryArguments(data, {"attribute", "name", "operation", "output", "table"})
+				customError("Sorry, this operation was not implemented in TerraLib yet.")
+			end,
 			mode = function()
 				if repr == "geometry" then
 					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "name", "operation", "select", "output", "table"})

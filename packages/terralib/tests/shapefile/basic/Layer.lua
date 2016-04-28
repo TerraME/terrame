@@ -45,6 +45,13 @@ return {
 			file = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
 		}
 
+		local rodovias = "Rodovias"
+		Layer{
+			project = proj,
+			name = rodovias,
+			file = filePath("BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "terralib")	
+		}		
+		
 		local clName1 = "cells"
 		local shp1 = clName1..".shp"
 
@@ -62,10 +69,10 @@ return {
 		}
 
 		local areaLayerName = clName1.."_area"
-		local shp2 = areaLayerName..".shp"
+		local shp1 = areaLayerName..".shp"
 
-		if isFile(shp2) then
-			rmFile(shp2)
+		if isFile(shp1) then
+			rmFile(shp1)
 		end
 
 		cl:fill{
@@ -90,6 +97,23 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "polygons-area.png")
+
+		local lengthLayerName = clName1.."_length"
+		local shp2 = areaLayerName..".shp"
+
+		if isFile(shp2) then
+			rmFile(shp2)
+		end
+
+		local error_func = function()
+			cl:fill{
+				operation = "length",
+				name = rodovias,
+				attribute = "mlength",
+				output = lengthLayerName
+			}
+		end
+		unitTest:assertError(error_func, "Sorry, this operation was not implemented in TerraLib yet.")
 	end
 }
 
