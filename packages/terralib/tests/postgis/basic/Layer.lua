@@ -121,7 +121,6 @@ return {
 			-- table = tableName			
 		-- }		
 		
-		-- ###################### END #############################	
 		if isFile(projName) then
 			rmFile(projName)
 		end		

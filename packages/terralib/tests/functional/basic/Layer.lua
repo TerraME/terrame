@@ -39,20 +39,11 @@ return {
 			file = filePath("sampa.shp", "terralib")
 		}	
 		
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
-		local shp1 = "setores_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
-		local fn1 = getFileName(filePath1)
-		fn1 = testDir.."/"..fn1	
-
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
+		local filePath1 = "setores_cells.shp"
 		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end			
+		if isFile(filePath1) then
+			rmFile(filePath1)
+		end
 		
 		local clName1 = "Sampa_Cells"
 		
@@ -78,15 +69,12 @@ return {
 		local clProj = cl2.project
 		
 		unitTest:assertEquals(cl2.source, "shp")
-		unitTest:assertEquals(cl2.file, filePath1)
+		unitTest:assertEquals(cl2.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath1))			
 	
 		unitTest:assertFile(projName)
 		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(filePath1) then
+			rmFile(filePath1)
 		end
 
 		local projName = "setores_2000.tview"
@@ -154,7 +142,7 @@ return {
 		
 		local projName = "cells_setores_2000.tview"
 
-		local proj = Project {
+		local proj = Project{
 			file = projName,
 			clean = true
 		}		
@@ -180,21 +168,12 @@ return {
 			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
 		}		
 		
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
-		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
-		local fn1 = getFileName(filePath1)
-		fn1 = testDir.."/"..fn1	
+		local filePath1 = "sampa_cells.shp"
 
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end	
-		
+		if isFile(filePath1) then
+			rmFile(filePath1)
+		end
+
 		local clName1 = "Sampa_Cells"
 		local l1 = Layer{
 			project = proj,
@@ -206,16 +185,10 @@ return {
 		
 		unitTest:assertEquals(l1.name, clName1)
 		
-		local shp2 = "mg_cells.shp"
-		local filePath2 = testDir.."/"..shp2	
-		local fn2 = getFileName(filePath2)
-		fn2 = testDir.."/"..fn2	
+		local filePath2 = "mg_cells.shp"
 		
-		for i = 1, #exts do
-			local f = fn2..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(filePath2) then
+			rmFile(filePath2)
 		end			
 		
 		local clName2 = "MG_Cells"
@@ -229,17 +202,11 @@ return {
 		
 		unitTest:assertEquals(l2.name, clName2)
 		
-		local shp3 = "another_sampa_cells.shp"
-		local filePath3 = testDir.."/"..shp3	
-		local fn3 = getFileName(filePath3)
-		fn3 = testDir.."/"..fn3	
+		local filePath3 = "another_sampa_cells.shp"
 		
-		for i = 1, #exts do
-			local f = fn3..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end			
+		if isFile(filePath3) then
+			rmFile(filePath3)
+		end
 		
 		local clName3 = "Another_Sampa_Cells"
 		local l3 = Layer{
@@ -255,21 +222,10 @@ return {
 		if isFile(projName) then
 			rmFile(projName)
 		end		
-		
-		for i = 1, #exts do
-			local f1 = fn1..exts[i]
-			local f2 = fn2..exts[i]
-			local f3 = fn3..exts[i]
-			if isFile(f1) then
-				rmFile(f1)
-			end
-			if isFile(f2) then
-				rmFile(f2)
-			end
-			if isFile(f3) then
-				rmFile(f3)
-			end				
-		end
+
+		if isFile(filePath1) then rmFile(filePath1) end
+		if isFile(filePath2) then rmFile(filePath2) end
+		if isFile(filePath3) then rmFile(filePath3) end
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_basic.tview"
@@ -300,22 +256,12 @@ return {
 			file = filePath("Rodovias_lin.shp", "terralib")	
 		}		
 		
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
-		
 		local clName1 = "Setores_Cells"
-		local shp1 = clName1..".shp"
-		local filePath1 = testDir.."/"..shp1	
-		local fn1 = getFileName(filePath1)
-		fn1 = testDir.."/"..fn1	
-
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
+		local filePath1 = clName1..".shp"
 		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end			
+		if isFile(filePath1) then
+			rmFile(filePath1)
+		end
 
 		local cl = Layer{
 			project = proj,
@@ -327,18 +273,11 @@ return {
 		}
 		
 		local presenceLayerName = clName1.."_Presence"
+		local filePath2 = presenceLayerName..".shp"
 
-		local shp2 = presenceLayerName..".shp"
-		local filePath2 = testDir.."/"..shp2	
-		local fn2 = getFileName(filePath2)
-		fn2 = testDir.."/"..fn2	
-		
-		for i = 1, #exts do
-			local f = fn2..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end		
+		if isFile(filePath2) then
+			rmFile(filePath2)
+		end
 
 		cl:fill{
 			operation = "presence",
@@ -348,18 +287,11 @@ return {
 		}	
 
 		local areaLayerName = clName1.."_Area"
+		local filePath3 = areaLayerName..".shp"
 		
-		local shp3 = areaLayerName..".shp"
-		local filePath3 = testDir.."/"..shp3	
-		local fn3 = getFileName(filePath3)
-		fn3 = testDir.."/"..fn3	
-		
-		for i = 1, #exts do
-			local f = fn3..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end		
+		if isFile(filePath3) then
+			rmFile(filePath3)
+		end
 		
 		cl:fill{
 			operation = "area",
@@ -368,20 +300,12 @@ return {
 			output = areaLayerName
 		}
 
-
 		local countLayerName = clName1.."_Count"
+		local filePath4 = countLayerName..".shp"
 		
-		local shp4 = countLayerName..".shp"
-		local filePath4 = testDir.."/"..shp4	
-		local fn4 = getFileName(filePath4)
-		fn4 = testDir.."/"..fn4	
-		
-		for i = 1, #exts do
-			local f = fn4..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end			
+		if isFile(filePath4) then
+			rmFile(filePath4)
+		end
 		
 		cl:fill{
 			operation = "count",
@@ -390,19 +314,11 @@ return {
 			output = countLayerName
 		}
 		
-		
 		-- local distanceLayerName = clName1.."_Distance"
+		-- local filePath5 = distanceLayerName..".shp"
 		
-		-- local shp5 = distanceLayerName..".shp"
-		-- local filePath5 = testDir.."/"..shp5	
-		-- local fn5 = getFileName(filePath5)
-		-- fn5 = testDir.."/"..fn5	
-		
-		-- for i = 1, #exts do
-			-- local f = fn5..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end
+		-- if isFile(filePath5) then
+			-- rmFile(filePath5)
 		-- end	
 		
 		-- cl:fill{
@@ -412,19 +328,12 @@ return {
 			-- output = distanceLayerName
 		-- }
 		
-		local minValueLayerName = clName1.."_Minimum"
+		local minValueLayerName = clName1.."_Minimum"		
+		local filePath6 = minValueLayerName..".shp"
 		
-		local shp6 = minValueLayerName..".shp"
-		local filePath6 = testDir.."/"..shp6	
-		local fn6 = getFileName(filePath6)
-		fn6 = testDir.."/"..fn6	
-		
-		for i = 1, #exts do
-			local f = fn6..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end		
+		if isFile(filePath6) then
+			rmFile(filePath6)
+		end
 		
 		cl:fill{
 			operation = "minimum",
@@ -435,17 +344,10 @@ return {
 		}
 		
 		local maxValueLayerName = clName1.."_Maximum"
+		local filePath7 = maxValueLayerName..".shp"
 		
-		local shp7 = maxValueLayerName..".shp"
-		local filePath7 = testDir.."/"..shp7	
-		local fn7 = getFileName(filePath7)
-		fn7 = testDir.."/"..fn7	
-		
-		for i = 1, #exts do
-			local f = fn7..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(filePath7) then
+			rmFile(filePath7)
 		end
 		
 		cl:fill{
@@ -457,17 +359,10 @@ return {
 		}
 		
 		local coverageLayerName = clName1.."_Percentage"
+		local filePath8 = coverageLayerName..".shp"
 		
-		local shp8 = coverageLayerName..".shp"
-		local filePath8 = testDir.."/"..shp8	
-		local fn8 = getFileName(filePath8)
-		fn8 = testDir.."/"..fn8	
-		
-		for i = 1, #exts do
-			local f = fn8..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(filePath8) then
+			rmFile(filePath8)
 		end	
 		
 		cl:fill{
@@ -479,17 +374,10 @@ return {
 		}
 		
 		local stdevLayerName = clName1.."_Stdev"
-		
-		local shp9 = stdevLayerName..".shp"
-		local filePath9 = testDir.."/"..shp9	
-		local fn9 = getFileName(filePath9)
-		fn9 = testDir.."/"..fn9	
-		
-		for i = 1, #exts do
-			local f = fn9..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		local filePath9 = stdevLayerName..".shp"
+
+		if isFile(filePath9) then
+			rmFile(filePath9)
 		end
 		
 		cl:fill{
@@ -501,17 +389,10 @@ return {
 		}
 		
 		local meanLayerName = clName1.."_Average_Mean"
-		
-		local shp10 = meanLayerName..".shp"
-		local filePath10 = testDir.."/"..shp10	
-		local fn10 = getFileName(filePath10)
-		fn10 = testDir.."/"..fn10	
-		
-		for i = 1, #exts do
-			local f = fn10..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		local filePath10 = meanLayerName..".shp"
+
+		if isFile(filePath10) then
+			rmFile(filePath10)
 		end
 		
 		cl:fill{
@@ -523,17 +404,10 @@ return {
 		}
 		
 		local weighLayerName = clName1.."_Average_Weighted"
-		
-		local shp11 = weighLayerName..".shp"
-		local filePath11 = testDir.."/"..shp11	
-		local fn11 = getFileName(filePath11)
-		fn11 = testDir.."/"..fn11	
-		
-		for i = 1, #exts do
-			local f = fn11..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		local filePath11 = weighLayerName..".shp"
+
+		if isFile(filePath11) then
+			rmFile(filePath11)
 		end
 		
 		cl:fill{
@@ -546,19 +420,12 @@ return {
 		}
 		
 		local intersecLayerName = clName1.."_Mojority_Intersection"
-		
-		local shp12 = intersecLayerName..".shp"
-		local filePath12 = testDir.."/"..shp12	
-		local fn12 = getFileName(filePath12)
-		fn12 = testDir.."/"..fn12	
-		
-		for i = 1, #exts do
-			local f = fn12..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		local filePath12 = intersecLayerName..".shp"
+
+		if isFile(filePath12) then
+			rmFile(filePath12)
 		end
-		
+
 		cl:fill{
 			operation = "mode",
 			name = localidades,
@@ -569,19 +436,12 @@ return {
 		}
 		
 		local occurrenceLayerName = clName1.."_Mojority_Occurrence"
-		
-		local shp13 = occurrenceLayerName..".shp"
-		local filePath13 = testDir.."/"..shp13	
-		local fn13 = getFileName(filePath13)
-		fn13 = testDir.."/"..fn13	
-		
-		for i = 1, #exts do
-			local f = fn13..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		local filePath13 = occurrenceLayerName..".shp"
+
+		if isFile(filePath13) then
+			rmFile(filePath13)
 		end
-		
+
 		cl:fill{
 			operation = "mode",
 			name = localidades,
@@ -591,17 +451,10 @@ return {
 		}
 		
 		local sumLayerName = clName1.."_Sum"
-		
-		local shp14 = sumLayerName..".shp"
-		local filePath14 = testDir.."/"..shp14	
-		local fn14 = getFileName(filePath14)
-		fn14 = testDir.."/"..fn14	
-		
-		for i = 1, #exts do
-			local f = fn14..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		local filePath14 = sumLayerName..".shp"
+
+		if isFile(filePath14) then
+			rmFile(filePath14)
 		end
 		
 		cl:fill{
@@ -613,17 +466,10 @@ return {
 		}
 		
 		local wsumLayerName = clName1.."_Weighted_Sum"
-		
-		local shp15 = wsumLayerName..".shp"
-		local filePath15 = testDir.."/"..shp15	
-		local fn15 = getFileName(filePath15)
-		fn15 = testDir.."/"..fn15	
-		
-		for i = 1, #exts do
-			local f = fn15..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		local filePath15 = wsumLayerName..".shp"
+
+		if isFile(filePath15) then
+			rmFile(filePath15)
 		end	
 		
 		cl:fill{
@@ -643,17 +489,10 @@ return {
 		-- }	
 		
 		-- local rmeanLayerName = clName1.."_Mean_Raster"
-		
-		-- local shp16 = rmeanLayerName..".shp"
-		-- local filePath16 = testDir.."/"..shp16	
-		-- local fn16 = getFileName(filePath16)
-		-- fn16 = testDir.."/"..fn16	
-		
-		-- for i = 1, #exts do
-			-- local f = fn16..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end
+		-- local filePath16 = shp16 = rmeanLayerName..".shp"
+
+		-- if isFile(filePath16) then
+			-- rmFile(filePath16)
 		-- end	
 		
 		-- cl:fill{
@@ -665,17 +504,10 @@ return {
 		-- }		
 		
 		-- local rminLayerName = clName1.."_Minimum_Raster"
-		
-		-- local shp17 = rminLayerName..".shp"
-		-- local filePath17 = testDir.."/"..shp17	
-		-- local fn17 = getFileName(filePath17)
-		-- fn17 = testDir.."/"..fn17	
-		
-		-- for i = 1, #exts do
-			-- local f = fn17..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end
+		-- local filePath17 = rminLayerName..".shp"
+
+		-- if isFile(filePath17) then
+			-- rmFile(filePath17)
 		-- end	
 		
 		-- cl:fill{
@@ -687,17 +519,10 @@ return {
 		-- }		
 
 		-- local rmaxLayerName = clName1.."_Maximum_Raster"
-		
-		-- local shp18 = rmaxLayerName..".shp"
-		-- local filePath18 = testDir.."/"..shp18	
-		-- local fn18 = getFileName(filePath18)
-		-- fn18 = testDir.."/"..fn18	
-		
-		-- for i = 1, #exts do
-			-- local f = fn18..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end
+		-- local filePath18 = rmaxLayerName..".shp"
+
+		-- if isFile(filePath18) then
+			-- rmFile(filePath18)
 		-- end	
 		
 		-- cl:fill{
@@ -709,17 +534,10 @@ return {
 		-- }		
 
 		-- local rpercentLayerName = clName1.."_Percentage_Raster"
-		
-		-- local shp19 = rpercentLayerName..".shp"
-		-- local filePath19 = testDir.."/"..shp19	
-		-- local fn19 = getFileName(filePath19)
-		-- fn19 = testDir.."/"..fn19	
-		
-		-- for i = 1, #exts do
-			-- local f = fn19..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end
+		-- local filePath19 = rpercentLayerName..".shp"
+
+		-- if isFile(filePath19) then
+			-- rmFile(filePath19)
 		-- end	
 		
 		-- cl:fill{
@@ -731,17 +549,10 @@ return {
 		-- }		
 
 		-- local rstdevLayerName = clName1.."_Stdev_Raster"
-		
-		-- local shp20 = rstdevLayerName..".shp"
-		-- local filePath20 = testDir.."/"..shp20	
-		-- local fn20 = getFileName(filePath20)
-		-- fn20 = testDir.."/"..fn20	
-		
-		-- for i = 1, #exts do
-			-- local f = fn20..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end
+		-- local filePath20 = rstdevLayerName..".shp"
+
+		-- if isFile(filePath20) then
+			-- rmFile(filePath20)
 		-- end	
 		
 		-- cl:fill{
@@ -753,18 +564,11 @@ return {
 		-- }		
 
 		-- local rsumLayerName = clName1.."_Sum_Raster"
-		
-		-- local shp21 = rstdevLayerName..".shp"
-		-- local filePath21 = testDir.."/"..shp21	
-		-- local fn21 = getFileName(filePath21)
-		-- fn21 = testDir.."/"..fn21	
-		
-		-- for i = 1, #exts do
-			-- local f = fn21..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end
-		-- end	
+		-- local filePath21 = rstdevLayerName..".shp"
+
+		-- if isFile(filePath21) then
+			-- rmFile(filePath21)
+		-- end
 		
 		-- cl:fill{
 			-- operation = "sum",
@@ -785,18 +589,11 @@ return {
 		end)		
 		
 		local cellSpaceLayerName = clName1.."_CellSpace_Sum"
+		local filePath22 = cellSpaceLayerName..".shp"
 
-		local shp22 = cellSpaceLayerName..".shp"
-		local filePath22 = testDir.."/"..shp22	
-		local fn22 = getFileName(filePath22)
-		fn22 = testDir.."/"..fn22	
-		
-		for i = 1, #exts do
-			local f = fn22..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end	
+		if isFile(filePath22) then
+			rmFile(filePath22)
+		end
 		
 		cs:save(cellSpaceLayerName, "past_sum")
 		
@@ -806,7 +603,7 @@ return {
 		}
 
 		unitTest:assertEquals(cellSpaceLayer.source, "shp")
-		unitTest:assertEquals(cellSpaceLayer.file, filePath22)			
+		unitTest:assertEquals(cellSpaceLayer.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath22))			
 		
 		local tl = TerraLib{}
 		tl:finalize()			
@@ -814,97 +611,29 @@ return {
 		if isFile(projName) then
 			rmFile(projName)
 		end
-		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-			local f = fn2..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end		
-			local f = fn3..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end		
-			local f = fn4..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end	
-			-- local f = fn5..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end
-			local f = fn6..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end			
-			local f = fn7..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end				
-			local f = fn8..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end				
-			local f = fn9..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end				
-			local f = fn10..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end				
-			local f = fn11..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end				
-			local f = fn12..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end				
-			local f = fn13..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end				
-			local f = fn14..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end					
-			local f = fn15..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end				
-			-- local f = fn16..exts[i] -- issue #928
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end		
-			-- local f = fn17..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end				
-			-- local f = fn18..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end				
-			-- local f = fn19..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end				
-			-- local f = fn20..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end				
-			-- local f = fn21..exts[i]
-			-- if isFile(f) then
-				-- rmFile(f)
-			-- end				
-			local f = fn22..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end				
-		end			
+
+		if isFile(filePath1)  then rmFile(filePath1)  end
+		if isFile(filePath2)  then rmFile(filePath2)  end
+		if isFile(filePath3)  then rmFile(filePath3)  end
+		if isFile(filePath4)  then rmFile(filePath4)  end
+		--if isFile(filePath5)  then rmFile(filePath5)  end
+		if isFile(filePath6)  then rmFile(filePath6)  end
+		if isFile(filePath7)  then rmFile(filePath7)  end
+		if isFile(filePath8)  then rmFile(filePath8)  end
+		if isFile(filePath9)  then rmFile(filePath9)  end
+		if isFile(filePath10) then rmFile(filePath10) end
+		if isFile(filePath11) then rmFile(filePath11) end
+		if isFile(filePath12) then rmFile(filePath12) end
+		if isFile(filePath13) then rmFile(filePath13) end
+		if isFile(filePath14) then rmFile(filePath14) end
+		if isFile(filePath15) then rmFile(filePath15) end
+		--if isFile(filePath16) then rmFile(filePath16) end
+		--if isFile(filePath17) then rmFile(filePath17) end
+		--if isFile(filePath18) then rmFile(filePath18) end
+		--if isFile(filePath19) then rmFile(filePath19) end
+		--if isFile(filePath20) then rmFile(filePath20) end
+		--if isFile(filePath21) then rmFile(filePath21) end
+		if isFile(filePath22) then rmFile(filePath22) end
 	end,
 	__tostring = function(unitTest)
 		local projName = "cellular_layer_print.tview"
@@ -932,3 +661,4 @@ source   string [shp]
 		unitTest:assertFile(projName)
 	end
 }
+

@@ -609,7 +609,6 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 	cellLayerInfo:setTitle(name)
 	cellLayerInfo:setDescription("Created on TerraME")
 	
-		
 	local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations()
 	local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
 	local cellName = dSetName
@@ -1114,6 +1113,10 @@ TerraLib_ = {
 	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath) 
 		loadProject(project, project.file)
 		
+		if not string.find(filePath, "/") then
+			filePath = _Gtme.makePathCompatibleToAllOS(currentDir().."/")..filePath
+		end
+
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
 		local dSetName = getFileName(connInfo.URI)

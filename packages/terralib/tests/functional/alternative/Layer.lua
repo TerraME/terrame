@@ -150,7 +150,7 @@ return{
 		unitTest:assertError(inconsistentExtension, "File '"..filePath0.."' does not match to source '"..source.."'.")			
 		
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
 		
 		local projName = "amazonia.tview"
@@ -251,20 +251,11 @@ return{
 			file = filePath("sampa.shp", "terralib")
 		}
 		
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "setores_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
-		local fn1 = getFileName(filePath1)
-		fn1 = testDir.."/"..fn1	
-
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
 		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				os.execute("rm -f "..f)
-			end
-		end	
+		if isFile(shp1) then
+			rmFile(shp1)
+		end
 		
 		local clName1 = "Setores_Cells"
 		Layer{
@@ -272,7 +263,7 @@ return{
 			input = layerName1,
 			name = clName1,
 			resolution = 0.7,
-			file = filePath1
+			file = shp1
 		}
 		
 		local cellLayerAlreadyExists = function()
@@ -292,10 +283,10 @@ return{
 				input = layerName1,
 				name = "CellLayerFileAlreadyExists",
 				resolution = 0.7,
-				file = filePath1
+				file = shp1
 			}	
 		end
-		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..filePath1.."' already exists.")
+		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..shp1.."' already exists.")
 		
 		local sourceInvalid = function()
 			Layer{
@@ -335,14 +326,11 @@ return{
 		unitTest:assertError(inputNonExists, "Input layer 'no_exists' was not found.")		
 		
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end		
 		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				os.execute("rm -f "..f)
-			end
+		if isFile(shp1) then
+			rmFile(shp1)
 		end
 	end,
 	fill = function(unitTest)
@@ -360,22 +348,11 @@ return{
 			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}	
 		
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
-		
-		local clName1 = "Setores_Cells"
-		
-		local shp1 = clName1..".shp"
-		local filePath1 = testDir.."/"..shp1	
-		local fn1 = getFileName(filePath1)
-		fn1 = testDir.."/"..fn1	
+		local clName1 = "setores_cells2"
+		local filePath1 = clName1..".shp"
 
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(filePath1) then
+			rmFile(filePath1)
 		end			
 
 		local cl = Layer{
@@ -930,18 +907,10 @@ return{
 		}
 		
 		local presenceLayerName = clName1.."_Presence_2000"
-		local shp2 = presenceLayerName..".shp"
-		local filePath2 = testDir.."/"..shp2	
-		local fn2 = getFileName(filePath2)
-		fn2 = testDir.."/"..fn2	
-		
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		
-		for i = 1, #exts do
-			local f = fn2..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		local filePath2 = presenceLayerName..".shp"
+
+		if isFile(filePath2) then
+			rmFile(filePath2)
 		end	
 
 		local cW = customWarning 
@@ -1204,25 +1173,16 @@ return{
 			}
 		end
 		unitTest:assertError(op5NotAvailable, "The operation '".."presence".."' is not available to raster layer.")		
-
-		-- ###################### END #############################
-		local tl = TerraLib{}
-		tl:finalize()			
 		
 		if isFile(projName) then
 			rmFile(projName)
 		end
-		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end			
-			local f = fn2..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end
+
+		local tl = TerraLib{}
+		tl:finalize()
+
+		if isFile(filePath1) then rmFile(filePath1) end	
+		if isFile(filePath2) then rmFile(filePath2) end	
  	end
 }
 

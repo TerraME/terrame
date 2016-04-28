@@ -91,40 +91,28 @@ return {
 		
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("sampa.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)		
+		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		local clName = "Sampa_Cells"
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = clName..".shp"
-		local filePath1 = testDir.."/"..shp1	
-		local fn1 = getFileName(filePath1)
-		fn1 = testDir.."/"..fn1	
 
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp1) then
+			rmFile(shp1)
 		end	
 		
 		local resolution = 0.7
-		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, filePath1)
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1)
 		
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(layerInfo.name, clName)
-		unitTest:assertEquals(layerInfo.file, filePath1)
+		unitTest:assertEquals(layerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp1)
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "geometry")
 		unitTest:assertNotNil(layerInfo.sid)
 
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp1) then
+			rmFile(shp1)
 		end	
 		
 		rmFile(proj.file)
@@ -140,36 +128,24 @@ return {
 			rmFile(proj.file)
 		end	
 		
-		-- CREATE A PROJECT
 		tl:createProject(proj, {})
 
-		-- CREATE A LAYER THAT WILL BE USED AS REFERENCE TO CREATE THE CELLULAR SPACE
 		local layerName1 = "Para"
 		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
 		
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp = {}
-		local fn = {}
-		
+
 		local clName = "Para_Cells"
 		shp[1] = clName..".shp"
-		local filePath1 = testDir.."/"..shp[1]	
-		fn[1] = getFileName(filePath1)
-		fn[1] = testDir.."/"..fn[1]	
 
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		
-		for i = 1, #exts do
-			local f = fn[1]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end	
+		if isFile(shp[1]) then
+			rmFile(shp[1])
+		end
 		
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 60e3
-		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, filePath1)
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1])
 		
 		local clSet = tl:getDataSet(proj, clName)
 		
@@ -183,7 +159,7 @@ return {
 		local clLayerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(clLayerInfo.name, clName)
-		unitTest:assertEquals(clLayerInfo.file, filePath1)
+		unitTest:assertEquals(clLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[1])
 		unitTest:assertEquals(clLayerInfo.type, "OGR")
 		unitTest:assertEquals(clLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(clLayerInfo.sid)
@@ -197,17 +173,11 @@ return {
 		-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
 		local presLayerName = clName.."_"..layerName2.."_Presence"		
 		shp[2] = presLayerName..".shp"
-		local filePath2 = testDir.."/"..shp[2]	
-		fn[2] = getFileName(filePath2)
-		fn[2] = testDir.."/"..fn[2]	
 		
-		for i = 1, #exts do
-			local f = fn[2]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end	
-		
+		if isFile(shp[2]) then
+			rmFile(shp[2])
+		end
+
 		local operation = "presence"
 		local attribute = "presence"
 		local select = "FID"
@@ -227,7 +197,7 @@ return {
 
 		local presLayerInfo = tl:getLayerInfo(proj, proj.layers[presLayerName])
 		unitTest:assertEquals(presLayerInfo.name, presLayerName)
-		unitTest:assertEquals(presLayerInfo.file, filePath2)
+		unitTest:assertEquals(presLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[2])
 		unitTest:assertEquals(presLayerInfo.type, "OGR")
 		unitTest:assertEquals(presLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(presLayerInfo.sid)
@@ -235,15 +205,9 @@ return {
 		-- FILL CELLULAR SPACE WITH PERCENTAGE TOTAL AREA OPERATION
 		local areaLayerName = clName.."_"..layerName2.."_Area"		
 		shp[3] = areaLayerName..".shp"
-		local filePath3 = testDir.."/"..shp[3]	
-		fn[3] = getFileName(filePath3)
-		fn[3] = testDir.."/"..fn[3]	
 		
-		for i = 1, #exts do
-			local f = fn[3]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[3]) then
+			rmFile(shp[3])
 		end
 		
 		operation = "area"
@@ -265,7 +229,7 @@ return {
 
 		local areaLayerInfo = tl:getLayerInfo(proj, proj.layers[areaLayerName])
 		unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
-		unitTest:assertEquals(areaLayerInfo.file, filePath3)
+		unitTest:assertEquals(areaLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[3])
 		unitTest:assertEquals(areaLayerInfo.type, "OGR")
 		unitTest:assertEquals(areaLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(areaLayerInfo.sid)		
@@ -273,15 +237,9 @@ return {
 		-- FILL CELLULAR SPACE WITH COUNT OPERATION
 		local countLayerName = clName.."_"..layerName2.."_Count"		
 		shp[4] = countLayerName..".shp"
-		local filePath4 = testDir.."/"..shp[4]	
-		fn[4] = getFileName(filePath4)
-		fn[4] = testDir.."/"..fn[4]	
 		
-		for i = 1, #exts do
-			local f = fn[4]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[4]) then
+			rmFile(shp[4])
 		end
 		
 		operation = "count"
@@ -303,7 +261,7 @@ return {
 
 		local countLayerInfo = tl:getLayerInfo(proj, proj.layers[countLayerName])
 		unitTest:assertEquals(countLayerInfo.name, countLayerName)
-		unitTest:assertEquals(countLayerInfo.file, filePath4)
+		unitTest:assertEquals(countLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[4])
 		unitTest:assertEquals(countLayerInfo.type, "OGR")
 		unitTest:assertEquals(countLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(countLayerInfo.sid)	
@@ -311,15 +269,9 @@ return {
 		-- FILL CELLULAR SPACE WITH DISTANCE OPERATION
 		local distLayerName = clName.."_"..layerName2.."_Distance"		
 		shp[5] = distLayerName..".shp"
-		local filePath5 = testDir.."/"..shp[5]	
-		fn[5] = getFileName(filePath5)
-		fn[5] = testDir.."/"..fn[5]	
 		
-		for i = 1, #exts do
-			local f = fn[5]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[5]) then
+			rmFile(shp[5])
 		end
 		
 		operation = "distance"
@@ -341,7 +293,7 @@ return {
 
 		local distLayerInfo = tl:getLayerInfo(proj, proj.layers[distLayerName])
 		unitTest:assertEquals(distLayerInfo.name, distLayerName)
-		unitTest:assertEquals(distLayerInfo.file, filePath5)
+		unitTest:assertEquals(distLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[5])
 		unitTest:assertEquals(distLayerInfo.type, "OGR")
 		unitTest:assertEquals(distLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(distLayerInfo.sid)			
@@ -353,15 +305,9 @@ return {
 		
 		local minLayerName = clName.."_"..layerName3.."_Minimum"		
 		shp[6] = minLayerName..".shp"
-		local filePath6 = testDir.."/"..shp[6]	
-		fn[6] = getFileName(filePath6)
-		fn[6] = testDir.."/"..fn[6]	
 		
-		for i = 1, #exts do
-			local f = fn[6]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[6]) then
+			rmFile(shp[6])
 		end
 		
 		operation = "minimum"
@@ -384,7 +330,7 @@ return {
 
 		local minLayerInfo = tl:getLayerInfo(proj, proj.layers[minLayerName])
 		unitTest:assertEquals(minLayerInfo.name, minLayerName)
-		unitTest:assertEquals(minLayerInfo.file, filePath6)
+		unitTest:assertEquals(minLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[6])
 		unitTest:assertEquals(minLayerInfo.type, "OGR")
 		unitTest:assertEquals(minLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(minLayerInfo.sid)	
@@ -392,15 +338,9 @@ return {
 		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION
 		local maxLayerName = clName.."_"..layerName3.."_Maximum"		
 		shp[7] = maxLayerName..".shp"
-		local filePath7 = testDir.."/"..shp[7]	
-		fn[7] = getFileName(filePath7)
-		fn[7] = testDir.."/"..fn[7]	
 		
-		for i = 1, #exts do
-			local f = fn[7]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[7]) then
+			rmFile(shp[7])
 		end
 		
 		operation = "maximum"
@@ -423,7 +363,7 @@ return {
 
 		local maxLayerInfo = tl:getLayerInfo(proj, proj.layers[maxLayerName])
 		unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
-		unitTest:assertEquals(maxLayerInfo.file, filePath7)
+		unitTest:assertEquals(maxLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[7])
 		unitTest:assertEquals(maxLayerInfo.type, "OGR")
 		unitTest:assertEquals(maxLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(maxLayerInfo.sid)			
@@ -431,15 +371,9 @@ return {
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION
 		local percLayerName = clName.."_"..layerName2.."_Percentage"		
 		shp[8] = percLayerName..".shp"
-		local filePath8 = testDir.."/"..shp[8]	
-		fn[8] = getFileName(filePath8)
-		fn[8] = testDir.."/"..fn[8]	
 		
-		for i = 1, #exts do
-			local f = fn[8]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[8]) then
+			rmFile(shp[8])
 		end
 		
 		operation = "coverage"
@@ -462,7 +396,7 @@ return {
 
 		local percLayerInfo = tl:getLayerInfo(proj, proj.layers[percLayerName])
 		unitTest:assertEquals(percLayerInfo.name, percLayerName)
-		unitTest:assertEquals(percLayerInfo.file, filePath8)
+		unitTest:assertEquals(percLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[8])
 		unitTest:assertEquals(percLayerInfo.type, "OGR")
 		unitTest:assertEquals(percLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(percLayerInfo.sid)	
@@ -470,15 +404,9 @@ return {
 		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION
 		local stdevLayerName = clName.."_"..layerName3.."_Stdev"		
 		shp[9] = stdevLayerName..".shp"
-		local filePath9 = testDir.."/"..shp[9]	
-		fn[9] = getFileName(filePath9)
-		fn[9] = testDir.."/"..fn[9]	
 		
-		for i = 1, #exts do
-			local f = fn[9]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[9]) then
+			rmFile(shp[9])
 		end
 		
 		operation = "stdev"
@@ -502,7 +430,7 @@ return {
 
 		local stdevLayerInfo = tl:getLayerInfo(proj, proj.layers[stdevLayerName])
 		unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
-		unitTest:assertEquals(stdevLayerInfo.file, filePath9)
+		unitTest:assertEquals(stdevLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[9])
 		unitTest:assertEquals(stdevLayerInfo.type, "OGR")
 		unitTest:assertEquals(stdevLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(stdevLayerInfo.sid)			
@@ -510,15 +438,9 @@ return {
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
 		local meanLayerName = clName.."_"..layerName3.."_AvrgMean"		
 		shp[10] = meanLayerName..".shp"
-		local filePath10 = testDir.."/"..shp[10]	
-		fn[10] = getFileName(filePath10)
-		fn[10] = testDir.."/"..fn[10]	
 		
-		for i = 1, #exts do
-			local f = fn[10]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[10]) then
+			rmFile(shp[10])
 		end
 		
 		operation = "average"
@@ -542,7 +464,7 @@ return {
 
 		local meanLayerInfo = tl:getLayerInfo(proj, proj.layers[meanLayerName])
 		unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
-		unitTest:assertEquals(meanLayerInfo.file, filePath10)
+		unitTest:assertEquals(meanLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[10])
 		unitTest:assertEquals(meanLayerInfo.type, "OGR")
 		unitTest:assertEquals(meanLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(meanLayerInfo.sid)
@@ -550,15 +472,9 @@ return {
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
 		local weighLayerName = clName.."_"..layerName3.."_AvrgWeighted"		
 		shp[11] = weighLayerName..".shp"
-		local filePath11 = testDir.."/"..shp[11]	
-		fn[11] = getFileName(filePath11)
-		fn[11] = testDir.."/"..fn[11]	
 		
-		for i = 1, #exts do
-			local f = fn[11]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[11]) then
+			rmFile(shp[11])
 		end
 		
 		operation = "average"
@@ -582,7 +498,7 @@ return {
 		
 		local weighLayerInfo = tl:getLayerInfo(proj, proj.layers[weighLayerName])
 		unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
-		unitTest:assertEquals(weighLayerInfo.file, filePath11)
+		unitTest:assertEquals(weighLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[11])
 		unitTest:assertEquals(weighLayerInfo.type, "OGR")
 		unitTest:assertEquals(weighLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(weighLayerInfo.sid)		
@@ -590,15 +506,9 @@ return {
 		-- FILL CELLULAR SPACE WITH MAJORITY INTERSECTION OPERATION
 		local interLayerName = clName.."_"..layerName3.."_Intersection"		
 		shp[12] = interLayerName..".shp"
-		local filePath12 = testDir.."/"..shp[12]	
-		fn[12] = getFileName(filePath12)
-		fn[12] = testDir.."/"..fn[12]	
 		
-		for i = 1, #exts do
-			local f = fn[12]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[12]) then
+			rmFile(shp[12])
 		end
 		
 		operation = "mode"
@@ -622,7 +532,7 @@ return {
 		
 		local interLayerInfo = tl:getLayerInfo(proj, proj.layers[interLayerName])
 		unitTest:assertEquals(interLayerInfo.name, interLayerName)
-		unitTest:assertEquals(interLayerInfo.file, filePath12)
+		unitTest:assertEquals(interLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[12])
 		unitTest:assertEquals(interLayerInfo.type, "OGR")
 		unitTest:assertEquals(interLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(interLayerInfo.sid)			
@@ -630,15 +540,9 @@ return {
 		-- FILL CELLULAR SPACE WITH MAJORITY OCCURRENCE OPERATION
 		local occurLayerName = clName.."_"..layerName3.."_Occurence"		
 		shp[13] = occurLayerName..".shp"
-		local filePath13 = testDir.."/"..shp[13]	
-		fn[13] = getFileName(filePath13)
-		fn[13] = testDir.."/"..fn[13]	
 		
-		for i = 1, #exts do
-			local f = fn[13]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[13]) then
+			rmFile(shp[13])
 		end
 		
 		operation = "mode"
@@ -663,7 +567,7 @@ return {
 		
 		local occurLayerInfo = tl:getLayerInfo(proj, proj.layers[occurLayerName])
 		unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
-		unitTest:assertEquals(occurLayerInfo.file, filePath13)
+		unitTest:assertEquals(occurLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[13])
 		unitTest:assertEquals(occurLayerInfo.type, "OGR")
 		unitTest:assertEquals(occurLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(occurLayerInfo.sid)	
@@ -671,15 +575,9 @@ return {
 		-- FILL CELLULAR SPACE WITH SUM OPERATION
 		local sumLayerName = clName.."_"..layerName3.."_Sum"		
 		shp[14] = sumLayerName..".shp"
-		local filePath14 = testDir.."/"..shp[14]	
-		fn[14] = getFileName(filePath14)
-		fn[14] = testDir.."/"..fn[14]	
 		
-		for i = 1, #exts do
-			local f = fn[14]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[14]) then
+			rmFile(shp[14])
 		end
 		
 		operation = "sum"
@@ -704,7 +602,7 @@ return {
 		
 		local sumLayerInfo = tl:getLayerInfo(proj, proj.layers[sumLayerName])
 		unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
-		unitTest:assertEquals(sumLayerInfo.file, filePath14)
+		unitTest:assertEquals(sumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[14])
 		unitTest:assertEquals(sumLayerInfo.type, "OGR")
 		unitTest:assertEquals(sumLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(sumLayerInfo.sid)		
@@ -712,15 +610,9 @@ return {
 		-- FILL CELLULAR SPACE WITH WEIGHTED SUM OPERATION
 		local wsumLayerName = clName.."_"..layerName3.."_Wsum"		
 		shp[15] = wsumLayerName..".shp"
-		local filePath15 = testDir.."/"..shp[15]	
-		fn[15] = getFileName(filePath15)
-		fn[15] = testDir.."/"..fn[15]	
 		
-		for i = 1, #exts do
-			local f = fn[15]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[15]) then
+			rmFile(shp[15])
 		end
 		
 		operation = "sum"
@@ -745,7 +637,7 @@ return {
 		
 		local wsumLayerInfo = tl:getLayerInfo(proj, proj.layers[wsumLayerName])
 		unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
-		unitTest:assertEquals(wsumLayerInfo.file, filePath15)
+		unitTest:assertEquals(wsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[15])
 		unitTest:assertEquals(wsumLayerInfo.type, "OGR")
 		unitTest:assertEquals(wsumLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(wsumLayerInfo.sid)						
@@ -758,15 +650,9 @@ return {
 		
 		local percTifLayerName = clName.."_"..layerName4.."_RPercentage"		
 		shp[16] = percTifLayerName..".shp"
-		local filePath16 = testDir.."/"..shp[16]	
-		fn[16] = getFileName(filePath16)
-		fn[16] = testDir.."/"..fn[16]	
 		
-		for i = 1, #exts do
-			local f = fn[16]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[16]) then
+			rmFile(shp[16])
 		end
 		
 		operation = "coverage"
@@ -791,7 +677,7 @@ return {
 
 		local percTifLayerInfo = tl:getLayerInfo(proj, proj.layers[percTifLayerName]) 
 		unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
-		unitTest:assertEquals(percTifLayerInfo.file, filePath16)
+		unitTest:assertEquals(percTifLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[16])
 		unitTest:assertEquals(percTifLayerInfo.type, "OGR")
 		unitTest:assertEquals(percTifLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(percTifLayerInfo.sid)					
@@ -799,15 +685,9 @@ return {
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION FROM RASTER
 		local rmeanLayerName = clName.."_"..layerName4.."_RMean"		
 		shp[17] = rmeanLayerName..".shp"
-		local filePath17 = testDir.."/"..shp[17]	
-		fn[17] = getFileName(filePath17)
-		fn[17] = testDir.."/"..fn[17]	
 		
-		for i = 1, #exts do
-			local f = fn[17]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[17]) then
+			rmFile(shp[17])
 		end
 		
 		operation = "average"
@@ -833,7 +713,7 @@ return {
 
 		local rmeanLayerInfo = tl:getLayerInfo(proj, proj.layers[rmeanLayerName])
 		unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
-		unitTest:assertEquals(rmeanLayerInfo.file, filePath17)
+		unitTest:assertEquals(rmeanLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[17])
 		unitTest:assertEquals(rmeanLayerInfo.type, "OGR")
 		unitTest:assertEquals(rmeanLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(rmeanLayerInfo.sid)			
@@ -841,15 +721,9 @@ return {
 		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION FROM RASTER
 		local rminLayerName = clName.."_"..layerName4.."_RMinimum"		
 		shp[18] = rminLayerName..".shp"
-		local filePath18 = testDir.."/"..shp[18]	
-		fn[18] = getFileName(filePath18)
-		fn[18] = testDir.."/"..fn[18]	
 		
-		for i = 1, #exts do
-			local f = fn[18]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[18]) then
+			rmFile(shp[18])
 		end
 		
 		operation = "minimum"
@@ -875,7 +749,7 @@ return {
 
 		local rminLayerInfo = tl:getLayerInfo(proj, proj.layers[rminLayerName])
 		unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
-		unitTest:assertEquals(rminLayerInfo.file, filePath18)
+		unitTest:assertEquals(rminLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[18])
 		unitTest:assertEquals(rminLayerInfo.type, "OGR")
 		unitTest:assertEquals(rminLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(rminLayerInfo.sid)		
@@ -883,15 +757,9 @@ return {
 		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION FROM RASTER
 		local rmaxLayerName = clName.."_"..layerName4.."_RMaximum"		
 		shp[19] = rmaxLayerName..".shp"
-		local filePath19 = testDir.."/"..shp[19]	
-		fn[19] = getFileName(filePath19)
-		fn[19] = testDir.."/"..fn[19]	
 		
-		for i = 1, #exts do
-			local f = fn[19]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[19]) then
+			rmFile(shp[19])
 		end
 		
 		operation = "maximum"
@@ -917,7 +785,7 @@ return {
 
 		local rmaxLayerInfo = tl:getLayerInfo(proj, proj.layers[rmaxLayerName])
 		unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
-		unitTest:assertEquals(rmaxLayerInfo.file, filePath19)
+		unitTest:assertEquals(rmaxLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[19])
 		unitTest:assertEquals(rmaxLayerInfo.type, "OGR")
 		unitTest:assertEquals(rmaxLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(rmaxLayerInfo.sid)	
@@ -925,15 +793,9 @@ return {
 		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION FROM RASTER
 		local rstdevLayerName = clName.."_"..layerName4.."_RStdev"		
 		shp[20] = rstdevLayerName..".shp"
-		local filePath20 = testDir.."/"..shp[20]	
-		fn[20] = getFileName(filePath20)
-		fn[20] = testDir.."/"..fn[20]	
 		
-		for i = 1, #exts do
-			local f = fn[20]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[20]) then
+			rmFile(shp[20])
 		end
 		
 		operation = "stdev"
@@ -959,7 +821,7 @@ return {
 
 		local rstdevLayerInfo = tl:getLayerInfo(proj, proj.layers[rstdevLayerName])
 		unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
-		unitTest:assertEquals(rstdevLayerInfo.file, filePath20)
+		unitTest:assertEquals(rstdevLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[20])
 		unitTest:assertEquals(rstdevLayerInfo.type, "OGR")
 		unitTest:assertEquals(rstdevLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(rstdevLayerInfo.sid)		
@@ -967,15 +829,9 @@ return {
 		-- FILL CELLULAR SPACE WITH SUM OPERATION FROM RASTER
 		local rsumLayerName = clName.."_"..layerName4.."_RSum"		
 		shp[21] = rsumLayerName..".shp"
-		local filePath21 = testDir.."/"..shp[21]	
-		fn[21] = getFileName(filePath21)
-		fn[21] = testDir.."/"..fn[21]	
 		
-		for i = 1, #exts do
-			local f = fn[21]..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
+		if isFile(shp[21]) then
+			rmFile(shp[21])
 		end
 		
 		operation = "sum"
@@ -1001,20 +857,16 @@ return {
 
 		local rsumLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
 		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumLayerInfo.file, filePath21)
+		unitTest:assertEquals(rsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[21])
 		unitTest:assertEquals(rsumLayerInfo.type, "OGR")
 		unitTest:assertEquals(rsumLayerInfo.rep, "geometry")
 		unitTest:assertNotNil(rsumLayerInfo.sid)					
 		
-		-- END
 		tl:finalize()
 		
-		for i = 1, #exts do
-			for j = 1, #fn do
-				local f = fn[j]..exts[i]
-				if isFile(f) then
-					rmFile(f)
-				end		
+		for j = 1, #shp do
+			if isFile(shp[j]) then
+				rmFile(shp[j])
 			end
 		end	
 		
