@@ -135,12 +135,20 @@ if(APPLE)
 		set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2001-2016")
 		set(MACOSX_BUNDLE_SIGNATURE "TerraME")
 		set(MACOSX_BUNDLE_GUI_IDENTIFIER "http://www.terrame.org")
-		set(MACOSX_BUNDLE_EXECUTABLE_NAME "TerraME")
+		set(MACOSX_BUNDLE_EXECUTABLE_NAME "terrame")
 		set(MACOSX_BUNDLE_INFO_STRING "System for spatial dynamical modelling.")
 		set(MACOSX_BUNDLE_ICON_FILE "../Resources/icon/app.icns")
 		set(MACOSX_BUNDLE_LONG_VERSION_STRING ${TERRAME_STRING_VERSION})
 		set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${TERRAME_PKG_VERSION})
 		set(MACOSX_BUNDLE_BUNDLE_VERSION ${TERRAME_STRING_VERSION})
+
+        install(PROGRAMS ${TERRAME_ABSOLUTE_ROOT_DIR}/res/terrame
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+            COMPONENT runtime
+        )
+
+        set(CPACK_BUNDLE_STARTUP_COMMAND ${TERRAME_INSTALL_PREFIX}/bin/terrame)
 
 		configure_file(${CMAKE_ROOT}/Modules/MacOSXBundleInfo.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
 
@@ -166,7 +174,6 @@ endif()
 #
 # first check of libraries
 #
-
 find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets PrintSupport Network)
 if(Qt5_FOUND)
 	message("Qt5 found!")
@@ -320,17 +327,25 @@ endif()
 if(APPLE)
     if(TERRAME_BUILD_AS_BUNDLE)
         TmeInstallQtPlugins("qgif;qico;qjpeg;qmng;qtiff;qsvg;qsvgicon;qsqlite;qwindows;qcocoa")
-    endif()
 
-    file(WRITE  ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
-                "[Paths]\nBinaries = MacOS\nPlugins = qtplugins"
+        file(WRITE  ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
+            "[Paths]\nBinaries = MacOS\nPlugins = qtplugins"
         )
 
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
-            DESTINATION terrame.app/Contents/Resources
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/Resources
             COMPONENT runtime
-            )
+        )
 
+        install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.icns
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/Resources/icon
+            COMPONENT runtime
+        )
+
+        set(TERRAME_CURRENT_BINARY_DIR ${TERRAME_INSTALL_PREFIX}/MacOS)
+    else()
+        set(TERRAME_CURRENT_BINARY_DIR bin)
+    endif()
 
     install(DIRECTORY ${TERRALIB_DIR}/lib
             DESTINATION ${TERRAME_INSTALL_PREFIX}
@@ -353,20 +368,15 @@ if(APPLE)
             COMPONENT runtime
             )
 
-    install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.icns
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/Resources/icon
-            COMPONENT runtime
-            )
-
     set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
     install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/MacOS
+            DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
             COMPONENT runtime
             )
 
     set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
     install(DIRECTORY ${TERRAME_PACKAGES_DIR}
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/MacOS
+            DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
             COMPONENT runtime
             PATTERN "log" EXCLUDE
             )
@@ -377,20 +387,19 @@ if(APPLE)
 #            )
 
     install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/MacOS/share/terralib
+            DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
             COMPONENT runtime
             )
 
     install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/MacOS/share/terralib
+            DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
             COMPONENT runtime
             )
 
     install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/MacOS/share/terralib
+            DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
             COMPONENT runtime
             )
-
 
 elseif(WIN32)
     set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)

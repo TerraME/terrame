@@ -33,7 +33,7 @@ file(GLOB_RECURSE TERRAME_PLGS ${CMAKE_INSTALL_PREFIX}/*@CMAKE_SHARED_LIBRARY_SU
 if(APPLE AND TERRAME_BUILD_AS_BUNDLE)
   set(BU_CHMOD_BUNDLE_ITEMS ON)
   set(TERRAME_APPLICATION ${CMAKE_INSTALL_PREFIX}/terrame.app)
-  set(TERRAME_PATHS "@Qt5_DIR@/../..;@TERRAME_DEPENDENCIES_DIR@/lib;@TERRALIB_3RDPARTY_DIR@/lib;@TERRAME_LIBRARIES@;@TERRALIB_DIR@/lib;@TERRALIB_DIR@/bin")
+  set(TERRAME_PATHS "@Qt5_DIR@/../..;@TERRAME_DEPENDENCIES_DIR@/lib;@TERRALIB_3RDPARTY_DIR@/lib;@TERRAME_LIBRARIES@;@TERRALIB_DIR@/lib;@TERRALIB_DIR@/bin;/usr/local/lib;/usr/lib")
 elseif(WIN32)
   set(TERRAME_APPLICATION ${CMAKE_INSTALL_PREFIX}/bin/terrame.exe)
   set(TERRAME_PATHS "")
@@ -42,7 +42,7 @@ elseif(WIN32)
 endif()
 
 if(APPLE AND TERRAME_BUILD_AS_BUNDLE)
-  # Overload function
+    # Overload function
 	function(gp_item_default_embedded_path item default_embedded_path_var)
 		set (is_System FALSE)
 		set (is_QImageFormat FALSE)
@@ -95,4 +95,3 @@ endif()
 
 # Call fixup_bundle
 fixup_bundle("${TERRAME_APPLICATION}" "${TERRAME_PLGS}" "${TERRAME_PATHS}")
-endif()

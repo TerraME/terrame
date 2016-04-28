@@ -69,7 +69,6 @@ else()
 	set(CPACK_PACKAGE_FILE_NAME "terrame-@TERRAME_VERSION_STRING@-src")
 endif()
 
-
 #
 # specific configuration for NSIS package generator
 #
