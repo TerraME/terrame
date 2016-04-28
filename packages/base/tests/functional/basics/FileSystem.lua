@@ -157,6 +157,22 @@ return{
 		rmFile(file)
 
 		unitTest:assert(not isFile(file))
+		
+		os.execute("touch abc123.shp")
+		os.execute("touch abc123.shx")
+		os.execute("touch abc123.dbf")
+		os.execute("touch abc123.prj")
+
+		rmFile("abc123.shp")
+
+		unitTest:assert(not isFile("abc123.shp"))
+		unitTest:assert(not isFile("abc123.shx"))
+		unitTest:assert(not isFile("abc123.dbf"))
+		unitTest:assert(not isFile("abc123.prj"))
+
+		os.execute("touch abc123.shp")
+
+		rmFile("abc123.shp")
 	end, 
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)

@@ -261,7 +261,8 @@ end
 
 --- Remove an existing file. If the file does not exist or it cannot be removed,
 -- this function stops with an error. Directories cannot be removed using
--- this function.
+-- this function. If the file to be removed is a shapefile, it also removes
+-- the respective dbf, shx, and prj files if they exist.
 -- @arg file A string with the file to be removed. It might contain a path if needed.
 -- The function will automatically add
 -- quotation marks in the beginning and in the end of this argument in order
@@ -284,6 +285,16 @@ function rmFile(file)
 
 	if result ~= true then
 		customError(result) -- SKIP
+	end
+
+	if string.endswith(file, ".shp") then
+		local dbf = string.sub(file, 1, -4).."dbf"
+		local shx = string.sub(file, 1, -4).."shx"
+		local prj = string.sub(file, 1, -4).."prj"
+
+		if isFile(dbf) then rmFile(dbf) end
+		if isFile(shx) then rmFile(shx) end
+		if isFile(prj) then rmFile(prj) end
 	end
 end
 
