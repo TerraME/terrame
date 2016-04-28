@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+
+SOURCE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+TME_ROOT_PATH="$SOURCE/.."
+export TME_PATH="$TME_ROOT_PATH"/MacOS
+export PATH=$PATH:$TME_PATH
+export DYLD_LIBRARY_PATH="$TME_ROOT_PATH"/lib
+export DYLD_FRAMEWORK_PATH="$TME_ROOT_PATH"/Frameworks
+
+"$TME_PATH"/terrame $@
