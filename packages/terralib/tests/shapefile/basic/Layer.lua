@@ -50,7 +50,14 @@ return {
 			project = proj,
 			name = rodovias,
 			file = filePath("BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "terralib")	
-		}		
+		}
+
+		local portos = "Portos"
+		Layer{
+			project = proj,
+			name = portos,
+			file = filePath("PORTOS_AMZ_pt.shp", "terralib")	
+		}
 		
 		local clName1 = "cells"
 		local shp1 = clName1..".shp"
@@ -98,11 +105,101 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-area.png")
 
-		local lengthLayerName = clName1.."_length"
-		local shp2 = areaLayerName..".shp"
+		local lindistLayerName = clName1.."_lindist"
+		local shp2 = lindistLayerName..".shp"
 
 		if isFile(shp2) then
 			rmFile(shp2)
+		end
+
+		cl:fill{
+			operation = "distance",
+			name = rodovias,
+			attribute = "lindist",
+			output = lindistLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = lindistLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "lindist",
+			min = 0,
+			max = 200000,
+			slices = 8,
+			color = {"green", "red"}
+		}
+
+		unitTest:assertSnapshot(map, "lines-distance.png")
+
+		local poldistLayerName = clName1.."_poldist"
+		local shp3 = poldistLayerName..".shp"
+
+		if isFile(shp3) then
+			rmFile(shp3)
+		end
+
+		cl:fill{
+			operation = "distance",
+			name = protecao,
+			attribute = "poldist",
+			output = poldistLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = poldistLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "poldist",
+			min = 0,
+			max = 370000,
+			slices = 8,
+			color = {"green", "red"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-distance.png")
+
+		local pointdistLayerName = clName1.."_pointdist"
+		local shp4 = pointdistLayerName..".shp"
+
+		if isFile(shp4) then
+			rmFile(shp4)
+		end
+
+		cl:fill{
+			operation = "distance",
+			name = portos,
+			attribute = "pointdist",
+			output = pointdistLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = pointdistLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "pointdist",
+			min = 0,
+			max = 900000,
+			slices = 8,
+			color = {"green", "red"}
+		}
+
+		unitTest:assertSnapshot(map, "points-distance.png")
+
+		local lengthLayerName = clName1.."_length"
+		local shp5 = lengthLayerName..".shp"
+
+		if isFile(shp5) then
+			rmFile(shp5)
 		end
 
 		local error_func = function()
