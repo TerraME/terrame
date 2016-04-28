@@ -75,6 +75,8 @@ return {
 			file = clName1..".shp"
 		}
 
+		-- AREA
+
 		local areaLayerName = clName1.."_area"
 		local shp1 = areaLayerName..".shp"
 
@@ -104,6 +106,8 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "polygons-area.png")
+
+		-- DISTANCE
 
 		local lindistLayerName = clName1.."_lindist"
 		local shp2 = lindistLayerName..".shp"
@@ -194,6 +198,94 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "points-distance.png")
+
+		-- PRESENCE
+
+		local linpresLayerName = clName1.."_linpres"
+		local shp2 = linpresLayerName..".shp"
+
+		if isFile(shp2) then
+			rmFile(shp2)
+		end
+
+		cl:fill{
+			operation = "presence",
+			name = rodovias,
+			attribute = "linpres",
+			output = linpresLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = linpresLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "linpres",
+			value = {0, 1},
+			color = {"green", "red"}
+		}
+
+		unitTest:assertSnapshot(map, "lines-presence.png")
+
+		local polpresLayerName = clName1.."_polpres"
+		local shp3 = polpresLayerName..".shp"
+
+		if isFile(shp3) then
+			rmFile(shp3)
+		end
+
+		cl:fill{
+			operation = "presence",
+			name = protecao,
+			attribute = "polpres",
+			output = polpresLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = polpresLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "polpres",
+			value = {0, 1},
+			color = {"green", "red"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-presennce.png")
+
+		local pointpresLayerName = clName1.."_pointpres"
+		local shp4 = pointpresLayerName..".shp"
+
+		if isFile(shp4) then
+			rmFile(shp4)
+		end
+
+		cl:fill{
+			operation = "presence",
+			name = portos,
+			attribute = "pointpres",
+			output = pointpresLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = pointpresLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "pointpres",
+			value = {0, 1},
+			color = {"green", "red"}
+		}
+
+		unitTest:assertSnapshot(map, "points-presence.png")
+
+		-- LENGTH
 
 		local lengthLayerName = clName1.."_length"
 		local shp5 = lengthLayerName..".shp"
