@@ -24,7 +24,7 @@
 
 return {
 	fill = function(unitTest)
-		local projName = "cellular_layer_basic.tview"
+		local projName = "cellular_layer_fill_shape.tview"
 
 		local proj = Project {
 			file = projName,
@@ -75,10 +75,14 @@ return {
 			file = clName1..".shp"
 		}
 
+		local shapes = {}
+
 		-- AREA
 
 		local areaLayerName = clName1.."_area"
 		local shp1 = areaLayerName..".shp"
+
+		table.insert(shapes, shp1)
 
 		if isFile(shp1) then
 			rmFile(shp1)
@@ -112,6 +116,8 @@ return {
 		local lindistLayerName = clName1.."_lindist"
 		local shp2 = lindistLayerName..".shp"
 
+		table.insert(shapes, shp2)
+
 		if isFile(shp2) then
 			rmFile(shp2)
 		end
@@ -142,6 +148,8 @@ return {
 		local poldistLayerName = clName1.."_poldist"
 		local shp3 = poldistLayerName..".shp"
 
+		table.insert(shapes, shp3)
+
 		if isFile(shp3) then
 			rmFile(shp3)
 		end
@@ -171,6 +179,8 @@ return {
 
 		local pointdistLayerName = clName1.."_pointdist"
 		local shp4 = pointdistLayerName..".shp"
+
+		table.insert(shapes, shp4)
 
 		if isFile(shp4) then
 			rmFile(shp4)
@@ -204,6 +214,8 @@ return {
 		local linpresLayerName = clName1.."_linpres"
 		local shp2 = linpresLayerName..".shp"
 
+		table.insert(shapes, shp2)
+
 		if isFile(shp2) then
 			rmFile(shp2)
 		end
@@ -232,6 +244,8 @@ return {
 		local polpresLayerName = clName1.."_polpres"
 		local shp3 = polpresLayerName..".shp"
 
+		table.insert(shapes, shp3)
+
 		if isFile(shp3) then
 			rmFile(shp3)
 		end
@@ -255,10 +269,12 @@ return {
 			color = {"green", "red"}
 		}
 
-		unitTest:assertSnapshot(map, "polygons-presennce.png")
+		unitTest:assertSnapshot(map, "polygons-presence.png")
 
 		local pointpresLayerName = clName1.."_pointpres"
 		local shp4 = pointpresLayerName..".shp"
+
+		table.insert(shapes, shp4)
 
 		if isFile(shp4) then
 			rmFile(shp4)
@@ -285,6 +301,117 @@ return {
 
 		unitTest:assertSnapshot(map, "points-presence.png")
 
+		-- COUNT
+		local clName2 = "cells_large"
+		local shp1 = clName2..".shp"
+
+		table.insert(shapes, shp1)
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end
+
+		local cl = Layer{
+			project = proj,
+			source = "shp",
+			input = layerName1,
+			name = clName2,
+			resolution = 100000,
+			file = clName2..".shp"
+		}
+
+		local pointcountLayerName = clName2.."_pointcount"
+		local shp2 = pointcountLayerName..".shp"
+
+		table.insert(shapes, shp2)
+
+		if isFile(shp2) then
+			rmFile(shp2)
+		end
+
+		cl:fill{
+			operation = "count",
+			name = portos,
+			attribute = "pointcount",
+			output = pointcountLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = pointcountLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "pointcount",
+			value = {0, 1, 2},
+			color = {"green", "red", "blue"}
+		}
+
+		unitTest:assertSnapshot(map, "points-count.png")
+
+		local linecountLayerName = clName2.."_linecount"
+		local shp3 = linecountLayerName..".shp"
+
+		table.insert(shapes, shp3)
+
+		if isFile(shp3) then
+			rmFile(shp3)
+		end
+
+		cl:fill{
+			operation = "count",
+			name = rodovias,
+			attribute = "linecount",
+			output = linecountLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = linecountLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "linecount",
+			min = 0,
+			max = 135,
+			slices = 10,
+			color = {"green", "blue"}
+		}
+
+		unitTest:assertSnapshot(map, "lines-count.png")
+
+		local polcountLayerName = clName2.."_polcount"
+		local shp4 = polcountLayerName..".shp"
+
+		table.insert(shapes, shp4)
+
+		if isFile(shp4) then
+			rmFile(shp4)
+		end
+
+		cl:fill{
+			operation = "count",
+			name = protecao,
+			attribute = "polcount",
+			output = polcountLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = polcountLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "polcount",
+			value = {0, 1, 2},
+			color = {"green", "red", "blue"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-count.png")
+
 		-- LENGTH
 
 		local lengthLayerName = clName1.."_length"
@@ -303,6 +430,15 @@ return {
 			}
 		end
 		unitTest:assertError(error_func, "Sorry, this operation was not implemented in TerraLib yet.")
+
+		local tl = TerraLib()
+		tl:finalize()
+
+		forEachElement(shapes, function(_, value)
+			rmFile(value)
+		end)
+
+		unitTest:assertFile(projName)
 	end
 }
 
