@@ -22,6 +22,8 @@
 --
 -------------------------------------------------------------------------------------------
 
+-- @example Creates a database that can be used by the example deforestation of base package.
+
 import("terralib")
 
 local projName = "amazonia.tview"
@@ -32,7 +34,7 @@ end
 
 local project = Project{
 	file = projName,
-	create = true,
+	clean = true,
 	author = "Andrade, P.",
 	title = "Amazonia database"
 }
@@ -67,37 +69,51 @@ limite = Layer{
 	file = filePath("LIMITE_AMZ_pol.shp", "terralib")
 }
 
---[[
--- bug. o sistema nao pode enctonrar o caminho especificado
-cl = Layer{
-	project = project,
-	file = "mycells.shp",
-	input = "limite",
-	name = "cells",
-	output = "cells",
-	resolution = 100000000
-}
---]]
+cellsFile = "amazonia.shp"
+
+if isFile(cellsFile) then rmFile(cellsFile) end
 
 cl = Layer{
 	project = project,
-	file = "c:/mycells.shp", -- test also without c:
+	file = cellsFile,
 	input = "limite",
 	name = "cells",
-	resolution = 10000000
+	resolution = 100000
+}
+
+cl:fill{
+	operation = "distance",
+	name = "roads",
+	attribute = "distroads",
+	output = "amazonia-dist.shp"
+}
+
+cs = CellularSpace{
+	project = project,
+	layer = "cells"
+}
+
+Map{
+	target = cs,
+	select = "distroads",
+	min = 0,
+	max = 200000,
+	slices = 10,
+	color = {"red", "green"}
 }
 
 --[[
 cl:fill{
 	operation = "average",
-	name = altimetria,
-	attribute = "height"
+	name = "prodes",
+	select = 1,
+	input = prodes,
+	attribute = "height",
+	output = "amazonia-height.shp"
 }
+--]]
 
 if isFile(projName) then
 	rmFile(projName)
 end
-
-terralib:finalize()
---]]
 
