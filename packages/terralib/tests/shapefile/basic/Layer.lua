@@ -481,6 +481,41 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-minimum.png")
 
+		-- AVERAGE
+
+		local polavrgLayerName = clName1.."_polavrg"
+		local shp1 = polavrgLayerName..".shp"
+
+		table.insert(shapes, shp1)
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end
+
+		cl:fill{
+			operation = "average",
+			name = municipios,
+			attribute = "polavrg",
+			select = "POPULACAO_",
+			output = polavrgLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = polavrgLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "polavrg",
+			min = 0,
+			max = 311000,
+			slices = 8,
+			color = {"red", "green"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-average.png")
+
 
 
 		-- LENGTH
