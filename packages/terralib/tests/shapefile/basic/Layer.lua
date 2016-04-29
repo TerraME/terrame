@@ -412,6 +412,41 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-count.png")
 
+		-- MAXIMUM
+
+		local polmaxLayerName = clName1.."_polmax"
+		local shp1 = polmaxLayerName..".shp"
+
+		table.insert(shapes, shp1)
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end
+
+		cl:fill{
+			operation = "maximum",
+			name = municipios,
+			attribute = "polmax",
+			select = "POPULACAO_",
+			output = polmaxLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = polmaxLayerName
+		}
+		local map = Map{
+			target = cs,
+			select = "polmax",
+			min = 0,
+			max = 1450000,
+			slices = 8,
+			color = {"red", "green"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-maximum.png")
+
+
 		-- LENGTH
 
 		local lengthLayerName = clName1.."_length"
