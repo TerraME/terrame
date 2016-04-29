@@ -446,6 +446,42 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-maximum.png")
 
+		-- MINIMUM
+
+		local polminLayerName = clName1.."_polinx"
+		local shp1 = polminLayerName..".shp"
+
+		table.insert(shapes, shp1)
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end
+
+		cl:fill{
+			operation = "minimum",
+			name = municipios,
+			attribute = "polmin",
+			select = "POPULACAO_",
+			output = polminLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = polminLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "polmin",
+			min = 0,
+			max = 275000,
+			slices = 8,
+			color = {"red", "green"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-minimum.png")
+
+
 
 		-- LENGTH
 
