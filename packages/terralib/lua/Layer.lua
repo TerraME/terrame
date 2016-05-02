@@ -364,7 +364,11 @@ Layer_ = {
 		if not data.table then
 			data.table = data.name
 		end
-		
+	
+		if isFile(data.output..".shp") then
+			customError("File '"..data.output..".shp' already exists and should be removed manually.") -- SKIP This should be removed by #902.
+		end
+
 		local layer = project.layers[data.name]
 		local info = project.terralib:getLayerInfo(project, layer)
 		local repr = info.rep
