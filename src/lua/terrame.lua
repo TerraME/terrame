@@ -1212,7 +1212,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 	loadPackgesLibPath()
     _Gtme.loadLibraryPath()
-	
+
+    if not _Gtme.isLoaded("terralib") then
+        _Gtme.import("terralib")
+    end
+
 	local argCount = 1
 	while argCount <= #arguments do
 		arg = arguments[argCount]
@@ -1357,10 +1361,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
 				end)
-				
-				local terralib = getPackage("terralib")
-				local tlib = terralib.TerraLib{}
-				tlib:finalize()
+
+                if _Gtme.isWindowsOS() then
+                    local terralib = getPackage("terralib")
+                    local tlib = terralib.TerraLib{}
+                    tlib:finalize()
+                end
 				
 				os.exit()
 			elseif arg == "-sketch" then
@@ -1520,9 +1526,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		rmDir(_Gtme.tmpdirectory__)
 	end
 
-	local terralib = getPackage("terralib")
-	local tlib = terralib.TerraLib{}
-	tlib:finalize()
+    if _Gtme.isWindowsOS() then
+        local terralib = getPackage("terralib")
+        local tlib = terralib.TerraLib{}
+        tlib:finalize()
+    end
 
 	return true
 end

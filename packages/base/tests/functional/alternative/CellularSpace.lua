@@ -193,7 +193,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("water", "number", "abc"))
 		
-		local terralib = getPackage("terralib")
+		--local terralib = getPackage("terralib")
 		
 		local projectNonStringOrProject = function()
 			local cs = CellularSpace{project = 2, layer = "cells"}
@@ -216,7 +216,7 @@ return{
 			os.execute("rm -f "..projFile)
 		end
 		
-		local proj = terralib.Project{
+		local proj = Project{
 			file = projFile,
 			clean = true,
 			author = "Avancini",
