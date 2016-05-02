@@ -1,7 +1,0 @@
-scripts/trace.lua:11: attempt to perform arithmetic on global 'x' (a nil value)
-Stack traceback:
-    File scripts/trace.lua, line 11, in function 'h'
-    File scripts/trace.lua, line 7, in function 'g'
-    File scripts/trace.lua, line 3, in function 'f'
-    File scripts/trace.lua, line 14, in main chunk
-

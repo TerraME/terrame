@@ -163,7 +163,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 			logfile = io.open("log"..s..lfilename, "w")
 			forEachElement(result, function(_, value)
-				logfile:write(value.."\n")
+				logfile:write(_Gtme.makePathCompatibleToAllOS(value).."\n")
 			end)
 		else
 			local resultfile = io.open(tmpdirectory..s..lfilename, "w")

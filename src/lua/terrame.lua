@@ -957,7 +957,8 @@ function _Gtme.traceback()
 	local s = "/" -- si.separator
 	local str = "Stack traceback:\n"
 
-	local last_function = ""
+	local func = ""
+	local last_function
 	local found_function = false
 
 	local info = debug.getinfo(level)
@@ -980,27 +981,35 @@ function _Gtme.traceback()
 			m4 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.package..s.."lua")))
 		end
 
-		last_function = info.name
+		local func = info.name
 
-		if     last_function == "?"          then last_function = "main chunk"
-		elseif last_function == "__add"      then last_function = "operator + (addition)"
-		elseif last_function == "__sub"      then last_function = "operator - (subtraction)"
-		elseif last_function == "__mul"      then last_function = "operator * (multiplication)"
-		elseif last_function == "__div"      then last_function = "operator / (division)"
-		elseif last_function == "__mod"      then last_function = "operator % (modulo)"
-		elseif last_function == "__pow"      then last_function = "operator ^ (exponentiation)"
-		elseif last_function == "__unm"      then last_function = "operator - (minus)"
-		elseif last_function == "__concat"   then last_function = "operator .. (concatenation)"
-		elseif last_function == "__len"      then last_function = "operator # (size)"
-		elseif last_function == "__eq"       then last_function = "operator == (equal)"
-		elseif last_function == "__lt"       then last_function = "comparison operator"
-		elseif last_function == "__le"       then last_function = "comparison operator"
-		elseif last_function == "__index"    then last_function = "operator [] (index)"
-		elseif last_function == "__newindex" then last_function = "operator [] (index)"
-		elseif last_function == "__call"     then last_function = "call"
-		elseif last_function ~= nil          then last_function = "function '"..last_function.."'"
-		elseif not last_function             then last_function = "main chunk"
+		if     func == "?"          then func = "main chunk"
+		elseif func == "__add"      then func = "operator + (addition)"
+		elseif func == "__sub"      then func = "operator - (subtraction)"
+		elseif func == "__mul"      then func = "operator * (multiplication)"
+		elseif func == "__div"      then func = "operator / (division)"
+		elseif func == "__mod"      then func = "operator % (modulo)"
+		elseif func == "__pow"      then func = "operator ^ (exponentiation)"
+		elseif func == "__unm"      then func = "operator - (minus)"
+		elseif func == "__concat"   then func = "operator .. (concatenation)"
+		elseif func == "__len"      then func = "operator # (size)"
+		elseif func == "__eq"       then func = "operator == (equal)"
+		elseif func == "__lt"       then func = "comparison operator"
+		elseif func == "__le"       then func = "comparison operator"
+		elseif func == "__index"    then func = "operator [] (index)"
+		elseif func == "__newindex" then func = "operator [] (index)"
+		elseif func == "__call"     then func = "call"
+		elseif func == "_sof_"      then func = "second order function"
+		elseif func ~= nil          then func = "function '"..func.."'"
+		elseif not func             then
+			if last_function then
+				func = "call to "..last_function
+			else
+				func = "main chunk"
+			end
 		end
+
+		last_function = func
 
 		if si.fullTraceback or (si.package and not (mb or m1 or m3)) or (not (m1 or m2 or m3 or m4)) then
 			str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
@@ -1008,7 +1017,7 @@ function _Gtme.traceback()
 			if info.currentline > 0 then
 				str = str..", line "..info.currentline
 			end
-			str = str..", in "..last_function.."\n"
+			str = str..", in "..func.."\n"
 		end
 	
 		level = level + 1

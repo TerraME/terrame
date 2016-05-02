@@ -449,7 +449,7 @@ end
 -- otherwise it returns false.
 -- @arg obj A Society, Group, or Cell. Cells need to have a placement in order to execute
 -- this function.
--- @arg func A function that takes one single Agent as argument. If some call to it returns
+-- @arg _sof_ A function that takes one single Agent as argument. If some call to it returns
 -- false, forEachAgent() stops and does not process any other Agent. 
 -- This function can optionally get a second argument with a positive number representing the
 -- position of the Agent in the vector of Agents.
@@ -463,12 +463,12 @@ end
 --     agent.age = agent.age + 1
 -- end)
 -- @see Environment:createPlacement
-function forEachAgent(obj, func)
+function forEachAgent(obj, _sof_)
 	local t = type(obj)
 	if t ~= "Society" and t ~= "Cell" and t ~= "Group" then
 		incompatibleTypeError(1, "Society, Group, or Cell", obj)
-	elseif type(func) ~= "function" then
-		incompatibleTypeError(2, "function", func)
+	elseif type(_sof_) ~= "function" then
+		incompatibleTypeError(2, "function", _sof_)
 	end
 
 	local ags = obj.agents
@@ -482,7 +482,7 @@ function forEachAgent(obj, func)
 	local k = 1
 	for i = 1, #ags do
 		local ag = ags[k]
-		if ag and func(ag, i) == false then return false end
+		if ag and _sof_(ag, i) == false then return false end
 		if ag == ags[k] then k = k + 1 end
 	end
 	return true
@@ -493,7 +493,7 @@ end
 -- false, forEachCell() stops and returns false, otherwise it returns true.
 -- @arg cs A CellularSpace, Trajectory, or Agent. Agents need to have a placement
 -- in order to execute this function.
--- @arg f A user-defined function that takes a Cell as argument.
+-- @arg _sof_ A user-defined function that takes a Cell as argument.
 -- It can optionally have a second argument with a positive number representing the position of
 -- the Cell in the vector of Cells. If it returns false when processing a given Cell,
 -- forEachCell() stops and does not process any other Cell.
@@ -503,16 +503,16 @@ end
 --     cell.water = 0
 -- end)
 -- @see Environment:createPlacement
-function forEachCell(cs, f)
+function forEachCell(cs, _sof_)
 	local t = type(cs)
 	if t ~= "CellularSpace" and t ~= "Trajectory" and t ~= "Agent" then
 		incompatibleTypeError(1, "CellularSpace, Trajectory, or Agent", cs)
-	elseif type(f) ~= "function" then
-		incompatibleTypeError(2, "function", f)
+	elseif type(_sof_) ~= "function" then
+		incompatibleTypeError(2, "function", _sof_)
 	end
 
 	for i, cell in ipairs(cs.cells) do
-		if f(cell, i) == false then return false end
+		if _sof_(cell, i) == false then return false end
 	end
 	return true
 end
@@ -524,7 +524,7 @@ end
 -- it returns false.
 -- @arg cs1 A CellularSpace.
 -- @arg cs2 Another CellularSpace.
--- @arg f A user-defined function that takes two Cells as arguments, one coming from the
+-- @arg _sof_ A user-defined function that takes two Cells as arguments, one coming from the
 -- first argument and the other from the second one.
 -- If some call returns false, forEachCellPair() stops and does not
 -- process any other pair of Cells.
@@ -538,20 +538,20 @@ end
 --     cell2.water = cell1.water
 --     cell1.water = 0
 -- end)
-function forEachCellPair(cs1, cs2, f)
+function forEachCellPair(cs1, cs2, _sof_)
 	if type(cs1) ~= "CellularSpace" then
 		incompatibleTypeError(1, "CellularSpace", cs1)
 	elseif type(cs2) ~= "CellularSpace" then
 		incompatibleTypeError(2, "CellularSpace", cs2)
-	elseif type(f) ~= "function" then
-		incompatibleTypeError(3, "function", f)
+	elseif type(_sof_) ~= "function" then
+		incompatibleTypeError(3, "function", _sof_)
 	end
 
 	verify(#cs1 == #cs2, "CellularSpaces should have the same size.")
 
 	for i, cell1 in ipairs(cs1.cells) do
 		local cell2 = cs2.cells[i]
-		if f(cell1, cell2, i) == false then return false end
+		if _sof_(cell1, cell2, i) == false then return false end
 	end
 	return true
 end
@@ -562,7 +562,7 @@ end
 -- There are two ways of using this function because the second argument is optional.
 -- @arg agent An Agent.
 -- @arg name (Optional) A string with the name of the SocialNetwork to be transversed. The default value is "1".
--- @arg f A function that takes three arguments: the Agent itself, its connection, and the
+-- @arg _sof_ A function that takes three arguments: the Agent itself, its connection, and the
 -- connection weight. If some call to f returns false, forEachConnection() stops and does not
 -- process any other connection. In the case where the second argument is missing, this
 -- function becomes the second argument.
@@ -579,16 +579,16 @@ end
 --     ag1:message{receiver = ag2}
 -- end)
 -- @see Society:createSocialNetwork
-function forEachConnection(agent, name, f)
+function forEachConnection(agent, name, _sof_)
 	if type(agent) ~= "Agent" then
 		incompatibleTypeError(1, "Agent", agent)
 	elseif type(name) == "function" then
-		f = name
+		_sof_ = name
 		name = "1"
 	elseif type(name) ~= "string" then
 		incompatibleTypeError(2, "function or string", name)
-	elseif type(f) ~= "function" then
-		incompatibleTypeError(3, "function", f)
+	elseif type(_sof_) ~= "function" then
+		incompatibleTypeError(3, "function", _sof_)
 	end
 
 	local socialnetwork = agent:getSocialNetwork(name)
@@ -598,7 +598,7 @@ function forEachConnection(agent, name, f)
 
 	for name, connection in pairs(socialnetwork.connections) do
 		local weight = socialnetwork.weights[name]
-		if f(agent, connection, weight) == false then return false end
+		if _sof_(agent, connection, weight) == false then return false end
 	end
 
 	return true
@@ -612,7 +612,7 @@ end
 -- This function returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg obj A TerraME object or a table.
--- @arg func A user-defined function that takes three arguments: the name of the element,
+-- @arg _sof_ A user-defined function that takes three arguments: the name of the element,
 -- the element itself, and the type of the element. If some call to this function returns
 -- false then forEachElement() stops.
 -- @usage cell = Cell{
@@ -623,20 +623,20 @@ end
 -- forEachElement(cell, function(idx, _, etype)
 --     print(idx.."\t"..etype)
 -- end)
-function forEachElement(obj, func)
+function forEachElement(obj, _sof_)
 	if obj == nil then
 		mandatoryArgumentError(1)
 	elseif not isTable(obj) then
 		incompatibleTypeError(1, "table", obj)
-	elseif func == nil then
+	elseif _sof_ == nil then
 		mandatoryArgumentError(2)
-	elseif type(func) ~= "function" then
-		incompatibleTypeError(2, "function", func)
+	elseif type(_sof_) ~= "function" then
+		incompatibleTypeError(2, "function", _sof_)
 	end
 
 	for k, ud in pairs(obj) do
 		local t = type(ud)
-		if func(k, ud, t) == false then return false end
+		if _sof_(k, ud, t) == false then return false end
 	end
 
 	return true
@@ -647,13 +647,13 @@ end
 -- also considered files. If any of the function calls returns
 -- false, forEachFile() stops and returns false, otherwise it returns true.
 -- @arg directory A string with the path to a directory, or a vector of files.
--- @arg f A user-defined function that takes a file name as argument. Note that
+-- @arg _sof_ A user-defined function that takes a file name as argument. Note that
 -- the name does not include the directory where the file is placed.
 -- @usage forEachFile(packageInfo("base").path, function(file)
 --     print(file)
 -- end)
 -- @see FileSystem:dir
-function forEachFile(directory, f)
+function forEachFile(directory, _sof_)
 	if type(directory) == "string" then
 		if not isDir(directory) then
 			customError("Directory '"..directory.."' is not valid or does not exist.")
@@ -665,10 +665,10 @@ function forEachFile(directory, f)
 	end
 
 	mandatoryArgument(1, "table", directory)
-	mandatoryArgument(2, "function", f)
+	mandatoryArgument(2, "function", _sof_)
 
 	for i = 1, #directory do
-		if f(directory[i]) == false then return false end
+		if _sof_(directory[i]) == false then return false end
 	end
 
 	return true
@@ -681,7 +681,7 @@ end
 -- @arg cell A Cell.
 -- @arg name (Optional) A string with the name of the Neighborhood to be transversed.
 -- The default value is "1".
--- @arg f A user-defined function that takes three arguments: the Cell itself, the neighbor
+-- @arg _sof_ A user-defined function that takes three arguments: the Cell itself, the neighbor
 -- Cell, and the connection weight. If some call to it returns false, forEachNeighbor() stops
 -- and does not process any other neighbor. In the case where the second argument is missing,
 -- this function becomes the second argument.
@@ -711,16 +711,16 @@ end
 -- end)
 -- @see CellularSpace:createNeighborhood
 -- @see CellularSpace:loadNeighborhood
-function forEachNeighbor(cell, name, f)
+function forEachNeighbor(cell, name, _sof_)
 	if type(cell) ~= "Cell" then
 		incompatibleTypeError(1, "Cell", cell)
 	elseif type(name) == "function" then
-		f = name
+		_sof_ = name
 		name = "1"
 	elseif type(name) ~= "string" then
 		incompatibleTypeError(2, "function or string", name)
-	elseif type(f) ~= "function" then
-		incompatibleTypeError(3, "function", f)
+	elseif type(_sof_) ~= "function" then
+		incompatibleTypeError(3, "function", _sof_)
 	end
 
 	local neighborhood = cell:getNeighborhood(name)
@@ -733,7 +733,7 @@ function forEachNeighbor(cell, name, f)
 	while not neighborhood.cObj_:isLast() do
 		local neigh = neighborhood.cObj_:getNeighbor()
 		local weight = neighborhood.cObj_:getWeight()
-		if f(cell, neigh, weight) == false then return false end
+		if _sof_(cell, neigh, weight) == false then return false end
 		neighborhood.cObj_:next()
 	end
 
@@ -744,7 +744,7 @@ end
 -- on them. It returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg cell A Cell.
--- @arg f A function that receives a Neighborhood name as argument.
+-- @arg _sof_ A function that receives a Neighborhood name as argument.
 -- @usage cs = CellularSpace{
 --     xdim = 10
 -- }
@@ -759,17 +759,17 @@ end
 --     print(idx)
 --     print(#cell:getNeighborhood(idx))
 -- end)
-function forEachNeighborhood(cell, f)
+function forEachNeighborhood(cell, _sof_)
 	if type(cell) ~= "Cell" then
 		incompatibleTypeError(1, "Cell", cell)
-	elseif type(f) ~= "function" then
-		incompatibleTypeError(2, "function", f)
+	elseif type(_sof_) ~= "function" then
+		incompatibleTypeError(2, "function", _sof_)
 	end
 
 	cell.cObj_:first()
 	while not cell.cObj_:isLast() do
 		local idx = cell.cObj_:getCurrentNeighborhood():getID()
-		if f(idx) == false then return false end
+		if _sof_(idx) == false then return false end
 		cell.cObj_:next()
 	end
 
@@ -784,7 +784,7 @@ end
 -- This function returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg obj A TerraME object or a table.
--- @arg func A user-defined function that takes three arguments: the name of the element,
+-- @arg _sof_ A user-defined function that takes three arguments: the name of the element,
 -- the element itself, and the type of the element. If some call to this function returns
 -- false then forEachElement() stops.
 -- @usage cell = Cell{
@@ -795,13 +795,13 @@ end
 -- forEachOrderedElement(cell, function(idx, _, etype)
 --     print(idx.."\t"..etype)
 -- end)
-function forEachOrderedElement(obj, func)
+function forEachOrderedElement(obj, _sof_)
 	if obj == nil then
 		mandatoryArgumentError(1)
 	elseif not isTable(obj) then
 		incompatibleTypeError(1, "table", obj)
-	elseif type(func) ~= "function" then
-		incompatibleTypeError(2, "function", func)
+	elseif type(_sof_) ~= "function" then
+		incompatibleTypeError(2, "function", _sof_)
 	end
 
 	local strk
@@ -836,14 +836,14 @@ function forEachOrderedElement(obj, func)
 
 	for k = 1, #norder do
 		local idx = nreference[norder[k]]
-		if func(idx, obj[idx], type(obj[idx])) == false then return false end
+		if _sof_(idx, obj[idx], type(obj[idx])) == false then return false end
 	end
 
 	for k = 1, #sorder do
 		local ref = sreference[sorder[k]]
 		for l = 1, #ref do
 			local idx = ref[l]
-			if func(idx, obj[idx], type(obj[idx])) == false then return false end
+			if _sof_(idx, obj[idx], type(obj[idx])) == false then return false end
 		end
 	end
 
@@ -854,7 +854,7 @@ end
 -- on them. It returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg agent An Agent.
--- @arg f A function that receives a SocialNetwork name as argument.
+-- @arg _sof_ A function that receives a SocialNetwork name as argument.
 -- @usage ag = Agent{value = 2}
 -- soc = Society{instance = ag, quantity = 20}
 --
@@ -869,15 +869,15 @@ end
 --     print(idx)
 --     print(#agent:getSocialNetwork(idx))
 -- end)
-function forEachSocialNetwork(agent, f)
+function forEachSocialNetwork(agent, _sof_)
 	if type(agent) ~= "Agent" then
 		incompatibleTypeError(1, "Agent", agent)
-	elseif type(f) ~= "function" then
-		incompatibleTypeError(2, "function", f)
+	elseif type(_sof_) ~= "function" then
+		incompatibleTypeError(2, "function", _sof_)
 	end
 
 	for idx in pairs(agent.socialnetworks) do
-		if f(idx) == false then return false end
+		if _sof_(idx) == false then return false end
 	end
 
 	return true
