@@ -293,10 +293,15 @@ Layer_ = {
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
 	-- attribute, layer, select & default, dummy \
-	-- "coverage" & Percentages of each qualitative value covering the cell, using polygons or
-	-- raster data. It creates one new attribute for each available value, appending the value to
-	-- the attribute name. The sum of the created attribute values for a given cell will range
-	-- from zero to one, according to the coverage of coverage.
+	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
+	-- raster data. It creates one new attribute for each available value, in the form
+	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
+	-- value represent the different values in the input data.
+	-- The sum of the created attribute values for a given cell will range
+	-- from zero to one hundred, according to the coverage of the cell.
+	-- When using shapefiles, keep in mind the total limit of ten characters, as
+	-- it removes the characters after the tenth in the name. This function will stop with
+	-- an error if two attribute names in the output are the same.
 	-- & attribute, layer, select & default, dummy \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
 	-- & attribute, layer & \
