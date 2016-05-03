@@ -9,3 +9,6 @@ TerraME is distributed under the GNU Lesser General Public License as published 
 
 ## Supported Platforms
 MS Windows, Mac OS X and Linux.
+
+## Building and Configuring
+See [How to build TerraME in Wiki](https://github.com/TerraME/terrame/wiki/Building-and-Configuring).
