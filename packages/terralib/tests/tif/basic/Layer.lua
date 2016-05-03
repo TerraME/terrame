@@ -24,7 +24,7 @@
 
 return {
 	fill = function(unitTest)
-		local projName = "cellular_layer_fill_shape.tview"
+		local projName = "cellular_layer_fill_tiff.tview"
 
 		local proj = Project {
 			file = projName,
@@ -150,6 +150,57 @@ return {
 
 		unitTest:assertSnapshot(map, "tiff-max.png")
 
+		-- AVERAGE
+
+		local box = Layer{
+			project = proj,
+			name = "box",
+			file = filePath("elevation_box.shp", "terralib")
+		}
+
+		local altimetria = Layer{
+			project = proj,
+			name = "altimetria",
+			file = filePath("elevation.tif", "terralib")
+		}
+
+		if isFile("mycells.shp") then rmFile("mycells.shp") end
+		if isFile("mycells-avg.shp") then rmFile("mycells-avg.shp") end
+
+		table.insert(shapes, "mycells.shp")
+		table.insert(shapes, "mycells-avg.shp")
+
+		cl = Layer{
+			project = proj,
+			file = "mycells.shp",
+			input = "box",
+			name = "cells_elev",
+			resolution = 200,
+		}
+
+		cl:fill{
+			operation = "average",
+			select = 0,
+			name = "altimetria",
+			output = "mycells-avg",
+			attribute = "height"
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = "mycells-avg"
+		}
+
+		local map = Map{
+			target = cs,
+			select = "height",
+			min = 0,
+			max = 255,
+			color = "RdPu",
+			slices = 7
+		}
+
+		unitTest:assertSnapshot(map, "tiff-average.png")
 		local tl = TerraLib()
 		tl:finalize()
 
