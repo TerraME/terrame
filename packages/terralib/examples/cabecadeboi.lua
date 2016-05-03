@@ -22,46 +22,65 @@
 --
 -------------------------------------------------------------------------------------------
 
+-- @example Creates a database that can be used by the example runoff of base package.
+
 import("terralib")
 
 local projName = "cabecadeboi.tview"
 
-if isFile(projName) then
-	rmFile(projName)
-end
-
 local project = Project{
 	file = projName,
-	create = true,
+	clean = true,
 	author = "Carneiro, T.",
 	title = "Cabeca de Boi database"
+}
+
+box = Layer{
+	project = project,
+	name = "box",
+	file = filePath("elevation_box.shp", "terralib")
 }
 
 altimetria = Layer{
 	project = project,
 	name = "altimetria",
-	file = filePath("altimetria.tif", "terralib")
+	file = filePath("elevation.tif", "terralib") -- se usar "altimetria.tif" da erro
 }
 
--- bug. possibly because we are using a tif as input for creating the cells
+if isFile("mycells.shp")     then rmFile("mycells.shp")     end
+if isFile("mycells-avg.shp") then rmFile("mycells-avg.shp") end
+
 cl = Layer{
 	project = project,
 	file = "mycells.shp",
-	input = altimetria,
+	input = "box",
 	name = "cells",
-	output = "cells",
-	resolution = 9000,
+	resolution = 200,
 }
 
 cl:fill{
 	operation = "average",
-	layer = altimetria,
+	select = 0,
+	name = "altimetria",
+	output = "mycells-avg",
 	attribute = "height"
 }
 
-if isFile(projName) then
-	rmFile(projName)
-end
+cs = CellularSpace{
+	project = project,
+	layer = "mycells-avg"
+}
 
-terralib:finalize()
+Map{
+	target = cs,
+	select = "height",
+	min = 0,
+	max = 255,
+	color = "RdPu",
+	slices = 7
+}
+
+if isFile(projName)          then rmFile(projName)          end
+if isFile("mycells.shp")     then rmFile("mycells.shp")     end
+if isFile("mycells-avg.shp") then rmFile("mycells-avg.shp") end
 
