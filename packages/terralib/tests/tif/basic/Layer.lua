@@ -150,6 +150,60 @@ return {
 
 		unitTest:assertSnapshot(map, "tiff-max.png")
 
+		-- COVERAGE
+
+		local covTifLayerName = clName1.."_"..prodes.."_cov"		
+		local shp = covTifLayerName..".shp"
+
+		table.insert(shapes, shp)
+		
+		if isFile(shp) then
+			rmFile(shp)
+		end
+
+		cl:fill{
+			operation = "coverage",
+			attribute = "cov",
+			name = prodes,
+			output = covTifLayerName,
+			select = 0,
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = covTifLayerName 
+		}
+
+		local cov = {0, 49, 169, 253, 254}
+
+		forEachCell(cs, function(cell)
+			local sum = 0
+
+			for i = 1, #cov do
+				unitTest:assertType(cell["cov_"..cov[i]],   "number")
+				sum = sum + cell["cov_"..cov[i]]
+			end
+
+			--unitTest:assert(math.abs(sum - 100) < 0.001) -- SKIP
+			
+			--if math.abs(sum - 100) > 0.001 then
+			--	print(sum)
+			--end
+		end)
+
+		for i = 1, #cov do
+			local map = Map{
+				target = cs,
+				select = "cov_"..cov[i],
+				min = 0,
+				max = 100,
+				slices = 10,
+				color = "RdPu"
+			}
+
+			unitTest:assertSnapshot(map, "tiff-cov-"..cov[i]..".png")
+		end
+
 		-- AVERAGE
 
 		local box = Layer{
