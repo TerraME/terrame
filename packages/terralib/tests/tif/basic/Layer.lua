@@ -71,9 +71,11 @@ return {
 		}
 
 		local shapes = {}
-		
-		local percTifLayerName = clName1.."_"..prodes.."_RPercentage"		
-		local shp = percTifLayerName..".shp"
+
+		-- MINIMUM
+
+		local minTifLayerName = clName1.."_"..prodes.."_min"		
+		local shp = minTifLayerName..".shp"
 
 		table.insert(shapes, shp)
 		
@@ -85,13 +87,13 @@ return {
 			operation = "minimum",
 			attribute = "prod_min",
 			name = prodes,
-			output = percTifLayerName,
+			output = minTifLayerName,
 			select = 0,
 		}
 
 		local cs = CellularSpace{
 			project = proj,
-			layer = percTifLayerName 
+			layer = minTifLayerName 
 		}
 
 		forEachCell(cs, function(cell)
@@ -108,6 +110,45 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "tiff-min.png")
+
+		-- MAXIMUM
+
+		local maxTifLayerName = clName1.."_"..prodes.."_max"		
+		local shp = maxTifLayerName..".shp"
+
+		table.insert(shapes, shp)
+		
+		if isFile(shp) then
+			rmFile(shp)
+		end
+
+		cl:fill{
+			operation = "maximum",
+			attribute = "prod_max",
+			name = prodes,
+			output = maxTifLayerName,
+			select = 0,
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = maxTifLayerName 
+		}
+
+		forEachCell(cs, function(cell)
+			unitTest:assertType(cell.prod_max, "number")
+			unitTest:assert(cell.prod_max >= 0)
+			unitTest:assert(cell.prod_max <= 254)
+		end)
+
+		local map = Map{
+			target = cs,
+			select = "prod_max",
+			value = {0, 49, 169, 253, 254},
+			color = {"red", "green", "blue", "orange", "purple"}
+		}
+
+		unitTest:assertSnapshot(map, "tiff-max.png")
 
 		local tl = TerraLib()
 		tl:finalize()
