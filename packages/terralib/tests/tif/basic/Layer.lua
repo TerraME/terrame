@@ -201,6 +201,36 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "tiff-average.png")
+
+		-- STDEV
+		if isFile("cells-std.shp") then rmFile("cells-std.shp") end
+
+		table.insert(shapes, "cells-std.shp")
+
+		cl:fill{
+			operation = "stdev",
+			select = 0,
+			name = "altimetria",
+			output = "cells-std",
+			attribute = "std"
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = "cells-std"
+		}
+
+		local map = Map{
+			target = cs,
+			select = "std",
+			min = 0,
+			max = 80,
+			color = "RdPu",
+			slices = 7
+		}
+
+		unitTest:assertSnapshot(map, "tiff-std.png")
+
 		local tl = TerraLib()
 		tl:finalize()
 
