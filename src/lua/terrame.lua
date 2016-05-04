@@ -838,21 +838,22 @@ function _Gtme.installPackage(file)
 end
 
 local function version()
-	print("TerraME - Terra Modeling Environment")
-	print("Version: ".._Gtme.sessionInfo().version)
-	print("Location (TME_PATH): ".._Gtme.sessionInfo().path)
+	local str = "Version: ".._Gtme.sessionInfo().version
+	str = str.."\nLocation (TME_PATH): ".._Gtme.sessionInfo().path
 
 	local lua_release, qt_version, qwt_version = cpp_informations()
 
-	print("Compiled with:")
-	print("  "..lua_release)
-	print("  Qt "..qt_version)
-	print("  Qwt "..qwt_version)
+	str = str.."\nCompiled with:"
+	str = str.."\n  "..lua_release
+	str = str.."\n  Qt "..qt_version
+	str = str.."\n  Qwt "..qwt_version
 	
-	local terralib = getPackage("terralib")
-	local tlib = terralib.TerraLib{}
-	print("  TerraLib "..tlib:getVersion())
-	tlib:finalize()	
+--	local terralib = getPackage("terralib")
+--	local tlib = terralib.TerraLib{}
+--	str = str.."\n  TerraLib "..tlib:getVersion()
+--	tlib:finalize()	
+
+	return str
 end
 
 local function usage()
@@ -1234,7 +1235,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		arg = arguments[argCount]
 		if string.sub(arg, 1, 1) == "-" then
 			if arg == "-version" then
-				version()
+				print("TerraME - Terra Modeling Environment")
+				print(version())
 				os.exit()
 			elseif arg == "-ide" then
 				if not _Gtme.isLoaded("base") then
@@ -1564,7 +1566,9 @@ function _Gtme.myxpcall(func)
 			local str = 
 				"*************************************************************\n"..
 				"UNEXPECTED TERRAME INTERNAL ERROR. PLEASE GIVE US A FEEDBACK.\n"..
-				"WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
+				"REPORT THE ERROR AT github.com/TerraME/terrame/issues/new\n"..
+				"PLEASE ADD THE INFORMATION BELOW AND SEND US ANY SCRIPTS AND\n"..
+						"DATA THAT COULD HELP US TO REPRODUCE THE ERROR.\n"..
 				"*************************************************************\n"
 
 			if _Gtme.sessionInfo().fullTraceback then
@@ -1598,7 +1602,13 @@ function _Gtme.myxpcall(func)
 				info = debug.getinfo(level)
 			end
 
-			return string.sub(str, 0, string.len(str) - 1)
+			str = string.sub(str, 0, string.len(str) - 1)
+
+			if not _Gtme.sessionInfo().fullTraceback then
+				str = str.."\n\nTerraME installation:\n"..version()
+			end
+
+			return str
 		else
 			local msg = _Gtme.traceback()
 
