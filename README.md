@@ -18,3 +18,6 @@ The complete documentation for TerraME API is available via `-showdoc` command l
 ```bash
 $> terrame -showdoc
 ```
+
+## Reporting Bugs
+If you have found a bug, open an entry in the [TerraME Issue Tracker](https://github.com/TerraME/terrame/issues).
