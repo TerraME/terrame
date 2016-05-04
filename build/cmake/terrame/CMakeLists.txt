@@ -401,6 +401,11 @@ if(APPLE)
             COMPONENT runtime
             )
 
+    install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+        DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share
+        COMPONENT runtime
+    )
+
 elseif(WIN32)
     set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
     install(DIRECTORY ${TERRAME_LUA_SRC_DIR}/
