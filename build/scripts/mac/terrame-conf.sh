@@ -45,7 +45,7 @@ export _TERRAME_OUT_DIR=$(pwd)/build
 # Configuring output folder
 # -----------------
 mkdir $_TERRAME_OUT_DIR
-cp -rf terrame_conf.cmake $_TERRAME_OUT_DIR
+cp -rf terrame-conf.cmake $_TERRAME_OUT_DIR
 
 # -----------------
 # Entering the output folder
