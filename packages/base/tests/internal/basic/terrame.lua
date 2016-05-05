@@ -23,6 +23,31 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	insert = function(unitTest)
+		local t = {}
+
+		table.insert(t, 2)
+		table.insert(t, 3)
+		table.insert(t, 4)
+
+		unitTest:assertEquals(#t, 3)
+		unitTest:assertEquals(t[1], 2)
+		unitTest:assertEquals(t[2], 3)
+		unitTest:assertEquals(t[3], 4)
+
+		local t = {}
+
+		table.insert(t, 2)
+		table.insert(t, 1, 3)
+		table.insert(t, 1, 4)
+		table.insert(t, 2, 5)
+
+		unitTest:assertEquals(#t, 4)
+		unitTest:assertEquals(t[1], 4)
+		unitTest:assertEquals(t[2], 5)
+		unitTest:assertEquals(t[3], 3)
+		unitTest:assertEquals(t[4], 2)
+	end,
 	verifyVersionDependency = function(unitTest)
 		unitTest:assert(    _Gtme.verifyVersionDependency("0.1", ">=", "0.0.3"))
 		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", ">=", "0.3"))
