@@ -76,6 +76,49 @@ return {
 		}
 
 		local shapes = {}
+		
+		-- MODE
+
+		local polmodeLayerName = clName1.."_polmode"
+		local shp1 = polmodeLayerName..".shp"
+
+		table.insert(shapes, shp1)
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end
+
+		cl:fill{
+			operation = "mode",
+			name = municipios,
+			attribute = "polmode",
+			select = "POPULACAO_",
+			output = polmodeLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = polmodeLayerName
+		}
+--[[
+		max = 0
+forEachCell(cs, function(cell)
+		if cell.polmin > max then max = cell.polmin
+		end
+	end)
+
+	print(max)
+--]]
+		local map = Map{
+			target = cs,
+			select = "polmode",
+			min = 0,
+			max = 275000,
+			slices = 8,
+			color = {"red", "green"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-mode.png")
 
 		-- AREA
 
