@@ -26,7 +26,7 @@ return {
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_tiff.tview"
 
-		local proj = Project {
+		local proj = Project{
 			file = projName,
 			clean = true
 		}
@@ -43,15 +43,6 @@ return {
 			project = proj,
 			name = prodes,
 			file = filePath("prodes_polyc_10k.tif", "terralib")	
-			-- value  meaning
-			-- 0
-			-- 6      deforestation
-			-- 7      deforestation
-			-- 2      non-forest
-			-- 17     deforestation
-			-- 18     water
-			-- 5      forest
-			-- 49
 		}
 		
 		local clName1 = "cells"
@@ -149,6 +140,46 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "tiff-max.png")
+
+		-- SUM
+
+		local sumTifLayerName = clName1.."_"..prodes.."_sum"		
+		local shp = sumTifLayerName..".shp"
+
+		table.insert(shapes, shp)
+		
+		if isFile(shp) then
+			rmFile(shp)
+		end
+
+		cl:fill{
+			operation = "sum",
+			attribute = "prod_sum",
+			name = prodes,
+			output = sumTifLayerName,
+			select = 0,
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = sumTifLayerName 
+		}
+
+		forEachCell(cs, function(cell)
+			unitTest:assertType(cell.prod_sum, "number")
+			unitTest:assert(cell.prod_sum >= 0)
+		end)
+
+		local map = Map{
+			target = cs,
+			select = "prod_sum",
+			min = 0,
+			max = 2300,
+			color = "RdPu",
+			slices = 8
+		}
+
+		unitTest:assertSnapshot(map, "tiff-sum.png")
 
 		-- COVERAGE
 
