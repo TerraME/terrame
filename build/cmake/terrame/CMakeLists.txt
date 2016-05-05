@@ -401,7 +401,7 @@ if(APPLE)
             COMPONENT runtime
             )
 
-    install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+    install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal # TODO: REVIEW TO USE GDAL_DATA_DIR
         DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share
         COMPONENT runtime
     )
@@ -438,7 +438,7 @@ elseif(WIN32)
 			)	
 			
 	list(APPEND MSYS_DEPENDENCIES 	${MSYS_DIR}/cp.exe 
-									${MSYS_DIR}/find-msys.exe #this find is the 'find.exe' renamed
+									#${MSYS_DIR}/find.exe
 									${MSYS_DIR}/ls.exe 
 									${MSYS_DIR}/md5sum.exe 
 									${MSYS_DIR}/mktemp.exe
@@ -456,12 +456,21 @@ elseif(WIN32)
 			COMPONENT runtime
 			)
 	
+    add_custom_command(
+      TARGET terrame
+      POST_BUILD
+	  COMMAND ${CMAKE_COMMAND} -E copy "${MSYS_DIR}/find.exe" "${CMAKE_INSTALL_PREFIX}/${TERRAME_INSTALL_PREFIX}/bin"
+      COMMAND ${CMAKE_COMMAND} -E rename "${CMAKE_INSTALL_PREFIX}/${TERRAME_INSTALL_PREFIX}/bin/find.exe" "${CMAKE_INSTALL_PREFIX}/${TERRAME_INSTALL_PREFIX}/bin/find-msys.exe"
+      COMMENT "rename bin/find.exe to bin/find-msys.exe..."
+      VERBATIM
+    )	
+		
 	install(DIRECTORY ${TERRALIB_DIR}/bin/
 			DESTINATION bin
 			COMPONENT runtime
 			)
 	
-	install(DIRECTORY ${TERRALIB_DIR}/share/data/
+	install(DIRECTORY ${GDAL_DATA_DIR}/
 			DESTINATION bin/share/data
 			COMPONENT runtime
 			)
