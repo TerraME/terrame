@@ -284,7 +284,9 @@ Layer_ = {
 	-- more than one line, it sums all lengths.
 	-- & attribute, layer & \
 	-- "mode" & More common qualitative value from the objects that have some intersection with
-	-- the cell, without taking into account their geometric properties. When using argument area, it
+	-- the cell, without taking into account their geometric properties. This operation converts the
+	-- output to string. Whenever there are two or more values with the same count, the resulting
+	-- value will contain all them separated by comma. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select & 
 	-- default, dummy \
 	-- "maximum" & Maximum quantitative value among the objects that have some

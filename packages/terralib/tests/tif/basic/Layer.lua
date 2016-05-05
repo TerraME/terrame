@@ -63,6 +63,50 @@ return {
 
 		local shapes = {}
 
+		-- MODE
+
+		local modeTifLayerName = clName1.."_"..prodes.."_mode"
+		local shp = modeTifLayerName..".shp"
+
+		table.insert(shapes, shp)
+		
+		if isFile(shp) then
+			rmFile(shp)
+		end
+
+		cl:fill{
+			operation = "mode",
+			attribute = "prod_mode",
+			name = prodes,
+			output = modeTifLayerName,
+			select = 0,
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = modeTifLayerName 
+		}
+
+		local count = 0
+		forEachCell(cs, function(cell)
+			unitTest:assertType(cell.prod_mode, "string")
+			if not belong(cell.prod_mode, {"0", "49", "169", "253", "254"}) then
+				-- print(cell.prod_mode)
+				count = count + 1
+			end
+		end)
+
+		unitTest:assertEquals(count, 163)
+
+		local map = Map{
+			target = cs,
+			select = "prod_mode",
+			value = {"0", "49", "169", "253", "254"},
+			color = {"red", "green", "blue", "orange", "purple"}
+		}
+
+		unitTest:assertSnapshot(map, "tiff-mode.png")
+
 		-- MINIMUM
 
 		local minTifLayerName = clName1.."_"..prodes.."_min"		
