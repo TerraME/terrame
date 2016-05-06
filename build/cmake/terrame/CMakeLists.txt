@@ -425,12 +425,7 @@ elseif(WIN32)
             COMPONENT runtime
 			PATTERN "log" EXCLUDE
             )
-
-	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindows.dll
-			DESTINATION bin/platforms
-			COMPONENT runtime
-			)
-
+	
 	set(QTLUA_LIBRARY_DLL ${QTLUA_INCLUDE_DIR}/../../bin/qtlua.dll)
 	install(FILES ${QTLUA_LIBRARY_DLL}
 			DESTINATION bin
@@ -458,17 +453,17 @@ elseif(WIN32)
 		)	
 							
 	install(FILES ${MSYS_DEPENDENCIES}
-			DESTINATION bin
-			COMPONENT runtime
-			)
+		DESTINATION bin
+		COMPONENT runtime
+	)
 	
     add_custom_command(
-      TARGET terrame
-      POST_BUILD
-	  COMMAND ${CMAKE_COMMAND} -E copy "${MSYS_DIR}/find.exe" "${CMAKE_INSTALL_PREFIX}/${TERRAME_INSTALL_PREFIX}/bin"
-      COMMAND ${CMAKE_COMMAND} -E rename "${CMAKE_INSTALL_PREFIX}/${TERRAME_INSTALL_PREFIX}/bin/find.exe" "${CMAKE_INSTALL_PREFIX}/${TERRAME_INSTALL_PREFIX}/bin/find-msys.exe"
-      COMMENT "rename bin/find.exe to bin/find-msys.exe..."
-      VERBATIM
+		TARGET terrame
+		POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy "${MSYS_DIR}/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find.exe"
+		COMMAND ${CMAKE_COMMAND} -E rename "${CMAKE_INSTALL_PREFIX}/bin/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find-msys.exe"
+		COMMENT "rename bin/find.exe to bin/find-msys.exe..."
+		VERBATIM
     )	
 		
 	install(DIRECTORY ${TERRALIB_DIR}/bin/
@@ -495,6 +490,19 @@ elseif(WIN32)
 			DESTINATION bin/share/terralib/schemas
 			COMPONENT runtime
 			)	
+			
+	
+	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindowsd.dll
+		DESTINATION bin/platforms
+		COMPONENT runtime
+		CONFIGURATIONS Debug
+	)
+
+	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindows.dll
+		DESTINATION bin/platforms
+		COMPONENT runtime
+		CONFIGURATIONS Release
+	)		
 	
 	list(APPEND TERRALIB_DEPENDENCIES	${TERRALIB_3RDPARTY_DIR}/lib/boost_chrono-mt.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/boost_date_time-mt.dll
@@ -530,9 +538,10 @@ elseif(WIN32)
 		)
 		
 	install(FILES ${TERRALIB_DEPENDENCIES}
-			DESTINATION bin
-			COMPONENT runtime
-			)		
+		DESTINATION bin
+		COMPONENT runtime
+		CONFIGURATIONS Release
+	)		
 	
 	list(APPEND MSVC_DEPENDENCIES	${MSVC_REDIST_DIR}/msvcp120.dll 
 									${MSVC_REDIST_DIR}/msvcr120.dll
@@ -546,7 +555,7 @@ elseif(WIN32)
 	# install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.ico
         # DESTINATION bin/
 		# COMPONENT runtime
-		# )			
+		# )					
 	
 endif()		
 		
