@@ -122,9 +122,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TERRAME_BIN_DIR})
 
 
 #
-# including TerraLib auxiliary macros and functions
+# including TerraME auxiliary macros and functions
 #
-
 include(terrame-macros.cmake)
 
 add_subdirectory(terrame)
