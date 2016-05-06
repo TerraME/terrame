@@ -227,6 +227,12 @@ if(QTLUAEXTRAS_FOUND)
     endif()
 endif()
 
+#
+# process TerraME configuration files
+#
+configure_file(${CMAKE_SOURCE_DIR}/terrameVersion.h.in
+                ${TERRAME_ABSOLUTE_ROOT_DIR}/src/core/terrameVersion.h @ONLY)
+
 #Set include directories location
 include_directories(${TERRAME_SRC_DIR}
 					${TERRAME_SRC_DIR}/core/

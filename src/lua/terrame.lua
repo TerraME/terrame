@@ -838,20 +838,20 @@ function _Gtme.installPackage(file)
 end
 
 local function version()
-	local str = "Version: ".._Gtme.sessionInfo().version
-	str = str.."\nLocation (TME_PATH): ".._Gtme.sessionInfo().path
+	local tmeVersion, lua_release, qt_version, qwt_version = cpp_informations()
 
-	local lua_release, qt_version, qwt_version = cpp_informations()
+	local str = "Version: "..tmeVersion
+	str = str.."\nLocation (TME_PATH): ".._Gtme.sessionInfo().path
 
 	str = str.."\nCompiled with:"
 	str = str.."\n  "..lua_release
 	str = str.."\n  Qt "..qt_version
 	str = str.."\n  Qwt "..qwt_version
 	
---	local terralib = getPackage("terralib")
---	local tlib = terralib.TerraLib{}
---	str = str.."\n  TerraLib "..tlib:getVersion()
---	tlib:finalize()	
+	local terralib = getPackage("terralib")
+	local tlib = terralib.TerraLib{}
+	str = str.."\n  TerraLib "..tlib:getVersion()
+	tlib:finalize()	
 
 	return str
 end

@@ -45,6 +45,8 @@ of this software and its documentation.
 #include "player.h"
 #include "registryObjects.h"
 
+#include "terrameVersion.h"
+
 extern "C"
 {
 	#include "lfs.h"
@@ -173,11 +175,12 @@ int cpp_runcommand(lua_State *L)
 
 int cpp_informations(lua_State *L)
 {
+	lua_pushstring(L, TERRAME_VERSION_STRING);
 	lua_pushstring(L, LUA_RELEASE);
 	lua_pushstring(L, qVersion());
 	lua_pushstring(L, QWT_VERSION_STR);
 
-	return 3;
+	return 4;
 }
 
 int cpp_imagecompare(lua_State *L)
