@@ -81,7 +81,14 @@ return{
 	isFile = function(unitTest)
 		unitTest:assert(isFile(filePath("agents.csv")))
         
-        unitTest:assertEquals(isFile(""), false);
+        unitTest:assertEquals(isFile(""), false)
+
+		os.execute("touch zasdc.abc")
+
+		unitTest:assert(not isFile("zasdc.ab*"))
+		unitTest:assert(not isFile("zasdc.???"))
+
+		rmFile("zasdc.abc")
 	end, 
 	isWindowsOS = function(unitTest)
 		unitTest:assert(true)
