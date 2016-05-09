@@ -60,6 +60,14 @@ return {
 		}
 		
 		local clName1 = "cells"
+
+		local municipios = "municipios"
+		Layer{
+			project = proj,
+			name = municipios,
+			file = filePath("municipiosAML_ok.shp", "terralib")	
+		}
+
 		local shp1 = clName1..".shp"
 
 		if isFile(shp1) then
