@@ -48,11 +48,11 @@ end
 
 local function validateGeomAndRasterData(data, repr)
 	if repr == "geometry" then
-		verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "name", "operation", "select", "output", "table"})
+		verifyUnnecessaryArguments(data, {"area", "attribute", "clean", "default", "dummy", "name", "operation", "select", "output", "table"})
 		defaultTableValue(data, "area", false)
 		mandatoryTableArgument(data, "select", "string")
 	else
-		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "name", "operation", "select", "output", "table"})
+		verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "name", "operation", "select", "output", "table"})
 		mandatoryTableArgument(data, "select", "number")
 		if data.select < 0 then
 			customError("The attribute selected must be '>=' 0.")
@@ -65,7 +65,7 @@ end
 
 local function validateGeomData(data, repr)
 	if repr == "geometry" then
-		verifyUnnecessaryArguments(data, {"attribute", "name", "operation", "output", "table"})
+		verifyUnnecessaryArguments(data, {"attribute", "clean", "name", "operation", "output", "table"})
 		data.select = "FID"
 	else
 		customError("The operation '"..data.operation.."' is not available to raster layer.")
@@ -75,7 +75,7 @@ end
 local function addCellularLayer(self, data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source", 
-										"host", "port", "user", "password", "database", "table"})
+	                                  "clean", "host", "port", "user", "password", "database", "table"})
 
 	defaultTableValue(data, "box", false) -- TODO: CHECK HOW USE THIS
 	mandatoryTableArgument(data, "input", "string")
@@ -129,11 +129,16 @@ local function addCellularLayer(self, data)
 	switch(data, "source"):caseof{
 		shp = function()
 			mandatoryTableArgument(data, "file", "string")
+		defaultTableValue(data, "clean", false)
 				
-			verifyUnnecessaryArguments(data, {"box", "input", "name", "project", "resolution", "file", "source"})
+			verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project", "resolution", "file", "source"})
 				
 			if isFile(data.file) then
-				customError("File '"..data.file.."' already exists.")
+				if data.clean then
+					rmFile(data.file)
+				else
+					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
+				end
 			end			
 
 			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, data.file)
@@ -269,32 +274,32 @@ Layer_ = {
 	-- @tabular operation
 	-- Operation & Description & Mandatory arguments & Optional arguments \
 	-- "area" & Total overlay area between the cell and a layer of polygons. The created values
-	-- will range from zero to one, indicating its area of coverage. & attribute, layer & \
+	-- will range from zero to one, indicating its area of coverage. & attribute, layer, output & clean \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income. 
-	-- & attribute, layer, select & area, default, dummy \
+	-- & attribute, layer, select, output & area, default, dummy, clean\
 	-- "count" & Number of objects that have some overlay with the cell.
-	-- & attribute, layer & \
+	-- & attribute, layer, output & clean \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
 	-- centroid of the cell to the closest point, line, or border of a polygon.
-	-- & attribute, layer & \
+	-- & attribute, layer, output & clean \
 	-- "length" & Total length of overlay between the cell and a layer of lines. If there is
 	-- more than one line, it sums all lengths.
-	-- & attribute, layer & \
+	-- & attribute, layer, output & clean \
 	-- "mode" & More common qualitative value from the objects that have some intersection with
 	-- the cell, without taking into account their geometric properties. This operation converts the
 	-- output to string. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
-	-- uses the value of the object that has larger coverage. & attribute, layer, select & 
-	-- default, dummy \
+	-- uses the value of the object that has larger coverage. & attribute, layer, select, output & 
+	-- default, dummy, clean \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, dummy \
+	-- attribute, layer, select, output & default, dummy, clean \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, dummy \
+	-- attribute, layer, select, output & default, dummy, clean \
 	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
@@ -304,20 +309,20 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & default, dummy \
+	-- & attribute, layer, select, output & default, dummy, clean \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
-	-- & attribute, layer & \
+	-- & attribute, layer, output & clean \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, dummy \
+	-- attribute, layer, select, output & default, dummy, clean \
 	-- "sum" & Sum of quantitative values from objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, it
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
-	-- & attribute, layer, select & area, default, dummy \
+	-- & attribute, layer, select, output & area, default, dummy, clean \
 	-- "value" & The value (quantitative or qualitative) of the closest object. If using
 	-- area, it uses the value of the object with greater intersection area. & attribute,
-	-- layer, select & area \
+	-- layer, select, output & area, clean \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true), 
 	-- or the weights are equal for each object with some overlap (false, default value).
@@ -326,6 +331,11 @@ Layer_ = {
 	-- @arg data.default A value that will be used to fill a cell whose attribute cannot be
 	-- computed. For example, when there is no intersection area. Note that this argument is
 	-- related to the output.
+	-- @arg data.output Where the output will be saved. The current version of TerraLib
+	-- requires that the output of fill will be in another layer of information. We are
+	-- currently working with a way to save the output in the same input layer.
+	-- @arg data.clean A boolean value indicating whether the argument output should be cleaned
+	-- if it needs to create the file.
 	-- @usage -- DONTRUN
 	-- import("terralib")
 	--
@@ -360,6 +370,7 @@ Layer_ = {
 		mandatoryTableArgument(data, "name", "string")
 		mandatoryTableArgument(data, "attribute", "string")
 		mandatoryTableArgument(data, "output", "string")
+		defaultTableValue(data, "clean", false)
 		
 		local tlib = TerraLib{}
 		local project = self.project
@@ -373,7 +384,11 @@ Layer_ = {
 		end
 	
 		if isFile(data.output..".shp") then
-			customError("File '"..data.output..".shp' already exists and should be removed manually.") -- SKIP This should be removed by #902.
+			if data.clean then
+				rmFile(data.output..".shp")
+			else
+				customError("File '"..data.output..".shp' already exists. Please set clean = true or remove it manually.") -- SKIP This should be removed by #902.
+			end
 		end
 
 		local layer = project.layers[data.name]
@@ -394,12 +409,12 @@ Layer_ = {
 				validateGeomData(data, repr)
 			end,
 			length = function()
-				verifyUnnecessaryArguments(data, {"attribute", "name", "operation", "output", "table"})
+				verifyUnnecessaryArguments(data, {"attribute", "clean", "name", "operation", "output", "table"})
 				customError("Sorry, this operation was not implemented in TerraLib yet.")
 			end,
 			mode = function()
 				if repr == "geometry" then
-					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "name", "operation", "select", "output", "table"})
+					verifyUnnecessaryArguments(data, {"area", "attribute", "clean", "default", "dummy", "name", "operation", "select", "output", "table"})
 					defaultTableValue(data, "area", false)
 					mandatoryTableArgument(data, "select", "string")
 				else
@@ -458,7 +473,7 @@ metaTableLayer_ = {
 -- Source & Description & Mandatory arguments & Optional arguments \
 -- "none" & Tries to open a Layer already stored in the Project & project, name & \
 -- "postgis" & Create a Layer to connect to a PostGIS database. & password, name & user, port, host \
--- "shp" & Create a Layer to work with an ESRI shapefile. & file, name & \
+-- "shp" & Create a Layer to work with an ESRI shapefile. & file, name & clean\
 -- "webservice" & Create a Layer to connect to a web service. & host, name & \
 -- "cell" & Create a cellular Layer. It has a raster-like
 -- representation of space with several attributes created from
@@ -473,12 +488,14 @@ metaTableLayer_ = {
 -- of the DBMS. For example, MySQL uses 3306 as standard port.
 -- @arg data.user String with the username. The default value is "".
 -- @arg data.password A string with the password.
--- @arg data.file A string with the location of the file to be loaded.
+-- @arg data.file A string with the location of the file to be loaded or created.
 -- @arg data.box A boolean value indicating whether the cellular Layer will fill the
 -- box from the input layer (true) or only the minimal set of cells that cover all the
 -- input data (false, default).
 -- @arg data.resolution A number with the x and y resolution. It will need to be
 -- measured in the same projection of the input layer.
+-- @arg data.clean A boolean value indicating whether the argument file should be cleaned
+-- if it needs to create the file.
 -- @usage -- DONTRUN
 -- import("terralib")
 --

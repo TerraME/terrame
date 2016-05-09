@@ -70,13 +70,10 @@ return {
 
 		local shp1 = clName1..".shp"
 
-		if isFile(shp1) then
-			rmFile(shp1)
-		end
-
 		local cl = Layer{
 			project = proj,
 			source = "shp",
+			clean = true,
 			input = layerName1,
 			name = clName1,
 			resolution = 50000,
@@ -92,14 +89,11 @@ return {
 
 		table.insert(shapes, shp1)
 
-		if isFile(shp1) then
-			rmFile(shp1)
-		end
-
 		cl:fill{
 			operation = "mode",
 			name = municipios,
 			attribute = "polmode",
+			clean = true,
 			select = "POPULACAO_",
 			output = polmodeLayerName
 		}
@@ -135,13 +129,10 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp1)
 
-		if isFile(shp1) then
-			rmFile(shp1)
-		end
-
 		cl:fill{
 			operation = "area",
 			name = protecao,
+			clean = true,
 			attribute = "marea",
 			output = areaLayerName
 		}
@@ -169,14 +160,11 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp2)
 
-		if isFile(shp2) then
-			rmFile(shp2)
-		end
-
 		cl:fill{
 			operation = "distance",
 			name = rodovias,
 			attribute = "lindist",
+			clean = true,
 			output = lindistLayerName
 		}
 
@@ -201,14 +189,11 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp3)
 
-		if isFile(shp3) then
-			rmFile(shp3)
-		end
-
 		cl:fill{
 			operation = "distance",
 			name = protecao,
 			attribute = "poldist",
+			clean = true,
 			output = poldistLayerName
 		}
 
@@ -233,14 +218,11 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp4)
 
-		if isFile(shp4) then
-			rmFile(shp4)
-		end
-
 		cl:fill{
 			operation = "distance",
 			name = portos,
 			attribute = "pointdist",
+			clean = true,
 			output = pointdistLayerName
 		}
 
@@ -267,14 +249,11 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp2)
 
-		if isFile(shp2) then
-			rmFile(shp2)
-		end
-
 		cl:fill{
 			operation = "presence",
 			name = rodovias,
 			attribute = "linpres",
+			clean = true,
 			output = linpresLayerName
 		}
 
@@ -297,14 +276,11 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp3)
 
-		if isFile(shp3) then
-			rmFile(shp3)
-		end
-
 		cl:fill{
 			operation = "presence",
 			name = protecao,
 			attribute = "polpres",
+			clean = true,
 			output = polpresLayerName
 		}
 
@@ -327,14 +303,11 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp4)
 
-		if isFile(shp4) then
-			rmFile(shp4)
-		end
-
 		cl:fill{
 			operation = "presence",
 			name = portos,
 			attribute = "pointpres",
+			clean = true,
 			output = pointpresLayerName
 		}
 
@@ -376,14 +349,11 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp2)
 
-		if isFile(shp2) then
-			rmFile(shp2)
-		end
-
 		cl:fill{
 			operation = "count",
 			name = portos,
 			attribute = "pointcount",
+			clean = true,
 			output = pointcountLayerName
 		}
 
@@ -406,14 +376,11 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp3)
 
-		if isFile(shp3) then
-			rmFile(shp3)
-		end
-
 		cl:fill{
 			operation = "count",
 			name = rodovias,
 			attribute = "linecount",
+			clean = true,
 			output = linecountLayerName
 		}
 
@@ -438,14 +405,11 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp4)
 
-		if isFile(shp4) then
-			rmFile(shp4)
-		end
-
 		cl:fill{
 			operation = "count",
 			name = protecao,
 			attribute = "polcount",
+			clean = true,
 			output = polcountLayerName
 		}
 

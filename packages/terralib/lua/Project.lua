@@ -50,7 +50,7 @@ metaTableProject_ = {
 -- of the file.
 -- @arg data.author A string with the name of the Project's author.
 -- @arg data.title A string with the title of the Project.
--- @arg data.clean A boolean value indicating whether the project should be cleaned
+-- @arg data.clean A boolean value indicating whether the argument file should be cleaned
 -- if it already exists.
 -- The default value is false.
 -- @usage -- DONTRUN

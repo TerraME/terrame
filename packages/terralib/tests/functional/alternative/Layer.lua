@@ -286,7 +286,7 @@ return{
 				file = shp1
 			}	
 		end
-		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..shp1.."' already exists.")
+		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..shp1.."' already exists. Please set clean = true or remove it manually.")
 		
 		local sourceInvalid = function()
 			Layer{
