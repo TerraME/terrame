@@ -316,8 +316,11 @@ local function setCellsByTerraLibDataSet(self, dSet)
 			row = tonumber(dSet[i].row)
 			col = tonumber(dSet[i].col)
 		elseif dSet[i].Lin then
-			row = tonumber(dSet[i].Lin)
-			col = tonumber(dSet[i].Col)
+			row = tonumber(dSet[i].Lin) -- SKIP
+			col = tonumber(dSet[i].Col) -- SKIP
+		elseif dSet[i].lin then
+			row = tonumber(dSet[i].lin) -- SKIP
+			col = tonumber(dSet[i].col) -- SKIP
 		end
 
 		self.xMin = math.min(self.xMin, col)
@@ -331,8 +334,13 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		local col = tonumber(dSet[i].col)
 
 		if not row then -- compatibility with shapes exported from TerraLLib 4
-			row = tonumber(dSet[i].Lin)
-			col = tonumber(dSet[i].Col)
+			if dSet[i].Lin then
+				row = tonumber(dSet[i].Lin) -- SKIP
+				col = tonumber(dSet[i].Col) -- SKIP
+			elseif dSet[i].lin then
+				row = tonumber(dSet[i].lin) -- SKIP
+				col = tonumber(dSet[i].col) -- SKIP
+			end
 		else
 			row = self.xMax - row + self.xMin
 		end
