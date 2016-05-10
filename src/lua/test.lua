@@ -297,7 +297,14 @@ function _Gtme.executeTests(package, fileName)
 		printError("Error: print() call detected with argument '"..tostring(arg).."'")
 	end
 
-	local pkgData, overwritten = _G.getPackage(package)
+	local pkgData, overwritten
+
+	xpcall(function() pkgData, overwritten = _G.getPackage(package) end, function(err)
+		printError("Package '"..package.."' could not be loaded.")
+		printError(err)
+		printError(_Gtme.traceback())
+		os.exit()
+	end)
 
 	print = function() end
 

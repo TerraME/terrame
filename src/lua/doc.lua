@@ -111,8 +111,9 @@ function _Gtme.executeDoc(package)
 	local pkg
 
 	xpcall(function() pkg = _G.getPackage(package) end, function(err)
-		printError("Package "..package.." could not be loaded.")
+		printError("Package '"..package.."' could not be loaded.")
 		printError(err)
+		printError(_Gtme.traceback())
 		os.exit()
 	end)
 
