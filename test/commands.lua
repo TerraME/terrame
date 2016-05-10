@@ -18,6 +18,7 @@ test = {
 package = {
 	nodescription     = {package = "nodescription"},
 	nolua             = {package = "nolua"},
+	nopackage         = {package = ""},
 	noexamples        = {package = "noexamples"},
 	noexamplesexample = {package = "noexamples",     arg = "-example"},
 	example           = {package = "onerror",        arg = "-example continuous-rain"},

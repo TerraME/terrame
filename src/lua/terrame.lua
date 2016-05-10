@@ -1267,6 +1267,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			elseif arg == "-package" then
 				argCount = argCount + 1
 				package = arguments[argCount]
+
+				if package == nil then
+					_Gtme.printError("A package should be specified after -package.")
+					os.exit()
+				end
+
 				info_.package = package
 				if #arguments <= argCount then
 					local models
