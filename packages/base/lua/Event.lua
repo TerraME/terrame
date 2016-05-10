@@ -210,6 +210,10 @@ function Event(data)
 		local maction = data.action
 		if targettype == "Society" then
 			if data.action.execute then
+				if type(data.action.execute) ~= "function" then
+					customError("Incompatible types. Attribute 'execute' from "..targettype.." should be a function, got "..type(data.action.execute)..".")
+				end
+
 				data.action = function(event)
 					maction:synchronize(event:getPeriod())
 					maction:execute(event)
@@ -221,6 +225,9 @@ function Event(data)
 			end
 		elseif targettype == "Cell" or targettype == "CellularSpace" then
 			if data.action.execute then
+				if type(data.action.execute) ~= "function" then
+					customError("Incompatible types. Attribute 'execute' from "..targettype.." should be a function, got "..type(data.action.execute)..".")
+				end
 				data.action = function(event)
 					maction:synchronize()
 					maction:execute(event)
@@ -231,6 +238,10 @@ function Event(data)
 				end
 			end
 		elseif targettype == "Agent" or targettype == "Automaton" then
+			if type(data.action.execute) ~= "function" then
+				customError("Incompatible types. Attribute 'execute' from "..targettype.." should be a function, got "..type(data.action.execute)..".")
+			end
+
 			data.action = function(event)
 				maction:execute(event)
 			end
