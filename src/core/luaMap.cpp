@@ -54,7 +54,11 @@ int luaMap::save(lua_State* L)
 
 int luaMap::setGridVisible(lua_State *L)
 {
+#if LUA_VERSION_NUM < 503
     int v = luaL_checkint(L, -1);
+#else
+    int v = luaL_checkinteger(L, -1);
+#endif
     obs->setGridVisible(v);
 
 	return 0;
