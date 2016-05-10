@@ -149,6 +149,10 @@ typedef struct dir_data {
 #define LSTAT_FUNC lstat
 #endif
 
+#if LUA_VERSION_NUM > 502
+#define luaL_optlong(L,n,d)     ((long)luaL_optinteger(L, (n), (d)))
+#endif
+
 /*
 ** Utility functions
 */

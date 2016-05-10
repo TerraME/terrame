@@ -53,7 +53,11 @@ of this software and its documentation.
 #endif
 
 #ifndef luaL_checkbool
+#if LUA_VERSION_NUM < 503
 #define luaL_checkbool(L, i) (lua_isboolean(L, i) ? lua_toboolean(L, i) : luaL_checkint(L, i))
+#else
+#define luaL_checkbool(L, i) (lua_isboolean(L, i) ? lua_toboolean(L, i) : luaL_checkinteger (L, i))
+#endif
 #endif
 
 

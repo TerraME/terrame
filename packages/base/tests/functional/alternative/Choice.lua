@@ -118,7 +118,7 @@ return{
 		error_func = function()
 			local c = Choice{min = 1, max = 10, step = 1, default = 1.2}
 		end
-		unitTest:assertError(error_func, "Invalid 'default' value (1.2). It could be 1 or 2.")
+		unitTest:assertError(error_func, "Invalid 'default' value (1.2). It could be 1.0 or 2.0.")
 
 		error_func = function()
 			local c = Choice{min = 1, max = 10, step = 1, default = 11}
@@ -143,7 +143,7 @@ return{
 		error_func = function()
 			local c = Choice{min = 1, max = 10, step = 4}
 		end
-		unitTest:assertError(error_func, "Invalid 'max' value (10). It could be 9 or 13.")
+		unitTest:assertError(error_func, "Invalid 'max' value (10). It could be 9.0 or 13.0.")
 
 		error_func = function()
 			local c = Choice{min = 1, step = 3}

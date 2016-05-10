@@ -39,22 +39,6 @@ _Gtme.fonts = {}
 _Gtme.print = print
 _Gtme.type = type
 
-table.insert = function(t, p, v)
-	if v then
-		local previous = v
-
-		for i = p, #t do
-			local tmp = t[i]
-			t[i] = previous
-			previous = tmp
-		end
-
-		t[#t + 1] = previous
-	else
-    	t[#t + 1] = p
-	end
-end
-
 print = function(obj, ...)
 	if type(obj) == "table" then
 		obj = vardump(obj)
