@@ -124,12 +124,14 @@ function _Gtme.getVersion(str)
 end
 
 function _Gtme.downloadPackagesList()
-	local packages = load(cpp_listpackages("http://www.terrame.org/packages/packages.lua"))()
+	local version = sessionInfo().version
+	local packages = load(cpp_listpackages("http://www.terrame.org/packages/"..version.."/packages.lua"))()
 	return packages
 end
 
 function _Gtme.downloadPackage(pkg)
-	cpp_downloadpackage(pkg, "http://www.terrame.org/packages/")
+	local version = sessionInfo().version
+	cpp_downloadpackage(pkg, "http://www.terrame.org/packages/"..version.."/")
 end
 
 -- from http://metalua.luaforge.net/src/lib/strict.lua.html

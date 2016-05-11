@@ -37,7 +37,7 @@ function filePath(filename, package)
 	if isFile(file) or isDir(file) then
 		return file
 	else
-		customError("File '"..file.."' does not exist in package '"..package.."'.")
+		customError("File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'.")
 	end
 end
 
