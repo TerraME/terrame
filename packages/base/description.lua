@@ -1,4 +1,4 @@
-version = "2.0"
+version = cpp_version()
 license = "LGPL-3"
 date = "24 March 2015"
 package = "base"
