@@ -22,13 +22,14 @@
 ############################################################################################
 
 LUA_PATH=/Users/developer/terralib/3rdparty/libs
+BUILD_TYPE=Release
 
 mkdir "build"
 cd "build"
 mkdir "libqtlua-build"
 cd "libqtlua-build"
 
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../../install -DLUA_LIBRARY=${LUA_PATH}/lib/liblua.a -DLUA_INCLUDE_DIR=${LUA_PATH}/include ../../libqtlua
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=../../install -DLUA_LIBRARY=${LUA_PATH}/lib/liblua.dylib -DLUA_INCLUDE_DIR=${LUA_PATH}/include ../../libqtlua
 
 make -j4
 make install
@@ -37,7 +38,7 @@ cd ".."
 mkdir "qtluae-build"
 cd "qtluae-build"
 
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../../install -DLUA_LIBRARY=${LUA_PATH}/lib/liblua.a -DLUA_INCLUDE_DIR=${LUA_PATH}/include -DQTLUA_INCLUDE_DIR=../../install/include -DQTLUA_LIBRARY=../../install/lib/libqtlua.dylib ../../qtluae/build/cmake
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=../../install -DLUA_LIBRARY=${LUA_PATH}/lib/liblua.dylib -DLUA_INCLUDE_DIR=${LUA_PATH}/include -DQTLUA_INCLUDE_DIR=../../install/include -DQTLUA_LIBRARY=../../install/lib/libqtlua.dylib ../../qtluae/build/cmake
 
 make -j4
 make install
@@ -48,7 +49,7 @@ cd ".."
 mkdir "protobuf-build"
 cd "protobuf-build"
 
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../install -Dprotobuf_WITH_ZLIB=OFF -Dprotobuf_BUILD_TESTS=OFF ../../protobuf/cmake
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=../../install -Dprotobuf_WITH_ZLIB=OFF -Dprotobuf_BUILD_TESTS=OFF ../../protobuf/cmake
 
 make -j4
 make install
