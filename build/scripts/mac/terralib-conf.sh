@@ -45,7 +45,7 @@ echo "$_TERRALIB_OUT_DIR"
 # Configuring output folder
 # -----------------
 mkdir $_TERRALIB_OUT_DIR
-cp terralib_conf.cmake $_TERRALIB_OUT_DIR
+cp terralib-conf.cmake $_TERRALIB_OUT_DIR
 
 # -----------------
 # Entering the output folder
