@@ -22,19 +22,15 @@
 --
 -------------------------------------------------------------------------------------------
 
+-- @example Creates a database in a PostGIS database.
+
 import("terralib")
 
--- HUNK USED ONLY TO TEST
 local projName = "terralib_example.tview"
-
-if isFile(projName) then
-	os.execute("rm -f "..projName)
-end
--- END HUNK
 
 local project = Project{
 	file = projName,
-	create = true,
+	clean = true,
 	author = "Avancini",
 	title = "FillCell Example"
 }
