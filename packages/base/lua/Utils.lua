@@ -393,20 +393,28 @@ function disableGraphics()
 		VisualTable = VisualTable
 	}
 
-	local indexFunction = function(_, func)
-		customError("It is not possible to call '"..func.."' with graphics disabled.")
+
+
+	local setConstructor = function(mtype)
+		local indexFunction = function(_, func)
+			if func == "type_" then return mtype end
+			if func == "parent" then return nil end
+			if func == "update" then return function() end end
+
+			customError("It is not possible to call '"..func.."' with graphics disabled.")
+		end
+
+		local constructor = function(attrTab)
+			setmetatable(attrTab, {__index = indexFunction})
+			return attrTab
+		end
+
+		rawset(_G, mtype, constructor)
 	end
 
-	local constructor = function(attrTab)
-		setmetatable(attrTab, {__index = indexFunction})
-		return attrTab
-	end
-
-	rawset(_G, "Chart", constructor)
-	rawset(_G, "Map", constructor)
-	rawset(_G, "Clock", constructor)
-	rawset(_G, "TextScreen", constructor)
-	rawset(_G, "VisualTable", constructor)
+	forEachElement(observers, function(idx)
+		setConstructor(idx)
+	end)
 end
 
 --- Enable all graphics. This function is useful to restore
@@ -911,9 +919,14 @@ end
 function getExtension(filename)
 	mandatoryArgument(1, "string", filename)
 
-	for i = 1, filename:len() do
-		if filename:sub(i, i) == "." then
+	local s = sessionInfo().separator
+
+	for i = filename:len() - 1, 1, -1 do
+		local sub = filename:sub(i, i)
+		if sub == "." then
 			return filename:sub(i + 1, filename:len())
+		elseif sub == s then
+			return ""
 		end
 	end
 

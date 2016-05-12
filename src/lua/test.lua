@@ -297,7 +297,14 @@ function _Gtme.executeTests(package, fileName)
 		printError("Error: print() call detected with argument '"..tostring(arg).."'")
 	end
 
-	local pkgData, overwritten = _G.getPackage(package)
+	local pkgData, overwritten
+
+	xpcall(function() pkgData, overwritten = _G.getPackage(package) end, function(err)
+		printError("Package '"..package.."' could not be loaded.")
+		printError(err)
+		printError(_Gtme.traceback())
+		os.exit()
+	end)
 
 	print = function() end
 
@@ -749,7 +756,7 @@ function _Gtme.executeTests(package, fileName)
 				
 				ut.examples = ut.examples + 1
 
-				_Gtme.loadedPackages[package] = nil -- SKIP
+				_Gtme.loadedPackages[package] = nil
 
 				local myfunc = function()
 					local env = setmetatable({}, {__index = _G})
@@ -778,7 +785,7 @@ function _Gtme.executeTests(package, fileName)
 
 					if ut.log == nil then
 						rmFile(value..".log")
-						printError("Error: It is not possble to test examples with print() without a configuration file pointing a log directory.")
+						printError("Error: It is not possible to test examples with print() without a configuration file pointing a log directory.")
 						os.exit()
 					end
 
@@ -786,7 +793,13 @@ function _Gtme.executeTests(package, fileName)
 					local success = ut.success
 					local fail = ut.fail 
 
-					ut:assertFile(value..".log")
+					if isFile(value..".log") then
+						ut:assertFile(value..".log")
+					else
+						printError("Error: Could not find log file "..value..".log. Possibly the example is handling temporary folders in a wrong way.")
+						test = test + 1
+						fail = fail + 1
+					end
 
 					ut.test = test
 					ut.success = success

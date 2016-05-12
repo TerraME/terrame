@@ -1,0 +1,5 @@
+scripts/trace-file.lua:2: attempt to perform arithmetic on global 'w' (a nil value)
+Stack traceback:
+    File scripts/trace-file.lua, line 2, in second order function
+    File scripts/trace-file.lua, line 1, in call to function 'forEachFile'
+

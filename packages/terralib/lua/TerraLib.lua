@@ -846,6 +846,83 @@ local function createDataSetAdapted(dSet)
 	return set
 end
 
+local function getGeometryTypeName(geomType)
+	if 	geomType == binding.te.gm.GeometryType or 
+		geomType == binding.te.gm.GeometryZType or
+        geomType == binding.te.gm.GeometryMType or 
+		geomType == binding.te.gm.GeometryZMType then
+		return "geometry"
+	elseif 	geomType == binding.te.gm.PointType or
+			geomType == binding.te.gm.PointZType or
+			geomType == binding.te.gm.PointMType or
+			geomType == binding.te.gm.PointZMType or
+			geomType == binding.te.gm.PointKdType or
+			geomType == binding.te.gm.MultiPointType or
+			geomType == binding.te.gm.MultiPointZType or
+			geomType == binding.te.gm.MultiPointMType or
+			geomType == binding.te.gm.MultiPointZMType then			
+		return "point"
+	elseif	geomType == binding.te.gm.LineStringType or
+			geomType == binding.te.gm.LineStringZType or
+			geomType == binding.te.gm.LineStringMType or
+			geomType == binding.te.gm.LineStringZMType or
+			geomType == binding.te.gm.MultiLineStringType or
+			geomType == binding.te.gm.MultiLineStringZType or
+			geomType == binding.te.gm.MultiLineStringMType or
+			geomType == binding.te.gm.MultiLineStringZMType then			
+		return "line"
+	elseif 	geomType == binding.te.gm.CircularStringType or
+			geomType == binding.te.gm.CircularStringZType or
+			geomType == binding.te.gm.CircularStringMType or
+			geomType == binding.te.gm.CircularStringZMType then
+		return "circular"
+	elseif 	geomType == binding.te.gm.CompoundCurveType or
+			geomType == binding.te.gm.CompoundCurveZType or
+			geomType == binding.te.gm.CompoundCurveMType or
+			geomType == binding.te.gm.CompoundCurveZMType then
+		return "compound"
+	elseif 	geomType == binding.te.gm.PolygonType or
+			geomType == binding.te.gm.PolygonZType or
+			geomType == binding.te.gm.PolygonMType or
+			geomType == binding.te.gm.PolygonZMType or
+			geomType == binding.te.gm.CurvePolygonType or
+			geomType == binding.te.gm.CurvePolygonZType or
+			geomType == binding.te.gm.CurvePolygonMType or
+			geomType == binding.te.gm.CurvePolygonZMType or
+			geomType == binding.te.gm.MultiPolygonType or
+			geomType == binding.te.gm.MultiPolygonZType or
+			geomType == binding.te.gm.MultiPolygonMType or
+			geomType == binding.te.gm.MultiPolygonZMType then			
+		return "polygon"
+	elseif 	geomType == binding.te.gm.GeometryCollectionType or
+			geomType == binding.te.gm.GeometryCollectionZType or
+			geomType == binding.te.gm.GeometryCollectionMType or
+			geomType == binding.te.gm.GeometryCollectionZMType then
+		return "collection"			  		
+	elseif 	geomType == binding.te.gm.MultiSurfaceType or
+			geomType == binding.te.gm.MultiSurfaceZType or
+			geomType == binding.te.gm.MultiSurfaceMType or
+			geomType == binding.te.gm.MultiSurfaceZMType then
+		return "surface"
+	elseif 	geomType == binding.te.gm.PolyhedralSurfaceType or
+			geomType == binding.te.gm.PolyhedralSurfaceZType or
+			geomType == binding.te.gm.PolyhedralSurfaceMType or
+			geomType == binding.te.gm.PolyhedralSurfaceZMType then
+		return "polyhedral"	
+	elseif 	geomType == binding.te.gm.TINType or
+			geomType == binding.te.gm.TINZType or
+			geomType == binding.te.gm.TINMType or
+			geomType == binding.te.gm.TINZMType or
+			geomType == binding.te.gm.TriangleType or
+			geomType == binding.te.gm.TriangleZType or
+			geomType == binding.te.gm.TriangleMType or
+			geomType == binding.te.gm.TriangleZMType then
+		return "triangle"		
+	end  
+	
+	return "unknown"
+end
+
 local function finalize()
 	if initialized then		
 		binding.te.plugin.PluginManager.getInstance():clear()
@@ -989,11 +1066,15 @@ TerraLib_ = {
 
 		local ds = makeAndOpenDataSource(connInfo, type)
 		local dst = ds:getDataSetType(dseName)
-
+		
 		if dst:hasGeom() then
-			info.rep = "geometry"
-		else
+			local gp = binding.GetFirstGeomProperty(dst)
+			local gpt = gp:getGeometryType()
+			info.rep = getGeometryTypeName(gpt)
+		elseif dst:hasRaster() then
 			info.rep = "raster"
+		else
+			info.rep = "unknown"
 		end
 		
 		ds:close()

@@ -118,6 +118,37 @@ return{
 			t:run(2)
 		end
 		unitTest:assertError(error_func, "aaa")
+
+		local ag = Agent{
+			execute = 2
+		}
+
+		error_func = function()
+			Event{action = ag}
+		end
+		unitTest:assertError(error_func, "Incompatible types. Attribute 'execute' from Agent should be a function, got number.")
+
+		local soc = Society{
+			instance = Agent{a = 2},
+			quantity = 4,
+			execute = 2
+		}
+
+		error_func = function()
+			Event{action = soc}
+		end
+		unitTest:assertError(error_func, "Incompatible types. Attribute 'execute' from Society should be a function, got number.")
+
+
+		local cs = CellularSpace{
+			xdim = 10,
+			execute = 2
+		}
+
+		error_func = function()
+			Event{action = cs}
+		end
+		unitTest:assertError(error_func, "Incompatible types. Attribute 'execute' from CellularSpace should be a function, got number.")
 	end,
 	config = function(unitTest)
 		local event = Event{action = function(event) end}

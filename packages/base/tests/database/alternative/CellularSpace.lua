@@ -87,14 +87,14 @@ return{
 		unitTest:assertError(error_func, "More than one candidate to argument 'source': 'shp', 'virtual'.")
 	end,
 	loadNeighborhood = function(unitTest)
-		local terralib = getPackage("terralib")
+		local terralib = _Gtme.getTerraLib()
 
 		local projName = "cellspace_neigh_alt.tview"
 
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = terralib.Project {
+		local proj = terralib.Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -249,7 +249,7 @@ return{
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cabecadeboi900.shp'.")		
 	end,
 	save = function(unitTest)
-		local terralib = getPackage("terralib")
+		local terralib = _Gtme.getTerraLib()
 
 		local projName = "cellspace_save_alt.tview"
 

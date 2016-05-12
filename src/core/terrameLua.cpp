@@ -183,6 +183,19 @@ int cpp_informations(lua_State *L)
 	return 4;
 }
 
+int cpp_version(lua_State *L)
+{
+	std::string v(to_string(TERRAME_VERSION_MAJOR));
+	v.append(".");
+	v.append(to_string(TERRAME_VERSION_MINOR));
+	v.append(".");
+	v.append(to_string(TERRAME_VERSION_PATCH));
+
+	lua_pushstring(L, v.c_str());
+
+	return 1;
+}
+
 int cpp_imagecompare(lua_State *L)
 {
     const char* s1 = lua_tostring(L, -1);
@@ -347,6 +360,9 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_informations);
 	lua_setglobal(L, "cpp_informations");
+
+	lua_pushcfunction(L, cpp_version);
+	lua_setglobal(L, "cpp_version");
 
 	lua_pushcfunction(L, cpp_imagecompare);
 	lua_setglobal(L, "cpp_imagecompare");

@@ -37,7 +37,7 @@ function filePath(filename, package)
 	if isFile(file) or isDir(file) then
 		return file
 	else
-		customError("File '"..file.."' does not exist in package '"..package.."'.")
+		customError("File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'.")
 	end
 end
 
@@ -245,7 +245,7 @@ function getPackage(pname)
 			local mfile = pname_path..s.."lua"..s..file
 			if not isFile(mfile) then -- SKIP
 				_Gtme.printError("Cannot open "..mfile..". No such file.")
-				_Gtme.printError("Please check "..pname_path.."load.lua")
+				_Gtme.printError("Please check "..pname_path..s.."load.lua")
 				os.exit() -- SKIP
 			end
 

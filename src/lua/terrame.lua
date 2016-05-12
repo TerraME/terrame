@@ -39,22 +39,6 @@ _Gtme.fonts = {}
 _Gtme.print = print
 _Gtme.type = type
 
-table.insert = function(t, p, v)
-	if v then
-		local previous = v
-
-		for i = p, #t do
-			local tmp = t[i]
-			t[i] = previous
-			previous = tmp
-		end
-
-		t[#t + 1] = previous
-	else
-    	t[#t + 1] = p
-	end
-end
-
 print = function(obj, ...)
 	if type(obj) == "table" then
 		obj = vardump(obj)
@@ -140,12 +124,14 @@ function _Gtme.getVersion(str)
 end
 
 function _Gtme.downloadPackagesList()
-	local packages = load(cpp_listpackages("http://www.terrame.org/packages/packages.lua"))()
+	local version = sessionInfo().version
+	local packages = load(cpp_listpackages("http://www.terrame.org/packages/"..version.."/packages.lua"))()
 	return packages
 end
 
 function _Gtme.downloadPackage(pkg)
-	cpp_downloadpackage(pkg, "http://www.terrame.org/packages/")
+	local version = sessionInfo().version
+	cpp_downloadpackage(pkg, "http://www.terrame.org/packages/"..version.."/")
 end
 
 -- from http://metalua.luaforge.net/src/lib/strict.lua.html
@@ -837,6 +823,16 @@ function _Gtme.installPackage(file)
 	return package
 end
 
+local terralib
+
+function _Gtme.getTerraLib()
+	if not terralib then
+		terralib = getPackage("terralib")
+	end
+
+	return terralib
+end
+
 local function version()
 	local tmeVersion, lua_release, qt_version, qwt_version = cpp_informations()
 
@@ -848,8 +844,7 @@ local function version()
 	str = str.."\n  Qt "..qt_version
 	str = str.."\n  Qwt "..qwt_version
 	
-	local terralib = getPackage("terralib")
-	local tlib = terralib.TerraLib{}
+	local tlib = _Gtme.getTerraLib().TerraLib{}
 	str = str.."\n  TerraLib "..tlib:getVersion()
 	tlib:finalize()	
 
@@ -1226,10 +1221,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	loadPackgesLibPath()
     _Gtme.loadLibraryPath()
 
-    if not _Gtme.isLoaded("terralib") then
-        _Gtme.import("terralib")
-    end
-
 	local argCount = 1
 	while argCount <= #arguments do
 		arg = arguments[argCount]
@@ -1267,6 +1258,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			elseif arg == "-package" then
 				argCount = argCount + 1
 				package = arguments[argCount]
+
+				if package == nil then
+					_Gtme.printError("A package should be specified after -package.")
+					os.exit()
+				end
+
 				info_.package = package
 				if #arguments <= argCount then
 					local models
@@ -1377,7 +1374,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end)
 
                 if _Gtme.isWindowsOS() then
-                    local terralib = getPackage("terralib")
+                    local terralib = _Gtme.getTerraLib()
                     local tlib = terralib.TerraLib{}
                     tlib:finalize()
                 end
@@ -1541,7 +1538,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	end
 
     if _Gtme.isWindowsOS() then
-        local terralib = getPackage("terralib")
+        local terralib = _Gtme.getTerraLib()
         local tlib = terralib.TerraLib{}
         tlib:finalize()
     end

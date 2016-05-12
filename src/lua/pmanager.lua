@@ -467,7 +467,6 @@ local function installButtonClicked()
 			text = text.."\n"..mtext
 		end
 
-
 		while lines < 16 do
 			text = text.."\n"
 			lines = lines + 1

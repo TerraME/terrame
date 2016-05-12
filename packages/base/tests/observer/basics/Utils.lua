@@ -40,6 +40,10 @@ return{
 		    target = {value = 2}
 		}
 
+		unitTest:assertType(c, "Chart")
+		unitTest:assertNil(c.parent)
+		c:update()
+
 		local error_func = function()
 			c:save("abc.png")
 		end
@@ -50,6 +54,10 @@ return{
 		local m = Map{
 			target = cs
 		}
+
+		unitTest:assertType(m, "Map")
+		unitTest:assertNil(m.parent)
+		m:update()
 
 		local error_func = function()
 			m:save("abc.png")
@@ -63,6 +71,10 @@ return{
 		}
 
 		local c = Clock{target = timer}
+
+		unitTest:assertType(c, "Clock")
+		unitTest:assertNil(c.parent)
+		c:update()
 
 		local error_func = function()
 			c:save("abc.png")
@@ -78,6 +90,10 @@ return{
 
 		local ts = TextScreen{target = world}
 
+		unitTest:assertType(ts, "TextScreen")
+		unitTest:assertNil(ts.parent)
+		ts:update()
+
 		local error_func = function()
 			ts:save("abc.png")
 		end
@@ -91,6 +107,10 @@ return{
 		}
 
 		local vt1 = VisualTable{target = world}
+
+		unitTest:assertType(vt1, "VisualTable")
+		unitTest:assertNil(vt1.parent)
+		vt1:update()
 
 		local error_func = function()
 			vt1:save("abc.png")

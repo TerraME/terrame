@@ -11,6 +11,7 @@ test = {
 	twotest        = {arg = "-test", config = "twoTests.lua"},
 	twodirectories = {arg = "-test", config = "twoDirectories.lua"},
 	pattern        = {arg = "-test", config = "pattern.lua"},
+	noload         = {arg = "-test", package = "noload"},
 	nolog          = {arg = "-test", config = "log.lua"},
 	noexamples     = {arg = "-test", package = "noexamples"}
 }
@@ -18,6 +19,7 @@ test = {
 package = {
 	nodescription     = {package = "nodescription"},
 	nolua             = {package = "nolua"},
+	nopackage         = {package = ""},
 	noexamples        = {package = "noexamples"},
 	noexamplesexample = {package = "noexamples",     arg = "-example"},
 	example           = {package = "onerror",        arg = "-example continuous-rain"},
@@ -28,6 +30,7 @@ package = {
 
 doc = {
 	doc             = {arg = "-doc"},
+	noload          = {arg = "-doc", package = "noload"},
 	onerror         = {arg = "-doc", package = "onerror"},
 	twoerrors       = {arg = "-doc", package = "twoerrors"},
 	images          = {arg = "-doc", package = "images"},
