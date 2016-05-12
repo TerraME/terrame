@@ -24,7 +24,7 @@
 
 return{
 	loadNeighborhood = function(unitTest)
-		local terralib = getPackage("terralib")
+		local terralib = _Gtme.getTerraLib()
 
 		local projName = "environment_alt.tview"
 

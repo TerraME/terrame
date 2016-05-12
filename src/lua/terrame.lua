@@ -823,6 +823,16 @@ function _Gtme.installPackage(file)
 	return package
 end
 
+local terralib
+
+function _Gtme.getTerraLib()
+	if not terralib then
+		terralib = getPackage("terralib")
+	end
+
+	return terralib
+end
+
 local function version()
 	local tmeVersion, lua_release, qt_version, qwt_version = cpp_informations()
 
@@ -834,8 +844,7 @@ local function version()
 	str = str.."\n  Qt "..qt_version
 	str = str.."\n  Qwt "..qwt_version
 	
-	local terralib = getPackage("terralib")
-	local tlib = terralib.TerraLib{}
+	local tlib = _Gtme.getTerraLib().TerraLib{}
 	str = str.."\n  TerraLib "..tlib:getVersion()
 	tlib:finalize()	
 
@@ -1212,10 +1221,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	loadPackgesLibPath()
     _Gtme.loadLibraryPath()
 
-    if not _Gtme.isLoaded("terralib") then
-        _Gtme.import("terralib")
-    end
-
 	local argCount = 1
 	while argCount <= #arguments do
 		arg = arguments[argCount]
@@ -1369,7 +1374,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end)
 
                 if _Gtme.isWindowsOS() then
-                    local terralib = getPackage("terralib")
+                    local terralib = _Gtme.getTerraLib()
                     local tlib = terralib.TerraLib{}
                     tlib:finalize()
                 end
@@ -1533,7 +1538,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	end
 
     if _Gtme.isWindowsOS() then
-        local terralib = getPackage("terralib")
+        local terralib = _Gtme.getTerraLib()
         local tlib = terralib.TerraLib{}
         tlib:finalize()
     end

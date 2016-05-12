@@ -80,7 +80,7 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = Project{
+		local proj = _Gtme.getTerraLib().Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -88,7 +88,7 @@ return{
 		}		
 
 		local layerName1 = "Sampa"
-		local sampa = Layer{
+		local sampa = _Gtme.getTerraLib().Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
@@ -109,7 +109,7 @@ return{
 		end			
 		
 		local clName1 = "Sampa_Cells"
-		local layer = Layer{
+		local layer = _Gtme.getTerraLib().Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
@@ -1178,7 +1178,7 @@ yMin    number [0]
 	save = function(unitTest)
 		local projName = "cellspace_save_basic.tview"
 
-		local proj = Project{
+		local proj = _Gtme.getTerraLib().Project{
 			file = projName,
 			clean = true,
 			author = "Avancini",
@@ -1186,7 +1186,7 @@ yMin    number [0]
 		}
 
 		local layerName1 = "Sampa"
-		Layer{
+		_Gtme.getTerraLib().Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
@@ -1208,7 +1208,7 @@ yMin    number [0]
 		end
 
 		local clName1 = "Sampa_Cells"
-		Layer{
+		_Gtme.getTerraLib().Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
@@ -1241,7 +1241,7 @@ yMin    number [0]
 		
 		cs:save(cellSpaceLayerNameT0, "t0")
 
-		local layer = Layer{
+		local layer = _Gtme.getTerraLib().Layer{
 			project = proj,
 			name = cellSpaceLayerNameT0
 		}

@@ -122,7 +122,7 @@ return{
 		end
 
 		-- project
-		local terralib = getPackage("terralib")
+		local terralib = _Gtme.getTerraLib()
 		local projName = "cellspace_basic.tview"
 		local author = "Avancini"
 		local title = "Cellular Space"

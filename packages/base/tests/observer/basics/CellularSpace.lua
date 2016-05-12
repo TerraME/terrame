@@ -149,7 +149,7 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = Project{
+		local proj = _Gtme.getTerraLib().Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -157,7 +157,7 @@ return{
 		}		
 
 		local layerName1 = "Sampa"
-		Layer{
+		_Gtme.getTerraLib().Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
@@ -178,7 +178,7 @@ return{
 		end			
 		
 		local clName1 = "Sampa_Cells"
-		Layer{
+		_Gtme.getTerraLib().Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
