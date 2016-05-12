@@ -22,17 +22,19 @@
 --
 -------------------------------------------------------------------------------------------
 
+-- @example Creates a database that can be used by the example fire-spread of base package.
+
 import("terralib")
 
-local projName = "emas.tview"
+projName = "emas.tview"
 
 if isFile(projName) then
 	rmFile(projName)
 end
 
-local project = Project{
+project = Project{
 	file = projName,
-	create = true,
+	clean = true,
 	author = "Almeida, R.",
 	title = "Emas database"
 }
@@ -61,25 +63,79 @@ limit = Layer{
 	file = filePath("Limit_pol.shp", "terralib")
 }
 
+if isFile("emas.shp") then rmFile("emas.shp") end
+if isFile("break.shp") then rmFile("break.shp") end
+if isFile("cover.shp") then rmFile("cover.shp") end
+if isFile("mriver.shp") then rmFile("mriver.shp") end
+
 cl = Layer{
 	project = project,
-	file = "emas.shp", -- test also without c:
+	file = "emas.shp",
 	input = "limit",
 	name = "cells",
-	resolution = 10000
+	resolution = 500
+}
+
+cl:fill{
+	operation = "presence",
+	attribute = "break",
+	name = "firebreak",
+	output = "break"
+}
+
+cl:fill{
+	operation = "presence",
+	attribute = "river",
+	name = "river",
+	output = "mriver"
+}
+
+cl:fill{
+	operation = "average",
+	attribute = "cover",
+	select = 1,
+	name = "cover",
+	output = "cover"
+}
+
+cs = CellularSpace{
+	project = project,
+	layer = "mriver"
+}
+
+Map{
+	target = cs,
+	select = "break",
+	value = {0, 1},
+	color = {"white", "black"}
+}
+
+Map{
+	target = cs,
+	select = "river",
+	value = {0, 1},
+	color = {"white", "black"}
 }
 
 --[[
-cl:fillCells{
-	operation = "average",
-	name = altimetria,
-	attribute = "height"
+Map{
+	target = cs,
+	select = "cover",
+	min = 0,
+	max = 5,
+	slices = 6,
+	color = "Greens"
 }
+--]]
+
+--terralib:finalize()
+--[[
+if isFile("emas.shp") then rmFile("emas.shp") end
+if isFile("break.shp") then rmFile("break.shp") end
+if isFile("cover.shp") then rmFile("cover.shp") end
 
 if isFile(projName) then
 	rmFile(projName)
 end
-
-terralib:finalize()
 --]]
 
