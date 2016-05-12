@@ -470,6 +470,8 @@ return{
 	end,
 	getExtension = function(unitTest)
 		unitTest:assertEquals(getExtension("file.txt"), "txt")
+		unitTest:assertEquals(getExtension("/Applications/terrame.app/Contents/bin/packages/base/data/amazonia.shp"), "shp")
+		unitTest:assertEquals(getExtension("/Applications/terrame.app/Contents/bin/packages/base/data/amazonia"), "")
 	end,
 	getn = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}

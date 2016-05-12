@@ -911,9 +911,14 @@ end
 function getExtension(filename)
 	mandatoryArgument(1, "string", filename)
 
-	for i = 1, filename:len() do
-		if filename:sub(i, i) == "." then
+	local s = sessionInfo().separator
+
+	for i = filename:len() - 1, 1, -1 do
+		local sub = filename:sub(i, i)
+		if sub == "." then
 			return filename:sub(i + 1, filename:len())
+		elseif sub == s then
+			return ""
 		end
 	end
 
