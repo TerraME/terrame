@@ -81,25 +81,75 @@ cl = Layer{
 	resolution = 100000
 }
 
+if isFile("amazonia-dist.shp") then rmFile("amazonia-dist.shp") end
+if isFile("amazonia-dist2.shp") then rmFile("amazonia-dist2.shp") end
+if isFile("amazonia-dist3.shp") then rmFile("amazonia-dist3.shp") end
+if isFile("amazonia-dist4.shp") then rmFile("amazonia-dist4.shp") end
+
 cl:fill{
 	operation = "distance",
 	name = "roads",
 	attribute = "distroads",
-	output = "amazonia-dist.shp"
+	output = "amazonia-dist"
+}
+
+cl:fill{
+	operation = "distance",
+	name = "portos",
+	attribute = "distports",
+	output = "amazonia-dist2"
+}
+
+--[[ -- this call below also aborts TerraME (but without showing any error)
+cl:fill{
+	operation = "area",
+	name = "protected",
+	attribute = "marea",
+	output = "amazonia-dist3"
+}
+--]]
+
+cl:fill{
+	operation = "coverage",
+	name = "prodes",
+	select = 0,
+	attribute = "prodes",
+	output = "amazonia-dist4"
 }
 
 cs = CellularSpace{
 	project = project,
-	layer = "cells"
+	layer = "amazonia-dist3"
 }
 
 Map{
 	target = cs,
 	select = "distroads",
 	min = 0,
-	max = 200000,
+	max = 350000,
 	slices = 10,
-	color = {"red", "green"}
+	invert = true,
+	color = "YlGn"
+}
+
+Map{
+	target = cs,
+	select = "distports",
+	min = 0,
+	max = 1200000,
+	slices = 10,
+	invert = true,
+	color = "YlGn"
+}
+
+Map{
+	target = cs,
+	select = "protected",
+	min = 0,
+	max = 1,
+	slices = 10,
+	invert = true,
+	color = "YlGn"
 }
 
 --[[
