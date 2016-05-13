@@ -2,7 +2,7 @@
 #
 
 SOURCE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-TME_ROOT_PATH="$SOURCE/.."
+TME_ROOT_PATH="$(dirname "$SOURCE")"
 export TME_PATH="$TME_ROOT_PATH"/MacOS
 export PATH=$PATH:$TME_PATH
 export DYLD_LIBRARY_PATH="$TME_ROOT_PATH"/lib
