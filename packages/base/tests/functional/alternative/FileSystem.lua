@@ -138,18 +138,20 @@ return{
 			rmFile("abc123456")
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abc123456"))
-		
-		local file = io.open("myfile.txt", "w")
 
-		local error_func = function()
+		if _Gtme.isWindowsOS() then 		
+			local file = io.open("myfile.txt", "w")
+
+			local error_func = function()
+				rmFile("myfile.txt")
+			end
+			unitTest:assertError(error_func, "Could not remove file 'myfile.txt'.") -- SKIP
+
+			file:close()
 			rmFile("myfile.txt")
+
+			unitTest:assert(not isFile("myfile.txt")) -- SKIP
 		end
-		unitTest:assertError(error_func, "Could not remove file 'myfile.txt'.")
-
-		file:close()
-		rmFile("myfile.txt")
-
-		unitTest:assert(not isFile("myfile.txt"))
 	end,
 	runCommand = function(unitTest)
 		local error_func = function()

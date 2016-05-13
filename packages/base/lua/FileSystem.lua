@@ -284,11 +284,11 @@ function rmFile(file)
 	local result = os.execute("rm -f \""..file.."\"")
 
 	if result ~= true then
-		if result == nil then
-			result = "Could not remove file '"..file.."'."
+		if result == nil then -- SKIP
+			result = "Could not remove file '"..file.."'." -- SKIP
 		end
 
-		customError(tostring(result))
+		customError(tostring(result)) -- SKIP
 	end
 
 	if string.endswith(file, ".shp") then

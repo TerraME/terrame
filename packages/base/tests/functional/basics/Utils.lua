@@ -298,7 +298,6 @@ return{
 		unitTest:assertEquals(count, 3)
 	end,
 	forEachFile = function(unitTest)
-	
 		if not _Gtme.isWindowsOS() then
 			local count = 0
 			local r
@@ -309,7 +308,7 @@ return{
 			end)
 
 			unitTest:assert(r) -- SKIP
-			unitTest:assertEquals(count, 23) -- SKIP
+			unitTest:assertEquals(count, 36) -- SKIP
 
 			local count2 = 0
 			forEachFile(dir(filePath("", "base"), true), function(file)
