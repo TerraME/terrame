@@ -97,7 +97,7 @@ return{
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1	
-		local fn1 = getFileName(filePath1)
+		local fn1 = _Gtme.getTerraLib().getFileName(filePath1)
 		fn1 = testDir.."/"..fn1			
 		
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
@@ -1195,7 +1195,7 @@ yMin    number [0]
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1
-		local fn1 = getFileName(filePath1)
+		local fn1 = _Gtme.getTerraLib().getFileName(filePath1)
 		fn1 = testDir.."/"..fn1
 
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
@@ -1229,7 +1229,7 @@ yMin    number [0]
 
 		local shp2 = cellSpaceLayerNameT0..".shp"
 		local filePath2 = testDir.."/"..shp2	
-		local fn2 = getFileName(filePath2)
+		local fn2 = _Gtme.getTerraLib().getFileName(filePath2)
 		fn2 = testDir.."/"..fn2	
 		
 		for i = 1, #exts do
@@ -1280,7 +1280,7 @@ yMin    number [0]
 		
 		local shp3 = cellSpaceLayerNameGeom..".shp"
 		local filePath3 = testDir.."/"..shp3	
-		local fn3 = getFileName(filePath3)
+		local fn3 = _Gtme.getTerraLib().getFileName(filePath3)
 		fn3 = testDir.."/"..fn3	
 		
 		for i = 1, #exts do
@@ -1306,7 +1306,7 @@ yMin    number [0]
 		
 		local shp4 = cellSpaceLayerNameGeom2..".shp"
 		local filePath4 = testDir.."/"..shp4	
-		local fn4 = getFileName(filePath4)
+		local fn4 = _Gtme.getTerraLib().getFileName(filePath4)
 		fn4 = testDir.."/"..fn4	
 		
 		for i = 1, #exts do
