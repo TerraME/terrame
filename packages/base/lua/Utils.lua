@@ -925,7 +925,7 @@ function getExtension(filename)
 		local sub = filename:sub(i, i)
 		if sub == "." then
 			return filename:sub(i + 1, filename:len())
-		elseif sub == s then
+		elseif sub == s or sub == "/" then
 			return ""
 		end
 	end

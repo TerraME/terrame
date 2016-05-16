@@ -92,7 +92,7 @@ return{
 
 		world:notify()
     
-		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.059)
+		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.07)
 
 		unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.06)
 
@@ -166,7 +166,7 @@ return{
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1	
-		local fn1 = getFileName(filePath1)
+		local fn1 = _Gtme.getTerraLib().getFileName(filePath1)
 		fn1 = testDir.."/"..fn1			
 		
 		local exts = {".dbf", ".prj", ".shp", ".shx"}

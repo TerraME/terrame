@@ -62,7 +62,7 @@ return{
 		error_func = function()
 			local c = Random{min = 2, max = 5, step = 2}
 		end
-		unitTest:assertError(error_func, "Invalid 'max' value (5). It could be 4.0 or 6.0.")
+		unitTest:assertError(error_func, "Invalid 'max' value (5). It could be 4 or 6.")
 
 		error_func = function()
 			local c = Random{min = 2, max = 5, step = false}
