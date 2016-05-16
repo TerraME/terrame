@@ -135,7 +135,7 @@ if(APPLE)
 		set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2001-2016")
 		set(MACOSX_BUNDLE_SIGNATURE "TerraME")
 		set(MACOSX_BUNDLE_GUI_IDENTIFIER "http://www.terrame.org")
-		set(MACOSX_BUNDLE_EXECUTABLE_NAME "terrame")
+		set(MACOSX_BUNDLE_EXECUTABLE_NAME "../bin/terrame")
 		set(MACOSX_BUNDLE_INFO_STRING "System for spatial dynamical modelling.")
 		set(MACOSX_BUNDLE_ICON_FILE "../Resources/icon/app.icns")
 		set(MACOSX_BUNDLE_LONG_VERSION_STRING ${TERRAME_STRING_VERSION})
@@ -148,13 +148,12 @@ if(APPLE)
             COMPONENT runtime
         )
 
-        set(CPACK_BUNDLE_STARTUP_COMMAND ${TERRAME_INSTALL_PREFIX}/bin/terrame)
-
-		configure_file(${CMAKE_ROOT}/Modules/MacOSXBundleInfo.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
+        configure_file(${CMAKE_ROOT}/Modules/MacOSXBundleInfo.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
 
 		set(CPACK_PACKAGE_ICON "${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.icns")
 		set(CPACK_BUNDLE_NAME "TerraME")
 		set(CPACK_BUNDLE_ICON ${CPACK_PACKAGE_ICON})
+        set(CPACK_BUNDLE_STARTUP_COMMAND ${TERRAME_INSTALL_PREFIX}/bin/terrame) # TODO: REVIEW #1046
 		set(CPACK_BUNDLE_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
 
 		set(TERRAME_APP_TYPE MACOSX_BUNDLE)
@@ -298,6 +297,7 @@ target_link_libraries(terrame ${TERRAME_LIBRARIES})
                                   
 if(APPLE)
 	target_link_libraries(terrame ${_COREFOUNDATION_LIBRARY})
+    set_target_properties(terrame PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
 endif()
 
 if(WIN32 AND MSVC)
