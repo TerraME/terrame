@@ -39,7 +39,7 @@ return {
 			file = filePath("sampa.shp", "terralib")
 		}	
 		
-		local filePath1 = "setores_cells.shp"
+		local filePath1 = "setores_cells_basic.shp"
 		
 		if isFile(filePath1) then
 			rmFile(filePath1)
@@ -281,7 +281,7 @@ return {
 
 		cl:fill{
 			operation = "presence",
-			name = localidades,
+			layer = localidades,
 			attribute = "presence",
 			output = presenceLayerName
 		}	
@@ -295,7 +295,7 @@ return {
 		
 		cl:fill{
 			operation = "area",
-			name = localidades,
+			layer = layerName1,
 			attribute = "area",
 			output = areaLayerName
 		}
@@ -309,7 +309,7 @@ return {
 		
 		cl:fill{
 			operation = "count",
-			name = localidades,
+			layer = localidades,
 			attribute = "count",
 			output = countLayerName
 		}
@@ -323,7 +323,7 @@ return {
 		
 		-- cl:fill{
 			-- operation = "distance",
-			-- name = localidades,
+			-- layer = localidades,
 			-- attribute = "distance",
 			-- output = distanceLayerName
 		-- }
@@ -337,7 +337,7 @@ return {
 		
 		cl:fill{
 			operation = "minimum",
-			name = localidades,
+			layer = localidades,
 			attribute = "minimum",
 			output = minValueLayerName,
 			select = "UCS_FATURA"
@@ -352,7 +352,7 @@ return {
 		
 		cl:fill{
 			operation = "maximum",
-			name = localidades,
+			layer = localidades,
 			attribute = "maximum",
 			output = maxValueLayerName,
 			select = "UCS_FATURA"
@@ -367,7 +367,7 @@ return {
 		
 		cl:fill{
 			operation = "coverage",
-			name = localidades,
+			layer = localidades,
 			attribute = "coverage",
 			output = coverageLayerName,
 			select = "LOCALIDADE"
@@ -382,7 +382,7 @@ return {
 		
 		cl:fill{
 			operation = "stdev",
-			name = localidades,
+			layer = localidades,
 			attribute = "stdev",
 			output = stdevLayerName,
 			select = "UCS_FATURA"
@@ -397,7 +397,7 @@ return {
 		
 		cl:fill{
 			operation = "average",
-			name = localidades,
+			layer = localidades,
 			attribute = "mean",
 			output = meanLayerName,
 			select = "UCS_FATURA"
@@ -412,7 +412,7 @@ return {
 		
 		cl:fill{
 			operation = "average",
-			name = localidades,
+			layer = localidades,
 			attribute = "weighted",
 			output = weighLayerName,
 			select = "UCS_FATURA",
@@ -428,7 +428,7 @@ return {
 
 		cl:fill{
 			operation = "mode",
-			name = localidades,
+			layer = localidades,
 			attribute = "high_inter",
 			output = intersecLayerName,
 			select = "UCS_FATURA",
@@ -444,7 +444,7 @@ return {
 
 		cl:fill{
 			operation = "mode",
-			name = localidades,
+			layer = localidades,
 			attribute = "high_occur",
 			output = occurrenceLayerName,
 			select = "UCS_FATURA"
@@ -459,7 +459,7 @@ return {
 		
 		cl:fill{
 			operation = "sum",
-			name = localidades,
+			layer = localidades,
 			attribute = "sum",
 			output = sumLayerName,
 			select = "UCS_FATURA"
@@ -474,7 +474,7 @@ return {
 		
 		cl:fill{
 			operation = "sum",
-			name = localidades,
+			layer = localidades,
 			attribute = "wsum",
 			output = wsumLayerName,
 			select = "UCS_FATURA",
@@ -497,7 +497,7 @@ return {
 		
 		-- cl:fill{
 			-- operation = "average",
-			-- name = desmatamento,
+			-- layer = desmatamento,
 			-- attribute = "mean_0",
 			-- output = rmeanLayerName,
 			-- select = 0
@@ -512,7 +512,7 @@ return {
 		
 		-- cl:fill{
 			-- operation = "minimum",
-			-- name = desmatamento,
+			-- layer = desmatamento,
 			-- attribute = "minimum_0",
 			-- output = rminLayerName,
 			-- select = 0
@@ -527,7 +527,7 @@ return {
 		
 		-- cl:fill{
 			-- operation = "maximum",
-			-- name = desmatamento,
+			-- layer = desmatamento,
 			-- attribute = "maximum_0",
 			-- output = rmaxLayerName,
 			-- select = 0
@@ -542,7 +542,7 @@ return {
 		
 		-- cl:fill{
 			-- operation = "coverage",
-			-- name = desmatamento,
+			-- layer = desmatamento,
 			-- attribute = "percent_0",
 			-- output = rpercentLayerName,
 			-- select = 0
@@ -557,7 +557,7 @@ return {
 		
 		-- cl:fill{
 			-- operation = "stdev",
-			-- name = desmatamento,
+			-- layer = desmatamento,
 			-- attribute = "stdev_0",
 			-- output = rstdevLayerName,
 			-- select = 0
@@ -572,7 +572,7 @@ return {
 		
 		-- cl:fill{
 			-- operation = "sum",
-			-- name = desmatamento,
+			-- layer = desmatamento,
 			-- attribute = "sum_0",
 			-- output = rsumLayerName,
 			-- select = 0

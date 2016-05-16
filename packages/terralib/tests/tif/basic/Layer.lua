@@ -77,7 +77,7 @@ return {
 		cl:fill{
 			operation = "mode",
 			attribute = "prod_mode",
-			name = prodes,
+			layer = prodes,
 			output = modeTifLayerName,
 			select = 0,
 		}
@@ -121,7 +121,7 @@ return {
 		cl:fill{
 			operation = "minimum",
 			attribute = "prod_min",
-			name = prodes,
+			layer = prodes,
 			output = minTifLayerName,
 			select = 0,
 		}
@@ -160,7 +160,7 @@ return {
 		cl:fill{
 			operation = "maximum",
 			attribute = "prod_max",
-			name = prodes,
+			layer = prodes,
 			output = maxTifLayerName,
 			select = 0,
 		}
@@ -199,7 +199,7 @@ return {
 		cl:fill{
 			operation = "sum",
 			attribute = "prod_sum",
-			name = prodes,
+			layer = prodes,
 			output = sumTifLayerName,
 			select = 0,
 		}
@@ -239,7 +239,7 @@ return {
 		cl:fill{
 			operation = "coverage",
 			attribute = "cov",
-			name = prodes,
+			layer = prodes,
 			output = covTifLayerName,
 			select = 0,
 		}
@@ -310,7 +310,7 @@ return {
 		cl:fill{
 			operation = "average",
 			select = 0,
-			name = "altimetria",
+			layer = "altimetria",
 			output = "mycells-avg",
 			attribute = "height"
 		}
@@ -339,7 +339,7 @@ return {
 		cl:fill{
 			operation = "stdev",
 			select = 0,
-			name = "altimetria",
+			layer = "altimetria",
 			output = "cells-std",
 			attribute = "std"
 		}

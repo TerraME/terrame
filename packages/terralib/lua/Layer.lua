@@ -46,32 +46,6 @@ local function isSourceConsistent(source, filePath)
 	return true
 end
 
-local function validateGeomAndRasterData(data, repr)
-	if repr == "geometry" then
-		verifyUnnecessaryArguments(data, {"area", "attribute", "clean", "default", "dummy", "name", "operation", "select", "output", "table"})
-		defaultTableValue(data, "area", false)
-		mandatoryTableArgument(data, "select", "string")
-	else
-		verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "name", "operation", "select", "output", "table"})
-		mandatoryTableArgument(data, "select", "number")
-		if data.select < 0 then
-			customError("The attribute selected must be '>=' 0.")
-		end
-	end
-	
-	defaultTableValue(data, "default", 0)
-	defaultTableValue(data, "dummy", math.huge)		
-end
-
-local function validateGeomData(data, repr)
-	if repr == "geometry" then
-		verifyUnnecessaryArguments(data, {"attribute", "clean", "name", "operation", "output", "table"})
-		data.select = "FID"
-	else
-		customError("The operation '"..data.operation.."' is not available to raster layer.")
-	end	
-end
-
 local function addCellularLayer(self, data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source", 
@@ -240,7 +214,6 @@ local function addLayer(self, data)
 	--TODO: implement all types (tif, access, etc)		
 end
 
-
 Layer_ = {
 	type_ = "Layer",	
 	--- Create a new attribute for each cell of a Layer.
@@ -250,8 +223,9 @@ Layer_ = {
 	-- input layer.
 	-- @arg data.select Name of an attribute from the input data. It is only required when
 	-- the selected operation needs a value associated to the geometry (average, sum, mode).
-	-- It can also be an integer value representing the band of the raster to be used.
-	-- If the raster has only one band then this value is optional.
+	-- When using a raster data as input, use argument band instead.
+	-- @arg data.band An integer value representing the band of the raster to be used.
+	-- The default value is one.
 	-- @arg data.layer Name of an input layer belonging to the same Project. There are
 	-- several strategies available, depending on the geometry of the layer. See below:
 	-- @tabular layer
@@ -262,7 +236,7 @@ Layer_ = {
 	-- "value" \
 	-- Lines & "count", "distance", "length", "presence" &
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
-	-- "mode", "value" \
+	-- "value" \
 	-- Polygons & "area", "count", "distance", "presence" &
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
 	-- "average", "mode", "coverage", "value", "sum" \
@@ -279,7 +253,7 @@ Layer_ = {
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income. 
-	-- & attribute, layer, select, output & area, default, dummy, clean\
+	-- & attribute, layer, select, output & area, default, band, dummy, clean\
 	-- "count" & Number of objects that have some overlay with the cell.
 	-- & attribute, layer, output & clean \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
@@ -293,13 +267,13 @@ Layer_ = {
 	-- output to string. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select, output & 
-	-- default, dummy, clean \
+	-- default, dummy, clean, band \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select, output & default, dummy, clean \
+	-- attribute, layer, select, output & default, dummy, clean, band \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select, output & default, dummy, clean \
+	-- attribute, layer, select, output & default, dummy, clean, band \
 	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
@@ -309,7 +283,7 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select, output & default, dummy, clean \
+	-- & attribute, layer, select, output & default, dummy, clean, band \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
 	-- & attribute, layer, output & clean \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
@@ -367,7 +341,7 @@ Layer_ = {
 		verifyNamedTable(data)
 
 		mandatoryTableArgument(data, "operation", "string")
-		mandatoryTableArgument(data, "name", "string")
+		mandatoryTableArgument(data, "layer", "string")
 		mandatoryTableArgument(data, "attribute", "string")
 		mandatoryTableArgument(data, "output", "string")
 		defaultTableValue(data, "clean", false)
@@ -375,12 +349,8 @@ Layer_ = {
 		local tlib = TerraLib{}
 		local project = self.project
 		
-		if not project.layers[data.name] then
-			customError("The layer '"..data.name.."' does not exist.")
-		end
-	
-		if not data.table then
-			data.table = data.name
+		if not project.layers[data.layer] then
+			customError("The layer '"..data.layer.."' does not exist.")
 		end
 	
 		if isFile(data.output..".shp") then
@@ -391,68 +361,186 @@ Layer_ = {
 			end
 		end
 
-		local layer = project.layers[data.name]
-		local info = project.terralib:getLayerInfo(project, layer)
-		local repr = info.rep
+		local repr = project.terralib:getLayerInfo(project, project.layers[data.layer]).rep
 		
 		switch(data, "operation"):caseof{
-			area = function()	
-				validateGeomData(data, repr)
+			area = function()
+				if repr == "polygon" then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
+					data.select = "FID"
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+				end
 			end,
-			average = function()		
-				validateGeomAndRasterData(data, repr)
+			average = function()
+				if belong(repr, {"point", "line", "polygon"}) then
+					if repr == "polygon" then
+						verifyUnnecessaryArguments(data, {"area", "attribute", "clean", "default", "dummy", "layer", "operation", "output", "select"})
+						defaultTableValue(data, "area", false)
+					else
+						verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "output", "select"})
+					end
+
+					mandatoryTableArgument(data, "select", "string")
+				elseif repr == "raster" then
+					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
+					defaultTableValue(data, "band", 1)
+					positiveTableArgument(data, "band", true)
+					data.select = data.band
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
+				end
+
+				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "dummy", math.huge)
 			end,
 			count = function()
-				validateGeomData(data, repr)
+				if belong(repr, {"point", "line", "polygon"}) then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
+					data.select = "FID"
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+				end
 			end,
 			distance = function()
-				validateGeomData(data, repr)
+				if belong(repr, {"point", "line", "polygon"}) then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
+					data.select = "FID"
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+				end
 			end,
 			length = function()
-				verifyUnnecessaryArguments(data, {"attribute", "clean", "name", "operation", "output", "table"})
+				if repr == "line" then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
+					data.select = "FID"
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+				end
+
 				customError("Sorry, this operation was not implemented in TerraLib yet.")
 			end,
 			mode = function()
-				if repr == "geometry" then
-					verifyUnnecessaryArguments(data, {"area", "attribute", "clean", "default", "dummy", "name", "operation", "select", "output", "table"})
-					defaultTableValue(data, "area", false)
+				if belong(repr, {"point", "line", "polygon"}) then
+					if repr == "polygon" then
+						verifyUnnecessaryArguments(data, {"area", "attribute", "clean", "default", "dummy", "layer", "operation", "output", "select"})
+						defaultTableValue(data, "area", false)
+					else
+						verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "output", "select"})
+					end
+
 					mandatoryTableArgument(data, "select", "string")
+				elseif repr == "raster" then
+					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
+					defaultTableValue(data, "band", 1)
+					positiveTableArgument(data, "band", true)
+					data.select = data.band
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
 				else
-					--verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "name", "operation", "select", "output", "table"})
-					--mandatoryTableArgument(data, "select", "number")
-					customError("The operation '"..data.operation.."' is not available to raster layer.")
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			maximum = function()
-				validateGeomAndRasterData(data, repr)
+				if belong(repr, {"point", "line", "polygon"}) then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "select", "output"})
+					mandatoryTableArgument(data, "select", "string")
+				elseif repr == "raster" then
+					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
+					defaultTableValue(data, "band", 1)
+					positiveTableArgument(data, "band", true)
+					data.select = data.band
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
+				end
+
+				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "dummy", math.huge)
 			end,
 			minimum = function()
-				validateGeomAndRasterData(data, repr)
+				if belong(repr, {"point", "line", "polygon"}) then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "select", "output"})
+					mandatoryTableArgument(data, "select", "string")
+				elseif repr == "raster" then
+					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
+					defaultTableValue(data, "band", 1)
+					positiveTableArgument(data, "band", true)
+					data.select = data.band
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
+				end
+
+				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "dummy", math.huge)
 			end,
 			coverage = function()
-				validateGeomAndRasterData(data, repr)
+				if repr == "polygon" then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "select", "output"})
+					mandatoryTableArgument(data, "select", "string")
+				elseif repr == "raster" then
+					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
+					defaultTableValue(data, "band", 1)
+					positiveTableArgument(data, "band", true)
+					data.select = data.band
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
+				end
+
+				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "dummy", math.huge)
 			end,
 			presence = function()
-				validateGeomData(data, repr)
+				if belong(repr, {"point", "line", "polygon"}) then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
+					data.select = "FID"
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+				end
 			end,
 			stdev = function()
-				validateGeomAndRasterData(data, repr)
+				if belong(repr, {"point", "line", "polygon"}) then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "select", "output"})
+					mandatoryTableArgument(data, "select", "string")
+				elseif repr == "raster" then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "band", "output"})
+					defaultTableValue(data, "band", 1)
+					positiveTableArgument(data, "band", true)
+					data.select = data.band
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
+				end
+
+				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "dummy", math.huge)
 			end,
 			sum = function()
-				validateGeomAndRasterData(data, repr)
+				if belong(repr, {"point", "line", "polygon"}) then
+					verifyUnnecessaryArguments(data, {"area", "attribute", "clean", "default", "dummy", "layer", "operation", "select", "output"})
+					mandatoryTableArgument(data, "select", "string")
+					defaultTableValue(data, "area", false)
+				elseif repr == "raster" then
+					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "band", "output"})
+					defaultTableValue(data, "band", 1)
+					positiveTableArgument(data, "band", true)
+					data.select = data.band
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
+				end
+
+				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "dummy", math.huge)
 			end
 			-- value = function()
-				-- verifyUnnecessaryArguments(data, {"area", "attribute", "name", "operation", "select"})
+				-- verifyUnnecessaryArguments(data, {"area", "attribute", "layer", "operation", "select"})
 
 				-- mandatoryTableArgument(data, "select", "string")
 				-- defaultTableValue(data, "area", false)
 			-- end
 		}
 		
-		tlib:attributeFill(project, data.name, self.name, data.output, data.attribute, data.operation, data.select, data.area, data.default)
+		tlib:attributeFill(project, data.layer, self.name, data.output, data.attribute, data.operation, data.select, data.area, data.default, repr)
 		
 		self.name = data.output
 	end

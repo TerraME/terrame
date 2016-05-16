@@ -59,7 +59,6 @@ return{
 		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in the Project '"..projFile.."'.")
 		
 		unitTest:assertFile("proj_celllayer.tview")
-
 	
 		local projName = "amazonia2.tview"
 
@@ -367,7 +366,7 @@ return{
 		local operationMandatory = function()
 			cl:fill{
 				attribute = "population",
-				name = "population"
+				layer = "population"
 			}
 		end
 		unitTest:assertError(operationMandatory, mandatoryArgumentMsg("operation"))
@@ -376,7 +375,7 @@ return{
 			cl:fill{
 				attribute = "distRoads",
 				operation = 2,
-				name = "roads"
+				layer = "roads"
 			}
 		end
 		unitTest:assertError(operationNotString, incompatibleTypeMsg("operation", "string", 2))
@@ -387,20 +386,20 @@ return{
 				operation = "area"
 			}
 		end
-		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("name"))
+		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("layer"))
 
 		local layerNotString = function()
 			cl:fill{
 				attribute = "distRoads",
 				operation = "area",
-				name = 2
+				layer = 2
 			}
 		end
-		unitTest:assertError(layerNotString, incompatibleTypeMsg("name", "string", 2))
+		unitTest:assertError(layerNotString, incompatibleTypeMsg("layer", "string", 2))
 	
 		local attributeMandatory = function()
 			cl:fill{
-				name = "cells",
+				layer = "cells",
 				operation = "area"
 			}
 		end
@@ -410,14 +409,14 @@ return{
 			cl:fill{
 				attribute = 2,
 				operation = "area",
-				name = "cells"
+				layer = "cells"
 			}
 		end
 		unitTest:assertError(attributeNotString, incompatibleTypeMsg("attribute", "string", 2))
 		
 		local outputMandatory = function()
 			cl:fill{
-				name = "cells",
+				layer = "cells",
 				operation = "area",
 				attribute = "any"
 			}
@@ -428,7 +427,7 @@ return{
 			cl:fill{
 				attribute = "any",
 				operation = "area",
-				name = "cells",
+				layer = "cells",
 				output = 2
 			}
 		end
@@ -438,7 +437,7 @@ return{
 		local layerNotExists = function()
 			cl:fill{
 				operation = "presence",
-				name = "LayerNotExists",
+				layer = "LayerNotExists",
 				attribute = "presence",
 				output = presenceLayerName
 			}
@@ -448,7 +447,7 @@ return{
 		local attrAlreadyExists = function()
 			cl:fill{
 				operation = "presence",
-				name = layerName1,
+				layer = layerName1,
 				attribute = "row",
 				output = presenceLayerName
 			}
@@ -458,7 +457,7 @@ return{
 		local presenceSelectUnnecessary = function()
 			cl:fill{
 				operation = "presence",
-				name = layerName1,
+				layer = layerName1,
 				attribute = "presence",
 				select = "FID",
 				output = presenceLayerName
@@ -471,7 +470,7 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "area",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
 				output = areaLayerName
 			}
@@ -483,7 +482,7 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "count",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
 				output = countLayerName
 			}
@@ -495,7 +494,7 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "distance",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
 				output = distanceLayerName
 			}
@@ -507,8 +506,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				name = layerName1,
+				layer = layerName1,
 				select = 2,
+				clean = true,
 				output = minValueLayerName
 			}
 		end
@@ -518,8 +518,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				name = layerName1,
+				layer = layerName1,
 				select = "row",
+				clean = true,
 				output = minValueLayerName,
 				default = false
 			}
@@ -530,8 +531,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				name = layerName1,
+				layer = layerName1,
 				select = "row",
+				clean = true,
 				output = minValueLayerName,
 				dummy = false
 			}
@@ -542,8 +544,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				name = layerName1,
+				layer = layerName1,
 				select = "row",
+				clean = true,
 				output = minValueLayerName,
 				dummy = 0,
 				defaut = 3
@@ -556,8 +559,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				name = layerName1,
+				layer = layerName1,
 				select = selected,
+				clean = true,
 				output = minValueLayerName
 			}
 		end
@@ -568,8 +572,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				name = layerName1,
+				layer = layerName1,
 				select = 2,
+				clean = true,
 				output = maxValueLayerName
 			}
 		end
@@ -579,8 +584,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = maxValueLayerName,
 				default = false
 			}
@@ -591,8 +597,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = maxValueLayerName,
 				dummy = false
 			}
@@ -603,8 +610,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = maxValueLayerName,
 				defaut = 3
 			}
@@ -616,8 +624,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
-				name = layerName1,
+				layer = layerName1,
 				select = 2,
+				clean = true,
 				output = coverageLayerName
 			}
 		end
@@ -627,8 +636,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = coverageLayerName,
 				default = false
 			}
@@ -639,8 +649,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = coverageLayerName,
 				dummy = false
 			}
@@ -651,8 +662,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = coverageLayerName,
 				defaut = 3
 			}
@@ -664,8 +676,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				name = layerName1,
+				layer = layerName1,
 				select = 2,
+				clean = true,
 				output = stdevLayerName
 			}
 		end
@@ -675,8 +688,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = stdevLayerName,
 				default = false
 			}
@@ -687,8 +701,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = stdevLayerName,
 				dummy = false
 			}
@@ -699,8 +714,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = stdevLayerName,
 				defaut = 3
 			}
@@ -712,8 +728,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				name = layerName1,
+				layer = layerName1,
 				select = 2,
+				clean = true,
 				output = averageLayerName
 			}
 		end
@@ -723,8 +740,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = averageLayerName,
 				area = 2
 			}
@@ -735,8 +753,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = averageLayerName,
 				default = false
 			}
@@ -747,8 +766,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = averageLayerName,
 				dummy = false
 			}
@@ -759,8 +779,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = averageLayerName,
 				defaut = 3
 			}
@@ -772,8 +793,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
-				name = layerName1,
+				layer = layerName1,
 				select = 2,
+				clean = true,
 				output = modeLayerName
 			}
 		end
@@ -783,8 +805,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = modeLayerName,
 				area = 2
 			}
@@ -795,9 +818,10 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
 				output = modeLayerName,
+				clean = true,
 				default = false
 			}
 		end
@@ -807,8 +831,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = modeLayerName,
 				dummy = false
 			}
@@ -819,8 +844,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = modeLayerName,
 				defaut = 3
 			}
@@ -832,8 +858,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				name = layerName1,
+				layer = layerName1,
 				select = 2,
+				clean = true,
 				output = sumLayerName
 			}
 		end
@@ -843,8 +870,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = sumLayerName,
 				area = 2
 			}
@@ -855,9 +883,10 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
 				output = sumLayerName,
+				clean = true,
 				default = false
 			}
 		end
@@ -867,8 +896,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = sumLayerName,
 				dummy = false
 			}
@@ -879,8 +909,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = sumLayerName,
 				defaut = 3
 			}
@@ -891,8 +922,9 @@ return{
 			cl:fill{
 				attribute = "max10allowed",
 				operation = "sum",
-				name = layerName1,
+				layer = layerName1,
 				select = "FID",
+				clean = true,
 				output = sumLayerName
 			}		
 		end
@@ -918,7 +950,7 @@ return{
 
 		cl:fill{
 			operation = "presence",
-			name = localidades,
+			layer = localidades,
 			attribute = "presence2000",
 			output = presenceLayerName
 		}	
@@ -928,7 +960,7 @@ return{
 		local normalizedTrucatedError = function()
 			cl:fill{
 				operation = "presence",
-				name = localidades,
+				layer = localidades,
 				attribute = "presence2001",
 				output = presenceLayerName2
 			}
@@ -951,8 +983,8 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				name = layerName3,
-				select = 0,
+				layer = layerName3,
+				band = 0,
 				output = raverageLayerName,
 				area = 2
 			}
@@ -963,41 +995,40 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				name = layerName3,
-				select = "0",
+				layer = layerName3,
+				band = "0",
 				output = raverageLayerName
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
-		
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))		
 		local bandNotExists = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				name = layerName3,
-				select = 9,
+				layer = layerName3,
+				band = 9,
 				output = raverageLayerName
 			}
 		end
-		unitTest:assertError(bandNotExists, "The attribute selected '".."9".."' not exists in layer '"..layerName3.."'.")	
+		unitTest:assertError(bandNotExists, "Selected band '".."9".."' does not exist in layer '"..layerName3.."'.")	
 		
 		local bandNegative = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
-				name = layerName3,
-				select = -1,
+				layer = layerName3,
+				band = -1,
 				output = raverageLayerName
 			}
 		end
-		unitTest:assertError(bandNegative, "The attribute selected must be '>=' 0.")	
+		unitTest:assertError(bandNegative, positiveArgumentMsg("band", -1, true))
 
 		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT) 
 		-- local layerNotIntersect = function()
 			-- cl:fill{
 				-- attribute = "attr",
 				-- operation = "average",
-				-- name = layerName3,
+				-- layer = layerName3,
 				-- select = 0,
 				-- output = raverageLayerName
 			-- }
@@ -1009,8 +1040,9 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				name = layerName3,
-				select = 0,
+				layer = layerName3,
+				band = 0,
+				clean = true,
 				output = rminLayerName,
 				area = 2
 			}
@@ -1021,20 +1053,22 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
-				name = layerName3,
-				select = "0",
+				layer = layerName3,
+				clean = true,
+				band = "0",
 				output = rminLayerName
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))	
 
 		local rmaxLayerName = clName1.."_Maximum"
 		local areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				name = layerName3,
-				select = 0,
+				layer = layerName3,
+				band = 0,
+				clean = true,
 				output = rmaxLayerName,
 				area = 2
 			}
@@ -1045,20 +1079,22 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
-				name = layerName3,
-				select = "0",
+				layer = layerName3,
+				band = "0",
+				clean = true,
 				output = rmaxLayerName
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local rpercentLayerName = clName1.."_Percentage"
 		local areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
-				name = layerName3,
-				select = 0,
+				layer = layerName3,
+				band = 0,
+				clean = true,
 				output = rpercentLayerName,
 				area = 2
 			}
@@ -1069,20 +1105,22 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
-				name = layerName3,
-				select = "0",
+				layer = layerName3,
+				band = "0",
+				clean = true,
 				output = rpercentLayerName
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local rstdevLayerName = clName1.."_Stdev"
 		local areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				name = layerName3,
-				select = 0,
+				layer = layerName3,
+				band = 0,
+				clean = true,
 				output = rstdevLayerName,
 				area = 2
 			}
@@ -1093,20 +1131,22 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
-				name = layerName3,
-				select = "0",
+				layer = layerName3,
+				band = "0",
+				clean = true,
 				output = rstdevLayerName
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 		
 		local rsumLayerName = clName1.."_Sum"
 		local areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				name = layerName3,
-				select = 0,
+				layer = layerName3,
+				band = 0,
+				clean = true,
 				output = rsumLayerName,
 				area = 2
 			}
@@ -1117,62 +1157,68 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
-				name = layerName3,
-				select = "0",
+				layer = layerName3,
+				band = "0",
+				clean = true,
 				output = rsumLayerName
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local op1NotAvailable = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "area",
-				name = layerName3,
+				layer = layerName3,
+				clean = true,
 				output = rstdevLayerName
 			}
 		end
-		unitTest:assertError(op1NotAvailable, "The operation '".."area".."' is not available to raster layer.")	
+		unitTest:assertError(op1NotAvailable, "The operation 'area' is not available for layers with raster data.")	
 
 		local op2NotAvailable = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "count",
-				name = layerName3,
+				layer = layerName3,
+				clean = true,
 				output = rstdevLayerName
 			}
 		end
-		unitTest:assertError(op2NotAvailable, "The operation '".."count".."' is not available to raster layer.")
+		unitTest:assertError(op2NotAvailable, "The operation 'count' is not available for layers with raster data.")	
 
 		local op3NotAvailable = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "distance",
-				name = layerName3,
+				layer = layerName3,
+				clean = true,
 				output = rstdevLayerName
 			}
 		end
-		unitTest:assertError(op3NotAvailable, "The operation '".."distance".."' is not available to raster layer.")	
+		unitTest:assertError(op3NotAvailable, "The operation 'distance' is not available for layers with raster data.")	
 
 		local op4NotAvailable = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
-				name = layerName3,
+				layer = layerName3,
+				clean = true,
 				output = rstdevLayerName
 			}
 		end
-		unitTest:assertError(op4NotAvailable, "The operation '".."mode".."' is not available to raster layer.")	
+		unitTest:assertError(op4NotAvailable, "The operation 'mode' is not available for layers with raster data.")	
 
 		local op5NotAvailable = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "presence",
-				name = layerName3,
+				layer = layerName3,
+				clean = true,
 				output = rstdevLayerName
 			}
 		end
-		unitTest:assertError(op5NotAvailable, "The operation '".."presence".."' is not available to raster layer.")		
+		unitTest:assertError(op5NotAvailable, "The operation 'presence' is not available for layers with raster data.")	
 		
 		if isFile(projName) then
 			rmFile(projName)

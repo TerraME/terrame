@@ -71,7 +71,7 @@ return {
 		unitTest:assertEquals(layerInfo.name, layerName)
 		unitTest:assertEquals(layerInfo.file, layerFile)
 		unitTest:assertEquals(layerInfo.type, "OGR")
-		unitTest:assertEquals(layerInfo.rep, "geometry")
+		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
 		
 		rmFile(proj.file)
@@ -108,7 +108,7 @@ return {
 		unitTest:assertEquals(layerInfo.name, clName)
 		unitTest:assertEquals(layerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp1)
 		unitTest:assertEquals(layerInfo.type, "OGR")
-		unitTest:assertEquals(layerInfo.rep, "geometry")
+		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
 
 		if isFile(shp1) then
@@ -132,7 +132,9 @@ return {
 
 		local layerName1 = "Para"
 		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
+		print("ADD--------------------------")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
+		print("ADD--------------------------")
 		
 		local shp = {}
 
@@ -161,7 +163,7 @@ return {
 		unitTest:assertEquals(clLayerInfo.name, clName)
 		unitTest:assertEquals(clLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[1])
 		unitTest:assertEquals(clLayerInfo.type, "OGR")
-		unitTest:assertEquals(clLayerInfo.rep, "geometry")
+		unitTest:assertEquals(clLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(clLayerInfo.sid)
 		
 		-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
@@ -199,7 +201,7 @@ return {
 		unitTest:assertEquals(presLayerInfo.name, presLayerName)
 		unitTest:assertEquals(presLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[2])
 		unitTest:assertEquals(presLayerInfo.type, "OGR")
-		unitTest:assertEquals(presLayerInfo.rep, "geometry")
+		unitTest:assertEquals(presLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(presLayerInfo.sid)
 		
 		-- FILL CELLULAR SPACE WITH PERCENTAGE TOTAL AREA OPERATION
@@ -231,7 +233,7 @@ return {
 		unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
 		unitTest:assertEquals(areaLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[3])
 		unitTest:assertEquals(areaLayerInfo.type, "OGR")
-		unitTest:assertEquals(areaLayerInfo.rep, "geometry")
+		unitTest:assertEquals(areaLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(areaLayerInfo.sid)		
 		
 		-- FILL CELLULAR SPACE WITH COUNT OPERATION
@@ -263,7 +265,7 @@ return {
 		unitTest:assertEquals(countLayerInfo.name, countLayerName)
 		unitTest:assertEquals(countLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[4])
 		unitTest:assertEquals(countLayerInfo.type, "OGR")
-		unitTest:assertEquals(countLayerInfo.rep, "geometry")
+		unitTest:assertEquals(countLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(countLayerInfo.sid)	
 
 		-- FILL CELLULAR SPACE WITH DISTANCE OPERATION
@@ -295,7 +297,7 @@ return {
 		unitTest:assertEquals(distLayerInfo.name, distLayerName)
 		unitTest:assertEquals(distLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[5])
 		unitTest:assertEquals(distLayerInfo.type, "OGR")
-		unitTest:assertEquals(distLayerInfo.rep, "geometry")
+		unitTest:assertEquals(distLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(distLayerInfo.sid)			
 
 		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION
@@ -332,7 +334,7 @@ return {
 		unitTest:assertEquals(minLayerInfo.name, minLayerName)
 		unitTest:assertEquals(minLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[6])
 		unitTest:assertEquals(minLayerInfo.type, "OGR")
-		unitTest:assertEquals(minLayerInfo.rep, "geometry")
+		unitTest:assertEquals(minLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(minLayerInfo.sid)	
 		
 		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION
@@ -365,7 +367,7 @@ return {
 		unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
 		unitTest:assertEquals(maxLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[7])
 		unitTest:assertEquals(maxLayerInfo.type, "OGR")
-		unitTest:assertEquals(maxLayerInfo.rep, "geometry")
+		unitTest:assertEquals(maxLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(maxLayerInfo.sid)			
 		
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION
@@ -398,7 +400,7 @@ return {
 		unitTest:assertEquals(percLayerInfo.name, percLayerName)
 		unitTest:assertEquals(percLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[8])
 		unitTest:assertEquals(percLayerInfo.type, "OGR")
-		unitTest:assertEquals(percLayerInfo.rep, "geometry")
+		unitTest:assertEquals(percLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(percLayerInfo.sid)	
 
 		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION
@@ -432,7 +434,7 @@ return {
 		unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
 		unitTest:assertEquals(stdevLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[9])
 		unitTest:assertEquals(stdevLayerInfo.type, "OGR")
-		unitTest:assertEquals(stdevLayerInfo.rep, "geometry")
+		unitTest:assertEquals(stdevLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(stdevLayerInfo.sid)			
 		
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
@@ -466,7 +468,7 @@ return {
 		unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
 		unitTest:assertEquals(meanLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[10])
 		unitTest:assertEquals(meanLayerInfo.type, "OGR")
-		unitTest:assertEquals(meanLayerInfo.rep, "geometry")
+		unitTest:assertEquals(meanLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(meanLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
@@ -500,7 +502,7 @@ return {
 		unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
 		unitTest:assertEquals(weighLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[11])
 		unitTest:assertEquals(weighLayerInfo.type, "OGR")
-		unitTest:assertEquals(weighLayerInfo.rep, "geometry")
+		unitTest:assertEquals(weighLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(weighLayerInfo.sid)		
 		
 		-- FILL CELLULAR SPACE WITH MAJORITY INTERSECTION OPERATION
@@ -534,7 +536,7 @@ return {
 		unitTest:assertEquals(interLayerInfo.name, interLayerName)
 		unitTest:assertEquals(interLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[12])
 		unitTest:assertEquals(interLayerInfo.type, "OGR")
-		unitTest:assertEquals(interLayerInfo.rep, "geometry")
+		unitTest:assertEquals(interLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(interLayerInfo.sid)			
 		
 		-- FILL CELLULAR SPACE WITH MAJORITY OCCURRENCE OPERATION
@@ -569,7 +571,7 @@ return {
 		unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
 		unitTest:assertEquals(occurLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[13])
 		unitTest:assertEquals(occurLayerInfo.type, "OGR")
-		unitTest:assertEquals(occurLayerInfo.rep, "geometry")
+		unitTest:assertEquals(occurLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(occurLayerInfo.sid)	
 		
 		-- FILL CELLULAR SPACE WITH SUM OPERATION
@@ -604,7 +606,7 @@ return {
 		unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
 		unitTest:assertEquals(sumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[14])
 		unitTest:assertEquals(sumLayerInfo.type, "OGR")
-		unitTest:assertEquals(sumLayerInfo.rep, "geometry")
+		unitTest:assertEquals(sumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(sumLayerInfo.sid)		
 
 		-- FILL CELLULAR SPACE WITH WEIGHTED SUM OPERATION
@@ -639,7 +641,7 @@ return {
 		unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
 		unitTest:assertEquals(wsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[15])
 		unitTest:assertEquals(wsumLayerInfo.type, "OGR")
-		unitTest:assertEquals(wsumLayerInfo.rep, "geometry")
+		unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(wsumLayerInfo.sid)						
 		
 		-- RASTER TESTS WITH POSTGIS
@@ -679,7 +681,7 @@ return {
 		unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
 		unitTest:assertEquals(percTifLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[16])
 		unitTest:assertEquals(percTifLayerInfo.type, "OGR")
-		unitTest:assertEquals(percTifLayerInfo.rep, "geometry")
+		unitTest:assertEquals(percTifLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(percTifLayerInfo.sid)					
 		
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION FROM RASTER
@@ -715,7 +717,7 @@ return {
 		unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
 		unitTest:assertEquals(rmeanLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[17])
 		unitTest:assertEquals(rmeanLayerInfo.type, "OGR")
-		unitTest:assertEquals(rmeanLayerInfo.rep, "geometry")
+		unitTest:assertEquals(rmeanLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rmeanLayerInfo.sid)			
 		
 		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION FROM RASTER
@@ -751,7 +753,7 @@ return {
 		unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
 		unitTest:assertEquals(rminLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[18])
 		unitTest:assertEquals(rminLayerInfo.type, "OGR")
-		unitTest:assertEquals(rminLayerInfo.rep, "geometry")
+		unitTest:assertEquals(rminLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rminLayerInfo.sid)		
 		
 		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION FROM RASTER
@@ -787,7 +789,7 @@ return {
 		unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
 		unitTest:assertEquals(rmaxLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[19])
 		unitTest:assertEquals(rmaxLayerInfo.type, "OGR")
-		unitTest:assertEquals(rmaxLayerInfo.rep, "geometry")
+		unitTest:assertEquals(rmaxLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rmaxLayerInfo.sid)	
 
 		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION FROM RASTER
@@ -823,7 +825,7 @@ return {
 		unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
 		unitTest:assertEquals(rstdevLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[20])
 		unitTest:assertEquals(rstdevLayerInfo.type, "OGR")
-		unitTest:assertEquals(rstdevLayerInfo.rep, "geometry")
+		unitTest:assertEquals(rstdevLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rstdevLayerInfo.sid)		
 
 		-- FILL CELLULAR SPACE WITH SUM OPERATION FROM RASTER
@@ -859,7 +861,7 @@ return {
 		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
 		unitTest:assertEquals(rsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[21])
 		unitTest:assertEquals(rsumLayerInfo.type, "OGR")
-		unitTest:assertEquals(rsumLayerInfo.rep, "geometry")
+		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rsumLayerInfo.sid)					
 		
 		tl:finalize()

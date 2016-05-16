@@ -1395,6 +1395,7 @@ TerraLib_ = {
 	-- @arg area A boolean value indicating whether the area should be considered.
 	-- @arg property Name of the attribute to be created.
 	-- @arg default The default value.
+	-- @arg repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
 	-- proj = {
@@ -1420,7 +1421,7 @@ TerraLib_ = {
 	-- tl:addShpLayer(proj, layerName2, layerFile2)
 	--	
 	-- tl:attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
-	attributeFill = function(self, project, from, to, out, property, operation, select, area, default)
+	attributeFill = function(self, project, from, to, out, property, operation, select, area, default, repr)
 		loadProject(project, project.file)
 
 		local fromLayer = project.layers[from]
@@ -1443,7 +1444,11 @@ TerraLib_ = {
 		end		
 
 		if not propertyExists(fromDsInfo:getConnInfo(), fromLayer:getDataSetName(), select, fromDsInfo:getType()) then
-			customError("The attribute selected '"..select.."' not exists in layer '"..from.."'.")
+			if repr == "raster" then
+				customError("Selected band '"..select.."' does not exist in layer '"..from.."'.")
+			else
+				customError("The attribute selected '"..select.."' not exists in layer '"..from.."'.")
+			end
 		end
 		
 		local outDs = nil
