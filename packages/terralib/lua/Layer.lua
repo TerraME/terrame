@@ -239,13 +239,13 @@ Layer_ = {
 	-- Using geometry and attribute \
 	-- Points & "count", "distance", "presence" & 
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
-	-- "value" \
+	-- "nearest" \
 	-- Lines & "count", "distance", "length", "presence" &
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
-	-- "value" \
+	-- "nearest" \
 	-- Polygons & "area", "count", "distance", "presence" &
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
-	-- "average", "mode", "coverage", "value", "sum" \
+	-- "average", "mode", "coverage", "nearest", "sum" \
 	-- Raster & (none) &
 	-- "average", "mode", "maximum", "minimum", "coverage", "stdev", "sum" &
 	-- (none) \
@@ -300,8 +300,7 @@ Layer_ = {
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
 	-- & attribute, layer, select, output & area, default, dummy, clean \
-	-- "value" & The value (quantitative or qualitative) of the closest object. If using
-	-- area, it uses the value of the object with greater intersection area. & attribute,
+	-- "nearest" & The value (quantitative or qualitative) of the nearest object. & attribute,
 	-- layer, select, output & area, clean \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true), 
@@ -497,6 +496,16 @@ Layer_ = {
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
+			nearest = function()
+				if belong(repr, {"point", "line", "polygon"}) then
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "select"})
+
+					mandatoryTableArgument(data, "select", "string")
+					customError("Sorry, this operation was not implemented in TerraLib yet.")
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
+				end
+			end,
 			presence = function()
 				if belong(repr, {"point", "line", "polygon"}) then
 					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
@@ -538,12 +547,6 @@ Layer_ = {
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end
-			-- value = function()
-				-- verifyUnnecessaryArguments(data, {"area", "attribute", "layer", "operation", "select"})
-
-				-- mandatoryTableArgument(data, "select", "string")
-				-- defaultTableValue(data, "area", false)
-			-- end
 		}
 		
 		tlib:attributeFill(project, data.layer, self.name, data.output, data.attribute, data.operation, data.select, data.area, data.default, repr)
