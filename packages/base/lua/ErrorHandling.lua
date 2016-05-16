@@ -206,7 +206,7 @@ end
 -- @usage _, err = pcall(function() integerArgument(1, 2.3) end)
 -- print(err)
 function integerArgument(position, value)
-	if type(value) ~= "number" then customError(type(value)) end
+	if type(value) ~= "number" then customError(incompatibleTypeMsg(2, "number", value)) end
 	if math.floor(value) ~= value then
 		customError(integerArgumentMsg(position, value))
 	end
@@ -327,8 +327,12 @@ end
 function mandatoryTableArgument(table, attr, mtype)
 	if table[attr] == nil then
 		mandatoryArgumentError(attr)
-	elseif type(table[attr]) ~= mtype and mtype ~= nil then
-		incompatibleTypeError(attr, mtype, table[attr])
+	elseif type(table[attr]) ~= mtype then
+		if type(mtype) == "string" then
+			incompatibleTypeError(attr, mtype, table[attr])
+		elseif mtype ~= nil then
+			customError(incompatibleTypeMsg(3, "string", mtype))
+		end
 	end
 end
 

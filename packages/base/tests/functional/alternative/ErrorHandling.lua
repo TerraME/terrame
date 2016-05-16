@@ -64,11 +64,24 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", -1))
 	end,
+	integerArgument = function(unitTest)
+		local error_func = function()
+			integerArgument(1, "value")
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "value"))
+	end,
 	integerTableArgument = function(unitTest)
 		local error_func = function()
 			integerTableArgument({}, "value")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("value", "number", nil))
+	end,
+	mandatoryTableArgument = function(unitTest)
+		local tab = {value = 5}
+		local error_func = function()
+			mandatoryTableArgument(tab, "value", 2)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(3, "string", 2))
 	end,
 	positiveTableArgument = function(unitTest)
 		local error_func = function()
