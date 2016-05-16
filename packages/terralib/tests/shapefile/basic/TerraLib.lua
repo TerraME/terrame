@@ -132,9 +132,7 @@ return {
 
 		local layerName1 = "Para"
 		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
-		print("ADD--------------------------")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
-		print("ADD--------------------------")
 		
 		local shp = {}
 
@@ -894,8 +892,64 @@ return {
 		-- // create a database 
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("sampa.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)		
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+
+		local clName1 = "SampaShpCells"	
+		local resolution = 0.7
+		local cellsShp = clName1..".shp"
 		
+		if isFile(cellsShp) then
+			rmFile(cellsShp)
+		end
+		
+		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp)
+
+		local dSet = tl:getDataSet(proj, clName1)
+		
+		unitTest:assertEquals(getn(dSet), 68)
+		
+		for i = 0, #dSet do
+			for k, v in pairs(dSet[i]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID"))
+				unitTest:assertNotNil(v)
+			end			
+		end			
+		
+		local luaTable = {}
+		
+		for i = 0, #dSet do
+			local data = dSet[i]
+			data.attr1 = i
+			data.attr2 = "test"..i
+			--data.attr3 = (i % 2) == 0 -- TODO: issue #1081
+			table.insert(luaTable, dSet[i])		
+		end			
+
+		local newLayerName = "New_Layer"
+		
+		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1", "attr2"}) --, "attr3"})
+		
+		local newDSet = tl:getDataSet(proj, newLayerName)
+		
+		unitTest:assertEquals(getn(newDSet), 68)
+		
+		for i = 0, #newDSet do
+			unitTest:assertEquals(newDSet[i].attr1, i)
+			for k, v in pairs(newDSet[i]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
+								(k == "attr1") or (k == "attr2")) --or (k == "attr3"))
+				
+				if k == "attr1" then
+					unitTest:assertEquals(type(v), "number")
+				elseif k == "attr2" then
+					unitTest:assertEquals(type(v), "string")
+				--elseif k == "attr3" then
+				--	unitTest:assertEquals(type(v), "boolean") -- SKIP
+				end
+			end
+		end					
+		
+		rmFile(cellsShp)
 		rmFile(proj.file)
 	end,
 	getShpByFilePath = function(unitTest)
