@@ -413,7 +413,7 @@ if(APPLE)
             COMPONENT runtime
             )
 
-    install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal # TODO: REVIEW TO USE GDAL_DATA_DIR
+    install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
         DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share
         COMPONENT runtime
     )
@@ -477,11 +477,11 @@ elseif(WIN32)
 			COMPONENT runtime
 			)
 	
-	install(DIRECTORY ${GDAL_DATA_DIR}/
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/data/
 			DESTINATION bin/share/data
 			COMPONENT runtime
 			)
-			
+
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json/
 			DESTINATION bin/share/terralib/json
 			COMPONENT runtime
