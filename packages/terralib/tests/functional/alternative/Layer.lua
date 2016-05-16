@@ -116,7 +116,7 @@ return{
 			}			
 		end
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName.."' already exists in the Project.")
-		
+	
 		local sourceInvalid = function()
 			Layer{
 				project = proj,
@@ -257,6 +257,7 @@ return{
 		end
 		
 		local clName1 = "Setores_Cells"
+
 		Layer{
 			project = proj,
 			input = layerName1,
@@ -298,7 +299,7 @@ return{
 		end
 		unitTest:assertError(sourceInvalid, "Source 'dbf' is invalid.")
 
-		local filePath = filePath("sampa.shp", "terralib")
+		local filePath1 = filePath("sampa.shp", "terralib")
 		local source = "tif"
 		local inconsistentExtension = function()
 			Layer{
@@ -306,11 +307,11 @@ return{
 				input = layerName1,
 				name = "cells",
 				resolution = 0.7,
-				file = filePath,
+				file = filePath1,
 				source = "tif"
 			}			
 		end
-		unitTest:assertError(inconsistentExtension, "File '"..filePath.."' not match to source '"..source.."'.")
+		unitTest:assertError(inconsistentExtension, "File '"..filePath1.."' not match to source '"..source.."'.")
 
 		local inLayer = "no_exists"
 		local inputNonExists = function()
@@ -323,7 +324,24 @@ return{
 			}
 		end
 		unitTest:assertError(inputNonExists, "Input layer 'no_exists' was not found.")		
-		
+	
+		local layer = Layer{
+			project = proj,
+			name = "cbers",
+			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
+		}
+
+		local invalidInput = function()
+			Layer{
+				project = proj,
+				input = "cbers",
+				name = "cells",
+				resolution = 0.7,
+				file = "some.shp"
+			}
+		end
+		unitTest:assertError(invalidInput, "It is only possible to create a layer of cells from a layer with polygonal geometry, got raster.")
+
 		if isFile(projName) then
 			rmFile(projName)
 		end		

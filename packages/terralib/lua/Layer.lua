@@ -100,6 +100,12 @@ local function addCellularLayer(self, data)
 		customError("Layer '"..data.name.."' already exists in the Project.")
 	end
 
+	local repr = data.project.terralib:getLayerInfo(data.project, data.project.layers[data.input]).rep
+
+	if repr ~= "polygon" then
+		customError("It is only possible to create a layer of cells from a layer with polygonal geometry, got "..repr..".")
+	end
+
 	switch(data, "source"):caseof{
 		shp = function()
 			mandatoryTableArgument(data, "file", "string")
