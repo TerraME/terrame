@@ -79,7 +79,7 @@ return {
 			attribute = "prod_mode",
 			layer = prodes,
 			output = modeTifLayerName,
-			select = 0,
+			band = 0,
 		}
 
 		local cs = CellularSpace{
@@ -123,7 +123,7 @@ return {
 			attribute = "prod_min",
 			layer = prodes,
 			output = minTifLayerName,
-			select = 0,
+			band = 0,
 		}
 
 		local cs = CellularSpace{
@@ -162,7 +162,7 @@ return {
 			attribute = "prod_max",
 			layer = prodes,
 			output = maxTifLayerName,
-			select = 0,
+			band = 0,
 		}
 
 		local cs = CellularSpace{
@@ -201,7 +201,7 @@ return {
 			attribute = "prod_sum",
 			layer = prodes,
 			output = sumTifLayerName,
-			select = 0,
+			band = 0,
 		}
 
 		local cs = CellularSpace{
@@ -241,7 +241,7 @@ return {
 			attribute = "cov",
 			layer = prodes,
 			output = covTifLayerName,
-			select = 0,
+			band = 0,
 		}
 
 		local cs = CellularSpace{
@@ -309,7 +309,7 @@ return {
 
 		cl:fill{
 			operation = "average",
-			select = 0,
+			band = 0,
 			layer = "altimetria",
 			output = "mycells-avg",
 			attribute = "height"
@@ -338,7 +338,7 @@ return {
 
 		cl:fill{
 			operation = "stdev",
-			select = 0,
+			band = 0,
 			layer = "altimetria",
 			output = "cells-std",
 			attribute = "std"

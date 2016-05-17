@@ -91,7 +91,7 @@ return {
 
 		cl:fill{
 			operation = "mode",
-			name = municipios,
+			layer = municipios,
 			attribute = "polmode",
 			clean = true,
 			select = "POPULACAO_",
@@ -131,7 +131,7 @@ forEachCell(cs, function(cell)
 
 		cl:fill{
 			operation = "area",
-			name = protecao,
+			layer = protecao,
 			clean = true,
 			attribute = "marea",
 			output = areaLayerName
@@ -162,7 +162,7 @@ forEachCell(cs, function(cell)
 
 		cl:fill{
 			operation = "distance",
-			name = rodovias,
+			layer = rodovias,
 			attribute = "lindist",
 			clean = true,
 			output = lindistLayerName
@@ -191,7 +191,7 @@ forEachCell(cs, function(cell)
 
 		cl:fill{
 			operation = "distance",
-			name = protecao,
+			layer = protecao,
 			attribute = "poldist",
 			clean = true,
 			output = poldistLayerName
@@ -220,7 +220,7 @@ forEachCell(cs, function(cell)
 
 		cl:fill{
 			operation = "distance",
-			name = portos,
+			layer = portos,
 			attribute = "pointdist",
 			clean = true,
 			output = pointdistLayerName
@@ -251,7 +251,7 @@ forEachCell(cs, function(cell)
 
 		cl:fill{
 			operation = "presence",
-			name = rodovias,
+			layer = rodovias,
 			attribute = "linpres",
 			clean = true,
 			output = linpresLayerName
@@ -278,7 +278,7 @@ forEachCell(cs, function(cell)
 
 		cl:fill{
 			operation = "presence",
-			name = protecao,
+			layer = protecao,
 			attribute = "polpres",
 			clean = true,
 			output = polpresLayerName
@@ -305,7 +305,7 @@ forEachCell(cs, function(cell)
 
 		cl:fill{
 			operation = "presence",
-			name = portos,
+			layer = portos,
 			attribute = "pointpres",
 			clean = true,
 			output = pointpresLayerName
@@ -335,7 +335,7 @@ forEachCell(cs, function(cell)
 			rmFile(shp1)
 		end
 
-		local cl = Layer{
+		local cl2 = Layer{
 			project = proj,
 			source = "shp",
 			input = layerName1,
@@ -349,9 +349,9 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp2)
 
-		cl:fill{
+		cl2:fill{
 			operation = "count",
-			name = portos,
+			layer = portos,
 			attribute = "pointcount",
 			clean = true,
 			output = pointcountLayerName
@@ -376,9 +376,9 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp3)
 
-		cl:fill{
+		cl2:fill{
 			operation = "count",
-			name = rodovias,
+			layer = rodovias,
 			attribute = "linecount",
 			clean = true,
 			output = linecountLayerName
@@ -405,9 +405,9 @@ forEachCell(cs, function(cell)
 
 		table.insert(shapes, shp4)
 
-		cl:fill{
+		cl2:fill{
 			operation = "count",
-			name = protecao,
+			layer = protecao,
 			attribute = "polcount",
 			clean = true,
 			output = polcountLayerName
@@ -440,7 +440,7 @@ forEachCell(cs, function(cell)
 
 		cl:fill{
 			operation = "maximum",
-			name = municipios,
+			layer = municipios,
 			attribute = "polmax",
 			select = "POPULACAO_",
 			output = polmaxLayerName
@@ -450,6 +450,7 @@ forEachCell(cs, function(cell)
 			project = proj,
 			layer = polmaxLayerName
 		}
+
 		local map = Map{
 			target = cs,
 			select = "polmax",
@@ -474,7 +475,7 @@ forEachCell(cs, function(cell)
 
 		cl:fill{
 			operation = "minimum",
-			name = municipios,
+			layer = municipios,
 			attribute = "polmin",
 			select = "POPULACAO_",
 			output = polminLayerName
@@ -509,7 +510,7 @@ forEachCell(cs, function(cell)
 
 		cl:fill{
 			operation = "average",
-			name = municipios,
+			layer = municipios,
 			attribute = "polavrg",
 			select = "POPULACAO_",
 			output = polavrgLayerName
@@ -531,8 +532,6 @@ forEachCell(cs, function(cell)
 
 		unitTest:assertSnapshot(map, "polygons-average.png")
 
-
-
 		-- LENGTH
 
 		local lengthLayerName = clName1.."_length"
@@ -545,7 +544,7 @@ forEachCell(cs, function(cell)
 		local error_func = function()
 			cl:fill{
 				operation = "length",
-				name = rodovias,
+				layer = rodovias,
 				attribute = "mlength",
 				output = lengthLayerName
 			}

@@ -1219,24 +1219,13 @@ return{
 		local op4NotAvailable = function()
 			cl:fill{
 				attribute = "attr",
-				operation = "mode",
-				layer = layerName3,
-				clean = true,
-				output = rstdevLayerName
-			}
-		end
-		unitTest:assertError(op4NotAvailable, "The operation 'mode' is not available for layers with raster data.")	
-
-		local op5NotAvailable = function()
-			cl:fill{
-				attribute = "attr",
 				operation = "presence",
 				layer = layerName3,
 				clean = true,
 				output = rstdevLayerName
 			}
 		end
-		unitTest:assertError(op5NotAvailable, "The operation 'presence' is not available for layers with raster data.")	
+		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.")	
 		
 		if isFile(projName) then
 			rmFile(projName)

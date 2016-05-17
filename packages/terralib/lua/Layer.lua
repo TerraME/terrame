@@ -440,7 +440,6 @@ Layer_ = {
 					defaultTableValue(data, "band", 1)
 					positiveTableArgument(data, "band", true)
 					data.select = data.band
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end

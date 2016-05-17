@@ -285,7 +285,7 @@ return {
 			attribute = "presence",
 			output = presenceLayerName
 		}	
-
+--[[
 		local areaLayerName = clName1.."_Area"
 		local filePath3 = areaLayerName..".shp"
 		
@@ -299,7 +299,7 @@ return {
 			attribute = "area",
 			output = areaLayerName
 		}
-
+--]]
 		local countLayerName = clName1.."_Count"
 		local filePath4 = countLayerName..".shp"
 		
@@ -364,7 +364,7 @@ return {
 		if isFile(filePath8) then
 			rmFile(filePath8)
 		end	
-		
+	--[[	
 		cl:fill{
 			operation = "coverage",
 			layer = localidades,
@@ -372,7 +372,7 @@ return {
 			output = coverageLayerName,
 			select = "LOCALIDADE"
 		}
-		
+		--]]
 		local stdevLayerName = clName1.."_Stdev"
 		local filePath9 = stdevLayerName..".shp"
 
@@ -415,8 +415,7 @@ return {
 			layer = localidades,
 			attribute = "weighted",
 			output = weighLayerName,
-			select = "UCS_FATURA",
-			area = true
+			select = "UCS_FATURA"
 		}
 		
 		local intersecLayerName = clName1.."_Mojority_Intersection"
@@ -431,8 +430,7 @@ return {
 			layer = localidades,
 			attribute = "high_inter",
 			output = intersecLayerName,
-			select = "UCS_FATURA",
-			area = true
+			select = "UCS_FATURA"
 		}
 		
 		local occurrenceLayerName = clName1.."_Mojority_Occurrence"
@@ -614,7 +612,7 @@ return {
 
 		if isFile(filePath1)  then rmFile(filePath1)  end
 		if isFile(filePath2)  then rmFile(filePath2)  end
-		if isFile(filePath3)  then rmFile(filePath3)  end
+--		if isFile(filePath3)  then rmFile(filePath3)  end
 		if isFile(filePath4)  then rmFile(filePath4)  end
 		--if isFile(filePath5)  then rmFile(filePath5)  end
 		if isFile(filePath6)  then rmFile(filePath6)  end
