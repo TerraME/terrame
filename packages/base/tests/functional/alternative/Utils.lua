@@ -418,7 +418,7 @@ return{
 				last = 2025
 			}
 		end
-		unitTest:assertError(error_func, "Invalid 'last' value (2025). It could be 2020 or 2030.")
+		unitTest:assertError(error_func, "Invalid 'last' value (2025). It could be 2020.0 or 2030.0.")
 
 		local error_func = function()
 			x = makeDataTable{
@@ -436,7 +436,7 @@ return{
 				demand = {7, 8, 9}
 			}
 		end
-		unitTest:assertError(error_func, "Argument 'demand' should have 4 elements, got 3.")
+		unitTest:assertError(error_func, "Argument 'demand' should have 4.0 elements, got 3.")
 
 		local error_func = function()
 			x = makeDataTable{
