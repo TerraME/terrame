@@ -532,6 +532,41 @@ forEachCell(cs, function(cell)
 
 		unitTest:assertSnapshot(map, "polygons-average.png")
 
+		-- STDEV
+
+		local polstdevLayerName = clName1.."_polstdev"
+		local shp1 = polstdevLayerName..".shp"
+
+		table.insert(shapes, shp1)
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end
+
+		cl:fill{
+			operation = "stdev",
+			layer = municipios,
+			attribute = "stdev",
+			select = "POPULACAO_",
+			output = polstdevLayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = polstdevLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "stdev",
+			min = 0,
+			max = 550000,
+			slices = 8,
+			color = {"red", "green"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-stdev.png")
+
 		-- LENGTH
 
 		local lengthLayerName = clName1.."_length"
