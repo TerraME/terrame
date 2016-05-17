@@ -921,13 +921,13 @@ return {
 			local data = dSet[i]
 			data.attr1 = i
 			data.attr2 = "test"..i
-			--data.attr3 = (i % 2) == 0 -- TODO: issue #1081
+			data.attr3 = (i % 2) == 0
 			table.insert(luaTable, dSet[i])		
 		end			
 
 		local newLayerName = "New_Layer"
 		
-		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1", "attr2"}) --, "attr3"})
+		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1", "attr2", "attr3"})
 		
 		local newDSet = tl:getDataSet(proj, newLayerName)
 		
@@ -937,14 +937,14 @@ return {
 			unitTest:assertEquals(newDSet[i].attr1, i)
 			for k, v in pairs(newDSet[i]) do
 				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
-								(k == "attr1") or (k == "attr2")) --or (k == "attr3"))
+								(k == "attr1") or (k == "attr2") or (k == "attr3"))
 				
 				if k == "attr1" then
 					unitTest:assertEquals(type(v), "number")
 				elseif k == "attr2" then
 					unitTest:assertEquals(type(v), "string")
-				--elseif k == "attr3" then
-				--	unitTest:assertEquals(type(v), "boolean") -- SKIP
+				elseif k == "attr3" then
+					unitTest:assertEquals(type(v), "string")
 				end
 			end
 		end					

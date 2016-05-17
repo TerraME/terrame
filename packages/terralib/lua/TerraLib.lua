@@ -1585,6 +1585,7 @@ TerraLib_ = {
 		end
 		
 		local types = getPropertiesTypes(dse)
+		local outType = dsInfo:getType()
 
 		-- Config the properties of the new DataSet 
 		for k, v in pairs(toSet[1]) do		
@@ -1602,7 +1603,11 @@ TerraLib_ = {
 				elseif type(v) == "string" then
 					newDst:add(k, isPk, binding.STRING_TYPE, true)
 				elseif type(v) == "boolean" then
-					newDst:add(k, isPk, binding.BOOLEAN_TYPE, true)
+					if outType == "OGR" then
+						newDst:add(k, isPk, binding.STRING_TYPE, true)
+					else
+						newDst:add(k, isPk, binding.BOOLEAN_TYPE, true)
+					end
 				end
 			end
 		end
@@ -1639,7 +1644,7 @@ TerraLib_ = {
 						elseif type == binding.GEOMETRY_TYPE then
 							item:setGeom(j, v)
 						else
-							item:setString(j, v)
+							item:setString(j, tostring(v))
 						end
 
 						break
@@ -1653,7 +1658,6 @@ TerraLib_ = {
 
 		-- Remove the DataSet if it already exists
 		local outConnInfo = dsInfo:getConnInfo()
-		local outType = dsInfo:getType()
 		local outDs = nil
 		if outType == "POSTGIS" then
 			outConnInfo.PG_NEWDB_NAME = string.lower(newDstName)
