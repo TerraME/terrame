@@ -547,11 +547,21 @@ local function dropDataSet(connInfo, dSetName, type)
 	collectgarbage("collect")
 end
 
+local function toDataSetLayer(layer)
+	if layer:getType() == "DATASETLAYER" then
+		layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)	
+	else
+		customError("Unknown Layer type '"..layer:getTitle().."'.")
+	end
+	
+	return layer
+end
+
 local function copyLayer(from, to)
 	local fromDsId = from:getDataSourceId()
 	local fromDs = binding.GetDs(fromDsId, true)	
 	
-	from = binding.te.map.DataSetLayer.toDataSetLayer(from)	
+	from = toDataSetLayer(from)	
 	local dSetName = from:getDataSetName()
 	
 	local toDs = nil
@@ -755,8 +765,8 @@ end
 local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName)
 	local r2v = binding.te.attributefill.RasterToVector()
 			
-	fromLayer = binding.te.map.DataSetLayer.toDataSetLayer(fromLayer)
-	toLayer = binding.te.map.DataSetLayer.toDataSetLayer(toLayer)
+	fromLayer = toDataSetLayer(fromLayer)
+	toLayer = toDataSetLayer(toLayer)
 	
 	local rDs = binding.GetDs(fromLayer:getDataSourceId(), true)
     local rDSet = rDs:getDataSet(fromLayer:getDataSetName())
@@ -1522,13 +1532,7 @@ TerraLib_ = {
 		loadProject(project, project.file)
 		
 		local layer = project.layers[layerName]
-		
-		if layer:getType() == "DATASETLAYER" then
-			layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)	
-		else
-			customError("Unknown Layer '"..layerName.."'.")
-		end
-		
+		layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)	
 		local dseName = layer:getDataSetName()
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
 		local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
@@ -1558,13 +1562,7 @@ TerraLib_ = {
 		loadProject(project, project.file)
 
 		local fromLayer = project.layers[fromLayerName]
-		
-		if fromLayer:getType() == "DATASETLAYER" then
-			fromLayer = binding.te.map.DataSetLayer.toDataSetLayer(fromLayer)	
-		else
-			customError("Unknown Layer '"..fromLayerName.."'.")
-		end
-
+		fromLayer = toDataSetLayer(fromLayer)	
 		local dseName = fromLayer:getDataSetName()
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
 		local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
@@ -1716,6 +1714,37 @@ TerraLib_ = {
 		collectgarbage("collect")
 		
 		return set	
+	end,
+	
+	getNumOfBands = function(self, project, layerName)
+		loadProject(project, project.file)
+		local layer = project.layers[layerName]
+		layer = toDataSetLayer(layer)
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+		local connInfo = dsInfo:getConnInfo()
+		local dsType = dsInfo:getType()
+
+		if dsType == "GDAL" then
+			local ds = makeAndOpenDataSource(connInfo, dsType)
+			local dSetName = layer:getDataSetName()
+			local dSet = ds:getDataSet(dSetName)
+			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+			local raster = dSet:getRaster(rpos)	
+			local numBands = raster:getNumberOfBands()
+			
+			ds:close()
+			ds = nil
+			dSet = nil
+			raster = nil
+			collectgarbage("collect")
+			
+			releaseProject(project)
+			return numBands
+		end		
+		
+		releaseProject(project)
+		
+		customError("The layer '"..layerName.."' is not a Raster.")
 	end
 }
 
