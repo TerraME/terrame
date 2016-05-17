@@ -102,15 +102,7 @@ return {
 			project = proj,
 			layer = polmodeLayerName
 		}
---[[
-		max = 0
-forEachCell(cs, function(cell)
-		if cell.polmin > max then max = cell.polmin
-		end
-	end)
 
-	print(max)
---]]
 		local map = Map{
 			target = cs,
 			select = "polmode",
@@ -121,6 +113,39 @@ forEachCell(cs, function(cell)
 		}
 
 		unitTest:assertSnapshot(map, "polygons-mode.png")
+
+		-- MODE (area = true)
+
+		local polmode2LayerName = clName1.."_polmode2"
+		local shp1 = polmode2LayerName..".shp"
+
+		table.insert(shapes, shp1)
+
+		cl:fill{
+			operation = "mode",
+			layer = municipios,
+			attribute = "polmode2",
+			clean = true,
+			select = "POPULACAO_",
+			area = true,
+			output = polmode2LayerName
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = polmode2LayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "polmode2",
+			min = 0,
+			max = 1410000,
+			slices = 8,
+			color = {"red", "green"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-mode-2.png")
 
 		-- AREA
 
