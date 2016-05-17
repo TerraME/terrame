@@ -23,33 +23,6 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	addTifLayer = function(unitTest)
-		local tl = TerraLib{}
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-		
-		if isFile(proj.file) then
-			rmFile(proj.file)
-		end
-		
-		tl:createProject(proj, {})
-		
-		local layerName = "TifLayer"
-		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-		tl:addTifLayer(proj, layerName, layerFile)
-		
-		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
-		
-		unitTest:assertEquals(layerInfo.name, layerName)
-		unitTest:assertEquals(layerInfo.file, layerFile)
-		unitTest:assertEquals(layerInfo.type, "GDAL")
-		unitTest:assertEquals(layerInfo.rep, "raster")
-		unitTest:assertNotNil(layerInfo.sid)
-		
-		rmFile(proj.file)
-	end,
 	getNumOfBands = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
@@ -59,16 +32,18 @@ return {
 		
 		if isFile(proj.file) then
 			rmFile(proj.file)
-		end
+		end	
 		
 		tl:createProject(proj, {})
 		
-		local layerName = "TifLayer"
-		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-		tl:addTifLayer(proj, layerName, layerFile)
+		local layerName = "SampaShp"
+		local layerFile = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName, layerFile)	
 		
-		local numBands = tl:getNumOfBands(proj, layerName)
-		unitTest:assertEquals(numBands, 3)
+		local noRasterLayer = function()
+			local numBands = tl:getNumOfBands(proj, layerName)
+		end
+		unitTest:assertError(noRasterLayer, "The layer '"..layerName.."' is not a Raster.")		
 		
 		rmFile(proj.file)
 	end
