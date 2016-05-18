@@ -583,8 +583,8 @@ return{
 				output = minValueLayerName
 			}
 		end
-		unitTest:assertError(selectNotExists, "The attribute selected '"..selected.."' not exists in layer '"..layerName1.."'.")			
-		
+		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'.")
+
 		local maxValueLayerName = clName1.."_Maximum"
 		local selectNotString = function()
 			cl:fill{
