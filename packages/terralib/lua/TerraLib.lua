@@ -1457,7 +1457,7 @@ TerraLib_ = {
 			if repr == "raster" then
 				customError("Selected band '"..select.."' does not exist in layer '"..from.."'.")
 			else
-				customError("The attribute selected '"..select.."' not exists in layer '"..from.."'.")
+				customError("Selected attribute '"..select.."' does not exist in layer '"..from.."'.")
 			end
 		end
 		

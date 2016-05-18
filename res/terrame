@@ -8,4 +8,4 @@ export PATH=$PATH:$TME_PATH
 export DYLD_LIBRARY_PATH="$TME_ROOT_PATH"/lib
 export DYLD_FRAMEWORK_PATH="$TME_ROOT_PATH"/Frameworks
 
-"$TME_PATH"/terrame $@
+"$TME_PATH"/terrame $@ 2> /dev/null

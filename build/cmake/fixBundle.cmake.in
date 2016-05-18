@@ -73,7 +73,7 @@ if(APPLE AND TERRAME_BUILD_AS_BUNDLE)
 
 		if(item MATCHES "\\.dylib$")
 			if(is_System)
-				set(${default_embedded_path_var} "@executable_path/../MacOS" PARENT_SCOPE)
+				set(${default_embedded_path_var} "@executable_path/../lib" PARENT_SCOPE)
 			elseif(is_QImageFormat)
 				set(${default_embedded_path_var} "@executable_path/../qtplugins/imageformats" PARENT_SCOPE)
 			elseif(is_QIconEngine)
