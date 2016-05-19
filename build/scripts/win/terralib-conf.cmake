@@ -28,21 +28,24 @@ set(SWIG_EXECUTABLE "$ENV{_TERRALIB_3RDPARTY_DIR}/../swigwin/swig.exe" CACHE FIL
 set(TERRALIB_DIR_VAR_NAME "TME_PATH" CACHE STRING "Name of an environment variable with the base installation path of TerraLib")
 
 # Specific configurations
-set(TERRALIB_BUILD_EXAMPLES_ENABLED ON CACHE BOOL "Build the examples?" FORCE)#
-set(TERRALIB_BUILD_UNITTEST_ENABLED OFF CACHE BOOL "Build the unit tests?" FORCE)#
+set(TERRALIB_BUILD_EXAMPLES_ENABLED ON CACHE BOOL "Build the examples?" FORCE)
+set(TERRALIB_EXAMPLE_ADO_ENABLED OFF CACHE BOOL "Build the TerraLib with ADO?" FORCE)
+set(TERRALIB_BUILD_UNITTEST_ENABLED OFF CACHE BOOL "Build the unit tests?" FORCE)
 set(TERRALIB_TRACK_3RDPARTY_DEPENDENCIES OFF CACHE BOOL "Track the 3rd-parties on instalation?" FORCE)
 set(TERRALIB_BUILD_AS_BUNDLE ON CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
-set(terralib4_DIR "$ENV{_TERRALIB_INSTALL_PATH}/lib/cmake/terralib-4.2.2" CACHE PATH "TerraLib4?" FORCE)
+set(terralib4_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}/lib/cmake/terralib-4.2.2" CACHE PATH "TerraLib4?" FORCE)
 
 # Enabling modules
 set(TERRALIB_MOD_BINDING_LUA_ENABLED ON CACHE BOOL "Build TerraLib bindings?" FORCE)
 set(TERRALIB_DOXYGEN OFF CACHE BOOL  "Enable API documentation build?" FORCE)
 set(TERRALIB_LOGGER_ENABLED OFF CACHE BOOL  "Logger?" FORCE)
 set(TERRALIB_QTRANSLATION_ENABLED OFF CACHE BOOL "Enable translation for Qt Widgets?" FORCE)
+set(TERRALIB_MOD_ADO_ENABLED OFF CACHE BOOL "Build the TerraLib with ADO?" FORCE)
 set(TERRALIB_MOD_WMS_QT_ENABLED OFF CACHE BOOL "Build the TerraLib Qt Web Map Service?" FORCE)
 set(TERRALIB_MOD_STATISTICS_QT_ENABLED OFF CACHE BOOL "Build Qt support for Statistics module?" FORCE)
 set(TERRALIB_MOD_VP_QT_ENABLED OFF CACHE BOOL "Build Vector Processing Qt module?" FORCE)
 set(TERRALIB_MOD_SA_QT_ENABLED OFF CACHE BOOL "Build Spatial Analysis Qt module?" FORCE)
+set(TERRALIB_MOD_TERRALIB4_ENABLED OFF CACHE BOOL "Build TerraLib4 module?" FORCE)
 set(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED OFF CACHE BOOL "Build Layout plugin?" FORCE)
 set(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_ADO_ENABLED OFF CACHE BOOL "Build ADO Driver Qt plugin?" FORCE)
 set(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_GDAL_ENABLED OFF CACHE BOOL "Build GDAL Driver Qt plugin?" FORCE)
