@@ -463,6 +463,16 @@ return{
 		end
 		unitTest:assertError(outputNotString, incompatibleTypeMsg("output", "string", 2))
 
+		local outputAlreadyExists = function()
+			cl:fill{
+				attribute = "any",
+				operation = "area",
+				layer = clName1,
+				output = clName1
+			}
+		end
+		unitTest:assertError(outputAlreadyExists, "The output layer 'setores_cells2' already exists.")
+
 		local presenceLayerName = clName1.."_Presence"
 		local layerNotExists = function()
 			cl:fill{
@@ -1031,17 +1041,6 @@ return{
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
-
-		local bandNotExists = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "average",
-				layer = layerName3,
-				band = 9,
-				output = raverageLayerName
-			}
-		end
-		unitTest:assertError(bandNotExists, "Selected band '".."9".."' does not exist in layer '"..layerName3.."'.")
 
 		local bandNegative = function()
 			cl:fill{

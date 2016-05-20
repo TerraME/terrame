@@ -387,6 +387,10 @@ Layer_ = {
 			customError("The layer '"..data.layer.."' does not exist.")
 		end
 	
+		if project.layers[data.output] then
+			customError("The output layer '"..data.output.."' already exists.")
+		end
+
 		if isFile(data.output..".shp") then
 			if data.clean then
 				rmFile(data.output..".shp")
