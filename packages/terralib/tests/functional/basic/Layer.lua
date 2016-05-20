@@ -633,6 +633,41 @@ return {
 		--if isFile(filePath21) then rmFile(filePath21) end
 		if isFile(filePath22) then rmFile(filePath22) end
 	end,
+	representation = function(unitTest)
+		local projName = "cellular_layer_representation.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}		
+
+		local layerName1 = "Setores_2000"
+		local l = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		}	
+		
+		unitTest:assertEquals(l:representation(), "polygon")
+
+		local localidades = "Localidades"
+		l = Layer{
+			project = proj,
+			name = localidades,
+			file = filePath("Localidades_pt.shp", "terralib")	
+		}
+
+		unitTest:assertEquals(l:representation(), "point")
+
+		local rodovias = "Rodovias"
+		l = Layer{
+			project = proj,
+			name = rodovias,
+			file = filePath("Rodovias_lin.shp", "terralib")	
+		}
+
+		unitTest:assertEquals(l:representation(), "line")
+	end,
 	__tostring = function(unitTest)
 		local projName = "cellular_layer_print.tview"
 

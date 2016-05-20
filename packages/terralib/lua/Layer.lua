@@ -221,7 +221,13 @@ local function addLayer(self, data)
 end
 
 Layer_ = {
-	type_ = "Layer",	
+	type_ = "Layer",
+	--- Return a string with the representation of the layer. It can be "point", "polygon", "line", or "raster".
+	-- @usage -- DONTRUN
+	-- print(layer:representation())
+	representation = function(self)
+		return self.project.terralib:getLayerInfo(self.project, self.project.layers[self.name]).rep
+	end,
 	--- Create a new attribute for each cell of a Layer.
 	-- This attribute can be stored as a new
 	-- column of a table or a new file, according to where the Layer is stored.
@@ -366,8 +372,13 @@ Layer_ = {
 			end
 		end
 
-		local repr = project.terralib:getLayerInfo(project, project.layers[data.layer]).rep
-		
+		local otherLayer = Layer{
+			project = self.project.file,
+			name = data.layer
+		}
+
+		local repr = otherLayer:representation()
+
 		switch(data, "operation"):caseof{
 			area = function()
 				if repr == "polygon" then

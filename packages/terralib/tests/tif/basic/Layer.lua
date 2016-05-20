@@ -368,6 +368,23 @@ return {
 		end)
 
 		unitTest:assertFile(projName)
+	end,
+	representation = function(unitTest)
+		local projName = "cellular_layer_fill_tiff_repr.tview"
+
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
+
+		local prodes = "prodes"
+		local l = Layer{
+			project = proj,
+			name = prodes,
+			file = filePath("prodes_polyc_10k.tif", "terralib")	
+		}
+
+		unitTest:assertEquals(l:representation(), "raster")
 	end
 }
 

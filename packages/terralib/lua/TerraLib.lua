@@ -1715,7 +1715,6 @@ TerraLib_ = {
 		
 		return set	
 	end,
-	
 	getNumOfBands = function(self, project, layerName)
 		loadProject(project, project.file)
 		local layer = project.layers[layerName]
