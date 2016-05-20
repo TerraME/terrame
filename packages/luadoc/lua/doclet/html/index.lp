@@ -72,7 +72,7 @@
 						<%end%>
 						<br>
 					</div>
-
+					
 					<%if doc.description.content ~= "Undefined content" then%> <%= doc.description.content %>
 					<%else%> <font color="red"><b><%= doc.description.content %></b></font>
 					<%end%><br>
@@ -90,7 +90,8 @@
 							<%end%>
 						</table>
 					<%end%>
-
+					
+					<table class="file_list">
 					<%if not options.nofiles and #doc.files > 0 then%>
 						<%local count_models = 0%>
 						<%for _, filepath in ipairs(doc.files) do%>
@@ -100,8 +101,10 @@
 						<%end%>
 
 						<%if count_models > 0 then%>
+							<tr><td colspan="2">
 							<h2><a href="<%=luadoc.link("files/models.html", from)%>">Models</a></h2>
-							<table class="file_list">
+							</td></tr>
+							<!--<table class="file_list">-->
 
 							<%for _, filepath in ipairs(doc.files) do%>
 								<%if doc.files[filepath].type == "model" then%>
@@ -112,7 +115,7 @@
 									</tr>
 								<%end%>
 							<%end%>
-							</table>
+							<!--</table>-->
 						<%end%>
 					<%end%>
 
@@ -125,9 +128,13 @@
 						<%end%>
 
 						<%if count_types > 0 then%>
+							
+							<tr><td class="title" colspan="2">
 							<h2>Types</h2>
+							</td></tr>
+							
 						<%end%>
-						<table class="file_list">
+						<!--<table class="file_list">-->
 							<!--<tr><td colspan="2">Files</td></tr>-->
 							<%for _, filepath in ipairs(doc.files) do%>
 								<%if doc.files[filepath].type == "type" then%>
@@ -138,7 +145,7 @@
 								</tr>
 								<%end%>
 							<%end%>
-						</table>
+						<!--</table>-->
 					<%end%>
 
 					<%if not options.nofiles and #doc.files > 0 then%>
@@ -150,10 +157,12 @@
 						<%end%>
 
 						<%if count_functions > 0 then%>
+							<tr><td class="title" colspan="2">
 							<h2>Functions</h2>
+							</td></tr>
 						<%end%>
 	
-						<table class="file_list">
+						<!--<table class="file_list">-->
 							<!--<tr><td colspan="2">Files</td></tr>-->
 							<%for _, filepath in ipairs(doc.files) do%>
 								<%if doc.files[filepath].type == "file" then%>
@@ -164,12 +173,12 @@
 									</tr>
 								<%end%>
 							<%end%>
-						</table>
+						<!--</table>-->
 					<%end%>
 
 					<%if not options.nofiles and #doc.examples > 0 then%>
 						<h2><a href="<%=luadoc.link("files/examples.html", from)%>">Examples</a></h2>
-						<table class="file_list">
+						<!--<table class="file_list">-->
 							<%for _, filepath in ipairs(doc.files) do%>
 								<%if doc.files[filepath].type == "example" then%>
 									<tr>
@@ -182,12 +191,12 @@
 									</tr>
 								<%end%>
 							<%end%>
-						</table>
+						<!--</table>-->
 					<%end%>
 
 					<%if not options.nofiles and doc.mdata and #doc.mdata > 0 then%>
 						<h2><a href="<%=luadoc.link("files/data.html", from)%>">Data</a></h2>
-						<table class="file_list">
+						<!--<table class="file_list">-->
 							<%for _, data in ipairs(doc.mdata) do%>
 								<tr>
 									<%local link = luadoc.link("files/data.html", from).."#"..data.file[1]%>
@@ -197,12 +206,12 @@
 										module_doc, file_doc, from, true, "summary", doc_report)%></td>
 								</tr>
 							<%end%>
-						</table>
+						<!--</table>-->
 					<%end%>
 
 					<%if doc.mfont and #doc.mfont > 0 then%>
 						<h2><a href="<%=luadoc.link("files/font.html", from)%>">Font</a></h2>
-						<table class="file_list">
+						<!--<table class="file_list">-->
 							<%for _, data in ipairs(doc.mfont) do%>
 								<tr>
 									<%local link = luadoc.link("files/font.html", from).."#"..data.name%>
@@ -212,10 +221,11 @@
 										module_doc, file_doc, from, true, "summary", doc_report)%></td>
 								</tr>
 							<%end%>
-						</table>
+						<!--</table>-->
 	
 					<%end%>
-
+					
+				</table>
 				</div> <!-- id="content" -->
 			</div> <!-- id="main" -->
 
