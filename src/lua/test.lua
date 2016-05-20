@@ -238,8 +238,7 @@ function _Gtme.executeTests(package, fileName)
 		end
 
 		if data.log ~= nil then
-			local pkg = sessionInfo().package
-			local location = packageInfo(pkg).path..s.."log"..s..data.log
+			local location = packageInfo(package).path..s.."log"..s..data.log
 			if isDir(location) then
 				printNote("Using log directory 'log"..s..data.log.."'")
 			else
@@ -286,7 +285,7 @@ function _Gtme.executeTests(package, fileName)
 		unused_log_files = 0
 	}
 
-	if not isLoaded("base") and sessionInfo().package ~= "base" then
+	if not isLoaded("base") and package ~= "base" then
 		import("base")
 	end
 
@@ -831,7 +830,7 @@ function _Gtme.executeTests(package, fileName)
 
 	local finalTime = os.clock()
 
-	print("\nUnit test report:")
+	print("\nFunctional test report for package '"..package.."':")
 
 	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds"
 	if ut.delayed_time > 0 then

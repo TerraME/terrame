@@ -276,7 +276,6 @@ local function verifyFont(package, report)
 	mfile:close()
 end
 
-
 function _Gtme.sketch(package)
 	local report = {
 		created_files = 0,
@@ -290,7 +289,7 @@ function _Gtme.sketch(package)
 	verifyData(package, report)
 	verifyFont(package, report)
 
-	print("\nSketch report:")
+	print("\nSketch report for package '"..package.."':")
 
 	if report.created_files == 0 then
 		printNote("No new test file was necessary.")

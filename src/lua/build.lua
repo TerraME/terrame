@@ -306,7 +306,7 @@ function _Gtme.buildPackage(package, config, clean)
 	chDir(currentdir)
 
 	local finalTime = os.clock()
-	print("\nBuild report:")
+	print("\nBuild report for package '"..package.."':")
 	printNote("Package was built in "..round(finalTime - initialTime, 2).." seconds.")
 	printNote("Build created file '"..file.."'.")
 	printNote("Temporary files are saved in "..tmpdirectory)

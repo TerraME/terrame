@@ -537,7 +537,7 @@ function _Gtme.executeDoc(package)
 
 	local finalTime = os.clock()
 
-	print("\nDocumentation report:")
+	print("\nDocumentation report for package '"..package.."':")
 	printNote("Documentation was built in "..round(finalTime - initialTime, 2).." seconds.")
 
 	if doc_report.html_files == 1 then
