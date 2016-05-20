@@ -26,14 +26,8 @@
 
 import("terralib")
 
-projName = "emas.tview"
-
-if isFile(projName) then
-	rmFile(projName)
-end
-
 project = Project{
-	file = projName,
+	file = "emas.tview",
 	clean = true,
 	author = "Almeida, R.",
 	title = "Emas database"
@@ -64,9 +58,9 @@ limit = Layer{
 }
 
 if isFile("emas.shp") then rmFile("emas.shp") end
-if isFile("break.shp") then rmFile("break.shp") end
-if isFile("cover.shp") then rmFile("cover.shp") end
-if isFile("mriver.shp") then rmFile("mriver.shp") end
+if isFile("firebreak2.shp") then rmFile("firebreak2.shp") end
+if isFile("cover2.shp") then rmFile("cover2.shp") end
+if isFile("river2.shp") then rmFile("river2.shp") end
 
 cl = Layer{
 	project = project,
@@ -78,64 +72,53 @@ cl = Layer{
 
 cl:fill{
 	operation = "presence",
-	attribute = "break",
-	name = "firebreak",
-	output = "break"
+	attribute = "firebreak",
+	layer = "firebreak",
+	output = "firebreak2"
 }
 
 cl:fill{
 	operation = "presence",
 	attribute = "river",
-	name = "river",
-	output = "mriver"
+	layer = "river",
+	output = "river2"
 }
 
 cl:fill{
 	operation = "average",
 	attribute = "cover",
-	select = 1,
-	name = "cover",
-	output = "cover"
+	layer = "cover",
+	output = "cover2"
 }
 
 cs = CellularSpace{
 	project = project,
-	layer = "mriver"
+	layer = "cover2"
 }
 
 Map{
 	target = cs,
-	select = "break",
+	select = "firebreak",
 	value = {0, 1},
+	grid = true,
 	color = {"white", "black"}
 }
 
 Map{
 	target = cs,
+	grid = true,
 	select = "river",
 	value = {0, 1},
 	color = {"white", "black"}
 }
 
---[[
 Map{
 	target = cs,
+	grid = true,
 	select = "cover",
 	min = 0,
-	max = 5,
+	max = 300,
 	slices = 6,
 	color = "Greens"
 }
---]]
-
---terralib:finalize()
---[[
-if isFile("emas.shp") then rmFile("emas.shp") end
-if isFile("break.shp") then rmFile("break.shp") end
-if isFile("cover.shp") then rmFile("cover.shp") end
-
-if isFile(projName) then
-	rmFile(projName)
-end
---]]
 
