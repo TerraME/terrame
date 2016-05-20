@@ -690,7 +690,7 @@ project  Project
 rep      string [geometry]
 sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
 source   string [shp]
-]], 60)
+]], 80)
 		unitTest:assertFile(projName)
 	end
 }

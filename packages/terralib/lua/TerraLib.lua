@@ -63,7 +63,7 @@ local OperationMapper = {
 	mean = binding.MEAN,
 	weighted = binding.WEIGHTED,
 	intersection = binding.HIGHEST_INTERSECTION,
-	occurrence = binding.HIGHEST_OCCURRENCE,
+	occurrence = binding.MODE,
 	sum = binding.SUM,
 	wsum = binding.WEIGHTED_SUM
 }
@@ -80,7 +80,7 @@ local VectorAttributeCreatedMapper = {
 	mean = "mean",
 	weighted = "weigh_area",
 	intersection = "class_high_area",
-	occurrence = "class_high_occurrence",
+	occurrence = "mode",
 	sum = "sum_values",
 	wsum = "weigh_sum_area" 
 }
