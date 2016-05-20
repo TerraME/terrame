@@ -78,8 +78,7 @@ return {
 			operation = "mode",
 			attribute = "prod_mode",
 			layer = prodes,
-			output = modeTifLayerName,
-			band = 0,
+			output = modeTifLayerName
 		}
 
 		local cs = CellularSpace{
@@ -122,8 +121,7 @@ return {
 			operation = "minimum",
 			attribute = "prod_min",
 			layer = prodes,
-			output = minTifLayerName,
-			band = 0,
+			output = minTifLayerName
 		}
 
 		local cs = CellularSpace{
@@ -161,8 +159,7 @@ return {
 			operation = "maximum",
 			attribute = "prod_max",
 			layer = prodes,
-			output = maxTifLayerName,
-			band = 0,
+			output = maxTifLayerName
 		}
 
 		local cs = CellularSpace{
@@ -200,8 +197,7 @@ return {
 			operation = "sum",
 			attribute = "prod_sum",
 			layer = prodes,
-			output = sumTifLayerName,
-			band = 0,
+			output = sumTifLayerName
 		}
 
 		local cs = CellularSpace{
@@ -240,8 +236,7 @@ return {
 			operation = "coverage",
 			attribute = "cov",
 			layer = prodes,
-			output = covTifLayerName,
-			band = 0,
+			output = covTifLayerName
 		}
 
 		local cs = CellularSpace{
@@ -309,7 +304,6 @@ return {
 
 		cl:fill{
 			operation = "average",
-			band = 0,
 			layer = "altimetria",
 			output = "mycells-avg",
 			attribute = "height"
@@ -338,7 +332,6 @@ return {
 
 		cl:fill{
 			operation = "stdev",
-			band = 0,
 			layer = "altimetria",
 			output = "cells-std",
 			attribute = "std"
@@ -385,6 +378,23 @@ return {
 		}
 
 		unitTest:assertEquals(l:representation(), "raster")
+	end,
+	bands = function(unitTest)
+		local projName = "cellular_layer_fill_tiff_repr.tview"
+
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
+
+		local prodes = "prodes"
+		local l = Layer{
+			project = proj,
+			name = prodes,
+			file = filePath("prodes_polyc_10k.tif", "terralib")	
+		}
+
+		unitTest:assertEquals(l:bands(), 4)
 	end
 }
 

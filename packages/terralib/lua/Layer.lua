@@ -220,6 +220,21 @@ local function addLayer(self, data)
 	--TODO: implement all types (tif, access, etc)		
 end
 
+local function checkBand(layer, data)
+	defaultTableValue(data, "band", 0)
+	positiveTableArgument(data, "band", true)
+
+	local band = layer:bands()
+
+	if data.band >= band then
+		if band > 1 then
+			customError("Band '"..data.band.."' does not exist. The available bands are from '0' to '"..band.."'.")
+		else
+			customError("Band '"..data.band.."' does not exist. The only available band is '0'.")
+		end
+	end
+end
+
 Layer_ = {
 	type_ = "Layer",
 	--- Return a string with the representation of the layer. It can be "point", "polygon", "line", or "raster".
@@ -227,6 +242,14 @@ Layer_ = {
 	-- print(layer:representation())
 	representation = function(self)
 		return self.project.terralib:getLayerInfo(self.project, self.project.layers[self.name]).rep
+	end,
+	--- Return the number of bands of a raster layer. If the layer does not have a raster representation
+	-- then it will stop with an error. The bands of the raster layer are named from zero to the number of
+	-- bands minus one.
+	-- @usage -- DONTRUN
+	-- print(layer:bands())
+	bands = function(self)
+		return self.project.terralib:getNumOfBands(self.project, self.name)
 	end,
 	--- Create a new attribute for each cell of a Layer.
 	-- This attribute can be stored as a new
@@ -400,8 +423,8 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
-					defaultTableValue(data, "band", 1)
-					positiveTableArgument(data, "band", true)
+					checkBand(otherLayer, data)
+
 					data.select = data.band
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
@@ -448,8 +471,8 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
-					defaultTableValue(data, "band", 1)
-					positiveTableArgument(data, "band", true)
+					checkBand(otherLayer, data)
+
 					data.select = data.band
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
@@ -464,8 +487,8 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
-					defaultTableValue(data, "band", 1)
-					positiveTableArgument(data, "band", true)
+					checkBand(otherLayer, data)
+
 					data.select = data.band
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
@@ -480,8 +503,8 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
-					defaultTableValue(data, "band", 1)
-					positiveTableArgument(data, "band", true)
+					checkBand(otherLayer, data)
+
 					data.select = data.band
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
@@ -496,8 +519,8 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
-					defaultTableValue(data, "band", 1)
-					positiveTableArgument(data, "band", true)
+					checkBand(otherLayer, data)
+
 					data.select = data.band
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
@@ -530,8 +553,8 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "band", "output"})
-					defaultTableValue(data, "band", 1)
-					positiveTableArgument(data, "band", true)
+					checkBand(otherLayer, data)
+
 					data.select = data.band
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
@@ -547,8 +570,8 @@ Layer_ = {
 					defaultTableValue(data, "area", false)
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "band", "output"})
-					defaultTableValue(data, "band", 1)
-					positiveTableArgument(data, "band", true)
+					checkBand(otherLayer, data)
+
 					data.select = data.band
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
