@@ -149,7 +149,9 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = _Gtme.getTerraLib().Project{
+        local terralib = getPackage("terralib")
+
+		local proj = terralib.Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -157,7 +159,7 @@ return{
 		}		
 
 		local layerName1 = "Sampa"
-		_Gtme.getTerraLib().Layer{
+		terralib.Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
@@ -166,7 +168,7 @@ return{
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1	
-		local fn1 = _Gtme.getTerraLib().getFileName(filePath1)
+		local fn1 = terralib.getFileName(filePath1)
 		fn1 = testDir.."/"..fn1			
 		
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
@@ -178,7 +180,7 @@ return{
 		end			
 		
 		local clName1 = "Sampa_Cells"
-		_Gtme.getTerraLib().Layer{
+		terralib.Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,

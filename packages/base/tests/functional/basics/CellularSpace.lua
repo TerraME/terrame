@@ -80,7 +80,9 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = _Gtme.getTerraLib().Project{
+        local terralib = getPackage("terralib")
+
+		local proj = terralib.Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -88,7 +90,7 @@ return{
 		}		
 
 		local layerName1 = "Sampa"
-		local sampa = _Gtme.getTerraLib().Layer{
+		local sampa = terralib.Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
@@ -97,7 +99,7 @@ return{
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1	
-		local fn1 = _Gtme.getTerraLib().getFileName(filePath1)
+		local fn1 = terralib.getFileName(filePath1)
 		fn1 = testDir.."/"..fn1			
 		
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
@@ -109,7 +111,7 @@ return{
 		end			
 		
 		local clName1 = "Sampa_Cells"
-		local layer = _Gtme.getTerraLib().Layer{
+		local layer = terralib.Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
@@ -1178,7 +1180,9 @@ yMin    number [0]
 	save = function(unitTest)
 		local projName = "cellspace_save_basic.tview"
 
-		local proj = _Gtme.getTerraLib().Project{
+        local terralib = getPackage("terralib")
+
+		local proj = terralib.Project{
 			file = projName,
 			clean = true,
 			author = "Avancini",
@@ -1186,7 +1190,7 @@ yMin    number [0]
 		}
 
 		local layerName1 = "Sampa"
-		_Gtme.getTerraLib().Layer{
+		terralib.Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
@@ -1195,7 +1199,7 @@ yMin    number [0]
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1
-		local fn1 = _Gtme.getTerraLib().getFileName(filePath1)
+		local fn1 = terralib.getFileName(filePath1)
 		fn1 = testDir.."/"..fn1
 
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
@@ -1208,7 +1212,7 @@ yMin    number [0]
 		end
 
 		local clName1 = "Sampa_Cells"
-		_Gtme.getTerraLib().Layer{
+		terralib.Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
@@ -1229,7 +1233,7 @@ yMin    number [0]
 
 		local shp2 = cellSpaceLayerNameT0..".shp"
 		local filePath2 = testDir.."/"..shp2	
-		local fn2 = _Gtme.getTerraLib().getFileName(filePath2)
+		local fn2 = terralib.getFileName(filePath2)
 		fn2 = testDir.."/"..fn2	
 		
 		for i = 1, #exts do
@@ -1241,7 +1245,7 @@ yMin    number [0]
 		
 		cs:save(cellSpaceLayerNameT0, "t0")
 
-		local layer = _Gtme.getTerraLib().Layer{
+		local layer = terralib.Layer{
 			project = proj,
 			name = cellSpaceLayerNameT0
 		}
@@ -1280,7 +1284,7 @@ yMin    number [0]
 		
 		local shp3 = cellSpaceLayerNameGeom..".shp"
 		local filePath3 = testDir.."/"..shp3	
-		local fn3 = _Gtme.getTerraLib().getFileName(filePath3)
+		local fn3 = terralib.getFileName(filePath3)
 		fn3 = testDir.."/"..fn3	
 		
 		for i = 1, #exts do
@@ -1306,7 +1310,7 @@ yMin    number [0]
 		
 		local shp4 = cellSpaceLayerNameGeom2..".shp"
 		local filePath4 = testDir.."/"..shp4	
-		local fn4 = _Gtme.getTerraLib().getFileName(filePath4)
+		local fn4 = terralib.getFileName(filePath4)
 		fn4 = testDir.."/"..fn4	
 		
 		for i = 1, #exts do

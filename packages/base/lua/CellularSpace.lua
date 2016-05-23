@@ -22,6 +22,8 @@
 --
 -------------------------------------------------------------------------------------------
 
+local terralib = getPackage("terralib")
+
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
 local function getCoordCoupling(cs, data)
@@ -233,7 +235,7 @@ local function checkProject(self)
 
 			if isFile(self.project) then
 				local file = self.project
-				self.project = _Gtme.getTerraLib().Project{
+				self.project = terralib.Project{
 					file = file
 				}
 			else
@@ -369,7 +371,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 end
 
 local function loadShape(self)
-	local tlib = _Gtme.getTerraLib().TerraLib{}
+	local tlib = terralib.TerraLib{}
 	local dSet = tlib:getShpByFilePath(self.file)
 	self.geometry = true
 	setCellsByTerraLibDataSet(self, dSet)
@@ -408,7 +410,7 @@ local function loadVirtual(self)
 end
 
 local function loadLayer(self)
-	local tlib = _Gtme.getTerraLib().TerraLib{}
+	local tlib = terralib.TerraLib{}
 	local dset = tlib:getDataSet(self.project, self.layer)
 	setCellsByTerraLibDataSet(self, dset)
 end
@@ -975,7 +977,7 @@ CellularSpace_ = {
 		end
 		
 		if self.project then
-			local tlib = _Gtme.getTerraLib().TerraLib{}
+			local tlib = terralib.TerraLib{}
 			
 			if not self.geometry then
 				local dset = tlib:getDataSet(self.project, self.layer)

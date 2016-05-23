@@ -29,13 +29,6 @@ return {
 		
 		unitTest:assertEquals(t1, t2)
 	end,
-	finalize = function(unitTest)
-		local tlib = TerraLib{}
-		tlib:finalize()
-		local t2 = TerraLib{}
-
-		unitTest:assert(tlib ~= t2)
-	end,
 	getVersion = function(unitTest)
 		local tlib = TerraLib{}
 		unitTest:assertEquals(tlib:getVersion(), "5.1.2")		

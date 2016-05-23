@@ -47,6 +47,40 @@ print = function(obj, ...)
 	_Gtme.print(obj, ...)
 end
 
+function _Gtme.loadLibraryPath()
+    local ldpath = os.getenv("DYLD_LIBRARY_PATH")
+    if ldpath then
+        package.cpath = package.cpath..";"..ldpath.."/?.so"
+                                    ..";"..ldpath.."/?.dylib"
+    end
+end
+
+_Gtme.loadLibraryPath()
+
+_Gtme.terralib_mod_binding_lua = nil
+
+local function initializeTerraLib()
+    if _Gtme.terralib_mod_binding_lua == nil then
+        require("terralib_mod_binding_lua")
+        local binding = terralib_mod_binding_lua
+        binding.TeSingleton.getInstance():initialize()
+        binding.te.plugin.PluginManager.getInstance():clear()
+        binding.te.plugin.PluginManager.getInstance():loadAll()
+        _Gtme.terralib_mod_binding_lua = terralib_mod_binding_lua
+    end
+end
+
+local function finalizeTerraLib()
+    if _Gtme.terralib_mod_binding_lua ~= nil then
+        local binding = terralib_mod_binding_lua
+        binding.te.plugin.PluginManager.getInstance():clear()
+        binding.TeSingleton.getInstance():finalize()
+        _Gtme.terralib_mod_binding_lua = nil
+    end
+end
+
+initializeTerraLib()
+
 function _Gtme.printError(value)
 	if sessionInfo().color then
 		_Gtme.print(begin_red..value..end_color)
@@ -823,16 +857,6 @@ function _Gtme.installPackage(file)
 	return package
 end
 
-local terralib
-
-function _Gtme.getTerraLib()
-	if not terralib then
-		terralib = getPackage("terralib")
-	end
-
-	return terralib
-end
-
 local function version()
 	local tmeVersion, lua_release, qt_version, qwt_version = cpp_informations()
 
@@ -843,10 +867,11 @@ local function version()
 	str = str.."\n  "..lua_release
 	str = str.."\n  Qt "..qt_version
 	str = str.."\n  Qwt "..qwt_version
-	
-	local tlib = _Gtme.getTerraLib().TerraLib{}
+
+    local terralib = _Gtme.getPackage("terralib")
+	local tlib = terralib.TerraLib{}
 	str = str.."\n  TerraLib "..tlib:getVersion()
-	tlib:finalize()	
+	finalizeTerraLib()
 
 	return str
 end
@@ -1065,13 +1090,6 @@ local function loadPackgesLibPath()
 	end)	
 end
 
-function _Gtme.loadLibraryPath()
-    local ldpath = os.getenv("DYLD_LIBRARY_PATH")
-    if ldpath then
-        package.cpath = package.cpath..";"..ldpath.."/?.so"
-                                    ..";"..ldpath.."/?.dylib"
-    end
-end
 
 local function findExample(example, packageName)
     local file = example
@@ -1219,7 +1237,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	local package = "base"
 
 	loadPackgesLibPath()
-    _Gtme.loadLibraryPath()
 
 	local argCount = 1
 	while argCount <= #arguments do
@@ -1374,9 +1391,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end)
 
                 if _Gtme.isWindowsOS() then
-                    local terralib = _Gtme.getTerraLib()
-                    local tlib = terralib.TerraLib{}
-                    tlib:finalize()
+                    finalizeTerralib()
                 end
 				
 				os.exit()
@@ -1538,9 +1553,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	end
 
     if _Gtme.isWindowsOS() then
-        local terralib = _Gtme.getTerraLib()
-        local tlib = terralib.TerraLib{}
-        tlib:finalize()
+        finalizeTerralib()
     end
 
 	return true
