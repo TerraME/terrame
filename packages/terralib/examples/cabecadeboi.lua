@@ -32,19 +32,9 @@ local project = Project{
 	file = projName,
 	clean = true,
 	author = "Carneiro, T.",
-	title = "Cabeca de Boi database"
-}
-
-box = Layer{
-	project = project,
-	name = "box",
-	file = filePath("elevation_box.shp", "terralib")
-}
-
-altimetria = Layer{
-	project = project,
-	name = "altimetria",
-	file = filePath("elevation.tif", "terralib") -- se usar "altimetria.tif" da erro
+	title = "Cabeca de Boi database",
+	box = filePath("elevation_box.shp", "terralib"),
+	altimetria = filePath("elevation.tif", "terralib") -- se usar "altimetria.tif" da erro
 }
 
 if isFile("mycells.shp")     then rmFile("mycells.shp")     end
@@ -61,7 +51,7 @@ cl = Layer{
 cl:fill{
 	operation = "average",
 	select = 0,
-	name = "altimetria",
+	layer = "altimetria",
 	output = "mycells-avg",
 	attribute = "height"
 }

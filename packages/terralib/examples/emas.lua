@@ -30,31 +30,11 @@ project = Project{
 	file = "emas.tview",
 	clean = true,
 	author = "Almeida, R.",
-	title = "Emas database"
-}
-
-firereak = Layer{
-	project = project,
-	name = "firebreak",
-	file = filePath("firebreak_lin.shp", "terralib")
-}
-
-cover = Layer{
-	project = project,
-	name = "cover",
-	file = filePath("accumulation_Nov94May00.tif", "terralib")
-}
-
-river = Layer{
-	project = project,
-	name = "river",
-	file = filePath("River_lin.shp", "terralib")
-}
-
-limit = Layer{
-	project = project,
-	name = "limit",
-	file = filePath("Limit_pol.shp", "terralib")
+	title = "Emas database",
+	firebreak = filePath("firebreak_lin.shp", "terralib"),
+	cover = filePath("accumulation_Nov94May00.tif", "terralib"),
+	river = filePath("River_lin.shp", "terralib"),
+	limit = filePath("Limit_pol.shp", "terralib")
 }
 
 if isFile("emas.shp") then rmFile("emas.shp") end

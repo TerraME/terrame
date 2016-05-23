@@ -72,8 +72,6 @@ function Project(data)
 	defaultTableValue(data, "title", "No title")
 	defaultTableValue(data, "author", "No author")
 
-	verifyUnnecessaryArguments(data, {"clean", "file", "author", "title"})
-
 	local terralib = TerraLib{}
 
 	data.terralib = TerraLib{}
@@ -99,6 +97,29 @@ function Project(data)
 	end
 
 	setmetatable(data, metaTableProject_)
+
+	local layers = {}
+
+	forEachElement(data, function(idx, value)
+		if not belong(idx, {"clean", "file", "author", "title", "layers", "terralib"}) then
+			mandatoryTableArgument(data, idx, "string")
+
+			if isFile(value) then
+				layers[idx] = Layer{
+					project = data,
+					name = idx,
+					file = value
+				}
+
+			else
+				customError("Value of argument '"..idx.."' is not a file.")
+			end
+		end
+	end)
+
+	forEachElement(layers, function(idx, layer)
+		data[idx] = layer
+	end)
 
 	return data
 end

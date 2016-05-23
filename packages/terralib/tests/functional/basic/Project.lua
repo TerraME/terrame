@@ -76,6 +76,22 @@ return {
 		unitTest:assertEquals(proj4.clean, false)
 		unitTest:assertType(proj4.layers, "table")
 		unitTest:assertEquals(getn(proj4.layers), 0)
+
+		local proj5 = Project{
+			file = "emas.tview",
+			clean = true,
+			author = "Almeida, R.",
+			title = "Emas database",
+			firebreak = filePath("firebreak_lin.shp", "terralib"),
+			cover = filePath("accumulation_Nov94May00.tif", "terralib"),
+			river = filePath("River_lin.shp", "terralib"),
+			limit = filePath("Limit_pol.shp", "terralib")
+		}
+
+		unitTest:assertType(proj5.firebreak, "Layer")
+		unitTest:assertType(proj5.cover, "Layer")
+		unitTest:assertType(proj5.river, "Layer")
+		unitTest:assertType(proj5.limit, "Layer")
 	end,
 	__tostring = function(unitTest)
 		local proj1 = Project{

@@ -23,11 +23,11 @@
 -------------------------------------------------------------------------------------------
 
 return{
- 	Project = function(unitTest)
- 		local noDataInContructor = function()
- 			local proj = Project()
- 		end
- 		unitTest:assertError(noDataInContructor, tableArgumentMsg())
+	Project = function(unitTest)
+		local noDataInContructor = function()
+			local proj = Project()
+		end
+		unitTest:assertError(noDataInContructor, tableArgumentMsg())
 
 		local attrFileNonString = function()
 			local proj = Project{file = 123}
@@ -52,21 +52,27 @@ return{
 		local attrTitleNonString = function()
 			local proj = Project{file = "myproj.tview", title = 2}
 		end
-		unitTest:assertError(attrTitleNonString, incompatibleTypeMsg("title", "string", 2))		
+		unitTest:assertError(attrTitleNonString, incompatibleTypeMsg("title", "string", 2))
 
 		local attrAuthorNonString = function()
 			local proj = Project{file = "myproj.tview", author = 2}
 		end
-		unitTest:assertError(attrAuthorNonString, incompatibleTypeMsg("author", "string", 2))				
+		unitTest:assertError(attrAuthorNonString, incompatibleTypeMsg("author", "string", 2))
+
 		local fileMandatory = function()
 			local proj = Project{clean = true}
 		end
 		unitTest:assertError(fileMandatory, mandatoryArgumentMsg("file"))
 
-		local unnecessaryArgument = function()
+		local layerShouldBeString = function()
 			local proj = Project{file = "myproj.tview", cean = true}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("cean", "clean"))
- 	end
+		unitTest:assertError(layerShouldBeString, incompatibleTypeMsg("cean", "string", true))
+
+		local notFile = function()
+			local proj = Project{file = "myproj.tview", cean = "true.abc"}
+		end
+		unitTest:assertError(notFile, "Value of argument 'cean' is not a file.")
+	end
 }
 

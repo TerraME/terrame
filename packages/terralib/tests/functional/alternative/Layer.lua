@@ -441,7 +441,7 @@ return{
 				output = "abc123"
 			}
 		end
-		unitTest:assertError(attributeDoesNotExist, "string")
+		unitTest:assertError(attributeDoesNotExist, "string") -- SKIP
 		--]]
 
 		local outputMandatory = function()

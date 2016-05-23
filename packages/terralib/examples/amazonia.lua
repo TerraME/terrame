@@ -36,37 +36,12 @@ local project = Project{
 	file = projName,
 	clean = true,
 	author = "Andrade, P.",
-	title = "Amazonia database"
-}
-
-portos = Layer{
-	project = project,
-	name = "portos",
-	file = filePath("PORTOS_AMZ_pt.shp", "terralib")
-}
-
-roads = Layer{
-	project = project,
-	name = "roads",
-	file = filePath("RODOVIAS_AMZ_lin.shp", "terralib")
-}
-
-protected = Layer{
-	project = project,
-	name = "protected",
-	file = filePath("TI_AMZ_pol.shp", "terralib")
-}
-
-prodes = Layer{
-	project = project,
-	name = "prodes",
-	file = filePath("PRODES_5KM.tif", "terralib")
-}
-
-limite = Layer{
-	project = project,
-	name = "limite",
-	file = filePath("LIMITE_AMZ_pol.shp", "terralib")
+	title = "Amazonia database",
+	portos = filePath("PORTOS_AMZ_pt.shp", "terralib"),
+	roads = filePath("RODOVIAS_AMZ_lin.shp", "terralib"),
+	protected = filePath("TI_AMZ_pol.shp", "terralib"),
+	prodes = filePath("PRODES_5KM.tif", "terralib"),
+	limite = filePath("LIMITE_AMZ_pol.shp", "terralib")
 }
 
 cellsFile = "amazonia.shp"
@@ -88,14 +63,14 @@ if isFile("amazonia-dist4.shp") then rmFile("amazonia-dist4.shp") end
 
 cl:fill{
 	operation = "distance",
-	name = "roads",
+	layer = "roads",
 	attribute = "distroads",
 	output = "amazonia-dist"
 }
 
 cl:fill{
 	operation = "distance",
-	name = "portos",
+	layer = "portos",
 	attribute = "distports",
 	output = "amazonia-dist2"
 }
@@ -103,7 +78,7 @@ cl:fill{
 --[[ -- this call below also aborts TerraME (but without showing any error)
 cl:fill{
 	operation = "area",
-	name = "protected",
+	layer = "protected",
 	attribute = "marea",
 	output = "amazonia-dist3"
 }
@@ -111,15 +86,15 @@ cl:fill{
 
 cl:fill{
 	operation = "coverage",
-	name = "prodes",
-	select = 0,
+	layer = "prodes",
+	band = 0, -- se trocar por select = 1 da pau no final
 	attribute = "prodes",
 	output = "amazonia-dist4"
 }
 
 cs = CellularSpace{
 	project = project,
-	layer = "amazonia-dist3"
+	layer = "amazonia-dist4"
 }
 
 Map{
@@ -142,6 +117,7 @@ Map{
 	color = "YlGn"
 }
 
+--[[
 Map{
 	target = cs,
 	select = "protected",
@@ -151,12 +127,12 @@ Map{
 	invert = true,
 	color = "YlGn"
 }
-
+--]]
 --[[
 cl:fill{
 	operation = "average",
-	name = "prodes",
-	select = 1,
+	layer = "prodes",
+	band = 1,
 	input = prodes,
 	attribute = "height",
 	output = "amazonia-height.shp"

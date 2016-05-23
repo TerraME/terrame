@@ -229,32 +229,17 @@ return {
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_basic.tview"
+		local layerName1 = "Setores_2000"
+		local localidades = "Localidades"
+		local rodovias = "Rodovias"
 
 		local proj = Project {
 			file = projName,
-			clean = true
-		}		
-
-		local layerName1 = "Setores_2000"
-		Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
-		}	
-		
-		local localidades = "Localidades"
-		Layer{
-			project = proj,
-			name = localidades,
-			file = filePath("Localidades_pt.shp", "terralib")	
+			clean = true,
+			[layerName1] = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
+			[localidades] = filePath("Localidades_pt.shp", "terralib"),
+			[rodovias] = filePath("Rodovias_lin.shp", "terralib")
 		}
-
-		local rodovias = "Rodovias"
-		Layer{
-			project = proj,
-			name = rodovias,
-			file = filePath("Rodovias_lin.shp", "terralib")	
-		}		
 		
 		local clName1 = "Setores_Cells"
 		local filePath1 = clName1..".shp"
