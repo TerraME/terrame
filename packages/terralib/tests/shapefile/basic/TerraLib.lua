@@ -862,8 +862,6 @@ return {
 		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rsumLayerInfo.sid)					
 		
-		tl:finalize()
-		
 		for j = 1, #shp do
 			if isFile(shp[j]) then
 				rmFile(shp[j])

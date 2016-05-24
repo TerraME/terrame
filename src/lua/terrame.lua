@@ -1391,7 +1391,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end)
 
                 if _Gtme.isWindowsOS() then
-                    finalizeTerralib()
+                    finalizeTerraLib()
                 end
 				
 				os.exit()
@@ -1553,7 +1553,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	end
 
     if _Gtme.isWindowsOS() then
-        finalizeTerralib()
+        finalizeTerraLib()
     end
 
 	return true
