@@ -586,10 +586,7 @@ return {
 		}
 
 		unitTest:assertEquals(cellSpaceLayer.source, "shp")
-		unitTest:assertEquals(cellSpaceLayer.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath22))			
-		
-		local tl = TerraLib{}
-		tl:finalize()			
+		unitTest:assertEquals(cellSpaceLayer.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath22))					
 		
 		if isFile(projName) then
 			rmFile(projName)

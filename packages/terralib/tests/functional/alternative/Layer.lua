@@ -1243,9 +1243,6 @@ return{
 			rmFile(projName)
 		end
 
-		local tl = TerraLib{}
-		tl:finalize()
-
 		if isFile(filePath1) then rmFile(filePath1) end
 		if isFile(filePath2) then rmFile(filePath2) end
 	end
