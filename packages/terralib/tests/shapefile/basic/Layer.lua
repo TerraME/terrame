@@ -103,13 +103,22 @@ return {
 			layer = polmodeLayerName
 		}
 
+		--[[
+		local unique = {}
+		forEachCell(cs, function(cell)
+			unique[cell.polmode] = true
+		end)
+
+		forEachElement(unique, function(idx)
+			print(idx)
+		end)
+		--]]
+
 		local map = Map{
 			target = cs,
 			select = "polmode",
-			min = 0,
-			max = 275000,
-			slices = 8,
-			color = {"red", "green"}
+			value = {"0", "53217", "37086", "14302"}, 
+			color = {"red", "green", "blue", "yellow"}
 		}
 
 		unitTest:assertSnapshot(map, "polygons-mode.png")
