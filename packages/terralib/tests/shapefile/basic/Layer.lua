@@ -686,10 +686,63 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "polygons-sum-area.png")
+
+		-- AVERAGE (area = true)
+
+		local projName = "cellular_layer_fill_avg_area.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true,
+			setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		}
+
+		local clName1 = "cells_avg_area"
+		local shp1 = clName1..".shp"
+
+		local cl = Layer{
+			project = proj,
+			source = "shp",
+			clean = true,
+			input = "setores",
+			name = clName1,
+			resolution = 10000,
+			file = clName1..".shp"
+		}
+
+		local polavgLayerName = clName1.."_polavg"
+		local shp1 = polavgLayerName..".shp"
+
+		cl:fill{
+			operation = "average",
+			layer = "setores",
+			attribute = "polavg",
+			clean = true,
+			select = "Densde_Pop",
+			output = polavgLayerName,
+			area = true
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = polavgLayerName
+		}
+
+		local map = Map{
+			target = cs,
+			select = "polavg",
+			min = 0,
+			max = 36,
+			slices = 8,
+			color = {"red", "green"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-average-area.png")
+--[[
 		forEachElement(shapes, function(_, value)
 			rmFile(value)
 		end)
-
+--]]
 		unitTest:assertFile(projName)
 	end
 }
