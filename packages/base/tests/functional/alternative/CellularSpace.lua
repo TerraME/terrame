@@ -213,8 +213,10 @@ return{
 		if isFile(projFile) then
 			os.execute("rm -f "..projFile)
 		end
+
+        local terralib = getPackage("terralib")
 		
-		local proj = _Gtme.getTerraLib().Project{
+		local proj = terralib.Project{
 			file = projFile,
 			clean = true,
 			author = "Avancini",

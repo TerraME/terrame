@@ -22,11 +22,8 @@
 --
 -------------------------------------------------------------------------------------------
 
-require("terralib_mod_binding_lua")
-
-local binding = terralib_mod_binding_lua
+local binding = _Gtme.terralib_mod_binding_lua
 local instance = nil
-local initialized = false
 
 local function decodeUri(str)
 	str = string.gsub(str, "+", " ")
@@ -933,38 +930,9 @@ local function getGeometryTypeName(geomType)
 	return "unknown"
 end
 
-local function finalize()
-	if initialized then		
-		binding.te.plugin.PluginManager.getInstance():clear()
-		binding.TeSingleton.getInstance():finalize()	
-
-		initialized = false	
-		instance = nil
-		
-		collectgarbage("collect")
-	end
-end
-
-local function init()
-	if not initialized then
-		binding.TeSingleton.getInstance():initialize()
-		binding.te.plugin.PluginManager.getInstance():clear()		
-		binding.te.plugin.PluginManager.getInstance():loadAll()
-		initialized = true
-	end	
-end
-
 TerraLib_ = {
 	type_ = "TerraLib",
-	--- Finalize TerraLib. This function is automatically executed in the end of any
-	-- simulation that uses TerraLib. It should be used only when the user wants to
-	-- reload TerraLib afterwards.
-	-- @usage import("terralib")
-	-- tl = TerraLib{}
-	-- tl:finalize()
-	finalize = function()
-		finalize()
-	end,
+	
 	--- Return the current TerraLib version.
 	-- @usage import("terralib")
 	-- tl = TerraLib{}
@@ -1764,7 +1732,6 @@ function TerraLib()
 		local data = {}
 		setmetatable(data, metaTableTerraLib_)
 		instance = data
-		init()
 		return data
 	end
 end
