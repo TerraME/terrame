@@ -620,9 +620,72 @@ return {
 		end
 		unitTest:assertError(error_func, "Sorry, this operation was not implemented in TerraLib yet.")
 
-		local tl = TerraLib()
-		tl:finalize()
+		-- SUM
 
+		local proj = Project {
+			file = "sum_wba.tview",
+			clean = true,
+			setores = filePath("municipiosAML_ok.shp", "terralib")
+		}
+
+		local clName1 = "cells_set"
+		local shp1 = clName1..".shp"
+
+		local cl = Layer{
+			project = proj,
+			source = "shp",
+			clean = true,
+			input = "setores",
+			name = clName1,
+			resolution = 50000,
+			file = clName1..".shp"
+		}
+
+		local polsumAreaLayerName = clName1.."_polavg"
+		local shp1 = polsumAreaLayerName..".shp"
+
+		cl:fill{
+			operation = "sum",
+			layer = "setores",
+			attribute = "polsuma",
+			clean = true,
+			select = "POPULACAO_",
+			output = polsumAreaLayerName,
+			area = true
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = "setores"
+		}
+
+		local sum1 = 0
+		forEachCell(cs, function(cell)
+			sum1 = sum1 + cell.POPULACAO_
+		end)
+	
+		local cs = CellularSpace{
+			project = proj,
+			layer = polsumAreaLayerName
+		}
+
+		local sum2 = 0
+		forEachCell(cs, function(cell)
+			sum2 = sum2 + cell.polsuma
+		end)
+
+		unitTest:assertEquals(sum1, sum2, 1e-4)
+
+		local map = Map{
+			target = cs,
+			select = "polsuma",
+			min = 0,
+			max = 1300000,
+			slices = 20,
+			color = {"red", "green"}
+		}
+
+		unitTest:assertSnapshot(map, "polygons-sum-area.png")
 		forEachElement(shapes, function(_, value)
 			rmFile(value)
 		end)
