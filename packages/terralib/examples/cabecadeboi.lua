@@ -70,7 +70,9 @@ Map{
 	slices = 7
 }
 
+--[[
 if isFile(projName)          then rmFile(projName)          end
 if isFile("mycells.shp")     then rmFile("mycells.shp")     end
 if isFile("mycells-avg.shp") then rmFile("mycells-avg.shp") end
+--]]
 

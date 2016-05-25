@@ -41,7 +41,7 @@ local project = Project{
 	roads = filePath("RODOVIAS_AMZ_lin.shp", "terralib"),
 	protected = filePath("TI_AMZ_pol.shp", "terralib"),
 	prodes = filePath("PRODES_5KM.tif", "terralib"),
-	limite = filePath("LIMITE_AMZ_pol.shp", "terralib")
+	limite = filePath("limitePA_polyc_pol.shp", "terralib")-- LIMITE_AMZ_pol.shp", "terralib")
 }
 
 cellsFile = "amazonia.shp"
@@ -53,17 +53,13 @@ cl = Layer{
 	file = cellsFile,
 	input = "limite",
 	name = "cells",
-	resolution = 100000
+	resolution = 40000
 }
-
-if isFile("amazonia-dist.shp") then rmFile("amazonia-dist.shp") end
-if isFile("amazonia-dist2.shp") then rmFile("amazonia-dist2.shp") end
-if isFile("amazonia-dist3.shp") then rmFile("amazonia-dist3.shp") end
-if isFile("amazonia-dist4.shp") then rmFile("amazonia-dist4.shp") end
 
 cl:fill{
 	operation = "distance",
 	layer = "roads",
+	clean = true,
 	attribute = "distroads",
 	output = "amazonia-dist"
 }
@@ -71,6 +67,7 @@ cl:fill{
 cl:fill{
 	operation = "distance",
 	layer = "portos",
+	clean = true,
 	attribute = "distports",
 	output = "amazonia-dist2"
 }
@@ -79,6 +76,7 @@ cl:fill{
 cl:fill{
 	operation = "area",
 	layer = "protected",
+	clean = true,
 	attribute = "marea",
 	output = "amazonia-dist3"
 }
@@ -87,21 +85,28 @@ cl:fill{
 cl:fill{
 	operation = "coverage",
 	layer = "prodes",
-	band = 0, -- se trocar por select = 1 da pau no final
+	clean = true,
 	attribute = "prodes",
 	output = "amazonia-dist4"
 }
 
+cl:fill{
+	operation = "average",
+	layer = "prodes",
+	clean = true,
+	input = prodes,
+	attribute = "mheight",
+	output = "amazonia-height"
+}
+
 cs = CellularSpace{
 	project = project,
-	layer = "amazonia-dist4"
+	layer = "amazonia-height"
 }
 
 Map{
 	target = cs,
 	select = "distroads",
-	min = 0,
-	max = 350000,
 	slices = 10,
 	invert = true,
 	color = "YlGn"
@@ -110,8 +115,6 @@ Map{
 Map{
 	target = cs,
 	select = "distports",
-	min = 0,
-	max = 1200000,
 	slices = 10,
 	invert = true,
 	color = "YlGn"
@@ -128,16 +131,15 @@ Map{
 	color = "YlGn"
 }
 --]]
---[[
-cl:fill{
-	operation = "average",
-	layer = "prodes",
-	band = 1,
-	input = prodes,
-	attribute = "height",
-	output = "amazonia-height.shp"
+
+Map{
+	target = cs,
+	select = "mheight",
+	slices = 10,
+	invert = true,
+	color = "YlGn"
 }
---]]
+
 
 if isFile(projName) then
 	rmFile(projName)

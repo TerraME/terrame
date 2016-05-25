@@ -37,14 +37,10 @@ project = Project{
 	limit = filePath("Limit_pol.shp", "terralib")
 }
 
-if isFile("emas.shp") then rmFile("emas.shp") end
-if isFile("firebreak2.shp") then rmFile("firebreak2.shp") end
-if isFile("cover2.shp") then rmFile("cover2.shp") end
-if isFile("river2.shp") then rmFile("river2.shp") end
-
 cl = Layer{
 	project = project,
 	file = "emas.shp",
+	clean = true,
 	input = "limit",
 	name = "cells",
 	resolution = 500
@@ -53,6 +49,7 @@ cl = Layer{
 cl:fill{
 	operation = "presence",
 	attribute = "firebreak",
+	clean = true,
 	layer = "firebreak",
 	output = "firebreak2"
 }
@@ -60,6 +57,7 @@ cl:fill{
 cl:fill{
 	operation = "presence",
 	attribute = "river",
+	clean = true,
 	layer = "river",
 	output = "river2"
 }
@@ -67,6 +65,7 @@ cl:fill{
 cl:fill{
 	operation = "average",
 	attribute = "cover",
+	clean = true,
 	layer = "cover",
 	output = "cover2"
 }
@@ -80,24 +79,30 @@ Map{
 	target = cs,
 	select = "firebreak",
 	value = {0, 1},
-	grid = true,
 	color = {"white", "black"}
 }
 
 Map{
 	target = cs,
-	grid = true,
 	select = "river",
 	value = {0, 1},
 	color = {"white", "black"}
 }
 
+--[[
+max = 0
+forEachCell(cs, function(cell)
+	if cell.cover > max then max = cell.cover end
+end)
+--]]
+
+-- the Map below will only work properly when TerraLib
+-- loads the band indexes #808
 Map{
 	target = cs,
-	grid = true,
 	select = "cover",
 	min = 0,
-	max = 300,
+	max = 300, -- it will be 5 or 6 possibly
 	slices = 6,
 	color = "Greens"
 }
