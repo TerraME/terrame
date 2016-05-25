@@ -35,9 +35,9 @@ Testing examples
 Testing ipd
 Checking logs
 
-Unit test report:
-Tests were executed in 0.27 seconds.
-Logs were saved in '.terrametmp_8bNNR'.
+Functional test report for package 'twoerrorsbuild':
+Tests were executed in 1.08 seconds.
+Logs were saved in '.terrametmp_pecOc'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -105,8 +105,8 @@ Checking Tube3.lua
 Checking Utils.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 0.03 seconds.
+Documentation report for package 'twoerrorsbuild':
+Documentation was built in 0.97 seconds.
 5 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
@@ -150,11 +150,11 @@ Building package twoerrorsbuild
 Creating file 'twoerrorsbuild_0.1.zip'
 Package 'twoerrorsbuild' successfully zipped
 
-Build report:
-Package was built in 0.46 seconds.
+Build report for package 'twoerrorsbuild':
+Package was built in 3.6 seconds.
 Build created file 'twoerrorsbuild_0.1.zip'.
-Temporary files are saved in .terrame_twoerrorsbuild_u7NAE
-MD5 sum for the package is 5f12e2a95003ddfb4b4aa5c3a15efd2f
+Temporary files are saved in .terrame_twoerrorsbuild_QByuK
+MD5 sum for the package is e751987346fd6b6da51d91b7f2b0fd40 *twoerrorsbuild_0.1.zip
 The package does not have a license file.
 2 errors were found in the documentation.
 2 files are unnecessary.

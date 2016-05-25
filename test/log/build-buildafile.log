@@ -20,8 +20,8 @@ Testing examples
 The package has no examples
 Skipping logs check
 
-Unit test report:
-Tests were executed in 0.08 seconds.
+Functional test report for package 'buildafile':
+Tests were executed in 1.28 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -72,8 +72,8 @@ Checking if all functions are documented
 Checking Utils.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 0.05 seconds.
+Documentation report for package 'buildafile':
+Documentation was built in 0.58 seconds.
 4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -112,8 +112,8 @@ Building package buildafile
 Creating file 'buildafile_0.1.zip'
 Package 'buildafile' successfully zipped
 
-Build report:
-Package was built in 0.32 seconds.
+Build report for package 'buildafile':
+Package was built in 1.7 seconds.
 Build created file 'buildafile_0.1.zip'.
 Temporary files are saved in .terrame_buildafile_uuAh4
 MD5 sum for the package is 2fed14576e931cf2794454c8b26c0409

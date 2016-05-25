@@ -8,7 +8,7 @@ Adding sketch for data file 'mycsv.csv'
 Verifying font files
 Package 'nodatadotlua' does not have a font directory
 
-Sketch report:
+Sketch report for package 'nodatadotlua':
 No new test file was necessary.
 2 data files were not documented.
 All font files are already documented.

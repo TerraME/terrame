@@ -33,9 +33,9 @@ Testing examples
 Testing ipd
 Checking logs
 
-Unit test report:
-Tests were executed in 0.26 seconds.
-Logs were saved in '.terrametmp_PZWcg'.
+Functional test report for package 'build':
+Tests were executed in 1.2 seconds.
+Logs were saved in '.terrametmp_kNQtn'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -103,8 +103,8 @@ Checking Utils.lua
 Checking Utils2.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 0.07 seconds.
+Documentation report for package 'build':
+Documentation was built in 0.7 seconds.
 6 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -144,8 +144,8 @@ Building package build
 Creating file 'build_0.1.zip'
 Package 'build' successfully zipped
 
-Build report:
-Package was built in 0.42 seconds.
+Build report for package 'build':
+Package was built in 3.7 seconds.
 Build created file 'build_0.1.zip'.
 Temporary files are saved in .terrame_build_N7hUr
 MD5 sum for the package is 24f4df921092157989f341837f0b6880

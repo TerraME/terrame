@@ -37,8 +37,8 @@ Checking if all functions are documented
 Checking foo.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 0.15 seconds.
+Documentation report for package 'wrongdata':
+Documentation was built in 1.08 seconds.
 2 HTML files were created.
 One out of 1 files are not documented.
 All fields of 'description.lua' are correct.

@@ -108,14 +108,14 @@ Skipping lines of source code check
 Skipping examples
 Skipping logs check
 
-Unit test report:
-Tests were executed in 4.76 seconds.
-Logs were saved in '.terrametmp_U5UCx'.
+Functional test report for package 'base':
+Tests were executed in 6.15 seconds.
+Logs were saved in '.terrametmp_qOlgL'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 Execution of all asserts was not verified.
-All 133 asserts were executed successfully.
+All 135 asserts were executed successfully.
 All 4 tested functions do not have any unexpected execution error.
 All 4 tested functions have at least one assert.
 All 4 tested functions exist in the source code of the package.

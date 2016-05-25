@@ -51,8 +51,8 @@ Checking Tube2.lua
 Checking Utils.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 0.16 seconds.
+Documentation report for package 'images':
+Documentation was built in 1.18 seconds.
 5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.

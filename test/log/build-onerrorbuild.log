@@ -29,9 +29,9 @@ Testing examples
 Testing ipd
 Checking logs
 
-Unit test report:
-Tests were executed in 0.23 seconds.
-Logs were saved in '.terrametmp_vUyZy'.
+Functional test report for package 'onerrorbuild':
+Tests were executed in 1.65 seconds.
+Logs were saved in '.terrametmp_euLEn'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -92,8 +92,8 @@ Checking Tube2.lua
 Checking Utils.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 0.03 seconds.
+Documentation report for package 'onerrorbuild':
+Documentation was built in 1.17 seconds.
 5 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
@@ -137,8 +137,8 @@ Building package onerrorbuild
 Creating file 'onerrorbuild_0.1.zip'
 Package 'onerrorbuild' successfully zipped
 
-Build report:
-Package was built in 0.41 seconds.
+Build report for package 'onerrorbuild':
+Package was built in 4.56 seconds.
 Build created file 'onerrorbuild_0.1.zip'.
 Temporary files are saved in .terrame_onerrorbuild_R3gqm
 MD5 sum for the package is a5fd0b90e0bd1edd98162d26ee2ca378

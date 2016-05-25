@@ -154,7 +154,7 @@ Testing createNeighborhood
 Testing cut
 Testing get
 Testing load
-Skipping loadNeighborhood
+Testing loadNeighborhood
 Testing notify
 Testing sample
 Skipping save
@@ -164,20 +164,22 @@ Testing #
 Testing file lua/Chart.lua
 Testing Chart
 Testing save
+Testing update
 Testing file lua/Choice.lua
 Testing Choice
 Testing sample
 Testing file lua/Clock.lua
 Testing Clock
 Testing save
+Testing update
 Testing file lua/Environment.lua
 Testing Environment
 Testing add
 Testing createPlacement
-Testing execute
 Testing getTime
 Testing loadNeighborhood
 Testing notify
+Testing run
 Testing file lua/ErrorHandling.lua
 Testing customError
 Testing customWarning
@@ -261,11 +263,13 @@ Testing file lua/Jump.lua
 Testing Jump
 Testing file lua/LogFile.lua
 Testing LogFile
+Testing update
 Testing file lua/Mandatory.lua
 Testing Mandatory
 Testing file lua/Map.lua
 Testing Map
 Testing save
+Testing update
 Testing file lua/Model.lua
 Testing Model
 Skipping configure
@@ -274,6 +278,7 @@ Testing getParameters
 Testing init
 Skipping interface
 Testing notify
+Testing run
 Testing file lua/Neighborhood.lua
 Testing Neighborhood
 Testing add
@@ -288,7 +293,7 @@ Testing sample
 Testing setWeight
 Testing #
 Testing file lua/Package.lua
-Testing file
+Testing filePath
 Testing filesByExtension
 Testing getPackage
 Skipping import
@@ -328,15 +333,17 @@ Testing State
 Testing file lua/TextScreen.lua
 Testing TextScreen
 Testing save
+Testing update
 Testing file lua/Timer.lua
 Testing Timer
 Testing add
+Testing addReplacement
 Testing clear
-Testing execute
 Testing getEvents
 Testing getTime
 Testing notify
 Testing reset
+Testing run
 Testing #
 Testing file lua/Trajectory.lua
 Testing Trajectory
@@ -354,10 +361,10 @@ Testing UnitTest
 Testing assert
 Testing assertEquals
 Testing assertError
-Testing assertFile
+Skipping assertFile
 Testing assertNil
 Testing assertNotNil
-Testing assertSnapshot
+Skipping assertSnapshot
 Testing assertType
 Testing clear
 Skipping printError
@@ -371,7 +378,9 @@ Testing clean
 Testing clone
 Testing d
 Testing delay
+Skipping disableGraphics
 Testing elapsedTime
+Skipping enableGraphics
 Testing forEachAgent
 Testing forEachCell
 Testing forEachCellPair
@@ -384,6 +393,7 @@ Testing forEachOrderedElement
 Testing forEachSocialNetwork
 Testing getConfig
 Testing getExtension
+Testing getNames
 Testing getn
 Testing greaterByAttribute
 Testing greaterByCoord
@@ -394,6 +404,7 @@ Testing integrationRungeKutta
 Testing isModel
 Testing isTable
 Testing levenshtein
+Testing makeDataTable
 Testing round
 Testing sessionInfo
 Testing string.endswith
@@ -404,6 +415,7 @@ Testing vardump
 Testing file lua/VisualTable.lua
 Testing VisualTable
 Testing save
+Testing update
 Checking calls to functions in @usage
 Checking lua/Agent.lua
 Checking lua/Automaton.lua
@@ -544,8 +556,8 @@ Checking Utils.lua
 Checking VisualTable.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 11.56 seconds.
+Documentation report for package 'base':
+Documentation was built in 55.84 seconds.
 35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -553,21 +565,21 @@ No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
-All 299 global functions of the package are documented.
+All 313 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 320 non-named arguments are documented.
+All 323 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 299 functions call themselves in their @usage.
-All 299 functions do not have any error in their @usage.
+All 313 functions call themselves in their @usage.
+All 313 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
-All 315 links were correctly built.
+All 327 links were correctly built.
 All 25 examples are correctly documented.
 Summing up, all the documentation was successfully built.

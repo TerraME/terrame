@@ -135,8 +135,8 @@ Checking Utils.lua
 Function forEachNeighbor2 is not documented
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 1.8 seconds.
+Documentation report for package 'onerror':
+Documentation was built in 15.51 seconds.
 6 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.

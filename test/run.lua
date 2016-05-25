@@ -98,6 +98,7 @@ local function approximateLine(line)
 	if string.match(line, "%.terrame")           then return   5 end
 	if string.match(line, "TME_PATH")            then return 120 end
 	if string.match(line, "Lua 5")               then return   3 end
+	if string.match(line, "attempt to")          then return  50 end
 	if string.match(line, "Qt 5")                then return   3 end
 	if string.match(line, "Qwt 6")               then return   3 end
 

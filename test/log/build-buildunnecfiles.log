@@ -33,9 +33,9 @@ Test file 'unnec2.txt' does not have a valid extension
 Testing ipd
 Checking logs
 
-Unit test report:
-Tests were executed in 0.24 seconds.
-Logs were saved in '.terrametmp_tHbwq'.
+Functional test report for package 'buildunnecfiles':
+Tests were executed in 1.64 seconds.
+Logs were saved in '.terrametmp_gVcyl'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 4 invalid files or directories were found in directory 'test'.
@@ -98,8 +98,8 @@ Checking Tube.lua
 Checking Utils.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 0.03 seconds.
+Documentation report for package 'buildunnecfiles':
+Documentation was built in 0.89 seconds.
 5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -148,8 +148,8 @@ Building package buildunnecfiles
 Creating file 'buildunnecfiles_0.1.zip'
 Package 'buildunnecfiles' successfully zipped
 
-Build report:
-Package was built in 0.42 seconds.
+Build report for package 'buildunnecfiles':
+Package was built in 5.41 seconds.
 Build created file 'buildunnecfiles_0.1.zip'.
 Temporary files are saved in .terrame_buildunnecfiles_nrjsE
 MD5 sum for the package is 9fead1b91d31fe79bfec3a4361d0753f

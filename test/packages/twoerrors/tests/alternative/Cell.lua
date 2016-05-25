@@ -45,20 +45,20 @@ return{
 			unitTest:assertType(c2, "Map")
 		end
 
-		world:notify()
 
 		local t = Timer{
 			Event{action = function()
 				world.count = world.count + 1
-				world:notify()
-			end}
+			end},
+			Event{action = c1},
+			Event{action = c2}
 		}
 
 		t:run(30)
 		local s = sessionInfo().separator
 
-		unitTest:assertSnapshot(c1, "chart_cell.bmp")
-		unitTest:assertSnapshot(c2, "chart_cell_select.bmp")
+		unitTest:assertSnapshot(c1, "chart_cell.bmp", 0.2)
+		unitTest:assertSnapshot(c2, "chart_cell_select.bmp", 0.2)
 
 		local c = abc + def
 	end

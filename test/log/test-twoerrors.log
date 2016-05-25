@@ -194,9 +194,9 @@ Checking logs
 File 'log/mac/chart_cell2.bmp' was not used by any assert.
 File 'log/mac/ipd2.log' was not used by any assert.
 
-Unit test report:
-Tests were executed in 14.85 seconds.
-Logs were saved in '.terrametmp_kKgxl'.
+Functional test report for package 'twoerrors':
+Tests were executed in 23.46 seconds.
+Logs were saved in '.terrametmp_UBhdy'.
 2 print() calls were found when loading the package.
 2 variables are overwritten when loading the package.
 2 invalid files or directories were found in directory 'test'.

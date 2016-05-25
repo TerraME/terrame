@@ -144,4 +144,4 @@ Function 'forEachNeighborhood2' was not tested.
 Skipping lines of source code check
 Testing examples
 Testing continuous-rain
-Eror: It is not possble to test examples with print() without a configuration file pointing a log directory.
+Error: It is not possible to test examples with print() without a configuration file pointing a log directory.

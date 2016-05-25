@@ -49,8 +49,8 @@ Skipping lines of source code check
 Skipping examples
 Skipping logs check
 
-Unit test report:
-Tests were executed in 31.42 seconds.
+Functional test report for package 'base':
+Tests were executed in 30.64 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.

@@ -33,9 +33,9 @@ Test file 'unnec2.txt' does not have a valid extension
 Testing ipd
 Checking logs
 
-Unit test report:
-Tests were executed in 0.23 seconds.
-Logs were saved in '.terrametmp_7NHou'.
+Functional test report for package 'buildunneclean':
+Tests were executed in 2 seconds.
+Logs were saved in '.terrametmp_zRsEN'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 4 invalid files or directories were found in directory 'test'.
@@ -96,8 +96,8 @@ Checking Tube.lua
 Checking Utils.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 0.03 seconds.
+Documentation report for package 'buildunneclean':
+Documentation was built in 0.67 seconds.
 5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -147,8 +147,8 @@ Building package buildunneclean
 Creating file 'buildunneclean_0.1.zip'
 Package 'buildunneclean' successfully zipped
 
-Build report:
-Package was built in 0.42 seconds.
+Build report for package 'buildunneclean':
+Package was built in 5.45 seconds.
 Build created file 'buildunneclean_0.1.zip'.
 Temporary files are saved in .terrame_buildunneclean_WTdjZ
 MD5 sum for the package is ec494022d2ab90cf4b855f4e96f38e68

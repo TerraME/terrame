@@ -20,6 +20,9 @@ File 'Desmatamento_2000.tif' is already documented in 'data.lua'
 File 'Desmatamento_2000.xml' is already documented in 'data.lua'
 File 'elevation.tif' is already documented in 'data.lua'
 File 'elevation.xml' is already documented in 'data.lua'
+File 'elevation_box.dbf' does not need to be documented
+File 'elevation_box.shp' is already documented in 'data.lua'
+File 'elevation_box.shx' does not need to be documented
 File 'firebreak_lin.dbf' does not need to be documented
 File 'firebreak_lin.prj' does not need to be documented
 File 'firebreak_lin.shp' is already documented in 'data.lua'
@@ -91,12 +94,13 @@ File 'Setores_Censitarios_2000_pol.shx' does not need to be documented
 File 'Setores_Censitarios_2000_props.txt' is already documented in 'data.lua'
 File 'TI_AMZ_pol.dbf' does not need to be documented
 File 'TI_AMZ_pol.prj' does not need to be documented
+File 'TI_AMZ_pol.shp' is already documented in 'data.lua'
 File 'TI_AMZ_pol.shx' does not need to be documented
 File 'YgDbLUDrqQbvu7QxTYxX.xml' is already documented in 'data.lua'
 Verifying font files
 Package 'terralib' does not have a font directory
 
-Sketch report:
+Sketch report for package 'terralib':
 No new test file was necessary.
 All data is already documented.
 All font files are already documented.

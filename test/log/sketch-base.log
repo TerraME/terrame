@@ -47,7 +47,7 @@ File 'Pet Animals.txt' will be ignored
 File 'Ubuntu-L.ttf' is already documented in 'font.lua'
 File 'Ubuntu-L.txt' will be ignored
 
-Sketch report:
+Sketch report for package 'base':
 No new test file was necessary.
 All data is already documented.
 All font files are already documented.

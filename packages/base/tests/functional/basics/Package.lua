@@ -58,7 +58,7 @@ return{
 		local r = packageInfo()
 
 		unitTest:assertEquals(r.version, "2.0.0")
-		unitTest:assertEquals(r.date, "24 March 2015")
+		unitTest:assertEquals(r.date, "25 May 2016")
 		unitTest:assertEquals(r.package, "base")
 		unitTest:assertEquals(r.url, "http://www.terrame.org")
 	end

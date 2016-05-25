@@ -162,9 +162,9 @@ are different.
 Checking logs
 File 'log/mac/chart_cell2.bmp' was not used by any assert.
 
-Unit test report:
-Tests were executed in 14.18 seconds.
-Logs were saved in '.terrametmp_nEz8h'.
+Functional test report for package 'onerror':
+Tests were executed in 21.15 seconds.
+Logs were saved in '.terrametmp_WxggN'.
 One print() call was found when loading the package.
 One variable is overwritten when loading the package.
 One invalid file or directory was found in directory 'test'.

@@ -169,8 +169,8 @@ Function forEachNeighbor2 is not documented
 Function forEachSocialNetwork2 is not documented
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 1.83 seconds.
+Documentation report for package 'twoerrors':
+Documentation was built in 10.89 seconds.
 6 HTML files were created.
 All files are documented.
 2 problems were found in 'description.lua'.

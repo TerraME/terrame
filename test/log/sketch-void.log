@@ -5,7 +5,7 @@ Package 'nolua' does not have a data directory
 Verifying font files
 Package 'nolua' does not have a font directory
 
-Sketch report:
+Sketch report for package 'nolua':
 No new test file was necessary.
 All data is already documented.
 All font files are already documented.

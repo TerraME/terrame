@@ -34,8 +34,8 @@ Checking if all functions are documented
 Checking foo.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 0.15 seconds.
+Documentation report for package 'nofontdotlua':
+Documentation was built in 1.31 seconds.
 4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
