@@ -243,6 +243,7 @@ local function releaseProject(project)
 
 		collectgarbage("collect")
 	end
+    binding.te.da.DataSourceManager.getInstance():detachAll()
 end
 
 local function decodeDataSourceInfo(dsInfo)
