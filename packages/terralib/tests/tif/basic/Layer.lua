@@ -353,9 +353,6 @@ return {
 
 		unitTest:assertSnapshot(map, "tiff-std.png")
 
-		local tl = TerraLib()
-		tl:finalize()
-
 		forEachElement(shapes, function(_, value)
 			rmFile(value)
 		end)
