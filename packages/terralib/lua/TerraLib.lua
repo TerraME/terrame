@@ -799,6 +799,10 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 		propCreatedName = string.lower(propCreatedName)
 	end	
 	
+	outDs:close()
+	outDs = nil
+	collectgarbage("collect")
+	
 	return propCreatedName
 end
 
@@ -1678,6 +1682,7 @@ TerraLib_ = {
 		local numProps = dSet:getNumProperties()
 		local set = createDataSetAdapted(dSet)
 		
+		ds:close()
 		ds = nil
 		dSet = nil
 		collectgarbage("collect")
