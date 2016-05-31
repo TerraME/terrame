@@ -37,11 +37,9 @@ local project = Project{
 	altimetria = filePath("elevation.tif", "terralib") -- se usar "altimetria.tif" da erro
 }
 
-if isFile("mycells.shp")     then rmFile("mycells.shp")     end
-if isFile("mycells-avg.shp") then rmFile("mycells-avg.shp") end
-
 cl = Layer{
 	project = project,
+	clean = true,
 	file = "mycells.shp",
 	input = "box",
 	name = "cells",
@@ -51,6 +49,7 @@ cl = Layer{
 cl:fill{
 	operation = "average",
 	select = 0,
+	clean = true,
 	layer = "altimetria",
 	output = "mycells-avg",
 	attribute = "height"

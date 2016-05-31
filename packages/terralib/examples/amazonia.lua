@@ -44,13 +44,10 @@ local project = Project{
 	limite = filePath("limitePA_polyc_pol.shp", "terralib")-- LIMITE_AMZ_pol.shp", "terralib")
 }
 
-cellsFile = "amazonia.shp"
-
-if isFile(cellsFile) then rmFile(cellsFile) end
-
 cl = Layer{
 	project = project,
-	file = cellsFile,
+	file = "amazonia.shp",
+	clean = true,
 	input = "limite",
 	name = "cells",
 	resolution = 40000
@@ -90,6 +87,7 @@ cl:fill{
 	output = "amazonia-dist4"
 }
 
+--[[
 cl:fill{
 	operation = "average",
 	layer = "prodes",
@@ -98,10 +96,11 @@ cl:fill{
 	attribute = "mheight",
 	output = "amazonia-height"
 }
+--]]
 
 cs = CellularSpace{
 	project = project,
-	layer = "amazonia-height"
+	layer = "amazonia-dist4"
 }
 
 Map{
@@ -132,6 +131,7 @@ Map{
 }
 --]]
 
+--[[
 Map{
 	target = cs,
 	select = "mheight",
@@ -139,9 +139,5 @@ Map{
 	invert = true,
 	color = "YlGn"
 }
-
-
-if isFile(projName) then
-	rmFile(projName)
-end
+--]]
 
