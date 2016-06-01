@@ -48,7 +48,6 @@ cl = Layer{
 
 cl:fill{
 	operation = "average",
-	select = 0,
 	clean = true,
 	layer = "altimetria",
 	output = "mycells-avg",

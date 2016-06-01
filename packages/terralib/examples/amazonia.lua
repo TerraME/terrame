@@ -41,7 +41,7 @@ local project = Project{
 	roads = filePath("RODOVIAS_AMZ_lin.shp", "terralib"),
 	protected = filePath("TI_AMZ_pol.shp", "terralib"),
 	prodes = filePath("PRODES_5KM.tif", "terralib"),
-	limite = filePath("limitePA_polyc_pol.shp", "terralib")-- LIMITE_AMZ_pol.shp", "terralib")
+	limite = filePath("LIMITE_AMZ_pol.shp", "terralib")
 }
 
 cl = Layer{
@@ -79,6 +79,7 @@ cl:fill{
 }
 --]]
 
+--[[ -- this example is not working properly. it aborts terrame
 cl:fill{
 	operation = "coverage",
 	layer = "prodes",
@@ -100,7 +101,7 @@ cl:fill{
 
 cs = CellularSpace{
 	project = project,
-	layer = "amazonia-dist4"
+	layer = "amazonia-dist2"
 }
 
 Map{

@@ -109,7 +109,7 @@ terralib:dropPgTable(pgData)
 
 cl:fill{
 	operation = "distance",
-	name = points,
+	layer = points,
 	attribute = "distpoints",
 	output = distLayer
 }
@@ -130,7 +130,7 @@ terralib:dropPgTable(pgData)
 
 cl:fill{
 	operation = "sum",
-	name = polygons,
+	layer = polygons,
 	attribute = "sum_population",
 	select = "Populacao",
 	output = sumLayer,
@@ -165,7 +165,6 @@ cl:fill{
 	layer = tif,
 	attribute = "raverage",
 	output = rasterLayer,
-	select = 0
 }
 
 -- USED ONLY TO TEST
@@ -187,6 +186,4 @@ terralib:dropPgTable(pgData)
 if isFile(projName) then
 	rmFile(projName)
 end
-
-terralib:finalize()
 
