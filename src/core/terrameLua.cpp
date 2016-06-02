@@ -301,6 +301,13 @@ int main(int argc, char *argv[])
 	TME_VERSION = "2.0";
 	TME_PATH = "TME_PATH";
 
+#ifdef WIN32
+	std::string p(getenv("TME_PATH"));
+	p.append(";");
+	p.append(getenv("PATH"));
+	_putenv_s("PATH", p.c_str());
+#endif
+
 	app = new QApplication(argc, argv); // #79
 	//app.setQuitOnLastWindowClosed(true);
 
