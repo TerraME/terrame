@@ -1,0 +1,572 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+	    
+			<title>terralib</title>
+		
+	    <link rel="stylesheet" href="../luadoc.css" type="text/css" />
+		<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="product">
+				<div id="product_logo">
+					<a href="http://www.terrame.org">
+					<img src='../img/terrame.png'/><br/></div></a>
+				<div id="product_name"><big><b></b></big></div>
+				<div id="product_description"></div>
+			</div> <!-- id="product" -->
+
+			<div id="main">
+				<div id="navigation">
+					<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<h1>terralib</h1>
+<ul>
+	
+		<li><a href="../index.html">Index</a></li>
+	
+</ul>
+
+<!-- Module list -->
+
+
+<!-- Models list -->
+
+	
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+	
+
+
+<!-- Types list -->
+
+	
+	
+		
+			
+		
+	
+		
+			
+		
+	
+		
+			
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+	
+		<h1>Types</h1>
+	
+
+	<ul>
+		
+					<li>
+						<a href="../files/Layer.html">Layer</a>
+					</li>
+				
+			
+		
+					<li>
+						<a href="../files/Project.html">Project</a>
+					</li>
+				
+			
+		
+					<li>
+						<a href="../files/TerraLib.html">TerraLib</a>
+					</li>
+				
+			
+		
+		
+		
+		
+		
+		
+		
+	</ul>
+
+
+<!-- Files list -->
+
+	
+	
+		
+	
+		
+	
+		
+	
+		
+			
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+	
+		<h1>Functions</h1>
+	
+
+	<ul>
+		
+		
+		
+		
+					<li><strong>Utils</strong></li>
+				
+			
+		
+		
+		
+		
+		
+		
+	</ul>
+
+
+<!-- Examples -->
+
+	
+		<h1><a href="../files/examples.html">Examples</a></h1>
+	
+
+
+
+<!-- Data -->
+
+	
+		<h1><a href="../files/data.html">Data</a></h1>
+	
+
+
+
+<!-- Font -->
+
+
+
+				</div> <!-- id="navigation" -->
+
+				<div id="content">
+					<h1>Utils
+					
+					
+					</h1>
+
+					
+						<span class="description">Some basic and useful functions to handle file names.</span>
+					
+					
+					
+					
+
+					
+						
+
+						
+							<h2 class="function_list">Functions</h2>
+							<table class="function_list">
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getFileDir">getFileDir</a>&nbsp;
+<td class="summary">Return the directory of a file given its path.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getFileExtension">getFileExtension</a>&nbsp;
+<td class="summary">Return the file extension from a fiven file path.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getFileName">getFileName</a>&nbsp;
+<td class="summary">Return the file name removing its path and extension.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getFileNameWithExtension">getFileNameWithExtension</a>&nbsp;
+<td class="summary">Return the file name removing its path.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getFilePathAndNameAndExtension">getFilePathAndNameAndExtension</a>&nbsp;
+<td class="summary">Split the path, file name, and extension from a given string.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#removeFileExtension">removeFileExtension</a>&nbsp;
+<td class="summary">Return the file name removing its extension.</td>
+									</tr>
+								
+							
+						
+						</table>
+					
+
+					
+
+					<!--<br/>
+					<br/>-->
+
+					
+						
+						<dl class="function">
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getFileDir">
+
+	</a><strong>getFileDir</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the directory of a file given its path.</span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string with the file path.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+<span class="id">print</span>(<span class="function">getFileDir</span>(<span class="string">"/my/path/file.txt"</span>)) <span class="comment">-- "/my/path"</span></code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getFileExtension">
+
+	</a><strong>getFileExtension</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the file extension from a fiven file path.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string with the file with extension.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+<span class="id">print</span>(<span class="function">getFileExtension</span>(<span class="string">"/my/path/file.txt"</span>)) <span class="comment">-- "txt"</span></code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getFileName">
+
+	</a><strong>getFileName</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the file name removing its path and extension.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string with the file path.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+<span class="id">print</span>(<span class="function">getFileName</span>(<span class="string">"/my/path/file.txt"</span>)) <span class="comment">-- "file"</span></code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getFileNameWithExtension">
+
+	</a><strong>getFileNameWithExtension</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the file name removing its path.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string with the file with the path.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+<span class="id">print</span>(<span class="function">getFileNameWithExtension</span>(<span class="string">"/my/path/file.txt"</span>)) <span class="comment">-- "file.txt"</span></code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getFilePathAndNameAndExtension">
+
+	</a><strong>getFilePathAndNameAndExtension</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Split the path, file name, and extension from a given string.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string with the file path.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+<span class="id">print</span>(<span class="function">getFilePathAndNameAndExtension</span>(<span class="string">"/my/path/file.txt"</span>)) <span class="comment">-- "/my/path/", "file", "txt"</span></code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="removeFileExtension">
+
+	</a><strong>removeFileExtension</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the file name removing its extension.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string with the file with extension.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+<span class="id">print</span>(<span class="function">removeFileExtension</span>(<span class="string">"file.txt"</span>)) <span class="comment">-- "file"</span></code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+						</dl>
+					
+
+					
+
+				</div> <!-- id="content" -->
+			</div> <!-- id="main" -->
+
+			<div id="about">
+				<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" /></a></p>
+			</div> <!-- id="about" -->
+
+		</div> <!-- id="container" -->	
+	</body>
+</html>
+

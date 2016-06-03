@@ -1,0 +1,1178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+	    
+			<title>terralib</title>
+		
+	    <link rel="stylesheet" href="../luadoc.css" type="text/css" />
+		<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="product">
+				<div id="product_logo">
+					<a href="http://www.terrame.org">
+					<img src='../img/terrame.png'/><br/></div></a>
+				<div id="product_name"><big><b></b></big></div>
+				<div id="product_description"></div>
+			</div> <!-- id="product" -->
+
+			<div id="main">
+				<div id="navigation">
+					<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<h1>terralib</h1>
+<ul>
+	
+		<li><a href="../index.html">Index</a></li>
+	
+</ul>
+
+<!-- Module list -->
+
+
+<!-- Models list -->
+
+	
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+	
+
+
+<!-- Types list -->
+
+	
+	
+		
+			
+		
+	
+		
+			
+		
+	
+		
+			
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+	
+		<h1>Types</h1>
+	
+
+	<ul>
+		
+					<li><strong>Layer</strong></li>
+				
+			
+		
+					<li>
+						<a href="../files/Project.html">Project</a>
+					</li>
+				
+			
+		
+					<li>
+						<a href="../files/TerraLib.html">TerraLib</a>
+					</li>
+				
+			
+		
+		
+		
+		
+		
+		
+		
+	</ul>
+
+
+<!-- Files list -->
+
+	
+	
+		
+	
+		
+	
+		
+	
+		
+			
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+	
+		<h1>Functions</h1>
+	
+
+	<ul>
+		
+		
+		
+		
+					<li>
+						<a href="../files/Utils.html">Utils</a>
+					</li>
+				
+			
+		
+		
+		
+		
+		
+		
+	</ul>
+
+
+<!-- Examples -->
+
+	
+		<h1><a href="../files/examples.html">Examples</a></h1>
+	
+
+
+
+<!-- Data -->
+
+	
+		<h1><a href="../files/data.html">Data</a></h1>
+	
+
+
+
+<!-- Font -->
+
+
+
+				</div> <!-- id="navigation" -->
+
+				<div id="content">
+					<h1>Layer
+					
+					
+					</h1>
+
+					
+						<span class="description"></span>
+					
+					
+					
+					
+
+					
+						
+						<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+<span class="description">
+
+A Layer of cells that belongs to a <a href=../files/Project.html>Project</a>. It has operations to create new attributes from other Layers. The data of the Layer can be stored in several different sources, such as a database, a file, or even a web service.</span>
+
+
+	
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>box</strong>: A boolean value indicating whether the cellular Layer will fill the box from the input layer (true) or only the minimal set of cells that cover all the input data (false, default).
+    </li> 
+    
+  
+    <li>
+	  <strong>clean</strong>: A boolean value indicating whether the argument file should be cleaned if it needs to create the file.
+    </li> 
+    
+  
+    <li>
+	  <strong>file</strong>: A string with the location of the file to be loaded or created.
+    </li> 
+    
+  
+    <li>
+	  <strong>host</strong>: String with the host where the database is stored. The default value is "localhost".
+    </li> 
+    
+  
+    <li>
+	  <strong>input</strong>: TODO: verify.
+    </li> 
+    
+  
+    <li>
+	  <strong>name</strong>: A string with the layer name to be used.
+    </li> 
+    
+  
+    <li>
+	  <strong>password</strong>: A string with the password.
+    </li> 
+    
+  
+    <li>
+	  <strong>port</strong>: Number with the port of the connection. The default value is the standard port of the DBMS. For example, MySQL uses 3306 as standard port.
+    </li> 
+    
+  
+    <li>
+	  <strong>project</strong>: A file name with the TerraView project to be used, or a Project.
+    </li> 
+    
+  
+    <li>
+	  <strong>resolution</strong>: A number with the x and y resolution. It will need to be measured in the same projection of the input layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>source</strong>: A string with the data source. See table below:
+    </li> 
+    
+      </span>
+      <!-- Strategy of the argument -->
+       
+      <table class="arg_tab">
+	  
+      
+        <tr>
+        
+          
+            <th>
+            Source
+            </th>
+          
+          
+            <th>
+            Description
+            </th>
+          
+          
+            <th>
+            Mandatory arguments
+            </th>
+          
+          
+            <th>
+            Optional arguments
+            </th>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "none"
+            </td>
+          
+          
+            <td>
+            Tries to open a Layer already stored in the Project
+            </td>
+          
+          
+            <td>
+            name, project
+            </td>
+          
+          
+            <td>
+            
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "postgis"
+            </td>
+          
+          
+            <td>
+            Create a Layer to connect to a PostGIS database.
+            </td>
+          
+          
+            <td>
+            name, password
+            </td>
+          
+          
+            <td>
+            host, port, user
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "shp"
+            </td>
+          
+          
+            <td>
+            Create a Layer to work with an ESRI shapefile.
+            </td>
+          
+          
+            <td>
+            file, name
+            </td>
+          
+          
+            <td>
+            clean
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "webservice"
+            </td>
+          
+          
+            <td>
+            Create a Layer to connect to a web service.
+            </td>
+          
+          
+            <td>
+            host, name
+            </td>
+          
+          
+            <td>
+            
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "cell"
+            </td>
+          
+          
+            <td>
+            Create a cellular Layer. It has a raster-like representation of space with several attributes created from different spatial representations. Cellular Layers homogeneize the spatial representation of a given model, making the model simpler and requiring less computational resources. It can be stored in "postgis" or "shp".
+            </td>
+          
+          
+            <td>
+            input, resolution
+            </td>
+          
+          
+            <td>
+            box, file, host, name, port, user
+            </td>
+          
+        
+        </tr>    
+      </table>
+      <span class="arg">
+    
+  
+    <li>
+	  <strong>user</strong>: String with the username. The default value is "".
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+
+<span class="id">proj</span> = <span class="function">Project</span>{
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>
+}
+
+<span class="function">Layer</span>{
+    <span class="id">project</span> = <span class="id">proj</span>,
+    <span class="id">layer</span> = <span class="string">"roads"</span>,
+    <span class="id">user</span> = <span class="string">"root"</span>,
+    <span class="id">password</span> = <span class="string">"abc123"</span>,
+    <span class="id">table</span> = <span class="string">"roads"</span>
+}
+
+<span class="id">cl</span> = <span class="function">Layer</span>{
+    <span class="id">project</span> = <span class="id">filePath</span>(<span class="string">"rondonia.tview"</span>, <span class="string">"terralib"</span>),
+    <span class="id">name</span> = <span class="string">"cells"</span>
+}
+
+<span class="id">cl2</span> = <span class="function">Layer</span>{
+    <span class="id">project</span> = <span class="id">proj</span>,
+    <span class="id">input</span> = <span class="string">"amazonia-states"</span>,
+    <span class="id">layer</span> = <span class="string">"cells"</span>,
+    <span class="id">resolution</span> = <span class="number">5e</span><span class="number">4</span> <span class="comment">-- 50x50km</span>
+}</code></pre>
+
+
+
+
+</dd>
+
+
+						
+						
+
+						
+							<h2 class="function_list">Functions</h2>
+							<table class="function_list">
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#bands">bands</a>&nbsp;
+<td class="summary">Return the number of bands of a raster layer.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#fill">fill</a>&nbsp;
+<td class="summary">Create a new attribute for each cell of a Layer.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#representation">representation</a>&nbsp;
+<td class="summary">Return a string with the representation of the layer.</td>
+									</tr>
+								
+							
+						
+						</table>
+					
+
+					
+
+					<!--<br/>
+					<br/>-->
+
+					
+						
+						<dl class="function">
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="bands">
+
+	</a><strong>bands</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the number of bands of a raster layer. If the layer does not have a raster representation then it will stop with an error. The bands of the raster layer are named from zero to the number of bands minus one.</span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">print</span>(<span class="id">layer</span>:<span class="function">bands</span>())</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="fill">
+
+	</a><strong>fill</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Create a new attribute for each cell of a Layer. This attribute can be stored as a new column of a table or a new file, according to where the Layer is stored. There are several strategies for filling cells according to the geometry of the input layer.<br><br></span>
+
+
+	
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>area</strong>: Whether the calculation will be based on the intersection area (true), or the weights are equal for each object with some overlap (false, default value).
+    </li> 
+    
+  
+    <li>
+	  <strong>attribute</strong>: The name of the new attribute to be created.
+    </li> 
+    
+  
+    <li>
+	  <strong>band</strong>: An integer value representing the band of the raster to be used. The default value is one.
+    </li> 
+    
+  
+    <li>
+	  <strong>clean</strong>: A boolean value indicating whether the argument output should be cleaned if it needs to create the file.
+    </li> 
+    
+  
+    <li>
+	  <strong>default</strong>: A value that will be used to fill a cell whose attribute cannot be computed. For example, when there is no intersection area. Note that this argument is related to the output.
+    </li> 
+    
+  
+    <li>
+	  <strong>dummy</strong>: A value that will ignored when computing the operation, used only for raster strategies. Note that this argument is related to the input.
+    </li> 
+    
+  
+    <li>
+	  <strong>layer</strong>: Name of an input layer belonging to the same <a href=../files/Project.html>Project</a>. There are several strategies available, depending on the geometry of the layer. See below:
+    </li> 
+    
+      </span>
+      <!-- Strategy of the argument -->
+       
+      <table class="arg_tab">
+	  
+      
+        <tr>
+        
+          
+            <th>
+            Geometry
+            </th>
+          
+          
+            <th>
+            Using only geometry
+            </th>
+          
+          
+            <th>
+            Using attribute of objects with some overlap
+            </th>
+          
+          
+            <th>
+            Using geometry and attribute
+            </th>
+          
+        
+        <tr>
+        
+          
+            <td>
+            Points
+            </td>
+          
+          
+            <td>
+            "count", "distance", "presence"
+            </td>
+          
+          
+            <td>
+            "average", "mode", "maximum", "minimum", "stdev", "sum"
+            </td>
+          
+          
+            <td>
+            "nearest"
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            Lines
+            </td>
+          
+          
+            <td>
+            "count", "distance", "length", "presence"
+            </td>
+          
+          
+            <td>
+            "average", "mode", "maximum", "minimum", "stdev", "sum"
+            </td>
+          
+          
+            <td>
+            "nearest"
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            Polygons
+            </td>
+          
+          
+            <td>
+            "area", "count", "distance", "presence"
+            </td>
+          
+          
+            <td>
+            "average", "mode", "maximum", "minimum", "stdev", "sum"
+            </td>
+          
+          
+            <td>
+            "average", "mode", "coverage", "nearest", "sum"
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            Raster
+            </td>
+          
+          
+            <td>
+            (none)
+            </td>
+          
+          
+            <td>
+            "average", "mode", "maximum", "minimum", "coverage", "stdev", "sum"
+            </td>
+          
+          
+            <td>
+            (none)
+            </td>
+          
+        
+        </tr>    
+      </table>
+      <span class="arg">
+    
+  
+    <li>
+	  <strong>operation</strong>: The way to compute the attribute of each cell. See the table below:
+    </li> 
+    
+      </span>
+      <!-- Strategy of the argument -->
+       
+      <table class="arg_tab">
+	  
+      
+        <tr>
+        
+          
+            <th>
+            Operation
+            </th>
+          
+          
+            <th>
+            Description
+            </th>
+          
+          
+            <th>
+            Mandatory arguments
+            </th>
+          
+          
+            <th>
+            Optional arguments
+            </th>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "area"
+            </td>
+          
+          
+            <td>
+            Total overlay area between the cell and a layer of polygons. The created values will range from zero to one, indicating its area of coverage.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output
+            </td>
+          
+          
+            <td>
+            clean
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "average"
+            </td>
+          
+          
+            <td>
+            Average of quantitative values from the objects that have some intersection with the cell, without taking into account their geometric properties. When using argument area, it computes the average weighted by the proportions of the respective intersection areas. Useful to distribute atributes that represent averages, such as per capita income.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output, select
+            </td>
+          
+          
+            <td>
+            area, band, clean, default, dummy
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "count"
+            </td>
+          
+          
+            <td>
+            Number of objects that have some overlay with the cell.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output
+            </td>
+          
+          
+            <td>
+            clean
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "distance"
+            </td>
+          
+          
+            <td>
+            Distance to the nearest object. The distance is computed from the centroid of the cell to the closest point, line, or border of a polygon.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output
+            </td>
+          
+          
+            <td>
+            clean
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "length"
+            </td>
+          
+          
+            <td>
+            Total length of overlay between the cell and a layer of lines. If there is more than one line, it sums all lengths.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output
+            </td>
+          
+          
+            <td>
+            clean
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "mode"
+            </td>
+          
+          
+            <td>
+            More common qualitative value from the objects that have some intersection with the cell, without taking into account their geometric properties. This operation converts the output to string. Whenever there are two or more values with the same count, the resulting value will contain all them separated by comma. When using argument area, it uses the value of the object that has larger coverage.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output, select
+            </td>
+          
+          
+            <td>
+            band, clean, default, dummy
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "maximum"
+            </td>
+          
+          
+            <td>
+            Maximum quantitative value among the objects that have some intersection with the cell, without taking into account their geometric properties.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output, select
+            </td>
+          
+          
+            <td>
+            band, clean, default, dummy
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "minimum"
+            </td>
+          
+          
+            <td>
+            Minimum quantitative value among the objects that have some intersection with the cell, without taking into account their geometric properties.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output, select
+            </td>
+          
+          
+            <td>
+            band, clean, default, dummy
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "coverage"
+            </td>
+          
+          
+            <td>
+            Percentage of each qualitative value covering the cell, using polygons or raster data. It creates one new attribute for each available value, in the form attribute.."_"..value, where attribute is the value passed as argument to fill and value represent the different values in the input data. The sum of the created attribute values for a given cell will range from zero to one hundred, according to the coverage of the cell. When using shapefiles, keep in mind the total limit of ten characters, as it removes the characters after the tenth in the name. This function will stop with an error if two attribute names in the output are the same.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output, select
+            </td>
+          
+          
+            <td>
+            band, clean, default, dummy
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "presence"
+            </td>
+          
+          
+            <td>
+            Boolean value pointing out whether some object has an overlay with the cell.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output
+            </td>
+          
+          
+            <td>
+            clean
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "stdev"
+            </td>
+          
+          
+            <td>
+            Standard deviation of quantitative values from objects that have some intersection with the cell, without taking into account their geometric properties.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output, select
+            </td>
+          
+          
+            <td>
+            clean, default, dummy
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "sum"
+            </td>
+          
+          
+            <td>
+            Sum of quantitative values from objects that have some intersection with the cell, without taking into account their geometric properties. When using argument area, it computes the sum based on the proportions of intersection area. Useful to preserve the total sum in both layers, such as population size.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output, select
+            </td>
+          
+          
+            <td>
+            area, clean, default, dummy
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "nearest"
+            </td>
+          
+          
+            <td>
+            The value (quantitative or qualitative) of the nearest object.
+            </td>
+          
+          
+            <td>
+            attribute, layer, output, select
+            </td>
+          
+          
+            <td>
+            area, clean
+            </td>
+          
+        
+        </tr>    
+      </table>
+      <span class="arg">
+    
+  
+    <li>
+	  <strong>output</strong>: Where the output will be saved. The current version of <a href=../files/TerraLib.html>TerraLib</a> requires that the output of fill will be in another layer of information. We are currently working with a way to save the output in the same input layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>select</strong>: Name of an attribute from the input data. It is only required when the selected operation needs a value associated to the geometry (average, sum, mode). When using a raster data as input, use argument band instead.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+
+<span class="id">cl</span> = <span class="function">Layer</span>{
+    <span class="id">project</span> = <span class="id">file</span>(<span class="string">"rondonia.tview"</span>),
+    <span class="id">layer</span> = <span class="string">"cells"</span>
+}
+
+<span class="id">cl</span>:<span class="function">fill</span>{
+    <span class="id">attribute</span> = <span class="string">"distRoads"</span>,
+    <span class="id">operation</span> = <span class="string">"distance"</span>,
+    <span class="id">layer</span> = <span class="string">"roads"</span>
+}
+
+<span class="id">cl</span>:<span class="function">fill</span>{
+    <span class="id">attribute</span> = <span class="string">"population"</span>,
+    <span class="id">layer</span> = <span class="string">"population"</span>,
+    <span class="id">operation</span> = <span class="string">"sum"</span>,
+    <span class="id">area</span> = <span class="reserved">true</span>
+}
+
+<span class="id">cl</span>:<span class="function">fill</span>{
+    <span class="id">attribute</span> = <span class="string">"area2010_"</span>,
+    <span class="id">operation</span> = <span class="string">"coverage"</span>,
+    <span class="id">layer</span> = <span class="string">"cover"</span>,
+    <span class="id">select</span> = <span class="string">"cover2010"</span>
+}</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="representation">
+
+	</a><strong>representation</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return a string with the representation of the layer. It can be "point", "polygon", "line", or "raster".<br><br></span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">print</span>(<span class="id">layer</span>:<span class="function">representation</span>())</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+						</dl>
+					
+
+					
+
+				</div> <!-- id="content" -->
+			</div> <!-- id="main" -->
+
+			<div id="about">
+				<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" /></a></p>
+			</div> <!-- id="about" -->
+
+		</div> <!-- id="container" -->	
+	</body>
+</html>
+

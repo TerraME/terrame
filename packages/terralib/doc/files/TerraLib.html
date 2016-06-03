@@ -1,0 +1,1582 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+	    
+			<title>terralib</title>
+		
+	    <link rel="stylesheet" href="../luadoc.css" type="text/css" />
+		<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="product">
+				<div id="product_logo">
+					<a href="http://www.terrame.org">
+					<img src='../img/terrame.png'/><br/></div></a>
+				<div id="product_name"><big><b></b></big></div>
+				<div id="product_description"></div>
+			</div> <!-- id="product" -->
+
+			<div id="main">
+				<div id="navigation">
+					<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<h1>terralib</h1>
+<ul>
+	
+		<li><a href="../index.html">Index</a></li>
+	
+</ul>
+
+<!-- Module list -->
+
+
+<!-- Models list -->
+
+	
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+	
+
+
+<!-- Types list -->
+
+	
+	
+		
+			
+		
+	
+		
+			
+		
+	
+		
+			
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+	
+		<h1>Types</h1>
+	
+
+	<ul>
+		
+					<li>
+						<a href="../files/Layer.html">Layer</a>
+					</li>
+				
+			
+		
+					<li>
+						<a href="../files/Project.html">Project</a>
+					</li>
+				
+			
+		
+					<li><strong>TerraLib</strong></li>
+				
+			
+		
+		
+		
+		
+		
+		
+		
+	</ul>
+
+
+<!-- Files list -->
+
+	
+	
+		
+	
+		
+	
+		
+	
+		
+			
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+	
+		<h1>Functions</h1>
+	
+
+	<ul>
+		
+		
+		
+		
+					<li>
+						<a href="../files/Utils.html">Utils</a>
+					</li>
+				
+			
+		
+		
+		
+		
+		
+		
+	</ul>
+
+
+<!-- Examples -->
+
+	
+		<h1><a href="../files/examples.html">Examples</a></h1>
+	
+
+
+
+<!-- Data -->
+
+	
+		<h1><a href="../files/data.html">Data</a></h1>
+	
+
+
+
+<!-- Font -->
+
+
+
+				</div> <!-- id="navigation" -->
+
+				<div id="content">
+					<h1>TerraLib
+					
+					
+					</h1>
+
+					
+						<span class="description"></span>
+					
+					
+					
+					
+
+					
+						
+						<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+<span class="description">
+
+Type to access TerraLib. It contains very basic and low level functions that are used by the other types of the package. If needed, these functions should be used with care. Such functions mught stop with very strange errors because they do not check any errors in their arguments.</span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">TerraLib</span>()</code></pre>
+
+
+
+
+</dd>
+
+
+						
+						
+
+						
+							<h2 class="function_list">Functions</h2>
+							<table class="function_list">
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#addPgCellSpaceLayer">addPgCellSpaceLayer</a>&nbsp;
+<td class="summary">Add a new cellular layer to a PostgreSQL connection.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#addPgLayer">addPgLayer</a>&nbsp;
+<td class="summary">Add a new PostgreSQL layer to a given project.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#addShpCellSpaceLayer">addShpCellSpaceLayer</a>&nbsp;
+<td class="summary">Create a new cellular layer into a shapefile.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#addShpLayer">addShpLayer</a>&nbsp;
+<td class="summary">Add a shapefile layer to a given project.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#addTifLayer">addTifLayer</a>&nbsp;
+<td class="summary">Add a new tiff layer to a given project.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#attributeFill">attributeFill</a>&nbsp;
+<td class="summary">Fill a given attribute in a layer.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#copyLayer">copyLayer</a>&nbsp;
+<td class="summary">Copy a given layer to another.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#createProject">createProject</a>&nbsp;
+<td class="summary">Create a new <a href=files/Project.html>Project</a>.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#dropPgDatabase">dropPgDatabase</a>&nbsp;
+<td class="summary">Remove a PostreSQL database.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#dropPgTable">dropPgTable</a>&nbsp;
+<td class="summary">Remove a PostreSQL table.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getDataSet">getDataSet</a>&nbsp;
+<td class="summary">Returns a given dataset from a layer.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getLayerInfo">getLayerInfo</a>&nbsp;
+<td class="summary">Return the information of a given layer.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getShpByFilePath">getShpByFilePath</a>&nbsp;
+<td class="summary">Return the content of a shapefile.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getVersion">getVersion</a>&nbsp;
+<td class="summary">Return the current TerraLib version.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#openProject">openProject</a>&nbsp;
+<td class="summary">Open a new project.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#saveDataSet">saveDataSet</a>&nbsp;
+<td class="summary">Save a given dataset.</td>
+									</tr>
+								
+							
+						
+						</table>
+					
+
+					
+
+					<!--<br/>
+					<br/>-->
+
+					
+						
+						<dl class="function">
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="addPgCellSpaceLayer">
+
+	</a><strong>addPgCellSpaceLayer</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Add a new cellular layer to a PostgreSQL connection.</span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: Name of the input layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: The name of the layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>#4</strong>: The size of a cell.
+    </li> 
+    
+  
+    <li>
+	  <strong>#5</strong>: The connection data, such as host, port, and user.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="reserved">local</span> <span class="id">proj</span> = {
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>,
+    <span class="id">title</span> = <span class="string">"TerraLib Tests"</span>,
+    <span class="id">author</span> = <span class="string">"Avancini Rodrigo"</span>
+}
+
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="id">proj</span>, {})
+
+<span class="reserved">local</span> <span class="id">layerName1</span> = <span class="string">"SampaShp"</span>
+<span class="reserved">local</span> <span class="id">layerFile1</span> = <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">tl</span>:<span class="id">addShpLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">layerFile1</span>)		
+
+<span class="reserved">local</span> <span class="id">pgData</span> = {
+    <span class="id">type</span> = <span class="string">"POSTGIS"</span>,
+    <span class="id">host</span> = <span class="string">"localhost"</span>,
+    <span class="id">port</span> = <span class="string">"5432"</span>,
+    <span class="id">user</span> = <span class="string">"postgres"</span>,
+    <span class="id">password</span> = <span class="string">"postgres"</span>,
+    <span class="id">database</span> = <span class="string">"terralib_save_test"</span>,
+    <span class="id">table</span> = <span class="string">"sampa_cells"</span>,
+    <span class="id">encoding</span> = <span class="string">"CP1252"</span>	
+}	
+
+<span class="reserved">local</span> <span class="id">clName1</span> = <span class="string">"SampaPgCells"</span>	
+<span class="reserved">local</span> <span class="id">resolution</span> = <span class="number">0.7</span>
+<span class="id">tl</span>:<span class="function">addPgCellSpaceLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">clName1</span>, <span class="id">resolution</span>, <span class="id">pgData</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="addPgLayer">
+
+	</a><strong>addPgLayer</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Add a new PostgreSQL layer to a given project.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>database</strong>: The database name.
+    </li> 
+    
+  
+    <li>
+	  <strong>encoding</strong>: The encoding of the table.
+    </li> 
+    
+  
+    <li>
+	  <strong>host</strong>: Name of the host.
+    </li> 
+    
+  
+    <li>
+	  <strong>name</strong>: The name of the layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>password</strong>: The password.
+    </li> 
+    
+  
+    <li>
+	  <strong>port</strong>: Port number.
+    </li> 
+    
+  
+    <li>
+	  <strong>project</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>user</strong>: The user name.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
+
+<span class="id">proj</span> = {
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>,
+    <span class="id">title</span> = <span class="string">"TerraLib Tests"</span>,
+    <span class="id">author</span> = <span class="string">"Avancini Rodrigo"</span>
+}
+
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="id">proj</span>, {})
+
+<span class="reserved">local</span> <span class="id">layerName1</span> = <span class="string">"SampaShp"</span>
+<span class="reserved">local</span> <span class="id">layerFile1</span> = <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">tl</span>:<span class="id">addShpLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">layerFile1</span>)		
+
+<span class="id">pgData</span> = {
+    <span class="id">type</span> = <span class="string">"POSTGIS"</span>,
+    <span class="id">host</span> = <span class="string">"localhost"</span>,
+    <span class="id">port</span> = <span class="string">"5432"</span>,
+    <span class="id">user</span> = <span class="string">"postgres"</span>,
+    <span class="id">password</span> = <span class="string">"postgres"</span>,
+    <span class="id">database</span> = <span class="string">"terralib_save_test"</span>,
+    <span class="id">table</span> = <span class="string">"sampa_cells"</span>,
+    <span class="id">encoding</span> = <span class="string">"CP1252"</span>	
+}	
+
+<span class="id">tl</span>:<span class="function">addPgLayer</span>(<span class="id">proj</span>, <span class="string">"SampaPg"</span>, <span class="id">pgData</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="addShpCellSpaceLayer">
+
+	</a><strong>addShpCellSpaceLayer</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Create a new cellular layer into a shapefile.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The name of the layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: The name of the layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>#4</strong>: The size of a cell.
+    </li> 
+    
+  
+    <li>
+	  <strong>#5</strong>: The path for the project.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
+<span class="id">proj</span> = {
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>,
+    <span class="id">title</span> = <span class="string">"TerraLib Tests"</span>,
+    <span class="id">author</span> = <span class="string">"Avancini Rodrigo"</span>
+}
+
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="id">proj</span>, {})
+
+<span class="id">layerName1</span> = <span class="string">"SampaShp"</span>
+<span class="id">layerFile1</span> = <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">tl</span>:<span class="id">addShpLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">layerFile1</span>)		
+
+<span class="id">tl</span>:<span class="function">addShpCellSpaceLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="string">"Sampa_Cells"</span>, <span class="number">0.7</span>, <span class="id">currentDir</span>())</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="addShpLayer">
+
+	</a><strong>addShpLayer</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Add a shapefile layer to a given project.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The name of the layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: The path for the project.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>()
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="string">"project.tview"</span>, {})
+<span class="id">tl</span>:<span class="function">addShpLayer</span>(<span class="id">proj</span>, <span class="string">"ShapeLayer"</span>, <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>))</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="addTifLayer">
+
+	</a><strong>addTifLayer</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Add a new tiff layer to a given project.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The name of the layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: The path for the project.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
+<span class="id">proj</span> = {
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>,
+    <span class="id">title</span> = <span class="string">"TerraLib Tests"</span>,
+    <span class="id">author</span> = <span class="string">"Avancini Rodrigo"</span>
+}
+
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="id">proj</span>, {})
+
+<span class="id">layerName</span> = <span class="string">"TifLayer"</span>
+<span class="id">layerFile</span> = <span class="id">filePath</span>(<span class="string">"cbers_rgb342_crop1.tif"</span>, <span class="string">"terralib"</span>)
+<span class="id">tl</span>:<span class="function">addTifLayer</span>(<span class="id">proj</span>, <span class="id">layerName</span>, <span class="id">layerFile</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="attributeFill">
+
+	</a><strong>attributeFill</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Fill a given attribute in a layer.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: Name of the input layer with the data where the operations will take place.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: Name of the reference layer with the elements to be copied to the output.
+    </li> 
+    
+  
+    <li>
+	  <strong>#4</strong>: Name of the layer to be created with the output.
+    </li> 
+    
+  
+    <li>
+	  <strong>#5</strong>: Name of the attribute to be created.
+    </li> 
+    
+  
+    <li>
+	  <strong>#6</strong>: Name of the operation.
+    </li> 
+    
+  
+    <li>
+	  <strong>#7</strong>: The attribute to be used in the operation.
+    </li> 
+    
+  
+    <li>
+	  <strong>#8</strong>: A boolean value indicating whether the area should be considered.
+    </li> 
+    
+  
+    <li>
+	  <strong>#9</strong>: The default value.
+    </li> 
+    
+  
+    <li>
+	  <strong>#10</strong>: A string with the spatial representation of data ("raster", "polygon", "point", or "line").
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
+<span class="id">proj</span> = {
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>,
+    <span class="id">title</span> = <span class="string">"TerraLib Tests"</span>,
+    <span class="id">author</span> = <span class="string">"Avancini Rodrigo"</span>
+}
+
+
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="id">proj</span>, {})
+
+<span class="id">layerName1</span> = <span class="string">"Para"</span>
+<span class="id">layerFile1</span> = <span class="id">filePath</span>(<span class="string">"limitePA_polyc_pol.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">tl</span>:<span class="id">addShpLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">layerFile1</span>)		
+
+<span class="id">resolution</span> = <span class="number">60e</span><span class="number">3</span>
+<span class="id">tl</span>:<span class="id">addShpCellSpaceLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">clName</span>, <span class="id">resolution</span>, <span class="id">filePath1</span>)
+
+<span class="id">clSet</span> = <span class="id">tl</span>:<span class="id">getDataSet</span>(<span class="id">proj</span>, <span class="id">clName</span>)
+
+<span class="id">layerName2</span> = <span class="string">"Protection_Unit"</span> 
+<span class="id">layerFile2</span> = <span class="id">filePath</span>(<span class="string">"BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">tl</span>:<span class="id">addShpLayer</span>(<span class="id">proj</span>, <span class="id">layerName2</span>, <span class="id">layerFile2</span>)
+
+<span class="id">tl</span>:<span class="function">attributeFill</span>(<span class="id">proj</span>, <span class="id">layerName2</span>, <span class="id">clName</span>, <span class="id">presLayerName</span>, <span class="string">"presence"</span>, <span class="string">"presence"</span>, <span class="string">"FID"</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="copyLayer">
+
+	</a><strong>copyLayer</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Copy a given layer to another.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The name input layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: The name of the output layer.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
+
+<span class="id">proj</span> = {
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>,
+    <span class="id">title</span> = <span class="string">"TerraLib Tests"</span>,
+    <span class="id">author</span> = <span class="string">"Avancini Rodrigo"</span>
+}
+
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="id">proj</span>, {})
+
+<span class="reserved">local</span> <span class="id">layerName1</span> = <span class="string">"SampaShp"</span>
+<span class="reserved">local</span> <span class="id">layerFile1</span> = <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">tl</span>:<span class="id">addShpLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">layerFile1</span>)		
+
+<span class="id">pgData</span> = {
+    <span class="id">type</span> = <span class="string">"POSTGIS"</span>,
+    <span class="id">host</span> = <span class="string">"localhost"</span>,
+    <span class="id">port</span> = <span class="string">"5432"</span>,
+    <span class="id">user</span> = <span class="string">"postgres"</span>,
+    <span class="id">password</span> = <span class="string">"postgres"</span>,
+    <span class="id">database</span> = <span class="string">"terralib_save_test"</span>,
+    <span class="id">table</span> = <span class="string">"sampa_cells"</span>,
+    <span class="id">encoding</span> = <span class="string">"CP1252"</span>	
+}	
+
+<span class="id">tl</span>:<span class="id">addPgLayer</span>(<span class="id">proj</span>, <span class="string">"SampaPg"</span>, <span class="id">pgData</span>)
+	
+<span class="id">tl</span>:<span class="function">copyLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">pgData</span>)	</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="createProject">
+
+	</a><strong>createProject</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Create a new <a href=../files/Project.html>Project</a>.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A table where the layers will be stored.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+<span class="id">tl</span> = <span class="function">TerraLib</span>{}
+
+<span class="id">proj</span> = {
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>,
+    <span class="id">title</span> = <span class="string">"TerraLib Tests"</span>,
+    <span class="id">author</span> = <span class="string">"Avancini Rodrigo"</span>
+}
+
+<span class="id">tl</span>:<span class="function">createProject</span>(<span class="id">proj</span>, {})</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="dropPgDatabase">
+
+	</a><strong>dropPgDatabase</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Remove a PostreSQL database.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>database</strong>: The database name.
+    </li> 
+    
+  
+    <li>
+	  <strong>host</strong>: Name of the host.
+    </li> 
+    
+  
+    <li>
+	  <strong>password</strong>: The password.
+    </li> 
+    
+  
+    <li>
+	  <strong>port</strong>: Port number.
+    </li> 
+    
+  
+    <li>
+	  <strong>user</strong>: The user name.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
+
+<span class="id">proj</span> = {
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>,
+    <span class="id">title</span> = <span class="string">"TerraLib Tests"</span>,
+    <span class="id">author</span> = <span class="string">"Avancini Rodrigo"</span>
+}
+
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="id">proj</span>, {})
+
+<span class="reserved">local</span> <span class="id">layerName1</span> = <span class="string">"SampaShp"</span>
+<span class="reserved">local</span> <span class="id">layerFile1</span> = <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">tl</span>:<span class="id">addShpLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">layerFile1</span>)		
+
+<span class="id">pgData</span> = {
+    <span class="id">type</span> = <span class="string">"POSTGIS"</span>,
+    <span class="id">host</span> = <span class="string">"localhost"</span>,
+    <span class="id">port</span> = <span class="string">"5432"</span>,
+    <span class="id">user</span> = <span class="string">"postgres"</span>,
+    <span class="id">password</span> = <span class="string">"postgres"</span>,
+    <span class="id">database</span> = <span class="string">"terralib_save_test"</span>,
+    <span class="id">table</span> = <span class="string">"sampa_cells"</span>,
+    <span class="id">encoding</span> = <span class="string">"CP1252"</span>	
+}	
+
+<span class="id">tl</span>:<span class="id">addPgLayer</span>(<span class="id">proj</span>, <span class="string">"SampaPg"</span>, <span class="id">pgData</span>)
+	
+<span class="id">tl</span>:<span class="function">dropPgDatabase</span>(<span class="id">pgData</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="dropPgTable">
+
+	</a><strong>dropPgTable</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Remove a PostreSQL table.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>database</strong>: The database name.
+    </li> 
+    
+  
+    <li>
+	  <strong>encoding</strong>: The encoding of the table.
+    </li> 
+    
+  
+    <li>
+	  <strong>host</strong>: Name of the host.
+    </li> 
+    
+  
+    <li>
+	  <strong>password</strong>: The password.
+    </li> 
+    
+  
+    <li>
+	  <strong>port</strong>: Port number.
+    </li> 
+    
+  
+    <li>
+	  <strong>user</strong>: The user name.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
+
+<span class="id">proj</span> = {
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>,
+    <span class="id">title</span> = <span class="string">"TerraLib Tests"</span>,
+    <span class="id">author</span> = <span class="string">"Avancini Rodrigo"</span>
+}
+
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="id">proj</span>, {})
+
+<span class="reserved">local</span> <span class="id">layerName1</span> = <span class="string">"SampaShp"</span>
+<span class="reserved">local</span> <span class="id">layerFile1</span> = <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">tl</span>:<span class="id">addShpLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">layerFile1</span>)		
+
+<span class="id">pgData</span> = {
+    <span class="id">type</span> = <span class="string">"POSTGIS"</span>,
+    <span class="id">host</span> = <span class="string">"localhost"</span>,
+    <span class="id">port</span> = <span class="string">"5432"</span>,
+    <span class="id">user</span> = <span class="string">"postgres"</span>,
+    <span class="id">password</span> = <span class="string">"postgres"</span>,
+    <span class="id">database</span> = <span class="string">"terralib_save_test"</span>,
+    <span class="id">table</span> = <span class="string">"sampa_cells"</span>,
+    <span class="id">encoding</span> = <span class="string">"CP1252"</span>	
+}	
+
+<span class="id">tl</span>:<span class="id">addPgLayer</span>(<span class="id">proj</span>, <span class="string">"SampaPg"</span>, <span class="id">pgData</span>)
+	
+<span class="id">tl</span>:<span class="function">dropPgTable</span>(<span class="id">pgData</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getDataSet">
+
+	</a><strong>getDataSet</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Returns a given dataset from a layer.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: Name of the layer to be read.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">ds</span> = <span class="id">terralib</span>:<span class="function">getDataSet</span>(<span class="string">"myproject.tview"</span>, <span class="string">"mylayer"</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getLayerInfo">
+
+	</a><strong>getLayerInfo</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the information of a given layer.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The name of the layer.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
+
+<span class="id">proj</span> = {
+    <span class="id">file</span> = <span class="string">"myproject.tview"</span>,
+    <span class="id">title</span> = <span class="string">"TerraLib Tests"</span>,
+    <span class="id">author</span> = <span class="string">"Avancini Rodrigo"</span>
+}
+
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="id">proj</span>, {})
+
+<span class="reserved">local</span> <span class="id">layerName1</span> = <span class="string">"SampaShp"</span>
+<span class="reserved">local</span> <span class="id">layerFile1</span> = <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">tl</span>:<span class="id">addShpLayer</span>(<span class="id">proj</span>, <span class="id">layerName1</span>, <span class="id">layerFile1</span>)		
+
+<span class="id">pgData</span> = {
+    <span class="id">type</span> = <span class="string">"POSTGIS"</span>,
+    <span class="id">host</span> = <span class="string">"localhost"</span>,
+    <span class="id">port</span> = <span class="string">"5432"</span>,
+    <span class="id">user</span> = <span class="string">"postgres"</span>,
+    <span class="id">password</span> = <span class="string">"postgres"</span>,
+    <span class="id">database</span> = <span class="string">"terralib_save_test"</span>,
+    <span class="id">table</span> = <span class="string">"sampa_cells"</span>,
+    <span class="id">encoding</span> = <span class="string">"CP1252"</span>	
+}	
+
+<span class="id">tl</span>:<span class="id">addPgLayer</span>(<span class="id">proj</span>, <span class="string">"SampaPg"</span>, <span class="id">pgData</span>)
+	
+<span class="id">layerInfo</span> = <span class="id">tl</span>:<span class="function">getLayerInfo</span>(<span class="id">proj</span>, <span class="id">proj</span>.<span class="id">layers</span>[<span class="id">layerName2</span>])		</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getShpByFilePath">
+
+	</a><strong>getShpByFilePath</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the content of a shapefile.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The path for the file to be loaded.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
+<span class="reserved">local</span> <span class="id">shpPath</span> = <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">dSet</span> = <span class="id">tl</span>:<span class="function">getShpByFilePath</span>(<span class="id">shpPath</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getVersion">
+
+	</a><strong>getVersion</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the current TerraLib version.<br><br></span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+<span class="id">tl</span> = <span class="function">TerraLib</span>{}
+<span class="id">print</span>(<span class="id">tl</span>:<span class="function">getVersion</span>())</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="openProject">
+
+	</a><strong>openProject</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Open a new project.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The path for the project.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+<span class="id">tl</span> = <span class="function">TerraLib</span>{}
+<span class="id">proj</span> = {}
+<span class="id">tl</span>:<span class="function">openProject</span>(<span class="id">proj2</span>, <span class="string">"myproject.tview"</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="saveDataSet">
+
+	</a><strong>saveDataSet</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Save a given dataset.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The input layer name.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: A table mapping the names of the attributes from the input to the output.
+    </li> 
+    
+  
+    <li>
+	  <strong>#4</strong>: The output layer name.
+    </li> 
+    
+  
+    <li>
+	  <strong>#5</strong>: A table with the attributes to be saved.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">saveDataSet</span>(<span class="id">self</span>, <span class="id">project</span>, <span class="id">fromLayerName</span>, <span class="id">toSet</span>, <span class="id">toName</span>, <span class="id">attrs</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+						</dl>
+					
+
+					
+
+				</div> <!-- id="content" -->
+			</div> <!-- id="main" -->
+
+			<div id="about">
+				<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" /></a></p>
+			</div> <!-- id="about" -->
+
+		</div> <!-- id="container" -->	
+	</body>
+</html>
+
