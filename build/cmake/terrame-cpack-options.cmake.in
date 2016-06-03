@@ -109,44 +109,33 @@ if(CPACK_GENERATOR MATCHES "NSIS")
 
 	list(APPEND CPACK_NSIS_CREATE_ICONS_EXTRA 
 		# "SetOutPath '\$INSTDIR\\\\bin'" #TODO: REVIEW
-		"CreateShortCut '\$DESKTOP\\\\${shortCutName}.lnk' '\$INSTDIR\\\\bin\\\\terrame.exe'"
+		"
+		CreateShortCut \"$DESKTOP\\${shortCutName}.lnk\" \"$INSTDIR\\bin\\terrame.exe\";
+		CreateShortCut \"$SMPROGRAMS\\$STARTMENU_FOLDER\\${shortCutName}.lnk\" \"$INSTDIR\\bin\\terrame.exe\"
+		"
 	)
 	
 	list(APPEND CPACK_NSIS_DELETE_ICONS_EXTRA 
 		# "Delete '\$SMPROGRAMS\\\\$MUI_TEMP\\\\${shortCutName}.lnk'" # TODO: REVIEW
-		"Delete '\$DESKTOP\\\\${shortCutName}.lnk'"
-	)	
+		"
+		Delete \"$DESKTOP\\${shortCutName}.lnk\";
+		Delete \"$SMPROGRAMS\\$STARTMENU_FOLDER\\${shortCutName}.lnk\"
+		"
+	)			
+
+	list(APPEND CPACK_NSIS_EXTRA_INSTALL_COMMANDS
+		"
+		WriteRegExpandStr HKLM \"SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\" \"TME_PATH\" \"\$INSTDIR\\bin\";
+		SendMessage \${HWND_BROADCAST} \${WM_WININICHANGE} 0 \"STR:Environment\" /TIMEOUT=5000;
+		"
+		# SetRebootFlag true #TODO: REVIEW
+	)
 	
-	list(APPEND CPACK_NSIS_CREATE_ICONS_EXTRA 
-		"CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${shortCutName}.lnk' '\$INSTDIR\\\\bin\\\\terrame.exe'"
-	)	
-
-	list(APPEND CPACK_NSIS_DELETE_ICONS_EXTRA 
-		"Delete '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${shortCutName}.lnk'"
-	)	
-
-	list(APPEND CPACK_NSIS_EXTRA_INSTALL_COMMANDS 
-		"WriteRegExpandStr HKLM 'SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session Manager\\\\Environment\\\\' 'TME_PATH' '\$INSTDIR\\bin'"
-		"SendMessage '${HWND_BROADCAST}' '${WM_WININICHANGE}' '0' 'STR:Environment' '/TIMEOUT=5000'"
+	set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS
+		"
+		DeleteRegValue HKLM \"SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\" \"TME_PATH\";
+		SendMessage \${HWND_BROADCAST} \${WM_WININICHANGE} 0 \"STR:Environment\" /TIMEOUT=5000
+		"
 	)
-	  
-	set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS 
-		"DeleteRegValue HKLM 'SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session Manager\\\\Environment\\\\' 'TME_PATH'"
-		"SendMessage '${HWND_BROADCAST}' '${WM_WININICHANGE}' '0' 'STR:Environment' '/TIMEOUT=5000'"
-	)
-	  
-	# File types association:
-	# list (APPEND CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-		# WriteRegStr HKCR \".tamz\" \"\" \"TerraAmazon.Project\"; #registering file extension
-		# WriteRegStr HKCR \"TerraAmazon.Project\" \"\" \"TerraAmazon Project File\"; #registering extension desc
-		# WriteRegStr HKCR \"TerraAmazon.Project\\DefaultIcon\" \"\" \"$INSTDIR\\share\\icons\\svg\\terraAmazon-icon.svg\"; #registering extension icon 
-		# WriteRegStr HKCR \"TerraAmazon.Project\\shell\\open\\command\" \"\" '\"$INSTDIR\\bin\\terraamazon.exe\" \"%1\"' #extension open command
-	# ")
-	  
-	# list (APPEND CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
-		# DeleteRegKey HKCR \".tamz\"; #removing extension register
-		# DeleteRegKey HKCR \"TerraAmazon.Project\"; #removing file association register
-	# ")
-	 
 endif()
 
