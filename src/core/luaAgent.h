@@ -25,7 +25,7 @@ of this software and its documentation.
     \brief This file definitions for the luaAgent objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUAAGENT_H )
+#ifndef LUAAGENT_H
 #define LUAAGENT_H
 
 extern "C"

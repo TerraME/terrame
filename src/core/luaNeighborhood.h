@@ -25,11 +25,11 @@ of this software and its documentation.
     \brief This file definitions for the luaNeighborhood objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUANEIGHBORHOOD_H )
+#ifndef LUANEIGHBORHOOD_H
 #define LUANEIGHBORHOOD_H
 
 
-extern "C" 
+extern "C"
 {
 #include <lua.h>
 }
@@ -63,13 +63,13 @@ class luaNeighborhood : public CellNeighborhood, public Reference<luaNeighborhoo
     QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
 
     TypesOfSubjects subjectType;
-    
+
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaNeighborhood>::RegType methods[]; 
+    static Luna<luaNeighborhood>::RegType methods[];
 
 
 public:
@@ -83,7 +83,7 @@ public:
     /// parameters: cell.y, cell.x,  cell, weight
     int addNeighbor(lua_State *L);
 
-    /// Removes the luaNeighbor cell from the luaNeighborhood 
+    /// Removes the luaNeighbor cell from the luaNeighborhood
 	/// parameters: cell.x, cell.y
 	/// \author Raian Vargas Maretto
 		int eraseNeighbor(lua_State *L);
@@ -97,7 +97,7 @@ public:
     /// parameters: cell index
     int eraseCell(lua_State *L);
 
-    /// Gets the luaNeighborhood relationship weight value for the luaNeighbor 
+    /// Gets the luaNeighborhood relationship weight value for the luaNeighbor
     /// idexed by the 2D coordenates received as parameter
     /// parameters: cell index
     /// return weight
@@ -108,11 +108,11 @@ public:
     /// return luaCell
     int getCellNeighbor(lua_State *L);
 
-    /// Gets the luaNeighborhood relationship weight value for the luaNeighbor 
+    /// Gets the luaNeighborhood relationship weight value for the luaNeighbor
     /// indexed by the 2D coordenates received as parameter.
     /// no parameters
     int getWeight( lua_State *L );
-    
+
     /// Gets the luaNeighbor cell pointed by the Nieghborhood interator.
     /// no parameters
     int getNeighbor( lua_State *L );
@@ -131,7 +131,7 @@ public:
 	/// parameters: cell.x, cell.y
 	/// \author Raian Vargas Maretto
 		int getNeighWeight(lua_State *L);
-		
+
     /// Sets the weight for the neighborhood relationship with the cell indexed by the coordenates
     /// received as parameter.
     // parameters: cell index, weight
@@ -160,8 +160,8 @@ public:
     /// Checks if a given cell is within the luaNeighborhood
 	/// parameters: cell
 	/// \author Raian Vargas Maretto
-		int isNeighbor( lua_State *L );
-	
+	int isNeighbor( lua_State *L );
+
     /// Fowards the Neighborhood iterator to the next Neighbor cell
     /// no parameters
     int next( lua_State *L );
@@ -206,14 +206,14 @@ public:
         /// \author Raian Vargas Maretto
         int getParent( lua_State *L );
     //@RAIAN
-    
+
     // /// Creates several types of observers to the luaCellularSpace object
     // /// parameters: observer type, observeb attributes table, observer type parameters
     // int createObserver( lua_State *L );
 
     // /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     // int notifyObservers(lua_State *L );
-    
+
     // /// Gets the subject's type
     // const TypesOfSubjects getSubjectType();
 

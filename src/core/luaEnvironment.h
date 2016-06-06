@@ -26,7 +26,7 @@ of this software and its documentation.
         \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined( LUAENVIRONMENT_H )
+#ifndef LUAENVIRONMENT_H
 #define LUAENVIRONMENT_H
 
 #include "../observer/environmentSubjectInterf.h"
@@ -50,24 +50,24 @@ private:
     lua_State *luaL;
     TypesOfSubjects subjectType;
     QStringList observedAttribs;
-    
+
     QString getAll(QDataStream& in, int obsId, QStringList& attribs);
     QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaEnvironment>::RegType methods[]; 
-    
+    static Luna<luaEnvironment>::RegType methods[];
+
 public:
     /// Constructor
     luaEnvironment(lua_State *L);
 
     /// Destructor
     ~luaEnvironment(void);
-    
+
     /// Adds new luaTimer, luaCellularSpace, luaGlobalAgent, luaLocalAgent and luaEnvironment to
     /// the luaEnvironment object
     /// parameter luaTimer, luaCellularSpace, luaGlobalAgent, luaLocalAgent and luaEnvironment
@@ -112,7 +112,7 @@ public:
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     int notify(lua_State *L );
-    
+
     /// Gets the subject's type
     const TypesOfSubjects getType();
 

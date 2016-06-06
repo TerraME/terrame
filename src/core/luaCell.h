@@ -25,7 +25,7 @@ of this software and its documentation.
     \brief This file definitions for the luaCell objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUACELL_H )
+#ifndef LUACELL_H
 #define LUACELL_H
 
 #include "../observer/cellSubjectInterf.h"
@@ -62,7 +62,7 @@ class luaCell : public CellSubjectInterf, public Reference<luaCell>
     NeighCmpstInterf::iterator it; ///< Neighborhood iterator.
 
 	CellIndex idx; //Raian: ?ndice da c?lula.
-	
+
     // Antonio - construtor
     TypesOfSubjects subjectType;
     lua_State *luaL; ///< Stores locally the lua stack location in memory
@@ -75,14 +75,14 @@ class luaCell : public CellSubjectInterf, public Reference<luaCell>
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
+    static const char className[];
 
     ///< Data structure issued by Luna<T>
-    static Luna<luaCell>::RegType methods[]; 
+    static Luna<luaCell>::RegType methods[];
 
 public:
     /// Constructor
-    luaCell(lua_State *L) ;
+    luaCell(lua_State *L);
 
     /// Returns the current internal state of the LocalAgent (Automaton) within the cell and received as parameter
     int getCurrentStateName( lua_State *L );
@@ -171,7 +171,7 @@ public:
 	/// Gets the cell index (x,y)
 	/// \author Raian Vargas Maretto
         CellIndex getIndex();
-		
+
     /// Creates several types of observers
     /// parameters: observer type, observeb attributes table, observer type parameters
     int createObserver( lua_State *L );

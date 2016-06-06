@@ -25,7 +25,7 @@ of this software and its documentation.
 \brief This file definitions for the luaTimer objects.
 \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUATIMER_H )
+#ifndef LUATIMER_H
 #define LUATIMER_H
 
 #include "../observer/schedulerSubjectInterf.h"
@@ -45,7 +45,7 @@ private:
 
     TypesOfSubjects subjectType;
     QStringList observedAttribs;
-    
+
     QString getAll(QDataStream& in, int obsId, QStringList& attribs);
     QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
 
@@ -54,10 +54,10 @@ private:
 public:
     ///< Data structure issued by Luna<T>
     static const char className[];
-    
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaTimer>::RegType methods[]; 
-    
+    static Luna<luaTimer>::RegType methods[];
+
 public:
     /// Constructor
     luaTimer(lua_State *L);

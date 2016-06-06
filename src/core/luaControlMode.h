@@ -25,7 +25,7 @@ of this software and its documentation.
     \brief This file definitions for the luaControlMode objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUACONTROLMODE_H )
+#ifndef LUACONTROLMODE_H
 #define LUACONTROLMODE_H
 
 #include "luaJumpCondition.h"
@@ -46,11 +46,11 @@ class luaControlMode : public ControlMode
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
     static Luna<luaControlMode>::RegType methods[];
-    
+
 public:
     /// constructor
     luaControlMode( lua_State *)

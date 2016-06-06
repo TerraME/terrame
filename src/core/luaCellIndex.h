@@ -25,14 +25,14 @@ of this software and its documentation.
     \brief This file definitions for the luaCellIndex objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUACELLINDEX_H )
+#ifndef LUACELLINDEX_H
 #define LUACELLINDEX_H
 
-extern "C" 
+extern "C"
 {
 #include <lua.h>
 }
-#include "luna.h" 
+#include "luna.h"
 
 #include "reference.h"
 
@@ -49,24 +49,24 @@ class luaCellIndex : Reference<luaCellIndex>
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaCellIndex>::RegType methods[]; 
-    
+    static Luna<luaCellIndex>::RegType methods[];
+
 public:
     int x, y; /// The luaCell coordenates (2D)
 
     /// Constructor
-    luaCellIndex(lua_State *L) 
+    luaCellIndex(lua_State *L)
     {
         x = y = 0;
-        if( lua_istable(L,-1) )
+        if(lua_istable(L, -1))
         {
-            lua_pushstring(L, "x"); lua_gettable(L, -2); 
+            lua_pushstring(L, "x"); lua_gettable(L, -2);
             x = (int) luaL_checknumber(L, -1); lua_pop(L, 1);
-            
-            lua_pushstring(L, "y"); lua_gettable(L, -2); 
+
+            lua_pushstring(L, "y"); lua_gettable(L, -2);
             y = (int) luaL_checknumber(L, -1); lua_pop(L, 1);
         }
     }
@@ -74,16 +74,16 @@ public:
     /// Stes the luaCellIndex value
     int set(lua_State *L)
     {
-        x = (int)luaL_checknumber(L, -2);  
-        y = (int) luaL_checknumber(L, -1 ); 
+        x = (int)luaL_checknumber(L, -2);
+        y = (int) luaL_checknumber(L, -1 );
         return 0;
         }
 
     /// Gets the luaCellIndex value
-    int get(lua_State *L) 
+    int get(lua_State *L)
     {
-        lua_pushnumber(L, x); 
-        lua_pushnumber(L, y); 
+        lua_pushnumber(L, x);
+        lua_pushnumber(L, y);
         return 2;
     }
 

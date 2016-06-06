@@ -25,7 +25,7 @@ of this software and its documentation.
 \brief This file definitions for the luaGlobalAgent objects.
 \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUAGLOBALAGENT_H )
+#ifndef LUAGLOBALAGENT_H
 #define LUAGLOBALAGENT_H
 
 #include "../observer/globalAgentSubjectInterf.h"
@@ -69,11 +69,11 @@ private:
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
     static Luna<luaGlobalAgent>::RegType methods[];
-    
+
 public:
     /// Constructor
     luaGlobalAgent(lua_State *L);
@@ -81,7 +81,7 @@ public:
     /// Desctructor
     ~luaGlobalAgent(void);
 
-    /// Gets the simulation time elapsed since the last change in the luaGlobalAgent 
+    /// Gets the simulation time elapsed since the last change in the luaGlobalAgent
     /// internal discrete state
     int getLatency( lua_State *L);
 
@@ -115,7 +115,7 @@ public:
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     int notify(lua_State *L );
-    
+
     /// Gets the subject's type
     const TypesOfSubjects getType();
 
@@ -132,7 +132,6 @@ public:
 
     /// Destroys the observer object instance
     int kill(lua_State *L);
- 
 };
 
 #endif
