@@ -132,6 +132,8 @@ return{
 			limit = {0.1, 0.04, 0.3, 0.07}
 		}
 
+		tab.type_ = "mytab"
+
 		c1 = Chart{
 		    data = tab,
 		    select = "limit",

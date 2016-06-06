@@ -197,9 +197,10 @@ metaTableChart_ = {__index = Chart_}
 -- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
 -- representing RGB compositions.
 -- @arg attrTab.data An optional table with a complete description of the data to be drawn in the Chart.
--- It must be a table with a set of vectors, each one with a name. The names of these vectors can be
+-- It must be a Utils:isTable() with a set of vectors, each one with a name. The names of these vectors can be
 -- used in arguments select and xAxis. If not using xAxis, it will draw the time according to the
--- positions of the values. When using data, argument target becomes unnecessary. 
+-- positions of the values. When using data, argument target becomes unnecessary. This argument
+-- will automatically be converted to a Cell, in order to allow using Cell:notify().
 -- @arg attrTab.title An overall title to the Chart.
 -- @arg attrTab.symbol The symbol to be used to draw the points of the Chart. It can be a string to
 -- be used by all lines, or a vector of strings, describing the symbol for each line. The available
@@ -306,7 +307,10 @@ function Chart(attrTab)
 	optionalTableArgument(attrTab, "label", "table")
 
 	if attrTab.data then
-		mandatoryTableArgument(attrTab, "data", "table")
+		if not isTable(attrTab.data) then
+			customError(incompatibleTypeMsg("data", "table", attrTab.data))
+		end
+
 		mandatoryTableArgument(attrTab, "select", "table")
 
 		if attrTab.target then
@@ -332,10 +336,8 @@ function Chart(attrTab)
 	else
 		mandatoryTableArgument(attrTab, "target")
 
-		if not belong(type(attrTab.target), {"Cell", "CellularSpace", "Agent", "Society", "table"}) then
-			if not (attrTab.target.parent and type(attrTab.target.parent) == "Model") then
-				customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, and instance of Model, got "..type(attrTab.target)..".")
-			end
+		if not belong(type(attrTab.target), {"Cell", "CellularSpace", "Agent", "Society"}) and not isTable(attrTab.target) then
+			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, and instance of Model, got "..type(attrTab.target)..".")
 		end
 	end
 
@@ -380,18 +382,18 @@ function Chart(attrTab)
 			if #attrTab.select == 0 then
 				attrTab.select = {"#"}
 			end
-		elseif type(attrTab.target) == "table" then
-			forEachOrderedElement(attrTab.target, function(idx, value, mtype)
-				if mtype == "number" then
-					attrTab.select[#attrTab.select + 1] = idx
-				end
-			end)
-		else -- instance of model
+		elseif isModel(attrTab.target) then
 			forEachOrderedElement(attrTab.target, function(idx, value, mtype)
 				if mtype == "number" and not belong(idx, {"finalTime", "seed"}) and string.sub(idx, -1, -1) ~= "_" then
 					if not attrTab.xAxis or idx ~= attrTab.xAxis then
 						attrTab.select[#attrTab.select + 1] = idx
 					end
+				end
+			end)
+		else -- isTable
+			forEachOrderedElement(attrTab.target, function(idx, value, mtype)
+				if mtype == "number" then
+					attrTab.select[#attrTab.select + 1] = idx
 				end
 			end)
 		end
@@ -547,8 +549,11 @@ function Chart(attrTab)
 	optionalTableArgument(attrTab, "size",   "table")
 	optionalTableArgument(attrTab, "color",  "table")
 
-	if type(attrTab.target) == "table" then
+	if isTable(attrTab.target) and not isModel(attrTab.target) and not belong(type(attrTab.target), {"Cell", "CellularSpace", "Agent", "Society"}) then
 		if attrTab.target.cobj_ == nil then
+			local mtable = getmetatable(attrTab.target)
+			attrTab.target.type_ = nil
+			setmetatable(attrTab.target, nil)
 			attrTab.target = Cell(attrTab.target)
 		end
 	end
