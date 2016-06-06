@@ -35,9 +35,9 @@ of this software and its documentation.
 #include "../observer/types/observerTable.h"
 #include "../observer/types/observerUDPSender.h"
 
-extern lua_State * L; 
+extern lua_State * L;
 
-///< true - TerrME runs in verbose mode and warning messages to the user; 
+///< true - TerrME runs in verbose mode and warning messages to the user;
 /// false - it runs in quite node and no messages are shown to the user.
 extern ExecutionModes execModes;
 
@@ -73,7 +73,7 @@ int luaEvent::config(lua_State *L)
 
 /// Gets the luaEvent time
 int luaEvent::getTime(lua_State *L)
-{ 
+{
     double time = Event::getTime();
     lua_pushnumber(L, time);
     return 1;
@@ -90,15 +90,15 @@ int luaEvent::getPriority(lua_State *L)
 /// Sets the luaEvent priority
 /// parameters: number
 int luaEvent::setPriority(lua_State *L)
-{ 
-    int priority= luaL_checknumber(L, -1);
+{
+    int priority = luaL_checknumber(L, -1);
     Event::setPriority( priority );
     return 0;
 }
 
 /// Gets the luaEvent periodicity
 int luaEvent::getPeriod(lua_State *L)
-{ 
+{
     double time = Event::getPeriod();
     lua_pushnumber(L, time);
     return 1;
@@ -108,10 +108,10 @@ int luaEvent::getPeriod(lua_State *L)
 int luaEvent::createObserver(lua_State *luaL)
 {
     Reference<luaEvent>::getReference(luaL);
-    
+
     // flags para a defini??o do uso de compress?o
     // na transmiss?o de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // dos observadores Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
     int top = lua_gettop(luaL);
@@ -125,7 +125,7 @@ int luaEvent::createObserver(lua_State *luaL)
 
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 1) != 0)
-    {   
+    {
         QString key;
         if (lua_type(luaL, -2) == LUA_TSTRING)
             key = QString( luaL_checkstring(luaL, -2));
@@ -158,9 +158,9 @@ int luaEvent::createObserver(lua_State *luaL)
         if (execModes != Quiet ){
             string err_out = string("Warning: The parameter table is empty.");
             lua_getglobal(L, "customWarning");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            lua_pushstring(L, err_out.c_str());
+            lua_pushnumber(L, 5);
+            lua_call(L, 2, 0);
         }
         cols << "" << "";
     }
@@ -304,7 +304,7 @@ int luaEvent::createObserver(lua_State *luaL)
         {
             // multicast or unicast
             for(int i = 1; i < cols.size(); i++){
-                if (! cols.at(i).isEmpty())
+                if (!cols.at(i).isEmpty())
                     obsUDPSender->addHost(cols.at(i));
             }
         }
@@ -434,12 +434,12 @@ int luaEvent::kill(lua_State *luaL)
     int id = -1;
     bool result = false;
 
-    if (! lua_istable(luaL, top - 1))
+    if (!lua_istable(luaL, top - 1))
     {
         id = luaL_checknumber(luaL, top - 1);
         result = EventSubjectInterf::kill(id);
-         lua_pushboolean(luaL, result);
-         return 1;
+        lua_pushboolean(luaL, result);
+        return 1;
     }
     else
     {
@@ -454,7 +454,7 @@ int luaEvent::kill(lua_State *luaL)
                 if (key == "id")
                 {
                     id = luaL_checknumber(luaL, -1);
-                    result = EventSubjectInterf::kill(id); 
+                    result = EventSubjectInterf::kill(id);
                     // break;
 
                     lua_pushboolean(luaL, result);

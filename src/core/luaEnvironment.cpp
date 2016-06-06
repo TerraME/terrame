@@ -38,9 +38,9 @@ extern ExecutionModes execModes;
 
 luaEnvironment::luaEnvironment(lua_State *L)
 {
-    id = lua_tostring(L,-1);
+    id = lua_tostring(L, -1);
     Environment::envId = id;
-    
+
     // Antonio
     luaL = L;
     subjectType = TObsEnvironment;
@@ -52,7 +52,7 @@ int luaEnvironment::add(lua_State *L)
     void *ud;
     if( isudatatype(L, -1, "TeTimer") )
     {
-        pair<Event,Scheduler>  timeSchedulerPair;
+        pair<Event, Scheduler>  timeSchedulerPair;
         Scheduler* pTimer = Luna<luaTimer>::check(L, -1);
 
         timeSchedulerPair.first = pTimer->getEvent();
@@ -67,7 +67,7 @@ int luaEnvironment::add(lua_State *L)
             Environment::add( *pCS);
         }
         else
-            if( isudatatype(L, -1,"TeLocalAutomaton") )
+            if( isudatatype(L, -1, "TeLocalAutomaton") )
             {
                 LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
                 Environment::add( *pAg);
@@ -81,7 +81,7 @@ int luaEnvironment::add(lua_State *L)
                 else
                     if( (ud = luaL_checkudata(L, -1, "TeScale")) != NULL )
                     {
-                        pair<Event,Environment>  timeEnvPair;
+                        pair<Event, Environment>  timeEnvPair;
                         Environment* pEnv = Luna<luaEnvironment>::check(L, -1);
 
                         timeEnvPair.first = pEnv->getEvent();
@@ -94,7 +94,7 @@ int luaEnvironment::add(lua_State *L)
 
 int luaEnvironment::addTimer(lua_State *L)
 {
-    pair<Event,Scheduler>  timeSchedulerPair;
+    pair<Event, Scheduler>  timeSchedulerPair;
     Scheduler* pTimer = Luna<luaTimer>::check(L, -1);
 
     timeSchedulerPair.first = lua_tonumber(L, -2);
@@ -165,7 +165,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
 
     // flags para a defini??o do uso de compress?o
     // na transmiss?o de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // dos observadores Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
     // recupero a tabela de
@@ -185,21 +185,21 @@ int luaEnvironment::createObserver(lua_State *luaL)
     lua_pushnil(luaL);
     while(lua_next(luaL, top) != 0)
     {
-        QString key; 
- 
-        if (lua_type(luaL, -2) == LUA_TSTRING) 
-        { 
-            key  = luaL_checkstring(luaL, -2); 
-        } 
-        else 
-        { 
-            if (lua_type(luaL, -2) == LUA_TNUMBER) 
-            { 
-                char aux[100]; 
-                double number = luaL_checknumber(luaL, -2); 
-                sprintf(aux, "%g", number); 
-                key = aux; 
-            } 
+        QString key;
+
+        if (lua_type(luaL, -2) == LUA_TSTRING)
+        {
+            key  = luaL_checkstring(luaL, -2);
+        }
+        else
+        {
+            if (lua_type(luaL, -2) == LUA_TNUMBER)
+            {
+                char aux[100];
+                double number = luaL_checknumber(luaL, -2);
+                sprintf(aux, "%g", number);
+                key = aux;
+            }
         }
 
         allAttribs.push_back(key);
@@ -212,7 +212,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
     lua_settop(luaL, top - 1);
     top = lua_gettop(luaL);
 
-    if(! lua_istable(luaL, top) )
+    if(!lua_istable(luaL, top) )
     {
         //printf("\nError: Attributes table not found. Incorrect sintax.\n");
         qFatal("Error: Attributes table not found. Incorrect sintax.\n");
@@ -222,53 +222,52 @@ int luaEnvironment::createObserver(lua_State *luaL)
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 1 ) != 0)
     {
-        QString key; 
- 		 
-        if (lua_type(luaL, -1) == LUA_TSTRING) 
-        { 
-            key = luaL_checkstring(luaL, -1); 
-        } 
-        else 
-        { 
-            if (lua_type(luaL, -1) == LUA_TNUMBER) 
-            { 
-                char aux[100]; 
-                double number = luaL_checknumber(luaL, -1); 
-                sprintf(aux, "%g", number); 
-                key = aux; 
-            } 
-        } 
+        QString key;
+
+        if (lua_type(luaL, -1) == LUA_TSTRING)
+        {
+            key = luaL_checkstring(luaL, -1);
+        }
+        else
+        {
+            if (lua_type(luaL, -1) == LUA_TNUMBER)
+            {
+                char aux[100];
+                double number = luaL_checknumber(luaL, -1);
+                sprintf(aux, "%g", number);
+                key = aux;
+            }
+        }
 
         // Verifica se o atributo informado n?o existe deve ter sido digitado errado
         if (allAttribs.contains(key))
         {
             obsAttribs.push_back(key);
-            if (! observedAttribs.contains(key))
+            if (!observedAttribs.contains(key))
                 observedAttribs.push_back(key);
         }
         else
         {
-            if ( ! key.isNull() || ! key.isEmpty())
+            if (!key.isNull() || !key.isEmpty())
             {
-                
                 string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,err_out.c_str());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				lua_pushstring(L, err_out.c_str());
+				lua_pushnumber(L, 5);
+				lua_call(L, 2, 0);
                 return -1;
             }
         }
         lua_pop(luaL, 1);
     }
 
-    if ((obsAttribs.empty() ) && (! isGraphicType))
+    if ((obsAttribs.empty()) && (!isGraphicType))
     {
         obsAttribs = allAttribs;
         observedAttribs = allAttribs;
     }
 
-    if(! lua_istable(luaL, top) )
+    if( !lua_istable(luaL, top) )
     {
         qFatal("Error: Parameter table not found. Incorrect sintax.");
         return -1;
@@ -280,7 +279,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
     // caso n?o seja um tabela a sintaxe do metodo esta incorreta
     lua_pushnil(luaL);
     while(lua_next(luaL, top) != 0)
-    {   
+    {
         QString key;
         if (lua_type(luaL, -2) == LUA_TSTRING)
             key = QString( luaL_checkstring(luaL, -2));
@@ -306,7 +305,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
 		case LUA_TTABLE:
 		    {
                 int tableTop = lua_gettop(luaL);
-                                           
+
 		        lua_pushnil(luaL);
 		        while(lua_next(luaL, tableTop) != 0)
                 {
@@ -318,7 +317,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
                         case LUA_TNUMBER:
                             cols.append(QString::number(luaL_checknumber(luaL, -1)) );
                             break;
-                            
+
                         case LUA_TSTRING:
 		                    cols.append(luaL_checkstring(luaL, -1));
                             break;
@@ -344,7 +343,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
     switch (typeObserver)
     {
         case TObsTextScreen:
-            obsText = (ObserverTextScreen*) 
+            obsText = (ObserverTextScreen*)
                 EnvironmentSubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
             {
@@ -358,7 +357,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         case TObsLogFile:
-            obsLog = (ObserverLogFile*) 
+            obsLog = (ObserverLogFile*)
                 EnvironmentSubjectInterf::createObserver(TObsLogFile);
             if (obsLog)
             {
@@ -372,7 +371,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         case TObsTable:
-            obsTable = (ObserverTable *) 
+            obsTable = (ObserverTable *)
                 EnvironmentSubjectInterf::createObserver(TObsTable);
             if (obsTable)
             {
@@ -386,7 +385,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         case TObsDynamicGraphic:
-            obsGraphic = (ObserverGraphic *) 
+            obsGraphic = (ObserverGraphic *)
                 EnvironmentSubjectInterf::createObserver(TObsDynamicGraphic);
             if (obsGraphic)
             {
@@ -401,7 +400,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         case TObsGraphic:
-            obsGraphic = (ObserverGraphic *) 
+            obsGraphic = (ObserverGraphic *)
                 EnvironmentSubjectInterf::createObserver(TObsGraphic);
             if (obsGraphic)
             {
@@ -415,7 +414,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         case TObsUDPSender:
-            obsUDPSender = (ObserverUDPSender *) 
+            obsUDPSender = (ObserverUDPSender *)
                 EnvironmentSubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
             {
@@ -489,7 +488,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
         obsGraphic->setLegendPosition();
 
         // Takes titles of three first locations
-        obsGraphic->setTitles(cols.at(0), cols.at(1), cols.at(2));   
+        obsGraphic->setTitles(cols.at(0), cols.at(1), cols.at(2));
         cols.removeFirst(); // remove graphic title
         cols.removeFirst(); // remove axis x title
         cols.removeFirst(); // remove axis y title
@@ -518,7 +517,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             // multicast or unicast
             for(int i = 1; i < cols.size(); i++)
             {
-                if (! cols.at(i).isEmpty())
+                if (!cols.at(i).isEmpty())
                     obsUDPSender->addHost(cols.at(i));
             }
         }
@@ -576,19 +575,19 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
     lua_pushnil(luaL);
     while(lua_next(luaL, environPos ) != 0)
     {
-        if (lua_type(luaL, -2) == LUA_TSTRING) 
-        { 
-            key  = luaL_checkstring(luaL, -2); 
-        } 
-        else 
-        { 
-            if (lua_type(luaL, -2) == LUA_TNUMBER) 
-            { 
-                char aux[100]; 
-                double number = luaL_checknumber(luaL, -2); 
-                sprintf(aux, "%g", number); 
-                key = aux; 
-            } 
+        if (lua_type(luaL, -2) == LUA_TSTRING)
+        {
+            key = luaL_checkstring(luaL, -2);
+        }
+        else
+        {
+            if (lua_type(luaL, -2) == LUA_TNUMBER)
+            {
+                char aux[100];
+                double number = luaL_checknumber(luaL, -2);
+                sprintf(aux, "%g", number);
+                key = aux;
+            }
         }
 
         attrCounter++;

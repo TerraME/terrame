@@ -118,7 +118,7 @@ int luaSociety::createObserver( lua_State * )
     top = lua_gettop(luaL);
 
     // Verificacao da sintaxe da tabela Atributos
-    if(! lua_istable(luaL, top) )
+    if(!lua_istable(luaL, top))
     {
         qFatal("Error: Attributes table not found. Incorrect sintax.\n");
         return -1;
@@ -136,18 +136,18 @@ int luaSociety::createObserver( lua_State * )
         if (allAttribs.contains(key))
         {
             obsAttribs.push_back(key);
-            if (! observedAttribs.contains(key))
+            if (!observedAttribs.contains(key))
                 observedAttribs.push_back(key);
         }
         else
         {
-            if ( ! key.isNull() || ! key.isEmpty())
+            if (!key.isNull() || !key.isEmpty())
             {
                 string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,err_out.c_str());
-				lua_pushnumber(L,4);
-				lua_call(L,2,0);
+				lua_pushstring(L, err_out.c_str());
+				lua_pushnumber(L, 4);
+				lua_call(L, 2, 0);
                 return -1;
             }
         }
@@ -231,9 +231,9 @@ int luaSociety::createObserver( lua_State * )
             if (execModes != Quiet ){
                 string err_out = string("Warning: The parameter table is empty.");
                 lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                lua_pushstring(L, err_out.c_str());
+                lua_pushnumber(L, 5);
+                lua_call(L, 2, 0);
             }
         }
         //------------------------
@@ -416,7 +416,7 @@ int luaSociety::createObserver( lua_State * )
             {
                 // multicast or unicast
                 for(int i = 1; i < cols.size(); i++){
-                    if (! cols.at(i).isEmpty())
+                    if (!cols.at(i).isEmpty())
                         obsUDPSender->addHost(cols.at(i));
                 }
             }

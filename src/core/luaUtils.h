@@ -27,7 +27,7 @@ of this software and its documentation.
 \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined( LUA_UTILS_H )
+#ifndef LUA_UTILS_H
 #define LUA_UTILS_H
 
 extern "C"

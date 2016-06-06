@@ -120,7 +120,7 @@ int luaCell::clear(lua_State *) {
 /// Returns the number of Neighbors cells in the Neighborhood
 int luaCell::size(lua_State *) {
     NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
-    lua_pushnumber(L,nhgs.size( ));
+    lua_pushnumber(L, nhgs.size( ));
     return 1;
 }
 
@@ -340,13 +340,13 @@ int luaCell::createObserver( lua_State * )
         top = lua_gettop(luaL);
 
         // Verificacao da sintaxe da tabela Atributos
-        if(! lua_istable(luaL, top) )
+        if(!lua_istable(luaL, top))
         {
             string err_out = string("Error: Attribute table not found. Incorrect sintax.");
             lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,3);
-            lua_call(L,2,0);
+            lua_pushstring(L, err_out.c_str());
+            lua_pushnumber(L, 3);
+            lua_call(L, 2, 0);
             return -1;
         }
 
@@ -362,18 +362,18 @@ int luaCell::createObserver( lua_State * )
             if (allAttribs.contains(key))
             {
                 obsAttribs.push_back(key);
-                if (! observedAttribs.contains(key))
+                if (!observedAttribs.contains(key))
                     observedAttribs.push_back(key);
             }
             else
             {
-                if ( ! key.isNull() || ! key.isEmpty())
+                if (!key.isNull() || !key.isEmpty())
                 {
                     string err_out = string("Error: Attribute '"+ key.toStdString() +"' not found.");
                     lua_getglobal(L, "customError");
-                    lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,3);
-                    lua_call(L,2,0);
+                    lua_pushstring(L, err_out.c_str());
+                    lua_pushnumber(L, 3);
+                    lua_call(L, 2, 0);
                     return -1;
                 }
             }
@@ -581,9 +581,9 @@ int luaCell::createObserver( lua_State * )
                         + string(getObserverName(typeObserver))
                         + string("' does not correspond to a valid type of Observer.");
                 lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                lua_pushstring(L, err_out.c_str());
+                lua_pushnumber(L, 5);
+                lua_call(L, 2, 0);
             }
             return 0;
         }
@@ -657,7 +657,7 @@ int luaCell::createObserver( lua_State * )
             {
                 // multicast or unicast
                 for(int i = 1; i < cols.size(); i++){
-                    if (! cols.at(i).isEmpty())
+                    if (!cols.at(i).isEmpty())
                         obsUDPSender->addHost(cols.at(i));
                 }
             }
@@ -729,10 +729,9 @@ int luaCell::createObserver( lua_State * )
                                 strAux = luaL_checkstring(luaL, -1);
                                 obsParamsAtribs.push_back(QString(strAux));
 
-                            case LUA_TNIL:
-                            case LUA_TTABLE:
-                            default:
-                                ;
+                            //case LUA_TNIL:
+                            //case LUA_TTABLE:
+							//default:;
                             }
                         }
                     }
@@ -748,9 +747,9 @@ int luaCell::createObserver( lua_State * )
         if(!cellSpace){
             string err_out = string(errorMsg.toStdString());
             lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,3);
-            lua_call(L,2,0);
+            lua_pushstring(L, err_out.c_str());
+            lua_pushnumber(L, 3);
+            lua_call(L, 2, 0);
         }
         QStringList neighIDs;
         QString exhibitionName;
@@ -779,9 +778,9 @@ int luaCell::createObserver( lua_State * )
             if(!obsMap){
                 string err_out = string(errorMsg.toStdString());
                 lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,3);
-                lua_call(L,2,0);
+                lua_pushstring(L, err_out.c_str());
+                lua_pushnumber(L, 3);
+                lua_call(L, 2, 0);
             }
             obsMap->registry(this, exhibitionName);
             obsMap->setAttributes(neighIDs, obsParams, obsParamsAtribs);

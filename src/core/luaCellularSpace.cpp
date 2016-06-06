@@ -60,19 +60,18 @@ of this software and its documentation.
 #endif
 #endif
 
-
 ///< Gobal variabel: Lua stack used for comunication with C++ modules.
-extern lua_State * L; 
+extern lua_State * L;
 
-///< true - TerrME runs in verbose mode and warning messages to the user; 
+///< true - TerrME runs in verbose mode and warning messages to the user;
 // false - it runs in quite node and no messages are shown to the user.
 extern ExecutionModes execModes;
 
 using namespace TerraMEObserver;
 
 /// constructor
-luaCellularSpace::luaCellularSpace(lua_State *L) 
-{  
+luaCellularSpace::luaCellularSpace(lua_State *L)
+{
     dbType = "mysql";
     host = "localhost";
     dbName = "";
@@ -135,7 +134,7 @@ int luaCellularSpace::setPassword(lua_State *L )
     return 0;
 }
 
-/// Sets the geographical database layer name 
+/// Sets the geographical database layer name
 int luaCellularSpace::setLayer(lua_State *L )
 {
     inputLayerName = string(lua_tostring(L, -1));
@@ -166,7 +165,7 @@ int luaCellularSpace::addAttrName( lua_State *L)
 /// Sets the SQL WHERE CLAUSE to the string received as parameter
 int luaCellularSpace::setWhereClause(lua_State *L)
 {
-    whereClause =  string(lua_tostring(L,-1));
+    whereClause =  string(lua_tostring(L, -1));
     return 0;
 }
 
@@ -179,10 +178,10 @@ int luaCellularSpace::clear(lua_State *)
 
 /// Adds a the luaCell received as parameter to the luaCellularSpace object
 /// parameters: x, y, luaCell
-int luaCellularSpace::addCell( lua_State *L)	 
-{ 
+int luaCellularSpace::addCell( lua_State *L)
+{
     CellIndex indx;
-    luaCell *cell = Luna<luaCell>::check(L,-1);
+    luaCell *cell = Luna<luaCell>::check(L, -1);
     indx.second = luaL_checknumber(L, -2);
     indx.first = luaL_checknumber(L, -3);
     CellularSpace::add( indx, cell);
@@ -249,11 +248,11 @@ int luaCellularSpace::createObserver(lua_State * luaL)
     //    qFatal("\nError: The Attribute table not found. Incorrect sintax.\n");
     //    return -1;
     //}
-    
+
     QStringList allCellSpaceAttribs, allCellAttribs, obsAttribs;
     QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
     QStringList imagePath; //diretorio onde as imagens do ObsImage serao salvas
-    
+
     const char *strAux;
     double numAux = -1;
     //int cellsNumber = 0;
@@ -273,7 +272,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
                 int stop = false;
 
                 lua_pushnil(luaL);
-                while ((! stop) && (lua_next(luaL, cellstop) != 0))
+                while ((!stop) && (lua_next(luaL, cellstop) != 0))
                 {
                     int cellTop = lua_gettop(luaL);
                     // lua_pushstring(luaL, "cObj_");
@@ -311,7 +310,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         // percorre cada item da tabela parametros
         lua_pushnil(luaL);
 
-        if (! lua_istable(luaL, firstLegPos - 1) )
+        if (!lua_istable(luaL, firstLegPos - 1))
         {
             // ---- Observer Image: Recupera o path/nome dos arquivos de imagem
             if (typeObserver == TObsImage)
@@ -426,7 +425,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
     }
 
     int width, height;
-    if (! obsDim.isEmpty())
+    if (!obsDim.isEmpty())
     {
         width = obsDim.at(0);
         height = obsDim.at(1);
@@ -452,17 +451,16 @@ int luaCellularSpace::createObserver(lua_State * luaL)
             for (int i = 0; i < obsAttribs.size(); i++)
             {
                 // insere na lista de atributos do cellspace o atributo recuperado
-                if (! observedAttribs.contains(obsAttribs.at(i)) )
+                if (!observedAttribs.contains(obsAttribs.at(i)))
                     observedAttribs.push_back(obsAttribs.at(i));
 
-                if (! allCellAttribs.contains(obsAttribs.at(i)) )
+                if (!allCellAttribs.contains(obsAttribs.at(i)))
                 {
-                  
                     string err_out = string("Error: Attribute name '" ) + string (qPrintable(obsAttribs.at(i))) + string("' not found.");
 					lua_getglobal(L, "customError");
-					lua_pushstring(L,err_out.c_str());
-					lua_pushnumber(L,5);
-					lua_call(L,2,0);
+					lua_pushstring(L, err_out.c_str());
+					lua_pushnumber(L, 5);
+					lua_call(L, 2, 0);
                     return 0;
                 }
             }
@@ -480,16 +478,16 @@ int luaCellularSpace::createObserver(lua_State * luaL)
             for (int i = 0; i < obsAttribs.size(); i++)
             {
                 // insere na lista de atributos do cellspace o atributo recuperado
-                if (! observedAttribs.contains(obsAttribs.at(i)) )
+                if (!observedAttribs.contains(obsAttribs.at(i)))
                     observedAttribs.push_back(obsAttribs.at(i));
-                
-                if (! allCellSpaceAttribs.contains(obsAttribs.at(i)) )
+
+                if (!allCellSpaceAttribs.contains(obsAttribs.at(i)))
                 {
                     string err_out = string("Error: Attribute name '") + string(qPrintable(obsAttribs.at(i))) + string("' not found or not belongs to this subject.");
                     lua_getglobal(L, "customError");
-                    lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    lua_pushstring(L, err_out.c_str());
+                    lua_pushnumber(L, 5);
+                    lua_call(L, 2, 0);
 
                     return 0;
                 }
@@ -609,7 +607,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         }
         break;
     default:
-        if (execModes != Quiet )
+        if (execModes != Quiet)
         {
             qWarning("Warning: In this context, the code '%s' does not "
                      "correspond to a valid type of Observer.",  getObserverName(typeObserver) );
@@ -659,7 +657,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         obsParamsAtribs.removeFirst(); // remove graphic title
         obsParamsAtribs.removeFirst(); // remove axis x title
         obsParamsAtribs.removeFirst(); // remove axis y title
-        
+
         // Splits the attribute labels in the cols list
         obsGraphic->setAttributes(obsAttribs, obsParamsAtribs.takeFirst()
                                   .split(";", QString::SkipEmptyParts), obsParams, obsParamsAtribs);
@@ -701,7 +699,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
             // multicast or unicast
             for(int i = 1; i < obsParamsAtribs.size(); i++)
             {
-                if (! obsParamsAtribs.at(i).isEmpty())
+                if (!obsParamsAtribs.at(i).isEmpty())
                     obsUDPSender->addHost(obsParamsAtribs.at(i));
             }
         }

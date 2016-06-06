@@ -32,7 +32,7 @@ of this software and its documentation.
 extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 
 /// constructor
-luaNeighborhood::luaNeighborhood(lua_State *) { 
+luaNeighborhood::luaNeighborhood(lua_State *) {
 
     it = CellNeighborhood::begin();
     itNext = false;
@@ -44,7 +44,7 @@ luaNeighborhood::~luaNeighborhood( void ) { }
 /// Adds a new cell to the luaNeigborhood
 /// parameters: cell.y, cell.x,  cell, weight
 /// return luaCell
-int luaNeighborhood::addNeighbor(lua_State *L) {  
+int luaNeighborhood::addNeighbor(lua_State *L) {
     double weight = luaL_checknumber(L, -1);
     luaCell *cell = Luna<luaCell>::check(L, -2);
     CellIndex cellIndex;
@@ -63,7 +63,7 @@ int luaNeighborhood::addNeighbor(lua_State *L) {
 /// \author Raian Vargas Maretto
 int luaNeighborhood::eraseNeighbor(lua_State *L) {
 //	luaCell *cell = (luaCell*)Luna<luaCell>::check(L, -1);
-	CellIndex cellIndex; 
+	CellIndex cellIndex;
 	cellIndex.second = luaL_checknumber(L, -2);
 	cellIndex.first = luaL_checknumber(L, -3);
 	if( it != CellNeighborhood::end() && it->first == cellIndex){
@@ -78,9 +78,9 @@ int luaNeighborhood::eraseNeighbor(lua_State *L) {
 /// Adds a new luaNeighbor cell into the luaNeighborhood
 /// parameters: cell index,  cell, weight
 /// return luaCell
-int luaNeighborhood::addCell(lua_State *L) {  
+int luaNeighborhood::addCell(lua_State *L) {
     double weight = luaL_checknumber(L, -1);
-    luaCellularSpace *cs = Luna<luaCellularSpace>::check(L,-2);
+    luaCellularSpace *cs = Luna<luaCellularSpace>::check(L, -2);
     luaCellIndex *cI = Luna<luaCellIndex>::check(L, -3);
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
     luaCell *cell = ::findCell( cs, cellIndex );
@@ -94,7 +94,7 @@ int luaNeighborhood::addCell(lua_State *L) {
 
 /// Removes the luaNeighbor cell from the luaNeighborhood
 /// parameters: cell index
-int luaNeighborhood::eraseCell(lua_State *L) {  
+int luaNeighborhood::eraseCell(lua_State *L) {
     luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
     // Raian: Coloquei esta compara??o porque quando um vizinho era retirado da vizinhan?a o iterador era invalidado
@@ -107,11 +107,11 @@ int luaNeighborhood::eraseCell(lua_State *L) {
     return 0;
 }
 
-/// Gets the luaNeighborhood relationship weight value for the luaNeighbor idexed by the 2D coordenates received 
+/// Gets the luaNeighborhood relationship weight value for the luaNeighbor idexed by the 2D coordenates received
 /// as parameter
-/// parameters: cell index 
+/// parameters: cell index
 /// return weight
-int luaNeighborhood::getCellWeight(lua_State *L) {  
+int luaNeighborhood::getCellWeight(lua_State *L) {
     luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
     lua_pushnumber( L, CellNeighborhood::getWeight( cellIndex ) );
@@ -119,9 +119,9 @@ int luaNeighborhood::getCellWeight(lua_State *L) {
 }
 
 /// Gets the luaNeighbor cell idexed by the 2D coordenates received as parameter
-/// parameters: cell index, 
+/// parameters: cell index,
 /// return luaCell
-int luaNeighborhood::getCellNeighbor(lua_State *L) {  
+int luaNeighborhood::getCellNeighbor(lua_State *L) {
     luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
     luaCell *cell = (luaCell*)(*CellNeighborhood::pImpl_)[ cellIndex ];
@@ -130,7 +130,7 @@ int luaNeighborhood::getCellNeighbor(lua_State *L) {
     return 1;
 }
 
-/// Gets the luaNeighborhood relationship weight value for the luaNeighbor idexed by the 2D coordenates received 
+/// Gets the luaNeighborhood relationship weight value for the luaNeighbor idexed by the 2D coordenates received
 /// as parameter.
 /// no parameters
 int luaNeighborhood::getWeight( lua_State *L )
@@ -179,11 +179,11 @@ int luaNeighborhood::getID( lua_State *L )
 /// Sets the weight of a neighborhood relationship
 /// parameters: cell.x, cell.y, weight
 /// \author Raian Vargas Maretto
-int luaNeighborhood::setNeighWeight(lua_State *L) {  
+int luaNeighborhood::setNeighWeight(lua_State *L) {
 	double weight = luaL_checknumber(L, -1);
 //	luaCell *cell = (luaCell*)Luna<luaCell>::check(L, -2);
-	CellIndex cellIndex; 
-	cellIndex.second = luaL_checknumber(L, -3); 
+	CellIndex cellIndex;
+	cellIndex.second = luaL_checknumber(L, -3);
 	cellIndex.first = luaL_checknumber(L, -4);
 
 	if(CellNeighborhood::empty()
@@ -222,10 +222,10 @@ int luaNeighborhood::getNeighWeight(lua_State *L) {
 	return 0;
 }
 
-/// Sets the weight for the neighborhood relationship with the cell indexed by the coordenates 
+/// Sets the weight for the neighborhood relationship with the cell indexed by the coordenates
 /// received as parameter.
 /// parameters: cell index, weight
-int luaNeighborhood::setCellWeight(lua_State *L) {  
+int luaNeighborhood::setCellWeight(lua_State *L) {
     double weight = luaL_checknumber(L, -1);
     luaCellIndex *cI = Luna<luaCellIndex>::check(L, -2);
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
@@ -245,7 +245,7 @@ int luaNeighborhood::setWeight( lua_State *L) {
     return 0;
 }
 
-/// Puts the Neighborhood iterator in the beginning of the Neighbor composite data structure  
+/// Puts the Neighborhood iterator in the beginning of the Neighbor composite data structure
 /// no parameters
 int luaNeighborhood::first( lua_State *)
 {
@@ -253,7 +253,7 @@ int luaNeighborhood::first( lua_State *)
     return 0;
 }
 
-/// Puts the Neighborhood iterator in the end of the Neighbor composite data structure  
+/// Puts the Neighborhood iterator in the end of the Neighbor composite data structure
 /// no parameters
 int luaNeighborhood::last( lua_State *)
 {
@@ -262,7 +262,7 @@ int luaNeighborhood::last( lua_State *)
     return 0;
 }
 
-/// Returns true if the Neighborhood iterator is in the beginning of the Neighbor composite data structure  
+/// Returns true if the Neighborhood iterator is in the beginning of the Neighbor composite data structure
 /// no parameters
 int luaNeighborhood::isFirst( lua_State *L )
 {
@@ -270,7 +270,7 @@ int luaNeighborhood::isFirst( lua_State *L )
     return 1;
 }
 
-/// Returns true if the Neighborhood iterator is in the end of the Neighbor composite data structure  
+/// Returns true if the Neighborhood iterator is in the end of the Neighbor composite data structure
 /// no parameters
 int  luaNeighborhood::isLast( lua_State *L )
 {
@@ -278,7 +278,7 @@ int  luaNeighborhood::isLast( lua_State *L )
     return  1;
 }
 
-/// Verifies if a cell is a neighbor 
+/// Verifies if a cell is a neighbor
 /// parameters: cell.x, cell.y
 /// return: true if cell is within the luaNeighborhood, otherwise retuens false
 /// \author Raian Vargas Maretto
@@ -286,16 +286,16 @@ int luaNeighborhood::isNeighbor( lua_State *L )
 {
 	//RAIAN: retirei o comentario aqui para poder comparar os ponteiros logo abaixo.
   luaCell *cell = (luaCell*)Luna<luaCell>::check(L, -1);
-  CellIndex cellIndex; 
+  CellIndex cellIndex;
   cellIndex.second = luaL_checknumber(L, -2);
   cellIndex.first = luaL_checknumber(L, -3);
   CellNeighborhood::iterator itAux;
   itAux = CellNeighborhood::begin();
   bool isneighbor = false;
   while( itAux != CellNeighborhood::end() ){
-	  // RAIAN: adicionei aqui a comparacao do proprio ponteiro, pois ha casos que o vizinho esta em outro CS e pode ter um indice igual 
-	  // ao de uma celula do proprio espaco celular que nao e vizinha. 
-	  if( itAux->first == cellIndex && itAux->second == cell){ 
+	  // RAIAN: adicionei aqui a comparacao do proprio ponteiro, pois ha casos que o vizinho esta em outro CS e pode ter um indice igual
+	  // ao de uma celula do proprio espaco celular que nao e vizinha.
+	  if( itAux->first == cellIndex && itAux->second == cell){
 		  isneighbor = true;
 	  }
 	  itAux++;
@@ -345,22 +345,22 @@ int luaNeighborhood::getCoord( lua_State *L )
 
 /// Returns true if the Neighborhood is empty.
 /// no parameters
-int luaNeighborhood::isEmpty(lua_State *L) {  
+int luaNeighborhood::isEmpty(lua_State *L) {
     lua_pushboolean(L, CellNeighborhood::empty() );
     return 1;
 }
 
 /// Clears all the Neighborhood content
 /// no parameters
-int luaNeighborhood::clear(lua_State *) {  
+int luaNeighborhood::clear(lua_State *) {
     CellNeighborhood::clear( );
     return 0;
 }
 
 /// Returns the number of Neighbors cells in the Neighborhood
 /// no parameters
-int luaNeighborhood::size(lua_State *L) {  
-    lua_pushnumber(L,CellNeighborhood::size( ));
+int luaNeighborhood::size(lua_State *L) {
+    lua_pushnumber(L, CellNeighborhood::size( ));
     return 1;
 }
 
@@ -426,5 +426,5 @@ QString luaNeighborhood::getAll(QDataStream& /*in*/, int /*observerId*/, QString
 
 QString luaNeighborhood::getChanges(QDataStream& in, int observerId, QStringList& attribs)
 {
-    return getAll(in,observerId,attribs);
+    return getAll(in, observerId, attribs);
 }

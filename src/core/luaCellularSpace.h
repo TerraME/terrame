@@ -25,7 +25,7 @@ of this software and its documentation.
     \brief This file definitions for the luaCellularSpace objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUACELLULARSPACE_H )
+#ifndef LUACELLULARSPACE_H
 #define LUACELLULARSPACE_H
 
 
@@ -51,10 +51,10 @@ class luaCellularSpace : public CellSpaceSubjectInterf, public Reference<luaCell
 {
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
+    static const char className[];
 
     ///< Data structure issued by Luna<T>
-    static Luna<luaCellularSpace>::RegType methods[]; 
+    static Luna<luaCellularSpace>::RegType methods[];
 
     /// constructor
     luaCellularSpace(lua_State *L);
@@ -83,7 +83,7 @@ public:
     int setTheme(lua_State *L );
 
     /// Clears the cellular space attributes names
-    int clearAttrName(lua_State *L) ;
+    int clearAttrName(lua_State *L);
 
     /// Adds a new attribute name to the CellularSpace attributes table used in the load function
     int addAttrName( lua_State *L);
@@ -137,7 +137,7 @@ public:
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     int notify(lua_State *L );
-    
+
     /// Returns the Agent Map Observers linked to this cellular space
     /// \param observerId the id of observer
     // \return a pointer for an observer if the id exists. Otherwise, returns a NULL pointer

@@ -36,7 +36,7 @@ of this software and its documentation.
 #include "../observer/types/agentObserverMap.h"
 #include "../observer/types/observerStateMachine.h"
 
-///< true - TerrME runs in verbose mode and warning messages to the user; 
+///< true - TerrME runs in verbose mode and warning messages to the user;
 /// false - it runs in quite node and no messages are shown to the user.
 extern ExecutionModes execModes;
 
@@ -47,7 +47,7 @@ luaGlobalAgent::luaGlobalAgent(lua_State *L)
     subjectType = TObsAgent;
     attrClassName = "";
     cellSpace = 0;
-    
+
     observedAttribs.clear();
 }
 
@@ -94,7 +94,7 @@ int luaGlobalAgent::setActionRegionStatus( lua_State* L)
 int luaGlobalAgent::getActionRegionStatus( lua_State* L)
 {
     bool status = GlobalAgent::getActionRegionStatus( );
-    lua_pushboolean(L,status);
+    lua_pushboolean(L, status);
     return 1;
 }
 
@@ -107,13 +107,13 @@ int luaGlobalAgent::execute( lua_State* L)
 
 int luaGlobalAgent::build( lua_State *)
 {
-    if( ! Agent::build() )
+    if( !Agent::build() )
     {
         string err_out = string("Error: A control mode must be added to the agent before use it as a jump condition target.");
         lua_getglobal(L, "customError");
-        lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        lua_pushstring(L, err_out.c_str());
+        lua_pushnumber(L, 4);
+        lua_call(L, 2, 0);
     }
     return 0;
 }
@@ -129,10 +129,10 @@ int luaGlobalAgent::createObserver( lua_State *L )
 {
     // recupero a referencia da celula
     Reference<luaAgent>::getReference(luaL);
-        
+
     // flags para a defini??o do uso de compress?o
     // na transmiss?o de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // dos observadores Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
     // recupero a tabela de
@@ -218,13 +218,13 @@ int luaGlobalAgent::createObserver( lua_State *L )
         top = lua_gettop(luaL);
 
         // Verifica??o da sintaxe da tabela Atributos
-        if(! lua_istable(luaL, top) )
+        if(!lua_istable(luaL, top))
         {
             string err_out = string("Attributes table not found. Incorrect sintax");
             lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,4);
-            lua_call(L,2,0);
+            lua_pushstring(L, err_out.c_str());
+            lua_pushnumber(L, 4);
+            lua_call(L, 2, 0);
             return -1;
         }
 
@@ -238,18 +238,18 @@ int luaGlobalAgent::createObserver( lua_State *L )
             if (allAttribs.contains(key))
             {
                 obsAttribs.push_back(key);
-                if (! observedAttribs.contains(key))
+                if (!observedAttribs.contains(key))
                     observedAttribs.push_back(key);
             }
             else
             {
-                if ( ! key.isNull() || ! key.isEmpty())
+                if (!key.isNull() || !key.isEmpty())
                 {
                     string err_out = string("Attribute '" ) + string (key.toStdString()) + string("' not found");
                     lua_getglobal(L, "customError");
-                    lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                    lua_pushstring(L, err_out.c_str());
+                    lua_pushnumber(L, 4);
+                    lua_call(L, 2, 0);
                     return -1;
                 }
             }
@@ -257,14 +257,14 @@ int luaGlobalAgent::createObserver( lua_State *L )
         }
         //------------------------
 
-        if ((obsAttribs.empty() ) && (! isGraphicType))
+        if ((obsAttribs.empty() ) && (!isGraphicType))
         {
             obsAttribs = allAttribs;
             observedAttribs = allAttribs;
         }
-        
+
         //------------------------
-        if(! lua_istable(luaL, top) )
+        if( !lua_istable(luaL, top) )
         {
             if (execModes != Quiet)
                 qWarning("Warning: Parameter table not found. Incorrect sintax.");
@@ -306,7 +306,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
                     sprintf(aux, "%g", number);
                     value = QString(aux);
                     break;
-                }               
+                }
 
             // percorre a tabela de parametros
             case LUA_TTABLE:
@@ -384,7 +384,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
         switch (typeObserver)
         {
         case  TObsTextScreen:
-            obsText = (ObserverTextScreen *) 
+            obsText = (ObserverTextScreen *)
                 GlobalAgentSubjectInterf::createObserver( TObsTextScreen);
             if (obsText)
             {
@@ -398,7 +398,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
             break;
 
         case  TObsLogFile:
-            obsLog = (ObserverLogFile *) 
+            obsLog = (ObserverLogFile *)
                 GlobalAgentSubjectInterf::createObserver( TObsLogFile);
             if (obsLog)
             {
@@ -412,7 +412,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
             break;
 
         case  TObsTable:
-            obsTable = (ObserverTable *) 
+            obsTable = (ObserverTable *)
                 GlobalAgentSubjectInterf::createObserver( TObsTable);
             if (obsTable)
             {
@@ -426,7 +426,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
             break;
 
         case  TObsUDPSender:
-            obsUDPSender = (ObserverUDPSender *) 
+            obsUDPSender = (ObserverUDPSender *)
                 GlobalAgentSubjectInterf::createObserver( TObsUDPSender);
             if (obsUDPSender)
             {
@@ -444,7 +444,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
             break;
 
         case TObsStateMachine:
-            obsStateMachine = (ObserverStateMachine *) 
+            obsStateMachine = (ObserverStateMachine *)
                 GlobalAgentSubjectInterf::createObserver( TObsStateMachine);
             if (obsStateMachine)
             {
@@ -458,7 +458,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
             break;
 
         case  TObsDynamicGraphic:
-            obsGraphic = (ObserverGraphic *) 
+            obsGraphic = (ObserverGraphic *)
                 GlobalAgentSubjectInterf::createObserver( TObsDynamicGraphic);
             if (obsGraphic)
             {
@@ -473,7 +473,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
             break;
 
         case  TObsGraphic:
-            obsGraphic = (ObserverGraphic *) 
+            obsGraphic = (ObserverGraphic *)
                 GlobalAgentSubjectInterf::createObserver( TObsGraphic);
             if (obsGraphic)
             {
@@ -544,7 +544,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 // multicast or unicast
                 for(int i = 1; i < cols.size(); i++)
                 {
-                    if (! cols.at(i).isEmpty())
+                    if (!cols.at(i).isEmpty())
                         obsUDPSender->addHost(cols.at(i));
                 }
             }
@@ -563,13 +563,13 @@ int luaGlobalAgent::createObserver( lua_State *L )
             //    obsGraphic->setCurveStyle();
 
             // Takes titles of three first locations
-            obsGraphic->setTitles(cols.at(0), cols.at(1), cols.at(2));   
+            obsGraphic->setTitles(cols.at(0), cols.at(1), cols.at(2));
             cols.removeFirst(); // remove graphic title
             cols.removeFirst(); // remove axis x title
             cols.removeFirst(); // remove axis y title
 
             // Splits the attribute labels in the cols list
-            obsGraphic->setAttributes(obsAttribs, cols.takeFirst().split(";", QString::SkipEmptyParts), 
+            obsGraphic->setAttributes(obsAttribs, cols.takeFirst().split(";", QString::SkipEmptyParts),
                 obsParams, obsParamsAtribs); // cols);
 
             lua_pushnumber(luaL, obsId);
@@ -604,7 +604,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
         while(lua_next(luaL, top - 1) != 0)
         {
             // Recupera o ID do observer map
-            if ( (lua_isnumber(luaL, -1) && (! getObserverID)) )
+            if ( (lua_isnumber(luaL, -1) && (!getObserverID)) )
             {
                 // obsID = lua_tonumber(luaL, paramTop - 1);
                 obsID = luaL_checknumber(luaL, -1);
@@ -652,10 +652,10 @@ int luaGlobalAgent::createObserver( lua_State *L )
                                 obsParamsAtribs.append(QString(strAux));
                                 break;
 
-                            case LUA_TNIL:
-                            case LUA_TTABLE:
-                            default:
-                                ;
+                            //case LUA_TNIL:
+                            //case LUA_TTABLE:
+                            //default:
+                            //    ;
                             }
 
                         } // isLegend
@@ -669,7 +669,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
         QString errorMsg = QString("\nError: The Observer ID \"%1\" was not found. "
             "Check the declaration of this observer.\n").arg(obsID);
 
-        if (! cellSpace)
+        if (!cellSpace)
             qFatal("%s", qPrintable(errorMsg));
 
         QStringList allAttribs, obsAttribs;
@@ -698,12 +698,12 @@ int luaGlobalAgent::createObserver( lua_State *L )
 
             obsMap = (AgentObserverMap *)cellSpace->getObserver(obsID);
 
-            if (! obsMap)
+            if (!obsMap)
                 qFatal("%s", qPrintable(errorMsg));
 
             obsMap->registry(this, attrClassName);
         }
-        
+
         // Adiciono o currentState no observador
         allAttribs.push_back("currentState");
 
@@ -720,22 +720,22 @@ int luaGlobalAgent::createObserver( lua_State *L )
 
             // qDebug() << "key: " << key << " class: " << attrClassName;
 
-            if (! allAttribs.contains(key))
+            if (!allAttribs.contains(key))
             {
 				string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,err_out.c_str());
-				lua_pushnumber(L,4);
-				lua_call(L,2,0);
+				lua_pushstring(L, err_out.c_str());
+				lua_pushnumber(L, 4);
+				lua_call(L, 2, 0);
                 return 0;
             }
-            
-            if (! observedAttribs.contains(key) )
+
+            if (!observedAttribs.contains(key) )
                 observedAttribs.append(key);
 
             lua_pop(luaL, 1);
         }
-        
+
         if (typeObserver == TObsMap)
         {
             // ao definir os valores dos atributos do agente,
@@ -821,7 +821,7 @@ QString luaGlobalAgent::pop(lua_State *luaL, QStringList& attribs)
         contains = attribs.contains(key);
         // bool containsReg = (attribs.indexOf(QRegExp("([A-Za-z_]+\\ \\()")) != -1);
 
-        if (! contains)
+        if (!contains)
         {
             key.append(attrClassName);
             contains = attribs.contains(key);
@@ -1017,14 +1017,14 @@ int luaGlobalAgent::kill(lua_State *luaL)
 
     result = GlobalAgentSubjectInterf::kill(id);
 
-    if (! result)
+    if (!result)
     {
         if (cellSpace)
         {
             Observer *obs = cellSpace->getObserverById(id);
 
             if (obs)
-            {        
+            {
                 if (obs->getType() == TObsMap)
                     result = ((AgentObserverMap *)obs)->unregistry(this, attrClassName);
             }

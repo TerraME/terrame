@@ -25,7 +25,7 @@ of this software and its documentation.
     \brief This file definitions for the luaSociety objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUASOCIETY_H)
+#ifndef LUASOCIETY_H
 #define LUASOCIETY_H
 
 #include "../observer/societySubjectInterf.h"
@@ -52,7 +52,7 @@ class luaSociety : public SocietySubjectInterf, public Reference<luaSociety>
     // Movido para clsse Reference
     // int ref; ///< The position of the object in the Lua stack
     string objectId_; ///< luaSociety identifier
-	
+
     // Antonio - construtor
     TypesOfSubjects subjectType;
     lua_State *luaL; ///< Stores locally the lua stack location in memory
@@ -65,10 +65,10 @@ class luaSociety : public SocietySubjectInterf, public Reference<luaSociety>
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
+    static const char className[];
 
     ///< Data structure issued by Luna<T>
-    static Luna<luaSociety>::RegType methods[]; 
+    static Luna<luaSociety>::RegType methods[];
 
 public:
     /// Constructor
@@ -160,7 +160,7 @@ public:
 	/// Gets the cell index (x,y)
 	/// \author Raian Vargas Maretto
         //SocietyIndex getIndex();
-		
+
     /// Creates several types of observers
     /// parameters: observer type, observeb attributes table, observer type parameters
     int createObserver( lua_State *L );

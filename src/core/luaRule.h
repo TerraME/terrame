@@ -25,7 +25,7 @@ of this software and its documentation.
     \brief This file definitions for the luaRule objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUARULE_H )
+#ifndef LUARULE_H
 #define LUARULE_H
 
 /**
@@ -33,11 +33,11 @@ of this software and its documentation.
 *  Implementation for a luaRule object.
 *
 */
-class luaRule 
+class luaRule
 {
 protected:
     int ref; ///< The position of the object in the Lua stack
-    
+
 public:
 
     /// Destructor

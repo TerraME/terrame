@@ -118,7 +118,7 @@ void stackDump (lua_State *L) {
     }
     printf("\n\n"); /* end the listing */
 }
-/// UTILIITARY FUNCTION - Checks if the value located at index "idx" in the Lua stack "L" is of the 
+/// UTILIITARY FUNCTION - Checks if the value located at index "idx" in the Lua stack "L" is of the
 /// user defined type "name".
 /// \param L is a Lua stack
 /// \param idx is a Lua stack position index
@@ -127,13 +127,13 @@ void stackDump (lua_State *L) {
 int isudatatype (lua_State *L, int idx, const char *name)
 { // returns true if a userdata is of a certain type
     int res;
-    if (lua_type(L,idx)!=LUA_TUSERDATA) return 0;
-    lua_getmetatable(L,idx);
+    if (lua_type(L, idx) != LUA_TUSERDATA) return 0;
+    lua_getmetatable(L, idx);
     luaL_newmetatable (L, name);
-    res = lua_compare(L,-2,-1,LUA_OPEQ);
-    lua_pop(L,2); // pop both tables (metatables) off
+    res = lua_compare(L, -2, -1, LUA_OPEQ);
+    lua_pop(L, 2); // pop both tables (metatables) off
     return res;
-} 
+}
 
 /// UTILITARY FUNCTION - Converts a TerraLib object ID to (x,y) coordinates
 /// \param objId is a "const char const *" containing the object ID

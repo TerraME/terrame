@@ -25,7 +25,7 @@ of this software and its documentation.
 \brief This file definitions for the luaTrajectory objects.
 \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUATRAJECTORY_H )
+#ifndef LUATRAJECTORY_H
 #define LUATRAJECTORY_H
 
 #include "trajectorySubjectInterf.h"
@@ -63,9 +63,9 @@ protected:
 public:
     ///< Data structure issued by Luna<T>
     static const char className[];
-    
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaTrajectory>::RegType methods[]; 
+    static Luna<luaTrajectory>::RegType methods[];
 
 public:
     /// constructor
@@ -97,7 +97,7 @@ public:
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     int notify(lua_State *L );
-    
+
     /// Returns the Agent Map Observers linked to this cellular space
     /// \param observerId the id of observer
     // \return a pointer for an observer if the id exists. Otherwise, returns a NULL pointer

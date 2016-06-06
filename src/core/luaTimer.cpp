@@ -32,9 +32,9 @@ of this software and its documentation.
 #include "../observer/types/observerUDPSender.h"
 
 ///< Global variable: Lua stack used for comunication with C++ modules.
-extern lua_State * L; 
+extern lua_State * L;
 
-///< true - TerrME runs in verbose mode and warning messages to the user; 
+///< true - TerrME runs in verbose mode and warning messages to the user;
 /// false - it runs in quite node and no messages are shown to the user.
 extern ExecutionModes execModes;
 
@@ -97,7 +97,7 @@ int luaTimer::createObserver(lua_State *luaL)
 
     // flags para a defini(C)(C)o do uso de compress(C)o
     // na transmiss(C)o de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // dos observadores Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
     // recupero a tabela de
@@ -192,13 +192,13 @@ int luaTimer::createObserver(lua_State *luaL)
     //top = lua_gettop(luaL);
 
     // Verificacao da sintaxe da tabela Atributos
-    if(! lua_istable(luaL, top) )
+    if(!lua_istable(luaL, top))
     {
         string err_out = string("Error: Attribute table not found. Incorrect sintax.");
         lua_getglobal(L, "customError");
-        lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        lua_pushstring(L, err_out.c_str());
+        lua_pushnumber(L, 4);
+        lua_call(L, 2, 0);
         return -1;
     }
 
@@ -212,37 +212,37 @@ int luaTimer::createObserver(lua_State *luaL)
         if (allAttribs.contains(key))
         {
             obsAttribs.push_back(key);
-            if (! observedAttribs.contains(key))
+            if (!observedAttribs.contains(key))
                 observedAttribs.push_back(key);
         }
         else
         {
-            if ( ! key.isNull() || ! key.isEmpty())
+            if (!key.isNull() || !key.isEmpty())
             {
                 string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,err_out.c_str());
-				lua_pushnumber(L,4);
-				lua_call(L,2,0);
+				lua_pushstring(L, err_out.c_str());
+				lua_pushnumber(L, 4);
+				lua_call(L, 2, 0);
                 return -1;
             }
         }
         lua_pop(luaL, 1);
     }
 
-    if ((obsAttribs.empty() ) && (! isGraphicType))
+    if ((obsAttribs.empty() ) && (!isGraphicType))
     {
         obsAttribs = allAttribs;
         observedAttribs = allAttribs;
     }
-        
-    if(! lua_istable(luaL, top) )
+
+    if(!lua_istable(luaL, top))
     {
         string err_out = string("Error: Attribute table not found. Incorrect sintax.");
         lua_getglobal(L, "customError");
-        lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,5);
-        lua_call(L,2,0);
+        lua_pushstring(L, err_out.c_str());
+        lua_pushnumber(L, 5);
+        lua_call(L, 2, 0);
         return 0;
     }
 
@@ -252,7 +252,7 @@ int luaTimer::createObserver(lua_State *luaL)
     // caso nao seja um tabela a sintaxe do metodo esta incorreta
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 1) != 0)
-    {   
+    {
         QString key;
         if (lua_type(luaL, -2) == LUA_TSTRING)
             key = QString( luaL_checkstring(luaL, -2));
@@ -288,9 +288,9 @@ int luaTimer::createObserver(lua_State *luaL)
         if (execModes != Quiet ){
             string err_out = string("Warning: Attribute table not found. Incorrect sintax.");
             lua_getglobal(L, "customWarning");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,4);
-            lua_call(L,2,0);
+            lua_pushstring(L, err_out.c_str());
+            lua_pushnumber(L, 4);
+            lua_call(L, 2, 0);
         }
     }
 
@@ -305,7 +305,7 @@ int luaTimer::createObserver(lua_State *luaL)
     switch (typeObserver)
     {
         case TObsTextScreen			:
-            obsText = (ObserverTextScreen*) 
+            obsText = (ObserverTextScreen*)
                 SchedulerSubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
             {
@@ -319,7 +319,7 @@ int luaTimer::createObserver(lua_State *luaL)
             break;
 
         case TObsLogFile:
-            obsLog = (ObserverLogFile*) 
+            obsLog = (ObserverLogFile*)
                 SchedulerSubjectInterf::createObserver(TObsLogFile);
             if (obsLog)
             {
@@ -333,7 +333,7 @@ int luaTimer::createObserver(lua_State *luaL)
             break;
 
         case TObsTable:
-            obsTable = (ObserverTable *) 
+            obsTable = (ObserverTable *)
                 SchedulerSubjectInterf::createObserver(TObsTable);
             if (obsTable)
             {
@@ -347,7 +347,7 @@ int luaTimer::createObserver(lua_State *luaL)
             break;
 
         case TObsUDPSender			:
-            obsUDPSender = (ObserverUDPSender *) 
+            obsUDPSender = (ObserverUDPSender *)
                 SchedulerSubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
             {
@@ -365,7 +365,7 @@ int luaTimer::createObserver(lua_State *luaL)
             break;
 
         case TObsScheduler			:
-            obsScheduler = (ObserverScheduler *) 
+            obsScheduler = (ObserverScheduler *)
                 SchedulerSubjectInterf::createObserver(TObsScheduler);
             if (obsScheduler)
             {
@@ -385,9 +385,9 @@ int luaTimer::createObserver(lua_State *luaL)
                         + string(getObserverName(typeObserver))
                         + string("' does not correspond to a valid type of Observer.");
                 lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                lua_pushstring(L, err_out.c_str());
+                lua_pushnumber(L, 4);
+                lua_call(L, 2, 0);
             }
             return 0;
     }
@@ -451,7 +451,7 @@ int luaTimer::createObserver(lua_State *luaL)
         {
             // multicast or unicast
             for(int i = 1; i < cols.size(); i++){
-                if (! cols.at(i).isEmpty())
+                if (!cols.at(i).isEmpty())
                     obsUDPSender->addHost(cols.at(i));
             }
         }
@@ -497,7 +497,7 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
     bool boolAux = false;
 
     QString msg, attrs, key, text;
-    
+
     // id
     msg.append(QString::number(getId()));
     msg.append(PROTOCOL_SEPARATOR);
@@ -699,7 +699,7 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
 
 QString luaTimer::getChanges(QDataStream& in, int observerId, QStringList& attribs)
 {
-    return getAll(in,observerId,attribs);
+    return getAll(in, observerId, attribs);
 }
 
 #ifdef TME_BLACK_BOARD

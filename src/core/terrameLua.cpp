@@ -36,7 +36,7 @@ of this software and its documentation.
 
 #include "terrameLua.h"
 
-#include <stdlib.h> 
+#include <stdlib.h>
 
 #ifndef TME_NO_TERRALIB
 	// #include "TeVersion.h" // issue #319

@@ -25,7 +25,7 @@ of this software and its documentation.
     \brief This file definitions for the luaLocalAgent objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUALOCALAGENT_H )
+#ifndef LUALOCALAGENT_H
 #define LUALOCALAGENT_H
 
 #include "luaAgent.h"
@@ -61,10 +61,10 @@ private:
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaLocalAgent>::RegType methods[]; 
+    static Luna<luaLocalAgent>::RegType methods[];
 
 public:
     /// Constructor
@@ -105,7 +105,7 @@ public:
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     int notify(lua_State *L );
-    
+
     /// Gets the subject's type
     const TypesOfSubjects getType();
 

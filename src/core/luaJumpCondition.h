@@ -25,7 +25,7 @@ of this software and its documentation.
     \brief This file definitions for the luaJumpCondition objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUAJUMPCONDITION_H )
+#ifndef LUAJUMPCONDITION_H
 #define LUAJUMPCONDITION_H
 
 #include "luaCell.h"
@@ -49,10 +49,10 @@ private:
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
+    static const char className[];
 
     ///< Data structure issued by Luna<T>
-    static Luna<luaJumpCondition>::RegType methods[]; 
+    static Luna<luaJumpCondition>::RegType methods[];
 
 public:
     /// Constructor
@@ -75,7 +75,7 @@ public:
     /// \param agent is the Agent been executed
     /// \param cellIndexPair is the Cell - CellIndex pair where the luaJumpCondition is being executed
     /// \return A booleand value: true if the rule transits, otherwise false.
-    bool execute ( Event &event, Agent *agent, pair<CellIndex,Cell*> &cellIndexPair )
+    bool execute ( Event &event, Agent *agent, pair<CellIndex, Cell*> &cellIndexPair )
     {
         try {
 
@@ -116,7 +116,7 @@ public:
             // calls the "execute" function of the rule
             if( lua_pcall( L, 3, 1, 0) != 0 )
             {
-                cout << " Error: rule can not be executed: " << lua_tostring(L,-1) << endl;
+                cout << " Error: rule can not be executed: " << lua_tostring(L, -1) << endl;
                 return 0;
             }
 
