@@ -1447,6 +1447,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 
 				os.exit(errors)
+			elseif arg == "-project" then
+				local s = _Gtme.sessionInfo().separator
+				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."project.lua")
+				_Gtme.myxpcall(function() _Gtme.executeProject(package) end)
+				os.exit(0)
 			elseif arg == "-autoclose" then
 				argCount = argCount + 1
 				info_.autoclose = true

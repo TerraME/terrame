@@ -26,7 +26,7 @@
 
 import("terralib")
 
-local projName = "terralib_example.tview"
+local projName = "fillCellExample.tview"
 
 local project = Project{
 	file = projName,
@@ -182,8 +182,4 @@ terralib:dropPgTable(pgData)
 
 pgData.table = rasterLayer
 terralib:dropPgTable(pgData)
-
-if isFile(projName) then
-	rmFile(projName)
-end
 
