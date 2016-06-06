@@ -329,6 +329,6 @@ function _Gtme.sketch(package)
 		printError("Summing up, "..errors.." sketches were created. Please fill them.")
 	end
 
-	os.exit()
+	os.exit(errors)
 end
 

@@ -45,7 +45,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	xpcall(function() _G.getPackage(package) end, function(err)
 		printError(err)
-		os.exit()
+		os.exit(1)
 	end)
 
 	info_.mode = "debug"
@@ -55,14 +55,14 @@ function _Gtme.buildPackage(package, config, clean)
 		local data
 		xpcall(function() data = _Gtme.include(config) end, function(err)
 			printError(err)
-			os.exit()
+			os.exit(1)
 		end)
 
 		local err, msg = pcall(function() verifyUnnecessaryArguments(data, {"lines", "log"}) end)
 
 		if not err then
 			printError(msg)
-			os.exit()
+			os.exit(1)
 		end
 	end
 
@@ -292,7 +292,7 @@ function _Gtme.buildPackage(package, config, clean)
 		printNote("Package '"..package.."' successfully zipped")
 	else
 		printError("Could not zip package '"..package.."'. Aborting.")
-		os.exit()
+		os.exit(1)
 	end
 
 	os.execute("cp \""..file.."\" \""..currentdir.."\"")
@@ -366,5 +366,7 @@ function _Gtme.buildPackage(package, config, clean)
 	else
 		printError("Summing up, "..errors.." problems were found along the build.")
 	end
+
+	return errors
 end
 

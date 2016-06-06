@@ -197,12 +197,12 @@ function _Gtme.executeTests(package, fileName)
 
 		xpcall(function() data = _Gtme.include(fileName) end, function(err)
 			printError(err)
-			os.exit()
+			os.exit(1)
 		end)
 
 		if getn(data) == 0 then
 			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'log', 'sleep', 'test'}.")
-			os.exit()
+			os.exit(1)
 		end
 
 		if type(data.directory) == "string" then
@@ -302,7 +302,7 @@ function _Gtme.executeTests(package, fileName)
 		printError("Package '"..package.."' could not be loaded.")
 		printError(err)
 		printError(_Gtme.traceback())
-		os.exit()
+		os.exit(1)
 	end)
 
 	print = function() end
@@ -356,7 +356,7 @@ function _Gtme.executeTests(package, fileName)
 	if not isDir(baseDir..s.."tests") then
 		printError("Directory 'tests' does not exist in package '"..package.."'")
 		printError("Please run 'terrame -package "..package.." -sketch' to create test files.")
-		os.exit()
+		os.exit(1)
 	end
 
 	local executionlines
@@ -400,14 +400,14 @@ function _Gtme.executeTests(package, fileName)
 		forEachElement(mdirectory, function(_, value)
 			if not found[value] then
 				printError("Could not find any directory for pattern '"..value.."'.")
-				os.exit()
+				os.exit(1)
 			end
 		end)
 	end
 
 	if #data.directory == 0 then
 		customError("Could not find any directory to be tested according to the value of 'directory'.")
-		os.exit()
+		os.exit(1)
 	end
 
 	local global_variables = {}
@@ -471,7 +471,7 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				printError("Could not load file "..err)
-				os.exit()
+				os.exit(1)
 			end)
 
 			print = _Gtme.print
@@ -485,7 +485,7 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				printError("The file does not implement any test.")
-				os.exit()
+				os.exit(1)
 			end
 
 			myTests = {}
@@ -649,7 +649,7 @@ function _Gtme.executeTests(package, fileName)
 
 	if ut.test == 0 and not data.examples then
 		printError("No test was executed. Aborting.")
-		os.exit()
+		os.exit(1)
 	end
 
 	-- checking if all source code functions were tested
@@ -785,7 +785,7 @@ function _Gtme.executeTests(package, fileName)
 					if ut.log == nil then
 						rmFile(value..".log")
 						printError("Error: It is not possible to test examples with print() without a configuration file pointing a log directory.")
-						os.exit()
+						os.exit(1)
 					end
 
 					local test = ut.test

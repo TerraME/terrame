@@ -271,7 +271,7 @@ function _Gtme.sqlFiles(package)
 	xpcall(function() dofile(_Gtme.packageInfo(package).path..s.."data.lua") end, function(err)
 		_Gtme.printError("Error loading "..package..s.."data.lua")
 		_Gtme.printError(err)
-		os.exit()
+		os.exit(1)
 	end)
 
 	data = _Gtme.data
@@ -331,7 +331,7 @@ function _Gtme.findExamples(package)
 
 	xpcall(function() examplespath = _Gtme.packageInfo(package).path..s.."examples" end, function(err)
 		_Gtme.printError(err)
-		os.exit()
+		os.exit(1)
 	end)
 
 	if _Gtme.attributes(examplespath, "mode") ~= "directory" then
@@ -357,7 +357,7 @@ function _Gtme.showDoc(package)
 
 	xpcall(function() docpath = _Gtme.packageInfo(package).path end, function(err)
 		_Gtme.printError(err)
-		os.exit()
+		os.exit(1)
 	end)
 
 	docpath = docpath..s.."doc"..s.."index.html"
@@ -365,7 +365,7 @@ function _Gtme.showDoc(package)
 	if not isFile(docpath) then
 		_Gtme.printError("It was not possible to find the documentation of package '"..package.."'.")
 		_Gtme.printError("Please run 'terrame -package "..package.." -doc' to build it.")
-		os.exit()
+		os.exit(1)
 	end
 
 	if not _Gtme.isWindowsOS() then
@@ -792,7 +792,7 @@ function _Gtme.installPackage(file)
 
 	local result = xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function(err)
 		_Gtme.printError(file.." is not a valid file name for a TerraME package")
-		os.exit()
+		os.exit(1)
 	end)
 
 	_Gtme.print("Copying package '"..package.."'")
@@ -832,7 +832,7 @@ function _Gtme.installPackage(file)
 			_Gtme.printError("Error: New version ("..newVersion..") is older than current one ("..currentVersion..").")
 			_Gtme.printError("If you really want to install a previous version, please")
 			_Gtme.printError("execute 'terrame -package "..package.." -uninstall' first.")
-			os.exit()
+			os.exit(1)
 		else
 			_Gtme.print("Removing previous version of package")
 			rmDir(packageDir..s..package)
@@ -1263,7 +1263,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			if arg == "-version" then
 				print("TerraME - Terra Modeling Environment")
 				print(version())
-				os.exit()
+				os.exit(0)
 			elseif arg == "-ide" then
 				if not _Gtme.isLoaded("base") then
 					_Gtme.import("base")
@@ -1289,14 +1289,14 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				print = function() end
 			elseif string.sub(arg, 1, 6) == "-mode=" then
 				_Gtme.printError("Invalid mode '"..string.sub(arg, 7).."'.")
-				os.exit()
+				os.exit(1)
 			elseif arg == "-package" then
 				argCount = argCount + 1
 				package = arguments[argCount]
 
 				if package == nil then
 					_Gtme.printError("A package should be specified after -package.")
-					os.exit()
+					os.exit(1)
 				end
 
 				info_.package = package
@@ -1305,7 +1305,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 					xpcall(function() models = _Gtme.findModels(package) end, function(err)
 						_Gtme.printError(err)
-						os.exit()
+						os.exit(1)
 					end)
 
 					if #models == 1 then
@@ -1313,14 +1313,14 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 							_Gtme.printError(err)
 							_Gtme.printError(traceback())
 						end)
-						os.exit()
+						os.exit(1)
 					end
 
 					local description = _Gtme.packageInfo(package).path..s.."description.lua"
 
 					if not isFile(description) then
 						_Gtme.printError("File '"..package..s.."description.lua' does not exist.")
-						os.exit()
+						os.exit(1)
 					end
 
 					local data = _Gtme.include(_Gtme.packageInfo(package).path..s.."description.lua")
@@ -1346,7 +1346,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 							print(" - "..value)
 						end)
 					end
-					os.exit()
+					os.exit(0)
 				end
 			elseif arg == "-configure" then
 				argCount = argCount + 1
@@ -1358,19 +1358,19 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				xpcall(function() import(package) end, function(err)
 					_Gtme.printError(err)
-					os.exit()
+					os.exit(1)
 				end)
 
 				local models
 
 				xpcall(function() models = _Gtme.findModels(package) end, function(err)
 					_Gtme.printError(err)
-					os.exit()
+					os.exit(1)
 				end)
 
 				if #models == 0 then
 					_Gtme.printError("Package \""..package.."\" does not have any Model.")
-					os.exit()
+					os.exit(0)
 				end
 
 				if model == nil then
@@ -1380,7 +1380,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					_Gtme.forEachElement(models, function(_, value)
 						print(" - "..value)
 					end)
-					os.exit()
+					os.exit(0)
 				elseif belong(model, models) then
 					graphicalInterface(package, model)
 				else
@@ -1390,7 +1390,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					_Gtme.forEachElement(models, function(_, value)
 						print(" - "..value)
 					end)
-					os.exit()
+					os.exit(0)
 				end
 			elseif arg == "-test" then
 				if info_.package == nil then
@@ -1403,16 +1403,18 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				local s = sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
-				local correct, errorMsg = xpcall(function() _Gtme.executeTests(package, arguments[argCount]) end, function(err)
+				local errors = 0
+				local correct, errorMsg = xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
+					os.exit(1)
 				end)
 
                 if _Gtme.isWindowsOS() then
                     finalizeTerraLib()
                 end
 				
-				os.exit()
+				os.exit(errors)
 			elseif arg == "-sketch" then
 				info_.mode = "debug"
 				argCount = argCount + 1
@@ -1424,23 +1426,27 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				local correct, errorMsg = xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
+					os.exit(1)
 				end)
-				os.exit()
+				os.exit(0)
 			elseif arg == "-help" then 
 				usage()
-				os.exit()
+				os.exit(0)
 			elseif arg == "-showdoc" then
 				_Gtme.showDoc(package)
-				os.exit()
+				os.exit(0)
 			elseif arg == "-doc" then
 				info_.mode = "strict"
 				local s = _Gtme.sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
-				local success, result = _Gtme.myxpcall(function() _Gtme.executeDoc(package) end)
+				local errors = 0
+				local success, result = _Gtme.myxpcall(function() errors = _Gtme.executeDoc(package) end)
 
 				if not success then
 					_Gtme.printError(result)
 				end
+
+				os.exit(errors)
 			elseif arg == "-autoclose" then
 				argCount = argCount + 1
 				info_.autoclose = true
@@ -1468,27 +1474,29 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 							clean = true
 						else
 							_Gtme.printError("Option not recognized: "..arguments[argCount])
-							os.exit()
+							os.exit(1)
 						end
 					end
 
-					_Gtme.buildPackage(package, config, clean)
+					local errors = _Gtme.buildPackage(package, config, clean)
+					os.exit(errors)
 				end
-				os.exit()
+				os.exit(0)
 			elseif arg == "-install" then
 				xpcall(function() _Gtme.installPackage(arguments[argCount + 1]) end, function(err)
 					_Gtme.printError(err)
+					os.exit(1)
 				end)
-				os.exit()
+				os.exit(0)
 			elseif arg == "-uninstall" then
 				_Gtme.uninstall(package)
-				os.exit()
+				os.exit(0)
 			elseif arg == "-importDb" then
 				_Gtme.importDatabase(package)
-				os.exit()
+				os.exit(0)
 			elseif arg == "-exportDb" then
 				exportDatabase(package)
-				os.exit()
+				os.exit(0)
 			elseif arg == "-example" then
 				local file = arguments[argCount + 1]
 
@@ -1496,7 +1504,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					local info
 					xpcall(function() info = packageInfo(package).path end, function(err)
 						_Gtme.printError(err)
-						os.exit()
+						os.exit(1)
 					end)
 
 					arg = info..s.."examples"..s..file..".lua"
@@ -1509,7 +1517,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					print("TerraME has the following examples:")
 				elseif #_Gtme.findExamples(package) == 0 then
 					_Gtme.printError("Package '"..package.."' has no examples")
-					os.exit()
+					os.exit(0)
 				else
 					print("Package '"..package.."' has the following examples:")
 				end
@@ -1524,13 +1532,13 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					_Gtme.forEachElement(files, function(_, value)
 						print(" - "..value)
 					end)
-					os.exit()
+					os.exit(0)
 				end
 			elseif arg == "-gui" then
 				-- this option was already recognized by the C++ level #79
 			else
 				_Gtme.printError("Option not recognized: "..arg)
-				os.exit()
+				os.exit(1)
 			end
 		else
 			if info_.mode ~= "quiet" then

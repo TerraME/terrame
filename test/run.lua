@@ -562,3 +562,5 @@ else
 	_Gtme.printError("Summing up, "..errors.." problems were found during the tests.")
 end
 
+os.exit(errors)
+
