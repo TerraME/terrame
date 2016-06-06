@@ -1,7 +1,6 @@
-scripts/trace-basic.lua:11: attempt to perform arithmetic on global 'x' (a nil value)
+Error: attempt to perform arithmetic on global 'x' (a nil value)
 Stack traceback:
-    File scripts/trace-basic.lua, line 11, in function 'h'
+    File scripts/trace-basic.lua, line 11, in function 'h', in operator + (addition)
     File scripts/trace-basic.lua, line 7, in function 'g'
     File scripts/trace-basic.lua, line 3, in function 'f'
     File scripts/trace-basic.lua, line 14, in call to function 'f'
-

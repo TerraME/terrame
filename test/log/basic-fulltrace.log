@@ -1,14 +1,13 @@
-scripts/trace-basic.lua:11: attempt to perform arithmetic on global 'x' (a nil value)
+Error: attempt to perform arithmetic on global 'x' (a nil value)
 Stack traceback:
-    File C:/TerraME/bin/lua/terrame.lua, line 961, in function 'traceback'
-    File C:/TerraME/bin/lua/terrame.lua, line 1535, in operator + (addition)
-    File scripts/trace-basic.lua, line 11, in function 'h'
+    File C:/TerraME/bin/lua/terrame.lua, line 997, in function 'traceback'
+    File C:/TerraME/bin/lua/terrame.lua, line 1643, in operator + (addition)
+    File scripts/trace-basic.lua, line 11, in function 'h', in operator + (addition)
     File scripts/trace-basic.lua, line 7, in function 'g'
     File scripts/trace-basic.lua, line 3, in function 'f'
     File scripts/trace-basic.lua, line 14, in call to function 'f'
     File [C], in function 'dofile'
-    File C:/TerraME/bin/lua/terrame.lua, line 1463, in call to function 'dofile'
+    File C:/TerraME/bin/lua/terrame.lua, line 1562, in call to function 'dofile'
     File [C], in function 'xpcall'
-    File C:/TerraME/bin/lua/terrame.lua, line 1483, in function 'myxpcall'
-    File C:/TerraME/bin/lua/terrame.lua, line 1463, in call to function 'myxpcall'
-
+    File C:/TerraME/bin/lua/terrame.lua, line 1582, in function 'myxpcall'
+    File C:/TerraME/bin/lua/terrame.lua, line 1562, in call to function 'myxpcall'

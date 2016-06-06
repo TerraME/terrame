@@ -1,5 +1,4 @@
-scripts/trace-social-network.lua:9: attempt to perform arithmetic on field 'w' (a nil value)
+Error: attempt to perform arithmetic on field 'w' (a nil value)
 Stack traceback:
-    File scripts/trace-social-network.lua, line 9, in second order function
+    File scripts/trace-social-network.lua, line 9, in second order function, in operator + (addition)
     File scripts/trace-social-network.lua, line 8, in call to function 'forEachSocialNetwork'
-

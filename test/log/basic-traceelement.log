@@ -1,5 +1,4 @@
-scripts/trace-element.lua:8: attempt to perform arithmetic on field 'w' (a nil value)
+Error: attempt to perform arithmetic on field 'w' (a nil value)
 Stack traceback:
-    File scripts/trace-element.lua, line 8, in second order function
+    File scripts/trace-element.lua, line 8, in second order function, in operator + (addition)
     File scripts/trace-element.lua, line 7, in call to function 'forEachElement'
-

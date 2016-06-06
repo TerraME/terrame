@@ -988,7 +988,7 @@ function _Gtme.traceback()
 
 	local si = sessionInfo()
 	local s = "/" -- si.separator
-	local str = "Stack traceback:\n"
+	local str = "Stack traceback:"
 
 	local func = ""
 	local last_function
@@ -1015,6 +1015,7 @@ function _Gtme.traceback()
 		end
 
 		local func = info.name
+		local update = true
 
 		if     func == "?"          then func = "main chunk"
 		elseif func == "__add"      then func = "operator + (addition)"
@@ -1032,9 +1033,24 @@ function _Gtme.traceback()
 		elseif func == "__index"    then func = "operator [] (index)"
 		elseif func == "__newindex" then func = "operator [] (index)"
 		elseif func == "__call"     then func = "call"
-		elseif func == "_sof_"      then func = "second order function"
-		elseif func ~= nil          then func = "function '"..func.."'"
-		elseif not func             then
+		elseif func == "_sof_"      then
+			func = "second order function"
+
+			if last_function and string.match(last_function, "operator") then
+				local lf = func
+				func = func..", in "..last_function
+				last_function = lf
+				update = false
+			end
+		elseif func ~= nil then
+			func = "function '"..func.."'"
+			if last_function and string.match(last_function, "operator") then
+				local lf = func
+				func = func..", in "..last_function
+				last_function = lf
+				update = false
+			end
+		elseif not func then
 			if last_function then
 				func = "call to "..last_function
 			else
@@ -1042,15 +1058,17 @@ function _Gtme.traceback()
 			end
 		end
 
-		last_function = func
+		if update then
+			last_function = func
+		end
 
 		if si.fullTraceback or (si.package and not (mb or m1 or m3)) or (not (m1 or m2 or m3 or m4)) then
-			str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
+			str = str.."\n    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
 
 			if info.currentline > 0 then
 				str = str..", line "..info.currentline
 			end
-			str = str..", in "..func.."\n"
+			str = str..", in "..func
 		end
 	
 		level = level + 1
@@ -1578,7 +1596,7 @@ function _Gtme.myxpcall(func)
 				"UNEXPECTED TERRAME INTERNAL ERROR. PLEASE GIVE US A FEEDBACK.\n"..
 				"REPORT THE ERROR AT github.com/TerraME/terrame/issues/new\n"..
 				"PLEASE ADD THE INFORMATION BELOW AND SEND US ANY SCRIPTS AND\n"..
-						"DATA THAT COULD HELP US TO REPRODUCE THE ERROR.\n"..
+				"DATA THAT COULD HELP US TO REPRODUCE THE ERROR.\n"..
 				"*************************************************************\n"
 
 			if _Gtme.sessionInfo().fullTraceback then
@@ -1621,6 +1639,15 @@ function _Gtme.myxpcall(func)
 			return str
 		else
 			local msg = _Gtme.traceback()
+
+			local pos = string.find(err, "Error:") -- TerraME error
+
+			if not pos then -- lua errror
+				pos = string.find(err, ":") -- remove first ":"
+				err = string.sub(err, pos + 1)
+				pos = string.find(err, ":") -- remove second ":"
+				err = "Error:"..string.sub(err, pos + 1)
+			end
 
 			if msg ~= "" then
 				msg = err.."\n"..msg
