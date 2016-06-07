@@ -37,7 +37,20 @@ function filePath(filename, package)
 	if isFile(file) or isDir(file) then
 		return file
 	else
-		customError("File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'.")
+		local files = {}
+
+		forEachFile(packageInfo(package).data, function(mfile)
+			files[mfile] = true
+		end)
+
+		local msg = "File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'."
+		local suggest = suggestion(filename, files)
+
+		if suggest then
+			msg = msg.." Do you mean '"..suggest.."'?"
+		end
+
+		customError(msg)
 	end
 end
 

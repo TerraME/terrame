@@ -23,6 +23,12 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	filePath = function(unitTest)
+		local error_func = function()
+			filePath("mriver_lin.shp")
+		end
+		unitTest:assertError(error_func, "File 'base/data/mriver_lin.shp' does not exist in package 'base'. Do you mean 'River_lin.shp'?", 2)
+	end,
 	filesByExtension = function(unitTest)
 		local error_func = function()
 			local files = filesByExtension()
