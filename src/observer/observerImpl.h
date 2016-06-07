@@ -54,7 +54,7 @@ class SubjectImpl;
  */
 class ObserverImpl : public Implementation
 {
-public:	
+public:
     /**
      * Constructor
      */

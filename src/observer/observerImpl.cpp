@@ -108,8 +108,8 @@ bool sortAttribByType(Attributes *a, Attributes *b)
     return a->getType() < b->getType();
 }
 
-bool sortByClassName(const QPair<Subject *, QString> & pair1, 
-    const QPair<Subject *, QString> & pair2) 
+bool sortByClassName(const QPair<Subject *, QString> & pair1,
+    const QPair<Subject *, QString> & pair2)
 {
     return pair1.second.toLower() < pair2.second.toLower();
 }
@@ -117,7 +117,7 @@ bool sortByClassName(const QPair<Subject *, QString> & pair1,
 void delay(float seconds)
 {
     clock_t endwait;
-    endwait = clock() + seconds * CLOCKS_PER_SEC ;
+    endwait = clock() + seconds * CLOCKS_PER_SEC;
     while (clock() < endwait)
         qApp->processEvents();
 }
@@ -134,7 +134,7 @@ void restartObserverCounter()
 
 //////////////////////////////////////////////////////////// Observer
 ObserverImpl::ObserverImpl() : visible(true)
-{ 
+{
     numObserverCreated++;
     observerID = numObserverCreated;
 }
@@ -179,7 +179,7 @@ ObserverImpl::~ObserverImpl()
         if (widget)
             thereAreOpenWidgets = true;
     }
-    if(! thereAreOpenWidgets)
+    if(!thereAreOpenWidgets)
         QApplication::exit();
 }
 
@@ -211,7 +211,7 @@ bool ObserverImpl::update(double time) // ver se passa realmente este par?metro 
     QDataStream out(&buffer);
 
     buffer.open(QIODevice::WriteOnly);
-    
+
     QDataStream& state = subject_->getState(out, subject_, obsHandle_->getId(), attribList);
 
     buffer.close();
@@ -220,7 +220,7 @@ bool ObserverImpl::update(double time) // ver se passa realmente este par?metro 
     buffer.close();
 
 #endif  // TME_BLACK_BOARD
-    
+
     return true;
 }
 
@@ -334,7 +334,7 @@ Observer * SubjectImpl::getObserverById(int id)
     return obs;
 }
 
-void SubjectImpl::notifyObservers(double time) 
+void SubjectImpl::notifyObservers(double time)
 {
 #ifdef TME_BLACK_BOARD
     BlackBoard::getInstance().setDirtyBit( getId() );
@@ -344,7 +344,7 @@ void SubjectImpl::notifyObservers(double time)
 
     for (ObsListIterator i (observers.begin()); i != observers.end(); ++i)
     {
-        if (! (*i)->update(time))
+        if (!(*i)->update(time))
         {
             detachList.push_back(*i);
         }
@@ -356,8 +356,8 @@ const TypesOfSubjects SubjectImpl::getSubjectType()
     return TObsUnknown;
 }
 
-int SubjectImpl::getId() const 
-{ 
+int SubjectImpl::getId() const
+{
     return subjectID;
 }
 

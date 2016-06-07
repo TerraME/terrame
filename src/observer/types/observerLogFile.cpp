@@ -80,7 +80,7 @@ bool ObserverLogFile::draw(QDataStream &state)
     //int nroElems = tokens.at(3).toInt();
     int j = 4;
 
-    for (int i=0; i < qtdParametros;i++)
+    for (int i = 0; i < qtdParametros; i++)
     {
         QString key = tokens.at(j);
         j++;
@@ -158,14 +158,14 @@ bool ObserverLogFile::write()
         for (int i = 0; i < attribList.size(); ++i)
         {
             headers += attribList.at(i);
-            
+
             if (i < attribList.size() - 1)
                 headers += separator;
         }
         header = false;
         headers += "\n";
         file.write(headers.toLatin1().data(),  qstrlen( headers.toLatin1().data() ));
- 
+
         mode = "w+";
     }
     else

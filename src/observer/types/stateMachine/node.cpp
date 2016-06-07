@@ -73,13 +73,13 @@ void Node::setActive(bool active)
 {
     if (active)
     {
-        if (! currentColorDefined)
+        if (!currentColorDefined)
             currentColor = ACTIVE_COLOR;
         currentPenWidth = ACTIVE_PEN_WIDTH;
     }
     else
     {
-        if (! currentColorDefined)
+        if (!currentColorDefined)
             currentColor = INACTIVE_COLOR;
         currentPenWidth = INACTIVE_PEN_WIDTH;
     }

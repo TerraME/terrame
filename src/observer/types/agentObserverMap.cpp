@@ -77,7 +77,7 @@ bool AgentObserverMap::draw(QDataStream & state)
 
         //QStringList attribListAux;
         //// attribListAux.push_back("@getLuaAgentState");
-        //attribListAux << subjectAttributes;        
+        //attribListAux << subjectAttributes;
 
 		//@RAIAN: Solucao provisoria
 #ifndef TME_BLACK_BOARD
@@ -85,7 +85,7 @@ bool AgentObserverMap::draw(QDataStream & state)
 			subjectAttributes.push_back("@getNeighborhoodState");
 #endif
 		//@RAIAN: FIM
-		
+
 //#ifdef TME_BLACK_BOARD
 //        QDataStream& state = BlackBoard::getInstance().getState(subj, getId(), subjectAttributes);
 //        BlackBoard::getInstance().setDirtyBit(subj->getId() );
@@ -102,7 +102,7 @@ bool AgentObserverMap::draw(QDataStream & state)
         {
             if (className != linkedSubjects.at(i).second)
                 cleanImage = true;
-            
+
             // if (className != attribListAux.first())
             //    cleanImage = true;
 
@@ -134,14 +134,14 @@ void AgentObserverMap::setSubjectAttributes(const QStringList & attribs, TypesOf
 
     for (int i = 0; i < attribs.size(); i++)
     {
-        if (! subjectAttributes.contains(attribs.at(i)) )
+        if ( !subjectAttributes.contains(attribs.at(i)) )
             subjectAttributes.push_back(attribs.at(i));
- 
-        if (! mapAttributes->contains(attribs.at(i)))
+
+        if (!mapAttributes->contains(attribs.at(i)))
         {
             if (execModes != Quiet)
             {
-                qWarning("Warning: The attribute called \"%s\" not found.", 
+                qWarning("Warning: The attribute called \"%s\" not found.",
                     qPrintable(attribs.at(i)));
             }
         }
@@ -164,7 +164,7 @@ QStringList & AgentObserverMap::getSubjectAttributes()
 
 void AgentObserverMap::registry(Subject *subj, const QString & className)
 {
-    if (! constainsItem(linkedSubjects, subj) )
+    if ( !constainsItem(linkedSubjects, subj) )
     {
 
 //#ifdef TME_BLACK_BOARD
@@ -180,7 +180,7 @@ void AgentObserverMap::registry(Subject *subj, const QString & className)
 
 bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
 {
-    if (! constainsItem(linkedSubjects, subj))
+    if (!constainsItem(linkedSubjects, subj))
         return false;
 
 #ifdef DEGUB_OBSERVER
@@ -209,7 +209,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
         if (getMapAttributes()->contains(subjectAttributes.at(i)))
         {
             Attributes *attrib = getMapAttributes()->value(subjectAttributes.at(i));
-            
+
             if (className == attrib->getClassName())
             {
             // @RAIAN: Comentei esta parte para execut?-la no fim, ap?s remover a legenda.
@@ -217,7 +217,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
 //                break;
 //            }
             // @RAIAN: FIM
-            
+
             /*
              // Remove apenas o atributo que n?o possui valores
              if (subj->getSubjectType() == attrib->getType())
@@ -248,7 +248,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
              return true;
              }
              }*/
-            
+
                 //@RAIAN
                 // Alterei o codigo acima, do toninho, que havia sido comentado para remover a legenda caso
                 // nao haja mais agentes/vizinhancas sendo observados.
@@ -293,7 +293,7 @@ bool AgentObserverMap::decode(QDataStream &in, TypesOfSubjects subject)
     // qDebug() << msg.split(PROTOCOL_SEPARATOR, QString::SkipEmptyParts);
 
     Attributes * attrib = 0;
-    
+
     if (subject == TObsTrajectory)
     {
         attrib = getMapAttributes()->value("trajectory");

@@ -97,7 +97,7 @@ void TeQtColorBar::setColorBar(const vector<TeColor>& colorVec)
     vector<ColorBar> cbVec;
     ColorBar cb;
 
-    for(i=0; i<(int)colorVec.size(); i++)
+    for(i = 0; i < (int)colorVec.size(); i++)
     {
         cb.color(colorVec[i]);
         cbVec.push_back(cb);
@@ -114,7 +114,7 @@ void TeQtColorBar::setColorBar(const vector<TeColor>& colorVec)
         cbVec.push_back(cb);
     }
 
-    for(i=0; i<(int)cbVec.size(); ++i)
+    for(i = 0; i < (int)cbVec.size(); ++i)
     {
         cbVec[i].distance_ = (double)i;
         inputColorVec_.push_back(cbVec[i]);
@@ -157,7 +157,7 @@ void TeQtColorBar::setColorBarFromNames(string colors)
         else
             colorNameVec.push_back("GRAY");
     }
-	
+
 	TeColor	RGB;
     map<string, TeColor> mapcor;
 
@@ -222,7 +222,7 @@ void TeQtColorBar::setColorBarFromNames(string colors)
     mapcor["WHITE"] = RGB;
 
     vector<ColorBar> cbVec;
-    for(i=0; i<(int)colorNameVec.size(); ++i)  {
+    for(i = 0; i < (int)colorNameVec.size(); ++i)  {
         ColorBar cb;
         cb.color(mapcor[colorNameVec[i]]);
         cbVec.push_back(cb);
@@ -241,7 +241,7 @@ void TeQtColorBar::setColorBarFromNames(string colors)
     }
 
     inputColorVec_.clear();
-    for(i=0; i<(int)cbVec.size(); ++i) {
+    for(i = 0; i < (int)cbVec.size(); ++i) {
         cbVec[i].distance_ = (double)i;
         inputColorVec_.push_back(cbVec[i]);
     }
@@ -520,7 +520,7 @@ void TeQtColorBar::paintEvent(QPaintEvent *)
                     {
                         //painter.lineTo(0, h-j);
                         //painter.moveTo(w-7, h-j);
-                        painter.drawLine(0, h-j, w-7,h-j);
+                        painter.drawLine(0, h - j, w - 7, h - j);
                     }
                 }
                 else
@@ -602,7 +602,7 @@ void TeQtColorBar::paintEvent(QPaintEvent *)
 
     double pd = (double)tsize / 10.;
     int	t;
-    for(i=0; i < 10; ++i){
+    for(i = 0; i < 10; ++i){
         t = 5;
         if(i % 2)
             t = 3;
@@ -627,7 +627,7 @@ void TeQtColorBar::mousePressEvent(QMouseEvent* e)
 {
     if(colorMap_.empty())
         return;
-	
+
     p_ = e->pos();
     ind_ = getColorIndiceToChange();
 
@@ -758,7 +758,7 @@ void TeQtColorBar::leaveEvent(QEvent*)
 }
 
 void TeQtColorBar::addColorSlot()
-{	
+{
     int ind = ind_;
     TeColor cor;
 
@@ -776,7 +776,7 @@ void TeQtColorBar::addColorSlot()
         vector<ColorBar> bcor = inputColorVec_;
         inputColorVec_.clear();
         int i;
-        for(i=0; i<(int)bcor.size(); ++i)
+        for(i = 0; i < (int)bcor.size(); ++i)
         {
             if(i == ind+1)
                 inputColorVec_.push_back(cb);
@@ -823,7 +823,7 @@ void TeQtColorBar::removeColorSlot()
     vector<ColorBar> bcor = inputColorVec_;
     inputColorVec_.clear();
 
-    for(i=0; i<(int)bcor.size(); ++i)
+    for(i = 0; i < (int)bcor.size(); ++i)
     {
         if(i == ind_)
             continue;
@@ -849,7 +849,7 @@ int TeQtColorBar::getColorIndiceToChange()
     fitMousePosition(p_);
 
     limit_ = inf_ = sup_ = ind = -1;
-    for(i=0; i<(int)changeVec_.size(); ++i)
+    for(i = 0; i < (int)changeVec_.size(); ++i)
     {
         j = changeVec_[i];
         if((a_ >= j-2) && (a_ <= j+2))
@@ -863,7 +863,7 @@ int TeQtColorBar::getColorIndiceToChange()
 
     if(ind == 0)
     {
-        for(i=1; i<(int)changeVec_.size()-1; ++i)
+        for(i = 1; i < (int)changeVec_.size() - 1; ++i)
         {
             j = changeVec_[i];
             if((a_ >= j-2) && (a_ <= j+2))
@@ -877,7 +877,7 @@ int TeQtColorBar::getColorIndiceToChange()
     if(ind == -1)
     {
         int jj;
-        for(i=0; i<(int)changeVec_.size()-1; ++i)
+        for(i = 0; i < (int)changeVec_.size()-1; ++i)
         {
             j = changeVec_[i];
             jj = changeVec_[i+1];
@@ -991,7 +991,7 @@ void TeQtColorBar::sortByDistance()
     int i;
     double dist;
 
-    for(i=0; i<(int)inputColorVec_.size(); ++i)
+    for(i = 0; i < (int)inputColorVec_.size(); ++i)
     {
         double d = inputColorVec_[i].distance_;
         if(&(inputColorVec_[i]) == colorEdit_)
@@ -1008,7 +1008,7 @@ void TeQtColorBar::sortByDistance()
     for(it = mMap.begin(); it!= mMap.end(); it++)
         inputColorVec_.push_back(it->second);
 
-    for(i=0; i<(int)inputColorVec_.size(); ++i)
+    for(i = 0; i < (int)inputColorVec_.size(); ++i)
     {
         ColorBar cb = inputColorVec_[i];
         if(cb.distance_ == -1)
@@ -1033,7 +1033,7 @@ void TeQtColorBar::changeAllBrightness()
         dif = 6.*(double)(p_.y() - b_);
 
 
-    for(ind=0; ind<(int)inputColorVec_.size(); ++ind)
+    for(ind = 0; ind < (int)inputColorVec_.size(); ++ind)
     {
         ColorBar cb = inputColorVec_[ind];
         cb.v_ += (int)dif;
@@ -1048,7 +1048,7 @@ void TeQtColorBar::changeAllBrightness()
             return;
     }
 
-    for(ind=0; ind<(int)inputColorVec_.size(); ++ind)
+    for(ind = 0; ind < (int)inputColorVec_.size(); ++ind)
     {
         ColorBar& cb = inputColorVec_[ind];
         cb.v_ += (int)dif;
@@ -1065,7 +1065,7 @@ void TeQtColorBar::changeAllBrightness()
         QColor cor;
         cor.setHsv(cb.h_, cb.s_, cb.v_);
 
-        TeColor tc(cor.red(), cor.green(),cor.blue());
+        TeColor tc(cor.red(), cor.green(), cor.blue());
         cb.color(tc);
     }
     generateColorMap();
@@ -1105,7 +1105,7 @@ void TeQtColorBar::changeBrightness()
     QColor cor;
     cor.setHsv(cb.h_, cb.s_, cb.v_);
 
-    TeColor tc(cor.red(), cor.green(),cor.blue());
+    TeColor tc(cor.red(), cor.green(), cor.blue());
     cb.color(tc);
 
     generateColorMap();
@@ -1126,7 +1126,7 @@ void TeQtColorBar::changeAllSaturation()
     else
         dif = 6.*(double)(p_.y() - b_);
 
-    for(ind=0; ind<(int)inputColorVec_.size(); ++ind)
+    for(ind = 0; ind < (int)inputColorVec_.size(); ++ind)
     {
         ColorBar cb = inputColorVec_[ind];
 
@@ -1148,7 +1148,7 @@ void TeQtColorBar::changeAllSaturation()
         }
     }
 
-    for(ind=0; ind<(int)inputColorVec_.size(); ++ind)
+    for(ind = 0; ind < (int)inputColorVec_.size(); ++ind)
     {
         ColorBar& cb = inputColorVec_[ind];
 
@@ -1172,7 +1172,7 @@ void TeQtColorBar::changeAllSaturation()
         QColor cor;
         cor.setHsv(cb.h_, cb.s_, cb.v_);
 
-        TeColor tc(cor.red(), cor.green(),cor.blue());
+        TeColor tc(cor.red(), cor.green(), cor.blue());
         cb.color(tc);
     }
     generateColorMap();
@@ -1218,12 +1218,12 @@ void TeQtColorBar::changeSaturation()
     QColor cor;
     cor.setHsv(cb.h_, cb.s_, cb.v_);
 
-    TeColor tc(cor.red(), cor.green(),cor.blue());
+    TeColor tc(cor.red(), cor.green(), cor.blue());
     cb.color(tc);
 
     generateColorMap();
     drawColorBar();
-	
+
     emit colorChangedSignal();
 }
 
@@ -1261,7 +1261,7 @@ void TeQtColorBar::changeHue()
     QColor cor;
     cor.setHsv(cb.h_, cb.s_, cb.v_);
 
-    TeColor tc(cor.red(), cor.green(),cor.blue());
+    TeColor tc(cor.red(), cor.green(), cor.blue());
     cb.color(tc);
 
     generateColorMap();
@@ -1276,7 +1276,7 @@ void TeQtColorBar::invertColorBar()
     vector<ColorBar> cbVec = inputColorVec_;
     inputColorVec_.clear();
 
-    for(i=(int)cbVec.size()-1; i>=0; --i)
+    for(i = (int)cbVec.size() - 1; i >= 0; --i)
     {
         cbVec[i].distance_ = totalDistance_ - cbVec[i].distance_;
         inputColorVec_.push_back(cbVec[i]);
@@ -1310,7 +1310,7 @@ void TeQtColorBar::setEqualSpace()
 {
     int i;
 
-    for(i=0; i<(int)inputColorVec_.size(); ++i)
+    for(i = 0; i < (int)inputColorVec_.size(); ++i)
         inputColorVec_[i].distance_ = (double)i;
 
     if((int)inputColorVec_.size()-1 >= 0)

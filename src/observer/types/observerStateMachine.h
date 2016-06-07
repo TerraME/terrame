@@ -216,14 +216,14 @@ private:
     QStringList attribList;
     QStringList obsAttrib;          // lista de chaves em observa??o
     QHash<QString, Attributes *> *mapAttributes;  // map de todas as chaves
-    
+
     QVector<int> zoomVec;
     int positionZoomVec;
     float offsetState;
     QPointF center;
 
     QComboBox *zoomComboBox;
- 
+
     QToolButton *butLegend, *butGrid;
     QToolButton *butZoomIn, *butZoomOut;
     QToolButton *butZoomWindow, *butHand;

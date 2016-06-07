@@ -119,7 +119,7 @@ void PainterWidget::calculateResult()
 
     if (existAgent)
         drawAgent();
-    
+
     if (gridEnabled)
         drawGrid();
 
@@ -133,7 +133,7 @@ void PainterWidget::setOperatorMode(QPainter::CompositionMode mode)
 
 void PainterWidget::plotMap(Attributes *attrib)
 {
-    if (! attrib)
+    if (!attrib)
         qFatal("\nErro: PainterWidget::plotMap - Invalid attribute!!\n");
 
     QPainter p;
@@ -171,7 +171,7 @@ bool PainterWidget::rescale(QSize size)
     }
 
     resultImageBkp = img;
-    
+
     if (gridEnabled)
         drawGrid();
 
@@ -180,13 +180,13 @@ bool PainterWidget::rescale(QSize size)
 }
 
 void PainterWidget::paintEvent(QPaintEvent * /* event */)
-{	
+{
     QPainter painter(this);
     painter.drawPixmap(QPoint(0, 0), QPixmap::fromImage(resultImageBkp));
-    
+
     // drawAgent();
 
-    if (! showRectZoom)
+    if (!showRectZoom)
         return;
 
     //---- Desenha o retangulo de zoom
@@ -243,7 +243,7 @@ void PainterWidget::mouseMoveEvent(QMouseEvent *event)
         if (zoomWindow)
         {
             // Define as coordenadas do retangulo de zoom
-            if (! rect().contains( QRect(imageOffset, event->pos()) ))
+            if ( !rect().contains( QRect(imageOffset, event->pos()) ))
             {
 
                 bool right = event->pos().x() > rect().right();
@@ -439,7 +439,7 @@ void PainterWidget::drawAgent()
 
     double orig2destW = (double) resultImageBkp.width() / resultImage.width();
     double orig2destH = (double) resultImageBkp.height() / resultImage.height();
-    
+
     double sizeCellPropW = orig2destW * SIZE_CELL;
     double sizeCellPropH = orig2destH * SIZE_CELL;
 
@@ -448,7 +448,7 @@ void PainterWidget::drawAgent()
 
     recCell = QRectF(0 - sizeCellPropW * 0.5, 0 - sizeCellPropH * 0.5,
                      sizeCellPropW, sizeCellPropH);
-    
+
     //recCell = QRectF(0 - SIZE_CELL * 0.5, 0 - SIZE_CELL * 0.5,
     //                 SIZE_CELL, SIZE_CELL);
 

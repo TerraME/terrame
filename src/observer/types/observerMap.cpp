@@ -33,7 +33,7 @@ of this software and its documentation.
 #include <QLabel>
 #include <QToolButton>
 #include <cmath>
-#include <QDebug> 
+#include <QDebug>
 
 #include "../protocol/decoder/decoder.h"
 
@@ -73,7 +73,7 @@ ObserverMap::~ObserverMap()
     delete zoomComboBox;
 
     delete scrollArea;
-    delete frameTools; 	
+    delete frameTools;
 }
 
 void ObserverMap::init()
@@ -174,7 +174,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                                 QStringList legAttribs)
 {
     connectTreeLayerSlot(false);
-    bool complexMap = false; 
+    bool complexMap = false;
 
     if (itemList.isEmpty())
     {
@@ -186,7 +186,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
 
         foreach(const QString & str, attribs)
         {
-            if (! itemList.contains(str))
+            if (!itemList.contains(str))
                 itemList.append(str);
         }
     }
@@ -206,14 +206,14 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
     Attributes *attrib = 0;
     for(int i = 0; i < itemList.size(); i++)
     {
-        if((! mapAttributes->contains(itemList.at(i)) )
+        if( (!mapAttributes->contains(itemList.at(i)) )
             && (itemList.at(i) != "x") && (itemList.at(i) != "y") )
         {
             obsAttrib.append(itemList.at(i));
             attrib = new Attributes(itemList.at(i), width * height, newWidthCellSpace, newHeightCellSpace);
             attrib->setVisible(true);
 
-            if(! legKeys.isEmpty())
+            if(!legKeys.isEmpty())
             {
                 type = legKeys.indexOf(TYPE);
                 mode = legKeys.indexOf(GROUP_MODE);
@@ -245,7 +245,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                     attrib->setSymbol(QString(QChar(asciiCode)));
                 else
                     attrib->setSymbol(legAttribs.at(symbol));
-                
+
 				attrib->setWidth(legAttribs.at(width).toDouble());
 
                 std::vector<ColorBar> colorBarVec;
@@ -282,9 +282,9 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
         }
     }
 
-    if(! legendWindow)
+    if(!legendWindow)
         legendWindow = new LegendWindow(this);
-    
+
     legendWindow->setValues(mapAttributes);
     zoomWindow();
     connectTreeLayerSlot(true);
@@ -379,7 +379,7 @@ void ObserverMap::showLayerLegend()
 			}
 			else
 			{
-				if (! leg->at(j).getLabel().contains("mean"))
+				if (!leg->at(j).getLabel().contains("mean"))
 					child->setData(0, Qt::DecorationRole,
 					legendWindow->color2Pixmap(color, ICON_SIZE));
 				else
@@ -463,7 +463,7 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
 
     QSize imgSize(painterWidget->size() * zoom);
 
-    if (! painterWidget->rescale(imgSize))
+    if (!painterWidget->rescale(imgSize))
     {
         //printf("\nzoomChanged:> painterWidget->rescale() FALSO\n\n");
         return;
@@ -598,7 +598,7 @@ const QSize ObserverMap::getCellSpaceSize()
 void ObserverMap::connectTreeLayerSlot(bool on)
 {
     // conecta/disconecta o sinal do treeWidget com o slot
-    if (! on)
+    if (!on)
     {
         disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
             this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
@@ -628,9 +628,9 @@ ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
     if (colorItemList.size() < 4){
         string err_out = string("Error: Could not infer legend.");
         lua_getglobal(L, "customError");
-        lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        lua_pushstring(L, err_out.c_str());
+        lua_pushnumber(L, 4);
+        lua_call(L, 2, 0);
     }
 
     if (colorItemList.at(LABEL_) != ITEM_NULL)
@@ -706,7 +706,7 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
     }
 }
 
-bool ObserverMap::constainsItem(const QVector<QPair<Subject *, QString> > &linkedSubjects, 
+bool ObserverMap::constainsItem(const QVector<QPair<Subject *, QString> > &linkedSubjects,
         const Subject *subj)
 {
     for (int i = 0; i < linkedSubjects.size(); i++)
@@ -783,9 +783,9 @@ void ObserverMap::setupGUI()
     //butZoomRestore->setCheckable(true);
     connect(butZoomRestore, SIGNAL(clicked()), this, SLOT(butZoomRestore_Clicked()));
 
-    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300 
+    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300
         << 200 << 100 << 66 << 50 << 33 << 25 << 16  << 12 << 8 << 5 << 3 << 2 << 1;
-    
+
     QStringList zoomList;
 
     for (int i = 0; i < zoomVec.size(); i++)

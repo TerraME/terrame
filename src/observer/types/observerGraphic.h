@@ -50,7 +50,7 @@ class ChartPlot;
  * \author Antonio Jos? da Cunha Rodrigues
  * \file observerGraphic.h
 */
-class ObserverGraphic : public QThread, public ObserverInterf 
+class ObserverGraphic : public QThread, public ObserverInterf
 {
     Q_OBJECT
 
@@ -92,7 +92,7 @@ public:
      * \param attribs a list of attributes
      */
     void setAttributes(const QStringList &attribs, const QStringList &curveTitles,
-        /*const*/ QStringList &legKeys, /*const*/ QStringList &legAttribs);   
+        /*const*/ QStringList &legKeys, /*const*/ QStringList &legAttribs);
 
     /**
      * Gets the list of attributes

@@ -51,7 +51,7 @@ namespace TerraMEObserver{
     class Subject;
 
 
-    inline static void doubleToQString(const double & number, QString & string, 
+    inline static void doubleToQString(const double & number, QString & string,
         const int & precision = TerraMEObserver::NUMBERIC_PRECISION)
     {
         string = "";
@@ -67,11 +67,11 @@ namespace TerraMEObserver{
 bool sortAttribByType(TerraMEObserver::Attributes *a, TerraMEObserver::Attributes *b);
 
 /// Auxiliary Function for sorting objects Subjects by the class name.
-bool sortByClassName(const QPair<TerraMEObserver::Subject *, QString> & pair1, 
+bool sortByClassName(const QPair<TerraMEObserver::Subject *, QString> & pair1,
     const QPair<TerraMEObserver::Subject *, QString> & pair2);
 
 
-// ---------------------- 
+// ----------------------
 
 //const char *getSubjectName(TypesOfSubjects type);
 //const char *getObserverName(TypesOfObservers type);
@@ -186,7 +186,7 @@ public:
      * \param attribs a list of attributes under observation
      */
     // virtual void setAttributes(QStringList &) = 0;
-    
+
     /**
     * Recupera a lista de atributos em observa??o
     * \return QStringList lista de atributtos
@@ -247,7 +247,7 @@ public:
     */
     virtual QDataStream& getState(QDataStream &state, Subject *subj,
                                   int observerId, QStringList &attribs) = 0;
-    
+
     /**
     * Gets the type of Subject
     * \see TypesOfSubjects

@@ -128,7 +128,7 @@ bool ObserverTextScreen::headerDefined()
 bool ObserverTextScreen::write()
 {
     // insere o cabe?alho do arquivo
-    if (! header)
+    if (!header)
     {
         QString headers;
         for (int i = 0; i < attribList.size(); ++i)

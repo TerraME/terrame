@@ -37,7 +37,7 @@ namespace TerraMEObserver {
  * \author Antonio Jos? da Cunha Rodrigues
  * \file player.h
  */
-class Player 
+class Player
 {
 public:
     /**

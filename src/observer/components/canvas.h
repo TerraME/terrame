@@ -109,7 +109,7 @@ protected:
      * \see QMouseEvent
      */
     void mouseReleaseEvent(QMouseEvent *);
-    
+
 private:
 
     QPointF lastDragPos, imageOffset;

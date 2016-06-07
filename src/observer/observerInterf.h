@@ -166,7 +166,7 @@ public:
      */
     virtual QDataStream& getState(QDataStream &state, Subject *subj,
                                   int observerId, QStringList &attribs) = 0;
-    
+
     /**
      * \copydoc TerraMEObserver::Subject::getType
      */

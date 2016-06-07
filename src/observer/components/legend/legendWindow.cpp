@@ -270,7 +270,7 @@ void LegendWindow::attributesComboBox_activated(const QString &selected)
         if (isVisible() && attrValuesChanged)
         {
             attrValuesChanged = false;
-            
+
              QMessageBox msgBox(this);
              msgBox.setWindowTitle("Map");
              msgBox.setText(tr("The attribute value has been modified.\n"
@@ -398,9 +398,9 @@ void LegendWindow::applyPushButton_clicked()
                 QString st = QString("Warning: %1").arg(msg);
                 string err_out = st.toLatin1().constData();
                 lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                lua_pushstring(L, err_out.c_str());
+                lua_pushnumber(L, 4);
+                lua_call(L, 2, 0);
             }
         }
         groupingModeComboBox->setCurrentIndex(attrib->getGroupMode());
@@ -534,7 +534,7 @@ void LegendWindow::colorChangedSlot()
     }
 }
 
-// em caso de duvida ver c?digo no arquivo 
+// em caso de duvida ver c?digo no arquivo
 // TeQtLegendSource.cpp, linha 526, m?todo putColorOnLegend
 void LegendWindow::createColorVector()
 {
@@ -550,7 +550,7 @@ void LegendWindow::createColorVector()
     if (rows == 1)
         rows++;
 
-    if (groupingModeComboBox->currentIndex() != TObsStdDeviation) 
+    if (groupingModeComboBox->currentIndex() != TObsStdDeviation)
     {
         leftColorVec = getColors(colorVec, rows);
 
@@ -618,7 +618,7 @@ void LegendWindow::countElementsBySlices()
             from = leg.getFromNumber();
             to = leg.getToNumber();
 
-            if (! leg.getLabel().contains(MEAN))
+            if (!leg.getLabel().contains(MEAN))
             {
                 // conta a ocorrencia dos mesmos valores
                 for (it = values->begin(); it != values->end(); ++it)
@@ -627,7 +627,7 @@ void LegendWindow::countElementsBySlices()
                     {
                         occurrence++;
                         leg.setOccurrence(occurrence);
-                        leg.setColor(teColorVec->at(leg.getIdxColor()).red_, 
+                        leg.setColor(teColorVec->at(leg.getIdxColor()).red_,
                                 teColorVec->at(leg.getIdxColor()).green_,
                                 teColorVec->at(leg.getIdxColor()).blue_);
 						std::cout << "legendWindow " << 4 << std::endl;
@@ -692,16 +692,16 @@ void LegendWindow::countElementsBySlices()
 				}
 
 				// exibe na tabela
-				model->setData(model->index(i, 0, QModelIndex()), color2PixmapLine(leg.getColor(), attrib->getWidth()), 
+				model->setData(model->index(i, 0, QModelIndex()), color2PixmapLine(leg.getColor(), attrib->getWidth()),
 					Qt::DecorationRole);
 
-				model->setData(model->index(i, 1, QModelIndex()), leg.getFrom(), 
+				model->setData(model->index(i, 1, QModelIndex()), leg.getFrom(),
 					Qt::DisplayRole);
-				model->setData(model->index(i, 2, QModelIndex()), leg.getTo(), 
+				model->setData(model->index(i, 2, QModelIndex()), leg.getTo(),
 					Qt::DisplayRole);
-				model->setData(model->index(i, 3, QModelIndex()), leg.getLabel(), 
+				model->setData(model->index(i, 3, QModelIndex()), leg.getLabel(),
 					Qt::DisplayRole);
-				model->setData(model->index(i, 4, QModelIndex()), leg.getOcurrence(), 
+				model->setData(model->index(i, 4, QModelIndex()), leg.getOcurrence(),
 					Qt::DisplayRole);
 			}
 			//@RAIAN: FIM
@@ -899,7 +899,7 @@ void LegendWindow::groupByQuantil(double fix, Attributes *attrib)
         }
 
         QString label = QString("%1 ~ %2").arg(from).arg(to);
-        
+
         ObsLegend leg;
         leg.setFrom(from);
         leg.setTo(to);
@@ -908,7 +908,7 @@ void LegendWindow::groupByQuantil(double fix, Attributes *attrib)
 
         // recupera a cor j? dividida entre os slices
         // n - 1 pq o "n" ? pre-incrementado (++n)
-        leg.setColor(teColorVec->at(n - 1).red_, 
+        leg.setColor(teColorVec->at(n - 1).red_,
                 teColorVec->at(n - 1).green_,
                 teColorVec->at(n - 1).blue_);
         vecLegend->append(leg);
@@ -1014,7 +1014,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
         ObsLegend leg = vecLegend->at(0);
         leg.setFrom( QString("%1").arg(min - fix, 0, 'f', precision) );
 
-        if (! leg.getFrom().contains(MEAN))
+        if (!leg.getFrom().contains(MEAN))
         {
             leg.setLabel( QString("%1 ~ %2")
                           .arg(leg.getFrom()).arg(leg.getTo()) );
@@ -1025,7 +1025,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
         leg = vecLegend->at(vecLegend->size() - 1);
         leg.setTo( QString("%1").arg(max + fix, 0, 'f', precision) );
 
-        if (! leg.getFrom().contains(MEAN))
+        if (!leg.getFrom().contains(MEAN))
         {
             leg.setLabel( QString("%1 ~ %2")
                           .arg(leg.getFrom()).arg(leg.getTo()) );
@@ -1038,7 +1038,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //{
 //    // Correcao do bug apresentado quando se altera a posicao
 //    // das cores definidas na legenda pois os resultados do map/image
-//    // s?o diferentes (Ticket 85). 
+//    // s?o diferentes (Ticket 85).
 //    // if (attrib->getDataType() == TObsNumber)
 //    //     attrib->getValueList().clear();
 //
@@ -1073,7 +1073,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //    {
 //        QString msg;
 //        msg = tr("The \"%1\" attribute has been configured incorrectly. An error might "
-//                    "have occurred when this attribute was defined in the legend.") 
+//                    "have occurred when this attribute was defined in the legend.")
 //                    .arg(attrib->getName());
 //
 //        if (isVisible())
@@ -1094,7 +1094,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //    double min = attrib->getMinValue();
 //    QString from;
 //
-//    // Cria todas as entradas poss?veis 
+//    // Cria todas as entradas poss?veis
 //    // considerando os valores de m?ximo e m?nimo
 //    for (double i = min; i <= max; i++)
 //    {
@@ -1151,7 +1151,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //                msg = tr("Was found more values in the model than those reported in the legend for the "
 //                    "attribute \"%1\". Please, check the maximum and mininum value for this attribute.")
 //                    .arg(attrib->getName());
-//                
+//
 //                if (isVisible())
 //                {
 //                    QMessageBox::information(this, windowTitle(), msg);
@@ -1214,7 +1214,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //            }
 //            //else
 //            //{
-//            //    // qWarning() << "out of range -- " << from; 
+//            //    // qWarning() << "out of range -- " << from;
 //            //    leg.setLabel("out of range");
 //
 //            //    vecLegend->push_back(leg);
@@ -1237,7 +1237,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //
 //        // Recupera o label na lista de labels
 //        if ((labels.size() == vecLegend->size()) && (values.size() == vecLegend->size()))
-//        {            
+//        {
 //            leg.setLabel( labels.at(i) );
 //            leg.setFrom( values.at(i) );
 //            leg.setIdxColor(i);
@@ -1280,7 +1280,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 {
     // Correcao do bug apresentado quando se altera a posicao
     // das cores definidas na legenda pois os resultados do map/image
-    // s?o diferentes (Ticket 85). 
+    // s?o diferentes (Ticket 85).
     // if (attrib->getDataType() == TObsNumber)
     //      attrib->getValueList().clear();
 
@@ -1315,7 +1315,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
     {
         QString msg;
         msg = tr("The \"%1\" attribute has been configured incorrectly. An error might "
-                    "have occurred when this attribute was defined in the legend.") 
+                    "have occurred when this attribute was defined in the legend.")
                     .arg(attrib->getName());
 
         if (isVisible())
@@ -1367,7 +1367,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             // caso j? contenha o item retorna o indice
             vecLegendPos = attrib->addValueListItem(from);
 
-            if ((! noValues) && (vecLegendPos >= vecLegend->size()) )
+            if ((!noValues) && (vecLegendPos >= vecLegend->size()) )
             {
 /* 
                QString msg;
@@ -1390,7 +1390,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 */
                 break;
             }
-            
+
             ObsLegend leg;
             leg.setIdxColor(vecLegendPos);
             leg.setFrom( from );
@@ -1415,7 +1415,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
     //qDebug() << "txtValues.size(): " << txtValues.size();
     //qDebug() << "(i-2): " << txtValues.at(i - 2) << " (i-1): " << txtValues.at(i - 1);
 
-    if (! txtValues.empty())
+    if (!txtValues.empty())
     {
         // Verif. as posi??es ?ltima e pen?ltima
         if ( (i > 1) && (txtValues.at(i - 2) == txtValues.at(i - 1)) )
@@ -1429,7 +1429,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             leg.setLabel( from );
             leg.setTo( from );
             leg.setOccurrence(count);
-            
+
             // Override the leg in the position vecLegendPos
             if (vecLegendPos < vecLegend->size())
                 vecLegend->replace(vecLegendPos, leg);
@@ -1445,14 +1445,14 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             leg.setLabel( from );
             leg.setTo( from );
             leg.setOccurrence(1);
-            
+
             if (vecLegendPos < vecLegend->size())
             {
                 vecLegend->replace(vecLegendPos, leg);
             }
             //else
             //{
-            //    // qWarning() << "out of range -- " << from; 
+            //    // qWarning() << "out of range -- " << from;
             //    leg.setLabel("out of range");
 
             //    vecLegend->push_back(leg);
@@ -1461,7 +1461,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             //}
         }
     }
-    
+
     rows = vecLegend->size();
     createView(rows);
     createColorVector();
@@ -1478,7 +1478,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 
         // Recupera o label na lista de labels
         if ((labelsList.size() == vecLegend->size()) && (valuesList.size() == vecLegend->size()))
-        {            
+        {
             leg.setLabel( labelsList.at(i) );
             leg.setFrom( valuesList.at(i) );
             leg.setIdxColor(i);
@@ -1655,13 +1655,13 @@ QPixmap LegendWindow::color2PixmapLine(const QColor &color, double width, const 
     QPainter p(&img);
 
 	p.fillRect(img.rect(), Qt::white);
-    
+
 	QPen pen(color);
 	pen.setStyle(Qt::SolidLine);
 	pen.setWidth(width);
 
 	p.setPen(pen);
-	p.drawLine(QLine(QPoint(0,(size.height()/2)), QPoint(size.width(), (size.height()/2))));
+	p.drawLine(QLine(QPoint(0, (size.height()/2)), QPoint(size.width(), (size.height()/2))));
 	p.end();
 
     return QPixmap::fromImage(img);
@@ -1712,7 +1712,7 @@ void LegendWindow::connectSlots(bool con)
 
         connect(applyPushButton, SIGNAL(clicked()), this,
                 SLOT(applyPushButton_clicked()));
-        connect(legendTable, SIGNAL(cellDoubleClicked(int,int)), this,
+        connect(legendTable, SIGNAL(cellDoubleClicked(int, int)), this,
                 SLOT(legendTable_doubleClicked(int, int)));
 
         connect(frameTeQtColorBar, SIGNAL(colorChangedSignal()), this,
@@ -1773,7 +1773,7 @@ void LegendWindow::connectSlots(bool con)
 
         disconnect(applyPushButton, SIGNAL(clicked()), this,
                 SLOT(applyPushButton_clicked()));
-        disconnect(legendTable, SIGNAL(cellDoubleClicked(int,int)), this,
+        disconnect(legendTable, SIGNAL(cellDoubleClicked(int, int)), this,
                 SLOT(legendTable_doubleClicked(int, int)));
 
         disconnect(frameTeQtColorBar, SIGNAL(colorChangedSignal()), this,
@@ -1821,8 +1821,8 @@ void LegendWindow::commitFile()
 
     keys = mapAttributes->keys();
 
-    legendKeys << TYPE << GROUP_MODE << SLICES << PRECISION 
-            << STD_DEV << MAX << MIN 
+    legendKeys << TYPE << GROUP_MODE << SLICES << PRECISION
+            << STD_DEV << MAX << MIN
             << SYMBOL << FONT_FAMILY << FONT_SIZE     // atributos especiais para os agentes
             << COLOR_BAR << STD_COLOR_BAR;          // tabelas de cores
 
@@ -1859,7 +1859,7 @@ void LegendWindow::commitFile()
         if ((int)colorBarVec.size() > 0)
         {
             colors = "{\n" + tabulation + tabulation;
-            
+
             for (int j = 0; j < (int)colorBarVec.size(); j++)
             {
                 QString color = QString("color = {{%1, %2, %3}, distance = %4}")	// formata??o: "r g b dist; "
@@ -1867,12 +1867,12 @@ void LegendWindow::commitFile()
                         .arg(QString::number(colorBarVec.at(j).cor_.green_))
                         .arg(QString::number(colorBarVec.at(j).cor_.blue_))
                         .arg(QString::number(colorBarVec.at(j).distance_));
-				
+
                 if (j < (int)colorBarVec.size() - 1)
                     color.append(",\n" + tabulation + tabulation);
                 else
                     color.append("\n");
-                
+
                 colors.append(color);
             }
             colors.append(tabulation + "},");
@@ -1899,7 +1899,7 @@ void LegendWindow::commitFile()
                             .arg(QString::number(colorBarVec.at(j).cor_.green_))
                             .arg(QString::number(colorBarVec.at(j).cor_.blue_))
                             .arg(QString::number(colorBarVec.at(j).distance_));
-					
+
                     if (j < (int)colorBarVec.size() - 1)
                         color.append(",\n" + tabulation + tabulation);
                     else
@@ -1915,7 +1915,7 @@ void LegendWindow::commitFile()
         }
 
         legAttribs.push_back(colors);
-    
+
         // descarrega no arquivo
         for (int k = 0; k < legendKeys.size(); k++)
         {

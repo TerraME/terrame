@@ -60,7 +60,7 @@ Observer * CellSpaceSubjectInterf::createObserver(TypesOfObservers type)
         case TObsMap:
             obs = new AgentObserverMap(this);
             break;
-    
+
         case TObsTextScreen:
         default:
             obs = new ObserverTextScreen(this);
@@ -74,7 +74,7 @@ bool CellSpaceSubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (! obs)
+    if (!obs)
         return false;
 
     switch (obs->getType())

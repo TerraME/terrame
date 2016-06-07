@@ -47,7 +47,7 @@ Decoder::~Decoder()
 
 }
 
-bool Decoder::decode(const QString &protocol, 
+bool Decoder::decode(const QString &protocol,
                      QVector<double> &xs, QVector<double> &ys)
 {
     int idx = 0;
@@ -64,14 +64,14 @@ bool Decoder::decode(const QString &protocol,
     return ret;
 }
 
-bool Decoder::interpret(QStringList &tokens, int &idx, 
+bool Decoder::interpret(QStringList &tokens, int &idx,
                         QVector<double> &xs, QVector<double> &ys)
 {
     bool ret = false;
     QString id;
     TypesOfSubjects subjectType = TObsUnknown;
     int numAttrib = 0, numElem = 0;
-    
+
     ret = consumeID(id, tokens, idx);
     ret = ret && consumeSubjectType(subjectType, tokens, idx);
     ret = ret && consumeAttribNumber(numAttrib, tokens, idx);
@@ -106,7 +106,6 @@ bool Decoder::interpret(QStringList &tokens, int &idx,
 	//@RAIAN: FIM
 	else
 	{
-    
 		int i = 4;
 		for(; ret && (i < numAttrib + 4); i += 3)
 			ret = consumeTriple(tokens, idx, xs, ys);
@@ -123,7 +122,7 @@ bool Decoder::consumeID(QString &id, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
         return false;
-        
+
     id = tokens.at(idx);
     idx++;
     return true;
@@ -134,7 +133,7 @@ bool Decoder::consumeSubjectType(TypesOfSubjects &type, QStringList &tokens, int
 {
     if (tokens.size() <= idx)
         return false;
-        
+
     type = (TypesOfSubjects) tokens.at(idx).toInt();
     idx++;
     return true;
@@ -145,7 +144,7 @@ bool Decoder::consumeAttribNumber(int &value, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
         return false;
-        
+
     value = tokens.at(idx).toInt();
     idx++;
     return true;
@@ -156,7 +155,7 @@ bool Decoder::consumeElementNumber(int &value, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
         return false;
-        
+
     value = tokens.at(idx).toInt();
     idx++;
     return true;
@@ -227,7 +226,7 @@ void Decoder::consumeNeighborhood(QStringList &tokens, int &idx, QString neighbo
 	for(int i = 0; (i < (numElem - 3)) && idx < tokens.size(); i += 3)
 	{
 		consumeNeighbor(tokens, idx, neighborhood);
-	}	
+	}
 }
 
 void Decoder::consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList<double> > &neighborhood)
@@ -235,7 +234,7 @@ void Decoder::consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList
 	QString id;
 	TypesOfSubjects subjectType = TObsUnknown;
 	int numAttrib = 0, numElem = 0;
-	
+
 	consumeID(id, tokens, idx);
 	consumeSubjectType(subjectType, tokens, idx);
 	consumeAttribNumber(numAttrib, tokens, idx);
@@ -245,7 +244,7 @@ void Decoder::consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList
 	numElem *= 3;
 
 	QList<double> neighbor = QList<double>();
-	
+
 	for(int i = 0; i < numAttrib; i += 3)
 	{
 		consumeNeighborTriple(tokens, idx, neighbor);
@@ -257,7 +256,7 @@ void Decoder::consumeNeighborTriple(QStringList &tokens, int &idx, QList<double>
 {
 	QString key = tokens.at(idx);
 	// TypesOfData type = (TypesOfData) tokens.at(idx + 1).toInt();
-	
+
 	if(key == "x")
 		neighbor.insert(0, tokens.at(idx + 2).toDouble());
 	else

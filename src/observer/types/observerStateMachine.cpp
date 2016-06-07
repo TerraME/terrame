@@ -235,7 +235,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
     Attributes *attrib = 0;
     for( int i = 0; i < attribs.size(); i++)
     {
-        if ((! mapAttributes->contains(attribs.at(i)))
+        if ((!mapAttributes->contains(attribs.at(i)))
             && (attribs.at(i) != QString("x")) && (attribs.at(i) != QString("y")) )
         {
             obsAttrib.append(attribs.at(i));
@@ -285,7 +285,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
         }
     }
 
-    if (! legendWindow)
+    if (!legendWindow)
         legendWindow = new LegendWindow(this);
     legendWindow->setValues(mapAttributes);
 }
@@ -380,7 +380,7 @@ void ObserverStateMachine::showLayerLegend()
                 child->setText(0, leg->at(j).getLabel());
                 QColor color = leg->at(j).getColor();
 
-                if (! leg->at(j).getLabel().contains("mean"))
+                if (!leg->at(j).getLabel().contains("mean"))
                     child->setData(0, Qt::DecorationRole,
                     legendWindow->color2Pixmap(color, ICON_SIZE));
                 else
@@ -535,7 +535,7 @@ void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, float width,
     float ratio = scene->sceneRect().width() / scene->sceneRect().height();
     ratio *= scene->sceneRect().width();
     float percent = 0.0;
-    
+
     if (width < height)
         percent = zoomRect.width() / ratio;
     else
@@ -601,12 +601,12 @@ void ObserverStateMachine::zoomOut()
 //    // conecta/disconecta o sinal do treeWidget com o slot
 //    if (! connect)
 //    {
-//        disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )), 
+//        disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
 //            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
 //    }
 //    else
 //    {
-//        QWidget::connect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )), 
+//        QWidget::connect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
 //            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
 //    }
 //}
@@ -620,9 +620,9 @@ void ObserverStateMachine::setupGUI()
     scene->setSceneRect(0, 0, 100, 200);
 
     view = new Canvas(scene, this);
-    view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); // 
+    view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); //
     // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); n?o existe na vers?o 4.3.4
-    // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); 
+    // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     view->setRenderHint(QPainter::Antialiasing);
     // view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     // view->setFrameShape(QFrame::WinPanel);
@@ -683,7 +683,7 @@ void ObserverStateMachine::setupGUI()
     //butZoomRestore->setCheckable(true);
     connect(butZoomRestore, SIGNAL(clicked()), this, SLOT(butZoomRestore_Clicked()));
 
-    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300 
+    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300
         << 200 << 100 << 66 << 50 << 33 << 25 << 16  << 12 << 8 << 5 << 3 << 2 << 1;
 
     QStringList zoomList;

@@ -128,7 +128,7 @@ private:
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
 
-    QStringList attribList,valuesList;
+    QStringList attribList, valuesList;
 
     bool header;
     bool paused;

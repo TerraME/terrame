@@ -341,14 +341,14 @@ void ObserverMapSuperclass::butLegend_Clicked()
 
 void ObserverMapSuperclass::butZoomIn_Clicked()
 {
-    positionZoomVec = max(positionZoomVec-1,0);
+    positionZoomVec = max(positionZoomVec-1, 0);
     zoomComboBox->setCurrentIndex(positionZoomVec);
     zoomActivated(zoomComboBox->currentText());
 }
 
 void ObserverMapSuperclass::butZoomOut_Clicked()
 {
-    positionZoomVec = min(positionZoomVec+1,22);
+    positionZoomVec = min(positionZoomVec + 1, 22);
     zoomComboBox->setCurrentIndex(positionZoomVec);
     zoomActivated(zoomComboBox->currentText());
 }
@@ -445,7 +445,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
 
         foreach(const QString & str, attribs)
         {
-            if (! attribList.contains(str))
+            if (!attribList.contains(str))
                 attribList.append(str);
         }
     }
@@ -479,7 +479,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
     {
         if(attribList.at(i) == QString("objectId_")) hasObjectId++;
         //qDebug() << "------------------" << attribList.at(i) << " " << hasObjectId;
-        if (((! mapAttributes->contains(attribs.at(i)))
+        if (((!mapAttributes->contains(attribs.at(i)))
                 && (attribList.at(i) != QString("x"))
                 && (attribList.at(i) != QString("y"))
                 && (attribList.at(i) != QString("objectId_")))
@@ -552,7 +552,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
 
     //if(!hasObsId) obsAttrib.append("objectId_");
 
-    if (! legendWindow)
+    if (!legendWindow)
         legendWindow = new LegendWindow(this);
     legendWindow->setValues(mapAttributes);
 
@@ -575,7 +575,7 @@ const TypesOfObservers ObserverMapSuperclass::getType()
 void ObserverMapSuperclass::connectTreeLayerSlot(bool on)
 {
     // conecta/disconecta o sinal do treeWidget com o slot
-    if (! on)
+    if (!on)
     {
         QWidget::disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
             this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));

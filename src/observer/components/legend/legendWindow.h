@@ -77,7 +77,7 @@ public:
      * \see QWidget
      */
     LegendWindow(QWidget *parent = 0);
-    
+
     /**
      * Destructor
      */
@@ -104,7 +104,7 @@ public:
      * \see QPixmap, \see QSize
      */
     QPixmap color2Pixmap(const QColor &color, const QSize size = ICON_SIZE);
-	
+
 	//@RAIAN
 		/// \author Raian Vargas Maretto
 		QPixmap color2PixmapLine(const QColor &color, double width, const QSize size = ICON_SIZE);
@@ -356,7 +356,7 @@ private:
     QLabel *stdDevTextLabel;
     QLabel *functionTextLabel;
     QLabel *chrononTextLabel;
-    
+
     QComboBox *groupingModeComboBox;
     QComboBox *slicesComboBox;
     QComboBox *precisionComboBox;

@@ -33,11 +33,11 @@ class UdpSenderGUI;
 class UdpSenderGUI : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     UdpSenderGUI(QWidget *parent = 0);
     virtual ~UdpSenderGUI();
-    
+
     void setPort(int port);
     void setStateSent(int state);
     void setMessagesSent(int msg);

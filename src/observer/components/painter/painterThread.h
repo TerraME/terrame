@@ -60,7 +60,7 @@ public:
      * \see QObject
      */
     PainterThread(QObject *parent = 0);
-    
+
     /**
      * Destructor
      */
@@ -108,7 +108,7 @@ private:
      * \param y axis position
      */
     void draw(QPainter *p, TypesOfSubjects subjType , double &x, double &y);
-	
+
 	//@RAIAN: Desenha a vizinhanca
 		/// Draws a Neighborhood object
 		/// \author Raian Vargas Maretto

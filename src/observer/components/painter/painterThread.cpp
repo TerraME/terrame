@@ -129,7 +129,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 		for(int pos = 0; pos < neighborhoods->size(); pos++)
 		{
             QMap<QString, QList<double> > neigh = neighborhoods->at(pos);
-			
+
 			xCell = attrib->getXsValue()->at(pos);
 			yCell = attrib->getYsValue()->at(pos);
 

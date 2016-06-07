@@ -128,7 +128,7 @@ void Receiver::processPendingDatagrams()
     bool compressDatagram = false;
     qint64 dataSize = -1.0, pos = 0;
     qint64 datagramSize = -1; // , dataRemainder = -1.0;
-        
+
     QHostAddress host;
     quint16 port;
 
@@ -174,12 +174,12 @@ void Receiver::processPendingDatagrams()
     if ((pos > -1)) // && (data != COMPLETE_STATE.toLatin1()))
     {
         // redimensiona o objeto e insere lixo
-        // msg.insert( (int)pos, data); 
+        // msg.insert( (int)pos, data);
         completeData.replace( (int)pos, data.size(), data);
 
         message = tr("Messages received: %1. From: %2, Port: %3")
             .arg(msgReceiver).arg(host.toString()).arg(port);
-    
+
         ui->logEdit->appendPlainText(
             QDateTime::currentDateTime().toString("MM/dd/yyyy, hh:mm:ss: ") + message);
     }
@@ -229,18 +229,18 @@ void Receiver::processDatagram(const QString msg)
 }
 #include <QFile>
 void Receiver::processDatagram(QByteArray msg)
-{ 
+{
     // QString m(msg);
     // static int asas = 0; asas++;
     // QFile file("receiverSPLITTED_" + QString::number(asas) + ".txt");
     // if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     // {
     //     QTextStream out(&file);
-    //    
+    //
     //     foreach(QString x, m.split(PROTOCOL_SEPARATOR, QString::SkipEmptyParts))
     //         out << x << "\n";
     //}
-    // 
+    //
     //QFile file1("receiverDATAGRAM_" + QString::number(asas) + ".txt");
     //if (file1.open(QIODevice::WriteOnly | QIODevice::Text))
     //{

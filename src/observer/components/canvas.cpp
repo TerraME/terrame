@@ -66,7 +66,7 @@ void Canvas::setPanCursor()
 }
 
 void Canvas::paintEvent(QPaintEvent * ev)
-{	
+{
     if (showRectZoom)
     {
         //---- Desenha o retangulo de zoom
@@ -79,7 +79,7 @@ void Canvas::paintEvent(QPaintEvent * ev)
         //painter.setBrush(brush);
         // painter.drawRect(QRect(imageOffset, lastDragPos));
 
-        zoomRectItem = scene()->addRect(QRectF(mapToScene(imageOffset.x(), imageOffset.y()), 
+        zoomRectItem = scene()->addRect(QRectF(mapToScene(imageOffset.x(), imageOffset.y()),
             mapToScene(lastDragPos.x(), lastDragPos.y()) ), pen, brush);
     }
     QGraphicsView::paintEvent(ev);
@@ -118,7 +118,7 @@ void Canvas::mouseMoveEvent(QMouseEvent *ev)
         if (zoomWindow)
         {
             // Define as coordenadas do retangulo de zoom
-            if (! sceneRect().contains( QRectF(imageOffset, ev->pos()) ))
+            if ( !sceneRect().contains( QRectF(imageOffset, ev->pos()) ))
             {
 
                 bool right = ev->pos().x() > rect().right();

@@ -98,7 +98,7 @@ Observer * SubjectInterf::getObserverById(int id)
     return SubjectInterf::pImpl_->getObserverById(id);
 }
 
-void SubjectInterf::notify(double time) 
+void SubjectInterf::notify(double time)
 {
     SubjectInterf::pImpl_->notifyObservers(time);
 }

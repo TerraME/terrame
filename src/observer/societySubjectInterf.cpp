@@ -64,7 +64,7 @@ bool SocietySubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (! obs)
+    if (!obs)
         return false;
 
     switch (obs->getType())
@@ -94,7 +94,7 @@ bool SocietySubjectInterf::kill(int id)
             ((ObserverTextScreen *)obs)->close();
             delete (ObserverTextScreen *)obs;
             break;
-            
+
         default:
             delete obs;
             break;

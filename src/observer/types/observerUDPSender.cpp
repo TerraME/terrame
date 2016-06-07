@@ -72,11 +72,11 @@ void ObserverUDPSender::init()
 
     paused = false;
     failureToSend = false;
-    compressDatagram = true;   //  //  false; 
+    compressDatagram = true;   //  //  false;
 
     // default port
     port = DEFAULT_PORT;
-    
+
     if (compressDatagram)
         datagramRatio = 50.0;
     else
@@ -109,7 +109,7 @@ bool ObserverUDPSender::draw(QDataStream &state)
     QString msg;
     state >> msg;
 
-    if (! sendDatagram(msg))
+    if (!sendDatagram(msg))
     {
         datagramRatio *= 0.5;
         datagramSize = MINIMUM_DATAGRAM_SIZE * datagramRatio;
@@ -128,9 +128,9 @@ bool ObserverUDPSender::draw(QDataStream &state)
 
         if (execModes != Quiet){
             lua_getglobal(L, "customWarning");
-            lua_pushstring(L,str.toLatin1().constData());
-            lua_pushnumber(L,4);
-            lua_call(L,2,0);
+            lua_pushstring(L, str.toLatin1().constData());
+            lua_pushnumber(L, 4);
+            lua_call(L, 2, 0);
         }
 
     }
@@ -189,14 +189,14 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
         {
             out << qCompress( data.mid(pos, datagramSize), COMPRESS_RATIO);
         }
-        else    
+        else
         {
             out << data.mid(pos, datagramSize);
         }
 
         for(int i = 0; i < hosts->size(); i++)
         {
-            bytesWritten = udpSocket->writeDatagram(datagram, hosts->at(i), port);     
+            bytesWritten = udpSocket->writeDatagram(datagram, hosts->at(i), port);
 
             udpSocket->flush();
 
@@ -212,9 +212,9 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
 #ifdef TME_LUA_5_2
                 if (execModes != Quiet){
                     lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,error.toLatin1().constData());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                    lua_pushstring(L, error.toLatin1().constData());
+                    lua_pushnumber(L, 4);
+                    lua_call(L, 2, 0);
                 }
 #else
 
@@ -230,7 +230,7 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
         if (compressDatagram)
         {
             bytesRead -= datagramSize;
-            pos += datagramSize;        
+            pos += datagramSize;
         }
         else
         {
@@ -257,7 +257,7 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
     //    .arg(compressionSum).arg(compressionCount).arg(compressionSum / compressionCount));
     //udpGUI->appendMessage(tr("renderingSum: %1 / %2 = %3")
     //    .arg(renderingSum).arg(renderingCount).arg(renderingSum / renderingCount));
-    
+
     udpGUI->appendMessage(tr("States sent: %1.\n").arg(stateCount));
 
     return true;
@@ -314,7 +314,7 @@ bool ObserverUDPSender::completeState(const QByteArray & flag)
 
     if (compressDatagram)
        out << qCompress( data, 1);
-    else    
+    else
         out << data;
 
     for(int i = 0; i < hosts->size(); i++)

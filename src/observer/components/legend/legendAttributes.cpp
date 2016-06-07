@@ -157,7 +157,7 @@ unsigned int ObsLegend::getIdxColor() const
 //////////////////////////////////////////////////////////////////////////////////////////// ATTRIBUTES
 
 Attributes::Attributes(QString name, int contSize, double width, double height) : attribName(name)
-{	
+{
     containersSize = contSize;
     attribDataType = TObsUnknownData;
     attribType = TObsCell;
@@ -172,7 +172,7 @@ Attributes::Attributes(QString name, int contSize, double width, double height) 
 	//@RAIAN
         neighValues = new QVector<QMap<QString, QList<double> > >;
 	//@RAIAN: FIM
-	
+
     valueList = QStringList();
     labelList = QStringList();
     legend = new QVector<ObsLegend>();
@@ -223,7 +223,7 @@ Attributes::Attributes(const Attributes &other)
 		//@RAIAN
 		neighValues = other.neighValues;
 		//@RAIAN: FIM
-		
+
         colorBarVec = colorBarVec;
         stdColorBarVec = stdColorBarVec;
         valueList = valueList;
@@ -283,7 +283,7 @@ Attributes & Attributes::operator=(const Attributes &other)
 	//@RAIAN
 	neighValues = other.neighValues;
 	//@RAIAN: FIM
-	
+
     colorBarVec = colorBarVec;
     stdColorBarVec = stdColorBarVec;
     valueList = valueList;
@@ -329,7 +329,7 @@ Attributes::~Attributes()
     delete legend; legend = 0;
     delete xs; xs = 0;
     delete ys; ys = 0;
-	
+
 	//@RAIAN
 	delete neighValues;
 	//@RAIAN: FIM
@@ -376,14 +376,14 @@ QVector<bool>* Attributes::getBoolValues()
 }
 
 void Attributes::addValue(double num)
-{ 
+{
     //if (numericValues->size() == containersSize)
     //    numericValues->clear();
     numericValues->push_back(num);
 }
 
 void Attributes::addValue(bool b)
-{ 
+{
     //if (boolValues->size() == containersSize)
     //    boolValues->clear();
     boolValues->push_back(b);
@@ -533,7 +533,7 @@ void Attributes::setValueList(const QStringList & values)
 
 int Attributes::addValueListItem(QString value)
 {
-    if (! valueList.contains(value))
+    if (!valueList.contains(value))
     {
         valueList.push_back(value);
         return valueList.size() - 1;
@@ -553,7 +553,7 @@ void Attributes::setLabelList(const QStringList & labels)
 
 int Attributes::addLabelListItem(QString label)
 {
-    if (! labelList.contains(label))
+    if (!labelList.contains(label))
     {
         labelList.push_back(label);
         return labelList.size() - 1;
@@ -627,7 +627,7 @@ void Attributes::addValue(QMap<QString, QList<double> > n)
 
 void Attributes::setWidth(double w)
 {
-	width = w;	
+	width = w;
 }
 
 double Attributes::getWidth()
@@ -750,7 +750,7 @@ qreal Attributes::getDirection(int pos, double x1, double y1)
 
     if (point == newPoint)
         return lastPos.at(pos).second;
-    
+
     lastPos[pos].first = newPoint;
 
     double num = y1 - point.y();
@@ -769,7 +769,7 @@ qreal Attributes::getDirection(int pos, double x1, double y1)
         else
             if ((den == 0) && (num != 0)) // movimento na vertical
                 angle = (num > 0) ? 90 : 270;
-        
+
         lastPos[pos].second = angle;
         return angle;
     }

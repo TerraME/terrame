@@ -57,7 +57,7 @@ public:
      * Destructor
      */
     virtual ~Receiver();
-    
+
 public slots:
     /**
      * Treats the click in the close button
@@ -90,7 +90,7 @@ private:
     void processDatagram(QByteArray datagram);
 
 
-    int msgReceiver,statesReceiver;
+    int msgReceiver, statesReceiver;
     QByteArray completeData;
     QString message;
 
