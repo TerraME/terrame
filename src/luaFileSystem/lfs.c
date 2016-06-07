@@ -93,7 +93,7 @@ of this software and its documentation.
 #define LFS_LIBNAME "lfs"
 
 #if LUA_VERSION_NUM < 502
-#  define luaL_newlib(L,l) (lua_newtable(L), luaL_register(L,NULL,l))
+#define luaL_newlib(L, l) (lua_newtable(L), luaL_register(L, NULL, l))
 #endif
 
 /* Define 'strerror' for systems that do not implement it */
@@ -103,7 +103,7 @@ of this software and its documentation.
 
 /* Define 'getcwd' for systems that do not implement it */
 #ifdef NO_GETCWD
-#define getcwd(p,s)     NULL
+#define getcwd(p, s)     NULL
 #define getcwd_error    "Function 'getcwd' not provided by system"
 #else
 #define getcwd_error    strerror(errno)
@@ -132,10 +132,10 @@ typedef struct dir_data {
 
 #ifdef _WIN32
  #ifdef __BORLANDC__
-  #define lfs_setmode(L,file,m)   ((void)L, setmode(_fileno(file), m))
+  #define lfs_setmode(L, file, m)   ((void)L, setmode(_fileno(file), m))
   #define STAT_STRUCT struct stati64
  #else
-  #define lfs_setmode(L,file,m)   ((void)L, _setmode(_fileno(file), m))
+  #define lfs_setmode(L, file, m)   ((void)L, _setmode(_fileno(file), m))
   #define STAT_STRUCT struct _stati64
  #endif
 #define STAT_FUNC _stati64
@@ -143,14 +143,14 @@ typedef struct dir_data {
 #else
 #define _O_TEXT               0
 #define _O_BINARY             0
-#define lfs_setmode(L,file,m)   ((void)L, (void)file, (void)m, 0)
+#define lfs_setmode(L, file, m)   ((void)L, (void)file, (void)m, 0)
 #define STAT_STRUCT struct stat
 #define STAT_FUNC stat
 #define LSTAT_FUNC lstat
 #endif
 
 #if LUA_VERSION_NUM > 502
-#define luaL_optlong(L,n,d)     ((long)luaL_optinteger(L, (n), (d)))
+#define luaL_optlong(L, n, d)     ((long)luaL_optinteger(L, (n), (d)))
 #endif
 
 /*
@@ -159,7 +159,7 @@ typedef struct dir_data {
 static int pusherror(lua_State *L, const char *info)
 {
         lua_pushnil(L);
-        if (info==NULL)
+        if (info == NULL)
                 lua_pushstring(L, strerror(errno));
         else
                 lua_pushfstring(L, "%s: %s", info, strerror(errno));
@@ -169,7 +169,7 @@ static int pusherror(lua_State *L, const char *info)
 
 static int pushresult(lua_State *L, int i, const char *info)
 {
-        if (i==-1)
+        if (i == -1)
                 return pusherror(L, info);
         lua_pushinteger(L, i);
         return 1;
@@ -183,7 +183,7 @@ static int change_dir (lua_State *L) {
         const char *path = luaL_checkstring(L, 1);
         if (chdir(path)) {
                 lua_pushnil (L);
-                lua_pushfstring (L,"Unable to change working directory to '%s'\n%s\n",
+                lua_pushfstring (L, "Unable to change working directory to '%s'\n%s\n",
                                 path, chdir_error);
                 return 2;
         } else {
@@ -312,9 +312,9 @@ static int lfs_lock_dir(lua_State *L) {
 }
 static int lfs_unlock_dir(lua_State *L) {
   lfs_Lock *lock = luaL_checkudata(L, 1, LOCK_METATABLE);
-  if(lock->fd != INVALID_HANDLE_VALUE) {    
+  if(lock->fd != INVALID_HANDLE_VALUE) {
     CloseHandle(lock->fd);
-    lock->fd=INVALID_HANDLE_VALUE;
+    lock->fd = INVALID_HANDLE_VALUE;
   }
   return 0;
 }
@@ -440,7 +440,7 @@ static int make_link(lua_State *L)
         const char *oldpath = luaL_checkstring(L, 1);
         const char *newpath = luaL_checkstring(L, 2);
         return pushresult(L,
-                (lua_toboolean(L,3) ? symlink : link)(oldpath, newpath), NULL);
+                (lua_toboolean(L, 3) ? symlink : link)(oldpath, newpath), NULL);
 #else
         return pusherror(L, "make_link is not supported on Windows");
 #endif
@@ -759,7 +759,7 @@ static void push_st_blksize (lua_State *L, STAT_STRUCT *info) {
 static const char *perm2string (unsigned short mode) {
   static char perms[10] = "---------\0";
   int i;
-  for (i=0;i<9;i++) perms[i]='-';
+  for (i = 0; i < 9; i++) perms[i] = '-';
   if (mode  & _S_IREAD)
    { perms[0] = 'r'; perms[3] = 'r'; perms[6] = 'r'; }
   if (mode  & _S_IWRITE)
@@ -772,7 +772,7 @@ static const char *perm2string (unsigned short mode) {
 static const char *perm2string (mode_t mode) {
   static char perms[10] = "---------\0";
   int i;
-  for (i=0;i<9;i++) perms[i]='-';
+  for (i = 0; i < 9; i++) perms[i] = '-';
   if (mode & S_IRUSR) perms[0] = 'r';
   if (mode & S_IWUSR) perms[1] = 'w';
   if (mode & S_IXUSR) perms[2] = 'x';
