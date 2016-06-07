@@ -37,13 +37,23 @@ function filePath(filename, package)
 	if isFile(file) or isDir(file) then
 		return file
 	else
+		local msg = "File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'."
+
+		if string.endswith(filename, ".tview") then
+			local luafile = string.sub(filename, 1, -6).."lua"
+
+			if isFile(packageInfo(package).data..s..luafile) then
+				msg = msg.." Please run 'terrame -package "..package.." -project' to create it."
+				customError(msg)
+			end
+		end
+
 		local files = {}
 
 		forEachFile(packageInfo(package).data, function(mfile)
 			files[mfile] = true
 		end)
 
-		local msg = "File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'."
 		local suggest = suggestion(filename, files)
 
 		if suggest then
