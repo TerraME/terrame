@@ -147,14 +147,14 @@ public slots:
     /** 
      * Treats of any change in the \a function comboBox
      */
-    void functionComboBox_activated(int);
+    void functionComboBox_activated(int idx);
     //    void chrononComboBox_activated(int);
     //    void loadNamesComboBox_activated(int);
 
     /** 
      * Treats of any change in the \a grouping \a mode comboBox
      */
-    void groupingModeComboBox_activated(int);
+    void groupingModeComboBox_activated(int idx);
 
     /** 
      * Treats the clicked in the \a ok button

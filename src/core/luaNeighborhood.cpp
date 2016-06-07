@@ -32,7 +32,7 @@ of this software and its documentation.
 extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 
 /// constructor
-luaNeighborhood::luaNeighborhood(lua_State *) {
+luaNeighborhood::luaNeighborhood(lua_State *L) {
 
     it = CellNeighborhood::begin();
     itNext = false;
@@ -352,7 +352,7 @@ int luaNeighborhood::isEmpty(lua_State *L) {
 
 /// Clears all the Neighborhood content
 /// no parameters
-int luaNeighborhood::clear(lua_State *) {
+int luaNeighborhood::clear(lua_State *L) {
     CellNeighborhood::clear( );
     return 0;
 }

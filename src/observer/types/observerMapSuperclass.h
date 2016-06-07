@@ -185,7 +185,7 @@ protected:
      * Catchs the resize event
      * \see QResizeEvent
      */
-    void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent* ev);
 
 protected:
     /**

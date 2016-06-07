@@ -142,43 +142,43 @@ protected:
      * Paints event of the user interface object
      * \see QPaintEvent
      */
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent* ev);
 
     /**
      * Catchs the mouse press event inside the user interface object
      * \see QMouseEvent
      */
-    void mousePressEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent* ev);
 
     /**
      * Catchs the mouse move event inside the user interface object
      * \see QMouseEvent
      */
-    void mouseMoveEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent* ev);
 
     /**
      * Catchs the mouse release event inside the user interface object
      * \see QMouseEvent
      */
-    void mouseReleaseEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent* ev);
 
     /**
      * Catchs the mouse double click event inside the user interface object
      * \see QMouseEvent
      */
-    void mouseDoubleClickEvent(QMouseEvent* );
+    void mouseDoubleClickEvent(QMouseEvent* ev);
 
     /**
      * Catchs the leave event
      * \see QEvent
      */
-    void leaveEvent(QEvent*);
+    void leaveEvent(QEvent* ev);
 
     /**
      * Catchs the resize event
      * \see QResizeEvent
      */
-    void resizeEvent(QResizeEvent*);
+    void resizeEvent(QResizeEvent* ev);
 
     /**
      * Generates the color map
@@ -260,8 +260,8 @@ protected:
     // QVector<QColor> qvecColor;
 
 signals:
-    void mouseReleaseSignal(QMouseEvent*);
-    void mouseMoveSignal(QMouseEvent*);
+    void mouseReleaseSignal(QMouseEvent* ev);
+    void mouseMoveSignal(QMouseEvent* ev);
     void colorChangedSignal();
 };
 

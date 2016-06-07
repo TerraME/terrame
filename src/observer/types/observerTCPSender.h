@@ -92,7 +92,7 @@ public:
 
 signals:
     void addState(const QByteArray &);
-    void setModelTimeSignal(double);
+    void setModelTimeSignal(double t1);
     void abort();
 
 public slots:

@@ -55,8 +55,8 @@ public:
 	void addSize(int, SizeVisualArrangement);
 	void addPosition(int, PositionVisualArrangement);
 
-	SizeVisualArrangement getSize(int);
-	PositionVisualArrangement getPosition(int);
+	SizeVisualArrangement getSize(int id);
+	PositionVisualArrangement getPosition(int id);
 	void setFile(string);
 
 	void buildLuaCode();

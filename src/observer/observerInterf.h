@@ -144,12 +144,12 @@ public:
     /**
      * \copydoc TerraMEObserver::Subject::attach
      */
-    void attach(Observer *);
+    void attach(Observer *obs);
 
     /**
      * \copydoc TerraMEObserver::Subject::detach
      */
-    void detach(Observer *);
+    void detach(Observer *obs);
 
     /**
      * \copydoc TerraMEObserver::Subject::getObserverById

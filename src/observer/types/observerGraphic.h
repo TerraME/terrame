@@ -149,7 +149,7 @@ private slots:
      * \param item a pointer to a plot item
      * \see QwtPlotItem
      */
-    void colorChanged(QwtPlotItem *);
+    void colorChanged(QwtPlotItem* item);
 
 protected:
     /**

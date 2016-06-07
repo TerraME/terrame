@@ -72,14 +72,14 @@ int luaCell::getCurrentStateName( lua_State *L )
 }
 
 /// Puts the iterator in the beginning of the luaNeighborhood composite.
-int luaCell::first(lua_State *){
+int luaCell::first(lua_State *L){
     NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
     it = nhgs.begin();
     return 0;
 }
 
 /// Puts the iterator in the end of the luaNeighborhood composite.
-int luaCell::last(lua_State *) {
+int luaCell::last(lua_State *L) {
     NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
     it = nhgs.end();
     return 1;
@@ -111,14 +111,14 @@ int luaCell::isEmpty(lua_State *L) {
 
 /// Clears all the Neighborhood content
 /// no parameters
-int luaCell::clear(lua_State *) {
+int luaCell::clear(lua_State *L) {
     NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
     nhgs.clear( );
     return 0;
 }
 
 /// Returns the number of Neighbors cells in the Neighborhood
-int luaCell::size(lua_State *) {
+int luaCell::size(lua_State *L) {
     NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
     lua_pushnumber(L, nhgs.size( ));
     return 1;
@@ -146,7 +146,7 @@ int luaCell::setLatency(lua_State *L) { Cell::setLatency(luaL_checknumber(L, 1))
 int luaCell::getLatency(lua_State *L) { lua_pushnumber(L, Cell::getLatency()); return 1; }
 
 /// Sets the neighborhood
-int luaCell::setNeighborhood(lua_State *) {
+int luaCell::setNeighborhood(lua_State *L) {
     //	luaNeighborhood* neigh = Luna<luaNeighborhood>::check(L, -1);
     return 0;
 }
@@ -223,7 +223,7 @@ int luaCell::addNeighborhood( lua_State *L )
 }
 
 /// Synchronizes the luaCell
-int luaCell::synchronize(lua_State *) {
+int luaCell::synchronize(lua_State *L) {
     Cell::synchronize( sizeof(luaCell) ); // parametro nao testado
     return 0;
 }
