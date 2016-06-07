@@ -47,9 +47,8 @@ of this software and its documentation.
 #include "observerGlobals.h"
 
 namespace TerraMEObserver{
-    class Attributes;
-    class Subject;
-
+class Attributes;
+class Subject;
 
     inline static void doubleToQString(const double & number, QString & string,
         const int & precision = TerraMEObserver::NUMBERIC_PRECISION)

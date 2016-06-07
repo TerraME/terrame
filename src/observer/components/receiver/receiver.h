@@ -28,11 +28,11 @@ of this software and its documentation.
 #include <QUdpSocket>
 
 namespace TerraMEObserver {
-    class AgentObserverMap;
+class AgentObserverMap;
 }
 
 namespace Ui {
-    class receiverGUI;
+class receiverGUI;
 }
 
 /**

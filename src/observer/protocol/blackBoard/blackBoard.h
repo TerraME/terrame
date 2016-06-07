@@ -35,7 +35,7 @@ class PrivateCache;
 
 namespace TerraMEObserver
 {
-    class Subject;
+class Subject;
 }
 
 
