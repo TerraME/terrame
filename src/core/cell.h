@@ -82,7 +82,6 @@ public:
 	/// \param  agent is a pointer to an agent within the cell.
 	/// \param controlMode is a pointer to the new agent tracked control mode (discrete state).
 	void attachControlMode(Agent *agent, ControlMode *controlMode) {
-
 		// improve here
 		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
 		if (location != targetControlMode_.end())
@@ -92,7 +91,6 @@ public:
 		}
 		else targetControlMode_.insert(
 				map<Agent*, ControlMode*>::value_type(agent, controlMode));
-
 	}
 
 	/// Releases the tracked state (control mode) of a agent within the cell
@@ -152,7 +150,6 @@ public:
 	/// Sets the list of neighborhood graphs from the cell
 	/// \param neighs is a reference to the list of neighborhoods.
 	void setNeighborhoods(NeighCmpstInterf& neighs) { neighborhoods_ = neighs; }
-
 };
 
 /**
@@ -185,7 +182,6 @@ protected:
 		return *copy;
 	}
 public:
-
 	/// constructor
 	///
 	Cell():duplicated(false) { past =(Cell*) &clone(); }
@@ -248,7 +244,6 @@ public:
 
 		if (sizeMem <= 0) return;
 		if (!duplicated) {
-
 			past =(Cell*)new unsigned char[sizeMem];
 			past->pImpl_ = new CellImpl();
 			duplicated = true;
@@ -258,7 +253,6 @@ public:
 		memcpy(past, this, sizeMem);
 		memcpy(p, this->pImpl_, sizeof(CellImpl));
 		past->pImpl_ = p;
-
 	}
 };
 #endif

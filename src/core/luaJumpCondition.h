@@ -64,7 +64,6 @@ public:
     /// Sets luaJumpCondition object target luaControlMode
     /// parameter: luaControlMode identifier
     int setTargetControlModeName(lua_State* L){
-
         const char* ctrlName = luaL_checkstring(L , -1);
         JumpCondition::setTargetControlModeName(string(ctrlName));
         return 0;
@@ -78,7 +77,6 @@ public:
     bool execute(Event &event, Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
     {
         try {
-
             bool isGlobalAgent = false;
             luaGlobalAgent *agG;
             luaLocalAgent *agL;
@@ -134,9 +132,7 @@ public:
         {
             return false;
         }
-
     }
-
 };
 
 

@@ -39,7 +39,6 @@ protected:
     int ref; ///< The position of the object in the Lua stack
 
 public:
-
     /// Destructor
     ~luaRule(void)
     {
@@ -59,7 +58,6 @@ public:
         lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
         return 1;
     }
-
 };
 
 

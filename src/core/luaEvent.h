@@ -53,7 +53,6 @@ class luaEvent : public EventSubjectInterf, public Reference<luaEvent>
     QString getChanges(QDataStream& in, int observerId, QStringList& attribs);
 
 public:
-
     ///< Data structure issued by Luna<T>
     static const char className[];
 

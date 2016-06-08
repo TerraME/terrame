@@ -97,7 +97,6 @@ private:
     Ui::receiverGUI *ui;
     QUdpSocket *udpSocket;
     TerraMEObserver::AgentObserverMap *obsMap;
-
 };
 
 #endif // DIALOG_H

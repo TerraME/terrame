@@ -97,8 +97,6 @@ public slots:
     void updatePosition();
 
 private:
-
-
     Node *origin, *destiny;
     QPolygonF arrowHead;
 };

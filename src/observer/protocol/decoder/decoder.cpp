@@ -27,25 +27,16 @@ of this software and its documentation.
 
 using namespace TerraMEObserver;
 
-Decoder::Decoder(QHash<QString, Attributes *> *map) : mapAttributes(map)
-{
+Decoder::Decoder(QHash<QString, Attributes *> *map) : mapAttributes(map) {}
 
-}
-
-Decoder::Decoder(const Decoder &)
-{
-
-}
+Decoder::Decoder(const Decoder &) {}
 
 Decoder& Decoder::operator=(Decoder &)
 {
     return *this;
 }
 
-Decoder::~Decoder()
-{
-
-}
+Decoder::~Decoder() {}
 
 bool Decoder::decode(const QString &protocol,
                      QVector<double> &xs, QVector<double> &ys)

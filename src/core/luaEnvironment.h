@@ -129,6 +129,5 @@ public:
 
     /// Destroys the observer object instance
     int kill(lua_State *L);
-
 };
 #endif

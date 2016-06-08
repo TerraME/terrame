@@ -1050,7 +1050,6 @@ int luaCellularSpace::loadNeighborhood(lua_State *L){
 					lua_call(L, 1, 0);
 					return false;
 				}
-
 			}
 		}
 	}
@@ -1650,9 +1649,7 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
 
 				file >> aux;
 			}
-
 		}
-
 	}
 	// The file ends before it was expected
 	if ((numCell - 1) != cellQtde)

@@ -64,13 +64,9 @@ public:
         delete buffer;
         delete out;
     }
-
 };
 
-BlackBoard::BlackBoard()
-{
-
-}
+BlackBoard::BlackBoard() {}
 
 BlackBoard::~BlackBoard()
 {

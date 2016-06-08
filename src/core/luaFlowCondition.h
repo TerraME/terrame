@@ -63,7 +63,6 @@ public:
     bool execute(Event &event, Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
     {
         try {
-
             int result = 0;
             luaEvent *ev =(luaEvent*)&event;
             luaCell  *cell =(luaCell*) cellIndexPair.second;
@@ -111,7 +110,6 @@ public:
         {
             return false;
         }
-
     }
 };
 

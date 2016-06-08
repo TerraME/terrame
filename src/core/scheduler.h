@@ -80,7 +80,6 @@ class SchedulerImpl: public Implementation
     Event time_; ///< Scheduler simulation timer
 
 public:
-
     /// Default constructor
     SchedulerImpl(void)
     {

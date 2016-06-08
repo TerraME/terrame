@@ -79,7 +79,6 @@ class Process : public ProcessInterf,
 				public JumpCompositeInterf, public FlowCompositeInterf
 {
 public:
-
     /// Executes the Rules objects in the order they have been inserted into ControlMode composite. JumpCondition
     /// objects are executed before FlowCondition objects. If a JumpCondition object execution returns true (e.g.
     /// it transits to the targets ControlMode) the FlowCondition objects will be not executed. Runtime Exceptions

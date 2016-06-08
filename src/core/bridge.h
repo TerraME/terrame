@@ -41,9 +41,7 @@ of this software and its documentation.
 template <class T>
 class Interface
 {
-
 public:
-
     /// constructor
     Interface<T>() {
         pImpl_ = new T; pImpl_->attach();
@@ -57,7 +55,6 @@ public:
     /// copy constructor
     Interface<T>(const Interface& interf):pImpl_(interf.pImpl_) {
         pImpl_->attach();
-
     }
 
     /// assignment operator
@@ -72,7 +69,6 @@ public:
     }
 
 protected:
-
     /// reference for the implementation
     T *pImpl_;
 };
@@ -109,7 +105,6 @@ public:
     virtual ~Implementation() {}
 
 private:
-
     /// No copy allowed
     Implementation(const Implementation&);
 
@@ -117,7 +112,6 @@ private:
     Implementation& operator=(const Implementation&) {return *this;}
 
     int refCount_; 	/// the number of references to this class
-
 };
 
 #endif

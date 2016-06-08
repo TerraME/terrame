@@ -53,7 +53,6 @@ typedef pair<int, int> CellIndex;
  */
 class CellNeighborhoodImpl : public Implementation
 {
-
     string ID;  ///< Neighborhood identifier
     Region_<CellIndex> neighs; ///< a neighborhood it is a region(map) on cell indexes.
     CompositeInterface< mapComposite<CellIndex, double> > weights; ///< the arrows weights are stored in a separated composite
@@ -61,7 +60,6 @@ class CellNeighborhoodImpl : public Implementation
 	//@RAIAN: Parent cell of the neighborhood
 	Cell* parent; ///< Neighborhood parent. It is "central" cell in the neighborhood graph.
 public:
-
     typedef Region_<CellIndex>::iterator iterator;
 
     //@RAIAN: I created a constructor to set the parent to NULL
@@ -88,7 +86,6 @@ public:
     /// \param cellIndex is a reference to a "CellIndex" with the n-dimensional coordinate of the cell to be excluded.
     bool erase(CellIndex& cellIndex)
     {
-
         if (neighs.erase(cellIndex) && weights.erase(cellIndex))
             return true;
         else
@@ -175,7 +172,6 @@ typedef Interface<CellNeighborhoodImpl> CellNeighInterf;
 class CellNeighborhood : public CellNeighInterf
 {
 public:
-
     typedef CellNeighborhoodImpl::iterator iterator;
 
     /// HANDLE - Adds a new neighbor cell to the cells neighborhood map
@@ -255,6 +251,5 @@ public:
 		/// \author Raian Vargas Maretto
         void setParent(Cell* parent) { CellNeighInterf::pImpl_->setParent(parent); }
 	//@RAIAN: FIM
-
 };
 #endif

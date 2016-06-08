@@ -42,7 +42,6 @@ namespace TerraMEObserver {
  */
 class AgentObserverMap : public ObserverMap
 {
-
 public:
     /**
      * Constructor

@@ -159,7 +159,6 @@ protected:
     void run();
 
 private:
-
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
     // double modelTime, lastModelTime;

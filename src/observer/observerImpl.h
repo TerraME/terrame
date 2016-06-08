@@ -163,7 +163,6 @@ typedef ObsList::iterator ObsListIterator;
 class SubjectImpl : public Implementation
 {
 public:
-
     /**
      * Constructor
      */

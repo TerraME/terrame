@@ -153,7 +153,6 @@ int luaCell::setNeighborhood(lua_State *L) {
 
 /// Gets the current active luaNeighboorhood
 int luaCell::getCurrentNeighborhood(lua_State *L) {
-
     NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
     if (it !=  nhgs.end())
     {
@@ -163,7 +162,6 @@ int luaCell::getCurrentNeighborhood(lua_State *L) {
             neigh->getReference(L);
         else
             lua_pushnil(L);
-
     }
     else
         lua_pushnil(L);
@@ -173,7 +171,6 @@ int luaCell::getCurrentNeighborhood(lua_State *L) {
 
 /// Returns the Neihborhood graph which name has been received as a parameter
 int luaCell::getNeighborhood(lua_State *L) {
-
     NeighCmpstInterf& neighs = Cell::getNeighborhoods();
 
     // Get and test parameters
@@ -904,7 +901,6 @@ QString luaCell::pop(lua_State *luaL, QStringList& attribs)
     }// @RAIAN: FIM
     else
     {
-
         // id
         msg.append(QString::number(getId())); // QString("%1").arg(this->ref));
         msg.append(PROTOCOL_SEPARATOR);
@@ -1039,7 +1035,6 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId, QStri
 #endif
 
 {
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 

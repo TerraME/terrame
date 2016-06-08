@@ -51,10 +51,7 @@ Edge::Edge(Node *orig, Node *dest, QGraphicsItem *parent, QGraphicsScene *scene)
     destiny->addEdge(this);
 }
 
-Edge::~Edge()
-{
-
-}
+Edge::~Edge() {}
 
 QRectF Edge::boundingRect() const
 {

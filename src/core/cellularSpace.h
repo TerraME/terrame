@@ -52,7 +52,6 @@ using namespace std;
 class CellularSpaceImpl : public Implementation
 {
 public:
-
 };
 
 /**
@@ -71,7 +70,6 @@ class CellularSpace : public Model, public CellularSpaceInterf, public Cell,
 					public Region_<CellIndex>
 {
 public:
-
     /// Attaches agent to all cellular space cell.
     /// \param agent is new agent being inserted into the cellular space
     void attachAgent(class LocalAgent *agent) {
@@ -99,7 +97,6 @@ public:
     }
 
 private:
-
     /// Attaches a control model of a agent attached to the cellular space to each cell.
     /// Using this method, the cell can keep track of the agents active control mode (or discrete state).
     /// \param agent is a pointer to a agent attached to the cellular space.
@@ -127,7 +124,6 @@ private:
             theIterator++;
         }
     }
-
 };
 
 #endif

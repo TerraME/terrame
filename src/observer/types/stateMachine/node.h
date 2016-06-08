@@ -131,7 +131,6 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
-
     QList<Edge *> edgeList;
     QString name;
     QColor currentColor;

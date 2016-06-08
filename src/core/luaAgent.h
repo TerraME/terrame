@@ -56,7 +56,6 @@ protected:
 //    }
 
 public:
-
     ///  Destructor
     virtual ~luaAgent(void)
     {
@@ -84,7 +83,6 @@ public:
 //        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
 //        return 1;
 //    }
-
 };
 
 #endif

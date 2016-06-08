@@ -113,7 +113,6 @@ protected:
     void run();
 
 private:
-
     void resizeEvent(QResizeEvent *event);
     void moveEvent(QMoveEvent *event);
     void closeEvent(QCloseEvent *event);

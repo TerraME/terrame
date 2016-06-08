@@ -79,7 +79,6 @@ public slots:
 
 private:
     Ui::PlayerGUI *ui;
-
 };
 
 #endif // TME_PLAYER_GUI_H

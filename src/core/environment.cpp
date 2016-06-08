@@ -31,5 +31,4 @@ void jump(Event& event, GlobalAgent* const agent, ControlMode* targetControlMode
     if (targetControlMode == agent->getControlMode()) return;
     agent->jump(targetControlMode);
     agent->setLastChangeTime(event.getTime());
-
 }

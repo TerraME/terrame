@@ -132,7 +132,6 @@ class Subject;
 class Observer
 {
 public:
-
     /**
     * Triggers the observer process
     * \param time the simulation time

@@ -136,7 +136,6 @@ int luaTrajectory::createObserver(lua_State *L)
                     lua_pushnil(luaL);
                     while (lua_next(luaL, pos) != 0)
                     {
-
                         if (lua_type(luaL, -2) == LUA_TSTRING)
                         {
                             obsParams.append(luaL_checkstring(luaL, -2));

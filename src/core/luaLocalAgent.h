@@ -43,7 +43,6 @@ class luaCellularSpace;
 class luaLocalAgent : public LocalAgentSubjectInterf, public luaAgent
 {
 private:
-
     // Antonio
     // int ref;
     lua_State *luaL;

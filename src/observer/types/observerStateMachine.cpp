@@ -392,8 +392,8 @@ void ObserverStateMachine::showLayerLegend()
                 node->update(node->boundingRect());
             }
         }
-
     }
+
     treeLayers->resizeColumnToContents(0);
 }
 
@@ -502,7 +502,6 @@ void ObserverStateMachine::resizeEvent(QResizeEvent * /*ev*/)
 
 void ObserverStateMachine::zoomWindow()
 {
-
     //// Define o retangulo que envolve todos os objetos da cena
     //float x = fstNode->pos().x() + fstNode->boundingRect().width() + 4;
     //float y = fstNode->pos().y() - offsetState * 0.25;

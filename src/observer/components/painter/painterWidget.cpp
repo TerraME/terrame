@@ -73,10 +73,7 @@ PainterWidget::PainterWidget(QHash<QString, Attributes*> *mapAttrib, QWidget *pa
     painterThread.start();
 }
 
-PainterWidget::~PainterWidget()
-{
-
-}
+PainterWidget::~PainterWidget() {}
 
 void PainterWidget::calculateResult()
 {
@@ -245,7 +242,6 @@ void PainterWidget::mouseMoveEvent(QMouseEvent *event)
             // Define as coordenadas do retangulo de zoom
             if (!rect().contains(QRect(imageOffset, event->pos())))
             {
-
                 bool right = event->pos().x() > rect().right();
                 bool left = event->pos().x() < rect().left();
 

@@ -113,7 +113,6 @@ public:
         lua_pushstring(L, ControlMode::getControlModeName().c_str());
         return 1;
     }
-
 };
 
 #endif

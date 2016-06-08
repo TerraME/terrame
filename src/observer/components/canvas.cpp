@@ -120,7 +120,6 @@ void Canvas::mouseMoveEvent(QMouseEvent *ev)
             // Define as coordenadas do retangulo de zoom
             if (!sceneRect().contains(QRectF(imageOffset, ev->pos())))
             {
-
                 bool right = ev->pos().x() > rect().right();
                 bool left = ev->pos().x() < rect().left();
 

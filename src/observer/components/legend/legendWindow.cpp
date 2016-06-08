@@ -763,7 +763,6 @@ void LegendWindow::groupingAttribute(Attributes *attrib)
     // m?todos baseado no terraView
     switch (groupingModeComboBox->currentIndex())
     {
-
         case 0: // TObsEqualSteps
             // ver m?todo TeGroupByEqualStep em TeGroupingAlgorithms.(h, cpp)
             groupByEqualStep(fix, attrib);
@@ -1645,8 +1644,6 @@ QPixmap LegendWindow::color2Pixmap(const QColor &color, const QSize size)
 //@RAIAN: Para a legenda da vizinhanca
 QPixmap LegendWindow::color2PixmapLine(const QColor &color, double width, const QSize size)
 {
-
-
 	QRect itemRect(QPoint(0, 0), size);
     // QSize itemSize = itemRect.size();
     QImage img(itemRect.size(), QImage::Format_RGB32);
@@ -1920,7 +1917,6 @@ void LegendWindow::commitFile()
         for (int k = 0; k < legendKeys.size(); k++)
         {
             out << tabulation << legendKeys.at(k) << " = " << legAttribs.at(k) << "\n";
-
         }
 
         //// Adiciona a classe do agente
@@ -2251,7 +2247,6 @@ void LegendWindow::setupUi()
     QWidget::setTabOrder(cancelPushButton, helpPushButton);
 
     retranslateUi();
-
 } // setupUi
 
 void LegendWindow::retranslateUi()
@@ -2283,7 +2278,6 @@ void LegendWindow::retranslateUi()
     cancelPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+C", 0));
     helpPushButton->setText(QApplication::translate("LegendWindow", "&Help", 0));
     helpPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+H", 0));
-
 } // retranslateUi
 
 

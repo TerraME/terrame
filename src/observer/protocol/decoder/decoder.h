@@ -40,7 +40,6 @@ namespace TerraMEObserver {
  */
 class Decoder
 {
-
 public:
     /**
      * Constructor

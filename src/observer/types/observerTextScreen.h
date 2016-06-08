@@ -108,7 +108,6 @@ protected:
     void run();
 
 private:
-
     /**
      * Gets the state of the file header
      */

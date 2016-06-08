@@ -972,7 +972,6 @@ void TeQtColorBar::changeDistance()
         QCursor cursor;
         setCursor(cursor);
         colorEdit_ = 0;
-
     }
     else
     {

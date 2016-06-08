@@ -89,7 +89,6 @@ class luaNeighborhood : public CellNeighborhood
     CellNeighborhood::iterator it;
 public:
     luaNeighborhood(lua_State *L) {
-
         it = CellNeighborhood::begin();
 
         int count = 0;
@@ -264,7 +263,6 @@ public:
     //	  it++;
     //  }
     //}
-
 };
 //////////////////////////////////////////////////////////////////////////////////////
 class luaCell : public Cell
@@ -282,7 +280,6 @@ public:
         return 0;
     }
     int getNeighborhood(lua_State *L) {
-
         NeighCmpstInterf& neighs = Cell::getNeighborhoods();
 
         // Get and test parameters
@@ -357,7 +354,6 @@ public:
 
     static const char className[];
     static Luna<luaCell>::RegType methods[];
-
 };
 
 void getReference(lua_State *L, luaCell *cell)
@@ -447,7 +443,6 @@ public:
 
     static const char className[];
     static Luna<luaCellularSpace>::RegType methods[];
-
 };
 
 luaCell * findCell(luaCellularSpace* cs, CellIndex& cellIndex)
@@ -512,7 +507,6 @@ public:
 
     static const char className[];
     static Luna<luaEvent>::RegType methods[];
-
 };
 //////////////////////
 class luaMessage : public Message
@@ -529,7 +523,6 @@ public:
     }
 
     bool execute(Event& event) {
-
         // puts the message table on the top of the lua stack
         getReference(L);
         if (!lua_istable(L, -1))
@@ -608,7 +601,6 @@ public:
     }
     static const char className[];
     static Luna<luaMessage>::RegType methods[];
-
 };
 //////////////////////
 class luaTimer : public Scheduler
@@ -630,7 +622,6 @@ public:
 
     static const char className[];
     static Luna<luaTimer>::RegType methods[];
-
 };
 //****************************** BEHAVIOR *******************************************//
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -652,7 +643,6 @@ public:
         lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
         return 1;
     }
-
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 class luaControlMode;
@@ -733,7 +723,6 @@ public:
     }
     static const char className[];
     static Luna<luaGlobalAgent>::RegType methods[];
-
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 class luaLocalAgent : public LocalAgent, public luaAgent
@@ -757,7 +746,6 @@ public:
             ControlMode* lcm =(ControlMode*)Luna<luaControlMode>::check(L, -1);
             ControlMode &cm = *lcm;
             LocalAgent::add(cm);
-
         }
         else
         {
@@ -811,7 +799,6 @@ public:
 
     static const char className[];
     static Luna<luaLocalAgent>::RegType methods[];
-
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 class luaRule
@@ -819,7 +806,6 @@ class luaRule
 protected:
     int ref;
 public:
-
     ~luaRule(void) { luaL_unref(L, LUA_REGISTRYINDEX, ref); }
 
     int setReference(lua_State* L)
@@ -833,7 +819,6 @@ public:
         lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
         return 1;
     }
-
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 class luaJumpCondition : public JumpCondition, public luaRule
@@ -842,7 +827,6 @@ public:
     luaJumpCondition(lua_State* L) { }
 
     int setTargetControlModeName(lua_State* L) {
-
         const char* ctrlName = luaL_checkstring(L , -1);
         JumpCondition::setTargetControlModeName(string(ctrlName));
         return 0;
@@ -851,7 +835,6 @@ public:
     bool execute(Event &event, Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
     {
         try {
-
             bool isGlobalAgent = false;
             luaGlobalAgent *agG;
             luaLocalAgent *agL;
@@ -907,24 +890,20 @@ public:
         {
             return false;
         }
-
     }
 
     static const char className[];
     static Luna<luaJumpCondition>::RegType methods[];
-
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 class luaFlowCondition : public FlowCondition, public luaRule
 {
 public:
-
     luaFlowCondition(lua_State* L) { }
 
     bool execute(Event &event, Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
     {
         try {
-
             int result = 0;
             luaEvent *ev =(luaEvent*)&event;
             luaCell  *cell =(luaCell*) cellIndexPair.second;
@@ -969,19 +948,16 @@ public:
         {
             return false;
         }
-
     }
 
     static const char className[];
     static Luna<luaFlowCondition>::RegType methods[];
-
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 class luaControlMode : public ControlMode
 {
     Process uniqueProcess;
 public:
-
     luaControlMode(lua_State* L) {
         ControlMode::add(uniqueProcess);
     }
@@ -996,7 +972,6 @@ public:
 
     int add(lua_State* L)
     {
-
         void *ud;
 
         if ((ud = luaL_checkudata(L, -1, "TeJump")) != NULL)
@@ -1035,7 +1010,6 @@ public:
 
     static const char className[];
     static Luna<luaControlMode>::RegType methods[];
-
 };
 
 //****************************** ENVIRONMENT ****************************************//
@@ -1072,7 +1046,6 @@ public:
             else
                 if ((ud = luaL_checkudata(L, -1, "TeLocalAutomaton")) != NULL)
                 {
-
                     LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
                     Environment::add(*pAg);
                 }

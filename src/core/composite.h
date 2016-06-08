@@ -50,7 +50,6 @@ template <class TElemnt>
 class vectorComposite : public Implementation
 {
 public:
-
     typedef TElemnt T;
     typedef int     TKey;
     typedef typename vector<T>::iterator iterator;
@@ -88,7 +87,6 @@ public:
         if (location != components_.end())
         {
             components_.erase(location);
-
         }
         return itr;
     }
@@ -140,7 +138,6 @@ public:
     }
 
 protected:
-
     vector<T>	components_;
 };
 
@@ -149,7 +146,6 @@ template <class TIndx, class TElmnt >
 class mapComposite : public Implementation
 {
 public:
-
     typedef pair<TIndx, TElmnt>  T;
     typedef TIndx				TKey;
     typedef typename map<TKey, TElmnt, less<TKey> >::iterator iterator;
@@ -193,7 +189,6 @@ public:
         if (location != components_.end())
         {
             components_.erase(location);
-
         }
         return itr;
     }
@@ -246,7 +241,6 @@ public:
     }
 
 protected:
-
     map<TKey, TElmnt, less<TKey> >	components_;
 };
 //////////////////////////////////////////////////////////////////////////////////////
@@ -254,7 +248,6 @@ template <class TIndx, class TElmnt >
 class multimapComposite : public Implementation
 {
 public:
-
     typedef pair<TIndx, TElmnt>	T;
     typedef TIndx				TKey;
     typedef typename multimap<TKey, TElmnt, less<TKey> >::iterator iterator;
@@ -299,7 +292,6 @@ public:
         if (location != components_.end())
         {
             components_.erase(location);
-
         }
         return itr;
     }
@@ -355,7 +347,6 @@ public:
     }
 
 protected:
-
     multimap<TKey, TElmnt, less<TKey> >	components_;
 };
 //////////////////////////////////////////////////////////////////////////////////////
@@ -363,7 +354,6 @@ template < class CpstImpl >
 class CompositeInterface : public Interface< CpstImpl >
 {
 public:
-
     typedef typename CpstImpl::T      TElemnt;      // Element type
     typedef typename CpstImpl::TKey   Indx;         // Element index
     typedef typename CpstImpl::iterator iterator;   // Element iterator
@@ -438,7 +428,6 @@ public:
 
         return true;
     }
-
 };
 
 #endif

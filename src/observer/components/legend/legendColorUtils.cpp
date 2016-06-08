@@ -646,7 +646,6 @@ void RGBtoHSV(const double& r, const double& g, const double& b, double& h, doub
     h *= 60;				// degrees
     if (h < 0)
         h += 360;
-
 }
 
 void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v)

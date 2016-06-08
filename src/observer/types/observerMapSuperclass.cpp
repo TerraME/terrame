@@ -305,7 +305,6 @@ int ObserverMapSuperclass::convertZoomIndex(bool in)
 
 void ObserverMapSuperclass::zoomWindow()
 {
-
     //// Define o retangulo que envolve todos os objetos da cena
     //float x = fstNode->pos().x() + fstNode->boundingRect().width() + 4;
     //float y = fstNode->pos().y() - offsetState * 0.25;

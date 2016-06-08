@@ -132,7 +132,6 @@ bool ObserverUDPSender::draw(QDataStream &state)
             lua_pushnumber(L, 4);
             lua_call(L, 2, 0);
         }
-
     }
     qApp->processEvents();
     return true;

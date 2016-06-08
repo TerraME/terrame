@@ -588,7 +588,6 @@ int luaGlobalAgent::createObserver(lua_State *L)
             lua_pushnumber(luaL, obsId);
             return 1;
         }
-
     }	// termina o if (typeObserver !=  TerraMEObserver::TObsMap)
     else
     {
@@ -657,7 +656,6 @@ int luaGlobalAgent::createObserver(lua_State *L)
                             //default:
                             //    ;
                             }
-
                         } // isLegend
                     }
                     lua_pop(luaL, 1);
@@ -975,7 +973,6 @@ QDataStream& luaGlobalAgent::getState(QDataStream& in, Subject *, int observerId
 QDataStream& luaGlobalAgent::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs)
 #endif
 {
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 

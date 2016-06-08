@@ -111,7 +111,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent* ev);
 
 private:
-
     QPointF lastDragPos, imageOffset;
     bool showRectZoom, zoomWindow, handTool;
     bool gridEnabled;

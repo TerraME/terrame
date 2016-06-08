@@ -64,9 +64,7 @@ public:
  */
 class Rule
 {
-
 public:
-
     /// Copy constructor
     Rule(RuleStrategy *strategy):theStrategy_(strategy) {
     }
@@ -85,9 +83,7 @@ public:
     }
 
 private:
-
     RuleStrategy *theStrategy_; ///< Each aRule is executed as the Strategy software design pattern
-
 };
 
 /**
@@ -98,7 +94,6 @@ private:
  */
 class FlowCondition : public RuleStrategy
 {
-
 };
 
 /**
@@ -109,7 +104,6 @@ class FlowCondition : public RuleStrategy
 class JumpCondition : public RuleStrategy
 {
 public:
-
     /// Default constructor
     JumpCondition(void):targetControlMode_(NULL), targetControlModeName_("") { }
 
@@ -150,7 +144,6 @@ public:
     /// \returns A string with the JumpCondition targe ControlMode name (identifier)
     string getTargetControlModeName(void) { return targetControlModeName_; }
 private:
-
     ControlMode* targetControlMode_; ///< The JumpCondition target ControlModel object
 
     string targetControlModeName_;  ///< The target ControlMode name (identifier)

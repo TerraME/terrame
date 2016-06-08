@@ -166,7 +166,6 @@ void AgentObserverMap::registry(Subject *subj, const QString & className)
 {
     if (!constainsItem(linkedSubjects, subj))
     {
-
 //#ifdef TME_BLACK_BOARD
 //        BlackBoard::getInstance().setDirtyBit(subj->getId());
 //#endif

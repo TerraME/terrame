@@ -71,7 +71,6 @@ class EnvironmentImpl :  public Implementation
     double finalTime_;	///< Time instant when the simulation should stop
 
 public:
-
     /// Configures the time instant when the Environment should stop
     /// \param finTime is a real number when the simulation engine should stop
     void config(double finTime) {
@@ -146,7 +145,6 @@ class Environment: public Model,
         public TimeSchedulerPairCompositeInterf,
         public TimeEnvironmentPairCompositeInterf
 {
-
 public:
     string envId;
 
@@ -392,7 +390,6 @@ public:
     }
 
 private:
-
     /// Executes the first scheduler of the environment received as parameter
     /// \param environment is a pointer to the Environment object being executed
     bool executeScheduler(Environment *environment)

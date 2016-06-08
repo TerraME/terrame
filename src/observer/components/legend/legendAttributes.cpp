@@ -71,10 +71,7 @@ ObsLegend & ObsLegend::operator=(const ObsLegend &other)
     return *this;
 }
 
-ObsLegend::~ObsLegend()
-{
-
-}
+ObsLegend::~ObsLegend() {}
 
 void ObsLegend::setColor(const QColor & c)
 {

@@ -50,10 +50,7 @@ Node::Node(QString n, QGraphicsItem *parent, QGraphicsScene *scene)
     currentColorDefined = false;
 }
 
-Node::~Node()
-{
-
-}
+Node::~Node() {}
 
 QRectF Node::boundingRect() const
 {

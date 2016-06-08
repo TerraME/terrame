@@ -33,7 +33,6 @@ extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with 
 
 /// constructor
 luaNeighborhood::luaNeighborhood(lua_State *L) {
-
     it = CellNeighborhood::begin();
     itNext = false;
 }
