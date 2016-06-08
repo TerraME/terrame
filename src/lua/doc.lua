@@ -91,6 +91,184 @@ local function dataFiles(package)
 	return result
 end
 
+local function getProjects(package)
+	data_path = packageInfo("terralib").data
+	local s = sessionInfo().separator
+
+	local projects = {}
+	local layers = {}
+	local currentProject
+
+	import("terralib")
+
+	local tl = getPackage("terralib")
+
+	Project = function(data)
+		currentProject = data.file
+		projects[currentProject] = {}
+
+		forEachOrderedElement(data, function(idx, value)
+			if idx ~= "file" and type(value) == "string" and isFile(value) then
+				local layer = tl.Layer{
+					project = filePath(currentProject, "terralib"),
+					name = idx
+				}
+
+				local representation = layer:representation()
+
+				local description = ""
+
+				if representation == "raster" then
+					description = "raster with "..layer:bands().." band"
+
+					if layer:bands() > 1 then
+						description = description.."s"
+					end
+				else
+					local cs = CellularSpace{
+						file = value
+					}
+
+					local quantity = #cs
+					description = tostring(quantity).." "..representation
+
+					if quantity > 1 then
+						description = description.."s"
+					end
+				end
+
+				description = description.."."
+
+				projects[currentProject][idx] = {
+					file = tl.getFileNameWithExtension(value),
+					description = description
+				}
+			end
+		end)
+
+		return data.file
+	end
+
+	local mLayer_ = {
+		fill = function(self, data)
+			if not layers[self.file] then 
+				layers[self.file] = 
+				{
+					attributes = {},
+					description = {},
+					types = {}
+				}
+			end
+
+			local description = "Operation "..data.operation.." from layer \""..data.layer.."\""
+
+			if data.band or data.select then
+				description = description.." using"
+			end
+
+			if data.band then
+				description = description.." band "..data.band
+			elseif data.select then
+				description = description.." selected attribute ".."\""..data.select.."\""
+			end
+
+			description = description.."."
+
+			table.insert(layers[self.file].attributes, data.attribute) 
+			table.insert(layers[self.file].description, description) 
+			table.insert(layers[self.file].types, "number")
+--[[			table.insert(layers[self.name].attribute = 
+
+			projects[currentProject][self.name].attributes[data.attribute] = {
+				band = data.band,
+				area = data.area,
+				default = data.default,
+				layer = data.layer,
+				operation = data.operation,
+				select = data.select
+			}
+			--]]
+		end
+	}
+
+	local mtLayer = {__index = mLayer_}
+
+	Layer = function(data)
+		if data.name then
+			local cs = CellularSpace{
+				file = data.file
+			}
+
+			local quantity = #cs
+			description = tostring(quantity).." cells (polygons) with resolution "..
+				data.resolution.." built from layer \""..data.input.."\"."
+
+			projects[currentProject][data.name] = {
+				file = data.file,
+				description = description
+			}
+
+			if not layers[data.file] then 
+				layers[data.file] = 
+				{
+					attributes = {},
+					description = {},
+					types = {}
+				}
+			end
+
+			layers[data.file].summary = "Automatically created file with "..description
+		end
+
+		setmetatable(data, mtLayer)
+		return data
+	end
+
+	printNote("Processing lua files")
+	forEachFile(data_path, function(file)
+		if string.endswith(file, ".lua") then
+			print("Processing '"..file.."'")
+
+			local ok, err = xpcall(function() dofile(data_path..s..file) end, function(err)
+				printError(err)
+			end)
+
+		end
+	end)
+
+	local output = {}
+
+	-- we need to execute this separately to guarantee that the output will be alphabetically ordered
+	forEachOrderedElement(projects, function(idx, proj)
+		local luaFile = string.sub(idx, 1, -6).."lua"
+		local shortsummary = "Automatically created TerraView project file"
+		local summary = shortsummary.." from <a href=\"../../data/"..luaFile.."\">"..luaFile.."</a>."
+		local mproject = {
+			summary = summary,
+			shortsummary = shortsummary..".",
+			file = {idx}
+		}
+
+		local layers = {}
+		forEachOrderedElement(proj, function(midx, layer)
+			layer.layer = midx
+			table.insert(layers, layer)
+		end)
+
+		mproject.layers = layers
+
+		table.insert(output, mproject)
+	end)
+
+	forEachOrderedElement(layers, function(idx, layer)
+		layer.file = {idx}
+		table.insert(output, layer)
+	end)
+
+	clean()
+	return output
+end
+
 function _Gtme.executeDoc(package)
 	local initialTime = os.clock()
 
@@ -241,6 +419,12 @@ function _Gtme.executeDoc(package)
 		end)
 
 		printNote("Checking directory 'data'")
+
+		projects = getProjects(package)
+
+		forEachOrderedElement(projects, function(idx, value)
+			table.insert(mdata, value)
+		end)
 
 		table.sort(mdata, function(a, b)
 			return a.file[1] < b.file[1]
