@@ -124,6 +124,6 @@ private:
     // QPen defaultPen;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

@@ -157,6 +157,6 @@ private:
     TypesOfSubjects parentSubjectType;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // DECODER_H

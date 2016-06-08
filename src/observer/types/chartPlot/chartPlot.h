@@ -74,6 +74,7 @@ private:
     int id;
 };
 
-}
+} // namespace TerraMEObserver
+
 #endif // CHART_PLOT_H
 

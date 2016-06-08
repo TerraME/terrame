@@ -99,5 +99,5 @@ private:
     QHash<int, PrivateCache *> cache;
 };
 
-}
+} // namespace TerraMEObserver
 #endif

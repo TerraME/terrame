@@ -59,7 +59,7 @@ class Subject;
         textStream << number;
     }
 
-}
+} // namespace TerraMEObserver
 
 
 /// Auxiliary Function for sorting objects Attributes by the type.
@@ -259,7 +259,6 @@ public:
     virtual int getId() const = 0;
 };
 
-}
-
+} // namespace TerraMEObserver
 
 #endif

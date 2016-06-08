@@ -265,7 +265,7 @@ signals:
     void colorChangedSignal();
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // __TERRALIB_INTERNAL_QTCOLORBAR_H
 

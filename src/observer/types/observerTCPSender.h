@@ -122,6 +122,6 @@ private:
     SenderGUI *senderGUI;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // OBSERVERTCPSENDER_H

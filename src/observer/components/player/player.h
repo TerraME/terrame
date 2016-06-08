@@ -88,6 +88,7 @@ private:
     PlayerGUI *playerGUI;
 };
 
-}
+} // namespace TerraMEObserver
+
 #endif // TME_PLAYER_H
 

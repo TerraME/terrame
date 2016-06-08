@@ -128,6 +128,6 @@ private:
     QStringList attribList;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

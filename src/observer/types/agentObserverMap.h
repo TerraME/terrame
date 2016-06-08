@@ -133,6 +133,6 @@ private:
     QString className;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif  //AGENT_OBSERVER_MAP

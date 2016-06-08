@@ -159,6 +159,6 @@ private:
 
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

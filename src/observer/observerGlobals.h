@@ -185,7 +185,7 @@ enum StdDev
     TObsQuarter =  2    //!< Quarter deviation
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // OBSERVER_GLOBAL_ITEMS
 

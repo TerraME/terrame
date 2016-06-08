@@ -339,6 +339,6 @@ private:
     double actualZoom;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

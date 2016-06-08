@@ -103,6 +103,6 @@ private:
     QPolygonF arrowHead;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // EDGE_H

@@ -659,7 +659,7 @@ private:
     QList<QPair<QPointF, qreal> > lastPos;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif
 

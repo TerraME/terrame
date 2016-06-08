@@ -393,6 +393,6 @@ private:
     QString attributesActive;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // LEGEND_WINDOW_OBSERVERMAP

@@ -139,6 +139,6 @@ private:
     bool currentColorDefined;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // NODE_H

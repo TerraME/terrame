@@ -136,6 +136,6 @@ private:
     QTextEdit *textEdit;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

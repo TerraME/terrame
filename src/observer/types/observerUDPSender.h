@@ -190,6 +190,6 @@ private:
     bool paused;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

@@ -233,6 +233,6 @@ private:
     QFrame *frameTools;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // OBSERVERSTATEMACHINE_H

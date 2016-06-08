@@ -236,6 +236,6 @@ private:
     QCursor zoomInCursor, zoomOutCursor;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

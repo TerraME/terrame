@@ -122,6 +122,6 @@ private:
     QCursor zoomInCursor, zoomOutCursor;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // CANVAS_H
