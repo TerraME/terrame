@@ -206,7 +206,7 @@ public:
      * \param v a pointer to a vector
      * \see QVector
      */
-    void setValues( QVector<double>* v);
+    void setValues(QVector<double>* v);
 
     /**
      * Gets the vector of double
@@ -218,7 +218,7 @@ public:
      * \param s a pointer to a QString vector
      * \see QVector, \see QString
      */
-    void setValues( QVector<QString>* s);
+    void setValues(QVector<QString>* s);
 
     /**
      * Gets the vector of QString
@@ -230,7 +230,7 @@ public:
      * \param b a pointer to a boolean vector
      * \see QVector, \see QString
      */
-    void setValues( QVector<bool>* b);
+    void setValues(QVector<bool>* b);
 
     /**
      * Gets the vector of boolean
@@ -261,7 +261,7 @@ public:
     * \param l a pointer to a ObsLegend QVector
     * \see QVector
     */
-    void setLegend( QVector<ObsLegend>* l);
+    void setLegend(QVector<ObsLegend>* l);
 
     /**
      * Gets the legend to this attribute
@@ -501,7 +501,7 @@ public:
     /**
      * \deprecated Allocates the size of the vectors
      */
-    void setContainersSize(int );
+    void setContainersSize(int size);
 
     /**
      * Cleans all data structure
@@ -574,7 +574,7 @@ public:
 
     /**
      * Gets the direction of the attribute using the
-     * coordanate (x,y) of the map
+     * coordanate(x,y) of the map
      * \param pos position of the attribute in the values list
      * \param x axis position
      * \param y axis position
@@ -588,7 +588,7 @@ public:
 
 		/// Sets neighborhood values
 		/// \author Raian Vargas Maretto
-                void setValues( QVector<QMap<QString, QList<double> > >* n);
+                void setValues(QVector<QMap<QString, QList<double> > >* n);
 
 		/// Adds a neighborhood to the attribute
 		/// \author Raian Vargas Maretto

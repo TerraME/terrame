@@ -75,7 +75,7 @@ public:
     /// Attaches agent to all cellular space cell.
     /// \param agent is new agent being inserted into the cellular space
     void attachAgent(class LocalAgent *agent) {
-        ControlMode& controlMode = (*agent)[0];
+        ControlMode& controlMode =(*agent)[0];
         attachControlModeToCells(agent, &controlMode);
     }
 
@@ -91,7 +91,7 @@ public:
     void synchronize(unsigned int  sizeMem) {
         Region_<CellIndex>::iterator theIterator;
         theIterator = Region_<CellIndex>::pImpl_->begin();
-        while(theIterator != Region_<CellIndex>::pImpl_->end())
+        while (theIterator != Region_<CellIndex>::pImpl_->end())
         {
             theIterator->second->synchronize(sizeMem);
             theIterator++;
@@ -108,7 +108,7 @@ private:
         Region_<CellIndex>::iterator theIterator;
 
         theIterator = Region_<CellIndex>::pImpl_->begin();
-        while(theIterator != Region_<CellIndex>::pImpl_->end())
+        while (theIterator != Region_<CellIndex>::pImpl_->end())
         {
             theIterator->second->attachControlMode(agent, controlMode);
             theIterator++;
@@ -121,7 +121,7 @@ private:
     void detachControlModeFromCells(LocalAgent *agent) {
         Region_<CellIndex>::iterator theIterator;
         theIterator = Region_<CellIndex>::pImpl_->begin();
-        while(theIterator != Region_<CellIndex>::pImpl_->end())
+        while (theIterator != Region_<CellIndex>::pImpl_->end())
         {
             theIterator->second->detachControlMode(agent);
             theIterator++;

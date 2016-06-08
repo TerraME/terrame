@@ -83,7 +83,7 @@ public:
 
     /// Gets the simulation time elapsed since the last change in the luaGlobalAgent
     /// internal discrete state
-    int getLatency( lua_State *L);
+    int getLatency(lua_State *L);
 
     /// Inserts a new luaControlMode into the luaGlobalAgent object
     /// parameter: luaControlMode
@@ -92,29 +92,29 @@ public:
     /// Sets the luaGlobalAgent "Acttion Region" status to true. The luaGlobalAgent
     ///  will traverse its internal luaTrajectory objects.
     /// parameter: boolean
-    int setActionRegionStatus( lua_State* L);
+    int setActionRegionStatus(lua_State* L);
 
     /// Gets the luaLocalAgent "Action Region" status to true, tha luaLocalAgent object will traverse its internal
     /// luaTrajectory objects
     /// parameter: boolean
-    int getActionRegionStatus( lua_State* L);
+    int getActionRegionStatus(lua_State* L);
 
     /// Executes the luaGlobalAgent object
     /// parameter: luaEvent
-    int execute( lua_State* L);
+    int execute(lua_State* L);
 
     /// Builds the luaGlobalAgent object
-    int build( lua_State* L);
+    int build(lua_State* L);
 
     /// Gtes the luaGlobalAgent current active luaControlMode name
-    int getControlModeName( lua_State* L);
+    int getControlModeName(lua_State* L);
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observeb attributes table, observer type parameters
-    int createObserver( lua_State *L );
+    int createObserver(lua_State *L);
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-    int notify(lua_State *L );
+    int notify(lua_State *L);
 
     /// Gets the subject's type
     const TypesOfSubjects getType();

@@ -57,24 +57,24 @@ public:
     typedef typename vector<T>::reverse_iterator reverse_iterator;
 
     /// Add a new component
-    void add (const T& comp)
-    { components_.push_back (comp); }
+    void add(const T& comp)
+    { components_.push_back(comp); }
 
     /// Remove the i-th component
-    bool erase (int i)
+    bool erase(int i)
     {
         if (components_.size() < i)
             return false;
-        return !(components_.erase (components_.begin() + i) == components_.end());
+        return !(components_.erase(components_.begin() + i) == components_.end());
     }
 
     /// Remove a component
-    bool erase (T& comp)
+    bool erase(T& comp)
     {
         typename vector<T>::iterator location = components_.begin();
         while (location != components_.end())
         {
-            if(comp == *location) {
+            if (comp == *location) {
                 components_.erase(location);
                 return true;
             }
@@ -94,15 +94,15 @@ public:
     }
 
     /// Remove all components
-    void clear ()
-    { components_.clear (); }
+    void clear()
+    { components_.clear(); }
 
     /// Return the composite size
     int size()
     { return components_.size(); }
 
     /// Return the i-th component
-    T& operator [] (int i)
+    T& operator [](int i)
     { return components_[i]; }
 
     /// Find a component and return its iterator
@@ -156,14 +156,14 @@ public:
     typedef typename map<TKey, TElmnt, less<TKey> >::reverse_iterator reverse_iterator;
 
     /// Add a new component
-    void add (const T& comp)
+    void add(const T& comp)
     {
         components_.insert(typename map<TKey, TElmnt>::value_type(
         		comp.first, comp.second));
     }
 
     /// Remove the i-th component
-    bool erase (TKey k)
+    bool erase(TKey k)
     {
         typename map< TKey, TElmnt, less<TKey> >::iterator location = components_.find(k);
         if (location != components_.end())
@@ -175,7 +175,7 @@ public:
     }
 
     /// Remove a component
-    bool erase (T& comp)
+    bool erase(T& comp)
     {
         typename map< TKey, TElmnt, less<TKey> >::iterator location =
         		components_.find(comp.first);
@@ -198,17 +198,17 @@ public:
         return itr;
     }
     /// Remove all components
-    void clear ()
-    { components_.clear (); }
+    void clear()
+    { components_.clear(); }
 
     /// Return the composite size
     int size()
     { return components_.size(); }
 
     /// Return the i-th component
-    T& operator [] (TKey k) {
+    T& operator [](TKey k) {
         typename map<TKey, TElmnt, less<TKey> >::iterator location = components_.find(k);
-        return (T&)(*location);
+        return(T&)(*location);
     }
 
     /// Find a component and return its iterator
@@ -261,14 +261,14 @@ public:
     typedef typename multimap<TKey, TElmnt, less<TKey> >::reverse_iterator reverse_iterator;
 
     /// Add a new component
-    void add (const T& comp)
+    void add(const T& comp)
     {
     	components_.insert(typename multimap<TKey, TElmnt, less<TKey> >::value_type(
     			comp.first, comp.second));
     }
 
     /// Remove the i-th component
-    bool erase (TKey k)
+    bool erase(TKey k)
     {
         typename multimap<TKey, TElmnt, less<TKey> >::iterator location =
         		components_.find(k);
@@ -281,7 +281,7 @@ public:
     }
 
     /// Remove a component
-    bool erase (T& comp)
+    bool erase(T& comp)
     {
         typename multimap<TKey, TElmnt, less<TKey> >::iterator location =
         		components_.find(comp.first);
@@ -305,18 +305,18 @@ public:
     }
 
     /// Remove all components
-    void clear ()
-    { components_.clear (); }
+    void clear()
+    { components_.clear(); }
 
     /// Return the composite size
     int size()
     { return components_.size(); }
 
     /// Return the i-th component
-    T& operator [] (TKey k) {
+    T& operator [](TKey k) {
         typename multimap<TKey, TElmnt, less<TKey> >::iterator location =
         		components_.find(k);
-        return (T&)(*location);
+        return(T&)(*location);
     }
 
     /// Find a component and return its iterator
@@ -370,42 +370,42 @@ public:
     typedef typename CpstImpl::reverse_iterator reverse_iterator; // Element reverse_iterator
 
     /// Add a new component
-    void add (const TElemnt& comp) { (CompositeInterface::pImpl_)->add(comp); }
+    void add(const TElemnt& comp) {(CompositeInterface::pImpl_)->add(comp); }
 
     /// Remove the i-th component
-    bool erase (Indx i) { return	(CompositeInterface::pImpl_)->erase(i); }
+    bool erase(Indx i) { return	(CompositeInterface::pImpl_)->erase(i); }
 
     /// Remove a component
-    bool erase (TElemnt& /*comp*/) { return false; }//return (CompositeInterface::pImpl_)->erase(comp); }
+    bool erase(TElemnt& /*comp*/) { return false; }//return(CompositeInterface::pImpl_)->erase(comp); }
 
-    iterator erase(iterator itr) { return (CompositeInterface::pImpl_)->erase(itr); }
+    iterator erase(iterator itr) { return(CompositeInterface::pImpl_)->erase(itr); }
 
     /// Remove all components
-    void clear () { (CompositeInterface::pImpl_)->clear(); }
+    void clear() {(CompositeInterface::pImpl_)->clear(); }
 
     /// Return the composite size
-    int size() { return (CompositeInterface::pImpl_)->size(); }
+    int size() { return(CompositeInterface::pImpl_)->size(); }
 
     /// Return the i-th component
-    TElemnt& operator [] (Indx i) { return (*(CompositeInterface::pImpl_))[i]; }
+    TElemnt& operator [](Indx i) { return(*(CompositeInterface::pImpl_))[i]; }
 
     /// Return the i-th component
-    iterator find (Indx i) { return (CompositeInterface::pImpl_)->find(i); }
+    iterator find(Indx i) { return(CompositeInterface::pImpl_)->find(i); }
 
     /// Check if the composite is empty
-    bool empty()	{ return (CompositeInterface::pImpl_)->empty(); }
+    bool empty()	{ return(CompositeInterface::pImpl_)->empty(); }
 
     /// Points to the iterator to the composite first element
-    iterator begin(void) { return (CompositeInterface::pImpl_)->begin(); }
+    iterator begin(void) { return(CompositeInterface::pImpl_)->begin(); }
 
     /// Points to the iterator to the composite last plus one element
-    iterator end(void) { return (CompositeInterface::pImpl_)->end(); }
+    iterator end(void) { return(CompositeInterface::pImpl_)->end(); }
 
     /// Points to the reverse_iterator to the composite last plus one element
-    reverse_iterator rbegin(void) { return (CompositeInterface::pImpl_)->rbegin(); }
+    reverse_iterator rbegin(void) { return(CompositeInterface::pImpl_)->rbegin(); }
 
     /// Points to the reverse_iterator to the composite first element
-    reverse_iterator rend(void) { return (CompositeInterface::pImpl_)->rend(); }
+    reverse_iterator rend(void) { return(CompositeInterface::pImpl_)->rend(); }
 
     // Operator ==
     // A composite is equal to another if and only if they have the same elements
@@ -424,11 +424,11 @@ public:
 
         iterator theIterator;
         typename CompositeInterface::iterator iterator;
-        theIterator = (CompositeInterface::pImpl_)->begin();
-        while(theIterator != (CompositeInterface::pImpl_)->end())
+        theIterator =(CompositeInterface::pImpl_)->begin();
+        while (theIterator !=(CompositeInterface::pImpl_)->end())
         {
             iterator = comp.begin();
-            while(iterator != comp.end())
+            while (iterator != comp.end())
             {
                 if (theIterator == iterator) return false;
                 iterator++;

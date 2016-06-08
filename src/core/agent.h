@@ -215,17 +215,17 @@ public:
 	bool build(void) {
 
 		ControlModeCompositeInterf::iterator itCtrl = ControlModeCompositeInterf::begin();
-		while(itCtrl != ControlModeCompositeInterf::end())
+		while (itCtrl != ControlModeCompositeInterf::end())
 		{
 			ControlMode& ctrlMode = *itCtrl;
 
 			ProcessCompositeInterf::iterator itProcess = ctrlMode.ProcessCompositeInterf::begin();
-			while(itProcess != ctrlMode.ProcessCompositeInterf::end())
+			while (itProcess != ctrlMode.ProcessCompositeInterf::end())
 			{
 				Process &p = *itProcess;
 
 				JumpCompositeInterf::iterator itJump = p.JumpCompositeInterf::begin();
-				while(itJump != p.JumpCompositeInterf::end())
+				while (itJump != p.JumpCompositeInterf::end())
 				{
 					JumpCondition *jump = *itJump;
 					string targetCmName;
@@ -235,10 +235,10 @@ public:
 					// search for the jump condition target control mode among the agent's control modes
 					bool found = false;
 					ControlModeCompositeInterf::iterator itCtrl = ControlModeCompositeInterf::begin();
-					while(itCtrl != ControlModeCompositeInterf::end())
+					while (itCtrl != ControlModeCompositeInterf::end())
 					{
 						ControlMode &agCtrl = *itCtrl;
-						if(agCtrl.getControlModeName() == targetCmName)
+						if (agCtrl.getControlModeName() == targetCmName)
 						{
 							jump->config(agCtrl , targetCmName);
 							found = true;
@@ -247,7 +247,7 @@ public:
 
 						itCtrl++;
 					}
-					if(!found) return false;
+					if (!found) return false;
 
 					itJump++;
 				}
@@ -295,11 +295,11 @@ public:
 		// for each agent action region
 		ActionRegionCompositeInterf& actRgs = getActionRegions();
 		ActionRegionCompositeInterf::iterator rgsIterator = actRgs.begin();
-		while(getActionRegionStatus() &&  (rgsIterator != actRgs.end()))
+		while (getActionRegionStatus() && (rgsIterator != actRgs.end()))
 		{
 			// for each cell
 			cellIterator = rgsIterator->begin();
-			while(cellIterator != rgsIterator->end())
+			while (cellIterator != rgsIterator->end())
 			{
 				// gets the agent active control mode
 				cellIndexPair.first = cellIterator->first;
@@ -350,7 +350,7 @@ public:
     /// \param event is a reference to the Event which linked message has triggered the agent control mode execution.
 	bool execute(Event &event) {
 
-		if(currentControlMode == NULL)
+		if (currentControlMode == NULL)
 			currentControlMode = &(*ControlModeCompositeInterf::pImpl_)[0];
 		CompositeInterface< multimapComposite<CellIndex, Cell*> >::iterator cellIterator;
 		pair<CellIndex, Cell*> cellIndexPair;
@@ -358,7 +358,7 @@ public:
 		// for each agent action region
 		ActionRegionCompositeInterf& actRgs = getActionRegions();
 		ActionRegionCompositeInterf::iterator rgsIterator = actRgs.begin();
-		if((!getActionRegionStatus()) || actRgs.empty())
+		if ((!getActionRegionStatus()) || actRgs.empty())
 		{
 			cellIndexPair.first.first = -1; cellIndexPair.first.second = -1;
 			cellIndexPair.second = NULL;
@@ -366,11 +366,11 @@ public:
 			return true;
 		}
 
-		while(getActionRegionStatus() && rgsIterator != actRgs.end())
+		while (getActionRegionStatus() && rgsIterator != actRgs.end())
 		{
 			// for each cell
 			cellIterator = rgsIterator->begin();
-			while(getActionRegionStatus() && (cellIterator != rgsIterator->end()))
+			while (getActionRegionStatus() && (cellIterator != rgsIterator->end()))
 			{
 				cellIndexPair.first = cellIterator->first;
 				cellIndexPair.second = cellIterator->second;
@@ -400,7 +400,7 @@ public:
     /// Gets the current (or active) ControlMode name
     /// \return Returns the identifier to the current control mode (discrete internal state)
 	string getControlModeName() {
-        if(currentControlMode == NULL)
+        if (currentControlMode == NULL)
         	currentControlMode = &(*ControlModeCompositeInterf::pImpl_)[0];
         return currentControlMode->getControlModeName();
 	}

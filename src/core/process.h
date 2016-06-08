@@ -96,9 +96,9 @@ public:
 
             JumpCompositeInterf::iterator jIt;
             jIt = JumpCompositeInterf::pImpl_->begin();
-            while(jIt != JumpCompositeInterf::pImpl_->end())
+            while (jIt != JumpCompositeInterf::pImpl_->end())
             {
-                if((*jIt)->execute(event, agent, cellIndexPair))
+                if ((*jIt)->execute(event, agent, cellIndexPair))
                 {
                     jumped = true;
                     break;
@@ -106,13 +106,13 @@ public:
                 jIt++;
             }
 
-            if(!jumped)
+            if (!jumped)
             {
                 FlowCompositeInterf::iterator fIt;
                 fIt = FlowCompositeInterf::pImpl_->begin();
-                while(fIt != FlowCompositeInterf::pImpl_->end())
+                while (fIt != FlowCompositeInterf::pImpl_->end())
                 {
-                    (*fIt)->execute(event, agent, cellIndexPair);
+                   (*fIt)->execute(event, agent, cellIndexPair);
                     fIt++;
                 }
             }

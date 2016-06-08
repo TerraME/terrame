@@ -77,7 +77,7 @@ public:
     luaNeighborhood(lua_State *L);
 
     /// destructor
-    ~luaNeighborhood( void );
+    ~luaNeighborhood(void);
 
     /// Adds a new luaNeighbor cell to the luaNeighborhood
     /// parameters: cell.y, cell.x,  cell, weight
@@ -111,15 +111,15 @@ public:
     /// Gets the luaNeighborhood relationship weight value for the luaNeighbor
     /// indexed by the 2D coordenates received as parameter.
     /// no parameters
-    int getWeight( lua_State *L );
+    int getWeight(lua_State *L);
 
     /// Gets the luaNeighbor cell pointed by the Nieghborhood interator.
     /// no parameters
-    int getNeighbor( lua_State *L );
+    int getNeighbor(lua_State *L);
 
     /// Gets luaNeighbor identifier
     /// no parameters
-    int getID( lua_State *L );
+    int getID(lua_State *L);
 
     /// Sets the luaNeighbor's weight receiving a reference to the luaNeighbor
 	/// parameters: cell.x, cell.y, weight
@@ -139,43 +139,43 @@ public:
 
     /// Sets the weight for the neighborhood relationship with the Neighbor pointed by the Neighborhood iterator.
     // parameters: weight
-    int setWeight( lua_State *L);
+    int setWeight(lua_State *L);
 
     /// Puts the Neighborhood iterator in the beginning of the Neighbor composite data structure
     /// no parameters
-    int first( lua_State *L);
+    int first(lua_State *L);
 
     /// Puts the Neighborhood iterator in the end of the Neighbor composite data structure
     /// no parameters
-    int last( lua_State* L);
+    int last(lua_State* L);
 
     /// Returns true if the Neighborhood iterator is in the beginning of the Neighbor composite data structure
     /// no parameters
-    int isFirst( lua_State *L );
+    int isFirst(lua_State *L);
 
     /// Returns true if the Neighborhood iterator is in the end of the Neighbor composite data structure
     /// no parameters
-    int  isLast( lua_State *L );
+    int  isLast(lua_State *L);
 
     /// Checks if a given cell is within the luaNeighborhood
 	/// parameters: cell
 	/// \author Raian Vargas Maretto
-	int isNeighbor( lua_State *L );
+	int isNeighbor(lua_State *L);
 
     /// Fowards the Neighborhood iterator to the next Neighbor cell
     /// no parameters
-    int next( lua_State *L );
+    int next(lua_State *L);
 
     //@RAIAN
     /// Fowards the Neighborhood iterator to the previous Neighbor cell
     /// no parameters
     ///\author Raian Vargas Maretto
-    int previous( lua_State *L );
+    int previous(lua_State *L);
     //@RAIAN: FIM
 
     /// Gets the coordenates of the Neighbor cell pointed by the Neighborhood interator
     /// no parameters
-    int getCoord( lua_State *L );
+    int getCoord(lua_State *L);
 
     /// Returns true if the Neighborhood is empty.
     /// no parameters
@@ -192,27 +192,27 @@ public:
     /// Registers the Lua object in the Lua stack, storing its reference
     // @DANIEL
     // Movido para Reference
-    // int setReference( lua_State* L);
+    // int setReference(lua_State* L);
 
     /// Gets the luaNeighborhood object reference.
     /// no parameters
     // @DANIEL
     // Movido para Reference
-    // int getReference( lua_State *L );
+    // int getReference(lua_State *L);
 
     //@RAIAN
         /// Gets the Neighborhood Parent, i. e., the "central" cell in the neighborhood graph.
         /// no parameters
         /// \author Raian Vargas Maretto
-        int getParent( lua_State *L );
+        int getParent(lua_State *L);
     //@RAIAN
 
     // /// Creates several types of observers to the luaCellularSpace object
     // /// parameters: observer type, observeb attributes table, observer type parameters
-    // int createObserver( lua_State *L );
+    // int createObserver(lua_State *L);
 
     // /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-    // int notifyObservers(lua_State *L );
+    // int notifyObservers(lua_State *L);
 
     // /// Gets the subject's type
     // const TypesOfSubjects getSubjectType();

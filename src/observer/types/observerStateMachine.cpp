@@ -60,22 +60,22 @@ static const int DIMENSION = 77;
 //#include <QApplication>
 //#include <time.h>
 //
-//void wait ( int seconds )
+//void wait(int seconds)
 //{
 //    clock_t endwait;
-//    endwait = clock () + seconds * CLOCKS_PER_SEC ;
+//    endwait = clock() + seconds * CLOCKS_PER_SEC ;
 //    while (clock() < endwait)
 //        qApp->processEvents();
 //}
 
 bool sortByXPosition(const QGraphicsItem *i1, const QGraphicsItem *i2)
 {
-    return (i1->pos().x() < i2->pos().x());
+    return(i1->pos().x() < i2->pos().x());
 }
 
 bool sortByYPosition(const QGraphicsItem *i1, const QGraphicsItem *i2)
 {
-    return (i1->pos().y() < i2->pos().y());
+    return(i1->pos().y() < i2->pos().y());
 }
 
 ObserverStateMachine::ObserverStateMachine(Subject *subj, QWidget *parent)
@@ -104,7 +104,7 @@ ObserverStateMachine::ObserverStateMachine(Subject *subj, QWidget *parent)
 
 ObserverStateMachine::~ObserverStateMachine()
 {
-    foreach (Node *node, *states)
+    foreach(Node *node, *states)
         delete node;
     delete states;
 
@@ -147,7 +147,7 @@ bool ObserverStateMachine::draw(QDataStream &state)
     int j = 4;
     Attributes *attrib = 0;
 
-    for (int i=0; i < qtdParametros; i++)
+    for (int i = 0; i < qtdParametros; i++)
     {
         key = tokens.at(j);
         j++;
@@ -158,7 +158,7 @@ bool ObserverStateMachine::draw(QDataStream &state)
 
         switch (typeOfData)
         {
-        case (TObsText):
+        case(TObsText):
             {
                 textAux = tokens.at(j);
 
@@ -190,7 +190,7 @@ bool ObserverStateMachine::draw(QDataStream &state)
 
     // wait(2, qApp);
 
-    if ((legendWindow) && (buildLegend <= 2 )) // (buildLegend <= states->size() )) //
+    if ((legendWindow) && (buildLegend <= 2)) //(buildLegend <= states->size())) //
     {
         legendWindow->makeLegend();
         showLayerLegend();
@@ -215,7 +215,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
         {
             qFatal("Error: Parameter legend \"%s\" not found. "
-                "Please check it in the model.", qPrintable( LEGEND_KEYS.at(j) ) );
+                "Please check it in the model.", qPrintable(LEGEND_KEYS.at(j)));
         }
     }
 
@@ -233,10 +233,10 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
 
     QTreeWidgetItem *item = 0;
     Attributes *attrib = 0;
-    for( int i = 0; i < attribs.size(); i++)
+    for (int i = 0; i < attribs.size(); i++)
     {
         if ((!mapAttributes->contains(attribs.at(i)))
-            && (attribs.at(i) != QString("x")) && (attribs.at(i) != QString("y")) )
+            && (attribs.at(i) != QString("x")) && (attribs.at(i) != QString("y")))
         {
             obsAttrib.append(attribs.at(i));
             attrib = new Attributes(attribs.at(i), 2, 0, 0); // states->size(), 0, 0);
@@ -244,11 +244,11 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
             //------- Recupera a legenda do arquivo e cria o objeto attrib
             if (legKeys.size() > 0)
             {
-                attrib->setDataType( (TypesOfData) legAttribs.at(type).toInt());
-                attrib->setGroupMode( (GroupingMode) legAttribs.at(mode ).toInt());
+                attrib->setDataType((TypesOfData) legAttribs.at(type).toInt());
+                attrib->setGroupMode((GroupingMode) legAttribs.at(mode).toInt());
                 attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// conta com o zero
                 attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// conta com o zero
-                attrib->setStdDeviation( (StdDev) legAttribs.at(stdDeviation ).toInt());
+                attrib->setStdDeviation((StdDev) legAttribs.at(stdDeviation).toInt());
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());
 
@@ -260,7 +260,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
                 bool ok = false;
                 int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
-                    attrib->setSymbol( QString( QChar(asciiCode) ));
+                    attrib->setSymbol(QString(QChar(asciiCode)));
                 else
                     attrib->setSymbol(legAttribs.at(symbol));
 
@@ -333,7 +333,7 @@ void ObserverStateMachine::addState(QList<QPair<QString, QString> > &allStates)
     nodeSource = 0;
     nodeDest = 0;
 
-    for(int i = 0; i < allStates.size(); i++)
+    for (int i = 0; i < allStates.size(); i++)
     {
         // recupero novamente os estados j? criados
         if (states->contains(allStates.at(i).first))
@@ -360,7 +360,7 @@ void ObserverStateMachine::showLayerLegend()
     QTreeWidgetItem *parent = 0, *child = 0;
     Attributes *attrib = 0;
     QVector<ObsLegend> *leg = 0;
-    for(int i = 0; i < layer; i++)
+    for (int i = 0; i < layer; i++)
     {
         parent = treeLayers->topLevelItem(i);
         treeLayers->setItemExpanded(parent, true);
@@ -371,11 +371,11 @@ void ObserverStateMachine::showLayerLegend()
         if (parent->childCount() > 0)
             parent->takeChildren();
 
-        for(int j = 0; j < leg->size(); j++)
+        for (int j = 0; j < leg->size(); j++)
         {
-            if (states->contains(leg->at(j).getLabel()) )
+            if (states->contains(leg->at(j).getLabel()))
             {
-                child = new QTreeWidgetItem( parent);
+                child = new QTreeWidgetItem(parent);
                 child->setSizeHint(0, ICON_SIZE);
                 child->setText(0, leg->at(j).getLabel());
                 QColor color = leg->at(j).getColor();
@@ -419,15 +419,15 @@ void ObserverStateMachine::butZoomIn_Clicked()
 {
     // currentIndex() < 0 : o indice n?o existe no comboBox
     // currentIndex() > 22 : o indice ? o zoom de janela
-    // if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
-    if ((zoomComboBox->currentIndex() > 0)) // || (zoomComboBox->currentIndex() < 22))
+    // if ((zoomComboBox->currentIndex() < 0) ||(zoomComboBox->currentIndex() > 22))
+    if ((zoomComboBox->currentIndex() > 0)) // ||(zoomComboBox->currentIndex() < 22))
     {
         positionZoomVec--;
         zoomComboBox->setCurrentIndex(positionZoomVec);
         zoomActivated(zoomComboBox->currentText());
     }
 
-    //if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
+    //if ((zoomComboBox->currentIndex() < 0) ||(zoomComboBox->currentIndex() > 22))
     ////         zoomComboBox->setCurrentIndex(positionZoomVec);
     //    zoomComboBox->setCurrentIndex(calculeZoom(true));
 }
@@ -436,15 +436,15 @@ void ObserverStateMachine::butZoomOut_Clicked()
 {
     // qDebug() << "zoomComboBox->currentIndex(): " << zoomComboBox->currentIndex();
 
-    if ((zoomComboBox->currentIndex() <= 23)) // || (zoomComboBox->currentIndex() > 0))
-    //if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
+    if ((zoomComboBox->currentIndex() <= 23)) // ||(zoomComboBox->currentIndex() > 0))
+    //if ((zoomComboBox->currentIndex() < 0) ||(zoomComboBox->currentIndex() > 22))
     {
         positionZoomVec++;
         zoomComboBox->setCurrentIndex(positionZoomVec);
         zoomActivated(zoomComboBox->currentText());
     }
 
-    //if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
+    //if ((zoomComboBox->currentIndex() < 0) ||(zoomComboBox->currentIndex() > 22))
     //{
     //    // positionZoomVec--;
     //    // zoomComboBox->setCurrentIndex(positionZoomVec);
@@ -523,7 +523,7 @@ void ObserverStateMachine::zoomWindow()
 
     zoomChanged(zoomRect, factWidth, factHeight);
     //// view->centerOn(zoomRect.center());  // n?o fica centralizado
-    //// view->centerOn( scene->itemsBoundingRect().center() );  // n?o fica centralizado
+    //// view->centerOn(scene->itemsBoundingRect().center());  // n?o fica centralizado
     // view->centerOn(scene->sceneRect().center()); // fica quase centralizado
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
@@ -601,13 +601,13 @@ void ObserverStateMachine::zoomOut()
 //    // conecta/disconecta o sinal do treeWidget com o slot
 //    if (! connect)
 //    {
-//        disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
-//            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+//        disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
+//            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 //    }
 //    else
 //    {
-//        QWidget::connect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
-//            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+//        QWidget::connect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
+//            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 //    }
 //}
 
@@ -689,7 +689,7 @@ void ObserverStateMachine::setupGUI()
     QStringList zoomList;
 
     for (int i = 0; i < zoomVec.size(); i++)
-        zoomList.append( QString::number(zoomVec.at(i)) + "%");
+        zoomList.append(QString::number(zoomVec.at(i)) + "%");
 
     zoomList.append(WINDOW);
 
@@ -700,7 +700,7 @@ void ObserverStateMachine::setupGUI()
     zoomComboBox->setCurrentIndex(23); // window  //zoomIdx); //11);
     //zoomComboBox->setCurrentIndex(zoomIdx); //11);
     zoomComboBox->setEditable(true);
-    connect(zoomComboBox, SIGNAL(activated(const QString & )), this, SLOT(zoomActivated(const QString &)));
+    connect(zoomComboBox, SIGNAL(activated(const QString &)), this, SLOT(zoomActivated(const QString &)));
 
     QHBoxLayout *hLayoutZoom1 = new QHBoxLayout();
     hLayoutZoom1->setMargin(5);

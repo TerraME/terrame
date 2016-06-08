@@ -62,7 +62,7 @@ public:
      * \see Subject
      * \see QWidget
      */
-    ObserverGraphic (Subject *subj, QWidget *parent = 0);
+    ObserverGraphic(Subject *subj, QWidget *parent = 0);
 
     /**
      * Destructor

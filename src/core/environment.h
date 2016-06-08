@@ -33,7 +33,7 @@ of this software and its documentation.
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
-#if defined (MSDEV)
+#if defined(MSDEV)
 #include <limits>
 #else
 #include <float.h>
@@ -47,11 +47,11 @@ of this software and its documentation.
 #include "scheduler.h"
 
 #ifndef MIN
-#define MIN(a, b)  (a < b ? a : b)
+#define MIN(a, b) (a < b ? a : b)
 #endif
 
 #ifndef MAX
-#define MAX(a, b)  (a > b ? a : b)
+#define MAX(a, b) (a > b ? a : b)
 #endif
 
 #include <QApplication>
@@ -75,7 +75,7 @@ public:
     /// Configures the time instant when the Environment should stop
     /// \param finTime is a real number when the simulation engine should stop
     void config(double finTime) {
-        if(finTime > 0)
+        if (finTime > 0)
         {
             finalTime_ = finTime;
         }
@@ -178,11 +178,11 @@ public:
         itEnv = TimeEnvironmentPairCompositeInterf::pImpl_->begin();
         if (itEnv != TimeEnvironmentPairCompositeInterf::pImpl_->end())
         	timeEnv = itEnv->second.getEvent().getTime();
-        if(itSch != TimeSchedulerPairCompositeInterf::pImpl_->end())
+        if (itSch != TimeSchedulerPairCompositeInterf::pImpl_->end())
         	timeSch = itSch->second.getEvent().getTime();
-        if((timeSch >= 0) & (timeEnv >= 0)) return MIN(timeSch, timeEnv);
-        if(timeSch >= 0) return timeSch;
-        if(timeEnv >= 0) return timeEnv;
+        if ((timeSch >= 0) &(timeEnv >= 0)) return MIN(timeSch, timeEnv);
+        if (timeSch >= 0) return timeSch;
+        if (timeEnv >= 0) return timeEnv;
         return -1;
     }
 
@@ -199,14 +199,14 @@ public:
         Environment envAux;
         Scheduler schAux;
         bool run = true;
-        while(run & (time <= finalTime))
+        while (run &(time <= finalTime))
         {
             // Player
-            while(paused)
+            while (paused)
                 qApp->processEvents();
 
             // If there is no any internal environment: run "my" clock
-            if(TimeEnvironmentPairCompositeInterf::size() == 0)
+            if (TimeEnvironmentPairCompositeInterf::size() == 0)
             {
                 run = executeScheduler(this);
                 time = getEvent().getTime();
@@ -216,27 +216,27 @@ public:
                 // gets the first environment
                 pair<Event, Environment> environmentPair;
                 iterator = TimeEnvironmentPairCompositeInterf::pImpl_->begin();
-                if(iterator != TimeEnvironmentPairCompositeInterf::pImpl_->end())
+                if (iterator != TimeEnvironmentPairCompositeInterf::pImpl_->end())
                 {
                     envAux = iterator->second;
 
-                    // Attempt to execute the (event, schedule) tree from this environment
-                    if((TimeSchedulerPairCompositeInterf::size() > 0) &
-                            (getEvent() < envAux.getEvent()))
+                    // Attempt to execute the(event, schedule) tree from this environment
+                    if ((TimeSchedulerPairCompositeInterf::size() > 0) &
+                           (getEvent() < envAux.getEvent()))
                     {
                         timeAux = getEvent().getTime();
-                        if(timeAux > finalTime) break;
+                        if (timeAux > finalTime) break;
                         run = executeScheduler(this);
                         time = getInitialTime();
                     }
                     else
                     {
-                        // Attempt to execute the (event, schedule) tree from an internal environment
+                        // Attempt to execute the(event, schedule) tree from an internal environment
                         TimeEnvironmentPairCompositeInterf::erase(iterator);
                         timeAux = envAux.getInitialTime();
-                        if(timeAux > finalTime) break;
+                        if (timeAux > finalTime) break;
                         environmentPair.second = envAux;
-                        if(executeScheduler(&envAux))
+                        if (executeScheduler(&envAux))
                         {
                             time = timeAux;
                             schAux = envAux.firstScheduler()->second;
@@ -262,7 +262,7 @@ public:
         Event timeSch;
         TimeSchedulerPairCompositeInterf::iterator itSch;
         itSch = TimeSchedulerPairCompositeInterf::pImpl_->begin();
-        if(itSch != TimeSchedulerPairCompositeInterf::pImpl_->end())
+        if (itSch != TimeSchedulerPairCompositeInterf::pImpl_->end())
         	timeSch = itSch->second.getEvent();
         return timeSch;
     }
@@ -280,7 +280,7 @@ public:
 	{
         CellularSpaceCompositeInterf::iterator iterator;
         iterator = CellularSpaceCompositeInterf::pImpl_->begin();
-        while(iterator != CellularSpaceCompositeInterf::pImpl_->end())
+        while (iterator != CellularSpaceCompositeInterf::pImpl_->end())
         {
             iterator->update();
             iterator++;
@@ -293,12 +293,12 @@ public:
 	{
         LocalAgentCompositeInterf::iterator iterator;
         iterator = LocalAgentCompositeInterf::pImpl_->begin();
-        while(iterator != LocalAgentCompositeInterf::pImpl_->end())
+        while (iterator != LocalAgentCompositeInterf::pImpl_->end())
 		{
             cs.attachAgent(&(*iterator));
             iterator++;
         }
-        CellularSpaceCompositeInterf::add (cs);
+        CellularSpaceCompositeInterf::add(cs);
     }
 
     /// Removes the CellularSpace object received as parameter from the Environment
@@ -307,7 +307,7 @@ public:
     {
         LocalAgentCompositeInterf::iterator iterator;
         iterator = LocalAgentCompositeInterf::pImpl_->begin();
-        while(iterator != LocalAgentCompositeInterf::pImpl_->end())
+        while (iterator != LocalAgentCompositeInterf::pImpl_->end())
 		{
             cs.detachAgent(&(*iterator));
             iterator++;
@@ -323,12 +323,12 @@ public:
 	{
         CellularSpaceCompositeInterf::iterator iterator;
         iterator = CellularSpaceCompositeInterf::pImpl_->begin();
-        while(iterator != CellularSpaceCompositeInterf::pImpl_->end())
+        while (iterator != CellularSpaceCompositeInterf::pImpl_->end())
 		{
             iterator->attachAgent(&agent);
             iterator++;
         }
-        LocalAgentCompositeInterf::add (agent);
+        LocalAgentCompositeInterf::add(agent);
     }
 
     /// Inserts a new GlobalAgent into the Environment. The GlobalAgent is attached to each CellularSpace already
@@ -336,7 +336,7 @@ public:
     /// \param agent is a reference to the LocalAgent being inserted into the Environment.
     void add(GlobalAgent &agent)
 	{
-        GlobalAgentCompositeInterf::add (agent);
+        GlobalAgentCompositeInterf::add(agent);
     }
 
     /// Removes a LocalAgent from the Environment. The LocalAgent is detached from all CellularSpace
@@ -346,7 +346,7 @@ public:
     {
         CellularSpaceCompositeInterf::iterator iterator;
         iterator = CellularSpaceCompositeInterf::pImpl_->begin();
-        while(iterator != CellularSpaceCompositeInterf::pImpl_->end())
+        while (iterator != CellularSpaceCompositeInterf::pImpl_->end())
 		{
             iterator->detachAgent(&agent);
             iterator++;
@@ -374,7 +374,7 @@ public:
     /// \param timeSchedulerPair is a reference to a Time-Scheduler pair being removed.
     void erase(pair<Event, Scheduler> &timeSchedulerPair)
 	{
-        TimeSchedulerPairCompositeInterf::erase (timeSchedulerPair.first);
+        TimeSchedulerPairCompositeInterf::erase(timeSchedulerPair.first);
     }
 
     /// Adds a new Event-Environment pair to the internal Environment synchronization data structure
@@ -388,7 +388,7 @@ public:
     /// \param timeEnvironmentPair is a reference to a Event-Environment pair being added.
     void erase(pair<Event, Environment> &timeEnvironmentPair)
 	{
-        TimeEnvironmentPairCompositeInterf::erase (timeEnvironmentPair.first);
+        TimeEnvironmentPairCompositeInterf::erase(timeEnvironmentPair.first);
     }
 
 private:
@@ -408,7 +408,7 @@ private:
             environment->TimeSchedulerPairCompositeInterf::erase(theIterator);
 
             time = scheduler.execute();
-            if(!scheduler.empty())
+            if (!scheduler.empty())
 				timeSchedulerPair.first = time;
             else
 			{

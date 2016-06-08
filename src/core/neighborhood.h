@@ -55,7 +55,7 @@ class CellNeighborhoodImpl : public Implementation
 {
 
     string ID;  ///< Neighborhood identifier
-    Region_<CellIndex> neighs; ///< a neighborhood it is a region (map) on cell indexes.
+    Region_<CellIndex> neighs; ///< a neighborhood it is a region(map) on cell indexes.
     CompositeInterface< mapComposite<CellIndex, double> > weights; ///< the arrows weights are stored in a separated composite
 
 	//@RAIAN: Parent cell of the neighborhood
@@ -104,7 +104,7 @@ public:
     iterator end(void) { return neighs.end(); }
 
     /// Returns true if the neighborhood composite is empty
-    /// \return bool is boolean value: true (empty), false (not empty)
+    /// \return bool is boolean value: true(empty), false(not empty)
     bool empty(void) { return neighs.empty(); }
 
     /// Clears the neighborhood data structure.
@@ -117,7 +117,7 @@ public:
     /// Searchs for a cell in the neighborhood composite. Similar to the "find" method semantics.
     /// \param i is a CellIndex representing a n-dimensional coordinate
     /// \return a pointer to Cell if it has been found, otherwise a NULL pointer.
-    Cell* operator [] (CellIndex i) { return neighs[i]; }
+    Cell* operator [](CellIndex i) { return neighs[i]; }
 
     /// Searches for a cell in the neighborhood composite.
     /// \param k is a CellIndex representing a n-dimensional coordinate
@@ -141,7 +141,7 @@ public:
 
     /// Gets the Neighborhood identifier
     /// \return a string reference to the identifier
-    string& getID (void) { return ID; }
+    string& getID(void) { return ID; }
 
     /// Sets the Neighborhood identifier
     /// \param id is a reference to a string containing the cell identifier.
@@ -208,7 +208,7 @@ public:
     Cell* getNeighbor(CellIndex& cI) { return CellNeighInterf::pImpl_->getNeighbor(cI); }
 
     /// HANDLE - Returns true if the neighborhood composite is empty
-    /// \return bool is boolean value: true (empty), false (not empty)
+    /// \return bool is boolean value: true(empty), false(not empty)
     bool empty(void) { return CellNeighInterf::pImpl_->empty(); }
 
     /// HANDLE - Clears the neighborhood data structure.
@@ -221,7 +221,7 @@ public:
     /// HANDLE - Searches for a cell in the neighborhood composite. Similar to the "find" method semantics.
     /// \param i is a CellIndex representing a n-dimensional coordinate
     /// \return a pointer to Cell if it has been found, otherwise a NULL pointer.
-    Cell* operator [] (CellIndex i) { return (*CellNeighInterf::pImpl_)[i]; }
+    Cell* operator [](CellIndex i) { return(*CellNeighInterf::pImpl_)[i]; }
 
     /// HANDLE - Puts the neighborhood iterator in the beggining of the neighborhood composite.
     /// \return the neighborhood iterator
@@ -238,7 +238,7 @@ public:
 
     /// HANDLE - Gets the Neighborhood identifier
     /// \return a string reference to the identifier
-    string& getID (void) { return CellNeighInterf::pImpl_->getID(); }
+    string& getID(void) { return CellNeighInterf::pImpl_->getID(); }
 
     /// HANDLE - Sets the Neighborhood identifier
     /// \param id is a reference to a string containing the cell identifier.

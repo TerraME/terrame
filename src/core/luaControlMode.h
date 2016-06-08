@@ -53,7 +53,7 @@ public:
 
 public:
     /// constructor
-    luaControlMode( lua_State *)
+    luaControlMode(lua_State *)
     {
         ControlMode::add(uniqueProcess);
         subjectType = TObsUnknown;
@@ -61,56 +61,56 @@ public:
 
     /// Configures the luaControlMode object
     /// parameter: luaControlMode identifier
-    int config( lua_State*L )
+    int config(lua_State*L)
     {
         const char *name = luaL_checkstring(L, -1);
-        string tempStr = name; // Raian: ControlMode::setControlModeName( string(name) );
-        ControlMode::setControlModeName( tempStr );
+        string tempStr = name; // Raian: ControlMode::setControlModeName(string(name));
+        ControlMode::setControlModeName(tempStr);
         return 0;
     }
 
     /// Adds new rules to the luaControlMode object: luaJumpCondition and luaFlowCondition objects
     /// parameter: rule
-    int add( lua_State* L)
+    int add(lua_State* L)
     {
         void *ud;
 
-        if( isudatatype (L, -1, "TeJump") )
+        if (isudatatype(L, -1, "TeJump"))
         {
             luaJumpCondition* const jump = Luna<luaJumpCondition>::check(L, -1);
-            uniqueProcess.JumpCompositeInterf::add( jump );
+            uniqueProcess.JumpCompositeInterf::add(jump);
         }
         else
-            if( (ud = luaL_checkudata(L, -1, "TeFlow")) != NULL )
+            if ((ud = luaL_checkudata(L, -1, "TeFlow")) != NULL)
             {
                 luaFlowCondition* const flow = Luna<luaFlowCondition>::check(L, -1);
-                uniqueProcess.FlowCompositeInterf::add( flow );
+                uniqueProcess.FlowCompositeInterf::add(flow);
             }
         return 0;
     }
 
     /// Adds new luaJumpCondition objects to the luaControlMode object
     /// parameter: luaJumpCondition
-    int addJump( lua_State* L)
+    int addJump(lua_State* L)
     {
         luaJumpCondition* const jump = Luna<luaJumpCondition>::check(L, -1);
-        uniqueProcess.JumpCompositeInterf::add( jump );
+        uniqueProcess.JumpCompositeInterf::add(jump);
         return 0;
     }
 
     /// Adds new luaFlowCondition objects to the luaControlMode object
     /// parameter: luaFlowCondition
-    int addFlow( lua_State* L)
+    int addFlow(lua_State* L)
     {
         luaFlowCondition* const flow = Luna<luaFlowCondition>::check(L, -1);
-        uniqueProcess.FlowCompositeInterf::add( flow );
+        uniqueProcess.FlowCompositeInterf::add(flow);
         return 0;
     }
 
     /// Gets the luaControlMode name
-    int getName( lua_State* L)
+    int getName(lua_State* L)
     {
-        lua_pushstring( L, ControlMode::getControlModeName().c_str() );
+        lua_pushstring(L, ControlMode::getControlModeName().c_str());
         return 1;
     }
 

@@ -48,7 +48,7 @@ public:
      * \param parent a pointer to a QWidget
      * \see QWidget
      */
-    ObserverTable (QWidget *parent = 0);
+    ObserverTable(QWidget *parent = 0);
 
     /**
      * Constructor
@@ -57,7 +57,7 @@ public:
      * \see Subject
      * \see QWidget
      */
-    ObserverTable (Subject *subj, QWidget *parent = 0);
+    ObserverTable(Subject *subj, QWidget *parent = 0);
 
     /**
      * Destructor

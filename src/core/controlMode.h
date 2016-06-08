@@ -112,10 +112,10 @@ public:
         {
             ProcessCompositeInterf::iterator iterator;
             iterator = ProcessCompositeInterf::pImpl_->begin();
-            while(iterator != ProcessCompositeInterf::pImpl_->end())
+            while (iterator != ProcessCompositeInterf::pImpl_->end())
             {
 
-                if(!iterator->execute(event, agent, cellIndexPair)) return false;
+                if (!iterator->execute(event, agent, cellIndexPair)) return false;
                 iterator++;
             }
             return true;

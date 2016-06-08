@@ -56,7 +56,7 @@ public:
     /// Sets the reference for the Lua object using the cObj pointer.
     int setReference(lua_State *L)
     {
-        if(m_ref == LUA_REFNIL)
+        if (m_ref == LUA_REFNIL)
             createWeakTable(L);
         // retrieves the container
         lua_rawgeti(L, LUA_REGISTRYINDEX, m_ref);

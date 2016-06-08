@@ -75,7 +75,7 @@ public:
     luaSociety(lua_State *L);
 
     /// Returns the current internal state of the LocalAgent (Automaton) within the cell and received as parameter
-    int getCurrentStateName( lua_State *L );
+    int getCurrentStateName(lua_State *L);
 
     /// Puts the iterator in the beginning of the luaNeighborhood composite.
     int first(lua_State *L);
@@ -104,10 +104,10 @@ public:
 
     /// Fowards the Neighborhood iterator to the next Neighbor cell
     // no parameters
-    int next( lua_State *L );
+    int next(lua_State *L);
 
     /// destructor
-    ~luaSociety( void );
+    ~luaSociety(void);
 
     /// Sets the Society latency
     int setLatency(lua_State *L);
@@ -126,7 +126,7 @@ public:
 
     /// Adds a new luaNeighborhood graph to the Society
     /// parameters: identifier, luaNeighborhood
-    int addNeighborhood( lua_State *L );
+    int addNeighborhood(lua_State *L);
 
     /// Synchronizes the luaSociety
     int synchronize(lua_State *L);
@@ -134,18 +134,18 @@ public:
     /// Registers the luaSociety object in the Lua stack
     // @DANIEL
     // Movido para clsse Reference
-    // int setReference( lua_State* L);
+    // int setReference(lua_State* L);
 
     /// Gets the luaSociety object reference
     // @DANIEL
     // Movido para clsse Reference
-    // int getReference( lua_State *L );
+    // int getReference(lua_State *L);
 
     /// Gets the luaSociety identifier
-    int getID( lua_State *L );
+    int getID(lua_State *L);
 
     /// Sets the luaSociety identifier
-    int setID( lua_State *L );
+    int setID(lua_State *L);
 
 	/// Gets the luaSociety identifier
 	/// \author Raian Vargas Maretto
@@ -163,10 +163,10 @@ public:
 
     /// Creates several types of observers
     /// parameters: observer type, observeb attributes table, observer type parameters
-    int createObserver( lua_State *L );
+    int createObserver(lua_State *L);
 
     /// Notifies observers about changes in the luaSociety internal state
-    int notify(lua_State *L );
+    int notify(lua_State *L);
 
     /// Gets the subject's type
     const TypesOfSubjects getType();
@@ -190,6 +190,6 @@ public:
 /// Gets the luaSociety position of the luaSociety in the Lua stack
 /// \param L is a pointer to the Lua stack
 /// \param cell is a pointer to the cell within the Lua stack
-void getReference( lua_State *L, luaSociety *cell );
+void getReference(lua_State *L, luaSociety *cell);
 
 #endif

@@ -57,7 +57,7 @@ class EventImpl : public Implementation
 {
     double time_; ///< instant in which the Events must occurs
     double period_; ///<  periodicity in which the Event must occurs
-    double priority_; /// Event priority (default value = 0)  Higher numbers means lower  priority.
+    double priority_; /// Event priority(default value = 0)  Higher numbers means lower  priority.
     /// The normal priority is 0(zero).
 public:
 

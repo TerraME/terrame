@@ -33,7 +33,7 @@ luaTable::luaTable(lua_State* L)
 
 int luaTable::setObserver(lua_State* L)
 {
-    ObserverTable *obst = (ObserverTable*) lua_touserdata(L, -1);
+    ObserverTable *obst =(ObserverTable*) lua_touserdata(L, -1);
     obs = obst;
     return 0;
 }

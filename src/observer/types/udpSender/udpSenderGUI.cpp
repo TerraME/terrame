@@ -63,8 +63,8 @@ void UdpSenderGUI::setSpeed(const QString &speed)
     ui->lblSpeedStatus->setText(speed);
 
 //    float secs = stopWatch.elapsed() / 1000.0;
-//    qDebug("\t%.2fMB/%.2fs: %.2fMB/s", float(nbytes / (1024.0*1024.0)),
-//    secs, float(nbytes / (1024.0*1024.0)) / secs);
+//    qDebug("\t%.2fMB/%.2fs: %.2fMB/s", float(nbytes /(1024.0*1024.0)),
+//    secs, float(nbytes /(1024.0*1024.0)) / secs);
 }
 
 void UdpSenderGUI::appendMessage(const QString &message)

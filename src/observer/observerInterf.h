@@ -159,7 +159,7 @@ public:
     /**
      * \copydoc TerraMEObserver::Subject::notify
      */
-    void notify(double );
+    void notify(double time);
 
     /**
      * \copydoc TerraMEObserver::Subject::getState

@@ -50,7 +50,7 @@ public:
 
 public:
     /// Constructor
-    luaFlowCondition( lua_State *)
+    luaFlowCondition(lua_State *)
     {
         subjectType = TObsUnknown;
     }
@@ -65,8 +65,8 @@ public:
         try {
 
             int result = 0;
-            luaEvent *ev = (luaEvent*)&event;
-            luaCell  *cell = (luaCell*) cellIndexPair.second;
+            luaEvent *ev =(luaEvent*)&event;
+            luaCell  *cell =(luaCell*) cellIndexPair.second;
 
             //puts the excute function of the rule on stack top
             luaRule::getReference(L);
@@ -76,25 +76,25 @@ public:
 
             // puts the rule parameters on stack top
             ev->getReference(L);
-            if( dynamic_cast<luaGlobalAgent*>(agent) )
+            if (dynamic_cast<luaGlobalAgent*>(agent))
             {
-                luaGlobalAgent* ag = (luaGlobalAgent*) agent;
+                luaGlobalAgent* ag =(luaGlobalAgent*) agent;
                 ag->getReference(L);
-                if( cell != NULL ) cell->getReference(L);
+                if (cell != NULL) cell->getReference(L);
                 else lua_pushnil(L);
             }
             else
             {
-                luaLocalAgent* ag = (luaLocalAgent*) agent;
+                luaLocalAgent* ag =(luaLocalAgent*) agent;
                 ag->getReference(L);
-                if( cell != NULL ) cell->getReference(L);
+                if (cell != NULL) cell->getReference(L);
                 else lua_pushnil(L);
             }
 
             // calls the "execute" function of the rule
-            if( lua_pcall( L, 3, 1, 0) != 0 )
+            if (lua_pcall(L, 3, 1, 0) != 0)
             {
-                string err_out = string(" Error: rule can not be executed " ) + string (lua_tostring(L, -1)) + string("\".\n");
+                string err_out = string(" Error: rule can not be executed ") + string(lua_tostring(L, -1)) + string("\".\n");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L, err_out.c_str());
                 lua_pushnumber(L, 4);
@@ -102,7 +102,7 @@ public:
                 return 0;
             }
 
-            result = lua_tonumber( L, -1);
+            result = lua_tonumber(L, -1);
             lua_pop(L, 1);  // pop returned value
 
             return result;

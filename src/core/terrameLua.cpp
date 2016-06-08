@@ -61,7 +61,7 @@ QApplication* app;
 //void closeAllWidgets()
 //{
 //  int i = 0;
-//  foreach (QWidget *widget, QApplication::allWidgets()) {
+//  foreach(QWidget *widget, QApplication::allWidgets()) {
 //	widget->close();
 //	i++;
 //	printf("%i", i);
@@ -318,7 +318,7 @@ int main(int argc, char *argv[])
 	step = false;
 
 	// Register the message handle of Observer Player
-	if((argc > 2) && (!strcmp(argv[1], "-gui")))
+	if ((argc > 2) && (!strcmp(argv[1], "-gui")))
 	{
 		SHOW_GUI = true;
 
@@ -332,7 +332,7 @@ int main(int argc, char *argv[])
 	// Loads the TerrME constructors for LUA
 	QString tmePath(getenv(TME_PATH));
 
-	if(tmePath.isEmpty())
+	if (tmePath.isEmpty())
 	{
 		qFatal("%s environment variable should exist and point to TerraME "
 			"installation folder.", TME_PATH);
@@ -348,7 +348,7 @@ int main(int argc, char *argv[])
 
     // runs the lua core files
     int error = luaL_loadfile(L, tmePath.toLatin1().constData()) || lua_pcall(L, 0, 0, 0);
-    if(error)
+    if (error)
     {
         fprintf(stderr, "\n%s\n", lua_tostring(L, -1));
         lua_pop(L, 1);  // pop error message from the stack
@@ -390,7 +390,7 @@ int main(int argc, char *argv[])
 	lua_setglobal(L, "cpp_putenv");
 
 	// Execute the lua files
-	if(argc < 2)
+	if (argc < 2)
 	{
 		lua_getglobal(L, "_Gtme");
 		lua_getfield(L, -1, "execute");
@@ -404,7 +404,7 @@ int main(int argc, char *argv[])
 		lua_newtable(L);
 
 		int argument = 1;
-		while(argument < argc)
+		while (argument < argc)
 		{
 			lua_pushnumber(L, argument);
 			lua_pushstring(L, argv[argument]);
@@ -434,17 +434,17 @@ int main(int argc, char *argv[])
 			{
 				bool ok = false;
 				int number = QString(argv[argument + 1]).toInt(&ok);
-				if(ok) WORKERS_NUMBER = number;
+				if (ok) WORKERS_NUMBER = number;
 
 				argument++;
 			}
-			else if(strcmp(argv[argument], "-gui"))
+			else if (strcmp(argv[argument], "-gui"))
 			{
 				qWarning("\nInvalid arguments.");
 				usage();
 				return -1;
 			}
-			if(argc < 3)
+			if (argc < 3)
 			{
 				usage();
 				return -1;
@@ -497,7 +497,7 @@ int main(int argc, char *argv[])
 	bool autoClose = false;
 	lua_getglobal(L, "info_");
 	int top = lua_gettop(L);
-	if(lua_istable(L, top))
+	if (lua_istable(L, top))
 	{
 		lua_getfield(L, top, "autoclose");
 		top = lua_gettop(L);
@@ -551,7 +551,7 @@ int main(int argc, char *argv[])
 
 	int ret = -1;
 
-	if(argc < 2)
+	if (argc < 2)
 	{
 		qWarning() << "Running in receiver in mode TCP..";
 		ReceiverTcpServer receiver;
@@ -563,7 +563,7 @@ int main(int argc, char *argv[])
 		QStringList argsList = app.arguments();
 
 		int index = argsList.indexOf("-workers");
-		if(index > 1)
+		if (index > 1)
 		{
 			bool ok = false;
 			int number = argsList.at(index++).toInt(&ok);
@@ -571,14 +571,14 @@ int main(int argc, char *argv[])
 		}
 
 		index = argsList.indexOf("-help");
-		if(index > 1)
+		if (index > 1)
 		{
 			receiverUsage();
 			return 0;
 		}
 
 		index = argsList.indexOf("-tcp");
-		if(index > 1)
+		if (index > 1)
 		{
 			qWarning() << "Running in receiver in mode TCP..";
 			ReceiverTcpServer receiver;
@@ -588,7 +588,7 @@ int main(int argc, char *argv[])
 		}
 
 		index = argsList.indexOf("-udp");
-		if(index > 1)
+		if (index > 1)
 		{
 			qWarning() << "Running in receiver in mode UDP..";
 			ReceiverUDP receiver;

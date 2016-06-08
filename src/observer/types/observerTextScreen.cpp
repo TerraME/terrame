@@ -86,16 +86,16 @@ bool ObserverTextScreen::draw(QDataStream &state)
 
         switch (typeOfData)
         {
-            case (TObsBool)		:
+            case(TObsBool)		:
                 if (contains)
                     valuesList.replace(attribList.indexOf(key),
-                                       (tokens.at(j).toInt() ? "true" : "false"));
+                                      (tokens.at(j).toInt() ? "true" : "false"));
                 break;
 
-            case (TObsDateTime)	:
+            case(TObsDateTime)	:
                 //break;
 
-            case (TObsNumber)		:
+            case(TObsNumber)		:
                 if (contains)
                     valuesList.replace(attribList.indexOf(key), tokens.at(j));
                 break;

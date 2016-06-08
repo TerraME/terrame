@@ -50,7 +50,7 @@ luaEnvironment::luaEnvironment(lua_State *L)
 int luaEnvironment::add(lua_State *L)
 {
     void *ud;
-    if( isudatatype(L, -1, "TeTimer") )
+    if (isudatatype(L, -1, "TeTimer"))
     {
         pair<Event, Scheduler>  timeSchedulerPair;
         Scheduler* pTimer = Luna<luaTimer>::check(L, -1);
@@ -58,28 +58,28 @@ int luaEnvironment::add(lua_State *L)
         timeSchedulerPair.first = pTimer->getEvent();
         timeSchedulerPair.second = *pTimer;
 
-        Environment::add( timeSchedulerPair );
+        Environment::add(timeSchedulerPair);
     }
     else
-        if( isudatatype(L, -1, "TeCellularSpace") )
+        if (isudatatype(L, -1, "TeCellularSpace"))
         {
             CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
-            Environment::add( *pCS);
+            Environment::add(*pCS);
         }
         else
-            if( isudatatype(L, -1, "TeLocalAutomaton") )
+            if (isudatatype(L, -1, "TeLocalAutomaton"))
             {
                 LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
-                Environment::add( *pAg);
+                Environment::add(*pAg);
             }
             else
-                if( isudatatype(L, -1, "TeGlobalAutomaton") )
+                if (isudatatype(L, -1, "TeGlobalAutomaton"))
                 {
                     GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
-                    Environment::add( *pAg);
+                    Environment::add(*pAg);
                 }
                 else
-                    if( (ud = luaL_checkudata(L, -1, "TeScale")) != NULL )
+                    if ((ud = luaL_checkudata(L, -1, "TeScale")) != NULL)
                     {
                         pair<Event, Environment>  timeEnvPair;
                         Environment* pEnv = Luna<luaEnvironment>::check(L, -1);
@@ -87,7 +87,7 @@ int luaEnvironment::add(lua_State *L)
                         timeEnvPair.first = pEnv->getEvent();
                         timeEnvPair.second = *pEnv;
 
-                        Environment::add( timeEnvPair );
+                        Environment::add(timeEnvPair);
                     }
     return 0;
 }
@@ -100,7 +100,7 @@ int luaEnvironment::addTimer(lua_State *L)
     timeSchedulerPair.first = lua_tonumber(L, -2);
     timeSchedulerPair.second = *pTimer;
 
-    Environment::add( timeSchedulerPair );
+    Environment::add(timeSchedulerPair);
 
     return 0;
 }
@@ -108,14 +108,14 @@ int luaEnvironment::addTimer(lua_State *L)
 int luaEnvironment::addCellularSpace(lua_State *L)
 {
     CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
-    Environment::add( *pCS);
+    Environment::add(*pCS);
 
     return 0;
 }
 
 int luaEnvironment::addLocalAgent(lua_State *L) {
     LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
-    Environment::add( *pAg);
+    Environment::add(*pAg);
 
     return 0;
 };
@@ -123,7 +123,7 @@ int luaEnvironment::addLocalAgent(lua_State *L) {
 int luaEnvironment::addGlobalAgent(lua_State *L)
 {
     GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
-    Environment::add( *pAg);
+    Environment::add(*pAg);
 
     return 0;
 };
@@ -131,7 +131,7 @@ int luaEnvironment::addGlobalAgent(lua_State *L)
 int luaEnvironment::config(lua_State *L)
 {
     float finalTime = lua_tonumber(L, -1);
-    Environment::config(finalTime );
+    Environment::config(finalTime);
 
     return 0;
 }
@@ -144,13 +144,13 @@ int luaEnvironment::execute(lua_State *)
 
 // @DANIEL
 // Movido para classe Reference
-//int luaEnvironment::setReference( lua_State* L)
+//int luaEnvironment::setReference(lua_State* L)
 //{
-//    ref = luaL_ref(L, LUA_REGISTRYINDEX );
+//    ref = luaL_ref(L, LUA_REGISTRYINDEX);
 //    return 0;
 //}
 //
-//int luaEnvironment::getReference( lua_State *L )
+//int luaEnvironment::getReference(lua_State *L)
 //{
 //    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
 //    return 1;
@@ -175,15 +175,15 @@ int luaEnvironment::createObserver(lua_State *luaL)
     // N?o modifica em nada a pilha
     // recupera o enum referente ao tipo
     // do observer
-    TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, -4);
-    bool isGraphicType = (typeObserver == TObsDynamicGraphic) || (typeObserver == TObsGraphic);
+    TypesOfObservers typeObserver =(TypesOfObservers)luaL_checkinteger(luaL, -4);
+    bool isGraphicType =(typeObserver == TObsDynamicGraphic) ||(typeObserver == TObsGraphic);
 
     //------------------------
     QStringList allAttribs, obsAttribs;
 
     // Pecorre a pilha lua recuperando todos os atributos celula
     lua_pushnil(luaL);
-    while(lua_next(luaL, top) != 0)
+    while (lua_next(luaL, top) != 0)
     {
         QString key;
 
@@ -212,7 +212,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
     lua_settop(luaL, top - 1);
     top = lua_gettop(luaL);
 
-    if(!lua_istable(luaL, top) )
+    if (!lua_istable(luaL, top))
     {
         //printf("\nError: Attributes table not found. Incorrect sintax.\n");
         qFatal("Error: Attributes table not found. Incorrect sintax.\n");
@@ -220,7 +220,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
     }
 
     lua_pushnil(luaL);
-    while(lua_next(luaL, top - 1 ) != 0)
+    while (lua_next(luaL, top - 1) != 0)
     {
         QString key;
 
@@ -250,7 +250,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
         {
             if (!key.isNull() || !key.isEmpty())
             {
-                string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
+                string err_out = string("Error: Attribute name '") + string(qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
 				lua_pushnumber(L, 5);
@@ -267,7 +267,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
         observedAttribs = allAttribs;
     }
 
-    if( !lua_istable(luaL, top) )
+    if (!lua_istable(luaL, top))
     {
         qFatal("Error: Parameter table not found. Incorrect sintax.");
         return -1;
@@ -278,17 +278,17 @@ int luaEnvironment::createObserver(lua_State *luaL)
     // Recupera a tabela de parametros os observadores do tipo Table e Graphic
     // caso n?o seja um tabela a sintaxe do metodo esta incorreta
     lua_pushnil(luaL);
-    while(lua_next(luaL, top) != 0)
+    while (lua_next(luaL, top) != 0)
     {
         QString key;
         if (lua_type(luaL, -2) == LUA_TSTRING)
-            key = QString( luaL_checkstring(luaL, -2));
+            key = QString(luaL_checkstring(luaL, -2));
 
         switch (lua_type(luaL, -1))
         {
         case LUA_TSTRING:
             {
-                QString value( luaL_checkstring(luaL, -1));
+                QString value(luaL_checkstring(luaL, -1));
                 cols.push_back(value);
                 break;
             }
@@ -307,7 +307,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
                 int tableTop = lua_gettop(luaL);
 
 		        lua_pushnil(luaL);
-		        while(lua_next(luaL, tableTop) != 0)
+		        while (lua_next(luaL, tableTop) != 0)
                 {
 		            if (lua_type(luaL, -2) == LUA_TSTRING)
 		                obsParams.append(luaL_checkstring(luaL, -2));
@@ -315,7 +315,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
 		            switch (lua_type(luaL, -1))
                     {
                         case LUA_TNUMBER:
-                            cols.append(QString::number(luaL_checknumber(luaL, -1)) );
+                            cols.append(QString::number(luaL_checknumber(luaL, -1)));
                             break;
 
                         case LUA_TSTRING:
@@ -343,7 +343,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
     switch (typeObserver)
     {
         case TObsTextScreen:
-            obsText = (ObserverTextScreen*)
+            obsText =(ObserverTextScreen*)
                 EnvironmentSubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
             {
@@ -357,7 +357,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         case TObsLogFile:
-            obsLog = (ObserverLogFile*)
+            obsLog =(ObserverLogFile*)
                 EnvironmentSubjectInterf::createObserver(TObsLogFile);
             if (obsLog)
             {
@@ -371,7 +371,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         case TObsTable:
-            obsTable = (ObserverTable *)
+            obsTable =(ObserverTable *)
                 EnvironmentSubjectInterf::createObserver(TObsTable);
             if (obsTable)
             {
@@ -385,7 +385,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         case TObsDynamicGraphic:
-            obsGraphic = (ObserverGraphic *)
+            obsGraphic =(ObserverGraphic *)
                 EnvironmentSubjectInterf::createObserver(TObsDynamicGraphic);
             if (obsGraphic)
             {
@@ -400,7 +400,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         case TObsGraphic:
-            obsGraphic = (ObserverGraphic *)
+            obsGraphic =(ObserverGraphic *)
                 EnvironmentSubjectInterf::createObserver(TObsGraphic);
             if (obsGraphic)
             {
@@ -414,7 +414,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         case TObsUDPSender:
-            obsUDPSender = (ObserverUDPSender *)
+            obsUDPSender =(ObserverUDPSender *)
                 EnvironmentSubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
             {
@@ -432,10 +432,10 @@ int luaEnvironment::createObserver(lua_State *luaL)
             break;
 
         default:
-            if (execModes != Quiet )
+            if (execModes != Quiet)
             {
                 qWarning("Warning: In this context, the code '%s' does not "
-                         "correspond to a valid type of Observer.",  getObserverName(typeObserver) );
+                         "correspond to a valid type of Observer.",  getObserverName(typeObserver));
             }
             return 0;
     }
@@ -508,14 +508,14 @@ int luaEnvironment::createObserver(lua_State *luaL)
         obsUDPSender->setPort(cols.at(0).toInt());
 
         // broadcast
-        if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
+        if ((cols.size() == 1) ||((cols.size() == 2) && cols.at(1).isEmpty()))
         {
             obsUDPSender->addHost(BROADCAST_HOST);
         }
         else
         {
             // multicast or unicast
-            for(int i = 1; i < cols.size(); i++)
+            for (int i = 1; i < cols.size(); i++)
             {
                 if (!cols.at(i).isEmpty())
                     obsUDPSender->addHost(cols.at(i));
@@ -544,7 +544,7 @@ int luaEnvironment::notify(lua_State *)
 luaEnvironment::~luaEnvironment(void)
 {
     // @DANIEL
-    // luaL_unref( L, LUA_REGISTRYINDEX, ref);
+    // luaL_unref(L, LUA_REGISTRYINDEX, ref);
 }
 
 QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
@@ -573,7 +573,7 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
     QString text, key, attrs, elements;
 
     lua_pushnil(luaL);
-    while(lua_next(luaL, environPos ) != 0)
+    while (lua_next(luaL, environPos) != 0)
     {
         if (lua_type(luaL, -2) == LUA_TSTRING)
         {
@@ -594,12 +594,12 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
         attrs.append(key);
         attrs.append(PROTOCOL_SEPARATOR);
 
-        switch( lua_type(luaL, -1) )
+        switch (lua_type(luaL, -1))
         {
             case LUA_TBOOLEAN:
                 attrs.append(QString::number(TObsBool));
                 attrs.append(PROTOCOL_SEPARATOR);
-                attrs.append(QString::number( lua_toboolean(luaL, -1)));
+                attrs.append(QString::number(lua_toboolean(luaL, -1)));
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
@@ -614,17 +614,17 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
 
             case LUA_TSTRING:
                 text = QString(luaL_checkstring(luaL, -1));
-                attrs.append(QString::number(TObsText) );
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
-                attrs.append( (text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text) );
+                attrs.append((text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text));
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
             case LUA_TTABLE:
             {
                 char result[100];
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                attrs.append(QString::number(TObsText) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
                 attrs.append(QString("Lua-Address(TB): ") + QString(result));
                 attrs.append(PROTOCOL_SEPARATOR);
@@ -635,8 +635,8 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
             case LUA_TUSERDATA:
             {
                 char result[100];
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                attrs.append(QString::number(TObsText) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
                 attrs.append(QString("Lua-Address(UD):") + QString(result));
                 attrs.append(PROTOCOL_SEPARATOR);
@@ -646,8 +646,8 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
             case LUA_TFUNCTION:
             {
                 char result[100];
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                attrs.append(QString::number(TObsText) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
                 attrs.append(QString("Lua-Address(FT): ") + QString(result));
                 attrs.append(PROTOCOL_SEPARATOR);
@@ -657,8 +657,8 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
             default:
             {
                 char result[100];
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                attrs.append(QString::number(TObsText) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
                 attrs.append(QString("Lua-Address(O): ") + QString(result));
                 attrs.append(PROTOCOL_SEPARATOR);
@@ -672,11 +672,11 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
 
     // #attrs
     msg.append(QString::number(attrCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
 
     // #elements
     msg.append(QString::number(elementCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
     msg.append(attrs);
 
     msg.append(PROTOCOL_SEPARATOR);
@@ -701,13 +701,13 @@ QString luaEnvironment::getChanges(QDataStream& in, int observerId , QStringList
 #ifdef TME_BLACK_BOARD
 QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int observerId, QStringList & /* attribs */)
 #else
-QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs )
+QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs)
 #endif
 {
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 
-    switch(obsCurrentState)
+    switch (obsCurrentState)
     {
         case 0:
 #ifdef TME_BLACK_BOARD
@@ -716,7 +716,7 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int observerId
         content = getAll(in, observerId, attribs);
 #endif
             // serverSession->setState(observerId, 1);
-            // if (! QUIET_MODE )
+            // if (! QUIET_MODE)
             // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
@@ -727,7 +727,7 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int observerId
         content = getChanges(in, observerId, attribs);
 #endif
             // serverSession->setState(observerId, 0);
-            // if (! QUIET_MODE )
+            // if (! QUIET_MODE)
             // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }

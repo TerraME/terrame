@@ -88,15 +88,15 @@ class Implementation
 {
 public:
     /// Constructor: zero references when the object is being built
-    Implementation(): refCount_ (0) {
+    Implementation(): refCount_(0) {
     }
 
     /// Increases the number of references to this object
-    void attach ()	{ refCount_++; }
+    void attach()	{ refCount_++; }
 
     /// Decreases the number of references to this object.
     /// Destroy it if there are no more references to it
-    void detach () {
+    void detach() {
         if (--refCount_ == 0)	{
             delete this;
         }

@@ -85,7 +85,7 @@ bool ObserverTCPSender::draw(QDataStream& state)
 
     // qDebug() << "stateAux.size(): " << stateAux.size();
 
-    if(!stateAux.isEmpty())
+    if (!stateAux.isEmpty())
     {
         static bool socket = false;
         if (!socket)
@@ -158,11 +158,11 @@ void ObserverTCPSender::setAttributes(QStringList &attribs)
 //#ifdef TME_BLACK_BOARD_
 //    Attributes *attrib = 0;
 //
-//    for(int i = 0; i < attribList.size(); i++)
+//    for (int i = 0; i < attribList.size(); i++)
 //    {
 //        if ((attribList.at(i) != "x") && (attribList.at(i) != "y"))
 //        {
-//            attrib = (Attributes *) &BlackBoard::getInstance()
+//            attrib =(Attributes *) &BlackBoard::getInstance()
 //                .addAttribute(getSubjectId(), attribList.at(i));
 //
 //            attrib->setVisible(true);

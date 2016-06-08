@@ -73,9 +73,9 @@ public:
     bool execute(Event& event) {
         // puts the message table on the top of the lua stack
         getReference(L);
-        if(!lua_istable(L, -1))
+        if (!lua_istable(L, -1))
         {
-            string err_out = string("Action function ") + string (msg)
+            string err_out = string("Action function ") + string(msg)
             				+ string(" not defined!");
 			lua_getglobal(L, "customError");
 			lua_pushstring(L, err_out.c_str());
@@ -89,7 +89,7 @@ public:
 
         // puts the Event constructor on the top of the lua stack
         lua_getglobal(L, "Event");
-        if(!lua_isfunction(L, -1))
+        if (!lua_isfunction(L, -1))
         {
 			string err_out = string("Event constructor not found.");
 			lua_getglobal(L, "customError");
@@ -101,24 +101,24 @@ public:
 
         // builds the table parameter of the constructor
         lua_newtable(L);
-		if(event.getTime() != 1) {
+		if (event.getTime() != 1) {
         	lua_pushstring(L, "start");
         	lua_pushnumber(L, event.getTime());
         	lua_settable(L, -3);
 		}
-		if(event.getPeriod() != 1) {
+		if (event.getPeriod() != 1) {
         	lua_pushstring(L, "period");
         	lua_pushnumber(L, event.getPeriod());
         	lua_settable(L, -3);
 		}
-		if(event.getPriority() != 0) {
+		if (event.getPriority() != 0) {
         	lua_pushstring(L, "priority");
         	lua_pushnumber(L, event.getPriority());
         	lua_settable(L, -3);
 		}
 
         // calls the event constructor
-        if(lua_pcall(L, 1, 1, 0) != 0)
+        if (lua_pcall(L, 1, 1, 0) != 0)
         {
             string err_out = string("Event constructor not found in the stack.");
 			lua_getglobal(L, "customError");
@@ -132,7 +132,7 @@ public:
 
         // retrieve the message result value from the lua stack
         int result = true;
-        if(lua_type(L, -1) == LUA_TBOOLEAN)
+        if (lua_type(L, -1) == LUA_TBOOLEAN)
         {
             result = lua_toboolean(L, -1);
             lua_pop(L, 1);  // pop returned value

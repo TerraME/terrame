@@ -182,7 +182,7 @@ Attributes::Attributes(QString name, int contSize, double width, double height) 
 
     maxValue = 100;
     minValue = 0;
-    val2Color = 255 / (maxValue - minValue);
+    val2Color = 255 /(maxValue - minValue);
     colorBarVec = vector<ColorBar>();
     stdColorBarVec = vector<ColorBar>();
 
@@ -355,7 +355,7 @@ QVector<double>* Attributes::getNumericValues()
     return numericValues;
 }
 
-void Attributes::setValues( QVector<QString>* s)
+void Attributes::setValues(QVector<QString>* s)
 {
     textValues = s;
 }
@@ -365,7 +365,7 @@ QVector<QString>* Attributes::getTextValues()
     return textValues;
 }
 
-void Attributes::setValues( QVector<bool>* b)
+void Attributes::setValues(QVector<bool>* b)
 {
     boolValues = b;
 }
@@ -399,7 +399,7 @@ void Attributes::addValue(QString txt)
     textValues->push_back(txt);
 }
 
-void Attributes::setLegend( QVector<ObsLegend>* l)
+void Attributes::setLegend(QVector<ObsLegend>* l)
 {
     legend = l;
 }
@@ -419,7 +419,7 @@ void Attributes::setMaxValue(double m)
     maxValue = m;
     if (maxValue - minValue == 0)
         maxValue++;
-    val2Color = 255 / (maxValue - minValue);
+    val2Color = 255 /(maxValue - minValue);
 }
 
 double Attributes::getMaxValue()
@@ -433,7 +433,7 @@ void Attributes::setMinValue(double m)
     if (maxValue - minValue == 0)
         maxValue++;
 
-    val2Color = 255 / (maxValue - minValue);
+    val2Color = 255 /(maxValue - minValue);
 }
 
 double Attributes::getMinValue()
@@ -568,13 +568,13 @@ QStringList & Attributes::getLabelList()
 
 void  Attributes::setImageSize(int w, int h)
 {
-    image = QImage( QSize(w, h),
+    image = QImage(QSize(w, h),
                     QImage::Format_ARGB32_Premultiplied);
 }
 
 QImage * Attributes::getImage()
 {
-    return (QImage *) &image;
+    return(QImage *) &image;
 }
 
 void Attributes::setVisible(bool visible)
@@ -647,12 +647,12 @@ void Attributes::makeBkp()
 
     colorBarVecBkp = colorBarVec;
     //colorBarVec_bkp.clear();
-    //for (int i = 0; i < (int)this->colorBarVec.size(); i++)
+    //for (int i = 0; i <(int)this->colorBarVec.size(); i++)
     //    colorBarVec_bkp.push_back(colorBarVec.at(i));
 
     stdColorBarVecBkp = stdColorBarVec;
     //colorBarVecB_bkp.clear();
-    //for (int i = 0; i < (int)this->colorBarVecB.size(); i++)
+    //for (int i = 0; i <(int)this->colorBarVecB.size(); i++)
     //    colorBarVecB_bkp.push_back(colorBarVecB.at(i));
 }
 
@@ -688,7 +688,7 @@ void Attributes::clear()
 
 void Attributes::setFontSize(int size)
 {
-    font.setPointSize( (size < 1 ? 1 : size) );
+    font.setPointSize((size < 1 ? 1 : size));
 }
 
 void Attributes::setFontFamily(const QString &family)
@@ -730,7 +730,7 @@ void Attributes::appendLastPos(double x, double y)
 {
     // QPair<QPointF, qreal> p;
     QPointF point(x, y);
-    lastPos.append( QPair<QPointF, qreal>(point, 0) );
+    lastPos.append(QPair<QPointF, qreal>(point, 0));
 }
 
 qreal Attributes::getDirection(int pos, double x1, double y1)
@@ -741,7 +741,7 @@ qreal Attributes::getDirection(int pos, double x1, double y1)
     if (pos >= size)
     {
         point = QPointF(x1, y1);
-        lastPos.append( QPair<QPointF, qreal>(point, 0) );
+        lastPos.append(QPair<QPointF, qreal>(point, 0));
         return 0;
     }
 
@@ -765,10 +765,10 @@ qreal Attributes::getDirection(int pos, double x1, double y1)
     else
     {
         if ((num == 0) && (den != 0))     // movimento na horizontal
-            angle = (den > 0) ? 0 : 180;
+            angle =(den > 0) ? 0 : 180;
         else
             if ((den == 0) && (num != 0)) // movimento na vertical
-                angle = (num > 0) ? 90 : 270;
+                angle =(num > 0) ? 90 : 270;
 
         lastPos[pos].second = angle;
         return angle;
@@ -814,14 +814,14 @@ QString Attributes::toString()
     str += "legend: "		+ QString::number(legend->size())		+ "\n\t\t";
     str += "colorBarVec.size(): "	+ QString::number((int)colorBarVec.size()) + "\n\t\t";
 
-    for (int i = 0; i < (int)colorBarVec.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(colorBarVec.at(i).cor_.red_).arg(colorBarVec.at(i).cor_.green_).arg(colorBarVec.at(i).cor_.blue_);
+    for (int i = 0; i <(int)colorBarVec.size(); i++)
+        str += QString("(%1, %2, %3)\n\t\t").arg(colorBarVec.at(i).cor_.red_).arg(colorBarVec.at(i).cor_.green_).arg(colorBarVec.at(i).cor_.blue_);
 
     str +="\n\t\t";
     str += "colorBarVecB.size(): "	+ QString::number((int)stdColorBarVec.size()) + "\n\t\t";
 
-    for (int i = 0; i < (int)stdColorBarVec.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(stdColorBarVec.at(i).cor_.red_).arg(stdColorBarVec.at(i).cor_.green_).arg(stdColorBarVec.at(i).cor_.blue_);
+    for (int i = 0; i <(int)stdColorBarVec.size(); i++)
+        str += QString("(%1, %2, %3)\n\t\t").arg(stdColorBarVec.at(i).cor_.red_).arg(stdColorBarVec.at(i).cor_.green_).arg(stdColorBarVec.at(i).cor_.blue_);
 
     str +="\n\t";
     str += "slicesNumber_bkp: "	+ QString::number(slicesNumberBkp) + "\n\t";
@@ -831,14 +831,14 @@ QString Attributes::toString()
     str += "stdDev_bkp: "	+ QString::number(stdDevBkp) + "\n\t";
     str += "colorBarVec_bkp.size(): "	+ QString::number((int)colorBarVecBkp.size()) + "\n\t\t";
 
-    for (int i = 0; i < (int)colorBarVecBkp.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(colorBarVecBkp.at(i).cor_.red_).arg(colorBarVecBkp.at(i).cor_.green_).arg(colorBarVecBkp.at(i).cor_.blue_);
+    for (int i = 0; i <(int)colorBarVecBkp.size(); i++)
+        str += QString("(%1, %2, %3)\n\t\t").arg(colorBarVecBkp.at(i).cor_.red_).arg(colorBarVecBkp.at(i).cor_.green_).arg(colorBarVecBkp.at(i).cor_.blue_);
 
     str +="\n\t";
     str += "colorBarVecB_bkp.size(): "	+ QString::number((int)stdColorBarVecBkp.size()) + "\n\t\t";
 
-    for (int i = 0; i < (int)stdColorBarVecBkp.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(stdColorBarVecBkp.at(i).cor_.red_).arg(stdColorBarVecBkp.at(i).cor_.green_).arg(stdColorBarVecBkp.at(i).cor_.blue_);
+    for (int i = 0; i <(int)stdColorBarVecBkp.size(); i++)
+        str += QString("(%1, %2, %3)\n\t\t").arg(stdColorBarVecBkp.at(i).cor_.red_).arg(stdColorBarVecBkp.at(i).cor_.green_).arg(stdColorBarVecBkp.at(i).cor_.blue_);
 
 	std::cout << "legendAttributes " << 3 << std::endl;
     str +="\n\n";

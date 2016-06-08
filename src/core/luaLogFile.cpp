@@ -33,7 +33,7 @@ luaLogFile::luaLogFile(lua_State* L)
 
 int luaLogFile::setObserver(lua_State* L)
 {
-    ObserverLogFile *obslf = (ObserverLogFile*) lua_touserdata(L, -1);
+    ObserverLogFile *obslf =(ObserverLogFile*) lua_touserdata(L, -1);
     obs = obslf;
     return 0;
 }

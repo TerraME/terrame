@@ -72,39 +72,39 @@ bool EnvironmentSubjectInterf::kill(int id)
     switch (obs->getType())
     {
         case TObsLogFile:
-            ((ObserverLogFile *)obs)->close();
-            delete (ObserverLogFile *)obs;
+           ((ObserverLogFile *)obs)->close();
+            delete(ObserverLogFile *)obs;
             break;
 
         case TObsTable:
-            ((ObserverTable *)obs)->close();
-            delete (ObserverTable *)obs;
+           ((ObserverTable *)obs)->close();
+            delete(ObserverTable *)obs;
             break;
 
         case TObsGraphic:
         case TObsDynamicGraphic:
-            ((ObserverGraphic *)obs)->close();
-            delete (ObserverGraphic *)obs;
+           ((ObserverGraphic *)obs)->close();
+            delete(ObserverGraphic *)obs;
             break;
 
         case TObsUDPSender:
-            ((ObserverUDPSender *)obs)->close();
-            delete (ObserverUDPSender *)obs;
+           ((ObserverUDPSender *)obs)->close();
+            delete(ObserverUDPSender *)obs;
             break;
 
         case TObsTextScreen:
-            ((ObserverTextScreen *)obs)->close();
-            delete (ObserverTextScreen *)obs;
+           ((ObserverTextScreen *)obs)->close();
+            delete(ObserverTextScreen *)obs;
             break;
 
             //case TObsPlayer:
-            //    ((ObserverPlayer *)obs)->close();
-            //    delete (ObserverPlayer *)obs;
+            //   ((ObserverPlayer *)obs)->close();
+            //    delete(ObserverPlayer *)obs;
             //    break;
 
             // case TObsMap:
-            //     ((AgentObserverMap *)obs)->close();
-            //     delete (AgentObserverMap *)obs;
+            //    ((AgentObserverMap *)obs)->close();
+            //     delete(AgentObserverMap *)obs;
             //     break;
 
         default:

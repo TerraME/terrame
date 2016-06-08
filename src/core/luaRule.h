@@ -43,18 +43,18 @@ public:
     /// Destructor
     ~luaRule(void)
     {
-        luaL_unref( L, LUA_REGISTRYINDEX, ref);
+        luaL_unref(L, LUA_REGISTRYINDEX, ref);
     }
 
     /// Registers the luaRule object in the Lua stack
-    int setReference( lua_State* L)
+    int setReference(lua_State* L)
     {
-        ref = luaL_ref(L, LUA_REGISTRYINDEX );
+        ref = luaL_ref(L, LUA_REGISTRYINDEX);
         return 0;
     }
 
     /// Gets the luaRule object position in the Lua stack
-    int getReference( lua_State *L )
+    int getReference(lua_State *L)
     {
         lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
         return 1;

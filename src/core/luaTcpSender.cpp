@@ -33,7 +33,7 @@ luaTcpSender::luaTcpSender(lua_State* L)
 
 int luaTcpSender::setObserver(lua_State* L)
 {
-    ObserverTCPSender *obsts = (ObserverTCPSender*) lua_touserdata(L, -1);
+    ObserverTCPSender *obsts =(ObserverTCPSender*) lua_touserdata(L, -1);
     obs = obsts;
     return 0;
 }

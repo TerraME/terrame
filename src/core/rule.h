@@ -50,7 +50,7 @@ class GlobalAgent;
 class RuleStrategy {
 public:
     RuleStrategy(void) {}
-    virtual bool execute (Event & /*event*/, Agent * /*agent*/,
+    virtual bool execute(Event & /*event*/, Agent * /*agent*/,
     		pair<CellIndex, Cell*> & /*cellIndexPair*/)
     {
     	return true;
@@ -117,7 +117,7 @@ public:
     /// \param target is a pointer to a the JumpCondtion target ControleMode
     /// \param targetName is the name of the target ControlMode
     JumpCondition(ControlMode *target, string &targetName)
-        :targetControlMode_ (target),
+        :targetControlMode_(target),
           targetControlModeName_(targetName) { }
 
     /// Transits the JumpCondition object to the target ControlMode

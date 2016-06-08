@@ -174,8 +174,8 @@ void Receiver::processPendingDatagrams()
     if ((pos > -1)) // && (data != COMPLETE_STATE.toLatin1()))
     {
         // redimensiona o objeto e insere lixo
-        // msg.insert( (int)pos, data);
-        completeData.replace( (int)pos, data.size(), data);
+        // msg.insert((int)pos, data);
+        completeData.replace((int)pos, data.size(), data);
 
         message = tr("Messages received: %1. From: %2, Port: %3")
             .arg(msgReceiver).arg(host.toString()).arg(port);

@@ -67,7 +67,7 @@ public:
     /// \return A pointer to the copied block of memory (the cells implementation).
     SocietyImpl* clone(void)
     {
-        SocietyImpl *copy = (SocietyImpl*) new char[sizeof(SocietyImpl)];
+        SocietyImpl *copy =(SocietyImpl*) new char[sizeof(SocietyImpl)];
         memcpy(copy, this, sizeof(SocietyImpl));
         return copy;
     }
@@ -87,7 +87,7 @@ public:
 
         // melhorar
         map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
-        if(location != targetControlMode_.end())
+        if (location != targetControlMode_.end())
         {
             targetControlMode_.erase(agent);
             targetControlMode_.insert(map<Agent*,
@@ -137,7 +137,7 @@ public:
 
             return location->second;
         }
-        return (ControlMode*)0;
+        return(ControlMode*)0;
     }
 
     /// Gets the simulation ticks elapsed since the last change in the cell
@@ -146,7 +146,7 @@ public:
 
     ///  Sets the Society's internal state latency counter to "value".
     /// \param value is a positive number (next version this should be checked).
-    void setLatency(int value) { if(value >= 0) latency = value; }
+    void setLatency(int value) { if (value >= 0) latency = value; }
 
     /// Gets the list of neighborhood graphs from the cell
     /// \return A reference to the list of neighborhoods.
@@ -182,7 +182,7 @@ protected:
     /// \return A pointer to the copied block of memory (the handle of the cell).
     Society& clone(void)
     {
-        Society* copy = (Society*) new char[sizeof(Society)];
+        Society* copy =(Society*) new char[sizeof(Society)];
 
         memcpy(copy, this, sizeof(Society));
         copy->pImpl_ = pImpl_->clone();
@@ -194,7 +194,7 @@ public:
 
     /// constructor
     ///
-    Society():duplicated(false) { past = (Society*) &clone(); }
+    Society():duplicated(false) { past =(Society*) &clone(); }
 
     /// HANDLE - Updates the tracked state (control mode) of a certain agent within the cell.
     /// \param  agent is a pointer to an agent within the cell.
@@ -255,10 +255,10 @@ public:
     {
         SocietyImpl* p;
 
-        if(sizeMem <= 0) return;
-        if(!duplicated) {
+        if (sizeMem <= 0) return;
+        if (!duplicated) {
 
-            past = (Society*)new unsigned char[sizeMem];
+            past =(Society*)new unsigned char[sizeMem];
             past->pImpl_ = new SocietyImpl();
             duplicated = true;
         }

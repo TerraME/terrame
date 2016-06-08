@@ -29,7 +29,7 @@ ObserverInterf::ObserverInterf()
 {
 }
 
-ObserverInterf::ObserverInterf( Subject* subj )
+ObserverInterf::ObserverInterf(Subject* subj)
 {
     ObserverInterf::pImpl_->setSubject(subj);
     ObserverInterf::pImpl_->setObsHandle(this);

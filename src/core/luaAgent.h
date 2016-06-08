@@ -62,16 +62,16 @@ public:
     {
         // @DANIEL
         // n?o misturar ger?ncia de mem?ria da camada C++ com a camada Lua
-        // luaL_unref( L, LUA_REGISTRYINDEX, ref);
+        // luaL_unref(L, LUA_REGISTRYINDEX, ref);
     }
 
     /// Registers the luaAgent object in the Lua stack
     //virtual
     // @DANIEL
     // Movido para a classe Reference
-//    int setReference( lua_State* L) //= 0;
+//    int setReference(lua_State* L) //= 0;
 //    {
-//        ref = luaL_ref(L, LUA_REGISTRYINDEX );
+//        ref = luaL_ref(L, LUA_REGISTRYINDEX);
 //        return 0;
 //    }
 
@@ -79,7 +79,7 @@ public:
     /// Gets the luaAgent object reference.
     // @DANIEL
     // Movido para a classe Reference
-//    int getReference( lua_State *L ) // = 0;
+//    int getReference(lua_State *L) // = 0;
 //    {
 //        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
 //        return 1;

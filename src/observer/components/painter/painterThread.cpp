@@ -113,7 +113,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
     p->setPen(Qt::NoPen); //defaultPen);
 
 	//@RAIAN: Desenhando a vizinhanca
-	if(attrib->getType() == TObsNeighborhood)
+	if (attrib->getType() == TObsNeighborhood)
 	{
 		QColor color(Qt::white);
                 QVector<QMap<QString, QList<double> > > *neighborhoods = attrib->getNeighValues();
@@ -126,18 +126,18 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
         // int random = qrand() % 256;
 		double xCell = -1.0, yCell = -1.0;
 
-		for(int pos = 0; pos < neighborhoods->size(); pos++)
+		for (int pos = 0; pos < neighborhoods->size(); pos++)
 		{
             QMap<QString, QList<double> > neigh = neighborhoods->at(pos);
 
 			xCell = attrib->getXsValue()->at(pos);
 			yCell = attrib->getYsValue()->at(pos);
 
-			if((xCell >= 0) && (yCell >=0))
+			if ((xCell >= 0) && (yCell >=0))
 			{
                 QMap<QString, QList<double> >::Iterator itNeigh = neigh.begin();
 
-				while(itNeigh != neigh.end())
+				while (itNeigh != neigh.end())
 				{
 					QString neighID = itNeigh.key();
 					QList<double> neighbor = itNeigh.value();
@@ -146,11 +146,11 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 					double yNeigh = neighbor.at(1);
 					double weight = neighbor.at(2);
 
-					if(vecLegend->isEmpty())
+					if (vecLegend->isEmpty())
 					{
 						weight = weight - attrib->getMinValue();
 						double c = weight * attrib->getVal2Color();
-						if(c >= 0 && c <= 255)
+						if (c >= 0 && c <= 255)
 						{
 							color.setRgb(c, c, c);
 						}
@@ -163,12 +163,12 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 					}
 					else
 					{
-						for(int j = 0; j < vecLegend->size(); j++)
+						for (int j = 0; j < vecLegend->size(); j++)
 						{
 							ObsLegend leg = vecLegend->at(j);
-							if(attrib->getGroupMode() == 3)
+							if (attrib->getGroupMode() == 3)
 							{
-								if(weight == leg.getTo().toDouble())
+								if (weight == leg.getTo().toDouble())
 								{
 									pen.setColor(leg.getColor());
 									break;
@@ -176,7 +176,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 							}
 							else
 							{
-								if((leg.getFrom().toDouble() <= weight) && (weight < leg.getTo().toDouble()))
+								if ((leg.getFrom().toDouble() <= weight) && (weight < leg.getTo().toDouble()))
 								{
 									pen.setColor(leg.getColor());
 									break;
@@ -186,7 +186,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 					}
 					p->setPen(pen);
 
-					if((xNeigh >= 0) && (yNeigh >= 0))
+					if ((xNeigh >= 0) && (yNeigh >= 0))
 					{
 						drawNeighborhood(p, xCell, yCell, xNeigh, yNeigh);
 					}
@@ -211,7 +211,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 			int xSize = attrib->getXsValue()->size();
 			int ySize = attrib->getYsValue()->size();
 
-			for(int pos = 0; (pos < vSize && pos < xSize && pos < ySize); pos++)
+			for (int pos = 0; (pos < vSize && pos < xSize && pos < ySize); pos++)
 			{
 				v = values->at(pos);
 
@@ -239,7 +239,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 				}
 				else
 				{
-					for(int j = 0; j < vecLegend->size(); j++)
+					for (int j = 0; j < vecLegend->size(); j++)
 					{
 						p->setBrush(Qt::white);
 
@@ -262,7 +262,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 						}
 					}
 				}
-				if ((x >= 0) && ( y >= 0))
+				if ((x >= 0) && (y >= 0))
 					draw(p, attrib->getType(), x, y);
 			}
 		}
@@ -296,7 +296,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 				else
 				{
 					p->setBrush(Qt::white);
-					for(int j = 0; j < vecLegend->size(); j++)
+					for (int j = 0; j < vecLegend->size(); j++)
 					{
 						const ObsLegend &leg = vecLegend->at(j);
 						if (v == leg.getFrom())
@@ -307,7 +307,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 					}
 				}
 
-				if ((x >= 0) && ( y >= 0))
+				if ((x >= 0) && (y >= 0))
 					draw(p, attrib->getType(), x, y);
 			}
 		}
@@ -343,8 +343,8 @@ void PainterThread::draw(QPainter *p, TypesOfSubjects type, double &x, double &y
 
         case TObsAgent:
         {
-            //double rx = qrand() % (SIZE_CELL - SIZE_AGENT);
-            //double ry = qrand() % (SIZE_CELL - SIZE_AGENT);
+            //double rx = qrand() %(SIZE_CELL - SIZE_AGENT);
+            //double ry = qrand() %(SIZE_CELL - SIZE_AGENT);
             //p->setPen(Qt::SolidLine);
             //p->drawEllipse(SIZE_CELL * x + rx, SIZE_CELL * y + ry, SIZE_AGENT, SIZE_AGENT);
             break;
@@ -357,10 +357,10 @@ void PainterThread::draw(QPainter *p, TypesOfSubjects type, double &x, double &y
 //@RAIAN: Metodo que desenha a vizinhanca
 void PainterThread::drawNeighborhood(QPainter *p, double &xCell, double &yCell, double &xNeighbor, double &yNeighbor)
 {
-	double coordXCell = (SIZE_CELL * xCell) + (SIZE_CELL/2);
-	double coordYCell = (SIZE_CELL * yCell) + (SIZE_CELL/2);
-	double coordXNeighbor = (SIZE_CELL * xNeighbor) + (SIZE_CELL/2);
-	double coordYNeighbor = (SIZE_CELL * yNeighbor) + (SIZE_CELL/2);
+	double coordXCell =(SIZE_CELL * xCell) +(SIZE_CELL/2);
+	double coordYCell =(SIZE_CELL * yCell) +(SIZE_CELL/2);
+	double coordXNeighbor =(SIZE_CELL * xNeighbor) +(SIZE_CELL/2);
+	double coordYNeighbor =(SIZE_CELL * yNeighbor) +(SIZE_CELL/2);
 	p->drawLine(coordXCell, coordYCell, coordXNeighbor, coordYNeighbor);
 
 	// Desenha a cabeca da seta
@@ -385,9 +385,9 @@ void PainterThread::drawGrid(QImage &imgResult, double &width, double &height)
     QPainter p(&imgResult);
     p.setPen(QPen(Qt::black));
 
-    for(int j = 0; j < imgResult.height(); j++)
+    for (int j = 0; j < imgResult.height(); j++)
     {
-        for(int i = 0; i < imgResult.width(); i++)
+        for (int i = 0; i < imgResult.width(); i++)
         {
             p.drawRect(QRectF(i * width, j * height, width, height));
         }

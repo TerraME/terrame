@@ -173,34 +173,34 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
     qint64 bytesWritten = 0, bytesRead = data.size();
     int pos = 0;
 
-    while(bytesRead > 0)
+    while (bytesRead > 0)
     {
         QByteArray datagram;
 
         QDataStream out(&datagram, QIODevice::WriteOnly);
         out.setVersion(QDataStream::Qt_4_6);
 
-        out << (qint64) data.size();
-        out << (qint64) datagramSize;
-        out << (qint64) pos;
+        out <<(qint64) data.size();
+        out <<(qint64) datagramSize;
+        out <<(qint64) pos;
         out << compressDatagram; // flag formato do datagrama transmitido
 
         if (compressDatagram)
         {
-            out << qCompress( data.mid(pos, datagramSize), COMPRESS_RATIO);
+            out << qCompress(data.mid(pos, datagramSize), COMPRESS_RATIO);
         }
         else
         {
             out << data.mid(pos, datagramSize);
         }
 
-        for(int i = 0; i < hosts->size(); i++)
+        for (int i = 0; i < hosts->size(); i++)
         {
             bytesWritten = udpSocket->writeDatagram(datagram, hosts->at(i), port);
 
             udpSocket->flush();
 
-            udpGUI->appendMessage( QLabel::tr("Datagram sent for %1").arg(hosts->at(i).toString()) );
+            udpGUI->appendMessage(QLabel::tr("Datagram sent for %1").arg(hosts->at(i).toString()));
 
             if (bytesWritten == -1)
             {
@@ -240,8 +240,8 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
         msgCount++;
 
         // faz um pausa antes de continuar a enviar
-        // delay( (float) 0.01); // 0.0125);
-        // delay( (float) 0.0125);
+        // delay((float) 0.01); // 0.0125);
+        // delay((float) 0.0125);
         qApp->processEvents();
     }
 
@@ -307,17 +307,17 @@ bool ObserverUDPSender::completeState(const QByteArray & flag)
     QDataStream out(&datagram, QIODevice::WriteOnly);
     // out.setVersion(QDataStream::Qt_4_6);
 
-    out << (qint64) data.size();
-    out << (qint64) datagramSize;
-    out << (qint64) -1;
+    out <<(qint64) data.size();
+    out <<(qint64) datagramSize;
+    out <<(qint64) -1;
     out << compressDatagram;
 
     if (compressDatagram)
-       out << qCompress( data, 1);
+       out << qCompress(data, 1);
     else
         out << data;
 
-    for(int i = 0; i < hosts->size(); i++)
+    for (int i = 0; i < hosts->size(); i++)
     {
         bytesWritten = udpSocket->writeDatagram(datagram, hosts->at(i), port);
         udpSocket->flush();

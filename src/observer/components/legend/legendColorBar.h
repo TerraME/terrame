@@ -52,7 +52,7 @@ public:
      * \param parent a pointer to a QWidget
      * \see QFrame, \see QWidget
      */
-    TeQtColorBar( QWidget* parent);
+    TeQtColorBar(QWidget* parent);
 
     /**
      * Destructor

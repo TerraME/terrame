@@ -65,7 +65,7 @@ public:
 
     /// Searches for a cell into the region
     /// \return a Cell pointer is the cell has been found, otherwise returns a NULL pointer
-    Cell* operator [] (Indx indx)
+    Cell* operator [](Indx indx)
     {
         pair<Indx, Cell*>  indexCellPair;
 

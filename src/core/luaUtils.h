@@ -47,7 +47,7 @@ void luaStackToQString(int size);
 
 int functionStackLevel(lua_State *L);
 
-void stackDump (lua_State *L);
+void stackDump(lua_State *L);
 
 /// UTILITARY FUNCTION - Checks if the value located at index "idx" in the Lua stack "L" is of the
 /// user defined type "name".
@@ -55,15 +55,15 @@ void stackDump (lua_State *L);
 /// \param idx is a Lua stack position index
 /// \param name is an user defined Lua type name
 /// \return A boolean value: true case positive, otherwise false.
-int isudatatype (lua_State *L, int idx, const char *name);
+int isudatatype(lua_State *L, int idx, const char *name);
 
 /// UTILITARY FUNCTION - Converts a TerraLib object ID to (x,y) coordinates
 /// \param objId is a "const char const *" containing the object ID
 /// \param x is a natural number returned by this function
 /// \param y is a natural number returned by this fucntion
 // RODRIGO
-// void objectId2coords( const char const * objId, int &x, int &y);
-void objectId2coords( const char * objId, int &x, int &y);
+// void objectId2coords(const char const * objId, int &x, int &y);
+void objectId2coords(const char * objId, int &x, int &y);
 
 void returnsCustomError(lua_State *L, int number, const string message);
 

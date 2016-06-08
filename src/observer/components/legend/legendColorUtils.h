@@ -51,24 +51,24 @@ using namespace std;
 	 std::string name_;
 
 	 //! Empty constructor
-	 TeColor () : red_(0), green_(0), blue_(0), name_("") {}
+	 TeColor() : red_(0), green_(0), blue_(0), name_("") {}
 
 	 //! Constructor with parameters
-	 TeColor (int r, int g, int b, const std::string& name = "") : red_(r), green_(g), blue_(b), name_(name) {}
+	 TeColor(int r, int g, int b, const std::string& name = "") : red_(r), green_(g), blue_(b), name_(name) {}
 
 	 //! Set parameters of colors
-	 void init (int r, int g, int b, const std::string& name = "") {red_ = r, green_ = g, blue_ = b; name_ = name;}
+	 void init(int r, int g, int b, const std::string& name = "") {red_ = r, green_ = g, blue_ = b; name_ = name;}
 
 	 //! Returns TRUE if color1 is equal to color2 or FALSE if they are different.
-	 bool operator== (const TeColor& color)
+	 bool operator==(const TeColor& color)
 	 {
-		 return (red_ == color.red_ && green_ == color.green_ && blue_ == color.blue_);
+		 return(red_ == color.red_ && green_ == color.green_ && blue_ == color.blue_);
 	 }
 
 	 //! Assignment operator
-	 TeColor& operator= ( const TeColor& color )
+	 TeColor& operator=(const TeColor& color)
 	 {
-		 if ( this != &color )
+		 if (this != &color)
 		{
 			 red_ = color.red_;
 			 green_ = color.green_;
@@ -80,9 +80,9 @@ using namespace std;
  };
 
 void rgb2Hsv(const TeColor& c, int& h, int& s, int& v); // issue #319
-void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v );
+void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v);
 void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v); // issue #319
-void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s, const double& v );
+void HSVtoRGB(double& r, double& g, double& b, const double& h, const double& s, const double& v);
 
 struct ColorBar {
     TeColor cor_; // issue #319
@@ -93,7 +93,7 @@ struct ColorBar {
 
     void color(const TeColor& c){cor_ = c; rgb2Hsv(cor_, h_, s_, v_);} // issue #319
 
-    ColorBar& operator= (const ColorBar& cb)
+    ColorBar& operator=(const ColorBar& cb)
     {
         cor_ = cb.cor_; // issue #319
         h_ = cb.h_;
@@ -104,19 +104,19 @@ struct ColorBar {
         return *this;
     }
 
-    bool operator<= (const ColorBar& cb) const
+    bool operator<=(const ColorBar& cb) const
     {
-        return (distance_ <= cb.distance_);
+        return(distance_ <= cb.distance_);
     }
 
-    bool operator< (const ColorBar& cb) const
+    bool operator<(const ColorBar& cb) const
     {
-        return (distance_ < cb.distance_);
+        return(distance_ < cb.distance_);
     }
 
     QString toString()
     {
-        QString r = QString("rgb: (%1, %2, %3); hsv: (%4, %5, %6); distance: %7;")
+        QString r = QString("rgb:(%1, %2, %3); hsv:(%4, %5, %6); distance: %7;")
                 .arg(cor_.red_).arg(cor_.green_).arg(cor_.blue_) // issue #319
                 .arg(h_).arg(s_).arg(v_).arg(distance_);
         return r;
@@ -152,9 +152,9 @@ const int	TeNAME_LENGTH = 2000;			//!< A default name length
 inline int TeRound(double val)
 {
 	if (val >= 0)
-		return (int)(val + .5);
+		return(int)(val + .5);
 	else
-		return (int)(val - .5);
+		return(int)(val - .5);
 }
 
 inline string

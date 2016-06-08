@@ -33,7 +33,7 @@ luaChart::luaChart(lua_State* L)
 
 int luaChart::setObserver(lua_State* L)
 {
-	ObserverGraphic * obsg = (ObserverGraphic*) lua_touserdata(L, -1);
+	ObserverGraphic * obsg =(ObserverGraphic*) lua_touserdata(L, -1);
 	obs = obsg;
 	return 0;
 }

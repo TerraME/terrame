@@ -66,7 +66,7 @@ public:
      * \param subj a pointer to a Subject
      * \see Subject
      */
-    ObserverLogFile (Subject *subj);
+    ObserverLogFile(Subject *subj);
 
     /**
      * Destructor

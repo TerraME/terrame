@@ -79,7 +79,7 @@ int luaTimer::add(lua_State *L)
 {
     luaEvent* event = Luna<luaEvent>::check(L, -2);
     luaMessage* message = Luna<luaMessage>::check(L, -1);
-    Scheduler::add( *event, message );
+    Scheduler::add(*event, message);
     return 0;
 }
 
@@ -106,9 +106,9 @@ int luaTimer::createObserver(lua_State *luaL)
 
     // Nao modifica em nada a pilha recupera o enum referente ao tipo
     // do observer
-    int typeObserver = (int)luaL_checkinteger(luaL, top - 3);
-    bool isGraphicType = (typeObserver == TObsDynamicGraphic)
-            || (typeObserver == TObsGraphic);
+    int typeObserver =(int)luaL_checkinteger(luaL, top - 3);
+    bool isGraphicType =(typeObserver == TObsDynamicGraphic)
+            ||(typeObserver == TObsGraphic);
 
     //------------------------
     QStringList allAttribs, obsAttribs;
@@ -119,13 +119,13 @@ int luaTimer::createObserver(lua_State *luaL)
 
     lua_pushnil(luaL);
 
-    while(lua_next(luaL, top) != 0)
+    while (lua_next(luaL, top) != 0)
     {
         QString key;
 
         if (lua_type(luaL, -2) == LUA_TSTRING)
         {
-            key = QString( luaL_checkstring(luaL, -2) );
+            key = QString(luaL_checkstring(luaL, -2));
         }
         else
         {
@@ -147,7 +147,7 @@ int luaTimer::createObserver(lua_State *luaL)
             //lua_gettable(luaL, pairTop);
 
             lua_pushnil(luaL);
-            while(lua_next(luaL, pairTop) != 0)
+            while (lua_next(luaL, pairTop) != 0)
             {
                 const char* eventKey = "-";
 
@@ -166,7 +166,7 @@ int luaTimer::createObserver(lua_State *luaL)
                     }
                 }
 
-                if ( (typeObserver == TObsScheduler) && (isudatatype(luaL, -1, "TeEvent")) )
+                if ((typeObserver == TObsScheduler) && (isudatatype(luaL, -1, "TeEvent")))
                 {
                     // QString ev(EVENT_KEY + QString::number(eventsCount));
                     QString ev("@");
@@ -192,7 +192,7 @@ int luaTimer::createObserver(lua_State *luaL)
     //top = lua_gettop(luaL);
 
     // Verificacao da sintaxe da tabela Atributos
-    if(!lua_istable(luaL, top))
+    if (!lua_istable(luaL, top))
     {
         string err_out = string("Error: Attribute table not found. Incorrect sintax.");
         lua_getglobal(L, "customError");
@@ -204,9 +204,9 @@ int luaTimer::createObserver(lua_State *luaL)
 
     lua_pushnil(luaL);
 
-    while(lua_next(luaL, top - 2 ) != 0)
+    while (lua_next(luaL, top - 2) != 0)
     {
-        QString key( luaL_checkstring(luaL, -1) );
+        QString key(luaL_checkstring(luaL, -1));
 
         // Verifica se o atributo informado nao existe deve ter sido digitado errado
         if (allAttribs.contains(key))
@@ -219,7 +219,7 @@ int luaTimer::createObserver(lua_State *luaL)
         {
             if (!key.isNull() || !key.isEmpty())
             {
-                string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
+                string err_out = string("Error: Attribute name '") + string(qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
 				lua_pushnumber(L, 4);
@@ -230,13 +230,13 @@ int luaTimer::createObserver(lua_State *luaL)
         lua_pop(luaL, 1);
     }
 
-    if ((obsAttribs.empty() ) && (!isGraphicType))
+    if ((obsAttribs.empty()) && (!isGraphicType))
     {
         obsAttribs = allAttribs;
         observedAttribs = allAttribs;
     }
 
-    if(!lua_istable(luaL, top))
+    if (!lua_istable(luaL, top))
     {
         string err_out = string("Error: Attribute table not found. Incorrect sintax.");
         lua_getglobal(L, "customError");
@@ -251,17 +251,17 @@ int luaTimer::createObserver(lua_State *luaL)
     // Recupera a tabela de parametros os observadores do tipo Table e Graphic
     // caso nao seja um tabela a sintaxe do metodo esta incorreta
     lua_pushnil(luaL);
-    while(lua_next(luaL, top - 1) != 0)
+    while (lua_next(luaL, top - 1) != 0)
     {
         QString key;
         if (lua_type(luaL, -2) == LUA_TSTRING)
-            key = QString( luaL_checkstring(luaL, -2));
+            key = QString(luaL_checkstring(luaL, -2));
 
         switch (lua_type(luaL, -1))
         {
         case LUA_TSTRING:
             {
-                QString value( luaL_checkstring(luaL, -1));
+                QString value(luaL_checkstring(luaL, -1));
                 cols.push_back(value);
                 break;
             }
@@ -285,7 +285,7 @@ int luaTimer::createObserver(lua_State *luaL)
     // lanca um warning
     if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
     {
-        if (execModes != Quiet ){
+        if (execModes != Quiet){
             string err_out = string("Warning: Attribute table not found. Incorrect sintax.");
             lua_getglobal(L, "customWarning");
             lua_pushstring(L, err_out.c_str());
@@ -305,7 +305,7 @@ int luaTimer::createObserver(lua_State *luaL)
     switch (typeObserver)
     {
         case TObsTextScreen			:
-            obsText = (ObserverTextScreen*)
+            obsText =(ObserverTextScreen*)
                 SchedulerSubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
             {
@@ -319,7 +319,7 @@ int luaTimer::createObserver(lua_State *luaL)
             break;
 
         case TObsLogFile:
-            obsLog = (ObserverLogFile*)
+            obsLog =(ObserverLogFile*)
                 SchedulerSubjectInterf::createObserver(TObsLogFile);
             if (obsLog)
             {
@@ -333,7 +333,7 @@ int luaTimer::createObserver(lua_State *luaL)
             break;
 
         case TObsTable:
-            obsTable = (ObserverTable *)
+            obsTable =(ObserverTable *)
                 SchedulerSubjectInterf::createObserver(TObsTable);
             if (obsTable)
             {
@@ -347,7 +347,7 @@ int luaTimer::createObserver(lua_State *luaL)
             break;
 
         case TObsUDPSender			:
-            obsUDPSender = (ObserverUDPSender *)
+            obsUDPSender =(ObserverUDPSender *)
                 SchedulerSubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
             {
@@ -365,7 +365,7 @@ int luaTimer::createObserver(lua_State *luaL)
             break;
 
         case TObsScheduler			:
-            obsScheduler = (ObserverScheduler *)
+            obsScheduler =(ObserverScheduler *)
                 SchedulerSubjectInterf::createObserver(TObsScheduler);
             if (obsScheduler)
             {
@@ -379,7 +379,7 @@ int luaTimer::createObserver(lua_State *luaL)
             break;
 
         default:
-            if (execModes != Quiet )
+            if (execModes != Quiet)
             {
                 string err_out = string("Warning: In this context, the code '")
                         + string(getObserverName(typeObserver))
@@ -443,14 +443,14 @@ int luaTimer::createObserver(lua_State *luaL)
         obsUDPSender->setPort(cols.at(0).toInt());
 
         // broadcast
-        if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
+        if ((cols.size() == 1) ||((cols.size() == 2) && cols.at(1).isEmpty()))
         {
             obsUDPSender->addHost(BROADCAST_HOST);
         }
         else
         {
             // multicast or unicast
-            for(int i = 1; i < cols.size(); i++){
+            for (int i = 1; i < cols.size(); i++){
                 if (!cols.at(i).isEmpty())
                     obsUDPSender->addHost(cols.at(i));
             }
@@ -468,7 +468,7 @@ int luaTimer::createObserver(lua_State *luaL)
         return 2;
     }
 
-    //printf("createObserver( lua_State *L ) performed\n");
+    //printf("createObserver(lua_State *L) performed\n");
     return 0;
 }
 
@@ -511,7 +511,7 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
     int position = lua_gettop(luaL);
 
     lua_pushnil(luaL);
-    while(lua_next(luaL, position ) != 0)
+    while (lua_next(luaL, position) != 0)
     {
         QString key;
 
@@ -532,13 +532,13 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
         }
 
         // bool contains = attribs.contains(QString(key));
-        if( attribs.contains(key) || attribs.contains("@" + key) )
+        if (attribs.contains(key) || attribs.contains("@" + key))
         {
             attrCounter++;
             attrs.append(key);
             attrs.append(PROTOCOL_SEPARATOR);
 
-            switch( lua_type(luaL, -1) )
+            switch (lua_type(luaL, -1))
             {
                 case LUA_TBOOLEAN:
                     boolAux = lua_toboolean(luaL, -1);
@@ -561,14 +561,14 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
                     text = QString(luaL_checkstring(luaL, -1));
                     attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
-                    attrs.append( (text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text) );
+                    attrs.append((text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text));
                     attrs.append(PROTOCOL_SEPARATOR);
                     break;
 
                 case LUA_TTABLE:
                 {
                     char result[100];
-                    sprintf( result, "%p", lua_topointer(luaL, -1) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
                     attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString("Lua-Address(TB): ") + QString(result));
@@ -579,7 +579,7 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
                     int top = lua_gettop(luaL);
 
                     lua_pushnil(luaL);
-                    while(lua_next(luaL, top) != 0)
+                    while (lua_next(luaL, top) != 0)
                     {
                         QString eventKey;
 
@@ -597,12 +597,12 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
                                 eventKey = aux;
                             }
 
-                            // QString eventKey( QString(EVENT_KEY + QString::number(eventsCount)) );
-                            eventKey = "@" + ( key );
+                            // QString eventKey(QString(EVENT_KEY + QString::number(eventsCount)));
+                            eventKey = "@" +(key);
 
                             if (isudatatype(luaL, -1, "TeEvent"))
                             {
-                                Event* ev = (Event*)Luna<luaEvent>::check(L, -1);
+                                Event* ev =(Event*)Luna<luaEvent>::check(L, -1);
 
                                 double time = ev->getTime();
                                 minimumTime = min(minimumTime, time);
@@ -641,7 +641,7 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
                 case LUA_TUSERDATA:
                 {
                     char result[100];
-                    sprintf( result, "%p", lua_topointer(luaL, -1) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
                     attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString("Lua-Address(UD): ") + QString(result));
@@ -652,8 +652,8 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
                 case LUA_TFUNCTION:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1) );
-                    attrs.append(QString::number(TObsText) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString("Lua-Address(FT): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
@@ -663,8 +663,8 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
                 default:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1) );
-                    attrs.append(QString::number(TObsText) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString("Lua-Address(O): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
@@ -685,11 +685,11 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
 
     // #attrs
     msg.append(QString::number(attrCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
 
     // #elements
     msg.append(QString::number(0));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
 
     msg.append(attrs);
     msg.append(PROTOCOL_SEPARATOR);
@@ -705,14 +705,14 @@ QString luaTimer::getChanges(QDataStream& in, int observerId, QStringList& attri
 #ifdef TME_BLACK_BOARD
 QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId, QStringList & /* attribs */)
 #else
-QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs )
+QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs)
 #endif
 
 {
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 
-    switch(obsCurrentState)
+    switch (obsCurrentState)
     {
         case 0:
 #ifdef TME_BLACK_BOARD
@@ -721,7 +721,7 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId, QStr
         content = getAll(in, observerId, attribs);
 #endif
             // serverSession->setState(observerId, 1);
-            //if (execModes == Quiet )
+            //if (execModes == Quiet)
             // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
             break;
 
@@ -732,7 +732,7 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId, QStr
         content = getChanges(in, observerId, attribs);
 #endif
             // serverSession->setState(observerId, 0);
-            //if (execModes == Quiet )
+            //if (execModes == Quiet)
             // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
             break;
     }
@@ -754,7 +754,7 @@ int luaTimer::kill(lua_State *luaL)
 
 int luaTimer::setObserver(lua_State* L)
 {
-    ObserverScheduler *obss = (ObserverScheduler*) lua_touserdata(L, -1);
+    ObserverScheduler *obss =(ObserverScheduler*) lua_touserdata(L, -1);
     obs = obss;
     return 0;
 }

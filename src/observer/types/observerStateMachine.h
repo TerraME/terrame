@@ -189,7 +189,7 @@ private:
      * Shows the attributes layer
      */
     void showLayerLegend();
-    // void connectTreeLayer(bool );
+    // void connectTreeLayer(bool);
 
     /**
      * Converts a index from zoom comboBox to a interger

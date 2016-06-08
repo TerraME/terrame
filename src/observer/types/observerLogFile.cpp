@@ -33,7 +33,7 @@ ObserverLogFile::ObserverLogFile() : QObject()
 }
 
 ObserverLogFile::ObserverLogFile(Subject *subj)
-    : QObject(), ObserverInterf( subj ) // , QThread()
+    : QObject(), ObserverInterf(subj) // , QThread()
 {
     init();
 }
@@ -75,7 +75,7 @@ bool ObserverLogFile::draw(QDataStream &state)
     //bool b;
 
     //QString subjectId = tokens.at(0);
-    subjectType = (TypesOfSubjects) tokens.at(1).toInt();
+    subjectType =(TypesOfSubjects) tokens.at(1).toInt();
     int qtdParametros = tokens.at(2).toInt();
     //int nroElems = tokens.at(3).toInt();
     int j = 4;
@@ -91,16 +91,16 @@ bool ObserverLogFile::draw(QDataStream &state)
 
         switch (typeOfData)
         {
-            case (TObsBool):
+            case(TObsBool):
                 if (contains)
                     valuesList.replace(attribList.indexOf(key),
-                                       (tokens.at(j).toInt() ? "true" : "false"));
+                                      (tokens.at(j).toInt() ? "true" : "false"));
                 break;
 
-            case (TObsDateTime):
+            case(TObsDateTime):
                 //break;
 
-            case (TObsNumber):
+            case(TObsNumber):
                 if (contains)
                     valuesList.replace(attribList.indexOf(key), tokens.at(j));
                 break;
@@ -164,7 +164,7 @@ bool ObserverLogFile::write()
         }
         header = false;
         headers += "\n";
-        file.write(headers.toLatin1().data(),  qstrlen( headers.toLatin1().data() ));
+        file.write(headers.toLatin1().data(),  qstrlen(headers.toLatin1().data()));
 
         mode = "w+";
     }
@@ -188,7 +188,7 @@ bool ObserverLogFile::write()
     }
 
     text.append("\n");
-    file.write(text.toLatin1().data(), qstrlen( text.toLatin1().data() ));
+    file.write(text.toLatin1().data(), qstrlen(text.toLatin1().data()));
     file.close();
     return true;
 }

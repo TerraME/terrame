@@ -36,7 +36,7 @@ of this software and its documentation.
 using namespace TerraMEObserver;
 
 ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
-    : ObserverInterf( s ), QDialog(parent) // , QThread()
+    : ObserverInterf(s), QDialog(parent) // , QThread()
 {
     observerType = TObsScheduler;
     subjectType = TObsUnknown;
@@ -164,16 +164,16 @@ bool ObserverScheduler::draw(QDataStream & state)
 
         switch (typeOfData)
         {
-            case (TObsBool):
+            case(TObsBool):
                 // break;
 
-            case (TObsDateTime):
+            case(TObsDateTime):
                 break;
 
-            case (TObsNumber):
+            case(TObsNumber):
                 if (key.contains("@"))
                 {
-                    item = hashTreeItem.value( key );
+                    item = hashTreeItem.value(key);
 
                     // recupera o eventTime
                     num = tokens.at(j).toDouble();
@@ -218,18 +218,18 @@ void ObserverScheduler::setAttributes(QStringList &attribs)
 
     QString evKey;
     QTreeWidgetItem *item = 0;
-    for(int i = 0; i < attributes.size(); i++)
+    for (int i = 0; i < attributes.size(); i++)
     {
         // o atributo TIMER_KEY ? aprentado apenas na GUI do observer
-        if ((attributes.at(i) != TIMER_KEY) && (attributes.at(i).contains("@")) )
+        if ((attributes.at(i) != TIMER_KEY) && (attributes.at(i).contains("@")))
         {
             evKey = attributes.at(i);
             item = new QTreeWidgetItem(pipelineWidget);
-            item->setText(Key, evKey.remove(0, 1) );
+            item->setText(Key, evKey.remove(0, 1));
 
-            item->setText(Time, QString::number(0) );
-            item->setText(Periodicity, QString::number(0) );
-            item->setText(Priority, QString::number(0) );
+            item->setText(Time, QString::number(0));
+            item->setText(Periodicity, QString::number(0));
+            item->setText(Priority, QString::number(0));
 
             hashTreeItem.insert(attributes.at(i), item);
         }

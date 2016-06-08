@@ -27,7 +27,7 @@ of this software and its documentation.
 
 using namespace TerraMEObserver;
 
-Decoder::Decoder( QHash<QString, Attributes *> *map) : mapAttributes(map)
+Decoder::Decoder(QHash<QString, Attributes *> *map) : mapAttributes(map)
 {
 
 }
@@ -58,7 +58,7 @@ bool Decoder::decode(const QString &protocol,
         return false;
 
     // qDebug() << tokens;
-    parentSubjectType = (TypesOfSubjects) tokens.at(1).toInt();
+    parentSubjectType =(TypesOfSubjects) tokens.at(1).toInt();
 
     bool ret = interpret(tokens, idx, xs, ys);
     return ret;
@@ -81,9 +81,9 @@ bool Decoder::interpret(QStringList &tokens, int &idx,
     numElem *= 3;
 
 	//@RAIAN: Decodificando a Vizinhanca
-	if(subjectType == TObsNeighborhood)
+	if (subjectType == TObsNeighborhood)
 	{
-		if(mapAttributes->contains(id))
+		if (mapAttributes->contains(id))
 		{
 			Attributes *attrib = 0;
                         QMap<QString, QList<double> > neighborhood = QMap<QString, QList<double> >();
@@ -94,10 +94,10 @@ bool Decoder::interpret(QStringList &tokens, int &idx,
 			consumeNeighborhood(tokens, idx, id, numElem, neighborhood);
 			attrib = mapAttributes->value(id);
 
-			if(attrib->getType() != TObsNeighborhood)
+			if (attrib->getType() != TObsNeighborhood)
 				attrib->setType(TObsNeighborhood);
 
-			if(attrib->getDataType() == TObsUnknownData)
+			if (attrib->getDataType() == TObsUnknownData)
 				attrib->setDataType(TObsNumber);
 
 			attrib->addValue(neighborhood);
@@ -107,10 +107,10 @@ bool Decoder::interpret(QStringList &tokens, int &idx,
 	else
 	{
 		int i = 4;
-		for(; ret && (i < numAttrib + 4); i += 3)
+		for (; ret && (i < numAttrib + 4); i += 3)
 			ret = consumeTriple(tokens, idx, xs, ys);
 
-		for(i = 0; ret && (i < numElem) && (idx < tokens.size()); i++)
+		for (i = 0; ret && (i < numElem) && (idx < tokens.size()); i++)
 			ret = interpret(tokens, idx, xs, ys);
 	}
 
@@ -134,7 +134,7 @@ bool Decoder::consumeSubjectType(TypesOfSubjects &type, QStringList &tokens, int
     if (tokens.size() <= idx)
         return false;
 
-    type = (TypesOfSubjects) tokens.at(idx).toInt();
+    type =(TypesOfSubjects) tokens.at(idx).toInt();
     idx++;
     return true;
 }
@@ -169,12 +169,12 @@ bool Decoder::consumeTriple(QStringList &tokens, int &idx,
         return false;
 
     QString key = tokens.at(idx);
-    TypesOfData type = (TypesOfData) tokens.at(idx + 1).toInt();
+    TypesOfData type =(TypesOfData) tokens.at(idx + 1).toInt();
     Attributes *attrib = 0;
 
     if (mapAttributes->contains(key))
     {
-        switch(type)
+        switch (type)
         {
             case TObsNumber:
                 attrib = mapAttributes->value(key);
@@ -207,7 +207,7 @@ bool Decoder::consumeTriple(QStringList &tokens, int &idx,
             if ((parentSubjectType == TObsTrajectory) && (mapAttributes->contains("trajectory")))
             {
                 attrib = mapAttributes->value("trajectory");
-                attrib->addValue( (double) attrib->getXsValue()->size() );
+                attrib->addValue((double) attrib->getXsValue()->size());
             }
         }
         else
@@ -223,7 +223,7 @@ bool Decoder::consumeTriple(QStringList &tokens, int &idx,
 //@RAIAN: Metodos para decodificar a vizinhanca
 void Decoder::consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID, int &numElem, QMap<QString, QList<double> > &neighborhood)
 {
-	for(int i = 0; (i < (numElem - 3)) && idx < tokens.size(); i += 3)
+	for (int i = 0; (i <(numElem - 3)) && idx < tokens.size(); i += 3)
 	{
 		consumeNeighbor(tokens, idx, neighborhood);
 	}
@@ -245,7 +245,7 @@ void Decoder::consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList
 
 	QList<double> neighbor = QList<double>();
 
-	for(int i = 0; i < numAttrib; i += 3)
+	for (int i = 0; i < numAttrib; i += 3)
 	{
 		consumeNeighborTriple(tokens, idx, neighbor);
 		neighborhood.insert(id, neighbor);
@@ -255,17 +255,17 @@ void Decoder::consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList
 void Decoder::consumeNeighborTriple(QStringList &tokens, int &idx, QList<double> &neighbor)
 {
 	QString key = tokens.at(idx);
-	// TypesOfData type = (TypesOfData) tokens.at(idx + 1).toInt();
+	// TypesOfData type =(TypesOfData) tokens.at(idx + 1).toInt();
 
-	if(key == "x")
+	if (key == "x")
 		neighbor.insert(0, tokens.at(idx + 2).toDouble());
 	else
 	{
-		if(key == "y")
+		if (key == "y")
 			neighbor.insert(1, tokens.at(idx + 2).toDouble());
 		else
 		{
-			if(key == "@getWeight")
+			if (key == "@getWeight")
 				neighbor.insert(2, tokens.at(idx + 2).toDouble());
 		}
 	}

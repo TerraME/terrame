@@ -32,10 +32,10 @@ extern "C" {
 template <typename T> class Luna {
     typedef struct { T *pT; } userdataType;
 public:
-    typedef int (T::*mfp)(lua_State *L);
+    typedef int(T::*mfp)(lua_State *L);
     typedef struct { const char *name; mfp mfunc; } RegType;
 
-	static int t_error (lua_State *L, int narg, const char *tname)
+	static int t_error(lua_State *L, int narg, const char *tname)
     {
       const char *msg = lua_pushfstring(
     		  L, "%s expected, got %s", tname, luaL_typename(L, narg));
@@ -104,8 +104,8 @@ public:
     static T *check(lua_State *L, int narg) {
         userdataType *ud =
                 static_cast<userdataType*>(luaL_checkudata(L, narg, T::className));
-        //if(!ud) luaL_typerror(L, narg, T::className);
-		if(!ud) t_error(L, narg, T::className);
+        //if (!ud) luaL_typerror(L, narg, T::className);
+		if (!ud) t_error(L, narg, T::className);
         return ud->pT;  // pointer to T object
     }
 
@@ -119,7 +119,7 @@ private:
         lua_remove(L, 1);  // remove self so member function args start at index 1
         // get member function from upvalue
         RegType *l = static_cast<RegType*>(lua_touserdata(L, lua_upvalueindex(1)));
-        return (obj->*(l->mfunc))(L);  // call member function
+        return(obj->*(l->mfunc))(L);  // call member function
     }
 
     // create a new T object and
@@ -143,12 +143,12 @@ private:
         return 0;
     }
 
-    static int tostring_T (lua_State *L) {
+    static int tostring_T(lua_State *L) {
         char buff[32];
         userdataType *ud = static_cast<userdataType*>(lua_touserdata(L, 1));
         T *obj = ud->pT;
         sprintf(buff, "%p", obj);
-        lua_pushfstring(L, "%s (%s)", T::className, buff);
+        lua_pushfstring(L, "%s(%s)", T::className, buff);
         return 1;
     }
 };

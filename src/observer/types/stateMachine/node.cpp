@@ -58,7 +58,7 @@ Node::~Node()
 QRectF Node::boundingRect() const
 {
     qreal adjust = 2.0;
-    return QRectF(- (DIMENSION * 0.5) - adjust, -(DIMENSION * 0.5) - adjust,
+    return QRectF(-(DIMENSION * 0.5) - adjust, -(DIMENSION * 0.5) - adjust,
                   DIMENSION + adjust, DIMENSION + adjust);
 }
 
@@ -126,7 +126,7 @@ QVariant Node::itemChange(GraphicsItemChange change,
 {
     if (change == QGraphicsItem::ItemPositionChange)
     {
-        foreach (Edge *i, edgeList)
+        foreach(Edge *i, edgeList)
             i->updatePosition();
     }
     return value;
