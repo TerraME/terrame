@@ -47,7 +47,7 @@ namespace TerraMEObserver {
 class ObserverLogFile : public QObject, public ObserverInterf
 {
 public:
-    // TODO
+    // TODO(Antonio)
     //enum WriteMode {
     //    WriteOnly = 0,
     //    Append = 1
@@ -108,10 +108,10 @@ public:
      */
     QStringList getAttributes();
 
-    // TODO
+    // TODO(Antonio)
     //void setWriteMode(WriteMode mode = WriteMode::WriteOnly);
 
-    // TODO
+    // TODO(Antonio)
     //WriteMode getWriteMode();
 
     /**
