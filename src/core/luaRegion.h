@@ -26,7 +26,7 @@ of this software and its documentation.
         \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined( LUAREGION_H )
+#ifndef LUAREGION_H
 #define LUAREGION_H
 
 #include "region.h"

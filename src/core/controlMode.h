@@ -46,7 +46,6 @@ of this software and its documentation.
 class ControlModeImpl : public Implementation
 {
 public:
-
     /// Sets the control mode name (identifier)
     /// \param controlModeName is a control mode identifier
     void setControlModeName(string &controlModeName) {
@@ -87,7 +86,6 @@ typedef CompositeInterface< vectorComposite<Process> > ProcessCompositeInterf;
 class ControlMode : public ControlModeInterf, public ProcessCompositeInterf
 {
 public:
-
     /// Default constructor
     ControlMode(void) {
         string strTemp = ""; // Raian: ControlModeInterf::pImpl_->setControlModeName(string(""));
@@ -107,15 +105,13 @@ public:
     ///  n-dimensional coordinates for the latters.
     bool execute(Event &event, class Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
     {
-
         try
         {
             ProcessCompositeInterf::iterator iterator;
             iterator = ProcessCompositeInterf::pImpl_->begin();
-            while(iterator != ProcessCompositeInterf::pImpl_->end())
+            while (iterator != ProcessCompositeInterf::pImpl_->end())
             {
-
-                if(!iterator->execute(event, agent, cellIndexPair)) return false;
+                if (!iterator->execute(event, agent, cellIndexPair)) return false;
                 iterator++;
             }
             return true;

@@ -50,7 +50,7 @@ class ChartPlot;
  * \author Antonio Jos? da Cunha Rodrigues
  * \file observerGraphic.h
 */
-class ObserverGraphic : public QThread, public ObserverInterf 
+class ObserverGraphic : public QThread, public ObserverInterf
 {
     Q_OBJECT
 
@@ -62,7 +62,7 @@ public:
      * \see Subject
      * \see QWidget
      */
-    ObserverGraphic (Subject *subj, QWidget *parent = 0);
+    ObserverGraphic(Subject *subj, QWidget *parent = 0);
 
     /**
      * Destructor
@@ -92,7 +92,7 @@ public:
      * \param attribs a list of attributes
      */
     void setAttributes(const QStringList &attribs, const QStringList &curveTitles,
-        /*const*/ QStringList &legKeys, /*const*/ QStringList &legAttribs);   
+        /*const*/ QStringList &legKeys, /*const*/ QStringList &legAttribs);
 
     /**
      * Gets the list of attributes
@@ -149,7 +149,7 @@ private slots:
      * \param item a pointer to a plot item
      * \see QwtPlotItem
      */
-    void colorChanged(QwtPlotItem *);
+    void colorChanged(QwtPlotItem* item);
 
 protected:
     /**
@@ -159,7 +159,6 @@ protected:
     void run();
 
 private:
-
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
     // double modelTime, lastModelTime;
@@ -176,5 +175,5 @@ private:
     bool paused;
 };
 
-}
+} // namespace TerraMEObserver
 #endif

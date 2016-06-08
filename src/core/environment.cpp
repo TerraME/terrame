@@ -28,8 +28,7 @@ of this software and its documentation.
 /// \param targetControlMode is a pointer to the jump condition target ControlMode
 void jump(Event& event, GlobalAgent* const agent, ControlMode* targetControlMode)
 {
-    if(targetControlMode == agent->getControlMode()) return;
+    if (targetControlMode == agent->getControlMode()) return;
     agent->jump(targetControlMode);
     agent->setLastChangeTime(event.getTime());
-
 }

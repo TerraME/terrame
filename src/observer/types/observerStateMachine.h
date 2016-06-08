@@ -177,7 +177,7 @@ protected:
      * Catchs the resize event
      * \see QResizeEvent
      */
-    void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent* ev);
 
 private:
     /**
@@ -189,7 +189,7 @@ private:
      * Shows the attributes layer
      */
     void showLayerLegend();
-    // void connectTreeLayer(bool );
+    // void connectTreeLayer(bool);
 
     /**
      * Converts a index from zoom comboBox to a interger
@@ -216,14 +216,14 @@ private:
     QStringList attribList;
     QStringList obsAttrib;          // lista de chaves em observa??o
     QHash<QString, Attributes *> *mapAttributes;  // map de todas as chaves
-    
+
     QVector<int> zoomVec;
     int positionZoomVec;
     float offsetState;
     QPointF center;
 
     QComboBox *zoomComboBox;
- 
+
     QToolButton *butLegend, *butGrid;
     QToolButton *butZoomIn, *butZoomOut;
     QToolButton *butZoomWindow, *butHand;
@@ -233,6 +233,6 @@ private:
     QFrame *frameTools;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // OBSERVERSTATEMACHINE_H

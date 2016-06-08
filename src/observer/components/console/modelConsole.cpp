@@ -26,7 +26,7 @@ of this software and its documentation.
 
 #include <QDebug>
 
-ModelConsole::ModelConsole(QWidget *parent) 
+ModelConsole::ModelConsole(QWidget *parent)
     : QWidget(parent), ui(new Ui::ModelConsoleGUI)
 {
     ui->setupUi(this);

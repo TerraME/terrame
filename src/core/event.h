@@ -57,10 +57,9 @@ class EventImpl : public Implementation
 {
     double time_; ///< instant in which the Events must occurs
     double period_; ///<  periodicity in which the Event must occurs
-    double priority_; /// Event priority (default value = 0)  Higher numbers means lower  priority.
+    double priority_; /// Event priority(default value = 0)  Higher numbers means lower  priority.
     /// The normal priority is 0(zero).
 public:
-
     /// Default constructor
     EventImpl(void) { time_ = -DBL_MAX, period_ = 1, priority_ = 0; }
 
@@ -116,7 +115,6 @@ typedef Interface<EventImpl> EventInterf;
 class Event: public Model, public EventInterf
 {
 public:
-
     /// Constructor.
     /// \param time is the time instant in which the Event must occurs
     /// \param period is the periodicity in which the Event must occurs

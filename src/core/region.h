@@ -49,7 +49,6 @@ template <class Indx>
 class Region_ : public CompositeInterface< multimapComposite<Indx, Cell*> >
 {
 public:
-
     /// Add a cell to the Region
     /// \param indx is a generic index representing the n-dimensional cell coordinate
     /// \param cell is a pointer to the cell being inserted into the Region
@@ -65,7 +64,7 @@ public:
 
     /// Searches for a cell into the region
     /// \return a Cell pointer is the cell has been found, otherwise returns a NULL pointer
-    Cell* operator [] (Indx indx)
+    Cell* operator [](Indx indx)
     {
         pair<Indx, Cell*>  indexCellPair;
 

@@ -90,28 +90,27 @@ protected:
      * Paints event of the user interface object
      * \see QPaintEvent
      */
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent* ev);
 
     /**
      * Catchs the mouse press event inside the user interface object
      * \see QMouseEvent
      */
-    void mousePressEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent* ev);
 
     /**
      * Catchs the mouse move event inside the user interface object
      * \see QMouseEvent
      */
-    void mouseMoveEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent* ev);
 
     /**
      * Catchs the mouse release event inside the user interface object
      * \see QMouseEvent
      */
-    void mouseReleaseEvent(QMouseEvent *);
-    
-private:
+    void mouseReleaseEvent(QMouseEvent* ev);
 
+private:
     QPointF lastDragPos, imageOffset;
     bool showRectZoom, zoomWindow, handTool;
     bool gridEnabled;
@@ -122,6 +121,6 @@ private:
     QCursor zoomInCursor, zoomOutCursor;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // CANVAS_H

@@ -63,7 +63,7 @@ static const QString COMP_COLOR_SEP = ",";
 static const QString ITEM_SEP = ";";
 static const QString ITEM_NULL = "?";
 static const QString COLORS_SEP = "#";
-static const QString COLOR_BAR_SEP= "|";
+static const QString COLOR_BAR_SEP = "|";
 
 // Legend keys
 static const QString TYPE = "type";
@@ -83,12 +83,12 @@ static const QString STYLE = "style";
 static const QString SIZE_ = "size";
 static const QString PENSTYLE = "pen";
 
-static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SLICES 
-    << PRECISION << STD_DEV << MAX << MIN << COLOR_BAR << FONT_FAMILY << FONT_SIZE 
+static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SLICES
+    << PRECISION << STD_DEV << MAX << MIN << COLOR_BAR << FONT_FAMILY << FONT_SIZE
     << SYMBOL << WIDTH << STYLE << SIZE_ << PENSTYLE; // << STD_COLOR_BAR; // is not a legend key
 static const int LEGEND_ITENS = LEGEND_KEYS.size(); /// Numero de itens que compoem a legenda de cada atributo
 
-static const QString VALUE_NOT_INFORMED = "not informed"; 
+static const QString VALUE_NOT_INFORMED = "not informed";
 static const QString WINDOW = "Window";
 static const QString TRAJECTORY_LABEL = "does not belong";
 static const QString TRAJECTORY_COUNT = "others";
@@ -102,7 +102,7 @@ static const QString MEMORY_ALLOC_FAILED = "Failed: Not enough memory for execut
 * \brief TerraME Subject Types.
 * 
 */
-enum TypesOfSubjects 
+enum TypesOfSubjects
 {
     TObsUnknown         = 0,   //!< Type unknown
     TObsCell,                  //!< Cell type
@@ -153,8 +153,8 @@ enum TypesOfObservers
 enum TypesOfData
 {
     TObsBool,                   //!< Boolean type
-    TObsNumber,                 //!< Numeric type 
-    TObsDateTime,               //!< Time stamp type 
+    TObsNumber,                 //!< Numeric type
+    TObsDateTime,               //!< Time stamp type
     TObsText,                   //!< Textual type
     TObsUnknownData     = 100   //!< Unknown type
 };
@@ -185,7 +185,7 @@ enum StdDev
     TObsQuarter =  2    //!< Quarter deviation
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // OBSERVER_GLOBAL_ITEMS
 

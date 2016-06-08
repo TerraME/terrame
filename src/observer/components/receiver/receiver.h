@@ -28,11 +28,11 @@ of this software and its documentation.
 #include <QUdpSocket>
 
 namespace TerraMEObserver {
-    class AgentObserverMap;
+class AgentObserverMap;
 }
 
 namespace Ui {
-    class receiverGUI;
+class receiverGUI;
 }
 
 /**
@@ -57,7 +57,7 @@ public:
      * Destructor
      */
     virtual ~Receiver();
-    
+
 public slots:
     /**
      * Treats the click in the close button
@@ -90,14 +90,13 @@ private:
     void processDatagram(QByteArray datagram);
 
 
-    int msgReceiver,statesReceiver;
+    int msgReceiver, statesReceiver;
     QByteArray completeData;
     QString message;
 
     Ui::receiverGUI *ui;
     QUdpSocket *udpSocket;
     TerraMEObserver::AgentObserverMap *obsMap;
-
 };
 
 #endif // DIALOG_H

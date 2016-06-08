@@ -122,9 +122,9 @@ void ChartPlot::createPicker()
         QwtPlotPicker::CrossRubberBand, QwtPicker::ActiveOnly, //AlwaysOn,
         canvas());
 
-    picker->setRubberBandPen( QColor(Qt::darkMagenta) );
+    picker->setRubberBandPen(QColor(Qt::darkMagenta));
     picker->setRubberBand(QwtPicker::CrossRubberBand);
-    picker->setTrackerPen( QColor(Qt::black) );
+    picker->setTrackerPen(QColor(Qt::black));
 }
 
 void ChartPlot::setId(int id)

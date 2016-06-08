@@ -50,7 +50,7 @@ public:
      * \param parent a pointer to a QWidget
      * \see QWidget
      */
-    // ObserverTextScreen (QWidget *parent = 0);
+    // ObserverTextScreen(QWidget *parent = 0);
 
     /**
      * Constructor
@@ -59,7 +59,7 @@ public:
      * \see Subject
      * \see QWidget
      */
-    ObserverTextScreen (Subject *subj, QWidget *parent = 0);
+    ObserverTextScreen(Subject *subj, QWidget *parent = 0);
 
     /**
      * Destructor
@@ -108,7 +108,6 @@ protected:
     void run();
 
 private:
-
     /**
      * Gets the state of the file header
      */
@@ -128,7 +127,7 @@ private:
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
 
-    QStringList attribList,valuesList;
+    QStringList attribList, valuesList;
 
     bool header;
     bool paused;
@@ -136,6 +135,6 @@ private:
     QTextEdit *textEdit;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

@@ -50,15 +50,12 @@ Node::Node(QString n, QGraphicsItem *parent, QGraphicsScene *scene)
     currentColorDefined = false;
 }
 
-Node::~Node()
-{
-
-}
+Node::~Node() {}
 
 QRectF Node::boundingRect() const
 {
     qreal adjust = 2.0;
-    return QRectF(- (DIMENSION * 0.5) - adjust, -(DIMENSION * 0.5) - adjust,
+    return QRectF(-(DIMENSION * 0.5) - adjust, -(DIMENSION * 0.5) - adjust,
                   DIMENSION + adjust, DIMENSION + adjust);
 }
 
@@ -73,13 +70,13 @@ void Node::setActive(bool active)
 {
     if (active)
     {
-        if (! currentColorDefined)
+        if (!currentColorDefined)
             currentColor = ACTIVE_COLOR;
         currentPenWidth = ACTIVE_PEN_WIDTH;
     }
     else
     {
-        if (! currentColorDefined)
+        if (!currentColorDefined)
             currentColor = INACTIVE_COLOR;
         currentPenWidth = INACTIVE_PEN_WIDTH;
     }
@@ -126,7 +123,7 @@ QVariant Node::itemChange(GraphicsItemChange change,
 {
     if (change == QGraphicsItem::ItemPositionChange)
     {
-        foreach (Edge *i, edgeList)
+        foreach(Edge *i, edgeList)
             i->updatePosition();
     }
     return value;

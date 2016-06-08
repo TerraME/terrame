@@ -34,13 +34,13 @@ PlayerGUI::PlayerGUI(QWidget *parent)
     : QDialog(parent), ui(new Ui::PlayerGUI)
 {
     ui->setupUi(this);
-    // ui->mainVLayout->addWidget( &ModelConsole::getInstance() );
+    // ui->mainVLayout->addWidget(&ModelConsole::getInstance());
     resize(400, 20);
 
     // The simulation will be launched in pause mode, so
     // the GUI must be similar
     playPauseClicked();
-    
+
     connect(ui->btPlayPause, SIGNAL(clicked()), this, SLOT(playPauseClicked()));
     connect(ui->btStep, SIGNAL(clicked()), this, SLOT(stepClicked()));
     connect(ui->btStop, SIGNAL(clicked()), this, SLOT(stopClicked()));
@@ -57,7 +57,7 @@ void PlayerGUI::playPauseClicked()
 {
     QIcon icon;
 
-    if (! paused)
+    if (!paused)
     {
         ui->btPlayPause->setText("Play");
         icon.addFile(QString::fromUtf8(":/icons/play.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -76,14 +76,14 @@ void PlayerGUI::playPauseClicked()
 
 void PlayerGUI::stepClicked()
 {
-    if (! step)
+    if (!step)
     {
         QIcon icon;
         ui->btPlayPause->setText("Play");
         icon.addFile(QString::fromUtf8(":/icons/play.png"), QSize(), QIcon::Normal, QIcon::Off);
         ui->btPlayPause->setIcon(icon);
     }
-    
+
     step = true;
     paused = false;
 }

@@ -60,7 +60,7 @@ Observer * CellSpaceSubjectInterf::createObserver(TypesOfObservers type)
         case TObsMap:
             obs = new AgentObserverMap(this);
             break;
-    
+
         case TObsTextScreen:
         default:
             obs = new ObserverTextScreen(this);
@@ -74,40 +74,40 @@ bool CellSpaceSubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (! obs)
+    if (!obs)
         return false;
 
     switch (obs->getType())
     {
         case TObsTextScreen:
-            ((ObserverTextScreen *)obs)->close();
-            delete (ObserverTextScreen *)obs;
+           ((ObserverTextScreen *)obs)->close();
+            delete(ObserverTextScreen *)obs;
             break;
 
         case TObsLogFile:
-            ((ObserverLogFile *)obs)->close();
-            delete (ObserverLogFile *)obs;
+           ((ObserverLogFile *)obs)->close();
+            delete(ObserverLogFile *)obs;
             break;
 
         case TObsTable:
-            ((ObserverTable *)obs)->close();
-            delete (ObserverTable *)obs;
+           ((ObserverTable *)obs)->close();
+            delete(ObserverTable *)obs;
             break;
 
         case TObsDynamicGraphic:
         case TObsGraphic:
-            ((ObserverGraphic *)obs)->close();
-            delete (ObserverGraphic *)obs;
+           ((ObserverGraphic *)obs)->close();
+            delete(ObserverGraphic *)obs;
             break;
 
         case TObsUDPSender:
-            ((ObserverUDPSender *)obs)->close();
-            delete (ObserverUDPSender *)obs;
+           ((ObserverUDPSender *)obs)->close();
+            delete(ObserverUDPSender *)obs;
             break;
 
         case TObsMap:
-            ((AgentObserverMap *)obs)->close();
-            delete (AgentObserverMap *)obs;
+           ((AgentObserverMap *)obs)->close();
+            delete(AgentObserverMap *)obs;
             break;
 
         default:

@@ -13,4 +13,4 @@
 #define chdir_error	strerror(errno)
 #endif
 
-int luaopen_lfs (lua_State *L);
+int luaopen_lfs(lua_State *L);

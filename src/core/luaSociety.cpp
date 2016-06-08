@@ -54,28 +54,28 @@ luaSociety::luaSociety(lua_State *L)
 }
 
 /// destructor
-luaSociety::~luaSociety( void ) { }
+luaSociety::~luaSociety(void) { }
 
 /// Gets the luaSociety identifier
-int luaSociety::getID( lua_State *L )
+int luaSociety::getID(lua_State *L)
 {
-    lua_pushstring(L, objectId_.c_str() );
+    lua_pushstring(L, objectId_.c_str());
     return 1;
 }
 
 /// Sets the luaSociety identifier
-int luaSociety::setID( lua_State *L )
+int luaSociety::setID(lua_State *L)
 {
-    const char* id = luaL_checkstring( L , -1);
-    objectId_ = string( id );
+    const char* id = luaL_checkstring(L , -1);
+    objectId_ = string(id);
     return 0;
 }
 
 /// Creates several types of observers
 /// parameters: observer type, observeb attributes table, observer type parameters
-// verif. ref (endereco na pilha lua)
+// verif. ref(endereco na pilha lua)
 // olhar a classe event
-int luaSociety::createObserver( lua_State * )
+int luaSociety::createObserver(lua_State *)
 {
     // recupero a referencia da celula
     Reference<luaSociety>::getReference(luaL);
@@ -92,20 +92,20 @@ int luaSociety::createObserver( lua_State * )
     // Nao modifica em nada a pilha
     // recupera o enum referente ao tipo
     // do observer
-    int typeObserver = (int)luaL_checkinteger(luaL, -4);
+    int typeObserver =(int)luaL_checkinteger(luaL, -4);
 
     //@RAIAN
     // Para o Observer do tipo Neighbohrood
-    bool isGraphicType = (typeObserver == TObsDynamicGraphic) || (typeObserver == TObsGraphic);
+    bool isGraphicType =(typeObserver == TObsDynamicGraphic) ||(typeObserver == TObsGraphic);
 
     //------------------------
     QStringList allAttribs, obsAttribs;
 
     // Pecorre a pilha lua recuperando todos os atributos celula
     lua_pushnil(luaL);
-    while(lua_next(luaL, top) != 0)
+    while (lua_next(luaL, top) != 0)
     {
-        QString key( luaL_checkstring(luaL, -2) );
+        QString key(luaL_checkstring(luaL, -2));
 
         allAttribs.push_back(key);
         lua_pop(luaL, 1);
@@ -118,7 +118,7 @@ int luaSociety::createObserver( lua_State * )
     top = lua_gettop(luaL);
 
     // Verificacao da sintaxe da tabela Atributos
-    if(! lua_istable(luaL, top) )
+    if (!lua_istable(luaL, top))
     {
         qFatal("Error: Attributes table not found. Incorrect sintax.\n");
         return -1;
@@ -127,27 +127,27 @@ int luaSociety::createObserver( lua_State * )
     bool attribTable = false;
 
     lua_pushnil(luaL);
-    while(lua_next(luaL, top - 1 ) != 0)
+    while (lua_next(luaL, top - 1) != 0)
     {
-        QString key( luaL_checkstring(luaL, -1) );
+        QString key(luaL_checkstring(luaL, -1));
         attribTable = true;
 
         // Verifica se o atributo informado nao existe deve ter sido digitado errado
         if (allAttribs.contains(key))
         {
             obsAttribs.push_back(key);
-            if (! observedAttribs.contains(key))
+            if (!observedAttribs.contains(key))
                 observedAttribs.push_back(key);
         }
         else
         {
-            if ( ! key.isNull() || ! key.isEmpty())
+            if (!key.isNull() || !key.isEmpty())
             {
-                string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
+                string err_out = string("Error: Attribute name '") + string(qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,err_out.c_str());
-				lua_pushnumber(L,4);
-				lua_call(L,2,0);
+				lua_pushstring(L, err_out.c_str());
+				lua_pushnumber(L, 4);
+				lua_call(L, 2, 0);
                 return -1;
             }
         }
@@ -155,7 +155,7 @@ int luaSociety::createObserver( lua_State * )
     }
     //------------------------
 
-    // if ((obsAttribs.empty() ) && (! isGraphicType))
+    // if ((obsAttribs.empty()) && (! isGraphicType))
     if (obsAttribs.empty())
     {
         obsAttribs = allAttribs;
@@ -167,7 +167,7 @@ int luaSociety::createObserver( lua_State * )
     // Recupera a tabela de parametros os observadores do tipo Table e Graphic
     // caso nao seja um tabela a sintaxe do metodo esta incorreta
     lua_pushnil(luaL);
-    while(lua_next(luaL, top) != 0)
+    while (lua_next(luaL, top) != 0)
     {
         QString key;
         if (lua_type(luaL, -2) == LUA_TSTRING)
@@ -177,7 +177,7 @@ int luaSociety::createObserver( lua_State * )
         {
         case LUA_TSTRING:
         {
-            QString value( luaL_checkstring(luaL, -1));
+            QString value(luaL_checkstring(luaL, -1));
             cols.push_back(value);
             break;
         }
@@ -197,7 +197,7 @@ int luaSociety::createObserver( lua_State * )
             int tableTop = lua_gettop(luaL);
 
             lua_pushnil(luaL);
-            while(lua_next(luaL, tableTop) != 0)
+            while (lua_next(luaL, tableTop) != 0)
             {
                 if (lua_type(luaL, -2) == LUA_TSTRING)
                     obsParams.append(luaL_checkstring(luaL, -2));
@@ -205,7 +205,7 @@ int luaSociety::createObserver( lua_State * )
                 switch (lua_type(luaL, -1))
                 {
                 case LUA_TNUMBER:
-                    cols.append(QString::number(luaL_checknumber(luaL, -1)) );
+                    cols.append(QString::number(luaL_checknumber(luaL, -1)));
                     break;
 
                 case LUA_TSTRING:
@@ -228,12 +228,12 @@ int luaSociety::createObserver( lua_State * )
         // lanca um warning
         if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
         {
-            if (execModes != Quiet ){
+            if (execModes != Quiet){
                 string err_out = string("Warning: The parameter table is empty.");
                 lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                lua_pushstring(L, err_out.c_str());
+                lua_pushnumber(L, 5);
+                lua_call(L, 2, 0);
             }
         }
         //------------------------
@@ -249,7 +249,7 @@ int luaSociety::createObserver( lua_State * )
         switch (typeObserver)
         {
         case TObsTextScreen:
-            obsText = (ObserverTextScreen*)
+            obsText =(ObserverTextScreen*)
                     SocietySubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
             {
@@ -263,7 +263,7 @@ int luaSociety::createObserver( lua_State * )
             break;
 
         case TObsLogFile:
-            obsLog = (ObserverLogFile*)
+            obsLog =(ObserverLogFile*)
                     SocietySubjectInterf::createObserver(TObsLogFile);
             if (obsLog)
             {
@@ -277,7 +277,7 @@ int luaSociety::createObserver( lua_State * )
             break;
 
         case TObsTable:
-            obsTable = (ObserverTable *)
+            obsTable =(ObserverTable *)
                     SocietySubjectInterf::createObserver(TObsTable);
             if (obsTable)
             {
@@ -291,7 +291,7 @@ int luaSociety::createObserver( lua_State * )
             break;
 
         case TObsDynamicGraphic:
-            obsGraphic = (ObserverGraphic *)
+            obsGraphic =(ObserverGraphic *)
                     SocietySubjectInterf::createObserver(TObsDynamicGraphic);
             if (obsGraphic)
             {
@@ -306,7 +306,7 @@ int luaSociety::createObserver( lua_State * )
             break;
 
         case TObsGraphic:
-            obsGraphic = (ObserverGraphic *)
+            obsGraphic =(ObserverGraphic *)
                     SocietySubjectInterf::createObserver(TObsGraphic);
             if (obsGraphic)
             {
@@ -320,7 +320,7 @@ int luaSociety::createObserver( lua_State * )
             break;
 
         case TObsUDPSender:
-            obsUDPSender = (ObserverUDPSender *)
+            obsUDPSender =(ObserverUDPSender *)
                     SocietySubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
             {
@@ -339,10 +339,10 @@ int luaSociety::createObserver( lua_State * )
 
         case TObsMap:
         default:
-            if (execModes != Quiet )
+            if (execModes != Quiet)
             {
                 qWarning("Warning: In this context, the code '%s' does not correspond to a "
-                         "valid type of Observer.",  getObserverName(typeObserver) );
+                         "valid type of Observer.",  getObserverName(typeObserver));
             }
             return 0;
         }
@@ -408,15 +408,15 @@ int luaSociety::createObserver( lua_State * )
             obsUDPSender->setPort(cols.at(0).toInt());
 
             // broadcast
-            if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
+            if ((cols.size() == 1) ||((cols.size() == 2) && cols.at(1).isEmpty()))
             {
                 obsUDPSender->addHost(BROADCAST_HOST);
             }
             else
             {
                 // multicast or unicast
-                for(int i = 1; i < cols.size(); i++){
-                    if (! cols.at(i).isEmpty())
+                for (int i = 1; i < cols.size(); i++){
+                    if (!cols.at(i).isEmpty())
                         obsUDPSender->addHost(cols.at(i));
                 }
             }
@@ -435,7 +435,7 @@ const TypesOfSubjects luaSociety::getType()
 }
 
 /// Notifies observers about changes in the luaSociety internal state
-int luaSociety::notify(lua_State *L )
+int luaSociety::notify(lua_State *L)
 {
     double time = luaL_checknumber(L, -1);
     SocietySubjectInterf::notify(time);
@@ -473,22 +473,22 @@ QString luaSociety::pop(lua_State *luaL, QStringList& attribs)
     QString text, key, attrs, elements;
 
     lua_pushnil(luaL);
-    while(lua_next(luaL, societyPos ) != 0)
+    while (lua_next(luaL, societyPos) != 0)
     {
         key = QString(luaL_checkstring(luaL, -2));
 
-        if ((attribs.contains(key)) || (key == "cells"))
+        if ((attribs.contains(key)) ||(key == "cells"))
         {
             attrCounter++;
             attrs.append(key);
             attrs.append(PROTOCOL_SEPARATOR);
 
-            switch( lua_type(luaL, -1) )
+            switch (lua_type(luaL, -1))
             {
             case LUA_TBOOLEAN:
                 attrs.append(QString::number(TObsBool));
                 attrs.append(PROTOCOL_SEPARATOR);
-                attrs.append(QString::number( lua_toboolean(luaL, -1)));
+                attrs.append(QString::number(lua_toboolean(luaL, -1)));
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
@@ -503,17 +503,17 @@ QString luaSociety::pop(lua_State *luaL, QStringList& attribs)
 
             case LUA_TSTRING:
                 text = QString(luaL_checkstring(luaL, -1));
-                attrs.append(QString::number(TObsText) );
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
-                attrs.append( (text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text) );
+                attrs.append((text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text));
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
             case LUA_TTABLE:
             {
                 char result[100];
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                attrs.append(QString::number(TObsText) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
                 attrs.append(QString("Lua-Address(TB): ") + QString(result));
                 attrs.append(PROTOCOL_SEPARATOR);
@@ -523,8 +523,8 @@ QString luaSociety::pop(lua_State *luaL, QStringList& attribs)
             case LUA_TUSERDATA	:
             {
                 char result[100];
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                attrs.append(QString::number(TObsText) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
                 attrs.append(QString("Lua-Address(UD): ") + QString(result));
                 attrs.append(PROTOCOL_SEPARATOR);
@@ -534,8 +534,8 @@ QString luaSociety::pop(lua_State *luaL, QStringList& attribs)
             case LUA_TFUNCTION:
             {
                 char result[100];
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                attrs.append(QString::number(TObsText) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
                 attrs.append(QString("Lua-Address(FT): ") + QString(result));
                 attrs.append(PROTOCOL_SEPARATOR);
@@ -545,8 +545,8 @@ QString luaSociety::pop(lua_State *luaL, QStringList& attribs)
             default:
             {
                 char result[100];
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                attrs.append(QString::number(TObsText) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
                 attrs.append(QString("Lua-Address(O): ") + QString(result));
                 attrs.append(PROTOCOL_SEPARATOR);
@@ -559,11 +559,11 @@ QString luaSociety::pop(lua_State *luaL, QStringList& attribs)
 
     // #attrs
     msg.append(QString::number(attrCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
 
     // #elements
     msg.append(QString::number(elementCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
     msg.append(attrs);
 
     msg.append(PROTOCOL_SEPARATOR);
@@ -581,14 +581,14 @@ QString luaSociety::getChanges(QDataStream& in, int observerId, QStringList& att
 #ifdef TME_BLACK_BOARD
 QDataStream& luaSociety::getState(QDataStream& in, Subject *, int observerId, QStringList & /* attribs */)
 #else
-QDataStream& luaSociety::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs )
+QDataStream& luaSociety::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs)
 #endif
 
 {
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 
-    switch(obsCurrentState)
+    switch (obsCurrentState)
     {
     case 0:
 #ifdef TME_BLACK_BOARD
@@ -597,7 +597,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int observerId, QS
         content = getAll(in, observerId, attribs);
 #endif
         // serverSession->setState(observerId, 1);
-        // if (execModes == Quiet )
+        // if (execModes == Quiet)
         // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
         break;
 
@@ -608,7 +608,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int observerId, QS
         content = getChanges(in, observerId, attribs);
 #endif
         // serverSession->setState(observerId, 0);
-        // if (execModes == Quiet )
+        // if (execModes == Quiet)
         // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
         break;
     }
@@ -631,7 +631,7 @@ int luaSociety::kill(lua_State *luaL)
 /// Gets the luaSociety position of the luaSociety in the Lua stack
 /// \param L is a pointer to the Lua stack
 /// \param cell is a pointer to the cell within the Lua stack
-void getReference( lua_State *L, luaSociety *cell )
+void getReference(lua_State *L, luaSociety *cell)
 {
     cell->getReference(L);
 }

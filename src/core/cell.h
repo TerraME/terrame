@@ -65,7 +65,7 @@ public:
 	/// \return A pointer to the copied block of memory (the cells implementation).
 	CellImpl* clone(void)
 	{
-		CellImpl *copy = (CellImpl*) new char[sizeof(CellImpl)];
+		CellImpl *copy =(CellImpl*) new char[sizeof(CellImpl)];
 		memcpy(copy, this, sizeof(CellImpl));
 		return copy;
 	}
@@ -82,17 +82,15 @@ public:
 	/// \param  agent is a pointer to an agent within the cell.
 	/// \param controlMode is a pointer to the new agent tracked control mode (discrete state).
 	void attachControlMode(Agent *agent, ControlMode *controlMode) {
-
 		// improve here
 		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
-		if(location != targetControlMode_.end())
+		if (location != targetControlMode_.end())
 		{
 			targetControlMode_.erase(agent);
 			targetControlMode_.insert(map<Agent*, ControlMode*>::value_type(agent, controlMode));
 		}
 		else targetControlMode_.insert(
 				map<Agent*, ControlMode*>::value_type(agent, controlMode));
-
 	}
 
 	/// Releases the tracked state (control mode) of a agent within the cell
@@ -114,7 +112,7 @@ public:
 	/// \return true - if success, false - otherwise
 	ControlMode* getControlMode(LocalAgent *agent) {
 		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find((Agent*)agent);
-		if(location != targetControlMode_.end())
+		if (location != targetControlMode_.end())
 		{
 			return location->second;
 		}
@@ -128,11 +126,11 @@ public:
 	/// \return A pointer to the agent active control mode (discrete state).
 	ControlMode* execute(Event &/*event*/, class Agent *agent) {
 		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
-		if(location != targetControlMode_.end())
+		if (location != targetControlMode_.end())
 		{
 			return location->second;
 		}
-		return (ControlMode*)0;
+		return(ControlMode*)0;
 	}
 
 	/// Gets the simulation ticks elapsed since the last change in the cell
@@ -141,7 +139,7 @@ public:
 
 	///  Sets the Cell's internal state latency counter to "value".
 	/// \param value is a positive number (next version this should be checked).
-	void setLatency(int value) { if(value >= 0) latency = value; }
+	void setLatency(int value) { if (value >= 0) latency = value; }
 
 	/// Gets the list of neighborhood graphs from the cell
 	/// \return A reference to the list of neighborhoods.
@@ -152,7 +150,6 @@ public:
 	/// Sets the list of neighborhood graphs from the cell
 	/// \param neighs is a reference to the list of neighborhoods.
 	void setNeighborhoods(NeighCmpstInterf& neighs) { neighborhoods_ = neighs; }
-
 };
 
 /**
@@ -177,7 +174,7 @@ protected:
 	/// \return A pointer to the copied block of memory (the handle of the cell).
 	Cell& clone(void)
 	{
-		Cell* copy = (Cell*) new char[sizeof(Cell)];
+		Cell* copy =(Cell*) new char[sizeof(Cell)];
 
 		memcpy(copy, this, sizeof(Cell));
 		copy->pImpl_ = pImpl_->clone();
@@ -185,10 +182,9 @@ protected:
 		return *copy;
 	}
 public:
-
 	/// constructor
 	///
-	Cell():duplicated(false) { past = (Cell*) &clone(); }
+	Cell():duplicated(false) { past =(Cell*) &clone(); }
 
 	/// HANDLE - Updates the tracked state (control mode) of a certain agent within the cell.
 	/// \param  agent is a pointer to an agent within the cell.
@@ -241,15 +237,14 @@ public:
 	Cell * getPast(void) { return past; }
 
 	/// Updates than cell past copying the current value of its attributes.
-	/// \param sizeMem is the size (in bytes) of the cell with all its attributes.
+	/// \param sizeMem is the size(in bytes) of the cell with all its attributes.
 	void synchronize(unsigned int sizeMem)
 	{
 		CellImpl* p;
 
-		if(sizeMem <= 0) return;
-		if(!duplicated) {
-
-			past = (Cell*)new unsigned char[sizeMem];
+		if (sizeMem <= 0) return;
+		if (!duplicated) {
+			past =(Cell*)new unsigned char[sizeMem];
 			past->pImpl_ = new CellImpl();
 			duplicated = true;
 		}
@@ -258,7 +253,6 @@ public:
 		memcpy(past, this, sizeMem);
 		memcpy(p, this->pImpl_, sizeof(CellImpl));
 		past->pImpl_ = p;
-
 	}
 };
 #endif

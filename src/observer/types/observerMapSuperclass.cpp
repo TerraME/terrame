@@ -178,7 +178,7 @@ void ObserverMapSuperclass::setupGUI(){
     QStringList zoomList;
 
     for (int i = 0; i < zoomVec.size(); i++)
-        zoomList.append( QString::number(zoomVec.at(i)) + "%");
+        zoomList.append(QString::number(zoomVec.at(i)) + "%");
 
     zoomList.append(WINDOW);
 
@@ -189,7 +189,7 @@ void ObserverMapSuperclass::setupGUI(){
     zoomComboBox->setCurrentIndex(23); // window  //zoomIdx); //11);
     //zoomComboBox->setCurrentIndex(zoomIdx); //11);
     zoomComboBox->setEditable(true);
-    connect(zoomComboBox, SIGNAL(activated(const QString & )), this, SLOT(zoomActivated(const QString &)));
+    connect(zoomComboBox, SIGNAL(activated(const QString &)), this, SLOT(zoomActivated(const QString &)));
 
     QHBoxLayout *hLayoutZoom1 = new QHBoxLayout();
     hLayoutZoom1->setMargin(5);
@@ -206,10 +206,10 @@ void ObserverMapSuperclass::setupGUI(){
     treeLayers->setGeometry(5, 150, 190, 310);
     treeLayers->setHeaderLabel(tr("Layers"));
 
-    connect(treeLayers, SIGNAL(itemClicked( QTreeWidgetItem *, int )),
-        this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
-    connect(treeLayers, SIGNAL(itemActivated( QTreeWidgetItem *, int )),
-        this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+    connect(treeLayers, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
+        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
+    connect(treeLayers, SIGNAL(itemActivated(QTreeWidgetItem *, int)),
+        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 
     //lblOperator = new QLabel(tr("Operations: "), frameTools);
     //lblOperator->setGeometry(10, 95, 150, 20);
@@ -305,7 +305,6 @@ int ObserverMapSuperclass::convertZoomIndex(bool in)
 
 void ObserverMapSuperclass::zoomWindow()
 {
-
     //// Define o retangulo que envolve todos os objetos da cena
     //float x = fstNode->pos().x() + fstNode->boundingRect().width() + 4;
     //float y = fstNode->pos().y() - offsetState * 0.25;
@@ -326,7 +325,7 @@ void ObserverMapSuperclass::zoomWindow()
 
     zoomChanged(zoomRect, factWidth, factHeight);
     //// view->centerOn(zoomRect.center());  // nao fica centralizado
-    //// view->centerOn( scene->itemsBoundingRect().center() );  // nao fica centralizado
+    //// view->centerOn(scene->itemsBoundingRect().center());  // nao fica centralizado
     // view->centerOn(scene->sceneRect().center()); // fica quase centralizado
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
@@ -341,14 +340,14 @@ void ObserverMapSuperclass::butLegend_Clicked()
 
 void ObserverMapSuperclass::butZoomIn_Clicked()
 {
-    positionZoomVec = max(positionZoomVec-1,0);
+    positionZoomVec = max(positionZoomVec-1, 0);
     zoomComboBox->setCurrentIndex(positionZoomVec);
     zoomActivated(zoomComboBox->currentText());
 }
 
 void ObserverMapSuperclass::butZoomOut_Clicked()
 {
-    positionZoomVec = min(positionZoomVec+1,22);
+    positionZoomVec = min(positionZoomVec + 1, 22);
     zoomComboBox->setCurrentIndex(positionZoomVec);
     zoomActivated(zoomComboBox->currentText());
 }
@@ -445,7 +444,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
 
         foreach(const QString & str, attribs)
         {
-            if (! attribList.contains(str))
+            if (!attribList.contains(str))
                 attribList.append(str);
         }
     }
@@ -456,7 +455,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
         {
             qFatal("Error: Parameter legend \"%s\" not found. "
-                "Please check it in the model.", qPrintable( LEGEND_KEYS.at(j) ) );
+                "Please check it in the model.", qPrintable(LEGEND_KEYS.at(j)));
         }
     }
 
@@ -475,30 +474,30 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
     QTreeWidgetItem *item = 0;
     Attributes *attrib = 0;
     int hasObjectId = 0;
-    for( int i = 0; i < attribList.size(); i++)
+    for (int i = 0; i < attribList.size(); i++)
     {
-        if(attribList.at(i) == QString("objectId_")) hasObjectId++;
+        if (attribList.at(i) == QString("objectId_")) hasObjectId++;
         //qDebug() << "------------------" << attribList.at(i) << " " << hasObjectId;
-        if (((! mapAttributes->contains(attribs.at(i)))
+        if (((!mapAttributes->contains(attribs.at(i)))
                 && (attribList.at(i) != QString("x"))
                 && (attribList.at(i) != QString("y"))
                 && (attribList.at(i) != QString("objectId_")))
-            || (!mapAttributes->contains(attribList.at(i))
+            ||(!mapAttributes->contains(attribList.at(i))
                 && (hasObjectId > 1)
                 && (attribList.at(i) == QString("objectId_"))))
         {
             obsAttrib.append(attribList.at(i));
-            attrib = new Attributes(attribList.at(i), 2, 2, 2 );
+            attrib = new Attributes(attribList.at(i), 2, 2, 2);
             attrib->setVisible(true);
 
             //------- Recupera a legenda do arquivo e cria o objeto attrib
             if (legKeys.size() > 0)
             {
-                attrib->setDataType( (TypesOfData) legAttribs.at(type).toInt());
-                attrib->setGroupMode( (GroupingMode) legAttribs.at(mode ).toInt());
+                attrib->setDataType((TypesOfData) legAttribs.at(type).toInt());
+                attrib->setGroupMode((GroupingMode) legAttribs.at(mode).toInt());
                 attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// conta com o zero
                 attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// conta com o zero
-                attrib->setStdDeviation( (StdDev) legAttribs.at(stdDeviation ).toInt());
+                attrib->setStdDeviation((StdDev) legAttribs.at(stdDeviation).toInt());
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());
 
@@ -510,7 +509,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
                 bool ok = false;
                 int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
-                    attrib->setSymbol( QString( QChar(asciiCode) ));
+                    attrib->setSymbol(QString(QChar(asciiCode)));
                 else
                     attrib->setSymbol(legAttribs.at(symbol));
 
@@ -527,7 +526,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
                 attrib->setLabelList(labelList);
 
                 // Removes the legend items retrieved
-                for(int j = 0; j < LEGEND_ITENS; j++)
+                for (int j = 0; j < LEGEND_ITENS; j++)
                 {
                     legKeys.removeFirst();
                     legAttribs.removeFirst();
@@ -550,9 +549,9 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
         }
     }
 
-    //if(!hasObsId) obsAttrib.append("objectId_");
+    //if (!hasObsId) obsAttrib.append("objectId_");
 
-    if (! legendWindow)
+    if (!legendWindow)
         legendWindow = new LegendWindow(this);
     legendWindow->setValues(mapAttributes);
 
@@ -575,15 +574,15 @@ const TypesOfObservers ObserverMapSuperclass::getType()
 void ObserverMapSuperclass::connectTreeLayerSlot(bool on)
 {
     // conecta/disconecta o sinal do treeWidget com o slot
-    if (! on)
+    if (!on)
     {
-        QWidget::disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
-            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+        QWidget::disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
+            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
     }
     else
     {
-        QWidget::connect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
-            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+        QWidget::connect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
+            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
     }
 }
 
@@ -595,7 +594,7 @@ void ObserverMapSuperclass::treeLayers_itemChanged(QTreeWidgetItem * item, int /
     Attributes * attrib = mapAttributes->value(item->text(0));
     if (attrib)
     {
-        attrib->setVisible( (item->checkState(0) == Qt::Checked) ? true : false );
+        attrib->setVisible((item->checkState(0) == Qt::Checked) ? true : false);
         //painterWidget->calculateResult();
         //update();
         //QWidget::update();

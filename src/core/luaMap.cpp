@@ -33,7 +33,7 @@ luaMap::luaMap(lua_State* L)
 
 int luaMap::setObserver(lua_State* L)
 {
-	ObserverMap * obsg = (ObserverMap*) lua_touserdata(L, -1);
+	ObserverMap * obsg =(ObserverMap*) lua_touserdata(L, -1);
 	obs = obsg;
 	return 0;
 }

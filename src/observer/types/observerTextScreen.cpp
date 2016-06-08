@@ -86,16 +86,16 @@ bool ObserverTextScreen::draw(QDataStream &state)
 
         switch (typeOfData)
         {
-            case (TObsBool)		:
+            case(TObsBool)		:
                 if (contains)
                     valuesList.replace(attribList.indexOf(key),
-                                       (tokens.at(j).toInt() ? "true" : "false"));
+                                      (tokens.at(j).toInt() ? "true" : "false"));
                 break;
 
-            case (TObsDateTime)	:
+            case(TObsDateTime)	:
                 //break;
 
-            case (TObsNumber)		:
+            case(TObsNumber)		:
                 if (contains)
                     valuesList.replace(attribList.indexOf(key), tokens.at(j));
                 break;
@@ -128,7 +128,7 @@ bool ObserverTextScreen::headerDefined()
 bool ObserverTextScreen::write()
 {
     // insere o cabe?alho do arquivo
-    if (! header)
+    if (!header)
     {
         QString headers;
         for (int i = 0; i < attribList.size(); ++i)

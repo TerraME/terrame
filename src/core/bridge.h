@@ -41,9 +41,7 @@ of this software and its documentation.
 template <class T>
 class Interface
 {
-
 public:
-
     /// constructor
     Interface<T>() {
         pImpl_ = new T; pImpl_->attach();
@@ -57,7 +55,6 @@ public:
     /// copy constructor
     Interface<T>(const Interface& interf):pImpl_(interf.pImpl_) {
         pImpl_->attach();
-
     }
 
     /// assignment operator
@@ -72,7 +69,6 @@ public:
     }
 
 protected:
-
     /// reference for the implementation
     T *pImpl_;
 };
@@ -88,15 +84,15 @@ class Implementation
 {
 public:
     /// Constructor: zero references when the object is being built
-    Implementation(): refCount_ (0) {
+    Implementation(): refCount_(0) {
     }
 
     /// Increases the number of references to this object
-    void attach ()	{ refCount_++; }
+    void attach()	{ refCount_++; }
 
     /// Decreases the number of references to this object.
     /// Destroy it if there are no more references to it
-    void detach () {
+    void detach() {
         if (--refCount_ == 0)	{
             delete this;
         }
@@ -109,7 +105,6 @@ public:
     virtual ~Implementation() {}
 
 private:
-
     /// No copy allowed
     Implementation(const Implementation&);
 
@@ -117,7 +112,6 @@ private:
     Implementation& operator=(const Implementation&) {return *this;}
 
     int refCount_; 	/// the number of references to this class
-
 };
 
 #endif

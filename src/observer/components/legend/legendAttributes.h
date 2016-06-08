@@ -121,14 +121,14 @@ public:
      * Gets the maximum value in numeric format
      */
     double getToNumber() const;
-    
+
     /**
      * Sets the label for this object
      * \param l label value for this object
      * \see QString
      */
     void setLabel(const QString & l);
-    
+
     /**
      * Gets the label of this object
      */
@@ -149,7 +149,7 @@ public:
      * \param i unsigned integer that indexing a color
      */
     void setIdxColor(unsigned int i);
-    
+
     /**
      * Gets the index of color
      */
@@ -199,14 +199,14 @@ public:
     /**
      * Gets the attribute name
      */
-    QString getName() ;
+    QString getName();
 
     /**
      * Sets a pointer to a vector of double
      * \param v a pointer to a vector
      * \see QVector
      */
-    void setValues( QVector<double>* v);
+    void setValues(QVector<double>* v);
 
     /**
      * Gets the vector of double
@@ -218,7 +218,7 @@ public:
      * \param s a pointer to a QString vector
      * \see QVector, \see QString
      */
-    void setValues( QVector<QString>* s);
+    void setValues(QVector<QString>* s);
 
     /**
      * Gets the vector of QString
@@ -230,7 +230,7 @@ public:
      * \param b a pointer to a boolean vector
      * \see QVector, \see QString
      */
-    void setValues( QVector<bool>* b);
+    void setValues(QVector<bool>* b);
 
     /**
      * Gets the vector of boolean
@@ -261,7 +261,7 @@ public:
     * \param l a pointer to a ObsLegend QVector
     * \see QVector
     */
-    void setLegend( QVector<ObsLegend>* l);
+    void setLegend(QVector<ObsLegend>* l);
 
     /**
      * Gets the legend to this attribute
@@ -420,7 +420,7 @@ public:
      * \see QStringList
      */
     void setLabelList(const QStringList & labels);
-    
+
     /**
      * Adds a label into the labels list
      * \param value a QString label
@@ -428,7 +428,7 @@ public:
      * \see QString
      */
     int addLabelListItem(QString value);
-    
+
     /**
      * Gets the labels list
      */
@@ -468,7 +468,7 @@ public:
      * Otherwise, hides it.
      */
     void setVisible(bool visible);
-    
+
     /**
      * Gets the visibility
      */
@@ -501,7 +501,7 @@ public:
     /**
      * \deprecated Allocates the size of the vectors
      */
-    void setContainersSize(int );
+    void setContainersSize(int size);
 
     /**
      * Cleans all data structure
@@ -524,7 +524,7 @@ public:
      * \see QString
      */
     void setFontFamily(const QString &family);
-    
+
     /**
      * Sets a font
      * Only used for an Agent attribute.
@@ -532,7 +532,7 @@ public:
      * \see QFont
      */
     void setFont(const QFont &font);
-    
+
     /**
      * Gets the font object
      */
@@ -559,7 +559,7 @@ public:
      * \see QString
      */
     void setClassName(const QString &name);
-    
+
     /**
      * Gets the class name
      */
@@ -571,26 +571,26 @@ public:
      * \param y axis position
      */
     void appendLastPos(double x, double y);
-    
+
     /**
      * Gets the direction of the attribute using the
-     * coordanate (x,y) of the map
+     * coordanate(x,y) of the map
      * \param pos position of the attribute in the values list
      * \param x axis position
      * \param y axis position
      * \return angle of direction
      */
     qreal getDirection(int pos, double x, double y);
-    
+
 		/// Gets neighborhood values
 		/// \author Raian Vargas Maretto
                 QVector<QMap<QString, QList<double> > >* getNeighValues();
 
 		/// Sets neighborhood values
 		/// \author Raian Vargas Maretto
-                void setValues( QVector<QMap<QString, QList<double> > >* n);
+                void setValues(QVector<QMap<QString, QList<double> > >* n);
 
-		/// Adds a neighborhood to the attribute 
+		/// Adds a neighborhood to the attribute
 		/// \author Raian Vargas Maretto
                 void addValue(QMap<QString, QList<double> > n);
 
@@ -606,7 +606,7 @@ private:
      * Copy constructor
      */
     Attributes(const Attributes &);
-    
+
     /**
      * Assign operator
      */
@@ -621,7 +621,7 @@ private:
     vector<ColorBar> stdColorBarVec;
     QStringList labelList, valueList;
 	QVector<QMap<QString, QList<double> > > *neighValues;
-	double width; 
+	double width;
 
     QString attribName;
     double maxValue;
@@ -659,7 +659,7 @@ private:
     QList<QPair<QPointF, qreal> > lastPos;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif
 

@@ -185,7 +185,7 @@ protected:
      * Catchs the resize event
      * \see QResizeEvent
      */
-    void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent* ev);
 
 protected:
     /**
@@ -233,7 +233,7 @@ protected:
     QFrame *frameTools;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // OBSERVERSTATEMACHINE_H
 

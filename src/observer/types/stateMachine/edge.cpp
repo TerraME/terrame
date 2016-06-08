@@ -51,14 +51,11 @@ Edge::Edge(Node *orig, Node *dest, QGraphicsItem *parent, QGraphicsScene *scene)
     destiny->addEdge(this);
 }
 
-Edge::~Edge()
-{
-
-}
+Edge::~Edge() {}
 
 QRectF Edge::boundingRect() const
 {
-    qreal extra = (pen().width() + ARROW_SIZE) / 2.0;
+    qreal extra =(pen().width() + ARROW_SIZE) / 2.0;
 
     return QRectF(line().p1(), QSizeF(line().p2().x() - line().p1().x(),
                                       line().p2().y() - line().p1().y()))
@@ -79,7 +76,7 @@ void Edge::updatePosition()
     //                mapFromItem((QGraphicsItem *) origin, QPointF(0, 0)));
     //    setLine(line);
     // update();
-    // update( boundingRect() );
+    // update(boundingRect());
 }
 
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -135,7 +132,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     //    painter->setPen(QPen(Qt::blue, 4));
     //    painter->drawPoint(intersectPointDest);
 
-    QPointF m = (base.p1() + base.p2()) * 0.5 ;
+    QPointF m =(base.p1() + base.p2()) * 0.5;
     QLineF normal = QLineF(m, base.p2()).normalVector();
 
 
@@ -159,7 +156,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         angle = ::acos(base.dx() / base.length());
 
     if (base.dy() >= 0)
-        angle = (PI * 2) - angle;
+        angle =(PI * 2) - angle;
 
     QPointF arrowP1 = intersectPointDest + QPointF(sin(angle + PI / 3) * ARROW_SIZE,
                                                    cos(angle + PI / 3) * ARROW_SIZE);

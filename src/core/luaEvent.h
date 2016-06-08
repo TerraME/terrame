@@ -25,7 +25,7 @@ of this software and its documentation.
     \brief This file definitions for the luaEvent objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUAEVENT_H )
+#ifndef LUAEVENT_H
 #define LUAEVENT_H
 
 extern "C"
@@ -48,17 +48,16 @@ class luaEvent : public EventSubjectInterf, public Reference<luaEvent>
     lua_State *luaL;
     TypesOfSubjects subjectType;
     QStringList observedAttribs;
-    
+
     QString getAll(QDataStream& in, int observerId, QStringList& attribs);
     QString getChanges(QDataStream& in, int observerId, QStringList& attribs);
 
 public:
+    ///< Data structure issued by Luna<T>
+    static const char className[];
 
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
-    ///< Data structure issued by Luna<T>
-    static Luna<luaEvent>::RegType methods[]; 
+    static Luna<luaEvent>::RegType methods[];
 
 public:
     /// constructor
