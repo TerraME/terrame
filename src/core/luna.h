@@ -105,7 +105,9 @@ public:
         userdataType *ud =
                 static_cast<userdataType*>(luaL_checkudata(L, narg, T::className));
         //if (!ud) luaL_typerror(L, narg, T::className);
-		if (!ud) t_error(L, narg, T::className);
+		if (!ud)
+			t_error(L, narg, T::className);
+
         return ud->pT;  // pointer to T object
     }
 

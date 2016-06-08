@@ -60,35 +60,44 @@ int luaEnvironment::add(lua_State *L)
 
         Environment::add(timeSchedulerPair);
     }
-    else
-        if (isudatatype(L, -1, "TeCellularSpace"))
-        {
-            CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
-            Environment::add(*pCS);
-        }
-        else
-            if (isudatatype(L, -1, "TeLocalAutomaton"))
-            {
-                LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
-                Environment::add(*pAg);
-            }
-            else
-                if (isudatatype(L, -1, "TeGlobalAutomaton"))
-                {
-                    GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
-                    Environment::add(*pAg);
-                }
-                else
-                    if ((ud = luaL_checkudata(L, -1, "TeScale")) != NULL)
-                    {
-                        pair<Event, Environment>  timeEnvPair;
-                        Environment* pEnv = Luna<luaEnvironment>::check(L, -1);
+	else
+	{
+		if (isudatatype(L, -1, "TeCellularSpace"))
+		{
+			CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
+			Environment::add(*pCS);
+		}
+		else
+		{
+			if (isudatatype(L, -1, "TeLocalAutomaton"))
+			{
+				LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
+				Environment::add(*pAg);
+			}
+			else
+			{
+				if (isudatatype(L, -1, "TeGlobalAutomaton"))
+				{
+					GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
+					Environment::add(*pAg);
+				}
+				else
+				{
+					if ((ud = luaL_checkudata(L, -1, "TeScale")) != NULL)
+					{
+						pair<Event, Environment>  timeEnvPair;
+						Environment* pEnv = Luna<luaEnvironment>::check(L, -1);
 
-                        timeEnvPair.first = pEnv->getEvent();
-                        timeEnvPair.second = *pEnv;
+						timeEnvPair.first = pEnv->getEvent();
+						timeEnvPair.second = *pEnv;
 
-                        Environment::add(timeEnvPair);
-                    }
+						Environment::add(timeEnvPair);
+					}
+				}
+			}
+		}
+	}
+
     return 0;
 }
 
@@ -118,7 +127,7 @@ int luaEnvironment::addLocalAgent(lua_State *L) {
     Environment::add(*pAg);
 
     return 0;
-};
+}
 
 int luaEnvironment::addGlobalAgent(lua_State *L)
 {

@@ -608,12 +608,14 @@ void TeQtColorBar::paintEvent(QPaintEvent *)
             t = 3;
 
         int a = TeRound((double)i * pd);
-        if (vertical_){
+        if (vertical_)
+		{
             //painterPath.moveTo(0, a);
             //painterPath.lineTo(t, a);
             painter.drawLine(0, a, t, a);
         }
-        else{
+        else
+		{
             //painterPath.moveTo(a, h);
             //painterPath.lineTo(a, h-t);
             painter.drawLine(a, h, a, h-t);

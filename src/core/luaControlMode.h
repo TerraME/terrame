@@ -80,12 +80,14 @@ public:
             luaJumpCondition* const jump = Luna<luaJumpCondition>::check(L, -1);
             uniqueProcess.JumpCompositeInterf::add(jump);
         }
-        else
-            if ((ud = luaL_checkudata(L, -1, "TeFlow")) != NULL)
-            {
-                luaFlowCondition* const flow = Luna<luaFlowCondition>::check(L, -1);
-                uniqueProcess.FlowCompositeInterf::add(flow);
-            }
+		else
+		{
+			if ((ud = luaL_checkudata(L, -1, "TeFlow")) != NULL)
+			{
+				luaFlowCondition* const flow = Luna<luaFlowCondition>::check(L, -1);
+				uniqueProcess.FlowCompositeInterf::add(flow);
+			}
+		}
         return 0;
     }
 

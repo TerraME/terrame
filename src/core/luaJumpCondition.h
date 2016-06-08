@@ -122,8 +122,14 @@ public:
             lua_pop(L, 1);  // pop returned value
 
             if (result){
-                if (isGlobalAgent) { ::jump(event, agG, JumpCondition::getTarget());	}
-                else { JumpCondition::jump(agL, cell); }
+                if (isGlobalAgent)
+				{
+					::jump(event, agG, JumpCondition::getTarget());
+				}
+                else
+				{
+					JumpCondition::jump(agL, cell);
+				}
             }
 
             return result;

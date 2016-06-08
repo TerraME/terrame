@@ -1874,7 +1874,8 @@ void LegendWindow::commitFile()
             }
             colors.append(tabulation + "},");
         }
-        else{
+        else
+		{
             colors = "{},";
         }
 

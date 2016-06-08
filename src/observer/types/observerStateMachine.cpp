@@ -436,8 +436,8 @@ void ObserverStateMachine::butZoomOut_Clicked()
 {
     // qDebug() << "zoomComboBox->currentIndex(): " << zoomComboBox->currentIndex();
 
+	//if ((zoomComboBox->currentIndex() < 0) ||(zoomComboBox->currentIndex() > 22))
     if ((zoomComboBox->currentIndex() <= 23)) // ||(zoomComboBox->currentIndex() > 0))
-    //if ((zoomComboBox->currentIndex() < 0) ||(zoomComboBox->currentIndex() > 22))
     {
         positionZoomVec++;
         zoomComboBox->setCurrentIndex(positionZoomVec);

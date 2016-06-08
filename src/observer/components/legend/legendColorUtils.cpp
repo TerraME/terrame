@@ -629,7 +629,8 @@ void RGBtoHSV(const double& r, const double& g, const double& b, double& h, doub
 
     if (max != 0)
         s = delta / max;		// s
-    else {
+    else
+	{
         // r = g = b = 0		// s = 0, v is undefined
         s = 0;
         h = -1;

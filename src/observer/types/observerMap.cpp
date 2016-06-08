@@ -153,8 +153,8 @@ bool ObserverMap::draw(QDataStream &state)
 	//@RAIAN: Troquei esta comparacao porque nao estava criando a legenda da segunda camada (No meu caso, a vizinhanca)
     //if (/*decoded &&*/ legendWindow && (builtLegend < 1))
 	if ((legendWindow) && (builtLegend < mapAttributes->size()))
-	//@RAIAN: FIM
     {
+	//@RAIAN: FIM
         connectTreeLayerSlot(false);
         legendWindow->makeLegend();
         showLayerLegend();

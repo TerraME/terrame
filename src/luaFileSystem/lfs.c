@@ -201,12 +201,14 @@ static int get_dir(lua_State *L) {
   char *path;
   /* Passing (NULL, 0) is not guaranteed to work. Use a temp buffer and size instead. */
   char buf[LFS_MAXPATHLEN];
-  if ((path = getcwd(buf, LFS_MAXPATHLEN)) == NULL) {
+  if ((path = getcwd(buf, LFS_MAXPATHLEN)) == NULL)
+  {
     lua_pushnil(L);
     lua_pushstring(L, getcwd_error);
     return 2;
   }
-  else {
+  else
+  {
     lua_pushstring(L, path);
     return 1;
   }
@@ -217,16 +219,21 @@ static int get_dir(lua_State *L) {
 */
 static FILE *check_file(lua_State *L, int idx, const char *funcname) {
         FILE **fh =(FILE **)luaL_checkudata(L, idx, "FILE*");
-        if (fh == NULL) {
-                luaL_error(L, "%s: not a file", funcname);
-                return 0;
-        } else if (*fh == NULL) {
-                luaL_error(L, "%s: closed file", funcname);
-                return 0;
-        } else
-                return *fh;
+        if (fh == NULL)
+		{
+			luaL_error(L, "%s: not a file", funcname);
+            return 0;
+        }
+		else if (*fh == NULL)
+		{
+			luaL_error(L, "%s: closed file", funcname);
+            return 0;
+        }
+		else
+		{
+			return *fh;
+		}
 }
-
 
 /*
 **
@@ -681,7 +688,8 @@ static int file_utime(lua_State *L) {
 
         if (lua_gettop(L) == 1) /* set to current date/time */
                 buf = NULL;
-        else {
+        else
+		{
                 utb.actime =(time_t)luaL_optnumber(L, 2, 0);
                 utb.modtime =(time_t)luaL_optnumber(L, 3, utb.actime);
                 buf = &utb;

@@ -311,7 +311,8 @@ int luaNeighborhood::next(lua_State *)
         itNext = false;
         return 0;
     }
-    else{
+    else
+	{
         if (it != CellNeighborhood::end()) it++;
     }
     return 0;

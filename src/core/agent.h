@@ -349,7 +349,7 @@ public:
 		{
 			cellIndexPair.first.first = -1; cellIndexPair.first.second = -1;
 			cellIndexPair.second = NULL;
-			while (!currentControlMode->execute(event, this, cellIndexPair)){};
+			while (!currentControlMode->execute(event, this, cellIndexPair)){}
 			return true;
 		}
 
@@ -363,7 +363,7 @@ public:
 				cellIndexPair.second = cellIterator->second;
 
 				// execute the control mode
-				while (!currentControlMode->execute(event, this, cellIndexPair)){};
+				while (!currentControlMode->execute(event, this, cellIndexPair)){}
 
 				cellIterator++;
 			}

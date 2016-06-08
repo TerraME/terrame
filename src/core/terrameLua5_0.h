@@ -457,7 +457,7 @@ class luaEvent : public Event
 {
     int ref;
 public:
-    luaEvent(lua_State *L) {};
+    luaEvent(lua_State *L) {}
     ~luaEvent(void) { luaL_unref(L, LUA_REGISTRYINDEX, ref); }
 
     luaEvent(Event &event) { Event::config(event.getTime(), event.getFrequency()); }
@@ -514,7 +514,7 @@ class luaMessage : public Message
     int ref;
     string msg;
 public:
-    luaMessage(lua_State *L) {};
+    luaMessage(lua_State *L) {}
     ~luaMessage(void) { luaL_unref(L, LUA_REGISTRYINDEX, ref); }
 
     int config(lua_State *L) {
@@ -879,9 +879,16 @@ public:
             result = lua_toboolean(L, -1);
             lua_pop(L, 1);  // pop returned value
 
-            if (result) {
-                if (isGlobalAgent) { ::jump(event, agG, JumpCondition::getTarget());	}
-                else { JumpCondition::jump(agL, cell); }
+            if (result)
+			{
+                if (isGlobalAgent)
+				{
+					::jump(event, agG, JumpCondition::getTarget());
+				}
+                else
+				{
+					JumpCondition::jump(agL, cell);
+				}
             }
 
             return result;
@@ -979,12 +986,14 @@ public:
             luaJumpCondition* const jump = Luna<luaJumpCondition>::check(L, -1);
             uniqueProcess.JumpCompositeInterf::add(jump);
         }
-        else
-            if ((ud = luaL_checkudata(L, -1, "TeFlow")) != NULL)
-            {
-                luaFlowCondition* const flow = Luna<luaFlowCondition>::check(L, -1);
-                uniqueProcess.FlowCompositeInterf::add(flow);
-            }
+		else
+		{
+			if ((ud = luaL_checkudata(L, -1, "TeFlow")) != NULL)
+			{
+				luaFlowCondition* const flow = Luna<luaFlowCondition>::check(L, -1);
+				uniqueProcess.FlowCompositeInterf::add(flow);
+			}
+		}
         return 0;
     }
 
@@ -1037,35 +1046,44 @@ public:
 
             Environment::add(timeSchedulerPair);
         }
-        else
-            if ((ud = luaL_checkudata(L, -1, "TeCellularSpace")) != NULL)
-            {
-                CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
-                Environment::add(*pCS);
-            }
-            else
-                if ((ud = luaL_checkudata(L, -1, "TeLocalAutomaton")) != NULL)
-                {
-                    LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
-                    Environment::add(*pAg);
-                }
-                else
-                    if ((ud = luaL_checkudata(L, -1, "TeGlobalAutomaton")) != NULL)
-                    {
-                        GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
-                        Environment::add(*pAg);
-                    }
-                    else
-                        if ((ud = luaL_checkudata(L, -1, "TeScale")) != NULL)
-                        {
-                            pair<float, Environment>  timeEnvPair;
-                            Environment* pEnv = Luna<luaEnvironment>::check(L, -1);
+		else
+		{
+			if ((ud = luaL_checkudata(L, -1, "TeCellularSpace")) != NULL)
+			{
+				CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
+				Environment::add(*pCS);
+			}
+			else
+			{
+				if ((ud = luaL_checkudata(L, -1, "TeLocalAutomaton")) != NULL)
+				{
+					LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
+					Environment::add(*pAg);
+				}
+				else
+				{
+					if ((ud = luaL_checkudata(L, -1, "TeGlobalAutomaton")) != NULL)
+					{
+						GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
+						Environment::add(*pAg);
+					}
+					else
+					{
+						if ((ud = luaL_checkudata(L, -1, "TeScale")) != NULL)
+						{
+							pair<float, Environment>  timeEnvPair;
+							Environment* pEnv = Luna<luaEnvironment>::check(L, -1);
 
-                            timeEnvPair.first = pEnv->getTime();
-                            timeEnvPair.second = *pEnv;
+							timeEnvPair.first = pEnv->getTime();
+							timeEnvPair.second = *pEnv;
 
-                            Environment::add(timeEnvPair);
-                        }
+							Environment::add(timeEnvPair);
+						}
+					}
+				}
+			}
+		}
+
         return 0;
     }
 
