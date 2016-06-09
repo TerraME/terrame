@@ -40,7 +40,6 @@ namespace TerraMEObserver {
  */
 class Decoder
 {
-
 public:
     /**
      * Constructor
@@ -48,7 +47,7 @@ public:
      * \see Attributes
      * \see QHash, \see QString
      */
-    Decoder( QHash<QString, Attributes *> *mapAttributes);
+    Decoder(QHash<QString, Attributes *> *mapAttributes);
 
     /**
      * Destructor
@@ -94,7 +93,7 @@ private:
      * \param idx index of a token under decodification
      * \see QStringList
      */
-    inline bool consumeID(QString &id, QStringList &tokens, int &idx );
+    inline bool consumeID(QString &id, QStringList &tokens, int &idx);
 
     /**
      * Identification of the subject type
@@ -157,6 +156,6 @@ private:
     TypesOfSubjects parentSubjectType;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // DECODER_H

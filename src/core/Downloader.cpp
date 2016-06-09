@@ -45,7 +45,7 @@ void Downloader::listFinished(QNetworkReply *reply)
 {
 	QByteArray qba;
 
-	if(reply->error())
+	if (reply->error())
 	{
 		packagesPage = reply->errorString();
 	}
@@ -73,7 +73,7 @@ void Downloader::downloadFinished(QNetworkReply *reply)
 {
 	QByteArray qba;
 
-	if(reply->error())
+	if (reply->error())
 	{
 		packagesPage = reply->errorString();
 	}

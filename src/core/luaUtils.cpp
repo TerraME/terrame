@@ -43,8 +43,8 @@ void luaStackToQString(int size)
     printf("\n");
     for (int i = 0; i < size; i++)
     {
-        printf("%i - %s \t %p\n", i, lua_typename(luaL, lua_type(luaL, (i * -1) )),
-               lua_topointer(luaL,  (i * -1) ));
+        printf("%i - %s \t %p\n", i, lua_typename(luaL, lua_type(luaL, (i * -1))),
+               lua_topointer(luaL, (i * -1)));
     }
     printf("\n");
 }
@@ -65,7 +65,7 @@ int functionStackLevel(lua_State *L) {
             case LUA_TBOOLEAN: { /* booleans */
                 //printf("idx: %i bool: %s \t %p\n", i,
                 //       lua_toboolean(L, i) ? "true" : "false", lua_topointer(L, i));
-                //std::cout << (lua_toboolean(L, i) ? "true" : "false") << std::endl;
+                //std::cout <<(lua_toboolean(L, i) ? "true" : "false") << std::endl;
                 break;
             }
             case LUA_TNUMBER: { /* numbers */
@@ -83,7 +83,7 @@ int functionStackLevel(lua_State *L) {
     return i;
 }
 
-void stackDump (lua_State *L) {
+void stackDump(lua_State *L) {
     int i;
     int top = lua_gettop(L);
     printf("pilha Lua - top: %i\n ", top);
@@ -100,7 +100,7 @@ void stackDump (lua_State *L) {
             case LUA_TBOOLEAN: { /* booleans */
                 printf("idx: %i bool: %s \t %p\n", i,
                        lua_toboolean(L, i) ? "true" : "false", lua_topointer(L, i));
-                //std::cout << (lua_toboolean(L, i) ? "true" : "false") << std::endl;
+                //std::cout <<(lua_toboolean(L, i) ? "true" : "false") << std::endl;
                 break;
             }
             case LUA_TNUMBER: { /* numbers */
@@ -118,22 +118,22 @@ void stackDump (lua_State *L) {
     }
     printf("\n\n"); /* end the listing */
 }
-/// UTILIITARY FUNCTION - Checks if the value located at index "idx" in the Lua stack "L" is of the 
+/// UTILIITARY FUNCTION - Checks if the value located at index "idx" in the Lua stack "L" is of the
 /// user defined type "name".
 /// \param L is a Lua stack
 /// \param idx is a Lua stack position index
 /// \param name is an user defined Lua type name
 /// \return A boolean value: true case positive, otherwise false.
-int isudatatype (lua_State *L, int idx, const char *name)
+int isudatatype(lua_State *L, int idx, const char *name)
 { // returns true if a userdata is of a certain type
     int res;
-    if (lua_type(L,idx)!=LUA_TUSERDATA) return 0;
-    lua_getmetatable(L,idx);
-    luaL_newmetatable (L, name);
-    res = lua_compare(L,-2,-1,LUA_OPEQ);
-    lua_pop(L,2); // pop both tables (metatables) off
+    if (lua_type(L, idx) != LUA_TUSERDATA) return 0;
+    lua_getmetatable(L, idx);
+    luaL_newmetatable(L, name);
+    res = lua_compare(L, -2, -1, LUA_OPEQ);
+    lua_pop(L, 2); // pop both tables(metatables) off
     return res;
-} 
+}
 
 /// UTILITARY FUNCTION - Converts a TerraLib object ID to (x,y) coordinates
 /// \param objId is a "const char const *" containing the object ID
@@ -147,8 +147,8 @@ void objectId2coords(const char *objId, int &x, int &y)
     char aux[255] = "";
 
     strncpy(aux, objId, strlen(objId));
-    strcpy( col, strtok( (char*)aux, seps ));
-    strcpy( lin,  strtok( NULL, seps ) );
+    strcpy(col, strtok((char*)aux, seps));
+    strcpy(lin,  strtok(NULL, seps));
     //cout << "{" << col <<","<< lin <<"}" << endl;
     x = atoi(col);
     y = atoi(lin);

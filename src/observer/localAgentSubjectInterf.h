@@ -40,7 +40,7 @@ of this software and its documentation.
  * \author Antonio Jos? da Cunha Rodrigues
  * \author Tiago Garcia de Senna Carneiro
  */
-class LocalAgentSubjectInterf : public LocalAgent, public SubjectInterf 
+class LocalAgentSubjectInterf : public LocalAgent, public SubjectInterf
 {
 public:
     /**

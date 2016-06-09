@@ -40,7 +40,7 @@ of this software and its documentation.
  * \author Tiago Garcia de Senna Carneiro
  * \file globalAgentSubjectInterf.h
  */
-class GlobalAgentSubjectInterf : public GlobalAgent, public SubjectInterf 
+class GlobalAgentSubjectInterf : public GlobalAgent, public SubjectInterf
 {
 public:
     /**

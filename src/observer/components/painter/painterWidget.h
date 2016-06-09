@@ -55,7 +55,7 @@ public:
      * \see QWidget, \see QHash, \see QString
      */
     PainterWidget(QHash<QString, Attributes*> *mapAttributes, QWidget *parent = 0);
-    
+
     /**
      * Destructor
      */
@@ -85,7 +85,7 @@ public:
      * \param size new size of the object
      * \see QSize
      */
-    bool rescale(QSize size); 
+    bool rescale(QSize size);
 
     /** 
      * Rescale the image according the CellularSpace dimension
@@ -94,7 +94,7 @@ public:
      */
     void resizeImage(const QSize &size);
 
-    // / Gets the original size of 
+    // / Gets the original size of
     // QSize getOriginalSize();
 
     /** 
@@ -172,32 +172,32 @@ protected:
      * Paints event of the user interface object
      * \see QPaintEvent
      */
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *ev);
 
     /**
      * Catchs the mouse press event inside the user interface object
      * \see QMouseEvent
      */
-    void mousePressEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent *ev);
 
     /**
      * Catchs the mouse move event inside the user interface object
      * \see QMouseEvent
      */
-    void mouseMoveEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *ev);
 
     /**
      * Catchs the mouse release event inside the user interface object
      * \see QMouseEvent
      */
-    void mouseReleaseEvent(QMouseEvent *);
-        
+    void mouseReleaseEvent(QMouseEvent *ev);
+
     /**
      * Catchs the resize event inside the user interface object
      * \see QResizeEvent
      */
-    void resizeEvent(QResizeEvent *);
-    
+    void resizeEvent(QResizeEvent *ev);
+
     //void wheelEvent(QWheelEvent *);
 
 private:
@@ -236,6 +236,6 @@ private:
     QCursor zoomInCursor, zoomOutCursor;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

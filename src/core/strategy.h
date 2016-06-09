@@ -32,17 +32,14 @@ of this software and its documentation.
 template <T>
 class StrategyContext
 {
-
     int execute() { return theStrategy.execute() }
 
 private:
-
     T theStrategy;
 }
 
 class Strategy
 {
-
     int execute(Cell& cell) = 0;
 }
 

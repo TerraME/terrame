@@ -62,12 +62,11 @@ class SocietyImpl : public Implementation
     map<Agent*, ControlMode*> targetControlMode_; ///< each cell keeps track of the current state of each automaton whitin itself
 
 public:
-
     /// Copies the block of memory used by the implementation of cell.
     /// \return A pointer to the copied block of memory (the cells implementation).
     SocietyImpl* clone(void)
     {
-        SocietyImpl *copy = (SocietyImpl*) new char[sizeof(SocietyImpl)];
+        SocietyImpl *copy =(SocietyImpl*) new char[sizeof(SocietyImpl)];
         memcpy(copy, this, sizeof(SocietyImpl));
         return copy;
     }
@@ -84,10 +83,9 @@ public:
     /// \param  agent is a pointer to an agent within the cell.
     /// \param controlMode is a pointer to the new agent tracked control mode (discrete state).
     void attachControlMode(Agent *agent, ControlMode *controlMode) {
-
         // melhorar
         map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
-        if(location != targetControlMode_.end())
+        if (location != targetControlMode_.end())
         {
             targetControlMode_.erase(agent);
             targetControlMode_.insert(map<Agent*,
@@ -95,7 +93,6 @@ public:
         }
         else targetControlMode_.insert(map<Agent*,
         		ControlMode*>::value_type(agent, controlMode));
-
     }
 
     /// Releases the tracked state (control mode) of a agent within the cell
@@ -134,10 +131,9 @@ public:
         map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
         if (location != targetControlMode_.end())
         {
-
             return location->second;
         }
-        return (ControlMode*)0;
+        return(ControlMode*)0;
     }
 
     /// Gets the simulation ticks elapsed since the last change in the cell
@@ -146,7 +142,7 @@ public:
 
     ///  Sets the Society's internal state latency counter to "value".
     /// \param value is a positive number (next version this should be checked).
-    void setLatency(int value) { if(value >= 0) latency = value; }
+    void setLatency(int value) { if (value >= 0) latency = value; }
 
     /// Gets the list of neighborhood graphs from the cell
     /// \return A reference to the list of neighborhoods.
@@ -157,7 +153,6 @@ public:
     /// Sets the list of neighborhood graphs from the cell
     /// \param neighs is a reference to the list of neighborhoods.
     void setNeighborhoods(NeighCmpstInterf& neighs) { neighborhoods_ = neighs; }
-
 };
 
 /**
@@ -182,7 +177,7 @@ protected:
     /// \return A pointer to the copied block of memory (the handle of the cell).
     Society& clone(void)
     {
-        Society* copy = (Society*) new char[sizeof(Society)];
+        Society* copy =(Society*) new char[sizeof(Society)];
 
         memcpy(copy, this, sizeof(Society));
         copy->pImpl_ = pImpl_->clone();
@@ -191,10 +186,9 @@ protected:
     }
 
 public:
-
     /// constructor
     ///
-    Society():duplicated(false) { past = (Society*) &clone(); }
+    Society():duplicated(false) { past =(Society*) &clone(); }
 
     /// HANDLE - Updates the tracked state (control mode) of a certain agent within the cell.
     /// \param  agent is a pointer to an agent within the cell.
@@ -255,10 +249,9 @@ public:
     {
         SocietyImpl* p;
 
-        if(sizeMem <= 0) return;
-        if(!duplicated) {
-
-            past = (Society*)new unsigned char[sizeMem];
+        if (sizeMem <= 0) return;
+        if (!duplicated) {
+            past =(Society*)new unsigned char[sizeMem];
             past->pImpl_ = new SocietyImpl();
             duplicated = true;
         }
@@ -267,7 +260,6 @@ public:
         memcpy(past, this, sizeMem);
         memcpy(p, this->pImpl_, sizeof(SocietyImpl));
         past->pImpl_ = p;
-
     }
 };
 #endif

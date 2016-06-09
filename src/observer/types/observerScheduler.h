@@ -156,9 +156,8 @@ private:
     QStringList attributes;
 
     QHash<QString, QTreeWidgetItem *> hashTreeItem;
-
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

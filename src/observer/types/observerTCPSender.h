@@ -46,8 +46,8 @@ class ObserverTCPSender : public QObject, public ObserverInterf
 {
     Q_OBJECT
 public:
-    ObserverTCPSender(Subject *subj, QObject *parent = 0) {};
-    virtual ~ObserverTCPSender() {};
+    ObserverTCPSender(Subject *subj, QObject *parent = 0) {}
+    virtual ~ObserverTCPSender() {}
 
     bool connectTo(quint16 port);
     void disconnectFromHost();
@@ -92,7 +92,7 @@ public:
 
 signals:
     void addState(const QByteArray &);
-    void setModelTimeSignal(double);
+    void setModelTimeSignal(double t1);
     void abort();
 
 public slots:
@@ -122,6 +122,6 @@ private:
     SenderGUI *senderGUI;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif // OBSERVERTCPSENDER_H

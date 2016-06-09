@@ -50,32 +50,32 @@ luaTrajectory::~luaTrajectory(void)
     luaRegion::clear();
 }
 
-int luaTrajectory::add( lua_State* L)
+int luaTrajectory::add(lua_State* L)
 {
     int i = luaL_checknumber(L, -2);
-    luaCell *cell = (luaCell*)Luna<luaCell>::check(L,-1);
+    luaCell *cell =(luaCell*)Luna<luaCell>::check(L, -1);
     CellIndex idx;
     idx.first = i;
     idx.second = 0;
-    luaRegion::add( idx, cell);
+    luaRegion::add(idx, cell);
 
     return 0;
 }
 
-int luaTrajectory::clear( lua_State *)
+int luaTrajectory::clear(lua_State *)
 {
     luaRegion::clear();
     return 0;
 }
 
-int luaTrajectory::createObserver( lua_State *L )
+int luaTrajectory::createObserver(lua_State *L)
 {
     // recupero a referencia da celula
     Reference<luaTrajectory>::getReference(luaL);
 
     // flags para a defini??o do uso de compress?o
     // na transmiss?o de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // dos observadores Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
     // recupero a tabela de atributos da celula
@@ -83,7 +83,7 @@ int luaTrajectory::createObserver( lua_State *L )
 
     // N?o modifica em nada a pilha recupera o enum referente ao tipo
     // do observer
-    int typeObserver = (int)luaL_checkinteger(luaL, 1);
+    int typeObserver =(int)luaL_checkinteger(luaL, 1);
 
     if ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
     {
@@ -91,10 +91,10 @@ int luaTrajectory::createObserver( lua_State *L )
 
         // qDebug() << "Recupera a tabela de parametros";
         lua_pushnil(luaL);
-        while(lua_next(luaL, top - 1) != 0)
+        while (lua_next(luaL, top - 1) != 0)
         {
             QString key;
-            
+
             if (lua_type(luaL, -2) == LUA_TSTRING)
             {
                 key = luaL_checkstring(luaL, -2);
@@ -109,7 +109,7 @@ int luaTrajectory::createObserver( lua_State *L )
             //        key = aux;
             //    }
             //}
-            
+
             switch (lua_type(luaL, -1))
             {
             case LUA_TBOOLEAN:
@@ -134,12 +134,11 @@ int luaTrajectory::createObserver( lua_State *L )
                     QString k;
 
                     lua_pushnil(luaL);
-                    while(lua_next(luaL, pos) != 0)
+                    while (lua_next(luaL, pos) != 0)
                     {
-
                         if (lua_type(luaL, -2) == LUA_TSTRING)
                         {
-                            obsParams.append( luaL_checkstring(luaL, -2) );
+                            obsParams.append(luaL_checkstring(luaL, -2));
                         }
 
                         switch (lua_type(luaL, -1))
@@ -172,11 +171,11 @@ int luaTrajectory::createObserver( lua_State *L )
 
         // qDebug() << "Recupera a tabela de atributos";
         lua_pushnil(luaL);
-        while(lua_next(luaL, top - 2) != 0)
+        while (lua_next(luaL, top - 2) != 0)
         {
             if (lua_type(luaL, -1) == LUA_TSTRING)
             {
-                // QString key( luaL_checkstring(luaL, -1) );
+                // QString key(luaL_checkstring(luaL, -1));
                 obsAttribs.push_back(luaL_checkstring(luaL, -1));
             }
             lua_pop(luaL, 1);
@@ -184,10 +183,10 @@ int luaTrajectory::createObserver( lua_State *L )
 
         // Retrieves all subject attributes
         lua_pushnil(luaL);
-        while(lua_next(luaL, top) != 0)
+        while (lua_next(luaL, top) != 0)
         {
             if (lua_type(luaL, -2) == LUA_TSTRING)
-                allAttribs.append( luaL_checkstring(luaL, -2) );
+                allAttribs.append(luaL_checkstring(luaL, -2));
             lua_pop(luaL, 1);
         }
 
@@ -201,16 +200,16 @@ int luaTrajectory::createObserver( lua_State *L )
             // Verifica se o atributo informado realmente existe na celula
             for (int i = 0; i < obsAttribs.size(); i++)
             {
-                if (! observedAttribs.contains(obsAttribs.at(i)) )
+                if (!observedAttribs.contains(obsAttribs.at(i)))
                     observedAttribs.push_back(obsAttribs.at(i));
-        
-                if (! allAttribs.contains(obsAttribs.at(i)))
+
+                if (!allAttribs.contains(obsAttribs.at(i)))
                 {
-					string err_out = string("Error: Attribute name '" ) + string (qPrintable(obsAttribs.at(i))) + string("' not found.");
+					string err_out = string("Error: Attribute name '") + string(qPrintable(obsAttribs.at(i))) + string("' not found.");
 					lua_getglobal(L, "customError");
-					lua_pushstring(L,err_out.c_str());
-					lua_pushnumber(L,5);
-					lua_call(L,2,0);
+					lua_pushstring(L, err_out.c_str());
+					lua_pushnumber(L, 5);
+					lua_call(L, 2, 0);
                     return -1;
                 }
             }
@@ -226,7 +225,7 @@ int luaTrajectory::createObserver( lua_State *L )
         switch (typeObserver)
         {
         case TObsTextScreen:
-            obsText = (ObserverTextScreen*) 
+            obsText =(ObserverTextScreen*)
                 TrajectorySubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
             {
@@ -240,7 +239,7 @@ int luaTrajectory::createObserver( lua_State *L )
             break;
 
         case TObsLogFile:
-            obsLog = (ObserverLogFile*) 
+            obsLog =(ObserverLogFile*)
                 TrajectorySubjectInterf::createObserver(TObsLogFile);
             if (obsLog)
             {
@@ -254,7 +253,7 @@ int luaTrajectory::createObserver( lua_State *L )
             break;
 
         case TObsTable:
-            obsTable = (ObserverTable *) 
+            obsTable =(ObserverTable *)
                 TrajectorySubjectInterf::createObserver(TObsTable);
             if (obsTable)
             {
@@ -268,7 +267,7 @@ int luaTrajectory::createObserver( lua_State *L )
             break;
 
         case TObsDynamicGraphic:
-            obsGraphic = (ObserverGraphic *) 
+            obsGraphic =(ObserverGraphic *)
                 TrajectorySubjectInterf::createObserver(TObsDynamicGraphic);
             if (obsGraphic)
             {
@@ -283,7 +282,7 @@ int luaTrajectory::createObserver( lua_State *L )
             break;
 
         case TObsGraphic:
-            obsGraphic = (ObserverGraphic *) 
+            obsGraphic =(ObserverGraphic *)
                 TrajectorySubjectInterf::createObserver(TObsGraphic);
             if (obsGraphic)
             {
@@ -297,7 +296,7 @@ int luaTrajectory::createObserver( lua_State *L )
             break;
 
         case TObsUDPSender:
-            obsUDPSender = (ObserverUDPSender *) 
+            obsUDPSender =(ObserverUDPSender *)
                 TrajectorySubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
             {
@@ -315,18 +314,18 @@ int luaTrajectory::createObserver( lua_State *L )
             break;
 
         default:
-            if (execModes != Quiet )
+            if (execModes != Quiet)
             {
                 char str[12];
                 sprintf(str, "%d", typeObserver);
                 string err_out = string("Warning: In this context, the code '")
                         + string(str) + string("' does not correspond to a valid type of Observer.");
                 lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                lua_pushstring(L, err_out.c_str());
+                lua_pushnumber(L, 4);
+                lua_call(L, 2, 0);
             }
-            return 0; 
+            return 0;
         }
 
 		if (obsLog)
@@ -377,7 +376,7 @@ int luaTrajectory::createObserver( lua_State *L )
             obsGraphic->setLegendPosition();
 
             // Takes titles of three first locations
-            obsGraphic->setTitles(cols.at(0), cols.at(1), cols.at(2));   
+            obsGraphic->setTitles(cols.at(0), cols.at(1), cols.at(2));
             cols.removeFirst(); // remove graphic title
             cols.removeFirst(); // remove axis x title
             cols.removeFirst(); // remove axis y title
@@ -396,24 +395,24 @@ int luaTrajectory::createObserver( lua_State *L )
             obsUDPSender->setPort(cols.at(0).toInt());
 
 		    // broadcast
-		    if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
+		    if ((cols.size() == 1) ||((cols.size() == 2) && cols.at(1).isEmpty()))
 		    {
 		        obsUDPSender->addHost(BROADCAST_HOST);
 		    }
 		    else
 		    {
 		        // multicast or unicast
-		        for(int i = 1; i < cols.size(); i++)
+		        for (int i = 1; i < cols.size(); i++)
                 {
-		            if (! cols.at(i).isEmpty())
+		            if (!cols.at(i).isEmpty())
 		                obsUDPSender->addHost(cols.at(i));
 		        }
 		    }
 		    lua_pushnumber(luaL, obsId);
 		    return 1;
 		}
-    }  
-    //   ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
+    }
+    //  ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
     // Creation of spatial observers
     else
     {
@@ -426,10 +425,10 @@ int luaTrajectory::createObserver( lua_State *L )
 
         // Recupera os parametros
         lua_pushnil(luaL);
-        while(lua_next(luaL, top - 1) != 0)
+        while (lua_next(luaL, top - 1) != 0)
         {
             // Recupera o ID do observer map
-            if ( (lua_isnumber(luaL, -1) && (! getObserverId)) )
+            if ((lua_isnumber(luaL, -1) && (!getObserverId)))
             {
                 obsId = luaL_checknumber(luaL, -1);
                 getObserverId = true;
@@ -442,7 +441,7 @@ int luaTrajectory::createObserver( lua_State *L )
                 int paramTop = lua_gettop(luaL);
 
                 lua_pushnil(luaL);
-                while(lua_next(luaL, paramTop) != 0)
+                while (lua_next(luaL, paramTop) != 0)
                 {
                     if (isudatatype(luaL, -1, "TeCellularSpace"))
                     {
@@ -460,7 +459,7 @@ int luaTrajectory::createObserver( lua_State *L )
                             double numAux;
                             QString strAux;
 
-                            switch( lua_type(luaL, -1) )
+                            switch (lua_type(luaL, -1))
                             {
                             case LUA_TBOOLEAN:
                                 boolAux = lua_toboolean(luaL, -1);
@@ -490,14 +489,14 @@ int luaTrajectory::createObserver( lua_State *L )
         QString errorMsg = QString("\nError: The Observer ID \"%1\" was not found. "
             "Check the declaration of this observer.\n").arg(obsId);
 
-        if (! cellSpace)
+        if (!cellSpace)
             qFatal("%s", qPrintable(errorMsg));
 
         if (typeObserver == TObsMap)
         {
-            obsMap = (AgentObserverMap *)cellSpace->getObserver(obsId);
+            obsMap =(AgentObserverMap *)cellSpace->getObserver(obsId);
 
-            if (! obsMap)
+            if (!obsMap)
                 qFatal("%s", qPrintable(errorMsg));
 
             obsMap->registry(this);
@@ -507,16 +506,16 @@ int luaTrajectory::createObserver( lua_State *L )
 
         // Recupera os atributos
         lua_pushnil(luaL);
-        while(lua_next(luaL, top - 2) != 0)
+        while (lua_next(luaL, top - 2) != 0)
         {
             const char * key = luaL_checkstring(luaL, -1);
             obsAttribs.push_back(QString(key));
             lua_pop(luaL, 1);
         }
-        
-        for(int i = 0; i < obsAttribs.size(); i++)
+
+        for (int i = 0; i < obsAttribs.size(); i++)
         {
-            if (! observedAttribs.contains(obsAttribs.at(i)) )
+            if (!observedAttribs.contains(obsAttribs.at(i)))
                 observedAttribs.push_back(obsAttribs.at(i));
         }
 
@@ -539,7 +538,7 @@ const TypesOfSubjects luaTrajectory::getType()
     return subjectType;
 }
 
-int luaTrajectory::notify(lua_State *L )
+int luaTrajectory::notify(lua_State *L)
 {
     double time = luaL_checknumber(L, -1);
     TrajectorySubjectInterf::notify(time);
@@ -560,13 +559,13 @@ QString luaTrajectory::getChanges(QDataStream& in, int observerId , QStringList 
 #ifdef TME_BLACK_BOARD
 QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId, QStringList & /* attribs */)
 #else
-QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs )
+QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs)
 #endif
 {
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 
-    switch(obsCurrentState)
+    switch (obsCurrentState)
     {
     case 0:
 #ifdef TME_BLACK_BOARD
@@ -575,7 +574,7 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId,
         content = getAll(in, observerId, attribs);
 #endif
         // serverSession->setState(observerId, 1);
-        // if (execModes == Quiet )
+        // if (execModes == Quiet)
         // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
         break;
 
@@ -586,7 +585,7 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId,
         content = getChanges(in, observerId, attribs);
 #endif
         // serverSession->setState(observerId, 0);
-        // if (execModes == Quiet )
+        // if (execModes == Quiet)
         // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
         break;
     }
@@ -619,7 +618,7 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
     QString text, key, attrs, elements;
 
     lua_pushnil(luaL);
-    while(lua_next(luaL, pos ) != 0)
+    while (lua_next(luaL, pos) != 0)
     {
         if (lua_type(luaL, -2) == LUA_TSTRING)
         {
@@ -636,18 +635,18 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
             }
         }
 
-        if ((attribs.contains(key)) || (key == "cells"))
+        if ((attribs.contains(key)) ||(key == "cells"))
         {
             attrCounter++;
             attrs.append(key);
             attrs.append(PROTOCOL_SEPARATOR);
 
-            switch( lua_type(luaL, -1) )
+            switch (lua_type(luaL, -1))
             {
             case LUA_TBOOLEAN:
                 attrs.append(QString::number(TObsBool));
                 attrs.append(PROTOCOL_SEPARATOR);
-                attrs.append(QString::number( lua_toboolean(luaL, -1)));
+                attrs.append(QString::number(lua_toboolean(luaL, -1)));
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
@@ -662,17 +661,17 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
 
             case LUA_TSTRING:
                 text = QString(luaL_checkstring(luaL, -1));
-                attrs.append(QString::number(TObsText) );
+                attrs.append(QString::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
-                attrs.append( (text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text) );
+                attrs.append((text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text));
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
             case LUA_TTABLE:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1) );
-                    attrs.append(QString::number(TObsText) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append("Lua-Address(TB): " + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
@@ -684,7 +683,7 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
                         int top = lua_gettop(luaL);
 
                         lua_pushnil(luaL);
-                        while(lua_next(luaL, top) != 0)
+                        while (lua_next(luaL, top) != 0)
                         {
                             int cellTop = lua_gettop(luaL);
 
@@ -692,7 +691,7 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
                             lua_gettable(luaL, cellTop);
 
                             luaCell*  cell;
-                            cell = (luaCell*)Luna<luaCell>::check(L, -1);
+                            cell =(luaCell*)Luna<luaCell>::check(L, -1);
                             lua_pop(luaL, 1);
 
                             // luaCell->pop(...) requer uma celula no topo da pilha
@@ -710,8 +709,8 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
             case LUA_TUSERDATA	:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1) );
-                    attrs.append(QString::number(TObsText) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append("Lua-Address(UD): " + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
@@ -721,8 +720,8 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
             case LUA_TFUNCTION:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1) );
-                    attrs.append(QString::number(TObsText) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString("Lua-Address(FT): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
@@ -732,8 +731,8 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
             default:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1) );
-                    attrs.append(QString::number(TObsText) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString("Lua-Address(O): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
@@ -746,11 +745,11 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
 
     // #attrs
     msg.append(QString::number(attrCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
 
     // #elements
     msg.append(QString::number(elementCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
     msg.append(attrs);
 
     msg.append(PROTOCOL_SEPARATOR);
@@ -767,16 +766,16 @@ int luaTrajectory::kill(lua_State *luaL)
 
     result = TrajectorySubjectInterf::kill(id);
 
-    if (! result)
+    if (!result)
     {
         if (cellSpace)
         {
             Observer *obs = cellSpace->getObserverById(id);
 
             if (obs)
-            {        
+            {
                 if (obs->getType() == TObsMap)
-                    result = ((AgentObserverMap *)obs)->unregistry(this);
+                    result =((AgentObserverMap *)obs)->unregistry(this);
             }
         }
     }

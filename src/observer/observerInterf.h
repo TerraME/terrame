@@ -144,12 +144,12 @@ public:
     /**
      * \copydoc TerraMEObserver::Subject::attach
      */
-    void attach(Observer *);
+    void attach(Observer *obs);
 
     /**
      * \copydoc TerraMEObserver::Subject::detach
      */
-    void detach(Observer *);
+    void detach(Observer *obs);
 
     /**
      * \copydoc TerraMEObserver::Subject::getObserverById
@@ -159,14 +159,14 @@ public:
     /**
      * \copydoc TerraMEObserver::Subject::notify
      */
-    void notify(double );
+    void notify(double time);
 
     /**
      * \copydoc TerraMEObserver::Subject::getState
      */
     virtual QDataStream& getState(QDataStream &state, Subject *subj,
                                   int observerId, QStringList &attribs) = 0;
-    
+
     /**
      * \copydoc TerraMEObserver::Subject::getType
      */

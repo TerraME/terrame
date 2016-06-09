@@ -80,7 +80,6 @@ class SchedulerImpl: public Implementation
     Event time_; ///< Scheduler simulation timer
 
 public:
-
     /// Default constructor
     SchedulerImpl(void)
     {
@@ -126,7 +125,7 @@ public:
 
     // TO CORRECT ADD METHOD: needs to change here, for when an event is added to a scheduler
     // the whole simulation structure should be changed: the tree of schedulers and
-    // environments tree (scales)
+    // environments tree(scales)
 
     /// Adds a new pair Event-Messsage to the Scheduler queue.
     /// \param event is a reference to the Event being added
@@ -148,7 +147,7 @@ public:
         EventMessagePairCompositeInterf::iterator iterator;
 
         iterator = eventMessageQueue.begin();
-        if(iterator != eventMessageQueue.end())
+        if (iterator != eventMessageQueue.end())
         {
             Event& event = eventMessagePair.first = iterator->first;
             Message *message = eventMessagePair.second = iterator->second;
@@ -169,7 +168,7 @@ public:
 
         if (!eventMessageQueue.empty())
         {
-            Event& event = (Event&)iterator->first;
+            Event& event =(Event&)iterator->first;
             return event;
         }
         return time_;
@@ -187,14 +186,14 @@ public:
         EventMessagePairCompositeInterf::iterator iterator;
 
         iterator = eventMessageQueue.begin();
-        while(iterator != eventMessageQueue.end() && time_.getTime() <= finalTime)
+        while (iterator != eventMessageQueue.end() && time_.getTime() <= finalTime)
         {
             while (paused) qApp->processEvents();
 
             event = eventMessagePair.first = iterator->first;
             message = eventMessagePair.second = iterator->second;
 
-            if(event.getTime() > finalTime)
+            if (event.getTime() > finalTime)
 			{
 				time_ = finalTime;
 				break;
@@ -204,7 +203,7 @@ public:
             Message msg = *message; // it's Important to keep the message implementation alive
             eventMessageQueue.erase(iterator);
 
-            if(message->execute(event))
+            if (message->execute(event))
 			{
                 eventMessagePair.first.setTime(double(time_.getTime() + event.getPeriod()));
                 eventMessageQueue.add(eventMessagePair);

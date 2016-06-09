@@ -33,7 +33,7 @@ of this software and its documentation.
 #include "visualArrangement.h"
 
 ObserverTable::ObserverTable(Subject *subj, QWidget *parent)
-    : QDialog(parent), ObserverInterf( subj ), QThread()
+    : QDialog(parent), ObserverInterf(subj), QThread()
 {
     observerType = TObsTable;
     subjectType = TObsUnknown;
@@ -94,7 +94,7 @@ void ObserverTable::setAttributes(QStringList &attribs)
     attribList = attribs;
 
     QTreeWidgetItem *item;
-    for(int i = 0; i < attribs.size(); i++)
+    for (int i = 0; i < attribs.size(); i++)
     {
         item = new QTreeWidgetItem(tableWidget);
         item->setText(0, attribs.at(i));
@@ -126,20 +126,20 @@ bool ObserverTable::draw(QDataStream &state)
 
         bool contains = attribList.contains(key);
 
-        if(contains)
+        if (contains)
             item = tableWidget->topLevelItem(attribList.indexOf(key));
 
         switch (typeOfData)
         {
-            case (TObsBool):
+            case(TObsBool):
                 if (contains)
                     item->setText(1, (tokens.at(j).toInt() ? "true" : "false"));
                 break;
 
-            case (TObsDateTime):
+            case(TObsDateTime):
                 //break;
 
-            case (TObsNumber):
+            case(TObsNumber):
                 if (contains)
                     item->setText(1, tokens.at(j));
                 break;
@@ -203,7 +203,7 @@ void ObserverTable::save(std::string file, std::string extension)
 void ObserverTable::saveAsImage(std::string file, std::string extension)
 {
 	raise();
-	activateWindow();	
+	activateWindow();
       QPixmap pixmap = grab();
       pixmap.save(file.c_str(), extension.c_str());
 }

@@ -74,19 +74,19 @@ const char *const stdDevNames[] =
 // const char *getSubjectName(TypesOfSubjects type)
 const char *getSubjectName(int type)
 {
-    return (type == TObsUnknown) ? "Unknown" : subjectTypesNames[type];
+    return(type == TObsUnknown) ? "Unknown" : subjectTypesNames[type];
 }
 
 //const char *getObserverName(TypesOfObservers type)
 const char *getObserverName(int type)
 {
-    return (type == TObsUndefined) ? "undefined" : observersTypesNames[type];
+    return(type == TObsUndefined) ? "undefined" : observersTypesNames[type];
 }
 
 //const char *getDataName(TypesOfData type)
 const char *getDataName(int type)
 {
-    return (type == TObsUnknownData) ? "UnknownData" : dataTypesNames[type];
+    return(type == TObsUnknownData) ? "UnknownData" : dataTypesNames[type];
 }
 
 //const char *getGroupingName(GroupingMode type)
@@ -98,7 +98,7 @@ const char *getGroupingName(int type)
 //const char *getStdDevNames(StdDev type)
 const char *getStdDevNames(int type)
 {
-    return (type == TObsNone) ? "None" : stdDevNames[type];
+    return(type == TObsNone) ? "None" : stdDevNames[type];
 }
 
 
@@ -108,8 +108,8 @@ bool sortAttribByType(Attributes *a, Attributes *b)
     return a->getType() < b->getType();
 }
 
-bool sortByClassName(const QPair<Subject *, QString> & pair1, 
-    const QPair<Subject *, QString> & pair2) 
+bool sortByClassName(const QPair<Subject *, QString> & pair1,
+    const QPair<Subject *, QString> & pair2)
 {
     return pair1.second.toLower() < pair2.second.toLower();
 }
@@ -117,7 +117,7 @@ bool sortByClassName(const QPair<Subject *, QString> & pair1,
 void delay(float seconds)
 {
     clock_t endwait;
-    endwait = clock() + seconds * CLOCKS_PER_SEC ;
+    endwait = clock() + seconds * CLOCKS_PER_SEC;
     while (clock() < endwait)
         qApp->processEvents();
 }
@@ -134,7 +134,7 @@ void restartObserverCounter()
 
 //////////////////////////////////////////////////////////// Observer
 ObserverImpl::ObserverImpl() : visible(true)
-{ 
+{
     numObserverCreated++;
     observerID = numObserverCreated;
 }
@@ -174,12 +174,12 @@ ObserverImpl & ObserverImpl::operator=(ObserverImpl &other)
 ObserverImpl::~ObserverImpl()
 {
     bool thereAreOpenWidgets = false;
-    foreach (QWidget *widget, QApplication::allWidgets())
+    foreach(QWidget *widget, QApplication::allWidgets())
     {
         if (widget)
             thereAreOpenWidgets = true;
     }
-    if(! thereAreOpenWidgets)
+    if (!thereAreOpenWidgets)
         QApplication::exit();
 }
 
@@ -200,7 +200,7 @@ bool ObserverImpl::update(double time) // ver se passa realmente este par?metro 
     QDataStream& state = BlackBoard::getInstance().getState(subject_, obsHandle_->getId(), attribList);
 
     state.device()->open(QIODevice::ReadOnly);
-    obsHandle_->draw( state );
+    obsHandle_->draw(state);
     state.device()->close();
 
 #else  // TME_BLACK_BOARD
@@ -211,16 +211,16 @@ bool ObserverImpl::update(double time) // ver se passa realmente este par?metro 
     QDataStream out(&buffer);
 
     buffer.open(QIODevice::WriteOnly);
-    
+
     QDataStream& state = subject_->getState(out, subject_, obsHandle_->getId(), attribList);
 
     buffer.close();
     buffer.open(QIODevice::ReadOnly);
-    obsHandle_->draw( state );
+    obsHandle_->draw(state);
     buffer.close();
 
 #endif  // TME_BLACK_BOARD
-    
+
     return true;
 }
 
@@ -284,7 +284,7 @@ SubjectImpl::SubjectImpl(const SubjectImpl &other)
     if (this != &other)
     {
         observers.clear();
-        ObsList &obs = (ObsList &) other.observers;
+        ObsList &obs =(ObsList &) other.observers;
         ObsListIterator i = obs.begin();
         for (; i != obs.end(); ++i)
             observers.push_back(*i);
@@ -297,7 +297,7 @@ SubjectImpl & SubjectImpl::operator=(SubjectImpl &other)
         return *this;
 
     observers.clear();
-    ObsList &obs = (ObsList &) other.observers;
+    ObsList &obs =(ObsList &) other.observers;
     ObsListIterator i = obs.begin();
     for (; i != obs.end(); ++i)
         observers.push_back(*i);
@@ -323,9 +323,9 @@ Observer * SubjectImpl::getObserverById(int id)
 {
     Observer *obs = 0;
 
-    for (ObsListIterator i (observers.begin()); i != observers.end(); ++i)
+    for (ObsListIterator i(observers.begin()); i != observers.end(); ++i)
     {
-        if ( (*i)->getId() == id)
+        if ((*i)->getId() == id)
         {
             obs = *i;
             break;
@@ -334,17 +334,17 @@ Observer * SubjectImpl::getObserverById(int id)
     return obs;
 }
 
-void SubjectImpl::notifyObservers(double time) 
+void SubjectImpl::notifyObservers(double time)
 {
 #ifdef TME_BLACK_BOARD
-    BlackBoard::getInstance().setDirtyBit( getId() );
+    BlackBoard::getInstance().setDirtyBit(getId());
 #endif
 
     ObsList detachList;
 
-    for (ObsListIterator i (observers.begin()); i != observers.end(); ++i)
+    for (ObsListIterator i(observers.begin()); i != observers.end(); ++i)
     {
-        if (! (*i)->update(time))
+        if (!(*i)->update(time))
         {
             detachList.push_back(*i);
         }
@@ -356,8 +356,8 @@ const TypesOfSubjects SubjectImpl::getSubjectType()
     return TObsUnknown;
 }
 
-int SubjectImpl::getId() const 
-{ 
+int SubjectImpl::getId() const
+{
     return subjectID;
 }
 

@@ -61,6 +61,7 @@ public:
     // QwtSymbol* symbol;
 };
 
-}
+} // namespace TerraMEObserver
+
 #endif // INTERNAL_CURVE_H
 

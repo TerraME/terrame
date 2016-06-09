@@ -25,7 +25,7 @@ of this software and its documentation.
     \brief This file definitions for the luaCellularSpace objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUACELLULARSPACE_H )
+#ifndef LUACELLULARSPACE_H
 #define LUACELLULARSPACE_H
 
 
@@ -51,47 +51,47 @@ class luaCellularSpace : public CellSpaceSubjectInterf, public Reference<luaCell
 {
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
+    static const char className[];
 
     ///< Data structure issued by Luna<T>
-    static Luna<luaCellularSpace>::RegType methods[]; 
+    static Luna<luaCellularSpace>::RegType methods[];
 
     /// constructor
     luaCellularSpace(lua_State *L);
 
     /// Sets the database type: MySQL, etc.
-    int setDBType(lua_State *L );
+    int setDBType(lua_State *L);
 
     /// Sets the host name.
-    int setHostName(lua_State *L );
+    int setHostName(lua_State *L);
 
     /// Sets the database name.
-    int setDBName(lua_State *L );
+    int setDBName(lua_State *L);
 
     int getDBName(lua_State *L);
 
     /// Sets the user name.
-    int setUser(lua_State *L );
+    int setUser(lua_State *L);
 
     /// Sets the password name.
-    int setPassword(lua_State *L );
+    int setPassword(lua_State *L);
 
     /// Sets the geographical database layer name
-    int setLayer(lua_State *L );
+    int setLayer(lua_State *L);
 
     /// Sets the geographical database theme name
-    int setTheme(lua_State *L );
+    int setTheme(lua_State *L);
 
     /// Clears the cellular space attributes names
-    int clearAttrName(lua_State *L) ;
+    int clearAttrName(lua_State *L);
 
     /// Adds a new attribute name to the CellularSpace attributes table used in the load function
-    int addAttrName( lua_State *L);
+    int addAttrName(lua_State *L);
 
     /// Sets the SQL WHERE CLAUSE to the string received as parameter
-    int setWhereClause(lua_State *L );
+    int setWhereClause(lua_State *L);
 
-    /// Clear all luaCellularSpace object content (cells)
+    /// Clear all luaCellularSpace object content(cells)
     int clear(lua_State *L);
 
     /// Loads a luaNeighborhood from a GAL text file
@@ -99,7 +99,7 @@ public:
 
     /// Adds a the luaCell received as parameter to the luaCellularSpace object
     /// parameters: x, y, luaCell
-    int addCell( lua_State *L);
+    int addCell(lua_State *L);
 
     /// Returns the number of cells of the CellularSpace object
     /// no parameters
@@ -108,19 +108,19 @@ public:
     /// Registers the luaCellularSpace object in the Lua stack
     // @DANIEL
     // Movido para Reference
-    // int setReference( lua_State* L);
+    // int setReference(lua_State* L);
 
     /// Gets the luaCellularSpace object reference
     // @DANIEL
     // Movido para Reference
-    // int getReference( lua_State *L );
+    // int getReference(lua_State *L);
 
     int setPort(lua_State* L);
 
 	//@RAIAN
 	/// Gets the name of the layer
 	/// \author Raian Vargas Maretto
-	void setLayerName( string layerName );
+	void setLayerName(string layerName);
 
 	/// Sets the name of the layer
 	/// \author Raian Vargas Maretto
@@ -128,16 +128,16 @@ public:
 
 	/// Sets the name of the layer
 	/// \author Raian Vargas Maretto
-	string getLayerName( );
+	string getLayerName();
 	//@RAIAN: Fim
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observeb attributes table, observer type parameters
-    int createObserver( lua_State *L );
+    int createObserver(lua_State *L);
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-    int notify(lua_State *L );
-    
+    int notify(lua_State *L);
+
     /// Returns the Agent Map Observers linked to this cellular space
     /// \param observerId the id of observer
     // \return a pointer for an observer if the id exists. Otherwise, returns a NULL pointer
@@ -212,6 +212,6 @@ private:
 };
 
 /// Find a cell given a luaCellularSpace object and a luaCellIndex object
-luaCell * findCell( luaCellularSpace* cs, CellIndex& cellIndex);
+luaCell * findCell(luaCellularSpace* cs, CellIndex& cellIndex);
 
 #endif

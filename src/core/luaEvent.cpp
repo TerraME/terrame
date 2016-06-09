@@ -35,9 +35,9 @@ of this software and its documentation.
 #include "../observer/types/observerTable.h"
 #include "../observer/types/observerUDPSender.h"
 
-extern lua_State * L; 
+extern lua_State * L;
 
-///< true - TerrME runs in verbose mode and warning messages to the user; 
+///< true - TerrME runs in verbose mode and warning messages to the user;
 /// false - it runs in quite node and no messages are shown to the user.
 extern ExecutionModes execModes;
 
@@ -73,7 +73,7 @@ int luaEvent::config(lua_State *L)
 
 /// Gets the luaEvent time
 int luaEvent::getTime(lua_State *L)
-{ 
+{
     double time = Event::getTime();
     lua_pushnumber(L, time);
     return 1;
@@ -90,15 +90,15 @@ int luaEvent::getPriority(lua_State *L)
 /// Sets the luaEvent priority
 /// parameters: number
 int luaEvent::setPriority(lua_State *L)
-{ 
-    int priority= luaL_checknumber(L, -1);
-    Event::setPriority( priority );
+{
+    int priority = luaL_checknumber(L, -1);
+    Event::setPriority(priority);
     return 0;
 }
 
 /// Gets the luaEvent periodicity
 int luaEvent::getPeriod(lua_State *L)
-{ 
+{
     double time = Event::getPeriod();
     lua_pushnumber(L, time);
     return 1;
@@ -108,14 +108,14 @@ int luaEvent::getPeriod(lua_State *L)
 int luaEvent::createObserver(lua_State *luaL)
 {
     Reference<luaEvent>::getReference(luaL);
-    
+
     // flags para a defini??o do uso de compress?o
     // na transmiss?o de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // dos observadores Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
     int top = lua_gettop(luaL);
-    int typeObserver = (int)luaL_checkinteger(luaL, 1);
+    int typeObserver =(int)luaL_checkinteger(luaL, 1);
 
     QStringList allAttribs, cols;
 
@@ -124,17 +124,17 @@ int luaEvent::createObserver(lua_State *luaL)
     allAttribs.push_back("Priority");
 
     lua_pushnil(luaL);
-    while(lua_next(luaL, top - 1) != 0)
-    {   
+    while (lua_next(luaL, top - 1) != 0)
+    {
         QString key;
         if (lua_type(luaL, -2) == LUA_TSTRING)
-            key = QString( luaL_checkstring(luaL, -2));
+            key = QString(luaL_checkstring(luaL, -2));
 
         switch (lua_type(luaL, -1))
         {
         case LUA_TSTRING:
             {
-                QString value( luaL_checkstring(luaL, -1));
+                QString value(luaL_checkstring(luaL, -1));
                 cols.push_back(value);
                 break;
             }
@@ -155,12 +155,12 @@ int luaEvent::createObserver(lua_State *luaL)
 
     if (cols.isEmpty())
     {
-        if (execModes != Quiet ){
+        if (execModes != Quiet){
             string err_out = string("Warning: The parameter table is empty.");
             lua_getglobal(L, "customWarning");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            lua_pushstring(L, err_out.c_str());
+            lua_pushnumber(L, 5);
+            lua_call(L, 2, 0);
         }
         cols << "" << "";
     }
@@ -175,7 +175,7 @@ int luaEvent::createObserver(lua_State *luaL)
     switch (typeObserver)
     {
         case TObsTextScreen:
-            obsText = (ObserverTextScreen*) EventSubjectInterf::createObserver(TObsTextScreen);
+            obsText =(ObserverTextScreen*) EventSubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
             {
                 obsId = obsText->getId();
@@ -188,7 +188,7 @@ int luaEvent::createObserver(lua_State *luaL)
             break;
 
         case TObsLogFile:
-            obsLog = (ObserverLogFile*) EventSubjectInterf::createObserver(TObsLogFile);
+            obsLog =(ObserverLogFile*) EventSubjectInterf::createObserver(TObsLogFile);
             if (obsLog)
             {
                 obsId = obsLog->getId();
@@ -201,7 +201,7 @@ int luaEvent::createObserver(lua_State *luaL)
             break;
 
         case TObsTable:
-            obsTable = (ObserverTable *) EventSubjectInterf::createObserver(TObsTable);
+            obsTable =(ObserverTable *) EventSubjectInterf::createObserver(TObsTable);
             if (obsTable)
             {
                 obsId = obsTable->getId();
@@ -214,7 +214,7 @@ int luaEvent::createObserver(lua_State *luaL)
             break;
 
         case TObsUDPSender:
-            obsUDPSender = (ObserverUDPSender *) EventSubjectInterf::createObserver(TObsUDPSender);
+            obsUDPSender =(ObserverUDPSender *) EventSubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
             {
                 obsId = obsUDPSender->getId();
@@ -231,10 +231,10 @@ int luaEvent::createObserver(lua_State *luaL)
             break;
 
         default:
-            if (execModes != Quiet )
+            if (execModes != Quiet)
             {
                 qWarning("Error: In this context, the code '%s' does not "
-                    "correspond to a valid type of Observer.",  getObserverName(typeObserver) );
+                    "correspond to a valid type of Observer.",  getObserverName(typeObserver));
             }
             return 0;
     }
@@ -296,15 +296,15 @@ int luaEvent::createObserver(lua_State *luaL)
         obsUDPSender->setPort(cols.at(0).toInt());
 
         // broadcast
-        if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
+        if ((cols.size() == 1) ||((cols.size() == 2) && cols.at(1).isEmpty()))
         {
             obsUDPSender->addHost(BROADCAST_HOST);
         }
         else
         {
             // multicast or unicast
-            for(int i = 1; i < cols.size(); i++){
-                if (! cols.at(i).isEmpty())
+            for (int i = 1; i < cols.size(); i++){
+                if (!cols.at(i).isEmpty())
                     obsUDPSender->addHost(cols.at(i));
             }
         }
@@ -319,7 +319,7 @@ const TypesOfSubjects luaEvent::getType()
     return subjectType;
 }
 
-int luaEvent::getType(lua_State *L )
+int luaEvent::getType(lua_State *L)
 {
     lua_pushnumber(L, subjectType);
     return 1;
@@ -371,11 +371,11 @@ QString luaEvent::pop(lua_State *, QStringList &)
 
     // #attrs
     msg.append(QString::number(attrCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
 
     // #elements
     msg.append(QString::number(0));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
 
     msg.append(attrs);
     msg.append(PROTOCOL_SEPARATOR);
@@ -398,14 +398,14 @@ QString luaEvent::getChanges(QDataStream& in, int observerId, QStringList& attri
 #ifdef TME_BLACK_BOARD
 QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, QStringList & /* attribs */)
 #else
-QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs )
+QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs)
 #endif
 
 {
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 
-    switch(obsCurrentState)
+    switch (obsCurrentState)
     {
         case 0:
 #ifdef TME_BLACK_BOARD
@@ -434,18 +434,18 @@ int luaEvent::kill(lua_State *luaL)
     int id = -1;
     bool result = false;
 
-    if (! lua_istable(luaL, top - 1))
+    if (!lua_istable(luaL, top - 1))
     {
         id = luaL_checknumber(luaL, top - 1);
         result = EventSubjectInterf::kill(id);
-         lua_pushboolean(luaL, result);
-         return 1;
+        lua_pushboolean(luaL, result);
+        return 1;
     }
     else
     {
         QString key;
         lua_pushnil(luaL);
-        while(lua_next(luaL, top - 1 ) != 0)
+        while (lua_next(luaL, top - 1) != 0)
         {
             if (lua_type(luaL, -2) == LUA_TSTRING)
             {
@@ -454,7 +454,7 @@ int luaEvent::kill(lua_State *luaL)
                 if (key == "id")
                 {
                     id = luaL_checknumber(luaL, -1);
-                    result = EventSubjectInterf::kill(id); 
+                    result = EventSubjectInterf::kill(id);
                     // break;
 
                     lua_pushboolean(luaL, result);

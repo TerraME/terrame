@@ -48,7 +48,7 @@ namespace TerraMEObserver {
  * \author Antonio Jos? da Cunha Rodrigues
  * \file observerUDPSender.h
  */
-class ObserverUDPSender : public QThread, public ObserverInterf 
+class ObserverUDPSender : public QThread, public ObserverInterf
 {
 public:
     /**
@@ -118,7 +118,7 @@ public:
      * \see setCompressDatagram
      */
     bool getCompressDatagram();
-    
+
     /**
      * Sets the number of communication port
      * \param port the number of port
@@ -190,6 +190,6 @@ private:
     bool paused;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif

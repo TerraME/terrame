@@ -25,7 +25,7 @@ of this software and its documentation.
 \brief This file definitions for the luaTrajectory objects.
 \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUATRAJECTORY_H )
+#ifndef LUATRAJECTORY_H
 #define LUATRAJECTORY_H
 
 #include "trajectorySubjectInterf.h"
@@ -63,9 +63,9 @@ protected:
 public:
     ///< Data structure issued by Luna<T>
     static const char className[];
-    
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaTrajectory>::RegType methods[]; 
+    static Luna<luaTrajectory>::RegType methods[];
 
 public:
     /// constructor
@@ -76,28 +76,28 @@ public:
 
     /// Inserts the the luaTrajectory object. The luaCell will be inserted in the number-th position.
     /// parameters: luaCell, number
-    int add( lua_State* L);
+    int add(lua_State* L);
 
     /// Clears all luaTrajectory object content
-    int clear( lua_State* L);
+    int clear(lua_State* L);
 
     /// Registers the luaTrajectory object in the Lua stack
     // @DANIEL
     // Movido para a classe Reference
-    // int setReference( lua_State* L);
+    // int setReference(lua_State* L);
 
     /// Gets the luaTrajectory object reference
     // @DANIEL
     // Movido para a classe Reference
-    // int getReference( lua_State *L );
+    // int getReference(lua_State *L);
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observeb attributes table, observer type parameters
-    int createObserver( lua_State *L );
+    int createObserver(lua_State *L);
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-    int notify(lua_State *L );
-    
+    int notify(lua_State *L);
+
     /// Returns the Agent Map Observers linked to this cellular space
     /// \param observerId the id of observer
     // \return a pointer for an observer if the id exists. Otherwise, returns a NULL pointer

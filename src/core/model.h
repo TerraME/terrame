@@ -35,7 +35,7 @@ of this software and its documentation.
 #include <sstream>
 #include <stdio.h>
 
-#if defined (TME_WIN32)
+#if defined(TME_WIN32)
 #include <iostream>
 #else
 //#include <iostream.h>
@@ -73,7 +73,7 @@ public:
 	{
         char strNum[255];
 
-        sprintf (strNum, "%ld", modelCounter);
+        sprintf(strNum, "%ld", modelCounter);
 
         setID(string("model") + strNum); modelCounter++;
     }

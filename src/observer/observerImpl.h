@@ -54,7 +54,7 @@ class SubjectImpl;
  */
 class ObserverImpl : public Implementation
 {
-public:	
+public:
     /**
      * Constructor
      */
@@ -163,7 +163,6 @@ typedef ObsList::iterator ObsListIterator;
 class SubjectImpl : public Implementation
 {
 public:
-
     /**
      * Constructor
      */

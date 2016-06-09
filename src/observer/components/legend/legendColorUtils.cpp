@@ -35,21 +35,21 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
     char	buf[1000];
     string ss;
     TeColor	cor(255, 255, 255);
-	
-    if(groupingColors.empty())
+
+    if (groupingColors.empty())
         groupingColors = "R-";
-    if(groupingColors.size() == 1)
+    if (groupingColors.size() == 1)
         groupingColors += "-";
 
     size_t t = groupingColors.find(";");
     string s = groupingColors.c_str();
 
-    if(t == string::npos)
+    if (t == string::npos)
     {
         size_t a = s.find("-");
 
         double dist = -1.;
-        while(a != string::npos)
+        while (a != string::npos)
         {
             memset(buf, '\0', 1000);
             s.copy(buf, a);
@@ -61,19 +61,19 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
             s = buf;
             a = s.find("-");
 
-            if("R" == ss)
+            if ("R" == ss)
                 cor.init(240, 0, 0);
-            else if("G" == ss)
+            else if ("G" == ss)
                 cor.init(0, 240, 0);
-            else if("B" == ss)
+            else if ("B" == ss)
                 cor.init(0, 0, 240);
-            else if("Cy" == ss)
+            else if ("Cy" == ss)
                 cor.init(100, 255, 255);
-            else if("Or" == ss)
+            else if ("Or" == ss)
                 cor.init(255, 140, 0);
-            else if("Mg" == ss)
+            else if ("Mg" == ss)
                 cor.init(255, 100, 255);
-            else if("Y" == ss)
+            else if ("Y" == ss)
                 cor.init(255, 255, 100);
             else
                 cor.init(240, 240, 240);
@@ -85,24 +85,24 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
 
             //			cbVec.push_back(cb);
             //
-            //			if(a == string::npos)
+            //			if (a == string::npos)
             //			{
             //				ss = s;
-            //				if("R" == ss)
+            //				if ("R" == ss)
             //					cor.init(240, 0, 0);
-            //				else if("G" == ss)
+            //				else if ("G" == ss)
             //					cor.init(0, 240, 0);
-            //				else if("B" == ss)
+            //				else if ("B" == ss)
             //					cor.init(0, 0, 240);
-            //				else if("Cy" == ss)
+            //				else if ("Cy" == ss)
             //					cor.init(100, 255, 255);
-            //				else if("Or" == ss)
+            //				else if ("Or" == ss)
             //					cor.init(255, 140, 0);
-            //				else if("Mg" == ss)
+            //				else if ("Mg" == ss)
             //					cor.init(255, 100, 255);
-            //				else if("Y" == ss)
+            //				else if ("Y" == ss)
             //					cor.init(255, 255, 100);
-            //				else if("W" == ss)
+            //				else if ("W" == ss)
             //					cor.init(240, 240, 240);
             //				else
             //					cor.init(0, 0, 0);
@@ -116,7 +116,7 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
             //
             cbVec.push_back(cb);
         }
-        if(cbVec.size() == 1)
+        if (cbVec.size() == 1)
         {
             cor.init(cor.red_/5, cor.green_/5, cor.blue_/5);
             ColorBar cb;
@@ -129,9 +129,9 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
     else
     {
         t = groupingColors.find("|");
-        if(first)
+        if (first)
         {
-            if(t != string::npos)
+            if (t != string::npos)
             {
                 memset(buf, '\0', 1000);
                 s.copy(buf, t, 0);
@@ -140,7 +140,7 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
         }
         else
         {
-            if(t != string::npos)
+            if (t != string::npos)
             {
                 memset(buf, '\0', 1000);
                 s.copy(buf, s.size()-t-1, t+1);
@@ -166,9 +166,9 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
 
         size_t a = s.find("-");
 
-        while(a != string::npos)
+        while (a != string::npos)
         {
-            if(a == 0) // hue = -1
+            if (a == 0) // hue = -1
                 a = s.find("-", 1);
             int cc = 0;
             memset(buf, '\0', 1000);
@@ -180,13 +180,13 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
             s.copy(buf, s.size()-a, a);
             s = buf;
             a = s.find("-");
-            if(a == 0) // hue = -1
+            if (a == 0) // hue = -1
                 a = s.find("-", 1);
 
             string sss;
             vector<double> vVec;
             size_t aa = ss.find(";");
-            while(aa != string::npos)
+            while (aa != string::npos)
             {
                 cc++;
                 memset(buf, '\0', 1000);
@@ -205,7 +205,7 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
             double brilho, dist = atof(ss.c_str());
             cb.distance_ = dist;
 
-            if(vVec.empty()) // error in group color
+            if (vVec.empty()) // error in group color
             {
                 cbVec.clear();
                 TeColor c;
@@ -221,7 +221,7 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
                 return cbVec;
             }
 
-            if(vVec.size() >= 4)
+            if (vVec.size() >= 4)
             {
                 cor.init((int)vVec[0], (int)vVec[1], (int)vVec[2]);
                 brilho = vVec[3];
@@ -229,9 +229,9 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
             }
             else
             {
-                int h = (int)vVec[0];
-                int	s = (int)vVec[1];
-                int v = (int)vVec[2];
+                int h =(int)vVec[0];
+                int	s =(int)vVec[1];
+                int v =(int)vVec[2];
                 TeColor c;
                 ::hsv2Rgb(c, h, s, v);
                 cb.color(c);
@@ -239,13 +239,13 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
 
             cbVec.push_back(cb);
 
-            if(a == string::npos)
+            if (a == string::npos)
             {
                 cc = 0;
                 vVec.clear();
                 ss = s;
                 size_t aa = ss.find(";");
-                while(aa != string::npos)
+                while (aa != string::npos)
                 {
                     cc++;
                     memset(buf, '\0', 1000);
@@ -264,7 +264,7 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
                 double brilho, dist = atof(ss.c_str());
                 cb.distance_ = dist;
 
-                if(vVec.size() >= 4)
+                if (vVec.size() >= 4)
                 {
                     cor.init((int)vVec[0], (int)vVec[1], (int)vVec[2]);
                     brilho = vVec[3];
@@ -272,10 +272,10 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
                 }
                 else
                 {
-                    int h = (int)vVec[0];
-                    int	s = (int)vVec[1];
-                    int v = (int)vVec[2];
-	
+                    int h =(int)vVec[0];
+                    int	s =(int)vVec[1];
+                    int v =(int)vVec[2];
+
                     TeColor c;
                     ::hsv2Rgb(c, h, s, v);
                     cb.color(c);
@@ -290,7 +290,7 @@ vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
 
 void generateColorBarMap(vector<ColorBar>& inputColorVec, int ncores, map<int, vector<TeColor> >& colorMap)
 {
-    if(inputColorVec.empty())
+    if (inputColorVec.empty())
     {
         TeColor c(255, 0, 0);
         ColorBar b;
@@ -306,20 +306,20 @@ void generateColorBarMap(vector<ColorBar>& inputColorVec, int ncores, map<int, v
     }
 
     int i, nc;
-    if(inputColorVec.empty())
+    if (inputColorVec.empty())
         return;
 
     double totalDistance = inputColorVec[inputColorVec.size()-1].distance_;
-    double dd = (double)ncores / totalDistance;
+    double dd =(double)ncores / totalDistance;
 
     colorMap.clear();
 
-    for(i=0; i<(int)inputColorVec.size()-1; ++i)
+    for (i = 0; i <(int)inputColorVec.size() -1; ++i)
     {
-        nc = TeRound(dd * (fabs(inputColorVec[i+1].distance_) - fabs(inputColorVec[i].distance_)));
+        nc = TeRound(dd *(fabs(inputColorVec[i+1].distance_) - fabs(inputColorVec[i].distance_)));
         TeColor corFrom, corTo;
-        ::hsv2Rgb(corFrom,inputColorVec[i].h_, inputColorVec[i].s_, inputColorVec[i].v_);
-        ::hsv2Rgb(corTo,inputColorVec[i+1].h_, inputColorVec[i+1].s_, inputColorVec[i+1].v_);
+        ::hsv2Rgb(corFrom, inputColorVec[i].h_, inputColorVec[i].s_, inputColorVec[i].v_);
+        ::hsv2Rgb(corTo, inputColorVec[i+1].h_, inputColorVec[i+1].s_, inputColorVec[i+1].v_);
         //		TeColor corFrom = inputColorVec[i].cor_;
         //		TeColor corTo = inputColorVec[i+1].cor_;
         colorMap[i] = ::getColors(corFrom, corTo, nc);
@@ -402,34 +402,34 @@ bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor> &co
         cto.red_ = cfrom.red_ / 5;
         cto.green_ = cfrom.green_ / 5;
         cto.blue_ = cfrom.blue_ / 5;
-        double dr = (double)(cto.red_ - cfrom.red_) / (double)n;
-        double dg = (double)(cto.green_ - cfrom.green_) / (double)n;
-        double db = (double)(cto.blue_ - cfrom.blue_) / (double)n;
+        double dr =(double)(cto.red_ - cfrom.red_) /(double)n;
+        double dg =(double)(cto.green_ - cfrom.green_) /(double)n;
+        double db =(double)(cto.blue_ - cfrom.blue_) /(double)n;
 
-        for(jj=0; jj<n; jj++)
+        for (jj = 0; jj < n; jj++)
         {
-            cor.red_ = cfrom.red_ + (int)(dr * (double)jj);
-            cor.green_ = cfrom.green_ + (int)(dg * (double)jj);
-            cor.blue_ = cfrom.blue_ + (int)(db * (double)jj);
+            cor.red_ = cfrom.red_ +(int)(dr *(double)jj);
+            cor.green_ = cfrom.green_ +(int)(dg *(double)jj);
+            cor.blue_ = cfrom.blue_ +(int)(db *(double)jj);
             allColors.push_back(cor);
         }
     }
     else
     {
         ii = 1;
-        while(ii < (int)ramps.size())
+        while (ii <(int)ramps.size())
         {
             cto = mapcor[ramps[ii]];
 
-            double dr = (double)(cto.red_ - cfrom.red_) / (double)n;
-            double dg = (double)(cto.green_ - cfrom.green_) / (double)n;
-            double db = (double)(cto.blue_ - cfrom.blue_) / (double)n;
+            double dr =(double)(cto.red_ - cfrom.red_) /(double)n;
+            double dg =(double)(cto.green_ - cfrom.green_) /(double)n;
+            double db =(double)(cto.blue_ - cfrom.blue_) /(double)n;
 
-            for(jj=0; jj<n; jj++)
+            for (jj = 0; jj < n; jj++)
             {
-                cor.red_ = cfrom.red_ + (int)(dr * (double)jj);
-                cor.green_ = cfrom.green_ + (int)(dg * (double)jj);
-                cor.blue_ = cfrom.blue_ + (int)(db * (double)jj);
+                cor.red_ = cfrom.red_ +(int)(dr *(double)jj);
+                cor.green_ = cfrom.green_ +(int)(dg *(double)jj);
+                cor.blue_ = cfrom.blue_ +(int)(db *(double)jj);
                 allColors.push_back(cor);
             }
             cfrom = cto;
@@ -438,11 +438,11 @@ bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor> &co
     }
     double step = 0.;
     if (nc > 1)
-        step = (double)(allColors.size()) / (double)(nc-1);
-    for (int i=0; i<nc; i++)
+        step =(double)(allColors.size()) /(double)(nc-1);
+    for (int i = 0; i < nc; i++)
     {
-        int ind = (int)(step * (double)i + .5);
-        if (ind > (int)(allColors.size() - 1))
+        int ind =(int)(step *(double)i + .5);
+        if (ind >(int)(allColors.size() - 1))
             ind = allColors.size() - 1;
         colors.push_back(allColors[ind]);
     }
@@ -457,24 +457,24 @@ vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc)
     TeColor cor;
 
     vector<TeColor> allColors;
-    double dr = (double)(cto.red_ - cfrom.red_) / (double)n;
-    double dg = (double)(cto.green_ - cfrom.green_) / (double)n;
-    double db = (double)(cto.blue_ - cfrom.blue_) / (double)n;
+    double dr =(double)(cto.red_ - cfrom.red_) /(double)n;
+    double dg =(double)(cto.green_ - cfrom.green_) /(double)n;
+    double db =(double)(cto.blue_ - cfrom.blue_) /(double)n;
 
-    for(j=0; j<n; j++)
+    for (j = 0; j < n; j++)
     {
-        cor.red_ = cfrom.red_ + (int)(dr * (double)j);
-        cor.green_ = cfrom.green_ + (int)(dg * (double)j);
-        cor.blue_ = cfrom.blue_ + (int)(db * (double)j);
+        cor.red_ = cfrom.red_ +(int)(dr *(double)j);
+        cor.green_ = cfrom.green_ +(int)(dg *(double)j);
+        cor.blue_ = cfrom.blue_ +(int)(db *(double)j);
         allColors.push_back(cor);
     }
     double step = 0.;
     if (nc > 1)
-        step = (double)(allColors.size()) / (double)(nc-1);
-    for (i=0; i<nc; ++i)
+        step =(double)(allColors.size()) /(double)(nc-1);
+    for (i = 0; i < nc; ++i)
     {
-        int ind = (int)(step * (double)i + .5);
-        if (ind > (int)(allColors.size() - 1))
+        int ind =(int)(step *(double)i + .5);
+        if (ind >(int)(allColors.size() - 1))
             ind = allColors.size() - 1;
         colorVec.push_back(allColors[ind]);
     }
@@ -492,12 +492,12 @@ vector<TeColor> getColors(vector<ColorBar>& iVec, int ncores)
 
     map<int, vector<TeColor> > :: iterator it = colorMap.begin();
 
-    while(it != colorMap.end())
+    while (it != colorMap.end())
     {
         vector<TeColor>& cores = it->second;
         vector<TeColor> :: iterator i = cores.begin();
 
-        while(i != cores.end())
+        while (i != cores.end())
         {
             cVec.push_back(*i);
             i++;
@@ -505,17 +505,17 @@ vector<TeColor> getColors(vector<ColorBar>& iVec, int ncores)
         it++;
     }
 
-    int s = (int)cVec.size();
-    double d, dd = (double)s /(double)(ncores-1);
+    int s =(int)cVec.size();
+    double d, dd =(double)s /(double)(ncores-1);
     int	i = 0, j;
 
-    while(i < ncores)
+    while (i < ncores)
     {
-        d = dd * (double)i;
+        d = dd *(double)i;
         j = TeRound(d);
-        if(j >= s)
+        if (j >= s)
             j = s - 1;
-        if((int)cVec.size() > j)
+        if ((int)cVec.size() > j)
             outVec.push_back(cVec[j]);
         i++;
     }
@@ -533,9 +533,9 @@ string getColors(vector<ColorBar>& aVec, vector<ColorBar>& bVec, int groupingMod
     //	double br, d;
 
     it = colorBarVec.begin();
-    while(it != colorBarVec.end())
+    while (it != colorBarVec.end())
     {
-        ColorBar cb = (*it);
+        ColorBar cb =(*it);
         TeColor cor;
         ::hsv2Rgb(cor, cb.h_, cb.s_, cb.v_);
         r = cor.red_;
@@ -544,7 +544,7 @@ string getColors(vector<ColorBar>& aVec, vector<ColorBar>& bVec, int groupingMod
         d = cb.distance_;
 
         s += Te2String(cb.h_) + ";" + Te2String(cb.s_) + ";" + Te2String(cb.v_) + ";" + Te2String(d, 2);
-        if(s.size() > 255)
+        if (s.size() > 255)
         {
             s = ss;
             break;
@@ -552,19 +552,19 @@ string getColors(vector<ColorBar>& aVec, vector<ColorBar>& bVec, int groupingMod
 
         ss = s;
         it++;
-        if(it != colorBarVec.end())
+        if (it != colorBarVec.end())
             s += "-";
     }
 
-    if(groupingMode == 2) //TeStdDeviation)
+    if (groupingMode == 2) //TeStdDeviation)
     {
         s += "|";
 
         colorBarVec = bVec;
         it = colorBarVec.begin();
-        while(it != colorBarVec.end())
+        while (it != colorBarVec.end())
         {
-			ColorBar cb = (*it);
+			ColorBar cb =(*it);
             TeColor cor;
             ::hsv2Rgb(cor, cb.h_, cb.s_, cb.v_);
             r = cor.red_;
@@ -573,7 +573,7 @@ string getColors(vector<ColorBar>& aVec, vector<ColorBar>& bVec, int groupingMod
             d = cb.distance_;
 
             s += Te2String(cb.h_) + ";" + Te2String(cb.s_) + ";" + Te2String(cb.v_) + ";" + Te2String(d, 2);
-            if(s.size() > 255)
+            if (s.size() > 255)
             {
                 s = ss;
                 break;
@@ -581,7 +581,7 @@ string getColors(vector<ColorBar>& aVec, vector<ColorBar>& bVec, int groupingMod
 
             ss = s;
             it++;
-            if(it != colorBarVec.end())
+            if (it != colorBarVec.end())
                 s += "-";
         }
     }
@@ -591,9 +591,9 @@ string getColors(vector<ColorBar>& aVec, vector<ColorBar>& bVec, int groupingMod
 
 void rgb2Hsv(const TeColor& c, int& h, int& s, int& v)
 {
-    double r = (double)(c.red_ / 255.);
-    double g = (double)(c.green_ / 255.);
-    double b = (double)(c.blue_ / 255.);
+    double r =(double)(c.red_ / 255.);
+    double g =(double)(c.green_ / 255.);
+    double b =(double)(c.blue_ / 255.);
 
     double hh, ss, vv;
     RGBtoHSV(r, g, b, hh, ss, vv);
@@ -605,11 +605,11 @@ void rgb2Hsv(const TeColor& c, int& h, int& s, int& v)
 
 // r,g,b values are from 0 to 1
 // h = [0,360], s = [0,1], v = [0,1]
-//		if s == 0, then h = -1 (undefined)
+//		if s == 0, then h = -1(undefined)
 
-void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v )
+void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v)
 {
-    if(r == g && g == b) // achromatic (grey)
+    if (r == g && g == b) // achromatic(grey)
     {
         h = - 1;
         s = 0;
@@ -627,34 +627,34 @@ void RGBtoHSV(const double& r, const double& g, const double& b, double& h, doub
 
     delta = max - min;
 
-    if( max != 0 )
+    if (max != 0)
         s = delta / max;		// s
-    else {
+    else
+	{
         // r = g = b = 0		// s = 0, v is undefined
         s = 0;
         h = -1;
         return;
     }
 
-    if( r == max )
-        h = ( g - b ) / delta;		// between yellow & magenta
-    else if( g == max )
-        h = 2 + ( b - r ) / delta;	// between cyan & yellow
+    if (r == max)
+        h =(g - b) / delta;		// between yellow & magenta
+    else if (g == max)
+        h = 2 +(b - r) / delta;	// between cyan & yellow
     else
-        h = 4 + ( r - g ) / delta;	// between magenta & cyan
+        h = 4 +(r - g) / delta;	// between magenta & cyan
 
     h *= 60;				// degrees
-    if( h < 0 )
+    if (h < 0)
         h += 360;
-
 }
 
 void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v)
 {
     double	r, g, b;
-    double hh = (double)h;
-    double ss = (double)s / 255.;
-    double vv = (double)v / 255.;
+    double hh =(double)h;
+    double ss =(double)s / 255.;
+    double vv =(double)v / 255.;
 
     HSVtoRGB(r, g, b, hh, ss, vv);
 
@@ -663,26 +663,26 @@ void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v)
     c.blue_ = TeRound(b * 255.);
 }
 
-void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s, const double& v )
+void HSVtoRGB(double& r, double& g, double& b, const double& h, const double& s, const double& v)
 {
     int i;
     double f, p, q, t, hh = h;
 
-    if( s == 0 || h == -1) {
-        // achromatic (grey)
+    if (s == 0 || h == -1) {
+        // achromatic(grey)
         r = g = b = v;
         return;
     }
 
     hh /= 60;			// sector 0 to 5
     i = TeRound(floor(hh));
-	i = (int)floor(hh);
+	i =(int)floor(hh);
     f = hh - i;			// factorial part of h
-    p = v * ( 1 - s );
-    q = v * ( 1 - s * f );
-    t = v * ( 1 - s * ( 1 - f ) );
+    p = v *(1 - s);
+    q = v *(1 - s * f);
+    t = v *(1 - s *(1 - f));
 
-    switch( i ) {
+    switch (i) {
         case 0:
             r = v;
             g = t;
@@ -778,7 +778,7 @@ void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s
 //			{
 //				break;
 //			}
-//		}while(true);
+//		}while (true);
 //	}
 //	catch(...)
 //	{

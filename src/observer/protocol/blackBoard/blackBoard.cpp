@@ -64,13 +64,9 @@ public:
         delete buffer;
         delete out;
     }
-
 };
 
-BlackBoard::BlackBoard()
-{
-
-}
+BlackBoard::BlackBoard() {}
 
 BlackBoard::~BlackBoard()
 {
@@ -92,7 +88,7 @@ void BlackBoard::setDirtyBit(int subjectId)
         cache.insert(subjectId, new PrivateCache());
 }
 
-bool BlackBoard::getDirtyBit(int subjectId) const 
+bool BlackBoard::getDirtyBit(int subjectId) const
 {
     return cache.value(subjectId)->dirtyBit;
 }
@@ -101,7 +97,7 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, QStringList &a
 {
     PrivateCache *state = cache.value(subj->getId());
 
-    if (! state->dirtyBit)
+    if (!state->dirtyBit)
     {
         return *state->out;
     }
@@ -109,7 +105,7 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, QStringList &a
     state->buffer->open(QIODevice::WriteOnly);
     state->out = &subj->getState(*state->out, subj, observerId, attribs);
     state->buffer->close();
-    
+
     state->dirtyBit = false;
     return *state->out;
 }

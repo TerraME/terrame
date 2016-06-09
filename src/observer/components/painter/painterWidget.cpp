@@ -73,10 +73,7 @@ PainterWidget::PainterWidget(QHash<QString, Attributes*> *mapAttrib, QWidget *pa
     painterThread.start();
 }
 
-PainterWidget::~PainterWidget()
-{
-
-}
+PainterWidget::~PainterWidget() {}
 
 void PainterWidget::calculateResult()
 {
@@ -101,7 +98,7 @@ void PainterWidget::calculateResult()
             else
 			{
 				//@RAIAN
-				if(attrib->getType() == TObsNeighborhood)
+				if (attrib->getType() == TObsNeighborhood)
 					painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 				else
 				//@RAIAN: FIM
@@ -115,11 +112,11 @@ void PainterWidget::calculateResult()
     painter.end();
 
     // resultImageBkp = QImage(resultImage.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    resultImageBkp = QImage( resultImage.scaled(size()) );
+    resultImageBkp = QImage(resultImage.scaled(size()));
 
     if (existAgent)
         drawAgent();
-    
+
     if (gridEnabled)
         drawGrid();
 
@@ -133,7 +130,7 @@ void PainterWidget::setOperatorMode(QPainter::CompositionMode mode)
 
 void PainterWidget::plotMap(Attributes *attrib)
 {
-    if (! attrib)
+    if (!attrib)
         qFatal("\nErro: PainterWidget::plotMap - Invalid attribute!!\n");
 
     QPainter p;
@@ -171,7 +168,7 @@ bool PainterWidget::rescale(QSize size)
     }
 
     resultImageBkp = img;
-    
+
     if (gridEnabled)
         drawGrid();
 
@@ -180,13 +177,13 @@ bool PainterWidget::rescale(QSize size)
 }
 
 void PainterWidget::paintEvent(QPaintEvent * /* event */)
-{	
+{
     QPainter painter(this);
     painter.drawPixmap(QPoint(0, 0), QPixmap::fromImage(resultImageBkp));
-    
+
     // drawAgent();
 
-    if (! showRectZoom)
+    if (!showRectZoom)
         return;
 
     //---- Desenha o retangulo de zoom
@@ -243,9 +240,8 @@ void PainterWidget::mouseMoveEvent(QMouseEvent *event)
         if (zoomWindow)
         {
             // Define as coordenadas do retangulo de zoom
-            if (! rect().contains( QRect(imageOffset, event->pos()) ))
+            if (!rect().contains(QRect(imageOffset, event->pos())))
             {
-
                 bool right = event->pos().x() > rect().right();
                 bool left = event->pos().x() < rect().left();
 
@@ -282,15 +278,15 @@ void PainterWidget::mouseMoveEvent(QMouseEvent *event)
             }
             update();
         }
-        else if(handTool)
+        else if (handTool)
         {
             setCursor(Qt::ClosedHandCursor);
             lastDragPos = event->pos();
 
             int x = mParentScroll->horizontalScrollBar()->value()
-                    - (lastDragPos.x() - imageOffset.x());
+                    -(lastDragPos.x() - imageOffset.x());
             int y = mParentScroll->verticalScrollBar()->value()
-                    - (lastDragPos.y() - imageOffset.y());
+                    -(lastDragPos.y() - imageOffset.y());
 
             mParentScroll->horizontalScrollBar()->setValue(x);
             mParentScroll->verticalScrollBar()->setValue(y);
@@ -391,15 +387,15 @@ bool PainterWidget::save(const QString & path)
     //    // imgTeste.save(path + "teste.png");
 
     //    QImage retImg(imgTeste.width(), imgTeste.height(), QImage::Format_Indexed8);
-    //    QVector<QRgb> table( 256 );
-    //    for( int i = 0; i < 256; ++i )
+    //    QVector<QRgb> table(256);
+    //    for (int i = 0; i < 256; ++i)
     //        table[i] = qRgb(i, i, i);
 
     //    retImg.setColorTable(table);
 
-    //    for(int i = 0; i < imgTeste.width(); i++)
+    //    for (int i = 0; i < imgTeste.width(); i++)
     //    {
-    //        for(int j = 0; j < imgTeste.height(); j++)
+    //        for (int j = 0; j < imgTeste.height(); j++)
     //        {
     //            QRgb value = imgTeste.pixel(i, j);
     //            retImg.setPixel(i, j, qGray(value));
@@ -437,9 +433,9 @@ void PainterWidget::drawAgent()
 {
     QPainter painter(&resultImageBkp);
 
-    double orig2destW = (double) resultImageBkp.width() / resultImage.width();
-    double orig2destH = (double) resultImageBkp.height() / resultImage.height();
-    
+    double orig2destW =(double) resultImageBkp.width() / resultImage.width();
+    double orig2destH =(double) resultImageBkp.height() / resultImage.height();
+
     double sizeCellPropW = orig2destW * SIZE_CELL;
     double sizeCellPropH = orig2destH * SIZE_CELL;
 
@@ -448,13 +444,13 @@ void PainterWidget::drawAgent()
 
     recCell = QRectF(0 - sizeCellPropW * 0.5, 0 - sizeCellPropH * 0.5,
                      sizeCellPropW, sizeCellPropH);
-    
+
     //recCell = QRectF(0 - SIZE_CELL * 0.5, 0 - SIZE_CELL * 0.5,
     //                 SIZE_CELL, SIZE_CELL);
 
     foreach(Attributes * attrib, mapAttributes->values())
     {
-        if ((attrib->getType() == TObsAgent) && (attrib->getVisible()) )
+        if ((attrib->getType() == TObsAgent) && (attrib->getVisible()))
         {
             QVector<ObsLegend> *vecLegend = attrib->getLegend();
 
@@ -474,11 +470,11 @@ void PainterWidget::drawAgent()
                     x = attrib->getXsValue()->at(pos) * SIZE_CELL;
                     y = attrib->getYsValue()->at(pos) * SIZE_CELL;
 
-                    rec = QRectF( x * orig2destW , y * orig2destH, sizeCellPropW, sizeCellPropH);
+                    rec = QRectF(x * orig2destW , y * orig2destH, sizeCellPropW, sizeCellPropH);
 
                     painter.save();
 
-                    for(int j = 0; j < vecLegend->size(); j++)
+                    for (int j = 0; j < vecLegend->size(); j++)
                     {
                         const ObsLegend &leg = vecLegend->at(j);
                         if (v == leg.getFrom())
@@ -510,8 +506,8 @@ void PainterWidget::drawAgent()
                     else if (fontSize <= recCell.height())
                     {
                         double range = floor(recCell.height() - fontSize);
-                        double randx = ((double)qrand() / RAND_MAX) * range;
-                        double randy = ((double)qrand() / RAND_MAX) * range;
+                        double randx =((double)qrand() / RAND_MAX) * range;
+                        double randy =((double)qrand() / RAND_MAX) * range;
                         xPos += randx;
                         yPos -= randy;
                     }
@@ -541,11 +537,11 @@ void PainterWidget::drawAgent()
                     x = attrib->getXsValue()->at(pos) * SIZE_CELL;
                     y = attrib->getYsValue()->at(pos) * SIZE_CELL;
 
-                    rec = QRectF( x * orig2destW , y * orig2destH, sizeCellPropW, sizeCellPropH);
+                    rec = QRectF(x * orig2destW , y * orig2destH, sizeCellPropW, sizeCellPropH);
 
                     painter.save();
 
-                    for(int j = 0; j < vecLegend->size(); j++)
+                    for (int j = 0; j < vecLegend->size(); j++)
                     {
                         const ObsLegend &leg = vecLegend->at(j);
                         if (v == leg.getFromNumber())
@@ -573,7 +569,7 @@ void PainterWidget::drawAgent()
                     else if (fontSize < recCell.height())
                     {
                         double range = floor(recCell.height() - fontSize);
-                        double rand = ((double)qrand() / RAND_MAX) * range;
+                        double rand =((double)qrand() / RAND_MAX) * range;
                         xPos += rand;
                         yPos -= rand;
                     }

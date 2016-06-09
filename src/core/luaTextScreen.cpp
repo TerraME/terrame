@@ -32,7 +32,7 @@ luaTextScreen::luaTextScreen(lua_State* L)
 
 int luaTextScreen::setObserver(lua_State* L)
 {
-    ObserverTextScreen *obsts = (ObserverTextScreen*) lua_touserdata(L, -1);
+    ObserverTextScreen *obsts =(ObserverTextScreen*) lua_touserdata(L, -1);
     obs = obsts;
     return 0;
 }

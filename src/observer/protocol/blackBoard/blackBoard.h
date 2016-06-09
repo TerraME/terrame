@@ -34,8 +34,8 @@ class QByteArray;
 class PrivateCache;
 
 namespace TerraMEObserver
-{ 
-    class Subject;
+{
+class Subject;
 }
 
 
@@ -99,5 +99,5 @@ private:
     QHash<int, PrivateCache *> cache;
 };
 
-}
+} // namespace TerraMEObserver
 #endif

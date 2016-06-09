@@ -35,7 +35,7 @@ VisualArrangement* VisualArrangement::myarrangement = NULL;
 
 VisualArrangement* VisualArrangement::getInstance()
 {
-	if(myarrangement == NULL)
+	if (myarrangement == NULL)
 	{
 		myarrangement = new VisualArrangement();
 		myarrangement->file = "";
@@ -86,7 +86,7 @@ void VisualArrangement::starts(int id, QWidget *widget)
     SizeVisualArrangement s = getSize(id);
     PositionVisualArrangement p = getPosition(id);
 
-    if((p.x > 0) && (p.y > 0) && (s.width > 0) && (s.height > 0))
+    if ((p.x > 0) && (p.y > 0) && (s.width > 0) && (s.height > 0))
     {
         widget->setGeometry(p.x, p.y, s.width, s.height);
     }
@@ -110,7 +110,7 @@ SizeVisualArrangement VisualArrangement::getSize(int id)
 
 void VisualArrangement::buildLuaCode()
 {
-	if(file == "" || myarrangement->position.size() == 0) return;
+	if (file == "" || myarrangement->position.size() == 0) return;
 
     QFile qfile(file.c_str());
 
@@ -118,7 +118,7 @@ void VisualArrangement::buildLuaCode()
     {
         QTextStream out(&qfile);
         out << "return {" << endl;
-        for(std::map<int, PositionVisualArrangement>::iterator it =
+        for (std::map<int, PositionVisualArrangement>::iterator it =
                 myarrangement->position.begin(); it != myarrangement->position.end(); ++it)
         {
             out << "\t[" << it->first << "] = {" << endl;

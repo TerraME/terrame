@@ -145,9 +145,9 @@ public:
      * \see Subject
      * \see QVector, \see QPair, \see Subject
      */
-    static bool constainsItem(const QVector<QPair<Subject *, QString> > &linkedSubjects, 
+    static bool constainsItem(const QVector<QPair<Subject *, QString> > &linkedSubjects,
         const Subject *subj);
-    
+
     /**
      * Closes the observer window
      */
@@ -225,7 +225,7 @@ protected:
      * Catchs the resize event
      * \see QResizeEvent
      */
-    void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent* event);
 
     /**
      * Gets a pointer to the painterWidget object
@@ -238,7 +238,7 @@ protected:
      * \see Attributes
      * \see QHash, \see QString
      */
-    QHash<QString, Attributes*> * getMapAttributes() const ;
+    QHash<QString, Attributes*> * getMapAttributes() const;
 
     /**
      * Gets a reference to the docoder object
@@ -323,7 +323,7 @@ private:
     QToolButton *butZoomIn, *butZoomOut;
     QToolButton *butZoomWindow, *butHand;
     QToolButton *butZoomRestore;
-    
+
     PainterWidget *painterWidget;
     LegendWindow *legendWindow;
     Decoder *protocolDecoder;
@@ -339,6 +339,6 @@ private:
     double actualZoom;
 };
 
-}
+} // namespace TerraMEObserver
 
 #endif
