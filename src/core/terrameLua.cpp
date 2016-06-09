@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
 
 	// TODO(avancinirodrigo)
 	// retrive lua version from terrame.lua
-	TME_VERSION = "2.0";
+	//TME_VERSION = "2.0";
 	TME_PATH = "TME_PATH";
 
 #ifdef WIN32
