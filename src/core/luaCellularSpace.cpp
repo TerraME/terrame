@@ -404,14 +404,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         lua_pop(luaL, 1);
     }
 
-    //if ((typeObserver == TObsImage) ||(typeObserver == TObsMap) ||(typeObserver == TObsShapefile))
-    //{
-    //    // LEGEND_ITENS esta definido dentro do observer.h
-    //    if (obsAttribs.size() * LEGEND_ITENS < obsParams.size())
-    //    {
-    //    }
-    //}
-
     QList<int> obsDim;
 
     // Recupera a tabela de dimensoes
