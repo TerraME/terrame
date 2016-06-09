@@ -48,13 +48,7 @@ function filePath(filename, package)
 			end
 		end
 
-		local files = {}
-
-		forEachFile(packageInfo(package).data, function(mfile)
-			files[mfile] = true
-		end)
-
-		local suggest = suggestion(filename, files)
+		local suggest = suggestion(filename, dir(packageInfo(package).data))
 
 		if suggest then
 			msg = msg.." Do you mean '"..suggest.."'?"

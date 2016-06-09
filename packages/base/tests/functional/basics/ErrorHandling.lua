@@ -236,6 +236,11 @@ return{
 
 		unitTest:assertEquals(suggestion("aaaab", t), "aaaaa")
 		unitTest:assertNil(suggestion("ddddd", t))
+
+		local t = {"aaaaa", "bbbbb", "ccccc"}
+
+		unitTest:assertEquals(suggestion("aaaab", t), "aaaaa")
+		unitTest:assertNil(suggestion("ddddd", t))
 	end,
 	switchInvalidArgument = function(unitTest)
 		local t = {

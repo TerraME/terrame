@@ -90,12 +90,6 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("value", "number", nil))
 	end,
 	suggestion = function(unitTest)
-		local t = {
-			"aaaaa",
-			"bbbbb",
-			"ccccc"
-		}
-
 		local error_func = function()
 			suggestion()
 		end
@@ -115,6 +109,8 @@ return{
 			suggestion("aaaab", 2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "table", 2))
+
+		local t = {2, 3, 4}
 
 		local error_func = function()
 			suggestion("aaaab", t)
