@@ -296,9 +296,6 @@ int main(int argc, char *argv[])
 
 	Q_INIT_RESOURCE(observerResource);
 
-	// TODO(avancinirodrigo)
-	// retrive lua version from terrame.lua
-	TME_VERSION = "2.0";
 	TME_PATH = "TME_PATH";
 
 #ifdef WIN32
