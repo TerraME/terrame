@@ -218,7 +218,32 @@ return {
 		}
 		
 		unitTest:assertEquals(l3.name, clName3)	
-
+		
+		-- BOX TEST
+		local tl = TerraLib{}
+		local clSet = tl:getDataSet(proj, clName1)
+		unitTest:assertEquals(getn(clSet), 68)
+		
+		clName1 = clName1.."_Box"
+		local filePath4 = clName1..".shp"
+		
+		if isFile(filePath4) then
+			rmFile(filePath4)
+		end		
+		
+		local l4 = Layer{
+			project = proj,
+			input = layerName1,
+			name = clName1,
+			resolution = 0.7,
+			box = true,
+			file = filePath4
+		}
+		
+		local clSet = tl:getDataSet(proj, clName1)
+		unitTest:assertEquals(getn(clSet), 104)		
+		
+		-- END
 		if isFile(projName) then
 			rmFile(projName)
 		end		
@@ -226,6 +251,7 @@ return {
 		if isFile(filePath1) then rmFile(filePath1) end
 		if isFile(filePath2) then rmFile(filePath2) end
 		if isFile(filePath3) then rmFile(filePath3) end
+		if isFile(filePath4) then rmFile(filePath4) end
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_basic.tview"

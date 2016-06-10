@@ -189,6 +189,17 @@ return{
 			}
 		end
 		unitTest:assertError(attrBoxNonBoolean, incompatibleTypeMsg("box", "boolean", 123))
+		
+		local boxDefaultError = function()
+			Layer{
+				project = proj,
+				input = "amazonia-states",
+				name = "cells",
+				resolution = 5e4,
+				box = false
+			}
+		end
+		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))		
 
 		local attrResolutionNonNumber = function()
 			Layer{
