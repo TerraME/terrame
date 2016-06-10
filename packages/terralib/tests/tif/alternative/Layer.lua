@@ -84,13 +84,13 @@ return {
 
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The available bands are from '0' to '4'.")
 		
-		local altimetria = Layer{
+		Layer{
 			project = proj,
 			name = "altimetria",
 			file = filePath("elevation.tif", "terralib")
 		}
 
-		local invalidBand = function()
+		invalidBand = function()
 			cl:fill{
 				operation = "mode",
 				attribute = "prod_mode",

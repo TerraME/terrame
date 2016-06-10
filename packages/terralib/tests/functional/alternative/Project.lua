@@ -25,52 +25,52 @@
 return{
 	Project = function(unitTest)
 		local noDataInContructor = function()
-			local proj = Project()
+			Project()
 		end
 		unitTest:assertError(noDataInContructor, tableArgumentMsg())
 
 		local attrFileNonString = function()
-			local proj = Project{file = 123}
+			Project{file = 123}
 		end
 		unitTest:assertError(attrFileNonString, incompatibleTypeMsg("file", "string", 123))
 
-		local attrFileNonString = function()
-			local proj = Project{file = "abc", author = "No author"}
+		attrFileNonString = function()
+			Project{file = "abc", author = "No author"}
 		end
 		unitTest:assertError(attrFileNonString, defaultValueMsg("author", "No author"))
 
-		local attrFileNonString = function()
-			local proj = Project{file = "abc", title = "No title"}
+		attrFileNonString = function()
+			Project{file = "abc", title = "No title"}
 		end
 		unitTest:assertError(attrFileNonString, defaultValueMsg("title", "No title"))
 
 		local attrCreateNonBool = function()
-			local proj = Project{file = "myproj.tview", clean = 2}
+			Project{file = "myproj.tview", clean = 2}
 		end
 		unitTest:assertError(attrCreateNonBool, incompatibleTypeMsg("clean", "boolean", 2))
 
 		local attrTitleNonString = function()
-			local proj = Project{file = "myproj.tview", title = 2}
+			Project{file = "myproj.tview", title = 2}
 		end
 		unitTest:assertError(attrTitleNonString, incompatibleTypeMsg("title", "string", 2))
 
 		local attrAuthorNonString = function()
-			local proj = Project{file = "myproj.tview", author = 2}
+			Project{file = "myproj.tview", author = 2}
 		end
 		unitTest:assertError(attrAuthorNonString, incompatibleTypeMsg("author", "string", 2))
 
 		local fileMandatory = function()
-			local proj = Project{clean = true}
+			Project{clean = true}
 		end
 		unitTest:assertError(fileMandatory, mandatoryArgumentMsg("file"))
 
 		local layerShouldBeString = function()
-			local proj = Project{file = "myproj.tview", cean = true}
+			Project{file = "myproj.tview", cean = true}
 		end
 		unitTest:assertError(layerShouldBeString, incompatibleTypeMsg("cean", "string", true))
 
 		local notFile = function()
-			local proj = Project{file = "myproj.tview", cean = "true.abc"}
+			Project{file = "myproj.tview", cean = "true.abc"}
 		end
 		unitTest:assertError(notFile, "Value of argument 'cean' is not a file.")
 	end

@@ -101,8 +101,7 @@ return {
 		end	
 		
 		local resolution = 0.7
-		local mask = true
-		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1)
 		
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
@@ -112,30 +111,8 @@ return {
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
 
-		-- NO MASK TEST
-		local clSet = tl:getDataSet(proj, clName)
-		unitTest:assertEquals(getn(clSet), 68)
-		
-		clName = clName.."_NoMask"
-		local shp2 = clName..".shp"
-		
-		if isFile(shp2) then
-			rmFile(shp2)
-		end			
-		
-		mask = false
-		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp2, mask)
-		
-		clSet = tl:getDataSet(proj, clName)
-		unitTest:assertEquals(getn(clSet), 104)
-		
-		-- END
 		if isFile(shp1) then
 			rmFile(shp1)
-		end	
-		
-		if isFile(shp2) then
-			rmFile(shp2)
 		end	
 		
 		rmFile(proj.file)
@@ -168,8 +145,7 @@ return {
 		
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 60e3
-		local mask = true
-		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1])
 		
 		local clSet = tl:getDataSet(proj, clName)
 		
@@ -686,7 +662,7 @@ return {
 		default = nil
 		tl:attributeFill(proj, layerName4, wsumLayerName, percTifLayerName, attribute, operation, select, area, default)
 		
-		local percentSet = tl:getDataSet(proj, percTifLayerName)
+		percentSet = tl:getDataSet(proj, percTifLayerName)
 		
 		unitTest:assertEquals(getn(percentSet), 402) 
 		
@@ -918,14 +894,13 @@ return {
 
 		local clName1 = "SampaShpCells"	
 		local resolution = 0.7
-		local mask = true
 		local cellsShp = clName1..".shp"
 		
 		if isFile(cellsShp) then
 			rmFile(cellsShp)
 		end
 		
-		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
+		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp)
 
 		local dSet = tl:getDataSet(proj, clName1)
 		
