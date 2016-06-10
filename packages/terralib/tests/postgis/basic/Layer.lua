@@ -243,7 +243,32 @@ return {
 		unitTest:assertEquals(layer4.password, password)
 		unitTest:assertEquals(layer4.database, newDbName)
 		unitTest:assertEquals(layer4.table, string.lower(clName4))		
-
+		
+		-- BOX TEST
+		local clSet = tl:getDataSet(proj, clName1)
+		unitTest:assertEquals(getn(clSet), 68)
+		
+		clName1 = clName1.."_Box"
+		local tName4 = string.lower(clName1)
+		pgData.table = tName4
+		tl:dropPgTable(pgData)	
+		
+		local layer5 = Layer{
+			project = proj,
+			source = "postgis",
+			input = layerName1,
+			name = clName1,
+			resolution = 0.7,
+			box = true,
+			user = user,
+			password = password,
+			database = database
+		}
+		
+		clSet = tl:getDataSet(proj, clName1)
+		unitTest:assertEquals(getn(clSet), 104)			
+	
+		-- END
 		if isFile(projName) then
 			rmFile(projName)
 		end	
@@ -253,6 +278,8 @@ return {
 		pgData.table = tName2
 		tl:dropPgTable(pgData)	
 		pgData.table = tName3
+		tl:dropPgTable(pgData)	
+		pgData.table = tName4
 		tl:dropPgTable(pgData)		
 		pgData.database = newDbName	
 		tl:dropPgDatabase(pgData)
