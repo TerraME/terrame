@@ -23,6 +23,40 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	-- Layer = function(unitTest)
+		-- #1152
+		-- local projName = "cellular_layer_fill_tiff_alternative.tview"
+
+		-- local proj = Project{
+			-- file = projName,
+			-- clean = true
+		-- }
+
+		-- local prodes = "prodes"
+		-- Layer{
+			-- project = proj,
+			-- name = prodes,
+			-- file = filePath("PRODES_5KM.tif", "terralib")	
+		-- }
+		
+		-- local clName1 = "cells"
+		-- local shp1 = clName1..".shp"
+		
+		-- local boxUnnecessary = function()
+			-- local cl = Layer{
+				-- project = proj,
+				-- source = "shp",
+				-- input = prodes,
+				-- name = clName1,
+				-- resolution = 60e3,
+				-- box = true,
+				-- file = clName1..".shp"
+			-- }
+		-- end
+		-- unitTest:assertError(boxUnnecessary, unnecessaryArgumentMsg("box")) -- SKIP
+		
+		-- rmFile(projName)
+	-- end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_tiff_alternative.tview"
 

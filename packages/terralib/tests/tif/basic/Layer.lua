@@ -23,6 +23,92 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	Layer = function(unitTest)
+		local projName = "tif_basic.tview"
+
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
+
+		local layerName1 = "Prodes"
+
+		Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("PRODES_5KM.tif", "terralib")
+		}	
+		
+		local filePath1 = "prodes_cells_tif_basic.shp"
+		
+		if isFile(filePath1) then
+			rmFile(filePath1)
+		end
+		
+		local clName1 = "Prodes_Cells"
+		
+		local cl1 = Layer{
+			project = proj,
+			source = "shp",
+			input = layerName1,
+			name = clName1,
+			resolution = 60e3,
+			file = filePath1
+		}	
+		
+		unitTest:assertEquals(clName1, cl1.name)
+		unitTest:assertEquals(cl1.source, "shp")
+		unitTest:assertEquals(cl1.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath1))			
+		
+		-- #1152
+		-- local host = "localhost"
+		-- local port = "5432"
+		-- local user = "postgres"
+		-- local password = "postgres"
+		-- local database = "postgis_22_sample"
+		-- local encoding = "CP1252"
+		-- local tableName = "prodes_pg_cells"
+		
+		-- local pgData = {
+			-- type = "POSTGIS",
+			-- host = host,
+			-- port = port,
+			-- user = user,
+			-- password = password,
+			-- database = database,
+			-- table = tableName,
+			-- encoding = encoding
+			
+		-- }		
+		
+		-- -- USED ONLY TO TESTS
+		-- local tl = TerraLib{}
+		-- tl:dropPgTable(pgData)
+		-- local clName2 = "ProdesPg"	
+		
+		-- local layer2 = Layer{
+			-- project = proj,
+			-- source = "postgis",
+			-- input = layerName1
+			-- name = clName2,
+			-- resolution = 60e3,
+			-- user = user,
+			-- password = password,
+			-- database = database,
+			-- table = tableName			
+		-- }				
+		
+		-- END
+		-- tl:dropPgTable(pgData)
+		
+		if isFile(filePath1) then
+			rmFile(filePath1)
+		end				
+		
+		if isFile(projName) then
+			rmFile(projName)
+		end		
+	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_tiff.tview"
 
