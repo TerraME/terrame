@@ -47,7 +47,7 @@ of this software and its documentation.
  *  Action Region Vector Composite Handle Type
  *
  */
-typedef CompositeInterface< vectorComposite< Region_<CellIndex> > >
+typedef CompositeInterface< vectorComposite< Region_<CellIndex> > >  
 											ActionRegionCompositeInterf;
 
 /**
