@@ -192,7 +192,7 @@ SocialNetwork_ = {
 	end,
 	--- Retrieve the number of connections in the SocialNetwork.
 	-- @deprecated SocialNetwork:#
-	size = function(self)
+	size = function()
 		deprecatedFunction("size", "operator #")
 	end
 }

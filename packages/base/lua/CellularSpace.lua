@@ -26,7 +26,7 @@ local terralib = getPackage("terralib")
 
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
-local function getCoordCoupling(cs, data)
+local function getCoordCoupling(_, data)
 	return function(cell)
 		local neighborhood = Neighborhood()
 		local neighCell = data.target:get(cell.x, cell.y)
@@ -46,7 +46,7 @@ local function getDiagonalNeighborhood(cs, data)
 			local col = -1
 			while col <= 1 do
 				if (lin ~= 0 and col ~= 0) or (data.self and lin == 0 and col == 0) then
-					local index = nil
+					local index
 					if data.wrap then
 						index = cs:get(
 							((cell.x + col) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin,
@@ -65,7 +65,7 @@ local function getDiagonalNeighborhood(cs, data)
 		end
 
 		local weight = 1 / #indexes
-		for i, index in ipairs(indexes) do
+		for _, index in ipairs(indexes) do
 			neigh:add(index, weight)
 		end
 
@@ -94,7 +94,7 @@ local function getMooreNeighborhood(cs, data)
 			local col = -1
 			while col <= 1 do 
 				if data.self or (lin ~= col or col ~= 0) then
-					local index = nil
+					local index
 					if data.wrap then
 						index = cs:get(
 							((cell.x + col) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin,
@@ -113,14 +113,14 @@ local function getMooreNeighborhood(cs, data)
 		end
 
 		local weight = 1 / #indexes
-		for i, index in ipairs(indexes) do
+		for _, index in ipairs(indexes) do
 			neigh:add(index, weight)
 		end
 		return neigh
 	end
 end
 
-local function getMxNNeighborhood(cs, data)
+local function getMxNNeighborhood(_, data)
 	local m = math.floor(data.m / 2)
 	local n = math.floor(data.n / 2)
 	local cs = data.target
@@ -159,7 +159,7 @@ local function getVonNeumannNeighborhood(cs, data)
 			local col = -1
 			while col <= 1 do
 				if ((lin == 0 or col == 0) and lin ~= col) or (data.self and lin == 0 and col == 0) then
-					local index = nil
+					local index
 					if data.wrap then
 						index = cs:get(
 							((cell.x + col) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin,
@@ -178,7 +178,7 @@ local function getVonNeumannNeighborhood(cs, data)
 		end
 
 		local weight = 1 / #indexes
-		for i, index in ipairs(indexes) do
+		for _, index in ipairs(indexes) do
 			neigh:add(index, weight)
 		end
 
@@ -702,15 +702,15 @@ CellularSpace_ = {
 
 			data2.target = self
 
-			local func = data.func(mtarget, data2)
+			local mfunc = data.func(mtarget, data2)
 
 			if data.inmemory then
 				forEachCell(mtarget, function(cell)
-					cell:addNeighborhood(func(cell), data2.name)
+					cell:addNeighborhood(mfunc(cell), data2.name)
 				end)
 			else
 				forEachCell(mtarget, function(cell)
-					cell:addNeighborhood(func, data2.name)
+					cell:addNeighborhood(mfunc, data2.name)
 				end)
 			end
 		end
@@ -806,21 +806,18 @@ CellularSpace_ = {
 		end
 	end,
 	--- Return a Cell from the CellularSpace given its x and y location.
-	-- @arg xIndex A number with the x location of the Cell to be returned.
-	-- @arg yIndex A number with the y location of the Cell to be returned.
 	-- @deprecated CellularSpace:get
-	getCell = function(self, xIndex, yIndex)
+	getCell = function()
 		deprecatedFunction("getCell", "get")
 	end,
 	--- Return a Cell from the CellularSpace given its id.
-	-- @arg cellID A string with the unique identifier of the Cell to be returned.
 	-- @deprecated CellularSpace:get
-	getCellByID = function(self, cellID)
+	getCellByID = function()
 		deprecatedFunction("getCellByID", "get")
 	end,
 	--- Return all the Cells of the CellularSpace as a vector.
 	-- @deprecated CellularSpace.cells
-	getCells = function(self)
+	getCells = function()
 		deprecatedFunction("getCells", ".cells")
 	end,
 	--- Load the CellularSpace from the database. TerraME automatically executes this function when
@@ -828,7 +825,7 @@ CellularSpace_ = {
 	-- all attributes and relations created by the modeler.
 	-- @usage cs = CellularSpace{xdim = 10}
 	-- cs:load()
-	load = function(self)
+	load = function()
 		customError("Load function was not implemented.")
 	end,
 	--- Load a Neighborhood stored in an external source. Each Cell receives its own set of 
@@ -899,10 +896,7 @@ CellularSpace_ = {
 			positiveArgument(1, modelTime, true)
 		end
 
-		local typename = ""
-
 		if self.obsattrs_ then
-			typename = "CellularSpace"
 			forEachElement(self.obsattrs_, function(idx)
 				if type(self[idx]) ~= "function" then
 					customError("Could not execute function '"..idx.."' from CellularSpace because it was replaced by a '"..type(self[idx]).."'.")
@@ -913,7 +907,6 @@ CellularSpace_ = {
 		end
 
 		if self.cellobsattrs_ then
-			typename = "Cell"
 			forEachElement(self.cellobsattrs_, function(idx)
 				forEachCell(self, function(cell)
 					if type(cell[idx]) ~= "function" then
@@ -993,7 +986,7 @@ CellularSpace_ = {
 				local dset = tlib:getDataSet(self.project, self.layer)
 				local isOgr = false
 
-				for k, v in pairs(dset[0]) do
+				for k in pairs(dset[0]) do
 					if k == "OGR_GEOMETRY" then
 						isOgr = true
 					end
@@ -1018,7 +1011,7 @@ CellularSpace_ = {
 	end,
 	--- Return the number of Cells in the CellularSpace.
 	-- @deprecated CellularSpace:#
-	size = function(self)
+	size = function()
 		deprecatedFunction("size", "operator #")
 	end,
 	--- Split the CellularSpace into a table of Trajectories according to a classification 
@@ -1123,22 +1116,20 @@ CellularSpace_ = {
 	-- print(c.forest)
 	-- print(c.past.forest)
 	synchronize = function(self, values)
-		if values == nil then
-			values = {}
-			local cell = self.cells[1]
-			for k, v in pairs(cell) do
-				if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
-					table.insert(values, k)
+		if type(values) == "string" then values = {values} end
+		if type(values) ~= "table" then 
+			if values == nil then
+				values = {}
+				local cell = self.cells[1]
+				for k in pairs(cell) do
+					if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
+						table.insert(values, k)
+					end
 				end
+			else
+				incompatibleTypeError(1, "string, table or nil", values)
 			end
 		end
-
-		if type(values) == "string" then
-			values = {values}
-		elseif type(values) ~= "table" then 
-			incompatibleTypeError(1, "string, table or nil", values)
-		end
-
 		local s = "return function(cell)\n"
 		s = s.."cell.past = {"
 
@@ -1267,7 +1258,7 @@ function CellularSpace(data)
 			data.source = candidates[1]
 		else
 			local str = ""
-			forEachElement(candidates, function(idx, value)
+			forEachElement(candidates, function(_, value)
 				str = str.."'"..value.."', "
 			end)
 
@@ -1326,12 +1317,12 @@ function CellularSpace(data)
 				end
 
 				data[attribute] = function(cs, args)
-					return forEachCell(cs, function(cell)
-						if type(cell[attribute]) ~= "function" then
-							incompatibleTypeError(attribute, "function", cell[attribute])
+					return forEachCell(cs, function(mcell)
+						if type(mcell[attribute]) ~= "function" then
+							incompatibleTypeError(attribute, "function", mcell[attribute])
 						end
 
-						return cell[attribute](cell, args)
+						return mcell[attribute](mcell, args)
 					end)
 				end
 			elseif mtype == "number" or (mtype == "Random" and value.distrib ~= "categorical" and (value.distrib ~= "discrete" or type(value[1]) == "number")) then
@@ -1343,12 +1334,12 @@ function CellularSpace(data)
 				if attribute ~= "x" and attribute ~= "y" then
 					data[attribute] = function(cs)
 						local quantity = 0
-						forEachCell(cs, function(cell)
-							if type(cell[attribute]) ~= "number" then
-								incompatibleTypeError(attribute, "number", cell[attribute])
+						forEachCell(cs, function(mcell)
+							if type(mcell[attribute]) ~= "number" then
+								incompatibleTypeError(attribute, "number", mcell[attribute])
 							end
 
-							quantity = quantity + cell[attribute]
+							quantity = quantity + mcell[attribute]
 						end)
 						return quantity
 					end
@@ -1361,8 +1352,8 @@ function CellularSpace(data)
 
 				data[attribute] = function(cs)
 					local quantity = 0
-					forEachCell(cs, function(cell)
-						if cell[attribute] then
+					forEachCell(cs, function(mcell)
+						if mcell[attribute] then
 							quantity = quantity + 1
 						end
 					end)
@@ -1376,12 +1367,12 @@ function CellularSpace(data)
 
 				data[attribute] = function(cs)
 					local result = {}
-					forEachCell(cs, function(cell)
-						local value = cell[attribute]
-						if result[value] then
-							result[value] = result[value] + 1
+					forEachCell(cs, function(mcell)
+						local mvalue = mcell[attribute]
+						if result[mvalue] then
+							result[mvalue] = result[mvalue] + 1
 						else
-							result[value] = 1
+							result[mvalue] = 1
 						end
 					end)
 					return result
@@ -1401,7 +1392,7 @@ function CellularSpace(data)
 
 		forEachCell(data, function(cell)
 			setmetatable(cell, {__index = data.instance})
-			forEachElement(data.instance, function(attribute, value, mtype)
+			forEachElement(data.instance, function(attribute, value)
 				if not string.endswith(attribute, "_") and not belong(attribute, {"x", "id", "y", "past"}) then 
 					cell[attribute] = value
 				end

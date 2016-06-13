@@ -49,9 +49,8 @@ Trajectory_ = {
 		self.cObj_:add(#self, cell.cObj_)
 	end,
 	--- Add a new Cell to the Trajectory.
-	-- @arg cell A Cell that will be added.
 	-- @deprecated Trajectory:add
-	addCell = function(self, cell)
+	addCell = function()
 		deprecatedFunction("addCell", "add")
 	end,
 	--- Remove all Cells from the Trajectory.
@@ -180,9 +179,8 @@ Trajectory_ = {
 		return result
 	end,
 	--- Return a cell given its x and y locations.
-	-- @arg index a Coord.
 	-- @deprecated Trajectory:get
-	getCell = function(self, index)
+	getCell = function()
 		deprecatedFunction("getCell", "get")
 	end,
 	--- Randomize the Cells of the Trajectory. It will change the traversing order used by

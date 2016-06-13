@@ -147,7 +147,7 @@ Timer_ = {
 	end,
 	--- Run the simulation.
 	-- @deprecated Timer:run
-	execute = function(self)
+	execute = function()
 		deprecatedFunction("execute", "run")
 	end,
 	--- Return a vector with the Events of the Timer.

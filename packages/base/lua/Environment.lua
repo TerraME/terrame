@@ -210,7 +210,6 @@ Environment_ = {
 		end
 
 		local mycs
-		local mysoc
 		local foundsoc
 
 		defaultTableValue(data, "strategy", "random")
@@ -226,7 +225,7 @@ Environment_ = {
 
 		local qty_agents = 0
 
-		for k, ud in pairs(self) do
+		for _, ud in pairs(self) do
 			local t = type(ud)
 			if belong(t, {"CellularSpace", "Trajectory", "Cell"}) then
 				if mycs ~= nil then
@@ -286,7 +285,7 @@ Environment_ = {
 	end,
 	--- Run the Environment.
 	-- @deprecated Timer:run
-	execute = function(self)
+	execute = function()
 		deprecatedFunction("execute", "run")
 	end,
 	--- Run the Environment until a given time. It activates the Timers it contains, the Timers
@@ -417,8 +416,6 @@ Environment_ = {
 		local attribNames = {}
 
 		for i = 1, numAttributes do
-			if i ~= 1 then local beginName = string.find(header, "%s", (endName + 1)) end
-
 			local endName = string.find(header, "%s", beginName + 1)
 			
 			attribNames[i] = string.sub(header, beginName + 1)
@@ -430,7 +427,7 @@ Environment_ = {
 		end
 		
 		local cellSpaces = {}
-		for i, element in pairs(self) do
+		for _, element in pairs(self) do
 			if type(element) == "CellularSpace" then
 				local cellSpaceLayer = element.layer
 				
@@ -523,7 +520,7 @@ Environment_ = {
 		until(line_cell == nil)
 
 		if data.bidirect then
-			for i, cell2 in ipairs(cellSpaces[2].cells) do
+			for _, cell2 in ipairs(cellSpaces[2].cells) do
 				local neighborhoodNeigh = cell2:getNeighborhood(data.name)
 				if neighborhoodNeigh == nil then
 					neighborhoodNeigh = Neighborhood()
@@ -599,14 +596,13 @@ function Environment(data)
 		elseif t == "Timer" or t == "Agent" or t == "Environment" then
 			ud.parent = data
 			cObj:add(ud.cObj_)
-		elseif t == "Cell" or t == "Group" or t == "Trajectory" then
 		elseif type(_G[t]) == "Model" then
-			forEachElement(ud, function(idx, value, mtype)
+			forEachElement(ud, function(_, value, mtype)
 				if mtype == "Timer" or mtype == "Environment" then
 					cObj:add(value.cObj_)
 				end
 			end)
-		elseif k ~= "id" then
+		elseif k ~= "id" and not belong(t, {"Cell", "Group", "Trajectory"}) then
 			strictWarning("Argument '"..k.."' (a '"..t.."') is unnecessary for the Environment.")
 		end
 	end)

@@ -473,7 +473,6 @@ end
 -- it returns nil.
 -- @arg value A string.
 -- @arg options A named table with the possible suggestions.
--- It can also be a vector of strings.
 -- @usage t = {
 --     blue = true,
 --     red = true,
@@ -485,16 +484,6 @@ end
 function suggestion(value, options)
 	mandatoryArgument(1, "string", value)
 	mandatoryArgument(2, "table", options)
-
-	if #options > 0 then
-		local moptions = {}
-
-		forEachElement(options, function(_, value)
-			moptions[value] = true
-		end)
-
-		options = moptions
-	end
 
 	local distance = string.len(value)
 	local word
