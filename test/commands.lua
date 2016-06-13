@@ -78,6 +78,8 @@ basic = {
 	builderror4         = {arg = "-build", package = "build", config = "pattern.lua"},
 	builderror5         = {arg = "-build", package = "onerror"},
 	basictrace          = {script = "trace-basic.lua"},
+	tracepackage        = {script = "trace-package.lua"},
+	tracesyntax         = {script = "trace-syntax.lua"},
 	fulltrace           = {script = "trace-basic.lua", arg = "-ft"},
 	traceagent          = {script = "trace-agent.lua"},
 	tracecell           = {script = "trace-cell.lua"},

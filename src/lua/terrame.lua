@@ -1631,18 +1631,26 @@ function _Gtme.myxpcall(func)
 		else
 			local msg = _Gtme.traceback()
 
+			local olderr = err
+			local line
+			local file
 			local pos = string.find(err, "Error:") -- TerraME error
 
 			if pos then -- error in some package
 				err = string.sub(err, pos)
 			else -- lua errror in the user's script
 				pos = string.find(err, ":") -- remove first ":"
+				file = string.sub(err, 1, pos - 1)
 				err = string.sub(err, pos + 1)
 				pos = string.find(err, ":") -- remove second ":"
+				line = string.sub(err, 1, pos - 1)
 				err = "Error:"..string.sub(err, pos + 1)
 			end
 
-			if msg ~= "" then
+			if msg == "Stack traceback:" then
+				msg = err.."\n"..msg
+				msg = msg.."\n\tFile "..file..", line "..line
+			elseif msg ~= "" then
 				msg = err.."\n"..msg
 			else
 				msg = err
