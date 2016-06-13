@@ -138,7 +138,8 @@ return {
 		
 		local clName1 = "SampaPgCells"	
 		local resolution = 0.7
-		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData)
+		local mask = true
+		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 		
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName1])
 		unitTest:assertEquals(layerInfo.name, clName1)
@@ -150,10 +151,28 @@ return {
 		unitTest:assertEquals(layerInfo.password, password)
 		unitTest:assertEquals(layerInfo.database, database)
 		unitTest:assertEquals(layerInfo.table, tableName)		
-		unitTest:assertNotNil(layerInfo.sid)		
+		unitTest:assertNotNil(layerInfo.sid)	
+
+		-- NO MASK TEST		
+		local clSet = tl:getDataSet(proj, clName1)
+		unitTest:assertEquals(getn(clSet), 68)
 		
+		clName1 = clName1.."_NoMask"
+		local pgData2 = pgData
+		pgData2.tableName = clName1
+		
+		tl:dropPgTable(pgData2)
+		
+		mask = false
+		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData2, mask)
+		
+		clSet = tl:getDataSet(proj, clName1)
+		unitTest:assertEquals(getn(clSet), 104)		
+		
+		-- END
 		rmFile(proj.file)
 		tl:dropPgTable(pgData)
+		tl:dropPgTable(pgData2)
 		tl:dropPgDatabase(pgData)		
 	end,	
 	attributeFill = function(unitTest)
@@ -198,7 +217,8 @@ return {
 		-- CREATE THE CELLULAR SPACE
 		local clName = "Para_Cells"	
 		local resolution = 60e3
-		tl:addPgCellSpaceLayer(proj, layerName1, clName, resolution, pgData)
+		local mask = true
+		tl:addPgCellSpaceLayer(proj, layerName1, clName, resolution, pgData, mask)
 		
 		local clSet = tl:getDataSet(proj, clName)
 		
@@ -1072,7 +1092,8 @@ return {
 		
 		local clName1 = "SampaPgCells"	
 		local resolution = 0.7
-		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData)
+		local mask = true
+		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 
 		local dSet = tl:getDataSet(proj, clName1)
 		
