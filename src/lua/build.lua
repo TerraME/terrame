@@ -255,12 +255,10 @@ function _Gtme.buildPackage(package, config, clean)
 		return attr
 	end
 
-	local result = {}
-
 	forEachFile(pkgInfo.path..s.."lua", function(fname)
-		local data = _Gtme.include(pkgInfo.path..s.."lua"..s..fname)
+		local mdata = _Gtme.include(pkgInfo.path..s.."lua"..s..fname)
 		if attrTab ~= nil then
-			forEachElement(data, function(idx, value)
+			forEachElement(mdata, function(idx, value)
 				if value == attrTab then
 					if idx..".lua" == fname then
 						print("Model '"..idx.."' belongs to file '"..fname.."'")

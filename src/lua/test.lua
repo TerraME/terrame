@@ -119,17 +119,14 @@ local function lineTable(filename)
 			if state == "code" then
 				if c == "" then
 					break
-				elseif c == " " or c == "\t" then
-
 				elseif c == "-" then
 					state = "-"
-				else
+				elseif c ~= " " or c ~= "\t" then
 					mtable[count] = 0
 					break
 				end
 			elseif state == "-" then
 				if c == "-" then
-					state = "code"
 					break
 				else
 					mtable[count] = 0
@@ -169,12 +166,12 @@ local function buildLineTable(package)
 
 	local testlines = {} -- test functions store all the functions that need to be tested, extracted from the source code
 
-	for i, file in ipairs(load_sequence) do
+	for _, file in ipairs(load_sequence) do
 		-- the 'include' below does not need to be inside a xpcall because
 		-- the package was already loaded with success
 		testlines[file] = lineTable(baseDir..s.."lua"..s..file)
 
-		local function trace(event, line)
+		local function trace(_, line)
 			testlines[file][line] = 1
 		end
 
@@ -296,9 +293,9 @@ function _Gtme.executeTests(package, fileName)
 		printError("Error: print() call detected with argument '"..tostring(arg).."'")
 	end
 
-	local pkgData, overwritten
+	local overwritten
 
-	xpcall(function() pkgData, overwritten = _G.getPackage(package) end, function(err)
+	xpcall(function() _, overwritten = _G.getPackage(package) end, function(err)
 		printError("Package '"..package.."' could not be loaded.")
 		printError(err)
 		printError(_Gtme.traceback())
@@ -494,7 +491,7 @@ function _Gtme.executeTests(package, fileName)
 					myTests = {data.test}
 				end
 			elseif data.test == nil then
-				forEachOrderedElement(tests, function(index, value, mtype)
+				forEachOrderedElement(tests, function(index)
 					myTests[#myTests + 1] = index
 				end)
 			else -- table
@@ -511,22 +508,20 @@ function _Gtme.executeTests(package, fileName)
 					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
 			end
 
-			local function trace(event, line)
-				local s = debug.getinfo(2).short_src
-				s = _Gtme.makePathCompatibleToAllOS(s)
-				local short = string.match(s, "([^/]-)$")
+			local function trace(_, line)
+				local ss = debug.getinfo(2).short_src
+				ss = _Gtme.makePathCompatibleToAllOS(ss)
+				local short = string.match(ss, "([^/]-)$")
 
-				if short == eachFile and string.match(s, "tests") then
+				if short == eachFile and string.match(ss, "tests") then
 					if myAssertTable[line] then
 						myAssertTable[line] = myAssertTable[line] + 1
 					end
 				end
 
-				if data.lines and short == eachFile and not string.match(s, "tests") then
+				if data.lines and short == eachFile and not string.match(ss, "tests") then
 					if executionlines[eachFile] then	
-						if not executionlines[eachFile][line] then
-							--printNote(line)
-						else
+						if executionlines[eachFile][line] then
 							executionlines[eachFile][line] = executionlines[eachFile][line] + 1
 						end
 					end
@@ -661,7 +656,7 @@ function _Gtme.executeTests(package, fileName)
 				found[value] = false
 			end)
 
-			forEachOrderedElement(data.file, function(idx, value)
+			forEachOrderedElement(data.file, function(_, value)
 				forEachOrderedElement(testfunctions, function(midx, mvalue)
 					if not string.match(midx, value) then return end
 
@@ -702,7 +697,7 @@ function _Gtme.executeTests(package, fileName)
 	if data.lines then
 		printNote("Checking lines of source code")
 		if type(data.file) == "table" then
-			forEachOrderedElement(data.file, function(idx, value)
+			forEachOrderedElement(data.file, function(_, value)
 				forEachElement(executionlines, function(midx, mvalue)
 					if not string.match(midx, value) then return end
 
@@ -718,9 +713,9 @@ function _Gtme.executeTests(package, fileName)
 		else -- nil
 			forEachOrderedElement(executionlines, function(idx, mvalue)
 				print("Checking "..idx)
-				forEachOrderedElement(mvalue, function(idx, value)
+				forEachOrderedElement(mvalue, function(midx, value)
 					if value == 0 then
-						printError("Line "..idx.." was not executed.")
+						printError("Line "..midx.." was not executed.")
 						ut.lines_not_executed = ut.lines_not_executed + 1
 					end
 				end)
@@ -735,7 +730,7 @@ function _Gtme.executeTests(package, fileName)
 		printNote("Testing examples")
 		local dirFiles = _Gtme.findExamples(package)
 		if #dirFiles > 0 then
-			forEachElement(dirFiles, function(idx, value)
+			forEachElement(dirFiles, function(_, value)
 				print("Testing "..value)
 				if not doc_functions then io.flush() end -- theck why it is necessary to have the 'if'
 				Random{seed = 987654321}

@@ -98,9 +98,9 @@ local function verifyTest(package, report)
 
 				local countMap = 1
 
-				forEachOrderedElement(model, function(idx, value, mtype)
+				forEachOrderedElement(model, function(midx, _, mtype)
 					if mtype == "Map" then
-						str = str.."\t\tunitTest:assertSnapshot(model."..idx..", \""..func.."-map-"..countMap.."-begin.bmp\")\n"
+						str = str.."\t\tunitTest:assertSnapshot(model."..midx..", \""..func.."-map-"..countMap.."-begin.bmp\")\n"
 						countMap = countMap + 1
 					end
 				end)
@@ -112,14 +112,14 @@ local function verifyTest(package, report)
 				str = str.."\t\tmodel:execute()\n\n"
 
 				local countChart = 1
-				local countMap = 1
+				countMap = 1
 
-				forEachOrderedElement(model, function(idx, value, mtype)
+				forEachOrderedElement(model, function(midx, _, mtype)
 					if mtype == "Chart" then
-						str = str.."\t\tunitTest:assertSnapshot(model."..idx..", \""..func.."-chart-"..countChart..".bmp\")\n"
+						str = str.."\t\tunitTest:assertSnapshot(model."..midx..", \""..func.."-chart-"..countChart..".bmp\")\n"
 						countChart = countChart + 1
 					elseif mtype == "Map" then
-						str = str.."\t\tunitTest:assertSnapshot(model."..idx..", \""..func.."-map-"..countMap.."-end.bmp\")\n"
+						str = str.."\t\tunitTest:assertSnapshot(model."..midx..", \""..func.."-map-"..countMap.."-end.bmp\")\n"
 						countMap = countMap + 1
 					end
 				end)

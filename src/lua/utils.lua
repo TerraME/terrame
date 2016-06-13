@@ -174,66 +174,7 @@ local TME_LEGEND_CURVE_STYLE_USER = {
 	["dots"]   = TME_LEGEND_CURVE_STYLE.DOTS
 }
 
--- Curve symbol -----------------------------------------------------------
--- Based on Qwt library (see QwtSymbol::Style)
-local TME_LEGEND_CURVE_SYMBOL = {
-	NOSYMBOL    = -1,
-	ELLIPSE     =  0,
-	RECT        =  1,
-	DIAMOND     =  2,
-	TRIANGLE    =  3,
-	DTRIANGLE   =  4,
-	UTRIANGLE   =  5,
-	LTRIANGLE   =  6,
-	RTRIANGLE   =  7,
-	CROSS       =  8,
-	XCROSS      =  9,
-	HLINE       = 10,
-	VLINE       = 11,
-	ASTERISK    = 12,
-	STAR2       = 13,
-	HEXAGON     = 14 
-}
-
-local TME_LEGEND_CURVE_SYMBOL_USER = {
-	["none"]      = TME_LEGEND_CURVE_SYMBOL.NOSYMBOL,
-	["ellipse"]   = TME_LEGEND_CURVE_SYMBOL.ELLIPSE,
-	["rect"]      = TME_LEGEND_CURVE_SYMBOL.RECT,
-	["diamond"]   = TME_LEGEND_CURVE_SYMBOL.DIAMOND,
-	["triangle"]  = TME_LEGEND_CURVE_SYMBOL.TRIANGLE,
-	["dtriangle"] = TME_LEGEND_CURVE_SYMBOL.DTRIANGLE,
-	["utriangle"] = TME_LEGEND_CURVE_SYMBOL.UTRIANGLE,
-	["ltriangle"] = TME_LEGEND_CURVE_SYMBOL.LTRIANGLE,
-	["rtriangle"] = TME_LEGEND_CURVE_SYMBOL.RTRIANGLE,
-	["cross"]     = TME_LEGEND_CURVE_SYMBOL.CROSS,
-	["xcross"]    = TME_LEGEND_CURVE_SYMBOL.XCROSS,
-	["hline"]     = TME_LEGEND_CURVE_SYMBOL.HLINE,
-	["vline"]     = TME_LEGEND_CURVE_SYMBOL.VLINE,
-	["asterisk"]  = TME_LEGEND_CURVE_SYMBOL.ASTERISK,
-	["star"]      = TME_LEGEND_CURVE_SYMBOL.STAR2,
-	["hexagon"]   = TME_LEGEND_CURVE_SYMBOL.HEXAGON,  
-}
-
--- Legend keys
-local LEG_KEYS = {
-	type = "type" ,
-	grouping = "grouping",
-	slices = "slices",
-	precision = "precision",
-	stdDeviation = "stdDeviation",
-	maximum = "maximum",
-	minimum = "minimum",
-	colorBar = "colorBar",
-	stdColorBar = "stdColorBar",
-	font = "font",
-	fontSize = "fontSize",
-	symbol = "symbol",
-	width = "width",
-	style = "style"
-}
-
 -- LEGEND CREATION FUNCTIONS
-local DEF_TYPE = TME_LEGEND_TYPE.NUMBER
 local DEF_GROUP = TME_LEGEND_GROUPING.EQUALSTEPS
 local DEF_SLICES = 2
 local DEF_PRECISION = 4
@@ -247,26 +188,6 @@ local DEF_FONT_SIZE = 12
 local DEF_FONT_SYMBOL = string.char(174) -- arrow in the font Symbol
 local DEF_WIDTH = 2 -- 5
 local DEF_CURVE_STYLE = TME_LEGEND_CURVE_STYLE.LINES
-local DEF_CURVE_SYMBOL = TME_LEGEND_CURVE_SYMBOL.NOSYMBOL
-
-local function defaultBasicLegend()
-	data = {}
-	data.type = DEF_TYPE
-	data.grouping = DEF_GROUP
-	data.slices = DEF_SLICES
-	data.precision = DEF_PRECISION
-	data.stdDeviation = DEF_STD_DEV
-	data.maximum = DEF_MAX
-	data.minimum = DEF_MIN
-	data.colorBar = DEF_COLOR
-	data.stdColorBar = DEF_STD_COLOR
-	data.font = DEF_FONT
-	data.fontSize = DEF_FONT_SIZE
-	data.symbol = DEF_FONT_SYMBOL
-	data.width = DEF_WIDTH
-	data.style = DEF_CURVE_STYLE
-	return data
-end
 
 -- Convert the colorBar for a string
 -- Output format:
@@ -309,7 +230,7 @@ local function colorBarToString(colorBar)
 		if item.label ~= nil and type(item.label) == "string" then
 			str = str .. item.label .. ITEM_SEP
 		elseif item.value ~= nil then
-			local val = ""
+			local val
 			if type(item.value) == "boolean" then
 				val = 0
 				if item.value == true then val = 1 end
@@ -579,8 +500,6 @@ function _Gtme.Legend(data)
 
 	if data.minimum == nil then
 		if data.colorBar ~= nil then
-			local theType = type(data.colorBar[1].value) -- it was already checked that values have the same type
-
 			local colorBarValues = {}
 			for i = 1, #data.colorBar do
 				table.insert(colorBarValues, data.colorBar[i].value)
@@ -646,7 +565,7 @@ function _Gtme.Legend(data)
 			incompatibleTypeError("slices", "integer number between 1 and 255", data.slices, 3)
 		end
 
-		local intPart, fracPart = math.modf(data.slices)
+		local _, fracPart = math.modf(data.slices)
 		if data.slices > 255 then
 			incompatibleValueError("slices", "integer number between 1 and 255", data.slices, 3)
 		elseif data.slices < 1 then
@@ -690,7 +609,7 @@ function _Gtme.Legend(data)
 				local precisions = {}
 				for i = 1, #colorBarValues do
 					local strValue = "".. colorBarValues[i]
-					local beginI,endI = string.find(strValue, "%.")
+					local beginI = string.find(strValue, "%.")
 
 					if beginI ~= nil then
 						local subStrValue = string.sub(strValue,beginI+1)
@@ -714,7 +633,7 @@ function _Gtme.Legend(data)
 			incompatibleTypeError("precision", "integer number greater than or equal to 1 (one)", data.precision, 3)
 		end
 
-		local intPart, fracPart = math.modf(data.precision)
+		local _, fracPart = math.modf(data.precision)
 		if data.precision < 1 then
 			incompatibleValueError("precision", "integer number greater than or equal to 1 (one)", data.precision, 3)
 		elseif fracPart ~= 0 then
@@ -787,7 +706,6 @@ function _Gtme.stringToLabel(mstring, parent)
 		while i <= mstring:len() do
 			local char = string.sub(mstring, i, i)
 			local nextchar = string.sub(mstring, i + 1, i + 1)
-			local post = string.sub(mstring, i + 2, mstring:len())
 
 			if char == "_" then
 				nextchar = string.upper(nextchar)

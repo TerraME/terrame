@@ -291,12 +291,12 @@ local function installButtonClicked()
 
 	local pkgsTab = {}
 
-	local dialog = qt.new_qobject(qt.meta.QDialog)
-	dialog.windowTitle = "Download and install package"
+	local mdialog = qt.new_qobject(qt.meta.QDialog)
+	mdialog.windowTitle = "Download and install package"
 
 	local externalLayout = qt.new_qobject(qt.meta.QVBoxLayout)
 
-	qt.ui.layout_add(dialog, externalLayout)
+	qt.ui.layout_add(mdialog, externalLayout)
 
 	local listPackages = qt.new_qobject(qt.meta.QListWidget)
 
@@ -325,15 +325,15 @@ local function installButtonClicked()
 		qt.listwidget_add_item(listPackages, package)
 	end)
 
-	local installButton = qt.new_qobject(qt.meta.QPushButton)
-	installButton.text = "Install"
-	qt.connect(installButton, "clicked()", function()
+	local installButton2 = qt.new_qobject(qt.meta.QPushButton)
+	installButton2.text = "Install"
+	qt.connect(installButton2, "clicked()", function()
 		local tmpdirectory = tmpDir()
 		local cdir = currentDir()
 
 		_Gtme.chDir(tmpdirectory)
 
-		local pkgfile = pkgsTab[listPackages.currentRow].file
+		local mpkgfile = pkgsTab[listPackages.currentRow].file
 		local installed = {}
 
 		local installRecursive
@@ -349,7 +349,6 @@ local function installButtonClicked()
     		_Gtme.print("Verifying dependencies")
 
     		local pinfo = packageInfo(package)
-    		local result = true
 
     		if pinfo.tdepends then
 		    	forEachElement(pinfo.tdepends, function(_, dtable)
@@ -383,8 +382,8 @@ local function installButtonClicked()
 			return true
 		end
 
-		local result = installRecursive(pkgfile)
-		local package = string.sub(pkgfile, 1, string.find(pkgfile, "_") - 1)
+		local result = installRecursive(mpkgfile)
+		local package = string.sub(mpkgfile, 1, string.find(mpkgfile, "_") - 1)
 
 		if result then
 			msg = "Package '"..package.."' successfully installed."
@@ -413,17 +412,17 @@ local function installButtonClicked()
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
 
-		rmFile(pkgfile)
+		rmFile(mpkgfile)
 
 		_Gtme.chDir(cdir)
 		rmDir(tmpdirectory)
-		dialog:done(0)
+		mdialog:done(0)
 	end)
 
 	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
 	cancelButton.text = "Cancel"
 	qt.connect(cancelButton, "clicked()", function()
-		dialog:done(0)
+		mdialog:done(0)
 	end)
 
 	local description = qt.new_qobject(qt.meta.QLabel)
@@ -431,7 +430,7 @@ local function installButtonClicked()
 		"\n\t\t\t\t\t\t\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 
 	qt.connect(listPackages, "itemClicked(QListWidgetItem*)", function()
-		installButton.enabled = pkgsTab[listPackages.currentRow].newversion
+		installButton2.enabled = pkgsTab[listPackages.currentRow].newversion
 
 		local idx = pkgsTab[listPackages.currentRow].file
 
@@ -457,7 +456,7 @@ local function installButtonClicked()
 			lines = lines + 1
 		end
 
-		local mtext, mlines = breakLines("Author(s): "..packages[package].authors)
+		mtext, mlines = breakLines("Author(s): "..packages[package].authors)
 		lines = lines + mlines
 		text = text.."\n"..mtext
 
@@ -483,12 +482,12 @@ local function installButtonClicked()
 	qt.ui.layout_add(externalLayout, internalLayout)
 
 	internalLayout = qt.new_qobject(qt.meta.QHBoxLayout)
-	qt.ui.layout_add(internalLayout, installButton)
+	qt.ui.layout_add(internalLayout, installButton2)
 	qt.ui.layout_add(internalLayout, cancelButton)
 
 	qt.ui.layout_add(externalLayout, internalLayout)
-	dialog:show()
-	dialog:exec()
+	mdialog:show()
+	mdialog:exec()
 	enableAll()
 end
 	
@@ -505,7 +504,7 @@ local function installLocalButtonClicked()
 	local _, pfile = string.match(file, "(.-)([^/]-([^%.]+))$") -- remove path from the file
 	local package
 
-	local result = xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function(err)
+	xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function()
 		qt.dialog.msg_information(file.." is not a valid file name for a TerraME package.")
 	end)
 
@@ -679,6 +678,6 @@ function _Gtme.packageManager()
 
 	selectPackage()
 	dialog:show()
-	local result = dialog:exec()
+	dialog:exec()
 end
 

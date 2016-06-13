@@ -107,7 +107,6 @@ end
 
 function _Gtme.fontFiles(package)
 	local s = sessionInfo().separator
-	local path = sessionInfo().path
 	local fontpath = packageInfo(package).path..s.."font"
 
 	if not isDir(fontpath) then
@@ -232,7 +231,7 @@ function _Gtme.buildCountTable(package)
 		if mtype == "function" or type(v) == "Model" then
 			testfunctions[currentFile][k] = 0
 		elseif mtype == "table" then
-			_Gtme.forEachElement(v, function(midx, mvalue, mmtype)
+			_Gtme.forEachElement(v, function(midx, _, mmtype)
 				if mmtype == "function" or mmtype == "Model" then
 					testfunctions[currentFile][midx] = 0
 				end
@@ -241,7 +240,7 @@ function _Gtme.buildCountTable(package)
 
 	end})
 
-	for i, file in ipairs(load_sequence) do
+	for _, file in ipairs(load_sequence) do
 		testfunctions[file] = {}
 		currentFile = file
 		lf = loadfile(baseDir..s.."lua"..s..file, 't', result)
@@ -505,7 +504,6 @@ local function exportDatabase(package)
 	local user = config.user
 	local password = config.password
 	local host = config.host
-	local drop = config.drop
 
 	local command = "mysqldump"
 
@@ -577,7 +575,7 @@ local function mySqlExists()
 end
 
 local function isMySqlOnPath() 
-	local result, err = _Gtme.runCommand("mysql --version")
+	local result = _Gtme.runCommand("mysql --version")
 
 	if #result > 0 then
 		return true
@@ -587,7 +585,7 @@ local function isMySqlOnPath()
 end
 
 local function isValidDbConnection(command, options)
-	local result, err = _Gtme.runCommand("\""..command.."\" "..options.. " <")
+	local _, err = _Gtme.runCommand("\""..command.."\" "..options.. " <")
 
 	for i = 1, #err, 1 do
 		local out = string.upper(err[i])
@@ -666,7 +664,7 @@ function _Gtme.importDatabase(package)
 
 		if drop then
 			_Gtme.printNote("Deleting database '"..database.."'")
-			local _, result = _Gtme.runCommand("\""..command.."\" "..options.." -e \"drop database "..database.."\"")
+			_Gtme.runCommand("\""..command.."\" "..options.." -e \"drop database "..database.."\"")
 		end
 
 		_Gtme.printNote("Creating database '"..database.."'")
@@ -790,14 +788,12 @@ function _Gtme.installPackage(file)
 	
 	local _, pfile = string.match(file, "(.-)([^/]-([^%.]+))$") -- remove path from the file
 
-	local result = xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function(err)
+	xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function()
 		_Gtme.printError(file.." is not a valid file name for a TerraME package")
 		os.exit(1)
 	end)
 
 	_Gtme.print("Copying package '"..package.."'")
-
-	local arg = _Gtme.sessionInfo().path..s.."packages"..s..package
 
 	local currentDir = _Gtme.currentDir()
 	local packageDir = _Gtme.sessionInfo().path..s.."packages"
@@ -959,9 +955,7 @@ function _Gtme.getLevel()
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4 = string.sub(info.short_src, 1, 1) == "["
 
-		local mpackage
-		mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(s.."packages"..s)))
-		mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(s.."lua")))
+		local mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(s.."lua")))
 
 		if m1 or m2 or m3 or m4 or mpackage then
 			level = level + 1
@@ -1270,7 +1264,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 
 				local __cellEmpty = Cell{attrib = 1}
-				local __obsEmpty = Chart{target = __cellEmpty}
+				Chart{target = __cellEmpty}
 				clean()
 			elseif arg == "-ft" then
 				info_.fullTraceback = true
@@ -1455,10 +1449,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			elseif arg == "-autoclose" then
 				argCount = argCount + 1
 				info_.autoclose = true
-			elseif arg == "-workers" then
-				-- #80
-			elseif arg == "-draw-all-higher" then
-				-- #78
 			elseif arg == "-build" then
 				if package == "base" then
 					_Gtme.printError("TerraME cannot be built using -build.")
@@ -1692,8 +1682,7 @@ function _Gtme.tostring(self)
 		result = result..index.." "
 
 		local size = maxlen - index:len()
-		local i
-		for i = 0, size do
+		for _ = 0, size do
 			result = result.." "
 		end
 
