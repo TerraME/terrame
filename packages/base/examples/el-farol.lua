@@ -106,7 +106,7 @@ beerAgent = Agent{
 		ag.chosen = {0, 0, 0, 0, 0, 0, 0, 0, 0}
 		for i = 1, K do
 			ag.count_fails[i] = 0
-			local p = 0
+			local p
 			repeat
 				p = math.random(1, #STRATEGIES)
 			until ag.chosen[p] == 0
@@ -154,7 +154,7 @@ s = Society{
 }
 
 t = Timer{
-	Event{action = function(ev)
+	Event{action = function()
 		local quant = 0
 
 		forEachAgent(s, function(ag)

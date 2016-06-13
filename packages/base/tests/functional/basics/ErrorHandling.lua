@@ -78,12 +78,12 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleValueMsg("position", "1, 2, or 3", "4"))
 
-		local error_func = function()
+		error_func = function()
 			incompatibleValueError(1, "1, 2, or 3", "4")
 		end
 		unitTest:assertError(error_func, incompatibleValueMsg(1, "1, 2, or 3", "4"))
 
-		local error_func = function()
+		error_func = function()
 			incompatibleValueError(1, "1, 2, or 3")
 		end
 		unitTest:assertError(error_func, incompatibleValueMsg(1, "1, 2, or 3"))
@@ -125,7 +125,7 @@ return{
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
+		error_func = function()
 			mandatoryArgument(1, "string", 2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
@@ -175,12 +175,12 @@ return{
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg(1, 0))
 
-		local error_func = function()
+		error_func = function()
 			positiveArgument(1, -2)
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg(1, -2))
 
-		local error_func = function()
+		error_func = function()
 			positiveArgument(1, -2, true)
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg(1, -2, true))
@@ -199,14 +199,14 @@ return{
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg("x", -2))
 
-		local t = {x = 0}
-		local error_func = function()
+		t = {x = 0}
+		error_func = function()
 			positiveTableArgument(t, "x")
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg("x", 0))
 
-		local t = {x = -1}
-		local error_func = function()
+		t = {x = -1}
+		error_func = function()
 			positiveTableArgument(t, "x", true)
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg("x", -1, true))
@@ -236,11 +236,6 @@ return{
 
 		unitTest:assertEquals(suggestion("aaaab", t), "aaaaa")
 		unitTest:assertNil(suggestion("ddddd", t))
-
-		local t = {"aaaaa", "bbbbb", "ccccc"}
-
-		unitTest:assertEquals(suggestion("aaaab", t), "aaaaa")
-		unitTest:assertNil(suggestion("ddddd", t))
 	end,
 	switchInvalidArgument = function(unitTest)
 		local t = {
@@ -254,7 +249,7 @@ return{
 		end
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("aaaab", "arg", "aaaaa"))
 
-		local error_func = function()
+		error_func = function()
 			switchInvalidArgument("arg", "ddddd", t)
 		end
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("ddddd", "arg", t))
@@ -284,17 +279,17 @@ return{
 		unitTest:assertEquals(valueNotFoundMsg(2, "bbb"), "Value 'bbb' not found for argument '#2'.")
 	end,
 	verifyUnnecessaryArguments = function(unitTest)
-		local error_func = function(unitTest)
+		local error_func = function()
 			verifyUnnecessaryArguments({aaa = "aaa"}, {"abc", "acd", "aab"})
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("aaa"))
 
-		local error_func = function(unitTest)
+		error_func = function()
 			verifyUnnecessaryArguments({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("aaaa", "aaab"))
 
-		local error_func = function(unitTest)
+		error_func = function()
 			verifyUnnecessaryArguments({[1] = "aaa"}, {"aabc", "aacd", "aaab"})
 		end
 		unitTest:assertError(error_func, "Arguments should have only string names, got number.")
@@ -305,12 +300,12 @@ return{
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
 
-		local error_func = function()
+		error_func = function()
 			verifyNamedTable(123)
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
-		local error_func = function()
+		error_func = function()
 			verifyNamedTable{x = 3, 3, 4}
 		end
 		unitTest:assertError(error_func, "All elements of the argument must be named.")
@@ -322,7 +317,7 @@ return{
 		unitTest:assertError(error_func, "Value 'neighborhood' not found for argument '1'.")
 	end,
 	verify = function(unitTest)
-		local error_func = function(unitTest)
+		local error_func = function()
 			verify(false, "error")
 		end
 		unitTest:assertError(error_func, "error")

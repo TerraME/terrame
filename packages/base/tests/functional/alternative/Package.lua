@@ -23,43 +23,24 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	filePath = function(unitTest)
-		local error_func = function()
-			filePath("mriver_lin.shp")
-		end
-		unitTest:assertError(error_func, "File 'base/data/mriver_lin.shp' does not exist in package 'base'. Do you mean 'River_lin.shp'?", 2)
-
-		local tlInfo = packageInfo("terralib")
-		local baseInfo = packageInfo()
-		local s = sessionInfo().separator
-
-		os.execute("cp "..tlInfo.data..s.."amazonia.lua "..baseInfo.data)
-
-		error_func = function()
-			filePath("amazonia.tview")
-		end
-		unitTest:assertError(error_func, "File 'base/data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project' to create it.", 2)
-
-		rmFile(baseInfo.data..s.."amazonia.lua")
-	end,
 	filesByExtension = function(unitTest)
 		local error_func = function()
-			local files = filesByExtension()
+			filesByExtension()
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
-			local files = filesByExtension(2)
+		error_func = function()
+			filesByExtension(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	
-		local error_func = function()
-			local files = filesByExtension("base")
+		error_func = function()
+			filesByExtension("base")
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
-		local error_func = function()
-			local files = filesByExtension("base", 2)
+		error_func = function()
+			filesByExtension("base", 2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 	end,
@@ -74,7 +55,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
 
-		local error_func = function()
+		error_func = function()
 			import("base")
 		end
 		unitTest:assertError(error_func, "Package 'base' is already loaded.")
@@ -98,12 +79,12 @@ return{
 	end,
 	packageInfo = function(unitTest)
 		local error_func = function()
-			local r = packageInfo(2)
+			packageInfo(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	
 		error_func = function()
-			local r = packageInfo("asdfgh")
+			packageInfo("asdfgh")
 		end
 		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
 	end

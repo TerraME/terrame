@@ -27,7 +27,7 @@ return{
 		local state1 = State{
 			id = "seco",
 			Jump{
-				function( event, agent, cell )
+				function(_, agent)
 					agent.acum = agent.acum + 1
 					if (agent.cont < MAX_COUNT) then
 						agent.cont = agent.cont + 1
@@ -43,7 +43,7 @@ return{
 		local state2 = State{
 			id = "molhado",
 			Jump{
-				function(event, agent, cell)
+				function(_, agent)
 					agent.acum = agent.acum + 1
 					if agent.cont < MAX_COUNT then
 						agent.cont = agent.cont + 1
@@ -82,19 +82,19 @@ return{
 
 		unitTest:assertError(error_func, tableArgumentMsg())
 
-		local error_func = function()
+		error_func = function()
 			envmt = Environment(2)
 		end
 
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
-		local error_func = function()
+		error_func = function()
 			envmt = Environment{at1}
 		end
 
 		unitTest:assertError(error_func, "The Environment has an Automaton but not a CellularSpace.")
 
-		local error_func = function()
+		error_func = function()
 			envmt = Environment{2}
 		end
 
@@ -165,9 +165,9 @@ return{
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg("max", -13))
 
-		local cs = CellularSpace{xdim = 2}
-		local ag1 = Agent{}
-		local sc1 = Society{instance = ag1, quantity = 20}
+		cs = CellularSpace{xdim = 2}
+		ag1 = Agent{}
+		sc1 = Society{instance = ag1, quantity = 20}
 		local g1 = Group{target = sc1}
 
 		env = Environment{g1}

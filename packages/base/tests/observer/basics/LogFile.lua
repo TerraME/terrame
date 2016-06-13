@@ -50,20 +50,20 @@ return{
 
 		log2:update()
 
-		local log2 = LogFile{target = world2, overwrite = false, file = "logfile-1.csv"}
+		log2 = LogFile{target = world2, overwrite = false, file = "logfile-1.csv"}
 		log2:update()
 		log2:update()
 
 		unitTest:assertFile("logfile-1.csv")
 
-		local world = Agent{
+		world = Agent{
 			count = 0,
 			mcount = function(self)
 				return self.count + 1
 			end
 		}
 
-		local log = LogFile{
+		log = LogFile{
 			target = world,
 			file = "logfile-2.csv",
 			separator = ";",
@@ -75,14 +75,14 @@ return{
 
 		unitTest:assertFile("logfile-2.csv")
 
-		local world = Agent{
+		world = Agent{
 			count = 0,
 			mcount = function(self)
 				return self.count + 1
 			end
 		}
 
-		local log = LogFile{
+		log = LogFile{
 			target = world,
 			select = {"mcount"},
 			file = "logfile-3.csv"
@@ -96,7 +96,7 @@ return{
 			quantity = 3
 		}
 
-		local log = LogFile{
+		log = LogFile{
 			target = soc,
 			file = "logfile-4.csv"
 		}
@@ -104,7 +104,7 @@ return{
 		log:update()
 		unitTest:assertFile("logfile-4.csv")
 
-		local log = LogFile{
+		log = LogFile{
 			target = soc,
 			select = "#",
 			file = "logfile-5.csv"
@@ -113,13 +113,13 @@ return{
 		log:update()
 		unitTest:assertFile("logfile-5.csv")
 
-		local soc = Society{
+		soc = Society{
 			instance = Agent{},
 			quantity = 3,
 			total = 10
 		}
 
-		local log = LogFile{
+		log = LogFile{
 			target = soc,
 			file = "logfile-6.csv"
 		}
@@ -127,7 +127,7 @@ return{
 		log:update()
 		unitTest:assertFile("logfile-6.csv")
 
-		local world = CellularSpace{
+		world = CellularSpace{
 			xdim = 10,
 			count = 0,
 			mcount = function(self)
@@ -135,12 +135,12 @@ return{
 			end
 		}
 
-		local log = LogFile{
+		LogFile{
 			target = world,
 			file = "logfile-7.csv"
 		}
 
-		local log = LogFile{
+		log = LogFile{
 			target = world,
 			file = "logfile-8.csv",
 			select = "mcount"

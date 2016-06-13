@@ -69,7 +69,7 @@ return{
 		
 		unitTest:clear()
 
-		local world = Agent{
+		world = Agent{
 			probability = 0,
 			mx = 0
 		}
@@ -80,7 +80,7 @@ return{
 		}
 		unitTest:assertType(c3, "Chart")
 
-		local t = Timer{
+		t = Timer{
 			Event{action = function(e)
 				if e:getTime() < 100 then
 					world.probability = world.probability + 0.01

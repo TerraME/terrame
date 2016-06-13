@@ -37,14 +37,14 @@ return{
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
- 			local traj = Trajectory{
+ 			traj = Trajectory{
  				target = cs,
  				selection = function() return true end
  			}
  		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("selection", "select"))
 
-		local error_func = function()
+		error_func = function()
 			trajectory = Trajectory{}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
@@ -66,7 +66,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("build", "boolean", "build"))
 
 		error_func = function()
-			local traj = Trajectory{
+			traj = Trajectory{
 				target = cs,
 				build = true
 			}
@@ -144,7 +144,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "a"))
 	
-		local error_func = function()
+		error_func = function()
 			trajectory:get(1, "a")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "a"))

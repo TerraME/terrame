@@ -25,14 +25,14 @@
 return{
 	CellularSpace = function(unitTest)
 		local error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdm = 0
 			}
 		end
 		unitTest:assertError(error_func, "Not enough information to infer argument 'source'.")
 
-		local error_func = function()
-			local cs = CellularSpace{
+		error_func = function()
+			CellularSpace{
 				xdim = 0,
 				ydim = 30
 			}
@@ -40,7 +40,7 @@ return{
 		unitTest:assertError(error_func, positiveArgumentMsg("xdim", 0))
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 5,
 				ydim = 0
 			}
@@ -48,7 +48,7 @@ return{
 		unitTest:assertError(error_func, positiveArgumentMsg("ydim", 0))
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = "terralab",
 				ydim = 30
 			}
@@ -56,7 +56,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("xdim", "number", "terralab"))
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 1.23,
 				ydim = 30
 			}
@@ -64,7 +64,7 @@ return{
 		unitTest:assertError(error_func, integerArgumentMsg("xdim", 1.23))
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 30,
 				ydim = "terralab"
 			}
@@ -85,9 +85,11 @@ return{
 			xdim = 10,
 			instance = c1
 		}
-	
+
+		unitTest:assertType(cs, "CellularSpace")
+
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 10,
 				instance = c1
 			}
@@ -97,7 +99,7 @@ return{
 		c1 = Cell{getNeighborhood = function() end}
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 10,
 				instance = c1
 			}
@@ -112,7 +114,7 @@ return{
 		}
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 10,
 				instance = 2
 			}
@@ -120,7 +122,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("instance", "Cell", 2))
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 10,
 				instance = c1,
 				status = 5
@@ -129,7 +131,7 @@ return{
 		unitTest:assertError(error_func, "Attribute 'status' will not be replaced by a summary function.")
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 10,
 				instance = c1,
 				alive = 5
@@ -138,7 +140,7 @@ return{
 		unitTest:assertError(error_func, "Attribute 'alive' will not be replaced by a summary function.")
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 10,
 				instance = c1,
 				value = 5
@@ -147,7 +149,7 @@ return{
 		unitTest:assertError(error_func, "Attribute 'value' will not be replaced by a summary function.")
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 10,
 				instance = c1,
 				set = 5
@@ -162,7 +164,7 @@ return{
 		}
 
 		error_func = function()
-			local cs = CellularSpace{
+			CellularSpace{
 				xdim = 10,
 				instance = c1,
 				status = 5
@@ -175,7 +177,7 @@ return{
 			exec = function() end
 		}
     
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			xdim = 10,
 			instance = cell
 		}
@@ -194,19 +196,19 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("water", "number", "abc"))
 		
 		local projectNonStringOrProject = function()
-			local cs = CellularSpace{project = 2, layer = "cells"}
+			CellularSpace{project = 2, layer = "cells"}
 		end
 		unitTest:assertError(projectNonStringOrProject, "Argument 'project' must be a Project or file path to a Project.")		
 
 		local layerNonString = function()
-			local cs = CellularSpace{project = "myproj.tview", layer = false}
+			CellularSpace{project = "myproj.tview", layer = false}
 		end
 		unitTest:assertError(layerNonString, incompatibleTypeMsg("layer", "string", false))
 
 		if isFile("myproj.tview") then rmFile("myproj.tview") end
 
 		local projNotExists = function()
-			local cs = CellularSpace{project = "myproj.tview", layer = "cells"}
+			CellularSpace{project = "myproj.tview", layer = "cells"}
 		end
 		unitTest:assertError(projNotExists, "Project '".."myproj.tview".."' was not found.")		
 		
@@ -227,7 +229,7 @@ return{
 		
 		local layerName = "any"
 		local layerDoesNotExists = function()
-			local cs = CellularSpace {
+			CellularSpace {
 				project = proj,
 				layer = layerName
 			}
@@ -235,7 +237,7 @@ return{
 		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'.")
 		
 		local geometryDefaultValue = function()
-			local cs = CellularSpace {
+			CellularSpace {
 				project = proj,
 				layer = layerName,
 				geometry = false
@@ -244,7 +246,7 @@ return{
 		unitTest:assertError(geometryDefaultValue, defaultValueMsg("geometry", false))
 		
 		local geometryNotBoolean = function()
-			local cs = CellularSpace {
+			CellularSpace {
 				project = proj,
 				layer = layerName,
 				geometry = 123
@@ -647,7 +649,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("weight", "function", 3))
 
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
 		cs:createNeighborhood{name = "abc"}
 
@@ -669,7 +671,7 @@ return{
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
-		local error_func = function()
+		error_func = function()
 			cs:cut{xmin = false}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("xmin", "number", false))

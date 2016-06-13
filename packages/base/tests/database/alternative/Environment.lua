@@ -84,11 +84,6 @@ return{
 			table = tName1
 		}
 
-		local cs = CellularSpace{
-			project = proj,
-			layer = clName1
-		}
-
 		if isFile(projName) then
 			rmFile(projName)
 		end
@@ -107,26 +102,26 @@ return{
 		end
 		unitTest:assertError(error_func, "CellularSpaces with layers 'emas.shp' and 'Limit_pol.shp' were not found in the Environment.")
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			file = filePath("Limit_pol.shp")
 		}
 
-		local env = Environment{cs, cs2}
+		env = Environment{cs, cs2}
 
-		local error_func = function()
+		error_func = function()
 			env:loadNeighborhood{
 				source = filePath("gpmAreaCellsPols.gpm", "base"),
 			}
 		end
 		unitTest:assertError(error_func, "CellularSpace with layer 'emas.shp' was not found in the Environment.")
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			file = filePath("emas.shp")
 		}
 
-		local env = Environment{cs, cs2}
+		env = Environment{cs, cs2}
 
-		local error_func = function()
+		error_func = function()
 			env:loadNeighborhood{
 				source = filePath("gpmAreaCellsPols.gpm", "base"),
 			}
@@ -136,11 +131,11 @@ return{
 		local cs1 = CellularSpace{xdim = 10}
 		cs2 = CellularSpace{xdim = 10}
 
-		local env = Environment{cs1, cs2}
+		env = Environment{cs1, cs2}
 
 		cs1:createNeighborhood{}
 
-		local error_func = function()
+		error_func = function()
 			env:loadNeighborhood{
 				source = nil,
 				name = "neigh1",
@@ -149,7 +144,7 @@ return{
 		end
 		 unitTest:assertError(error_func, mandatoryArgumentMsg("source"))	
 
-		local error_func = function()
+		error_func = function()
 			env:loadNeighborhood{
 				source = 5,
 				name = "neigh1",
@@ -167,7 +162,7 @@ return{
 		end
 		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste1"))
 
-		local error_func = function()
+		error_func = function()
 			env:loadNeighborhood{
 				source = "teste1.abc",
 				name = "neigh1",
@@ -176,7 +171,7 @@ return{
 		end
 		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "abc"))
 
-		local error_func = function()
+		error_func = function()
 			env:loadNeighborhood{
 				source = filePath("emas-pollin.gpm", "base"),
 				name = 6,
@@ -185,7 +180,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 6))
 
-		local error_func = function()
+		error_func = function()
 			env:loadNeighborhood{
 				source = filePath("emas-pollin.gpm", "base"),		
 				name = "neigh1",
@@ -194,7 +189,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("bidirect", "boolean", 13))
 
-		local error_func = function()
+		error_func = function()
 			env:loadNeighborhood{
 				source = filePath("emas-distance.gpm", "base"),
 				name = "my_neighborhood"
@@ -202,7 +197,7 @@ return{
 		end
 		unitTest:assertError(error_func, "This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.")
 		
-		local error_func = function()
+		error_func = function()
 			env:loadNeighborhood{
 				source = "emas-distance-xxx.gpm",
 				name = "my_neighborhood"
@@ -210,7 +205,7 @@ return{
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("source", "emas-distance-xxx.gpm"))
 
-		local error_func = function()
+		error_func = function()
 			env:loadNeighborhood{
 				source = "gpmlinesDbEmas_invalid.teste",
 				name = "my_neighborhood"
@@ -218,15 +213,15 @@ return{
 		end
 		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			file = filePath("emas.shp")
 		}
 
-		local cs2 = CellularSpace{
+		cs2 = CellularSpace{
 			file = filePath("Limit_pol.shp")
 		}
 
-		local env = Environment{cs, cs2}
+		env = Environment{cs, cs2}
 
 		local countTest = 1
 
@@ -242,7 +237,7 @@ return{
 		end
 		unitTest:assertError(error_func, "The string 'bb' found as weight in the file '"..mfile.."' could not be converted to a number.")
 
-		local mfile = filePath("error"..s.."gpmAreaCellsPols-error2.gpm", "base")
+		mfile = filePath("error"..s.."gpmAreaCellsPols-error2.gpm", "base")
 
 		error_func = function()
 	   		env:loadNeighborhood{
@@ -253,7 +248,7 @@ return{
 
 		unitTest:assertError(error_func, "Could not read the file properly. It seems that it is corrupted.")
 
-		local mfile = filePath("error"..s.."gpmAreaCellsPols-error3.gpm", "base")
+		mfile = filePath("error"..s.."gpmAreaCellsPols-error3.gpm", "base")
 
 		error_func = function()
 	   		env:loadNeighborhood{

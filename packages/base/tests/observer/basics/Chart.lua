@@ -54,9 +54,9 @@ return{
 			end
 		}
 
-		local c1 = Chart{target = world}
+		Chart{target = world}
 
-		local c1 = Chart{
+		Chart{
 			target = world,
 			select = {"m_count"},
 			color = "green",
@@ -72,17 +72,17 @@ return{
 			quantity = 3
 		}
 
-		local c1 = Chart{target = soc}
+		Chart{target = soc}
 
-		local soc = Society{
+		soc = Society{
 			instance = Agent{},
 			quantity = 3,
 			total = 10
 		}
 
-		local c1 = Chart{target = soc}
+		Chart{target = soc}
 
-		local world = CellularSpace{
+		world = CellularSpace{
 			xdim = 10,
 			count = 0,
 			mCount = function(self)
@@ -95,7 +95,7 @@ return{
 		c1:update(1)
 		unitTest:assertSnapshot(c1, "chart-table-base.bmp", 0.02)
 
-		local c1 = Chart{target = world, select = "mCount", xAxis = "count"}
+		c1 = Chart{target = world, select = "mCount", xAxis = "count"}
 		c1:update(0)
 		world.count = world.count + 2
 		c1:update(1)
@@ -106,7 +106,7 @@ return{
 			value2 = 5
 		}
 
-		local c1 = Chart{
+		c1 = Chart{
 			target = t
 		}
 
@@ -131,8 +131,6 @@ return{
 			demand = {7, 8, 9, 10},
 			limit = {0.1, 0.04, 0.3, 0.07}
 		}
-
-		tab.type_ = "mytab"
 
 		c1 = Chart{
 		    data = tab,

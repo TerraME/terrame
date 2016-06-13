@@ -44,12 +44,12 @@ return{
 			unitTest:assertNotNil(cell.height_)
 			unitTest:assertNotNil(cell.soilWater)
 
-			forEachNeighbor(cell, "moore1", function(cell, neigh, weight)
+			forEachNeighbor(cell, "moore1", function(_, _, weight)
 				countNeigh = countNeigh + 1
 				sumWeight = sumWeight + weight
 			end)
 
-			forEachNeighbor(cell, "moore2", function(cell, neigh, weight)
+			forEachNeighbor(cell, "moore2", function(_, _, weight)
 				countNeigh = countNeigh + 1
 				sumWeight = sumWeight + weight
 			end)
@@ -178,25 +178,25 @@ return{
 			table = tName1
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = clName1,
 			geometry = true
 		}
 
-		forEachCell(cs, function(cell)
-			unitTest:assertNotNil(cell.geom)
-			unitTest:assertNil(cell.OGR_GEOMETRY)
+		forEachCell(cs, function(c)
+			unitTest:assertNotNil(c.geom)
+			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = "cellspace_basic",
 			layer = clName1
 		}
 
-		forEachCell(cs, function(cell)
-			unitTest:assertNil(cell.geom)
-			unitTest:assertNil(cell.OGR_GEOMETRY)
+		forEachCell(cs, function(c)
+			unitTest:assertNil(c.geom)
+			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 
 		unitTest:assertEquals(303, #cs.cells)		
@@ -206,7 +206,7 @@ return{
 		tl:dropPgTable(pgData)
 		
 		-- map file
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			file = filePath("simple.map", "base")
 		}
 
@@ -218,8 +218,8 @@ return{
 		unitTest:assertType(cs, "CellularSpace")
 		unitTest:assertEquals(2500, #cs)
 
-		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.maxSugar, "number")
+		forEachCell(cs, function(c)
+			unitTest:assertType(c.maxSugar, "number")
 		end)	
 	end,
 	createNeighborhood = function(unitTest)
@@ -238,7 +238,7 @@ return{
 			filter = function(cell,neigh) 
 				return not ((cell.x == neigh.x) and (cell.y == neigh.y))
 			end,
-			weight = function(cell, neigh) return 1 / 9 end,
+			weight = function() return 1 / 9 end,
 			name = "spatialCoupling"
 		}
 
@@ -246,7 +246,7 @@ return{
 		local sumWeight  = 0
 
 		forEachCell(cs, function(cell)
-			forEachNeighbor(cell, "spatialCoupling", function(cell, neigh, weight)
+			forEachNeighbor(cell, "spatialCoupling", function(_, _, weight)
 				countNeigh = countNeigh + 1
 				sumWeight = sumWeight + weight
 			end)
@@ -259,7 +259,7 @@ return{
 		sumWeight  = 0
 
 		forEachCell(cs2, function(cell)
-			forEachNeighbor(cell, "spatialCoupling", function(cell, neigh, weight)
+			forEachNeighbor(cell, "spatialCoupling", function(_, _, weight)
 				countNeigh = countNeigh + 1
 				sumWeight = sumWeight + weight
 			end)
@@ -316,10 +316,6 @@ return{
 		--]]
 	end,
 	loadNeighborhood = function(unitTest)
-		local cs = CellularSpace{
-			file = filePath("cabecadeboi.shp", "base")
-		}
-
 		local cs1 = CellularSpace{
 			file = filePath("cabecadeboi900.shp", "base")	
 		}
@@ -396,13 +392,13 @@ return{
 			name = "my_neighborhood"..countTest
 		}
 
-		local sizes = {}
+		sizes = {}
 
-		local minSize   = math.huge
-		local maxSize   = -math.huge
-		local minWeight = math.huge
-		local maxWeight = -math.huge
-		local sumWeight = 0
+		minSize   = math.huge
+		maxSize   = -math.huge
+		minWeight = math.huge
+		maxWeight = -math.huge
+		sumWeight = 0
 
 		forEachCell(cs1, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
@@ -454,11 +450,11 @@ return{
 			name = "my_neighborhood"..countTest
 		}
 
-		local sizes = {}
+		sizes = {}
 
-		local minSize = math.huge
-		local maxSize = -math.huge
-		local sumWeight = 0
+		minSize = math.huge
+		maxSize = -math.huge
+		sumWeight = 0
 
 		forEachCell(cs3, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
@@ -504,12 +500,12 @@ return{
 			name = "my_neighborhood"..countTest
 		}
 
-		local minSize   = math.huge
-		local maxSize   = -math.huge
-		local minWeight = math.huge
-		local maxWeight = -math.huge
+		minSize   = math.huge
+		maxSize   = -math.huge
+		minWeight = math.huge
+		maxWeight = -math.huge
 
-		local sumWeight = 0
+		sumWeight = 0
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
@@ -791,7 +787,7 @@ return{
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
 
-		local layer = terralib.Layer{
+		terralib.Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
@@ -816,7 +812,7 @@ return{
 
 		cs:save(cellSpaceLayerNameT0, "t0")
 
-		layer = terralib.Layer{
+		local layer = terralib.Layer{
 			project = proj,
 			name = cellSpaceLayerNameT0
 		}
@@ -846,7 +842,7 @@ return{
 		unitTest:assertEquals(layer.database, database)
 		unitTest:assertEquals(layer.table, cellSpaceLayerName)	-- TODO: VERIFY LOWER CASE IF CHANGED
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = cellSpaceLayerNameT0
 		}
@@ -858,7 +854,7 @@ return{
 
 		cs:save(cellSpaceLayerNameT0)
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = cellSpaceLayerNameT0
 		}
@@ -876,7 +872,7 @@ return{
 
 		cs:save(cellSpaceLayerNameT0, "number")
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = cellSpaceLayerNameT0
 		}
@@ -885,7 +881,7 @@ return{
 			unitTest:assertEquals(cell.number, num)
 		end)
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameT0
 		}
@@ -893,7 +889,7 @@ return{
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
 		cs:save(cellSpaceLayerNameGeom)
 		
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameGeom,
 			geometry = true
@@ -906,7 +902,7 @@ return{
 		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"
 		cs:save(cellSpaceLayerNameGeom2)
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameGeom2,
 			geometry = true

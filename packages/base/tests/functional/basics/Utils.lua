@@ -33,7 +33,7 @@ return{
 	end,
 	call = function(unitTest)
 		local cont = 0
-		local a = Agent{map = function(self, ev) cont = cont + 1 end}
+		local a = Agent{map = function() cont = cont + 1 end}
 
 		local t = Timer{
 			Event{action = call(a, "map")}
@@ -62,8 +62,6 @@ return{
 		local b = 2
 		local init = 0.5
 		local delta = 0.2
-		local x = 0
-		local y = 0
 
 		local result1 = integrationEuler(df, init, a, b, delta)
 		local result2 = d{df, init, a, b, delta}
@@ -71,13 +69,11 @@ return{
 		unitTest:assertEquals(result1, result2)
 
 		INTEGRATION_METHOD = integrationHeun
-		local df = function(x, y) return y - x ^ 2 + 1 end
-		local a = 0
-		local b = 2
-		local init = 0.5
-		local delta = 0.2
-		local x = 0
-		local y = 0
+		df = function(mx, my) return my - mx ^ 2 + 1 end
+		a = 0
+		b = 2
+		init = 0.5
+		delta = 0.2
 
 		result1 = integrationHeun(df, init, a, b, delta)
 		result2 = d{df, init, a, b, delta}
@@ -92,16 +88,16 @@ return{
 		local birthPredatorPerPreyRate = 0.01 -- birth predator rate
 		local deathPredatorRate = 0.1
 
-		local preyFunc = function(t, q)
+		local preyFunc = function(_, q)
 			return q[1] * birthPreyRate - q[1] * q[2] * predationRate
 		end
 		
-		local predatorFunc = function(t, q)
+		local predatorFunc = function(_, q)
 			return q[2] * q[1] * birthPredatorPerPreyRate - q[2] * deathPredatorRate
 		end
 
 		local ag = Agent{preys = 100, predators = 10}
-		for t = 0, 10, timeStep do
+		for _ = 0, 10, timeStep do
 			ag.preys, ag.predators = d{
 				{preyFunc, predatorFunc},
 				{ag.preys, ag.predators},
@@ -121,9 +117,9 @@ return{
 
 		unitTest:assert(t2 - t1 >= 1)
 
-		local t1 = os.time()
+		t1 = os.time()
 		delay(.5)
-		local t2 = os.time()
+		t2 = os.time()
 
 		unitTest:assert(t2 - t1 >= .5)
 	end,
@@ -143,7 +139,7 @@ return{
 		unitTest:assertEquals(count, 10)
 
 		count = 0
-		forEachAgent(soc, function(ag)
+		forEachAgent(soc, function()
 			count = count + 1
 			if count > 5 then return false end
 		end)
@@ -202,7 +198,7 @@ return{
 		unitTest:assert(r)
 
 		local count = 0
-		r = forEachCell(cs, function(cell)
+		r = forEachCell(cs, function()
 			count = count + 1
 			if count > 10 then return false end
 		end)
@@ -311,7 +307,7 @@ return{
 			unitTest:assertEquals(count, 36) -- SKIP
 
 			local count2 = 0
-			forEachFile(dir(filePath("", "base"), true), function(file)
+			forEachFile(dir(filePath("", "base"), true), function()
 				count2 = count2 + 1
 			end)
 
@@ -319,7 +315,7 @@ return{
 
 			count = 0
 
-			r = forEachFile(filePath("", "base"), function(file)
+			r = forEachFile(filePath("", "base"), function()
 				count = count + 1
 				if count > 1 then return false end
 			end)
@@ -390,7 +386,7 @@ return{
 		unitTest:assertEquals(count, 2)
 		unitTest:assertEquals(neighbors, 4)
 
-		local count = 0
+		count = 0
 		r = forEachNeighborhood(c1, function()
 			count = count + 1
 			return false
@@ -416,7 +412,7 @@ return{
 		unitTest:assert(r)
 		unitTest:assertEquals(cont, #result)
 
-		local cont = 0
+		cont = 0
 		r = forEachOrderedElement(list, function()
 			cont = cont + 1
 			return false
@@ -458,7 +454,7 @@ return{
 		unitTest:assertEquals(count, 2)
 		unitTest:assertEquals(connections, 4)
 
-		local count = 0
+		count = 0
 		r = forEachSocialNetwork(a1, function()
 			count = count + 1
 			return false
@@ -529,7 +525,7 @@ return{
 
 		unitTest:assertEquals(16.48360, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -539,7 +535,7 @@ return{
 
 		unitTest:assertEquals(20.11522, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -549,7 +545,7 @@ return{
 
 		unitTest:assertEquals(20.23650, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -559,7 +555,7 @@ return{
 
 		unitTest:assertEquals(20.24595, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -570,7 +566,7 @@ return{
 
 		unitTest:assertEquals(17.682025, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -581,7 +577,7 @@ return{
 
 		unitTest:assertEquals(20.25, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -592,7 +588,7 @@ return{
 
 		unitTest:assertEquals(20.25, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -603,7 +599,7 @@ return{
 
 		unitTest:assertEquals(20.24730, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -614,7 +610,7 @@ return{
 
 		unitTest:assertEquals(17.70305, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -625,7 +621,7 @@ return{
 
 		unitTest:assertEquals(20.250225, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -636,7 +632,7 @@ return{
 
 		unitTest:assertEquals(20.25, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = f,
 			initial = 0,
 			a = 0,
@@ -648,7 +644,7 @@ return{
 		unitTest:assertEquals(20.24730, v, 0.0001)
 
 		local df = function(x, y) return y - x ^ 2 + 1 end
-		local v = integrate{
+		v = integrate{
 			equation = df,
 			initial = 0.5,
 			a = 0,
@@ -659,13 +655,13 @@ return{
 
 		unitTest:assertEquals(5.23305, v, 0.0001)
 
-		local eq1 = function(t, y)
+		local eq1 = function(t)
 			return t - 0.1
 		end
 
-		local event = Event{start = 2, period = 2, priority = 1, action = function(event) end}
+		local event = Event{start = 2, period = 2, priority = 1, action = function() end}
 
-		local v = integrate{
+		v = integrate{
 			equation = df,
 			method = "heun",
 			step = 0.2,
@@ -675,7 +671,7 @@ return{
 
 		unitTest:assertEquals(5.23305, v, 0.0001)
 
-		local v = integrate{
+		v = integrate{
 			equation = {eq1, eq1},
 			initial = {0, 0},
 			a = 0,
@@ -685,7 +681,7 @@ return{
 
 		unitTest:assertType(v, "number")
 
-		local v = integrate{
+		v = integrate{
 			equation = {eq1, eq1},
 			method = "heun",
 			initial = {0, 0},
@@ -696,7 +692,7 @@ return{
 
 		unitTest:assertType(v, "number")
 
-		local v = integrate{
+		v = integrate{
 			equation = {eq1, eq1},
 			method = "rungekutta",
 			initial = {0, 0},
@@ -714,16 +710,16 @@ return{
 		local birthPredatorPerPreyRate = 0.01 -- birth predator rate
 		local deathPredatorRate = 0.1
 
-		local preyFunc = function(t, q)
+		local preyFunc = function(_, q)
 			return q[1] * birthPreyRate - q[1] * q[2] * predationRate
 		end
 		
-		local predatorFunc = function(t, q)
+		local predatorFunc = function(_, q)
 			return q[2] * q[1] * birthPredatorPerPreyRate - q[2] * deathPredatorRate
 		end
 
 		local ag = Agent{preys = 100, predators = 10}
-		for t = 0, 10, timeStep do
+		for _ = 0, 10, timeStep do
 			ag.preys, ag.predators = integrate{
 				equation = {preyFunc, predatorFunc},
 				initial = {ag.preys, ag.predators},
@@ -737,7 +733,7 @@ return{
 		unitTest:assertEquals(ag.predators, 77.830055916773)
 
 		ag = Agent{preys = 100, predators = 10}
-		for t = 0, 10, timeStep do
+		for _ = 0, 10, timeStep do
 			ag.preys, ag.predators = integrate{
 				equation = {preyFunc, predatorFunc},
 				initial = {ag.preys, ag.predators},
@@ -752,7 +748,7 @@ return{
 		unitTest:assertEquals(ag.predators, 77.393465378403)
 
 		ag = Agent{preys = 100, predators = 10}
-		for t = 0, 10, timeStep do
+		for _ = 0, 10, timeStep do
 			ag.preys, ag.predators = integrate{
 				equation = {preyFunc, predatorFunc},
 				initial = {ag.preys, ag.predators},
@@ -830,7 +826,7 @@ return{
 		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
 		unitTest:assertEquals(sumvalue, 7 + 8 + 9 + 10)
 
-		local tab = makeDataTable{
+		tab = makeDataTable{
 			first = 2000,
 			step = 10,
 			last = 2030,
@@ -845,8 +841,8 @@ return{
 		unitTest:assertEquals(getn(tab.demand), 4)
 		unitTest:assertEquals(getn(tab.limit), 4)
 
-		local sumidx = 0
-		local sumvalue = 0
+		sumidx = 0
+		sumvalue = 0
 
 		forEachElement(tab.limit, function(idx, value)
 			sumidx = sumidx + idx
@@ -895,7 +891,7 @@ return{
 			abc = function() count = count + 1 end
 		}
 
-		local data = {}
+		data = {}
 		switch(data, "att"):caseof{
 			missing = function() count = count + 1 end
 		}

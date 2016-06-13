@@ -25,42 +25,42 @@
 return{
 	Cell = function(unitTest)
 		local error_func = function()
-			local cell = Cell(2)
+			Cell(2)
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
-			local cell = Cell{x = "2.22", y = 0}
+			Cell{x = "2.22", y = 0}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("x", "number", "2.22"))
 
 		error_func = function()
-			local cell = Cell{x = -2, y = "1"}
+			Cell{x = -2, y = "1"}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("y", "number", "1"))
 
 		error_func = function()
-			local cell = Cell{x = 2.22, y = 0}
+			Cell{x = 2.22, y = 0}
 		end
 		unitTest:assertError(error_func, integerArgumentMsg("x", 2.22))
 
 		error_func = function()
-			local cell = Cell{x = -2.3, y = 1}
+			Cell{x = -2.3, y = 1}
 		end
 		unitTest:assertError(error_func, integerArgumentMsg("x", -2.3))
 
 		error_func = function()
-			local cell = Cell{x = 1, y = 2.22}
+			Cell{x = 1, y = 2.22}
 		end
 		unitTest:assertError(error_func, integerArgumentMsg("y", 2.22))
 
 		error_func = function()
-			local cell = Cell{x = 1, y = -2.3}
+			Cell{x = 1, y = -2.3}
 		end
 		unitTest:assertError(error_func, integerArgumentMsg("y", -2.3))
 
 		error_func = function()
-			local cell = Cell{id = 2.3}
+			Cell{id = 2.3}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("id", "string", 2.3))
 	
@@ -92,7 +92,7 @@ return{
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
+		error_func = function()
 			c:distance(12345)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 12345))
@@ -106,7 +106,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
 
-		local error_func = function()
+		error_func = function()
 			c:getAgent("friends")
 		end
 		unitTest:assertError(error_func, "Placement 'friends' should be a Group, got number.")
@@ -120,7 +120,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
 
-		local error_func = function()
+		error_func = function()
 			c:getAgents("friends")
 		end
 		unitTest:assertError(error_func, "Placement 'friends' should be a Group, got number.")
@@ -144,7 +144,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
 
-		local error_func = function()
+		error_func = function()
 			c:isEmpty("friends")
 		end
 		unitTest:assertError(error_func, "Placement 'friends' should be a Group, got number.")

@@ -220,7 +220,7 @@ state_          State
 					end,
 					target = "go"
 				},
-				Flow{function(ev, self)
+				Flow{function(_, self)
 					flows = flows + 1
 					self.x = self.x + 1
 				end}
@@ -240,17 +240,17 @@ state_          State
 					target = "stop"
 				},
 				Jump{
-					function(ev, self)
+					function()
 						jumps = jumps + 1
 						return false
 					end,
 					target = "stop"
 				},
-				Flow{function(ev, self)
+				Flow{function(_, self)
 					flows = flows + 1
 					self.x = self.x - 1
 				end},
-				Flow{function(ev, self)
+				Flow{function()
 					flows = flows + 1
 				end}
 			}
@@ -291,7 +291,6 @@ state_          State
 		}
 
 		predators:createSocialNetwork{probability = 0.5, inmemory = false}
-		local sn = predators.agents[1]:getSocialNetwork()	
 	end,
 	getStateName = function(unitTest)
 		local a = Agent{
@@ -309,7 +308,7 @@ state_          State
 					end,
 					target = "go"
 				},
-				Flow{function(ev, self)
+				Flow{function(_, self)
 					self.x = self.x + 1
 				end}
 			},
@@ -326,7 +325,7 @@ state_          State
 					end,
 					target = "stop"
 				},
-				Flow{function(ev, self)
+				Flow{function(_, self)
 					self.x = self.x - 1
 				end}
 			}
@@ -357,7 +356,7 @@ state_          State
 			State{
 				id = "first",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -372,7 +371,7 @@ state_          State
 			State{
 				id = "second",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -420,9 +419,9 @@ state_          State
 
 		unitTest:assertNil(ag1:getCell("placement"))
 
-		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3}
-		local myEnv = Environment{cs, ag1}
+		ag1 = Agent{}
+		cs = CellularSpace{xdim = 3}
+		myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void"}
 		cell = cs.cells[1]
@@ -538,7 +537,7 @@ state_          State
 			State{
 				id = "first",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -553,7 +552,7 @@ state_          State
 			State{
 				id = "second",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -591,7 +590,7 @@ state_          State
 		ag1:execute(ev)
 		unitTest:assertEquals(22, cont)
 
-		ag1.it:filter(function(cell) return true end)
+		ag1.it:filter(function() return true end)
 		cont = 0
 		ag1:execute(ev)
 		unitTest:assertEquals(44, cont)

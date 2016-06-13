@@ -26,7 +26,7 @@ return{
 	notify = function(unitTest)
 		local c = Cell{value = function() return 5 end}
 
-		local ch = Chart{
+		Chart{
 			target = c,
 			select = "value"
 		}

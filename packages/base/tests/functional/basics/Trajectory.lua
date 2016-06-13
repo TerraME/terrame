@@ -68,7 +68,7 @@ return{
 			end
 		}
 
-		local cont = 0
+		cont = 0
 		local orderMemory = 10
 
 		forEachCell(t, function(cell)
@@ -84,7 +84,7 @@ return{
 		-- Trajectory inside of another trajectory
 		local cellSpace = CellularSpace{xdim = 5}
 
-		local cont = 1
+		cont = 1
 
 		forEachCell(cellSpace, function(cell)
 			cell.value = cont
@@ -122,14 +122,14 @@ return{
 			w = 4
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			xdim = 5,
 			instance = c
 		}
 
 		t = Trajectory{
 			target = cs,
-			select = function(c) return c.x > 2 end
+			select = function(cell) return cell.x > 2 end
 		}
 
 		unitTest:assert(t:k() == 20)

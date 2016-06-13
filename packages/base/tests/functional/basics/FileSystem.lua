@@ -65,7 +65,7 @@ return{
 		d = dir(packageInfo().data, true)
 		unitTest:assertEquals(#d, files + 2)
 
-		d = dir(".", true)
+		dir(".", true)
 	end,
 	isDir = function(unitTest)
 		unitTest:assert(isDir(sessionInfo().path))
@@ -194,20 +194,20 @@ return{
 		unitTest:assertType(f, "string")
 		unitTest:assert(isDir(f))
 
-		os.execute("rm -rf "..g)
-		local g = tmpDir()
+		rmDir(g)
+		g = tmpDir()
 
 		unitTest:assertEquals(f, g)
 		unitTest:assertType(f, "string")
 		unitTest:assert(isDir(f))
 
-		local g = tmpDir("abc123XXXXX")
+		g = tmpDir("abc123XXXXX")
 
 		unitTest:assert(isDir(g))
 		unitTest:assertEquals(string.len(g), 11)
 		unitTest:assertType(g, "string")
 
-		os.execute("rm -rf "..g)
+		rmDir(g)
 	end,
 	touch = function(unitTest)
 		if not _Gtme.isWindowsOS() then

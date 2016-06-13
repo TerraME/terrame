@@ -25,7 +25,7 @@
 return{
 	Event = function(unitTest)
 		local error_func = function()
-			event = Event{start = "time", period = 2, priority = -1, action = function(event) end}
+			event = Event{start = "time", period = 2, priority = -1, action = function() end}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("start", "number", "time"))
 
@@ -40,22 +40,22 @@ return{
 		unitTest:assertError(error_func, "Argument 'action' is mandatory.")
 
 		error_func = function()
-			event = Event{period = "1", priority = 1, action = function(event) end}
+			event = Event{period = "1", priority = 1, action = function() end}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("period", "number", "1"))
 
 		error_func = function()
-			event = Event{period = -1, priority = 1, action = function(event) end}
+			event = Event{period = -1, priority = 1, action = function() end}
 		end
 		unitTest:assertError(error_func, incompatibleValueMsg("period", "positive number (except zero)", -1))
 
 		error_func = function()
-			event = Event{period = 2, priority = true, action = function(event) end}
+			event = Event{period = 2, priority = true, action = function() end}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("priority", "number", true))
 
 		error_func = function()
-			event = Event{period = 2, priority = "aaa", action = function(event) end}
+			event = Event{period = 2, priority = "aaa", action = function() end}
 		end
 
 		local options = {
@@ -69,7 +69,7 @@ return{
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("aaa", "priority", options))
 
 		error_func = function()
-			event = Event{start = 0.5, period = 2, priority = "medium", action = function(event) end}
+			event = Event{start = 0.5, period = 2, priority = "medium", action = function() end}
 		end
 		unitTest:assertError(error_func, defaultValueMsg("priority", 0))
 
@@ -94,17 +94,17 @@ return{
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("myaction", "action"))
 
 		error_func = function()
-			event = Event{period = 1, priority = 1, action = function(event) end}
+			event = Event{period = 1, priority = 1, action = function() end}
 		end
 		unitTest:assertError(error_func, defaultValueMsg("period", 1))
 
 		error_func = function()
-			event = Event{start = 1, priority = 1, action = function(event) end}
+			event = Event{start = 1, priority = 1, action = function() end}
 		end
 		unitTest:assertError(error_func, defaultValueMsg("start", 1))
 
 		error_func = function()
-			event = Event{priority = 0, action = function(event) end}
+			event = Event{priority = 0, action = function() end}
 		end
 		unitTest:assertError(error_func, defaultValueMsg("priority", 0))
 
@@ -151,7 +151,7 @@ return{
 		unitTest:assertError(error_func, "Incompatible types. Attribute 'execute' from CellularSpace should be a function, got number.")
 	end,
 	config = function(unitTest)
-		local event = Event{action = function(event) end}
+		local event = Event{action = function() end}
 
 		local error_func = function()
 			event:config()

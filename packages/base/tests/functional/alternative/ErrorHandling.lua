@@ -42,7 +42,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("x", "boolean", 5))
 
-		local error_func = function()
+		error_func = function()
 			defaultTableValue(t, "x", 5)
 		end
 		unitTest:assertError(error_func, defaultValueMsg("x", 5))
@@ -90,29 +90,33 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("value", "number", nil))
 	end,
 	suggestion = function(unitTest)
+		local t = {
+			"aaaaa",
+			"bbbbb",
+			"ccccc"
+		}
+
 		local error_func = function()
 			suggestion()
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
+		error_func = function()
 			suggestion(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 
-		local error_func = function()
+		error_func = function()
 			suggestion("aaaab")
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
-		local error_func = function()
+		error_func = function()
 			suggestion("aaaab", 2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "table", 2))
 
-		local t = {2, 3, 4}
-
-		local error_func = function()
+		error_func = function()
 			suggestion("aaaab", t)
 		end
 		unitTest:assertError(error_func, "All the names of argument #2 should be string, got 'number'.")

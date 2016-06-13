@@ -27,10 +27,10 @@ return{
 		local timer
 
 		timer = Timer{
-			Event{priority = 1, action = function(event) timer:notify() end},
-			Event{priority = 2, action = function(event) timer:notify() end},
-			Event{priority = 3, action = function(event) timer:notify() end},
-			Event{priority = 4, action = function(event) timer:notify() end}
+			Event{priority = 1, action = function() timer:notify() end},
+			Event{priority = 2, action = function() timer:notify() end},
+			Event{priority = 3, action = function() timer:notify() end},
+			Event{priority = 4, action = function() timer:notify() end}
 		}
 
 		unitTest:assertType(timer, "Timer")
@@ -45,10 +45,10 @@ return{
 		local timer
 
 		timer = Timer{
-			ev1 = Event{priority =  1, action = function(event) timer:notify() end},
-			ev2 = Event{priority = 10, action = function(event) timer:notify() end},
-			ev3 = Event{priority = 10, action = function(event) timer:notify() end},
-			ev4 = Event{priority = 10, action = function(event) timer:notify() end}
+			ev1 = Event{priority =  1, action = function() timer:notify() end},
+			ev2 = Event{priority = 10, action = function() timer:notify() end},
+			ev3 = Event{priority = 10, action = function() timer:notify() end},
+			ev4 = Event{priority = 10, action = function() timer:notify() end}
 		}
 
 		local c2 = Clock{target = timer}

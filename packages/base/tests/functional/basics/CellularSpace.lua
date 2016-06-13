@@ -42,7 +42,7 @@ return{
 			water = Random{1, 2, 3}
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			instance = cell,
 			xdim = 10
 		}
@@ -55,7 +55,7 @@ return{
 		unitTest:assert(cs:deforest())
 		unitTest:assertEquals(cs:sample().defor, 2)
 
-		local cell = Cell{
+		cell = Cell{
 			defor = 1,
 			deforest = function(self)
 				if self.x > 4 then
@@ -66,7 +66,7 @@ return{
 			end
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			instance = cell,
 			xdim = 10
 		}
@@ -80,22 +80,23 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-        local terralib = getPackage("terralib")
+		local terralib = getPackage("terralib")
 
 		local proj = terralib.Project{
 			file = projName,
 			clean = true,
 			author = author,
 			title = title
-		}		
+		}
 
 		local layerName1 = "Sampa"
-		local sampa = terralib.Layer{
+
+		terralib.Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
-		}		
-		
+		}
+
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1	
@@ -119,7 +120,7 @@ return{
 			file = filePath1
 		}
 		
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = clName1
 		}
@@ -127,44 +128,42 @@ return{
 		unitTest:assertEquals(projName, cs.project.file)
 		unitTest:assertEquals(clName1, cs.layer)
 		
-		local csProj = cs.project
-		
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
 		
 		unitTest:assertEquals(layer.source, "shp")
 		unitTest:assertEquals(layer.file, filePath1)
 		
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			file = filePath1
 		}
 		
 		unitTest:assert(#cs.cells > 0)
 		
-		forEachCell(cs, function(cell)
-			unitTest:assertNotNil(cell.x)
-			unitTest:assertNotNil(cell.y)
+		forEachCell(cs, function(c)
+			unitTest:assertNotNil(c.x)
+			unitTest:assertNotNil(c.y)
 		end)
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = clName1,
 			geometry = true
 		}	
 		
-		forEachCell(cs, function(cell)
-			unitTest:assertNotNil(cell.geom)
-			unitTest:assertNil(cell.OGR_GEOMETRY)
+		forEachCell(cs, function(c)
+			unitTest:assertNotNil(c.geom)
+			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = clName1
 		}	
 
-		forEachCell(cs, function(cell)
-			unitTest:assertNil(cell.geom)
-			unitTest:assertNil(cell.OGR_GEOMETRY)
+		forEachCell(cs, function(c)
+			unitTest:assertNil(c.geom)
+			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)		
 		
 		if isFile(projName) then
@@ -249,7 +248,7 @@ yMin    number [0]
 
 		cs:createNeighborhood{name = "neigh2"}
 
-		forEachNeighbor(cs:sample(), "neigh2", function(c, neigh, weight)
+		forEachNeighbor(cs:sample(), "neigh2", function(c, neigh)
 				unitTest:assert(c ~= neigh)
 
 				unitTest:assert(neigh.x >= (c.x - 1))
@@ -260,7 +259,7 @@ yMin    number [0]
 
 		cs:createNeighborhood{name = "my_neighborhood2", self = true}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood2")
@@ -271,7 +270,7 @@ yMin    number [0]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood2", function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood2", function(c, neigh)
 				unitTest:assert(neigh.x >= c.x - 1)
 				unitTest:assert(neigh.x <= c.x + 1)
 				unitTest:assert(neigh.y >= c.y - 1)
@@ -283,16 +282,16 @@ yMin    number [0]
 		unitTest:assertEquals(32, sizes[6])
 		unitTest:assertEquals(64, sizes[9])
 
-		local verifyWrapX = function(cs, cell, neigh)
-			return neigh.x == ((cell.x - 1) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin
+		local verifyWrapX = function(cs1, cell, neigh)
+			return neigh.x == ((cell.x - 1) - cs1.xMin) % (cs1.xMax - cs1.xMin + 1) + cs1.xMin
 			or     neigh.x == cell.x
-			or     neigh.x == ((cell.x + 1) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin
+			or     neigh.x == ((cell.x + 1) - cs1.xMin) % (cs1.xMax - cs1.xMin + 1) + cs1.xMin
 		end
 
-		local verifyWrapY = function(cs, cell, neigh)
-			return neigh.y == (((cell.y - 1) - cs.yMin) % (cs.yMax - cs.yMin + 1) + cs.yMin)
+		local verifyWrapY = function(cs1, cell, neigh)
+			return neigh.y == (((cell.y - 1) - cs1.yMin) % (cs1.yMax - cs1.yMin + 1) + cs1.yMin)
 			or     neigh.y == cell.y
-			or     neigh.y == (((cell.y + 1) - cs.yMin) % (cs.yMax - cs.yMin + 1) + cs.yMin)
+			or     neigh.y == (((cell.y + 1) - cs1.yMin) % (cs1.yMax - cs1.yMin + 1) + cs1.yMin)
 		end
 
 		cs:createNeighborhood{name = "my_neighborhood3", wrap = true}
@@ -305,9 +304,9 @@ yMin    number [0]
 
 			unitTest:assert(not neighborhood:isNeighbor(cell))
 
-			forEachNeighbor(cell, function(cell, neigh)
-				unitTest:assert(verifyWrapX(cs, cell, neigh))
-				unitTest:assert(verifyWrapY(cs, cell, neigh))
+			forEachNeighbor(cell, function(c, neigh)
+				unitTest:assert(verifyWrapX(cs, c, neigh))
+				unitTest:assert(verifyWrapY(cs, c, neigh))
 			end)
 		end)
 
@@ -325,9 +324,9 @@ yMin    number [0]
 
 			unitTest:assert(neighborhood:isNeighbor(cell))
 
-			forEachNeighbor(cell, function(cell, neigh)
-				unitTest:assert(verifyWrapX(cs, cell, neigh))
-				unitTest:assert(verifyWrapY(cs, cell, neigh))
+			forEachNeighbor(cell, function(c, neigh)
+				unitTest:assert(verifyWrapX(cs, c, neigh))
+				unitTest:assert(verifyWrapY(cs, c, neigh))
 			end)
 		end)
 
@@ -335,7 +334,7 @@ yMin    number [0]
 
 		cs:createNeighborhood{strategy = "vonneumann"}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("1")
@@ -368,7 +367,7 @@ yMin    number [0]
 			self = true
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
@@ -422,9 +421,9 @@ yMin    number [0]
 
 			unitTest:assert(not neighborhood:isNeighbor(cell))
 
-			forEachNeighbor(cell, function(cell, neigh)
-				unitTest:assert(verifyWrapX(cs, cell, neigh))
-				unitTest:assert(verifyWrapY(cs, cell, neigh))
+			forEachNeighbor(cell, function(c, neigh)
+				unitTest:assert(verifyWrapX(cs, c, neigh))
+				unitTest:assert(verifyWrapY(cs, c, neigh))
 			end)
 		end)
 
@@ -441,8 +440,6 @@ yMin    number [0]
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(5, neighborhoodSize)
 
-			local sumWeight = 0
-
 			forEachNeighbor(cell, "my_neighborhood3", function(c, neigh, weight)
 				unitTest:assertEquals((1 / neighborhoodSize), weight, 0.00001)
 
@@ -458,7 +455,7 @@ yMin    number [0]
 
 		cs:createNeighborhood{strategy = "diagonal"}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("1")
@@ -492,7 +489,7 @@ yMin    number [0]
 			wrap = true
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("1")
@@ -528,7 +525,7 @@ yMin    number [0]
 			wrap = true
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("1")
@@ -555,11 +552,11 @@ yMin    number [0]
 		unitTest:assertEquals(100, sizes[5])
 
 		-- mxn
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
 		cs:createNeighborhood{strategy = "mxn"}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood()
@@ -591,16 +588,16 @@ yMin    number [0]
 			name = "mxnwrap"
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("mxnwrap")
 			unitTest:assert(neighborhood:isNeighbor(cell))
 			unitTest:assertEquals(#neighborhood, 25)
 
-			forEachNeighbor(cell, function(cell, neigh)
-				unitTest:assert(verifyWrapX(cs, cell, neigh))
-				unitTest:assert(verifyWrapY(cs, cell, neigh))
+			forEachNeighbor(cell, function(c, neigh)
+				unitTest:assert(verifyWrapX(cs, c, neigh))
+				unitTest:assert(verifyWrapY(cs, c, neigh))
 			end)
 		end)
 
@@ -614,7 +611,7 @@ yMin    number [0]
 			filter = filterFunction
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
@@ -624,7 +621,7 @@ yMin    number [0]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh)
 				unitTest:assert(neigh.x >= c.x - 1)
 				unitTest:assert(neigh.x <= c.x + 1)
 				unitTest:assert(neigh.y >= c.y - 1)
@@ -649,7 +646,7 @@ yMin    number [0]
 			weight = weightFunction
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
@@ -674,7 +671,7 @@ yMin    number [0]
 		unitTest:assertEquals(18, sizes[2])
 		unitTest:assertEquals(72, sizes[3])
 
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 		local cs2 = CellularSpace{xdim = 10}
 
 		cs:createNeighborhood{
@@ -683,7 +680,7 @@ yMin    number [0]
 			m = 5
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
@@ -717,7 +714,7 @@ yMin    number [0]
 			m = 5,
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood2")
@@ -744,7 +741,7 @@ yMin    number [0]
 		unitTest:assertEquals(8,  sizes[12])
 		unitTest:assertEquals(24, sizes[15])
 
-		local filterFunction = function(cell, neighbor)
+		filterFunction = function(cell, neighbor)
 			return neighbor.y > cell.y
 		end
 
@@ -755,7 +752,7 @@ yMin    number [0]
 			filter = filterFunction
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood3")
@@ -784,7 +781,7 @@ yMin    number [0]
 		unitTest:assertEquals(16, sizes[4])
 		unitTest:assertEquals(64, sizes[6])
 
-		local weightFunction = function(cell, neighbor)
+		weightFunction = function(cell, neighbor)
 			return (neighbor.y - cell.y) / (neighbor.y + cell.y)
 		end
 
@@ -796,7 +793,7 @@ yMin    number [0]
 			weight = weightFunction
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood4")
@@ -835,7 +832,7 @@ yMin    number [0]
 			weight = weightFunction
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood5")
@@ -864,7 +861,7 @@ yMin    number [0]
 		unitTest:assertEquals(16, sizes[4])
 		unitTest:assertEquals(64, sizes[6])
 
-		local weightFunction = function(cell, neighbor)
+		weightFunction = function(cell, neighbor)
 			if neighbor.x + cell.x == 0 then
 				return 0
 			else
@@ -881,7 +878,7 @@ yMin    number [0]
 			weight = weightFunction
 		}
 
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood6")
@@ -910,7 +907,7 @@ yMin    number [0]
 		unitTest:assertEquals(48, sizes[10])
 
 		-- Tests the bilaterality (From cs2 to cs)
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood6")
@@ -940,9 +937,9 @@ yMin    number [0]
 		unitTest:assertEquals(48, sizes[10])
 
 		-- filter
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
-		local filterFunction = function(cell, neighbor)
+		filterFunction = function(cell, neighbor)
 			return cell.x == neighbor.x and cell.y ~= neighbor.y
 		end
 
@@ -969,7 +966,7 @@ yMin    number [0]
 			)
 		end)
 
-		local weightFunction = function(cell, neighbor)
+		weightFunction = function(cell, neighbor)
 			return math.abs(neighbor.y - cell.y)
 		end
 
@@ -1012,8 +1009,8 @@ yMin    number [0]
 		unitTest:assertEquals(20, sumWeightVec[27])
 
 		--  coord
-		local cs = CellularSpace{xdim = 10}
-		local cs2 = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
+		cs2 = CellularSpace{xdim = 10}
 	
 		cs:createNeighborhood{
 			strategy = "coord",
@@ -1052,8 +1049,7 @@ yMin    number [0]
 			end)
 		end)
 	
-
-		local cs = CellularSpace{xdim = 5}
+		cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
 
 		forEachCell(cs, function(cell)
@@ -1061,7 +1057,7 @@ yMin    number [0]
 		end)
 
 		-- on the fly
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
 		cs:createNeighborhood{inmemory = false}
 
@@ -1069,7 +1065,7 @@ yMin    number [0]
 		unitTest:assertType(cs.cells[1]:getNeighborhood(), "Neighborhood")
 
 		-- Vector of size counters - Used to verify the size of the neighborhoods
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood()
@@ -1104,7 +1100,7 @@ yMin    number [0]
 
 		unitTest:assertType(cs.cells[1].neighborhoods["1"], "function")
 		unitTest:assertType(cs.cells[1]:getNeighborhood(), "Neighborhood")
-		local sizes = {}
+		sizes = {}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("1")
@@ -1148,7 +1144,6 @@ yMin    number [0]
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
-
 		local c = cs:get(2, 2)
 
 		unitTest:assertEquals(2, c.x)
@@ -1158,7 +1153,7 @@ yMin    number [0]
 
 		unitTest:assertEquals(c, d)
 
-		local c = cs:get(100, 100)
+		c = cs:get(100, 100)
 		unitTest:assertNil(c)
 	end,
 	load = function(unitTest)
@@ -1275,7 +1270,7 @@ yMin    number [0]
 			-- unitTest:assertEquals(cell.t0, 2000) -- SKIP
 		-- end)
 		
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameT0
 		}		
@@ -1296,7 +1291,7 @@ yMin    number [0]
 		
 		cs:save(cellSpaceLayerNameGeom)
 		
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameGeom,
 			geometry = true
@@ -1322,7 +1317,7 @@ yMin    number [0]
 		
 		cs:save(cellSpaceLayerNameGeom2)
 		
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameGeom2,
 			geometry = true
@@ -1341,15 +1336,18 @@ yMin    number [0]
 			if isFile(f) then
 				rmFile(f)
 			end
-			local f = fn2..exts[i]
+
+			f = fn2..exts[i]
 			if isFile(f) then
 				rmFile(f)
 			end
-			local f = fn3..exts[i]
+
+			f = fn3..exts[i]
 			if isFile(f) then
 				rmFile(f)
-			end		
-			local f = fn4..exts[i]
+			end
+		
+			f = fn4..exts[i]
 			if isFile(f) then
 				rmFile(f)
 			end				
@@ -1377,7 +1375,7 @@ yMin    number [0]
 		unitTest:assertEquals(#t1, 3)
 		unitTest:assertEquals(#t2, 6)
 
-		t2 = cs:split(function(cell)
+		t2 = cs:split(function()
 			return "test"
 		end)
 

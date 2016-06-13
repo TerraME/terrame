@@ -57,9 +57,9 @@ return{
 		unitTest:assertEquals(6, sum_metabolism)
 		unitTest:assertEquals(2, sum_immunes)
 
-		local nonFooAgent = Agent{}
+		nonFooAgent = Agent{}
 
-		local soc = Society{
+		soc = Society{
 			instance = nonFooAgent,
 			file = filePath("brazilstates.shp", "base")
 		}
