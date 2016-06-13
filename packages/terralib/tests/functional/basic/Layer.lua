@@ -227,7 +227,7 @@ return {
 			rmFile(filePath4)
 		end		
 		
-		local l4 = Layer{
+		Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
@@ -236,7 +236,7 @@ return {
 			file = filePath4
 		}
 		
-		local clSet = tl:getDataSet(proj, clName1)
+		clSet = tl:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)		
 		
 		-- END

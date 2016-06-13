@@ -252,7 +252,7 @@ return {
 		pgData.table = tName4
 		tl:dropPgTable(pgData)	
 		
-		local layer5 = Layer{
+		Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
