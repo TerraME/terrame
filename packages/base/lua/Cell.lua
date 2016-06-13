@@ -159,7 +159,7 @@ Cell_ = {
 	--
 	-- print(cs:sample().population)
 	-- @see Random
-	init = function(self) -- virtual function that might be implemented by the modeler
+	init = function() -- virtual function that might be implemented by the modeler
 	end,
 	--- Return whether the cell is empty according to a given placement.
 	-- An empty Cell does not contain any Agent.
@@ -249,7 +249,7 @@ Cell_ = {
 	end,
 	--- Return the number of Neighborhoods in the Cell.
 	-- @deprecated Cell:#
-	size = function(self)
+	size = function()
 		deprecatedFunction("size", "operator #")
 	end,
 	--- Synchronizes the Cell. TerraME can keep two copies of the attributes of a Cell in memory:
