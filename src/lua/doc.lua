@@ -23,7 +23,6 @@
 -------------------------------------------------------------------------------------------
 
 local printError   = _Gtme.printError
-local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
 _Gtme.ignoredFile = function(fname)
@@ -75,7 +74,6 @@ local function imageFiles(package)
 end
 
 local function dataFiles(package)
-	local s = sessionInfo().separator
 	local datapath = packageInfo(package).data
 
 	if not isDir(datapath) then
@@ -92,7 +90,7 @@ local function dataFiles(package)
 end
 
 local function getProjects(package)
-	data_path = packageInfo("terralib").data
+	data_path = packageInfo(package).data
 	local s = sessionInfo().separator
 
 	local projects = {}
@@ -116,7 +114,7 @@ local function getProjects(package)
 
 				local representation = layer:representation()
 
-				local description = ""
+				local description
 
 				if representation == "raster" then
 					description = "raster with "..layer:bands().." band"
@@ -229,7 +227,7 @@ local function getProjects(package)
 		if string.endswith(file, ".lua") then
 			print("Processing '"..file.."'")
 
-			local ok, err = xpcall(function() dofile(data_path..s..file) end, function(err)
+			xpcall(function() dofile(data_path..s..file) end, function(err)
 				printError(err)
 			end)
 
@@ -249,18 +247,18 @@ local function getProjects(package)
 			file = {idx}
 		}
 
-		local layers = {}
+		local mlayers = {}
 		forEachOrderedElement(proj, function(midx, layer)
 			layer.layer = midx
-			table.insert(layers, layer)
+			table.insert(mlayers, layer)
 		end)
 
-		mproject.layers = layers
+		mproject.layers = mlayers
 
 		table.insert(output, mproject)
 	end)
 
-	forEachOrderedElement(layers, function(idx, layer)
+	forEachOrderedElement(mlayers, function(idx, layer)
 		layer.file = {idx}
 		table.insert(output, layer)
 	end)
@@ -422,7 +420,7 @@ function _Gtme.executeDoc(package)
 
 		projects = getProjects(package)
 
-		forEachOrderedElement(projects, function(idx, value)
+		forEachOrderedElement(projects, function(_, value)
 			table.insert(mdata, value)
 		end)
 
@@ -480,7 +478,7 @@ function _Gtme.executeDoc(package)
 
 	local mfont = {}
 	local fontsdocumented = {}
-	local df = _Gtme.fontFiles(package)
+	df = _Gtme.fontFiles(package)
 
 	if isFile(package_path..s.."font.lua") and #df > 0 then
 		printNote("Parsing 'font.lua'")
@@ -513,7 +511,7 @@ function _Gtme.executeDoc(package)
 
 			if type(tab.symbol) ~= "table" then tab.symbol = {} end
 
-			forEachElement(tab.symbol, function(idx, value, mtype)
+			forEachElement(tab.symbol, function(idx, _, mtype)
 				if type(idx) ~= "string" then
 					printError("Font '"..tostring(tab.name).."' has a non-string symbol.")
 					doc_report.error_font = doc_report.error_font + 1
@@ -635,13 +633,13 @@ function _Gtme.executeDoc(package)
 		if type(idx) ~= "string" then return end
 		if not string.endswith(idx, ".lua") then return end
 
-		forEachElement(value.models, function(midx, value, mtype)
-			if mtype == "table" and value.image then
-				if not images[value.image] then
-					printError("Image file '"..value.image.."' does not exist in directory 'images'")
+		forEachElement(value.models, function(_, mvalue, mtype)
+			if mtype == "table" and mvalue.image then
+				if not images[mvalue.image] then
+					printError("Image file '"..mvalue.image.."' does not exist in directory 'images'")
 					doc_report.wrong_image = doc_report.wrong_image + 1
 				else
-					images[value.image] = images[value.image] + 1
+					images[mvalue.image] = images[mvalue.image] + 1
 				end
 			end
 		end)
@@ -675,7 +673,7 @@ function _Gtme.executeDoc(package)
 	printNote("Checking if all functions are documented")
 	forEachOrderedElement(all_functions, function(idx, value)
 		print("Checking "..idx)
-		forEachOrderedElement(value, function(midx, mvalue)
+		forEachOrderedElement(value, function(midx)
 			if midx == "__len" or midx == "__tostring" then return end -- TODO: think about this kind of function
 
 			if not result.files[idx] or not result.files[idx].functions[midx] and 
@@ -693,10 +691,10 @@ function _Gtme.executeDoc(package)
 
 		local documentedArguments = {}
 
-		forEachOrderedElement(value.models, function(midx, value, mtype)
+		forEachOrderedElement(value.models, function(_, mvalue, mtype)
 			if mtype == "table" then
-				if type(value.arg) == "table" then -- if some argument is documented
-					forEachOrderedElement(value.arg, function(mmidx, mvalue, mmtype)
+				if type(mvalue.arg) == "table" then -- if some argument is documented
+					forEachOrderedElement(mvalue.arg, function(mmidx)
 						if type(mmidx) == "string" then
 							documentedArguments[mmidx] = true
 						end
@@ -709,9 +707,9 @@ function _Gtme.executeDoc(package)
 		if value.models and type(pkg[modelName]) == "Model" then
 			local args = pkg[modelName]:getParameters()
 
-			forEachOrderedElement(args, function(idx, _, mtype)
-				if not documentedArguments[idx] then
-					printError("Model '"..modelName.."' has undocumented argument '"..idx.."'")
+			forEachOrderedElement(args, function(midx)
+				if not documentedArguments[midx] then
+					printError("Model '"..modelName.."' has undocumented argument '"..midx.."'")
 					doc_report.model_error = doc_report.model_error + 1
 				end
 			end)

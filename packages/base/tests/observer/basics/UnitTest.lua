@@ -37,7 +37,7 @@ return{
     clear = function(unitTest)
         local u = UnitTest{sleep = 1}
         local cell = Cell{value = 1}
-        local c = Chart{target = cell}
+        Chart{target = cell}
 
         local t1 = os.time()
         u:clear()

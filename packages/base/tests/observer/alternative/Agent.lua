@@ -26,7 +26,7 @@ return{
 	notify = function(unitTest)
 		local a = Agent{value = function() return 5 end}
 
-		local ch = Chart{
+		Chart{
 			target = a,
 			select = "value"
 		}

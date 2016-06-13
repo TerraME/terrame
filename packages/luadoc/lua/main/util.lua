@@ -4,8 +4,8 @@
 -------------------------------------------------------------------------------
 
 -- local lfs = require "lfs"
-local type, table, io, assert, tostring, setmetatable, pcall = type, table, io, assert, tostring, setmetatable, pcall
-local print, string, ipairs, mkDir, printNote, printError = print, string, ipairs, mkDir, _Gtme.printNote, _Gtme.printError
+local table, io, assert, setmetatable = table, io, assert, setmetatable
+local string, ipairs, mkDir, printError = string, ipairs, mkDir, _Gtme.printError
 
 -------------------------------------------------------------------------------
 -- Module with several utilities that could not fit in a specific module
@@ -182,8 +182,8 @@ function loadlogengine(options)
 		end
 		
 	else
-		noop = {__index=function(...)
-			return function(...)
+		noop = {__index=function()
+			return function()
 				-- noop
 			end
 		end}
@@ -203,8 +203,8 @@ function parse_tab(tab, func, filename, doc_report)
 	
 	local is_strategy_table
 	for k, title in ipairs(header) do
-		local title = title:lower()
-		if title:match("arguments")  then
+		local mtitle = title:lower()
+		if mtitle:match("arguments")  then
 			is_strategy_table = true
 			local line = 2
 			while (line <= #tab) do
@@ -235,7 +235,7 @@ function parse_tab(tab, func, filename, doc_report)
 	end	
 end
 
-function check_arguments(parsed_args, func, filename, doc_report)
+function check_arguments(parsed_args, func, _, doc_report)
 	local unknown = {}
 	local unused = {}
 	

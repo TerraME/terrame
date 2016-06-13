@@ -3,7 +3,6 @@
 -- @release $Id: init.lua,v 1.4 2008/02/17 06:42:51 jasonsantos Exp $
 -------------------------------------------------------------------------------
 
-local print, pairs, pcall, loadfile = print, pairs, pcall, loadfile
 local belong = belong
 local include = _Gtme.include
 local printNote = _Gtme.printNote
@@ -11,7 +10,6 @@ local printError = _Gtme.printError
 local forEachOrderedElement = forEachOrderedElement
 
 local s = sessionInfo().separator
-local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 
 logger = {}
 
@@ -97,8 +95,6 @@ end
 -- @see luadoc.doclet.html, luadoc.doclet.formatter, luadoc.doclet.raw
 -- @see luadoc.taglet.standard
 function startDoc(files, examples, options, package_path, mdata, mfont, doc_report, silent)
-	-- logger = util.loadlogengine(options)
-
 	-- load config file
 	-- if options.config ~= nil then
 		-- load specified config file

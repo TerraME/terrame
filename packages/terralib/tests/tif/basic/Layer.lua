@@ -109,7 +109,7 @@ return {
 		-- MINIMUM
 
 		local minTifLayerName = clName1.."_"..prodes.."_min"		
-		local shp = minTifLayerName..".shp"
+		shp = minTifLayerName..".shp"
 
 		table.insert(shapes, shp)
 		
@@ -124,7 +124,7 @@ return {
 			output = minTifLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = minTifLayerName 
 		}
@@ -135,7 +135,7 @@ return {
 			unitTest:assert(cell.prod_min <= 254)
 		end)
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "prod_min",
 			value = {0, 49, 169, 253, 254},
@@ -147,7 +147,7 @@ return {
 		-- MAXIMUM
 
 		local maxTifLayerName = clName1.."_"..prodes.."_max"		
-		local shp = maxTifLayerName..".shp"
+		shp = maxTifLayerName..".shp"
 
 		table.insert(shapes, shp)
 		
@@ -162,7 +162,7 @@ return {
 			output = maxTifLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = maxTifLayerName 
 		}
@@ -173,7 +173,7 @@ return {
 			unitTest:assert(cell.prod_max <= 254)
 		end)
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "prod_max",
 			value = {0, 49, 169, 253, 254},
@@ -185,7 +185,7 @@ return {
 		-- SUM
 
 		local sumTifLayerName = clName1.."_"..prodes.."_sum"		
-		local shp = sumTifLayerName..".shp"
+		shp = sumTifLayerName..".shp"
 
 		table.insert(shapes, shp)
 		
@@ -200,7 +200,7 @@ return {
 			output = sumTifLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = sumTifLayerName 
 		}
@@ -210,7 +210,7 @@ return {
 			unitTest:assert(cell.prod_sum >= 0)
 		end)
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "prod_sum",
 			min = 0,
@@ -224,7 +224,7 @@ return {
 		-- COVERAGE
 
 		local covTifLayerName = clName1.."_"..prodes.."_cov"		
-		local shp = covTifLayerName..".shp"
+		shp = covTifLayerName..".shp"
 
 		table.insert(shapes, shp)
 		
@@ -239,7 +239,7 @@ return {
 			output = covTifLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = covTifLayerName 
 		}
@@ -262,7 +262,7 @@ return {
 		end)
 
 		for i = 1, #cov do
-			local map = Map{
+			local mmap = Map{
 				target = cs,
 				select = "cov_"..cov[i],
 				min = 0,
@@ -271,18 +271,18 @@ return {
 				color = "RdPu"
 			}
 
-			unitTest:assertSnapshot(map, "tiff-cov-"..cov[i]..".png")
+			unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i]..".png")
 		end
 
 		-- AVERAGE
 
-		local box = Layer{
+		Layer{
 			project = proj,
 			name = "box",
 			file = filePath("elevation_box.shp", "terralib")
 		}
 
-		local altimetria = Layer{
+		Layer{
 			project = proj,
 			name = "altimetria",
 			file = filePath("elevation.tif", "terralib")
@@ -309,12 +309,12 @@ return {
 			attribute = "height"
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = "mycells-avg"
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "height",
 			min = 0,
@@ -337,12 +337,12 @@ return {
 			attribute = "std"
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = "cells-std"
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "std",
 			min = 0,

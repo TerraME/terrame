@@ -12,16 +12,18 @@
 local s = sessionInfo().separator
 local include = _Gtme.include
 
+--[[
 local function print_version ()
 	print (string.format("%s\n%s\n%s", 
 		luadoc._VERSION, 
 		luadoc._DESCRIPTION, 
 		luadoc._COPYRIGHT))
 end
-
+--]]
 -------------------------------------------------------------------------------
 -- Print usage message.
 
+--[[
 local function print_help ()
 	print ("Usage: "..arg[0]..[[ [options|files]
 Build documentation from files. Available options are:
@@ -34,17 +36,21 @@ Build documentation from files. Available options are:
       --doclet doclet_module   doclet module to generate output
       --taglet taglet_module   taglet module to parse input code
   -q, --quiet                  suppress all normal output
-  -v, --version                print version information]])
-end
+--]]
+--  -v, --version                print version information]])
+--end
 
-local function off_messages (arg, i, options)
+--[[
+local function off_messages (_, _, options)
 	options.verbose = nil
 end
+--]]
 
 -------------------------------------------------------------------------------
 -- Process options. TODO: use getopts.
 -- @class table
 -- @name OPTIONS
+--[[
 local OPTIONS = {
 	d = function (arg, i, options)
 		local dir = arg[i+1]
@@ -77,7 +83,7 @@ local OPTIONS = {
 		return 1
 	end,
 }
-
+--]]
 -------------------------------------------------------------------------------
 -- local function process_options (arg)
 	-- local files = {}
@@ -108,7 +114,7 @@ local OPTIONS = {
 
 -------------------------------------------------------------------------------
 -- Main function. Process command-line arguments and call luadoc processor.
-function luadocMain(package_path, lua_files, example_files, package, mdata, mfont, doc_report, silent)
+function luadocMain(package_path, lua_files, example_files, _, mdata, mfont, doc_report, silent)
 	if not silent then silent = false end
 	-- Process options
 	-- local argc = #arg

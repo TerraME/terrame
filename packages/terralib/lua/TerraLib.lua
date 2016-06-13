@@ -93,12 +93,16 @@ local RasterAttributeCreatedMapper = {
 }
 
 local function checkConnectionParams(type, connInfo)
-	local ds = binding.te.da.DataSourceFactory.make(type)
-	ds:setConnectionInfo(connInfo)
-	local msg = binding.te.da.DataSource.Exists(ds)	
+	local msg
+
+	do
+		local ds = binding.te.da.DataSourceFactory.make(type)
+		ds:setConnectionInfo(connInfo)
+		msg = binding.te.da.DataSource.Exists(ds)	
 	
-	ds:close()
-	ds = nil
+		ds:close()
+	end
+
 	collectgarbage("collect")
 	
 	return msg
@@ -176,52 +180,55 @@ local function makeAndOpenDataSource(connInfo, type)
 end
 
 local function createLayer(name, dSetName, connInfo, type)
-	local dsId, added = addDataSourceInfo(type, name, connInfo)	
+	local layer
 
-	local ds = makeAndOpenDataSource(connInfo, type)
-	ds:setId(dsId)
-	
-	binding.te.da.DataSourceManager.getInstance():insert(ds)
-	
-	local dSetType = nil
-	local dSet = nil
-	local env = nil
-	local srid = 0
+	do
+		local dsId = addDataSourceInfo(type, name, connInfo)	
 
-	if type == "OGR" then
-		dSetType = ds:getDataSetType(dSetName)
-		local gp = binding.GetFirstGeomProperty(dSetType)
-		env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
-		srid = gp:getSRID()
-	elseif type == "GDAL" then
-		dSetType = ds:getDataSetType(dSetName)
-		dSet = ds:getDataSet(dSetName)
-		local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
-		local raster = dSet:getRaster(rpos)	
-		env = raster:getExtent()
-		srid = raster:getSRID()
-	elseif type == "POSTGIS" then
-		dSetType = ds:getDataSetType(dSetName)
-		local gp = binding.GetFirstGeomProperty(dSetType)
-		env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
-		srid = gp:getSRID()	
+		local ds = makeAndOpenDataSource(connInfo, type)
+		ds:setId(dsId)
+	
+		binding.te.da.DataSourceManager.getInstance():insert(ds)
+	
+		local dSetType
+		local dSet
+		local env = nil
+		local srid = 0
+
+		if type == "OGR" then
+			dSetType = ds:getDataSetType(dSetName)
+			local gp = binding.GetFirstGeomProperty(dSetType)
+			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
+			srid = gp:getSRID()
+		elseif type == "GDAL" then
+			dSet = ds:getDataSet(dSetName)
+			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+			local raster = dSet:getRaster(rpos)	
+			env = raster:getExtent()
+			srid = raster:getSRID()
+		elseif type == "POSTGIS" then
+			dSetType = ds:getDataSetType(dSetName)
+			local gp = binding.GetFirstGeomProperty(dSetType)
+			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
+			srid = gp:getSRID()	
+		end
+
+		local id = binding.GetRandomicId()
+		layer = binding.te.map.DataSetLayer(id)
+	
+		layer:setDataSetName(dSetName)
+		layer:setTitle(name)
+		layer:setDataSourceId(ds:getId())
+		layer:setExtent(env)
+		layer:setVisibility(binding.VISIBLE)
+		layer:setRendererType("ABSTRACT_LAYER_RENDERER")
+		layer:setSRID(srid)
+
+		binding.te.da.DataSourceManager.getInstance():detach(ds:getId())
+
+		ds:close()
 	end
 
-	local id = binding.GetRandomicId()
-	local layer = binding.te.map.DataSetLayer(id)
-	
-	layer:setDataSetName(dSetName)
-	layer:setTitle(name)
-	layer:setDataSourceId(ds:getId())
-	layer:setExtent(env)
-	layer:setVisibility(binding.VISIBLE)
-	layer:setRendererType("ABSTRACT_LAYER_RENDERER")
-	layer:setSRID(srid)
-
-	binding.te.da.DataSourceManager.getInstance():detach(ds:getId())
-
-	ds:close()
-	ds = nil
 	collectgarbage("collect")
 	
 	return layer
@@ -233,7 +240,7 @@ end
 
 local function releaseProject(project)
 	local removed = {}
-	for title, layer in pairs(project.layers) do
+	for _, layer in pairs(project.layers) do
 		local id = layer:getDataSourceId()
 
 		if not removed[id] then
@@ -265,7 +272,7 @@ end
 local function encodeDataSourceInfos(layers)
 	local encoded = {}
 	
-	for title, layer in pairs(layers) do
+	for _, layer in pairs(layers) do
 		layer:setTitle(encodeUri(layer:getTitle()))
 		
 		local lid = layer:getDataSourceId()
@@ -334,7 +341,7 @@ local function saveProject(project, layers)
 	if layers then 
 		local lserial = binding.te.map.serialize.Layer.getInstance()
 		
-		for title, layer in pairs(layers) do
+		for _, layer in pairs(layers) do
 			lserial:write(layer, writer)
 		end
 	end
@@ -501,47 +508,57 @@ local function addFileLayer(project, name, filePath, type)
 end
 
 local function dataSetExists(connInfo, dSetName, type)
-	local ds = makeAndOpenDataSource(connInfo, type)	
-	local exists = ds:dataSetExists(dSetName)
+	local exists
+
+	do
+		local ds = makeAndOpenDataSource(connInfo, type)	
+		exists = ds:dataSetExists(dSetName)
 	
-	ds:close()
-	ds = nil
+		ds:close()
+	end
+
 	collectgarbage("collect")
 	
 	return exists
 end
 
 local function propertyExists(connInfo, dSetName, property, type)
-	local ds = makeAndOpenDataSource(connInfo, type)
+	local exists
 
-	if type == "GDAL" then
-		local dSet = ds:getDataSet(dSetName)
-		local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
-		local raster = dSet:getRaster(rpos)	
-		local numBands = raster:getNumberOfBands()
-		return (property >= 0) and (property < numBands)
+	do
+		local ds = makeAndOpenDataSource(connInfo, type)
+
+		if type == "GDAL" then
+			local dSet = ds:getDataSet(dSetName)
+			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+			local raster = dSet:getRaster(rpos)	
+			local numBands = raster:getNumberOfBands()
+			return (property >= 0) and (property < numBands)
+		end
+	
+		exists = ds:propertyExists(dSetName, property)
+	
+		ds:close()
 	end
-	
-	local exists = ds:propertyExists(dSetName, property)
-	
-	ds:close()
-	ds = nil
+
 	collectgarbage("collect")
 	
 	return exists
 end
 
 local function dropDataSet(connInfo, dSetName, type)
-	local ds = makeAndOpenDataSource(connInfo, type)
+	do
+		local ds = makeAndOpenDataSource(connInfo, type)
 
-	local dsetExists = ds:dataSetExists(dSetName)
+		local dsetExists = ds:dataSetExists(dSetName)
 
-	if dsetExists then
-		ds:dropDataSet(dSetName)
-	end	
+		if dsetExists then
+			ds:dropDataSet(dSetName)
+		end	
 	
-	ds:close()
-	ds = nil
+		ds:close()
+	end
+
 	collectgarbage("collect")
 end
 
@@ -556,59 +573,57 @@ local function toDataSetLayer(layer)
 end
 
 local function copyLayer(from, to)
-	local fromDsId = from:getDataSourceId()
-	local fromDs = binding.GetDs(fromDsId, true)	
+	do
+		local fromDsId = from:getDataSourceId()
+		local fromDs = binding.GetDs(fromDsId, true)	
 	
-	from = toDataSetLayer(from)	
-	local dSetName = from:getDataSetName()
+		from = toDataSetLayer(from)	
+		local dSetName = from:getDataSetName()
 	
-	local toDs = nil
+		local toDs = nil
 		
-	if to.type == "POSTGIS" then
-		to.table = dSetName
-		local toConnInfo = createPgConnInfo(to.host, to.port, to.user, to.password, to.database, to.encoding)	
-		local toTable = string.lower(to.table)	
-		local toDb = string.lower(to.database)	
-		-- TODO: IT IS NOT POSSIBLE CREATE A DATABASE (REVIEW)
-		--toConnInfo.PG_CHECK_DB_EXISTENCE = toDb		
-		--print(binding.te.da.DataSource.exists("POSTGIS", toConnInfo))
-		--local exists = binding.te.da.DataSource.exists("POSTGIS", toConnInfo)
-		-- if exists then
-			-- toConnInfo.PG_DB_TO_DROP = string.lower(to.dbName)	
-			-- binding.te.da.DataSource.drop("POSTGIS", toConnInfo)	
-		-- end		
-		toDs = makeAndOpenDataSource(toConnInfo, "POSTGIS")
-			
-		local tableExists = toDs:dataSetExists(toTable)
-		if tableExists then
-			toDs:dropDataSet(toTable)
+		if to.type == "POSTGIS" then
+			to.table = dSetName
+			local toConnInfo = createPgConnInfo(to.host, to.port, to.user, to.password, to.database, to.encoding)	
+			local toTable = string.lower(to.table)	
+			-- TODO: IT IS NOT POSSIBLE CREATE A DATABASE (REVIEW)
+			--toConnInfo.PG_CHECK_DB_EXISTENCE = toDb		
+			--print(binding.te.da.DataSource.exists("POSTGIS", toConnInfo))
+			--local exists = binding.te.da.DataSource.exists("POSTGIS", toConnInfo)
+			-- if exists then
+				-- toConnInfo.PG_DB_TO_DROP = string.lower(to.dbName)	
+				-- binding.te.da.DataSource.drop("POSTGIS", toConnInfo)	
+			-- end		
+			toDs = makeAndOpenDataSource(toConnInfo, "POSTGIS")
+		
+			local tableExists = toDs:dataSetExists(toTable)
+			if tableExists then
+				toDs:dropDataSet(toTable)
+			end
+		elseif to.type == "ADO" then
+			local toConnInfo = createAdoConnInfo(to.file)
+			-- TODO: ADO DON'T WORK (REVIEW)
+			toDs = makeAndOpenDataSource(toConnInfo, "ADO") --binding.te.da.DataSource.create("ADO", toConnInfo)
+			-- local tableExists = toDs:dataSetExists(toTable)
+			-- if tableExists then
+				-- toDs:dropDataSet(toTable)
+			-- end		
+			--fromDs:moveFirst()
 		end
-	elseif to.type == "ADO" then
-		local toConnInfo = createAdoConnInfo(to.file)
-		-- TODO: ADO DON'T WORK (REVIEW)
-		toDs = makeAndOpenDataSource(toConnInfo, "ADO") --binding.te.da.DataSource.create("ADO", toConnInfo)
-		-- local tableExists = toDs:dataSetExists(toTable)
-		-- if tableExists then
-			-- toDs:dropDataSet(toTable)
-		-- end		
-		--fromDs:moveFirst()
-	end
+	
+		local fromDSetType = fromDs:getDataSetType(dSetName)
+		local fromDSet = fromDs:getDataSet(dSetName)
 		
-	local fromDSetType = fromDs:getDataSetType(dSetName)
-	local fromDSet = fromDs:getDataSet(dSetName)
-		
-	binding.Create(toDs, fromDSetType, fromDSet)
+		binding.Create(toDs, fromDSetType, fromDSet)
 			
-	fromDSetType = nil
-	fromDSet = nil
-	fromDs:close()
-	fromDs = nil
-	toDs:close()
-	toDs = nil
+		fromDs:close()
+		toDs:close()
+	end
+
 	collectgarbage("collect")	
 end
 
-local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, type, mask) 
+local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, type) 
 	local cLId = binding.GetRandomicId()
 	local cellLayerInfo = binding.te.da.DataSourceInfo()
 		
@@ -622,14 +637,8 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 	local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations()
 	local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
 	local cellName = dSetName
-	
-	if mask then
-		cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, 
-									inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
-	else
-		cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, 
-									inputLayer:getExtent(), inputLayer:getSRID(), cLType)
-	end
+
+	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 end
 
 local function renameEachClass(ds, dSetName, dsType, select, property)
@@ -639,9 +648,9 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 	
 	for i = 0, numProps - 1 do
 		local currentProp = dSet:getPropertyName(i)
-		
+		local newName
+
 		if string.match(currentProp, select) then
-			local newName = ""
 			if type(select) == "number" then
 				if dsType == "POSTGIS" then
 					newName = string.gsub(currentProp, "b"..select.."_", property.."_")
@@ -665,44 +674,18 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 	return propsRenamed
 end
 
-local function getPropertyCreatedName(outDs, outDSetName, toLayer)
-	local toDSetName = toLayer:getDataSetName()
-	local toDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
-	local toDs = makeAndOpenDataSource(toDsInfo:getConnInfo(), toDsInfo:getType())
-
-	
-	local outDSet = outDs:getDataSet(outDSetName)
-	local numProps = outDSet:getNumProperties()		
-	local propCreatedName = ""
-	
-	while outDSet:moveNext() do
-		for i = 0, numProps - 1 do
-			local propName = outDSet:getPropertyName(i)
-			if not toDs:propertyExists(toDSetName, propName) then
-				if propName ~= "OGR_GEOMETRY" then
-					propCreatedName = propName
-				end
-			end
-		end
-		outDSet:moveLast()
-	end
-	
-	toDs:close()
-	toDs = nil
-	outDSet = nil
-	collectgarbage("collect")
-
-	return propCreatedName
-end
-
 local function getDataSetTypeByLayer(layer)
-	local dSetName = layer:getDataSetName()
-	local connInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
-	local ds = makeAndOpenDataSource(connInfo:getConnInfo(), connInfo:getType())
-	local dst = ds:getDataSetType(dSetName)
+	local dst
+
+	do
+		local dSetName = layer:getDataSetName()
+		local connInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+		local ds = makeAndOpenDataSource(connInfo:getConnInfo(), connInfo:getType())
+		dst = ds:getDataSetType(dSetName)
 	
-	ds:close()
-	ds = nil
+		ds:close()
+	end
+
 	collectgarbage("collect")
 	
 	return dst
@@ -717,96 +700,97 @@ local function getNormalizedName(name)
 end
 
 local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, area)
-	local v2v = binding.te.attributefill.VectorToVectorMemory()
-	v2v:setInput(fromLayer, toLayer)			
+	local propCreatedName
+	do
+		local v2v = binding.te.attributefill.VectorToVectorMemory()
+		v2v:setInput(fromLayer, toLayer)			
 			
-	local outDs = v2v:createAndSetOutput(outDSetName, outType, outConnInfo)
+		local outDs = v2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
-	if operation == "average" then
-		if area then
-			operation = "weighted"
-		else
-			operation = "mean"
+		if operation == "average" then
+			if area then
+				operation = "weighted"
+			else
+				operation = "mean"
+			end
+		elseif operation == "mode" then
+			if area then 
+				operation = "intersection"
+			else
+				operation = "occurrence"
+			end
+		elseif operation == "sum" then
+			if area then
+				operation = "wsum"
+			end
 		end
-	elseif operation == "mode" then
-		if area then 
-			operation = "intersection"
-		else
-			operation = "occurrence"
-		end
-	elseif operation == "sum" then
-		if area then
-			operation = "wsum"
-		end
-	end
 	
-	local toDst = getDataSetTypeByLayer(toLayer)
+		local toDst = getDataSetTypeByLayer(toLayer)
 
-	v2v:setParams(select, OperationMapper[operation], toDst)
+		v2v:setParams(select, OperationMapper[operation], toDst)
 
-	local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
-	if err ~= "" then
-		customError(err)
+		local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
+		if err ~= "" then
+			customError(err)
+		end
+	
+		propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
+	
+		if outType == "OGR" then
+			propCreatedName = getNormalizedName(propCreatedName)
+		end
+	
+		propCreatedName = string.lower(propCreatedName)	
+	
+		outDs:close()
 	end
-	
-	local propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
-	
-	if outType == "OGR" then
-		propCreatedName = getNormalizedName(propCreatedName)
-	end
-	
-	propCreatedName = string.lower(propCreatedName)	
-	
-	outDs:close()
-	outDs = nil
-	toDst = nil
-	v2v = nil
+
 	collectgarbage("collect")
 	
 	return propCreatedName
 end
 
 local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName)
-	local r2v = binding.te.attributefill.RasterToVector()
-			
-	fromLayer = toDataSetLayer(fromLayer)
-	toLayer = toDataSetLayer(toLayer)
-	
-	local rDs = binding.GetDs(fromLayer:getDataSourceId(), true)
-    local rDSet = rDs:getDataSet(fromLayer:getDataSetName())
-	local rpos = binding.GetFirstPropertyPos(rDSet, binding.RASTER_TYPE)
-	local raster = rDSet:getRaster(rpos)
-	
-	if (fromLayer:getSRID() == 0) or (toLayer:getSRID() == 0) then -- TODO: REVIEW
-		--customError("Input layer with invalid SRID information.")
-	end
-	
-	local grid = raster:getGrid()
-	grid:setSRID(fromLayer:getSRID())
-			
-	r2v:setInput(raster, toLayer)
-			
-	if operation == "average" then
-		operation = "mean"
-	end			
-			
-	r2v:setParams(select, OperationMapper[operation], false) -- TODO: TEXTURE PARAM (REVIEW)
-			
-	local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
+	local propCreatedName
 
-	local err = r2v:pRun()
-	if err ~= "" then
-		customError(err)
-	end
+	do
+		local r2v = binding.te.attributefill.RasterToVector()
 			
-	local propCreatedName = "B"..select..RasterAttributeCreatedMapper[operation]
+		fromLayer = toDataSetLayer(fromLayer)
+		toLayer = toDataSetLayer(toLayer)
 	
-	if outType == "POSTGIS" then
-		propCreatedName = string.lower(propCreatedName)
-	end	
+		local rDs = binding.GetDs(fromLayer:getDataSourceId(), true)
+	    local rDSet = rDs:getDataSet(fromLayer:getDataSetName())
+		local rpos = binding.GetFirstPropertyPos(rDSet, binding.RASTER_TYPE)
+		local raster = rDSet:getRaster(rpos)
 	
-	outDs:close()
-	outDs = nil
+		local grid = raster:getGrid()
+		grid:setSRID(fromLayer:getSRID())
+			
+		r2v:setInput(raster, toLayer)
+			
+		if operation == "average" then
+			operation = "mean"
+		end			
+			
+		r2v:setParams(select, OperationMapper[operation], false) -- TODO: TEXTURE PARAM (REVIEW)
+			
+		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
+
+		local err = r2v:pRun()
+		if err ~= "" then
+			customError(err)
+		end
+			
+		propCreatedName = "B"..select..RasterAttributeCreatedMapper[operation]
+	
+		if outType == "POSTGIS" then
+			propCreatedName = string.lower(propCreatedName)
+		end	
+	
+		outDs:close()
+	end
+
 	collectgarbage("collect")
 	
 	return propCreatedName
@@ -965,7 +949,7 @@ TerraLib_ = {
 	-- }
 	--
 	-- tl:createProject(proj, {})
-	createProject = function(self, project, layers)
+	createProject = function(_, project, layers)
 		if not isValidTviewExt(project.file) then
 			customError("Please, the file extension must be '.tview'.")
 		end
@@ -984,7 +968,7 @@ TerraLib_ = {
 	-- tl = TerraLib{}
 	-- proj = {}
 	-- tl:openProject(proj2, "myproject.tview")
-	openProject = function(self, project, filePath)
+	openProject = function(_, project, filePath)
 		if not isValidTviewExt(filePath) then
 			customError("Please, the file extension must be '.tview'.")
 		end		
@@ -1027,7 +1011,7 @@ TerraLib_ = {
 	-- tl:addPgLayer(proj, "SampaPg", pgData)
 	-- 	
 	-- layerInfo = tl:getLayerInfo(proj, proj.layers[layerName2])		
-	getLayerInfo = function(self, project, layer)
+	getLayerInfo = function(_, project, layer)
 		local info = {}		
 		info.name = layer:getTitle()	
 		info.sid = layer:getDataSourceId()
@@ -1053,22 +1037,23 @@ TerraLib_ = {
 			info.file = connInfo.URI
 		end
 
-		local ds = makeAndOpenDataSource(connInfo, type)
-		local dst = ds:getDataSetType(dseName)
+		do
+			local ds = makeAndOpenDataSource(connInfo, type)
+			local dst = ds:getDataSetType(dseName)
 		
-		if dst:hasGeom() then
-			local gp = binding.GetFirstGeomProperty(dst)
-			local gpt = gp:getGeometryType()
-			info.rep = getGeometryTypeName(gpt)
-		elseif dst:hasRaster() then
-			info.rep = "raster"
-		else
-			info.rep = "unknown"
+			if dst:hasGeom() then
+				local gp = binding.GetFirstGeomProperty(dst)
+				local gpt = gp:getGeometryType()
+				info.rep = getGeometryTypeName(gpt)
+			elseif dst:hasRaster() then
+				info.rep = "raster"
+			else
+				info.rep = "unknown"
+			end
+	
+			ds:close()
 		end
-		
-		ds:close()
-		ds = nil
-		dst = nil
+
 		collectgarbage("collect")
 		
 		releaseProject(project)
@@ -1083,7 +1068,7 @@ TerraLib_ = {
 	-- tl = TerraLib()
 	-- tl:createProject("project.tview", {})
 	-- tl:addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
-	addShpLayer = function(self, project, name, filePath)
+	addShpLayer = function(_, project, name, filePath)
 		addFileLayer(project, name, filePath, "OGR")
 	end,
 	--- Add a new tiff layer to a given project.
@@ -1103,7 +1088,7 @@ TerraLib_ = {
 	-- layerName = "TifLayer"
 	-- layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
 	-- tl:addTifLayer(proj, layerName, layerFile)
-	addTifLayer = function(self, project, name, filePath)
+	addTifLayer = function(_, project, name, filePath)
 		addFileLayer(project, name, filePath, "GDAL")
 	end,
 	--- Add a new PostgreSQL layer to a given project.
@@ -1142,7 +1127,7 @@ TerraLib_ = {
 	-- }	
 	--	
 	-- tl:addPgLayer(proj, "SampaPg", pgData)
-	addPgLayer = function(self, project, name, data)				
+	addPgLayer = function(_, project, name, data)				
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 		
 		loadProject(project, project.file)
@@ -1182,18 +1167,18 @@ TerraLib_ = {
 	-- tl:addShpLayer(proj, layerName1, layerFile1)		
 	--
 	--	tl:addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
-	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask) 
+	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath) 
 		loadProject(project, project.file)
 		
 		if not string.find(filePath, "/") then
 			filePath = _Gtme.makePathCompatibleToAllOS(currentDir().."/")..filePath
 		end
-		
+
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
 		local dSetName = getFileName(connInfo.URI)
 		
-		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
+		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR")
 		
 		self:addShpLayer(project, name, filePath)
 	end,
@@ -1230,14 +1215,14 @@ TerraLib_ = {
 	-- local clName1 = "SampaPgCells"	
 	-- local resolution = 0.7
 	-- tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData)
-	addPgCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, data, mask) 
+	addPgCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, data) 
 		loadProject(project, project.file)
-		
-		local inputLayer = project.layers[inputLayerTitle]	
+
+		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 
 		if not dataSetExists(connInfo, data.table, "POSTGIS") then
-			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS", mask)
+			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS")
 		else
 			releaseProject(project)
 			customError("The table '"..data.table.."' already exists.")
@@ -1281,7 +1266,7 @@ TerraLib_ = {
 	-- tl:addPgLayer(proj, "SampaPg", pgData)
 	-- 	
 	-- tl:dropPgTable(pgData)
-	dropPgTable = function(self, data)
+	dropPgTable = function(_, data)
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)		
 		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
 	end,
@@ -1320,7 +1305,7 @@ TerraLib_ = {
 	-- tl:addPgLayer(proj, "SampaPg", pgData)
 	-- 	
 	-- tl:dropPgDatabase(pgData)
-	dropPgDatabase = function(self, data)
+	dropPgDatabase = function(_, data)
 		local connInfo = {}
 		connInfo.PG_DB_TO_DROP = data.database
 		connInfo.PG_HOST = data.host 
@@ -1366,7 +1351,7 @@ TerraLib_ = {
 	-- tl:addPgLayer(proj, "SampaPg", pgData)
 	-- 	
 	-- tl:copyLayer(proj, layerName1, pgData)	
-	copyLayer = function(self, project, from, to)
+	copyLayer = function(_, project, from, to)
 		loadProject(project, project.file)
 		
 		local fromLayer = project.layers[from]	
@@ -1410,96 +1395,97 @@ TerraLib_ = {
 	-- tl:addShpLayer(proj, layerName2, layerFile2)
 	--	
 	-- tl:attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
-	attributeFill = function(self, project, from, to, out, property, operation, select, area, default, repr)
-		loadProject(project, project.file)
+	attributeFill = function(_, project, from, to, out, property, operation, select, area, default, repr)
+		do
+			loadProject(project, project.file)
 
-		local fromLayer = project.layers[from]
-		local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
-		local toLayer = project.layers[to]
-		local toDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
-		local outDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
+			local fromLayer = project.layers[from]
+			local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
+			local toLayer = project.layers[to]
+			local toDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
+			local outDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
 		
-		local outType = outDsInfo:getType()
+			local outType = outDsInfo:getType()
 		
-		if outType == "OGR" then
-			if string.len(property) > 10 then
-				property = getNormalizedName(property)
-				customWarning("The 'attribute' lenght is more than 10 characters, it was changed to '"..property.."'.")
+			if outType == "OGR" then
+				if string.len(property) > 10 then
+					property = getNormalizedName(property)
+					customWarning("The 'attribute' lenght is more than 10 characters, it was changed to '"..property.."'.")
+				end
 			end
-		end
 		
-		if propertyExists(toDsInfo:getConnInfo(), toLayer:getDataSetName(), property, toDsInfo:getType()) then
-			customError("The attribute '"..property.."' already exists in the Layer.")
-		end		
+			if propertyExists(toDsInfo:getConnInfo(), toLayer:getDataSetName(), property, toDsInfo:getType()) then
+				customError("The attribute '"..property.."' already exists in the Layer.")
+			end		
 
-		if not propertyExists(fromDsInfo:getConnInfo(), fromLayer:getDataSetName(), select, fromDsInfo:getType()) then
-			if repr == "raster" then
-				customError("Selected band '"..select.."' does not exist in layer '"..from.."'.")
+			if not propertyExists(fromDsInfo:getConnInfo(), fromLayer:getDataSetName(), select, fromDsInfo:getType()) then
+				if repr == "raster" then
+					customError("Selected band '"..select.."' does not exist in layer '"..from.."'.")
+				else
+					customError("Selected attribute '"..select.."' does not exist in layer '"..from.."'.")
+				end
+			end
+		
+			local outDs
+			local outConnInfo = outDsInfo:getConnInfo()
+			local outDSetName = out
+			local propCreatedName
+		
+			if outType == "POSTGIS" then
+				outDSetName = string.lower(outDSetName)
+				outConnInfo.PG_NEWDB_NAME = outDSetName
+			elseif outType == "OGR" then
+				local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
+				outConnInfo.URI = outDir..out..".shp"
+				outConnInfo.DRIVER = "ESRI Shapefile"
+			end				
+		
+			local dseType = fromLayer:getSchema()
+		
+			if dseType:hasRaster() then
+				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out)
 			else
-				customError("Selected attribute '"..select.."' does not exist in layer '"..from.."'.")
+				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
 			end
-		end
 		
-		local outDs = nil
-		local outConnInfo = outDsInfo:getConnInfo()
-		local outDSetName = out
-		local propCreatedName = ""
+			if outType == "OGR" then
+				propCreatedName = getNormalizedName(propCreatedName)
+			end
 		
-		if outType == "POSTGIS" then
-			outDSetName = string.lower(outDSetName)
-			outConnInfo.PG_NEWDB_NAME = outDSetName
-		elseif outType == "OGR" then
-			local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
-			outConnInfo.URI = outDir..out..".shp"
-			outConnInfo.DRIVER = "ESRI Shapefile"
-		end				
+			if (outType == "POSTGIS") and (type(select) == "string")  then
+				select = string.lower(select)
+			end
 		
-		local dseType = fromLayer:getSchema()
+			outDs = makeAndOpenDataSource(outConnInfo, outType)
+			local attrsRenamed = {}
 		
-		if dseType:hasRaster() then
-			propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out)
-		else
-			propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
-		end
+			if operation == "coverage" then
+				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, property)
+			else
+				outDs:renameProperty(outDSetName, propCreatedName, property)
+				attrsRenamed[property] = property
+			end
 		
-		if outType == "OGR" then
-			propCreatedName = getNormalizedName(propCreatedName)
-		end
+			if default then
+				for _, prop in pairs(attrsRenamed) do
+					outDs:updateNullValues(outDSetName, prop, tostring(default))
+				end			
+			end
 		
-		if (outType == "POSTGIS") and (type(select) == "string")  then
-			select = string.lower(select)
-		end
-		
-		outDs = makeAndOpenDataSource(outConnInfo, outType)
-		local attrsRenamed = {}
-		
-		if operation == "coverage" then
-			attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, property)
-		else
-			outDs:renameProperty(outDSetName, propCreatedName, property)
-			attrsRenamed[property] = property
-		end
-		
-		if default then
-			for key, prop in pairs(attrsRenamed) do
-				outDs:updateNullValues(outDSetName, prop, tostring(default))
-			end			
-		end
-		
-		-- TODO: RENAME INSTEAD OUTPUT
-		-- #875
-		-- outDs:renameDataSet(outDSetName, "rename_test")		
+			-- TODO: RENAME INSTEAD OUTPUT
+			-- #875
+			-- outDs:renameDataSet(outDSetName, "rename_test")		
 
-		local outLayer = createLayer(out, outDSetName, outConnInfo, outType)
-		project.layers[out] = outLayer
+			local outLayer = createLayer(out, outDSetName, outConnInfo, outType)
+			project.layers[out] = outLayer
 		
-		loadProject(project, project.file) -- TODO: IT NEED RELOAD (REVIEW)
-		saveProject(project, project.layers)
-		releaseProject(project)
+			loadProject(project, project.file) -- TODO: IT NEED RELOAD (REVIEW)
+			saveProject(project, project.layers)
+			releaseProject(project)
 		
-		outDs:close()
-		outDs = nil
-		dseType = nil
+			outDs:close()
+		end
+
 		collectgarbage("collect")		
 	end,
 	--- Returns a given dataset from a layer.
@@ -1507,24 +1493,25 @@ TerraLib_ = {
 	-- @arg layerName Name of the layer to be read.
 	-- @usage -- DONTRUN
 	-- ds = terralib:getDataSet("myproject.tview", "mylayer")
-	getDataSet = function(self, project, layerName)
-		loadProject(project, project.file)
+	getDataSet = function(_, project, layerName)
+		local set
+
+		do
+			loadProject(project, project.file)
 		
-		local layer = project.layers[layerName]
-		layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)	
-		local dseName = layer:getDataSetName()
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
-		local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
-		local dse = ds:getDataSet(dseName)
-		local count = 0
-		local numProps = dse:getNumProperties()
+			local layer = project.layers[layerName]
+			layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)	
+			local dseName = layer:getDataSetName()
+			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+			local dse = ds:getDataSet(dseName)
 		
-		local set = createDataSetAdapted(dse)
+			set = createDataSetAdapted(dse)
 		
-		releaseProject(project)
-		ds:close()
-		ds = nil
-		dse = nil
+			releaseProject(project)
+			ds:close()
+		end
+
 		collectgarbage("collect")
 		
 		return set
@@ -1537,139 +1524,135 @@ TerraLib_ = {
 	-- @arg attrs A table with the attributes to be saved.
 	-- @usage -- DONTRUN
 	-- saveDataSet(self, project, fromLayerName, toSet, toName, attrs)
-	saveDataSet = function(self, project, fromLayerName, toSet, toName, attrs)
-		loadProject(project, project.file)
+	saveDataSet = function(_, project, fromLayerName, toSet, toName, attrs)
+		do
+			loadProject(project, project.file)
 
-		local fromLayer = project.layers[fromLayerName]
-		fromLayer = toDataSetLayer(fromLayer)	
-		local dseName = fromLayer:getDataSetName()
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
-		local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
-		local dse = ds:getDataSet(dseName)
-		local dst = ds:getDataSetType(dseName)
-		local pk = dst:getPrimaryKey()
-		local pkName = pk:getPropertyName(0)
-		local numProps = dse:getNumProperties()		
-		local newDst = binding.te.da.DataSetType(toName)
-		local geom = binding.GetFirstGeomProperty(dst)
-		local srid = geom:getSRID()	
+			local fromLayer = project.layers[fromLayerName]
+			fromLayer = toDataSetLayer(fromLayer)	
+			local dseName = fromLayer:getDataSetName()
+			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
+			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+			local dse = ds:getDataSet(dseName)
+			local dst = ds:getDataSetType(dseName)
+			local pk = dst:getPrimaryKey()
+			local pkName = pk:getPropertyName(0)
+			local numProps
+			local newDst = binding.te.da.DataSetType(toName)
+			local geom = binding.GetFirstGeomProperty(dst)
+			local srid = geom:getSRID()	
 		
-		local attrsToIn = {}
-		if attrs then
-			for i = 1, #attrs do
-				attrsToIn[attrs[i]] = true
+			local attrsToIn = {}
+			if attrs then
+				for i = 1, #attrs do
+					attrsToIn[attrs[i]] = true
+				end
 			end
-		end
 		
-		local types = getPropertiesTypes(dse)
-		local outType = dsInfo:getType()
+			local types = getPropertiesTypes(dse)
+			local outType = dsInfo:getType()
 
-		-- Config the properties of the new DataSet 
-		for k, v in pairs(toSet[1]) do		
-			local isPk = (k == pkName)
+			-- Config the properties of the new DataSet 
+			for k, v in pairs(toSet[1]) do		
+				local isPk = (k == pkName)
 			
-			if types[k] ~= nil then
-				if types[k] == binding.GEOMETRY_TYPE then
-					newDst:add(k, srid, geom:getGeometryType(), true)
-				else
-					newDst:add(k, isPk, types[k], true)
-				end
-			elseif attrsToIn[k] then
-				if type(v) == "number" then
-					newDst:add(k, isPk, binding.DOUBLE_TYPE, true)
-				elseif type(v) == "string" then
-					newDst:add(k, isPk, binding.STRING_TYPE, true)
-				elseif type(v) == "boolean" then
-					if outType == "OGR" then
-						newDst:add(k, isPk, binding.STRING_TYPE, true)
+				if types[k] ~= nil then
+					if types[k] == binding.GEOMETRY_TYPE then
+						newDst:add(k, srid, geom:getGeometryType(), true)
 					else
-						newDst:add(k, isPk, binding.BOOLEAN_TYPE, true)
+						newDst:add(k, isPk, types[k], true)
 					end
-				end
-			end
-		end
-
-		-- Create the new DataSet
-		local newDse = binding.te.mem.DataSet(newDst)
-		numProps = newDse:getNumProperties()
-		
-		for i = 1, #toSet do
-			local idpos = 0
-			local item = binding.te.mem.DataSetItem.create(newDse)
-
-			for j = 0, numProps - 1 do
-				local propName = newDse:getPropertyName(j)
-
-				for k, v in pairs(toSet[i]) do				
-					if propName == k then 
-						local type = newDse:getPropertyDataType(j)
-						
-						if type == binding.INT16_TYPE then
-							item:setInt16(j, v)
-						elseif type == binding.INT32_TYPE then
-							item:setInt32(j, v)
-						elseif type == binding.INT64_TYPE then
-							item:setInt64(j, v)
-						elseif type == binding.FLOAT_TYPE then
-							item:setFloat(j, v)
-						elseif type == binding.DOUBLE_TYPE then
-							item:setDouble(j, v)
-						elseif type == binding.NUMERIC_TYPE then
-							item:setNumeric(j, tostring(v))
-						elseif type == binding.BOOLEAN_TYPE then
-							item:setBool(j, v)
-						elseif type == binding.GEOMETRY_TYPE then
-							item:setGeom(j, v)
+				elseif attrsToIn[k] then
+					if type(v) == "number" then
+						newDst:add(k, isPk, binding.DOUBLE_TYPE, true)
+					elseif type(v) == "string" then
+						newDst:add(k, isPk, binding.STRING_TYPE, true)
+					elseif type(v) == "boolean" then
+						if outType == "OGR" then
+							newDst:add(k, isPk, binding.STRING_TYPE, true)
 						else
-							item:setString(j, tostring(v))
+							newDst:add(k, isPk, binding.BOOLEAN_TYPE, true)
 						end
-
-						break
 					end
 				end
 			end
-			newDse:add(item)
-		end
-		
-		local newDstName = newDst:getName()
 
-		-- Remove the DataSet if it already exists
-		local outConnInfo = dsInfo:getConnInfo()
-		local outDs = nil
-		if outType == "POSTGIS" then
-			outConnInfo.PG_NEWDB_NAME = string.lower(newDstName)
-			dropDataSet(outConnInfo, string.lower(newDstName), "POSTGIS")
-			outDs = makeAndOpenDataSource(outConnInfo, outType)
-		elseif outType == "OGR" then
-			local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
-			outConnInfo.URI = outDir..newDstName..".shp"		
-			dropDataSet(outConnInfo, newDstName, "OGR")
-			outDs = makeAndOpenDataSource(outConnInfo, outType)
+			-- Create the new DataSet
+			local newDse = binding.te.mem.DataSet(newDst)
+			numProps = newDse:getNumProperties()
+		
+			for i = 1, #toSet do
+				local item = binding.te.mem.DataSetItem.create(newDse)
+
+				for j = 0, numProps - 1 do
+					local propName = newDse:getPropertyName(j)
+
+					for k, v in pairs(toSet[i]) do				
+						if propName == k then 
+							local type = newDse:getPropertyDataType(j)
+						
+							if type == binding.INT16_TYPE then
+								item:setInt16(j, v)
+							elseif type == binding.INT32_TYPE then
+								item:setInt32(j, v)
+							elseif type == binding.INT64_TYPE then
+								item:setInt64(j, v)
+							elseif type == binding.FLOAT_TYPE then
+								item:setFloat(j, v)
+							elseif type == binding.DOUBLE_TYPE then
+								item:setDouble(j, v)
+							elseif type == binding.NUMERIC_TYPE then
+								item:setNumeric(j, tostring(v))
+							elseif type == binding.BOOLEAN_TYPE then
+								item:setBool(j, v)
+							elseif type == binding.GEOMETRY_TYPE then
+								item:setGeom(j, v)
+							else
+								item:setString(j, tostring(v))
+							end
+
+							break
+						end
+					end
+				end
+				newDse:add(item)
+			end
+		
+			local newDstName = newDst:getName()
+
+			-- Remove the DataSet if it already exists
+			local outConnInfo = dsInfo:getConnInfo()
+			local outDs = nil
+			if outType == "POSTGIS" then
+				outConnInfo.PG_NEWDB_NAME = string.lower(newDstName)
+				dropDataSet(outConnInfo, string.lower(newDstName), "POSTGIS")
+				outDs = makeAndOpenDataSource(outConnInfo, outType)
+			elseif outType == "OGR" then
+				local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
+				outConnInfo.URI = outDir..newDstName..".shp"		
+				dropDataSet(outConnInfo, newDstName, "OGR")
+				outDs = makeAndOpenDataSource(outConnInfo, outType)
+			end
+		
+			-- Save the new DataSet into the from DataSource
+			outDs:createDataSet(newDst)
+			newDse:moveBeforeFirst()
+			outDs:add(newDstName, newDse)
+		
+			-- Create the new Layer
+			local outLayer = createLayer(toName, newDstName, outConnInfo, outType)
+			project.layers[toName] = outLayer
+		
+			saveProject(project, project.layers)
+			releaseProject(project)
+		
+			ds:close()
+			dst:clear()
+			newDst:clear()
+			newDse:clear()		
+			outDs:close()
 		end
-		
-		-- Save the new DataSet into the from DataSource
-		outDs:createDataSet(newDst)
-		newDse:moveBeforeFirst()
-		outDs:add(newDstName, newDse)
-		
-		-- Create the new Layer
-		local outLayer = createLayer(toName, newDstName, outConnInfo, outType)
-		project.layers[toName] = outLayer
-		
-		saveProject(project, project.layers)
-		releaseProject(project)
-		
-		ds:close()
-		dst:clear()
-		ds = nil
-		dse = nil	
-		dst = nil
-		newDst:clear()
-		newDse:clear()		
-		newDst = nil
-		newDse = nil
-		outDs:close()
-		outDs = nil		
+
 		collectgarbage("collect")		
 	end,
 	--- Return the content of a shapefile.
@@ -1678,24 +1661,24 @@ TerraLib_ = {
 	-- tl = TerraLib{}
 	-- local shpPath = filePath("sampa.shp", "terralib")
 	-- dSet = tl:getShpByFilePath(shpPath)
-	getShpByFilePath = function(self, filePath)
-		local connInfo = createFileConnInfo(filePath)
-		local ds = makeAndOpenDataSource(connInfo, "OGR")
-		local dSetName = getFileName(filePath)
-		local dSet = ds:getDataSet(dSetName)
+	getShpByFilePath = function(_, filePath)
+		local set
+
+		do
+			local connInfo = createFileConnInfo(filePath)
+			local ds = makeAndOpenDataSource(connInfo, "OGR")
+			local dSetName = getFileName(filePath)
+			local dSet = ds:getDataSet(dSetName)
+			set = createDataSetAdapted(dSet)
 		
-		local count = 0
-		local numProps = dSet:getNumProperties()
-		local set = createDataSetAdapted(dSet)
-		
-		ds:close()
-		ds = nil
-		dSet = nil
+			ds:close()
+		end
+
 		collectgarbage("collect")
 		
 		return set	
 	end,
-	getNumOfBands = function(self, project, layerName)
+	getNumOfBands = function(_, project, layerName)
 		loadProject(project, project.file)
 		local layer = project.layers[layerName]
 		layer = toDataSetLayer(layer)
@@ -1704,17 +1687,18 @@ TerraLib_ = {
 		local dsType = dsInfo:getType()
 
 		if dsType == "GDAL" then
-			local ds = makeAndOpenDataSource(connInfo, dsType)
-			local dSetName = layer:getDataSetName()
-			local dSet = ds:getDataSet(dSetName)
-			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
-			local raster = dSet:getRaster(rpos)	
-			local numBands = raster:getNumberOfBands()
+			local numBands
+			do
+				local ds = makeAndOpenDataSource(connInfo, dsType)
+				local dSetName = layer:getDataSetName()
+				local dSet = ds:getDataSet(dSetName)
+				local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+				local raster = dSet:getRaster(rpos)	
+				numBands = raster:getNumberOfBands()
 			
-			ds:close()
-			ds = nil
-			dSet = nil
-			raster = nil
+				ds:close()
+			end
+
 			collectgarbage("collect")
 			
 			releaseProject(project)

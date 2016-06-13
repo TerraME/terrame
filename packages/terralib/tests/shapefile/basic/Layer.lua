@@ -68,8 +68,6 @@ return {
 			file = filePath("municipiosAML_ok.shp", "terralib")	
 		}
 
-		local shp1 = clName1..".shp"
-
 		local cl = Layer{
 			project = proj,
 			source = "shp",
@@ -126,7 +124,7 @@ return {
 		-- MODE (area = true)
 
 		local polmode2LayerName = clName1.."_polmode2"
-		local shp1 = polmode2LayerName..".shp"
+		shp1 = polmode2LayerName..".shp"
 
 		table.insert(shapes, shp1)
 
@@ -140,12 +138,12 @@ return {
 			output = polmode2LayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = polmode2LayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "polmode2",
 			min = 0,
@@ -159,7 +157,7 @@ return {
 		-- AREA
 
 		local areaLayerName = clName1.."_area"
-		local shp1 = areaLayerName..".shp"
+		shp1 = areaLayerName..".shp"
 
 		table.insert(shapes, shp1)
 
@@ -171,12 +169,12 @@ return {
 			output = areaLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = areaLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "marea",
 			min = 0,
@@ -202,12 +200,12 @@ return {
 			output = lindistLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = lindistLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "lindist",
 			min = 0,
@@ -231,12 +229,12 @@ return {
 			output = poldistLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = poldistLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "poldist",
 			min = 0,
@@ -260,12 +258,12 @@ return {
 			output = pointdistLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = pointdistLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "pointdist",
 			min = 0,
@@ -279,7 +277,7 @@ return {
 		-- PRESENCE
 
 		local linpresLayerName = clName1.."_linpres"
-		local shp2 = linpresLayerName..".shp"
+		shp2 = linpresLayerName..".shp"
 
 		table.insert(shapes, shp2)
 
@@ -291,12 +289,12 @@ return {
 			output = linpresLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = linpresLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "linpres",
 			value = {0, 1},
@@ -306,7 +304,7 @@ return {
 		unitTest:assertSnapshot(map, "lines-presence.png")
 
 		local polpresLayerName = clName1.."_polpres"
-		local shp3 = polpresLayerName..".shp"
+		shp3 = polpresLayerName..".shp"
 
 		table.insert(shapes, shp3)
 
@@ -318,12 +316,12 @@ return {
 			output = polpresLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = polpresLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "polpres",
 			value = {0, 1},
@@ -333,7 +331,7 @@ return {
 		unitTest:assertSnapshot(map, "polygons-presence.png")
 
 		local pointpresLayerName = clName1.."_pointpres"
-		local shp4 = pointpresLayerName..".shp"
+		shp4 = pointpresLayerName..".shp"
 
 		table.insert(shapes, shp4)
 
@@ -345,12 +343,12 @@ return {
 			output = pointpresLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = pointpresLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "pointpres",
 			value = {0, 1},
@@ -361,7 +359,7 @@ return {
 
 		-- COUNT
 		local clName2 = "cells_large"
-		local shp1 = clName2..".shp"
+		shp1 = clName2..".shp"
 
 		table.insert(shapes, shp1)
 
@@ -379,7 +377,7 @@ return {
 		}
 
 		local pointcountLayerName = clName2.."_pointcount"
-		local shp2 = pointcountLayerName..".shp"
+		shp2 = pointcountLayerName..".shp"
 
 		table.insert(shapes, shp2)
 
@@ -391,12 +389,12 @@ return {
 			output = pointcountLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = pointcountLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "pointcount",
 			value = {0, 1, 2},
@@ -406,7 +404,7 @@ return {
 		unitTest:assertSnapshot(map, "points-count.png")
 
 		local linecountLayerName = clName2.."_linecount"
-		local shp3 = linecountLayerName..".shp"
+		shp3 = linecountLayerName..".shp"
 
 		table.insert(shapes, shp3)
 
@@ -418,12 +416,12 @@ return {
 			output = linecountLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = linecountLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "linecount",
 			min = 0,
@@ -435,7 +433,7 @@ return {
 		unitTest:assertSnapshot(map, "lines-count.png")
 
 		local polcountLayerName = clName2.."_polcount"
-		local shp4 = polcountLayerName..".shp"
+		shp4 = polcountLayerName..".shp"
 
 		table.insert(shapes, shp4)
 
@@ -447,12 +445,12 @@ return {
 			output = polcountLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = polcountLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "polcount",
 			value = {0, 1, 2},
@@ -464,7 +462,7 @@ return {
 		-- MAXIMUM
 
 		local polmaxLayerName = clName1.."_polmax"
-		local shp1 = polmaxLayerName..".shp"
+		shp1 = polmaxLayerName..".shp"
 
 		table.insert(shapes, shp1)
 
@@ -480,12 +478,12 @@ return {
 			output = polmaxLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = polmaxLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "polmax",
 			min = 0,
@@ -499,7 +497,7 @@ return {
 		-- MINIMUM
 
 		local polminLayerName = clName1.."_polinx"
-		local shp1 = polminLayerName..".shp"
+		shp1 = polminLayerName..".shp"
 
 		table.insert(shapes, shp1)
 
@@ -515,12 +513,12 @@ return {
 			output = polminLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = polminLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "polmin",
 			min = 0,
@@ -534,7 +532,7 @@ return {
 		-- AVERAGE
 
 		local polavrgLayerName = clName1.."_polavrg"
-		local shp1 = polavrgLayerName..".shp"
+		shp1 = polavrgLayerName..".shp"
 
 		table.insert(shapes, shp1)
 
@@ -550,12 +548,12 @@ return {
 			output = polavrgLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = polavrgLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "polavrg",
 			min = 0,
@@ -569,7 +567,7 @@ return {
 		-- STDEV
 
 		local polstdevLayerName = clName1.."_polstdev"
-		local shp1 = polstdevLayerName..".shp"
+		shp1 = polstdevLayerName..".shp"
 
 		table.insert(shapes, shp1)
 
@@ -585,12 +583,12 @@ return {
 			output = polstdevLayerName
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = polstdevLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "stdev",
 			min = 0,
@@ -622,16 +620,15 @@ return {
 
 		-- SUM
 
-		local proj = Project {
+		proj = Project {
 			file = "sum_wba.tview",
 			clean = true,
 			setores = filePath("municipiosAML_ok.shp", "terralib")
 		}
 
-		local clName1 = "cells_set"
-		local shp1 = clName1..".shp"
+		clName1 = "cells_set"
 
-		local cl = Layer{
+		cl = Layer{
 			project = proj,
 			source = "shp",
 			clean = true,
@@ -642,7 +639,6 @@ return {
 		}
 
 		local polsumAreaLayerName = clName1.."_polavg"
-		local shp1 = polsumAreaLayerName..".shp"
 
 		cl:fill{
 			operation = "sum",
@@ -654,7 +650,7 @@ return {
 			area = true
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = "setores"
 		}
@@ -664,7 +660,7 @@ return {
 			sum1 = sum1 + cell.POPULACAO_
 		end)
 	
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = polsumAreaLayerName
 		}
@@ -676,7 +672,7 @@ return {
 
 		unitTest:assertEquals(sum1, sum2, 1e-4)
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "polsuma",
 			min = 0,
@@ -689,18 +685,17 @@ return {
 
 		-- AVERAGE (area = true)
 
-		local projName = "cellular_layer_fill_avg_area.tview"
+		projName = "cellular_layer_fill_avg_area.tview"
 
-		local proj = Project {
+		proj = Project {
 			file = projName,
 			clean = true,
 			setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
 
-		local clName1 = "cells_avg_area"
-		local shp1 = clName1..".shp"
+		clName1 = "cells_avg_area"
 
-		local cl = Layer{
+		cl = Layer{
 			project = proj,
 			source = "shp",
 			clean = true,
@@ -711,7 +706,6 @@ return {
 		}
 
 		local polavgLayerName = clName1.."_polavg"
-		local shp1 = polavgLayerName..".shp"
 
 		cl:fill{
 			operation = "average",
@@ -723,12 +717,12 @@ return {
 			area = true
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = polavgLayerName
 		}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "polavg",
 			min = 0,

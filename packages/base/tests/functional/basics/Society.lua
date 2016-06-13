@@ -36,7 +36,7 @@ return {
 		unitTest:assertType(nonFooSociety, "Society")
 		unitTest:assertEquals(0, #nonFooSociety)
 
-		local singleFooAgent = Agent{
+		singleFooAgent = Agent{
 			size = 10,
 			name = "foo",
 			execute = function(self)
@@ -68,7 +68,7 @@ return {
 
 		unitTest:assertNil(nonFooAgent.charge)
 
-		local nonFooSociety = Society{
+		nonFooSociety = Society{
 			instance = nonFooAgent,
 			quantity = 50
 		}
@@ -142,7 +142,7 @@ return {
 		ag:die()
 		unitTest:assertEquals(9, #soc1)
 
-		local ag = Agent{
+		ag = Agent{
 			age = 0,
 			human = true,
 			gender = "male",
@@ -180,10 +180,10 @@ return {
 	__tostring = function(unitTest)
 		local ag1 = Agent{
 			name = "nonfoo",
-			init = function(unitTest)
-				unitTest.age = 8
+			init = function(ag)
+				ag.age = 8
 			end,
-			execute = function(unitTest) end
+			execute = function() end
 		}
 
 		local soc1 = Society{
@@ -231,7 +231,8 @@ state_          State
 		e:createPlacement{}
 		local ag2 = Agent{}
 
-		local agent = sc1:add(ag2)
+		agent = sc1:add(ag2)
+		unitTest:assertType(agent, "Agent")
 		unitTest:assertEquals(22, #sc1)
 	end,
 	createSocialNetwork = function(unitTest)
@@ -325,7 +326,7 @@ state_          State
 		}
 		unitTest:assertEquals(0, #sc:sample():getSocialNetwork("void"))
 
-		local ag1 = sc:sample()
+		ag1 = sc:sample()
 		local ag2 = sc:sample()
 
 		ag1:getSocialNetwork("void"):add(ag2)
@@ -333,7 +334,7 @@ state_          State
 		unitTest:assertEquals(1, #ag1:getSocialNetwork("void"))
 
 		-- on the fly social networks
-		local predator = Agent{
+		predator = Agent{
 			energy = 40,
 			name = "predator",
 			execute = function(self)
@@ -343,7 +344,7 @@ state_          State
 			end
 		}
 
-		local predators = Society{
+		predators = Society{
 			instance = predator,
 			quantity = 100
 		}
@@ -352,9 +353,9 @@ state_          State
 		predators:createSocialNetwork{quantity = 1, name = "boss", inmemory = false}
 		predators:createSocialNetwork{filter = function() return true end, name = "all", inmemory = false}
 
-		local count_prob = 0
-		local count_quant = 0
-		local count_all = 0
+		count_prob = 0
+		count_quant = 0
+		count_all = 0
 
 		forEachAgent(predators, function(ag)
 			count_prob  = count_prob  + #ag:getSocialNetwork("friends")
@@ -366,9 +367,9 @@ state_          State
 		unitTest:assertEquals(100,   count_quant)
 		unitTest:assertEquals(10000, count_all)
 
-		local count_prob = 0
-		local count_quant = 0
-		local count_all = 0
+		count_prob = 0
+		count_quant = 0
+		count_all = 0
 
 		forEachAgent(predators, function(ag)
 			count_prob  = count_prob  + #ag:getSocialNetwork("friends")
@@ -380,17 +381,17 @@ state_          State
 		unitTest:assertEquals(100,   count_quant)
 		unitTest:assertEquals(10000, count_all)
 
-		local cs = CellularSpace{xdim = 5}
+		cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
 
-		local env = Environment{cs, predators}
+		env = Environment{cs, predators}
 		env:createPlacement{max = 4}
 
 		predators:createSocialNetwork{strategy = "cell", name = "c", inmemory = false}
 		predators:createSocialNetwork{strategy = "neighbor", name = "n", inmemory = false}
 
-		local count_c = 0
-		local count_n = 0
+		count_c = 0
+		count_n = 0
 		forEachAgent(predators, function(ag)
 			count_c  = count_c + #ag:getSocialNetwork("c")
 			count_n  = count_n + #ag:getSocialNetwork("n")
@@ -401,8 +402,8 @@ state_          State
 
 		predators:sample():die()
 
-		local count_c = 0
-		local count_n = 0
+		count_c = 0
+		count_n = 0
 		forEachAgent(predators, function(ag)
 			count_c  = count_c + #ag:getSocialNetwork("c")
 			count_n  = count_n + #ag:getSocialNetwork("n")
@@ -411,13 +412,12 @@ state_          State
 		unitTest:assertEquals(294, count_c)
 		unitTest:assertEquals(2280, count_n)
 
-		local predator = Agent{
+		predator = Agent{
 			energy = 40,
-			execute = function(self)
-			end
+			execute = function() end
 		}
 
-		local predators = Society{
+		predators = Society{
 			instance = predator,
 			quantity = 100
 		}
@@ -425,8 +425,8 @@ state_          State
 		predators:createSocialNetwork{probability = 0.05, name = "friends", symmetric = true}
 		predators:createSocialNetwork{quantity = 1, name = "boss", symmetric = true}
 
-		local count_prob = 0
-		local count_quant = 0
+		count_prob = 0
+		count_quant = 0
 
 		forEachAgent(predators, function(ag)
 			count_prob  = count_prob  + #ag:getSocialNetwork("friends")
@@ -437,13 +437,12 @@ state_          State
 		unitTest:assertEquals(200,  count_quant)
 
 		-- social networks that must be "in memory"
-		local predator = Agent{
+		predator = Agent{
 			energy = 40,
-			execute = function(self)
-			end
+			execute = function() end
 		}
 
-		local predators = Society{
+		predators = Society{
 			instance = predator,
 			quantity = 100
 		}
@@ -549,10 +548,10 @@ state_          State
 			execute = function(self)
 				self.age = self.age + 1
 			end,
-			on_message = function(m)
+			on_message = function()
 				received = received + 1
 			end,
-			on_sugar = function(m)
+			on_sugar = function()
 				sugar = sugar + 1
 			end
 		}
@@ -579,18 +578,18 @@ state_          State
 		unitTest:assertEquals(2, #myself:getSocialNetwork())
 
 		local sum = 0
-		forEachConnection(myself, function(self, friend)
+		forEachConnection(myself, function(_, friend)
 			sum = sum + friend.age
 		end)
 
 		unitTest:assertEquals(15, sum)
 
-		forEachConnection(myself, function(self, friend)
+		forEachConnection(myself, function(_, friend)
 			myself:message{receiver = friend}
 		end)
 		unitTest:assertEquals(2, received)
 
-		forEachConnection(myself, function(self, friend)
+		forEachConnection(myself, function(_, friend)
 			myself:message{receiver = friend, delay = Random():integer(1, 10)}
 			myself:message{receiver = friend, delay = Random():integer(1, 10)}
 			myself:message{receiver = friend, delay = Random():integer(1, 10)}
@@ -629,7 +628,6 @@ state_          State
 		unitTest:assertEquals(2, sugar)
 	end,
 	split = function(unitTest)
-		local received = 0
 		local nonFooAgent = Agent{
 			name = "nonfoo",
 			init = function(self)

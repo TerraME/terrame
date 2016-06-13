@@ -233,7 +233,7 @@ function Event(data)
 					maction:execute(event)
 				end
 			else
-				data.action = function(event)
+				data.action = function()
 					maction:synchronize()
 				end
 			end
@@ -246,7 +246,7 @@ function Event(data)
 				maction:execute(event)
 			end
 		elseif targettype == "Group" or targettype == "Trajectory" then
-			data.action = function(event)
+			data.action = function()
 				maction:rebuild()
 			end
 		elseif isModel(maction) then
@@ -255,7 +255,7 @@ function Event(data)
 					maction:execute(event)
 				end
 			else
-				data.action = function(event)
+				data.action = function()
 				end
 			end
 		elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "FileSystem", "TextScreen"}) then

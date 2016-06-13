@@ -179,10 +179,6 @@ y          number [0]
 
 		local cs = CellularSpace{xdim = 10}
 
-		local filterFunction = function(cell, neighbor)
-			return cell.x == neighbor.x and cell.y ~= neighbor.y
-		end
-
 		cs:createNeighborhood{
 			inmemory = false
 		}

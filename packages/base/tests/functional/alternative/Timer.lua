@@ -25,23 +25,23 @@
 return {
 	Timer = function(unitTest)
 		local error_func = function()
-			local timer = Timer(2)
+			Timer(2)
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
-			local timer = Timer{Cell()}
+			Timer{Cell()}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event", Cell()))
 
 		error_func = function()
-			local timer = Timer{b = Cell()}
+			Timer{b = Cell()}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("b", "Event", Cell()))
 	end,
 	add = function(unitTest)
 		local timer = Timer{
-			Event{period = 2, action = function(event) end}
+			Event{period = 2, action = function() end}
 		}
 
 		local error_func = function()
@@ -50,7 +50,7 @@ return {
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		timer = Timer{
-			Event{period = 2, action = function(event) end}
+			Event{period = 2, action = function() end}
 		}
 
 		error_func = function()
@@ -61,7 +61,7 @@ return {
 		timer:run(10)
 
 		error_func = function()
-			timer:add(Event{period = 2, action = function(event) end})
+			timer:add(Event{period = 2, action = function() end})
 		end
 		unitTest:assertError(error_func, "Adding an Event with time (1) before the current simulation time (10).")
 	end,
@@ -154,7 +154,7 @@ return {
 	end,
 	execute = function(unitTest)
 		local timer = Timer{
-			Event{period = 2, action = function(event)
+			Event{period = 2, action = function()
 			end}
 		}
 
@@ -165,7 +165,7 @@ return {
 	end,
 	run = function(unitTest)
 		local timer = Timer{
-			Event{period = 2, action = function(event)
+			Event{period = 2, action = function()
 			end}
 		}
 
@@ -175,7 +175,7 @@ return {
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		timer = Timer{
-			Event{period = 2, action = function(event)
+			Event{period = 2, action = function()
 			end}
 		}
 
@@ -185,7 +185,7 @@ return {
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "2"))
 
 		timer = Timer{
-			Event{period = 2, action = function(event)
+			Event{period = 2, action = function()
 			end}
 		}
 

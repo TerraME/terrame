@@ -25,18 +25,18 @@
 return{
 	State = function(unitTest)
 		local error_func = function()
-			local s = State(2)
+			State(2)
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
 
-		local s = State{
+		State{
 			Jump{
-				function(ev, self)
+				function()
 					return true 
 				end,
 				target = "go"
 			},
-			Flow{ function(ev, self)
+			Flow{ function(_, self)
 					self.x = self.x + 1
 				end}
 		}
@@ -46,13 +46,13 @@ return{
 			State{
 				id = {},
 				Jump{
-					function(ev, self)
+					function()
 						return true 
 					end,
 					target = "go"
 				},
 				Flow{
-					function(ev, self)
+					function(_, self)
 						self.x = self.x + 1
 					end
 				}
@@ -62,25 +62,25 @@ return{
 		unitTest:assertError(function()
 			State{
 				id = 123,
-				Jump{ function(ev, self)
+				Jump{ function()
 						return true 
 					end,
 					target = "go"
 				},
-				Flow{ function(ev, self)
+				Flow{ function(_, self)
 						self.x = self.x + 1
 					end}
 			}
 		end, incompatibleTypeMsg("id", "string", 123))
 
-		local s = State{
+		State{
 			id = "IdState",
 			Flow{
-				function(ev, self)
+				function(_, self)
 					self.x = self.x + 1
 				end},
 			Jump{
-				function(self)
+				function()
 					return true 
 				end,
 				target = "go"
@@ -88,7 +88,7 @@ return{
 		}
 		unitTest:assert(true)
 
-		local s = State{
+		State{
 			id = "IdState",
 			Flow{
 				function(self)
@@ -96,7 +96,7 @@ return{
 				end
 			},
 			Jump{
-				function(ev, self)
+				function()
 					return true 
 				end,
 				target = "go"

@@ -22,13 +22,6 @@
 --
 -------------------------------------------------------------------------------------------
 
-local SourceTypeMapper = {
-	OGR = "shp",
-	GDAL = "tif",
-	POSTGIS = "postgis",
-	ADO = "access"
-}
-
 Project_ = {
 	type_ = "Project"
 }

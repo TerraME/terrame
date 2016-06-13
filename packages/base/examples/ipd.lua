@@ -87,32 +87,32 @@ NTFT = Agent{ -- NOT TIT-FOR-TAT
 
 AD = Agent{ -- ALWAYS DEFECT
 	name = "AD",
-	play = function(ag)
+	play = function()
 		return NOT_COOPERATE
 	end,
-	update = function(ag, oponent_strategy) end,
+	update = function() end,
 	prepare_for_championship = function() end
 }
 
 AC = Agent{ -- ALWAYS COOPERATE
 	name = "AC",
-	play = function(ag)
+	play = function()
 		return COOPERATE
 	end,
-	update = function(ag, oponent_strategy) end,
+	update = function() end,
 	prepare_for_championship = function() end
 }
 
 RANDOM = Agent{
 	name = "RANDOM",
-	play = function(ag)
+	play = function()
 		if Random():number() > 0.5 then
 			return COOPERATE
 		else
 			return NOT_COOPERATE
 		end
 	end,
-	update = function(ag, oponent_strategy) end,
+	update = function() end,
 	prepare_for_championship = function() end
 }
 
@@ -169,7 +169,7 @@ for i = 1, nplayers do
 		payoff1 = 0
 		payoff2 = 0
 
-		for k = 1, TURNS do
+		for _ = 1, TURNS do
 			a1 = player1:play()
 			a2 = player2:play()
 

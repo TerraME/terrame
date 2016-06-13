@@ -25,7 +25,7 @@
 return{
 	CellularSpace = function(unitTest)	
 		local error_func = function()
-			local cs = CellularSpace{
+			cs = CellularSpace{
 				source = "post",
 				layer = "layer"
 			}
@@ -41,8 +41,8 @@ return{
  
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("post", "source", options))
 
- 		local error_func = function()
- 			local cs = CellularSpace{
+ 		error_func = function()
+ 			cs = CellularSpace{
 				file = filePath("simple-cs.csv", "base"), 
 				source = "map", 
 				sep = ";"
@@ -50,18 +50,18 @@ return{
  		end
  		unitTest:assertError(error_func, "source and file extension should be the same.")
  
- 		local error_func = function()
- 			local cs = CellularSpace{file = 2, source = "map", sep = ";"}
+ 		error_func = function()
+ 			cs = CellularSpace{file = 2, source = "map", sep = ";"}
  		end
  		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
  
- 		local error_func = function()
- 			local cs = CellularSpace{file = "abc123.map", sep = ";"}
+ 		error_func = function()
+ 			cs = CellularSpace{file = "abc123.map", sep = ";"}
  		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.map"))
 		
-		local error_func = function()
- 			local cs = CellularSpace{
+		error_func = function()
+ 			cs = CellularSpace{
  				file = "abc123.shp"
  			}
  		end
@@ -69,8 +69,8 @@ return{
 
 		os.execute("touch abc123.shp")
 			
-		local error_func = function()
- 			local cs = CellularSpace{
+		error_func = function()
+ 			cs = CellularSpace{
  				file = "abc123.shp"
  			}
  		end
@@ -78,8 +78,8 @@ return{
 
 		rmFile("abc123.shp")
 
-		local error_func = function()
- 			local cs = CellularSpace{
+		error_func = function()
+ 			cs = CellularSpace{
  				file = "abc123.shp",
 				xdim = 10
  			}
@@ -153,24 +153,24 @@ return{
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
 		
-		local error_func = function()
+		error_func = function()
 			cs:loadNeighborhood{}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("source"))		
 		
-		local error_func = function()
+		error_func = function()
 			cs:loadNeighborhood{source = 123}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("source", "string", 123))
 
-		local error_func = function()
+		error_func = function()
 			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm"}
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("source", "neighCabecaDeBoi900x900.gpm"))
 
 		local mfile = filePath("cabecadeboi-neigh.gpm", "base")
 	
-		local error_func = function()
+		error_func = function()
 			cs:loadNeighborhood{source = mfile, name = 22}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
@@ -179,40 +179,40 @@ return{
 		tl:dropPgTable(pgData)			
 		
 		-- GAL from shapefile
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			file = filePath("brazilstates.shp", "base")
 		}		
 		
-		local error_func = function()	
+		error_func = function()	
 			cs:loadNeighborhood{source = filePath("brazil.gal", "base"), che = false}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("che"))		
 		
 		mfile = filePath("brazil.gal", "base")
 
-		local error_func = function()
+		error_func = function()
 			cs:loadNeighborhood{source = mfile}
 		end
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: 'brazilstates.shp', GAL file layer: 'mylayer'.")	
 
 		local cs2 = CellularSpace{xdim = 10}
 
-		local error_func = function()
+		error_func = function()
 			cs2:loadNeighborhood{source = "arquivo.gpm"}
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
 
-		local error_func = function()
+		error_func = function()
 			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid"}
 		end
 		unitTest:assertError(error_func, "Argument 'source' does not have an extension.")
 
-		local error_func = function()
+		error_func = function()
 			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid.teste"}
 		end
 		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))	
 
-		local error_func = function()
+		error_func = function()
 			local s = sessionInfo().separator
 			cs:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-invalid-neigh.gpm", "base")}
 		end
@@ -220,7 +220,7 @@ return{
 
 		mfile = filePath("cabecadeboi-neigh.gpm", "base")
 
-		local error_func = function()
+		error_func = function()
 			cs2:loadNeighborhood{
 				source = mfile,
 				name = "my_neighborhood"
@@ -230,7 +230,7 @@ return{
 
 		mfile = filePath("cabecadeboi-neigh.gal", "base")
 
-		local error_func = function()
+		error_func = function()
 			cs2:loadNeighborhood{
 				source = mfile,
 				name = "my_neighborhood"
@@ -240,7 +240,7 @@ return{
 
 		mfile = filePath("cabecadeboi-neigh.gwt", "base")
 
-		local error_func = function()
+		error_func = function()
 			cs2:loadNeighborhood{
 				source = mfile,
 				name = "my_neighborhood"

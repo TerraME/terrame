@@ -99,7 +99,7 @@ function TextScreen(data)
 	if data.select == nil then
 		data.select = {}
 		if type(data.target) == "Cell" then
-			forEachElement(data.target, function(idx, value, mtype)
+			forEachElement(data.target, function(idx, _, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
 				if not belong(idx, {"x", "y", "past"}) and string.sub(idx, -1, -1) ~= "_" then
@@ -107,7 +107,7 @@ function TextScreen(data)
 				end
 			end)
 		elseif type(data.target) == "Agent" then
-			forEachElement(data.target, function(idx, value, mtype)
+			forEachElement(data.target, function(idx, _, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
 				if string.sub(idx, -1, -1) ~= "_" then
@@ -115,7 +115,7 @@ function TextScreen(data)
 				end
 			end)
 		elseif type(data.target) == "CellularSpace" then
-			forEachElement(data.target, function(idx, value, mtype)
+			forEachElement(data.target, function(idx, _, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
 				if not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim", "source"}) and string.sub(idx, -1, -1) ~= "_" then
@@ -123,7 +123,7 @@ function TextScreen(data)
 				end
 			end)
 		elseif type(data.target) == "Society" then
-			forEachElement(data.target, function(idx, value, mtype)
+			forEachElement(data.target, function(idx, _, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
 				if not belong(idx, {"autoincrement", "quantity", "observerId"}) and string.sub(idx, -1, -1) ~= "_" then

@@ -30,7 +30,7 @@ return{
 		local neigh = Neighborhood()
 		unitTest:assertType(neigh, "Neighborhood")
 
-		local neigh = Neighborhood()
+		neigh = Neighborhood()
 		unitTest:assertType(neigh, "Neighborhood")
 	end,
 	__len = function(unitTest)
@@ -157,7 +157,6 @@ return{
 		unitTest:assert(not neigh:isNeighbor(cell3))
 	end,
 	sample = function(unitTest)
-		local randomObj = Random{seed = 12345}
 		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}

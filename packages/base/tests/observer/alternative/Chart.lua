@@ -36,10 +36,11 @@ return{
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
 
+		local e = Event{action = function() end}
 		error_func = function()
-			Chart{target = 2}
+			Chart{target = e}
 		end
-		unitTest:assertError(error_func, "Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, and instance of Model, got number.")
+		unitTest:assertError(error_func, "Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, and instance of Model, got Event.")
 
 		error_func = function()
 			Chart{target = c, select = 5}
@@ -207,18 +208,18 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("value", "number or function", "value"))
 
-		local cell = Cell{
+		cell = Cell{
 			value = 3
 		}
 
-		local c = Chart{target = cell}
+		c = Chart{target = cell}
 
 		error_func = function()
 			c:save("file.wrongext")
 		end
 		unitTest:assertError(error_func, invalidFileExtensionMsg("#1", "wrongext"))
 
-		local cell = Cell{}
+		cell = Cell{}
 
 		for i = 1, 15 do
 			cell["v"..i] = 5
@@ -321,7 +322,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Argument 'data.demand' should have 4 elements, got 3.")
 
-		local tab = makeDataTable{
+		tab = makeDataTable{
 			first = 2000,
 			step = 10,
 			demand = {7, 8, 9, 10},
@@ -340,7 +341,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("data.limit", "table", "abc"))
 
-		local tab = makeDataTable{
+		tab = makeDataTable{
 			first = 2000,
 			step = 10,
 			demand = {7, 8, 9, 10},

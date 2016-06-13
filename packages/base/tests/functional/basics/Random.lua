@@ -47,7 +47,7 @@ sample   function
 	integer = function(self)
 		local randomObj = Random{}
 		randomObj:reSeed(123456)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:integer()
 			self:assert(v >= 0)
 			self:assert(v <= 1)
@@ -55,53 +55,53 @@ sample   function
 
 		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:integer(10)
 			self:assert(v <= 10)
 			self:assert(v >= 0)
 		end
 
-		local randomObj = Random{}
+		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:integer(-10)
 			self:assert(v <= 0)
 			self:assert(v >= -10)
 		end
 
-		local randomObj = Random{}
+		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:integer(10, 20)
 			self:assert(v <= 20)
 			self:assert(v >= 10)
 		end
 
-		local randomObj = Random{}
+		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:integer(10, 10)
 			self:assertEquals(v, 10)
 		end
 
-		local randomObj = Random{}
+		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:integer(-10, 10)
 			self:assert(v <= 10)
 			self:assert(v >= -10)
 		end
 
-		local randomObj = Random{}
+		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:integer(-10, -10)
 			self:assertEquals(v, -10)
 		end
 
 		randomObj = Random{}
 		randomObj:reSeed()
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:integer(10)
 			self:assert(v <= 10)
 			self:assert(v >= 0)
@@ -110,7 +110,7 @@ sample   function
 	number = function(self)
 		local randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:number()
 			self:assert(v >= 0)
 			self:assert(v <= 1)
@@ -118,40 +118,40 @@ sample   function
 
 		self:assertEquals(randomObj:number(), 0.517326)
 
-		local randomObj = Random{}
+		randomObj = Random{}
 		randomObj:reSeed(54321)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:number(10.1)
 			self:assert(v >= 0)
 			self:assert(v <= 10.1)
 		end
 
-		local randomObj = Random{}
+		randomObj = Random{}
 		randomObj:reSeed(54321)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:number(-10.1)
 			self:assert(v <= 0)
 			self:assert(v >= -10.1)
 		end
 
-		local randomObj = Random{}
+		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:number(10.1, 20.2)
 			self:assert(v <= 20.2)
 			self:assert(v >= 10.1)
 		end
 
-		local randomObj = Random{}
+		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:number(10.1, 10.1)
 			self:assertEquals(v, 10.1)
 		end
 
-		local randomObj = Random{}
+		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:number(-10.1, 10.1)
 			self:assert(v <= 10.1)
 			self:assert(v >= -10.1)
@@ -159,14 +159,14 @@ sample   function
 
 		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:number(-10.1, -10.1)
 			self:assertEquals(v, -10.1)
 		end
 
 		randomObj = Random{}
 		randomObj:reSeed(12345)
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			local v = randomObj:number(10.1, -10.1)
 			self:assert(v <= 10.1)
 			self:assert(v >= -10.1)
@@ -213,7 +213,7 @@ sample   function
 
 		unitTest:assertType(bern:sample(), "boolean")
 
-		for i = 1, 1000 do
+		for _ = 1, 1000 do
 			if bern:sample() then
 				counter = counter + 1
 			end
@@ -226,7 +226,7 @@ sample   function
 
 		unitTest:assertType(continuous:sample(), "number")
 
-		for i = 1, 1000 do
+		for _ = 1, 1000 do
 			local sample = continuous:sample()
 			sum = sum + sample
 			unitTest:assert(sample <= 10)
@@ -236,11 +236,11 @@ sample   function
 		unitTest:assertEquals(sum, 5140.55, 0.01)
 
 		local discrete = Random{1, 2, 5, 6}
-		local sum = 0
+		sum = 0
 
 		unitTest:assertType(discrete:sample(), "number")
 
-		for i = 1, 1000 do
+		for _ = 1, 1000 do
 			local sample = discrete:sample()
 			sum = sum + sample
 			unitTest:assert(sample <= 6)
@@ -249,8 +249,8 @@ sample   function
 
 		unitTest:assertEquals(sum, 3634)
 
-		local discrete = Random{"a", "b", "c"}
-		local sum = {
+		discrete = Random{"a", "b", "c"}
+		sum = {
 			a = 0,
 			b = 0,
 			c = 0
@@ -258,7 +258,7 @@ sample   function
 
 		unitTest:assertType(discrete:sample(), "string")
 
-		for i = 1, 200 do
+		for _ = 1, 200 do
 			local sample= discrete:sample()
 			sum[sample] = sum[sample] + 1
 		end
@@ -268,11 +268,11 @@ sample   function
 		unitTest:assertEquals(sum.c, 64)
 
 		local step = Random{min = 1, max = 4, step = 1}
-		local sum = {0, 0, 0, 0}
+		sum = {0, 0, 0, 0}
 
 		unitTest:assertType(step:sample(), "number")
 
-		for i = 1, 200 do
+		for _ = 1, 200 do
 			local sample = step:sample()
 			sum[sample] = sum[sample] + 1
 		end
@@ -283,7 +283,7 @@ sample   function
 		unitTest:assertEquals(sum[4], 52)
 
 		local cat = Random{poor = 0.5, middle = 0.33, rich = 0.17}
-		local sum = {
+		sum = {
 			poor = 0,
 			middle = 0,
 			rich = 0
@@ -291,7 +291,7 @@ sample   function
 
 		unitTest:assertType(cat:sample(), "string")
 
-		for i = 1, 200 do
+		for _ = 1, 200 do
 			local sample = cat:sample()
 			sum[sample] = sum[sample] + 1
 		end

@@ -27,34 +27,34 @@
 return{
 	Jump = function(unitTest)
 		local j1 = Jump{
-			function(ev, unitTest)
-				if unitTest.x > 5 then 
+			function(_, cell)
+				if cell.x > 5 then 
 					return true 
 				end
 			end,
 			target = "go"
 		}
-		unitTest:assertEquals(string.sub(tostring(j1),1,8), "TeJump (")
+		unitTest:assertEquals(string.sub(tostring(j1), 1, 8), "TeJump (")
 
-		local jump = Jump{
-			function(cell, env, ag1)
+		Jump{
+			function(cell, _, ag1)
 				return cell.water > ag1.energy
 			end,
 			target = nil
 		}
 		unitTest:assert(true)
 
-		local jump = Jump{
-			function(cell, env, ag1)
+		Jump{
+			function(cell, _, ag1)
 				return cell.water > ag1.energy
 			end,
 			target = 8
 		}
 		unitTest:assert(true)
 
-		local j = Jump{
-			function(cell, env, ag1)
-				return cell.water > c.capInf
+		Jump{
+			function(cell, _, ag1)
+				return cell.water > ag1.capInf
 			end,
 			target = "wrongString"
 		}

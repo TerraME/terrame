@@ -42,19 +42,13 @@ Neighborhood_ = {
 		self.cObj_:addNeighbor(cell.x, cell.y, cell.cObj_, weight)
 	end,
 	--- Add a new Cell to the Neighborhood.
-	-- @arg xIndex A number with the x value of the Cell.
-	-- @arg yIndex A number with the y value of the Cell.
-	-- @arg cellularSpace A CellularSpace.
-	-- @arg weight A number representing the weight of the connection.
 	-- @deprecated Neighborhood:add
-	addCell = function(self, xIndex, yIndex, cellularSpace, weight)
+	addCell = function()
 		deprecatedFunction("addCell", "add")
 	end,
 	--- Add a new Cell to the Neighborhood.
-	-- @arg cell A Cell.
-	-- @arg weight A number representing the weight of the connection.
 	-- @deprecated Neighborhood:add
-	addNeighbor = function(self, cell, weight)
+	addNeighbor = function()
 		deprecatedFunction("addNeighbor", "add")
 	end,
 	--- Remove all Cells from the Neighborhood. In practice, it has the same behavior
@@ -65,23 +59,18 @@ Neighborhood_ = {
 		self.cObj_:clear()
 	end,
 	--- Remove a Cell from the Neighborhood.
-	-- @arg xIndex A number with the x value of the Cell.
-	-- @arg yIndex A number with the y value of the Cell.
 	-- @deprecated Neighborhood:remove
-	eraseCell = function(self, xIndex, yIndex)
+	eraseCell = function()
 		deprecatedFunction("eraseCell", "remove")
 	end,
 	--- Remove a Cell from the Neighborhood.
-	-- @arg cell A string with the unique identifier of the Cell.
 	-- @deprecated Neighborhood:remove
-	eraseNeighbor = function(self, cell)
+	eraseNeighbor = function()
 		deprecatedFunction("eraseNeighbor", "remove")
 	end,
 	--- Return the weight of the connection to a given neighbor Cell.
-	-- @arg xIndex A number with the x value of the Cell.
-	-- @arg yIndex A number with the y value of the Cell.
 	-- @deprecated Neighborhood:getWeight
-	getCellWeight = function(self, xIndex, yIndex)
+	getCellWeight = function()
 		deprecatedFunction("getCellWeight", "getWeight")
 	end,
 	--- Return the unique identifier of the Neighborhood. It represents
@@ -92,9 +81,8 @@ Neighborhood_ = {
 		return self.cObj_:getID()
 	end,
 	--- Return the weight of the connection to a given neighbor Cell.
-	-- @arg cell A Cell.
 	-- @deprecated Neighborhood:getWeight
-	getNeighWeight = function(self, cell)
+	getNeighWeight = function()
 		deprecatedFunction("getNeighWeight", "getWeight")
 	end,
 	--- Return the parent of the Neighborhood, which is the last Cell where the Neighborhood
@@ -166,7 +154,7 @@ Neighborhood_ = {
 
 		verify(self:isNeighbor(cell), "Trying to remove a Cell that does not belong to the Neighborhood.")
 
-		local result = self.cObj_:eraseNeighbor(cell.x, cell.y, cell.cObj_)
+		self.cObj_:eraseNeighbor(cell.x, cell.y, cell.cObj_)
 	end,
 	--- Return a random Cell from the Neighborhood.
 	-- @usage c1 = Cell{}
@@ -195,25 +183,18 @@ Neighborhood_ = {
 		end
 	end,
 	--- Remove a Cell from the Neighborhood replacing it by another Cell.
-	-- @arg index A positive integer number with the position of the Cell.
-	-- @arg cell The new Cell.
 	-- @deprecated Neighborhood:remove() and Neighborhood:add()
-	setCellNeighbor = function(self, index, cell)
+	setCellNeighbor = function()
 		deprecatedFunction("setCellNeighbor", "remove and add")
 	end,
 	--- Update the weight of a connection to a given neighbor Cell.
-	-- @arg xIndex A number with the x value of the Cell.
-	-- @arg yIndex A number with the y value of the Cell.
-	-- @arg weight A number representing the new weight of the connection.
 	-- @deprecated Neighborhood:setWeight
-	setCellWeight = function(self, xIndex, yIndex, weight)
+	setCellWeight = function()
 		deprecatedFunction("setCellWeight", "setWeight")
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
-	-- @arg cell A Cell.
-	-- @arg weight A number representing the weight of the connection.
 	-- @deprecated Neighborhood:setWeight
-	setNeighWeight = function(self, cell, weight)
+	setNeighWeight = function()
 		deprecatedFunction("setNeighWeight", "setWeight")
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
@@ -236,7 +217,7 @@ Neighborhood_ = {
 	end,
 	--- Return the number of Cells in the Neighborhood.
 	-- @deprecated Neighborhood:#
-	size = function(self)
+	size = function()
 		deprecatedFunction("size", "operator #")
 	end
 }

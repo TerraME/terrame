@@ -49,7 +49,7 @@ return{
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
- 			local gr = Group{
+ 			Group{
  				target = sc1,
  				selection = function() return true end
  			}

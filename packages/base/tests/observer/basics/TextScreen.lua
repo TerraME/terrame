@@ -39,7 +39,7 @@ return{
 
 		unitTest:assertSnapshot(ts, "textscreen_basic.bmp")
 
-		local world = Agent{
+		world = Agent{
 			count = 0,
 			mcount = function(self)
 				return self.count + 1
@@ -64,8 +64,8 @@ return{
 			quantity = 3
 		}
 
-		local ts1 = TextScreen{target = soc}
-		local ts2 = TextScreen{target = soc, select = "#"}
+		ts1 = TextScreen{target = soc}
+		TextScreen{target = soc, select = "#"}
 
 		ts1:update()
 		ts1:update()
@@ -73,13 +73,13 @@ return{
 		unitTest:assertSnapshot(ts, "textscreen_society.bmp")
 		unitTest:assertSnapshot(ts, "textscreen_society_select.bmp")
 
-		local soc = Society{
+		soc = Society{
 			instance = Agent{},
 			quantity = 3,
 			total = 10
 		}
 
-		local ts = TextScreen{target = soc}
+		ts = TextScreen{target = soc}
 
 		ts:update()
 		ts:update()
@@ -88,7 +88,7 @@ return{
 
 		unitTest:assertSnapshot(ts, "textscreen_society_total.bmp")
 
-		local world = CellularSpace{
+		world = CellularSpace{
 			xdim = 10,
 			count = 0,
 			mcount = function(self)
@@ -96,8 +96,8 @@ return{
 			end
 		}
 
-		local ts1 = TextScreen{target = world}
-		local ts2 = TextScreen{target = world, select = "mcount"}
+		ts1 = TextScreen{target = world}
+		ts2 = TextScreen{target = world, select = "mcount"}
 
 		ts1:update()
 		ts1:update()

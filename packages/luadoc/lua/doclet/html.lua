@@ -12,15 +12,14 @@
 -- @release $Id: html.lua,v 1.29 2007/12/21 17:50:48 tomas Exp $
 -------------------------------------------------------------------------------
 
-local assert, getfenv, ipairs, loadstring, setfenv, tostring, tonumber, type = assert, getfenv, ipairs, loadstring, setfenv, tostring, tonumber, type
+local assert,  ipairs, tostring, tonumber, type = assert, ipairs, tostring, tonumber, type
 local io, pairs, os = io, pairs, os
-local package, string, mkDir = package, string, mkDir
+local string, mkDir = string, mkDir
 local table = table
 local print = print
 local printNote, printError, getn, belong = _Gtme.printNote, _Gtme.printError, getn, belong
 local forEachElement = forEachElement
 local forEachOrderedElement = forEachOrderedElement
-local belong = belong
 local include = _Gtme.include
 local makepath = _Gtme.makePathCompatibleToAllOS
 
@@ -36,6 +35,7 @@ local util = include(ppath..s.."lua"..s.."main"..s.."util.lua")
 -- @arg name String with the name to look for.
 -- @return String with the complete path of the file found
 --	or nil in case the file is not found.
+--[[
 local function search(path, name)
 	for c in string.gmatch(path, "[^;]+") do
 		c = string.gsub(c, "%?", name)
@@ -47,6 +47,7 @@ local function search(path, name)
 	end
 	return nil    -- file not found
 end
+--]]
 
 local function httpLink(text)
 	local result = string.gsub(text, "http://[%w%.%-]+[%/%w~%-_.]*", function(value)
@@ -140,7 +141,7 @@ function module_link (modulename, doc, from)
 	return href
 end
 
-function file_func_link(symbol, doc, file_doc, from, doc_report)
+function file_func_link(symbol, doc, _, from, doc_report)
 	-- TODO: replace "." by "/" to create directories?
 	-- TODO: how to deal with module names with "/"?
 	assert(symbol)
@@ -211,27 +212,27 @@ function link_to(fname, doc, module_doc, file_doc, from, kind)
 		end
 	end
 	
-	local _, _, modulename, fname = string.find(fname, "^(.-)[%.%:]?([^%.%:]*)$")
-	assert(fname)
+	local _, _, modulename, mfname = string.find(fname, "^(.-)[%.%:]?([^%.%:]*)$")
+	assert(mfname)
   
-	-- if fname does not specify a module, use the module_doc
+	-- if mfname does not specify a module, use the module_doc
 	if string.len(modulename) == 0 and module_doc then
 		modulename = module_doc.name
 	end
 
-	local module_doc = doc.modules[modulename]
-	if not module_doc then
-		-- printError(string.format("Reference not found to function '%s' of module '%s'", fname, modulename))
+	local mmodule_doc = doc.modules[modulename]
+	if not mmodule_doc then
+		-- printError(string.format("Reference not found to function '%s' of module '%s'", mfname, modulename))
 		return
 	end
 	
-	for _, func_name in pairs(module_doc[kind]) do
-		if func_name == fname then
-			return module_link(modulename, doc, from) .. "#" .. fname
+	for _, func_name in pairs(mmodule_doc[kind]) do
+		if func_name == mfname then
+			return module_link(modulename, doc, from) .. "#" .. mfname
 		end
 	end
 	
-	-- printError(string.format("Reference not found to function '%s' of module '%s'", fname, modulename))
+	-- printError(string.format("Reference not found to function '%s' of module '%s'", mfname, modulename))
 end
 
 -------------------------------------------------------------------------------
@@ -330,10 +331,9 @@ function out_file(filename)
 	local h = filename
 	h = string.gsub(h, "lua$", "html")
 	h = string.gsub(h, "luadoc$", "html")
-	local short_filepath = h
 	h = "files/" .. h
 --	h = options.output_dir .. string.gsub (h, "^.-([%w_]+%.html)$", "%1")
-	short_filepath = options.short_output_path..h
+	local short_filepath = options.short_output_path..h
 	h = options.output_dir..h
 	return h, short_filepath
 end
@@ -441,12 +441,12 @@ function start(doc, doc_report)
 
 			if not belong(string.sub(filepath, 1, -5), doc.examples) and doc.files[filepath].type ~= "model" then
 				-- assembly the filename
-				local filepath, short_filepath = out_file(file_doc.name)
+				local mfilepath, short_filepath = out_file(file_doc.name)
 				print(string.format("Building %s", makepath(short_filepath)))
 
 				doc_report.html_files = doc_report.html_files + 1
 				
-				local f = util.openFile(filepath, "w")
+				local f = util.openFile(mfilepath, "w")
 				assert(f, string.format("Could not open %s for writing", short_filepath))
 				io.output(f)
 				includeMod("file.lp", { doc = doc, file_doc = file_doc, doc_report = doc_report } )

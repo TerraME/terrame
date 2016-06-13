@@ -100,9 +100,9 @@ min      number [2]
 step     number [0.1]
 ]])
 
-	local c = Choice{1, 2, 4, 5}
+		c = Choice{1, 2, 4, 5}
 
-	unitTest:assertEquals(tostring(c), [[default  number [1]
+		unitTest:assertEquals(tostring(c), [[default  number [1]
 values   vector of size 4
 ]])
 	end

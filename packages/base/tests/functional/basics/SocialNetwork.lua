@@ -29,7 +29,7 @@ return{
 		local sntw = SocialNetwork()
 		unitTest:assertType(sntw, "SocialNetwork")
 
-		local sntw = SocialNetwork()
+		sntw = SocialNetwork()
 		unitTest:assertType(sntw, "SocialNetwork")
 
 		unitTest:assertEquals(sntw.count, 0)

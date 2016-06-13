@@ -240,7 +240,7 @@ Agent_ = {
 	--- Return the unique identifier of the Agent.
 	-- @usage -- id = agent:getId()
 	-- @deprecated Agent.id
-	getId = function(self)
+	getId = function()
 		deprecatedFunction("getId", ".id")
 	end,
 	--- Return the time when the State machine executed the transition to the current state.
@@ -310,7 +310,7 @@ Agent_ = {
 	--
 	-- print(soc:sample().age)
 	-- @see Random
-	init = function(self) -- virtual function that might be implemented by the modeler
+	init = function() -- virtual function that might be implemented by the modeler
 	end,
 	--- Remove the Agent from its current Cell. If the Agent does not belong to any Cell then it will
 	-- stop with an error. This function supposes that each Agent can be in one and
@@ -523,11 +523,11 @@ Agent_ = {
 	-- @arg message A table with the received message. It has an attribute called sender with
 	-- the Agent that sent the message.
 	on_message = function(self, message)
-		customError("Agent "..self.id.." does not implement 'on_message'.")
+		customError("Agent "..self.id.." cannot get a message from "..message.sender.id.." because it does not implement 'on_message'.")
 	end,
 	--- Execute a random walk to a neighbor Cell.
 	-- @deprecated Agent:walk
-	randomWalk = function(self)
+	randomWalk = function()
 		deprecatedFunction("randomWalk", "walk")
 	end,
 	--- Create an Agent with the same behavior in the same Cell where the original Agent is
@@ -596,9 +596,8 @@ Agent_ = {
 		return sn:sample()
 	end,
 	--- Set the unique identifier of the Agent.
-	-- @arg name A string with the new unique identifier.
 	-- @deprecated Agent.id
-	setId = function(self, name)
+	setId = function()
 		deprecatedFunction("setId", ".id")
 	end,
 	--- Activate or not the Trajectories defined for a given Agent.
@@ -713,7 +712,7 @@ function Agent(data)
 	data.cObj_ = cObj
 	cObj:setReference(data)
 
-	for i, ud in pairs(data) do
+	for _, ud in pairs(data) do
 		local t = type(ud)
 		if t == "Trajectory" or t == "State" then cObj:add(ud.cObj_) end
 	end

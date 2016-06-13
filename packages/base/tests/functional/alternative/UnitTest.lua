@@ -45,7 +45,7 @@ return{
 			end
 		end
 
-		local error_func = function()
+		error_func = function()
 			u:assert(false)
 		end
 
@@ -60,43 +60,43 @@ return{
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
+		error_func = function()
 			u:assertEquals(1)
 		end
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
-		local error_func = function()
+		error_func = function()
 			u:assertEquals(2, 2, "a")
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "a"))
 
-		local error_func = function()
+		error_func = function()
 			u:assertEquals(false, true, 2)
 		end
 
 		unitTest:assertError(error_func, "#3 should be used only when comparing numbers or strings (#1 is boolean).")
 
-		local error_func = function()
+		error_func = function()
 			u:assertEquals(2, 3)
 		end
 
 		unitTest:assertError(error_func, "Values should be equal, but got '2' and '3'.")
 
-		local error_func = function()
+		error_func = function()
 			u:assertEquals("2", "3")
 		end
 
 		unitTest:assertError(error_func, "Values should be equal, but got \n'2' and \n'3'.")
 
-		local error_func = function()
+		error_func = function()
 			u:assertEquals("2", 3)
 		end
 
 		unitTest:assertError(error_func, "Values should be equal, but they have different types (string and number).")
 	
-		local error_func = function()
+		error_func = function()
 			u:assertEquals(true, false)
 		end
 
@@ -111,13 +111,13 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", 2))
 
-		local error_func = function()
+		error_func = function()
 			u:assertError(function() end, 2)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
-		local error_func = function()
+		error_func = function()
 			u:assertError(function() end, "aaa", false)
 		end
 
@@ -132,20 +132,20 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 
-		local error_func = function()
+		error_func = function()
 			u:assertFile("abcd1234.txt")
 		end
 
 		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abcd1234.txt"))
 
-		local error_func = function()
+		error_func = function()
 			u:assertFile(sessionInfo().path)
 		end
 
 		unitTest:assertError(error_func, "It is not possible to use a directory as #1 for assertFile().")
 
 		local c = Cell{value = 2}
-		local lg = LogFile{target = c, file = "mabc.csv"}
+		LogFile{target = c, file = "mabc.csv"}
 
 		c:notify()
 		unitTest:assertFile("mabc.csv")
@@ -158,7 +158,7 @@ return{
 			str = v
 		end
 
-		local lg = LogFile{target = c, file = "mabc.csv"}
+		LogFile{target = c, file = "mabc.csv"}
 
 		c:notify()
 		unitTest:assertFile("mabc.csv")
@@ -168,14 +168,13 @@ return{
 		unitTest.success = unitTest.success + 1
 		unitTest.printError = oldPrint
 
-		local u = UnitTest{}
-
-		local c = Cell{value = 2}
-		local lg = LogFile{target = c, file = "abc.csv"}
+		u = UnitTest{}
+		c = Cell{value = 2}
+		LogFile{target = c, file = "abc.csv"}
 
 		c:notify()
 
-		local error_func = function()
+		error_func = function()
 			u:assertFile("abc.csv")
 		end
 
@@ -213,31 +212,31 @@ return{
 		local ce = Cell{value = 5}
 		local ch = Chart{target = ce}
 
-		local error_func = function()
+		error_func = function()
 			u:assertSnapshot(ch)
 		end
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
-		local error_func = function()
+		error_func = function()
 			u:assertSnapshot(ch, "file.bmp", false)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", false))
 	
-		local error_func = function()
+		error_func = function()
 			u:assertSnapshot(ch, "file.bmp", 2)
 		end
 
 		unitTest:assertError(error_func, "Argument #3 should be between 0 and 1, got 2.")
 	
-		local error_func = function()
+		error_func = function()
 			u:assertSnapshot(ch, "file.bmp", -1)
 		end
 
 		unitTest:assertError(error_func, "Argument #3 should be between 0 and 1, got -1.")
 	
-		local error_func = function()
+		error_func = function()
 			u:assertSnapshot(ch, "file.bmp")
 		end
 
@@ -252,13 +251,13 @@ return{
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
+		error_func = function()
 			u:assertType(2, 2)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
-		local error_func = function()
+		error_func = function()
 			u:assertType(2, "string")
 		end
 

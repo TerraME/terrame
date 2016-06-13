@@ -23,31 +23,31 @@ TURNS = 20
 r = Random{seed = 12345}
 
 cell = Cell{
-	init = function(cell)
+	init = function(self)
 		local v = r:number()
 		if v <= PROBABILITY then
-			cell.state = "alive"
+			self.state = "alive"
 		else
-			cell.state = "dead"
+			self.state = "dead"
 		end
 	end,
-	countAlive = function(cell)
+	countAlive = function(self)
 		local count = 0
-		forEachNeighbor(cell, function(cell, neigh)
+		forEachNeighbor(self, function(_, neigh)
 			if neigh.past.state == "alive" then
 				count = count + 1
 			end
 		end)
 		return count
 	end,
-	execute = function(cell)
-		local n = cell:countAlive()
-		if cell.state == "alive" and (n > 3 or n < 2) then
-			cell.state = "dead"
-		elseif cell.state == "dead" and n == 3 then
-			cell.state = "alive"
+	execute = function(self)
+		local n = self:countAlive()
+		if self.state == "alive" and (n > 3 or n < 2) then
+			self.state = "dead"
+		elseif self.state == "dead" and n == 3 then
+			self.state = "alive"
 		else
-			cell.state = cell.past.state
+			self.state = self.past.state
 		end 
 	end
 }

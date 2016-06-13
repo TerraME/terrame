@@ -35,7 +35,7 @@ return{
 			cell.value = r:number()
 		end)
 
-		local c = Chart{target = cs, select = "value"}
+		Chart{target = cs, select = "value"}
 
 		local m = Map{
 			target = cs,
@@ -73,12 +73,12 @@ return{
 		world:notify(0)
 
 		local t = Timer{
-			Event{action = function(e)
+			Event{action = function(event)
 				world.value = world.value + 99
 				forEachCell(world, function(cell)
 					cell.count = cell.count + 1
 				end)
-				world:notify(e)
+				world:notify(event)
 			end}
 		}
 
@@ -98,7 +98,7 @@ return{
 
 		unitTest:clear()
 
-		local world = CellularSpace{
+		world = CellularSpace{
 			xdim = 10
 		}
 
@@ -188,12 +188,12 @@ return{
 			file = filePath1
 		}
 		
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = projName,
 			layer = clName1
 		}
 		
-		local r = Random()
+		r = Random()
 		
 		forEachCell(cs, function(cell)
 			cell.value = r:number()
@@ -211,17 +211,17 @@ return{
 		cs:notify()
 		unitTest:assertSnapshot(map, "cellspace_map_project.bmp")		
 		
-		local t = Timer{
-			Event{action = function(e)
+		t = Timer{
+			Event{action = function(event)
 				forEachCell(cs, function(cell)
 					cell.count = cell.value + 1
 				end)
-				cs:notify(e)
+				cs:notify(event)
 			end}
 		}		
 		
-		local ts = TextScreen{target = cs}
-		local vt = VisualTable{target = cs}
+		ts = TextScreen{target = cs}
+		vt = VisualTable{target = cs}
 
 		t:run(30)
 
@@ -252,7 +252,7 @@ return{
 			instance = c
 		}
 
-		local m = Map{
+		Map{
 			target = cs,
 			select = "mvalue",
 			min = 0,

@@ -32,7 +32,7 @@ agent = Agent{
 		local mycell = agent:getCell()
 		local likeme = 0
 
-		forEachNeighbor(mycell, function(cell, neigh)
+		forEachNeighbor(mycell, function(_, neigh)
 			local other = neigh:getAgent()
 			if other and other.color == agent.color then
 				likeme = likeme + 1

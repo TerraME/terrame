@@ -24,22 +24,17 @@
 
 return{
 	Society = function(unitTest)
-		local ag1 = Agent{}
-
-		local sc1 = Society{
-			instance = ag1,
-			quantity = 20
-		}
+		local ag1
 
 		local error_func = function()
-			sc2 = Society{
+			Society{
 				quantity = 20
 			}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("instance"))
 
 		error_func = function()
-			sc2 = Society{
+			Society{
 				instance = "wrongType",
 				quantity = 20
 			}
@@ -48,14 +43,14 @@ return{
 
 		ag1 = Agent{}
 		error_func = function()
-			sc2 = Society{
+			Society{
 				instance = ag1
 			}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("quantity"))
 
 		error_func = function()
-			sc2 = Society{
+			Society{
 				instance = ag1,
 				quantity = "wrongType"
 			}
@@ -63,7 +58,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("quantity", "number", "wrongType"))
 
 		error_func = function()
-			sc2 = Society{
+			Society{
 				instance = ag1,
 				quantity = -15
 			}
@@ -72,8 +67,8 @@ return{
 
 		ag1 = Agent{id = "2"}
 
-		local error_func = function()
-			sc2 = Society{
+		error_func = function()
+			Society{
 				instance = ag1,
 				quantity = 20
 			}
@@ -82,8 +77,8 @@ return{
 
 		ag1 = Agent{parent = Cell{}}
 
-		local error_func = function()
-			sc2 = Society{
+		error_func = function()
+			Society{
 				instance = ag1,
 				quantity = 20
 			}
@@ -92,8 +87,8 @@ return{
 
 		ag1 = Agent{instance = 2}
 
-		local error_func = function()
-			sc2 = Society{
+		error_func = function()
+			Society{
 				instance = ag1,
 				quantity = 20
 			}
@@ -102,12 +97,12 @@ return{
 
 		ag1 = Agent{}
 		
-		local sc2 = Society{
+		Society{
 			instance = ag1,
 			quantity = 20
 		}
 
-		local error_func = function()
+		error_func = function()
 			sc3 = Society{
 				instance = ag1,
 				quantity = 20
@@ -117,7 +112,7 @@ return{
 
 		ag1 = Agent{enter = function() end}
 		
-		local error_func = function()
+		error_func = function()
 			sc3 = Society{
 				instance = ag1,
 				quantity = 20
@@ -128,7 +123,7 @@ return{
 		ag1 = Agent{status = "alive"}
 
 		error_func = function()
-			sc2 = Society{
+			Society{
 				instance = ag1,
 				quantity = 20,
 				status = 5
@@ -139,7 +134,7 @@ return{
 		ag1 = Agent{male = true}
 
 		error_func = function()
-			sc2 = Society{
+			Society{
 				instance = ag1,
 				quantity = 20,
 				male = 4
@@ -150,7 +145,7 @@ return{
 		ag1 = Agent{value = 4}
 
 		error_func = function()
-			sc2 = Society{
+			Society{
 				instance = ag1,
 				quantity = 20,
 				value = 5
@@ -161,7 +156,7 @@ return{
 		ag1 = Agent{set = function() end}
 
 		error_func = function()
-			sc2 = Society{
+			Society{
 				instance = ag1,
 				quantity = 20,
 				set = 5
@@ -176,7 +171,7 @@ return{
 		}
 
 		error_func = function()
-			sc2 = Society{
+			Society{
 				instance = ag1,
 				quantity = 20,
 				male = 5
@@ -229,7 +224,7 @@ return{
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
 
-		local error_func = function()
+		error_func = function()
 			sc1:createSocialNetwork{}
 		end
 		unitTest:assertError(error_func, "It was not possible to infer a value for argument 'strategy'.")
@@ -414,8 +409,8 @@ return{
 		unitTest:assertError(error_func, "Society has no placement. Use Environment:createPlacement() first.")
 
 		local cs = CellularSpace{xdim = 5}
-		local ag1 = Agent{}
-		local sc1 = Society{instance = ag1, quantity = 20}
+		ag1 = Agent{}
+		sc1 = Society{instance = ag1, quantity = 20}
 		local env = Environment{cs, sc1}
 		env:createPlacement()
 
@@ -424,11 +419,11 @@ return{
 		end
 		unitTest:assertError(error_func, "CellularSpace has no Neighborhood named '1'. Use CellularSpace:createNeighborhood() first.")
 
-		local ag1 = Agent{}
-		local sc1 = Society{instance = ag1, quantity = 20}
-		local cs = CellularSpace{xdim = 5}
+		ag1 = Agent{}
+		sc1 = Society{instance = ag1, quantity = 20}
+		cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
-		local env = Environment{cs, sc1}
+		env = Environment{cs, sc1}
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = "c"}
@@ -457,13 +452,13 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("filter", "function", 3))
 
 		error_func = function()
-			sc1:createSocialNetwork{strategy = "function", name = "c", filter = function(ag) return true end, quantity = 1}
+			sc1:createSocialNetwork{strategy = "function", name = "c", filter = function() return true end, quantity = 1}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("quantity"))
 
 		-- social networks that must be "in memory"
-		local ag1 = Agent{}
-		local sc1 = Society{instance = ag1, quantity = 20}
+		ag1 = Agent{}
+		sc1 = Society{instance = ag1, quantity = 20}
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "erdos", quantity = "abc"}
@@ -578,7 +573,7 @@ return{
 	get = function(unitTest)
 		local ag1 = Agent{
 			name = "nonfoo",
-			execute = function(self) end
+			execute = function() end
 		}
 
 		local sc1 = Society{
@@ -587,34 +582,34 @@ return{
 		}
 
 		local error_func = function()
-			ag1 = sc1:get(nil)
+			sc1:get(nil)
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
-			ag1 = sc1:get(false)
+			sc1:get(false)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", false))
 
 		error_func = function()
-			ag1 = sc1:get("asdfg")
+			sc1:get("asdfg")
 		end
 		unitTest:assertError(error_func, "Agent 'asdfg' does not belong to the Society.")
 
 		error_func = function()
-			ag1 = sc1:get(-1)
+			sc1:get(-1)
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg(1, -1))
 	
 		error_func = function()
-			ag1 = sc1:get(2.2)
+			sc1:get(2.2)
 		end
 		unitTest:assertError(error_func, integerArgumentMsg(1, 2.2))
 	end,
 	getAgent = function(unitTest)
 		local ag1 = Agent{
 			name = "nonfoo",
-			execute = function(self) end
+			execute = function() end
 		}
 
 		local sc1 = Society{
@@ -630,7 +625,7 @@ return{
 	getAgents = function(unitTest)
 		local ag1 = Agent{
 			name = "nonfoo",
-			execute = function(self) end
+			execute = function() end
 		}
 
 		local sc1 = Society{
@@ -675,7 +670,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent or function"))
 	
-		local error_func = function()
+		error_func = function()
 			soc1:remove(ag)
 		end
 		unitTest:assertError(error_func, "Could not remove the Agent (id = '1').")
@@ -698,7 +693,7 @@ return{
 	size = function(unitTest)
 		local ag1 = Agent{
 			name = "nonfoo",
-			execute = function(self) end
+			execute = function() end
 		}
 
 		local sc1 = Society{
@@ -714,7 +709,7 @@ return{
 	split = function(unitTest)
 		local ag1 = Agent{
 			name = "nonfoo",
-			execute = function(self) end
+			execute = function() end
 		}
 
 		local sc1 = Society{
@@ -740,7 +735,7 @@ return{
 	synchronize = function(unitTest)
 		local ag1 = Agent{
 			name = "nonfoo",
-			execute = function(self) end
+			execute = function() end
 		}
 
 		local sc1 = Society{

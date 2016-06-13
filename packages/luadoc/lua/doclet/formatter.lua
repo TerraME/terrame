@@ -10,7 +10,7 @@ local sessionInfo = sessionInfo
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 local assert, ipairs, type = assert, ipairs, type
-local string, table, printNote = string, table, _Gtme.printNote
+local string, printNote = string, _Gtme.printNote
 
 options = {
 	output_dir = "./",
@@ -34,7 +34,7 @@ function start (doc)
 	local todo = "<TODO>"
 	
 	-- Process files
-	for i, file_doc in ipairs(doc.files) do
+	for _, file_doc in ipairs(doc.files) do
 		-- assembly the filename
 		local filename = out_file(file_doc.name)
 		printNote(string.format("Generating file %s", filename))

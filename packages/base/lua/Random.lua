@@ -61,11 +61,11 @@ local function discrete(generator, values)
 	end
 end
 
-local function step(generator, min, max, step)
-	local quantity = (max - min) / step
+local function step(generator, min, max, mstep)
+	local quantity = (max - min) / mstep
 
 	return function()
-		return min + step * generator:integer(0, quantity)
+		return min + mstep * generator:integer(0, quantity)
 	end
 end
 
@@ -174,7 +174,7 @@ Random_ = {
 	-- @usage random = Random()
 	--
 	-- random:reSeed(12345)
-	reSeed = function(self, seed)
+	reSeed = function(_, seed)
 		if seed == nil then 
 			seed = tonumber(tostring(os.time()):reverse():sub(1, 6))
 		else
@@ -191,7 +191,7 @@ Random_ = {
 	-- @usage random = Random{2, 3, 4, 6}
 	--
 	-- random:sample()
-	sample = function(self)
+	sample = function()
 		customError("Cannot return a random number.")
 	end
 }

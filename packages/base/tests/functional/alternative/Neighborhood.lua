@@ -43,7 +43,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "not_number"))
 
-		local error_func = function()
+		error_func = function()
 			neigh:add(cell2)
 			neigh:add(cell2)
 		end
@@ -99,7 +99,6 @@ return{
 	end,
 	getWeight = function(unitTest)
 		local cell1 = Cell{x = 0, y = 0}
-		local cell2 = Cell{x = 0, y = 1}
 		local neigh = Neighborhood()
 
 		local error_func = function()
@@ -118,7 +117,6 @@ return{
 		unitTest:assertError(error_func, "Cell (0,0) does not belong to the Neighborhood.")
 	end,
 	isNeighbor = function(unitTest)
-		local cell1 = Cell{}
 		local neigh = Neighborhood()
 
 		local error_func = function()
@@ -150,7 +148,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 123))
 
-		local error_func = function()
+		error_func = function()
 			neigh:remove(cell1)
 		end
 		unitTest:assertError(error_func, "Trying to remove a Cell that does not belong to the Neighborhood.")
@@ -192,7 +190,6 @@ return{
 	end,
 	setWeight = function(unitTest)
 		local cell1 = Cell{}
-		local cell2 = Cell{}
 		local neigh = Neighborhood()
 
 		local error_func = function()

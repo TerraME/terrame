@@ -64,68 +64,49 @@ local brewerMatchNames = {
 	BuGn = "BuGn",
 	BlueishGreens = "BuGn",
 	BlueGreens = "BuGn",
-	BlueGreens = "BuGn",
-	BlueGreen = "BuGn",
 	BlueGreen = "BuGn",
 	BuPu = "BuPu",
 	BlueishPurples = "BuPu",
 	BluePurples = "BuPu",
-	BluePurples = "BuPu",
-	BluePurple = "BuPu",
 	BluePurple = "BuPu",
 	GnBu = "GnBu",
 	GreenishBlues = "GnBu",
 	GreenBlues = "GnBu",
-	GreenBlues = "GnBu",
-	GreenBlue = "GnBu",
 	GreenBlue = "GnBu",
 	OrRd = "OrRd",
 	OrangishReds = "OrRd",
 	OrangeReds = "OrRd",
-	OrangeReds = "OrRd",
-	OrangeRed = "OrRd",
 	OrangeRed = "OrRd",
 	PuBu = "PuBu",
 	PurplishBlues = "PuBu",
 	PurpleBlues = "PuBu",
-	PurpleBlues = "PuBu",
-	PurpleBlue = "PuBu",
 	PurpleBlue = "PuBu",
 	PuBuGn = "PuBuGn",
 	PurplishBlueGreens = "PuBuGn",
 	PurpleBlueGreens = "PuBuGn",
 	PurpleBlueGreen = "PuBuGn",
-	PurpleBlueGreen = "PuBuGn",
 	PuRd = "PuRd",
 	PurplishReds = "PuRd",
 	PurpleReds = "PuRd",
-	PurpleReds = "PuRd",
-	PurpleRed = "PuRd",
 	PurpleRed = "PuRd",
 	RdPu = "RdPu",
 	ReddishPurples = "RdPu",
 	RedPurples = "RdPu",
-	RedPurples = "RdPu",
-	RedPurple = "RdPu",
 	RedPurple = "RdPu",
 	YlGn = "YlGn",
 	YellowishGreens = "YlGn",
-	YellowGreens = "YlGn",
 	YellowGreens = "YlGn",
 	YellowGreen = "YlGn",
 	YlGnBu = "YlGnBu",
 	YellowishGreenBlues = "YlGnBu",
 	YellowGreenBlues = "YlGnBu",
-	YellowGreenBlues = "YlGnBu",
 	YellowGreenBlue = "YlGnBu",
 	YlOrBr = "YlOrBr",
 	YellowishOrangeBrowns = "YlOrBr",
 	YellowOrangeBrowns = "YlOrBr",
-	YellowOrangeBrowns = "YlOrBr",
 	YellowOrangeBrown = "YlOrBr",
 	YlOrRd = "YlOrRd",
 	YellowishOrangereds = "YlOrRd",
-	YellowOrangeReds = "YlOrRd",
 	YellowOrangeReds = "YlOrRd",
 	YellowOrangeRed = "YlOrRd",
 	Blues = "Blues",
@@ -143,7 +124,6 @@ local brewerMatchNames = {
 	Reds = "Reds",
 	Red = "Reds",
 	BrBG = "BrBG",
-	BrownsWhiteBlueGreens = "BrBG",
 	BrownsBlueGrens = "BrBG",
 	BrownsWhiteBlueGreens = "BrBG",
 	BrownsWhiteBlueGreen = "BrBG",
@@ -151,7 +131,6 @@ local brewerMatchNames = {
 	BrownBlueGreen = "BrBG",
 	PiYG = "PiYG",
 	PurplesWhiteYellowGreens = "PiYG",
-	PurplesYellowGreens = "PiYG",
 	PurplesYellowGreens = "PiYG",
 	PurplesYellowGreen = "PiYG",
 	PurplesYellowsGreens = "PiYG",
@@ -168,14 +147,11 @@ local brewerMatchNames = {
 	RdBu = "RdBu",
 	RedsWhiteBlues = "RdBu",
 	RedWhiteBlue = "RdBu",
-	RedsBlues = "RdBu",
 	RedBlue = "RdBu",
 	RedsBlues = "RdBu",
 	RdGy = "RdGy",
 	RedsWhiteGreys= "RdGy",
 	RedsGreys= "RdGy",
-	RedsGreys= "RdGy",
-	RedGrey = "RdGy",
 	RedGrey = "RdGy",
 	RdYlBu = "RdYlBu",
 	ReddishYellowWhiteBlues = "RdYlBu",
@@ -1865,9 +1841,9 @@ function Map(data)
 			verify(data.slices > 1, "Argument 'slices' ("..data.slices..") should be greater than one.")
 
 			if type(data.color) == "string" then
-				local colors = brewerMatchNames[data.color]
+				local mcolors = brewerMatchNames[data.color]
 
-				if not colors then
+				if not mcolors then
 					local s = suggestion(data.color, brewerMatchNames)
 					if s then
 						customError(switchInvalidArgumentSuggestionMsg(data.color, "color", s))
@@ -1876,21 +1852,21 @@ function Map(data)
 					end
 				end
 
-				colors = brewerRGB[colors][data.slices]
+				mcolors = brewerRGB[mcolors][data.slices]
 
-				if not colors then
+				if not mcolors then
 					customError("Color '"..data.color.."' does not support "..data.slices.." slices.")
 				end
 
 				if data.invert then
 					local invcolors = {}
-					for i = #colors, 1, -1 do
-						table.insert(invcolors, colors[i])
+					for i = #mcolors, 1, -1 do
+						table.insert(invcolors, mcolors[i])
 					end
 
 					data.color = invcolors
 				else
-					data.color = colors
+					data.color = mcolors
 				end
 			end
 
@@ -1936,9 +1912,9 @@ function Map(data)
 			verify(data.slices > 1, "Argument 'slices' ("..data.slices..") should be greater than one.")
 
 			if type(data.color) == "string" then
-				local colors = brewerMatchNames[data.color]
+				local mcolors = brewerMatchNames[data.color]
 
-				if not colors then
+				if not mcolors then
 					local s = suggestion(data.color, brewerMatchNames)
 					if s then
 						customError(switchInvalidArgumentSuggestionMsg(data.color, "color", s))
@@ -1947,21 +1923,21 @@ function Map(data)
 					end
 				end
 
-				colors = brewerRGB[colors][data.slices]
+				mcolors = brewerRGB[colors][data.slices]
 
-				if not colors then
+				if not mcolors then
 					customError("Color '"..data.color.."' does not support "..data.slices.." slices.")
 				end
 
 				if data.invert then
 					local invcolors = {}
-					for i = #colors, 1, -1 do
-						table.insert(invcolors, colors[i])
+					for i = #mcolors, 1, -1 do
+						table.insert(invcolors, mcolors[i])
 					end
 
 					data.color = invcolors
 				else
-					data.color = colors
+					data.color = mcolors
 				end
 			end
 
@@ -1989,9 +1965,9 @@ function Map(data)
 			end
 
 			if type(data.color) == "string" then
-				local colors = brewerMatchNames[data.color]
+				local mcolors = brewerMatchNames[data.color]
 
-				if not colors then
+				if not mcolors then
 					local s = suggestion(data.color, brewerMatchNames)
 					if s then
 						customError(switchInvalidArgumentSuggestionMsg(data.color, "color", s))
@@ -2000,12 +1976,12 @@ function Map(data)
 					end
 				end
 
-				colors = brewerRGB[colors][#data.value]
-				if not colors then
+				mcolors = brewerRGB[mcolors][#data.value]
+				if not mcolors then
 					customError("Color '"..data.color.."' does not support "..#data.value.." slices.")
 				end
 
-				data.color = colors
+				data.color = mcolors
 			end
 
 			mandatoryTableArgument(data, "color", "table")

@@ -61,7 +61,7 @@ return{
 		local error_func = function() CellularSpace{xdim = "a"} end
 		u:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got string.")
 
-		local error_func = function() CellularSpace{xdim = "a"} end
+		error_func = function() CellularSpace{xdim = "a"} end
 		u:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
 
 		unitTest:assertEquals(u.success, 2)
@@ -69,7 +69,7 @@ return{
 	end,
 	assertFile = function(unitTest)
 		local c = Cell{value = 2}
-		local lg = LogFile{target = c, file = "abc.csv"}
+		LogFile{target = c, file = "abc.csv"}
 
 		local success = unitTest.success
 		local test = unitTest.test

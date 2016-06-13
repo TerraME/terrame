@@ -127,9 +127,9 @@ end
 local create_t
 
 -- Create a table with the order of the elements to be drawn on the screen
-local function create_t(mtable, ordering)
+create_t = function(mtable, ordering)
 	local t = {}
-	forEachElement(ordering, function(column, elements)
+	forEachElement(ordering, function(_, elements)
 		forEachElement(elements, function(_, element)
 			-- element \in {string, number, boolean, table, etc.}
 			local mt = {}
@@ -141,8 +141,8 @@ local function create_t(mtable, ordering)
 				elseif element == "Choice"    and mtype == "Choice"    then table.insert(mt, idx)
 				elseif element == "Mandatory" and mtype == "Mandatory" then table.insert(mt, idx)
 				elseif element == idx then -- named table
-					local ordering = create_ordering(melement)
-					table.insert(mt, create_t(melement, ordering))
+					local mordering = create_ordering(melement)
+					table.insert(mt, create_t(melement, mordering))
 				end
 			end)
 
@@ -156,19 +156,19 @@ local function create_t(mtable, ordering)
 				end
 			end)
 
-			forEachElement(idxmax, function(idx, maxelement)
+			forEachElement(idxmax, function(idx)
 				local mmin = string.gsub(mt[idxmax[idx]], "max", "min")
 
 				local idx_min = -1
 
-				forEachElement(mt, function(idx, melement)
+				forEachElement(mt, function(midx, melement)
 					if melement == mmin then
-						idx_min = idx
+						idx_min = midx
 					end
 				end)
 				if idx_min ~= -1 then
-					local tmp = mt[idxmax[idx]]
-					mt[idxmax[idx]] = mt[idx_min]
+					local tmp = mt[idxmax[midx]]
+					mt[idxmax[midx]] = mt[idx_min]
 					mt[idx_min] = tmp
 				end
 			end)
@@ -180,8 +180,8 @@ local function create_t(mtable, ordering)
 end
 
 function _Gtme.configure(self, modelName, package)
-	local quantity, count = 0, 0
-	local pkgattrs, qtattrs, typeattrs, r = "", "", "", ""
+	local count = 0
+	local r = ""
 
 	r = r.."-- This file was created automatically from a TerraME Model ("..os.date("%c")..")\n\n"
 	r = r.."require(\"qtluae\")\n"
@@ -284,7 +284,6 @@ function _Gtme.configure(self, modelName, package)
 				r = r.."SelectButton.maximumSize = {16, 18}\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, SelectButton, "..count..", 2)\n\n"
 
-				local svalue = _Gtme.stringToLabel(value)
 				local ext = string.find(self[value], "%.")
 				if ext then
 					ext = "*"..string.sub(self[value], ext)

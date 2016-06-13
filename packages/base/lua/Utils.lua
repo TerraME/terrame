@@ -37,7 +37,7 @@ end}
 -- a Model repeated times.
 -- @usage clean()
 function clean()
-	forEachElement(_Gtme.createdObservers, function(idx, obs)
+	forEachElement(_Gtme.createdObservers, function(_, obs)
 		if obs.target.cObj_ then
 			if obs.type == 11 or obs.type == "neighborhood" then
 				obs.target.cObj_:kill(obs.id, obs.observer.target.cObj_) -- SKIP
@@ -314,7 +314,6 @@ end
 -- result = d{df, init, a, b, delta}
 -- print(result)
 function d(data)
-	local result = 0
 	local delta = DELTA
 	if delta == nil then
 		delta = 0.2
@@ -604,8 +603,8 @@ function forEachConnection(agent, name, _sof_)
 		customError("Agent does not have a SocialNetwork named '"..name.."'.")
 	end
 
-	for name, connection in pairs(socialnetwork.connections) do
-		local weight = socialnetwork.weights[name]
+	for mname, connection in pairs(socialnetwork.connections) do
+		local weight = socialnetwork.weights[mname]
 		if _sof_(agent, connection, weight) == false then return false end
 	end
 
@@ -818,7 +817,7 @@ function forEachOrderedElement(obj, _sof_)
 	local norder = {}
 	local nreference = {}
 
-	for k, ud in pairs(obj) do
+	for k in pairs(obj) do
 		if type(k) == "number" then
 			norder[#norder + 1] = k
 			nreference[k] = k
@@ -945,7 +944,7 @@ function getn(t)
 	end
 
 	local n = 0
-	for k, v in pairs(t) do
+	for _ in pairs(t) do
 		n = n + 1
 	end
 
@@ -1141,7 +1140,6 @@ end
 function integrationEuler(df, initCond, a, b, delta)
 	if type(df) == "function" then
 		local y = initCond
-		local x = a
 		local bb = b - delta
 		for x = a, bb, delta do
 			y = y + delta * df(x, y)
@@ -1149,9 +1147,7 @@ function integrationEuler(df, initCond, a, b, delta)
 
 		return y
 	else
-		local i = 0
 		local y = initCond
-		local x = a
 		local bb = b - delta
 		local values = {} -- each equation must be computed from the same "past" value ==> o(n2),
 		                  -- where n is the number of equations
@@ -1180,10 +1176,9 @@ end
 -- v = integrationHeun(f, 0, 0, 3, 0.1)
 function integrationHeun(df, initCond, a, b, delta)
 	if type(df) == "function" then
-		local x = a
 		local y = initCond
-		local y1 = 0
-		local val = 0
+		local y1
+		local val
 		local bb = b - delta
 		for x = a, bb, delta do
 			val = df(x, y)
@@ -1193,10 +1188,7 @@ function integrationHeun(df, initCond, a, b, delta)
 
 		return y
 	else
-		local x = a
 		local y = initCond
-		local y1 = 0
-		local val = 0
 		local bb = b - delta
 		local sizeDF = #df
 		for x = a, bb, delta do
@@ -1230,14 +1222,12 @@ end
 -- @usage f = function(x) return x^3 end
 -- v = integrationRungeKutta(f, 0, 0, 3, 0.1)
 function integrationRungeKutta(df, initCond, a, b, delta)
-	local i = 0
 	if type(df) == "function" then
-		local x = a
 		local y = initCond
-		local y1 = 0
-		local y2 = 0
-		local y3 = 0
-		local y4 = 0
+		local y1
+		local y2
+		local y3
+		local y4
 		local bb = b - delta
 		local midDelta = 0.5 * delta
 		for x = a, bb, delta do
@@ -1250,12 +1240,11 @@ function integrationRungeKutta(df, initCond, a, b, delta)
 
 		return y
 	else
-		local x = a
 		local y = initCond
-		local y1 = 0
-		local y2 = 0
-		local y3 = 0
-		local y4 = 0
+		local y1
+		local y2
+		local y3
+		local y4
 		local bb = b - delta
 		local midDelta = 0.5 * delta
 		local sizeDF = #df
@@ -1376,18 +1365,18 @@ function makeDataTable(data)
 	local quantity = #data[mydata[1]]
 
 	if data.last then
-		local quantity = (data.last - data.first) / data.step + 1
+		local mquantity = (data.last - data.first) / data.step + 1
 
 		forEachOrderedElement(mydata, function(_, idx)
-			if #data[idx] ~= quantity then
-				customError("Argument '"..idx.."' should have "..quantity.." elements, got "..#data[idx]..".")
+			if #data[idx] ~= mquantity then
+				customError("Argument '"..idx.."' should have "..mquantity.." elements, got "..#data[idx]..".")
 			end
 		end)
 	else
 
 		forEachOrderedElement(mydata, function(_, idx)
-			if #data[idx] ~= quantity then
-				customError("Argument '"..idx.."' should have "..quantity.." elements, got "..#data[idx]..".")
+			if #data[idx] ~= mquantity then
+				customError("Argument '"..idx.."' should have "..mquantity.." elements, got "..#data[idx]..".")
 			end
 		end)
 	end
@@ -1478,7 +1467,7 @@ end
 -- @arg send A substring describing the end of #1.
 -- @usage string.endswith("abcdef", "def")
 function string.endswith(str, send)
-	local send = send:lower().."$"
+	send = send:lower().."$"
 	return str:lower():match(send) ~= nil
 end
 

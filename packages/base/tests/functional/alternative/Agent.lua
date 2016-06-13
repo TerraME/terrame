@@ -25,12 +25,12 @@
 return {
 	Agent = function(unitTest)
 		local error_func = function()
-			local ag1 = Agent(2)
+			Agent(2)
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
 	
-		local error_func = function()
-			local ag1 = Agent{id = 123}
+		error_func = function()
+			Agent{id = 123}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("id", "string", 123))
 	end,
@@ -55,15 +55,15 @@ return {
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
-			local ag1 = Agent{}
+		error_func = function()
+			Agent{}
 			ag1:addSocialNetwork({}, "friends")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "SocialNetwork", {}))
 
-		local ag1 = Agent{}
+		ag1 = Agent{}
 		local sn = SocialNetwork()
-		local error_func = function()
+		error_func = function()
 			ag1:addSocialNetwork(sn, 123)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 123))
@@ -95,30 +95,28 @@ return {
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void"}
-		local cell = cs.cells[1]
 		local error_func = function()
 			ag1:enter(nil, "placement")
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
-			local ag1 = Agent{}
-			local cs = CellularSpace{xdim = 3}
-			local myEnv = Environment{cs, ag1}
+		error_func = function()
+			ag1 = Agent{}
+			cs = CellularSpace{xdim = 3}
+			myEnv = Environment{cs, ag1}
 
 			myEnv:createPlacement{strategy = "void"}
-			cell = cs.cells[1]
 			ag1:enter({}, "placement")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", {}))
 
-		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3}
-		local myEnv = Environment{cs, ag1}
+		ag1 = Agent{}
+		cs = CellularSpace{xdim = 3}
+		myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void"}
-		cell = cs.cells[1]
-		local error_func = function()
+		local cell = cs.cells[1]
+		error_func = function()
 			ag1:enter(cell, 123)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 123))
@@ -130,14 +128,14 @@ return {
 			quantity = 5
 		}
 
-		local cs = CellularSpace{xdim = 5}
+		cs = CellularSpace{xdim = 5}
 
 		local e = Environment{predators, cs}
 		e:createPlacement()
 
 		local c = Cell{}
 
-		local error_func = function()
+		error_func = function()
 			predators:sample():enter(c)
 		end
 		unitTest:assertError(error_func, "Agent is already inside of a Cell. Use Agent:move() instead.")
@@ -146,7 +144,7 @@ return {
 
 		ag:leave()
 
-		local error_func = function()
+		error_func = function()
 			ag:enter(c)
 		end
 		unitTest:assertError(error_func, "Placement 'placement' was not found in the Cell.")
@@ -163,7 +161,7 @@ return {
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
+		error_func = function()
 			ag1 = Agent{
 				id = "MyFirst",
 				State{
@@ -209,7 +207,7 @@ return {
 	end,
 	leave = function(unitTest)
 		local error_func = function()
-			local ag1 = Agent{}
+			Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
@@ -221,7 +219,7 @@ return {
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
 
 		error_func = function()
-			local ag1 = Agent{}
+			Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
@@ -233,7 +231,7 @@ return {
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
 
 		error_func = function()
-			local ag1 = Agent{}
+			Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
@@ -249,19 +247,17 @@ return {
 		myEnv:createPlacement{strategy = "void"}
 		local cell = cs.cells[1]
 		ag1:enter(cell, "placement")
-		local error_func = function()
+		error_func = function()
 			ag1:leave("notplacement")
 		end
 		unitTest:assertError(error_func, valueNotFoundMsg(1, "notplacement"))
 
-		local ag1 = Agent{pl = 2}
-		local c = Cell{}
+		ag1 = Agent{pl = 2}
 
-		local error_func = function()
+		error_func = function()
 			ag1:leave("pl")
 		end
 		unitTest:assertError(error_func, "Placement 'pl' should be a Trajectory, got number.")
-	
 	end,
 	message = function(unitTest)
 		local error_func = function()
@@ -274,7 +270,7 @@ return {
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
 
-		local error_func = function()
+		error_func = function()
 			local ag = Agent{}
 
 			local sc = Society{instance = ag, quantity = 2}
@@ -287,14 +283,14 @@ return {
 		local ag = Agent{}
 		local sc = Society{instance = ag, quantity = 2}
 		local ag1 = sc.agents[1]		
-		local error_func = function()
+		error_func = function()
 			ag1:message{}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("receiver"))
 
-		local ag = Agent{}	
-		local sc = Society{instance = ag, quantity = 2}
-		local ag1 = sc.agents[1]		
+		ag = Agent{}	
+		sc = Society{instance = ag, quantity = 2}
+		ag1 = sc.agents[1]		
 		local ag2 = sc.agents[2]		
 		error_func = function()
 			ag1:message{
@@ -306,12 +302,12 @@ return {
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("delay", "number", "money"))
 
-		local ag = Agent{}
+		ag = Agent{}
 
 		sc = Society{instance = ag, quantity = 2}
-		local ag1 = sc.agents[1]		
-		local ag2 = sc.agents[2]		
-		local error_func = function()
+		ag1 = sc.agents[1]		
+		ag2 = sc.agents[2]		
+		error_func = function()
 			ag1:message{
 				receiver = ag2,
 				delay = -1,
@@ -320,7 +316,7 @@ return {
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg("delay", -1, true))
 
-		local error_func = function()
+		error_func = function()
 			ag1:message{
 				receiver = ag2,
 				subject = 2
@@ -337,7 +333,6 @@ return {
 			myEnv:createPlacement{strategy = "void", name = "renting"}
 			local c1 = cs.cells[1]
 			ag1:enter(c1,"renting")
-			local c1 = cs.cells[4]
 			ag1:move()
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
@@ -350,57 +345,57 @@ return {
 		myEnv:createPlacement{strategy = "void", name = "renting"}
 		local c1 = cs.cells[1]
 		ag1:enter(c1, "renting")
-		c1 = cs.cells[4]
-		local error_func = function()
+
+		error_func = function()
 			ag1:move(ag2, "renting")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", ag2))
 
-		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3}
-		local myEnv = Environment{cs, ag1}
+		ag1 = Agent{}
+		cs = CellularSpace{xdim = 3}
+		myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "test"}
 
-		local c1 = cs.cells[1]
-		local error_func = function()
+		c1 = cs.cells[1]
+		error_func = function()
 			ag1:enter(c1)
 		end
 		unitTest:assertError(error_func, "Placement 'placement' was not found in the Agent.")
 
-		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3}
-		local myEnv = Environment{cs, ag1}
+		ag1 = Agent{}
+		cs = CellularSpace{xdim = 3}
+		myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "renting"}
 		myEnv:createPlacement{strategy = "void"}
 
-		local c1 = cs.cells[1]
+		c1 = cs.cells[1]
 		ag1:enter(c1, "renting")
 		
-		local error_func = function()
+		error_func = function()
 			ag1:move(c1, 123)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 123))
 
-		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3}
-		local myEnv = Environment{cs, ag1}
+		ag1 = Agent{}
+		cs = CellularSpace{xdim = 3}
+		myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "renting"}
 		c1 = cs.cells[1]
 		ag1:enter(c1, "renting")
 		c1 = cs.cells[4]
 
-		local error_func = function()
+		error_func = function()
 			ag1:move(c1, "not_placement")
 		end
 		unitTest:assertError(error_func, valueNotFoundMsg(2, "not_placement"))
 
 		ag1:leave("renting")
 
-		local error_func = function()
+		error_func = function()
 			ag1:move(c1, "renting")
 		end
 		unitTest:assertError(error_func, "Agent should belong to a Cell in order to move().")
@@ -443,7 +438,7 @@ return {
 		end
 		unitTest:assertError(error_func, "Agent should belong to a Society to be able to reproduce.")
 
-		local error_func = function()
+		error_func = function()
 			s:sample():reproduce(2)
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
@@ -463,32 +458,33 @@ return {
 		myEnv:createPlacement{strategy = "void"}
 		local c1 = cs.cells[1]
 		ag1:enter(c1)
+
 		local error_func = function()
 			ag1:walk()
 		end
 		unitTest:assertError(error_func, valueNotFoundMsg(2, "1"))
 
-		local error_func = function()
-			local ag1 = Agent{}
-			local cs = CellularSpace{xdim = 3}
-			local myEnv = Environment{cs, ag1}
+		error_func = function()
+			ag1 = Agent{}
+			cs = CellularSpace{xdim = 3}
+			myEnv = Environment{cs, ag1}
 
 			myEnv:createPlacement{strategy = "void"}
 			c1 = cs.cells[1]
 			ag1:enter(c1)
 			ag1:walk(123)
 		end
-
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
 
-		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3}
-		local myEnv = Environment{cs, ag1}
+		ag1 = Agent{}
+		cs = CellularSpace{xdim = 3}
+		myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void"}
 		c1 = cs.cells[1]
 		ag1:enter(c1,"placement")
-		local error_func = function()
+
+		error_func = function()
 			ag1:walk("123")
 		end
 		unitTest:assertError(error_func, valueNotFoundMsg(1, "123"))

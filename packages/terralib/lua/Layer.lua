@@ -121,7 +121,7 @@ local function addCellularLayer(self, data)
 				end
 			end			
 
-			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, data.file, not data.box)
+			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, data.file)
 		end,
 		--tif = function()
 		--	mandatoryTableArgument(data, "file", "string")
@@ -148,7 +148,7 @@ local function addCellularLayer(self, data)
 
 			verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "source", "encoding",
 										"project", "host", "port", "user", "password", "database", "table", "project"})
-			self.terralib:addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data, not data.box)
+			self.terralib:addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data)
 		end
 	}
 end

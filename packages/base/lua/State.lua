@@ -51,7 +51,7 @@ function State(data)
 	end
 	cObj:config(data.id)
 
-	for i, ud in pairs(data) do
+	for _, ud in pairs(data) do
 		if type(ud) == "table" then cObj:add(ud.cObj_) end
 		if type(ud) == "userdata" then cObj:add(ud) end
 	end

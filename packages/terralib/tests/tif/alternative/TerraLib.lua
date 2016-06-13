@@ -41,7 +41,7 @@ return {
 		tl:addShpLayer(proj, layerName, layerFile)	
 		
 		local noRasterLayer = function()
-			local numBands = tl:getNumOfBands(proj, layerName)
+			tl:getNumOfBands(proj, layerName)
 		end
 		unitTest:assertError(noRasterLayer, "The layer '"..layerName.."' is not a Raster.")		
 		

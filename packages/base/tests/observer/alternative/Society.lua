@@ -30,7 +30,7 @@ return{
 			myvalue = function() return 4 end
 		}
 
-		local ch = Chart{
+		Chart{
 			target = soc,
 			select = "myvalue"
 		}

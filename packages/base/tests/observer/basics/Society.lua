@@ -48,7 +48,7 @@ return{
 
 		local t = Timer{
 			Event{action = function(e)
-				for i = 1, e:getTime() do
+				for _ = 1, e:getTime() do
 					soc:grow()
 					soc:add()
 					soc.value = soc.value + 1
@@ -82,7 +82,7 @@ return{
 
 		unitTest:assertSnapshot(m, "map_single_agent.bmp")
 
-		local ag = Agent{
+		ag = Agent{
 			init = function(self)
 				if Random():number() > 0.8 then
 					self.class = "large"
@@ -96,18 +96,18 @@ return{
 			end
 		}
 
-		local soc = Society{
+		soc = Society{
 			instance = ag,
 			quantity = 10,
 			value = 5
 		}
 
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
 		local env = Environment{cs, soc}
 		env:createPlacement()
 
-		local m = Map{
+		m = Map{
 			target = soc,
 			symbol = "beetle",
 			color = "green"
