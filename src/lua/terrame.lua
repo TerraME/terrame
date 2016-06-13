@@ -1633,7 +1633,9 @@ function _Gtme.myxpcall(func)
 
 			local pos = string.find(err, "Error:") -- TerraME error
 
-			if not pos then -- lua errror
+			if pos then -- error in some package
+				err = string.sub(err, pos)
+			else -- lua errror in the user's script
 				pos = string.find(err, ":") -- remove first ":"
 				err = string.sub(err, pos + 1)
 				pos = string.find(err, ":") -- remove second ":"
