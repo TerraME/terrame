@@ -1631,7 +1631,6 @@ function _Gtme.myxpcall(func)
 		else
 			local msg = _Gtme.traceback()
 
-			local olderr = err
 			local line
 			local file
 			local pos = string.find(err, "Error:") -- TerraME error
