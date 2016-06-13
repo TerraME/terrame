@@ -691,7 +691,7 @@ function _Gtme.executeDoc(package)
 
 		local documentedArguments = {}
 
-		forEachOrderedElement(value.models, function(midx, mvalue, mtype)
+		forEachOrderedElement(value.models, function(_, mvalue, mtype)
 			if mtype == "table" then
 				if type(mvalue.arg) == "table" then -- if some argument is documented
 					forEachOrderedElement(mvalue.arg, function(mmidx)
