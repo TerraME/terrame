@@ -7,7 +7,7 @@
 local assert, error, loadstring, select, string = assert, error, load, select, string
 local close = io.close
 local find, format, gsub, strsub = string.find, string.format, string.gsub, string.sub
-local concat, tinsert, open, print, debug, load = table.concat, table.insert, io.open, print, debug, load
+local concat, tinsert, open, debug, load = table.concat, table.insert, io.open, debug, load
 local printError, xpcall, traceback = _Gtme.printError, xpcall, traceback
 
 ----------------------------------------------------------------------------
@@ -95,12 +95,12 @@ local cache = {}
 -- @arg chunkname String with the name of the chunk, for debugging purposes.
 -- @return Function with the resulting translation.
 
-function compile (string, chunkname)
-	local f, err = cache[string]
+function compile(mstring, chunkname)
+	local f, err = cache[mstring]
 	if f then return f end
-	f, err = loadstring (translate (string), chunkname)
-	if not f then error (err, 3) end
-	cache[string] = f
+	f, err = loadstring(translate(mstring), chunkname)
+	if not f then error(err, 3) end
+	cache[mstring] = f
 	return f
 end
 
@@ -149,7 +149,6 @@ function include (filename, env)
 	close(fh)
 	-- translates the file into a function
 	local prog = compile (src, '@'..filename)
-	local _env
 	if env then
 		_env = getfenv (prog)
 		setfenv (prog, env)()

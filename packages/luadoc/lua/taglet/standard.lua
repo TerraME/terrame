@@ -2,7 +2,7 @@
 -- @release $Id: standard.lua,v 1.39 2007/12/21 17:50:48 tomas Exp $
 -------------------------------------------------------------------------------
 
-local assert, tostring, type = assert, tostring, type
+local assert, type = assert, type
 local collectgarbage = collectgarbage
 local load = load
 local _Gtme = _Gtme
@@ -11,14 +11,13 @@ local xpcall = xpcall
 local pcall = pcall
 local exit = os.exit
 local io, table, string = io, table, string
-local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
+local ipairs, pairs = ipairs, pairs
 local printNote, printError, printWarning = _Gtme.printNote, _Gtme.printError, _Gtme.printWarning
 local print, attributes = print, attributes
 local sessionInfo, belong = sessionInfo, belong
 local include = _Gtme.include
 local getn = getn
 local forEachElement = forEachElement
-local belong = belong
 local traceback = _Gtme.traceback
 local forEachFile = forEachFile
 local makepath = _Gtme.makePathCompatibleToAllOS
@@ -123,7 +122,7 @@ local function check_model(line)
 
 	local info
 	for _, pattern in ipairs(model_patterns) do
-		local r, _, l, id, arg = string.find(line, pattern)
+		local r, _, l, id = string.find(line, pattern)
 		if r ~= nil then
 			info = {
 				name = id,
@@ -261,8 +260,7 @@ local function parse_comment(block, first_line, doc_report, silent)
 			block.arg = {}
 			return
 		end
-	else
-		-- TODO: comment without any code. Does this means we are dealing
+		-- TODO: else - comment without any code. Does this means we are dealing
 		-- with a file comment?
 	end
 
@@ -427,7 +425,7 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 --		tables = class_iterator(blocks, "table"),
 	}
 --
-	local first = doc.files[fileName].doc[1]
+	first = doc.files[fileName].doc[1]
 	if first and modulename then
 		doc.files[fileName].author = first.author
 		doc.files[fileName].copyright = first.copyright
@@ -490,15 +488,15 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 		
 		-- make functions table
 		doc.modules[modulename].functions = {}
-		for f in class_iterator(blocks, "function")() do
-			if doc.modules[modulename].functions[f.name] then
+		for ff in class_iterator(blocks, "function")() do
+			if doc.modules[modulename].functions[ff.name] then
 				if not silent then
-					printError("Function "..f.name.." was already declared.")
+					printError("Function "..ff.name.." was already declared.")
 					doc_report.duplicated_functions = doc_report.duplicated_functions + 1
 				end
 			else
-				table.insert(doc.modules[modulename].functions, f.name)
-				doc.modules[modulename].functions[f.name] = f
+				table.insert(doc.modules[modulename].functions, ff.name)
+				doc.modules[modulename].functions[ff.name] = ff
 			end
 		end
 		
@@ -512,26 +510,25 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 	
 	-- make functions table
 	doc.files[fileName].functions = {}
-	for f in class_iterator(blocks, "function")() do
+	for ff in class_iterator(blocks, "function")() do
 		if not silent then
 			doc_report.functions = doc_report.functions + 1
 		end
 
-
-		if doc.files[fileName].functions[f.name] then
+		if doc.files[fileName].functions[ff.name] then
 			if not silent then
-				printError("Function "..f.name.." was already declared.")
+				printError("Function "..ff.name.." was already declared.")
 				doc_report.duplicated_functions = doc_report.duplicated_functions + 1
 			end
 		else
-			table.insert(doc.files[fileName].functions, f.name)
-			doc.files[fileName].functions[f.name] = f
+			table.insert(doc.files[fileName].functions, ff.name)
+			doc.files[fileName].functions[ff.name] = ff
 		end
 	end
 
 	-- make models table
 	doc.files[fileName].models = {}
-	for f in class_iterator(blocks, "model")() do
+	for ff in class_iterator(blocks, "model")() do
 		if not silent then
 			doc_report.models = doc_report.models + 1
 		end
@@ -547,8 +544,8 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 				doc_report.model_error = doc_report.model_error + quant
 			end
 		end
-		table.insert(doc.files[fileName].models, f.name)
-		doc.files[fileName].models[f.name] = f
+		table.insert(doc.files[fileName].models, ff.name)
+		doc.files[fileName].models[ff.name] = ff
 		doc.files[fileName].type = "model"
 	end
 	
@@ -587,13 +584,12 @@ end
 -- @return table with documentation
 -- @see parse_file
 function file(lua_path, fileName, doc, short_lua_path, doc_report, silent)
-	local patterns = { "%.lua$", "%.luadoc$" }
+	local patterns = {"%.lua$", "%.luadoc$"}
 	local valid = false
 	for _, pattern in ipairs(patterns) do
 		if string.find(lua_path..fileName, pattern) ~= nil then
 			valid = true
 		end
-		break
 	end
 	
 	if valid then
@@ -638,7 +634,7 @@ end
 -- @arg path directory to search
 -- @arg doc table with documentation
 -- @return table with documentation
-function directory(lua_path, file_, doc, short_lua_path, silent)
+function directory(lua_path, _, doc, short_lua_path, silent)
 	forEachFile(lua_path, function(f)
 		local fullpath = lua_path..f
 		local attr = attributes(fullpath)
@@ -658,7 +654,7 @@ end
 local function sort_doc(files)
 	table.sort(files)
 	-- sort list of functions by name alphabetically
-	for f, doc in pairs(files) do
+	for _, doc in pairs(files) do
 		if doc.functions then
 			table.sort(doc.functions, function(a, b) 
 				if a:match("^%W") then return false end
@@ -720,7 +716,6 @@ end
 
 -- report functions with no usage definition
 local function check_usage(files, doc_report)
-	local no_usage = {}
 	printNote("Checking @usage definition")
 	for i = 1, #files do
 		local file_name = files[i]
@@ -730,21 +725,10 @@ local function check_usage(files, doc_report)
 			for j = 1, #functions do
 				local function_name = functions[j]
 				if not functions[function_name].usage and not functions[function_name].deprecated then
-					if not no_usage[file_name] then
-						no_usage[file_name] = {}
-						table.insert(no_usage, file_name)
-					end
-					table.insert(no_usage[file_name], function_name)
 					printError("Function '"..function_name.."' has no @usage definition")
 					doc_report.lack_usage = doc_report.lack_usage + 1
 				end
 			end
-		end
-	end
-	for i = 1, #no_usage do
-		local file_name = no_usage[i]
-		for j = 1, #no_usage[file_name] do
-			local function_name = no_usage[file_name][j]
 		end
 	end
 
@@ -838,7 +822,7 @@ local function check_function_usage(files, doc_report)
 end
 
 -- Check counting of columns on table of arguments
-local function check_tab_cols(files)
+local function check_tab_cols()
 	--for _, file_name in ipairs(files) do
 		--local file = files[file_name]
 		--for _, func_name in ipairs(file.functions) do
@@ -954,7 +938,7 @@ function check_header(filepath)
 	return text
 end
 
-function check_example(filepath, doc, file_name, doc_report, silent)
+function check_example(filepath, _, _, doc_report, silent)
 	f = io.open(filepath)
 	local line
 
@@ -994,7 +978,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 
 			next_text = util.trim(next_text)
 			if readingArg then
-				local r, _, tag, text = string.find(next_text, "@([_%w%.]+)%s*(.*)")
+				local _, _, tag, mtext = string.find(next_text, "@([_%w%.]+)%s*(.*)")
 				if tag == nil then
 					argDescription = argDescription.." "..next_text
 				elseif tag == "arg" then
@@ -1003,11 +987,11 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 						table.insert(argdescriptions, argDescription)
 					end
 
-					local _a, _b, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
+					local _, _, name, desc = string.find(mtext, "^([_%w%.]+)%s+(.*)")
 
 					if desc == nil or name == nil then
 						if not silent then
-							printError("Could not infer argument and description of @arg from '"..text.."'")
+							printError("Could not infer argument and description of @arg from '"..mtext.."'")
 							doc_report.invalid_tags = doc_report.invalid_tags + 1	
 						end
 						argDescription = ""
@@ -1016,7 +1000,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 						argDescription = desc
 					end
 				elseif tag == "image" then
-					image = text
+					image = mtext
 				else
 					if not silent then
 						printError("Invalid tag '@"..tag.."' for example.")
@@ -1054,7 +1038,6 @@ end
 
 -------------------------------------------------------------------------------
 function start(files, examples, package_path, short_lua_path, doc_report, silent)
-	local s = sessionInfo().separator
 	assert(files, "file list not specified")
 	local lua_path = package_path..s.."lua"..s
 	local examples_path = package_path..s.."examples"..s
