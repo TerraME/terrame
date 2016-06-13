@@ -482,7 +482,7 @@ function _Gtme.buildConfig()
 	quitButton.text = "Cancel"
 	qt.ui.layout_add(buttonsLayout, quitButton)
 
-	local m2function = function()
+	m2function = function()
 		returnv = false
 		dialog:done(0)
 	end
@@ -971,7 +971,7 @@ local function graphicalInterface(package, model)
 	local attrTab
 	local mModel = Model
 	Model = function(attr) attrTab = attr end
-	local data = _Gtme.include(_Gtme.packageInfo(package).path..s.."lua"..s..model..".lua")
+	_Gtme.include(_Gtme.packageInfo(package).path..s.."lua"..s..model..".lua")
 	Model = mModel
 
 	_Gtme.configure(attrTab, model, package)
@@ -984,9 +984,7 @@ function _Gtme.traceback()
 	local s = "/" -- si.separator
 	local str = "Stack traceback:"
 
-	local func = ""
 	local last_function
-	local found_function = false
 
 	local info = debug.getinfo(level)
 	while info ~= nil do
@@ -1207,8 +1205,6 @@ function _Gtme.execConfigure(model, packageName)
 		end)
 		return false, errMsg
 	end
-
-	return false, "Unknow Error."
 end
 
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
@@ -1395,10 +1391,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				argCount = argCount + 1
 				dofile(path.."UnitTest.lua")
 
-				local s = sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				local errors = 0
-				local correct, errorMsg = xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
+				xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
 					os.exit(1)
@@ -1413,11 +1408,10 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				info_.mode = "debug"
 				argCount = argCount + 1
 
-				local s = sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."sketch.lua")
-				local correct, errorMsg = xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
+				xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
 					os.exit(1)
@@ -1431,7 +1425,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(0)
 			elseif arg == "-doc" then
 				info_.mode = "strict"
-				local s = _Gtme.sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				local errors = 0
 				local success, result = _Gtme.myxpcall(function() errors = _Gtme.executeDoc(package) end)
@@ -1442,7 +1435,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				os.exit(errors)
 			elseif arg == "-project" then
-				local s = _Gtme.sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."project.lua")
 				_Gtme.myxpcall(function() _Gtme.executeProject(package) end)
 				os.exit(0)
@@ -1529,8 +1521,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					end)
 					os.exit(0)
 				end
-			elseif arg == "-gui" then
-				-- this option was already recognized by the C++ level #79
 			else
 				_Gtme.printError("Option not recognized: "..arg)
 				os.exit(1)
@@ -1543,8 +1533,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			if not _Gtme.isLoaded("base") then
 				_Gtme.import("base")
 			end
-
-			local s = _Gtme.sessionInfo().separator
 
 			local displayFile = string.sub(arg, 0, string.len(arg) - 3).."tme"
 			displayFile = _Gtme.makePathCompatibleToAllOS(displayFile)
@@ -1664,7 +1652,6 @@ function _Gtme.myxpcall(func)
 end
 
 function _Gtme.tostring(self)
-	local rs = {}
 	local maxlen = 0
 
 	_Gtme.forEachElement(self, function(index)
