@@ -207,7 +207,7 @@ return {
 	end,
 	leave = function(unitTest)
 		local error_func = function()
-			Agent{}
+			local ag1 = Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
@@ -219,7 +219,7 @@ return {
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
 
 		error_func = function()
-			Agent{}
+			local ag1 = Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
@@ -231,7 +231,7 @@ return {
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
 
 		error_func = function()
-			Agent{}
+			local ag1 = Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 

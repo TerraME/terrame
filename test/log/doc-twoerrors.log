@@ -4,6 +4,7 @@ print when loading
 print when loading
 Parsing 'data.lua'
 Checking directory 'data'
+Processing lua files
 File 'data.csv' is not documented
 File 'brazilstates.dbf' is documented but does not exist in directory 'data'
 Checking directory 'font'

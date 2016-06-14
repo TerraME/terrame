@@ -297,8 +297,7 @@ function _Gtme.executeTests(package, fileName)
 
 	xpcall(function() _, overwritten = _G.getPackage(package) end, function(err)
 		printError("Package '"..package.."' could not be loaded.")
-		printError(err)
-		printError(_Gtme.traceback())
+		printError(_Gtme.traceback(err))
 		os.exit(1)
 	end)
 
@@ -554,12 +553,8 @@ function _Gtme.executeTests(package, fileName)
 
 				local found_error = false
 				xpcall(function() tests[eachTest](ut) end, function(err)
-					printError("Wrong execution, got error: '".._Gtme.makePathCompatibleToAllOS(err).."'.")
 					ut.functions_with_error = ut.functions_with_error + 1
-					local tb = _Gtme.traceback()
-					if tb ~= "" then
-						printError(tb)
-					end
+					printError("Wrong execution, got:\n".._Gtme.traceback(err))
 					found_error = true
 				end)
 
@@ -768,8 +763,7 @@ function _Gtme.executeTests(package, fileName)
 
 				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
-					printError("Error in ".._Gtme.makePathCompatibleToAllOS(err))
-					printError(_Gtme.traceback())
+					printError("Error in example: ".._Gtme.traceback(err))
 				end)
 
 				print = _Gtme.print

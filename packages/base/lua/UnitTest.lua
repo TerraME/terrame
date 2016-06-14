@@ -137,8 +137,8 @@ UnitTest_ = {
 			if self.current_file then
 				local err2 = string.match(err, self.current_file)
 				if err2 ~= self.current_file then
-					_Gtme.printError("Error in wrong file (possibly wrong stack level). It should occur in '".._Gtme.makePathCompatibleToAllOS(self.current_file).."', got '".._Gtme.makePathCompatibleToAllOS(err).."'.")
-					_Gtme.printError(_Gtme.traceback())
+					_Gtme.printError("Error in wrong file (possibly wrong stack level). It should occur in '".._Gtme.makePathCompatibleToAllOS(self.current_file).."', got:")
+					_Gtme.printError(_Gtme.traceback(err))
 					self.wrong_file = self.wrong_file + 1 -- SKIP
 					return
 				end
@@ -148,8 +148,8 @@ UnitTest_ = {
 
 			if shortError == nil then
 				self.wrong_file = self.wrong_file + 1 -- SKIP
-				_Gtme.printError("Error should contain line number (possibly wrong stack level), got: '"..err.."'.")
-				_Gtme.printError(_Gtme.traceback())
+				_Gtme.printError("Error should contain line number (possibly wrong stack level), got:")
+				_Gtme.printError(_Gtme.traceback(err))
 				return
 			end
 

@@ -8,10 +8,10 @@ Looking for package functions
 Skip looking for lines of source code
 Testing tests/Utils.lua
 Testing elapsedTime2
-Wrong execution, got error: '...o/github/terrame/bin/packages/buildafile/tests/Utils.lua:31: Error: It is not possible to use assertFile without a log directory location in a configuration file for the tests.'.
+Wrong execution, got:
+Error: It is not possible to use assertFile without a log directory location in a configuration file for the tests.
 Stack traceback:
-    File ...o/github/terrame/bin/packages/buildafile/tests/Utils.lua, line 31, in main chunk
-
+    File C:/TerraME/bin/packages/buildafile/tests/Utils.lua, line 31, in main chunk
 Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking Utils.lua
@@ -21,7 +21,7 @@ The package has no examples
 Skipping logs check
 
 Functional test report for package 'buildafile':
-Tests were executed in 1.28 seconds.
+Tests were executed in 0.66 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.

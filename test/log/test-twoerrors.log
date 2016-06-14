@@ -65,15 +65,15 @@ Testing w2
 Checking if all asserts were executed
 Testing tests/Utils.lua
 Testing belong2
-Error in ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua:32: Test should be true, got false.
+Error in C:/TerraME/bin/packages/twoerrors/tests/Utils.lua:32: Test should be true, got false.
 Test creates global variable(s): 'abcdef' (number).
 Test updates global variable(s): 'forEachCell' (changed from function to number).
 Testing call2
-Wrong execution, got error: '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:80: attempt to perform arithmetic on global 'aaa' (a nil value)'.
+Wrong execution, got:
+Error: attempt to perform arithmetic on global 'aaa' (a nil value)
 Stack traceback:
-    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 80, in call2
-    File ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua, line 42, in main chunk
-
+    File C:/TerraME/bin/packages/twoerrors/lua/Utils.lua, line 79, in function 'call2', in operator + (addition)
+    File C:/TerraME/bin/packages/twoerrors/tests/Utils.lua, line 42, in main chunk
 Testing createNeighborhood2
 Testing elapsedTime2
 Testing forEachAgent2
@@ -108,12 +108,12 @@ Checking if all asserts were executed
 Assert in line 244 was not executed.
 Testing tests/alternative/Cell.lua
 Testing Cell
-Error in ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:42: Test should be Map got Chart.
+Error in ...erraME/bin/packages/twoerrors/tests/alternative/Cell.lua:42: Test should be Map got Chart.
 Creating 'log/mac/chart_cell_select.bmp'.
-Wrong execution, got error: '...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:63: attempt to perform arithmetic on global 'abc' (a nil value)'.
+Wrong execution, got:
+Error: attempt to perform arithmetic on global 'abc' (a nil value)
 Stack traceback:
-    File ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua, line 63, in main chunk
-
+    File ...erraME/bin/packages/twoerrors/tests/alternative/Cell.lua, line 63, in main chunk
 Checking if all asserts were executed
 Assert in line 45 was not executed.
 Testing tests/alternative/ErrorHandling.lua
@@ -129,19 +129,19 @@ Testing switchInvalidArgumentSuggestionMsg2
 Checking if all asserts were executed
 Testing tests/alternative/Utils.lua
 Testing belong2
-Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:47: attempt to perform arithmetic on global 'aab' (a nil value)'.
+Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got:
+Error: attempt to perform arithmetic on global 'aab' (a nil value)
 Stack traceback:
-    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 47, in belong2
-    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 30, in nil
-    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 32, in main chunk
-
+    File C:/TerraME/bin/packages/twoerrors/lua/Utils.lua, line 46, in function 'belong2', in operator + (addition)
+    File ...rraME/bin/packages/twoerrors/tests/alternative/Utils.lua, line 30, in call to function 'belong2'
+    File ...rraME/bin/packages/twoerrors/tests/alternative/Utils.lua, line 32, in main chunk
 Testing call2
-Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:47: attempt to perform arithmetic on global 'aab' (a nil value)'.
+Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got:
+Error: attempt to perform arithmetic on global 'aab' (a nil value)
 Stack traceback:
-    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 47, in belong2
-    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 41, in nil
-    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 43, in main chunk
-
+    File C:/TerraME/bin/packages/twoerrors/lua/Utils.lua, line 46, in function 'belong2', in operator + (addition)
+    File ...rraME/bin/packages/twoerrors/tests/alternative/Utils.lua, line 41, in call to function 'belong2'
+    File ...rraME/bin/packages/twoerrors/tests/alternative/Utils.lua, line 43, in main chunk
 Testing elapsedTime2
 Testing forEachCellPair2
 Testing forEachElement2
@@ -173,35 +173,26 @@ Line 42 was not executed.
 Testing examples
 Testing continuous-rain
 Testing discrete-rain
-Error in ...errame/bin/packages/twoerrors/examples/discrete-rain.lua:28: attempt to perform arithmetic on global 'fff' (a nil value)
+Error in example: Error: attempt to perform arithmetic on global 'fff' (a nil value)
 Stack traceback:
-    File ...errame/bin/packages/twoerrors/examples/discrete-rain.lua, line 28, in main chunk
-
+    File ...erraME/bin/packages/twoerrors/examples/discrete-rain.lua, line 28, in call to operator + (addition)
 Creating 'log/mac/discrete-rain.log'.
 Testing ipd
-Error in ...o/github/terrame/bin/packages/twoerrors/examples/ipd.lua:195: attempt to perform arithmetic on global 'fff' (a nil value)
+Error in example: Error: attempt to perform arithmetic on global 'fff' (a nil value)
 Stack traceback:
-    File ...o/github/terrame/bin/packages/twoerrors/examples/ipd.lua, line 195, in main chunk
-
-Files 
-  '/Users/pedro/github/terrame/bin/packages/twoerrors/log/mac/ipd.log'
-and
-  '.terrametmp_kKgxl/ipd.log'
-are different.
-8d7
-< NTFT	90	1	0	120	87	112	80	490
+    File C:/TerraME/bin/packages/twoerrors/examples/ipd.lua, line 195, in call to operator + (addition)
 Checking logs
 File 'log/mac/chart_cell2.bmp' was not used by any assert.
 File 'log/mac/ipd2.log' was not used by any assert.
 
 Functional test report for package 'twoerrors':
-Tests were executed in 23.46 seconds.
-Logs were saved in '.terrametmp_UBhdy'.
+Tests were executed in 14.49 seconds.
+Logs were saved in '.terrametmp_TgnOm'.
 2 print() calls were found when loading the package.
 2 variables are overwritten when loading the package.
 2 invalid files or directories were found in directory 'test'.
 2 asserts were not executed at least once.
-2 out of 247 asserts failed.
+2 out of 260 asserts failed.
 2 out of 95 tested functions stopped with an unexpected error.
 2 out of 95 tested functions do not have at least one assert.
 2 out of 95 tested functions do not exist in the source code of the package.

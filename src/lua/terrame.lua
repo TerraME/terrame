@@ -83,7 +83,7 @@ initializeTerraLib()
 
 function _Gtme.printError(value)
 	if sessionInfo().color then
-		_Gtme.print(begin_red..value..end_color)
+		_Gtme.print(begin_red..tostring(value)..end_color)
 	else
 		_Gtme.print(value)
 	end
@@ -91,7 +91,7 @@ end
 
 function _Gtme.printNote(value)
 	if sessionInfo().color then
-		_Gtme.print(begin_green..value..end_color)
+		_Gtme.print(begin_green..tostring(value)..end_color)
 	else
 		_Gtme.print(value)
 	end
@@ -99,7 +99,7 @@ end
 
 function _Gtme.printWarning(value)
 	if sessionInfo().color then
-		_Gtme.print(begin_yellow..value..end_color)
+		_Gtme.print(begin_yellow..tostring(value)..end_color)
 	else
 		_Gtme.print(value)
 	end
@@ -977,10 +977,15 @@ local function graphicalInterface(package, model)
 	_Gtme.configure(attrTab, model, package)
 end
 
-function _Gtme.traceback()
+function _Gtme.traceback(err)
 	local level = 1
 
 	local si = sessionInfo()
+
+	if si.fullTraceback then
+		return _Gtme.ft(err)
+	end
+
 	local s = "/" -- si.separator
 	local str = "Stack traceback:"
 
@@ -1054,7 +1059,7 @@ function _Gtme.traceback()
 			last_function = func
 		end
 
-		if si.fullTraceback or (si.package and not (mb or m1 or m3)) or (not (m1 or m2 or m3 or m4)) then
+		if (si.package and not (mb or m1 or m3)) or (not (m1 or m2 or m3 or m4)) then
 			str = str.."\n    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
 
 			if info.currentline > 0 then
@@ -1069,10 +1074,47 @@ function _Gtme.traceback()
 
 	clean()
 
-	if str == "Stack traceback:\n" then
-		return ""
+	local line
+	local file
+
+	if err then
+		local pos = string.find(err, "Error:") -- TerraME error
+
+		if pos then -- error in some package
+			err = string.sub(err, pos)
+		else -- lua errror in the user's script
+			pos = string.find(err, ":") -- remove first ":"
+			file = string.sub(err, 1, pos - 1)
+			err = string.sub(err, pos + 1)
+			pos = string.find(err, ":") -- remove second ":"
+			line = string.sub(err, 1, pos - 1)
+
+			if tostring(tonumber(line)) ~= line then
+				pos = string.find(err, ":") -- remove first ":"
+				file = string.sub(err, 1, pos - 1)
+				err = string.sub(err, pos + 1)
+				pos = string.find(err, ":") -- remove second ":"
+				line = string.sub(err, 1, pos - 1)
+			end
+
+			err = "Error:"..string.sub(err, pos + 1)
+		end
 	end
-	return str
+
+	if str == "Stack traceback:" then
+		if file and line then
+			str = err.."\n"..str
+			str = str.."\n\tFile "..file..", line "..line
+		else
+			str = err
+		end
+	elseif str ~= "" then
+		str = err.."\n"..str
+	else
+		str = err
+	end
+
+	return _Gtme.makePathCompatibleToAllOS(str)
 end
 
 local function loadPackgesLibPath()
@@ -1099,7 +1141,6 @@ local function loadPackgesLibPath()
 		end
 	end)	
 end
-
 
 local function findExample(example, packageName)
     local file = example
@@ -1300,8 +1341,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 					if #models == 1 then
 						xpcall(function() graphicalInterface(package, models[1]) end, function(err)
-							_Gtme.printError(err)
-							_Gtme.printError(traceback())
+							_Gtme.printError(_Gtme.traceback(err))
 						end)
 						os.exit(1)
 					end
@@ -1394,8 +1434,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				local errors = 0
 				xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
-					_Gtme.printError(err)
-					--_Gtme.printError(traceback())
+					_Gtme.printError(_Gtme.traceback(err))
 					os.exit(1)
 				end)
 
@@ -1412,8 +1451,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."sketch.lua")
 				xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
-					_Gtme.printError(err)
-					--_Gtme.printError(traceback())
+					_Gtme.printError(_Gtme.traceback(err))
 					os.exit(1)
 				end)
 				os.exit(0)
@@ -1594,34 +1632,7 @@ function _Gtme.myxpcall(func)
 				str = ""
 			end
 
-			str = str..err.."\nStack traceback:\n"
-			clean()
-
-			local level = 1
-			local info = debug.getinfo(level)
-			while info ~= nil do
-				if info.short_src == "[C]" then
-					str = str.."    Internal C file"
-				else
-					str = str.."    File "..info.short_src
-				end
-
-				if info.currentline > 0 then
-					str = str..", line "..info.currentline
-				end
-
-				if info.name then
-					str = str..", in function "..info.name
-				else
-					str = str..", in main chunk"
-				end
-
-				str = str.."\n"
-				level = level + 1
-				info = debug.getinfo(level)
-			end
-
-			str = string.sub(str, 0, string.len(str) - 1)
+			str = str.._Gtme.ft(err)
 
 			if not _Gtme.sessionInfo().fullTraceback then
 				str = str.."\n\nTerraME installation:\n"..version()
@@ -1629,26 +1640,42 @@ function _Gtme.myxpcall(func)
 
 			return str
 		else
-			local msg = _Gtme.traceback()
-
-			local pos = string.find(err, "Error:") -- TerraME error
-
-			if not pos then -- lua errror
-				pos = string.find(err, ":") -- remove first ":"
-				err = string.sub(err, pos + 1)
-				pos = string.find(err, ":") -- remove second ":"
-				err = "Error:"..string.sub(err, pos + 1)
-			end
-
-			if msg ~= "" then
-				msg = err.."\n"..msg
-			else
-				msg = err
-			end
+			local msg = _Gtme.traceback(err)
 
 			return msg
 		end
 	end)
+end
+
+function _Gtme.ft(err)
+	local level = 1
+	local str = err.."\nStack traceback:"
+	local info = debug.getinfo(level)
+
+	clean()
+
+	while info ~= nil do
+		if info.short_src == "[C]" then
+			str = str.."\n    Internal C file"
+		else
+			str = str.."\n    File "..info.short_src
+		end
+
+		if info.currentline > 0 then
+			str = str..", line "..info.currentline
+		end
+
+		if info.name then
+			str = str..", in function "..info.name
+		else
+			str = str..", in main chunk"
+		end
+
+		level = level + 1
+		info = debug.getinfo(level)
+	end
+
+	return _Gtme.makePathCompatibleToAllOS(str)
 end
 
 function _Gtme.tostring(self)

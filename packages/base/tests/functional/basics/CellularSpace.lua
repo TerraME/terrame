@@ -1126,6 +1126,26 @@ yMin    number [0]
 		unitTest:assertEquals(4, sizes[2])
 		unitTest:assertEquals(32, sizes[3])
 		unitTest:assertEquals(64, sizes[4])
+
+		-- small cellular spaces
+		cs = CellularSpace{xdim = 2}
+
+		cs:createNeighborhood{
+		    strategy = "vonneumann",
+		    wrap = true
+		}
+
+		cs:createNeighborhood{
+		    wrap = true,
+			name = "2"
+		}
+
+		cs:createNeighborhood{
+		    wrap = true,
+			strategy = "mxn",
+			m = 5,
+			name = "3"
+		}
 	end,
 	cut = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

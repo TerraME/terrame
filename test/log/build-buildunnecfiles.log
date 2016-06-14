@@ -139,8 +139,6 @@ File 'buildunnecfiles/tests/unnec4.txt' is unnecessary and will be ignored.
 Checking fonts
 File 'buildunnecfiles/font/unnec7.txt' is unnecessary and will be ignored.
 Looking for hidden files
-File 'buildunnecfiles/.hidden' is unnecessary and will be ignored.
-File 'buildunnecfiles/lua/.hidden2' is unnecessary and will be ignored.
 Checking Models
 Model 'Tube' belongs to file 'Tube.lua'
 Checking license
@@ -149,13 +147,13 @@ Creating file 'buildunnecfiles_0.1.zip'
 Package 'buildunnecfiles' successfully zipped
 
 Build report for package 'buildunnecfiles':
-Package was built in 5.41 seconds.
+Package was built in 5.05 seconds.
 Build created file 'buildunnecfiles_0.1.zip'.
-Temporary files are saved in .terrame_buildunnecfiles_nrjsE
-MD5 sum for the package is 9fead1b91d31fe79bfec3a4361d0753f
+Temporary files are saved in .terrame_buildunnecfiles_CDETI
+MD5 sum for the package is cdbd0c40523098f5109aa0e5d2c53ae5 *buildunnecfiles_0.1.zip
 The package has a license file.
 Documentation was successfully built.
-9 files are unnecessary.
+7 files are unnecessary.
 4 errors were found in the tests.
 All Models are placed in the right files.
-Summing up, 13 problems were found along the build.
+Summing up, 11 problems were found along the build.

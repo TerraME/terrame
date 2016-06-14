@@ -30,7 +30,7 @@ local function getCoordCoupling(_, data)
 	return function(cell)
 		local neighborhood = Neighborhood()
 		local neighCell = data.target:get(cell.x, cell.y)
-		if neighCell then
+		if neighCell and not neighborhood:isNeighbor(neighCell) then
 			neighborhood:add(neighCell, 1)
 		end
 		return neighborhood
@@ -66,7 +66,9 @@ local function getDiagonalNeighborhood(cs, data)
 
 		local weight = 1 / #indexes
 		for _, index in ipairs(indexes) do
-			neigh:add(index, weight)
+			if not neigh:isNeighbor(index) then
+				neigh:add(index, weight)
+			end
 		end
 
 		return neigh
@@ -77,7 +79,7 @@ local function getFunctionNeighborhood(cs, data)
 	return function(cell)
 		local neighborhood = Neighborhood()
 		forEachCell(cs, function(neighCell)
-			if data.filter(cell, neighCell) then
+			if data.filter(cell, neighCell) and not neighborhood:isNeighbor(cell) then
 				neighborhood:add(neighCell, data.weight(cell, neighCell))
 			end
 		end)
@@ -114,7 +116,9 @@ local function getMooreNeighborhood(cs, data)
 
 		local weight = 1 / #indexes
 		for _, index in ipairs(indexes) do
-			neigh:add(index, weight)
+			if not neigh:isNeighbor(index) then
+				neigh:add(index, weight)
+			end
 		end
 		return neigh
 	end
@@ -140,7 +144,7 @@ local function getMxNNeighborhood(_, data)
 				end
 	
 				if neighCell then
-					if data.filter(cell, neighCell) then
+					if data.filter(cell, neighCell) and not neighborhood:isNeighbor(neighCell) then
 						neighborhood:add(neighCell, data.weight(cell, neighCell))
 					end
 				end
@@ -179,7 +183,9 @@ local function getVonNeumannNeighborhood(cs, data)
 
 		local weight = 1 / #indexes
 		for _, index in ipairs(indexes) do
-			neigh:add(index, weight)
+			if not neigh:isNeighbor(index) then
+				neigh:add(index, weight)
+			end
 		end
 
 		return neigh

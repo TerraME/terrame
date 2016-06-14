@@ -43,7 +43,7 @@ return{
 
 		instance:run()
 
-		unitTest:assertSnapshot(instance.ch, "model-chart.png")
+		unitTest:assertSnapshot(instance.ch, "model-chart.png", 0.2)
 	end
 }
 

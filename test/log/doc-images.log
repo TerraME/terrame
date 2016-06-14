@@ -2,6 +2,7 @@ Building documentation for package 'images'
 Loading package 'images'
 Parsing 'data.lua'
 Checking directory 'data'
+Processing lua files
 Package 'images' has no fonts
 Parsing lua files
 Parsing lua/Tube.lua
