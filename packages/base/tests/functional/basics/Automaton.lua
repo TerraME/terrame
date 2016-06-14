@@ -156,7 +156,7 @@ id     string [MyAutomaton]
 		t:run(1)
 		unitTest:assert(true)
 
-		local cs = CellularSpace{xdim = 2}
+		cs = CellularSpace{xdim = 2}
 		local cont = 0
 
 		at1 = Automaton{
