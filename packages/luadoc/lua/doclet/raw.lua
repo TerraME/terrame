@@ -8,5 +8,5 @@
 -- Generate the output.
 -- @arg doc Table with the structured documentation.
 
-function start (doc)
+function start ()
 end

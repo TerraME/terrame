@@ -173,7 +173,7 @@ function Automaton(data)
 
 	setmetatable(data, metaTableAutomaton_)
 	cObj:setReference(data)
-	for i, ud in pairs(data) do
+	for _, ud in pairs(data) do
 		local t = type(ud)
 		if t == "Trajectory" or t == "State" then cObj:add(ud.cObj_) end
 	end

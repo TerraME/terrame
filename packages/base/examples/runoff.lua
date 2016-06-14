@@ -24,7 +24,7 @@ cell = Cell{
 	runoff = function(cell)
 		local quantity = cell.past.water / #cell:getNeighborhood()
 
-		forEachNeighbor(cell, function(cell, neighbor)
+		forEachNeighbor(cell, function(_, neighbor)
 			neighbor.water = neighbor.water + quantity
 		end)
 	end

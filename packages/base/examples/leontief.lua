@@ -56,7 +56,7 @@ family = Agent {
 
 		ag.sum_cost = ag.sum_cost + ag.received
 
-		forEachConnection(ag, function(ag, neigh, weigh)
+		forEachConnection(ag, function(_, neigh, weigh)
 			ag:message{receiver = neigh, subject = "money", value = ag.received * weigh}
 		end)
 		ag.received = 0
@@ -98,7 +98,7 @@ capital_formation = Agent{
 
 		ag.sum_cost = ag.sum_cost + ag.received
 
-		forEachConnection(ag, function(ag, neigh, weigh)
+		forEachConnection(ag, function(_, neigh, weigh)
 			ag:message{receiver = neigh, subject = "money", value = ag.received * weigh}
 		end)
 		ag.received = 0
@@ -122,7 +122,6 @@ basicAgent = Agent{
 	execute = function(ag)
 		if ag.received < 0.001 and ag.received > -0.001 then return end
 
-		local vr = ag.received - ag.received * (ag.taxes + ag.salary + ag.costs)
 		local cost       = ag.received * ag.costs
 		local salary     = ag.received * ag.salary
 		local taxes      = ag.received * ag.taxes
@@ -150,7 +149,7 @@ basicAgent = Agent{
 		ag:message{receiver = government, subject = "profit",     value = profit}
 --		ag:message{receiver = family,     subject = "money",      value = salary}
 
-		forEachConnection(ag, function(ag, neigh, weigh)
+		forEachConnection(ag, function(_, neigh, weigh)
 			ag:message{receiver = neigh, subject = "money", value = cost * weigh}
 		end)
 		ag.received = 0
@@ -300,7 +299,7 @@ end
 scenarios = {default_scenario, scenario_1, scenario_2, scenario_3, scenario_4, scenario_5}
 
 execute = function(time)
-	for i = 1, time do
+	for _ = 1, time do
 		s:execute()
 	end
 end

@@ -37,24 +37,7 @@ function filePath(filename, package)
 	if isFile(file) or isDir(file) then
 		return file
 	else
-		local msg = "File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'."
-
-		if string.endswith(filename, ".tview") then
-			local luafile = string.sub(filename, 1, -6).."lua"
-
-			if isFile(packageInfo(package).data..s..luafile) then
-				msg = msg.." Please run 'terrame -package "..package.." -project' to create it."
-				customError(msg)
-			end
-		end
-
-		local suggest = suggestion(filename, dir(packageInfo(package).data))
-
-		if suggest then
-			msg = msg.." Do you mean '"..suggest.."'?"
-		end
-
-		customError(msg)
+		customError("File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'.")
 	end
 end
 
@@ -131,8 +114,6 @@ function import(package, reload)
 		for _, file in ipairs(all_files) do
 			count_files[file] = 0 -- SKIP
 		end
-
-		local i, file
 
 		if load_sequence then -- SKIP
 			for _, file in ipairs(load_sequence) do
@@ -243,8 +224,6 @@ function getPackage(pname)
 		count_files[file] = 0 -- SKIP
 	end
 
-	local i, file
-
 	local overwritten = {}
 
 	local mt = getmetatable(_G)
@@ -354,22 +333,22 @@ function packageInfo(package)
 	result.data = pkgdirectory..s.."data"
 
 	if result.depends then
-		local s = string.gsub(result.depends, "([%w]+ %(%g%g %d[.%d]+%))", function(v)
+		local ss = string.gsub(result.depends, "([%w]+ %(%g%g %d[.%d]+%))", function()
 			return ""
 		end)
 
-		if s ~= "" then -- SKIP
-			s = string.gsub(s, "%, ", function(v)
+		if ss ~= "" then -- SKIP
+			ss = string.gsub(s, "%, ", function()
 				return ""
 			end)
 		end
 
-		if s ~= "" then -- SKIP
+		if ss ~= "" then -- SKIP
 			customError("Wrong description of 'depends' in description.lua of package '"..package.."'. Unrecognized '"..s.."'.")
 		end
 
 		local mdepends = {}
-		s = string.gsub(result.depends, "([%w]+) %((%g%g) (%d[.%d]+)%)", function(value, v2, v3)
+		string.gsub(result.depends, "([%w]+) %((%g%g) (%d[.%d]+)%)", function(value, v2, v3)
 			local mversion = _Gtme.getVersion(v3) -- SKIP
 			table.insert(mdepends, {package = value, operator = v2, version = mversion})
 		end)

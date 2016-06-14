@@ -37,7 +37,7 @@ return{
 
 		unitTest:assertSnapshot(vt1, "visualtable_cell.bmp", 0.059)
 
-		local world = Agent{
+		world = Agent{
 			count = 0,
 			mcount = function(self)
 				return self.count + 1
@@ -66,7 +66,7 @@ return{
 		unitTest:assertSnapshot(vt4, "visualtable_society.bmp", 0.059)
 		unitTest:assertSnapshot(vt5, "visualtable_society_select.bmp", 0.059)
 
-		local soc = Society{
+		soc = Society{
 			instance = Agent{},
 			quantity = 3,
 			total = 10
@@ -76,7 +76,7 @@ return{
 
 		unitTest:assertSnapshot(vt6, "visualtable_society_agent.bmp", 0.059)
 
-		local world = CellularSpace{
+		world = CellularSpace{
 			xdim = 10,
 			count = 0,
 			mcount = function(self)

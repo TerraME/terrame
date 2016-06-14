@@ -53,7 +53,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 5))
 
-		local error_func = function()
+		error_func = function()
 			Map{target = c, select = "value"}
 		end
 		unitTest:assertError(error_func, "It was not possible to infer argument 'grouping'.")
@@ -537,10 +537,10 @@ return{
 		unitTest:assertError(error_func, "It is not possible to create a Map from an empty Society.")
 
 		-- placement
-		local ag = Agent{}
-		local soc = Society{instance = ag, quantity = 10}
-		local cs = CellularSpace{xdim = 10}
-		local env = Environment{soc, cs}
+		ag = Agent{}
+		soc = Society{instance = ag, quantity = 10}
+		cs = CellularSpace{xdim = 10}
+		env = Environment{soc, cs}
 		env:createPlacement()
 
 		error_func = function()

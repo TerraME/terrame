@@ -5,7 +5,7 @@
 
 local assert, type, tostring, ipairs = assert, type, tostring, ipairs
 local string, table = string, table
-local printError, pairs = _Gtme.printError, pairs
+local printError = _Gtme.printError
 local include = _Gtme.include
 
 local s = sessionInfo().separator
@@ -35,11 +35,6 @@ end
 
 -------------------------------------------------------------------------------
 local function description(tag, block, text)
-	block[tag] = text
-end
-
--------------------------------------------------------------------------------
-local function release(tag, block, text)
 	block[tag] = text
 end
 
@@ -153,9 +148,9 @@ local function arg(tag, block, text, doc_report, silent)
 	end
 
 	-- match table(dot)argument
-	local arg_tab, field = name:match("(.-)%.(.*)")
+	local arg_tab, mfield = name:match("(.-)%.(.*)")
 	if arg_tab then
-		name = field
+		name = mfield
 		-- match documented argument with declared argument
 		local i
 		for idx, v in ipairs(block[tag]) do
@@ -203,8 +198,8 @@ local function release(tag, block, text)
 end
 
 -------------------------------------------------------------------------------
-local function ret(tag, block, text)
-	tag = "ret"
+local function ret(_, block, text)
+	local tag = "ret"
 	if type(block[tag]) == "string" then
 		block[tag] = { block[tag], text }
 	elseif type(block[tag]) == "table" then

@@ -47,7 +47,7 @@ return {
 
 		local countEvent = 0
 		local clock1 = Timer{
-			Event{start = 0, action = function(event) 
+			Event{start = 0, action = function()
 				countEvent = countEvent + 1
 			end}
 		}
@@ -218,7 +218,7 @@ time    number [-inf]
 			unitTest:assertEquals(1, event:getPeriod())
 		end})
 
-		timer2:add(Event{action = function(event)
+		timer2:add(Event{action = function()
 			cont = cont + 1
 			return false
 		end})
@@ -273,7 +273,7 @@ time    number [-inf]
 
 		local result = ""
 
-		local timer = Timer{
+		timer = Timer{
 			Event{action = function(event)
 				result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
         	end},
@@ -301,7 +301,7 @@ time 4 event 1 priority 0
 		-- negative time
 		local cont = 0
 		local t = Timer{
-			Event{start = -10, action = function(ev)
+			Event{start = -10, action = function()
 				cont = cont + 1
 			end}
 		}
@@ -310,9 +310,9 @@ time 4 event 1 priority 0
 		unitTest:assertEquals(cont, 6)
 
 		--	time fraction
-		local cont = 0
-		local t = Timer{
-			Event{start = 0.1, period = 0.1, action = function(ev)
+		cont = 0
+		t = Timer{
+			Event{start = 0.1, period = 0.1, action = function()
 				cont = cont + 0.1
 			end}
 		}
@@ -353,7 +353,7 @@ time 4 event 1 priority 0
  
 				unitTest:assertEquals(1, event:getPeriod())
 			end},
-			Event{action = function(event)
+			Event{action = function()
 				cont = cont + 1
 				return false
 			end}
@@ -371,7 +371,7 @@ time 4 event 1 priority 0
 
 		cont = 0
 		timer2:reset()
-		timer2:add(Event{ action = function(event)
+		timer2:add(Event{ action = function()
 			cont = cont + 1
 		end})
 

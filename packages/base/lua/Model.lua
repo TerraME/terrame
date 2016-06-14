@@ -48,7 +48,7 @@ Model_ = {
 	-- }
 	--
 	-- Tube:configure()
-	configure = function(self)
+	configure = function()
 	end,
 	--- User-defined function to execute the Model in a given time step. It is useful
 	-- when using the Model as an action for a given Event.
@@ -87,13 +87,13 @@ Model_ = {
 	--
 	-- m:run()
 	run = function(self)
-		forEachOrderedElement(self, function(name, value, mtype)
+		forEachOrderedElement(self, function(_, value, mtype)
 			if mtype == "Timer" then
 				value:run(self.finalTime)
 				return false
 			elseif mtype == "Environment" then
 				local found = false
-				forEachElement(value, function(mname, mvalue, mmtype)
+				forEachElement(value, function(_, _, mmtype)
 					if mmtype == "Timer" then
 						found = true
 						return false
@@ -133,7 +133,7 @@ Model_ = {
 	-- print(m.finalTime) -- 10
 	-- @see ErrorHandling:verify
 	-- @see ErrorHandling:customError
-	init = function(self)
+	init = function()
 	end,
 	--- Return the parameters of the Model as they were defined. The result must not
 	-- be changed, otherwise it might affect the Model itself.
@@ -155,7 +155,7 @@ Model_ = {
 	-- print(params.par1)
 	-- print(type(params.par2))
 	-- print(params.init) -- nil
-	getParameters = function(self)
+	getParameters = function()
 	end,
 	--- User-defined function to define the distribution of components in the graphical
 	-- interface. If this function is not
@@ -202,7 +202,7 @@ Model_ = {
 	-- }
 	--
 	-- Sugarscape:configure()
-	interface = function(self)
+	interface = function()
 	end,
 	--- Notify the Observers of the Model instance.
 	-- @arg modelTime A number representing the notification time. The default value is zero.
@@ -231,6 +231,7 @@ Model_ = {
 	--
 	-- scenario1:run()
 	notify = function(self, modelTime)
+		self.cObj_:notify(modelTime) -- SKIP
 	end
 }
 
@@ -431,15 +432,15 @@ function Model(attrTab)
 		return model(v, debug.getinfo(1).name)
 	end
 
-	local indexFunction = function(model, v) -- in this case, the type of this model will be "model"
+	local indexFunction = function(mmodel, v) -- in this case, the type of this model will be "model"
 		local options = {
 			run = function()
-				local m = model{}
+				local m = mmodel{}
 				m:run()
 				return m
 			end,
 			configure = function()
-				_Gtme.configure(attrTab, model) -- SKIP
+				_Gtme.configure(attrTab, mmodel) -- SKIP
 			end,
 			getParameters = function()
 				local result = {}
@@ -457,7 +458,7 @@ function Model(attrTab)
 		local mresult = options[v]
 
 		if not mresult then
-			mresult = rawget(model, v)
+			mresult = rawget(mmodel, v)
 			if not mresult and v ~= "interface" then
 				customError("It is not possible to call any function from a Model but run() or configure().")
 			end
@@ -497,7 +498,7 @@ function Model(attrTab)
 					return -- this error will be shown later on
 				end
 
-				forEachElement(value, function(mname, mvalue, mtype)
+				forEachElement(value, function(mname, _, _)
 					if attrTabValue[mname] == nil then
 						local msg = "Argument '"..name.."."..mname.."' is unnecessary."
 
@@ -705,7 +706,7 @@ function Model(attrTab)
 					customError("The object has two running objects: '"..name.."' (Timer) and "..text..".")
 				end
 			elseif mtype == "Environment" then
-				forEachElement(value, function(mname, mvalue, mmtype)
+				forEachElement(value, function(_, _, mmtype)
 					if mmtype == "Timer" then
 						if text == "" then
 							text = "'"..name.."' (Environment)"

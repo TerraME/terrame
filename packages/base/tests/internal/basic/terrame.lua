@@ -35,7 +35,7 @@ return{
 		unitTest:assertEquals(t[2], 3)
 		unitTest:assertEquals(t[3], 4)
 
-		local t = {}
+		t = {}
 
 		table.insert(t, 2)
 		table.insert(t, 1, 3)

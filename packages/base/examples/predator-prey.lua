@@ -11,7 +11,7 @@ predator = Agent{
 	energy = 40,
 	name = "predator",
 	execute = function(self)
-		forEachNeighbor(self:getCell(), function(cell, neigh)
+		forEachNeighbor(self:getCell(), function(_, neigh)
 			other = neigh:getAgent()
 			if not other then return end
 

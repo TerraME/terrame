@@ -275,11 +275,11 @@ return {
 		pgData.table = string.lower(areaLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "area"
-		local attribute = "area_percent"
-		local select = "FID"
-		local area = nil
-		local default = 0
+		operation = "area"
+		attribute = "area_percent"
+		select = "FID"
+		area = nil
+		default = 0
 		tl:attributeFill(proj, layerName2, presLayerName, areaLayerName, attribute, operation, select, area, default)
 		
 		local areaSet = tl:getDataSet(proj, areaLayerName)
@@ -310,11 +310,11 @@ return {
 		pgData.table = string.lower(countLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "count"
-		local attribute = "count"
-		local select = "FID"
-		local area = nil
-		local default = 0
+		operation = "count"
+		attribute = "count"
+		select = "FID"
+		area = nil
+		default = 0
 		tl:attributeFill(proj, layerName2, areaLayerName, countLayerName, attribute, operation, select, area, default)
 		
 		local countSet = tl:getDataSet(proj, countLayerName)
@@ -345,11 +345,11 @@ return {
 		pgData.table = string.lower(distLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "distance"
-		local attribute = "distance"
-		local select = "FID"
-		local area = nil
-		local default = nil
+		operation = "distance"
+		attribute = "distance"
+		select = "FID"
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName2, countLayerName, distLayerName, attribute, operation, select, area, default)
 		
 		local distSet = tl:getDataSet(proj, distLayerName)
@@ -385,11 +385,11 @@ return {
 		pgData.table = string.lower(minLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "minimum"
-		local attribute = "minimum"
-		local select = "POPULACAO_"
-		local area = nil
-		local default = nil
+		operation = "minimum"
+		attribute = "minimum"
+		select = "POPULACAO_"
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName3, distLayerName, minLayerName, attribute, operation, select, area, default)
 		
 		local minSet = tl:getDataSet(proj, minLayerName)
@@ -421,11 +421,11 @@ return {
 		pgData.table = string.lower(maxLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "maximum"
-		local attribute = "maximum"
-		local select = "POPULACAO_"
-		local area = nil
-		local default = nil
+		operation = "maximum"
+		attribute = "maximum"
+		select = "POPULACAO_"
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName3, minLayerName, maxLayerName, attribute, operation, select, area, default)
 		
 		local maxSet = tl:getDataSet(proj, maxLayerName)
@@ -457,11 +457,11 @@ return {
 		pgData.table = string.lower(percLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "coverage"
-		local attribute = "perc"
-		local select = "ADMINISTRA"
-		local area = nil
-		local default = nil
+		operation = "coverage"
+		attribute = "perc"
+		select = "ADMINISTRA"
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName2, maxLayerName, percLayerName, attribute, operation, select, area, default)
 		
 		local percentSet = tl:getDataSet(proj, percLayerName)
@@ -494,11 +494,11 @@ return {
 		pgData.table = string.lower(stdevLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "stdev"
-		local attribute = "stdev"
-		local select = "POPULACAO_"
-		local area = nil
-		local default = nil
+		operation = "stdev"
+		attribute = "stdev"
+		select = "POPULACAO_"
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName3, percLayerName, stdevLayerName, attribute, operation, select, area, default)
 		
 		local stdevSet = tl:getDataSet(proj, stdevLayerName)
@@ -531,11 +531,11 @@ return {
 		pgData.table = string.lower(meanLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "average"
-		local attribute = "mean"
-		local select = "POPULACAO_"
-		local area = false
-		local default = nil
+		operation = "average"
+		attribute = "mean"
+		select = "POPULACAO_"
+		area = false
+		default = nil
 		tl:attributeFill(proj, layerName3, stdevLayerName, meanLayerName, attribute, operation, select, area, default)
 		
 		local meanSet = tl:getDataSet(proj, meanLayerName)
@@ -568,11 +568,11 @@ return {
 		pgData.table = string.lower(weighLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "average"
-		local attribute = "weighted"
-		local select = "POPULACAO_"
-		local area = true
-		local default = nil
+		operation = "average"
+		attribute = "weighted"
+		select = "POPULACAO_"
+		area = true
+		default = nil
 		tl:attributeFill(proj, layerName3, meanLayerName, weighLayerName, attribute, operation, select, area, default)
 		
 		local weighSet = tl:getDataSet(proj, weighLayerName)
@@ -606,11 +606,11 @@ return {
 		pgData.table = string.lower(interLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "mode"
-		local attribute = "mode_int"
-		local select = "POPULACAO_"
-		local area = true
-		local default = nil
+		operation = "mode"
+		attribute = "mode_int"
+		select = "POPULACAO_"
+		area = true
+		default = nil
 		tl:attributeFill(proj, layerName3, weighLayerName, interLayerName, attribute, operation, select, area, default)
 		
 		local interSet = tl:getDataSet(proj, interLayerName)
@@ -644,11 +644,11 @@ return {
 		pgData.table = string.lower(occurLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "mode"
-		local attribute = "mode_occur"
-		local select = "POPULACAO_"
-		local area = false
-		local default = nil
+		operation = "mode"
+		attribute = "mode_occur"
+		select = "POPULACAO_"
+		area = false
+		default = nil
 		tl:attributeFill(proj, layerName3, interLayerName, occurLayerName, attribute, operation, select, area, default)
 		
 		local occurSet = tl:getDataSet(proj, occurLayerName)
@@ -683,11 +683,11 @@ return {
 		pgData.table = string.lower(sumLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "sum"
-		local attribute = "sum"
-		local select = "POPULACAO_"
-		local area = false
-		local default = nil
+		operation = "sum"
+		attribute = "sum"
+		select = "POPULACAO_"
+		area = false
+		default = nil
 		tl:attributeFill(proj, layerName3, occurLayerName, sumLayerName, attribute, operation, select, area, default)
 		
 		local sumSet = tl:getDataSet(proj, sumLayerName)
@@ -722,11 +722,11 @@ return {
 		pgData.table = string.lower(wsumLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "sum"
-		local attribute = "wsum"
-		local select = "POPULACAO_"
-		local area = true
-		local default = nil
+		operation = "sum"
+		attribute = "wsum"
+		select = "POPULACAO_"
+		area = true
+		default = nil
 		tl:attributeFill(proj, layerName3, sumLayerName, wsumLayerName, attribute, operation, select, area, default)
 		
 		local wsumSet = tl:getDataSet(proj, wsumLayerName)
@@ -766,14 +766,14 @@ return {
 		pgData.table = string.lower(percTifLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "coverage"
-		local attribute = "rperc"
-		local select = 0
-		local area = nil
-		local default = nil
+		operation = "coverage"
+		attribute = "rperc"
+		select = 0
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName4, wsumLayerName, percTifLayerName, attribute, operation, select, area, default)
 		
-		local percentSet = tl:getDataSet(proj, percTifLayerName)
+		percentSet = tl:getDataSet(proj, percTifLayerName)
 		
 		unitTest:assertEquals(getn(percentSet), 402) 
 		
@@ -805,11 +805,11 @@ return {
 		pgData.table = string.lower(rmeanLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "average"
-		local attribute = "rmean"
-		local select = 0
-		local area = nil
-		local default = nil
+		operation = "average"
+		attribute = "rmean"
+		select = 0
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName4, percTifLayerName, rmeanLayerName, attribute, operation, select, area, default)
 		
 		local rmeanSet = tl:getDataSet(proj, rmeanLayerName)
@@ -845,11 +845,11 @@ return {
 		pgData.table = string.lower(rminLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "minimum"
-		local attribute = "rmin"
-		local select = 0
-		local area = nil
-		local default = nil
+		operation = "minimum"
+		attribute = "rmin"
+		select = 0
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName4, rmeanLayerName, rminLayerName, attribute, operation, select, area, default)
 		
 		local rminSet = tl:getDataSet(proj, rminLayerName)
@@ -885,11 +885,11 @@ return {
 		pgData.table = string.lower(rmaxLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "maximum"
-		local attribute = "rmax"
-		local select = 0
-		local area = nil
-		local default = nil
+		operation = "maximum"
+		attribute = "rmax"
+		select = 0
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName4, rminLayerName, rmaxLayerName, attribute, operation, select, area, default)
 		
 		local rmaxSet = tl:getDataSet(proj, rmaxLayerName)
@@ -925,11 +925,11 @@ return {
 		pgData.table = string.lower(rstdevLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "stdev"
-		local attribute = "rstdev"
-		local select = 0
-		local area = nil
-		local default = nil
+		operation = "stdev"
+		attribute = "rstdev"
+		select = 0
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName4, rmaxLayerName, rstdevLayerName, attribute, operation, select, area, default)
 		
 		local rstdevSet = tl:getDataSet(proj, rstdevLayerName)
@@ -965,11 +965,11 @@ return {
 		pgData.table = string.lower(rsumLayerName)
 		tl:dropPgTable(pgData)
 		
-		local operation = "sum"
-		local attribute = "rsum"
-		local select = 0
-		local area = nil
-		local default = nil
+		operation = "sum"
+		attribute = "rsum"
+		select = 0
+		area = nil
+		default = nil
 		tl:attributeFill(proj, layerName4, rstdevLayerName, rsumLayerName, attribute, operation, select, area, default)
 		
 		local rsumSet = tl:getDataSet(proj, rsumLayerName)

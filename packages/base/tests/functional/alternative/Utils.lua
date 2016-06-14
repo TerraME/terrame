@@ -35,12 +35,12 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
-		local error_func = function()
+		error_func = function()
 			call("value", "sum")
 		end
 		unitTest:assertError(error_func, "Cannot access elements from an object of type 'string'.")
 	
-		local error_func = function()
+		error_func = function()
 			call(Cell{}, "sum")
 		end
 		unitTest:assertError(error_func, "Function 'sum' does not exist.")
@@ -53,7 +53,7 @@ return{
 	end,
 	d = function(unitTest)
 		local error_func = function()
-			local gt = d()
+			d()
 		end
 		unitTest:assertError(error_func, [[Error: bad arguments in diferential equation constructor "d{arguments}". TerraME has found 0 arguments.
  - the first attribute of a differential equantion must be a function which return a number. It can also be a table of functions like that,
@@ -66,7 +66,7 @@ return{
 		local myf = function() end
 
 		error_func = function()
-			local gt = d{{myf, myf}, {1}, 0, 0, 10} 
+			d{{myf, myf}, {1}, 0, 0, 10} 
 		end
 		unitTest:assertError(error_func, "You should provide the same number of differential equations and initial conditions.")
 	end,
@@ -181,7 +181,7 @@ return{
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
+		error_func = function()
 			forEachFile(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
@@ -283,103 +283,103 @@ return{
 	end,
 	getNames = function(unitTest)
 		local error_func = function()
-			local gn = getNames(2)
+			getNames(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
 	end,
 	greaterByAttribute = function(unitTest)
 		local error_func = function()
-			local gt = greaterByAttribute(2)
+			greaterByAttribute(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
-			local gt = greaterByAttribute("cover", "==")
+			greaterByAttribute("cover", "==")
 		end
 		unitTest:assertError(error_func, incompatibleValueMsg(2, "<, >, <=, or >=", "=="))
 	end,
 	greaterByCoord = function(unitTest)
 		local error_func = function()
-			local gt = greaterByCoord("==")
+			greaterByCoord("==")
 		end
 		unitTest:assertError(error_func, incompatibleValueMsg(1, "<, >, <=, or >=", "=="))
 	end,
 	integrate = function(unitTest)
 		local error_func = function()
-			local gt = integrate()
+			integrate()
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
 
-		local error_func = function()
-			local gt = integrate{step = "a", equation = function() end, initial = 0}
+		error_func = function()
+			integrate{step = "a", equation = function() end, initial = 0}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("step", "number", "a"))
 
-		local error_func = function()
-			local gt = integrate{step = -0.5, equation = function() end, initial = 0}
+		error_func = function()
+			integrate{step = -0.5, equation = function() end, initial = 0}
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg("step", -0.5))
 
-		local error_func = function()
-			local gt = integrate{step = 0.1, method = "euler", equation = function() end, initial = 0}
+		error_func = function()
+			integrate{step = 0.1, method = "euler", equation = function() end, initial = 0}
 		end
 		unitTest:assertError(error_func, defaultValueMsg("method", "euler"))
 
-		local error_func = function()
-			local gt = integrate{step = 0.1, method = "eler", equation = function() end, initial = 0}
+		error_func = function()
+			integrate{step = 0.1, method = "eler", equation = function() end, initial = 0}
 		end
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("eler", "method", "euler"))
 
-		local error_func = function()
-			local gt = integrate{equation = 0.1}
+		error_func = function()
+			integrate{equation = 0.1}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("equation", "table", 0.1))
 
-		local error_func = function()
-			local gt = integrate{equation = function() end, initial = "aaa"}
+		error_func = function()
+			integrate{equation = function() end, initial = "aaa"}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("initial", "table", "aaa"))
 
-		local error_func = function()
-			local gt = integrate{equation = {function() end, 2}}
+		error_func = function()
+			integrate{equation = {function() end, 2}}
 		end
 		unitTest:assertError(error_func, "Table 'equation' should contain only functions, got number.")
 
-		local error_func = function()
-			local gt = integrate{equation = {function() end, function() end}, initial = {1, "b"}}
+		error_func = function()
+			integrate{equation = {function() end, function() end}, initial = {1, "b"}}
 		end
 		unitTest:assertError(error_func, "Table 'initial' should contain only numbers, got string.")
 
-		local error_func = function()
-			local gt = integrate{equation = {function() end, function() end}, initial = {1, 2, 3}}
+		error_func = function()
+			integrate{equation = {function() end, function() end}, initial = {1, 2, 3}}
 		end
 		unitTest:assertError(error_func, "Tables equation and initial shoud have the same size.")
 
-		local error_func = function()
-			local gt = integrate{equation = function() end, initial = 1, step = 5, metod = 3}
+		error_func = function()
+			integrate{equation = function() end, initial = 1, step = 5, metod = 3}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("metod", "method"))
 
-		local event = Event{start = 0.5, period = 2, priority = 1, action = function(event) end}
+		local event = Event{start = 0.5, period = 2, priority = 1, action = function() end}
 
-		local error_func = function()
-			local gt = integrate{equation = function() end, initial = 1, event = event, a = 2}
+		error_func = function()
+			integrate{equation = function() end, initial = 1, event = event, a = 2}
 		end
 		unitTest:assertError(error_func, "Argument 'a' should not be used together with argument 'event'.")
 
-		local error_func = function()
-			local gt = integrate{equation = function() end, initial = 1, event = event, b = 2}
+		error_func = function()
+			integrate{equation = function() end, initial = 1, event = event, b = 2}
 		end
 		unitTest:assertError(error_func, "Argument 'b' should not be used together with argument 'event'.")
 	end,
 	levenshtein = function(unitTest)
 		local error_func = function()
-			local gt = levenshtein(2)
+			levenshtein(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	
 		error_func = function()
-			local gt = levenshtein("abc", 2)
+			levenshtein("abc", 2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 	end,
@@ -389,12 +389,12 @@ return{
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
 
-		local error_func = function()
+		error_func = function()
 			x = makeDataTable{first = "a"}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("first", "number", "a"))
 
-		local error_func = function()
+		error_func = function()
 			x = makeDataTable{
 				first = 2000,
 				step = "a"
@@ -402,7 +402,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("step", "number", "a"))
 
-		local error_func = function()
+		error_func = function()
 			x = makeDataTable{
 				first = 2000,
 				step = 10,
@@ -411,7 +411,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("demand", "table", "a"))
 
-		local error_func = function()
+		error_func = function()
 			x = makeDataTable{
 				first = 2000,
 				step = 10,
@@ -420,7 +420,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Invalid 'last' value (2025). It could be 2020.0 or 2030.0.")
 
-		local error_func = function()
+		error_func = function()
 			x = makeDataTable{
 				first = 2000,
 				step = 10
@@ -428,7 +428,7 @@ return{
 		end
 		unitTest:assertError(error_func, "It is not possible to create a table without any data.")
 
-		local error_func = function()
+		error_func = function()
 			x = makeDataTable{
 				first = 2000,
 				step = 10,
@@ -438,7 +438,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Argument 'demand' should have 4.0 elements, got 3.")
 
-		local error_func = function()
+		error_func = function()
 			x = makeDataTable{
 				first = 2000,
 				step = 10,

@@ -59,7 +59,7 @@ return{
 		unitTest:assertNil(m.parent)
 		m:update()
 
-		local error_func = function()
+		error_func = function()
 			m:save("abc.png")
 		end
 		unitTest:assertError(error_func, "It is not possible to call 'save' with graphics disabled.")
@@ -67,16 +67,16 @@ return{
 		local timer
 
 		timer = Timer{
-			ev1 = Event{action = function(event) timer:notify() end},
+			ev1 = Event{action = function() timer:notify() end},
 		}
 
-		local c = Clock{target = timer}
+		c = Clock{target = timer}
 
 		unitTest:assertType(c, "Clock")
 		unitTest:assertNil(c.parent)
 		c:update()
 
-		local error_func = function()
+		error_func = function()
 			c:save("abc.png")
 		end
 		unitTest:assertError(error_func, "It is not possible to call 'save' with graphics disabled.")
@@ -94,12 +94,12 @@ return{
 		unitTest:assertNil(ts.parent)
 		ts:update()
 
-		local error_func = function()
+		error_func = function()
 			ts:save("abc.png")
 		end
 		unitTest:assertError(error_func, "It is not possible to call 'save' with graphics disabled.")
 
-		local world = Cell{
+		world = Cell{
 			count = 0,
 			mcount = function(self)
 				return self.count + 1
@@ -112,7 +112,7 @@ return{
 		unitTest:assertNil(vt1.parent)
 		vt1:update()
 
-		local error_func = function()
+		error_func = function()
 			vt1:save("abc.png")
 		end
 		unitTest:assertError(error_func, "It is not possible to call 'save' with graphics disabled.")
@@ -131,7 +131,7 @@ return{
 
 		local cs = CellularSpace{xdim = 10}
 
-		local m = Map{
+		Map{
 			target = cs
 		}
 
@@ -140,10 +140,10 @@ return{
 		local timer
 
 		timer = Timer{
-			ev1 = Event{action = function(event) timer:notify() end},
+			ev1 = Event{action = function() timer:notify() end},
 		}
 
-		local c = Clock{target = timer}
+		c = Clock{target = timer}
 
 		unitTest:assertSnapshot(c, "enable_graphics_clock.png")
 
@@ -158,7 +158,7 @@ return{
 
 		unitTest:assertSnapshot(ts, "enable_graphics_textscreen.png")
 
-		local world = Cell{
+		world = Cell{
 			count = 0,
 			mcount = function(self)
 				return self.count + 1

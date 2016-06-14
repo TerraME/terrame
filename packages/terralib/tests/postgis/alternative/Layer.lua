@@ -390,7 +390,7 @@ return {
 			rmFile(projName)
 		end
 		
-		local projName = "amazonia.tview"
+		projName = "amazonia.tview"
 
 		if isFile(projName) then
 			rmFile(projName)
@@ -403,7 +403,7 @@ return {
 			title = "The Amazonia"
 		}
 
-		local layerName1 = "Sampa"
+		layerName1 = "Sampa"
 		Layer{
 			project = proj,
 			name = layerName1,
@@ -413,14 +413,14 @@ return {
 		local clName1 = "Sampa_Cells"
 		local tName1 = "add_cellslayer_alternative"
 		
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
-		local password = "postgres"
-		local database = "postgis_22_sample"
-		local encoding = "CP1252"
+		host = "localhost"
+		port = "5432"
+		user = "postgres"
+		password = "postgres"
+		database = "postgis_22_sample"
+		encoding = "CP1252"
 
-		local sourceMandatory = function() 
+		sourceMandatory = function() 
 			Layer{
 				project = proj,
 				-- source = "postgis",
@@ -465,7 +465,7 @@ return {
 		end
 		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("name"))
 
-		local userMandatory = function()
+		userMandatory = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -480,7 +480,7 @@ return {
 		end
 		unitTest:assertError(userMandatory, mandatoryArgumentMsg("user"))
 
-		local passMandatory = function()
+		passMandatory = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -495,7 +495,7 @@ return {
 		end
 		unitTest:assertError(passMandatory, mandatoryArgumentMsg("password"))
 
-		local dbMandatory = function()
+		dbMandatory = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -510,7 +510,7 @@ return {
 		end
 		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))
 
-		local sourceNotString = function()
+		sourceNotString = function()
 			Layer{
 				project = proj,
 				source = 123,
@@ -540,7 +540,7 @@ return {
 		end
 		unitTest:assertError(inputNotString, incompatibleTypeMsg("input", "string", 123))
 
-		local layerNotString = function()
+		layerNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -585,7 +585,7 @@ return {
 		end
 		unitTest:assertError(resMustBePositive, positiveArgumentMsg("resolution", -1))
 
-		local hostNotString = function()
+		hostNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -601,7 +601,7 @@ return {
 		end
 		unitTest:assertError(hostNotString, incompatibleTypeMsg("host", "string", 123))
 
-		local portNotString = function()
+		portNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -617,7 +617,7 @@ return {
 		end
 		unitTest:assertError(portNotString, incompatibleTypeMsg("port", "number", "123"))
 
-		local passNotString = function()
+		passNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -632,7 +632,7 @@ return {
 		end
 		unitTest:assertError(passNotString, incompatibleTypeMsg("password", "string", 123))
 
-		local dbNotString = function()
+		dbNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -647,7 +647,7 @@ return {
 		end
 		unitTest:assertError(dbNotString, incompatibleTypeMsg("database", "string", 123))
 
-		local tableNotString = function()
+		tableNotString = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -694,8 +694,8 @@ return {
 		end
 		unitTest:assertError(boxNonBoolean, incompatibleTypeMsg("box", "boolean", 123))
 
-		local wrongHost = "inotexist"
-		local hostNonExists = function()
+		wrongHost = "inotexist"
+		hostNonExists = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -712,8 +712,8 @@ return {
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
 								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 20)
 
-		local wrongPort = 2345
-		local portWrong = function()
+		wrongPort = 2345
+		portWrong = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -729,8 +729,8 @@ return {
 		end
 		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 18)
 		
-		local nonuser = "usernotexists"
-		local userNotExists = function()
+		nonuser = "usernotexists"
+		userNotExists = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -746,8 +746,8 @@ return {
 		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.")
 
-		local wrongPass = "passiswrong"
-		local passWrong = function()
+		wrongPass = "passiswrong"
+		passWrong = function()
 			Layer{
 				project = proj,
 				source = "postgis",
@@ -773,7 +773,7 @@ return {
 			encoding = encoding
 		}
 
-		local tl = TerraLib{}
+		tl = TerraLib{}
 		tl:dropPgTable(pgData)
 
 		Layer{

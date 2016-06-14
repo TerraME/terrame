@@ -40,7 +40,7 @@ return{
 			cell.value = r:number()
 		end)
 
-		local m = Map{
+		m = Map{
 			target = cs,
 			select = "value",
 			min = 0,
@@ -83,7 +83,7 @@ return{
 		m:update()
 		unitTest:assertSnapshot(m, "map_uniquevalue.bmp")
 
-		local m = Map{
+		m = Map{
 			target = cs,
 			color = "blue"
 		}
@@ -93,7 +93,7 @@ return{
 		m:update()
 		unitTest:assertSnapshot(m, "map_background.bmp")
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			xdim = 20
 		}
 		
@@ -101,7 +101,7 @@ return{
 			cell.w = cell.x
 		end)
 
-		local m = Map{
+		m = Map{
 			target = cs,
 			select = "w",
 			min = 0,
@@ -112,7 +112,7 @@ return{
 
 		unitTest:assertSnapshot(m, "map_rdylgn.bmp")
 
-		local r = Random{seed = 10}
+		r = Random{seed = 10}
 
 		local c = Cell{
 			mvalue = function()
@@ -120,12 +120,12 @@ return{
 			end
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			xdim = 5,
 			instance = c
 		}
 
-		local m = Map{
+		m = Map{
 			target = cs,
 			select = "mvalue",
 			min = 0,
@@ -137,8 +137,8 @@ return{
 		m:update()
 		unitTest:assertSnapshot(m, "map_function.bmp")
 
-		local c = Random{"low", "medium", "high"}
-		local cs = CellularSpace{xdim = 5}
+		c = Random{"low", "medium", "high"}
+		cs = CellularSpace{xdim = 5}
 		forEachCell(cs, function(cell)
 			cell.level = c:sample()
 		end)
@@ -155,15 +155,15 @@ return{
 		m:update()
 		unitTest:assertSnapshot(m, "map_string.bmp")
 
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
-		local r = Random()
+		r = Random()
 
 		forEachCell(cs, function(cell)
 			cell.value = r:number()
 		end)
 
-		local m = Map{
+		m = Map{
 			target = cs,
 			select = "value",
 			min = 0,
@@ -173,7 +173,7 @@ return{
 			color = "Blues"
 		}
 
-		local mi = Map{
+		mi = Map{
 			target = cs,
 			select = "value",
 			min = 0,
@@ -192,7 +192,7 @@ return{
 			cell.w = cell.x
 		end)
 
-		local m = Map{
+		m = Map{
 			target = cs,
 			select = "w",
 			min = 0,
@@ -204,7 +204,7 @@ return{
 
 		unitTest:assertSnapshot(m, "map_quantil_3.bmp")
 
-		local m = Map{
+		m = Map{
 			target = cs,
 			select = "w",
 			min = 0,
@@ -236,12 +236,12 @@ return{
 			value = 5
 		}
 
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
 		local env = Environment{cs, soc}
 		env:createPlacement()
 
-		local m = Map{
+		m = Map{
 			target = soc,
 			font = "JLS Smiles Sampler",
 			symbol = "smile",
@@ -251,14 +251,14 @@ return{
 		m:update()
 		unitTest:assertSnapshot(m, "map_society_background.bmp")
 
-		local m = Map{
+		m = Map{
 			target = soc,
 			background = "green",
 			symbol = "turtle"
 		}
 		unitTest:assertSnapshot(m, "map_society_background2.bmp")
 
-		local m = Map{
+		m = Map{
 			target = soc,
 			select = "class",
 			value = {"small", "large"},
@@ -267,7 +267,7 @@ return{
 
 		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp")
 
-		local m = Map{
+		m = Map{
 			target = soc,
 			color = "white",
 			background = "darkGreen",
@@ -276,15 +276,15 @@ return{
 
 		unitTest:assertSnapshot(m, "map_society_white.bmp")
 
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
-		local r = Random()
+		r = Random()
 
 		forEachCell(cs, function(cell)
 			cell.value = r:number()
 		end)
 
-		local m = Map{
+		m = Map{
 			target = cs,
 			select = "value",
 			min = 0,
@@ -298,12 +298,12 @@ return{
 		unitTest:assertSnapshot(m, "map_save.bmp")
 
 		local singleFooAgent = Agent{}
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 		local e = Environment{cs, singleFooAgent}
 
 		e:createPlacement()
 
-		local m = Map{
+		m = Map{
 			target = singleFooAgent,
 			symbol = "O",
 			size = 30
@@ -311,10 +311,9 @@ return{
 
 		unitTest:assertSnapshot(m, "map_single_agent_config.bmp")
 
-		local singleFooAgent = Agent{}
-		local soc = Society{instance = Agent{}, quantity = 10}
-		local cs = CellularSpace{xdim = 10}
-		local e = Environment{cs, soc}
+		soc = Society{instance = Agent{}, quantity = 10}
+		cs = CellularSpace{xdim = 10}
+		e = Environment{cs, soc}
 
 		Random():reSeed(123456789)
 		e:createPlacement()
@@ -327,7 +326,7 @@ return{
 			end
 		end)
 
-		local m = Map{
+		m = Map{
 			target = cs,
 			select = "state",
 			value = {"empty", "full"},
@@ -342,11 +341,11 @@ return{
 
 		unitTest:assertSnapshot(m2, "map_society_location.bmp")
 
-		for i = 1, 5 do
+		for _ = 1, 5 do
 			soc:sample():die()
 		end
 
-		local m2 = Map{
+		m2 = Map{
 			background = "gray",
 			target = soc,
 			color = "red"
@@ -360,7 +359,7 @@ return{
 			end
 		}
 
-		local cs = CellularSpace {
+		cs = CellularSpace {
 			xdim = 4,
 			instance = cell
 		}
@@ -374,19 +373,19 @@ return{
 		
 		unitTest:assertSnapshot(map, "map_string_values.bmp")
 		
-		local ag = Agent{}
+		ag = Agent{}
 
-		local soc = Society{
+		soc = Society{
 			instance = ag,
 			quantity = 40
 		}
 
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
-		local env = Environment{cs, soc}
+		env = Environment{cs, soc}
 		env:createPlacement{max = 5}
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			grouping = "placement",
 			min = 0,
@@ -397,18 +396,18 @@ return{
 
 		unitTest:assertSnapshot(map, "map_placement.bmp")
 
-		local c = Cell{
+		c = Cell{
 			mvalue = function()
 				return r:number()
 			end
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			xdim = 5,
 			instance = c
 		}
 
-		local m = Map{
+		m = Map{
 			target = cs,
 			select = "mvalue",
 			slices = 10,

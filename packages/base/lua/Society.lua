@@ -30,7 +30,7 @@ local function getEmptySocialNetwork()
 	end
 end
 
-local function getSocialNetworkByCell(soc, data)
+local function getSocialNetworkByCell(_, data)
 	return function(agent)
 		local rs = SocialNetwork()
 		forEachAgent(agent:getCell(data.placement), function(agentwithin)
@@ -55,10 +55,10 @@ local function getSocialNetworkByFunction(soc, data)
 	end
 end
 
-local function getSocialNetworkByNeighbor(soc, data)
+local function getSocialNetworkByNeighbor(_, data)
 	return function(agent)
 		local rs = SocialNetwork()
-		forEachNeighbor(agent:getCell(data.placement), data.neighborhood, function(cell, neigh)
+		forEachNeighbor(agent:getCell(data.placement), data.neighborhood, function(_, neigh)
 			forEachAgent(neigh, function(agentwithin)
 				rs:add(agentwithin, 1)
 			end)
@@ -131,8 +131,8 @@ Society_ = {
 			local metaTable = {__index = self.instance, __tostring = _Gtme.tostring}
 			setmetatable(agent, metaTable)
 
-			forEachOrderedElement(self.instance, function(idx, value, mtype)
-				if mtype == "Random" then
+			forEachOrderedElement(self.instance, function(idx, value, mmtype)
+				if mmtype == "Random" then
 					agent[idx] = value:sample()
 				end
 			end)
@@ -389,7 +389,7 @@ Society_ = {
 				if name == "1" then name = nil end
 				self:createSocialNetwork{strategy = "void", name = name}
 
-				for i = 1, data.quantity do
+				for _ = 1, data.quantity do
 					local ag1 = self:sample()
 					local ag2 = ag1
 
@@ -505,11 +505,11 @@ Society_ = {
 
 		if data.symmetric then
 			forEachAgent(self, function(agent)
-				forEachConnection(agent, name, function(agent, connection)
+				forEachConnection(agent, name, function(magent, connection)
 					local sn = connection:getSocialNetwork(name)
 
-					if not sn:isConnection(agent) then
-						sn:add(agent)
+					if not sn:isConnection(magent) then
+						sn:add(magent)
 					end
 				end)
 			end)
@@ -552,14 +552,13 @@ Society_ = {
 		return self.agents[position]
 	end,
 	--- Return a given Agent based on its position.
-	-- @arg position The position of the Agent that will be returned.
 	-- @deprecated Society:get
-	getAgent = function(self, position)
+	getAgent = function()
 		deprecatedFunction("getAgent", "get")
 	end,
 	--- Return a vector with the Agents of the Society.
 	-- @deprecated Society.agents
-	getAgents = function(self)
+	getAgents = function()
 		deprecatedFunction("getAgents", ".agents")
 	end,
 	--- Notify all the Agents of the Society.
@@ -632,10 +631,9 @@ Society_ = {
 
 			customError("Could not remove the Agent (id = '"..tostring(arg.id).."').")
 		elseif type(arg) == "function" then
-			local ret = false
 			for i = #self.agents, 1, -1  do
 				if arg(self.agents[i]) == true then
-					ret = self:remove(self.agents[i])
+					self:remove(self.agents[i])
 				end
 			end
 		else
@@ -659,7 +657,7 @@ Society_ = {
 	end,
 	--- Return the number of Agents in the Society.
 	-- @deprecated Society:#
-	size = function(self)
+	size = function()
 		deprecatedFunction("size", "operator #")
 	end,
 	--- Split the Society into a set of Groups according to a classification strategy. The
@@ -791,7 +789,7 @@ Society_ = {
 		end
 
 		local k = 1
-		for i = 1, getn(self.messages) do
+		for _ = 1, getn(self.messages) do
 			local kmessage = self.messages[k]
 			kmessage.delay = kmessage.delay - delay
 
@@ -938,12 +936,12 @@ function Society(data)
 				end
 
 				data[attribute] = function(soc, args)
-					return forEachAgent(soc, function(agent)
-						if type(agent[attribute]) ~= "function" then
-							incompatibleTypeError(attribute, "function", agent[attribute])
+					return forEachAgent(soc, function(magent)
+						if type(magent[attribute]) ~= "function" then
+							incompatibleTypeError(attribute, "function", magent[attribute])
 						end
 
-						return agent[attribute](agent, args)
+						return magent[attribute](magent, args)
 					end)
 				end
 			elseif mtype == "number" or (mtype == "Random" and value.distrib ~= "categorical" and (value.distrib ~= "discrete" or type(value[1]) == "number")) then
@@ -954,12 +952,12 @@ function Society(data)
 
 				data[attribute] = function(soc)
 					local quantity = 0
-					forEachAgent(soc, function(agent)
-						if type(agent[attribute]) ~= "number" then
-							incompatibleTypeError(attribute, "number", agent[attribute])
+					forEachAgent(soc, function(magent)
+						if type(magent[attribute]) ~= "number" then
+							incompatibleTypeError(attribute, "number", magent[attribute])
 						end
 
-						quantity = quantity + agent[attribute]
+						quantity = quantity + magent[attribute]
 					end)
 					return quantity
 				end
@@ -971,8 +969,8 @@ function Society(data)
 
 				data[attribute] = function(soc)
 					local quantity = 0
-					forEachAgent(soc, function(agent)
-						if agent[attribute] then
+					forEachAgent(soc, function(magent)
+						if magent[attribute] then
 							quantity = quantity + 1
 						end
 					end)
@@ -986,12 +984,12 @@ function Society(data)
 
 				data[attribute] = function(soc)
 					local result = {}
-					forEachAgent(soc, function(agent)
-						local value = agent[attribute]
-						if result[value] then
-							result[value] = result[value] + 1
+					forEachAgent(soc, function(magent)
+						local mvalue = magent[attribute]
+						if result[mvalue] then
+							result[mvalue] = result[mvalue] + 1
 						else
-							result[value] = 1
+							result[mvalue] = 1
 						end
 					end)
 					return result
@@ -1028,7 +1026,7 @@ function Society(data)
 		positiveTableArgument(data, "quantity", true)
 
 		local quantity = data.quantity
-		for i = 1, quantity do
+		for _ = 1, quantity do
 			data:add{}
 		end
 	end

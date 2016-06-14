@@ -29,7 +29,7 @@ local cs = CellularSpace{xdim = 10}
 local state1 = State{
 	id = "seco",
 	Jump{
-		function(event, agent, cell)
+		function(_, agent)
 			agent.acum = agent.acum + 1
 			if agent.cont < MAX_COUNT then 
 				agent.cont = agent.cont + 1
@@ -45,7 +45,7 @@ local state1 = State{
 local state2 = State{
 	id = "molhado",
 	Jump{
-		function(event, agent, cell)
+		function(_, agent)
 			agent.acum = agent.acum + 1
 			if agent.cont < MAX_COUNT then 
 				agent.cont = agent.cont + 1
@@ -57,8 +57,6 @@ local state2 = State{
 		target = "seco"
 	}
 }
-
-local ev = Event{action = function() end}
 
 return{
 	Automaton = function(unitTest)
@@ -94,7 +92,7 @@ return{
 		}
 
 		local count = 0
-		for k, v in pairs(at1) do
+		for _, v in pairs(at1) do
 			if type(v) == "State" then
 				count = count + 1
 			end		
@@ -157,10 +155,10 @@ id     string [MyAutomaton]
 		t:run(1)
 		unitTest:assert(true)
 
-		local cs = CellularSpace{xdim = 2}
+		cs = CellularSpace{xdim = 2}
 		local cont = 0
 
-		local at1 = Automaton{
+		at1 = Automaton{
 			it = Trajectory{
 				target = cs
 			},
@@ -168,7 +166,7 @@ id     string [MyAutomaton]
 			State{
 				id = "first",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -183,7 +181,7 @@ id     string [MyAutomaton]
 			State{
 				id = "second",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -197,7 +195,7 @@ id     string [MyAutomaton]
 			}
 		}
 
-		local env = Environment{cs, at1}
+		Environment{cs, at1}
 
 		local ev = Event{action = function() end}
 
@@ -207,7 +205,7 @@ id     string [MyAutomaton]
 		unitTest:assertEquals(4, at1.cont)
 		unitTest:assertEquals(4, cont)
 
-		local ev = Event{start = 4, action = function() end}
+		ev = Event{start = 4, action = function() end}
 		at1.it:sort(greaterByCoord(">"))
 		at1:execute(ev)
 		unitTest:assertEquals(8, at1.cont)
@@ -218,7 +216,7 @@ id     string [MyAutomaton]
 		unitTest:assertEquals(10, at1.cont)
 		unitTest:assertEquals(10, at1.cont)
 
-		at1.it:filter(function(cell) return true end)
+		at1.it:filter(function() return true end)
 		at1:execute(ev)
 		unitTest:assertEquals(3, at1.cont)
 		unitTest:assertEquals(14, cont)
@@ -230,7 +228,7 @@ id     string [MyAutomaton]
 		unitTest:assert(true)
 	end,
 	getStateName = function(unitTest)
-		local cs = CellularSpace{xdim = 2}
+		cs = CellularSpace{xdim = 2}
 		local cont = 0
 
 		local at1 = Automaton{
@@ -241,7 +239,7 @@ id     string [MyAutomaton]
 			State{
 				id = "first",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -256,7 +254,7 @@ id     string [MyAutomaton]
 			State{
 				id = "second",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -270,7 +268,7 @@ id     string [MyAutomaton]
 			}
 		}
 
-		local env = Environment{cs, at1}
+		Environment{cs, at1}
 
 		local ev = Event{action = function() end}
 
@@ -366,7 +364,7 @@ id     string [MyAutomaton]
 			}
 		}
 
-		local env = Environment{cs, at1}
+		Environment{cs, at1}
 
 		local e = Event{action = function() end}
 		at1:execute(e)

@@ -24,12 +24,8 @@
 
 return{
 	Layer = function(unitTest)
-		local noDataArguments = function()
-			local cl = Layer()
-		end
-
 		local attrLayerNonString = function()
-			local cl = Layer{project = "myproj.tview", name = false}
+			Layer{project = "myproj.tview", name = false}
 		end
 		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", false))
 
@@ -38,7 +34,7 @@ return{
 		end
 
 		local projNotExists = function()
-			local cl = Layer{project = "myproj.tview", name = "cells"}
+			Layer{project = "myproj.tview", name = "cells"}
 		end
 		unitTest:assertError(projNotExists, "Project file '".."myproj.tview".."' does not exist.")
 
@@ -51,7 +47,7 @@ return{
 
 		local layerName = "any"
 		local layerDoesNotExists = function()
-			local cl = Layer{
+			Layer{
 				project = proj,
 				name = layerName
 			}
@@ -62,7 +58,7 @@ return{
 
 		local projName = "amazonia2.tview"
 
-		local proj = Project{
+		proj = Project{
 			file = projName,
 			clean = true
 		}
@@ -72,7 +68,7 @@ return{
 		end
 		unitTest:assertError(noDataInLayer, tableArgumentMsg())
 
-		local attrLayerNonString = function()
+		attrLayerNonString = function()
 			Layer{
 				project = proj,
 				name = 123,
@@ -101,7 +97,7 @@ return{
 		end
 		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))
 
-		local layerName = "Sampa"
+		layerName = "Sampa"
 		Layer{
 			project = proj,
 			name = layerName,
@@ -152,9 +148,9 @@ return{
 			rmFile(projName)
 		end
 		
-		local projName = "amazonia.tview"
+		projName = "amazonia.tview"
 
-		local proj = Project{
+		proj = Project{
 			file = projName,
 			clean = true
 		}
@@ -169,7 +165,7 @@ return{
 		end
 		unitTest:assertError(attrInputNonString, incompatibleTypeMsg("input", "string", 123))
 
-		local attrLayerNonString = function()
+		attrLayerNonString = function()
 			Layer{
 				project = proj,
 				input = "amazonia-states",
@@ -209,7 +205,7 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
 
-		local noFilePass = function()
+		noFilePass = function()
 			Layer{
 				project = proj,
 				input = "amazonia-states",
@@ -219,11 +215,10 @@ return{
 		end
 		unitTest:assertError(noFilePass, mandatoryArgumentMsg("source"))
 
-		local attrSourceNonString = function()
+		attrSourceNonString = function()
 			Layer{
 				input = "amazonia-states",
 				project = proj,
-				name = "cells",
 				resolution = 0.7,
 				name = "layer",
 				file = "cells.shp",
@@ -277,7 +272,7 @@ return{
 		end
 		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..shp1.."' already exists. Please set clean = true or remove it manually.")
 
-		local sourceInvalid = function()
+		sourceInvalid = function()
 			Layer{
 				project = proj,
 				input = layerName1,
@@ -289,8 +284,8 @@ return{
 		unitTest:assertError(sourceInvalid, "Source 'dbf' is invalid.")
 
 		local filePath1 = filePath("sampa.shp", "terralib")
-		local source = "tif"
-		local inconsistentExtension = function()
+		source = "tif"
+		inconsistentExtension = function()
 			Layer{
 				project = proj,
 				input = layerName1,
@@ -314,7 +309,7 @@ return{
 		end
 		unitTest:assertError(inputNonExists, "Input layer 'no_exists' was not found.")
 
-		local layer = Layer{
+		Layer{
 			project = proj,
 			name = "cbers",
 			file = filePath("cbers_rgb342_crop1.tif", "terralib")
@@ -610,7 +605,7 @@ return{
 		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'.")
 
 		local maxValueLayerName = clName1.."_Maximum"
-		local selectNotString = function()
+		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
@@ -622,7 +617,7 @@ return{
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
-		local defaultNotNumber = function()
+		defaultNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
@@ -635,7 +630,7 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		local dummyNotNumber = function()
+		dummyNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
@@ -648,7 +643,7 @@ return{
 		end
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
-		local unnecessaryArgument = function()
+		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
@@ -662,7 +657,7 @@ return{
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 
 		local coverageLayerName = clName1.."_Percentage"
-		local selectNotString = function()
+		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
@@ -674,7 +669,7 @@ return{
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
-		local defaultNotNumber = function()
+		defaultNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
@@ -687,7 +682,7 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		local dummyNotNumber = function()
+		dummyNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
@@ -700,7 +695,7 @@ return{
 		end
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
-		local unnecessaryArgument = function()
+		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
@@ -714,7 +709,7 @@ return{
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 
 		local stdevLayerName = clName1.."_Stdev"
-		local selectNotString = function()
+		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
@@ -726,7 +721,7 @@ return{
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
-		local defaultNotNumber = function()
+		defaultNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
@@ -739,7 +734,7 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		local dummyNotNumber = function()
+		dummyNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
@@ -752,7 +747,7 @@ return{
 		end
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
-		local defaultNotNumber = function()
+		defaultNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
@@ -766,7 +761,7 @@ return{
 		unitTest:assertError(defaultNotNumber, unnecessaryArgumentMsg("defaut", "default"))
 
 		local averageLayerName = clName1.."_Average"
-		local selectNotString = function()
+		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
@@ -791,7 +786,7 @@ return{
 		end
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
-		local defaultNotNumber = function()
+		defaultNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
@@ -804,7 +799,7 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		local dummyNotNumber = function()
+		dummyNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
@@ -817,7 +812,7 @@ return{
 		end
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
-		local unnecessaryArgument = function()
+		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
@@ -831,7 +826,7 @@ return{
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 
 		local modeLayerName = clName1.."_Majority"
-		local selectNotString = function()
+		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
@@ -843,7 +838,7 @@ return{
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
-		local areaNotBoolean = function()
+		areaNotBoolean = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
@@ -856,7 +851,7 @@ return{
 		end
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
-		local defaultNotNumber = function()
+		defaultNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
@@ -869,7 +864,7 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		local dummyNotNumber = function()
+		dummyNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
@@ -882,7 +877,7 @@ return{
 		end
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
-		local unnecessaryArgument = function()
+		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
@@ -896,7 +891,7 @@ return{
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 
 		local sumLayerName = clName1.."_Sum"
-		local selectNotString = function()
+		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
@@ -908,7 +903,7 @@ return{
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
-		local areaNotBoolean = function()
+		areaNotBoolean = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
@@ -921,7 +916,7 @@ return{
 		end
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
-		local defaultNotNumber = function()
+		defaultNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
@@ -934,7 +929,7 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		local dummyNotNumber = function()
+		dummyNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
@@ -947,7 +942,7 @@ return{
 		end
 		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
-		local unnecessaryArgument = function()
+		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
@@ -980,7 +975,7 @@ return{
 			file = filePath("Localidades_pt.shp", "terralib")
 		}
 		
-		local presenceLayerName = clName1.."_Presence_2000"
+		presenceLayerName = clName1.."_Presence_2000"
 		local filePath2 = presenceLayerName..".shp"
 
 		if isFile(filePath2) then
@@ -988,7 +983,7 @@ return{
 		end
 
 		local cW = customWarning 
-		customWarning = function(msg) return end
+		customWarning = function() return end
 
 		cl:fill{
 			operation = "presence",
@@ -1068,7 +1063,7 @@ return{
 		-- unitTest:assertError(layerNotIntersect, "The two layers do not intersect.") -- SKIP
 
 		local rminLayerName = clName1.."_Minimum"
-		local areaUnnecessary = function()
+		areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
@@ -1081,7 +1076,7 @@ return{
 		end
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
-		local selectNotNumber = function()
+		selectNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
@@ -1094,7 +1089,7 @@ return{
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local rmaxLayerName = clName1.."_Maximum"
-		local areaUnnecessary = function()
+		areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
@@ -1107,7 +1102,7 @@ return{
 		end
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
-		local selectNotNumber = function()
+		selectNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
@@ -1120,7 +1115,7 @@ return{
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local rpercentLayerName = clName1.."_Percentage"
-		local areaUnnecessary = function()
+		areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
@@ -1133,7 +1128,7 @@ return{
 		end
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
-		local selectNotNumber = function()
+		selectNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
@@ -1146,7 +1141,7 @@ return{
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local rstdevLayerName = clName1.."_Stdev"
-		local areaUnnecessary = function()
+		areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
@@ -1159,7 +1154,7 @@ return{
 		end
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
-		local selectNotNumber = function()
+		selectNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
@@ -1172,7 +1167,7 @@ return{
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local rsumLayerName = clName1.."_Sum"
-		local areaUnnecessary = function()
+		areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
@@ -1185,7 +1180,7 @@ return{
 		end
 		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
-		local selectNotNumber = function()
+		selectNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",

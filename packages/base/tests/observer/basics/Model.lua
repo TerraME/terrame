@@ -38,11 +38,11 @@ return{
 
 		local tube = Tube{}
 
-		local c = Chart{
+		Chart{
 			target = tube
 		}
 
-		local c2 = Chart{
+		Chart{
 			target = tube,
 			select = "v2"
 		}

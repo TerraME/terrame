@@ -107,7 +107,6 @@ end
 
 function _Gtme.fontFiles(package)
 	local s = sessionInfo().separator
-	local path = sessionInfo().path
 	local fontpath = packageInfo(package).path..s.."font"
 
 	if not isDir(fontpath) then
@@ -232,7 +231,7 @@ function _Gtme.buildCountTable(package)
 		if mtype == "function" or type(v) == "Model" then
 			testfunctions[currentFile][k] = 0
 		elseif mtype == "table" then
-			_Gtme.forEachElement(v, function(midx, mvalue, mmtype)
+			_Gtme.forEachElement(v, function(midx, _, mmtype)
 				if mmtype == "function" or mmtype == "Model" then
 					testfunctions[currentFile][midx] = 0
 				end
@@ -241,7 +240,7 @@ function _Gtme.buildCountTable(package)
 
 	end})
 
-	for i, file in ipairs(load_sequence) do
+	for _, file in ipairs(load_sequence) do
 		testfunctions[file] = {}
 		currentFile = file
 		lf = loadfile(baseDir..s.."lua"..s..file, 't', result)
@@ -483,7 +482,7 @@ function _Gtme.buildConfig()
 	quitButton.text = "Cancel"
 	qt.ui.layout_add(buttonsLayout, quitButton)
 
-	local m2function = function()
+	m2function = function()
 		returnv = false
 		dialog:done(0)
 	end
@@ -505,7 +504,6 @@ local function exportDatabase(package)
 	local user = config.user
 	local password = config.password
 	local host = config.host
-	local drop = config.drop
 
 	local command = "mysqldump"
 
@@ -577,7 +575,7 @@ local function mySqlExists()
 end
 
 local function isMySqlOnPath() 
-	local result, err = _Gtme.runCommand("mysql --version")
+	local result = _Gtme.runCommand("mysql --version")
 
 	if #result > 0 then
 		return true
@@ -587,7 +585,7 @@ local function isMySqlOnPath()
 end
 
 local function isValidDbConnection(command, options)
-	local result, err = _Gtme.runCommand("\""..command.."\" "..options.. " <")
+	local _, err = _Gtme.runCommand("\""..command.."\" "..options.. " <")
 
 	for i = 1, #err, 1 do
 		local out = string.upper(err[i])
@@ -666,7 +664,7 @@ function _Gtme.importDatabase(package)
 
 		if drop then
 			_Gtme.printNote("Deleting database '"..database.."'")
-			local _, result = _Gtme.runCommand("\""..command.."\" "..options.." -e \"drop database "..database.."\"")
+			_Gtme.runCommand("\""..command.."\" "..options.." -e \"drop database "..database.."\"")
 		end
 
 		_Gtme.printNote("Creating database '"..database.."'")
@@ -790,14 +788,12 @@ function _Gtme.installPackage(file)
 	
 	local _, pfile = string.match(file, "(.-)([^/]-([^%.]+))$") -- remove path from the file
 
-	local result = xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function(err)
+	xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function()
 		_Gtme.printError(file.." is not a valid file name for a TerraME package")
 		os.exit(1)
 	end)
 
 	_Gtme.print("Copying package '"..package.."'")
-
-	local arg = _Gtme.sessionInfo().path..s.."packages"..s..package
 
 	local currentDir = _Gtme.currentDir()
 	local packageDir = _Gtme.sessionInfo().path..s.."packages"
@@ -959,9 +955,7 @@ function _Gtme.getLevel()
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4 = string.sub(info.short_src, 1, 1) == "["
 
-		local mpackage
-		mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(s.."packages"..s)))
-		mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(s.."lua")))
+		local mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(s.."lua")))
 
 		if m1 or m2 or m3 or m4 or mpackage then
 			level = level + 1
@@ -977,7 +971,7 @@ local function graphicalInterface(package, model)
 	local attrTab
 	local mModel = Model
 	Model = function(attr) attrTab = attr end
-	local data = _Gtme.include(_Gtme.packageInfo(package).path..s.."lua"..s..model..".lua")
+	_Gtme.include(_Gtme.packageInfo(package).path..s.."lua"..s..model..".lua")
 	Model = mModel
 
 	_Gtme.configure(attrTab, model, package)
@@ -990,9 +984,7 @@ function _Gtme.traceback()
 	local s = "/" -- si.separator
 	local str = "Stack traceback:"
 
-	local func = ""
 	local last_function
-	local found_function = false
 
 	local info = debug.getinfo(level)
 	while info ~= nil do
@@ -1213,8 +1205,6 @@ function _Gtme.execConfigure(model, packageName)
 		end)
 		return false, errMsg
 	end
-
-	return false, "Unknow Error."
 end
 
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
@@ -1270,7 +1260,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 
 				local __cellEmpty = Cell{attrib = 1}
-				local __obsEmpty = Chart{target = __cellEmpty}
+				Chart{target = __cellEmpty}
 				clean()
 			elseif arg == "-ft" then
 				info_.fullTraceback = true
@@ -1401,10 +1391,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				argCount = argCount + 1
 				dofile(path.."UnitTest.lua")
 
-				local s = sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				local errors = 0
-				local correct, errorMsg = xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
+				xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
 					os.exit(1)
@@ -1419,11 +1408,10 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				info_.mode = "debug"
 				argCount = argCount + 1
 
-				local s = sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."sketch.lua")
-				local correct, errorMsg = xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
+				xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
 					os.exit(1)
@@ -1437,7 +1425,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(0)
 			elseif arg == "-doc" then
 				info_.mode = "strict"
-				local s = _Gtme.sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				local errors = 0
 				local success, result = _Gtme.myxpcall(function() errors = _Gtme.executeDoc(package) end)
@@ -1448,17 +1435,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				os.exit(errors)
 			elseif arg == "-project" then
-				local s = _Gtme.sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."project.lua")
 				_Gtme.myxpcall(function() _Gtme.executeProject(package) end)
 				os.exit(0)
 			elseif arg == "-autoclose" then
 				argCount = argCount + 1
 				info_.autoclose = true
-			elseif arg == "-workers" then
-				-- #80
-			elseif arg == "-draw-all-higher" then
-				-- #78
 			elseif arg == "-build" then
 				if package == "base" then
 					_Gtme.printError("TerraME cannot be built using -build.")
@@ -1539,8 +1521,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					end)
 					os.exit(0)
 				end
-			elseif arg == "-gui" then
-				-- this option was already recognized by the C++ level #79
 			else
 				_Gtme.printError("Option not recognized: "..arg)
 				os.exit(1)
@@ -1553,8 +1533,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			if not _Gtme.isLoaded("base") then
 				_Gtme.import("base")
 			end
-
-			local s = _Gtme.sessionInfo().separator
 
 			local displayFile = string.sub(arg, 0, string.len(arg) - 3).."tme"
 			displayFile = _Gtme.makePathCompatibleToAllOS(displayFile)
@@ -1674,7 +1652,6 @@ function _Gtme.myxpcall(func)
 end
 
 function _Gtme.tostring(self)
-	local rs = {}
 	local maxlen = 0
 
 	_Gtme.forEachElement(self, function(index)
@@ -1692,8 +1669,7 @@ function _Gtme.tostring(self)
 		result = result..index.." "
 
 		local size = maxlen - index:len()
-		local i
-		for i = 0, size do
+		for _ = 0, size do
 			result = result.." "
 		end
 

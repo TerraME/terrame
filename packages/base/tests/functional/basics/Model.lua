@@ -155,7 +155,7 @@ water            number [200]
 			end
 		}
 
-		local t3 = Tube3{tube = t}
+		Tube3{tube = t}
 
 		local M = Model{
 			file0 = "def",
@@ -181,7 +181,7 @@ water            number [200]
 		unitTest:assertEquals(m.files.file3, "abc")
 	end,
 	execute = function(unitTest)
-		local Tube = Model{
+		local Tube3 = Model{
 			water = 20,
 			flow = 1,
 			finalTime = 20,
@@ -196,7 +196,7 @@ water            number [200]
 			end
 		}
 
-		local t = Tube{}
+		local t = Tube3{}
 
 		t:run()
 

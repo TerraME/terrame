@@ -132,7 +132,7 @@ UnitTest_ = {
 		optionalArgument(3, "number", max_error)
 
 		local found_error = false
-		local _, err = xpcall(my_function, function(err)
+		xpcall(my_function, function(err)
 			found_error = true
 			if self.current_file then
 				local err2 = string.match(err, self.current_file)

@@ -27,7 +27,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			local ag = Agent{
 				id = "agent",
@@ -77,7 +77,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			local at = Automaton{id = "automaton"}
 
@@ -124,7 +124,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			local cell = Cell{cover = "forest"}
 			unitTest:assertNotNil(cell) -- SKIP
@@ -170,7 +170,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			local cs = CellularSpace{xdim = 200}
 			unitTest:assertType(cs, "CellularSpace") -- SKIP
@@ -224,16 +224,16 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			local coord1 = TeCoord{x = 10, y = 10}
 			local coord2 = TeCoord{x = 12, y = 10}
 
 			local reg = _G --debug.getregistry()
 			local count = 0
-			for k, v in pairs(reg) do
+			for _, v in pairs(reg) do
 				if type(v) == "table" then
-					for kk, vv in pairs(v) do
+					for _, vv in pairs(v) do
 						if type(vv) == "Coord" then
 							count = count + 1
 						end
@@ -271,7 +271,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			local env = Environment{}
 
@@ -319,7 +319,7 @@ return{
 		local evt
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			evt = Event{priority = 1, action = function(event)
 				time = event:getTime()
@@ -334,9 +334,9 @@ return{
 		local flw
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
-			flw = Flow{function(event, agent, cell) end}
+			flw = Flow{function() end}
 
 			unitTest:assertNotNil(flw) -- SKIP
 		end
@@ -348,10 +348,10 @@ return{
 		local jmp
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			jmp = Jump{
-				function(event, agent, c) return true end,
+				function() return true end,
 				target = "wet"
 			}
 			unitTest:assertNotNil(jmp) -- SKIP
@@ -363,7 +363,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			local cs = CellularSpace{xdim = 50}
 
@@ -428,7 +428,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			local t = Timer{
 				Event{priority = 1, action = function(event)
@@ -482,7 +482,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for i = 1, 100 do
+		for _ = 1, 100 do
 			collectgarbage("collect")
 			local cs = CellularSpace{xdim = 10}
 			local traj = Trajectory{target = cs}

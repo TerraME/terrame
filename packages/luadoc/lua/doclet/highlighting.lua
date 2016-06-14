@@ -29,20 +29,20 @@ local base = {
 
 words = {}
 
-for i, j in ipairs(reserved) do
+for _, j in ipairs(reserved) do
 	reserved[j] = j
 end
 
-for i, j in ipairs(base) do
+for _, j in ipairs(base) do
 	base[j] = j
 end
 
 function parse(text, func)
 	local code = {}
 	while #text > 0 do
-		local start, ending, token
+		local ending, token
 		for i = 1, #patterns do
-			start, ending, token = text:find(patterns[i][1])
+			_, ending, token = text:find(patterns[i][1])
 			if token then 
 				local class = patterns[i][2]
 

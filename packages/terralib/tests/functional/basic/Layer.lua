@@ -59,14 +59,10 @@ return {
 		unitTest:assertEquals(projName, cl.project.file)
 		unitTest:assertEquals(clName1, cl.name)
 		
-		proj = nil
-		
 		local cl2 = Layer{
 			project = projName,
 			name = clName1
 		}
-		
-		local clProj = cl2.project
 		
 		unitTest:assertEquals(cl2.source, "shp")
 		unitTest:assertEquals(cl2.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath1))			
@@ -77,7 +73,7 @@ return {
 			rmFile(filePath1)
 		end
 
-		local projName = "setores_2000.tview"
+		projName = "setores_2000.tview"
 
 		if isFile(projName) then
 			rmFile(projName)
@@ -87,7 +83,7 @@ return {
 			file = projName
 		}		
 		
-		local layerName1 = "Sampa"
+		layerName1 = "Sampa"
 		local layer1 = Layer{
 			project = proj1,
 			name = layerName1,
@@ -140,41 +136,41 @@ return {
 		
 		unitTest:assertFile(projName)
 		
-		local projName = "cells_setores_2000.tview"
+		projName = "cells_setores_2000.tview"
 
-		local proj = Project{
+		proj = Project{
 			file = projName,
 			clean = true
 		}		
 
-		local layerName1 = "Sampa"
+		layerName1 = "Sampa"
 		Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}
 		
-		local layerName2 = "MG"
+		layerName2 = "MG"
 		Layer{
 			project = proj,
 			name = layerName2,
 			file = filePath("MG_cities.shp", "terralib")	
 		}
 
-		local layerName3 = "CBERS"
+		layerName3 = "CBERS"
 		Layer{
 			project = proj,
 			name = layerName3,
 			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
 		}		
 		
-		local filePath1 = "sampa_cells.shp"
+		filePath1 = "sampa_cells.shp"
 
 		if isFile(filePath1) then
 			rmFile(filePath1)
 		end
 
-		local clName1 = "Sampa_Cells"
+		clName1 = "Sampa_Cells"
 		local l1 = Layer{
 			project = proj,
 			input = layerName1,
@@ -231,7 +227,7 @@ return {
 			rmFile(filePath4)
 		end		
 		
-		local l4 = Layer{
+		Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
@@ -240,7 +236,7 @@ return {
 			file = filePath4
 		}
 		
-		local clSet = tl:getDataSet(proj, clName1)
+		clSet = tl:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)		
 		
 		-- END

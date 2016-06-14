@@ -23,7 +23,6 @@
 -------------------------------------------------------------------------------------------
 
 local printError   = _Gtme.printError
-local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
 function _Gtme.executeProject(package)
@@ -80,7 +79,7 @@ function _Gtme.executeProject(package)
 
 			local output = string.sub(file, 1, -5)..".tview"			
 
-			local ok, err = xpcall(function() dofile(data_path..s..file) end, function(err)
+			xpcall(function() dofile(data_path..s..file) end, function(err)
 				printError(err)
 				project_report.errors_processing = project_report.errors_processing + 1
 			end)

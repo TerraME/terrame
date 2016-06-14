@@ -51,7 +51,7 @@ return{
 	end,
 	CSVread = function(unitTest)
 		local error_func = function()
-			local csv = CSVread("asdfgh.csv")
+			csv = CSVread("asdfgh.csv")
 		end
 
 		unitTest:assertError(error_func, resourceNotFoundMsg(1, "asdfgh.csv"))

@@ -41,7 +41,7 @@ return{
 			ev4 = Event{priority = 10, action = function() c:update() end}
 		}
 
-		local c = Clock{target = timer}
+		c = Clock{target = timer}
 		timer:run(50)
 
 		--unitTest:assertSnapshot(c, "clock_timer_events.bmp", 0.01) -- SKIP

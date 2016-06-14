@@ -686,7 +686,7 @@ return {
 		default = nil
 		tl:attributeFill(proj, layerName4, wsumLayerName, percTifLayerName, attribute, operation, select, area, default)
 		
-		local percentSet = tl:getDataSet(proj, percTifLayerName)
+		percentSet = tl:getDataSet(proj, percTifLayerName)
 		
 		unitTest:assertEquals(getn(percentSet), 402) 
 		

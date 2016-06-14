@@ -43,12 +43,12 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "not_number"))
 
-		local error_func = function()
+		error_func = function()
 			sn:add(ag1)
 		end
 		unitTest:assertError(error_func, "Agent should have an id in order to be added to a SocialNetwork.")
 
-		local error_func = function()
+		error_func = function()
 			sn:add(ag2)
 			sn:add(ag2)
 		end
@@ -81,7 +81,6 @@ return{
 		unitTest:assertError(error_func, "Agent '1' does not belong to the SocialNetwork.")
 	end,
 	isConnection = function(unitTest)
-		local ag1 = Agent{id = "1"}
 		local sn = SocialNetwork()
 
 		local error_func = function()
@@ -108,14 +107,13 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent", 123))
 
-		local error_func = function()
+		error_func = function()
 			sn:remove(ag1)
 		end
 		unitTest:assertError(error_func, "Trying to remove an Agent that does not belong to the SocialNetwork.")
 	end,
 	sample = function(unitTest)
 		local sn = SocialNetwork()
-		local a = Agent{id = "1"}
 
 		local error_func = function()
 			sn:sample()

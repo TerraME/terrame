@@ -47,7 +47,7 @@ function calculatePotNeighborhood(cs)
 		local countNeigh = 0
 
 		if cell.defor < 1.0 then
-			forEachNeighbor(cell, function(cell, neigh)
+			forEachNeighbor(cell, function(_, neigh)
 				-- The potential of change for each cell is
 				-- the average of neighbors deforestation.
 				-- fully deforested cells have zero potential
@@ -98,7 +98,7 @@ function calculatePotMixed(cs)
 
 		-- Calculate the average deforestation
 		countNeigh = 0
-		forEachNeighbor(cell, function(cell, neigh)
+		forEachNeighbor(cell, function(_, neigh)
 			-- The potential of change for each cell is
 			-- the average of neighbors' deforestation.
 			if cell.defor < 1.0 then
@@ -173,7 +173,7 @@ traj = Trajectory{
 }
 
 t = Timer{
-	Event{start = 2005, action = function(event)
+	Event{start = 2005, action = function()
 		local total_pot = currentPot(amazonia)
 		traj:rebuild()
 		deforest(traj, total_pot)

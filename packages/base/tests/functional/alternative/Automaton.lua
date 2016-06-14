@@ -27,7 +27,7 @@ local cs = CellularSpace{xdim = 10}
 local state1 = State{
 	id = "seco",
 	Jump{
-		function(event, agent, cell)
+		function(_, agent)
 			agent.acum = agent.acum + 1
 			if agent.cont < MAX_COUNT then 
 				agent.cont = agent.cont + 1
@@ -43,7 +43,7 @@ local state1 = State{
 local state2 = State{
 	id = "molhado",
 	Jump{
-		function(event, agent, cell)
+		function(_, agent)
 			agent.acum = agent.acum + 1
 			if agent.cont < MAX_COUNT then 
 				agent.cont = agent.cont + 1
@@ -55,8 +55,6 @@ local state2 = State{
 		target = "seco"
 	}
 }
-
-local ev = Event{action = function() return true end}
 
 return{
 	Automaton = function(unitTest)
@@ -81,12 +79,12 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("id", "string", 15))
 
-		local error_func = function()
+		error_func = function()
 			Automaton()
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
 
-		local error_func = function()
+		error_func = function()
 			Automaton(2)
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
@@ -129,7 +127,7 @@ return{
 			st1 = state1
 		}
 
-		local error_func = function()
+		error_func = function()
 			at1:add("notTrajectoryOrTtate")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "State or Trajectory", "notTrajectoryOrTtate"))
@@ -185,7 +183,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "abc"))
 	
-		local error_func = function()
+		error_func = function()
 			a:getState(-2)
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg(1, -2))
@@ -234,7 +232,7 @@ return{
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
+		error_func = function()
 			at1:setId(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))

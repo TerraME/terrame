@@ -26,7 +26,7 @@
 
 return{
 	__tostring = function(unitTest)
-		local f1 = Flow { function(ev, agent, cell) 
+		local f1 = Flow { function(_, agent, _) 
 			agent.value = agent.value + 2 
 		end}
 		unitTest:assertEquals(string.sub(tostring(f1),1,8), "TeFlow (")

@@ -29,7 +29,7 @@ return{
 			myvalue = function() return 4 end
 		}
 
-		local ch = Chart{
+		Chart{
 			target = cs,
 			select = "myvalue"
 		}
@@ -43,12 +43,12 @@ return{
 
 		local c = Cell{value = function() return 5 end}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			xdim = 5,
 			instance = c,
 		}
 
-		local map = Map{
+		Map{
 			target = cs,
 			select = "value",
 			value = {5, 8},
@@ -57,7 +57,7 @@ return{
 
 		cs:sample().value = 3
 
-		local error_func = function()
+		error_func = function()
 			cs:notify()
 		end
 		unitTest:assertError(error_func, "Could not execute function 'value' from Cell because it was replaced by a 'number'.")

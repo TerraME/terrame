@@ -125,14 +125,14 @@ return {
 			rmFile(projName)
 		end		
 
-		local projName = "cells_setores_2000.tview"
+		projName = "cells_setores_2000.tview"
 
 		local proj = Project{
 			file = projName,
 			clean = true
 		}		
 
-		local layerName1 = "Sampa"
+		layerName1 = "Sampa"
 		Layer{
 			project = proj,
 			name = layerName1,
@@ -142,15 +142,14 @@ return {
 		local clName1 = "Sampa_Cells"
 		local tName1 = "add_cellslayer_basic"
 		
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
-		local password = "postgres"
-		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = tName1	
+		host = "localhost"
+		port = "5432"
+		user = "postgres"
+		password = "postgres"
+		database = "postgis_22_sample"
+		encoding = "CP1252"
 		
-		local pgData = {
+		pgData = {
 			type = "POSTGIS",
 			host = host,
 			port = port,
@@ -161,7 +160,7 @@ return {
 			encoding = encoding
 		}
 		
-		local tl = TerraLib{}
+		tl = TerraLib{}
 		tl:dropPgTable(pgData)
 		
 		local l1 = Layer{
@@ -253,7 +252,7 @@ return {
 		pgData.table = tName4
 		tl:dropPgTable(pgData)	
 		
-		local layer5 = Layer{
+		Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,

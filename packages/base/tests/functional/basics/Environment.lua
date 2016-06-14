@@ -34,12 +34,12 @@ return{
 			x = 3,
 			State{
 				id = "stop",
-				Jump{function(ev, self)
+				Jump{function()
 						return false
 					end,
 					target = "stop"
 				},
-				Flow{function(ev, self)
+				Flow{function(_, self)
 					self.x = self.x + 1
 				end}
 			}
@@ -66,7 +66,7 @@ return{
 
 		local cellCont = 0
 		unitTest:assertEquals(cellCont, 0)
-		local cs = CellularSpace{xdim = 2}
+		cs = CellularSpace{xdim = 2}
 
 		forEachCell(cs, function(cell)
 			cell.soilType = 0
@@ -75,7 +75,7 @@ return{
 
 		unitTest:assertEquals(cellCont, 4)
 
-		forEachCell(cs, function(cell, idx)
+		forEachCell(cs, function(cell)
 			unitTest:assertEquals(cell.soilType, 0)
 		end)
 
@@ -88,7 +88,7 @@ return{
 			State{
 				id = "first",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -103,7 +103,7 @@ return{
 			State{
 				id = "second",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -123,7 +123,7 @@ return{
 			State{
 				id = "first",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -138,7 +138,7 @@ return{
 			State{
 				id = "second",
 				Jump{
-					function(event, agent, cell)
+					function(_, agent)
 						cont = cont + 1
 						if agent.cont < 10 then
 							agent.cont = agent.cont + 1
@@ -152,7 +152,7 @@ return{
 			}
 		}
 
-		local env = Environment{
+		Environment{
 			cs, at1, ag1
 		}
 
@@ -237,8 +237,8 @@ id     string [env]
 		end)
 		unitTest:assertEquals(20, cont)
 
-		forEachAgent(predators, function(ag)
-			ag:reproduce{age = 0}
+		forEachAgent(predators, function(agent)
+			agent:reproduce{age = 0}
 		end)
 
 		predators:execute()
@@ -256,17 +256,17 @@ id     string [env]
 		end)
 		unitTest:assertEquals(40, cont)
 
-		local predator = Agent{name = "predator"}
-		local ag = Agent{name = "ag"}
+		predator = Agent{name = "predator"}
+		ag = Agent{name = "ag"}
 
-		local predators = Society{
+		predators = Society{
 			instance = predator,
 			quantity = 199
 		}
 
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
-		local env = Environment{cs, pred = predators, zag = ag}
+		env = Environment{cs, pred = predators, zag = ag}
 		env:createPlacement{strategy = "uniform"}
 
 		unitTest:assertEquals(#cs.cells[1]:getAgents(), 2)
@@ -278,7 +278,7 @@ id     string [env]
 
 		Random():reSeed(12345)
 
-		local predator = Agent{
+		predator = Agent{
 			energy = 40,
 			name = "predator",
 			execute = function(self)
@@ -288,15 +288,15 @@ id     string [env]
 			end
 		}
 
-		local predators = Society{
+		predators = Society{
 			instance = predator,
 			quantity = 100
 		}
 
-		local cs = CellularSpace{xdim = 20}
+		cs = CellularSpace{xdim = 20}
 		cs:createNeighborhood()
 
-		local env = Environment{cs, predators}
+		env = Environment{cs, predators}
 		env:createPlacement{name = "house"}
 		env:createPlacement{strategy = "uniform", name = "stay"}
 		env:createPlacement{strategy = "void", name = "workingplace"}
@@ -338,16 +338,16 @@ id     string [env]
 		unitTest:assertEquals(99, count_stay)
 		unitTest:assertEquals(0,  count_wplace)
 
-		local predator = Agent{name = "predator"}
+		predator = Agent{name = "predator"}
 
-		local predators = Society{
+		predators = Society{
 			instance = predator,
 			quantity = 10
 		}
 
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
-		local env = Environment{cs.cells[1], predators}
+		env = Environment{cs.cells[1], predators}
 		env:createPlacement{max = 200}
 
 		unitTest:assertEquals(#cs.cells[1]:getAgents(), #predators)
@@ -402,9 +402,9 @@ time 6 event 3 priority 2
 time 6 event 4 priority 3
 ]])
 
-		local result = ""
+		result = ""
 
-		local env = Environment{
+		env = Environment{
 			firstEnv = Environment{
 				clock1 = Timer{
 					Event{start = 0, action = function(event)
@@ -455,9 +455,9 @@ time 6 event 3 priority 2
 time 6 event 4 priority 3
 ]])
 
-		local result = ""
+		result = ""
 
-		local env = Environment{
+		env = Environment{
 			firstEnv = Environment{
 				clock1 = Timer{
 					Event{start = 0, priority = 1, action = function(event)
@@ -533,9 +533,9 @@ time 4 event 7 priority 7
 time 4 event 8 priority 8
 ]])
 
-result = ""
+		result = ""
 
-		local env = Environment{
+		env = Environment{
 			clock1 = Timer{
 				Event{start = 0, action = function(event)
 					result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
@@ -647,7 +647,7 @@ time 4 event 12 priority 11
 		local cs = CellularSpace{xdim = 10}
 
 		local t = Timer{
-			Event{action = function(ev)
+			Event{action = function()
 			end}
 		}
 

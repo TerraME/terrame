@@ -154,12 +154,12 @@ function Choice(attrTab)
 			end
 
 			if attrTab.default then
-				local k = (attrTab.default - attrTab.min) / attrTab.step
+				local mk = (attrTab.default - attrTab.min) / attrTab.step
 
-				local rest = k % 1
-				if rest > 0.00001 then
-					local def1 = attrTab.min + (k - rest) * attrTab.step
-					local def2 = attrTab.min + (k - rest + 1) * attrTab.step
+				local mrest = mk % 1
+				if mrest > 0.00001 then
+					local def1 = attrTab.min + (mk - mrest) * attrTab.step
+					local def2 = attrTab.min + (mk - mrest + 1) * attrTab.step
 					customError("Invalid 'default' value ("..attrTab.default.."). It could be "..def1.." or "..def2..".")
 				end
 			end
