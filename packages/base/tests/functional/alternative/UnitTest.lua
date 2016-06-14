@@ -82,7 +82,13 @@ return{
 			u:assertEquals(2, 3)
 		end
 
-		unitTest:assertError(error_func, "Values should be equal, but got '2' and '3'.")
+		unitTest:assertError(error_func, "Values should be equal, but got '2' and '3'. The maximum difference is 0, but got 1.")
+
+		error_func = function()
+			u:assertEquals(2, 3, 0.5)
+		end
+
+		unitTest:assertError(error_func, "Values should be equal, but got '2' and '3'. The maximum difference is 0.5, but got 1.")
 
 		error_func = function()
 			u:assertEquals("2", "3")
