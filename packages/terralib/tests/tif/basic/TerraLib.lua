@@ -50,6 +50,110 @@ return {
 		
 		rmFile(proj.file)
 	end,
+	addShpCellSpaceLayer = function(unitTest) -- CREATE SHP CELLULAR SPACE FROM TIF
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "AmazoniaTif"
+		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
+		tl:addTifLayer(proj, layerName1, layerFile1)
+
+		local clName = "Amazonia_Cells"
+		local shp1 = clName..".shp"
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end	
+		
+		local resolution = 60e3
+		local mask = false
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+		
+		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
+		
+		unitTest:assertEquals(layerInfo.name, clName)
+		unitTest:assertEquals(layerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp1)
+		unitTest:assertEquals(layerInfo.type, "OGR")
+		unitTest:assertEquals(layerInfo.rep, "polygon")
+		unitTest:assertNotNil(layerInfo.sid)				
+
+		-- END
+		if isFile(shp1) then
+			rmFile(shp1)
+		end			
+		
+		rmFile(proj.file)		
+	end,
+	-- addPgCellSpaceLayer = function(unitTest) -- CREATE POSTGIS CELLULAR SPACE FROM TIF
+		-- #1152
+		-- local tl = TerraLib{}
+		-- local proj = {}
+		-- proj.file = "myproject.tview"
+		-- proj.title = "TerraLib Tests"
+		-- proj.author = "Avancini Rodrigo"
+		
+		-- if isFile(proj.file) then
+			-- rmFile(proj.file)
+		-- end	
+		
+		-- tl:createProject(proj, {})
+		
+		-- local layerName1 = "AmazoniaTif"
+		-- local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
+		-- tl:addTifLayer(proj, layerName1, layerFile1)
+	
+		-- local host = "localhost"
+		-- local port = "5432"
+		-- local user = "postgres"
+		-- local password = "postgres"
+		-- local database = "tif_pg_test"
+		-- local encoding = "CP1252"
+		-- local tableName = "sampa_cells"
+		
+		-- local pgData = {
+			-- type = "POSTGIS",
+			-- host = host,
+			-- port = port,
+			-- user = user,
+			-- password = password,
+			-- database = database,
+			-- table = tableName,
+			-- encoding = encoding	
+		-- }
+
+		-- tl:dropPgDatabase(pgData)
+		
+		-- local clName1 = "Amazonia_PG_Cells"
+		-- local resolution = 60e3
+		-- local mask = false
+		-- tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)		
+		
+		-- local layerInfo = tl:getLayerInfo(proj, proj.layers[clName1])
+		-- unitTest:assertEquals(layerInfo.name, clName1) -- SKIP
+		-- unitTest:assertEquals(layerInfo.type, "POSTGIS") -- SKIP
+		-- unitTest:assertEquals(layerInfo.rep, "polygon") -- SKIP
+		-- unitTest:assertEquals(layerInfo.host, host) -- SKIP
+		-- unitTest:assertEquals(layerInfo.port, port) -- SKIP
+		-- unitTest:assertEquals(layerInfo.user, user) -- SKIP
+		-- unitTest:assertEquals(layerInfo.password, password) -- SKIP
+		-- unitTest:assertEquals(layerInfo.database, database) -- SKIP
+		-- unitTest:assertEquals(layerInfo.table, tableName) -- SKIP	
+		-- unitTest:assertNotNil(layerInfo.sid) -- SKIP
+	
+		-- tl:dropPgTable(pgData)
+		-- tl:dropPgDatabase(pgData)		
+		
+		-- rmFile(proj.file)	
+	-- end,
 	getNumOfBands = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}

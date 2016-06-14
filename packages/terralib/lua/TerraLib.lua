@@ -637,14 +637,20 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 	local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations()
 	local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
 	local cellName = dSetName
-	
-    if mask then
-        cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, 
-									inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
-	else
-		cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, 
-									inputLayer:getExtent(), inputLayer:getSRID(), cLType)
+	local inputDsType = inputLayer:getSchema()
+
+	if mask then
+		if inputDsType:hasGeom() then
+			cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, 
+										inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
+			return
+		else
+			customWarning("The 'mask' not work to Raster, it was ignored.")
+		end
 	end
+	
+	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, 
+								inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 end
 
 local function renameEachClass(ds, dSetName, dsType, select, property)

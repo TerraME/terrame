@@ -173,29 +173,7 @@ return{
 				resolution = 5e4
 			}
 		end
-		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", 123))
-
-		local attrBoxNonBoolean = function()
-			Layer{
-				project = proj,
-				input = "amazonia-states",
-				name = "cells",
-				resolution = 5e4,
-				box = 123
-			}
-		end
-		unitTest:assertError(attrBoxNonBoolean, incompatibleTypeMsg("box", "boolean", 123))
-		
-		local boxDefaultError = function()
-			Layer{
-				project = proj,
-				input = "amazonia-states",
-				name = "cells",
-				resolution = 5e4,
-				box = false
-			}
-		end
-		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))		
+		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", 123))	
 
 		local attrResolutionNonNumber = function()
 			Layer{
@@ -336,17 +314,30 @@ return{
 			name = "cbers",
 			file = filePath("cbers_rgb342_crop1.tif", "terralib")
 		}
-
-		local invalidInput = function()
+		
+		local attrBoxNonBoolean = function()
 			Layer{
 				project = proj,
-				input = "cbers",
+				input = layerName1,
 				name = "cells",
-				resolution = 0.7,
-				file = "some.shp"
+				resolution = 5e4,
+				box = 123,
+				file = "sampabox.shp"
 			}
 		end
-		unitTest:assertError(invalidInput, "It is only possible to create a layer of cells from a layer with polygonal geometry, got raster.")
+		unitTest:assertError(attrBoxNonBoolean, incompatibleTypeMsg("box", "boolean", 123))
+		
+		local boxDefaultError = function()
+			Layer{
+				project = proj,
+				input = layerName1,
+				name = "cells",
+				resolution = 5e4,
+				box = false,
+				file = "sampabox.shp"
+			}
+		end
+		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))	
 
 		if isFile(projName) then
 			rmFile(projName)

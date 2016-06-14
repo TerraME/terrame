@@ -23,6 +23,43 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	addShpCellSpaceLayer = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "AmazoniaTif"
+		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
+		tl:addTifLayer(proj, layerName1, layerFile1)
+
+		local clName = "Amazonia_Cells"
+		local shp1 = clName..".shp"
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end	
+		
+		local resolution = 60e3
+		local mask = true
+		
+		local maskNotWork = function()
+			tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+		end
+		unitTest:assertError(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
+		
+		rmFile(proj.file)
+	end,	
+	--addPgCellSpaceLayer = function(unitTest)
+		-- #1152
+	--end,
 	getNumOfBands = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
