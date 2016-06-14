@@ -623,7 +623,7 @@ local function copyLayer(from, to)
 	collectgarbage("collect")	
 end
 
-local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, type) 
+local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, type, mask)
 	local cLId = binding.GetRandomicId()
 	local cellLayerInfo = binding.te.da.DataSourceInfo()
 		
@@ -637,8 +637,14 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 	local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations()
 	local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
 	local cellName = dSetName
-
-	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
+	
+    if mask then
+        cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, 
+									inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
+	else
+		cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, 
+									inputLayer:getExtent(), inputLayer:getSRID(), cLType)
+	end
 end
 
 local function renameEachClass(ds, dSetName, dsType, select, property)
@@ -1167,7 +1173,7 @@ TerraLib_ = {
 	-- tl:addShpLayer(proj, layerName1, layerFile1)		
 	--
 	--	tl:addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
-	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath) 
+	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask) 
 		loadProject(project, project.file)
 		
 		if not string.find(filePath, "/") then
@@ -1178,7 +1184,7 @@ TerraLib_ = {
 		local connInfo = createFileConnInfo(filePath)
 		local dSetName = getFileName(connInfo.URI)
 		
-		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR")
+		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 		
 		self:addShpLayer(project, name, filePath)
 	end,
@@ -1215,14 +1221,14 @@ TerraLib_ = {
 	-- local clName1 = "SampaPgCells"	
 	-- local resolution = 0.7
 	-- tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData)
-	addPgCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, data) 
+	addPgCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, data, mask) 
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 
 		if not dataSetExists(connInfo, data.table, "POSTGIS") then
-			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS")
+			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS", mask)
 		else
 			releaseProject(project)
 			customError("The table '"..data.table.."' already exists.")
