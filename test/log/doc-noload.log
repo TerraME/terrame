@@ -1,7 +1,6 @@
 Building documentation for package 'noload'
 Loading package 'noload'
 Package 'noload' could not be loaded.
-noload/lua/myerror.lua:2: attempt to perform arithmetic on global 'swerf' (a nil value)
+Error:2: attempt to perform arithmetic on global 'swerf' (a nil value)
 Stack traceback:
-    File noload/lua/myerror.lua, line 2, in function 'lf'
-
+    File C:/TerraME/bin/packages/noload/lua/myerror.lua, line 2, in function 'lf', in operator + (addition)

@@ -24,8 +24,6 @@
 --          Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
-local cs = CellularSpace{xdim = 10}
-
 local state1 = State{
 	id = "seco",
 	Jump{
@@ -60,6 +58,7 @@ local state2 = State{
 
 return{
 	Automaton = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 			it = Trajectory{
 				target = cs, 
@@ -112,6 +111,7 @@ id     string [MyAutomaton]
 ]])
 	end,
 	add = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 
 			acum = 0,
@@ -133,6 +133,7 @@ id     string [MyAutomaton]
 		unitTest:assert(true)
 	end,
 	execute = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 			it = Trajectory{
 				target = cs, 
@@ -155,7 +156,7 @@ id     string [MyAutomaton]
 		t:run(1)
 		unitTest:assert(true)
 
-		cs = CellularSpace{xdim = 2}
+		local cs = CellularSpace{xdim = 2}
 		local cont = 0
 
 		at1 = Automaton{
@@ -228,7 +229,7 @@ id     string [MyAutomaton]
 		unitTest:assert(true)
 	end,
 	getStateName = function(unitTest)
-		cs = CellularSpace{xdim = 2}
+		local cs = CellularSpace{xdim = 2}
 		local cont = 0
 
 		local at1 = Automaton{
@@ -278,6 +279,7 @@ id     string [MyAutomaton]
 		unitTest:assertEquals(at1:getStateName(cs:sample()), "first")
 	end,
 	getStates = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 			it = Trajectory{
 				target = cs, 
@@ -298,6 +300,7 @@ id     string [MyAutomaton]
 		unitTest:assertEquals(getn(states), 0) -- TODO: should be 2, but type(state) is not "State"
 	end,
 	notify = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 			it = Trajectory{
 				target = cs, 
@@ -323,6 +326,7 @@ id     string [MyAutomaton]
 		unitTest:assert(true)
 	end,
 	setId = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 			it = Trajectory{
 				target = cs, 
@@ -344,6 +348,7 @@ id     string [MyAutomaton]
 		unitTest:assert(true)
 	end,
 	setTrajectoryStatus = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
 		local t = Trajectory{target = cs, select = function(cell)
 			local x = cell.x - 5
 			local y = cell.y - 5

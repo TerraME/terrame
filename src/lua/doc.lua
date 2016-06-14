@@ -235,6 +235,7 @@ local function getProjects(package)
 	end)
 
 	local output = {}
+	local mlayers = {}
 
 	-- we need to execute this separately to guarantee that the output will be alphabetically ordered
 	forEachOrderedElement(projects, function(idx, proj)
@@ -247,7 +248,6 @@ local function getProjects(package)
 			file = {idx}
 		}
 
-		local mlayers = {}
 		forEachOrderedElement(proj, function(midx, layer)
 			layer.layer = midx
 			table.insert(mlayers, layer)
@@ -258,10 +258,12 @@ local function getProjects(package)
 		table.insert(output, mproject)
 	end)
 
-	forEachOrderedElement(mlayers, function(idx, layer)
-		layer.file = {idx}
-		table.insert(output, layer)
-	end)
+	if #mlayers > 0 then
+		forEachOrderedElement(mlayers, function(idx, layer)
+			layer.file = {idx}
+			table.insert(output, layer)
+		end)
+	end
 
 	clean()
 	return output
@@ -288,8 +290,7 @@ function _Gtme.executeDoc(package)
 
 	xpcall(function() pkg = _G.getPackage(package) end, function(err)
 		printError("Package '"..package.."' could not be loaded.")
-		printError(err)
-		printError(_Gtme.traceback())
+		printError(_Gtme.traceback(err))
 		os.exit(1)
 	end)
 

@@ -829,7 +829,7 @@ return{
 
 		cs:save(cellSpaceLayerName)
 
-		layer = terralib.Layer{
+		local layer = terralib.Layer{
 			project = proj,
 			name = cellSpaceLayerName
 		}

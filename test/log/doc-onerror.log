@@ -3,6 +3,7 @@ Loading package 'onerror'
 print when loading
 Parsing 'data.lua'
 Checking directory 'data'
+Processing lua files
 File 'data.csv' is not documented
 Package 'onerror' has font.lua but there are no fonts
 Parsing lua files

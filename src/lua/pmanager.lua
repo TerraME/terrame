@@ -216,9 +216,8 @@ local function selectPackage()
 
 	local result = xpcall(function() getPackage(comboboxPackages.currentText) end, function(err)
 		sessionInfo().fullTraceback = true
-		local trace = _Gtme.traceback()
-		local merr = "Error: Package '"..comboboxPackages.currentText.."' could not be loaded:\n\n"
-			..err.."\n\n"..trace
+		local trace = _Gtme.traceback(err)
+		local merr = "Error: Package '"..comboboxPackages.currentText.."' could not be loaded:\n\n"..trace
 
 		qt.dialog.msg_critical(merr)
 	end)
@@ -226,9 +225,8 @@ local function selectPackage()
 	if result then
 		result = xpcall(function() models = _Gtme.findModels(comboboxPackages.currentText) end, function(err)
 			sessionInfo().fullTraceback = true
-			local trace = _Gtme.traceback()
-			local merr = "Error: Package '"..comboboxPackages.currentText.."' could not be loaded:\n\n"
-				..err.."\n\n"..trace
+			local trace = _Gtme.traceback(err)
+			local merr = "Error: Package '"..comboboxPackages.currentText.."' could not be loaded:\n\n"..trace
 	
 			qt.dialog.msg_critical(merr)
 		end)

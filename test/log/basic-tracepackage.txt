@@ -1,3 +1,0 @@
-Error: 'mooore' is an invalid value for argument 'strategy'. Do you mean 'moore'?
-Stack traceback:
-    File trace-package.lua, line 4, in call to function 'createNeighborhood'

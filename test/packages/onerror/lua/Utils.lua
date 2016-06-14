@@ -38,6 +38,7 @@ print("print when loading")
 function belong2(value, values)
 	if false then
 		a = 3
+		bb = 5
 	end
 
 	if _Gtme.type(values) ~= "table" then

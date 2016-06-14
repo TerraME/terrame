@@ -1,13 +1,13 @@
-Error: attempt to perform arithmetic on global 'x' (a nil value)
+scripts/trace-basic.lua:11: attempt to perform arithmetic on global 'x' (a nil value)
 Stack traceback:
-    File C:/TerraME/bin/lua/terrame.lua, line 997, in function 'traceback'
-    File C:/TerraME/bin/lua/terrame.lua, line 1643, in operator + (addition)
-    File scripts/trace-basic.lua, line 11, in function 'h', in operator + (addition)
-    File scripts/trace-basic.lua, line 7, in function 'g'
-    File scripts/trace-basic.lua, line 3, in function 'f'
-    File scripts/trace-basic.lua, line 14, in call to function 'f'
-    File [C], in function 'dofile'
-    File C:/TerraME/bin/lua/terrame.lua, line 1562, in call to function 'dofile'
-    File [C], in function 'xpcall'
-    File C:/TerraME/bin/lua/terrame.lua, line 1582, in function 'myxpcall'
-    File C:/TerraME/bin/lua/terrame.lua, line 1562, in call to function 'myxpcall'
+    File C:/TerraME/bin/lua/terrame.lua, line 1639, in main chunk
+    File C:/TerraME/bin/lua/terrame.lua, line 1629, in function __add
+    File scripts/trace-basic.lua, line 11, in function h
+    File scripts/trace-basic.lua, line 7, in function g
+    File scripts/trace-basic.lua, line 3, in function f
+    File scripts/trace-basic.lua, line 14, in main chunk
+    Internal C file, in function dofile
+    File C:/TerraME/bin/lua/terrame.lua, line 1576, in main chunk
+    Internal C file, in function xpcall
+    File C:/TerraME/bin/lua/terrame.lua, line 1596, in function myxpcall
+    File C:/TerraME/bin/lua/terrame.lua, line 1576, in main chunk

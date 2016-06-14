@@ -136,8 +136,6 @@ File 'buildunneclean/tests/alternative/unnec5.txt' is unnecessary and will be ig
 File 'buildunneclean/tests/unnec4.txt' is unnecessary and will be ignored.
 Checking fonts
 Looking for hidden files
-File 'buildunneclean/.hidden' is unnecessary and will be ignored.
-File 'buildunneclean/lua/.hidden2' is unnecessary and will be ignored.
 Cleaning package
 Removing 'log' directory
 Checking Models
@@ -148,13 +146,13 @@ Creating file 'buildunneclean_0.1.zip'
 Package 'buildunneclean' successfully zipped
 
 Build report for package 'buildunneclean':
-Package was built in 5.45 seconds.
+Package was built in 3.34 seconds.
 Build created file 'buildunneclean_0.1.zip'.
-Temporary files are saved in .terrame_buildunneclean_WTdjZ
-MD5 sum for the package is ec494022d2ab90cf4b855f4e96f38e68
+Temporary files are saved in .terrame_buildunneclean_ZYXBy
+MD5 sum for the package is 2b9830f3e7394486140de0542d49e046 *buildunneclean_0.1.zip
 The package has a license file.
 Documentation was successfully built.
-8 files are unnecessary.
+6 files are unnecessary.
 4 errors were found in the tests.
 All Models are placed in the right files.
-Summing up, 12 problems were found along the build.
+Summing up, 10 problems were found along the build.

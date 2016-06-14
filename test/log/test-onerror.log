@@ -59,11 +59,11 @@ Checking if all asserts were executed
 Testing tests/Utils.lua
 Testing belong2
 Testing call2
-Wrong execution, got error: '.../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua:78: attempt to perform arithmetic on global 'aaa' (a nil value)'.
+Wrong execution, got:
+Error: attempt to perform arithmetic on global 'aaa' (a nil value)
 Stack traceback:
-    File .../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua, line 78, in call2
-    File ...edro/github/terrame/bin/packages/onerror/tests/Utils.lua, line 40, in main chunk
-
+    File C:/TerraME/bin/packages/onerror/lua/Utils.lua, line 78, in function 'call2', in operator + (addition)
+    File C:/TerraME/bin/packages/onerror/tests/Utils.lua, line 40, in main chunk
 Testing createNeighborhood2
 Testing elapsedTime2
 Testing forEachAgent2
@@ -114,12 +114,12 @@ Testing switchInvalidArgumentSuggestionMsg2
 Checking if all asserts were executed
 Testing tests/alternative/Utils.lua
 Testing belong2
-Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '.../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua:44: attempt to perform arithmetic on global 'aab' (a nil value)'.
+Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got:
+Error: attempt to perform arithmetic on global 'aab' (a nil value)
 Stack traceback:
-    File .../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua, line 44, in belong2
-    File ...terrame/bin/packages/onerror/tests/alternative/Utils.lua, line 30, in nil
-    File ...terrame/bin/packages/onerror/tests/alternative/Utils.lua, line 32, in main chunk
-
+    File C:/TerraME/bin/packages/onerror/lua/Utils.lua, line 44, in function 'belong2', in operator + (addition)
+    File C:/TerraME/bin/packages/onerror/tests/alternative/Utils.lua, line 30, in call to function 'belong2'
+    File C:/TerraME/bin/packages/onerror/tests/alternative/Utils.lua, line 32, in main chunk
 Testing call2
 Testing elapsedTime2
 Testing forEachCellPair2
@@ -144,21 +144,13 @@ Checking lines of source code
 Checking ErrorHandling.lua
 Checking Tube.lua
 Checking Utils.lua
-Line 40 was not executed.
+Line 41 was not executed.
 Testing examples
 Testing continuous-rain
 Testing ipd
-Error in ...dro/github/terrame/bin/packages/onerror/examples/ipd.lua:193: attempt to perform arithmetic on global 'bcs' (a nil value)
+Error in example: Error: attempt to perform arithmetic on global 'bcs' (a nil value)
 Stack traceback:
-    File ...dro/github/terrame/bin/packages/onerror/examples/ipd.lua, line 193, in main chunk
-
-Files 
-  '/Users/pedro/github/terrame/bin/packages/onerror/log/mac/ipd.log'
-and
-  '.terrametmp_13Atd/ipd.log'
-are different.
-8d7
-< NTFT	90	1	0	120	87	112	80	490
+    File C:/TerraME/bin/packages/onerror/examples/ipd.lua, line 193, in call to operator + (addition)
 Checking logs
 File 'log/mac/chart_cell2.bmp' was not used by any assert.
 
@@ -169,7 +161,7 @@ One print() call was found when loading the package.
 One variable is overwritten when loading the package.
 One invalid file or directory was found in directory 'test'.
 One assert was not executed at least once.
-One out of 244 asserts failed.
+One out of 257 asserts failed.
 One out of 92 tested functions stopped with an unexpected error.
 One out of 92 tested functions does not have at least one assert.
 One out of 92 tested functions does not exist in the source code of the package.
