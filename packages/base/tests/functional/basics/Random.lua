@@ -41,6 +41,7 @@ return {
 
 		unitTest:assertEquals(tostring(bern), [[distrib  string [bernoulli]
 p        number [0.3]
+random   Random
 sample   function
 ]])
 	end,

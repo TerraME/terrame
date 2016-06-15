@@ -332,7 +332,7 @@ function Chart(attrTab)
 		mandatoryTableArgument(attrTab, "target")
 
 		if not belong(type(attrTab.target), {"Cell", "CellularSpace", "Agent", "Society", "table"}) then
-			if not (attrTab.target.parent and type(attrTab.target.parent) == "Model") then
+			if not isTable(attrTab.target) or not (attrTab.target.parent and type(attrTab.target.parent) == "Model") then
 				customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, and instance of Model, got "..type(attrTab.target)..".")
 			end
 		end

@@ -99,11 +99,19 @@ local function getProjects(package)
 
 	import("terralib")
 
+	local oldImport = import
+
+	import = function(pkg)
+		if pkg ~= "terralib" then
+			oldImport(pkg)
+		end
+	end
+
 	local tl = getPackage("terralib")
 
 	Project = function(data)
 		currentProject = data.file
-		projects[currentProject] = {}
+		projects[currentProject] = {description = data.description}
 
 		forEachOrderedElement(data, function(idx, value)
 			if idx ~= "file" and type(value) == "string" and isFile(value) then
@@ -242,6 +250,12 @@ local function getProjects(package)
 		local luaFile = string.sub(idx, 1, -6).."lua"
 		local shortsummary = "Automatically created TerraView project file"
 		local summary = shortsummary.." from <a href=\"../../data/"..luaFile.."\">"..luaFile.."</a>."
+
+		if proj.description then
+			summary = summary.." "..proj.description
+			proj.description = nil
+		end
+
 		local mproject = {
 			summary = summary,
 			shortsummary = shortsummary..".",
@@ -259,13 +273,16 @@ local function getProjects(package)
 	end)
 
 	if #mlayers > 0 then
-		forEachOrderedElement(mlayers, function(idx, layer)
-			layer.file = {idx}
+		forEachOrderedElement(mlayers, function(_, layer)
+			layer.file = {layer.file}
 			table.insert(output, layer)
 		end)
 	end
 
 	clean()
+
+	import = oldImport
+
 	return output
 end
 
@@ -417,12 +434,29 @@ function _Gtme.executeDoc(package)
 			os.exit(1)
 		end)
 
-		printNote("Checking directory 'data'")
-
 		projects = getProjects(package)
 
 		forEachOrderedElement(projects, function(_, value)
-			table.insert(mdata, value)
+			if value.layers or string.find(value.description, "resolution") then -- a project or a layer of cells
+				filesdocumented[value.file[1]] = 1
+			end
+		end)
+
+		printNote("Checking directory 'data'")
+		forEachOrderedElement(projects, function(_, value)
+			local found = false
+			forEachElement(mdata, function(_, mvalue)
+				if value.file[1] == mvalue.file[1] then
+					if value.layers or string.find(value.description, "resolution") then -- a project or a layer of cells
+						printError("File "..value.file[1].." should not be documented as it would be automatically created.")
+						doc_report.error_data = doc_report.error_data + 1
+					end
+				end
+			end)
+
+			if not found then
+				table.insert(mdata, value)
+			end
 		end)
 
 		table.sort(mdata, function(a, b)

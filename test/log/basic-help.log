@@ -31,10 +31,6 @@ Options:
  [-package <pkg>] -doc            Build the documentation.
  [-package <pkg>] -showdoc        Show the documentation in the default browser.
  [-package <pkg>] -configure      Configure and run a Model using a graphical interface.
- [-package <pkg>] -importDb       Import .sql files described in data.lua from directory
-                                  data within the package to MySQL.
- [-package <pkg>] -exportDb       Export .sql files described in data.lua from MySQL to
-                                  directory data within the package.
 
 For more information, please visit www.terrame.org
 

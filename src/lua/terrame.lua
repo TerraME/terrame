@@ -254,26 +254,17 @@ function _Gtme.buildCountTable(package)
 	return testfunctions
 end
 
-function _Gtme.sqlFiles(package)
-	local s = _Gtme.sessionInfo().separator
+function _Gtme.projectFiles(package)
 	local files = {}
-	data = function(mtable)
-		if type(mtable.file) == "string" then mtable.file = {mtable.file} end
+	local data_path = _Gtme.packageInfo(package).data
 
-		_Gtme.forEachElement(mtable.file, function(_, mfile)
-			if string.endswith(mfile, ".sql") then
-				table.insert(files, mfile)
-			end
-		end)
-	end
+	if not isDir(data_path) then return files end
 
-	xpcall(function() dofile(_Gtme.packageInfo(package).path..s.."data.lua") end, function(err)
-		_Gtme.printError("Error loading "..package..s.."data.lua")
-		_Gtme.printError(err)
-		os.exit(1)
+	forEachFile(data_path, function(file)
+		if string.endswith(file, ".lua") then
+			table.insert(files, file)
+		end
 	end)
-
-	data = _Gtme.data
 
 	return files
 end
@@ -496,198 +487,6 @@ function _Gtme.buildConfig()
 	return returnv
 end
 
-local function exportDatabase(package)
-	local s = _Gtme.sessionInfo().separator
-
-	local config = _Gtme.getConfig()
-
-	local user = config.user
-	local password = config.password
-	local host = config.host
-
-	local command = "mysqldump"
-
-	if user then
-		command = command.." -u"..user
-	else
-		command = command.." -u root"
-	end
-
-	if password and password ~= "" then
-		command = command.." -p="..password
-	end
-
-	if host then
-		command = command.." -h="..host
-	end
-
-	local directory = _Gtme.packageInfo(package).data
-	local files = _Gtme.sqlFiles(package)
-
-	_Gtme.forEachElement(files, function(_, mfile)
-		local database = string.sub(mfile, 1, string.len(mfile) - 4)
-
-		if _Gtme.isFile(directory..s..mfile) then
-			_Gtme.printWarning("File "..mfile.." already exists and will not be replaced")
-		else
-			_Gtme.printNote("Exporting database "..database)
-			local _, result = _Gtme.runCommand(command.." "..database.." > "..directory..mfile)
-
-			if result and result[1] then
-				_Gtme.printError(result[1])
-				rmFile(directory..mfile)
-			else
-				_Gtme.printNote("Database '"..database.."'successfully exported")
-			end
-		end
-	end)
-end
-
-local function isWarningMessage(message)
-	return string.match(string.upper(message), "WARNING")
-end
-
-local function gimmeMySqlDirPath()	
-	local mySqlDirPath = "C:/Program Files/MySQL"
-	if not _Gtme.isDir(mySqlDirPath) then
-		mySqlDirPath = "C:/Program Files (x86)/MySQL"
-		if not _Gtme.isDir(mySqlDirPath) then
-			return ""
-		end
-	end		
-
-	mySqlDirPath = mySqlDirPath.."/MySQL Server 5."
-	for i = 0, 9, 1 do
-		if _Gtme.isDir(mySqlDirPath..i) then
-			return mySqlDirPath..i.."/bin"
-		end
-	end
-	
-	return ""
-end
-
-local function mySqlExists()
-	if gimmeMySqlDirPath() == "" then
-		return false
-	end
-	
-	return true
-end
-
-local function isMySqlOnPath() 
-	local result = _Gtme.runCommand("mysql --version")
-
-	if #result > 0 then
-		return true
-	end
-	
-	return false
-end
-
-local function isValidDbConnection(command, options)
-	local _, err = _Gtme.runCommand("\""..command.."\" "..options.. " <")
-
-	for i = 1, #err, 1 do
-		local out = string.upper(err[i])
-		if string.match(out, "ERROR") then
-			if string.match(out, "1045") or string.match(out, "2005") then
-				return false
-			end
-		end
-	end
-	
-	return true
-end
-
-function _Gtme.validateMySql()
-	if _Gtme.isWindowsOS() then
-		if not mySqlExists() then
-			local err = "MySql is not installed, version 5.X required."
-			return  err
-		end
-	end
-	
-	return ""
-end
-
-function _Gtme.importDatabase(package)
-	local mysqlCheck = _Gtme.validateMySql()
-	if not (mysqlCheck == "") then
-		_Gtme.printError(mysqlCheck)
-		return
-	end	
-	
-	local mysqlPath = ""
-	if not isMySqlOnPath() then
-		mysqlPath = gimmeMySqlDirPath().."/"
-	end	
-
-	local s = _Gtme.sessionInfo().separator
-
-	local config = _Gtme.getConfig()
-
-	local user = config.user
-	local password = config.password
-	local host = config.host
-	local drop = config.drop
-	
-	local command = mysqlPath.."mysql"
-	local options = ""
-
-	if user then
-		options = options.." -u"..user
-	else
-		options = options.." -u root"
-	end
-
-	if password and password ~= "" then
-		options = options.." -p"..password
-	end
-
-	if host then
-		options = options.." -h"..host
-	end	
-	
-	if not isValidDbConnection(command, options) then
-		local err = "Wrong database connection parameters!"
-		_Gtme.printError(err)
-		return err
-	end		
-	
-	local directory = _Gtme.packageInfo(package).data
-	local files = _Gtme.sqlFiles(package)
-
-	local returnv
-
-	_Gtme.forEachElement(files, function(_, value)
-		local database = string.sub(value, 1, string.len(value) - 4)
-
-		if drop then
-			_Gtme.printNote("Deleting database '"..database.."'")
-			_Gtme.runCommand("\""..command.."\" "..options.." -e \"drop database "..database.."\"")
-		end
-
-		_Gtme.printNote("Creating database '"..database.."'")
-		local _, result = _Gtme.runCommand("\""..command.."\" "..options.." -e \"create database "..database.."\"")
-		if result and result[1] and not isWarningMessage(result[1]) then
-			_Gtme.printError(result[1])
-			_Gtme.printError("Add 'drop = true' to your config.lua to allow replacing databases if needed.")
-			returnv = result[1]
-		else
-			_Gtme.printNote("Importing database '"..database.."'")
-			local importDbFile = _Gtme.makePathCompatibleToAllOS(directory..s..value)
-			local cmd = "\""..command.."\" "..options.." "..database.." < \""..importDbFile.."\""
-			if _Gtme.isWindowsOS() then
-				cmd = "\""..cmd.."\""
-			end
-
-			os.execute(cmd)
-			_Gtme.printNote("Database '"..database.."' successfully imported")
-		end
-	end)
-	return returnv
-end
-
 function _Gtme.uninstall(package)
 	local si = _Gtme.sessionInfo()
 	local s = si.separator
@@ -907,10 +706,6 @@ local function usage()
 	print(" [-package <pkg>] -doc            Build the documentation.")
 	print(" [-package <pkg>] -showdoc        Show the documentation in the default browser.")
 	print(" [-package <pkg>] -configure      Configure and run a Model using a graphical interface.")
-	print(" [-package <pkg>] -importDb       Import .sql files described in data.lua from directory")
-	print("                                  data within the package to MySQL.")
-	print(" [-package <pkg>] -exportDb       Export .sql files described in data.lua from MySQL to")
-	print("                                  directory data within the package.")
 --	print(" -workers <value>                 Sets the number of threads used for spatial observers.")
 	print("\nFor more information, please visit www.terrame.org\n")
 end
@@ -1515,12 +1310,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(0)
 			elseif arg == "-uninstall" then
 				_Gtme.uninstall(package)
-				os.exit(0)
-			elseif arg == "-importDb" then
-				_Gtme.importDatabase(package)
-				os.exit(0)
-			elseif arg == "-exportDb" then
-				exportDatabase(package)
 				os.exit(0)
 			elseif arg == "-example" then
 				local file = arguments[argCount + 1]

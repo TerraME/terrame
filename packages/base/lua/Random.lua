@@ -95,7 +95,6 @@ local function xorshift128plus(self, min, max)
 	return ((x + y) % (max - min + 1)) + min
 end
 
-
 Random_ = {
 	type_ = "Random",
 	--- Return an integer random number. It uses a discrete uniform distribution.
@@ -174,7 +173,7 @@ Random_ = {
 	-- @usage random = Random()
 	--
 	-- random:reSeed(12345)
-	reSeed = function(_, seed)
+	reSeed = function(self, seed)
 		if seed == nil then 
 			seed = tonumber(tostring(os.time()):reverse():sub(1, 6))
 		else
@@ -184,8 +183,8 @@ Random_ = {
 		optionalArgument(1, "number", seed)
 		integerArgument(1, seed)
 
-		Random_.seed[1] = 1
-		Random_.seed[2] = seed
+		self.random.seed[1] = 1
+		self.random.seed[2] = seed
 	end,
 	--- Return a random element from the chosen distribution. 
 	-- @usage random = Random{2, 3, 4, 6}
@@ -375,6 +374,7 @@ function Random(data)
 		Random_.seed = {seed, seed}
 	end
 
+	data.random = Random_
 	setmetatable(data, metaTableRandom_)
 	return data
 end

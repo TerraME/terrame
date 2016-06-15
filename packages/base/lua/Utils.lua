@@ -1375,8 +1375,8 @@ function makeDataTable(data)
 	else
 
 		forEachOrderedElement(mydata, function(_, idx)
-			if #data[idx] ~= mquantity then
-				customError("Argument '"..idx.."' should have "..mquantity.." elements, got "..#data[idx]..".")
+			if #data[idx] ~= quantity then
+				customError("Argument '"..idx.."' should have "..quantity.." elements, got "..#data[idx]..".")
 			end
 		end)
 	end
