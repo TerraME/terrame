@@ -258,6 +258,8 @@ function _Gtme.projectFiles(package)
 	local files = {}
 	local data_path = _Gtme.packageInfo(package).data
 
+	if not isDir(data_path) then return files end
+
 	forEachFile(data_path, function(file)
 		if string.endswith(file, ".lua") then
 			table.insert(files, file)

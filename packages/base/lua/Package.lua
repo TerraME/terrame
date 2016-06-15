@@ -338,13 +338,13 @@ function packageInfo(package)
 		end)
 
 		if ss ~= "" then -- SKIP
-			ss = string.gsub(s, "%, ", function()
+			ss = string.gsub(ss, "%, ", function()
 				return ""
 			end)
 		end
 
 		if ss ~= "" then -- SKIP
-			customError("Wrong description of 'depends' in description.lua of package '"..package.."'. Unrecognized '"..s.."'.")
+			customError("Wrong description of 'depends' in description.lua of package '"..package.."'. Unrecognized '"..ss.."'.")
 		end
 
 		local mdepends = {}
