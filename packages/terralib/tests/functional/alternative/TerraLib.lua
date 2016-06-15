@@ -42,31 +42,30 @@ return {
 		end
 		unitTest:assertError(mandatoryExt, "Please, the file extension must be '.tview'.")
 	end,
-	getLayerInfo = function(unitTest)
-		unitTest:assert(true)
-	end,
-	addShpLayer = function(unitTest)
-		unitTest:assert(true)
-	end,
-	addTifLayer = function(unitTest)
-		unitTest:assert(true)
-	end,
-	addPgLayer = function(unitTest)
-		unitTest:assert(true)
-	end,
-	copyLayer = function(unitTest)
-		unitTest:assert(true)
-	end,
-	addShpCellSpaceLayer = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getDataSet = function(unitTest)
-		unitTest:assert(true)
-	end,
-	saveDataSet = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getShpByFilePath = function(unitTest)
-		unitTest:assert(true)
-	end	
+	getArea = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+
+		local dSet = tl:getDataSet(proj, layerName1)
+		
+		local areaError = function()
+			local area = tl:getArea(dSet[0].OGR_GEOMETRY)
+		end
+		unitTest:assertError(areaError, "Geometry should be a polygon to get the area.")
+		
+		rmFile(proj.file)
+	end
 }
