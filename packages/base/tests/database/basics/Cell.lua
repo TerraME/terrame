@@ -56,7 +56,7 @@ return{
 		end			
 		
 		local clName1 = "Brazil_Cells"
-		local layer = terralib.Layer{
+		terralib.Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,

@@ -56,7 +56,7 @@ return{
 		end			
 		
 		local clName1 = "Brazil_Cells"
-		local layer = terralib.Layer{
+		terralib.Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
@@ -71,7 +71,7 @@ return{
 		
 		local cellWithoutGeom = function()
 			local cell = cs:sample()
-			local area = cell:area()
+			cell:area()
 		end
 		unitTest:assertError(cellWithoutGeom, "It was not possible to calculate the area. Geometry was not found.")
 		
@@ -117,7 +117,7 @@ return{
 
 		cellWithoutGeom = function()
 			local cell = cs:sample()
-			local area = cell:area()
+			cell:area()
 		end
 		unitTest:assertError(cellWithoutGeom, "It was not possible to calculate the area. Geometry was not found.")	
 		
