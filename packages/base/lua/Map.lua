@@ -1923,7 +1923,7 @@ function Map(data)
 					end
 				end
 
-				mcolors = brewerRGB[colors][data.slices]
+				mcolors = brewerRGB[mcolors][data.slices]
 
 				if not mcolors then
 					customError("Color '"..data.color.."' does not support "..data.slices.." slices.")

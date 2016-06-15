@@ -6,6 +6,7 @@ File 'accumulation_Nov94May00.tif.aux.xml' is already documented in 'data.lua'
 File 'accumulation_Nov94May00.xml' is already documented in 'data.lua'
 File 'altimetria.tif' is already documented in 'data.lua'
 File 'Altimetria.xml' is already documented in 'data.lua'
+File 'amazonia.lua' is already documented in 'data.lua'
 File 'amazonia.tview' is already documented in 'data.lua'
 File 'BCIM_Trecho_RodoviarioLine_PA_polyc_lin.dbf' does not need to be documented
 File 'BCIM_Trecho_RodoviarioLine_PA_polyc_lin.prj' does not need to be documented
@@ -17,6 +18,8 @@ File 'BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.prj' does not need to b
 File 'BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.qix' does not need to be documented
 File 'BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp' is already documented in 'data.lua'
 File 'BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shx' does not need to be documented
+File 'cabecadeboi.lua' is already documented in 'data.lua'
+File 'cabecadeboi.tview' is already documented in 'data.lua'
 File 'cbers_rgb342_crop1.jpg' is already documented in 'data.lua'
 File 'cbers_rgb342_crop1.tif' is already documented in 'data.lua'
 File 'Desmatamento_2000.tif' is already documented in 'data.lua'
@@ -28,11 +31,16 @@ File 'elevation_box.sbn' does not need to be documented
 File 'elevation_box.sbx' does not need to be documented
 File 'elevation_box.shp' is already documented in 'data.lua'
 File 'elevation_box.shx' does not need to be documented
+File 'emas.lua' is already documented in 'data.lua'
+File 'fillCellExample.lua' is already documented in 'data.lua'
+File 'fillCellExample.tview' is already documented in 'data.lua'
 File 'firebreak_lin.dbf' does not need to be documented
 File 'firebreak_lin.prj' does not need to be documented
 File 'firebreak_lin.qix' does not need to be documented
 File 'firebreak_lin.shp' is already documented in 'data.lua'
 File 'firebreak_lin.shx' does not need to be documented
+File 'itaituba.lua' is already documented in 'data.lua'
+File 'itaituba.tview' is already documented in 'data.lua'
 File 'Limit_pol.dbf' does not need to be documented
 File 'Limit_pol.prj' does not need to be documented
 File 'Limit_pol.qix' does not need to be documented
