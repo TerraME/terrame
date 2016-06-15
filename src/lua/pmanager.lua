@@ -27,7 +27,7 @@ local comboboxModels
 local comboboxPackages
 local aboutButton
 local configureButton
-local dbButton
+local projButton
 local docButton
 local installLocalButton
 local installButton
@@ -63,7 +63,7 @@ local function disableAll()
 	oldState = {
 		[comboboxExamples] = comboboxExamples.enabled,
 		[comboboxModels]   = comboboxModels.enabled,
-		[dbButton]         = dbButton.enabled,
+		[projButton]       = projButton.enabled,
 		[docButton]        = docButton.enabled,
 		[configureButton]  = configureButton.enabled,
 		[runButton]        = runButton.enabled
@@ -74,7 +74,7 @@ local function disableAll()
 	comboboxPackages.enabled   = false
 	aboutButton.enabled        = false
 	configureButton.enabled    = false
-	dbButton.enabled           = false
+	projButton.enabled           = false
 	docButton.enabled          = false
 	installLocalButton.enabled = false
 	installButton.enabled      = false
@@ -86,7 +86,7 @@ local function enableAll()
 	comboboxExamples.enabled = oldState[comboboxExamples]
 	comboboxModels.enabled   = oldState[comboboxModels]
 	configureButton.enabled  = oldState[configureButton]
-	dbButton.enabled         = oldState[dbButton]
+	projButton.enabled       = oldState[projButton]
 	docButton.enabled        = oldState[docButton]
 	runButton.enabled        = oldState[runButton]
 
@@ -141,18 +141,13 @@ local function docButtonClicked()
 	enableAll()
 end
 
-local function dbButtonClicked()
+local function projButtonClicked()
 	disableAll()
-	local mysqlCheck = _Gtme.validateMySql()		
-	if not (mysqlCheck == "") then
-		qt.dialog.msg_critical(mysqlCheck)
-		enableAll()
-		return
-	end		
-		
-	local files = _Gtme.sqlFiles(comboboxPackages.currentText)
+	local package = comboboxPackages.currentText
+	local s = _Gtme.sessionInfo().separator
+	local files = _Gtme.projectFiles(package)
 
-	local msg = "The following databases will be imported:\n"
+	local msg = "The following projects will be created:\n"
 	_Gtme.forEachElement(files, function(_, value)
 		local database = string.sub(value, 1, string.len(value) - 4)
 		msg = msg.."- "..database.."\n"
@@ -162,25 +157,16 @@ local function dbButtonClicked()
 	local ok = 1024
 	local cancel = 4194304
 
-	msg = msg.."\nConfirm installation?"
+	msg = msg.."\nThis operation will take some time. Confirm?"
 	if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
-		local success = false
+		local data = _Gtme.packageInfo(package).data..s
+		_Gtme.forEachElement(files, function(_, value)
+			_Gtme.printNote("Processing "..data..value)
+			dofile(data..value)
+			_Gtme.clean()
+		end)
 
-		while not success do
-			if not _Gtme.buildConfig() then
-				enableAll()
-				return
-			end
-
-			local result = _Gtme.importDatabase(comboboxPackages.currentText)
-
-			if result then
-				qt.dialog.msg_critical("Error: "..result)
-			else
-				qt.dialog.msg_information("Databases sucessfully installed.")
-				success = true
-			end
-		end
+		qt.dialog.msg_information("All "..#files.." projects were successfully created.")
 	end
 	enableAll()
 end
@@ -237,7 +223,7 @@ local function selectPackage()
 		configureButton.enabled = false
 		comboboxExamples.enabled = false
 		runButton.enabled = false
-		dbButton.enabled = false
+		projButton.enabled = false
 		docButton.enabled = false
 		return
 	end
@@ -263,14 +249,8 @@ local function selectPackage()
 		qt.combobox_add_item(comboboxExamples, value)
 	end)
 
-	data = function() end
-
-	if not pcall(function() dofile(_Gtme.packageInfo(comboboxPackages.currentText).path..s.."data.lua") end) then
-		dbButton.enabled = false
-	else
-		local files = _Gtme.sqlFiles(comboboxPackages.currentText)
-		dbButton.enabled = #files > 0
-	end
+	local files = _Gtme.projectFiles(comboboxPackages.currentText)
+	projButton.enabled = #files > 0
 end
 
 local function installButtonClicked()
@@ -596,9 +576,9 @@ function _Gtme.packageManager()
 	docButton.text = "Documentation"
 	qt.connect(docButton, "clicked()", docButtonClicked)
 
-	dbButton = qt.new_qobject(qt.meta.QPushButton)
-	dbButton.text = "Databases"
-	qt.connect(dbButton, "clicked()", dbButtonClicked)
+	projButton = qt.new_qobject(qt.meta.QPushButton)
+	projButton.text = "Projects"
+	qt.connect(projButton, "clicked()", projButtonClicked)
 
 	label = qt.new_qobject(qt.meta.QLabel)
 	label.text = "Package:"
@@ -606,7 +586,7 @@ function _Gtme.packageManager()
 	qt.ui.layout_add(internalLayout, comboboxPackages, 0, 1)
 	qt.ui.layout_add(internalLayout, aboutButton,      0, 2)
 	qt.ui.layout_add(internalLayout, docButton,        0, 3)
-	qt.ui.layout_add(internalLayout, dbButton,         0, 4)
+	qt.ui.layout_add(internalLayout, projButton,       0, 4)
 
 	-- models list + execute button
 	comboboxModels = qt.new_qobject(qt.meta.QComboBox)
