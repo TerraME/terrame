@@ -1153,7 +1153,6 @@ CellularSpace_ = {
 
 		forEachCell(self, load(s)())
 	end
-	end
 }
 
 metaTableCellularSpace_ = {
