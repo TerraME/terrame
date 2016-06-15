@@ -445,7 +445,7 @@ function _Gtme.executeDoc(package)
 		printNote("Checking directory 'data'")
 		forEachOrderedElement(projects, function(_, value)
 			local found = false
-			forEachElement(mdata, function(idx, mvalue)
+			forEachElement(mdata, function(_, mvalue)
 				if value.file[1] == mvalue.file[1] then
 					if value.layers or string.find(value.description, "resolution") then -- a project or a layer of cells
 						printError("File "..value.file[1].." should not be documented as it would be automatically created.")
