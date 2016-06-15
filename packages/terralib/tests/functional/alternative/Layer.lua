@@ -213,7 +213,7 @@ return{
 				resolution = 0.7
 			}
 		end
-		unitTest:assertError(noFilePass, mandatoryArgumentMsg("source"))
+		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))
 
 		attrSourceNonString = function()
 			Layer{

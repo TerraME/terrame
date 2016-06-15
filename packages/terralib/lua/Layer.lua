@@ -56,10 +56,14 @@ local function addCellularLayer(self, data)
 		
 	if isEmpty(data.source) then		
 		if isEmpty(data.file) then
+			if data.database then
+				defaultTableValue(data, "source", "postgis")
+			else
 			--if not isFile(data.file) then
 				--customError("The layer file'"..data.file.."' not found.")
+				mandatoryTableArgument(data, "file", "string") -- HERE
 				mandatoryTableArgument(data, "source", "string")
-			--end	
+			end	
 		else		
 			local source = getFileExtension(data.file)
 			data.source = source	

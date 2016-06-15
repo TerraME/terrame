@@ -420,21 +420,6 @@ return {
 		database = "postgis_22_sample"
 		encoding = "CP1252"
 
-		sourceMandatory = function() 
-			Layer{
-				project = proj,
-				-- source = "postgis",
-				input = layerName1,
-				name = clName1,
-				resolution = 0.7,
-				user = user,
-				password = password,
-				database = database,
-				table = tName1
-			}
-		end
-		unitTest:assertError(sourceMandatory, mandatoryArgumentMsg("source"))
-
 		local inputMandatory = function()
 			Layer{
 				project = proj,
