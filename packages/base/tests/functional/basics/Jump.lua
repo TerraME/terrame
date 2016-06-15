@@ -34,7 +34,7 @@ return{
 			end,
 			target = "go"
 		}
-		unitTest:assertEquals(string.sub(tostring(j1), 1, 8), "TeJump (")
+		unitTest:assertEquals(string.sub(tostring(j1), 1, 8), "TeJump (", 2)
 
 		Jump{
 			function(cell, _, ag1)

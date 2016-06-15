@@ -116,7 +116,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(invalidBand, "Band '5' does not exist. The available bands are from '0' to '4'.")
+		unitTest:assertError(invalidBand, "Band '5' does not exist. The available bands are from '0' to '4.0'.")
 		
 		Layer{
 			project = proj,
