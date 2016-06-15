@@ -255,7 +255,6 @@ function _Gtme.buildCountTable(package)
 end
 
 function _Gtme.projectFiles(package)
-	local s = _Gtme.sessionInfo().separator
 	local files = {}
 	local data_path = _Gtme.packageInfo(package).data
 
