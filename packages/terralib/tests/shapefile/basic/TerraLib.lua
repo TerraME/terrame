@@ -991,5 +991,52 @@ return {
 				unitTest:assertNotNil(v)
 			end
 		end		
-	end	
+	end,
+	getArea = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+
+		local clName1 = "SampaShpCells"	
+		local resolution = 0.7
+		local mask = true
+		local cellsShp = clName1..".shp"
+		
+		if isFile(cellsShp) then
+			rmFile(cellsShp)
+		end
+		
+		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
+
+		local dSet = tl:getDataSet(proj, clName1)
+		local area = tl:getArea(dSet[0].OGR_GEOMETRY)
+		unitTest:assertEquals(type(area), "number")
+		unitTest:assertEquals(area, 0.49, 0.001)
+		
+		for i = 1, #dSet do
+			for k, v in pairs(dSet[i]) do
+				if k == "OGR_GEOMETRY" then
+					unitTest:assertEquals(area, tl:getArea(v), 0.001)
+				end
+			end
+		end			
+		
+		if isFile(cellsShp) then
+			rmFile(cellsShp)
+		end		
+		
+		rmFile(proj.file)
+	end
 }

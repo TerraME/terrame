@@ -1690,6 +1690,12 @@ TerraLib_ = {
 		
 		return set	
 	end,
+	--- Returns the number of bands of some Raster.
+	-- @arg project The name of the project.
+	-- @arg layerName The input layer name.
+	-- @usage -- DONTRUN
+	-- tl:addTifLayer(proj, layerName, layerFile)	
+	-- local numBands = tl:getNumOfBands(proj, layerName)	
 	getNumOfBands = function(_, project, layerName)
 		loadProject(project, project.file)
 		local layer = project.layers[layerName]
@@ -1720,6 +1726,24 @@ TerraLib_ = {
 		releaseProject(project)
 		
 		customError("The layer '"..layerName.."' is not a Raster.")
+	end,
+	--- Returns the area of this envelope as measured in the spatial reference system of it.
+	-- @arg geom The geometry of the project.
+	-- @usage -- DONTRUN
+	-- local dSet = tl:getDataSet(proj, clName1)
+	-- local area = tl:getArea(dSet[0].OGR_GEOMETRY)
+	getArea = function(_, geom)
+		local geomType = geom:getGeometryType()
+
+		if (geomType == "MultiPolygon") or (geomType == "CurvePolygon") or
+			(geomType == "Polygon") then
+			local env = geom:getMBR()
+			return env:getArea()
+		else
+			customWarning("Geometry should be a polygon to get the area.")
+		end	
+		
+		return 0
 	end
 }
 

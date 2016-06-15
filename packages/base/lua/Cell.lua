@@ -22,6 +22,9 @@
 --
 -------------------------------------------------------------------------------------------
 
+local terralib = getPackage("terralib")
+local cellArea
+
 Cell_ = {
 	type_ = "Cell",
 	--- Add a new Neighborhood to the Cell. This function replaces previous Neighborhood with the
@@ -267,6 +270,22 @@ Cell_ = {
 			if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
 				self.past[k] = v
 			end
+		end
+	end,
+	--- Return the Cell area.
+	-- @usage -- DONTRUN
+	-- cell:area()	
+	area = function(self)
+		if cellArea then
+			return cellArea
+		end
+		
+		if self.geom then
+			local tl = terralib.TerraLib{}
+			cellArea = tl:getArea(self.geom)
+			return cellArea
+		else
+			customError("It was not possible to calculate the area. Geometry was not found.")
 		end
 	end
 }

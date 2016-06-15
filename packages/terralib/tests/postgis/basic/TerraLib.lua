@@ -1142,5 +1142,65 @@ return {
 		
 		rmFile(proj.file)
 		tl:dropPgDatabase(pgData)		
-	end
+	end,
+	getArea = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {
+			file = "myproject.tview",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
+		}
+
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)		
+		
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "terralib_save_test"
+		local encoding = "CP1252"
+		local tableName = "sampa_cells"
+		
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName,
+			encoding = encoding	
+		}	
+		
+		tl:dropPgDatabase(pgData)
+		
+		local clName1 = "SampaPgCells"	
+		local resolution = 0.7
+		local mask = true
+		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
+		
+		local dSet = tl:getDataSet(proj, clName1)
+		local area = tl:getArea(dSet[0].geom)
+		unitTest:assertEquals(type(area), "number")
+		unitTest:assertEquals(area, 0.49, 0.001)
+		
+		for i = 1, #dSet do
+			for k, v in pairs(dSet[i]) do
+				if k == "geom" then
+					unitTest:assertEquals(area, tl:getArea(v), 0.001)
+				end
+			end
+		end				
+		
+		rmFile(proj.file)
+		tl:dropPgDatabase(pgData)		
+	end		
 }
