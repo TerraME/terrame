@@ -28,6 +28,19 @@ return{
 			filePath("mriver_lin.shp")
 		end
 		unitTest:assertError(error_func, "File 'base/data/mriver_lin.shp' does not exist in package 'base'. Do you mean 'River_lin.shp'?", 2)
+
+		local tlInfo = packageInfo("terralib")
+		local baseInfo = packageInfo()
+		local s = sessionInfo().separator
+
+		os.execute("cp "..tlInfo.data..s.."amazonia.lua "..baseInfo.data)
+
+		error_func = function()
+			filePath("amazonia.tview")
+		end
+		unitTest:assertError(error_func, "File 'base/data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project' to create it.", 2)
+
+		rmFile(baseInfo.data..s.."amazonia.lua")
 	end,
 	filesByExtension = function(unitTest)
 		local error_func = function()
