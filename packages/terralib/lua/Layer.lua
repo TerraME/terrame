@@ -51,7 +51,6 @@ local function addCellularLayer(self, data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source", 
 	                                  "clean", "host", "port", "user", "password", "database", "table"})
 
-	defaultTableValue(data, "box", false) -- TODO: CHECK HOW USE THIS
 	mandatoryTableArgument(data, "input", "string")
 	positiveTableArgument(data, "resolution")
 		
@@ -102,16 +101,18 @@ local function addCellularLayer(self, data)
 
 	local repr = data.project.terralib:getLayerInfo(data.project, data.project.layers[data.input]).rep
 
-	if repr ~= "polygon" then
-		customError("It is only possible to create a layer of cells from a layer with polygonal geometry, got "..repr..".")
-	end
-
 	switch(data, "source"):caseof{
 		shp = function()
 			mandatoryTableArgument(data, "file", "string")
-		defaultTableValue(data, "clean", false)
-				
-			verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project", "resolution", "file", "source"})
+			defaultTableValue(data, "clean", false)
+			
+			if repr == "raster" then
+				verifyUnnecessaryArguments(data, {"clean", "input", "name", "project", "resolution", "file", "source"})
+				data.box = true
+			else
+				defaultTableValue(data, "box", false)
+				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project", "resolution", "file", "source"})
+			end
 				
 			if isFile(data.file) then
 				if data.clean then
@@ -120,20 +121,9 @@ local function addCellularLayer(self, data)
 					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
 				end
 			end			
-
-			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, data.file)
+			
+			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, data.file, not data.box)
 		end,
-		--tif = function()
-		--	mandatoryTableArgument(data, "file", "string")
-			
-		--	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "project", "file", "source"})
-				
-		--	if isFile(data.file) then
-		--		customError("File '"..data.file.."' already exists.")
-		--	end	
-			
-			--self.terralib:addTifLayer(data.name, data.file)
-		--end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")
 			mandatoryTableArgument(data, "password", "string")
@@ -145,10 +135,18 @@ local function addCellularLayer(self, data)
 			defaultTableValue(data, "encoding", "CP1252")
 				
 			data.port = tostring(data.port)
-
-			verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "source", "encoding",
+			
+			if repr == "raster" then
+				verifyUnnecessaryArguments(data, {"input", "name", "resolution", "source", "encoding",
+										"project", "host", "port", "user", "password", "database", "table", "project"})		
+				data.box = true
+			else
+				defaultTableValue(data, "box", false)
+				verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "source", "encoding",
 										"project", "host", "port", "user", "password", "database", "table", "project"})
-			self.terralib:addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data)
+			end
+										
+			self.terralib:addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data, not data.box)
 		end
 	}
 end
