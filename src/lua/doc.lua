@@ -99,11 +99,19 @@ local function getProjects(package)
 
 	import("terralib")
 
+	local oldImport = import
+
+	import = function(package)
+		if package ~= "terralib" then
+			oldImport(package)
+		end
+	end
+
 	local tl = getPackage("terralib")
 
 	Project = function(data)
 		currentProject = data.file
-		projects[currentProject] = {}
+		projects[currentProject] = {description = data.description}
 
 		forEachOrderedElement(data, function(idx, value)
 			if idx ~= "file" and type(value) == "string" and isFile(value) then
@@ -242,6 +250,12 @@ local function getProjects(package)
 		local luaFile = string.sub(idx, 1, -6).."lua"
 		local shortsummary = "Automatically created TerraView project file"
 		local summary = shortsummary.." from <a href=\"../../data/"..luaFile.."\">"..luaFile.."</a>."
+
+		if proj.description then
+			summary = summary.." "..proj.description
+			proj.description = nil
+		end
+
 		local mproject = {
 			summary = summary,
 			shortsummary = shortsummary..".",
@@ -260,12 +274,15 @@ local function getProjects(package)
 
 	if #mlayers > 0 then
 		forEachOrderedElement(mlayers, function(idx, layer)
-			layer.file = {idx}
+			layer.file = {layer.file}
 			table.insert(output, layer)
 		end)
 	end
 
 	clean()
+
+	import = oldImport
+
 	return output
 end
 
