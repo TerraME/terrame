@@ -101,9 +101,9 @@ local function getProjects(package)
 
 	local oldImport = import
 
-	import = function(package)
-		if package ~= "terralib" then
-			oldImport(package)
+	import = function(pkg)
+		if pkg ~= "terralib" then
+			oldImport(pkg)
 		end
 	end
 
@@ -273,7 +273,7 @@ local function getProjects(package)
 	end)
 
 	if #mlayers > 0 then
-		forEachOrderedElement(mlayers, function(idx, layer)
+		forEachOrderedElement(mlayers, function(_, layer)
 			layer.file = {layer.file}
 			table.insert(output, layer)
 		end)
@@ -434,12 +434,29 @@ function _Gtme.executeDoc(package)
 			os.exit(1)
 		end)
 
-		printNote("Checking directory 'data'")
-
 		projects = getProjects(package)
 
 		forEachOrderedElement(projects, function(_, value)
-			table.insert(mdata, value)
+			if value.layers or string.find(value.description, "resolution") then -- a project or a layer of cells
+				filesdocumented[value.file[1]] = 1
+			end
+		end)
+
+		printNote("Checking directory 'data'")
+		forEachOrderedElement(projects, function(_, value)
+			local found = false
+			forEachElement(mdata, function(idx, mvalue)
+				if value.file[1] == mvalue.file[1] then
+					if value.layers or string.find(value.description, "resolution") then -- a project or a layer of cells
+						printError("File "..value.file[1].." should not be documented as it would be automatically created.")
+						doc_report.error_data = doc_report.error_data + 1
+					end
+				end
+			end)
+
+			if not found then
+				table.insert(mdata, value)
+			end
 		end)
 
 		table.sort(mdata, function(a, b)

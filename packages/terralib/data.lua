@@ -117,16 +117,6 @@ data{
 }
 
 data{
-	file = "amazonia.tview",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	types = {},       -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-
-data{
 	file = "BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp",
 	summary = "",
 	source = "",
@@ -248,16 +238,6 @@ data{
 }
 
 data{
-	file = "sampa.shp.tview",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	types = {},       -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-
-data{
 	file = "Setores_Censitarios_2000_pol.shp",
 	summary = "",
 	source = "",
@@ -276,3 +256,83 @@ data{
 	description = {}, -- optional
 	reference = ""    -- optional
 }
+data{
+	file = "accumulation_Nov94May00.tif.aux.xml",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "amazonia.lua",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "cabecadeboi.lua",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "elevation_box.shp",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "emas.lua",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "fillCellExample.lua",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "itaituba.lua",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "TI_AMZ_pol.shp",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
