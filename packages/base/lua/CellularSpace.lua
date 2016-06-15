@@ -1122,20 +1122,22 @@ CellularSpace_ = {
 	-- print(c.forest)
 	-- print(c.past.forest)
 	synchronize = function(self, values)
-		if type(values) == "string" then values = {values} end
-		if type(values) ~= "table" then 
-			if values == nil then
-				values = {}
-				local cell = self.cells[1]
-				for k in pairs(cell) do
-					if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
-						table.insert(values, k)
-					end
+		if values == nil then
+			values = {}
+			local cell = self.cells[1]
+			for k, v in pairs(cell) do
+				if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
+					table.insert(values, k)
 				end
-			else
-				incompatibleTypeError(1, "string, table or nil", values)
 			end
 		end
+
+		if type(values) == "string" then
+			values = {values}
+		elseif type(values) ~= "table" then 
+			incompatibleTypeError(1, "string, table or nil", values)
+		end
+
 		local s = "return function(cell)\n"
 		s = s.."cell.past = {"
 
