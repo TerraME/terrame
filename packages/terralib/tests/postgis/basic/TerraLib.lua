@@ -1186,8 +1186,6 @@ return {
 		local resolution = 0.7
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
-
-		local dSet = tl:getDataSet(proj, clName1)
 		
 		local dSet = tl:getDataSet(proj, clName1)
 		local area = tl:getArea(dSet[0].geom)

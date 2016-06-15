@@ -60,9 +60,10 @@ return {
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 
 		local dSet = tl:getDataSet(proj, layerName1)
+		local area = 0
 		
 		local areaError = function()
-			local area = tl:getArea(dSet[0].OGR_GEOMETRY)
+			area = tl:getArea(dSet[0].OGR_GEOMETRY)
 		end
 		unitTest:assertError(areaError, "Geometry should be a polygon to get the area.")
 		
