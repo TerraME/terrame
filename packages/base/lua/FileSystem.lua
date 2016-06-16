@@ -295,10 +295,12 @@ function rmFile(file)
 		local dbf = string.sub(file, 1, -4).."dbf"
 		local shx = string.sub(file, 1, -4).."shx"
 		local prj = string.sub(file, 1, -4).."prj"
+		local qix = string.sub(file, 1, -4).."qix"
 
 		if isFile(dbf) then rmFile(dbf) end
 		if isFile(shx) then rmFile(shx) end
 		if isFile(prj) then rmFile(prj) end
+		if isFile(qix) then rmFile(qix) end
 	end
 end
 
