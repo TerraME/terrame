@@ -390,7 +390,7 @@ function Chart(attrTab)
 				end
 			end)
 		else -- isTable
-			forEachOrderedElement(attrTab.target, function(idx, value, mtype)
+			forEachOrderedElement(attrTab.target, function(idx, _, mtype)
 				if mtype == "number" then
 					attrTab.select[#attrTab.select + 1] = idx
 				end
@@ -550,7 +550,6 @@ function Chart(attrTab)
 
 	if isTable(attrTab.target) and not isModel(attrTab.target) and not belong(type(attrTab.target), {"Cell", "CellularSpace", "Agent", "Society"}) then
 		if attrTab.target.cobj_ == nil then
-			local mtable = getmetatable(attrTab.target)
 			attrTab.target.type_ = nil
 			setmetatable(attrTab.target, nil)
  			attrTab.target = Cell(attrTab.target)

@@ -489,8 +489,8 @@ function suggestion(value, options)
 	if #options > 0 then
 		local moptions = {}
 
-		forEachElement(options, function(_, value)
-			moptions[value] = true
+		forEachElement(options, function(_, mvalue)
+			moptions[mvalue] = true
 		end)
 
 		options = moptions

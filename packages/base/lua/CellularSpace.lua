@@ -1125,7 +1125,7 @@ CellularSpace_ = {
 		if values == nil then
 			values = {}
 			local cell = self.cells[1]
-			for k, v in pairs(cell) do
+			for k in pairs(cell) do
 				if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
 					table.insert(values, k)
 				end
