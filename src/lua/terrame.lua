@@ -158,7 +158,11 @@ end
 
 function _Gtme.downloadPackagesList()
 	local version = sessionInfo().version
-	local packages = load(cpp_listpackages("http://www.terrame.org/packages/"..version.."/packages.lua"))()
+	local list = load(cpp_listpackages("http://www.terrame.org/packages/"..version.."/packages.lua"))
+
+	if not list then return {} end
+
+	local packages = list()
 	return packages
 end
 
