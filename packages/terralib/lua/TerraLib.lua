@@ -179,6 +179,24 @@ local function makeAndOpenDataSource(connInfo, type)
 	return ds
 end
 
+local function hasShapeFileSpatialIndex(shapeFile)
+	local qixFile = string.gsub(shapeFile, ".shp", ".qix")
+	if isFile(qixFile) then
+		return true
+	end
+	
+	local sbnFile = string.gsub(shapeFile, ".shp", ".sbn")
+	if isFile(sbnFile) then
+		return true
+	end	
+	
+	return false
+end
+
+local function addSpatialIndex(ds, dSetName)
+	ds:execute("CREATE SPATIAL INDEX ON "..dSetName)
+end
+
 local function createLayer(name, dSetName, connInfo, type)
 	local layer
 
@@ -200,6 +218,9 @@ local function createLayer(name, dSetName, connInfo, type)
 			local gp = binding.GetFirstGeomProperty(dSetType)
 			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
 			srid = gp:getSRID()
+			if not hasShapeFileSpatialIndex(connInfo.URI) and connInfo.SPATIAL_IDX then
+				addSpatialIndex(ds, dSetName)
+			end
 		elseif type == "GDAL" then
 			dSet = ds:getDataSet(dSetName)
 			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
@@ -487,7 +508,7 @@ local function loadProject(project, file)
 	xmlReader:read(filePath("YgDbLUDrqQbvu7QxTYxX.xml", "terralib"))
 end
 
-local function addFileLayer(project, name, filePath, type)
+local function addFileLayer(project, name, filePath, type, addSpatialIdx)
 	local connInfo = createFileConnInfo(filePath)
 	
 	loadProject(project, project.file)
@@ -495,6 +516,9 @@ local function addFileLayer(project, name, filePath, type)
 	local dSetName = ""
 	
 	if type == "OGR" then
+		if addSpatialIdx then
+			connInfo.SPATIAL_IDX = true
+		end
 		dSetName = getFileName(connInfo.URI)
 	elseif type == "GDAL" then
 		dSetName = getFileNameWithExtension(connInfo.URI)
@@ -1080,8 +1104,8 @@ TerraLib_ = {
 	-- tl = TerraLib()
 	-- tl:createProject("project.tview", {})
 	-- tl:addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
-	addShpLayer = function(_, project, name, filePath)
-		addFileLayer(project, name, filePath, "OGR")
+	addShpLayer = function(_, project, name, filePath, addSpatialIdx)
+		addFileLayer(project, name, filePath, "OGR", addSpatialIdx)
 	end,
 	--- Add a new tiff layer to a given project.
 	-- @arg filePath The path for the project.
@@ -1179,7 +1203,7 @@ TerraLib_ = {
 	-- tl:addShpLayer(proj, layerName1, layerFile1)		
 	--
 	--	tl:addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
-	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask) 
+	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask, addSpatialIdx) 
 		loadProject(project, project.file)
 		
 		if not string.find(filePath, "/") then
@@ -1192,7 +1216,7 @@ TerraLib_ = {
 		
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 		
-		self:addShpLayer(project, name, filePath)
+		self:addShpLayer(project, name, filePath, addSpatialIdx)
 	end,
 	--- Add a new cellular layer to a PostgreSQL connection.
 	-- @arg project The name of the project.
@@ -1450,6 +1474,7 @@ TerraLib_ = {
 				local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
 				outConnInfo.URI = outDir..out..".shp"
 				outConnInfo.DRIVER = "ESRI Shapefile"
+				outConnInfo.SPATIAL_IDX = true
 			end				
 		
 			local dseType = fromLayer:getSchema()
@@ -1487,7 +1512,7 @@ TerraLib_ = {
 			-- TODO: RENAME INSTEAD OUTPUT
 			-- #875
 			-- outDs:renameDataSet(outDSetName, "rename_test")		
-
+			
 			local outLayer = createLayer(out, outDSetName, outConnInfo, outType)
 			project.layers[out] = outLayer
 		

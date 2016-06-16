@@ -23,7 +23,7 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	-- Layer = function(unitTest)
+	Layer = function(unitTest)
 		-- #1152
 		-- local projName = "cellular_layer_fill_tiff_alternative.tview"
 
@@ -56,7 +56,29 @@ return {
 		-- unitTest:assertError(boxUnnecessary, unnecessaryArgumentMsg("box")) -- SKIP
 		
 		-- rmFile(projName)
-	-- end,
+		
+		-- SPATIAL INDEX TEST
+		local projName = "layer_tif_alternative.tview"
+
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
+
+		local prodes = "prodes"
+		local indexUnnecessary = function()
+			Layer{
+				project = proj,
+				name = prodes,
+				file = filePath("PRODES_5KM.tif", "terralib"),
+				index = true
+			}
+		end
+		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index"))
+		
+		rmFile(proj.file)
+		-- // SPATIAL INDEX TEST
+	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_tiff_alternative.tview"
 

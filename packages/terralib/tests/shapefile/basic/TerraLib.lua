@@ -73,8 +73,31 @@ return {
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
-		
+
 		rmFile(proj.file)
+		
+		-- SPATIAL INDEX TEST
+		proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "ShapeLayer1"
+		local qixFile = string.gsub(layerFile, ".shp", ".qix")
+		rmFile(qixFile)
+		local addSpatialIdx = false
+		tl:addShpLayer(proj, layerName1, layerFile, addSpatialIdx)
+		unitTest:assert(not isFile(qixFile))
+		
+		local layerName2 = "ShapeLayer2"
+		addSpatialIdx = true
+		tl:addShpLayer(proj, layerName2, layerFile, addSpatialIdx)
+		unitTest:assert(isFile(qixFile))
+		
+		rmFile(proj.file)		
+		-- // SPATIAL INDEX TEST
 	end,
 	addShpCellSpaceLayer = function(unitTest)
 		local tl = TerraLib{}
@@ -128,6 +151,23 @@ return {
 		
 		clSet = tl:getDataSet(proj, clName)
 		unitTest:assertEquals(getn(clSet), 104)
+		-- // NO MASK TEST
+		
+		-- SPATIAL INDEX TEST
+		clName = "Sampa_Cells_NOSIDX"
+		local shp3 = clName..".shp"
+		local addSpatialIdx = false
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp3, mask, addSpatialIdx)
+		local qixFile1 = string.gsub(shp3, ".shp", ".qix")
+		unitTest:assert(not isFile(qixFile1))
+		
+		clName = "Sampa_Cells_SIDX"
+		local shp4 = clName..".shp"
+		addSpatialIdx = true
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp4, mask, addSpatialIdx)
+		local qixFile2 = string.gsub(shp4, ".shp", ".qix")
+		unitTest:assert(isFile(qixFile2))
+		-- // SPATIAL INDEX TEST
 		
 		-- END
 		if isFile(shp1) then
@@ -136,6 +176,14 @@ return {
 		
 		if isFile(shp2) then
 			rmFile(shp2)
+		end			
+		
+		if isFile(shp3) then
+			rmFile(shp3)
+		end			
+		
+		if isFile(shp4) then
+			rmFile(shp4)
 		end	
 		
 		rmFile(proj.file)
@@ -973,6 +1021,7 @@ return {
 		end					
 		
 		rmFile(cellsShp)
+		rmFile(newLayerName..".shp")
 		rmFile(proj.file)
 	end,
 	getShpByFilePath = function(unitTest)
