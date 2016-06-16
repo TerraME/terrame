@@ -77,20 +77,14 @@ return {
 		rmFile(proj.file)
 		
 		-- SPATIAL INDEX TEST
-		local tl = TerraLib{}
-		local proj = {}
+		proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
-		end
-		
 		tl:createProject(proj, {})
 		
 		local layerName1 = "ShapeLayer1"
-		local layerFile = filePath("sampa.shp", "terralib")
 		local qixFile = string.gsub(layerFile, ".shp", ".qix")
 		rmFile(qixFile)
 		local addSpatialIdx = false
@@ -98,8 +92,8 @@ return {
 		unitTest:assert(not isFile(qixFile))
 		
 		local layerName2 = "ShapeLayer2"
-		local addSpatialIdx = true
-		tl:addShpLayer(proj, layerName1, layerFile, addSpatialIdx)
+		addSpatialIdx = true
+		tl:addShpLayer(proj, layerName2, layerFile, addSpatialIdx)
 		unitTest:assert(isFile(qixFile))
 		
 		rmFile(proj.file)		
@@ -169,7 +163,7 @@ return {
 		
 		clName = "Sampa_Cells_SIDX"
 		local shp4 = clName..".shp"
-		local addSpatialIdx = true
+		addSpatialIdx = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp4, mask, addSpatialIdx)
 		local qixFile2 = string.gsub(shp4, ".shp", ".qix")
 		unitTest:assert(isFile(qixFile2))

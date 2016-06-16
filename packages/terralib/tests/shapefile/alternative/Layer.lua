@@ -35,7 +35,7 @@ return {
 		local layerName1 = "limitepa"
 		
 		local indexDefaultError1 = function()
-			local layer1 = Layer{
+			Layer{
 				project = proj,
 				name = layerName1,
 				file = filePath("limitePA_polyc_pol.shp", "terralib"),

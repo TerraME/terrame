@@ -37,7 +37,7 @@ return {
 		rmFile(qixFile)
 		
 		local layerName1 = "limitepa"
-		local layer1 = Layer{
+		Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath1,
@@ -51,7 +51,7 @@ return {
 			clean = true
 		}		
 		
-		layer1 = Layer{
+		Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath1
