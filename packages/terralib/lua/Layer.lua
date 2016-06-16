@@ -386,7 +386,15 @@ Layer_ = {
 		local project = self.project
 		
 		if not project.layers[data.layer] then
-			customError("The layer '"..data.layer.."' does not exist.")
+			local sug = suggestion(data.layer, project.layers)
+
+			local msg = "The layer '"..data.layer.."' does not exist."
+
+			if sug then
+				msg = msg.." Do you mean '"..sug.."'?"
+			end
+
+			customError(msg)
 		end
 	
 		if project.layers[data.output] then
