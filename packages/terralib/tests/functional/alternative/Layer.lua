@@ -213,7 +213,7 @@ return{
 				resolution = 0.7
 			}
 		end
-		unitTest:assertError(noFilePass, mandatoryArgumentMsg("source"))
+		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))
 
 		attrSourceNonString = function()
 			Layer{
@@ -479,7 +479,17 @@ return{
 				output = presenceLayerName
 			}
 		end
-		unitTest:assertError(layerNotExists, "The layer '".."LayerNotExists".."' does not exist.")
+		unitTest:assertError(layerNotExists, "The layer 'LayerNotExists' does not exist.")
+
+		local layerNotExistsSug = function()
+			cl:fill{
+				operation = "presence",
+				layer = layerName1.."_",
+				attribute = "presence",
+				output = presenceLayerName
+			}
+		end
+		unitTest:assertError(layerNotExistsSug, "The layer '"..layerName1.."_' does not exist. Do you mean '"..layerName1.."'?")
 
 		local attrAlreadyExists = function()
 			cl:fill{

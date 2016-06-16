@@ -2,35 +2,40 @@
 Usage: TerraME [arguments] [file1.lua file2.lua ...]
 
 Options: 
- -autoclose                       Automatically close the platform after simulation.
- -gui                             Show the player for the application (it works only 
-                                  when an Environment and/or a Timer objects are used).
- -ide                             Configure TerraME for running from IDEs in Windows.
- -ft                              Show the full traceback in case of errors (including
-                                  internal lines from TerraME and loaded packages).
- -mode=normal (default)           Warnings enabled.
- -mode=debug                      Warnings treated as errors.
- -mode=strict                     Execute additional verifications in the source code 
-                                  when it finds unnecessary arguments for functions.
- -mode=quiet                      Warnings disabled.
- -silent                          print() does not show any text on the screen.
- -version                         TerraME general information.
- -color                           Show colored output (only for Linux and Mac systems).
- -package <pkg>                   Select a given package. If used alone and the model has
-                                  a single model than it runs the graphical interface
-                                  creating an instance of such model.
- -install <file>                  Install a package stored in a given file.
- [-package <pkg>] -test [<file>]  Execute unit tests.
- [-package <pkg>] -sketch         Create test scripts for source code files missing
-                                  tests and initial documentation for undocumented files.
- [-package <pkg>] -build [<file>] Build an installer for the package. It executes all
- [-clean]                         tests and build the documentation of the package.
-                                  -clean option remove test files and logs.
- [-package <pkg>] -uninstall      Remove an installed package.
- [-package <pkg>] -example [file] Run an example.
- [-package <pkg>] -doc            Build the documentation.
- [-package <pkg>] -showdoc        Show the documentation in the default browser.
- [-package <pkg>] -configure      Configure and run a Model using a graphical interface.
+-autoclose              Automatically close TerraME after simulation.
+-color                  Show colored output. In Windows, it requires ansicon
+                        (https://github.com/adoxa/ansicon/releases).
+-ft                     Show the full traceback in case of errors (including
+                        internal lines from TerraME and loaded packages).
+-gui                    Show the player for the application (it works only
+                        when an Environment or a Timer object is used.
+-ide                    Configure TerraME for running from IDEs in Windows.
+-install <f>            Install a package stored in a given file <f>.
+-mode=debug             Warnings treated as errors.
+-mode=normal (default)  Warnings enabled.
+-mode=quiet             Warnings disabled.
+-mode=strict            Execute additional verifications in the source code.
+-package <pkg>          Select a given package. If used alone and the package
+                        has a single model than it runs the graphical interface
+                        to configure such model. If not package is selected,
+                        TerraME selects base package. -package can be combined
+                        with the following options:
+  -build [<f>] [-clean] Build an installer for the package. It executes all
+                        tests and build the documentation of the package.
+                        -clean option remove test files and logs.
+  -configure <m>        Visually configure and run Model <m>.
+  -doc                  Build the documentation.
+  -example <exp>        Run example <exp>.
+  -project              Create the TerraView projects for the package.
+  -showdoc              Show the documentation in the default browser.
+  -sketch               Create test scripts for source code files missing
+                        tests and initial documentation for undocumented files.
+  -test [<f>]           Execute unit tests for the package. An optional Lua
+                        file <f> can describe a subset of the tests to be 
+                        executed.
+  -uninstall            Remove an installed package.
+-silent                 print() does not show any text on the screen.
+-version                Show TerraME general information.
 
 For more information, please visit www.terrame.org
 
