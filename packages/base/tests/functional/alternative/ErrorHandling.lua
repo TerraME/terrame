@@ -109,6 +109,13 @@ return{
 			suggestion("aaaab", 2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "table", 2))
+
+		local t = {2, 3, 4}
+
+		error_func = function()
+			suggestion("aaaab", t)
+		end
+		unitTest:assertError(error_func, "All the names of argument #2 should be string, got 'number'.")
 	end,
 	switchInvalidArgument = function(unitTest)
 		local error_func = function()
