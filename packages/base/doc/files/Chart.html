@@ -798,7 +798,7 @@ Create a line chart showing the variation of one or more attributes (y axis) of 
     
   
     <li>
-	  <strong>data</strong>: An optional table with a complete description of the data to be drawn in the Chart. It must be a table with a set of vectors, each one with a name. The names of these vectors can be used in arguments select and xAxis. If not using xAxis, it will draw the time according to the positions of the values. When using data, argument target becomes unnecessary.
+	  <strong>data</strong>: An optional table with a complete description of the data to be drawn in the Chart. It must be a <a href=../files/Utils.html#isTable>isTable()</a> with a set of vectors, each one with a name. The names of these vectors can be used in arguments select and xAxis. If not using xAxis, it will draw the time according to the positions of the values. When using data, argument target becomes unnecessary. This argument will automatically be converted to a <a href=../files/Cell.html>Cell</a>, in order to allow using <a href=../files/Cell.html#notify>Cell:notify()</a>.
     </li> 
     
   
@@ -833,7 +833,7 @@ Create a line chart showing the variation of one or more attributes (y axis) of 
     
   
     <li>
-	  <strong>target</strong>: An <a href=../files/Agent.html>Agent</a>, <a href=../files/Cell.html>Cell</a>, <a href=../files/CellularSpace.html>CellularSpace</a>, Society, table, or instance of a <a href=../files/Model.html>Model</a>.
+	  <strong>target</strong>: An <a href=../files/Agent.html>Agent</a>, Cell, <a href=../files/CellularSpace.html>CellularSpace</a>, Society, table, or instance of a <a href=../files/Model.html>Model</a>.
     </li> 
     
   

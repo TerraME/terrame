@@ -1094,7 +1094,7 @@ Add temporal replacements for a given attribute. <a href=../files/Cell.html>Cell
 
 <span class="description">
 
-Remove all the <a href=../files/Event.html>Events</a> from the Timer.<br><br></span>
+Remove all the <a href=../files/Event.html>Events</a> from the Timer. Note that, when this function is called within an action of an Event, if such function does not return false, it will be added to the Timer again after the end of its execution. This means that the simulation will continue with a single Event until its final time.<br><br></span>
 
 
 
