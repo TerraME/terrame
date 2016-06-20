@@ -58,8 +58,9 @@ return{
 		chDir(cur_dir)
 	end,
 	dir = function(unitTest)
-		local files = 36
+		local files = 37
 		local d = dir(packageInfo().data)
+
 		unitTest:assertEquals(#d, files)
 
 		d = dir(packageInfo().data, true)
@@ -183,7 +184,7 @@ return{
 	end, 
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)
-		unitTest:assertEquals(#d, 36) -- 36 files
+		unitTest:assertEquals(#d, 37) -- 37 files
 		unitTest:assertEquals(#e, 0)
 	end,
 	tmpDir = function(unitTest)
