@@ -25,27 +25,6 @@
 local binding = _Gtme.terralib_mod_binding_lua
 local instance = nil
 
-local function decodeUri(str)
-	str = string.gsub(str, "+", " ")
-	str = string.gsub(str, "%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end)
-	str = string.gsub(str, "\r\n", "\n")
-	  
-	return str	
-end
-
-local function encodeUri(str)
-	if (str) then
-		str = string.gsub(str, "\n", "\r\n")
-		str = string.gsub(str, "([^%w %-%_%.%~])", function (c)
-			return string.format ("%%%02X", string.byte(c))
-		end)
-
-		str = string.gsub (str, " ", "+")
-	end
-	
-	return str
-end
-
 local OperationMapper = {
 	value = binding.VALUE_OPERATION,
 	area = binding.PERCENT_TOTAL_AREA,
@@ -91,6 +70,27 @@ local RasterAttributeCreatedMapper = {
 	stdev = "_Standard_Deviation",
 	sum = "_Sum"
 }
+
+local function decodeUri(str)
+	str = string.gsub(str, "+", " ")
+	str = string.gsub(str, "%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end)
+	str = string.gsub(str, "\r\n", "\n")
+	  
+	return str	
+end
+
+local function encodeUri(str)
+	if (str) then
+		str = string.gsub(str, "\n", "\r\n")
+		str = string.gsub(str, "([^%w %-%_%.%~])", function (c)
+			return string.format ("%%%02X", string.byte(c))
+		end)
+
+		str = string.gsub (str, " ", "+")
+	end
+	
+	return str
+end
 
 local function checkConnectionParams(type, connInfo)
 	local msg
@@ -1769,6 +1769,21 @@ TerraLib_ = {
 		end	
 		
 		return 0
+	end,
+	--- Returns a coordinate system name given an identification
+	-- @arg layer The layer
+	-- @usage -- DONTRUN
+	-- local prj = tl:getLayerProjection(proj.layers[layerName])
+	-- print(prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4)
+	getProjection = function(_, layer)
+		local srid = layer:getSRID()
+		local proj4 = binding.te.srs.SpatialReferenceSystemManager.getInstance():getP4Txt(srid)
+		local name = binding.te.srs.SpatialReferenceSystemManager.getInstance():getName(srid)
+		local prj = {}
+		prj.SRID = srid
+		prj.NAME = name
+		prj.PROJ4 = proj4
+		return prj
 	end
 }
 

@@ -1087,5 +1087,40 @@ return {
 		end		
 		
 		rmFile(proj.file)
+	end,
+	getProjection = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "Sampa"
+		local layerFile1 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+		
+		local prj = tl:getProjection(proj.layers[layerName1])
+		
+		unitTest:assertEquals(prj.SRID, 4019.0)
+		unitTest:assertEquals(prj.NAME, "Unknown datum based upon the GRS 1980 ellipsoid")		
+		unitTest:assertEquals(prj.PROJ4, "+proj=longlat +ellps=GRS80 +no_defs ")
+		
+		local layerName2 = "Setores"
+		local layerFile2 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		tl:addShpLayer(proj, layerName2, layerFile2)	
+		
+		prj = tl:getProjection(proj.layers[layerName2])
+		
+		unitTest:assertEquals(prj.SRID, 29191.0)
+		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")		
+		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")	
+		
+		rmFile(proj.file)		
 	end
 }
