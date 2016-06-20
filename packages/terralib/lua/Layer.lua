@@ -605,6 +605,10 @@ Layer_ = {
 		tlib:attributeFill(project, data.layer, self.name, data.output, data.attribute, data.operation, data.select, data.area, data.default, repr)
 		
 		self.name = data.output
+	end,
+	projection = function(self)
+		local prj = self.project.terralib:getProjection(self.project.layers[self.name])
+		return prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4
 	end
 }
 

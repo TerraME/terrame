@@ -809,6 +809,28 @@ return {
 		end)
 --]]
 		unitTest:assertFile(projName)
+	end,
+	projection = function(unitTest)
+		local projName = "layer_shape_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+		
+		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	
+		local layerName1 = "setores"
+		local layer = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1,
+			index = false
+		}	
+		
+		unitTest:assertEquals(layer:projection(), "SAD69 / UTM zone 21S. SRID: 29191.0. PROJ4: +proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")
+		
+		rmFile(proj.file)
 	end
 }
 
