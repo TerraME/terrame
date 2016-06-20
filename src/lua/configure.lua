@@ -166,9 +166,10 @@ create_t = function(mtable, ordering)
 						idx_min = midx
 					end
 				end)
+
 				if idx_min ~= -1 then
-					local tmp = mt[idxmax[midx]]
-					mt[idxmax[midx]] = mt[idx_min]
+					local tmp = mt[idxmax[idx]]
+					mt[idxmax[idx]] = mt[idx_min]
 					mt[idx_min] = tmp
 				end
 			end)
