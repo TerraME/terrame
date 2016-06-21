@@ -157,6 +157,11 @@ return {
 		clName = "Sampa_Cells_NOSIDX"
 		local shp3 = clName..".shp"
 		local addSpatialIdx = false
+		
+		if isFile(shp3) then
+			rmFile(shp3)
+		end
+		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp3, mask, addSpatialIdx)
 		local qixFile1 = string.gsub(shp3, ".shp", ".qix")
 		unitTest:assert(not isFile(qixFile1))
@@ -164,6 +169,11 @@ return {
 		clName = "Sampa_Cells_SIDX"
 		local shp4 = clName..".shp"
 		addSpatialIdx = true
+		
+		if isFile(shp4) then
+			rmFile(shp4)
+		end	
+		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp4, mask, addSpatialIdx)
 		local qixFile2 = string.gsub(shp4, ".shp", ".qix")
 		unitTest:assert(isFile(qixFile2))
@@ -1122,5 +1132,31 @@ return {
 		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")	
 		
 		rmFile(proj.file)		
+	end,
+	getPropertyNames = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "Sampa"
+		local layerFile1 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)
+		
+		local propNames = tl:getPropertyNames(proj, proj.layers[layerName1])
+		
+		for i = 0, #propNames do
+			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "ID") or 
+						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU"))
+		end
+		
+		rmFile(proj.file)
 	end
 }

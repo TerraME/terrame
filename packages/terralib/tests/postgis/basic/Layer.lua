@@ -340,6 +340,69 @@ return {
 		
 		rmFile(proj.file)
 		tl:dropPgTable(pgData)
-	end
+	end,
+	properties = function(unitTest)
+		local projName = "layer_basic.tview"
+
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
+
+		local layerName1 = "Setores"
+
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		}
+
+		unitTest:assertEquals(layer1.name, layerName1)	
+		
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+		local tableName = "setores_cells"
+		
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName,
+			encoding = encoding
+			
+		}	
+		
+		local tl = TerraLib{}
+		tl:dropPgTable(pgData)
+		
+		local clName1 = "Setores_Cells"
+		local layer = Layer{
+			project = proj,
+			source = "postgis",
+			input = layerName1,
+			name = clName1,
+			resolution = 5e3,
+			user = user,
+			password = password,
+			database = database
+		}			
+		
+		local propNames = layer:properties()
+		
+		for i = 1, #propNames do
+			unitTest:assert((propNames[i] == "id") or (propNames[i] == "geom") or 
+						(propNames[i] == "col") or (propNames[i] == "row"))
+		end		
+		
+		rmFile(proj.file)
+		tl:dropPgTable(pgData)
+	end	
 }
 

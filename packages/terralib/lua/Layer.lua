@@ -609,6 +609,21 @@ Layer_ = {
 	projection = function(self)
 		local prj = self.project.terralib:getProjection(self.project.layers[self.name])
 		return prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4
+	end,
+	properties = function(self)
+		local propNames = self.project.terralib:getPropertyNames(self.project, self.project.layers[self.name])
+		
+		if propNames[0] == "raster" then
+			return nil
+		end
+		
+		local luaPropNames = {}
+		
+		for i = 0, #propNames do
+			luaPropNames[i+1] = propNames[i]
+		end
+		
+		return luaPropNames
 	end
 }
 
