@@ -200,6 +200,30 @@ return {
 		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ")
 		
 		rmFile(proj.file)		
+	end,
+	getPropertyNames = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end
+		
+		tl:createProject(proj, {})
+		
+		local layerName = "Prodes"
+		local layerFile = filePath("PRODES_5KM.tif", "terralib")
+		tl:addTifLayer(proj, layerName, layerFile)
+
+		local propNames = tl:getPropertyNames(proj, proj.layers[layerName])
+		
+		unitTest:assertEquals(getn(propNames), 1)
+		unitTest:assertEquals(propNames[0], "raster")
+		
+		rmFile(proj.file)			
 	end
 }
 

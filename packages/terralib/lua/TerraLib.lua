@@ -1784,6 +1784,24 @@ TerraLib_ = {
 		prj.NAME = name
 		prj.PROJ4 = proj4
 		return prj
+	end,
+	getPropertyNames = function(_, project, layer)
+		loadProject(project, project.file)
+		
+		local layer = toDataSetLayer(layer)
+		local dSetName = layer:getDataSetName()
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId()) --<<< tem que colocar no manager
+		local names = {}
+
+		do
+			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+			names = ds:getPropertyNames(dSetName)
+			ds:close()		
+		end
+		
+		releaseProject(project)
+		
+		return names
 	end
 }
 
