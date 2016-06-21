@@ -287,6 +287,22 @@ Cell_ = {
 		else
 			customError("It was not possible to calculate the area. Geometry was not found.")
 		end
+	end,
+	--- Returns the shortest distance between the cells.
+	-- @arg othercell Some cell.
+	-- @usage -- DONTRUN
+	-- cell:distance(othercell)
+	distance = function(self, othercell)
+		if self.id == othercell.id then
+			return 0
+		end
+		
+		if self.geom then
+			local tl = terralib.TerraLib{}
+			return tl:getDistance(self.geom, othercell.geom)
+		else
+			customError("It was not possible to calculate the area. Geometry was not found.")
+		end
 	end
 }
 
