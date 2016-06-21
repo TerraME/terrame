@@ -1811,6 +1811,15 @@ TerraLib_ = {
 		releaseProject(project)
 		
 		return names
+	end,
+	--- Returns the shortest distance between any two points in the two geometries.
+	-- @arg fromGeom The geometry.
+	-- @arg toGeom The other geometry.
+	-- @usage -- DONTRUN
+	-- local dSet = tl:getDataSet(proj, clName)
+	-- local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)	
+	getDistance = function(_, fromGeom, toGeom)
+		return fromGeom:distance(toGeom)
 	end
 }
 
