@@ -1770,8 +1770,8 @@ TerraLib_ = {
 		
 		return 0
 	end,
-	--- Returns a coordinate system name given an identification
-	-- @arg layer The layer
+	--- Returns a coordinate system name given an identification.
+	-- @arg layer The layer.
 	-- @usage -- DONTRUN
 	-- local prj = tl:getLayerProjection(proj.layers[layerName])
 	-- print(prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4)
@@ -1785,13 +1785,22 @@ TerraLib_ = {
 		prj.PROJ4 = proj4
 		return prj
 	end,
+	--- Returns the property names of the dataset.
+	-- @arg layer The project.
+	-- @arg layer The layer.
+	-- @usage -- DONTRUN	
+	-- local propNames = tl:getPropertyNames(proj, proj.layers[layerName])
+	-- for i = 0, #propNames do
+	--		unitTest:assert((propNames[i] == "FID") or (propNames[i] == "ID") or 
+	--						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU"))
+	-- end	
 	getPropertyNames = function(_, project, layer)
 		loadProject(project, project.file)
 		
-		local layer = toDataSetLayer(layer)
-		local dSetName = layer:getDataSetName()
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId()) --<<< tem que colocar no manager
-		local names = {}
+		local dSetLayer = toDataSetLayer(layer)
+		local dSetName = dSetLayer:getDataSetName()
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(dSetLayer:getDataSourceId())
+		local names
 
 		do
 			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
