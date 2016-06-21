@@ -498,6 +498,28 @@ return {
 		unitTest:assertEquals(layer:projection(), "SAD69 / UTM zone 21S - old 29191. SRID: 100017.0. PROJ4: +proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ")
 		
 		rmFile(proj.file)
+	end,
+	properties = function(unitTest)
+		local projName = "tif_basic.tview"
+
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
+
+		local layerName1 = "Prodes"
+
+		local layer = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("PRODES_5KM.tif", "terralib")
+		}
+		
+		local props = layer:properties()
+		
+		unitTest:assertNil(props)
+		
+		rmFile(proj.file)	
 	end
 }
 
