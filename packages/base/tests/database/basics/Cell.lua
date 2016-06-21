@@ -226,9 +226,11 @@ return{
 			geometry = true
 		}
 
-		local cell = cs.cells[1]
-		local othercell = cs.cells[#cs - 1]
-		local dist = cell:distance(othercell)
+		cell = cs.cells[1]
+		unitTest:assertEquals(cell:distance(cell), 0)
+		
+		othercell = cs.cells[#cs - 1]
+		dist = cell:distance(othercell)
 		
 		unitTest:assertEquals(dist, 4257933.7712088, 1.0e-7)
 		

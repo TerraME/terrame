@@ -55,15 +55,21 @@ Cell_ = {
 			self.cObj_:addNeighborhood(id, neigh.cObj_)
 		end
 	end,
-	--- Compute the Euclidean distance to a given Cell. It uses the attributes x and y of both Cells.
-	-- @arg cell A Cell.
+	--- Returns the shortest distance between the cells. If the cell do not have geometry, it
+	-- calculates the Euclidean distance to a given Cell using the attributes x and y of both Cells.
+	-- @arg cell Other Cell.
 	-- @usage c1 = Cell{x = 5, y = 5}
 	-- c2 = Cell{x = 10, y = 10}
 	-- dist = c1:distance(c2)
 	-- print(dist)
 	distance = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
-
+		
+		if self.geom then
+			local tl = terralib.TerraLib{}
+			return tl:getDistance(self.geom, cell.geom)
+		end		
+		
 		return math.sqrt((self.x - cell.x) ^ 2 + (self.y - cell.y) ^ 2)
 	end,
 	--- Return an Agent that belongs to the Cell. It assumes that there is at most one Agent per Cell.
@@ -284,22 +290,6 @@ Cell_ = {
 			local tl = terralib.TerraLib{}
 			cellArea = tl:getArea(self.geom)
 			return cellArea
-		else
-			customError("It was not possible to calculate the area. Geometry was not found.")
-		end
-	end,
-	--- Returns the shortest distance between the cells.
-	-- @arg othercell Some cell.
-	-- @usage -- DONTRUN
-	-- cell:distance(othercell)
-	distance = function(self, othercell)
-		if self.id == othercell.id then
-			return 0
-		end
-		
-		if self.geom then
-			local tl = terralib.TerraLib{}
-			return tl:getDistance(self.geom, othercell.geom)
 		else
 			customError("It was not possible to calculate the area. Geometry was not found.")
 		end
