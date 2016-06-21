@@ -9,6 +9,9 @@ Skip looking for lines of source code
 Testing tests/database/alternative/Assert.lua
 Testing getConfig
 Checking if all asserts were executed
+Testing tests/database/alternative/Cell.lua
+Testing area
+Checking if all asserts were executed
 Testing tests/database/alternative/CellularSpace.lua
 Testing CellularSpace
 Testing loadNeighborhood
@@ -75,10 +78,10 @@ No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 240 asserts were executed successfully.
-All 25 tested functions do not have any unexpected execution error.
-All 25 tested functions have at least one assert.
-All 25 tested functions exist in the source code of the package.
+All 242 asserts were executed successfully.
+All 26 tested functions do not have any unexpected execution error.
+All 26 tested functions have at least one assert.
+All 26 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.

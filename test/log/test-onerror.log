@@ -161,7 +161,7 @@ One print() call was found when loading the package.
 One variable is overwritten when loading the package.
 One invalid file or directory was found in directory 'test'.
 One assert was not executed at least once.
-One out of 257 asserts failed.
+One out of 258 asserts failed.
 One out of 92 tested functions stopped with an unexpected error.
 One out of 92 tested functions does not have at least one assert.
 One out of 92 tested functions does not exist in the source code of the package.

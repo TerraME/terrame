@@ -192,7 +192,7 @@ Logs were saved in '.terrametmp_TgnOm'.
 2 variables are overwritten when loading the package.
 2 invalid files or directories were found in directory 'test'.
 2 asserts were not executed at least once.
-2 out of 260 asserts failed.
+2 out of 261 asserts failed.
 2 out of 95 tested functions stopped with an unexpected error.
 2 out of 95 tested functions do not have at least one assert.
 2 out of 95 tested functions do not exist in the source code of the package.
