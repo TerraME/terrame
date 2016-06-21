@@ -794,6 +794,75 @@ return {
 		if isFile(projName) then
 			rmFile(projName)
 		end
+		
+		-- SPATIAL INDEX TEST
+		proj = Project{
+			file = projName,
+			clean = true,
+			author = "Avancini",
+			title = "The Amazonia"
+		}		
+		
+		Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("sampa.shp", "terralib")
+		}		
+		
+		local indexUnnecessary = function()
+			Layer{
+				project = proj,
+				source = "postgis",
+				input = layerName1,
+				name = clName1,
+				resolution = 0.7,
+				user = user,
+				password = password,
+				database = database,
+				table = tName1,
+				index = true
+			}
+		end
+		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index"))
+		
+		tl:dropPgTable(pgData)
+		
+		Layer{
+			project = proj,
+			source = "postgis",
+			input = layerName1,
+			name = clName1,
+			resolution = 0.7,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1
+		}		
+		
+		proj = Project{
+			file = projName,
+			clean = true,
+			author = "Avancini",
+			title = "The Amazonia"
+		}		
+		
+		indexUnnecessary = function()
+			Layer{
+				project = proj,
+				source = "postgis",
+				name = clName1,
+				user = user,
+				password = password,
+				database = database,
+				table = tName1,
+				index = true
+			}
+		end
+		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index"))
+		
+		tl:dropPgTable(pgData)
+		rmFile(proj.file)
+		-- // SPATIAL INDEX TEST
 	end
 }
 

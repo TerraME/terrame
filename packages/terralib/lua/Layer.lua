@@ -49,7 +49,8 @@ end
 local function addCellularLayer(self, data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source", 
-	                                  "clean", "host", "port", "user", "password", "database", "table"})
+	                                  "clean", "host", "port", "user", "password", "database", "table", 
+									  "index"})
 
 	mandatoryTableArgument(data, "input", "string")
 	positiveTableArgument(data, "resolution")
@@ -109,13 +110,16 @@ local function addCellularLayer(self, data)
 		shp = function()
 			mandatoryTableArgument(data, "file", "string")
 			defaultTableValue(data, "clean", false)
+			defaultTableValue(data, "index", true)
 			
 			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"clean", "input", "name", "project", "resolution", "file", "source"})
+				verifyUnnecessaryArguments(data, {"clean", "input", "name", "project",
+												"resolution", "file", "source", "index"})
 				data.box = true
 			else
 				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project", "resolution", "file", "source"})
+				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project", 
+												"resolution", "file", "source", "index"})
 			end
 				
 			if isFile(data.file) then
@@ -126,7 +130,8 @@ local function addCellularLayer(self, data)
 				end
 			end			
 			
-			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, data.file, not data.box)
+			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, 
+													data.file, not data.box, data.index)
 		end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")
@@ -159,7 +164,7 @@ local function addLayer(self, data)
 	verifyNamedTable(data)
 	mandatoryTableArgument(data, "name", "string")
 		
-	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "host", "port", "user", "password", "database", "table"})
+	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "host", "port", "user", "password", "database", "table", "index"})
 		
 	if isEmpty(data.source) then		
 		if not isEmpty(data.file) then
@@ -191,9 +196,10 @@ local function addLayer(self, data)
 	switch(data, "source"):caseof{
 		shp = function()
 			mandatoryTableArgument(data, "file", "string")
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+			defaultTableValue(data, "index", true)
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index"})
 				
-			self.terralib:addShpLayer(self, data.name, data.file)
+			self.terralib:addShpLayer(self, data.name, data.file, data.index)
 		end,
 		tif = function()	
 			mandatoryTableArgument(data, "file", "string")
@@ -599,6 +605,25 @@ Layer_ = {
 		tlib:attributeFill(project, data.layer, self.name, data.output, data.attribute, data.operation, data.select, data.area, data.default, repr)
 		
 		self.name = data.output
+	end,
+	projection = function(self)
+		local prj = self.project.terralib:getProjection(self.project.layers[self.name])
+		return prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4
+	end,
+	properties = function(self)
+		local propNames = self.project.terralib:getPropertyNames(self.project, self.project.layers[self.name])
+		
+		if propNames[0] == "raster" then
+			return nil
+		end
+		
+		local luaPropNames = {}
+		
+		for i = 0, #propNames do
+			luaPropNames[i+1] = propNames[i]
+		end
+		
+		return luaPropNames
 	end
 }
 

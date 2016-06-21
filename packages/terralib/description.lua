@@ -1,6 +1,5 @@
 version = "0.1"
 license = "LGPL-3"
-date = "11 Fevereiro 2016"
 package = "terralib"
 title = ""
 url = "http://www.terrame.org"

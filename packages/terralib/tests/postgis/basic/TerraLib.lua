@@ -1202,5 +1202,114 @@ return {
 		
 		rmFile(proj.file)
 		tl:dropPgDatabase(pgData)		
-	end		
+	end,	
+	getProjection = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {
+			file = "myproject.tview",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
+		}
+
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "SetoresShp"
+		local layerFile1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)		
+		
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "terralib_projection_test"
+		local encoding = "CP1252"
+		local tableName = "setores_cells"
+		
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName,
+			encoding = encoding	
+		}	
+		
+		tl:dropPgDatabase(pgData)
+		
+		local clName1 = "SetoresPgCells"	
+		local resolution = 5e3
+		local mask = true
+		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
+		
+		local prj = tl:getProjection(proj.layers[clName1])
+		
+		unitTest:assertEquals(prj.SRID, 29191.0)
+		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")		
+		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")			
+		
+		rmFile(proj.file)
+		tl:dropPgTable(pgData)
+		tl:dropPgDatabase(pgData)		
+	end,
+	getPropertyNames = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {
+			file = "myproject.tview",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
+		}
+
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "SetoresShp"
+		local layerFile1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)		
+		
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "terralib_projection_test"
+		local encoding = "CP1252"
+		local tableName = "setores_cells"
+		
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName,
+			encoding = encoding	
+		}	
+		
+		tl:dropPgDatabase(pgData)
+		
+		local clName1 = "SetoresPgCells"	
+		local resolution = 5e3
+		local mask = true
+		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
+
+		local propNames = tl:getPropertyNames(proj, proj.layers[clName1])
+		
+		for i = 0, #propNames do
+			unitTest:assert((propNames[i] == "id") or (propNames[i] == "geom") or 
+						(propNames[i] == "col") or (propNames[i] == "row"))
+		end
+		
+		rmFile(proj.file)
+		tl:dropPgTable(pgData)
+		tl:dropPgDatabase(pgData)		
+	end
 }

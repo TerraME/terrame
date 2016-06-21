@@ -177,7 +177,9 @@
 					<%end%>
 
 					<%if not options.nofiles and #doc.examples > 0 then%>
-						<h2><a href="<%=luadoc.link("files/examples.html", from)%>">Examples</a></h2>
+						<tr><td class="title" colspan="2">
+							<h2><a href="<%=luadoc.link("files/examples.html", from)%>">Examples</a></h2>
+						</td></tr>
 						<!--<table class="file_list">-->
 							<%for _, filepath in ipairs(doc.files) do%>
 								<%if doc.files[filepath].type == "example" then%>
@@ -195,7 +197,9 @@
 					<%end%>
 
 					<%if not options.nofiles and doc.mdata and #doc.mdata > 0 then%>
-						<h2><a href="<%=luadoc.link("files/data.html", from)%>">Data</a></h2>
+						<tr><td class="title" colspan="2">
+							<h2><a href="<%=luadoc.link("files/data.html", from)%>">Data</a></h2>
+						</td></tr>
 						<!--<table class="file_list">-->
 							<%for _, data in ipairs(doc.mdata) do%>
 								<tr>
@@ -210,7 +214,9 @@
 					<%end%>
 
 					<%if doc.mfont and #doc.mfont > 0 then%>
-						<h2><a href="<%=luadoc.link("files/font.html", from)%>">Font</a></h2>
+						<tr><td class="title" colspan="2">
+							<h2><a href="<%=luadoc.link("files/font.html", from)%>">Font</a></h2>
+						</td></tr>
 						<!--<table class="file_list">-->
 							<%for _, data in ipairs(doc.mfont) do%>
 								<tr>

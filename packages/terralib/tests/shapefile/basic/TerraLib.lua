@@ -73,8 +73,31 @@ return {
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
-		
+
 		rmFile(proj.file)
+		
+		-- SPATIAL INDEX TEST
+		proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "ShapeLayer1"
+		local qixFile = string.gsub(layerFile, ".shp", ".qix")
+		rmFile(qixFile)
+		local addSpatialIdx = false
+		tl:addShpLayer(proj, layerName1, layerFile, addSpatialIdx)
+		unitTest:assert(not isFile(qixFile))
+		
+		local layerName2 = "ShapeLayer2"
+		addSpatialIdx = true
+		tl:addShpLayer(proj, layerName2, layerFile, addSpatialIdx)
+		unitTest:assert(isFile(qixFile))
+		
+		rmFile(proj.file)		
+		-- // SPATIAL INDEX TEST
 	end,
 	addShpCellSpaceLayer = function(unitTest)
 		local tl = TerraLib{}
@@ -128,6 +151,33 @@ return {
 		
 		clSet = tl:getDataSet(proj, clName)
 		unitTest:assertEquals(getn(clSet), 104)
+		-- // NO MASK TEST
+		
+		-- SPATIAL INDEX TEST
+		clName = "Sampa_Cells_NOSIDX"
+		local shp3 = clName..".shp"
+		local addSpatialIdx = false
+		
+		if isFile(shp3) then
+			rmFile(shp3)
+		end
+		
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp3, mask, addSpatialIdx)
+		local qixFile1 = string.gsub(shp3, ".shp", ".qix")
+		unitTest:assert(not isFile(qixFile1))
+		
+		clName = "Sampa_Cells_SIDX"
+		local shp4 = clName..".shp"
+		addSpatialIdx = true
+		
+		if isFile(shp4) then
+			rmFile(shp4)
+		end	
+		
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp4, mask, addSpatialIdx)
+		local qixFile2 = string.gsub(shp4, ".shp", ".qix")
+		unitTest:assert(isFile(qixFile2))
+		-- // SPATIAL INDEX TEST
 		
 		-- END
 		if isFile(shp1) then
@@ -136,6 +186,14 @@ return {
 		
 		if isFile(shp2) then
 			rmFile(shp2)
+		end			
+		
+		if isFile(shp3) then
+			rmFile(shp3)
+		end			
+		
+		if isFile(shp4) then
+			rmFile(shp4)
 		end	
 		
 		rmFile(proj.file)
@@ -973,6 +1031,7 @@ return {
 		end					
 		
 		rmFile(cellsShp)
+		rmFile(newLayerName..".shp")
 		rmFile(proj.file)
 	end,
 	getShpByFilePath = function(unitTest)
@@ -1036,6 +1095,67 @@ return {
 		if isFile(cellsShp) then
 			rmFile(cellsShp)
 		end		
+		
+		rmFile(proj.file)
+	end,
+	getProjection = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "Sampa"
+		local layerFile1 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+		
+		local prj = tl:getProjection(proj.layers[layerName1])
+		
+		unitTest:assertEquals(prj.SRID, 4019.0)
+		unitTest:assertEquals(prj.NAME, "Unknown datum based upon the GRS 1980 ellipsoid")		
+		unitTest:assertEquals(prj.PROJ4, "+proj=longlat +ellps=GRS80 +no_defs ")
+		
+		local layerName2 = "Setores"
+		local layerFile2 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		tl:addShpLayer(proj, layerName2, layerFile2)	
+		
+		prj = tl:getProjection(proj.layers[layerName2])
+		
+		unitTest:assertEquals(prj.SRID, 29191.0)
+		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")		
+		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")	
+		
+		rmFile(proj.file)		
+	end,
+	getPropertyNames = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "Sampa"
+		local layerFile1 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)
+		
+		local propNames = tl:getPropertyNames(proj, proj.layers[layerName1])
+		
+		for i = 0, #propNames do
+			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "ID") or 
+						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU"))
+		end
 		
 		rmFile(proj.file)
 	end

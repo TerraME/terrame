@@ -23,6 +23,77 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	Layer = function(unitTest)
+		local projName = "layer_shape_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+		
+		-- SPATIAL INDEX TEST
+		local filePath1 = filePath("limitePA_polyc_pol.shp", "terralib")
+		local qixFile = string.gsub(filePath1, ".shp", ".qix")
+		rmFile(qixFile)
+		
+		local layerName1 = "limitepa"
+		Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1,
+			index = false
+		}
+		
+		unitTest:assert(not isFile(qixFile))
+		
+		proj = Project {
+			file = projName,
+			clean = true
+		}		
+		
+		Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}		
+		
+		unitTest:assert(isFile(qixFile))
+		
+		local clName1 = "PA_Cells50x50"
+		local cl1 = Layer{
+			project = proj,
+			source = "shp",
+			clean = true,
+			input = layerName1,
+			name = clName1,
+			resolution = 50000,
+			file = clName1..".shp",
+			index = false
+		}			
+		
+		qixFile = string.gsub(cl1.file, ".shp", ".qix")
+		unitTest:assert(not isFile(qixFile))
+		
+		local clName2 = "PA_Cells60x60"
+		local cl2 = Layer{
+			project = proj,
+			source = "shp",
+			clean = true,
+			input = layerName1,
+			name = clName2,
+			resolution = 60000,
+			file = clName2..".shp"
+		}
+		
+		qixFile = string.gsub(cl2.file, ".shp", ".qix")
+		unitTest:assert(isFile(qixFile))	
+
+		rmFile(cl1.file)
+		rmFile(cl2.file)
+		-- // SPATIAL INDEX
+		
+		rmFile(proj.file)
+	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_shape.tview"
 
@@ -738,6 +809,57 @@ return {
 		end)
 --]]
 		unitTest:assertFile(projName)
+	end,
+	projection = function(unitTest)
+		local projName = "layer_shape_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+		
+		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	
+		local layerName1 = "setores"
+		local layer = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1,
+			index = false
+		}	
+		
+		unitTest:assertEquals(layer:projection(), "SAD69 / UTM zone 21S. SRID: 29191.0. PROJ4: +proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")
+		
+		rmFile(proj.file)
+	end,
+	properties = function(unitTest)
+		local projName = "layer_shape_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+		
+		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	
+		local layerName1 = "setores"
+		local layer = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1,
+			index = false
+		}
+
+		local propNames = layer:properties()
+		
+		for i = 1, #propNames do
+			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "SPRAREA") or 
+						(propNames[i] == "SPRPERIMET") or (propNames[i] == "SPRROTULO") or
+						(propNames[i] == "Populacao") or (propNames[i] == "objet_id_8") or
+						(propNames[i] == "Densde_Pop") or (propNames[i] == "Area"))
+		end
+		
+		rmFile(proj.file)
 	end
 }
 

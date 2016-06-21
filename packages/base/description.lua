@@ -1,6 +1,5 @@
 version = cpp_version()
 license = "LGPL-3"
-date = "25 May 2016"
 package = "base"
 title = "TerraME Types and Functions"
 url = "http://www.terrame.org"

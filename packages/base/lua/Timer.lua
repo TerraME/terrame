@@ -136,7 +136,10 @@ Timer_ = {
 			end)
 		end
 	end,
-	--- Remove all the Events from the Timer.
+	--- Remove all the Events from the Timer. Note that, when this function is called
+	-- within an action of an Event, if such function does not return false, it
+	-- will be added to the Timer again after the end of its execution. This
+	-- means that the simulation will continue with a single Event until its final time.
 	-- @usage timer = Timer{
 	--     Event{action = function() print("step") end}
 	-- }
