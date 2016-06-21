@@ -7,10 +7,12 @@ Looking for package functions
 Found 1 extra functions in the documentation
 Skip looking for lines of source code
 Skipping tests/database/alternative/Assert.lua
+Skipping tests/database/alternative/Cell.lua
 Skipping tests/database/alternative/CellularSpace.lua
 Skipping tests/database/alternative/Environment.lua
 Skipping tests/database/alternative/Society.lua
 Skipping tests/database/alternative/Utils.lua
+Skipping tests/database/basics/Cell.lua
 Skipping tests/database/basics/CellularSpace.lua
 Skipping tests/database/basics/Environment.lua
 Skipping tests/database/basics/Society.lua

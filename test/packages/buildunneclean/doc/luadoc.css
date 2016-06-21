@@ -287,6 +287,8 @@ table.file_list
 	border-style: solid;
 	border-color: #cccccc;
 	border-collapse: collapse;
+	margin-left: 2px;
+	margin-right: auto;
 }
 table.file_list td
 {

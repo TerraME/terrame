@@ -136,6 +136,10 @@ forEachOrderedElement(commands, function(idx, group)
 			command = command.." -clean"
 		end
 
+		if args.arg == "-test" and args.config then
+			command = command.." 2> abc.txt"
+		end
+
 		_Gtme.print("Testing "..name)
 
 		if show then

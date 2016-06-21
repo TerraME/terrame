@@ -121,7 +121,7 @@ return{
 		end)
 
 		unitTest:assert(r)
-		unitTest:assertEquals(count, 36)
+		unitTest:assertEquals(count, 37)
 
 		local count2 = 0
 		forEachFile2(dir(filePath("", "base"), true), function(file)
