@@ -224,6 +224,42 @@ return {
 		unitTest:assertEquals(propNames[0], "raster")
 		
 		rmFile(proj.file)			
+	end,
+	getDistance = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "AmazoniaTif"
+		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
+		tl:addTifLayer(proj, layerName1, layerFile1)
+
+		local clName = "Amazonia_Cells"
+		local shp1 = clName..".shp"
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end	
+		
+		local resolution = 60e3
+		local mask = false
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+		
+		local dSet = tl:getDataSet(proj, clName)
+		local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)	
+			
+		unitTest:assertEquals(dist, 4296603.3095924, 1.0e-7)
+		
+		rmFile(proj.file)
+		rmFile(shp1)		
 	end
 }
 

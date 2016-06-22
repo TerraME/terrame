@@ -1158,5 +1158,41 @@ return {
 		end
 		
 		rmFile(proj.file)
+	end,
+	getDistance = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+		
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)
+
+		local clName = "Sampa_Cells"
+		local shp1 = clName..".shp"
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end	
+		
+		local resolution = 0.7
+		local mask = true
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+		
+		local dSet = tl:getDataSet(proj, clName)
+		local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)	
+			
+		unitTest:assertEquals(dist, 4.4271887242357, 1.0e-13)
+		
+		rmFile(proj.file)
+		rmFile(shp1)
 	end
 }
