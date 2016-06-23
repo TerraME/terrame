@@ -823,7 +823,7 @@ return{
 		unitTest:assertEquals(layer.user, user)
 		unitTest:assertEquals(layer.password, password)
 		unitTest:assertEquals(layer.database, database)
-		unitTest:assertEquals(layer.table, cellSpaceLayerNameT0)	-- TODO: VERIFY LOWER CASE IF CHANGED
+		unitTest:assertEquals(layer.table, string.lower(cellSpaceLayerNameT0))
 
 		local cellSpaceLayerName = clName1.."_CellSpace"
 
@@ -840,7 +840,7 @@ return{
 		unitTest:assertEquals(layer.user, user)
 		unitTest:assertEquals(layer.password, password)
 		unitTest:assertEquals(layer.database, database)
-		unitTest:assertEquals(layer.table, cellSpaceLayerName)	-- TODO: VERIFY LOWER CASE IF CHANGED
+		unitTest:assertEquals(layer.table, string.lower(cellSpaceLayerName))
 
 		cs = CellularSpace{
 			project = proj,

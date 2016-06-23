@@ -1193,15 +1193,19 @@ yMin    number [0]
 		unitTest:assertType(cs:sample(), "Cell")
 	end,
 	save = function(unitTest)
-		local projName = "cellspace_save_basic.tview"
-
         local terralib = getPackage("terralib")
-
+	
+		local projName = "cellspace_save_basic.tview"
+		
+		if isFile(projName) then
+			rmFile(projName)
+		end
+		
 		local proj = terralib.Project{
 			file = projName,
 			clean = true,
 			author = "Avancini",
-			title = "Setores"
+			title = "Sampa"
 		}
 
 		local layerName1 = "Sampa"
@@ -1210,7 +1214,7 @@ yMin    number [0]
 			name = layerName1,
 			file = filePath("sampa.shp", "terralib")
 		}	
-		
+
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1
@@ -1250,51 +1254,47 @@ yMin    number [0]
 		local filePath2 = testDir.."/"..shp2	
 		local fn2 = terralib.getFileName(filePath2)
 		fn2 = testDir.."/"..fn2	
-		
-		for i = 1, #exts do
-			local f = fn2..exts[i]
-			if isFile(f) then
-				rmFile(f)
-			end
-		end		
-		
+
+		if isFile(filePath2) then
+			rmFile(filePath2)
+		end
+
 		cs:save(cellSpaceLayerNameT0, "t0")
 
 		local layer = terralib.Layer{
 			project = proj,
-			name = cellSpaceLayerNameT0
+			name = cellSpaceLayerNameT0,
 		}
 
 		unitTest:assertEquals(layer.source, "shp")
-		unitTest:assertEquals(layer.file, filePath2)
+		unitTest:assertEquals(layer.file, filePath2)		
 		
-		-- issue #967
-		-- local cs = CellularSpace{
-			-- project = proj,
-			-- layer = cellSpaceLayerNameT0
-		-- }		
+		cs = CellularSpace{
+			project = projName,
+			layer = cellSpaceLayerNameT0
+		}			
 		
-		-- forEachCell(cs, function(cell)
-			-- unitTest:assertEquals(cell.t0, 1000) -- SKIP
-			-- cell.t0 = cell.t0 + 1000
-		-- end)
-		
-		-- cs:save(cellSpaceLayerNameT0)
-		
-		-- local cs = CellularSpace{
-			-- project = proj,
-			-- layer = cellSpaceLayerNameT0
-		-- }	
+		forEachCell(cs, function(cell)
+			unitTest:assertEquals(cell.t0, 1000)
+			cell.t0 = cell.t0 + 1000
+		end)
 
-		-- forEachCell(cs, function(cell)
-			-- unitTest:assertEquals(cell.t0, 2000) -- SKIP
-		-- end)
+		cs:save(cellSpaceLayerNameT0)
 		
 		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameT0
 		}		
+
+		forEachCell(cs, function(cell)
+			unitTest:assertEquals(cell.t0, 2000)
+		end)
 		
+		cs = CellularSpace{
+			project = projName,
+			layer = cellSpaceLayerNameT0
+		}		
+
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
 		
 		local shp3 = cellSpaceLayerNameGeom..".shp"
