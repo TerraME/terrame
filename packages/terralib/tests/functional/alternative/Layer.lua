@@ -614,8 +614,8 @@ return{
 		end
 		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'.")
 
-		local selected = "populaco"
-		local selectNotExists = function()
+		selected = "populaco"
+		local selectNotExistsSug = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
@@ -625,7 +625,7 @@ return{
 				output = minValueLayerName
 			}
 		end
-		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'Populacao'?")
+		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'Populacao'?")
 
 		local maxValueLayerName = clName1.."_Maximum"
 		selectNotString = function()
