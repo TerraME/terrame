@@ -601,7 +601,21 @@ Layer_ = {
 				defaultTableValue(data, "dummy", math.huge)
 			end
 		}
-		
+
+		if type(data.select) == "string" then
+			if not belong(data.select, otherLayer:properties()) then
+				local msg = "Selected attribute '"..data.select.."' does not exist in layer '"..otherLayer.name.."'."
+
+				local sugg = suggestion(data.select, otherLayer:properties())
+
+				if sugg then
+					msg = msg.." Do you mean '"..sugg.."'?"
+				end
+
+				customError(msg)
+			end
+		end
+
 		tlib:attributeFill(project, data.layer, self.name, data.output, data.attribute, data.operation, data.select, data.area, data.default, repr)
 		
 		self.name = data.output
