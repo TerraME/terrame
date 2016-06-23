@@ -1661,16 +1661,24 @@ TerraLib_ = {
 			local outConnInfo = dsInfo:getConnInfo()
 			local outDs = nil
 			if outType == "POSTGIS" then
+				newDstName = string.lower(newDstName)
 				outConnInfo.PG_NEWDB_NAME = string.lower(newDstName)
-				dropDataSet(outConnInfo, string.lower(newDstName), "POSTGIS")
 				outDs = makeAndOpenDataSource(outConnInfo, outType)
 			elseif outType == "OGR" then
 				local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
 				outConnInfo.URI = outDir..newDstName..".shp"		
-				dropDataSet(outConnInfo, newDstName, "OGR")
-				outDs = makeAndOpenDataSource(outConnInfo, outType)
+
+				if fromLayerName == toName then
+					outDs = ds
+				else	
+					outDs = makeAndOpenDataSource(outConnInfo, outType)
+				end
 			end
-		
+			
+			if outDs:dataSetExists(newDstName) then
+				outDs:dropDataSet(newDstName)
+			end
+
 			-- Save the new DataSet into the from DataSource
 			outDs:createDataSet(newDst)
 			newDse:moveBeforeFirst()

@@ -1028,8 +1028,25 @@ return {
 					unitTest:assertEquals(type(v), "string")
 				end
 			end
-		end					
+		end			
+
+		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1"})
+		newDSet = tl:getDataSet(proj, newLayerName)
 		
+		unitTest:assertEquals(getn(newDSet), 68)
+		
+		for i = 0, #newDSet do
+			unitTest:assertEquals(newDSet[i].attr1, i)
+			for k, v in pairs(newDSet[i]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
+								(k == "attr1"))
+				
+				if k == "attr1" then
+					unitTest:assertEquals(type(v), "number")
+				end
+			end
+		end			
+
 		rmFile(cellsShp)
 		rmFile(newLayerName..".shp")
 		rmFile(proj.file)
