@@ -78,6 +78,10 @@ function Project(data)
 		local proj = Project{file = data.file}
 		rmFile(data.file)
 
+		if isFile(data.file) then
+			customError("File '"..data.file.."' could not be removed.") -- SKIP
+		end
+
 		if data.author == "No author" and proj.author ~= "No author" then
 			data.author = proj.author
 		end
