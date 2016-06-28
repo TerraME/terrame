@@ -563,7 +563,97 @@ elseif(WIN32)
 	# install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.ico
         # DESTINATION bin/
 		# COMPONENT runtime
-		#)					
+		#)	
+
+else()
+    set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
+    install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+            COMPONENT runtime
+    )
+
+    set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
+    install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/packages
+            COMPONENT runtime
+			PATTERN "log" EXCLUDE
+    )
+
+    install(DIRECTORY ${TERRALIB_DIR}/lib/
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+            COMPONENT runtime
+            PATTERN "cmake" EXCLUDE
+    )
+
+    list(APPEND QTLUA_LIBS  ${TERRAME_DEPENDENCIES_DIR}/lib/libqtluae.so.0.1
+                            ${TERRAME_DEPENDENCIES_DIR}/lib/qtluae.so
+    )
+
+    install(FILES   ${QTLUA_LIBS}
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+            COMPONENT runtime
+    )
+
+	file(GLOB TERRAME_CORE_DEPENDENCIES 
+		${TERRALIB_3RDPARTY_DIR}/lib/libqwt.so*	
+		${TERRALIB_3RDPARTY_DIR}/lib/liblua.so*)
+	
+    install(FILES ${TERRAME_CORE_DEPENDENCIES}
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+            COMPONENT runtime
+    )
+
+	file(GLOB Qt5_LIBS 
+		${Qt5_DIR}/../../libQt5Network.so*	
+		${Qt5_DIR}/../../libQt5Gui.so*
+		${Qt5_DIR}/../../libQt5Core.so*
+		${Qt5_DIR}/../../libQt5Widgets.so*
+		${Qt5_DIR}/../../libicu*)
+	
+    install(FILES ${Qt5_LIBS}
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+            COMPONENT runtime
+    )	
+
+    install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+            COMPONENT runtime
+    )
+
+	file(GLOB TERRALIB_DEPENDENCIES 
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_system.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_date_time.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_filesystem.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_thread.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libgeos*so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libproj*so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libxerces*so*
+		${TERRALIB_3RDPARTY_DIR}/gdal2/lib/libgdal.so*)
+	
+    install(FILES ${TERRALIB_DEPENDENCIES}
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+            COMPONENT runtime
+    )	
+
+    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
+            COMPONENT runtime
+    )
+
+    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
+            COMPONENT runtime
+    )
+
+    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
+            COMPONENT runtime
+	)
+
+    install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share
+        COMPONENT runtime	
+	)			
 	
 endif()		
 		
