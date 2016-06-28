@@ -41,20 +41,35 @@ metaTableProject_ = {
 -- file does not exist then it will be created. If it exists then it will be opened.
 -- If this name does not ends with ".tview", this extension will be added to the name
 -- of the file.
--- @arg data.author A string with the name of the Project's author.
--- @arg data.description A string with a description of the Project. It is useful
+-- @arg data.author An optional string with the name of the Project's author.
+-- @arg data.description An optional string with a description of the Project. It is useful
 -- when the script belongs to a package, as this description will be
 -- displayed in the HTML documentation of the package.
--- @arg data.title A string with the title of the Project.
--- @arg data.clean A boolean value indicating whether the argument file should be cleaned
+-- @arg data.title An optional string with the title of the Project.
+-- @arg data.clean An optional boolean value indicating whether the argument file should be cleaned
 -- if it already exists.
 -- The default value is false.
+-- @arg data.... Names of layers to be created from files. Each argument that has a string as value 
+-- and does not belong to the arguments above will
+-- be converted into a layer. The name of the attribute will be used as
+-- layer name and its value as file name where data is stored. It can be a shapefile or a tiff.
 -- @usage -- DONTRUN
 -- import("terralib")
 --
--- proj = Project{
+-- proj1 = Project{
 --     file = "myproject.tview"
 -- }
+--
+-- proj2 = Project{
+--     file = "itaituba.tview",
+--     clean = true,
+--     deforestation = filePath("desmatamento_2000.tif", "terralib"),
+--     altimetria = filePath("altimetria.tif", "terralib"),
+--     localidades = filePath("Localidades_pt.shp", "terralib"),
+--     roads = filePath("Rodovias_lin.shp", "terralib"),
+--     setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+-- }
+-- 
 function Project(data)
 	verifyNamedTable(data)
     
