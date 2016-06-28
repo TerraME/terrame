@@ -48,10 +48,15 @@ print = function(obj, ...)
 end
 
 function _Gtme.loadLibraryPath()
-    local ldpath = os.getenv("DYLD_LIBRARY_PATH")
+    local dyldpath = os.getenv("DYLD_LIBRARY_PATH")
+    if dyldpath then
+        package.cpath = package.cpath..";"..dyldpath.."/?.so"
+                                    ..";"..dyldpath.."/?.dylib"
+    end
+
+    local ldpath = os.getenv("LD_LIBRARY_PATH")
     if ldpath then
         package.cpath = package.cpath..";"..ldpath.."/?.so"
-                                    ..";"..ldpath.."/?.dylib"
     end
 end
 
