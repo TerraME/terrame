@@ -269,8 +269,9 @@ Layer_ = {
 	-- When using a raster data as input, use argument band instead.
 	-- @arg data.band An integer value representing the band of the raster to be used.
 	-- The default value is one.
-	-- @arg data.layer Name of an input layer belonging to the same Project. There are
-	-- several strategies available, depending on the geometry of the layer. See below:
+	-- @arg data.layer An input Layer belonging to the same Project. It can also be a
+	-- string with the Layer's name. There are
+	-- several strategies available, depending on the geometry of the Layer. See below:
 	-- @tabular layer
 	-- Geometry & Using only geometry & Using attribute of objects with some overlap &
 	-- Using geometry and attribute \
@@ -383,7 +384,6 @@ Layer_ = {
 		verifyNamedTable(data)
 
 		mandatoryTableArgument(data, "operation", "string")
-		mandatoryTableArgument(data, "layer", "string")
 		mandatoryTableArgument(data, "attribute", "string")
 		mandatoryTableArgument(data, "output", "string")
 		defaultTableValue(data, "clean", false)
@@ -391,18 +391,6 @@ Layer_ = {
 		local tlib = TerraLib{}
 		local project = self.project
 		
-		if not project.layers[data.layer] then
-			local sug = suggestion(data.layer, project.layers)
-
-			local msg = "The layer '"..data.layer.."' does not exist."
-
-			if sug then
-				msg = msg.." Do you mean '"..sug.."'?"
-			end
-
-			customError(msg)
-		end
-	
 		if project.layers[data.output] then
 			customError("The output layer '"..data.output.."' already exists.")
 		end
@@ -415,12 +403,16 @@ Layer_ = {
 			end
 		end
 
-		local otherLayer = Layer{
-			project = self.project.file,
-			name = data.layer
-		}
+		if type(data.layer) == "string" then
+			data.layer = Layer{
+				project = self.project.file,
+				name = data.layer
+			}
+		else
+			mandatoryTableArgument(data, "layer", "Layer")
+		end
 
-		local repr = otherLayer:representation()
+		local repr = data.layer:representation()
 
 		switch(data, "operation"):caseof{
 			area = function()
@@ -443,7 +435,7 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
-					checkBand(otherLayer, data)
+					checkBand(data.layer, data)
 
 					data.select = data.band
 				else
@@ -491,7 +483,7 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
-					checkBand(otherLayer, data)
+					checkBand(data.layer, data)
 
 					data.select = data.band
 				else
@@ -507,7 +499,7 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
-					checkBand(otherLayer, data)
+					checkBand(data.layer, data)
 
 					data.select = data.band
 				else
@@ -523,7 +515,7 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
-					checkBand(otherLayer, data)
+					checkBand(data.layer, data)
 
 					data.select = data.band
 				else
@@ -539,7 +531,7 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
-					checkBand(otherLayer, data)
+					checkBand(data.layer, data)
 
 					data.select = data.band
 				else
@@ -573,7 +565,7 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "band", "output"})
-					checkBand(otherLayer, data)
+					checkBand(data.layer, data)
 
 					data.select = data.band
 				else
@@ -590,7 +582,7 @@ Layer_ = {
 					defaultTableValue(data, "area", false)
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "band", "output"})
-					checkBand(otherLayer, data)
+					checkBand(data.layer, data)
 
 					data.select = data.band
 				else
@@ -603,10 +595,10 @@ Layer_ = {
 		}
 
 		if type(data.select) == "string" then
-			if not belong(data.select, otherLayer:properties()) then
-				local msg = "Selected attribute '"..data.select.."' does not exist in layer '"..otherLayer.name.."'."
+			if not belong(data.select, data.layer:properties()) then
+				local msg = "Selected attribute '"..data.select.."' does not exist in layer '"..data.layer.name.."'."
 
-				local sugg = suggestion(data.select, otherLayer:properties())
+				local sugg = suggestion(data.select, data.layer:properties())
 
 				if sugg then
 					msg = msg.." Do you mean '"..sugg.."'?"
@@ -616,7 +608,7 @@ Layer_ = {
 			end
 		end
 
-		tlib:attributeFill(project, data.layer, self.name, data.output, data.attribute, data.operation, data.select, data.area, data.default, repr)
+		tlib:attributeFill(project, data.layer.name, self.name, data.output, data.attribute, data.operation, data.select, data.area, data.default, repr)
 		
 		self.name = data.output
 	end,
@@ -729,7 +721,14 @@ function Layer(data)
 
 	if getn(data) == 2 then
 		if not data.project.layers[data.name] then
-			customError("Layer '"..data.name.."' does not exist in the Project '"..data.project.file.."'.")
+			local msg = "Layer '"..data.name.."' does not exist in Project '"..data.project.file.."'."
+			local sug = suggestion(data.name, data.project.layers)
+
+			if sug then
+				msg = msg.." Do you mean '"..sug.."'?"
+			end
+
+			customError(msg)
 		end
 
 		setmetatable(data, metaTableLayer_)
