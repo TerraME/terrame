@@ -565,7 +565,7 @@ elseif(WIN32)
 		# COMPONENT runtime
 		#)	
 
-else()
+else(UNIX)
     set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
     install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
             DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
