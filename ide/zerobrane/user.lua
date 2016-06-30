@@ -33,5 +33,5 @@ language = "en"
 path.terrame_install = os.getenv("TME_PATH")
 -- hack in Mac OS X
 if (path.terrame_install == nil) then
-    path.terrame_install = "/Applications/terrame.app/Contents/bin/terrame" 
+    path.terrame_install = "/Applications/terrame.app/Contents/bin"
 end
