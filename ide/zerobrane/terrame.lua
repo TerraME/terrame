@@ -42,21 +42,16 @@ return {
             end
         end
 
-        local path = win and ([[C:\TerraME\bin\terrame  -ide -mode=strict]]) 
+        local path = win and ([[C:\TerraME\bin\terrame -ide -mode=strict]]) 
                     or unix and (ide.config.path.terrame_install.."/terrame -mode=strict")
         local cmd = path.." "..self:fworkdir(wfilename).."/"..wfilename:GetFullName()    
         CommandLineRun(cmd,self:fworkdir(wfilename),true,false)
     end,
-  
     fprojdir = function(self,wfilename)
         return wfilename:GetPath(wx.wxPATH_GET_VOLUME)
     end,
-  
     fworkdir = function (self,wfilename)
         return wfilename:GetPath(wx.wxPATH_GET_VOLUME)
     end,
-  
-    hasdebugger = true,
-    
     fattachdebug = function(self) DebuggerAttachDefault() end,
 }

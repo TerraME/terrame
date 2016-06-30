@@ -9,7 +9,7 @@ styles = G.loadfile('cfg/tomorrow.lua')('Palleton')
 stylesoutshell = styles -- also apply the same scheme to Output/Console windows
 
 -- Editor preferences
-editor.fontsize = 22 -- this is mapped to ide.config.editor.fontsize
+editor.fontsize = 14 -- this is mapped to ide.config.editor.fontsize
 editor.fontname = "Consolas"
 -- to disable indicators (underlining) on function calls
 -- styles.indicator.fncall = nil
@@ -21,11 +21,7 @@ filehistorylength = 20 -- this is mapped to ide.config.filehistorylength
 
 -- Output preferences
 outputshell.fontname = "Consolas"-- set font name.
-outputshell.fontsize = 20 -- set font size (the default value is 11 on OSX).
-
--- Project/Filetree window 
-filetree.fontname = "Consolas" -- set font name
-filetree.fontsize = 16 -- set font size 
+outputshell.fontsize = 14 -- set font size (the default value is 11 on OSX).
 
 -- to have 4 spaces when TAB is used in the editor
 editor.tabwidth = 4
