@@ -585,18 +585,19 @@ else(UNIX)
             PATTERN "cmake" EXCLUDE
     )
 
-    list(APPEND QTLUA_LIBS  ${TERRAME_DEPENDENCIES_DIR}/lib/libqtluae.so.0.1
+    list(APPEND QTLUAE_LIBS  ${TERRAME_DEPENDENCIES_DIR}/lib/libqtluae.so.0.1
                             ${TERRAME_DEPENDENCIES_DIR}/lib/qtluae.so
     )
 
-    install(FILES   ${QTLUA_LIBS}
+    install(FILES   ${QTLUAE_LIBS}
             DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
             COMPONENT runtime
     )
 
 	file(GLOB TERRAME_CORE_DEPENDENCIES 
 		${TERRALIB_3RDPARTY_DIR}/lib/libqwt.so*	
-		${TERRALIB_3RDPARTY_DIR}/lib/liblua.so*)
+		${TERRALIB_3RDPARTY_DIR}/lib/liblua.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libqtlua.so*)
 	
     install(FILES ${TERRAME_CORE_DEPENDENCIES}
             DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
