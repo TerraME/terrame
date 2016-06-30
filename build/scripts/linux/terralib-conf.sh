@@ -30,7 +30,7 @@
 # variables to reflect you environment.
 # -----------------
 # Location of the builded 3rd-parties.
-export _TERRALIB_3RDPARTY_DIR=/home/avancini/terralib/3rdparty/libs
+export _TERRALIB_3RDPARTY_DIR=/home/developer/terralib/3rdparty/libs
 echo "$_TERRALIB_3RDPARTY_DIR"
 
 # Location to install TerraLib
@@ -55,7 +55,7 @@ cd $_TERRALIB_OUT_DIR
 # -----------------
 # Calling CMake: note that we are using a release configuration and Unix Makefiles generator
 # -----------------
-cmake -G "Unix Makefiles" -C terralib-conf.cmake ./../../git/terralib5/build/cmake
+cmake -G "Unix Makefiles" -C terralib-conf.cmake ./../../git/terralib/build/cmake
 
 make -j4 
 make install

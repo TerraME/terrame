@@ -21,7 +21,7 @@
 # of this software and its documentation.
 ############################################################################################
 
-LUA_PATH=/home/avancini/terralib/3rdparty/libs
+LUA_PATH=/home/developer/terralib/3rdparty/libs
 BUILD_TYPE=Release
 
 mkdir "build"
