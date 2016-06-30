@@ -609,13 +609,27 @@ else(UNIX)
 		${Qt5_DIR}/../../libQt5Gui.so*
 		${Qt5_DIR}/../../libQt5Core.so*
 		${Qt5_DIR}/../../libQt5Widgets.so*
-		${Qt5_DIR}/../../libicu*)
+		${Qt5_DIR}/../../libQt5PrintSupport.so*
+		${Qt5_DIR}/../../libQt5Svg.so*
+		${Qt5_DIR}/../../libQt5OpenGL.so*
+		${Qt5_DIR}/../../libQt5DBus.so*
+		${Qt5_DIR}/../../libicu*
+		${Qt5_DIR}/../../libkmldom*so*
+		${Qt5_DIR}/../../libkmlengine*so*
+		${Qt5_DIR}/../../libkmlbase*so*
+		${Qt5_DIR}/../../libminizip*so*
+		${Qt5_DIR}/../../../liburiparser*so*)
 	
     install(FILES ${Qt5_LIBS}
             DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
             COMPONENT runtime
     )	
 
+	install(FILES ${Qt5_DIR}/../../qt5/plugins/platforms/libqxcb.so
+		DESTINATION bin/platforms
+		COMPONENT runtime
+	)	
+	
     install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
             DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
             COMPONENT runtime
@@ -629,6 +643,14 @@ else(UNIX)
 		${TERRALIB_3RDPARTY_DIR}/lib/libgeos*so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libproj*so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libxerces*so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libsz*so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libgeotiff*so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libjpeg*so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libpng*so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libspatialite*so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libfreexl*so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libpcre*so*
+		${TERRALIB_3RDPARTY_DIR}/pgsql/lib/libpq*so*
 		${TERRALIB_3RDPARTY_DIR}/gdal2/lib/libgdal.so*)
 	
     install(FILES ${TERRALIB_DEPENDENCIES}

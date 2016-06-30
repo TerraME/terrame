@@ -30,10 +30,10 @@
 # variables to reflect you environment.
 # -----------------
 # Location of the builded 3rd-parties.
-export _TERRALIB_3RDPARTY_DIR=/home/avancini/terralib/3rdparty/libs
-export _TERRAME_DEPENDS_DIR=/home/avancini/terrame/3rdparty/install
-export _TERRALIB_MODULES_DIR=/home/avancini/terralib/build-cmake/install
-export _QT5_DIR=/home/avancini/Qt/5.7/gcc_64
+export _TERRALIB_3RDPARTY_DIR=/home/developer/terralib/3rdparty/libs
+export _TERRAME_DEPENDS_DIR=/home/developer/terrame/3rdparty/install
+export _TERRALIB_MODULES_DIR=/home/developer/terralib/build-cmake/install
+export _QT5_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt5
 
 # Location to install TerraLib
 export _TERRAME_INSTALL_PATH=$(pwd)/install
