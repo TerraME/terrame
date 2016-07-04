@@ -55,14 +55,14 @@ return{
 		end
 		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'.")
 
-		local layerName = "defirestation"
-		local layerDoesNotExists = function()
+		layerName = "defirestation"
+		local layerDoesNotExistsSug = function()
 			Layer{
 				project = proj,
 				name = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
+		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
 
 		unitTest:assertFile("proj_celllayer.tview")
 
