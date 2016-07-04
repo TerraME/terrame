@@ -29,7 +29,7 @@ import("terralib")
 proj = Project{
 	file = "itaituba.tview",
 	clean = true,
-	deforestation = filePath("desmatamento_2000.tif", "terralib"),
+	deforestation = filePath("Desmatamento_2000.tif", "terralib"),
 	altimetria = filePath("altimetria.tif", "terralib"),
 	localidades = filePath("Localidades_pt.shp", "terralib"),
 	roads = filePath("Rodovias_lin.shp", "terralib"),
