@@ -73,7 +73,7 @@ local RasterAttributeCreatedMapper = {
 
 local SourceTypeMapper = {
 	OGR = "shp",
-	GDAL = {"tif", "nc"},
+	GDAL = {"tif", "nc", "asc"},
 	POSTGIS = "postgis",
 	ADO = "access"
 }

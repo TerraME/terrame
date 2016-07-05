@@ -28,7 +28,7 @@ local function isEmpty(data)
 end
 
 local function isValidSource(source)
-	return source == "tif" or source == "shp" or source == "postgis" or source == "access" or source == "nc"
+	return source == "tif" or source == "shp" or source == "postgis" or source == "access" or source == "nc" or source == "asc"
 end
 
 local function isSourceConsistent(source, filePath)
@@ -176,7 +176,7 @@ local function addLayer(self, data)
 		customError("Source '"..data.source.."' is invalid.")
 	end				
 		
-	if data.source == "tif" or data.source == "shp" then
+	if data.source == "tif" or data.source == "shp" or data.source == "nc" or data.source == "asc" then
 		if not isSourceConsistent(data.source, data.file) then
 			customError("File '"..data.file.."' does not match to source '"..data.source.."'.")
 		end
@@ -201,6 +201,12 @@ local function addLayer(self, data)
 			self.terralib:addGDALLayer(self, data.name, data.file)
 		end,
 		nc = function()
+			mandatoryTableArgument(data, "file", "string")
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+
+			self.terralib:addGDALLayer(self, data.name, data.file)
+		end,
+		asc = function()
 			mandatoryTableArgument(data, "file", "string")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 
