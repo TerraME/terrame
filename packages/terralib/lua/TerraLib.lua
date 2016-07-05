@@ -1074,12 +1074,15 @@ TerraLib_ = {
 			info.password = connInfo.PG_PASSWORD
 			info.database = connInfo.PG_DB_NAME
 			info.table = dseName
+			info.source = SourceTypeMapper.POSTGIS
 		elseif type == "OGR" then
 			info.file = connInfo.URI
 			info.source = SourceTypeMapper.OGR
 		elseif type == "GDAL" then
 			info.file = connInfo.URI
 			info.source = getFileExtension(info.file)
+		elseif type == "ADO" then
+			info.source = SourceTypeMapper.ADO
 		end
 
 		do
@@ -1132,8 +1135,8 @@ TerraLib_ = {
 	--	
 	-- layerName = "TifLayer"
 	-- layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-	-- tl:addGDALLayer(proj, layerName, layerFile)
-	addGDALLayer = function(_, project, name, filePath)
+	-- tl:addGdalLayer(proj, layerName, layerFile)
+	addGdalLayer = function(_, project, name, filePath)
 		addFileLayer(project, name, filePath, "GDAL")
 	end,
 	--- Add a new PostgreSQL layer to a given project.
@@ -1736,7 +1739,7 @@ TerraLib_ = {
 	-- @arg project The name of the project.
 	-- @arg layerName The input layer name.
 	-- @usage -- DONTRUN
-	-- tl:addGDALLayer(proj, layerName, layerFile)	
+	-- tl:addGdalLayer(proj, layerName, layerFile)	
 	-- local numBands = tl:getNumOfBands(proj, layerName)	
 	getNumOfBands = function(_, project, layerName)
 		loadProject(project, project.file)

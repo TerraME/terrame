@@ -23,7 +23,7 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	addGDALLayer = function(unitTest)
+	addGdalLayer = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
@@ -38,7 +38,7 @@ return {
 		
 		local layerName = "TifLayer"
 		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-		tl:addGDALLayer(proj, layerName, layerFile)
+		tl:addGdalLayer(proj, layerName, layerFile)
 		
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
 		
@@ -65,7 +65,7 @@ return {
 		
 		local layerName1 = "AmazoniaTif"
 		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
-		tl:addGDALLayer(proj, layerName1, layerFile1)
+		tl:addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"
@@ -109,7 +109,7 @@ return {
 		
 		-- local layerName1 = "AmazoniaTif"
 		-- local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
-		-- tl:addGDALLayer(proj, layerName1, layerFile1)
+		-- tl:addGdalLayer(proj, layerName1, layerFile1)
 	
 		-- local host = "localhost"
 		-- local port = "5432"
@@ -169,7 +169,7 @@ return {
 		
 		local layerName = "TifLayer"
 		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-		tl:addGDALLayer(proj, layerName, layerFile)
+		tl:addGdalLayer(proj, layerName, layerFile)
 		
 		local numBands = tl:getNumOfBands(proj, layerName)
 		unitTest:assertEquals(numBands, 3)
@@ -191,7 +191,7 @@ return {
 		
 		local layerName = "Prodes"
 		local layerFile = filePath("PRODES_5KM.tif", "terralib")
-		tl:addGDALLayer(proj, layerName, layerFile)
+		tl:addGdalLayer(proj, layerName, layerFile)
 		
 		local prj = tl:getProjection(proj.layers[layerName])
 		
@@ -216,7 +216,7 @@ return {
 		
 		local layerName = "Prodes"
 		local layerFile = filePath("PRODES_5KM.tif", "terralib")
-		tl:addGDALLayer(proj, layerName, layerFile)
+		tl:addGdalLayer(proj, layerName, layerFile)
 
 		local propNames = tl:getPropertyNames(proj, proj.layers[layerName])
 		
@@ -240,7 +240,7 @@ return {
 		
 		local layerName1 = "AmazoniaTif"
 		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
-		tl:addGDALLayer(proj, layerName1, layerFile1)
+		tl:addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"

@@ -198,19 +198,19 @@ local function addLayer(self, data)
 			mandatoryTableArgument(data, "file", "string")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 			
-			self.terralib:addGDALLayer(self, data.name, data.file)
+			self.terralib:addGdalLayer(self, data.name, data.file)
 		end,
 		nc = function()
 			mandatoryTableArgument(data, "file", "string")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 
-			self.terralib:addGDALLayer(self, data.name, data.file)
+			self.terralib:addGdalLayer(self, data.name, data.file)
 		end,
 		asc = function()
 			mandatoryTableArgument(data, "file", "string")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 
-			self.terralib:addGDALLayer(self, data.name, data.file)
+			self.terralib:addGdalLayer(self, data.name, data.file)
 		end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")

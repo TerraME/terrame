@@ -197,7 +197,7 @@ Type to access TerraLib. It contains very basic and low level functions that are
 							
 								
 									<tr>
-										<td class="name" nowrap><a href="#addGDALLayer">addGDALLayer</a>&nbsp;
+										<td class="name" nowrap><a href="#addGdalLayer">addGdalLayer</a>&nbsp;
 <td class="summary">Add a new GDAL layer to a given project.</td>
 									</tr>
 								
@@ -359,9 +359,9 @@ Type to access TerraLib. It contains very basic and low level functions that are
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
-<dt><h2><a name="addGDALLayer">
+<dt><h2><a name="addGdalLayer">
 
-	</a><strong>addGDALLayer</strong>&nbsp;
+	</a><strong>addGdalLayer</strong>&nbsp;
 
 </h2></dt>
 <dd>
@@ -418,7 +418,7 @@ Add a new GDAL layer to a given project.</span>
 
 <span class="id">layerName</span> = <span class="string">"TifLayer"</span>
 <span class="id">layerFile</span> = <span class="id">filePath</span>(<span class="string">"cbers_rgb342_crop1.tif"</span>, <span class="string">"terralib"</span>)
-<span class="id">tl</span>:<span class="function">addGDALLayer</span>(<span class="id">proj</span>, <span class="id">layerName</span>, <span class="id">layerFile</span>)</code></pre>
+<span class="id">tl</span>:<span class="function">addGdalLayer</span>(<span class="id">proj</span>, <span class="id">layerName</span>, <span class="id">layerFile</span>)</code></pre>
 
 
 
@@ -1573,7 +1573,7 @@ Returns the number of bands of some Raster.<br><br></span>
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">tl</span>:<span class="id">addGDALLayer</span>(<span class="id">proj</span>, <span class="id">layerName</span>, <span class="id">layerFile</span>)	
+<pre class="example"><code><span class="id">tl</span>:<span class="id">addGdalLayer</span>(<span class="id">proj</span>, <span class="id">layerName</span>, <span class="id">layerFile</span>)	
 <span class="reserved">local</span> <span class="id">numBands</span> = <span class="id">tl</span>:<span class="function">getNumOfBands</span>(<span class="id">proj</span>, <span class="id">layerName</span>)	</code></pre>
 
 

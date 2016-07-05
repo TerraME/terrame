@@ -38,7 +38,7 @@ return {
 		
 		local layerName1 = "AmazoniaTif"
 		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
-		tl:addGDALLayer(proj, layerName1, layerFile1)
+		tl:addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"
