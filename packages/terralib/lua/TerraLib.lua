@@ -71,6 +71,13 @@ local RasterAttributeCreatedMapper = {
 	sum = "_Sum"
 }
 
+local SourceTypeMapper = {
+	OGR = "shp",
+	GDAL = {"tif", "nc"},
+	POSTGIS = "postgis",
+	ADO = "access"
+}
+
 local function decodeUri(str)
 	str = string.gsub(str, "+", " ")
 	str = string.gsub(str, "%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end)
@@ -1069,8 +1076,10 @@ TerraLib_ = {
 			info.table = dseName
 		elseif type == "OGR" then
 			info.file = connInfo.URI
+			info.source = SourceTypeMapper.OGR
 		elseif type == "GDAL" then
 			info.file = connInfo.URI
+			info.source = getFileExtension(info.file)
 		end
 
 		do
@@ -1107,7 +1116,7 @@ TerraLib_ = {
 	addShpLayer = function(_, project, name, filePath, addSpatialIdx)
 		addFileLayer(project, name, filePath, "OGR", addSpatialIdx)
 	end,
-	--- Add a new tiff layer to a given project.
+	--- Add a new GDAL layer to a given project.
 	-- @arg filePath The path for the project.
 	-- @arg name The name of the layer.
 	-- @arg project The name of the project.
@@ -1123,8 +1132,8 @@ TerraLib_ = {
 	--	
 	-- layerName = "TifLayer"
 	-- layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-	-- tl:addTifLayer(proj, layerName, layerFile)
-	addTifLayer = function(_, project, name, filePath)
+	-- tl:addGDALLayer(proj, layerName, layerFile)
+	addGDALLayer = function(_, project, name, filePath)
 		addFileLayer(project, name, filePath, "GDAL")
 	end,
 	--- Add a new PostgreSQL layer to a given project.
@@ -1727,7 +1736,7 @@ TerraLib_ = {
 	-- @arg project The name of the project.
 	-- @arg layerName The input layer name.
 	-- @usage -- DONTRUN
-	-- tl:addTifLayer(proj, layerName, layerFile)	
+	-- tl:addGDALLayer(proj, layerName, layerFile)	
 	-- local numBands = tl:getNumOfBands(proj, layerName)	
 	getNumOfBands = function(_, project, layerName)
 		loadProject(project, project.file)

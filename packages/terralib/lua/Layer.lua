@@ -23,19 +23,12 @@
 -------------------------------------------------------------------------------------------
 
 -- TODO: create Common for this
-local SourceTypeMapper = {
-	OGR = "shp",
-	GDAL = "tif",
-	POSTGIS = "postgis",
-	ADO = "access"
-}
-
 local function isEmpty(data)
 	return (data == "") or (data == nil)
 end
 
 local function isValidSource(source)
-	return source == "tif" or source == "shp" or source == "postgis" or source == "access"
+	return source == "tif" or source == "shp" or source == "postgis" or source == "access" or source == "nc"
 end
 
 local function isSourceConsistent(source, filePath)
@@ -205,7 +198,13 @@ local function addLayer(self, data)
 			mandatoryTableArgument(data, "file", "string")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 			
-			self.terralib:addTifLayer(self, data.name, data.file)
+			self.terralib:addGDALLayer(self, data.name, data.file)
+		end,
+		nc = function()
+			mandatoryTableArgument(data, "file", "string")
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+
+			self.terralib:addGDALLayer(self, data.name, data.file)
 		end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")
@@ -719,7 +718,6 @@ function Layer(data)
 		local layer = data.project.layers[data.name]
 
 		local info = data.project.terralib:getLayerInfo(data.project, layer)
-		info.source = SourceTypeMapper[info.type]
 		info.type = nil
 
 		forEachElement(info, function(idx, value)
