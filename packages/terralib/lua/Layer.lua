@@ -685,6 +685,12 @@ metaTableLayer_ = {
 --
 -- Layer{
 --     project = proj,
+--     file = filePath("TI_AMZ.shp", "terralib"),
+--     name = "ti"
+-- }
+--
+-- Layer{
+--     project = proj,
 --     layer = "roads",
 --     user = "root",
 --     password = "abc123",
