@@ -292,6 +292,9 @@ Environment_ = {
 	-- of the Environments it contains, and so on.
 	-- @arg finalTime A number representing the final time. This funcion will stop when there is no
 	-- Event scheduled to a time less or equal to the final time.
+	-- When using instances of Models within the Environment (to simulate them at the same time),
+	-- this argument is optional. In this case, the default value is the greater final time
+	-- amongst all instances.
 	-- @usage env = Environment{
 	--     Timer{Event{action = function()
 	--         print("execute 1")
@@ -302,11 +305,11 @@ Environment_ = {
 	-- }
 	-- env:run(10)
 	run = function(self, finalTime)
-		mandatoryArgument(1, "number", finalTime)
 		local timer = Timer{}
 		local timers = {}
 
 		local process
+		local modelFinalTime
 
 		process = function(env)
 			forEachOrderedElement(env, function(idx, value, mtype)
@@ -317,13 +320,24 @@ Environment_ = {
 					forEachElement(value.events, function(_, ev)
 						timer:add(ev)
 					end)
-				elseif isModel(value) then
+				elseif isModel(value) and idx ~= "parent" then
+					local ft = value.finalTime
+					if not modelFinalTime or ft > modelFinalTime then
+						modelFinalTime = ft
+					end
+
 					process(value)
 				end
 			end)
 		end
 
 		process(self)
+
+		if modelFinalTime and not finalTime then
+			finalTime = modelFinalTime
+		end
+
+		mandatoryArgument(1, "number", finalTime)
 
 		timer:run(finalTime)
 
@@ -559,7 +573,7 @@ metaTableEnvironment_ = {__index = Environment_, __tostring = _Gtme.tostring}
 -- relations between sets of objects. Calling
 -- Utils:forEachElement() traverses each object of an Environment.
 -- @arg data.... Agents, Automatons, Cells, CellularSpaces, Societies, Trajectories, Groups,
--- Timers, or Environments.
+-- Timers, Environments, or instances of Models.
 -- @output cObj_ A pointer to a C++ representation of the Environment. Never use this object.
 -- @usage environment = Environment{
 --     cs1 = CellularSpace{xdim = 10},
@@ -596,7 +610,7 @@ function Environment(data)
 		elseif t == "Timer" or t == "Agent" or t == "Environment" then
 			ud.parent = data
 			cObj:add(ud.cObj_)
-		elseif type(_G[t]) == "Model" then
+		elseif isModel(ud) then
 			forEachElement(ud, function(_, value, mtype)
 				if mtype == "Timer" or mtype == "Environment" then
 					cObj:add(value.cObj_)

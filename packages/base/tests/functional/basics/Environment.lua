@@ -642,6 +642,34 @@ time 4 event 10 priority 9
 time 4 event 11 priority 10
 time 4 event 12 priority 11
 ]])
+
+		local init = function(model)
+			model.timer = Timer{
+				Event{action = function()
+					model.count = model.count + 1
+				end}
+			}
+		end
+
+		local Room = Model{
+			count = 0,
+			finalTime = 20,
+			init = init
+		}
+
+		local scenario1 = Room{}
+		local scenario2 = Room{count = 20, finalTime = 30}
+		local scenario3 = Room{count = 5}
+
+		env = Environment{
+			scenario1, scenario2, scenario3
+		}
+
+		env:run()
+
+		unitTest:assertEquals(scenario1.count, 0  + 30)
+		unitTest:assertEquals(scenario2.count, 20 + 30)
+		unitTest:assertEquals(scenario3.count, 5  + 30)
 	end,
 	getTime = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
