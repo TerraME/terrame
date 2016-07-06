@@ -1000,6 +1000,43 @@ return {
 		unitTest:assertEquals(rsumLayerInfo.table, string.lower(rsumLayerName))		
 		unitTest:assertNotNil(rsumLayerInfo.sid)			
 		
+		-- OVERWRITE OUTPUT
+		operation = "sum"
+		attribute = "rsum_over"
+		select = 0
+		area = nil
+		default = nil
+		tl:attributeFill(proj, layerName4, rsumLayerName, nil, attribute, operation, select, area, default)
+		
+		local rsumSet = tl:getDataSet(proj, rsumLayerName)
+		
+		unitTest:assertEquals(getn(rsumSet), 402)
+		
+		for k, v in pairs(rsumSet[0]) do
+			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
+							(k == "presence") or (k == "area_percent") or (k == "count") or
+							(k == "distance") or (k == "minimum") or (k == "maximum") or
+							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or 
+							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
+							(k == "rsum") or (k == "rsum_over"))
+			unitTest:assertNotNil(v)
+		end		
+
+		local rsumLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
+		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
+		unitTest:assertEquals(rsumLayerInfo.type, "POSTGIS")
+		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
+		unitTest:assertEquals(rsumLayerInfo.host, host)
+		unitTest:assertEquals(rsumLayerInfo.port, port)
+		unitTest:assertEquals(rsumLayerInfo.user, user)
+		unitTest:assertEquals(rsumLayerInfo.password, password)
+		unitTest:assertEquals(rsumLayerInfo.database, database)
+		unitTest:assertEquals(rsumLayerInfo.table, string.lower(rsumLayerName))		
+		unitTest:assertNotNil(rsumLayerInfo.sid)		
+
+		-- END
 		pgData.table = string.lower(clName)
 		tl:dropPgTable(pgData)
 		pgData.table = string.lower(presLayerName)

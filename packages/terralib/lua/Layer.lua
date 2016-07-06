@@ -385,9 +385,7 @@ Layer_ = {
 		mandatoryTableArgument(data, "operation", "string")
 		mandatoryTableArgument(data, "layer", "string")
 		mandatoryTableArgument(data, "attribute", "string")
-		mandatoryTableArgument(data, "output", "string")
-		defaultTableValue(data, "clean", false)
-		
+
 		local tlib = TerraLib{}
 		local project = self.project
 		
@@ -402,18 +400,6 @@ Layer_ = {
 
 			customError(msg)
 		end
-	
-		if project.layers[data.output] then
-			customError("The output layer '"..data.output.."' already exists.")
-		end
-
-		if isFile(data.output..".shp") then
-			if data.clean then
-				rmFile(data.output..".shp")
-			else
-				customError("File '"..data.output..".shp' already exists. Please set clean = true or remove it manually.") -- SKIP This should be removed by #902.
-			end
-		end
 
 		local otherLayer = Layer{
 			project = self.project.file,
@@ -425,7 +411,7 @@ Layer_ = {
 		switch(data, "operation"):caseof{
 			area = function()
 				if repr == "polygon" then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
@@ -434,15 +420,15 @@ Layer_ = {
 			average = function()
 				if belong(repr, {"point", "line", "polygon"}) then
 					if repr == "polygon" then
-						verifyUnnecessaryArguments(data, {"area", "attribute", "clean", "default", "dummy", "layer", "operation", "output", "select"})
+						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
 						defaultTableValue(data, "area", false)
 					else
-						verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "output", "select"})
+						verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 					end
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(otherLayer, data)
 
 					data.select = data.band
@@ -455,7 +441,7 @@ Layer_ = {
 			end,
 			count = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
@@ -463,7 +449,7 @@ Layer_ = {
 			end,
 			distance = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
@@ -471,7 +457,7 @@ Layer_ = {
 			end,
 			length = function()
 				if repr == "line" then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
@@ -482,15 +468,15 @@ Layer_ = {
 			mode = function()
 				if belong(repr, {"point", "line", "polygon"}) then
 					if repr == "polygon" then
-						verifyUnnecessaryArguments(data, {"area", "attribute", "clean", "default", "dummy", "layer", "operation", "output", "select"})
+						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
 						defaultTableValue(data, "area", false)
 					else
-						verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "output", "select"})
+						verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 					end
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(otherLayer, data)
 
 					data.select = data.band
@@ -503,10 +489,10 @@ Layer_ = {
 			end,
 			maximum = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "select", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(otherLayer, data)
 
 					data.select = data.band
@@ -519,10 +505,10 @@ Layer_ = {
 			end,
 			minimum = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "select", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(otherLayer, data)
 
 					data.select = data.band
@@ -535,10 +521,10 @@ Layer_ = {
 			end,
 			coverage = function()
 				if repr == "polygon" then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "select", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "clean", "default", "dummy", "layer", "operation", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(otherLayer, data)
 
 					data.select = data.band
@@ -561,7 +547,7 @@ Layer_ = {
 			end,
 			presence = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "layer", "operation", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
@@ -569,10 +555,10 @@ Layer_ = {
 			end,
 			stdev = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "select", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "band", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
 					checkBand(otherLayer, data)
 
 					data.select = data.band
@@ -585,11 +571,11 @@ Layer_ = {
 			end,
 			sum = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"area", "attribute", "clean", "default", "dummy", "layer", "operation", "select", "output"})
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 					defaultTableValue(data, "area", false)
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "clean", "default", "dummy", "layer", "operation", "band", "output"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
 					checkBand(otherLayer, data)
 
 					data.select = data.band
@@ -602,9 +588,7 @@ Layer_ = {
 			end
 		}
 		
-		tlib:attributeFill(project, data.layer, self.name, data.output, data.attribute, data.operation, data.select, data.area, data.default, repr)
-		
-		self.name = data.output
+		tlib:attributeFill(project, data.layer, self.name, nil, data.attribute, data.operation, data.select, data.area, data.default, repr)
 	end,
 	projection = function(self)
 		local prj = self.project.terralib:getProjection(self.project.layers[self.name])

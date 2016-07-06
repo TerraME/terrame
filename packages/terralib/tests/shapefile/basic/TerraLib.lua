@@ -942,8 +942,40 @@ return {
 		unitTest:assertEquals(rsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[21])
 		unitTest:assertEquals(rsumLayerInfo.type, "OGR")
 		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(rsumLayerInfo.sid)					
+		unitTest:assertNotNil(rsumLayerInfo.sid)
+
+		-- OVERWRITE OUTPUT
+		operation = "sum"
+		attribute = "rsum_over"
+		select = 0
+		area = nil
+		default = nil
+		tl:attributeFill(proj, layerName4, rsumLayerName, nil, attribute, operation, select, area, default)
 		
+		local rsumSet = tl:getDataSet(proj, rsumLayerName)
+		
+		unitTest:assertEquals(getn(rsumSet), 402)
+		
+		for k, v in pairs(rsumSet[0]) do
+			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
+							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or 
+							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or 
+							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or 
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or 
+							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or (k == "rsum") or
+							(k == "rsum_over"))
+			unitTest:assertNotNil(v)
+		end		
+
+		local rsumLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
+		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
+		unitTest:assertEquals(rsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[21])
+		unitTest:assertEquals(rsumLayerInfo.type, "OGR")
+		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
+		unitTest:assertNotNil(rsumLayerInfo.sid)		
+
+		
+		-- END
 		for j = 1, #shp do
 			if isFile(shp[j]) then
 				rmFile(shp[j])

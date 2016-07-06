@@ -24,7 +24,7 @@
 
 return {
 	Layer = function(unitTest)
-		local projName = "layer_shape_basic.tview"
+		local projName = "layer_shape_alt.tview"
 
 		local proj = Project {
 			file = projName,

@@ -434,49 +434,18 @@ return{
 			cl:fill{
 				attribute = "def",
 				operation = "area",
-				layer = clName1,
-				output = "abc123"
+				layer = clName1
 			}
 		end
 		unitTest:assertError(attributeDoesNotExist, "string") -- SKIP
 		--]]
-
-		local outputMandatory = function()
-			cl:fill{
-				layer = "cells",
-				operation = "area",
-				attribute = "any"
-			}
-		end
-		unitTest:assertError(outputMandatory, mandatoryArgumentMsg("output"))
-
-		local outputNotString = function()
-			cl:fill{
-				attribute = "any",
-				operation = "area",
-				layer = "cells",
-				output = 2
-			}
-		end
-		unitTest:assertError(outputNotString, incompatibleTypeMsg("output", "string", 2))
-
-		local outputAlreadyExists = function()
-			cl:fill{
-				attribute = "any",
-				operation = "area",
-				layer = clName1,
-				output = clName1
-			}
-		end
-		unitTest:assertError(outputAlreadyExists, "The output layer 'setores_cells2' already exists.")
 
 		local presenceLayerName = clName1.."_Presence"
 		local layerNotExists = function()
 			cl:fill{
 				operation = "presence",
 				layer = "LayerNotExists",
-				attribute = "presence",
-				output = presenceLayerName
+				attribute = "presence"
 			}
 		end
 		unitTest:assertError(layerNotExists, "The layer 'LayerNotExists' does not exist.")
@@ -485,8 +454,7 @@ return{
 			cl:fill{
 				operation = "presence",
 				layer = layerName1.."_",
-				attribute = "presence",
-				output = presenceLayerName
+				attribute = "presence"
 			}
 		end
 		unitTest:assertError(layerNotExistsSug, "The layer '"..layerName1.."_' does not exist. Do you mean '"..layerName1.."'?")
@@ -495,8 +463,7 @@ return{
 			cl:fill{
 				operation = "presence",
 				layer = layerName1,
-				attribute = "row",
-				output = presenceLayerName
+				attribute = "row"
 			}
 		end
 		unitTest:assertError(attrAlreadyExists, "The attribute '".."row".."' already exists in the Layer.")
@@ -506,8 +473,7 @@ return{
 				operation = "presence",
 				layer = layerName1,
 				attribute = "presence",
-				select = "FID",
-				output = presenceLayerName
+				select = "FID"
 			}
 		end
 		unitTest:assertError(presenceSelectUnnecessary, unnecessaryArgumentMsg("select"))
@@ -518,8 +484,7 @@ return{
 				attribute = "attr",
 				operation = "area",
 				layer = layerName1,
-				select = "FID",
-				output = areaLayerName
+				select = "FID"
 			}
 		end
 		unitTest:assertError(areaSelectUnnecessary, unnecessaryArgumentMsg("select"))
@@ -530,8 +495,7 @@ return{
 				attribute = "attr",
 				operation = "count",
 				layer = layerName1,
-				select = "FID",
-				output = countLayerName
+				select = "FID"
 			}
 		end
 		unitTest:assertError(countSelectUnnecessary, unnecessaryArgumentMsg("select"))
@@ -542,8 +506,7 @@ return{
 				attribute = "attr",
 				operation = "distance",
 				layer = layerName1,
-				select = "FID",
-				output = distanceLayerName
+				select = "FID"
 			}
 		end
 		unitTest:assertError(distanceSelectUnnecessary, unnecessaryArgumentMsg("select"))
@@ -554,9 +517,7 @@ return{
 				attribute = "attr",
 				operation = "minimum",
 				layer = layerName1,
-				select = 2,
-				clean = true,
-				output = minValueLayerName
+				select = 2
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -567,8 +528,6 @@ return{
 				operation = "minimum",
 				layer = layerName1,
 				select = "row",
-				clean = true,
-				output = minValueLayerName,
 				default = false
 			}
 		end
@@ -580,8 +539,6 @@ return{
 				operation = "minimum",
 				layer = layerName1,
 				select = "row",
-				clean = true,
-				output = minValueLayerName,
 				dummy = false
 			}
 		end
@@ -593,8 +550,6 @@ return{
 				operation = "minimum",
 				layer = layerName1,
 				select = "row",
-				clean = true,
-				output = minValueLayerName,
 				dummy = 0,
 				defaut = 3
 			}
@@ -607,9 +562,7 @@ return{
 				attribute = "attr",
 				operation = "minimum",
 				layer = layerName1,
-				select = selected,
-				clean = true,
-				output = minValueLayerName
+				select = selected
 			}
 		end
 		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'.")
@@ -620,9 +573,7 @@ return{
 				attribute = "attr",
 				operation = "maximum",
 				layer = layerName1,
-				select = 2,
-				clean = true,
-				output = maxValueLayerName
+				select = 2
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -633,8 +584,6 @@ return{
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = maxValueLayerName,
 				default = false
 			}
 		end
@@ -646,8 +595,6 @@ return{
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = maxValueLayerName,
 				dummy = false
 			}
 		end
@@ -659,8 +606,6 @@ return{
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = maxValueLayerName,
 				defaut = 3
 			}
 		end
@@ -672,9 +617,7 @@ return{
 				attribute = "attr",
 				operation = "coverage",
 				layer = layerName1,
-				select = 2,
-				clean = true,
-				output = coverageLayerName
+				select = 2
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -685,8 +628,6 @@ return{
 				operation = "coverage",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = coverageLayerName,
 				default = false
 			}
 		end
@@ -698,8 +639,6 @@ return{
 				operation = "coverage",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = coverageLayerName,
 				dummy = false
 			}
 		end
@@ -711,8 +650,6 @@ return{
 				operation = "coverage",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = coverageLayerName,
 				defaut = 3
 			}
 		end
@@ -724,9 +661,7 @@ return{
 				attribute = "attr",
 				operation = "stdev",
 				layer = layerName1,
-				select = 2,
-				clean = true,
-				output = stdevLayerName
+				select = 2
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -737,8 +672,6 @@ return{
 				operation = "stdev",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = stdevLayerName,
 				default = false
 			}
 		end
@@ -750,8 +683,6 @@ return{
 				operation = "stdev",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = stdevLayerName,
 				dummy = false
 			}
 		end
@@ -763,8 +694,6 @@ return{
 				operation = "stdev",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = stdevLayerName,
 				defaut = 3
 			}
 		end
@@ -776,9 +705,7 @@ return{
 				attribute = "attr",
 				operation = "average",
 				layer = layerName1,
-				select = 2,
-				clean = true,
-				output = averageLayerName
+				select = 2
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -789,8 +716,6 @@ return{
 				operation = "average",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = averageLayerName,
 				area = 2
 			}
 		end
@@ -802,8 +727,6 @@ return{
 				operation = "average",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = averageLayerName,
 				default = false
 			}
 		end
@@ -815,8 +738,6 @@ return{
 				operation = "average",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = averageLayerName,
 				dummy = false
 			}
 		end
@@ -828,8 +749,6 @@ return{
 				operation = "average",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = averageLayerName,
 				defaut = 3
 			}
 		end
@@ -841,9 +760,7 @@ return{
 				attribute = "attr",
 				operation = "mode",
 				layer = layerName1,
-				select = 2,
-				clean = true,
-				output = modeLayerName
+				select = 2
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -854,8 +771,6 @@ return{
 				operation = "mode",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = modeLayerName,
 				area = 2
 			}
 		end
@@ -867,8 +782,6 @@ return{
 				operation = "mode",
 				layer = layerName1,
 				select = "FID",
-				output = modeLayerName,
-				clean = true,
 				default = false
 			}
 		end
@@ -880,8 +793,6 @@ return{
 				operation = "mode",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = modeLayerName,
 				dummy = false
 			}
 		end
@@ -893,8 +804,6 @@ return{
 				operation = "mode",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = modeLayerName,
 				defaut = 3
 			}
 		end
@@ -906,9 +815,7 @@ return{
 				attribute = "attr",
 				operation = "sum",
 				layer = layerName1,
-				select = 2,
-				clean = true,
-				output = sumLayerName
+				select = 2
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -919,8 +826,6 @@ return{
 				operation = "sum",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = sumLayerName,
 				area = 2
 			}
 		end
@@ -932,8 +837,6 @@ return{
 				operation = "sum",
 				layer = layerName1,
 				select = "FID",
-				output = sumLayerName,
-				clean = true,
 				default = false
 			}
 		end
@@ -945,8 +848,6 @@ return{
 				operation = "sum",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = sumLayerName,
 				dummy = false
 			}
 		end
@@ -958,8 +859,6 @@ return{
 				operation = "sum",
 				layer = layerName1,
 				select = "FID",
-				clean = true,
-				output = sumLayerName,
 				defaut = 3
 			}
 		end
@@ -970,9 +869,7 @@ return{
 				attribute = "max10allowed",
 				operation = "sum",
 				layer = layerName1,
-				select = "FID",
-				clean = true,
-				output = sumLayerName
+				select = "FID"
 			}
 		end
 		unitTest:assertError(normalizedNameWarning,   "The 'attribute' lenght is more than 10 characters, it was changed to 'max10allow'.")
@@ -998,8 +895,7 @@ return{
 		cl:fill{
 			operation = "presence",
 			layer = localidades,
-			attribute = "presence2000",
-			output = presenceLayerName
+			attribute = "presence2000"
 		}
 
 		local presenceLayerName2 = clName1.."_Presence_2001"
@@ -1008,8 +904,7 @@ return{
 			cl:fill{
 				operation = "presence",
 				layer = localidades,
-				attribute = "presence2001",
-				output = presenceLayerName2
+				attribute = "presence2001"
 			}
 		end
 		unitTest:assertError(normalizedTrucatedError, "The attribute 'presence20' already exists in the Layer.")
@@ -1032,7 +927,6 @@ return{
 				operation = "average",
 				layer = layerName3,
 				band = 0,
-				output = raverageLayerName,
 				area = 2
 			}
 		end
@@ -1043,8 +937,7 @@ return{
 				attribute = "attr",
 				operation = "average",
 				layer = layerName3,
-				band = "0",
-				output = raverageLayerName
+				band = "0"
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
@@ -1054,8 +947,7 @@ return{
 				attribute = "attr",
 				operation = "average",
 				layer = layerName3,
-				band = -1,
-				output = raverageLayerName
+				band = -1
 			}
 		end
 		unitTest:assertError(bandNegative, positiveArgumentMsg("band", -1, true))
@@ -1066,8 +958,7 @@ return{
 				-- attribute = "attr",
 				-- operation = "average",
 				-- layer = layerName3,
-				-- select = 0,
-				-- output = raverageLayerName
+				-- select = 0
 			-- }
 		-- end
 		-- unitTest:assertError(layerNotIntersect, "The two layers do not intersect.") -- SKIP
@@ -1079,8 +970,6 @@ return{
 				operation = "minimum",
 				layer = layerName3,
 				band = 0,
-				clean = true,
-				output = rminLayerName,
 				area = 2
 			}
 		end
@@ -1091,9 +980,7 @@ return{
 				attribute = "attr",
 				operation = "minimum",
 				layer = layerName3,
-				clean = true,
-				band = "0",
-				output = rminLayerName
+				band = "0"
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
@@ -1105,8 +992,6 @@ return{
 				operation = "maximum",
 				layer = layerName3,
 				band = 0,
-				clean = true,
-				output = rmaxLayerName,
 				area = 2
 			}
 		end
@@ -1117,9 +1002,7 @@ return{
 				attribute = "attr",
 				operation = "maximum",
 				layer = layerName3,
-				band = "0",
-				clean = true,
-				output = rmaxLayerName
+				band = "0"
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
@@ -1131,8 +1014,6 @@ return{
 				operation = "coverage",
 				layer = layerName3,
 				band = 0,
-				clean = true,
-				output = rpercentLayerName,
 				area = 2
 			}
 		end
@@ -1143,9 +1024,7 @@ return{
 				attribute = "attr",
 				operation = "coverage",
 				layer = layerName3,
-				band = "0",
-				clean = true,
-				output = rpercentLayerName
+				band = "0"
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
@@ -1157,8 +1036,6 @@ return{
 				operation = "stdev",
 				layer = layerName3,
 				band = 0,
-				clean = true,
-				output = rstdevLayerName,
 				area = 2
 			}
 		end
@@ -1169,9 +1046,7 @@ return{
 				attribute = "attr",
 				operation = "stdev",
 				layer = layerName3,
-				band = "0",
-				clean = true,
-				output = rstdevLayerName
+				band = "0"
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
@@ -1183,8 +1058,6 @@ return{
 				operation = "sum",
 				layer = layerName3,
 				band = 0,
-				clean = true,
-				output = rsumLayerName,
 				area = 2
 			}
 		end
@@ -1195,9 +1068,7 @@ return{
 				attribute = "attr",
 				operation = "sum",
 				layer = layerName3,
-				band = "0",
-				clean = true,
-				output = rsumLayerName
+				band = "0"
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
@@ -1206,9 +1077,7 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "area",
-				layer = layerName3,
-				clean = true,
-				output = rstdevLayerName
+				layer = layerName3
 			}
 		end
 		unitTest:assertError(op1NotAvailable, "The operation 'area' is not available for layers with raster data.")
@@ -1217,9 +1086,7 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "count",
-				layer = layerName3,
-				clean = true,
-				output = rstdevLayerName
+				layer = layerName3
 			}
 		end
 		unitTest:assertError(op2NotAvailable, "The operation 'count' is not available for layers with raster data.")
@@ -1228,9 +1095,7 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "distance",
-				layer = layerName3,
-				clean = true,
-				output = rstdevLayerName
+				layer = layerName3
 			}
 		end
 		unitTest:assertError(op3NotAvailable, "The operation 'distance' is not available for layers with raster data.")
@@ -1239,9 +1104,7 @@ return{
 			cl:fill{
 				attribute = "attr",
 				operation = "presence",
-				layer = layerName3,
-				clean = true,
-				output = rstdevLayerName
+				layer = layerName3
 			}
 		end
 		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.")
