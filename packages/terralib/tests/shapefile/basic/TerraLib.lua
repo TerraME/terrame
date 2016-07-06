@@ -952,11 +952,11 @@ return {
 		default = nil
 		tl:attributeFill(proj, layerName4, rsumLayerName, nil, attribute, operation, select, area, default)
 		
-		local rsumSet = tl:getDataSet(proj, rsumLayerName)
+		local rsumOverSet = tl:getDataSet(proj, rsumLayerName)
 		
-		unitTest:assertEquals(getn(rsumSet), 402)
+		unitTest:assertEquals(getn(rsumOverSet), 402)
 		
-		for k, v in pairs(rsumSet[0]) do
+		for k, v in pairs(rsumOverSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or 
 							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or 
@@ -967,12 +967,12 @@ return {
 			unitTest:assertNotNil(v)
 		end		
 
-		local rsumLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
-		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[21])
-		unitTest:assertEquals(rsumLayerInfo.type, "OGR")
-		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(rsumLayerInfo.sid)		
+		local rsumOverLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
+		unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
+		unitTest:assertEquals(rsumOverLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[21])
+		unitTest:assertEquals(rsumOverLayerInfo.type, "OGR")
+		unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
+		unitTest:assertNotNil(rsumOverLayerInfo.sid)		
 
 		
 		-- END

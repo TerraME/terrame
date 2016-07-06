@@ -1008,11 +1008,11 @@ return {
 		default = nil
 		tl:attributeFill(proj, layerName4, rsumLayerName, nil, attribute, operation, select, area, default)
 		
-		local rsumSet = tl:getDataSet(proj, rsumLayerName)
+		local rsumOverSet = tl:getDataSet(proj, rsumLayerName)
 		
-		unitTest:assertEquals(getn(rsumSet), 402)
+		unitTest:assertEquals(getn(rsumOverSet), 402)
 		
-		for k, v in pairs(rsumSet[0]) do
+		for k, v in pairs(rsumOverSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
@@ -1024,17 +1024,17 @@ return {
 			unitTest:assertNotNil(v)
 		end		
 
-		local rsumLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
-		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
-		unitTest:assertEquals(rsumLayerInfo.host, host)
-		unitTest:assertEquals(rsumLayerInfo.port, port)
-		unitTest:assertEquals(rsumLayerInfo.user, user)
-		unitTest:assertEquals(rsumLayerInfo.password, password)
-		unitTest:assertEquals(rsumLayerInfo.database, database)
-		unitTest:assertEquals(rsumLayerInfo.table, string.lower(rsumLayerName))		
-		unitTest:assertNotNil(rsumLayerInfo.sid)		
+		local rsumOverLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
+		unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
+		unitTest:assertEquals(rsumOverLayerInfo.type, "POSTGIS")
+		unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
+		unitTest:assertEquals(rsumOverLayerInfo.host, host)
+		unitTest:assertEquals(rsumOverLayerInfo.port, port)
+		unitTest:assertEquals(rsumOverLayerInfo.user, user)
+		unitTest:assertEquals(rsumOverLayerInfo.password, password)
+		unitTest:assertEquals(rsumOverLayerInfo.database, database)
+		unitTest:assertEquals(rsumOverLayerInfo.table, string.lower(rsumLayerName))		
+		unitTest:assertNotNil(rsumOverLayerInfo.sid)		
 
 		-- END
 		pgData.table = string.lower(clName)

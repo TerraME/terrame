@@ -440,7 +440,6 @@ return{
 		unitTest:assertError(attributeDoesNotExist, "string") -- SKIP
 		--]]
 
-		local presenceLayerName = clName1.."_Presence"
 		local layerNotExists = function()
 			cl:fill{
 				operation = "presence",
@@ -478,7 +477,6 @@ return{
 		end
 		unitTest:assertError(presenceSelectUnnecessary, unnecessaryArgumentMsg("select"))
 
-		local areaLayerName = clName1.."_Area"
 		local areaSelectUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
@@ -489,7 +487,6 @@ return{
 		end
 		unitTest:assertError(areaSelectUnnecessary, unnecessaryArgumentMsg("select"))
 
-		local countLayerName = clName1.."_Count"
 		local countSelectUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
@@ -500,7 +497,6 @@ return{
 		end
 		unitTest:assertError(countSelectUnnecessary, unnecessaryArgumentMsg("select"))
 
-		local distanceLayerName = clName1.."_Distance"
 		local distanceSelectUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
@@ -511,7 +507,6 @@ return{
 		end
 		unitTest:assertError(distanceSelectUnnecessary, unnecessaryArgumentMsg("select"))
 
-		local minValueLayerName = clName1.."_Minimum"
 		local selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -567,7 +562,6 @@ return{
 		end
 		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'.")
 
-		local maxValueLayerName = clName1.."_Maximum"
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -611,7 +605,6 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 
-		local coverageLayerName = clName1.."_Percentage"
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -655,7 +648,6 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 
-		local stdevLayerName = clName1.."_Stdev"
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -699,7 +691,6 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, unnecessaryArgumentMsg("defaut", "default"))
 
-		local averageLayerName = clName1.."_Average"
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -754,7 +745,6 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 
-		local modeLayerName = clName1.."_Majority"
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -809,7 +799,6 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 
-		local sumLayerName = clName1.."_Sum"
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -882,13 +871,6 @@ return{
 			file = filePath("Localidades_pt.shp", "terralib")
 		}
 		
-		presenceLayerName = clName1.."_Presence_2000"
-		local filePath2 = presenceLayerName..".shp"
-
-		if isFile(filePath2) then
-			rmFile(filePath2)
-		end
-
 		local cW = customWarning 
 		customWarning = function() return end
 
@@ -897,8 +879,6 @@ return{
 			layer = localidades,
 			attribute = "presence2000"
 		}
-
-		local presenceLayerName2 = clName1.."_Presence_2001"
 
 		local normalizedTrucatedError = function()
 			cl:fill{
@@ -920,7 +900,6 @@ return{
 			file = filePath("Desmatamento_2000.tif", "terralib")
 		}
 
-		local raverageLayerName = clName1.."_Average"
 		local areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
@@ -963,7 +942,6 @@ return{
 		-- end
 		-- unitTest:assertError(layerNotIntersect, "The two layers do not intersect.") -- SKIP
 
-		local rminLayerName = clName1.."_Minimum"
 		areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
@@ -985,7 +963,6 @@ return{
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
-		local rmaxLayerName = clName1.."_Maximum"
 		areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
@@ -1007,7 +984,6 @@ return{
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
-		local rpercentLayerName = clName1.."_Percentage"
 		areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
@@ -1029,7 +1005,6 @@ return{
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
-		local rstdevLayerName = clName1.."_Stdev"
 		areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
@@ -1051,7 +1026,6 @@ return{
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
-		local rsumLayerName = clName1.."_Sum"
 		areaUnnecessary = function()
 			cl:fill{
 				attribute = "attr",
@@ -1114,7 +1088,6 @@ return{
 		end
 
 		if isFile(filePath1) then rmFile(filePath1) end
-		if isFile(filePath2) then rmFile(filePath2) end
 	end
 }
 

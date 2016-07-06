@@ -1709,7 +1709,7 @@ TerraLib_ = {
 				newDse:add(item)
 			end
 			
-			local newDstName = ""
+			local newDstName
 			
 			if not toSetName then
 				newDstName = newDst:getName()
