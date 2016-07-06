@@ -133,8 +133,7 @@ return {
 				operation = "mode",
 				attribute = "prod_mode",
 				layer = prodes,
-				output = modeTifLayerName,
-				band = 5,
+				band = 5
 			}
 		end
 
@@ -151,11 +150,12 @@ return {
 				operation = "mode",
 				attribute = "prod_mode",
 				layer = "altimetria",
-				output = modeTifLayerName,
-				band = 5,
+				band = 5
 			}
 		end
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
+		
+		unitTest:assertFile(projName)
 	end
 }
 

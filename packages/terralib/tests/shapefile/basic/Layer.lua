@@ -130,15 +130,23 @@ return {
 			file = filePath("PORTOS_AMZ_pt.shp", "terralib")	
 		}
 		
-		local clName1 = "cells"
-
 		local municipios = "municipios"
 		Layer{
 			project = proj,
 			name = municipios,
 			file = filePath("municipiosAML_ok.shp", "terralib")	
 		}
-
+		
+		local clName1 = "cells"
+		
+		local shapes = {}
+		
+		local shp0 = clName1..".shp"
+		table.insert(shapes, shp0)
+		if isFile(shp0) then
+			rmFile(shp0)
+		end
+		
 		local cl = Layer{
 			project = proj,
 			source = "shp",
@@ -148,28 +156,19 @@ return {
 			resolution = 50000,
 			file = clName1..".shp"
 		}
-
-		local shapes = {}
 		
 		-- MODE
-
-		local polmodeLayerName = clName1.."_polmode"
-		local shp1 = polmodeLayerName..".shp"
-
-		table.insert(shapes, shp1)
-
+		
 		cl:fill{
 			operation = "mode",
 			layer = municipios,
 			attribute = "polmode",
-			clean = true,
-			select = "POPULACAO_",
-			output = polmodeLayerName
+			select = "POPULACAO_"
 		}
 
 		local cs = CellularSpace{
 			project = proj,
-			layer = polmodeLayerName
+			layer = cl.name
 		}
 
 		--[[
@@ -194,24 +193,17 @@ return {
 
 		-- MODE (area = true)
 
-		local polmode2LayerName = clName1.."_polmode2"
-		shp1 = polmode2LayerName..".shp"
-
-		table.insert(shapes, shp1)
-
 		cl:fill{
 			operation = "mode",
 			layer = municipios,
 			attribute = "polmode2",
-			clean = true,
 			select = "POPULACAO_",
-			area = true,
-			output = polmode2LayerName
+			area = true
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = polmode2LayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -227,22 +219,15 @@ return {
 
 		-- AREA
 
-		local areaLayerName = clName1.."_area"
-		shp1 = areaLayerName..".shp"
-
-		table.insert(shapes, shp1)
-
 		cl:fill{
 			operation = "area",
 			layer = protecao,
-			clean = true,
-			attribute = "marea",
-			output = areaLayerName
+			attribute = "marea"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = areaLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -258,22 +243,15 @@ return {
 
 		-- DISTANCE
 
-		local lindistLayerName = clName1.."_lindist"
-		local shp2 = lindistLayerName..".shp"
-
-		table.insert(shapes, shp2)
-
 		cl:fill{
 			operation = "distance",
 			layer = rodovias,
-			attribute = "lindist",
-			clean = true,
-			output = lindistLayerName
+			attribute = "lindist"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = lindistLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -287,22 +265,15 @@ return {
 
 		unitTest:assertSnapshot(map, "lines-distance.png")
 
-		local poldistLayerName = clName1.."_poldist"
-		local shp3 = poldistLayerName..".shp"
-
-		table.insert(shapes, shp3)
-
 		cl:fill{
 			operation = "distance",
 			layer = protecao,
-			attribute = "poldist",
-			clean = true,
-			output = poldistLayerName
+			attribute = "poldist"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = poldistLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -316,22 +287,15 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-distance.png")
 
-		local pointdistLayerName = clName1.."_pointdist"
-		local shp4 = pointdistLayerName..".shp"
-
-		table.insert(shapes, shp4)
-
 		cl:fill{
 			operation = "distance",
 			layer = portos,
-			attribute = "pointdist",
-			clean = true,
-			output = pointdistLayerName
+			attribute = "pointdist"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = pointdistLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -347,22 +311,15 @@ return {
 
 		-- PRESENCE
 
-		local linpresLayerName = clName1.."_linpres"
-		shp2 = linpresLayerName..".shp"
-
-		table.insert(shapes, shp2)
-
 		cl:fill{
 			operation = "presence",
 			layer = rodovias,
-			attribute = "linpres",
-			clean = true,
-			output = linpresLayerName
+			attribute = "linpres"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = linpresLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -374,22 +331,15 @@ return {
 
 		unitTest:assertSnapshot(map, "lines-presence.png")
 
-		local polpresLayerName = clName1.."_polpres"
-		shp3 = polpresLayerName..".shp"
-
-		table.insert(shapes, shp3)
-
 		cl:fill{
 			operation = "presence",
 			layer = protecao,
-			attribute = "polpres",
-			clean = true,
-			output = polpresLayerName
+			attribute = "polpres"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = polpresLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -401,22 +351,15 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-presence.png")
 
-		local pointpresLayerName = clName1.."_pointpres"
-		shp4 = pointpresLayerName..".shp"
-
-		table.insert(shapes, shp4)
-
 		cl:fill{
 			operation = "presence",
 			layer = portos,
-			attribute = "pointpres",
-			clean = true,
-			output = pointpresLayerName
+			attribute = "pointpres"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = pointpresLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -430,10 +373,9 @@ return {
 
 		-- COUNT
 		local clName2 = "cells_large"
-		shp1 = clName2..".shp"
 
+		local shp1 = clName2..".shp"
 		table.insert(shapes, shp1)
-
 		if isFile(shp1) then
 			rmFile(shp1)
 		end
@@ -447,22 +389,15 @@ return {
 			file = clName2..".shp"
 		}
 
-		local pointcountLayerName = clName2.."_pointcount"
-		shp2 = pointcountLayerName..".shp"
-
-		table.insert(shapes, shp2)
-
 		cl2:fill{
 			operation = "count",
 			layer = portos,
-			attribute = "pointcount",
-			clean = true,
-			output = pointcountLayerName
+			attribute = "pointcount"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = pointcountLayerName
+			layer = cl2.name
 		}
 
 		map = Map{
@@ -474,22 +409,15 @@ return {
 
 		unitTest:assertSnapshot(map, "points-count.png")
 
-		local linecountLayerName = clName2.."_linecount"
-		shp3 = linecountLayerName..".shp"
-
-		table.insert(shapes, shp3)
-
 		cl2:fill{
 			operation = "count",
 			layer = rodovias,
-			attribute = "linecount",
-			clean = true,
-			output = linecountLayerName
+			attribute = "linecount"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = linecountLayerName
+			layer = cl2.name
 		}
 
 		map = Map{
@@ -503,22 +431,15 @@ return {
 
 		unitTest:assertSnapshot(map, "lines-count.png")
 
-		local polcountLayerName = clName2.."_polcount"
-		shp4 = polcountLayerName..".shp"
-
-		table.insert(shapes, shp4)
-
 		cl2:fill{
 			operation = "count",
 			layer = protecao,
-			attribute = "polcount",
-			clean = true,
-			output = polcountLayerName
+			attribute = "polcount"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = polcountLayerName
+			layer = cl2.name
 		}
 
 		map = Map{
@@ -532,26 +453,16 @@ return {
 
 		-- MAXIMUM
 
-		local polmaxLayerName = clName1.."_polmax"
-		shp1 = polmaxLayerName..".shp"
-
-		table.insert(shapes, shp1)
-
-		if isFile(shp1) then
-			rmFile(shp1)
-		end
-
 		cl:fill{
 			operation = "maximum",
 			layer = municipios,
 			attribute = "polmax",
-			select = "POPULACAO_",
-			output = polmaxLayerName
+			select = "POPULACAO_"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = polmaxLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -567,26 +478,16 @@ return {
 
 		-- MINIMUM
 
-		local polminLayerName = clName1.."_polinx"
-		shp1 = polminLayerName..".shp"
-
-		table.insert(shapes, shp1)
-
-		if isFile(shp1) then
-			rmFile(shp1)
-		end
-
 		cl:fill{
 			operation = "minimum",
 			layer = municipios,
 			attribute = "polmin",
-			select = "POPULACAO_",
-			output = polminLayerName
+			select = "POPULACAO_"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = polminLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -602,26 +503,16 @@ return {
 
 		-- AVERAGE
 
-		local polavrgLayerName = clName1.."_polavrg"
-		shp1 = polavrgLayerName..".shp"
-
-		table.insert(shapes, shp1)
-
-		if isFile(shp1) then
-			rmFile(shp1)
-		end
-
 		cl:fill{
 			operation = "average",
 			layer = municipios,
 			attribute = "polavrg",
-			select = "POPULACAO_",
-			output = polavrgLayerName
+			select = "POPULACAO_"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = polavrgLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -637,26 +528,16 @@ return {
 
 		-- STDEV
 
-		local polstdevLayerName = clName1.."_polstdev"
-		shp1 = polstdevLayerName..".shp"
-
-		table.insert(shapes, shp1)
-
-		if isFile(shp1) then
-			rmFile(shp1)
-		end
-
 		cl:fill{
 			operation = "stdev",
 			layer = municipios,
 			attribute = "stdev",
-			select = "POPULACAO_",
-			output = polstdevLayerName
+			select = "POPULACAO_"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = polstdevLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -672,25 +553,19 @@ return {
 
 		-- LENGTH
 
-		local lengthLayerName = clName1.."_length"
-		local shp5 = lengthLayerName..".shp"
-
-		if isFile(shp5) then
-			rmFile(shp5)
-		end
-
 		local error_func = function()
 			cl:fill{
 				operation = "length",
 				layer = rodovias,
-				attribute = "mlength",
-				output = lengthLayerName
+				attribute = "mlength"
 			}
 		end
 		unitTest:assertError(error_func, "Sorry, this operation was not implemented in TerraLib yet.")
 
 		-- SUM
 
+		rmFile(proj.file)
+		
 		proj = Project {
 			file = "sum_wba.tview",
 			clean = true,
@@ -698,7 +573,12 @@ return {
 		}
 
 		clName1 = "cells_set"
-
+		local shp2 = clName1..".shp"
+		table.insert(shapes, shp2)
+		if isFile(shp2) then
+			rmFile(shp2)
+		end		
+		
 		cl = Layer{
 			project = proj,
 			source = "shp",
@@ -706,18 +586,14 @@ return {
 			input = "setores",
 			name = clName1,
 			resolution = 50000,
-			file = clName1..".shp"
+			file = shp2
 		}
-
-		local polsumAreaLayerName = clName1.."_polavg"
 
 		cl:fill{
 			operation = "sum",
 			layer = "setores",
 			attribute = "polsuma",
-			clean = true,
 			select = "POPULACAO_",
-			output = polsumAreaLayerName,
 			area = true
 		}
 
@@ -733,7 +609,7 @@ return {
 	
 		cs = CellularSpace{
 			project = proj,
-			layer = polsumAreaLayerName
+			layer = cl.name
 		}
 
 		local sum2 = 0
@@ -755,7 +631,9 @@ return {
 		unitTest:assertSnapshot(map, "polygons-sum-area.png")
 
 		-- AVERAGE (area = true)
-
+		
+		rmFile(proj.file)
+		
 		projName = "cellular_layer_fill_avg_area.tview"
 
 		proj = Project {
@@ -765,7 +643,13 @@ return {
 		}
 
 		clName1 = "cells_avg_area"
+		local shp3 = clName1..".shp"
+		table.insert(shapes, shp3)
 
+		if isFile(shp3) then
+			rmFile(shp3)
+		end
+		
 		cl = Layer{
 			project = proj,
 			source = "shp",
@@ -773,24 +657,20 @@ return {
 			input = "setores",
 			name = clName1,
 			resolution = 10000,
-			file = clName1..".shp"
+			file = shp3
 		}
-
-		local polavgLayerName = clName1.."_polavg"
 
 		cl:fill{
 			operation = "average",
 			layer = "setores",
 			attribute = "polavg",
-			clean = true,
 			select = "Densde_Pop",
-			output = polavgLayerName,
 			area = true
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = polavgLayerName
+			layer = cl.name
 		}
 
 		map = Map{
@@ -803,11 +683,12 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "polygons-average-area.png")
---[[
+				
+
 		forEachElement(shapes, function(_, value)
 			rmFile(value)
 		end)
---]]
+
 		unitTest:assertFile(projName)
 	end,
 	projection = function(unitTest)
