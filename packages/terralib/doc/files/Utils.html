@@ -168,6 +168,13 @@
 							
 								
 									<tr>
+										<td class="name" nowrap><a href="#forEachLayer">forEachLayer</a>&nbsp;
+<td class="summary">Second order function to transverse all the <a href=files/Layer.html>Layers</a> of a given <a href=files/Project.html>Project</a>, applying a given function to each of its Layer.</td>
+									</tr>
+								
+							
+								
+									<tr>
 										<td class="name" nowrap><a href="#getFileDir">getFileDir</a>&nbsp;
 <td class="summary">Return the directory of a file given its path.</td>
 									</tr>
@@ -225,6 +232,72 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
+<dt><h2><a name="forEachLayer">
+
+	</a><strong>forEachLayer</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Second order function to transverse all the <a href=../files/Layer.html>Layers</a> of a given <a href=../files/Project.html>Project</a>, applying a given function to each of its Layer. If any of the function calls returns false, forEachLayer() stops and returns false, otherwise it returns true.</span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A Project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A user-defined function that takes a Layer as argument. It can optionally have a second argument with a positive number representing the position of the Layer in the vector of Cells. If it returns false when processing a given Layer, forEachLayer() stops and does not process any other Cell.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code>
+<span class="id">import</span>(<span class="string">"terralib"</span>)
+
+<span class="id">project</span> = <span class="function">Project</span>{
+    <span class="id">file</span> = <span class="string">"emas-count.tview"</span>,
+    <span class="id">clean</span> = <span class="reserved">true</span>,
+    <span class="id">firebreak</span> = <span class="id">filePath</span>(<span class="string">"firebreak_lin.shp"</span>, <span class="string">"terralib"</span>),
+    <span class="id">cover</span> = <span class="id">filePath</span>(<span class="string">"accumulation_Nov94May00.tif"</span>, <span class="string">"terralib"</span>),
+    <span class="id">river</span> = <span class="id">filePath</span>(<span class="string">"River_lin.shp"</span>, <span class="string">"terralib"</span>),
+    <span class="id">limit</span> = <span class="id">filePath</span>(<span class="string">"Limit_pol.shp"</span>, <span class="string">"terralib"</span>)
+}
+
+<span class="function">forEachLayer</span>(<span class="id">project</span>, <span class="reserved">function</span>(<span class="id">layer</span>, <span class="id">index</span>)
+    <span class="id">print</span>(<span class="id">index</span>..<span class="string">"\t"</span>..<span class="id">layer</span>.<span class="id">rep</span>)
+<span class="reserved">end</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
 <dt><h2><a name="getFileDir">
 
 	</a><strong>getFileDir</strong>&nbsp;
@@ -235,7 +308,7 @@
 
 <span class="description">
 
-Return the directory of a file given its path.</span>
+Return the directory of a file given its path.<br><br></span>
 
 
 
