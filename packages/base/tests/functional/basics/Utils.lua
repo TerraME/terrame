@@ -935,6 +935,15 @@ return{
     [false] = 5, 
     name = "john"
 }]])
+
+        local t = {x = true}
+        
+        local y = (vardump(t))
+
+		unitTest:assertEquals(y, [[{
+    x = true
+}]])
+	
 	end
 }
 

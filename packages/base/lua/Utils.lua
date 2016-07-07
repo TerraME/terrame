@@ -1574,6 +1574,8 @@ function vardump(o, indent)
 		return s.."\n"..indent.."}"
 	elseif type(o) == "number" then
 		return tostring(o)
+    elseif type(o) == "boolean" then
+		return tostring(o)
 	else
 		return "\""..tostring(o).."\""
 	end
