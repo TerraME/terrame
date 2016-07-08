@@ -72,7 +72,7 @@ local RasterAttributeCreatedMapper = {
 }
 
 local SourceTypeMapper = {
-	OGR = "shp",
+	OGR = {"shp", "geojson"},
 	GDAL = {"tif", "nc", "asc"},
 	POSTGIS = "postgis",
 	ADO = "access"
@@ -180,7 +180,7 @@ end
 local function makeAndOpenDataSource(connInfo, type)
 	local ds = binding.te.da.DataSourceFactory.make(type)
 
-	ds:setConnectionInfo(connInfo) 
+	ds:setConnectionInfo(connInfo)
 	ds:open()
 
 	return ds
@@ -208,13 +208,13 @@ local function createLayer(name, dSetName, connInfo, type)
 	local layer
 
 	do
-		local dsId = addDataSourceInfo(type, name, connInfo)	
+		local dsId = addDataSourceInfo(type, name, connInfo)
 
 		local ds = makeAndOpenDataSource(connInfo, type)
 		ds:setId(dsId)
-	
+
 		binding.te.da.DataSourceManager.getInstance():insert(ds)
-	
+
 		local dSetType
 		local dSet
 		local env = nil
@@ -228,7 +228,7 @@ local function createLayer(name, dSetName, connInfo, type)
 			if not hasShapeFileSpatialIndex(connInfo.URI) and connInfo.SPATIAL_IDX then
 				addSpatialIndex(ds, dSetName)
 			end
-		elseif type == "GDAL" then
+		elseif type == "GDAL"then
 			dSet = ds:getDataSet(dSetName)
 			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
 			local raster = dSet:getRaster(rpos)	
@@ -238,7 +238,7 @@ local function createLayer(name, dSetName, connInfo, type)
 			dSetType = ds:getDataSetType(dSetName)
 			local gp = binding.GetFirstGeomProperty(dSetType)
 			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
-			srid = gp:getSRID()	
+			srid = gp:getSRID()
 		end
 
 		local id = binding.GetRandomicId()
@@ -529,10 +529,13 @@ local function addFileLayer(project, name, filePath, type, addSpatialIdx)
 		dSetName = getFileName(connInfo.URI)
 	elseif type == "GDAL" then
 		dSetName = getFileNameWithExtension(connInfo.URI)
+	elseif type == "GeoJSON" then
+		type = "OGR"
+		dSetName = "OGRGeoJSON"
 	end
-	
+
 	local layer = createLayer(name, dSetName, connInfo, type)
-	
+
 	project.layers[layer:getTitle()] = layer
 	saveProject(project, project.layers)
 	releaseProject(project)
@@ -1077,7 +1080,7 @@ TerraLib_ = {
 			info.source = SourceTypeMapper.POSTGIS
 		elseif type == "OGR" then
 			info.file = connInfo.URI
-			info.source = SourceTypeMapper.OGR
+			info.source = getFileExtension(info.file)
 		elseif type == "GDAL" then
 			info.file = connInfo.URI
 			info.source = getFileExtension(info.file)
@@ -1138,6 +1141,17 @@ TerraLib_ = {
 	-- tl:addGdalLayer(proj, layerName, layerFile)
 	addGdalLayer = function(_, project, name, filePath)
 		addFileLayer(project, name, filePath, "GDAL")
+	end,
+	--- Add a GeoJSON layer to a given project.
+	-- @arg project The name of the project.
+	-- @arg name The name of the layer.
+	-- @arg filePath The path for the project.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib()
+	-- tl:createProject("project.tview", {})
+	-- tl:addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
+	addGeoJSONLayer = function(_, project, name, filePath, addSpatialIdx)
+		addFileLayer(project, name, filePath, "GeoJSON", addSpatialIdx)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
 	-- @arg project The name of the project.

@@ -204,6 +204,13 @@ Type to access TerraLib. It contains very basic and low level functions that are
 							
 								
 									<tr>
+										<td class="name" nowrap><a href="#addGeoJSONLayer">addGeoJSONLayer</a>&nbsp;
+<td class="summary">Add a GeoJSON layer to a given project.</td>
+									</tr>
+								
+							
+								
+									<tr>
 										<td class="name" nowrap><a href="#addPgCellSpaceLayer">addPgCellSpaceLayer</a>&nbsp;
 <td class="summary">Add a new cellular layer to a PostgreSQL connection.</td>
 									</tr>
@@ -419,6 +426,75 @@ Add a new GDAL layer to a given project.</span>
 <span class="id">layerName</span> = <span class="string">"TifLayer"</span>
 <span class="id">layerFile</span> = <span class="id">filePath</span>(<span class="string">"cbers_rgb342_crop1.tif"</span>, <span class="string">"terralib"</span>)
 <span class="id">tl</span>:<span class="function">addGdalLayer</span>(<span class="id">proj</span>, <span class="id">layerName</span>, <span class="id">layerFile</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="addGeoJSONLayer">
+
+	</a><strong>addGeoJSONLayer</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Add a GeoJSON layer to a given project.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: 
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The name of the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: The name of the layer.
+    </li> 
+    
+  
+    <li>
+	  <strong>#4</strong>: The path for the project.
+    </li> 
+    
+  
+    <li>
+	  <strong>#5</strong>: 
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>()
+<span class="id">tl</span>:<span class="id">createProject</span>(<span class="string">"project.tview"</span>, {})
+<span class="id">tl</span>:<span class="function">addGeoJSONLayer</span>(<span class="id">proj</span>, <span class="string">"GeoJSONLayer"</span>, <span class="id">filePath</span>(<span class="string">"Setores_Censitarios_2000_pol.geojson"</span>, <span class="string">"terralib"</span>))</code></pre>
 
 
 
