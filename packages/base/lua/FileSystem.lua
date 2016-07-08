@@ -167,7 +167,7 @@ end
 function isFile(file)
 	mandatoryArgument(1, "string", file)
 
-	local fopen = io.open(file, "r")
+    local fopen = openFile(file)
 	
 	if fopen then
 		fopen:close()
@@ -198,7 +198,7 @@ end
 -- @arg fh A file handle with the file to be locked.
 -- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w
 -- (for a write/exclusive lock).
--- @usage filehandle = io.open(filePath("agents.csv", "base"), "r")
+-- @usage filehandle = openFile(filePath("agents.csv", "base"), "r")
 -- lock(filehandle, "r")
 -- unlock(filehandle)
 -- @see FileSystem:unlock
@@ -268,7 +268,7 @@ end
 -- quotation marks in the beginning and in the end of this argument in order
 -- to avoid problems related to empty spaces in the string. Therefore,
 -- this string must not contain quotation marks.
--- @usage file = io.open("myfile.txt", "w")
+-- @usage file = openFile("myfile.txt", "w")
 -- file:close()
 --
 -- rmFile("myfile.txt")
@@ -385,7 +385,7 @@ end
 -- a starting point and its length; both should be numbers. It returns true if the operation was
 -- successful. In case of error, it returns nil plus an error string.
 -- @arg fh A file handle with the file to be locked.
--- @usage filehandle = io.open(filePath("agents.csv", "base"), "r")
+-- @usage filehandle = openFile(filePath("agents.csv", "base"), "r")
 -- lock(filehandle, "r")
 -- unlock(filehandle)
 -- @see FileSystem:lock

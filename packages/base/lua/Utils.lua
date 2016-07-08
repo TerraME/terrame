@@ -157,11 +157,7 @@ function CSVread(filename, sep)
 	optionalArgument(2, "string", sep)
 
 	local data = {}
-	local file = io.open(filename, "r")
-
-	if not file then
-		resourceNotFoundError(1, filename)
-	end
+	local file = openFile(filename, "r")
 
 	local fields = CSVparseLine(file:read(), sep)
 	local line = file:read()
@@ -204,7 +200,7 @@ function CSVwrite(data, filename, sep)
 	optionalArgument(3, "string", sep)
 
 	sep = sep or ","
-	local file = io.open(filename, "w")
+	local file = iopenFile(filename, "w")
 	local fields = {}
 
 	if data[1] == nil then
@@ -1398,6 +1394,20 @@ function makeDataTable(data)
 	end)
 
 	return result
+end
+
+--- Open a file for reading or writing. An opened file must be closed after being used.
+-- @see Utils:closeFile
+-- @usage -- DONTRUN
+-- file = openFile("myfile.txt")]
+function openFile(file)
+    
+    local fopen = io.open(file)
+    if not file then
+		resourceNotFoundError("1", file)
+    else
+        return fopen
+	end 
 end
 
 --- Round a number given a precision.

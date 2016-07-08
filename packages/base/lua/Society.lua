@@ -1003,10 +1003,8 @@ function Society(data)
 			if data.sep and type(data.sep) ~= "string" then
 				incompatibleTypeError("sep", "string", data.sep)
 			end
-			local f = io.open(data.file)
-			if not f then
-				resourceNotFoundError("file", data.file)
-			end
+			local f = openFile(data.file)
+
 			io.close(f)
 			local csv = CSVread(data.file, data.sep)
 			for i = 1, #csv do
