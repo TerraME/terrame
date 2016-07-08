@@ -2,4 +2,4 @@ password = ""
 drop = true
 dbType = "mysql"
 log = "linux"
-examples = true
+examples = false
