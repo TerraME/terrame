@@ -448,6 +448,12 @@ return{
 		end
 		unitTest:assertError(error_func, "Argument 'limit' should have 4 elements, got 3.")
 	end,
+    openFile = function(unitTest)
+        local error_func = function()
+            openFile(aaaa)
+        end
+        unitTest:assertError(error_func, "Error : Invalid file")
+    end,
 	round = function(unitTest)
 		local error_func = function()
 			x = round("a")

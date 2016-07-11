@@ -200,7 +200,7 @@ function CSVwrite(data, filename, sep)
 	optionalArgument(3, "string", sep)
 
 	sep = sep or ","
-	local file = iopenFile(filename, "w")
+	local file = openFile(filename, "w")
 	local fields = {}
 
 	if data[1] == nil then
@@ -1397,15 +1397,17 @@ function makeDataTable(data)
 end
 
 --- Open a file for reading or writing. An opened file must be closed after being used.
+-- @arg file Name of the file to be opened. It might contain the path to the file as well.
+-- @arg mode A string with the mode. It can be "w" for writing or "r" for reading.
 -- @see Utils:closeFile
 -- @usage -- DONTRUN
--- file = openFile("myfile.txt")]
-function openFile(file)
+-- file = openFile("myfile.txt")
+function openFile(file, mode)
     
-    local fopen = io.open(file)
     if not file then
-		resourceNotFoundError("1", file)
+        customError("Error : Invalid file")
     else
+        local fopen = io.open(file, mode)
         return fopen
 	end 
 end
