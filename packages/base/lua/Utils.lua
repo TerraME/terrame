@@ -83,6 +83,21 @@ function clone(mtable)
 	return result
 end
 
+--- Close an opened file.
+-- @arg file the file to be closed.
+-- @see Utils:openFile
+-- @usage -- DONTRUN
+-- file = openFile("myfile.txt")
+-- closeFile(file)
+function closeFile(file)
+  if not file then
+		customError("Error : Invalid file")
+    else
+        io.close(file)
+        return true
+	end 
+end
+
 --- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
 -- This function was taken froom http://lua-users.org/wiki/LuaCsv.
 -- @arg line A string from a CSV file.
@@ -176,7 +191,7 @@ function CSVread(filename, sep)
 		line = file:read()
 		cline = cline + 1
 	end
-	io.close(file)
+	closeFile(file)
 	return data
 end
 
@@ -230,7 +245,7 @@ function CSVwrite(data, filename, sep)
 		file:write(table.concat(line, sep))
 		file:write("\n")
 	end
-	io.close(file)
+	closeFile(file)
 end
 
 --- Return whether a given value belong to a table.

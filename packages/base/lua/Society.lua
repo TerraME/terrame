@@ -1005,7 +1005,7 @@ function Society(data)
 			end
 			local f = openFile(data.file)
 
-			io.close(f)
+			closeFile(f)
 			local csv = CSVread(data.file, data.sep)
 			for i = 1, #csv do
 				data:add(csv[i])

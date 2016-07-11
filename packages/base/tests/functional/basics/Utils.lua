@@ -55,7 +55,12 @@ return{
 		copy.age = 2
 
 		unitTest:assertEquals(animal.age, 5)
-	end,
+	end,    
+    closeFile = function(unitTest)
+        local fopen = openFile("test.csv", "a+") 
+        local data = closeFile(fopen)
+        unitTest:assertEquals(true, data)
+    end,
 	d = function(unitTest)
 		local df = function(x, y) return y - x ^ 2 + 1 end
 		local a = 0
