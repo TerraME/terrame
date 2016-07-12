@@ -403,6 +403,12 @@ A Layer of cells that belongs to a <a href=../files/Project.html>Project</a>. It
 
 <span class="function">Layer</span>{
     <span class="id">project</span> = <span class="id">proj</span>,
+    <span class="id">file</span> = <span class="id">filePath</span>(<span class="string">"TI_AMZ.shp"</span>, <span class="string">"terralib"</span>),
+    <span class="id">name</span> = <span class="string">"ti"</span>
+}
+
+<span class="function">Layer</span>{
+    <span class="id">project</span> = <span class="id">proj</span>,
     <span class="id">layer</span> = <span class="string">"roads"</span>,
     <span class="id">user</span> = <span class="string">"root"</span>,
     <span class="id">password</span> = <span class="string">"abc123"</span>,
@@ -559,7 +565,7 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
     
   
     <li>
-	  <strong>layer</strong>: Name of an input layer belonging to the same <a href=../files/Project.html>Project</a>. There are several strategies available, depending on the geometry of the layer. See below:
+	  <strong>layer</strong>: An input Layer belonging to the same <a href=../files/Project.html>Project</a>. It can also be a string with the Layer's name. There are several strategies available, depending on the geometry of the Layer. See below:
     </li> 
     
       </span>

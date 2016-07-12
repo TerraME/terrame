@@ -239,7 +239,7 @@ return {
 			color = {"red", "green"}
 		}
 
-		unitTest:assertSnapshot(map, "polygons-area.png")
+		unitTest:assertSnapshot(map, "polygons-area.png", 0.05)
 
 		-- DISTANCE
 

@@ -389,18 +389,6 @@ Layer_ = {
 		local tlib = TerraLib{}
 		local project = self.project
 		
-		if not project.layers[data.layer] then
-			local sug = suggestion(data.layer, project.layers)
-
-			local msg = "The layer '"..data.layer.."' does not exist."
-
-			if sug then
-				msg = msg.." Do you mean '"..sug.."'?"
-			end
-
-			customError(msg)
-		end
-
 		if type(data.layer) == "string" then
 			data.layer = Layer{
 				project = self.project.file,
