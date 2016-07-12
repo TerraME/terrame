@@ -72,10 +72,13 @@ end
 -- @arg data A named table (which can be an argument for a function).
 -- @arg idx A string with the name of an attribute (or argument) from #1.
 -- @arg value The default value (any type).
--- @usage t = {x = 5}
--- defaultTableValue(t, "y", 8)
+-- @usage function integrate(attrs)
+--     defaultTableValue(attrs, "method", "euler")
+--     return attrs
+-- end
 --
--- print(t.y)
+-- t = integrate{}
+-- print(t.method)
 function defaultTableValue(data, idx, value)
 	if data[idx] == nil then
 		data[idx] = value
@@ -105,7 +108,8 @@ end
 -- ErrorHandling:defaultValueMsg().
 -- @arg argument A string with the name of the argument.
 -- @arg value The default value.
--- @usage defaultValueWarning("size", 2)
+-- @usage str = defaultValueWarning("size", 2)
+-- print(str)
 function defaultValueWarning(argument, value)
 	mandatoryArgument(1, "string", argument)
 
@@ -117,7 +121,11 @@ end
 -- @arg functionName A string with the name of the deprecated function.
 -- @arg functionExpected A string indicating how to proceed to replace the
 -- deprecated function call.
--- @usage _, err = pcall(function() deprecatedFunction("abc", "def") end)
+-- @usage deprecatedFunc = function()
+--     deprecatedFunction("abc", "def")
+-- end
+--
+-- _, err = pcall(function() deprecatedFunc() end)
 -- print(err)
 function deprecatedFunction(functionName, functionExpected)
 	mandatoryArgument(1, "string", functionName)
@@ -203,7 +211,13 @@ end
 -- non-named arguments. The error message comes from ErrorHandling:integerArgumentMsg().
 -- @arg position A number with the position of the argument in the function.
 -- @arg value The value used as argument to the function call.
--- @usage _, err = pcall(function() integerArgument(1, 2.3) end)
+-- @usage sum = function(a, b)
+--     integerArgument(1, a)
+--     integerArgument(2, b)
+--     return a + b
+-- end
+--
+-- _, err = pcall(function() sum(5) end)
 -- print(err)
 function integerArgument(position, value)
 	if type(value) ~= "number" then customError(incompatibleTypeMsg(2, "number", value)) end
@@ -232,8 +246,11 @@ end
 -- The error message comes from ErrorHandling:integerArgumentMsg().
 -- @arg table A named table.
 -- @arg attr A string with the name of the argument.
--- @usage mtable = {bbb = 2.3}
--- _, err = pcall(function() integerTableArgument(mtable, "bbb") end)
+-- @usage myFunction = function(mtable)
+--     integerTableArgument(mtable, "value")
+-- end
+-- 
+-- _, err = pcall(function() myFunction{value = false} end)
 -- print(err)
 function integerTableArgument(table, attr)
 	if type(table[attr]) ~= "number" then
@@ -276,7 +293,11 @@ end
 -- @arg position A number with the position of the argument in the function.
 -- @arg mtype A string with the required type for the argument.
 -- @arg value The value used as argument to the function call.
--- @usage _, err = pcall(function() mandatoryArgument(1, "string", 2) end)
+-- @usage myFunction = function(value)
+--     mandatoryArgument(1, "string", value)
+-- end
+-- 
+-- _, err = pcall(function() myFunction(2) end)
 -- print(err)
 function mandatoryArgument(position, mtype, value)
 	if type(value) ~= mtype then
@@ -321,8 +342,11 @@ end
 -- @arg mtype A string with the required type for the argument.
 -- This argument is optional. If not used, then this function
 -- will check only if the argument is not nil.
--- @usage mtable = {bbb = 3, ccc = "aaa"}
--- _, err = pcall(function() mandatoryTableArgument(mtable, "bbb", "string") end)
+-- @usage myFunction = function(mtable)
+--     mandatoryTableArgument(mtable, "value", "string")
+-- end
+-- 
+-- _, err = pcall(function() myFunction{value = 2} end)
 -- print(err)
 function mandatoryTableArgument(table, attr, mtype)
 	if table[attr] == nil then
@@ -349,7 +373,11 @@ end
 -- @arg position A number with the position of the argument in the function.
 -- @arg mtype A string with the required type for the argument.
 -- @arg value The value used as argument to the function call.
--- @usage _, err = pcall(function() optionalArgument(1, "string", 2) end)
+-- @usage myFunction = function(value)
+--     optionalArgument(1, "string", value)
+-- end
+-- 
+-- _, err = pcall(function() myFunction(2) end)
 -- print(err)
 function optionalArgument(position, mtype, value)
 	if value ~= nil and type(value) ~= mtype then
@@ -363,8 +391,11 @@ end
 -- @arg table A named table.
 -- @arg attr A string with the name of the argument.
 -- @arg allowedType A string with the required type for the argument.
--- @usage mtable = {bbb = 3, ccc = "aaa"}
--- _, err = pcall(function() optionalTableArgument(mtable, "bbb", "string") end)
+-- @usage myFunction = function(mtable)
+--     optionalTableArgument(mtable, "value", "string")
+-- end
+-- 
+-- _, err = pcall(function() myFunction{value = 2} end)
 -- print(err)
 function optionalTableArgument(table, attr, allowedType)
 	local value = table[attr]
@@ -381,7 +412,13 @@ end
 -- @arg value The value used as argument to the function call.
 -- @arg zero A boolean value indicating whether zero should be included
 -- (the default value is false).
--- @usage _, err = pcall(function() positiveArgument(1, -2) end)
+-- @usage positiveSum = function(a, b)
+--     positiveArgument(1, a)
+--     positiveArgument(2, b)
+--     return a + b
+-- end
+--
+-- _, err = pcall(function() positiveSum(5, -2) end)
 -- print(err)
 function positiveArgument(position, value, zero)
 	if not zero then
@@ -419,8 +456,11 @@ end
 -- @arg attr A string with the name of the argument.
 -- @arg zero A boolean value indicating whether zero should be included
 -- (the default value is false).
--- @usage mtable = {bbb = -3}
--- _, err = pcall(function() positiveTableArgument(table, "bbb") end)
+-- @usage myFunction = function(mtable)
+--     positiveTableArgument(mtable, "value")
+-- end
+-- 
+-- _, err = pcall(function() myFunction{value = -2} end)
 -- print(err)
 function positiveTableArgument(table, attr, zero)
 	if type(table[attr]) ~= "number" then
@@ -635,7 +675,11 @@ end
 --- Verify a given condition, otherwise it stops the simulation with an error.
 -- @arg condition A value of any type. If it is false or nil, the function generates an error.
 -- @arg msg A string with the error to be displayed.
--- @usage _, err = pcall(function() verify(2 > 3, "wrong operator") end)
+-- @usage greater = function(a, b)
+--     verify(a > b, "#1 is not greater than #2.")
+-- end
+--
+-- _, err = pcall(function() greater(5, 7) end)
 -- print(err)
 function verify(condition, msg)
 	if not condition then
@@ -647,8 +691,11 @@ end
 -- if it is not a table, or if it has numeric names. The error messages come from
 -- ErrorHandling:tableArgumentMsg() and ErrorHandling:namedArgumentsMsg().
 -- @arg data A value of any type.
--- @usage t = {1, 2, 3, 4}
--- _, err = pcall(function() verifyNamedTable(t) end)
+-- @usage myFunction = function(mtable)
+--     verifyNamedTable(mtable)
+-- end
+-- 
+-- _, err = pcall(function() myFunction{1, 2, 3} end)
 -- print(err)
 function verifyNamedTable(data)
 	if type(data) ~= "table" then
@@ -670,8 +717,12 @@ end
 -- @arg data A named table with the arguments used in the function call.
 -- The names of this table will be verified.
 -- @arg arguments A vector with the allowed arguments.
--- @usage t = {value = 2}
--- verifyUnnecessaryArguments(t, {"target", "select"})
+-- @usage myFunction = function(mtable)
+--     verifyUnnecessaryArguments(mtable, {"aaa", "bbb", "ccc"})
+-- end
+-- 
+-- _, err = pcall(function() myFunction{aaa = 3, value = 2} end)
+-- print(err)
 function verifyUnnecessaryArguments(data, arguments)
 	forEachElement(data, function(idx)
 		if type(idx) ~= "string" then
