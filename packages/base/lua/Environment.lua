@@ -406,6 +406,10 @@ Environment_ = {
 
 		defaultTableValue(data, "bidirect", false)
 
+		if not isFile(data.source) then
+			resourceNotFoundError("source", data.source)
+		end
+
 		local file = openFile(data.source, "r")
 
 		local header = file:read()
