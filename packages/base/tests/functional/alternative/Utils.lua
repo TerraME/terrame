@@ -457,14 +457,19 @@ return{
 	end,
 	openFile = function(unitTest)
 		local error_func = function()
-			openFile(aaa)
+			openFile()
 		end
-		unitTest:assertError(error_func, "Invalid path, file not found.")
+		unitTest:assertError(error_func, mandatoryArgumentMsg("#1"))
         
 		error_func = function()
-			openFile("a")
+			openFile("123123", 2)
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "a"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(2,"string",2))
+        
+		error_func = function()
+			openFile("123123","r")
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "123123"))
 	end,
 	round = function(unitTest)
 		local error_func = function()

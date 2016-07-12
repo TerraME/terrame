@@ -1418,11 +1418,13 @@ end
 -- @usage -- DONTRUN
 -- file = openFile("myfile.txt")
 function openFile(file, mode)
-	if not file or file == "" then
-		customError("Invalid path, file not found.")
+	mandatoryArgument(1, "string", file)
+	if mode == nil then 
+		mode = "r"
 	end
+	mandatoryArgument(2, "string", mode)
 	local fopen = io.open(file, mode)
-	if fopen == nil and string.len(file) < 2 then
+	if fopen == nil then
 		resourceNotFoundError("file", file)
 	else
 		return fopen

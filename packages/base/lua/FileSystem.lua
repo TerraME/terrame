@@ -167,7 +167,7 @@ end
 function isFile(file)
 	mandatoryArgument(1, "string", file)
 
-    local fopen = openFile(file)
+    local fopen = io.open(file)
 	
 	if fopen then
 		fopen:close()

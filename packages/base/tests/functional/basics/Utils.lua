@@ -860,9 +860,9 @@ return{
 	end,
 	openFile = function(unitTest)
 		local fopen = openFile("test.csv", "a+") 
-		local Sfile = fopen:read("*all")
+		local sfile = fopen:read("*all")
 		closeFile(fopen)
-		unitTest:assertEquals(Sfile, "")
+		unitTest:assertEquals(sfile, "")
 		rmFile("test.csv")
 	end,
 	round = function(unitTest)

@@ -81,7 +81,7 @@ return{
 	isFile = function(unitTest)
 		unitTest:assert(isFile(filePath("agents.csv")))
         
-        unitTest:assertEquals(isFile("aaa"), false)
+        unitTest:assertEquals(isFile(""), false)
 
 		os.execute("touch zasdc.abc")
 
