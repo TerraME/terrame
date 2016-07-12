@@ -1575,7 +1575,7 @@ function vardump(o, indent)
 	elseif type(o) == "number" then
 		return tostring(o)
 	else
-		return "\""..tostring(o).."\""
+		return "\""..string.gsub(tostring(o), "\n", "\\n").."\""
 	end
 end
 

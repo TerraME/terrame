@@ -904,9 +904,9 @@ return{
 		unitTest:assertEquals(type(c), "Cell")
 	end,
 	vardump = function(unitTest)
-		local x = vardump{a = 2, b = 3, w = {2, 3, 4}}
+		local actual = vardump{a = 2, b = 3, w = {2, 3, 4}}
 
-		unitTest:assertEquals(x, [[{
+		unitTest:assertEquals(actual, [[{
     a = 2, 
     b = 3, 
     w = {
@@ -916,9 +916,9 @@ return{
     }
 }]])
 
-		x = vardump{abc = 2, be2 = 3, ["2bx"] = {2, 3, 4}}
+		actual = vardump{abc = 2, be2 = 3, ["2bx"] = {2, 3, 4}}
 
-		unitTest:assertEquals(x, [[{
+		unitTest:assertEquals(actual, [[{
     ["2bx"] = {
         [1] = 2, 
         [2] = 3, 
@@ -928,13 +928,32 @@ return{
     be2 = 3
 }]])
 
-		x = vardump{name = "john", age = 20, [false] = 5}
+		actual = vardump{name = "john", age = 20, [false] = 5}
 
-		unitTest:assertEquals(x, [[{
+		unitTest:assertEquals(actual, [[{
     age = 20, 
     [false] = 5, 
     name = "john"
 }]])
+
+		actual = "Phrase 1. \nPhrase 2."
+		local expected = "\"Phrase 1. \\nPhrase 2.\""
+
+		unitTest:assertEquals(vardump(actual), expected)
+
+		actual = vardump{
+			name = "john", 
+			age = 20, 
+			phrase = "Phrase 1. \nPhrase 2."
+		}
+
+		expected = [[{
+    age = 20, 
+    name = "john",
+    phrase = "Phrase 1. \nPhrase 2."
+}]]
+
+		unitTest:assertEquals(actual, expected, 1)
 	end
 }
 
