@@ -58,7 +58,6 @@ return{
 	end,    
 	closeFile = function(unitTest)
 		local fopen = io.open("test.csv", "a+")
-		--io.write("test.csv", "unitTest")
 		local data = closeFile(fopen)
 		unitTest:assert(data)
 		rmFile("test.csv")
