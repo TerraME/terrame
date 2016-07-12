@@ -877,7 +877,7 @@ CellularSpace_ = {
 		mandatoryTableArgument(data, "source", "string")
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
-			if not io.open(data.source, "r") then
+			if not openFile(data.source, "r") then
 				resourceNotFoundError("source", data.source)
 			end
 		else
