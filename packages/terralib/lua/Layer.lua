@@ -292,32 +292,32 @@ Layer_ = {
 	-- @tabular operation
 	-- Operation & Description & Mandatory arguments & Optional arguments \
 	-- "area" & Total overlay area between the cell and a layer of polygons. The created values
-	-- will range from zero to one, indicating its area of coverage. & attribute, layer, output & clean \
+	-- will range from zero to one, indicating its area of coverage. & attribute, layer & \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income. 
-	-- & attribute, layer, select, output & area, default, band, dummy, clean\
+	-- & attribute, layer, select  & area, default, band, dummy \
 	-- "count" & Number of objects that have some overlay with the cell.
-	-- & attribute, layer, output & clean \
+	-- & attribute, layer & \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
 	-- centroid of the cell to the closest point, line, or border of a polygon.
-	-- & attribute, layer, output & clean \
+	-- & attribute, layer & \
 	-- "length" & Total length of overlay between the cell and a layer of lines. If there is
 	-- more than one line, it sums all lengths.
-	-- & attribute, layer, output & clean \
+	-- & attribute, layer & \
 	-- "mode" & More common qualitative value from the objects that have some intersection with
 	-- the cell, without taking into account their geometric properties. This operation converts the
 	-- output to string. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
-	-- uses the value of the object that has larger coverage. & attribute, layer, select, output & 
-	-- default, dummy, clean, band \
+	-- uses the value of the object that has larger coverage. & attribute, layer, select & 
+	-- default, dummy, band \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select, output & default, dummy, clean, band \
+	-- attribute, layer, select & default, dummy, band \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select, output & default, dummy, clean, band \
+	-- attribute, layer, select & default, dummy, band \
 	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
@@ -327,19 +327,19 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select, output & default, dummy, clean, band \
+	-- & attribute, layer, select & default, dummy, band \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
-	-- & attribute, layer, output & clean \
+	-- & attribute, layer & \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select, output & default, dummy, clean \
+	-- attribute, layer, select & default, dummy \
 	-- "sum" & Sum of quantitative values from objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, it
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
-	-- & attribute, layer, select, output & area, default, dummy, clean \
+	-- & attribute, layer, select & area, default, dummy \
 	-- "nearest" & The value (quantitative or qualitative) of the nearest object. & attribute,
-	-- layer, select, output & area, clean \
+	-- layer, select & area \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true), 
 	-- or the weights are equal for each object with some overlap (false, default value).
@@ -348,11 +348,6 @@ Layer_ = {
 	-- @arg data.default A value that will be used to fill a cell whose attribute cannot be
 	-- computed. For example, when there is no intersection area. Note that this argument is
 	-- related to the output.
-	-- @arg data.output Where the output will be saved. The current version of TerraLib
-	-- requires that the output of fill will be in another layer of information. We are
-	-- currently working with a way to save the output in the same input layer.
-	-- @arg data.clean A boolean value indicating whether the argument output should be cleaned
-	-- if it needs to create the file.
 	-- @usage -- DONTRUN
 	-- import("terralib")
 	--
