@@ -1216,10 +1216,13 @@ Verify the default value of a given attribute of a named table. It adds the attr
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">t</span> = {<span class="id">x</span> = <span class="number">5</span>}
-<span class="function">defaultTableValue</span>(<span class="id">t</span>, <span class="string">"y"</span>, <span class="number">8</span>)
+<pre class="example"><code><span class="reserved">function</span> <span class="id">integrate</span>(<span class="id">attrs</span>)
+    <span class="function">defaultTableValue</span>(<span class="id">attrs</span>, <span class="string">"method"</span>, <span class="string">"euler"</span>)
+    <span class="reserved">return</span> <span class="id">attrs</span>
+<span class="reserved">end</span>
 
-<span class="id">print</span>(<span class="id">t</span>.<span class="id">y</span>)</code></pre>
+<span class="id">t</span> = <span class="id">integrate</span>{}
+<span class="id">print</span>(<span class="id">t</span>.<span class="id">method</span>)</code></pre>
 
 
 
@@ -1324,7 +1327,8 @@ Show a strict warning if the attribute of a table has the default value. If Terr
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="function">defaultValueWarning</span>(<span class="string">"size"</span>, <span class="number">2</span>)</code></pre>
+<pre class="example"><code><span class="id">str</span> = <span class="function">defaultValueWarning</span>(<span class="string">"size"</span>, <span class="number">2</span>)
+<span class="id">print</span>(<span class="id">str</span>)</code></pre>
 
 
 
@@ -1376,7 +1380,11 @@ Show an error indicating a deprecated function. The error comes from <a href=../
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">deprecatedFunction</span>(<span class="string">"abc"</span>, <span class="string">"def"</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">deprecatedFunc</span> = <span class="reserved">function</span>()
+    <span class="function">deprecatedFunction</span>(<span class="string">"abc"</span>, <span class="string">"def"</span>)
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">deprecatedFunc</span>() <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -1714,7 +1722,13 @@ Verify whether a given argument is integer. It is useful only for functions with
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">integerArgument</span>(<span class="number">1</span>, <span class="number">2.3</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">sum</span> = <span class="reserved">function</span>(<span class="id">a</span>, <span class="id">b</span>)
+    <span class="function">integerArgument</span>(<span class="number">1</span>, <span class="id">a</span>)
+    <span class="function">integerArgument</span>(<span class="number">2</span>, <span class="id">b</span>)
+    <span class="reserved">return</span> <span class="id">a</span> + <span class="id">b</span>
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">sum</span>(<span class="number">5</span>) <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -1823,8 +1837,11 @@ Verify whether a given argument of a named function is integer. The error messag
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">mtable</span> = {<span class="id">bbb</span> = <span class="number">2.3</span>}
-<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">integerTableArgument</span>(<span class="id">mtable</span>, <span class="string">"bbb"</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">myFunction</span> = <span class="reserved">function</span>(<span class="id">mtable</span>)
+    <span class="function">integerTableArgument</span>(<span class="id">mtable</span>, <span class="string">"value"</span>)
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">myFunction</span>{<span class="id">value</span> = <span class="reserved">false</span>} <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -1988,7 +2005,11 @@ Verify whether a given argument of a function with non-named arguments belongs t
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">mandatoryArgument</span>(<span class="number">1</span>, <span class="string">"string"</span>, <span class="number">2</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">myFunction</span> = <span class="reserved">function</span>(<span class="id">value</span>)
+    <span class="function">mandatoryArgument</span>(<span class="number">1</span>, <span class="string">"string"</span>, <span class="id">value</span>)
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">myFunction</span>(<span class="number">2</span>) <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -2145,8 +2166,11 @@ Verify whether a named table contains a mandatory argument. It stops with an err
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">mtable</span> = {<span class="id">bbb</span> = <span class="number">3</span>, <span class="id">ccc</span> = <span class="string">"aaa"</span>}
-<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">mandatoryTableArgument</span>(<span class="id">mtable</span>, <span class="string">"bbb"</span>, <span class="string">"string"</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">myFunction</span> = <span class="reserved">function</span>(<span class="id">mtable</span>)
+    <span class="function">mandatoryTableArgument</span>(<span class="id">mtable</span>, <span class="string">"value"</span>, <span class="string">"string"</span>)
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">myFunction</span>{<span class="id">value</span> = <span class="number">2</span>} <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -2241,7 +2265,11 @@ Verify whether an optional argument of a function with non-named arguments belon
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">optionalArgument</span>(<span class="number">1</span>, <span class="string">"string"</span>, <span class="number">2</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">myFunction</span> = <span class="reserved">function</span>(<span class="id">value</span>)
+    <span class="function">optionalArgument</span>(<span class="number">1</span>, <span class="string">"string"</span>, <span class="id">value</span>)
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">myFunction</span>(<span class="number">2</span>) <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -2299,8 +2327,11 @@ Verify whether a named table contains an optional argument. It stops with an err
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">mtable</span> = {<span class="id">bbb</span> = <span class="number">3</span>, <span class="id">ccc</span> = <span class="string">"aaa"</span>}
-<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">optionalTableArgument</span>(<span class="id">mtable</span>, <span class="string">"bbb"</span>, <span class="string">"string"</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">myFunction</span> = <span class="reserved">function</span>(<span class="id">mtable</span>)
+    <span class="function">optionalTableArgument</span>(<span class="id">mtable</span>, <span class="string">"value"</span>, <span class="string">"string"</span>)
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">myFunction</span>{<span class="id">value</span> = <span class="number">2</span>} <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -2358,7 +2389,13 @@ Verify whether a given argument is positive. It is useful only for functions wit
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">positiveArgument</span>(<span class="number">1</span>, <span class="number">-2</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">positiveSum</span> = <span class="reserved">function</span>(<span class="id">a</span>, <span class="id">b</span>)
+    <span class="function">positiveArgument</span>(<span class="number">1</span>, <span class="id">a</span>)
+    <span class="function">positiveArgument</span>(<span class="number">2</span>, <span class="id">b</span>)
+    <span class="reserved">return</span> <span class="id">a</span> + <span class="id">b</span>
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">positiveSum</span>(<span class="number">5</span>, <span class="number">-2</span>) <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -2477,8 +2514,11 @@ Verify whether a given argument of a function with named arguments is positive. 
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">mtable</span> = {<span class="id">bbb</span> = <span class="number">-3</span>}
-<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">positiveTableArgument</span>(<span class="id">table</span>, <span class="string">"bbb"</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">myFunction</span> = <span class="reserved">function</span>(<span class="id">mtable</span>)
+    <span class="function">positiveTableArgument</span>(<span class="id">mtable</span>, <span class="string">"value"</span>)
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">myFunction</span>{<span class="id">value</span> = <span class="number">-2</span>} <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -3128,7 +3168,11 @@ Verify a given condition, otherwise it stops the simulation with an error.<br><b
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">verify</span>(<span class="number">2</span> > <span class="number">3</span>, <span class="string">"wrong operator"</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">greater</span> = <span class="reserved">function</span>(<span class="id">a</span>, <span class="id">b</span>)
+    <span class="function">verify</span>(<span class="id">a</span> > <span class="id">b</span>, <span class="string">"#1 is not greater than #2."</span>)
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">greater</span>(<span class="number">5</span>, <span class="number">7</span>) <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -3176,8 +3220,11 @@ Verify if a given object is a named table. It generates errors if it is nil, if 
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">t</span> = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>}
-<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="function">verifyNamedTable</span>(<span class="id">t</span>) <span class="reserved">end</span>)
+<pre class="example"><code><span class="id">myFunction</span> = <span class="reserved">function</span>(<span class="id">mtable</span>)
+    <span class="function">verifyNamedTable</span>(<span class="id">mtable</span>)
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">myFunction</span>{<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>} <span class="reserved">end</span>)
 <span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
@@ -3230,8 +3277,12 @@ Verify whether the user has passed only the allowed arguments for a function, sh
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">t</span> = {<span class="id">value</span> = <span class="number">2</span>}
-<span class="function">verifyUnnecessaryArguments</span>(<span class="id">t</span>, {<span class="string">"target"</span>, <span class="string">"select"</span>})</code></pre>
+<pre class="example"><code><span class="id">myFunction</span> = <span class="reserved">function</span>(<span class="id">mtable</span>)
+    <span class="function">verifyUnnecessaryArguments</span>(<span class="id">mtable</span>, {<span class="string">"aaa"</span>, <span class="string">"bbb"</span>, <span class="string">"ccc"</span>})
+<span class="reserved">end</span>
+
+<span class="id">_</span>, <span class="id">err</span> = <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">myFunction</span>{<span class="id">aaa</span> = <span class="number">3</span>, <span class="id">value</span> = <span class="number">2</span>} <span class="reserved">end</span>)
+<span class="id">print</span>(<span class="id">err</span>)</code></pre>
 
 
 

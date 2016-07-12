@@ -832,6 +832,13 @@
 							
 								
 									<tr>
+										<td class="name" nowrap><a href="#closeFile">closeFile</a>&nbsp;
+<td class="summary">Close an opened file.</td>
+									</tr>
+								
+							
+								
+									<tr>
 										<td class="name" nowrap><a href="#d">d</a>&nbsp;
 <td class="summary">Constructor for an ordinary differential equation.</td>
 									</tr>
@@ -1030,6 +1037,13 @@
 									<tr>
 										<td class="name" nowrap><a href="#makeDataTable">makeDataTable</a>&nbsp;
 <td class="summary">Create a table with indexes according to a given configuration.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#openFile">openFile</a>&nbsp;
+<td class="summary">Open a file for reading or writing.</td>
 									</tr>
 								
 							
@@ -1470,6 +1484,66 @@ Return a copy of a given table. It does not copy metatables.<br><br></span>
 
 
 
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="closeFile">
+
+	</a><strong>closeFile</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Close an opened file.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: the file to be closed.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">file</span> = <span class="id">openFile</span>(<span class="string">"myfile.txt"</span>)
+<span class="function">closeFile</span>(<span class="id">file</span>)</code></pre>
+
+
+
+
+<h3>See also</h3>
+<ul>
+	
+	<li>
+		
+
+			<a href="../files/Utils.html#openFile">openFile	</a>
+		
+	</li>
+	
+</ul>
 
 </dd>
 
@@ -3342,6 +3416,70 @@ Create a table with indexes according to a given configuration. It returns a tab
 
 
 
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="openFile">
+
+	</a><strong>openFile</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Open a file for reading or writing. An opened file must be closed after being used.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: Name of the file to be opened. It might contain the path to the file as well.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A string with the mode. It can be "w" for writing or "r" for reading.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">file</span> = <span class="function">openFile</span>(<span class="string">"myfile.txt"</span>)</code></pre>
+
+
+
+
+<h3>See also</h3>
+<ul>
+	
+	<li>
+		
+
+			<a href="../files/Utils.html#closeFile">closeFile	</a>
+		
+	</li>
+	
+</ul>
 
 </dd>
 

@@ -1005,6 +1005,7 @@ TerraLib_ = {
 		return binding.te.common.Version.asString()
 	end,
 	--- Create a new Project.
+	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg layers A table where the layers will be stored.
 	-- @usage -- DONTRUN
@@ -1030,6 +1031,7 @@ TerraLib_ = {
 		saveProject(project, layers)
 	end,
 	--- Open a new project.
+	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg filePath The path for the project.
 	-- @usage -- DONTRUN
@@ -1049,6 +1051,7 @@ TerraLib_ = {
 		loadProject(project, filePath)		
 	end,
 	--- Return the information of a given layer.
+	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg layer The name of the layer.
 	-- @usage -- DONTRUN
@@ -1130,9 +1133,11 @@ TerraLib_ = {
 		return info
 	end,
 	--- Add a shapefile layer to a given project.
+	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg name The name of the layer.
 	-- @arg filePath The path for the project.
+	-- @arg addSpatialIdx A boolean value indicating whether a spatial index file should be created.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
 	-- tl:createProject("project.tview", {})
@@ -1141,6 +1146,7 @@ TerraLib_ = {
 		addFileLayer(project, name, filePath, "OGR", addSpatialIdx)
 	end,
 	--- Add a new tiff layer to a given project.
+	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the project.
 	-- @arg name The name of the layer.
 	-- @arg project The name of the project.
@@ -1163,6 +1169,7 @@ TerraLib_ = {
 	--- Add a new PostgreSQL layer to a given project.
 	-- @arg project The name of the project.
 	-- @arg name The name of the layer.
+	-- @arg _ A TerraLib object.
 	-- @arg data.host Name of the host.
 	-- @arg data.port Port number.
 	-- @arg data.user The user name.
@@ -1221,6 +1228,8 @@ TerraLib_ = {
 	-- @arg name The name of the layer.
 	-- @arg resolution The size of a cell.
 	-- @arg inputLayerTitle The name of the layer.
+	-- @arg mask A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
+	-- @arg addSpatialIdx A boolean value indicating whether a spatial index file should be created.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
 	-- proj = {
@@ -1257,6 +1266,7 @@ TerraLib_ = {
 	-- @arg data The connection data, such as host, port, and user.
 	-- @arg name The name of the layer.
 	-- @arg resolution The size of a cell.
+	-- @arg mask A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
 	-- @usage --DONTRUN
 	-- local proj = {
 	--     file = "myproject.tview",
@@ -1300,6 +1310,7 @@ TerraLib_ = {
 		self:addPgLayer(project, name, data)	
 	end,
 	--- Remove a PostreSQL table.
+	-- @arg _ A TerraLib object.
 	-- @arg data.host Name of the host.
 	-- @arg data.port Port number.
 	-- @arg data.user The user name.
@@ -1340,6 +1351,7 @@ TerraLib_ = {
 		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
 	end,
 	--- Remove a PostreSQL database.
+	-- @arg _ A TerraLib object.
 	-- @arg data.host Name of the host.
 	-- @arg data.port Port number.
 	-- @arg data.user The user name.
@@ -1388,6 +1400,7 @@ TerraLib_ = {
 		end
 	end,
 	--- Copy a given layer to another.
+	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg from The name input layer.
 	-- @arg to The name of the output layer.
@@ -1579,6 +1592,7 @@ TerraLib_ = {
 		collectgarbage("collect")		
 	end,
 	--- Returns a given dataset from a layer.
+	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg layerName Name of the layer to be read.
 	-- @usage -- DONTRUN
@@ -1607,6 +1621,7 @@ TerraLib_ = {
 		return set
 	end,
 	--- Save a given dataset.
+	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg fromLayerName The input layer name.
 	-- @arg toName The output layer name.
@@ -1765,6 +1780,7 @@ TerraLib_ = {
 		collectgarbage("collect")		
 	end,
 	--- Return the content of a shapefile.
+	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the file to be loaded.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
@@ -1788,6 +1804,7 @@ TerraLib_ = {
 		return set	
 	end,
 	--- Returns the number of bands of some Raster.
+	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg layerName The input layer name.
 	-- @usage -- DONTRUN
@@ -1825,6 +1842,7 @@ TerraLib_ = {
 		customError("The layer '"..layerName.."' is not a Raster.")
 	end,
 	--- Returns the area of this envelope as measured in the spatial reference system of it.
+	-- @arg _ A TerraLib object.
 	-- @arg geom The geometry of the project.
 	-- @usage -- DONTRUN
 	-- local dSet = tl:getDataSet(proj, clName1)
@@ -1843,9 +1861,10 @@ TerraLib_ = {
 		return 0
 	end,
 	--- Returns a coordinate system name given an identification.
+	-- @arg _ A TerraLib object.
 	-- @arg layer The layer.
 	-- @usage -- DONTRUN
-	-- local prj = tl:getLayerProjection(proj.layers[layerName])
+	-- local prj = tl:getProjection(proj.layers[layerName])
 	-- print(prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4)
 	getProjection = function(_, layer)
 		local srid = layer:getSRID()
@@ -1858,8 +1877,9 @@ TerraLib_ = {
 		return prj
 	end,
 	--- Returns the property names of the dataset.
-	-- @arg layer The project.
-	-- @arg layer The layer.
+	-- @arg _ A TerraLib object.
+	-- @arg project A Project.
+	-- @arg layer A Layer.
 	-- @usage -- DONTRUN	
 	-- local propNames = tl:getPropertyNames(proj, proj.layers[layerName])
 	-- for i = 0, #propNames do
@@ -1885,6 +1905,7 @@ TerraLib_ = {
 		return names
 	end,
 	--- Returns the shortest distance between any two points in the two geometries.
+	-- @arg _ A TerraLib object.
 	-- @arg fromGeom The geometry.
 	-- @arg toGeom The other geometry.
 	-- @usage -- DONTRUN

@@ -42,7 +42,8 @@ return{
 
 		local proj = Project{
 			file = projFile,
-			clean = true
+			clean = true,
+			deforestation = filePath("desmatamento_2000.tif", "terralib"),
 		}
 
 		local layerName = "any"
@@ -52,7 +53,16 @@ return{
 				name = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in the Project '"..projFile.."'.")
+		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'.")
+
+		layerName = "defirestation"
+		local layerDoesNotExistsSug = function()
+			Layer{
+				project = proj,
+				name = layerName
+			}
+		end
+		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
 
 		unitTest:assertFile("proj_celllayer.tview")
 
@@ -398,6 +408,7 @@ return{
 		local layerMandatory = function()
 			cl:fill{
 				attribute = "population",
+				output = "abc",
 				operation = "area"
 			}
 		end
@@ -406,11 +417,12 @@ return{
 		local layerNotString = function()
 			cl:fill{
 				attribute = "distRoads",
+				output = "abc",
 				operation = "area",
 				layer = 2
 			}
 		end
-		unitTest:assertError(layerNotString, incompatibleTypeMsg("layer", "string", 2))
+		unitTest:assertError(layerNotString, incompatibleTypeMsg("layer", "Layer", 2))
 
 		local attributeMandatory = function()
 			cl:fill{
@@ -447,7 +459,7 @@ return{
 				attribute = "presence"
 			}
 		end
-		unitTest:assertError(layerNotExists, "The layer 'LayerNotExists' does not exist.")
+		unitTest:assertError(layerNotExists, "Layer 'LayerNotExists' does not exist in Project '"..projName.."'.")
 
 		local layerNotExistsSug = function()
 			cl:fill{
@@ -456,7 +468,7 @@ return{
 				attribute = "presence"
 			}
 		end
-		unitTest:assertError(layerNotExistsSug, "The layer '"..layerName1.."_' does not exist. Do you mean '"..layerName1.."'?")
+		unitTest:assertError(layerNotExistsSug, "Layer '"..layerName1.."_' does not exist in Project '"..projName.."'. Do you mean '"..layerName1.."'?")
 
 		local attrAlreadyExists = function()
 			cl:fill{
@@ -561,6 +573,17 @@ return{
 			}
 		end
 		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'.")
+
+		selected = "populaco"
+		local selectNotExistsSug = function()
+			cl:fill{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName1,
+				select = selected
+			}
+		end
+		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'Populacao'?")
 
 		selectNotString = function()
 			cl:fill{

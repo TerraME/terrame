@@ -173,6 +173,11 @@ function CSVread(filename, sep)
 	optionalArgument(2, "string", sep)
 
 	local data = {}
+
+	if not isFile(filename) then
+		resourceNotFoundError(1, filename)
+	end
+
 	local file = openFile(filename, "r")
 
 	local fields = CSVparseLine(file:read(), sep)

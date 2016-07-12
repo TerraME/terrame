@@ -281,6 +281,13 @@ Type to access TerraLib. It contains very basic and low level functions that are
 							
 								
 									<tr>
+										<td class="name" nowrap><a href="#getDistance">getDistance</a>&nbsp;
+<td class="summary">Returns the shortest distance between any two points in the two geometries.</td>
+									</tr>
+								
+							
+								
+									<tr>
 										<td class="name" nowrap><a href="#getLayerInfo">getLayerInfo</a>&nbsp;
 <td class="summary">Return the information of a given layer.</td>
 									</tr>
@@ -290,6 +297,20 @@ Type to access TerraLib. It contains very basic and low level functions that are
 									<tr>
 										<td class="name" nowrap><a href="#getNumOfBands">getNumOfBands</a>&nbsp;
 <td class="summary">Returns the number of bands of some Raster.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getProjection">getProjection</a>&nbsp;
+<td class="summary">Returns a coordinate system name given an identification.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getPropertyNames">getPropertyNames</a>&nbsp;
+<td class="summary">Returns the property names of the dataset.</td>
 									</tr>
 								
 							
@@ -383,7 +404,7 @@ Add a new cellular layer to a PostgreSQL connection.</span>
     
   
     <li>
-	  <strong>#6</strong>: 
+	  <strong>#6</strong>: A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
     </li> 
     
   
@@ -495,7 +516,7 @@ Add a new PostgreSQL layer to a given project.<br><br></span>
     
   
     <li>
-	  <strong>_</strong>: 
+	  <strong>_</strong>: A TerraLib object.
     </li> 
     
   
@@ -592,12 +613,12 @@ Create a new cellular layer into a shapefile.<br><br></span>
     
   
     <li>
-	  <strong>#6</strong>: 
+	  <strong>#6</strong>: A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
     </li> 
     
   
     <li>
-	  <strong>#7</strong>: 
+	  <strong>#7</strong>: A boolean value indicating whether a spatial index file should be created.
     </li> 
     
   
@@ -657,7 +678,7 @@ Add a shapefile layer to a given project.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -677,7 +698,7 @@ Add a shapefile layer to a given project.<br><br></span>
     
   
     <li>
-	  <strong>#5</strong>: 
+	  <strong>#5</strong>: A boolean value indicating whether a spatial index file should be created.
     </li> 
     
   
@@ -726,7 +747,7 @@ Add a new tiff layer to a given project.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -799,57 +820,52 @@ Fill a given attribute in a layer.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: The name of the project.
     </li> 
     
   
     <li>
-	  <strong>#2</strong>: The name of the project.
+	  <strong>#2</strong>: Name of the input layer with the data where the operations will take place.
     </li> 
     
   
     <li>
-	  <strong>#3</strong>: Name of the input layer with the data where the operations will take place.
+	  <strong>#3</strong>: Name of the reference layer with the elements to be copied to the output.
     </li> 
     
   
     <li>
-	  <strong>#4</strong>: Name of the reference layer with the elements to be copied to the output.
+	  <strong>#4</strong>: Name of the layer to be created with the output.
     </li> 
     
   
     <li>
-	  <strong>#5</strong>: Name of the layer to be created with the output.
+	  <strong>#5</strong>: Name of the attribute to be created.
     </li> 
     
   
     <li>
-	  <strong>#6</strong>: Name of the attribute to be created.
+	  <strong>#6</strong>: Name of the operation.
     </li> 
     
   
     <li>
-	  <strong>#7</strong>: Name of the operation.
+	  <strong>#7</strong>: The attribute to be used in the operation.
     </li> 
     
   
     <li>
-	  <strong>#8</strong>: The attribute to be used in the operation.
+	  <strong>#8</strong>: A boolean value indicating whether the area should be considered.
     </li> 
     
   
     <li>
-	  <strong>#9</strong>: A boolean value indicating whether the area should be considered.
+	  <strong>#9</strong>: The default value.
     </li> 
     
   
     <li>
-	  <strong>#10</strong>: The default value.
-    </li> 
-    
-  
-    <li>
-	  <strong>#11</strong>: A string with the spatial representation of data ("raster", "polygon", "point", or "line").
+	  <strong>#10</strong>: A string with the spatial representation of data ("raster", "polygon", "point", or "line").
     </li> 
     
   
@@ -919,7 +935,7 @@ Copy a given layer to another.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -1008,7 +1024,7 @@ Create a new <a href=../files/Project.html>Project</a>.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -1099,7 +1115,7 @@ Remove a PostreSQL database.<br><br></span>
     
   
     <li>
-	  <strong>_</strong>: 
+	  <strong>_</strong>: A TerraLib object.
     </li> 
     
   
@@ -1203,7 +1219,7 @@ Remove a PostreSQL table.<br><br></span>
     
   
     <li>
-	  <strong>_</strong>: 
+	  <strong>_</strong>: A TerraLib object.
     </li> 
     
   
@@ -1277,7 +1293,7 @@ Returns the area of this envelope as measured in the spatial reference system of
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -1330,7 +1346,7 @@ Returns a given dataset from a layer.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -1367,6 +1383,64 @@ Returns a given dataset from a layer.<br><br></span>
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
+<dt><h2><a name="getDistance">
+
+	</a><strong>getDistance</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Returns the shortest distance between any two points in the two geometries.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A TerraLib object.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The geometry.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: The other geometry.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="reserved">local</span> <span class="id">dSet</span> = <span class="id">tl</span>:<span class="id">getDataSet</span>(<span class="id">proj</span>, <span class="id">clName</span>)
+<span class="reserved">local</span> <span class="id">dist</span> = <span class="id">tl</span>:<span class="function">getDistance</span>(<span class="id">dSet</span>[<span class="number">0</span>].<span class="id">OGR_GEOMETRY</span>, <span class="id">dSet</span>[<span class="id">getn</span>(<span class="id">dSet</span>) - <span class="number">1</span>].<span class="id">OGR_GEOMETRY</span>)	</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
 <dt><h2><a name="getLayerInfo">
 
 	</a><strong>getLayerInfo</strong>&nbsp;
@@ -1387,7 +1461,7 @@ Return the information of a given layer.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -1471,7 +1545,7 @@ Returns the number of bands of some Raster.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -1509,6 +1583,120 @@ Returns the number of bands of some Raster.<br><br></span>
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
+<dt><h2><a name="getProjection">
+
+	</a><strong>getProjection</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Returns a coordinate system name given an identification.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A TerraLib object.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The layer.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="reserved">local</span> <span class="id">prj</span> = <span class="id">tl</span>:<span class="function">getProjection</span>(<span class="id">proj</span>.<span class="id">layers</span>[<span class="id">layerName</span>])
+<span class="id">print</span>(<span class="id">prj</span>.<span class="id">NAME</span>..<span class="string">". SRID: "</span>..<span class="id">prj</span>.<span class="id">SRID</span>..<span class="string">". PROJ4: "</span>..<span class="id">prj</span>.<span class="id">PROJ4</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getPropertyNames">
+
+	</a><strong>getPropertyNames</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Returns the property names of the dataset.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A TerraLib object.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A <a href=../files/Project.html>Project</a>.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: A <a href=../files/Layer.html>Layer</a>.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="reserved">local</span> <span class="id">propNames</span> = <span class="id">tl</span>:<span class="function">getPropertyNames</span>(<span class="id">proj</span>, <span class="id">proj</span>.<span class="id">layers</span>[<span class="id">layerName</span>])
+<span class="reserved">for</span> <span class="id">i</span> = <span class="number">0</span>, #<span class="id">propNames</span> <span class="reserved">do</span>
+	<span class="id">unitTest</span>:<span class="id">assert</span>((<span class="id">propNames</span>[<span class="id">i</span>] == <span class="string">"FID"</span>) <span class="reserved">or</span> (<span class="id">propNames</span>[<span class="id">i</span>] == <span class="string">"ID"</span>) <span class="reserved">or</span> 
+					(<span class="id">propNames</span>[<span class="id">i</span>] == <span class="string">"NM_MICRO"</span>) <span class="reserved">or</span> (<span class="id">propNames</span>[<span class="id">i</span>] == <span class="string">"CD_GEOCODU"</span>))
+<span class="reserved">end</span>	</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
 <dt><h2><a name="getShpByFilePath">
 
 	</a><strong>getShpByFilePath</strong>&nbsp;
@@ -1529,7 +1717,7 @@ Return the content of a shapefile.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -1621,7 +1809,7 @@ Open a new project.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -1681,7 +1869,7 @@ Save a given dataset.<br><br></span>
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: 
+	  <strong>#1</strong>: A TerraLib object.
     </li> 
     
   
@@ -1707,6 +1895,11 @@ Save a given dataset.<br><br></span>
   
     <li>
 	  <strong>#6</strong>: A table with the attributes to be saved.
+    </li> 
+    
+  
+    <li>
+	  <strong>#7</strong>: The name of the output data set.
     </li> 
     
   

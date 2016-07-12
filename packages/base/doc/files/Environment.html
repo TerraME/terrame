@@ -793,7 +793,7 @@ A container that encapsulates space, time, behavior, and other Environments. Obj
 <ul><span class="arg">
 
     <li>
-	  <strong>...</strong>: <a href=../files/Agent.html>Agents</a>, <a href=../files/Automaton.html>Automatons</a>, <a href=../files/Cell.html>Cells</a>, <a href=../files/CellularSpace.html>CellularSpaces</a>, <a href=../files/Society.html>Societies</a>, <a href=../files/Trajectory.html>Trajectories</a>, <a href=../files/Group.html>Groups</a>, Timers, or Environments.
+	  <strong>...</strong>: <a href=../files/Agent.html>Agents</a>, <a href=../files/Automaton.html>Automatons</a>, <a href=../files/Cell.html>Cells</a>, <a href=../files/CellularSpace.html>CellularSpaces</a>, <a href=../files/Society.html>Societies</a>, <a href=../files/Trajectory.html>Trajectories</a>, <a href=../files/Group.html>Groups</a>, Timers, Environments, or instances of <a href=../files/Model.html>Models</a>.
     </li> 
     
   
@@ -1337,7 +1337,7 @@ Run the Environment until a given time. It activates the <a href=../files/Timer.
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: A number representing the final time. This funcion will stop when there is no <a href=../files/Event.html>Event</a> scheduled to a time less or equal to the final time.
+	  <strong>#1</strong>: A number representing the final time. This funcion will stop when there is no <a href=../files/Event.html>Event</a> scheduled to a time less or equal to the final time. When using instances of <a href=../files/Model.html>Models</a> within the Environment (to simulate them at the same time), this argument is optional. In this case, the default value is the greater final time amongst all instances.
     </li> 
     
   

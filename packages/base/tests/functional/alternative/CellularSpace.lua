@@ -203,7 +203,7 @@ return{
 		local layerNonString = function()
 			CellularSpace{project = "myproj.tview", layer = false}
 		end
-		unitTest:assertError(layerNonString, incompatibleTypeMsg("layer", "string", false))
+		unitTest:assertError(layerNonString, incompatibleTypeMsg("layer", "Layer", false))
 
 		if isFile("myproj.tview") then rmFile("myproj.tview") end
 
