@@ -57,7 +57,8 @@ return{
 		unitTest:assertEquals(animal.age, 5)
 	end,    
 	closeFile = function(unitTest)
-		local fopen = openFile("test.csv", "a+") 
+		local fopen = io.open("test.csv", "a+")
+		--io.write("test.csv", "unitTest")
 		local data = closeFile(fopen)
 		unitTest:assert(data)
 		rmFile("test.csv")

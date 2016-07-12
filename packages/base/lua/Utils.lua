@@ -90,12 +90,13 @@ end
 -- file = openFile("myfile.txt")
 -- closeFile(file)
 function closeFile(file)
-	if not file or type(file) == "string" then
-		resourceNotFoundError("file", file)
-	else
+	mandatoryArgument(1, "userdata", file)
+	if io.type(file) == "file" then
 		io.close(file)
 		return true
-	end 
+	else
+		resourceNotFoundError("file", file)
+	end
 end
 
 --- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
