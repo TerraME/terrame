@@ -961,6 +961,39 @@ local function getGeometryTypeName(geomType)
 	return "unknown"
 end
 
+local function removeLayer(project, layerName)
+	do
+		loadProject(project, project.file)
+		local layer = project.layers[layerName]
+		local id = layer:getDataSourceId()
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(id)
+		local dsetName = layer:getDataSetName()
+		local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+			
+		ds:dropDataSet(dsetName)
+		binding.te.da.DataSourceInfoManager.getInstance():remove(id)
+		project.layers[layerName] = nil
+			
+		saveProject(project, project.layers)
+		releaseProject(project)	
+			
+		ds:close()
+	end
+		
+	collectgarbage("collect")
+end
+
+local function overwriteLayer(self, project, fromName, toName, toSetName)
+	local fromDset = self:getDataSet(project, fromName)
+		
+	local luaTable = {}
+	for i = 0, #fromDset do
+		table.insert(luaTable, fromDset[i])		
+	end		
+		
+	self:saveDataSet(project, fromName, luaTable, toName, {}, toSetName)	
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 	
@@ -1431,7 +1464,7 @@ TerraLib_ = {
 	-- tl:addShpLayer(proj, layerName2, layerFile2)
 	--	
 	-- tl:attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
-	attributeFill = function(_, project, from, to, out, property, operation, select, area, default, repr)
+	attributeFill = function(self, project, from, to, out, property, operation, select, area, default, repr)
 		do
 			loadProject(project, project.file)
 
@@ -1461,7 +1494,13 @@ TerraLib_ = {
 					customError("Selected attribute '"..select.."' does not exist in layer '"..from.."'.")
 				end
 			end
-		
+			
+			local outOverwrite = false
+			if out == nil then
+				outOverwrite = true
+				out = to.."_temp"
+			end
+			
 			local outDs
 			local outConnInfo = outDsInfo:getConnInfo()
 			local outDSetName = out
@@ -1521,6 +1560,20 @@ TerraLib_ = {
 			releaseProject(project)
 		
 			outDs:close()
+			
+			-- TODO: REVIEW AFTER FIX #875
+			if outOverwrite then
+				local toConnInfo = toDsInfo:getConnInfo()
+				local toType = toDsInfo:getType()
+				local toSetName = nil
+				
+				if toType == "OGR" then
+					toSetName = getFileName(toConnInfo.URI)
+				end
+				
+				overwriteLayer(self, project, out, to, toSetName)
+				removeLayer(project, out)
+			end		
 		end
 
 		collectgarbage("collect")		
@@ -1559,9 +1612,10 @@ TerraLib_ = {
 	-- @arg toName The output layer name.
 	-- @arg toSet A table mapping the names of the attributes from the input to the output.
 	-- @arg attrs A table with the attributes to be saved.
+	-- @arg toSetName The name of the output data set.
 	-- @usage -- DONTRUN
 	-- saveDataSet(self, project, fromLayerName, toSet, toName, attrs)
-	saveDataSet = function(_, project, fromLayerName, toSet, toName, attrs)
+	saveDataSet = function(_, project, fromLayerName, toSet, toName, attrs, toSetName)
 		do
 			loadProject(project, project.file)
 
@@ -1654,15 +1708,21 @@ TerraLib_ = {
 				end
 				newDse:add(item)
 			end
-		
-			local newDstName = newDst:getName()
+			
+			local newDstName
+			
+			if not toSetName then
+				newDstName = newDst:getName()
+			else
+				newDstName = toSetName
+			end
 
 			-- Remove the DataSet if it already exists
 			local outConnInfo = dsInfo:getConnInfo()
 			local outDs = nil
 			if outType == "POSTGIS" then
 				newDstName = string.lower(newDstName)
-				outConnInfo.PG_NEWDB_NAME = string.lower(newDstName)
+				outConnInfo.PG_NEWDB_NAME = newDstName
 				outDs = makeAndOpenDataSource(outConnInfo, outType)
 			elseif outType == "OGR" then
 				local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
@@ -1675,8 +1735,10 @@ TerraLib_ = {
 				end
 			end
 			
+			local overwrite = false
 			if outDs:dataSetExists(newDstName) then
 				outDs:dropDataSet(newDstName)
+				overwrite = true
 			end
 
 			-- Save the new DataSet into the from DataSource
@@ -1685,10 +1747,12 @@ TerraLib_ = {
 			outDs:add(newDstName, newDse)
 		
 			-- Create the new Layer
-			local outLayer = createLayer(toName, newDstName, outConnInfo, outType)
-			project.layers[toName] = outLayer
-		
-			saveProject(project, project.layers)
+			if not overwrite then
+				local outLayer = createLayer(toName, newDstName, outConnInfo, outType)
+				project.layers[toName] = outLayer
+				saveProject(project, project.layers)
+			end	
+			
 			releaseProject(project)
 		
 			ds:close()

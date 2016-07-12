@@ -279,18 +279,11 @@ return {
 			file = filePath1
 		}
 		
-		local presenceLayerName = clName1.."_Presence"
-		local filePath2 = presenceLayerName..".shp"
-
-		if isFile(filePath2) then
-			rmFile(filePath2)
-		end
 
 		cl:fill{
 			operation = "presence",
 			layer = localidades,
-			attribute = "presence",
-			output = presenceLayerName
+			attribute = "presence"
 		}	
 --[[
 		local areaLayerName = clName1.."_Area"
@@ -303,22 +296,14 @@ return {
 		cl:fill{
 			operation = "area",
 			layer = layerName1,
-			attribute = "area",
-			output = areaLayerName
+			attribute = "area"
 		}
 --]]
-		local countLayerName = clName1.."_Count"
-		local filePath4 = countLayerName..".shp"
-		
-		if isFile(filePath4) then
-			rmFile(filePath4)
-		end
 		
 		cl:fill{
 			operation = "count",
 			layer = localidades,
-			attribute = "count",
-			output = countLayerName
+			attribute = "count"
 		}
 		
 		-- local distanceLayerName = clName1.."_Distance"
@@ -331,157 +316,78 @@ return {
 		-- cl:fill{
 			-- operation = "distance",
 			-- layer = localidades,
-			-- attribute = "distance",
-			-- output = distanceLayerName
+			-- attribute = "distance"
 		-- }
-		
-		local minValueLayerName = clName1.."_Minimum"		
-		local filePath6 = minValueLayerName..".shp"
-		
-		if isFile(filePath6) then
-			rmFile(filePath6)
-		end
 		
 		cl:fill{
 			operation = "minimum",
 			layer = localidades,
 			attribute = "minimum",
-			output = minValueLayerName,
 			select = "UCS_FATURA"
 		}
-		
-		local maxValueLayerName = clName1.."_Maximum"
-		local filePath7 = maxValueLayerName..".shp"
-		
-		if isFile(filePath7) then
-			rmFile(filePath7)
-		end
 		
 		cl:fill{
 			operation = "maximum",
 			layer = localidades,
 			attribute = "maximum",
-			output = maxValueLayerName,
 			select = "UCS_FATURA"
 		}
 		
-		local coverageLayerName = clName1.."_Percentage"
-		local filePath8 = coverageLayerName..".shp"
-		
-		if isFile(filePath8) then
-			rmFile(filePath8)
-		end	
 	--[[	
 		cl:fill{
 			operation = "coverage",
 			layer = localidades,
 			attribute = "coverage",
-			output = coverageLayerName,
 			select = "LOCALIDADE"
 		}
 		--]]
-		local stdevLayerName = clName1.."_Stdev"
-		local filePath9 = stdevLayerName..".shp"
-
-		if isFile(filePath9) then
-			rmFile(filePath9)
-		end
 		
 		cl:fill{
 			operation = "stdev",
 			layer = localidades,
 			attribute = "stdev",
-			output = stdevLayerName,
 			select = "UCS_FATURA"
 		}
-		
-		local meanLayerName = clName1.."_Average_Mean"
-		local filePath10 = meanLayerName..".shp"
-
-		if isFile(filePath10) then
-			rmFile(filePath10)
-		end
 		
 		cl:fill{
 			operation = "average",
 			layer = localidades,
 			attribute = "mean",
-			output = meanLayerName,
 			select = "UCS_FATURA"
 		}
-		
-		local weighLayerName = clName1.."_Average_Weighted"
-		local filePath11 = weighLayerName..".shp"
-
-		if isFile(filePath11) then
-			rmFile(filePath11)
-		end
 		
 		cl:fill{
 			operation = "average",
 			layer = localidades,
 			attribute = "weighted",
-			output = weighLayerName,
 			select = "UCS_FATURA"
 		}
 		
-		local intersecLayerName = clName1.."_Mojority_Intersection"
-		local filePath12 = intersecLayerName..".shp"
-
-		if isFile(filePath12) then
-			rmFile(filePath12)
-		end
-
 		cl:fill{
 			operation = "mode",
 			layer = localidades,
 			attribute = "high_inter",
-			output = intersecLayerName,
 			select = "UCS_FATURA"
 		}
 		
-		local occurrenceLayerName = clName1.."_Mojority_Occurrence"
-		local filePath13 = occurrenceLayerName..".shp"
-
-		if isFile(filePath13) then
-			rmFile(filePath13)
-		end
-
 		cl:fill{
 			operation = "mode",
 			layer = localidades,
 			attribute = "high_occur",
-			output = occurrenceLayerName,
 			select = "UCS_FATURA"
 		}
-		
-		local sumLayerName = clName1.."_Sum"
-		local filePath14 = sumLayerName..".shp"
-
-		if isFile(filePath14) then
-			rmFile(filePath14)
-		end
 		
 		cl:fill{
 			operation = "sum",
 			layer = localidades,
 			attribute = "sum",
-			output = sumLayerName,
 			select = "UCS_FATURA"
 		}
-		
-		local wsumLayerName = clName1.."_Weighted_Sum"
-		local filePath15 = wsumLayerName..".shp"
-
-		if isFile(filePath15) then
-			rmFile(filePath15)
-		end	
 		
 		cl:fill{
 			operation = "sum",
 			layer = localidades,
 			attribute = "wsum",
-			output = wsumLayerName,
 			select = "UCS_FATURA",
 			area = true
 		}
@@ -504,7 +410,6 @@ return {
 			-- operation = "average",
 			-- layer = desmatamento,
 			-- attribute = "mean_0",
-			-- output = rmeanLayerName,
 			-- select = 0
 		-- }		
 		
@@ -519,7 +424,6 @@ return {
 			-- operation = "minimum",
 			-- layer = desmatamento,
 			-- attribute = "minimum_0",
-			-- output = rminLayerName,
 			-- select = 0
 		-- }		
 
@@ -534,7 +438,6 @@ return {
 			-- operation = "maximum",
 			-- layer = desmatamento,
 			-- attribute = "maximum_0",
-			-- output = rmaxLayerName,
 			-- select = 0
 		-- }		
 
@@ -549,7 +452,6 @@ return {
 			-- operation = "coverage",
 			-- layer = desmatamento,
 			-- attribute = "percent_0",
-			-- output = rpercentLayerName,
 			-- select = 0
 		-- }		
 
@@ -564,7 +466,6 @@ return {
 			-- operation = "stdev",
 			-- layer = desmatamento,
 			-- attribute = "stdev_0",
-			-- output = rstdevLayerName,
 			-- select = 0
 		-- }		
 
@@ -579,13 +480,12 @@ return {
 			-- operation = "sum",
 			-- layer = desmatamento,
 			-- attribute = "sum_0",
-			-- output = rsumLayerName,
 			-- select = 0
 		-- }		
 
 		local cs = CellularSpace{
 			project = proj,
-			layer = sumLayerName
+			layer = cl.name
 		}
 		
 		forEachCell(cs, function(cell)
@@ -614,28 +514,16 @@ return {
 			rmFile(projName)
 		end
 
-		if isFile(filePath1)  then rmFile(filePath1)  end
-		if isFile(filePath2)  then rmFile(filePath2)  end
---		if isFile(filePath3)  then rmFile(filePath3)  end
-		if isFile(filePath4)  then rmFile(filePath4)  end
-		--if isFile(filePath5)  then rmFile(filePath5)  end
-		if isFile(filePath6)  then rmFile(filePath6)  end
-		if isFile(filePath7)  then rmFile(filePath7)  end
-		if isFile(filePath8)  then rmFile(filePath8)  end
-		if isFile(filePath9)  then rmFile(filePath9)  end
-		if isFile(filePath10) then rmFile(filePath10) end
-		if isFile(filePath11) then rmFile(filePath11) end
-		if isFile(filePath12) then rmFile(filePath12) end
-		if isFile(filePath13) then rmFile(filePath13) end
-		if isFile(filePath14) then rmFile(filePath14) end
-		if isFile(filePath15) then rmFile(filePath15) end
-		--if isFile(filePath16) then rmFile(filePath16) end
-		--if isFile(filePath17) then rmFile(filePath17) end
-		--if isFile(filePath18) then rmFile(filePath18) end
-		--if isFile(filePath19) then rmFile(filePath19) end
-		--if isFile(filePath20) then rmFile(filePath20) end
-		--if isFile(filePath21) then rmFile(filePath21) end
-		if isFile(filePath22) then rmFile(filePath22) end
+		rmFile(filePath1)
+--		rmFile(filePath3)
+--		rmFile(filePath5)
+		--rmFile(filePath16)
+		--rmFile(filePath17)
+		--rmFile(filePath18)
+		--rmFile(filePath19)
+		--rmFile(filePath20)
+		--rmFile(filePath21)
+		rmFile(filePath22)
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_representation.tview"
@@ -671,6 +559,8 @@ return {
 		}
 
 		unitTest:assertEquals(l:representation(), "line")
+		
+		rmFile(proj.file)
 	end,
 	__tostring = function(unitTest)
 		local projName = "cellular_layer_print.tview"
