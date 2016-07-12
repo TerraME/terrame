@@ -596,15 +596,23 @@ Layer_ = {
 
 		tlib:attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.default, repr)
 	end,
-	-- Return the Layer's projection. It contains the name of the projection, its Spatial Reference
+	--- Return the Layer's projection. It contains the name of the projection, its Spatial Reference
 	-- Identifier (SRID), and
 	-- its Proj4 description (www.proj4.org/parameters.html).
+	-- @usage -- DONTRUN
+	-- import("terralib")
+	--
+	-- print(layer:projection())
 	projection = function(self)
 		local prj = self.project.terralib:getProjection(self.project.layers[self.name])
 		return prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4
 	end,
-	-- The attribute names of the Layer. It returns a vector of strings, whose size is
+	--- The attribute names of the Layer. It returns a vector of strings, whose size is
 	-- the number of attributes.
+	-- @usage -- DONTRUN
+	-- import("terralib")
+	--
+	-- print(vardump(layer:properties()))
 	properties = function(self)
 		local propNames = self.project.terralib:getPropertyNames(self.project, self.project.layers[self.name])
 		

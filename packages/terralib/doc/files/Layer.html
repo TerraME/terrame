@@ -456,6 +456,20 @@ A Layer of cells that belongs to a <a href=../files/Project.html>Project</a>. It
 							
 								
 									<tr>
+										<td class="name" nowrap><a href="#projection">projection</a>&nbsp;
+<td class="summary">Return the Layer's projection.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#properties">properties</a>&nbsp;
+<td class="summary">The attribute names of the Layer.</td>
+									</tr>
+								
+							
+								
+									<tr>
 										<td class="name" nowrap><a href="#representation">representation</a>&nbsp;
 <td class="summary">Return a string with the representation of the layer.</td>
 									</tr>
@@ -1076,6 +1090,82 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
     <span class="id">layer</span> = <span class="string">"cover"</span>,
     <span class="id">select</span> = <span class="string">"cover2010"</span>
 }</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="projection">
+
+	</a><strong>projection</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the Layer's projection. It contains the name of the projection, its Spatial Reference Identifier (SRID), and its Proj4 description (www.proj4.org/parameters.html).<br><br></span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+
+<span class="id">print</span>(<span class="id">layer</span>:<span class="function">projection</span>())</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="properties">
+
+	</a><strong>properties</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+The attribute names of the Layer. It returns a vector of strings, whose size is the number of attributes.<br><br></span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+
+<span class="id">print</span>(<span class="id">vardump</span>(<span class="id">layer</span>:<span class="function">properties</span>()))</code></pre>
 
 
 
