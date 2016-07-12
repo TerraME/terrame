@@ -1418,12 +1418,14 @@ end
 -- @usage -- DONTRUN
 -- file = openFile("myfile.txt")
 function openFile(file, mode)
-    
-    if not file then
-        customError("Error : Invalid file")
-    else
-        local fopen = io.open(file, mode)
-        return fopen
+	if not file or file == "" then
+		customError("Invalid path, file not found.")
+	end
+	local fopen = io.open(file, mode)
+	if fopen == nil and string.len(file) < 2 then
+		resourceNotFoundError("file", file)
+	else
+		return fopen
 	end 
 end
 
@@ -1601,7 +1603,7 @@ function vardump(o, indent)
 		return s.."\n"..indent.."}"
 	elseif type(o) == "number" then
 		return tostring(o)
-    elseif type(o) == "boolean" then
+	elseif type(o) == "boolean" then
 		return tostring(o)
 	else
 		return "\""..tostring(o).."\""

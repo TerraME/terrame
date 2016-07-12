@@ -60,7 +60,6 @@ return{
 	dir = function(unitTest)
 		local files = 37
 		local d = dir(packageInfo().data)
-
 		unitTest:assertEquals(#d, files)
 
 		d = dir(packageInfo().data, true)
@@ -82,7 +81,7 @@ return{
 	isFile = function(unitTest)
 		unitTest:assert(isFile(filePath("agents.csv")))
         
-        unitTest:assertEquals(isFile(""), false)
+        unitTest:assertEquals(isFile("aaa"), false)
 
 		os.execute("touch zasdc.abc")
 

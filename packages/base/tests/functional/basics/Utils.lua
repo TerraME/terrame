@@ -857,12 +857,13 @@ return{
 		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
 		unitTest:assertEquals(sumvalue, 0.1 + 0.04 + 0.3 + 0.07)
 	end,
-    openFile = function(unitTest)
-        local fopen = openFile("test.csv", "a+") 
-        local Sfile = fopen:read("*all")
-        closeFile(fopen)
-        unitTest:assertEquals(Sfile, "")
-    end,
+	openFile = function(unitTest)
+		local fopen = openFile("test.csv", "a+") 
+		local Sfile = fopen:read("*all")
+		closeFile(fopen)
+		unitTest:assertEquals(Sfile, "")
+		rmFile("test.csv")
+	end,
 	round = function(unitTest)
 		unitTest:assertEquals(round(5.22), 5)
 		unitTest:assertEquals(round(5.2235, 3), 5.224)
