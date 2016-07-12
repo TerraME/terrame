@@ -28,8 +28,7 @@ local function isEmpty(data)
 end
 
 local function isValidSource(source)
-	return source == "tif" or source == "shp" or source == "postgis" or source == "access"
-			or source == "nc" or source == "asc" or source == "asc" or source == "geojson"
+	return belong(source, {"tif", "shp", "postgis", "access", "nc", "asc", "geojson"})
 end
 
 local function isSourceConsistent(source, filePath)
@@ -80,7 +79,7 @@ local function addCellularLayer(self, data)
 
 	mandatoryTableArgument(data, "source", "string")
 		
-	if (data.source == "tif") or (data.source == "shp") or (data.source == "geojson") then
+	if belong(data.source, {"tif", "shp", "geojson"}) then
 		if not isSourceConsistent(data.source, data.file) then
 			customError("File '"..data.file.."' not match to source '"..data.source.."'.")
 		end
@@ -129,25 +128,15 @@ local function addCellularLayer(self, data)
 		end,
 		geojson = function()
 			mandatoryTableArgument(data, "file", "string")
-			defaultTableValue(data, "clean", false)
-			defaultTableValue(data, "index", true)
 
 			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"clean", "input", "name", "project",
-					"resolution", "file", "source", "index"})
+				verifyUnnecessaryArguments(data, {"input", "name", "project",
+					"resolution", "file", "source"})
 				data.box = true
 			else
 				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project",
-					"resolution", "file", "source", "index"})
-			end
-
-			if isFile(data.file) then
-				if data.clean then
-					rmFile(data.file)
-				else
-					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
-				end
+				verifyUnnecessaryArguments(data, {"box", "input", "name", "project",
+					"resolution", "file", "source"})
 			end
 
 			self.terralib:addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution,
@@ -203,7 +192,7 @@ local function addLayer(self, data)
 		customError("Source '"..data.source.."' is invalid.")
 	end				
 		
-	if data.source == "tif" or data.source == "shp" or data.source == "nc" or data.source == "asc" or data.source == "geojson" then
+	if belong(data.source, {"tif", "shp", "nc", "asc", "geojson"}) then
 		if not isSourceConsistent(data.source, data.file) then
 			customError("File '"..data.file.."' does not match to source '"..data.source.."'.")
 		end
@@ -223,8 +212,7 @@ local function addLayer(self, data)
 		end,
 		geojson = function()
 			mandatoryTableArgument(data, "file", "string")
-			defaultTableValue(data, "index", true)
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 
 			self.terralib:addGeoJSONLayer(self, data.name, data.file)
 		end,

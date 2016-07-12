@@ -1173,7 +1173,7 @@ TerraLib_ = {
 	-- layerFile1 = filePath("Setores_Censitarios_2000_pol.geojson", "terralib")
 	-- tl:addGeoJSONLayer(proj, layerName1, layerFile1)
 	--
-	--	tl:addGeoJSONCellSpaceLayer(proj, layerName1, "Setores_Cells", 10000, currentDir())
+	-- tl:addGeoJSONCellSpaceLayer(proj, layerName1, "Setores_Cells", 10000, currentDir())
 	addGeoJSONCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask)
 		loadProject(project, project.file)
 
