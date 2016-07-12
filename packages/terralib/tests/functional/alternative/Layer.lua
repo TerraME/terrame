@@ -585,8 +585,6 @@ return{
 		end
 		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'Populacao'?")
 
-		local maxValueLayerName = clName1.."_Maximum"
-
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
