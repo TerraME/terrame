@@ -1150,8 +1150,44 @@ TerraLib_ = {
 	-- tl = TerraLib()
 	-- tl:createProject("project.tview", {})
 	-- tl:addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
-	addGeoJSONLayer = function(_, project, name, filePath, addSpatialIdx)
-		addFileLayer(project, name, filePath, "GeoJSON", addSpatialIdx)
+	addGeoJSONLayer = function(_, project, name, filePath)
+		addFileLayer(project, name, filePath, "GeoJSON")
+	end,
+	--- Create a new cellular layer into a shapefile.
+	-- @arg project The name of the project.
+	-- @arg filePath The path for the project.
+	-- @arg name The name of the layer.
+	-- @arg resolution The size of a cell.
+	-- @arg inputLayerTitle The name of the layer.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	-- proj = {
+	--     file = "mygeojsonproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Carneiro Heitor"
+	-- }
+	--
+	-- tl:createProject(proj, {})
+	--
+	-- layerName1 = "Setores_Layer"
+	-- layerFile1 = filePath("Setores_Censitarios_2000_pol.geojson", "terralib")
+	-- tl:addGeoJSONLayer(proj, layerName1, layerFile1)
+	--
+	--	tl:addGeoJSONCellSpaceLayer(proj, layerName1, "Setores_Cells", 10000, currentDir())
+	addGeoJSONCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask)
+		loadProject(project, project.file)
+
+		if not string.find(filePath, "/") then
+			filePath = _Gtme.makePathCompatibleToAllOS(currentDir().."/")..filePath
+		end
+
+		local inputLayer = project.layers[inputLayerTitle]
+		local connInfo = createFileConnInfo(filePath)
+		local dSetName = getFileName(connInfo.URI)
+
+		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
+
+		self:addGeoJSONLayer(project, name, filePath)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
 	-- @arg project The name of the project.
