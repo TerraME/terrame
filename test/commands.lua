@@ -94,6 +94,9 @@ basic = {
 	qwerty4321          = {package = "qwerty4321"},
 	depend              = {arg = "-build", package = "depend"},
 	depend2             = {arg = "-build", package = "depend2"},
+	scriptdir           = {arg = packageInfo().path},
+	scriptnofile        = {arg = "abcd1234.lua"},
+	scriptnoluafile     = {arg = filePath("simple-cs.csv")},
 	tmp                 = {script = "tmp.lua"}
 }
 

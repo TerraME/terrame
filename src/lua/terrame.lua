@@ -1399,6 +1399,17 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end)
 			end
 
+			if isDir(arg) then
+				_Gtme.printError("Argument '"..arg.."' is a directory, and not a Lua file.")
+				os.exit(1)
+			elseif not isFile(arg) then
+				_Gtme.printError("File '"..arg.."' does not exist.")
+				os.exit(1)
+			elseif not _Gtme.string.endswith(arg, ".lua") then
+				_Gtme.printError("Argument '"..arg.."' does not have '.lua' extension.")
+				os.exit(1)
+			end
+
 			local success, result = _Gtme.myxpcall(function() dofile(arg) end) 
 			if not success then
 				_Gtme.printError(result)
