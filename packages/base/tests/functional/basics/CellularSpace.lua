@@ -126,7 +126,7 @@ return{
 		}
 		
 		unitTest:assertEquals(projName, cs.project.file)
-		unitTest:assertEquals(clName1, cs.layer)
+		unitTest:assertType(cs.layer, "Layer")
 		
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)

@@ -787,7 +787,7 @@ return{
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
 
-		terralib.Layer{
+		local layer = terralib.Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
@@ -800,9 +800,17 @@ return{
 		}
 
 		local cs = CellularSpace{
+			layer = layer
+		}
+
+		unitTest:assertEquals(#cs, 303)
+
+		cs = CellularSpace{
 			project = proj,
 			layer = clName1
 		}
+
+		unitTest:assertEquals(#cs, 303)
 
 		forEachCell(cs, function(cell)
 			cell.t0 = 1000
@@ -823,7 +831,7 @@ return{
 		unitTest:assertEquals(layer.user, user)
 		unitTest:assertEquals(layer.password, password)
 		unitTest:assertEquals(layer.database, database)
-		unitTest:assertEquals(layer.table, string.lower(cellSpaceLayerNameT0))
+		unitTest:assertEquals(layer.table, cellSpaceLayerNameT0)	-- TODO: VERIFY LOWER CASE IF CHANGED
 
 		local cellSpaceLayerName = clName1.."_CellSpace"
 
@@ -840,7 +848,7 @@ return{
 		unitTest:assertEquals(layer.user, user)
 		unitTest:assertEquals(layer.password, password)
 		unitTest:assertEquals(layer.database, database)
-		unitTest:assertEquals(layer.table, string.lower(cellSpaceLayerName))
+		unitTest:assertEquals(layer.table, cellSpaceLayerName)	-- TODO: VERIFY LOWER CASE IF CHANGED
 
 		cs = CellularSpace{
 			project = proj,
