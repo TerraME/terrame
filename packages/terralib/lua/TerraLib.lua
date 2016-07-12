@@ -1781,7 +1781,7 @@ TerraLib_ = {
 	--- Returns a coordinate system name given an identification.
 	-- @arg layer The layer.
 	-- @usage -- DONTRUN
-	-- local prj = tl:getLayerProjection(proj.layers[layerName])
+	-- local prj = tl:getProjection(proj.layers[layerName])
 	-- print(prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4)
 	getProjection = function(_, layer)
 		local srid = layer:getSRID()
@@ -1794,8 +1794,8 @@ TerraLib_ = {
 		return prj
 	end,
 	--- Returns the property names of the dataset.
-	-- @arg layer The project.
-	-- @arg layer The layer.
+	-- @arg project A Project.
+	-- @arg layer A Layer.
 	-- @usage -- DONTRUN	
 	-- local propNames = tl:getPropertyNames(proj, proj.layers[layerName])
 	-- for i = 0, #propNames do
