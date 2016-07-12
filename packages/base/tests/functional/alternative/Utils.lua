@@ -51,12 +51,13 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
 	end,
-    closeFile = function(unitTest)
-        local error_func = function()
-            closeFile(file)
-        end
-        unitTest:assertError(error_func, "Error : Invalid file")
-    end,
+	closeFile = function(unitTest)
+		local file = "a"
+		local error_func = function()
+			closeFile(file)
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "a"))
+	end,
 	d = function(unitTest)
 		local error_func = function()
 			d()

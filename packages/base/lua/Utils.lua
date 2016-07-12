@@ -90,11 +90,11 @@ end
 -- file = openFile("myfile.txt")
 -- closeFile(file)
 function closeFile(file)
-  if not file then
-		customError("Error : Invalid file")
-    else
-        io.close(file)
-        return true
+	if not file or type(file) == "string" then
+		resourceNotFoundError("file", file)
+	else
+		io.close(file)
+		return true
 	end 
 end
 
