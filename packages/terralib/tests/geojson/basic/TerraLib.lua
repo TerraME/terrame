@@ -24,7 +24,7 @@
 
 return {
 	createProject = function(unitTest)
-		local tl = TerraLib {}
+		local tl = TerraLib{}
 		local title = "TerraLib Tests"
 		local author = "Carneiro Heitor"
 		local file = "mygeojsonproject.tview"
@@ -83,7 +83,7 @@ return {
 		end
 	end,
 	addGeoJSONCellSpaceLayer = function(unitTest)
-		local tl = TerraLib {}
+		local tl = TerraLib{}
 		local title = "TerraLib Tests"
 		local author = "Carneiro Heitor"
 		local file = "mygeojsonproject.tview"
@@ -104,7 +104,7 @@ return {
 		tl:addGeoJSONLayer(proj, layerName, layerFile)
 
 		local clName = "GeoJSON_Cells"
-		local geojson1 = clName .. ".geojson"
+		local geojson1 = clName..".geojson"
 
 		if isFile(geojson1) then
 			rmFile(geojson1)
@@ -126,8 +126,8 @@ return {
 		local clSet = tl:getDataSet(proj, clName)
 		unitTest:assertEquals(getn(clSet), 160)
 
-		clName = clName .. "_NoMask"
-		local geojson2 = clName .. ".geojson"
+		clName = clName.."_NoMask"
+		local geojson2 = clName..".geojson"
 
 		if isFile(geojson2) then
 			rmFile(geojson2)
@@ -140,15 +140,8 @@ return {
 		unitTest:assertEquals(getn(clSet), 160)
 		-- // NO MASK TEST
 
-		-- END
-		if isFile(geojson1) then
-			rmFile(geojson1)
-		end
-
-		if isFile(geojson2) then
-			rmFile(geojson2)
-		end
-
+		unitTest:assertFile(geojson1)
+		unitTest:assertFile(geojson2)
 		rmFile(proj.file)
 	end
 }
