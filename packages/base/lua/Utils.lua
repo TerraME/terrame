@@ -83,6 +83,22 @@ function clone(mtable)
 	return result
 end
 
+--- Close an opened file.
+-- @arg file the file to be closed.
+-- @see Utils:openFile
+-- @usage -- DONTRUN
+-- file = openFile("myfile.txt")
+-- closeFile(file)
+function closeFile(file)
+	mandatoryArgument(1, "userdata", file)
+	if io.type(file) == "file" then
+		io.close(file)
+		return true
+	else
+		resourceNotFoundError("file", file)
+	end
+end
+
 --- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
 -- This function was taken froom http://lua-users.org/wiki/LuaCsv.
 -- @arg line A string from a CSV file.
@@ -157,11 +173,7 @@ function CSVread(filename, sep)
 	optionalArgument(2, "string", sep)
 
 	local data = {}
-	local file = io.open(filename, "r")
-
-	if not file then
-		resourceNotFoundError(1, filename)
-	end
+	local file = openFile(filename, "r")
 
 	local fields = CSVparseLine(file:read(), sep)
 	local line = file:read()
@@ -180,7 +192,7 @@ function CSVread(filename, sep)
 		line = file:read()
 		cline = cline + 1
 	end
-	io.close(file)
+	closeFile(file)
 	return data
 end
 
@@ -204,7 +216,7 @@ function CSVwrite(data, filename, sep)
 	optionalArgument(3, "string", sep)
 
 	sep = sep or ","
-	local file = io.open(filename, "w")
+	local file = openFile(filename, "w")
 	local fields = {}
 
 	if data[1] == nil then
@@ -234,7 +246,7 @@ function CSVwrite(data, filename, sep)
 		file:write(table.concat(line, sep))
 		file:write("\n")
 	end
-	io.close(file)
+	closeFile(file)
 end
 
 --- Return whether a given value belong to a table.
@@ -1400,6 +1412,26 @@ function makeDataTable(data)
 	return result
 end
 
+--- Open a file for reading or writing. An opened file must be closed after being used.
+-- @arg file Name of the file to be opened. It might contain the path to the file as well.
+-- @arg mode A string with the mode. It can be "w" for writing or "r" for reading.
+-- @see Utils:closeFile
+-- @usage -- DONTRUN
+-- file = openFile("myfile.txt")
+function openFile(file, mode)
+	mandatoryArgument(1, "string", file)
+	if mode == nil then 
+		mode = "r"
+	end
+	mandatoryArgument(2, "string", mode)
+	local fopen = io.open(file, mode)
+	if fopen == nil then
+		resourceNotFoundError("file", file)
+	else
+		return fopen
+	end 
+end
+
 --- Round a number given a precision.
 -- @arg num A number.
 -- @arg idp The number of decimal places to be used. The default value is zero.
@@ -1573,6 +1605,8 @@ function vardump(o, indent)
 
 		return s.."\n"..indent.."}"
 	elseif type(o) == "number" then
+		return tostring(o)
+	elseif type(o) == "boolean" then
 		return tostring(o)
 	else
 		return "\""..tostring(o).."\""

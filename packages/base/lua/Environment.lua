@@ -392,10 +392,7 @@ Environment_ = {
 
 		defaultTableValue(data, "bidirect", false)
 
-		local file = io.open(data.source, "r")
-		if not file then
-			resourceNotFoundError("source", data.source)
-		end
+		local file = openFile(data.source, "r")
 
 		local header = file:read()
 		
