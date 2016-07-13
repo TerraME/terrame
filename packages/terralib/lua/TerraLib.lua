@@ -1182,6 +1182,7 @@ TerraLib_ = {
 		addFileLayer(project, name, filePath, "GDAL")
 	end,
 	--- Add a GeoJSON layer to a given project.
+	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg name The name of the layer.
 	-- @arg filePath The path for the project.
