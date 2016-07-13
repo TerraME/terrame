@@ -414,7 +414,23 @@ function Chart(attrTab)
 				attrTab.target.obsattrs_["quantity_"] = true
 				attrTab.target.quantity_ = #attrTab.target
 			else
-				customError("Selected element '"..value.."' does not belong to the target.")
+				local suggestions = {}
+
+				forEachElement(attrTab.target, function(idx, _, mtype)
+					if mtype == "number" then
+						suggestions[idx] = true
+					end
+				end)
+
+				local sug = suggestion(value, suggestions)
+
+				local err = "Selected element '"..value.."' does not belong to the target."
+
+				if sug then
+					err = err.." Do you mean '"..sug.."'?"
+				end
+
+				customError(err)
 			end
 		elseif type(attrTab.target[value]) == "function" then
 			if attrTab.target.obsattrs_ == nil then
