@@ -868,15 +868,17 @@ function _Gtme.traceback(err)
 			last_function = func
 		end
 
-		if (si.package and not (mb or m1 or m3)) or (not (m1 or m2 or m3 or m4)) then
-			str = str.."\n    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
+		if not m1 and not m3 then
+			if (si.package and not mb) or (not (m2 or m4)) or (si.package == "base" and mb) then
+				str = str.."\n    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
 
-			if info.currentline > 0 then
-				str = str..", line "..info.currentline
+				if info.currentline > 0 then
+					str = str..", line "..info.currentline
+				end
+				str = str..", in "..func
 			end
-			str = str..", in "..func
 		end
-	
+
 		level = level + 1
 		info = debug.getinfo(level)
 	end
@@ -887,6 +889,14 @@ function _Gtme.traceback(err)
 	local file
 
 	if err then
+		local sub = string.sub(err, 2, 3)
+
+		if sub == ":/" or sub == ":\\" then -- if string starts with a windows partition (such as C:/)
+			sub = string.sub(err, 1, 2)
+		else
+			sub = ""
+		end
+
 		local pos = string.find(err, "Error:") -- TerraME error
 
 		if pos then -- error in some package
@@ -905,6 +915,10 @@ function _Gtme.traceback(err)
 				pos = string.find(err, ":") -- remove second ":"
 				line = string.sub(err, 1, pos - 1)
 			end
+	
+			if file and sub then -- if string starts with a windows partition (such as C:/)
+				file = sub..file
+			end
 
 			err = "Error:"..string.sub(err, pos + 1)
 		end
@@ -913,7 +927,7 @@ function _Gtme.traceback(err)
 	if str == "Stack traceback:" then
 		if file and line then
 			str = err.."\n"..str
-			str = str.."\n\tFile "..file..", line "..line
+			str = str.."\n    File "..file..", line "..line
 		else
 			str = err
 		end
@@ -1388,6 +1402,17 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					cObj:addPosition(idx, data.x, data.y)
 					cObj:addSize(idx, data.width, data.height)
 				end)
+			end
+
+			if isDir(arg) then
+				_Gtme.printError("Argument '"..arg.."' is a directory, and not a Lua file.")
+				os.exit(1)
+			elseif not isFile(arg) then
+				_Gtme.printError("File '"..arg.."' does not exist.")
+				os.exit(1)
+			elseif not _Gtme.string.endswith(arg, ".lua") then
+				_Gtme.printError("Argument '"..arg.."' does not have '.lua' extension.")
+				os.exit(1)
 			end
 
 			local success, result = _Gtme.myxpcall(function() dofile(arg) end) 

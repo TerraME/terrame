@@ -231,30 +231,44 @@ end
 
 local function checkProject(self)
 	defaultTableValue(self, "geometry", false)
-	mandatoryTableArgument(self, "layer", "string")		
-	
-	if not (type(self.project) == "Project") then
-		if type(self.project) == "string" then
-			if not string.endswith(self.project, ".tview") then
-				self.project = self.project..".tview"
-			end
 
-			if isFile(self.project) then
-				local file = self.project
-				self.project = terralib.Project{
-					file = file
-				}
+	if type(self.layer) == "string" then
+		if type(self.project) ~= "Project" then
+			if type(self.project) == "string" then
+				if not string.endswith(self.project, ".tview") then
+					self.project = self.project..".tview"
+				end
+
+				if isFile(self.project) then
+					local file = self.project
+					self.project = terralib.Project{
+						file = file
+					}
+				else
+					customError("Project '"..self.project.."' was not found.")
+				end
 			else
-				customError("Project '"..self.project.."' was not found.")
+				customError("Argument 'project' must be a Project or file path to a Project.")
 			end
-		else
-			customError("Argument 'project' must be a Project or file path to a Project.")
 		end
+
+		if not self.project.layers[self.layer] then
+			customError("Layer '"..self.layer.."' does not exist in Project '"..self.project.file.."'.")
+		end	
+
+		self.layer = terralib.Layer{
+			project = self.project,
+			name = self.layer
+		}
+	else
+		mandatoryTableArgument(self, "layer", "Layer")
+
+		if self.project then
+			customError("It is not possible to use Project when passing a Layer to CellularSpace.")
+		end
+
+		self.project = self.layer.project
 	end
-		
-	if not self.project.layers[self.layer] then
-		customError("Layer '"..self.layer.."' does not exist in Project '"..self.project.file.."'.")
-	end	
 end
 
 local function loadCsv(self)
@@ -417,7 +431,8 @@ end
 
 local function loadLayer(self)
 	local tlib = terralib.TerraLib{}
-	local dset = tlib:getDataSet(self.project, self.layer)
+
+	local dset = tlib:getDataSet(self.project, self.layer.name)
 	setCellsByTerraLibDataSet(self, dset)
 end
 
@@ -471,7 +486,8 @@ registerCellularSpaceDriver{
 	source = "proj",
 	extension = false,
 	load = loadLayer,
-	compulsory = {"project", "layer"},
+	compulsory = "layer",
+	optional = "project",
 	check = checkProject
 }
 
@@ -861,7 +877,7 @@ CellularSpace_ = {
 		mandatoryTableArgument(data, "source", "string")
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
-			if not io.open(data.source, "r") then
+			if not isFile(data.source) then
 				resourceNotFoundError("source", data.source)
 			end
 		else
@@ -979,7 +995,7 @@ CellularSpace_ = {
 			local tlib = terralib.TerraLib{}
 			
 			if not self.geometry then
-				local dset = tlib:getDataSet(self.project, self.layer)
+				local dset = tlib:getDataSet(self.project, self.layer.name)
 
 				for i = 0, #dset do
 					for k, v in pairs(dset[i]) do
@@ -989,7 +1005,7 @@ CellularSpace_ = {
 					end		
 				end
 			else
-				local dset = tlib:getDataSet(self.project, self.layer)
+				local dset = tlib:getDataSet(self.project, self.layer.name)
 				local isOgr = false
 
 				for k in pairs(dset[0]) do
@@ -1010,7 +1026,7 @@ CellularSpace_ = {
 				end	
 			end
 			
-			tlib:saveDataSet(self.project, self.layer, self.cells, newLayerName, attrNames)
+			tlib:saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
 		else
 			customError("The CellularSpace must have a valid Project. Please, check the documentation.")
 		end
@@ -1177,7 +1193,7 @@ metaTableCellularSpace_ = {
 -- @arg data.layer A string with the name of the layer stored in a TerraLib project. 
 -- @arg data.project A string with the name of the TerraLib project to be used. 
 -- If this name does not ends with ".tview", this extension will be added to the name
--- of the file.
+-- of the file. It can also be an object of type Project from package terralib.
 -- @arg data.attrname A string with an attribute name. It is useful for files that have 
 -- only one attribute value for each cell but no attribute name.
 -- @arg data.... Any other attribute or function for the CellularSpace.

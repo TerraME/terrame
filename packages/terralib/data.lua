@@ -177,16 +177,6 @@ data{
 }
 
 data{
-	file = "Prodes2014_PA_60m_polyc.xml",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	types = {},       -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-
-data{
 	file = "prodes_points_10km_PA_pt.shp",
 	summary = "",
 	source = "",

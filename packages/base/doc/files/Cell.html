@@ -897,7 +897,7 @@ Some attributes of Cell have internal semantics. They can be used as <b>read-onl
 								
 									<tr>
 										<td class="name" nowrap><a href="#distance">distance</a>&nbsp;
-<td class="summary">Compute the Euclidean distance to a given Cell.</td>
+<td class="summary">Returns the shortest distance between the cells.</td>
 									</tr>
 								
 							
@@ -1118,7 +1118,7 @@ Return the Cell area.<br><br></span>
 
 <span class="description">
 
-Compute the Euclidean distance to a given Cell. It uses the attributes x and y of both Cells.<br><br></span>
+Returns the shortest distance between the cells. If the cell do not have geometry, it calculates the Euclidean distance to a given Cell using the attributes x and y of both Cells.<br><br></span>
 
 
 
@@ -1128,7 +1128,7 @@ Compute the Euclidean distance to a given Cell. It uses the attributes x and y o
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: A Cell.
+	  <strong>#1</strong>: Other Cell.
     </li> 
     
   

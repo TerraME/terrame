@@ -60,7 +60,6 @@ return{
 	dir = function(unitTest)
 		local files = 37
 		local d = dir(packageInfo().data)
-
 		unitTest:assertEquals(#d, files)
 
 		d = dir(packageInfo().data, true)

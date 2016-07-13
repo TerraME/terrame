@@ -403,6 +403,12 @@ A Layer of cells that belongs to a <a href=../files/Project.html>Project</a>. It
 
 <span class="function">Layer</span>{
     <span class="id">project</span> = <span class="id">proj</span>,
+    <span class="id">file</span> = <span class="id">filePath</span>(<span class="string">"TI_AMZ.shp"</span>, <span class="string">"terralib"</span>),
+    <span class="id">name</span> = <span class="string">"ti"</span>
+}
+
+<span class="function">Layer</span>{
+    <span class="id">project</span> = <span class="id">proj</span>,
     <span class="id">layer</span> = <span class="string">"roads"</span>,
     <span class="id">user</span> = <span class="string">"root"</span>,
     <span class="id">password</span> = <span class="string">"abc123"</span>,
@@ -445,6 +451,20 @@ A Layer of cells that belongs to a <a href=../files/Project.html>Project</a>. It
 									<tr>
 										<td class="name" nowrap><a href="#fill">fill</a>&nbsp;
 <td class="summary">Create a new attribute for each cell of a Layer.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#projection">projection</a>&nbsp;
+<td class="summary">Return the Layer's projection.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#properties">properties</a>&nbsp;
+<td class="summary">The attribute names of the Layer.</td>
 									</tr>
 								
 							
@@ -544,11 +564,6 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
     
   
     <li>
-	  <strong>clean</strong>: A boolean value indicating whether the argument output should be cleaned if it needs to create the file.
-    </li> 
-    
-  
-    <li>
 	  <strong>default</strong>: A value that will be used to fill a cell whose attribute cannot be computed. For example, when there is no intersection area. Note that this argument is related to the output.
     </li> 
     
@@ -559,7 +574,7 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
     
   
     <li>
-	  <strong>layer</strong>: Name of an input layer belonging to the same <a href=../files/Project.html>Project</a>. There are several strategies available, depending on the geometry of the layer. See below:
+	  <strong>layer</strong>: An input Layer belonging to the same <a href=../files/Project.html>Project</a>. It can also be a string with the Layer's name. There are several strategies available, depending on the geometry of the Layer. See below:
     </li> 
     
       </span>
@@ -735,12 +750,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output
+            attribute, layer
             </td>
           
           
             <td>
-            clean
+            
             </td>
           
         
@@ -758,12 +773,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output, select
+            attribute, layer, select
             </td>
           
           
             <td>
-            area, band, clean, default, dummy
+            area, band, default, dummy
             </td>
           
         
@@ -781,12 +796,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output
+            attribute, layer
             </td>
           
           
             <td>
-            clean
+            
             </td>
           
         
@@ -804,12 +819,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output
+            attribute, layer
             </td>
           
           
             <td>
-            clean
+            
             </td>
           
         
@@ -827,12 +842,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output
+            attribute, layer
             </td>
           
           
             <td>
-            clean
+            
             </td>
           
         
@@ -850,12 +865,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output, select
+            attribute, layer, select
             </td>
           
           
             <td>
-            band, clean, default, dummy
+            band, default, dummy
             </td>
           
         
@@ -873,12 +888,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output, select
+            attribute, layer, select
             </td>
           
           
             <td>
-            band, clean, default, dummy
+            band, default, dummy
             </td>
           
         
@@ -896,12 +911,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output, select
+            attribute, layer, select
             </td>
           
           
             <td>
-            band, clean, default, dummy
+            band, default, dummy
             </td>
           
         
@@ -919,12 +934,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output, select
+            attribute, layer, select
             </td>
           
           
             <td>
-            band, clean, default, dummy
+            band, default, dummy
             </td>
           
         
@@ -942,12 +957,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output
+            attribute, layer
             </td>
           
           
             <td>
-            clean
+            
             </td>
           
         
@@ -965,12 +980,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output, select
+            attribute, layer, select
             </td>
           
           
             <td>
-            clean, default, dummy
+            default, dummy
             </td>
           
         
@@ -988,12 +1003,12 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output, select
+            attribute, layer, select
             </td>
           
           
             <td>
-            area, clean, default, dummy
+            area, default, dummy
             </td>
           
         
@@ -1011,23 +1026,18 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
           
           
             <td>
-            attribute, layer, output, select
+            attribute, layer, select
             </td>
           
           
             <td>
-            area, clean
+            area
             </td>
           
         
         </tr>    
       </table>
       <span class="arg">
-    
-  
-    <li>
-	  <strong>output</strong>: Where the output will be saved. The current version of <a href=../files/TerraLib.html>TerraLib</a> requires that the output of fill will be in another layer of information. We are currently working with a way to save the output in the same input layer.
-    </li> 
     
   
     <li>
@@ -1070,6 +1080,82 @@ Create a new attribute for each cell of a Layer. This attribute can be stored as
     <span class="id">layer</span> = <span class="string">"cover"</span>,
     <span class="id">select</span> = <span class="string">"cover2010"</span>
 }</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="projection">
+
+	</a><strong>projection</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the Layer's projection. It contains the name of the projection, its Spatial Reference Identifier (SRID), and its Proj4 description (www.proj4.org/parameters.html).<br><br></span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+
+<span class="id">print</span>(<span class="id">layer</span>:<span class="function">projection</span>())</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="properties">
+
+	</a><strong>properties</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+The attribute names of the Layer. It returns a vector of strings, whose size is the number of attributes.<br><br></span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+
+<span class="id">print</span>(<span class="id">vardump</span>(<span class="id">layer</span>:<span class="function">properties</span>()))</code></pre>
 
 
 

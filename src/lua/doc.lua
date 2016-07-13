@@ -147,7 +147,8 @@ local function getProjects(package)
 
 				projects[currentProject][idx] = {
 					file = tl.getFileNameWithExtension(value),
-					description = description
+					description = description,
+					projection = layer:projection()
 				}
 			end
 		end)
@@ -215,8 +216,14 @@ local function getProjects(package)
 			}
 
 			if not layers[data.file] then 
+				local layer = tl.Layer{
+					project = data.project,
+					name = data.name
+				}
+
 				layers[data.file] = 
 				{
+					projection = layer:projection(),
 					attributes = {},
 					description = {},
 					types = {}

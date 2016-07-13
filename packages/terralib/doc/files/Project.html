@@ -178,17 +178,17 @@ Project is a concept to describe all the data to be used by a given model. Data 
 <ul><span class="arg">
 
     <li>
-	  <strong>author</strong>: A string with the name of the Project's author.
+	  <strong>author</strong>: An optional string with the name of the Project's author.
     </li> 
     
   
     <li>
-	  <strong>clean</strong>: A boolean value indicating whether the argument file should be cleaned if it already exists. The default value is false.
+	  <strong>clean</strong>: An optional boolean value indicating whether the argument file should be cleaned if it already exists. The default value is false.
     </li> 
     
   
     <li>
-	  <strong>description</strong>: A string with a description of the Project. It is useful when the script belongs to a package, as this description will be displayed in the HTML documentation of the package.
+	  <strong>description</strong>: An optional string with a description of the Project. It is useful when the script belongs to a package, as this description will be displayed in the HTML documentation of the package.
     </li> 
     
   
@@ -198,7 +198,12 @@ Project is a concept to describe all the data to be used by a given model. Data 
     
   
     <li>
-	  <strong>title</strong>: A string with the title of the Project.
+	  <strong>title</strong>: An optional string with the title of the Project.
+    </li> 
+    
+  
+    <li>
+	  <strong>...</strong>: Names of layers to be created from files. Each argument that has a string as value and does not belong to the arguments above will be converted into a layer. The name of the attribute will be used as layer name and its value as file name where data is stored. It can be a shapefile or a tiff.
     </li> 
     
   
@@ -213,9 +218,20 @@ Project is a concept to describe all the data to be used by a given model. Data 
 <h3>Usage</h3>
 <pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
 
-<span class="id">proj</span> = <span class="function">Project</span>{
+<span class="id">proj1</span> = <span class="function">Project</span>{
     <span class="id">file</span> = <span class="string">"myproject.tview"</span>
-}</code></pre>
+}
+
+<span class="id">proj2</span> = <span class="function">Project</span>{
+    <span class="id">file</span> = <span class="string">"itaituba.tview"</span>,
+    <span class="id">clean</span> = <span class="reserved">true</span>,
+    <span class="id">deforestation</span> = <span class="id">filePath</span>(<span class="string">"desmatamento_2000.tif"</span>, <span class="string">"terralib"</span>),
+    <span class="id">altimetria</span> = <span class="id">filePath</span>(<span class="string">"altimetria.tif"</span>, <span class="string">"terralib"</span>),
+    <span class="id">localidades</span> = <span class="id">filePath</span>(<span class="string">"Localidades_pt.shp"</span>, <span class="string">"terralib"</span>),
+    <span class="id">roads</span> = <span class="id">filePath</span>(<span class="string">"Rodovias_lin.shp"</span>, <span class="string">"terralib"</span>),
+    <span class="id">setores</span> = <span class="id">filePath</span>(<span class="string">"Setores_Censitarios_2000_pol.shp"</span>, <span class="string">"terralib"</span>)
+}
+</code></pre>
 
 
 

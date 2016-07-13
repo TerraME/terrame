@@ -1530,7 +1530,7 @@ Lock a file or a part of it. This function works on open files; the file handle 
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">filehandle</span> = <span class="id">io</span>.<span class="id">open</span>(<span class="id">filePath</span>(<span class="string">"agents.csv"</span>, <span class="string">"base"</span>), <span class="string">"r"</span>)
+<pre class="example"><code><span class="id">filehandle</span> = <span class="id">openFile</span>(<span class="id">filePath</span>(<span class="string">"agents.csv"</span>, <span class="string">"base"</span>), <span class="string">"r"</span>)
 <span class="function">lock</span>(<span class="id">filehandle</span>, <span class="string">"r"</span>)
 <span class="id">unlock</span>(<span class="id">filehandle</span>)</code></pre>
 
@@ -1734,7 +1734,7 @@ Remove an existing file. If the file does not exist or it cannot be removed, thi
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">file</span> = <span class="id">io</span>.<span class="id">open</span>(<span class="string">"myfile.txt"</span>, <span class="string">"w"</span>)
+<pre class="example"><code><span class="id">file</span> = <span class="id">openFile</span>(<span class="string">"myfile.txt"</span>, <span class="string">"w"</span>)
 <span class="id">file</span>:<span class="id">close</span>()
 
 <span class="function">rmFile</span>(<span class="string">"myfile.txt"</span>)</code></pre>
@@ -1938,7 +1938,7 @@ Unlock a file or a part of it. This function works on open files; the file handl
 
 
 <h3>Usage</h3>
-<pre class="example"><code><span class="id">filehandle</span> = <span class="id">io</span>.<span class="id">open</span>(<span class="id">filePath</span>(<span class="string">"agents.csv"</span>, <span class="string">"base"</span>), <span class="string">"r"</span>)
+<pre class="example"><code><span class="id">filehandle</span> = <span class="id">openFile</span>(<span class="id">filePath</span>(<span class="string">"agents.csv"</span>, <span class="string">"base"</span>), <span class="string">"r"</span>)
 <span class="id">lock</span>(<span class="id">filehandle</span>, <span class="string">"r"</span>)
 <span class="function">unlock</span>(<span class="id">filehandle</span>)</code></pre>
 

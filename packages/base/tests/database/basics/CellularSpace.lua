@@ -787,7 +787,7 @@ return{
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
 
-		terralib.Layer{
+		local layer = terralib.Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
@@ -800,9 +800,17 @@ return{
 		}
 
 		local cs = CellularSpace{
+			layer = layer
+		}
+
+		unitTest:assertEquals(#cs, 303)
+
+		cs = CellularSpace{
 			project = proj,
 			layer = clName1
 		}
+
+		unitTest:assertEquals(#cs, 303)
 
 		forEachCell(cs, function(cell)
 			cell.t0 = 1000
@@ -812,7 +820,7 @@ return{
 
 		cs:save(cellSpaceLayerNameT0, "t0")
 
-		local layer = terralib.Layer{
+		layer = terralib.Layer{
 			project = proj,
 			name = cellSpaceLayerNameT0
 		}

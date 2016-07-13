@@ -132,11 +132,14 @@ return {
 		}
 		
 		local clName1 = "cells"
+		
+		local shapes = {}
+		
 		local shp1 = clName1..".shp"
-
 		if isFile(shp1) then
 			rmFile(shp1)
 		end
+		table.insert(shapes, shp1)
 
 		local cl = Layer{
 			project = proj,
@@ -147,29 +150,18 @@ return {
 			file = clName1..".shp"
 		}
 
-		local shapes = {}
 
 		-- MODE
-
-		local modeTifLayerName = clName1.."_"..prodes.."_mode"
-		local shp = modeTifLayerName..".shp"
-
-		table.insert(shapes, shp)
-		
-		if isFile(shp) then
-			rmFile(shp)
-		end
 
 		cl:fill{
 			operation = "mode",
 			attribute = "prod_mode",
-			layer = prodes,
-			output = modeTifLayerName
+			layer = prodes
 		}
 
 		local cs = CellularSpace{
 			project = proj,
-			layer = modeTifLayerName 
+			layer = cl.name 
 		}
 
 		local count = 0
@@ -194,25 +186,15 @@ return {
 
 		-- MINIMUM
 
-		local minTifLayerName = clName1.."_"..prodes.."_min"		
-		shp = minTifLayerName..".shp"
-
-		table.insert(shapes, shp)
-		
-		if isFile(shp) then
-			rmFile(shp)
-		end
-
 		cl:fill{
 			operation = "minimum",
 			attribute = "prod_min",
-			layer = prodes,
-			output = minTifLayerName
+			layer = prodes
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = minTifLayerName 
+			layer = cl.name 
 		}
 
 		forEachCell(cs, function(cell)
@@ -232,25 +214,15 @@ return {
 
 		-- MAXIMUM
 
-		local maxTifLayerName = clName1.."_"..prodes.."_max"		
-		shp = maxTifLayerName..".shp"
-
-		table.insert(shapes, shp)
-		
-		if isFile(shp) then
-			rmFile(shp)
-		end
-
 		cl:fill{
 			operation = "maximum",
 			attribute = "prod_max",
-			layer = prodes,
-			output = maxTifLayerName
+			layer = prodes
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = maxTifLayerName 
+			layer = cl.name 
 		}
 
 		forEachCell(cs, function(cell)
@@ -270,25 +242,15 @@ return {
 
 		-- SUM
 
-		local sumTifLayerName = clName1.."_"..prodes.."_sum"		
-		shp = sumTifLayerName..".shp"
-
-		table.insert(shapes, shp)
-		
-		if isFile(shp) then
-			rmFile(shp)
-		end
-
 		cl:fill{
 			operation = "sum",
 			attribute = "prod_sum",
-			layer = prodes,
-			output = sumTifLayerName
+			layer = prodes
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = sumTifLayerName 
+			layer = cl.name 
 		}
 
 		forEachCell(cs, function(cell)
@@ -309,25 +271,15 @@ return {
 
 		-- COVERAGE
 
-		local covTifLayerName = clName1.."_"..prodes.."_cov"		
-		shp = covTifLayerName..".shp"
-
-		table.insert(shapes, shp)
-		
-		if isFile(shp) then
-			rmFile(shp)
-		end
-
 		cl:fill{
 			operation = "coverage",
 			attribute = "cov",
-			layer = prodes,
-			output = covTifLayerName
+			layer = prodes
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = covTifLayerName 
+			layer = cl.name 
 		}
 
 		local cov = {0, 49, 169, 253, 254}
@@ -375,11 +327,8 @@ return {
 		}
 
 		if isFile("mycells.shp") then rmFile("mycells.shp") end
-		if isFile("mycells-avg.shp") then rmFile("mycells-avg.shp") end
-
 		table.insert(shapes, "mycells.shp")
-		table.insert(shapes, "mycells-avg.shp")
-
+		
 		cl = Layer{
 			project = proj,
 			file = "mycells.shp",
@@ -391,13 +340,12 @@ return {
 		cl:fill{
 			operation = "average",
 			layer = "altimetria",
-			output = "mycells-avg",
 			attribute = "height"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = "mycells-avg"
+			layer = cl.name
 		}
 
 		map = Map{
@@ -412,20 +360,16 @@ return {
 		unitTest:assertSnapshot(map, "tiff-average.png")
 
 		-- STDEV
-		if isFile("cells-std.shp") then rmFile("cells-std.shp") end
-
-		table.insert(shapes, "cells-std.shp")
 
 		cl:fill{
 			operation = "stdev",
 			layer = "altimetria",
-			output = "cells-std",
 			attribute = "std"
 		}
 
 		cs = CellularSpace{
 			project = proj,
-			layer = "cells-std"
+			layer = cl.name
 		}
 
 		map = Map{
@@ -461,6 +405,8 @@ return {
 		}
 
 		unitTest:assertEquals(l:representation(), "raster")
+		
+		unitTest:assertFile(projName)
 	end,
 	bands = function(unitTest)
 		local projName = "cellular_layer_fill_tiff_repr.tview"

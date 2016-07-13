@@ -55,6 +55,12 @@ return{
 		copy.age = 2
 
 		unitTest:assertEquals(animal.age, 5)
+	end,    
+	closeFile = function(unitTest)
+		local fopen = io.open("test.csv", "a+")
+		local data = closeFile(fopen)
+		unitTest:assert(data)
+		rmFile("test.csv")
 	end,
 	d = function(unitTest)
 		local df = function(x, y) return y - x ^ 2 + 1 end
@@ -852,6 +858,13 @@ return{
 		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
 		unitTest:assertEquals(sumvalue, 0.1 + 0.04 + 0.3 + 0.07)
 	end,
+	openFile = function(unitTest)
+		local fopen = openFile("test.csv", "a+") 
+		local sfile = fopen:read("*all")
+		closeFile(fopen)
+		unitTest:assertEquals(sfile, "")
+		rmFile("test.csv")
+	end,
 	round = function(unitTest)
 		unitTest:assertEquals(round(5.22), 5)
 		unitTest:assertEquals(round(5.2235, 3), 5.224)
@@ -954,6 +967,14 @@ return{
 }]]
 
 		unitTest:assertEquals(actual, expected, 1)
+
+        local t = {x = true}
+        
+        local y = (vardump(t))
+
+		unitTest:assertEquals(y, [[{
+    x = true
+}]])
 	end
 }
 

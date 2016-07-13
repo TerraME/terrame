@@ -70,6 +70,10 @@
 							<font color="red"><%="undefined"%></font>
 						<%end%>
 
+						<%if data.projection then%>
+							<br><b>Projection: </b><%=data.projection%>
+						<%end%>
+
 						<%if data.reference then%>
 							<br><b>Reference: </b><%=data.reference%>
 						<%end%>
