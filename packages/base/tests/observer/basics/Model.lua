@@ -38,11 +38,11 @@ return{
 
 		local tube = Tube{}
 
-		Chart{
+		local ch1 = Chart{
 			target = tube
 		}
 
-		Chart{
+		local ch2 = Chart{
 			target = tube,
 			select = "v2"
 		}
@@ -50,32 +50,34 @@ return{
 		tube:notify()
 		tube:run(10)
 		tube:notify(11)
-		unitTest:assert(true)
+
+		unitTest:assertSnapshot(ch1, "chart-model-1.png")
+		unitTest:assertSnapshot(ch2, "chart-model-2.png")
 	end,
 	notify = function(unitTest)
 		local Tube = Model{
-			water = 200,
+			waterValue = 200,
 			init = function(model)
 				model.finalTime = 100
 				model.timer = Timer{
 					Event{action = function(e)
-						model.water = model.water - 1
+						model.waterValue = model.waterValue - 1
 						model:notify(e)
 					end}
 				}
 			end
 		}
 
-		local m = Tube{water = 100}
+		local m = Tube{waterValue = 100}
 
-		Chart{
+		local ch = Chart{
 			target = m,
-			select = "water"
+			select = "waterValue"
 		}
 
 		m:run()
 
-		unitTest:assert(true)
+		unitTest:assertSnapshot(ch, "chart-model-3.png")
 	end
 }
 

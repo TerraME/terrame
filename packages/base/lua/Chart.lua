@@ -200,7 +200,8 @@ metaTableChart_ = {__index = Chart_}
 -- used in arguments select and xAxis. If not using xAxis, it will draw the time according to the
 -- positions of the values. When using data, argument target becomes unnecessary. This argument
 -- will automatically be converted to a Cell, in order to allow using Cell:notify().
--- @arg attrTab.title An overall title to the Chart.
+-- @arg attrTab.title An overall title to the Chart. The default value is "". In the case of
+-- instances of Models, the default is Model:title().
 -- @arg attrTab.symbol The symbol to be used to draw the points of the Chart. It can be a string to
 -- be used by all lines, or a vector of strings, describing the symbol for each line. The available
 -- values are: "square", "diamond", "triangle", "ltriangle" (left), "dtriangle" (downwards triangle),
@@ -295,7 +296,12 @@ function Chart(attrTab)
 	})
 
 	defaultTableValue(attrTab, "yLabel", "")
-	defaultTableValue(attrTab, "title",  "")
+
+	if isModel(attrTab.target) then
+		defaultTableValue(attrTab, "title",  attrTab.target:title())
+	else
+		defaultTableValue(attrTab, "title",  "")
+	end
 
 	optionalTableArgument(attrTab, "xAxis", "string")
 
