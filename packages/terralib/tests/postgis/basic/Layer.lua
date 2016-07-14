@@ -341,7 +341,7 @@ return {
 		rmFile(proj.file)
 		tl:dropPgTable(pgData)
 	end,
-	properties = function(unitTest)
+	attributes = function(unitTest)
 		local projName = "layer_basic.tview"
 
 		local proj = Project{
@@ -394,7 +394,7 @@ return {
 			database = database
 		}			
 		
-		local propNames = layer:properties()
+		local propNames = layer:attributes()
 		
 		for i = 1, #propNames do
 			unitTest:assert((propNames[i] == "id") or (propNames[i] == "geom") or 
