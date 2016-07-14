@@ -916,6 +916,13 @@
 							
 								
 									<tr>
+										<td class="name" nowrap><a href="#forEachModel">forEachModel</a>&nbsp;
+<td class="summary">Second order function to transverse the instances of <a href=files/Model.html>Models</a> within a given <a href=files/Environment.html>Environment</a>.</td>
+									</tr>
+								
+							
+								
+									<tr>
 										<td class="name" nowrap><a href="#forEachNeighbor">forEachNeighbor</a>&nbsp;
 <td class="summary">Second order function to transverse a given <a href=files/Neighborhood.html>Neighborhood</a> of a <a href=files/Cell.html>Cell</a>, applying a function in each of its neighbors.</td>
 									</tr>
@@ -2207,6 +2214,81 @@ Second order function to transverse a given directory, applying a given function
 	</li>
 	
 </ul>
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="forEachModel">
+
+	</a><strong>forEachModel</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Second order function to transverse the instances of <a href=../files/Model.html>Models</a> within a given <a href=../files/Environment.html>Environment</a>. It applies a given function on each of its instances. If any of the function calls returns false, forEachModel() stops and returns false, otherwise it returns true.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: An Environment.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A user-defined function that takes an instance of Model as first argument and its name within the Environment as second argument.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">MyTube</span> = <span class="function">Model</span>{
+    <span class="id">water</span> = <span class="number">200</span>,
+    <span class="id">sun</span> = <span class="function">Choice</span>{<span class="id">min</span> = <span class="number">0</span>, <span class="id">default</span> = <span class="number">10</span>},
+    <span class="id">init</span> = <span class="reserved">function</span>(<span class="id">model</span>)
+        <span class="id">model</span>.<span class="id">finalTime</span> = <span class="number">100</span>
+
+        <span class="id">model</span>.<span class="id">timer</span> = <span class="function">Timer</span>{
+            <span class="function">Event</span>{<span class="id">action</span> = <span class="reserved">function</span>()
+                <span class="comment">-- ...</span>
+            <span class="reserved">end</span>}
+        }
+    <span class="reserved">end</span>
+}
+	
+<span class="id">e</span> = <span class="function">Environment</span>{
+    <span class="id">scenario0</span> = <span class="id">MyTube</span>{},
+    <span class="id">scenario1</span> = <span class="id">MyTube</span>{<span class="id">water</span> = <span class="number">100</span>},
+    <span class="id">scenario2</span> = <span class="id">MyTube</span>{<span class="id">water</span> = <span class="number">100</span>, <span class="id">sun</span> = <span class="number">5</span>},
+    <span class="id">scenario3</span> = <span class="id">MyTube</span>{<span class="id">water</span> = <span class="number">100</span>, <span class="id">sun</span> = <span class="number">10</span>}
+}
+
+<span class="function">forEachModel</span>(<span class="id">e</span>, <span class="reserved">function</span>(<span class="id">model</span>, <span class="id">name</span>)
+    <span class="id">print</span>(<span class="id">name</span>..<span class="string">"  "</span>..<span class="id">model</span>:<span class="id">title</span>())
+<span class="reserved">end</span>)</code></pre>
+
+
+
 
 </dd>
 
