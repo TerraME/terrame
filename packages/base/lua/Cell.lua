@@ -221,6 +221,18 @@ Cell_ = {
 
 		self.cObj_:notify(modelTime)
 	end,
+	--- An optional user-defined function that is activated just after one calls Cell:synchronize().
+	-- @usage cell = Cell{
+	--     value = 3,
+	--     on_synchronize = function(self)
+	--         self.value = 0
+	--     end
+	-- }
+	--
+	-- cell:synchronize()
+	-- print(cell.value) -- 0
+	on_synchronize = function(self)
+	end,
 	--- Return a random Cell from a Neighborhood of the Cell.
 	-- @arg id A string with the name of the Neighborhood. The default value is "1".
 	-- @see Cell:getNeighborhood
@@ -264,7 +276,8 @@ Cell_ = {
 	--- Synchronizes the Cell. TerraME can keep two copies of the attributes of a Cell in memory:
 	-- one stores the past values and the other stores the current (present) values. Synchronize
 	-- copies the current values to a table named past, within the Cell. The previous past is
-	-- therefore overwritten.
+	-- therefore overwritten. In the end synchronize, it calls Cell:on_synchronize() if
+	-- it exists.
 	-- @usage cell = Cell{value = 5}
 	--
 	-- cell:synchronize()
@@ -276,6 +289,10 @@ Cell_ = {
 			if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
 				self.past[k] = v
 			end
+		end
+
+		if type(self.on_synchronize) == "function" then
+			self:on_synchronize()
 		end
 	end,
 	--- Return the Cell area.

@@ -1124,6 +1124,8 @@ CellularSpace_ = {
 	--- Synchronize the CellularSpace, calling the function synchronize() for each of its Cells.
 	-- @arg values A string or a vector of strings with the attributes to be synchronized. If 
 	-- empty, TerraME synchronizes every attribute of the Cells but the (x, y) coordinates.
+	-- If the CellularSpace has an instance and it implements Cell:on_synchronize() then it
+	-- will be called for each Cell.
 	-- @usage cell = Cell{
 	--     forest = Random{min = 0, max = 1}
 	-- }
@@ -1165,7 +1167,9 @@ CellularSpace_ = {
 			end
 		end
 
-		s = s.."} end"
+		s = s.."} "
+		s = s.."if type(cell.on_synchronize) == 'function' then cell:on_synchronize() end "
+		s = s.."end"
 
 		forEachCell(self, load(s)())
 	end
@@ -1452,7 +1456,7 @@ function CellularSpace(data)
 			end
 
 			if data.instance[idx] then
-				if type(value) == "function" then
+				if type(value) == "function" and idx ~= "on_synchronize" then
 					strictWarning("Function '"..idx.."()' from Cell is replaced in the instance.")
 				end
 			else
