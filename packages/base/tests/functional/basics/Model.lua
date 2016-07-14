@@ -117,6 +117,7 @@ soilCap          number [4]
 soilInf          number [5]
 subwater         number [4]
 timer            Timer
+title            function
 type_            string [Tube]
 water            number [200]
 ]])
@@ -249,6 +250,31 @@ water            number [200]
 	end,
 	configure = function(unitTest)
 		unitTest:assert(true)
+	end,
+	title = function(unitTest)
+		local MyTube = Model{
+			initialWater = 200,
+			sun = Choice{min = 0, default = 10},
+			init = function(model)
+				model.finalTime = 100
+
+				model.timer = Timer{
+					Event{action = function(ev) end}
+				}
+			end
+		}
+	
+		local scenario0 = MyTube{}
+		unitTest:assertEquals("Default", scenario0:title())
+
+		local scenario1 = MyTube{initialWater = 100}
+		unitTest:assertEquals("Initial Water = 100", scenario1:title())
+
+		local scenario2 = MyTube{initialWater = 100, sun = 5}
+		unitTest:assertEquals("Initial Water = 100, Sun = 5", scenario2:title())
+
+		local scenario3 = MyTube{initialWater = 100, sun = 10}
+		unitTest:assertEquals("Initial Water = 100", scenario3:title())
 	end
 }
 
