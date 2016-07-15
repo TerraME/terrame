@@ -503,10 +503,7 @@ function Model(attrTab)
 						local msg = "Argument '"..name.."."..mname.."' is unnecessary."
 
 						local s = suggestion(mname, attrTabValue)
-						if s then
-							msg = msg.." Do you mean '"..name.."."..s.."'?"
-						end
-
+						msg = msg..suggestionMsg(name.."."..s)
 						customWarning(msg)
 					end
 				end)

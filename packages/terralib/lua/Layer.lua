@@ -607,10 +607,7 @@ Layer_ = {
 				local msg = "Selected attribute '"..data.select.."' does not exist in layer '"..data.layer.name.."'."
 
 				local sugg = suggestion(data.select, data.layer:properties())
-
-				if sugg then
-					msg = msg.." Do you mean '"..sugg.."'?"
-				end
+				msg = msg..suggestionMsg(sugg)
 
 				customError(msg)
 			end
@@ -743,10 +740,7 @@ function Layer(data)
 		if not data.project.layers[data.name] then
 			local msg = "Layer '"..data.name.."' does not exist in Project '"..data.project.file.."'."
 			local sug = suggestion(data.name, data.project.layers)
-
-			if sug then
-				msg = msg.." Do you mean '"..sug.."'?"
-			end
+			msg = msg..suggestionMsg(sug)
 
 			customError(msg)
 		end

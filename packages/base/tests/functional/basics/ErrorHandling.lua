@@ -237,6 +237,16 @@ return{
 		unitTest:assertEquals(suggestion("aaaab", t), "aaaaa")
 		unitTest:assertNil(suggestion("ddddd", t))
 	end,
+	suggestionMsg = function(unitTest)
+		local t = {
+			aaaaa = true,
+			bbbbb = true,
+			ccccc = true
+		}
+
+		unitTest:assertEquals(suggestionMsg(suggestion("aaaab", t)), " Do you mean 'aaaaa'?")
+		unitTest:assertEquals(suggestionMsg(nil), "")
+	end,
 	switchInvalidArgument = function(unitTest)
 		local t = {
 			aaaaa = true,
