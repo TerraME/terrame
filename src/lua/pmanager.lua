@@ -123,7 +123,6 @@ local function aboutButtonClicked()
 	local info = packageInfo(comboboxPackages.currentText)
 
 	msg = msg.."\n\nVersion: "..tostring(info.version)
-	msg = msg.."\n\nDate: "..tostring(info.date)
 	msg = msg.."\n\nAuthors: "..tostring(info.authors)
 	msg = msg.."\n\nContact: "..tostring(info.contact)
 

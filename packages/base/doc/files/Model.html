@@ -987,6 +987,7 @@ Some attributes of Model have internal semantics. They can be used as <b>read-on
 
 <span class="id">MyTube</span> = <span class="id">Tube</span>{<span class="id">initialWater</span> = <span class="number">50</span>} <span class="comment">-- ... or create instances using it</span>
 <span class="id">print</span>(<span class="id">type</span>(<span class="id">MyTube</span>)) <span class="comment">-- "Tube"</span>
+<span class="id">print</span>(<span class="id">MyTube</span>:<span class="id">title</span>()) <span class="comment">-- "Initial Water = 50"</span>
 <span class="id">MyTube</span>:<span class="id">run</span>()
 
 <span class="id">pcall</span>(<span class="reserved">function</span>() <span class="id">MyTube2</span> = <span class="id">Tube</span>{<span class="id">initialwater</span> = <span class="number">100</span>} <span class="reserved">end</span>)
@@ -1056,6 +1057,13 @@ Some attributes of Model have internal semantics. They can be used as <b>read-on
 									<tr>
 										<td class="name" nowrap><a href="#run">run</a>&nbsp;
 <td class="summary">Run the Model instance.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#title">title</a>&nbsp;
+<td class="summary">Return a title for the Model instance according to its parameters.</td>
 									</tr>
 								
 							
@@ -1477,6 +1485,62 @@ Run the Model instance. It requires that the Model instance has attribute finalT
 <span class="id">m</span> = <span class="id">Tube</span>{<span class="id">initialWater</span> = <span class="number">100</span>, <span class="id">flow</span> = <span class="number">10</span>}
 
 <span class="id">m</span>:<span class="function">run</span>()</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="title">
+
+	</a><strong>title</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return a title for the Model instance according to its parameters. It uses only the parameters that are different from the default values. If the Model was instantiated without any parameter, its title will be "default".<br><br></span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">Tube</span> = <span class="function">Model</span>{
+    <span class="id">water</span> = <span class="number">200</span>,
+    <span class="id">init</span> = <span class="reserved">function</span>(<span class="id">model</span>)
+        <span class="id">model</span>.<span class="id">finalTime</span> = <span class="number">100</span>
+
+        <span class="function">Chart</span>{
+            <span class="id">target</span> = <span class="id">model</span>,
+            <span class="id">select</span> = <span class="string">"water"</span>
+        }
+
+        <span class="id">model</span>.<span class="id">timer</span> = <span class="function">Timer</span>{
+            <span class="function">Event</span>{<span class="id">action</span> = <span class="reserved">function</span>(<span class="id">ev</span>)
+                <span class="id">model</span>.<span class="id">water</span> = <span class="id">model</span>.<span class="id">water</span> - <span class="number">1</span>
+                <span class="id">model</span>:<span class="id">notify</span>(<span class="id">ev</span>)
+            <span class="reserved">end</span>}
+        }
+    <span class="reserved">end</span>
+}
+
+<span class="id">scenario1</span> = <span class="id">Tube</span>{<span class="id">water</span> = <span class="number">100</span>}
+<span class="id">print</span>(<span class="id">scenario1</span>:<span class="function">title</span>()) <span class="comment">-- "water = 100"</span></code></pre>
 
 
 

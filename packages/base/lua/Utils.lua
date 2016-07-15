@@ -26,8 +26,10 @@
 
 local observers
 
-local deadObserverMetaTable_ = {__index = function(_, idx)
+local deadObserverMetaTable_ = {__index = function(self, idx)
 	if idx == "type_" then return "<DestroyedObserver>" end
+	if idx == "update" then return function() end end
+	if idx == "parent" then return self end
 
     customError("Trying to call a function of an observer that was destroyed.")
 end}
@@ -694,6 +696,49 @@ function forEachFile(directory, _sof_)
 	for i = 1, #directory do
 		if _sof_(directory[i]) == false then return false end
 	end
+
+	return true
+end
+
+--- Second order function to transverse the instances of Models within a given Environment.
+-- It applies a given function on each of its instances. If any of the function calls returns
+-- false, forEachModel() stops and returns false, otherwise it returns true.
+-- @arg env An Environment.
+-- @arg _sof_ A user-defined function that takes an instance of Model as first argument and
+-- its name within the Environment as second argument.
+-- @usage MyTube = Model{
+--     water = 200,
+--     sun = Choice{min = 0, default = 10},
+--     init = function(model)
+--         model.finalTime = 100
+--
+--         model.timer = Timer{
+--             Event{action = function()
+--                 -- ...
+--             end}
+--         }
+--     end
+-- }
+-- 	
+-- e = Environment{
+--     scenario0 = MyTube{},
+--     scenario1 = MyTube{water = 100},
+--     scenario2 = MyTube{water = 100, sun = 5},
+--     scenario3 = MyTube{water = 100, sun = 10}
+-- }
+--
+-- forEachModel(e, function(model, name)
+--     print(name.."  "..model:title())
+-- end)
+function forEachModel(env, _sof_)
+	mandatoryArgument(1, "Environment", env)
+	mandatoryArgument(2, "function", _sof_)
+
+	forEachOrderedElement(env, function(idx, value)
+		if isModel(value) then
+			if _sof_(value, idx) == false then return false end 
+		end
+	end)
 
 	return true
 end

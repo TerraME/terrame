@@ -445,7 +445,7 @@ return {
 		
 		rmFile(proj.file)
 	end,
-	properties = function(unitTest)
+	attributes = function(unitTest)
 		local projName = "tif_basic.tview"
 
 		local proj = Project{
@@ -461,7 +461,7 @@ return {
 			file = filePath("PRODES_5KM.tif", "terralib")
 		}
 		
-		local props = layer:properties()
+		local props = layer:attributes()
 		
 		unitTest:assertNil(props)
 		

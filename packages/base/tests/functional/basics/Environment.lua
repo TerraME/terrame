@@ -190,6 +190,14 @@ return{
 		unitTest:assertEquals(m1.water, 10)
 		unitTest:assertEquals(m2.water, 10)
 	end,
+	add = function(unitTest)
+		local e = Environment{}
+
+		e:add(Event{action = function() end})
+
+		unitTest:assertType(e[1], "Timer")
+		unitTest:assertEquals(#e[1], 1)
+	end,
 	__tostring = function(unitTest)
 		local cs1 = CellularSpace{xdim = 2}
 		local ag1 = Agent{}

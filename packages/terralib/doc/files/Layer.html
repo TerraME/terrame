@@ -442,6 +442,13 @@ A Layer of cells that belongs to a <a href=../files/Project.html>Project</a>. It
 							
 								
 									<tr>
+										<td class="name" nowrap><a href="#attributes">attributes</a>&nbsp;
+<td class="summary">The attribute names of the Layer.</td>
+									</tr>
+								
+							
+								
+									<tr>
 										<td class="name" nowrap><a href="#bands">bands</a>&nbsp;
 <td class="summary">Return the number of bands of a raster layer.</td>
 									</tr>
@@ -458,13 +465,6 @@ A Layer of cells that belongs to a <a href=../files/Project.html>Project</a>. It
 									<tr>
 										<td class="name" nowrap><a href="#projection">projection</a>&nbsp;
 <td class="summary">Return the Layer's projection.</td>
-									</tr>
-								
-							
-								
-									<tr>
-										<td class="name" nowrap><a href="#properties">properties</a>&nbsp;
-<td class="summary">The attribute names of the Layer.</td>
 									</tr>
 								
 							
@@ -492,6 +492,44 @@ A Layer of cells that belongs to a <a href=../files/Project.html>Project</a>. It
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
+<dt><h2><a name="attributes">
+
+	</a><strong>attributes</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+The attribute names of the Layer. It returns a vector of strings, whose size is the number of attributes.</span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
+
+<span class="id">print</span>(<span class="id">vardump</span>(<span class="id">layer</span>:<span class="function">attributes</span>()))</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
 <dt><h2><a name="bands">
 
 	</a><strong>bands</strong>&nbsp;
@@ -502,7 +540,7 @@ A Layer of cells that belongs to a <a href=../files/Project.html>Project</a>. It
 
 <span class="description">
 
-Return the number of bands of a raster layer. If the layer does not have a raster representation then it will stop with an error. The bands of the raster layer are named from zero to the number of bands minus one.</span>
+Return the number of bands of a raster layer. If the layer does not have a raster representation then it will stop with an error. The bands of the raster layer are named from zero to the number of bands minus one.<br><br></span>
 
 
 
@@ -1118,44 +1156,6 @@ Return the Layer's projection. It contains the name of the projection, its Spati
 <pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
 
 <span class="id">print</span>(<span class="id">layer</span>:<span class="function">projection</span>())</code></pre>
-
-
-
-
-</dd>
-
-
-						    	
-							
-									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-
-<dt><h2><a name="properties">
-
-	</a><strong>properties</strong>&nbsp;
-
-</h2></dt>
-<dd>
-
-
-<span class="description">
-
-The attribute names of the Layer. It returns a vector of strings, whose size is the number of attributes.<br><br></span>
-
-
-
-
-
-
-
-
-
-
-<h3>Usage</h3>
-<pre class="example"><code><span class="id">import</span>(<span class="string">"terralib"</span>)
-
-<span class="id">print</span>(<span class="id">vardump</span>(<span class="id">layer</span>:<span class="function">properties</span>()))</code></pre>
 
 
 
