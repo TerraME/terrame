@@ -340,9 +340,7 @@ return{
 				model.finalTime = 100
 
 				model.timer = Timer{
-					Event{action = function(ev)
-						-- ...
-					end}
+					Event{action = function() end}
 				}
 			end
 		}
@@ -366,7 +364,7 @@ return{
 
 		count = 0
 
-		forEachModel(e, function(model, name)
+		forEachModel(e, function()
 			count = count + 1
 			return false
 		end)

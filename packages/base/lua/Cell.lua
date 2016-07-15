@@ -231,7 +231,7 @@ Cell_ = {
 	--
 	-- cell:synchronize()
 	-- print(cell.value) -- 0
-	on_synchronize = function(self)
+	on_synchronize = function()
 	end,
 	--- Return a random Cell from a Neighborhood of the Cell.
 	-- @arg id A string with the name of the Neighborhood. The default value is "1".

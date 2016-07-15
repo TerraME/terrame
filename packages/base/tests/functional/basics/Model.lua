@@ -259,7 +259,7 @@ water            number [200]
 				model.finalTime = 100
 
 				model.timer = Timer{
-					Event{action = function(ev) end}
+					Event{action = function() end}
 				}
 			end
 		}

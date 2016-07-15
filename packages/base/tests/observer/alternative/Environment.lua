@@ -73,7 +73,7 @@ return{
 		end
 		unitTest:assertError(error_func, "There is no Model instance within the Environment.")
 
-		local error_func = function()
+		error_func = function()
 			c = Chart{
 				target = e,
 				select = "infected",
@@ -82,14 +82,14 @@ return{
 		end
 		unitTest:assertError(error_func, defaultValueMsg("title", "Infected"))
 
-		local error_func = function()
+		error_func = function()
 			c = Chart{
 				target = e
 			}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("select"))
 
-		local error_func = function()
+		error_func = function()
 			c = Chart{
 				target = e,
 				select = "infected",
