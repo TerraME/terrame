@@ -6,7 +6,7 @@
 -- This framework is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU Lesser General Public
 -- License as published by the Free Software Foundation; either
--- version 2.1 of the License, or (at your option) any later version.
+-- version 2.3 of the License, or (at your option) any later version.
 
 -- You should have received a copy of the GNU Lesser General Public
 -- License along with this library.
@@ -33,37 +33,24 @@ return {
 			limit = filePath("Limit_pol.shp", "terralib")
 		}
 
-		local count = 0
+		local error_func = function()
+			forEachLayer()
+		end
 
-		forEachLayer(project, function(layer)
-			unitTest:assertType(layer, "Layer")
-			count = count + 1
-		end)
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Project"))
 
-		unitTest:assertEquals(count, 4)
-	end,
-	getFileNameWithExtension = function(unitTest)
-		unitTest:assertEquals(getFileNameWithExtension("/my/path/file.txt"), "file.txt")
-	end,
-	removeFileExtension = function(unitTest)
-		unitTest:assertEquals(removeFileExtension("file.txt"), "file")
-	end,
-	getFileName = function(unitTest)
-		unitTest:assertEquals(getFileName("/my/path/file.txt"), "file")
-	end,	
-	getFilePathAndNameAndExtension = function(unitTest)
-		local p, n, e = getFilePathAndNameAndExtension("/my/path/file.txt")
-		unitTest:assertEquals(p, "/my/path/")
-		unitTest:assertEquals(n, "file")
-		unitTest:assertEquals(e, "txt")
-	end,	
-	getFileExtension = function(unitTest)
-		local e = getFileExtension("/my/path/file.txt")
-		unitTest:assertEquals(e, "txt")
-	end,
-	getFileDir = function(unitTest)
-		local p = getFileDir("/my/path/file.txt")
-		unitTest:assertEquals(p, "/my/path/")
+		error_func = function()
+			forEachLayer(nil, function() end)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Project"))
+
+		error_func = function()
+			forEachLayer(project)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
+
 	end
 }
 

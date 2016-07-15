@@ -101,8 +101,6 @@ local function lineTable(filename)
 		local state = "code"
 
 		while true do
-			local c = string.sub(line, pos, pos)
-
 			if string.match(line, "function") then break end
 			if string.match(line, "else")     then break end
 			if string.match(line, "end")      then break end
@@ -116,12 +114,14 @@ local function lineTable(filename)
 			if string.match(line, "io.close") then break end
 			if string.match(line, "SKIP")     then break end
 
+			local c = string.sub(line, pos, pos)
+
 			if state == "code" then
 				if c == "" then
 					break
 				elseif c == "-" then
 					state = "-"
-				elseif c ~= " " or c ~= "\t" then
+				elseif c ~= " " and c ~= "\t" then
 					mtable[count] = 0
 					break
 				end

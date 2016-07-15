@@ -42,7 +42,7 @@
 					<dl class="function">
 						<%for _, filepath in ipairs(doc.files) do%>
 							<%if doc.files[filepath].type == "model" then%>
-								<dt><a name="<%=doc.files[filepath].doc[1].name%>"><h2><%=doc.files[filepath].doc[1].name%></h2></dt>
+								<dt><h2><a name="<%=doc.files[filepath].doc[1].name%>" href= <%="../../lua/"..doc.files[filepath].doc[1].name..".lua"%>><%=doc.files[filepath].doc[1].name%></a></h2></dt>
 									<%func = doc.files[filepath].doc[1]%>
 									<% if func.image then %>
 										<% loc = "../../images/"..func.image %>

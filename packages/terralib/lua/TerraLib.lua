@@ -71,6 +71,13 @@ local RasterAttributeCreatedMapper = {
 	sum = "_Sum"
 }
 
+local SourceTypeMapper = {
+	OGR = {"shp", "geojson"},
+	GDAL = {"tif", "nc", "asc"},
+	POSTGIS = "postgis",
+	ADO = "access"
+}
+
 local function decodeUri(str)
 	str = string.gsub(str, "+", " ")
 	str = string.gsub(str, "%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end)
@@ -173,7 +180,7 @@ end
 local function makeAndOpenDataSource(connInfo, type)
 	local ds = binding.te.da.DataSourceFactory.make(type)
 
-	ds:setConnectionInfo(connInfo) 
+	ds:setConnectionInfo(connInfo)
 	ds:open()
 
 	return ds
@@ -201,13 +208,13 @@ local function createLayer(name, dSetName, connInfo, type)
 	local layer
 
 	do
-		local dsId = addDataSourceInfo(type, name, connInfo)	
+		local dsId = addDataSourceInfo(type, name, connInfo)
 
 		local ds = makeAndOpenDataSource(connInfo, type)
 		ds:setId(dsId)
-	
+
 		binding.te.da.DataSourceManager.getInstance():insert(ds)
-	
+
 		local dSetType
 		local dSet
 		local env = nil
@@ -221,7 +228,7 @@ local function createLayer(name, dSetName, connInfo, type)
 			if not hasShapeFileSpatialIndex(connInfo.URI) and connInfo.SPATIAL_IDX then
 				addSpatialIndex(ds, dSetName)
 			end
-		elseif type == "GDAL" then
+		elseif type == "GDAL"then
 			dSet = ds:getDataSet(dSetName)
 			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
 			local raster = dSet:getRaster(rpos)	
@@ -231,7 +238,7 @@ local function createLayer(name, dSetName, connInfo, type)
 			dSetType = ds:getDataSetType(dSetName)
 			local gp = binding.GetFirstGeomProperty(dSetType)
 			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
-			srid = gp:getSRID()	
+			srid = gp:getSRID()
 		end
 
 		local id = binding.GetRandomicId()
@@ -522,10 +529,13 @@ local function addFileLayer(project, name, filePath, type, addSpatialIdx)
 		dSetName = getFileName(connInfo.URI)
 	elseif type == "GDAL" then
 		dSetName = getFileNameWithExtension(connInfo.URI)
+	elseif type == "GeoJSON" then
+		type = "OGR"
+		dSetName = "OGRGeoJSON"
 	end
-	
+
 	local layer = createLayer(name, dSetName, connInfo, type)
-	
+
 	project.layers[layer:getTitle()] = layer
 	saveProject(project, project.layers)
 	releaseProject(project)
@@ -1103,10 +1113,15 @@ TerraLib_ = {
 			info.password = connInfo.PG_PASSWORD
 			info.database = connInfo.PG_DB_NAME
 			info.table = dseName
+			info.source = SourceTypeMapper.POSTGIS
 		elseif type == "OGR" then
 			info.file = connInfo.URI
+			info.source = getFileExtension(info.file)
 		elseif type == "GDAL" then
 			info.file = connInfo.URI
+			info.source = getFileExtension(info.file)
+		elseif type == "ADO" then
+			info.source = SourceTypeMapper.ADO
 		end
 
 		do
@@ -1145,7 +1160,7 @@ TerraLib_ = {
 	addShpLayer = function(_, project, name, filePath, addSpatialIdx)
 		addFileLayer(project, name, filePath, "OGR", addSpatialIdx)
 	end,
-	--- Add a new tiff layer to a given project.
+	--- Add a new GDAL layer to a given project.
 	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the project.
 	-- @arg name The name of the layer.
@@ -1162,9 +1177,58 @@ TerraLib_ = {
 	--	
 	-- layerName = "TifLayer"
 	-- layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-	-- tl:addTifLayer(proj, layerName, layerFile)
-	addTifLayer = function(_, project, name, filePath)
+	-- tl:addGdalLayer(proj, layerName, layerFile)
+	addGdalLayer = function(_, project, name, filePath)
 		addFileLayer(project, name, filePath, "GDAL")
+	end,
+	--- Add a GeoJSON layer to a given project.
+	-- @arg _ A TerraLib object.
+	-- @arg project The name of the project.
+	-- @arg name The name of the layer.
+	-- @arg filePath The path for the project.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib()
+	-- tl:createProject("project.tview", {})
+	-- tl:addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
+	addGeoJSONLayer = function(_, project, name, filePath)
+		addFileLayer(project, name, filePath, "GeoJSON")
+	end,
+	--- Create a new cellular layer into a shapefile.
+	-- @arg project The name of the project.
+	-- @arg filePath The path for the project.
+	-- @arg name The name of the layer.
+	-- @arg resolution The size of a cell.
+	-- @arg inputLayerTitle The name of the layer.
+	-- @arg mask A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	-- proj = {
+	--     file = "mygeojsonproject.tview",
+	--     title = "TerraLib Tests",
+	--     author = "Carneiro Heitor"
+	-- }
+	--
+	-- tl:createProject(proj, {})
+	--
+	-- layerName1 = "Setores_Layer"
+	-- layerFile1 = filePath("Setores_Censitarios_2000_pol.geojson", "terralib")
+	-- tl:addGeoJSONLayer(proj, layerName1, layerFile1)
+	--
+	-- tl:addGeoJSONCellSpaceLayer(proj, layerName1, "Setores_Cells", 10000, currentDir())
+	addGeoJSONCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask)
+		loadProject(project, project.file)
+
+		if not string.find(filePath, "/") then
+			filePath = _Gtme.makePathCompatibleToAllOS(currentDir().."/")..filePath
+		end
+
+		local inputLayer = project.layers[inputLayerTitle]
+		local connInfo = createFileConnInfo(filePath)
+		local dSetName = getFileName(connInfo.URI)
+
+		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
+
+		self:addGeoJSONLayer(project, name, filePath)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
 	-- @arg project The name of the project.
@@ -1808,7 +1872,7 @@ TerraLib_ = {
 	-- @arg project The name of the project.
 	-- @arg layerName The input layer name.
 	-- @usage -- DONTRUN
-	-- tl:addTifLayer(proj, layerName, layerFile)	
+	-- tl:addGdalLayer(proj, layerName, layerFile)	
 	-- local numBands = tl:getNumOfBands(proj, layerName)	
 	getNumOfBands = function(_, project, layerName)
 		loadProject(project, project.file)

@@ -1,2 +1,2 @@
-scripts/basic.lua:1: Warning: Variable 'abc' is not declared.
+Warning: Variable 'abc' is not declared. In file scripts/basic.lua, in line 1.
 nil
