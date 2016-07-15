@@ -65,30 +65,38 @@ return{
 			max2000 = SIR{maximum = 2000}
 		}
 
-		local c = Chart{
-			target = e,
-			select = "infected"
-		}
+		local error_func = function()
+			c = Chart{
+				target = Environment{},
+				select = "infected"
+			}
+		end
+		unitTest:assertError(error_func, "There is no Model instance within the Environment.")
 
-		local timer = Timer{
-			Event{action = c}
-		}
+		local error_func = function()
+			c = Chart{
+				target = e,
+				select = "infected",
+				title = "Infected"
+			}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("title", "Infected"))
 
-		e:add(timer)
-		e:run()
+		local error_func = function()
+			c = Chart{
+				target = e
+			}
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg("select"))
 
-		unitTest:assertSnapshot(c, "chart-environment-scenarios.png")
-	end,
-	notify = function(unitTest)
-		local e = Environment{}
-
-		e:notify()
-		e:notify(5)
-
-		local ev = Event{action = function() end}
-		e:notify(ev)
-	
-		unitTest:assert(true)
+		local error_func = function()
+			c = Chart{
+				target = e,
+				select = "infected",
+				color = {"blue", "red", "green"}
+			}
+		end
+		unitTest:assertError(error_func, "Arguments 'select' and 'color' should have the same size, got 2 and 3.")
 	end
 }
 

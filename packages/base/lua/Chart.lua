@@ -175,14 +175,18 @@ metaTableChart_ = {__index = Chart_}
 
 --- Create a line chart showing the variation of one or more attributes (y axis) of an
 -- object. X axis values come from the single argument of notify().
--- @arg attrTab.target An Agent, Cell, CellularSpace, Society, table, or instance of a Model.
+-- @arg attrTab.target An Agent, Cell, CellularSpace, Environment, Society, table, or instance of a Model.
 -- @arg attrTab.select A vector of strings with the name of the attributes to be observed. If it is only a
--- single value then it can also be described as a string. 
+-- single value then it can also be described as a string.
 -- As default, it selects all the user-defined number attributes of the target.
 -- In the case of Society, if it does not have any numeric attributes then it will use
 -- the number of agents in the Society as attribute.
 -- The positions of the vector define the plot order. It draws starting from the first
 -- until the last position.
+-- When using an Environment as target, it is possible to use only one attribute name. The selected
+-- attribute must belong to the Model instances it contains. Chart will then create one line for
+-- each Model instance. In this case, the selected attribute will be the default title for the Chart and the
+-- default labels will be the names of the Model instances in the Environment or else their Model:title() values.
 -- @arg attrTab.xLabel Name of the x-axis. It shows "Time" as default.
 -- @arg attrTab.yLabel Name of the y-axis. It does not show any label as default.
 -- @arg attrTab.label Vector of the same size of select that indicates the labels for each
@@ -338,6 +342,36 @@ function Chart(attrTab)
 		if attrTab.xAxis and type(attrTab.data[attrTab.xAxis]) ~= "table" then
 			customError(incompatibleTypeMsg("data."..attrTab.xAxis, "table", attrTab.data[attrTab.xAxis]))
 		end
+	elseif type(attrTab.target) == "Environment" then
+		local c = Cell{}
+		local select = {}
+
+		mandatoryTableArgument(attrTab, "select", "table")
+
+		verify(#attrTab.select == 1, "It is not possible to select more than one attribute when creating a Chart from an Environment.")
+
+		local mselect = attrTab.select[1]
+
+		forEachModel(attrTab.target, function(value, idx)
+			local midx = tostring(idx)
+			c[midx] = function() return value[mselect] end
+			table.insert(select, midx)
+		end)
+
+		if #select == 0 then
+			customError("There is no Model instance within the Environment.")
+		end
+
+		attrTab.target = c
+		attrTab.select = select
+
+		if attrTab.title  == "" then attrTab.title  = nil end
+
+		defaultTableValue(attrTab, "title", _Gtme.stringToLabel(mselect))
+
+		if attrTab.yLabel == "" then attrTab.yLabel = nil end
+
+		return Chart(attrTab)
 	else
 		mandatoryTableArgument(attrTab, "target")
 
