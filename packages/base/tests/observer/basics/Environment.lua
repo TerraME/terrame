@@ -72,11 +72,7 @@ return{
 			select = "infected"
 		}
 
-		local timer = Timer{
-			Event{action = c}
-		}
-
-		e:add(timer)
+		e:add(Event{action = c})
 		e:run()
 
 		unitTest:assertSnapshot(c, "chart-environment-scenarios.png")

@@ -132,7 +132,8 @@ end
 Environment_ = {
 	type_ = "Environment",
 	--- Add an element to the Environment.
-	-- @arg object An Agent, Automaton, Cell, CellularSpace, Society, Trajectory, Group, Timer, or Environment.
+	-- @arg object An Agent, Automaton, Cell, CellularSpace, Society, Trajectory, Group, Event, Timer, or Environment.
+	-- When adding an Event, this function converts the Event into a Timer that contains the Event itself.
 	-- @usage environment = Environment{}
 	--
 	-- cs1 = CellularSpace{xdim = 10}
@@ -149,9 +150,13 @@ Environment_ = {
 			table.insert(self, object)
 
 			if t == "Society" then return end
+		elseif t == "Event" then
+			object = Timer{object} -- create a Timer with the Event itself
+			table.insert(self, object)
 		else
 			incompatibleTypeError(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory", object)
 		end
+
 		self.cObj_:add(object.cObj_)
 	end,
 	--- Create relations between behavioural entities (Agents) and spatial entities (Cells). 
