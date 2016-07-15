@@ -65,6 +65,8 @@ return{
 			max2000 = SIR{maximum = 2000}
 		}
 
+		clean()
+
 		local c = Chart{
 			target = e,
 			select = "infected"

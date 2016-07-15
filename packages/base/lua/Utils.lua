@@ -26,8 +26,10 @@
 
 local observers
 
-local deadObserverMetaTable_ = {__index = function(_, idx)
+local deadObserverMetaTable_ = {__index = function(self, idx)
 	if idx == "type_" then return "<DestroyedObserver>" end
+	if idx == "update" then return function() end end
+	if idx == "parent" then return self end
 
     customError("Trying to call a function of an observer that was destroyed.")
 end}
