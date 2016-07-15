@@ -326,3 +326,63 @@ data{
 	reference = ""    -- optional
 }
 
+data{
+	file = "amazonia.shp",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "biomassa-manaus.asc",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "Localidades_pt.geojson",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "Rodovias_lin.geojson",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "Setores_Censitarios_2000_pol.geojson",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
+data{
+	file = "vegtype_2000.nc",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	types = {},       -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+

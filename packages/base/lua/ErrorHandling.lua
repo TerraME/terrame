@@ -53,7 +53,7 @@ function customWarning(msg)
 	local arg = msg
 
 	if info then
-		arg = info.short_src..":".. info.currentline ..": Warning: "..msg
+		arg = "Warning: "..msg.." In file "..info.short_src..", in line "..info.currentline.."."
 	end
 
 	if sessionInfo().mode == "debug" then

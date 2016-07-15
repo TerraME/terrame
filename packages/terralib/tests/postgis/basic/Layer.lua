@@ -234,7 +234,7 @@ return {
 			password = password,
 			database = newDbName
 		}
-		
+
 		unitTest:assertEquals(layer4.source, "postgis")
 		unitTest:assertEquals(layer4.host, host)
 		unitTest:assertEquals(layer4.port, port)
