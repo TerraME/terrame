@@ -1,0 +1,4 @@
+Error: attempt to perform arithmetic on a nil value (field 'w')
+Stack traceback:
+    File trace-layer.lua, line 12, in second order function, in operator + (addition)
+    File trace-layer.lua, line 11, in call to function 'forEachLayer'
