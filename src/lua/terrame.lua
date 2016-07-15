@@ -1285,7 +1285,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.showDoc(package)
 				os.exit(0)
 			elseif arg == "-doc" then
-				info_.mode = "strict"
+				info_.mode = "debug"
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				local errors = 0
 				local success, result = _Gtme.myxpcall(function() errors = _Gtme.executeDoc(package) end)
