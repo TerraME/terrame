@@ -554,7 +554,7 @@ function suggestion(value, options)
 	end
 end
 
---- Return the arguments of suggestion within a question " Do you mean "..suggestion.."'?"
+--- Return the arguments of suggestion within a question " Do you mean "..suggestion.."'?".
 -- @arg suggestion A string.
 -- @usage t = {
 --     blue = true,
@@ -659,9 +659,7 @@ end
 -- str = unnecessaryArgumentMsg("filf", "file")
 -- print(str)
 function unnecessaryArgumentMsg(value, suggestion)
-	local str = "Argument '"..tostring(value).."' is unnecessary."
-	str = str ..suggestionMsg(suggestion)
-	return str
+	return "Argument '"..tostring(value).."' is unnecessary."..suggestionMsg(suggestion)
 end
 
 --- Stop the simulation with an error due to a wrong value for an argument.
