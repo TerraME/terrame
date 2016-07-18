@@ -41,7 +41,8 @@ _Gtme.ignoredFile = function(fname)
 		".atx",
 		".shp.xml",
 		".cpg",
-		".qix"
+		".qix",
+		".lua"
 	}
 
 	local ignore = false
@@ -125,7 +126,7 @@ local function getProjects(package)
 				local description
 
 				if representation == "raster" then
-					description = "raster with "..layer:bands().." band"
+					description = "Raster with "..math.floor(layer:bands()).." band"
 
 					if layer:bands() > 1 then
 						description = description.."s"
@@ -216,11 +217,11 @@ local function getProjects(package)
 
 			local quantity = #cs
 			description = tostring(quantity).." cells (polygons) with resolution "..
-				data.resolution.." built from layer \""..data.input.."\"."
+				data.resolution.." built from layer \""..data.input.."\""
 
 			projects[currentProject][data.name] = {
 				file = data.file,
-				description = description
+				description = description.."."
 			}
 
 			if not layers[data.file] then 
@@ -232,13 +233,15 @@ local function getProjects(package)
 				layers[data.file] = 
 				{
 					projection = layer:projection(),
+					file = {data.file},
+					summary = "Automatically created file with "..description..", in project \""..currentProject.."\".",
+					shortsummary = "Automatically created file in project \""..currentProject.."\".",
 					attributes = {},
 					description = {},
 					types = {}
 				}
 			end
 
-			layers[data.file].summary = "Automatically created file with "..description
 		end
 
 		setmetatable(data, mtLayer)
@@ -259,13 +262,14 @@ local function getProjects(package)
 	end)
 
 	local output = {}
-	local mlayers = {}
+	local allLayers = {}
 
 	-- we need to execute this separately to guarantee that the output will be alphabetically ordered
 	forEachOrderedElement(projects, function(idx, proj)
 		local luaFile = string.sub(idx, 1, -6).."lua"
 		local shortsummary = "Automatically created TerraView project file"
 		local summary = shortsummary.." from <a href=\"../../data/"..luaFile.."\">"..luaFile.."</a>."
+		local mlayers = {}
 
 		if proj.description then
 			summary = summary.." "..proj.description
@@ -281,6 +285,7 @@ local function getProjects(package)
 		forEachOrderedElement(proj, function(midx, layer)
 			layer.layer = midx
 			table.insert(mlayers, layer)
+			table.insert(allLayers, layer)
 		end)
 
 		mproject.layers = mlayers
@@ -288,12 +293,10 @@ local function getProjects(package)
 		table.insert(output, mproject)
 	end)
 
-	if #mlayers > 0 then
-		forEachOrderedElement(mlayers, function(_, layer)
-			layer.file = {layer.file}
-			table.insert(output, layer)
-		end)
-	end
+	forEachOrderedElement(layers, function(_, layer)
+		--layer.file = {layer.file}
+		table.insert(output, layer)
+	end)
 
 	clean()
 
@@ -453,7 +456,7 @@ function _Gtme.executeDoc(package)
 		projects = getProjects(package)
 
 		forEachOrderedElement(projects, function(_, value)
-			if value.layers or string.find(value.description, "resolution") then -- a project or a layer of cells
+			if value.layers or string.find(value.summary, "resolution") then -- a project or a layer of cells
 				filesdocumented[value.file[1]] = 1
 			end
 		end)
@@ -463,8 +466,9 @@ function _Gtme.executeDoc(package)
 			local found = false
 			forEachElement(mdata, function(_, mvalue)
 				if value.file[1] == mvalue.file[1] then
-					if value.layers or string.find(value.description, "resolution") then -- a project or a layer of cells
+					if value.layers or string.find(value.summary, "resolution") then -- a project or a layer of cells
 						printError("File "..value.file[1].." should not be documented as it would be automatically created.")
+						found = true
 						doc_report.error_data = doc_report.error_data + 1
 					end
 				end
@@ -495,7 +499,7 @@ function _Gtme.executeDoc(package)
 				return
 			end
 
-			if filesdocumented[mvalue] == nil then
+			if filesdocumented[mvalue] == nil and not string.endswith(mvalue, ".lua") then
 				printError("File '"..mvalue.."' is not documented")
 				doc_report.error_data = doc_report.error_data + 1
 			else

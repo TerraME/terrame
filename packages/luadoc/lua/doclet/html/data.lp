@@ -89,11 +89,21 @@
 								</tr>
 							<%else%>
 								<% for j = 1,#data.attributes do %>
-									<tr><td><%=data.attributes[j]%></td><td><%=data.types[j]%></td><td><%=data.description[j]%></td></tr>
+									<tr><td><%="\""..data.attributes[j].."\""%></td><td><%="\""..data.types[j].."\""%></td><td><%=data.description[j]%></td></tr>
 								<%end%>
 							<%end%> 
 							</table>
 						<%end%>
+
+						<%if data.layers then%>
+							<table class="arg_tab">
+							<tr><td><b>Layer</b></td><td><b>File</b></td><td><b>Description</b></td></tr>
+							<% for j = 1,#data.layers do %>
+								<tr><td><%="\""..data.layers[j].layer.."\""%></td><td><%="\""..data.layers[j].file.."\""%></td><td><%=data.layers[j].description%></td></tr>
+							<%end%>
+							</table>
+						<%end%>
+
 						</dd>
 					<%end%>
 					</dl>
