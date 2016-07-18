@@ -245,7 +245,7 @@ return{
 		}
 
 		unitTest:assertEquals(suggestionMsg(suggestion("aaaab", t)), " Do you mean 'aaaaa'?")
-		unitTest:assertEquals(suggestionMsg(nil), "")
+		unitTest:assertEquals(suggestionMsg(), "")
 	end,
 	switchInvalidArgument = function(unitTest)
 		local t = {
