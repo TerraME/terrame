@@ -1442,6 +1442,23 @@ yMin    number [0]
 
 		forEachElement(cs.cells[1], function(el) unitTest:assertNotNil(el) end)
 		forEachElement(cs.cells[1].past, function(el) unitTest:assertNotNil(el) end)
+
+		local c = Cell{
+			value = 3,
+			on_synchronize = function(self)
+				self.value = 0
+			end
+		}
+
+		cs = CellularSpace{
+			instance = c,
+			xdim = 3
+		}
+
+		cs:synchronize()
+
+		forEachCell(cs, function(cell) unitTest:assertEquals(3, cell.past.value) end)
+		forEachCell(cs, function(cell) unitTest:assertEquals(0, cell.value) end)
 	end
 }
 

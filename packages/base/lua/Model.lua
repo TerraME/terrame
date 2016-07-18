@@ -232,6 +232,32 @@ Model_ = {
 	-- scenario1:run()
 	notify = function(self, modelTime)
 		self.cObj_:notify(modelTime) -- SKIP
+	end,
+	--- Return a title for the Model instance according to its parameters.
+	-- It uses only the parameters that are different from the default values.
+	-- If the Model was instantiated without any parameter, its title will be "default".
+	-- @usage Tube = Model{
+	--     water = 200,
+	--     init = function(model)
+	--         model.finalTime = 100
+	--
+	--         Chart{
+	--             target = model,
+	--             select = "water"
+	--         }
+	--
+	--         model.timer = Timer{
+	--             Event{action = function(ev)
+	--                 model.water = model.water - 1
+	--                 model:notify(ev)
+	--             end}
+	--         }
+	--     end
+	-- }
+	--
+	-- scenario1 = Tube{water = 100}
+	-- print(scenario1:title()) -- "water = 100"
+	title = function()
 	end
 }
 
@@ -292,6 +318,7 @@ Model_ = {
 --
 -- MyTube = Tube{initialWater = 50} -- ... or create instances using it
 -- print(type(MyTube)) -- "Tube"
+-- print(MyTube:title()) -- "Initial Water = 50"
 -- MyTube:run()
 --
 -- pcall(function() MyTube2 = Tube{initialwater = 100} end)
@@ -683,6 +710,29 @@ function Model(attrTab)
 			end
 
 			self.cObj_:notify(modelTime)
+		end
+
+		argv.title = function(self)
+			local parameters = self.parent:getParameters()
+			local str = ""
+
+			forEachOrderedElement(parameters, function(idx, value, mtype)
+				if mtype == "Choice" then
+					if self[idx] ~= value.default then
+						str = str.._Gtme.stringToLabel(idx).." = "..vardump(self[idx])..", "
+					end	
+				elseif self[idx] ~= value then
+					str = str.._Gtme.stringToLabel(idx).." = "..vardump(self[idx])..", "
+				end
+			end)
+
+			if str == "" then
+				str = "Default"
+			else
+				str = string.sub(str, 1, -3)
+			end
+
+			return str
 		end
 
 		if argv.seed ~= nil then

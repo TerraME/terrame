@@ -603,12 +603,11 @@ Layer_ = {
 		}
 
 		if type(data.select) == "string" then
-			if not belong(data.select, data.layer:properties()) then
+			if not belong(data.select, data.layer:attributes()) then
 				local msg = "Selected attribute '"..data.select.."' does not exist in layer '"..data.layer.name.."'."
+				local sugg = suggestion(data.select, data.layer:attributes())
 
-				local sugg = suggestion(data.select, data.layer:properties())
 				msg = msg..suggestionMsg(sugg)
-
 				customError(msg)
 			end
 		end
@@ -631,8 +630,8 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- import("terralib")
 	--
-	-- print(vardump(layer:properties()))
-	properties = function(self)
+	-- print(vardump(layer:attributes()))
+	attributes = function(self)
 		local propNames = self.project.terralib:getPropertyNames(self.project, self.project.layers[self.name])
 		
 		if propNames[0] == "raster" then

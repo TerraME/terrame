@@ -132,7 +132,8 @@ end
 Environment_ = {
 	type_ = "Environment",
 	--- Add an element to the Environment.
-	-- @arg object An Agent, Automaton, Cell, CellularSpace, Society, Trajectory, Group, Timer, or Environment.
+	-- @arg object An Agent, Automaton, Cell, CellularSpace, Society, Trajectory, Group, Event, Timer, or Environment.
+	-- When adding an Event, this function converts the Event into a Timer that contains the Event itself.
 	-- @usage environment = Environment{}
 	--
 	-- cs1 = CellularSpace{xdim = 10}
@@ -149,9 +150,13 @@ Environment_ = {
 			table.insert(self, object)
 
 			if t == "Society" then return end
+		elseif t == "Event" then
+			object = Timer{object} -- create a Timer with the Event itself
+			table.insert(self, object)
 		else
 			incompatibleTypeError(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory", object)
 		end
+
 		self.cObj_:add(object.cObj_)
 	end,
 	--- Create relations between behavioural entities (Agents) and spatial entities (Cells). 
@@ -573,6 +578,8 @@ metaTableEnvironment_ = {__index = Environment_, __tostring = _Gtme.tostring}
 -- control the simulation engine, synchronizing all the Timers within it, or instantiate
 -- relations between sets of objects. Calling
 -- Utils:forEachElement() traverses each object of an Environment.
+-- If the Environment has a set of Model instances, it is possible to call Utils:forEachModel()
+-- to transverse them.
 -- @arg data.... Agents, Automatons, Cells, CellularSpaces, Societies, Trajectories, Groups,
 -- Timers, Environments, or instances of Models.
 -- @output cObj_ A pointer to a C++ representation of the Environment. Never use this object.

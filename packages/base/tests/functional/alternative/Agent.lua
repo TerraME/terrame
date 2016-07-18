@@ -413,6 +413,15 @@ return {
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg(1, -1, true))
 	end,
+	on_message = function(unitTest)
+		local ag1 = Agent{}
+		local ag2 = Agent{}
+
+		local error_func = function()
+			ag1:message{receiver = ag2}
+		end
+		unitTest:assertError(error_func, "Agent 'nil' cannot get a message from 'nil' because it does not implement 'on_message'.")
+	end,
 	randomWalk = function(unitTest)
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}

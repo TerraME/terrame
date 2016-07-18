@@ -952,6 +952,13 @@ Some attributes of Cell have internal semantics. They can be used as <b>read-onl
 							
 								
 									<tr>
+										<td class="name" nowrap><a href="#on_synchronize">on_synchronize</a>&nbsp;
+<td class="summary">An optional user-defined function that is activated just after one calls <a href=files/Cell.html#synchronize>Cell:synchronize()</a>.</td>
+									</tr>
+								
+							
+								
+									<tr>
 										<td class="name" nowrap><a href="#sample">sample</a>&nbsp;
 <td class="summary">Return a random Cell from a <a href=files/Neighborhood.html>Neighborhood</a> of the Cell.</td>
 									</tr>
@@ -1538,6 +1545,50 @@ Notify every Observer connected to the Cell.<br><br></span>
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
+<dt><h2><a name="on_synchronize">
+
+	</a><strong>on_synchronize</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+An optional user-defined function that is activated just after one calls <a href=../files/Cell.html#synchronize>Cell:synchronize()</a>.<br><br></span>
+
+
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">cell</span> = <span class="function">Cell</span>{
+    <span class="id">value</span> = <span class="number">3</span>,
+    <span class="function">on_synchronize</span> = <span class="reserved">function</span>(<span class="id">self</span>)
+        <span class="id">self</span>.<span class="id">value</span> = <span class="number">0</span>
+    <span class="reserved">end</span>
+}
+
+<span class="id">cell</span>:<span class="id">synchronize</span>()
+<span class="id">print</span>(<span class="id">cell</span>.<span class="id">value</span>) <span class="comment">-- 0</span></code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
 <dt><h2><a name="sample">
 
 	</a><strong>sample</strong>&nbsp;
@@ -1706,7 +1757,7 @@ Return the number of <a href=../files/Neighborhood.html>Neighborhoods</a> in the
 
 <span class="description">
 
-Synchronizes the Cell. TerraME can keep two copies of the attributes of a Cell in memory: one stores the past values and the other stores the current (present) values. Synchronize copies the current values to a table named past, within the Cell. The previous past is therefore overwritten.<br><br></span>
+Synchronizes the Cell. TerraME can keep two copies of the attributes of a Cell in memory: one stores the past values and the other stores the current (present) values. Synchronize copies the current values to a table named past, within the Cell. The previous past is therefore overwritten. In the end synchronize, it calls <a href=../files/Cell.html#on_synchronize>Cell:on_synchronize()</a> if it exists.<br><br></span>
 
 
 
