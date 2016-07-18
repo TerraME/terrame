@@ -554,7 +554,7 @@ function suggestion(value, options)
 	end
 end
 
---- Return the arguments of suggestion within a question " Do you mean "..suggestion.."'?".
+--- Return the arguments of suggestion within a question " Do you mean '"..suggestion.."'?".
 -- @arg suggestion A string.
 -- @usage t = {
 --     blue = true,
