@@ -92,6 +92,7 @@ basic = {
 	tracelayer          = {script = "trace-layer.lua"},
 	traceneighbor       = {script = "trace-neighbor.lua"},
 	traceneighborhood   = {script = "trace-neighborhood.lua"},
+	traceself           = {script = "trace-self.lua"},
 	tracesocialnetwork  = {script = "trace-social-network.lua"},
 	qwerty4321          = {package = "qwerty4321"},
 	depend              = {arg = "-build", package = "depend"},
