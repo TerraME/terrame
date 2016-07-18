@@ -56,10 +56,13 @@ UnitTest_ = {
 	-- @arg tol A number indicating a maximum error tolerance. This argument is optional and can
 	-- be used with numbers or strings. When using string, the tolerance is measured according
 	-- to the Utils:levenshtein() distance. The default tolerance is zero.
+	-- @arg ignorePath A boolean to ignore path between /'s, when comparing two strings. This argument
+	-- is optional and can be used only with strings. The default value is false.
 	-- @usage unitTest = UnitTest{}
 	-- unitTest:assertEquals(3, 3)
 	-- unitTest:assertEquals(2, 2.1, 0.2)
-	assertEquals = function (self, v1, v2, tol)
+	-- unitTest:assertEquals([[string [biomassa-manaus.asc] ]], [[string [terralib/data/biomassa-manaus.asc] ]], 0, true)
+	assertEquals = function (self, v1, v2, tol, ignorePath)
 		self.test = self.test + 1
 
 		if v1 == nil then
@@ -75,6 +78,9 @@ UnitTest_ = {
 		if tol == nil then tol = 0 end
 		mandatoryArgument(3, "number", tol)
 
+		if ignorePath == nil then ignorePath = false end
+		mandatoryArgument(4, "boolean", ignorePath)
+
 		if type(v1) == "number" and type(v2) == "number" then
 			local dist = math.abs(v1 - v2)
 			if dist <= tol or v1 == v2 then
@@ -87,6 +93,30 @@ UnitTest_ = {
 				self:printError(msg)
 			end
 		elseif type(v1) == "string" and type(v2) == "string" then
+			if ignorePath then
+				local tempstr = ""
+
+				if v2:match("\n") then
+					for line in v2:gmatch("([^(.-)\r?\n]+)") do
+						local path = line:match("%[(.*)%]")
+						if path then
+							local _, fileNameWithExtension,_ = path:match("(.-)([^\\/]-%.?([^%.\\/]*))$")
+							line = line:gsub(path, fileNameWithExtension)
+						end
+						tempstr = tempstr..line.."\n"
+					end
+				else
+					local path = v2:match("%[(.*)%]")
+					if path then
+						local _, fileNameWithExtension,_ = path:match("(.-)([^\\/]-%.?([^%.\\/]*))$")
+						tempstr = v2:gsub("%[(.*)%]", "["..fileNameWithExtension.."]")
+					end
+				end
+
+				if tempstr ~= "" then v2 = tempstr end
+
+			end
+
 			local dist = levenshtein(v1, v2)
 			if dist <= tol then
 				self.success = self.success + 1
