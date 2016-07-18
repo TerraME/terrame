@@ -119,10 +119,10 @@ function _Gtme.executeProject(package)
 
 	if project_report.errors_processing == 0 then
 		printNote("No error was found while creating projects.")
-	elseif project_report.errors_invalid == 1 then
+	elseif project_report.errors_processing == 1 then
 		printError("One error was found while creating projects.")
 	else
-		printError(project_report.errors_invalid.." errors were found while creating projects.")
+		printError(project_report.errors_processing.." errors were found while creating projects.")
 	end
 
 	if errors == 0 then

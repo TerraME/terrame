@@ -153,11 +153,13 @@ local function getProjects(package)
 			end
 		end)
 
-		return data.file
+		return filePath(currentProject, "terralib")
 	end
 
 	local mLayer_ = {
 		fill = function(self, data)
+			if not self.file then return nil end
+
 			if not layers[self.file] then 
 				layers[self.file] = 
 				{
@@ -201,9 +203,15 @@ local function getProjects(package)
 	local mtLayer = {__index = mLayer_}
 
 	Layer = function(data)
-		if data.name then
+		if data.resolution and data.file then
+			local mfile = data.file
+
+			if not isFile(mfile) then
+				mfile = filePath(mfile, "terralib")
+			end
+
 			local cs = CellularSpace{
-				file = data.file
+				file = mfile
 			}
 
 			local quantity = #cs
@@ -243,9 +251,10 @@ local function getProjects(package)
 			print("Processing '"..file.."'")
 
 			xpcall(function() dofile(data_path..s..file) end, function(err)
-				printError(err)
+				printError(_Gtme.traceback(err))
 			end)
 
+			clean()
 		end
 	end)
 

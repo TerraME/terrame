@@ -327,16 +327,6 @@ data{
 }
 
 data{
-	file = "amazonia.shp",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	types = {},       -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-
-data{
 	file = "biomassa-manaus.asc",
 	summary = "",
 	source = "",
