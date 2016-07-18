@@ -54,7 +54,7 @@ function customWarning(msg)
 	local arg = msg
 
 	if info then
-		arg = "Warning: "..msg.." In file "..info.short_src..", in line "..info.currentline.."."
+		arg = "Warning: "..msg.." In file ".._Gtme.makePathCompatibleToAllOS(info.short_src)..", in line "..info.currentline.."."
 	end
 
 	if sessionInfo().mode == "debug" then

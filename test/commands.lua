@@ -84,6 +84,7 @@ basic = {
 	traceagent          = {script = "trace-agent.lua"},
 	tracecell           = {script = "trace-cell.lua"},
 	tracecellpair       = {script = "trace-cell-pair.lua"},
+	tracechart          = {script = "trace-chart.lua"},
 	traceconnection     = {script = "trace-connection.lua"},
 	traceelement        = {script = "trace-element.lua"},
 	traceorderedelement = {script = "trace-ordered-element.lua"},
