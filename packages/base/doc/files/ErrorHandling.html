@@ -993,6 +993,13 @@
 							
 								
 									<tr>
+										<td class="name" nowrap><a href="#suggestionMsg">suggestionMsg</a>&nbsp;
+<td class="summary">Return the arguments of suggestion within a question " Do you mean "..suggestion.."'?".</td>
+									</tr>
+								
+							
+								
+									<tr>
 										<td class="name" nowrap><a href="#switchInvalidArgument">switchInvalidArgument</a>&nbsp;
 <td class="summary">Stop the simulation with an error because the user did not choose a correct option.</td>
 									</tr>
@@ -2731,6 +2738,60 @@ Return a suggestion for a wrong string value. The suggestion must have a Levensh
 }
 
 <span class="id">str</span> = <span class="function">suggestion</span>(<span class="string">"gren"</span>, <span class="id">t</span>)
+<span class="id">print</span>(<span class="id">str</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="suggestionMsg">
+
+	</a><strong>suggestionMsg</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the arguments of suggestion within a question " Do you mean "..suggestion.."'?".<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">t</span> = {
+    <span class="id">blue</span> = <span class="reserved">true</span>,
+    <span class="id">red</span> = <span class="reserved">true</span>,
+    <span class="id">green</span> = <span class="reserved">true</span>
+}
+
+<span class="id">str</span> = <span class="function">suggestionMsg</span>(<span class="id">suggestion</span>(<span class="string">"gren"</span>, <span class="id">t</span>))
 <span class="id">print</span>(<span class="id">str</span>)</code></pre>
 
 
