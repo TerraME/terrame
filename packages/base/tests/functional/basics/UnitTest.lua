@@ -57,15 +57,8 @@ return{
 
 		local expected = [[string [biomassa-manaus.asc] ]]
 		local actual = [[string [/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/terralib/data/biomassa-manaus.asc] ]]
-		unitTest:assertEquals(expected, actual, 0, true)
+		unitTest:assertEquals(actual, expected, 0, true)
 
-		expected = [[file     string [Setores_Censitarios_2000_pol.shp]
-name     string [Setores_2000]
-project  Project
-rep      string [geometry]
-sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
-source   string [shp]
-]]
 		actual = [[file     string [packages\terralib\data\Setores_Censitarios_2000_pol.shp]
 name     string [Setores_2000]
 project  Project
@@ -73,7 +66,14 @@ rep      string [geometry]
 sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
 source   string [shp]
 ]]
-		unitTest:assertEquals(expected, actual, 0, true)
+		expected = [[file     string [Setores_Censitarios_2000_pol.shp]
+name     string [Setores_2000]
+project  Project
+rep      string [geometry]
+sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
+source   string [shp]
+]]
+		unitTest:assertEquals(actual, expected, 0, true)
 	end,
 	assertError = function(unitTest)
 		local u = UnitTest{}

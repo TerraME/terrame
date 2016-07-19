@@ -96,8 +96,8 @@ UnitTest_ = {
 			if ignorePath then
 				local tempstr = ""
 
-				if v2:match("\n") then
-					for line in v2:gmatch("([^(.-)\r?\n]+)") do
+				if v1:match("\n") then
+					for line in v1:gmatch("([^(.-)\r?\n]+)") do
 						local path = line:match("%[(.*)%]")
 						if path then
 							local _, fileNameWithExtension,_ = path:match("(.-)([^\\/]-%.?([^%.\\/]*))$")
@@ -106,14 +106,14 @@ UnitTest_ = {
 						tempstr = tempstr..line.."\n"
 					end
 				else
-					local path = v2:match("%[(.*)%]")
+					local path = v1:match("%[(.*)%]")
 					if path then
 						local _, fileNameWithExtension,_ = path:match("(.-)([^\\/]-%.?([^%.\\/]*))$")
-						tempstr = v2:gsub("%[(.*)%]", "["..fileNameWithExtension.."]")
+						tempstr = v1:gsub("%[(.*)%]", "["..fileNameWithExtension.."]")
 					end
 				end
 
-				if tempstr ~= "" then v2 = tempstr end
+				if tempstr ~= "" then v1 = tempstr end
 
 			end
 
