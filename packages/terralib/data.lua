@@ -53,7 +53,7 @@ data{
 }
 
 data{
-	file = {"PRODES_5KM.jgw", "PRODES_5KM.tif", "PRODES_5KM.xml"},
+	file = {"PRODES_5KM.tif", "PRODES_5KM.jgw", "PRODES_5KM.xml"},
 	summary = "",
 	source = ""
 }
@@ -77,17 +77,7 @@ data{
 }
 
 data{
-	file = "accumulation_Nov94May00.tif",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	types = {},       -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-
-data{
-	file = "accumulation_Nov94May00.xml",
+	file = {"accumulation_Nov94May00.tif", "accumulation_Nov94May00.tif.aux.xml", "accumulation_Nov94May00.xml"},
 	summary = "",
 	source = "",
 	attributes = {},  -- optional
@@ -239,15 +229,6 @@ data{
 
 data{
 	file = "Setores_Censitarios_2000_props.txt",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	types = {},       -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-data{
-	file = "accumulation_Nov94May00.tif.aux.xml",
 	summary = "",
 	source = "",
 	attributes = {},  -- optional

@@ -74,6 +74,18 @@
 							<br><b>Projection: </b><%=data.projection%>
 						<%end%>
 
+						<%if data.representation then%>
+							<br><b>Representation: </b><%=data.representation%>
+						<%end%>
+
+						<%if data.quantity then%>
+							<br><b>Quantity: </b><%=data.quantity%>
+						<%end%>
+
+						<%if data.bands then%>
+							<br><b>Bands: </b><%=data.bands%>
+						<%end%>
+
 						<%if data.reference then%>
 							<br><b>Reference: </b><%=data.reference%>
 						<%end%>

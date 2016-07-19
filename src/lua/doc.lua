@@ -483,6 +483,56 @@ function _Gtme.executeDoc(package)
 			return a.file[1] < b.file[1]
 		end)
 
+		printNote("Checking properties of data files")
+		-- add quantity and type for each documented file
+		local tl = getPackage("terralib")
+
+		myProject = tl.Project{
+			file = "tmpproj.tview",
+			clean = true
+		}
+
+		idx = 1
+
+		forEachElement(mdata, function(_, value)
+			if string.endswith(value.file[1], ".shp") then
+				print("Processing '"..value.file[1].."'")
+
+				layer = tl.Layer{
+					project = myProject,
+					file = filePath(value.file[1], package),
+					name = "layer"..idx
+				}
+
+				value.representation = layer:representation()
+
+				local cs = CellularSpace{
+					layer = layer
+				}
+
+				value.quantity = #cs
+
+				idx = idx + 1
+			elseif string.endswith(value.file[1], ".tif") then
+				print("Processing '"..value.file[1].."'")
+
+				layer = tl.Layer{
+					project = myProject,
+					file = filePath(value.file[1], package),
+					name = "layer"..idx
+				}
+
+				value.representation = layer:representation()
+				value.bands = layer:bands()
+
+				idx = idx + 1
+			end
+		end)
+
+		rmFile("tmpproj.tview")
+
+--		os.exit()
+
 		forEachOrderedElement(df, function(_, mvalue)	
 			if _Gtme.ignoredFile(mvalue) then
 				if filesdocumented[mvalue] == nil then
