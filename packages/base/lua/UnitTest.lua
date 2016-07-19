@@ -101,7 +101,7 @@ UnitTest_ = {
 						local path = line:match("%[(.*)%]")
 						if path then
 							local _, fileNameWithExtension,_ = path:match("(.-)([^\\/]-%.?([^%.\\/]*))$")
-							line = line:gsub(path, fileNameWithExtension)
+							line = line:gsub("%[(.*)%]", "["..fileNameWithExtension.."]")
 						end
 						tempstr = tempstr..line.."\n"
 					end
