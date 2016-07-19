@@ -72,12 +72,12 @@
 									<tr>
 										<td class="name" nowrap><%=func_data.private and "local " or ""%><a href="#<%=func_name%>"><%=func_name%></a>
 										<i><font color="gray"> (deprecated)</font></i>&nbsp;
-<td class="summary"><%=luadoc.link_description(func_data.summary or "", doc, module_doc, file_doc, from, true, "summary", doc_report)%></td>
+<td class="summary"><%=luadoc.link_description(func_data.summary or "", doc, module_doc, file_doc, "files/.."..file_doc.name, true, "summary", doc_report)%></td>
 									</tr>
 								<%else%>
 									<tr>
 										<td class="name" nowrap><%=func_data.private and "local " or ""%><a href="#<%=func_name%>"><%=func_name%></a>&nbsp;
-<td class="summary"><%=luadoc.link_description(func_data.summary or "", doc, module_doc, file_doc, from, true, "summary", doc_report)%></td>
+<td class="summary"><%=luadoc.link_description(func_data.summary or "", doc, module_doc, file_doc, "files/.."..file_doc.name, true, "summary", doc_report)%></td>
 									</tr>
 								<%end%>
 							<%end%>
