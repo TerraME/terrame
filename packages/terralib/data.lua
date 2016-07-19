@@ -41,12 +41,6 @@ data{
 }
 
 data{
-	file = "Localidades_pt.shp",
-	summary = "",
-	source = ""
-}
-
-data{
 	file = "PORTOS_AMZ_pt.shp",
 	summary = "",
 	source = ""
@@ -87,17 +81,7 @@ data{
 }
 
 data{
-	file = "altimetria.tif",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	types = {},       -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-
-data{
-	file = "Altimetria.xml",
+	file = {"altimetria.tif", "Altimetria.xml"},
 	summary = "",
 	source = "",
 	attributes = {},  -- optional
@@ -127,7 +111,7 @@ data{
 }
 
 data{
-	file = "elevation.tif",
+	file = {"elevation.tif", "elevation.xml"},
 	summary = "",
 	source = "",
 	attributes = {},  -- optional
@@ -137,17 +121,7 @@ data{
 }
 
 data{
-	file = "elevation.xml",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	types = {},       -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-
-data{
-	file = "Localidades_props.txt",
+	file = {"Localidades_pt.shp", "Localidades_props.txt"},
 	summary = "",
 	source = "",
 	attributes = {},  -- optional
@@ -198,7 +172,7 @@ data{
 }
 
 data{
-	file = "Rodovias_lin.shp",
+	file = {"Rodovias_lin.shp", "Rodovias_props.txt"},
 	summary = "",
 	source = "",
 	attributes = {},  -- optional
@@ -208,27 +182,7 @@ data{
 }
 
 data{
-	file = "Rodovias_props.txt",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	types = {},       -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-
-data{
-	file = "Setores_Censitarios_2000_pol.shp",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	types = {},       -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-
-data{
-	file = "Setores_Censitarios_2000_props.txt",
+	file = {"Setores_Censitarios_2000_pol.shp", "Setores_Censitarios_2000_props.txt"},
 	summary = "",
 	source = "",
 	attributes = {},  -- optional

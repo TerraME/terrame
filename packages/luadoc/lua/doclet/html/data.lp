@@ -92,7 +92,8 @@
 
 						<%if data.attributes then%>
 							<table class="arg_tab">
-							<tr><td><b>Attribute</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							<tr><td><b><%if data.bands then%>Band<%else%>Attribute<%end%>
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
 							<%if data.attributes[1] == "_incompatible_" then%>
 								<tr>
 								<td><font color="red">Incompatible sizes</font></td>

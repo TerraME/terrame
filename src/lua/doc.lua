@@ -148,8 +148,7 @@ local function getProjects(package)
 
 				projects[currentProject][idx] = {
 					file = tl.getFileNameWithExtension(value),
-					description = description,
-					projection = layer:projection()
+					description = description
 				}
 			end
 		end)
@@ -232,7 +231,6 @@ local function getProjects(package)
 
 				layers[data.file] = 
 				{
-					projection = layer:projection(),
 					file = {data.file},
 					summary = "Automatically created file with "..description..", in project \""..currentProject.."\".",
 					shortsummary = "Automatically created file in project \""..currentProject.."\".",
@@ -505,6 +503,42 @@ function _Gtme.executeDoc(package)
 				}
 
 				value.representation = layer:representation()
+				value.projection = layer:projection()
+
+				local attributes = layer:attributes()
+
+				if value.attributes  == nil then value.attributes  = {} end
+				if value.description == nil then value.description = {} end
+
+				forEachElement(attributes, function(_, mvalue)
+					if not belong(mvalue, value.attributes) then
+						if mvalue == "FID" then
+							table.insert(value.attributes, mvalue)
+							table.insert(value.description, "Unique identifier (internal value).")
+						elseif mvalue == "id" then
+							table.insert(value.attributes, mvalue)
+							table.insert(value.description, "Unique identifier (internal value).")
+						elseif mvalue == "col" then
+							table.insert(value.attributes, mvalue)
+							table.insert(value.description, "Cell's column.")
+						elseif mvalue == "row" then
+							table.insert(value.attributes, mvalue)
+							table.insert(value.description, "Cell's row.")
+						else
+							printError("Attribute '"..mvalue.."' is not documented.")
+							doc_report.error_data = doc_report.error_data + 1
+							table.insert(value.attributes, mvalue)
+							table.insert(value.description, "<font color=\"red\">undefined</font>")
+						end
+					end
+				end)
+
+				forEachElement(value.attributes, function(_, mvalue)
+					if not belong(mvalue, attributes) then
+						doc_report.error_data = doc_report.error_data + 1
+						printError("Attribute '"..mvalue.."' is documented but does not exist in the file.")
+					end
+				end)
 
 				local cs = CellularSpace{
 					layer = layer
@@ -523,7 +557,27 @@ function _Gtme.executeDoc(package)
 				}
 
 				value.representation = layer:representation()
+				value.projection = layer:projection()
 				value.bands = layer:bands()
+
+				if value.attributes  == nil then value.attributes  = {} end
+				if value.description == nil then value.description = {} end
+
+				for i = 0, value.bands - 1 do
+					if not belong(tostring(i), value.attributes) then
+						printError("Band '"..i.."' is not documented.")
+						doc_report.error_data = doc_report.error_data + 1
+						table.insert(value.attributes, tostring(i))
+						table.insert(value.description, "<font color=\"red\">undefined</font>")
+					end
+				end
+
+				forEachElement(value.attributes, function(_, mvalue)
+					if tonumber(mvalue) < 0 or tonumber(mvalue) >= value.bands then
+						doc_report.error_data = doc_report.error_data + 1
+						printError("Band '"..mvalue.."' is documented but does not exist in the file.")
+					end
+				end)
 
 				idx = idx + 1
 			end
