@@ -10,7 +10,7 @@ data{
 	summary = "A simple set of four Agents.",
 	source = "TerraME team",
 	attributes = {"name", "age", "wealth", "vision", "metabolism", "immune"},
-	types = {"string", "number", "number", "number", "number", "boolean"},
+	--types = {"string", "number", "number", "number", "number", "boolean"},
 	description = {"Name of the agents", "Age of the agent", "Amount of sugar the agent starts with", "Distance in cells the agent can see", "Energy consumed by time step", "Whether the agent is immune"}
 }
 

@@ -374,7 +374,7 @@ function _Gtme.executeDoc(package)
 	if isFile(package_path..s.."data.lua") and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
-			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "types", "description", "reference"})
+			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "description", "reference"})
 			doc_report.error_data = doc_report.error_data + count
 
 			if type(tab.file)        == "string" then tab.file = {tab.file} end
@@ -389,7 +389,6 @@ function _Gtme.executeDoc(package)
 				{"optionalTableArgument",  "file",        "table"},
 				{"optionalTableArgument",  "image",       "string"},
 				{"optionalTableArgument",  "attributes",  "table"},
-				{"optionalTableArgument",  "types",       "table"},
 				{"optionalTableArgument",  "description", "table"},
 				{"optionalTableArgument",  "reference",   "string"}
 			}
@@ -543,6 +542,12 @@ function _Gtme.executeDoc(package)
 				local cs = CellularSpace{
 					layer = layer
 				}
+				
+				if value.types == nil then value.types = {} end
+
+				forEachElement(value.attributes, function(idx, mvalue)
+					value.types[idx] = type(cs.cells[1][mvalue])
+				end)
 
 				value.quantity = #cs
 
@@ -562,6 +567,7 @@ function _Gtme.executeDoc(package)
 
 				if value.attributes  == nil then value.attributes  = {} end
 				if value.description == nil then value.description = {} end
+				if value.types       == nil then value.types       = {} end
 
 				for i = 0, value.bands - 1 do
 					if not belong(tostring(i), value.attributes) then
@@ -577,6 +583,10 @@ function _Gtme.executeDoc(package)
 						doc_report.error_data = doc_report.error_data + 1
 						printError("Band '"..mvalue.."' is documented but does not exist in the file.")
 					end
+				end)
+
+				forEachElement(value.attributes, function(idx)
+					value.types[idx] = "number"
 				end)
 
 				idx = idx + 1
