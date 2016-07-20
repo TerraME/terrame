@@ -1083,10 +1083,10 @@ return {
 		rmFile(newLayerName..".shp")
 		rmFile(proj.file)
 	end,
-	getShpByFilePath = function(unitTest)
+	getOGRByFilePath = function(unitTest)
 		local tl = TerraLib{}
 		local shpPath = filePath("sampa.shp", "terralib")
-		local dSet = tl:getShpByFilePath(shpPath)
+		local dSet = tl:getOGRByFilePath(shpPath)
 		
 		unitTest:assertEquals(getn(dSet), 63)
 

@@ -124,7 +124,7 @@ local function createPgConnInfo(host, port, user, pass, database, encoding)
 	connInfo.PG_PASSWORD = pass
 	connInfo.PG_NEWDB_NAME = database
 	connInfo.PG_CONNECT_TIMEOUT = "4" 
-	connInfo.PG_CLIENT_ENCODING = encoding -- "UTF-8" --"CP1252" -- "LATIN1" --"WIN1252" 	
+	connInfo.PG_CLIENT_ENCODING = encoding -- "UTF-8" --"CP1252" -- "LATIN1" --"WIN1252"
 	connInfo.PG_CHECK_DB_EXISTENCE = database	
 
 	local errorMsg = checkConnectionParams("POSTGIS", connInfo)	
@@ -1843,29 +1843,36 @@ TerraLib_ = {
 
 		collectgarbage("collect")		
 	end,
-	--- Return the content of a shapefile.
+	--- Return the content of an OGR file.
 	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the file to be loaded.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
 	-- local shpPath = filePath("sampa.shp", "terralib")
-	-- dSet = tl:getShpByFilePath(shpPath)
-	getShpByFilePath = function(_, filePath)
+	-- dSet = tl:getOGRByFilePath(shpPath)
+	getOGRByFilePath = function(_, filePath)
 		local set
 
 		do
 			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "OGR")
-			local dSetName = getFileName(filePath)
+			local dSetName = ""
+
+			if string.lower(getFileExtension(filePath)) == "geojson" then
+				dSetName = "OGRGeoJSON"
+			else
+				dSetName = getFileName(filePath)
+			end
+
 			local dSet = ds:getDataSet(dSetName)
 			set = createDataSetAdapted(dSet)
-		
+
 			ds:close()
 		end
 
 		collectgarbage("collect")
-		
-		return set	
+
+		return set
 	end,
 	--- Returns the number of bands of some Raster.
 	-- @arg _ A TerraLib object.

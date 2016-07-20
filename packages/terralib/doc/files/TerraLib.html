@@ -316,6 +316,13 @@ Type to access TerraLib. It contains very basic and low level functions that are
 							
 								
 									<tr>
+										<td class="name" nowrap><a href="#getOGRByFilePath">getOGRByFilePath</a>&nbsp;
+<td class="summary">Return the content of an OGR file.</td>
+									</tr>
+								
+							
+								
+									<tr>
 										<td class="name" nowrap><a href="#getProjection">getProjection</a>&nbsp;
 <td class="summary">Returns a coordinate system name given an identification.</td>
 									</tr>
@@ -325,13 +332,6 @@ Type to access TerraLib. It contains very basic and low level functions that are
 									<tr>
 										<td class="name" nowrap><a href="#getPropertyNames">getPropertyNames</a>&nbsp;
 <td class="summary">Returns the property names of the dataset.</td>
-									</tr>
-								
-							
-								
-									<tr>
-										<td class="name" nowrap><a href="#getShpByFilePath">getShpByFilePath</a>&nbsp;
-<td class="summary">Return the content of a shapefile.</td>
 									</tr>
 								
 							
@@ -1746,6 +1746,60 @@ Returns the number of bands of some Raster.<br><br></span>
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
+<dt><h2><a name="getOGRByFilePath">
+
+	</a><strong>getOGRByFilePath</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the content of an OGR file.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A TerraLib object.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The path for the file to be loaded.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
+<span class="reserved">local</span> <span class="id">shpPath</span> = <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>)
+<span class="id">dSet</span> = <span class="id">tl</span>:<span class="function">getOGRByFilePath</span>(<span class="id">shpPath</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
 <dt><h2><a name="getProjection">
 
 	</a><strong>getProjection</strong>&nbsp;
@@ -1847,60 +1901,6 @@ Returns the property names of the dataset.<br><br></span>
 	<span class="id">unitTest</span>:<span class="id">assert</span>((<span class="id">propNames</span>[<span class="id">i</span>] == <span class="string">"FID"</span>) <span class="reserved">or</span> (<span class="id">propNames</span>[<span class="id">i</span>] == <span class="string">"ID"</span>) <span class="reserved">or</span> 
 					(<span class="id">propNames</span>[<span class="id">i</span>] == <span class="string">"NM_MICRO"</span>) <span class="reserved">or</span> (<span class="id">propNames</span>[<span class="id">i</span>] == <span class="string">"CD_GEOCODU"</span>))
 <span class="reserved">end</span>	</code></pre>
-
-
-
-
-</dd>
-
-
-						    	
-							
-									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-
-<dt><h2><a name="getShpByFilePath">
-
-	</a><strong>getShpByFilePath</strong>&nbsp;
-
-</h2></dt>
-<dd>
-
-
-<span class="description">
-
-Return the content of a shapefile.<br><br></span>
-
-
-
-
-<!-- Function arguments -->
-  <h3>Arguments</h3>
-<ul><span class="arg">
-
-    <li>
-	  <strong>#1</strong>: A TerraLib object.
-    </li> 
-    
-  
-    <li>
-	  <strong>#2</strong>: The path for the file to be loaded.
-    </li> 
-    
-  
-  </span></ul>
-
-
-
-
-
-
-
-<h3>Usage</h3>
-<pre class="example"><code><span class="id">tl</span> = <span class="function">TerraLib</span>{}
-<span class="reserved">local</span> <span class="id">shpPath</span> = <span class="id">filePath</span>(<span class="string">"sampa.shp"</span>, <span class="string">"terralib"</span>)
-<span class="id">dSet</span> = <span class="id">tl</span>:<span class="function">getShpByFilePath</span>(<span class="id">shpPath</span>)</code></pre>
 
 
 

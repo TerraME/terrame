@@ -34,6 +34,7 @@ return{
 		local options = {
  			csv = true,
  			map = true,
+			geojson = true,
  			shp = true,
  			virtual = true,
 			proj = true

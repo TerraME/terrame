@@ -196,6 +196,12 @@ local function checkCsv(self)
 	defaultTableValue(self, "sep", ",")
 end
 
+local function checkGeoJSON(self)
+	if not isFile(self.file) then
+		customError("File '"..self.file.."' was not found.")
+	end
+end
+
 local function checkMap(self)
 	defaultTableValue(self, "sep", " ")
 
@@ -390,9 +396,9 @@ local function setCellsByTerraLibDataSet(self, dSet)
 	end
 end
 
-local function loadShape(self)
+local function loadOGR(self)
 	local tlib = terralib.TerraLib{}
-	local dSet = tlib:getShpByFilePath(self.file)
+	local dSet = tlib:getOGRByFilePath(self.file)
 	self.geometry = true
 	setCellsByTerraLibDataSet(self, dSet)
 	local temp = ""
@@ -454,8 +460,14 @@ local function registerCellularSpaceDriver(data)
 end
 
 registerCellularSpaceDriver{
+	source = "geojson",
+	load = loadOGR,
+	check = checkGeoJSON
+}
+
+registerCellularSpaceDriver{
 	source = "shp",
-	load = loadShape,
+	load = loadOGR,
 	check = checkShape
 }
 

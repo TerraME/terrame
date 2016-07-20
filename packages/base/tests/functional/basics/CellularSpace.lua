@@ -175,7 +175,98 @@ return{
 			if isFile(f) then
 				rmFile(f)
 			end
-		end			
+		end
+		------------------------------------------------------------------
+		--//GeoJSON
+		projName = "geojson_cellspace.tview"
+		author = "Carneiro Heitor"
+		title = "GeoJSON Cellular Space"
+
+		proj = terralib.Project{
+			file = projName,
+			clean = true,
+			author = author,
+			title = title
+		}
+
+		layerName1 = "GeoJSON_Sampa"
+
+		terralib.Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("sampa.geojson", "terralib")
+		}
+
+		testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local geojson1 = "geojson_sampa_cells.geojson"
+		filePath1 = testDir.."/"..geojson1
+
+		if isFile(filePath1) then
+			rmFile(filePath1)
+		end
+
+		clName1 = "GeoJSON_Sampa_Cells"
+		layer = terralib.Layer{
+			project = proj,
+			input = layerName1,
+			name = clName1,
+			resolution = 1,
+			file = filePath1
+		}
+
+		cs = CellularSpace{
+			project = projName,
+			layer = clName1
+		}
+
+		unitTest:assertEquals(projName, cs.project.file)
+		unitTest:assertType(cs.layer, "Layer")
+
+		unitTest:assertEquals(proj.title, title)
+		unitTest:assertEquals(proj.author, author)
+
+		unitTest:assertEquals(layer.source, "geojson")
+		unitTest:assertEquals(layer.file, filePath1)
+		unitTest:assert(#cs.cells > 0)
+
+		cs = CellularSpace{
+			file = filePath1
+		}
+
+		unitTest:assert(#cs.cells > 0)
+
+		forEachCell(cs, function(c)
+			unitTest:assertNotNil(c.x)
+			unitTest:assertNotNil(c.y)
+		end)
+
+		cs = CellularSpace{
+			project = projName,
+			layer = clName1,
+			geometry = true
+		}
+
+		forEachCell(cs, function(c)
+			unitTest:assertNotNil(c.geom)
+			unitTest:assertNil(c.OGR_GEOMETRY)
+		end)
+
+		cs = CellularSpace{
+			project = projName,
+			layer = clName1
+		}
+
+		forEachCell(cs, function(c)
+			unitTest:assertNil(c.geom)
+			unitTest:assertNil(c.OGR_GEOMETRY)
+		end)
+
+		if isFile(projName) then
+			rmFile(projName)
+		end
+		if isFile(geojson1) then
+			rmFile(geojson1)
+		end
 	end, 
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
