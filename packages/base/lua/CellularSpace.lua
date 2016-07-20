@@ -26,6 +26,127 @@ local terralib = getPackage("terralib")
 
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
+local function loadNeighborhoodGAL(self, data)
+	local file = openFile(data.source, "r")
+	if file == nil then resourceNotFoundError("file", file) end
+
+	local header = file:read()
+	local lineTest = CSVparseLine(header, "\t" )
+	local b
+	if lineTest[2] ~= nil then b = "\t"
+	else b = " " end
+
+	forEachCell(self, function(cell)
+		cell:addNeighborhood(Neighborhood{}, data.name)
+	end)
+
+	repeat
+		local line_cell = file:read()
+		if line_cell ~= nil then
+			local line = CSVparseLine(line_cell, b)       
+			local cell = self:get(line[1])
+			if cell ~= nil then
+				local neig = cell:getNeighborhood(data.name)
+				local lineV = file:read()
+				local lineID = CSVparseLine(lineV, b)
+				for i = 1, tonumber(line[2]) do
+					local n = self:get(lineID[i])
+					neig:add(n)
+				end
+			end
+		end
+	until(line_cell == nil)
+   
+	closeFile(file)
+    
+end
+
+local function loadNeighborhoodGPM(self, data)
+	local file = openFile(data.source, "r")
+	if file == nil then resourceNotFoundError("file", file) end
+
+	local header = file:read()
+	local lineTest = CSVparseLine(header, "\t" )
+
+	local val
+	local a
+	if lineTest[2] ~= nil then a = "\t"
+	else a = " " end
+
+	if lineTest[4] == nil then val = 1
+	else val = 2 end
+
+	forEachCell(self, function(cell)
+		cell:addNeighborhood(Neighborhood{}, data.name)
+	end)
+
+	repeat
+		local line_cell = file:read()
+		if line_cell ~= nil then
+			local lineTest = CSVparseLine(line_cell, "\t" )
+			local b
+			if lineTest[2] ~= nil then b = "\t"
+			else b = " " end
+			local line = CSVparseLine(line_cell, b)       
+			local cell = self:get(line[1])
+			if cell ~= nil then
+				local neig = cell:getNeighborhood(data.name)
+				local lineV = file:read()
+				local lineID = CSVparseLine(lineV, b)
+				local valfor = (tonumber(line[2])*val)
+				for i = 1, valfor, val do
+					if lineID[i] ~= nil then
+						local n = self:get(lineID[i])
+						if val ~= 1 then neig:add(n, tonumber(lineID[i+1]))
+						else neig:add(n) end                        
+					elseif valfor >= i then
+						lineV = file:read()
+						lineID = CSVparseLine(lineV, b)
+						for j = i, valfor, val do
+							if lineID[i] ~= nil then
+								if val ~= 1 then neig:add(n, tonumber(lineID[i+1]))
+								else neig:add(n) end
+							end
+						end
+					end
+				end 
+			end
+		end
+	until(line_cell == nil)
+
+	closeFile(file)
+
+end
+
+local function loadNeighborhoodGWT(self, data)
+	local file = openFile(data.source, "r")
+	if file == nil then resourceNotFoundError("file", file) end
+    
+	local header = file:read()
+	local lineTest = CSVparseLine(header, "\t" )
+	local b
+	if lineTest[2] ~= nil then b = "\t"
+	else b = " " end
+
+	forEachCell(self, function(cell)
+		cell:addNeighborhood(Neighborhood{}, data.name)
+	end)
+
+	repeat
+		local line_cell = file:read()
+		if line_cell ~= nil then
+			local line = CSVparseLine(line_cell, b)       
+			local cell = self:get(line[1])
+			local neig = cell:getNeighborhood(data.name)
+			local n = self:get(line[2])
+			neig:add(n, tonumber(line[3]))
+		end
+	until(line_cell == nil)
+
+	closeFile(file)
+
+end
+
 local function getCoordCoupling(_, data)
 	return function(cell)
 		local neighborhood = Neighborhood()
@@ -892,8 +1013,15 @@ CellularSpace_ = {
 
 		defaultTableValue(data, "name", "1")
 		defaultTableValue(data, "check", true)
-
-		self.cObj_:loadNeighborhood(data.source, data.name, data.check)
+        
+		if data.source:endswith(".gal") then
+			loadNeighborhoodGAL(self, data)
+		elseif data.source:endswith(".gwt") then
+			loadNeighborhoodGWT(self, data)
+		elseif data.source:endswith(".gpm") then
+			loadNeighborhoodGPM(self, data)        
+		end
+        
 	end,
 	--- Notify every Observer connected to the CellularSpace.
 	-- @arg modelTime A number representing the notification time. The default value is zero.
