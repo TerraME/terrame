@@ -67,11 +67,7 @@ local function loadNeighborhoodGPM(self, data)
 
 	local header = file:read()
 	local lineTest = CSVparseLine(header, "\t" )
-
 	local val
-	local a
-	if lineTest[2] ~= nil then a = "\t"
-	else a = " " end
 
 	if lineTest[4] == nil then val = 1
 	else val = 2 end
@@ -83,7 +79,7 @@ local function loadNeighborhoodGPM(self, data)
 	repeat
 		local line_cell = file:read()
 		if line_cell ~= nil then
-			local lineTest = CSVparseLine(line_cell, "\t" )
+			lineTest = CSVparseLine(line_cell, "\t" )
 			local b
 			if lineTest[2] ~= nil then b = "\t"
 			else b = " " end
@@ -99,15 +95,6 @@ local function loadNeighborhoodGPM(self, data)
 						local n = self:get(lineID[i])
 						if val ~= 1 then neig:add(n, tonumber(lineID[i+1]))
 						else neig:add(n) end                        
-					elseif valfor >= i then
-						lineV = file:read()
-						lineID = CSVparseLine(lineV, b)
-						for j = i, valfor, val do
-							if lineID[i] ~= nil then
-								if val ~= 1 then neig:add(n, tonumber(lineID[i+1]))
-								else neig:add(n) end
-							end
-						end
 					end
 				end 
 			end
