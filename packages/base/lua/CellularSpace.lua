@@ -114,7 +114,7 @@ local function loadNeighborhoodGPM(self, data)
 					if lineID[i] ~= nil then
 						local n = self:get(lineID[i])
 						if val ~= 1 then 
-							neig:add(n, tonumber(lineID[i+1]))
+							neig:add(n, tonumber(lineID[i + 1]))
 						else 
 							neig:add(n) 
 						end                        
