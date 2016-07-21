@@ -196,6 +196,12 @@ local function checkCsv(self)
 	defaultTableValue(self, "sep", ",")
 end
 
+local function checkGdal(self)
+	if not isFile(self.file) then
+		customError("File '"..self.file.."' was not found.")
+	end
+end
+
 local function checkGeoJSON(self)
 	if not isFile(self.file) then
 		customError("File '"..self.file.."' was not found.")
@@ -396,6 +402,24 @@ local function setCellsByTerraLibDataSet(self, dSet)
 	end
 end
 
+local function loadGdal(self)
+	local tlib = terralib.TerraLib{}
+	local dSet = tlib:getGdalByFilePath(self.file)
+	setCellsByTerraLibDataSet(self, dSet)
+	local temp = ""
+
+	for i = self.file:len(), 1, -1 do
+		if self.file:sub(i, i) ~= sessionInfo().separator then
+			temp = self.file:sub(i, i)..temp
+		else
+			break
+		end
+	end
+
+	self.layer = temp
+	self.cObj_:setLayer(self.layer)
+end
+
 local function loadOGR(self)
 	local tlib = terralib.TerraLib{}
 	local dSet = tlib:getOGRByFilePath(self.file)
@@ -460,12 +484,6 @@ local function registerCellularSpaceDriver(data)
 end
 
 registerCellularSpaceDriver{
-	source = "geojson",
-	load = loadOGR,
-	check = checkGeoJSON
-}
-
-registerCellularSpaceDriver{
 	source = "shp",
 	load = loadOGR,
 	check = checkShape
@@ -501,6 +519,30 @@ registerCellularSpaceDriver{
 	compulsory = "layer",
 	optional = "project",
 	check = checkProject
+}
+
+registerCellularSpaceDriver{
+	source = "geojson",
+	load = loadOGR,
+	check = checkGeoJSON
+}
+
+registerCellularSpaceDriver{
+	source = "tif",
+	load = loadGdal,
+	check = checkGdal
+}
+
+registerCellularSpaceDriver{
+	source = "nc",
+	load = loadGdal,
+	check = checkGdal
+}
+
+registerCellularSpaceDriver{
+	source = "asc",
+	load = loadGdal,
+	check = checkGdal
 }
 
 CellularSpace_ = {

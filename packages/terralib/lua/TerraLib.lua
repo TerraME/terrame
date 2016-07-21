@@ -1843,6 +1843,30 @@ TerraLib_ = {
 
 		collectgarbage("collect")		
 	end,
+	--- Return the content of a GDAL file.
+	-- @arg _ A TerraLib object.
+	-- @arg filePath The path for the file to be loaded.
+	-- @usage -- DONTRUN
+	-- tl = TerraLib{}
+	-- local gdalPath = filePath("PRODES_5KM.tif", "terralib")
+	-- dSet = tl:getGdalByFilePath(gdalPath)
+	getGdalByFilePath = function(_, filePath)
+		local set
+
+		do
+			local connInfo = createFileConnInfo(filePath)
+			local ds = makeAndOpenDataSource(connInfo, "GDAL")
+			local dSetName = getFileNameWithExtension(connInfo.URI)
+			local dSet = ds:getDataSet(dSetName)
+			set = createDataSetAdapted(dSet)
+
+			ds:close()
+		end
+
+		collectgarbage("collect")
+
+		return set
+	end,
 	--- Return the content of an OGR file.
 	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the file to be loaded.
