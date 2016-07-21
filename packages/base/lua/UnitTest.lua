@@ -61,7 +61,7 @@ UnitTest_ = {
 	-- @usage unitTest = UnitTest{}
 	-- unitTest:assertEquals(3, 3)
 	-- unitTest:assertEquals(2, 2.1, 0.2)
-	-- unitTest:assertEquals([[string [biomassa-manaus.asc] ]], [[string [terralib/data/biomassa-manaus.asc] ]], 0, true)
+	-- unitTest:assertEquals("string [terralib/data/biomassa-manaus.asc]", "string [biomassa-manaus.asc]", 0, true)
 	assertEquals = function (self, v1, v2, tol, ignorePath)
 		self.test = self.test + 1
 

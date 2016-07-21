@@ -192,7 +192,7 @@ return{
 
 		layerName1 = "GeoJSON_Sampa"
 
-		layer = terralib.Layer{
+		terralib.Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("sampa.geojson", "terralib")

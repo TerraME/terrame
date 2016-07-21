@@ -1880,7 +1880,7 @@ TerraLib_ = {
 		do
 			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "OGR")
-			local dSetName = ""
+			local dSetName
 
 			if string.lower(getFileExtension(filePath)) == "geojson" then
 				dSetName = "OGRGeoJSON"
