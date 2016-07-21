@@ -240,7 +240,7 @@ local function getProjects(package)
 			}
 
 			if not layers[data.file] then 
-				local layer = tl.Layer{
+				tl.Layer{
 					project = data.project,
 					name = data.name
 				}
