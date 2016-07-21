@@ -36,6 +36,14 @@ local function loadNeighborhoodGAL(self, data)
 	else 
 		b = " " 
 	end
+	for _, element in pairs(self) do
+		if type(element) == "CellularSpace" then
+			local cellSpaceLayer = element.layer            
+			if cellSpaceLayer == header[2] then
+				customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..cellSpaceLayer.."', GAL file layer: '"..header[2].."'.")
+			end
+		end
+	end  
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
@@ -69,6 +77,19 @@ local function loadNeighborhoodGPM(self, data)
 	else 
 		val = 2 
 	end
+	if header[3] ~= nil then
+		if header[3]:endswith(".shp") then
+			customError("This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
+		end
+	end
+	for _, element in pairs(self) do
+		if type(element) == "CellularSpace" then
+			local cellSpaceLayer = element.layer            
+			if cellSpaceLayer == header[2] then
+				customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..cellSpaceLayer.."', GPM file layer: '"..header[2].."'.")
+			end
+		end
+	end 
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
@@ -115,6 +136,14 @@ local function loadNeighborhoodGWT(self, data)
 		b = "\t"
 	else 
 		b = " " 
+	end
+	for _, element in pairs(self) do
+		if type(element) == "CellularSpace" then
+			local cellSpaceLayer = element.layer            
+			if cellSpaceLayer == header[2] then
+				customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..cellSpaceLayer.."', GWT file layer: '"..header[2].."'.")
+			end
+		end
 	end
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
