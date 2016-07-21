@@ -28,20 +28,19 @@ TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary
 
 local function loadNeighborhoodGAL(self, data)
 	local file = openFile(data.source, "r")
-	if file == nil then resourceNotFoundError("file", file) end
-
 	local header = file:read()
-	local lineTest = CSVparseLine(header, "\t" )
+	local lineTest = CSVparseLine(header, "\t")
 	local b
-	if lineTest[2] ~= nil then b = "\t"
-	else b = " " end
-
+	if lineTest[2] ~= nil then 
+		b = "\t"
+	else 
+		b = " " 
+	end
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
-
-	repeat
-		local line_cell = file:read()
+	local line_cell = file:read()
+	while line_cell do
 		if line_cell ~= nil then
 			local line = CSVparseLine(line_cell, b)       
 			local cell = self:get(line[1])
@@ -55,72 +54,73 @@ local function loadNeighborhoodGAL(self, data)
 				end
 			end
 		end
-	until(line_cell == nil)
-   
+		line_cell = file:read()
+	end
 	closeFile(file)
-    
 end
 
 local function loadNeighborhoodGPM(self, data)
 	local file = openFile(data.source, "r")
-	if file == nil then resourceNotFoundError("file", file) end
-
 	local header = file:read()
-	local lineTest = CSVparseLine(header, "\t" )
+	local lineTest = CSVparseLine(header, "\t")
 	local val
-
-	if lineTest[4] == nil then val = 1
-	else val = 2 end
-
+	if lineTest[4] == nil then 
+		val = 1
+	else 
+		val = 2 
+	end
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
-
-	repeat
-		local line_cell = file:read()
+	local line_cell = file:read()
+	while line_cell do
 		if line_cell ~= nil then
-			lineTest = CSVparseLine(line_cell, "\t" )
+			lineTest = CSVparseLine(line_cell, "\t")
 			local b
-			if lineTest[2] ~= nil then b = "\t"
-			else b = " " end
+			if lineTest[2] ~= nil then
+				b = "\t"
+			else 
+				b = " " 
+			end
 			local line = CSVparseLine(line_cell, b)       
 			local cell = self:get(line[1])
 			if cell ~= nil then
 				local neig = cell:getNeighborhood(data.name)
 				local lineV = file:read()
 				local lineID = CSVparseLine(lineV, b)
-				local valfor = (tonumber(line[2])*val)
+				local valfor = (tonumber(line[2]) * val)
 				for i = 1, valfor, val do
 					if lineID[i] ~= nil then
 						local n = self:get(lineID[i])
-						if val ~= 1 then neig:add(n, tonumber(lineID[i+1]))
-						else neig:add(n) end                        
+						if val ~= 1 then 
+							neig:add(n, tonumber(lineID[i+1]))
+						else 
+							neig:add(n) 
+						end                        
 					end
 				end 
 			end
 		end
-	until(line_cell == nil)
-
+		line_cell = file:read()
+	end
 	closeFile(file)
-
 end
 
 local function loadNeighborhoodGWT(self, data)
 	local file = openFile(data.source, "r")
-	if file == nil then resourceNotFoundError("file", file) end
-    
 	local header = file:read()
-	local lineTest = CSVparseLine(header, "\t" )
+	local lineTest = CSVparseLine(header, "\t")
 	local b
-	if lineTest[2] ~= nil then b = "\t"
-	else b = " " end
-
+	if lineTest[2] ~= nil then
+		b = "\t"
+	else 
+		b = " " 
+	end
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
-
-	repeat
-		local line_cell = file:read()
+	local line_cell = file:read()
+	while line_cell do
 		if line_cell ~= nil then
 			local line = CSVparseLine(line_cell, b)       
 			local cell = self:get(line[1])
@@ -128,10 +128,9 @@ local function loadNeighborhoodGWT(self, data)
 			local n = self:get(line[2])
 			neig:add(n, tonumber(line[3]))
 		end
-	until(line_cell == nil)
-
+		line_cell = file:read()
+	end
 	closeFile(file)
-
 end
 
 local function getCoordCoupling(_, data)
@@ -982,8 +981,6 @@ CellularSpace_ = {
 		verifyNamedTable(data)
 		verifyUnnecessaryArguments(data, {"source", "name", "check"})
 
-		mandatoryTableArgument(data, "source", "string")
-
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
 			if not isFile(data.source) then
 				resourceNotFoundError("source", data.source)
@@ -997,16 +994,20 @@ CellularSpace_ = {
 				invalidFileExtensionError("source", ext)
 			end
 		end
-
-		defaultTableValue(data, "name", "1")
-		defaultTableValue(data, "check", true)
+        
+		local file = openFile(data.source, "r")
+		if file == nil then 
+			resourceNotFoundError("source", file)
+		end
         
 		if data.source:endswith(".gal") then
 			loadNeighborhoodGAL(self, data)
 		elseif data.source:endswith(".gwt") then
 			loadNeighborhoodGWT(self, data)
 		elseif data.source:endswith(".gpm") then
-			loadNeighborhoodGPM(self, data)        
+			loadNeighborhoodGPM(self, data)
+		else
+			customError("Could not read the file. It is not the expected type.")
 		end
         
 	end,
