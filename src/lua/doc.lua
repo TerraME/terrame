@@ -181,12 +181,28 @@ local function getProjects(package)
 				description = description.." selected attribute ".."\""..data.select.."\""
 			end
 
-			description = description.."."
+			if data.operation == "coverage" then
+				local layer = tl.Layer{
+					project = filePath(currentProject, package),
+					name = self.name
+				}
 
-			table.insert(layers[self.file].attributes, data.attribute) 
-			table.insert(layers[self.file].description, description) 
-			table.insert(layers[self.file].types, "number")
---[[			table.insert(layers[self.name].attribute = 
+				forEachElement(layer:attributes(), function(_, mvalue)
+					if string.sub(mvalue, 1, string.len(data.attribute)) == data.attribute then
+						local v = string.sub(mvalue, string.len(data.attribute) + 2)
+						table.insert(layers[self.file].attributes, mvalue) 
+						table.insert(layers[self.file].description, description.. " using value "..v..".") 
+						table.insert(layers[self.file].types, "number")
+					end
+				end)
+			else
+				description = description.."."
+
+				table.insert(layers[self.file].attributes, data.attribute) 
+				table.insert(layers[self.file].description, description) 
+				table.insert(layers[self.file].types, "number")
+			end
+				--[[			table.insert(layers[self.name].attribute = 
 
 			projects[currentProject][self.name].attributes[data.attribute] = {
 				band = data.band,
