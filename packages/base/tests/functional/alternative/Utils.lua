@@ -209,6 +209,27 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2))
 	end,
+	forEachModel = function(unitTest)
+		local error_func = function()
+			forEachModel()
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
+
+		error_func = function()
+			forEachModel(2)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Environment", 2))
+
+		error_func = function()
+			forEachModel(Environment{})
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
+
+		error_func = function()
+			forEachModel(Environment{}, 2)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2))
+	end,
 	forEachNeighbor = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 		cs:createNeighborhood()

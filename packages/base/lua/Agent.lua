@@ -523,7 +523,7 @@ Agent_ = {
 	-- @arg message A table with the received message. It has an attribute called sender with
 	-- the Agent that sent the message.
 	on_message = function(self, message)
-		customError("Agent "..self.id.." cannot get a message from "..message.sender.id.." because it does not implement 'on_message'.")
+		customError("Agent '"..tostring(self.id).."' cannot get a message from '"..tostring(message.sender.id).."' because it does not implement 'on_message'.")
 	end,
 	--- Execute a random walk to a neighbor Cell.
 	-- @deprecated Agent:walk

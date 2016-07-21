@@ -2420,7 +2420,7 @@ Synchronize the CellularSpace, calling the function synchronize() for each of it
 <ul><span class="arg">
 
     <li>
-	  <strong>#1</strong>: A string or a vector of strings with the attributes to be synchronized. If empty, TerraME synchronizes every attribute of the Cells but the (x, y) coordinates.
+	  <strong>#1</strong>: A string or a vector of strings with the attributes to be synchronized. If empty, TerraME synchronizes every attribute of the Cells but the (x, y) coordinates. If the CellularSpace has an instance and it implements <a href=../files/Cell.html#on_synchronize>Cell:on_synchronize()</a> then it will be called for each Cell.
     </li> 
     
   

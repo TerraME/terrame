@@ -49,7 +49,12 @@ return{
 		error_func = function()
 			Chart{target = c, select = "mvalue"}
 		end
-		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
+		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target. Do you mean 'value'?")
+
+		error_func = function()
+			Chart{target = c, select = "abcd"}
+		end
+		unitTest:assertError(error_func, "Selected element 'abcd' does not belong to the target.")
 
 		error_func = function()
 			Chart{target = c, xLabel = 5}

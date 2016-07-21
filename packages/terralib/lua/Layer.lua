@@ -23,19 +23,12 @@
 -------------------------------------------------------------------------------------------
 
 -- TODO: create Common for this
-local SourceTypeMapper = {
-	OGR = "shp",
-	GDAL = "tif",
-	POSTGIS = "postgis",
-	ADO = "access"
-}
-
 local function isEmpty(data)
 	return (data == "") or (data == nil)
 end
 
 local function isValidSource(source)
-	return source == "tif" or source == "shp" or source == "postgis" or source == "access"
+	return belong(source, {"tif", "shp", "postgis", "access", "nc", "asc", "geojson"})
 end
 
 local function isSourceConsistent(source, filePath)
@@ -86,7 +79,7 @@ local function addCellularLayer(self, data)
 
 	mandatoryTableArgument(data, "source", "string")
 		
-	if (data.source == "tif") or (data.source == "shp") then
+	if belong(data.source, {"tif", "shp", "geojson"}) then
 		if not isSourceConsistent(data.source, data.file) then
 			customError("File '"..data.file.."' not match to source '"..data.source.."'.")
 		end
@@ -132,6 +125,22 @@ local function addCellularLayer(self, data)
 			
 			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, 
 													data.file, not data.box, data.index)
+		end,
+		geojson = function()
+			mandatoryTableArgument(data, "file", "string")
+
+			if repr == "raster" then
+				verifyUnnecessaryArguments(data, {"input", "name", "project",
+					"resolution", "file", "source"})
+				data.box = true
+			else
+				defaultTableValue(data, "box", false)
+				verifyUnnecessaryArguments(data, {"box", "input", "name", "project",
+					"resolution", "file", "source"})
+			end
+
+			self.terralib:addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution,
+				data.file, not data.box)
 		end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")
@@ -183,7 +192,7 @@ local function addLayer(self, data)
 		customError("Source '"..data.source.."' is invalid.")
 	end				
 		
-	if data.source == "tif" or data.source == "shp" then
+	if belong(data.source, {"tif", "shp", "nc", "asc", "geojson"}) then
 		if not isSourceConsistent(data.source, data.file) then
 			customError("File '"..data.file.."' does not match to source '"..data.source.."'.")
 		end
@@ -201,11 +210,29 @@ local function addLayer(self, data)
 				
 			self.terralib:addShpLayer(self, data.name, data.file, data.index)
 		end,
+		geojson = function()
+			mandatoryTableArgument(data, "file", "string")
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+
+			self.terralib:addGeoJSONLayer(self, data.name, data.file)
+		end,
 		tif = function()	
 			mandatoryTableArgument(data, "file", "string")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 			
-			self.terralib:addTifLayer(self, data.name, data.file)
+			self.terralib:addGdalLayer(self, data.name, data.file)
+		end,
+		nc = function()
+			mandatoryTableArgument(data, "file", "string")
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+
+			self.terralib:addGdalLayer(self, data.name, data.file)
+		end,
+		asc = function()
+			mandatoryTableArgument(data, "file", "string")
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+
+			self.terralib:addGdalLayer(self, data.name, data.file)
 		end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")
@@ -576,10 +603,10 @@ Layer_ = {
 		}
 
 		if type(data.select) == "string" then
-			if not belong(data.select, data.layer:properties()) then
+			if not belong(data.select, data.layer:attributes()) then
 				local msg = "Selected attribute '"..data.select.."' does not exist in layer '"..data.layer.name.."'."
 
-				local sugg = suggestion(data.select, data.layer:properties())
+				local sugg = suggestion(data.select, data.layer:attributes())
 
 				if sugg then
 					msg = msg.." Do you mean '"..sugg.."'?"
@@ -607,8 +634,8 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- import("terralib")
 	--
-	-- print(vardump(layer:properties()))
-	properties = function(self)
+	-- print(vardump(layer:attributes()))
+	attributes = function(self)
 		local propNames = self.project.terralib:getPropertyNames(self.project, self.project.layers[self.name])
 		
 		if propNames[0] == "raster" then
@@ -730,7 +757,6 @@ function Layer(data)
 		local layer = data.project.layers[data.name]
 
 		local info = data.project.terralib:getLayerInfo(data.project, layer)
-		info.source = SourceTypeMapper[info.type]
 		info.type = nil
 
 		forEachElement(info, function(idx, value)

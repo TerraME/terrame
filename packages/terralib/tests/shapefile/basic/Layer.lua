@@ -713,7 +713,7 @@ return {
 		
 		rmFile(proj.file)
 	end,
-	properties = function(unitTest)
+	attributes = function(unitTest)
 		local projName = "layer_shape_basic.tview"
 
 		local proj = Project {
@@ -731,7 +731,7 @@ return {
 			index = false
 		}
 
-		local propNames = layer:properties()
+		local propNames = layer:attributes()
 		
 		for i = 1, #propNames do
 			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "SPRAREA") or 

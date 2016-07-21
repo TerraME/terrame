@@ -23,6 +23,25 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	forEachLayer = function(unitTest)
+		local project = Project{
+			file = "emas-count.tview",
+			clean = true,
+			firebreak = filePath("firebreak_lin.shp", "terralib"),
+			cover = filePath("accumulation_Nov94May00.tif", "terralib"),
+			river = filePath("River_lin.shp", "terralib"),
+			limit = filePath("Limit_pol.shp", "terralib")
+		}
+
+		local count = 0
+
+		forEachLayer(project, function(layer)
+			unitTest:assertType(layer, "Layer")
+			count = count + 1
+		end)
+
+		unitTest:assertEquals(count, 4)
+	end,
 	getFileNameWithExtension = function(unitTest)
 		unitTest:assertEquals(getFileNameWithExtension("/my/path/file.txt"), "file.txt")
 	end,

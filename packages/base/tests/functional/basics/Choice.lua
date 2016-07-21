@@ -58,6 +58,9 @@ return{
 		c = Choice{1, 2, 3, 4, default = 3}
 		unitTest:assertEquals(#c.values, 4)
 		unitTest:assertEquals(c.default, 3)
+
+		c = Choice{min = 0.1, max = 0.7, step = 0.05}
+		unitTest:assertEquals(c.default, 0.1)
 	end,
 	sample = function(unitTest)
 		local c = Choice{1, 2, 3}

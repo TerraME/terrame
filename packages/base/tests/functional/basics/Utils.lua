@@ -332,6 +332,45 @@ return{
 			unitTest:assert(true) -- SKIP
 		end
 	end,
+	forEachModel = function(unitTest)
+		local MyTube = Model{
+			water = 200,
+			sun = Choice{min = 0, default = 10},
+			init = function(model)
+				model.finalTime = 100
+
+				model.timer = Timer{
+					Event{action = function() end}
+				}
+			end
+		}
+	
+		local e = Environment{
+			scenario0 = MyTube{},
+			scenario1 = MyTube{water = 100},
+			scenario2 = MyTube{water = 100, sun = 5},
+			scenario3 = MyTube{water = 100, sun = 10}
+		}
+
+		local count = 0
+
+		forEachModel(e, function(model, name)
+			unitTest:assert(isModel(model))
+			unitTest:assertType(name, "string")
+			count = count + 1
+		end)
+
+		unitTest:assertEquals(count, 4)
+
+		count = 0
+
+		forEachModel(e, function()
+			count = count + 1
+			return false
+		end)
+
+		unitTest:assertEquals(count, 1)
+	end,
 	forEachNeighbor = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 		cs:createNeighborhood()
@@ -917,9 +956,9 @@ return{
 		unitTest:assertEquals(type(c), "Cell")
 	end,
 	vardump = function(unitTest)
-		local x = vardump{a = 2, b = 3, w = {2, 3, 4}}
+		local actual = vardump{a = 2, b = 3, w = {2, 3, 4}}
 
-		unitTest:assertEquals(x, [[{
+		unitTest:assertEquals(actual, [[{
     a = 2, 
     b = 3, 
     w = {
@@ -929,9 +968,9 @@ return{
     }
 }]])
 
-		x = vardump{abc = 2, be2 = 3, ["2bx"] = {2, 3, 4}}
+		actual = vardump{abc = 2, be2 = 3, ["2bx"] = {2, 3, 4}}
 
-		unitTest:assertEquals(x, [[{
+		unitTest:assertEquals(actual, [[{
     ["2bx"] = {
         [1] = 2, 
         [2] = 3, 
@@ -941,13 +980,32 @@ return{
     be2 = 3
 }]])
 
-		x = vardump{name = "john", age = 20, [false] = 5}
+		actual = vardump{name = "john", age = 20, [false] = 5}
 
-		unitTest:assertEquals(x, [[{
+		unitTest:assertEquals(actual, [[{
     age = 20, 
     [false] = 5, 
     name = "john"
 }]])
+
+		actual = "Phrase 1. \nPhrase 2."
+		local expected = "\"Phrase 1. \\nPhrase 2.\""
+
+		unitTest:assertEquals(vardump(actual), expected)
+
+		actual = vardump{
+			name = "john", 
+			age = 20, 
+			phrase = "Phrase 1. \nPhrase 2."
+		}
+
+		expected = [[{
+    age = 20, 
+    name = "john",
+    phrase = "Phrase 1. \nPhrase 2."
+}]]
+
+		unitTest:assertEquals(actual, expected, 1)
 
         local t = {x = true}
         
@@ -956,7 +1014,6 @@ return{
 		unitTest:assertEquals(y, [[{
     x = true
 }]])
-	
 	end
 }
 
