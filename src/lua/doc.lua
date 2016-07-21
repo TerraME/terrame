@@ -390,12 +390,11 @@ function _Gtme.executeDoc(package)
 	if isFile(package_path..s.."data.lua") and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
-			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "description", "reference"})
+			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "description", "reference"})
 			doc_report.error_data = doc_report.error_data + count
 
 			if type(tab.file)        == "string" then tab.file = {tab.file} end
 			if type(tab.attributes)  == "string" then tab.attributes = {tab.attributes} end
-			if type(tab.types)       == "string" then tab.types = {tab.types} end
 			if type(tab.description) == "string" then tab.description = {tab.description} end
 
 			local mverify = {
@@ -406,19 +405,16 @@ function _Gtme.executeDoc(package)
 				{"optionalTableArgument",  "image",       "string"},
 				{"optionalTableArgument",  "attributes",  "table"},
 				{"optionalTableArgument",  "description", "table"},
-				{"optionalTableArgument",  "reference",   "string"}
+				{"optionalTableArgument",  "reference",   "string"},
+				{"optionalTableArgument",  "separator",   "string"}
 			}
 
-			if tab.attributes or tab.types or tab.description then
+			if tab.attributes or tab.description then
 				if tab.attributes  == nil then tab.attributes  = {} end
-				if tab.types       == nil then tab.types       = {} end
 				if tab.description == nil then tab.description = {} end
 
 				local verifySize = function()
 					local ds = "Different sizes in the documentation: "
-					if #tab.attributes ~= #tab.types then
-						customError(ds.."'attributes' ("..#tab.attributes..") and 'types' ("..#tab.types..").")
-					end
 
 					if #tab.attributes ~= #tab.description then
 						customError(ds.."'attributes' ("..#tab.attributes..") and 'description' ("..#tab.description..").")
@@ -508,7 +504,48 @@ function _Gtme.executeDoc(package)
 		idx = 1
 
 		forEachElement(mdata, function(_, value)
-			if string.endswith(value.file[1], ".shp") then
+			value.types = {}
+			
+			if string.endswith(value.file[1], ".csv") then
+				print("Processing '"..value.file[1].."'")
+
+				if not value.separator then
+					doc_report.error_data = doc_report.error_data + 1
+					printError("Documentation of CSV files must define 'separator'.")
+					return
+				end
+
+				local csv 
+				
+				local result, err = pcall(function() csv = CSVread(filePath(value.file[1], package), value.separator) end)
+
+				if not result then
+					printError(err)
+					doc_report.error_data = doc_report.error_data + 1
+					return
+				end
+
+
+				if value.attributes  == nil then value.attributes  = {} end
+				if value.description == nil then value.description = {} end
+
+				forEachElement(value.attributes, function(idx, mvalue)
+					value.types[idx] = type(csv[1][mvalue])
+				end)
+
+				forEachElement(csv[1], function(idx, mvalue)
+					if not belong(idx, value.attributes) then
+						doc_report.error_data = doc_report.error_data + 1
+						printError("Attribute '"..idx.."' is not documented.")
+
+						table.insert(value.attributes, idx)
+						table.insert(value.description, "<font color=\"red\">undefined</font>")
+						table.insert(value.types, type(mvalue))
+					end
+				end)
+
+				value.quantity = #csv
+			elseif string.endswith(value.file[1], ".shp") then
 				print("Processing '"..value.file[1].."'")
 
 				layer = tl.Layer{
@@ -559,8 +596,6 @@ function _Gtme.executeDoc(package)
 					layer = layer
 				}
 				
-				if value.types == nil then value.types = {} end
-
 				forEachElement(value.attributes, function(idx, mvalue)
 					value.types[idx] = type(cs.cells[1][mvalue])
 				end)
@@ -583,11 +618,10 @@ function _Gtme.executeDoc(package)
 
 				if value.attributes  == nil then value.attributes  = {} end
 				if value.description == nil then value.description = {} end
-				if value.types       == nil then value.types       = {} end
 
 				for i = 0, value.bands - 1 do
 					if not belong(tostring(i), value.attributes) then
-						printError("Band '"..i.."' is not documented.")
+						printError("Band "..i.." is not documented.")
 						doc_report.error_data = doc_report.error_data + 1
 						table.insert(value.attributes, tostring(i))
 						table.insert(value.description, "<font color=\"red\">undefined</font>")
@@ -597,7 +631,7 @@ function _Gtme.executeDoc(package)
 				forEachElement(value.attributes, function(_, mvalue)
 					if tonumber(mvalue) < 0 or tonumber(mvalue) >= value.bands then
 						doc_report.error_data = doc_report.error_data + 1
-						printError("Band '"..mvalue.."' is documented but does not exist in the file.")
+						printError("Band "..mvalue.." is documented but does not exist in the file.")
 					end
 				end)
 
@@ -610,8 +644,6 @@ function _Gtme.executeDoc(package)
 		end)
 
 		rmFile("tmpproj.tview")
-
---		os.exit()
 
 		forEachOrderedElement(df, function(_, mvalue)	
 			if _Gtme.ignoredFile(mvalue) then

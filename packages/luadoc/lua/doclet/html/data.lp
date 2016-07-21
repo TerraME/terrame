@@ -86,6 +86,10 @@
 							<br><b>Bands: </b><%=data.bands%>
 						<%end%>
 
+						<%if data.separator then%>
+							<br><b>Separator: </b><%="\""..data.separator.."\""%>
+						<%end%>
+
 						<%if data.reference then%>
 							<br><b>Reference: </b><%=data.reference%>
 						<%end%>
@@ -102,7 +106,11 @@
 								</tr>
 							<%else%>
 								<% for j = 1,#data.attributes do %>
-									<tr><td><%="\""..data.attributes[j].."\""%></td><td><%="\""..data.types[j].."\""%></td><td><%=data.description[j]%></td></tr>
+									<%if data.bands then%>
+										<tr><td><%=data.attributes[j]%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
+									<%else%>
+									<tr><td><%="\""..data.attributes[j].."\""%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
+									<%end%>
 								<%end%>
 							<%end%> 
 							</table>
