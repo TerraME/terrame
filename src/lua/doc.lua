@@ -41,7 +41,8 @@ _Gtme.ignoredFile = function(fname)
 		".atx",
 		".shp.xml",
 		".cpg",
-		".qix"
+		".qix",
+		".lua"
 	}
 
 	local ignore = false
@@ -125,7 +126,7 @@ local function getProjects(package)
 				local description
 
 				if representation == "raster" then
-					description = "raster with "..layer:bands().." band"
+					description = "Raster with "..math.floor(layer:bands()).." band"
 
 					if layer:bands() > 1 then
 						description = description.."s"
@@ -147,17 +148,18 @@ local function getProjects(package)
 
 				projects[currentProject][idx] = {
 					file = tl.getFileNameWithExtension(value),
-					description = description,
-					projection = layer:projection()
+					description = description
 				}
 			end
 		end)
 
-		return data.file
+		return filePath(currentProject, "terralib")
 	end
 
 	local mLayer_ = {
 		fill = function(self, data)
+			if not self.file then return nil end
+
 			if not layers[self.file] then 
 				layers[self.file] = 
 				{
@@ -179,12 +181,28 @@ local function getProjects(package)
 				description = description.." selected attribute ".."\""..data.select.."\""
 			end
 
-			description = description.."."
+			if data.operation == "coverage" then
+				local layer = tl.Layer{
+					project = filePath(currentProject, package),
+					name = self.name
+				}
 
-			table.insert(layers[self.file].attributes, data.attribute) 
-			table.insert(layers[self.file].description, description) 
-			table.insert(layers[self.file].types, "number")
---[[			table.insert(layers[self.name].attribute = 
+				forEachElement(layer:attributes(), function(_, mvalue)
+					if string.sub(mvalue, 1, string.len(data.attribute)) == data.attribute then
+						local v = string.sub(mvalue, string.len(data.attribute) + 2)
+						table.insert(layers[self.file].attributes, mvalue) 
+						table.insert(layers[self.file].description, description.. " using value "..v..".") 
+						table.insert(layers[self.file].types, "number")
+					end
+				end)
+			else
+				description = description.."."
+
+				table.insert(layers[self.file].attributes, data.attribute) 
+				table.insert(layers[self.file].description, description) 
+				table.insert(layers[self.file].types, "number")
+			end
+				--[[			table.insert(layers[self.name].attribute = 
 
 			projects[currentProject][self.name].attributes[data.attribute] = {
 				band = data.band,
@@ -201,36 +219,43 @@ local function getProjects(package)
 	local mtLayer = {__index = mLayer_}
 
 	Layer = function(data)
-		if data.name then
+		if data.resolution and data.file then
+			local mfile = data.file
+
+			if not isFile(mfile) then
+				mfile = filePath(mfile, "terralib")
+			end
+
 			local cs = CellularSpace{
-				file = data.file
+				file = mfile
 			}
 
 			local quantity = #cs
 			description = tostring(quantity).." cells (polygons) with resolution "..
-				data.resolution.." built from layer \""..data.input.."\"."
+				data.resolution.." built from layer \""..data.input.."\""
 
 			projects[currentProject][data.name] = {
 				file = data.file,
-				description = description
+				description = description.."."
 			}
 
 			if not layers[data.file] then 
-				local layer = tl.Layer{
+				tl.Layer{
 					project = data.project,
 					name = data.name
 				}
 
 				layers[data.file] = 
 				{
-					projection = layer:projection(),
+					file = {data.file},
+					summary = "Automatically created file with "..description..", in project \""..currentProject.."\".",
+					shortsummary = "Automatically created file in project \""..currentProject.."\".",
 					attributes = {},
 					description = {},
 					types = {}
 				}
 			end
 
-			layers[data.file].summary = "Automatically created file with "..description
 		end
 
 		setmetatable(data, mtLayer)
@@ -243,20 +268,22 @@ local function getProjects(package)
 			print("Processing '"..file.."'")
 
 			xpcall(function() dofile(data_path..s..file) end, function(err)
-				printError(err)
+				printError(_Gtme.traceback(err))
 			end)
 
+			clean()
 		end
 	end)
 
 	local output = {}
-	local mlayers = {}
+	local allLayers = {}
 
 	-- we need to execute this separately to guarantee that the output will be alphabetically ordered
 	forEachOrderedElement(projects, function(idx, proj)
 		local luaFile = string.sub(idx, 1, -6).."lua"
 		local shortsummary = "Automatically created TerraView project file"
 		local summary = shortsummary.." from <a href=\"../../data/"..luaFile.."\">"..luaFile.."</a>."
+		local mlayers = {}
 
 		if proj.description then
 			summary = summary.." "..proj.description
@@ -272,6 +299,7 @@ local function getProjects(package)
 		forEachOrderedElement(proj, function(midx, layer)
 			layer.layer = midx
 			table.insert(mlayers, layer)
+			table.insert(allLayers, layer)
 		end)
 
 		mproject.layers = mlayers
@@ -279,12 +307,10 @@ local function getProjects(package)
 		table.insert(output, mproject)
 	end)
 
-	if #mlayers > 0 then
-		forEachOrderedElement(mlayers, function(_, layer)
-			layer.file = {layer.file}
-			table.insert(output, layer)
-		end)
-	end
+	forEachOrderedElement(layers, function(_, layer)
+		--layer.file = {layer.file}
+		table.insert(output, layer)
+	end)
 
 	clean()
 
@@ -364,12 +390,11 @@ function _Gtme.executeDoc(package)
 	if isFile(package_path..s.."data.lua") and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
-			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "types", "description", "reference"})
+			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "description", "reference"})
 			doc_report.error_data = doc_report.error_data + count
 
 			if type(tab.file)        == "string" then tab.file = {tab.file} end
 			if type(tab.attributes)  == "string" then tab.attributes = {tab.attributes} end
-			if type(tab.types)       == "string" then tab.types = {tab.types} end
 			if type(tab.description) == "string" then tab.description = {tab.description} end
 
 			local mverify = {
@@ -379,21 +404,17 @@ function _Gtme.executeDoc(package)
 				{"optionalTableArgument",  "file",        "table"},
 				{"optionalTableArgument",  "image",       "string"},
 				{"optionalTableArgument",  "attributes",  "table"},
-				{"optionalTableArgument",  "types",       "table"},
 				{"optionalTableArgument",  "description", "table"},
-				{"optionalTableArgument",  "reference",   "string"}
+				{"optionalTableArgument",  "reference",   "string"},
+				{"optionalTableArgument",  "separator",   "string"}
 			}
 
-			if tab.attributes or tab.types or tab.description then
+			if tab.attributes or tab.description then
 				if tab.attributes  == nil then tab.attributes  = {} end
-				if tab.types       == nil then tab.types       = {} end
 				if tab.description == nil then tab.description = {} end
 
 				local verifySize = function()
 					local ds = "Different sizes in the documentation: "
-					if #tab.attributes ~= #tab.types then
-						customError(ds.."'attributes' ("..#tab.attributes..") and 'types' ("..#tab.types..").")
-					end
 
 					if #tab.attributes ~= #tab.description then
 						customError(ds.."'attributes' ("..#tab.attributes..") and 'description' ("..#tab.description..").")
@@ -444,7 +465,7 @@ function _Gtme.executeDoc(package)
 		projects = getProjects(package)
 
 		forEachOrderedElement(projects, function(_, value)
-			if value.layers or string.find(value.description, "resolution") then -- a project or a layer of cells
+			if value.layers or string.find(value.summary, "resolution") then -- a project or a layer of cells
 				filesdocumented[value.file[1]] = 1
 			end
 		end)
@@ -454,8 +475,9 @@ function _Gtme.executeDoc(package)
 			local found = false
 			forEachElement(mdata, function(_, mvalue)
 				if value.file[1] == mvalue.file[1] then
-					if value.layers or string.find(value.description, "resolution") then -- a project or a layer of cells
+					if value.layers or string.find(value.summary, "resolution") then -- a project or a layer of cells
 						printError("File "..value.file[1].." should not be documented as it would be automatically created.")
+						found = true
 						doc_report.error_data = doc_report.error_data + 1
 					end
 				end
@@ -469,6 +491,159 @@ function _Gtme.executeDoc(package)
 		table.sort(mdata, function(a, b)
 			return a.file[1] < b.file[1]
 		end)
+
+		printNote("Checking properties of data files")
+		-- add quantity and type for each documented file
+		local tl = getPackage("terralib")
+
+		myProject = tl.Project{
+			file = "tmpproj.tview",
+			clean = true
+		}
+
+		idx = 1
+
+		forEachElement(mdata, function(_, value)
+			value.types = {}
+			
+			if string.endswith(value.file[1], ".csv") then
+				print("Processing '"..value.file[1].."'")
+
+				if not value.separator then
+					doc_report.error_data = doc_report.error_data + 1
+					printError("Documentation of CSV files must define 'separator'.")
+					return
+				end
+
+				local csv 
+				
+				local result, err = pcall(function() csv = CSVread(filePath(value.file[1], package), value.separator) end)
+
+				if not result then
+					printError(err)
+					doc_report.error_data = doc_report.error_data + 1
+					return
+				end
+
+
+				if value.attributes  == nil then value.attributes  = {} end
+				if value.description == nil then value.description = {} end
+
+				forEachElement(value.attributes, function(idx, mvalue)
+					value.types[idx] = type(csv[1][mvalue])
+				end)
+
+				forEachElement(csv[1], function(idx, mvalue)
+					if not belong(idx, value.attributes) then
+						doc_report.error_data = doc_report.error_data + 1
+						printError("Attribute '"..idx.."' is not documented.")
+
+						table.insert(value.attributes, idx)
+						table.insert(value.description, "<font color=\"red\">undefined</font>")
+						table.insert(value.types, type(mvalue))
+					end
+				end)
+
+				value.quantity = #csv
+			elseif string.endswith(value.file[1], ".shp") then
+				print("Processing '"..value.file[1].."'")
+
+				layer = tl.Layer{
+					project = myProject,
+					file = filePath(value.file[1], package),
+					name = "layer"..idx
+				}
+
+				value.representation = layer:representation()
+				value.projection = layer:projection()
+
+				local attributes = layer:attributes()
+
+				if value.attributes  == nil then value.attributes  = {} end
+				if value.description == nil then value.description = {} end
+
+				forEachElement(attributes, function(_, mvalue)
+					if not belong(mvalue, value.attributes) then
+						if mvalue == "FID" then
+							table.insert(value.attributes, mvalue)
+							table.insert(value.description, "Unique identifier (internal value).")
+						elseif mvalue == "id" then
+							table.insert(value.attributes, mvalue)
+							table.insert(value.description, "Unique identifier (internal value).")
+						elseif mvalue == "col" then
+							table.insert(value.attributes, mvalue)
+							table.insert(value.description, "Cell's column.")
+						elseif mvalue == "row" then
+							table.insert(value.attributes, mvalue)
+							table.insert(value.description, "Cell's row.")
+						else
+							printError("Attribute '"..mvalue.."' is not documented.")
+							doc_report.error_data = doc_report.error_data + 1
+							table.insert(value.attributes, mvalue)
+							table.insert(value.description, "<font color=\"red\">undefined</font>")
+						end
+					end
+				end)
+
+				forEachElement(value.attributes, function(_, mvalue)
+					if not belong(mvalue, attributes) then
+						doc_report.error_data = doc_report.error_data + 1
+						printError("Attribute '"..mvalue.."' is documented but does not exist in the file.")
+					end
+				end)
+
+				local cs = CellularSpace{
+					layer = layer
+				}
+				
+				forEachElement(value.attributes, function(idx, mvalue)
+					value.types[idx] = type(cs.cells[1][mvalue])
+				end)
+
+				value.quantity = #cs
+
+				idx = idx + 1
+			elseif string.endswith(value.file[1], ".tif") then
+				print("Processing '"..value.file[1].."'")
+
+				layer = tl.Layer{
+					project = myProject,
+					file = filePath(value.file[1], package),
+					name = "layer"..idx
+				}
+
+				value.representation = layer:representation()
+				value.projection = layer:projection()
+				value.bands = layer:bands()
+
+				if value.attributes  == nil then value.attributes  = {} end
+				if value.description == nil then value.description = {} end
+
+				for i = 0, value.bands - 1 do
+					if not belong(tostring(i), value.attributes) then
+						printError("Band "..i.." is not documented.")
+						doc_report.error_data = doc_report.error_data + 1
+						table.insert(value.attributes, tostring(i))
+						table.insert(value.description, "<font color=\"red\">undefined</font>")
+					end
+				end
+
+				forEachElement(value.attributes, function(_, mvalue)
+					if tonumber(mvalue) < 0 or tonumber(mvalue) >= value.bands then
+						doc_report.error_data = doc_report.error_data + 1
+						printError("Band "..mvalue.." is documented but does not exist in the file.")
+					end
+				end)
+
+				forEachElement(value.attributes, function(idx)
+					value.types[idx] = "number"
+				end)
+
+				idx = idx + 1
+			end
+		end)
+
+		rmFile("tmpproj.tview")
 
 		forEachOrderedElement(df, function(_, mvalue)	
 			if _Gtme.ignoredFile(mvalue) then
@@ -486,7 +661,7 @@ function _Gtme.executeDoc(package)
 				return
 			end
 
-			if filesdocumented[mvalue] == nil then
+			if filesdocumented[mvalue] == nil and not string.endswith(mvalue, ".lua") then
 				printError("File '"..mvalue.."' is not documented")
 				doc_report.error_data = doc_report.error_data + 1
 			else

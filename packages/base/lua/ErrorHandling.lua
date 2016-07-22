@@ -39,7 +39,8 @@ end
 
 --- Print a warning. If TerraME is executing in the debug mode, it stops the simulation with an error.
 -- @arg msg A string describing the warning.
--- @usage customWarning("warning message")
+-- @usage -- DONTRUN
+-- customWarning("warning message")
 function customWarning(msg)
 	if sessionInfo().mode == "quiet" then return end
 
@@ -53,7 +54,7 @@ function customWarning(msg)
 	local arg = msg
 
 	if info then
-		arg = "Warning: "..msg.." In file "..info.short_src..", in line "..info.currentline.."."
+		arg = "Warning: "..msg.." In file ".._Gtme.makePathCompatibleToAllOS(info.short_src)..", in line "..info.currentline.."."
 	end
 
 	if sessionInfo().mode == "debug" then
@@ -108,7 +109,8 @@ end
 -- ErrorHandling:defaultValueMsg().
 -- @arg argument A string with the name of the argument.
 -- @arg value The default value.
--- @usage str = defaultValueWarning("size", 2)
+-- @usage -- DONTRUN
+-- str = defaultValueWarning("size", 2)
 -- print(str)
 function defaultValueWarning(argument, value)
 	mandatoryArgument(1, "string", argument)

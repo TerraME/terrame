@@ -1656,7 +1656,7 @@ metaTableMap_ = {__index = Map_}
 --     soc
 -- }
 --
--- e:createPlacement{max = 1}
+-- e:createPlacement{}
 --
 -- m = Map{
 --     target = soc,
