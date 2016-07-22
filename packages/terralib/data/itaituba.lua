@@ -40,7 +40,7 @@ cl = Layer{
 	project = proj,
 	name = "cells",
 	clean = true,
-	file = "cells.shp",
+	file = "itaituba.shp",
 	input = "setores",
 	resolution = 5000
 }
@@ -48,17 +48,13 @@ cl = Layer{
 cl:fill{
 	operation = "average",
 	layer = "altimetria",
-	attribute = "altim",
-	clean = true,
-	output = "altim"
+	attribute = "altim"
 }
 
 cl:fill{
 	operation = "coverage",
 	layer = "deforestation",
-	attribute = "defor",
-	clean = true,
-	output = "defor"
+	attribute = "defor"
 }
 
 cl:fill{
@@ -66,31 +62,24 @@ cl:fill{
 	layer = "setores",
 	attribute = "pop",
 	select = "Populacao",
-	clean = true,
-	output = "pop",
 	area = true
 }
-
 
 cl:fill{
 	operation = "distance",
 	layer = "roads",
-	attribute = "distr",
-	clean = true,
-	output = "distr"
+	attribute = "distr"
 }
 
 cl:fill{
 	operation = "distance",
 	layer = "localidades",
-	attribute = "distl",
-	clean = true,
-	output = "distl"
+	attribute = "distl"
 }
 
 cs = CellularSpace{
 	project = proj,
-	layer = "distl"
+	layer = "cells"
 }
 
 m = Map{

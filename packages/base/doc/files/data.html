@@ -852,8 +852,55 @@
 						
 
 						
+							<br><b>Projection: </b>. SRID: 0.0. PROJ4: 
+						
 
 						
+							<br><b>Representation: </b>polygon
+						
+
+						
+							<br><b>Quantity: </b>1
+						
+
+						
+
+						
+
+						
+
+						
+							<table class="arg_tab">
+							<tr><td><b>Attribute
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							
+								
+									
+									<tr><td>"SPRAREA"</td><td>"number"</td><td>Polygon area</td></tr>
+									
+								
+									
+									<tr><td>"SPRPERIMET"</td><td>"number"</td><td>Polygon perimeter</td></tr>
+									
+								
+									
+									<tr><td>"SPRCLASSE"</td><td>"string"</td><td>A string with the class of the polygon</td></tr>
+									
+								
+									
+									<tr><td>"objet_id_1"</td><td>"string"</td><td>Unique identifier</td></tr>
+									
+								
+									
+									<tr><td>"FID"</td><td>"number"</td><td>Unique identifier (internal value).</td></tr>
+									
+								
+							 
+							</table>
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="River_lin.shp"><h2>River_lin.shp</h2></dt>
@@ -870,8 +917,51 @@
 						
 
 						
+							<br><b>Projection: </b>. SRID: 0.0. PROJ4: 
+						
 
 						
+							<br><b>Representation: </b>line
+						
+
+						
+							<br><b>Quantity: </b>208
+						
+
+						
+
+						
+
+						
+
+						
+							<table class="arg_tab">
+							<tr><td><b>Attribute
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							
+								
+									
+									<tr><td>"SPRPERIMET"</td><td>"number"</td><td>Polygon perimeter</td></tr>
+									
+								
+									
+									<tr><td>"SPRCLASSE"</td><td>"string"</td><td>A string with the class of the polygon</td></tr>
+									
+								
+									
+									<tr><td>"objet_id_9"</td><td>"string"</td><td>Unique identifier</td></tr>
+									
+								
+									
+									<tr><td>"FID"</td><td>"number"</td><td>Unique identifier (internal value).</td></tr>
+									
+								
+							 
+							</table>
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="agents.csv"><h2>agents.csv</h2></dt>
@@ -890,25 +980,55 @@
 						
 
 						
+
+						
+							<br><b>Quantity: </b>4
+						
+
+						
+
+						
+							<br><b>Separator: </b>","
+						
+
+						
+
+						
 							<table class="arg_tab">
-							<tr><td><b>Attribute</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							<tr><td><b>Attribute
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
 							
 								
-									<tr><td>name</td><td>string</td><td>Name of the agents</td></tr>
+									
+									<tr><td>"name"</td><td>"string"</td><td>Name of the agents</td></tr>
+									
 								
-									<tr><td>age</td><td>number</td><td>Age of the agent</td></tr>
+									
+									<tr><td>"age"</td><td>"number"</td><td>Age of the agent</td></tr>
+									
 								
-									<tr><td>wealth</td><td>number</td><td>Amount of sugar the agent starts with</td></tr>
+									
+									<tr><td>"wealth"</td><td>"number"</td><td>Amount of sugar the agent starts with</td></tr>
+									
 								
-									<tr><td>vision</td><td>number</td><td>Distance in cells the agent can see</td></tr>
+									
+									<tr><td>"vision"</td><td>"number"</td><td>Distance in cells the agent can see</td></tr>
+									
 								
-									<tr><td>metabolism</td><td>number</td><td>Energy consumed by time step</td></tr>
+									
+									<tr><td>"metabolism"</td><td>"number"</td><td>Energy consumed by time step</td></tr>
+									
 								
-									<tr><td>immune</td><td>boolean</td><td>Whether the agent is immune</td></tr>
+									
+									<tr><td>"immune"</td><td>"string"</td><td>Whether the agent is immune</td></tr>
+									
 								
 							 
 							</table>
 						
+
+						
+
 						</dd>
 					
 						<dt><a name="amazonia.shp"><h2>amazonia.shp</h2></dt>
@@ -918,7 +1038,7 @@
 							<center><img src=../../images/amazonia.bmp ></center><br><br>
 						
 						
-							Database with some data for the Amazonia region, in Brazil.
+							Database with some data for the Amazonia region, in Brazil. The biomass was taken from Sassan Saatchi. It is represented in Ton/ha and contains three values: [minimum, average, maximum]. The original data was degradated, and therefore the biomass might be underestimated.
 						
 						<dd>
 						
@@ -928,8 +1048,111 @@
 						
 
 						
+							<br><b>Projection: </b>. SRID: 0.0. PROJ4: 
+						
 
 						
+							<br><b>Representation: </b>polygon
+						
+
+						
+							<br><b>Quantity: </b>590
+						
+
+						
+
+						
+
+						
+
+						
+							<table class="arg_tab">
+							<tr><td><b>Attribute
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							
+								
+									
+									<tr><td>"object_id0"</td><td>"string"</td><td>Unique identifier</td></tr>
+									
+								
+									
+									<tr><td>"Col"</td><td>"number"</td><td>Column of the Cell</td></tr>
+									
+								
+									
+									<tr><td>"Lin"</td><td>"number"</td><td>Line of the Cell</td></tr>
+									
+								
+									
+									<tr><td>"areadigena"</td><td>"number"</td><td>Percentage of indigenous area</td></tr>
+									
+								
+									
+									<tr><td>"distportos"</td><td>"number"</td><td>Distance to ports</td></tr>
+									
+								
+									
+									<tr><td>"distdovias"</td><td>"number"</td><td>Distance to roads</td></tr>
+									
+								
+									
+									<tr><td>"defor_255"</td><td>"number"</td><td>Column with only zeros</td></tr>
+									
+								
+									
+									<tr><td>"defor_208"</td><td>"number"</td><td>Percentage of non-forest and non-deforestation area</td></tr>
+									
+								
+									
+									<tr><td>"defor_10"</td><td>"number"</td><td>Percentage of forest area</td></tr>
+									
+								
+									
+									<tr><td>"bioma_255"</td><td>"number"</td><td>Biomass [350, 375, 400]</td></tr>
+									
+								
+									
+									<tr><td>"bioma_224"</td><td>"number"</td><td>Biomass [250, 275, 300]</td></tr>
+									
+								
+									
+									<tr><td>"bioma_191"</td><td>"number"</td><td>Biomass [200, 225, 250]</td></tr>
+									
+								
+									
+									<tr><td>"bioma_160"</td><td>"number"</td><td>Biomass [150, 175, 200]</td></tr>
+									
+								
+									
+									<tr><td>"bioma_127"</td><td>"number"</td><td>Biomass [100, 125, 150]</td></tr>
+									
+								
+									
+									<tr><td>"biomssa_95"</td><td>"number"</td><td>Biomass [75, 87.5, 100]</td></tr>
+									
+								
+									
+									<tr><td>"biomssa_63"</td><td>"number"</td><td>Biomass [50, 62.5, 75]</td></tr>
+									
+								
+									
+									<tr><td>"biomssa_31"</td><td>"number"</td><td>Biomass [25, 37.5, 50]</td></tr>
+									
+								
+									
+									<tr><td>"biomassa_0"</td><td>"number"</td><td>Biomass [0, 12.5, 25]</td></tr>
+									
+								
+									
+									<tr><td>"FID"</td><td>"number"</td><td>Unique identifier (internal value).</td></tr>
+									
+								
+							 
+							</table>
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="brazil.gal"><h2>brazil.gal</h2></dt>
@@ -948,6 +1171,19 @@
 						
 
 						
+
+						
+
+						
+
+						
+
+						
+
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="brazilstates.shp"><h2>brazilstates.shp</h2></dt>
@@ -964,8 +1200,79 @@
 						
 
 						
+							<br><b>Projection: </b>. SRID: 0.0. PROJ4: 
+						
 
 						
+							<br><b>Representation: </b>polygon
+						
+
+						
+							<br><b>Quantity: </b>27
+						
+
+						
+
+						
+
+						
+
+						
+							<table class="arg_tab">
+							<tr><td><b>Attribute
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							
+								
+									
+									<tr><td>"SPRAREA"</td><td>"number"</td><td>Polygon area</td></tr>
+									
+								
+									
+									<tr><td>"SPRPERIMET"</td><td>"number"</td><td>Polygon perimeter</td></tr>
+									
+								
+									
+									<tr><td>"SPRROTULO"</td><td>"string"</td><td>A name for the state</td></tr>
+									
+								
+									
+									<tr><td>"SPRNOME"</td><td>"string"</td><td>A name for the state</td></tr>
+									
+								
+									
+									<tr><td>"NOME_UF"</td><td>"string"</td><td>Name of the state</td></tr>
+									
+								
+									
+									<tr><td>"SIGLA"</td><td>"string"</td><td>A name for the state</td></tr>
+									
+								
+									
+									<tr><td>"CAPITAL"</td><td>"string"</td><td>Name of the state's capital</td></tr>
+									
+								
+									
+									<tr><td>"CODIGO"</td><td>"number"</td><td>A code for the state</td></tr>
+									
+								
+									
+									<tr><td>"REGIAO"</td><td>"string"</td><td>Name of the region the state belongs</td></tr>
+									
+								
+									
+									<tr><td>"POPUL"</td><td>"number"</td><td>Population of the state</td></tr>
+									
+								
+									
+									<tr><td>"FID"</td><td>"number"</td><td>Unique identifier (internal value).</td></tr>
+									
+								
+							 
+							</table>
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="cabecadeboi-neigh.gal"><h2>cabecadeboi-neigh.gal</h2></dt>
@@ -1003,6 +1310,19 @@
 						
 
 						
+
+						
+
+						
+
+						
+
+						
+
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="cabecadeboi.shp"><h2>cabecadeboi.shp</h2></dt>
@@ -1022,8 +1342,59 @@
 						
 
 						
+							<br><b>Projection: </b>. SRID: 0.0. PROJ4: 
+						
 
 						
+							<br><b>Representation: </b>polygon
+						
+
+						
+							<br><b>Quantity: </b>10201
+						
+
+						
+
+						
+
+						
+
+						
+							<table class="arg_tab">
+							<tr><td><b>Attribute
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							
+								
+									
+									<tr><td>"object_id0"</td><td>"string"</td><td>Unique identifier of the Cell</td></tr>
+									
+								
+									
+									<tr><td>"Col"</td><td>"number"</td><td>The x location.</td></tr>
+									
+								
+									
+									<tr><td>"Lin"</td><td>"number"</td><td>The y location.</td></tr>
+									
+								
+									
+									<tr><td>"height_"</td><td>"number"</td><td>Height of the Cell, measured in values between 0 and 255.</td></tr>
+									
+								
+									
+									<tr><td>"soilWater"</td><td>"number"</td><td>Amount of water in the soil.</td></tr>
+									
+								
+									
+									<tr><td>"FID"</td><td>"number"</td><td>Unique identifier (internal value).</td></tr>
+									
+								
+							 
+							</table>
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="cabecadeboi900.shp"><h2>cabecadeboi900.shp</h2></dt>
@@ -1043,8 +1414,59 @@
 						
 
 						
+							<br><b>Projection: </b>. SRID: 0.0. PROJ4: 
+						
 
 						
+							<br><b>Representation: </b>polygon
+						
+
+						
+							<br><b>Quantity: </b>121
+						
+
+						
+
+						
+
+						
+
+						
+							<table class="arg_tab">
+							<tr><td><b>Attribute
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							
+								
+									
+									<tr><td>"object_id0"</td><td>"string"</td><td>Unique identifier of the Cell</td></tr>
+									
+								
+									
+									<tr><td>"Col"</td><td>"number"</td><td>The x location.</td></tr>
+									
+								
+									
+									<tr><td>"Lin"</td><td>"number"</td><td>The y location.</td></tr>
+									
+								
+									
+									<tr><td>"height_"</td><td>"number"</td><td>Height of the Cell, measured in values between 0 and 255.</td></tr>
+									
+								
+									
+									<tr><td>"soilWater"</td><td>"number"</td><td>Amount of water in the soil.</td></tr>
+									
+								
+									
+									<tr><td>"FID"</td><td>"number"</td><td>Unique identifier (internal value).</td></tr>
+									
+								
+							 
+							</table>
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="emas-distance.gal"><h2>emas-distance.gal</h2></dt>
@@ -1090,6 +1512,19 @@
 						
 
 						
+
+						
+
+						
+
+						
+
+						
+
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="emas.shp"><h2>emas.shp</h2></dt>
@@ -1109,10 +1544,73 @@
 						
 
 						
+							<br><b>Projection: </b>. SRID: 0.0. PROJ4: 
+						
+
+						
+							<br><b>Representation: </b>polygon
+						
+
+						
+							<br><b>Quantity: </b>1435
+						
+
+						
+
+						
+
+						
 							<br><b>Reference: </b>Almeida, Rodolfo M., et al. 'Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil.' X Simposio Brasileiro de Geoinfoamatica (2008)
 						
 
 						
+							<table class="arg_tab">
+							<tr><td><b>Attribute
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							
+								
+									
+									<tr><td>"object_id_"</td><td>"string"</td><td>Unique identifier for the Cell</td></tr>
+									
+								
+									
+									<tr><td>"Col"</td><td>"number"</td><td>Column of the Cell</td></tr>
+									
+								
+									
+									<tr><td>"Lin"</td><td>"number"</td><td>Line of the Cell</td></tr>
+									
+								
+									
+									<tr><td>"river"</td><td>"number"</td><td></td></tr>
+									
+								
+									
+									<tr><td>"firebreak"</td><td>"number"</td><td></td></tr>
+									
+								
+									
+									<tr><td>"accuation"</td><td>"number"</td><td></td></tr>
+									
+								
+									
+									<tr><td>"fire"</td><td>"number"</td><td></td></tr>
+									
+								
+									
+									<tr><td>"state"</td><td>"number"</td><td></td></tr>
+									
+								
+									
+									<tr><td>"FID"</td><td>"number"</td><td>Unique identifier (internal value).</td></tr>
+									
+								
+							 
+							</table>
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="simple-cs.csv"><h2>simple-cs.csv</h2></dt>
@@ -1134,6 +1632,43 @@
 						
 
 						
+
+						
+							<br><b>Quantity: </b>2500
+						
+
+						
+
+						
+							<br><b>Separator: </b>";"
+						
+
+						
+
+						
+							<table class="arg_tab">
+							<tr><td><b>Attribute
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							
+								
+									
+									<tr><td>"x"</td><td>"number"</td><td>x location of the Cell</td></tr>
+									
+								
+									
+									<tr><td>"y"</td><td>"number"</td><td>y location of the Cell</td></tr>
+									
+								
+									
+									<tr><td>"maxSugar"</td><td>"number"</td><td>Maximum amount of sugar for the Cell</td></tr>
+									
+								
+							 
+							</table>
+						
+
+						
+
 						</dd>
 					
 						<dt><a name="simple.map"><h2>simple.map</h2></dt>
@@ -1155,6 +1690,19 @@
 						
 
 						
+
+						
+
+						
+
+						
+
+						
+
+						
+
+						
+
 						</dd>
 					
 					</dl>

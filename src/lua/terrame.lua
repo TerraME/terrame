@@ -857,7 +857,7 @@ function _Gtme.traceback(err)
 				update = false
 			end
 		elseif not func then
-			if last_function then
+			if last_function and string.sub(last_function, 1, 7) ~= "call to" then
 				func = "call to "..last_function
 			else
 				func = "main chunk"
@@ -1285,7 +1285,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.showDoc(package)
 				os.exit(0)
 			elseif arg == "-doc" then
-				info_.mode = "strict"
+				info_.mode = "debug"
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				local errors = 0
 				local success, result = _Gtme.myxpcall(function() errors = _Gtme.executeDoc(package) end)
@@ -1446,8 +1446,16 @@ function _Gtme.myxpcall(func)
 		local m2 = string.match(err, string.sub(baseLuaDirectory, string.len(baseLuaDirectory) - 25, string.len(baseLuaDirectory)))
 		local m3 = string.match(err, string.sub(luadocLuaDirectory, string.len(luadocLuaDirectory) - 25, string.len(luadocLuaDirectory)))
 		local m4 = string.match(err, "%[C%]")
+		local m5 = string.match(err, "attempt to index a nil value %(local 'self'%)")
 
-		if m1 or m2 or m3 or m4 then
+		if m5 then
+			-- whenever this error uccurs, it is because terrame is trying to use the argument
+			-- self of a function of a type, but it is nil. TerraME never checks if this
+			-- argument exists, and therefore this kind of error must be captured here.
+			err = string.sub(err, 1, -44)
+			err = err.."Trying to index a nil value. Did you forget to use ':' instead of '.'?"
+			return _Gtme.traceback(err)
+		elseif m1 or m2 or m3 or m4 then
 			local str = 
 				"*************************************************************\n"..
 				"UNEXPECTED TERRAME INTERNAL ERROR. PLEASE GIVE US A FEEDBACK.\n"..
@@ -1468,9 +1476,7 @@ function _Gtme.myxpcall(func)
 
 			return str
 		else
-			local msg = _Gtme.traceback(err)
-
-			return msg
+			return _Gtme.traceback(err)
 		end
 	end)
 end
