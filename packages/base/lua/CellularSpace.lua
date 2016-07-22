@@ -111,14 +111,16 @@ local function loadNeighborhoodGPM(self, data)
 				local lineID = CSVparseLine(lineV, b)
 				local valfor = (tonumber(line[2]) * val)
 				for i = 1, valfor, val do
-					if lineID[i] ~= nil then
-						local n = self:get(lineID[i])
-						if val ~= 1 then 
-							neig:add(n, tonumber(lineID[i + 1]))
-						else 
-							neig:add(n) 
-						end                        
-					end
+					if valfor ~= nil then 
+						if lineID[i] ~= nil then
+							local n = self:get(lineID[i])
+							if val == 2 and n ~= nilthen  then
+								neig:add(n, tonumber(lineID[i + 1]))
+							elseif val == 1 and n ~= nil then
+								neig:add(n) 
+							end                        
+						end
+                    end 
 				end 
 			end
 		end
@@ -154,8 +156,14 @@ local function loadNeighborhoodGWT(self, data)
 			local line = CSVparseLine(line_cell, b)       
 			local cell = self:get(line[1])
 			local neig = cell:getNeighborhood(data.name)
-			local n = self:get(line[2])
-			neig:add(n, tonumber(line[3]))
+			if line[2] ~= nil then
+				local n = self:get(line[2])
+				if line[3] ~= nil then 
+					neig:add(n, tonumber(line[3]))
+				else
+					neig:add(n)
+				end
+			end
 		end
 		line_cell = file:read()
 	end
