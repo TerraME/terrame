@@ -31,13 +31,19 @@ local function loadNeighborhoodGAL(self, data)
 	local header = file:read()
 	local lineTest = CSVparseLine(header, "\t")
 	local vallayer
-	if lineTest[2]:endswith(".shp") then 
-		vallayer = lineTest[2]
+	if lineTest[2] ~= nil then
+		if lineTest[2]:endswith(".shp") then 
+			vallayer = lineTest[2]
+		else
+			vallayer = lineTest[3]
+		end
 	else
-		vallayer = lineTest[3]
+		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: 'b"..self.."', GAL file layer: '"..self.layer.."'.")
 	end
-	if self.layer ~= vallayer then
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..self.layer.."', GAL file layer: '"..vallayer.."'.")
+	if type(self) == "CellularSpace" then
+		if self.layer ~= vallayer then
+			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..self.layer.."', GAL file layer: '"..vallayer.."'.")
+		end
 	end  
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
@@ -85,13 +91,19 @@ local function loadNeighborhoodGPM(self, data)
 		end
 	end
 	local vallayer
-	if lineTest[2]:endswith(".shp") then 
-		vallayer = lineTest[2]
+	if lineTest[2] ~= nil then
+		if lineTest[2]:endswith(".shp") then 
+			vallayer = lineTest[2]
+		else
+			vallayer = lineTest[3]
+		end
 	else
-		vallayer = lineTest[3]
+		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: 'b"..self.."', GPM file layer: '"..self.layer.."'.")
 	end
-	if self.layer ~= vallayer then
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..self.layer.."', GPM file layer: '"..vallayer.."'.")
+    if type(self) == "CellularSpace" then
+	    if self.layer ~= vallayer then
+		    customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..self.layer.."', GPM file layer: '"..vallayer.."'.")
+        end 
 	end 
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
@@ -137,13 +149,19 @@ local function loadNeighborhoodGWT(self, data)
 	local header = file:read()
 	local lineTest = CSVparseLine(header, "\t")
 	local vallayer
-	if lineTest[2]:endswith(".shp") then 
-		vallayer = lineTest[2]
+	if lineTest[2] ~= nil then
+		if lineTest[2]:endswith(".shp") then 
+			vallayer = lineTest[2]
+		else
+			vallayer = lineTest[3]
+		end
 	else
-		vallayer = lineTest[3]
+		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: 'b"..self.."', GWT file layer: '"..self.layer.."'.")
 	end
-	if self.layer ~= vallayer then
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..self.layer.."', GWT file layer: '"..vallayer.."'.")
+	if type(self) == "CellularSpace" then
+		if self.layer ~= vallayer then
+			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..self.layer.."', GWT file layer: '"..vallayer.."'.")
+		end 
 	end
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
