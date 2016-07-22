@@ -311,13 +311,13 @@ return{
 
 		unitTest:assertEquals(layer.source, "tif")
 		unitTest:assertEquals(layer.file, filePath1)
-		unitTest:assert(#cs.cells > 0)
+		unitTest:assertEquals(#cs.cells, 1)
 
 		cs = CellularSpace{
 			file = filePath1
 		}
 
-		unitTest:assert(#cs.cells > 0)
+		unitTest:assertEquals(#cs.cells, 1)
 
 		forEachCell(cs, function(c)
 			unitTest:assertNotNil(c.x)
@@ -333,8 +333,8 @@ return{
 		end
 
 		-- NetCDF
-		projName = "tif_cellspace.tview"
-		title = "Tif Cellular Space"
+		projName = "nc_cellspace.tview"
+		title = "NC Cellular Space"
 
 		proj = terralib.Project{
 			file = projName,
@@ -365,13 +365,13 @@ return{
 
 		unitTest:assertEquals(layer.source, "nc")
 		unitTest:assertEquals(layer.file, filePath1)
-		unitTest:assert(#cs.cells > 0)
+		unitTest:assertEquals(#cs.cells, 1)
 
 		cs = CellularSpace{
 			file = filePath1
 		}
 
-		unitTest:assert(#cs.cells > 0)
+		unitTest:assertEquals(#cs.cells, 1)
 
 		forEachCell(cs, function(c)
 			unitTest:assertNotNil(c.x)
@@ -387,8 +387,8 @@ return{
 		end
 
 		-- ASC
-		projName = "tif_cellspace.tview"
-		title = "Tif Cellular Space"
+		projName = "asc_cellspace.tview"
+		title = "Asc Cellular Space"
 
 		proj = terralib.Project{
 			file = projName,
@@ -419,13 +419,13 @@ return{
 
 		unitTest:assertEquals(layer.source, "asc")
 		unitTest:assertEquals(layer.file, filePath1)
-		unitTest:assert(#cs.cells > 0)
+		unitTest:assertEquals(#cs.cells, 1)
 
 		cs = CellularSpace{
 			file = filePath1
 		}
 
-		unitTest:assert(#cs.cells > 0)
+		unitTest:assertEquals(#cs.cells, 1)
 
 		forEachCell(cs, function(c)
 			unitTest:assertNotNil(c.x)
