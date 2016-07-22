@@ -38,11 +38,11 @@ local function loadNeighborhoodGAL(self, data)
 			vallayer = lineTest[3]
 		end
 	else
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: 'b"..self.."', GAL file layer: '"..self.layer.."'.")
+		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: 'b""..self..""', GAL file layer: '"..self.layer.."'.")
 	end
 	if type(self) == "CellularSpace" then
 		if self.layer ~= vallayer then
-			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..self.layer.."', GAL file layer: '"..vallayer.."'.")
+			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '""..self.layer..""', GAL file layer: '"..vallayer.."'.")
 		end
 	end  
 	forEachCell(self, function(cell)
@@ -98,11 +98,11 @@ local function loadNeighborhoodGPM(self, data)
 			vallayer = lineTest[3]
 		end
 	else
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: 'b"..self.."', GPM file layer: '"..self.layer.."'.")
+		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: 'b""..self..""', GPM file layer: '"..self.layer.."'.")
 	end
     if type(self) == "CellularSpace" then
 	    if self.layer ~= vallayer then
-		    customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..self.layer.."', GPM file layer: '"..vallayer.."'.")
+		    customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '""..self.layer..""', GPM file layer: '"..vallayer.."'.")
         end 
 	end 
 	forEachCell(self, function(cell)
@@ -156,11 +156,11 @@ local function loadNeighborhoodGWT(self, data)
 			vallayer = lineTest[3]
 		end
 	else
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: 'b"..self.."', GWT file layer: '"..self.layer.."'.")
+		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: 'b""self""', GWT file layer: '"..self.layer.."'.")
 	end
 	if type(self) == "CellularSpace" then
 		if self.layer ~= vallayer then
-			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..self.layer.."', GWT file layer: '"..vallayer.."'.")
+			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '""..self.layer..""', GWT file layer: '"..vallayer.."'.")
 		end 
 	end
 	forEachCell(self, function(cell)
@@ -1040,9 +1040,18 @@ CellularSpace_ = {
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
 		verifyUnnecessaryArguments(data, {"source", "name", "check"})
+        
+		if data.source ~= nil then
+			local file = openFile(data.source, "r")
+			if file == nil and type(file) == "string" then 
+				resourceNotFoundError("source", data.source)
+			end
+		else
+			resourceNotFoundError("source", "")
+		end
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
-			if not isFile(data.source) then
+			if not openFile(data.source, "r") then
 				resourceNotFoundError("source", data.source)
 			end
 		else
@@ -1053,11 +1062,6 @@ CellularSpace_ = {
 			else
 				invalidFileExtensionError("source", ext)
 			end
-		end
-        
-		local file = openFile(data.source, "r")
-		if file == nil then 
-			resourceNotFoundError("source", file)
 		end
         
 		if data.source:endswith(".gal") then
@@ -1071,6 +1075,7 @@ CellularSpace_ = {
 		end
         
 	end,
+       
 	--- Notify every Observer connected to the CellularSpace.
 	-- @arg modelTime A number representing the notification time. The default value is zero.
 	-- It is also possible to use an Event as argument. In this case, it will use the result of
