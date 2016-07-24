@@ -30,26 +30,28 @@ local function loadNeighborhoodGAL(self, data)
 	local file = openFile(data.source, "r")
 	local header = file:read()
 	local lineTest = CSVparseLine(header, "\t")
-	local vallayer
+	local b 
 	if lineTest[2] ~= nil then
-		if lineTest[2]:endswith(".shp") then 
-			vallayer = lineTest[2]
-		else
-			vallayer = lineTest[3]
-		end
-	else
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: '"..self.layer.."'.")
+		b = "\t"
+	else 
+		b = " " 
+		lineTest = CSVparseLine(header, b)
 	end
-	if type(self) == "CellularSpace" then
-		if self.layer ~= vallayer then
-			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: '"..vallayer.."'.")
-		end
-	end  
+	local layer
+	if self.layer == nil then
+		layer = ""
+	else
+		layer = self.layer
+	end 
+	local vallayer = ""
+	if lineTest[3] ~= nil then vallayer = lineTest[3] end 
+	if vallayer ~= self.layer then
+		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GAL file layer: '"..vallayer.."'.")
+	end 
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 	local line_cell = file:read()
-	local b
 	if line_cell ~= nil then
 		lineTest = CSVparseLine(line_cell, "\t")
 		if lineTest[2] ~= nil then
@@ -79,37 +81,39 @@ local function loadNeighborhoodGPM(self, data)
 	local file = openFile(data.source, "r")
 	local header = file:read()
 	local lineTest = CSVparseLine(header, "\t")
+	local b
+	if lineTest[2] ~= nil then
+		b = "\t"
+	else 
+		b = " " 
+		lineTest = CSVparseLine(header, b)
+	end
+	local layer
+	if self.layer == nil then
+		layer = ""
+	else
+		layer = self.layer
+	end 
+	local vallayer = ""
+	if lineTest[3] ~= nil and lineTest[2] ~= nil then
+		if lineTest[3] ~= lineTest[2] then
+			customError("This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
+		end
+	end
+	if lineTest[2] ~= nil then vallayer = lineTest[2] end
+	if vallayer ~= self.layer then
+		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GPM file layer: '"..vallayer.."'.")
+	end
 	local val
 	if lineTest[4] == nil then 
 		val = 1
 	else 
 		val = 2 
 	end
-	if lineTest[3] ~= nil and lineTest[2] ~= nil then
-		if not lineTest[3]:endswith(lineTest[2]) then
-			customError("This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
-		end
-	end
-	local vallayer
-	if lineTest[2] ~= nil then
-		if lineTest[2]:endswith(".shp") then 
-			vallayer = lineTest[2]
-		else
-			vallayer = lineTest[3]
-		end
-	else
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: '"..self.layer.."'.")
-	end
-    if type(self) == "CellularSpace" then
-	    if self.layer ~= vallayer then
-		    customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: '"..vallayer.."'.")
-        end 
-	end 
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 	local line_cell = file:read()
-	local b
 	if line_cell ~= nil then
 		lineTest = CSVparseLine(line_cell, "\t")
 		if lineTest[2] ~= nil then
@@ -148,20 +152,23 @@ local function loadNeighborhoodGWT(self, data)
 	local file = openFile(data.source, "r")
 	local header = file:read()
 	local lineTest = CSVparseLine(header, "\t")
-	local vallayer
+	local b 
 	if lineTest[2] ~= nil then
-		if lineTest[2]:endswith(".shp") then 
-			vallayer = lineTest[2]
-		else
-			vallayer = lineTest[3]
-		end
-	else
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: '"..self.layer.."'.")
+		b = "\t"
+	else 
+		b = " " 
+		lineTest = CSVparseLine(header, b)
 	end
-	if type(self) == "CellularSpace" then
-		if self.layer ~= vallayer then
-			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: '"..vallayer.."'.")
-		end 
+	local layer
+	if self.layer == nil then
+		layer = ""
+	else
+		layer = self.layer
+	end 
+	local vallayer = ""
+	if lineTest[3] ~= nil then vallayer = lineTest[3] end 
+	if vallayer ~= self.layer then
+		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GWT file layer: '"..vallayer.."'.")
 	end
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
@@ -1038,17 +1045,18 @@ CellularSpace_ = {
 	--
 	-- cs:loadNeighborhood{source = filePath("cabecadeboi-neigh.gpm", "base")}
 	loadNeighborhood = function(self, data)
+		if data ~= nil then
+			if type(data.name) == "number" then 
+				incompatibleTypeError("name", "string", data.name) 
+			elseif type(data.source) == "number" then 
+				incompatibleTypeError("source", "string", data.source)
+			elseif data.source == nil then
+				mandatoryArgumentError("source") 
+			end
+		end
+
 		verifyNamedTable(data)
 		verifyUnnecessaryArguments(data, {"source", "name", "check"})
-        
-		if data.source ~= nil then
-			local file = openFile(data.source, "r")
-			if file == nil and type(file) == "string" then 
-				resourceNotFoundError("source", data.source)
-			end
-		else
-			resourceNotFoundError("source", "")
-		end
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
 			if not openFile(data.source, "r") then
@@ -1056,7 +1064,6 @@ CellularSpace_ = {
 			end
 		else
 			local ext = string.match(data.source, "(([^%.]+))$")
-
 			if ext == data.source then
 				customError("Argument 'source' does not have an extension.")
 			else
@@ -1075,7 +1082,6 @@ CellularSpace_ = {
 		end
         
 	end,
-       
 	--- Notify every Observer connected to the CellularSpace.
 	-- @arg modelTime A number representing the notification time. The default value is zero.
 	-- It is also possible to use an Event as argument. In this case, it will use the result of
