@@ -143,13 +143,13 @@ return {
 			file = filePath("vegtype_2000.nc", "terralib")
 		}
 
-		unitTest:assertEquals(tostring(l), [[file     string [C:\TerraME\bin\packages\terralib\data\vegtype_2000.nc]
+		unitTest:assertEquals(tostring(l), [[file     string [vegtype_2000.nc]
 name     string [Vegtype_layer]
 project  Project
 rep      string [raster]
 sid      string [14825bac-96e7-418d-a340-f97f49ac3ed1]
 source   string [nc]
-]], 33)
+]], 36, true)
 		unitTest:assertFile(projName)
 
 		if isFile(projName) then

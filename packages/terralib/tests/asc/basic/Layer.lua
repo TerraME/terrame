@@ -143,13 +143,14 @@ return {
             file = filePath("biomassa-manaus.asc", "terralib")
         }
 
-        unitTest:assertEquals(tostring(l), [[file     string [C:\TerraME\bin\packages\terralib\data\biomassa-manaus.asc]
+		local expected = [[file     string [biomassa-manaus.asc]
 name     string [Biomassa_layer]
 project  Project
 rep      string [raster]
 sid      string [8e9b98cc-a511-4b41-9faf-5d67001c7058]
 source   string [asc]
-]], 33)
+]]
+        unitTest:assertEquals(tostring(l), expected, 36, true)
         unitTest:assertFile(projName)
 
         if isFile(projName) then

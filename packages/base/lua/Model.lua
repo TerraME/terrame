@@ -528,8 +528,8 @@ function Model(attrTab)
 				forEachElement(value, function(mname, _, _)
 					if attrTabValue[mname] == nil then
 						local msg = "Argument '"..name.."."..mname.."' is unnecessary."
-
 						local s = suggestion(mname, attrTabValue)
+
 						if s then
 							msg = msg.." Do you mean '"..name.."."..s.."'?"
 						end
