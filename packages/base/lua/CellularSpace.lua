@@ -183,7 +183,6 @@ local function loadNeighborhoodGWT(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 	local line_cell = file:read()
-	local b
 	if line_cell ~= nil then
 		lineTest = CSVparseLine(line_cell, "\t")
 		if lineTest[2] ~= nil then
