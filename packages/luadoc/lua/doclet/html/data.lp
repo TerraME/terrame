@@ -74,13 +74,30 @@
 							<br><b>Projection: </b><%=data.projection%>
 						<%end%>
 
+						<%if data.representation then%>
+							<br><b>Representation: </b><%=data.representation%>
+						<%end%>
+
+						<%if data.quantity then%>
+							<br><b>Quantity: </b><%=data.quantity%>
+						<%end%>
+
+						<%if data.bands then%>
+							<br><b>Bands: </b><%=data.bands%>
+						<%end%>
+
+						<%if data.separator then%>
+							<br><b>Separator: </b><%="\""..data.separator.."\""%>
+						<%end%>
+
 						<%if data.reference then%>
 							<br><b>Reference: </b><%=data.reference%>
 						<%end%>
 
 						<%if data.attributes then%>
 							<table class="arg_tab">
-							<tr><td><b>Attribute</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+							<tr><td><b><%if data.bands then%>Band<%else%>Attribute<%end%>
+							</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
 							<%if data.attributes[1] == "_incompatible_" then%>
 								<tr>
 								<td><font color="red">Incompatible sizes</font></td>
@@ -89,11 +106,25 @@
 								</tr>
 							<%else%>
 								<% for j = 1,#data.attributes do %>
-									<tr><td><%=data.attributes[j]%></td><td><%=data.types[j]%></td><td><%=data.description[j]%></td></tr>
+									<%if data.bands then%>
+										<tr><td><%=data.attributes[j]%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
+									<%else%>
+									<tr><td><%="\""..data.attributes[j].."\""%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
+									<%end%>
 								<%end%>
 							<%end%> 
 							</table>
 						<%end%>
+
+						<%if data.layers then%>
+							<table class="arg_tab">
+							<tr><td><b>Layer</b></td><td><b>File</b></td><td><b>Description</b></td></tr>
+							<% for j = 1,#data.layers do %>
+								<tr><td><%="\""..data.layers[j].layer.."\""%></td><td><%="\""..data.layers[j].file.."\""%></td><td><%=data.layers[j].description%></td></tr>
+							<%end%>
+							</table>
+						<%end%>
+
 						</dd>
 					<%end%>
 					</dl>
