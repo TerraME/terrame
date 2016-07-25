@@ -278,6 +278,7 @@ return{
 			rmFile(geojson1)
 		end
 
+		--[[
 		-- Tif
 		projName = "tif_cellspace.tview"
 		title = "Tif Cellular Space"
@@ -439,6 +440,7 @@ return{
 		if isFile(projName) then
 			rmFile(projName)
 		end
+		]]
 	end, 
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
