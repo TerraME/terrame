@@ -42,11 +42,14 @@ local function loadNeighborhoodGAL(self, data)
 		layer = ""
 	else
 		layer = self.layer
-	end 
-	local vallayer = ""
-	if lineTest[3] ~= nil then vallayer = lineTest[3] end 
-	if vallayer ~= self.layer then
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GAL file layer: '"..vallayer.."'.")
+	end
+	if data.check == nil then data.check = true end
+	if data.check then
+		local vallayer = ""
+		if lineTest[3] ~= nil then vallayer = lineTest[3] end 
+		if vallayer ~= self.layer then
+			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GAL file layer: '"..vallayer.."'.")
+		end
 	end 
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
@@ -94,15 +97,18 @@ local function loadNeighborhoodGPM(self, data)
 	else
 		layer = self.layer
 	end 
-	local vallayer = ""
-	if lineTest[3] ~= nil and lineTest[2] ~= nil then
-		if lineTest[3] ~= lineTest[2] then
-			customError("This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
+	if data.check == nil then data.check = true end
+	if data.check then
+		local vallayer = ""	
+		if lineTest[3] ~= nil and lineTest[2] ~= nil then
+			if lineTest[3] ~= lineTest[2] then
+				customError("This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
+			end
 		end
-	end
-	if lineTest[2] ~= nil then vallayer = lineTest[2] end
-	if vallayer ~= self.layer then
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GPM file layer: '"..vallayer.."'.")
+		if lineTest[2] ~= nil then vallayer = lineTest[2] end
+		if vallayer ~= self.layer then
+			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GPM file layer: '"..vallayer.."'.")
+		end
 	end
 	local val
 	if lineTest[4] == nil then 
@@ -165,11 +171,14 @@ local function loadNeighborhoodGWT(self, data)
 	else
 		layer = self.layer
 	end 
-	local vallayer = ""
-	if lineTest[3] ~= nil then vallayer = lineTest[3] end 
-	if vallayer ~= self.layer then
-		customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GWT file layer: '"..vallayer.."'.")
-	end
+	if data.check == nil then data.check = true end
+	if data.check then
+		local vallayer = ""
+		if lineTest[3] ~= nil then vallayer = lineTest[3] end 
+		if vallayer ~= self.layer then
+			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GWT file layer: '"..vallayer.."'.")
+		end
+	end 
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
