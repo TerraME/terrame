@@ -75,6 +75,7 @@ function _Gtme.buildPackage(package, config, clean)
 	}
 
 	local s = sessionInfo().separator
+	local currentdir = currentDir()
 
 	printNote("\nTesting package '"..package.."'")
 	local testErrors = 0
@@ -97,7 +98,6 @@ function _Gtme.buildPackage(package, config, clean)
 	report.doc_errors = report.doc_errors + docErrors
 
 	tmpdirectory = tmpDir(".terrame_"..package.."_XXXXX")
-	local currentdir = currentDir()
 
 	local pkgInfo = packageInfo(package)
 	local pkgDirectory = pkgInfo.path

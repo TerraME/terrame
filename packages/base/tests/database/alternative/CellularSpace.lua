@@ -32,10 +32,14 @@ return{
 		end
 	
 		local options = {
+			asc = true,
  			csv = true,
  			map = true,
+			nc = true,
+			geojson = true,
  			shp = true,
  			virtual = true,
+			tif = true,
 			proj = true
  		}
  

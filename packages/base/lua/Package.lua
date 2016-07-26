@@ -49,11 +49,7 @@ function filePath(filename, package)
 		end
 
 		local suggest = suggestion(filename, dir(packageInfo(package).data))
-
-		if suggest then
-			msg = msg.." Do you mean '"..suggest.."'?"
-		end
-
+		msg = msg..suggestionMsg(suggest)
 		customError(msg)
 	end
 end

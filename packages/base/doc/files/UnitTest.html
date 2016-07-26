@@ -891,7 +891,7 @@ Type for testing packages. All its arguments (but sleep) are necessary only when
 								
 									<tr>
 										<td class="name" nowrap><a href="#assertSnapshot">assertSnapshot</a>&nbsp;
-<td class="summary">Verify whether a <a href=files/Chart.html>Chart</a> or a <a href=files/Map.html>Map</a> has a plot similar to the one defined in the log directory.</td>
+<td class="summary">Verify whether a <a href=../files/Chart.html>Chart</a> or a <a href=../files/Map.html>Map</a> has a plot similar to the one defined in the log directory.</td>
 									</tr>
 								
 							
@@ -1015,6 +1015,11 @@ Check if two values are equal. In this function, two tables are equal only when 
     </li> 
     
   
+    <li>
+	  <strong>#4</strong>: A boolean to ignore path between /'s, when comparing two strings. This argument is optional and can be used only with strings. The default value is false.
+    </li> 
+    
+  
   </span></ul>
 
 
@@ -1026,7 +1031,8 @@ Check if two values are equal. In this function, two tables are equal only when 
 <h3>Usage</h3>
 <pre class="example"><code><span class="id">unitTest</span> = <span class="function">UnitTest</span>{}
 <span class="id">unitTest</span>:<span class="function">assertEquals</span>(<span class="number">3</span>, <span class="number">3</span>)
-<span class="id">unitTest</span>:<span class="function">assertEquals</span>(<span class="number">2</span>, <span class="number">2.1</span>, <span class="number">0.2</span>)</code></pre>
+<span class="id">unitTest</span>:<span class="function">assertEquals</span>(<span class="number">2</span>, <span class="number">2.1</span>, <span class="number">0.2</span>)
+<span class="id">unitTest</span>:<span class="function">assertEquals</span>(<span class="string">"string [terralib/data/biomassa-manaus.asc]"</span>, <span class="string">"string [biomassa-manaus.asc]"</span>, <span class="number">0</span>, <span class="reserved">true</span>)</code></pre>
 
 
 

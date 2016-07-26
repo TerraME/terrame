@@ -1012,7 +1012,7 @@ function Society(data)
 			end
 		else
 			local tlib = terralib.TerraLib{}
-			local dSet = tlib:getShpByFilePath(data.file)
+			local dSet = tlib:getOGRByFilePath(data.file)
 			
 			for i = 0, #dSet do
 				data:add(dSet[i])

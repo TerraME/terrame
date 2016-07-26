@@ -49,30 +49,24 @@ cl = Layer{
 cl:fill{
 	operation = "presence",
 	attribute = "firebreak",
-	clean = true,
-	layer = "firebreak",
-	output = "firebreak2"
+	layer = "firebreak"
 }
 
 cl:fill{
 	operation = "presence",
 	attribute = "river",
-	clean = true,
-	layer = "river",
-	output = "river2"
+	layer = "river"
 }
 
 cl:fill{
 	operation = "average",
 	attribute = "cover",
-	clean = true,
-	layer = "cover",
-	output = "cover2"
+	layer = "cover"
 }
 
 cs = CellularSpace{
 	project = project,
-	layer = "cover2"
+	layer = "cells"
 }
 
 Map{

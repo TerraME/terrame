@@ -45,7 +45,7 @@ return{
 		unitTest:assertType(cs, "CellularSpace")
 
 		-- The assert below checks the number of functions in package 'base'.
-		unitTest:assertEquals(getn(base), 184)
+		unitTest:assertEquals(getn(base), 185)
 	end,
 	import = function(unitTest)
 		forEachCell = nil

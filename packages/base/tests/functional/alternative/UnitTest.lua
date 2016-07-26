@@ -107,6 +107,21 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Values have the same type (boolean) but different values.")
+
+		local expected = [[string [biomassa-manaus.asc] ]]
+		local actual = [[string [/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/terralib/data/biomassa-manaus.asc] ]]
+
+		error_func = function()
+			u:assertEquals(expected, actual, 0, "")
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(4, "boolean", actual))
+
+		error_func = function()
+			u:assertEquals(expected, "bbb", 0, true)
+		end
+
+		unitTest:assertError(error_func, "Values should be equal, but got \n'"..expected.."' and \n'".."bbb".."'.")
 	end,
 	assertError = function(unitTest)
 		local u = UnitTest{unittest = true}
