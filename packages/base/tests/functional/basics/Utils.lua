@@ -310,7 +310,7 @@ return{
 			end)
 
 			unitTest:assert(r) -- SKIP
-			unitTest:assertEquals(count, 36) -- SKIP
+			unitTest:assertEquals(count, 43) -- SKIP
 
 			local count2 = 0
 			forEachFile(dir(filePath("", "base"), true), function()
