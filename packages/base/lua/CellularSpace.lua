@@ -26,6 +26,19 @@ local terralib = getPackage("terralib")
 
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
+local function separatorCheck(file)
+	local fopen = openFile(file)
+	local header = fopen:read()
+	local lineTest1 = CSVparseLine(header, "\t")
+	local lineTest2 = CSVparseLine(header, " ")
+	if lineTest1[2] ~= nil and lineTest2[2] == nil  or header:endswith(";") then
+		customError("Could not read the file, header invalid") 
+	else
+		return true 
+	end
+	colseFile(file)    
+end
+
 local function loadNeighborhoodGAL(self, data)
 	local file = openFile(data.source, "r")
 	local header = file:read()
@@ -1132,6 +1145,8 @@ CellularSpace_ = {
 				invalidFileExtensionError("source", ext)
 			end
 		end
+        
+		separatorCheck(data.source)
         
 		if data.source:endswith(".gal") then
 			loadNeighborhoodGAL(self, data)

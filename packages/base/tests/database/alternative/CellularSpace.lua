@@ -251,6 +251,12 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cabecadeboi900.shp'.")		
+
+		error_func = function()
+			local s = sessionInfo().separator
+			cs:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-header-invalid.gpm", "base")}
+		end
+		unitTest:assertError(error_func, "Could not read the file, header invalid")
 	end,
 	save = function(unitTest)
 		local terralib = getPackage("terralib")
