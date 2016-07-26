@@ -79,7 +79,7 @@ return{
 			name = clName1,
 			resolution = 0.3,
 			user = user,
-			password = password,
+			password = password, 
 			database = database,
 			table = tName1
 		}
