@@ -72,7 +72,7 @@ metaTableChoice_ = {
 -- @usage c1 = Choice{1, 2, 3}
 -- c2 = Choice{"low", "medium", "high"}
 -- c3 = Choice{min = 2, max = 5, step = 0.1}
--- c4 = Choice{min = 2, max = 20, slice = 4}
+-- c4 = Choice{min = 2, max = 20, slices = 4}
 function Choice(attrTab)
 	local result
 
@@ -152,7 +152,7 @@ function Choice(attrTab)
 		end
 
 		if attrTab.slices and attrTab.step then
-			customError(unnecessaryArgumentMsg("step"))
+			customError("It is not possible to use arguments 'step' and 'slices' at the same time.")
 		end
 
 		if attrTab.step then
@@ -178,14 +178,14 @@ function Choice(attrTab)
 		end
 
 		if attrTab.slices then
-			verify(attrTab.slices > 2, "Argument 'slices' ("..attrTab.slices..") should be greater than one.")
+			verify(attrTab.slices > 2, "Argument 'slices' ("..attrTab.slices..") should be greater than two.")
 			verify(attrTab.slices == math.floor(attrTab.slices), "Invalid 'slices' value ("..attrTab.slices.."). It could be "..math.floor(attrTab.slices).." or "..math.ceil(attrTab.slices)..".")
 
 			attrTab.step = (attrTab.max - attrTab.min) / (attrTab.slices - 1)
 			attrTab.values = {}
 
 			local value = attrTab.min
-			for i = 1, attrTab.slices do
+			for _ = 1, attrTab.slices do
 				table.insert(attrTab.values, value)
 				value = value + attrTab.step
 			end

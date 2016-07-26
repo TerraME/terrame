@@ -153,7 +153,7 @@ return{
 		error_func = function()
 			Choice{min = 1, max = 4, step = 1, slices = 4}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("step"))
+		unitTest:assertError(error_func, "It is not possible to use arguments 'step' and 'slices' at the same time.")
 
 		error_func = function()
 			Choice{min = 2, max = 20, slices = "abc"}
@@ -163,7 +163,7 @@ return{
 		error_func = function()
 			Choice{min = 2, max = 20, slices = 1}
 		end
-		unitTest:assertError(error_func, "Argument 'slices' (1) should be greater than one.")
+		unitTest:assertError(error_func, "Argument 'slices' (1) should be greater than two.")
 
 		error_func = function()
 			Choice{min = 2, max = 20, slices = 2.5}
