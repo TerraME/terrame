@@ -111,6 +111,11 @@ return{
 			env:add{}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("action"))
+
+		error_func = function()
+			env:add(unitTest)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory", unitTest))
 	end,
 	createPlacement = function(unitTest)
 		local ag1 = Agent{}

@@ -147,13 +147,7 @@ Environment_ = {
 	add = function(self, object)
 		local t = type(object)
 		if t == "table" then
-			object = Event{
-				action = object.action,
-				period = object.period,
-				priority = object.priority,
-				start = object.start
-			}
-
+			object = Event(object)
 			t = type(object)
 		end
 		if belong(t, {"Cell", "CellularSpace", "Society", "Agent", "Automaton", "Timer", "Environment", "Trajectory", "Cell"}) then

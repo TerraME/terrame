@@ -26,18 +26,14 @@ Timer_ = {
 	type_ = "Timer",
 	--- Add a new Event to the timer. If the Event has a start time less than the current
 	-- simulation time then add() will prompt a warning (but the Event will be added).
-	-- @arg event An Event or table with Event arguments.
+	-- @arg event An Event or table.
+	-- When adding a table, this function converts the table into an Event.
 	-- @usage timer = Timer{}
 	--
 	-- timer:add(Event{action = function() end})
 	add = function(self, event)
 		if type(event) == "table" then
-			event = Event{
-				action = event.action,
-				period = event.period,
-				priority = event.priority,
-				start = event.start
-			}
+			event = Event(event)
 		end
 
 		mandatoryArgument(1, "Event", event)
