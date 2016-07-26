@@ -149,6 +149,26 @@ return{
 			Choice{min = 1, step = 3}
 		end
 		unitTest:assertError(error_func, "Attribute 'step' requires 'max' and 'min'.")
+
+		error_func = function()
+			Choice{min = 1, max = 4, step = 1, slices = 4}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("step"))
+
+		error_func = function()
+			Choice{min = 2, max = 20, slices = "abc"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("slices", "number", "abc"))
+
+		error_func = function()
+			Choice{min = 2, max = 20, slices = 1}
+		end
+		unitTest:assertError(error_func, "Argument 'slices' (1) should be greater than one.")
+
+		error_func = function()
+			Choice{min = 2, max = 20, slices = 2.5}
+		end
+		unitTest:assertError(error_func, "Invalid 'slices' value (2.5). It could be 2 or 3.")
 	end
 }
 
