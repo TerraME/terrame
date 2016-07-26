@@ -42,14 +42,8 @@ end
 local function loadNeighborhoodGAL(self, data)
 	local file = openFile(data.source, "r")
 	local header = file:read()
-	local lineTest = CSVparseLine(header, "\t")
-	local b 
-	if lineTest[2] ~= nil then
-		b = "\t"
-	else 
-		b = " " 
-		lineTest = CSVparseLine(header, b)
-	end
+	local b = " "
+	local lineTest = CSVparseLine(header, b)
 	local layer
 	if self.layer == nil then
 		layer = ""
@@ -68,14 +62,6 @@ local function loadNeighborhoodGAL(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 	local line_cell = file:read()
-	if line_cell ~= nil then
-		lineTest = CSVparseLine(line_cell, "\t")
-		if lineTest[2] ~= nil then
-			b = "\t"
-		else 
-			b = " " 
-		end
-	end
 	while line_cell do
 		local line = CSVparseLine(line_cell, b)       
 		local cell = self:get(line[1])
@@ -96,14 +82,8 @@ end
 local function loadNeighborhoodGPM(self, data)
 	local file = openFile(data.source, "r")
 	local header = file:read()
-	local lineTest = CSVparseLine(header, "\t")
-	local b
-	if lineTest[2] ~= nil then
-		b = "\t"
-	else 
-		b = " " 
-		lineTest = CSVparseLine(header, b)
-	end
+	local b = " "
+	local lineTest = CSVparseLine(header, b)
 	local layer
 	if self.layer == nil then
 		layer = ""
@@ -113,14 +93,14 @@ local function loadNeighborhoodGPM(self, data)
 	if data.check == nil then data.check = true end
 	if data.check then
 		local vallayer = ""	
-		if lineTest[3] ~= nil and lineTest[2] ~= nil then
-			if lineTest[3] ~= lineTest[2] then
-				customError("This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
-			end
-		end
 		if lineTest[2] ~= nil then vallayer = lineTest[2] end
 		if vallayer ~= self.layer then
 			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GPM file layer: '"..vallayer.."'.")
+		end
+	end
+	if lineTest[2] ~= nil and lineTest[3] ~= nil then
+		if lineTest[3] ~= layer and  lineTest[2] ~= layer then
+            customError("This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
 		end
 	end
 	local val
@@ -133,14 +113,6 @@ local function loadNeighborhoodGPM(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 	local line_cell = file:read()
-	if line_cell ~= nil then
-		lineTest = CSVparseLine(line_cell, "\t")
-		if lineTest[2] ~= nil then
-			b = "\t"
-		else 
-			b = " " 
-		end
-	end
 	while line_cell do
 		local line = CSVparseLine(line_cell, b)       
 		local cell = self:get(line[1])
@@ -170,14 +142,8 @@ end
 local function loadNeighborhoodGWT(self, data)
 	local file = openFile(data.source, "r")
 	local header = file:read()
-	local lineTest = CSVparseLine(header, "\t")
-	local b 
-	if lineTest[2] ~= nil then
-		b = "\t"
-	else 
-		b = " " 
-		lineTest = CSVparseLine(header, b)
-	end
+	local b = " "
+	local lineTest = CSVparseLine(header, b)
 	local layer
 	if self.layer == nil then
 		layer = ""
@@ -196,14 +162,6 @@ local function loadNeighborhoodGWT(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 	local line_cell = file:read()
-	if line_cell ~= nil then
-		lineTest = CSVparseLine(line_cell, "\t")
-		if lineTest[2] ~= nil then
-			b = "\t"
-		else 
-			b = " " 
-		end
-	end
 	while line_cell do
 		local line = CSVparseLine(line_cell, b)       
 		local cell = self:get(line[1])
