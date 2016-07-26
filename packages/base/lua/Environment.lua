@@ -132,7 +132,8 @@ end
 Environment_ = {
 	type_ = "Environment",
 	--- Add an element to the Environment.
-	-- @arg object An Agent, Automaton, Cell, CellularSpace, Society, Trajectory, Group, Event, Timer, or Environment.
+	-- @arg object An Agent, Automaton, Cell, CellularSpace, Society, Trajectory, Group, Event, Timer, Environment, or table.
+	-- When adding a table, this function converts the table into an Event.
 	-- When adding an Event, this function converts the Event into a Timer that contains the Event itself.
 	-- @usage environment = Environment{}
 	--
@@ -145,6 +146,16 @@ Environment_ = {
 	-- environment:add(t1)
 	add = function(self, object)
 		local t = type(object)
+		if t == "table" then
+			object = Event{
+				action = object.action,
+				period = object.period,
+				priority = object.priority,
+				start = object.start
+			}
+
+			t = type(object)
+		end
 		if belong(t, {"Cell", "CellularSpace", "Society", "Agent", "Automaton", "Timer", "Environment", "Trajectory", "Cell"}) then
 			object.parent = self
 			table.insert(self, object)

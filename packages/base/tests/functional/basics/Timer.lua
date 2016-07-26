@@ -102,7 +102,7 @@ return {
 		unitTest:assertEquals(counter, 4) 
 		unitTest:assertEquals(t.events[1].time, 19) 
 		unitTest:assertEquals(t.events[1].period, 5) 
-		unitTest:assertEquals(t.events[1].priority, 4) 
+		unitTest:assertEquals(t.events[1].priority, 4)
 	end,
 	addReplacement = function(unitTest)
 		local timer = Timer{}
@@ -223,9 +223,18 @@ time    number [-inf]
 			return false
 		end})
 
+		timer2:add{
+			period = 2,
+			action = function(event)
+				cont = cont + 1
+				unitTest:assertType(event, "Event")
+				unitTest:assertEquals(2, event:getPeriod())
+			end
+		}
+
 		timer2:run(6)
 		unitTest:assertEquals(6, timer2:getTime())
-		unitTest:assertEquals(7, cont)
+		unitTest:assertEquals(10, cont)
 	end,
 	run = function(unitTest)
 		local qt1 = 0

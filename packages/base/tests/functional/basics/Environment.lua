@@ -197,6 +197,23 @@ return{
 
 		unitTest:assertType(e[1], "Timer")
 		unitTest:assertEquals(#e[1], 1)
+
+		local cont = 0
+
+		e:add{
+			period = 2,
+			action = function(event)
+				cont = cont + 1
+				unitTest:assertType(event, "Event")
+				unitTest:assertEquals(2, event:getPeriod())
+			end
+		}
+
+		local timer = e[2]
+		timer:run(6)
+
+		unitTest:assertEquals(timer:getTime(), 6)
+		unitTest:assertEquals(cont, 3)
 	end,
 	__tostring = function(unitTest)
 		local cs1 = CellularSpace{xdim = 2}
