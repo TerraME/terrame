@@ -219,9 +219,9 @@ return{
 		error_func = function()
 			local s = sessionInfo().separator
 			cs:loadNeighborhood{
-                source = filePath("error"..s.."cabecadeboi-invalid-neigh.gpm", "base"),
-                check = false
-                }
+				source = filePath("error"..s.."cabecadeboi-invalid-neigh.gpm", "base"),
+				check = false
+			}
 		end
 		unitTest:assertError(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
 

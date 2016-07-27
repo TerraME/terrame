@@ -50,7 +50,6 @@ local function loadNeighborhoodGAL(self, data)
 	else
 		layer = self.layer
 	end
-	if data.check == nil then data.check = true end
 	if data.check then
 		local vallayer = ""
 		if lineTest[3] ~= nil then vallayer = lineTest[3] end 
@@ -90,7 +89,6 @@ local function loadNeighborhoodGPM(self, data)
 	else
 		layer = self.layer
 	end 
-	if data.check == nil then data.check = true end
 	if data.check then
 		local vallayer = ""	
 		if lineTest[2] ~= nil then vallayer = lineTest[2] end
@@ -150,7 +148,6 @@ local function loadNeighborhoodGWT(self, data)
 	else
 		layer = self.layer
 	end 
-	if data.check == nil then data.check = true end
 	if data.check then
 		local vallayer = ""
 		if lineTest[3] ~= nil then vallayer = lineTest[3] end 
@@ -1078,18 +1075,10 @@ CellularSpace_ = {
 	--
 	-- cs:loadNeighborhood{source = filePath("cabecadeboi-neigh.gpm", "base")}
 	loadNeighborhood = function(self, data)
-		if data ~= nil then
-			if type(data.name) == "number" then 
-				incompatibleTypeError("name", "string", data.name) 
-			elseif type(data.source) == "number" then 
-				incompatibleTypeError("source", "string", data.source)
-			elseif data.source == nil then
-				mandatoryArgumentError("source") 
-			end
-		end
-
 		verifyNamedTable(data)
 		verifyUnnecessaryArguments(data, {"source", "name", "check"})
+        
+		mandatoryTableArgument(data, "source", "string")
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
 			if not openFile(data.source, "r") then
@@ -1105,6 +1094,9 @@ CellularSpace_ = {
 		end
         
 		separatorCheck(data.source)
+        
+		defaultTableValue(data, "name", "1")
+		defaultTableValue(data, "check", true)
         
 		if data.source:endswith(".gal") then
 			loadNeighborhoodGAL(self, data)
