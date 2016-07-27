@@ -59,8 +59,9 @@ return {
 		unitTest:assertEquals(proj1.title, proj3clean.title)
 		unitTest:assertEquals(proj1.file, proj3clean.file)
 
-		unitTest:assertFile("amazonia.tview")
-
+		-- unitTest:assertFile("amazonia.tview") -- SKIP #1301
+		rmFile("amazonia.tview") -- #1301
+		
 		local proj4Name = "notitlenoauthor.tview"
 
 		if isFile(proj4Name) then
@@ -110,6 +111,7 @@ terralib     TerraLib
 title        string [The Amazonia]
 ]])
 
-		unitTest:assertFile("tostring.tview")
+		-- unitTest:assertFile("tostring.tview") -- SKIP #1301
+		rmFile("tostring.tview") -- #1301
 	end
 }

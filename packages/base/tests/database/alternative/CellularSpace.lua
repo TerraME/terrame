@@ -179,7 +179,8 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
-		unitTest:assertFile(projName)
+		-- unitTest:assertFile(projName) -- SKIP #1301
+		rmFile(projName) -- #1301
 		tl:dropPgTable(pgData)			
 		
 		-- GAL from shapefile
@@ -340,7 +341,8 @@ return{
 		end
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
 		
-		unitTest:assertFile(projName)
+		-- unitTest:assertFile(projName) -- SKIP #1301
+		rmFile(projName) -- #1301
 		tl:dropPgTable(pgData)	
 	end
 }
