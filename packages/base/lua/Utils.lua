@@ -96,8 +96,6 @@ function closeFile(file)
 	if io.type(file) == "file" then
 		io.close(file)
 		return true
-	else
-		resourceNotFoundError("file", file)
 	end
 end
 
