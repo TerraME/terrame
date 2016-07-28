@@ -1153,8 +1153,7 @@ function _Gtme.executeDoc(package)
 	end
 
 	errors = 255
-
-
+	
 	return errors, all_doc_functions
 end
 
