@@ -96,7 +96,11 @@ return {
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_shape.tview"
-
+		
+		if isFile(projName) then
+			rmFile(projName)
+		end
+		
 		local proj = Project {
 			file = projName,
 			clean = true

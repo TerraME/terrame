@@ -156,13 +156,14 @@ return {
 				file = filePath("vegtype_2000.nc", "terralib")
 			}
 
-			-- unitTest:assertEquals(tostring(l), [[file     string [vegtype_2000.nc] -- SKIP
-	-- name     string [Vegtype_layer]
-	-- project  Project
-	-- rep      string [raster]
-	-- sid      string [14825bac-96e7-418d-a340-f97f49ac3ed1]
-	-- source   string [nc]
-	-- ]], 36, true) -- SKIP
+			unitTest:assertEquals( -- SKIP
+tostring(l), [[file     string [vegtype_2000.nc]
+name     string [Vegtype_layer]
+project  Project
+rep      string [raster]
+sid      string [14825bac-96e7-418d-a340-f97f49ac3ed1]
+source   string [nc]
+]], 36, true)
 			-- unitTest:assertFile(projName) -- SKIP #1301
 
 			if isFile(projName) then
