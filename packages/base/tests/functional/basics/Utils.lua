@@ -454,6 +454,7 @@ return{
 			unitTest:assertEquals(value, result[cont])
 		end)
 
+		unitTest:assert(r)
 		unitTest:assertEquals(cont, #result)
 
 		list = {[1] = 1, [3] = 3, [2] = 2, a = "a", A = "A", b = "b", c = "c"}
@@ -479,6 +480,19 @@ return{
 
 		unitTest:assert(not r)
 		unitTest:assertEquals(cont, 1)
+
+		list = {cObj = 1, cPbj = 2, cell = 3, cells = 4, cem = 5, value1 = 6, value2 = 7}
+		result = {1, 2, 3, 4, 5, 6, 7}
+
+		cont = 0
+		r = forEachOrderedElement(list, function(idx, value, mtype)
+			cont = cont + 1
+
+			unitTest:assertEquals(value, result[cont])
+		end)
+
+		unitTest:assert(r)
+		unitTest:assertEquals(cont, #result)
 	end,
 	forEachSocialNetwork = function(unitTest)
 		local a1 = Agent{id = "111"}
@@ -997,8 +1011,8 @@ return{
 		actual = vardump{name = "john", age = 20, [false] = 5}
 
 		unitTest:assertEquals(actual, [[{
-    age = 20, 
     [false] = 5, 
+    age = 20, 
     name = "john"
 }]])
 

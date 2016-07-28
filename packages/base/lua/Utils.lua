@@ -864,18 +864,22 @@ local function greaterString(str1, str2)
 	local last1 = string.sub(str1, countChar - 1, countChar - 1)
 	local last2 = string.sub(str2, countChar - 1, countChar - 1)
 
+	local function upper(str)
+		return string.lower(str) ~= str
+	end
+
 	if countChar > size1 then
 		return  last1 == last2
 	elseif countChar > size2 then
 		return last1 ~= last2
-	elseif size1 == size2 then
-		if string.lower(ch1) == string.lower(ch2) then
-			return string.lower(ch1) ~= ch1
-		else
-			return ch1 < ch2
-		end
-	else
+	elseif string.lower(ch1) == string.lower(ch2) then
 		return string.lower(ch1) ~= ch1
+	elseif upper(ch1) and not upper(ch2) then
+		return true
+	elseif not upper(ch1) and upper(ch2) then
+		return false
+	else
+		return ch1 < ch2
 	end
 end
 
@@ -907,16 +911,12 @@ function forEachOrderedElement(obj, _sof_)
 		incompatibleTypeError(2, "function", _sof_)
 	end
 
-	local strk
 	local sorder = {}
 	local norder = {}
 	local nreference = {}
 
 	for k in pairs(obj) do
-		if type(k) == "number" then
-			table.insert(norder, k)
-			nreference[k] = k
-		else
+		if type(k) == "string" then
 			local count = 1
 
 			while count <= #sorder and greaterString(sorder[count], k) do 
@@ -924,6 +924,9 @@ function forEachOrderedElement(obj, _sof_)
 			end
 
 			table.insert(sorder, count, k)
+		else
+			table.insert(norder, k)
+			nreference[k] = k
 		end
 	end
 
