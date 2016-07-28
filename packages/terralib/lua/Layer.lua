@@ -623,7 +623,20 @@ Layer_ = {
 	-- print(layer:projection())
 	projection = function(self)
 		local prj = self.project.terralib:getProjection(self.project.layers[self.name])
-		return prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4
+
+		if prj.NAME == "" then
+			prj.NAME = "Undefined"
+		else
+			prj.NAME = "'"..prj.NAME.."'"
+		end
+
+		if prj.PROJ4 == "" then
+			prj.PROJ4 = "Undefined"
+		else
+			prj.PROJ4 = "'"..prj.PROJ4.."'"
+		end
+
+		return prj.NAME..", with SRID: "..prj.SRID.." (PROJ4: "..prj.PROJ4..")."
 	end,
 	--- The attribute names of the Layer. It returns a vector of strings, whose size is
 	-- the number of attributes.
