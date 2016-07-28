@@ -485,7 +485,7 @@ return{
 		result = {1, 2, 3, 4, 5, 6, 7}
 
 		cont = 0
-		r = forEachOrderedElement(list, function(idx, value, mtype)
+		r = forEachOrderedElement(list, function(_, value, _)
 			cont = cont + 1
 
 			unitTest:assertEquals(value, result[cont])

@@ -170,7 +170,7 @@ return{
 
 		neigh:add(cell3)
 
-		for i = 1, 6 do
+		for _ = 1, 6 do
 			unitTest:assertEquals(type(neigh:sample()), type(cell1))
 		end
 	end,
