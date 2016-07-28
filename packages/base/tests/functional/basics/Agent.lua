@@ -291,6 +291,9 @@ state_          State
 		}
 
 		predators:createSocialNetwork{probability = 0.5, inmemory = false}
+
+		sn2 = predators:sample():getSocialNetwork()
+		unitTest:assertType(sn2, "SocialNetwork")
 	end,
 	getStateName = function(unitTest)
 		local a = Agent{
