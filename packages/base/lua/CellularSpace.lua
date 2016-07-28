@@ -102,7 +102,7 @@ local function loadNeighborhoodGPM(self, data)
 		end
 	end
 	local val
-	if lineTest[4] == nil then 
+	if lineTest[4] == nil or lineTest[4] == "" then 
 		val = 1
 	else 
 		val = 2 
@@ -118,16 +118,14 @@ local function loadNeighborhoodGPM(self, data)
 			local neig = cell:getNeighborhood(data.name)
 			local lineV = file:read()
 			local lineID = CSVparseLine(lineV, b)
-			local valfor = (tonumber(line[2]) * val)
-			for i = 1, valfor, val do
-				if valfor ~= nil then 
-					if lineID[i] ~= nil then
-						local n = self:get(lineID[i])
-						if val == 2 and n ~= nilthen  then
-							neig:add(n, tonumber(lineID[i + 1]))
-						elseif val == 1 and n ~= nil then
-							neig:add(n, 1) 
-						end                        
+			local valfor = (tonumber(line[2]) * 2)
+			for i = 1, valfor, val do 
+				if lineID[i] ~= nil then
+					local n = self:get(lineID[i])
+					if val == 2 and n ~= nilthen  then
+						neig:add(n, tonumber(lineID[i + 1]))
+					elseif val == 1 and n ~= nil then
+						neig:add(n, 1)
 					end
 				end 
 			end 
