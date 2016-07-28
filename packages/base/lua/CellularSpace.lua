@@ -26,17 +26,18 @@ local terralib = getPackage("terralib")
 
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
-local function separatorCheck(file)
-	local fopen = openFile(file)
+local function separatorCheck(data)
+	local fopen = openFile(data.source)
 	local header = fopen:read()
 	local lineTest1 = CSVparseLine(header, "\t")
 	local lineTest2 = CSVparseLine(header, " ")
-	if lineTest1[2] ~= nil and lineTest2[2] == nil  or header:endswith(";") then
-		customError("Could not read the file, header invalid") 
-	else
-		return true 
+	local lineTest3 = CSVparseLine(header, ";")
+
+	if lineTest1[2] ~= nil and lineTest2[2] == nil or lineTest3[2] ~= nil then
+		customError("Could not read the file '"..data.source.."' invalid header.")  
 	end
-	colseFile(file)    
+
+	closeFile(fopen)    
 end
 
 local function loadNeighborhoodGAL(self, data)
@@ -1091,7 +1092,7 @@ CellularSpace_ = {
 			end
 		end
         
-		separatorCheck(data.source)
+		separatorCheck(data)
         
 		defaultTableValue(data, "name", "1")
 		defaultTableValue(data, "check", true)
@@ -1102,8 +1103,6 @@ CellularSpace_ = {
 			loadNeighborhoodGWT(self, data)
 		elseif data.source:endswith(".gpm") then
 			loadNeighborhoodGPM(self, data)
-		else
-			customError("Could not read the file. It is not the expected type.")
 		end
         
 	end,
