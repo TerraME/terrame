@@ -154,6 +154,17 @@ return {
 		
 		-- rmFile(proj.file)	
 	-- end,
+	getGdalByFilePath = function(unitTest)
+		local tlib = TerraLib{}
+		local file = filePath("PRODES_5KM.tif", "terralib")
+
+		local dSet = tlib:getGdalByFilePath(file)
+		for i = 0, #dSet do
+			for k, _ in pairs(dSet[i]) do
+				unitTest:assert(k == "raster")
+			end
+		end
+	end,
 	getNumOfBands = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}

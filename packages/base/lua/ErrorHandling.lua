@@ -556,6 +556,25 @@ function suggestion(value, options)
 	end
 end
 
+--- Return the arguments of suggestion within a question " Do you mean '"..suggestion.."'?".
+-- @arg suggestion A string.
+-- @usage t = {
+--     blue = true,
+--     red = true,
+--     green = true
+-- }
+--
+-- str = suggestionMsg(suggestion("gren", t))
+-- print(str)
+function suggestionMsg(suggestion)
+	local suggestionMsg = ""
+	if suggestion then 
+		suggestionMsg = " Do you mean '"..suggestion.."'?"
+	end
+
+	return suggestionMsg
+end
+
 --- Stop the simulation with an error because the user did not choose a correct option.
 -- This function supposes that there is a set of available options described as
 -- string idexes of a table so it tries to find an approximate string to be shown as
@@ -622,7 +641,7 @@ function switchInvalidArgumentSuggestionMsg(casevar, att, suggestion)
 	mandatoryArgument(2, "string", att)
 	mandatoryArgument(3, "string", suggestion)
 
-	return "'"..casevar.."' is an invalid value for argument '"..att.."'. Do you mean '"..suggestion.."'?"
+	return "'"..casevar.."' is an invalid value for argument '"..att.."'."..suggestionMsg(suggestion)
 end
 
 --- Return a message indicating that the argument of a function must be a table.
@@ -642,12 +661,7 @@ end
 -- str = unnecessaryArgumentMsg("filf", "file")
 -- print(str)
 function unnecessaryArgumentMsg(value, suggestion)
-	local str = "Argument '"..tostring(value).."' is unnecessary."
-
-	if suggestion then
-		str = str .." Do you mean '"..suggestion.."'?"
-	end
-	return str
+	return "Argument '"..tostring(value).."' is unnecessary."..suggestionMsg(suggestion)
 end
 
 --- Stop the simulation with an error due to a wrong value for an argument.

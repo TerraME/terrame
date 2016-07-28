@@ -74,9 +74,9 @@ return{
 		unitTest:assertEquals(cs:defor(), 100)
 		unitTest:assert(not cs:deforest())
 		unitTest:assertEquals(cs:defor(), 150)
-		
-		local projName = "cellspace.tview"
 
+		-- Shapefile
+		local projName = "cellspace.tview"
 		local author = "Avancini"
 		local title = "Cellular Space"
 
@@ -164,7 +164,7 @@ return{
 		forEachCell(cs, function(c)
 			unitTest:assertNil(c.geom)
 			unitTest:assertNil(c.OGR_GEOMETRY)
-		end)		
+		end)
 		
 		if isFile(projName) then
 			rmFile(projName)
@@ -175,7 +175,272 @@ return{
 			if isFile(f) then
 				rmFile(f)
 			end
-		end			
+		end
+
+		-- GeoJSON
+		author = "Carneiro Heitor"
+
+		projName = "geojson_cellspace.tview"
+		title = "GeoJSON Cellular Space"
+
+		proj = terralib.Project{
+			file = projName,
+			clean = true,
+			author = author,
+			title = title
+		}
+
+		layerName1 = "GeoJSON_Sampa"
+
+		terralib.Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("sampa.geojson", "terralib")
+		}
+
+		cs = CellularSpace{
+			project = projName,
+			layer = layerName1
+		}
+
+		forEachCell(cs, function(c)
+			unitTest:assertEquals(c.CD_GEOCODU, "35")
+			unitTest:assertNotNil(c.NM_MICRO)
+		end)
+
+		local geojson1 = "geojson_sampa_cells.geojson"
+		filePath1 = testDir.."/"..geojson1
+
+		if isFile(filePath1) then
+			rmFile(filePath1)
+		end
+
+		clName1 = "GeoJSON_Sampa_Cells"
+		layer = terralib.Layer{
+			project = proj,
+			input = layerName1,
+			name = clName1,
+			resolution = 1,
+			file = filePath1
+		}
+
+		cs = CellularSpace{
+			project = projName,
+			layer = clName1
+		}
+
+		unitTest:assertEquals(projName, cs.project.file)
+		unitTest:assertType(cs.layer, "Layer")
+
+		unitTest:assertEquals(proj.title, title)
+		unitTest:assertEquals(proj.author, author)
+
+		unitTest:assertEquals(layer.source, "geojson")
+		unitTest:assertEquals(layer.file, filePath1)
+		unitTest:assert(#cs.cells > 0)
+
+		cs = CellularSpace{
+			file = filePath1
+		}
+
+		unitTest:assert(#cs.cells > 0)
+
+		forEachCell(cs, function(c)
+			unitTest:assertNotNil(c.x)
+			unitTest:assertNotNil(c.y)
+		end)
+
+		cs = CellularSpace{
+			project = projName,
+			layer = clName1,
+			geometry = true
+		}
+
+		forEachCell(cs, function(c)
+			unitTest:assertNotNil(c.geom)
+			unitTest:assertNil(c.OGR_GEOMETRY)
+		end)
+
+		cs = CellularSpace{
+			project = projName,
+			layer = clName1
+		}
+
+		forEachCell(cs, function(c)
+			unitTest:assertNil(c.geom)
+			unitTest:assertNil(c.OGR_GEOMETRY)
+		end)
+
+		if isFile(projName) then
+			rmFile(projName)
+		end
+		if isFile(geojson1) then
+			rmFile(geojson1)
+		end
+
+		--[[
+		-- Tif
+		projName = "tif_cellspace.tview"
+		title = "Tif Cellular Space"
+
+		proj = terralib.Project{
+			file = projName,
+			clean = true,
+			author = author,
+			title = title
+		}
+
+		layerName1 = "Tif_PRODES"
+		filePath1 = filePath("PRODES_5KM.tif", "terralib")
+
+		layer = terralib.Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+
+		cs = CellularSpace{
+			project = projName,
+			layer = layerName1
+		}
+
+--		unitTest:assertEquals(projName, cs.project.file) -- SKIP
+--		unitTest:assertType(cs.layer, "Layer") -- SKIP
+--
+--		unitTest:assertEquals(proj.title, title) -- SKIP
+--		unitTest:assertEquals(proj.author, author) -- SKIP
+--
+--		unitTest:assertEquals(layer.source, "tif") -- SKIP
+--		unitTest:assertEquals(layer.file, filePath1) -- SKIP
+--		unitTest:assertEquals(#cs.cells, 1) -- SKIP
+
+		cs = CellularSpace{
+			file = filePath1
+		}
+
+--		unitTest:assertEquals(#cs.cells, 1) -- SKIP
+--
+--		forEachCell(cs, function(c)
+--			unitTest:assertNotNil(c.x) -- SKIP
+--			unitTest:assertNotNil(c.y) -- SKIP
+--			unitTest:assertNotNil(c.raster) -- SKIP
+--
+--			unitTest:assertNil(c.geom) -- SKIP
+--			unitTest:assertNil(c.OGR_GEOMETRY) -- SKIP
+--		end)
+
+		if isFile(projName) then
+			rmFile(projName)
+		end
+
+		-- NetCDF
+		projName = "nc_cellspace.tview"
+		title = "NC Cellular Space"
+
+		proj = terralib.Project{
+			file = projName,
+			clean = true,
+			author = author,
+			title = title
+		}
+
+		layerName1 = "NC_vegtype2000"
+		filePath1 = filePath("vegtype_2000.nc", "terralib")
+
+		layer = terralib.Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+
+		cs = CellularSpace{
+			project = projName,
+			layer = layerName1
+		}
+
+--		unitTest:assertEquals(projName, cs.project.file) -- SKIP
+--		unitTest:assertType(cs.layer, "Layer") -- SKIP
+--
+--		unitTest:assertEquals(proj.title, title) -- SKIP
+--		unitTest:assertEquals(proj.author, author) -- SKIP
+--
+--		unitTest:assertEquals(layer.source, "nc") -- SKIP
+--		unitTest:assertEquals(layer.file, filePath1) -- SKIP
+--		unitTest:assertEquals(#cs.cells, 1) -- SKIP
+
+		cs = CellularSpace{
+			file = filePath1
+		}
+
+--		unitTest:assertEquals(#cs.cells, 1) -- SKIP
+--
+--		forEachCell(cs, function(c)
+--			unitTest:assertNotNil(c.x) -- SKIP
+--			unitTest:assertNotNil(c.y) -- SKIP
+--			unitTest:assertNotNil(c.raster) -- SKIP
+--
+--			unitTest:assertNil(c.geom) -- SKIP
+--			unitTest:assertNil(c.OGR_GEOMETRY) -- SKIP
+--		end)
+
+		if isFile(projName) then
+			rmFile(projName)
+		end
+
+		-- ASC
+		projName = "asc_cellspace.tview"
+		title = "Asc Cellular Space"
+
+		proj = terralib.Project{
+			file = projName,
+			clean = true,
+			author = author,
+			title = title
+		}
+
+		layerName1 = "ASC_biomassa-manaus"
+		filePath1 = filePath("biomassa-manaus.asc", "terralib")
+
+		layer = terralib.Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+
+		cs = CellularSpace{
+			project = projName,
+			layer = layerName1
+		}
+
+--		unitTest:assertEquals(projName, cs.project.file) -- SKIP
+--		unitTest:assertType(cs.layer, "Layer") -- SKIP
+--
+--		unitTest:assertEquals(proj.title, title) -- SKIP
+--		unitTest:assertEquals(proj.author, author) -- SKIP
+--
+--		unitTest:assertEquals(layer.source, "asc") -- SKIP
+--		unitTest:assertEquals(layer.file, filePath1) -- SKIP
+--		unitTest:assertEquals(#cs.cells, 1) -- SKIP
+
+		cs = CellularSpace{
+			file = filePath1
+		}
+
+--		unitTest:assertEquals(#cs.cells, 1) -- SKIP
+--
+--		forEachCell(cs, function(c)
+--			unitTest:assertNotNil(c.x) -- SKIP
+--			unitTest:assertNotNil(c.y) -- SKIP
+--			unitTest:assertNotNil(c.raster) -- SKIP
+--
+--			unitTest:assertNil(c.geom) -- SKIP
+--			unitTest:assertNil(c.OGR_GEOMETRY) -- SKIP
+--		end)
+
+		if isFile(projName) then
+			rmFile(projName)
+		end
+		]]
 	end, 
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

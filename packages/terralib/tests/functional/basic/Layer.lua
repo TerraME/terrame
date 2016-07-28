@@ -576,15 +576,15 @@ return {
 			name = layerName1,
 			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
-		
-		unitTest:assertEquals(tostring(l), [[file     string [packages\terralib\data\Setores_Censitarios_2000
-_pol.shp]
+
+		local expected = [[file     string [Setores_Censitarios_2000_pol.shp]
 name     string [Setores_2000]
 project  Project
-rep      string [geometry]
+rep      string [polygon]
 sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
 source   string [shp]
-]], 80)
+]]
+		unitTest:assertEquals(tostring(l), expected, 36, true)
 		unitTest:assertFile(projName)
 	end
 }

@@ -528,3 +528,12 @@ data{
 	reference = ""    -- optional
 }
 
+data{
+	file = "sampa.geojson",
+	summary = "",
+	source = "",
+	attributes = {},  -- optional
+	description = {}, -- optional
+	reference = ""    -- optional
+}
+
