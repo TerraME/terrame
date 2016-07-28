@@ -150,6 +150,72 @@ return{
 		
 		unitTest:assertSnapshot(c1, "chart-data-1.bmp", 0.01)
 		unitTest:assertSnapshot(c2, "chart-data-2.bmp", 0.01)
+
+		local init = function(model)
+			local contacts = 6
+
+			model.timer = Timer{
+				Event{action = function()
+					local proportion = model.susceptible / 
+						(model.susceptible + model.infected + model.recovered)
+
+					local newInfected = model.infected * contacts * model.probability * proportion
+
+					local newRecovered = model.infected / model.duration
+
+					model.susceptible = model.susceptible - newInfected
+					model.recovered = model.recovered + newRecovered
+					model.infected = model.infected + newInfected - newRecovered
+				end},
+				Event{action = function()
+					if model.infected >= model.maximum then
+						contacts = contacts / 2
+						return false
+					end
+				end}
+			}
+		end
+
+		local SIR = Model{
+			susceptible = 9998,
+			infected = 2,
+			recovered = 0,
+			duration = 2,
+			finalTime = 30,
+			maximum = 1000,
+			probability = 0.25,
+			init = init
+		}
+
+		local e = Environment{
+			max1000 = SIR{maximum = 1000},
+			max2000 = SIR{maximum = 2000}
+		}
+
+		local c = Chart{
+			target = e,
+			select = "infected"
+		}
+
+		e:add(Event{action = c})
+		e:run()
+
+		unitTest:assertSnapshot(c, "chart-environment-scenarios.png")
+
+		e = Environment{
+			SIR{maximum = 1000},
+			SIR{maximum = 2000}
+		}
+
+		c = Chart{
+			target = e,
+			select = "infected"
+		}
+
+		e:add(Event{action = c})
+		e:run()
+
+		unitTest:assertSnapshot(c, "chart-environment-scenarios-2.png")
 	end,
 	update = function(unitTest)
 		local world = Cell{

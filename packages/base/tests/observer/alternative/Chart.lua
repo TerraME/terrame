@@ -121,6 +121,11 @@ return{
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg("size", -3))
 
+		error_func = function()
+			Chart{target = Environment{}, select = "value1"}
+		end
+		unitTest:assertError(error_func, "There is no Model instance within the Environment.")
+
 		local symbolTable = {
 			square = 1,
 			diamond = 2,
