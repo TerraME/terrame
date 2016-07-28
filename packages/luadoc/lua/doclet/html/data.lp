@@ -63,11 +63,10 @@
 								<%end%>
 							<%end%>
 						<%end%>
-						<br><b>Source: </b>
+
 						<%if data.source then%>
+							<br><b>Source: </b>
 							<%= httpLink(data.source)%>
-						<%else%>
-							<font color="red"><%="undefined"%></font>
 						<%end%>
 
 						<%if data.projection then%>
