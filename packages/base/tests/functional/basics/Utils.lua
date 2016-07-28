@@ -441,11 +441,25 @@ return{
 		unitTest:assertEquals(count, 1)
 	end,
 	forEachOrderedElement = function(unitTest)
-		local list = {[1] = 1, [3] = 3, [2] = 2, a = "a", A = "A", b = "b", c = "c"}
-		local result = {1, 2, 3, "a", "A", "b", "c"}
+		local list = {aaB = "aaB", aAB = "aAB", aab = "aab", aAb = "aAb", aaBa = "aaBa", aa = "aa"}
+		local result = {"aAB", "aAb", "aa", "aaB", "aaBa", "aab"}
 
 		local cont = 0
 		local r
+		r = forEachOrderedElement(list, function(idx, value, mtype)
+			cont = cont + 1
+			unitTest:assertEquals(mtype, type(result[cont]))
+
+			unitTest:assertEquals(idx, result[cont])
+			unitTest:assertEquals(value, result[cont])
+		end)
+
+		unitTest:assertEquals(cont, #result)
+
+		list = {[1] = 1, [3] = 3, [2] = 2, a = "a", A = "A", b = "b", c = "c"}
+		result = {1, 2, 3, "A", "a", "b", "c"}
+
+		cont = 0
 		r = forEachOrderedElement(list, function(idx, value, mtype)
 			cont = cont + 1
 			unitTest:assertEquals(mtype, type(result[cont]))
