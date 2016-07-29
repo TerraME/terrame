@@ -65,24 +65,33 @@ local function loadNeighborhoodGAL(self, data)
 	end)
 
 	local line_cell = file:read()
+	local counterLine = 2
 
 	while line_cell do
 		local line = CSVparseLine(line_cell, " ")
 		local cell = self:get(line[1])
 
-		if cell ~= nil then
+		if cell == nil then
+			customError("Could not read line '"..counterLine.."' properly. It seems that it is corrupted.")
+		else
 			local neig = cell:getNeighborhood(data.name)
 			local lineV = file:read()
 			local lineID = CSVparseLine(lineV, " ")
 
+			counterLine = counterLine + 1
 			for i = 1, tonumber(line[2]) do
-				local n = self:get(lineID[i])
+				if lineID[i] == nil then
+					customError("Could not read line '"..counterLine.."' properly. It seems that it is corrupted.")
+				else
+					local n = self:get(lineID[i])
 
-				neig:add(n)
+					neig:add(n)
+				end
 			end
 		end
 
 		line_cell = file:read()
+		counterLine = counterLine + 1
 	end
 
 	closeFile(file)
@@ -125,19 +134,25 @@ local function loadNeighborhoodGPM(self, data)
 	end)
 
 	local line_cell = file:read()
+	local counterLine = 2
 
 	while line_cell do
 		local line = CSVparseLine(line_cell, " ")
 		local cell = self:get(line[1])
 
-		if cell ~= nil then
+		if cell == nil then
+			customError("Could not read line '"..counterLine.."' properly. It seems that it is corrupted.")
+		else
 			local neig = cell:getNeighborhood(data.name)
 			local lineV = file:read()
 			local lineID = CSVparseLine(lineV, " ")
 			local valfor = (tonumber(line[2]) * 2)
 
+			counterLine = counterLine + 1
 			for i = 1, valfor, values do
-				if lineID[i] ~= nil then
+				if lineID[i] == nil and tonumber(line[2]) * values >= i then
+					customError("Could not read line '"..counterLine.."' properly. It seems that it is corrupted.")
+				elseif lineID[i] ~= nil then
 					local n = self:get(lineID[i])
 
 					if values == 2 and n ~= nilthen  then
@@ -150,6 +165,7 @@ local function loadNeighborhoodGPM(self, data)
 		end
 
 		line_cell = file:read()
+		counterLine = counterLine + 1
 	end
 
 	closeFile(file)
@@ -180,13 +196,16 @@ local function loadNeighborhoodGWT(self, data)
 	end)
 
 	local line_cell = file:read()
+	local counterLine = 2
 
 	while line_cell do
 		local line = CSVparseLine(line_cell, " ")
 		local cell = self:get(line[1])
-		local neig = cell:getNeighborhood(data.name)
 
-		if line[2] ~= nil then
+		if cell == nil or line[2] == nil then
+			customError("Could not read line '"..counterLine.."' properly. It seems that it is corrupted.")
+		else
+			local neig = cell:getNeighborhood(data.name)
 			local n = self:get(line[2])
 
 			if line[3] ~= nil then
@@ -197,6 +216,7 @@ local function loadNeighborhoodGWT(self, data)
 		end
 
 		line_cell = file:read()
+		counterLine = counterLine + 1
 	end
 
 	closeFile(file)
@@ -1103,7 +1123,7 @@ CellularSpace_ = {
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
 		verifyUnnecessaryArguments(data, {"source", "name", "check"})
-        
+
 		mandatoryTableArgument(data, "source", "string")
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
@@ -1118,12 +1138,12 @@ CellularSpace_ = {
 				invalidFileExtensionError("source", ext)
 			end
 		end
-        
+
 		separatorCheck(data)
-        
+
 		defaultTableValue(data, "name", "1")
 		defaultTableValue(data, "check", true)
-        
+
 		if data.source:endswith(".gal") then
 			loadNeighborhoodGAL(self, data)
 		elseif data.source:endswith(".gwt") then
