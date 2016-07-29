@@ -441,11 +441,26 @@ return{
 		unitTest:assertEquals(count, 1)
 	end,
 	forEachOrderedElement = function(unitTest)
-		local list = {[1] = 1, [3] = 3, [2] = 2, a = "a", A = "A", b = "b", c = "c"}
-		local result = {1, 2, 3, "a", "A", "b", "c"}
+		local list = {aaB = "aaB", aAB = "aAB", aab = "aab", aAb = "aAb", aaBa = "aaBa", aa = "aa"}
+		local result = {"aAB", "aAb", "aa", "aaB", "aaBa", "aab"}
 
 		local cont = 0
 		local r
+		r = forEachOrderedElement(list, function(idx, value, mtype)
+			cont = cont + 1
+			unitTest:assertEquals(mtype, type(result[cont]))
+
+			unitTest:assertEquals(idx, result[cont])
+			unitTest:assertEquals(value, result[cont])
+		end)
+
+		unitTest:assert(r)
+		unitTest:assertEquals(cont, #result)
+
+		list = {[1] = 1, [3] = 3, [2] = 2, a = "a", A = "A", b = "b", c = "c"}
+		result = {1, 2, 3, "A", "a", "b", "c"}
+
+		cont = 0
 		r = forEachOrderedElement(list, function(idx, value, mtype)
 			cont = cont + 1
 			unitTest:assertEquals(mtype, type(result[cont]))
@@ -465,6 +480,19 @@ return{
 
 		unitTest:assert(not r)
 		unitTest:assertEquals(cont, 1)
+
+		list = {cObj = 1, cPbj = 2, cell = 3, cells = 4, cem = 5, value1 = 6, value2 = 7}
+		result = {1, 2, 3, 4, 5, 6, 7}
+
+		cont = 0
+		r = forEachOrderedElement(list, function(_, value, _)
+			cont = cont + 1
+
+			unitTest:assertEquals(value, result[cont])
+		end)
+
+		unitTest:assert(r)
+		unitTest:assertEquals(cont, #result)
 	end,
 	forEachSocialNetwork = function(unitTest)
 		local a1 = Agent{id = "111"}
@@ -900,8 +928,15 @@ return{
 	openFile = function(unitTest)
 		local fopen = openFile("test.csv", "a+") 
 		local sfile = fopen:read("*all")
-		closeFile(fopen)
+
 		unitTest:assertEquals(sfile, "")
+		closeFile(fopen)
+
+		fopen = openFile("test.csv")
+		sfile = fopen:read()
+		unitTest:assertNil(sfile)
+		closeFile(fopen)
+
 		rmFile("test.csv")
 	end,
 	round = function(unitTest)
@@ -983,8 +1018,8 @@ return{
 		actual = vardump{name = "john", age = 20, [false] = 5}
 
 		unitTest:assertEquals(actual, [[{
-    age = 20, 
     [false] = 5, 
+    age = 20, 
     name = "john"
 }]])
 
