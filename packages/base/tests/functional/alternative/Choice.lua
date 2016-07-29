@@ -151,6 +151,11 @@ return{
 		unitTest:assertError(error_func, "Attribute 'step' requires 'max' and 'min'.")
 
 		error_func = function()
+			Choice{min = 1, slices = 4}
+		end
+		unitTest:assertError(error_func, "Attribute 'slices' requires 'max' and 'min'.")
+
+		error_func = function()
 			Choice{min = 1, max = 4, step = 1, slices = 4}
 		end
 		unitTest:assertError(error_func, "It is not possible to use arguments 'step' and 'slices' at the same time.")
