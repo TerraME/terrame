@@ -206,6 +206,8 @@ local function loadNeighborhoodGWT(self, data)
 			customError("Could not find id '"..tostring(line[1]).."' in line "..counterLine..". It seems that it is corrupted.")
 		elseif line[2] == nil then
 			customError("Could not find id '"..tostring(line[2]).."' in line "..counterLine..". It seems that it is corrupted.")
+		elseif line[3] == nil then
+			customError("Could not find id '"..tostring(line[3]).."' in line "..counterLine..". It seems that it is corrupted.")
 		else
 			local neig = cell:getNeighborhood(data.name)
 			local n = self:get(line[2])

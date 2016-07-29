@@ -302,6 +302,12 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Could not find id '' in line 2. It seems that it is corrupted.")
+
+		error_func = function()
+			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid3.gwt", "base")}
+		end
+
+		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
 	end,
 	save = function(unitTest)
 		local terralib = getPackage("terralib")
