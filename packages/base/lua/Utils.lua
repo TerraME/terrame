@@ -96,8 +96,6 @@ function closeFile(file)
 	if io.type(file) == "file" then
 		io.close(file)
 		return true
-	else
-		resourceNotFoundError("file", file)
 	end
 end
 
@@ -845,6 +843,44 @@ function forEachNeighborhood(cell, _sof_)
 	return true
 end
 
+local function greaterString(str1, str2)
+	local countChar = 1
+
+	local size1 = string.len(str1)
+	local size2 = string.len(str2)
+
+	local ch1 = string.sub(str1, countChar, countChar)
+	local ch2 = string.sub(str2, countChar, countChar)
+
+	while countChar <= size1 and countChar <= size2 and ch1 == ch2 do
+		countChar = countChar + 1
+
+		ch1 = string.sub(str1, countChar, countChar)
+		ch2 = string.sub(str2, countChar, countChar)
+	end
+
+	local last1 = string.sub(str1, countChar - 1, countChar - 1)
+	local last2 = string.sub(str2, countChar - 1, countChar - 1)
+
+	local function upper(str)
+		return string.lower(str) ~= str
+	end
+
+	if countChar > size1 then
+		return  last1 == last2
+	elseif countChar > size2 then
+		return last1 ~= last2
+	elseif string.lower(ch1) == string.lower(ch2) then
+		return string.lower(ch1) ~= ch1
+	elseif upper(ch1) and not upper(ch2) then
+		return true
+	elseif not upper(ch1) and upper(ch2) then
+		return false
+	else
+		return ch1 < ch2
+	end
+end
+
 --- Second order function to transverse a given object, applying a function to each of its
 -- elements according to their alphabetical order. It can be used for instance to transverse all
 -- the elements of an Agent or an Environment. This function executes first the positions with
@@ -873,35 +909,26 @@ function forEachOrderedElement(obj, _sof_)
 		incompatibleTypeError(2, "function", _sof_)
 	end
 
-	local strk
 	local sorder = {}
-	local sreference = {}
 	local norder = {}
 	local nreference = {}
 
 	for k in pairs(obj) do
-		if type(k) == "number" then
-			norder[#norder + 1] = k
-			nreference[k] = k
-		else
-			strk = string.lower(tostring(k))
+		if type(k) == "string" then
+			local count = 1
 
-			if sreference[strk] then -- two strings with the same lower case
-				local count = 1
-				local ref = sreference[strk]
-
-				while count <= #ref and ref[count] > k do count = count + 1 end
-
-				table.insert(sreference[strk], count, k)
-			else
-				sreference[strk] = {k}
-				table.insert(sorder, strk)
+			while count <= #sorder and greaterString(sorder[count], k) do 
+				count = count + 1
 			end
+
+			table.insert(sorder, count, k)
+		else
+			table.insert(norder, k)
+			nreference[k] = k
 		end
 	end
 
 	table.sort(norder)
-	table.sort(sorder)
 
 	for k = 1, #norder do
 		local idx = nreference[norder[k]]
@@ -909,11 +936,8 @@ function forEachOrderedElement(obj, _sof_)
 	end
 
 	for k = 1, #sorder do
-		local ref = sreference[sorder[k]]
-		for l = 1, #ref do
-			local idx = ref[l]
-			if _sof_(idx, obj[idx], type(obj[idx])) == false then return false end
-		end
+		local ref = sorder[k]
+		if _sof_(ref, obj[ref], type(obj[ref])) == false then return false end
 	end
 
 	return true
