@@ -156,8 +156,8 @@ return{
 			target = cs1,
 			select = function() return true end
 		}
-		unitTest:assertEquals(tostring(tr1), [[cells   vector of size 200
-cObj_   userdata
+		unitTest:assertEquals(tostring(tr1), [[cObj_   userdata
+cells   vector of size 200
 load    function
 parent  CellularSpace
 select  function

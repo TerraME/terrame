@@ -92,7 +92,7 @@ return{
 
 		world:notify()
     
-		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.07)
+		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.1)
 
 		unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.06)
 
@@ -227,7 +227,7 @@ return{
 
 		cs:notify()
     
-		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.09)
+		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.1)
 		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
 		unitTest:assertFile(projName)
 		

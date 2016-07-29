@@ -96,9 +96,9 @@ socialnetworks  vector of size 0
 		local e = Environment{predators, cs}
 		e:createPlacement()
 
-		unitTest:assertEquals(tostring(predators:sample()), [[cell            Cell
+		unitTest:assertEquals(tostring(predators:sample()), [[cObj_           userdata
+cell            Cell
 cells           vector of size 1
-cObj_           userdata
 id              string [4]
 parent          Society
 placement       Trajectory
@@ -291,6 +291,9 @@ state_          State
 		}
 
 		predators:createSocialNetwork{probability = 0.5, inmemory = false}
+
+		sn2 = predators:sample():getSocialNetwork()
+		unitTest:assertType(sn2, "SocialNetwork")
 	end,
 	getStateName = function(unitTest)
 		local a = Agent{
