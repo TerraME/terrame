@@ -248,7 +248,8 @@ local function getProjects(package)
 				layers[data.file] = 
 				{
 					file = {data.file},
-					summary = "Automatically created file with "..description..", in project \""..currentProject.."\".",
+					summary = "Automatically created file with "..description..
+						", in project <a href = \"#"..currentProject.."\">"..currentProject.."</a>.",
 					shortsummary = "Automatically created file in project \""..currentProject.."\".",
 					attributes = {},
 					description = {},
