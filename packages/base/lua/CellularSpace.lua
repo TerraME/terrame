@@ -413,7 +413,7 @@ local function loadGdal(self)
 			temp = self.file:sub(i, i)..temp -- SKIP
 		else -- SKIP
 			break -- SKIP
-		end -- SKIP
+		end
 	end
 
 	self.layer = temp -- SKIP
