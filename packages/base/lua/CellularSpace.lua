@@ -34,144 +34,171 @@ local function separatorCheck(data)
 	local lineTest3 = CSVparseLine(header, ";")
 
 	if lineTest1[2] ~= nil and lineTest2[2] == nil or lineTest3[2] ~= nil then
-		customError("Could not read the file '"..data.source.."' invalid header.")  
+		customError("Could not read the file '"..data.source.."' invalid header.")
 	end
 
-	closeFile(fopen)    
+	closeFile(fopen)
 end
 
 local function loadNeighborhoodGAL(self, data)
 	local file = openFile(data.source, "r")
 	local header = file:read()
-	local b = " "
-	local lineTest = CSVparseLine(header, b)
-	local layer
-	if self.layer == nil then
-		layer = ""
-	else
+	local lineTest = CSVparseLine(header, " ")
+	local layer = ""
+
+	if self.layer ~= nil then
 		layer = self.layer
 	end
+
 	if data.check then
 		local vallayer = ""
-		if lineTest[3] ~= nil then vallayer = lineTest[3] end 
+
+		if lineTest[3] ~= nil then vallayer = lineTest[3] end
+
 		if vallayer ~= self.layer then
 			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GAL file layer: '"..vallayer.."'.")
 		end
-	end 
+	end
+
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
+
 	local line_cell = file:read()
+
 	while line_cell do
-		local line = CSVparseLine(line_cell, b)       
+		local line = CSVparseLine(line_cell, " ")
 		local cell = self:get(line[1])
+
 		if cell ~= nil then
 			local neig = cell:getNeighborhood(data.name)
 			local lineV = file:read()
-			local lineID = CSVparseLine(lineV, b)
+			local lineID = CSVparseLine(lineV, " ")
+
 			for i = 1, tonumber(line[2]) do
 				local n = self:get(lineID[i])
+
 				neig:add(n)
 			end
 		end
+
 		line_cell = file:read()
 	end
+
 	closeFile(file)
 end
 
 local function loadNeighborhoodGPM(self, data)
 	local file = openFile(data.source, "r")
 	local header = file:read()
-	local b = " "
-	local lineTest = CSVparseLine(header, b)
-	local layer
-	if self.layer == nil then
-		layer = ""
-	else
+	local lineTest = CSVparseLine(header, " ")
+	local layer = ""
+
+	if self.layer ~= nil then
 		layer = self.layer
-	end 
+	end
+
 	if data.check then
-		local vallayer = ""	
+		local vallayer = ""
+
 		if lineTest[2] ~= nil then vallayer = lineTest[2] end
+
 		if vallayer ~= self.layer then
 			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GPM file layer: '"..vallayer.."'.")
 		end
 	end
+
 	if lineTest[2] ~= nil and lineTest[3] ~= nil then
 		if lineTest[3] ~= layer and  lineTest[2] ~= layer then
-            customError("This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
+			customError("This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
 		end
 	end
-	local val
-	if lineTest[4] == nil or lineTest[4] == "" then 
-		val = 1
-	else 
-		val = 2 
+
+	local values = 2
+
+	if lineTest[4] == nil or lineTest[4] == "" then
+		values = 1
 	end
+
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
+
 	local line_cell = file:read()
+
 	while line_cell do
-		local line = CSVparseLine(line_cell, b)       
+		local line = CSVparseLine(line_cell, " ")
 		local cell = self:get(line[1])
+
 		if cell ~= nil then
 			local neig = cell:getNeighborhood(data.name)
 			local lineV = file:read()
-			local lineID = CSVparseLine(lineV, b)
+			local lineID = CSVparseLine(lineV, " ")
 			local valfor = (tonumber(line[2]) * 2)
-			for i = 1, valfor, val do 
+
+			for i = 1, valfor, values do
 				if lineID[i] ~= nil then
 					local n = self:get(lineID[i])
-					if val == 2 and n ~= nilthen  then
+
+					if values == 2 and n ~= nilthen  then
 						neig:add(n, tonumber(lineID[i + 1]))
-					elseif val == 1 and n ~= nil then
+					elseif values == 1 and n ~= nil then
 						neig:add(n, 1)
 					end
-				end 
-			end 
+				end
+			end
 		end
+
 		line_cell = file:read()
 	end
+
 	closeFile(file)
 end
 
 local function loadNeighborhoodGWT(self, data)
 	local file = openFile(data.source, "r")
 	local header = file:read()
-	local b = " "
-	local lineTest = CSVparseLine(header, b)
-	local layer
-	if self.layer == nil then
-		layer = ""
-	else
+	local lineTest = CSVparseLine(header, " ")
+	local layer = ""
+
+	if self.layer ~= nil then
 		layer = self.layer
-	end 
+	end
+
 	if data.check then
 		local vallayer = ""
-		if lineTest[3] ~= nil then vallayer = lineTest[3] end 
+
+		if lineTest[3] ~= nil then vallayer = lineTest[3] end
+
 		if vallayer ~= self.layer then
 			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GWT file layer: '"..vallayer.."'.")
 		end
-	end 
+	end
+
 	forEachCell(self, function(cell)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
+
 	local line_cell = file:read()
+
 	while line_cell do
-		local line = CSVparseLine(line_cell, b)       
+		local line = CSVparseLine(line_cell, " ")
 		local cell = self:get(line[1])
 		local neig = cell:getNeighborhood(data.name)
+
 		if line[2] ~= nil then
 			local n = self:get(line[2])
-			if line[3] ~= nil then 
+
+			if line[3] ~= nil then
 				neig:add(n, tonumber(line[3]))
 			else
 				neig:add(n)
 			end
 		end
+
 		line_cell = file:read()
 	end
+
 	closeFile(file)
 end
 
@@ -1104,7 +1131,6 @@ CellularSpace_ = {
 		elseif data.source:endswith(".gpm") then
 			loadNeighborhoodGPM(self, data)
 		end
-        
 	end,
 	--- Notify every Observer connected to the CellularSpace.
 	-- @arg modelTime A number representing the notification time. The default value is zero.
