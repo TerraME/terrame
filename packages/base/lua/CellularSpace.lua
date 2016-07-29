@@ -34,7 +34,7 @@ local function separatorCheck(data)
 	local lineTest3 = CSVparseLine(header, ";")
 
 	if lineTest1[2] ~= nil and lineTest2[2] == nil or lineTest3[2] ~= nil then
-		customError("Could not read the file '"..data.source.."' invalid header.")
+		customError("Could not read file '"..data.source.."': invalid header.")
 	end
 
 	closeFile(fopen)

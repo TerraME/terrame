@@ -261,7 +261,7 @@ return{
 		error_func = function()
 			cs:loadNeighborhood{source = mfile}
 		end
-		unitTest:assertError(error_func, "Could not read the file '"..mfile.."' invalid header.")
+		unitTest:assertError(error_func, "Could not read file '"..mfile.."': invalid header.")
 
 		local cs3 = CellularSpace{
 			file = filePath("cabecadeboi900.shp", "base")	
