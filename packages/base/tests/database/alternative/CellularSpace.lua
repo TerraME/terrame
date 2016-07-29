@@ -268,42 +268,36 @@ return{
 		}
 
 		error_func = function()
-			local s = sessionInfo().separator
 			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid1.gal", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not read line '2' properly. It seems that it is corrupted.")
 
 		error_func = function()
-			local s = sessionInfo().separator
 			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid2.gal", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not read line '3' properly. It seems that it is corrupted.")
     
 		error_func = function()
-			local s = sessionInfo().separator
 			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid1.gpm", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not read line '2' properly. It seems that it is corrupted.")
 
 		error_func = function()
-			local s = sessionInfo().separator
 			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid2.gpm", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not read line '3' properly. It seems that it is corrupted.")
 
 		error_func = function()
-			local s = sessionInfo().separator
 			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid1.gwt", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not read line '2' properly. It seems that it is corrupted.")
 
 		error_func = function()
-			local s = sessionInfo().separator
 			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid2.gwt", "base")}
 		end
 
