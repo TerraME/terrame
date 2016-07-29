@@ -351,15 +351,24 @@ function Chart(attrTab)
 		verify(#attrTab.select == 1, "It is not possible to select more than one attribute when creating a Chart from an Environment.")
 
 		local mselect = attrTab.select[1]
+		local labels = {}
 
 		forEachModel(attrTab.target, function(value, idx)
 			local midx = tostring(idx)
 			c[midx] = function() return value[mselect] end
 			table.insert(select, midx)
+
+			if type(idx) ~= "string" then
+				table.insert(labels, value:title())
+			end
 		end)
 
 		if #select == 0 then
 			customError("There is no Model instance within the Environment.")
+		end
+
+		if attrTab.label == nil and #select == #labels then
+			attrTab.label = labels
 		end
 
 		attrTab.target = c

@@ -101,8 +101,8 @@ subwater         Choice
 ]])
 
 		unitTest:assertEquals(tostring(t), [[block            named table of size 6
-checkZero        boolean [false]
 cObj_            userdata
+checkZero        boolean [false]
 filter           function
 finalTime        number [10]
 flow             number [20]

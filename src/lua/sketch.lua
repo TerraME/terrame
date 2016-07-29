@@ -109,7 +109,7 @@ local function verifyTest(package, report)
 					str = str.."\n"
 				end
 
-				str = str.."\t\tmodel:execute()\n\n"
+				str = str.."\t\tmodel:run()\n\n"
 
 				local countChart = 1
 				countMap = 1
