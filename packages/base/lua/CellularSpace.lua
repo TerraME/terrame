@@ -72,7 +72,7 @@ local function loadNeighborhoodGAL(self, data)
 		local cell = self:get(line[1])
 
 		if cell == nil then
-			customError("Could not read line '"..counterLine.."' properly. It seems that it is corrupted.")
+			customError("Could not find id '"..tostring(line[1]).."' in line "..counterLine..". It seems that it is corrupted.")
 		else
 			local neig = cell:getNeighborhood(data.name)
 			local lineV = file:read()
@@ -81,7 +81,7 @@ local function loadNeighborhoodGAL(self, data)
 			counterLine = counterLine + 1
 			for i = 1, tonumber(line[2]) do
 				if lineID[i] == nil then
-					customError("Could not read line '"..counterLine.."' properly. It seems that it is corrupted.")
+					customError("Could not find id '"..tostring(lineID[i]).."' in line "..counterLine..". It seems that it is corrupted.")
 				else
 					local n = self:get(lineID[i])
 
@@ -141,7 +141,7 @@ local function loadNeighborhoodGPM(self, data)
 		local cell = self:get(line[1])
 
 		if cell == nil then
-			customError("Could not read line '"..counterLine.."' properly. It seems that it is corrupted.")
+			customError("Could not find id '"..tostring(line[i]).."' in line "..counterLine..". It seems that it is corrupted.")
 		else
 			local neig = cell:getNeighborhood(data.name)
 			local lineV = file:read()
@@ -151,7 +151,7 @@ local function loadNeighborhoodGPM(self, data)
 			counterLine = counterLine + 1
 			for i = 1, valfor, values do
 				if lineID[i] == nil and tonumber(line[2]) * values >= i then
-					customError("Could not read line '"..counterLine.."' properly. It seems that it is corrupted.")
+					customError("Could not find id '"..tostring(lineID[i]).."' in line "..counterLine..". It seems that it is corrupted.")
 				elseif lineID[i] ~= nil then
 					local n = self:get(lineID[i])
 
@@ -202,17 +202,15 @@ local function loadNeighborhoodGWT(self, data)
 		local line = CSVparseLine(line_cell, " ")
 		local cell = self:get(line[1])
 
-		if cell == nil or line[2] == nil then
-			customError("Could not read line '"..counterLine.."' properly. It seems that it is corrupted.")
+		if cell == nil then
+			customError("Could not find id '"..tostring(line[1]).."' in line "..counterLine..". It seems that it is corrupted.")
+		elseif line[2] == nil then
+			customError("Could not find id '"..tostring(line[2]).."' in line "..counterLine..". It seems that it is corrupted.")
 		else
 			local neig = cell:getNeighborhood(data.name)
 			local n = self:get(line[2])
 
-			if line[3] ~= nil then
-				neig:add(n, tonumber(line[3]))
-			else
-				neig:add(n)
-			end
+			neig:add(n, tonumber(line[3]))
 		end
 
 		line_cell = file:read()
