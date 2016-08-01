@@ -399,8 +399,12 @@ local function checkGdal(self)
 end
 
 local function checkGeoJSON(self)
-	if not isFile(self.file) then
-		customError("File '"..self.file.."' was not found.")
+	local fopen = openFile(self.file)
+	local sfile = fopen:read("*all")
+	closeFile(fopen)
+
+	if sfile == "" then
+		customError("File '"..self.file.."' was empty.")
 	end
 end
 
