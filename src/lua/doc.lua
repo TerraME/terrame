@@ -169,7 +169,13 @@ local function getProjects(package)
 				}
 			end
 
-			local description = "Operation "..data.operation.." from layer \""..data.layer.."\""
+			local description = "Operation "..data.operation
+
+			if data.area then
+				description = description.." (weighted by area) "
+			end
+			
+			description = description.." from layer \""..data.layer.."\""
 
 			if data.band or data.select then
 				description = description.." using"
@@ -248,7 +254,8 @@ local function getProjects(package)
 				layers[data.file] = 
 				{
 					file = {data.file},
-					summary = "Automatically created file with "..description..", in project \""..currentProject.."\".",
+					summary = "Automatically created file with "..description..
+						", in project <a href = \"#"..currentProject.."\">"..currentProject.."</a>.",
 					shortsummary = "Automatically created file in project \""..currentProject.."\".",
 					attributes = {},
 					description = {},
