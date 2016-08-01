@@ -13,7 +13,8 @@ test = {
 	pattern        = {arg = "-test", config = "pattern.lua"},
 	noload         = {arg = "-test", package = "noload"},
 	nolog          = {arg = "-test", config = "log.lua"},
-	noexamples     = {arg = "-test", package = "noexamples"}
+	noexamples     = {arg = "-test", package = "noexamples" },
+	linedirectory  = {arg = "-test", config = "linesDirectory.lua"}
 }
 
 package = {
