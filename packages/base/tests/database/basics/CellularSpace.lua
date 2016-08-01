@@ -148,7 +148,7 @@ return{
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = "postgres"
+		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 
@@ -769,7 +769,7 @@ return{
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = "postgres"
+		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 

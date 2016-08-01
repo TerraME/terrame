@@ -119,7 +119,7 @@
 							<table class="arg_tab">
 							<tr><td><b>Layer</b></td><td><b>File</b></td><td><b>Description</b></td></tr>
 							<% for j = 1,#data.layers do %>
-								<tr><td><%="\""..data.layers[j].layer.."\""%></td><td><%="\""..data.layers[j].file.."\""%></td><td><%=data.layers[j].description%></td></tr>
+							<tr><td><%="\""..data.layers[j].layer.."\""%></td><td><a href = "#<%=data.layers[j].file%>"><%=data.layers[j].file%></a></td><td><%=data.layers[j].description%></td></tr>
 							<%end%>
 							</table>
 						<%end%>

@@ -379,7 +379,7 @@ return {
 				host = host,
 				port = port,
 				user = user,
-				password = password,
+				password = getConfig().password,
 				database = database,
 				table = tableWrong
 			}
@@ -416,7 +416,7 @@ return {
 		host = "localhost"
 		port = "5432"
 		user = "postgres"
-		password = "postgres"
+		password = getConfig().password
 		database = "postgis_22_sample"
 		encoding = "CP1252"
 
