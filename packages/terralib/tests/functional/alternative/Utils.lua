@@ -24,6 +24,10 @@
 
 return {
 	forEachLayer = function(unitTest)
+		if isFile("emas-count.tview") then
+			rmFile("emas-count.tview")
+		end
+		
 		local project = Project{
 			file = "emas-count.tview",
 			clean = true,
@@ -50,7 +54,8 @@ return {
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
-
+		
+		rmFile("emas-count.tview")
 	end
 }
 

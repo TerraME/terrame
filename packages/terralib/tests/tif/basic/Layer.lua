@@ -64,7 +64,7 @@ return {
 		-- local host = "localhost"
 		-- local port = "5432"
 		-- local user = "postgres"
-		-- local password = getConfig().password
+		-- local password = "postgres"
 		-- local database = "postgis_22_sample"
 		-- local encoding = "CP1252"
 		-- local tableName = "prodes_pg_cells"
@@ -187,35 +187,35 @@ return {
 
 		unitTest:assertSnapshot(map, "tiff-mode.png")
 
-		-- MINIMUM
+		if _Gtme.isWindowsOS() then -- #1306		
+			-- MINIMUM
 
-		cl:fill{
-			operation = "minimum",
-			attribute = "prod_min",
-			layer = prodes
-		}
+			cl:fill{
+				operation = "minimum",
+				attribute = "prod_min",
+				layer = prodes
+			}
 
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name 
-		}
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name 
+			}
 
-		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_min, "number")
-			unitTest:assert(cell.prod_min >= 0)
-			unitTest:assert(cell.prod_min <= 254)
-		end)
+			forEachCell(cs, function(cell)
+				unitTest:assertType(cell.prod_min, "number") -- SKIP
+				unitTest:assert(cell.prod_min >= 0) -- SKIP
+				unitTest:assert(cell.prod_min <= 254) -- SKIP
+			end)
 
-		map = Map{
-			target = cs,
-			select = "prod_min",
-			value = {0, 49, 169, 253, 254},
-			color = {"red", "green", "blue", "orange", "purple"}
-		}
+			map = Map{
+				target = cs,
+				select = "prod_min",
+				value = {0, 49, 169, 253, 254},
+				color = {"red", "green", "blue", "orange", "purple"}
+			}
 
-		unitTest:assertSnapshot(map, "tiff-min.png")
-		
-		if _Gtme.isWindowsOS() then -- #1306
+			unitTest:assertSnapshot(map, "tiff-min.png") -- SKIP
+			
 			-- MAXIMUM
 
 			cl:fill{
@@ -397,7 +397,7 @@ return {
 	end,
 	representation = function(unitTest)
 		if _Gtme.isWindowsOS() then -- #1307
-			local projName = "cellular_layer_fill_tiff_repr.tview"
+			local projName = "layer_fill_tiff_repr.tview"
 
 			local proj = Project{
 				file = projName,
@@ -420,8 +420,12 @@ return {
 		end
 	end,
 	bands = function(unitTest)
-		local projName = "cellular_layer_fill_tiff_repr.tview"
-
+		local projName = "layer_tif_bands.tview"
+		
+		if isFile(projName) then
+			rmFile(projName)
+		end
+		
 		local proj = Project{
 			file = projName,
 			clean = true
@@ -435,6 +439,8 @@ return {
 		}
 
 		unitTest:assertEquals(l:bands(), 4)
+		
+		rmFile(projName)
 	end,
 	projection = function(unitTest)
 		local projName = "tif_basic.tview"
