@@ -40,8 +40,8 @@ return {
 			file = filePath("sampa.shp", "terralib")
 		}
 
-		local host = nil -- "localhost"
-		local port = nil
+		local host = "localhost"
+		local port = "5432"
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
@@ -61,6 +61,9 @@ return {
 
 		local tl = TerraLib{}
 		tl:copyLayer(proj1, layerName1, data)
+		
+		host = nil
+		port = nil
 		
 		local layerName2 = "SampaDB"
 
@@ -318,7 +321,7 @@ return {
 			}
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 20)
+								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 26) -- #1303
 
 		local wrongPort = 2345
 		local portWrong = function()
@@ -334,7 +337,7 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 18)
+		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 188) -- #1303
 
 		local nonuser = "usernotexists"
 		local userNotExists = function()
@@ -351,7 +354,7 @@ return {
 			}
 		end
 		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.")
+							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 64) -- #1303
 
 		local wrongPass = "passiswrong"
 		local passWrong = function()
@@ -368,7 +371,7 @@ return {
 			}
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..user.."\"\n.")
+							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
 
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
@@ -695,7 +698,7 @@ return {
 			}
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 20)
+								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 26) -- #1303
 
 		wrongPort = 2345
 		portWrong = function()
@@ -712,7 +715,7 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 18)
+		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 188) -- #1303
 		
 		nonuser = "usernotexists"
 		userNotExists = function()
@@ -729,7 +732,7 @@ return {
 			}
 		end
 		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.")
+							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 64) -- #1303
 
 		wrongPass = "passiswrong"
 		passWrong = function()
@@ -746,10 +749,15 @@ return {
 			}
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..user.."\"\n.")
+							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
 
+		
+		host = "localhost"
+		port = "5432"
+		
 		local pgData = {
 			type = "POSTGIS",
+			host = host,
 			port = port,
 			user = user,
 			password = password,
@@ -757,7 +765,7 @@ return {
 			table = tName1,
 			encoding = encoding
 		}
-
+		
 		tl = TerraLib{}
 		tl:dropPgTable(pgData)
 
