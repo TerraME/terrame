@@ -253,10 +253,36 @@ return{
 			}		
 		end
 		unitTest:assertError(geometryNotBoolean, incompatibleTypeMsg("geometry", "boolean", 123))
-		
+
 		if isFile(projFile) then
 			os.execute("rm -f "..projFile)
-		end					
+		end
+
+		projFile = "sampa.tview"
+		local project = terralib.Project{
+			file = projFile,
+			clean = true,
+			author = "Carneiro, H.",
+			title = "Sampa Example",
+		}
+
+		local layer = terralib.Layer{
+			project = project,
+			name = "sampa_layer",
+			file = filePath("sampa.shp", "terralib"),
+		}
+
+		local projAndLayerExists = function()
+			CellularSpace {
+				project = proj,
+				layer = layer
+			}
+		end
+		unitTest:assertError(projAndLayerExists, "It is not possible to use Project when passing a Layer to CellularSpace.")
+
+		if isFile(projFile) then
+			os.execute("rm -f "..projFile)
+		end
 	end,
 	add = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

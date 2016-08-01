@@ -26,6 +26,202 @@ local terralib = getPackage("terralib")
 
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
+local function separatorCheck(data)
+	local fopen = openFile(data.source)
+	local header = fopen:read()
+	local lineTest1 = CSVparseLine(header, "\t")
+	local lineTest2 = CSVparseLine(header, " ")
+	local lineTest3 = CSVparseLine(header, ";")
+
+	if lineTest1[2] ~= nil and lineTest2[2] == nil or lineTest3[2] ~= nil then
+		customError("Could not read file '"..data.source.."': invalid header.")
+	end
+
+	closeFile(fopen)
+end
+
+local function loadNeighborhoodGAL(self, data)
+	local file = openFile(data.source, "r")
+	local header = file:read()
+	local lineTest = CSVparseLine(header, " ")
+	local layer = ""
+
+	if self.layer ~= nil then
+		layer = self.layer
+	end
+
+	if data.check then
+		local vallayer = ""
+
+		if lineTest[3] ~= nil then vallayer = lineTest[3] end
+
+		if vallayer ~= self.layer then
+			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GAL file layer: '"..vallayer.."'.")
+		end
+	end
+
+	forEachCell(self, function(cell)
+		cell:addNeighborhood(Neighborhood{}, data.name)
+	end)
+
+	local line_cell = file:read()
+	local counterLine = 2
+
+	while line_cell do
+		local line = CSVparseLine(line_cell, " ")
+		local cell = self:get(line[1])
+
+		if cell == nil then
+			customError("Could not find id '"..tostring(line[1]).."' in line "..counterLine..". It seems that it is corrupted.")
+		else
+			local neig = cell:getNeighborhood(data.name)
+			local lineV = file:read()
+			local lineID = CSVparseLine(lineV, " ")
+
+			counterLine = counterLine + 1
+			for i = 1, tonumber(line[2]) do
+				if lineID[i] == nil then
+					customError("Could not find id '"..tostring(lineID[i]).."' in line "..counterLine..". It seems that it is corrupted.")
+				else
+					local n = self:get(lineID[i])
+
+					neig:add(n)
+				end
+			end
+		end
+
+		line_cell = file:read()
+		counterLine = counterLine + 1
+	end
+
+	closeFile(file)
+end
+
+local function loadNeighborhoodGPM(self, data)
+	local file = openFile(data.source, "r")
+	local header = file:read()
+	local lineTest = CSVparseLine(header, " ")
+	local layer = ""
+
+	if self.layer ~= nil then
+		layer = self.layer
+	end
+
+	if data.check then
+		local vallayer = ""
+
+		if lineTest[2] ~= nil then vallayer = lineTest[2] end
+
+		if vallayer ~= self.layer then
+			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GPM file layer: '"..vallayer.."'.")
+		end
+	end
+
+	if lineTest[2] ~= nil and lineTest[3] ~= nil then
+		if lineTest[3] ~= layer and  lineTest[2] ~= layer then
+			customError("This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
+		end
+	end
+
+	local values = 2
+
+	if lineTest[4] == nil or lineTest[4] == "" then
+		values = 1
+	end
+
+	forEachCell(self, function(cell)
+		cell:addNeighborhood(Neighborhood{}, data.name)
+	end)
+
+	local line_cell = file:read()
+	local counterLine = 2
+
+	while line_cell do
+		local line = CSVparseLine(line_cell, " ")
+		local cell = self:get(line[1])
+
+		if cell == nil then
+			customError("Could not find id '"..tostring(line[i]).."' in line "..counterLine..". It seems that it is corrupted.")
+		else
+			local neig = cell:getNeighborhood(data.name)
+			local lineV = file:read()
+			local lineID = CSVparseLine(lineV, " ")
+			local valfor = (tonumber(line[2]) * 2)
+
+			counterLine = counterLine + 1
+			for i = 1, valfor, values do
+				if lineID[i] == nil and tonumber(line[2]) * values >= i then
+					customError("Could not find id '"..tostring(lineID[i]).."' in line "..counterLine..". It seems that it is corrupted.")
+				elseif lineID[i] ~= nil then
+					local n = self:get(lineID[i])
+
+					if values == 2 and n ~= nilthen  then
+						neig:add(n, tonumber(lineID[i + 1]))
+					elseif values == 1 and n ~= nil then
+						neig:add(n, 1)
+					end
+				end
+			end
+		end
+
+		line_cell = file:read()
+		counterLine = counterLine + 1
+	end
+
+	closeFile(file)
+end
+
+local function loadNeighborhoodGWT(self, data)
+	local file = openFile(data.source, "r")
+	local header = file:read()
+	local lineTest = CSVparseLine(header, " ")
+	local layer = ""
+
+	if self.layer ~= nil then
+		layer = self.layer
+	end
+
+	if data.check then
+		local vallayer = ""
+
+		if lineTest[3] ~= nil then vallayer = lineTest[3] end
+
+		if vallayer ~= self.layer then
+			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GWT file layer: '"..vallayer.."'.")
+		end
+	end
+
+	forEachCell(self, function(cell)
+		cell:addNeighborhood(Neighborhood{}, data.name)
+	end)
+
+	local line_cell = file:read()
+	local counterLine = 2
+
+	while line_cell do
+		local line = CSVparseLine(line_cell, " ")
+		local cell = self:get(line[1])
+
+		if cell == nil then
+			customError("Could not find id '"..tostring(line[1]).."' in line "..counterLine..". It seems that it is corrupted.")
+		elseif line[2] == nil then
+			customError("Could not find id '"..tostring(line[2]).."' in line "..counterLine..". It seems that it is corrupted.")
+		elseif line[3] == nil then
+			customError("Could not find id '"..tostring(line[3]).."' in line "..counterLine..". It seems that it is corrupted.")
+		else
+			local neig = cell:getNeighborhood(data.name)
+			local n = self:get(line[2])
+
+			neig:add(n, tonumber(line[3]))
+		end
+
+		line_cell = file:read()
+		counterLine = counterLine + 1
+	end
+
+	closeFile(file)
+end
+
 local function getCoordCoupling(_, data)
 	return function(cell)
 		local neighborhood = Neighborhood()
@@ -197,14 +393,18 @@ local function checkCsv(self)
 end
 
 local function checkGdal(self)
-	if not isFile(self.file) then
-		customError("File '"..self.file.."' was not found.")
-	end
+	if not isFile(self.file) then -- SKIP
+		customError("File '"..self.file.."' was not found.") -- SKIP
+	end -- SKIP
 end
 
 local function checkGeoJSON(self)
-	if not isFile(self.file) then
-		customError("File '"..self.file.."' was not found.")
+	local fopen = openFile(self.file)
+	local sfile = fopen:read("*all")
+	closeFile(fopen)
+
+	if sfile == "" then
+		customError("File '"..self.file.."' was empty.")
 	end
 end
 
@@ -405,19 +605,19 @@ end
 local function loadGdal(self)
 	local tlib = terralib.TerraLib{}
 	local dSet = tlib:getGdalByFilePath(self.file)
-	setCellsByTerraLibDataSet(self, dSet)
+	setCellsByTerraLibDataSet(self, dSet) -- SKIP
 	local temp = ""
 
-	for i = self.file:len(), 1, -1 do
-		if self.file:sub(i, i) ~= sessionInfo().separator then
-			temp = self.file:sub(i, i)..temp
-		else
-			break
+	for i = self.file:len(), 1, -1 do -- SKIP
+		if self.file:sub(i, i) ~= sessionInfo().separator then -- SKIP
+			temp = self.file:sub(i, i)..temp -- SKIP
+		else -- SKIP
+			break -- SKIP
 		end
 	end
 
-	self.layer = temp
-	self.cObj_:setLayer(self.layer)
+	self.layer = temp -- SKIP
+	self.cObj_:setLayer(self.layer) -- SKIP
 end
 
 local function loadOGR(self)
@@ -931,12 +1131,11 @@ CellularSpace_ = {
 		mandatoryTableArgument(data, "source", "string")
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
-			if not isFile(data.source) then
-				resourceNotFoundError("source", data.source)
+			if not openFile(data.source, "r") then
+				resourceNotFoundError("source", data.source) -- SKIP
 			end
 		else
 			local ext = string.match(data.source, "(([^%.]+))$")
-
 			if ext == data.source then
 				customError("Argument 'source' does not have an extension.")
 			else
@@ -944,10 +1143,18 @@ CellularSpace_ = {
 			end
 		end
 
+		separatorCheck(data)
+
 		defaultTableValue(data, "name", "1")
 		defaultTableValue(data, "check", true)
 
-		self.cObj_:loadNeighborhood(data.source, data.name, data.check)
+		if data.source:endswith(".gal") then
+			loadNeighborhoodGAL(self, data)
+		elseif data.source:endswith(".gwt") then
+			loadNeighborhoodGWT(self, data)
+		elseif data.source:endswith(".gpm") then
+			loadNeighborhoodGPM(self, data)
+		end
 	end,
 	--- Notify every Observer connected to the CellularSpace.
 	-- @arg modelTime A number representing the notification time. The default value is zero.
