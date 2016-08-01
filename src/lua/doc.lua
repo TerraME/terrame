@@ -1165,6 +1165,8 @@ function _Gtme.executeDoc(package)
 		printError("Summing up, "..errors.." problems were found in the documentation.")
 	end
 
+	if errors > 255 then errors = 255 end
+
 	return errors, all_doc_functions
 end
 

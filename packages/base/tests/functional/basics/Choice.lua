@@ -61,6 +61,29 @@ return{
 
 		c = Choice{min = 0.1, max = 0.7, step = 0.05}
 		unitTest:assertEquals(c.default, 0.1)
+
+		c = Choice{min = 1, max = 5, slices = 10}
+		unitTest:assertEquals(c.slices, 10)
+		unitTest:assertEquals(#c.values, c.slices)
+
+		c = Choice{min = 2, max = 20, slices = 4}
+		unitTest:assertEquals(c.step, 6)
+		unitTest:assertEquals(c.slices, 4)
+		unitTest:assertEquals(#c.values, c.slices)
+
+		c = Choice{min = 1, max = 5, slices = 5}
+		unitTest:assertType(c, "Choice")
+		unitTest:assertEquals(c.min, 1)
+		unitTest:assertEquals(c.max, 5)
+		unitTest:assertEquals(c.default, 1)
+		unitTest:assertEquals(c.step, 1)
+		unitTest:assertEquals(c.slices, 5)
+		unitTest:assertEquals(#c.values, c.slices)
+
+		local expectedvalues = {1.0, 2.0, 3.0, 4.0, 5.0}
+		for i, value in ipairs(c.values) do
+			unitTest:assertEquals(value, expectedvalues[i])
+		end
 	end,
 	sample = function(unitTest)
 		local c = Choice{1, 2, 3}

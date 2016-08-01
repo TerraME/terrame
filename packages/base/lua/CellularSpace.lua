@@ -393,14 +393,18 @@ local function checkCsv(self)
 end
 
 local function checkGdal(self)
-	if not isFile(self.file) then
-		customError("File '"..self.file.."' was not found.")
-	end
+	if not isFile(self.file) then -- SKIP
+		customError("File '"..self.file.."' was not found.") -- SKIP
+	end -- SKIP
 end
 
 local function checkGeoJSON(self)
-	if not isFile(self.file) then
-		customError("File '"..self.file.."' was not found.")
+	local fopen = openFile(self.file)
+	local sfile = fopen:read("*all")
+	closeFile(fopen)
+
+	if sfile == "" then
+		customError("File '"..self.file.."' was empty.")
 	end
 end
 
@@ -601,19 +605,19 @@ end
 local function loadGdal(self)
 	local tlib = terralib.TerraLib{}
 	local dSet = tlib:getGdalByFilePath(self.file)
-	setCellsByTerraLibDataSet(self, dSet)
+	setCellsByTerraLibDataSet(self, dSet) -- SKIP
 	local temp = ""
 
-	for i = self.file:len(), 1, -1 do
-		if self.file:sub(i, i) ~= sessionInfo().separator then
-			temp = self.file:sub(i, i)..temp
-		else
-			break
+	for i = self.file:len(), 1, -1 do -- SKIP
+		if self.file:sub(i, i) ~= sessionInfo().separator then -- SKIP
+			temp = self.file:sub(i, i)..temp -- SKIP
+		else -- SKIP
+			break -- SKIP
 		end
 	end
 
-	self.layer = temp
-	self.cObj_:setLayer(self.layer)
+	self.layer = temp -- SKIP
+	self.cObj_:setLayer(self.layer) -- SKIP
 end
 
 local function loadOGR(self)

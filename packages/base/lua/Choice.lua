@@ -66,10 +66,13 @@ metaTableChoice_ = {
 -- @arg attrTab.step An optional argument with the step from minimum to maximum.
 -- Note that max should be equals to min plus k times step, where k is an integer
 -- number. When using this argument, min and max become mandatory.
+-- @arg attrTab.slices An optional argument with the number of values between minimum and maximum.
+-- It must be an integer number greater than two. When using this argument, min and max become mandatory.
 -- @output values A vector with the possible values for the Choice.
 -- @usage c1 = Choice{1, 2, 3}
 -- c2 = Choice{"low", "medium", "high"}
 -- c3 = Choice{min = 2, max = 5, step = 0.1}
+-- c4 = Choice{min = 2, max = 20, slices = 4}
 function Choice(attrTab)
 	local result
 
@@ -113,11 +116,12 @@ function Choice(attrTab)
 
 		result = {values = attrTab, default = default}
 	elseif getn(attrTab) > 0 then
-		verifyUnnecessaryArguments(attrTab, {"default", "min", "max", "step"})
+		verifyUnnecessaryArguments(attrTab, {"default", "min", "max", "step", "slices"})
 
 		optionalTableArgument(attrTab, "min", "number")
 		optionalTableArgument(attrTab, "max", "number")
 		optionalTableArgument(attrTab, "step", "number")
+		optionalTableArgument(attrTab, "slices", "number")
 
 		if attrTab.min then
 			defaultTableValue(attrTab, "default", attrTab.min)
@@ -143,6 +147,14 @@ function Choice(attrTab)
 			customError("Attribute 'step' requires 'max' and 'min'.")
 		end
 
+		if attrTab.slices and not (attrTab.max and attrTab.min) then
+			customError("Attribute 'slices' requires 'max' and 'min'.")
+		end
+
+		if attrTab.slices and attrTab.step then
+			customError("It is not possible to use arguments 'step' and 'slices' at the same time.")
+		end
+
 		if attrTab.step then
 			local k = (attrTab.max - attrTab.min) / attrTab.step
 
@@ -163,6 +175,21 @@ function Choice(attrTab)
 					customError("Invalid 'default' value ("..attrTab.default.."). It could be "..def1.." or "..def2..".")
 				end
 			end
+		end
+
+		if attrTab.slices then
+			verify(attrTab.slices > 2, "Argument 'slices' ("..attrTab.slices..") should be greater than two.")
+			verify(attrTab.slices == math.floor(attrTab.slices), "Invalid 'slices' value ("..attrTab.slices.."). It could be "..math.floor(attrTab.slices).." or "..math.ceil(attrTab.slices)..".")
+
+			attrTab.step = (attrTab.max - attrTab.min) / (attrTab.slices - 1)
+			attrTab.values = {}
+
+			local value = attrTab.min
+			for _ = 1, attrTab.slices do
+				table.insert(attrTab.values, value)
+				value = value + attrTab.step
+			end
+
 		end
 
 		result = attrTab

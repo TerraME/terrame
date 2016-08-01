@@ -89,6 +89,17 @@ return{
  			}
  		end
 		unitTest:assertError(error_func, "More than one candidate to argument 'source': 'shp', 'virtual'.")
+
+		os.execute("touch data.geojson")
+
+		error_func = function()
+ 			cs = CellularSpace{
+ 				file = "data.geojson"
+ 			}
+		end
+		unitTest:assertError(error_func, "File 'data.geojson' was empty.")
+
+		rmFile("data.geojson")
 	end,
 	loadNeighborhood = function(unitTest)
 		local terralib = getPackage("terralib")
