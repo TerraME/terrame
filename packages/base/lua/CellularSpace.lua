@@ -1128,7 +1128,7 @@ CellularSpace_ = {
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
 			if not openFile(data.source, "r") then
-				resourceNotFoundError("source", data.source)
+				resourceNotFoundError("source", data.source) -- SKIP
 			end
 		else
 			local ext = string.match(data.source, "(([^%.]+))$")
