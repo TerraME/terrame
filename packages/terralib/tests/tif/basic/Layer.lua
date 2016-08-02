@@ -416,7 +416,7 @@ return {
 			-- unitTest:assertFile(projName) -- SKIP #1301
 			rmFile(projName) -- #1301
 		else
-			unitTest:assert(true)
+			unitTest:assert(true) -- SKIP
 		end
 	end,
 	bands = function(unitTest)
