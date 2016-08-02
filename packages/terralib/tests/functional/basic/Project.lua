@@ -59,8 +59,13 @@ return {
 		unitTest:assertEquals(proj1.title, proj3clean.title)
 		unitTest:assertEquals(proj1.file, proj3clean.file)
 
-		unitTest:assertFile("amazonia.tview")
-
+		-- unitTest:assertFile("amazonia.tview") -- SKIP #1301
+		rmFile("amazonia.tview") -- #1301
+		
+		if isFile("notitlenoauthor.tview") then
+			rmFile("notitlenoauthor.tview")
+		end
+		
 		local proj4Name = "notitlenoauthor.tview"
 
 		if isFile(proj4Name) then
@@ -76,6 +81,12 @@ return {
 		unitTest:assertEquals(proj4.clean, false)
 		unitTest:assertType(proj4.layers, "table")
 		unitTest:assertEquals(getn(proj4.layers), 0)
+		
+		rmFile("notitlenoauthor.tview")
+		
+		if isFile("emas.tview") then
+			rmFile("emas.tview")
+		end
 
 		local proj5 = Project{
 			file = "emas.tview",
@@ -92,6 +103,8 @@ return {
 		unitTest:assertType(proj5.cover, "Layer")
 		unitTest:assertType(proj5.river, "Layer")
 		unitTest:assertType(proj5.limit, "Layer")
+		
+		rmFile("emas.tview")
 	end,
 	__tostring = function(unitTest)
 		local proj1 = Project{
@@ -110,6 +123,7 @@ terralib     TerraLib
 title        string [The Amazonia]
 ]])
 
-		unitTest:assertFile("tostring.tview")
+		-- unitTest:assertFile("tostring.tview") -- SKIP #1301
+		rmFile("tostring.tview") -- #1301
 	end
 }

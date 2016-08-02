@@ -62,7 +62,7 @@ return{
 
 		unitTest:assertFile("agent.csv")
 
-		unitTest:assertSnapshot(c1, "chart_agent.bmp", 0.01)
+		unitTest:assertSnapshot(c1, "chart_agent.bmp", 0.03)
 		unitTest:assertSnapshot(c2, "chart_agent_select.bmp", 0.01)
 		unitTest:assertSnapshot(ts, "textscreen_agent_select.bmp", 0.01)
 		unitTest:assertSnapshot(vt, "agent_visualtable.bmp", 0.059)
