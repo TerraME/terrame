@@ -269,20 +269,20 @@ id     string [env]
 
 		predators = Society{
 			instance = predator,
-			quantity = 199
+			quantity = 49
 		}
 
-		cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 5}
 
 		env = Environment{cs, pred = predators, zag = ag}
 		env:createPlacement{strategy = "uniform"}
 
 		unitTest:assertEquals(#cs.cells[1]:getAgents(), 2)
 		unitTest:assertEquals(#cs.cells[2]:getAgents(), 2)
-		unitTest:assertEquals(#cs.cells[100]:getAgents(), 2)
+		unitTest:assertEquals(#cs.cells[25]:getAgents(), 2)
 
-		unitTest:assertEquals(cs.cells[100]:getAgents()[1].name, "predator")
-		unitTest:assertEquals(cs.cells[100]:getAgents()[2].name, "ag")
+		unitTest:assertEquals(cs.cells[25]:getAgents()[1].name, "predator")
+		unitTest:assertEquals(cs.cells[25]:getAgents()[2].name, "ag")
 
 		Random():reSeed(12345)
 
@@ -298,10 +298,10 @@ id     string [env]
 
 		predators = Society{
 			instance = predator,
-			quantity = 100
+			quantity = 25
 		}
 
-		cs = CellularSpace{xdim = 20}
+		cs = CellularSpace{xdim = 10}
 		cs:createNeighborhood()
 
 		env = Environment{cs, predators}
@@ -317,9 +317,9 @@ id     string [env]
 			count_stay   = count_stay   + #cell.stay
 			count_wplace = count_wplace + #cell.workingplace
 		end)
-		unitTest:assertEquals(100, count_house)
-		unitTest:assertEquals(100, count_stay)
-		unitTest:assertEquals(0,   count_wplace)
+		unitTest:assertEquals(25, count_house)
+		unitTest:assertEquals(25, count_stay)
+		unitTest:assertEquals(0,  count_wplace)
 
 		local max = 0
 		forEachCell(cs, function(cell)
@@ -328,8 +328,8 @@ id     string [env]
 			end
 		end)
 		unitTest:assertEquals(1, max)
-		unitTest:assertEquals(1, #cs.cells[100].stay)
-		unitTest:assertEquals(0, #cs.cells[101].stay)
+		unitTest:assertEquals(1, #cs.cells[25].stay)
+		unitTest:assertEquals(0, #cs.cells[26].stay)
 
 		predators:execute()
 		predators:sample():die()
@@ -342,8 +342,8 @@ id     string [env]
 			count_stay   = count_stay   + #cell.stay
 			count_wplace = count_wplace + #cell.workingplace
 		end)
-		unitTest:assertEquals(99, count_house)
-		unitTest:assertEquals(99, count_stay)
+		unitTest:assertEquals(24, count_house)
+		unitTest:assertEquals(24, count_stay)
 		unitTest:assertEquals(0,  count_wplace)
 
 		predator = Agent{name = "predator"}
@@ -366,18 +366,18 @@ id     string [env]
 		local env = Environment{
 			clock1 = Timer{
 				Event{start = 0, action = function(event)
-					result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
+					result = result.."t "..event:getTime().." e 1 p "..event:getPriority().."\n"
 				end},
 				Event{priority = 1, action = function(event)
-					result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
+					result = result.."t "..event:getTime().." e 2 p "..event:getPriority().."\n"
 				end}
 			},
 			clock2 = Timer{
 				Event{start = 0, period = 2, priority = 2, action = function(event)
-					result = result.."time "..event:getTime().." event 3 priority "..event:getPriority().."\n"
+					result = result.."t "..event:getTime().." e 3 p "..event:getPriority().."\n"
 				end},
 				Event{priority = 3, action = function(event)
-					result = result.."time "..event:getTime().." event 4 priority "..event:getPriority().."\n"
+					result = result.."t "..event:getTime().." e 4 p "..event:getPriority().."\n"
 				end}
 			}
 		}
@@ -385,29 +385,29 @@ id     string [env]
 		env:run(6)
 
 		unitTest:assertEquals(result, [[
-time 0 event 1 priority 0
-time 0 event 3 priority 2
-time 1 event 1 priority 0
-time 1 event 2 priority 1
-time 1 event 4 priority 3
-time 2 event 1 priority 0
-time 2 event 2 priority 1
-time 2 event 3 priority 2
-time 2 event 4 priority 3
-time 3 event 1 priority 0
-time 3 event 2 priority 1
-time 3 event 4 priority 3
-time 4 event 1 priority 0
-time 4 event 2 priority 1
-time 4 event 3 priority 2
-time 4 event 4 priority 3
-time 5 event 1 priority 0
-time 5 event 2 priority 1
-time 5 event 4 priority 3
-time 6 event 1 priority 0
-time 6 event 2 priority 1
-time 6 event 3 priority 2
-time 6 event 4 priority 3
+t 0 e 1 p 0
+t 0 e 3 p 2
+t 1 e 1 p 0
+t 1 e 2 p 1
+t 1 e 4 p 3
+t 2 e 1 p 0
+t 2 e 2 p 1
+t 2 e 3 p 2
+t 2 e 4 p 3
+t 3 e 1 p 0
+t 3 e 2 p 1
+t 3 e 4 p 3
+t 4 e 1 p 0
+t 4 e 2 p 1
+t 4 e 3 p 2
+t 4 e 4 p 3
+t 5 e 1 p 0
+t 5 e 2 p 1
+t 5 e 4 p 3
+t 6 e 1 p 0
+t 6 e 2 p 1
+t 6 e 3 p 2
+t 6 e 4 p 3
 ]])
 
 		result = ""
@@ -416,20 +416,20 @@ time 6 event 4 priority 3
 			firstEnv = Environment{
 				clock1 = Timer{
 					Event{start = 0, action = function(event)
-						result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 1 p "..event:getPriority().."\n"
 					end},
 					Event{priority = 1, action = function(event)
-						result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 2 p "..event:getPriority().."\n"
 					end}
 				}
 			},
 			secondEnv = Environment{
 				clock2 = Timer{
 					Event{start = 0, period = 2, priority = 2, action = function(event)
-						result = result.."time "..event:getTime().." event 3 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 3 p "..event:getPriority().."\n"
 					end},
 					Event{priority = 3, action = function(event)
-						result = result.."time "..event:getTime().." event 4 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 4 p "..event:getPriority().."\n"
 					end}
 				}
 			}
@@ -438,29 +438,29 @@ time 6 event 4 priority 3
 		env:run(6)
 
 		unitTest:assertEquals(result, [[
-time 0 event 1 priority 0
-time 0 event 3 priority 2
-time 1 event 1 priority 0
-time 1 event 2 priority 1
-time 1 event 4 priority 3
-time 2 event 1 priority 0
-time 2 event 2 priority 1
-time 2 event 3 priority 2
-time 2 event 4 priority 3
-time 3 event 1 priority 0
-time 3 event 2 priority 1
-time 3 event 4 priority 3
-time 4 event 1 priority 0
-time 4 event 2 priority 1
-time 4 event 3 priority 2
-time 4 event 4 priority 3
-time 5 event 1 priority 0
-time 5 event 2 priority 1
-time 5 event 4 priority 3
-time 6 event 1 priority 0
-time 6 event 2 priority 1
-time 6 event 3 priority 2
-time 6 event 4 priority 3
+t 0 e 1 p 0
+t 0 e 3 p 2
+t 1 e 1 p 0
+t 1 e 2 p 1
+t 1 e 4 p 3
+t 2 e 1 p 0
+t 2 e 2 p 1
+t 2 e 3 p 2
+t 2 e 4 p 3
+t 3 e 1 p 0
+t 3 e 2 p 1
+t 3 e 4 p 3
+t 4 e 1 p 0
+t 4 e 2 p 1
+t 4 e 3 p 2
+t 4 e 4 p 3
+t 5 e 1 p 0
+t 5 e 2 p 1
+t 5 e 4 p 3
+t 6 e 1 p 0
+t 6 e 2 p 1
+t 6 e 3 p 2
+t 6 e 4 p 3
 ]])
 
 		result = ""
@@ -469,36 +469,36 @@ time 6 event 4 priority 3
 			firstEnv = Environment{
 				clock1 = Timer{
 					Event{start = 0, priority = 1, action = function(event)
-						result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 1 p "..event:getPriority().."\n"
 					end},
 					Event{priority = 2, action = function(event)
-						result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 2 p "..event:getPriority().."\n"
 					end}
 				},
 				clock2 = Timer{
 					Event{start = 0, period = 2, priority = 3, action = function(event)
-						result = result.."time "..event:getTime().." event 3 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 3 p "..event:getPriority().."\n"
 					end},
 					Event{priority = 4, action = function(event)
-						result = result.."time "..event:getTime().." event 4 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 4 p "..event:getPriority().."\n"
 					end}
 				}
 			},
 			secondEnv = Environment{
 				clock1 = Timer{
 					Event{start = 0, priority = 5, action = function(event)
-						result = result.."time "..event:getTime().." event 5 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 5 p "..event:getPriority().."\n"
 					end},
 					Event{priority = 6, action = function(event)
-						result = result.."time "..event:getTime().." event 6 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 6 p "..event:getPriority().."\n"
 					end}
 				},
 				clock2 = Timer{
 					Event{start = 0, period = 2, priority = 7, action = function(event)
-						result = result.."time "..event:getTime().." event 7 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 7 p "..event:getPriority().."\n"
 					end},
 					Event{priority = 8, action = function(event)
-						result = result.."time "..event:getTime().." event 8 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 8 p "..event:getPriority().."\n"
 					end}
 				}
 			}
@@ -507,38 +507,38 @@ time 6 event 4 priority 3
 		env:run(4)
 
 		unitTest:assertEquals(result, [[
-time 0 event 1 priority 1
-time 0 event 3 priority 3
-time 0 event 5 priority 5
-time 0 event 7 priority 7
-time 1 event 1 priority 1
-time 1 event 2 priority 2
-time 1 event 4 priority 4
-time 1 event 5 priority 5
-time 1 event 6 priority 6
-time 1 event 8 priority 8
-time 2 event 1 priority 1
-time 2 event 2 priority 2
-time 2 event 3 priority 3
-time 2 event 4 priority 4
-time 2 event 5 priority 5
-time 2 event 6 priority 6
-time 2 event 7 priority 7
-time 2 event 8 priority 8
-time 3 event 1 priority 1
-time 3 event 2 priority 2
-time 3 event 4 priority 4
-time 3 event 5 priority 5
-time 3 event 6 priority 6
-time 3 event 8 priority 8
-time 4 event 1 priority 1
-time 4 event 2 priority 2
-time 4 event 3 priority 3
-time 4 event 4 priority 4
-time 4 event 5 priority 5
-time 4 event 6 priority 6
-time 4 event 7 priority 7
-time 4 event 8 priority 8
+t 0 e 1 p 1
+t 0 e 3 p 3
+t 0 e 5 p 5
+t 0 e 7 p 7
+t 1 e 1 p 1
+t 1 e 2 p 2
+t 1 e 4 p 4
+t 1 e 5 p 5
+t 1 e 6 p 6
+t 1 e 8 p 8
+t 2 e 1 p 1
+t 2 e 2 p 2
+t 2 e 3 p 3
+t 2 e 4 p 4
+t 2 e 5 p 5
+t 2 e 6 p 6
+t 2 e 7 p 7
+t 2 e 8 p 8
+t 3 e 1 p 1
+t 3 e 2 p 2
+t 3 e 4 p 4
+t 3 e 5 p 5
+t 3 e 6 p 6
+t 3 e 8 p 8
+t 4 e 1 p 1
+t 4 e 2 p 2
+t 4 e 3 p 3
+t 4 e 4 p 4
+t 4 e 5 p 5
+t 4 e 6 p 6
+t 4 e 7 p 7
+t 4 e 8 p 8
 ]])
 
 		result = ""
@@ -546,53 +546,53 @@ time 4 event 8 priority 8
 		env = Environment{
 			clock1 = Timer{
 				Event{start = 0, action = function(event)
-					result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
+					result = result.."t "..event:getTime().." e 1 p "..event:getPriority().."\n"
 				end},
 				Event{priority = 1, action = function(event)
-					result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
+					result = result.."t "..event:getTime().." e 2 p "..event:getPriority().."\n"
 				end}
 			},
 			clock2 = Timer{
 				Event{start = 0, period = 2, priority = 2, action = function(event)
-					result = result.."time "..event:getTime().." event 3 priority "..event:getPriority().."\n"
+					result = result.."t "..event:getTime().." e 3 p "..event:getPriority().."\n"
 				end},
 				Event{priority = 3, action = function(event)
-					result = result.."time "..event:getTime().." event 4 priority "..event:getPriority().."\n"
+					result = result.."t "..event:getTime().." e 4 p "..event:getPriority().."\n"
 				end}
 			},
 			firstEnv = Environment{
 				clock1 = Timer{
 					Event{start = 0, priority = 4, action = function(event)
-						result = result.."time "..event:getTime().." event 5 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 5 p "..event:getPriority().."\n"
 					end},
 					Event{priority = 5, action = function(event)
-						result = result.."time "..event:getTime().." event 6 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 6 p "..event:getPriority().."\n"
 					end}
 				},
 				clock2 = Timer{
 					Event{start = 0, period = 2, priority = 6, action = function(event)
-						result = result.."time "..event:getTime().." event 7 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 7 p "..event:getPriority().."\n"
 					end},
 					Event{priority = 7, action = function(event)
-						result = result.."time "..event:getTime().." event 8 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 8 p "..event:getPriority().."\n"
 					end}
 				}
 			},
 			secondEnv = Environment{
 				clock1 = Timer{
 					Event{start = 0, priority = 8, action = function(event)
-						result = result.."time "..event:getTime().." event 9 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 9 p "..event:getPriority().."\n"
 					end},
 					Event{priority = 9, action = function(event)
-						result = result.."time "..event:getTime().." event 10 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 10 p "..event:getPriority().."\n"
 					end}
 				},
 				clock2 = Timer{
 					Event{start = 0, period = 2, priority = 10, action = function(event)
-						result = result.."time "..event:getTime().." event 11 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 11 p "..event:getPriority().."\n"
 					end},
 					Event{priority = 11, action = function(event)
-						result = result.."time "..event:getTime().." event 12 priority "..event:getPriority().."\n"
+						result = result.."t "..event:getTime().." e 12 p "..event:getPriority().."\n"
 					end}
 				}
 			}
@@ -601,54 +601,54 @@ time 4 event 8 priority 8
 		env:run(4)
 
 		unitTest:assertEquals(result, [[
-time 0 event 1 priority 0
-time 0 event 3 priority 2
-time 0 event 5 priority 4
-time 0 event 7 priority 6
-time 0 event 9 priority 8
-time 0 event 11 priority 10
-time 1 event 1 priority 0
-time 1 event 2 priority 1
-time 1 event 4 priority 3
-time 1 event 5 priority 4
-time 1 event 6 priority 5
-time 1 event 8 priority 7
-time 1 event 9 priority 8
-time 1 event 10 priority 9
-time 1 event 12 priority 11
-time 2 event 1 priority 0
-time 2 event 2 priority 1
-time 2 event 3 priority 2
-time 2 event 4 priority 3
-time 2 event 5 priority 4
-time 2 event 6 priority 5
-time 2 event 7 priority 6
-time 2 event 8 priority 7
-time 2 event 9 priority 8
-time 2 event 10 priority 9
-time 2 event 11 priority 10
-time 2 event 12 priority 11
-time 3 event 1 priority 0
-time 3 event 2 priority 1
-time 3 event 4 priority 3
-time 3 event 5 priority 4
-time 3 event 6 priority 5
-time 3 event 8 priority 7
-time 3 event 9 priority 8
-time 3 event 10 priority 9
-time 3 event 12 priority 11
-time 4 event 1 priority 0
-time 4 event 2 priority 1
-time 4 event 3 priority 2
-time 4 event 4 priority 3
-time 4 event 5 priority 4
-time 4 event 6 priority 5
-time 4 event 7 priority 6
-time 4 event 8 priority 7
-time 4 event 9 priority 8
-time 4 event 10 priority 9
-time 4 event 11 priority 10
-time 4 event 12 priority 11
+t 0 e 1 p 0
+t 0 e 3 p 2
+t 0 e 5 p 4
+t 0 e 7 p 6
+t 0 e 9 p 8
+t 0 e 11 p 10
+t 1 e 1 p 0
+t 1 e 2 p 1
+t 1 e 4 p 3
+t 1 e 5 p 4
+t 1 e 6 p 5
+t 1 e 8 p 7
+t 1 e 9 p 8
+t 1 e 10 p 9
+t 1 e 12 p 11
+t 2 e 1 p 0
+t 2 e 2 p 1
+t 2 e 3 p 2
+t 2 e 4 p 3
+t 2 e 5 p 4
+t 2 e 6 p 5
+t 2 e 7 p 6
+t 2 e 8 p 7
+t 2 e 9 p 8
+t 2 e 10 p 9
+t 2 e 11 p 10
+t 2 e 12 p 11
+t 3 e 1 p 0
+t 3 e 2 p 1
+t 3 e 4 p 3
+t 3 e 5 p 4
+t 3 e 6 p 5
+t 3 e 8 p 7
+t 3 e 9 p 8
+t 3 e 10 p 9
+t 3 e 12 p 11
+t 4 e 1 p 0
+t 4 e 2 p 1
+t 4 e 3 p 2
+t 4 e 4 p 3
+t 4 e 5 p 4
+t 4 e 6 p 5
+t 4 e 7 p 6
+t 4 e 8 p 7
+t 4 e 9 p 8
+t 4 e 10 p 9
+t 4 e 11 p 10
+t 4 e 12 p 11
 ]])
 
 		local init = function(model)
