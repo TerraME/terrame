@@ -89,6 +89,17 @@ return{
  			}
  		end
 		unitTest:assertError(error_func, "More than one candidate to argument 'source': 'shp', 'virtual'.")
+
+		os.execute("touch data.geojson")
+
+		error_func = function()
+ 			cs = CellularSpace{
+ 				file = "data.geojson"
+ 			}
+		end
+		unitTest:assertError(error_func, "File 'data.geojson' was empty.")
+
+		rmFile("data.geojson")
 	end,
 	loadNeighborhood = function(unitTest)
 		local terralib = getPackage("terralib")
@@ -117,7 +128,7 @@ return{
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = "postgres"
+		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 
@@ -170,7 +181,7 @@ return{
 		error_func = function()
 			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("source", "neighCabecaDeBoi900x900.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "neighCabecaDeBoi900x900.gpm"))
 
 		local mfile = filePath("cabecadeboi-neigh.gpm", "base")
 	
@@ -179,7 +190,8 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
-		unitTest:assertFile(projName)
+		-- unitTest:assertFile(projName) -- SKIP #1301
+		rmFile(projName) -- #1301
 		tl:dropPgTable(pgData)			
 		
 		-- GAL from shapefile
@@ -204,7 +216,7 @@ return{
 		error_func = function()
 			cs2:loadNeighborhood{source = "arquivo.gpm"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "arquivo.gpm"))
 
 		error_func = function()
 			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid"}
@@ -218,7 +230,10 @@ return{
 
 		error_func = function()
 			local s = sessionInfo().separator
-			cs:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-invalid-neigh.gpm", "base")}
+			cs:loadNeighborhood{
+				source = filePath("error"..s.."cabecadeboi-invalid-neigh.gpm", "base"),
+				check = false
+			}
 		end
 		unitTest:assertError(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
 
@@ -251,6 +266,60 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cabecadeboi900.shp'.")		
+		
+		local s = sessionInfo().separator
+		mfile = filePath("error"..s.."cabecadeboi-neigh-header-invalid.gpm", "base")
+
+		error_func = function()
+			cs:loadNeighborhood{source = mfile}
+		end
+		unitTest:assertError(error_func, "Could not read file '"..mfile.."': invalid header.")
+
+		local cs3 = CellularSpace{
+			file = filePath("cabecadeboi900.shp", "base")	
+		}
+
+		error_func = function()
+			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid1.gal", "base")}
+		end
+
+		unitTest:assertError(error_func, "Could not find id '' in line 2. It seems that it is corrupted.")
+
+		error_func = function()
+			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid2.gal", "base")}
+		end
+
+		unitTest:assertError(error_func, "Could not find id 'nil' in line 3. It seems that it is corrupted.")
+
+		error_func = function()
+			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid1.gpm", "base")}
+		end
+
+		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
+
+		error_func = function()
+			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid2.gpm", "base")}
+		end
+
+		unitTest:assertError(error_func, "Could not find id 'nil' in line 3. It seems that it is corrupted.")
+
+		error_func = function()
+			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid1.gwt", "base")}
+		end
+
+		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
+
+		error_func = function()
+			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid2.gwt", "base")}
+		end
+
+		unitTest:assertError(error_func, "Could not find id '' in line 2. It seems that it is corrupted.")
+
+		error_func = function()
+			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid3.gwt", "base")}
+		end
+
+		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
 	end,
 	save = function(unitTest)
 		local terralib = getPackage("terralib")
@@ -279,7 +348,7 @@ return{
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = "postgres"
+		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 
@@ -340,7 +409,8 @@ return{
 		end
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
 		
-		unitTest:assertFile(projName)
+		-- unitTest:assertFile(projName) -- SKIP #1301
+		rmFile(projName) -- #1301
 		tl:dropPgTable(pgData)	
 	end
 }

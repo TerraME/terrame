@@ -24,6 +24,10 @@
 
 return {
 	forEachLayer = function(unitTest)
+		if isFile("emas-count.tview") then
+			rmFile("emas-count.tview")
+		end	
+	
 		local project = Project{
 			file = "emas-count.tview",
 			clean = true,
@@ -41,6 +45,8 @@ return {
 		end)
 
 		unitTest:assertEquals(count, 4)
+		
+		rmFile("emas-count.tview")
 	end,
 	getFileNameWithExtension = function(unitTest)
 		unitTest:assertEquals(getFileNameWithExtension("/my/path/file.txt"), "file.txt")

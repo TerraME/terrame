@@ -130,7 +130,7 @@ return{
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = "postgres"
+		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 
@@ -182,7 +182,8 @@ return{
 		end)
 
 		unitTest:assertEquals(303, #cs.cells)		
-		unitTest:assertFile(projName)
+		-- unitTest:assertFile(projName) -- SKIP #1301
+		rmFile(projName) -- #1301
 
 		pgData.table = string.lower(tName1)
 		tl:dropPgTable(pgData)
@@ -658,7 +659,7 @@ return{
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = "postgres"
+		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 

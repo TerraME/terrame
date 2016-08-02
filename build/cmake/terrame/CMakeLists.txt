@@ -576,7 +576,8 @@ else(UNIX)
     install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
             DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/packages
             COMPONENT runtime
-			PATTERN "log" EXCLUDE
+			PATTERN "win" EXCLUDE
+			PATTERN "mac" EXCLUDE
     )
 
     install(DIRECTORY ${TERRALIB_DIR}/lib/

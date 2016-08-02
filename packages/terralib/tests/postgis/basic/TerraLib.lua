@@ -47,7 +47,7 @@ return {
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = "postgres"
+		local password = getConfig().password
 		local database = "terralib_pg_test"
 		local encoding = "CP1252"
 		local tableName = "sampa"
@@ -118,7 +118,7 @@ return {
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = "postgres"
+		local password = getConfig().password
 		local database = "terralib_pg_test"
 		local encoding = "CP1252"
 		local tableName = "sampa_cells"
@@ -196,7 +196,7 @@ return {
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = "postgres"
+		local password = getConfig().password
 		local database = "postgis_22_sample" -- TODO: REVIEW TEST WITH NEW DATABASE (PROBLEM IN DROP)
 		local encoding = "CP1252"
 		local tableName = "para_cells"
@@ -1218,7 +1218,7 @@ return {
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = "postgres"
+		local password = getConfig().password
 		local database = "terralib_save_test"
 		local encoding = "CP1252"
 		local tableName = "sampa_cells"

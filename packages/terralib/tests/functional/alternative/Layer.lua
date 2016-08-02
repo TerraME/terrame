@@ -43,7 +43,7 @@ return{
 		local proj = Project{
 			file = projFile,
 			clean = true,
-			deforestation = filePath("desmatamento_2000.tif", "terralib"),
+			deforestation = filePath("Desmatamento_2000.tif", "terralib"),
 		}
 
 		local layerName = "any"
@@ -63,9 +63,10 @@ return{
 			}
 		end
 		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
-
-		unitTest:assertFile("proj_celllayer.tview")
-
+		
+		-- unitTest:assertFile("proj_celllayer.tview") -- SKIP #1301
+		rmFile("proj_celllayer.tview") -- #1301
+		
 		local projName = "amazonia2.tview"
 
 		proj = Project{

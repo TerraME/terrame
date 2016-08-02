@@ -1022,6 +1022,8 @@ function _Gtme.executeTests(package, fileName)
 		printError("Summing up, "..errors.." problems were found during the tests.")
 	end
 
+	if errors > 255 then errors = 255 end
+
 	return errors
 end
 

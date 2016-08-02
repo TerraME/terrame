@@ -229,7 +229,8 @@ return{
     
 		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.1)
 		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
-		unitTest:assertFile(projName)
+		-- unitTest:assertFile(projName) -- SKIP #1301
+		rmFile(projName) -- #1301
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
