@@ -285,7 +285,8 @@ function _Gtme.executeTests(package, fileName)
 		lines_not_executed = 0,
 		asserts_not_executed = 0,
 		overwritten_variables = 0,
-		unused_log_files = 0
+		unused_log_files = 0,
+		files_created = 0
 	}
 
 	if not isLoaded("base") and package ~= "base" then
@@ -421,6 +422,12 @@ function _Gtme.executeTests(package, fileName)
 
 	local myTests
 	local myFiles
+
+	local filesDir = {}
+
+	forEachFile(_Gtme.dir("."), function(file)
+		filesDir[file] = true
+	end)
 
 	-- For each test in each file in each directory, execute the test
 	forEachElement(data.directory, function(_, eachDirectory)
@@ -583,6 +590,14 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				print = _Gtme.print
+
+				forEachFile(_Gtme.dir("."), function(file)
+					if filesDir[file] == nil then
+						printError("File '"..file.."' was created along the test.")
+						filesDir[file] = true
+						ut.files_created = ut.files_created + 1
+					end
+				end)
 
 				ut:clear()
 				ut.executed_functions = ut.executed_functions + 1
@@ -945,6 +960,14 @@ function _Gtme.executeTests(package, fileName)
 		printError(ut.wrong_file.." assertError() calls have error messages pointing to an internal file (wrong level).")
 	else
 		printNote("No assertError() calls have error messages pointing to internal files.")
+	end
+
+	if ut.files_created == 1 then
+		printError("One file was created along the tests.")
+	elseif ut.files_created > 1 then
+		printError(ut.files_created.." files were created along the tests.")
+	else
+		printNote("No file was created along the tests.")
 	end
 
 	if check_functions then

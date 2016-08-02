@@ -31,7 +31,7 @@ return{
 		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
 		unitTest:assertEquals(10201, #cs.cells)
 
-		for i = 1, 5 do
+		for _ = 1, 5 do
 			local cell = cs:sample()
 			unitTest:assertType(cell.object_id0, "string")
 			unitTest:assertType(cell.x, "number")
