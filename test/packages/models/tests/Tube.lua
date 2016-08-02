@@ -5,7 +5,7 @@ return{
 	Tube = function(unitTest)
 		local model = Tube{}
 
-		model:execute()
+		model:run()
 
 		unitTest:assertSnapshot(model.chart, "Tube-chart-1.bmp")
 	end,
