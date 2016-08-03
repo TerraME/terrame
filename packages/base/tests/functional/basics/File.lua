@@ -76,7 +76,9 @@ return{
 
 		file = File(filePath("agents.csv", "base"))
 		unitTest:assertType(file, "File")
-		unitTest:assertEquals(file:getPath(), "C:\\TerraME\\bin\\packages\\base\\data\\agents.csv")
+
+		local path = _Gtme.makePathCompatibleToAllOS(packageInfo().data).."/".."agents.csv"
+		unitTest:assertEquals(file:getPath(), path)
 	end,
 	read = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))

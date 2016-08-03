@@ -89,7 +89,7 @@ File_ = {
 	-- print(file:getPath())
 	getPath = function(self)
 		if isFile(self.name) then
-			return self.name
+			return _Gtme.makePathCompatibleToAllOS(self.name)
 		end
 	end,
 	--- Read a file. It returns a vector (whose indexes are line numbers)
