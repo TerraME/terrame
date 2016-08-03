@@ -29,12 +29,12 @@ return{
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local error_func = function()
+		error_func = function()
 			File{}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
 
-		local error_func = function()
+		error_func = function()
 			File(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
