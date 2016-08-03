@@ -155,9 +155,9 @@ local function addCellularLayer(self, data)
 			data.port = tostring(data.port)
 			
 			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"input", "name", "resolution", "source", "encoding",
+				verifyUnnecessaryArguments(data, {"input", "name", "resolution", "source", "encoding", -- SKIP
 										"project", "host", "port", "user", "password", "database", "table", "project"})		
-				data.box = true
+				data.box = true -- SKIP
 			else
 				defaultTableValue(data, "box", false)
 				verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "source", "encoding",
