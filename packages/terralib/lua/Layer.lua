@@ -51,12 +51,9 @@ local function addCellularLayer(self, data)
 	if isEmpty(data.source) then		
 		if isEmpty(data.file) then
 			if data.database then
-				defaultTableValue(data, "source", "postgis")
+				data.source = "postgis"
 			else
-			--if not isFile(data.file) then
-				--customError("The layer file'"..data.file.."' not found.")
-				mandatoryTableArgument(data, "file", "string") -- HERE
-				mandatoryTableArgument(data, "source", "string")
+				customError("At least one of the following arguments must be used: 'file', 'source', or 'database'.")
 			end	
 		else		
 			local source = getFileExtension(data.file)
@@ -474,7 +471,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+					customError("Operation '"..data.operation.."' is not available for layers with "..repr.." data.")
 				end
 
 				customError("Sorry, this operation was not implemented in TerraLib yet.")

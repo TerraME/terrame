@@ -1556,7 +1556,7 @@ TerraLib_ = {
 			if outType == "OGR" then
 				if string.len(property) > 10 then
 					property = getNormalizedName(property)
-					customWarning("The 'attribute' lenght is more than 10 characters, it was changed to '"..property.."'.")
+					customWarning("The 'attribute' lenght has more than 10 characters. It was truncated to '"..property.."'.")
 				end
 			end
 		

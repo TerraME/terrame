@@ -224,7 +224,7 @@ return{
 				resolution = 0.7
 			}
 		end
-		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))
+		unitTest:assertError(noFilePass, "At least one of the following arguments must be used: 'file', 'source', or 'database'.")
 
 		attrSourceNonString = function()
 			Layer{
@@ -885,7 +885,35 @@ return{
 				select = "FID"
 			}
 		end
-		unitTest:assertError(normalizedNameWarning,   "The 'attribute' lenght is more than 10 characters, it was changed to 'max10allow'.")
+		unitTest:assertError(normalizedNameWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'max10allow'.")
+
+		local lengthInvalidGeom = function()
+			cl:fill{
+				operation = "length",
+				attribute = "attr",
+				layer = layerName1
+			}
+		end
+		unitTest:assertError(lengthInvalidGeom, "Operation 'length' is not available for layers with polygon data.")
+
+		local nearestWithoutSelect = function()
+			cl:fill{
+				operation = "nearest",
+				attribute = "attr",
+				layer = layerName1
+			}
+		end
+		unitTest:assertError(nearestWithoutSelect, mandatoryArgumentMsg("select"))
+
+		local nearestNotImplemented = function()
+			cl:fill{
+				operation = "nearest",
+				attribute = "attr",
+				select = "abc",
+				layer = layerName1
+			}
+		end
+		unitTest:assertError(nearestNotImplemented, "Sorry, this operation was not implemented in TerraLib yet.")
 
 		local localidades = "Localidades"
 

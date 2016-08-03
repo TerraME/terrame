@@ -376,7 +376,6 @@ return {
 			database = database,
 			table = tableName,
 			encoding = encoding
-			
 		}	
 		
 		local tl = TerraLib{}
@@ -385,7 +384,6 @@ return {
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
 			project = proj,
-			source = "postgis",
 			input = layerName1,
 			name = clName1,
 			resolution = 5e3,
