@@ -389,11 +389,20 @@ if (APPLE)
            )
 
     set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
-    install(DIRECTORY ${TERRAME_PACKAGES_DIR}
-            DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
-            COMPONENT runtime
-            PATTERN "log" EXCLUDE
-           )
+	if (NOT TERRAME_CREATE_INSTALLER)
+		install(DIRECTORY ${TERRAME_PACKAGES_DIR}
+				DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
+				COMPONENT runtime
+				PATTERN "win" EXCLUDE
+				PATTERN "linux" EXCLUDE
+			   )
+	else()
+		install(DIRECTORY ${TERRAME_PACKAGES_DIR}
+				DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
+				COMPONENT runtime
+				PATTERN "log" EXCLUDE
+			   )	
+	endif()
 
 #    install(DIRECTORY ${TERRALIB_DIR}/share/data
 #            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/data/
@@ -428,11 +437,20 @@ elseif(WIN32)
            )
 
     set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
-    install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
-            DESTINATION bin/packages
-            COMPONENT runtime
-			PATTERN "log" EXCLUDE
-           )
+	if (NOT TERRAME_CREATE_INSTALLER)
+		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
+				DESTINATION bin/packages
+				COMPONENT runtime
+				PATTERN "linux" EXCLUDE
+				PATTERN "mac" EXCLUDE
+			   )
+	else()
+		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
+				DESTINATION bin/packages
+				COMPONENT runtime
+				PATTERN "log" EXCLUDE
+			   )
+	endif()
 	
 	set(QTLUA_LIBRARY_DLL ${QTLUA_INCLUDE_DIR}/../../bin/qtlua.dll)
 	install(FILES ${QTLUA_LIBRARY_DLL}
@@ -573,12 +591,20 @@ else(UNIX)
     )
 
     set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
-    install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/packages
-            COMPONENT runtime
-			PATTERN "win" EXCLUDE
-			PATTERN "mac" EXCLUDE
-    )
+	if (NOT TERRAME_CREATE_INSTALLER)
+		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
+				DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/packages
+				COMPONENT runtime
+				PATTERN "win" EXCLUDE
+				PATTERN "mac" EXCLUDE
+		)
+	else()
+		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
+				DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/packages
+				COMPONENT runtime
+				PATTERN "log" EXCLUDE
+		)
+	endif()
 
     install(DIRECTORY ${TERRALIB_DIR}/lib/
             DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
