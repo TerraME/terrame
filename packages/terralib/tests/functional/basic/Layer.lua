@@ -41,8 +41,10 @@ return {
 		
 		local filePath1 = "setores_cells_basic.shp"
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if not isFile(filePath1) then
+			local mf = io.open(filePath1, "w")
+			mf:write("aaa")
+			io.close(mf)
 		end
 		
 		local clName1 = "Sampa_Cells"
@@ -52,6 +54,7 @@ return {
 			source = "shp",
 			input = layerName1,
 			name = clName1,
+			clean = true,
 			resolution = 0.3,
 			file = filePath1
 		}	

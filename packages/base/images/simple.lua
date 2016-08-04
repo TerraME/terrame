@@ -1,6 +1,6 @@
 
 cs = CellularSpace{
-	database = file("simple.map", "base"),
+	database = filePath("simple.map", "base"),
 	attrname = "simple"
 }
 

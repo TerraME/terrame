@@ -96,6 +96,10 @@ return{
 
 		world:notify(Event{start = 31, action = function() end})
 
+		-- the call to notify() above creates the file again.
+		-- remove the line below after refactoring observer.
+		if isFile("cell.csv") then rmFile("cell.csv") end
+
 -- FIXME: bug below
 --[[
 		world = Cell{value = 3, value2 = 5}
