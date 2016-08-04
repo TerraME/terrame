@@ -59,6 +59,7 @@ return{
 	end,
 	dir = function(unitTest)
 		local files = 43
+
 		local d = dir(packageInfo().data)
 		unitTest:assertEquals(#d, files)
 
