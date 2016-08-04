@@ -697,24 +697,28 @@ return {
 		rmFile(projName) -- #1301
 	end,
 	projection = function(unitTest)
-		local projName = "layer_shape_basic.tview"
-
 		local proj = Project {
-			file = projName,
+			file = "layer_shape_basic.tview",
 			clean = true
 		}
 		
-		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
-	
-		local layerName1 = "setores"
 		local layer = Layer{
 			project = proj,
-			name = layerName1,
-			file = filePath1,
+			name = "setores",
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
 			index = false
-		}	
+		}
 		
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
+
+		layer = Layer{
+			project = proj,
+			name = "ti",
+			file = filePath("TI_AMZ_pol.shp", "terralib"),
+			index = false
+		}	
+	
+		unitTest:assertEquals(layer:projection(), "Undefined, with SRID: 0.0 (PROJ4: Undefined).")
 
 		rmFile(proj.file)
 	end,

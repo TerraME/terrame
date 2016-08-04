@@ -51,12 +51,9 @@ local function addCellularLayer(self, data)
 	if isEmpty(data.source) then		
 		if isEmpty(data.file) then
 			if data.database then
-				defaultTableValue(data, "source", "postgis")
+				data.source = "postgis"
 			else
-			--if not isFile(data.file) then
-				--customError("The layer file'"..data.file.."' not found.")
-				mandatoryTableArgument(data, "file", "string") -- HERE
-				mandatoryTableArgument(data, "source", "string")
+				customError("At least one of the following arguments must be used: 'file', 'source', or 'database'.")
 			end	
 		else		
 			local source = getFileExtension(data.file)
@@ -127,20 +124,20 @@ local function addCellularLayer(self, data)
 													data.file, not data.box, data.index)
 		end,
 		geojson = function()
-			mandatoryTableArgument(data, "file", "string")
+			mandatoryTableArgument(data, "file", "string") -- SKIP
 
-			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"input", "name", "project",
+			if repr == "raster" then -- SKIP
+				verifyUnnecessaryArguments(data, {"input", "name", "project", -- SKIP
 					"resolution", "file", "source"})
-				data.box = true
+				data.box = true -- SKIP
 			else
-				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"box", "input", "name", "project",
+				defaultTableValue(data, "box", false) -- SKIP
+				verifyUnnecessaryArguments(data, {"box", "input", "name", "project", -- SKIP
 					"resolution", "file", "source"})
 			end
 
-			self.terralib:addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution,
-				data.file, not data.box)
+			self.terralib:addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution, -- SKIP
+				data.file, not data.box) -- SKIP
 		end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")
@@ -155,9 +152,9 @@ local function addCellularLayer(self, data)
 			data.port = tostring(data.port)
 			
 			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"input", "name", "resolution", "source", "encoding",
+				verifyUnnecessaryArguments(data, {"input", "name", "resolution", "source", "encoding", -- SKIP
 										"project", "host", "port", "user", "password", "database", "table", "project"})		
-				data.box = true
+				data.box = true -- SKIP
 			else
 				defaultTableValue(data, "box", false)
 				verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "source", "encoding",
@@ -211,10 +208,10 @@ local function addLayer(self, data)
 			self.terralib:addShpLayer(self, data.name, data.file, data.index)
 		end,
 		geojson = function()
-			mandatoryTableArgument(data, "file", "string")
+			mandatoryTableArgument(data, "file", "string") -- SKIP
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 
-			self.terralib:addGeoJSONLayer(self, data.name, data.file)
+			self.terralib:addGeoJSONLayer(self, data.name, data.file) -- SKIP
 		end,
 		tif = function()	
 			mandatoryTableArgument(data, "file", "string")
@@ -474,7 +471,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+					customError("Operation '"..data.operation.."' is not available for layers with "..repr.." data.")
 				end
 
 				customError("Sorry, this operation was not implemented in TerraLib yet.")

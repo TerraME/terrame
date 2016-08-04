@@ -31,32 +31,14 @@ return{
 		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
 		unitTest:assertEquals(10201, #cs.cells)
 
-		cs:createNeighborhood{name = "moore1"}
-		cs:createNeighborhood{name = "moore2", inmemory = false}
-
-		local countNeigh = 0
-		local sumWeight  = 0
-
-		forEachCell(cs, function(cell)
+		for _ = 1, 5 do
+			local cell = cs:sample()
 			unitTest:assertType(cell.object_id0, "string")
 			unitTest:assertType(cell.x, "number")
 			unitTest:assertType(cell.y, "number")
 			unitTest:assertNotNil(cell.height_)
 			unitTest:assertNotNil(cell.soilWater)
-
-			forEachNeighbor(cell, "moore1", function(_, _, weight)
-				countNeigh = countNeigh + 1
-				sumWeight = sumWeight + weight
-			end)
-
-			forEachNeighbor(cell, "moore2", function(_, _, weight)
-				countNeigh = countNeigh + 1
-				sumWeight = sumWeight + weight
-			end)
-		end)
-
-		unitTest:assertEquals(160800, countNeigh)
-		unitTest:assertEquals(20402, sumWeight, 0.00001)
+		end
 
 		local cell = cs:get(0, 0)
 		unitTest:assertEquals(0, cell.x)
@@ -217,104 +199,11 @@ return{
 		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), sep = ";"}
 
 		unitTest:assertType(cs, "CellularSpace")
-		unitTest:assertEquals(2500, #cs)
+		unitTest:assertEquals(400, #cs)
 
-		forEachCell(cs, function(c)
-			unitTest:assertType(c.maxSugar, "number")
-		end)	
-	end,
-	createNeighborhood = function(unitTest)
-		-- neighborhood between two cellular spaces
-		local cs = CellularSpace{
-			file = filePath("cabecadeboi.shp", "base"),
-		}
-
-		local cs2 = CellularSpace{
-			file = filePath("cabecadeboi900.shp", "base"),
-		}
-
-		cs:createNeighborhood{
-			strategy = "mxn",
-			target = cs2,
-			filter = function(cell,neigh) 
-				return not ((cell.x == neigh.x) and (cell.y == neigh.y))
-			end,
-			weight = function() return 1 / 9 end,
-			name = "spatialCoupling"
-		}
-
-		local countNeigh = 0
-		local sumWeight  = 0
-
-		forEachCell(cs, function(cell)
-			forEachNeighbor(cell, "spatialCoupling", function(_, _, weight)
-				countNeigh = countNeigh + 1
-				sumWeight = sumWeight + weight
-			end)
-		end)
-
-		unitTest:assertEquals(903, countNeigh)
-		unitTest:assertEquals(100.33333, sumWeight, 0.00001)
-
-		countNeigh = 0
-		sumWeight  = 0
-
-		forEachCell(cs2, function(cell)
-			forEachNeighbor(cell, "spatialCoupling", function(_, _, weight)
-				countNeigh = countNeigh + 1
-				sumWeight = sumWeight + weight
-			end)
-		end)
-
-		unitTest:assertEquals(10201, #cs)
-		unitTest:assertEquals(903, countNeigh)
-		unitTest:assertEquals(100.33333, sumWeight, 0.00001)
-
---[[
-		-- where plus createNeighborhood
-		cs = CellularSpace{
-			host = mhost,
-			user = muser,
-			password = mpassword,
-			port = mport,
-			database = mdatabase,
-			theme = "cells90x90",
-			select = {"height_", "soilWater"},
-			where = "height_ > 100"
-		}
-
-		cs:createNeighborhood{name = "first", self = true}
-
-		cs:createNeighborhood{
-			strategy = "mxn",
-			filter = function(c, n) return n.height_ < c.height_ end,
-			weight = function(c, n) return (c.height_ - n.height_ ) / (c.height_ + n.height_) end,
-			name = "second"
-		}
-
-		countNeigh = 0
-		sumWeight  = 0
-		forEachCell(cs, function(cell)
-			forEachNeighbor(cell, "first", function(cell, neigh, weight)
-				countNeigh = countNeigh + 1
-				sumWeight = sumWeight + weight
-			end)
-		end)
-		unitTest:assertEquals(49385, countNeigh) -- SKIP
-		unitTest:assertEquals(5673, sumWeight, 0.00001) -- SKIP
-
-		countNeigh = 0
-		sumWeight  = 0
-
-		forEachCell(cs, function(cell)
-			forEachNeighbor(cell, "second", function(cell, neigh, weight)
-				countNeigh = countNeigh + 1
-				sumWeight = sumWeight + weight
-			end)
-		end)
-		unitTest:assertEquals(18582, countNeigh) -- SKIP
-		unitTest:assertEquals(451.98359156683, sumWeight, 0.00001) -- SKIP
-		--]]
+		unitTest:assertType(cs:sample().maxSugar, "number")
+		unitTest:assertType(cs:sample().maxSugar, "number")
+		unitTest:assertType(cs:sample().maxSugar, "number")
 	end,
 	loadNeighborhood = function(unitTest)
 		local cs1 = CellularSpace{

@@ -198,7 +198,7 @@ function _Gtme.executeTests(package, fileName)
 		end)
 
 		if getn(data) == 0 then
-			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'log', 'sleep', 'test'}.")
+			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'log', 'time', 'sleep', 'test'}.")
 			os.exit(1)
 		end
 
@@ -226,6 +226,12 @@ function _Gtme.executeTests(package, fileName)
 			customError("'examples' should be boolean or nil, got "..type(data.examples)..".")
 		end
 
+		if data.time ~= nil then
+			if type(data.time) ~= "boolean" then
+				customError("'time' should be boolean or nil, got "..type(data.time)..".")
+			end
+		end
+
 		if data.lines ~= nil then
 			if type(data.lines) ~= "boolean" then
 				customError("'lines' should be boolean or nil, got "..type(data.lines)..".")
@@ -243,7 +249,7 @@ function _Gtme.executeTests(package, fileName)
 			end
 		end
 
-		verifyUnnecessaryArguments(data, {"directory", "file", "test", "sleep", "examples", "lines", "log"})
+		verifyUnnecessaryArguments(data, {"directory", "file", "test", "sleep", "examples", "lines", "log", 'time'})
 	else
 		data = {}
 	end
@@ -279,7 +285,8 @@ function _Gtme.executeTests(package, fileName)
 		lines_not_executed = 0,
 		asserts_not_executed = 0,
 		overwritten_variables = 0,
-		unused_log_files = 0
+		unused_log_files = 0,
+		files_created = 0
 	}
 
 	if not isLoaded("base") and package ~= "base" then
@@ -415,6 +422,12 @@ function _Gtme.executeTests(package, fileName)
 
 	local myTests
 	local myFiles
+
+	local filesDir = {}
+
+	forEachFile(_Gtme.dir("."), function(file)
+		filesDir[file] = true
+	end)
 
 	-- For each test in each file in each directory, execute the test
 	forEachElement(data.directory, function(_, eachDirectory)
@@ -552,13 +565,39 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				local found_error = false
+
+				local testInitialTime = os.clock()
+
 				xpcall(function() tests[eachTest](ut) end, function(err)
 					ut.functions_with_error = ut.functions_with_error + 1
 					printError("Wrong execution, got:\n".._Gtme.traceback(err))
 					found_error = true
 				end)
 
+				if data.time then
+					local testFinalTime = os.clock()
+					local difference = testFinalTime - testInitialTime
+
+					local text = "Test executed in "..round(difference, 1).." seconds"
+
+					if difference > 20 then
+						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+					elseif difference > 5 then
+						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+					else
+						_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+					end
+				end
+
 				print = _Gtme.print
+
+				forEachFile(_Gtme.dir("."), function(file)
+					if filesDir[file] == nil then
+						printError("File '"..file.."' was created along the test.")
+						filesDir[file] = true
+						ut.files_created = ut.files_created + 1
+					end
+				end)
 
 				ut:clear()
 				ut.executed_functions = ut.executed_functions + 1
@@ -921,6 +960,14 @@ function _Gtme.executeTests(package, fileName)
 		printError(ut.wrong_file.." assertError() calls have error messages pointing to an internal file (wrong level).")
 	else
 		printNote("No assertError() calls have error messages pointing to internal files.")
+	end
+
+	if ut.files_created == 1 then
+		printError("One file was created along the tests.")
+	elseif ut.files_created > 1 then
+		printError(ut.files_created.." files were created along the tests.")
+	else
+		printNote("No file was created along the tests.")
 	end
 
 	if check_functions then
