@@ -109,14 +109,16 @@ function isWindowsOS()
 end
 
 --- Return the files in a given directory.
--- @arg directory A string describing a directory.
+-- @arg directory A string describing a directory. The default value is the current directory (".").
 -- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
--- @usage files = dir(".")
+-- @usage files = dir()
 --
 -- forEachFile(files, function(file)
 --     print(file)
 -- end)
 function dir(directory, all)
+	if directory == nil then directory = "." end
+
 	mandatoryArgument(1, "string", directory)
 	optionalArgument(2, "boolean", all)
 

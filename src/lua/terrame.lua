@@ -1257,7 +1257,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				local errors = 0
 				xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
-					_Gtme.printError(_Gtme.traceback(err))
+					_Gtme.printError(err)
 					os.exit(1)
 				end)
 
