@@ -92,6 +92,10 @@ return{
 
 		world:notify()
     
+		-- the call to notify() above creates the file again.
+		-- remove the line below after refactoring observer.
+		if isFile("cellularspace.csv") then rmFile("cellularspace.csv") end
+
 		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.1)
 
 		unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.06)

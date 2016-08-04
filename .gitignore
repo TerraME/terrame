@@ -38,3 +38,4 @@ test/.terrame*
 test/packages/.terrame*
 installer/setup
 packages/*/doc
+test/packages/*/doc

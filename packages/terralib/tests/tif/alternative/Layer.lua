@@ -117,13 +117,9 @@ return {
 			file = clName1..".shp"
 		}
 
-		local shapes = {}
-
 		local modeTifLayerName = clName1.."_"..prodes.."_mode"
 		local shp = modeTifLayerName..".shp"
 
-		table.insert(shapes, shp)
-		
 		if isFile(shp) then
 			rmFile(shp)
 		end
@@ -157,6 +153,10 @@ return {
 		
 		-- unitTest:assertFile(projName) -- SKIP #1301
 		rmFile(projName) -- #1301
+
+		if isFile(shp1) then
+			rmFile(shp1)
+		end
 	end
 }
 

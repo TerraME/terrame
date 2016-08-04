@@ -152,9 +152,9 @@ end
 local function createAdoConnInfo(dbFilePath)
 	local connInfo = {}
 	--connInfo.PROVIDER = "Microsoft.Jet.OLEDB.4.0"
-	connInfo.PROVIDER = "Microsoft.ACE.OLEDB.12.0" 
-	connInfo.DB_NAME = dbFilePath
-	connInfo.CREATE_OGC_METADATA_TABLES = "TRUE"	
+	connInfo.PROVIDER = "Microsoft.ACE.OLEDB.12.0" -- SKIP
+	connInfo.DB_NAME = dbFilePath -- SKIP
+	connInfo.CREATE_OGC_METADATA_TABLES = "TRUE" -- SKIP	
 	
 	return connInfo
 end
@@ -382,7 +382,7 @@ end
 
 local function loadProject(project, file)		
 	if not isFile(file) then
-		customError("Could not read project file: "..file..".")
+		customError("Could not read project file: "..file..".") -- SKIP
 	end
 	
 	local xmlReader = binding.te.xml.ReaderFactory.make()
@@ -391,7 +391,7 @@ local function loadProject(project, file)
 	xmlReader:read(file)
 	
 	if not xmlReader:next() then
-		customError("Could not read project information in the file: "..file..".")
+		customError("Could not read project information in the file: "..file..".") -- SKIP
 	end
 	
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
@@ -400,19 +400,19 @@ local function loadProject(project, file)
 	
 	if xmlReader:getElementLocalName() ~= "Project" then
 		customError("The first tag in the document "..file.." is not 'Project'.")
-	end	
+	end
 	
 	xmlReader:next()
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 	if xmlReader:getElementLocalName() ~= "Title" then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 
 	xmlReader:next()
 	if xmlReader:getNodeType() ~= binding.VALUE then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 	project.title = xmlReader:getElementValue()
 	
@@ -420,7 +420,7 @@ local function loadProject(project, file)
 
 	xmlReader:next()
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 	if xmlReader:getElementLocalName() ~= "Author" then
 		customError("PROJECT READ ERROR.")
@@ -437,10 +437,10 @@ local function loadProject(project, file)
 	xmlReader:next()
 
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 	if xmlReader:getElementLocalName() ~= "DataSourceList" then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 
 	xmlReader:next()
@@ -461,19 +461,19 @@ local function loadProject(project, file)
 	-- end read data source list
 
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 	if xmlReader:getElementLocalName() ~= "ComponentList" then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 	xmlReader:next() -- End element
 	xmlReader:next() -- next after </ComponentList>
 
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 	if xmlReader:getElementLocalName() ~= "LayerList" then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 
 	xmlReader:next()
@@ -486,7 +486,7 @@ local function loadProject(project, file)
 		local layer = lserial:read(xmlReader)
 		
 		if not layer then
-			customError("PROJECT READ ERROR.")
+			customError("PROJECT READ ERROR.") -- SKIP
 		end
 		
 		layer:setTitle(decodeUri(layer:getTitle()))
@@ -494,19 +494,19 @@ local function loadProject(project, file)
 	end
 	
 	if xmlReader:getNodeType() ~= binding.END_ELEMENT then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 	if xmlReader:getElementLocalName() ~= "LayerList" then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 
 	xmlReader:next()
 	if not ((xmlReader:getNodeType() == binding.END_ELEMENT) or
 		(xmlReader:getNodeType() == binding.END_DOCUMENT)) then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 	if xmlReader:getElementLocalName() ~= "Project" then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end	
 	
 	-- TODO: THE ONLY WAY SO FAR TO RELEASE THE FILE AFTER READ
@@ -600,7 +600,7 @@ local function toDataSetLayer(layer)
 	if layer:getType() == "DATASETLAYER" then
 		layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)	
 	else
-		customError("Unknown Layer type '"..layer:getTitle().."'.")
+		customError("Unknown Layer type '"..layer:getTitle().."'.") -- @avancinirodrigo getTitle?
 	end
 	
 	return layer
@@ -637,7 +637,7 @@ local function copyLayer(from, to)
 		elseif to.type == "ADO" then
 			local toConnInfo = createAdoConnInfo(to.file)
 			-- TODO: ADO DON'T WORK (REVIEW)
-			toDs = makeAndOpenDataSource(toConnInfo, "ADO") --binding.te.da.DataSource.create("ADO", toConnInfo)
+			toDs = makeAndOpenDataSource(toConnInfo, "ADO") --binding.te.da.DataSource.create("ADO", toConnInfo) -- SKIP
 			-- local tableExists = toDs:dataSetExists(toTable)
 			-- if tableExists then
 				-- toDs:dropDataSet(toTable)
@@ -777,7 +777,7 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
 		if err ~= "" then
-			customError(err)
+			customError(err) -- SKIP
 		end
 	
 		propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
@@ -825,7 +825,7 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		local err = r2v:pRun()
 		if err ~= "" then
-			customError(err)
+			customError(err) -- SKIP
 		end
 			
 		propCreatedName = "B"..select..RasterAttributeCreatedMapper[operation]
@@ -938,33 +938,33 @@ local function getGeometryTypeName(geomType)
 			geomType == binding.te.gm.CurvePolygonMType or
 			geomType == binding.te.gm.CurvePolygonZMType or
 			geomType == binding.te.gm.MultiPolygonType or
-			geomType == binding.te.gm.MultiPolygonZType or
-			geomType == binding.te.gm.MultiPolygonMType or
-			geomType == binding.te.gm.MultiPolygonZMType then			
+			geomType == binding.te.gm.MultiPolygonZType or -- SKIP
+			geomType == binding.te.gm.MultiPolygonMType or -- SKIP
+			geomType == binding.te.gm.MultiPolygonZMType then -- SKIP		
 		return "polygon"
 	elseif 	geomType == binding.te.gm.GeometryCollectionType or
-			geomType == binding.te.gm.GeometryCollectionZType or
-			geomType == binding.te.gm.GeometryCollectionMType or
-			geomType == binding.te.gm.GeometryCollectionZMType then
+			geomType == binding.te.gm.GeometryCollectionZType or -- SKIP
+			geomType == binding.te.gm.GeometryCollectionMType or -- SKIP
+			geomType == binding.te.gm.GeometryCollectionZMType then -- SKIP
 		return "collection"			  		
 	elseif 	geomType == binding.te.gm.MultiSurfaceType or
-			geomType == binding.te.gm.MultiSurfaceZType or
-			geomType == binding.te.gm.MultiSurfaceMType or
-			geomType == binding.te.gm.MultiSurfaceZMType then
+			geomType == binding.te.gm.MultiSurfaceZType or -- SKIP
+			geomType == binding.te.gm.MultiSurfaceMType or -- SKIP
+			geomType == binding.te.gm.MultiSurfaceZMType then -- SKIP
 		return "surface"
 	elseif 	geomType == binding.te.gm.PolyhedralSurfaceType or
-			geomType == binding.te.gm.PolyhedralSurfaceZType or
-			geomType == binding.te.gm.PolyhedralSurfaceMType or
-			geomType == binding.te.gm.PolyhedralSurfaceZMType then
+			geomType == binding.te.gm.PolyhedralSurfaceZType or -- SKIP
+			geomType == binding.te.gm.PolyhedralSurfaceMType or -- SKIP
+			geomType == binding.te.gm.PolyhedralSurfaceZMType then -- SKIP
 		return "polyhedral"	
 	elseif 	geomType == binding.te.gm.TINType or
-			geomType == binding.te.gm.TINZType or
-			geomType == binding.te.gm.TINMType or
-			geomType == binding.te.gm.TINZMType or
-			geomType == binding.te.gm.TriangleType or
-			geomType == binding.te.gm.TriangleZType or
-			geomType == binding.te.gm.TriangleMType or
-			geomType == binding.te.gm.TriangleZMType then
+			geomType == binding.te.gm.TINZType or -- SKIP
+			geomType == binding.te.gm.TINMType or -- SKIP
+			geomType == binding.te.gm.TINZMType or -- SKIP
+			geomType == binding.te.gm.TriangleType or -- SKIP
+			geomType == binding.te.gm.TriangleZType or -- SKIP
+			geomType == binding.te.gm.TriangleMType or -- SKIP
+			geomType == binding.te.gm.TriangleZMType then -- SKIP
 		return "triangle"		
 	end  
 	
@@ -1121,7 +1121,7 @@ TerraLib_ = {
 			info.file = connInfo.URI
 			info.source = getFileExtension(info.file)
 		elseif type == "ADO" then
-			info.source = SourceTypeMapper.ADO
+			info.source = SourceTypeMapper.ADO -- SKIP
 		end
 
 		do
@@ -1135,7 +1135,7 @@ TerraLib_ = {
 			elseif dst:hasRaster() then
 				info.rep = "raster"
 			else
-				info.rep = "unknown"
+				info.rep = "unknown" -- SKIP
 			end
 	
 			ds:close()
@@ -1278,7 +1278,7 @@ TerraLib_ = {
 			connInfo.PG_NEWDB_NAME = data.table
 			layer = createLayer(name, data.table, connInfo, "POSTGIS")
 		else
-			releaseProject(project)
+			releaseProject(project) -- SKIP
 			customError("Is not possible add the Layer. The table '"..data.table.."' does not exist.")
 		end
 		
@@ -1367,8 +1367,8 @@ TerraLib_ = {
 		if not dataSetExists(connInfo, data.table, "POSTGIS") then
 			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS", mask)
 		else
-			releaseProject(project)
-			customError("The table '"..data.table.."' already exists.")
+			releaseProject(project) -- SKIP
+			customError("The table '"..data.table.."' already exists.") -- SKIP
 		end
 		
 		self:addPgLayer(project, name, data)	
@@ -1556,7 +1556,7 @@ TerraLib_ = {
 			if outType == "OGR" then
 				if string.len(property) > 10 then
 					property = getNormalizedName(property)
-					customWarning("The 'attribute' lenght is more than 10 characters, it was changed to '"..property.."'.")
+					customWarning("The 'attribute' lenght has more than 10 characters. It was truncated to '"..property.."'.")
 				end
 			end
 		
@@ -1762,17 +1762,17 @@ TerraLib_ = {
 							local type = newDse:getPropertyDataType(j)
 						
 							if type == binding.INT16_TYPE then
-								item:setInt16(j, v)
+								item:setInt16(j, v) -- SKIP
 							elseif type == binding.INT32_TYPE then
 								item:setInt32(j, v)
 							elseif type == binding.INT64_TYPE then
-								item:setInt64(j, v)
+								item:setInt64(j, v) -- SKIP
 							elseif type == binding.FLOAT_TYPE then
-								item:setFloat(j, v)
+								item:setFloat(j, v) -- SKIP
 							elseif type == binding.DOUBLE_TYPE then
 								item:setDouble(j, v)
 							elseif type == binding.NUMERIC_TYPE then
-								item:setNumeric(j, tostring(v))
+								item:setNumeric(j, tostring(v)) -- SKIP
 							elseif type == binding.BOOLEAN_TYPE then
 								item:setBool(j, v)
 							elseif type == binding.GEOMETRY_TYPE then

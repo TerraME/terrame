@@ -477,7 +477,7 @@ ydim    number [20]
 		unitTest:assertEquals(cs.cells[101], c)
 	end,
 	createNeighborhood = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
+		local cs = CellularSpace{xdim = 5}
 
 		cs:createNeighborhood()
 
@@ -508,8 +508,8 @@ ydim    number [20]
 		end)
 
 		unitTest:assertEquals(4, sizes[3])
-		unitTest:assertEquals(32, sizes[5])
-		unitTest:assertEquals(64, sizes[8])
+		unitTest:assertEquals(12, sizes[5])
+		unitTest:assertEquals(9, sizes[8])
 
 		cs:createNeighborhood{name = "neigh2"}
 
@@ -544,8 +544,8 @@ ydim    number [20]
 		end)
 
 		unitTest:assertEquals(4, sizes[4])
-		unitTest:assertEquals(32, sizes[6])
-		unitTest:assertEquals(64, sizes[9])
+		unitTest:assertEquals(12, sizes[6])
+		unitTest:assertEquals(9, sizes[9])
 
 		local verifyWrapX = function(cs1, cell, neigh)
 			return neigh.x == ((cell.x - 1) - cs1.xMin) % (cs1.xMax - cs1.xMin + 1) + cs1.xMin
@@ -595,7 +595,7 @@ ydim    number [20]
 			end)
 		end)
 
-		cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 5}
 
 		cs:createNeighborhood{strategy = "vonneumann"}
 
@@ -623,8 +623,8 @@ ydim    number [20]
 		end)
 
 		unitTest:assertEquals(4, sizes[2])
-		unitTest:assertEquals(32, sizes[3])
-		unitTest:assertEquals(64, sizes[4])
+		unitTest:assertEquals(12, sizes[3])
+		unitTest:assertEquals(9, sizes[4])
 
 		cs:createNeighborhood{ 
 			strategy = "vonneumann",
@@ -655,8 +655,8 @@ ydim    number [20]
 		end)
 
 		unitTest:assertEquals(4, sizes[3])
-		unitTest:assertEquals(32, sizes[4])
-		unitTest:assertEquals(64, sizes[5])
+		unitTest:assertEquals(12, sizes[4])
+		unitTest:assertEquals(9, sizes[5])
 
 		cs:createNeighborhood{ 
 			strategy = "vonneumann",
@@ -716,7 +716,7 @@ ydim    number [20]
 			unitTest:assert(neighborhood:isNeighbor(cell))
 		end)
 
-		cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 5}
 
 		cs:createNeighborhood{strategy = "diagonal"}
 
@@ -744,10 +744,10 @@ ydim    number [20]
 		end)
 
 		unitTest:assertEquals(4, sizes[1])
-		unitTest:assertEquals(32, sizes[2])
-		unitTest:assertEquals(64, sizes[4])
+		unitTest:assertEquals(12, sizes[2])
+		unitTest:assertEquals(9, sizes[4])
 
-		cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 5}
 
 		cs:createNeighborhood{
 			strategy = "diagonal",
@@ -780,9 +780,9 @@ ydim    number [20]
 			unitTest:assert(not neighborhood:isNeighbor(cell))
 		end)
 
-		unitTest:assertEquals(100, sizes[4])
+		unitTest:assertEquals(25, sizes[4])
 
-		cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 5}
 
 		cs:createNeighborhood{
 			strategy = "diagonal",
@@ -814,7 +814,7 @@ ydim    number [20]
 
 		end)
 
-		unitTest:assertEquals(100, sizes[5])
+		unitTest:assertEquals(25, sizes[5])
 
 		-- mxn
 		cs = CellularSpace{xdim = 10}
@@ -1202,7 +1202,7 @@ ydim    number [20]
 		unitTest:assertEquals(48, sizes[10])
 
 		-- filter
-		cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 5}
 
 		filterFunction = function(cell, neighbor)
 			return cell.x == neighbor.x and cell.y ~= neighbor.y
@@ -1218,7 +1218,7 @@ ydim    number [20]
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assertEquals(9, neighborhoodSize)
+			unitTest:assertEquals(4, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
 				unitTest:assertEquals(neigh.x, cell.x)
@@ -1248,7 +1248,7 @@ ydim    number [20]
 			local neighborhood = cell:getNeighborhood("my_neighborhood2")
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assertEquals(9, neighborhoodSize)
+			unitTest:assertEquals(4, neighborhoodSize)
 
 			local sumWeight = 0
 
@@ -1267,15 +1267,13 @@ ydim    number [20]
 			sumWeightVec[sumWeight] = sumWeightVec[sumWeight] + 1
 		end)
 
-		unitTest:assertEquals(20, sumWeightVec[25])
-		unitTest:assertEquals(20, sumWeightVec[31])
-		unitTest:assertEquals(20, sumWeightVec[45])
-		unitTest:assertEquals(20, sumWeightVec[37])
-		unitTest:assertEquals(20, sumWeightVec[27])
+		unitTest:assertEquals(5, sumWeightVec[6])
+		unitTest:assertEquals(10, sumWeightVec[7])
+		unitTest:assertEquals(10, sumWeightVec[10])
 
 		--  coord
-		cs = CellularSpace{xdim = 10}
-		cs2 = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 5}
+		cs2 = CellularSpace{xdim = 5}
 	
 		cs:createNeighborhood{
 			strategy = "coord",
@@ -1314,15 +1312,8 @@ ydim    number [20]
 			end)
 		end)
 	
-		cs = CellularSpace{xdim = 5}
-		cs:createNeighborhood()
-
-		forEachCell(cs, function(cell)
-			unitTest:assertType(cell:getNeighborhood(), "Neighborhood")
-		end)
-
 		-- on the fly
-		cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 5}
 
 		cs:createNeighborhood{inmemory = false}
 
@@ -1356,10 +1347,10 @@ ydim    number [20]
 		end)
 
 		unitTest:assertEquals(4, sizes[3])
-		unitTest:assertEquals(32, sizes[5])
-		unitTest:assertEquals(64, sizes[8])
+		unitTest:assertEquals(12, sizes[5])
+		unitTest:assertEquals(9, sizes[8])
 
-		cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 5}
 
 		cs:createNeighborhood{strategy = "vonneumann", inmemory = false}
 
@@ -1389,8 +1380,8 @@ ydim    number [20]
 		end)
 
 		unitTest:assertEquals(4, sizes[2])
-		unitTest:assertEquals(32, sizes[3])
-		unitTest:assertEquals(64, sizes[4])
+		unitTest:assertEquals(12, sizes[3])
+		unitTest:assertEquals(9, sizes[4])
 
 		-- small cellular spaces
 		cs = CellularSpace{xdim = 2}

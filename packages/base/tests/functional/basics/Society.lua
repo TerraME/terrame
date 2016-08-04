@@ -250,7 +250,7 @@ state_          State
 
 		local predators = Society{
 			instance = predator,
-			quantity = 100
+			quantity = 20
 		}
 	
 		forEachAgent(predators, function(ag)
@@ -271,9 +271,9 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(6608,  count_prob)
-		unitTest:assertEquals(100,   count_quant)
-		unitTest:assertEquals(10000, count_all)
+		unitTest:assertEquals(252, count_prob)
+		unitTest:assertEquals(20,  count_quant)
+		unitTest:assertEquals(400, count_all)
 
 		local cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
@@ -295,9 +295,9 @@ state_          State
 			count_n2 = count_n2 + #ag:getSocialNetwork("n2")
 		end)
 
-		unitTest:assertEquals(400, count_c)
-		unitTest:assertEquals(2300, count_n)
-		unitTest:assertEquals(2300, count_n2)
+		unitTest:assertEquals(80, count_c)
+		unitTest:assertEquals(50, count_n)
+		unitTest:assertEquals(50, count_n2)
 
 		local ag1 = Agent{
 			name = "nonfoo",
@@ -346,7 +346,7 @@ state_          State
 
 		predators = Society{
 			instance = predator,
-			quantity = 100
+			quantity = 20
 		}
 
 		predators:createSocialNetwork{probability = 0.5, name = "friends", inmemory = false}
@@ -363,9 +363,9 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(6618,  count_prob)
-		unitTest:assertEquals(100,   count_quant)
-		unitTest:assertEquals(10000, count_all)
+		unitTest:assertEquals(258, count_prob)
+		unitTest:assertEquals(20,  count_quant)
+		unitTest:assertEquals(400, count_all)
 
 		count_prob = 0
 		count_quant = 0
@@ -377,9 +377,9 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(6594,  count_prob)
-		unitTest:assertEquals(100,   count_quant)
-		unitTest:assertEquals(10000, count_all)
+		unitTest:assertEquals(242, count_prob)
+		unitTest:assertEquals(20,  count_quant)
+		unitTest:assertEquals(400, count_all)
 
 		cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
@@ -397,8 +397,8 @@ state_          State
 			count_n  = count_n + #ag:getSocialNetwork("n")
 		end)
 
-		unitTest:assertEquals(300, count_c)
-		unitTest:assertEquals(2304, count_n)
+		unitTest:assertEquals(60, count_c)
+		unitTest:assertEquals(64, count_n)
 
 		predators:sample():die()
 
@@ -409,8 +409,8 @@ state_          State
 			count_n  = count_n + #ag:getSocialNetwork("n")
 		end)
 
-		unitTest:assertEquals(294, count_c)
-		unitTest:assertEquals(2280, count_n)
+		unitTest:assertEquals(54, count_c)
+		unitTest:assertEquals(56, count_n)
 
 		predator = Agent{
 			energy = 40,
@@ -419,7 +419,7 @@ state_          State
 
 		predators = Society{
 			instance = predator,
-			quantity = 100
+			quantity = 20
 		}
 	
 		predators:createSocialNetwork{probability = 0.05, name = "friends", symmetric = true}
@@ -433,8 +433,8 @@ state_          State
 			count_quant = count_quant + #ag:getSocialNetwork("boss")
 		end)
 
-		unitTest:assertEquals(1460, count_prob)
-		unitTest:assertEquals(200,  count_quant)
+		unitTest:assertEquals(44, count_prob)
+		unitTest:assertEquals(40, count_quant)
 
 		-- social networks that must be "in memory"
 		predator = Agent{
@@ -444,11 +444,11 @@ state_          State
 
 		predators = Society{
 			instance = predator,
-			quantity = 100
+			quantity = 20
 		}
 
-		predators:createSocialNetwork{strategy = "erdos", quantity = 200, name = "erdos"}
-		predators:createSocialNetwork{strategy = "barabasi", start = 50, quantity = 10, name = "barabasi"}
+		predators:createSocialNetwork{strategy = "erdos", quantity = 40, name = "erdos"}
+		predators:createSocialNetwork{strategy = "barabasi", start = 10, quantity = 2, name = "barabasi"}
 		predators:createSocialNetwork{strategy = "watts", probability = 0.1, quantity = 2, name = "watts"}
 
 		local count_barabasi = 0
@@ -461,9 +461,9 @@ state_          State
 			count_watts    = count_watts    + #ag:getSocialNetwork("watts")
 		end)
 
-		unitTest:assertEquals(1000, count_barabasi)
-		unitTest:assertEquals(400,  count_erdos)
-		unitTest:assertEquals(400,  count_watts)
+		unitTest:assertEquals(40, count_barabasi)
+		unitTest:assertEquals(80,  count_erdos)
+		unitTest:assertEquals(80,  count_watts)
 	end,
 	clear = function(unitTest)
 		local agent1 = Agent{}

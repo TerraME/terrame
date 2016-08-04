@@ -438,6 +438,21 @@ return {
 		end
 		unitTest:assertError(inputMandatory, mandatoryArgumentMsg("input"))
 
+		local missingArgument = function()
+			Layer{
+				project = proj,
+				--source = "postgis",
+				input = layerName1,
+				name = clName1,
+				resolution = 0.7,
+				user = user,
+				password = password,
+				--database = database,
+				table = tName1
+			}
+		end
+		unitTest:assertError(missingArgument, "At least one of the following arguments must be used: 'file', 'source', or 'database'.")
+
 		local layerMandatory = function()
 			Layer{
 				project = proj,
