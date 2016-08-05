@@ -263,7 +263,8 @@ local function createLayer(name, dSetName, connInfo, type)
 end
 
 local function isValidTviewExt(filePath)
-	return getFileExtension(filePath) == "tview"
+	local file = File(filePath)
+	return file:getExtension() == "tview"
 end
 
 local function releaseProject(project)
@@ -526,9 +527,11 @@ local function addFileLayer(project, name, filePath, type, addSpatialIdx)
 		if addSpatialIdx then
 			connInfo.SPATIAL_IDX = true
 		end
-		dSetName = getFileName(connInfo.URI)
+		local file = File(connInfo.URI)
+		dSetName = file:getName()
 	elseif type == "GDAL" then
-		dSetName = getFileNameWithExtension(connInfo.URI)
+		local file = File(connInfo.URI)
+		dSetName = file:getNameWithExtension()
 	elseif type == "GeoJSON" then
 		type = "OGR"
 		dSetName = "OGRGeoJSON"
@@ -1116,10 +1119,12 @@ TerraLib_ = {
 			info.source = SourceTypeMapper.POSTGIS
 		elseif type == "OGR" then
 			info.file = connInfo.URI
-			info.source = getFileExtension(info.file)
+			local file = File(info.file)
+			info.source = file:getExtension()
 		elseif type == "GDAL" then
 			info.file = connInfo.URI
-			info.source = getFileExtension(info.file)
+			local file = File(info.file)
+			info.source = file:getExtension()
 		elseif type == "ADO" then
 			info.source = SourceTypeMapper.ADO -- SKIP
 		end
@@ -1224,7 +1229,8 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
-		local dSetName = getFileName(connInfo.URI)
+		local file = File(connInfo.URI)
+		local dSetName = file:getName()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
@@ -1318,7 +1324,8 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
-		local dSetName = getFileName(connInfo.URI)
+		local file = File(connInfo.URI)
+		local dSetName = file:getName()
 		
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 		
@@ -1587,7 +1594,8 @@ TerraLib_ = {
 				outDSetName = string.lower(outDSetName)
 				outConnInfo.PG_NEWDB_NAME = outDSetName
 			elseif outType == "OGR" then
-				local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
+				local file = File(outConnInfo.URI)
+				local outDir = _Gtme.makePathCompatibleToAllOS(file:getDir())
 				outConnInfo.URI = outDir..out..".shp"
 				outConnInfo.DRIVER = "ESRI Shapefile"
 				outConnInfo.SPATIAL_IDX = true
@@ -1645,7 +1653,8 @@ TerraLib_ = {
 				local toSetName = nil
 				
 				if toType == "OGR" then
-					toSetName = getFileName(toConnInfo.URI)
+					local file = File(toConnInfo.URI)
+					toSetName = file:getName()
 				end
 				
 				overwriteLayer(self, project, out, to, toSetName)
@@ -1804,7 +1813,8 @@ TerraLib_ = {
 				outConnInfo.PG_NEWDB_NAME = newDstName
 				outDs = makeAndOpenDataSource(outConnInfo, outType)
 			elseif outType == "OGR" then
-				local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
+				local file = File(outConnInfo.URI)
+				local outDir = _Gtme.makePathCompatibleToAllOS(file:getDir())
 				outConnInfo.URI = outDir..newDstName..".shp"		
 
 				if fromLayerName == toName then
@@ -1856,7 +1866,8 @@ TerraLib_ = {
 		do
 			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "GDAL")
-			local dSetName = getFileNameWithExtension(connInfo.URI)
+			local file = File(connInfo.URI)
+			local dSetName = file:getNameWithExtension()
 			local dSet = ds:getDataSet(dSetName)
 			set = createDataSetAdapted(dSet)
 
@@ -1881,11 +1892,12 @@ TerraLib_ = {
 			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "OGR")
 			local dSetName
-
-			if string.lower(getFileExtension(filePath)) == "geojson" then
+			local file = File(filePath)
+			if string.lower(file:getExtension()) == "geojson" then
 				dSetName = "OGRGeoJSON"
 			else
-				dSetName = getFileName(filePath)
+				local file = File(connInfo.URI)
+				dSetName = file:getName()
 			end
 
 			local dSet = ds:getDataSet(dSetName)
