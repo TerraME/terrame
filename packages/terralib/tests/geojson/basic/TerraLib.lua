@@ -143,5 +143,22 @@ return {
 		unitTest:assertFile(geojson1)
 		unitTest:assertFile(geojson2)
 		rmFile(proj.file)
-	end
+	end,
+	getOGRByFilePath = function(unitTest)
+		local tl = TerraLib{}
+		local shpPath = filePath("sampa.geojson", "terralib")
+		local dSet = tl:getOGRByFilePath(shpPath)
+		
+		unitTest:assertEquals(getn(dSet), 63)
+
+		for i = 0, #dSet do
+			unitTest:assertEquals(dSet[i].FID, i)
+
+			for k, v in pairs(dSet[i]) do
+				unitTest:assert((k == "FID") or (k == "ID") or (k == "NM_MICRO") or 
+								(k == "CD_GEOCODU") or (k == "OGR_GEOMETRY"))
+				unitTest:assertNotNil(v)
+			end
+		end		
+	end,	
 }

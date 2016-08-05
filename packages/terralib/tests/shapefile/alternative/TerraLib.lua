@@ -23,67 +23,6 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	addShpCellSpaceLayer = function(unitTest)
-		local tl = TerraLib{}
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-		
-		if isFile(proj.file) then
-			rmFile(proj.file)
-		end	
-		
-		tl:createProject(proj, {})
-		
-		local layerName1 = "AmazoniaTif"
-		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
-		tl:addGdalLayer(proj, layerName1, layerFile1)
-
-		local clName = "Amazonia_Cells"
-		local shp1 = clName..".shp"
-
-		if isFile(shp1) then
-			rmFile(shp1)
-		end	
-		
-		local resolution = 60e3
-		local mask = true
-		
-		local maskNotWork = function()
-			tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
-		end
-		unitTest:assertError(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
-		
-		rmFile(proj.file)
-	end,	
-	--addPgCellSpaceLayer = function(unitTest)
-		-- #1152
-	--end,
-	getNumOfBands = function(unitTest)
-		local tl = TerraLib{}
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-		
-		if isFile(proj.file) then
-			rmFile(proj.file)
-		end	
-		
-		tl:createProject(proj, {})
-		
-		local layerName = "SampaShp"
-		local layerFile = filePath("sampa.shp", "terralib")
-		tl:addShpLayer(proj, layerName, layerFile)	
-		
-		local noRasterLayer = function()
-			tl:getNumOfBands(proj, layerName)
-		end
-		unitTest:assertError(noRasterLayer, "The layer '"..layerName.."' is not a Raster.")		
-		
-		rmFile(proj.file)
-	end,
 	attributeFill = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
@@ -114,29 +53,37 @@ return {
 		local resolution = 60e3
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
-	
-		local layerName2 = "Prodes_PA" 
-		local layerFile4 = filePath("prodes_polyc_10k.tif", "terralib")
-		tl:addGdalLayer(proj, layerName2, layerFile4)		
 		
-		local percTifLayerName = clName.."_"..layerName2.."_RPercentage"		
-		shp[2] = percTifLayerName..".shp"
+		-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
+		local layerName2 = "Protection_Unit" 
+		local layerFile2 = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
+		tl:addShpLayer(proj, layerName2, layerFile2)
+		
+		-- SHAPE OUTPUT
+		-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
+		local presLayerName = clName.."_"..layerName2.."_Presence"		
+		shp[2] = presLayerName..".shp"
 		
 		if isFile(shp[2]) then
 			rmFile(shp[2])
 		end
-		
-		local operation = "coverage"
-		local attribute = "rperc"
-		local select = 5
+
+		local operation = "presence"
+		local attribute = "presence_truncate"
+		local select = "FID"
 		local area = nil
 		local default = nil
-		local repr = "raster"
 		
-		local bandNoExists = function()
-			tl:attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
+		local attributeTruncateWarning = function()
+			tl:attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
 		end
-		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in layer '"..layerName2.."'.")
+		unitTest:assertError(attributeTruncateWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'presence_t'.")
+		
+		attribute = "FID"
+		local attributeAlreadyExists = function()
+			tl:attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
+		end
+		unitTest:assertError(attributeAlreadyExists, "The attribute 'FID' already exists in the Layer.")
 		
 		-- END
 		for j = 1, #shp do
@@ -148,4 +95,3 @@ return {
 		rmFile(proj.file)
 	end
 }
-
