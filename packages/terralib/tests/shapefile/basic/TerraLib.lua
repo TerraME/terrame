@@ -724,7 +724,7 @@ return {
 		unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(wsumLayerInfo.sid)						
 		
-		-- RASTER TESTS WITH POSTGIS
+		-- RASTER TESTS WITH SHAPE
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
 		local layerName4 = "Prodes_PA" 
 		local layerFile4 = filePath("prodes_polyc_10k.tif", "terralib")
@@ -974,7 +974,6 @@ return {
 		unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rsumOverLayerInfo.sid)		
 
-		
 		-- END
 		for j = 1, #shp do
 			if isFile(shp[j]) then
@@ -1078,7 +1077,25 @@ return {
 				end
 			end
 		end			
-
+		
+		-- OVERWRITE CELLSPACE
+		tl:saveDataSet(proj, clName1, luaTable, clName1, {"attr1"})
+		newDSet = tl:getDataSet(proj, newLayerName)
+		
+		unitTest:assertEquals(getn(newDSet), 68)
+		
+		for i = 0, #newDSet do
+			unitTest:assertEquals(newDSet[i].attr1, i)
+			for k, v in pairs(newDSet[i]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
+								(k == "attr1"))
+				
+				if k == "attr1" then
+					unitTest:assertEquals(type(v), "number")
+				end
+			end
+		end			
+		
 		rmFile(cellsShp)
 		rmFile(newLayerName..".shp")
 		rmFile(proj.file)

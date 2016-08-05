@@ -128,7 +128,7 @@ function Project(data)
 				}
 
 			else
-				customError("Value of argument '"..idx.."' is not a valid file name.")
+				customError("Value of argument '"..idx.."' is not a valid file name.") -- SKIP TODO(avancinirodrigo): #1317
 			end
 		end
 	end)
