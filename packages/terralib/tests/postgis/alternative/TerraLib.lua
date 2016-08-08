@@ -22,62 +22,47 @@
 --
 -------------------------------------------------------------------------------------------
 
-return{
-	Model = function(unitTest)
-		local Tube = Model{
-			init = function(model)
-				model.t = Timer{Event{action = function(ev)
-					model.v = model.v + 1
-					model:notify(ev)
-				end}}
-				model.v = 1
-				model.v2 = function() return model.v ^ 2 end
-			end,
-			finalTime = 10
-		}
+return {	
+	addPgLayer = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})	
+	
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "post"
+		local database = "terralib_pg_test"
+		local encoding = "CP1252"
+		local tableName = "sampa"
+		
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName,
+			encoding = encoding	
+		}			
+		
+		local layerName = "Postgis"
+		
+		local passWrong = function()
+			tl:addPgLayer(proj, layerName, pgData)
+		end
+		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
+							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
 
-		local tube = Tube{}
-
-		local ch1 = Chart{
-			target = tube
-		}
-
-		local ch2 = Chart{
-			target = tube,
-			select = "v2"
-		}
-
-		tube:notify()
-		tube:run(10)
-		tube:notify(11)
-
-		unitTest:assertSnapshot(ch1, "chart-model-1.png", 0.05)
-		unitTest:assertSnapshot(ch2, "chart-model-2.png", 0.05)
-	end,
-	notify = function(unitTest)
-		local Tube = Model{
-			waterValue = 200,
-			init = function(model)
-				model.finalTime = 100
-				model.timer = Timer{
-					Event{action = function(e)
-						model.waterValue = model.waterValue - 1
-						model:notify(e)
-					end}
-				}
-			end
-		}
-
-		local m = Tube{waterValue = 100}
-
-		local ch = Chart{
-			target = m,
-			select = "waterValue"
-		}
-
-		m:run()
-
-		unitTest:assertSnapshot(ch, "chart-model-3.png", 0.05)
+		rmFile(proj.file)
 	end
 }
-

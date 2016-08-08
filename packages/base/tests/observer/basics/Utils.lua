@@ -127,7 +127,7 @@ return{
 		    target = {value = 2}
 		}
 
-		unitTest:assertSnapshot(c, "enable_graphics_chart.png")
+		unitTest:assertSnapshot(c, "enable_graphics_chart.png", 0.05)
 
 		local cs = CellularSpace{xdim = 10}
 
@@ -135,7 +135,7 @@ return{
 			target = cs
 		}
 
-		unitTest:assertSnapshot(c, "enable_graphics_map.png")
+		unitTest:assertSnapshot(c, "enable_graphics_map.png", 0.05)
 
 		local timer
 
@@ -145,7 +145,7 @@ return{
 
 		c = Clock{target = timer}
 
-		unitTest:assertSnapshot(c, "enable_graphics_clock.png")
+		unitTest:assertSnapshot(c, "enable_graphics_clock.png", 0.45)
 
 		local world = Cell{
 			count = 0,
@@ -156,7 +156,7 @@ return{
 
 		local ts = TextScreen{target = world}
 
-		unitTest:assertSnapshot(ts, "enable_graphics_textscreen.png")
+		unitTest:assertSnapshot(ts, "enable_graphics_textscreen.png", 0.05)
 
 		world = Cell{
 			count = 0,
@@ -167,7 +167,7 @@ return{
 
 		local vt1 = VisualTable{target = world}
 
-		unitTest:assertSnapshot(vt1, "enable_graphics_visualtable.png")
+		unitTest:assertSnapshot(vt1, "enable_graphics_visualtable.png", 0.2)
 	end
 }
 
