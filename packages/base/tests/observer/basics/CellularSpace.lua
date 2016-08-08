@@ -96,9 +96,9 @@ return{
 		-- remove the line below after refactoring observer.
 		if isFile("cellularspace.csv") then rmFile("cellularspace.csv") end
 
-		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.1)
+		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.23)
 
-		unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.06)
+		unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.1)
 
 		unitTest:clear()
 
@@ -231,7 +231,7 @@ return{
 
 		cs:notify()
     
-		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.1)
+		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.23)
 		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
 		-- unitTest:assertFile(projName) -- SKIP #1301
 		rmFile(projName) -- #1301

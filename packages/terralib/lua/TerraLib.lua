@@ -292,9 +292,9 @@ local function decodeDataSourceInfo(dsInfo)
 		connInfo.URI = decodeUri(connInfo.URI)
 		dsInfo:setConnInfo(connInfo)
 	end
-	if connInfo.SOURCE then
-		connInfo.SOURCE = decodeUri(connInfo.SOURCE)
-		dsInfo:setConnInfo(connInfo)
+	if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
+		connInfo.SOURCE = decodeUri(connInfo.SOURCE) -- SKIP
+		dsInfo:setConnInfo(connInfo) -- SKIP
 	end	
 end
 
@@ -316,9 +316,9 @@ local function encodeDataSourceInfos(layers)
 				connInfo.URI = encodeUri(connInfo.URI)
 				dsInfo:setConnInfo(connInfo)
 			end
-			if connInfo.SOURCE then
-				connInfo.SOURCE = encodeUri(connInfo.SOURCE)
-				dsInfo:setConnInfo(connInfo)
+			if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
+				connInfo.SOURCE = encodeUri(connInfo.SOURCE) -- SKIP
+				dsInfo:setConnInfo(connInfo) -- SKIP
 			end		
 			binding.te.da.DataSourceInfoManager.getInstance():remove(lid)
 			binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo)
@@ -424,7 +424,7 @@ local function loadProject(project, file)
 		customError("PROJECT READ ERROR.") -- SKIP
 	end
 	if xmlReader:getElementLocalName() ~= "Author" then
-		customError("PROJECT READ ERROR.")
+		customError("PROJECT READ ERROR.") -- SKIP
 	end
 
 	xmlReader:next()
@@ -603,7 +603,8 @@ local function toDataSetLayer(layer)
 	if layer:getType() == "DATASETLAYER" then
 		layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)	
 	else
-		customError("Unknown Layer type '"..layer:getTitle().."'.") -- @avancinirodrigo getTitle?
+		-- TODO(avancinirodrigo): REVIEW OTHER LAYERS TYPES
+		customError("Layer '"..layer:getTitle().."'cannot be converted, (type '"..layer:getType().."').") -- SKIP 
 	end
 	
 	return layer
@@ -635,7 +636,7 @@ local function copyLayer(from, to)
 		
 			local tableExists = toDs:dataSetExists(toTable)
 			if tableExists then
-				toDs:dropDataSet(toTable)
+				toDs:dropDataSet(toTable) -- SKIP
 			end
 		elseif to.type == "ADO" then
 			local toConnInfo = createAdoConnInfo(to.file)

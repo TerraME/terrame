@@ -35,7 +35,7 @@ return{
 
 		unitTest:assertType(vt1, "VisualTable")
 
-		unitTest:assertSnapshot(vt1, "visualtable_cell.bmp", 0.059)
+		unitTest:assertSnapshot(vt1, "visualtable_cell.bmp", 0.2)
 
 		world = Agent{
 			count = 0,
@@ -46,14 +46,14 @@ return{
 
 		local vt2 = VisualTable{target = world}
 
-		unitTest:assertSnapshot(vt2, "visualtable_agent.bmp", 0.059)
+		unitTest:assertSnapshot(vt2, "visualtable_agent.bmp", 0.2)
 
 		local vt3 = VisualTable{
 			target = world,
 			select = {"mcount"}
 		}
 
-		unitTest:assertSnapshot(vt3, "visualtable_agent2.bmp", 0.059)
+		unitTest:assertSnapshot(vt3, "visualtable_agent2.bmp", 0.2)
 
 		local soc = Society{
 			instance = world,
@@ -63,8 +63,8 @@ return{
 		local vt4 = VisualTable{target = soc}
 		local vt5 = VisualTable{target = soc, select = "#"}
 
-		unitTest:assertSnapshot(vt4, "visualtable_society.bmp", 0.059)
-		unitTest:assertSnapshot(vt5, "visualtable_society_select.bmp", 0.059)
+		unitTest:assertSnapshot(vt4, "visualtable_society.bmp", 0.2)
+		unitTest:assertSnapshot(vt5, "visualtable_society_select.bmp", 0.2)
 
 		soc = Society{
 			instance = Agent{},
@@ -74,7 +74,7 @@ return{
 
 		local vt6 = VisualTable{target = soc}
 
-		unitTest:assertSnapshot(vt6, "visualtable_society_agent.bmp", 0.059)
+		unitTest:assertSnapshot(vt6, "visualtable_society_agent.bmp", 0.2)
 
 		world = CellularSpace{
 			xdim = 10,
@@ -87,8 +87,8 @@ return{
 		local vt7 = VisualTable{target = world}
 		local vt8 = VisualTable{target = world, select = "mcount"}
 
-		unitTest:assertSnapshot(vt7, "visualtable_cellularspace.bmp", 0.059)
-		unitTest:assertSnapshot(vt8, "visualtable_cellularspace_select.bmp", 0.059)
+		unitTest:assertSnapshot(vt7, "visualtable_cellularspace.bmp", 0.25)
+		unitTest:assertSnapshot(vt8, "visualtable_cellularspace_select.bmp", 0.2)
 	end,
 	update = function(unitTest)
 		local world = Cell{
@@ -102,7 +102,7 @@ return{
 
 		vt1:update()
 
-		unitTest:assertSnapshot(vt1, "visualtable_update.bmp", 0.059)
+		unitTest:assertSnapshot(vt1, "visualtable_update.bmp", 0.15)
 	end
 }
 
