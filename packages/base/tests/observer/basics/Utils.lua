@@ -145,7 +145,7 @@ return{
 
 		c = Clock{target = timer}
 
-		unitTest:assertSnapshot(c, "enable_graphics_clock.png", 0.4)
+		unitTest:assertSnapshot(c, "enable_graphics_clock.png", 0.45)
 
 		local world = Cell{
 			count = 0,
@@ -167,7 +167,7 @@ return{
 
 		local vt1 = VisualTable{target = world}
 
-		unitTest:assertSnapshot(vt1, "enable_graphics_visualtable.png", 0.05)
+		unitTest:assertSnapshot(vt1, "enable_graphics_visualtable.png", 0.2)
 	end
 }
 
