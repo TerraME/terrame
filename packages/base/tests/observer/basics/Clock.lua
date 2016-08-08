@@ -32,7 +32,7 @@ return{
 		c = Clock{target = timer}
 		timer:run(50)
 
-		unitTest:assertSnapshot(c, "clock_single_event.bmp", 0.01)
+		unitTest:assertSnapshot(c, "clock_single_event.bmp", 0.5)
 
 		timer = Timer{
 			ev1 = Event{priority =  1, action = function() end},

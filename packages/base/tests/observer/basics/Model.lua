@@ -51,8 +51,8 @@ return{
 		tube:run(10)
 		tube:notify(11)
 
-		unitTest:assertSnapshot(ch1, "chart-model-1.png")
-		unitTest:assertSnapshot(ch2, "chart-model-2.png")
+		unitTest:assertSnapshot(ch1, "chart-model-1.png", 0.05)
+		unitTest:assertSnapshot(ch2, "chart-model-2.png", 0.05)
 	end,
 	notify = function(unitTest)
 		local Tube = Model{
@@ -77,7 +77,7 @@ return{
 
 		m:run()
 
-		unitTest:assertSnapshot(ch, "chart-model-3.png")
+		unitTest:assertSnapshot(ch, "chart-model-3.png", 0.05)
 	end
 }
 

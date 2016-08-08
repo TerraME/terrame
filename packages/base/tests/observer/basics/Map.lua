@@ -309,7 +309,7 @@ return{
 			size = 30
 		}
 
-		unitTest:assertSnapshot(m, "map_single_agent_config.bmp")
+		unitTest:assertSnapshot(m, "map_single_agent_config.bmp", 0.05)
 
 		soc = Society{instance = Agent{}, quantity = 10}
 		cs = CellularSpace{xdim = 10}
@@ -424,8 +424,7 @@ return{
 			target = cs
 		}
 
-		m:save("save_map.bmp")
-		unitTest:assertFile("save_map.bmp")
+		unitTest:assertSnapshot(m, "save_map.bmp", 0.05)
 	end,
 	update = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

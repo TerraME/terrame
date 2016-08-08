@@ -63,9 +63,9 @@ return{
 		unitTest:assertFile("agent.csv")
 
 		unitTest:assertSnapshot(c1, "chart_agent.bmp", 0.03)
-		unitTest:assertSnapshot(c2, "chart_agent_select.bmp", 0.01)
-		unitTest:assertSnapshot(ts, "textscreen_agent_select.bmp", 0.01)
-		unitTest:assertSnapshot(vt, "agent_visualtable.bmp", 0.059)
+		unitTest:assertSnapshot(c2, "chart_agent_select.bmp", 0.03)
+		unitTest:assertSnapshot(ts, "textscreen_agent_select.bmp", 0.03)
+		unitTest:assertSnapshot(vt, "agent_visualtable.bmp", 0.15)
 		
 		unitTest:clear()
 
@@ -94,7 +94,7 @@ return{
 
 		t:run(200)
 
-		unitTest:assertSnapshot(c3, "chart_agent_xaxis.bmp", 0.02)
+		unitTest:assertSnapshot(c3, "chart_agent_xaxis.bmp", 0.035)
 	end
 }
 

@@ -93,13 +93,13 @@ return{
 		local c1 = Chart{target = world}
 		c1:update(0)
 		c1:update(1)
-		unitTest:assertSnapshot(c1, "chart-table-base.bmp", 0.02)
+		unitTest:assertSnapshot(c1, "chart-table-base.bmp", 0.03)
 
 		c1 = Chart{target = world, select = "mCount", xAxis = "count"}
 		c1:update(0)
 		world.count = world.count + 2
 		c1:update(1)
-		unitTest:assertSnapshot(c1, "chart-table-xaxis.bmp", 0.02)
+		unitTest:assertSnapshot(c1, "chart-table-xaxis.bmp", 0.03)
 
 		local t = {
 			value1 = 2,
@@ -121,8 +121,8 @@ return{
 		c1:update(2)
 		c1:update(3)
 
-		unitTest:assertSnapshot(c1, "chart-table-1.bmp", 0.01)
-		unitTest:assertSnapshot(c2, "chart-table-2.bmp", 0.01)
+		unitTest:assertSnapshot(c1, "chart-table-1.bmp", 0.03)
+		unitTest:assertSnapshot(c2, "chart-table-2.bmp", 0.03)
 
 		-- chart using data
 		local tab = makeDataTable{
@@ -140,7 +140,7 @@ return{
 		    xAxis = "demand",
 		    color = "blue"
 		}
-	
+
 		c2 = Chart{
 		    data = tab,
 		    select = "demand",
@@ -148,8 +148,8 @@ return{
 			pen = "dash"
 		}
 		
-		unitTest:assertSnapshot(c1, "chart-data-1.bmp", 0.01)
-		unitTest:assertSnapshot(c2, "chart-data-2.bmp", 0.01)
+		unitTest:assertSnapshot(c1, "chart-data-1.bmp", 0.05)
+		unitTest:assertSnapshot(c2, "chart-data-2.bmp", 0.05)
 
 		local init = function(model)
 			local contacts = 6
@@ -200,7 +200,7 @@ return{
 		e:add(Event{action = c})
 		e:run()
 
-		unitTest:assertSnapshot(c, "chart-environment-scenarios.png")
+		unitTest:assertSnapshot(c, "chart-environment-scenarios.png", 0.05)
 
 		e = Environment{
 			SIR{maximum = 1000},
@@ -215,7 +215,7 @@ return{
 		e:add(Event{action = c})
 		e:run()
 
-		unitTest:assertSnapshot(c, "chart-environment-scenarios-2.png")
+		unitTest:assertSnapshot(c, "chart-environment-scenarios-2.png", 0.05)
 	end,
 	update = function(unitTest)
 		local world = Cell{
@@ -243,7 +243,7 @@ return{
 
 		t:run(10)
 
-		unitTest:assertSnapshot(chart, "chart-update-two-actions.png")
+		unitTest:assertSnapshot(chart, "chart-update-two-actions.png", 0.05)
 	end,
 	save = function(unitTest)
 		local c = Cell{value = 1}
@@ -254,11 +254,7 @@ return{
 		ch:update(2)
 		ch:update(3)
 
-		local file = "save_test.bmp"
-
-		ch:save(file)
-
-		unitTest:assertFile(file)
+		unitTest:assertSnapshot(ch, "save_test.bmp", 0.05)
 	end
 }
 
