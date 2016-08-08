@@ -85,22 +85,34 @@ return{
 		unitTest:assertError(error_func, "Line 2 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
 	end,
 	readLine = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local s = sessionInfo().separator
+		local filename = currentDir()..s.."csvwrite.csv"
+		local csv = {
+			{name = "\"ab\"c"}
+		}
+
+		local file = File(filename)
+		file:write(csv)
 
 		local error_func = function()
+			file:readLine()
+		end
+		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
+
+		error_func = function()
+			file = File(filename)
+			file:read()
+		end
+		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
+
+		file:close()
+		if isFile(filename) then rmFile(filename) end
+
+		file = File(filePath("agents.csv", "base"))
+		error_func = function()
 			file:readLine(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
-
-		error_func = function()
-			file:readLine("abc", 2)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
-
-		error_func = function()
-			file:readLine("\"ab\"c", ",")
-		end
-		unitTest:assertError(error_func, "Line 0 ('\"ab\"c') is invalid.")
 	end,
 	write = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))

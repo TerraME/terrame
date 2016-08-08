@@ -171,8 +171,8 @@ return{
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
-		local fn1 = terralib.getFileName(filePath1)
+		local filePath1 = testDir.."/"..shp1
+		local fn1 = File(filePath1):getName()
 		fn1 = testDir.."/"..fn1			
 		
 		local exts = {".dbf", ".prj", ".shp", ".shx"}

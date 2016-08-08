@@ -88,12 +88,13 @@ return{
 		unitTest:assertEquals(20, csv[1].age)
 	end,
 	readLine = function(unitTest)
-		local file = File("/my/path/file.txt")
-		local line = file:readLine("2,5,aa", ",")
+		local file = File(filePath("agents.csv", "base"))
+		file:readLine()
+		local line = file:readLine()
 
-		unitTest:assertEquals(line[1], "2")
-		unitTest:assertEquals(line[2], "5")
-		unitTest:assertEquals(line[3], "aa")
+		unitTest:assertEquals(line[1], "john")
+		unitTest:assertEquals(line[2], "20")
+		unitTest:assertEquals(line[3], "200")
 	end,
 	removeExtension = function(unitTest)
 		local file = File("/my/path/file.txt")

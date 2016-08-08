@@ -1003,10 +1003,9 @@ function Society(data)
 			if data.sep and type(data.sep) ~= "string" then
 				incompatibleTypeError("sep", "string", data.sep)
 			end
-			local f = openFile(data.file)
 
-			closeFile(f)
-			local csv = CSVread(data.file, data.sep)
+			local f = File(data.file)
+			local csv = f:read(data.sep)
 			for i = 1, #csv do
 				data:add(csv[i])
 			end

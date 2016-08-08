@@ -1896,7 +1896,6 @@ TerraLib_ = {
 			if string.lower(file:getExtension()) == "geojson" then
 				dSetName = "OGRGeoJSON"
 			else
-				local file = File(connInfo.URI)
 				dSetName = file:getName()
 			end
 

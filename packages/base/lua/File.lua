@@ -30,6 +30,57 @@ local function open(file)
 	end
 end
 
+local function parseLine(line, sep, cline)
+	mandatoryArgument(1, "string", line)
+	optionalArgument(2, "string", sep)
+	optionalArgument(3, "number", cline)
+
+	if cline == nil then cline = 1 end
+
+	local res = {}
+	local pos = 1
+	sep = sep or ','
+	while true do
+		local c = string.sub(line, pos, pos)
+		if c == "" then break end
+		if c == '"' then
+			-- quoted value (ignore separator within)
+			local txt = ""
+			repeat
+				local startp, endp = string.find(line, '^%b""', pos)
+				txt = txt..string.sub(line, startp + 1, endp - 1)
+				pos = endp + 1
+				c = string.sub(line, pos, pos)
+				if c == '"' then txt = txt..'"' end
+				-- check first char AFTER quoted string, if it is another
+				-- quoted string without separator, then append it
+				-- this is the way to "escape" the quote char in a quote. example:
+				-- value1,"blub""blip""boing",value3 will result in blub"blip"boing for the middle
+			until (c ~= '"')
+			table.insert(res, txt)
+			verify(c == sep or c == "", "Line "..cline.." ('"..line.."') is invalid.")
+			pos = pos + 1
+		else
+			-- no quotes used, just look for the first separator
+			local startp, endp = string.find(line, sep, pos)
+			if startp then
+				table.insert(res,string.sub(line, pos, startp - 1))
+				pos = endp + 1
+			else
+				-- no separator found -> use rest of string and terminate
+				table.insert(res, string.sub(line, pos))
+				break
+			end
+		end
+	end
+
+	for i = 1, #res do
+		res[i] = res[i]:match("^%s*(.-)%s*$")
+	end
+
+	return res
+end
+
 File_ = {
 	type_ = "File",
 	--- Close an opened file.
@@ -112,12 +163,12 @@ File_ = {
 
 		local data = {}
 
-		local fields = self:readLine(self.file:read(), sep)
+		local fields = parseLine(self.file:read(), sep, self.line)
 		local line = self.file:read()
 
 		while line do
 			local element = {}
-			local tuple = self:readLine(line, sep)
+			local tuple = parseLine(line, sep, self.line)
 			if #tuple == #fields then
 				for k, v in ipairs(fields) do
 					element[v] = tonumber(tuple[k]) or tuple[k]
@@ -139,61 +190,32 @@ File_ = {
 	-- will be used as argument for this function.
 	--- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
 	-- This function was taken from http://lua-users.org/wiki/LuaCsv.
-	-- @arg line A string from a CSV file.
 	-- @arg sep A string with the separator. The default value is ','.
-	-- @usage file = File("/my/path/file.txt")
-	-- line = file:readLine("2,5,aa", ",")
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- line = file:readLine()
 	-- print(line[1])
 	-- print(line[2])
 	-- print(line[3])
-	readLine = function(self, line, sep)
-		mandatoryArgument(1, "string", line)
-		optionalArgument(2, "string", sep)
+	readLine = function(self, sep)
+		optionalArgument(1, "string", sep)
 
-		if self.line == nil then self.line = 0 end;
-
-		local res = {}
-		local pos = 1
-		sep = sep or ','
-		while true do
-			local c = string.sub(line, pos, pos)
-			if c == "" then break end
-			if c == '"' then
-				-- quoted value (ignore separator within)
-				local txt = ""
-				repeat
-					local startp, endp = string.find(line, '^%b""', pos)
-					txt = txt..string.sub(line, startp + 1, endp - 1)
-					pos = endp + 1
-					c = string.sub(line, pos, pos)
-					if c == '"' then txt = txt..'"' end
-					-- check first char AFTER quoted string, if it is another
-					-- quoted string without separator, then append it
-					-- this is the way to "escape" the quote char in a quote. example:
-					-- value1,"blub""blip""boing",value3 will result in blub"blip"boing for the middle
-				until (c ~= '"')
-				table.insert(res, txt)
-				verify(c == sep or c == "", "Line "..self.line.." ('"..line.."') is invalid.")
-				pos = pos + 1
-			else
-				-- no quotes used, just look for the first separator
-				local startp, endp = string.find(line, sep, pos)
-				if startp then
-					table.insert(res,string.sub(line, pos, startp - 1))
-					pos = endp + 1
-				else
-					-- no separator found -> use rest of string and terminate
-					table.insert(res, string.sub(line, pos))
-					break
-				end
-			end
+		if not self.mode then
+			self.mode = "r"
+			self.line = 1
+			self.file = open(self)
+		elseif self.mode ~= "r" then
+			customError("Cannot read a file opened for writing.")
 		end
 
-		for i = 1, #res do
-			res[i] = res[i]:match("^%s*(.-)%s*$")
+		local data = {}
+		local line = self.file:read()
+
+		if line then
+			data = parseLine(line, sep, self.line)
+			self.line = self.line + 1
 		end
 
-		return res
+		return data
 	end,
 	--- Return the file name removing its extension.
 	-- @arg nameWithExtension An optional string with the file with extension.
