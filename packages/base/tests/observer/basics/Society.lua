@@ -65,10 +65,10 @@ return{
 
 		unitTest:assertFile("society.csv")
 
-		unitTest:assertSnapshot(c1, "chart_society.bmp", 0.02)
-		unitTest:assertSnapshot(c2, "chart_society_select.bmp", 0.03)
-		unitTest:assertSnapshot(ts, "textscreen_society_grow.bmp")
-		unitTest:assertSnapshot(vt, "society_visualtable.bmp", 0.059)
+		unitTest:assertSnapshot(c1, "chart_society.bmp", 0.03)
+		unitTest:assertSnapshot(c2, "chart_society_select.bmp", 0.05)
+		unitTest:assertSnapshot(ts, "textscreen_society_grow.bmp", 0.05)
+		unitTest:assertSnapshot(vt, "society_visualtable.bmp", 0.2)
 
 		local singleFooAgent = Agent{}
 		local cs = CellularSpace{xdim = 10}

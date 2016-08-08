@@ -37,7 +37,7 @@ return{
 		ts:update()
 		ts:update()
 
-		unitTest:assertSnapshot(ts, "textscreen_basic.bmp")
+		unitTest:assertSnapshot(ts, "textscreen_basic.bmp", 0.05)
 
 		world = Agent{
 			count = 0,
@@ -56,8 +56,8 @@ return{
 		ts1:update()
 		ts1:update()
 
-		unitTest:assertSnapshot(ts1, "textscreen_noselect.bmp")
-		unitTest:assertSnapshot(ts2, "textscreen_mcount.bmp")
+		unitTest:assertSnapshot(ts1, "textscreen_noselect.bmp", 0.05)
+		unitTest:assertSnapshot(ts2, "textscreen_mcount.bmp", 0.05)
 
 		local soc = Society{
 			instance = world,
@@ -70,8 +70,8 @@ return{
 		ts1:update()
 		ts1:update()
 
-		unitTest:assertSnapshot(ts, "textscreen_society.bmp")
-		unitTest:assertSnapshot(ts, "textscreen_society_select.bmp")
+		unitTest:assertSnapshot(ts, "textscreen_society.bmp", 0.05)
+		unitTest:assertSnapshot(ts, "textscreen_society_select.bmp", 0.05)
 
 		soc = Society{
 			instance = Agent{},
@@ -86,7 +86,7 @@ return{
 		ts:update()
 		ts:update()
 
-		unitTest:assertSnapshot(ts, "textscreen_society_total.bmp")
+		unitTest:assertSnapshot(ts, "textscreen_society_total.bmp", 0.05)
 
 		world = CellularSpace{
 			xdim = 10,
@@ -104,7 +104,7 @@ return{
 		ts1:update()
 
 		unitTest:assertSnapshot(ts1, "textscreen_cs.bmp", 0.05)
-		unitTest:assertSnapshot(ts2, "textscreen_cs_select.bmp")
+		unitTest:assertSnapshot(ts2, "textscreen_cs_select.bmp", 0.05)
 	end,
 	save = function(unitTest)
 		local world = Cell{
@@ -117,8 +117,7 @@ return{
 		ts:update()
 		ts:update()
 
-		ts:save("textscreen_save.bmp")
-		unitTest:assertFile("textscreen_save.bmp")
+		unitTest:assertSnapshot(ts, "textscreen_save.bmp", 0.05)
 	end,
 	update = function(unitTest)
 		local world = Cell{
@@ -131,7 +130,7 @@ return{
 		ts:update()
 		ts:update()
 
-		unitTest:assertSnapshot(ts, "textscreen_update.bmp")
+		unitTest:assertSnapshot(ts, "textscreen_update.bmp", 0.05)
 	end
 }
 

@@ -32,7 +32,7 @@ return{
 		c:notify(2)
 		c:notify(3)
 
-		unitTest:assertSnapshot(ch, "chart_snapshot_test.bmp", 0.01)
+		unitTest:assertSnapshot(ch, "chart_snapshot_test.bmp", 0.03)
 	end,
     clear = function(unitTest)
         local u = UnitTest{sleep = 1}

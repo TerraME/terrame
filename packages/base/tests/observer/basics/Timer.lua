@@ -38,7 +38,7 @@ return{
 		local c1 = Clock{target = timer}
 		timer:run(50)
 	
-		unitTest:assertSnapshot(c1, "timer_clock_priority_ordered.bmp", 0.08)
+		unitTest:assertSnapshot(c1, "timer_clock_priority_ordered.bmp", 0.5)
 		unitTest:assertType(c1, "Clock")
 	end,
 	notify = function(unitTest)
@@ -54,7 +54,7 @@ return{
 		local c2 = Clock{target = timer}
 		timer:run(50)
 
-		unitTest:assertSnapshot(c2, "timer_clock_priority_nordered.bmp", 0.08)
+		unitTest:assertSnapshot(c2, "timer_clock_priority_nordered.bmp", 0.5)
 		unitTest:assertType(c2, "Clock")
 	end
 }
