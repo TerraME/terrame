@@ -2048,9 +2048,9 @@ TerraLib_ = {
 	getDistance = function(_, fromGeom, toGeom)
 		return fromGeom:distance(toGeom)
 	end,
-	--- Returns a subtype of Geometry object
+	--- Returns a subtype of Geometry object.
 	-- @arg _ A TerraLib object.	
-	-- @arg geom A Geometry object
+	-- @arg geom A Geometry object.
 	-- @usage -- DONTRUN
 	-- shpPath = filePath("RODOVIAS_AMZ_lin.shp", "terralib")
 	-- dSet = tl:getOGRByFilePath(shpPath)	
