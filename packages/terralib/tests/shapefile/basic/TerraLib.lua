@@ -1260,5 +1260,25 @@ return {
 		
 		rmFile(proj.file)
 		rmFile(shp1)
+	end,
+	castGeomToSubtype = function(unitTest)
+		local tl = TerraLib{}
+		local shpPath = filePath("sampa.shp", "terralib")
+		local dSet = tl:getOGRByFilePath(shpPath)	
+		local geom = dSet[1].OGR_GEOMETRY
+		geom = tl:castGeomToSubtype(geom)
+		unitTest:assertEquals(geom:getGeometryType(), "MultiPolygon")
+		
+		shpPath = filePath("Rodovias_lin.shp", "terralib")
+		dSet = tl:getOGRByFilePath(shpPath)	
+		geom = dSet[1].OGR_GEOMETRY
+		geom = tl:castGeomToSubtype(geom)
+		unitTest:assertEquals(geom:getGeometryType(), "MultiLineString")	
+
+		shpPath = filePath("prodes_points_10km_PA_pt.shp", "terralib")
+		dSet = tl:getOGRByFilePath(shpPath)	
+		geom = dSet[1].OGR_GEOMETRY
+		geom = tl:castGeomToSubtype(geom)
+		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")			
 	end
 }

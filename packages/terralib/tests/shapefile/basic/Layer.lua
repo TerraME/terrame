@@ -141,7 +141,7 @@ return {
 			file = filePath("municipiosAML_ok.shp", "terralib")	
 		}
 		
-		local clName1 = "cells"
+		local clName1 = "CellsShp"
 		
 		local shapes = {}
 		
