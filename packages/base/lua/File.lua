@@ -162,7 +162,7 @@ File_ = {
 		mandatoryArgument(1, "string", mode)
 
 		if self.mode then
-			customError("File is already open.")
+			customError("File '"..self.name.."' is already open.")
 		else
 			self.mode = mode
 		end

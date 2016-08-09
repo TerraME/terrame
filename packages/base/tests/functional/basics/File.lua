@@ -83,12 +83,10 @@ return{
 	hasExtension = function(unitTest)
 		local file = File("/my/path/file.txt")
 		local extension = file:hasExtension()
-
 		unitTest:assert(extension)
 
-		local file = File("/my/path/file")
-		local extension = file:hasExtension()
-
+		file = File("/my/path/file")
+		extension = file:hasExtension()
 		unitTest:assert(not extension)
 	end,
 	open = function(unitTest)

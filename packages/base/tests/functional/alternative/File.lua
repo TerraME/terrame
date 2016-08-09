@@ -63,7 +63,7 @@ return{
 		local error_func = function()
 			file:open()
 		end
-		unitTest:assertError(error_func, "File is already open.")
+		unitTest:assertError(error_func, "File '"..file.name.."' is already open.")
 		file:close()
 
 		file = File("test.txt")
