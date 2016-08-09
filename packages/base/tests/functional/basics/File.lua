@@ -80,6 +80,33 @@ return{
 		local path = _Gtme.makePathCompatibleToAllOS(packageInfo().data).."/".."agents.csv"
 		unitTest:assertEquals(file:getPath(), path)
 	end,
+	hasExtension = function(unitTest)
+		local file = File("/my/path/file.txt")
+		local extension = file:hasExtension()
+
+		unitTest:assert(extension)
+
+		local file = File("/my/path/file")
+		local extension = file:hasExtension()
+
+		unitTest:assert(not extension)
+	end,
+	open = function(unitTest)
+		local file = File("test.csv")
+		local fopen = file:open("a+")
+		local sfile = fopen:read("*all")
+
+		unitTest:assertEquals(sfile, "")
+		file:close()
+
+		file = File("test.csv")
+		fopen = file:open()
+		sfile = fopen:read()
+		unitTest:assertNil(sfile)
+		file:close()
+
+		rmFile("test.csv")
+	end,
 	read = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
 		local csv = file:read()

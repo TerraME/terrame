@@ -460,7 +460,8 @@ local function loadCsv(self)
 
 	self.cells = {}
 	self.cObj_:clear()
-	local data = CSVread(self.file, self.sep)
+	local file = File(self.file)
+	local data = file:read(self.sep)
 	local cellIdCounter = 0
 	for i = 1, #data do
 		cellIdCounter = cellIdCounter + 1
@@ -1501,7 +1502,7 @@ function CellularSpace(data)
 			end
 		end)
 
-		if value.extension and (not data.file or (type(data.file) == "string" and getExtension(data.file) ~= idx)) then
+		if value.extension and (not data.file or (type(data.file) == "string" and File(data.file):getExtension() ~= idx)) then
 			all = false
 		end
 
@@ -1543,7 +1544,7 @@ function CellularSpace(data)
 	elseif CellularSpaceDrivers[data.source].extension then
 		mandatoryTableArgument(data, "file", "string")
 
-		if getExtension(data.file) ~= data.source then
+		if File(data.file):getExtension() ~= data.source then
 			customError("source and file extension should be the same.")
 		end
 

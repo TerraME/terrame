@@ -21,14 +21,6 @@
 -- of this software and its documentation.
 --
 -------------------------------------------------------------------------------------------
-local function open(file)
-	local fopen = io.open(file.name, file.mode)
-	if fopen == nil then
-		resourceNotFoundError("file", file.name)
-	else
-		return fopen
-	end
-end
 
 local function parseLine(line, sep, cline)
 	mandatoryArgument(1, "string", line)
@@ -113,13 +105,23 @@ File_ = {
 
 		return path
 	end,
-	--- Return the file extension from a fiven file path.
+	--- Return the extension of a given file name. It returns the substring after the last dot.
+	-- If it does not have a dot, an empty string is returned.
 	-- @usage file = File("/my/path/file.txt")
 	-- print(file:getExtension()) -- "txt"
 	getExtension = function(self)
-		local _, _, extension = self:splitNames()
+		local s = sessionInfo().separator
 
-		return extension
+		for i = self.name:len() - 1, 1, -1 do
+			local sub = self.name:sub(i, i)
+			if sub == "." then
+				return self.name:sub(i + 1, self.name:len())
+			elseif sub == s or sub == "/" then
+				return ""
+			end
+		end
+
+		return ""
 	end,
 	--- Return the file name removing its path and extension.
 	-- @usage file = File("/my/path/file.txt")
@@ -143,6 +145,36 @@ File_ = {
 			return _Gtme.makePathCompatibleToAllOS(self.name)
 		end
 	end,
+	--- Return a boolean value if a given file name has extension.
+	-- @usage file = File("/my/path/file.txt")
+	-- print(file:hasExtension()) -- true
+	hasExtension = function(self)
+		return not (self:getExtension() == "")
+	end,
+	--- Open a file for reading or writing. An opened file must be closed after being used.
+	-- @arg mode A string with the mode. It can be "w" for writing or "r" for reading.
+	-- @see File:close
+	-- @usage -- DONTRUN
+	-- file = File("myfile.txt")
+	-- file:open()
+	open = function(self, mode)
+		mode = mode or "r"
+		mandatoryArgument(1, "string", mode)
+
+		if self.mode then
+			customError("File is already open.")
+		else
+			self.mode = mode
+		end
+
+		local fopen = io.open(self.name, self.mode)
+		if fopen == nil then
+			resourceNotFoundError("file", self.name)
+		else
+			self.file = fopen
+			return fopen
+		end
+	end,
 	--- Read a file. It returns a vector (whose indexes are line numbers)
 	-- containing named tables (whose indexes are attribute names).
 	-- The first line of the file list the attribute names.
@@ -154,9 +186,8 @@ File_ = {
 		optionalArgument(1, "string", sep)
 
 		if not self.mode then
-			self.mode = "r"
 			self.line = 1
-			self.file = open(self)
+			self.file = self:open("r")
 		elseif self.mode ~= "r" then
 			customError("Cannot read a file opened for writing.")
 		end
@@ -200,9 +231,8 @@ File_ = {
 		optionalArgument(1, "string", sep)
 
 		if not self.mode then
-			self.mode = "r"
 			self.line = 1
-			self.file = open(self)
+			self.file = self:open("r")
 		elseif self.mode ~= "r" then
 			customError("Cannot read a file opened for writing.")
 		end
@@ -256,8 +286,7 @@ File_ = {
 		optionalArgument(2, "string", sep)
 
 		if not self.mode then
-			self.mode = "w"
-			self.file = open(self)
+			self.file = self:open("w")
 		elseif self.mode ~= "w" then
 			customError("Cannot write a file opened for reading.")
 		end
@@ -303,8 +332,7 @@ File_ = {
 		mandatoryArgument(1, "string", text)
 
 		if not self.mode then
-			self.mode = "w"
-			self.file = open(self)
+			self.file = self:open("w")
 		elseif self.mode ~= "w" then
 			customError("Cannot write a file opened for reading.")
 		end

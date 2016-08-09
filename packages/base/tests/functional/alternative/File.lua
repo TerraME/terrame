@@ -56,6 +56,27 @@ return{
 
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
 	end,
+	open = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		file:readLine()
+
+		local error_func = function()
+			file:open()
+		end
+		unitTest:assertError(error_func, "File is already open.")
+		file:close()
+
+		file = File("test.txt")
+		error_func = function()
+			file:open(2)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+
+		error_func = function()
+			file:open("r")
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "test.txt"))
+	end,
 	read = function(unitTest)
 		local filename = "abc.txt"
 		local file = File(filename)

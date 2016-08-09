@@ -200,7 +200,8 @@ end
 -- @arg fh A file handle with the file to be locked.
 -- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w
 -- (for a write/exclusive lock).
--- @usage filehandle = openFile(filePath("agents.csv", "base"), "r")
+-- @usage file = File(filePath("agents.csv", "base"))
+-- filehandle = file:open("r")
 -- lock(filehandle, "r")
 -- unlock(filehandle)
 -- @see FileSystem:unlock
@@ -270,10 +271,11 @@ end
 -- quotation marks in the beginning and in the end of this argument in order
 -- to avoid problems related to empty spaces in the string. Therefore,
 -- this string must not contain quotation marks.
--- @usage file = openFile("myfile.txt", "w")
--- file:close()
+-- @usage filename = "myfile.txt"
+-- file = File(filename)
+-- file:writeLine("Some text..")
 --
--- rmFile("myfile.txt")
+-- rmFile(filename)
 function rmFile(file)
 	mandatoryArgument(1, "string", file)
 
@@ -387,7 +389,8 @@ end
 -- a starting point and its length; both should be numbers. It returns true if the operation was
 -- successful. In case of error, it returns nil plus an error string.
 -- @arg fh A file handle with the file to be locked.
--- @usage filehandle = openFile(filePath("agents.csv", "base"), "r")
+-- @usage file = File(filePath("agents.csv", "base"))
+-- filehandle = file:open("r")
 -- lock(filehandle, "r")
 -- unlock(filehandle)
 -- @see FileSystem:lock
