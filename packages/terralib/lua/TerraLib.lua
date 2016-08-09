@@ -1008,6 +1008,44 @@ local function overwriteLayer(self, project, fromName, toName, toSetName)
 	self:saveDataSet(project, fromName, luaTable, toName, {}, toSetName)	
 end
 
+local function castGeometry(geom)
+	local geomType = binding.te.gm.Geometry.getGeomTypeId(string.upper(geom:getGeometryType()))
+	
+	if 	geomType == binding.te.gm.GeometryType then
+		return geom
+	elseif geomType == binding.te.gm.PointType then
+		return binding.te.gm.Geometry.toPoint(geom)		
+	elseif geomType == binding.te.gm.MultiPointType then	
+		return binding.te.gm.Geometry.toMultiPoint(geom)
+	elseif geomType == binding.te.gm.LineStringType then
+		return binding.te.gm.Geometry.LineString(geom)
+	elseif geomType == binding.te.gm.MultiLineStringType then		
+		return binding.te.gm.Geometry.toMultiLineString(geom)
+	elseif geomType == binding.te.gm.CircularStringType then
+		return binding.te.gm.Geometry.toMultiPoint(geom)
+	elseif geomType == binding.te.gm.CompoundCurveType then
+		return binding.te.gm.Geometry.toCompoundCurve(geom)
+	elseif geomType == binding.te.gm.PolygonType then
+		return binding.te.gm.Geometry.toPolygon(geom)
+	elseif geomType == binding.te.gm.CurvePolygonType then
+		return binding.te.gm.Geometry.toCurvePolygon(geom)
+	elseif geomType == binding.te.gm.MultiPolygonType then	
+		return binding.te.gm.Geometry.toMultiPolygon(geom)
+	elseif geomType == binding.te.gm.GeometryCollectionType then
+		return binding.te.gm.Geometry.toGeometryCollection(geom)	  		
+	elseif geomType == binding.te.gm.MultiSurfaceType then
+		return binding.te.gm.Geometry.toMultiSurface(geom)
+	elseif geomType == binding.te.gm.PolyhedralSurfaceType then
+		return binding.te.gm.Geometry.toPolyhedralSurface(geom)
+	elseif geomType == binding.te.gm.TINType then
+		return binding.te.gm.Geometry.toTIN(geom)
+	elseif geomType == binding.te.gm.TriangleType then
+		return binding.te.gm.Geometry.toTriangle(geom)		
+	end  
+
+	customError("Unknown geometry type '"..geomType.."'.") -- SKIP
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 	
@@ -2020,6 +2058,17 @@ TerraLib_ = {
 	-- local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)	
 	getDistance = function(_, fromGeom, toGeom)
 		return fromGeom:distance(toGeom)
+	end,
+	--- Returns a subtype of Geometry object.
+	-- @arg _ A TerraLib object.	
+	-- @arg geom A Geometry object.
+	-- @usage -- DONTRUN
+	-- shpPath = filePath("RODOVIAS_AMZ_lin.shp", "terralib")
+	-- dSet = tl:getOGRByFilePath(shpPath)	
+	-- geom = dSet[1].OGR_GEOMETRY
+	-- geom = tl:castGeomToSubtype(geom)	
+	castGeomToSubtype = function(_, geom)
+		return castGeometry(geom)
 	end
 }
 

@@ -554,10 +554,12 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		local cell = Cell{id = tostring(i), x = col, y = row}
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 		
+		local tlib = terralib.TerraLib{}
+		
 		for k, v in pairs(dSet[i]) do
 			if (k == "OGR_GEOMETRY") or (k == "geom") then
 				if self.geometry then
-					cell.geom = v
+					cell.geom = tlib:castGeomToSubtype(v)
 				end
 			else
 				cell[k] = v
