@@ -2051,7 +2051,7 @@ TerraLib_ = {
 	--- Returns a subtype of Geometry object
 	-- @arg _ A TerraLib object.	
 	-- @arg geom A Geometry object
-	-- @usage -- DOWTRUN
+	-- @usage -- DONTRUN
 	-- shpPath = filePath("RODOVIAS_AMZ_lin.shp", "terralib")
 	-- dSet = tl:getOGRByFilePath(shpPath)	
 	-- geom = dSet[1].OGR_GEOMETRY
