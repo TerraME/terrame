@@ -1043,6 +1043,34 @@ local function castGeometry(geom)
 	customError("Unknown geometry type '"..geomType.."'.") -- SKIP
 end
 
+local function getRasterFromLayer(project, layer)
+	loadProject(project, project.file)
+
+	layer = toDataSetLayer(layer)
+	local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+	local connInfo = dsInfo:getConnInfo()
+	local dsType = dsInfo:getType()
+	local raster = nil
+	
+	if dsType == "GDAL" then
+		do
+			local ds = makeAndOpenDataSource(connInfo, dsType)
+			local dSetName = layer:getDataSetName()
+			local dSet = ds:getDataSet(dSetName)
+			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+			raster = dSet:getRaster(rpos)	
+			
+			ds:close()
+		end
+
+		collectgarbage("collect")
+	end		
+		
+	releaseProject(project)
+		
+	return raster
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 	
@@ -1939,39 +1967,18 @@ TerraLib_ = {
 	end,
 	--- Returns the number of bands of some Raster.
 	-- @arg _ A TerraLib object.
-	-- @arg project The name of the project.
+	-- @arg project The project.
 	-- @arg layerName The input layer name.
 	-- @usage -- DONTRUN
 	-- tl:addGdalLayer(proj, layerName, layerFile)	
 	-- local numBands = tl:getNumOfBands(proj, layerName)	
 	getNumOfBands = function(_, project, layerName)
-		loadProject(project, project.file)
 		local layer = project.layers[layerName]
-		layer = toDataSetLayer(layer)
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
-		local connInfo = dsInfo:getConnInfo()
-		local dsType = dsInfo:getType()
-
-		if dsType == "GDAL" then
-			local numBands
-			do
-				local ds = makeAndOpenDataSource(connInfo, dsType)
-				local dSetName = layer:getDataSetName()
-				local dSet = ds:getDataSet(dSetName)
-				local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
-				local raster = dSet:getRaster(rpos)	
-				numBands = raster:getNumberOfBands()
-			
-				ds:close()
-			end
-
-			collectgarbage("collect")
-			
-			releaseProject(project)
-			return numBands
-		end		
+		local raster = getRasterFromLayer(project, layer)
 		
-		releaseProject(project)
+		if raster then
+			return raster:getNumberOfBands()
+		end
 		
 		customError("The layer '"..layerName.."' is not a Raster.")
 	end,
@@ -2058,6 +2065,33 @@ TerraLib_ = {
 	-- geom = tl:castGeomToSubtype(geom)	
 	castGeomToSubtype = function(_, geom)
 		return castGeometry(geom)
+	end,
+	--- Returns the dummy value of a raster data.
+	-- @arg _ A TerraLib object.
+	-- @arg project The project.
+	-- @arg layerName The layer name which is in the project.
+	-- @usage -- DONTRUN
+	-- local layerName = "TifLayer"
+	-- local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+	-- tl:addGdalLayer(proj, layerName, layerFile)
+	-- local dummy = tl:getDummyValue(proj, layerName, 0)	
+	getDummyValue = function(_, project, layerName, band)
+		local layer = project.layers[layerName]
+		local raster = getRasterFromLayer(project, layer)
+		local value = nil
+		
+		if raster then
+			local numBands = raster:getNumberOfBands()
+			if numBands > band then
+				local bandObj = raster:getBand(band)
+				local bandProperty = bandObj:getProperty()
+				value = bandProperty.m_noDataValue
+			else
+				customError("The maximum band is '"..(numBands - 1).."'.")
+			end
+		end
+		
+		return value
 	end
 }
 
