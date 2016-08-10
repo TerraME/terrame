@@ -445,7 +445,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -493,7 +493,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -509,7 +509,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -525,7 +525,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -541,7 +541,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -575,7 +575,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -592,7 +592,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
