@@ -71,11 +71,16 @@ return {
 		unitTest:assert(pt:coveredBy(pt))
 	end,
 	point = function(unitTest)
+		local tl = TerraLib{}
 		local cs = CellularSpace{
 			file = filePath("Localidades_pt.shp", "terralib")
 		}
 
 		forEachCell(cs, function(cell)
+			local geometry = tl:castGeomToSubtype(cell.geom:getGeometryN(0))
+
+			unitTest:assert(geometry:getX() > 0)
+			unitTest:assert(geometry:getY() > 0)
 			unitTest:assertEquals(1, cell.geom:getNPoints())
 			unitTest:assertEquals("MultiPoint", cell.geom:getGeometryType())
 			unitTest:assert(cell.geom:intersects(cell.geom))
