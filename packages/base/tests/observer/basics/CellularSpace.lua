@@ -268,7 +268,7 @@ return{
 
 		cs:notify()
 		unitTest:assertType(map, "Map")
-		unitTest:assertSnapshot(map, "map_virtual.bmp")
+		unitTest:assertSnapshot(map, "map_virtual.bmp", 0.05)
 	end,
 	notify = function(unitTest)
 		local r = Random()
