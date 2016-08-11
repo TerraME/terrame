@@ -1268,17 +1268,23 @@ return {
 		local geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPolygon")
+		geom = tl:castGeomToSubtype(geom:getGeometryN(0))
+		unitTest:assertEquals(geom:getGeometryType(), "Polygon")
 		
 		shpPath = filePath("Rodovias_lin.shp", "terralib")
 		dSet = tl:getOGRByFilePath(shpPath)	
 		geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiLineString")	
+		geom = tl:castGeomToSubtype(geom:getGeometryN(0))
+		unitTest:assertEquals(geom:getGeometryType(), "LineString")		
 
 		shpPath = filePath("prodes_points_10km_PA_pt.shp", "terralib")
 		dSet = tl:getOGRByFilePath(shpPath)	
 		geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
-		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")			
+		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")		
+		geom = tl:castGeomToSubtype(geom:getGeometryN(0))
+		unitTest:assertEquals(geom:getGeometryType(), "Point")		
 	end
 }
