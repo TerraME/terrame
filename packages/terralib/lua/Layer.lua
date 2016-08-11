@@ -658,6 +658,15 @@ Layer_ = {
 		end
 		
 		return luaPropNames
+	end,
+	--- Returns the dummy value of a raster layer. If the layer does not have a raster representation
+	-- then it returns a nil value. The bands of the raster layer are named from zero to the number of
+	-- bands minus one, if the band is greater than that, it returns an error.
+	-- @arg band The band number.
+	-- @usage -- DONTRUN
+	-- print(layer:dummy(0))	
+	dummy = function(self, band)
+		return self.project.terralib:getDummyValue(self.project, self.name, band)
 	end
 }
 
