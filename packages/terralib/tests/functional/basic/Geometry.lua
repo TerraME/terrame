@@ -121,11 +121,26 @@ return {
 		end)
 	end,
 	polygon = function(unitTest)
+		local tl = TerraLib{}
 		local cs = CellularSpace{
 			file = filePath("Limit_pol.shp", "terralib")
 		}
 
 		forEachCell(cs, function(cell)
+			local geometry = tl:castGeomToSubtype(cell.geom:getGeometryN(0))
+			local centroid = tl:castGeomToSubtype(geometry:getCentroid())
+			local ring = tl:castGeomToSubtype(geometry:getExteriorRing())
+			local nPoint = ring:getNPoints()
+
+			for i = 0, nPoint do
+				unitTest:assert(ring:getX(i) ~= nil)
+				unitTest:assertEquals("number", type(ring:getX(i)))
+				unitTest:assert(ring:getY(i) ~= nil)
+				unitTest:assertEquals("number", type(ring:getX(i)))
+			end
+
+			unitTest:assert(centroid:getX() > 0)
+			unitTest:assert(centroid:getY() > 0)
 			unitTest:assertEquals("MultiPolygon", cell.geom:getGeometryType())
 			local npoints = cell.geom:getNPoints()
 
