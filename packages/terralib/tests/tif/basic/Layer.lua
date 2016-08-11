@@ -485,6 +485,41 @@ return {
 		unitTest:assertNil(props)
 		
 		rmFile(proj.file)	
+	end,
+	dummy = function(unitTest)
+		local projName = "layer_tif_bands.tview"
+		
+		if isFile(projName) then
+			rmFile(projName)
+		end
+		
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
+
+		local prodes = "prodes"
+		local l = Layer{
+			project = proj,
+			name = prodes,
+			file = filePath("prodes_polyc_10k.tif", "terralib")	
+		}
+
+		unitTest:assertEquals(l:dummy(0), 255.0)
+		unitTest:assertEquals(l:dummy(1), 255.0)
+		unitTest:assertEquals(l:dummy(2), 255.0)
+		unitTest:assertEquals(l:dummy(3), 255.0)
+		
+		local portos = "Portos"
+		l = Layer{
+			project = proj,
+			name = portos,
+			file = filePath("PORTOS_AMZ_pt.shp", "terralib")	
+		}
+		
+		unitTest:assertNil(l:dummy(0))
+		
+		rmFile(projName)	
 	end
 }
 

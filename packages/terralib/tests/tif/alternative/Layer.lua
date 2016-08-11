@@ -157,6 +157,32 @@ return {
 		if isFile(shp1) then
 			rmFile(shp1)
 		end
+	end,
+	dummy = function(unitTest)
+		local projName = "layer_tif_dummy.tview"
+		
+		if isFile(projName) then
+			rmFile(projName)
+		end
+		
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
+
+		local prodes = "prodes"
+		local bandNoExists = function()
+			local l = Layer{
+				project = proj,
+				name = prodes,
+				file = filePath("prodes_polyc_10k.tif", "terralib")	
+			}
+			
+			l:dummy(4)
+		end
+		unitTest:assertError(bandNoExists, "The maximum band is '3.0'.")
+		
+		rmFile(projName)		
 	end
 }
 
