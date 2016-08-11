@@ -616,15 +616,15 @@ end
 local function loadVirtual(self)
 	self.yMin = 0
 	self.xMin = 0
-	self.xMax = self.xdim - 1
-	self.yMax = self.ydim - 1
+	self.xMax = self.ydim - 1
+	self.yMax = self.xdim - 1
 
 	self.cells = {}
 	self.cObj_:clear()
 	local cellIdCounter = 1
-	for i = 1, self.xdim do
-		for j = 1, self.ydim do
-			local c = Cell{id = tostring(cellIdCounter), x = i - 1, y = j - 1}
+	for row = 1, self.xdim do
+		for col = 1, self.ydim do
+			local c = Cell{id = tostring(cellIdCounter), x = row - 1, y = col - 1}
 			cellIdCounter = cellIdCounter + 1
 			c.parent = self
 			self.cObj_:addCell(c.x, c.y, c.cObj_)

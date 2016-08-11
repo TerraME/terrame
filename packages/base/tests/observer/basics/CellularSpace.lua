@@ -241,7 +241,34 @@ return{
 			if isFile(f) then
 				rmFile(f)
 			end
-		end			
+		end
+
+		cs = CellularSpace{
+			xdim = 10,
+			ydim = 20,
+		}
+
+		forEachCell(cs, function(cell)
+			cell.value = cell.x
+		end)
+
+		unitTest:assertEquals(cs.source, "virtual")
+		unitTest:assertEquals(cs.xMax, cs.ydim - 1)
+		unitTest:assertEquals(cs.yMax, cs.xdim - 1)
+		unitTest:assertEquals(#cs, cs.xdim * cs.ydim)
+
+		map = Map{
+			target = cs,
+			select = "value",
+			min = 0,
+			max = 10,
+			color = "Blues",
+			slices = 11
+		}
+
+		cs:notify()
+		unitTest:assertType(map, "Map")
+		unitTest:assertSnapshot(map, "map_virtual.bmp")
 	end,
 	notify = function(unitTest)
 		local r = Random()

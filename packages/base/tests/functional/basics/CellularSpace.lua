@@ -458,11 +458,11 @@ cells   vector of size 200
 load    function
 source  string [virtual]
 vvv     number [333]
-xMax    number [9]
+xMax    number [19]
 xMin    number [0]
 xdim    number [10]
 xyz     function
-yMax    number [19]
+yMax    number [9]
 yMin    number [0]
 ydim    number [20]
 ]])
