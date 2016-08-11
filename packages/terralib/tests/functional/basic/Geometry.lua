@@ -90,11 +90,26 @@ return {
 		end)
 	end,
 	line = function(unitTest)
+		local tl = TerraLib{}
 		local cs = CellularSpace{
 			file = filePath("River_lin.shp", "terralib")
 		}
 
 		forEachCell(cs, function(cell)
+			local geometry = tl:castGeomToSubtype(cell.geom:getGeometryN(0))
+			local length = geometry:getLength()
+
+			unitTest:assert(length ~= nil)
+			unitTest:assertEquals("number", type(length))
+			local nPoint = geometry:getNPoints()
+
+			for i = 0, nPoint do
+				unitTest:assert(geometry:getX(i) ~= nil)
+				unitTest:assertEquals("number", type(geometry:getX(i)))
+				unitTest:assert(geometry:getY(i) ~= nil)
+				unitTest:assertEquals("number", type(geometry:getX(i)))
+			end
+
 			unitTest:assertEquals("MultiLineString", cell.geom:getGeometryType())
 			local npoints = cell.geom:getNPoints()
 
