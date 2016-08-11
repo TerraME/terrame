@@ -146,6 +146,30 @@ return {
 		end	
 		
 		rmFile(proj.file)
+	end,
+	getDummyValue = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end
+		
+		tl:createProject(proj, {})
+		
+		local layerName = "TifLayer"
+		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+		tl:addGdalLayer(proj, layerName, layerFile)
+		
+		local bandNoExists =  function()
+			tl:getDummyValue(proj, layerName, 3)
+		end
+		unitTest:assertError(bandNoExists, "The maximum band is '2.0'.")	
+		
+		rmFile(proj.file)
 	end
 }
 

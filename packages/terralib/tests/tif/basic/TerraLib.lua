@@ -271,6 +271,41 @@ return {
 		
 		rmFile(proj.file)
 		rmFile(shp1)		
+	end,
+	getDummyValue = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end
+		
+		tl:createProject(proj, {})
+		
+		local layerName = "TifLayer"
+		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+		tl:addGdalLayer(proj, layerName, layerFile)
+		
+		local dummy = tl:getDummyValue(proj, layerName, 0)
+		unitTest:assertEquals(tostring(dummy), tostring(1.7976931348623e+308))
+		
+		dummy = tl:getDummyValue(proj, layerName, 1)
+		unitTest:assertEquals(tostring(dummy), tostring(1.7976931348623e+308))
+		
+		dummy = tl:getDummyValue(proj, layerName, 2)
+		unitTest:assertEquals(tostring(dummy), tostring(1.7976931348623e+308))	
+
+		local layerName2 = "ShapeLayer"
+		local layerFile2 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName2, layerFile2)	
+		
+		dummy = tl:getDummyValue(proj, layerName2, 0)
+		unitTest:assertNil(dummy)
+		
+		rmFile(proj.file)		
 	end
 }
 
