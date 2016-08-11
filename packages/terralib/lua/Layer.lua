@@ -283,7 +283,7 @@ Layer_ = {
 	bands = function(self)
 		return self.project.terralib:getNumOfBands(self.project, self.name)
 	end,
-	--- Create a new attribute for each cell of a Layer.
+	--- Create a new attribute for each object of a Layer.
 	-- This attribute can be stored as a new
 	-- column of a table or a new file, according to where the Layer is stored.
 	-- There are several strategies for filling cells according to the geometry of the
@@ -662,7 +662,8 @@ metaTableLayer_ = {
 	__index = Layer_, __tostring = _Gtme.tostring
 }
 	
---- A Layer of cells that belongs to a Project. It has operations to create new attributes from other Layers.
+--- A Layer representing a geospatial dataset stored into a given data source. 
+-- Each Layer belongs to a Project. It has operations to create new attributes from other Layers.
 -- The data of the Layer can be stored in several different sources, such as a database, 
 -- a file, or even a web service.
 -- @arg data.project A file name with the TerraView project to be used, or a Project.
@@ -711,7 +712,7 @@ metaTableLayer_ = {
 --
 -- Layer{
 --     project = proj,
---     layer = "roads",
+--     name = "roads",
 --     user = "root",
 --     password = "abc123",
 --     table = "roads"
@@ -725,7 +726,8 @@ metaTableLayer_ = {
 -- cl2 = Layer{
 --     project = proj,
 --     input = "amazonia-states",
---     layer = "cells",
+--     name = "cells",
+--     file = "cells.shp",
 --     resolution = 5e4 -- 50x50km
 -- }
 function Layer(data)
