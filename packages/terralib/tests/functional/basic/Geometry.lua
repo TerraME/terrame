@@ -134,9 +134,9 @@ return {
 
 			for i = 0, nPoint do
 				unitTest:assert(ring:getX(i) ~= nil)
-				unitTest:assertEquals("number", type(ring:getX(i)))
+				unitTest:assertType(ring:getX(i), "number")
 				unitTest:assert(ring:getY(i) ~= nil)
-				unitTest:assertEquals("number", type(ring:getX(i)))
+				unitTest:assertType(ring:getX(i), "number")
 			end
 
 			unitTest:assert(centroid:getX() > 0)
