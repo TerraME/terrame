@@ -2070,6 +2070,7 @@ TerraLib_ = {
 	-- @arg _ A TerraLib object.
 	-- @arg project The project.
 	-- @arg layerName The layer name which is in the project.
+	-- @arg band The band number.
 	-- @usage -- DONTRUN
 	-- local layerName = "TifLayer"
 	-- local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
