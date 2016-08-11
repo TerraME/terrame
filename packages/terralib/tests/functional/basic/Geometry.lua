@@ -105,9 +105,9 @@ return {
 
 			for i = 0, nPoint do
 				unitTest:assert(geometry:getX(i) ~= nil)
-				unitTest:assertEquals("number", type(geometry:getX(i)))
+				unitTest:assertType(geometry:getX(i), "number")
 				unitTest:assert(geometry:getY(i) ~= nil)
-				unitTest:assertEquals("number", type(geometry:getX(i)))
+				unitTest:assertType(geometry:getX(i), "number")
 			end
 
 			unitTest:assertEquals("MultiLineString", cell.geom:getGeometryType())
