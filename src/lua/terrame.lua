@@ -710,7 +710,7 @@ local function usage()
 	print("  -configure <m>        Visually configure and run Model <m>.")
 	print("  -doc                  Build the documentation.")
 	print("  -example <exp>        Run example <exp>.")
-	print("  -project              Create the TerraView projects for the package.")
+	print("  -projects             Create the TerraView projects for the package.")
 	print("  -showdoc              Show the documentation in the default browser.")
 	print("  -sketch               Create test scripts for source code files missing")
 	print("                        tests and initial documentation for undocumented files.")
@@ -1295,7 +1295,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 
 				os.exit(errors)
-			elseif arg == "-project" then
+			elseif arg == "-projects" then
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."project.lua")
 				_Gtme.myxpcall(function() _Gtme.executeProject(package) end)
 				os.exit(0)
