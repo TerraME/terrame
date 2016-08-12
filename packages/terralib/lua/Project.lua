@@ -118,7 +118,13 @@ function Project(data)
 
 	forEachElement(data, function(idx, value)
 		if not belong(idx, {"clean", "file", "author", "description", "title", "layers", "terralib"}) then
-			mandatoryTableArgument(data, idx, "string")
+			if type(data[idx]) ~= "string" then
+				if isFile(data.file) then
+					rmFile(data.file)
+				end
+
+				incompatibleTypeError(idx, "string", data[idx])
+			end
 
 			if isFile(value) then
 				layers[idx] = Layer{
@@ -128,7 +134,11 @@ function Project(data)
 				}
 
 			else
-				customError("Value of argument '"..idx.."' is not a valid file name.") -- SKIP TODO(avancinirodrigo): #1317
+				if isFile(data.file) then
+					rmFile(data.file)
+				end
+
+				customError("Value of argument '"..idx.."' is not a valid file name.")
 			end
 		end
 	end)

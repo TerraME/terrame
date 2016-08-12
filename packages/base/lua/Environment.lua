@@ -420,10 +420,11 @@ Environment_ = {
 			resourceNotFoundError("source", data.source)
 		end
 
-		local file = openFile(data.source, "r")
+		local f = File(data.source)
+		local file = f:open("r")
 
 		local header = file:read()
-		
+
 		local numAttribIdx = string.find(header, "%s", 1)
 		local layer1Idx = string.find(header, "%s", numAttribIdx + 1)
 		local layer2Idx = string.find(header, "%s", layer1Idx + 1)

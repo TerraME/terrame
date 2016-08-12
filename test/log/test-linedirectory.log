@@ -1,0 +1,2 @@
+Loading configuration file 'config/linesDirectory.lua'
+Error: 'lines' cannot be used with 'test' or 'directory'.

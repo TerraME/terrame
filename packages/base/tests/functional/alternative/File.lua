@@ -23,71 +23,126 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	CSVparseLine = function(unitTest)
+	File = function(unitTest)
 		local error_func = function()
-			CSVparseLine(2)
+			File()
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
-			CSVparseLine("abc", 2)
+			File{}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
 
 		error_func = function()
-			CSVparseLine("\"ab\"c", ",", "abc")
+			File(1)
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "abc"))
-
-		error_func = function()
-			CSVparseLine("\"ab\"c", ",")
-		end
-		unitTest:assertError(error_func, "Line 0 ('\"ab\"c') is invalid.")
-	
-		error_func = function()
-			CSVparseLine("\"ab\"c", ",", 1)
-		end
-		unitTest:assertError(error_func, "Line 1 ('\"ab\"c') is invalid.")
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
-	CSVread = function(unitTest)
+	close = function(unitTest)
+		local file = File("abc.txt")
 		local error_func = function()
-			csv = CSVread("asdfgh.csv")
+			file:close()
 		end
 
-		unitTest:assertError(error_func, resourceNotFoundMsg(1, "asdfgh.csv"))
+		unitTest:assertError(error_func, "File is not opened.")
+
+		file = File("123")
+		file.file = true
 
 		error_func = function()
-			CSVread(2)
+			file:close()
+		end
+
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
+	end,
+	open = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		file:readLine()
+
+		local error_func = function()
+			file:open()
+		end
+		unitTest:assertError(error_func, "File '"..file.name.."' is already open.")
+		file:close()
+
+		file = File("test.txt")
+		error_func = function()
+			file:open(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
-			CSVread("abc", 2)
+			file:open("r")
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "test.txt"))
+	end,
+	read = function(unitTest)
+		local filename = "abc.txt"
+		local file = File(filename)
+		file:writeLine("text...")
+
+		local error_func = function()
+			file:read()
+		end
+
+		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
+		if isFile(filename) then rmFile(filename) end
+
+		file = File(filename)
+
+		error_func = function()
+			file:read()
+		end
+
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
 
 		local s = sessionInfo().separator
+		file = File(filePath("error"..s.."csv-error.csv"))
 
 		error_func = function()
-			CSVread(filePath("error"..s.."csv-error.csv"))
+			file:read()
 		end
 		unitTest:assertError(error_func, "Line 2 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
 	end,
-	CSVwrite = function(unitTest)
+	readLine = function(unitTest)
+		local s = sessionInfo().separator
+		local filename = currentDir()..s.."csvwrite.csv"
+		local csv = {
+			{name = "\"ab\"c"}
+		}
+
+		local file = File(filename)
+		file:write(csv)
+
 		local error_func = function()
-			CSVwrite(2)
+			file:readLine()
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
+		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
 
 		error_func = function()
-			CSVwrite({}, 2)
+			file = File(filename)
+			file:read()
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
+		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
 
+		file:close()
+		if isFile(filename) then rmFile(filename) end
+
+		file = File(filePath("agents.csv", "base"))
 		error_func = function()
-			CSVwrite({}, "aaa", 2)
+			file:readLine(1)
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(3, "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+	end,
+	write = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+
+		local error_func = function()
+			file:write()
+		end
+
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		local example = {
 			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
@@ -96,11 +151,27 @@ return{
 			w3c = {age = 1, wealth = 10, vision = 3, metabolism = 2, test = "Foo(text"}
 		}
 
-		local s = sessionInfo().separator
-		local filename = tmpDir()..s.."csvwrite.csv"
+		error_func = function()
+			file:write(example, 2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
+
+		file = File(filePath("agents.csv", "base"))
+		file:read()
 
 		error_func = function()
-			CSVwrite(example, filename)
+			file:write(example)
+		end
+
+		unitTest:assertError(error_func, "Cannot write a file opened for reading.")
+
+		local s = sessionInfo().separator
+		local filename = tmpDir()..s.."csvwrite.csv"
+		file = File(filename)
+
+		error_func = function()
+			file:write(example)
 		end
 		unitTest:assertError(error_func, "#1 should be a vector.")
 
@@ -112,7 +183,7 @@ return{
 		}
 
 		error_func = function()
-			CSVwrite(example, filename)
+			file:write(example)
 		end
 		unitTest:assertError(error_func, "#1 does not have position 1.")
 
@@ -124,9 +195,20 @@ return{
 		}
 
 		error_func = function()
-			CSVwrite(example, filename)
+			file:write(example)
 		end
 		unitTest:assertError(error_func, "All attributes should be string, got number.")
+
+	end,
+	writeLine = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		file:read()
+
+		local error_func = function()
+			file:writeLine("Text")
+		end
+
+		unitTest:assertError(error_func, "Cannot write a file opened for reading.")
 	end
 }
 

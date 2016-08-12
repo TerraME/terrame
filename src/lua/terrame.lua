@@ -710,7 +710,8 @@ local function usage()
 	print("  -configure <m>        Visually configure and run Model <m>.")
 	print("  -doc                  Build the documentation.")
 	print("  -example <exp>        Run example <exp>.")
-	print("  -project              Create the TerraView projects for the package.")
+	print("  -project <prj>        Run project <prj>.")
+	print("  -projects             Create the TerraView projects for the package.")
 	print("  -showdoc              Show the documentation in the default browser.")
 	print("  -sketch               Create test scripts for source code files missing")
 	print("                        tests and initial documentation for undocumented files.")
@@ -1257,7 +1258,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				local errors = 0
 				xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
-					_Gtme.printError(_Gtme.traceback(err))
+					_Gtme.printError(err)
 					os.exit(1)
 				end)
 
@@ -1295,7 +1296,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 
 				os.exit(errors)
-			elseif arg == "-project" then
+			elseif arg == "-projects" then
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."project.lua")
 				_Gtme.myxpcall(function() _Gtme.executeProject(package) end)
 				os.exit(0)
@@ -1373,6 +1374,41 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 					_Gtme.forEachElement(files, function(_, value)
 						print(" - "..value)
+					end)
+					os.exit(0)
+				end
+			elseif arg == "-project" then
+				local file = arguments[argCount + 1]
+
+				if file then
+					local info
+					xpcall(function() info = packageInfo(package).path end, function(err)
+						_Gtme.printError(err)
+						os.exit(1)
+					end)
+
+					arg = info..s.."data"..s..file..".lua"
+
+					if not isFile(arg) then
+						_Gtme.printError("Project '"..file.."' does not exist in package '"..package.."'.")
+						print("Please use one from the list below:")
+					end
+				elseif #_Gtme.projectFiles(package) == 0 then
+					_Gtme.printError("Package '"..package.."' has no projects")
+					os.exit(0)
+				else
+					print("Package '"..package.."' has the following projects:")
+				end
+
+				if file and isFile(arg) then
+					-- it only changes the file to point to the package and let it run as it
+					-- was a call such as "TerraME .../package/examples/example.lua"
+					arguments[argCount + 1] = arg
+				else
+					files = _Gtme.projectFiles(package)
+
+					_Gtme.forEachElement(files, function(_, value)
+						print(" - "..string.sub(value, 0, string.len(value) - 4))
 					end)
 					os.exit(0)
 				end

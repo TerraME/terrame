@@ -69,15 +69,15 @@ return{
 		end
 		unitTest:assertError(fileMandatory, mandatoryArgumentMsg("file"))
 
-		-- local layerShouldBeString = function()
-			-- Project{file = "myproj.tview", cean = true}
-		-- end
-		-- unitTest:assertError(layerShouldBeString, incompatibleTypeMsg("cean", "string", true)) -- SKIP #1317
+		local layerShouldBeString = function()
+			Project{file = "myproj.tview", cean = true}
+		end
+		unitTest:assertError(layerShouldBeString, incompatibleTypeMsg("cean", "string", true))
 
-		-- local notFile = function()
-			-- Project{file = "myproj.tview", cean = "true.abc"}
-		-- end
-		-- unitTest:assertError(notFile, "Value of argument 'cean' is not a valid file name.") -- SKIP #1317
+		local notFile = function()
+			Project{file = "myproj.tview", cean = "true.abc"}
+		end
+		unitTest:assertError(notFile, "Value of argument 'cean' is not a valid file name.")
 	end
 }
 
