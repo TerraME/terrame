@@ -2122,8 +2122,8 @@ function TerraLib()
 		return instance
 	else
 		local data = {}
-		setmetatable(data, metaTableTerraLib_)
-		instance = data
+		setmetatable(data, metaTableTerraLib_) -- SKIP
+		instance = data -- SKIP
 		return data
 	end
 end
