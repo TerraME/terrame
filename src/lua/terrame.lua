@@ -710,6 +710,7 @@ local function usage()
 	print("  -configure <m>        Visually configure and run Model <m>.")
 	print("  -doc                  Build the documentation.")
 	print("  -example <exp>        Run example <exp>.")
+	print("  -examples             Run all examples.")
 	print("  -project <prj>        Run project <prj>.")
 	print("  -projects             Create the TerraView projects for the package.")
 	print("  -showdoc              Show the documentation in the default browser.")
@@ -1012,6 +1013,69 @@ local function findExample(example, packageName)
     return false, errMsg
 end
 
+local function execExample(package)
+	local initialTime = os.clock()
+
+	if not isLoaded("base") then
+		import("base")
+	end
+
+	if not isLoaded("terralib") then
+		import("terralib")
+	end
+
+	_Gtme.printNote("Run all examples for package '"..package.."'")
+
+	local examples_report = {
+		examples = 0,
+		errors = 0,
+
+	}
+
+	local s = _Gtme.sessionInfo().separator
+	local examplespath
+
+	xpcall(function() examplespath = _Gtme.packageInfo(package).path..s.."examples" end, function(err)
+		_Gtme.printError(err)
+		os.exit(1)
+	end)
+
+	_Gtme.forEachFile(examplespath, function(fname)
+		if string.endswith(fname, ".lua") then
+			print("Run example '"..fname.."'.")
+			examples_report.examples = examples_report.examples + 1
+
+			xpcall(function() dofile(examplespath..s..fname) end, function(err)
+				_Gtme.printError(err)
+				examples_report.errors = examples_report.errors + 1
+			end)
+		end
+	end)
+
+	local finalTime = os.clock()
+
+	print("\nExamples report for package '"..package.."':")
+	_Gtme.printNote("Examples were created in "..round(finalTime - initialTime, 2).." seconds.")
+
+	if examples_report.examples == 0 then
+		_Gtme.printNote("No example was executed.")
+	elseif examples_report.examples == 1 then
+		_Gtme.printNote("One example was executed.")
+	else
+		_Gtme.printNote(examples_report.examples.." examples were executed.")
+	end
+
+	if examples_report.errors == 0 then
+		_Gtme.printNote("Summing up, all examples were successfully executed.")
+	elseif examples_report.errors == 1 then
+		_Gtme.printError("Summing up, one problem was found while running examples.")
+	else
+		_Gtme.printError("Summing up, "..examples_report.errors.." problems were found while running examples.")
+	end
+
+	return examples_report.errors
+end
+
 function _Gtme.execExample(example, packageName)
     local ok, res = findExample(example, packageName)
 
@@ -1295,6 +1359,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					_Gtme.printError(result)
 				end
 
+				os.exit(errors)
+			elseif arg == "-examples" then
+				local errors
+				_Gtme.myxpcall(function() errors = execExample(package) end)
+				errors = errors or 0
 				os.exit(errors)
 			elseif arg == "-projects" then
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."project.lua")
