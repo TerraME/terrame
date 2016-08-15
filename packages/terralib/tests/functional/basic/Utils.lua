@@ -47,29 +47,6 @@ return {
 		unitTest:assertEquals(count, 4)
 		
 		rmFile("emas-count.tview")
-	end,
-	getFileNameWithExtension = function(unitTest)
-		unitTest:assertEquals(getFileNameWithExtension("/my/path/file.txt"), "file.txt")
-	end,
-	removeFileExtension = function(unitTest)
-		unitTest:assertEquals(removeFileExtension("file.txt"), "file")
-	end,
-	getFileName = function(unitTest)
-		unitTest:assertEquals(getFileName("/my/path/file.txt"), "file")
-	end,	
-	getFilePathAndNameAndExtension = function(unitTest)
-		local p, n, e = getFilePathAndNameAndExtension("/my/path/file.txt")
-		unitTest:assertEquals(p, "/my/path/")
-		unitTest:assertEquals(n, "file")
-		unitTest:assertEquals(e, "txt")
-	end,	
-	getFileExtension = function(unitTest)
-		local e = getFileExtension("/my/path/file.txt")
-		unitTest:assertEquals(e, "txt")
-	end,
-	getFileDir = function(unitTest)
-		local p = getFileDir("/my/path/file.txt")
-		unitTest:assertEquals(p, "/my/path/")
 	end
 }
 

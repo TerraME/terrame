@@ -59,13 +59,29 @@ return{
 	end,
 	dir = function(unitTest)
 		local files = 43
+
 		local d = dir(packageInfo().data)
 		unitTest:assertEquals(#d, files)
 
 		d = dir(packageInfo().data, true)
 		unitTest:assertEquals(#d, files + 2)
 
-		dir(".", true)
+		local curDir = currentDir()
+		chDir(packageInfo().data)
+
+		d = dir(".")
+		unitTest:assertEquals(#d, files)
+
+		d = dir(".", true)
+		unitTest:assertEquals(#d, files + 2)
+
+		d = dir()
+		unitTest:assertEquals(#d, files)
+
+		d = dir(nil, true)
+		unitTest:assertEquals(#d, files + 2)
+
+		chDir(curDir)
 	end,
 	isDir = function(unitTest)
 		unitTest:assert(isDir(sessionInfo().path))

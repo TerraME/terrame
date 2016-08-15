@@ -33,7 +33,8 @@ end
 
 local function isSourceConsistent(source, filePath)
 	if filePath ~= nil then
-		return source == getFileExtension(filePath)
+		local file = File(filePath)
+		return source == file:getExtension()
 	end
 	
 	return true
@@ -55,16 +56,17 @@ local function addCellularLayer(self, data)
 			else
 				customError("At least one of the following arguments must be used: 'file', 'source', or 'database'.")
 			end	
-		else		
-			local source = getFileExtension(data.file)
+		else
+			local file = File(data.file)
+			local source = file:getExtension()
 			data.source = source	
 		end
 	end
 		
 	-- if isEmpty(data.source) then
 		-- mandatoryTableArgument(data, "file", "string")	
-			
-		-- local source = getFileExtension(data.file)
+		-- local file = File(data.file)
+		-- local source = file:getExtension()
 		-- data.source = source
 	-- else
 		-- mandatoryTableArgument(data, "source", "string")
@@ -178,8 +180,9 @@ local function addLayer(self, data)
 				--customError("The layer file'"..data.file.."' not found.")
 				mandatoryTableArgument(data, "source", "string")
 			end	
-				
-			data.source = getFileExtension(data.file)
+
+			local file = File(data.file)
+			data.source = file:getExtension()
 		end
 	end
 		
@@ -220,10 +223,10 @@ local function addLayer(self, data)
 			self.terralib:addGdalLayer(self, data.name, data.file)
 		end,
 		nc = function()
-			mandatoryTableArgument(data, "file", "string")
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+			mandatoryTableArgument(data, "file", "string") -- SKIP
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"}) -- SKIP
 
-			self.terralib:addGdalLayer(self, data.name, data.file)
+			self.terralib:addGdalLayer(self, data.name, data.file) -- SKIP
 		end,
 		asc = function()
 			mandatoryTableArgument(data, "file", "string")
@@ -442,7 +445,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -490,7 +493,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -506,7 +509,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -522,7 +525,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -538,7 +541,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -572,7 +575,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -589,7 +592,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
