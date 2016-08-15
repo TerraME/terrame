@@ -142,7 +142,7 @@ function _Gtme.include(scriptfile, basetable)
 	local lf = loadfile(scriptfile, "t", env)
 
 	if lf == nil then
-		_Gtme.printError("Could not load file "..scriptfile..".")
+		_Gtme.printError("Could not load file '"..scriptfile.."'.")
 		dofile(scriptfile) -- this line will show the error when parsing the file
 	end
 
@@ -343,7 +343,7 @@ function _Gtme.findExamples(package)
 		if string.endswith(fname, ".lua") then
 			table.insert(result, string.sub(fname, 0, string.len(fname) - 4))
 		elseif not string.endswith(fname, ".tme") and not string.endswith(fname, ".log") then
-			_Gtme.printWarning("Test file '"..fname.."' does not have a valid extension")
+			_Gtme.printWarning("Test file '"..fname.."' does not have a valid extension.")
 		end
 	end)
 	return result
@@ -573,7 +573,7 @@ function _Gtme.verifyVersionDependency(newVersion, operator, oldVersion)
 				return #newVersionT <= #oldVersionT
 			end
 		else
-			_Gtme.customError("Wrong operator: "..operator)
+			_Gtme.customError("Wrong operator: '"..operator.."'.")
 		end
 	end
 end
@@ -583,11 +583,11 @@ function _Gtme.installPackage(file)
 		_Gtme.printError("You need to choose the file to be installed.")
 		return
 	elseif not _Gtme.isFile(file) then
-		_Gtme.printError("No such file: "..file)
+		_Gtme.printError("No such file: '"..file.."'.")
 		return
 	end
 
-	_Gtme.printNote("Installing "..file)
+	_Gtme.printNote("Installing '"..file.."'.")
 
 	local s = "/" --_Gtme.sessionInfo().separator
 	local package
@@ -597,11 +597,11 @@ function _Gtme.installPackage(file)
 	local _, pfile = string.match(file, "(.-)([^/]-([^%.]+))$") -- remove path from the file
 
 	xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function()
-		_Gtme.printError(file.." is not a valid file name for a TerraME package")
+		_Gtme.printError(file.." is not a valid file name for a TerraME package.")
 		os.exit(1)
 	end)
 
-	_Gtme.print("Copying package '"..package.."'")
+	_Gtme.print("Copying package '"..package.."'.")
 
 	local currentDir = _Gtme.currentDir()
 	local packageDir = _Gtme.sessionInfo().path..s.."packages"
@@ -613,9 +613,9 @@ function _Gtme.installPackage(file)
 	local currentVersion
 	if isDir(packageDir..s..package) then
 		currentVersion = packageInfo(package).version
-		_Gtme.print("Package '"..package.."' is already installed")
+		_Gtme.print("Package '"..package.."' is already installed.")
 	else
-		_Gtme.print("Package '"..package.."' was not installed before")
+		_Gtme.print("Package '"..package.."' was not installed before.")
 	end
 
 	local tmpdirectory = tmpDir(".terrametmp_XXXXX")
@@ -625,7 +625,7 @@ function _Gtme.installPackage(file)
 
 	os.execute("unzip -oq \""..file.."\"")
 
-	_Gtme.print("Verifying dependencies")
+	_Gtme.print("Verifying dependencies.")
 
 	_Gtme.verifyDepends(package)
 
@@ -638,12 +638,12 @@ function _Gtme.installPackage(file)
 			_Gtme.printError("execute 'terrame -package "..package.." -uninstall' first.")
 			os.exit(1)
 		else
-			_Gtme.print("Removing previous version of package")
+			_Gtme.print("Removing previous version of package.")
 			rmDir(packageDir..s..package)
 		end
 	end
 
-	_Gtme.print("Trying to load package '"..package.."'")
+	_Gtme.print("Trying to load package '"..package.."'.")
 	local status, err = pcall(function() import(package) end)
 
 	if not status then
@@ -651,13 +651,13 @@ function _Gtme.installPackage(file)
 		_Gtme.customError(err)
 	end
 
-	_Gtme.print("Installing package '"..package.."'")
+	_Gtme.print("Installing package '"..package.."'.")
 	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")
 
 	chDir(currentDir)
 
 	rmDir(tmpdirectory)
-	_Gtme.print("Package '"..package.."' successfully installed")
+	_Gtme.print("Package '"..package.."' successfully installed.")
 	return package
 end
 
@@ -711,7 +711,7 @@ local function usage()
 	print("  -doc                  Build the documentation.")
 	print("  -example <exp>        Run example <exp>.")
 	print("  -examples             Run all examples.")
-	print("  -project <prj>        Run project <prj>.")
+	print("  -project <prj>        Create project <prj>.")
 	print("  -projects             Create the TerraView projects for the package.")
 	print("  -showdoc              Show the documentation in the default browser.")
 	print("  -sketch               Create test scripts for source code files missing")
@@ -992,7 +992,7 @@ local function findExample(example, packageName)
     elseif packageName == "base" then
         errMsg = "TerraME has the following examples:"
     elseif #_Gtme.findExamples(packageName) == 0 then
-        errMsg = "Package '"..packageName.."' has no examples"
+        errMsg = "Package '"..packageName.."' has no examples."
         return false, errMsg
     else
         errMsg = "Package '"..packageName.."' has the following examples:"
@@ -1024,7 +1024,7 @@ local function execExample(package)
 		import("terralib")
 	end
 
-	_Gtme.printNote("Run all examples for package '"..package.."'")
+	_Gtme.printNote("Run all examples for package '"..package.."'.")
 
 	local examples_report = {
 		examples = 0,
@@ -1391,7 +1391,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						if arguments[argCount] == "-clean" then
 							clean = true
 						else
-							_Gtme.printError("Option not recognized: "..arguments[argCount])
+							_Gtme.printError("Option not recognized: '"..arguments[argCount].."'.")
 							os.exit(1)
 						end
 					end
@@ -1428,7 +1428,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				elseif package == "base" then
 					print("TerraME has the following examples:")
 				elseif #_Gtme.findExamples(package) == 0 then
-					_Gtme.printError("Package '"..package.."' has no examples")
+					_Gtme.printError("Package '"..package.."' has no examples.")
 					os.exit(0)
 				else
 					print("Package '"..package.."' has the following examples:")
@@ -1463,7 +1463,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						print("Please use one from the list below:")
 					end
 				elseif #_Gtme.projectFiles(package) == 0 then
-					_Gtme.printError("Package '"..package.."' has no projects")
+					_Gtme.printError("Package '"..package.."' has no projects.")
 					os.exit(0)
 				else
 					print("Package '"..package.."' has the following projects:")
@@ -1482,7 +1482,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(0)
 				end
 			else
-				_Gtme.printError("Option not recognized: "..arg)
+				_Gtme.printError("Option not recognized: '"..arg.."'.")
 				os.exit(1)
 			end
 		else
