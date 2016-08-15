@@ -51,13 +51,6 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
 	end,
-	closeFile = function(unitTest)
-		local file = "123123"
-		local error_func = function()
-			closeFile(file)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "userdata", file))
-	end,
 	d = function(unitTest)
 		local error_func = function()
 			d()
@@ -297,12 +290,6 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
 	end,
-	getExtension = function(unitTest)
-		local error_func = function()
-			getExtension(2)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
-	end,
 	getn = function(unitTest)
 		local error_func = function()
 			getn("2")
@@ -475,22 +462,6 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "Argument 'limit' should have 4 elements, got 3.")
-	end,
-	openFile = function(unitTest)
-		local error_func = function()
-			openFile()
-		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
-        
-		error_func = function()
-			openFile("123123", 2)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
-        
-		error_func = function()
-			openFile("123123", "r")
-		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "123123"))
 	end,
 	round = function(unitTest)
 		local error_func = function()

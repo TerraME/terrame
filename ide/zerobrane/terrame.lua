@@ -1,5 +1,6 @@
 local win = ide.osname == "Windows"
 local unix = ide.osname == "Macintosh" or ide.osname == "Unix"
+local terrame
 
 return {
     name = "TerraME",
@@ -8,11 +9,26 @@ return {
     version = "2.0",
     api = {"baselib", "terrame"},
     frun = function(self,wfilename,rundebug)
-        if not ide.config.path.terrame_install then 
-            DisplayOutputLn("Please define 'path.terrame_install' in your cfg/user.lua") 
-            return 
+        terrame = terrame or ide.config.path.terrame_install
+
+        if not terrame then
+            local executable = win and "\\terrame.exe" or "/terrame"
+            -- path to TerraME
+            terrame = os.getenv("TME_PATH")
+            -- hack in Mac OS X
+            if terrame == nil then
+                terrame = "/Applications/terrame.app/Contents/bin"
+            end
+
+            local fopen = io.open(terrame..executable)
+            if not fopen then
+                DisplayOutputLn("Please define 'path.terrame_install' in your cfg/user.lua")
+            else
+                fopen:close()
+            end
         end
-        wx.wxSetEnv("TME_PATH", ide.config.path.terrame_install)
+
+        wx.wxSetEnv("TME_PATH", terrame)
 
         if rundebug then
             DebuggerAttachDefault({runstart = ide.config.debugger.runonstart == true})
@@ -42,11 +58,11 @@ return {
             end
         end
 
-        local path = win and ([[C:\TerraME\bin\terrame -ide -mode=strict]]) 
-                    or unix and (ide.config.path.terrame_install.."/terrame -mode=strict")
+        local path = win and (terrame..[[\terrame -ide -mode=strict]])
+                    or unix and (terrame.."/terrame -mode=strict")
         local cmd = path.." ".."\""..self:fworkdir(wfilename).."/"..wfilename:GetFullName().."\""
         local pid = CommandLineRun(cmd,self:fworkdir(wfilename),true,false, nil, nil, function() if rundebug then wx.wxRemoveFile(file) end end)
-		return pid
+        return pid
     end,
     fprojdir = function(self,wfilename)
         return wfilename:GetPath(wx.wxPATH_GET_VOLUME)
