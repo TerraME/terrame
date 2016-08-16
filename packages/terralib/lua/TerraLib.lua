@@ -1018,11 +1018,11 @@ local function castGeometry(geom)
 	elseif geomType == binding.te.gm.MultiPointType then	
 		return binding.te.gm.Geometry.toMultiPoint(geom)
 	elseif geomType == binding.te.gm.LineStringType then
-		return binding.te.gm.Geometry.LineString(geom)
+		return binding.te.gm.Geometry.toLineString(geom)
 	elseif geomType == binding.te.gm.MultiLineStringType then		
 		return binding.te.gm.Geometry.toMultiLineString(geom)
 	elseif geomType == binding.te.gm.CircularStringType then
-		return binding.te.gm.Geometry.toMultiPoint(geom)
+		return binding.te.gm.Geometry.toCircularString(geom)
 	elseif geomType == binding.te.gm.CompoundCurveType then
 		return binding.te.gm.Geometry.toCompoundCurve(geom)
 	elseif geomType == binding.te.gm.PolygonType then

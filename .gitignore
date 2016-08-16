@@ -39,3 +39,4 @@ test/packages/.terrame*
 installer/setup
 packages/*/doc
 test/packages/*/doc
+packages/*/data/*.tview
