@@ -1013,7 +1013,7 @@ local function findExample(example, packageName)
     return false, errMsg
 end
 
-local function execExample(package)
+local function executeExamples(package)
 	local initialTime = os.clock()
 
 	if not isLoaded("base") then
@@ -1134,6 +1134,67 @@ function _Gtme.execConfigure(model, packageName)
 		end)
 		return false, errMsg
 	end
+end
+
+local function findProject(project, packageName)
+	local file = project
+	local s = package.config:sub(1, 1)
+	local errMsg = nil
+	local exFullPath = ""
+
+	if file then
+		local info
+		xpcall(function() info = packageInfo(packageName).path end, function(err)
+			errMsg = err
+		end)
+
+		if errMsg then
+			return false, errMsg
+		end
+
+		exFullPath = info..s.."data"..s..file..".lua"
+
+		if not isFile(exFullPath) then
+			errMsg = "Project '"..file.."' does not exist in package '"..packageName.."'."
+			errMsg = errMsg.."\nPlease use one from the list below:"
+		end
+	elseif packageName == "base" then
+		errMsg = "TerraME has the following projects:"
+	elseif #_Gtme.projectFiles(packageName) == 0 then
+		errMsg = "Package '"..packageName.."' has no projects."
+		return false, errMsg
+	else
+		errMsg = "Package '"..packageName.."' has the following projects:"
+	end
+
+	if file and isFile(exFullPath) then
+		return true, exFullPath
+	else
+		files = _Gtme.projectFiles(packageName)
+
+		_Gtme.forEachElement(files, function(_, value)
+			errMsg = errMsg.."\n - "..value
+		end)
+	end
+
+	return false, errMsg
+end
+
+function _Gtme.execProject(project, packageName)
+	local ok, res = findProject(project, packageName)
+
+	if not ok then
+		return false, res
+	end
+
+	project = res
+
+	local success, result = _Gtme.myxpcall(function() dofile(project) end)
+	if not success then
+		return false, result
+	end
+
+	return success, _
 end
 
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
@@ -1362,7 +1423,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(errors)
 			elseif arg == "-examples" then
 				local errors
-				_Gtme.myxpcall(function() errors = execExample(package) end)
+				_Gtme.myxpcall(function() errors = executeExamples(package) end)
 				errors = errors or 0
 				os.exit(errors)
 			elseif arg == "-projects" then
