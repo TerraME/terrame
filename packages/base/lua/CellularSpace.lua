@@ -707,14 +707,12 @@ registerCellularSpaceDriver{
 
 registerCellularSpaceDriver{
 	source = "nc",
-	load = loadGdal,
-	check = checkGdal
+	load = loadGdal
 }
 
 registerCellularSpaceDriver{
 	source = "asc",
-	load = loadGdal,
-	check = checkGdal
+	load = loadGdal
 }
 
 CellularSpace_ = {
