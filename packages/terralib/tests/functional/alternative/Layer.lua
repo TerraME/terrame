@@ -95,7 +95,6 @@ return{
 				name = "layer",
 				source = 123
 			}
-
 		end
 		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))
 

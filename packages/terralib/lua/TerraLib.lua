@@ -72,10 +72,13 @@ local RasterAttributeCreatedMapper = {
 }
 
 local SourceTypeMapper = {
-	OGR = {"shp", "geojson"},
-	GDAL = {"tif", "nc", "asc"},
-	POSTGIS = "postgis",
-	ADO = "access"
+	shp = "OGR",
+	geojson = "OGR",
+	tif = "GDAL",
+	nc = "GDAL",
+	asc = "GDAL",
+	postgis = "POSTGIS",
+	access = "ADO"
 }
 
 local function decodeUri(str)
@@ -117,7 +120,7 @@ end
 
 local function createPgConnInfo(host, port, user, pass, database, encoding)
 	local connInfo = {}
-	
+
 	connInfo.PG_HOST = host 
 	connInfo.PG_PORT = port 
 	connInfo.PG_USER = user
@@ -587,9 +590,7 @@ local function dropDataSet(connInfo, dSetName, type)
 	do
 		local ds = makeAndOpenDataSource(connInfo, type)
 
-		local dsetExists = ds:dataSetExists(dSetName)
-
-		if dsetExists then
+		if  ds:dataSetExists(dSetName) then
 			ds:dropDataSet(dSetName)
 		end	
 	
@@ -1074,6 +1075,39 @@ local function getRasterFromLayer(project, layer)
 	return raster
 end
 
+local function createPgDataSourceToSaveAs(fromType, pgData)
+	local ds = nil
+	
+	if fromType == "OGR" then
+		local connInfo = createPgConnInfo(pgData.host, pgData.port, pgData.user, pgData.password, pgData.database, pgData.encoding)
+		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
+	end
+
+	return ds
+end
+
+local function createOgrDataSourceToSaveAs(fromType, fileData)
+	local ds = nil
+	
+	if (fromType == "OGR") or (fromType == "POSTGIS") then
+		local connInfo = createFileConnInfo(fileData.file)
+		ds = makeAndOpenDataSource(connInfo, "OGR")	
+	end
+	
+	return ds
+end
+
+local function createGdalDataSourceToSaveAs(fromType, fileData)
+	local ds = nil
+	
+	if fromType == "GDAL" then				
+		local connInfo = createFileConnInfo(fileData.dir)
+		ds = makeAndOpenDataSource(connInfo, "GDAL")		
+	end
+	
+	return ds
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 	
@@ -1183,7 +1217,7 @@ TerraLib_ = {
 			info.password = connInfo.PG_PASSWORD
 			info.database = connInfo.PG_DB_NAME
 			info.table = dseName
-			info.source = SourceTypeMapper.POSTGIS
+			info.source = "postgis"
 		elseif type == "OGR" then
 			info.file = connInfo.URI
 			local file = File(info.file)
@@ -1193,7 +1227,7 @@ TerraLib_ = {
 			local file = File(info.file)
 			info.source = file:getExtension()
 		elseif type == "ADO" then
-			info.source = SourceTypeMapper.ADO -- SKIP
+			info.source = "access" -- SKIP
 		end
 
 		do
@@ -2104,6 +2138,116 @@ TerraLib_ = {
 		end
 		
 		return value
+	end,
+	
+	saveLayerAs = function(_, project, layerName, toData, overwrite)
+		loadProject(project, project.file)
+	
+		do		
+			local from = project.layers[layerName]
+			local fromDsId = from:getDataSourceId()	
+			local toType = SourceTypeMapper[toData.source]
+			local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)		
+			local fromDs = binding.GetDs(fromDsId, true)	
+			from = toDataSetLayer(from)	
+			local fromDSetName = from:getDataSetName()	
+			local fromType = fromDsInfo:getType()
+			local toDs = nil
+			local errorMsg = nil
+			
+			if toType == "POSTGIS" then  -- #1243
+				toData.table = string.lower(fromDSetName)
+				toDs = createPgDataSourceToSaveAs(fromType, toData)				
+				if not toDs then
+					errorMsg = "It was not possible save the data in layer '"..layerName.."' to postgis data." -- #1363
+				elseif toDs:dataSetExists(toData.table) then
+					if overwrite then
+						toDs:dropDataSet(toData.table)
+					else
+						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
+					end
+				end						
+			elseif toType == "OGR" then
+				if isFile(toData.file) then
+					if overwrite then
+						rmFile(toData.file) -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
+					else
+						errorMsg = "The file '"..toData.file.."' already exists."
+					end
+				end				
+				
+				if not errorMsg then	
+					toDs = createOgrDataSourceToSaveAs(fromType, toData)
+					if not toDs then
+						errorMsg = "It was not possible save the data in layer '"..layerName.."' to vector data."
+					end	
+				end
+			elseif toType == "GDAL" then
+				if toData.file then
+					customWarning("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364
+				end					
+			
+				toData.fileTif = fromDSetName
+				
+				local file = File(toData.file)
+				local dir = file:getDir()
+				if dir == "" then
+					dir = _Gtme.makePathCompatibleToAllOS(currentDir())
+				end	
+				
+				toData.dir = dir
+				local fileCopy = dir.."/"..toData.fileTif
+				customWarning("The data of the layer was saved in '"..fileCopy.."'.")
+						
+				-- if isFile(fileCopy) then
+					-- if overwrite then
+						-- rmFile(fileCopy) -- #967
+					-- else
+						-- errorMsg = "The file '"..fileCopy.."' already exists."
+					-- end
+				-- end	
+				
+				--if not errorMsg then
+					toDs = createGdalDataSourceToSaveAs(fromType, toData)
+					if not toDs then
+						errorMsg = "It was not possible save the data in layer '"..layerName.."' to raster data."
+					elseif toDs:dataSetExists(toData.fileTif) then
+						if overwrite then
+							toDs:dropDataSet(toData.fileTif)
+						else
+							errorMsg = "The file '"..fileCopy.."' already exists."
+						end					
+					end	
+				--end
+			end
+			
+			if errorMsg then
+				if toDs then
+					toDs:close()
+				end
+				
+				fromDs:close()
+				releaseProject(project)
+				customError(errorMsg)
+			end
+						
+			local fromDSetType = fromDs:getDataSetType(fromDSetName)				
+			local fromDSet = fromDs:getDataSet(fromDSetName)
+				
+			binding.Create(toDs, fromDSetType, fromDSet)
+			
+			-- #875
+			-- if toType == "POSTGIS" then
+				-- toDs:renameDataSet(string.lower(fromDSetName), toData.table)
+			-- end
+
+			fromDs:close()
+			toDs:close()	
+		end
+		
+		releaseProject(project)
+
+		collectgarbage("collect")			
 	end
 }
 

@@ -170,6 +170,93 @@ return {
 		unitTest:assertError(bandNoExists, "The maximum band is '2.0'.")	
 		
 		rmFile(proj.file)
-	end
+	end,
+	saveLayerAs = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+
+		local layerName1 = "TifLayer"
+		local layerFile1 = filePath("cbers_rgb342_crop1.tif", "terralib")
+		tl:addGdalLayer(proj, layerName1, layerFile1)	
+		
+		local customWarningBkp = customWarning 
+		local currDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		customWarning = function(msg) 
+			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2tif.tif'.") or
+							(msg == "The data of the layer was saved in '"..currDir.."/cbers_rgb342_crop1.tif'."))
+		end
+		
+		local overwrite = true
+		
+		-- SHP
+		local toData = {}
+		toData.file = "tif2shp.shp"
+		toData.source = "shp"		
+		
+		local tif2shpError = function()
+			tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		end
+		unitTest:assertError(tif2shpError, "It was not possible save the data in layer 'TifLayer' to vector data.")
+
+		-- GEOJSON
+		local toData = {}
+		toData.file = "tif2geojson.geojson"
+		toData.source = "geojson"		
+		
+		local tif2geojsonError = function()
+			tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		end
+		unitTest:assertError(tif2geojsonError, "It was not possible save the data in layer 'TifLayer' to vector data.")		
+		
+		-- POSTGIS
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+
+		local pgData = {
+			source = "postgis",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			encoding = encoding	
+		}			
+		
+		local tif2postgisError = function()
+			tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		end
+		unitTest:assertError(tif2postgisError,  "It was not possible save the data in layer 'TifLayer' to postgis data.")
+		
+		-- OVERWRITE
+		local toData = {}
+		toData.file = "tif2tif.tif"
+		toData.source = "tif"	
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		
+		overwrite = false
+		
+		local overwriteError = function()
+			tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		end
+		unitTest:assertError(overwriteError, "The file '"..currDir.."/cbers_rgb342_crop1.tif' already exists.")
+		
+		rmFile("cbers_rgb342_crop1.tif")
+		rmFile(proj.file)
+		
+		customWarning = customWarningBkp
+	end		
 }
 

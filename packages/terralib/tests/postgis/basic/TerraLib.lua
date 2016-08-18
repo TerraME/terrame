@@ -1418,5 +1418,75 @@ return {
 		rmFile(proj.file)
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
+	end,
+	saveLayerAs = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+
+		local layerName1 = "AmazonasAML"
+		local layerFile1 = filePath("municipiosAML_ok.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+		
+		-- POSTGIS
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+		local tableName = "municipiosAML_ok"	
+
+		local pgData = {
+			source = "postgis",
+			type = "POSTGIS", -- it is used only to drop
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName, -- it is used only to drop
+			encoding = encoding	
+		}		
+		
+		local overwrite = true
+		
+		tl:saveLayerAs(proj, layerName1, pgData, overwrite)	
+		local layerName2 = "PgLayer"
+		tl:addPgLayer(proj, layerName2, pgData)
+		
+		-- SHP
+		local toData = {}
+		toData.file = "postgis2shp.shp"
+		toData.source = "shp"		
+		if isFile(toData.file) then
+			rmFile(toData.file)
+		end		
+		
+		tl:saveLayerAs(proj, layerName2, toData, overwrite)	
+		unitTest:assert(isFile(toData.file))
+		
+		-- GEOJSON
+		toData.file = "postgis2geojson.geojson"
+		toData.source = "geojson"		
+		if isFile(toData.file) then
+			rmFile(toData.file)
+		end	
+
+		tl:saveLayerAs(proj, layerName2, toData, overwrite)
+		unitTest:assert(isFile(toData.file))
+
+		tl:dropPgTable(pgData)
+		rmFile("postgis2shp.shp")
+		rmFile("postgis2geojson.geojson")
+		rmFile(proj.file)		
 	end
 }

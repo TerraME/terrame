@@ -93,5 +93,79 @@ return {
 		end	
 		
 		rmFile(proj.file)
-	end
+	end,
+	saveLayerAs = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+		
+		-- TIF
+		local toData = {}
+		toData.file = "shp2tif.tif"
+		toData.source = "tif"		
+		
+		local overwrite = true
+		
+		local shp2tifError = function()
+			tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		end
+		unitTest:assertError(shp2tifError, "It was not possible to convert the data in layer 'SampaShp' to 'shp2tif.tif'.")
+		
+		-- GEOJSON
+		toData.file = "shp2geojson.geojson"
+		toData.source = "geojson"
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		
+		-- POSTGIS
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+		local tableName = "sampa"	
+
+		local pgData = {
+			source = "postgis",
+			type = "POSTGIS", -- it is used only to drop
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName, -- it is used only to drop
+			encoding = encoding	
+		}		
+		
+		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+				
+		-- OVERWRITE
+		overwrite = false		
+			
+		local overwriteGeojsonError = function()
+			tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		end
+		unitTest:assertError(overwriteGeojsonError,  "The file 'shp2geojson.geojson' already exists.")
+		
+		local overwritePgError = function()
+			tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		end
+		unitTest:assertError(overwritePgError, "The table 'sampa' already exists in postgis database 'postgis_22_sample'.")
+		
+		tl:dropPgTable(pgData)		
+		rmFile(toData.file)
+		rmFile(proj.file)
+	end	
 }
