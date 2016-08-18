@@ -35,8 +35,9 @@
 -- @usage
 -- import("terralib")
 --
+-- local filename = "emas-count.tview"
 -- project = Project{
---     file = "emas-count.tview",
+--     file = filename,
 --     clean = true,
 --     firebreak = filePath("firebreak_lin.shp", "terralib"),
 --     cover = filePath("accumulation_Nov94May00.tif", "terralib"),
@@ -47,6 +48,8 @@
 -- forEachLayer(project, function(layer, index)
 --     print(index.."\t"..layer.rep)
 -- end)
+--
+-- if isFile(filename) then rmFile(filename) end
 function forEachLayer(project, _sof_)
 	if type(project) ~= "Project" then
 		incompatibleTypeError(1, "Project", project)
