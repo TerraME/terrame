@@ -1691,6 +1691,10 @@ function Map(data)
 	end
 
 	if data.grouping == nil then
+		local uniqueArgs= {"select", "stdDeviation", "background", "slices", "color", "grid", "target", "precision", "max", "invert",
+			"symbol", "size", "min", "stdColor", "label", "value", "grouping", "font" }
+		verifyUnnecessaryArguments(data, uniqueArgs)
+
 		if data.slices ~= nil or data.min ~= nil or data.max ~= nil then
 			data.grouping = "equalsteps"
 		elseif data.value ~= nil then
