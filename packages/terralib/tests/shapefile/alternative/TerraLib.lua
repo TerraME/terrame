@@ -123,6 +123,19 @@ return {
 		end
 		unitTest:assertError(shp2tifError, "It was not possible to convert the data in layer 'SampaShp' to 'shp2tif.tif'.")
 		
+		local customWarningBkp = customWarning 
+		local currDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		customWarning = function(msg) 
+			return msg
+		end	
+		
+		shp2tifError = function()
+			tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		end
+		unitTest:assertError(shp2tifError, "It was not possible save the data in layer 'SampaShp' to raster data.")
+		
+		customWarning = customWarningBkp
+		
 		-- GEOJSON
 		toData.file = "shp2geojson.geojson"
 		toData.type = "geojson"

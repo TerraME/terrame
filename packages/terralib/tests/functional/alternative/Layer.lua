@@ -1162,7 +1162,6 @@ return{
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local tableName = string.lower("Setores_Censitarios_2000_pol")
 		
 		local pgData = {
 			source = "postgi",
