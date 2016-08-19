@@ -1307,7 +1307,7 @@ return {
 		-- GEOJSON
 		local toData = {}
 		toData.file = "shp2geojson.geojson"
-		toData.source = "geojson"		
+		toData.type = "geojson"		
 		if isFile(toData.file) then
 			rmFile(toData.file)
 		end
@@ -1321,6 +1321,20 @@ return {
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(isFile(toData.file))
 		
+		rmFile(toData.file)
+		
+		-- SHP
+		toData.file = "shp2shp.shp"
+		toData.type = "shp"		
+		if isFile(toData.file) then
+			rmFile(toData.file)
+		end
+		
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		unitTest:assert(isFile(toData.file))
+
+		rmFile(toData.file)
+		
 		-- POSTGIS
 		local host = "localhost"
 		local port = "5432"
@@ -1331,8 +1345,7 @@ return {
 		local tableName = "sampa"	
 
 		local pgData = {
-			source = "postgis",
-			type = "POSTGIS", -- it is used only to drop
+			type = "postgis", -- it is used only to drop
 			host = host,
 			port = port,
 			user = user,
@@ -1348,7 +1361,6 @@ return {
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
 		tl:dropPgTable(pgData)		
-		rmFile(toData.file)
 		rmFile(proj.file)
 	end
 }

@@ -181,7 +181,7 @@ return {
 		-- SHP
 		local toData = {}
 		toData.file = "geojson2shp.shp"
-		toData.source = "shp"		
+		toData.type = "shp"		
 		if isFile(toData.file) then
 			rmFile(toData.file)
 		end
@@ -205,8 +205,7 @@ return {
 		local tableName = "ogrgeojson"	-- #1243
 
 		local pgData = {
-			source = "postgis",
-			type = "POSTGIS", -- it is used only to drop
+			type = "postgis",
 			host = host,
 			port = port,
 			user = user,

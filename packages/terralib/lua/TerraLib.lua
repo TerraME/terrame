@@ -2139,14 +2139,24 @@ TerraLib_ = {
 		
 		return value
 	end,
-	
+	--- Save some data of a layer to another data type.
+	-- @arg _ A TerraLib object (not used).
+	-- @arg project The project.
+	-- @arg layerName The layer name which is in the project.
+	-- @arg toData The data that will be saved.
+	-- @arg overwrite It indicates if the saved data will be overwrited.
+	-- @usage -- DONTRUN	
+	-- local toData = {}
+	-- toData.file = "shp2geojson.geojson"
+	-- toData.type = "geojson"			
+	-- tl:saveLayerAs(project, "SomeLayer", toData, true)	
 	saveLayerAs = function(_, project, layerName, toData, overwrite)
 		loadProject(project, project.file)
 	
 		do		
 			local from = project.layers[layerName]
 			local fromDsId = from:getDataSourceId()	
-			local toType = SourceTypeMapper[toData.source]
+			local toType = SourceTypeMapper[toData.type]
 			local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)		
 			local fromDs = binding.GetDs(fromDsId, true)	
 			from = toDataSetLayer(from)	
@@ -2183,12 +2193,7 @@ TerraLib_ = {
 					end	
 				end
 			elseif toType == "GDAL" then
-				if toData.file then
-					customWarning("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364
-				end					
-			
 				toData.fileTif = fromDSetName
-				
 				local file = File(toData.file)
 				local dir = file:getDir()
 				if dir == "" then
@@ -2197,28 +2202,23 @@ TerraLib_ = {
 				
 				toData.dir = dir
 				local fileCopy = dir.."/"..toData.fileTif
-				customWarning("The data of the layer was saved in '"..fileCopy.."'.")
-						
-				-- if isFile(fileCopy) then
-					-- if overwrite then
-						-- rmFile(fileCopy) -- #967
-					-- else
-						-- errorMsg = "The file '"..fileCopy.."' already exists."
-					-- end
-				-- end	
 				
-				--if not errorMsg then
-					toDs = createGdalDataSourceToSaveAs(fromType, toData)
-					if not toDs then
-						errorMsg = "It was not possible save the data in layer '"..layerName.."' to raster data."
-					elseif toDs:dataSetExists(toData.fileTif) then
-						if overwrite then
-							toDs:dropDataSet(toData.fileTif)
-						else
-							errorMsg = "The file '"..fileCopy.."' already exists."
-						end					
-					end	
-				--end
+				if toData.file and (file:getNameWithExtension() ~= fileTif) then
+					customWarning("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364
+				end					
+						
+				toDs = createGdalDataSourceToSaveAs(fromType, toData)
+				if not toDs then
+					errorMsg = "It was not possible save the data in layer '"..layerName.."' to raster data." -- #1364
+				elseif toDs:dataSetExists(toData.fileTif) then
+					if overwrite then
+						toDs:dropDataSet(toData.fileTif)
+					else
+						errorMsg = "The file '"..fileCopy.."' already exists."
+					end					
+				end	
+				
+				customWarning("Attempt to save data of the layer in '"..fileCopy.."'.") -- REVIEW
 			end
 			
 			if errorMsg then
@@ -2247,7 +2247,9 @@ TerraLib_ = {
 		
 		releaseProject(project)
 
-		collectgarbage("collect")			
+		collectgarbage("collect")	
+		
+		return true
 	end
 }
 

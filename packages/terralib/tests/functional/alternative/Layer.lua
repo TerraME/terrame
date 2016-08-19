@@ -1139,6 +1139,54 @@ return{
 		end
 
 		if isFile(filePath1) then rmFile(filePath1) end
+	end,
+	export = function(unitTest)
+		local projName = "layer_postgis_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+		
+		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	
+		local layerName1 = "setores"
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+		
+		local overwrite = true
+		
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		local tableName = string.lower("Setores_Censitarios_2000_pol")
+		
+		local pgData = {
+			source = "postgi",
+			user = user,
+			password = password,
+			database = database
+		}		
+		
+		local pgSourceError = function()
+			layer1:export(pgData, overwrite)
+		end
+		unitTest:assertError(pgSourceError, "It only supports postgis database, use source = \"postgis\".")
+		
+		local invalidFile = function()
+			layer1:export("invalid.org", overwrite)
+		end
+		unitTest:assertError(invalidFile, invalidFileExtensionMsg("data", "org"))
+
+		local invalidDataType = function()
+			layer1:export(123, overwrite)
+		end
+		unitTest:assertError(invalidDataType,  "The attribute 'data' must be either 'file' or 'table', but received (number).")		
+		
+		rmFile(proj.file)
 	end
 }
 

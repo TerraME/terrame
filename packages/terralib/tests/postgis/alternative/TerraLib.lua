@@ -92,8 +92,7 @@ return {
 		local tableName = "municipiosAML_ok"	
 
 		local pgData = {
-			source = "postgis",
-			type = "POSTGIS", -- it is used only to drop
+			type = "postgis",
 			host = host,
 			port = port,
 			user = user,
@@ -112,9 +111,7 @@ return {
 		-- TIF
 		local toData = {}
 		toData.file = "postgis2tif.tif"
-		toData.source = "tif"		
-		
-		local overwrite = true
+		toData.type = "tif"		
 		
 		local postgis2tifError = function()
 			tl:saveLayerAs(proj, layerName2, toData, overwrite)
@@ -125,9 +122,8 @@ return {
 		overwrite = false
 		
 		-- SHP
-		local toData = {}
 		toData.file = "postgis2shp.shp"
-		toData.source = "shp"		
+		toData.type = "shp"		
 		if isFile(toData.file) then
 			rmFile(toData.file)
 		end		
@@ -143,7 +139,7 @@ return {
 		
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
-		toData.source = "geojson"		
+		toData.type = "geojson"		
 		if isFile(toData.file) then
 			rmFile(toData.file)
 		end	

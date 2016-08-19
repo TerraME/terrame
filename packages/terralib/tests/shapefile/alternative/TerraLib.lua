@@ -114,7 +114,7 @@ return {
 		-- TIF
 		local toData = {}
 		toData.file = "shp2tif.tif"
-		toData.source = "tif"		
+		toData.type = "tif"		
 		
 		local overwrite = true
 		
@@ -125,7 +125,7 @@ return {
 		
 		-- GEOJSON
 		toData.file = "shp2geojson.geojson"
-		toData.source = "geojson"
+		toData.type = "geojson"
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		
 		-- POSTGIS
@@ -138,8 +138,7 @@ return {
 		local tableName = "sampa"	
 
 		local pgData = {
-			source = "postgis",
-			type = "POSTGIS", -- it is used only to drop
+			type = "postgis",
 			host = host,
 			port = port,
 			user = user,

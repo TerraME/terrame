@@ -192,7 +192,7 @@ return {
 		local currDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		customWarning = function(msg) 
 			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2tif.tif'.") or
-							(msg == "The data of the layer was saved in '"..currDir.."/cbers_rgb342_crop1.tif'."))
+							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'."))					
 		end
 		
 		local overwrite = true
@@ -200,7 +200,7 @@ return {
 		-- SHP
 		local toData = {}
 		toData.file = "tif2shp.shp"
-		toData.source = "shp"		
+		toData.type = "shp"		
 		
 		local tif2shpError = function()
 			tl:saveLayerAs(proj, layerName1, toData, overwrite)
@@ -208,9 +208,8 @@ return {
 		unitTest:assertError(tif2shpError, "It was not possible save the data in layer 'TifLayer' to vector data.")
 
 		-- GEOJSON
-		local toData = {}
 		toData.file = "tif2geojson.geojson"
-		toData.source = "geojson"		
+		toData.type = "geojson"		
 		
 		local tif2geojsonError = function()
 			tl:saveLayerAs(proj, layerName1, toData, overwrite)
@@ -226,7 +225,7 @@ return {
 		local encoding = "CP1252"
 
 		local pgData = {
-			source = "postgis",
+			type = "postgis",
 			host = host,
 			port = port,
 			user = user,
@@ -241,9 +240,8 @@ return {
 		unitTest:assertError(tif2postgisError,  "It was not possible save the data in layer 'TifLayer' to postgis data.")
 		
 		-- OVERWRITE
-		local toData = {}
 		toData.file = "tif2tif.tif"
-		toData.source = "tif"	
+		toData.type = "tif"	
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		
 		overwrite = false
