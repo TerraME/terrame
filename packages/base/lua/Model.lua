@@ -428,6 +428,9 @@ function Model(attrTab)
 	mandatoryTableArgument(attrTab, "init", "function")
 	optionalTableArgument(attrTab, "execute", "function")
 
+	if attrTab.title then customError("Argument 'title' cannot be an argument for a Model.") end
+	if attrTab.getParameters then customError("Argument 'getParameters' cannot be an argument for a Model.") end
+
 	local function getExtensions(value)
 		local extensions = {}
 		local i = 1
