@@ -750,6 +750,37 @@ return {
 		end
 		
 		rmFile(proj.file)
+	end,
+	export = function(unitTest)
+		local projName = "layer_shape_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+		
+		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	
+		local layerName1 = "setores"
+		local layer = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+		
+		local overwrite = true
+		
+		local geojson = "setores.geojson"
+		layer:export(geojson, overwrite)
+		unitTest:assert(isFile(geojson))
+		
+		local shp = "setores.shp"
+		layer:export(shp, overwrite)
+		unitTest:assert(isFile(shp))
+
+		rmFile(geojson)
+		rmFile(shp)
+		rmFile(proj.file)
 	end
 }
 
