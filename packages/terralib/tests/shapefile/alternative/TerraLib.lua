@@ -124,7 +124,6 @@ return {
 		unitTest:assertError(shp2tifError, "It was not possible to convert the data in layer 'SampaShp' to 'shp2tif.tif'.")
 		
 		local customWarningBkp = customWarning 
-		local currDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		customWarning = function(msg) 
 			return msg
 		end	
