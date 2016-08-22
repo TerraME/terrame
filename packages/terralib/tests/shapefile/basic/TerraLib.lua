@@ -1286,5 +1286,81 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")		
 		geom = tl:castGeomToSubtype(geom:getGeometryN(0))
 		unitTest:assertEquals(geom:getGeometryType(), "Point")		
+	end,
+	saveLayerAs = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+		
+		-- GEOJSON
+		local toData = {}
+		toData.file = "shp2geojson.geojson"
+		toData.type = "geojson"		
+		if isFile(toData.file) then
+			rmFile(toData.file)
+		end
+		
+		local overwrite = true
+		
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		unitTest:assert(isFile(toData.file))
+		
+		-- OVERWRITE
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		unitTest:assert(isFile(toData.file))
+		
+		rmFile(toData.file)
+		
+		-- SHP
+		toData.file = "shp2shp.shp"
+		toData.type = "shp"		
+		if isFile(toData.file) then
+			rmFile(toData.file)
+		end
+		
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		unitTest:assert(isFile(toData.file))
+
+		rmFile(toData.file)
+		
+		-- POSTGIS
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+		local tableName = "sampa"	
+
+		local pgData = {
+			type = "postgis", -- it is used only to drop
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName, -- it is used only to drop
+			encoding = encoding	
+		}		
+		
+		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		
+		-- OVERWRITE
+		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		
+		tl:dropPgTable(pgData)		
+		rmFile(proj.file)
 	end
 }
