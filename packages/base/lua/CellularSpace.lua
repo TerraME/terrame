@@ -576,24 +576,6 @@ local function setCellsByTerraLibDataSet(self, dSet)
 	end
 end
 
-local function loadGdal(self)
-	local tlib = terralib.TerraLib{}
-	local dSet = tlib:getGdalByFilePath(self.file)
-	setCellsByTerraLibDataSet(self, dSet) -- SKIP
-	local temp = ""
-
-	for i = self.file:len(), 1, -1 do -- SKIP
-		if self.file:sub(i, i) ~= sessionInfo().separator then -- SKIP
-			temp = self.file:sub(i, i)..temp -- SKIP
-		else -- SKIP
-			break -- SKIP
-		end
-	end
-
-	self.layer = temp -- SKIP
-	self.cObj_:setLayer(self.layer) -- SKIP
-end
-
 local function loadOGR(self)
 	local tlib = terralib.TerraLib{}
 	local dSet = tlib:getOGRByFilePath(self.file)
@@ -633,11 +615,46 @@ local function loadVirtual(self)
 	end
 end
 
+local function setRasterCells(self, dSet)
+	local set = dSet[0]
+
+	self.xdim = set.xdim
+	self.ydim = set.ydim
+	self.name = set.name
+	self.srid = set.srid
+	self.bands = set.bands
+	self.resolutionX = set.resolutionX
+	self.resolutionY = set.resolutionY
+
+	loadVirtual(self)
+
+	for _, cell in pairs(self.cells) do
+		for b = 0, self.bands - 1 do
+			cell[b] = set.getValue(cell.y, cell.x, b)
+		end
+	end
+end
+
+local function loadGdal(self)
+	local tlib = terralib.TerraLib{}
+	local dSet = tlib:getGdalByFilePath(self.file)
+
+	setRasterCells(self, dSet) -- SKIP
+	self.layer = File(self.file):getNameWithExtension() -- SKIP
+	self.cObj_:setLayer(self.layer) -- SKIP
+
+	return self
+end
+
 local function loadLayer(self)
 	local tlib = terralib.TerraLib{}
-
 	local dset = tlib:getDataSet(self.project, self.layer.name)
-	setCellsByTerraLibDataSet(self, dset)
+
+	if self.layer.rep == "raster" then
+		setRasterCells(self, dset) -- SKIP
+	else
+		setCellsByTerraLibDataSet(self, dset)
+	end
 end
 
 local CellularSpaceDrivers = {}
