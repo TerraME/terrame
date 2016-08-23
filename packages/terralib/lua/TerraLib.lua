@@ -563,9 +563,10 @@ local function dataSetExists(connInfo, dSetName, type)
 end
 
 local function propertyExists(connInfo, dSetName, property, type)
-	local exists
+	local exists = false
 
 	do
+		_Gtme.print("propertyExists", connInfo.URI, dSetName, property, type)
 		local ds = makeAndOpenDataSource(connInfo, type)
 
 		if type == "GDAL" then
@@ -775,29 +776,39 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 				operation = "wsum"
 			end
 		end
-	
-		local toDst = getDataSetTypeByLayer(toLayer)
+
+		local toDSetName = toLayer:getDataSetName()
+		local toConnInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
+		local toDs = makeAndOpenDataSource(toConnInfo:getConnInfo(), toConnInfo:getType())
+		--dst = ds:getDataSetType(dSetName)
+		
+		local toDst = toDs:getDataSetType(toDSetName) --getDataSetTypeByLayer(toLayer)
+		
+		_Gtme.print(select, OperationMapper[operation], operation, toDst)
+		_Gtme.print(fromLayer:getTitle(), toLayer:getTitle(), outDSetName, outConnInfo.URI, outType)
 
 		v2v:setParams(select, OperationMapper[operation], toDst)
-
+		_Gtme.print(0.1)
 		local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
 		if err ~= "" then
 			customError(err) -- SKIP
 		end
-	
+		_Gtme.print(0.1)
 		propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
-	
+		_Gtme.print(0.11, propCreatedName)
 		if outType == "OGR" then
 			propCreatedName = getNormalizedName(propCreatedName)
 		end
-	
+		_Gtme.print(0.3)
 		propCreatedName = string.lower(propCreatedName)	
-	
+		_Gtme.print(0.4, propCreatedName)
+		toDs:close()
 		outDs:close()
+		_Gtme.print(0.5)
 	end
-
+	_Gtme.print(0.6)
 	collectgarbage("collect")
-	
+	_Gtme.print(0.7)
 	return propCreatedName
 end
 
@@ -1709,11 +1720,11 @@ TerraLib_ = {
 			else
 				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
 			end
-		
+			_Gtme.print(1)
 			if outType == "OGR" then
 				propCreatedName = getNormalizedName(propCreatedName)
 			end
-		
+			_Gtme.print(2)
 			if (outType == "POSTGIS") and (type(select) == "string")  then
 				select = string.lower(select)
 			end
@@ -1727,7 +1738,7 @@ TerraLib_ = {
 				outDs:renameProperty(outDSetName, propCreatedName, property)
 				attrsRenamed[property] = property
 			end
-		
+			_Gtme.print(3)
 			if default then
 				for _, prop in pairs(attrsRenamed) do
 					outDs:updateNullValues(outDSetName, prop, tostring(default))
@@ -1737,7 +1748,7 @@ TerraLib_ = {
 			-- TODO: RENAME INSTEAD OUTPUT
 			-- #875
 			-- outDs:renameDataSet(outDSetName, "rename_test")		
-			
+			_Gtme.print(4)
 			local outLayer = createLayer(out, outDSetName, outConnInfo, outType)
 			project.layers[out] = outLayer
 		
@@ -1760,10 +1771,12 @@ TerraLib_ = {
 				
 				overwriteLayer(self, project, out, to, toSetName)
 				removeLayer(project, out)
-			end		
+			end	
+			_Gtme.print(5)
 		end
 
 		collectgarbage("collect")		
+		_Gtme.print(6)
 	end,
 	--- Returns a given dataset from a layer.
 	-- @arg _ A TerraLib object.

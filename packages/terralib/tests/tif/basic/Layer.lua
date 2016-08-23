@@ -154,7 +154,7 @@ return {
 			file = clName1..".shp"
 		}
 		
-		if _Gtme.isWindowsOS() then -- #1306	
+--		if _Gtme.isWindowsOS() then -- #1306	
 			-- MODE
 		
 			cl:fill{
@@ -386,9 +386,9 @@ return {
 			}
 
 			unitTest:assertSnapshot(map, "tiff-std.png") -- SKIP
-		else
-			unitTest:assert(true) -- SKIP
-		end
+--		else
+--			unitTest:assert(true) -- SKIP
+--		end
 		
 		forEachElement(shapes, function(_, value)
 			rmFile(value)

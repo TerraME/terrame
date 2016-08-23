@@ -1262,9 +1262,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(1)
 				end)
 
-                if _Gtme.isWindowsOS() then
+                --if _Gtme.isWindowsOS() then
                     finalizeTerraLib()
-                end
+                --end
 				
 				os.exit(errors)
 			elseif arg == "-sketch" then
@@ -1463,9 +1463,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		rmDir(_Gtme.tmpdirectory__)
 	end
 
-    if _Gtme.isWindowsOS() then
+--    if _Gtme.isWindowsOS() then
         finalizeTerraLib()
-    end
+--    end
 
 	return true
 end
