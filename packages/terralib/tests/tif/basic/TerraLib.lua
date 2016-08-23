@@ -160,8 +160,10 @@ return {
 
 		local dSet = tlib:getGdalByFilePath(file)
 		for i = 0, #dSet do
-			for k, _ in pairs(dSet[i]) do
-				unitTest:assert(k == "raster")
+			for k, v in pairs(dSet[i]) do
+				unitTest:assert(belong(k, {"xdim", "ydim", "name", "srid", "bands",
+											"resolutionX", "resolutionY", "getValue"}))
+				unitTest:assertNotNil(v)
 			end
 		end
 	end,
