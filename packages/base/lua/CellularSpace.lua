@@ -618,19 +618,19 @@ end
 local function setRasterCells(self, dSet)
 	local set = dSet[0]
 
-	self.xdim = set.xdim
-	self.ydim = set.ydim
-	self.name = set.name
-	self.srid = set.srid
-	self.bands = set.bands
-	self.resolutionX = set.resolutionX
-	self.resolutionY = set.resolutionY
+	self.xdim = set.xdim -- SKIP
+	self.ydim = set.ydim -- SKIP
+	self.name = set.name -- SKIP
+	self.srid = set.srid -- SKIP
+	self.bands = set.bands -- SKIP
+	self.resolutionX = set.resolutionX -- SKIP
+	self.resolutionY = set.resolutionY -- SKIP
 
-	loadVirtual(self)
+	loadVirtual(self) -- SKIP
 
 	for _, cell in pairs(self.cells) do
 		for b = 0, self.bands - 1 do
-			cell[b] = set.getValue(cell.y, cell.x, b)
+			cell[b] = set.getValue(cell.y, cell.x, b) -- SKIP
 		end
 	end
 end
