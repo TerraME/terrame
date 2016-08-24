@@ -784,10 +784,6 @@ function Layer(data)
 	mandatoryTableArgument(data, "name", "string")
 
 	if type(data.project) == "string" then
-		if not isFile(data.project) then
-			customError("Project file '"..data.project.."' does not exist.")
-		end
-
 		data.project = Project{
 			file = data.project
 		}

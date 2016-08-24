@@ -33,11 +33,6 @@ return{
 			rmFile("myproj.tview")
 		end
 
-		local projNotExists = function()
-			Layer{project = "myproj.tview", name = "cells"}
-		end
-		unitTest:assertError(projNotExists, "Project file '".."myproj.tview".."' does not exist.")
-
 		local projFile = "proj_celllayer.tview"
 
 		local proj = Project{
