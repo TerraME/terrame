@@ -618,7 +618,7 @@ end
 local function setRasterCells(self, dSet)
 	local set = dSet[0]
 
-	self.xdim = set.xdim -- SKIP
+	self.xdim = set.xdim -- SKIP -- TODO(#1306): raster are not tested on Linux
 	self.ydim = set.ydim -- SKIP
 	self.name = set.name -- SKIP
 	self.srid = set.srid -- SKIP
