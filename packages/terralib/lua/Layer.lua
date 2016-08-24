@@ -667,6 +667,44 @@ Layer_ = {
 	-- print(layer:dummy(0))	
 	dummy = function(self, band)
 		return self.project.terralib:getDummyValue(self.project, self.name, band)
+	end,
+	--- Exports the data of a layer to another data source. 
+	-- The data argument can be either a file string or data table of postigis connection. 
+	-- @arg data Either a file string or data table.
+	-- @arg overwrite Indicates if the exported data will be overwrited.
+	-- @usage -- DONTRUN
+	-- layer:export{file = "myfile.shp", true}
+	-- layer:export{file = "myfile.geojson"}	
+	export = function(self, data, overwrite)
+		if type(data) == "string" then 
+			local file = File(data) -- TODO(#1366): the file needs validation
+			local source = file:getExtension()
+			if isValidSource(source) then
+				local toData = {}
+				toData.file = data			
+				toData.type = source 
+				self.project.terralib:saveLayerAs(self.project, self.name, toData, overwrite)
+			else
+				invalidFileExtensionError("data", source) 
+			end
+		elseif type(data) == "table" then
+			mandatoryTableArgument(data, "source", "string")
+			if data.source == "postgis" then
+				mandatoryTableArgument(data, "user", "string")
+				mandatoryTableArgument(data, "password", "string")
+				mandatoryTableArgument(data, "database", "string")
+				defaultTableValue(data, "host", "localhost")
+				defaultTableValue(data, "port", 5432)
+				defaultTableValue(data, "encoding", "CP1252")		
+				local pgData = data
+				pgData.type = "postgis"
+				self.project.terralib:saveLayerAs(self.project, self.name, pgData, overwrite)
+			else
+				customError("It only supports postgis database, use source = \"postgis\".")
+			end
+		else
+			customError("The attribute 'data' must be either 'file' or 'table', but received ("..type(data)..").")
+		end
 	end
 }
 
