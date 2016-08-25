@@ -1020,17 +1020,9 @@ local function executeExamples(package)
 		import("base")
 	end
 
-	if not isLoaded("terralib") then
-		import("terralib")
-	end
+	_Gtme.printNote("Running all examples for package '"..package.."'.")
 
-	_Gtme.printNote("Run all examples for package '"..package.."'.")
-
-	local examples_report = {
-		examples = 0,
-		errors = 0,
-
-	}
+	local errors = 0
 
 	local s = _Gtme.sessionInfo().separator
 	local examplespath
@@ -1043,37 +1035,17 @@ local function executeExamples(package)
 	_Gtme.forEachFile(examplespath, function(fname)
 		if string.endswith(fname, ".lua") then
 			print("Run example '"..fname.."'.")
-			examples_report.examples = examples_report.examples + 1
 
 			xpcall(function() dofile(examplespath..s..fname) end, function(err)
 				_Gtme.printError(err)
-				examples_report.errors = examples_report.errors + 1
+				errors = errors + 1
 			end)
+
+			clean()
 		end
 	end)
 
-	local finalTime = os.clock()
-
-	print("\nExamples report for package '"..package.."':")
-	_Gtme.printNote("Examples were created in "..round(finalTime - initialTime, 2).." seconds.")
-
-	if examples_report.examples == 0 then
-		_Gtme.printNote("No example was executed.")
-	elseif examples_report.examples == 1 then
-		_Gtme.printNote("One example was executed.")
-	else
-		_Gtme.printNote(examples_report.examples.." examples were executed.")
-	end
-
-	if examples_report.errors == 0 then
-		_Gtme.printNote("Summing up, all examples were successfully executed.")
-	elseif examples_report.errors == 1 then
-		_Gtme.printError("Summing up, one problem was found while running examples.")
-	else
-		_Gtme.printError("Summing up, "..examples_report.errors.." problems were found while running examples.")
-	end
-
-	return examples_report.errors
+	return errors
 end
 
 function _Gtme.execExample(example, packageName)
