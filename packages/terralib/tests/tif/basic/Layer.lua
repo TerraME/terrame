@@ -154,241 +154,237 @@ return {
 			file = clName1..".shp"
 		}
 		
---		if _Gtme.isWindowsOS() then -- #1306	
-			-- MODE
+		-- MODE
 		
-			cl:fill{
-				operation = "mode",
-				attribute = "prod_mode",
-				layer = prodes
-			}
+		cl:fill{
+			operation = "mode",
+			attribute = "prod_mode",
+			layer = prodes
+		}
 
-			local cs = CellularSpace{
-				project = proj,
-				layer = cl.name 
-			}
+		local cs = CellularSpace{
+			project = proj,
+			layer = cl.name 
+		}
 
-			local count = 0
-			forEachCell(cs, function(cell)
-				unitTest:assertType(cell.prod_mode, "string") -- SKIP
-				if not belong(cell.prod_mode, {"0", "49", "169", "253", "254"}) then
-					-- print(cell.prod_mode)
-					count = count + 1
-				end
-			end)
+		local count = 0
+		forEachCell(cs, function(cell)
+			unitTest:assertType(cell.prod_mode, "string") -- SKIP
+			if not belong(cell.prod_mode, {"0", "49", "169", "253", "254"}) then
+				-- print(cell.prod_mode)
+				count = count + 1
+			end
+		end)
 
-			unitTest:assertEquals(count, 163) -- SKIP
+		unitTest:assertEquals(count, 163) -- SKIP
 
-			local map = Map{
-				target = cs,
-				select = "prod_mode",
-				value = {"0", "49", "169", "253", "254"},
-				color = {"red", "green", "blue", "orange", "purple"}
-			}
+		local map = Map{
+			target = cs,
+			select = "prod_mode",
+			value = {"0", "49", "169", "253", "254"},
+			color = {"red", "green", "blue", "orange", "purple"}
+		}
 
-			unitTest:assertSnapshot(map, "tiff-mode.png") -- SKIP
+		unitTest:assertSnapshot(map, "tiff-mode.png") -- SKIP
 
-			-- MINIMUM
+		-- MINIMUM
 
-			cl:fill{
-				operation = "minimum",
-				attribute = "prod_min",
-				layer = prodes
-			}
+		cl:fill{
+			operation = "minimum",
+			attribute = "prod_min",
+			layer = prodes
+		}
 
-			cs = CellularSpace{
-				project = proj,
-				layer = cl.name 
-			}
+		cs = CellularSpace{
+			project = proj,
+			layer = cl.name 
+		}
 
-			forEachCell(cs, function(cell)
-				unitTest:assertType(cell.prod_min, "number") -- SKIP
-				unitTest:assert(cell.prod_min >= 0) -- SKIP
-				unitTest:assert(cell.prod_min <= 254) -- SKIP
-			end)
+		forEachCell(cs, function(cell)
+			unitTest:assertType(cell.prod_min, "number") -- SKIP
+			unitTest:assert(cell.prod_min >= 0) -- SKIP
+			unitTest:assert(cell.prod_min <= 254) -- SKIP
+		end)
 
-			map = Map{
-				target = cs,
-				select = "prod_min",
-				value = {0, 49, 169, 253, 254},
-				color = {"red", "green", "blue", "orange", "purple"}
-			}
+		map = Map{
+			target = cs,
+			select = "prod_min",
+			value = {0, 49, 169, 253, 254},
+			color = {"red", "green", "blue", "orange", "purple"}
+		}
 
-			unitTest:assertSnapshot(map, "tiff-min.png") -- SKIP
-			
-			-- MAXIMUM
+		unitTest:assertSnapshot(map, "tiff-min.png") -- SKIP
+		
+		-- MAXIMUM
 
-			cl:fill{
-				operation = "maximum",
-				attribute = "prod_max",
-				layer = prodes
-			}
+		cl:fill{
+			operation = "maximum",
+			attribute = "prod_max",
+			layer = prodes
+		}
 
-			cs = CellularSpace{
-				project = proj,
-				layer = cl.name 
-			}
+		cs = CellularSpace{
+			project = proj,
+			layer = cl.name 
+		}
 
-			forEachCell(cs, function(cell)
-				unitTest:assertType(cell.prod_max, "number") -- SKIP
-				unitTest:assert(cell.prod_max >= 0) -- SKIP
-				unitTest:assert(cell.prod_max <= 254) -- SKIP
-			end)
+		forEachCell(cs, function(cell)
+			unitTest:assertType(cell.prod_max, "number") -- SKIP
+			unitTest:assert(cell.prod_max >= 0) -- SKIP
+			unitTest:assert(cell.prod_max <= 254) -- SKIP
+		end)
 
-			map = Map{
-				target = cs,
-				select = "prod_max",
-				value = {0, 49, 169, 253, 254},
-				color = {"red", "green", "blue", "orange", "purple"}
-			}
+		map = Map{
+			target = cs,
+			select = "prod_max",
+			value = {0, 49, 169, 253, 254},
+			color = {"red", "green", "blue", "orange", "purple"}
+		}
 
-			unitTest:assertSnapshot(map, "tiff-max.png") -- SKIP
+		unitTest:assertSnapshot(map, "tiff-max.png") -- SKIP
 
-			-- SUM
+		-- SUM
 
-			cl:fill{
-				operation = "sum",
-				attribute = "prod_sum",
-				layer = prodes
-			}
+		cl:fill{
+			operation = "sum",
+			attribute = "prod_sum",
+			layer = prodes
+		}
 
-			cs = CellularSpace{
-				project = proj,
-				layer = cl.name 
-			}
+		cs = CellularSpace{
+			project = proj,
+			layer = cl.name 
+		}
 
-			forEachCell(cs, function(cell)
-				unitTest:assertType(cell.prod_sum, "number") -- SKIP
-				unitTest:assert(cell.prod_sum >= 0) -- SKIP
-			end)
+		forEachCell(cs, function(cell)
+			unitTest:assertType(cell.prod_sum, "number") -- SKIP
+			unitTest:assert(cell.prod_sum >= 0) -- SKIP
+		end)
 
-			map = Map{
-				target = cs,
-				select = "prod_sum",
-				min = 0,
-				max = 2300,
-				color = "RdPu",
-				slices = 8
-			}
+		map = Map{
+			target = cs,
+			select = "prod_sum",
+			min = 0,
+			max = 2300,
+			color = "RdPu",
+			slices = 8
+		}
 
-			unitTest:assertSnapshot(map, "tiff-sum.png") -- SKIP
+		unitTest:assertSnapshot(map, "tiff-sum.png") -- SKIP
 
-			-- COVERAGE
+		-- COVERAGE
 
-			cl:fill{
-				operation = "coverage",
-				attribute = "cov",
-				layer = prodes
-			}
+		cl:fill{
+			operation = "coverage",
+			attribute = "cov",
+			layer = prodes
+		}
 
-			cs = CellularSpace{
-				project = proj,
-				layer = cl.name 
-			}
+		cs = CellularSpace{
+			project = proj,
+			layer = cl.name 
+		}
 
-			local cov = {0, 49, 169, 253, 254}
+		local cov = {0, 49, 169, 253, 254}
 
-			forEachCell(cs, function(cell)
-				local sum = 0
-
-				for i = 1, #cov do
-					unitTest:assertType(cell["cov_"..cov[i]],   "number") -- SKIP
-					sum = sum + cell["cov_"..cov[i]]
-				end
-
-				--unitTest:assert(math.abs(sum - 100) < 0.001) -- SKIP
-				
-				--if math.abs(sum - 100) > 0.001 then
-				--	print(sum)
-				--end
-			end)
+		forEachCell(cs, function(cell)
+			local sum = 0
 
 			for i = 1, #cov do
-				local mmap = Map{
-					target = cs,
-					select = "cov_"..cov[i],
-					min = 0,
-					max = 100,
-					slices = 10,
-					color = "RdPu"
-				}
-
-				unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i]..".png") -- SKIP
+				unitTest:assertType(cell["cov_"..cov[i]],   "number") -- SKIP
+				sum = sum + cell["cov_"..cov[i]]
 			end
 
-			-- AVERAGE
-
-			Layer{
-				project = proj,
-				name = "box",
-				file = filePath("elevation_box.shp", "terralib")
-			}
-
-			Layer{
-				project = proj,
-				name = "altimetria",
-				file = filePath("elevation.tif", "terralib")
-			}
-
-			if isFile("mycells.shp") then rmFile("mycells.shp") end
-			table.insert(shapes, "mycells.shp")
+			--unitTest:assert(math.abs(sum - 100) < 0.001) -- SKIP
 			
-			cl = Layer{
-				project = proj,
-				file = "mycells.shp",
-				input = "box",
-				name = "cells_elev",
-				resolution = 200,
-			}
+			--if math.abs(sum - 100) > 0.001 then
+			--	print(sum)
+			--end
+		end)
 
-			cl:fill{
-				operation = "average",
-				layer = "altimetria",
-				attribute = "height"
-			}
-
-			cs = CellularSpace{
-				project = proj,
-				layer = cl.name
-			}
-
-			map = Map{
+		for i = 1, #cov do
+			local mmap = Map{
 				target = cs,
-				select = "height",
+				select = "cov_"..cov[i],
 				min = 0,
-				max = 255,
-				color = "RdPu",
-				slices = 7
+				max = 100,
+				slices = 10,
+				color = "RdPu"
 			}
 
-			unitTest:assertSnapshot(map, "tiff-average.png") -- SKIP
+			unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i]..".png") -- SKIP
+		end
 
-			-- STDEV
+		-- AVERAGE
+		
+		Layer{
+			project = proj,
+			name = "box",
+			file = filePath("elevation_box.shp", "terralib")
+		}
 
-			cl:fill{
-				operation = "stdev",
-				layer = "altimetria",
-				attribute = "std"
-			}
+		Layer{
+			project = proj,
+			name = "altimetria",
+			file = filePath("elevation.tif", "terralib")
+		}
 
-			cs = CellularSpace{
-				project = proj,
-				layer = cl.name
-			}
+		if isFile("mycells.shp") then rmFile("mycells.shp") end
+		table.insert(shapes, "mycells.shp")
+			
+		cl = Layer{
+			project = proj,
+			file = "mycells.shp",
+			input = "box",
+			name = "cells_elev",
+			resolution = 200,
+		}
 
-			map = Map{
-				target = cs,
-				select = "std",
-				min = 0,
-				max = 80,
-				color = "RdPu",
-				slices = 7
-			}
+		cl:fill{
+			operation = "average",
+			layer = "altimetria",
+			attribute = "height"
+		}
 
-			unitTest:assertSnapshot(map, "tiff-std.png") -- SKIP
---		else
---			unitTest:assert(true) -- SKIP
---		end
+		cs = CellularSpace{
+			project = proj,
+			layer = cl.name
+		}
+
+		map = Map{
+			target = cs,
+			select = "height",
+			min = 0,
+			max = 255,
+			color = "RdPu",
+			slices = 7
+		}
+
+		unitTest:assertSnapshot(map, "tiff-average.png") -- SKIP
+
+		-- STDEV
+		
+		cl:fill{
+			operation = "stdev",
+			layer = "altimetria",
+			attribute = "std"
+		}
+
+		cs = CellularSpace{
+			project = proj,
+			layer = cl.name
+		}
+
+		map = Map{
+			target = cs,
+			select = "std",
+			min = 0,
+			max = 80,
+			color = "RdPu",
+			slices = 7
+		}
+
+		unitTest:assertSnapshot(map, "tiff-std.png") -- SKIP
 		
 		forEachElement(shapes, function(_, value)
 			rmFile(value)

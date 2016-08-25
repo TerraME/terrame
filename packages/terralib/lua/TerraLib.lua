@@ -331,192 +331,31 @@ local function encodeDataSourceInfos(layers)
 end
 
 local function saveProject(project, layers)
-	encodeDataSourceInfos(layers)
-
-	local writer = binding.te.xml.AbstractWriterFactory.make()
-	
-	writer:setURI(project.file)
-
-	-- TODO: THIS GET THE PATH WHERE WAS INSTALLED (PROBLEM)
-	local schema = binding.FindInTerraLibPath("share/terralib/schemas/terralib/qt/af/project.xsd")
-	schema = _Gtme.makePathCompatibleToAllOS(schema)
-
-	writer:writeStartDocument("UTF-8", "no")
-
-	writer:writeStartElement("Project")
-
-	schema = string.gsub(schema, "%s", "%%20")
-	
-	writer:writeAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema-instance")
-	writer:writeAttribute("xmlns:te_da", "http://www.terralib.org/schemas/dataaccess")
-	writer:writeAttribute("xmlns:te_map", "http://www.terralib.org/schemas/maptools")
-	writer:writeAttribute("xmlns:te_qt_af", "http://www.terralib.org/schemas/common/af")
-
-	writer:writeAttribute("xmlns:se", "http://www.opengis.net/se")
-	writer:writeAttribute("xmlns:ogc", "http://www.opengis.net/ogc")
-	writer:writeAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink")
-
-	writer:writeAttribute("xmlns", "http://www.terralib.org/schemas/qt/af")
-	writer:writeAttribute("xsd:schemaLocation", "http://www.terralib.org/schemas/qt/af "..schema)
-	writer:writeAttribute("version", binding.te.common.Version.asString())
-
-	writer:writeElement("Title", project.title)
-	writer:writeElement("Author", project.author)
-	
-	writer:writeDataSourceList()
-	
-	writer:writeStartElement("ComponentList")
-	writer:writeEndElement("ComponentList")
-
-	writer:writeStartElement("te_map:LayerList")
-	
-	if layers then 
-		local lserial = binding.te.map.serialize.Layer.getInstance()
-		
-		for _, layer in pairs(layers) do
-			lserial:write(layer, writer)
-		end
+	local layersVector = {}
+	local i = 1
+ 
+	for k, v in pairs(layers) do
+		layersVector[i] = binding.te.map.DataSetLayer.toDataSetLayer(v)
+		i = i + 1
 	end
-	writer:writeEndElement("te_map:LayerList")
-
-	writer:writeEndElement("Project")
-
-	writer:writeToFile()
+	
+	binding.SaveProject(project.file, project.author, project.title, layersVector)
 end
 
 local function loadProject(project, file)		
 	if not isFile(file) then
 		customError("Could not read project file: "..file..".") -- SKIP
 	end
-	
-	local xmlReader = binding.te.xml.ReaderFactory.make()
 
-	xmlReader:setValidationScheme(false)
-	xmlReader:read(file)
-	
-	if not xmlReader:next() then
-		customError("Could not read project information in the file: "..file..".") -- SKIP
-	end
-	
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("Error reading the document "..file..", the start element wasn't found.")
-	end
-	
-	if xmlReader:getElementLocalName() ~= "Project" then
-		customError("The first tag in the document "..file.." is not 'Project'.")
-	end
-	
-	xmlReader:next()
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "Title" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
+	local projMd = binding.LoadProject(file)
+	project.author = projMd.author
+	project.title = projMd.title
+	local layers = projMd:getLayers()
 
-	xmlReader:next()
-	if xmlReader:getNodeType() ~= binding.VALUE then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	project.title = xmlReader:getElementValue()
-	
-	xmlReader:next() -- End element
-
-	xmlReader:next()
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "Author" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-
-	xmlReader:next()
-
-	if xmlReader:getNodeType() == binding.VALUE then
-		project.author = xmlReader:getElementValue()
-		xmlReader:next() -- End element
-	end	
-
-	-- read data source list from this project
-	xmlReader:next()
-
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "DataSourceList" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-
-	xmlReader:next()
-
-	-- DataSourceList contract form
-	if (xmlReader:getNodeType() == binding.END_ELEMENT) and 
-		(xmlReader:getElementLocalName() == "DataSourceList") then
-		xmlReader:next()
-	end
-
-	while (xmlReader:getNodeType() == binding.START_ELEMENT) and
-			(xmlReader:getElementLocalName() == "DataSource") do
-		local  ds = binding.ReadDataSourceInfo(xmlReader)
-		decodeDataSourceInfo(ds)
-		binding.te.da.DataSourceInfoManager.getInstance():add(ds)
-	end
-	
-	-- end read data source list
-
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "ComponentList" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	xmlReader:next() -- End element
-	xmlReader:next() -- next after </ComponentList>
-
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "LayerList" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-
-	xmlReader:next()
-
-	local lserial = binding.te.map.serialize.Layer.getInstance()
-	
-	-- Read the layers
-	while (xmlReader:getNodeType() ~= binding.END_ELEMENT) and
-			(xmlReader:getElementLocalName() ~= "LayerList") do
-		local layer = lserial:read(xmlReader)
-		
-		if not layer then
-			customError("PROJECT READ ERROR.") -- SKIP
-		end
-		
-		layer:setTitle(decodeUri(layer:getTitle()))
+	for i = 0, getn(layers) - 1 do
+		local layer = layers[i]
 		project.layers[layer:getTitle()] = layer
 	end
-	
-	if xmlReader:getNodeType() ~= binding.END_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "LayerList" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-
-	xmlReader:next()
-	if not ((xmlReader:getNodeType() == binding.END_ELEMENT) or
-		(xmlReader:getNodeType() == binding.END_DOCUMENT)) then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "Project" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end	
-	
-	-- TODO: THE ONLY WAY SO FAR TO RELEASE THE FILE AFTER READ
-	-- WAS READ ANOTHER FILE (REVIEW)
-	-- #880
-	xmlReader:read(filePath("YgDbLUDrqQbvu7QxTYxX.xml", "terralib"))
 end
 
 local function addFileLayer(project, name, filePath, type, addSpatialIdx)
@@ -566,7 +405,6 @@ local function propertyExists(connInfo, dSetName, property, type)
 	local exists = false
 
 	do
-		_Gtme.print("propertyExists", connInfo.URI, dSetName, property, type)
 		local ds = makeAndOpenDataSource(connInfo, type)
 
 		if type == "GDAL" then
@@ -780,35 +618,29 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 		local toDSetName = toLayer:getDataSetName()
 		local toConnInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
 		local toDs = makeAndOpenDataSource(toConnInfo:getConnInfo(), toConnInfo:getType())
-		--dst = ds:getDataSetType(dSetName)
+		local toDst = toDs:getDataSetType(toDSetName)
 		
-		local toDst = toDs:getDataSetType(toDSetName) --getDataSetTypeByLayer(toLayer)
-		
-		_Gtme.print(select, OperationMapper[operation], operation, toDst)
-		_Gtme.print(fromLayer:getTitle(), toLayer:getTitle(), outDSetName, outConnInfo.URI, outType)
-
 		v2v:setParams(select, OperationMapper[operation], toDst)
-		_Gtme.print(0.1)
+
 		local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
 		if err ~= "" then
 			customError(err) -- SKIP
 		end
-		_Gtme.print(0.1)
+
 		propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
-		_Gtme.print(0.11, propCreatedName)
+
 		if outType == "OGR" then
 			propCreatedName = getNormalizedName(propCreatedName)
 		end
-		_Gtme.print(0.3)
+
 		propCreatedName = string.lower(propCreatedName)	
-		_Gtme.print(0.4, propCreatedName)
+
 		toDs:close()
 		outDs:close()
-		_Gtme.print(0.5)
 	end
-	_Gtme.print(0.6)
+
 	collectgarbage("collect")
-	_Gtme.print(0.7)
+
 	return propCreatedName
 end
 
@@ -1720,11 +1552,11 @@ TerraLib_ = {
 			else
 				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
 			end
-			_Gtme.print(1)
+
 			if outType == "OGR" then
 				propCreatedName = getNormalizedName(propCreatedName)
 			end
-			_Gtme.print(2)
+
 			if (outType == "POSTGIS") and (type(select) == "string")  then
 				select = string.lower(select)
 			end
@@ -1738,7 +1570,7 @@ TerraLib_ = {
 				outDs:renameProperty(outDSetName, propCreatedName, property)
 				attrsRenamed[property] = property
 			end
-			_Gtme.print(3)
+
 			if default then
 				for _, prop in pairs(attrsRenamed) do
 					outDs:updateNullValues(outDSetName, prop, tostring(default))
@@ -1748,7 +1580,7 @@ TerraLib_ = {
 			-- TODO: RENAME INSTEAD OUTPUT
 			-- #875
 			-- outDs:renameDataSet(outDSetName, "rename_test")		
-			_Gtme.print(4)
+
 			local outLayer = createLayer(out, outDSetName, outConnInfo, outType)
 			project.layers[out] = outLayer
 		
@@ -1772,11 +1604,9 @@ TerraLib_ = {
 				overwriteLayer(self, project, out, to, toSetName)
 				removeLayer(project, out)
 			end	
-			_Gtme.print(5)
 		end
 
 		collectgarbage("collect")		
-		_Gtme.print(6)
 	end,
 	--- Returns a given dataset from a layer.
 	-- @arg _ A TerraLib object.
