@@ -1111,16 +1111,14 @@ end
 local function findProject(project, packageName)
 	local file = project
 	local s = package.config:sub(1, 1)
-	local errMsg = nil
 	local exFullPath = ""
+	local errMsg
 
 	if file then
 		local info
-		xpcall(function() info = packageInfo(packageName).path end, function(err)
-			errMsg = err
-		end)
+		local ok, errMsg = pcall(function() info = packageInfo(packageName).path end)
 
-		if errMsg then
+		if not ok then
 			return false, errMsg
 		end
 
@@ -1130,8 +1128,6 @@ local function findProject(project, packageName)
 			errMsg = "Project '"..file.."' does not exist in package '"..packageName.."'."
 			errMsg = errMsg.."\nPlease use one from the list below:"
 		end
-	elseif packageName == "base" then
-		errMsg = "TerraME has the following projects:"
 	elseif #_Gtme.projectFiles(packageName) == 0 then
 		errMsg = "Package '"..packageName.."' has no projects."
 		return false, errMsg

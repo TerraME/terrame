@@ -64,7 +64,7 @@ local function disableAll()
 	oldState = {
 		[comboboxExamples] = comboboxExamples.enabled,
 		[comboboxModels]   = comboboxModels.enabled,
-		[comboboxProjects]   = comboboxProjects.enabled,
+		[comboboxProjects] = comboboxProjects.enabled,
 		[projButton]       = projButton.enabled,
 		[docButton]        = docButton.enabled,
 		[configureButton]  = configureButton.enabled,
