@@ -91,7 +91,7 @@ return{
 				finalTime = 10
 			}
 		end
-		unitTest:assertError(error_func, "Argument 'title' cannot be an argument for a Model.")
+		unitTest:assertError(error_func, "'title' cannot be an argument for a Model.")
 
 		error_func = function()
 			Model{
@@ -100,7 +100,7 @@ return{
 				finalTime = 10
 			}
 		end
-		unitTest:assertError(error_func, "Argument 'getParameters' cannot be an argument for a Model.")
+		unitTest:assertError(error_func, "'getParameters' cannot be an argument for a Model.")
 	
 		local Tube = Model{
 			init = function() end,
