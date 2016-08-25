@@ -29,9 +29,6 @@ editor.tabwidth = 4
 -- to specify language to use in the IDE (requires a file in cfg/i18n folder)
 language = "en"
 
--- path to TerraME
-path.terrame_install = os.getenv("TME_PATH")
--- hack in Mac OS X
-if (path.terrame_install == nil) then
-    path.terrame_install = "/Applications/terrame.app/Contents/bin"
-end
+-- Path to TerraME
+-- Example:
+-- path.terrame_install = "C:\\TerraME\\bin"

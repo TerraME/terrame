@@ -401,6 +401,65 @@ return {
 		
 		rmFile(proj.file)
 		tl:dropPgTable(pgData)
-	end	
+	end,
+	export = function(unitTest)
+		local projName = "layer_postgis_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+		
+		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	
+		local layerName1 = "setores"
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+		
+		local overwrite = true
+		
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		local tableName = string.lower("Setores_Censitarios_2000_pol")
+		
+		local pgData = {
+			source = "postgis",
+			user = user,
+			password = password,
+			database = database
+		}		
+		
+		layer1:export(pgData, overwrite)
+		
+		local layerName2 = "setorespg"
+		local layer2 = Layer{
+			project = proj,
+			source = "postgis",
+			name = layerName2,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName
+		}
+		
+		local geojson = "setores.geojson"
+		layer2:export(geojson, overwrite)
+		unitTest:assert(isFile(geojson))
+		
+		local shp = "setores.shp"
+		layer2:export(shp, overwrite)
+		unitTest:assert(isFile(shp))
+
+		rmFile(geojson)
+		rmFile(shp)
+		rmFile(proj.file)
+		
+		pgData.table = tableName
+		TerraLib{}:dropPgTable(pgData)
+	end
 }
 

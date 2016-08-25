@@ -55,12 +55,6 @@ return{
 		copy.age = 2
 
 		unitTest:assertEquals(animal.age, 5)
-	end,    
-	closeFile = function(unitTest)
-		local fopen = io.open("test.csv", "a+")
-		local data = closeFile(fopen)
-		unitTest:assert(data)
-		rmFile("test.csv")
 	end,
 	d = function(unitTest)
 		local df = function(x, y) return y - x ^ 2 + 1 end
@@ -536,11 +530,6 @@ return{
 		unitTest:assert(not r)
 		unitTest:assertEquals(count, 1)
 	end,
-	getExtension = function(unitTest)
-		unitTest:assertEquals(getExtension("file.txt"), "txt")
-		unitTest:assertEquals(getExtension("/Applications/terrame.app/Contents/bin/packages/base/data/amazonia.shp"), "shp")
-		unitTest:assertEquals(getExtension("/Applications/terrame.app/Contents/bin/packages/base/data/amazonia"), "")
-	end,
 	getn = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}
 
@@ -924,20 +913,6 @@ return{
 
 		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
 		unitTest:assertEquals(sumvalue, 0.1 + 0.04 + 0.3 + 0.07)
-	end,
-	openFile = function(unitTest)
-		local fopen = openFile("test.csv", "a+") 
-		local sfile = fopen:read("*all")
-
-		unitTest:assertEquals(sfile, "")
-		closeFile(fopen)
-
-		fopen = openFile("test.csv")
-		sfile = fopen:read()
-		unitTest:assertNil(sfile)
-		closeFile(fopen)
-
-		rmFile("test.csv")
 	end,
 	round = function(unitTest)
 		unitTest:assertEquals(round(5.22), 5)

@@ -147,7 +147,7 @@ local function getProjects(package)
 				description = description.."."
 
 				projects[currentProject][idx] = {
-					file = tl.getFileNameWithExtension(value),
+					file = File(value):getNameWithExtension(),
 					description = description
 				}
 			end
@@ -523,8 +523,8 @@ function _Gtme.executeDoc(package)
 				end
 
 				local csv 
-				
-				local result, err = pcall(function() csv = CSVread(filePath(value.file[1], package), value.separator) end)
+
+				local result, err = pcall(function() csv = File(filePath(value.file[1], package)):read(value.separator) end)
 
 				if not result then
 					printError(err)

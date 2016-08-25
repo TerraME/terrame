@@ -271,6 +271,85 @@ return {
 		
 		rmFile(proj.file)
 		rmFile(shp1)		
-	end
+	end,
+	getDummyValue = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end
+		
+		tl:createProject(proj, {})
+		
+		local layerName = "TifLayer"
+		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+		tl:addGdalLayer(proj, layerName, layerFile)
+		
+		local dummy = tl:getDummyValue(proj, layerName, 0)
+		unitTest:assertEquals(tostring(dummy), tostring(1.7976931348623e+308))
+		
+		dummy = tl:getDummyValue(proj, layerName, 1)
+		unitTest:assertEquals(tostring(dummy), tostring(1.7976931348623e+308))
+		
+		dummy = tl:getDummyValue(proj, layerName, 2)
+		unitTest:assertEquals(tostring(dummy), tostring(1.7976931348623e+308))	
+
+		local layerName2 = "ShapeLayer"
+		local layerFile2 = filePath("sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName2, layerFile2)	
+		
+		dummy = tl:getDummyValue(proj, layerName2, 0)
+		unitTest:assertNil(dummy)
+		
+		rmFile(proj.file)		
+	end,
+	saveLayerAs = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+
+		local layerName1 = "TifLayer"
+		local layerFile1 = filePath("cbers_rgb342_crop1.tif", "terralib")
+		tl:addGdalLayer(proj, layerName1, layerFile1)	
+		
+		local customWarningBkp = customWarning 
+		local currDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		customWarning = function(msg) 
+			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2nc.nc'.") or
+							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'."))
+		end
+		
+		-- NC (IT WAS ONLY TO COPY TIF TO A CURRENT DIR)
+		local toData = {}
+		toData.file = "tif2nc.nc"
+		toData.type = "nc"		
+		
+		local overwrite = true
+		
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		unitTest:assert(isFile("cbers_rgb342_crop1.tif"))
+
+		-- OVERWRITE
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		unitTest:assert(isFile("cbers_rgb342_crop1.tif"))
+		
+		
+		rmFile("cbers_rgb342_crop1.tif")
+		rmFile(proj.file)
+		
+		customWarning = customWarningBkp
+	end	
 }
 

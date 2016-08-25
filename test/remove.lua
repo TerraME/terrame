@@ -7,6 +7,7 @@ files = {
 	packageInfo("twoerrors").path..s.."log"..s..so..s.."chart_cell_select.bmp",
 	packageInfo("nodatadotlua").path..s.."data.lua",
 	packageInfo("nofontdotlua").path..s.."font.lua",
-	packageInfo("models").path..s.."tests"
+	packageInfo("models").path..s.."tests",
+	currentDir()..s.."trace-layer.tview"
 }
 

@@ -89,17 +89,6 @@ return{
  			}
  		end
 		unitTest:assertError(error_func, "More than one candidate to argument 'source': 'shp', 'virtual'.")
-
-		os.execute("touch data.geojson")
-
-		error_func = function()
- 			cs = CellularSpace{
- 				file = "data.geojson"
- 			}
-		end
-		unitTest:assertError(error_func, "File 'data.geojson' was empty.")
-
-		rmFile("data.geojson")
 	end,
 	loadNeighborhood = function(unitTest)
 		local terralib = getPackage("terralib")
@@ -181,7 +170,7 @@ return{
 		error_func = function()
 			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "neighCabecaDeBoi900x900.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", "neighCabecaDeBoi900x900.gpm"))
 
 		local mfile = filePath("cabecadeboi-neigh.gpm", "base")
 	
@@ -216,7 +205,7 @@ return{
 		error_func = function()
 			cs2:loadNeighborhood{source = "arquivo.gpm"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "arquivo.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
 
 		error_func = function()
 			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid"}

@@ -33,7 +33,8 @@ end
 
 local function isSourceConsistent(source, filePath)
 	if filePath ~= nil then
-		return source == getFileExtension(filePath)
+		local file = File(filePath)
+		return source == file:getExtension()
 	end
 	
 	return true
@@ -55,16 +56,17 @@ local function addCellularLayer(self, data)
 			else
 				customError("At least one of the following arguments must be used: 'file', 'source', or 'database'.")
 			end	
-		else		
-			local source = getFileExtension(data.file)
+		else
+			local file = File(data.file)
+			local source = file:getExtension()
 			data.source = source	
 		end
 	end
 		
 	-- if isEmpty(data.source) then
 		-- mandatoryTableArgument(data, "file", "string")	
-			
-		-- local source = getFileExtension(data.file)
+		-- local file = File(data.file)
+		-- local source = file:getExtension()
 		-- data.source = source
 	-- else
 		-- mandatoryTableArgument(data, "source", "string")
@@ -178,8 +180,9 @@ local function addLayer(self, data)
 				--customError("The layer file'"..data.file.."' not found.")
 				mandatoryTableArgument(data, "source", "string")
 			end	
-				
-			data.source = getFileExtension(data.file)
+
+			local file = File(data.file)
+			data.source = file:getExtension()
 		end
 	end
 		
@@ -220,10 +223,10 @@ local function addLayer(self, data)
 			self.terralib:addGdalLayer(self, data.name, data.file)
 		end,
 		nc = function()
-			mandatoryTableArgument(data, "file", "string")
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+			mandatoryTableArgument(data, "file", "string") -- SKIP
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"}) -- SKIP
 
-			self.terralib:addGdalLayer(self, data.name, data.file)
+			self.terralib:addGdalLayer(self, data.name, data.file) -- SKIP
 		end,
 		asc = function()
 			mandatoryTableArgument(data, "file", "string")
@@ -442,7 +445,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -490,7 +493,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -506,7 +509,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -522,7 +525,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -538,7 +541,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -572,7 +575,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -589,7 +592,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
-					data.select = data.band
+					data.select = data.band -- SKIP
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -655,6 +658,53 @@ Layer_ = {
 		end
 		
 		return luaPropNames
+	end,
+	--- Returns the dummy value of a raster layer. If the layer does not have a raster representation
+	-- then it returns a nil value. The bands of the raster layer are named from zero to the number of
+	-- bands minus one, if the band is greater than that, it returns an error.
+	-- @arg band The band number.
+	-- @usage -- DONTRUN
+	-- print(layer:dummy(0))	
+	dummy = function(self, band)
+		return self.project.terralib:getDummyValue(self.project, self.name, band)
+	end,
+	--- Exports the data of a layer to another data source. 
+	-- The data argument can be either a file string or data table of postigis connection. 
+	-- @arg data Either a file string or data table.
+	-- @arg overwrite Indicates if the exported data will be overwrited.
+	-- @usage -- DONTRUN
+	-- layer:export{file = "myfile.shp", true}
+	-- layer:export{file = "myfile.geojson"}	
+	export = function(self, data, overwrite)
+		if type(data) == "string" then 
+			local file = File(data) -- TODO(#1366): the file needs validation
+			local source = file:getExtension()
+			if isValidSource(source) then
+				local toData = {}
+				toData.file = data			
+				toData.type = source 
+				self.project.terralib:saveLayerAs(self.project, self.name, toData, overwrite)
+			else
+				invalidFileExtensionError("data", source) 
+			end
+		elseif type(data) == "table" then
+			mandatoryTableArgument(data, "source", "string")
+			if data.source == "postgis" then
+				mandatoryTableArgument(data, "user", "string")
+				mandatoryTableArgument(data, "password", "string")
+				mandatoryTableArgument(data, "database", "string")
+				defaultTableValue(data, "host", "localhost")
+				defaultTableValue(data, "port", 5432)
+				defaultTableValue(data, "encoding", "CP1252")		
+				local pgData = data
+				pgData.type = "postgis"
+				self.project.terralib:saveLayerAs(self.project, self.name, pgData, overwrite)
+			else
+				customError("It only supports postgis database, use source = \"postgis\".")
+			end
+		else
+			customError("The attribute 'data' must be either 'file' or 'table', but received ("..type(data)..").")
+		end
 	end
 }
 

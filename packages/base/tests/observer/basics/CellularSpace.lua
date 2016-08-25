@@ -171,8 +171,8 @@ return{
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
-		local fn1 = terralib.getFileName(filePath1)
+		local filePath1 = testDir.."/"..shp1
+		local fn1 = File(filePath1):getName()
 		fn1 = testDir.."/"..fn1			
 		
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
@@ -241,7 +241,34 @@ return{
 			if isFile(f) then
 				rmFile(f)
 			end
-		end			
+		end
+
+		cs = CellularSpace{
+			xdim = 10,
+			ydim = 20,
+		}
+
+		forEachCell(cs, function(cell)
+			cell.value = cell.x
+		end)
+
+		unitTest:assertEquals(cs.source, "virtual")
+		unitTest:assertEquals(cs.xMax, cs.ydim - 1)
+		unitTest:assertEquals(cs.yMax, cs.xdim - 1)
+		unitTest:assertEquals(#cs, cs.xdim * cs.ydim)
+
+		map = Map{
+			target = cs,
+			select = "value",
+			min = 0,
+			max = 10,
+			color = "Blues",
+			slices = 11
+		}
+
+		cs:notify()
+		unitTest:assertType(map, "Map")
+		unitTest:assertSnapshot(map, "map_virtual.bmp", 0.05)
 	end,
 	notify = function(unitTest)
 		local r = Random()

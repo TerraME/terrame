@@ -72,10 +72,13 @@ local RasterAttributeCreatedMapper = {
 }
 
 local SourceTypeMapper = {
-	OGR = {"shp", "geojson"},
-	GDAL = {"tif", "nc", "asc"},
-	POSTGIS = "postgis",
-	ADO = "access"
+	shp = "OGR",
+	geojson = "OGR",
+	tif = "GDAL",
+	nc = "GDAL",
+	asc = "GDAL",
+	postgis = "POSTGIS",
+	access = "ADO"
 }
 
 local function decodeUri(str)
@@ -117,7 +120,7 @@ end
 
 local function createPgConnInfo(host, port, user, pass, database, encoding)
 	local connInfo = {}
-	
+
 	connInfo.PG_HOST = host 
 	connInfo.PG_PORT = port 
 	connInfo.PG_USER = user
@@ -263,7 +266,8 @@ local function createLayer(name, dSetName, connInfo, type)
 end
 
 local function isValidTviewExt(filePath)
-	return getFileExtension(filePath) == "tview"
+	local file = File(filePath)
+	return file:getExtension() == "tview"
 end
 
 local function releaseProject(project)
@@ -526,9 +530,11 @@ local function addFileLayer(project, name, filePath, type, addSpatialIdx)
 		if addSpatialIdx then
 			connInfo.SPATIAL_IDX = true
 		end
-		dSetName = getFileName(connInfo.URI)
+		local file = File(connInfo.URI)
+		dSetName = file:getName()
 	elseif type == "GDAL" then
-		dSetName = getFileNameWithExtension(connInfo.URI)
+		local file = File(connInfo.URI)
+		dSetName = file:getNameWithExtension()
 	elseif type == "GeoJSON" then
 		type = "OGR"
 		dSetName = "OGRGeoJSON"
@@ -584,9 +590,7 @@ local function dropDataSet(connInfo, dSetName, type)
 	do
 		local ds = makeAndOpenDataSource(connInfo, type)
 
-		local dsetExists = ds:dataSetExists(dSetName)
-
-		if dsetExists then
+		if  ds:dataSetExists(dSetName) then
 			ds:dropDataSet(dSetName)
 		end	
 	
@@ -1005,6 +1009,105 @@ local function overwriteLayer(self, project, fromName, toName, toSetName)
 	self:saveDataSet(project, fromName, luaTable, toName, {}, toSetName)	
 end
 
+local function castGeometry(geom)
+	local geomType = binding.te.gm.Geometry.getGeomTypeId(string.upper(geom:getGeometryType()))
+	
+	if 	geomType == binding.te.gm.GeometryType then
+		return geom
+	elseif geomType == binding.te.gm.PointType then
+		return binding.te.gm.Geometry.toPoint(geom)		
+	elseif geomType == binding.te.gm.MultiPointType then	
+		return binding.te.gm.Geometry.toMultiPoint(geom)
+	elseif geomType == binding.te.gm.LineStringType then
+		return binding.te.gm.Geometry.toLineString(geom)
+	elseif geomType == binding.te.gm.MultiLineStringType then		
+		return binding.te.gm.Geometry.toMultiLineString(geom)
+	elseif geomType == binding.te.gm.CircularStringType then
+		return binding.te.gm.Geometry.toCircularString(geom)
+	elseif geomType == binding.te.gm.CompoundCurveType then
+		return binding.te.gm.Geometry.toCompoundCurve(geom)
+	elseif geomType == binding.te.gm.PolygonType then
+		return binding.te.gm.Geometry.toPolygon(geom)
+	elseif geomType == binding.te.gm.CurvePolygonType then
+		return binding.te.gm.Geometry.toCurvePolygon(geom)
+	elseif geomType == binding.te.gm.MultiPolygonType then	
+		return binding.te.gm.Geometry.toMultiPolygon(geom)
+	elseif geomType == binding.te.gm.GeometryCollectionType then
+		return binding.te.gm.Geometry.toGeometryCollection(geom)	  		
+	elseif geomType == binding.te.gm.MultiSurfaceType then
+		return binding.te.gm.Geometry.toMultiSurface(geom)
+	elseif geomType == binding.te.gm.PolyhedralSurfaceType then
+		return binding.te.gm.Geometry.toPolyhedralSurface(geom)
+	elseif geomType == binding.te.gm.TINType then
+		return binding.te.gm.Geometry.toTIN(geom)
+	elseif geomType == binding.te.gm.TriangleType then
+		return binding.te.gm.Geometry.toTriangle(geom)		
+	end  
+
+	customError("Unknown geometry type '"..geomType.."'.") -- SKIP
+end
+
+local function getRasterFromLayer(project, layer)
+	loadProject(project, project.file)
+
+	layer = toDataSetLayer(layer)
+	local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+	local connInfo = dsInfo:getConnInfo()
+	local dsType = dsInfo:getType()
+	local raster = nil
+	
+	if dsType == "GDAL" then
+		do
+			local ds = makeAndOpenDataSource(connInfo, dsType)
+			local dSetName = layer:getDataSetName()
+			local dSet = ds:getDataSet(dSetName)
+			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+			raster = dSet:getRaster(rpos)	
+			
+			ds:close()
+		end
+
+		collectgarbage("collect")
+	end		
+		
+	releaseProject(project)
+		
+	return raster
+end
+
+local function createPgDataSourceToSaveAs(fromType, pgData)
+	local ds = nil
+	
+	if fromType == "OGR" then
+		local connInfo = createPgConnInfo(pgData.host, pgData.port, pgData.user, pgData.password, pgData.database, pgData.encoding)
+		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
+	end
+
+	return ds
+end
+
+local function createOgrDataSourceToSaveAs(fromType, fileData)
+	local ds = nil
+	
+	if (fromType == "OGR") or (fromType == "POSTGIS") then
+		local connInfo = createFileConnInfo(fileData.file)
+		ds = makeAndOpenDataSource(connInfo, "OGR")	
+	end
+	
+	return ds
+end
+
+local function createGdalDataSourceToSaveAs(fromType, fileData)
+	local ds = nil
+	
+	if fromType == "GDAL" then				
+		local connInfo = createFileConnInfo(fileData.dir)
+		ds = makeAndOpenDataSource(connInfo, "GDAL")		
+	end
+	
+	return ds
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 	
@@ -1114,15 +1217,17 @@ TerraLib_ = {
 			info.password = connInfo.PG_PASSWORD
 			info.database = connInfo.PG_DB_NAME
 			info.table = dseName
-			info.source = SourceTypeMapper.POSTGIS
+			info.source = "postgis"
 		elseif type == "OGR" then
 			info.file = connInfo.URI
-			info.source = getFileExtension(info.file)
+			local file = File(info.file)
+			info.source = file:getExtension()
 		elseif type == "GDAL" then
 			info.file = connInfo.URI
-			info.source = getFileExtension(info.file)
+			local file = File(info.file)
+			info.source = file:getExtension()
 		elseif type == "ADO" then
-			info.source = SourceTypeMapper.ADO -- SKIP
+			info.source = "access" -- SKIP
 		end
 
 		do
@@ -1225,7 +1330,8 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
-		local dSetName = getFileName(connInfo.URI)
+		local file = File(connInfo.URI)
+		local dSetName = file:getName()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
@@ -1319,7 +1425,8 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
-		local dSetName = getFileName(connInfo.URI)
+		local file = File(connInfo.URI)
+		local dSetName = file:getName()
 		
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 		
@@ -1588,7 +1695,8 @@ TerraLib_ = {
 				outDSetName = string.lower(outDSetName)
 				outConnInfo.PG_NEWDB_NAME = outDSetName
 			elseif outType == "OGR" then
-				local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
+				local file = File(outConnInfo.URI)
+				local outDir = _Gtme.makePathCompatibleToAllOS(file:getDir())
 				outConnInfo.URI = outDir..out..".shp"
 				outConnInfo.DRIVER = "ESRI Shapefile"
 				outConnInfo.SPATIAL_IDX = true
@@ -1646,7 +1754,8 @@ TerraLib_ = {
 				local toSetName = nil
 				
 				if toType == "OGR" then
-					toSetName = getFileName(toConnInfo.URI)
+					local file = File(toConnInfo.URI)
+					toSetName = file:getName()
 				end
 				
 				overwriteLayer(self, project, out, to, toSetName)
@@ -1805,7 +1914,8 @@ TerraLib_ = {
 				outConnInfo.PG_NEWDB_NAME = newDstName
 				outDs = makeAndOpenDataSource(outConnInfo, outType)
 			elseif outType == "OGR" then
-				local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
+				local file = File(outConnInfo.URI)
+				local outDir = _Gtme.makePathCompatibleToAllOS(file:getDir())
 				outConnInfo.URI = outDir..newDstName..".shp"		
 
 				if fromLayerName == toName then
@@ -1857,7 +1967,8 @@ TerraLib_ = {
 		do
 			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "GDAL")
-			local dSetName = getFileNameWithExtension(connInfo.URI)
+			local file = File(connInfo.URI)
+			local dSetName = file:getNameWithExtension()
 			local dSet = ds:getDataSet(dSetName)
 			set = createDataSetAdapted(dSet)
 
@@ -1882,11 +1993,11 @@ TerraLib_ = {
 			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "OGR")
 			local dSetName
-
-			if string.lower(getFileExtension(filePath)) == "geojson" then
+			local file = File(filePath)
+			if string.lower(file:getExtension()) == "geojson" then
 				dSetName = "OGRGeoJSON"
 			else
-				dSetName = getFileName(filePath)
+				dSetName = file:getName()
 			end
 
 			local dSet = ds:getDataSet(dSetName)
@@ -1901,39 +2012,18 @@ TerraLib_ = {
 	end,
 	--- Returns the number of bands of some Raster.
 	-- @arg _ A TerraLib object.
-	-- @arg project The name of the project.
+	-- @arg project The project.
 	-- @arg layerName The input layer name.
 	-- @usage -- DONTRUN
 	-- tl:addGdalLayer(proj, layerName, layerFile)	
 	-- local numBands = tl:getNumOfBands(proj, layerName)	
 	getNumOfBands = function(_, project, layerName)
-		loadProject(project, project.file)
 		local layer = project.layers[layerName]
-		layer = toDataSetLayer(layer)
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
-		local connInfo = dsInfo:getConnInfo()
-		local dsType = dsInfo:getType()
-
-		if dsType == "GDAL" then
-			local numBands
-			do
-				local ds = makeAndOpenDataSource(connInfo, dsType)
-				local dSetName = layer:getDataSetName()
-				local dSet = ds:getDataSet(dSetName)
-				local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
-				local raster = dSet:getRaster(rpos)	
-				numBands = raster:getNumberOfBands()
-			
-				ds:close()
-			end
-
-			collectgarbage("collect")
-			
-			releaseProject(project)
-			return numBands
-		end		
+		local raster = getRasterFromLayer(project, layer)
 		
-		releaseProject(project)
+		if raster then
+			return raster:getNumberOfBands()
+		end
 		
 		customError("The layer '"..layerName.."' is not a Raster.")
 	end,
@@ -2009,6 +2099,157 @@ TerraLib_ = {
 	-- local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)	
 	getDistance = function(_, fromGeom, toGeom)
 		return fromGeom:distance(toGeom)
+	end,
+	--- Returns a subtype of Geometry object.
+	-- @arg _ A TerraLib object.	
+	-- @arg geom A Geometry object.
+	-- @usage -- DONTRUN
+	-- shpPath = filePath("RODOVIAS_AMZ_lin.shp", "terralib")
+	-- dSet = tl:getOGRByFilePath(shpPath)	
+	-- geom = dSet[1].OGR_GEOMETRY
+	-- geom = tl:castGeomToSubtype(geom)	
+	castGeomToSubtype = function(_, geom)
+		return castGeometry(geom)
+	end,
+	--- Returns the dummy value of a raster data.
+	-- @arg _ A TerraLib object.
+	-- @arg project The project.
+	-- @arg layerName The layer name which is in the project.
+	-- @arg band The band number.
+	-- @usage -- DONTRUN
+	-- local layerName = "TifLayer"
+	-- local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+	-- tl:addGdalLayer(proj, layerName, layerFile)
+	-- local dummy = tl:getDummyValue(proj, layerName, 0)	
+	getDummyValue = function(_, project, layerName, band)
+		local layer = project.layers[layerName]
+		local raster = getRasterFromLayer(project, layer)
+		local value = nil
+		
+		if raster then
+			local numBands = raster:getNumberOfBands()
+			if numBands > band then
+				local bandObj = raster:getBand(band)
+				local bandProperty = bandObj:getProperty()
+				value = bandProperty.m_noDataValue
+			else
+				customError("The maximum band is '"..(numBands - 1).."'.")
+			end
+		end
+		
+		return value
+	end,
+	--- Save some data of a layer to another data type.
+	-- @arg _ A TerraLib object (not used).
+	-- @arg project The project.
+	-- @arg layerName The layer name which is in the project.
+	-- @arg toData The data that will be saved.
+	-- @arg overwrite It indicates if the saved data will be overwrited.
+	-- @usage -- DONTRUN	
+	-- local toData = {}
+	-- toData.file = "shp2geojson.geojson"
+	-- toData.type = "geojson"			
+	-- tl:saveLayerAs(project, "SomeLayer", toData, true)	
+	saveLayerAs = function(_, project, layerName, toData, overwrite)
+		loadProject(project, project.file)
+	
+		do		
+			local from = project.layers[layerName]
+			local fromDsId = from:getDataSourceId()	
+			local toType = SourceTypeMapper[toData.type]
+			local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)		
+			local fromDs = binding.GetDs(fromDsId, true)	
+			from = toDataSetLayer(from)	
+			local fromDSetName = from:getDataSetName()	
+			local fromType = fromDsInfo:getType()
+			local toDs = nil
+			local errorMsg = nil
+			
+			if toType == "POSTGIS" then  -- #1243
+				toData.table = string.lower(fromDSetName)
+				toDs = createPgDataSourceToSaveAs(fromType, toData)				
+				if not toDs then
+					errorMsg = "It was not possible save the data in layer '"..layerName.."' to postgis data." -- #1363
+				elseif toDs:dataSetExists(toData.table) then
+					if overwrite then
+						toDs:dropDataSet(toData.table)
+					else
+						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
+					end
+				end						
+			elseif toType == "OGR" then
+				if isFile(toData.file) then
+					if overwrite then
+						rmFile(toData.file) -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
+					else
+						errorMsg = "The file '"..toData.file.."' already exists."
+					end
+				end				
+				
+				if not errorMsg then	
+					toDs = createOgrDataSourceToSaveAs(fromType, toData)
+					if not toDs then
+						errorMsg = "It was not possible save the data in layer '"..layerName.."' to vector data."
+					end	
+				end
+			elseif toType == "GDAL" then
+				toData.fileTif = fromDSetName
+				local file = File(toData.file)
+				local dir = file:getDir()
+				if dir == "" then
+					dir = _Gtme.makePathCompatibleToAllOS(currentDir())
+				end	
+				
+				toData.dir = dir
+				local fileCopy = dir.."/"..toData.fileTif
+				
+				if toData.file and (file:getNameWithExtension() ~= fileTif) then
+					customWarning("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364
+				end					
+						
+				toDs = createGdalDataSourceToSaveAs(fromType, toData)
+				if not toDs then
+					errorMsg = "It was not possible save the data in layer '"..layerName.."' to raster data." -- #1364
+				elseif toDs:dataSetExists(toData.fileTif) then
+					if overwrite then
+						toDs:dropDataSet(toData.fileTif)
+					else
+						errorMsg = "The file '"..fileCopy.."' already exists."
+					end					
+				end	
+				
+				customWarning("Attempt to save data of the layer in '"..fileCopy.."'.") -- REVIEW
+			end
+			
+			if errorMsg then
+				if toDs then
+					toDs:close()
+				end
+				
+				fromDs:close()
+				releaseProject(project)
+				customError(errorMsg)
+			end
+						
+			local fromDSetType = fromDs:getDataSetType(fromDSetName)				
+			local fromDSet = fromDs:getDataSet(fromDSetName)
+				
+			binding.Create(toDs, fromDSetType, fromDSet)
+			
+			-- #875
+			-- if toType == "POSTGIS" then
+				-- toDs:renameDataSet(string.lower(fromDSetName), toData.table)
+			-- end
+
+			fromDs:close()
+			toDs:close()	
+		end
+		
+		releaseProject(project)
+
+		collectgarbage("collect")	
+		
+		return true
 	end
 }
 
@@ -2027,8 +2268,8 @@ function TerraLib()
 		return instance
 	else
 		local data = {}
-		setmetatable(data, metaTableTerraLib_)
-		instance = data
+		setmetatable(data, metaTableTerraLib_) -- SKIP
+		instance = data -- SKIP
 		return data
 	end
 end

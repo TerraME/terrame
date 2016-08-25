@@ -27,23 +27,25 @@ local terralib = getPackage("terralib")
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
 local function separatorCheck(data)
-	local fopen = openFile(data.source)
-	local header = fopen:read()
-	local lineTest1 = CSVparseLine(header, "\t")
-	local lineTest2 = CSVparseLine(header, " ")
-	local lineTest3 = CSVparseLine(header, ";")
+	local header1 = File(data.source)
+	local header2 = File(data.source)
+	local header3 = File(data.source)
+	local lineTest1 = header1:readLine("\t")
+	local lineTest2 = header2:readLine(" ")
+	local lineTest3 = header3:readLine(";")
 
 	if lineTest1[2] ~= nil and lineTest2[2] == nil or lineTest3[2] ~= nil then
 		customError("Could not read file '"..data.source.."': invalid header.")
 	end
 
-	closeFile(fopen)
+	header1:close()
+	header2:close()
+	header3:close()
 end
 
 local function loadNeighborhoodGAL(self, data)
-	local file = openFile(data.source, "r")
-	local header = file:read()
-	local lineTest = CSVparseLine(header, " ")
+	local file = File(data.source)
+	local lineTest = file:readLine(" ")
 	local layer = ""
 
 	if self.layer ~= nil then
@@ -64,19 +66,17 @@ local function loadNeighborhoodGAL(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 
-	local line_cell = file:read()
+	local line = file:readLine(" ")
 	local counterLine = 2
 
-	while line_cell do
-		local line = CSVparseLine(line_cell, " ")
+	while #line > 0 do
 		local cell = self:get(line[1])
 
 		if cell == nil then
 			customError("Could not find id '"..tostring(line[1]).."' in line "..counterLine..". It seems that it is corrupted.")
 		else
 			local neig = cell:getNeighborhood(data.name)
-			local lineV = file:read()
-			local lineID = CSVparseLine(lineV, " ")
+			local lineID = file:readLine(" ")
 
 			counterLine = counterLine + 1
 			for i = 1, tonumber(line[2]) do
@@ -90,17 +90,16 @@ local function loadNeighborhoodGAL(self, data)
 			end
 		end
 
-		line_cell = file:read()
+		line = file:readLine(" ")
 		counterLine = counterLine + 1
 	end
 
-	closeFile(file)
+	file:close()
 end
 
 local function loadNeighborhoodGPM(self, data)
-	local file = openFile(data.source, "r")
-	local header = file:read()
-	local lineTest = CSVparseLine(header, " ")
+	local file = File(data.source)
+	local lineTest = file:readLine(" ")
 	local layer = ""
 
 	if self.layer ~= nil then
@@ -133,19 +132,17 @@ local function loadNeighborhoodGPM(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 
-	local line_cell = file:read()
+	local line = file:readLine(" ")
 	local counterLine = 2
 
-	while line_cell do
-		local line = CSVparseLine(line_cell, " ")
+	while #line > 0 do
 		local cell = self:get(line[1])
 
 		if cell == nil then
 			customError("Could not find id '"..tostring(line[i]).."' in line "..counterLine..". It seems that it is corrupted.")
 		else
 			local neig = cell:getNeighborhood(data.name)
-			local lineV = file:read()
-			local lineID = CSVparseLine(lineV, " ")
+			local lineID = file:readLine(" ")
 			local valfor = (tonumber(line[2]) * 2)
 
 			counterLine = counterLine + 1
@@ -164,17 +161,16 @@ local function loadNeighborhoodGPM(self, data)
 			end
 		end
 
-		line_cell = file:read()
+		line = file:readLine(" ")
 		counterLine = counterLine + 1
 	end
 
-	closeFile(file)
+	file:close()
 end
 
 local function loadNeighborhoodGWT(self, data)
-	local file = openFile(data.source, "r")
-	local header = file:read()
-	local lineTest = CSVparseLine(header, " ")
+	local file = File(data.source)
+	local lineTest = file:readLine(" ")
 	local layer = ""
 
 	if self.layer ~= nil then
@@ -195,11 +191,10 @@ local function loadNeighborhoodGWT(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 
-	local line_cell = file:read()
+	local line = file:readLine(" ")
 	local counterLine = 2
 
-	while line_cell do
-		local line = CSVparseLine(line_cell, " ")
+	while #line > 0 do
 		local cell = self:get(line[1])
 
 		if cell == nil then
@@ -215,11 +210,11 @@ local function loadNeighborhoodGWT(self, data)
 			neig:add(n, tonumber(line[3]))
 		end
 
-		line_cell = file:read()
+		line = file:readLine(" ")
 		counterLine = counterLine + 1
 	end
 
-	closeFile(file)
+	file:close()
 end
 
 local function getCoordCoupling(_, data)
@@ -392,36 +387,10 @@ local function checkCsv(self)
 	defaultTableValue(self, "sep", ",")
 end
 
-local function checkGdal(self)
-	if not isFile(self.file) then -- SKIP
-		customError("File '"..self.file.."' was not found.") -- SKIP
-	end -- SKIP
-end
-
-local function checkGeoJSON(self)
-	local fopen = openFile(self.file)
-	local sfile = fopen:read("*all")
-	closeFile(fopen)
-
-	if sfile == "" then
-		customError("File '"..self.file.."' was empty.")
-	end
-end
-
 local function checkMap(self)
 	defaultTableValue(self, "sep", " ")
-
-	local getFileName = function(filename)
-		for i = 1, filename:len() do
-			if filename:sub(i, i) == "." then
-				return filename:sub(1, i - 1)
-			end
-		end
-
-		return filename
-	end
-
-	defaultTableValue(self, "attrname", getFileName(self.file))
+	local file = File(self.file)
+	defaultTableValue(self, "attrname", file:getName())
 end
 
 local function checkShape(self)
@@ -491,7 +460,8 @@ local function loadCsv(self)
 
 	self.cells = {}
 	self.cObj_:clear()
-	local data = CSVread(self.file, self.sep)
+	local file = File(self.file)
+	local data = file:read(self.sep)
 	local cellIdCounter = 0
 	for i = 1, #data do
 		cellIdCounter = cellIdCounter + 1
@@ -514,19 +484,21 @@ local function loadMap(self)
 
 	self.cells = {}
 	self.cObj_:clear()
-	for line in io.lines(self.file) do
+
+	local file = File(self.file)
+	local res = file:readLine(self.sep)
+
+	while #res > 0 do
 		j = 0
-
-		local res = CSVparseLine(line, self.sep)
-
 		forEachElement(res, function(_, value)
-			local p = Cell {x = j, y = i} 
+			local p = Cell {x = j, y = i}
 		 	p[self.attrname] = tonumber(value)
 			self:add(p)
 			self.cObj_:addCell(p.x, p.y, p.cObj_)
 			j = j + 1
 		end)
 		i = i + 1
+		res = file:readLine(self.sep)
 	end
 
 	self.xdim = self.xMax
@@ -582,10 +554,12 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		local cell = Cell{id = tostring(i), x = col, y = row}
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 		
+		local tlib = terralib.TerraLib{}
+		
 		for k, v in pairs(dSet[i]) do
 			if (k == "OGR_GEOMETRY") or (k == "geom") then
 				if self.geometry then
-					cell.geom = v
+					cell.geom = tlib:castGeomToSubtype(v)
 				end
 			else
 				cell[k] = v
@@ -642,15 +616,15 @@ end
 local function loadVirtual(self)
 	self.yMin = 0
 	self.xMin = 0
-	self.xMax = self.xdim - 1
-	self.yMax = self.ydim - 1
+	self.xMax = self.ydim - 1
+	self.yMax = self.xdim - 1
 
 	self.cells = {}
 	self.cObj_:clear()
 	local cellIdCounter = 1
-	for i = 1, self.xdim do
-		for j = 1, self.ydim do
-			local c = Cell{id = tostring(cellIdCounter), x = i - 1, y = j - 1}
+	for row = 1, self.xdim do
+		for col = 1, self.ydim do
+			local c = Cell{id = tostring(cellIdCounter), x = row - 1, y = col - 1}
 			cellIdCounter = cellIdCounter + 1
 			c.parent = self
 			self.cObj_:addCell(c.x, c.y, c.cObj_)
@@ -677,7 +651,7 @@ local function registerCellularSpaceDriver(data)
 	defaultTableValue(data, "extension", true)
 
 	mandatoryTableArgument(data, "load", "function")
-	mandatoryTableArgument(data, "check", "function")
+	optionalTableArgument(data, "check", "function")
 	mandatoryTableArgument(data, "source", "string")
 
 	CellularSpaceDrivers[data.source] =  data
@@ -723,14 +697,12 @@ registerCellularSpaceDriver{
 
 registerCellularSpaceDriver{
 	source = "geojson",
-	load = loadOGR,
-	check = checkGeoJSON
+	load = loadOGR
 }
 
 registerCellularSpaceDriver{
 	source = "tif",
-	load = loadGdal,
-	check = checkGdal
+	load = loadGdal
 }
 
 registerCellularSpaceDriver{
@@ -1131,8 +1103,9 @@ CellularSpace_ = {
 		mandatoryTableArgument(data, "source", "string")
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
-			if not openFile(data.source, "r") then
-				resourceNotFoundError("source", data.source) -- SKIP
+			local file = File(data.source)
+			if not file:exists() then
+				resourceNotFoundError("source", data.source)
 			end
 		else
 			local ext = string.match(data.source, "(([^%.]+))$")
@@ -1531,7 +1504,7 @@ function CellularSpace(data)
 			end
 		end)
 
-		if value.extension and (not data.file or (type(data.file) == "string" and getExtension(data.file) ~= idx)) then
+		if value.extension and (not data.file or (type(data.file) == "string" and File(data.file):getExtension() ~= idx)) then
 			all = false
 		end
 
@@ -1573,7 +1546,7 @@ function CellularSpace(data)
 	elseif CellularSpaceDrivers[data.source].extension then
 		mandatoryTableArgument(data, "file", "string")
 
-		if getExtension(data.file) ~= data.source then
+		if File(data.file):getExtension() ~= data.source then
 			customError("source and file extension should be the same.")
 		end
 

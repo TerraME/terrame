@@ -35,48 +35,6 @@ return{
 		unitTest:assertEquals(cf, cf2)
 
 		chDir(cd)
-	end,
-	CSVparseLine = function(unitTest)
-		local line = CSVparseLine("2,5,aa", ",")
-		unitTest:assertEquals(line[1], "2")
-		unitTest:assertEquals(line[2], "5")
-		unitTest:assertEquals(line[3], "aa")
-	end,
-	CSVread = function(unitTest)
-		local mfile = filePath("agents.csv", "base")
-
-		local csv = CSVread(mfile)
-
-		unitTest:assertEquals(4, #csv)
-		unitTest:assertEquals(20, csv[1].age)
-	end,
-	CSVwrite = function(unitTest)
-		local example = {
-			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
-			{age = 3, wealth =  8, vision = 1, metabolism = 1, test = "Foo;text"},
-			{age = 3, wealth = 15, vision = 2, metabolism = 1, test = "Foo,text"},
-			{age = 4, wealth = 12, vision = 2, metabolism = 2, test = "Foo@text"},
-			{age = 2, wealth = 10, vision = 3, metabolism = 1, test = "Foo%text"},
-			{age = 2, wealth =  9, vision = 2, metabolism = 1, test = "Foo)text"},
-			{age = 1, wealth = 11, vision = 2, metabolism = 1, test = "Foo#text"},
-			{age = 3, wealth = 15, vision = 1, metabolism = 2, test = "Foo=text"},
-			{age = 3, wealth = 13, vision = 1, metabolism = 1, test = "Foo.text"},
-			{age = 1, wealth = 10, vision = 3, metabolism = 2, test = "Foo(text"}
-		}
-
-		local s = sessionInfo().separator
-		local filename = tmpDir()..s.."csvwrite.csv"
-
-		CSVwrite(example, filename)
-		local data = CSVread(filename)
-		unitTest:assertNotNil(data)
-		unitTest:assertEquals(#example, #data)
-
-		for i = 1, #example do
-			for k in pairs(example[i]) do
-				unitTest:assertEquals(example[i][k], data[i][k])
-			end
-		end
 	end
 }
 
