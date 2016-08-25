@@ -27,9 +27,9 @@ return{
 		local error_func = function()
 			table.load("dump")
 		end
-		unitTest:assertError(error_func, "File does not have a valid extension.")
+		unitTest:assertError(error_func, "File 'dump' does not have a valid extension.")
 
-		local file = File("dump.tme")
+		local file = File("dump.lua")
 
 		error_func = function()
 			table.load(file:getNameWithExtension())
@@ -40,14 +40,14 @@ return{
 		error_func = function()
 			table.load(file:getPath())
 		end
-		unitTest:assertError(error_func, "Failed to load file.")
+		unitTest:assertError(error_func, "Failed to load file '"..file:getNameWithExtension().."': dump.luaunexpected symbol near '!'")
 
-		file = File("dump.tme")
+		file = File("dump.lua")
 		file:writeLine("local x = 2")
 		error_func = function()
 			table.load(file:getPath())
 		end
-		unitTest:assertError(error_func, "Load file is not a table.")
+		unitTest:assertError(error_func, "File '"..file:getPath().."' does not contain a Lua table.")
 
 		if isFile(file:getPath()) then rmFile(file:getPath()) end
 	end,
@@ -63,7 +63,7 @@ return{
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
-			table.save("", "dump.tme")
+			table.save("", "dump.lua")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", ""))
 

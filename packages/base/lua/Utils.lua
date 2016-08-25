@@ -1411,31 +1411,30 @@ function switch(data, att)
 	return swtbl
 end
 
---- Function that returns a table from file. It converts a file into a Lua code.
--- @arg filename A string with the file name. The filename extension must be '.tme'. This argument is mandatory.
+--- Function to load a table from a given file.
+-- @arg filename A mandatory string with the file name. The filename extension must be '.lua'.
 -- @usage -- DONTRUN
--- tbl = table.load("table.tme")
+-- tbl = table.load("table.lua")
 -- print(_Gtme.tostring(tbl))
 function table.load(filename)
 	mandatoryArgument(1, "string", filename)
 
 	local file = File(filename)
-	verify(file:getExtension() == "tme", "File does not have a valid extension.")
+	verify(file:getExtension() == "lua", "File '"..filename.."' does not have a valid extension.")
 	verify(file:exists(), resourceNotFoundMsg("file", file:getNameWithExtension()))
 
 	local tbl
-	if not pcall(function() tbl = dofile(file:getPath()) end) then
-		customError("Failed to load file.")
-	end
+	local ok, error = pcall(function() tbl = dofile(file:getPath()) end)
+	if not ok then customError("Failed to load file '"..filename.."': "..error) end
 
-	verify(type(tbl) == "table", "Load file is not a table.")
+	verify(type(tbl) == "table", "File '"..filename.."' does not contain a Lua table.")
 	return tbl
 end
 
---- Function that save a table to file. It converts a Lua code into a file.
--- @arg tbl A table to be saved. This argument is mandatory.
--- @arg filename A string with the file name. This argument is mandatory.
--- @usage filename = "dump.tme"
+--- Function to save a table to a given file.
+-- @arg tbl A mandatory table to be saved.
+-- @arg filename A mandatory string with the file name.
+-- @usage filename = "dump.lua"
 -- tbl = {x = 1, y = 2}
 -- table.save(tbl, filename)
 --

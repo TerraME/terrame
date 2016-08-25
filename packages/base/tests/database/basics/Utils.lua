@@ -37,7 +37,7 @@ return{
 		chDir(cd)
 	end,
 	["table.load"] = function(unitTest)
-		local filename = "dump.tme"
+		local filename = "dump.lua"
 		local expected = {
 			{age = 1, wealth = 10, vision = 2},
 			{age = 3, wealth =  8, vision = 1},
@@ -48,7 +48,8 @@ return{
 		local actual = table.load(filename)
 
 		unitTest:assertEquals(#actual, #expected)
-		for i,tab1 in pairs(actual) do
+
+		for i, tab1 in pairs(actual) do
 			local tab2 = expected[i]
 
 			unitTest:assertEquals(tab1.age, tab2.age)
@@ -59,7 +60,7 @@ return{
 		if isFile(filename) then rmFile(filename) end
 	end,
 	["table.save"] = function(unitTest)
-		local filename = "dump.tme"
+		local filename = "dump.lua"
 		local expected = {
 			{age = 1, wealth = 10, vision = 2},
 			{age = 3, wealth =  8, vision = 1},
@@ -68,8 +69,7 @@ return{
 
 		table.save(expected, filename)
 
-		unitTest:assert(isFile(filename))
-		if isFile(filename) then rmFile(filename) end
+		unitTest:assertFile(filename)
 	end
 }
 
