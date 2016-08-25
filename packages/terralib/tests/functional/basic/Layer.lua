@@ -24,27 +24,14 @@
 
 return {
 	Layer = function(unitTest)
-		local projName = "sampa_project.tview"
-		local layerName1 = "Sampa"
-
-		local layerProj = Layer{
-			project = projName,
-			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
-		}
-
-		unitTest:assertEquals(layerName1, layerProj.name)
-		unitTest:assertEquals("polygon", layerProj.rep)
-		unitTest:assertEquals(projName, layerProj.project.file)
-
-		if isFile(projName) then rmFile(projName) end
-
-		projName = "cellular_layer_basic.tview"
+		local projName = "cellular_layer_basic.tview"
 
 		local proj = Project{
 			file = projName,
 			clean = true
 		}
+
+		local layerName1 = "Sampa"
 
 		Layer{
 			project = proj,
@@ -100,7 +87,7 @@ return {
 			file = projName
 		}		
 		
-		layerName1 = "Sampa"
+		local layerName1 = "Sampa"
 		local layer1 = Layer{
 			project = proj1,
 			name = layerName1,
