@@ -29,6 +29,7 @@ return {
 			y = 23.5,
 			srid = 4326
 		}
+
 		local pt = _Gtme.terralib_mod_binding_lua.te.gm.Point(point.x, point.y, point.srid)
 
 		unitTest:assertEquals(point.x, pt:getX())
