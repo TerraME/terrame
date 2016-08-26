@@ -324,22 +324,28 @@ function Timer(data)
 
 	local cObj = TeTimer()
 
-	data.events = {}
-	data.time = -math.huge
+	defaultTableValue(data, "round", 1e-5)
 
-	setmetatable(data, metaTableTimer_)
+	local mdata = {
+		events = {},
+		time = -math.huge,
+		round = data.round
+	}
+
+	data.round = nil
+
+	setmetatable(mdata, metaTableTimer_)
 
 	forEachOrderedElement(data, function(idx, value, mtype)
 		if mtype == "Event" then
-			data:add(value)
-		elseif not belong(idx, {"events", "time"}) then
+			mdata:add(value)
+		else
 			incompatibleTypeError(idx, "Event", value)
 		end
 	end)
  
-	defaultTableValue(data, "round", 1e-5)
-	data.cObj_ = cObj
-	cObj:setReference(data)
-	return data
+	mdata.cObj_ = cObj
+	cObj:setReference(mdata)
+	return mdata
 end
 
