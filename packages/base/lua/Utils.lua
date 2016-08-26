@@ -1431,6 +1431,9 @@ end
 -- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
 --- Function that returns a string describing the internal content of an object.
 -- It converts a table into a string that represents a Lua code that declares such table.
+-- If some internal object is named "parent", it will be converted into a string with the
+-- type of the object. It avoids infinite loops due to the internal cyclic representation
+-- of TerraME.
 -- @arg o The object to be converted into a string.
 -- @arg indent A string to be placed in the beginning of each line of the returning string.
 -- @usage vardump{name = "john", age = 20}
@@ -1444,8 +1447,17 @@ function vardump(o, indent)
 	local indent2 = indent.."    "
 	if isTable(o) then
 		local s = "{".."\n"
+
+		if type(o) ~= "table" then
+			s = type(o)..s
+		end
+
 		local first = true
+		local count = 1
+
 		forEachOrderedElement(o, function(k, v)
+			if k == "parent" then v = type(v) end
+
 			if first == false then s = s .. ", \n" end
 
 			first = false
@@ -1453,7 +1465,7 @@ function vardump(o, indent)
 			s = s..indent2
 			if type(k) == "string" then
 				local char = string.sub(k, 1, 1)
-				if string.match(k, "%w+") == k and string.match(char, "%a") == char then
+				if string.match(k, "[%w_]+") == k and string.match(char, "%a") == char then
 					s = s..tostring(k).." = "..vardump(v, indent2)
 				else
 					s = s.."[\""..tostring(k).."\"] = "..vardump(v, indent2)
@@ -1461,7 +1473,13 @@ function vardump(o, indent)
 			elseif type(k) == "boolean" then
 				s = s.."["..tostring(k).."] = "..vardump(v, indent2)
 			elseif type(k) == "number" then
-				s = s.."["..k.."] = "..vardump(v, indent2)
+				if k ~= count then
+					s = s.."["..k.."] = "
+				else
+					count = count + 1
+				end
+
+				s = s..vardump(v, indent2)
 			else
 				customError("Function vardump cannot handle an index of type "..type(k)..".")
 			end
