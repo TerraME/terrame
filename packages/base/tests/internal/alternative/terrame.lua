@@ -27,7 +27,7 @@ return{
 		local error_func = function()
 			_Gtme.verifyVersionDependency("0.1", ">", "0.0.3")
 		end
-		unitTest:assertError(error_func, "Wrong operator: >")
+		unitTest:assertError(error_func, "Wrong operator: '>'.")
 	end
 }
 

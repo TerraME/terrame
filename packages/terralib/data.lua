@@ -492,38 +492,95 @@ data{
 	file = "Localidades_pt.geojson",
 	summary = "",
 	source = "",
-	attributes = {},  -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
+	attributes = {
+		"LAYER",
+		"LOCALIDADE",
+		"MUNICIPIO",
+		"ATENDIMENT",
+		"POPULA__O",
+		"UCS_FATURA",
+		"ALIMENTADO",
+		"CONSUMO_FA",
+		"CONSUMO_ME",
+		"OBJEID_17",
+		"objet_id_7"
+	},
+	description = {
+		"Name of the layer",
+		"Name of the location",
+		"Name of the municipality it belongs",
+		"?",
+		"Population size",
+		"?",
+		"?",
+		"?",
+		"?",
+		"Secondary unique object identifier",
+		"Unique object identifier"
+	}
 }
 
 data{
 	file = "Rodovias_lin.geojson",
 	summary = "",
 	source = "",
-	attributes = {},  -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
+	attributes = {
+		"LAYER",
+		"FEATURE_ID",
+		"CD_NUMERO_",
+		"CD_ALINHAM",
+		"CD_CLASSE",
+		"CD_PAVIMEN",
+		"CD_TRAFEGO",
+		"CD_SITUACA",
+		"CD_ADMINIS",
+		"NM_RODOVIA",
+		"NM_SIGLA",
+		"PROJECT_ID",
+		"SHAPE_LENG",
+		"SHAPE_LEN",
+		"OBJET_ID_8",
+		"objet_id_9"
+	},
+	description = {
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?",
+		"?"
+	},
+	reference = ""
 }
 
 data{
 	file = "Setores_Censitarios_2000_pol.geojson",
 	summary = "",
 	source = "",
-	reference = ""
-}
-
-data{
-	file = "vegtype_2000.nc",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
+	attributes = {"SPRAREA", "SPRPERIMET", "SPRROTULO", "Populacao", "objet_id_8", "Densde_Pop", "Area"},
+	description = {"?", "?", "?", "?", "?", "?", "?"}
 }
 
 data{
 	file = "sampa.geojson",
+	summary = "Sao Paulo data",
+	source = "",
+	attributes = {"NM_MICRO", "CD_GEOCODU"},
+	description = {"?", "?"}
+}
+
+data{
+	file = "vegtype_2000.nc",
 	summary = "",
 	source = "",
 	attributes = {},  -- optional

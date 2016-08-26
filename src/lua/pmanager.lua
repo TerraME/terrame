@@ -25,6 +25,7 @@
 local comboboxExamples
 local comboboxModels
 local comboboxPackages
+local comboboxProjects
 local aboutButton
 local configureButton
 local projButton
@@ -63,6 +64,7 @@ local function disableAll()
 	oldState = {
 		[comboboxExamples] = comboboxExamples.enabled,
 		[comboboxModels]   = comboboxModels.enabled,
+		[comboboxProjects] = comboboxProjects.enabled,
 		[projButton]       = projButton.enabled,
 		[docButton]        = docButton.enabled,
 		[configureButton]  = configureButton.enabled,
@@ -72,9 +74,10 @@ local function disableAll()
 	comboboxExamples.enabled   = false
 	comboboxModels.enabled     = false
 	comboboxPackages.enabled   = false
+	comboboxProjects.enabled   = false
 	aboutButton.enabled        = false
 	configureButton.enabled    = false
-	projButton.enabled           = false
+	projButton.enabled         = false
 	docButton.enabled          = false
 	installLocalButton.enabled = false
 	installButton.enabled      = false
@@ -85,6 +88,7 @@ end
 local function enableAll()
 	comboboxExamples.enabled = oldState[comboboxExamples]
 	comboboxModels.enabled   = oldState[comboboxModels]
+	comboboxProjects.enabled   = oldState[comboboxProjects]
 	configureButton.enabled  = oldState[configureButton]
 	projButton.enabled       = oldState[projButton]
 	docButton.enabled        = oldState[docButton]
@@ -140,36 +144,6 @@ local function docButtonClicked()
 	enableAll()
 end
 
-local function projButtonClicked()
-	disableAll()
-	local package = comboboxPackages.currentText
-	local s = _Gtme.sessionInfo().separator
-	local files = _Gtme.projectFiles(package)
-
-	local msg = "The following projects will be created:\n"
-	_Gtme.forEachElement(files, function(_, value)
-		local database = string.sub(value, 1, string.len(value) - 4)
-		msg = msg.."- "..database.."\n"
-	end)
-
-	-- QMessageBox::StandardButton
-	local ok = 1024
-	local cancel = 4194304
-
-	msg = msg.."\nThis operation will take some time. Confirm?"
-	if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
-		local data = _Gtme.packageInfo(package).data..s
-		_Gtme.forEachElement(files, function(_, value)
-			_Gtme.printNote("Processing "..data..value)
-			dofile(data..value)
-			_Gtme.clean()
-		end)
-
-		qt.dialog.msg_information("All "..#files.." projects were successfully created.")
-	end
-	enableAll()
-end
-
 local function configureButtonClicked()
 	disableAll()
 
@@ -188,6 +162,17 @@ local function runButtonClicked()
     if not ok then
        qt.dialog.msg_critical(res)
     end
+
+	enableAll()
+end
+
+local function projButtonClicked()
+	disableAll()
+
+	local ok, res = _Gtme.execProject(comboboxProjects.currentText, comboboxPackages.currentText)
+	if not ok then
+		qt.dialog.msg_critical(res)
+	end
 
 	enableAll()
 end
@@ -249,7 +234,13 @@ local function selectPackage()
 	end)
 
 	local files = _Gtme.projectFiles(comboboxPackages.currentText)
+
+	comboboxProjects.enabled = #files > 1
 	projButton.enabled = #files > 0
+
+	forEachElement(files, function(_, value)
+		qt.combobox_add_item(comboboxProjects, string.sub(value, 0, string.len(value) - 4))
+	end)
 end
 
 local function installButtonClicked()
@@ -575,17 +566,12 @@ function _Gtme.packageManager()
 	docButton.text = "Documentation"
 	qt.connect(docButton, "clicked()", docButtonClicked)
 
-	projButton = qt.new_qobject(qt.meta.QPushButton)
-	projButton.text = "Projects"
-	qt.connect(projButton, "clicked()", projButtonClicked)
-
 	label = qt.new_qobject(qt.meta.QLabel)
 	label.text = "Package:"
 	qt.ui.layout_add(internalLayout, label,            0, 0)
 	qt.ui.layout_add(internalLayout, comboboxPackages, 0, 1)
 	qt.ui.layout_add(internalLayout, aboutButton,      0, 2)
 	qt.ui.layout_add(internalLayout, docButton,        0, 3)
-	qt.ui.layout_add(internalLayout, projButton,       0, 4)
 
 	-- models list + execute button
 	comboboxModels = qt.new_qobject(qt.meta.QComboBox)
@@ -614,6 +600,20 @@ function _Gtme.packageManager()
 	qt.ui.layout_add(internalLayout, label,            2, 0)
 	qt.ui.layout_add(internalLayout, comboboxExamples, 2, 1)
 	qt.ui.layout_add(internalLayout, runButton,        2, 2)
+
+	-- projects list + execute button
+	comboboxProjects = qt.new_qobject(qt.meta.QComboBox)
+
+	label = qt.new_qobject(qt.meta.QLabel)
+	label.text = "Project:"
+
+	projButton = qt.new_qobject(qt.meta.QPushButton)
+	projButton.text = "Create"
+	qt.connect(projButton, "clicked()", projButtonClicked)
+
+	qt.ui.layout_add(internalLayout, label,            3, 0)
+	qt.ui.layout_add(internalLayout, comboboxProjects, 3, 1)
+	qt.ui.layout_add(internalLayout, projButton,       3, 2)
 
 	local index = buildComboboxPackages("base")
 	comboboxPackages:setCurrentIndex(index)
@@ -647,7 +647,7 @@ function _Gtme.packageManager()
 	qt.connect(quitButton, "clicked()", quitButtonClicked)
 
 	qt.ui.layout_add(externalLayout, internalLayout)
-	qt.ui.layout_add(externalLayout, buttonsLayout, 3, 0)
+	qt.ui.layout_add(externalLayout, buttonsLayout, 4, 0)
 
 	selectPackage()
 	dialog:show()

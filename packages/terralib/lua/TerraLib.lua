@@ -731,14 +731,26 @@ local function createDataSetAdapted(dSet)
 				line[dSet:getPropertyName(i)] = dSet:getBool(i)
 			elseif type == binding.GEOMETRY_TYPE then
 				line[dSet:getPropertyName(i)] = dSet:getGeom(i)
+			elseif type == binding.RASTER_TYPE then
+				local raster = dSet:getRaster(i)
+				line.xdim = raster:getNumberOfRows()
+				line.ydim = raster:getNumberOfColumns()
+				line.name = raster:getName()
+				line.srid = raster:getSRID()
+				line.bands = raster:getNumberOfBands()
+				line.resolutionX = raster:getResolutionX()
+				line.resolutionY = raster:getResolutionY()
+				line.getValue = function(col, row, band)
+					return raster:getValue(col, row, band)
+				end
 			else
 				line[dSet:getPropertyName(i)] = dSet:getAsString(i)
 			end
 		end
 		set[count] = line
 		count = count + 1
-	end	
-	
+	end
+
 	return set
 end
 

@@ -255,9 +255,8 @@ water            number [200]
 		local MyTube = Model{
 			initialWater = 200,
 			sun = Choice{min = 0, default = 10},
+			finalTime = 100,
 			init = function(model)
-				model.finalTime = 100
-
 				model.timer = Timer{
 					Event{action = function() end}
 				}
@@ -275,6 +274,9 @@ water            number [200]
 
 		local scenario3 = MyTube{initialWater = 100, sun = 10}
 		unitTest:assertEquals("Initial Water = 100", scenario3:title())
+
+		local scenario4 = MyTube{initialWater = 100, finalTime = 50}
+		unitTest:assertEquals("Initial Water = 100", scenario4:title())
 	end
 }
 

@@ -83,6 +83,24 @@ return{
 			Model{seed = Choice{1, 2}}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("init"))
+
+		error_func = function()
+			Model{
+				title = "abc",
+				init = function() end,
+				finalTime = 10
+			}
+		end
+		unitTest:assertError(error_func, "'title' cannot be an argument for a Model.")
+
+		error_func = function()
+			Model{
+				getParameters = "abc",
+				init = function() end,
+				finalTime = 10
+			}
+		end
+		unitTest:assertError(error_func, "'getParameters' cannot be an argument for a Model.")
 	
 		local Tube = Model{
 			init = function() end,
