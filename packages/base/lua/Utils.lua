@@ -1411,6 +1411,43 @@ function switch(data, att)
 	return swtbl
 end
 
+--- Function to load a table from a given file.
+-- @arg filename A mandatory string with the file name. The filename extension must be '.lua'.
+-- @usage -- DONTRUN
+-- tbl = table.load("table.lua")
+-- print(_Gtme.tostring(tbl))
+function table.load(filename)
+	mandatoryArgument(1, "string", filename)
+
+	local file = File(filename)
+	verify(file:getExtension() == "lua", "File '"..filename.."' does not have a valid extension.")
+	verify(file:exists(), resourceNotFoundMsg("file", file:getNameWithExtension()))
+
+	local tbl
+	local ok, error = pcall(function() tbl = dofile(file:getPath()) end)
+	if not ok then customError("Failed to load file '"..filename.."': "..error) end
+
+	verify(type(tbl) == "table", "File '"..filename.."' does not contain a Lua table.")
+	return tbl
+end
+
+--- Function to save a table to a given file.
+-- @arg tbl A mandatory table to be saved.
+-- @arg filename A mandatory string with the file name.
+-- @usage filename = "dump.lua"
+-- tbl = {x = 1, y = 2}
+-- table.save(tbl, filename)
+--
+-- if isFile(filename) then rmFile(filename) end
+function table.save(tbl, filename)
+	mandatoryArgument(1, "table", tbl)
+	mandatoryArgument(2, "string", filename)
+
+	local file = File(filename)
+	local stbl = "return"..vardump(tbl)
+	file:writeLine(stbl)
+end
+
 --- Return the type of an object. It extends the original Lua type() to support TerraME objects,
 -- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
 -- @arg data Any object or value.

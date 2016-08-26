@@ -428,6 +428,9 @@ function Model(attrTab)
 	mandatoryTableArgument(attrTab, "init", "function")
 	optionalTableArgument(attrTab, "execute", "function")
 
+	if attrTab.title then customError("'title' cannot be an argument for a Model.") end
+	if attrTab.getParameters then customError("'getParameters' cannot be an argument for a Model.") end
+
 	local function getExtensions(value)
 		local extensions = {}
 		local i = 1
@@ -718,10 +721,10 @@ function Model(attrTab)
 
 			forEachOrderedElement(parameters, function(idx, value, mtype)
 				if mtype == "Choice" then
-					if self[idx] ~= value.default then
+					if self[idx] ~= value.default and idx ~= "finalTime" then
 						str = str.._Gtme.stringToLabel(idx).." = "..vardump(self[idx])..", "
 					end	
-				elseif self[idx] ~= value then
+				elseif self[idx] ~= value and idx ~= "finalTime" then
 					str = str.._Gtme.stringToLabel(idx).." = "..vardump(self[idx])..", "
 				end
 			end)

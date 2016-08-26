@@ -347,7 +347,7 @@ metaTableFile_ = {
 	__tostring = _Gtme.tostring
 }
 
---- An abtract representation of file and directory pathnames. This type provide access to additional
+--- An abstract representation of file and directory pathnames. This type provide access to additional
 -- file operations and file attributes.
 -- @arg data.name A string with the file name. This argument is mandatory.
 -- @usage file = File("/my/path/file.txt")

@@ -552,7 +552,7 @@ function _Gtme.executeDoc(package)
 				end)
 
 				value.quantity = #csv
-			elseif string.endswith(value.file[1], ".shp") then
+			elseif string.endswith(value.file[1], ".shp") or string.endswith(value.file[1], ".geojson") then
 				print("Processing '"..value.file[1].."'")
 
 				layer = tl.Layer{

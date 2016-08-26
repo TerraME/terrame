@@ -1674,6 +1674,20 @@ function Map(data)
 		customError("Invalid type. Maps only work with CellularSpace, Agent, Society, got "..type(data.target)..".")
 	end
 
+	local validArgs= {"background", "color", "font", "grid", "grouping", "invert", "label", "max", "min",
+	"precision", "select", "size", "slices", "stdColor", "stdDeviation", "symbol", "target", "value"}
+
+	verifyUnnecessaryArguments(data, validArgs)
+
+	local args = {}
+	forEachElement(data, function(arg, value)
+		if belong(arg, validArgs) then
+			args[arg] = value
+		end
+	end)
+
+	data = args
+
 	if type(data.target) == "Agent" then
 		local s = Society{instance = Agent{}, quantity = 0}
 		s:add(data.target)
