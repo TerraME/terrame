@@ -966,7 +966,7 @@ return{
 		unitTest:assertEquals(type(c), "Cell")
 	end,
 	vardump = function(unitTest)
-		local actual = vardump{a = 2, b = 3, w = {2, 3, 4}}
+		local actual = vardump{a = 2, b = 3, w = {2, 3, [4] = 4}}
 
 		unitTest:assertEquals(actual, [[{
     a = 2, 
@@ -974,7 +974,7 @@ return{
     w = {
         2, 
         3, 
-        4
+        [4] = 4
     }
 }]])
 
