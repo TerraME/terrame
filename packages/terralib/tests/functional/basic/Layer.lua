@@ -86,8 +86,7 @@ return {
 		local proj1 = Project {
 			file = projName
 		}		
-		
-		local layerName1 = "Sampa"
+
 		local layer1 = Layer{
 			project = proj1,
 			name = layerName1,
