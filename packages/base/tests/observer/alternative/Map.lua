@@ -68,6 +68,11 @@ return{
 		end
 		unitTest:assertError(error_func, "All the elements of an RGB composition should be numbers, got 'string' in position 1.")
 
+		error_func = function()
+			Map{target = c, select = "x", slices = "abc", values = {"a"}, color = {"green"}}
+		end
+		unitTest:assertError(error_func, "Argument 'values' is unnecessary. Do you mean 'value'?")
+
 		-- equalsteps
 		error_func = function()
 			Map{target = c, grouping = "equalsteps"}
