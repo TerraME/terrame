@@ -1014,8 +1014,6 @@ local function findExample(example, packageName)
 end
 
 local function executeExamples(package)
-	local initialTime = os.clock()
-
 	if not isLoaded("base") then
 		import("base")
 	end
@@ -1112,7 +1110,7 @@ local function findProject(project, packageName)
 	local file = project
 	local s = package.config:sub(1, 1)
 	local exFullPath = ""
-	local errMsg
+	local msg
 
 	if file then
 		local info
@@ -1125,14 +1123,14 @@ local function findProject(project, packageName)
 		exFullPath = info..s.."data"..s..file..".lua"
 
 		if not isFile(exFullPath) then
-			errMsg = "Project '"..file.."' does not exist in package '"..packageName.."'."
-			errMsg = errMsg.."\nPlease use one from the list below:"
+			msg = "Project '"..file.."' does not exist in package '"..packageName.."'."
+			msg = msg.."\nPlease use one from the list below:"
 		end
 	elseif #_Gtme.projectFiles(packageName) == 0 then
-		errMsg = "Package '"..packageName.."' has no projects."
-		return false, errMsg
+		msg = "Package '"..packageName.."' has no projects."
+		return false, msg
 	else
-		errMsg = "Package '"..packageName.."' has the following projects:"
+		msg = "Package '"..packageName.."' has the following projects:"
 	end
 
 	if file and isFile(exFullPath) then
@@ -1141,11 +1139,11 @@ local function findProject(project, packageName)
 		files = _Gtme.projectFiles(packageName)
 
 		_Gtme.forEachElement(files, function(_, value)
-			errMsg = errMsg.."\n - "..value
+			msg = msg .."\n - "..value
 		end)
 	end
 
-	return false, errMsg
+	return false, msg
 end
 
 function _Gtme.execProject(project, packageName)
