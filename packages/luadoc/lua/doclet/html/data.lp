@@ -28,43 +28,45 @@
 
 				<div id="content">
 					<%
-					local function checkData(data)
+					local function isProject(data)
 						return (type(data.file[1]) == "string" and data.file[1]:endswith(".tview"))
 					end
 
-					local function checkProject(data)
-						return not checkData(data)
+					doc.projectFiles = {}
+					doc.dataFiles = {}
+
+					if not options.nofiles and doc.mdata then
+						for _, data in ipairs(doc.mdata) do
+							if isProject(data) then
+								table.insert(doc.projectFiles, data)
+							else
+								table.insert(doc.dataFiles, data)
+							end
+						end
 					end
 					%>
-					<%local function buildDataTable(check)%>
-						<%if type(check) ~= "function" then return end%>
-						<%if not options.nofiles and doc.mdata then%>
-								<table class="file_list">
-								<%for _, data in ipairs(doc.mdata) do%>
-									<%(function()%>
-										<%if check(data) then%>
-											<%return%>
-										<%end%>
-
-										<tr>
-											<td class="name"><a href = "#<%=data.file[1]%>"><%=data.file[1]%></a></td>
-											<td class="summary"><%= data.shortsummary or "" %></td>
-										</tr>
-									<%end)()%>
-								<%end%>
-								</table>
+					<%local function buildIndex(mdata)%>
+						<table class="file_list">
+						<%for _, data in ipairs(mdata) do%>
+							<tr>
+								<td class="name"><a href = "#<%=data.file[1]%>"><%=data.file[1]%></a></td>
+								<td class="summary"><%= data.shortsummary or "" %></td>
+							</tr>
 						<%end%>
+						</table>
 					<%end%>
 
-					<%local function buildDataAttributes(check)%>
-						<dl class="function">
-						<%for _, data in ipairs(doc.mdata) do%>
-							<%(function()%>
-								<%if check(data) then%>
-									<%return%>
-								<%end%>
+					<%local function buildAttributes(mdata, borderTop)%>
+						<%if type(borderTop) == "number" then%>
+							<%borderTop = "border-top: "..borderTop.."px"%>
+							<%borderTop = "style=".."\""..borderTop.."\""%>
+						<%else%>
+							<%borderTop = ""%>
+						<%end%>
 
-								<dt><h2><a name="<%=data.file[1]%>" href= <%="../../data/"..data.file[1]%>><%=data.file[1]%></a></h2></dt>
+						<dl class="function">
+							<%for _, data in ipairs(mdata) do%>
+								<dt<%=borderTop%>><h2><a name="<%=data.file[1]%>" href= <%="../../data/"..data.file[1]%>><%=data.file[1]%></a></h2></dt>
 
 								<% if data.image then %>
 									<% loc = "../../images/"..tostring(data.image) %>
@@ -148,19 +150,22 @@
 								<%end%>
 
 								</dd>
-							<%end)()%>
-						<%end%>
+							<%end%>
 						</dl>
 					<%end%>
 
-					<h1>Data</h1>
 					<!-- tview -->
-					<%buildDataTable(checkProject)%>
-					<%buildDataAttributes(checkProject)%>
+					<%if #doc.projectFiles > 0 then%>
+						<h1>Projects</h1>
+						<%buildAttributes(doc.projectFiles, 0)%>
+					<%end%>
 					<!-- /tview -->
 					<!-- data -->
-					<%buildDataTable(checkData)%>
-					<%buildDataAttributes(checkData)%>
+					<%if #doc.dataFiles > 0 then%>
+						<h1>Data</h1>
+						<%buildIndex(doc.dataFiles)%>
+						<%buildAttributes(doc.dataFiles)%>
+					<%end%>
 					<!-- /data -->
 				</div>
 				<!-- id="content" -->
