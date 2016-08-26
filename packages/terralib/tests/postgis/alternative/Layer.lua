@@ -321,7 +321,7 @@ return {
 			}
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 26) -- #1303
+								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 38) -- #1303
 
 		local wrongPort = 2345
 		local portWrong = function()
@@ -713,7 +713,7 @@ return {
 			}
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 26) -- #1303
+								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 38) -- #1303
 
 		wrongPort = 2345
 		portWrong = function()
