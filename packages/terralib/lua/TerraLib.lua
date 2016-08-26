@@ -81,26 +81,26 @@ local SourceTypeMapper = {
 	access = "ADO"
 }
 
-local function decodeUri(str)
-	str = string.gsub(str, "+", " ")
-	str = string.gsub(str, "%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end)
-	str = string.gsub(str, "\r\n", "\n")
+-- local function decodeUri(str)	-- TODO(#896)
+	-- str = string.gsub(str, "+", " ")
+	-- str = string.gsub(str, "%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end)
+	-- str = string.gsub(str, "\r\n", "\n")
 	  
-	return str	
-end
+	-- return str	
+-- end
 
-local function encodeUri(str)
-	if (str) then
-		str = string.gsub(str, "\n", "\r\n")
-		str = string.gsub(str, "([^%w %-%_%.%~])", function (c)
-			return string.format ("%%%02X", string.byte(c))
-		end)
+-- local function encodeUri(str)	-- TODO(#896)
+	-- if (str) then
+		-- str = string.gsub(str, "\n", "\r\n")
+		-- str = string.gsub(str, "([^%w %-%_%.%~])", function (c)
+			-- return string.format ("%%%02X", string.byte(c))
+		-- end)
 
-		str = string.gsub (str, " ", "+")
-	end
+		-- str = string.gsub (str, " ", "+")
+	-- end
 	
-	return str
-end
+	-- return str
+-- end
 
 local function checkConnectionParams(type, connInfo)
 	local msg
@@ -285,50 +285,50 @@ local function releaseProject(project)
     binding.te.da.DataSourceManager.getInstance():detachAll()
 end
 
-local function decodeDataSourceInfo(dsInfo)
-	local connInfo = dsInfo:getConnInfo()
+-- local function decodeDataSourceInfo(dsInfo)	-- TODO(#896)
+	-- local connInfo = dsInfo:getConnInfo()
 	
-	dsInfo:setTitle(decodeUri(dsInfo:getTitle()))
-	dsInfo:setDescription(decodeUri(dsInfo:getDescription()))
+	-- dsInfo:setTitle(decodeUri(dsInfo:getTitle()))
+	-- dsInfo:setDescription(decodeUri(dsInfo:getDescription()))
 
-	if connInfo.URI then
-		connInfo.URI = decodeUri(connInfo.URI)
-		dsInfo:setConnInfo(connInfo)
-	end
-	if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
-		connInfo.SOURCE = decodeUri(connInfo.SOURCE) -- SKIP
-		dsInfo:setConnInfo(connInfo) -- SKIP
-	end	
-end
+	-- if connInfo.URI then
+		-- connInfo.URI = decodeUri(connInfo.URI)
+		-- dsInfo:setConnInfo(connInfo)
+	-- end
+	-- if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
+		-- connInfo.SOURCE = decodeUri(connInfo.SOURCE) -- SKIP
+		-- dsInfo:setConnInfo(connInfo) -- SKIP
+	-- end	
+-- end
 
-local function encodeDataSourceInfos(layers)
-	local encoded = {}
+-- local function encodeDataSourceInfos(layers)	-- TODO(#896)
+	-- local encoded = {}
 	
-	for _, layer in pairs(layers) do
-		layer:setTitle(encodeUri(layer:getTitle()))
+	-- for _, layer in pairs(layers) do
+		-- layer:setTitle(encodeUri(layer:getTitle()))
 		
-		local lid = layer:getDataSourceId()
-		if not encoded[lid] then
-			local dsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(lid)
-			local connInfo = dsInfo:getConnInfo()
+		-- local lid = layer:getDataSourceId()
+		-- if not encoded[lid] then
+			-- local dsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(lid)
+			-- local connInfo = dsInfo:getConnInfo()
 			
-			dsInfo:setTitle(encodeUri(dsInfo:getTitle()))
-			dsInfo:setDescription(encodeUri(dsInfo:getDescription()))
+			-- dsInfo:setTitle(encodeUri(dsInfo:getTitle()))
+			-- dsInfo:setDescription(encodeUri(dsInfo:getDescription()))
 
-			if connInfo.URI then
-				connInfo.URI = encodeUri(connInfo.URI)
-				dsInfo:setConnInfo(connInfo)
-			end
-			if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
-				connInfo.SOURCE = encodeUri(connInfo.SOURCE) -- SKIP
-				dsInfo:setConnInfo(connInfo) -- SKIP
-			end		
-			binding.te.da.DataSourceInfoManager.getInstance():remove(lid)
-			binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo)
-			encoded[lid] = lid
-		end
-	end
-end
+			-- if connInfo.URI then
+				-- connInfo.URI = encodeUri(connInfo.URI)
+				-- dsInfo:setConnInfo(connInfo)
+			-- end
+			-- if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
+				-- connInfo.SOURCE = encodeUri(connInfo.SOURCE) -- SKIP
+				-- dsInfo:setConnInfo(connInfo) -- SKIP
+			-- end		
+			-- binding.te.da.DataSourceInfoManager.getInstance():remove(lid)
+			-- binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo)
+			-- encoded[lid] = lid
+		-- end
+	-- end
+-- end
 
 local function saveProject(project, layers)
 	local layersVector = {}
@@ -564,22 +564,22 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 	return propsRenamed
 end
 
-local function getDataSetTypeByLayer(layer)
-	local dst
+-- local function getDataSetTypeByLayer(layer)
+	-- local dst
 
-	do
-		local dSetName = layer:getDataSetName()
-		local connInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
-		local ds = makeAndOpenDataSource(connInfo:getConnInfo(), connInfo:getType())
-		dst = ds:getDataSetType(dSetName)
+	-- do
+		-- local dSetName = layer:getDataSetName()
+		-- local connInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+		-- local ds = makeAndOpenDataSource(connInfo:getConnInfo(), connInfo:getType())
+		-- dst = ds:getDataSetType(dSetName)
 	
-		ds:close()
-	end
+		-- ds:close()
+	-- end
 
-	collectgarbage("collect")
+	-- collectgarbage("collect")
 	
-	return dst
-end
+	-- return dst
+-- end
 
 local function getNormalizedName(name)
 	if string.len(name) <= 10 then

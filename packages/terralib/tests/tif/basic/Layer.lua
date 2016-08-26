@@ -169,14 +169,14 @@ return {
 
 		local count = 0
 		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_mode, "string") -- SKIP
+			unitTest:assertType(cell.prod_mode, "string") 
 			if not belong(cell.prod_mode, {"0", "49", "169", "253", "254"}) then
 				-- print(cell.prod_mode)
 				count = count + 1
 			end
 		end)
 
-		unitTest:assertEquals(count, 163) -- SKIP
+		unitTest:assertEquals(count, 163) 
 
 		local map = Map{
 			target = cs,
@@ -185,7 +185,7 @@ return {
 			color = {"red", "green", "blue", "orange", "purple"}
 		}
 
-		unitTest:assertSnapshot(map, "tiff-mode.png") -- SKIP
+		unitTest:assertSnapshot(map, "tiff-mode.png") 
 
 		-- MINIMUM
 
@@ -201,9 +201,9 @@ return {
 		}
 
 		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_min, "number") -- SKIP
-			unitTest:assert(cell.prod_min >= 0) -- SKIP
-			unitTest:assert(cell.prod_min <= 254) -- SKIP
+			unitTest:assertType(cell.prod_min, "number") 
+			unitTest:assert(cell.prod_min >= 0) 
+			unitTest:assert(cell.prod_min <= 254) 
 		end)
 
 		map = Map{
@@ -213,7 +213,7 @@ return {
 			color = {"red", "green", "blue", "orange", "purple"}
 		}
 
-		unitTest:assertSnapshot(map, "tiff-min.png") -- SKIP
+		unitTest:assertSnapshot(map, "tiff-min.png") 
 		
 		-- MAXIMUM
 
@@ -229,9 +229,9 @@ return {
 		}
 
 		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_max, "number") -- SKIP
-			unitTest:assert(cell.prod_max >= 0) -- SKIP
-			unitTest:assert(cell.prod_max <= 254) -- SKIP
+			unitTest:assertType(cell.prod_max, "number") 
+			unitTest:assert(cell.prod_max >= 0) 
+			unitTest:assert(cell.prod_max <= 254) 
 		end)
 
 		map = Map{
@@ -241,7 +241,7 @@ return {
 			color = {"red", "green", "blue", "orange", "purple"}
 		}
 
-		unitTest:assertSnapshot(map, "tiff-max.png") -- SKIP
+		unitTest:assertSnapshot(map, "tiff-max.png") 
 
 		-- SUM
 
@@ -257,8 +257,8 @@ return {
 		}
 
 		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_sum, "number") -- SKIP
-			unitTest:assert(cell.prod_sum >= 0) -- SKIP
+			unitTest:assertType(cell.prod_sum, "number") 
+			unitTest:assert(cell.prod_sum >= 0) 
 		end)
 
 		map = Map{
@@ -270,7 +270,7 @@ return {
 			slices = 8
 		}
 
-		unitTest:assertSnapshot(map, "tiff-sum.png") -- SKIP
+		unitTest:assertSnapshot(map, "tiff-sum.png") 
 
 		-- COVERAGE
 
@@ -291,7 +291,7 @@ return {
 			local sum = 0
 
 			for i = 1, #cov do
-				unitTest:assertType(cell["cov_"..cov[i]],   "number") -- SKIP
+				unitTest:assertType(cell["cov_"..cov[i]],   "number") 
 				sum = sum + cell["cov_"..cov[i]]
 			end
 
@@ -312,7 +312,7 @@ return {
 				color = "RdPu"
 			}
 
-			unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i]..".png") -- SKIP
+			unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i]..".png") 
 		end
 
 		-- AVERAGE
@@ -360,7 +360,7 @@ return {
 			slices = 7
 		}
 
-		unitTest:assertSnapshot(map, "tiff-average.png") -- SKIP
+		unitTest:assertSnapshot(map, "tiff-average.png") 
 
 		-- STDEV
 		
@@ -384,7 +384,7 @@ return {
 			slices = 7
 		}
 
-		unitTest:assertSnapshot(map, "tiff-std.png") -- SKIP
+		unitTest:assertSnapshot(map, "tiff-std.png") 
 		
 		forEachElement(shapes, function(_, value)
 			rmFile(value)
@@ -394,28 +394,24 @@ return {
 		rmFile(projName) -- #1301
 	end,
 	representation = function(unitTest)
-		if _Gtme.isWindowsOS() then -- #1307
-			local projName = "layer_fill_tiff_repr.tview"
+		local projName = "layer_fill_tiff_repr.tview"
 
-			local proj = Project{
-				file = projName,
-				clean = true
-			}
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
 
-			local prodes = "prodes"
-			local l = Layer{
-				project = proj,
-				name = prodes,
-				file = filePath("prodes_polyc_10k.tif", "terralib")	
-			}
+		local prodes = "prodes"
+		local l = Layer{
+			project = proj,
+			name = prodes,
+			file = filePath("prodes_polyc_10k.tif", "terralib")	
+		}
 
-			unitTest:assertEquals(l:representation(), "raster") -- SKIP
-			
-			-- unitTest:assertFile(projName) -- SKIP #1301
-			rmFile(projName) -- #1301
-		else
-			unitTest:assert(true) -- SKIP
-		end
+		unitTest:assertEquals(l:representation(), "raster") 
+		
+		-- unitTest:assertFile(projName) -- SKIP #1301
+		rmFile(projName) -- #1301
 	end,
 	bands = function(unitTest)
 		local projName = "layer_tif_bands.tview"
