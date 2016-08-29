@@ -321,7 +321,7 @@ return {
 			}
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 26) -- #1303
+								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 38) -- #1303
 
 		local wrongPort = 2345
 		local portWrong = function()
@@ -713,7 +713,7 @@ return {
 			}
 		end
 		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 26) -- #1303
+								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 38) -- #1303
 
 		wrongPort = 2345
 		portWrong = function()
@@ -848,42 +848,6 @@ return {
 		end
 		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index"))
 		
-		tl:dropPgTable(pgData)
-		
-		Layer{
-			project = proj,
-			source = "postgis",
-			input = layerName1,
-			name = clName1,
-			resolution = 0.7,
-			user = user,
-			password = password,
-			database = database,
-			table = tName1
-		}		
-		
-		proj = Project{
-			file = projName,
-			clean = true,
-			author = "Avancini",
-			title = "The Amazonia"
-		}		
-		
-		indexUnnecessary = function()
-			Layer{
-				project = proj,
-				source = "postgis",
-				name = clName1,
-				user = user,
-				password = password,
-				database = database,
-				table = tName1,
-				index = true
-			}
-		end
-		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index"))
-		
-		tl:dropPgTable(pgData)
 		rmFile(proj.file)
 		-- // SPATIAL INDEX TEST
 	end

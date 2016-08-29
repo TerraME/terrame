@@ -81,26 +81,26 @@ local SourceTypeMapper = {
 	access = "ADO"
 }
 
-local function decodeUri(str)
-	str = string.gsub(str, "+", " ")
-	str = string.gsub(str, "%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end)
-	str = string.gsub(str, "\r\n", "\n")
+-- local function decodeUri(str)	-- TODO(#896)
+	-- str = string.gsub(str, "+", " ")
+	-- str = string.gsub(str, "%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end)
+	-- str = string.gsub(str, "\r\n", "\n")
 	  
-	return str	
-end
+	-- return str	
+-- end
 
-local function encodeUri(str)
-	if (str) then
-		str = string.gsub(str, "\n", "\r\n")
-		str = string.gsub(str, "([^%w %-%_%.%~])", function (c)
-			return string.format ("%%%02X", string.byte(c))
-		end)
+-- local function encodeUri(str)	-- TODO(#896)
+	-- if (str) then
+		-- str = string.gsub(str, "\n", "\r\n")
+		-- str = string.gsub(str, "([^%w %-%_%.%~])", function (c)
+			-- return string.format ("%%%02X", string.byte(c))
+		-- end)
 
-		str = string.gsub (str, " ", "+")
-	end
+		-- str = string.gsub (str, " ", "+")
+	-- end
 	
-	return str
-end
+	-- return str
+-- end
 
 local function checkConnectionParams(type, connInfo)
 	local msg
@@ -285,238 +285,77 @@ local function releaseProject(project)
     binding.te.da.DataSourceManager.getInstance():detachAll()
 end
 
-local function decodeDataSourceInfo(dsInfo)
-	local connInfo = dsInfo:getConnInfo()
+-- local function decodeDataSourceInfo(dsInfo)	-- TODO(#896)
+	-- local connInfo = dsInfo:getConnInfo()
 	
-	dsInfo:setTitle(decodeUri(dsInfo:getTitle()))
-	dsInfo:setDescription(decodeUri(dsInfo:getDescription()))
+	-- dsInfo:setTitle(decodeUri(dsInfo:getTitle()))
+	-- dsInfo:setDescription(decodeUri(dsInfo:getDescription()))
 
-	if connInfo.URI then
-		connInfo.URI = decodeUri(connInfo.URI)
-		dsInfo:setConnInfo(connInfo)
-	end
-	if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
-		connInfo.SOURCE = decodeUri(connInfo.SOURCE) -- SKIP
-		dsInfo:setConnInfo(connInfo) -- SKIP
-	end	
-end
+	-- if connInfo.URI then
+		-- connInfo.URI = decodeUri(connInfo.URI)
+		-- dsInfo:setConnInfo(connInfo)
+	-- end
+	-- if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
+		-- connInfo.SOURCE = decodeUri(connInfo.SOURCE) -- SKIP
+		-- dsInfo:setConnInfo(connInfo) -- SKIP
+	-- end	
+-- end
 
-local function encodeDataSourceInfos(layers)
-	local encoded = {}
+-- local function encodeDataSourceInfos(layers)	-- TODO(#896)
+	-- local encoded = {}
 	
-	for _, layer in pairs(layers) do
-		layer:setTitle(encodeUri(layer:getTitle()))
+	-- for _, layer in pairs(layers) do
+		-- layer:setTitle(encodeUri(layer:getTitle()))
 		
-		local lid = layer:getDataSourceId()
-		if not encoded[lid] then
-			local dsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(lid)
-			local connInfo = dsInfo:getConnInfo()
+		-- local lid = layer:getDataSourceId()
+		-- if not encoded[lid] then
+			-- local dsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(lid)
+			-- local connInfo = dsInfo:getConnInfo()
 			
-			dsInfo:setTitle(encodeUri(dsInfo:getTitle()))
-			dsInfo:setDescription(encodeUri(dsInfo:getDescription()))
+			-- dsInfo:setTitle(encodeUri(dsInfo:getTitle()))
+			-- dsInfo:setDescription(encodeUri(dsInfo:getDescription()))
 
-			if connInfo.URI then
-				connInfo.URI = encodeUri(connInfo.URI)
-				dsInfo:setConnInfo(connInfo)
-			end
-			if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
-				connInfo.SOURCE = encodeUri(connInfo.SOURCE) -- SKIP
-				dsInfo:setConnInfo(connInfo) -- SKIP
-			end		
-			binding.te.da.DataSourceInfoManager.getInstance():remove(lid)
-			binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo)
-			encoded[lid] = lid
-		end
-	end
-end
+			-- if connInfo.URI then
+				-- connInfo.URI = encodeUri(connInfo.URI)
+				-- dsInfo:setConnInfo(connInfo)
+			-- end
+			-- if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
+				-- connInfo.SOURCE = encodeUri(connInfo.SOURCE) -- SKIP
+				-- dsInfo:setConnInfo(connInfo) -- SKIP
+			-- end		
+			-- binding.te.da.DataSourceInfoManager.getInstance():remove(lid)
+			-- binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo)
+			-- encoded[lid] = lid
+		-- end
+	-- end
+-- end
 
 local function saveProject(project, layers)
-	encodeDataSourceInfos(layers)
-
-	local writer = binding.te.xml.AbstractWriterFactory.make()
-	
-	writer:setURI(project.file)
-
-	-- TODO: THIS GET THE PATH WHERE WAS INSTALLED (PROBLEM)
-	local schema = binding.FindInTerraLibPath("share/terralib/schemas/terralib/qt/af/project.xsd")
-	schema = _Gtme.makePathCompatibleToAllOS(schema)
-
-	writer:writeStartDocument("UTF-8", "no")
-
-	writer:writeStartElement("Project")
-
-	schema = string.gsub(schema, "%s", "%%20")
-	
-	writer:writeAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema-instance")
-	writer:writeAttribute("xmlns:te_da", "http://www.terralib.org/schemas/dataaccess")
-	writer:writeAttribute("xmlns:te_map", "http://www.terralib.org/schemas/maptools")
-	writer:writeAttribute("xmlns:te_qt_af", "http://www.terralib.org/schemas/common/af")
-
-	writer:writeAttribute("xmlns:se", "http://www.opengis.net/se")
-	writer:writeAttribute("xmlns:ogc", "http://www.opengis.net/ogc")
-	writer:writeAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink")
-
-	writer:writeAttribute("xmlns", "http://www.terralib.org/schemas/qt/af")
-	writer:writeAttribute("xsd:schemaLocation", "http://www.terralib.org/schemas/qt/af "..schema)
-	writer:writeAttribute("version", binding.te.common.Version.asString())
-
-	writer:writeElement("Title", project.title)
-	writer:writeElement("Author", project.author)
-	
-	writer:writeDataSourceList()
-	
-	writer:writeStartElement("ComponentList")
-	writer:writeEndElement("ComponentList")
-
-	writer:writeStartElement("te_map:LayerList")
-	
-	if layers then 
-		local lserial = binding.te.map.serialize.Layer.getInstance()
-		
-		for _, layer in pairs(layers) do
-			lserial:write(layer, writer)
-		end
+	local layersVector = {}
+	local i = 1
+ 
+	for _, v in pairs(layers) do
+		layersVector[i] = binding.te.map.DataSetLayer.toDataSetLayer(v)
+		i = i + 1
 	end
-	writer:writeEndElement("te_map:LayerList")
-
-	writer:writeEndElement("Project")
-
-	writer:writeToFile()
+	
+	binding.SaveProject(project.file, project.author, project.title, layersVector)
 end
 
 local function loadProject(project, file)		
 	if not isFile(file) then
 		customError("Could not read project file: "..file..".") -- SKIP
 	end
-	
-	local xmlReader = binding.te.xml.ReaderFactory.make()
 
-	xmlReader:setValidationScheme(false)
-	xmlReader:read(file)
-	
-	if not xmlReader:next() then
-		customError("Could not read project information in the file: "..file..".") -- SKIP
-	end
-	
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("Error reading the document "..file..", the start element wasn't found.")
-	end
-	
-	if xmlReader:getElementLocalName() ~= "Project" then
-		customError("The first tag in the document "..file.." is not 'Project'.")
-	end
-	
-	xmlReader:next()
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "Title" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
+	local projMd = binding.LoadProject(file)
+	project.author = projMd.author
+	project.title = projMd.title
+	local layers = projMd:getLayers()
 
-	xmlReader:next()
-	if xmlReader:getNodeType() ~= binding.VALUE then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	project.title = xmlReader:getElementValue()
-	
-	xmlReader:next() -- End element
-
-	xmlReader:next()
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "Author" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-
-	xmlReader:next()
-
-	if xmlReader:getNodeType() == binding.VALUE then
-		project.author = xmlReader:getElementValue()
-		xmlReader:next() -- End element
-	end	
-
-	-- read data source list from this project
-	xmlReader:next()
-
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "DataSourceList" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-
-	xmlReader:next()
-
-	-- DataSourceList contract form
-	if (xmlReader:getNodeType() == binding.END_ELEMENT) and 
-		(xmlReader:getElementLocalName() == "DataSourceList") then
-		xmlReader:next()
-	end
-
-	while (xmlReader:getNodeType() == binding.START_ELEMENT) and
-			(xmlReader:getElementLocalName() == "DataSource") do
-		local  ds = binding.ReadDataSourceInfo(xmlReader)
-		decodeDataSourceInfo(ds)
-		binding.te.da.DataSourceInfoManager.getInstance():add(ds)
-	end
-	
-	-- end read data source list
-
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "ComponentList" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	xmlReader:next() -- End element
-	xmlReader:next() -- next after </ComponentList>
-
-	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "LayerList" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-
-	xmlReader:next()
-
-	local lserial = binding.te.map.serialize.Layer.getInstance()
-	
-	-- Read the layers
-	while (xmlReader:getNodeType() ~= binding.END_ELEMENT) and
-			(xmlReader:getElementLocalName() ~= "LayerList") do
-		local layer = lserial:read(xmlReader)
-		
-		if not layer then
-			customError("PROJECT READ ERROR.") -- SKIP
-		end
-		
-		layer:setTitle(decodeUri(layer:getTitle()))
+	for i = 0, getn(layers) - 1 do
+		local layer = layers[i]
 		project.layers[layer:getTitle()] = layer
 	end
-	
-	if xmlReader:getNodeType() ~= binding.END_ELEMENT then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "LayerList" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-
-	xmlReader:next()
-	if not ((xmlReader:getNodeType() == binding.END_ELEMENT) or
-		(xmlReader:getNodeType() == binding.END_DOCUMENT)) then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end
-	if xmlReader:getElementLocalName() ~= "Project" then
-		customError("PROJECT READ ERROR.") -- SKIP
-	end	
-	
-	-- TODO: THE ONLY WAY SO FAR TO RELEASE THE FILE AFTER READ
-	-- WAS READ ANOTHER FILE (REVIEW)
-	-- #880
-	xmlReader:read(filePath("YgDbLUDrqQbvu7QxTYxX.xml", "terralib"))
 end
 
 local function addFileLayer(project, name, filePath, type, addSpatialIdx)
@@ -725,22 +564,22 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 	return propsRenamed
 end
 
-local function getDataSetTypeByLayer(layer)
-	local dst
+-- local function getDataSetTypeByLayer(layer)
+	-- local dst
 
-	do
-		local dSetName = layer:getDataSetName()
-		local connInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
-		local ds = makeAndOpenDataSource(connInfo:getConnInfo(), connInfo:getType())
-		dst = ds:getDataSetType(dSetName)
+	-- do
+		-- local dSetName = layer:getDataSetName()
+		-- local connInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+		-- local ds = makeAndOpenDataSource(connInfo:getConnInfo(), connInfo:getType())
+		-- dst = ds:getDataSetType(dSetName)
 	
-		ds:close()
-	end
+		-- ds:close()
+	-- end
 
-	collectgarbage("collect")
+	-- collectgarbage("collect")
 	
-	return dst
-end
+	-- return dst
+-- end
 
 local function getNormalizedName(name)
 	if string.len(name) <= 10 then
@@ -775,29 +614,33 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 				operation = "wsum"
 			end
 		end
-	
-		local toDst = getDataSetTypeByLayer(toLayer)
 
+		local toDSetName = toLayer:getDataSetName()
+		local toConnInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
+		local toDs = makeAndOpenDataSource(toConnInfo:getConnInfo(), toConnInfo:getType())
+		local toDst = toDs:getDataSetType(toDSetName)
+		
 		v2v:setParams(select, OperationMapper[operation], toDst)
 
 		local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
 		if err ~= "" then
 			customError(err) -- SKIP
 		end
-	
+
 		propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
-	
+
 		if outType == "OGR" then
 			propCreatedName = getNormalizedName(propCreatedName)
 		end
-	
+
 		propCreatedName = string.lower(propCreatedName)	
-	
+
+		toDs:close()
 		outDs:close()
 	end
 
 	collectgarbage("collect")
-	
+
 	return propCreatedName
 end
 
@@ -1721,11 +1564,11 @@ TerraLib_ = {
 			else
 				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
 			end
-		
+
 			if outType == "OGR" then
 				propCreatedName = getNormalizedName(propCreatedName)
 			end
-		
+
 			if (outType == "POSTGIS") and (type(select) == "string")  then
 				select = string.lower(select)
 			end
@@ -1739,7 +1582,7 @@ TerraLib_ = {
 				outDs:renameProperty(outDSetName, propCreatedName, property)
 				attrsRenamed[property] = property
 			end
-		
+
 			if default then
 				for _, prop in pairs(attrsRenamed) do
 					outDs:updateNullValues(outDSetName, prop, tostring(default))
@@ -1749,7 +1592,7 @@ TerraLib_ = {
 			-- TODO: RENAME INSTEAD OUTPUT
 			-- #875
 			-- outDs:renameDataSet(outDSetName, "rename_test")		
-			
+
 			local outLayer = createLayer(out, outDSetName, outConnInfo, outType)
 			project.layers[out] = outLayer
 		
@@ -1772,7 +1615,7 @@ TerraLib_ = {
 				
 				overwriteLayer(self, project, out, to, toSetName)
 				removeLayer(project, out)
-			end		
+			end	
 		end
 
 		collectgarbage("collect")		

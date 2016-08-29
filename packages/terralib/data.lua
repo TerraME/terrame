@@ -83,12 +83,6 @@ data{
 }
 
 data{
-	file = {"YgDbLUDrqQbvu7QxTYxX.xml"},
-	summary = "Blank Project used for internal control system",
-	source = "TerraME Team"
-}
-
-data{
 	file = {"Desmatamento_2000.tif", "Desmatamento_2000.xml"},
 	summary = "",
 	source = "",
