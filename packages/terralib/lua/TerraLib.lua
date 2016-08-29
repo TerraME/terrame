@@ -334,7 +334,7 @@ local function saveProject(project, layers)
 	local layersVector = {}
 	local i = 1
  
-	for k, v in pairs(layers) do
+	for _, v in pairs(layers) do
 		layersVector[i] = binding.te.map.DataSetLayer.toDataSetLayer(v)
 		i = i + 1
 	end
@@ -402,7 +402,7 @@ local function dataSetExists(connInfo, dSetName, type)
 end
 
 local function propertyExists(connInfo, dSetName, property, type)
-	local exists = false
+	local exists
 
 	do
 		local ds = makeAndOpenDataSource(connInfo, type)
