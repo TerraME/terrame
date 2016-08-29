@@ -6,6 +6,7 @@
 -- to markets, and coverage of protected areas as parameters.
 -- The last strategies mixes the other two. It adds the average deforestation
 -- of the neighborhood to the statistical regression.
+-- @image deforestation.bmp
 
 local function calculatePotNeighborhood(cs)
 	local total_pot = 0
