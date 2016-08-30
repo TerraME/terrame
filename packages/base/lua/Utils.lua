@@ -1310,21 +1310,6 @@ function round(num, idp)
 	return math.floor(num * mult + 0.5) / mult
 end
 
---- Return information about the current execution. The result is a table
--- with the following values.
--- @tabular NONE
--- Attribute & Description \
--- dbVersion & A string with the current TerraLib version for databases. \
--- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
--- path & A string with the location of TerraME in the computer. \
--- separator & A string with the directory separator. \
--- silent & A boolean value indicating whether print() calls should not be shown in the
--- screen. This element is true when TerraME is executed with mode "silent".
--- @usage print(sessionInfo().mode)
-function sessionInfo()
-	return info_ -- this is a global variable created when TerraME is initialized
-end
-
 --- Convert a string into a more readable name. It is useful to work
 -- with Model:init() when the model will be available through a graphical interface.
 -- In graphical interfaces, if the string contains underscores, it

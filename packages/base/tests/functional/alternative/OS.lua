@@ -68,17 +68,6 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
-	linkAttributes = function(unitTest)
-		local error_func = function()
-			linkAttributes(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-
-		error_func = function()
-			linkAttributes("path", 1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
-	end,
 	lock = function(unitTest)
 		local error_func = function()
 			lock(1)

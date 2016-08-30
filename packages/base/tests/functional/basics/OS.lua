@@ -109,28 +109,6 @@ return{
 	isWindowsOS = function(unitTest)
 		unitTest:assert(true)
 	end,
-	linkAttributes = function(unitTest)
-		if not _Gtme.isWindowsOS() then
-			local pathdata = packageInfo().data
-
-			os.execute("ln -s "..pathdata.."agents.csv "..pathdata.."agentslink")
-			local attr = linkAttributes(pathdata.."agentslink")
-
-			unitTest:assertEquals(attr.mode, "link") -- SKIP
-			unitTest:assertEquals(attr.nlink, 1) -- SKIP
-			--unitTest:assert(attr.size >= 61) -- SKIP
-
-			attr = linkAttributes(pathdata.."agentslink", "mode")
-			unitTest:assertEquals(attr, "link") -- SKIP
-
-			attr = linkAttributes(pathdata.."agentslink", "nlink")
-			unitTest:assertEquals(attr, 1) -- SKIP
-
-			os.execute("rm \""..pathdata.."agentslink\"")
-		else
-			unitTest:assert(true) -- SKIP
-		end
-	end,
 	lock = function(unitTest)
 		local pathdata = packageInfo().data
 
@@ -201,6 +179,12 @@ return{
 		local d, e = runCommand("ls "..packageInfo().data)
 		unitTest:assertEquals(#d, 43) -- 43 files
 		unitTest:assertEquals(#e, 0)
+	end,
+	sessionInfo = function(unitTest)
+		local s = sessionInfo()
+
+		unitTest:assertEquals(s.mode, "debug")
+		unitTest:assertEquals(s.version, packageInfo().version)
 	end,
 	tmpDir = function(unitTest)
 		local f = tmpDir()

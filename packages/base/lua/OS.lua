@@ -34,7 +34,7 @@
 -- related attributes use the same time reference of os.time.
 -- This function uses stat internally thus if the given filepath is a symbolic link, it is followed
 -- (if it points to another link the chain is followed recursively) and the information is about the
--- file it refers to. To obtain information about the link itself, see OS:linkAttributes().
+-- file it refers to.
 -- @arg filepath A string with the file path.
 -- @arg attributename A string with the name of the attribute to be read.
 -- @tabular attributename
@@ -177,20 +177,6 @@ function isFile(file)
 	end
 	
 	return false
-end
-
---- Identical to OS:attributes() except that it obtains information about the link itself
--- (not the file it refers to). On Windows this function does not yet support links, and is identical
--- to OS:attributes().
--- @arg filepath A string with the file path.
--- @arg attributename A string with the name of the attribute to be read.
--- @usage -- DONTRUN
--- linkAttributes(filepath, "size")
-function linkAttributes(filepath, attributename)
-	mandatoryArgument(1, "string", filepath)
-	optionalArgument(2, "string", attributename)
-
-	return lfs.symlinkattributes(filepath, attributename)
 end
 
 --- Lock a file or a part of it. This function works on open files; the file handle should be
@@ -337,6 +323,21 @@ function runCommand(command)
 	err = convertToTable(err)
 
 	return result, err
+end
+
+--- Return information about the current execution. The result is a table
+-- with the following values.
+-- @tabular NONE
+-- Attribute & Description \
+-- dbVersion & A string with the current TerraLib version for databases. \
+-- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
+-- path & A string with the location of TerraME in the computer. \
+-- separator & A string with the directory separator. \
+-- silent & A boolean value indicating whether print() calls should not be shown in the
+-- screen. This element is true when TerraME is executed with mode "silent".
+-- @usage print(sessionInfo().mode)
+function sessionInfo()
+	return info_ -- this is a global variable created when TerraME is initialized
 end
 
 --- Create a temporary directory and return its name.

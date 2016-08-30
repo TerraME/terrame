@@ -918,12 +918,6 @@ return{
 		unitTest:assertEquals(round(5.22), 5)
 		unitTest:assertEquals(round(5.2235, 3), 5.224)
 	end,
-	sessionInfo = function(unitTest)
-		local s = sessionInfo()
-
-		unitTest:assertEquals(s.mode, "debug")
-		unitTest:assertEquals(s.version, packageInfo().version)
-	end,
 	["string.endswith"] = function(unitTest)
 		unitTest:assert(string.endswith("abcdef", "def"))
 		unitTest:assert(not string.endswith("abcdef", "deef"))
