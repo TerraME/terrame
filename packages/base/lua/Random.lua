@@ -113,9 +113,11 @@ Random_ = {
 
 		if v2 then
 			integerArgument(2, v2)
-			if v1 then
+			if v1 and v2 >= v1 then
 				integerArgument(1, v1)
 				return xorshift128plus(self, v1, v2)
+			else
+				customError("It is not possible to sample from an empty object.")
 			end
 		elseif v1 then
 			integerArgument(1, v1)

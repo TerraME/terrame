@@ -688,7 +688,7 @@ return{
 		local error_func = function()
 			soc1:sample()
 		end
-		unitTest:assertError(error_func, "Trying to sample an empty Society.")
+		unitTest:assertError(error_func, "It is not possible to sample from an empty object.")
 	end,
 	size = function(unitTest)
 		local ag1 = Agent{
