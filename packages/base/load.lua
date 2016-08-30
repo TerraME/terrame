@@ -27,7 +27,7 @@ files = {
 	"Clock.lua",
 	"Map.lua",
 	"InternetSender.lua",
-	"FileSystem.lua",
+	"OS.lua",
 	"VisualTable.lua",
 	"TextScreen.lua",
 	"LogFile.lua"

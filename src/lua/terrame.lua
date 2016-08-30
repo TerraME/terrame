@@ -1185,7 +1185,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	local path = info_.path..s.."packages"..s.."base"..s.."lua"..s
 	dofile(path.."ErrorHandling.lua", _Gtme)
 	dofile(path.."Package.lua", _Gtme)
-	dofile(path.."FileSystem.lua", _Gtme)
+	dofile(path.."OS.lua", _Gtme)
 	dofile(path.."Utils.lua", _Gtme)
 	dofile(info_.path..s.."lua"..s.."utils.lua")
 	dofile(info_.path..s.."lua"..s.."configure.lua")

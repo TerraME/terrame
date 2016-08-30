@@ -34,7 +34,7 @@
 -- related attributes use the same time reference of os.time.
 -- This function uses stat internally thus if the given filepath is a symbolic link, it is followed
 -- (if it points to another link the chain is followed recursively) and the information is about the
--- file it refers to. To obtain information about the link itself, see FileSystem:linkAttributes().
+-- file it refers to. To obtain information about the link itself, see OS:linkAttributes().
 -- @arg filepath A string with the file path.
 -- @arg attributename A string with the name of the attribute to be read.
 -- @tabular attributename
@@ -179,9 +179,9 @@ function isFile(file)
 	return false
 end
 
---- Identical to FileSystem:attributes() except that it obtains information about the link itself
+--- Identical to OS:attributes() except that it obtains information about the link itself
 -- (not the file it refers to). On Windows this function does not yet support links, and is identical
--- to FileSystem:attributes().
+-- to OS:attributes().
 -- @arg filepath A string with the file path.
 -- @arg attributename A string with the name of the attribute to be read.
 -- @usage -- DONTRUN
@@ -204,7 +204,7 @@ end
 -- filehandle = file:open("r")
 -- lock(filehandle, "r")
 -- unlock(filehandle)
--- @see FileSystem:unlock
+-- @see OS:unlock
 function lock(fh, mode)
 	mandatoryArgument(1, "userdata", fh)
 	mandatoryArgument(2, "string", mode)
@@ -393,7 +393,7 @@ end
 -- filehandle = file:open("r")
 -- lock(filehandle, "r")
 -- unlock(filehandle)
--- @see FileSystem:lock
+-- @see OS:lock
 function unlock(fh)
 	mandatoryArgument(1, "userdata", fh)
 

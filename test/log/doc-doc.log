@@ -17,7 +17,7 @@ Parsing lua/Clock.lua
 Parsing lua/Environment.lua
 Parsing lua/ErrorHandling.lua
 Parsing lua/Event.lua
-Parsing lua/FileSystem.lua
+Parsing lua/OS.lua
 Parsing lua/Flow.lua
 Parsing lua/Group.lua
 Parsing lua/InternetSender.lua
@@ -76,7 +76,7 @@ Checking lua/Clock.lua
 Checking lua/Environment.lua
 Checking lua/ErrorHandling.lua
 Checking lua/Event.lua
-Checking lua/FileSystem.lua
+Checking lua/OS.lua
 Checking lua/Flow.lua
 Checking lua/Group.lua
 Checking lua/InternetSender.lua
@@ -230,7 +230,7 @@ Testing getParent
 Testing getPeriod
 Testing getPriority
 Testing getTime
-Testing file lua/FileSystem.lua
+Testing file lua/OS.lua
 Testing attributes
 Skipping chDir
 Testing currentDir
@@ -429,7 +429,7 @@ Checking lua/Clock.lua
 Checking lua/Environment.lua
 Checking lua/ErrorHandling.lua
 Checking lua/Event.lua
-Checking lua/FileSystem.lua
+Checking lua/OS.lua
 Checking lua/Flow.lua
 Checking lua/Group.lua
 Checking lua/InternetSender.lua
@@ -461,7 +461,7 @@ Checking lua/Clock.lua
 Checking lua/Environment.lua
 Checking lua/ErrorHandling.lua
 Checking lua/Event.lua
-Checking lua/FileSystem.lua
+Checking lua/OS.lua
 Checking lua/Flow.lua
 Checking lua/Group.lua
 Checking lua/InternetSender.lua
@@ -495,7 +495,7 @@ Building doc/files/Clock.html
 Building doc/files/Environment.html
 Building doc/files/ErrorHandling.html
 Building doc/files/Event.html
-Building doc/files/FileSystem.html
+Building doc/files/OS.html
 Building doc/files/Flow.html
 Building doc/files/Group.html
 Building doc/files/InternetSender.html
@@ -535,7 +535,7 @@ Checking Clock.lua
 Checking Environment.lua
 Checking ErrorHandling.lua
 Checking Event.lua
-Checking FileSystem.lua
+Checking OS.lua
 Checking Flow.lua
 Checking Group.lua
 Checking InternetSender.lua

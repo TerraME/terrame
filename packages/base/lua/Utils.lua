@@ -507,7 +507,7 @@ end
 -- @usage forEachFile(packageInfo("base").path, function(file)
 --     print(file)
 -- end)
--- @see FileSystem:dir
+-- @see OS:dir
 function forEachFile(directory, _sof_)
 	if type(directory) == "string" then
 		if not isDir(directory) then
