@@ -37,7 +37,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "Para"
-		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
+		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
 		
 		local shp = {}
@@ -108,7 +108,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 		
 		-- TIF

@@ -38,7 +38,7 @@ return {
 			Layer{
 				project = proj,
 				name = layerName1,
-				file = filePath("limitePA_polyc_pol.shp", "terralib"),
+				file = filePath("test/limitePA_polyc_pol.shp", "terralib"),
 				index = true
 			}
 		end
@@ -47,7 +47,7 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("limitePA_polyc_pol.shp", "terralib")		
+			file = filePath("test/limitePA_polyc_pol.shp", "terralib")		
 		}		
 		
 		local indexDefaultError2 = function()

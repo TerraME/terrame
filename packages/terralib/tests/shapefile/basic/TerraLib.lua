@@ -63,7 +63,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName = "ShapeLayer"
-		local layerFile = filePath("sampa.shp", "terralib")
+		local layerFile = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName, layerFile)
 		
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
@@ -113,7 +113,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		local clName = "Sampa_Cells"
@@ -212,7 +212,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "Para"
-		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
+		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
 		
 		local shp = {}
@@ -382,7 +382,7 @@ return {
 
 		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION
 		local layerName3 = "Amazon_Munic" 
-		local layerFile3 = filePath("municipiosAML_ok.shp", "terralib")
+		local layerFile3 = filePath("test/municipiosAML_ok.shp", "terralib")
 		tl:addShpLayer(proj, layerName3, layerFile3)		
 		
 		local minLayerName = clName.."_"..layerName3.."_Minimum"		
@@ -727,7 +727,7 @@ return {
 		-- RASTER TESTS WITH SHAPE
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
 		local layerName4 = "Prodes_PA" 
-		local layerFile4 = filePath("prodes_polyc_10k.tif", "terralib")
+		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "terralib")
 		tl:addGdalLayer(proj, layerName4, layerFile4)		
 		
 		local percTifLayerName = clName.."_"..layerName4.."_RPercentage"		
@@ -1002,7 +1002,7 @@ return {
 		
 		-- // create a database 
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 
 		local clName1 = "SampaShpCells"	
@@ -1102,7 +1102,7 @@ return {
 	end,
 	getOGRByFilePath = function(unitTest)
 		local tl = TerraLib{}
-		local shpPath = filePath("sampa.shp", "terralib")
+		local shpPath = filePath("test/sampa.shp", "terralib")
 		local dSet = tl:getOGRByFilePath(shpPath)
 		
 		unitTest:assertEquals(getn(dSet), 63)
@@ -1131,7 +1131,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 
 		local clName1 = "SampaShpCells"	
@@ -1178,7 +1178,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName1 = "Sampa"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 		
 		local prj = tl:getProjection(proj.layers[layerName1])
@@ -1213,7 +1213,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName1 = "Sampa"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 		
 		local propNames = tl:getPropertyNames(proj, proj.layers[layerName1])
@@ -1239,7 +1239,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		local clName = "Sampa_Cells"
@@ -1263,7 +1263,7 @@ return {
 	end,
 	castGeomToSubtype = function(unitTest)
 		local tl = TerraLib{}
-		local shpPath = filePath("sampa.shp", "terralib")
+		local shpPath = filePath("test/sampa.shp", "terralib")
 		local dSet = tl:getOGRByFilePath(shpPath)	
 		local geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
@@ -1279,7 +1279,7 @@ return {
 		geom = tl:castGeomToSubtype(geom:getGeometryN(0))
 		unitTest:assertEquals(geom:getGeometryType(), "LineString")		
 
-		shpPath = filePath("prodes_points_10km_PA_pt.shp", "terralib")
+		shpPath = filePath("test/prodes_points_10km_PA_pt.shp", "terralib")
 		dSet = tl:getOGRByFilePath(shpPath)	
 		geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
@@ -1301,7 +1301,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 		
 		-- GEOJSON

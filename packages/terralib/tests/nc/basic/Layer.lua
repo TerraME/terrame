@@ -42,7 +42,7 @@ return {
 			Layer {
 				project = proj,
 				name = layerName1,
-				file = filePath("vegtype_2000.nc", "terralib")
+				file = filePath("test/vegtype_2000.nc", "terralib")
 			}
 
 			local filePath1 = "vegtype_cells_nc_basic.shp"
@@ -94,7 +94,7 @@ return {
 			local l = Layer {
 				project = proj,
 				name = vegType,
-				file = filePath("vegtype_2000.nc", "terralib")
+				file = filePath("test/vegtype_2000.nc", "terralib")
 			}
 
 			unitTest:assertEquals(l:representation(), "raster") -- SKIP
@@ -123,7 +123,7 @@ return {
 			local l = Layer {
 				project = proj,
 				name = vegType,
-				file = filePath("vegtype_2000.nc", "terralib")
+				file = filePath("test/vegtype_2000.nc", "terralib")
 			}
 
 			unitTest:assertEquals(l:bands(), 1) -- SKIP
@@ -153,7 +153,7 @@ return {
 			local l = Layer {
 				project = proj,
 				name = layerName1,
-				file = filePath("vegtype_2000.nc", "terralib")
+				file = filePath("test/vegtype_2000.nc", "terralib")
 			}
 
 			unitTest:assertEquals( -- SKIP

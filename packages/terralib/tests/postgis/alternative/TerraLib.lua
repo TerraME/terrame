@@ -79,7 +79,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "AmazonasAML"
-		local layerFile1 = filePath("municipiosAML_ok.shp", "terralib")
+		local layerFile1 = filePath("test/municipiosAML_ok.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 		
 		-- POSTGIS

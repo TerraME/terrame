@@ -36,7 +36,7 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}	
 		
 		local filePath1 = "setores_cells_basic.shp"
@@ -90,7 +90,7 @@ return {
 		local layer1 = Layer{
 			project = proj1,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 		unitTest:assertEquals(layer1.name, layerName1)
 					
@@ -102,7 +102,7 @@ return {
 		local layer2 = Layer{
 			project = proj2,
 			name = layerName2,
-			file = filePath("MG_cities.shp", "terralib")
+			file = filePath("test/MG_cities.shp", "terralib")
 		}
 
 		unitTest:assertEquals(layer1.name, layerName1)
@@ -112,7 +112,7 @@ return {
 		local layer21 = Layer{
 			project = proj2,
 			name = layerName21,
-			file = filePath("MG_cities.shp", "terralib")
+			file = filePath("test/MG_cities.shp", "terralib")
 		}
 
 		unitTest:assert(layer21.name ~= layer2.name)
@@ -122,7 +122,7 @@ return {
 		local layer3 = Layer{
 			project = proj2,
 			name = layerName3,
-			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
+			file = filePath("test/cbers_rgb342_crop1.tif", "terralib")		
 		}		
 		
 		unitTest:assertEquals(layer3.name, layerName3)
@@ -131,7 +131,7 @@ return {
 		local layer4 = Layer{
 			project = proj2,
 			name = layerName4,
-			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
+			file = filePath("test/cbers_rgb342_crop1.tif", "terralib")		
 		}		
 
 		unitTest:assert(layer4.name ~= layer3.name)
@@ -151,21 +151,21 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 		
 		layerName2 = "MG"
 		Layer{
 			project = proj,
 			name = layerName2,
-			file = filePath("MG_cities.shp", "terralib")	
+			file = filePath("test/MG_cities.shp", "terralib")	
 		}
 
 		layerName3 = "CBERS"
 		Layer{
 			project = proj,
 			name = layerName3,
-			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
+			file = filePath("test/cbers_rgb342_crop1.tif", "terralib")		
 		}		
 		
 		filePath1 = "sampa_cells.shp"

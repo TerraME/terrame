@@ -37,7 +37,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "SampaGeoJson"
-		local layerFile1 = filePath("sampa.geojson", "terralib")
+		local layerFile1 = filePath("test/sampa.geojson", "terralib")
 		tl:addGeoJSONLayer(proj, layerName1, layerFile1)	
 
 		-- TIF
