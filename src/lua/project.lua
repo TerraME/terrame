@@ -101,7 +101,7 @@ function _Gtme.executeProject(package)
 				if filesDir[newFile] == nil then
 					local fileInfo = File(newFile)
 					if not fileInfo:getName() == filename then
-						printError("File '"..fileInfo:getNameWithExtension().."' it should be named '"..filename.."."..fileInfo:getExtension().."'.")
+						printError("File '"..fileInfo:getNameWithExtension().."' should be named '"..filename.."."..fileInfo:getExtension().."'.")
 						project_report.errors_output = project_report.errors_output + 1
 					end
 				end
