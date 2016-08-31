@@ -149,7 +149,7 @@ function import(package, reload)
 		end
 
 		for mfile, count in pairs(count_files) do
-			local attr = attributes(package_path..s.."lua"..s..mfile, "mode")
+			local attr = _Gtme.attributes(package_path..s.."lua"..s..mfile, "mode")
 			if count == 0 and attr ~= "directory" then -- SKIP
 				customWarning("File lua"..s..mfile.." is ignored by load.lua.") -- SKIP
 			elseif count > 1 then
@@ -277,7 +277,7 @@ function getPackage(pname)
 	end
 
 	for mfile, count in pairs(count_files) do
-		local attr = attributes(pname_path.."lua"..s..mfile, "mode")
+		local attr = _Gtme.attributes(pname_path.."lua"..s..mfile, "mode")
 		if count == 0 and attr ~= "directory" then -- SKIP
 			_Gtme.printWarning("File lua"..s..mfile.." is ignored by load.lua.")
 		elseif count > 1 then

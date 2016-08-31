@@ -75,6 +75,54 @@ end
 
 File_ = {
 	type_ = "File",
+	--- Return a table with the file attributes corresponding to filepath (or nil followed by an error
+	-- message in case of error). If the second optional argument is given, then only the value of the
+	-- named attribute is returned (this use is equivalent to lfs.attributes(filepath).aname, but the
+	-- table is not created and only one attribute is retrieved from the O.S.). The attributes are
+	-- described as follows; attribute mode is a string, all the others are numbers, and the time
+	-- related attributes use the same time reference of os.time.
+	-- This function uses stat internally thus if the given filepath is a symbolic link, it is followed
+	-- (if it points to another link the chain is followed recursively) and the information is about the
+	-- file it refers to.
+	-- @arg filepath A string with the file path.
+	-- @arg attributename A string with the name of the attribute to be read.
+	-- @tabular attributename
+	-- Attribute & Description \
+	-- "dev" &
+	-- on Unix systems, this represents the device that the inode resides on. On Windows
+	-- systems, represents the drive number of the disk containing the file \
+	-- "ino" &
+	-- on Unix systems, this represents the inode number. On Windows systems this has no meaning \
+	-- "mode" &
+	-- string representing the associated protection mode (the values could be file, directory,
+	-- link, socket, named pipe, char device, block device or other) \
+	-- "nlink" &
+	-- number of hard links to the file \
+	-- "uid" &
+	-- user-id of owner (Unix only, always 0 on Windows) \
+	-- "gid" &
+	-- group-id of owner (Unix only, always 0 on Windows) \
+	-- "rdev" &
+	-- on Unix systems, represents the device type, for special file inodes. On Windows systems
+	-- represents the same as dev \
+	-- "access" &
+	-- time of last access \
+	-- "modification" &
+	-- time of last data modification \
+	-- "change" &
+	-- time of last file status change \
+	-- "size" &
+	-- file size, in bytes \
+	-- "blocks" &
+	-- block allocated for file; (Unix only) \
+	-- "blksize" &
+	-- optimal file system I/O blocksize; (Unix only)
+	-- @usage File(packageInfo("base").path):attributes("mode")
+	attributes = function(self, attributename)
+		optionalArgument(1, "string", attributename)
+
+		return lfs.attributes(self.name, attributename)
+	end,
 	--- Close an opened file.
 	-- @usage -- DONTRUN
 	-- file = File("abc.txt")
@@ -91,11 +139,19 @@ File_ = {
 			resourceNotFoundError("file", self.name)
 		end
 	end,
-	--- Return a boolean if the file exists.
+	--- Return whether a given string represents a file stored in the computer.
+	-- A directory is also considered a file.
 	-- @usage file = File(filePath("agents.csv", "base"))
 	-- print(file:exists())
 	exists = function(self)
-		return isFile(self.name)
+		local fopen = io.open(self.name)
+
+		if fopen then
+			fopen:close()
+			return true
+		end
+
+		return false
 	end,
 	--- Return the directory of a file given its path.
 	-- @usage file = File("/my/path/file.txt")

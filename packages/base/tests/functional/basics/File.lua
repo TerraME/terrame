@@ -27,6 +27,31 @@ return{
 		local file = File("abc.txt")
 		unitTest:assertType(file, "File")
 	end,
+	attributes = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		local attr = file:attributes()
+
+		local expected = {
+			getn = 12,
+			mode = "file",
+			size = 140.0
+		}
+
+		if not _Gtme.isWindowsOS() then
+			expected.getn = 14
+			expected.size = 135
+		end
+
+		unitTest:assertEquals(getn(attr), expected.getn)
+		unitTest:assertEquals(attr.mode, expected.mode)
+		unitTest:assertEquals(attr.size, expected.size)
+
+		attr = file:attributes("mode")
+		unitTest:assertEquals(attr, expected.mode)
+
+		attr = file:attributes("size")
+		unitTest:assertEquals(attr, expected.size)
+	end,
 	close = function(unitTest)
 		local filename = "test.csv"
 		local file = File(filename)

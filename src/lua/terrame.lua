@@ -300,7 +300,7 @@ function _Gtme.findModels(package)
 	local packagepath = _Gtme.packageInfo(package).path
 	packagepath = _Gtme.makePathCompatibleToAllOS(packagepath)
 
-	if _Gtme.attributes(packagepath, "mode") ~= "directory" then
+	if _Gtme.File(packagepath):attributes("mode") ~= "directory" then
 		_Gtme.customError("Package '"..package.."' is not installed.")
 	end
 
@@ -333,7 +333,7 @@ function _Gtme.findExamples(package)
 		os.exit(1)
 	end)
 
-	if _Gtme.attributes(examplespath, "mode") ~= "directory" then
+	if _Gtme.File(examplespath):attributes("mode") ~= "directory" then
 		return {}
 	end
 
@@ -1190,6 +1190,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	dofile(info_.path..s.."lua"..s.."utils.lua")
 	dofile(info_.path..s.."lua"..s.."configure.lua")
 
+	_Gtme.attributes = lfs.attributes
 	info_.version = _Gtme.packageInfo().version
 
 	if arguments == nil or #arguments < 1 then 

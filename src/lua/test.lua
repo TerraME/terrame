@@ -43,7 +43,7 @@ local function testdirectories(directory, ut)
 					found_file = true
 					table.insert(result, mdirectory)
 				end
-			elseif attributes(directory..s..mdirectory..s..value, "mode") == "directory" then
+			elseif _Gtme.attributes(directory..s..mdirectory..s..value, "mode") == "directory" then
 				lf(mdirectory..s..value)
 				found_directory = true
 			else

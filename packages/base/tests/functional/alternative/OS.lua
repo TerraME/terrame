@@ -23,17 +23,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	 attributes = function(unitTest)
-		local error_func = function()
-			attributes(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-
-		error_func = function()
-			attributes("file", 1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
-	end,
 	chDir = function(unitTest)
 		local error_func = function()
 			chDir(1)

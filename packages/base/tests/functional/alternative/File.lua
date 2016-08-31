@@ -39,6 +39,13 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
+	attributes = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		local error_func = function()
+			file:attributes(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
 	close = function(unitTest)
 		local file = File("abc.txt")
 		local error_func = function()
