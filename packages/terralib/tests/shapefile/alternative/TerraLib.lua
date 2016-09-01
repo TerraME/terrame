@@ -36,6 +36,11 @@ return {
 		
 		tl:createProject(proj, {})
 
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end			
+		
 		local layerName1 = "Para"
 		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
@@ -73,6 +78,8 @@ return {
 		local select = "FID"
 		local area = nil
 		local default = nil
+		
+		customWarning = customWarningBkp
 		
 		local attributeTruncateWarning = function()
 			tl:attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
