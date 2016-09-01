@@ -585,7 +585,8 @@ end
 local function loadOGR(self)
 	local tlib = terralib.TerraLib{}
 	local dSet = tlib:getOGRByFilePath(self.file)
-	self.geometry = true
+
+	defaultTableValue(self, "geometry", false)
 
 	if type(self.xy) == "table" then
 		verify(#self.xy == 2, "Argument 'xy' should have exactly two values.")
@@ -1272,7 +1273,7 @@ CellularSpace_ = {
 				for i = 0, #dset do
 					for k, v in pairs(dset[i]) do
 						if (k == "OGR_GEOMETRY") or (k == "geom") then
-							self.cells[i+1][k] = v
+							self.cells[i + 1][k] = v
 						end
 					end		
 				end
@@ -1290,8 +1291,8 @@ CellularSpace_ = {
 					for i = 0, #dset do
 						for k, v in pairs(dset[i]) do
 							if k == "OGR_GEOMETRY" then
-								self.cells[i+1]["geom"] = nil
-								self.cells[i+1][k] = v
+								self.cells[i + 1]["geom"] = nil
+								self.cells[i + 1][k] = v
 							end
 						end		
 					end
