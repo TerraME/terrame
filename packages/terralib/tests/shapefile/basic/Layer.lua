@@ -92,6 +92,23 @@ return {
 		rmFile(cl2.file)
 		-- // SPATIAL INDEX
 		
+		-- VERIFY SRID
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			local _, nchars = string.find(msg, "It was not possible to find the projection of layer 'PA'.\nThe projection should be one of the availables in: ")
+			unitTest:assertEquals(109, nchars)	
+		end			
+		
+		Layer{
+			project = proj,
+			name = "PA",
+			file = filePath("limitePA_polyc_pol.shp", "terralib")		
+		}			
+		--unitTest:assertError(sridWarning, "It was not possible to find the projection of layer 'PA'.\nThe projection should be one of the availables in: ", )
+		
+		customWarning = customWarningBkp
+		-- // VERIFY SRID		
+		
 		rmFile(proj.file)
 	end,
 	fill = function(unitTest)
@@ -718,14 +735,21 @@ return {
 		
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
 
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end		
+		
 		layer = Layer{
 			project = proj,
-			name = "Fire",
-			file = filePath("firebreak_lin.shp", "terralib"),
+			name = "PA",
+			file = filePath("limitePA_polyc_pol.shp", "terralib"),
 			index = false
 		}	
 	
-		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 22S', with SRID: 29192.0 (PROJ4: '+proj=utm +zone=22 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
+		unitTest:assertEquals(layer:projection(), "Undefined, with SRID: 0.0 (PROJ4: Undefined).")
+		
+		customWarning = customWarningBkp
 
 		rmFile(proj.file)
 	end,
