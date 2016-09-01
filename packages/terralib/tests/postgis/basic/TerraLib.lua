@@ -187,6 +187,11 @@ return {
 		end	
 		-- CREATE A PROJECT
 		tl:createProject(proj, {})
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end		
 
 		-- CREATE A LAYER THAT WILL BE USED AS REFERENCE TO CREATE THE CELLULAR SPACE
 		local layerName1 = "Para"
@@ -1082,6 +1087,8 @@ return {
 		-- END POSTGIS TESTS		
 		
 		rmFile(proj.file)
+		
+		customWarning = customWarningBkp		
 	end,
 	getDataSet = function(unitTest)
 		-- see in saveDataSet() test --
@@ -1432,8 +1439,8 @@ return {
 		
 		tl:createProject(proj, {})
 
-		local layerName1 = "AmazonasAML"
-		local layerFile1 = filePath("test/municipiosAML_ok.shp", "terralib")
+		local layerName1 = "Setores"
+		local layerFile1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 		
 		-- POSTGIS
@@ -1443,7 +1450,7 @@ return {
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
-		local tableName = "municipiosAML_ok"	
+		local tableName = "Setores_Censitarios_2000_pol"	
 
 		local pgData = {
 			type = "postgis",

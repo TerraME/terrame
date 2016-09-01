@@ -32,11 +32,11 @@ return {
 		}
 		
 		-- SPATIAL INDEX TEST
-		local filePath1 = filePath("test/limitePA_polyc_pol.shp", "terralib")
+		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		local qixFile = string.gsub(filePath1, ".shp", ".qix")
 		rmFile(qixFile)
 		
-		local layerName1 = "limitepa"
+		local layerName1 = "Setores"
 		Layer{
 			project = proj,
 			name = layerName1,
@@ -59,14 +59,14 @@ return {
 		
 		unitTest:assert(isFile(qixFile))
 		
-		local clName1 = "PA_Cells50x50"
+		local clName1 = "Setores_Cells10x10"
 		local cl1 = Layer{
 			project = proj,
 			source = "shp",
 			clean = true,
 			input = layerName1,
 			name = clName1,
-			resolution = 50000,
+			resolution = 10e3,
 			file = clName1..".shp",
 			index = false
 		}			
@@ -74,14 +74,14 @@ return {
 		qixFile = string.gsub(cl1.file, ".shp", ".qix")
 		unitTest:assert(not isFile(qixFile))
 		
-		local clName2 = "PA_Cells60x60"
+		local clName2 = "Setores_Cells9x9"
 		local cl2 = Layer{
 			project = proj,
 			source = "shp",
 			clean = true,
 			input = layerName1,
 			name = clName2,
-			resolution = 60000,
+			resolution = 9e3,
 			file = clName2..".shp"
 		}
 		
@@ -91,6 +91,22 @@ return {
 		rmFile(cl1.file)
 		rmFile(cl2.file)
 		-- // SPATIAL INDEX
+		
+		-- VERIFY SRID
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			local _, nchars = string.find(msg, "It was not possible to find the projection of layer 'PA'.\nThe projection should be one of the availables in: ")
+			unitTest:assertEquals(109, nchars)	
+		end			
+		
+		Layer{
+			project = proj,
+			name = "PA",
+			file = filePath("test/limitePA_polyc_pol.shp", "terralib")		
+		}			
+		
+		customWarning = customWarningBkp
+		-- // VERIFY SRID		
 		
 		rmFile(proj.file)
 	end,
@@ -105,6 +121,11 @@ return {
 			file = projName,
 			clean = true
 		}
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end				
 
 		local layerName1 = "limitepa"
 		Layer{
@@ -695,6 +716,8 @@ return {
 
 		-- unitTest:assertFile(projName) -- SKIP #1301
 		rmFile(projName) -- #1301
+		
+		customWarning = customWarningBkp
 	end,
 	projection = function(unitTest)
 		local proj = Project {
@@ -711,14 +734,21 @@ return {
 		
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
 
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end		
+		
 		layer = Layer{
 			project = proj,
-			name = "ti",
-			file = filePath("TI_AMZ_pol.shp", "terralib"),
+			name = "PA",
+			file = filePath("test/limitePA_polyc_pol.shp", "terralib"),
 			index = false
 		}	
 	
 		unitTest:assertEquals(layer:projection(), "Undefined, with SRID: 0.0 (PROJ4: Undefined).")
+		
+		customWarning = customWarningBkp
 
 		rmFile(proj.file)
 	end,
