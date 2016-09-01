@@ -268,7 +268,8 @@ local function getProjects(package)
 		setmetatable(data, mtLayer)
 		return data
 	end
-
+	
+	sessionInfo().mode = "normal" -- #1100, #813
 	printNote("Processing lua files")
 	forEachFile(data_path, function(file)
 		if string.endswith(file, ".lua") then
@@ -281,7 +282,7 @@ local function getProjects(package)
 			clean()
 		end
 	end)
-
+	
 	local output = {}
 	local allLayers = {}
 
@@ -322,7 +323,7 @@ local function getProjects(package)
 	clean()
 
 	import = oldImport
-
+	
 	return output
 end
 
