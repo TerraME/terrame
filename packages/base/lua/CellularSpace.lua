@@ -1449,6 +1449,8 @@ metaTableCellularSpace_ = {
 -- of the file. It can also be an object of type Project from package terralib.
 -- @arg data.attrname A string with an attribute name. It is useful for files that have 
 -- only one attribute value for each cell but no attribute name.
+-- @arg data.as A table with string indexes and values. It renames the loaded attributes
+-- of the CellularSpace from the values to its indexes.
 -- @arg data.... Any other attribute or function for the CellularSpace.
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
@@ -1478,18 +1480,18 @@ metaTableCellularSpace_ = {
 -- @tabular source
 -- source & Description & Compulsory arguments & Optional arguments\
 -- "map" & Load from a text file where Cells are stored as numbers with its attribute value.
--- & & sep, attrname \
+-- & & sep, attrname, as \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
--- requires at least two attributes: x and y. & file & source, sep, geometry, ...\
+-- requires at least two attributes: x and y. & file & source, sep, as, geometry, ...\
 -- "proj" & Load from a layer within a TerraLib project. See the documentation of package terralib for
--- more information. & project, layer & source, geometry, ... \
+-- more information. & project, layer & source, geometry, as, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and 
 -- different extensions: .shp, .shx, and .dbf. The argument file must contain the
 -- extension .shp. Each loaded Cell will have its (x, y) location according to the attributes
 -- (row, col) or (Lin, Col) from the shapefile. The first pair keeps compatibility with TerraLib 5, 
--- while the last one is related to TerraLib 4. & file & source, geometry, ... \
+-- while the last one is related to TerraLib 4. & file & source, as, geometry, ... \
 -- "virtual" & Create a rectangular CellularSpace from scratch. Cells will be instantiated with
--- only two attributes, x and y, starting from (0, 0). & xdim & ydim, geometry, ...
+-- only two attributes, x and y, starting from (0, 0). & xdim & ydim, as, geometry, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.
 -- @output cObj_ A pointer to a C++ representation of the CellularSpace. Never use this object.
 -- @output parent The Environment it belongs.
@@ -1505,9 +1507,16 @@ metaTableCellularSpace_ = {
 -- states = CellularSpace{
 --     file = filePath("brazilstates.shp", "base")
 -- }
+--
+-- cabecadeboi = CellularSpace{
+--     file = filePath("cabecadeboi.shp"),
+--     as = {height = "height_"}
+-- }
 function CellularSpace(data)
 	verifyNamedTable(data)
 	
+	optionalTableArgument(data, "as", "table")
+
 	local candidates = {}
 
 	forEachOrderedElement(CellularSpaceDrivers, function(idx, value)
@@ -1720,6 +1729,31 @@ function CellularSpace(data)
 
 		forEachCell(data, function(cell)
 			setmetatable(cell, metaTableInstance)
+		end)
+	end
+
+	if data.as then
+		forEachElement(data.as, function(idx, value)
+			if type(idx) ~= "string" then
+				customError("All indexes of 'as' should be 'string', got '"..type(idx).."'")
+			elseif type(value ~= "string") then
+				customError("All values of 'as' should be 'string', got '"..type(value).."'")
+			elseif data.cells[1][value] then
+				customError("Cannot rename '"..idx.."' to '"..value.."' as it already exists.")
+			elseif not data.cells[1][idx] then
+				customError("Cannot rename attribute '"..idx.."' as it does not exist.")
+			end
+
+			local s = "return function(cell)\n"
+
+			forEachElement(data.as, function(idx, value)
+				s = s.."cell."..idx".. = cell."..value.."\n"
+				s = s.."cell."..value.." = nil\n"
+			end)
+	
+			s = s.."end"
+
+			forEachCell(data, load(s)())
 		end)
 	end
 

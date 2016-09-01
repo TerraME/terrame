@@ -89,6 +89,48 @@ return{
  			}
  		end
 		unitTest:assertError(error_func, "More than one candidate to argument 'source': 'shp', 'virtual'.")
+
+		error_func = function()
+			local cs = CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				as = 2
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("as", "table", 2))
+
+		error_func = function()
+			local cs = CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				as = {x = 2}
+			}
+		end
+		unitTest:assertError(error_func, "All values of 'as' should be 'string', got 'number'.")
+
+		error_func = function()
+			local cs = CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				as = {"height_"}
+			}
+		end
+		unitTest:assertError(error_func, "All indexes of 'as' should be 'string', got 'number'.")
+
+		error_func = function()
+			local cs = CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				as = {x = "height_"}
+			}
+		end
+		unitTest:assertError(error_func, "Cannot rename 'height_' to 'x' as it already exists.")
+
+		error_func = function()
+			local cs = CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				as = {
+					height = "height_2"
+				}
+			}
+		end
+		unitTest:assertError(error_func, "Cannor rename attribute 'height_2' as it does not exist.")
 	end,
 	loadNeighborhood = function(unitTest)
 		local terralib = getPackage("terralib")

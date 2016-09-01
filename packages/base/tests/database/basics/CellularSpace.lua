@@ -26,6 +26,9 @@ return{
 	CellularSpace = function(unitTest)
 		local cs = CellularSpace{
 			file = filePath("cabecadeboi.shp")
+			as = {
+				height = "height_"
+			}
 		}
 
 		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
@@ -36,7 +39,8 @@ return{
 			unitTest:assertType(cell.object_id0, "string")
 			unitTest:assertType(cell.x, "number")
 			unitTest:assertType(cell.y, "number")
-			unitTest:assertNotNil(cell.height_)
+			unitTest:assertNotNil(cell.height)
+			unitTest:assertNil(cell.height_)
 			unitTest:assertNotNil(cell.soilWater)
 		end
 
