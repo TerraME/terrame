@@ -1743,18 +1743,18 @@ function CellularSpace(data)
 			elseif not data.cells[1][value] then
 				customError("Cannot rename attribute '"..value.."' as it does not exist.")
 			end
-
-			local s = "return function(cell)\n"
-
-			forEachElement(data.as, function(idx, value)
-				s = s.."cell."..idx.." = cell."..value.."\n"
-				s = s.."cell."..value.." = nil\n"
-			end)
-	
-			s = s.."end"
-
-			forEachCell(data, load(s)())
 		end)
+
+		local s = "return function(cell)\n"
+
+		forEachElement(data.as, function(idx, value)
+			s = s.."cell."..idx.." = cell."..value.."\n"
+			s = s.."cell."..value.." = nil\n"
+		end)
+	
+		s = s.."end"
+
+		forEachCell(data, load(s)())
 	end
 
 	return data
