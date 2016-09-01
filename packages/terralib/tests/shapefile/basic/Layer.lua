@@ -104,7 +104,6 @@ return {
 			name = "PA",
 			file = filePath("limitePA_polyc_pol.shp", "terralib")		
 		}			
-		--unitTest:assertError(sridWarning, "It was not possible to find the projection of layer 'PA'.\nThe projection should be one of the availables in: ", )
 		
 		customWarning = customWarningBkp
 		-- // VERIFY SRID		
