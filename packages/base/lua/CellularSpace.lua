@@ -514,41 +514,47 @@ local function setCellsByTerraLibDataSet(self, dSet)
 	self.cells = {}
 	self.cObj_:clear()
 
+	if type(self.xy) == "table" then
+		local colname = self.xy[1]
+		local rowname = self.xy[2]
+
+		if colname ~= "col" and not dSet[1][colname] then
+			customError("Cells do not have attribute '"..colname.."'.")
+		elseif rowname ~= "row" and not dSet[1][rowname] then
+			customError("Cells do not have attribute '"..rowname.."'.")
+		end
+	end
+
 	for i = 0, #dSet do
 		local row = 0
 		local col = 0
 
-		if dSet[i].row then
-			row = tonumber(dSet[i].row)
-			col = tonumber(dSet[i].col)
-		elseif dSet[i].Lin then
-			row = tonumber(dSet[i].Lin) -- SKIP
-			col = tonumber(dSet[i].Col) -- SKIP
-		elseif dSet[i].lin then
-			row = tonumber(dSet[i].lin) -- SKIP
-			col = tonumber(dSet[i].col) -- SKIP
+		if type(self.xy) == "table" then
+			col = tonumber(dSet[i][self.xy[1]]) or 0
+			row = tonumber(dSet[i][self.xy[2]]) or 0
+		elseif type(self.xy) == "function" then
+			col, row = self.xy(dSet[i])
 		end
 
 		self.xMin = math.min(self.xMin, col)
 		self.xMax = math.max(self.xMax, row)
 		self.yMin = math.min(self.yMin, row)
-		self.yMax = math.max(self.yMax, col)		
+		self.yMax = math.max(self.yMax, col)
 	end
 
 	for i = 0, #dSet do
-		local row = tonumber(dSet[i].row)
-		local col = tonumber(dSet[i].col)
+		local row = 0
+		local col = 0
 
-		if not row then -- compatibility with shapes exported from TerraLLib 4
-			if dSet[i].Lin then
-				row = tonumber(dSet[i].Lin) -- SKIP
-				col = tonumber(dSet[i].Col) -- SKIP
-			elseif dSet[i].lin then
-				row = tonumber(dSet[i].lin) -- SKIP
-				col = tonumber(dSet[i].col) -- SKIP
-			end
-		else
-			row = self.xMax - row + self.xMin
+		if type(self.xy) == "table" then
+			col = tonumber(dSet[i][self.xy[1]]) or 0
+			row = tonumber(dSet[i][self.xy[2]]) or 0
+		elseif type(self.xy) == "function" then
+			col, row = self.xy(dSet[i])
+		end
+
+		if self.zero == "bottom" then
+			row = self.xMax - row + self.xMin -- bottom inverts row
 		end
 
 		local cell = Cell{id = tostring(i), x = col, y = row}
@@ -580,6 +586,21 @@ local function loadOGR(self)
 	local tlib = terralib.TerraLib{}
 	local dSet = tlib:getOGRByFilePath(self.file)
 	self.geometry = true
+
+	if type(self.xy) == "table" then
+		verify(#self.xy == 2, "Argument 'xy' should have exactly two values.")
+
+		verify(type(self.xy[1]) == "string", "Argument 'xy[1]' should be 'string', got '"..type(self.xy[1]).."'.")
+		verify(type(self.xy[2]) == "string", "Argument 'xy[2]' should be 'string', got '"..type(self.xy[2]).."'.")
+
+		defaultTableValue(self, "zero", "top")
+	elseif self.xy == nil then
+		self.xy = {"col", "row"}
+		defaultTableValue(self, "zero", "bottom") 
+	elseif type(self.xy) ~= "function" then
+		customError("Argument 'xy' should be a 'table' or a 'function', got '"..type(self.xy).."'")
+	end
+
 	setCellsByTerraLibDataSet(self, dSet)
 	local temp = ""
 
@@ -677,7 +698,8 @@ end
 registerCellularSpaceDriver{
 	source = "shp",
 	load = loadOGR,
-	check = checkShape
+	check = checkShape,
+	optional = "xy"
 }
 
 registerCellularSpaceDriver{
@@ -714,7 +736,8 @@ registerCellularSpaceDriver{
 
 registerCellularSpaceDriver{
 	source = "geojson",
-	load = loadOGR
+	load = loadOGR,
+	optional = "xy"
 }
 
 registerCellularSpaceDriver{
@@ -1451,6 +1474,16 @@ metaTableCellularSpace_ = {
 -- only one attribute value for each cell but no attribute name.
 -- @arg data.as A table with string indexes and values. It renames the loaded attributes
 -- of the CellularSpace from the values to its indexes.
+-- @arg data.zero A string value describing where the zero in the y axis starts. The
+-- default value is "bottom" (as defined by TerraLib). When one uses argument xy, the
+-- default value is "top", which is the most common representation in different data
+-- formats.
+-- @arg data.xy An optional table with two strings describing the names of the
+-- column and row attributes, in this order. The default value is {"col", "row"},
+-- representing the attribute names created by TerraLib for CellularSpaces. A Map
+-- can only be created from a CellularSpace if each Cell has a (x, y) location. This
+-- argument can also be a function that gets a Cell as argument and returns two values
+-- with the (x, y) location. 
 -- @arg data.... Any other attribute or function for the CellularSpace.
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
@@ -1489,7 +1522,7 @@ metaTableCellularSpace_ = {
 -- different extensions: .shp, .shx, and .dbf. The argument file must contain the
 -- extension .shp. Each loaded Cell will have its (x, y) location according to the attributes
 -- (row, col) or (Lin, Col) from the shapefile. The first pair keeps compatibility with TerraLib 5, 
--- while the last one is related to TerraLib 4. & file & source, as, geometry, ... \
+-- while the last one is related to TerraLib 4. & file & source, as, xy, zero, geometry, ... \
 -- "virtual" & Create a rectangular CellularSpace from scratch. Cells will be instantiated with
 -- only two attributes, x and y, starting from (0, 0). & xdim & ydim, as, geometry, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.

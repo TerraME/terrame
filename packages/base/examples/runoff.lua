@@ -33,7 +33,8 @@ cell = Cell{
 cs = CellularSpace{
 	file = filePath("cabecadeboi.shp"),
 	instance = cell,
-	as = {height = "height_"}
+	as = {height = "height_"},
+	xy = {"Col", "Lin"}
 }
 
 cs:createNeighborhood{
