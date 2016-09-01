@@ -80,16 +80,6 @@ return{
 	isWindowsOS = function(unitTest)
 		unitTest:assert(true)
 	end,
-	lock = function(unitTest)
-		local pathdata = packageInfo().data
-
-		local f = io.open(pathdata.."test.txt", "w+")
-
-		unitTest:assert(lock(f, "w"))
-		
-		f:close()
-		os.execute("rm \""..pathdata.."test.txt\"")
-	end,
 	lockDir = function(unitTest)
 		local pathdata = packageInfo().data
 
@@ -179,40 +169,6 @@ return{
 		unitTest:assertType(g, "string")
 
 		rmDir(g)
-	end,
-	touch = function(unitTest)
-		if not _Gtme.isWindowsOS() then
-			local pathdata = packageInfo().data
-
-			local f = io.open(pathdata.."testfile.txt", "w+")
-			f:write("test")
-			f:close()
-
-			unitTest:assert(touch(pathdata.."testfile.txt", 10000, 10000)) -- SKIP
-
-			local attr = _Gtme.File(pathdata.."testfile.txt"):attributes("access")
-			unitTest:assertEquals(attr, 10000) -- SKIP
-
-			attr = _Gtme.File(pathdata.."testfile.txt"):attributes("modification")
-			unitTest:assertEquals(attr, 10000) -- SKIP
-
-			os.execute("rm \""..pathdata.."testfile.txt\"")
-		end
-		
-		unitTest:assert(true)
-		
-	end, 
-	unlock = function(unitTest)
-		local pathdata = packageInfo().data
-
-		local f = io.open(pathdata.."testfile.txt", "w+")
-		f:write("test")
-
-		unitTest:assert(lock(f, "w"))
-		unitTest:assert(unlock(f))
-
-		f:close()
-		os.execute("rm \""..pathdata.."testfile.txt\"")
 	end
 }
 

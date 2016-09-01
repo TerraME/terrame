@@ -114,6 +114,17 @@ return{
 		extension = file:hasExtension()
 		unitTest:assert(not extension)
 	end,
+	lock = function(unitTest)
+		local filepath = packageInfo().data.."test.txt"
+		local file = File(filepath)
+
+		file:open("w+")
+
+		unitTest:assert(file:lock("w"))
+
+		file:close()
+		rmFile(filepath)
+	end,
 	open = function(unitTest)
 		local file = File("test.csv")
 		local fopen = file:open("a+")
@@ -163,6 +174,39 @@ return{
 		unitTest:assertEquals(path, "/my/path/")
 		unitTest:assertEquals(name, "file")
 		unitTest:assertEquals(extension, "txt")
+	end,
+	touch = function(unitTest)
+		if not _Gtme.isWindowsOS() then
+			local pathdata = packageInfo().data.."testfile.txt"
+
+			local file = File(pathdata)
+			file:writeLine("test")
+
+			unitTest:assert(file:touch(10000, 10000)) -- SKIP
+
+			local attr = _Gtme.File(pathdata):attributes("access")
+			unitTest:assertEquals(attr, 10000) -- SKIP
+
+			attr = _Gtme.File(pathdata):attributes("modification")
+			unitTest:assertEquals(attr, 10000) -- SKIP
+
+			rmFile(pathdata)
+		end
+
+		unitTest:assert(true)
+
+	end,
+	unlock = function(unitTest)
+		local filepath = packageInfo().data.."test.txt"
+		local file = File(filepath)
+
+		file:open("w+")
+
+		unitTest:assert(file:lock("w"))
+		unitTest:assert(file:unlock())
+
+		file:close()
+		rmFile(filepath)
 	end,
 	write = function(unitTest)
 		local example = {

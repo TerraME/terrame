@@ -206,6 +206,31 @@ File_ = {
 	hasExtension = function(self)
 		return not (self:getExtension() == "")
 	end,
+	--- Lock a file or a part of it. This function works on open files; the file handle should be
+	-- specified as the first argument. The optional arguments start and length can be used to specify a
+	-- starting point and its length; both should be numbers.
+	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
+	-- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w
+	-- (for a write/exclusive lock).
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- file:open("r")
+	-- file:lock()
+	-- file:unlock()
+	-- @see File:unlock
+	lock = function(self, mode)
+		if not self.file then
+			return customWarning("Cannot lock a file not opened.")
+		end
+
+		optionalArgument(1, "string", mode)
+
+		if io.type(self.file) == "file" then
+			mode = mode or self.mode
+			return lfs.lock(self.file, mode)
+		else
+			resourceNotFoundError("file", self.name)
+		end
+	end,
 	--- Open a file for reading or writing. An opened file must be closed after being used.
 	-- @arg mode A string with the mode. It can be "w" for writing or "r" for reading.
 	-- @see File:close
@@ -321,6 +346,40 @@ File_ = {
 		local fileName = self:removeExtension(nameWithExtension)
 
 		return filePath, fileName, extension
+	end,
+	--- Set access and modification times of a file. This function is a bind to utime function.
+	-- Times are provided in seconds (which should be generated with Lua
+	-- standard function os.time). If the modification time is omitted, the access time provided is used;
+	-- if both times are omitted, the current time is used.
+	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
+	-- @arg atime The new access time (in seconds).
+	-- @arg mtime The new modification time (in seconds).
+	-- @usage File(packageInfo("base").path):touch(0, 0)
+	touch = function(self, atime, mtime)
+		mandatoryArgument(1, "number", atime)
+		mandatoryArgument(2, "number", mtime)
+
+		return lfs.touch(self.name, atime, mtime)
+	end,
+	--- Unlock a file or a part of it. This function works on open files; the file handle should be
+	-- specified as the first argument. The optional arguments start and length can be used to specify
+	-- a starting point and its length; both should be numbers. It returns true if the operation was
+	-- successful. In case of error, it returns nil plus an error string.
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- file:open("r")
+	-- file:lock()
+	-- file:unlock()
+	-- @see File:lock
+	unlock =function(self)
+		if not self.file then
+			return customWarning("Cannot unlock a file not opened.")
+		end
+
+		if io.type(self.file) == "file" then
+			return lfs.unlock(self.file)
+		else
+			resourceNotFoundError("file", self.name)
+		end
 	end,
 	--- Write a given table into a file.
 	-- The first line of the file will list the attributes of each table.

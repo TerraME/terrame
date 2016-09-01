@@ -51,22 +51,6 @@ return{
         end
         unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
     end,
-	lock = function(unitTest)
-		local error_func = function()
-			lock(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "userdata", 1))
-
-		local pathdata = packageInfo().data
-		local f = io.open(pathdata.."test.txt", "w+")
-
-		error_func = function()
-			lock(f, 1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
-		f:close()
-		os.execute("rm \""..pathdata.."test.txt\"")
-	end,
 	lockDir = function(unitTest)
 		local error_func = function()
 			lockDir(1)
@@ -136,28 +120,6 @@ return{
 			tmpDir(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-	end,
-	touch = function(unitTest)
-		local error_func = function()
-			touch(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-
-		error_func = function()
-			touch("path", "1")
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "1"))
-	
-		error_func = function()
-			touch("path", 1, "1")
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "1"))
-	end,
-	unlock = function(unitTest)
-		local error_func = function()
-			unlock(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "userdata", 1))
 	end
 }
 

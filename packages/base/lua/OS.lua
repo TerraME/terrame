@@ -110,25 +110,6 @@ function isDir(path)
 	return false
 end
 
---- Lock a file or a part of it. This function works on open files; the file handle should be
--- specified as the first argument. The optional arguments start and length can be used to specify a
--- starting point and its length; both should be numbers.
--- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @arg fh A file handle with the file to be locked.
--- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w
--- (for a write/exclusive lock).
--- @usage file = File(filePath("agents.csv", "base"))
--- filehandle = file:open("r")
--- lock(filehandle, "r")
--- unlock(filehandle)
--- @see OS:unlock
-function lock(fh, mode)
-	mandatoryArgument(1, "userdata", fh)
-	mandatoryArgument(2, "string", mode)
-
-	return lfs.lock(fh, mode)
-end
-
 --- Create a lockfile (called lockfile.lfs) in path if it does not exist and returns the lock. 
 -- If the lock already exists checks if it's stale, using the second argeter (default for the 
 -- second argeter is INT_MAX, which in practice means the lock will never be stale.
@@ -297,38 +278,5 @@ function tmpDir(directory)
 	end
 
 	return _Gtme.tmpdirectory__
-end
-
---- Set access and modification times of a file. This function is a bind to utime function.
--- Times are provided in seconds (which should be generated with Lua
--- standard function os.time). If the modification time is omitted, the access time provided is used;
--- if both times are omitted, the current time is used.
--- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @arg filepath A string with the file name.
--- @arg atime The new access time (in seconds).
--- @arg mtime The new modification time (in seconds).
--- @usage touch(packageInfo("base").path, 0, 0)
-function touch(filepath, atime, mtime)
-	mandatoryArgument(1, "string", filepath)
-	mandatoryArgument(2, "number", atime)
-	mandatoryArgument(3, "number", mtime)
-
-	return lfs.touch(filepath, atime, mtime)
-end
-
---- Unlock a file or a part of it. This function works on open files; the file handle should be
--- specified as the first argument. The optional arguments start and length can be used to specify
--- a starting point and its length; both should be numbers. It returns true if the operation was
--- successful. In case of error, it returns nil plus an error string.
--- @arg fh A file handle with the file to be locked.
--- @usage file = File(filePath("agents.csv", "base"))
--- filehandle = file:open("r")
--- lock(filehandle, "r")
--- unlock(filehandle)
--- @see OS:lock
-function unlock(fh)
-	mandatoryArgument(1, "userdata", fh)
-
-	return lfs.unlock(fh)
 end
 
