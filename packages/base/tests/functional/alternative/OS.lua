@@ -51,12 +51,6 @@ return{
         end
         unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
     end,
-	isFile = function(unitTest)
-		local error_func = function()
-			isFile(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-	end,
 	lock = function(unitTest)
 		local error_func = function()
 			lock(1)
@@ -128,7 +122,7 @@ return{
 			file:close()
 			rmFile("myfile.txt")
 
-			unitTest:assert(not isFile("myfile.txt")) -- SKIP
+			unitTest:assert(not File("myfile.txt"):exists()) -- SKIP
 		end
 	end,
 	runCommand = function(unitTest)

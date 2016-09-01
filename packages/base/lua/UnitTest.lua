@@ -233,7 +233,7 @@ UnitTest_ = {
 			self.fail = self.fail + 1
 			self:printError("It is not possible to use a directory as #1 for assertFile().")
 			return
-		elseif not isFile(fname) then
+		elseif not File(fname):exists() then
 			self.fail = self.fail + 1
 			self:printError(resourceNotFoundMsg(1, fname))
 			return
@@ -267,7 +267,7 @@ UnitTest_ = {
 		os.execute("cp \""..fname.."\" \""..self.tmpdir.."\"")
 		rmFile(fname)
 
-		if isFile(fname) then
+		if File(fname):exists() then
 			self.fail = self.fail + 1 -- SKIP
 			self:printError("Could not remove file '"..fname.."'.")
 			return
@@ -277,7 +277,7 @@ UnitTest_ = {
 		local pkg = sessionInfo().package
 		local oldLog = packageInfo(pkg).path..s.."log"..s..self.log..s..fname
 
-		if not isFile(oldLog) then
+		if not File(oldLog):exists() then
 			if not self.created_logs then -- SKIP
 				self.created_logs = 0 -- SKIP
 			end
@@ -385,7 +385,7 @@ UnitTest_ = {
 		local pkg = sessionInfo().package
 		local oldImage = packageInfo(pkg).path..s.."log"..s..self.log..s..file
 
-		if not isFile(oldImage) then
+		if not File(oldImage):exists() then
 			observer:save(oldImage) -- SKIP
 
 			if not self.created_logs then -- SKIP

@@ -205,7 +205,7 @@ return{
 		end
 		unitTest:assertError(layerNonString, incompatibleTypeMsg("layer", "Layer", false))
 
-		if isFile("myproj.tview") then rmFile("myproj.tview") end
+		if File("myproj.tview"):exists() then rmFile("myproj.tview") end
 
 		local projNotExists = function()
 			CellularSpace{project = "myproj.tview", layer = "cells"}
@@ -214,7 +214,7 @@ return{
 		
 		local projFile = "cellspace_alt.tview"
 		
-		if isFile(projFile) then
+		if File(projFile):exists() then
 			os.execute("rm -f "..projFile)
 		end
 
@@ -254,7 +254,7 @@ return{
 		end
 		unitTest:assertError(geometryNotBoolean, incompatibleTypeMsg("geometry", "boolean", 123))
 
-		if isFile(projFile) then
+		if File(projFile):exists() then
 			os.execute("rm -f "..projFile)
 		end
 
@@ -280,7 +280,7 @@ return{
 		end
 		unitTest:assertError(projAndLayerExists, "It is not possible to use Project when passing a Layer to CellularSpace.")
 
-		if isFile(projFile) then
+		if File(projFile):exists() then
 			os.execute("rm -f "..projFile)
 		end
 	end,

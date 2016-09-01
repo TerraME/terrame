@@ -94,7 +94,7 @@ return{
     
 		-- the call to notify() above creates the file again.
 		-- remove the line below after refactoring observer.
-		if isFile("cellularspace.csv") then rmFile("cellularspace.csv") end
+		if File("cellularspace.csv"):exists() then rmFile("cellularspace.csv") end
 
 		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.23)
 
@@ -146,7 +146,7 @@ return{
 		
 		local projName = "cellspace_basic_observer.tview"
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
@@ -178,7 +178,7 @@ return{
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end
 		end			
@@ -238,7 +238,7 @@ return{
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end
 		end

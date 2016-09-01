@@ -41,7 +41,7 @@ return {
 		
 		local filePath1 = "setores_cells_basic.shp"
 		
-		if not isFile(filePath1) then
+		if not File(filePath1):exists() then
 			local mf = io.open(filePath1, "w")
 			mf:write("aaa")
 			io.close(mf)
@@ -73,13 +73,13 @@ return {
 		-- unitTest:assertFile(projName) -- SKIP #1301
 		rmFile(projName) -- #1301
 		
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end
 
 		projName = "setores_2000.tview"
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
@@ -170,7 +170,7 @@ return {
 		
 		filePath1 = "sampa_cells.shp"
 
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end
 
@@ -187,7 +187,7 @@ return {
 		
 		local filePath2 = "mg_cells.shp"
 		
-		if isFile(filePath2) then
+		if File(filePath2):exists() then
 			rmFile(filePath2)
 		end			
 		
@@ -204,7 +204,7 @@ return {
 		
 		local filePath3 = "another_sampa_cells.shp"
 		
-		if isFile(filePath3) then
+		if File(filePath3):exists() then
 			rmFile(filePath3)
 		end
 		
@@ -227,7 +227,7 @@ return {
 		clName1 = clName1.."_Box"
 		local filePath4 = clName1..".shp"
 		
-		if isFile(filePath4) then
+		if File(filePath4):exists() then
 			rmFile(filePath4)
 		end		
 		
@@ -244,14 +244,14 @@ return {
 		unitTest:assertEquals(getn(clSet), 104)		
 		
 		-- END
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end		
 
-		if isFile(filePath1) then rmFile(filePath1) end
-		if isFile(filePath2) then rmFile(filePath2) end
-		if isFile(filePath3) then rmFile(filePath3) end
-		if isFile(filePath4) then rmFile(filePath4) end
+		if File(filePath1):exists() then rmFile(filePath1) end
+		if File(filePath2):exists() then rmFile(filePath2) end
+		if File(filePath3):exists() then rmFile(filePath3) end
+		if File(filePath4):exists() then rmFile(filePath4) end
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_basic.tview"
@@ -270,7 +270,7 @@ return {
 		local clName1 = "Setores_Cells"
 		local filePath1 = clName1..".shp"
 		
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end
 
@@ -293,7 +293,7 @@ return {
 		local areaLayerName = clName1.."_Area"
 		local filePath3 = areaLayerName..".shp"
 		
-		if isFile(filePath3) then
+		if File(filePath3):exists() then
 			rmFile(filePath3)
 		end
 		
@@ -313,7 +313,7 @@ return {
 		-- local distanceLayerName = clName1.."_Distance"
 		-- local filePath5 = distanceLayerName..".shp"
 		
-		-- if isFile(filePath5) then
+		-- if File(filePath5):exists() then
 			-- rmFile(filePath5)
 		-- end	
 		
@@ -406,7 +406,7 @@ return {
 		-- local rmeanLayerName = clName1.."_Mean_Raster"
 		-- local filePath16 = shp16 = rmeanLayerName..".shp"
 
-		-- if isFile(filePath16) then
+		-- if File(filePath16):exists() then
 			-- rmFile(filePath16)
 		-- end	
 		
@@ -420,7 +420,7 @@ return {
 		-- local rminLayerName = clName1.."_Minimum_Raster"
 		-- local filePath17 = rminLayerName..".shp"
 
-		-- if isFile(filePath17) then
+		-- if File(filePath17):exists() then
 			-- rmFile(filePath17)
 		-- end	
 		
@@ -434,7 +434,7 @@ return {
 		-- local rmaxLayerName = clName1.."_Maximum_Raster"
 		-- local filePath18 = rmaxLayerName..".shp"
 
-		-- if isFile(filePath18) then
+		-- if File(filePath18):exists() then
 			-- rmFile(filePath18)
 		-- end	
 		
@@ -448,7 +448,7 @@ return {
 		-- local rpercentLayerName = clName1.."_Percentage_Raster"
 		-- local filePath19 = rpercentLayerName..".shp"
 
-		-- if isFile(filePath19) then
+		-- if File(filePath19):exists() then
 			-- rmFile(filePath19)
 		-- end	
 		
@@ -462,7 +462,7 @@ return {
 		-- local rstdevLayerName = clName1.."_Stdev_Raster"
 		-- local filePath20 = rstdevLayerName..".shp"
 
-		-- if isFile(filePath20) then
+		-- if File(filePath20):exists() then
 			-- rmFile(filePath20)
 		-- end	
 		
@@ -476,7 +476,7 @@ return {
 		-- local rsumLayerName = clName1.."_Sum_Raster"
 		-- local filePath21 = rstdevLayerName..".shp"
 
-		-- if isFile(filePath21) then
+		-- if File(filePath21):exists() then
 			-- rmFile(filePath21)
 		-- end
 		
@@ -500,7 +500,7 @@ return {
 		local cellSpaceLayerName = clName1.."_CellSpace_Sum"
 		local filePath22 = cellSpaceLayerName..".shp"
 
-		if isFile(filePath22) then
+		if File(filePath22):exists() then
 			rmFile(filePath22)
 		end
 		
@@ -514,7 +514,7 @@ return {
 		unitTest:assertEquals(cellSpaceLayer.source, "shp")
 		unitTest:assertEquals(cellSpaceLayer.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath22))					
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 

@@ -49,7 +49,7 @@
 --     print(index.."\t"..layer.rep)
 -- end)
 --
--- if isFile(filename) then rmFile(filename) end
+-- if File(filename):exists() then rmFile(filename) end
 function forEachLayer(project, _sof_)
 	if type(project) ~= "Project" then
 		incompatibleTypeError(1, "Project", project)

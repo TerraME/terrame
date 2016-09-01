@@ -810,7 +810,7 @@ return{
 			unitTest:assertNotNil(cell.geom)
 		end)
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 
@@ -855,7 +855,7 @@ return{
 
 		unitTest:assertNil(cs:sample().past.geom)
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 	end

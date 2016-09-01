@@ -57,7 +57,7 @@ return{
 			unitTest:assertEquals(tab1.vision, tab2.vision)
 		end
 
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then rmFile(filename) end
 	end,
 	["table.save"] = function(unitTest)
 		local filename = "dump.lua"

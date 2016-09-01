@@ -34,7 +34,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -104,7 +104,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -182,7 +182,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		-- CREATE A PROJECT
@@ -1095,7 +1095,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -1205,7 +1205,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -1265,7 +1265,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -1319,7 +1319,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -1373,7 +1373,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -1426,7 +1426,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -1466,22 +1466,22 @@ return {
 		local toData = {}
 		toData.file = "postgis2shp.shp"
 		toData.type = "shp"		
-		if isFile(toData.file) then
+		if File(toData.file):exists() then
 			rmFile(toData.file)
 		end		
 		
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)	
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 		
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"		
-		if isFile(toData.file) then
+		if File(toData.file):exists() then
 			rmFile(toData.file)
 		end	
 
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 
 		tl:dropPgTable(pgData)
 		rmFile("postgis2shp.shp")

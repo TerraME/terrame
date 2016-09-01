@@ -104,7 +104,7 @@ return {
 		local clName1 = "cells"
 		local shp1 = clName1..".shp"
 
-		if isFile(shp1) then
+		if File(shp1):exists() then
 			rmFile(shp1)
 		end
 
@@ -120,7 +120,7 @@ return {
 		local modeTifLayerName = clName1.."_"..prodes.."_mode"
 		local shp = modeTifLayerName..".shp"
 
-		if isFile(shp) then
+		if File(shp):exists() then
 			rmFile(shp)
 		end
 
@@ -154,14 +154,14 @@ return {
 		-- unitTest:assertFile(projName) -- SKIP #1301
 		rmFile(projName) -- #1301
 
-		if isFile(shp1) then
+		if File(shp1):exists() then
 			rmFile(shp1)
 		end
 	end,
 	dummy = function(unitTest)
 		local projName = "layer_tif_dummy.tview"
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		

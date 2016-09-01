@@ -44,7 +44,7 @@ return {
 			index = false
 		}
 		
-		unitTest:assert(not isFile(qixFile))
+		unitTest:assert(not File(qixFile):exists())
 		
 		proj = Project {
 			file = projName,
@@ -57,7 +57,7 @@ return {
 			file = filePath1
 		}		
 		
-		unitTest:assert(isFile(qixFile))
+		unitTest:assert(File(qixFile):exists())
 		
 		local clName1 = "PA_Cells50x50"
 		local cl1 = Layer{
@@ -72,7 +72,7 @@ return {
 		}			
 		
 		qixFile = string.gsub(cl1.file, ".shp", ".qix")
-		unitTest:assert(not isFile(qixFile))
+		unitTest:assert(not File(qixFile):exists())
 		
 		local clName2 = "PA_Cells60x60"
 		local cl2 = Layer{
@@ -86,7 +86,7 @@ return {
 		}
 		
 		qixFile = string.gsub(cl2.file, ".shp", ".qix")
-		unitTest:assert(isFile(qixFile))	
+		unitTest:assert(File(qixFile):exists())
 
 		rmFile(cl1.file)
 		rmFile(cl2.file)
@@ -97,7 +97,7 @@ return {
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_shape.tview"
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
@@ -147,7 +147,7 @@ return {
 		
 		local shp0 = clName1..".shp"
 		table.insert(shapes, shp0)
-		if isFile(shp0) then
+		if File(shp0):exists() then
 			rmFile(shp0)
 		end
 		
@@ -380,7 +380,7 @@ return {
 
 		local shp1 = clName2..".shp"
 		table.insert(shapes, shp1)
-		if isFile(shp1) then
+		if File(shp1):exists() then
 			rmFile(shp1)
 		end
 
@@ -579,7 +579,7 @@ return {
 		clName1 = "cells_set"
 		local shp2 = clName1..".shp"
 		table.insert(shapes, shp2)
-		if isFile(shp2) then
+		if File(shp2):exists() then
 			rmFile(shp2)
 		end		
 		
@@ -650,7 +650,7 @@ return {
 		local shp3 = clName1..".shp"
 		table.insert(shapes, shp3)
 
-		if isFile(shp3) then
+		if File(shp3):exists() then
 			rmFile(shp3)
 		end
 		
@@ -772,11 +772,11 @@ return {
 		
 		local geojson = "setores.geojson"
 		layer:export(geojson, overwrite)
-		unitTest:assert(isFile(geojson))
+		unitTest:assert(File(geojson):exists())
 		
 		local shp = "setores.shp"
 		layer:export(shp, overwrite)
-		unitTest:assert(isFile(shp))
+		unitTest:assert(File(shp):exists())
 
 		rmFile(geojson)
 		rmFile(shp)

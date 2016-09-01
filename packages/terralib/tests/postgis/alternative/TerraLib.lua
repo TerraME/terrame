@@ -30,7 +30,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -72,7 +72,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -124,7 +124,7 @@ return {
 		-- SHP
 		toData.file = "postgis2shp.shp"
 		toData.type = "shp"		
-		if isFile(toData.file) then
+		if File(toData.file):exists() then
 			rmFile(toData.file)
 		end		
 		
@@ -140,7 +140,7 @@ return {
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"		
-		if isFile(toData.file) then
+		if File(toData.file):exists() then
 			rmFile(toData.file)
 		end	
 

@@ -121,7 +121,7 @@ return {
 			-- table = tableName			
 		-- }		
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end		
 
@@ -268,7 +268,7 @@ return {
 		unitTest:assertEquals(getn(clSet), 104)			
 	
 		-- END
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end	
 		
@@ -448,11 +448,11 @@ return {
 		
 		local geojson = "setores.geojson"
 		layer2:export(geojson, overwrite)
-		unitTest:assert(isFile(geojson))
+		unitTest:assert(File(geojson):exists())
 		
 		local shp = "setores.shp"
 		layer2:export(shp, overwrite)
-		unitTest:assert(isFile(shp))
+		unitTest:assert(File(shp):exists())
 
 		rmFile(geojson)
 		rmFile(shp)

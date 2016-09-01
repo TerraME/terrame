@@ -94,7 +94,7 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then rmFile(filename) end
 
 		file = File(filename)
 
@@ -134,7 +134,7 @@ return{
 		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
 
 		file:close()
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then rmFile(filename) end
 
 		file = File(filePath("agents.csv", "base"))
 		error_func = function()

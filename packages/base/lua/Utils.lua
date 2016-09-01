@@ -819,7 +819,7 @@ local config
 function getConfig()
 	if config then
 		return config
-	elseif not isFile("config.lua") then
+	elseif not File("config.lua"):exists() then
 		_Gtme.buildConfig() -- SKIP
 		return getConfig() -- SKIP
 	else
@@ -1423,7 +1423,7 @@ end
 -- tbl = {x = 1, y = 2}
 -- table.save(tbl, filename)
 --
--- if isFile(filename) then rmFile(filename) end
+-- if File(filename):exists() then rmFile(filename) end
 function table.save(tbl, filename)
 	mandatoryArgument(1, "table", tbl)
 	mandatoryArgument(2, "string", filename)

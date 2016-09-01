@@ -106,7 +106,7 @@ return{
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end
 		end			
@@ -166,13 +166,13 @@ return{
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end
 		end
@@ -211,7 +211,7 @@ return{
 		local geojson1 = "geojson_sampa_cells.geojson"
 		filePath1 = testDir.."/"..geojson1
 
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end
 
@@ -271,11 +271,11 @@ return{
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 
-		if isFile(geojson1) then
+		if File(geojson1):exists() then
 			rmFile(geojson1)
 		end
 
@@ -320,7 +320,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs, 10000) -- SKIP
-			if isFile(projName) then rmFile(projName) end
+			if File(projName):exists() then rmFile(projName) end
 
 			-- NetCDF
 			projName = "nc_cellspace.tview"
@@ -362,7 +362,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 8904) -- SKIP
-			if isFile(projName) then rmFile(projName) end
+			if File(projName):exists() then rmFile(projName) end
 
 
 			-- ASC
@@ -405,7 +405,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
-			if isFile(projName) then rmFile(projName) end
+			if File(projName):exists() then rmFile(projName) end
 
 		end
 	end, 
@@ -1420,7 +1420,7 @@ ydim    number [20]
 	
 		local projName = "cellspace_save_basic.tview"
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
@@ -1448,7 +1448,7 @@ ydim    number [20]
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end
 		end
@@ -1478,7 +1478,7 @@ ydim    number [20]
 		local fn2 = File(filePath2):getName()
 		fn2 = testDir.."/"..fn2	
 
-		if isFile(filePath2) then
+		if File(filePath2):exists() then
 			rmFile(filePath2)
 		end
 
@@ -1527,7 +1527,7 @@ ydim    number [20]
 		
 		for i = 1, #exts do
 			local f = fn3..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end
 		end			
@@ -1553,7 +1553,7 @@ ydim    number [20]
 		
 		for i = 1, #exts do
 			local f = fn4..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end
 		end			
@@ -1570,28 +1570,28 @@ ydim    number [20]
 			unitTest:assertNotNil(cell.geom)
 		end)		
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end
 
 			f = fn2..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end
 
 			f = fn3..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end
 		
 			f = fn4..exts[i]
-			if isFile(f) then
+			if File(f):exists() then
 				rmFile(f)
 			end				
 		end

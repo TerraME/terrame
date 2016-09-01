@@ -30,7 +30,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end
 		
@@ -57,7 +57,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -70,7 +70,7 @@ return {
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"
 
-		if isFile(shp1) then
+		if File(shp1):exists() then
 			rmFile(shp1)
 		end	
 		
@@ -87,7 +87,7 @@ return {
 		unitTest:assertNotNil(layerInfo.sid)				
 
 		-- END
-		if isFile(shp1) then
+		if File(shp1):exists() then
 			rmFile(shp1)
 		end			
 		
@@ -101,7 +101,7 @@ return {
 		-- proj.title = "TerraLib Tests"
 		-- proj.author = "Avancini Rodrigo"
 		
-		-- if isFile(proj.file) then
+		-- if File(proj.file):exists() then
 			-- rmFile(proj.file)
 		-- end	
 		
@@ -174,7 +174,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end
 		
@@ -196,7 +196,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end
 		
@@ -221,7 +221,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end
 		
@@ -245,7 +245,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -258,7 +258,7 @@ return {
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"
 
-		if isFile(shp1) then
+		if File(shp1):exists() then
 			rmFile(shp1)
 		end	
 		
@@ -281,7 +281,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end
 		
@@ -316,7 +316,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -341,11 +341,11 @@ return {
 		local overwrite = true
 		
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(isFile("cbers_rgb342_crop1.tif"))
+		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
 
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(isFile("cbers_rgb342_crop1.tif"))
+		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
 		
 		
 		rmFile("cbers_rgb342_crop1.tif")

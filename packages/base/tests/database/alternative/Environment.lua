@@ -28,7 +28,7 @@ return{
 
 		local projName = "environment_alt.tview"
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 
@@ -84,7 +84,7 @@ return{
 			table = tName1
 		}
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		

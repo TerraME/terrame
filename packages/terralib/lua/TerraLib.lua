@@ -191,12 +191,12 @@ end
 
 local function hasShapeFileSpatialIndex(shapeFile)
 	local qixFile = string.gsub(shapeFile, ".shp", ".qix")
-	if isFile(qixFile) then
+	if File(qixFile):exists() then
 		return true
 	end
 	
 	local sbnFile = string.gsub(shapeFile, ".shp", ".sbn")
-	if isFile(sbnFile) then
+	if File(sbnFile):exists() then
 		return true
 	end	
 	
@@ -343,7 +343,7 @@ local function saveProject(project, layers)
 end
 
 local function loadProject(project, file)		
-	if not isFile(file) then
+	if not File(file):exists() then
 		customError("Could not read project file: "..file..".") -- SKIP
 	end
 
@@ -2033,7 +2033,7 @@ TerraLib_ = {
 					end
 				end						
 			elseif toType == "OGR" then
-				if isFile(toData.file) then
+				if File(toData.file):exists() then
 					if overwrite then
 						rmFile(toData.file) -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
 					else

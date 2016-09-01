@@ -60,7 +60,7 @@ local function verifyTest(package, report)
 	local testfunctions = _Gtme.buildCountTable(package)
 
 	forEachOrderedElement(testfunctions, function(idx, value)
-		if isFile(testDir..s..idx) then
+		if File(testDir..s..idx):exists() then
 			print("File '"..idx.."' already exists in the tests")
 			return
 		end
@@ -166,7 +166,7 @@ local function verifyData(package, report)
 		return
 	end
 
-	if isFile(datadotlua) then
+	if File(datadotlua):exists() then
 		local originaldata = data
 		data = function(mdata)
 			if type(mdata.file) == "string" then
@@ -237,7 +237,7 @@ local function verifyFont(package, report)
 		return
 	end
 
-	if isFile(fontdotlua) then
+	if File(fontdotlua):exists() then
 		local originalfont = font
 		font = function(mfont)
 			if type(mfont.file) == "string" then

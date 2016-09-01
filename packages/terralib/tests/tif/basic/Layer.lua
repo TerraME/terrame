@@ -41,7 +41,7 @@ return {
 		
 		local filePath1 = "prodes_cells_tif_basic.shp"
 		
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end
 		
@@ -101,18 +101,18 @@ return {
 		-- END
 		-- tl:dropPgTable(pgData)
 		
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end				
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end		
 	end,
 	fill = function(unitTest)
 		local projName = "layer_fill_tif.tview"
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
@@ -140,7 +140,7 @@ return {
 		local shapes = {}
 		
 		local shp1 = clName1..".shp"
-		if isFile(shp1) then
+		if File(shp1):exists() then
 			rmFile(shp1)
 		end
 		table.insert(shapes, shp1)
@@ -329,7 +329,7 @@ return {
 			file = filePath("elevation.tif", "terralib")
 		}
 
-		if isFile("mycells.shp") then rmFile("mycells.shp") end
+		if File("mycells.shp"):exists() then rmFile("mycells.shp") end
 		table.insert(shapes, "mycells.shp")
 			
 		cl = Layer{
@@ -416,7 +416,7 @@ return {
 	bands = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
@@ -481,7 +481,7 @@ return {
 	dummy = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 		
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		

@@ -51,7 +51,7 @@ return{
 		local shp1 = "brazil_cells.shp"
 		local filePath1 = testDir.."/"..shp1			
 		
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end			
 		
@@ -120,11 +120,11 @@ return{
 		end)		
 		
 		-- END
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end	
 
@@ -158,7 +158,7 @@ return{
 		local shp1 = "brazil_cells.shp"
 		local filePath1 = testDir.."/"..shp1			
 		
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end			
 		
@@ -235,11 +235,11 @@ return{
 		unitTest:assertEquals(dist, 4257933.7712088, 1.0e-7)
 		
 		-- END
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end	
 

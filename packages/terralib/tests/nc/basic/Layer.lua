@@ -28,7 +28,7 @@ return {
 			local projName = "nc_basic.tview"
 
 
-			if isFile(projName) then
+			if File(projName):exists() then
 				rmFile(projName)
 			end
 
@@ -47,7 +47,7 @@ return {
 
 			local filePath1 = "vegtype_cells_nc_basic.shp"
 
-			if isFile(filePath1) then
+			if File(filePath1):exists() then
 				rmFile(filePath1)
 			end
 
@@ -66,11 +66,11 @@ return {
 			unitTest:assertEquals(cl1.source, "shp") -- SKIP
 			unitTest:assertEquals(cl1.file, _Gtme.makePathCompatibleToAllOS(currentDir() .. "/" .. filePath1)) -- SKIP
 
-			if isFile(filePath1) then
+			if File(filePath1):exists() then
 				rmFile(filePath1)
 			end
 
-			if isFile(projName) then
+			if File(projName):exists() then
 				rmFile(projName)
 			end
 		else
@@ -81,7 +81,7 @@ return {
 		if _Gtme.isWindowsOS() then
 			local projName = "cellular_layer_fill_nc_repr.tview"
 
-			if isFile(projName) then
+			if File(projName):exists() then
 				rmFile(projName)
 			end
 
@@ -99,7 +99,7 @@ return {
 
 			unitTest:assertEquals(l:representation(), "raster") -- SKIP
 
-			if isFile(projName) then
+			if File(projName):exists() then
 				rmFile(projName)
 			end
 		else
@@ -110,7 +110,7 @@ return {
 		if _Gtme.isWindowsOS() then
 			local projName = "cellular_layer_fill_nc_repr.tview"
 
-			if isFile(projName) then
+			if File(projName):exists() then
 				rmFile(projName)
 			end
 
@@ -128,7 +128,7 @@ return {
 
 			unitTest:assertEquals(l:bands(), 1) -- SKIP
 
-			if isFile(projName) then
+			if File(projName):exists() then
 				rmFile(projName)
 			end
 		else
@@ -139,7 +139,7 @@ return {
 		if _Gtme.isWindowsOS() then
 			local projName = "cellular_layer_print_nc.tview"
 
-			if isFile(projName) then
+			if File(projName):exists() then
 				rmFile(projName)
 			end
 
@@ -166,7 +166,7 @@ source   string [nc]
 ]], 36, true)
 			-- unitTest:assertFile(projName) -- SKIP #1301
 
-			if isFile(projName) then
+			if File(projName):exists() then
 				rmFile(projName)
 			end
 		else

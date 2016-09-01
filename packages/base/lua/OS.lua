@@ -110,25 +110,6 @@ function isDir(path)
 	return false
 end
 
---- Return whether a given string represents a file stored in the computer.
--- A directory is also considered a file.
--- @arg file A string.
--- @usage if isFile("C:\\file.txt") then
---     print("is file")
--- end
-function isFile(file)
-	mandatoryArgument(1, "string", file)
-
-	local fopen = io.open(file)
-
-	if fopen then
-		fopen:close()
-		return true
-	end
-
-	return false
-end
-
 --- Lock a file or a part of it. This function works on open files; the file handle should be
 -- specified as the first argument. The optional arguments start and length can be used to specify a
 -- starting point and its length; both should be numbers.
@@ -217,7 +198,7 @@ function rmFile(file)
 
 	if string.find(file, "\"") then
 		customError("Argument #1 should not contain quotation marks.")
-	elseif not isFile(file) then
+	elseif not File(file):exists() then
 		resourceNotFoundError(1, file)
 	end
 
@@ -237,10 +218,10 @@ function rmFile(file)
 		local prj = string.sub(file, 1, -4).."prj"
 		local qix = string.sub(file, 1, -4).."qix"
 
-		if isFile(dbf) then rmFile(dbf) end
-		if isFile(shx) then rmFile(shx) end
-		if isFile(prj) then rmFile(prj) end
-		if isFile(qix) then rmFile(qix) end
+		if File(dbf):exists() then rmFile(dbf) end
+		if File(shx):exists() then rmFile(shx) end
+		if File(prj):exists() then rmFile(prj) end
+		if File(qix):exists() then rmFile(qix) end
 	end
 end
 

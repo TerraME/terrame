@@ -84,7 +84,6 @@ File_ = {
 	-- This function uses stat internally thus if the given filepath is a symbolic link, it is followed
 	-- (if it points to another link the chain is followed recursively) and the information is about the
 	-- file it refers to.
-	-- @arg filepath A string with the file path.
 	-- @arg attributename A string with the name of the attribute to be read.
 	-- @tabular attributename
 	-- Attribute & Description \
@@ -197,7 +196,7 @@ File_ = {
 	-- @usage file = File(filePath("agents.csv", "base"))
 	-- print(file:getPath())
 	getPath = function(self)
-		if isFile(self.name) then
+		if self:exists() then
 			return _Gtme.makePathCompatibleToAllOS(self.name)
 		end
 	end,

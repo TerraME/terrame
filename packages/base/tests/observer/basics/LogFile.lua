@@ -115,7 +115,7 @@ return{
 
 		-- the call to update() above creates the file again.
 		-- remove the line below after refactoring observer.
-		if isFile("logfile-4.csv") then rmFile("logfile-4.csv") end
+		if File("logfile-4.csv"):exists() then rmFile("logfile-4.csv") end
 
 		soc = Society{
 			instance = Agent{},

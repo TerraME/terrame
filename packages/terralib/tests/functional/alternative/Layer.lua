@@ -29,7 +29,7 @@ return{
 		end
 		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", false))
 
-		if isFile("myproj.tview") then
+		if File("myproj.tview"):exists() then
 			rmFile("myproj.tview")
 		end
 
@@ -154,7 +154,7 @@ return{
 		end
 		unitTest:assertError(inconsistentExtension, "File '"..filePath0.."' does not match to source '"..source.."'.")
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
@@ -246,7 +246,7 @@ return{
 		
 		local shp1 = "setores_cells.shp"
 		
-		if isFile(shp1) then
+		if File(shp1):exists() then
 			rmFile(shp1)
 		end
 		
@@ -349,11 +349,11 @@ return{
 		end
 		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))	
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 
-		if isFile(shp1) then
+		if File(shp1):exists() then
 			rmFile(shp1)
 		end
 	end,
@@ -375,7 +375,7 @@ return{
 		local clName1 = "setores_cells2"
 		local filePath1 = clName1..".shp"
 
-		if isFile(filePath1) then
+		if File(filePath1):exists() then
 			rmFile(filePath1)
 		end
 
@@ -1134,11 +1134,11 @@ return{
 		end
 		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.")
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 
-		if isFile(filePath1) then rmFile(filePath1) end
+		if File(filePath1):exists() then rmFile(filePath1) end
 	end,
 	export = function(unitTest)
 		local projName = "layer_postgis_basic.tview"

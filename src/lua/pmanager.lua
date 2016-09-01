@@ -215,7 +215,7 @@ local function selectPackage()
 	local docpath = packageInfo(comboboxPackages.currentText).path
 	docpath = docpath..s.."doc"..s.."index.html"
 
-	docButton.enabled = isFile(docpath)
+	docButton.enabled = File(docpath):exists()
 
 	comboboxModels.enabled = #models > 1
 	configureButton.enabled = #models > 0

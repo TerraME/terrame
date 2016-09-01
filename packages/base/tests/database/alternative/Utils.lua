@@ -49,7 +49,7 @@ return{
 		end
 		unitTest:assertError(error_func, "File '"..file:getPath().."' does not contain a Lua table.")
 
-		if isFile(file:getPath()) then rmFile(file:getPath()) end
+		if File(file:getPath()):exists() then rmFile(file:getPath()) end
 	end,
 	["table.save"] = function(unitTest)
 		local error_func = function()

@@ -77,18 +77,6 @@ return{
         
         unitTest:assert(not isDir(filePath("agents.csv")))	
 	end,
-	isFile = function(unitTest)
-		unitTest:assert(isFile(filePath("agents.csv")))
-
-        unitTest:assertEquals(isFile(""), false)
-
-		os.execute("touch zasdc.abc")
-
-		unitTest:assert(not isFile("zasdc.ab*"))
-		unitTest:assert(not isFile("zasdc.???"))
-
-		rmFile("zasdc.abc")
-	end,
 	isWindowsOS = function(unitTest)
 		unitTest:assert(true)
 	end,
@@ -117,7 +105,7 @@ return{
 
 		unitTest:assert(mkDir(pathdata.."test"))
 
-		local attr = _Gtme.attributes(pathdata.."test", "mode")
+		local attr = _Gtme.File(pathdata.."test"):attributes("mode")
 		unitTest:assertEquals(attr, "directory")
 
 		rmDir(pathdata.."test")
@@ -127,7 +115,7 @@ return{
 
 		unitTest:assert(mkDir(pathdata.."test"))
 
-		local attr = _Gtme.attributes(pathdata.."test", "mode")
+		local attr = _Gtme.File(pathdata.."test"):attributes("mode")
 		unitTest:assertEquals(attr, "directory")
 
 		rmDir(pathdata.."test")
@@ -140,7 +128,7 @@ return{
 
 		rmFile(file)
 
-		unitTest:assert(not isFile(file))
+		unitTest:assert(not File(file):exists())
 		
 		os.execute("touch abc123.shp")
 		os.execute("touch abc123.shx")
@@ -149,10 +137,10 @@ return{
 
 		rmFile("abc123.shp")
 
-		unitTest:assert(not isFile("abc123.shp"))
-		unitTest:assert(not isFile("abc123.shx"))
-		unitTest:assert(not isFile("abc123.dbf"))
-		unitTest:assert(not isFile("abc123.prj"))
+		unitTest:assert(not File("abc123.shp"):exists())
+		unitTest:assert(not File("abc123.shx"):exists())
+		unitTest:assert(not File("abc123.dbf"):exists())
+		unitTest:assert(not File("abc123.prj"):exists())
 
 		os.execute("touch abc123.shp")
 
@@ -202,10 +190,10 @@ return{
 
 			unitTest:assert(touch(pathdata.."testfile.txt", 10000, 10000)) -- SKIP
 
-			local attr = _Gtme.attributes(pathdata.."testfile.txt", "access")
+			local attr = _Gtme.File(pathdata.."testfile.txt"):attributes("access")
 			unitTest:assertEquals(attr, 10000) -- SKIP
 
-			attr = _Gtme.attributes(pathdata.."testfile.txt", "modification")
+			attr = _Gtme.File(pathdata.."testfile.txt"):attributes("modification")
 			unitTest:assertEquals(attr, 10000) -- SKIP
 
 			os.execute("rm \""..pathdata.."testfile.txt\"")

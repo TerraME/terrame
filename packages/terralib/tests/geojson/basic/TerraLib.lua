@@ -33,19 +33,19 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end
 
 		tl:createProject(proj, {})
-		unitTest:assert(isFile(proj.file))
+		unitTest:assert(File(proj.file):exists())
 		unitTest:assertEquals(proj.file, file)
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
 
 		-- allow overwrite
 		tl:createProject(proj, {})
-		unitTest:assert(isFile(proj.file))
+		unitTest:assert(File(proj.file):exists())
 
 		rmFile(proj.file)
 	end,
@@ -59,7 +59,7 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end
 
@@ -78,7 +78,7 @@ return {
 		unitTest:assertEquals(layerInfo.rep, "geometry")
 		unitTest:assertNotNil(layerInfo.sid)
 
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end
 	end,
@@ -92,7 +92,7 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end
 
@@ -106,7 +106,7 @@ return {
 		local clName = "GeoJSON_Cells"
 		local geojson1 = clName..".geojson"
 
-		if isFile(geojson1) then
+		if File(geojson1):exists() then
 			rmFile(geojson1)
 		end
 
@@ -129,7 +129,7 @@ return {
 		clName = clName.."_NoMask"
 		local geojson2 = clName..".geojson"
 
-		if isFile(geojson2) then
+		if File(geojson2):exists() then
 			rmFile(geojson2)
 		end
 
@@ -168,7 +168,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -182,18 +182,18 @@ return {
 		local toData = {}
 		toData.file = "geojson2shp.shp"
 		toData.type = "shp"		
-		if isFile(toData.file) then
+		if File(toData.file):exists() then
 			rmFile(toData.file)
 		end
 		
 		local overwrite = true
 		
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)		
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 
 		-- POSTGIS
 		local host = "localhost"

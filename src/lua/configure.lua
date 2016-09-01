@@ -767,7 +767,7 @@ function _Gtme.configure(self, modelName, package)
 	local getFile = function(prefix)
 		local fname = prefix.."-instance.lua"
 		local count = 0
-		while isFile(fname) do
+		while File(fname):exists() do
 			count = count + 1
 			fname = prefix.."-instance-"..count..".lua"
 		end

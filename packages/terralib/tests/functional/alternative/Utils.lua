@@ -24,7 +24,7 @@
 
 return {
 	forEachLayer = function(unitTest)
-		if isFile("emas-count.tview") then
+		if File("emas-count.tview"):exists() then
 			rmFile("emas-count.tview")
 		end
 		

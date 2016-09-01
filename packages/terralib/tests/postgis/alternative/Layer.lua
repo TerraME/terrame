@@ -389,13 +389,13 @@ return {
 		end
 		unitTest:assertError(tableNotExists, "Is not possible add the Layer. The table '"..tableWrong.."' does not exist.")
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		
 		projName = "amazonia.tview"
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 
@@ -814,7 +814,7 @@ return {
 
 		tl:dropPgTable(pgData)
 
-		if isFile(projName) then
+		if File(projName):exists() then
 			rmFile(projName)
 		end
 		

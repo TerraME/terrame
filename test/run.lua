@@ -61,7 +61,7 @@ forEachElement(remove.files, function(_, value)
 	_Gtme.print("Removing '"..value.."'")
 	if isDir(value) then
 		result = rmDir(value)
-	elseif isFile(value) then
+	elseif File(value):exists() then
 		rmFile(value)
 	end
 end)
@@ -240,7 +240,7 @@ if commands.build then
 		_Gtme.print("Checking "..mfile)
 		report.build = report.build + 1
 
-		if not isFile(mfile) then
+		if not File(mfile):exists() then
 			_Gtme.printError("File does not exist")
 			report.builderrors = report.builderrors + 1
 		else
@@ -266,7 +266,7 @@ forEachElement(remove.files, function(_, value)
 	_Gtme.print("Removing '"..value.."'")
 	if isDir(value) then
 		result = rmDir(value)
-	elseif isFile(value) then
+	elseif File(value):exists() then
 		rmFile(value)
 	end
 
@@ -403,7 +403,7 @@ if commands.build then
 
 		_Gtme.print("Checking "..mfile)
 
-		if not isFile(mfile) then
+		if not File(mfile):exists() then
 			_Gtme.printError("File does not exist")
 			report.localbuilderrors = report.localbuilderrors + 1
 		else

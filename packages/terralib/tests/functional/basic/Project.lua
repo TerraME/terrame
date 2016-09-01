@@ -62,13 +62,13 @@ return {
 		-- unitTest:assertFile("amazonia.tview") -- SKIP #1301
 		rmFile("amazonia.tview") -- #1301
 		
-		if isFile("notitlenoauthor.tview") then
+		if File("notitlenoauthor.tview"):exists() then
 			rmFile("notitlenoauthor.tview")
 		end
 		
 		local proj4Name = "notitlenoauthor.tview"
 
-		if isFile(proj4Name) then
+		if File(proj4Name):exists() then
 			rmFile(proj4Name)
 		end
 
@@ -84,7 +84,7 @@ return {
 		
 		rmFile("notitlenoauthor.tview")
 		
-		if isFile("emas.tview") then
+		if File("emas.tview"):exists() then
 			rmFile("emas.tview")
 		end
 

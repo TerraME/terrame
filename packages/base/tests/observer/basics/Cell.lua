@@ -98,7 +98,7 @@ return{
 
 		-- the call to notify() above creates the file again.
 		-- remove the line below after refactoring observer.
-		if isFile("cell.csv") then rmFile("cell.csv") end
+		if File("cell.csv"):exists() then rmFile("cell.csv") end
 
 -- FIXME: bug below
 --[[

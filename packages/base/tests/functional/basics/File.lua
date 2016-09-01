@@ -60,7 +60,7 @@ return{
 		local close = file:close()
 
 		unitTest:assert(close)
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then rmFile(filename) end
 	end,
 	exists = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -196,7 +196,7 @@ return{
 			end
 		end
 
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then rmFile(filename) end
 	end,
 	writeLine = function(unitTest)
 		local example = "Some text.."
@@ -214,7 +214,7 @@ return{
 		unitTest:assertNotNil(text)
 		unitTest:assertEquals(text, example)
 
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then rmFile(filename) end
 	end,
 	__tostring = function(unitTest)
 		local file = File("abc.txt")

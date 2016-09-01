@@ -89,11 +89,11 @@ function Project(data)
 	data.terralib = TerraLib{}
 	data.layers = {}
 
-	if isFile(data.file) and data.clean then
+	if File(data.file):exists() and data.clean then
 		local proj = Project{file = data.file}
 		rmFile(data.file)
 
-		if isFile(data.file) then
+		if File(data.file):exists() then
 			customError("File '"..data.file.."' could not be removed.") -- SKIP
 		end
 
@@ -106,7 +106,7 @@ function Project(data)
 		end
 	end
 
-	if isFile(data.file) then
+	if File(data.file):exists() then
 		terralib:openProject(data, data.file)
 	else
 		terralib:createProject(data, data.layers)
@@ -119,14 +119,14 @@ function Project(data)
 	forEachElement(data, function(idx, value)
 		if not belong(idx, {"clean", "file", "author", "description", "title", "layers", "terralib"}) then
 			if type(data[idx]) ~= "string" then
-				if isFile(data.file) then
+				if File(data.file):exists() then
 					rmFile(data.file)
 				end
 
 				incompatibleTypeError(idx, "string", data[idx])
 			end
 
-			if isFile(value) then
+			if File(value):exists() then
 				layers[idx] = Layer{
 					project = data,
 					name = idx,
@@ -134,7 +134,7 @@ function Project(data)
 				}
 
 			else
-				if isFile(data.file) then
+				if File(data.file):exists() then
 					rmFile(data.file)
 				end
 

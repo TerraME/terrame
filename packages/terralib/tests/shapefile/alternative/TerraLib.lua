@@ -30,7 +30,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
@@ -45,7 +45,7 @@ return {
 		local clName = "Para_Cells"
 		shp[1] = clName..".shp"
 
-		if isFile(shp[1]) then
+		if File(shp[1]):exists() then
 			rmFile(shp[1])
 		end
 		
@@ -64,7 +64,7 @@ return {
 		local presLayerName = clName.."_"..layerName2.."_Presence"		
 		shp[2] = presLayerName..".shp"
 		
-		if isFile(shp[2]) then
+		if File(shp[2]):exists() then
 			rmFile(shp[2])
 		end
 
@@ -87,7 +87,7 @@ return {
 		
 		-- END
 		for j = 1, #shp do
-			if isFile(shp[j]) then
+			if File(shp[j]):exists() then
 				rmFile(shp[j])
 			end
 		end	
@@ -101,7 +101,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
+		if File(proj.file):exists() then
 			rmFile(proj.file)
 		end	
 		
