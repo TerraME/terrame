@@ -62,7 +62,7 @@ forEachElement(remove.files, function(_, value)
 	if isDir(value) then
 		result = rmDir(value)
 	elseif File(value):exists() then
-		rmFile(value)
+		File(value):delete()
 	end
 end)
 
@@ -244,7 +244,7 @@ if commands.build then
 			_Gtme.printError("File does not exist")
 			report.builderrors = report.builderrors + 1
 		else
-			rmFile(mfile)
+			File(mfile):delete()
 		end
 	end)
 end
@@ -267,7 +267,7 @@ forEachElement(remove.files, function(_, value)
 	if isDir(value) then
 		result = rmDir(value)
 	elseif File(value):exists() then
-		rmFile(value)
+		File(value):delete()
 	end
 
 end)
@@ -425,11 +425,11 @@ if commands.build then
 			report.localbuilderrors = report.localbuilderrors + 1
 		end
 
-		rmFile(mfile)
+		File(mfile):delete()
 	end)
 end
 
-rmFile("config.lua")
+File("config.lua"):delete()
 chDir("..")
 
 if commands.observer then

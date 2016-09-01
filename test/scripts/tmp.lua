@@ -4,7 +4,7 @@ file:write("print(tmpDir())")
 file:close()
 
 os.execute("terrame mytmp.lua > resp.txt")
-rmFile("mytmp.lua")
+File("mytmp.lua"):delete()
 
 file = io.open("resp.txt")
 value = file:read()
@@ -19,5 +19,5 @@ else
 end
 
 file:close()
-rmFile("resp.txt")
+File("resp.txt"):delete()
 

@@ -376,7 +376,7 @@ local function installButtonClicked()
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
 
-		rmFile(mpkgfile)
+		File(mpkgfile):delete()
 
 		_Gtme.chDir(cdir)
 		rmDir(tmpdirectory)

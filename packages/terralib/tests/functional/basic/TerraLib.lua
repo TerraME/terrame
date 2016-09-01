@@ -41,7 +41,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 		
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end
 		
 		tl:createProject(proj, {})
@@ -54,7 +54,7 @@ return {
 		unitTest:assertEquals(proj2.title, proj.title)
 		unitTest:assertEquals(proj2.author, proj.author)
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end
 }
 

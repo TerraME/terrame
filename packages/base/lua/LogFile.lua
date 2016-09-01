@@ -38,7 +38,7 @@ LogFile_ = {
 	--
 	-- log:update()
 	--
-	-- rmFile("agent.csv")
+	-- File("agent.csv"):delete()
 	update = function(self)
 		self.target:notify()
 	end

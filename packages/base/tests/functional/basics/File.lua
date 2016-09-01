@@ -60,7 +60,32 @@ return{
 		local close = file:close()
 
 		unitTest:assert(close)
-		if File(filename):exists() then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
+	end,
+	delete = function(unitTest)
+		local filepath = packageInfo().data.."test123"
+		os.execute("touch "..filepath)
+
+		local file = File(filepath)
+		file:delete()
+
+		unitTest:assert(not file:exists())
+
+		os.execute("touch abc123.shp")
+		os.execute("touch abc123.shx")
+		os.execute("touch abc123.dbf")
+		os.execute("touch abc123.prj")
+
+		File("abc123.shp"):delete()
+
+		unitTest:assert(not File("abc123.shp"):exists())
+		unitTest:assert(not File("abc123.shx"):exists())
+		unitTest:assert(not File("abc123.dbf"):exists())
+		unitTest:assert(not File("abc123.prj"):exists())
+
+		os.execute("touch abc123.shp")
+
+		File("abc123.shp"):delete()
 	end,
 	exists = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -123,7 +148,7 @@ return{
 		unitTest:assert(file:lock("w"))
 
 		file:close()
-		rmFile(filepath)
+		File(filepath):delete()
 	end,
 	open = function(unitTest)
 		local file = File("test.csv")
@@ -139,7 +164,7 @@ return{
 		unitTest:assertNil(sfile)
 		file:close()
 
-		rmFile("test.csv")
+		File("test.csv"):delete()
 	end,
 	read = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -190,11 +215,10 @@ return{
 			attr = _Gtme.File(pathdata):attributes("modification")
 			unitTest:assertEquals(attr, 10000) -- SKIP
 
-			rmFile(pathdata)
+			File(pathdata):delete()
 		end
 
 		unitTest:assert(true)
-
 	end,
 	unlock = function(unitTest)
 		local filepath = packageInfo().data.."test.txt"
@@ -206,7 +230,7 @@ return{
 		unitTest:assert(file:unlock())
 
 		file:close()
-		rmFile(filepath)
+		File(filepath):delete()
 	end,
 	write = function(unitTest)
 		local example = {
@@ -240,7 +264,7 @@ return{
 			end
 		end
 
-		if File(filename):exists() then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 	end,
 	writeLine = function(unitTest)
 		local example = "Some text.."
@@ -258,7 +282,7 @@ return{
 		unitTest:assertNotNil(text)
 		unitTest:assertEquals(text, example)
 
-		if File(filename):exists() then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 	end,
 	__tostring = function(unitTest)
 		local file = File("abc.txt")

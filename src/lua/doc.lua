@@ -650,7 +650,7 @@ function _Gtme.executeDoc(package)
 			end
 		end)
 
-		rmFile("tmpproj.tview")
+		File("tmpproj.tview"):delete()
 
 		forEachOrderedElement(df, function(_, mvalue)	
 			if _Gtme.ignoredFile(mvalue) then

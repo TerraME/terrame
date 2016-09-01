@@ -107,7 +107,7 @@ return{
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if File(f):exists() then
-				rmFile(f)
+				File(f):delete()
 			end
 		end			
 		
@@ -167,13 +167,13 @@ return{
 		end)
 		
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if File(f):exists() then
-				rmFile(f)
+				File(f):delete()
 			end
 		end
 
@@ -212,7 +212,7 @@ return{
 		filePath1 = testDir.."/"..geojson1
 
 		if File(filePath1):exists() then
-			rmFile(filePath1)
+			File(filePath1):delete()
 		end
 
 		clName1 = "GeoJSON_Sampa_Cells"
@@ -272,11 +272,11 @@ return{
 		end)
 
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end
 
 		if File(geojson1):exists() then
-			rmFile(geojson1)
+			File(geojson1):delete()
 		end
 
 		if _Gtme.isWindowsOS() then
@@ -320,7 +320,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs, 10000) -- SKIP
-			if File(projName):exists() then rmFile(projName) end
+			if File(projName):exists() then File(projName):delete() end
 
 			-- NetCDF
 			projName = "nc_cellspace.tview"
@@ -362,7 +362,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 8904) -- SKIP
-			if File(projName):exists() then rmFile(projName) end
+			if File(projName):exists() then File(projName):delete() end
 
 
 			-- ASC
@@ -405,7 +405,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
-			if File(projName):exists() then rmFile(projName) end
+			if File(projName):exists() then File(projName):delete() end
 
 		end
 	end, 
@@ -1421,7 +1421,7 @@ ydim    number [20]
 		local projName = "cellspace_save_basic.tview"
 		
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end
 		
 		local proj = terralib.Project{
@@ -1449,7 +1449,7 @@ ydim    number [20]
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if File(f):exists() then
-				rmFile(f)
+				File(f):delete()
 			end
 		end
 
@@ -1479,7 +1479,7 @@ ydim    number [20]
 		fn2 = testDir.."/"..fn2	
 
 		if File(filePath2):exists() then
-			rmFile(filePath2)
+			File(filePath2):delete()
 		end
 
 		cs:save(cellSpaceLayerNameT0, "t0")
@@ -1528,7 +1528,7 @@ ydim    number [20]
 		for i = 1, #exts do
 			local f = fn3..exts[i]
 			if File(f):exists() then
-				rmFile(f)
+				File(f):delete()
 			end
 		end			
 		
@@ -1554,7 +1554,7 @@ ydim    number [20]
 		for i = 1, #exts do
 			local f = fn4..exts[i]
 			if File(f):exists() then
-				rmFile(f)
+				File(f):delete()
 			end
 		end			
 		
@@ -1571,28 +1571,28 @@ ydim    number [20]
 		end)		
 		
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end
 
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if File(f):exists() then
-				rmFile(f)
+				File(f):delete()
 			end
 
 			f = fn2..exts[i]
 			if File(f):exists() then
-				rmFile(f)
+				File(f):delete()
 			end
 
 			f = fn3..exts[i]
 			if File(f):exists() then
-				rmFile(f)
+				File(f):delete()
 			end
 		
 			f = fn4..exts[i]
 			if File(f):exists() then
-				rmFile(f)
+				File(f):delete()
 			end				
 		end
 	end,

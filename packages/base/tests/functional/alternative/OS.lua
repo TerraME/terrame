@@ -79,36 +79,6 @@ return{
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abc123456"))
 	end,
-	rmFile = function(unitTest)
-		local error_func = function()
-			rmFile(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-
-		error_func = function()
-			rmFile("abc\"")
-		end
-		unitTest:assertError(error_func, "Argument #1 should not contain quotation marks.")
-
-		error_func = function()
-			rmFile("abc123456")
-		end
-		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abc123456"))
-
-		if _Gtme.isWindowsOS() then 		
-			local file = io.open("myfile.txt", "w")
-
-			error_func = function()
-				rmFile("myfile.txt")
-			end
-			unitTest:assertError(error_func, "Could not remove file 'myfile.txt'.") -- SKIP
-
-			file:close()
-			rmFile("myfile.txt")
-
-			unitTest:assert(not File("myfile.txt"):exists()) -- SKIP
-		end
-	end,
 	runCommand = function(unitTest)
 		local error_func = function()
 			runCommand(1)

@@ -34,7 +34,7 @@ return {
 		proj.author = author
 
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end
 
 		tl:createProject(proj, {})
@@ -47,7 +47,7 @@ return {
 		tl:createProject(proj, {})
 		unitTest:assert(File(proj.file):exists())
 
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	addGeoJSONLayer = function(unitTest)
 		local tl = TerraLib {}
@@ -60,7 +60,7 @@ return {
 		proj.author = author
 
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end
 
 		tl:createProject(proj, {})
@@ -79,7 +79,7 @@ return {
 		unitTest:assertNotNil(layerInfo.sid)
 
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end
 	end,
 	addGeoJSONCellSpaceLayer = function(unitTest)
@@ -93,7 +93,7 @@ return {
 		proj.author = author
 
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end
 
 		tl:createProject(proj, {})
@@ -107,7 +107,7 @@ return {
 		local geojson1 = clName..".geojson"
 
 		if File(geojson1):exists() then
-			rmFile(geojson1)
+			File(geojson1):delete()
 		end
 
 		local resolution = 10000
@@ -130,7 +130,7 @@ return {
 		local geojson2 = clName..".geojson"
 
 		if File(geojson2):exists() then
-			rmFile(geojson2)
+			File(geojson2):delete()
 		end
 
 		mask = false
@@ -142,7 +142,7 @@ return {
 
 		unitTest:assertFile(geojson1)
 		unitTest:assertFile(geojson2)
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	getOGRByFilePath = function(unitTest)
 		local tl = TerraLib{}
@@ -169,7 +169,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 		
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -183,7 +183,7 @@ return {
 		toData.file = "geojson2shp.shp"
 		toData.type = "shp"		
 		if File(toData.file):exists() then
-			rmFile(toData.file)
+			File(toData.file):delete()
 		end
 		
 		local overwrite = true
@@ -221,7 +221,7 @@ return {
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
 		tl:dropPgTable(pgData)		
-		rmFile(toData.file)
-		rmFile(proj.file)
+		File(toData.file):delete()
+		File(proj.file):delete()
 	end
 }

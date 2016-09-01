@@ -30,7 +30,7 @@ local function rm(file)
 	if isDir(file) then
 		rmDir(file)
 	else
-		rmFile(file)
+		File(file):delete()
 	end
 end
 

@@ -29,7 +29,7 @@ return {
 
 
 			if File(projName):exists() then
-				rmFile(projName)
+				File(projName):delete()
 			end
 
 			local proj = Project {
@@ -48,7 +48,7 @@ return {
 			local filePath1 = "vegtype_cells_nc_basic.shp"
 
 			if File(filePath1):exists() then
-				rmFile(filePath1)
+				File(filePath1):delete()
 			end
 
 			local clName1 = "Vegtype_Cells"
@@ -67,11 +67,11 @@ return {
 			unitTest:assertEquals(cl1.file, _Gtme.makePathCompatibleToAllOS(currentDir() .. "/" .. filePath1)) -- SKIP
 
 			if File(filePath1):exists() then
-				rmFile(filePath1)
+				File(filePath1):delete()
 			end
 
 			if File(projName):exists() then
-				rmFile(projName)
+				File(projName):delete()
 			end
 		else
 			unitTest:assert(true) -- SKIP
@@ -82,7 +82,7 @@ return {
 			local projName = "cellular_layer_fill_nc_repr.tview"
 
 			if File(projName):exists() then
-				rmFile(projName)
+				File(projName):delete()
 			end
 
 			local proj = Project {
@@ -100,7 +100,7 @@ return {
 			unitTest:assertEquals(l:representation(), "raster") -- SKIP
 
 			if File(projName):exists() then
-				rmFile(projName)
+				File(projName):delete()
 			end
 		else
 			unitTest:assert(true) -- SKIP
@@ -111,7 +111,7 @@ return {
 			local projName = "cellular_layer_fill_nc_repr.tview"
 
 			if File(projName):exists() then
-				rmFile(projName)
+				File(projName):delete()
 			end
 
 			local proj = Project {
@@ -129,7 +129,7 @@ return {
 			unitTest:assertEquals(l:bands(), 1) -- SKIP
 
 			if File(projName):exists() then
-				rmFile(projName)
+				File(projName):delete()
 			end
 		else
 			unitTest:assert(true) -- SKIP
@@ -140,7 +140,7 @@ return {
 			local projName = "cellular_layer_print_nc.tview"
 
 			if File(projName):exists() then
-				rmFile(projName)
+				File(projName):delete()
 			end
 
 			local proj = Project {
@@ -167,7 +167,7 @@ source   string [nc]
 			-- unitTest:assertFile(projName) -- SKIP #1301
 
 			if File(projName):exists() then
-				rmFile(projName)
+				File(projName):delete()
 			end
 		else
 			unitTest:assert(true) -- SKIP

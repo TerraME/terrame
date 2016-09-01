@@ -91,7 +91,7 @@ function Project(data)
 
 	if File(data.file):exists() and data.clean then
 		local proj = Project{file = data.file}
-		rmFile(data.file)
+		File(data.file):delete()
 
 		if File(data.file):exists() then
 			customError("File '"..data.file.."' could not be removed.") -- SKIP
@@ -120,7 +120,7 @@ function Project(data)
 		if not belong(idx, {"clean", "file", "author", "description", "title", "layers", "terralib"}) then
 			if type(data[idx]) ~= "string" then
 				if File(data.file):exists() then
-					rmFile(data.file)
+					File(data.file):delete()
 				end
 
 				incompatibleTypeError(idx, "string", data[idx])
@@ -135,7 +135,7 @@ function Project(data)
 
 			else
 				if File(data.file):exists() then
-					rmFile(data.file)
+					File(data.file):delete()
 				end
 
 				customError("Value of argument '"..idx.."' is not a valid file name.")

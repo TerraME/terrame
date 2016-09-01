@@ -1423,7 +1423,7 @@ end
 -- tbl = {x = 1, y = 2}
 -- table.save(tbl, filename)
 --
--- if File(filename):exists() then rmFile(filename) end
+-- if File(filename):exists() then File(filename):delete() end
 function table.save(tbl, filename)
 	mandatoryArgument(1, "table", tbl)
 	mandatoryArgument(2, "string", filename)

@@ -40,7 +40,7 @@ return{
 		end
 		unitTest:assertError(error_func, "File 'base/data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project' to create it.", 2)
 
-		rmFile(baseInfo.data..s.."amazonia.lua")
+		File(baseInfo.data..s.."amazonia.lua"):delete()
 	end,
 	filesByExtension = function(unitTest)
 		local error_func = function()

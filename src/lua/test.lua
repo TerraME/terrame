@@ -811,7 +811,7 @@ function _Gtme.executeTests(package, fileName)
 					io.close(logfile)
 
 					if ut.log == nil then
-						rmFile(value..".log")
+						File(value..".log"):delete()
 						printError("Error: It is not possible to test examples with print() without a configuration file pointing a log directory.")
 						os.exit(1)
 					end

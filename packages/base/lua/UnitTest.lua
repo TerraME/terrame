@@ -240,7 +240,7 @@ UnitTest_ = {
 		end
 
 		if not self.log then
-			rmFile(fname)
+			File(fname):delete()
 			customError("It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
 		end
 
@@ -254,7 +254,7 @@ UnitTest_ = {
 		if self.tlogs[fname] then
 			self.fail = self.fail + 1
 			self:printError("Log file '"..fname.."' is used in more than one assert.")
-			rmFile(fname)
+			File(fname):delete()
 			return
 		end
 
@@ -265,7 +265,7 @@ UnitTest_ = {
 		end
 
 		os.execute("cp \""..fname.."\" \""..self.tmpdir.."\"")
-		rmFile(fname)
+		File(fname):delete()
 
 		if File(fname):exists() then
 			self.fail = self.fail + 1 -- SKIP

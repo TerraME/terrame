@@ -30,7 +30,7 @@ return{
 		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", false))
 
 		if File("myproj.tview"):exists() then
-			rmFile("myproj.tview")
+			File("myproj.tview"):delete()
 		end
 
 		local projNotExists = function()
@@ -65,7 +65,7 @@ return{
 		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
 		
 		-- unitTest:assertFile("proj_celllayer.tview") -- SKIP #1301
-		rmFile("proj_celllayer.tview") -- #1301
+		File("proj_celllayer.tview"):delete() -- #1301
 		
 		local projName = "amazonia2.tview"
 
@@ -155,7 +155,7 @@ return{
 		unitTest:assertError(inconsistentExtension, "File '"..filePath0.."' does not match to source '"..source.."'.")
 
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end
 		
 		projName = "amazonia.tview"
@@ -247,7 +247,7 @@ return{
 		local shp1 = "setores_cells.shp"
 		
 		if File(shp1):exists() then
-			rmFile(shp1)
+			File(shp1):delete()
 		end
 		
 		local clName1 = "Setores_Cells"
@@ -350,11 +350,11 @@ return{
 		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))	
 
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end
 
 		if File(shp1):exists() then
-			rmFile(shp1)
+			File(shp1):delete()
 		end
 	end,
 	fill = function(unitTest)
@@ -376,7 +376,7 @@ return{
 		local filePath1 = clName1..".shp"
 
 		if File(filePath1):exists() then
-			rmFile(filePath1)
+			File(filePath1):delete()
 		end
 
 		local cl = Layer{
@@ -1135,10 +1135,10 @@ return{
 		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.")
 
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end
 
-		if File(filePath1):exists() then rmFile(filePath1) end
+		if File(filePath1):exists() then File(filePath1):delete() end
 	end,
 	export = function(unitTest)
 		local projName = "layer_postgis_basic.tview"
@@ -1185,7 +1185,7 @@ return{
 		end
 		unitTest:assertError(invalidDataType,  "The attribute 'data' must be either 'file' or 'table', but received (number).")		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end
 }
 

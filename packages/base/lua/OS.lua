@@ -51,7 +51,7 @@ end
 --     print("not windows")
 -- end
 function isWindowsOS()
-	if sessionInfo().separator == "/" then
+	if sessionInfo().separator == "/" then -- SKIP
 		return false
 	end
 	
@@ -157,52 +157,6 @@ function rmDir(path)
 
 	if result ~= true then
 		customError(result) -- SKIP
-	end
-end
-
---- Remove an existing file. If the file does not exist or it cannot be removed,
--- this function stops with an error. Directories cannot be removed using
--- this function. If the file to be removed is a shapefile, it also removes
--- the respective dbf, shx, and prj files if they exist.
--- @arg file A string with the file to be removed. It might contain a path if needed.
--- The function will automatically add
--- quotation marks in the beginning and in the end of this argument in order
--- to avoid problems related to empty spaces in the string. Therefore,
--- this string must not contain quotation marks.
--- @usage filename = "myfile.txt"
--- file = File(filename)
--- file:writeLine("Some text..")
---
--- rmFile(filename)
-function rmFile(file)
-	mandatoryArgument(1, "string", file)
-
-	if string.find(file, "\"") then
-		customError("Argument #1 should not contain quotation marks.")
-	elseif not File(file):exists() then
-		resourceNotFoundError(1, file)
-	end
-
-	local result = os.execute("rm -f \""..file.."\"")
-
-	if result ~= true then
-		if result == nil then -- SKIP
-			result = "Could not remove file '"..file.."'." -- SKIP
-		end
-
-		customError(tostring(result)) -- SKIP
-	end
-
-	if string.endswith(file, ".shp") then
-		local dbf = string.sub(file, 1, -4).."dbf"
-		local shx = string.sub(file, 1, -4).."shx"
-		local prj = string.sub(file, 1, -4).."prj"
-		local qix = string.sub(file, 1, -4).."qix"
-
-		if File(dbf):exists() then rmFile(dbf) end
-		if File(shx):exists() then rmFile(shx) end
-		if File(prj):exists() then rmFile(prj) end
-		if File(qix):exists() then rmFile(qix) end
 	end
 end
 

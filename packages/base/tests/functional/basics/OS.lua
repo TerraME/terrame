@@ -112,30 +112,6 @@ return{
 
 		unitTest:assert(not isDir(pathdata.."test"))
 	end,
-	rmFile = function(unitTest)
-		local file = packageInfo().data.."test123"
-		os.execute("touch "..file)
-
-		rmFile(file)
-
-		unitTest:assert(not File(file):exists())
-		
-		os.execute("touch abc123.shp")
-		os.execute("touch abc123.shx")
-		os.execute("touch abc123.dbf")
-		os.execute("touch abc123.prj")
-
-		rmFile("abc123.shp")
-
-		unitTest:assert(not File("abc123.shp"):exists())
-		unitTest:assert(not File("abc123.shx"):exists())
-		unitTest:assert(not File("abc123.dbf"):exists())
-		unitTest:assert(not File("abc123.prj"):exists())
-
-		os.execute("touch abc123.shp")
-
-		rmFile("abc123.shp")
-	end, 
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)
 		unitTest:assertEquals(#d, 43) -- 43 files

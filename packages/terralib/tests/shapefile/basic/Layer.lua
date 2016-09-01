@@ -34,7 +34,7 @@ return {
 		-- SPATIAL INDEX TEST
 		local filePath1 = filePath("limitePA_polyc_pol.shp", "terralib")
 		local qixFile = string.gsub(filePath1, ".shp", ".qix")
-		rmFile(qixFile)
+		File(qixFile):delete()
 		
 		local layerName1 = "limitepa"
 		Layer{
@@ -88,17 +88,17 @@ return {
 		qixFile = string.gsub(cl2.file, ".shp", ".qix")
 		unitTest:assert(File(qixFile):exists())
 
-		rmFile(cl1.file)
-		rmFile(cl2.file)
+		File(cl1.file):delete()
+		File(cl2.file):delete()
 		-- // SPATIAL INDEX
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_shape.tview"
 		
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end
 		
 		local proj = Project {
@@ -148,7 +148,7 @@ return {
 		local shp0 = clName1..".shp"
 		table.insert(shapes, shp0)
 		if File(shp0):exists() then
-			rmFile(shp0)
+			File(shp0):delete()
 		end
 		
 		local cl = Layer{
@@ -381,7 +381,7 @@ return {
 		local shp1 = clName2..".shp"
 		table.insert(shapes, shp1)
 		if File(shp1):exists() then
-			rmFile(shp1)
+			File(shp1):delete()
 		end
 
 		local cl2 = Layer{
@@ -568,7 +568,7 @@ return {
 
 		-- SUM
 
-		rmFile(proj.file)
+		File(proj.file):delete()
 		
 		proj = Project {
 			file = "sum_wba.tview",
@@ -580,7 +580,7 @@ return {
 		local shp2 = clName1..".shp"
 		table.insert(shapes, shp2)
 		if File(shp2):exists() then
-			rmFile(shp2)
+			File(shp2):delete()
 		end		
 		
 		cl = Layer{
@@ -636,7 +636,7 @@ return {
 
 		-- AVERAGE (area = true)
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		
 		projName = "cellular_layer_fill_avg_area.tview"
 
@@ -651,7 +651,7 @@ return {
 		table.insert(shapes, shp3)
 
 		if File(shp3):exists() then
-			rmFile(shp3)
+			File(shp3):delete()
 		end
 		
 		cl = Layer{
@@ -690,11 +690,11 @@ return {
 				
 
 		forEachElement(shapes, function(_, value)
-			rmFile(value)
+			File(value):delete()
 		end)
 
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
+		File(projName):delete() -- #1301
 	end,
 	projection = function(unitTest)
 		local proj = Project {
@@ -720,7 +720,7 @@ return {
 	
 		unitTest:assertEquals(layer:projection(), "Undefined, with SRID: 0.0 (PROJ4: Undefined).")
 
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	attributes = function(unitTest)
 		local projName = "layer_shape_basic.tview"
@@ -749,7 +749,7 @@ return {
 						(propNames[i] == "Densde_Pop") or (propNames[i] == "Area"))
 		end
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	export = function(unitTest)
 		local projName = "layer_shape_basic.tview"
@@ -778,9 +778,9 @@ return {
 		layer:export(shp, overwrite)
 		unitTest:assert(File(shp):exists())
 
-		rmFile(geojson)
-		rmFile(shp)
-		rmFile(proj.file)
+		File(geojson):delete()
+		File(shp):delete()
+		File(proj.file):delete()
 	end
 }
 

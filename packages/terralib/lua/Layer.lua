@@ -116,7 +116,7 @@ local function addCellularLayer(self, data)
 				
 			if File(data.file):exists() then
 				if data.clean then
-					rmFile(data.file)
+					File(data.file):delete()
 				else
 					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
 				end

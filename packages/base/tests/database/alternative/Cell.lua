@@ -52,7 +52,7 @@ return{
 		local filePath1 = testDir.."/"..shp1			
 		
 		if File(filePath1):exists() then
-			rmFile(filePath1)
+			File(filePath1):delete()
 		end			
 		
 		local clName1 = "Brazil_Cells"
@@ -123,11 +123,11 @@ return{
 		
 		-- END
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end
 		
 		if File(filePath1):exists() then
-			rmFile(filePath1)
+			File(filePath1):delete()
 		end	
 
 		tl:dropPgTable(pgData)		

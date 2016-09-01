@@ -58,7 +58,7 @@ function _Gtme.executeProject(package)
 
 			if File(output):exists() then
 				print("Removing file '"..output.."'.")
-				rmFile(output)
+				File(output):delete()
 			end
 		end
 	end)

@@ -2035,7 +2035,7 @@ TerraLib_ = {
 			elseif toType == "OGR" then
 				if File(toData.file):exists() then
 					if overwrite then
-						rmFile(toData.file) -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
+						File(toData.file):delete() -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
 					else
 						errorMsg = "The file '"..toData.file.."' already exists."
 					end

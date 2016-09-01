@@ -63,6 +63,35 @@ return{
 
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
 	end,
+	delete = function(unitTest)
+		local file = File("abc\"")
+
+		local error_func = function()
+			file:delete()
+		end
+		unitTest:assertError(error_func, "Argument #1 should not contain quotation marks.")
+
+		file = File("abc123456")
+		error_func = function()
+			file:delete()
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abc123456"))
+
+		if _Gtme.isWindowsOS() then
+			file = File("myfile.txt")
+			file:open("w")
+
+			error_func = function()
+				file:delete()
+			end
+			unitTest:assertError(error_func, "Could not remove file 'myfile.txt'.") -- SKIP
+
+			file:close()
+			file:delete()
+
+			unitTest:assert(not file:exists()) -- SKIP
+		end
+	end,
 	lock = function(unitTest)
 		local file = File("abc.txt")
 		local error_func = function()
@@ -119,7 +148,7 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
-		if File(filename):exists() then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 
 		file = File(filename)
 
@@ -159,7 +188,7 @@ return{
 		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
 
 		file:close()
-		if File(filename):exists() then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 
 		file = File(filePath("agents.csv", "base"))
 		error_func = function()

@@ -60,16 +60,16 @@ return {
 		unitTest:assertEquals(proj1.file, proj3clean.file)
 
 		-- unitTest:assertFile("amazonia.tview") -- SKIP #1301
-		rmFile("amazonia.tview") -- #1301
+		File("amazonia.tview"):delete() -- #1301
 		
 		if File("notitlenoauthor.tview"):exists() then
-			rmFile("notitlenoauthor.tview")
+			File("notitlenoauthor.tview"):delete()
 		end
 		
 		local proj4Name = "notitlenoauthor.tview"
 
 		if File(proj4Name):exists() then
-			rmFile(proj4Name)
+			File(proj4Name):delete()
 		end
 
 		local proj4 = Project{
@@ -82,10 +82,10 @@ return {
 		unitTest:assertType(proj4.layers, "table")
 		unitTest:assertEquals(getn(proj4.layers), 0)
 		
-		rmFile("notitlenoauthor.tview")
+		File("notitlenoauthor.tview"):delete()
 		
 		if File("emas.tview"):exists() then
-			rmFile("emas.tview")
+			File("emas.tview"):delete()
 		end
 
 		local proj5 = Project{
@@ -104,7 +104,7 @@ return {
 		unitTest:assertType(proj5.river, "Layer")
 		unitTest:assertType(proj5.limit, "Layer")
 		
-		rmFile("emas.tview")
+		File("emas.tview"):delete()
 	end,
 	__tostring = function(unitTest)
 		local proj1 = Project{
@@ -124,6 +124,6 @@ title        string [The Amazonia]
 ]])
 
 		-- unitTest:assertFile("tostring.tview") -- SKIP #1301
-		rmFile("tostring.tview") -- #1301
+		File("tostring.tview"):delete() -- #1301
 	end
 }

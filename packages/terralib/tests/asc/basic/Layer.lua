@@ -28,7 +28,7 @@ return {
 
 
         if File(projName):exists() then
-            rmFile(projName)
+            File(projName):delete()
         end
 
         local proj = Project {
@@ -47,7 +47,7 @@ return {
         local filePath1 = "biomassa_cells_asc_basic.shp"
 
         if File(filePath1):exists() then
-            rmFile(filePath1)
+            File(filePath1):delete()
         end
 
         local clName1 = "Biomassa_Cells"
@@ -66,18 +66,18 @@ return {
         unitTest:assertEquals(cl1.file, _Gtme.makePathCompatibleToAllOS(currentDir() .. "/" .. filePath1))
 
         if File(filePath1):exists() then
-            rmFile(filePath1)
+            File(filePath1):delete()
         end
 
         if File(projName):exists() then
-            rmFile(projName)
+            File(projName):delete()
         end
     end,
     representation = function(unitTest)
         local projName = "cellular_layer_fill_asc_repr.tview"
 
         if File(projName):exists() then
-            rmFile(projName)
+            File(projName):delete()
         end
 
         local proj = Project {
@@ -95,14 +95,14 @@ return {
         unitTest:assertEquals(l:representation(), "raster")
 
         if File(projName):exists() then
-            rmFile(projName)
+            File(projName):delete()
         end
     end,
     bands = function(unitTest)
         local projName = "cellular_layer_fill_asc_repr.tview"
 
         if File(projName):exists() then
-            rmFile(projName)
+            File(projName):delete()
         end
 
         local proj = Project {
@@ -120,14 +120,14 @@ return {
         unitTest:assertEquals(l:bands(), 1)
 
         if File(projName):exists() then
-            rmFile(projName)
+            File(projName):delete()
         end
     end,
     __tostring = function(unitTest)
         local projName = "cellular_layer_print_asc.tview"
 
         if File(projName):exists() then
-            rmFile(projName)
+            File(projName):delete()
         end
 
         local proj = Project {
@@ -154,7 +154,7 @@ source   string [asc]
         -- unitTest:assertFile(projName) -- SKIP #1301
 
         if File(projName):exists() then
-            rmFile(projName)
+            File(projName):delete()
         end
     end
 }

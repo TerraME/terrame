@@ -122,7 +122,7 @@ return {
 		-- }		
 		
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end		
 
 		projName = "cells_setores_2000.tview"
@@ -269,7 +269,7 @@ return {
 	
 		-- END
 		if File(projName):exists() then
-			rmFile(projName)
+			File(projName):delete()
 		end	
 		
 		pgData.table = tName1
@@ -338,7 +338,7 @@ return {
 
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
 
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 	end,
 	attributes = function(unitTest)
@@ -399,7 +399,7 @@ return {
 						(propNames[i] == "col") or (propNames[i] == "row"))
 		end		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 	end,
 	export = function(unitTest)
@@ -454,9 +454,9 @@ return {
 		layer2:export(shp, overwrite)
 		unitTest:assert(File(shp):exists())
 
-		rmFile(geojson)
-		rmFile(shp)
-		rmFile(proj.file)
+		File(geojson):delete()
+		File(shp):delete()
+		File(proj.file):delete()
 		
 		pgData.table = tableName
 		TerraLib{}:dropPgTable(pgData)

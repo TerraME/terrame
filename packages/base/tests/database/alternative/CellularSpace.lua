@@ -80,7 +80,7 @@ return{
  		end
 		unitTest:assertError(error_func, "File 'abc123.dbf' was not found.")
 
-		rmFile("abc123.shp")
+		File("abc123.shp"):delete()
 
 		error_func = function()
  			cs = CellularSpace{
@@ -180,7 +180,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
+		File(projName):delete() -- #1301
 		tl:dropPgTable(pgData)			
 		
 		-- GAL from shapefile
@@ -399,7 +399,7 @@ return{
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
 		
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
+		File(projName):delete() -- #1301
 		tl:dropPgTable(pgData)	
 	end
 }

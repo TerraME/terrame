@@ -35,7 +35,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 		
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -81,7 +81,7 @@ return {
 		unitTest:assertEquals(layerInfo.table, tableName)		
 		unitTest:assertNotNil(layerInfo.sid)		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)
 	end,
@@ -105,7 +105,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 		
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -170,7 +170,7 @@ return {
 		unitTest:assertEquals(getn(clSet), 104)		
 		
 		-- END
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgTable(pgData2)
 		tl:dropPgDatabase(pgData)		
@@ -183,7 +183,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 		
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end	
 		-- CREATE A PROJECT
 		tl:createProject(proj, {})
@@ -1081,7 +1081,7 @@ return {
 		tl:dropPgTable(pgData)
 		-- END POSTGIS TESTS		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	getDataSet = function(unitTest)
 		-- see in saveDataSet() test --
@@ -1096,7 +1096,7 @@ return {
 		}
 
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1194,7 +1194,7 @@ return {
 			end
 		end				
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgDatabase(pgData)		
 	end,
 	getArea = function(unitTest)
@@ -1206,7 +1206,7 @@ return {
 		}
 
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1254,7 +1254,7 @@ return {
 			end
 		end				
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgDatabase(pgData)		
 	end,	
 	getProjection = function(unitTest)
@@ -1266,7 +1266,7 @@ return {
 		}
 
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1307,7 +1307,7 @@ return {
 		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")		
 		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")			
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1320,7 +1320,7 @@ return {
 		}
 
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1362,7 +1362,7 @@ return {
 						(propNames[i] == "col") or (propNames[i] == "row"))
 		end
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1374,7 +1374,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 		
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1415,7 +1415,7 @@ return {
 			
 		unitTest:assertEquals(dist, 4.4271887242357, 1.0e-13)		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1427,7 +1427,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 		
 		if File(proj.file):exists() then
-			rmFile(proj.file)
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1467,7 +1467,7 @@ return {
 		toData.file = "postgis2shp.shp"
 		toData.type = "shp"		
 		if File(toData.file):exists() then
-			rmFile(toData.file)
+			File(toData.file):delete()
 		end		
 		
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)	
@@ -1477,15 +1477,15 @@ return {
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"		
 		if File(toData.file):exists() then
-			rmFile(toData.file)
+			File(toData.file):delete()
 		end	
 
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		tl:dropPgTable(pgData)
-		rmFile("postgis2shp.shp")
-		rmFile("postgis2geojson.geojson")
-		rmFile(proj.file)		
+		File("postgis2shp.shp"):delete()
+		File("postgis2geojson.geojson"):delete()
+		File(proj.file):delete()		
 	end
 }

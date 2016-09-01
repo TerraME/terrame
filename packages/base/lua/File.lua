@@ -138,6 +138,48 @@ File_ = {
 			resourceNotFoundError("file", self.name)
 		end
 	end,
+	--- Remove an existing file. If the file does not exist or it cannot be removed,
+	-- this function stops with an error. Directories cannot be removed using
+	-- this function. If the file to be removed is a shapefile, it also removes
+	-- the respective dbf, shx, and prj files if they exist.
+	-- The function will automatically add
+	-- quotation marks in the beginning and in the end of this argument in order
+	-- to avoid problems related to empty spaces in the string. Therefore,
+	-- this string must not contain quotation marks.
+	-- @usage filename = "myfile.txt"
+	-- file = File(filename)
+	-- file:writeLine("Some text..")
+	--
+	-- file:delete()
+	delete = function(self)
+		if string.find(self.name, "\"") then
+			customError("Argument #1 should not contain quotation marks.")
+		elseif not self:exists() then
+			resourceNotFoundError(1, self.name)
+		end
+
+		local result = os.execute("rm -f \""..self.name.."\"")
+
+		if result ~= true then
+			if result == nil then -- SKIP
+				result = "Could not remove file '"..self.name.."'." -- SKIP
+			end
+
+			customError(tostring(result)) -- SKIP
+		end
+
+		if string.endswith(self.name, ".shp") then
+			local dbf = File(string.sub(self.name, 1, -4).."dbf")
+			local shx = File(string.sub(self.name, 1, -4).."shx")
+			local prj = File(string.sub(self.name, 1, -4).."prj")
+			local qix = File(string.sub(self.name, 1, -4).."qix")
+
+			if dbf:exists() then dbf:delete() end
+			if shx:exists() then shx:delete() end
+			if prj:exists() then prj:delete() end
+			if qix:exists() then qix:delete() end
+		end
+	end,
 	--- Return whether a given string represents a file stored in the computer.
 	-- A directory is also considered a file.
 	-- @usage file = File(filePath("agents.csv", "base"))
@@ -394,7 +436,7 @@ File_ = {
 	--
 	-- file = File( "file.csv")
 	-- file:write(mytable, ";")
-	-- rmFile("file.csv")
+	-- File("file.csv"):delete()
 	write = function(self, data, sep)
 		mandatoryArgument(1, "table", data)
 		optionalArgument(2, "string", sep)
@@ -441,7 +483,7 @@ File_ = {
 	-- @arg text A string to be saved.
 	-- @usage file = File( "file.txt")
 	-- file:writeLine("Text...")
-	-- rmFile("file.txt")
+	-- File("file.txt"):delete()
 	writeLine = function(self, text)
 		mandatoryArgument(1, "string", text)
 
