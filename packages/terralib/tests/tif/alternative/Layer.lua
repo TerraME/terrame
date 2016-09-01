@@ -87,6 +87,11 @@ return {
 			clean = true
 		}
 
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end		
+		
 		local layerName1 = "limitepa"
 		Layer{
 			project = proj,
@@ -157,6 +162,8 @@ return {
 		if File(shp1):exists() then
 			File(shp1):delete()
 		end
+		
+		customWarning = customWarningBkp		
 	end,
 	dummy = function(unitTest)
 		local projName = "layer_tif_dummy.tview"
@@ -169,6 +176,11 @@ return {
 			file = projName,
 			clean = true
 		}
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end				
 
 		local prodes = "prodes"
 		local bandNoExists = function()
@@ -181,8 +193,10 @@ return {
 			l:dummy(4)
 		end
 		unitTest:assertError(bandNoExists, "The maximum band is '3.0'.")
-		
-		File(projName):delete()		
+
+		File(projName):delete()
+
+		customWarning = customWarningBkp
 	end
 }
 

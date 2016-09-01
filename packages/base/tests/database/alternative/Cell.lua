@@ -38,6 +38,11 @@ return{
 			title = title
 		}
 
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end				
+		
 		local layerName1 = "Brazil"
 
 		terralib.Layer{
@@ -131,5 +136,7 @@ return{
 		end	
 
 		tl:dropPgTable(pgData)		
+		
+		customWarning = customWarningBkp
 	end
 }

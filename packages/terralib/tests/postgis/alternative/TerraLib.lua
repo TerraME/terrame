@@ -78,8 +78,8 @@ return {
 		
 		tl:createProject(proj, {})
 
-		local layerName1 = "AmazonasAML"
-		local layerFile1 = filePath("municipiosAML_ok.shp", "terralib")
+		local layerName1 = "Setores"
+		local layerFile1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 		
 		-- POSTGIS
@@ -89,7 +89,7 @@ return {
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
-		local tableName = "municipiosAML_ok"	
+		local tableName = "Setores_Censitarios_2000_pol"	
 
 		local pgData = {
 			type = "postgis",

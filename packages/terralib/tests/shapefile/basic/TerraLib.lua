@@ -210,6 +210,11 @@ return {
 		end	
 		
 		tl:createProject(proj, {})
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end				
 
 		local layerName1 = "Para"
 		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
@@ -980,8 +985,10 @@ return {
 				File(shp[j]):delete()
 			end
 		end	
-		
-		File(proj.file):delete()						
+
+		File(proj.file):delete()
+
+		customWarning = customWarningBkp
 	end,
 	getDataSet = function(unitTest)
 		-- see in saveDataSet() test --

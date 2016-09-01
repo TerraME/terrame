@@ -24,7 +24,7 @@
 
 return {
 	Layer = function(unitTest)
-		local projName = "sampa_basic.tview"
+		local projName = "layer_postgis_basic.tview"
 
 		local proj1 = Project{
 			file = projName,

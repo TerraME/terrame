@@ -253,6 +253,13 @@ local function createLayer(name, dSetName, connInfo, type)
 		layer:setExtent(env)
 		layer:setVisibility(binding.VISIBLE)
 		layer:setRendererType("ABSTRACT_LAYER_RENDERER")
+
+		if srid == binding.TE_UNKNOWN_SRS then
+			local srsPath = binding.FindInTerraLibPath("share/terralib/json/srs.json")
+			customWarning("It was not possible to find the projection of layer '"..name.."'."
+						.."\nThe projection should be one of the availables in: "..srsPath)
+		end
+		
 		layer:setSRID(srid)
 
 		binding.te.da.DataSourceManager.getInstance():detach(ds:getId())

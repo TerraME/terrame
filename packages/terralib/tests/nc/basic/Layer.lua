@@ -36,6 +36,11 @@ return {
 				file = projName,
 				clean = true
 			}
+			
+			local customWarningBkp = customWarning
+			customWarning = function(msg)
+				return msg
+			end				
 
 			local layerName1 = "Vegtype_layer"
 
@@ -73,6 +78,8 @@ return {
 			if File(projName):exists() then
 				File(projName):delete()
 			end
+			
+			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -90,6 +97,11 @@ return {
 				clean = true
 			}
 
+			local customWarningBkp = customWarning
+			customWarning = function(msg)
+				return msg
+			end				
+			
 			local vegType = "Vegtype_layer"
 			local l = Layer {
 				project = proj,
@@ -102,6 +114,8 @@ return {
 			if File(projName):exists() then
 				File(projName):delete()
 			end
+			
+			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -119,6 +133,11 @@ return {
 				clean = true
 			}
 
+			local customWarningBkp = customWarning
+			customWarning = function(msg)
+				return msg
+			end				
+			
 			local vegType = "Vegtype_layer"
 			local l = Layer {
 				project = proj,
@@ -131,6 +150,8 @@ return {
 			if File(projName):exists() then
 				File(projName):delete()
 			end
+			
+			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -147,6 +168,11 @@ return {
 				file = projName,
 				clean = true
 			}
+			
+			local customWarningBkp = customWarning
+			customWarning = function(msg)
+				return msg
+			end				
 
 			local layerName1 = "Vegtype_layer"
 
@@ -169,6 +195,8 @@ source   string [nc]
 			if File(projName):exists() then
 				File(projName):delete()
 			end
+			
+			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
 		end

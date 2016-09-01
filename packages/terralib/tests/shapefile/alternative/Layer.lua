@@ -32,13 +32,13 @@ return {
 		}
 		
 		-- SPATIAL INDEX TEST
-		local layerName1 = "limitepa"
+		local layerName1 = "Setores"
 		
 		local indexDefaultError1 = function()
 			Layer{
 				project = proj,
 				name = layerName1,
-				file = filePath("limitePA_polyc_pol.shp", "terralib"),
+				file = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
 				index = true
 			}
 		end
@@ -47,7 +47,7 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("limitePA_polyc_pol.shp", "terralib")		
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")		
 		}		
 		
 		local indexDefaultError2 = function()
