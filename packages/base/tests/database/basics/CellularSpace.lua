@@ -25,7 +25,7 @@
 return{
 	CellularSpace = function(unitTest)
 		local cs = CellularSpace{
-			file = filePath("cabecadeboi.shp")
+			file = filePath("cabecadeboi.shp"),
 			as = {
 				height = "height_"
 			}

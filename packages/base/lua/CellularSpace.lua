@@ -1735,19 +1735,19 @@ function CellularSpace(data)
 	if data.as then
 		forEachElement(data.as, function(idx, value)
 			if type(idx) ~= "string" then
-				customError("All indexes of 'as' should be 'string', got '"..type(idx).."'")
-			elseif type(value ~= "string") then
-				customError("All values of 'as' should be 'string', got '"..type(value).."'")
-			elseif data.cells[1][value] then
-				customError("Cannot rename '"..idx.."' to '"..value.."' as it already exists.")
-			elseif not data.cells[1][idx] then
-				customError("Cannot rename attribute '"..idx.."' as it does not exist.")
+				customError("All indexes of 'as' should be 'string', got '"..type(idx).."'.")
+			elseif type(value) ~= "string" then
+				customError("All values of 'as' should be 'string', got '"..type(value).."'.")
+			elseif data.cells[1][idx] then
+				customError("Cannot rename '"..value.."' to '"..idx.."' as it already exists.")
+			elseif not data.cells[1][value] then
+				customError("Cannot rename attribute '"..value.."' as it does not exist.")
 			end
 
 			local s = "return function(cell)\n"
 
 			forEachElement(data.as, function(idx, value)
-				s = s.."cell."..idx".. = cell."..value.."\n"
+				s = s.."cell."..idx.." = cell."..value.."\n"
 				s = s.."cell."..value.." = nil\n"
 			end)
 	
