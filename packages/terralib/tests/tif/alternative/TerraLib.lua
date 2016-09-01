@@ -96,6 +96,11 @@ return {
 		end	
 		
 		tl:createProject(proj, {})
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end			
 
 		local layerName1 = "Para"
 		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
@@ -146,6 +151,8 @@ return {
 		end	
 		
 		rmFile(proj.file)
+		
+		customWarning = customWarningBkp
 	end,
 	getDummyValue = function(unitTest)
 		local tl = TerraLib{}

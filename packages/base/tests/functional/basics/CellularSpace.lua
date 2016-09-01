@@ -88,6 +88,11 @@ return{
 			author = author,
 			title = title
 		}
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end				
 
 		local layerName1 = "Sampa"
 
@@ -408,6 +413,8 @@ return{
 			if isFile(projName) then rmFile(projName) end
 
 		end
+		
+		customWarning = customWarningBkp
 	end, 
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

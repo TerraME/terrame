@@ -38,6 +38,11 @@ return{
 			title = title
 		}
 
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end				
+		
 		local layerName1 = "Brazil"
 
 		terralib.Layer{
@@ -129,6 +134,8 @@ return{
 		end	
 
 		tl:dropPgTable(pgData)		
+		
+		customWarning = customWarningBkp
 	end,
 	distance = function(unitTest)
 		local projName = "cell_area.tview"
@@ -144,6 +151,11 @@ return{
 			author = author,
 			title = title
 		}
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end				
 
 		local layerName1 = "Brazil"
 
@@ -243,6 +255,8 @@ return{
 			rmFile(filePath1)
 		end	
 
-		tl:dropPgTable(pgData)			
+		tl:dropPgTable(pgData)	
+
+		customWarning = customWarningBkp
 	end
 }
