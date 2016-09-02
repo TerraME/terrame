@@ -48,14 +48,6 @@ data{
 }
 
 data{
-	file = "Limit_pol.shp",
-	attributes = {"SPRAREA", "SPRPERIMET", "SPRCLASSE", "objet_id_1"},
-	description = {"Polygon area", "Polygon perimeter", "A string with the class of the polygon", "Unique identifier"},
-	summary = "A polygons describing Emas National Park, in Goias, Brazil.",
-	source = "Rodolfo Almeida"
-}
-
-data{
 	file = "River_lin.shp",
 	attributes = {
 		"SPRPERIMET", 
@@ -81,38 +73,10 @@ data{
 }
 
 data{
-	file = {"brazil.gal"},
-	summary = "A small Neighborhood file for brazilstates.shp.",
-	source = "TerraME team"
-}
-
-data{
-	file = {"emas-distance.gal", "emas-distance.gwt", "emas-distance.gpm", "emas-pollin.gpm", "gpmdistanceDbEmasCells.gpm", "gpmlinesDbEmas.gpm"},
-	summary = "Neighborhood files to be used with emas database.",
-	source = "TerraME team"
-}
-
-data{
-	file = {"cabecadeboi-neigh.gal", "cabecadeboi-neigh.gpm", "cabecadeboi-neigh.gwt", "gpmAreaCellsPols.gpm"},
-	summary = "Neighborhood files to be used with cabecadeboi database.",
-	source = "TerraME team"
-}
-
-data{
 	file = {"simple.map"},
 	image = "simple.bmp",
 	summary = "A simple CellularSpace with one attribute for sugarscape model.",
 	source = "TerraME team"
-}
-
-data{
-	file = {"simple-cs.csv"},
-	image = "simple-cs.bmp",
-	separator = ";",
-	summary = "A simple CellularSpace with an attribute called maxSugar (number).",
-	source = "TerraME team",
-	attributes = {"x", "y", "maxSugar"},
-	description = {"x location of the Cell", "y location of the Cell", "Maximum amount of sugar for the Cell"}
 }
 
 data{

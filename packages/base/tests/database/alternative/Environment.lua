@@ -46,7 +46,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local clName1 = "Sampa_Cells_DB"
@@ -97,20 +97,20 @@ return{
 
 		local error_func = function()
 			env:loadNeighborhood{
-				source = filePath("gpmAreaCellsPols.gpm", "base"),
+				source = filePath("test/gpmAreaCellsPols.gpm", "base"),
 			}
 		end
 		unitTest:assertError(error_func, "CellularSpaces with layers 'emas.shp' and 'Limit_pol.shp' were not found in the Environment.")
 
 		cs = CellularSpace{
-			file = filePath("Limit_pol.shp")
+			file = filePath("test/Limit_pol.shp")
 		}
 
 		env = Environment{cs, cs2}
 
 		error_func = function()
 			env:loadNeighborhood{
-				source = filePath("gpmAreaCellsPols.gpm", "base"),
+				source = filePath("test/gpmAreaCellsPols.gpm", "base"),
 			}
 		end
 		unitTest:assertError(error_func, "CellularSpace with layer 'emas.shp' was not found in the Environment.")
@@ -123,7 +123,7 @@ return{
 
 		error_func = function()
 			env:loadNeighborhood{
-				source = filePath("gpmAreaCellsPols.gpm", "base"),
+				source = filePath("test/gpmAreaCellsPols.gpm", "base"),
 			}
 		end
 		unitTest:assertError(error_func, "CellularSpace with layer 'Limit_pol.shp' was not found in the Environment.")
@@ -173,7 +173,7 @@ return{
 
 		error_func = function()
 			env:loadNeighborhood{
-				source = filePath("emas-pollin.gpm", "base"),
+				source = filePath("test/emas-pollin.gpm", "base"),
 				name = 6,
 				bidirect = true
 			}
@@ -182,7 +182,7 @@ return{
 
 		error_func = function()
 			env:loadNeighborhood{
-				source = filePath("emas-pollin.gpm", "base"),		
+				source = filePath("test/emas-pollin.gpm", "base"),		
 				name = "neigh1",
 				bidirect = 13
 		}
@@ -191,7 +191,7 @@ return{
 
 		error_func = function()
 			env:loadNeighborhood{
-				source = filePath("emas-distance.gpm", "base"),
+				source = filePath("test/emas-distance.gpm", "base"),
 				name = "my_neighborhood"
 		}
 		end
@@ -218,7 +218,7 @@ return{
 		}
 
 		cs2 = CellularSpace{
-			file = filePath("Limit_pol.shp")
+			file = filePath("test/Limit_pol.shp")
 		}
 
 		env = Environment{cs, cs2}
@@ -227,7 +227,7 @@ return{
 
 		-- .gpm Regular CS x Irregular CS - without weights
 		local s = sessionInfo().separator
-		local mfile = filePath("error"..s.."gpmAreaCellsPols-error.gpm", "base")
+		local mfile = filePath("test/error"..s.."gpmAreaCellsPols-error.gpm", "base")
 
 		error_func = function()
 	   		env:loadNeighborhood{
@@ -237,7 +237,7 @@ return{
 		end
 		unitTest:assertError(error_func, "The string 'bb' found as weight in the file '"..mfile.."' could not be converted to a number.")
 
-		mfile = filePath("error"..s.."gpmAreaCellsPols-error2.gpm", "base")
+		mfile = filePath("test/error"..s.."gpmAreaCellsPols-error2.gpm", "base")
 
 		error_func = function()
 	   		env:loadNeighborhood{
@@ -248,7 +248,7 @@ return{
 
 		unitTest:assertError(error_func, "Could not read the file properly. It seems that it is corrupted.")
 
-		mfile = filePath("error"..s.."gpmAreaCellsPols-error3.gpm", "base")
+		mfile = filePath("test/error"..s.."gpmAreaCellsPols-error3.gpm", "base")
 
 		error_func = function()
 	   		env:loadNeighborhood{

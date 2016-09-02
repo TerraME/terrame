@@ -26,7 +26,7 @@
 
 return{
 	filePath = function(unitTest)
-		unitTest:assertType(filePath("simple-cs.csv"), "string")
+		unitTest:assertType(filePath("test/simple-cs.csv"), "string")
 	end,
 	filesByExtension = function(unitTest)
 		local files = filesByExtension("base", ".csv")
