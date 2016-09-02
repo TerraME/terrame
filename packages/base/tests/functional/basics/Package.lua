@@ -32,7 +32,7 @@ return{
 		local files = filesByExtension("base", ".csv")
 
 		unitTest:assertType(files, "table")
-		unitTest:assertEquals(#files, 2)
+		unitTest:assertEquals(#files, 1)
 		unitTest:assertType(files[1], "string")
 	end,
 	isLoaded = function(unitTest)
