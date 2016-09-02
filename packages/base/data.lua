@@ -72,8 +72,22 @@ data{
 	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil, with a larger resolution."
 }
 
+
 data{
-	file = {"simple.map"},
+	file = "cabecadeboi-neigh.gpm",
+	summary = "Neighborhood files to be used with cabecadeboi database.",
+	source = "TerraME team"
+}
+
+
+data{
+	file = "gpmlinesDbEmas.gpm",
+	summary = "Neighborhood files to be used with emas database.",
+	source = "TerraME team"
+}
+
+data{
+	file = "simple.map",
 	image = "simple.bmp",
 	summary = "A simple CellularSpace with one attribute for sugarscape model.",
 	source = "TerraME team"
