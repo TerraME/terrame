@@ -26,16 +26,16 @@
 
 -- TODO(#1326)
 
--- import("terralib")
+import("terralib")
 
--- local projName = "fillCellExample.tview"
+local projName = "fillCellExample.tview"
 
--- local project = Project{
-	-- file = projName,
-	-- clean = true,
-	-- author = "Avancini",
-	-- title = "FillCell Example"
--- }
+local project = Project{
+	file = projName,
+	clean = true,
+	author = "Avancini",
+	title = "FillCell Example"
+}
 
 -- local polygons = "Setores"
 -- Layer{
