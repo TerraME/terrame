@@ -52,8 +52,8 @@ function filePath(filename, package)
 		local suggestMsg = suggestionMsg(suggest)
 		
 		if string.find(filename, "/", 1) then	
-			local file = File(filename):getNameWithExtension()
-			if not string.find(suggestMsg, file, 1) then
+			local fn = File(filename):getNameWithExtension()
+			if not string.find(suggestMsg, fn, 1) then
 				customError(msg)	
 			end
 		end
