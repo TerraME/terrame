@@ -85,8 +85,8 @@ return{
 
 		cs = CellularSpace{
 			file = filePath("cabecadeboi.shp"),
-			xy = function(cell)
-				return cell.Col, cell.Lin
+			xy = function(mcell)
+				return mcell.Col, mcell.Lin
 			end
 		}
 
@@ -94,9 +94,9 @@ return{
 		unitTest:assertEquals(10201, #cs.cells)
 
 		for _ = 1, 5 do
-			local cell = cs:sample()
-			unitTest:assertEquals(cell.x, cell.Col)
-			unitTest:assertEquals(cell.y, cell.Lin)
+			local mcell = cs:sample()
+			unitTest:assertEquals(mcell.x, mcell.Col)
+			unitTest:assertEquals(mcell.y, mcell.Lin)
 		end
 
 		-- shp file
