@@ -26,6 +26,7 @@ return{
 	CellularSpace = function(unitTest)
 		local cs = CellularSpace{
 			file = filePath("cabecadeboi.shp"),
+			xy = {"Col", "Lin"},
 			as = {
 				height = "height_"
 			}
@@ -212,7 +213,8 @@ return{
 	end,
 	loadNeighborhood = function(unitTest)
 		local cs1 = CellularSpace{
-			file = filePath("cabecadeboi900.shp", "base")	
+			file = filePath("cabecadeboi900.shp", "base"),
+			xy = {"Col", "Lin"}
 		}
 
 		local cs2 = CellularSpace{
@@ -220,7 +222,8 @@ return{
 		}
 
 		local cs3 = CellularSpace{
-			file = filePath("emas.shp", "base")
+			file = filePath("emas.shp", "base"),
+			xy = {"Col", "Lin"},
 		}
 
 		unitTest:assertType(cs1, "CellularSpace")

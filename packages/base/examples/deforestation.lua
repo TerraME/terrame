@@ -117,7 +117,8 @@ Amazonia = Model{
 		end
 
 		model.amazonia = CellularSpace{
-			file = filePath("amazonia.shp")
+			file = filePath("amazonia.shp"),
+			xy = {"Col", "Lin"}
 		}
 
 		forEachCell(model.amazonia, function(cell)

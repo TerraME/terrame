@@ -93,6 +93,7 @@ return{
 		error_func = function()
 			CellularSpace{
 				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
 				as = 2
 			}
 		end
@@ -101,6 +102,7 @@ return{
 		error_func = function()
 			CellularSpace{
 				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
 				as = {x = 2}
 			}
 		end
@@ -109,6 +111,7 @@ return{
 		error_func = function()
 			CellularSpace{
 				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
 				as = {"height_"}
 			}
 		end
@@ -117,6 +120,7 @@ return{
 		error_func = function()
 			CellularSpace{
 				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
 				as = {x = "height_2"}
 			}
 		end
@@ -125,6 +129,7 @@ return{
 		error_func = function()
 			CellularSpace{
 				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
 				as = {
 					height = "height_2"
 				}
@@ -307,7 +312,8 @@ return{
 		unitTest:assertError(error_func, "Could not read file '"..mfile.."': invalid header.")
 
 		local cs3 = CellularSpace{
-			file = filePath("cabecadeboi900.shp", "base")	
+			file = filePath("cabecadeboi900.shp", "base"),
+			xy = {"Col", "Lin"},
 		}
 
 		error_func = function()

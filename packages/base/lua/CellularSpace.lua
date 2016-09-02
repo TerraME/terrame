@@ -510,7 +510,21 @@ local function setCellsByTerraLibDataSet(self, dSet)
 	self.yMin = 0
 	self.yMax = 0
 	self.xMin = 0
-	
+
+	if type(self.xy) == "table" then
+		verify(#self.xy == 2, "Argument 'xy' should have exactly two values.")
+
+		verify(type(self.xy[1]) == "string", "Argument 'xy[1]' should be 'string', got '"..type(self.xy[1]).."'.")
+		verify(type(self.xy[2]) == "string", "Argument 'xy[2]' should be 'string', got '"..type(self.xy[2]).."'.")
+
+		defaultTableValue(self, "zero", "top")
+	elseif self.xy == nil then
+		self.xy = {"col", "row"}
+		defaultTableValue(self, "zero", "bottom") 
+	elseif type(self.xy) ~= "function" then
+		customError("Argument 'xy' should be a 'table' or a 'function', got '"..type(self.xy).."'")
+	end
+
 	self.cells = {}
 	self.cObj_:clear()
 
@@ -587,20 +601,6 @@ local function loadOGR(self)
 	local dSet = tlib:getOGRByFilePath(self.file)
 
 	defaultTableValue(self, "geometry", false)
-
-	if type(self.xy) == "table" then
-		verify(#self.xy == 2, "Argument 'xy' should have exactly two values.")
-
-		verify(type(self.xy[1]) == "string", "Argument 'xy[1]' should be 'string', got '"..type(self.xy[1]).."'.")
-		verify(type(self.xy[2]) == "string", "Argument 'xy[2]' should be 'string', got '"..type(self.xy[2]).."'.")
-
-		defaultTableValue(self, "zero", "top")
-	elseif self.xy == nil then
-		self.xy = {"col", "row"}
-		defaultTableValue(self, "zero", "bottom") 
-	elseif type(self.xy) ~= "function" then
-		customError("Argument 'xy' should be a 'table' or a 'function', got '"..type(self.xy).."'")
-	end
 
 	setCellsByTerraLibDataSet(self, dSet)
 	local temp = ""

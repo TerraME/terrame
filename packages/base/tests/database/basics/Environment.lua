@@ -29,7 +29,8 @@ return{
 		}
 
 		local cs2 = CellularSpace{
-			file = filePath("emas.shp")
+			file = filePath("emas.shp"),
+			xy = {"Col", "Lin"}
 		}
 
 		local cs3 = CellularSpace{
