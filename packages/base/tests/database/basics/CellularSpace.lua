@@ -83,6 +83,22 @@ return{
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(99, cell.y)
 
+		cs = CellularSpace{
+			file = filePath("cabecadeboi.shp"),
+			xy = function(cell)
+				return cell.Col, cell.Lin
+			end
+		}
+
+		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
+		unitTest:assertEquals(10201, #cs.cells)
+
+		for _ = 1, 5 do
+			local cell = cs:sample()
+			unitTest:assertEquals(cell.x, cell.Col)
+			unitTest:assertEquals(cell.y, cell.Lin)
+		end
+
 		-- shp file
 		cs = CellularSpace{file = filePath("brazilstates.shp", "base")}
 
