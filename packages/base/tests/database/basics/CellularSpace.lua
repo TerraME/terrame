@@ -42,6 +42,7 @@ return{
 			unitTest:assertNotNil(cell.height)
 			unitTest:assertNil(cell.height_)
 			unitTest:assertNotNil(cell.soilWater)
+			unitTest:assertNil(cell.geom)
 		end
 
 		local cell = cs:get(0, 0)
