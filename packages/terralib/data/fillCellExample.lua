@@ -24,6 +24,8 @@
 
 -- @example Creates a database in a PostGIS database.
 
+-- TODO(#1326)
+
 import("terralib")
 
 local projName = "fillCellExample.tview"
@@ -63,56 +65,56 @@ Layer{
 	file = filePath("Desmatamento_2000.tif", "terralib")		
 }
 
-local host = "localhost"
-local port = "5432"
-local user = "postgres"
-local password = "postgres"
-local database = "postgis_22_sample"
-local encoding = "CP1252"
-local tableName = "setores_cells"
+-- local host = "localhost"
+-- local port = "5432"
+-- local user = "postgres"
+-- local password = "postgres"
+-- local database = "postgis_22_sample"
+-- local encoding = "CP1252"
+-- local tableName = "setores_cells"
 
 -- HUNK USED ONLY TO TEST
-local pgData = {
-	type = "POSTGIS",
-	host = host,
-	port = port,
-	user = user,
-	password = password,
-	database = database,
-	table = tableName, 
-	encoding = encoding
-}
+-- local pgData = {
+	-- type = "POSTGIS",
+	-- host = host,
+	-- port = port,
+	-- user = user,
+	-- password = password,
+	-- database = database,
+	-- table = tableName, 
+	-- encoding = encoding
+-- }
 
-local terralib = TerraLib{}
-terralib:dropPgTable(pgData)
+-- local terralib = TerraLib{}
+-- terralib:dropPgTable(pgData)
 -- END HUNK
 
-local cellDbLayerName = "Setores_Cells_DB"
-cl = Layer{
-	project = project,
-	input = polygons,
-	name = cellDbLayerName,
-	resolution = 2e4, -- 50x50km
-	source = "postgis",
-	user = user,
-	password = password,
-	database = database,
-	table = tableName
-}
+-- local cellDbLayerName = "Setores_Cells_DB"
+-- cl = Layer{
+	-- project = project,
+	-- input = polygons,
+	-- name = cellDbLayerName,
+	-- resolution = 2e4, -- 50x50km
+	-- source = "postgis",
+	-- user = user,
+	-- password = password,
+	-- database = database,
+	-- table = tableName
+-- }
 
-local distLayer = cellDbLayerName.."_Distance"
+-- local distLayer = cellDbLayerName.."_Distance"
 
 -- HUNK USED ONLY TO TEST
-pgData.table = distLayer
-terralib:dropPgTable(pgData)
+-- pgData.table = distLayer
+-- terralib:dropPgTable(pgData)
 -- END HUNK
 
-cl:fill{
-	operation = "distance",
-	layer = points,
-	attribute = "distpoints",
-	output = distLayer
-}
+-- cl:fill{
+	-- operation = "distance",
+	-- layer = points,
+	-- attribute = "distpoints",
+	-- output = distLayer
+-- }
 
 -- TODO: OPERATION NOT IMPLEMENTED YET
 -- cl:fill{
@@ -121,65 +123,65 @@ cl:fill{
 	-- attribute = "llenght"
 -- }
 
-local sumLayer = cellDbLayerName.."_Sum"
+-- local sumLayer = cellDbLayerName.."_Sum"
 
 -- HUNK USED ONLY TO TEST
-pgData.table = sumLayer
-terralib:dropPgTable(pgData)
+-- pgData.table = sumLayer
+-- terralib:dropPgTable(pgData)
 -- END HUNK
 
-cl:fill{
-	operation = "sum",
-	layer = polygons,
-	attribute = "sum_population",
-	select = "Populacao",
-	output = sumLayer,
-	area = true
-}
+-- cl:fill{
+	-- operation = "sum",
+	-- layer = polygons,
+	-- attribute = "sum_population",
+	-- select = "Populacao",
+	-- output = sumLayer,
+	-- area = true
+-- }
 
-local averageLayer = cellDbLayerName.."_Average"
+-- local averageLayer = cellDbLayerName.."_Average"
 
 -- HUNK USED ONLY TO TEST
-pgData.table = averageLayer
-terralib:dropPgTable(pgData)
+-- pgData.table = averageLayer
+-- terralib:dropPgTable(pgData)
 -- END HUNK
 
-cl:fill{
-	layer = polygons,
-	operation = "average",
-	attribute = "income",
-	select = "Populacao",
-	output = averageLayer,
-	area = true
-}
+-- cl:fill{
+	-- layer = polygons,
+	-- operation = "average",
+	-- attribute = "income",
+	-- select = "Populacao",
+	-- output = averageLayer,
+	-- area = true
+-- }
 
-local rasterLayer = cellDbLayerName.."_Dematamento_Average"
+-- local rasterLayer = cellDbLayerName.."_Dematamento_Average"
 
 -- HUNK USED ONLY TO TEST
-pgData.table = rasterLayer
-terralib:dropPgTable(pgData)
+-- pgData.table = rasterLayer
+-- terralib:dropPgTable(pgData)
 -- END HUNK
 
-cl:fill{
-	operation = "average",
-	layer = tif,
-	attribute = "raverage",
-	output = rasterLayer,
-}
+-- cl:fill{
+	-- operation = "average",
+	-- layer = tif,
+	-- attribute = "raverage",
+	-- output = rasterLayer,
+-- }
 
 -- USED ONLY TO TEST
-pgData.table = tableName
-terralib:dropPgTable(pgData)
+-- pgData.table = tableName
+-- terralib:dropPgTable(pgData)
 
-pgData.table = distLayer
-terralib:dropPgTable(pgData)
+-- pgData.table = distLayer
+-- terralib:dropPgTable(pgData)
 
-pgData.table = sumLayer
-terralib:dropPgTable(pgData)
+-- pgData.table = sumLayer
+-- terralib:dropPgTable(pgData)
 
-pgData.table = averageLayer
-terralib:dropPgTable(pgData)
+-- pgData.table = averageLayer
+-- terralib:dropPgTable(pgData)
 
-pgData.table = rasterLayer
-terralib:dropPgTable(pgData)
+-- pgData.table = rasterLayer
+-- terralib:dropPgTable(pgData)
 

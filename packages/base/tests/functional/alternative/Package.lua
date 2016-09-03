@@ -39,6 +39,11 @@ return{
 			filePath("amazonia.tview")
 		end
 		unitTest:assertError(error_func, "File 'base/data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project' to create it.", 2)
+		
+		local subdirError = function()
+			filePath("subdir/mriver_lin.shp")
+		end
+		unitTest:assertError(subdirError, "File 'base/data/subdir/mriver_lin.shp' does not exist in package 'base'.")		
 
 		rmFile(baseInfo.data..s.."amazonia.lua")
 	end,

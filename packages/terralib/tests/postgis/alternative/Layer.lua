@@ -37,7 +37,7 @@ return {
 		Layer{
 			project = proj1,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local host = "localhost"
@@ -188,7 +188,7 @@ return {
 				password = password,
 				database = database,
 				table = tableName,
-				file = filePath("sampa.shp", "terralib")
+				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
 		unitTest:assertError(fileUnnecessary, unnecessaryArgumentMsg("file"))
@@ -410,7 +410,7 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local clName1 = "Sampa_Cells"
@@ -676,7 +676,7 @@ return {
 				password = password,
 				database = database,
 				table = tName1,
-				file = filePath("sampa.shp", "terralib")
+				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("file"))
@@ -829,7 +829,7 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}		
 		
 		local indexUnnecessary = function()

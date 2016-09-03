@@ -66,7 +66,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName = "GeoJSONLayer"
-		local layerFile = filePath("Setores_Censitarios_2000_pol.geojson", "terralib")
+		local layerFile = filePath("test/Setores_Censitarios_2000_pol.geojson", "terralib")
 
 		tl:addGeoJSONLayer(proj, layerName, layerFile)
 
@@ -99,7 +99,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName = "GeoJSONLayer"
-		local layerFile = filePath("Setores_Censitarios_2000_pol.geojson", "terralib")
+		local layerFile = filePath("test/Setores_Censitarios_2000_pol.geojson", "terralib")
 
 		tl:addGeoJSONLayer(proj, layerName, layerFile)
 
@@ -146,7 +146,7 @@ return {
 	end,
 	getOGRByFilePath = function(unitTest)
 		local tl = TerraLib{}
-		local shpPath = filePath("sampa.geojson", "terralib")
+		local shpPath = filePath("test/sampa.geojson", "terralib")
 		local dSet = tl:getOGRByFilePath(shpPath)
 		
 		unitTest:assertEquals(getn(dSet), 63)
@@ -175,7 +175,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "SampaGeoJson"
-		local layerFile1 = filePath("sampa.geojson", "terralib")
+		local layerFile1 = filePath("test/sampa.geojson", "terralib")
 		tl:addGeoJSONLayer(proj, layerName1, layerFile1)	
 
 		-- SHP

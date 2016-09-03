@@ -41,7 +41,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
 		
 		local host = "localhost"
@@ -112,7 +112,7 @@ return {
 		
 		-- // create a database 
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
 		
 		local host = "localhost"
@@ -195,7 +195,7 @@ return {
 
 		-- CREATE A LAYER THAT WILL BE USED AS REFERENCE TO CREATE THE CELLULAR SPACE
 		local layerName1 = "Para"
-		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
+		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
 		
 		local host = "localhost"
@@ -382,7 +382,7 @@ return {
 		
 		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION
 		local layerName3 = "Amazon_Munic" 
-		local layerFile3 = filePath("municipiosAML_ok.shp", "terralib")
+		local layerFile3 = filePath("test/municipiosAML_ok.shp", "terralib")
 		tl:addShpLayer(proj, layerName3, layerFile3)		
 		
 		local minLayerName = clName.."_"..layerName3.."_Minimum"		
@@ -763,7 +763,7 @@ return {
 		-- RASTER TESTS WITH POSTGIS
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
 		local layerName4 = "Prodes_PA" 
-		local layerFile4 = filePath("prodes_polyc_10k.tif", "terralib")
+		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "terralib")
 		tl:addGdalLayer(proj, layerName4, layerFile4)		
 		
 		local percTifLayerName = clName.."_"..layerName4.."_RPercentage"		
@@ -1110,7 +1110,7 @@ return {
 		
 		-- // create a database 
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
 		
 		local host = "localhost"
@@ -1219,7 +1219,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
 		
 		local host = "localhost"
@@ -1388,7 +1388,7 @@ return {
 		
 		-- // create a database 
 		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("sampa.shp", "terralib")
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
 		
 		local host = "localhost"

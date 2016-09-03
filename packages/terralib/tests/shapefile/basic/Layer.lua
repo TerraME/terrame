@@ -102,7 +102,7 @@ return {
 		Layer{
 			project = proj,
 			name = "PA",
-			file = filePath("limitePA_polyc_pol.shp", "terralib")		
+			file = filePath("test/limitePA_polyc_pol.shp", "terralib")		
 		}			
 		
 		customWarning = customWarningBkp
@@ -131,7 +131,7 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("limitePA_polyc_pol.shp", "terralib")
+			file = filePath("test/limitePA_polyc_pol.shp", "terralib")
 		}
 
 		local protecao = "protecao"
@@ -159,7 +159,7 @@ return {
 		Layer{
 			project = proj,
 			name = municipios,
-			file = filePath("municipiosAML_ok.shp", "terralib")	
+			file = filePath("test/municipiosAML_ok.shp", "terralib")	
 		}
 		
 		local clName1 = "CellsShp"
@@ -594,7 +594,7 @@ return {
 		proj = Project {
 			file = "sum_wba.tview",
 			clean = true,
-			setores = filePath("municipiosAML_ok.shp", "terralib")
+			setores = filePath("test/municipiosAML_ok.shp", "terralib")
 		}
 
 		clName1 = "cells_set"
@@ -742,7 +742,7 @@ return {
 		layer = Layer{
 			project = proj,
 			name = "PA",
-			file = filePath("limitePA_polyc_pol.shp", "terralib"),
+			file = filePath("test/limitePA_polyc_pol.shp", "terralib"),
 			index = false
 		}	
 	

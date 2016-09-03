@@ -74,7 +74,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName = "SampaShp"
-		local layerFile = filePath("sampa.shp", "terralib")
+		local layerFile = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName, layerFile)	
 		
 		local noRasterLayer = function()
@@ -103,7 +103,7 @@ return {
 		end			
 
 		local layerName1 = "Para"
-		local layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
+		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)		
 		
 		local shp = {}
@@ -121,7 +121,7 @@ return {
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
 	
 		local layerName2 = "Prodes_PA" 
-		local layerFile4 = filePath("prodes_polyc_10k.tif", "terralib")
+		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "terralib")
 		tl:addGdalLayer(proj, layerName2, layerFile4)		
 		
 		local percTifLayerName = clName.."_"..layerName2.."_RPercentage"		
@@ -168,7 +168,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName = "TifLayer"
-		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		tl:addGdalLayer(proj, layerName, layerFile)
 		
 		local bandNoExists =  function()
@@ -192,7 +192,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "TifLayer"
-		local layerFile1 = filePath("cbers_rgb342_crop1.tif", "terralib")
+		local layerFile1 = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		tl:addGdalLayer(proj, layerName1, layerFile1)	
 		
 		local customWarningBkp = customWarning 

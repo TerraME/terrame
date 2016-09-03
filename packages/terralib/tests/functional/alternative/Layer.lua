@@ -111,14 +111,14 @@ return{
 		Layer{
 			project = proj,
 			name = layerName,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local layerAlreadyExists = function()
 			Layer{
 				project = proj,
 				name = layerName,
-				file = filePath("sampa.shp", "terralib")
+				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName.."' already exists in the Project.")
@@ -127,7 +127,7 @@ return{
 			Layer{
 				project = proj,
 				name = layerName,
-				file = filePath("sampa.dbf", "terralib")
+				file = filePath("test/sampa.dbf", "terralib")
 			}
 		end
 		unitTest:assertError(sourceInvalid, "Source 'dbf' is invalid.")
@@ -142,7 +142,7 @@ return{
 		end
 		unitTest:assertError(fileLayerNonExists, mandatoryArgumentMsg("source"))
 
-		local filePath0 = filePath("sampa.shp", "terralib")
+		local filePath0 = filePath("test/sampa.shp", "terralib")
 		local source = "tif"
 		local inconsistentExtension = function()
 			Layer{
@@ -241,7 +241,7 @@ return{
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 		
 		local shp1 = "setores_cells.shp"
@@ -288,12 +288,12 @@ return{
 				input = layerName1,
 				name = "cells",
 				resolution = 0.7,
-				file = filePath("sampa.dbf", "terralib")
+				file = filePath("test/sampa.dbf", "terralib")
 			}
 		end
 		unitTest:assertError(sourceInvalid, "Source 'dbf' is invalid.")
 
-		local filePath1 = filePath("sampa.shp", "terralib")
+		local filePath1 = filePath("test/sampa.shp", "terralib")
 		source = "tif"
 		inconsistentExtension = function()
 			Layer{
@@ -322,7 +322,7 @@ return{
 		Layer{
 			project = proj,
 			name = "cbers",
-			file = filePath("cbers_rgb342_crop1.tif", "terralib")
+			file = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		}
 		
 		local attrBoxNonBoolean = function()

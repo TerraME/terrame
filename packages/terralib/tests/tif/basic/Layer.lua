@@ -130,14 +130,14 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("limitePA_polyc_pol.shp", "terralib")
+			file = filePath("test/limitePA_polyc_pol.shp", "terralib")
 		}
 
 		local prodes = "prodes"
 		Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("prodes_polyc_10k.tif", "terralib")	
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")	
 		}
 		
 		local clName1 = "CellsTif"
@@ -417,7 +417,7 @@ return {
 		local l = Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("prodes_polyc_10k.tif", "terralib")	
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")	
 		}
 
 		unitTest:assertEquals(l:representation(), "raster") 
@@ -448,7 +448,7 @@ return {
 		local l = Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("prodes_polyc_10k.tif", "terralib")	
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")	
 		}
 
 		unitTest:assertEquals(l:bands(), 4)
@@ -520,7 +520,7 @@ return {
 		local l = Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("prodes_polyc_10k.tif", "terralib")	
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")	
 		}
 
 		unitTest:assertEquals(l:dummy(0), 255.0)
