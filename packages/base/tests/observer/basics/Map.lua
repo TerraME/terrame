@@ -359,7 +359,7 @@ return{
 			end
 		}
 
-		cs = CellularSpace {
+		cs = CellularSpace{
 			xdim = 4,
 			instance = cell
 		}

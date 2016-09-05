@@ -231,7 +231,7 @@ return{
 
 		cs:notify()
     
-		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.23)
+		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.25)
 		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
 		-- unitTest:assertFile(projName) -- SKIP #1301
 		rmFile(projName) -- #1301

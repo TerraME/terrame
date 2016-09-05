@@ -201,8 +201,7 @@ return {
 			end}
 		}
 
-		unitTest:assertEquals(tostring(t1), [[1       Event
-cObj_   userdata
+		unitTest:assertEquals(tostring(t1), [[cObj_   userdata
 events  vector of size 1
 round   number [1e-05]
 time    number [-inf]

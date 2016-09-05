@@ -62,6 +62,7 @@ cell = Cell{
 
 cs = CellularSpace{
 	file = filePath("emas.shp"),
+	xy = {"Col", "Lin"},
 	instance = cell
 }
 

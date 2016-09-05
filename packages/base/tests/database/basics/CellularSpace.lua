@@ -25,7 +25,11 @@
 return{
 	CellularSpace = function(unitTest)
 		local cs = CellularSpace{
-			file = filePath("cabecadeboi.shp")
+			file = filePath("cabecadeboi.shp"),
+			xy = {"Col", "Lin"},
+			as = {
+				height = "height_"
+			}
 		}
 
 		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
@@ -36,8 +40,10 @@ return{
 			unitTest:assertType(cell.object_id0, "string")
 			unitTest:assertType(cell.x, "number")
 			unitTest:assertType(cell.y, "number")
-			unitTest:assertNotNil(cell.height_)
+			unitTest:assertNotNil(cell.height)
+			unitTest:assertNil(cell.height_)
 			unitTest:assertNotNil(cell.soilWater)
+			unitTest:assertNil(cell.geom)
 		end
 
 		local cell = cs:get(0, 0)
@@ -76,6 +82,22 @@ return{
 		cell = cs.cells[101]
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(99, cell.y)
+
+		cs = CellularSpace{
+			file = filePath("cabecadeboi.shp"),
+			xy = function(mcell)
+				return mcell.Col, mcell.Lin
+			end
+		}
+
+		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
+		unitTest:assertEquals(10201, #cs.cells)
+
+		for _ = 1, 5 do
+			local mcell = cs:sample()
+			unitTest:assertEquals(mcell.x, mcell.Col)
+			unitTest:assertEquals(mcell.y, mcell.Lin)
+		end
 
 		-- shp file
 		cs = CellularSpace{file = filePath("brazilstates.shp", "base")}
@@ -207,7 +229,8 @@ return{
 	end,
 	loadNeighborhood = function(unitTest)
 		local cs1 = CellularSpace{
-			file = filePath("cabecadeboi900.shp", "base")	
+			file = filePath("cabecadeboi900.shp", "base"),
+			xy = {"Col", "Lin"}
 		}
 
 		local cs2 = CellularSpace{
@@ -215,7 +238,8 @@ return{
 		}
 
 		local cs3 = CellularSpace{
-			file = filePath("emas.shp", "base")
+			file = filePath("emas.shp", "base"),
+			xy = {"Col", "Lin"},
 		}
 
 		unitTest:assertType(cs1, "CellularSpace")

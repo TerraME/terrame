@@ -392,6 +392,29 @@ return{
 		unitTest:assert(not r)
 		unitTest:assertEquals(count, 2)
 	end,
+	forEachNeighborAgent = function(unitTest)
+		Random():reSeed(12345)
+		local predator = Agent{}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 20
+		}
+
+		local cs = CellularSpace{xdim = 5}
+
+		local env = Environment{cs, predators = predators}
+		env:createPlacement{}
+		cs:createNeighborhood()
+
+		local count = 0
+
+		forEachNeighborAgent(predators:sample(), function()
+			count = count + 1
+		end)
+
+		unitTest:assertEquals(count, 4)
+	end,
 	forEachNeighborhood = function(unitTest)
 		local c1 = Cell{}
 		local c2 = Cell{}
@@ -966,15 +989,15 @@ return{
 		unitTest:assertEquals(type(c), "Cell")
 	end,
 	vardump = function(unitTest)
-		local actual = vardump{a = 2, b = 3, w = {2, 3, 4}}
+		local actual = vardump{a = 2, b = 3, w = {2, 3, [4] = 4}}
 
 		unitTest:assertEquals(actual, [[{
     a = 2, 
     b = 3, 
     w = {
-        [1] = 2, 
-        [2] = 3, 
-        [3] = 4
+        2, 
+        3, 
+        [4] = 4
     }
 }]])
 
@@ -982,9 +1005,9 @@ return{
 
 		unitTest:assertEquals(actual, [[{
     ["2bx"] = {
-        [1] = 2, 
-        [2] = 3, 
-        [3] = 4
+        2, 
+        3, 
+        4
     }, 
     abc = 2, 
     be2 = 3
@@ -1024,6 +1047,33 @@ return{
 		unitTest:assertEquals(y, [[{
     x = true
 }]])
+
+		local cs = CellularSpace{xdim = 1}
+
+        y = (vardump(cs))
+
+		unitTest:assertEquals(y, [[CellularSpace{
+    cObj_ = "TeCellularSpace(0x7fad0da0e840)", 
+    cells = {
+        Cell{
+            cObj_ = "TeCell(0x7fad0da19a00)", 
+            parent = "CellularSpace", 
+            past = {
+
+            }, 
+            x = 0, 
+            y = 0
+        }
+    }, 
+    load = "function: 0x7fad0a66aff0", 
+    source = "virtual", 
+    xMax = 0, 
+    xMin = 0, 
+    xdim = 1, 
+    yMax = 0, 
+    yMin = 0, 
+    ydim = 1
+}]], 36)
 	end
 }
 

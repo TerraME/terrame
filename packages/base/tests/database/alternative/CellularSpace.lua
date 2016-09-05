@@ -89,6 +89,53 @@ return{
  			}
  		end
 		unitTest:assertError(error_func, "More than one candidate to argument 'source': 'shp', 'virtual'.")
+
+		error_func = function()
+			CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
+				as = 2
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("as", "table", 2))
+
+		error_func = function()
+			CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
+				as = {x = 2}
+			}
+		end
+		unitTest:assertError(error_func, "All values of 'as' should be 'string', got 'number'.")
+
+		error_func = function()
+			CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
+				as = {"height_"}
+			}
+		end
+		unitTest:assertError(error_func, "All indexes of 'as' should be 'string', got 'number'.")
+
+		error_func = function()
+			CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
+				as = {x = "height_2"}
+			}
+		end
+		unitTest:assertError(error_func, "Cannot rename 'height_2' to 'x' as it already exists.")
+
+		error_func = function()
+			CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
+				as = {
+					height = "height_2"
+				}
+			}
+		end
+		unitTest:assertError(error_func, "Cannot rename attribute 'height_2' as it does not exist.")
 	end,
 	loadNeighborhood = function(unitTest)
 		local terralib = getPackage("terralib")
@@ -265,7 +312,8 @@ return{
 		unitTest:assertError(error_func, "Could not read file '"..mfile.."': invalid header.")
 
 		local cs3 = CellularSpace{
-			file = filePath("cabecadeboi900.shp", "base")	
+			file = filePath("cabecadeboi900.shp", "base"),
+			xy = {"Col", "Lin"},
 		}
 
 		error_func = function()
