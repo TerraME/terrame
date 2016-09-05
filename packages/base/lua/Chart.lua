@@ -487,7 +487,6 @@ function Chart(attrTab)
 			end
 
 			attrTab.target.obsattrs_[value] = true
-
 		elseif type(attrTab.target[value]) ~= "number" then
 			incompatibleTypeError(value, "number or function", attrTab.target[value])
 		end
@@ -554,6 +553,15 @@ function Chart(attrTab)
 
 		if belong(attrTab.xAxis, attrTab.select) then
 			customError("Attribute '"..attrTab.xAxis.."' cannot belong to argument 'select' as it was already selected as 'xAxis'.")
+		end
+
+		if type(attrTab.target[attrTab.xAxis]) == "function" then
+			if attrTab.target.obsattrs_ == nil then
+				attrTab.target.obsattrs_ = {}
+			end
+
+			attrTab.target.obsattrs_[attrTab.xAxis] = true
+			attrTab.xAxis = attrTab.xAxis.."_"
 		end
 	else
 		defaultTableValue(attrTab, "xLabel", "Time")

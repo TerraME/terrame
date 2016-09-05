@@ -74,7 +74,8 @@ return {
 	point = function(unitTest)
 		local tl = TerraLib{}
 		local cs = CellularSpace{
-			file = filePath("Localidades_pt.shp", "terralib")
+			file = filePath("Localidades_pt.shp", "terralib"),
+			geometry = true
 		}
 
 		forEachCell(cs, function(cell)
@@ -93,7 +94,8 @@ return {
 	line = function(unitTest)
 		local tl = TerraLib{}
 		local cs = CellularSpace{
-			file = filePath("River_lin.shp", "terralib")
+			file = filePath("River_lin.shp", "terralib"),
+			geometry = true
 		}
 
 		forEachCell(cs, function(cell)
@@ -124,7 +126,8 @@ return {
 	polygon = function(unitTest)
 		local tl = TerraLib{}
 		local cs = CellularSpace{
-			file = filePath("Limit_pol.shp", "terralib")
+			file = filePath("Limit_pol.shp", "terralib"),
+			geometry = true
 		}
 
 		forEachCell(cs, function(cell)

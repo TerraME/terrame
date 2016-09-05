@@ -47,7 +47,7 @@ return{
 
  		error_func = function()
  			cs = CellularSpace{
-				file = filePath("simple-cs.csv", "base"), 
+				file = filePath("test/simple-cs.csv", "base"), 
 				source = "map", 
 				sep = ";"
 			}
@@ -89,6 +89,53 @@ return{
  			}
  		end
 		unitTest:assertError(error_func, "More than one candidate to argument 'source': 'shp', 'virtual'.")
+
+		error_func = function()
+			CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
+				as = 2
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("as", "table", 2))
+
+		error_func = function()
+			CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
+				as = {x = 2}
+			}
+		end
+		unitTest:assertError(error_func, "All values of 'as' should be 'string', got 'number'.")
+
+		error_func = function()
+			CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
+				as = {"height_"}
+			}
+		end
+		unitTest:assertError(error_func, "All indexes of 'as' should be 'string', got 'number'.")
+
+		error_func = function()
+			CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
+				as = {x = "height_2"}
+			}
+		end
+		unitTest:assertError(error_func, "Cannot rename 'height_2' to 'x' as it already exists.")
+
+		error_func = function()
+			CellularSpace{
+				file = filePath("cabecadeboi.shp"),
+				xy = {"Col", "Lin"},
+				as = {
+					height = "height_2"
+				}
+			}
+		end
+		unitTest:assertError(error_func, "Cannot rename attribute 'height_2' as it does not exist.")
 	end,
 	loadNeighborhood = function(unitTest)
 		local terralib = getPackage("terralib")
@@ -109,7 +156,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local clName1 = "Sampa_Cells_DB"
@@ -189,11 +236,11 @@ return{
 		}		
 		
 		error_func = function()	
-			cs:loadNeighborhood{source = filePath("brazil.gal", "base"), che = false}
+			cs:loadNeighborhood{source = filePath("test/brazil.gal", "base"), che = false}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("che"))		
 		
-		mfile = filePath("brazil.gal", "base")
+		mfile = filePath("test/brazil.gal", "base")
 
 		error_func = function()
 			cs:loadNeighborhood{source = mfile}
@@ -220,7 +267,7 @@ return{
 		error_func = function()
 			local s = sessionInfo().separator
 			cs:loadNeighborhood{
-				source = filePath("error"..s.."cabecadeboi-invalid-neigh.gpm", "base"),
+				source = filePath("test/error"..s.."cabecadeboi-invalid-neigh.gpm", "base"),
 				check = false
 			}
 		end
@@ -236,7 +283,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cabecadeboi900.shp'.")
 
-		mfile = filePath("cabecadeboi-neigh.gal", "base")
+		mfile = filePath("test/cabecadeboi-neigh.gal", "base")
 
 		error_func = function()
 			cs2:loadNeighborhood{
@@ -246,7 +293,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cabecadeboi900.shp'.")
 
-		mfile = filePath("cabecadeboi-neigh.gwt", "base")
+		mfile = filePath("test/cabecadeboi-neigh.gwt", "base")
 
 		error_func = function()
 			cs2:loadNeighborhood{
@@ -257,7 +304,7 @@ return{
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cabecadeboi900.shp'.")		
 		
 		local s = sessionInfo().separator
-		mfile = filePath("error"..s.."cabecadeboi-neigh-header-invalid.gpm", "base")
+		mfile = filePath("test/error"..s.."cabecadeboi-neigh-header-invalid.gpm", "base")
 
 		error_func = function()
 			cs:loadNeighborhood{source = mfile}
@@ -265,47 +312,48 @@ return{
 		unitTest:assertError(error_func, "Could not read file '"..mfile.."': invalid header.")
 
 		local cs3 = CellularSpace{
-			file = filePath("cabecadeboi900.shp", "base")	
+			file = filePath("cabecadeboi900.shp", "base"),
+			xy = {"Col", "Lin"},
 		}
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid1.gal", "base")}
+			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gal", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id '' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid2.gal", "base")}
+			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gal", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 3. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid1.gpm", "base")}
+			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gpm", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid2.gpm", "base")}
+			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gpm", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 3. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid1.gwt", "base")}
+			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gwt", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid2.gwt", "base")}
+			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gwt", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id '' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-neigh-line-invalid3.gwt", "base")}
+			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid3.gwt", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
@@ -329,7 +377,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local clName1 = "Sampa_Cells_DB"

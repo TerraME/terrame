@@ -623,7 +623,11 @@ function forEachNeighbor(cell, name, _sof_)
 
 	local neighborhood = cell:getNeighborhood(name)
 	if neighborhood == nil then
-		customError("Neighborhood '"..name.."' does not exist.")
+		if name == "1" then
+				customError("The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
+		else
+			customError("Neighborhood '"..name.."' does not exist.")
+		end
 	end
 
 	neighborhood.cObj_:first()
@@ -636,6 +640,51 @@ function forEachNeighbor(cell, name, _sof_)
 	end
 
 	return true
+end
+
+--- Second order function to traverse the Agents within the neighbor Cells fom the
+-- current location of a given Agent, applying a function to each of them.
+-- This function requires that the Agent has a default placement ("placement") and
+-- its Cell has a default Neighborhood ("1"). More complex placements and neighborhoods
+-- need to be trasversed manually using Agent:getCell() and Cell:getNeighborhood().
+-- It returns true if no call to the function taken as argument returns false,
+-- otherwise it returns false.
+-- @arg agent An Agent.
+-- @arg _sof_ A function that takes one single Agent as argument. This function is called
+-- once for each agent within a neighbor cell of the current cell where the Agent belongs.
+-- If some call to it returns false, forEachNeighborAgent() stops and does not process
+-- any other Agent. 
+-- @usage ag = Agent{age = Random{min = 0, max = 2}}
+-- soc = Society{
+--     instance = ag,
+--     quantity = 5
+-- }
+-- 
+-- cs = CellularSpace{xdim = 5}
+-- cs:createNeighborhood{}
+--
+-- env = Environment{soc, cs}
+-- env:createPlacement{}
+--
+-- forEachNeighborAgent(soc:sample(), function(agent)
+--     print("Found Agent "..agent.id)
+-- end)
+-- @see CellularSpace:createNeighborhood
+-- @see Environment:createPlacement
+function forEachNeighborAgent(agent, _sof_)
+	if type(agent) ~= "Agent" then
+		incompatibleTypeError(1, "Agent", agent)
+	elseif type(_sof_) ~= "function" then
+		incompatibleTypeError(2, "function", _sof_)
+	end
+
+	local cell = agent:getCell()
+
+	forEachNeighbor(cell, function(_, neigh)
+		forEachAgent(neigh, function(ag)
+			if _sof_(ag) == false then return false end
+		end)
+	end)
 end
 
 --- Second order function to transverse all Neighborhoods of a Cell, applying a given function
@@ -1453,6 +1502,9 @@ end
 -- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
 --- Function that returns a string describing the internal content of an object.
 -- It converts a table into a string that represents a Lua code that declares such table.
+-- If some internal object is named "parent", it will be converted into a string with the
+-- type of the object. It avoids infinite loops due to the internal cyclic representation
+-- of TerraME.
 -- @arg o The object to be converted into a string.
 -- @arg indent A string to be placed in the beginning of each line of the returning string.
 -- @usage vardump{name = "john", age = 20}
@@ -1466,8 +1518,17 @@ function vardump(o, indent)
 	local indent2 = indent.."    "
 	if isTable(o) then
 		local s = "{".."\n"
+
+		if type(o) ~= "table" then
+			s = type(o)..s
+		end
+
 		local first = true
+		local count = 1
+
 		forEachOrderedElement(o, function(k, v)
+			if k == "parent" then v = type(v) end
+
 			if first == false then s = s .. ", \n" end
 
 			first = false
@@ -1475,7 +1536,7 @@ function vardump(o, indent)
 			s = s..indent2
 			if type(k) == "string" then
 				local char = string.sub(k, 1, 1)
-				if string.match(k, "%w+") == k and string.match(char, "%a") == char then
+				if string.match(k, "[%w_]+") == k and string.match(char, "%a") == char then
 					s = s..tostring(k).." = "..vardump(v, indent2)
 				else
 					s = s.."[\""..tostring(k).."\"] = "..vardump(v, indent2)
@@ -1483,7 +1544,13 @@ function vardump(o, indent)
 			elseif type(k) == "boolean" then
 				s = s.."["..tostring(k).."] = "..vardump(v, indent2)
 			elseif type(k) == "number" then
-				s = s.."["..k.."] = "..vardump(v, indent2)
+				if k ~= count then
+					s = s.."["..k.."] = "
+				else
+					count = count + 1
+				end
+
+				s = s..vardump(v, indent2)
 			else
 				customError("Function vardump cannot handle an index of type "..type(k)..".")
 			end

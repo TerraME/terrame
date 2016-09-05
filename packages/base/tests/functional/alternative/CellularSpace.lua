@@ -269,7 +269,7 @@ return{
 		local layer = terralib.Layer{
 			project = project,
 			name = "sampa_layer",
-			file = filePath("sampa.shp", "terralib"),
+			file = filePath("test/sampa.shp", "terralib"),
 		}
 
 		local projAndLayerExists = function()

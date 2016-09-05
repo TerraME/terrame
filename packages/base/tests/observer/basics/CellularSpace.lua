@@ -166,7 +166,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}		
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
@@ -231,7 +231,7 @@ return{
 
 		cs:notify()
     
-		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.23)
+		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.25)
 		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
 		-- unitTest:assertFile(projName) -- SKIP #1301
 		File(projName):delete() -- #1301

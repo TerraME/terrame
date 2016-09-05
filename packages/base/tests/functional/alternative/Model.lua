@@ -399,7 +399,7 @@ return{
 		unitTest:assertError(error_func, "No file extension for parameter 'file1'. It should be one of '*.csv'.")
 
 		error_func = function()
-			M{file1 = filePath("brazil.gal", "base")}
+			M{file1 = filePath("test/brazil.gal", "base")}
 		end
 		unitTest:assertError(error_func, "Invalid file extension for parameter 'file1'. It should be one of '*.csv'.")
 
@@ -439,7 +439,7 @@ return{
 		unitTest:assertError(error_func, "No file extension for parameter 'files.file1'. It should be one of '*.csv'.")
 
 		error_func = function()
-			M{files = {file1 = filePath("brazil.gal", "base")}}
+			M{files = {file1 = filePath("test/brazil.gal", "base")}}
 		end
 		unitTest:assertError(error_func, "Invalid file extension for parameter 'files.file1'. It should be one of '*.csv'.")
 

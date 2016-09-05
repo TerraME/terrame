@@ -159,7 +159,7 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
 
 		local s = sessionInfo().separator
-		file = File(filePath("error"..s.."csv-error.csv"))
+		file = File(filePath("test/error"..s.."csv-error.csv"))
 
 		error_func = function()
 			file:read()

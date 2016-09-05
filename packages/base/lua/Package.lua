@@ -48,8 +48,18 @@ function filePath(filename, package)
 			end
 		end
 
-		local suggest = suggestion(filename, Directory(packageInfo(package).data):list())
-		msg = msg..suggestionMsg(suggest)
+		local suggest = suggestion(filename, Directory(packageInfo(package).data):list()) -- suggestion must include subdirs
+		local suggestMsg = suggestionMsg(suggest)
+
+		if string.find(filename, "/", 1) then	
+			local fn = File(filename):getNameWithExtension()
+			if not string.find(suggestMsg, fn, 1) then
+				customError(msg)	
+			end
+		end
+
+		msg = msg..suggestMsg
+
 		customError(msg)
 	end
 end

@@ -99,7 +99,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
@@ -200,7 +200,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.geojson", "terralib")
+			file = filePath("test/sampa.geojson", "terralib")
 		}
 
 		cs = CellularSpace{
@@ -1442,7 +1442,7 @@ ydim    number [20]
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}	
 
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())

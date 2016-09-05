@@ -25,7 +25,11 @@
 return{
 	CellularSpace = function(unitTest)
 		local cs = CellularSpace{
-			file = filePath("cabecadeboi.shp")
+			file = filePath("cabecadeboi.shp"),
+			xy = {"Col", "Lin"},
+			as = {
+				height = "height_"
+			}
 		}
 
 		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
@@ -36,8 +40,10 @@ return{
 			unitTest:assertType(cell.object_id0, "string")
 			unitTest:assertType(cell.x, "number")
 			unitTest:assertType(cell.y, "number")
-			unitTest:assertNotNil(cell.height_)
+			unitTest:assertNotNil(cell.height)
+			unitTest:assertNil(cell.height_)
 			unitTest:assertNotNil(cell.soilWater)
+			unitTest:assertNil(cell.geom)
 		end
 
 		local cell = cs:get(0, 0)
@@ -76,6 +82,22 @@ return{
 		cell = cs.cells[101]
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(99, cell.y)
+
+		cs = CellularSpace{
+			file = filePath("cabecadeboi.shp"),
+			xy = function(mcell)
+				return mcell.Col, mcell.Lin
+			end
+		}
+
+		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
+		unitTest:assertEquals(10201, #cs.cells)
+
+		for _ = 1, 5 do
+			local mcell = cs:sample()
+			unitTest:assertEquals(mcell.x, mcell.Col)
+			unitTest:assertEquals(mcell.y, mcell.Lin)
+		end
 
 		-- shp file
 		cs = CellularSpace{file = filePath("brazilstates.shp", "base")}
@@ -121,7 +143,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local clName1 = "Sampa_Cells_DB"
@@ -196,7 +218,7 @@ return{
 		unitTest:assertEquals(#cs, 100)
 		
 		-- csv file
-		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), sep = ";"}
+		cs = CellularSpace{file = filePath("test/simple-cs.csv", "base"), sep = ";"}
 
 		unitTest:assertType(cs, "CellularSpace")
 		unitTest:assertEquals(400, #cs)
@@ -207,7 +229,8 @@ return{
 	end,
 	loadNeighborhood = function(unitTest)
 		local cs1 = CellularSpace{
-			file = filePath("cabecadeboi900.shp", "base")	
+			file = filePath("cabecadeboi900.shp", "base"),
+			xy = {"Col", "Lin"}
 		}
 
 		local cs2 = CellularSpace{
@@ -215,7 +238,8 @@ return{
 		}
 
 		local cs3 = CellularSpace{
-			file = filePath("emas.shp", "base")
+			file = filePath("emas.shp", "base"),
+			xy = {"Col", "Lin"},
 		}
 
 		unitTest:assertType(cs1, "CellularSpace")
@@ -336,7 +360,7 @@ return{
 		countTest = countTest + 1
 
 		cs3:loadNeighborhood{
-			source = filePath("gpmdistanceDbEmasCells.gpm", "base"),
+			source = filePath("test/gpmdistanceDbEmasCells.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -386,7 +410,7 @@ return{
 		countTest = countTest + 1
 
 		cs2:loadNeighborhood{
-			source = filePath("emas-distance.gpm", "base"),
+			source = filePath("test/emas-distance.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -432,7 +456,7 @@ return{
 		countTest = countTest + 1
  
 		cs1:loadNeighborhood{
-			source = filePath("cabecadeboi-neigh.gal", "base"),
+			source = filePath("test/cabecadeboi-neigh.gal", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -481,7 +505,7 @@ return{
 		countTest = countTest + 1
 
 		cs2:loadNeighborhood{
-			source = filePath("emas-distance.gal", "base"),
+			source = filePath("test/emas-distance.gal", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -517,7 +541,7 @@ return{
 		countTest = countTest + 1
 
 		cs1:loadNeighborhood{
-			source = filePath("cabecadeboi-neigh.gwt", "base"),
+			source = filePath("test/cabecadeboi-neigh.gwt", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -573,7 +597,7 @@ return{
 		countTest = countTest + 1
 
 		cs2:loadNeighborhood{
-			source = filePath("emas-distance.gwt", "base"),
+			source = filePath("test/emas-distance.gwt", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -622,7 +646,7 @@ return{
 		}
 
 		cs:loadNeighborhood{
-			source = filePath("brazil.gal", "base"),
+			source = filePath("test/brazil.gal", "base"),
 			check = false
 		}
 
@@ -650,7 +674,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local clName1 = "Sampa_Cells_DB"
@@ -842,7 +866,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local cs = CellularSpace{

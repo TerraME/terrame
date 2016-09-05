@@ -26,44 +26,44 @@
 
 -- TODO(#1326)
 
--- import("terralib")
+import("terralib")
 
--- local projName = "fillCellExample.tview"
+local projName = "fillCellExample.tview"
 
--- local project = Project{
-	-- file = projName,
-	-- clean = true,
-	-- author = "Avancini",
-	-- title = "FillCell Example"
--- }
+local project = Project{
+	file = projName,
+	clean = true,
+	author = "Avancini",
+	title = "FillCell Example"
+}
 
--- local polygons = "Setores"
--- Layer{
-	-- project = project,
-	-- name = polygons,
-	-- file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
--- }
+local polygons = "Setores"
+Layer{
+	project = project,
+	name = polygons,
+	file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+}
 	
--- local points = "Localidades"
--- Layer{
-	-- project = project,
-	-- name = points,
-	-- file = filePath("Localidades_pt.shp", "terralib")	
--- }
+local points = "Localidades"
+Layer{
+	project = project,
+	name = points,
+	file = filePath("Localidades_pt.shp", "terralib")	
+}
 
--- local lines = "Rodovias"
--- Layer{
-	-- project = project,
-	-- name = lines,
-	-- file = filePath("Rodovias_lin.shp", "terralib")	
--- }
+local lines = "Rodovias"
+Layer{
+	project = project,
+	name = lines,
+	file = filePath("Rodovias_lin.shp", "terralib")	
+}
 
--- local tif = "Desmatamento"
--- Layer{
-	-- project = project,
-	-- name = tif,
-	-- file = filePath("Desmatamento_2000.tif", "terralib")		
--- }
+local tif = "Desmatamento"
+Layer{
+	project = project,
+	name = tif,
+	file = filePath("Desmatamento_2000.tif", "terralib")		
+}
 
 -- local host = "localhost"
 -- local port = "5432"

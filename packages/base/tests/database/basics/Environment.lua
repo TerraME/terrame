@@ -29,11 +29,12 @@ return{
 		}
 
 		local cs2 = CellularSpace{
-			file = filePath("emas.shp")
+			file = filePath("emas.shp"),
+			xy = {"Col", "Lin"}
 		}
 
 		local cs3 = CellularSpace{
-			file = filePath("Limit_pol.shp")
+			file = filePath("test/Limit_pol.shp")
 		}
 
 		unitTest:assertEquals(208, #cs)
@@ -95,7 +96,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = filePath("gpmAreaCellsPols.gpm", "base"),
+			source = filePath("test/gpmAreaCellsPols.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -130,7 +131,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = filePath("gpmAreaCellsPols.gpm", "base"),
+			source = filePath("test/gpmAreaCellsPols.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -163,7 +164,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = filePath("gpmAreaCellsPols.gpm", "base"),
+			source = filePath("test/gpmAreaCellsPols.gpm", "base"),
 			name = "my_neighborhood"..countTest,
 			bidirect = true
 		}
@@ -225,7 +226,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = filePath("emas-pollin.gpm", "base"),
+			source = filePath("test/emas-pollin.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -252,7 +253,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = filePath("emas-pollin.gpm", "base"),
+			source = filePath("test/emas-pollin.gpm", "base"),
 			name = "my_neighborhood"..countTest,
 			bidirect = true
 		}

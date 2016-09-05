@@ -176,6 +176,11 @@ return {
 		local ag1 = Agent{pl = 2}
 		
 		local error_func = function()
+			ag1:getCell()
+		end
+		unitTest:assertError(error_func, "Default placement does not exist. Please call 'Environment:createPlacement' first.")
+
+		error_func = function()
 			ag1:getCell("pl")
 		end
 		unitTest:assertError(error_func, "Placement 'pl' should be a Trajectory, got number.")
@@ -464,14 +469,29 @@ return {
 		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
+		local error_func = function()
+			ag1:walk()
+		end
+		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call 'Environment:createPlacement' first.")
+
+		error_func = function()
+			ag1:walk("placement2")
+		end
+		unitTest:assertError(error_func, valueNotFoundMsg(1, "placement2"))
+
 		myEnv:createPlacement{strategy = "void"}
 		local c1 = cs.cells[1]
 		ag1:enter(c1)
 
-		local error_func = function()
+		error_func = function()
 			ag1:walk()
 		end
-		unitTest:assertError(error_func, valueNotFoundMsg(2, "1"))
+		unitTest:assertError(error_func, "The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
+
+		error_func = function()
+			ag1:walk("placement", "2")
+		end
+		unitTest:assertError(error_func, "Neighborhood '2' does not exist.")
 
 		error_func = function()
 			ag1 = Agent{}

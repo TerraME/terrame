@@ -29,12 +29,10 @@ agent = Agent{
 		end
 	end,
 	isUnhappy = function(agent)
-		local mycell = agent:getCell()
 		local likeme = 0
 
-		forEachNeighbor(mycell, function(_, neigh)
-			local other = neigh:getAgent()
-			if other and other.color == agent.color then
+		forEachNeighborAgent(agent, function(other)
+			if other.color == agent.color then
 				likeme = likeme + 1
 			end
 		end)
