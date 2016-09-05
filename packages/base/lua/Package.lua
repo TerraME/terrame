@@ -34,7 +34,7 @@ function filePath(filename, package)
 
 	local s = sessionInfo().separator
 	local file = packageInfo(package).data..s..filename
-	if File(file):exists() or isDir(file) then
+	if File(file):exists() or Directory(file):exists() then
 		return file
 	else
 		local msg = "File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'."
@@ -48,7 +48,7 @@ function filePath(filename, package)
 			end
 		end
 
-		local suggest = suggestion(filename, dir(packageInfo(package).data))
+		local suggest = suggestion(filename, Directory(packageInfo(package).data):list())
 		msg = msg..suggestionMsg(suggest)
 		customError(msg)
 	end
@@ -99,7 +99,7 @@ function import(package, reload)
 		_Gtme.verifyDepends(package)
 
 		local load_file = package_path..s.."load.lua"
-		local all_files = dir(package_path..s.."lua")
+		local all_files = Directory(package_path..s.."lua"):list()
 		local load_sequence
 
 		if File(load_file):exists() then -- SKIP
@@ -207,7 +207,7 @@ function getPackage(pname)
 	_Gtme.verifyDepends(pname)
 
 	local load_file = pname_path..s.."load.lua"
-	local all_files = dir(pname_path..s.."lua")
+	local all_files = Directory(pname_path..s.."lua"):list()
 	local load_sequence
 
 	if File(load_file):exists() then -- SKIP
@@ -322,8 +322,8 @@ function packageInfo(package)
 
 	local s = sessionInfo().separator
 	local pkgdirectory = sessionInfo().path..s.."packages"..s..package
-	if not isDir(pkgdirectory) then
-		if isDir(package) then
+	if not Directory(pkgdirectory):exists() then
+		if Directory(package):exists() then
 			pkgdirectory = package -- SKIP
 		else
 			customError("Package '"..package.."' is not installed.")

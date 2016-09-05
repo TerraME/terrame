@@ -25,92 +25,15 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	chDir = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
-		local cur_dir = currentDir()
-		chDir(info.path..s.."packages")
-		unitTest:assertEquals(currentDir(), info.path..s.."packages")
-		chDir(cur_dir)
-	end, 
 	currentDir = function(unitTest)
 		local info = sessionInfo()
 		local cur_dir = currentDir()
-		chDir(info.path)
+		Directory(info.path):setCurrentDir()
 		unitTest:assertEquals(currentDir(), info.path)
-		chDir(cur_dir)
-	end,
-	dir = function(unitTest)
-		local files = 43
-
-		local d = dir(packageInfo().data)
-		unitTest:assertEquals(#d, files)
-
-		d = dir(packageInfo().data, true)
-		unitTest:assertEquals(#d, files + 2)
-
-		local curDir = currentDir()
-		chDir(packageInfo().data)
-
-		d = dir(".")
-		unitTest:assertEquals(#d, files)
-
-		d = dir(".", true)
-		unitTest:assertEquals(#d, files + 2)
-
-		d = dir()
-		unitTest:assertEquals(#d, files)
-
-		d = dir(nil, true)
-		unitTest:assertEquals(#d, files + 2)
-
-		chDir(curDir)
-	end,
-	isDir = function(unitTest)
-		unitTest:assert(isDir(sessionInfo().path))
-		
-		local path = _Gtme.makePathCompatibleToAllOS(sessionInfo().path)
-		path = path.."/"
-		unitTest:assert(isDir(path))
-		
-        unitTest:assertEquals(isDir(""), false);
-        
-        unitTest:assert(not isDir(filePath("agents.csv")))	
+		Directory(cur_dir):setCurrentDir()
 	end,
 	isWindowsOS = function(unitTest)
 		unitTest:assert(true)
-	end,
-	lockDir = function(unitTest)
-		local pathdata = packageInfo().data
-
-		mkDir(pathdata.."test")
-
-		local f = lockDir(pathdata.."test")
-		unitTest:assertNotNil(f)
-
-		rmDir(pathdata.."test")
-	end,
-	mkDir = function(unitTest)
-		local pathdata = packageInfo().data
-
-		unitTest:assert(mkDir(pathdata.."test"))
-
-		local attr = _Gtme.File(pathdata.."test"):attributes("mode")
-		unitTest:assertEquals(attr, "directory")
-
-		rmDir(pathdata.."test")
-	end,
-	rmDir = function(unitTest)
-		local pathdata = packageInfo().data
-
-		unitTest:assert(mkDir(pathdata.."test"))
-
-		local attr = _Gtme.File(pathdata.."test"):attributes("mode")
-		unitTest:assertEquals(attr, "directory")
-
-		rmDir(pathdata.."test")
-
-		unitTest:assert(not isDir(pathdata.."test"))
 	end,
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)
@@ -129,22 +52,22 @@ return{
 
 		unitTest:assertEquals(f, g)
 		unitTest:assertType(f, "string")
-		unitTest:assert(isDir(f))
+		unitTest:assert(Directory(f):exists())
 
-		rmDir(g)
+		Directory(g):delete()
 		g = tmpDir()
 
 		unitTest:assertEquals(f, g)
 		unitTest:assertType(f, "string")
-		unitTest:assert(isDir(f))
+		unitTest:assert(Directory(f):exists())
 
 		g = tmpDir("abc123XXXXX")
 
-		unitTest:assert(isDir(g))
+		unitTest:assert(Directory(g):exists())
 		unitTest:assertEquals(string.len(g), 11)
 		unitTest:assertType(g, "string")
 
-		rmDir(g)
+		Directory(g):delete()
 	end
 }
 

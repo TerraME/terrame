@@ -307,7 +307,7 @@ return{
 			unitTest:assertEquals(count, 43) -- SKIP
 
 			local count2 = 0
-			forEachFile(dir(filePath("", "base"), true), function()
+			forEachFile(Directory(filePath("", "base")):list(true), function()
 				count2 = count2 + 1
 			end)
 

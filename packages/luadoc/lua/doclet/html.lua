@@ -14,7 +14,7 @@
 
 local assert,  ipairs, tostring, tonumber, type = assert, ipairs, tostring, tonumber, type
 local io, pairs, os = io, pairs, os
-local string, mkDir = string, mkDir
+local string, mkDir = string, function(path) return Directory(path):create() end
 local table = table
 local print = print
 local printNote, printError, getn, belong = _Gtme.printNote, _Gtme.printError, getn, belong

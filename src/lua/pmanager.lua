@@ -108,7 +108,7 @@ local function buildComboboxPackages(default)
 	local index = 0
 	local pkgDir = sessionInfo().path..s.."packages"
 	forEachFile(pkgDir, function(file)
-		if file == "luadoc" or not isDir(pkgDir..s..file) then return end
+		if file == "luadoc" or not Directory(pkgDir..s..file):exists() then return end
 	
 		qt.combobox_add_item(comboboxPackages, file)
 	
@@ -299,7 +299,7 @@ local function installButtonClicked()
 		local tmpdirectory = tmpDir()
 		local cdir = currentDir()
 
-		_Gtme.chDir(tmpdirectory)
+		_Gtme.Directory(tmpdirectory):setCurrentDir()
 
 		local mpkgfile = pkgsTab[listPackages.currentRow].file
 		local installed = {}
@@ -378,8 +378,8 @@ local function installButtonClicked()
 
 		File(mpkgfile):delete()
 
-		_Gtme.chDir(cdir)
-		rmDir(tmpdirectory)
+		_Gtme.Directory(cdir):setCurrentDir()
+		Directory(tmpdirectory):delete()
 		mdialog:done(0)
 	end)
 
@@ -479,7 +479,7 @@ local function installLocalButtonClicked()
 
 	local currentVersion
 	local packageDir = _Gtme.sessionInfo().path..s.."packages"
-	if isDir(packageDir..s..package) then
+	if Directory(packageDir..s..package):exists() then
 		currentVersion = packageInfo(package).version
 		_Gtme.printNote("Package '"..package.."' is already installed")
 	else
@@ -489,7 +489,7 @@ local function installLocalButtonClicked()
 	local tmpdirectory = tmpDir()
 
 	os.execute("cp \""..file.."\" \""..tmpdirectory.."\"")
-	_Gtme.chDir(tmpdirectory)
+	_Gtme.Directory(tmpdirectory):setCurrentDir()
 
 	os.execute("unzip -oq \""..file.."\"")
 
@@ -505,9 +505,9 @@ local function installLocalButtonClicked()
 
 			if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
 				_Gtme.printNote("Removing previous version of package")
-				rmDir(packageDir..s..package)
+				Directory(packageDir..s..package):delete()
 			else
-				rmDir(tmpdirectory)
+				Directory(tmpdirectory):delete()
 				enableAll()
 				return
 			end
@@ -521,7 +521,7 @@ local function installLocalButtonClicked()
 	if pkg then
 		local ok = true
 		xpcall(function() getPackage(package) end, function(err)
-			rmDir(packageInfo(package).path)
+			Directory(packageInfo(package).path):delete()
 			qt.dialog.msg_critical(err)
 			ok = false
 		end)

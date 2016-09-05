@@ -29,12 +29,12 @@ return{
 
 		local cd = currentDir()
 
-		chDir(packageInfo().data)
+		Directory(packageInfo().data):setCurrentDir()
 
 		local cf2 = getConfig()
 		unitTest:assertEquals(cf, cf2)
 
-		chDir(cd)
+		Directory(cd):setCurrentDir()
 	end,
 	["table.load"] = function(unitTest)
 		local filename = "dump.lua"

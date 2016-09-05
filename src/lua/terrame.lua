@@ -114,11 +114,11 @@ function _Gtme.fontFiles(package)
 	local s = sessionInfo().separator
 	local fontpath = packageInfo(package).path..s.."font"
 
-	if not isDir(fontpath) then
+	if not Directory(fontpath):exists() then
 		return {}
 	end
 
-	local files = dir(fontpath)
+	local files = Directory(fontpath):list()
 	local result = {}
 
 	forEachElement(files, function(_, fname)
@@ -267,7 +267,7 @@ function _Gtme.projectFiles(package)
 	local files = {}
 	local data_path = _Gtme.packageInfo(package).data
 
-	if not isDir(data_path) then return files end
+	if not Directory(data_path):exists() then return files end
 
 	forEachFile(data_path, function(file)
 		if string.endswith(file, ".lua") then
@@ -502,9 +502,9 @@ function _Gtme.uninstall(package)
 
 	local arg = si.path..s.."packages"..s..package
 
-	if isDir(arg) then
-		rmDir(arg)
-		if isDir(arg) then
+	if Directory(arg):exists() then
+		Directory(arg):delete()
+		if Directory(arg):exists() then
 			_Gtme.print("Package \'"..package.."\' could not be uninstalled (wrong permission).")
 		else
 			_Gtme.print("Package \'"..package.."\' was successfully uninstalled.")
@@ -611,7 +611,7 @@ function _Gtme.installPackage(file)
 	end
 
 	local currentVersion
-	if isDir(packageDir..s..package) then
+	if Directory(packageDir..s..package):exists() then
 		currentVersion = packageInfo(package).version
 		_Gtme.print("Package '"..package.."' is already installed.")
 	else
@@ -621,7 +621,7 @@ function _Gtme.installPackage(file)
 	local tmpdirectory = tmpDir(".terrametmp_XXXXX")
 
 	os.execute("cp \""..file.."\" \""..tmpdirectory.."\"")
-	_Gtme.chDir(tmpdirectory)
+	_Gtme.Directory(tmpdirectory):setCurrentDir()
 
 	os.execute("unzip -oq \""..file.."\"")
 
@@ -639,7 +639,7 @@ function _Gtme.installPackage(file)
 			os.exit(1)
 		else
 			_Gtme.print("Removing previous version of package.")
-			rmDir(packageDir..s..package)
+			Directory(packageDir..s..package):delete()
 		end
 	end
 
@@ -647,16 +647,16 @@ function _Gtme.installPackage(file)
 	local status, err = pcall(function() import(package) end)
 
 	if not status then
-		rmDir(tmpdirectory)
+		Directory(tmpdirectory):delete()
 		_Gtme.customError(err)
 	end
 
 	_Gtme.print("Installing package '"..package.."'.")
 	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")
 
-	chDir(currentDir)
+	Directory(currentDir):setCurrentDir()
 
-	rmDir(tmpdirectory)
+	Directory(tmpdirectory):delete()
 	_Gtme.print("Package '"..package.."' successfully installed.")
 	return package
 end
@@ -945,16 +945,16 @@ end
 local function loadPackgesLibPath()
 	local tmePath = os.getenv("TME_PATH")
 	local packsPath = tmePath.."/packages"
-	local files = dir(packsPath)
+	local files = Directory(packsPath):list()
 	
 	forEachFile(files, function(file)
-		if isDir(packsPath.."/"..file) then
+		if Directory(packsPath.."/"..file):exists() then
 			local packPath = packsPath.."/"..file
-			local packDirs = dir(packPath)
+			local packDirs = Directory(packPath):list()
 			forEachFile(packDirs, function(d)
 				if d == "lib"  then
 					packLibPath = packPath.."/"..d
-					if isDir(packLibPath) then
+					if Directory(packLibPath):exists() then
 						cpp_putenv(packLibPath)
 						package.cpath = package.cpath..";"..packLibPath.."/?.dll"
 													..";"..packLibPath.."/?.so"
@@ -1185,6 +1185,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	local path = info_.path..s.."packages"..s.."base"..s.."lua"..s
 	dofile(path.."ErrorHandling.lua", _Gtme)
 	dofile(path.."File.lua", _Gtme)
+	dofile(path.."Directory.lua", _Gtme)
 	dofile(path.."Package.lua", _Gtme)
 	dofile(path.."OS.lua", _Gtme)
 	dofile(path.."Utils.lua", _Gtme)
@@ -1537,7 +1538,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end)
 			end
 
-			if isDir(arg) then
+			if Directory(arg):exists() then
 				_Gtme.printError("Argument '"..arg.."' is a directory, and not a Lua file.")
 				os.exit(1)
 			elseif not File(arg):exists() then
@@ -1557,7 +1558,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	end
 
 	if rawget(_Gtme, "tmpdirectory__") then
-		rmDir(_Gtme.tmpdirectory__)
+		Directory(_Gtme.tmpdirectory__):delete()
 	end
 
 --    if _Gtme.isWindowsOS() then
