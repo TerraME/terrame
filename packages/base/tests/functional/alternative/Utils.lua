@@ -273,14 +273,14 @@ return{
 		local env = Environment{cs, predators = predators}
 		env:createPlacement{}
 
-		local error_func = function()
+		error_func = function()
 			forEachNeighborAgent(predators:sample(), function() end)
 		end
 		unitTest:assertError(error_func, "The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
 
 		cs:createNeighborhood()
 
-		local error_func = function()
+		error_func = function()
 			forEachNeighborAgent(nil, function() end)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent"))
