@@ -11,10 +11,7 @@ predator = Agent{
 	energy = 40,
 	name = "predator",
 	execute = function(self)
-		forEachNeighbor(self:getCell(), function(_, neigh)
-			other = neigh:getAgent()
-			if not other then return end
-
+		forEachNeighborAgent(self, function(other)
 			if other.name == "prey" and Random():number() < 0.5 then
 				self.energy = self.energy + other.energy / 5
 				other:die()

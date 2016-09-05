@@ -176,6 +176,11 @@ return {
 		local ag1 = Agent{pl = 2}
 		
 		local error_func = function()
+			ag1:getCell()
+		end
+		unitTest:assertError(error_func, "Default placement does not exist. Please call 'Environment:createPlacement' first.")
+
+		error_func = function()
 			ag1:getCell("pl")
 		end
 		unitTest:assertError(error_func, "Placement 'pl' should be a Trajectory, got number.")
@@ -486,8 +491,7 @@ return {
 		error_func = function()
 			ag1:walk("placement", "2")
 		end
-		unitTest:assertError(error_func, valueNotFoundMsg(2, "2"))
-
+		unitTest:assertError(error_func, "Neighborhood '2' does not exist.")
 
 		error_func = function()
 			ag1 = Agent{}

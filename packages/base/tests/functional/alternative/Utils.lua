@@ -248,6 +248,48 @@ return{
 		end
 		unitTest:assertError(error_func, "Neighborhood '2' does not exist.")
 	end,
+	forEachNeighborAgent = function(unitTest)
+		Random():reSeed(12345)
+		local predator = Agent{
+			energy = 40,
+			name = "predator",
+			execute = function(self)
+				self:move(self:getCell():getNeighborhood():sample())
+			end
+		}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 20
+		}
+
+		local error_func = function()
+			forEachNeighborAgent(predators:sample(), function() end)
+		end
+		unitTest:assertError(error_func, "Default placement does not exist. Please call 'Environment:createPlacement' first.")
+
+		local cs = CellularSpace{xdim = 5}
+
+		local env = Environment{cs, predators = predators}
+		env:createPlacement{}
+
+		local error_func = function()
+			forEachNeighborAgent(predators:sample(), function() end)
+		end
+		unitTest:assertError(error_func, "The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
+
+		cs:createNeighborhood()
+
+		local error_func = function()
+			forEachNeighborAgent(nil, function() end)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent"))
+
+		error_func = function()
+			forEachNeighborAgent(predators:sample())
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
+	end,
 	forEachNeighborhood = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 

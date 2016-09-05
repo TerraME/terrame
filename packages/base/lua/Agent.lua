@@ -205,7 +205,12 @@ Agent_ = {
 		if placement == nil then placement = "placement" end
 
 		if type(self[placement]) ~= "Trajectory" then
-			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
+			if self[placement] == nil then
+				customError("Default placement does not exist. Please call 'Environment:createPlacement' first.")
+			else
+				customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
+
+			end
 		end
 		return self[placement].cells[1]
 	end,
@@ -647,15 +652,15 @@ Agent_ = {
 		end
 
 		local c1 = self:getCell(placement)
-		local c2 = c1:getNeighborhood(neighborhood)
-		if c2 == nil then
+		local neigh = c1:getNeighborhood(neighborhood)
+		if neigh == nil then
 			if neighborhood == "1" then
 				customError("The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
 			else
-				valueNotFoundError(2, neighborhood)
+				customError("Neighborhood '"..neighborhood.."' does not exist.")
 			end
 		end
-		self:move(c2:sample(), placement)
+		self:move(neigh:sample(), placement)
 	end
 }
 

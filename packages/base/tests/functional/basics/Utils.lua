@@ -392,6 +392,29 @@ return{
 		unitTest:assert(not r)
 		unitTest:assertEquals(count, 2)
 	end,
+	forEachNeighborAgent = function(unitTest)
+		Random():reSeed(12345)
+		local predator = Agent{}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 20
+		}
+
+		local cs = CellularSpace{xdim = 5}
+
+		local env = Environment{cs, predators = predators}
+		env:createPlacement{}
+		cs:createNeighborhood()
+
+		local count = 0
+
+		forEachNeighborAgent(predators:sample(), function()
+			count = count + 1
+		end)
+
+		unitTest:assertEquals(count, 4)
+	end,
 	forEachNeighborhood = function(unitTest)
 		local c1 = Cell{}
 		local c2 = Cell{}
