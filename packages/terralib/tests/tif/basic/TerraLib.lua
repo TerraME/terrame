@@ -37,7 +37,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName = "TifLayer"
-		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		tl:addGdalLayer(proj, layerName, layerFile)
 		
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
@@ -181,7 +181,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName = "TifLayer"
-		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		tl:addGdalLayer(proj, layerName, layerFile)
 		
 		local numBands = tl:getNumOfBands(proj, layerName)
@@ -288,7 +288,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName = "TifLayer"
-		local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
+		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		tl:addGdalLayer(proj, layerName, layerFile)
 		
 		local dummy = tl:getDummyValue(proj, layerName, 0)
@@ -301,7 +301,7 @@ return {
 		unitTest:assertEquals(tostring(dummy), tostring(1.7976931348623e+308))	
 
 		local layerName2 = "ShapeLayer"
-		local layerFile2 = filePath("sampa.shp", "terralib")
+		local layerFile2 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName2, layerFile2)	
 		
 		dummy = tl:getDummyValue(proj, layerName2, 0)
@@ -323,7 +323,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "TifLayer"
-		local layerFile1 = filePath("cbers_rgb342_crop1.tif", "terralib")
+		local layerFile1 = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		tl:addGdalLayer(proj, layerName1, layerFile1)	
 		
 		local customWarningBkp = customWarning 

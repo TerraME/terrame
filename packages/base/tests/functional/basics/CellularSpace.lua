@@ -88,13 +88,18 @@ return{
 			author = author,
 			title = title
 		}
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end				
 
 		local layerName1 = "Sampa"
 
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
@@ -195,7 +200,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.geojson", "terralib")
+			file = filePath("test/sampa.geojson", "terralib")
 		}
 
 		cs = CellularSpace{
@@ -408,6 +413,8 @@ return{
 			if isFile(projName) then rmFile(projName) end
 
 		end
+		
+		customWarning = customWarningBkp
 	end, 
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -1435,7 +1442,7 @@ ydim    number [20]
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}	
 
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())

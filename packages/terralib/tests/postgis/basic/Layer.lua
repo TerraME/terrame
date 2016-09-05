@@ -24,7 +24,7 @@
 
 return {
 	Layer = function(unitTest)
-		local projName = "sampa_basic.tview"
+		local projName = "layer_postgis_basic.tview"
 
 		local proj1 = Project{
 			file = projName,
@@ -36,7 +36,7 @@ return {
 		local layer1 = Layer{
 			project = proj1,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		unitTest:assertEquals(layer1.name, layerName1)	
@@ -136,7 +136,7 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}	
 		
 		local clName1 = "Sampa_Cells"

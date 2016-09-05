@@ -120,19 +120,24 @@ return {
 			file = projName,
 			clean = true
 		}
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end				
 
 		local layerName1 = "limitepa"
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("limitePA_polyc_pol.shp", "terralib")
+			file = filePath("test/limitePA_polyc_pol.shp", "terralib")
 		}
 
 		local prodes = "prodes"
 		Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("prodes_polyc_10k.tif", "terralib")	
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")	
 		}
 		
 		local clName1 = "CellsTif"
@@ -392,6 +397,8 @@ return {
 
 		-- unitTest:assertFile(projName) -- SKIP #1301
 		rmFile(projName) -- #1301
+		
+		customWarning = customWarningBkp
 	end,
 	representation = function(unitTest)
 		local projName = "layer_fill_tiff_repr.tview"
@@ -400,18 +407,25 @@ return {
 			file = projName,
 			clean = true
 		}
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end			
 
 		local prodes = "prodes"
 		local l = Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("prodes_polyc_10k.tif", "terralib")	
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")	
 		}
 
 		unitTest:assertEquals(l:representation(), "raster") 
 		
 		-- unitTest:assertFile(projName) -- SKIP #1301
 		rmFile(projName) -- #1301
+		
+		customWarning = customWarningBkp
 	end,
 	bands = function(unitTest)
 		local projName = "layer_tif_bands.tview"
@@ -424,17 +438,24 @@ return {
 			file = projName,
 			clean = true
 		}
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end			
 
 		local prodes = "prodes"
 		local l = Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("prodes_polyc_10k.tif", "terralib")	
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")	
 		}
 
 		unitTest:assertEquals(l:bands(), 4)
 		
 		rmFile(projName)
+		
+		customWarning = customWarningBkp
 	end,
 	projection = function(unitTest)
 		local projName = "tif_basic.tview"
@@ -490,11 +511,16 @@ return {
 			clean = true
 		}
 
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end			
+		
 		local prodes = "prodes"
 		local l = Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("prodes_polyc_10k.tif", "terralib")	
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")	
 		}
 
 		unitTest:assertEquals(l:dummy(0), 255.0)
@@ -512,6 +538,8 @@ return {
 		unitTest:assertNil(l:dummy(0))
 		
 		rmFile(projName)	
+		
+		customWarning = customWarningBkp
 	end
 }
 

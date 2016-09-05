@@ -87,18 +87,23 @@ return {
 			clean = true
 		}
 
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end		
+		
 		local layerName1 = "limitepa"
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("limitePA_polyc_pol.shp", "terralib")
+			file = filePath("test/limitePA_polyc_pol.shp", "terralib")
 		}
 
 		local prodes = "prodes"
 		Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("prodes_polyc_10k.tif", "terralib")	
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")	
 		}
 		
 		local clName1 = "cells"
@@ -157,6 +162,8 @@ return {
 		if isFile(shp1) then
 			rmFile(shp1)
 		end
+		
+		customWarning = customWarningBkp		
 	end,
 	dummy = function(unitTest)
 		local projName = "layer_tif_dummy.tview"
@@ -169,20 +176,27 @@ return {
 			file = projName,
 			clean = true
 		}
+		
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end				
 
 		local prodes = "prodes"
 		local bandNoExists = function()
 			local l = Layer{
 				project = proj,
 				name = prodes,
-				file = filePath("prodes_polyc_10k.tif", "terralib")	
+				file = filePath("test/prodes_polyc_10k.tif", "terralib")	
 			}
 			
 			l:dummy(4)
 		end
 		unitTest:assertError(bandNoExists, "The maximum band is '3.0'.")
 		
-		rmFile(projName)		
+		rmFile(projName)	
+
+		customWarning = customWarningBkp
 	end
 }
 

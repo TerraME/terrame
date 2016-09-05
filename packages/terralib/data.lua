@@ -1,88 +1,4 @@
 data{
-	file = "sampa.shp",
-	summary = "Sao Paulo data",
-	source = "",
-	attributes = {"ID", "NM_MICRO", "CD_GEOCODU"},
-	description = {"?", "?", "?"},
-}
-
-data{
-	file = "MG_cities.shp",
-	summary = "Cities from Minas Gerais state, in Brazil",
-	source = "IBGE",
-	attributes = {
-		"SPRAREA",
-		"SPRPERIMET",
-		"SPRNOME",
-		"CODMUNIC",
-		"COD",
-		"NOMEMUNI",
-		"NOMEUF",
-		"SPRROTULO",
-		"CODUF",
-		"SIGLAUF",
-		"POPULACA",
-		"POPHOMEN",
-		"POPMULHE",
-		"POPURBAN",
-		"POPRURAL",
-		"REGIAO",
-		"CODMESO",
-		"NOMEMESO",
-		"CODMICRO",
-		"NOMEMICR",
-		"CODUFMES",
-		"CODUFME1",
-		"AREA_97",
-		"LAT1",
-		"LONG1",
-		"LATITUDE",
-		"LONGITUD",
-		"objeid_10",
-		"densidade",
-	},
-	description = {
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-	}
-}
-
-data{
-	file = {"cbers_rgb342_crop1.tif", "cbers_rgb342_crop1.jpg"},
-	summary = "",
-	source = "",
-	attributes = {"0", "1", "2"},
-	description = {"Red color of a LUT table", "Green color of a LUT table", "Blue color of a LUT table"}
-}
-
-data{
 	file = {"Desmatamento_2000.tif", "Desmatamento_2000.xml"},
 	summary = "",
 	source = "",
@@ -233,14 +149,6 @@ data{
 }
 
 data{
-	file = "limitePA_polyc_pol.shp",
-	summary = "",
-	attributes = {"ID", "NOME", "SIGLA", "REGIAO_ID", "CODIGO_IBG", "objet_id_2"},
-	description = {"?", "?", "?", "?", "?", "?"},
-	source = ""
-}
-
-data{
 	file = {"accumulation_Nov94May00.tif", "accumulation_Nov94May00.tif.aux.xml", "accumulation_Nov94May00.xml"},
 	summary = "",
 	source = "",
@@ -373,30 +281,6 @@ data{
 }
 
 data{
-	file = "municipiosAML_ok.shp",
-	summary = "",
-	source = "",
-	attributes = {"ID", "NOMEMICRO", "NOMEUF", "REGIAO", "CODMESO", "NOMEMESO", "CODMICRO", "NOME_1", "NOME_2", "CODIGO_UF", "CODIGO_MUN", "AREA_1997", "doubl", "date_", "COD_MUN", "POPULACAO_"},
-	description = {"?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?"}
-}
-
-data{
-	file = "prodes_points_10km_PA_pt.shp",
-	summary = "",
-	source = "",
-	attributes = {"POINTID", "GRID_CODE"},
-	description = {"?", "?"},
-}
-
-data{
-	file = "prodes_polyc_10k.tif",
-	summary = "",
-	source = "",
-	attributes = {"0", "1", "2", "3"},
-	description = {"?", "?", "?", "?"},
-}
-
-data{
 	file = "River_lin.shp",
 	summary = "",
 	source = "",
@@ -480,15 +364,6 @@ data{
 }
 
 data{
-	file = "biomassa-manaus.asc",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-
-data{
 	file = "Localidades_pt.geojson",
 	summary = "",
 	source = "",
@@ -519,72 +394,3 @@ data{
 		"Unique object identifier"
 	}
 }
-
-data{
-	file = "Rodovias_lin.geojson",
-	summary = "",
-	source = "",
-	attributes = {
-		"LAYER",
-		"FEATURE_ID",
-		"CD_NUMERO_",
-		"CD_ALINHAM",
-		"CD_CLASSE",
-		"CD_PAVIMEN",
-		"CD_TRAFEGO",
-		"CD_SITUACA",
-		"CD_ADMINIS",
-		"NM_RODOVIA",
-		"NM_SIGLA",
-		"PROJECT_ID",
-		"SHAPE_LENG",
-		"SHAPE_LEN",
-		"OBJET_ID_8",
-		"objet_id_9"
-	},
-	description = {
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?",
-		"?"
-	},
-	reference = ""
-}
-
-data{
-	file = "Setores_Censitarios_2000_pol.geojson",
-	summary = "",
-	source = "",
-	attributes = {"SPRAREA", "SPRPERIMET", "SPRROTULO", "Populacao", "objet_id_8", "Densde_Pop", "Area"},
-	description = {"?", "?", "?", "?", "?", "?", "?"}
-}
-
-data{
-	file = "sampa.geojson",
-	summary = "Sao Paulo data",
-	source = "",
-	attributes = {"NM_MICRO", "CD_GEOCODU"},
-	description = {"?", "?"}
-}
-
-data{
-	file = "vegtype_2000.nc",
-	summary = "",
-	source = "",
-	attributes = {},  -- optional
-	description = {}, -- optional
-	reference = ""    -- optional
-}
-

@@ -143,7 +143,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local clName1 = "Sampa_Cells_DB"
@@ -218,7 +218,7 @@ return{
 		unitTest:assertEquals(#cs, 100)
 		
 		-- csv file
-		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), sep = ";"}
+		cs = CellularSpace{file = filePath("test/simple-cs.csv", "base"), sep = ";"}
 
 		unitTest:assertType(cs, "CellularSpace")
 		unitTest:assertEquals(400, #cs)
@@ -360,7 +360,7 @@ return{
 		countTest = countTest + 1
 
 		cs3:loadNeighborhood{
-			source = filePath("gpmdistanceDbEmasCells.gpm", "base"),
+			source = filePath("test/gpmdistanceDbEmasCells.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -410,7 +410,7 @@ return{
 		countTest = countTest + 1
 
 		cs2:loadNeighborhood{
-			source = filePath("emas-distance.gpm", "base"),
+			source = filePath("test/emas-distance.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -456,7 +456,7 @@ return{
 		countTest = countTest + 1
  
 		cs1:loadNeighborhood{
-			source = filePath("cabecadeboi-neigh.gal", "base"),
+			source = filePath("test/cabecadeboi-neigh.gal", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -505,7 +505,7 @@ return{
 		countTest = countTest + 1
 
 		cs2:loadNeighborhood{
-			source = filePath("emas-distance.gal", "base"),
+			source = filePath("test/emas-distance.gal", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -541,7 +541,7 @@ return{
 		countTest = countTest + 1
 
 		cs1:loadNeighborhood{
-			source = filePath("cabecadeboi-neigh.gwt", "base"),
+			source = filePath("test/cabecadeboi-neigh.gwt", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -597,7 +597,7 @@ return{
 		countTest = countTest + 1
 
 		cs2:loadNeighborhood{
-			source = filePath("emas-distance.gwt", "base"),
+			source = filePath("test/emas-distance.gwt", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -646,7 +646,7 @@ return{
 		}
 
 		cs:loadNeighborhood{
-			source = filePath("brazil.gal", "base"),
+			source = filePath("test/brazil.gal", "base"),
 			check = false
 		}
 
@@ -674,7 +674,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local clName1 = "Sampa_Cells_DB"
@@ -866,7 +866,7 @@ return{
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib")
 		}
 
 		local cs = CellularSpace{

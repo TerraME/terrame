@@ -41,7 +41,7 @@ return {
         Layer {
             project = proj,
             name = layerName1,
-            file = filePath("biomassa-manaus.asc", "terralib")
+            file = filePath("test/biomassa-manaus.asc", "terralib")
         }
 
         local filePath1 = "biomassa_cells_asc_basic.shp"
@@ -89,7 +89,7 @@ return {
         local l = Layer {
             project = proj,
             name = vegType,
-            file = filePath("biomassa-manaus.asc", "terralib")
+            file = filePath("test/biomassa-manaus.asc", "terralib")
         }
 
         unitTest:assertEquals(l:representation(), "raster")
@@ -114,7 +114,7 @@ return {
         local l = Layer {
             project = proj,
             name = vegType,
-            file = filePath("biomassa-manaus.asc", "terralib")
+            file = filePath("test/biomassa-manaus.asc", "terralib")
         }
 
         unitTest:assertEquals(l:bands(), 1)
@@ -140,7 +140,7 @@ return {
         local l = Layer {
             project = proj,
             name = layerName1,
-            file = filePath("biomassa-manaus.asc", "terralib")
+            file = filePath("test/biomassa-manaus.asc", "terralib")
         }
 
 		local expected = [[file     string [biomassa-manaus.asc]

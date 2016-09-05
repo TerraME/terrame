@@ -36,13 +36,18 @@ return {
 				file = projName,
 				clean = true
 			}
+			
+			local customWarningBkp = customWarning
+			customWarning = function(msg)
+				return msg
+			end				
 
 			local layerName1 = "Vegtype_layer"
 
 			Layer {
 				project = proj,
 				name = layerName1,
-				file = filePath("vegtype_2000.nc", "terralib")
+				file = filePath("test/vegtype_2000.nc", "terralib")
 			}
 
 			local filePath1 = "vegtype_cells_nc_basic.shp"
@@ -73,6 +78,8 @@ return {
 			if isFile(projName) then
 				rmFile(projName)
 			end
+			
+			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -90,11 +97,16 @@ return {
 				clean = true
 			}
 
+			local customWarningBkp = customWarning
+			customWarning = function(msg)
+				return msg
+			end				
+			
 			local vegType = "Vegtype_layer"
 			local l = Layer {
 				project = proj,
 				name = vegType,
-				file = filePath("vegtype_2000.nc", "terralib")
+				file = filePath("test/vegtype_2000.nc", "terralib")
 			}
 
 			unitTest:assertEquals(l:representation(), "raster") -- SKIP
@@ -102,6 +114,8 @@ return {
 			if isFile(projName) then
 				rmFile(projName)
 			end
+			
+			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -119,11 +133,16 @@ return {
 				clean = true
 			}
 
+			local customWarningBkp = customWarning
+			customWarning = function(msg)
+				return msg
+			end				
+			
 			local vegType = "Vegtype_layer"
 			local l = Layer {
 				project = proj,
 				name = vegType,
-				file = filePath("vegtype_2000.nc", "terralib")
+				file = filePath("test/vegtype_2000.nc", "terralib")
 			}
 
 			unitTest:assertEquals(l:bands(), 1) -- SKIP
@@ -131,6 +150,8 @@ return {
 			if isFile(projName) then
 				rmFile(projName)
 			end
+			
+			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -147,13 +168,18 @@ return {
 				file = projName,
 				clean = true
 			}
+			
+			local customWarningBkp = customWarning
+			customWarning = function(msg)
+				return msg
+			end				
 
 			local layerName1 = "Vegtype_layer"
 
 			local l = Layer {
 				project = proj,
 				name = layerName1,
-				file = filePath("vegtype_2000.nc", "terralib")
+				file = filePath("test/vegtype_2000.nc", "terralib")
 			}
 
 			unitTest:assertEquals( -- SKIP
@@ -169,6 +195,8 @@ source   string [nc]
 			if isFile(projName) then
 				rmFile(projName)
 			end
+			
+			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
 		end
