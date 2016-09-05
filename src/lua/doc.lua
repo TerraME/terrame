@@ -59,11 +59,11 @@ local function imageFiles(package)
 	local s = sessionInfo().separator
 	local imagepath = packageInfo(package).path..s.."images"
 
-	if not isDir(imagepath) then
+	if not Directory(imagepath):exists() then
 		return {}
 	end
 
-	local files = dir(imagepath)
+	local files = Directory(imagepath):list()
 	local result = {}
 
 	forEachElement(files, function(_, fname)
@@ -77,11 +77,11 @@ end
 local function dataFiles(package)
 	local datapath = packageInfo(package).data
 
-	if not isDir(datapath) then
+	if not Directory(datapath):exists() then
 		return {}
 	end
 
-	local files = dir(datapath)
+	local files = Directory(datapath):list()
 	local result = {}
 
 	forEachElement(files, function(_, fname)
@@ -352,7 +352,7 @@ function _Gtme.executeDoc(package)
 		os.exit(1)
 	end)
 
-	local lua_files = dir(package_path..s.."lua")
+	local lua_files = Directory(package_path..s.."lua"):list()
 
 	local example_files = _Gtme.findExamples(package)
 
@@ -665,7 +665,7 @@ function _Gtme.executeDoc(package)
 		end)
 
 		forEachOrderedElement(df, function(_, mvalue)
-			if isDir(package_path..s.."data"..s..mvalue) then
+			if Directory(package_path..s.."data"..s..mvalue):exists() then
 				return
 			end
 
@@ -687,7 +687,7 @@ function _Gtme.executeDoc(package)
 		printNote("Checking directory 'data'")
 		printError("Package has data files but data.lua does not exist")
 		forEachElement(df, function(_, mvalue)
-			if isDir(package_path..s.."data"..s..mvalue) then
+			if Directory(package_path..s.."data"..s..mvalue):exists() then
 				return
 			end
 
@@ -771,7 +771,7 @@ function _Gtme.executeDoc(package)
 
 		printNote("Checking directory 'font'")
 		forEachOrderedElement(df, function(_, mvalue)
-			if isDir(package_path..s.."font"..s..mvalue) then
+			if Directory(package_path..s.."font"..s..mvalue):exists() then
 				return
 			end
 
@@ -816,7 +816,7 @@ function _Gtme.executeDoc(package)
 
 	local result = luadocMain(package_path, lua_files, example_files, package, mdata, mfont, doc_report)
 
-	if isDir(package_path..s.."font") then
+	if Directory(package_path..s.."font"):exists() then
 		local cmd = "cp "..package_path..s.."font"..s.."* "..package_path..s.."doc"..s.."files"
 		cmd = _Gtme.makePathCompatibleToAllOS(cmd)
 		os.execute(cmd)

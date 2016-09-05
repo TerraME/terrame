@@ -3,6 +3,7 @@ files = {
 	"Choice.lua",
 	"ErrorHandling.lua",
 	"File.lua",
+	"Directory.lua",
 	"Package.lua",
 	"Utils.lua",
 	"UnitTest.lua",

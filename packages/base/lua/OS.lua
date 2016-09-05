@@ -26,17 +26,6 @@
 -- Most of the functions bellow are taken from LuaFileSystem 1.6.2.
 -- Copyright Kepler Project 2003 (http://www.keplerproject.org/luafilesystem).
 
---- Change the current working directory to the given path.
--- Returns true in case of success or nil plus an error string.
--- @arg path A string with the path.
--- @usage -- DONTRUN
--- chDir("c:\\tests")
-function chDir(path)
-	mandatoryArgument(1, "string", path)
-
-	return lfs.chdir(path)
-end
-
 --- Return a string with the current working directory or nil plus an error string.
 -- @usage cdir = currentDir()
 -- print(cdir)
@@ -56,108 +45,6 @@ function isWindowsOS()
 	end
 	
 	return true
-end
-
---- Return the files in a given directory.
--- @arg directory A string describing a directory. The default value is the current directory (".").
--- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
--- @usage files = dir()
---
--- forEachFile(files, function(file)
---     print(file)
--- end)
-function dir(directory, all)
-	if directory == nil then directory = "." end
-
-	mandatoryArgument(1, "string", directory)
-	optionalArgument(2, "boolean", all)
-
-	if all == nil then all = false end
-	
-	local command 
-
-	if all then
-		command = "ls -a1 \""..directory.."\""
-	else
-		command = "ls -1 \""..directory.."\""
-	end
-
-	local result = runCommand(command)
-
-	if not result or not result[1] then
-		customError(directory.." is not a directory or is empty or does not exist.")
-	end
-
-	return result
-end	
-
---- Return whether a given string represents a directory stored in the computer.
--- @arg path A string.
--- @usage if isDir("C:\\TerraME\\bin") then
---     print("is dir")
--- end
-function isDir(path)
-	mandatoryArgument(1, "string", path)
-
-	if string.sub(path, -1) == "/" then
-		path = string.sub(path, 1, -2)
-	end	
-
-	if lfs.attributes(path:gsub("\\$", ""), "mode") == "directory" then
-		return true
-	end
-	
-	return false
-end
-
---- Create a lockfile (called lockfile.lfs) in path if it does not exist and returns the lock. 
--- If the lock already exists checks if it's stale, using the second argeter (default for the 
--- second argeter is INT_MAX, which in practice means the lock will never be stale.
--- In case of any errors it returns nil and the error message. In particular, if the lock
--- exists and is not stale it returns the "File exists" message.
--- @arg path A string with the path.
--- @usage ld = lockDir(packageInfo("base").path)
-function lockDir(path)
-	mandatoryArgument(1, "string", path)
-
-	return lfs.lock_dir
-end
-
---- Create a new directory. The argument is the name of the new directory.
--- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @arg path A string with the path.
--- @usage -- DONTRUN
--- mkDir("mydirectory")
-function mkDir(path)
-	mandatoryArgument(1, "string", path)
-
-	return lfs.mkdir(path)
-end
-
---- Remove an existing directory. It removes all internal files and directories
--- recursively. If the directory does not exist or it cannot be removed,
--- this function stops with an error.
--- @arg path A string with the path. The function will automatically add
--- quotation marks in the beginning and in the end of this argument in order
--- to avoid problems related to empty spaces in the string. Therefore,
--- this string must not contain quotation marks.
--- @usage mkDir("mydirectory")
---
--- rmDir("mydirectory")
-function rmDir(path)
-	mandatoryArgument(1, "string", path)
-
-	if string.find(path, "\"") then
-		customError("Argument #1 should not contain quotation marks.")
-	elseif not isDir(path) then
-		resourceNotFoundError(1, path)
-	end
-
-	local result = os.execute("rm -rf \""..path.."\"")
-
-	if result ~= true then
-		customError(result) -- SKIP
-	end
 end
 
 --- Execute a system command and return its output. It returns two tables. 
@@ -220,14 +107,14 @@ end
 -- @usage tmpf = tmpDir("mytmpdir_XXX")
 -- print(tmpf)
 --
--- rmDir(tmpf)
+-- Directory(tmpf):delete()
 function tmpDir(directory)
 	if directory then
 		optionalArgument(1, "string", directory)
 		return runCommand("mktemp -d "..directory)[1]
 	elseif not _Gtme.tmpdirectory__ then
 		_Gtme.tmpdirectory__ = runCommand("mktemp -d .terrametmp_XXXXX")[1] -- SKIP
-	elseif not isDir(_Gtme.tmpdirectory__) then
+	elseif not Directory(_Gtme.tmpdirectory__):exists() then
 		os.execute("mkdir ".._Gtme.tmpdirectory__)
 	end
 

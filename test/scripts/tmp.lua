@@ -12,7 +12,7 @@ value = file:read()
 -- check if the directory does not exist
 if value == nil then
 	print("Could not read the directory's name.")
-elseif isDir(value) then
+elseif Directory(value):exists() then
 	print("Directory '"..value.."' should not exist!")
 else
 	print("Directory does not exist.")

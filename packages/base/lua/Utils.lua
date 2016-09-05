@@ -510,11 +510,11 @@ end
 -- @see OS:dir
 function forEachFile(directory, _sof_)
 	if type(directory) == "string" then
-		if not isDir(directory) then
+		if not Directory(directory):exists() then
 			customError("Directory '"..directory.."' is not valid or does not exist.")
 		end
 
-		if not pcall(function() directory = dir(directory) end) then
+		if not pcall(function() directory = Directory(directory):list() end) then
 			return true
 		end
 	end

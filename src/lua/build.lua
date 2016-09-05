@@ -27,8 +27,8 @@ local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
 local function rm(file)
-	if isDir(file) then
-		rmDir(file)
+	if Directory(file):exists() then
+		Directory(file):delete()
 	else
 		File(file):delete()
 	end
@@ -102,7 +102,7 @@ function _Gtme.buildPackage(package, config, clean)
 	local pkgInfo = packageInfo(package)
 	local pkgDirectory = pkgInfo.path
 
-	chDir(tmpdirectory)
+	Directory(tmpdirectory):setCurrentDir()
 
 	if pkgDirectory == package then
 		os.execute("cp -pr \""..currentdir..s..pkgDirectory.."\" .")
@@ -154,7 +154,7 @@ function _Gtme.buildPackage(package, config, clean)
 		end
 	end)
 
-	if isDir(package..s.."examples") then
+	if Directory(package..s.."examples"):exists() then
 		print("Checking examples")
 		forEachFile(package..s.."examples", function(file)
 			if not string.endswith(file, ".lua") and not string.endswith(file, ".tme") and not string.endswith(file, ".log") then
@@ -169,7 +169,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	print("Checking source code")
 	forEachFile(package..s.."lua", function(file)
-		if not string.endswith(file, ".lua") and not isDir(package..s.."lua"..s..file) then
+		if not string.endswith(file, ".lua") and not Directory(package..s.."lua"..s..file):exists() then
 			printError("File '"..package..s.."lua"..s..file.."' is unnecessary and will be ignored.")
 			rm(package..s.."lua"..s..file)
 			report.unnecessary_files = report.unnecessary_files + 1
@@ -178,7 +178,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	local function removeRecursiveLua(currentDir)
 		forEachFile(currentDir, function(file)
-			if isDir(currentDir..s..file) then
+			if Directory(currentDir..s..file):exists() then
 				removeRecursiveLua(currentDir..s..file)
 			elseif not string.endswith(currentDir..s..file, ".lua") then
 				printError("File '"..currentDir..s..file.."' is unnecessary and will be ignored.")
@@ -191,7 +191,7 @@ function _Gtme.buildPackage(package, config, clean)
 	removeRecursiveLua(package..s.."tests")
 
 	print("Checking fonts")
-	if isDir(package..s.."font") then
+	if Directory(package..s.."font"):exists() then
 		local fontFiles = {}
 		local df = _Gtme.fontFiles(package)
 		forEachElement(df, function(_, mvalue)
@@ -234,16 +234,16 @@ function _Gtme.buildPackage(package, config, clean)
 
 		local dlogs = package..s.."log"
 
-		if isDir(dlogs) then
+		if Directory(dlogs):exists() then
 			print("Removing 'log' directory")
-			rmDir(package..s.."log")
+			Directory(package..s.."log"):delete()
 		end
 
 		local dtest = package..s.."test"
 
-		if isDir(dtest) then
+		if Directory(dtest):exists() then
 			print("Removing 'test' directory")
-			rmDir(package..s.."test")
+			Directory(package..s.."test"):delete()
 		end
 	end
 
@@ -301,7 +301,7 @@ function _Gtme.buildPackage(package, config, clean)
 		md5sum = runCommand("md5 -q "..file) 
 	end
 
-	chDir(currentdir)
+	Directory(currentdir):setCurrentDir()
 
 	local finalTime = os.clock()
 	print("\nBuild report for package '"..package.."':")

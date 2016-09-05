@@ -15,7 +15,7 @@ end)
 
 _Gtme.printNote("Processing packages")
 forEachFile(".", function(file)
-	if isDir(file) then
+	if Directory(file):exists() then
 		print("Processing "..file)
 		info = packageInfo(file)
 
@@ -37,8 +37,8 @@ file:close()
 
 _Gtme.printNote("Cleaning folder")
 forEachFile(".", function(file)
-	if isDir(file) then
-		rmDir(file)
+	if Directory(file):exists() then
+		Directory(file):delete()
 	end
 end)
 

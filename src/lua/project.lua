@@ -42,7 +42,7 @@ function _Gtme.executeProject(package)
 
 	local data_path = package_path..s.."data"
 
-	chDir(data_path)
+	Directory(data_path):setCurrentDir()
 
 	local project_report = {
 		projects = 0,
@@ -81,7 +81,8 @@ function _Gtme.executeProject(package)
 			local output = filename..".tview"
 
 			local filesDir = {}
-			forEachFile(dir(), function(oldFile)
+			local dir = Directory(".")
+			forEachFile(dir:list(), function(oldFile)
 				filesDir[oldFile] = true
 			end)
 
@@ -97,7 +98,7 @@ function _Gtme.executeProject(package)
 				project_report.errors_output = project_report.errors_output + 1
 			end
 
-			forEachFile(dir(), function(newFile)
+			forEachFile(dir:list(), function(newFile)
 				if filesDir[newFile] == nil then
 					local fileInfo = File(newFile)
 					if not fileInfo:getName() == filename then

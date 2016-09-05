@@ -23,17 +23,40 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	runCommand = function(unitTest)
+	Directory = function(unitTest)
 		local error_func = function()
-			runCommand(1)
+			Directory()
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
+
+		error_func = function()
+			Directory{}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
+
+		error_func = function()
+			Directory(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
-	tmpDir = function(unitTest)
+	attributes = function(unitTest)
+		local dir = Directory("/my/path/my_dir")
 		local error_func = function()
-			tmpDir(1)
+			dir:attributes(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
+	delete = function(unitTest)
+		local error_func = function()
+			Directory("abc\"")
+		end
+		unitTest:assertError(error_func, "Argument #1 should not contain quotation marks.")
+
+		local dir = Directory("abc123456")
+		error_func = function()
+			dir:delete()
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg("directory", "abc123456"))
 	end
 }
 
