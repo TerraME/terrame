@@ -55,7 +55,7 @@ return{
 
 		local datapath = packageInfo("base").data
 		local s = sessionInfo().separator
-		local dir = Directory(datapath..s.."test_dir_create")
+		dir = Directory(datapath..s.."test_dir_create")
 		unitTest:assert(dir:create())
 		unitTest:assert(dir:exists())
 
