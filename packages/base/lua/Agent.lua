@@ -639,13 +639,21 @@ Agent_ = {
 		if neighborhood == nil then neighborhood = "1" end
 
 		if type(self[placement]) ~= "Trajectory" then
-			valueNotFoundError(1, placement)
+			if placement == "placement" then
+				customError("The Agent does not have a default placement. Please call 'Environment:createPlacement' first.")
+			else
+				valueNotFoundError(1, placement)
+			end
 		end
 
 		local c1 = self:getCell(placement)
 		local c2 = c1:getNeighborhood(neighborhood)
 		if c2 == nil then
-			valueNotFoundError(2, neighborhood)
+			if neighborhood == "1" then
+				customError("The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
+			else
+				valueNotFoundError(2, neighborhood)
+			end
 		end
 		self:move(c2:sample(), placement)
 	end
