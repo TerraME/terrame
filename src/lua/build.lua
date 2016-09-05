@@ -30,7 +30,7 @@ local function rm(file)
 	if isDir(file) then
 		rmDir(file)
 	else
-		rmFile(file)
+		File(file):delete()
 	end
 end
 
@@ -275,7 +275,7 @@ function _Gtme.buildPackage(package, config, clean)
 	Model = mModel
 
 	printNote("Checking license")
-	if not isFile(pkgDirectory..s.."license.txt") then
+	if not File(pkgDirectory..s.."license.txt"):exists() then
 		report.license = 1
 		printError("The package does not contain file 'license.txt'")
 	end
@@ -286,7 +286,7 @@ function _Gtme.buildPackage(package, config, clean)
 	local file = package.."_"..info.version..".zip"
 	printNote("Creating file '"..file.."'")
 	os.execute("zip -qr \""..file.."\" "..package)
-	if isFile(file) then
+	if File(file):exists() then
 		printNote("Package '"..package.."' successfully zipped")
 	else
 		printError("Could not zip package '"..package.."'. Aborting.")

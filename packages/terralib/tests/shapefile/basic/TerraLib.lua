@@ -33,21 +33,21 @@ return {
 		proj.title = title
 		proj.author = author
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 		
 		tl:createProject(proj, {})
-		unitTest:assert(isFile(proj.file))
+		unitTest:assert(File(proj.file):exists())
 		unitTest:assertEquals(proj.file, file)
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
 		
 		-- allow overwrite
 		tl:createProject(proj, {})
-		unitTest:assert(isFile(proj.file))
+		unitTest:assert(File(proj.file):exists())
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	addShpLayer = function(unitTest)
 		local tl = TerraLib{}
@@ -56,8 +56,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 		
 		tl:createProject(proj, {})
@@ -74,7 +74,7 @@ return {
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
 
-		rmFile(proj.file)
+		File(proj.file):delete()
 		
 		-- SPATIAL INDEX TEST
 		proj = {}
@@ -86,17 +86,17 @@ return {
 		
 		local layerName1 = "ShapeLayer1"
 		local qixFile = string.gsub(layerFile, ".shp", ".qix")
-		rmFile(qixFile)
+		File(qixFile):delete()
 		local addSpatialIdx = false
 		tl:addShpLayer(proj, layerName1, layerFile, addSpatialIdx)
-		unitTest:assert(not isFile(qixFile))
+		unitTest:assert(not File(qixFile):exists())
 		
 		local layerName2 = "ShapeLayer2"
 		addSpatialIdx = true
 		tl:addShpLayer(proj, layerName2, layerFile, addSpatialIdx)
-		unitTest:assert(isFile(qixFile))
+		unitTest:assert(File(qixFile):exists())
 		
-		rmFile(proj.file)		
+		File(proj.file):delete()		
 		-- // SPATIAL INDEX TEST
 	end,
 	addShpCellSpaceLayer = function(unitTest)
@@ -106,8 +106,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -119,8 +119,8 @@ return {
 		local clName = "Sampa_Cells"
 		local shp1 = clName..".shp"
 
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end	
 		
 		local resolution = 0.7
@@ -142,8 +142,8 @@ return {
 		clName = clName.."_NoMask"
 		local shp2 = clName..".shp"
 		
-		if isFile(shp2) then
-			rmFile(shp2)
+		if File(shp2):exists() then
+			File(shp2):delete()
 		end			
 		
 		mask = false
@@ -158,45 +158,45 @@ return {
 		local shp3 = clName..".shp"
 		local addSpatialIdx = false
 		
-		if isFile(shp3) then
-			rmFile(shp3)
+		if File(shp3):exists() then
+			File(shp3):delete()
 		end
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp3, mask, addSpatialIdx)
 		local qixFile1 = string.gsub(shp3, ".shp", ".qix")
-		unitTest:assert(not isFile(qixFile1))
+		unitTest:assert(not File(qixFile1):exists())
 		
 		clName = "Sampa_Cells_SIDX"
 		local shp4 = clName..".shp"
 		addSpatialIdx = true
 		
-		if isFile(shp4) then
-			rmFile(shp4)
+		if File(shp4):exists() then
+			File(shp4):delete()
 		end	
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp4, mask, addSpatialIdx)
 		local qixFile2 = string.gsub(shp4, ".shp", ".qix")
-		unitTest:assert(isFile(qixFile2))
+		unitTest:assert(File(qixFile2):exists())
 		-- // SPATIAL INDEX TEST
 		
 		-- END
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end	
 		
-		if isFile(shp2) then
-			rmFile(shp2)
+		if File(shp2):exists() then
+			File(shp2):delete()
 		end			
 		
-		if isFile(shp3) then
-			rmFile(shp3)
+		if File(shp3):exists() then
+			File(shp3):delete()
 		end			
 		
-		if isFile(shp4) then
-			rmFile(shp4)
+		if File(shp4):exists() then
+			File(shp4):delete()
 		end	
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,	
 	attributeFill = function(unitTest)
 		local tl = TerraLib{}
@@ -205,8 +205,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -225,8 +225,8 @@ return {
 		local clName = "Para_Cells"
 		shp[1] = clName..".shp"
 
-		if isFile(shp[1]) then
-			rmFile(shp[1])
+		if File(shp[1]):exists() then
+			File(shp[1]):delete()
 		end
 		
 		-- CREATE THE CELLULAR SPACE
@@ -261,8 +261,8 @@ return {
 		local presLayerName = clName.."_"..layerName2.."_Presence"		
 		shp[2] = presLayerName..".shp"
 		
-		if isFile(shp[2]) then
-			rmFile(shp[2])
+		if File(shp[2]):exists() then
+			File(shp[2]):delete()
 		end
 
 		local operation = "presence"
@@ -293,8 +293,8 @@ return {
 		local areaLayerName = clName.."_"..layerName2.."_Area"		
 		shp[3] = areaLayerName..".shp"
 		
-		if isFile(shp[3]) then
-			rmFile(shp[3])
+		if File(shp[3]):exists() then
+			File(shp[3]):delete()
 		end
 		
 		operation = "area"
@@ -325,8 +325,8 @@ return {
 		local countLayerName = clName.."_"..layerName2.."_Count"		
 		shp[4] = countLayerName..".shp"
 		
-		if isFile(shp[4]) then
-			rmFile(shp[4])
+		if File(shp[4]):exists() then
+			File(shp[4]):delete()
 		end
 		
 		operation = "count"
@@ -357,8 +357,8 @@ return {
 		local distLayerName = clName.."_"..layerName2.."_Distance"		
 		shp[5] = distLayerName..".shp"
 		
-		if isFile(shp[5]) then
-			rmFile(shp[5])
+		if File(shp[5]):exists() then
+			File(shp[5]):delete()
 		end
 		
 		operation = "distance"
@@ -393,8 +393,8 @@ return {
 		local minLayerName = clName.."_"..layerName3.."_Minimum"		
 		shp[6] = minLayerName..".shp"
 		
-		if isFile(shp[6]) then
-			rmFile(shp[6])
+		if File(shp[6]):exists() then
+			File(shp[6]):delete()
 		end
 		
 		operation = "minimum"
@@ -426,8 +426,8 @@ return {
 		local maxLayerName = clName.."_"..layerName3.."_Maximum"		
 		shp[7] = maxLayerName..".shp"
 		
-		if isFile(shp[7]) then
-			rmFile(shp[7])
+		if File(shp[7]):exists() then
+			File(shp[7]):delete()
 		end
 		
 		operation = "maximum"
@@ -459,8 +459,8 @@ return {
 		local percLayerName = clName.."_"..layerName2.."_Percentage"		
 		shp[8] = percLayerName..".shp"
 		
-		if isFile(shp[8]) then
-			rmFile(shp[8])
+		if File(shp[8]):exists() then
+			File(shp[8]):delete()
 		end
 		
 		operation = "coverage"
@@ -492,8 +492,8 @@ return {
 		local stdevLayerName = clName.."_"..layerName3.."_Stdev"		
 		shp[9] = stdevLayerName..".shp"
 		
-		if isFile(shp[9]) then
-			rmFile(shp[9])
+		if File(shp[9]):exists() then
+			File(shp[9]):delete()
 		end
 		
 		operation = "stdev"
@@ -526,8 +526,8 @@ return {
 		local meanLayerName = clName.."_"..layerName3.."_AvrgMean"		
 		shp[10] = meanLayerName..".shp"
 		
-		if isFile(shp[10]) then
-			rmFile(shp[10])
+		if File(shp[10]):exists() then
+			File(shp[10]):delete()
 		end
 		
 		operation = "average"
@@ -560,8 +560,8 @@ return {
 		local weighLayerName = clName.."_"..layerName3.."_AvrgWeighted"		
 		shp[11] = weighLayerName..".shp"
 		
-		if isFile(shp[11]) then
-			rmFile(shp[11])
+		if File(shp[11]):exists() then
+			File(shp[11]):delete()
 		end
 		
 		operation = "average"
@@ -594,8 +594,8 @@ return {
 		local interLayerName = clName.."_"..layerName3.."_Intersection"		
 		shp[12] = interLayerName..".shp"
 		
-		if isFile(shp[12]) then
-			rmFile(shp[12])
+		if File(shp[12]):exists() then
+			File(shp[12]):delete()
 		end
 		
 		operation = "mode"
@@ -628,8 +628,8 @@ return {
 		local occurLayerName = clName.."_"..layerName3.."_Occurence"		
 		shp[13] = occurLayerName..".shp"
 		
-		if isFile(shp[13]) then
-			rmFile(shp[13])
+		if File(shp[13]):exists() then
+			File(shp[13]):delete()
 		end
 		
 		operation = "mode"
@@ -663,8 +663,8 @@ return {
 		local sumLayerName = clName.."_"..layerName3.."_Sum"		
 		shp[14] = sumLayerName..".shp"
 		
-		if isFile(shp[14]) then
-			rmFile(shp[14])
+		if File(shp[14]):exists() then
+			File(shp[14]):delete()
 		end
 		
 		operation = "sum"
@@ -698,8 +698,8 @@ return {
 		local wsumLayerName = clName.."_"..layerName3.."_Wsum"		
 		shp[15] = wsumLayerName..".shp"
 		
-		if isFile(shp[15]) then
-			rmFile(shp[15])
+		if File(shp[15]):exists() then
+			File(shp[15]):delete()
 		end
 		
 		operation = "sum"
@@ -738,8 +738,8 @@ return {
 		local percTifLayerName = clName.."_"..layerName4.."_RPercentage"		
 		shp[16] = percTifLayerName..".shp"
 		
-		if isFile(shp[16]) then
-			rmFile(shp[16])
+		if File(shp[16]):exists() then
+			File(shp[16]):delete()
 		end
 		
 		operation = "coverage"
@@ -773,8 +773,8 @@ return {
 		local rmeanLayerName = clName.."_"..layerName4.."_RMean"		
 		shp[17] = rmeanLayerName..".shp"
 		
-		if isFile(shp[17]) then
-			rmFile(shp[17])
+		if File(shp[17]):exists() then
+			File(shp[17]):delete()
 		end
 		
 		operation = "average"
@@ -809,8 +809,8 @@ return {
 		local rminLayerName = clName.."_"..layerName4.."_RMinimum"		
 		shp[18] = rminLayerName..".shp"
 		
-		if isFile(shp[18]) then
-			rmFile(shp[18])
+		if File(shp[18]):exists() then
+			File(shp[18]):delete()
 		end
 		
 		operation = "minimum"
@@ -845,8 +845,8 @@ return {
 		local rmaxLayerName = clName.."_"..layerName4.."_RMaximum"		
 		shp[19] = rmaxLayerName..".shp"
 		
-		if isFile(shp[19]) then
-			rmFile(shp[19])
+		if File(shp[19]):exists() then
+			File(shp[19]):delete()
 		end
 		
 		operation = "maximum"
@@ -881,8 +881,8 @@ return {
 		local rstdevLayerName = clName.."_"..layerName4.."_RStdev"		
 		shp[20] = rstdevLayerName..".shp"
 		
-		if isFile(shp[20]) then
-			rmFile(shp[20])
+		if File(shp[20]):exists() then
+			File(shp[20]):delete()
 		end
 		
 		operation = "stdev"
@@ -917,8 +917,8 @@ return {
 		local rsumLayerName = clName.."_"..layerName4.."_RSum"		
 		shp[21] = rsumLayerName..".shp"
 		
-		if isFile(shp[21]) then
-			rmFile(shp[21])
+		if File(shp[21]):exists() then
+			File(shp[21]):delete()
 		end
 		
 		operation = "sum"
@@ -981,12 +981,12 @@ return {
 
 		-- END
 		for j = 1, #shp do
-			if isFile(shp[j]) then
-				rmFile(shp[j])
+			if File(shp[j]):exists() then
+				File(shp[j]):delete()
 			end
 		end	
-		
-		rmFile(proj.file)		
+
+		File(proj.file):delete()
 
 		customWarning = customWarningBkp
 	end,
@@ -1001,8 +1001,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1017,8 +1017,8 @@ return {
 		local mask = true
 		local cellsShp = clName1..".shp"
 		
-		if isFile(cellsShp) then
-			rmFile(cellsShp)
+		if File(cellsShp):exists() then
+			File(cellsShp):delete()
 		end
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
@@ -1103,9 +1103,9 @@ return {
 			end
 		end			
 		
-		rmFile(cellsShp)
-		rmFile(newLayerName..".shp")
-		rmFile(proj.file)
+		File(cellsShp):delete()
+		File(newLayerName..".shp"):delete()
+		File(proj.file):delete()
 	end,
 	getOGRByFilePath = function(unitTest)
 		local tl = TerraLib{}
@@ -1131,8 +1131,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1146,8 +1146,8 @@ return {
 		local mask = true
 		local cellsShp = clName1..".shp"
 		
-		if isFile(cellsShp) then
-			rmFile(cellsShp)
+		if File(cellsShp):exists() then
+			File(cellsShp):delete()
 		end
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
@@ -1165,11 +1165,11 @@ return {
 			end
 		end			
 		
-		if isFile(cellsShp) then
-			rmFile(cellsShp)
+		if File(cellsShp):exists() then
+			File(cellsShp):delete()
 		end		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	getProjection = function(unitTest)
 		local tl = TerraLib{}
@@ -1178,8 +1178,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1204,7 +1204,7 @@ return {
 		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")		
 		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")	
 		
-		rmFile(proj.file)		
+		File(proj.file):delete()		
 	end,
 	getPropertyNames = function(unitTest)
 		local tl = TerraLib{}
@@ -1213,8 +1213,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1230,7 +1230,7 @@ return {
 						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU"))
 		end
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	getDistance = function(unitTest)
 		local tl = TerraLib{}
@@ -1239,8 +1239,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1252,8 +1252,8 @@ return {
 		local clName = "Sampa_Cells"
 		local shp1 = clName..".shp"
 
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end	
 		
 		local resolution = 0.7
@@ -1265,8 +1265,8 @@ return {
 			
 		unitTest:assertEquals(dist, 4.4271887242357, 1.0e-13)
 		
-		rmFile(proj.file)
-		rmFile(shp1)
+		File(proj.file):delete()
+		File(shp1):delete()
 	end,
 	castGeomToSubtype = function(unitTest)
 		local tl = TerraLib{}
@@ -1301,8 +1301,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1315,32 +1315,32 @@ return {
 		local toData = {}
 		toData.file = "shp2geojson.geojson"
 		toData.type = "geojson"		
-		if isFile(toData.file) then
-			rmFile(toData.file)
+		if File(toData.file):exists() then
+			File(toData.file):delete()
 		end
 		
 		local overwrite = true
 		
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 		
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 		
-		rmFile(toData.file)
+		File(toData.file):delete()
 		
 		-- SHP
 		toData.file = "shp2shp.shp"
 		toData.type = "shp"		
-		if isFile(toData.file) then
-			rmFile(toData.file)
+		if File(toData.file):exists() then
+			File(toData.file):delete()
 		end
 		
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 
-		rmFile(toData.file)
+		File(toData.file):delete()
 		
 		-- POSTGIS
 		local host = "localhost"
@@ -1368,6 +1368,6 @@ return {
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
 		tl:dropPgTable(pgData)		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end
 }

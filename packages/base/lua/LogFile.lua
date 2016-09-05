@@ -38,7 +38,7 @@ LogFile_ = {
 	--
 	-- log:update()
 	--
-	-- rmFile("agent.csv")
+	-- File("agent.csv"):delete()
 	update = function(self)
 		self.target:notify()
 	end
@@ -166,7 +166,7 @@ function LogFile(data)
 		end
 	end
 
-	if data.overwrite or not isFile(data.file) then
+	if data.overwrite or not File(data.file):exists() then
 		data.mode = "w"
 	else
 		data.mode = "w+"

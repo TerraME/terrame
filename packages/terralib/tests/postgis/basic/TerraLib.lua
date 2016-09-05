@@ -34,8 +34,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -81,7 +81,7 @@ return {
 		unitTest:assertEquals(layerInfo.table, tableName)		
 		unitTest:assertNotNil(layerInfo.sid)		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)
 	end,
@@ -104,8 +104,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -170,7 +170,7 @@ return {
 		unitTest:assertEquals(getn(clSet), 104)		
 		
 		-- END
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgTable(pgData2)
 		tl:dropPgDatabase(pgData)		
@@ -182,8 +182,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		-- CREATE A PROJECT
 		tl:createProject(proj, {})
@@ -1085,10 +1085,10 @@ return {
 		pgData.table = string.lower(rsumLayerName)
 		tl:dropPgTable(pgData)
 		-- END POSTGIS TESTS		
-		
-		rmFile(proj.file)
-		
-		customWarning = customWarningBkp		
+
+		File(proj.file):delete()
+
+		customWarning = customWarningBkp
 	end,
 	getDataSet = function(unitTest)
 		-- see in saveDataSet() test --
@@ -1102,8 +1102,8 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1201,7 +1201,7 @@ return {
 			end
 		end				
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgDatabase(pgData)		
 	end,
 	getArea = function(unitTest)
@@ -1212,8 +1212,8 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1261,7 +1261,7 @@ return {
 			end
 		end				
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgDatabase(pgData)		
 	end,	
 	getProjection = function(unitTest)
@@ -1272,8 +1272,8 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1314,7 +1314,7 @@ return {
 		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")		
 		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")			
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1326,8 +1326,8 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1369,7 +1369,7 @@ return {
 						(propNames[i] == "col") or (propNames[i] == "row"))
 		end
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1380,8 +1380,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1422,7 +1422,7 @@ return {
 			
 		unitTest:assertEquals(dist, 4.4271887242357, 1.0e-13)		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1433,8 +1433,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -1473,26 +1473,26 @@ return {
 		local toData = {}
 		toData.file = "postgis2shp.shp"
 		toData.type = "shp"		
-		if isFile(toData.file) then
-			rmFile(toData.file)
+		if File(toData.file):exists() then
+			File(toData.file):delete()
 		end		
 		
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)	
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 		
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"		
-		if isFile(toData.file) then
-			rmFile(toData.file)
+		if File(toData.file):exists() then
+			File(toData.file):delete()
 		end	
 
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 
 		tl:dropPgTable(pgData)
-		rmFile("postgis2shp.shp")
-		rmFile("postgis2geojson.geojson")
-		rmFile(proj.file)		
+		File("postgis2shp.shp"):delete()
+		File("postgis2geojson.geojson"):delete()
+		File(proj.file):delete()		
 	end
 }

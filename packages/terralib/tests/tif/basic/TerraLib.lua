@@ -30,8 +30,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 		
 		tl:createProject(proj, {})
@@ -48,7 +48,7 @@ return {
 		unitTest:assertEquals(layerInfo.rep, "raster")
 		unitTest:assertNotNil(layerInfo.sid)
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	addShpCellSpaceLayer = function(unitTest) -- CREATE SHP CELLULAR SPACE FROM TIF
 		local tl = TerraLib{}
@@ -57,8 +57,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -70,8 +70,8 @@ return {
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"
 
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end	
 		
 		local resolution = 60e3
@@ -87,11 +87,11 @@ return {
 		unitTest:assertNotNil(layerInfo.sid)				
 
 		-- END
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end			
 		
-		rmFile(proj.file)		
+		File(proj.file):delete()		
 	end,
 	-- addPgCellSpaceLayer = function(unitTest) -- CREATE POSTGIS CELLULAR SPACE FROM TIF
 		-- #1152
@@ -101,8 +101,8 @@ return {
 		-- proj.title = "TerraLib Tests"
 		-- proj.author = "Avancini Rodrigo"
 		
-		-- if isFile(proj.file) then
-			-- rmFile(proj.file)
+		-- if File(proj.file):exists() then
+			-- File(proj.file):delete()
 		-- end	
 		
 		-- tl:createProject(proj, {})
@@ -152,7 +152,7 @@ return {
 		-- tl:dropPgTable(pgData)
 		-- tl:dropPgDatabase(pgData)		
 		
-		-- rmFile(proj.file)	
+		-- File(proj.file):delete()	
 	-- end,
 	getGdalByFilePath = function(unitTest)
 		local tlib = TerraLib{}
@@ -174,8 +174,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 		
 		tl:createProject(proj, {})
@@ -187,7 +187,7 @@ return {
 		local numBands = tl:getNumOfBands(proj, layerName)
 		unitTest:assertEquals(numBands, 3)
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	getProjection = function(unitTest)
 		local tl = TerraLib{}
@@ -196,8 +196,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 		
 		tl:createProject(proj, {})
@@ -212,7 +212,7 @@ return {
 		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S - old 29191")		
 		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ")
 		
-		rmFile(proj.file)		
+		File(proj.file):delete()		
 	end,
 	getPropertyNames = function(unitTest)
 		local tl = TerraLib{}
@@ -221,8 +221,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 		
 		tl:createProject(proj, {})
@@ -236,7 +236,7 @@ return {
 		unitTest:assertEquals(getn(propNames), 1)
 		unitTest:assertEquals(propNames[0], "raster")
 		
-		rmFile(proj.file)			
+		File(proj.file):delete()			
 	end,
 	getDistance = function(unitTest)
 		local tl = TerraLib{}
@@ -245,8 +245,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -258,8 +258,8 @@ return {
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"
 
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end	
 		
 		local resolution = 60e3
@@ -271,8 +271,8 @@ return {
 			
 		unitTest:assertEquals(dist, 4296603.3095924, 1.0e-7)
 		
-		rmFile(proj.file)
-		rmFile(shp1)		
+		File(proj.file):delete()
+		File(shp1):delete()		
 	end,
 	getDummyValue = function(unitTest)
 		local tl = TerraLib{}
@@ -281,8 +281,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 		
 		tl:createProject(proj, {})
@@ -307,7 +307,7 @@ return {
 		dummy = tl:getDummyValue(proj, layerName2, 0)
 		unitTest:assertNil(dummy)
 		
-		rmFile(proj.file)		
+		File(proj.file):delete()		
 	end,
 	saveLayerAs = function(unitTest)
 		local tl = TerraLib{}
@@ -316,8 +316,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -341,15 +341,15 @@ return {
 		local overwrite = true
 		
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(isFile("cbers_rgb342_crop1.tif"))
+		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
 
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(isFile("cbers_rgb342_crop1.tif"))
+		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
 		
 		
-		rmFile("cbers_rgb342_crop1.tif")
-		rmFile(proj.file)
+		File("cbers_rgb342_crop1.tif"):delete()
+		File(proj.file):delete()
 		
 		customWarning = customWarningBkp
 	end	

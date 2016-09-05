@@ -26,56 +26,6 @@
 -- Most of the functions bellow are taken from LuaFileSystem 1.6.2.
 -- Copyright Kepler Project 2003 (http://www.keplerproject.org/luafilesystem).
 
---- Return a table with the file attributes corresponding to filepath (or nil followed by an error
--- message in case of error). If the second optional argument is given, then only the value of the
--- named attribute is returned (this use is equivalent to lfs.attributes(filepath).aname, but the
--- table is not created and only one attribute is retrieved from the O.S.). The attributes are
--- described as follows; attribute mode is a string, all the others are numbers, and the time
--- related attributes use the same time reference of os.time.
--- This function uses stat internally thus if the given filepath is a symbolic link, it is followed
--- (if it points to another link the chain is followed recursively) and the information is about the
--- file it refers to. To obtain information about the link itself, see FileSystem:linkAttributes().
--- @arg filepath A string with the file path.
--- @arg attributename A string with the name of the attribute to be read.
--- @tabular attributename
--- Attribute & Description \
--- "dev" &
--- on Unix systems, this represents the device that the inode resides on. On Windows
--- systems, represents the drive number of the disk containing the file \
--- "ino" &
--- on Unix systems, this represents the inode number. On Windows systems this has no meaning \
--- "mode" &
--- string representing the associated protection mode (the values could be file, directory,
--- link, socket, named pipe, char device, block device or other) \
--- "nlink" &
--- number of hard links to the file \
--- "uid" &
--- user-id of owner (Unix only, always 0 on Windows) \
--- "gid" &
--- group-id of owner (Unix only, always 0 on Windows) \
--- "rdev" &
--- on Unix systems, represents the device type, for special file inodes. On Windows systems
--- represents the same as dev \
--- "access" &
--- time of last access \
--- "modification" &
--- time of last data modification \
--- "change" &
--- time of last file status change \
--- "size" &
--- file size, in bytes \
--- "blocks" &
--- block allocated for file; (Unix only) \
--- "blksize" &
--- optimal file system I/O blocksize; (Unix only)
--- @usage attributes(packageInfo("base").path, "mode")
-function attributes(filepath, attributename)
-	mandatoryArgument(1, "string", filepath)
-	optionalArgument(2, "string", attributename)
-
-	return lfs.attributes(filepath, attributename)
-end
-
 --- Change the current working directory to the given path.
 -- Returns true in case of success or nil plus an error string.
 -- @arg path A string with the path.
@@ -101,7 +51,7 @@ end
 --     print("not windows")
 -- end
 function isWindowsOS()
-	if sessionInfo().separator == "/" then
+	if sessionInfo().separator == "/" then -- SKIP
 		return false
 	end
 	
@@ -160,58 +110,6 @@ function isDir(path)
 	return false
 end
 
---- Return whether a given string represents a file stored in the computer.
--- A directory is also considered a file.
--- @arg file A string.
--- @usage if isFile("C:\\file.txt") then
---     print("is file")
--- end
-function isFile(file)
-	mandatoryArgument(1, "string", file)
-    
-	local fopen = io.open(file)
-	
-	if fopen then
-		fopen:close()
-		return true	
-	end
-	
-	return false
-end
-
---- Identical to FileSystem:attributes() except that it obtains information about the link itself
--- (not the file it refers to). On Windows this function does not yet support links, and is identical
--- to FileSystem:attributes().
--- @arg filepath A string with the file path.
--- @arg attributename A string with the name of the attribute to be read.
--- @usage -- DONTRUN
--- linkAttributes(filepath, "size")
-function linkAttributes(filepath, attributename)
-	mandatoryArgument(1, "string", filepath)
-	optionalArgument(2, "string", attributename)
-
-	return lfs.symlinkattributes(filepath, attributename)
-end
-
---- Lock a file or a part of it. This function works on open files; the file handle should be
--- specified as the first argument. The optional arguments start and length can be used to specify a
--- starting point and its length; both should be numbers.
--- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @arg fh A file handle with the file to be locked.
--- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w
--- (for a write/exclusive lock).
--- @usage file = File(filePath("agents.csv", "base"))
--- filehandle = file:open("r")
--- lock(filehandle, "r")
--- unlock(filehandle)
--- @see FileSystem:unlock
-function lock(fh, mode)
-	mandatoryArgument(1, "userdata", fh)
-	mandatoryArgument(2, "string", mode)
-
-	return lfs.lock(fh, mode)
-end
-
 --- Create a lockfile (called lockfile.lfs) in path if it does not exist and returns the lock. 
 -- If the lock already exists checks if it's stale, using the second argeter (default for the 
 -- second argeter is INT_MAX, which in practice means the lock will never be stale.
@@ -262,52 +160,6 @@ function rmDir(path)
 	end
 end
 
---- Remove an existing file. If the file does not exist or it cannot be removed,
--- this function stops with an error. Directories cannot be removed using
--- this function. If the file to be removed is a shapefile, it also removes
--- the respective dbf, shx, and prj files if they exist.
--- @arg file A string with the file to be removed. It might contain a path if needed.
--- The function will automatically add
--- quotation marks in the beginning and in the end of this argument in order
--- to avoid problems related to empty spaces in the string. Therefore,
--- this string must not contain quotation marks.
--- @usage filename = "myfile.txt"
--- file = File(filename)
--- file:writeLine("Some text..")
---
--- rmFile(filename)
-function rmFile(file)
-	mandatoryArgument(1, "string", file)
-
-	if string.find(file, "\"") then
-		customError("Argument #1 should not contain quotation marks.")
-	elseif not isFile(file) then
-		resourceNotFoundError(1, file)
-	end
-
-	local result = os.execute("rm -f \""..file.."\"")
-
-	if result ~= true then
-		if result == nil then -- SKIP
-			result = "Could not remove file '"..file.."'." -- SKIP
-		end
-
-		customError(tostring(result)) -- SKIP
-	end
-
-	if string.endswith(file, ".shp") then
-		local dbf = string.sub(file, 1, -4).."dbf"
-		local shx = string.sub(file, 1, -4).."shx"
-		local prj = string.sub(file, 1, -4).."prj"
-		local qix = string.sub(file, 1, -4).."qix"
-
-		if isFile(dbf) then rmFile(dbf) end
-		if isFile(shx) then rmFile(shx) end
-		if isFile(prj) then rmFile(prj) end
-		if isFile(qix) then rmFile(qix) end
-	end
-end
-
 --- Execute a system command and return its output. It returns two tables. 
 -- The first one contains each standard output line as a position.
 -- The second one contains  each error output line as a position.
@@ -339,6 +191,21 @@ function runCommand(command)
 	return result, err
 end
 
+--- Return information about the current execution. The result is a table
+-- with the following values.
+-- @tabular NONE
+-- Attribute & Description \
+-- dbVersion & A string with the current TerraLib version for databases. \
+-- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
+-- path & A string with the location of TerraME in the computer. \
+-- separator & A string with the directory separator. \
+-- silent & A boolean value indicating whether print() calls should not be shown in the
+-- screen. This element is true when TerraME is executed with mode "silent".
+-- @usage print(sessionInfo().mode)
+function sessionInfo()
+	return info_ -- this is a global variable created when TerraME is initialized
+end
+
 --- Create a temporary directory and return its name.
 -- If this function is used without any argument, the directory will be deleted
 -- in the end of the simulation. Otherwise, the modeler will need to remove the
@@ -365,38 +232,5 @@ function tmpDir(directory)
 	end
 
 	return _Gtme.tmpdirectory__
-end
-
---- Set access and modification times of a file. This function is a bind to utime function.
--- Times are provided in seconds (which should be generated with Lua
--- standard function os.time). If the modification time is omitted, the access time provided is used;
--- if both times are omitted, the current time is used.
--- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @arg filepath A string with the file name.
--- @arg atime The new access time (in seconds).
--- @arg mtime The new modification time (in seconds).
--- @usage touch(packageInfo("base").path, 0, 0)
-function touch(filepath, atime, mtime)
-	mandatoryArgument(1, "string", filepath)
-	mandatoryArgument(2, "number", atime)
-	mandatoryArgument(3, "number", mtime)
-
-	return lfs.touch(filepath, atime, mtime)
-end
-
---- Unlock a file or a part of it. This function works on open files; the file handle should be
--- specified as the first argument. The optional arguments start and length can be used to specify
--- a starting point and its length; both should be numbers. It returns true if the operation was
--- successful. In case of error, it returns nil plus an error string.
--- @arg fh A file handle with the file to be locked.
--- @usage file = File(filePath("agents.csv", "base"))
--- filehandle = file:open("r")
--- lock(filehandle, "r")
--- unlock(filehandle)
--- @see FileSystem:lock
-function unlock(fh)
-	mandatoryArgument(1, "userdata", fh)
-
-	return lfs.unlock(fh)
 end
 

@@ -39,6 +39,13 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
+	attributes = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		local error_func = function()
+			file:attributes(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
 	close = function(unitTest)
 		local file = File("abc.txt")
 		local error_func = function()
@@ -55,6 +62,60 @@ return{
 		end
 
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
+	end,
+	delete = function(unitTest)
+		local file = File("abc\"")
+
+		local error_func = function()
+			file:delete()
+		end
+		unitTest:assertError(error_func, "Argument #1 should not contain quotation marks.")
+
+		file = File("abc123456")
+		error_func = function()
+			file:delete()
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abc123456"))
+
+		if _Gtme.isWindowsOS() then
+			file = File("myfile.txt")
+			file:open("w")
+
+			error_func = function()
+				file:delete()
+			end
+			unitTest:assertError(error_func, "Could not remove file 'myfile.txt'.") -- SKIP
+
+			file:close()
+			file:delete()
+
+			unitTest:assert(not file:exists()) -- SKIP
+		end
+	end,
+	lock = function(unitTest)
+		local file = File("abc.txt")
+		local error_func = function()
+			file:lock()
+		end
+
+		unitTest:assertError(error_func, "Cannot lock a file not opened.")
+
+		file = File("123")
+		file.file = true
+
+		error_func = function()
+			file:lock()
+		end
+
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
+
+		file = File("abc.txt")
+		file.file = true
+		error_func = function()
+			file:lock(1)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
 	open = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -87,7 +148,7 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 
 		file = File(filename)
 
@@ -127,13 +188,43 @@ return{
 		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
 
 		file:close()
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 
 		file = File(filePath("agents.csv", "base"))
 		error_func = function()
 			file:readLine(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+	end,
+	touch = function(unitTest)
+		local file = File("abc.txt")
+
+		local error_func = function()
+			file:touch("1")
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "1"))
+
+		error_func = function()
+			file:touch(1, "1")
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "1"))
+	end,
+	unlock = function(unitTest)
+		local file = File("abc.txt")
+		local error_func = function()
+			file:unlock()
+		end
+
+		unitTest:assertError(error_func, "Cannot unlock a file not opened.")
+
+		file = File("123")
+		file.file = true
+
+		error_func = function()
+			file:unlock()
+		end
+
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
 	end,
 	write = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))

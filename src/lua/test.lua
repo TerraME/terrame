@@ -43,7 +43,7 @@ local function testdirectories(directory, ut)
 					found_file = true
 					table.insert(result, mdirectory)
 				end
-			elseif attributes(directory..s..mdirectory..s..value, "mode") == "directory" then
+			elseif _Gtme.File(directory..s..mdirectory..s..value):attributes("mode") == "directory" then
 				lf(mdirectory..s..value)
 				found_directory = true
 			else
@@ -150,7 +150,7 @@ local function buildLineTable(package)
 	local load_file = baseDir..s.."load.lua"
 	local load_sequence
 
-	if isFile(load_file) then
+	if File(load_file):exists() then
 		-- the 'include' below does not need to be inside a xpcall because
 		-- the package was already loaded with success
 		load_sequence = _Gtme.include(load_file).files
@@ -811,7 +811,7 @@ function _Gtme.executeTests(package, fileName)
 					io.close(logfile)
 
 					if ut.log == nil then
-						rmFile(value..".log")
+						File(value..".log"):delete()
 						printError("Error: It is not possible to test examples with print() without a configuration file pointing a log directory.")
 						os.exit(1)
 					end
@@ -820,7 +820,7 @@ function _Gtme.executeTests(package, fileName)
 					local success = ut.success
 					local fail = ut.fail 
 
-					if isFile(value..".log") then
+					if File(value..".log"):exists() then
 						ut:assertFile(value..".log")
 					else
 						printError("Error: Could not find log file "..value..".log. Possibly the example is handling temporary folders in a wrong way.")

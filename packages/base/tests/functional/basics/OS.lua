@@ -25,23 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	attributes = function(unitTest)
-		if not _Gtme.isWindowsOS() then
-			local attr = attributes(filePath("agents.csv", "base"))
-			-- local t = filePath("agents.csv", "base")
-			unitTest:assertEquals(getn(attr), 14) -- SKIP
-			unitTest:assertEquals(attr.mode, "file") -- SKIP
-			unitTest:assertEquals(attr.size, 135) -- SKIP
-
-			attr = attributes(filePath("agents.csv", "base"), "mode")
-			unitTest:assertEquals(attr, "file") -- SKIP
-
-			attr = attributes(filePath("agents.csv", "base"), "size")
-			unitTest:assertEquals(attr, 135) -- SKIP
-		else
-			unitTest:assert(true) -- SKIP
-		end
-	end, 
 	chDir = function(unitTest)
 		local info = sessionInfo()
 		local s = info.separator
@@ -94,52 +77,8 @@ return{
         
         unitTest:assert(not isDir(filePath("agents.csv")))	
 	end,
-	isFile = function(unitTest)
-		unitTest:assert(isFile(filePath("agents.csv")))
-        
-        unitTest:assertEquals(isFile(""), false)
-
-		os.execute("touch zasdc.abc")
-
-		unitTest:assert(not isFile("zasdc.ab*"))
-		unitTest:assert(not isFile("zasdc.???"))
-
-		rmFile("zasdc.abc")
-	end, 
 	isWindowsOS = function(unitTest)
 		unitTest:assert(true)
-	end,
-	linkAttributes = function(unitTest)
-		if not _Gtme.isWindowsOS() then
-			local pathdata = packageInfo().data
-
-			os.execute("ln -s "..pathdata.."agents.csv "..pathdata.."agentslink")
-			local attr = linkAttributes(pathdata.."agentslink")
-
-			unitTest:assertEquals(attr.mode, "link") -- SKIP
-			unitTest:assertEquals(attr.nlink, 1) -- SKIP
-			--unitTest:assert(attr.size >= 61) -- SKIP
-
-			attr = linkAttributes(pathdata.."agentslink", "mode")
-			unitTest:assertEquals(attr, "link") -- SKIP
-
-			attr = linkAttributes(pathdata.."agentslink", "nlink")
-			unitTest:assertEquals(attr, 1) -- SKIP
-
-			os.execute("rm \""..pathdata.."agentslink\"")
-		else
-			unitTest:assert(true) -- SKIP
-		end
-	end,
-	lock = function(unitTest)
-		local pathdata = packageInfo().data
-
-		local f = io.open(pathdata.."test.txt", "w+")
-
-		unitTest:assert(lock(f, "w"))
-		
-		f:close()
-		os.execute("rm \""..pathdata.."test.txt\"")
 	end,
 	lockDir = function(unitTest)
 		local pathdata = packageInfo().data
@@ -156,7 +95,7 @@ return{
 
 		unitTest:assert(mkDir(pathdata.."test"))
 
-		local attr = attributes(pathdata.."test", "mode")
+		local attr = _Gtme.File(pathdata.."test"):attributes("mode")
 		unitTest:assertEquals(attr, "directory")
 
 		rmDir(pathdata.."test")
@@ -166,41 +105,23 @@ return{
 
 		unitTest:assert(mkDir(pathdata.."test"))
 
-		local attr = attributes(pathdata.."test", "mode")
+		local attr = _Gtme.File(pathdata.."test"):attributes("mode")
 		unitTest:assertEquals(attr, "directory")
 
 		rmDir(pathdata.."test")
 
 		unitTest:assert(not isDir(pathdata.."test"))
 	end,
-	rmFile = function(unitTest)
-		local file = packageInfo().data.."test123"
-		os.execute("touch "..file)
-
-		rmFile(file)
-
-		unitTest:assert(not isFile(file))
-		
-		os.execute("touch abc123.shp")
-		os.execute("touch abc123.shx")
-		os.execute("touch abc123.dbf")
-		os.execute("touch abc123.prj")
-
-		rmFile("abc123.shp")
-
-		unitTest:assert(not isFile("abc123.shp"))
-		unitTest:assert(not isFile("abc123.shx"))
-		unitTest:assert(not isFile("abc123.dbf"))
-		unitTest:assert(not isFile("abc123.prj"))
-
-		os.execute("touch abc123.shp")
-
-		rmFile("abc123.shp")
-	end, 
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)
 		unitTest:assertEquals(#d, 43) -- 43 files
 		unitTest:assertEquals(#e, 0)
+	end,
+	sessionInfo = function(unitTest)
+		local s = sessionInfo()
+
+		unitTest:assertEquals(s.mode, "debug")
+		unitTest:assertEquals(s.version, packageInfo().version)
 	end,
 	tmpDir = function(unitTest)
 		local f = tmpDir()
@@ -224,40 +145,6 @@ return{
 		unitTest:assertType(g, "string")
 
 		rmDir(g)
-	end,
-	touch = function(unitTest)
-		if not _Gtme.isWindowsOS() then
-			local pathdata = packageInfo().data
-
-			local f = io.open(pathdata.."testfile.txt", "w+")
-			f:write("test")
-			f:close()
-
-			unitTest:assert(touch(pathdata.."testfile.txt", 10000, 10000)) -- SKIP
-
-			local attr = attributes(pathdata.."testfile.txt", "access")
-			unitTest:assertEquals(attr, 10000) -- SKIP
-
-			attr = attributes(pathdata.."testfile.txt", "modification")
-			unitTest:assertEquals(attr, 10000) -- SKIP
-
-			os.execute("rm \""..pathdata.."testfile.txt\"")
-		end
-		
-		unitTest:assert(true)
-		
-	end, 
-	unlock = function(unitTest)
-		local pathdata = packageInfo().data
-
-		local f = io.open(pathdata.."testfile.txt", "w+")
-		f:write("test")
-
-		unitTest:assert(lock(f, "w"))
-		unitTest:assert(unlock(f))
-
-		f:close()
-		os.execute("rm \""..pathdata.."testfile.txt\"")
 	end
 }
 

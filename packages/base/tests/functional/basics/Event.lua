@@ -134,6 +134,19 @@ return{
 
 		t:run(5)
 		unitTest:assertEquals(sum, 5)
+
+		local log = LogFile{
+			target = soc,
+			file = "logfile-event.csv"
+		}
+
+		event = Event{action = log}
+
+		unitTest:assertEquals(event:getPeriod(), 1)
+		unitTest:assertEquals(event:getPriority(), 10)
+
+		log:update()
+		unitTest:assertFile("logfile-event.csv")
 	end,
 	config = function(unitTest)
 		local event = Event{action = function() end}

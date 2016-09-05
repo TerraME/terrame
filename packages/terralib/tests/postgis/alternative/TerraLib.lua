@@ -30,8 +30,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})	
@@ -63,7 +63,7 @@ return {
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
 
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	saveLayerAs = function(unitTest)
 		local tl = TerraLib{}
@@ -72,8 +72,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -124,8 +124,8 @@ return {
 		-- SHP
 		toData.file = "postgis2shp.shp"
 		toData.type = "shp"		
-		if isFile(toData.file) then
-			rmFile(toData.file)
+		if File(toData.file):exists() then
+			File(toData.file):delete()
 		end		
 		
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)	
@@ -135,13 +135,13 @@ return {
 		end
 		unitTest:assertError(overwriteShpError,  "The file 'postgis2shp.shp' already exists.")
 		
-		rmFile(toData.file)
+		File(toData.file):delete()
 		
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"		
-		if isFile(toData.file) then
-			rmFile(toData.file)
+		if File(toData.file):exists() then
+			File(toData.file):delete()
 		end	
 
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)		
@@ -151,9 +151,9 @@ return {
 		end
 		unitTest:assertError(overwriteGeojsonError,  "The file 'postgis2geojson.geojson' already exists.")
 
-		rmFile(toData.file)
+		File(toData.file):delete()
 		
 		tl:dropPgTable(pgData)
-		rmFile(proj.file)		
+		File(proj.file):delete()		
 	end	
 }

@@ -416,7 +416,7 @@ Environment_ = {
 
 		defaultTableValue(data, "bidirect", false)
 
-		if not isFile(data.source) then
+		if not File(data.source):exists() then
 			resourceNotFoundError("source", data.source)
 		end
 

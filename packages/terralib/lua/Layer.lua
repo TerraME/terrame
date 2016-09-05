@@ -114,9 +114,9 @@ local function addCellularLayer(self, data)
 												"resolution", "file", "source", "index"})
 			end
 				
-			if isFile(data.file) then
+			if File(data.file):exists() then
 				if data.clean then
-					rmFile(data.file)
+					File(data.file):delete()
 				else
 					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
 				end
@@ -176,7 +176,7 @@ local function addLayer(self, data)
 		
 	if isEmpty(data.source) then		
 		if not isEmpty(data.file) then
-			if not isFile(data.file) then
+			if not File(data.file):exists() then
 				--customError("The layer file'"..data.file.."' not found.")
 				mandatoryTableArgument(data, "source", "string")
 			end	
@@ -784,7 +784,7 @@ function Layer(data)
 	mandatoryTableArgument(data, "name", "string")
 
 	if type(data.project) == "string" then
-		if not isFile(data.project) then
+		if not File(data.project):exists() then
 			customError("Project file '"..data.project.."' does not exist.")
 		end
 

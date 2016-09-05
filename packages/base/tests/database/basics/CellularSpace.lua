@@ -183,7 +183,7 @@ return{
 
 		unitTest:assertEquals(303, #cs.cells)		
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
+		File(projName):delete() -- #1301
 
 		pgData.table = string.lower(tName1)
 		tl:dropPgTable(pgData)
@@ -810,8 +810,8 @@ return{
 			unitTest:assertNotNil(cell.geom)
 		end)
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 
 		pgData.table = string.lower(tName1)
@@ -855,8 +855,8 @@ return{
 
 		unitTest:assertNil(cs:sample().past.geom)
 
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 	end
 }

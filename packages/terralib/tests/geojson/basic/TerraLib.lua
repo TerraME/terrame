@@ -33,21 +33,21 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 
 		tl:createProject(proj, {})
-		unitTest:assert(isFile(proj.file))
+		unitTest:assert(File(proj.file):exists())
 		unitTest:assertEquals(proj.file, file)
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
 
 		-- allow overwrite
 		tl:createProject(proj, {})
-		unitTest:assert(isFile(proj.file))
+		unitTest:assert(File(proj.file):exists())
 
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	addGeoJSONLayer = function(unitTest)
 		local tl = TerraLib {}
@@ -59,8 +59,8 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 
 		tl:createProject(proj, {})
@@ -78,8 +78,8 @@ return {
 		unitTest:assertEquals(layerInfo.rep, "geometry")
 		unitTest:assertNotNil(layerInfo.sid)
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 	end,
 	addGeoJSONCellSpaceLayer = function(unitTest)
@@ -92,8 +92,8 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 
 		tl:createProject(proj, {})
@@ -106,8 +106,8 @@ return {
 		local clName = "GeoJSON_Cells"
 		local geojson1 = clName..".geojson"
 
-		if isFile(geojson1) then
-			rmFile(geojson1)
+		if File(geojson1):exists() then
+			File(geojson1):delete()
 		end
 
 		local resolution = 10000
@@ -129,8 +129,8 @@ return {
 		clName = clName.."_NoMask"
 		local geojson2 = clName..".geojson"
 
-		if isFile(geojson2) then
-			rmFile(geojson2)
+		if File(geojson2):exists() then
+			File(geojson2):delete()
 		end
 
 		mask = false
@@ -142,7 +142,7 @@ return {
 
 		unitTest:assertFile(geojson1)
 		unitTest:assertFile(geojson2)
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	getOGRByFilePath = function(unitTest)
 		local tl = TerraLib{}
@@ -168,8 +168,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -182,18 +182,18 @@ return {
 		local toData = {}
 		toData.file = "geojson2shp.shp"
 		toData.type = "shp"		
-		if isFile(toData.file) then
-			rmFile(toData.file)
+		if File(toData.file):exists() then
+			File(toData.file):delete()
 		end
 		
 		local overwrite = true
 		
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)		
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(isFile(toData.file))
+		unitTest:assert(File(toData.file):exists())
 
 		-- POSTGIS
 		local host = "localhost"
@@ -221,7 +221,7 @@ return {
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
 		tl:dropPgTable(pgData)		
-		rmFile(toData.file)
-		rmFile(proj.file)
+		File(toData.file):delete()
+		File(proj.file):delete()
 	end
 }

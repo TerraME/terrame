@@ -23,17 +23,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	 attributes = function(unitTest)
-		local error_func = function()
-			attributes(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-
-		error_func = function()
-			attributes("file", 1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
-	end,
 	chDir = function(unitTest)
 		local error_func = function()
 			chDir(1)
@@ -62,39 +51,6 @@ return{
         end
         unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
     end,
-	isFile = function(unitTest)
-		local error_func = function()
-			isFile(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-	end,
-	linkAttributes = function(unitTest)
-		local error_func = function()
-			linkAttributes(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-
-		error_func = function()
-			linkAttributes("path", 1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
-	end,
-	lock = function(unitTest)
-		local error_func = function()
-			lock(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "userdata", 1))
-
-		local pathdata = packageInfo().data
-		local f = io.open(pathdata.."test.txt", "w+")
-
-		error_func = function()
-			lock(f, 1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
-		f:close()
-		os.execute("rm \""..pathdata.."test.txt\"")
-	end,
 	lockDir = function(unitTest)
 		local error_func = function()
 			lockDir(1)
@@ -123,36 +79,6 @@ return{
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abc123456"))
 	end,
-	rmFile = function(unitTest)
-		local error_func = function()
-			rmFile(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-
-		error_func = function()
-			rmFile("abc\"")
-		end
-		unitTest:assertError(error_func, "Argument #1 should not contain quotation marks.")
-
-		error_func = function()
-			rmFile("abc123456")
-		end
-		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abc123456"))
-
-		if _Gtme.isWindowsOS() then 		
-			local file = io.open("myfile.txt", "w")
-
-			error_func = function()
-				rmFile("myfile.txt")
-			end
-			unitTest:assertError(error_func, "Could not remove file 'myfile.txt'.") -- SKIP
-
-			file:close()
-			rmFile("myfile.txt")
-
-			unitTest:assert(not isFile("myfile.txt")) -- SKIP
-		end
-	end,
 	runCommand = function(unitTest)
 		local error_func = function()
 			runCommand(1)
@@ -164,28 +90,6 @@ return{
 			tmpDir(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-	end,
-	touch = function(unitTest)
-		local error_func = function()
-			touch(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-
-		error_func = function()
-			touch("path", "1")
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "1"))
-	
-		error_func = function()
-			touch("path", 1, "1")
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "1"))
-	end,
-	unlock = function(unitTest)
-		local error_func = function()
-			unlock(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "userdata", 1))
 	end
 }
 

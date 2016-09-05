@@ -34,7 +34,7 @@ return {
 		-- SPATIAL INDEX TEST
 		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		local qixFile = string.gsub(filePath1, ".shp", ".qix")
-		rmFile(qixFile)
+		File(qixFile):delete()
 		
 		local layerName1 = "Setores"
 		Layer{
@@ -44,7 +44,7 @@ return {
 			index = false
 		}
 		
-		unitTest:assert(not isFile(qixFile))
+		unitTest:assert(not File(qixFile):exists())
 		
 		proj = Project {
 			file = projName,
@@ -57,7 +57,7 @@ return {
 			file = filePath1
 		}		
 		
-		unitTest:assert(isFile(qixFile))
+		unitTest:assert(File(qixFile):exists())
 		
 		local clName1 = "Setores_Cells10x10"
 		local cl1 = Layer{
@@ -72,7 +72,7 @@ return {
 		}			
 		
 		qixFile = string.gsub(cl1.file, ".shp", ".qix")
-		unitTest:assert(not isFile(qixFile))
+		unitTest:assert(not File(qixFile):exists())
 		
 		local clName2 = "Setores_Cells9x9"
 		local cl2 = Layer{
@@ -86,12 +86,12 @@ return {
 		}
 		
 		qixFile = string.gsub(cl2.file, ".shp", ".qix")
-		unitTest:assert(isFile(qixFile))	
+		unitTest:assert(File(qixFile):exists())
 
-		rmFile(cl1.file)
-		rmFile(cl2.file)
+		File(cl1.file):delete()
+		File(cl2.file):delete()
 		-- // SPATIAL INDEX
-		
+
 		-- VERIFY SRID
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
@@ -108,13 +108,13 @@ return {
 		customWarning = customWarningBkp
 		-- // VERIFY SRID		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_shape.tview"
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
 		local proj = Project {
@@ -168,8 +168,8 @@ return {
 		
 		local shp0 = clName1..".shp"
 		table.insert(shapes, shp0)
-		if isFile(shp0) then
-			rmFile(shp0)
+		if File(shp0):exists() then
+			File(shp0):delete()
 		end
 		
 		local cl = Layer{
@@ -401,8 +401,8 @@ return {
 
 		local shp1 = clName2..".shp"
 		table.insert(shapes, shp1)
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end
 
 		local cl2 = Layer{
@@ -589,7 +589,7 @@ return {
 
 		-- SUM
 
-		rmFile(proj.file)
+		File(proj.file):delete()
 		
 		proj = Project {
 			file = "sum_wba.tview",
@@ -600,8 +600,8 @@ return {
 		clName1 = "cells_set"
 		local shp2 = clName1..".shp"
 		table.insert(shapes, shp2)
-		if isFile(shp2) then
-			rmFile(shp2)
+		if File(shp2):exists() then
+			File(shp2):delete()
 		end		
 		
 		cl = Layer{
@@ -657,7 +657,7 @@ return {
 
 		-- AVERAGE (area = true)
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		
 		projName = "cellular_layer_fill_avg_area.tview"
 
@@ -671,8 +671,8 @@ return {
 		local shp3 = clName1..".shp"
 		table.insert(shapes, shp3)
 
-		if isFile(shp3) then
-			rmFile(shp3)
+		if File(shp3):exists() then
+			File(shp3):delete()
 		end
 		
 		cl = Layer{
@@ -711,12 +711,12 @@ return {
 				
 
 		forEachElement(shapes, function(_, value)
-			rmFile(value)
+			File(value):delete()
 		end)
 
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
-		
+		File(projName):delete() -- #1301
+
 		customWarning = customWarningBkp
 	end,
 	projection = function(unitTest)
@@ -750,7 +750,7 @@ return {
 		
 		customWarning = customWarningBkp
 
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	attributes = function(unitTest)
 		local projName = "layer_shape_basic.tview"
@@ -779,7 +779,7 @@ return {
 						(propNames[i] == "Densde_Pop") or (propNames[i] == "Area"))
 		end
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	export = function(unitTest)
 		local projName = "layer_shape_basic.tview"
@@ -802,15 +802,15 @@ return {
 		
 		local geojson = "setores.geojson"
 		layer:export(geojson, overwrite)
-		unitTest:assert(isFile(geojson))
+		unitTest:assert(File(geojson):exists())
 		
 		local shp = "setores.shp"
 		layer:export(shp, overwrite)
-		unitTest:assert(isFile(shp))
+		unitTest:assert(File(shp):exists())
 
-		rmFile(geojson)
-		rmFile(shp)
-		rmFile(proj.file)
+		File(geojson):delete()
+		File(shp):delete()
+		File(proj.file):delete()
 	end
 }
 

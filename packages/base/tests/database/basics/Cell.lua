@@ -56,8 +56,8 @@ return{
 		local shp1 = "brazil_cells.shp"
 		local filePath1 = testDir.."/"..shp1			
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end			
 		
 		local clName1 = "Brazil_Cells"
@@ -125,12 +125,12 @@ return{
 		end)		
 		
 		-- END
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end	
 
 		tl:dropPgTable(pgData)		
@@ -170,8 +170,8 @@ return{
 		local shp1 = "brazil_cells.shp"
 		local filePath1 = testDir.."/"..shp1			
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end			
 		
 		local clName1 = "Brazil_Cells"
@@ -247,12 +247,12 @@ return{
 		unitTest:assertEquals(dist, 4257933.7712088, 1.0e-7)
 		
 		-- END
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end	
 
 		tl:dropPgTable(pgData)	

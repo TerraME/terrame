@@ -115,7 +115,12 @@ return{
 		error_func = function()
 			randomObj:integer(1, 2.5)
 		end
-		unitTest:assertError(error_func, integerArgumentMsg(2, 2.5))	
+		unitTest:assertError(error_func, integerArgumentMsg(2, 2.5))
+
+		error_func = function()
+			randomObj:integer(1, 0)
+		end
+		unitTest:assertError(error_func, "It is not possible to sample from an empty object.")
 	end,
 	number = function(unitTest)
 		local randomObj = Random{}

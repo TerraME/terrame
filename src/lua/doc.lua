@@ -115,7 +115,7 @@ local function getProjects(package)
 		projects[currentProject] = {description = data.description}
 
 		forEachOrderedElement(data, function(idx, value)
-			if idx ~= "file" and type(value) == "string" and isFile(value) then
+			if idx ~= "file" and type(value) == "string" and File(value):exists() then
 				local layer = tl.Layer{
 					project = filePath(currentProject, "terralib"),
 					name = idx
@@ -228,7 +228,7 @@ local function getProjects(package)
 		if data.resolution and data.file then
 			local mfile = data.file
 
-			if not isFile(mfile) then
+			if not File(mfile):exists() then
 				mfile = filePath(mfile, "terralib")
 			end
 
@@ -395,7 +395,7 @@ function _Gtme.executeDoc(package)
 	local filesdocumented = {}
 	local df = dataFiles(package)
 
-	if isFile(package_path..s.."data.lua") and #df > 0 then
+	if File(package_path..s.."data.lua"):exists() and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
 			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "description", "reference"})
@@ -651,7 +651,7 @@ function _Gtme.executeDoc(package)
 			end
 		end)
 
-		rmFile("tmpproj.tview")
+		File("tmpproj.tview"):delete()
 
 		forEachOrderedElement(df, function(_, mvalue)	
 			if _Gtme.ignoredFile(mvalue) then
@@ -694,7 +694,7 @@ function _Gtme.executeDoc(package)
 			printError("File '"..mvalue.."' is not documented")
 			doc_report.error_data = doc_report.error_data + 1
 		end)
-	elseif isFile(package_path..s.."data.lua") then
+	elseif File(package_path..s.."data.lua"):exists() then
 		printError("Package '"..package.."' has data.lua but there is no data")
 		doc_report.error_data = doc_report.error_data + 1
 	else
@@ -705,7 +705,7 @@ function _Gtme.executeDoc(package)
 	local fontsdocumented = {}
 	df = _Gtme.fontFiles(package)
 
-	if isFile(package_path..s.."font.lua") and #df > 0 then
+	if File(package_path..s.."font.lua"):exists() and #df > 0 then
 		printNote("Parsing 'font.lua'")
 		font = function(tab)
 			local count = verifyUnnecessaryArguments(tab, {"name", "file", "summary", "source", "symbol"})
@@ -795,7 +795,7 @@ function _Gtme.executeDoc(package)
 		forEachElement(df, function(_, mvalue)
 			local license = string.sub(mvalue, 0, -5)..".txt"
 
-			if not isFile(package_path..s.."font"..s..license) then
+			if not File(package_path..s.."font"..s..license):exists() then
 				printError("License file '"..license.."' for font '"..mvalue.."' does not exist")
 				doc_report.error_font = doc_report.error_font + 1
 			end
@@ -807,7 +807,7 @@ function _Gtme.executeDoc(package)
 			printError("File '"..mvalue.."' is not documented")
 			doc_report.error_font = doc_report.error_font + 1
 		end)
-	elseif isFile(package_path..s.."font.lua") then
+	elseif File(package_path..s.."font.lua"):exists() then
 		printError("Package '"..package.."' has font.lua but there are no fonts")
 		doc_report.error_font = doc_report.error_font + 1
 	else

@@ -49,8 +49,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -66,6 +66,6 @@ return {
 		end
 		unitTest:assertError(areaError, "Geometry should be a polygon to get the area.")
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end
 }

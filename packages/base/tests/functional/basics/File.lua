@@ -27,6 +27,31 @@ return{
 		local file = File("abc.txt")
 		unitTest:assertType(file, "File")
 	end,
+	attributes = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		local attr = file:attributes()
+
+		local expected = {
+			getn = 12,
+			mode = "file",
+			size = 140.0
+		}
+
+		if not _Gtme.isWindowsOS() then
+			expected.getn = 14
+			expected.size = 135
+		end
+
+		unitTest:assertEquals(getn(attr), expected.getn)
+		unitTest:assertEquals(attr.mode, expected.mode)
+		unitTest:assertEquals(attr.size, expected.size)
+
+		attr = file:attributes("mode")
+		unitTest:assertEquals(attr, expected.mode)
+
+		attr = file:attributes("size")
+		unitTest:assertEquals(attr, expected.size)
+	end,
 	close = function(unitTest)
 		local filename = "test.csv"
 		local file = File(filename)
@@ -35,7 +60,32 @@ return{
 		local close = file:close()
 
 		unitTest:assert(close)
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
+	end,
+	delete = function(unitTest)
+		local filepath = packageInfo().data.."test123"
+		os.execute("touch "..filepath)
+
+		local file = File(filepath)
+		file:delete()
+
+		unitTest:assert(not file:exists())
+
+		os.execute("touch abc123.shp")
+		os.execute("touch abc123.shx")
+		os.execute("touch abc123.dbf")
+		os.execute("touch abc123.prj")
+
+		File("abc123.shp"):delete()
+
+		unitTest:assert(not File("abc123.shp"):exists())
+		unitTest:assert(not File("abc123.shx"):exists())
+		unitTest:assert(not File("abc123.dbf"):exists())
+		unitTest:assert(not File("abc123.prj"):exists())
+
+		os.execute("touch abc123.shp")
+
+		File("abc123.shp"):delete()
 	end,
 	exists = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -89,6 +139,17 @@ return{
 		extension = file:hasExtension()
 		unitTest:assert(not extension)
 	end,
+	lock = function(unitTest)
+		local filepath = packageInfo().data.."test.txt"
+		local file = File(filepath)
+
+		file:open("w+")
+
+		unitTest:assert(file:lock("w"))
+
+		file:close()
+		File(filepath):delete()
+	end,
 	open = function(unitTest)
 		local file = File("test.csv")
 		local fopen = file:open("a+")
@@ -103,7 +164,7 @@ return{
 		unitTest:assertNil(sfile)
 		file:close()
 
-		rmFile("test.csv")
+		File("test.csv"):delete()
 	end,
 	read = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -139,6 +200,38 @@ return{
 		unitTest:assertEquals(name, "file")
 		unitTest:assertEquals(extension, "txt")
 	end,
+	touch = function(unitTest)
+		if not _Gtme.isWindowsOS() then
+			local pathdata = packageInfo().data.."testfile.txt"
+
+			local file = File(pathdata)
+			file:writeLine("test")
+
+			unitTest:assert(file:touch(10000, 10000)) -- SKIP
+
+			local attr = _Gtme.File(pathdata):attributes("access")
+			unitTest:assertEquals(attr, 10000) -- SKIP
+
+			attr = _Gtme.File(pathdata):attributes("modification")
+			unitTest:assertEquals(attr, 10000) -- SKIP
+
+			File(pathdata):delete()
+		end
+
+		unitTest:assert(true)
+	end,
+	unlock = function(unitTest)
+		local filepath = packageInfo().data.."test.txt"
+		local file = File(filepath)
+
+		file:open("w+")
+
+		unitTest:assert(file:lock("w"))
+		unitTest:assert(file:unlock())
+
+		file:close()
+		File(filepath):delete()
+	end,
 	write = function(unitTest)
 		local example = {
 			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
@@ -171,7 +264,7 @@ return{
 			end
 		end
 
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 	end,
 	writeLine = function(unitTest)
 		local example = "Some text.."
@@ -189,7 +282,7 @@ return{
 		unitTest:assertNotNil(text)
 		unitTest:assertEquals(text, example)
 
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 	end,
 	__tostring = function(unitTest)
 		local file = File("abc.txt")

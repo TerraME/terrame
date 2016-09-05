@@ -189,7 +189,7 @@ function Event(data)
 		}
 	end
 
-	if belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "FileSystem", "TextScreen"}) then
+	if belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "LogFile", "TextScreen"}) then
 		defaultTableValue(data, "priority", 10)
 		defaultTableValue(data, "start", 0)
 	else
@@ -258,7 +258,7 @@ function Event(data)
 				data.action = function()
 				end
 			end
-		elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "FileSystem", "TextScreen"}) then
+		elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "LogFile", "TextScreen"}) then
 			data.action = function(event)
 				maction:update(event)
 			end

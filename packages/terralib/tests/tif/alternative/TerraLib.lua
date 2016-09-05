@@ -30,8 +30,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -43,8 +43,8 @@ return {
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"
 
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end	
 		
 		local resolution = 60e3
@@ -55,7 +55,7 @@ return {
 		end
 		unitTest:assertError(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,	
 	--addPgCellSpaceLayer = function(unitTest)
 		-- #1152
@@ -67,8 +67,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -82,7 +82,7 @@ return {
 		end
 		unitTest:assertError(noRasterLayer, "The layer '"..layerName.."' is not a Raster.")		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	attributeFill = function(unitTest)
 		local tl = TerraLib{}
@@ -91,8 +91,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -111,8 +111,8 @@ return {
 		local clName = "Para_Cells"
 		shp[1] = clName..".shp"
 
-		if isFile(shp[1]) then
-			rmFile(shp[1])
+		if File(shp[1]):exists() then
+			File(shp[1]):delete()
 		end
 		
 		-- CREATE THE CELLULAR SPACE
@@ -127,8 +127,8 @@ return {
 		local percTifLayerName = clName.."_"..layerName2.."_RPercentage"		
 		shp[2] = percTifLayerName..".shp"
 		
-		if isFile(shp[2]) then
-			rmFile(shp[2])
+		if File(shp[2]):exists() then
+			File(shp[2]):delete()
 		end
 		
 		local operation = "coverage"
@@ -145,13 +145,13 @@ return {
 		
 		-- END
 		for j = 1, #shp do
-			if isFile(shp[j]) then
-				rmFile(shp[j])
+			if File(shp[j]):exists() then
+				File(shp[j]):delete()
 			end
 		end	
-		
-		rmFile(proj.file)
-		
+
+		File(proj.file):delete()
+
 		customWarning = customWarningBkp
 	end,
 	getDummyValue = function(unitTest)
@@ -161,8 +161,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 		
 		tl:createProject(proj, {})
@@ -176,7 +176,7 @@ return {
 		end
 		unitTest:assertError(bandNoExists, "The maximum band is '2.0'.")	
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	saveLayerAs = function(unitTest)
 		local tl = TerraLib{}
@@ -185,8 +185,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -258,8 +258,8 @@ return {
 		end
 		unitTest:assertError(overwriteError, "The file '"..currDir.."/cbers_rgb342_crop1.tif' already exists.")
 		
-		rmFile("cbers_rgb342_crop1.tif")
-		rmFile(proj.file)
+		File("cbers_rgb342_crop1.tif"):delete()
+		File(proj.file):delete()
 		
 		customWarning = customWarningBkp
 	end		

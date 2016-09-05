@@ -111,8 +111,8 @@ return{
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end
 		end			
 		
@@ -171,14 +171,14 @@ return{
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end
 		end
 
@@ -216,8 +216,8 @@ return{
 		local geojson1 = "geojson_sampa_cells.geojson"
 		filePath1 = testDir.."/"..geojson1
 
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end
 
 		clName1 = "GeoJSON_Sampa_Cells"
@@ -276,12 +276,12 @@ return{
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 
-		if isFile(geojson1) then
-			rmFile(geojson1)
+		if File(geojson1):exists() then
+			File(geojson1):delete()
 		end
 
 		if _Gtme.isWindowsOS() then
@@ -325,7 +325,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs, 10000) -- SKIP
-			if isFile(projName) then rmFile(projName) end
+			if File(projName):exists() then File(projName):delete() end
 
 			-- NetCDF
 			projName = "nc_cellspace.tview"
@@ -367,7 +367,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 8904) -- SKIP
-			if isFile(projName) then rmFile(projName) end
+			if File(projName):exists() then File(projName):delete() end
 
 
 			-- ASC
@@ -410,7 +410,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
-			if isFile(projName) then rmFile(projName) end
+			if File(projName):exists() then File(projName):delete() end
 
 		end
 		
@@ -1427,8 +1427,8 @@ ydim    number [20]
 	
 		local projName = "cellspace_save_basic.tview"
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
 		local proj = terralib.Project{
@@ -1455,8 +1455,8 @@ ydim    number [20]
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end
 		end
 
@@ -1485,8 +1485,8 @@ ydim    number [20]
 		local fn2 = File(filePath2):getName()
 		fn2 = testDir.."/"..fn2	
 
-		if isFile(filePath2) then
-			rmFile(filePath2)
+		if File(filePath2):exists() then
+			File(filePath2):delete()
 		end
 
 		cs:save(cellSpaceLayerNameT0, "t0")
@@ -1534,8 +1534,8 @@ ydim    number [20]
 		
 		for i = 1, #exts do
 			local f = fn3..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end
 		end			
 		
@@ -1560,8 +1560,8 @@ ydim    number [20]
 		
 		for i = 1, #exts do
 			local f = fn4..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end
 		end			
 		
@@ -1577,29 +1577,29 @@ ydim    number [20]
 			unitTest:assertNotNil(cell.geom)
 		end)		
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end
 
 			f = fn2..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end
 
 			f = fn3..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end
 		
 			f = fn4..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end				
 		end
 	end,

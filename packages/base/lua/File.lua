@@ -75,6 +75,53 @@ end
 
 File_ = {
 	type_ = "File",
+	--- Return a table with the file attributes corresponding to filepath (or nil followed by an error
+	-- message in case of error). If the second optional argument is given, then only the value of the
+	-- named attribute is returned (this use is equivalent to lfs.attributes(filepath).aname, but the
+	-- table is not created and only one attribute is retrieved from the O.S.). The attributes are
+	-- described as follows; attribute mode is a string, all the others are numbers, and the time
+	-- related attributes use the same time reference of os.time.
+	-- This function uses stat internally thus if the given filepath is a symbolic link, it is followed
+	-- (if it points to another link the chain is followed recursively) and the information is about the
+	-- file it refers to.
+	-- @arg attributename A string with the name of the attribute to be read.
+	-- @tabular attributename
+	-- Attribute & Description \
+	-- "dev" &
+	-- on Unix systems, this represents the device that the inode resides on. On Windows
+	-- systems, represents the drive number of the disk containing the file \
+	-- "ino" &
+	-- on Unix systems, this represents the inode number. On Windows systems this has no meaning \
+	-- "mode" &
+	-- string representing the associated protection mode (the values could be file, directory,
+	-- link, socket, named pipe, char device, block device or other) \
+	-- "nlink" &
+	-- number of hard links to the file \
+	-- "uid" &
+	-- user-id of owner (Unix only, always 0 on Windows) \
+	-- "gid" &
+	-- group-id of owner (Unix only, always 0 on Windows) \
+	-- "rdev" &
+	-- on Unix systems, represents the device type, for special file inodes. On Windows systems
+	-- represents the same as dev \
+	-- "access" &
+	-- time of last access \
+	-- "modification" &
+	-- time of last data modification \
+	-- "change" &
+	-- time of last file status change \
+	-- "size" &
+	-- file size, in bytes \
+	-- "blocks" &
+	-- block allocated for file; (Unix only) \
+	-- "blksize" &
+	-- optimal file system I/O blocksize; (Unix only)
+	-- @usage File(packageInfo("base").path):attributes("mode")
+	attributes = function(self, attributename)
+		optionalArgument(1, "string", attributename)
+
+		return lfs.attributes(self.name, attributename)
+	end,
 	--- Close an opened file.
 	-- @usage -- DONTRUN
 	-- file = File("abc.txt")
@@ -91,11 +138,61 @@ File_ = {
 			resourceNotFoundError("file", self.name)
 		end
 	end,
-	--- Return a boolean if the file exists.
+	--- Remove an existing file. If the file does not exist or it cannot be removed,
+	-- this function stops with an error. Directories cannot be removed using
+	-- this function. If the file to be removed is a shapefile, it also removes
+	-- the respective dbf, shx, and prj files if they exist.
+	-- The function will automatically add
+	-- quotation marks in the beginning and in the end of this argument in order
+	-- to avoid problems related to empty spaces in the string. Therefore,
+	-- this string must not contain quotation marks.
+	-- @usage filename = "myfile.txt"
+	-- file = File(filename)
+	-- file:writeLine("Some text..")
+	--
+	-- file:delete()
+	delete = function(self)
+		if string.find(self.name, "\"") then
+			customError("Argument #1 should not contain quotation marks.")
+		elseif not self:exists() then
+			resourceNotFoundError(1, self.name)
+		end
+
+		local result = os.execute("rm -f \""..self.name.."\"")
+
+		if result ~= true then
+			if result == nil then -- SKIP
+				result = "Could not remove file '"..self.name.."'." -- SKIP
+			end
+
+			customError(tostring(result)) -- SKIP
+		end
+
+		if string.endswith(self.name, ".shp") then
+			local dbf = File(string.sub(self.name, 1, -4).."dbf")
+			local shx = File(string.sub(self.name, 1, -4).."shx")
+			local prj = File(string.sub(self.name, 1, -4).."prj")
+			local qix = File(string.sub(self.name, 1, -4).."qix")
+
+			if dbf:exists() then dbf:delete() end
+			if shx:exists() then shx:delete() end
+			if prj:exists() then prj:delete() end
+			if qix:exists() then qix:delete() end
+		end
+	end,
+	--- Return whether a given string represents a file stored in the computer.
+	-- A directory is also considered a file.
 	-- @usage file = File(filePath("agents.csv", "base"))
 	-- print(file:exists())
 	exists = function(self)
-		return isFile(self.name)
+		local fopen = io.open(self.name)
+
+		if fopen then
+			fopen:close()
+			return true
+		end
+
+		return false
 	end,
 	--- Return the directory of a file given its path.
 	-- @usage file = File("/my/path/file.txt")
@@ -141,7 +238,7 @@ File_ = {
 	-- @usage file = File(filePath("agents.csv", "base"))
 	-- print(file:getPath())
 	getPath = function(self)
-		if isFile(self.name) then
+		if self:exists() then
 			return _Gtme.makePathCompatibleToAllOS(self.name)
 		end
 	end,
@@ -150,6 +247,31 @@ File_ = {
 	-- print(file:hasExtension()) -- true
 	hasExtension = function(self)
 		return not (self:getExtension() == "")
+	end,
+	--- Lock a file or a part of it. This function works on open files; the file handle should be
+	-- specified as the first argument. The optional arguments start and length can be used to specify a
+	-- starting point and its length; both should be numbers.
+	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
+	-- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w
+	-- (for a write/exclusive lock).
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- file:open("r")
+	-- file:lock()
+	-- file:unlock()
+	-- @see File:unlock
+	lock = function(self, mode)
+		if not self.file then
+			return customWarning("Cannot lock a file not opened.")
+		end
+
+		optionalArgument(1, "string", mode)
+
+		if io.type(self.file) == "file" then
+			mode = mode or self.mode
+			return lfs.lock(self.file, mode)
+		else
+			resourceNotFoundError("file", self.name)
+		end
 	end,
 	--- Open a file for reading or writing. An opened file must be closed after being used.
 	-- @arg mode A string with the mode. It can be "w" for writing or "r" for reading.
@@ -267,6 +389,40 @@ File_ = {
 
 		return filePath, fileName, extension
 	end,
+	--- Set access and modification times of a file. This function is a bind to utime function.
+	-- Times are provided in seconds (which should be generated with Lua
+	-- standard function os.time). If the modification time is omitted, the access time provided is used;
+	-- if both times are omitted, the current time is used.
+	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
+	-- @arg atime The new access time (in seconds).
+	-- @arg mtime The new modification time (in seconds).
+	-- @usage File(packageInfo("base").path):touch(0, 0)
+	touch = function(self, atime, mtime)
+		mandatoryArgument(1, "number", atime)
+		mandatoryArgument(2, "number", mtime)
+
+		return lfs.touch(self.name, atime, mtime)
+	end,
+	--- Unlock a file or a part of it. This function works on open files; the file handle should be
+	-- specified as the first argument. The optional arguments start and length can be used to specify
+	-- a starting point and its length; both should be numbers. It returns true if the operation was
+	-- successful. In case of error, it returns nil plus an error string.
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- file:open("r")
+	-- file:lock()
+	-- file:unlock()
+	-- @see File:lock
+	unlock =function(self)
+		if not self.file then
+			return customWarning("Cannot unlock a file not opened.")
+		end
+
+		if io.type(self.file) == "file" then
+			return lfs.unlock(self.file)
+		else
+			resourceNotFoundError("file", self.name)
+		end
+	end,
 	--- Write a given table into a file.
 	-- The first line of the file will list the attributes of each table.
 	-- @arg data A table to be saved. It must be a vector (whose indexes are line numbers)
@@ -280,7 +436,7 @@ File_ = {
 	--
 	-- file = File( "file.csv")
 	-- file:write(mytable, ";")
-	-- rmFile("file.csv")
+	-- File("file.csv"):delete()
 	write = function(self, data, sep)
 		mandatoryArgument(1, "table", data)
 		optionalArgument(2, "string", sep)
@@ -327,7 +483,7 @@ File_ = {
 	-- @arg text A string to be saved.
 	-- @usage file = File( "file.txt")
 	-- file:writeLine("Text...")
-	-- rmFile("file.txt")
+	-- File("file.txt"):delete()
 	writeLine = function(self, text)
 		mandatoryArgument(1, "string", text)
 

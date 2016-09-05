@@ -136,7 +136,7 @@ function _Gtme.include(scriptfile, basetable)
 	end
 
 	local env = setmetatable(basetable, {__index = _G})
-	if not isFile(scriptfile) then
+	if not File(scriptfile):exists() then
 		_Gtme.customError("File '"..scriptfile.."' does not exist.")
 	end
 	local lf = loadfile(scriptfile, "t", env)
@@ -214,7 +214,7 @@ function _Gtme.buildCountTable(package)
 	local load_file = baseDir..s.."load.lua"
 	local load_sequence
 
-	if _Gtme.isFile(load_file) then
+	if _Gtme.File(load_file):exists() then
 		-- the 'include' below does not need to be inside a xpcall because 
 		-- the package was already loaded with success
 		load_sequence = _Gtme.include(load_file).files
@@ -300,7 +300,7 @@ function _Gtme.findModels(package)
 	local packagepath = _Gtme.packageInfo(package).path
 	packagepath = _Gtme.makePathCompatibleToAllOS(packagepath)
 
-	if _Gtme.attributes(packagepath, "mode") ~= "directory" then
+	if _Gtme.File(packagepath):attributes("mode") ~= "directory" then
 		_Gtme.customError("Package '"..package.."' is not installed.")
 	end
 
@@ -333,7 +333,7 @@ function _Gtme.findExamples(package)
 		os.exit(1)
 	end)
 
-	if _Gtme.attributes(examplespath, "mode") ~= "directory" then
+	if _Gtme.File(examplespath):attributes("mode") ~= "directory" then
 		return {}
 	end
 
@@ -361,7 +361,7 @@ function _Gtme.showDoc(package)
 
 	docpath = docpath..s.."doc"..s.."index.html"
 
-	if not isFile(docpath) then
+	if not File(docpath):exists() then
 		_Gtme.printError("It was not possible to find the documentation of package '"..package.."'.")
 		_Gtme.printError("Please run 'terrame -package "..package.." -doc' to build it.")
 		os.exit(1)
@@ -422,7 +422,7 @@ function _Gtme.buildConfig()
 
 	local conf = {}
 
-	if isFile("config.lua") then
+	if File("config.lua"):exists() then
 		conf = _Gtme.getConfig()
 
 		if conf.user     then lineEditUser:setText(conf.user)         end
@@ -582,7 +582,7 @@ function _Gtme.installPackage(file)
 	if file == nil then
 		_Gtme.printError("You need to choose the file to be installed.")
 		return
-	elseif not _Gtme.isFile(file) then
+	elseif not _Gtme.File(file):exists() then
 		_Gtme.printError("No such file: '"..file.."'.")
 		return
 	end
@@ -985,7 +985,7 @@ local function findExample(example, packageName)
 
         exFullPath = info..s.."examples"..s..file..".lua"
 
-        if not isFile(exFullPath) then
+        if not File(exFullPath):exists() then
             errMsg = "Example '"..file.."' does not exist in package '"..packageName.."'."
             errMsg = errMsg.."\nPlease use one from the list below:"
         end
@@ -998,7 +998,7 @@ local function findExample(example, packageName)
         errMsg = "Package '"..packageName.."' has the following examples:"
     end
 
-    if file and isFile(exFullPath) then
+    if file and File(exFullPath):exists() then
         -- it only changes the file to point to the package and let it run as it
         -- was a call such as "TerraME .../package/examples/example.lua"
         return true, exFullPath
@@ -1122,7 +1122,7 @@ local function findProject(project, packageName)
 
 		exFullPath = info..s.."data"..s..file..".lua"
 
-		if not isFile(exFullPath) then
+		if not File(exFullPath):exists() then
 			msg = "Project '"..file.."' does not exist in package '"..packageName.."'."
 			msg = msg.."\nPlease use one from the list below:"
 		end
@@ -1133,7 +1133,7 @@ local function findProject(project, packageName)
 		msg = "Package '"..packageName.."' has the following projects:"
 	end
 
-	if file and isFile(exFullPath) then
+	if file and File(exFullPath):exists() then
 		return true, exFullPath
 	else
 		files = _Gtme.projectFiles(packageName)
@@ -1184,8 +1184,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	local s = info_.separator
 	local path = info_.path..s.."packages"..s.."base"..s.."lua"..s
 	dofile(path.."ErrorHandling.lua", _Gtme)
+	dofile(path.."File.lua", _Gtme)
 	dofile(path.."Package.lua", _Gtme)
-	dofile(path.."FileSystem.lua", _Gtme)
+	dofile(path.."OS.lua", _Gtme)
 	dofile(path.."Utils.lua", _Gtme)
 	dofile(info_.path..s.."lua"..s.."utils.lua")
 	dofile(info_.path..s.."lua"..s.."configure.lua")
@@ -1263,7 +1264,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 					local description = _Gtme.packageInfo(package).path..s.."description.lua"
 
-					if not isFile(description) then
+					if not File(description):exists() then
 						_Gtme.printError("File '"..package..s.."description.lua' does not exist.")
 						os.exit(1)
 					end
@@ -1448,7 +1449,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 					arg = info..s.."examples"..s..file..".lua"
 
-					if not isFile(arg) then
+					if not File(arg):exists() then
 						_Gtme.printError("Example '"..file.."' does not exist in package '"..package.."'.")
 						print("Please use one from the list below:")
 					end
@@ -1461,7 +1462,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					print("Package '"..package.."' has the following examples:")
 				end
 
-				if file and isFile(arg) then
+				if file and File(arg):exists() then
 					-- it only changes the file to point to the package and let it run as it
 					-- was a call such as "TerraME .../package/examples/example.lua"
 					arguments[argCount + 1] = arg
@@ -1485,7 +1486,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 					arg = info..s.."data"..s..file..".lua"
 
-					if not isFile(arg) then
+					if not File(arg):exists() then
 						_Gtme.printError("Project '"..file.."' does not exist in package '"..package.."'.")
 						print("Please use one from the list below:")
 					end
@@ -1496,7 +1497,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					print("Package '"..package.."' has the following projects:")
 				end
 
-				if file and isFile(arg) then
+				if file and File(arg):exists() then
 					-- it only changes the file to point to the package and let it run as it
 					-- was a call such as "TerraME .../package/examples/example.lua"
 					arguments[argCount + 1] = arg
@@ -1527,7 +1528,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			local cObj = TeVisualArrangement()
 			cObj:setFile(displayFile)
 			
-			if _Gtme.isFile(displayFile) then
+			if _Gtme.File(displayFile):exists() then
 				local display = dofile(displayFile)
 				
 				_Gtme.forEachElement(display, function(idx, data)
@@ -1539,7 +1540,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			if isDir(arg) then
 				_Gtme.printError("Argument '"..arg.."' is a directory, and not a Lua file.")
 				os.exit(1)
-			elseif not isFile(arg) then
+			elseif not File(arg):exists() then
 				_Gtme.printError("File '"..arg.."' does not exist.")
 				os.exit(1)
 			elseif not _Gtme.string.endswith(arg, ".lua") then

@@ -396,7 +396,7 @@ end
 local function checkShape(self)
 	local dbf = self.file:sub(1, self.file:len() - 3).."dbf"
 
-	if not isFile(dbf) then
+	if not File(dbf):exists() then
 		customError("File '"..dbf.."' was not found.")
 	end
 end
@@ -420,7 +420,7 @@ local function checkProject(self)
 					self.project = self.project..".tview"
 				end
 
-				if isFile(self.project) then
+				if File(self.project):exists() then
 					local file = self.project
 					self.project = terralib.Project{
 						file = file
@@ -1565,7 +1565,7 @@ function CellularSpace(data)
 			customError("source and file extension should be the same.")
 		end
 
-		if not isFile(data.file) then
+		if not File(data.file):exists() then
 			resourceNotFoundError("file", data.file)
 		end
 	end
