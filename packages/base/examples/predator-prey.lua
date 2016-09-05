@@ -109,10 +109,16 @@ c = Cell{
 	preys = function() return #preys end
 }
 
-chart = Chart{
+chart1 = Chart{
 	target = c,
 	select = {"predators", "preys"},
 	color = {"red", "blue"}
+}
+
+chart2 = Chart{
+	target = c,
+	select = "predators",
+	xAxis = "preys"
 }
 
 map1 = Map{
@@ -135,7 +141,8 @@ timer = Timer{
 	Event{action = cs},
 	Event{action = map1},
 	Event{action = map2},
-	Event{action = chart},
+	Event{action = chart1},
+	Event{action = chart2},
 }
 
 timer:run(500)
