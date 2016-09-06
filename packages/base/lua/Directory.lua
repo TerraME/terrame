@@ -74,7 +74,6 @@ Directory_ = {
 	end,
 	--- Create a new directory. The argument is the name of the new directory.
 	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
-	-- @arg path A string with the path.
 	-- @usage -- DONTRUN
 	-- Directory("mydirectory"):create()
 	create = function(self)
@@ -82,11 +81,9 @@ Directory_ = {
 	end,
 	--- Remove an existing directory. It removes all internal files and directories
 	-- recursively. If the directory does not exist or it cannot be removed,
-	-- this function stops with an error.
-	-- @arg path A string with the path. The function will automatically add
-	-- quotation marks in the beginning and in the end of this argument in order
-	-- to avoid problems related to empty spaces in the string. Therefore,
-	-- this string must not contain quotation marks.
+	-- this function stops with an error. The function will automatically add
+	-- quotation marks in the beginning and in the end of the directory name in order
+	-- to avoid problems related to empty spaces in the string.
 	-- @usage dir = Directory("mydirectory")
 	-- dir:create()
 	-- dir:delete()
@@ -111,9 +108,8 @@ Directory_ = {
 		return false
 	end,
 	--- Return the files in a given directory.
-	-- @arg directory A string describing a directory. The default value is the current directory (".").
 	-- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
-	-- @usage files = File(packageInfo("base").data):list()
+	-- @usage files = Directory(packageInfo("base").data):list()
 	--
 	-- forEachFile(files, function(file)
 	--     print(file)
@@ -141,7 +137,6 @@ Directory_ = {
 	end,
 	--- Change the current working directory to the given path.
 	-- Returns true in case of success or nil plus an error string.
-	-- @arg path A string with the path.
 	-- @usage -- DONTRUN
 	-- Directory("c:\\tests"):setCurrentDir()
 	setCurrentDir = function(self)
