@@ -395,6 +395,8 @@ function _Gtme.executeDoc(package)
 	local filesdocumented = {}
 	local df = dataFiles(package)
 
+	sessionInfo().mode = "strict"
+
 	if isFile(package_path..s.."data.lua") and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
@@ -764,6 +766,8 @@ function _Gtme.executeDoc(package)
 			printError(err)
 			os.exit(1)
 		end)
+
+		sessionInfo().mode = "debug"
 
 		table.sort(mfont, function(a, b)
 			return a.file < b.file
