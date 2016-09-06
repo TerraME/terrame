@@ -944,7 +944,7 @@ function _Gtme.executeDoc(package)
 			end)
 
 			forEachOrderedElement(documentedArguments, function(midx)
-				if not args[midx] and midx ~= "named" then
+				if args[midx] == nil and midx ~= "named" then
 					printError("Model '"..modelName.."' does not have documented argument '"..midx.."'")
 					doc_report.model_error = doc_report.model_error + 1
 				end
