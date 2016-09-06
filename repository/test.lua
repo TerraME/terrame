@@ -1,6 +1,8 @@
 -- Script to test the package repository.
 -- To use it, just run 'terrame test.lua' within this directory.
 
+local configuration = "configuration.lua"
+
 local initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
 local baseDir = sessionInfo().path
@@ -43,7 +45,7 @@ local function approximateLine(line)
 	
 	if string.match(line, "seconds")             then return   5 end
 	if string.match(line, "MD5")                 then return  70 end
-	if string.match(line, "configuration file")  then return   3 end
+	if string.match(line, "configuration file")  then return 120 end
 	if string.match(line, "or is empty or does") then return  50 end
 	if string.match(line, "does not exist")      then return  50 end
 	if string.match(line, "is unnecessary%.")    then return  50 end
@@ -153,7 +155,13 @@ end)
 _Gtme.printNote("Executing tests")
 forEachOrderedElement(pkgs, function(package)
 	_Gtme.print("Testing package '"..package.."'")
+
 	local command = "terrame -package "..package.." -test"
+
+	if isDir(packageInfo(package).path.."/log") then
+		command = command.." ../"..configuration
+	end
+
 	execute(command, "test-"..package..".log")
 end)
 

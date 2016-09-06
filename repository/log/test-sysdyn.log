@@ -1,3 +1,5 @@
+Loading configuration file '/Users/pedro/t.lua'
+Using log directory 'log/mac'
 Loading package 'sysdyn'
 Looking for overwritten variables
 Looking for documented functions
@@ -5,6 +7,12 @@ Looking for package functions
 Skip looking for lines of source code
 Testing tests/ChaoticGrowth.lua
 Testing ChaoticGrowth
+Checking if all asserts were executed
+Testing tests/Coffee.lua
+Testing Coffee
+Checking if all asserts were executed
+Testing tests/Daisyworld.lua
+Testing Daisyworld
 Checking if all asserts were executed
 Testing tests/Homeostasis.lua
 Testing Homeostasis
@@ -27,11 +35,16 @@ Checking if all asserts were executed
 Testing tests/RoomTemperature.lua
 Testing RoomTemperature
 Checking if all asserts were executed
-Testing tests/SysDynModel.lua
-Testing SysDynModel
+Testing tests/SIR.lua
+Testing SIR
+Checking if all asserts were executed
+Testing tests/Tub.lua
+Testing Tub
 Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking ChaoticGrowth.lua
+Checking Coffee.lua
+Checking Daisyworld.lua
 Checking Homeostasis.lua
 Checking LimitedGrowth.lua
 Checking MonoLake.lua
@@ -39,28 +52,37 @@ Checking PopulationGrowth.lua
 Checking PredatorPrey.lua
 Checking RandomWalk.lua
 Checking RoomTemperature.lua
-Checking SysDynModel.lua
+Checking SIR.lua
+Checking Tub.lua
 Skipping lines of source code check
-Skipping snapthots check
 Testing examples
-The package has no examples
+Testing coffee-scenarios
+Testing infection-scenarios-1
+Testing infection-scenarios-2
+Testing infection-scenarios-3
+Testing population-scenarios-1
+Testing population-scenarios-2
+Testing tub-scenarios
+Checking logs
 
-Unit test report:
-Tests were executed in 11.71 seconds.
+Functional test report for package 'sysdyn':
+Tests were executed in 31.95 seconds.
+Logs were saved in '.terrametmp_6bYUQ'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 13 asserts were executed successfully.
-All 9 tested functions do not have any unexpected execution error.
-All 9 tested functions have at least one assert.
-All 9 tested functions exist in the source code of the package.
+All 27 asserts were executed successfully.
+All 12 tested functions do not have any unexpected execution error.
+All 12 tested functions have at least one assert.
+All 12 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
-All 9 functions of the package were tested.
+No file was created along the tests.
+All 12 functions of the package were tested.
 No lines from the source code were verified.
-No snapshot test was executed.
-The package has no examples.
+All 7 examples were successfully executed.
 No new log file was created.
+All log files were used in the tests.
 Summing up, all tests were successfully executed.
