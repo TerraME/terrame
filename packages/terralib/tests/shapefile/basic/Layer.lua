@@ -183,7 +183,6 @@ return {
 		}
 		
 		-- MODE
-		
 		cl:fill{
 			operation = "mode",
 			layer = municipios,

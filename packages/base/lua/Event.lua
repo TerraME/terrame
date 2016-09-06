@@ -177,6 +177,10 @@ function Event(data)
 		customError("Argument 'message' is deprecated, use 'action' instead.")
 	end
 
+	if data.action == nil then
+		customError(mandatoryArgumentMsg("action"))
+	end
+
 	verifyUnnecessaryArguments(data, {"start", "action", "priority", "period"})
 
 	if type(data.priority) == "string" then
@@ -203,68 +207,64 @@ function Event(data)
 	data.time = data.start
 	data.start = nil
 
-	if data.action == nil then
-		customError("Argument 'action' is mandatory.")
-	else
-		local targettype = type(data.action)
-		local maction = data.action
-		if targettype == "Society" then
-			if data.action.execute then
-				if type(data.action.execute) ~= "function" then
-					customError("Incompatible types. Attribute 'execute' from "..targettype.." should be a function, got "..type(data.action.execute)..".")
-				end
-
-				data.action = function(event)
-					maction:synchronize(event:getPeriod())
-					maction:execute(event)
-				end
-			else
-				data.action = function(event)
-					maction:synchronize(event:getPeriod())
-				end
-			end
-		elseif targettype == "Cell" or targettype == "CellularSpace" then
-			if data.action.execute then
-				if type(data.action.execute) ~= "function" then
-					customError("Incompatible types. Attribute 'execute' from "..targettype.." should be a function, got "..type(data.action.execute)..".")
-				end
-				data.action = function(event)
-					maction:synchronize()
-					maction:execute(event)
-				end
-			else
-				data.action = function()
-					maction:synchronize()
-				end
-			end
-		elseif targettype == "Agent" or targettype == "Automaton" then
+	local targettype = type(data.action)
+	local maction = data.action
+	if targettype == "Society" then
+		if data.action.execute then
 			if type(data.action.execute) ~= "function" then
 				customError("Incompatible types. Attribute 'execute' from "..targettype.." should be a function, got "..type(data.action.execute)..".")
 			end
 
 			data.action = function(event)
+				maction:synchronize(event:getPeriod())
 				maction:execute(event)
 			end
-		elseif targettype == "Group" or targettype == "Trajectory" then
-			data.action = function()
-				maction:rebuild()
-			end
-		elseif isModel(maction) then
-			if data.action.execute then
-				data.action = function(event)
-					maction:execute(event)
-				end
-			else
-				data.action = function()
-				end
-			end
-		elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "FileSystem", "TextScreen"}) then
+		else
 			data.action = function(event)
-				maction:update(event)
+				maction:synchronize(event:getPeriod())
 			end
-		elseif targettype ~= "function" then
-			incompatibleTypeError("action", "one of the TerraME types or a function", data.action)
 		end
+	elseif targettype == "Cell" or targettype == "CellularSpace" then
+		if data.action.execute then
+			if type(data.action.execute) ~= "function" then
+				customError("Incompatible types. Attribute 'execute' from "..targettype.." should be a function, got "..type(data.action.execute)..".")
+			end
+			data.action = function(event)
+				maction:synchronize()
+				maction:execute(event)
+			end
+		else
+			data.action = function()
+				maction:synchronize()
+			end
+		end
+	elseif targettype == "Agent" or targettype == "Automaton" then
+		if type(data.action.execute) ~= "function" then
+			customError("Incompatible types. Attribute 'execute' from "..targettype.." should be a function, got "..type(data.action.execute)..".")
+		end
+
+		data.action = function(event)
+			maction:execute(event)
+		end
+	elseif targettype == "Group" or targettype == "Trajectory" then
+		data.action = function()
+			maction:rebuild()
+		end
+	elseif isModel(maction) then
+		if data.action.execute then
+			data.action = function(event)
+				maction:execute(event)
+			end
+		else
+			data.action = function()
+			end
+		end
+	elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "FileSystem", "TextScreen"}) then
+		data.action = function(event)
+			maction:update(event)
+		end
+	elseif targettype ~= "function" then
+		incompatibleTypeError("action", "one of the TerraME types or a function", data.action)
 	end
 
 	setmetatable(data, metaTableEvent_)

@@ -11,10 +11,7 @@ predator = Agent{
 	energy = 40,
 	name = "predator",
 	execute = function(self)
-		forEachNeighbor(self:getCell(), function(_, neigh)
-			other = neigh:getAgent()
-			if not other then return end
-
+		forEachNeighborAgent(self, function(other)
 			if other.name == "prey" and Random():number() < 0.5 then
 				self.energy = self.energy + other.energy / 5
 				other:die()
@@ -112,10 +109,16 @@ c = Cell{
 	preys = function() return #preys end
 }
 
-chart = Chart{
+chart1 = Chart{
 	target = c,
 	select = {"predators", "preys"},
 	color = {"red", "blue"}
+}
+
+chart2 = Chart{
+	target = c,
+	select = "predators",
+	xAxis = "preys"
 }
 
 map1 = Map{
@@ -138,7 +141,8 @@ timer = Timer{
 	Event{action = cs},
 	Event{action = map1},
 	Event{action = map2},
-	Event{action = chart},
+	Event{action = chart1},
+	Event{action = chart2},
 }
 
 timer:run(500)

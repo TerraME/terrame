@@ -510,45 +510,65 @@ local function setCellsByTerraLibDataSet(self, dSet)
 	self.yMin = 0
 	self.yMax = 0
 	self.xMin = 0
-	
+
+	if type(self.xy) == "table" then
+		verify(#self.xy == 2, "Argument 'xy' should have exactly two values.")
+
+		verify(type(self.xy[1]) == "string", "Argument 'xy[1]' should be 'string', got '"..type(self.xy[1]).."'.")
+		verify(type(self.xy[2]) == "string", "Argument 'xy[2]' should be 'string', got '"..type(self.xy[2]).."'.")
+
+		defaultTableValue(self, "zero", "top")
+	elseif self.xy == nil then
+		self.xy = {"col", "row"}
+		defaultTableValue(self, "zero", "bottom") 
+	elseif type(self.xy) ~= "function" then
+		customError("Argument 'xy' should be a 'table' or a 'function', got '"..type(self.xy).."'")
+	end
+
 	self.cells = {}
 	self.cObj_:clear()
+
+	if type(self.xy) == "table" then
+		local colname = self.xy[1]
+		local rowname = self.xy[2]
+
+		if colname ~= "col" and not dSet[1][colname] then
+			customError("Cells do not have attribute '"..colname.."'.")
+		elseif rowname ~= "row" and not dSet[1][rowname] then
+			customError("Cells do not have attribute '"..rowname.."'.")
+		end
+	end
 
 	for i = 0, #dSet do
 		local row = 0
 		local col = 0
 
-		if dSet[i].row then
-			row = tonumber(dSet[i].row)
-			col = tonumber(dSet[i].col)
-		elseif dSet[i].Lin then
-			row = tonumber(dSet[i].Lin) -- SKIP
-			col = tonumber(dSet[i].Col) -- SKIP
-		elseif dSet[i].lin then
-			row = tonumber(dSet[i].lin) -- SKIP
-			col = tonumber(dSet[i].col) -- SKIP
+		if type(self.xy) == "table" then
+			col = tonumber(dSet[i][self.xy[1]]) or 0
+			row = tonumber(dSet[i][self.xy[2]]) or 0
+		elseif type(self.xy) == "function" then
+			col, row = self.xy(dSet[i])
 		end
 
 		self.xMin = math.min(self.xMin, col)
 		self.xMax = math.max(self.xMax, row)
 		self.yMin = math.min(self.yMin, row)
-		self.yMax = math.max(self.yMax, col)		
+		self.yMax = math.max(self.yMax, col)
 	end
 
 	for i = 0, #dSet do
-		local row = tonumber(dSet[i].row)
-		local col = tonumber(dSet[i].col)
+		local row = 0
+		local col = 0
 
-		if not row then -- compatibility with shapes exported from TerraLLib 4
-			if dSet[i].Lin then
-				row = tonumber(dSet[i].Lin) -- SKIP
-				col = tonumber(dSet[i].Col) -- SKIP
-			elseif dSet[i].lin then
-				row = tonumber(dSet[i].lin) -- SKIP
-				col = tonumber(dSet[i].col) -- SKIP
-			end
-		else
-			row = self.xMax - row + self.xMin
+		if type(self.xy) == "table" then
+			col = tonumber(dSet[i][self.xy[1]]) or 0
+			row = tonumber(dSet[i][self.xy[2]]) or 0
+		elseif type(self.xy) == "function" then
+			col, row = self.xy(dSet[i])
+		end
+
+		if self.zero == "bottom" then
+			row = self.xMax - row + self.xMin -- bottom inverts row
 		end
 
 		local cell = Cell{id = tostring(i), x = col, y = row}
@@ -579,7 +599,9 @@ end
 local function loadOGR(self)
 	local tlib = terralib.TerraLib{}
 	local dSet = tlib:getOGRByFilePath(self.file)
-	self.geometry = true
+
+	defaultTableValue(self, "geometry", false)
+
 	setCellsByTerraLibDataSet(self, dSet)
 	local temp = ""
 
@@ -677,7 +699,8 @@ end
 registerCellularSpaceDriver{
 	source = "shp",
 	load = loadOGR,
-	check = checkShape
+	check = checkShape,
+	optional = "xy"
 }
 
 registerCellularSpaceDriver{
@@ -714,7 +737,8 @@ registerCellularSpaceDriver{
 
 registerCellularSpaceDriver{
 	source = "geojson",
-	load = loadOGR
+	load = loadOGR,
+	optional = "xy"
 }
 
 registerCellularSpaceDriver{
@@ -1249,7 +1273,7 @@ CellularSpace_ = {
 				for i = 0, #dset do
 					for k, v in pairs(dset[i]) do
 						if (k == "OGR_GEOMETRY") or (k == "geom") then
-							self.cells[i+1][k] = v
+							self.cells[i + 1][k] = v
 						end
 					end		
 				end
@@ -1267,8 +1291,8 @@ CellularSpace_ = {
 					for i = 0, #dset do
 						for k, v in pairs(dset[i]) do
 							if k == "OGR_GEOMETRY" then
-								self.cells[i+1]["geom"] = nil
-								self.cells[i+1][k] = v
+								self.cells[i + 1]["geom"] = nil
+								self.cells[i + 1][k] = v
 							end
 						end		
 					end
@@ -1449,6 +1473,18 @@ metaTableCellularSpace_ = {
 -- of the file. It can also be an object of type Project from package terralib.
 -- @arg data.attrname A string with an attribute name. It is useful for files that have 
 -- only one attribute value for each cell but no attribute name.
+-- @arg data.as A table with string indexes and values. It renames the loaded attributes
+-- of the CellularSpace from the values to its indexes.
+-- @arg data.zero A string value describing where the zero in the y axis starts. The
+-- default value is "bottom" (as defined by TerraLib). When one uses argument xy, the
+-- default value is "top", which is the most common representation in different data
+-- formats.
+-- @arg data.xy An optional table with two strings describing the names of the
+-- column and row attributes, in this order. The default value is {"col", "row"},
+-- representing the attribute names created by TerraLib for CellularSpaces. A Map
+-- can only be created from a CellularSpace if each Cell has a (x, y) location. This
+-- argument can also be a function that gets a Cell as argument and returns two values
+-- with the (x, y) location. 
 -- @arg data.... Any other attribute or function for the CellularSpace.
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
@@ -1478,18 +1514,18 @@ metaTableCellularSpace_ = {
 -- @tabular source
 -- source & Description & Compulsory arguments & Optional arguments\
 -- "map" & Load from a text file where Cells are stored as numbers with its attribute value.
--- & & sep, attrname \
+-- & & sep, attrname, as \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
--- requires at least two attributes: x and y. & file & source, sep, geometry, ...\
+-- requires at least two attributes: x and y. & file & source, sep, as, geometry, ...\
 -- "proj" & Load from a layer within a TerraLib project. See the documentation of package terralib for
--- more information. & project, layer & source, geometry, ... \
+-- more information. & project, layer & source, geometry, as, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and 
 -- different extensions: .shp, .shx, and .dbf. The argument file must contain the
 -- extension .shp. Each loaded Cell will have its (x, y) location according to the attributes
 -- (row, col) or (Lin, Col) from the shapefile. The first pair keeps compatibility with TerraLib 5, 
--- while the last one is related to TerraLib 4. & file & source, geometry, ... \
+-- while the last one is related to TerraLib 4. & file & source, as, xy, zero, geometry, ... \
 -- "virtual" & Create a rectangular CellularSpace from scratch. Cells will be instantiated with
--- only two attributes, x and y, starting from (0, 0). & xdim & ydim, geometry, ...
+-- only two attributes, x and y, starting from (0, 0). & xdim & ydim, as, geometry, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.
 -- @output cObj_ A pointer to a C++ representation of the CellularSpace. Never use this object.
 -- @output parent The Environment it belongs.
@@ -1505,9 +1541,16 @@ metaTableCellularSpace_ = {
 -- states = CellularSpace{
 --     file = filePath("brazilstates.shp", "base")
 -- }
+--
+-- cabecadeboi = CellularSpace{
+--     file = filePath("cabecadeboi.shp"),
+--     as = {height = "height_"}
+-- }
 function CellularSpace(data)
 	verifyNamedTable(data)
 	
+	optionalTableArgument(data, "as", "table")
+
 	local candidates = {}
 
 	forEachOrderedElement(CellularSpaceDrivers, function(idx, value)
@@ -1721,6 +1764,31 @@ function CellularSpace(data)
 		forEachCell(data, function(cell)
 			setmetatable(cell, metaTableInstance)
 		end)
+	end
+
+	if data.as then
+		forEachElement(data.as, function(idx, value)
+			if type(idx) ~= "string" then
+				customError("All indexes of 'as' should be 'string', got '"..type(idx).."'.")
+			elseif type(value) ~= "string" then
+				customError("All values of 'as' should be 'string', got '"..type(value).."'.")
+			elseif data.cells[1][idx] then
+				customError("Cannot rename '"..value.."' to '"..idx.."' as it already exists.")
+			elseif not data.cells[1][value] then
+				customError("Cannot rename attribute '"..value.."' as it does not exist.")
+			end
+		end)
+
+		local s = "return function(cell)\n"
+
+		forEachElement(data.as, function(idx, value)
+			s = s.."cell."..idx.." = cell."..value.."\n"
+			s = s.."cell."..value.." = nil\n"
+		end)
+	
+		s = s.."end"
+
+		forEachCell(data, load(s)())
 	end
 
 	return data

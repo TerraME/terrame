@@ -89,9 +89,9 @@ return{
 		unitTest:assertError(error_func, "Argument 'message' is deprecated, use 'action' instead.")
 
 		error_func = function()
-			event = Event{myaction = function() end}
+			event = Event{action = function() end, myperiod = function() end}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("myaction", "action"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("myperiod", "period"))
 
 		error_func = function()
 			event = Event{period = 1, priority = 1, action = function() end}

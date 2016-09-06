@@ -101,6 +101,12 @@ return{
 		c1:update(1)
 		unitTest:assertSnapshot(c1, "chart-table-xaxis.bmp", 0.03)
 
+		c1 = Chart{target = world, select = "count", xAxis = "mCount"}
+		c1:update(0)
+		world.count = world.count + 2
+		c1:update(1)
+		unitTest:assertSnapshot(c1, "chart-table-xaxis-func.bmp", 0.03)
+
 		local t = {
 			value1 = 2,
 			value2 = 5
