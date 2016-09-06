@@ -4,6 +4,10 @@
 -- Pedro R. Andrade
 
 initialTime = os.time(os.date("*t"))
+local s = sessionInfo().separator
+
+initialDir = currentDir()..s..File(sessionInfo().currentFile):getDir()
+chDir(initialDir)
 
 commands = _Gtme.include("commands.lua")
 
@@ -28,7 +32,6 @@ forEachElement(directories, function(idx, value)
 	end)
 end)
 
-local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 
 _Gtme.printNote("Creating temporary directory")
@@ -258,7 +261,7 @@ end)
 _Gtme.printNote("Testing from local directories")
 
 os.execute("cp config.lua packages")
-chDir("packages")
+chDir(initialDir..s.."packages")
 
 _Gtme.printNote("Removing files")
 remove = _Gtme.include(".."..s.."remove.lua")
@@ -431,7 +434,7 @@ if commands.build then
 end
 
 rmFile("config.lua")
-chDir("..")
+chDir(initialDir..s.."..")
 
 if commands.observer then
 	_Gtme.printNote("Checking observers")
@@ -442,7 +445,7 @@ if commands.observer then
 
 		directories.scripts[tmefile] = true
 
-		tmefile = dofile("scripts"..s..tmefile)
+		tmefile = dofile(initialDir..s.."scripts"..s..tmefile)
 
 		local names = {"x", "y", "width", "height"}
 

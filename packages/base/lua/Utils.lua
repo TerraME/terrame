@@ -1363,6 +1363,8 @@ end
 -- with the following values.
 -- @tabular NONE
 -- Attribute & Description \
+-- currentFile & A string with the current file being executed. This attribute 
+-- only exists when the file was passed as argument to TerraME. \
 -- dbVersion & A string with the current TerraLib version for databases. \
 -- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
 -- path & A string with the location of TerraME in the computer. \

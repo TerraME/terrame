@@ -1547,6 +1547,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(1)
 			end
 
+			sessionInfo().currentFile = arg
+
 			local success, result = _Gtme.myxpcall(function() dofile(arg) end) 
 			if not success then
 				_Gtme.printError(result)
