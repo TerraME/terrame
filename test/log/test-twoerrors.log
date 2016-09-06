@@ -18,42 +18,42 @@ Testing customWarning2
 Testing defaultTableValue2
 Testing defaultValueMsg2
 Testing defaultValueWarning2
-Testing deprecatedFunction2
 Testing deprecatedFunctionMsg2
+Testing deprecatedFunction2
 Testing incompatibleTypeError2
 Testing incompatibleTypeMsg2
 Testing incompatibleValueError2
 Testing incompatibleValueMsg2
-Testing integerArgument2
 Testing integerArgumentMsg2
+Testing integerArgument2
 Testing integerTableArgument2
 Testing invalidFileExtensionError2
 Testing invalidFileExtensionMsg2
-Testing mandatoryArgument2
 Testing mandatoryArgumentError2
 Testing mandatoryArgumentMsg2
+Testing mandatoryArgument2
 Testing mandatoryTableArgument2
 Testing namedArgumentsMsg2
 Testing optionalArgument2
 Testing optionalTableArgument2
-Testing positiveArgument2
 Testing positiveArgumentMsg2
+Testing positiveArgument2
 Testing positiveTableArgument2
 Testing resourceNotFoundError2
 Testing resourceNotFoundMsg2
 Testing strictWarning2
 Testing suggestion2
-Testing switchInvalidArgument2
 Testing switchInvalidArgumentMsg2
 Testing switchInvalidArgumentSuggestionMsg2
+Testing switchInvalidArgument2
 Testing tableArgumentMsg2
 Testing toLabel2
 Testing unnecessaryArgumentMsg2
 Testing valueNotFoundError2
 Testing valueNotFoundMsg2
-Testing verify2
 Testing verifyNamedTable2
 Testing verifyUnnecessaryArguments2
+Testing verify2
 Checking if all asserts were executed
 Testing tests/Tube.lua
 Testing Tube
@@ -66,19 +66,21 @@ Checking if all asserts were executed
 Testing tests/Utils.lua
 Testing belong2
 Error in C:/TerraME/bin/packages/twoerrors/tests/Utils.lua:32: Test should be true, got false.
+File 'twoerrors-file-1.txt' was created along the test.
+File 'twoerrors-file-2.txt' was created along the test.
 Test creates global variable(s): 'abcdef' (number).
 Test updates global variable(s): 'forEachCell' (changed from function to number).
 Testing call2
 Wrong execution, got:
-Error: attempt to perform arithmetic on global 'aaa' (a nil value)
+Error: attempt to perform arithmetic on a nil value (global 'aaa')
 Stack traceback:
     File C:/TerraME/bin/packages/twoerrors/lua/Utils.lua, line 79, in function 'call2', in operator + (addition)
     File C:/TerraME/bin/packages/twoerrors/tests/Utils.lua, line 42, in main chunk
 Testing createNeighborhood2
 Testing elapsedTime2
 Testing forEachAgent2
-Testing forEachCell2
 Testing forEachCellPair2
+Testing forEachCell2
 Testing forEachElement2
 Testing forEachFile2
 Testing forEachNeighbor2
@@ -105,13 +107,13 @@ Testing switch2
 Testing type2
 Testing vardump2
 Checking if all asserts were executed
-Assert in line 244 was not executed.
+Assert in line 254 was not executed.
 Testing tests/alternative/Cell.lua
 Testing Cell
 Error in ...erraME/bin/packages/twoerrors/tests/alternative/Cell.lua:42: Test should be Map got Chart.
 Creating 'log/mac/chart_cell_select.bmp'.
 Wrong execution, got:
-Error: attempt to perform arithmetic on global 'abc' (a nil value)
+Error: attempt to perform arithmetic on a nil value (global 'abc')
 Stack traceback:
     File ...erraME/bin/packages/twoerrors/tests/alternative/Cell.lua, line 63, in main chunk
 Checking if all asserts were executed
@@ -123,21 +125,21 @@ Testing defaultTableValue2
 Testing defaultValueWarning2
 Testing deprecatedFunction2
 Testing suggestion2
-Testing switchInvalidArgument2
 Testing switchInvalidArgumentMsg2
 Testing switchInvalidArgumentSuggestionMsg2
+Testing switchInvalidArgument2
 Checking if all asserts were executed
 Testing tests/alternative/Utils.lua
 Testing belong2
 Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got:
-Error: attempt to perform arithmetic on global 'aab' (a nil value)
+Error: attempt to perform arithmetic on a nil value (global 'aab')
 Stack traceback:
     File C:/TerraME/bin/packages/twoerrors/lua/Utils.lua, line 46, in function 'belong2', in operator + (addition)
     File ...rraME/bin/packages/twoerrors/tests/alternative/Utils.lua, line 30, in call to function 'belong2'
     File ...rraME/bin/packages/twoerrors/tests/alternative/Utils.lua, line 32, in main chunk
 Testing call2
 Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got:
-Error: attempt to perform arithmetic on global 'aab' (a nil value)
+Error: attempt to perform arithmetic on a nil value (global 'aab')
 Stack traceback:
     File C:/TerraME/bin/packages/twoerrors/lua/Utils.lua, line 46, in function 'belong2', in operator + (addition)
     File ...rraME/bin/packages/twoerrors/tests/alternative/Utils.lua, line 41, in call to function 'belong2'
@@ -165,20 +167,20 @@ Function 'forEachNeighborhood2' was not tested.
 Function 'forEachNeighborhood3' was not tested.
 Checking lines of source code
 Checking ErrorHandling.lua
+Line 228 was not executed.
 Checking Tube.lua
 Checking Tube2.lua
 Checking Utils.lua
 Line 41 was not executed.
-Line 42 was not executed.
 Testing examples
 Testing continuous-rain
 Testing discrete-rain
-Error in example: Error: attempt to perform arithmetic on global 'fff' (a nil value)
+Error in example: Error: attempt to perform arithmetic on a nil value (global 'fff')
 Stack traceback:
     File ...erraME/bin/packages/twoerrors/examples/discrete-rain.lua, line 28, in call to operator + (addition)
 Creating 'log/mac/discrete-rain.log'.
 Testing ipd
-Error in example: Error: attempt to perform arithmetic on global 'fff' (a nil value)
+Error in example: Error: attempt to perform arithmetic on a nil value (global 'fff')
 Stack traceback:
     File C:/TerraME/bin/packages/twoerrors/examples/ipd.lua, line 195, in call to operator + (addition)
 Checking logs
@@ -192,16 +194,17 @@ Logs were saved in '.terrametmp_TgnOm'.
 2 variables are overwritten when loading the package.
 2 invalid files or directories were found in directory 'test'.
 2 asserts were not executed at least once.
-2 out of 261 asserts failed.
+2 out of 253 asserts failed.
 2 out of 95 tested functions stopped with an unexpected error.
 2 out of 95 tested functions do not have at least one assert.
 2 out of 95 tested functions do not exist in the source code of the package.
 2 out of 95 tested functions create or update some global variable.
 2 print calls were found in the tests.
 2 assertError() calls have error messages pointing to an internal file (wrong level).
+2 files were created along the tests.
 2 out of 70 source code functions were not tested.
 2 lines from the source code were not executed at least once.
 2 errors were found in the 3 examples.
 2 log files were created. Please run the tests again.
 2 files from directory 'log/mac' were not used.
-Summing up, 32 problems were found during the tests.
+Summing up, 34 problems were found during the tests.

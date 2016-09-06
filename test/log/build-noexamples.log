@@ -17,7 +17,7 @@ The package has no examples
 Skipping logs check
 
 Functional test report for package 'noexamples':
-Tests were executed in 0.2 seconds.
+Tests were executed in 0.04 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -29,6 +29,7 @@ All 1 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
 All 1 functions of the package were tested.
 No lines from the source code were verified.
 The package has no examples.
@@ -70,7 +71,7 @@ Checking single.lua
 Checking if all Models are documented
 
 Documentation report for package 'noexamples':
-Documentation was built in 0.76 seconds.
+Documentation was built in 0.02 seconds.
 4 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
@@ -111,10 +112,10 @@ Creating file 'noexamples_0.1.zip'
 Package 'noexamples' successfully zipped
 
 Build report for package 'noexamples':
-Package was built in 2.64 seconds.
+Package was built in 0.24 seconds.
 Build created file 'noexamples_0.1.zip'.
-Temporary files are saved in .terrame_noexamples_KXaVZ
-MD5 sum for the package is 42808fce012eef591ef91892a9d146a9
+Temporary files are saved in .terrame_noexamples_54PM9
+MD5 sum for the package is c4fdf18689337943fa715c5a51add34d
 The package does not have a license file.
 2 errors were found in the documentation.
 There are no unnecessary files in the package.

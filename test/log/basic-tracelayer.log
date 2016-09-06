@@ -1,4 +1,6 @@
+Warning: It was not possible to find the projection of layer 'cover'.
+The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json In file scripts/trace-layer.lua, in line 3.
 Error: attempt to perform arithmetic on a nil value (field 'w')
 Stack traceback:
-    File trace-layer.lua, line 12, in second order function, in operator + (addition)
-    File trace-layer.lua, line 11, in call to function 'forEachLayer'
+    File scripts/trace-layer.lua, line 13, in second order function
+    File scripts/trace-layer.lua, line 12, in call to function 'forEachLayer'

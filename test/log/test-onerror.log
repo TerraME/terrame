@@ -15,42 +15,42 @@ Testing customWarning2
 Testing defaultTableValue2
 Testing defaultValueMsg2
 Testing defaultValueWarning2
-Testing deprecatedFunction2
 Testing deprecatedFunctionMsg2
+Testing deprecatedFunction2
 Testing incompatibleTypeError2
 Testing incompatibleTypeMsg2
 Testing incompatibleValueError2
 Testing incompatibleValueMsg2
-Testing integerArgument2
 Testing integerArgumentMsg2
+Testing integerArgument2
 Testing integerTableArgument2
 Testing invalidFileExtensionError2
 Testing invalidFileExtensionMsg2
-Testing mandatoryArgument2
 Testing mandatoryArgumentError2
 Testing mandatoryArgumentMsg2
+Testing mandatoryArgument2
 Testing mandatoryTableArgument2
 Testing namedArgumentsMsg2
 Testing optionalArgument2
 Testing optionalTableArgument2
-Testing positiveArgument2
 Testing positiveArgumentMsg2
+Testing positiveArgument2
 Testing positiveTableArgument2
 Testing resourceNotFoundError2
 Testing resourceNotFoundMsg2
 Testing strictWarning2
 Testing suggestion2
-Testing switchInvalidArgument2
 Testing switchInvalidArgumentMsg2
 Testing switchInvalidArgumentSuggestionMsg2
+Testing switchInvalidArgument2
 Testing tableArgumentMsg2
 Testing toLabel2
 Testing unnecessaryArgumentMsg2
 Testing valueNotFoundError2
 Testing valueNotFoundMsg2
-Testing verify2
 Testing verifyNamedTable2
 Testing verifyUnnecessaryArguments2
+Testing verify2
 Checking if all asserts were executed
 Testing tests/Tube.lua
 Testing Tube
@@ -58,17 +58,18 @@ Testing w
 Checking if all asserts were executed
 Testing tests/Utils.lua
 Testing belong2
+File 'onerror-file-1.txt' was created along the test.
 Testing call2
 Wrong execution, got:
-Error: attempt to perform arithmetic on global 'aaa' (a nil value)
+Error: attempt to perform arithmetic on a nil value (global 'aaa')
 Stack traceback:
-    File C:/TerraME/bin/packages/onerror/lua/Utils.lua, line 78, in function 'call2', in operator + (addition)
-    File C:/TerraME/bin/packages/onerror/tests/Utils.lua, line 40, in main chunk
+    File ...errame.app/Contents/MacOS/packages/onerror/lua/Utils.lua, line 78, in function 'call2', in operator + (addition)
+    File ...rame.app/Contents/MacOS/packages/onerror/tests/Utils.lua, line 45, in main chunk
 Testing createNeighborhood2
 Testing elapsedTime2
 Testing forEachAgent2
-Testing forEachCell2
 Testing forEachCellPair2
+Testing forEachCell2
 Testing forEachElement2
 Testing forEachFile2
 Testing forEachNeighbor2
@@ -91,7 +92,7 @@ Testing switch2
 Testing type2
 Testing vardump2
 Checking if all asserts were executed
-Assert in line 241 was not executed.
+Assert in line 246 was not executed.
 Testing tests/alternative/Cell.lua
 Testing Cell
 Creating 'log/mac/chart_cell.bmp'.
@@ -108,14 +109,14 @@ Testing defaultTableValue2
 Testing defaultValueWarning2
 Testing deprecatedFunction2
 Testing suggestion2
-Testing switchInvalidArgument2
 Testing switchInvalidArgumentMsg2
 Testing switchInvalidArgumentSuggestionMsg2
+Testing switchInvalidArgument2
 Checking if all asserts were executed
 Testing tests/alternative/Utils.lua
 Testing belong2
 Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got:
-Error: attempt to perform arithmetic on global 'aab' (a nil value)
+Error: attempt to perform arithmetic on a nil value (global 'aab')
 Stack traceback:
     File C:/TerraME/bin/packages/onerror/lua/Utils.lua, line 44, in function 'belong2', in operator + (addition)
     File C:/TerraME/bin/packages/onerror/tests/alternative/Utils.lua, line 30, in call to function 'belong2'
@@ -144,11 +145,11 @@ Checking lines of source code
 Checking ErrorHandling.lua
 Checking Tube.lua
 Checking Utils.lua
-Line 41 was not executed.
+Line 40 was not executed.
 Testing examples
 Testing continuous-rain
 Testing ipd
-Error in example: Error: attempt to perform arithmetic on global 'bcs' (a nil value)
+Error in example: Error: attempt to perform arithmetic on a nil value (global 'bcs')
 Stack traceback:
     File C:/TerraME/bin/packages/onerror/examples/ipd.lua, line 193, in call to operator + (addition)
 Checking logs
@@ -161,16 +162,17 @@ One print() call was found when loading the package.
 One variable is overwritten when loading the package.
 One invalid file or directory was found in directory 'test'.
 One assert was not executed at least once.
-One out of 258 asserts failed.
+One out of 250 asserts failed.
 One out of 92 tested functions stopped with an unexpected error.
 One out of 92 tested functions does not have at least one assert.
 One out of 92 tested functions does not exist in the source code of the package.
 One out of 92 tested functions creates or updates some global variable.
 One print call was found in the tests.
 One assertError() call has an error message pointing to an internal file (wrong level).
+One file was created along the tests.
 One out of 67 source code functions was not tested.
 One line from the source code was not executed at least once.
 One error was found in the 2 examples.
 One log file was created. Please run the tests again.
 One file from directory 'log/mac' was not used.
-Summing up, 16 problems were found during the tests.
+Summing up, 17 problems were found during the tests.

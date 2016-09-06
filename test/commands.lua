@@ -10,6 +10,7 @@ test = {
 	twofiles       = {arg = "-test", config = "twoFiles.lua"},
 	twotest        = {arg = "-test", config = "twoTests.lua"},
 	twodirectories = {arg = "-test", config = "twoDirectories.lua"},
+	memory         = {arg = "-test", package = "memory"},
 	pattern        = {arg = "-test", config = "pattern.lua"},
 	noload         = {arg = "-test", package = "noload"},
 	nolog          = {arg = "-test", config = "log.lua"},
@@ -101,7 +102,7 @@ basic = {
 	depend2             = {arg = "-build", package = "depend2"},
 	scriptdir           = {arg = packageInfo().path},
 	scriptnofile        = {arg = "abcd1234.lua"},
-	scriptnoluafile     = {arg = filePath("simple-cs.csv")},
+	scriptnoluafile     = {arg = filePath("agents.csv")},
 	tmp                 = {script = "tmp.lua"}
 }
 

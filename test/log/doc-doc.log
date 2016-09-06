@@ -3,6 +3,26 @@ Loading package 'base'
 Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
+Checking properties of data files
+Processing 'River_lin.shp'
+It was not possible to find the projection of layer 'layer1'.
+The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
+Processing 'agents.csv'
+Processing 'amazonia.shp'
+It was not possible to find the projection of layer 'layer2'.
+The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
+Processing 'brazilstates.shp'
+It was not possible to find the projection of layer 'layer3'.
+The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
+Processing 'cabecadeboi.shp'
+It was not possible to find the projection of layer 'layer4'.
+The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
+Processing 'cabecadeboi900.shp'
+It was not possible to find the projection of layer 'layer5'.
+The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
+Processing 'emas.shp'
+It was not possible to find the projection of layer 'layer6'.
+The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
 Parsing 'font.lua'
 Checking directory 'font'
 Checking licenses of fonts
@@ -17,6 +37,7 @@ Parsing lua/Clock.lua
 Parsing lua/Environment.lua
 Parsing lua/ErrorHandling.lua
 Parsing lua/Event.lua
+Parsing lua/File.lua
 Parsing lua/FileSystem.lua
 Parsing lua/Flow.lua
 Parsing lua/Group.lua
@@ -76,6 +97,7 @@ Checking lua/Clock.lua
 Checking lua/Environment.lua
 Checking lua/ErrorHandling.lua
 Checking lua/Event.lua
+Checking lua/File.lua
 Checking lua/FileSystem.lua
 Checking lua/Flow.lua
 Checking lua/Group.lua
@@ -145,6 +167,7 @@ Testing getNeighborhood
 Testing init
 Testing isEmpty
 Testing notify
+Testing on_synchronize
 Testing sample
 Testing setId
 Testing synchronize
@@ -184,10 +207,10 @@ Testing notify
 Testing run
 Testing file lua/ErrorHandling.lua
 Testing customError
-Testing customWarning
+Skipping customWarning
 Testing defaultTableValue
 Testing defaultValueMsg
-Testing defaultValueWarning
+Skipping defaultValueWarning
 Testing deprecatedFunction
 Testing deprecatedFunctionMsg
 Testing incompatibleTypeError
@@ -213,6 +236,7 @@ Testing resourceNotFoundError
 Testing resourceNotFoundMsg
 Skipping strictWarning
 Testing suggestion
+Testing suggestionMsg
 Testing switchInvalidArgument
 Testing switchInvalidArgumentMsg
 Testing switchInvalidArgumentSuggestionMsg
@@ -230,6 +254,23 @@ Testing getParent
 Testing getPeriod
 Testing getPriority
 Testing getTime
+Testing file lua/File.lua
+Testing File
+Skipping close
+Testing exists
+Testing getDir
+Testing getExtension
+Testing getName
+Testing getNameWithExtension
+Testing getPath
+Testing hasExtension
+Skipping open
+Testing read
+Testing readLine
+Testing removeExtension
+Testing splitNames
+Testing write
+Testing writeLine
 Testing file lua/FileSystem.lua
 Testing attributes
 Skipping chDir
@@ -281,6 +322,7 @@ Testing init
 Skipping interface
 Testing notify
 Testing run
+Testing title
 Testing file lua/Neighborhood.lua
 Testing Neighborhood
 Testing add
@@ -371,9 +413,6 @@ Testing assertType
 Testing clear
 Skipping printError
 Testing file lua/Utils.lua
-Testing CSVparseLine
-Testing CSVread
-Testing CSVwrite
 Testing belong
 Testing call
 Testing clean
@@ -389,12 +428,13 @@ Testing forEachCellPair
 Testing forEachConnection
 Testing forEachElement
 Testing forEachFile
+Testing forEachModel
 Testing forEachNeighbor
+Testing forEachNeighborAgent
 Testing forEachNeighborhood
 Testing forEachOrderedElement
 Testing forEachSocialNetwork
 Testing getConfig
-Testing getExtension
 Testing getNames
 Testing getn
 Testing greaterByAttribute
@@ -411,6 +451,8 @@ Testing round
 Testing sessionInfo
 Testing string.endswith
 Testing switch
+Skipping table.load
+Testing table.save
 Testing toLabel
 Testing type
 Testing vardump
@@ -429,6 +471,7 @@ Checking lua/Clock.lua
 Checking lua/Environment.lua
 Checking lua/ErrorHandling.lua
 Checking lua/Event.lua
+Checking lua/File.lua
 Checking lua/FileSystem.lua
 Checking lua/Flow.lua
 Checking lua/Group.lua
@@ -461,6 +504,7 @@ Checking lua/Clock.lua
 Checking lua/Environment.lua
 Checking lua/ErrorHandling.lua
 Checking lua/Event.lua
+Checking lua/File.lua
 Checking lua/FileSystem.lua
 Checking lua/Flow.lua
 Checking lua/Group.lua
@@ -495,6 +539,7 @@ Building doc/files/Clock.html
 Building doc/files/Environment.html
 Building doc/files/ErrorHandling.html
 Building doc/files/Event.html
+Building doc/files/File.html
 Building doc/files/FileSystem.html
 Building doc/files/Flow.html
 Building doc/files/Group.html
@@ -536,6 +581,7 @@ Checking Environment.lua
 Checking ErrorHandling.lua
 Checking Event.lua
 Checking FileSystem.lua
+Checking File.lua
 Checking Flow.lua
 Checking Group.lua
 Checking InternetSender.lua
@@ -559,29 +605,29 @@ Checking VisualTable.lua
 Checking if all Models are documented
 
 Documentation report for package 'base':
-Documentation was built in 176.73 seconds.
-35 HTML files were created.
+Documentation was built in 17.85 seconds.
+36 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
-All 314 global functions of the package are documented.
+All 333 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 297 non-named arguments are documented.
+All 304 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 314 functions call themselves in their @usage.
-All 314 functions do not have any error in their @usage.
+All 333 functions call themselves in their @usage.
+All 333 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
-All 329 links were correctly built.
+All 348 links were correctly built.
 All 25 examples are correctly documented.
 Summing up, all the documentation was successfully built.

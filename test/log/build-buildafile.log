@@ -11,7 +11,7 @@ Testing elapsedTime2
 Wrong execution, got:
 Error: It is not possible to use assertFile without a log directory location in a configuration file for the tests.
 Stack traceback:
-    File C:/TerraME/bin/packages/buildafile/tests/Utils.lua, line 31, in main chunk
+    File ...e.app/Contents/MacOS/packages/buildafile/tests/Utils.lua, line 31, in main chunk
 Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking Utils.lua
@@ -21,7 +21,7 @@ The package has no examples
 Skipping logs check
 
 Functional test report for package 'buildafile':
-Tests were executed in 0.66 seconds.
+Tests were executed in 0.08 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -33,6 +33,7 @@ All 1 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
 All 1 functions of the package were tested.
 No lines from the source code were verified.
 The package has no examples.
@@ -73,7 +74,7 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'buildafile':
-Documentation was built in 0.58 seconds.
+Documentation was built in 0.05 seconds.
 4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -113,10 +114,10 @@ Creating file 'buildafile_0.1.zip'
 Package 'buildafile' successfully zipped
 
 Build report for package 'buildafile':
-Package was built in 1.7 seconds.
+Package was built in 0.32 seconds.
 Build created file 'buildafile_0.1.zip'.
-Temporary files are saved in .terrame_buildafile_uuAh4
-MD5 sum for the package is 2fed14576e931cf2794454c8b26c0409
+Temporary files are saved in .terrame_buildafile_6kdGU
+MD5 sum for the package is 7811e78630458ae2a77cb012c86e5c19
 The package has a license file.
 Documentation was successfully built.
 There are no unnecessary files in the package.
