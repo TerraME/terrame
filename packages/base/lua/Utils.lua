@@ -1454,8 +1454,8 @@ function table.load(filename)
 	mandatoryArgument(1, "string", filename)
 
 	local file = File(filename)
-	verify(file:getExtension() == "lua", "File '"..filename.."' does not have a valid extension.")
-	verify(file:exists(), resourceNotFoundMsg("file", file:getNameWithExtension()))
+	verify(file:extension() == "lua", "File '"..filename.."' does not have a valid extension.")
+	verify(file:exists(), resourceNotFoundMsg("file", file:name(true)))
 
 	local tbl
 	local ok, error = pcall(function() tbl = dofile(file:getPath()) end)

@@ -56,7 +56,7 @@ return{
 		local filename = "test.csv"
 		local file = File(filename)
 
-		file.file = io.open(file.name, "a+")
+		file.file = io.open(file.filename, "a+")
 		local close = file:close()
 
 		unitTest:assert(close)
@@ -87,6 +87,12 @@ return{
 
 		File("abc123.shp"):delete()
 	end,
+	directory = function(unitTest)
+		local file = File("/my/path/file.txt")
+
+		unitTest:assertType(file, "File")
+		unitTest:assertEquals(file:directory(), "/my/path/")
+	end,
 	exists = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
 		unitTest:assert(file:exists())
@@ -94,30 +100,12 @@ return{
 		file = File("abc.lua")
 		unitTest:assert(not file:exists())
 	end,
-	getDir = function(unitTest)
+	extension = function(unitTest)
 		local file = File("/my/path/file.txt")
-
-		unitTest:assertType(file, "File")
-		unitTest:assertEquals(file:getDir(), "/my/path/")
-	end,
-	getExtension = function(unitTest)
-		local file = File("/my/path/file.txt")
-		local extension = file:getExtension()
+		local extension = file:extension()
 
 		unitTest:assertType(file, "File")
 		unitTest:assertEquals(extension, "txt")
-	end,
-	getName = function(unitTest)
-		local file = File("/my/path/file.txt")
-
-		unitTest:assertType(file, "File")
-		unitTest:assertEquals(file:getName(), "file")
-	end,
-	getNameWithExtension = function (unitTest)
-		local file = File("/my/path/file.txt")
-
-		unitTest:assertType(file, "File")
-		unitTest:assertEquals(file:getNameWithExtension(), "file.txt")
 	end,
 	getPath = function(unitTest)
 		local file = File("/my/path/file.txt")
@@ -149,6 +137,13 @@ return{
 
 		file:close()
 		File(filepath):delete()
+	end,
+	name = function(unitTest)
+		local file = File("/my/path/file.txt")
+
+		unitTest:assertType(file, "File")
+		unitTest:assertEquals(file:name(), "file")
+		unitTest:assertEquals(file:name(true), "file.txt")
 	end,
 	open = function(unitTest)
 		local file = File("test.csv")
@@ -182,23 +177,15 @@ return{
 		unitTest:assertEquals(line[2], "20")
 		unitTest:assertEquals(line[3], "200")
 	end,
-	removeExtension = function(unitTest)
+	split = function(unitTest)
 		local file = File("/my/path/file.txt")
-		local nameWithExtension = file:getNameWithExtension()
-
-		unitTest:assertType(file, "File")
-		unitTest:assertEquals(nameWithExtension, "file.txt")
-		unitTest:assertEquals(file:removeExtension(nameWithExtension), "file")
-		unitTest:assertEquals(file:removeExtension(), "file")
-	end,
-	splitNames = function(unitTest)
-		local file = File("/my/path/file.txt")
-		local path, name, extension = file:splitNames()
+		local path, name, extension, nameWithExtension = file:split()
 
 		unitTest:assertType(file, "File")
 		unitTest:assertEquals(path, "/my/path/")
 		unitTest:assertEquals(name, "file")
 		unitTest:assertEquals(extension, "txt")
+		unitTest:assertEquals(nameWithExtension, "file.txt")
 	end,
 	touch = function(unitTest)
 		if not _Gtme.isWindowsOS() then
@@ -286,7 +273,7 @@ return{
 	end,
 	__tostring = function(unitTest)
 		local file = File("abc.txt")
-		unitTest:assertEquals(tostring(file), [[name  string [abc.txt]
+		unitTest:assertEquals(tostring(file), [[filename  string [abc.txt]
 ]])
 	end
 }

@@ -61,7 +61,7 @@ return{
 			file:close()
 		end
 
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
 	delete = function(unitTest)
 		local file = File("abc\"")
@@ -107,7 +107,7 @@ return{
 			file:lock()
 		end
 
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 
 		file = File("abc.txt")
 		file.file = true
@@ -117,6 +117,14 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
+	name = function(unitTest)
+		local file = File("abc.txt")
+
+		local error_func = function()
+			file:name(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "boolean", 1))
+	end,
 	open = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
 		file:readLine()
@@ -124,7 +132,7 @@ return{
 		local error_func = function()
 			file:open()
 		end
-		unitTest:assertError(error_func, "File '"..file.name.."' is already open.")
+		unitTest:assertError(error_func, "File '"..file.filename.."' is already open.")
 		file:close()
 
 		file = File("test.txt")
@@ -156,7 +164,7 @@ return{
 			file:read()
 		end
 
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 
 		local s = sessionInfo().separator
 		file = File(filePath("test/error"..s.."csv-error.csv"))
@@ -224,7 +232,7 @@ return{
 			file:unlock()
 		end
 
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
 	write = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))

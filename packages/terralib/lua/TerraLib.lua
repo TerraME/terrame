@@ -274,7 +274,7 @@ end
 
 local function isValidTviewExt(filePath)
 	local file = File(filePath)
-	return file:getExtension() == "tview"
+	return file:extension() == "tview"
 end
 
 local function releaseProject(project)
@@ -377,10 +377,10 @@ local function addFileLayer(project, name, filePath, type, addSpatialIdx)
 			connInfo.SPATIAL_IDX = true
 		end
 		local file = File(connInfo.URI)
-		dSetName = file:getName()
+		dSetName = file:name()
 	elseif type == "GDAL" then
 		local file = File(connInfo.URI)
-		dSetName = file:getNameWithExtension()
+		dSetName = file:name(true)
 	elseif type == "GeoJSON" then
 		type = "OGR"
 		dSetName = "OGRGeoJSON"
@@ -1083,11 +1083,11 @@ TerraLib_ = {
 		elseif type == "OGR" then
 			info.file = connInfo.URI
 			local file = File(info.file)
-			info.source = file:getExtension()
+			info.source = file:extension()
 		elseif type == "GDAL" then
 			info.file = connInfo.URI
 			local file = File(info.file)
-			info.source = file:getExtension()
+			info.source = file:extension()
 		elseif type == "ADO" then
 			info.source = "access" -- SKIP
 		end
@@ -1193,7 +1193,7 @@ TerraLib_ = {
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
 		local file = File(connInfo.URI)
-		local dSetName = file:getName()
+		local dSetName = file:name()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
@@ -1288,7 +1288,7 @@ TerraLib_ = {
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
 		local file = File(connInfo.URI)
-		local dSetName = file:getName()
+		local dSetName = file:name()
 		
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 		
@@ -1558,7 +1558,7 @@ TerraLib_ = {
 				outConnInfo.PG_NEWDB_NAME = outDSetName
 			elseif outType == "OGR" then
 				local file = File(outConnInfo.URI)
-				local outDir = _Gtme.makePathCompatibleToAllOS(file:getDir())
+				local outDir = _Gtme.makePathCompatibleToAllOS(file:directory())
 				outConnInfo.URI = outDir..out..".shp"
 				outConnInfo.DRIVER = "ESRI Shapefile"
 				outConnInfo.SPATIAL_IDX = true
@@ -1617,7 +1617,7 @@ TerraLib_ = {
 				
 				if toType == "OGR" then
 					local file = File(toConnInfo.URI)
-					toSetName = file:getName()
+					toSetName = file:name()
 				end
 				
 				overwriteLayer(self, project, out, to, toSetName)
@@ -1777,7 +1777,7 @@ TerraLib_ = {
 				outDs = makeAndOpenDataSource(outConnInfo, outType)
 			elseif outType == "OGR" then
 				local file = File(outConnInfo.URI)
-				local outDir = _Gtme.makePathCompatibleToAllOS(file:getDir())
+				local outDir = _Gtme.makePathCompatibleToAllOS(file:directory())
 				outConnInfo.URI = outDir..newDstName..".shp"		
 
 				if fromLayerName == toName then
@@ -1830,7 +1830,7 @@ TerraLib_ = {
 			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "GDAL")
 			local file = File(connInfo.URI)
-			local dSetName = file:getNameWithExtension()
+			local dSetName = file:name(true)
 			local dSet = ds:getDataSet(dSetName)
 			set = createDataSetAdapted(dSet)
 
@@ -1856,10 +1856,10 @@ TerraLib_ = {
 			local ds = makeAndOpenDataSource(connInfo, "OGR")
 			local dSetName
 			local file = File(filePath)
-			if string.lower(file:getExtension()) == "geojson" then
+			if string.lower(file:extension()) == "geojson" then
 				dSetName = "OGRGeoJSON"
 			else
-				dSetName = file:getName()
+				dSetName = file:name()
 			end
 
 			local dSet = ds:getDataSet(dSetName)
@@ -2057,7 +2057,7 @@ TerraLib_ = {
 			elseif toType == "GDAL" then
 				toData.fileTif = fromDSetName
 				local file = File(toData.file)
-				local dir = file:getDir()
+				local dir = file:directory()
 				if dir == "" then
 					dir = _Gtme.makePathCompatibleToAllOS(currentDir())
 				end	
@@ -2065,7 +2065,7 @@ TerraLib_ = {
 				toData.dir = dir
 				local fileCopy = dir.."/"..toData.fileTif
 				
-				if toData.file and (file:getNameWithExtension() ~= fileTif) then
+				if toData.file and (file:name(true) ~= fileTif) then
 					customWarning("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364
 				end					
 						

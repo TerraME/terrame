@@ -613,7 +613,7 @@ function Model(attrTab)
 
 				if #e > 0 then
 					mandatoryTableArgument(argv, name, "string")
-					local ext = File(argv[name]):getExtension()
+					local ext = File(argv[name]):extension()
 
 					if ext == "" then
 						customError("No file extension for parameter "..toLabel(name)..". It should be one of '"..value.."'.")
@@ -668,7 +668,7 @@ function Model(attrTab)
 							end
 
 							mandatoryTableArgument(iargv, iname, "string")
-							local ext = File(iargv[iname]):getExtension()
+							local ext = File(iargv[iname]):extension()
 
 							if ext == "" then
 								customError("No file extension for parameter "..toLabel(iname, name)..". It should be one of '"..ivalue.."'.")

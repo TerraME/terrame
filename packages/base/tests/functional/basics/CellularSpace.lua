@@ -105,7 +105,7 @@ return{
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1	
-		local fn1 = File(filePath1):getName()
+		local fn1 = File(filePath1):name()
 		fn1 = testDir.."/"..fn1			
 		
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
@@ -1448,7 +1448,7 @@ ydim    number [20]
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1
-		local fn1 = File(filePath1):getName()
+		local fn1 = File(filePath1):name()
 		fn1 = testDir.."/"..fn1
 
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
@@ -1482,7 +1482,7 @@ ydim    number [20]
 
 		local shp2 = cellSpaceLayerNameT0..".shp"
 		local filePath2 = testDir.."/"..shp2	
-		local fn2 = File(filePath2):getName()
+		local fn2 = File(filePath2):name()
 		fn2 = testDir.."/"..fn2	
 
 		if File(filePath2):exists() then
@@ -1529,7 +1529,7 @@ ydim    number [20]
 		
 		local shp3 = cellSpaceLayerNameGeom..".shp"
 		local filePath3 = testDir.."/"..shp3	
-		local fn3 = File(filePath3):getName()
+		local fn3 = File(filePath3):name()
 		fn3 = testDir.."/"..fn3	
 		
 		for i = 1, #exts do
@@ -1555,7 +1555,7 @@ ydim    number [20]
 		
 		local shp4 = cellSpaceLayerNameGeom2..".shp"
 		local filePath4 = testDir.."/"..shp4	
-		local fn4 = File(filePath4):getName()
+		local fn4 = File(filePath4):name()
 		fn4 = testDir.."/"..fn4	
 		
 		for i = 1, #exts do

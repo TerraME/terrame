@@ -77,7 +77,7 @@ function _Gtme.executeProject(package)
 			print("Processing '"..file.."'")
 			project_report.projects = project_report.projects + 1
 
-			local filename = File(file):getName()
+			local filename = File(file):name()
 			local output = filename..".tview"
 
 			local filesDir = {}
@@ -101,8 +101,8 @@ function _Gtme.executeProject(package)
 			forEachFile(dir:list(), function(newFile)
 				if filesDir[newFile] == nil then
 					local fileInfo = File(newFile)
-					if not fileInfo:getName() == filename then
-						printError("File '"..fileInfo:getNameWithExtension().."' should be named '"..filename.."."..fileInfo:getExtension().."'.")
+					if not fileInfo:name() == filename then
+						printError("File '"..fileInfo:name(true).."' should be named '"..filename.."."..fileInfo:extension().."'.")
 						project_report.errors_output = project_report.errors_output + 1
 					end
 				end

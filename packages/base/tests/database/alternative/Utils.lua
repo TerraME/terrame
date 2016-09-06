@@ -32,15 +32,15 @@ return{
 		local file = File("dump.lua")
 
 		error_func = function()
-			table.load(file:getNameWithExtension())
+			table.load(file:name(true))
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file:getNameWithExtension()))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file:name(true)))
 
 		file:writeLine("!!#$@12334")
 		error_func = function()
 			table.load(file:getPath())
 		end
-		unitTest:assertError(error_func, "Failed to load file '"..file:getNameWithExtension().."': dump.luaunexpected symbol near '!'")
+		unitTest:assertError(error_func, "Failed to load file '"..file:name(true).."': dump.luaunexpected symbol near '!'")
 
 		file = File("dump.lua")
 		file:writeLine("local x = 2")

@@ -390,7 +390,7 @@ end
 local function checkMap(self)
 	defaultTableValue(self, "sep", " ")
 	local file = File(self.file)
-	defaultTableValue(self, "attrname", file:getName())
+	defaultTableValue(self, "attrname", file:name())
 end
 
 local function checkShape(self)
@@ -662,7 +662,7 @@ local function loadGdal(self)
 	local dSet = tlib:getGdalByFilePath(self.file)
 
 	setRasterCells(self, dSet) -- SKIP
-	self.layer = File(self.file):getNameWithExtension() -- SKIP
+	self.layer = File(self.file):name(true) -- SKIP
 	self.cObj_:setLayer(self.layer) -- SKIP
 
 	return self
@@ -1562,7 +1562,7 @@ function CellularSpace(data)
 			end
 		end)
 
-		if value.extension and (not data.file or (type(data.file) == "string" and File(data.file):getExtension() ~= idx)) then
+		if value.extension and (not data.file or (type(data.file) == "string" and File(data.file):extension() ~= idx)) then
 			all = false
 		end
 
@@ -1604,7 +1604,7 @@ function CellularSpace(data)
 	elseif CellularSpaceDrivers[data.source].extension then
 		mandatoryTableArgument(data, "file", "string")
 
-		if File(data.file):getExtension() ~= data.source then
+		if File(data.file):extension() ~= data.source then
 			customError("source and file extension should be the same.")
 		end
 

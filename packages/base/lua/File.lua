@@ -120,7 +120,7 @@ File_ = {
 	attributes = function(self, attributename)
 		optionalArgument(1, "string", attributename)
 
-		return lfs.attributes(self.name, attributename)
+		return lfs.attributes(self.filename, attributename)
 	end,
 	--- Close an opened file.
 	-- @usage -- DONTRUN
@@ -135,7 +135,7 @@ File_ = {
 			io.close(self.file)
 			return true
 		else
-			resourceNotFoundError("file", self.name)
+			resourceNotFoundError("file", self.filename)
 		end
 	end,
 	--- Remove an existing file. If the file does not exist or it cannot be removed,
@@ -152,27 +152,27 @@ File_ = {
 	--
 	-- file:delete()
 	delete = function(self)
-		if string.find(self.name, "\"") then
+		if string.find(self.filename, "\"") then
 			customError("Argument #1 should not contain quotation marks.")
 		elseif not self:exists() then
-			resourceNotFoundError(1, self.name)
+			resourceNotFoundError(1, self.filename)
 		end
 
-		local result = os.execute("rm -f \""..self.name.."\"")
+		local result = os.execute("rm -f \""..self.filename.."\"")
 
 		if result ~= true then
 			if result == nil then -- SKIP
-				result = "Could not remove file '"..self.name.."'." -- SKIP
+				result = "Could not remove file '"..self.filename.."'." -- SKIP
 			end
 
 			customError(tostring(result)) -- SKIP
 		end
 
-		if string.endswith(self.name, ".shp") then
-			local dbf = File(string.sub(self.name, 1, -4).."dbf")
-			local shx = File(string.sub(self.name, 1, -4).."shx")
-			local prj = File(string.sub(self.name, 1, -4).."prj")
-			local qix = File(string.sub(self.name, 1, -4).."qix")
+		if string.endswith(self.filename, ".shp") then
+			local dbf = File(string.sub(self.filename, 1, -4).."dbf")
+			local shx = File(string.sub(self.filename, 1, -4).."shx")
+			local prj = File(string.sub(self.filename, 1, -4).."prj")
+			local qix = File(string.sub(self.filename, 1, -4).."qix")
 
 			if dbf:exists() then dbf:delete() end
 			if shx:exists() then shx:delete() end
@@ -180,12 +180,20 @@ File_ = {
 			if qix:exists() then qix:delete() end
 		end
 	end,
+	--- Return the directory of a file given its path.
+	-- @usage file = File("/my/path/file.txt")
+	-- print(file:directory()) -- "/my/path"
+	directory = function(self)
+		local path, _, _ = self:split()
+
+		return path
+	end,
 	--- Return whether a given string represents a file stored in the computer.
 	-- A directory is also considered a file.
 	-- @usage file = File(filePath("agents.csv", "base"))
 	-- print(file:exists())
 	exists = function(self)
-		local fopen = io.open(self.name)
+		local fopen = io.open(self.filename)
 
 		if fopen then
 			fopen:close()
@@ -194,25 +202,17 @@ File_ = {
 
 		return false
 	end,
-	--- Return the directory of a file given its path.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:getDir()) -- "/my/path"
-	getDir = function(self)
-		local path, _, _ = self:splitNames()
-
-		return path
-	end,
 	--- Return the extension of a given file name. It returns the substring after the last dot.
 	-- If it does not have a dot, an empty string is returned.
 	-- @usage file = File("/my/path/file.txt")
-	-- print(file:getExtension()) -- "txt"
-	getExtension = function(self)
+	-- print(file:extension()) -- "txt"
+	extension = function(self)
 		local s = sessionInfo().separator
 
-		for i = self.name:len() - 1, 1, -1 do
-			local sub = self.name:sub(i, i)
+		for i = self.filename:len() - 1, 1, -1 do
+			local sub = self.filename:sub(i, i)
 			if sub == "." then
-				return self.name:sub(i + 1, self.name:len())
+				return self.filename:sub(i + 1, self.filename:len())
 			elseif sub == s or sub == "/" then
 				return ""
 			end
@@ -220,33 +220,19 @@ File_ = {
 
 		return ""
 	end,
-	--- Return the file name removing its path and extension.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:getName()) -- "file"
-	getName = function(self)
-		return self:removeExtension()
-	end,
-	--- Return the file name removing its path.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:getNameWithExtension()) -- "file.txt"
-	getNameWithExtension = function (self)
-		local _, nameWithExtension, _ = string.match(self.name, "(.-)([^\\/]-%.?([^%.\\/]*))$")
-
-		return nameWithExtension
-	end,
 	--- Return the path if the file exists.
 	-- @usage file = File(filePath("agents.csv", "base"))
 	-- print(file:getPath())
 	getPath = function(self)
 		if self:exists() then
-			return _Gtme.makePathCompatibleToAllOS(self.name)
+			return _Gtme.makePathCompatibleToAllOS(self.filename)
 		end
 	end,
 	--- Return a boolean value if a given file name has extension.
 	-- @usage file = File("/my/path/file.txt")
 	-- print(file:hasExtension()) -- true
 	hasExtension = function(self)
-		return not (self:getExtension() == "")
+		return not (self:extension() == "")
 	end,
 	--- Lock a file or a part of it. This function works on open files; the file handle should be
 	-- specified as the first argument. The optional arguments start and length can be used to specify a
@@ -270,8 +256,22 @@ File_ = {
 			mode = mode or self.mode
 			return lfs.lock(self.file, mode)
 		else
-			resourceNotFoundError("file", self.name)
+			resourceNotFoundError("file", self.filename)
 		end
+	end,
+	--- Return the file name removing its path.
+	-- @arg extension A boolean that enable return the name with extension. The default value is false.
+	-- @usage file = File("/my/path/file.txt")
+	-- print(file:name()) -- "file"
+	-- print(file:name(true)) -- "file.txt"
+	name = function(self, extension)
+		extension = extension or false
+		optionalArgument(1, "boolean", extension)
+
+		local split = {self:split()}
+		if extension then return split[4] end
+
+		return split[2]
 	end,
 	--- Open a file for reading or writing. An opened file must be closed after being used.
 	-- @arg mode A string with the mode. It can be "w" for writing or "r" for reading.
@@ -284,14 +284,14 @@ File_ = {
 		mandatoryArgument(1, "string", mode)
 
 		if self.mode then
-			customError("File '"..self.name.."' is already open.")
+			customError("File '"..self.filename.."' is already open.")
 		else
 			self.mode = mode
 		end
 
-		local fopen = io.open(self.name, self.mode)
+		local fopen = io.open(self.filename, self.mode)
 		if fopen == nil then
-			resourceNotFoundError("file", self.name)
+			resourceNotFoundError("file", self.filename)
 		else
 			self.file = fopen
 			return fopen
@@ -369,25 +369,14 @@ File_ = {
 
 		return data
 	end,
-	--- Return the file name removing its extension.
-	-- @arg nameWithExtension An optional string with the file with extension.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:removeExtension())
-	removeExtension = function(self, nameWithExtension)
-		if not nameWithExtension then nameWithExtension = self:getNameWithExtension() end
-
-		local _, _, fileName = string.find(nameWithExtension, "^(.*)%.[^%.]*$")
-
-		return fileName
-	end,
 	--- Split the path, file name, and extension from a given string.
 	-- @usage file = File("/my/path/file.txt")
-	-- print(file:splitNames()) -- "/my/path/", "file", "txt"
-	splitNames = function(self)
-		local filePath, nameWithExtension, extension = string.match(self.name, "(.-)([^\\/]-%.?([^%.\\/]*))$")
-		local fileName = self:removeExtension(nameWithExtension)
+	-- print(file:split()) -- "/my/path/", "file", "txt"
+	split = function(self)
+		local filePath, nameWithExtension, extension = string.match(self.filename, "(.-)([^\\/]-%.?([^%.\\/]*))$")
+		local _, _, fileName = string.find(nameWithExtension, "^(.*)%.[^%.]*$")
 
-		return filePath, fileName, extension
+		return filePath, fileName, extension, nameWithExtension
 	end,
 	--- Set access and modification times of a file. This function is a bind to utime function.
 	-- Times are provided in seconds (which should be generated with Lua
@@ -401,7 +390,7 @@ File_ = {
 		mandatoryArgument(1, "number", atime)
 		mandatoryArgument(2, "number", mtime)
 
-		return lfs.touch(self.name, atime, mtime)
+		return lfs.touch(self.filename, atime, mtime)
 	end,
 	--- Unlock a file or a part of it. This function works on open files; the file handle should be
 	-- specified as the first argument. The optional arguments start and length can be used to specify
@@ -420,7 +409,7 @@ File_ = {
 		if io.type(self.file) == "file" then
 			return lfs.unlock(self.file)
 		else
-			resourceNotFoundError("file", self.name)
+			resourceNotFoundError("file", self.filename)
 		end
 	end,
 	--- Write a given table into a file.
@@ -509,7 +498,7 @@ metaTableFile_ = {
 -- @usage file = File("/my/path/file.txt")
 function File(data)
 	mandatoryArgument(1, "string", data)
-	data = {name = data}
+	data = {filename = data}
 
 	setmetatable(data, metaTableFile_)
 

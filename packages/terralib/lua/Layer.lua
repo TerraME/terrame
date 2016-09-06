@@ -34,7 +34,7 @@ end
 local function isSourceConsistent(source, filePath)
 	if filePath ~= nil then
 		local file = File(filePath)
-		return source == file:getExtension()
+		return source == file:extension()
 	end
 	
 	return true
@@ -58,7 +58,7 @@ local function addCellularLayer(self, data)
 			end	
 		else
 			local file = File(data.file)
-			local source = file:getExtension()
+			local source = file:extension()
 			data.source = source	
 		end
 	end
@@ -66,7 +66,7 @@ local function addCellularLayer(self, data)
 	-- if isEmpty(data.source) then
 		-- mandatoryTableArgument(data, "file", "string")	
 		-- local file = File(data.file)
-		-- local source = file:getExtension()
+		-- local source = file:extension()
 		-- data.source = source
 	-- else
 		-- mandatoryTableArgument(data, "source", "string")
@@ -182,7 +182,7 @@ local function addLayer(self, data)
 			end	
 
 			local file = File(data.file)
-			data.source = file:getExtension()
+			data.source = file:extension()
 		end
 	end
 		
@@ -678,7 +678,7 @@ Layer_ = {
 	export = function(self, data, overwrite)
 		if type(data) == "string" then 
 			local file = File(data) -- TODO(#1366): the file needs validation
-			local source = file:getExtension()
+			local source = file:extension()
 			if isValidSource(source) then
 				local toData = {}
 				toData.file = data			

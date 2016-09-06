@@ -147,7 +147,7 @@ local function getProjects(package)
 				description = description.."."
 
 				projects[currentProject][idx] = {
-					file = File(value):getNameWithExtension(),
+					file = File(value):name(true),
 					description = description
 				}
 			end
