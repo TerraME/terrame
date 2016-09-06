@@ -220,14 +220,6 @@ File_ = {
 
 		return ""
 	end,
-	--- Return the path if the file exists.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:getPath())
-	getPath = function(self)
-		if self:exists() then
-			return _Gtme.makePathCompatibleToAllOS(self.filename)
-		end
-	end,
 	--- Return a boolean value if a given file name has extension.
 	-- @usage file = File("/my/path/file.txt")
 	-- print(file:hasExtension()) -- true
@@ -484,12 +476,18 @@ File_ = {
 
 		self.file:write(text)
 		self:close()
+	end,
+	--- Return the full path.
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- print(file:__tostring())
+	__tostring = function(self)
+		return self.filename
 	end
 }
 
 metaTableFile_ = {
 	__index = File_,
-	__tostring = _Gtme.tostring
+	__tostring = File_.__tostring
 }
 
 --- An abstract representation of file and directory pathnames. This type provide access to additional
@@ -498,7 +496,12 @@ metaTableFile_ = {
 -- @usage file = File("/my/path/file.txt")
 function File(data)
 	mandatoryArgument(1, "string", data)
-	data = {filename = data}
+
+	if not (data:match("\\") or data:match("/")) then
+		data = currentDir()..sessionInfo().separator..data
+	end
+
+	data = {filename = _Gtme.makePathCompatibleToAllOS(data)}
 
 	setmetatable(data, metaTableFile_)
 

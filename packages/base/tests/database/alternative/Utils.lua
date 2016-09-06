@@ -38,18 +38,18 @@ return{
 
 		file:writeLine("!!#$@12334")
 		error_func = function()
-			table.load(file:getPath())
+			table.load(tostring(file))
 		end
-		unitTest:assertError(error_func, "Failed to load file '"..file:name(true).."': dump.luaunexpected symbol near '!'")
+		unitTest:assertError(error_func, "Failed to load file '"..tostring(file).."': ...rame/workspace/dev-terrame/test-mock/tests/base/dump.luaunexpected symbol near '!'")
 
 		file = File("dump.lua")
 		file:writeLine("local x = 2")
 		error_func = function()
-			table.load(file:getPath())
+			table.load(tostring(file))
 		end
-		unitTest:assertError(error_func, "File '"..file:getPath().."' does not contain a Lua table.")
+		unitTest:assertError(error_func, "File '"..tostring(file).."' does not contain a Lua table.")
 
-		if File(file:getPath()):exists() then File(file:getPath()):delete() end
+		if file:exists() then file:delete() end
 	end,
 	["table.save"] = function(unitTest)
 		local error_func = function()

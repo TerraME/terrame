@@ -1458,7 +1458,7 @@ function table.load(filename)
 	verify(file:exists(), resourceNotFoundMsg("file", file:name(true)))
 
 	local tbl
-	local ok, error = pcall(function() tbl = dofile(file:getPath()) end)
+	local ok, error = pcall(function() tbl = dofile(tostring(file)) end)
 	if not ok then customError("Failed to load file '"..filename.."': "..error) end
 
 	verify(type(tbl) == "table", "File '"..filename.."' does not contain a Lua table.")

@@ -75,7 +75,7 @@ return{
 		error_func = function()
 			file:delete()
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abc123456"))
+		unitTest:assertError(error_func, resourceNotFoundMsg(1, file.filename))
 
 		if _Gtme.isWindowsOS() then
 			file = File("myfile.txt")
@@ -84,7 +84,7 @@ return{
 			error_func = function()
 				file:delete()
 			end
-			unitTest:assertError(error_func, "Could not remove file 'myfile.txt'.") -- SKIP
+			unitTest:assertError(error_func, "Could not remove file '"..file.filename.."'.") -- SKIP
 
 			file:close()
 			file:delete()
@@ -144,7 +144,7 @@ return{
 		error_func = function()
 			file:open("r")
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "test.txt"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
 	read = function(unitTest)
 		local filename = "abc.txt"

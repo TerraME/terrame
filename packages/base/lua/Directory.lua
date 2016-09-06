@@ -141,11 +141,18 @@ Directory_ = {
 	-- Directory("c:\\tests"):setCurrentDir()
 	setCurrentDir = function(self)
 		return lfs.chdir(self.name)
+	end,
+	--- Return the full path.
+	-- @usage dir = Directory(packageInfo("base").data)
+	-- print(dir:__tostring())
+	__tostring = function(self)
+		return self.name
 	end
 }
 
 metaTableDirectory_ = {
 	__index = Directory_,
+	__tostring = Directory_.__tostring
 }
 
 --- An abstract representation of Directory. This type provide access to additional
@@ -159,11 +166,14 @@ function Directory(data)
 			customError("Argument #1 should not contain quotation marks.")
 	end
 
-	if string.sub(data, -1) == sessionInfo().separator then
-		data = string.sub(data, 1, -2)
+	local s = sessionInfo().separator
+	if not (data:match("\\") or data:match("/")) then
+		data = currentDir()..s..data
+	elseif data:sub(-1) == s then
+		data = data:sub(1, -2)
 	end
 
-	data = {name = data}
+	data = {name = _Gtme.makePathCompatibleToAllOS(data)}
 
 	setmetatable(data, metaTableDirectory_)
 

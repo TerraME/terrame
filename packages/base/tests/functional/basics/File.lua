@@ -107,17 +107,6 @@ return{
 		unitTest:assertType(file, "File")
 		unitTest:assertEquals(extension, "txt")
 	end,
-	getPath = function(unitTest)
-		local file = File("/my/path/file.txt")
-		unitTest:assertType(file, "File")
-		unitTest:assertNil(file:getPath())
-
-		file = File(filePath("agents.csv", "base"))
-		unitTest:assertType(file, "File")
-
-		local path = _Gtme.makePathCompatibleToAllOS(packageInfo().data).."/".."agents.csv"
-		unitTest:assertEquals(file:getPath(), path)
-	end,
 	hasExtension = function(unitTest)
 		local file = File("/my/path/file.txt")
 		local extension = file:hasExtension()
@@ -272,9 +261,11 @@ return{
 		if File(filename):exists() then File(filename):delete() end
 	end,
 	__tostring = function(unitTest)
-		local file = File("abc.txt")
-		unitTest:assertEquals(tostring(file), [[filename  string [abc.txt]
-]])
+		local path = filePath("agents.csv", "base")
+		local  file = File(path)
+
+		unitTest:assertType(file, "File")
+		unitTest:assertEquals(tostring(file), _Gtme.makePathCompatibleToAllOS(path))
 	end
 }
 

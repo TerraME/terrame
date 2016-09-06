@@ -56,7 +56,7 @@ return{
 		error_func = function()
 			dir:delete()
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("directory", "abc123456"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("directory", tostring(dir)))
 	end
 }
 

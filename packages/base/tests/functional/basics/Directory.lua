@@ -131,5 +131,12 @@ return{
 		dir = Directory(cur_dir)
 		dir:setCurrentDir()
 		unitTest:assertEquals(currentDir(), cur_dir)
+	end,
+	__tostring = function(unitTest)
+		local datapath = packageInfo("base").data
+		local dir = Directory(datapath)
+
+		unitTest:assertType(dir, "Directory")
+		unitTest:assertEquals(tostring(dir), _Gtme.makePathCompatibleToAllOS(datapath))
 	end
 }
