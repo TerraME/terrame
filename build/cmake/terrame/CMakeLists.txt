@@ -401,6 +401,8 @@ if (APPLE)
 				DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
 				COMPONENT runtime
 				PATTERN "log" EXCLUDE
+				PATTERN "test" EXCLUDE
+				PATTERN "tests" EXCLUDE
 			   )	
 	endif()
 
@@ -449,6 +451,8 @@ elseif(WIN32)
 				DESTINATION bin/packages
 				COMPONENT runtime
 				PATTERN "log" EXCLUDE
+				PATTERN "test" EXCLUDE
+				PATTERN "tests" EXCLUDE
 			   )
 	endif()
 	
@@ -603,6 +607,8 @@ else(UNIX)
 				DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/packages
 				COMPONENT runtime
 				PATTERN "log" EXCLUDE
+				PATTERN "test" EXCLUDE
+				PATTERN "tests" EXCLUDE
 		)
 	endif()
 

@@ -40,6 +40,7 @@ local init = function(model)
     model.cs = CellularSpace{
         file = filePath("cabecadeboi.shp", "terralib"),
         instance = model.cell,
+		geometry = true
     }
     
     model.cs:createNeighborhood{

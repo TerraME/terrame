@@ -413,7 +413,6 @@ public:
     int load(lua_State *L);
     int save(lua_State *L);
     int clear(lua_State *L)		 { CellularSpace::clear(); return 0; }
-    int loadNeighborhood(lua_State *L);
     int addCell(lua_State *L)
     {
         CellIndex indx;

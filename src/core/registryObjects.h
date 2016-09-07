@@ -159,7 +159,6 @@ Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
 	method(luaCellularSpace, size),
 	method(luaCellularSpace, addCell),
 	method(luaCellularSpace, setWhereClause),
-	method(luaCellularSpace, loadNeighborhood),
 
 	method(luaCellularSpace, getReference),
 	method(luaCellularSpace, setReference),
