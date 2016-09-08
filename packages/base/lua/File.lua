@@ -431,18 +431,14 @@ File_ = {
 
 		self.file:write(text)
 		self:close()
-	end,
-	--- Return the full path.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:__tostring())
-	__tostring = function(self)
-		return self.filename
 	end
 }
 
 metaTableFile_ = {
 	__index = File_,
-	__tostring = File_.__tostring
+	__tostring = function(self)
+		return self.filename
+	end
 }
 
 --- An abstract representation of file and directory pathnames. This type provide access to additional

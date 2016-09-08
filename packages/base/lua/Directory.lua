@@ -141,18 +141,14 @@ Directory_ = {
 	-- Directory("c:\\tests"):setCurrentDir()
 	setCurrentDir = function(self)
 		return lfs.chdir(self.name)
-	end,
-	--- Return the full path.
-	-- @usage dir = Directory(packageInfo("base").data)
-	-- print(dir:__tostring())
-	__tostring = function(self)
-		return self.name
 	end
 }
 
 metaTableDirectory_ = {
 	__index = Directory_,
-	__tostring = Directory_.__tostring
+	__tostring = function(self)
+		return self.name
+	end
 }
 
 --- An abstract representation of Directory. This type provide access to additional
