@@ -40,7 +40,7 @@ return{
 		error_func = function()
 			table.load(tostring(file))
 		end
-		unitTest:assertError(error_func, "Failed to load file '"..tostring(file).."': ...rame/workspace/dev-terrame/test-mock/tests/base/dump.luaunexpected symbol near '!'")
+		unitTest:assertError(error_func, "Failed to load file '"..tostring(file).."': "..tostring(file).."unexpected symbol near '!'", 30) -- TODO(#1383)
 
 		file = File("dump.lua")
 		file:writeLine("local x = 2")

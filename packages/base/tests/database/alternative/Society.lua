@@ -25,13 +25,14 @@
 return{
 	Society = function(unitTest)
 		local agents_csv = filePath("agents.csv", "base")
+		local filename = File("not_a_file.csv")
 		local error_func = function()
 			sc = Society{
 				instance = Agent{},
-				file = "not_a_file.csv"
+				file = tostring(filename)
 			}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "not_a_file.csv"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", tostring(filename)))
 
 		error_func = function()
 			sc2 = Society{

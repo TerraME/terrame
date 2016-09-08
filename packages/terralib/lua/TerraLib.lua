@@ -2063,7 +2063,7 @@ TerraLib_ = {
 				end	
 				
 				toData.dir = dir
-				local fileCopy = dir.."/"..toData.fileTif
+				local fileCopy = dir..toData.fileTif
 				
 				if toData.file and (file:name(true) ~= fileTif) then
 					customWarning("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364

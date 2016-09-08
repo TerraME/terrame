@@ -184,9 +184,10 @@ return {
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
-		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
+
+		local file = File(proj.file)
+		if file:exists() then
+			file:delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -199,7 +200,7 @@ return {
 		local currDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		customWarning = function(msg) 
 			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2tif.tif'.") or
-							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'."))					
+							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'."))
 		end
 		
 		local overwrite = true
