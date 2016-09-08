@@ -160,31 +160,6 @@ public:
     /// Destroys the observer object instance
     int kill(lua_State *L);
 
-
-    /// This method loads a neighborhood from a file. Extensions supported: .GAL, .GWT, .txt
-	/// \author  Raian Vargas Maretto
-    int loadNeighborhood(lua_State *L);
-
-	/// Loads a neighborhood from a .gpm file.
-	/// \author  Raian Vargas Maretto
-	int loadNeighborhoodGPMFile(lua_State *L, const char* fileName,
-								const char* neighName, bool check);
-
-	/// Loads GAL Neighborhood files
-	/// \author Raian Vargas Maretto
-    int loadNeighborhoodGALFile(lua_State *L, const char* fileName,
-    							const char* neighName, bool check);
-
-	/// Loads GWT Neighborhood files
-	/// \author Raian Vargas Maretto
-    int loadNeighborhoodGWTFile(lua_State *L, const char* fileName,
-    							const char* neighName, bool check);
-
-	/// Loads TXT Neighborhood file.
-	/// \author Raian Vargas Maretto
-    int loadTXTNeighborhood(lua_State *L, const char* fileName,
-    						const char* neighName, bool check);
-
 	/// Find a cell given a cell ID
 	/// \author Raian Vargas Maretto
 	luaCell * findCellByID(const char* cellID);
