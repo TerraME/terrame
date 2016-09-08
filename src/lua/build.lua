@@ -297,8 +297,12 @@ function _Gtme.buildPackage(package, config, clean)
 	
 	if _Gtme.isWindowsOS() then 
 		md5sum = runCommand("md5sum "..file) 
-	else 
+	elseif runCommand("which md5")[1] then
 		md5sum = runCommand("md5 -q "..file) 
+	elseif runCommand("which md5sum")[1] then
+		md5sum = runCommand("md5sum -q "..file)
+	else
+		printWarning("Could not find an MD5 sum software installed.")
 	end
 
 	chDir(currentdir)
