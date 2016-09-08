@@ -94,6 +94,7 @@ basic = {
 	tracelayer          = {script = "trace-layer.lua"},
 	tracemodel          = {script = "trace-model.lua"},
 	traceneighbor       = {script = "trace-neighbor.lua"},
+	traceneighagent     = {script = "trace-neighagent.lua"},
 	traceneighborhood   = {script = "trace-neighborhood.lua"},
 	traceself           = {script = "trace-self.lua"},
 	tracesocialnetwork  = {script = "trace-social-network.lua"},

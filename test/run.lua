@@ -34,8 +34,8 @@ end)
 
 local baseDir = sessionInfo().path
 
-_Gtme.printNote("Creating temporary directory")
 tmpdirectory = tmpDir(".terramerun_XXXXX")
+_Gtme.printNote("Temporary directory created in ".. initialDir..tmpdirectory)
 
 _Gtme.printNote("Testing installed packages")
 
