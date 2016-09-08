@@ -1494,5 +1494,55 @@ return {
 		rmFile("postgis2shp.shp")
 		rmFile("postgis2geojson.geojson")
 		rmFile(proj.file)		
-	end
+	end,
+	getLayerSize = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+
+		local layerName1 = "Setores"
+		local layerFile1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+		
+		-- POSTGIS
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+		local tableName = "Setores_Censitarios_2000_pol"	
+
+		local pgData = {
+			type = "postgis",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName, -- it is used only to drop
+			encoding = encoding	
+		}		
+		
+		local overwrite = true
+		
+		tl:saveLayerAs(proj, layerName1, pgData, overwrite)	
+		local layerName2 = "PgLayer"
+		tl:addPgLayer(proj, layerName2, pgData)
+		
+		local size = tl:getLayerSize(proj, layerName2)
+		
+		unitTest:assertEquals(size, 58.0)
+
+		tl:dropPgTable(pgData)
+		rmFile(proj.file)
+	end		
 }
