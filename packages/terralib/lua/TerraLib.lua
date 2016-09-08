@@ -2124,7 +2124,7 @@ TerraLib_ = {
 	-- tl:addShpLayer(proj, layerName, layerFile)	
 	-- local size = tl:getLayerSize(proj, layerName)
 	getLayerSize = function(_, project, layerName)
-		local size = -1
+		local size
 		
 		do
 			loadProject(project, project.file)
