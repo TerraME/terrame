@@ -1,5 +1,5 @@
 local s = sessionInfo().separator
-local so = "mac"
+local so = "linux"
 
 files = {
 	packageInfo("onerror").path..s.."log"..s..so..s.."chart_cell.bmp",

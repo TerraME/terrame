@@ -96,6 +96,7 @@ local function approximateLine(line)
 	if string.match(line, "'%.lua' extension")   then return 130 end
 	if string.match(line, "Error: ")             then return  50 end
 	if string.match(line, "File ")               then return 150 end
+	if string.match(line, "directory")           then return 150 end
 	if string.match(line, "such file")           then return 200 end
 	if string.match(line, "In ")                 then return  50 end
 	if string.match(line, "Error in")            then return  50 end
