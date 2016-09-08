@@ -367,7 +367,7 @@ function _Gtme.showDoc(package)
 		os.exit(1)
 	end
 
-	if not _Gtme.sessionInfo().system == "windows" then
+	if _Gtme.sessionInfo().system ~= "windows" then
 		if _Gtme.runCommand("uname")[1] == "Darwin" then
 			_Gtme.runCommand("open "..docpath)
 		else

@@ -162,14 +162,17 @@ function Directory(data)
 			customError("Argument #1 should not contain quotation marks.")
 	end
 
-	local s = sessionInfo().separator
 	if not (data:match("\\") or data:match("/")) then
-		data = currentDir()..s..data
-	elseif data:sub(-1) == s then
+		data = currentDir()..sessionInfo().separator..data
+	end
+
+	data = _Gtme.makePathCompatibleToAllOS(data)
+
+	if data:sub(-1) == "/" then
 		data = data:sub(1, -2)
 	end
 
-	data = {name = _Gtme.makePathCompatibleToAllOS(data)}
+	data = {name = data}
 
 	setmetatable(data, metaTableDirectory_)
 

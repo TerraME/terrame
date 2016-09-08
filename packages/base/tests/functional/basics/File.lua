@@ -37,9 +37,8 @@ return{
 			size = 140.0
 		}
 
-		if not _Gtme.sessionInfo().system == "windows" then
+		if _Gtme.sessionInfo().system ~= "windows" then
 			expected.getn = 14
-			expected.size = 135
 		end
 
 		unitTest:assertEquals(getn(attr), expected.getn)
@@ -166,7 +165,7 @@ return{
 		unitTest:assertEquals(nameWithExtension, "file.txt")
 	end,
 	touch = function(unitTest)
-		if not _Gtme.sessionInfo().system == "windows" then
+		if _Gtme.sessionInfo().system ~= "windows" then
 			local pathdata = packageInfo().data.."testfile.txt"
 
 			local file = File(pathdata)

@@ -36,7 +36,7 @@ return{
 			mode = "directory",
 		}
 
-		if not _Gtme.sessionInfo().system == "windows" then
+		if _Gtme.sessionInfo().system ~= "windows" then
 			expected.getn = 14
 		end
 
@@ -77,25 +77,24 @@ return{
 	end,
 	exists = function(unitTest)
 		local datapath = packageInfo("base").data
-		local s = sessionInfo().separator
 
 		local dir = Directory(datapath)
 		unitTest:assert(dir:exists())
 
-		dir = Directory(datapath..s)
+		dir = Directory(datapath)
 		unitTest:assert(dir:exists())
 
 		dir = Directory(_Gtme.makePathCompatibleToAllOS(datapath))
 		unitTest:assert(dir:exists())
 
-		dir = Directory(datapath..s.."test_dir_exists")
+		dir = Directory(datapath..sessionInfo().separator.."test_dir_exists")
 		unitTest:assert(not dir:exists())
 
 		dir = Directory(filePath("agents.csv", "base"))
 		unitTest:assert(not dir:exists())
 
 		dir = Directory("")
-		unitTest:assert(not dir:exists())
+		unitTest:assertEquals(tostring(dir), _Gtme.makePathCompatibleToAllOS(currentDir()))
 	end,
 	list = function(unitTest)
 		local datapath = packageInfo("base").data
