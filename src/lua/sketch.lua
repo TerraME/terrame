@@ -193,6 +193,10 @@ local function verifyData(package, report)
 			_Gtme.print("Directory '"..idx.."' will be ignored")
 		elseif _Gtme.ignoredFile(idx) then
 			_Gtme.print("File '"..idx.."' does not need to be documented")
+		elseif string.endswith(idx, ".tview") and isFile(dataDir..s..string.sub(idx, 1, -6).."lua") then
+			_Gtme.print("Project file '"..idx.."' does not need to be documented (a Lua file creates it)")
+		elseif string.endswith(idx, ".shp") and isFile(dataDir..s..string.sub(idx, 1, -4).."lua") then
+			_Gtme.print("File '"..idx.."' does not need to be documented (a Lua file creates it)")
 		else
 			_Gtme.printWarning("Adding sketch for data file '"..idx.."'")
 			local str = "data{\n"

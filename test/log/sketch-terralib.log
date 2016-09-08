@@ -73,15 +73,15 @@ File 'altimetria.tif' is already documented in 'data.lua'
 File 'amazonia.dbf' does not need to be documented
 File 'amazonia.lua' does not need to be documented
 File 'amazonia.qix' does not need to be documented
-File 'amazonia.shp' is already documented in 'data.lua'
+File 'amazonia.shp' does not need to be documented (a Lua file creates it)
 File 'amazonia.shx' does not need to be documented
-File 'amazonia.tview' is already documented in 'data.lua'
+Project file 'amazonia.tview' does not need to be documented (a Lua file creates it)
 File 'cabecadeboi.dbf' does not need to be documented
 File 'cabecadeboi.lua' does not need to be documented
 File 'cabecadeboi.qix' does not need to be documented
-File 'cabecadeboi.shp' is already documented in 'data.lua'
+File 'cabecadeboi.shp' does not need to be documented (a Lua file creates it)
 File 'cabecadeboi.shx' does not need to be documented
-File 'cabecadeboi.tview' is already documented in 'data.lua'
+Project file 'cabecadeboi.tview' does not need to be documented (a Lua file creates it)
 File 'elevation.tif' is already documented in 'data.lua'
 File 'elevation.xml' is already documented in 'data.lua'
 File 'elevation_box.dbf' does not need to be documented
@@ -93,11 +93,11 @@ File 'emas.dbf' does not need to be documented
 File 'emas.lua' does not need to be documented
 File 'emas.prj' does not need to be documented
 File 'emas.qix' does not need to be documented
-File 'emas.shp' is already documented in 'data.lua'
+File 'emas.shp' does not need to be documented (a Lua file creates it)
 File 'emas.shx' does not need to be documented
-File 'emas.tview' is already documented in 'data.lua'
+Project file 'emas.tview' does not need to be documented (a Lua file creates it)
 File 'fillCellExample.lua' does not need to be documented
-File 'fillCellExample.tview' is already documented in 'data.lua'
+Project file 'fillCellExample.tview' does not need to be documented (a Lua file creates it)
 File 'firebreak_lin.dbf' does not need to be documented
 File 'firebreak_lin.prj' does not need to be documented
 File 'firebreak_lin.qix' does not need to be documented
@@ -107,9 +107,9 @@ File 'itaituba.dbf' does not need to be documented
 File 'itaituba.lua' does not need to be documented
 File 'itaituba.prj' does not need to be documented
 File 'itaituba.qix' does not need to be documented
-File 'itaituba.shp' is already documented in 'data.lua'
+File 'itaituba.shp' does not need to be documented (a Lua file creates it)
 File 'itaituba.shx' does not need to be documented
-File 'itaituba.tview' is already documented in 'data.lua'
+Project file 'itaituba.tview' does not need to be documented (a Lua file creates it)
 Directory 'test' will be ignored
 Verifying font files
 Package 'terralib' does not have a font directory
