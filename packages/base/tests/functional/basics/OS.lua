@@ -32,9 +32,6 @@ return{
 		unitTest:assertEquals(currentDir(), info.path)
 		Directory(cur_dir):setCurrentDir()
 	end,
-	isWindowsOS = function(unitTest)
-		unitTest:assert(true)
-	end,
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)
 		unitTest:assertEquals(#d, 29) -- 29 files
@@ -45,6 +42,7 @@ return{
 
 		unitTest:assertEquals(s.mode, "debug")
 		unitTest:assertEquals(s.version, packageInfo().version)
+		unitTest:assertEquals(s.system == "windows", s.separator == "\\")
 	end,
 	tmpDir = function(unitTest)
 		local f = tmpDir()

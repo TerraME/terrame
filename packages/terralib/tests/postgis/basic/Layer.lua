@@ -101,7 +101,7 @@ return {
 		tl:dropPgTable(pgData)
 
 		-- TODO: ADO DON'T WORK (REVIEW)
-		-- if _Gtme.isWindowsOS() then
+		-- if _Gtme.sessionInfo().system == "windows" then
 			-- local adoData = {
 				-- type = "ADO",
 				-- file = "D:/terrame/tests/sampa.accdb" --file("sampa.accdb", "fillcell")

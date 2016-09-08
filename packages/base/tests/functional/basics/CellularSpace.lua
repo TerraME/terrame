@@ -284,7 +284,7 @@ return{
 			File(geojson1):delete()
 		end
 
-		if _Gtme.isWindowsOS() then
+		if _Gtme.sessionInfo().system == "windows" then
 			-- Tif
 			projName = "tif_four_cellspace.tview"
 			title = "Tif Cellular Space"

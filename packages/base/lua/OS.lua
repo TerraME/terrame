@@ -33,20 +33,6 @@ function currentDir()
 	return lfs.currentdir()
 end
 
---- Returns true if the operating system is Windows, otherwise returns false.
--- @usage if isWindowsOS() then
---     print("is windows")
--- else
---     print("not windows")
--- end
-function isWindowsOS()
-	if sessionInfo().separator == "/" then -- SKIP
-		return false
-	end
-	
-	return true
-end
-
 --- Execute a system command and return its output. It returns two tables. 
 -- The first one contains each standard output line as a position.
 -- The second one contains  each error output line as a position.

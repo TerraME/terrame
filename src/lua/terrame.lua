@@ -367,7 +367,7 @@ function _Gtme.showDoc(package)
 		os.exit(1)
 	end
 
-	if not _Gtme.isWindowsOS() then
+	if not _Gtme.sessionInfo().system == "windows" then
 		if _Gtme.runCommand("uname")[1] == "Darwin" then
 			_Gtme.runCommand("open "..docpath)
 		else
@@ -807,7 +807,7 @@ function _Gtme.traceback(err)
 		local infoSource = _Gtme.makePathCompatibleToAllOS(info.source)
 		local m1
 		
-		if _Gtme.isWindowsOS() then
+		if _Gtme.sessionInfo().system == "windows" then
 			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."lua")))
 		else
 			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("MacOS"..s.."lua")))
@@ -1179,6 +1179,20 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		error("Error: TME_PATH environment variable should exist and point to TerraME installation directory.", 2)
 	end
 
+	info_.system = (function()
+		if info_.separator == "/" then
+			local macintosh = "/Applications/terrame.app/Contents/MacOS"
+
+			if not info_.path:match(macintosh) then
+				return "linux"
+			end
+
+			return "macintosh"
+		else
+			return "windows"
+		end
+	end)()
+
 	-- Package.lua contains functions that terrame.lua needs, but should also be
 	-- documented and availeble for the final users.
 	local s = info_.separator
@@ -1355,7 +1369,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(1)
 				end)
 
-                --if _Gtme.isWindowsOS() then
+                --if _Gtme.sessionInfo().system == "windows" then
                     finalizeTerraLib()
                 --end
 				
@@ -1561,7 +1575,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		Directory(_Gtme.tmpdirectory__):delete()
 	end
 
---    if _Gtme.isWindowsOS() then
+--    if _Gtme.sessionInfo().system == "windows" then
         finalizeTerraLib()
 --    end
 

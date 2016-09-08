@@ -77,7 +77,7 @@ return{
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg(1, file.filename))
 
-		if _Gtme.isWindowsOS() then
+		if _Gtme.sessionInfo().system == "windows" then
 			file = File("myfile.txt")
 			file:open("w")
 

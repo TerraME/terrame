@@ -24,7 +24,7 @@
 
 return {
 	Layer = function(unitTest)
-		if _Gtme.isWindowsOS() then
+		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "nc_basic.tview"
 
 
@@ -85,7 +85,7 @@ return {
 		end
 	end,
 	representation = function(unitTest)
-		if _Gtme.isWindowsOS() then
+		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "cellular_layer_fill_nc_repr.tview"
 
 			if File(projName):exists() then
@@ -121,7 +121,7 @@ return {
 		end
 	end,
 	bands = function(unitTest)
-		if _Gtme.isWindowsOS() then
+		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "cellular_layer_fill_nc_repr.tview"
 
 			if File(projName):exists() then
@@ -157,7 +157,7 @@ return {
 		end
 	end,
 	__tostring = function(unitTest)
-		if _Gtme.isWindowsOS() then
+		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "cellular_layer_print_nc.tview"
 
 			if File(projName):exists() then

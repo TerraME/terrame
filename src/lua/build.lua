@@ -212,7 +212,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	print("Looking for hidden files")
 	local hidden
-	if _Gtme.isWindowsOS() then
+	if _Gtme.sessionInfo().system == "windows" then
 		hidden = runCommand("find-msys '"..package.."' -name '.*'")
 	else
 		hidden = runCommand("find \""..package.."\" -name \".*\"")
@@ -295,7 +295,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	os.execute("cp \""..file.."\" \""..currentdir.."\"")
 	
-	if _Gtme.isWindowsOS() then 
+	if _Gtme.sessionInfo().system == "windows" then
 		md5sum = runCommand("md5sum "..file) 
 	else 
 		md5sum = runCommand("md5 -q "..file) 

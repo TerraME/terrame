@@ -294,7 +294,7 @@ return{
 		unitTest:assertEquals(count, 3)
 	end,
 	forEachFile = function(unitTest)
-		if not _Gtme.isWindowsOS() then
+		if not _Gtme.sessionInfo().system == "windows" then
 			local count = 0
 			local r
 

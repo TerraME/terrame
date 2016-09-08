@@ -36,7 +36,7 @@ return{
 			mode = "directory",
 		}
 
-		if not _Gtme.isWindowsOS() then
+		if not _Gtme.sessionInfo().system == "windows" then
 			expected.getn = 14
 		end
 
