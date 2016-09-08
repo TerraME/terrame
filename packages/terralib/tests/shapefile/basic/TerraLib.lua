@@ -1369,5 +1369,28 @@ return {
 		
 		tl:dropPgTable(pgData)		
 		rmFile(proj.file)
+	end,
+	getLayerSize = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+		
+		if isFile(proj.file) then
+			rmFile(proj.file)
+		end	
+		
+		tl:createProject(proj, {})
+
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+		
+		local size = tl:getLayerSize(proj, layerName1)
+		
+		unitTest:assertEquals(size, 63.0)
+		
+		rmFile(proj.file)
 	end
 }

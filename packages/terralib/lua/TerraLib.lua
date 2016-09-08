@@ -2112,6 +2112,47 @@ TerraLib_ = {
 		collectgarbage("collect")	
 		
 		return true
+	end,
+	--- Returns the size of a layer.
+	-- When it stores vector data, it returns the number of elements. If it stores raster data, return the number of pixels.
+	-- @arg _ A TerraLib object (not used).
+	-- @arg project The project.
+	-- @arg layerName The layer name which is in the project.
+	-- @usage -- DONTRUN	
+	-- local layerName = "SampaShp"
+	-- local layerFile = filePath("sampa.shp", "terralib")
+	-- tl:addShpLayer(proj, layerName, layerFile)	
+	-- local size = tl:getLayerSize(proj, layerName)
+	getLayerSize = function(_, project, layerName)
+		local size
+		
+		do
+			loadProject(project, project.file)
+
+			local layer = project.layers[layerName]
+			layer = toDataSetLayer(layer)	
+			local datasetName = layer:getDataSetName()
+			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+			local dataset = ds:getDataSet(datasetName)
+			local dst = ds:getDataSetType(datasetName)
+			
+			if dst:hasGeom() then
+				size = dataset:size()
+			else
+				local rpos = binding.GetFirstPropertyPos(dataset, binding.RASTER_TYPE)
+				local raster = dataset:getRaster(rpos)
+				size = raster:getNumberOfRows()* raster:getNumberOfColumns()
+			end
+			
+			ds:close()
+			
+			releaseProject(project)
+		end
+		
+		collectgarbage("collect")
+		
+		return size
 	end
 }
 
