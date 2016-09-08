@@ -92,31 +92,6 @@ return{
 			unitTest:assert(not file:exists()) -- SKIP
 		end
 	end,
-	lock = function(unitTest)
-		local file = File("abc.txt")
-		local error_func = function()
-			file:lock()
-		end
-
-		unitTest:assertError(error_func, "Cannot lock a file not opened.")
-
-		file = File("123")
-		file.file = true
-
-		error_func = function()
-			file:lock()
-		end
-
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
-
-		file = File("abc.txt")
-		file.file = true
-		error_func = function()
-			file:lock(1)
-		end
-
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-	end,
 	name = function(unitTest)
 		local file = File("abc.txt")
 
@@ -216,23 +191,6 @@ return{
 			file:touch(1, "1")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "1"))
-	end,
-	unlock = function(unitTest)
-		local file = File("abc.txt")
-		local error_func = function()
-			file:unlock()
-		end
-
-		unitTest:assertError(error_func, "Cannot unlock a file not opened.")
-
-		file = File("123")
-		file.file = true
-
-		error_func = function()
-			file:unlock()
-		end
-
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
 	write = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))

@@ -116,17 +116,6 @@ return{
 		extension = file:hasExtension()
 		unitTest:assert(not extension)
 	end,
-	lock = function(unitTest)
-		local filepath = packageInfo().data.."test.txt"
-		local file = File(filepath)
-
-		file:open("w+")
-
-		unitTest:assert(file:lock("w"))
-
-		file:close()
-		File(filepath):delete()
-	end,
 	name = function(unitTest)
 		local file = File("/my/path/file.txt")
 
@@ -196,18 +185,6 @@ return{
 
 		unitTest:assert(true)
 	end,
-	unlock = function(unitTest)
-		local filepath = packageInfo().data.."test.txt"
-		local file = File(filepath)
-
-		file:open("w+")
-
-		unitTest:assert(file:lock("w"))
-		unitTest:assert(file:unlock())
-
-		file:close()
-		File(filepath):delete()
-	end,
 	write = function(unitTest)
 		local example = {
 			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
@@ -262,7 +239,7 @@ return{
 	end,
 	__tostring = function(unitTest)
 		local path = filePath("agents.csv", "base")
-		local  file = File(path)
+		local file = File(path)
 
 		unitTest:assertType(file, "File")
 		unitTest:assertEquals(tostring(file), _Gtme.makePathCompatibleToAllOS(path))
