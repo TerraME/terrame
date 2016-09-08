@@ -73,7 +73,8 @@ end
 -- path & A string with the location of TerraME in the computer. \
 -- separator & A string with the directory separator. \
 -- silent & A boolean value indicating whether print() calls should not be shown in the
--- screen. This element is true when TerraME is executed with mode "silent".
+-- screen. This element is true when TerraME is executed with mode "silent". \
+-- system & A string with the operating system.
 -- @usage print(sessionInfo().mode)
 function sessionInfo()
 	return info_ -- this is a global variable created when TerraME is initialized
