@@ -522,11 +522,15 @@ function forEachFile(directory, _sof_)
 	mandatoryArgument(1, "table", directory)
 	mandatoryArgument(2, "function", _sof_)
 
+	local directoryIdx = {}
+
 	for i = 1, #directory do
-		if _sof_(directory[i]) == false then return false end
+		directoryIdx[directory[i]] = true
 	end
 
-	return true
+	return forEachOrderedElement(directoryIdx, function(file)
+		if _sof_(file) == false then return false end
+	end)
 end
 
 --- Second order function to transverse the instances of Models within a given Environment.
