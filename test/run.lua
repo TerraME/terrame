@@ -107,6 +107,7 @@ local function approximateLine(line)
 	if string.match(line, "attempt to")          then return  50 end
 	if string.match(line, "Qt 5")                then return   3 end
 	if string.match(line, "Qwt 6")               then return   3 end
+	if string.match(line, "beta")                then return   2 end
 
 	return 0
 end
