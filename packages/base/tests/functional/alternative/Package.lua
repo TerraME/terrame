@@ -40,7 +40,6 @@ return{
 		end
 		unitTest:assertError(error_func, "File 'base/data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project' to create it.", 2)
 
-		local s = sessionInfo().separator
 		error_func = function()
 			filePath("test"..s.."mriver_lin.shp")
 		end
