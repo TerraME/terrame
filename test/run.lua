@@ -178,6 +178,11 @@ forEachOrderedElement(commands, function(idx, group)
 			end)
 		else
 			local resultfile = io.open(tmpdirectory..s..lfilename, "w")
+
+			forEachElement(result, function(_, value)
+				value = _Gtme.makePathCompatibleToAllOS(value)
+				resultfile:write(value.."\n")
+			end)
 			
 			local line = 1
 			local logerror = false
@@ -188,7 +193,6 @@ forEachOrderedElement(commands, function(idx, group)
 				end
 
 				value = _Gtme.makePathCompatibleToAllOS(value)
-				resultfile:write(value.."\n")
 
 				local str = logfile:read()
 
@@ -338,6 +342,11 @@ forEachOrderedElement(commands, function(idx, group)
 			end)
 		else
 			local resultfile = io.open(".."..s..tmpdirectory..s..lfilename, "w")
+
+			forEachElement(result, function(_, value)
+				value = _Gtme.makePathCompatibleToAllOS(value)
+				resultfile:write(value.."\n")
+			end)
 			
 			local line = 1
 			local logerror = false
@@ -348,7 +357,6 @@ forEachOrderedElement(commands, function(idx, group)
 				end
 
 				value = _Gtme.makePathCompatibleToAllOS(value)
-				resultfile:write(value.."\n")
 
 				local str = logfile:read()
 				local distance2 = approximateLine(str)
