@@ -811,6 +811,10 @@ function _Gtme.traceback(err)
 			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."lua")))
 		else
 			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("MacOS"..s.."lua")))
+
+			if not m1 then
+				m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("bin"..s.."lua")))
+			end
 		end
 
 		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages")))
