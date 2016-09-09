@@ -442,7 +442,7 @@ metaTableFile_ = {
 --- An abstract representation of file and directory pathnames. This type provide access to additional
 -- file operations and file attributes.
 -- @arg data.name A string with the file name. This argument is mandatory.
--- @usage file = File("/my/path/file.txt")
+-- @usage file = File(filePath("agents.csv", "base"))
 function File(data)
 	mandatoryArgument(1, "string", data)
 
