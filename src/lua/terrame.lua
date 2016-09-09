@@ -300,7 +300,7 @@ function _Gtme.findModels(package)
 	local packagepath = _Gtme.packageInfo(package).path
 	packagepath = _Gtme.makePathCompatibleToAllOS(packagepath)
 
-	if _Gtme.File(packagepath):attributes("mode") ~= "directory" then
+	if _Gtme.Directory(packagepath):attributes("mode") ~= "directory" then
 		_Gtme.customError("Package '"..package.."' is not installed.")
 	end
 
@@ -333,7 +333,7 @@ function _Gtme.findExamples(package)
 		os.exit(1)
 	end)
 
-	if _Gtme.File(examplespath):attributes("mode") ~= "directory" then
+	if _Gtme.Directory(examplespath):attributes("mode") ~= "directory" then
 		return {}
 	end
 

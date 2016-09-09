@@ -43,7 +43,7 @@ return{
 		local subdirError = function()
 			filePath("subdir/mriver_lin.shp")
 		end
-		unitTest:assertError(subdirError, "File 'base/data/subdir/mriver_lin.shp' does not exist in package 'base'.")		
+		unitTest:assertError(subdirError, "Directory '".._Gtme.makePathCompatibleToAllOS(baseInfo.data).."/subdir/".."'does not exists.")
 
 		File(baseInfo.data..s.."amazonia.lua"):delete()
 	end,

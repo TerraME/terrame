@@ -38,6 +38,25 @@ return{
 			File(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+
+		error_func = function()
+			File("/my/path/file.txt")
+		end
+		unitTest:assertError(error_func, "Directory '/my/path/'does not exists.")
+
+		local path = _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/"
+
+		local filename = path.."file*"
+		error_func = function()
+			File(filename)
+		end
+		unitTest:assertError(error_func, "Filename '"..filename.."' cannot contain character '*'.")
+
+		filename = path.."file\""
+		error_func = function()
+			File(filename)
+		end
+		unitTest:assertError(error_func, "Filename '"..filename.."' cannot contain character '\"'.")
 	end,
 	attributes = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -64,15 +83,8 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
 	delete = function(unitTest)
-		local file = File("abc\"")
-
+		local file = File("abc123456")
 		local error_func = function()
-			file:delete()
-		end
-		unitTest:assertError(error_func, "Argument #1 should not contain quotation marks.")
-
-		file = File("abc123456")
-		error_func = function()
 			file:delete()
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg(1, file.filename))

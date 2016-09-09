@@ -2057,18 +2057,13 @@ TerraLib_ = {
 			elseif toType == "GDAL" then
 				toData.fileTif = fromDSetName
 				local file = File(toData.file)
-				local dir = file:directory()
-				if dir == "" then
-					dir = _Gtme.makePathCompatibleToAllOS(currentDir())
-				end	
-				
-				toData.dir = dir
-				local fileCopy = dir..toData.fileTif
-				
+				toData.dir = file:directory()
+				local fileCopy = toData.dir..toData.fileTif
+
 				if toData.file and (file:name(true) ~= fileTif) then
 					customWarning("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364
-				end					
-						
+				end
+
 				toDs = createGdalDataSourceToSaveAs(fromType, toData)
 				if not toDs then
 					errorMsg = "It was not possible save the data in layer '"..layerName.."' to raster data." -- #1364

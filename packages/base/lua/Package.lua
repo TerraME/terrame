@@ -51,10 +51,10 @@ function filePath(filename, package)
 		local suggest = suggestion(filename, Directory(packageInfo(package).data):list()) -- suggestion must include subdirs
 		local suggestMsg = suggestionMsg(suggest)
 
-		if string.find(filename, "/", 1) then	
+		if string.find(filename, "/", 1) then
 			local fn = File(filename):name(true)
 			if not string.find(suggestMsg, fn, 1) then
-				customError(msg)	
+				customError(msg)
 			end
 		end
 
@@ -159,7 +159,7 @@ function import(package, reload)
 		end
 
 		for mfile, count in pairs(count_files) do
-			local attr = _Gtme.File(package_path..s.."lua"..s..mfile):attributes("mode")
+			local attr = _Gtme.Directory(package_path..s.."lua"..s..mfile):attributes("mode")
 			if count == 0 and attr ~= "directory" then -- SKIP
 				customWarning("File lua"..s..mfile.." is ignored by load.lua.") -- SKIP
 			elseif count > 1 then
@@ -287,7 +287,7 @@ function getPackage(pname)
 	end
 
 	for mfile, count in pairs(count_files) do
-		local attr = _Gtme.File(pname_path.."lua"..s..mfile):attributes("mode")
+		local attr = _Gtme.Directory(pname_path.."lua"..s..mfile):attributes("mode")
 		if count == 0 and attr ~= "directory" then -- SKIP
 			_Gtme.printWarning("File lua"..s..mfile.." is ignored by load.lua.")
 		elseif count > 1 then

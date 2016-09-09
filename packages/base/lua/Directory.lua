@@ -158,7 +158,7 @@ metaTableDirectory_ = {
 function Directory(data)
 	mandatoryArgument(1, "string", data)
 
-	if string.find(data, "\"") then
+	if data:find("\"") then
 			customError("Argument #1 should not contain quotation marks.")
 	end
 

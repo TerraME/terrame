@@ -152,9 +152,7 @@ File_ = {
 	--
 	-- file:delete()
 	delete = function(self)
-		if string.find(self.filename, "\"") then
-			customError("Argument #1 should not contain quotation marks.")
-		elseif not self:exists() then
+		if not self:exists() then
 			resourceNotFoundError(1, self.filename)
 		end
 
@@ -181,8 +179,8 @@ File_ = {
 		end
 	end,
 	--- Return the directory of a file given its path.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:directory()) -- "/my/path"
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- print(file:directory())
 	directory = function(self)
 		local path, _, _ = self:split()
 
@@ -204,8 +202,8 @@ File_ = {
 	end,
 	--- Return the extension of a given file name. It returns the substring after the last dot.
 	-- If it does not have a dot, an empty string is returned.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:extension()) -- "txt"
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- print(file:extension()) -- "csv"
 	extension = function(self)
 		local s = sessionInfo().separator
 
@@ -221,16 +219,16 @@ File_ = {
 		return ""
 	end,
 	--- Return a boolean value if a given file name has extension.
-	-- @usage file = File("/my/path/file.txt")
+	-- @usage file = File(filePath("agents.csv", "base"))
 	-- print(file:hasExtension()) -- true
 	hasExtension = function(self)
 		return not (self:extension() == "")
 	end,
 	--- Return the file name removing its path.
 	-- @arg extension A boolean that enable return the name with extension. The default value is false.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:name()) -- "file"
-	-- print(file:name(true)) -- "file.txt"
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- print(file:name()) -- "agents"
+	-- print(file:name(true)) -- "agents.csv"
 	name = function(self, extension)
 		extension = extension or false
 		optionalArgument(1, "boolean", extension)
@@ -337,8 +335,8 @@ File_ = {
 		return data
 	end,
 	--- Split the path, file name, and extension from a given string.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:split()) -- "/my/path/", "file", "txt"
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- print(file:split()) -- "/base/data/", "agents", "csv", "agents.csv"
 	split = function(self)
 		local filePath, nameWithExtension, extension = string.match(self.filename, "(.-)([^\\/]-%.?([^%.\\/]*))$")
 		local _, _, fileName = string.find(nameWithExtension, "^(.*)%.[^%.]*$")
@@ -455,6 +453,16 @@ function File(data)
 	data = {filename = _Gtme.makePathCompatibleToAllOS(data)}
 
 	setmetatable(data, metaTableFile_)
+
+	local dir = data:directory()
+	if not Directory(dir):exists() then
+		customError("Directory '"..dir.."'does not exists.")
+	end
+
+	local invalidChar = data.filename:find("[~#%&*{}<>?|\"+]")
+	if invalidChar then
+		customError("Filename '"..data.filename.."' cannot contain character '"..data.filename:sub(invalidChar, invalidChar).."'.")
+	end
 
 	return data
 end
