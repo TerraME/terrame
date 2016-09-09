@@ -27,27 +27,27 @@ return {
 		local tl = TerraLib{}
 		local title = "TerraLib Tests"
 		local author = "Avancini Rodrigo"
-		local file = "myproject.tview"
 		local proj = {}
-		proj.file = file
+		proj.file = "myproject.tview"
 		proj.title = title
 		proj.author = author
-		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
+
+		local file = File(proj.file)
+		if file:exists() then
+			file:delete()
 		end
-		
+
 		tl:createProject(proj, {})
-		unitTest:assert(File(proj.file):exists())
-		unitTest:assertEquals(proj.file, file)
+		unitTest:assert(file:exists())
+		unitTest:assertEquals(proj.file, "myproject.tview")
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
-		
+
 		-- allow overwrite
 		tl:createProject(proj, {})
 		unitTest:assert(File(proj.file):exists())
-		
-		File(proj.file):delete()
+
+		file:delete()
 	end,
 	addShpLayer = function(unitTest)
 		local tl = TerraLib{}
@@ -55,26 +55,27 @@ return {
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
-		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
+
+		local file = File(proj.file)
+		if file:exists() then
+			file:delete()
 		end
-		
+
 		tl:createProject(proj, {})
-		
+
 		local layerName = "ShapeLayer"
 		local layerFile = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName, layerFile)
-		
+
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
-		
+
 		unitTest:assertEquals(layerInfo.name, layerName)
 		unitTest:assertEquals(layerInfo.file, layerFile)
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
 
-		File(proj.file):delete()
+		file:delete()
 		
 		-- SPATIAL INDEX TEST
 		proj = {}
@@ -96,7 +97,7 @@ return {
 		tl:addShpLayer(proj, layerName2, layerFile, addSpatialIdx)
 		unitTest:assert(File(qixFile):exists())
 		
-		File(proj.file):delete()		
+		file:delete()
 		-- // SPATIAL INDEX TEST
 	end,
 	addShpCellSpaceLayer = function(unitTest)
@@ -106,9 +107,10 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		local file = File(proj.file)
+		if file:exists() then
+			file:delete()
+		end
 		
 		tl:createProject(proj, {})
 		
@@ -196,7 +198,7 @@ return {
 			File(shp4):delete()
 		end	
 		
-		File(proj.file):delete()
+		file:delete()
 	end,	
 	attributeFill = function(unitTest)
 		local tl = TerraLib{}
@@ -1368,6 +1370,30 @@ return {
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
 		tl:dropPgTable(pgData)		
+
 		File(proj.file):delete()
+	end,
+	getLayerSize = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		local file = File(proj.file)
+		if file:exists() then
+			file:delete()
+		end
+
+		tl:createProject(proj, {})
+
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)	
+
+		local size = tl:getLayerSize(proj, layerName1)
+
+		unitTest:assertEquals(size, 63.0)
+		file:delete()
 	end
 }

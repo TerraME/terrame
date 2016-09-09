@@ -221,7 +221,32 @@ return {
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
 		tl:dropPgTable(pgData)		
+
 		File(toData.file):delete()
 		File(proj.file):delete()
+	end,
+	getLayerSize = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		local file = File(proj.file)
+		if file:exists() then
+			file:delete()
+		end
+
+		tl:createProject(proj, {})
+
+		local layerName1 = "SampaGeoJson"
+		local layerFile1 = filePath("test/sampa.geojson", "terralib")
+		tl:addGeoJSONLayer(proj, layerName1, layerFile1)
+
+		local size = tl:getLayerSize(proj, layerName1)
+
+		unitTest:assertEquals(size, 63.0)
+
+		file:delete()
 	end
 }

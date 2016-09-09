@@ -352,6 +352,30 @@ return {
 		File(proj.file):delete()
 		
 		customWarning = customWarningBkp
-	end	
+	end,
+	getLayerSize = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		local file = File(proj.file)
+		if file:exists() then
+			file:delete()
+		end
+
+		tl:createProject(proj, {})
+
+		local layerName = "TifLayer"
+		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
+		tl:addGdalLayer(proj, layerName, layerFile)	
+
+		local size = tl:getLayerSize(proj, layerName)
+
+		unitTest:assertEquals(size, 882875.0)
+
+		file:delete()
+	end
 }
 
