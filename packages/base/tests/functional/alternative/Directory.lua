@@ -27,17 +27,35 @@ return{
 		local error_func = function()
 			Directory()
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
-
-		error_func = function()
-			Directory{}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
+		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			Directory(1)
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+		unitTest:assertError(error_func, namedArgumentsMsg())
+
+		error_func = function()
+			Directory{}
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg("name"))
+
+		error_func = function()
+			Directory{name = 1}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
+
+		error_func = function()
+			Directory{
+				name = ".tmp_XXXXX",
+				tmpd = true
+			}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("tmpd", "tmp"))
+
+		error_func = function()
+			Directory{tmpd = true}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("tmpd", "tmp"))
 	end,
 	attributes = function(unitTest)
 		local dir = Directory("/my/path/my_dir")

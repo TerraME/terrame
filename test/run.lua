@@ -32,7 +32,7 @@ local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 
 _Gtme.printNote("Creating temporary directory")
-tmpdirectory = tmpDir(".terramerun_XXXXX")
+tmpdirectory = _Gtme.Directory{name = ".terramerun_XXXXX", tmp = true}:create()
 
 _Gtme.printNote("Testing installed packages")
 

@@ -26,6 +26,38 @@ return{
 	Directory = function(unitTest)
 		local dir = Directory(packageInfo("base").data)
 		unitTest:assertType(dir, "Directory")
+
+		dir = Directory{
+			name = ".tmp_XXXXX",
+			tmp = true
+		}
+
+		dir:create()
+		unitTest:assert(dir:exists())
+
+		local tmpDir = Directory{
+			name = ".tmp_XXXXX",
+			tmp = true
+		}
+
+		tmpDir:create()
+		unitTest:assert(tmpDir:exists())
+		unitTest:assert(tostring(tmpDir) ~= tostring(dir))
+
+		dir:delete()
+		tmpDir:delete()
+
+		dir = Directory{tmp = true}
+		dir:create()
+		unitTest:assert(dir:exists())
+
+		tmpDir = Directory{tmp = true}
+		tmpDir:create()
+		unitTest:assert(tmpDir:exists())
+		unitTest:assert(tostring(tmpDir) ~= tostring(dir))
+
+		dir:delete()
+		tmpDir:delete()
 	end,
 	attributes = function(unitTest)
 		local dir = Directory(packageInfo("base").data)

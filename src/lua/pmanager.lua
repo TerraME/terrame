@@ -296,10 +296,11 @@ local function installButtonClicked()
 	local installButton2 = qt.new_qobject(qt.meta.QPushButton)
 	installButton2.text = "Install"
 	qt.connect(installButton2, "clicked()", function()
-		local tmpdirectory = tmpDir()
+		local tmpdirectory = _Gtme.Directory{tmp = true }
+		tmpdirectory:create()
 		local cdir = currentDir()
 
-		_Gtme.Directory(tmpdirectory):setCurrentDir()
+		tmpdirectory:setCurrentDir()
 
 		local mpkgfile = pkgsTab[listPackages.currentRow].file
 		local installed = {}
@@ -379,7 +380,7 @@ local function installButtonClicked()
 		File(mpkgfile):delete()
 
 		_Gtme.Directory(cdir):setCurrentDir()
-		Directory(tmpdirectory):delete()
+		tmpdirectory:delete()
 		mdialog:done(0)
 	end)
 
@@ -486,10 +487,11 @@ local function installLocalButtonClicked()
 		_Gtme.printNote("Package '"..package.."' was not installed before")
 	end
 
-	local tmpdirectory = tmpDir()
+	local tmpdirectory = _Gtme.Directory{tmp = true }
+	tmpdirectory:create()
 
-	os.execute("cp \""..file.."\" \""..tmpdirectory.."\"")
-	_Gtme.Directory(tmpdirectory):setCurrentDir()
+	os.execute("cp \""..file.."\" \""..tostring(tmpdirectory).."\"")
+	tmpdirectory:setCurrentDir()
 
 	os.execute("unzip -oq \""..file.."\"")
 
@@ -507,7 +509,7 @@ local function installLocalButtonClicked()
 				_Gtme.printNote("Removing previous version of package")
 				Directory(packageDir..s..package):delete()
 			else
-				Directory(tmpdirectory):delete()
+				tmpdirectory:delete()
 				enableAll()
 				return
 			end

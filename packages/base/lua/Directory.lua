@@ -72,11 +72,41 @@ Directory_ = {
 
 		return lfs.attributes(self.name, attributename)
 	end,
-	--- Create a new directory. The argument is the name of the new directory.
-	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
+	--- Create a new directory.
+	-- Returns true if the operation was successful and is not a temporary directory; in case of error, it returns nil plus an error string.
+	-- Temporary directory returns its name. The end of the temporary directory name might contain X's,
+	-- which are going to be replaced by random alphanumerica values in order to
+	-- guarantee that the created directory will not replace a previous one.
 	-- @usage -- DONTRUN
-	-- Directory("mydirectory"):create()
+	-- dir = Directory("mydirectory")
+	-- dir:create()
+	-- print(dir)
+	--
+	-- tmpDir = Directory{
+	--    name = "mytmpdir_XXX",
+	--    tmp = true
+	-- }
+	--
+	-- dir:create()
+	-- print(tmpDir)
+	--
+	-- dir:delete()
+	-- tmpDir:delete()
 	create = function(self)
+		if self.tmp == true then
+			if not _Gtme.tmpdirectory__ then
+				_Gtme.tmpdirectory__ = {}
+			end
+
+			local cmd = runCommand("mktemp -d "..self.name)[1]
+			table.insert(_Gtme.tmpdirectory__, self)
+
+			if cmd then
+				self.name = cmd
+				return cmd
+			end
+		end
+
 		return lfs.mkdir(self.name)
 	end,
 	--- Remove an existing directory. It removes all internal files and directories
@@ -156,23 +186,33 @@ metaTableDirectory_ = {
 -- @arg data.name A mandatory string with the directory name.
 -- @usage dir = Directory("/my/path/my_dir")
 function Directory(data)
-	mandatoryArgument(1, "string", data)
+	if type(data) == "string" then
+		data = {name = data}
+	end
 
-	if data:find("\"") then
+	verifyNamedTable(data)
+	defaultTableValue(data, "tmp", false)
+	verifyUnnecessaryArguments(data, {"name", "tmp"})
+
+	if data.tmp then
+		defaultTableValue(data, "name", ".terrametmp_XXXXX")
+	end
+
+	mandatoryTableArgument(data, "name", "string")
+
+	if data.name:find("\"") then
 			customError("Argument #1 should not contain quotation marks.")
 	end
 
-	if not (data:match("\\") or data:match("/")) then
-		data = currentDir()..sessionInfo().separator..data
+	if not (data.name:match("\\") or data.name:match("/")) then
+		data.name = currentDir()..sessionInfo().separator..data.name
 	end
 
-	data = _Gtme.makePathCompatibleToAllOS(data)
+	data.name = _Gtme.makePathCompatibleToAllOS(data.name)
 
-	if data:sub(-1) == "/" then
-		data = data:sub(1, -2)
+	if data.name:sub(-1) == "/" then
+		data.name = data.name:sub(1, -2)
 	end
-
-	data = {name = data}
 
 	setmetatable(data, metaTableDirectory_)
 

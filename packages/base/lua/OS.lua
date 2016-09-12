@@ -99,12 +99,12 @@ function tmpDir(directory)
 	if directory then
 		optionalArgument(1, "string", directory)
 		return runCommand("mktemp -d "..directory)[1]
-	elseif not _Gtme.tmpdirectory__ then
-		_Gtme.tmpdirectory__ = runCommand("mktemp -d .terrametmp_XXXXX")[1] -- SKIP
-	elseif not Directory(_Gtme.tmpdirectory__):exists() then
-		os.execute("mkdir ".._Gtme.tmpdirectory__)
+	elseif not _Gtme.tmpdirectory__old then
+		_Gtme.tmpdirectory__old = runCommand("mktemp -d .terrametmp_XXXXX")[1] -- SKIP
+	elseif not Directory(_Gtme.tmpdirectory__old):exists() then
+		os.execute("mkdir ".._Gtme.tmpdirectory__old)
 	end
 
-	return _Gtme.tmpdirectory__
+	return _Gtme.tmpdirectory__old
 end
 

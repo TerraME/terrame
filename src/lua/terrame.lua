@@ -618,10 +618,11 @@ function _Gtme.installPackage(file)
 		_Gtme.print("Package '"..package.."' was not installed before.")
 	end
 
-	local tmpdirectory = tmpDir(".terrametmp_XXXXX")
+	local tmpdirectory = Directory{tmp = true}
+	tmpdirectory:create()
 
-	os.execute("cp \""..file.."\" \""..tmpdirectory.."\"")
-	_Gtme.Directory(tmpdirectory):setCurrentDir()
+	os.execute("cp \""..file.."\" \""..tostring(tmpdirectory).."\"")
+	tmpdirectory:setCurrentDir()
 
 	os.execute("unzip -oq \""..file.."\"")
 
@@ -647,7 +648,7 @@ function _Gtme.installPackage(file)
 	local status, err = pcall(function() import(package) end)
 
 	if not status then
-		Directory(tmpdirectory):delete()
+		tmpdirectory:delete()
 		_Gtme.customError(err)
 	end
 
@@ -656,7 +657,7 @@ function _Gtme.installPackage(file)
 
 	Directory(currentDir):setCurrentDir()
 
-	Directory(tmpdirectory):delete()
+	tmpdirectory:delete()
 	_Gtme.print("Package '"..package.."' successfully installed.")
 	return package
 end
@@ -1572,7 +1573,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	end
 
 	if rawget(_Gtme, "tmpdirectory__") then
-		Directory(_Gtme.tmpdirectory__):delete()
+		forEachElement(_Gtme.tmpdirectory__, function(_, dir)
+			if dir:exists() then dir:delete() end
+		end)
 	end
 
 --    if _Gtme.sessionInfo().system == "windows" then

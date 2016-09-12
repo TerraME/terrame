@@ -97,12 +97,17 @@ function _Gtme.buildPackage(package, config, clean)
 
 	report.doc_errors = report.doc_errors + docErrors
 
-	tmpdirectory = tmpDir(".terrame_"..package.."_XXXXX")
+	tmpdirectory = Directory{
+		name = ".terrame_"..package.."_XXXXX",
+		tmp = true
+	}
+
+	tmpdirectory:create()
 
 	local pkgInfo = packageInfo(package)
 	local pkgDirectory = pkgInfo.path
 
-	Directory(tmpdirectory):setCurrentDir()
+	tmpdirectory:setCurrentDir()
 
 	if pkgDirectory == package then
 		os.execute("cp -pr \""..currentdir..s..pkgDirectory.."\" .")
@@ -307,7 +312,7 @@ function _Gtme.buildPackage(package, config, clean)
 	print("\nBuild report for package '"..package.."':")
 	printNote("Package was built in "..round(finalTime - initialTime, 2).." seconds.")
 	printNote("Build created file '"..file.."'.")
-	printNote("Temporary files are saved in "..tmpdirectory)
+	printNote("Temporary files are saved in "..tostring(tmpdirectory))
 
 	if type(md5sum) == "table" then
 		printNote("MD5 sum for the package is "..md5sum[1])
