@@ -377,8 +377,8 @@ forEachOrderedElement(commands, function(idx, group)
 					return false
 				end		
 
-				str = _Gtme.makePathCompatibleToAllOS(str)				
-				value = _Gtme.makePathCompatibleToAllOS(value)				
+				str = _Gtme.makePathCompatibleToAllOS(str)
+				value = _Gtme.makePathCompatibleToAllOS(value)
 				
 				if levenshtein(str, value) > distance then
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
