@@ -23,59 +23,59 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	LogFile = function(unitTest)
+	Log = function(unitTest)
 		local c = Cell{value = 5}
 
 		local error_func = function()
-			LogFile(2)
+			Log(2)
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
-			LogFile{}
+			Log{}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
 
 		local e = Event{action = function() end}
 		error_func = function()
-			LogFile{target = e}
+			Log{target = e}
 		end
-		unitTest:assertError(error_func, "Invalid type. LogFile only works with Cell, CellularSpace, Agent, and Society.")
+		unitTest:assertError(error_func, "Invalid type. Log only works with Cell, CellularSpace, Agent, and Society.")
 
 		error_func = function()
-			LogFile{target = c, select = 5}
+			Log{target = c, select = 5}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 5))
 
 		error_func = function()
-			LogFile{target = c, overwrite = 5}
+			Log{target = c, overwrite = 5}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("overwrite", "boolean", 5))
 
 		error_func = function()
-			LogFile{target = c, select = "mvalue"}
+			Log{target = c, select = "mvalue"}
 		end
 		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
 
 		error_func = function()
-			LogFile{target = c, select = {}}
+			Log{target = c, select = {}}
 		end
-		unitTest:assertError(error_func, "LogFile must select at least one attribute.")
+		unitTest:assertError(error_func, "Log must select at least one attribute.")
 
 		error_func = function()
-			LogFile{target = c, file = 2}
+			Log{target = c, file = 2}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
 
 		error_func = function()
-			LogFile{target = c, separator = 2}
+			Log{target = c, separator = 2}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("separator", "string", 2))
 
 		local unit = Cell{}
 
 		error_func = function()
-			LogFile{target = unit}
+			Log{target = unit}
 		end
 		unitTest:assertError(error_func, "The target does not have at least one valid attribute to be used.")
 	end

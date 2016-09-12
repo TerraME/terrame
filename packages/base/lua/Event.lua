@@ -144,7 +144,7 @@ metaTableEvent_ = {
 -- Object & Function(s) activated by the Event \
 -- Agent/Automaton & execute \
 -- CellularSpace/Cell & synchronize and then execute (if exists) \
--- Chart/Map/Clock/LogFile/InternetSender/VisualTable/TextScreen & update \
+-- Chart/Map/Clock/Log/InternetSender/VisualTable/TextScreen & update \
 -- function & the function itself \
 -- Model & execute (if exists) \
 -- Society & synchronize and then execute (if exists) \
@@ -193,7 +193,7 @@ function Event(data)
 		}
 	end
 
-	if belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "LogFile", "TextScreen"}) then
+	if belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "Log", "TextScreen"}) then
 		defaultTableValue(data, "priority", 10)
 		defaultTableValue(data, "start", 0)
 	else
@@ -259,7 +259,7 @@ function Event(data)
 			data.action = function()
 			end
 		end
-	elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "LogFile", "TextScreen"}) then
+	elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "Log", "TextScreen"}) then
 		data.action = function(event)
 			maction:update(event)
 		end

@@ -83,7 +83,7 @@ return{
 		}
 
 		local ts = TextScreen{target = world}
-		LogFile{target = world, file = "cellularspace.csv"}
+		Log{target = world, file = "cellularspace.csv"}
 		local vt = VisualTable{target = world}
 
 		t:run(30)

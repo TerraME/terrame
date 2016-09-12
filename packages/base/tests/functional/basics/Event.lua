@@ -135,7 +135,7 @@ return{
 		t:run(5)
 		unitTest:assertEquals(sum, 5)
 
-		local log = LogFile{
+		local log = Log{
 			target = soc,
 			file = "logfile-event.csv"
 		}

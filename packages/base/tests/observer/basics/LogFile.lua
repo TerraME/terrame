@@ -23,7 +23,7 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	LogFile = function(unitTest)
+	Log = function(unitTest)
 		local world = Cell{
 			count = 0,
 			mcount = function(self)
@@ -31,9 +31,9 @@ return{
 			end
 		}
 
-		local log = LogFile{target = world}
+		local log = Log{target = world}
 
-		unitTest:assertType(log, "LogFile")
+		unitTest:assertType(log, "Log")
 
 		log:update()
 		log:update()
@@ -44,13 +44,13 @@ return{
 			count = 2
 		}
 
-		local log2 = LogFile{target = world2, overwrite = false, file = "logfile-1.csv"}
+		local log2 = Log{target = world2, overwrite = false, file = "logfile-1.csv"}
 
-		unitTest:assertType(log2, "LogFile")
+		unitTest:assertType(log2, "Log")
 
 		log2:update()
 
-		log2 = LogFile{target = world2, overwrite = false, file = "logfile-1.csv"}
+		log2 = Log{target = world2, overwrite = false, file = "logfile-1.csv"}
 		log2:update()
 		log2:update()
 
@@ -63,7 +63,7 @@ return{
 			end
 		}
 
-		log = LogFile{
+		log = Log{
 			target = world,
 			file = "logfile-2.csv",
 			separator = ";",
@@ -82,7 +82,7 @@ return{
 			end
 		}
 
-		log = LogFile{
+		log = Log{
 			target = world,
 			select = {"mcount"},
 			file = "logfile-3.csv"
@@ -96,7 +96,7 @@ return{
 			quantity = 3
 		}
 
-		log = LogFile{
+		log = Log{
 			target = soc,
 			file = "logfile-4.csv"
 		}
@@ -104,7 +104,7 @@ return{
 		log:update()
 		unitTest:assertFile("logfile-4.csv")
 
-		log = LogFile{
+		log = Log{
 			target = soc,
 			select = "#",
 			file = "logfile-5.csv"
@@ -123,7 +123,7 @@ return{
 			total = 10
 		}
 
-		log = LogFile{
+		log = Log{
 			target = soc,
 			file = "logfile-6.csv"
 		}
@@ -139,12 +139,12 @@ return{
 			end
 		}
 
-		LogFile{
+		Log{
 			target = world,
 			file = "logfile-7.csv"
 		}
 
-		log = LogFile{
+		log = Log{
 			target = world,
 			file = "logfile-8.csv",
 			select = "mcount"
@@ -162,7 +162,7 @@ return{
 			end
 		}
 
-		local log = LogFile{target = world, file = "logfile-update.csv"}
+		local log = Log{target = world, file = "logfile-update.csv"}
 
 		log:update()
 		log:update()
