@@ -43,29 +43,6 @@ return{
 		unitTest:assertEquals(s.mode, "debug")
 		unitTest:assertEquals(s.version, packageInfo().version)
 		unitTest:assertEquals(s.system == "windows", s.separator == "\\")
-	end,
-	tmpDir = function(unitTest)
-		local f = tmpDir()
-		local g = tmpDir()
-
-		unitTest:assertEquals(f, g)
-		unitTest:assertType(f, "string")
-		unitTest:assert(Directory(f):exists())
-
-		Directory(g):delete()
-		g = tmpDir()
-
-		unitTest:assertEquals(f, g)
-		unitTest:assertType(f, "string")
-		unitTest:assert(Directory(f):exists())
-
-		g = tmpDir("abc123XXXXX")
-
-		unitTest:assert(Directory(g):exists())
-		unitTest:assertEquals(string.len(g), 11)
-		unitTest:assertType(g, "string")
-
-		Directory(g):delete()
 	end
 }
 
