@@ -1,5 +1,5 @@
 Loading configuration file 'config/oneTest.lua'
-Using log directory 'log/mac'
+Using log directory 'log/linux'
 Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
@@ -27,8 +27,8 @@ Skipping tests/functional/alternative/ErrorHandling.lua
 Testing tests/functional/alternative/Event.lua
 Testing Event
 Skip checking asserts
-Skipping tests/functional/alternative/File.lua
 Skipping tests/functional/alternative/FileSystem.lua
+Skipping tests/functional/alternative/File.lua
 Skipping tests/functional/alternative/Flow.lua
 Skipping tests/functional/alternative/Group.lua
 Skipping tests/functional/alternative/Jump.lua
@@ -54,8 +54,8 @@ Skipping tests/functional/basics/ErrorHandling.lua
 Testing tests/functional/basics/Event.lua
 Testing Event
 Skip checking asserts
-Skipping tests/functional/basics/File.lua
 Skipping tests/functional/basics/FileSystem.lua
+Skipping tests/functional/basics/File.lua
 Skipping tests/functional/basics/Flow.lua
 Skipping tests/functional/basics/Group.lua
 Skipping tests/functional/basics/Jump.lua

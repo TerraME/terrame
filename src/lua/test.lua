@@ -439,24 +439,24 @@ function _Gtme.executeTests(package, fileName)
 		if type(data.file) == "table" then
 			forEachElement(dirFiles, function(_, value)
 				forEachElement(data.file, function(_, mfile)
-					if string.match(value, mfile) and not belong(value, myFiles) then
-						table.insert(myFiles, value)
+					if string.match(value, mfile) and not myFiles[value] then
+						myFiles[value] = true
 					end
 				end)
 			end)
 		else -- nil
 			forEachElement(dirFiles, function(_, value)
 				if string.endswith(value, ".lua") then
-					table.insert(myFiles, value)
+					myFiles[value] = true
 				end
 			end)
 		end
 
-		if #myFiles == 0 then
+		if getn(myFiles) == 0 then
 			printWarning("Skipping directory ".._Gtme.makePathCompatibleToAllOS(eachDirectory))
 		end
 
-		for _, eachFile in ipairs(myFiles) do
+		forEachOrderedElement(myFiles, function(eachFile)
 			ut.current_file = eachDirectory..s..eachFile
 			local tests
 
@@ -673,7 +673,7 @@ function _Gtme.executeTests(package, fileName)
 					end)
 				end
 			end
-		end
+		end)
 	end) 
 
 	if ut.test == 0 and not data.examples then

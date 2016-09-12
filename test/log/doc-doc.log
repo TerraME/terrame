@@ -4,23 +4,23 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
-Processing 'River_lin.shp'
-It was not possible to find the projection of layer 'layer1'.
-The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
 Processing 'agents.csv'
 Processing 'amazonia.shp'
-It was not possible to find the projection of layer 'layer2'.
+It was not possible to find the projection of layer 'layer1'.
 The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
 Processing 'brazilstates.shp'
-It was not possible to find the projection of layer 'layer3'.
+It was not possible to find the projection of layer 'layer2'.
 The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
 Processing 'cabecadeboi.shp'
-It was not possible to find the projection of layer 'layer4'.
+It was not possible to find the projection of layer 'layer3'.
 The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
 Processing 'cabecadeboi900.shp'
-It was not possible to find the projection of layer 'layer5'.
+It was not possible to find the projection of layer 'layer4'.
 The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
 Processing 'emas.shp'
+It was not possible to find the projection of layer 'layer5'.
+The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
+Processing 'river.shp'
 It was not possible to find the projection of layer 'layer6'.
 The projection should be one of the availables in: /Applications/terrame.app/Contents/MacOS/share/terralib/json/srs.json
 Parsing 'font.lua'
