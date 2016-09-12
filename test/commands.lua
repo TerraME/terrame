@@ -91,7 +91,7 @@ basic = {
 	traceelement        = {script = "trace-element.lua"},
 	traceorderedelement = {script = "trace-ordered-element.lua"},
 	tracefile           = {script = "trace-file.lua"},
-	tracelayer          = {script = "trace-layer.lua"},
+	tracelayer          = {script = "trace-layer.lua", arg = "-mode=quiet"},
 	tracemodel          = {script = "trace-model.lua"},
 	traceneighbor       = {script = "trace-neighbor.lua"},
 	traceneighagent     = {script = "trace-neighagent.lua"},
