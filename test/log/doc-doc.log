@@ -22,7 +22,7 @@ Parsing lua/Flow.lua
 Parsing lua/Group.lua
 Parsing lua/InternetSender.lua
 Parsing lua/Jump.lua
-Parsing lua/LogFile.lua
+Parsing lua/Log.lua
 Parsing lua/Mandatory.lua
 Parsing lua/Map.lua
 Parsing lua/Model.lua
@@ -81,7 +81,7 @@ Checking lua/Flow.lua
 Checking lua/Group.lua
 Checking lua/InternetSender.lua
 Checking lua/Jump.lua
-Checking lua/LogFile.lua
+Checking lua/Log.lua
 Checking lua/Mandatory.lua
 Checking lua/Map.lua
 Checking lua/Model.lua
@@ -263,8 +263,8 @@ Testing file lua/InternetSender.lua
 Skipping InternetSender
 Testing file lua/Jump.lua
 Testing Jump
-Testing file lua/LogFile.lua
-Testing LogFile
+Testing file lua/Log.lua
+Testing Log
 Testing update
 Testing file lua/Mandatory.lua
 Testing Mandatory
@@ -434,7 +434,7 @@ Checking lua/Flow.lua
 Checking lua/Group.lua
 Checking lua/InternetSender.lua
 Checking lua/Jump.lua
-Checking lua/LogFile.lua
+Checking lua/Log.lua
 Checking lua/Mandatory.lua
 Checking lua/Map.lua
 Checking lua/Model.lua
@@ -466,7 +466,7 @@ Checking lua/Flow.lua
 Checking lua/Group.lua
 Checking lua/InternetSender.lua
 Checking lua/Jump.lua
-Checking lua/LogFile.lua
+Checking lua/Log.lua
 Checking lua/Mandatory.lua
 Checking lua/Map.lua
 Checking lua/Model.lua
@@ -500,7 +500,7 @@ Building doc/files/Flow.html
 Building doc/files/Group.html
 Building doc/files/InternetSender.html
 Building doc/files/Jump.html
-Building doc/files/LogFile.html
+Building doc/files/Log.html
 Building doc/files/Mandatory.html
 Building doc/files/Map.html
 Building doc/files/Model.html
@@ -540,7 +540,7 @@ Checking Flow.lua
 Checking Group.lua
 Checking InternetSender.lua
 Checking Jump.lua
-Checking LogFile.lua
+Checking Log.lua
 Checking Mandatory.lua
 Checking Map.lua
 Checking Model.lua

@@ -31,6 +31,6 @@ files = {
 	"OS.lua",
 	"VisualTable.lua",
 	"TextScreen.lua",
-	"LogFile.lua"
+	"Log.lua"
 }
 

@@ -84,7 +84,7 @@ Skipping tests/observer/alternative/CellularSpace.lua
 Skipping tests/observer/alternative/Chart.lua
 Skipping tests/observer/alternative/Clock.lua
 Skipping tests/observer/alternative/InternetSender.lua
-Skipping tests/observer/alternative/LogFile.lua
+Skipping tests/observer/alternative/Log.lua
 Skipping tests/observer/alternative/Map.lua
 Skipping tests/observer/alternative/Society.lua
 Skipping tests/observer/alternative/TextScreen.lua
@@ -99,7 +99,7 @@ Testing tests/observer/basics/Event.lua
 Testing Event
 Skip checking asserts
 Skipping tests/observer/basics/InternetSender.lua
-Skipping tests/observer/basics/LogFile.lua
+Skipping tests/observer/basics/Log.lua
 Skipping tests/observer/basics/Map.lua
 Skipping tests/observer/basics/Model.lua
 Skipping tests/observer/basics/Society.lua
