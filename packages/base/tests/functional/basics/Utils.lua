@@ -512,12 +512,12 @@ return{
 		unitTest:assertEquals(count, #result)
 
 		local files = {
-			["Tube.lua"] = 1,
-			["Tube2.lua"] = 2,
-			["Utils.lua"] = 3,
-			["Utils2m.lua"] = 4,
-			["Utilsm.lua"] = 5,
-			["Utilsm2.lua"] = 6
+			["lua/Tube.lua"]    = 1,
+			["lua/Tube2.lua"]   = 2,
+			["lua/Utils.lua"]   = 3,
+			["lua/Utils2m.lua"] = 4,
+			["lua/Utilsm.lua"]  = 5,
+			["lua/Utilsm2.lua"] = 6
 		}
 
 		count = 1

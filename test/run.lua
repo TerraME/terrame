@@ -92,6 +92,7 @@ local function approximateLine(line)
 	if string.match(line, "configuration file")  then return   3 end
 	if string.match(line, "or is empty or does") then return  70 end
 	if string.match(line, "does not exist")      then return 200 end
+	if string.match(line, "projection should ")  then return 200 end
 	if string.match(line, "is unnecessary%.")    then return 130 end
 	if string.match(line, "'%.lua' extension")   then return 130 end
 	if string.match(line, "Error: ")             then return  50 end
