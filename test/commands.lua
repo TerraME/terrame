@@ -31,7 +31,6 @@ package = {
 }
 
 doc = {
-	doc             = {arg = "-doc"},
 	noload          = {arg = "-doc", package = "noload"},
 	onerror         = {arg = "-doc", package = "onerror"},
 	twoerrors       = {arg = "-doc", package = "twoerrors"},
