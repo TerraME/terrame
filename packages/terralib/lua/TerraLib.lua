@@ -1202,7 +1202,6 @@ TerraLib_ = {
 		return isValidDataSourceUri(toWfsUrl(url), "WFS")
 	end,
 	--- Add a WFS layer to a given project.
-	-- @arg self A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg name The name of the layer.
 	-- @arg url The URL of the WFS server.

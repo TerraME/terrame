@@ -75,9 +75,7 @@ return {
 
 		tl:createProject(proj, {})
 
-		local layerName = "WFS-Layer"
 		local url = "WFS:http://terrabrasilis.info"
-		local dataset = "reddpac:BAU"
 
 		unitTest:assert(not tl:isValidWfsUrl(url))
 		
