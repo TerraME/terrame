@@ -286,6 +286,19 @@ int cpp_putenv(lua_State* L)
 	return 0;
 }
 
+int cpp_getOsName(lua_State* L)
+{
+	#ifdef _WIN64
+		lua_pushstring(L, "WINDOWS");
+	#elif __APPLE__
+		lua_pushstring(L, "MAC");
+	#elif __linux__
+		lua_pushstring(L, "LINUX");
+	#endif
+
+	return 1;
+}
+
 extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
@@ -385,6 +398,9 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_putenv);
 	lua_setglobal(L, "cpp_putenv");
+
+	lua_pushcfunction(L, cpp_getOsName);
+	lua_setglobal(L, "cpp_getOsName");
 
 	// Execute the lua files
 	if (argc < 2)
