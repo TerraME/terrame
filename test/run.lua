@@ -111,8 +111,8 @@ local function approximateLine(line)
 	if string.match(line, "beta")                then return   2 end
 	if string.match(line, "Processing")          then return   3 end
 	if string.match(line, "Parsing")             then return   1 end
-	if string.match(line, "Checking")            then return   1 end
-	if string.match(line, "Testing")             then return  14 end
+	if string.match(line, "Checking")            then return   8 end
+	if string.match(line, "Testing")             then return  34 end
 	if string.match(line, "Skipping")            then return   8 end
 	if string.match(line, "Building")            then return   8 end
 	if string.match(line, "should contain only") then return   1 end
