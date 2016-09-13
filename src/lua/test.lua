@@ -517,7 +517,7 @@ function _Gtme.executeTests(package, fileName)
 			if #myTests == 0 then
 				printWarning("Skipping ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
 			elseif not printTesting then
-					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+				printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
 			end
 
 			local function trace(_, line)
@@ -532,7 +532,7 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				if data.lines and short == eachFile and not string.match(ss, "tests") then
-					if executionlines[eachFile] then	
+					if executionlines[eachFile] then
 						if executionlines[eachFile][line] then
 							executionlines[eachFile][line] = executionlines[eachFile][line] + 1
 						end
