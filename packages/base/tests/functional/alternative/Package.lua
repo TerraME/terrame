@@ -44,6 +44,16 @@ return{
 			filePath("test"..s.."mriver_lin.shp")
 		end
 		unitTest:assertError(error_func, "File 'base"..s.."data"..s.."test"..s.."mriver_lin.shp' does not exist in package 'base'.")
+
+		error_func = function()
+			filePath("error"..s.."csv-error.csv")
+		end
+		unitTest:assertError(error_func, "Directory '".._Gtme.makePathCompatibleToAllOS(baseInfo.data..s.."error"..s).."' does not exist.")
+
+		error_func = function()
+			filePath("test"..s.."braz.gdal")
+		end
+		unitTest:assertError(error_func, "File 'base"..s.."data"..s.."test"..s.."braz.gdal' does not exist in package 'base'. Do you mean 'brazil.gal'?")
 		File(baseInfo.data..s.."amazonia.lua"):delete()
 	end,
 	filesByExtension = function(unitTest)

@@ -42,7 +42,7 @@ return{
 		error_func = function()
 			File("/my/path/file.txt")
 		end
-		unitTest:assertError(error_func, "Directory '/my/path/'does not exist.")
+		unitTest:assertError(error_func, "Directory '/my/path/' does not exist.")
 
 		local path = _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/"
 

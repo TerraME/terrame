@@ -456,7 +456,7 @@ function File(data)
 
 	local dir = data:directory()
 	if not Directory(dir):exists() then
-		customError("Directory '"..dir.."'does not exist.")
+		customError("Directory '"..dir.."' does not exist.")
 	end
 
 	local invalidChar = data.filename:find("[~#%&*{}<>?|\"+]")

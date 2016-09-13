@@ -339,7 +339,7 @@ return{
 			}
 
 			layerName1 = "NC_vegtype2000"
-			filePath1 = filePath("vegtype_2000.nc", "terralib")
+			filePath1 = filePath("test/vegtype_2000.nc", "terralib")
 
 			layer = terralib.Layer{
 				project = proj,
@@ -382,7 +382,7 @@ return{
 			}
 
 			layerName1 = "ASC_biomassa-manaus"
-			filePath1 = filePath("biomassa-manaus.asc", "terralib")
+			filePath1 = filePath("test/biomassa-manaus.asc", "terralib")
 
 			layer = terralib.Layer{
 				project = proj,
