@@ -7,7 +7,7 @@ local baseDir = sessionInfo().path
 local pkgDir = _Gtme.makePathCompatibleToAllOS(baseDir..s.."packages")
 
 _Gtme.printNote("Creating temporary directory")
-tmpdirectory = Directory{name = ".terramerepository_XXXXX", tmp = true}:create()
+tmpdirectory = Directory{name = ".terramerepository_XXXXX", tmp = true}.name
 Directory(tmpdirectory):setCurrentDir()
 
 _Gtme.printNote("Copying currently installed packages")

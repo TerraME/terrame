@@ -22,7 +22,6 @@
 --
 -------------------------------------------------------------------------------------------
 
-
 Directory_ = {
 	type_ = "Directory",
 	--- Return a table with the file attributes corresponding to filepath (or nil followed by an error
@@ -73,10 +72,7 @@ Directory_ = {
 		return lfs.attributes(self.name, attributename)
 	end,
 	--- Create a new directory.
-	-- Returns true if the operation was successful and is not a temporary directory; in case of error, it returns nil plus an error string.
-	-- Temporary directory returns its name. The end of the temporary directory name might contain X's,
-	-- which are going to be replaced by random alphanumerica values in order to
-	-- guarantee that the created directory will not replace a previous one.
+	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 	-- @usage -- DONTRUN
 	-- dir = Directory("mydirectory")
 	-- dir:create()
@@ -87,26 +83,11 @@ Directory_ = {
 	--    tmp = true
 	-- }
 	--
-	-- dir:create()
 	-- print(tmpDir)
 	--
 	-- dir:delete()
 	-- tmpDir:delete()
 	create = function(self)
-		if self.tmp == true then
-			if not _Gtme.tmpdirectory__ then
-				_Gtme.tmpdirectory__ = {}
-			end
-
-			local cmd = runCommand("mktemp -d "..self.name)[1]
-			table.insert(_Gtme.tmpdirectory__, self)
-
-			if cmd then
-				self.name = cmd
-				return cmd
-			end
-		end
-
 		return lfs.mkdir(self.name)
 	end,
 	--- Remove an existing directory. It removes all internal files and directories
@@ -184,7 +165,18 @@ metaTableDirectory_ = {
 --- An abstract representation of Directory. This type provide access to additional
 -- directory operations and directory attributes.
 -- @arg data.name A mandatory string with the directory name.
+-- The end of the temporary directory name might contain X's,
+-- which are going to be replaced by random alphanumerica values in order to
+-- guarantee that the created directory will not replace a previous one.
 -- @usage dir = Directory("/my/path/my_dir")
+--
+-- tmpDir = Directory{
+--    name = "mytmpdir_XXX",
+--    tmp = true
+-- }
+--
+-- print(tmpDir)
+-- tmpDir:delete()
 function Directory(data)
 	if type(data) == "string" then
 		data = {name = data}
@@ -200,8 +192,9 @@ function Directory(data)
 
 	mandatoryTableArgument(data, "name", "string")
 
-	if data.name:find("\"") then
-			customError("Argument #1 should not contain quotation marks.")
+	local invalidChar = data.name:find("[*<>?|\"]")
+	if invalidChar then
+		customError("Directory name '"..data.name.."' cannot contain character '"..data.name:sub(invalidChar, invalidChar).."'.")
 	end
 
 	if not (data.name:match("\\") or data.name:match("/")) then
@@ -215,6 +208,17 @@ function Directory(data)
 	end
 
 	setmetatable(data, metaTableDirectory_)
+
+	if data.tmp == true then
+		if not _Gtme.tmpdirectory__ then
+			_Gtme.tmpdirectory__ = {}
+		end
+
+		local cmd = runCommand("mktemp -d "..data.name)[1]
+		table.insert(_Gtme.tmpdirectory__, data)
+
+		data.name = cmd
+	end
 
 	return data
 end

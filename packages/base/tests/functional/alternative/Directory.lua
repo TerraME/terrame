@@ -34,6 +34,11 @@ return{
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
+		local error_func = function()
+			Directory("abc\"")
+		end
+		unitTest:assertError(error_func, "Directory name 'abc\"' cannot contain character '\"'.")
+
 		error_func = function()
 			Directory{}
 		end
@@ -65,13 +70,8 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
 	delete = function(unitTest)
-		local error_func = function()
-			Directory("abc\"")
-		end
-		unitTest:assertError(error_func, "Argument #1 should not contain quotation marks.")
-
 		local dir = Directory("abc123456")
-		error_func = function()
+		local error_func = function()
 			dir:delete()
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("directory", tostring(dir)))
