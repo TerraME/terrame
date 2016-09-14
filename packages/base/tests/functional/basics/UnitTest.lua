@@ -89,7 +89,7 @@ source   string [shp]
 	end,
 	assertFile = function(unitTest)
 		local c = Cell{value = 2}
-		LogFile{target = c, file = "abc.csv"}
+		Log{target = c, file = "abc.csv"}
 
 		local success = unitTest.success
 		local test = unitTest.test

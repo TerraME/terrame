@@ -55,7 +55,7 @@ return {
 		-- end
 		-- unitTest:assertError(boxUnnecessary, unnecessaryArgumentMsg("box")) -- SKIP
 		
-		-- rmFile(projName)
+		-- File(projName):delete()
 		
 		-- SPATIAL INDEX TEST
 		local projName = "layer_tif_alternative.tview"
@@ -76,7 +76,7 @@ return {
 		end
 		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index"))
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 		-- // SPATIAL INDEX TEST
 	end,
 	fill = function(unitTest)
@@ -109,8 +109,8 @@ return {
 		local clName1 = "cells"
 		local shp1 = clName1..".shp"
 
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end
 
 		local cl = Layer{
@@ -125,8 +125,8 @@ return {
 		local modeTifLayerName = clName1.."_"..prodes.."_mode"
 		local shp = modeTifLayerName..".shp"
 
-		if isFile(shp) then
-			rmFile(shp)
+		if File(shp):exists() then
+			File(shp):delete()
 		end
 
 		local invalidBand = function()
@@ -157,10 +157,10 @@ return {
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
 		
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
+		File(projName):delete() -- #1301
 
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end
 		
 		customWarning = customWarningBkp		
@@ -168,8 +168,8 @@ return {
 	dummy = function(unitTest)
 		local projName = "layer_tif_dummy.tview"
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
 		local proj = Project{
@@ -193,8 +193,8 @@ return {
 			l:dummy(4)
 		end
 		unitTest:assertError(bandNoExists, "The maximum band is '3.0'.")
-		
-		rmFile(projName)	
+
+		File(projName):delete()
 
 		customWarning = customWarningBkp
 	end

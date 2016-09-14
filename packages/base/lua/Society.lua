@@ -649,11 +649,7 @@ Society_ = {
 	--
 	-- sample = soc:sample()
 	sample = function(self)
-		if #self.agents > 0 then
-			return self.agents[Random():integer(1, #self.agents)]
-		else
-			customError("Trying to sample an empty Society.")
-		end
+		return self.agents[Random():integer(1, #self.agents)]
 	end,
 	--- Return the number of Agents in the Society.
 	-- @deprecated Society:#

@@ -1477,7 +1477,7 @@ Map_ = {
 	-- }
 	--
 	-- map:save("file.bmp")
-	-- rmFile("file.bmp")
+	-- File("file.bmp"):delete()
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 

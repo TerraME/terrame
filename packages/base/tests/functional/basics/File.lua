@@ -27,15 +27,71 @@ return{
 		local file = File("abc.txt")
 		unitTest:assertType(file, "File")
 	end,
+	attributes = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		local attr = file:attributes()
+
+		local expected = {
+			mode = "file",
+			getn = 12,
+			size = 140.0
+		}
+
+		if _Gtme.sessionInfo().system ~= "windows" then
+			expected.getn = 14
+			expected.size = 135.0
+		end
+
+		unitTest:assertEquals(getn(attr), expected.getn)
+		unitTest:assertEquals(attr.mode, expected.mode)
+		unitTest:assertEquals(attr.size, expected.size)
+
+		attr = file:attributes("mode")
+		unitTest:assertEquals(attr, expected.mode)
+
+		attr = file:attributes("size")
+		unitTest:assertEquals(attr, expected.size)
+	end,
 	close = function(unitTest)
 		local filename = "test.csv"
 		local file = File(filename)
 
-		file.file = io.open(file.name, "a+")
+		file.file = io.open(file.filename, "a+")
 		local close = file:close()
 
 		unitTest:assert(close)
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
+	end,
+	delete = function(unitTest)
+		local filepath = packageInfo().data.."test123"
+		os.execute("touch "..filepath)
+
+		local file = File(filepath)
+		file:delete()
+
+		unitTest:assert(not file:exists())
+
+		os.execute("touch abc123.shp")
+		os.execute("touch abc123.shx")
+		os.execute("touch abc123.dbf")
+		os.execute("touch abc123.prj")
+
+		File("abc123.shp"):delete()
+
+		unitTest:assert(not File("abc123.shp"):exists())
+		unitTest:assert(not File("abc123.shx"):exists())
+		unitTest:assert(not File("abc123.dbf"):exists())
+		unitTest:assert(not File("abc123.prj"):exists())
+
+		os.execute("touch abc123.shp")
+
+		File("abc123.shp"):delete()
+	end,
+	directory = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+
+		unitTest:assertType(file, "File")
+		unitTest:assertEquals(file:directory(), _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/")
 	end,
 	exists = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -44,50 +100,28 @@ return{
 		file = File("abc.lua")
 		unitTest:assert(not file:exists())
 	end,
-	getDir = function(unitTest)
-		local file = File("/my/path/file.txt")
+	extension = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		local extension = file:extension()
 
 		unitTest:assertType(file, "File")
-		unitTest:assertEquals(file:getDir(), "/my/path/")
-	end,
-	getExtension = function(unitTest)
-		local file = File("/my/path/file.txt")
-		local extension = file:getExtension()
-
-		unitTest:assertType(file, "File")
-		unitTest:assertEquals(extension, "txt")
-	end,
-	getName = function(unitTest)
-		local file = File("/my/path/file.txt")
-
-		unitTest:assertType(file, "File")
-		unitTest:assertEquals(file:getName(), "file")
-	end,
-	getNameWithExtension = function (unitTest)
-		local file = File("/my/path/file.txt")
-
-		unitTest:assertType(file, "File")
-		unitTest:assertEquals(file:getNameWithExtension(), "file.txt")
-	end,
-	getPath = function(unitTest)
-		local file = File("/my/path/file.txt")
-		unitTest:assertType(file, "File")
-		unitTest:assertNil(file:getPath())
-
-		file = File(filePath("agents.csv", "base"))
-		unitTest:assertType(file, "File")
-
-		local path = _Gtme.makePathCompatibleToAllOS(packageInfo().data).."/".."agents.csv"
-		unitTest:assertEquals(file:getPath(), path)
+		unitTest:assertEquals(extension, "csv")
 	end,
 	hasExtension = function(unitTest)
-		local file = File("/my/path/file.txt")
-		local extension = file:hasExtension()
-		unitTest:assert(extension)
+		local file = File(filePath("agents.csv", "base"))
+		unitTest:assert(file:hasExtension())
 
-		file = File("/my/path/file")
-		extension = file:hasExtension()
-		unitTest:assert(not extension)
+		file = File(packageInfo("base").data.."file")
+		os.execute("touch "..tostring(file))
+		unitTest:assert(not file:hasExtension())
+		file:delete()
+	end,
+	name = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+
+		unitTest:assertType(file, "File")
+		unitTest:assertEquals(file:name(), "agents")
+		unitTest:assertEquals(file:name(true), "agents.csv")
 	end,
 	open = function(unitTest)
 		local file = File("test.csv")
@@ -103,7 +137,7 @@ return{
 		unitTest:assertNil(sfile)
 		file:close()
 
-		rmFile("test.csv")
+		file:delete()
 	end,
 	read = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -121,23 +155,35 @@ return{
 		unitTest:assertEquals(line[2], "20")
 		unitTest:assertEquals(line[3], "200")
 	end,
-	removeExtension = function(unitTest)
-		local file = File("/my/path/file.txt")
-		local nameWithExtension = file:getNameWithExtension()
+	split = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		local path, name, extension, nameWithExtension = file:split()
 
 		unitTest:assertType(file, "File")
-		unitTest:assertEquals(nameWithExtension, "file.txt")
-		unitTest:assertEquals(file:removeExtension(nameWithExtension), "file")
-		unitTest:assertEquals(file:removeExtension(), "file")
+		unitTest:assertEquals(path, _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/")
+		unitTest:assertEquals(name, "agents")
+		unitTest:assertEquals(extension, "csv")
+		unitTest:assertEquals(nameWithExtension, "agents.csv")
 	end,
-	splitNames = function(unitTest)
-		local file = File("/my/path/file.txt")
-		local path, name, extension = file:splitNames()
+	touch = function(unitTest)
+		if _Gtme.sessionInfo().system ~= "windows" then
+			local pathdata = packageInfo().data.."testfile.txt"
 
-		unitTest:assertType(file, "File")
-		unitTest:assertEquals(path, "/my/path/")
-		unitTest:assertEquals(name, "file")
-		unitTest:assertEquals(extension, "txt")
+			local file = File(pathdata)
+			file:writeLine("test")
+
+			unitTest:assert(file:touch(10000, 10000)) -- SKIP
+
+			local attr = _Gtme.File(pathdata):attributes("access")
+			unitTest:assertEquals(attr, 10000) -- SKIP
+
+			attr = _Gtme.File(pathdata):attributes("modification")
+			unitTest:assertEquals(attr, 10000) -- SKIP
+
+			File(pathdata):delete()
+		end
+
+		unitTest:assert(true)
 	end,
 	write = function(unitTest)
 		local example = {
@@ -171,7 +217,7 @@ return{
 			end
 		end
 
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 	end,
 	writeLine = function(unitTest)
 		local example = "Some text.."
@@ -189,12 +235,14 @@ return{
 		unitTest:assertNotNil(text)
 		unitTest:assertEquals(text, example)
 
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 	end,
 	__tostring = function(unitTest)
-		local file = File("abc.txt")
-		unitTest:assertEquals(tostring(file), [[name  string [abc.txt]
-]])
+		local path = filePath("agents.csv", "base")
+		local file = File(path)
+
+		unitTest:assertType(file, "File")
+		unitTest:assertEquals(tostring(file), _Gtme.makePathCompatibleToAllOS(path))
 	end
 }
 

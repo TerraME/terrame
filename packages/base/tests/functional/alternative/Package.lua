@@ -39,13 +39,22 @@ return{
 			filePath("amazonia.tview")
 		end
 		unitTest:assertError(error_func, "File 'base/data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project' to create it.", 2)
-		
-		local subdirError = function()
-			filePath("subdir/mriver_lin.shp")
-		end
-		unitTest:assertError(subdirError, "File 'base/data/subdir/mriver_lin.shp' does not exist in package 'base'.")		
 
-		rmFile(baseInfo.data..s.."amazonia.lua")
+		error_func = function()
+			filePath("test"..s.."mriver_lin.shp")
+		end
+		unitTest:assertError(error_func, "File 'base"..s.."data"..s.."test"..s.."mriver_lin.shp' does not exist in package 'base'.")
+
+		error_func = function()
+			filePath("error"..s.."csv-error.csv")
+		end
+		unitTest:assertError(error_func, "Directory '".._Gtme.makePathCompatibleToAllOS(baseInfo.data..s.."error"..s).."' does not exist.")
+
+		error_func = function()
+			filePath("test"..s.."braz.gdal")
+		end
+		unitTest:assertError(error_func, "File 'base"..s.."data"..s.."test"..s.."braz.gdal' does not exist in package 'base'. Do you mean 'brazil.gal'?")
+		File(baseInfo.data..s.."amazonia.lua"):delete()
 	end,
 	filesByExtension = function(unitTest)
 		local error_func = function()

@@ -38,6 +38,32 @@ return{
 			File(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+
+		error_func = function()
+			File("/my/path/file.txt")
+		end
+		unitTest:assertError(error_func, "Directory '/my/path/' does not exist.")
+
+		local path = _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/"
+
+		local filename = path.."file*"
+		error_func = function()
+			File(filename)
+		end
+		unitTest:assertError(error_func, "Filename '"..filename.."' cannot contain character '*'.")
+
+		filename = path.."file\""
+		error_func = function()
+			File(filename)
+		end
+		unitTest:assertError(error_func, "Filename '"..filename.."' cannot contain character '\"'.")
+	end,
+	attributes = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		local error_func = function()
+			file:attributes(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
 	close = function(unitTest)
 		local file = File("abc.txt")
@@ -54,7 +80,37 @@ return{
 			file:close()
 		end
 
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
+	end,
+	delete = function(unitTest)
+		local file = File("abc123456")
+		local error_func = function()
+			file:delete()
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg(1, file.filename))
+
+		if _Gtme.sessionInfo().system == "windows" then
+			file = File("myfile.txt")
+			file:open("w")
+
+			error_func = function()
+				file:delete()
+			end
+			unitTest:assertError(error_func, "Could not remove file '"..file.filename.."'.") -- SKIP
+
+			file:close()
+			file:delete()
+
+			unitTest:assert(not file:exists()) -- SKIP
+		end
+	end,
+	name = function(unitTest)
+		local file = File("abc.txt")
+
+		local error_func = function()
+			file:name(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "boolean", 1))
 	end,
 	open = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -63,7 +119,7 @@ return{
 		local error_func = function()
 			file:open()
 		end
-		unitTest:assertError(error_func, "File '"..file.name.."' is already open.")
+		unitTest:assertError(error_func, "File '"..file.filename.."' is already open.")
 		file:close()
 
 		file = File("test.txt")
@@ -75,7 +131,7 @@ return{
 		error_func = function()
 			file:open("r")
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "test.txt"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
 	read = function(unitTest)
 		local filename = "abc.txt"
@@ -87,7 +143,7 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 
 		file = File(filename)
 
@@ -95,7 +151,7 @@ return{
 			file:read()
 		end
 
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.name))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 
 		local s = sessionInfo().separator
 		file = File(filePath("test/error"..s.."csv-error.csv"))
@@ -127,13 +183,26 @@ return{
 		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
 
 		file:close()
-		if isFile(filename) then rmFile(filename) end
+		if File(filename):exists() then File(filename):delete() end
 
 		file = File(filePath("agents.csv", "base"))
 		error_func = function()
 			file:readLine(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+	end,
+	touch = function(unitTest)
+		local file = File("abc.txt")
+
+		local error_func = function()
+			file:touch("1")
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "1"))
+
+		error_func = function()
+			file:touch(1, "1")
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "1"))
 	end,
 	write = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -167,7 +236,7 @@ return{
 		unitTest:assertError(error_func, "Cannot write a file opened for reading.")
 
 		local s = sessionInfo().separator
-		local filename = tmpDir()..s.."csvwrite.csv"
+		local filename = Directory{tmp = true}.name..s.."csvwrite.csv"
 		file = File(filename)
 
 		error_func = function()

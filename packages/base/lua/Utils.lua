@@ -507,14 +507,14 @@ end
 -- @usage forEachFile(packageInfo("base").path, function(file)
 --     print(file)
 -- end)
--- @see FileSystem:dir
+-- @see Directory:list
 function forEachFile(directory, _sof_)
 	if type(directory) == "string" then
-		if not isDir(directory) then
+		if not Directory(directory):exists() then
 			customError("Directory '"..directory.."' is not valid or does not exist.")
 		end
 
-		if not pcall(function() directory = dir(directory) end) then
+		if not pcall(function() directory = Directory(directory):list() end) then
 			return true
 		end
 	end
@@ -872,7 +872,7 @@ local config
 function getConfig()
 	if config then
 		return config
-	elseif not isFile("config.lua") then
+	elseif not File("config.lua"):exists() then
 		_Gtme.buildConfig() -- SKIP
 		return getConfig() -- SKIP
 	else
@@ -1363,23 +1363,6 @@ function round(num, idp)
 	return math.floor(num * mult + 0.5) / mult
 end
 
---- Return information about the current execution. The result is a table
--- with the following values.
--- @tabular NONE
--- Attribute & Description \
--- currentFile & A string with the current file being executed. This attribute 
--- only exists when the file was passed as argument to TerraME. \
--- dbVersion & A string with the current TerraLib version for databases. \
--- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
--- path & A string with the location of TerraME in the computer. \
--- separator & A string with the directory separator. \
--- silent & A boolean value indicating whether print() calls should not be shown in the
--- screen. This element is true when TerraME is executed with mode "silent".
--- @usage print(sessionInfo().mode)
-function sessionInfo()
-	return info_ -- this is a global variable created when TerraME is initialized
-end
-
 --- Convert a string into a more readable name. It is useful to work
 -- with Model:init() when the model will be available through a graphical interface.
 -- In graphical interfaces, if the string contains underscores, it
@@ -1475,11 +1458,11 @@ function table.load(filename)
 	mandatoryArgument(1, "string", filename)
 
 	local file = File(filename)
-	verify(file:getExtension() == "lua", "File '"..filename.."' does not have a valid extension.")
-	verify(file:exists(), resourceNotFoundMsg("file", file:getNameWithExtension()))
+	verify(file:extension() == "lua", "File '"..filename.."' does not have a valid extension.")
+	verify(file:exists(), resourceNotFoundMsg("file", file:name(true)))
 
 	local tbl
-	local ok, merror = pcall(function() tbl = dofile(file:getPath()) end)
+	local ok, merror = pcall(function() tbl = dofile(tostring(file)) end)
 	if not ok then customError("Failed to load file "..merror) end
 
 	verify(type(tbl) == "table", "File '"..filename.."' does not contain a Lua table.")
@@ -1493,7 +1476,7 @@ end
 -- tbl = {x = 1, y = 2}
 -- table.save(tbl, filename)
 --
--- if isFile(filename) then rmFile(filename) end
+-- if File(filename):exists() then File(filename):delete() end
 function table.save(tbl, filename)
 	mandatoryArgument(1, "table", tbl)
 	mandatoryArgument(2, "string", filename)

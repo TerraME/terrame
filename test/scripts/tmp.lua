@@ -1,10 +1,10 @@
 file = io.open("mytmp.lua", "w")
 
-file:write("print(tmpDir())")
+file:write("print(Directory{tmp = true}.name)")
 file:close()
 
 os.execute("terrame mytmp.lua > resp.txt")
-rmFile("mytmp.lua")
+File("mytmp.lua"):delete()
 
 file = io.open("resp.txt")
 value = file:read()
@@ -12,12 +12,12 @@ value = file:read()
 -- check if the directory does not exist
 if value == nil then
 	print("Could not read the directory's name.")
-elseif isDir(value) then
+elseif Directory(value):exists() then
 	print("Directory '"..value.."' should not exist!")
 else
 	print("Directory does not exist.")
 end
 
 file:close()
-rmFile("resp.txt")
+File("resp.txt"):delete()
 

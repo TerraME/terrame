@@ -256,7 +256,7 @@ end
 -- end)
 function forEachFile2(directory, f)
 	if type(directory) == "string" then
-		directory = dir(directory)
+		directory = Directory(directory):list()
 	end
 
 	mandatoryArgument(1, "table", directory)

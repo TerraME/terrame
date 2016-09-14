@@ -40,8 +40,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 		
 		tl:createProject(proj, {})
@@ -54,7 +54,7 @@ return {
 		unitTest:assertEquals(proj2.title, proj.title)
 		unitTest:assertEquals(proj2.author, proj.author)
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end
 }
 

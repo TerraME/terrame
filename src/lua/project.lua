@@ -42,7 +42,7 @@ function _Gtme.executeProject(package)
 
 	local data_path = package_path..s.."data"
 
-	chDir(data_path)
+	Directory(data_path):setCurrentDir()
 
 	local project_report = {
 		projects = 0,
@@ -56,9 +56,9 @@ function _Gtme.executeProject(package)
 		if string.endswith(file, ".lua") then
 			local output = string.sub(file, 1, -5)..".tview"
 
-			if isFile(output) then
+			if File(output):exists() then
 				print("Removing file '"..output.."'.")
-				rmFile(output)
+				File(output):delete()
 			end
 		end
 	end)
@@ -77,19 +77,36 @@ function _Gtme.executeProject(package)
 			print("Processing '"..file.."'")
 			project_report.projects = project_report.projects + 1
 
-			local output = string.sub(file, 1, -5)..".tview"			
+			local filename = File(file):name()
+			local output = filename..".tview"
+
+			local filesDir = {}
+			local dir = Directory(".")
+			forEachFile(dir:list(), function(oldFile)
+				filesDir[oldFile] = true
+			end)
 
 			xpcall(function() dofile(data_path..s..file) end, function(err)
 				printError(err)
 				project_report.errors_processing = project_report.errors_processing + 1
 			end)
 
-			if isFile(output) then
+			if File(output):exists() then
 				print("File '"..output.."' was successfully created.")
 			else
 				printError("File '"..output.."' was not created.")
 				project_report.errors_output = project_report.errors_output + 1
 			end
+
+			forEachFile(dir:list(), function(newFile)
+				if filesDir[newFile] == nil then
+					local fileInfo = File(newFile)
+					if not fileInfo:name() == filename then
+						printError("File '"..fileInfo:name(true).."' should be named '"..filename.."."..fileInfo:extension().."'.")
+						project_report.errors_output = project_report.errors_output + 1
+					end
+				end
+			end)
 		end
 	end)
 

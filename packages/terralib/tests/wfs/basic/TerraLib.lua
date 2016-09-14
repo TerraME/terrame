@@ -27,15 +27,13 @@ return {
 		local tl = TerraLib {}
 		local title = "TerraLib Tests"
 		local author = "Avancini Rodrigo"
-		local file = "terralib_wfs_basic.tview"
+		local file = File("terralib_wfs_basic.tview")
 		local proj = {}
-		proj.file = file
+		proj.file = file:name(true)
 		proj.title = title
 		proj.author = author
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
-		end
+		if file:exists() then file:delete() end
 
 		tl:createProject(proj, {})
 
@@ -51,27 +49,25 @@ return {
 			unitTest:assertEquals(layerInfo.url, "WFS:"..url) -- SKIP
 			unitTest:assertEquals(layerInfo.type, "WFS") -- SKIP
 			unitTest:assertEquals(layerInfo.source, "wfs") -- SKIP
-			unitTest:assertEquals(layerInfo.rep, "unknown") -- SKIP
+			unitTest:assertEquals(layerInfo.rep, "surface") -- SKIP
 			unitTest:assertNotNil(layerInfo.sid) -- SKIP
 		else
 			unitTest:assert(true) -- SKIP
 		end
-		
-		rmFile(proj.file)
+
+		file:delete()
 	end,
 	isValidWfsUrl = function(unitTest)
 		local tl = TerraLib {}
 		local title = "TerraLib Tests"
 		local author = "Avancini Rodrigo"
-		local file = "terralib_wfs_basic.tview"
+		local file = File("terralib_wfs_basic.tview")
 		local proj = {}
-		proj.file = file
+		proj.file = file:name(true)
 		proj.title = title
 		proj.author = author
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
-		end
+		if file:exists() then file:delete() end
 
 		tl:createProject(proj, {})
 
@@ -79,6 +75,6 @@ return {
 
 		unitTest:assert(not tl:isValidWfsUrl(url))
 		
-		rmFile(proj.file)
+		file:delete()
 	end
 }

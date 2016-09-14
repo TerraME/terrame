@@ -108,7 +108,7 @@ local function buildComboboxPackages(default)
 	local index = 0
 	local pkgDir = sessionInfo().path..s.."packages"
 	forEachFile(pkgDir, function(file)
-		if file == "luadoc" or not isDir(pkgDir..s..file) then return end
+		if file == "luadoc" or not Directory(pkgDir..s..file):exists() then return end
 	
 		qt.combobox_add_item(comboboxPackages, file)
 	
@@ -215,7 +215,7 @@ local function selectPackage()
 	local docpath = packageInfo(comboboxPackages.currentText).path
 	docpath = docpath..s.."doc"..s.."index.html"
 
-	docButton.enabled = isFile(docpath)
+	docButton.enabled = File(docpath):exists()
 
 	comboboxModels.enabled = #models > 1
 	configureButton.enabled = #models > 0
@@ -296,10 +296,10 @@ local function installButtonClicked()
 	local installButton2 = qt.new_qobject(qt.meta.QPushButton)
 	installButton2.text = "Install"
 	qt.connect(installButton2, "clicked()", function()
-		local tmpdirectory = tmpDir()
+		local tmpdirectory = _Gtme.Directory{tmp = true}
 		local cdir = currentDir()
 
-		_Gtme.chDir(tmpdirectory)
+		tmpdirectory:setCurrentDir()
 
 		local mpkgfile = pkgsTab[listPackages.currentRow].file
 		local installed = {}
@@ -376,10 +376,10 @@ local function installButtonClicked()
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
 
-		rmFile(mpkgfile)
+		File(mpkgfile):delete()
 
-		_Gtme.chDir(cdir)
-		rmDir(tmpdirectory)
+		_Gtme.Directory(cdir):setCurrentDir()
+		tmpdirectory:delete()
 		mdialog:done(0)
 	end)
 
@@ -479,17 +479,17 @@ local function installLocalButtonClicked()
 
 	local currentVersion
 	local packageDir = _Gtme.sessionInfo().path..s.."packages"
-	if isDir(packageDir..s..package) then
+	if Directory(packageDir..s..package):exists() then
 		currentVersion = packageInfo(package).version
 		_Gtme.printNote("Package '"..package.."' is already installed")
 	else
 		_Gtme.printNote("Package '"..package.."' was not installed before")
 	end
 
-	local tmpdirectory = tmpDir()
+	local tmpdirectory = _Gtme.Directory{tmp = true}
 
-	os.execute("cp \""..file.."\" \""..tmpdirectory.."\"")
-	_Gtme.chDir(tmpdirectory)
+	os.execute("cp \""..file.."\" \""..tostring(tmpdirectory).."\"")
+	tmpdirectory:setCurrentDir()
 
 	os.execute("unzip -oq \""..file.."\"")
 
@@ -505,9 +505,9 @@ local function installLocalButtonClicked()
 
 			if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
 				_Gtme.printNote("Removing previous version of package")
-				rmDir(packageDir..s..package)
+				Directory(packageDir..s..package):delete()
 			else
-				rmDir(tmpdirectory)
+				tmpdirectory:delete()
 				enableAll()
 				return
 			end
@@ -521,7 +521,7 @@ local function installLocalButtonClicked()
 	if pkg then
 		local ok = true
 		xpcall(function() getPackage(package) end, function(err)
-			rmDir(packageInfo(package).path)
+			Directory(packageInfo(package).path):delete()
 			qt.dialog.msg_critical(err)
 			ok = false
 		end)

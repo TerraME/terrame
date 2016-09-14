@@ -79,7 +79,7 @@ return{
 		}
 
 		local ts = TextScreen{target = world}
-		LogFile{target = world, file = "cell.csv"}
+		Log{target = world, file = "cell.csv"}
 		local vt = VisualTable{target = world}
 
 		t:run(15)
@@ -98,7 +98,7 @@ return{
 
 		-- the call to notify() above creates the file again.
 		-- remove the line below after refactoring observer.
-		if isFile("cell.csv") then rmFile("cell.csv") end
+		if File("cell.csv"):exists() then File("cell.csv"):delete() end
 
 -- FIXME: bug below
 --[[

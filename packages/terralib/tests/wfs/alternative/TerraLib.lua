@@ -33,8 +33,8 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end
 
 		tl:createProject(proj, {})
@@ -58,6 +58,6 @@ return {
 			unitTest:assertError(invalidDataSet, "It was not possible to find data set 'reddpac:B' of type 'WFS'. Layer 'WFS-Layer' does not created.")
 		end		
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end
 }

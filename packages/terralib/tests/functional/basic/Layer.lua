@@ -41,7 +41,7 @@ return {
 		
 		local filePath1 = "setores_cells_basic.shp"
 		
-		if not isFile(filePath1) then
+		if not File(filePath1):exists() then
 			local mf = io.open(filePath1, "w")
 			mf:write("aaa")
 			io.close(mf)
@@ -71,16 +71,16 @@ return {
 		unitTest:assertEquals(cl2.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath1))			
 	
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
+		File(projName):delete() -- #1301
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end
 
 		projName = "setores_2000.tview"
 
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
 		local proj1 = Project {
@@ -138,7 +138,7 @@ return {
 		unitTest:assertEquals(layer4.sid, layer3.sid)		
 		
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
+		File(projName):delete() -- #1301
 		
 		projName = "cells_setores_2000.tview"
 
@@ -170,8 +170,8 @@ return {
 		
 		filePath1 = "sampa_cells.shp"
 
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end
 
 		clName1 = "Sampa_Cells"
@@ -187,8 +187,8 @@ return {
 		
 		local filePath2 = "mg_cells.shp"
 		
-		if isFile(filePath2) then
-			rmFile(filePath2)
+		if File(filePath2):exists() then
+			File(filePath2):delete()
 		end			
 		
 		local clName2 = "MG_Cells"
@@ -204,8 +204,8 @@ return {
 		
 		local filePath3 = "another_sampa_cells.shp"
 		
-		if isFile(filePath3) then
-			rmFile(filePath3)
+		if File(filePath3):exists() then
+			File(filePath3):delete()
 		end
 		
 		local clName3 = "Another_Sampa_Cells"
@@ -227,8 +227,8 @@ return {
 		clName1 = clName1.."_Box"
 		local filePath4 = clName1..".shp"
 		
-		if isFile(filePath4) then
-			rmFile(filePath4)
+		if File(filePath4):exists() then
+			File(filePath4):delete()
 		end		
 		
 		Layer{
@@ -244,14 +244,14 @@ return {
 		unitTest:assertEquals(getn(clSet), 104)		
 		
 		-- END
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end		
 
-		if isFile(filePath1) then rmFile(filePath1) end
-		if isFile(filePath2) then rmFile(filePath2) end
-		if isFile(filePath3) then rmFile(filePath3) end
-		if isFile(filePath4) then rmFile(filePath4) end
+		if File(filePath1):exists() then File(filePath1):delete() end
+		if File(filePath2):exists() then File(filePath2):delete() end
+		if File(filePath3):exists() then File(filePath3):delete() end
+		if File(filePath4):exists() then File(filePath4):delete() end
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_basic.tview"
@@ -270,8 +270,8 @@ return {
 		local clName1 = "Setores_Cells"
 		local filePath1 = clName1..".shp"
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end
 
 		local cl = Layer{
@@ -293,8 +293,8 @@ return {
 		local areaLayerName = clName1.."_Area"
 		local filePath3 = areaLayerName..".shp"
 		
-		if isFile(filePath3) then
-			rmFile(filePath3)
+		if File(filePath3):exists() then
+			File(filePath3):delete()
 		end
 		
 		cl:fill{
@@ -313,8 +313,8 @@ return {
 		-- local distanceLayerName = clName1.."_Distance"
 		-- local filePath5 = distanceLayerName..".shp"
 		
-		-- if isFile(filePath5) then
-			-- rmFile(filePath5)
+		-- if File(filePath5):exists() then
+			-- File(filePath5):delete()
 		-- end	
 		
 		-- cl:fill{
@@ -406,8 +406,8 @@ return {
 		-- local rmeanLayerName = clName1.."_Mean_Raster"
 		-- local filePath16 = shp16 = rmeanLayerName..".shp"
 
-		-- if isFile(filePath16) then
-			-- rmFile(filePath16)
+		-- if File(filePath16):exists() then
+			-- File(filePath16):delete()
 		-- end	
 		
 		-- cl:fill{
@@ -420,8 +420,8 @@ return {
 		-- local rminLayerName = clName1.."_Minimum_Raster"
 		-- local filePath17 = rminLayerName..".shp"
 
-		-- if isFile(filePath17) then
-			-- rmFile(filePath17)
+		-- if File(filePath17):exists() then
+			-- File(filePath17):delete()
 		-- end	
 		
 		-- cl:fill{
@@ -434,8 +434,8 @@ return {
 		-- local rmaxLayerName = clName1.."_Maximum_Raster"
 		-- local filePath18 = rmaxLayerName..".shp"
 
-		-- if isFile(filePath18) then
-			-- rmFile(filePath18)
+		-- if File(filePath18):exists() then
+			-- File(filePath18):delete()
 		-- end	
 		
 		-- cl:fill{
@@ -448,8 +448,8 @@ return {
 		-- local rpercentLayerName = clName1.."_Percentage_Raster"
 		-- local filePath19 = rpercentLayerName..".shp"
 
-		-- if isFile(filePath19) then
-			-- rmFile(filePath19)
+		-- if File(filePath19):exists() then
+			-- File(filePath19):delete()
 		-- end	
 		
 		-- cl:fill{
@@ -462,8 +462,8 @@ return {
 		-- local rstdevLayerName = clName1.."_Stdev_Raster"
 		-- local filePath20 = rstdevLayerName..".shp"
 
-		-- if isFile(filePath20) then
-			-- rmFile(filePath20)
+		-- if File(filePath20):exists() then
+			-- File(filePath20):delete()
 		-- end	
 		
 		-- cl:fill{
@@ -476,8 +476,8 @@ return {
 		-- local rsumLayerName = clName1.."_Sum_Raster"
 		-- local filePath21 = rstdevLayerName..".shp"
 
-		-- if isFile(filePath21) then
-			-- rmFile(filePath21)
+		-- if File(filePath21):exists() then
+			-- File(filePath21):delete()
 		-- end
 		
 		-- cl:fill{
@@ -500,8 +500,8 @@ return {
 		local cellSpaceLayerName = clName1.."_CellSpace_Sum"
 		local filePath22 = cellSpaceLayerName..".shp"
 
-		if isFile(filePath22) then
-			rmFile(filePath22)
+		if File(filePath22):exists() then
+			File(filePath22):delete()
 		end
 		
 		cs:save(cellSpaceLayerName, "past_sum")
@@ -514,20 +514,20 @@ return {
 		unitTest:assertEquals(cellSpaceLayer.source, "shp")
 		unitTest:assertEquals(cellSpaceLayer.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath22))					
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 
-		rmFile(filePath1)
---		rmFile(filePath3)
---		rmFile(filePath5)
-		--rmFile(filePath16)
-		--rmFile(filePath17)
-		--rmFile(filePath18)
-		--rmFile(filePath19)
-		--rmFile(filePath20)
-		--rmFile(filePath21)
-		rmFile(filePath22)
+		File(filePath1):delete()
+--		File(filePath3):delete()
+--		File(filePath5):delete()
+		--File(filePath16):delete()
+		--File(filePath17):delete()
+		--File(filePath18):delete()
+		--File(filePath19):delete()
+		--File(filePath20):delete()
+		--File(filePath21):delete()
+		File(filePath22):delete()
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_representation.tview"
@@ -564,7 +564,7 @@ return {
 
 		unitTest:assertEquals(l:representation(), "line")
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	__tostring = function(unitTest)
 		local projName = "cellular_layer_print.tview"
@@ -590,7 +590,7 @@ source   string [shp]
 ]]
 		unitTest:assertEquals(tostring(l), expected, 36, true)
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
+		File(projName):delete() -- #1301
 	end
 }
 

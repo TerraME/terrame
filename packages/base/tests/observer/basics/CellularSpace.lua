@@ -83,7 +83,7 @@ return{
 		}
 
 		local ts = TextScreen{target = world}
-		LogFile{target = world, file = "cellularspace.csv"}
+		Log{target = world, file = "cellularspace.csv"}
 		local vt = VisualTable{target = world}
 
 		t:run(30)
@@ -94,7 +94,7 @@ return{
     
 		-- the call to notify() above creates the file again.
 		-- remove the line below after refactoring observer.
-		if isFile("cellularspace.csv") then rmFile("cellularspace.csv") end
+		if File("cellularspace.csv"):exists() then File("cellularspace.csv"):delete() end
 
 		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.23)
 
@@ -146,8 +146,8 @@ return{
 		
 		local projName = "cellspace_basic_observer.tview"
 
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
 		local author = "Avancini"
@@ -172,14 +172,14 @@ return{
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1
-		local fn1 = File(filePath1):getName()
+		local fn1 = File(filePath1):name()
 		fn1 = testDir.."/"..fn1			
 		
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end
 		end			
 		
@@ -234,12 +234,12 @@ return{
 		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.25)
 		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
+		File(projName):delete() -- #1301
 		
 		for i = 1, #exts do
 			local f = fn1..exts[i]
-			if isFile(f) then
-				rmFile(f)
+			if File(f):exists() then
+				File(f):delete()
 			end
 		end
 

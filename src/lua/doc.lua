@@ -59,11 +59,11 @@ local function imageFiles(package)
 	local s = sessionInfo().separator
 	local imagepath = packageInfo(package).path..s.."images"
 
-	if not isDir(imagepath) then
+	if not Directory(imagepath):exists() then
 		return {}
 	end
 
-	local files = dir(imagepath)
+	local files = Directory(imagepath):list()
 	local result = {}
 
 	forEachElement(files, function(_, fname)
@@ -77,11 +77,11 @@ end
 local function dataFiles(package)
 	local datapath = packageInfo(package).data
 
-	if not isDir(datapath) then
+	if not Directory(datapath):exists() then
 		return {}
 	end
 
-	local files = dir(datapath)
+	local files = Directory(datapath):list()
 	local result = {}
 
 	forEachElement(files, function(_, fname)
@@ -115,7 +115,7 @@ local function getProjects(package)
 		projects[currentProject] = {description = data.description}
 
 		forEachOrderedElement(data, function(idx, value)
-			if idx ~= "file" and type(value) == "string" and isFile(value) then
+			if idx ~= "file" and type(value) == "string" and File(value):exists() then
 				local layer = tl.Layer{
 					project = filePath(currentProject, "terralib"),
 					name = idx
@@ -147,7 +147,7 @@ local function getProjects(package)
 				description = description.."."
 
 				projects[currentProject][idx] = {
-					file = File(value):getNameWithExtension(),
+					file = File(value):name(true),
 					description = description
 				}
 			end
@@ -228,7 +228,7 @@ local function getProjects(package)
 		if data.resolution and data.file then
 			local mfile = data.file
 
-			if not isFile(mfile) then
+			if not File(mfile):exists() then
 				mfile = filePath(mfile, "terralib")
 			end
 
@@ -352,7 +352,7 @@ function _Gtme.executeDoc(package)
 		os.exit(1)
 	end)
 
-	local lua_files = dir(package_path..s.."lua")
+	local lua_files = Directory(package_path..s.."lua"):list()
 
 	local example_files = _Gtme.findExamples(package)
 
@@ -397,7 +397,7 @@ function _Gtme.executeDoc(package)
 
 	sessionInfo().mode = "strict"
 
-	if isFile(package_path..s.."data.lua") and #df > 0 then
+	if File(package_path..s.."data.lua"):exists() and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
 			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "description", "reference"})
@@ -653,7 +653,7 @@ function _Gtme.executeDoc(package)
 			end
 		end)
 
-		rmFile("tmpproj.tview")
+		File("tmpproj.tview"):delete()
 
 		forEachOrderedElement(df, function(_, mvalue)	
 			if _Gtme.ignoredFile(mvalue) then
@@ -667,7 +667,7 @@ function _Gtme.executeDoc(package)
 		end)
 
 		forEachOrderedElement(df, function(_, mvalue)
-			if isDir(package_path..s.."data"..s..mvalue) then
+			if Directory(package_path..s.."data"..s..mvalue):exists() then
 				return
 			end
 
@@ -689,14 +689,14 @@ function _Gtme.executeDoc(package)
 		printNote("Checking directory 'data'")
 		printError("Package has data files but data.lua does not exist")
 		forEachElement(df, function(_, mvalue)
-			if isDir(package_path..s.."data"..s..mvalue) then
+			if Directory(package_path..s.."data"..s..mvalue):exists() then
 				return
 			end
 
 			printError("File '"..mvalue.."' is not documented")
 			doc_report.error_data = doc_report.error_data + 1
 		end)
-	elseif isFile(package_path..s.."data.lua") then
+	elseif File(package_path..s.."data.lua"):exists() then
 		printError("Package '"..package.."' has data.lua but there is no data")
 		doc_report.error_data = doc_report.error_data + 1
 	else
@@ -707,7 +707,7 @@ function _Gtme.executeDoc(package)
 	local fontsdocumented = {}
 	df = _Gtme.fontFiles(package)
 
-	if isFile(package_path..s.."font.lua") and #df > 0 then
+	if File(package_path..s.."font.lua"):exists() and #df > 0 then
 		printNote("Parsing 'font.lua'")
 		font = function(tab)
 			local count = verifyUnnecessaryArguments(tab, {"name", "file", "summary", "source", "symbol"})
@@ -775,7 +775,7 @@ function _Gtme.executeDoc(package)
 
 		printNote("Checking directory 'font'")
 		forEachOrderedElement(df, function(_, mvalue)
-			if isDir(package_path..s.."font"..s..mvalue) then
+			if Directory(package_path..s.."font"..s..mvalue):exists() then
 				return
 			end
 
@@ -799,7 +799,7 @@ function _Gtme.executeDoc(package)
 		forEachElement(df, function(_, mvalue)
 			local license = string.sub(mvalue, 0, -5)..".txt"
 
-			if not isFile(package_path..s.."font"..s..license) then
+			if not File(package_path..s.."font"..s..license):exists() then
 				printError("License file '"..license.."' for font '"..mvalue.."' does not exist")
 				doc_report.error_font = doc_report.error_font + 1
 			end
@@ -811,7 +811,7 @@ function _Gtme.executeDoc(package)
 			printError("File '"..mvalue.."' is not documented")
 			doc_report.error_font = doc_report.error_font + 1
 		end)
-	elseif isFile(package_path..s.."font.lua") then
+	elseif File(package_path..s.."font.lua"):exists() then
 		printError("Package '"..package.."' has font.lua but there are no fonts")
 		doc_report.error_font = doc_report.error_font + 1
 	else
@@ -820,7 +820,7 @@ function _Gtme.executeDoc(package)
 
 	local result = luadocMain(package_path, lua_files, example_files, package, mdata, mfont, doc_report)
 
-	if isDir(package_path..s.."font") then
+	if Directory(package_path..s.."font"):exists() then
 		local cmd = "cp "..package_path..s.."font"..s.."* "..package_path..s.."doc"..s.."files"
 		cmd = _Gtme.makePathCompatibleToAllOS(cmd)
 		os.execute(cmd)
