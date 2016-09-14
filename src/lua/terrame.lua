@@ -48,16 +48,16 @@ print = function(obj, ...)
 end
 
 function _Gtme.loadLibraryPath()
-    local dyldpath = os.getenv("DYLD_LIBRARY_PATH")
-    if dyldpath then
-        package.cpath = package.cpath..";"..dyldpath.."/?.so"
-                                    ..";"..dyldpath.."/?.dylib"
-    end
+	local dyldpath = os.getenv("DYLD_LIBRARY_PATH")
+	if dyldpath then
+		package.cpath = package.cpath..";"..dyldpath.."/?.so"
+		                             ..";"..dyldpath.."/?.dylib"
+	end
 
-    local ldpath = os.getenv("LD_LIBRARY_PATH")
-    if ldpath then
-        package.cpath = package.cpath..";"..ldpath.."/?.so"
-    end
+	local ldpath = os.getenv("LD_LIBRARY_PATH")
+	if ldpath then
+		package.cpath = package.cpath..";"..ldpath.."/?.so"
+	end
 end
 
 _Gtme.loadLibraryPath()
@@ -65,23 +65,23 @@ _Gtme.loadLibraryPath()
 _Gtme.terralib_mod_binding_lua = nil
 
 local function initializeTerraLib()
-    if _Gtme.terralib_mod_binding_lua == nil then
-        require("terralib_mod_binding_lua")
-        local binding = terralib_mod_binding_lua
-        binding.TeSingleton.getInstance():initialize()
-        binding.te.plugin.PluginManager.getInstance():clear()
-        binding.te.plugin.PluginManager.getInstance():loadAll()
-        _Gtme.terralib_mod_binding_lua = terralib_mod_binding_lua
-    end
+	if _Gtme.terralib_mod_binding_lua == nil then
+		require("terralib_mod_binding_lua")
+		local binding = terralib_mod_binding_lua
+		binding.TeSingleton.getInstance():initialize()
+		binding.te.plugin.PluginManager.getInstance():clear()
+		binding.te.plugin.PluginManager.getInstance():loadAll()
+		_Gtme.terralib_mod_binding_lua = terralib_mod_binding_lua
+	end
 end
 
 local function finalizeTerraLib()
-    if _Gtme.terralib_mod_binding_lua ~= nil then
-        local binding = terralib_mod_binding_lua
-        binding.te.plugin.PluginManager.getInstance():clear()
-        binding.TeSingleton.getInstance():finalize()
-        _Gtme.terralib_mod_binding_lua = nil
-    end
+	if _Gtme.terralib_mod_binding_lua ~= nil then
+		local binding = terralib_mod_binding_lua
+		binding.te.plugin.PluginManager.getInstance():clear()
+		binding.TeSingleton.getInstance():finalize()
+		_Gtme.terralib_mod_binding_lua = nil
+	end
 end
 
 initializeTerraLib()

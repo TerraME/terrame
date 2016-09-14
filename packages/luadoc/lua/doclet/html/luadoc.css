@@ -315,6 +315,7 @@ table.function_list
 	border-style: solid;
 	border-color: #cccccc;
 	border-collapse: collapse;
+	margin-left: initial;
 }
 table.function_list td
 {

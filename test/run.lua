@@ -109,6 +109,13 @@ local function approximateLine(line)
 	if string.match(line, "Qt 5")                then return   3 end
 	if string.match(line, "Qwt 6")               then return   3 end
 	if string.match(line, "beta")                then return   2 end
+	if string.match(line, "Processing")          then return   3 end
+	if string.match(line, "Parsing")             then return   1 end
+	if string.match(line, "Checking")            then return   8 end
+	if string.match(line, "Testing")             then return  34 end
+	if string.match(line, "Skipping")            then return  34 end
+	if string.match(line, "Building")            then return   8 end
+	if string.match(line, "should contain only") then return   1 end
 
 	return 0
 end
@@ -210,7 +217,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 				local distance2 = approximateLine(str)
 
-				if distance > distance2 then
+				if distance < distance2 then
 					distance = distance2
 				end
 
