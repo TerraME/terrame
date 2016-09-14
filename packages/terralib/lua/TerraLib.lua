@@ -189,6 +189,10 @@ local function makeAndOpenDataSource(connInfo, type)
 end
 
 local function hasShapeFileSpatialIndex(shapeFile)
+	if string.find(shapeFile, "WFS:http://", 1, true) then
+		return false
+	end
+
 	local qixFile = string.gsub(shapeFile, ".shp", ".qix")
 	if File(qixFile):exists() then
 		return true

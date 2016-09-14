@@ -202,6 +202,61 @@ return{
 		u:assertError(error_func, "It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
 
 		unitTest:assert(not File("abc.csv"):exists())
+
+		if sessionInfo().system == "windows" then
+			u.log = "win"
+		elseif sessionInfo().system == "linux" then
+			u.log = "linux"
+		else
+			u.log = "mac"
+		end
+
+		local terralib = getPackage("terralib")
+
+		local file = File("assertFile-nolayers.tview")
+		local proj = terralib.Project{
+			file = file:name(),
+			clean = true
+		}
+
+		error_func = function()
+			u:assertFile(file:name(true))
+		end
+
+		u:assertType(proj, "Project")
+		u:assertError(error_func, "")
+
+		file = File("assertFile-fourlayers.tview")
+		proj = terralib.Project{
+			file = file:name(),
+			clean = true,
+			author = "Carneiro",
+			title = "Emas database",
+			firebreak = filePath("firebreak_lin.shp", "terralib")
+		}
+
+		error_func = function()
+			u:assertFile(file:name(true))
+		end
+
+		u:assertType(proj, "Project")
+		u:assertError(error_func, "")
+
+		file = File("assertFile-fourlayers.tview")
+		proj = terralib.Project{
+			file = file:name(),
+			clean = true,
+			author = "Carneiro",
+			title = "Emas database",
+			firebreak = filePath("firebreak_lin.shp", "terralib")
+		}
+
+		error_func = function()
+			u:assertFile(file:name(true))
+		end
+
+		u:assertType(proj, "Project")
+		u:assertError(error_func, "")
 	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{unittest = true}

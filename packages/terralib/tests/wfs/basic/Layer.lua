@@ -26,9 +26,8 @@ return {
 	Layer = function(unitTest)
 		local projName = "layer_wfs_basic.tview"
 
-
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 
 		local proj = Project {
@@ -57,7 +56,7 @@ return {
 			unitTest:assert(true) -- SKIP
 		end
 
-		rmFile(projName)
+		File(projName):delete()
 	end
 }
 
