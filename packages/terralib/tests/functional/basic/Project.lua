@@ -24,18 +24,20 @@
 
 return {
 	Project = function(unitTest)
+		local file = File("amazonia.tview")
+
 		local proj1 = Project{
-			file = "amazonia",
+			file = file:name(),
 			clean = true,
 			author = "Avancini",
 			title = "The Amazonia"
 		}
 		
 		unitTest:assertType(proj1, "Project")
-		unitTest:assertEquals(proj1.file, "amazonia.tview")
+		unitTest:assertEquals(proj1.file, file:name(true))
 		
 		local proj2 = Project{
-			file = "amazonia"
+			file = file:name()
 		}		
 
 		unitTest:assertEquals(proj1.author, proj2.author)
@@ -43,7 +45,7 @@ return {
 		unitTest:assertEquals(proj1.file, proj2.file)
 
 		local proj3 = Project{
-			file = "amazonia.tview"
+			file = file:name(true)
 		}
 
 		unitTest:assertEquals(proj1.author, proj3.author)
@@ -51,29 +53,22 @@ return {
 		unitTest:assertEquals(proj1.file, proj3.file)
 
 		local proj3clean = Project{
-			file = "amazonia.tview",
+			file = file:name(true),
 			clean = true
 		}
 
 		unitTest:assertEquals(proj1.author, proj3clean.author)
 		unitTest:assertEquals(proj1.title, proj3clean.title)
 		unitTest:assertEquals(proj1.file, proj3clean.file)
+		unitTest:assertFile(file:name(true))
 
-		-- unitTest:assertFile("amazonia.tview") -- SKIP #1301
-		File("amazonia.tview"):delete() -- #1301
-		
-		if File("notitlenoauthor.tview"):exists() then
-			File("notitlenoauthor.tview"):delete()
-		end
-		
-		local proj4Name = "notitlenoauthor.tview"
+		if file:exists() then file:delete() end
 
-		if File(proj4Name):exists() then
-			File(proj4Name):delete()
-		end
+		file = File("notitlenoauthor.tview")
+		if file:exists() then file:delete() end
 
 		local proj4 = Project{
-			file = proj4Name
+			file = file:name(true)
 		}
 
 		unitTest:assertEquals(proj4.title, "No title")
@@ -81,15 +76,14 @@ return {
 		unitTest:assertEquals(proj4.clean, false)
 		unitTest:assertType(proj4.layers, "table")
 		unitTest:assertEquals(getn(proj4.layers), 0)
-		
-		File("notitlenoauthor.tview"):delete()
-		
-		if File("emas.tview"):exists() then
-			File("emas.tview"):delete()
-		end
+
+		if file:exists() then file:delete() end
+
+		file = File("emas.tview")
+		if file:exists() then file:delete() end
 
 		local proj5 = Project{
-			file = "emas.tview",
+			file = file:name(true),
 			clean = true,
 			author = "Almeida, R.",
 			title = "Emas database",
@@ -103,12 +97,14 @@ return {
 		unitTest:assertType(proj5.cover, "Layer")
 		unitTest:assertType(proj5.river, "Layer")
 		unitTest:assertType(proj5.limit, "Layer")
-		
-		File("emas.tview"):delete()
+		unitTest:assertFile(file:name(true))
+
+		if file:exists() then file:delete() end
 	end,
 	__tostring = function(unitTest)
+		local file = File("tostring.tview")
 		local proj1 = Project{
-			file = "tostring",
+			file = file:name(),
 			clean = true,
 			author = "Avancini",
 			title = "The Amazonia"
@@ -123,7 +119,7 @@ terralib     TerraLib
 title        string [The Amazonia]
 ]])
 
-		-- unitTest:assertFile("tostring.tview") -- SKIP #1301
-		File("tostring.tview"):delete() -- #1301
+		unitTest:assertFile("tostring.tview")
+		if file:exists() then file:delete() end
 	end
 }
