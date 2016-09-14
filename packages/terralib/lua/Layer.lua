@@ -195,8 +195,7 @@ local function addLayer(self, data)
 	if isEmpty(data.source) then		
 		if not isEmpty(data.file) then
 			if not isFile(data.file) then
-				--customError("The layer file'"..data.file.."' not found.")
-				mandatoryTableArgument(data, "source", "string")
+				customError("File '"..data.file.."' does not exist.")
 			end	
 
 			local file = File(data.file)
