@@ -49,7 +49,7 @@ return {
 			unitTest:assertEquals(layerInfo.url, "WFS:"..url) -- SKIP
 			unitTest:assertEquals(layerInfo.type, "WFS") -- SKIP
 			unitTest:assertEquals(layerInfo.source, "wfs") -- SKIP
-			unitTest:assertEquals(layerInfo.rep, "unknown") -- SKIP
+			unitTest:assertEquals(layerInfo.rep, "surface") -- SKIP
 			unitTest:assertNotNil(layerInfo.sid) -- SKIP
 		else
 			unitTest:assert(true) -- SKIP
