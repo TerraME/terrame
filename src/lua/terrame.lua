@@ -1516,7 +1516,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.printError("Option not recognized: '"..arg.."'.")
 				os.exit(1)
 			end
-		else
+		else -- running a Lua script
 			if info_.mode ~= "quiet" then
 				checkNilVariables()
 			end
@@ -1556,6 +1556,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			local success, result = _Gtme.myxpcall(function() dofile(arg) end) 
 			if not success then
 				_Gtme.printError(result)
+				os.exit(1)
 			end
 		end
 		argCount = argCount + 1
