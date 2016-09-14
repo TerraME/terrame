@@ -28,7 +28,7 @@ local function isEmpty(data)
 end
 
 local function isValidSource(source)
-	return belong(source, {"tif", "shp", "postgis", "access", "nc", "asc", "geojson"})
+	return belong(source, {"tif", "shp", "postgis", "access", "nc", "asc", "geojson", "wfs"})
 end
 
 local function isSourceConsistent(source, filePath)
@@ -38,6 +38,22 @@ local function isSourceConsistent(source, filePath)
 	end
 	
 	return true
+end
+
+local function adaptsTerraLibInfo(data)
+	local layer = data.project.layers[data.name]
+	local info = data.project.terralib:getLayerInfo(data.project, layer)
+	info.type = nil
+	
+	forEachElement(info, function(idx, value)
+		if idx == "url" then
+			idx = "service"
+			value = string.gsub(value, "^WFS:", "")
+		elseif idx == "dataset" then
+			idx = "feature"
+		end
+		data[idx] = value
+	end)
 end
 
 local function addCellularLayer(self, data)
@@ -172,7 +188,9 @@ local function addLayer(self, data)
 	verifyNamedTable(data)
 	mandatoryTableArgument(data, "name", "string")
 		
-	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "host", "port", "user", "password", "database", "table", "index"})
+	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "index",
+									"host", "port", "user", "password", "database", "table",
+									"service", "feature"})
 		
 	if isEmpty(data.source) then		
 		if not isEmpty(data.file) then
@@ -250,6 +268,14 @@ local function addLayer(self, data)
 			data.port = tostring(data.port)
 
 			self.terralib:addPgLayer(self, data.name, data)
+		end,
+		wfs = function()
+			mandatoryTableArgument(data, "service", "string")
+			mandatoryTableArgument(data, "feature", "string")
+			
+			verifyUnnecessaryArguments(data, {"name", "source", "service", "feature", "project"})
+			
+			self.terralib:addWfsLayer(self, data.name, data.service, data.feature)
 		end
 	}
 	--TODO: implement all types (tif, access, etc)		
@@ -808,15 +834,7 @@ function Layer(data)
 
 		setmetatable(data, metaTableLayer_)
 		data.project.terralib:openProject(data.project, data.project.file)
-
-		local layer = data.project.layers[data.name]
-
-		local info = data.project.terralib:getLayerInfo(data.project, layer)
-		info.type = nil
-
-		forEachElement(info, function(idx, value)
-			data[idx] = value
-		end)
+		adaptsTerraLibInfo(data)
 
 		return data
 	elseif data.input or data.resolution or data.box then
