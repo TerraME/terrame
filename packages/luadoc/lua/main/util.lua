@@ -5,7 +5,7 @@
 
 -- local lfs = require "lfs"
 local table, io, assert, setmetatable = table, io, assert, setmetatable
-local string, ipairs, mkDir, printError = string, ipairs, mkDir, _Gtme.printError
+local string, ipairs, mkDir, printError = string, ipairs, lfs.mkdir, _Gtme.printError
 
 -------------------------------------------------------------------------------
 -- Module with several utilities that could not fit in a specific module

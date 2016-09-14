@@ -32,7 +32,7 @@ local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 
 _Gtme.printNote("Creating temporary directory")
-tmpdirectory = tmpDir(".terramerun_XXXXX")
+tmpdirectory = _Gtme.Directory{name = ".terramerun_XXXXX", tmp = true}.name
 
 _Gtme.printNote("Testing installed packages")
 
@@ -42,8 +42,8 @@ forEachFile("packages", function(file)
 
 	local mdir = baseDir..s.."packages"..s..file
 
-	if isDir(mdir) then
-		rmDir(mdir)
+	if Directory(mdir):exists() then
+		Directory(mdir):delete()
 	end
 end)
 
@@ -59,10 +59,10 @@ remove = _Gtme.include("remove.lua")
 
 forEachElement(remove.files, function(_, value)
 	_Gtme.print("Removing '"..value.."'")
-	if isDir(value) then
-		result = rmDir(value)
-	elseif isFile(value) then
-		rmFile(value)
+	if Directory(value):exists() then
+		result = Directory(value):delete()
+	elseif File(value):exists() then
+		File(value):delete()
 	end
 end)
 
@@ -240,11 +240,11 @@ if commands.build then
 		_Gtme.print("Checking "..mfile)
 		report.build = report.build + 1
 
-		if not isFile(mfile) then
+		if not File(mfile):exists() then
 			_Gtme.printError("File does not exist")
 			report.builderrors = report.builderrors + 1
 		else
-			rmFile(mfile)
+			File(mfile):delete()
 		end
 	end)
 end
@@ -257,17 +257,17 @@ end)
 _Gtme.printNote("Testing from local directories")
 
 os.execute("cp config.lua packages")
-chDir("packages")
+Directory("packages"):setCurrentDir()
 
 _Gtme.printNote("Removing files")
 remove = _Gtme.include(".."..s.."remove.lua")
 
 forEachElement(remove.files, function(_, value)
 	_Gtme.print("Removing '"..value.."'")
-	if isDir(value) then
-		result = rmDir(value)
-	elseif isFile(value) then
-		rmFile(value)
+	if Directory(value):exists() then
+		result = Directory(value):delete()
+	elseif File(value):exists() then
+		File(value):delete()
 	end
 
 end)
@@ -403,7 +403,7 @@ if commands.build then
 
 		_Gtme.print("Checking "..mfile)
 
-		if not isFile(mfile) then
+		if not File(mfile):exists() then
 			_Gtme.printError("File does not exist")
 			report.localbuilderrors = report.localbuilderrors + 1
 		else
@@ -418,19 +418,19 @@ if commands.build then
 
 		local pkgdir = sessionInfo().path..s.."packages"..s..package
 
-		if isDir(pkgdir) then
-			rmDir(pkgdir)
+		if Directory(pkgdir):exists() then
+			Directory(pkgdir):delete()
 		else
 			_Gtme.printError("Package could not be installed")
 			report.localbuilderrors = report.localbuilderrors + 1
 		end
 
-		rmFile(mfile)
+		File(mfile):delete()
 	end)
 end
 
-rmFile("config.lua")
-chDir("..")
+File("config.lua"):delete()
+Directory(".."):setCurrentDir()
 
 if commands.observer then
 	_Gtme.printNote("Checking observers")

@@ -34,19 +34,20 @@ local function verifyTest(package, report)
 	local s = sessionInfo().separator
 	local testDir = baseDir..s.."tests"
 	local internalDirectory = false
+	local dir = Directory(testDir)
 
-	if not isDir(baseDir..s.."lua") then
+	if not Directory(baseDir..s.."lua"):exists() then
 		_Gtme.print("Package '"..package.."' does not have source code")
 		return
 	end
 
-	if not isDir(testDir) then
+	if not dir:exists() then
 		printWarning("Creating directory 'tests'")
-		mkDir(testDir)
+		dir:create()
 	end
 
 	forEachFile(testDir, function(mfile)
-		if isDir(testDir..s..mfile) then
+		if Directory(testDir..s..mfile):exists() then
 			internalDirectory = true
 		end
 	end)
@@ -60,7 +61,7 @@ local function verifyTest(package, report)
 	local testfunctions = _Gtme.buildCountTable(package)
 
 	forEachOrderedElement(testfunctions, function(idx, value)
-		if isFile(testDir..s..idx) then
+		if File(testDir..s..idx):exists() then
 			print("File '"..idx.."' already exists in the tests")
 			return
 		end
@@ -149,7 +150,7 @@ local function verifyData(package, report)
 	local s = sessionInfo().separator
 	local dataDir = baseDir..s.."data"
 
-	if not isDir(dataDir) then
+	if not Directory(dataDir):exists() then
 		_Gtme.print("Package '"..package.."' does not have a data directory")
 		return
 	end
@@ -166,7 +167,7 @@ local function verifyData(package, report)
 		return
 	end
 
-	if isFile(datadotlua) then
+	if File(datadotlua):exists() then
 		local originaldata = data
 		data = function(mdata)
 			if type(mdata.file) == "string" then
@@ -189,7 +190,7 @@ local function verifyData(package, report)
 	forEachOrderedElement(datafiles, function(idx, value)
 		if value then
 			_Gtme.print("File '"..idx.."' is already documented in 'data.lua'")
-		elseif isDir(dataDir..s..idx) then
+		elseif Directory(dataDir..s..idx):exists() then
 			_Gtme.print("Directory '"..idx.."' will be ignored")
 		elseif _Gtme.ignoredFile(idx) then
 			_Gtme.print("File '"..idx.."' does not need to be documented")
@@ -220,7 +221,7 @@ local function verifyFont(package, report)
 	local s = sessionInfo().separator
 	local fontDir = baseDir..s.."font"
 
-	if not isDir(fontDir) then
+	if not Directory(fontDir):exists() then
 		_Gtme.print("Package '"..package.."' does not have a font directory")
 		return
 	end
@@ -237,7 +238,7 @@ local function verifyFont(package, report)
 		return
 	end
 
-	if isFile(fontdotlua) then
+	if File(fontdotlua):exists() then
 		local originalfont = font
 		font = function(mfont)
 			if type(mfont.file) == "string" then

@@ -1,16 +1,16 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
-
+-- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP.
+--
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU Lesser General Public
 -- License as published by the Free Software Foundation; either
 -- version 2.1 of the License, or (at your option) any later version.
-
+--
 -- You should have received a copy of the GNU Lesser General Public
 -- License along with this library.
-
+--
 -- The authors reassure the license terms regarding the warranties.
 -- They specifically disclaim any warranties, including, but not limited to,
 -- the implied warranties of merchantability and fitness for a particular purpose.
@@ -18,30 +18,31 @@
 -- obligation to provide maintenance, support, updates, enhancements, or modifications.
 -- In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 -- indirect, special, incidental, or consequential damages arising out of the use
--- of this software and its documentation.
+-- of this library and its documentation.
 --
+-- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
+--          Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
 return{
-	Society = function(unitTest)
-		local agents_csv = filePath("agents.csv", "base")
-		local filename = File("not_a_file.csv")
-		local error_func = function()
-			sc = Society{
-				instance = Agent{},
-				file = tostring(filename)
-			}
-		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", tostring(filename)))
+	currentDir = function(unitTest)
+		local info = sessionInfo()
+		local cur_dir = currentDir()
+		Directory(info.path):setCurrentDir()
+		unitTest:assertEquals(currentDir(), info.path)
+		Directory(cur_dir):setCurrentDir()
+	end,
+	runCommand = function(unitTest)
+		local d, e = runCommand("ls "..packageInfo().data)
+		unitTest:assertEquals(#d, 29) -- 29 files
+		unitTest:assertEquals(#e, 0)
+	end,
+	sessionInfo = function(unitTest)
+		local s = sessionInfo()
 
-		error_func = function()
-			sc2 = Society{
-				instance = Agent{},
-				file = agents_csv,
-				sep = 10
-			}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("sep", "string", 10))
+		unitTest:assertEquals(s.mode, "debug")
+		unitTest:assertEquals(s.version, packageInfo().version)
+		unitTest:assertEquals(s.system == "windows", s.separator == "\\")
 	end
 }
 

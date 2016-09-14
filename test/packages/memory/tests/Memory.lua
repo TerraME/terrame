@@ -451,7 +451,7 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			if not _Gtme.isWindowsOS() then
+			if _Gtme.sessionInfo().system ~= "windows" then
 				unitTest:assertEquals(1, countTimer) -- SKIP
 			end
 			unitTest:assertEquals(0, countOutWT) -- SKIP
@@ -473,7 +473,7 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		if not _Gtme.isWindowsOS() then
+		if _Gtme.sessionInfo().system ~= "windows" then
 			unitTest:assertEquals(0, countTimer) -- SKIP
 		end
 		unitTest:assertEquals(0, countOutWT) -- SKIP

@@ -294,7 +294,7 @@ return{
 		unitTest:assertEquals(count, 3)
 	end,
 	forEachFile = function(unitTest)
-		if not _Gtme.isWindowsOS() then
+		if _Gtme.sessionInfo().system ~= "windows" then
 			local count = 0
 			local r
 
@@ -307,7 +307,7 @@ return{
 			unitTest:assertEquals(count, 29) -- SKIP
 
 			local count2 = 0
-			forEachFile(dir(filePath("", "base"), true), function()
+			forEachFile(Directory(filePath("", "base")):list(true), function()
 				count2 = count2 + 1
 			end)
 
@@ -940,12 +940,6 @@ return{
 	round = function(unitTest)
 		unitTest:assertEquals(round(5.22), 5)
 		unitTest:assertEquals(round(5.2235, 3), 5.224)
-	end,
-	sessionInfo = function(unitTest)
-		local s = sessionInfo()
-
-		unitTest:assertEquals(s.mode, "debug")
-		unitTest:assertEquals(s.version, packageInfo().version)
 	end,
 	["string.endswith"] = function(unitTest)
 		unitTest:assert(string.endswith("abcdef", "def"))

@@ -41,8 +41,8 @@ return {
 		
 		local filePath1 = "prodes_cells_tif_basic.shp"
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end
 		
 		local clName1 = "Prodes_Cells"
@@ -101,19 +101,19 @@ return {
 		-- END
 		-- tl:dropPgTable(pgData)
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end				
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end		
 	end,
 	fill = function(unitTest)
 		local projName = "layer_fill_tif.tview"
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
 		local proj = Project{
@@ -145,8 +145,8 @@ return {
 		local shapes = {}
 		
 		local shp1 = clName1..".shp"
-		if isFile(shp1) then
-			rmFile(shp1)
+		if File(shp1):exists() then
+			File(shp1):delete()
 		end
 		table.insert(shapes, shp1)
 
@@ -334,7 +334,7 @@ return {
 			file = filePath("elevation.tif", "terralib")
 		}
 
-		if isFile("mycells.shp") then rmFile("mycells.shp") end
+		if File("mycells.shp"):exists() then File("mycells.shp"):delete() end
 		table.insert(shapes, "mycells.shp")
 			
 		cl = Layer{
@@ -392,12 +392,12 @@ return {
 		unitTest:assertSnapshot(map, "tiff-std.png") 
 		
 		forEachElement(shapes, function(_, value)
-			rmFile(value)
+			File(value):delete()
 		end)
 
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
-		
+		File(projName):delete() -- #1301
+
 		customWarning = customWarningBkp
 	end,
 	representation = function(unitTest)
@@ -423,15 +423,15 @@ return {
 		unitTest:assertEquals(l:representation(), "raster") 
 		
 		-- unitTest:assertFile(projName) -- SKIP #1301
-		rmFile(projName) -- #1301
-		
+		File(projName):delete() -- #1301
+
 		customWarning = customWarningBkp
 	end,
 	bands = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
 		local proj = Project{
@@ -452,9 +452,9 @@ return {
 		}
 
 		unitTest:assertEquals(l:bands(), 4)
-		
-		rmFile(projName)
-		
+
+		File(projName):delete()
+
 		customWarning = customWarningBkp
 	end,
 	projection = function(unitTest)
@@ -475,7 +475,7 @@ return {
 		
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S - old 29191', with SRID: 100017.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ').")
 
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end,
 	attributes = function(unitTest)
 		local projName = "tif_basic.tview"
@@ -497,13 +497,13 @@ return {
 		
 		unitTest:assertNil(props)
 		
-		rmFile(proj.file)	
+		File(proj.file):delete()	
 	end,
 	dummy = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 		
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
 		local proj = Project{
@@ -536,9 +536,9 @@ return {
 		}
 		
 		unitTest:assertNil(l:dummy(0))
-		
-		rmFile(projName)	
-		
+
+		File(projName):delete()	
+
 		customWarning = customWarningBkp
 	end
 }

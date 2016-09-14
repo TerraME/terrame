@@ -66,7 +66,7 @@ return {
 		unitTest:assertError(indexDefaultError2, defaultValueMsg("index", true))
 		-- // SPATIAL INDEX
 		
-		rmFile(proj.file)
+		File(proj.file):delete()
 	end
 }
 

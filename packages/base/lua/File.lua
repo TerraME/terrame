@@ -75,6 +75,53 @@ end
 
 File_ = {
 	type_ = "File",
+	--- Return a table with the file attributes corresponding to filepath (or nil followed by an error
+	-- message in case of error). If the second optional argument is given, then only the value of the
+	-- named attribute is returned (this use is equivalent to lfs.attributes(filepath).aname, but the
+	-- table is not created and only one attribute is retrieved from the O.S.). The attributes are
+	-- described as follows; attribute mode is a string, all the others are numbers, and the time
+	-- related attributes use the same time reference of os.time.
+	-- This function uses stat internally thus if the given filepath is a symbolic link, it is followed
+	-- (if it points to another link the chain is followed recursively) and the information is about the
+	-- file it refers to.
+	-- @arg attributename A string with the name of the attribute to be read.
+	-- @tabular attributename
+	-- Attribute & Description \
+	-- "dev" &
+	-- on Unix systems, this represents the device that the inode resides on. On Windows
+	-- systems, represents the drive number of the disk containing the file \
+	-- "ino" &
+	-- on Unix systems, this represents the inode number. On Windows systems this has no meaning \
+	-- "mode" &
+	-- string representing the associated protection mode (the values could be file, directory,
+	-- link, socket, named pipe, char device, block device or other) \
+	-- "nlink" &
+	-- number of hard links to the file \
+	-- "uid" &
+	-- user-id of owner (Unix only, always 0 on Windows) \
+	-- "gid" &
+	-- group-id of owner (Unix only, always 0 on Windows) \
+	-- "rdev" &
+	-- on Unix systems, represents the device type, for special file inodes. On Windows systems
+	-- represents the same as dev \
+	-- "access" &
+	-- time of last access \
+	-- "modification" &
+	-- time of last data modification \
+	-- "change" &
+	-- time of last file status change \
+	-- "size" &
+	-- file size, in bytes \
+	-- "blocks" &
+	-- block allocated for file; (Unix only) \
+	-- "blksize" &
+	-- optimal file system I/O blocksize; (Unix only)
+	-- @usage File(packageInfo("base").path):attributes("mode")
+	attributes = function(self, attributename)
+		optionalArgument(1, "string", attributename)
+
+		return lfs.attributes(self.filename, attributename)
+	end,
 	--- Close an opened file.
 	-- @usage -- DONTRUN
 	-- file = File("abc.txt")
@@ -88,34 +135,82 @@ File_ = {
 			io.close(self.file)
 			return true
 		else
-			resourceNotFoundError("file", self.name)
+			resourceNotFoundError("file", self.filename)
 		end
 	end,
-	--- Return a boolean if the file exists.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:exists())
-	exists = function(self)
-		return isFile(self.name)
+	--- Remove an existing file. If the file does not exist or it cannot be removed,
+	-- this function stops with an error. Directories cannot be removed using
+	-- this function. If the file to be removed is a shapefile, it also removes
+	-- the respective dbf, shx, and prj files if they exist.
+	-- The function will automatically add
+	-- quotation marks in the beginning and in the end of this argument in order
+	-- to avoid problems related to empty spaces in the string. Therefore,
+	-- this string must not contain quotation marks.
+	-- @usage filename = "myfile.txt"
+	-- file = File(filename)
+	-- file:writeLine("Some text..")
+	--
+	-- file:delete()
+	delete = function(self)
+		if not self:exists() then
+			resourceNotFoundError(1, self.filename)
+		end
+
+		local result = os.execute("rm -f \""..self.filename.."\"")
+
+		if result ~= true then
+			if result == nil then -- SKIP
+				result = "Could not remove file '"..self.filename.."'." -- SKIP
+			end
+
+			customError(tostring(result)) -- SKIP
+		end
+
+		if string.endswith(self.filename, ".shp") then
+			local dbf = File(string.sub(self.filename, 1, -4).."dbf")
+			local shx = File(string.sub(self.filename, 1, -4).."shx")
+			local prj = File(string.sub(self.filename, 1, -4).."prj")
+			local qix = File(string.sub(self.filename, 1, -4).."qix")
+
+			if dbf:exists() then dbf:delete() end
+			if shx:exists() then shx:delete() end
+			if prj:exists() then prj:delete() end
+			if qix:exists() then qix:delete() end
+		end
 	end,
 	--- Return the directory of a file given its path.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:getDir()) -- "/my/path"
-	getDir = function(self)
-		local path, _, _ = self:splitNames()
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- print(file:directory())
+	directory = function(self)
+		local path, _, _ = self:split()
 
 		return path
 	end,
+	--- Return whether a given string represents a file stored in the computer.
+	-- A directory is also considered a file.
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- print(file:exists())
+	exists = function(self)
+		local fopen = io.open(self.filename)
+
+		if fopen then
+			fopen:close()
+			return true
+		end
+
+		return false
+	end,
 	--- Return the extension of a given file name. It returns the substring after the last dot.
 	-- If it does not have a dot, an empty string is returned.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:getExtension()) -- "txt"
-	getExtension = function(self)
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- print(file:extension()) -- "csv"
+	extension = function(self)
 		local s = sessionInfo().separator
 
-		for i = self.name:len() - 1, 1, -1 do
-			local sub = self.name:sub(i, i)
+		for i = self.filename:len() - 1, 1, -1 do
+			local sub = self.filename:sub(i, i)
 			if sub == "." then
-				return self.name:sub(i + 1, self.name:len())
+				return self.filename:sub(i + 1, self.filename:len())
 			elseif sub == s or sub == "/" then
 				return ""
 			end
@@ -123,33 +218,25 @@ File_ = {
 
 		return ""
 	end,
-	--- Return the file name removing its path and extension.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:getName()) -- "file"
-	getName = function(self)
-		return self:removeExtension()
-	end,
-	--- Return the file name removing its path.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:getNameWithExtension()) -- "file.txt"
-	getNameWithExtension = function (self)
-		local _, nameWithExtension, _ = string.match(self.name, "(.-)([^\\/]-%.?([^%.\\/]*))$")
-
-		return nameWithExtension
-	end,
-	--- Return the path if the file exists.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:getPath())
-	getPath = function(self)
-		if isFile(self.name) then
-			return _Gtme.makePathCompatibleToAllOS(self.name)
-		end
-	end,
 	--- Return a boolean value if a given file name has extension.
-	-- @usage file = File("/my/path/file.txt")
+	-- @usage file = File(filePath("agents.csv", "base"))
 	-- print(file:hasExtension()) -- true
 	hasExtension = function(self)
-		return not (self:getExtension() == "")
+		return not (self:extension() == "")
+	end,
+	--- Return the file name removing its path.
+	-- @arg extension A boolean that enable return the name with extension. The default value is false.
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- print(file:name()) -- "agents"
+	-- print(file:name(true)) -- "agents.csv"
+	name = function(self, extension)
+		extension = extension or false
+		optionalArgument(1, "boolean", extension)
+
+		local split = {self:split()}
+		if extension then return split[4] end
+
+		return split[2]
 	end,
 	--- Open a file for reading or writing. An opened file must be closed after being used.
 	-- @arg mode A string with the mode. It can be "w" for writing or "r" for reading.
@@ -162,14 +249,14 @@ File_ = {
 		mandatoryArgument(1, "string", mode)
 
 		if self.mode then
-			customError("File '"..self.name.."' is already open.")
+			customError("File '"..self.filename.."' is already open.")
 		else
 			self.mode = mode
 		end
 
-		local fopen = io.open(self.name, self.mode)
+		local fopen = io.open(self.filename, self.mode)
 		if fopen == nil then
-			resourceNotFoundError("file", self.name)
+			resourceNotFoundError("file", self.filename)
 		else
 			self.file = fopen
 			return fopen
@@ -247,25 +334,28 @@ File_ = {
 
 		return data
 	end,
-	--- Return the file name removing its extension.
-	-- @arg nameWithExtension An optional string with the file with extension.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:removeExtension())
-	removeExtension = function(self, nameWithExtension)
-		if not nameWithExtension then nameWithExtension = self:getNameWithExtension() end
-
+	--- Split the path, file name, and extension from a given string.
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- print(file:split()) -- "/base/data/", "agents", "csv", "agents.csv"
+	split = function(self)
+		local filePath, nameWithExtension, extension = string.match(self.filename, "(.-)([^\\/]-%.?([^%.\\/]*))$")
 		local _, _, fileName = string.find(nameWithExtension, "^(.*)%.[^%.]*$")
 
-		return fileName
+		return filePath, fileName, extension, nameWithExtension
 	end,
-	--- Split the path, file name, and extension from a given string.
-	-- @usage file = File("/my/path/file.txt")
-	-- print(file:splitNames()) -- "/my/path/", "file", "txt"
-	splitNames = function(self)
-		local filePath, nameWithExtension, extension = string.match(self.name, "(.-)([^\\/]-%.?([^%.\\/]*))$")
-		local fileName = self:removeExtension(nameWithExtension)
+	--- Set access and modification times of a file. This function is a bind to utime function.
+	-- Times are provided in seconds (which should be generated with Lua
+	-- standard function os.time). If the modification time is omitted, the access time provided is used;
+	-- if both times are omitted, the current time is used.
+	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
+	-- @arg atime The new access time (in seconds).
+	-- @arg mtime The new modification time (in seconds).
+	-- @usage File(packageInfo("base").path):touch(0, 0)
+	touch = function(self, atime, mtime)
+		mandatoryArgument(1, "number", atime)
+		mandatoryArgument(2, "number", mtime)
 
-		return filePath, fileName, extension
+		return lfs.touch(self.filename, atime, mtime)
 	end,
 	--- Write a given table into a file.
 	-- The first line of the file will list the attributes of each table.
@@ -280,7 +370,7 @@ File_ = {
 	--
 	-- file = File( "file.csv")
 	-- file:write(mytable, ";")
-	-- rmFile("file.csv")
+	-- File("file.csv"):delete()
 	write = function(self, data, sep)
 		mandatoryArgument(1, "table", data)
 		optionalArgument(2, "string", sep)
@@ -327,7 +417,7 @@ File_ = {
 	-- @arg text A string to be saved.
 	-- @usage file = File( "file.txt")
 	-- file:writeLine("Text...")
-	-- rmFile("file.txt")
+	-- File("file.txt"):delete()
 	writeLine = function(self, text)
 		mandatoryArgument(1, "string", text)
 
@@ -344,18 +434,35 @@ File_ = {
 
 metaTableFile_ = {
 	__index = File_,
-	__tostring = _Gtme.tostring
+	__tostring = function(self)
+		return self.filename
+	end
 }
 
 --- An abstract representation of file and directory pathnames. This type provide access to additional
 -- file operations and file attributes.
 -- @arg data.name A string with the file name. This argument is mandatory.
--- @usage file = File("/my/path/file.txt")
+-- @usage file = File(filePath("agents.csv", "base"))
 function File(data)
 	mandatoryArgument(1, "string", data)
-	data = {name = data}
+
+	if not (data:match("\\") or data:match("/")) then
+		data = currentDir()..sessionInfo().separator..data
+	end
+
+	data = {filename = _Gtme.makePathCompatibleToAllOS(data)}
 
 	setmetatable(data, metaTableFile_)
+
+	local dir = data:directory()
+	if not Directory(dir):exists() then
+		customError("Directory '"..dir.."' does not exist.")
+	end
+
+	local invalidChar = data.filename:find("[~#%&*{}<>?|\"+]")
+	if invalidChar then
+		customError("Filename '"..data.filename.."' cannot contain character '"..data.filename:sub(invalidChar, invalidChar).."'.")
+	end
 
 	return data
 end

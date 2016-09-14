@@ -3,6 +3,7 @@ files = {
 	"Choice.lua",
 	"ErrorHandling.lua",
 	"File.lua",
+	"Directory.lua",
 	"Package.lua",
 	"Utils.lua",
 	"UnitTest.lua",
@@ -27,9 +28,9 @@ files = {
 	"Clock.lua",
 	"Map.lua",
 	"InternetSender.lua",
-	"FileSystem.lua",
+	"OS.lua",
 	"VisualTable.lua",
 	"TextScreen.lua",
-	"LogFile.lua"
+	"Log.lua"
 }
 

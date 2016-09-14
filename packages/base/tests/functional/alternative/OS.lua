@@ -23,25 +23,11 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	Society = function(unitTest)
-		local agents_csv = filePath("agents.csv", "base")
-		local filename = File("not_a_file.csv")
+	runCommand = function(unitTest)
 		local error_func = function()
-			sc = Society{
-				instance = Agent{},
-				file = tostring(filename)
-			}
+			runCommand(1)
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", tostring(filename)))
-
-		error_func = function()
-			sc2 = Society{
-				instance = Agent{},
-				file = agents_csv,
-				sep = 10
-			}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("sep", "string", 10))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end
 }
 

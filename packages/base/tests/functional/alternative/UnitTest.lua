@@ -166,7 +166,7 @@ return{
 		unitTest:assertError(error_func, "It is not possible to use a directory as #1 for assertFile().")
 
 		local c = Cell{value = 2}
-		LogFile{target = c, file = "mabc.csv"}
+		Log{target = c, file = "mabc.csv"}
 
 		c:notify()
 		unitTest:assertFile("mabc.csv")
@@ -179,7 +179,7 @@ return{
 			str = v
 		end
 
-		LogFile{target = c, file = "mabc.csv"}
+		Log{target = c, file = "mabc.csv"}
 
 		c:notify()
 		unitTest:assertFile("mabc.csv")
@@ -191,7 +191,7 @@ return{
 
 		u = UnitTest{}
 		c = Cell{value = 2}
-		LogFile{target = c, file = "abc.csv"}
+		Log{target = c, file = "abc.csv"}
 
 		c:notify()
 
@@ -201,7 +201,7 @@ return{
 
 		u:assertError(error_func, "It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
 
-		unitTest:assert(not isFile("abc.csv"))
+		unitTest:assert(not File("abc.csv"):exists())
 	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{unittest = true}

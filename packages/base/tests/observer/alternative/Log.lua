@@ -23,54 +23,61 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	["table.load"] = function(unitTest)
+	Log = function(unitTest)
+		local c = Cell{value = 5}
+
 		local error_func = function()
-			table.load("dump")
+			Log(2)
 		end
-		unitTest:assertError(error_func, "File 'dump' does not have a valid extension.")
-
-		local file = File("dump.lua")
+		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
-			table.load(file:name(true))
+			Log{}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file:name(true)))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
 
-		file:writeLine("!!#$@12334")
+		local e = Event{action = function() end}
 		error_func = function()
-			table.load(tostring(file))
+			Log{target = e}
 		end
-		unitTest:assertError(error_func, "Failed to load file '"..tostring(file).."': "..tostring(file).."unexpected symbol near '!'", 30) -- TODO(#1383)
-
-		file = File("dump.lua")
-		file:writeLine("local x = 2")
-		error_func = function()
-			table.load(tostring(file))
-		end
-		unitTest:assertError(error_func, "File '"..tostring(file).."' does not contain a Lua table.")
-
-		if file:exists() then file:delete() end
-	end,
-	["table.save"] = function(unitTest)
-		local error_func = function()
-			table.save()
-		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, "Invalid type. Log only works with Cell, CellularSpace, Agent, and Society.")
 
 		error_func = function()
-			table.save({})
+			Log{target = c, select = 5}
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 5))
 
 		error_func = function()
-			table.save("", "dump.lua")
+			Log{target = c, overwrite = 5}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", ""))
+		unitTest:assertError(error_func, incompatibleTypeMsg("overwrite", "boolean", 5))
 
 		error_func = function()
-			table.save({}, 1)
+			Log{target = c, select = "mvalue"}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
+		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
+
+		error_func = function()
+			Log{target = c, select = {}}
+		end
+		unitTest:assertError(error_func, "Log must select at least one attribute.")
+
+		error_func = function()
+			Log{target = c, file = 2}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
+
+		error_func = function()
+			Log{target = c, separator = 2}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("separator", "string", 2))
+
+		local unit = Cell{}
+
+		error_func = function()
+			Log{target = unit}
+		end
+		unitTest:assertError(error_func, "The target does not have at least one valid attribute to be used.")
 	end
 }
 

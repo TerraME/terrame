@@ -138,7 +138,7 @@ Chart_ = {
 	-- chart:update(2)
 	-- chart:update(3)
 	-- chart:save("file.bmp")
-	-- rmFile("file.bmp")
+	-- File("file.bmp"):delete()
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 

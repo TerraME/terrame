@@ -56,8 +56,8 @@ return{
 		local shp1 = "brazil_cells.shp"
 		local filePath1 = testDir.."/"..shp1			
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end			
 		
 		local clName1 = "Brazil_Cells"
@@ -127,12 +127,12 @@ return{
 		unitTest:assertError(cellWithoutGeom, "It was not possible to calculate the area. Geometry was not found.")	
 		
 		-- END
-		if isFile(projName) then
-			rmFile(projName)
+		if File(projName):exists() then
+			File(projName):delete()
 		end
 		
-		if isFile(filePath1) then
-			rmFile(filePath1)
+		if File(filePath1):exists() then
+			File(filePath1):delete()
 		end	
 
 		tl:dropPgTable(pgData)		

@@ -613,13 +613,13 @@ function Model(attrTab)
 
 				if #e > 0 then
 					mandatoryTableArgument(argv, name, "string")
-					local ext = File(argv[name]):getExtension()
+					local ext = File(argv[name]):extension()
 
 					if ext == "" then
 						customError("No file extension for parameter "..toLabel(name)..". It should be one of '"..value.."'.")
 					elseif not belong(ext, e) then
 						customError("Invalid file extension for parameter "..toLabel(name)..". It should be one of '"..value.."'.")
-					elseif not isFile(argv[name]) then
+					elseif not File(argv[name]):exists() then
 						resourceNotFoundError(toLabel(name), argv[name])
 					end
 				elseif argv[name] == nil then
@@ -668,13 +668,13 @@ function Model(attrTab)
 							end
 
 							mandatoryTableArgument(iargv, iname, "string")
-							local ext = File(iargv[iname]):getExtension()
+							local ext = File(iargv[iname]):extension()
 
 							if ext == "" then
 								customError("No file extension for parameter "..toLabel(iname, name)..". It should be one of '"..ivalue.."'.")
 							elseif not belong(ext, e) then
 								customError("Invalid file extension for parameter "..toLabel(iname, name)..". It should be one of '"..ivalue.."'.")
-							elseif not isFile(iargv[iname]) then
+							elseif not File(iargv[iname]):exists() then
 								resourceNotFoundError(toLabel(iname, name), iargv[iname])
 							end
 						elseif iargv[iname] == nil then

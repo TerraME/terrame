@@ -22,15 +22,15 @@
 --
 -------------------------------------------------------------------------------------------
 
-LogFile_ = {
-	type_ = "LogFile",
-	--- Update the LogFile with the latest values of its target. It is usually recommended
-    -- to use the LogFile as action of an Event instead of calling this function explicitly.
+Log_ = {
+	type_ = "Log",
+	--- Update the Log with the latest values of its target. It is usually recommended
+    -- to use the Log as action of an Event instead of calling this function explicitly.
 	-- @usage agent = Agent{
 	--     age = 3
 	-- }
 	--
-	-- log = LogFile{
+	-- log = Log{
 	--     target = agent,
 	--     file = "agent.csv",
 	--     separator = ";"
@@ -38,13 +38,13 @@ LogFile_ = {
 	--
 	-- log:update()
 	--
-	-- rmFile("agent.csv")
+	-- File("agent.csv"):delete()
 	update = function(self)
 		self.target:notify()
 	end
 }
 
-metaTableLogFile_ = {__index = LogFile_}
+metaTableLog_ = {__index = Log_}
 
 --- A log file to save attributes of an object. The saved file uses the csv
 -- standard: The first line contains the attribute names and the following lines
@@ -63,12 +63,12 @@ metaTableLogFile_ = {__index = LogFile_}
 --     age = 3
 -- }
 --
--- LogFile{
+-- Log{
 --     target = agent,
 --     file = "agent.csv",
 --     separator = ";"
 -- }
-function LogFile(data)
+function Log(data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"target", "select", "file", "separator", "overwrite"})
 
@@ -118,14 +118,14 @@ function LogFile(data)
 				data.select = {"#"}
 			end
 		else
-			customError("Invalid type. LogFile only works with Cell, CellularSpace, Agent, and Society.")
+			customError("Invalid type. Log only works with Cell, CellularSpace, Agent, and Society.")
 		end
 
 		verify(#data.select > 0, "The target does not have at least one valid attribute to be used.")
 	end
 
 	mandatoryTableArgument(data, "select", "table")
-	verify(#data.select > 0, "LogFile must select at least one attribute.")
+	verify(#data.select > 0, "Log must select at least one attribute.")
 	forEachElement(data.select, function(_, value)
 		if data.target[value] == nil then
 			if value == "#" then
@@ -166,7 +166,7 @@ function LogFile(data)
 		end
 	end
 
-	if data.overwrite or not isFile(data.file) then
+	if data.overwrite or not File(data.file):exists() then
 		data.mode = "w"
 	else
 		data.mode = "w+"
@@ -194,7 +194,7 @@ function LogFile(data)
 	data.cObj_ = logfile
 	data.id = id
 
-	setmetatable(data, metaTableLogFile_)
+	setmetatable(data, metaTableLog_)
 	table.insert(_Gtme.createdObservers, data)
 	return data
 end

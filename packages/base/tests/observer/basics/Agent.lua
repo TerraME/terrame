@@ -55,7 +55,7 @@ return{
 		}
 
 		local ts = TextScreen{target = world}
-		LogFile{target = world, file = "agent.csv"}
+		Log{target = world, file = "agent.csv"}
 		local vt = VisualTable{target = world}
 
 		t:run(15)

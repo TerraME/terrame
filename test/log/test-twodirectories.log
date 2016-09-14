@@ -48,8 +48,8 @@ Checking if all asserts were executed
 Testing tests/observer/alternative/InternetSender.lua
 Testing InternetSender
 Checking if all asserts were executed
-Testing tests/observer/alternative/LogFile.lua
-Testing LogFile
+Testing tests/observer/alternative/Log.lua
+Testing Log
 Checking if all asserts were executed
 Testing tests/observer/alternative/Map.lua
 Testing Map
