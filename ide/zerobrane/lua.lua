@@ -276,7 +276,7 @@ return {
       string.byte string.char string.dump string.find string.format string.gmatch string.gsub string.len
       string.lower string.match string.rep string.reverse string.sub string.upper
       byte find format gmatch gsub len lower match rep reverse sub upper
-      Agent Automaton Cell CellularSpace Chart Choice Clock Environment Event Flow
+      Agent Automaton Cell CellularSpace Chart Choice Clock Directory Environment Event File Flow
       Group InternetSender Jump Layer Log Mandatory Map Model Neighborhood Project Random SocialNetwork Society
       State TextScreen Timer Trajectory UnitTest VisualTable 
       forEachAgent forEachCell forEachCellPair forEachConnection forEachElement forEachNeighbor forEachNeighborhood 

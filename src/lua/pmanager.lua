@@ -296,8 +296,7 @@ local function installButtonClicked()
 	local installButton2 = qt.new_qobject(qt.meta.QPushButton)
 	installButton2.text = "Install"
 	qt.connect(installButton2, "clicked()", function()
-		local tmpdirectory = _Gtme.Directory{tmp = true }
-		tmpdirectory:create()
+		local tmpdirectory = _Gtme.Directory{tmp = true}
 		local cdir = currentDir()
 
 		tmpdirectory:setCurrentDir()
@@ -487,8 +486,7 @@ local function installLocalButtonClicked()
 		_Gtme.printNote("Package '"..package.."' was not installed before")
 	end
 
-	local tmpdirectory = _Gtme.Directory{tmp = true }
-	tmpdirectory:create()
+	local tmpdirectory = _Gtme.Directory{tmp = true}
 
 	os.execute("cp \""..file.."\" \""..tostring(tmpdirectory).."\"")
 	tmpdirectory:setCurrentDir()

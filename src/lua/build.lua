@@ -102,8 +102,6 @@ function _Gtme.buildPackage(package, config, clean)
 		tmp = true
 	}
 
-	tmpdirectory:create()
-
 	local pkgInfo = packageInfo(package)
 	local pkgDirectory = pkgInfo.path
 

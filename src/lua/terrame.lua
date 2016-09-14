@@ -619,7 +619,6 @@ function _Gtme.installPackage(file)
 	end
 
 	local tmpdirectory = Directory{tmp = true}
-	tmpdirectory:create()
 
 	os.execute("cp \""..file.."\" \""..tostring(tmpdirectory).."\"")
 	tmpdirectory:setCurrentDir()

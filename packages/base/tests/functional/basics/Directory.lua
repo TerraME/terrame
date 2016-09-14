@@ -32,7 +32,6 @@ return{
 			tmp = true
 		}
 
-		dir:create()
 		unitTest:assert(dir:exists())
 
 		local tmpDir = Directory{
@@ -40,7 +39,6 @@ return{
 			tmp = true
 		}
 
-		tmpDir:create()
 		unitTest:assert(tmpDir:exists())
 		unitTest:assert(tostring(tmpDir) ~= tostring(dir))
 
@@ -48,11 +46,9 @@ return{
 		tmpDir:delete()
 
 		dir = Directory{tmp = true}
-		dir:create()
 		unitTest:assert(dir:exists())
 
 		tmpDir = Directory{tmp = true}
-		tmpDir:create()
 		unitTest:assert(tmpDir:exists())
 		unitTest:assert(tostring(tmpDir) ~= tostring(dir))
 
