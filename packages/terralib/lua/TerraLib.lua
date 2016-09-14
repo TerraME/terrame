@@ -182,7 +182,6 @@ end
 
 local function makeAndOpenDataSource(connInfo, type)
 	local ds = binding.te.da.DataSourceFactory.make(type)
-
 	ds:setConnectionInfo(connInfo)
 	ds:open()
 
@@ -214,6 +213,12 @@ local function createLayer(name, dSetName, connInfo, type)
 		local dsId = addDataSourceInfo(type, name, connInfo)
 
 		local ds = makeAndOpenDataSource(connInfo, type)
+		
+		if not ds:dataSetExists(dSetName) then
+			ds:close()
+			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not created.")
+		end
+		
 		ds:setId(dsId)
 
 		binding.te.da.DataSourceManager.getInstance():insert(ds)
@@ -223,7 +228,7 @@ local function createLayer(name, dSetName, connInfo, type)
 		local env = nil
 		local srid = 0
 
-		if type == "OGR" then
+		if (type == "OGR") or (type == "WFS") then
 			dSetType = ds:getDataSetType(dSetName)
 			local gp = binding.GetFirstGeomProperty(dSetType)
 			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
@@ -365,7 +370,7 @@ local function loadProject(project, file)
 	end
 end
 
-local function addFileLayer(project, name, filePath, type, addSpatialIdx)
+local function addFileLayer(project, name, filePath, type, addSpatialIdx, dataset)
 	local connInfo = createFileConnInfo(filePath)
 	
 	loadProject(project, project.file)
@@ -384,6 +389,8 @@ local function addFileLayer(project, name, filePath, type, addSpatialIdx)
 	elseif type == "GeoJSON" then
 		type = "OGR"
 		dSetName = "OGRGeoJSON"
+	elseif type == "WFS" then -- WFS works like a file layer
+		dSetName = dataset
 	end
 
 	local layer = createLayer(name, dSetName, connInfo, type)
@@ -970,6 +977,24 @@ local function createGdalDataSourceToSaveAs(fromType, fileData)
 	return ds
 end
 
+local function isValidDataSourceUri(uri, type)
+	local ds = binding.te.da.DataSourceFactory.make(type)
+	local connInfo = {}
+	connInfo.URI = uri
+	ds:setConnectionInfo(connInfo)
+	
+	return ds:isValid()
+end
+
+local function toWfsUrl(url)
+	local wfsPrefix = "WFS:"
+	if string.find(url, "^"..wfsPrefix) then
+		return url
+	end
+	
+	return wfsPrefix..url
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 	
@@ -1090,6 +1115,10 @@ TerraLib_ = {
 			info.source = file:extension()
 		elseif type == "ADO" then
 			info.source = "access" -- SKIP
+		elseif type == "WFS" then
+			info.url = connInfo.URI
+			info.source = "wfs"
+			info.dataset = dseName
 		end
 
 		do
@@ -1160,6 +1189,35 @@ TerraLib_ = {
 	-- tl:addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
 	addGeoJSONLayer = function(_, project, name, filePath)
 		addFileLayer(project, name, filePath, "GeoJSON")
+	end,
+	--- Validates if the URL is a valid WFS server.
+	-- @arg _ A TerraLib object.
+	-- @arg url The URL of the WFS server.
+	-- @usage -- DONTRUN	
+	-- local layerName = "WFS-Layer"
+	-- local url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
+	-- local dataset = "reddpac:BAU"
+	-- tl:isValidWfsUrl(url)		
+	isValidWfsUrl = function(_, url)
+		return isValidDataSourceUri(toWfsUrl(url), "WFS")
+	end,
+	--- Add a WFS layer to a given project.
+	-- @arg project The name of the project.
+	-- @arg name The name of the layer.
+	-- @arg url The URL of the WFS server.
+	-- @arg dataset The data set in WFS server.
+	-- @usage -- DONTRUN	
+	-- local layerName = "WFS-Layer"
+	-- local url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
+	-- local dataset = "reddpac:BAU"
+	-- tl:addWfsLayer(project, name, url, dataset)	
+	addWfsLayer = function(self, project, name, url, dataset)
+		local wfsUrl = toWfsUrl(url)
+		if self:isValidWfsUrl(wfsUrl) then
+			addFileLayer(project, name, wfsUrl, "WFS", nil, dataset)
+		else
+			customError("The URL '"..url.."' is invalid.")
+		end
 	end,
 	--- Create a new cellular layer into a shapefile.
 	-- @arg project The name of the project.
@@ -2137,7 +2195,7 @@ TerraLib_ = {
 			else
 				local rpos = binding.GetFirstPropertyPos(dataset, binding.RASTER_TYPE)
 				local raster = dataset:getRaster(rpos)
-				size = raster:getNumberOfRows()* raster:getNumberOfColumns()
+				size = raster:getNumberOfRows() * raster:getNumberOfColumns()
 			end
 			
 			ds:close()
