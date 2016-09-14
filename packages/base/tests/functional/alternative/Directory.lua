@@ -34,7 +34,7 @@ return{
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
-		local error_func = function()
+		error_func = function()
 			Directory("abc\"")
 		end
 		unitTest:assertError(error_func, "Directory name 'abc\"' cannot contain character '\"'.")
