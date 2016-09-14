@@ -180,8 +180,8 @@ UnitTest_ = {
 				return
 			end
 
-			shortError = string.gsub(shortError,":[0-9]*: ", "")
-			shortError = string.gsub(shortError,"%s+[0-9]+:", "")
+			shortError = string.gsub(shortError,":[0-9]*: ", "", 1)
+			shortError = string.gsub(shortError,"%s+[0-9]+:", "", 1)
 
 			local start = shortError:sub(1, 7)
 

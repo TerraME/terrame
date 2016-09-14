@@ -40,7 +40,7 @@ return{
 		error_func = function()
 			table.load(file:getPath())
 		end
-		unitTest:assertError(error_func, "Failed to load file '"..file:getNameWithExtension().."': dump.luaunexpected symbol near '!'")
+		unitTest:assertError(error_func, "Failed to load file dump.lua:1: unexpected symbol near '!'")
 
 		file = File("dump.lua")
 		file:writeLine("local x = 2")
