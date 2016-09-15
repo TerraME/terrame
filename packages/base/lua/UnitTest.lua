@@ -305,13 +305,7 @@ UnitTest_ = {
 					local layers = {}
 					local size = 0
 					terralib.forEachLayer(proj, function(layer, index)
-						layers[index] = {
-							name = layer.name,
-							file = File(layer.file):name(),
-							rep = layer.rep,
-							source = layer.source
-						}
-
+						layers[index] = layer
 						size  = size + 1
 					end)
 
@@ -341,13 +335,20 @@ UnitTest_ = {
 				else
 					forEachElement(layers.got, function(k, tab1)
 						local tab2 = layers.equal[k]
+						if not isTable(tab2) then return end
 
-						if type(tab2) ~= "table" then return end
 						forEachElement(tab1, function(name, v1)
+							if name == "project" or name == "sid" then return end
+
 							local v2 = tab2[name]
+							if name == "file" then
+								v1 = File(v1):name(true)
+								v2 = File(v2):name(true)
+							end
 
 							if v1 ~= v2 then
-								result[k] = {name = name, equal = v2, got = v1}
+								if not result[k] then result[k] = {} end
+								result[k][name] = {equal = v2, got = v1}
 							end
 						end)
 					end)
@@ -360,8 +361,13 @@ UnitTest_ = {
 				self.success = self.success + 1
 			else
 				_Gtme.printError("Files \n  '".._Gtme.makePathCompatibleToAllOS(oldLog).."'\nand\n  '"..self.tmpdir..s..fname.."'\nare different.")
-				forEachElement(result, function(_, value)
-					_Gtme.printError(vardump(value))
+				forEachElement(result, function(index, value)
+					local dump = vardump(value)
+					if type(index) == "string" then
+						dump = index.." = "..dump
+					end
+
+					_Gtme.printError(dump)
 				end)
 
 				self.fail = self.fail + 1 -- SKIP

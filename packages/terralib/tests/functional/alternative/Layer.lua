@@ -38,10 +38,12 @@ return{
 		end
 		unitTest:assertError(projNotExists, "Project file '".."myproj.tview".."' does not exist.")
 
-		local projFile = "proj_celllayer.tview"
+		local projFile = File("proj_celllayer.tview")
+
+		if projFile:exists() then projFile:delete() end
 
 		local proj = Project{
-			file = projFile,
+			file = projFile:name(true),
 			clean = true,
 			deforestation = filePath("Desmatamento_2000.tif", "terralib"),
 		}
@@ -53,7 +55,7 @@ return{
 				name = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'.")
+		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile:name(true).."'.")
 
 		layerName = "defirestation"
 		local layerDoesNotExistsSug = function()
@@ -62,11 +64,11 @@ return{
 				name = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
+		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile:name(true).."'. Do you mean 'deforestation'?")
 		
-		-- unitTest:assertFile("proj_celllayer.tview") -- SKIP #1301
-		File("proj_celllayer.tview"):delete() -- #1301
-		
+		unitTest:assertFile(projFile:name(true))
+		if projFile:exists() then projFile:delete() end
+
 		local projName = "amazonia2.tview"
 
 		proj = Project{

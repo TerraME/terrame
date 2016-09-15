@@ -139,14 +139,15 @@ return{
 	end,
 	loadNeighborhood = function(unitTest)
 		local terralib = getPackage("terralib")
-
-		local projName = "cellspace_neigh_alt.tview"
+		local file = File("cellspace_neigh_alt.tview")
 
 		local author = "Avancini"
 		local title = "Cellular Space"
 
+		if file:exists() then file:delete() end
+
 		local proj = terralib.Project{
-			file = projName,
+			file = tostring(file),
 			clean = true,
 			author = author,
 			title = title
@@ -226,8 +227,8 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
-		-- unitTest:assertFile(projName) -- SKIP #1301
-		File(projName):delete() -- #1301
+		unitTest:assertFile(file:name(true))
+		if file:exists() then file:delete() end
 		tl:dropPgTable(pgData)			
 		
 		-- GAL from shapefile
@@ -361,13 +362,14 @@ return{
 	save = function(unitTest)
 		local terralib = getPackage("terralib")
 
-		local projName = "cellspace_save_alt.tview"
+		local projName = File("cellspace_save_alt.tview")
 
 		local author = "Avancini"
 		local title = "Cellular Space"
 
+		if projName:exists() then projName:delete() end
 		local proj = terralib.Project{
-			file = projName,
+			file = projName:name(true),
 			clean = true,
 			author = author,
 			title = title
@@ -422,8 +424,8 @@ return{
 
 		forEachCell(cs, function(cell)
 			cell.t0 = 1000
-		end)	
-		
+		end)
+
 		local cellSpaceLayerName = clName1.."_CellSpace"
 
 		local attrNotExists = function()
@@ -445,10 +447,10 @@ return{
 			cs:save()
 		end
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
-		
-		-- unitTest:assertFile(projName) -- SKIP #1301
-		File(projName):delete() -- #1301
-		tl:dropPgTable(pgData)	
+
+		unitTest:assertFile(projName:name(true))
+		if projName:exists() then projName:delete() end
+		tl:dropPgTable(pgData)
 	end
 }
 

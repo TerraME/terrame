@@ -24,10 +24,11 @@
 
 return {
 	Layer = function(unitTest)
-		local projName = "cellular_layer_basic.tview"
+		local projName = File("cellular_layer_basic.tview")
 
+		if projName:exists() then projName:delete() end
 		local proj = Project{
-			file = projName,
+			file = projName:name(true),
 			clean = true
 		}
 
@@ -59,32 +60,29 @@ return {
 			file = filePath1
 		}	
 
-		unitTest:assertEquals(projName, cl.project.file)
+		unitTest:assertEquals(projName:name(true), cl.project.file)
 		unitTest:assertEquals(clName1, cl.name)
 		
 		local cl2 = Layer{
-			project = projName,
+			project = projName:name(true),
 			name = clName1
 		}
 		
 		unitTest:assertEquals(cl2.source, "shp")
 		unitTest:assertEquals(cl2.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath1))			
 	
-		-- unitTest:assertFile(projName) -- SKIP #1301
-		File(projName):delete() -- #1301
-		
+		unitTest:assertFile(projName:name(true))
+
 		if File(filePath1):exists() then
 			File(filePath1):delete()
 		end
 
-		projName = "setores_2000.tview"
+		projName = File("setores_2000.tview")
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		if projName:exists() then projName:delete() end
 		
 		local proj1 = Project {
-			file = projName
+			file = projName:name(true)
 		}		
 
 		local layer1 = Layer{
@@ -95,7 +93,7 @@ return {
 		unitTest:assertEquals(layer1.name, layerName1)
 					
 		local proj2 = Project {
-			file = projName
+			file = projName:name(true)
 		}		
 
 		local layerName2 = "MG"
@@ -135,15 +133,14 @@ return {
 		}		
 
 		unitTest:assert(layer4.name ~= layer3.name)
-		unitTest:assertEquals(layer4.sid, layer3.sid)		
-		
-		-- unitTest:assertFile(projName) -- SKIP #1301
-		File(projName):delete() -- #1301
-		
-		projName = "cells_setores_2000.tview"
+		unitTest:assertEquals(layer4.sid, layer3.sid)
+		unitTest:assertFile(projName:name(true))
 
+		if projName:exists() then projName:delete() end
+
+		projName = File("cells_setores_2000.tview")
 		proj = Project{
-			file = projName,
+			file = projName:name(true),
 			clean = true
 		}		
 
@@ -229,7 +226,7 @@ return {
 		
 		if File(filePath4):exists() then
 			File(filePath4):delete()
-		end		
+		end
 		
 		Layer{
 			project = proj,
@@ -244,9 +241,7 @@ return {
 		unitTest:assertEquals(getn(clSet), 104)		
 		
 		-- END
-		if File(projName):exists() then
-			File(projName):delete()
-		end		
+		if projName:exists() then projName:delete() end
 
 		if File(filePath1):exists() then File(filePath1):delete() end
 		if File(filePath2):exists() then File(filePath2):delete() end
@@ -567,10 +562,10 @@ return {
 		File(proj.file):delete()
 	end,
 	__tostring = function(unitTest)
-		local projName = "cellular_layer_print.tview"
+		local projName = File("cellular_layer_print.tview")
 
 		local proj = Project {
-			file = projName,
+			file = projName:name(true),
 			clean = true
 		}		
 
@@ -589,8 +584,8 @@ sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
 source   string [shp]
 ]]
 		unitTest:assertEquals(tostring(l), expected, 36, true)
-		-- unitTest:assertFile(projName) -- SKIP #1301
-		File(projName):delete() -- #1301
+		unitTest:assertFile(projName:name(true))
+		if projName:exists() then projName:delete() end
 	end
 }
 

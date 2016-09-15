@@ -127,12 +127,14 @@ return{
 
 		-- project
 		local terralib = getPackage("terralib")
-		local projName = "cellspace_basic.tview"
+		local projName = File("cellspace_basic.tview")
 		local author = "Avancini"
 		local title = "Cellular Space"
 
+		if projName:exists() then projName:delete() end
+
 		local proj = terralib.Project{
-			file = projName,
+			file = projName:name(true),
 			clean = true,
 			author = author,
 			title = title
@@ -183,7 +185,7 @@ return{
 		}
 
 		cs = CellularSpace{
-			project = projName,
+			project = projName:name(true),
 			layer = clName1,
 			geometry = true
 		}
@@ -203,9 +205,9 @@ return{
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 
-		unitTest:assertEquals(303, #cs.cells)		
-		-- unitTest:assertFile(projName) -- SKIP #1301
-		File(projName):delete() -- #1301
+		unitTest:assertEquals(303, #cs.cells)
+		unitTest:assertFile(projName:name(true))
+		if projName:exists() then projName:delete() end
 
 		pgData.table = string.lower(tName1)
 		tl:dropPgTable(pgData)
