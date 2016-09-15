@@ -1484,6 +1484,7 @@ function table.save(tbl, filename)
 	local file = File(filename)
 	local stbl = "return"..vardump(tbl)
 	file:writeLine(stbl)
+	file:close()
 end
 
 --- Return the type of an object. It extends the original Lua type() to support TerraME objects,

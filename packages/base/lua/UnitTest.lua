@@ -114,7 +114,6 @@ UnitTest_ = {
 				end
 
 				if tempstr ~= "" then v1 = tempstr end
-
 			end
 
 			local dist = levenshtein(v1, v2)
