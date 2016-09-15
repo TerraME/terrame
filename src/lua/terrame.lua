@@ -48,16 +48,16 @@ print = function(obj, ...)
 end
 
 function _Gtme.loadLibraryPath()
-    local dyldpath = os.getenv("DYLD_LIBRARY_PATH")
-    if dyldpath then
-        package.cpath = package.cpath..";"..dyldpath.."/?.so"
-                                    ..";"..dyldpath.."/?.dylib"
-    end
+	local dyldpath = os.getenv("DYLD_LIBRARY_PATH")
+	if dyldpath then
+		package.cpath = package.cpath..";"..dyldpath.."/?.so"
+		                             ..";"..dyldpath.."/?.dylib"
+	end
 
-    local ldpath = os.getenv("LD_LIBRARY_PATH")
-    if ldpath then
-        package.cpath = package.cpath..";"..ldpath.."/?.so"
-    end
+	local ldpath = os.getenv("LD_LIBRARY_PATH")
+	if ldpath then
+		package.cpath = package.cpath..";"..ldpath.."/?.so"
+	end
 end
 
 _Gtme.loadLibraryPath()
@@ -65,23 +65,23 @@ _Gtme.loadLibraryPath()
 _Gtme.terralib_mod_binding_lua = nil
 
 local function initializeTerraLib()
-    if _Gtme.terralib_mod_binding_lua == nil then
-        require("terralib_mod_binding_lua")
-        local binding = terralib_mod_binding_lua
-        binding.TeSingleton.getInstance():initialize()
-        binding.te.plugin.PluginManager.getInstance():clear()
-        binding.te.plugin.PluginManager.getInstance():loadAll()
-        _Gtme.terralib_mod_binding_lua = terralib_mod_binding_lua
-    end
+	if _Gtme.terralib_mod_binding_lua == nil then
+		require("terralib_mod_binding_lua")
+		local binding = terralib_mod_binding_lua
+		binding.TeSingleton.getInstance():initialize()
+		binding.te.plugin.PluginManager.getInstance():clear()
+		binding.te.plugin.PluginManager.getInstance():loadAll()
+		_Gtme.terralib_mod_binding_lua = terralib_mod_binding_lua
+	end
 end
 
 local function finalizeTerraLib()
-    if _Gtme.terralib_mod_binding_lua ~= nil then
-        local binding = terralib_mod_binding_lua
-        binding.te.plugin.PluginManager.getInstance():clear()
-        binding.TeSingleton.getInstance():finalize()
-        _Gtme.terralib_mod_binding_lua = nil
-    end
+	if _Gtme.terralib_mod_binding_lua ~= nil then
+		local binding = terralib_mod_binding_lua
+		binding.te.plugin.PluginManager.getInstance():clear()
+		binding.TeSingleton.getInstance():finalize()
+		_Gtme.terralib_mod_binding_lua = nil
+	end
 end
 
 initializeTerraLib()
@@ -361,7 +361,10 @@ function _Gtme.showDoc(package)
 
 	docpath = docpath..s.."doc"..s.."index.html"
 
-	if not File(docpath):exists() then
+	local exists 
+	ok, err = pcall(function() exists = File(docpath):exists() end)
+
+	if not ok or not exists then
 		_Gtme.printError("It was not possible to find the documentation of package '"..package.."'.")
 		_Gtme.printError("Please run 'terrame -package "..package.." -doc' to build it.")
 		os.exit(1)
@@ -811,6 +814,10 @@ function _Gtme.traceback(err)
 			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."lua")))
 		else
 			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("MacOS"..s.."lua")))
+
+			if not m1 then
+				m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("bin"..s.."lua")))
+			end
 		end
 
 		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages")))
@@ -1528,7 +1535,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.printError("Option not recognized: '"..arg.."'.")
 				os.exit(1)
 			end
-		else
+		else -- running a Lua script
 			if info_.mode ~= "quiet" then
 				checkNilVariables()
 			end
@@ -1563,9 +1570,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(1)
 			end
 
+			sessionInfo().currentFile = arg
+
 			local success, result = _Gtme.myxpcall(function() dofile(arg) end) 
 			if not success then
 				_Gtme.printError(result)
+				os.exit(1)
 			end
 		end
 		argCount = argCount + 1

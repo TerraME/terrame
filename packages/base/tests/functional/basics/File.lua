@@ -227,6 +227,7 @@ return{
 
 		local file = File(filename)
 		file:writeLine(example)
+		file:close()
 
 		file = io.open(filename, "r")
 		local text = file:read("*all")

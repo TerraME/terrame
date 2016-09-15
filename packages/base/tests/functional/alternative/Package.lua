@@ -25,9 +25,9 @@
 return{
 	filePath = function(unitTest)
 		local error_func = function()
-			filePath("mriver_lin.shp")
+			filePath("mriver.shp")
 		end
-		unitTest:assertError(error_func, "File 'base/data/mriver_lin.shp' does not exist in package 'base'. Do you mean 'River_lin.shp'?", 2)
+		unitTest:assertError(error_func, "File 'base/data/mriver.shp' does not exist in package 'base'. Do you mean 'river.shp'?", 2)
 
 		local tlInfo = packageInfo("terralib")
 		local baseInfo = packageInfo()

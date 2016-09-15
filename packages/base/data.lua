@@ -48,7 +48,7 @@ data{
 }
 
 data{
-	file = "River_lin.shp",
+	file = "river.shp",
 	attributes = {
 		"SPRPERIMET", 
 		"SPRCLASSE", 

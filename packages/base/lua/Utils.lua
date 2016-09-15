@@ -522,11 +522,15 @@ function forEachFile(directory, _sof_)
 	mandatoryArgument(1, "table", directory)
 	mandatoryArgument(2, "function", _sof_)
 
+	local directoryIdx = {}
+
 	for i = 1, #directory do
-		if _sof_(directory[i]) == false then return false end
+		directoryIdx[directory[i]] = true
 	end
 
-	return true
+	return forEachOrderedElement(directoryIdx, function(file)
+		if _sof_(file) == false then return false end
+	end)
 end
 
 --- Second order function to transverse the instances of Models within a given Environment.
@@ -1458,8 +1462,8 @@ function table.load(filename)
 	verify(file:exists(), resourceNotFoundMsg("file", file:name(true)))
 
 	local tbl
-	local ok, error = pcall(function() tbl = dofile(tostring(file)) end)
-	if not ok then customError("Failed to load file '"..filename.."': "..error) end
+	local ok, merror = pcall(function() tbl = dofile(tostring(file)) end)
+	if not ok then customError("Failed to load file "..merror) end
 
 	verify(type(tbl) == "table", "File '"..filename.."' does not contain a Lua table.")
 	return tbl
@@ -1480,6 +1484,7 @@ function table.save(tbl, filename)
 	local file = File(filename)
 	local stbl = "return"..vardump(tbl)
 	file:writeLine(stbl)
+	file:close()
 end
 
 --- Return the type of an object. It extends the original Lua type() to support TerraME objects,

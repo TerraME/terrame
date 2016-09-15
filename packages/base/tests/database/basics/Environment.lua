@@ -25,7 +25,7 @@
 return{
 	loadNeighborhood = function(unitTest)
 		local cs = CellularSpace{
-			file = filePath("River_lin.shp")
+			file = filePath("river.shp")
 		}
 
 		local cs2 = CellularSpace{

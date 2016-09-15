@@ -428,7 +428,6 @@ File_ = {
 		end
 
 		self.file:write(text)
-		self:close()
 	end
 }
 

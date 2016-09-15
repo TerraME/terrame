@@ -236,7 +236,7 @@ return{
 		}
 
 		local cs2 = CellularSpace{
-			file = filePath("River_lin.shp", "base")
+			file = filePath("river.shp", "base")
 		}
 
 		local cs3 = CellularSpace{

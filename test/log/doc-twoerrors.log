@@ -5,6 +5,7 @@ print when loading
 Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
+Checking properties of data files
 File 'data.csv' is not documented
 File 'brazilstates.dbf' is documented but does not exist in directory 'data'
 Checking directory 'font'
@@ -99,11 +100,11 @@ Testing file lua/Tube2.lua
 Skipping w2
 Testing file lua/Utils.lua
 Testing belong2
-Error: [string "belon2(2, {1, 2, 3})"]:1: attempt to call global 'belon2' (a nil value)
+Error: [string "belon2(2, {1, 2, 3})"]:1: attempt to call a nil value (global 'belon2')
 Skipping call2
 Skipping createNeighborhood2
 Testing elapsedTime2
-Error: [string "print(elapsedTime2(100)) -- 00:01:40"]:1: attempt to call global 'elapsedTime2' (a nil value)
+Error: [string "print(elapsedTime2(100)) -- 00:01:40"]:1: attempt to call a nil value (global 'elapsedTime2')
 Skipping forEachAgent2
 Skipping forEachCell2
 Skipping forEachCellPair2

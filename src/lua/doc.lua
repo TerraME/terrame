@@ -395,6 +395,8 @@ function _Gtme.executeDoc(package)
 	local filesdocumented = {}
 	local df = dataFiles(package)
 
+	sessionInfo().mode = "strict"
+
 	if File(package_path..s.."data.lua"):exists() and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
@@ -765,6 +767,8 @@ function _Gtme.executeDoc(package)
 			os.exit(1)
 		end)
 
+		sessionInfo().mode = "debug"
+
 		table.sort(mfont, function(a, b)
 			return a.file < b.file
 		end)
@@ -940,7 +944,7 @@ function _Gtme.executeDoc(package)
 			end)
 
 			forEachOrderedElement(documentedArguments, function(midx)
-				if not args[midx] and midx ~= "named" then
+				if args[midx] == nil and midx ~= "named" then
 					printError("Model '"..modelName.."' does not have documented argument '"..midx.."'")
 					doc_report.model_error = doc_report.model_error + 1
 				end
