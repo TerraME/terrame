@@ -3,7 +3,7 @@ Parsing configuration file 'config/all.lua'
 
 Testing package 'build'
 Loading configuration file 'config/all.lua'
-Using log directory 'log/mac'
+Using log directory 'log/linux'
 Loading package 'build'
 Looking for overwritten variables
 Looking for documented functions

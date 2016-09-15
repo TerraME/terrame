@@ -33,8 +33,9 @@ return{
 		runCommand("touch onerror-file-1.txt")
 	end,
 	call2 = function(unitTest)
-		if isFile("onerror-file-1.txt") then
-			rmFile("onerror-file-1.txt")
+		local mfile = File("onerror-file-1.txt")
+		if mfile:exists() then
+			mfile:delete()
 		end
 
 		local cont = 0

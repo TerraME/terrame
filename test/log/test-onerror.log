@@ -1,5 +1,5 @@
 Loading configuration file 'config/all.lua'
-Using log directory 'log/mac'
+Using log directory 'log/linux'
 Loading package 'onerror'
 Error: print() call detected with argument 'print when loading'
 Looking for overwritten variables
@@ -92,7 +92,7 @@ Testing switch2
 Testing type2
 Testing vardump2
 Checking if all asserts were executed
-Assert in line 246 was not executed.
+Assert in line 247 was not executed.
 Testing tests/alternative/Cell.lua
 Testing Cell
 Creating 'log/mac/chart_cell.bmp'.

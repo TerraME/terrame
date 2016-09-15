@@ -361,7 +361,10 @@ function _Gtme.showDoc(package)
 
 	docpath = docpath..s.."doc"..s.."index.html"
 
-	if not File(docpath):exists() then
+	local exists 
+	ok, err = pcall(function() exists = File(docpath):exists() end)
+
+	if not ok or not exists then
 		_Gtme.printError("It was not possible to find the documentation of package '"..package.."'.")
 		_Gtme.printError("Please run 'terrame -package "..package.." -doc' to build it.")
 		os.exit(1)

@@ -36,12 +36,14 @@ return{
 		runCommand("touch twoerrors-file-2.txt")
 	end,
 	call2 = function(unitTest)
-		if isFile("twoerrors-file-1.txt") then
-			rmFile("twoerrors-file-1.txt")
+		local mfile = File("twoerrors-file-1.txt")
+		if mfile:exists() then
+			mfile:delete()
 		end
 
-		if isFile("twoerrors-file-2.txt") then
-			rmFile("twoerrors-file-2.txt")
+		mfile = File("tworrors-file-2.txt")
+		if mfile:exists() then
+			mfile:delete()
 		end
 
 		local cont = 0

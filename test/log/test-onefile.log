@@ -1,5 +1,5 @@
 Loading configuration file 'config/oneFile.lua'
-Using log directory 'log/mac'
+Using log directory 'log/linux'
 Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
@@ -40,7 +40,7 @@ No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 53 asserts were executed successfully.
+All 56 asserts were executed successfully.
 All 10 tested functions do not have any unexpected execution error.
 All 10 tested functions have at least one assert.
 All 10 tested functions exist in the source code of the package.

@@ -6,8 +6,8 @@
 initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
 
-initialDir = currentDir()..s..File(sessionInfo().currentFile):getDir()
-chDir(initialDir)
+initialDir = Directory(File(sessionInfo().currentFile):directory())
+initialDir:setCurrentDir()
 
 commands = _Gtme.include("commands.lua")
 
@@ -35,7 +35,7 @@ end)
 local baseDir = sessionInfo().path
 
 tmpdirectory = _Gtme.Directory{name = ".terramerun_XXXXX", tmp = true}.name
-_Gtme.printNote("Temporary directory created in ".. initialDir..tmpdirectory)
+_Gtme.printNote("Temporary directory created in "..tmpdirectory)
 
 _Gtme.printNote("Testing installed packages")
 
@@ -85,6 +85,8 @@ local report = {
 local function approximateLine(line)
 	if not line then return 0 end
 	
+	if string.match(line, "Logs")                then return 120 end
+	if string.match(line, "Temporary")           then return 120 end
 	if string.match(line, "seconds")             then return   5 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "log")                 then return 100 end
@@ -102,7 +104,7 @@ local function approximateLine(line)
 	if string.match(line, "In ")                 then return  50 end
 	if string.match(line, "Error in")            then return  50 end
 	if string.match(line, "Wrong execution")     then return  50 end
-	if string.match(line, "%.terrame")           then return   5 end
+	if string.match(line, "%.terrame")           then return 120 end
 	if string.match(line, "TME_PATH")            then return 120 end
 	if string.match(line, "Lua 5")               then return   3 end
 	if string.match(line, "attempt to")          then return  50 end
@@ -176,21 +178,21 @@ forEachOrderedElement(commands, function(idx, group)
 
 		local lfilename = idx.."-"..name..".log"
 
-		logfile = io.open("log"..s..lfilename, "r")
-		if logfile == nil then
+		logfile = File("log"..s..lfilename)
+		if not logfile:exists() then
 			_Gtme.printError("Creating log file '".._Gtme.makePathCompatibleToAllOS( "log"..s..lfilename.."'"))
 			report.createdlogs = report.createdlogs + 1
 
-			logfile = io.open("log"..s..lfilename, "w")
 			forEachElement(result, function(_, value)
-				logfile:write(_Gtme.makePathCompatibleToAllOS(value).."\n")
+				logfile:writeLine(_Gtme.makePathCompatibleToAllOS(value).."\n")
 			end)
 		else
-			local resultfile = io.open(tmpdirectory..s..lfilename, "w")
+			logfile:open()
+			local resultfile = File(tmpdirectory..s..lfilename)
 
 			forEachElement(result, function(_, value)
 				value = _Gtme.makePathCompatibleToAllOS(value)
-				resultfile:write(value.."\n")
+				resultfile:writeLine(value.."\n")
 			end)
 			
 			local line = 1
@@ -203,7 +205,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 				value = _Gtme.makePathCompatibleToAllOS(value)
 
-				local str = logfile:read()
+				local str = logfile.file:read()
 
 				if not str then
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
@@ -238,7 +240,7 @@ forEachOrderedElement(commands, function(idx, group)
 			end)
 
 			if not logerror then
-				local v = logfile:read()
+				local v = logfile.file:read()
 				if v then
 					_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
 					report.logerrors = report.logerrors + 1
@@ -276,7 +278,7 @@ end)
 _Gtme.printNote("Testing from local directories")
 
 os.execute("cp config.lua packages")
-Directory(initialDir..s.."packages"):setCurrentDir()
+Directory(tostring(initialDir)..s.."packages"):setCurrentDir()
 
 _Gtme.printNote("Removing files")
 remove = _Gtme.include(".."..s.."remove.lua")
@@ -340,21 +342,21 @@ forEachOrderedElement(commands, function(idx, group)
 
 		local lfilename = idx.."-"..name..".log"
 
-		logfile = io.open(".."..s.."log"..s..lfilename, "r")
-		if logfile == nil then
+		logfile = File(".."..s.."log"..s..lfilename)
+		if not logfile:exists() then
 			_Gtme.printError("Creating log file '".._Gtme.makePathCompatibleToAllOS("log"..s..lfilename.."'"))
 			report.createdlogs = report.createdlogs + 1
 
-			logfile = io.open(".."..s.."log"..s..lfilename, "w")
 			forEachElement(result, function(_, value)
-				logfile:write(value.."\n")
+				logfile:writeLine(value.."\n")
 			end)
 		else
-			local resultfile = io.open(".."..s..tmpdirectory..s..lfilename, "w")
+			logfile:open()
+			local resultfile = File(tmpdirectory..s..lfilename)
 
 			forEachElement(result, function(_, value)
 				value = _Gtme.makePathCompatibleToAllOS(value)
-				resultfile:write(value.."\n")
+				resultfile:writeLine(value.."\n")
 			end)
 			
 			local line = 1
@@ -367,7 +369,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 				value = _Gtme.makePathCompatibleToAllOS(value)
 
-				local str = logfile:read()
+				local str = logfile.file:read()
 				local distance2 = approximateLine(str)
 
 				if distance > distance2 then
@@ -404,7 +406,7 @@ forEachOrderedElement(commands, function(idx, group)
 			end)
 
 			if not logerror then
-				local v = logfile:read()
+				local v = logfile.file:read()
 				if v then
 					_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
 					report.logerrors = report.logerrors + 1
@@ -453,7 +455,7 @@ if commands.build then
 end
 
 File("config.lua"):delete()
-Directory(initialDir..s..".."):setCurrentDir()
+Directory(tostring(initialDir)..s..".."):setCurrentDir()
 
 if commands.observer then
 	_Gtme.printNote("Checking observers")
@@ -464,7 +466,7 @@ if commands.observer then
 
 		directories.scripts[tmefile] = true
 
-		tmefile = dofile(initialDir..s.."scripts"..s..tmefile)
+		tmefile = dofile(tostring(initialDir)..s.."scripts"..s..tmefile)
 
 		local names = {"x", "y", "width", "height"}
 
