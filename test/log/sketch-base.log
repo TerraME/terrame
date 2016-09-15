@@ -1,43 +1,35 @@
 Verifying test files
 Ignoring tests because internal directories were found in the tests
 Verifying data files
+File 'River_lin.dbf' does not need to be documented
+File 'River_lin.qix' does not need to be documented
+File 'River_lin.shp' is already documented in 'data.lua'
+File 'River_lin.shx' does not need to be documented
 File 'agents.csv' is already documented in 'data.lua'
 File 'amazonia.dbf' does not need to be documented
+File 'amazonia.qix' does not need to be documented
 File 'amazonia.shp' is already documented in 'data.lua'
 File 'amazonia.shx' does not need to be documented
-File 'brazil.gal' is already documented in 'data.lua'
 File 'brazilstates.dbf' does not need to be documented
 File 'brazilstates.qix' does not need to be documented
 File 'brazilstates.shp' is already documented in 'data.lua'
 File 'brazilstates.shx' does not need to be documented
-File 'cabecadeboi-neigh.gal' is already documented in 'data.lua'
 File 'cabecadeboi-neigh.gpm' is already documented in 'data.lua'
-File 'cabecadeboi-neigh.gwt' is already documented in 'data.lua'
 File 'cabecadeboi.dbf' does not need to be documented
+File 'cabecadeboi.qix' does not need to be documented
 File 'cabecadeboi.shp' is already documented in 'data.lua'
 File 'cabecadeboi.shx' does not need to be documented
 File 'cabecadeboi900.dbf' does not need to be documented
+File 'cabecadeboi900.qix' does not need to be documented
 File 'cabecadeboi900.shp' is already documented in 'data.lua'
 File 'cabecadeboi900.shx' does not need to be documented
-File 'emas-distance.gal' is already documented in 'data.lua'
-File 'emas-distance.gpm' is already documented in 'data.lua'
-File 'emas-distance.gwt' is already documented in 'data.lua'
-File 'emas-pollin.gpm' is already documented in 'data.lua'
 File 'emas.dbf' does not need to be documented
+File 'emas.qix' does not need to be documented
 File 'emas.shp' is already documented in 'data.lua'
 File 'emas.shx' does not need to be documented
-Directory 'error' will be ignored
-File 'gpmAreaCellsPols.gpm' is already documented in 'data.lua'
-File 'gpmdistanceDbEmasCells.gpm' is already documented in 'data.lua'
 File 'gpmlinesDbEmas.gpm' is already documented in 'data.lua'
-File 'Limit_pol.dbf' does not need to be documented
-File 'Limit_pol.shp' is already documented in 'data.lua'
-File 'Limit_pol.shx' does not need to be documented
-File 'River_lin.dbf' does not need to be documented
-File 'River_lin.shp' is already documented in 'data.lua'
-File 'River_lin.shx' does not need to be documented
-File 'simple-cs.csv' is already documented in 'data.lua'
 File 'simple.map' is already documented in 'data.lua'
+Directory 'test' will be ignored
 Verifying font files
 File 'Grissom Free.ttf' is already documented in 'font.lua'
 File 'Grissom Free.txt' will be ignored

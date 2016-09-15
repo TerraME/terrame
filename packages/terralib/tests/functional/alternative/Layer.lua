@@ -140,7 +140,7 @@ return{
 				file = layerFile
 			}
 		end
-		unitTest:assertError(fileLayerNonExists, mandatoryArgumentMsg("source"))
+		unitTest:assertError(fileLayerNonExists, "File 'linhares.shp' does not exist.")
 
 		local filePath0 = filePath("test/sampa.shp", "terralib")
 		local source = "tif"

@@ -1,0 +1,3 @@
+Error: <eof> expected near 'end'
+Stack traceback:
+    File scripts/trace-syntax.lua, line 1

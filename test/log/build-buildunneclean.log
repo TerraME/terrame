@@ -29,7 +29,7 @@ Checking lines of source code
 Checking Tube.lua
 Checking Utils.lua
 Testing examples
-Test file 'unnec2.txt' does not have a valid extension
+Test file 'unnec2.txt' does not have a valid extension.
 Testing ipd
 Checking logs
 
@@ -47,6 +47,7 @@ All 3 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
 All 2 functions of the package were tested.
 All lines from the source code were executed.
 All 1 examples were successfully executed.
@@ -56,7 +57,7 @@ Summing up, 4 problems were found during the tests.
 Creating documentation of package 'buildunneclean'
 Building documentation for package 'buildunneclean'
 Loading package 'buildunneclean'
-Test file 'unnec2.txt' does not have a valid extension
+Test file 'unnec2.txt' does not have a valid extension.
 Package 'buildunneclean' has no data
 Package 'buildunneclean' has no fonts
 Parsing lua files
@@ -136,6 +137,8 @@ File 'buildunneclean/tests/alternative/unnec5.txt' is unnecessary and will be ig
 File 'buildunneclean/tests/unnec4.txt' is unnecessary and will be ignored.
 Checking fonts
 Looking for hidden files
+File 'buildunneclean/.hidden' is unnecessary and will be ignored.
+File 'buildunneclean/lua/.hidden2' is unnecessary and will be ignored.
 Cleaning package
 Removing 'log' directory
 Checking Models
@@ -152,7 +155,7 @@ Temporary files are saved in .terrame_buildunneclean_ZYXBy
 MD5 sum for the package is 2b9830f3e7394486140de0542d49e046 *buildunneclean_0.1.zip
 The package has a license file.
 Documentation was successfully built.
-6 files are unnecessary.
+8 files are unnecessary.
 4 errors were found in the tests.
 All Models are placed in the right files.
-Summing up, 10 problems were found along the build.
+Summing up, 12 problems were found along the build.

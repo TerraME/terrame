@@ -3,6 +3,7 @@ Loading package 'images'
 Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
+Checking properties of data files
 Package 'images' has no fonts
 Parsing lua files
 Parsing lua/Tube.lua

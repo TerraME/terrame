@@ -1,0 +1,45 @@
+Loading package 'memory'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/Memory.lua
+Testing Agent
+Testing Automaton
+Testing Cell
+Testing CellularSpace
+Testing Coord
+Testing Environment
+Testing Event
+Testing Flow
+Testing Jump
+Testing Neighborhood
+Testing Timer
+Testing Trajectory
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking M.lua
+Skipping lines of source code check
+Testing examples
+The package has no examples
+Skipping logs check
+
+Functional test report for package 'memory':
+Tests were executed in 53.42 seconds.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or directories in directory 'tests'.
+All asserts were executed at least once.
+All 3623 asserts were executed successfully.
+All 12 tested functions do not have any unexpected execution error.
+All 12 tested functions have at least one assert.
+All 12 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
+All 0 functions of the package were tested.
+No lines from the source code were verified.
+The package has no examples.
+No log test was executed.
+Summing up, all tests were successfully executed.

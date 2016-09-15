@@ -30,8 +30,14 @@ return{
 
 		unitTest:assert(belong2("b", mvector))
 		unitTest:assert(not belong2("e", mvector))
+		runCommand("touch onerror-file-1.txt")
 	end,
 	call2 = function(unitTest)
+		local mfile = File("onerror-file-1.txt")
+		if mfile:exists() then
+			mfile:delete()
+		end
+
 		local cont = 0
 		local a = Agent{map = function(self, ev) cont = cont + 1 end}
 		unitTest:assert(true)
@@ -121,7 +127,7 @@ return{
 		end)
 
 		unitTest:assert(r)
-		unitTest:assertEquals(count, 37)
+		unitTest:assertEquals(count, 29)
 
 		local count2 = 0
 		forEachFile2(Directory(filePath("", "base")):list(true), function(file)
@@ -293,9 +299,9 @@ return{
     ['a'] = 2, 
     ['b'] = 3, 
     ['w'] = {
-        [1] = 2, 
-        [2] = 3, 
-        [3] = 4
+        2, 
+        3, 
+        4
     }
 }]])
 	end

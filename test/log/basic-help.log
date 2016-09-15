@@ -26,7 +26,9 @@ Options:
   -configure <m>        Visually configure and run Model <m>.
   -doc                  Build the documentation.
   -example <exp>        Run example <exp>.
-  -project              Create the TerraView projects for the package.
+  -examples             Run all examples.
+  -project <prj>        Create project <prj>.
+  -projects             Create the TerraView projects for the package.
   -showdoc              Show the documentation in the default browser.
   -sketch               Create test scripts for source code files missing
                         tests and initial documentation for undocumented files.
