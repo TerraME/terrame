@@ -112,42 +112,6 @@ source   string [shp]
 
 		unitTest.fail = unitTest.fail - 2
 		unitTest.success = unitTest.success + 2
-
-		local terralib = getPackage("terralib")
-
-		local file = File("assertFile-nolayers.tview")
-		local proj = terralib.Project{
-			file = file:name(),
-			clean = true,
-			author = "Carneiro",
-			title = "No Layers"
-		}
-
-		success = unitTest.success
-
-		unitTest:assertType(proj, "Project")
-		unitTest:assertEquals(proj.file, file:name(true))
-		unitTest:assertFile(file:name(true))
-		unitTest:assertEquals(success + 3, unitTest.success)
-
-		file = File("assertFile-fourlayers.tview")
-		proj = terralib.Project{
-			file = file:name(),
-			clean = true,
-			author = "Carneiro",
-			title = "Emas database",
-			firebreak = filePath("firebreak_lin.shp", "terralib"),
-			cover = filePath("accumulation_Nov94May00.tif", "terralib"),
-			river = filePath("River_lin.shp", "terralib"),
-			limit = filePath("Limit_pol.shp", "terralib")
-		}
-
-		success = unitTest.success
-
-		unitTest:assertType(proj, "Project")
-		unitTest:assertEquals(proj.file, file:name(true))
-		unitTest:assertFile(file:name(true))
-		unitTest:assertEquals(success + 3, unitTest.success)
 	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{}

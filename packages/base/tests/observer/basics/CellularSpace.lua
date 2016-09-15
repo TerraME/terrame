@@ -231,7 +231,7 @@ return{
     
 		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.25)
 		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
-		unitTest:assertFile(projName:name(true))
+		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 		if projName:exists() then projName:delete() end
 
 		for i = 1, #exts do

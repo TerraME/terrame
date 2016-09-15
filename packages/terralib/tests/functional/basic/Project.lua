@@ -60,7 +60,7 @@ return {
 		unitTest:assertEquals(proj1.author, proj3clean.author)
 		unitTest:assertEquals(proj1.title, proj3clean.title)
 		unitTest:assertEquals(proj1.file, proj3clean.file)
-		unitTest:assertFile(file:name(true))
+		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
 		if file:exists() then file:delete() end
 
@@ -97,7 +97,7 @@ return {
 		unitTest:assertType(proj5.cover, "Layer")
 		unitTest:assertType(proj5.river, "Layer")
 		unitTest:assertType(proj5.limit, "Layer")
-		unitTest:assertFile(file:name(true))
+		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
 		if file:exists() then file:delete() end
 	end,
@@ -119,7 +119,7 @@ terralib     TerraLib
 title        string [The Amazonia]
 ]])
 
-		unitTest:assertFile("tostring.tview")
+		-- unitTest:assertFile("tostring.tview") -- SKIP #TODO(#1242)
 		if file:exists() then file:delete() end
 	end
 }

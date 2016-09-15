@@ -288,86 +288,14 @@ UnitTest_ = {
 			self.test = self.test + 1 -- SKIP
 			self.success = self.success + 1 -- SKIP
 		else
-			local result
-			if fname:endswith(".tview") then
-				local terralib = getPackage("terralib")
-				result = {}
+			local result = runCommand("diff \""..self.tmpdir..s..fname.."\" \""..oldLog.."\"")
 
-				local proj = terralib.Project{
-					file = self.tmpdir..s..fname
-				}
-
-				local projLog = terralib.Project{
-					file = oldLog
-				}
-
-				local function getLayers(proj)
-					local layers = {}
-					local size = 0
-					terralib.forEachLayer(proj, function(layer, index)
-						layers[index] = layer
-						size  = size + 1
-					end)
-
-					layers.size = size
-
-					return layers
-				end
-
-				forEachElement(projLog, function(k, v1)
-					if k == "terralib" or k == "layers" then return end
-
-					local v2 = proj[k]
-					if k == "file" then
-						v1 = File(v1):name(true)
-						v2 = File(v2):name(true)
-					end
-
-					if v1 ~= v2 then
-						result[k] = {equal = v2, got = v1}
-					end
-				end)
-
-				local layers = {equal = getLayers(proj), got = getLayers(projLog)}
-
-				if layers.equal.size ~= layers.got.size then
-					result.size = {equal = layers.equal.size , got = layers.got.size}
-				else
-					forEachElement(layers.got, function(k, tab1)
-						local tab2 = layers.equal[k]
-						if not isTable(tab2) then return end
-
-						forEachElement(tab1, function(name, v1)
-							if name == "project" or name == "sid" then return end
-
-							local v2 = tab2[name]
-							if name == "file" then
-								v1 = File(v1):name(true)
-								v2 = File(v2):name(true)
-							end
-
-							if v1 ~= v2 then
-								if not result[k] then result[k] = {} end
-								result[k][name] = {equal = v2, got = v1}
-							end
-						end)
-					end)
-				end
-			else
-				result = runCommand("diff \""..self.tmpdir..s..fname.."\" \""..oldLog.."\"")
-			end
-
-			if getn(result) == 0 then
+			if #result == 0 then
 				self.success = self.success + 1
 			else
 				_Gtme.printError("Files \n  '".._Gtme.makePathCompatibleToAllOS(oldLog).."'\nand\n  '"..self.tmpdir..s..fname.."'\nare different.")
-				forEachElement(result, function(index, value)
-					local dump = vardump(value)
-					if type(index) == "string" then
-						dump = index.." = "..dump
-					end
-
-					_Gtme.printError(dump)
+				forEachElement(result, function(_, value)
+					_Gtme.printError(value)
 				end)
 
 				self.fail = self.fail + 1 -- SKIP

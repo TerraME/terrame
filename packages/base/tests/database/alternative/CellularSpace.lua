@@ -227,7 +227,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
-		unitTest:assertFile(file:name(true))
+		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 		if file:exists() then file:delete() end
 		tl:dropPgTable(pgData)			
 		
@@ -448,7 +448,7 @@ return{
 		end
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
 
-		unitTest:assertFile(projName:name(true))
+		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 		if projName:exists() then projName:delete() end
 		tl:dropPgTable(pgData)
 	end
