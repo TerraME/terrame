@@ -269,7 +269,7 @@ local function getProjects(package)
 		return data
 	end
 	
-	sessionInfo().mode = "normal" -- #1100, #813
+	sessionInfo().mode = "quiet"
 	printNote("Processing lua files")
 	forEachFile(data_path, function(file)
 		if string.endswith(file, ".lua") then
