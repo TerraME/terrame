@@ -272,7 +272,9 @@ end
 
 _Gtme.printNote("Removing packages")
 forEachFile("packages", function(pkg)
-	_Gtme.uninstall(pkg)
+	if Directory(pkg):exists() then
+		_Gtme.uninstall(pkg)
+	end
 end)
 
 _Gtme.printNote("Testing from local directories")
@@ -299,7 +301,7 @@ forEachOrderedElement(commands, function(idx, group)
 	forEachOrderedElement(group, function(name, args)
 		command = "terrame"
 
-		if args.package then
+		if args.package and args.package ~= "memory" then
 			command = command.." -package "..args.package
 		else
 			return
