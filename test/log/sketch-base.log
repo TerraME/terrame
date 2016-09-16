@@ -1,10 +1,6 @@
 Verifying test files
 Ignoring tests because internal directories were found in the tests
 Verifying data files
-File 'River_lin.dbf' does not need to be documented
-File 'River_lin.qix' does not need to be documented
-File 'River_lin.shp' is already documented in 'data.lua'
-File 'River_lin.shx' does not need to be documented
 File 'agents.csv' is already documented in 'data.lua'
 File 'amazonia.dbf' does not need to be documented
 File 'amazonia.qix' does not need to be documented
@@ -28,6 +24,10 @@ File 'emas.qix' does not need to be documented
 File 'emas.shp' is already documented in 'data.lua'
 File 'emas.shx' does not need to be documented
 File 'gpmlinesDbEmas.gpm' is already documented in 'data.lua'
+File 'river.dbf' does not need to be documented
+File 'river.qix' does not need to be documented
+File 'river.shp' is already documented in 'data.lua'
+File 'river.shx' does not need to be documented
 File 'simple.map' is already documented in 'data.lua'
 Directory 'test' will be ignored
 Verifying font files

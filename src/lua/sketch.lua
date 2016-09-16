@@ -186,6 +186,17 @@ local function verifyData(package, report)
 	end
 
 	local mfile = io.open(datadotlua, "a")
+	
+	local tl = getPackage("terralib")
+
+	sessionInfo().mode = "quiet"
+
+	myProject = tl.Project{
+		file = "tmpproj.tview",
+		clean = true
+	}
+
+	counter = 1
 
 	forEachOrderedElement(datafiles, function(idx, value)
 		if value then
@@ -204,17 +215,54 @@ local function verifyData(package, report)
 				.."\tfile = \""..idx.."\",\n"
     			.."\tsummary = \"\",\n"
     			.."\tsource = \"\",\n"
-    			.."\tattributes = {},  -- optional\n"
-    			.."\ttypes = {},       -- optional\n"
-    			.."\tdescription = {}, -- optional\n"
-    			.."\treference = \"\"    -- optional\n"
-				.."}\n\n"
+    			.."\treference = \"\""
+
+			if string.endswith(idx, ".shp") or string.endswith(idx, ".geojson") then
+				layer = tl.Layer{
+					project = myProject,
+					file = filePath(idx, package),
+					name = "layer"..counter
+				}
+
+				counter = counter + 1
+
+    			str = str..",\n\tattributes = {\n"
+
+				local attributes = layer:attributes()
+
+				forEachElement(attributes, function(_, value)
+					str = str.."\t\t"..value.." = \"\",\n"
+				end)
+
+				str = str.."\t}"
+			elseif string.endswith(idx, ".tif") then
+				layer = tl.Layer{
+					project = myProject,
+					file = filePath(idx, package),
+					name = "layer"..counter
+				}
+
+				counter = counter + 1
+
+    			str = str..",\n\tattributes = {\n"
+
+				local bands = layer:bands()
+				for i = 0, bands - 1 do
+					str = str.."\t\t[\""..i.."\"] = \"\",\n"
+				end
+
+				str = str.."\t}"
+			end
+
+    		str = str.."\n}\n\n"
 			mfile:write(str)
 
 			report.created_data = report.created_data + 1
 		end
 	end)
 
+	sessionInfo().mode = "strict"
+	File("tmpproj.tview"):delete()
 	mfile:close()
 end
 
@@ -299,25 +347,25 @@ function _Gtme.sketch(package)
 	if report.created_files == 0 then
 		printNote("No new test file was necessary.")
 	elseif report.created_files == 1 then
-		printWarning("One test file was created.")
+		printWarning("One sketch to test a file was created.")
 	else
-		printWarning(report.created_files.." test files were created.")
+		printWarning(report.created_files.." sketches to test files were created.")
 	end
 
 	if report.created_data == 0 then
 		printNote("All data is already documented.")
 	elseif report.created_data == 1 then
-		printWarning("One data file was not documented.")
+		printWarning("One sketch for data file was created in 'data.lua'.")
 	else
-		printWarning(report.created_data.." data files were not documented.")
+		printWarning(report.created_data.." sketches for data files were created in 'data.lua'.")
 	end
 
 	if report.created_font == 0 then
 		printNote("All font files are already documented.")
 	elseif report.created_font == 1 then
-		printWarning("One font file was not documented.")
+		printWarning("One sketch for font file was created in 'font.lua'.")
 	else
-		printWarning(report.created_font.." font files were not documented.")
+		printWarning(report.created_font.." sketches for font files were created in 'font.lua'.")
 	end
 
 	local errors = 0
