@@ -117,11 +117,11 @@ function import(package, reload)
 			if load_sequence == nil then -- SKIP
 				_Gtme.printError("Package '"..package.."' could not be loaded.")
 				_Gtme.printError("load.lua should declare table 'files', with the order of the files to be loaded.")
-				os.exit() -- SKIP
+				os.exit(1) -- SKIP
 			elseif type(load_sequence) ~= "table" then
 				_Gtme.printError("Package '"..package.."' could not be loaded.")
 				_Gtme.printError("In load.lua, 'files' should be table, got "..type(load_sequence)..".")
-				os.exit() -- SKIP
+				os.exit(1) -- SKIP
 			end
 		else
 			load_sequence = all_files -- SKIP
@@ -226,11 +226,11 @@ function getPackage(pname)
 		if load_sequence == nil then -- SKIP
 			_Gtme.printError("Package '"..pname.."' could not be loaded.")
 			_Gtme.printError("load.lua should declare table 'files', with the order of the files to be loaded.")
-			os.exit() -- SKIP
+			os.exit(1) -- SKIP
 		elseif type(load_sequence) ~= "table" then
 			_Gtme.printError("Package '"..pname.."' could not be loaded.")
 			_Gtme.printError("In load.lua, 'files' should be table, got "..type(load_sequence)..".")
-			os.exit() -- SKIP
+			os.exit(1) -- SKIP
 		end
 	else
 		load_sequence = all_files -- SKIP
@@ -259,7 +259,7 @@ function getPackage(pname)
 			if not File(mfile):exists() then -- SKIP
 				_Gtme.printError("Cannot open "..mfile..". No such file.")
 				_Gtme.printError("Please check "..pname_path..s.."load.lua")
-				os.exit() -- SKIP
+				os.exit(1) -- SKIP
 			end
 
 			local lf = loadfile(mfile, 't', result)
@@ -334,15 +334,19 @@ function packageInfo(package)
 	end
 	
 	local file = tostring(pkgdirectory)..s.."description.lua"
+
+	if not File(file):exists() then -- SKIP
+		customError("Could not load package '"..package.."'. File 'description.lua' does not exist.") -- SKIP
+	end
 	
 	local result 
 	xpcall(function() result = _Gtme.include(file) end, function(err)
-		_Gtme.printError(err)
-		os.exit() -- SKIP
+		_Gtme.printError("Could not load package '"..package.."':"..err)
+		os.exit(1) -- SKIP
 	end)
 
 	if result == nil then
-		customError("Could not read description.lua") -- SKIP
+		customError("Could not load package '"..package.."'. File 'description.lua' is empty.") -- SKIP
 	end
 
 	result.path = tostring(pkgdirectory)

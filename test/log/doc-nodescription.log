@@ -1,2 +1,2 @@
 Building documentation for package 'nodescription'
-Error: File '/Users/pedro/github/terrame/bin/packages/nodescription/description.lua' does not exist.
+Error: Could not load package 'nodescription'. File 'description.lua' does not exist.
