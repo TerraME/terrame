@@ -303,6 +303,14 @@ return{
 			verifyUnnecessaryArguments({[1] = "aaa"}, {"aabc", "aacd", "aaab"})
 		end
 		unitTest:assertError(error_func, "Arguments should have only string names, got number.")
+
+		local args = {x = 1, y = 2, a = 0}
+		error_func = function()
+			verifyUnnecessaryArguments(args, {"x", "y", "z"})
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("a"))
+		unitTest:assertEquals(getn(args), 2)
+		unitTest:assertNil(args.a)
 	end,
 	verifyNamedTable = function(unitTest)
 		local error_func = function()
