@@ -44,6 +44,35 @@ return{
 		unitTest:assertEquals(s.version, packageInfo().version)
 		unitTest:assertEquals(s.system == "windows", s.separator == "\\")
 		unitTest:assertEquals(s.system == "linux" or s.system == "mac", s.separator == "/")
+
+		local info = {
+			mode = s.mode,
+			version = s.version,
+			path = s.path,
+			silent = s.silent
+		}
+
+		local infoMock = {
+			mode = "strict",
+			version = "3.0.0",
+			path = currentDir(),
+			silent = true
+		}
+
+		s.mode = infoMock.mode
+		s.version = infoMock.version
+		s.path = infoMock.path
+		s.silent = infoMock.silent
+
+		unitTest:assertEquals(s.mode, infoMock.mode)
+		unitTest:assertEquals(s.version, infoMock.version)
+		unitTest:assertEquals(s.path, infoMock.path)
+		unitTest:assertEquals(s.silent, infoMock.silent)
+
+		s.mode = info.mode
+		s.version = info.version
+		s.path = info.path
+		s.silent = info.silent
 	end
 }
 

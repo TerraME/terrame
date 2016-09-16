@@ -77,6 +77,64 @@ end
 -- system & A string with the operating system.
 -- @usage print(sessionInfo().mode)
 function sessionInfo()
-	return info_ -- this is a global variable created when TerraME is initialized
+	local info_ = _Gtme.info_ -- this is a global variable created when TerraME is initialized
+	local args = {
+		mode = {"default", "debug", "normal", "quiet", "strict"},
+		dbVersion = false,
+		separator = false,
+		silent = "boolean",
+		color = "boolean",
+		fullTraceback = "boolean",
+		autoclose = "boolean",
+		system = false,
+		version = "string",
+		currentFile = "string",
+		path = function(midx, mvalue)
+			if not Directory(mvalue):exists() then
+				customError("The argument '"..midx.."' cannot be change by '"..mvalue.."'. Directory does not exist.")
+			end
+		end
+	}
+
+	local sessionInfo_ = {}
+	local metaTableSessionInfo_ = {
+		__index = function(_, idx)
+			return info_[idx]
+		end,
+		__newindex = function(_, idx, value)
+			local ok = false
+			forEachElement(args, function(arg, check)
+				if idx ~= arg then return end
+
+				if not check then
+					customError("The argument '"..idx.."' is an important information about the current execution and cannot be change.")
+				end
+
+				local mtype = type(check)
+				if mtype == "function" then
+					check(arg, value)
+				elseif mtype == "table" then
+					if not belong(value, check) then
+						customError("The argument '"..idx.."' cannot be change by '"..value.."'.")
+					end
+				elseif type(value) ~= check then
+					incompatibleTypeError(arg, check, value)
+				end
+
+				ok = true
+				return false
+			end)
+
+			if not ok then
+				customError("The argument '"..idx.."' is not an information about the current execution.")
+			end
+
+			info_[idx] = value
+		end
+	}
+
+	setmetatable(sessionInfo_, metaTableSessionInfo_)
+
+	return sessionInfo_
 end
 

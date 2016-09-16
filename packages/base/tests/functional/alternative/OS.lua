@@ -28,6 +28,34 @@ return{
 			runCommand(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
+	sessionInfo = function(unitTest)
+		local s = sessionInfo()
+
+		local error_func = function()
+			s.system = "mac"
+		end
+		unitTest:assertError(error_func, "The argument 'system' is an important information about the current execution and cannot be change.")
+
+		error_func = function()
+			s.path = "/my/path/"
+		end
+		unitTest:assertError(error_func, "The argument 'path' cannot be change by '/my/path/'. Directory does not exist.")
+
+		error_func = function()
+			s.mode = "void"
+		end
+		unitTest:assertError(error_func, "The argument 'mode' cannot be change by 'void'.")
+
+		error_func = function()
+			s.silent = 1
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("silent", "boolean", 1))
+
+		error_func = function()
+			s.arg = 1
+		end
+		unitTest:assertError(error_func, "The argument 'arg' is not an information about the current execution.")
 	end
 }
 

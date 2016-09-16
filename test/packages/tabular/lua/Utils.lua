@@ -104,7 +104,7 @@ end
 -- @usage sessionInfo2().version
 -- DONTRUN
 function sessionInfo2()
-	return info_ -- this is a global variable created when TerraME is initialized
+	return _Gtme.info_ -- this is a global variable created when TerraME is initialized
 end
 
 --- Return the type of an object. It extends the original Lua type() to support TerraME objects,
