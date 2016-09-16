@@ -400,51 +400,46 @@ function _Gtme.executeDoc(package)
 	if File(package_path..s.."data.lua"):exists() and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
-			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "description", "reference"})
+			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "reference"})
 			doc_report.error_data = doc_report.error_data + count
 
-			if type(tab.file)        == "string" then tab.file = {tab.file} end
-			if type(tab.attributes)  == "string" then tab.attributes = {tab.attributes} end
-			if type(tab.description) == "string" then tab.description = {tab.description} end
+			if type(tab.file) == "string" then tab.file = {tab.file} end
 
 			local mverify = {
 				{"mandatoryTableArgument", "file",        "table"},
 				{"mandatoryTableArgument", "summary",     "string"},
 				{"mandatoryTableArgument", "source",      "string"},
-				{"optionalTableArgument",  "file",        "table"},
 				{"optionalTableArgument",  "image",       "string"},
 				{"optionalTableArgument",  "attributes",  "table"},
-				{"optionalTableArgument",  "description", "table"},
 				{"optionalTableArgument",  "reference",   "string"},
 				{"optionalTableArgument",  "separator",   "string"}
 			}
 
-			if tab.attributes or tab.description then
-				if tab.attributes  == nil then tab.attributes  = {} end
-				if tab.description == nil then tab.description = {} end
-
-				local verifySize = function()
-					local ds = "Different sizes in the documentation: "
-
-					if #tab.attributes ~= #tab.description then
-						customError(ds.."'attributes' ("..#tab.attributes..") and 'description' ("..#tab.description..").")
-					end
-				end
-
-				xpcall(verifySize, function(err)
-					doc_report.error_data = doc_report.error_data + 1
-					tab.attributes = {"_incompatible_"}
-					printError(err)
-				end)
-
+			if tab.attributes then
 				local attributes = {}
+				local counter = 0
 
 				forEachElement(tab.attributes, function(idx, value)
-					attributes[value] = {description = tab.description[idx]}
+					if type(idx) ~= "string" then
+						counter = counter + 1
+						return
+					end
+
+					if type(value) ~= "string" then
+						printError("In the documentation of '"..tab.file[1].."', description of attribute '"..idx.."' should be string, got "..type(value)..".")
+						value = ""
+						doc_report.error_data = doc_report.error_data + 1
+					end
+
+					attributes[idx] = {description = value}
 				end)
 
+				if counter > 0 then
+					printError("In the documentation of '"..tab.file[1].."', all names should be string, got "..counter.." invalid names.")
+					doc_report.error_data = doc_report.error_data + counter
+				end
+
 				tab.attributes = attributes
-				tab.description = nil
 			end
 
 			-- it is necessary to implement this way in order to get the line number of the error
