@@ -109,9 +109,18 @@ local function getProjects(package)
 	end
 
 	local tl = getPackage("terralib")
+	local createdFiles = {}
 
 	Project = function(data)
 		currentProject = data.file
+
+		if createdFiles[data.file] then
+			printError("File '"..data.file.."' is created more than once.")
+			project_report.errors_output = project_report.errors_output + 1	
+		else
+			createdFiles[data.file] = true
+		end
+
 		projects[currentProject] = {description = data.description}
 
 		forEachOrderedElement(data, function(idx, value)
@@ -227,6 +236,13 @@ local function getProjects(package)
 	Layer = function(data)
 		if data.resolution and data.file then
 			local mfile = data.file
+
+			if createdFiles[mfile] then
+				printError("File '"..mfile.."' is created more than once.")
+				project_report.errors_output = project_report.errors_output + 1	
+			else
+				createdFiles[mfile] = true
+			end
 
 			if not File(mfile):exists() then
 				mfile = filePath(mfile, "terralib")

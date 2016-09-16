@@ -80,12 +80,6 @@ function _Gtme.executeProject(package)
 			local filename = File(file):name()
 			local output = filename..".tview"
 
-			local filesDir = {}
-			local dir = Directory(".")
-			forEachFile(dir:list(), function(oldFile)
-				filesDir[oldFile] = true
-			end)
-
 			xpcall(function() dofile(data_path..s..file) end, function(err)
 				printError(err)
 				project_report.errors_processing = project_report.errors_processing + 1
@@ -97,16 +91,6 @@ function _Gtme.executeProject(package)
 				printError("File '"..output.."' was not created.")
 				project_report.errors_output = project_report.errors_output + 1
 			end
-
-			forEachFile(dir:list(), function(newFile)
-				if filesDir[newFile] == nil then
-					local fileInfo = File(newFile)
-					if not fileInfo:name() == filename then
-						printError("File '"..fileInfo:name(true).."' should be named '"..filename.."."..fileInfo:extension().."'.")
-						project_report.errors_output = project_report.errors_output + 1
-					end
-				end
-			end)
 		end
 	end)
 
