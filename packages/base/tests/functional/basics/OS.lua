@@ -43,6 +43,7 @@ return{
 		unitTest:assertEquals(s.mode, "debug")
 		unitTest:assertEquals(s.version, packageInfo().version)
 		unitTest:assertEquals(s.system == "windows", s.separator == "\\")
+		unitTest:assertEquals(s.system == "linux" or s.system == "mac", s.separator == "/")
 	end
 }
 
