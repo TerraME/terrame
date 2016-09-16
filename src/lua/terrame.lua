@@ -1180,7 +1180,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		path = os.getenv("TME_PATH"), 
 		fullTraceback = false,
 		autoclose = false,
-		system = string.lower(cpp_getOsName())
+		system = string.lower(cpp_getOsName()),
+		round = 1e-5
 	}
 
 	if _Gtme.info_.path == nil or _Gtme.info_.path == "" then

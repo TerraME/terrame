@@ -49,6 +49,7 @@ return{
 			mode = s.mode,
 			version = s.version,
 			path = s.path,
+			round = s.round,
 			silent = s.silent
 		}
 
@@ -56,23 +57,50 @@ return{
 			mode = "strict",
 			version = "3.0.0",
 			path = currentDir(),
+			round = 1,
 			silent = true
 		}
 
 		s.mode = infoMock.mode
 		s.version = infoMock.version
 		s.path = infoMock.path
+		s.round = infoMock.round
 		s.silent = infoMock.silent
 
 		unitTest:assertEquals(s.mode, infoMock.mode)
 		unitTest:assertEquals(s.version, infoMock.version)
 		unitTest:assertEquals(s.path, infoMock.path)
+		unitTest:assertEquals(s.round, infoMock.round)
 		unitTest:assertEquals(s.silent, infoMock.silent)
 
 		s.mode = info.mode
 		s.version = info.version
 		s.path = info.path
 		s.silent = info.silent
+		s.round = info.round
+
+		local count = 0
+		local timer = Timer{
+			Event{period = 1.0000001, action = function()
+				count = count + 1
+			end}
+		}
+
+		timer:run(5)
+		unitTest:assertEquals(count, 5)
+
+		s.round = 0.0000001
+		count = 0
+		timer = Timer{
+			Event{period = 1.0000001, action = function()
+				count = count + 1
+			end}
+		}
+
+		timer:run(5)
+		unitTest:assertEquals(count, 4)
+
+		s.round = info.round
 	end
 }
 

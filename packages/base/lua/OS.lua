@@ -87,6 +87,7 @@ function sessionInfo()
 		fullTraceback = "boolean",
 		autoclose = "boolean",
 		system = false,
+		round = "number",
 		version = "string",
 		currentFile = "string",
 		path = function(midx, mvalue)

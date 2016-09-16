@@ -159,7 +159,7 @@ function Choice(attrTab)
 			local k = (attrTab.max - attrTab.min) / attrTab.step
 
 			local rest = k % 1
-			if rest > 0.00001 and rest < 0.9999 then
+			if rest > sessionInfo().round and rest < (1 - sessionInfo().round) then
 				local max1 = attrTab.min + (k - rest) * attrTab.step
 				local max2 = attrTab.min + (k - rest + 1) * attrTab.step
 				customError("Invalid 'max' value ("..attrTab.max.."). It could be "..max1.." or "..max2..".")
@@ -169,7 +169,7 @@ function Choice(attrTab)
 				local mk = (attrTab.default - attrTab.min) / attrTab.step
 
 				local mrest = mk % 1
-				if mrest > 0.00001 and mrest < 0.9999 then
+				if mrest > sessionInfo().round and mrest < (1 - sessionInfo().round) then
 					local def1 = attrTab.min + (mk - mrest) * attrTab.step
 					local def2 = attrTab.min + (mk - mrest + 1) * attrTab.step
 					customError("Invalid 'default' value ("..attrTab.default.."). It could be "..def1.." or "..def2..".")

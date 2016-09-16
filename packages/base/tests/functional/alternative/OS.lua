@@ -48,6 +48,11 @@ return{
 		unitTest:assertError(error_func, "The argument 'mode' cannot be change by 'void'.")
 
 		error_func = function()
+			s.round = false
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("round", "number", false))
+
+		error_func = function()
 			s.silent = 1
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("silent", "boolean", 1))

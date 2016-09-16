@@ -252,9 +252,9 @@ Timer_ = {
 				local floor = math.floor(ev.time)
 				local ceil = math.ceil(ev.time)
 
-				if math.abs(ev.time - floor) < self.round then
+				if math.abs(ev.time - floor) < sessionInfo().round then
 					ev.time = floor
-				elseif math.abs(ev.time - ceil) < self.round then
+				elseif math.abs(ev.time - ceil) < sessionInfo().round then
 					ev.time = ceil
 				end
 				self:add(ev)
@@ -324,15 +324,10 @@ function Timer(data)
 
 	local cObj = TeTimer()
 
-	defaultTableValue(data, "round", 1e-5)
-
 	local mdata = {
 		events = {},
 		time = -math.huge,
-		round = data.round
 	}
-
-	data.round = nil
 
 	setmetatable(mdata, metaTableTimer_)
 
