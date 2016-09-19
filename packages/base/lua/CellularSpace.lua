@@ -499,8 +499,8 @@ local function loadPGM(self)
 		if res[1]:find("#", 1) then
 			if len > 1 then
 				local comment = res[2]
-				for i = 3, #res do
-					comment = comment.." "..res[i]
+				for k = 3, #res do
+					comment = comment.." "..res[k]
 				end
 
 				table.insert(pgm.comments, comment)
@@ -525,6 +525,8 @@ local function loadPGM(self)
 		res = file:readLine(self.sep)
 		len = #res
 	end
+
+	file:close()
 
 	if (j ~= pgm.size[1]) or (i ~= pgm.size[2]) then
 		customWarning("File '"..self.file.."' has a diffent size declared: expected '("..pgm.size[1]..","..pgm.size[2]..")', got '("..j..","..i..")'.")

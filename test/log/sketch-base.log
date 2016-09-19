@@ -28,7 +28,7 @@ File 'river.dbf' does not need to be documented
 File 'river.qix' does not need to be documented
 File 'river.shp' is already documented in 'data.lua'
 File 'river.shx' does not need to be documented
-File 'simple.map' is already documented in 'data.lua'
+File 'simple.pgm' is already documented in 'data.lua'
 Directory 'test' will be ignored
 Verifying font files
 File 'Grissom Free.ttf' is already documented in 'font.lua'

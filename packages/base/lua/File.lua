@@ -149,7 +149,7 @@ File_ = {
 	-- @usage filename = "myfile.txt"
 	-- file = File(filename)
 	-- file:writeLine("Some text..")
-	--
+	-- file:close()
 	-- file:delete()
 	delete = function(self)
 		if not self:exists() then
@@ -417,7 +417,8 @@ File_ = {
 	-- @arg text A string to be saved.
 	-- @usage file = File( "file.txt")
 	-- file:writeLine("Text...")
-	-- File("file.txt"):delete()
+	-- file:close()
+	-- file:delete()
 	writeLine = function(self, text)
 		mandatoryArgument(1, "string", text)
 
