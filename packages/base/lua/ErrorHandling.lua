@@ -730,7 +730,7 @@ end
 -- The warning comes from ErrorHandling:unnecessaryArgumentMsg().
 -- It is recommended that this function should be called as early as possible, in order
 -- to show the warning before any error that might be related to it.
--- This function remove the returns the number of unnecessary arguments found.
+-- This function removes each unnecessary argument from #1.
 -- @arg data A named table with the arguments used in the function call.
 -- The names of this table will be verified.
 -- @arg arguments A vector with the allowed arguments.
@@ -772,6 +772,7 @@ function verifyUnnecessaryArguments(data, arguments)
 			if dst < math.floor(#notCorrectArguments[i] * 0.6) and data[i] == nil then
 				msg = unnecessaryArgumentMsg(value, correctedSuggestions[i])
 			end
+
 			data[notCorrectArguments[i]] = nil
 			count = count + 1
 			strictWarning(msg)
