@@ -34,7 +34,6 @@ return{
 		local options = {
 			asc = true,
  			csv = true,
- 			map = true,
 			pgm = true,
 			nc = true,
 			geojson = true,
@@ -49,7 +48,7 @@ return{
  		error_func = function()
  			cs = CellularSpace{
 				file = filePath("test/simple-cs.csv", "base"), 
-				source = "map", 
+				source = "pgm",
 				sep = ";"
 			}
  		end
@@ -70,16 +69,24 @@ return{
 			}
  		end
  		unitTest:assertError(error_func, "File '"..pgmFile.."' has a diffent size declared: expected '(2,2)', got '(10,10)'.")
+
+		pgmFile = filePath("test/error/pgm-invalid-max.pgm", "base")
+		error_func = function()
+ 			cs = CellularSpace{
+				file = pgmFile
+			}
+ 		end
+ 		unitTest:assertError(error_func, "File '"..pgmFile.."' does not have a maximum value declared.")
  
  		error_func = function()
- 			cs = CellularSpace{file = 2, source = "map", sep = ";"}
+ 			cs = CellularSpace{file = 2, source = "pgm", sep = ";"}
  		end
  		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
  
  		error_func = function()
- 			cs = CellularSpace{file = "abc123.map", sep = ";"}
+ 			cs = CellularSpace{file = "abc123.pgm", sep = ";"}
  		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.map"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.pgm"))
 		
 		error_func = function()
  			cs = CellularSpace{

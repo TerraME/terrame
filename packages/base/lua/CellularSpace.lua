@@ -387,12 +387,6 @@ local function checkCsv(self)
 	defaultTableValue(self, "sep", ",")
 end
 
-local function checkMap(self)
-	defaultTableValue(self, "sep", " ")
-	local file = File(self.file)
-	defaultTableValue(self, "attrname", file:name())
-end
-
 local function checkPGM(self)
 	defaultTableValue(self, "sep", " ")
 	local file = File(self.file)
@@ -479,38 +473,6 @@ local function loadCsv(self)
 	return 
 end
 
-local function loadMap(self)
-	local i = 0
-	local j = 0
-
-	if self.yMin == nil then self.yMin = 100000 end
-	if self.xMin == nil then self.xMin = 100000 end
-	if self.xMax == nil then self.xMax = -self.xMin end
-	if self.yMax == nil then self.yMax = -self.yMin end
-
-	self.cells = {}
-	self.cObj_:clear()
-
-	local file = File(self.file)
-	local res = file:readLine(self.sep)
-
-	while #res > 0 do
-		j = 0
-		forEachElement(res, function(_, value)
-			local p = Cell {x = j, y = i}
-		 	p[self.attrname] = tonumber(value)
-			self:add(p)
-			self.cObj_:addCell(p.x, p.y, p.cObj_)
-			j = j + 1
-		end)
-		i = i + 1
-		res = file:readLine(self.sep)
-	end
-
-	self.xdim = self.xMax
-	self.ydim = self.yMax
-end
-
 local function loadPGM(self)
 	local i = 0
 	local j = 0
@@ -566,6 +528,10 @@ local function loadPGM(self)
 
 	if (j ~= pgm.size[1]) or (i ~= pgm.size[2]) then
 		customWarning("File '"..self.file.."' has a diffent size declared: expected '("..pgm.size[1]..","..pgm.size[2]..")', got '("..j..","..i..")'.")
+	end
+
+	if not pgm.maximumValue then
+		customWarning("File '"..self.file.."' does not have a maximum value declared.")
 	end
 
 	self.xdim = self.xMax
@@ -784,13 +750,6 @@ registerCellularSpaceDriver{
 	optional = "sep",
 	load = loadCsv,
 	check = checkCsv
-}
-
-registerCellularSpaceDriver{
-	source = "map",
-	optional = {"sep", "attrname"},
-	load = loadMap,
-	check = checkMap
 }
 
 registerCellularSpaceDriver{
@@ -1587,7 +1546,7 @@ metaTableCellularSpace_ = {
 -- according to the arguments passed to the function.
 -- @tabular source
 -- source & Description & Compulsory arguments & Optional arguments\
--- "map" & Load from a text file where Cells are stored as numbers with its attribute value.
+-- "pgm" & Load from a text file where Cells are stored as numbers with its attribute value.
 -- & & sep, attrname, as \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
 -- requires at least two attributes: x and y. & file & source, sep, as, geometry, ...\

@@ -211,13 +211,6 @@ return{
 
 		pgData.table = string.lower(tName1)
 		tl:dropPgTable(pgData)
-		
-		-- map file
-		cs = CellularSpace{
-			file = filePath("simple.map", "base")
-		}
-
-		unitTest:assertEquals(#cs, 100)
 
 		-- pgm file
 		cs = CellularSpace{
