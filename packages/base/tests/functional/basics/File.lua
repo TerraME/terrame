@@ -27,6 +27,11 @@ return{
 		local file = File("abc.txt")
 		unitTest:assertType(file, "File")
 	end,
+	__concat = function(unitTest)
+    	local f = File("abcd1234")
+
+		unitTest:assertType(f.." does not exits.", "string")
+	end,
 	attributes = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
 		local attr = file:attributes()

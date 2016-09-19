@@ -935,7 +935,7 @@ function _Gtme.executeDoc(package)
 	forEachOrderedElement(all_functions, function(idx, value)
 		print("Checking "..idx)
 		forEachOrderedElement(value, function(midx)
-			if midx == "__len" or midx == "__tostring" then return end -- TODO: think about this kind of function
+			if belong(midx, {"__len", "__tostring", "__concat"}) then return end -- TODO: think about this kind of function
 
 			if not result.files[idx] or not result.files[idx].functions[midx] and 
 			  (not result.files[idx].models or not result.files[idx].models[midx]) then

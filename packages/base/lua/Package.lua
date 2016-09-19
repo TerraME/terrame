@@ -333,7 +333,7 @@ function packageInfo(package)
 		end
 	end
 	
-	local file = tostring(pkgdirectory)..s.."description.lua"
+	local file = pkgdirectory.."description.lua"
 
 	if not File(file):exists() then -- SKIP
 		customError("Could not load package '"..package.."'. File 'description.lua' does not exist.") -- SKIP
@@ -341,7 +341,7 @@ function packageInfo(package)
 	
 	local result 
 	xpcall(function() result = _Gtme.include(file) end, function(err)
-		_Gtme.printError("Could not load package '"..package.."':"..err)
+		_Gtme.printError("Could not load package '"..package.."': "..err)
 		os.exit(1) -- SKIP
 	end)
 
@@ -350,7 +350,7 @@ function packageInfo(package)
 	end
 
 	result.path = tostring(pkgdirectory)
-	result.data = tostring(pkgdirectory)..s.."data"
+	result.data = pkgdirectory.."data"
 
 	if result.depends then
 		local ss = string.gsub(result.depends, "([%w]+ %(%g%g %d[.%d]+%))", function()

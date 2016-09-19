@@ -282,7 +282,7 @@ end)
 _Gtme.printNote("Testing from local directories")
 
 os.execute("cp config.lua packages")
-Directory(tostring(initialDir)..s.."packages"):setCurrentDir()
+Directory(initialDir.."packages"):setCurrentDir()
 
 _Gtme.printNote("Removing files")
 remove = _Gtme.include(".."..s.."remove.lua")
@@ -459,7 +459,7 @@ if commands.build then
 end
 
 File("config.lua"):delete()
-Directory(tostring(initialDir)..s..".."):setCurrentDir()
+Directory(initialDir..".."):setCurrentDir()
 
 if commands.observer then
 	_Gtme.printNote("Checking observers")
@@ -470,7 +470,7 @@ if commands.observer then
 
 		directories.scripts[tmefile] = true
 
-		tmefile = dofile(tostring(initialDir)..s.."scripts"..s..tmefile)
+		tmefile = dofile(initialDir.."scripts"..s..tmefile)
 
 		local names = {"x", "y", "width", "height"}
 
