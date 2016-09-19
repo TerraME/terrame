@@ -28,6 +28,8 @@ directories = {
 
 forEachElement(directories, function(idx, value)
 	forEachFile(idx, function(file)
+		if idx == "packages" and not Directory(initialDir.."packages"..s..file):exists() then return end
+
 		value[file] = false
 	end)
 end)

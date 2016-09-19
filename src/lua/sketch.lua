@@ -230,8 +230,8 @@ local function verifyData(package, report)
 
 				local attributes = layer:attributes()
 
-				forEachElement(attributes, function(_, value)
-					str = str.."\t\t"..value.." = \"\",\n"
+				forEachElement(attributes, function(_, mvalue)
+					str = str.."\t\t"..mvalue.." = \"\",\n"
 				end)
 
 				str = str.."\t}"
