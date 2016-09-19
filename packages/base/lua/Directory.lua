@@ -159,6 +159,18 @@ metaTableDirectory_ = {
 	__index = Directory_,
 	__tostring = function(self)
 		return self.name
+	end,
+	--- Concatenate the directory. It adds a path separator whenever needed.
+	-- @arg value A string or an object that can be concatenated.
+	-- @usage path = sessionInfo().path.."data"
+	__concat = function(self, value)
+		local s = sessionInfo().separator
+
+		if string.sub(value, 1, 1) ~= s then
+			value = s..value
+		end
+
+		return self.name..value
 	end
 }
 
@@ -222,3 +234,4 @@ function Directory(data)
 
 	return data
 end
+

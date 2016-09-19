@@ -28,6 +28,8 @@ directories = {
 
 forEachElement(directories, function(idx, value)
 	forEachFile(idx, function(file)
+		if idx == "packages" and not Directory(initialDir.."packages"..s..file):exists() then return end
+
 		value[file] = false
 	end)
 end)
@@ -272,13 +274,15 @@ end
 
 _Gtme.printNote("Removing packages")
 forEachFile("packages", function(pkg)
-	_Gtme.uninstall(pkg)
+	if Directory(pkg):exists() then
+		_Gtme.uninstall(pkg)
+	end
 end)
 
 _Gtme.printNote("Testing from local directories")
 
 os.execute("cp config.lua packages")
-Directory(tostring(initialDir)..s.."packages"):setCurrentDir()
+Directory(initialDir.."packages"):setCurrentDir()
 
 _Gtme.printNote("Removing files")
 remove = _Gtme.include(".."..s.."remove.lua")
@@ -299,7 +303,7 @@ forEachOrderedElement(commands, function(idx, group)
 	forEachOrderedElement(group, function(name, args)
 		command = "terrame"
 
-		if args.package then
+		if args.package and args.package ~= "memory" then
 			command = command.." -package "..args.package
 		else
 			return
@@ -455,7 +459,7 @@ if commands.build then
 end
 
 File("config.lua"):delete()
-Directory(tostring(initialDir)..s..".."):setCurrentDir()
+Directory(initialDir..".."):setCurrentDir()
 
 if commands.observer then
 	_Gtme.printNote("Checking observers")
@@ -466,7 +470,7 @@ if commands.observer then
 
 		directories.scripts[tmefile] = true
 
-		tmefile = dofile(tostring(initialDir)..s.."scripts"..s..tmefile)
+		tmefile = dofile(initialDir.."scripts"..s..tmefile)
 
 		local names = {"x", "y", "width", "height"}
 
