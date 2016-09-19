@@ -440,8 +440,6 @@ metaTableFile_ = {
 	-- @arg value A string or an object that can be concatenated.
 	-- @usage print(File("abcd1234").." does not exist.")
 	__concat = function(self, value)
-		local s = sessionInfo().separator
-
 		return self.filename..value
 	end
 }
@@ -473,3 +471,4 @@ function File(data)
 
 	return data
 end
+
