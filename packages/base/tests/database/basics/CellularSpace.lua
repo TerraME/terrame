@@ -218,6 +218,13 @@ return{
 		}
 
 		unitTest:assertEquals(#cs, 100)
+
+		-- pgm file
+		cs = CellularSpace{
+			file = filePath("simple.pgm", "base")
+		}
+
+		unitTest:assertEquals(#cs, 100)
 		
 		-- csv file
 		cs = CellularSpace{file = filePath("test/simple-cs.csv", "base"), sep = ";"}

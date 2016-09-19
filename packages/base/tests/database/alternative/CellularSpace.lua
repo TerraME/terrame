@@ -35,6 +35,7 @@ return{
 			asc = true,
  			csv = true,
  			map = true,
+			pgm = true,
 			nc = true,
 			geojson = true,
  			shp = true,
@@ -53,6 +54,22 @@ return{
 			}
  		end
  		unitTest:assertError(error_func, "source and file extension should be the same.")
+
+		local pgmFile = filePath("test/error/pgm-invalid-identifier.pgm", "base")
+		error_func = function()
+ 			cs = CellularSpace{
+				file = pgmFile
+			}
+ 		end
+ 		unitTest:assertError(error_func, "File '"..pgmFile.."' does not contain the PGM identifier 'P2'.")
+
+		pgmFile = filePath("test/error/pgm-invalid-size.pgm", "base")
+		error_func = function()
+ 			cs = CellularSpace{
+				file = pgmFile
+			}
+ 		end
+ 		unitTest:assertError(error_func, "File '"..pgmFile.."' has a diffent size declared: expected '(2,2)', got '(10,10)'.")
  
  		error_func = function()
  			cs = CellularSpace{file = 2, source = "map", sep = ";"}

@@ -393,6 +393,12 @@ local function checkMap(self)
 	defaultTableValue(self, "attrname", file:name())
 end
 
+local function checkPGM(self)
+	defaultTableValue(self, "sep", " ")
+	local file = File(self.file)
+	defaultTableValue(self, "attrname", file:name())
+end
+
 local function checkShape(self)
 	local dbf = self.file:sub(1, self.file:len() - 3).."dbf"
 
@@ -499,6 +505,67 @@ local function loadMap(self)
 		end)
 		i = i + 1
 		res = file:readLine(self.sep)
+	end
+
+	self.xdim = self.xMax
+	self.ydim = self.yMax
+end
+
+local function loadPGM(self)
+	local i = 0
+	local j = 0
+
+	if self.yMin == nil then self.yMin = 100000 end
+	if self.xMin == nil then self.xMin = 100000 end
+	if self.xMax == nil then self.xMax = -self.xMin end
+	if self.yMax == nil then self.yMax = -self.yMin end
+
+	self.cells = {}
+	self.cObj_:clear()
+
+	local file = File(self.file)
+	local pgm = {}
+
+	pgm.comments = {}
+	pgm.type = file:readLine(self.sep)[1]
+
+	verify(pgm.type == "P2", "File '"..self.file.."' does not contain the PGM identifier 'P2'.")
+
+	local res = file:readLine(self.sep)
+	local len = #res
+	while len > 0 do
+		if res[1]:find("#", 1) then
+			if len > 1 then
+				local comment = res[2]
+				for i = 3, #res do
+					comment = comment.." "..res[i]
+				end
+
+				table.insert(pgm.comments, comment)
+			end
+		elseif len == 2 and not pgm.size then
+			pgm.size = {tonumber(res[1]), tonumber(res[2])}
+		elseif len == 1 and not pgm.maximumValue then
+			pgm.maximumValue = tonumber(res[1])
+		else
+			j = 0
+			forEachElement(res, function(_, value)
+				local p = Cell {x = j, y = i}
+				p[self.attrname] = tonumber(value)
+				self:add(p)
+				self.cObj_:addCell(p.x, p.y, p.cObj_)
+				j = j + 1
+			end)
+
+			i = i + 1
+		end
+
+		res = file:readLine(self.sep)
+		len = #res
+	end
+
+	if (j ~= pgm.size[1]) or (i ~= pgm.size[2]) then
+		customWarning("File '"..self.file.."' has a diffent size declared: expected '("..pgm.size[1]..","..pgm.size[2]..")', got '("..j..","..i..")'.")
 	end
 
 	self.xdim = self.xMax
@@ -724,6 +791,13 @@ registerCellularSpaceDriver{
 	optional = {"sep", "attrname"},
 	load = loadMap,
 	check = checkMap
+}
+
+registerCellularSpaceDriver{
+	source = "pgm",
+	optional = {"sep", "attrname"},
+	load = loadPGM,
+	check = checkPGM
 }
 
 registerCellularSpaceDriver{
