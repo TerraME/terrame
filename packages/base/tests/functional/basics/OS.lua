@@ -47,35 +47,25 @@ return{
 
 		local info = {
 			mode = s.mode,
-			version = s.version,
-			path = s.path,
 			round = s.round,
 			silent = s.silent
 		}
 
 		local infoMock = {
 			mode = "strict",
-			version = "3.0.0",
-			path = currentDir(),
-			round = 1,
+			round = 0.9,
 			silent = true
 		}
 
 		s.mode = infoMock.mode
-		s.version = infoMock.version
-		s.path = infoMock.path
 		s.round = infoMock.round
 		s.silent = infoMock.silent
 
 		unitTest:assertEquals(s.mode, infoMock.mode)
-		unitTest:assertEquals(s.version, infoMock.version)
-		unitTest:assertEquals(s.path, infoMock.path)
 		unitTest:assertEquals(s.round, infoMock.round)
 		unitTest:assertEquals(s.silent, infoMock.silent)
 
 		s.mode = info.mode
-		s.version = info.version
-		s.path = info.path
 		s.silent = info.silent
 		s.round = info.round
 
