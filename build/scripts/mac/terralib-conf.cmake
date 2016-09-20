@@ -20,9 +20,9 @@
 # of this software and its documentation.
 ############################################################################################
 
-message("CMAKE_INTALL_PREFIX $ENV{_TERRALIB_INSTALL_PATH}")
+message("CMAKE_INSTALL_PREFIX $ENV{_TERRALIB_INSTALL_PATH}")
 
-set(CMAKE_BUILD_TYPE=Debug CACHE STRING "Build type" FORCE)
+set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
 set(CMAKE_INSTALL_PREFIX "$ENV{_TERRALIB_INSTALL_PATH}" CACHE PATH "Where to install TerraLib?" FORCE)
 set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR};$ENV{_TERRALIB_3RDPARTY_DIR}/lib;$ENV{_TERRALIB_3RDPARTY_DIR}/include;$ENV{_TERRALIB_3RDPARTY_DIR}/gdal2;$ENV{_TERRALIB_3RDPARTY_DIR}/pgsql" CACHE PATH "Where are the dependencies of TerraLib?" FORCE)
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
 #
@@ -30,16 +30,32 @@
 # variables to reflect you environment.
 # -----------------
 # Location of the builded 3rd-parties.
-export _TERRALIB_3RDPARTY_DIR=/Users/developer/terralib/3rdparty/libs
+if [ "$_TERRALIB_3RDPARTY_DIR" == "" ]; then
+  _TERRALIB_3RDPARTY_DIR="/Users/developer/terralib/3rdparty/libs"
+fi
+export _TERRALIB_3RDPARTY_DIR="$_TERRALIB_3RDPARTY_DIR"
 echo "$_TERRALIB_3RDPARTY_DIR"
 
 # Location to install TerraLib
-export _TERRALIB_INSTALL_PATH=$(pwd)/install
+if [ "$_TERRALIB_INSTALL_PATH" == "" ]; then
+  _TERRALIB_INSTALL_PATH=$(pwd)/install
+fi
+export _TERRALIB_INSTALL_PATH="$_TERRALIB_INSTALL_PATH"
 echo "$_TERRALIB_INSTALL_PATH"
 
 # Build location (where is tha Makefile)
-export _TERRALIB_OUT_DIR=$(pwd)/build
+if [ "$_TERRALIB_OUT_DIR" == "" ]; then
+  _TERRALIB_OUT_DIR=$(pwd)/build
+fi
+export _TERRALIB_OUT_DIR="$_TERRALIB_OUT_DIR"
 echo "$_TERRALIB_OUT_DIR"
+
+# Checking source code location
+if [ "$_TERRALIB_GIT_DIR" == "" ]; then
+  _TERRALIB_GIT_DIR="../../git/terralib5"
+fi
+export _TERRALIB_GIT_DIR="$_TERRALIB_GIT_DIR"
+echo "$_TERRALIB_GIT_DIR"
 
 # -----------------
 # Configuring output folder
@@ -55,10 +71,7 @@ cd $_TERRALIB_OUT_DIR
 # -----------------
 # Calling CMake: note that we are using a release configuration and Unix Makefiles generator
 # -----------------
-cmake -G "Xcode" -C terralib-conf.cmake ./../../git/terralib5/build/cmake
+cmake -G "Xcode" -C terralib-conf.cmake $_TERRALIB_GIT_DIR/build/cmake
 
-# -----------------
-# Making TerraLib: help and translations, then build and install
-# -----------------
-#make -j4; 
-#make install;
+# Building and installing
+# cmake --build . --target install --config Release
