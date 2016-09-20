@@ -528,7 +528,7 @@ function _Gtme.executeDoc(package)
 
 				local csv 
 
-				local result, err = pcall(function() csv = File(filePath(value.file[1], package)):read(value.separator) end)
+				local result, err = pcall(function() csv = File(filePath(value.file[1], package)):readTable(value.separator) end)
 
 				if not result then
 					printError(err)

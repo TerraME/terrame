@@ -133,14 +133,14 @@ return{
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
-	read = function(unitTest)
+	readTable = function(unitTest)
 		local filename = "abc.txt"
 		local file = File(filename)
 		file:write("text...")
 		file:close()
 
 		local error_func = function()
-			file:read()
+			file:readTable()
 		end
 
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
@@ -149,7 +149,7 @@ return{
 		file = File(filename)
 
 		error_func = function()
-			file:read()
+			file:readTable()
 		end
 
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
@@ -158,7 +158,7 @@ return{
 		file = File(filePath("test/error"..s.."csv-error.csv"))
 
 		error_func = function()
-			file:read()
+			file:readTable()
 		end
 		unitTest:assertError(error_func, "Line 2 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
 	end,
@@ -179,7 +179,7 @@ return{
 
 		error_func = function()
 			file = File(filename)
-			file:read()
+			file:readTable()
 		end
 		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
 
@@ -228,7 +228,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		file = File(filePath("agents.csv", "base"))
-		file:read()
+		file:readTable()
 
 		error_func = function()
 			file:write(example)

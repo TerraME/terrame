@@ -461,7 +461,7 @@ local function loadCsv(self)
 	self.cells = {}
 	self.cObj_:clear()
 	local file = File(self.file)
-	local data = file:read(self.sep)
+	local data = file:readTable(self.sep)
 	local cellIdCounter = 0
 	for i = 1, #data do
 		cellIdCounter = cellIdCounter + 1

@@ -267,9 +267,9 @@ File_ = {
 	-- The first line of the file list the attribute names.
 	-- @arg sep A string with the separator. The default value is ','.
 	-- @usage file = File(filePath("agents.csv", "base"))
-	-- csv = file:read()
+	-- csv = file:readTable()
 	-- print(csv[1].age) -- 20
-	read = function(self, sep)
+	readTable = function(self, sep)
 		optionalArgument(1, "string", sep)
 
 		if not self.mode then

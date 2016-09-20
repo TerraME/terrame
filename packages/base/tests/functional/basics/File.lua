@@ -144,9 +144,9 @@ return{
 
 		file:delete()
 	end,
-	read = function(unitTest)
+	readTable = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
-		local csv = file:read()
+		local csv = file:readTable()
 
 		unitTest:assertEquals(4, #csv)
 		unitTest:assertEquals(20, csv[1].age)
@@ -211,7 +211,7 @@ return{
 		file:write(example)
 
 		file = File(filename)
-		local data = file:read()
+		local data = file:readTable()
 
 		unitTest:assertNotNil(data)
 		unitTest:assertEquals(#example, #data)
