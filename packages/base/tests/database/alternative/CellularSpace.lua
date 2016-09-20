@@ -60,7 +60,7 @@ return{
 				file = pgmFile
 			}
  		end
- 		unitTest:assertError(error_func, "File '"..pgmFile.."' does not contain the PGM identifier 'P2'.")
+ 		unitTest:assertError(error_func, "File '"..pgmFile.."' does not contain the PGM identifier 'P2' in its first line.")
 
 		pgmFile = filePath("test/error/pgm-invalid-size.pgm", "base")
 		error_func = function()
@@ -68,7 +68,7 @@ return{
 				file = pgmFile
 			}
  		end
- 		unitTest:assertError(error_func, "File '"..pgmFile.."' has a diffent size declared: expected '(2,2)', got '(10,10)'.")
+ 		unitTest:assertError(error_func, "File '"..pgmFile.."' has a diffent size declared: expected '(2, 2)', got '(10, 10)'.")
 
 		pgmFile = filePath("test/error/pgm-invalid-max.pgm", "base")
 		error_func = function()

@@ -491,7 +491,7 @@ local function loadPGM(self)
 	pgm.comments = {}
 	pgm.type = file:readLine(self.sep)[1]
 
-	verify(pgm.type == "P2", "File '"..self.file.."' does not contain the PGM identifier 'P2'.")
+	verify(pgm.type == "P2", "File '"..self.file.."' does not contain the PGM identifier 'P2' in its first line.")
 
 	local res = file:readLine(self.sep)
 	local len = #res
@@ -529,7 +529,7 @@ local function loadPGM(self)
 	file:close()
 
 	if (j ~= pgm.size[1]) or (i ~= pgm.size[2]) then
-		customWarning("File '"..self.file.."' has a diffent size declared: expected '("..pgm.size[1]..","..pgm.size[2]..")', got '("..j..","..i..")'.")
+		customWarning("File '"..self.file.."' has a diffent size declared: expected '("..pgm.size[1]..", "..pgm.size[2]..")', got '("..j..", "..i..")'.")
 	end
 
 	if not pgm.maximumValue then
