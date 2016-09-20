@@ -71,14 +71,13 @@ end
 -- dbVersion & A string with the current TerraLib version for databases. \
 -- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
 -- path & A string with the location of TerraME in the computer. \
--- round & A number to be used in the places where it is possible to have rounding problems.
--- This number works with Events that have period less than one. It rounds
--- the execution time of an Event that is going to be scheduled to be executed to
--- a time in the future if the difference between such time and the closest integer number
--- is less then the value of this argument. For example, an Event that starts in time one
--- and has period 0.1 might execute in time 1.999999999, as we are working with real numbers.
--- Round is then useful to make sure that such Event will be executed in time exactly two.
--- The default value is 0.00001 (1e-5). \
+-- round & A number used whenever it is possible to have rounding problems. For instance,
+-- it works with Events that have period less than one by rounding the execution time of
+-- an Event that is going to be scheduled to a future time if the difference between such
+-- time and the closest integer number is less then the value of this argument. In this case,
+-- if an Event that starts in time one and has period 0.1, it might execute in time 1.999999999,
+-- as we are working with real number. This argument is then useful to make sure that such Event
+-- will be executed in time exactly two. The default value is 1e-5. \
 -- separator & A string with the directory separator. \
 -- silent & A boolean value indicating whether print() calls should not be shown in the
 -- screen. This element is true when TerraME is executed with mode "silent". \
