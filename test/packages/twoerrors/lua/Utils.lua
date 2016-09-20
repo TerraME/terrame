@@ -518,7 +518,7 @@ end
 -- @usage sessionInfo2().version
 -- DONTRUN
 function sessionInfo2()
-	return _Gtme.info_ -- this is a global variable created when TerraME is initialized
+	return info_ -- this is a global variable created when TerraME is initialized
 end
 
 --- Return whether a string ends with a given substring (no case sensitive).

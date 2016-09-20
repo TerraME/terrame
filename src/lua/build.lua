@@ -48,7 +48,7 @@ function _Gtme.buildPackage(package, config, clean)
 		os.exit(1)
 	end)
 
-	_Gtme.info_.mode = "debug"
+	info_.mode = "debug"
 
 	if config then
 		printNote("Parsing configuration file '"..config.."'")
