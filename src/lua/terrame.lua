@@ -1171,7 +1171,7 @@ function _Gtme.execProject(project, packageName)
 end
 
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
-	info_ = { -- this variable is used by Utils:sessionInfo()
+	_Gtme.info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
 		dbVersion = "1_3_1",
 		separator = package.config:sub(1, 1),
@@ -1184,27 +1184,27 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		round = 1e-5
 	}
 
-	if info_.path == nil or info_.path == "" then
+	if _Gtme.info_.path == nil or _Gtme.info_.path == "" then
 		error("Error: TME_PATH environment variable should exist and point to TerraME installation directory.", 2)
 	end
 
 	-- Package.lua contains functions that terrame.lua needs, but should also be
 	-- documented and availeble for the final users.
-	local s = info_.separator
-	local path = info_.path..s.."packages"..s.."base"..s.."lua"..s
+	local s = _Gtme.info_.separator
+	local path = _Gtme.info_.path..s.."packages"..s.."base"..s.."lua"..s
 	dofile(path.."ErrorHandling.lua", _Gtme)
 	dofile(path.."File.lua", _Gtme)
 	dofile(path.."Directory.lua", _Gtme)
 	dofile(path.."Package.lua", _Gtme)
 	dofile(path.."OS.lua", _Gtme)
 	dofile(path.."Utils.lua", _Gtme)
-	dofile(info_.path..s.."lua"..s.."utils.lua")
-	dofile(info_.path..s.."lua"..s.."configure.lua")
+	dofile(_Gtme.info_.path..s.."lua"..s.."utils.lua")
+	dofile(_Gtme.info_.path..s.."lua"..s.."configure.lua")
 
-	info_.version = _Gtme.packageInfo().version
+	_Gtme.info_.version = _Gtme.packageInfo().version
 
 	if arguments == nil or #arguments < 1 then 
-		dofile(info_.path..s.."lua"..s.."pmanager.lua")
+		dofile(_Gtme.info_.path..s.."lua"..s.."pmanager.lua")
 		_Gtme.packageManager()
 		return true
 	end
@@ -1230,19 +1230,19 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				Chart{target = __cellEmpty}
 				clean()
 			elseif arg == "-ft" then
-				info_.fullTraceback = true
+				_Gtme.info_.fullTraceback = true
 			elseif arg == "-color" then
-				info_.color = true
+				_Gtme.info_.color = true
 			elseif arg == "-mode=normal" then
-				info_.mode = "normal"
+				_Gtme.info_.mode = "normal"
 			elseif arg == "-mode=debug" then
-				info_.mode = "debug"
+				_Gtme.info_.mode = "debug"
 			elseif arg == "-mode=quiet" then
-				info_.mode = "quiet"
+				_Gtme.info_.mode = "quiet"
 			elseif arg == "-mode=strict" then
-				info_.mode = "strict"
+				_Gtme.info_.mode = "strict"
 			elseif arg == "-silent" then
-				info_.silent = true
+				_Gtme.info_.silent = true
 				print = function() end
 			elseif string.sub(arg, 1, 6) == "-mode=" then
 				_Gtme.printError("Invalid mode '"..string.sub(arg, 7).."'.")
@@ -1256,7 +1256,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(1)
 				end
 
-				info_.package = package
+				_Gtme.info_.package = package
 				if #arguments <= argCount then
 					local models
 
@@ -1349,11 +1349,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(0)
 				end
 			elseif arg == "-test" then
-				if info_.package == nil then
-					info_.package = "base"
+				if _Gtme.info_.package == nil then
+					_Gtme.info_.package = "base"
 				end
 
-				info_.mode = "debug"
+				_Gtme.info_.mode = "debug"
 				argCount = argCount + 1
 				dofile(path.."UnitTest.lua")
 
@@ -1370,7 +1370,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				
 				os.exit(errors)
 			elseif arg == "-sketch" then
-				info_.mode = "debug"
+				_Gtme.info_.mode = "debug"
 				argCount = argCount + 1
 
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
@@ -1388,7 +1388,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.showDoc(package)
 				os.exit(0)
 			elseif arg == "-doc" then
-				info_.mode = "debug"
+				_Gtme.info_.mode = "debug"
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				local errors = 0
 				local success, result = _Gtme.myxpcall(function() errors = _Gtme.executeDoc(package) end)
@@ -1409,7 +1409,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(0)
 			elseif arg == "-autoclose" then
 				argCount = argCount + 1
-				info_.autoclose = true
+				_Gtme.info_.autoclose = true
 			elseif arg == "-build" then
 				if package == "base" then
 					_Gtme.printError("TerraME cannot be built using -build.")
@@ -1524,7 +1524,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(1)
 			end
 		else -- running a Lua script
-			if info_.mode ~= "quiet" then
+			if _Gtme.info_.mode ~= "quiet" then
 				checkNilVariables()
 			end
 
@@ -1558,7 +1558,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(1)
 			end
 
-			info_.currentFile = arg
+			_Gtme.info_.currentFile = arg
 
 			local success, result = _Gtme.myxpcall(function() dofile(arg) end) 
 			if not success then
