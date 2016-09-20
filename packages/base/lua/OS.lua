@@ -84,12 +84,12 @@ end
 -- system & A string with the operating system.
 -- @usage print(sessionInfo().mode)
 function sessionInfo()
-	local info_ = _Gtme.info_ -- this is a global variable created when TerraME is initialized
+	local info = info_ -- this is a global variable created when TerraME is initialized
 
 	local sessionInfo_ = {}
 	local metaTableSessionInfo_ = {
 		__index = function(_, idx)
-			return info_[idx]
+			return info[idx]
 		end,
 		__newindex = function(_, idx, value)
 			local readOnly = false
@@ -142,7 +142,7 @@ function sessionInfo()
 				customError("Argument '"..idx.."' is not an information about the current execution.")
 			end
 
-			info_[idx] = value
+			info[idx] = value
 		end
 	}
 
