@@ -30,9 +30,9 @@ local function separatorCheck(data)
 	local header1 = File(data.source)
 	local header2 = File(data.source)
 	local header3 = File(data.source)
-	local lineTest1 = header1:readLine("\t")
-	local lineTest2 = header2:readLine(" ")
-	local lineTest3 = header3:readLine(";")
+	local lineTest1 = header1:read("\t")
+	local lineTest2 = header2:read(" ")
+	local lineTest3 = header3:read(";")
 
 	if lineTest1[2] ~= nil and lineTest2[2] == nil or lineTest3[2] ~= nil then
 		customError("Could not read file '"..data.source.."': invalid header.")
@@ -45,7 +45,7 @@ end
 
 local function loadNeighborhoodGAL(self, data)
 	local file = File(data.source)
-	local lineTest = file:readLine(" ")
+	local lineTest = file:read(" ")
 	local layer = ""
 
 	if self.layer ~= nil then
@@ -66,7 +66,7 @@ local function loadNeighborhoodGAL(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 
-	local line = file:readLine(" ")
+	local line = file:read(" ")
 	local counterLine = 2
 
 	while #line > 0 do
@@ -76,7 +76,7 @@ local function loadNeighborhoodGAL(self, data)
 			customError("Could not find id '"..tostring(line[1]).."' in line "..counterLine..". It seems that it is corrupted.")
 		else
 			local neig = cell:getNeighborhood(data.name)
-			local lineID = file:readLine(" ")
+			local lineID = file:read(" ")
 
 			counterLine = counterLine + 1
 			for i = 1, tonumber(line[2]) do
@@ -90,7 +90,7 @@ local function loadNeighborhoodGAL(self, data)
 			end
 		end
 
-		line = file:readLine(" ")
+		line = file:read(" ")
 		counterLine = counterLine + 1
 	end
 
@@ -99,7 +99,7 @@ end
 
 local function loadNeighborhoodGPM(self, data)
 	local file = File(data.source)
-	local lineTest = file:readLine(" ")
+	local lineTest = file:read(" ")
 	local layer = ""
 
 	if self.layer ~= nil then
@@ -132,7 +132,7 @@ local function loadNeighborhoodGPM(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 
-	local line = file:readLine(" ")
+	local line = file:read(" ")
 	local counterLine = 2
 
 	while #line > 0 do
@@ -142,7 +142,7 @@ local function loadNeighborhoodGPM(self, data)
 			customError("Could not find id '"..tostring(line[i]).."' in line "..counterLine..". It seems that it is corrupted.")
 		else
 			local neig = cell:getNeighborhood(data.name)
-			local lineID = file:readLine(" ")
+			local lineID = file:read(" ")
 			local valfor = (tonumber(line[2]) * 2)
 
 			counterLine = counterLine + 1
@@ -161,7 +161,7 @@ local function loadNeighborhoodGPM(self, data)
 			end
 		end
 
-		line = file:readLine(" ")
+		line = file:read(" ")
 		counterLine = counterLine + 1
 	end
 
@@ -170,7 +170,7 @@ end
 
 local function loadNeighborhoodGWT(self, data)
 	local file = File(data.source)
-	local lineTest = file:readLine(" ")
+	local lineTest = file:read(" ")
 	local layer = ""
 
 	if self.layer ~= nil then
@@ -191,7 +191,7 @@ local function loadNeighborhoodGWT(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 
-	local line = file:readLine(" ")
+	local line = file:read(" ")
 	local counterLine = 2
 
 	while #line > 0 do
@@ -210,7 +210,7 @@ local function loadNeighborhoodGWT(self, data)
 			neig:add(n, tonumber(line[3]))
 		end
 
-		line = file:readLine(" ")
+		line = file:read(" ")
 		counterLine = counterLine + 1
 	end
 
@@ -489,21 +489,17 @@ local function loadPGM(self)
 	local pgm = {}
 
 	pgm.comments = {}
-	pgm.type = file:readLine(self.sep)[1]
+	pgm.type = file:read(self.sep)[1]
 
 	verify(pgm.type == "P2", "File '"..self.file.."' does not contain the PGM identifier 'P2' in its first line.")
 
-	local res = file:readLine(self.sep)
+	local res = file:read(self.sep)
 	local len = #res
 	while len > 0 do
 		if res[1]:find("#", 1) then
 			if len > 1 then
-				local comment = res[2]
-				for k = 3, #res do
-					comment = comment.." "..res[k]
-				end
-
-				table.insert(pgm.comments, comment)
+				table.remove(res, 1)
+				table.insert(pgm.comments, table.concat(res, " "))
 			end
 		elseif len == 2 and not pgm.size then
 			pgm.size = {tonumber(res[1]), tonumber(res[2])}
@@ -522,7 +518,7 @@ local function loadPGM(self)
 			i = i + 1
 		end
 
-		res = file:readLine(self.sep)
+		res = file:read(self.sep)
 		len = #res
 	end
 

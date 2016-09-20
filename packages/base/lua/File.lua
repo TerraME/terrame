@@ -262,6 +262,37 @@ File_ = {
 			return fopen
 		end
 	end,
+	--- Read a line from the file. It stores the position
+	-- of the line internally in case of some error occur. Therefore no line number
+	-- will be used as argument for this function.
+	--- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
+	-- This function was taken from http://lua-users.org/wiki/LuaCsv.
+	-- @arg sep A string with the separator. The default value is ','.
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- line = file:read()
+	-- print(line[1])
+	-- print(line[2])
+	-- print(line[3])
+	read = function(self, sep)
+		optionalArgument(1, "string", sep)
+
+		if not self.mode then
+			self.line = 1
+			self.file = self:open("r")
+		elseif self.mode ~= "r" then
+			customError("Cannot read a file opened for writing.")
+		end
+
+		local data = {}
+		local line = self.file:read()
+
+		if line then
+			data = parseLine(line, sep, self.line)
+			self.line = self.line + 1
+		end
+
+		return data
+	end,
 	--- Read a file. It returns a vector (whose indexes are line numbers)
 	-- containing named tables (whose indexes are attribute names).
 	-- The first line of the file list the attribute names.
@@ -300,37 +331,6 @@ File_ = {
 		end
 
 		self:close()
-
-		return data
-	end,
-	--- Read a line from the file. It stores the position
-	-- of the line internally in case of some error occur. Therefore no line number
-	-- will be used as argument for this function.
-	--- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
-	-- This function was taken from http://lua-users.org/wiki/LuaCsv.
-	-- @arg sep A string with the separator. The default value is ','.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- line = file:readLine()
-	-- print(line[1])
-	-- print(line[2])
-	-- print(line[3])
-	readLine = function(self, sep)
-		optionalArgument(1, "string", sep)
-
-		if not self.mode then
-			self.line = 1
-			self.file = self:open("r")
-		elseif self.mode ~= "r" then
-			customError("Cannot read a file opened for writing.")
-		end
-
-		local data = {}
-		local line = self.file:read()
-
-		if line then
-			data = parseLine(line, sep, self.line)
-			self.line = self.line + 1
-		end
 
 		return data
 	end,

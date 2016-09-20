@@ -114,7 +114,7 @@ return{
 	end,
 	open = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
-		file:readLine()
+		file:read()
 
 		local error_func = function()
 			file:open()
@@ -132,6 +132,36 @@ return{
 			file:open("r")
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
+	end,
+	read = function(unitTest)
+		local s = sessionInfo().separator
+		local filename = currentDir()..s.."csvwrite.csv"
+		local csv = {
+			{name = "\"ab\"c"}
+		}
+
+		local file = File(filename)
+		file:write(csv)
+
+		local error_func = function()
+			file:read()
+		end
+		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
+
+		error_func = function()
+			file = File(filename)
+			file:readTable()
+		end
+		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
+
+		file:close()
+		if File(filename):exists() then File(filename):delete() end
+
+		file = File(filePath("agents.csv", "base"))
+		error_func = function()
+			file:read(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	readTable = function(unitTest)
 		local filename = "abc.txt"
@@ -161,36 +191,6 @@ return{
 			file:readTable()
 		end
 		unitTest:assertError(error_func, "Line 2 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
-	end,
-	readLine = function(unitTest)
-		local s = sessionInfo().separator
-		local filename = currentDir()..s.."csvwrite.csv"
-		local csv = {
-			{name = "\"ab\"c"}
-		}
-
-		local file = File(filename)
-		file:write(csv)
-
-		local error_func = function()
-			file:readLine()
-		end
-		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
-
-		error_func = function()
-			file = File(filename)
-			file:readTable()
-		end
-		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
-
-		file:close()
-		if File(filename):exists() then File(filename):delete() end
-
-		file = File(filePath("agents.csv", "base"))
-		error_func = function()
-			file:readLine(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	touch = function(unitTest)
 		local file = File("abc.txt")

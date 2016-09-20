@@ -144,21 +144,21 @@ return{
 
 		file:delete()
 	end,
+	read = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		file:read()
+		local line = file:read()
+
+		unitTest:assertEquals(line[1], "john")
+		unitTest:assertEquals(line[2], "20")
+		unitTest:assertEquals(line[3], "200")
+	end,
 	readTable = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
 		local csv = file:readTable()
 
 		unitTest:assertEquals(4, #csv)
 		unitTest:assertEquals(20, csv[1].age)
-	end,
-	readLine = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
-		file:readLine()
-		local line = file:readLine()
-
-		unitTest:assertEquals(line[1], "john")
-		unitTest:assertEquals(line[2], "20")
-		unitTest:assertEquals(line[3], "200")
 	end,
 	split = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
