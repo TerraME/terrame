@@ -175,7 +175,8 @@ return{
 			local pathdata = packageInfo().data.."testfile.txt"
 
 			local file = File(pathdata)
-			file:writeLine("test")
+			file:write("test")
+			file:close()
 
 			unitTest:assert(file:touch(10000, 10000)) -- SKIP
 
@@ -206,8 +207,7 @@ return{
 
 		local s = sessionInfo().separator
 		local filename = currentDir()..s.."csvwrite.csv"
-
-		local file = File(filename)
+		local file = File("csvwrite.csv")
 		file:write(example)
 
 		file = File(filename)
@@ -222,24 +222,21 @@ return{
 			end
 		end
 
-		if File(filename):exists() then File(filename):delete() end
-	end,
-	writeLine = function(unitTest)
-		local example = "Some text.."
+		if file:exists() then file:delete() end
 
-		local s = sessionInfo().separator
-		local filename = currentDir()..s.."abc.txt"
+		example = "Some text.."
+		filename = currentDir()..s.."abc.txt"
 
-		local file = File(filename)
-		file:writeLine(example)
+		file = File(filename)
+		file:write(example)
 		file:close()
 
-		file = io.open(filename, "r")
-		local text = file:read("*all")
+		file = File(filename):open()
+		data = file:read("*all")
 		file:close()
 
-		unitTest:assertNotNil(text)
-		unitTest:assertEquals(text, example)
+		unitTest:assertNotNil(data)
+		unitTest:assertEquals(data, example)
 
 		if File(filename):exists() then File(filename):delete() end
 	end,

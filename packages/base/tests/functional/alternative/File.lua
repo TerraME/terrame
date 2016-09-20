@@ -136,14 +136,15 @@ return{
 	read = function(unitTest)
 		local filename = "abc.txt"
 		local file = File(filename)
-		file:writeLine("text...")
+		file:write("text...")
+		file:close()
 
 		local error_func = function()
 			file:read()
 		end
 
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
-		if File(filename):exists() then File(filename):delete() end
+		if file:exists() then file:delete() end
 
 		file = File(filename)
 
@@ -268,16 +269,6 @@ return{
 		end
 		unitTest:assertError(error_func, "All attributes should be string, got number.")
 
-	end,
-	writeLine = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
-		file:read()
-
-		local error_func = function()
-			file:writeLine("Text")
-		end
-
-		unitTest:assertError(error_func, "Cannot write a file opened for reading.")
 	end
 }
 

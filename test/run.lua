@@ -186,7 +186,7 @@ forEachOrderedElement(commands, function(idx, group)
 			report.createdlogs = report.createdlogs + 1
 
 			forEachElement(result, function(_, value)
-				logfile:writeLine(_Gtme.makePathCompatibleToAllOS(value).."\n")
+				logfile:write(_Gtme.makePathCompatibleToAllOS(value).."\n")
 			end)
 		else
 			logfile:open()
@@ -194,7 +194,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 			forEachElement(result, function(_, value)
 				value = _Gtme.makePathCompatibleToAllOS(value)
-				resultfile:writeLine(value.."\n")
+				resultfile:write(value.."\n")
 			end)
 			
 			local line = 1
@@ -352,7 +352,7 @@ forEachOrderedElement(commands, function(idx, group)
 			report.createdlogs = report.createdlogs + 1
 
 			forEachElement(result, function(_, value)
-				logfile:writeLine(value.."\n")
+				logfile:write(value.."\n")
 			end)
 		else
 			logfile:open()
@@ -360,7 +360,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 			forEachElement(result, function(_, value)
 				value = _Gtme.makePathCompatibleToAllOS(value)
-				resultfile:writeLine(value.."\n")
+				resultfile:write(value.."\n")
 			end)
 			
 			local line = 1

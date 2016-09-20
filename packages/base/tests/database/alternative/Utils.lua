@@ -36,7 +36,7 @@ return{
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file:name(true)))
 
-		file:writeLine("!!#$@12334")
+		file:write("!!#$@12334")
 		file:close()
 		error_func = function()
 			table.load(tostring(file))
@@ -44,7 +44,7 @@ return{
 		unitTest:assertError(error_func, "Failed to load file dump.lua:1: unexpected symbol near '!'", 110)
 
 		file = File("dump.lua")
-		file:writeLine("local x = 2")
+		file:write("local x = 2")
 		file:close()
 		error_func = function()
 			table.load(tostring(file))
