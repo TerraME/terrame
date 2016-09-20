@@ -490,7 +490,7 @@ end
 -- screen. This parameter is set true when TerraME is executed with mode "silent".
 -- @usage sessionInfo2().version
 function sessionInfo2()
-	return _Gtme.info_ -- this is a global variable created when TerraME is initialized
+	return info_ -- this is a global variable created when TerraME is initialized
 end
 
 --- Return whether a string ends with a given substring (no case sensitive).
