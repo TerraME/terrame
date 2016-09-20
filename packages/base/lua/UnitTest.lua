@@ -114,7 +114,6 @@ UnitTest_ = {
 				end
 
 				if tempstr ~= "" then v1 = tempstr end
-
 			end
 
 			local dist = levenshtein(v1, v2)
@@ -180,8 +179,8 @@ UnitTest_ = {
 				return
 			end
 
-			shortError = string.gsub(shortError,":[0-9]*: ", "")
-			shortError = string.gsub(shortError,"%s+[0-9]+:", "")
+			shortError = string.gsub(shortError,":[0-9]*: ", "", 1)
+			shortError = string.gsub(shortError,"%s+[0-9]+:", "", 1)
 
 			local start = shortError:sub(1, 7)
 
@@ -229,18 +228,18 @@ UnitTest_ = {
 
 		mandatoryArgument(1, "string", fname)
 
-		if isDir(fname) then
+		if Directory(fname):exists() then
 			self.fail = self.fail + 1
 			self:printError("It is not possible to use a directory as #1 for assertFile().")
 			return
-		elseif not isFile(fname) then
+		elseif not File(fname):exists() then
 			self.fail = self.fail + 1
 			self:printError(resourceNotFoundMsg(1, fname))
 			return
 		end
 
 		if not self.log then
-			rmFile(fname)
+			File(fname):delete()
 			customError("It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
 		end
 
@@ -254,20 +253,20 @@ UnitTest_ = {
 		if self.tlogs[fname] then
 			self.fail = self.fail + 1
 			self:printError("Log file '"..fname.."' is used in more than one assert.")
-			rmFile(fname)
+			File(fname):delete()
 			return
 		end
 
 		self.tlogs[fname] = true
 
 		if not self.tmpdir then
-			self.tmpdir = tmpDir(".terrametmp_XXXXX") -- SKIP
+			self.tmpdir = Directory{tmp = true}.name -- SKIP
 		end
 
 		os.execute("cp \""..fname.."\" \""..self.tmpdir.."\"")
-		rmFile(fname)
+		File(fname):delete()
 
-		if isFile(fname) then
+		if File(fname):exists() then
 			self.fail = self.fail + 1 -- SKIP
 			self:printError("Could not remove file '"..fname.."'.")
 			return
@@ -277,7 +276,7 @@ UnitTest_ = {
 		local pkg = sessionInfo().package
 		local oldLog = packageInfo(pkg).path..s.."log"..s..self.log..s..fname
 
-		if not isFile(oldLog) then
+		if not File(oldLog):exists() then
 			if not self.created_logs then -- SKIP
 				self.created_logs = 0 -- SKIP
 			end
@@ -377,7 +376,7 @@ UnitTest_ = {
 		self.tlogs[file] = true
 
 		if not self.tmpdir then
-			self.tmpdir = tmpDir(".terrametmp_XXXXX") -- SKIP
+			self.tmpdir = Directory{tmp = true}.name -- SKIP
 		end
 
 		local newImage = self.tmpdir..s..file
@@ -385,7 +384,7 @@ UnitTest_ = {
 		local pkg = sessionInfo().package
 		local oldImage = packageInfo(pkg).path..s.."log"..s..self.log..s..file
 
-		if not isFile(oldImage) then
+		if not File(oldImage):exists() then
 			observer:save(oldImage) -- SKIP
 
 			if not self.created_logs then -- SKIP

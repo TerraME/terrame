@@ -4,29 +4,10 @@ Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Found 1 extra functions in the documentation
+Found 3 extra functions in the documentation
 Skip looking for lines of source code
-Testing tests/database/alternative/Assert.lua
-Testing getConfig
-Checking if all asserts were executed
-Testing tests/database/alternative/Cell.lua
-Testing area
-Checking if all asserts were executed
-Testing tests/database/alternative/CellularSpace.lua
-Testing CellularSpace
-Testing loadNeighborhood
-Testing save
-Checking if all asserts were executed
-Testing tests/database/alternative/Environment.lua
-Testing loadNeighborhood
-Checking if all asserts were executed
-Testing tests/database/alternative/Society.lua
-Testing Society
-Checking if all asserts were executed
-Testing tests/database/alternative/Utils.lua
-Testing CSVparseLine
-Testing CSVread
-Testing CSVwrite
+Testing tests/internal/alternative/terrame.lua
+Testing verifyVersionDependency
 Checking if all asserts were executed
 Testing tests/observer/alternative/Agent.lua
 Testing notify
@@ -45,11 +26,14 @@ Testing tests/observer/alternative/Clock.lua
 Testing Clock
 Testing save
 Checking if all asserts were executed
+Testing tests/observer/alternative/Environment.lua
+Testing Environment
+Checking if all asserts were executed
 Testing tests/observer/alternative/InternetSender.lua
 Testing InternetSender
 Checking if all asserts were executed
-Testing tests/observer/alternative/LogFile.lua
-Testing LogFile
+Testing tests/observer/alternative/Log.lua
+Testing Log
 Checking if all asserts were executed
 Testing tests/observer/alternative/Map.lua
 Testing Map
@@ -59,12 +43,12 @@ Testing tests/observer/alternative/Society.lua
 Testing notify
 Checking if all asserts were executed
 Testing tests/observer/alternative/TextScreen.lua
-Testing save
 Testing TextScreen
+Testing save
 Checking if all asserts were executed
 Testing tests/observer/alternative/VisualTable.lua
-Testing save
 Testing VisualTable
+Testing save
 Checking if all asserts were executed
 Skipping source code functions check
 Skipping lines of source code check
@@ -72,22 +56,21 @@ Skipping examples
 Skipping logs check
 
 Functional test report for package 'base':
-Tests were executed in 56.86 seconds.
-Logs were saved in '.terrametmp_prpfE'.
+Tests were executed in 38.34 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 242 asserts were executed successfully.
-All 26 tested functions do not have any unexpected execution error.
-All 26 tested functions have at least one assert.
-All 26 tested functions exist in the source code of the package.
+All 188 asserts were executed successfully.
+All 18 tested functions do not have any unexpected execution error.
+All 18 tested functions have at least one assert.
+All 18 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
 No source code functions were verified.
 No lines from the source code were verified.
 No examples were executed.
-No new log file was created.
-All log files were used in the tests.
+No log test was executed.
 Summing up, all tests were successfully executed.

@@ -10,12 +10,12 @@ Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking Spline.lua
 Skipping lines of source code check
-Skipping snapthots check
 Testing examples
 Testing SimpleSpline
+Skipping logs check
 
-Unit test report:
-Tests were executed in 0.65 seconds.
+Functional test report for package 'sci':
+Tests were executed in 1.19 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -27,9 +27,9 @@ All 2 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
 All 2 functions of the package were tested.
 No lines from the source code were verified.
-No snapshot test was executed.
 All 1 examples were successfully executed.
-No new log file was created.
+No log test was executed.
 Summing up, all tests were successfully executed.

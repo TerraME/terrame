@@ -38,7 +38,6 @@ print("print when loading")
 function belong2(value, values)
 	if false then
 		a = 3
-		bb = 5
 	end
 
 	if _Gtme.type(values) ~= "table" then
@@ -266,7 +265,7 @@ end
 -- DONTRUN
 function forEachFile2(directory, f)
 	if type(directory) == "string" then
-		directory = dir(directory)
+		directory = Directory(directory):list()
 	end
 
 	mandatoryArgument(1, "table", directory)

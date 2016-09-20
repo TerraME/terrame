@@ -32,15 +32,15 @@ return{
 		unitTest:assert(not belong("e", mvector))
 	end,
 	call = function(unitTest)
-		local cont = 0
-		local a = Agent{map = function() cont = cont + 1 end}
+		local count = 0
+		local a = Agent{map = function() count = count + 1 end}
 
 		local t = Timer{
 			Event{action = call(a, "map")}
 		}
 
 		t:run(10)
-		unitTest:assertEquals(cont, 10)
+		unitTest:assertEquals(count, 10)
 	end,
 	clone = function(unitTest)
 		local animal = {
@@ -294,7 +294,7 @@ return{
 		unitTest:assertEquals(count, 3)
 	end,
 	forEachFile = function(unitTest)
-		if not _Gtme.isWindowsOS() then
+		if _Gtme.sessionInfo().system ~= "windows" then
 			local count = 0
 			local r
 
@@ -307,7 +307,7 @@ return{
 			unitTest:assertEquals(count, 29) -- SKIP
 
 			local count2 = 0
-			forEachFile(dir(filePath("", "base"), true), function()
+			forEachFile(Directory(filePath("", "base")):list(true), function()
 				count2 = count2 + 1
 			end)
 
@@ -461,55 +461,71 @@ return{
 		local list = {aaB = "aaB", aAB = "aAB", aab = "aab", aAb = "aAb", aaBa = "aaBa", aa = "aa"}
 		local result = {"aAB", "aAb", "aa", "aaB", "aaBa", "aab"}
 
-		local cont = 0
+		local count = 0
 		local r
 		r = forEachOrderedElement(list, function(idx, value, mtype)
-			cont = cont + 1
-			unitTest:assertEquals(mtype, type(result[cont]))
+			count = count + 1
+			unitTest:assertEquals(mtype, type(result[count]))
 
-			unitTest:assertEquals(idx, result[cont])
-			unitTest:assertEquals(value, result[cont])
+			unitTest:assertEquals(idx, result[count])
+			unitTest:assertEquals(value, result[count])
 		end)
 
 		unitTest:assert(r)
-		unitTest:assertEquals(cont, #result)
+		unitTest:assertEquals(count, #result)
 
 		list = {[1] = 1, [3] = 3, [2] = 2, a = "a", A = "A", b = "b", c = "c"}
 		result = {1, 2, 3, "A", "a", "b", "c"}
 
-		cont = 0
+		count = 0
 		r = forEachOrderedElement(list, function(idx, value, mtype)
-			cont = cont + 1
-			unitTest:assertEquals(mtype, type(result[cont]))
+			count = count + 1
+			unitTest:assertEquals(mtype, type(result[count]))
 
-			unitTest:assertEquals(idx, result[cont])
-			unitTest:assertEquals(value, result[cont])
+			unitTest:assertEquals(idx, result[count])
+			unitTest:assertEquals(value, result[count])
 		end)
 
 		unitTest:assert(r)
-		unitTest:assertEquals(cont, #result)
+		unitTest:assertEquals(count, #result)
 
-		cont = 0
+		count = 0
 		r = forEachOrderedElement(list, function()
-			cont = cont + 1
+			count = count + 1
 			return false
 		end)
 
 		unitTest:assert(not r)
-		unitTest:assertEquals(cont, 1)
+		unitTest:assertEquals(count, 1)
 
 		list = {cObj = 1, cPbj = 2, cell = 3, cells = 4, cem = 5, value1 = 6, value2 = 7}
 		result = {1, 2, 3, 4, 5, 6, 7}
 
-		cont = 0
+		count = 0
 		r = forEachOrderedElement(list, function(_, value, _)
-			cont = cont + 1
+			count = count + 1
 
-			unitTest:assertEquals(value, result[cont])
+			unitTest:assertEquals(value, result[count])
 		end)
 
 		unitTest:assert(r)
-		unitTest:assertEquals(cont, #result)
+		unitTest:assertEquals(count, #result)
+
+		local files = {
+			["lua/Tube.lua"]    = 1,
+			["lua/Tube2.lua"]   = 2,
+			["lua/Utils.lua"]   = 3,
+			["lua/Utils2m.lua"] = 4,
+			["lua/Utilsm.lua"]  = 5,
+			["lua/Utilsm2.lua"] = 6
+		}
+
+		count = 1
+
+		forEachOrderedElement(files, function(_, value)
+			unitTest:assertEquals(value, count)
+			count = count + 1
+		end)
 	end,
 	forEachSocialNetwork = function(unitTest)
 		local a1 = Agent{id = "111"}
@@ -940,12 +956,6 @@ return{
 	round = function(unitTest)
 		unitTest:assertEquals(round(5.22), 5)
 		unitTest:assertEquals(round(5.2235, 3), 5.224)
-	end,
-	sessionInfo = function(unitTest)
-		local s = sessionInfo()
-
-		unitTest:assertEquals(s.mode, "debug")
-		unitTest:assertEquals(s.version, packageInfo().version)
 	end,
 	["string.endswith"] = function(unitTest)
 		unitTest:assert(string.endswith("abcdef", "def"))

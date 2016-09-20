@@ -3,13 +3,13 @@ Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Found 1 extra functions in the documentation
+Found 3 extra functions in the documentation
 Skip looking for lines of source code
 Skipping directory tests/database/alternative
 Testing tests/functional/alternative/Agent.lua
+Testing Agent
 Testing add
 Testing addSocialNetwork
-Testing Agent
 Testing die
 Testing enter
 Testing execute
@@ -21,6 +21,7 @@ Testing leave
 Testing message
 Testing move
 Testing notify
+Testing on_message
 Testing randomWalk
 Testing reproduce
 Testing setId
@@ -36,18 +37,19 @@ Skipping examples
 Skipping logs check
 
 Functional test report for package 'base':
-Tests were executed in 11.05 seconds.
+Tests were executed in 7.18 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 47 asserts were executed successfully.
-All 19 tested functions do not have any unexpected execution error.
-All 19 tested functions have at least one assert.
-All 19 tested functions exist in the source code of the package.
+All 52 asserts were executed successfully.
+All 20 tested functions do not have any unexpected execution error.
+All 20 tested functions have at least one assert.
+All 20 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
 No source code functions were verified.
 No lines from the source code were verified.
 No examples were executed.

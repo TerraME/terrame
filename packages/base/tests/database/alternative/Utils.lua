@@ -32,24 +32,24 @@ return{
 		local file = File("dump.lua")
 
 		error_func = function()
-			table.load(file:getNameWithExtension())
+			table.load(file:name(true))
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file:getNameWithExtension()))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file:name(true)))
 
 		file:writeLine("!!#$@12334")
 		error_func = function()
-			table.load(file:getPath())
+			table.load(tostring(file))
 		end
-		unitTest:assertError(error_func, "Failed to load file '"..file:getNameWithExtension().."': dump.luaunexpected symbol near '!'")
+		unitTest:assertError(error_func, "Failed to load file dump.lua:1: unexpected symbol near '!'", 110)
 
 		file = File("dump.lua")
 		file:writeLine("local x = 2")
 		error_func = function()
-			table.load(file:getPath())
+			table.load(tostring(file))
 		end
-		unitTest:assertError(error_func, "File '"..file:getPath().."' does not contain a Lua table.")
+		unitTest:assertError(error_func, "File '"..tostring(file).."' does not contain a Lua table.")
 
-		if isFile(file:getPath()) then rmFile(file:getPath()) end
+		if file:exists() then file:delete() end
 	end,
 	["table.save"] = function(unitTest)
 		local error_func = function()

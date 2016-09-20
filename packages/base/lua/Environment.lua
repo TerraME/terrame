@@ -393,7 +393,7 @@ Environment_ = {
 	-- to Cell b loaded from the file, it will also create
 	-- a relation from b to a. The default value is false.
 	-- @usage river = CellularSpace{
-	--     file = filePath("River_lin.shp")
+	--     file = filePath("river.shp")
 	-- }
 	--
 	-- emas = CellularSpace{
@@ -416,7 +416,7 @@ Environment_ = {
 
 		defaultTableValue(data, "bidirect", false)
 
-		if not isFile(data.source) then
+		if not File(data.source):exists() then
 			resourceNotFoundError("source", data.source)
 		end
 

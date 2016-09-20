@@ -1,4 +1,4 @@
 Error: attempt to perform arithmetic on a nil value (field 'w')
 Stack traceback:
-    File trace-model.lua, line 20, in second order function, in operator + (addition)
-    File trace-model.lua, line 19, in call to function 'forEachModel'
+    File scripts/trace-model.lua, line 20, in second order function
+    File scripts/trace-model.lua, line 19, in call to function 'forEachModel'

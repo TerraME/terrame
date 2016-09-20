@@ -30,8 +30,8 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if isFile(proj.file) then
-			rmFile(proj.file)
+		if File(proj.file):exists() then
+			File(proj.file):delete()
 		end	
 		
 		tl:createProject(proj, {})
@@ -93,7 +93,7 @@ return {
 		unitTest:assertError(overwritePgError, "The table 'ogrgeojson' already exists in postgis database 'postgis_22_sample'.")
 		
 		tl:dropPgTable(pgData)		
-		rmFile(toData.file)
-		rmFile(proj.file)
+		File(toData.file):delete()
+		File(proj.file):delete()
 	end
 }

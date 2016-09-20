@@ -34,7 +34,7 @@ end
 local function isSourceConsistent(source, filePath)
 	if filePath ~= nil then
 		local file = File(filePath)
-		return source == file:getExtension()
+		return source == file:extension()
 	end
 	
 	return true
@@ -74,7 +74,7 @@ local function addCellularLayer(self, data)
 			end	
 		else
 			local file = File(data.file)
-			local source = file:getExtension()
+			local source = file:extension()
 			data.source = source	
 		end
 	end
@@ -82,7 +82,7 @@ local function addCellularLayer(self, data)
 	-- if isEmpty(data.source) then
 		-- mandatoryTableArgument(data, "file", "string")	
 		-- local file = File(data.file)
-		-- local source = file:getExtension()
+		-- local source = file:extension()
 		-- data.source = source
 	-- else
 		-- mandatoryTableArgument(data, "source", "string")
@@ -130,9 +130,9 @@ local function addCellularLayer(self, data)
 												"resolution", "file", "source", "index"})
 			end
 				
-			if isFile(data.file) then
+			if File(data.file):exists() then
 				if data.clean then
-					rmFile(data.file)
+					File(data.file):delete()
 				else
 					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
 				end
@@ -194,13 +194,12 @@ local function addLayer(self, data)
 		
 	if isEmpty(data.source) then		
 		if not isEmpty(data.file) then
-			if not isFile(data.file) then
-				--customError("The layer file'"..data.file.."' not found.")
-				mandatoryTableArgument(data, "source", "string")
+			if not File(data.file):exists() then
+				customError("File '"..data.file.."' does not exist.")
 			end	
 
 			local file = File(data.file)
-			data.source = file:getExtension()
+			data.source = file:extension()
 		end
 	end
 		
@@ -704,7 +703,7 @@ Layer_ = {
 	export = function(self, data, overwrite)
 		if type(data) == "string" then 
 			local file = File(data) -- TODO(#1366): the file needs validation
-			local source = file:getExtension()
+			local source = file:extension()
 			if isValidSource(source) then
 				local toData = {}
 				toData.file = data			
@@ -812,7 +811,7 @@ function Layer(data)
 	mandatoryTableArgument(data, "name", "string")
 
 	if type(data.project) == "string" then
-		if not isFile(data.project) then
+		if not File(data.project):exists() then
 			customError("Project file '"..data.project.."' does not exist.")
 		end
 

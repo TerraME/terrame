@@ -1,24 +1,24 @@
 Loading configuration file 'config/twoFiles.lua'
-Using log directory 'log/mac'
+Using log directory 'log/linux'
 Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Found 1 extra functions in the documentation
+Found 3 extra functions in the documentation
 Skip looking for lines of source code
 Skipping directory tests/database/alternative
 Skipping directory tests/database/basics
 Testing tests/functional/alternative/Event.lua
-Testing config
 Testing Event
+Testing config
 Checking if all asserts were executed
 Testing tests/functional/alternative/Jump.lua
 Testing Jump
 Checking if all asserts were executed
 Testing tests/functional/basics/Event.lua
+Testing Event
 Testing __tostring
 Testing config
-Testing Event
 Testing getParent
 Testing getPeriod
 Testing getPriority
@@ -41,19 +41,20 @@ Skipping examples
 Skipping logs check
 
 Functional test report for package 'base':
-Tests were executed in 7 seconds.
-Logs were saved in '.terrametmp_NTcLC'.
+Tests were executed in 6.2 seconds.
+Logs were saved in '.terrametmp_mKtaP'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 60 asserts were executed successfully.
+All 63 asserts were executed successfully.
 All 12 tested functions do not have any unexpected execution error.
 All 12 tested functions have at least one assert.
 All 12 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
 All 8 functions of the package were tested.
 No lines from the source code were verified.
 No examples were executed.

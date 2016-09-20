@@ -1,67 +1,96 @@
 Building documentation for package 'ca'
 Loading package 'ca'
 Parsing 'data.lua'
+Processing lua files
 Checking directory 'data'
+Checking properties of data files
 Package 'ca' has no fonts
 Parsing lua files
 Parsing lua/Anneal.lua
-Parsing lua/CellularAutomataModel.lua
+Parsing lua/DaisyWorld.lua
+Parsing lua/Excitable.lua
 Parsing lua/Fire.lua
+Parsing lua/Growth.lua
 Parsing lua/Life.lua
 Parsing lua/LifePatterns.lua
+Parsing lua/Oscillator.lua
+Parsing lua/Parasit.lua
+Parsing lua/Parity.lua
+Parsing lua/Snow.lua
+Parsing lua/SolidDiffusion.lua
 Parsing lua/Utils.lua
 Parsing lua/Wolfram.lua
 Parsing examples
-Parsing examples/excitable.lua
-Parsing examples/growth.lua
-Parsing examples/oscillator.lua
-Parsing examples/parasit.lua
-Parsing examples/parity.lua
-Parsing examples/snow.lua
+No examples were found.
 Checking undocumented files
 Checking @usage definition
 Checking lua/Anneal.lua
-Checking lua/CellularAutomataModel.lua
+Checking lua/DaisyWorld.lua
+Checking lua/Excitable.lua
 Checking lua/Fire.lua
+Checking lua/Growth.lua
 Checking lua/Life.lua
 Checking lua/LifePatterns.lua
+Checking lua/Oscillator.lua
+Checking lua/Parasit.lua
+Checking lua/Parity.lua
+Checking lua/Snow.lua
+Checking lua/SolidDiffusion.lua
 Checking lua/Utils.lua
 Checking lua/Wolfram.lua
 Testing @usage
 Testing file lua/Anneal.lua
-Testing file lua/CellularAutomataModel.lua
-Testing CellularAutomataModel
+Testing file lua/DaisyWorld.lua
+Testing file lua/Excitable.lua
 Testing file lua/Fire.lua
+Testing file lua/Growth.lua
 Testing file lua/Life.lua
 Testing file lua/LifePatterns.lua
 Testing getLife
 Testing insertPattern
+Testing file lua/Oscillator.lua
+Testing file lua/Parasit.lua
+Testing file lua/Parity.lua
+Testing file lua/Snow.lua
+Testing file lua/SolidDiffusion.lua
 Testing file lua/Utils.lua
 Testing countNeighbors
 Testing file lua/Wolfram.lua
 Checking calls to functions in @usage
 Checking lua/Anneal.lua
-Checking lua/CellularAutomataModel.lua
+Checking lua/DaisyWorld.lua
+Checking lua/Excitable.lua
 Checking lua/Fire.lua
+Checking lua/Growth.lua
 Checking lua/Life.lua
 Checking lua/LifePatterns.lua
+Checking lua/Oscillator.lua
+Checking lua/Parasit.lua
+Checking lua/Parity.lua
+Checking lua/Snow.lua
+Checking lua/SolidDiffusion.lua
 Checking lua/Utils.lua
 Checking lua/Wolfram.lua
 Checking undocumented arguments
 Checking lua/Anneal.lua
-Checking lua/CellularAutomataModel.lua
+Checking lua/DaisyWorld.lua
+Checking lua/Excitable.lua
 Checking lua/Fire.lua
+Checking lua/Growth.lua
 Checking lua/Life.lua
 Checking lua/LifePatterns.lua
+Checking lua/Oscillator.lua
+Checking lua/Parasit.lua
+Checking lua/Parity.lua
+Checking lua/Snow.lua
+Checking lua/SolidDiffusion.lua
 Checking lua/Utils.lua
 Checking lua/Wolfram.lua
 Checking 'description.lua'
 Building and checking HTML files
 Building doc/index.html
-Building doc/files/CellularAutomataModel.html
 Building doc/files/LifePatterns.html
 Building doc/files/Utils.html
-Building doc/files/examples.html
 Building doc/files/data.html
 Building doc/files/font.html
 Building doc/files/models.html
@@ -72,24 +101,31 @@ Checking examples
 Checking if all images are used
 Checking if all functions are documented
 Checking Anneal.lua
-Checking CellularAutomataModel.lua
+Checking DaisyWorld.lua
+Checking Excitable.lua
 Checking Fire.lua
-Checking Life.lua
+Checking Growth.lua
 Checking LifePatterns.lua
+Checking Life.lua
+Checking Oscillator.lua
+Checking Parasit.lua
+Checking Parity.lua
+Checking Snow.lua
+Checking SolidDiffusion.lua
 Checking Utils.lua
 Checking Wolfram.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 6.66 seconds.
-7 HTML files were created.
+Documentation report for package 'ca':
+Documentation was built in 0.46 seconds.
+5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
-All 4 Models are correctly documented.
-All 4 global functions of the package are documented.
+All 12 Models are correctly documented.
+All 3 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
@@ -99,11 +135,11 @@ No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 4 functions call themselves in their @usage.
-All 4 functions do not have any error in their @usage.
+All 3 functions call themselves in their @usage.
+All 3 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
-All 6 examples are correctly documented.
+All 0 examples are correctly documented.
 Summing up, all the documentation was successfully built.

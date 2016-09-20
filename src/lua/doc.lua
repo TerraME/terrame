@@ -59,11 +59,11 @@ local function imageFiles(package)
 	local s = sessionInfo().separator
 	local imagepath = packageInfo(package).path..s.."images"
 
-	if not isDir(imagepath) then
+	if not Directory(imagepath):exists() then
 		return {}
 	end
 
-	local files = dir(imagepath)
+	local files = Directory(imagepath):list()
 	local result = {}
 
 	forEachElement(files, function(_, fname)
@@ -77,11 +77,11 @@ end
 local function dataFiles(package)
 	local datapath = packageInfo(package).data
 
-	if not isDir(datapath) then
+	if not Directory(datapath):exists() then
 		return {}
 	end
 
-	local files = dir(datapath)
+	local files = Directory(datapath):list()
 	local result = {}
 
 	forEachElement(files, function(_, fname)
@@ -109,13 +109,22 @@ local function getProjects(package)
 	end
 
 	local tl = getPackage("terralib")
+	local createdFiles = {}
 
 	Project = function(data)
 		currentProject = data.file
+
+		if createdFiles[data.file] then
+			printError("File '"..data.file.."' is created more than once.")
+			project_report.errors_output = project_report.errors_output + 1	
+		else
+			createdFiles[data.file] = true
+		end
+
 		projects[currentProject] = {description = data.description}
 
 		forEachOrderedElement(data, function(idx, value)
-			if idx ~= "file" and type(value) == "string" and isFile(value) then
+			if idx ~= "file" and type(value) == "string" and File(value):exists() then
 				local layer = tl.Layer{
 					project = filePath(currentProject, "terralib"),
 					name = idx
@@ -147,7 +156,7 @@ local function getProjects(package)
 				description = description.."."
 
 				projects[currentProject][idx] = {
-					file = File(value):getNameWithExtension(),
+					file = File(value):name(true),
 					description = description
 				}
 			end
@@ -161,12 +170,7 @@ local function getProjects(package)
 			if not self.file then return nil end
 
 			if not layers[self.file] then 
-				layers[self.file] = 
-				{
-					attributes = {},
-					description = {},
-					types = {}
-				}
+				layers[self.file] = {attributes = {}}
 			end
 
 			local description = "Operation "..data.operation
@@ -196,29 +200,20 @@ local function getProjects(package)
 				forEachElement(layer:attributes(), function(_, mvalue)
 					if string.sub(mvalue, 1, string.len(data.attribute)) == data.attribute then
 						local v = string.sub(mvalue, string.len(data.attribute) + 2)
-						table.insert(layers[self.file].attributes, mvalue) 
-						table.insert(layers[self.file].description, description.. " using value "..v..".") 
-						table.insert(layers[self.file].types, "number")
+						layers[self.file].attributes[mvalue] = {
+							description = description.. " using value "..v..".",
+							types = "number"
+						}
 					end
 				end)
 			else
 				description = description.."."
 
-				table.insert(layers[self.file].attributes, data.attribute) 
-				table.insert(layers[self.file].description, description) 
-				table.insert(layers[self.file].types, "number")
+				layers[self.file].attributes[data.attribute] = {
+					description = description,
+					type = "number"
+				}
 			end
-				--[[			table.insert(layers[self.name].attribute = 
-
-			projects[currentProject][self.name].attributes[data.attribute] = {
-				band = data.band,
-				area = data.area,
-				default = data.default,
-				layer = data.layer,
-				operation = data.operation,
-				select = data.select
-			}
-			--]]
 		end
 	}
 
@@ -228,7 +223,14 @@ local function getProjects(package)
 		if data.resolution and data.file then
 			local mfile = data.file
 
-			if not isFile(mfile) then
+			if createdFiles[mfile] then
+				printError("File '"..mfile.."' is created more than once.")
+				project_report.errors_output = project_report.errors_output + 1	
+			else
+				createdFiles[mfile] = true
+			end
+
+			if not File(mfile):exists() then
 				mfile = filePath(mfile, "terralib")
 			end
 
@@ -257,9 +259,7 @@ local function getProjects(package)
 					summary = "Automatically created file with "..description..
 						", in project <a href = \"#"..currentProject.."\">"..currentProject.."</a>.",
 					shortsummary = "Automatically created file in project \""..currentProject.."\".",
-					attributes = {},
-					description = {},
-					types = {}
+					attributes = {}
 				}
 			end
 
@@ -269,7 +269,7 @@ local function getProjects(package)
 		return data
 	end
 	
-	sessionInfo().mode = "normal" -- #1100, #813
+	sessionInfo().mode = "quiet"
 	printNote("Processing lua files")
 	forEachFile(data_path, function(file)
 		if string.endswith(file, ".lua") then
@@ -286,7 +286,7 @@ local function getProjects(package)
 	local output = {}
 	local allLayers = {}
 
-	-- we need to execute this separately to guarantee that the output will be alphabetically ordered
+	-- we need to execute this separately to guarantee that the outputs will be alphabetically ordered
 	forEachOrderedElement(projects, function(idx, proj)
 		local luaFile = string.sub(idx, 1, -6).."lua"
 		local shortsummary = "Automatically created TerraView project file"
@@ -352,7 +352,7 @@ function _Gtme.executeDoc(package)
 		os.exit(1)
 	end)
 
-	local lua_files = dir(package_path..s.."lua")
+	local lua_files = Directory(package_path..s.."lua"):list()
 
 	local example_files = _Gtme.findExamples(package)
 
@@ -395,46 +395,51 @@ function _Gtme.executeDoc(package)
 	local filesdocumented = {}
 	local df = dataFiles(package)
 
-	if isFile(package_path..s.."data.lua") and #df > 0 then
+	sessionInfo().mode = "strict"
+
+	if File(package_path..s.."data.lua"):exists() and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
-			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "description", "reference"})
+			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "reference"})
 			doc_report.error_data = doc_report.error_data + count
 
-			if type(tab.file)        == "string" then tab.file = {tab.file} end
-			if type(tab.attributes)  == "string" then tab.attributes = {tab.attributes} end
-			if type(tab.description) == "string" then tab.description = {tab.description} end
+			if type(tab.file) == "string" then tab.file = {tab.file} end
 
 			local mverify = {
 				{"mandatoryTableArgument", "file",        "table"},
 				{"mandatoryTableArgument", "summary",     "string"},
 				{"mandatoryTableArgument", "source",      "string"},
-				{"optionalTableArgument",  "file",        "table"},
 				{"optionalTableArgument",  "image",       "string"},
 				{"optionalTableArgument",  "attributes",  "table"},
-				{"optionalTableArgument",  "description", "table"},
 				{"optionalTableArgument",  "reference",   "string"},
 				{"optionalTableArgument",  "separator",   "string"}
 			}
 
-			if tab.attributes or tab.description then
-				if tab.attributes  == nil then tab.attributes  = {} end
-				if tab.description == nil then tab.description = {} end
+			if tab.attributes then
+				local attributes = {}
+				local counter = 0
 
-				local verifySize = function()
-					local ds = "Different sizes in the documentation: "
-
-					if #tab.attributes ~= #tab.description then
-						customError(ds.."'attributes' ("..#tab.attributes..") and 'description' ("..#tab.description..").")
+				forEachElement(tab.attributes, function(idx, value)
+					if type(idx) ~= "string" then
+						counter = counter + 1
+						return
 					end
-				end
 
-				xpcall(verifySize, function(err)
-					doc_report.error_data = doc_report.error_data + 1
-					tab.attributes = {"_incompatible_"}
-					printError(err)
+					if type(value) ~= "string" then
+						printError("In the documentation of '"..tab.file[1].."', description of attribute '"..idx.."' should be string, got "..type(value)..".")
+						value = ""
+						doc_report.error_data = doc_report.error_data + 1
+					end
+
+					attributes[idx] = {description = value}
 				end)
 
+				if counter > 0 then
+					printError("In the documentation of '"..tab.file[1].."', all names should be string, got "..counter.." invalid names.")
+					doc_report.error_data = doc_report.error_data + counter
+				end
+
+				tab.attributes = attributes
 			end
 
 			-- it is necessary to implement this way in order to get the line number of the error
@@ -512,8 +517,6 @@ function _Gtme.executeDoc(package)
 		idx = 1
 
 		forEachElement(mdata, function(_, value)
-			value.types = {}
-			
 			if string.endswith(value.file[1], ".csv") then
 				print("Processing '"..value.file[1].."'")
 
@@ -533,22 +536,21 @@ function _Gtme.executeDoc(package)
 					return
 				end
 
-
-				if value.attributes  == nil then value.attributes  = {} end
-				if value.description == nil then value.description = {} end
+				if value.attributes == nil then value.attributes = {} end
 
 				forEachElement(value.attributes, function(idx, mvalue)
-					value.types[idx] = type(csv[1][mvalue])
+					mvalue.type = type(csv[1][idx])
 				end)
 
 				forEachElement(csv[1], function(idx, mvalue)
-					if not belong(idx, value.attributes) then
+					if not value.attributes[idx] then
 						doc_report.error_data = doc_report.error_data + 1
 						printError("Attribute '"..idx.."' is not documented.")
 
-						table.insert(value.attributes, idx)
-						table.insert(value.description, "<font color=\"red\">undefined</font>")
-						table.insert(value.types, type(mvalue))
+						value.attributes[idx] = {
+							description = "<font color=\"red\">undefined</font>",
+							type = type(mvalue)
+						}
 					end
 				end)
 
@@ -567,33 +569,37 @@ function _Gtme.executeDoc(package)
 
 				local attributes = layer:attributes()
 
-				if value.attributes  == nil then value.attributes  = {} end
-				if value.description == nil then value.description = {} end
+				if value.attributes == nil then value.attributes = {} end
 
 				forEachElement(attributes, function(_, mvalue)
-					if not belong(mvalue, value.attributes) then
+					if not value.attributes[mvalue] then
 						if mvalue == "FID" then
-							table.insert(value.attributes, mvalue)
-							table.insert(value.description, "Unique identifier (internal value).")
+							value.attributes[mvalue] = {
+								description = "Unique identifier (internal value)."
+							}
 						elseif mvalue == "id" then
-							table.insert(value.attributes, mvalue)
-							table.insert(value.description, "Unique identifier (internal value).")
+							value.attributes[mvalue] = {
+								description = "Unique identifier (internal value)."
+							}
 						elseif mvalue == "col" then
-							table.insert(value.attributes, mvalue)
-							table.insert(value.description, "Cell's column.")
+							value.attributes[mvalue] = {
+								description = "Cell's column."
+							}
 						elseif mvalue == "row" then
-							table.insert(value.attributes, mvalue)
-							table.insert(value.description, "Cell's row.")
+							value.attributes[mvalue] = {
+								description = "Cell's row."
+							}
 						else
 							printError("Attribute '"..mvalue.."' is not documented.")
 							doc_report.error_data = doc_report.error_data + 1
-							table.insert(value.attributes, mvalue)
-							table.insert(value.description, "<font color=\"red\">undefined</font>")
+							value.attributes[mvalue] = {
+								description = "<font color=\"red\">undefined</font>"
+							}
 						end
 					end
 				end)
 
-				forEachElement(value.attributes, function(_, mvalue)
+				forEachElement(value.attributes, function(mvalue)
 					if not belong(mvalue, attributes) then
 						doc_report.error_data = doc_report.error_data + 1
 						printError("Attribute '"..mvalue.."' is documented but does not exist in the file.")
@@ -605,7 +611,7 @@ function _Gtme.executeDoc(package)
 				}
 				
 				forEachElement(value.attributes, function(idx, mvalue)
-					value.types[idx] = type(cs.cells[1][mvalue])
+					mvalue.type = type(cs.cells[1][idx])
 				end)
 
 				value.quantity = #cs
@@ -624,34 +630,62 @@ function _Gtme.executeDoc(package)
 				value.projection = layer:projection()
 				value.bands = layer:bands()
 
-				if value.attributes  == nil then value.attributes  = {} end
-				if value.description == nil then value.description = {} end
+				if value.attributes  == nil then value.attributes = {} end
 
 				for i = 0, value.bands - 1 do
-					if not belong(tostring(i), value.attributes) then
+					if not value.attributes[tostring(i)] then
 						printError("Band "..i.." is not documented.")
 						doc_report.error_data = doc_report.error_data + 1
-						table.insert(value.attributes, tostring(i))
-						table.insert(value.description, "<font color=\"red\">undefined</font>")
+						value.attributes[tostring(i)] = {
+							description = "<font color=\"red\">undefined</font>"
+						}
 					end
 				end
 
-				forEachElement(value.attributes, function(_, mvalue)
-					if tonumber(mvalue) < 0 or tonumber(mvalue) >= value.bands then
+				forEachElement(value.attributes, function(idx)
+					if tonumber(idx) < 0 or tonumber(idx) >= value.bands then
 						doc_report.error_data = doc_report.error_data + 1
-						printError("Band "..mvalue.." is documented but does not exist in the file.")
+						printError("Band "..idx.." is documented but does not exist in the file.")
 					end
 				end)
 
-				forEachElement(value.attributes, function(idx)
-					value.types[idx] = "number"
+				forEachElement(value.attributes, function(_, mvalue)
+					mvalue.type = "number"
 				end)
 
 				idx = idx + 1
 			end
 		end)
 
-		rmFile("tmpproj.tview")
+		File("tmpproj.tview"):delete()
+
+		-- convert attributes from
+		-- {
+		--		attribute1 = {type = ..., description = ...},
+		--		attribute2 = {type = ..., description = ...},
+		--		attribute3 = {type = ..., description = ...}
+		-- }
+		-- into tables
+		-- {
+		--     attributes = {...},
+		--     types = {...},
+		--     description = {...}
+		-- }
+		forEachElement(mdata, function(_, value)
+			if not value.attributes then return end
+
+			local attributes = value.attributes
+
+			value.attributes = {}
+			value.types = {}
+			value.description = {}
+
+			forEachOrderedElement(attributes, function(idx, mvalue)
+				table.insert(value.attributes, idx)
+				table.insert(value.description, mvalue.description)
+				table.insert(value.types, mvalue.type)
+			end)
+		end)
 
 		forEachOrderedElement(df, function(_, mvalue)	
 			if _Gtme.ignoredFile(mvalue) then
@@ -665,7 +699,7 @@ function _Gtme.executeDoc(package)
 		end)
 
 		forEachOrderedElement(df, function(_, mvalue)
-			if isDir(package_path..s.."data"..s..mvalue) then
+			if Directory(package_path..s.."data"..s..mvalue):exists() then
 				return
 			end
 
@@ -687,14 +721,14 @@ function _Gtme.executeDoc(package)
 		printNote("Checking directory 'data'")
 		printError("Package has data files but data.lua does not exist")
 		forEachElement(df, function(_, mvalue)
-			if isDir(package_path..s.."data"..s..mvalue) then
+			if Directory(package_path..s.."data"..s..mvalue):exists() then
 				return
 			end
 
 			printError("File '"..mvalue.."' is not documented")
 			doc_report.error_data = doc_report.error_data + 1
 		end)
-	elseif isFile(package_path..s.."data.lua") then
+	elseif File(package_path..s.."data.lua"):exists() then
 		printError("Package '"..package.."' has data.lua but there is no data")
 		doc_report.error_data = doc_report.error_data + 1
 	else
@@ -705,7 +739,7 @@ function _Gtme.executeDoc(package)
 	local fontsdocumented = {}
 	df = _Gtme.fontFiles(package)
 
-	if isFile(package_path..s.."font.lua") and #df > 0 then
+	if File(package_path..s.."font.lua"):exists() and #df > 0 then
 		printNote("Parsing 'font.lua'")
 		font = function(tab)
 			local count = verifyUnnecessaryArguments(tab, {"name", "file", "summary", "source", "symbol"})
@@ -765,13 +799,15 @@ function _Gtme.executeDoc(package)
 			os.exit(1)
 		end)
 
+		sessionInfo().mode = "debug"
+
 		table.sort(mfont, function(a, b)
 			return a.file < b.file
 		end)
 
 		printNote("Checking directory 'font'")
 		forEachOrderedElement(df, function(_, mvalue)
-			if isDir(package_path..s.."font"..s..mvalue) then
+			if Directory(package_path..s.."font"..s..mvalue):exists() then
 				return
 			end
 
@@ -795,7 +831,7 @@ function _Gtme.executeDoc(package)
 		forEachElement(df, function(_, mvalue)
 			local license = string.sub(mvalue, 0, -5)..".txt"
 
-			if not isFile(package_path..s.."font"..s..license) then
+			if not File(package_path..s.."font"..s..license):exists() then
 				printError("License file '"..license.."' for font '"..mvalue.."' does not exist")
 				doc_report.error_font = doc_report.error_font + 1
 			end
@@ -807,7 +843,7 @@ function _Gtme.executeDoc(package)
 			printError("File '"..mvalue.."' is not documented")
 			doc_report.error_font = doc_report.error_font + 1
 		end)
-	elseif isFile(package_path..s.."font.lua") then
+	elseif File(package_path..s.."font.lua"):exists() then
 		printError("Package '"..package.."' has font.lua but there are no fonts")
 		doc_report.error_font = doc_report.error_font + 1
 	else
@@ -816,7 +852,7 @@ function _Gtme.executeDoc(package)
 
 	local result = luadocMain(package_path, lua_files, example_files, package, mdata, mfont, doc_report)
 
-	if isDir(package_path..s.."font") then
+	if Directory(package_path..s.."font"):exists() then
 		local cmd = "cp "..package_path..s.."font"..s.."* "..package_path..s.."doc"..s.."files"
 		cmd = _Gtme.makePathCompatibleToAllOS(cmd)
 		os.execute(cmd)
@@ -899,7 +935,7 @@ function _Gtme.executeDoc(package)
 	forEachOrderedElement(all_functions, function(idx, value)
 		print("Checking "..idx)
 		forEachOrderedElement(value, function(midx)
-			if midx == "__len" or midx == "__tostring" then return end -- TODO: think about this kind of function
+			if belong(midx, {"__len", "__tostring", "__concat"}) then return end -- TODO: think about this kind of function
 
 			if not result.files[idx] or not result.files[idx].functions[midx] and 
 			  (not result.files[idx].models or not result.files[idx].models[midx]) then
@@ -940,7 +976,7 @@ function _Gtme.executeDoc(package)
 			end)
 
 			forEachOrderedElement(documentedArguments, function(midx)
-				if not args[midx] and midx ~= "named" then
+				if args[midx] == nil and midx ~= "named" then
 					printError("Model '"..modelName.."' does not have documented argument '"..midx.."'")
 					doc_report.model_error = doc_report.model_error + 1
 				end

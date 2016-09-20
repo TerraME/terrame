@@ -27,8 +27,8 @@ return {
         local projName = "asc_basic.tview"
 
 
-        if isFile(projName) then
-            rmFile(projName)
+        if File(projName):exists() then
+            File(projName):delete()
         end
 
         local proj = Project {
@@ -46,8 +46,8 @@ return {
 
         local filePath1 = "biomassa_cells_asc_basic.shp"
 
-        if isFile(filePath1) then
-            rmFile(filePath1)
+        if File(filePath1):exists() then
+            File(filePath1):delete()
         end
 
         local clName1 = "Biomassa_Cells"
@@ -65,19 +65,19 @@ return {
         unitTest:assertEquals(cl1.source, "shp")
         unitTest:assertEquals(cl1.file, _Gtme.makePathCompatibleToAllOS(currentDir() .. "/" .. filePath1))
 
-        if isFile(filePath1) then
-            rmFile(filePath1)
+        if File(filePath1):exists() then
+            File(filePath1):delete()
         end
 
-        if isFile(projName) then
-            rmFile(projName)
+        if File(projName):exists() then
+            File(projName):delete()
         end
     end,
     representation = function(unitTest)
         local projName = "cellular_layer_fill_asc_repr.tview"
 
-        if isFile(projName) then
-            rmFile(projName)
+        if File(projName):exists() then
+            File(projName):delete()
         end
 
         local proj = Project {
@@ -94,15 +94,15 @@ return {
 
         unitTest:assertEquals(l:representation(), "raster")
 
-        if isFile(projName) then
-            rmFile(projName)
+        if File(projName):exists() then
+            File(projName):delete()
         end
     end,
     bands = function(unitTest)
         local projName = "cellular_layer_fill_asc_repr.tview"
 
-        if isFile(projName) then
-            rmFile(projName)
+        if File(projName):exists() then
+            File(projName):delete()
         end
 
         local proj = Project {
@@ -119,15 +119,15 @@ return {
 
         unitTest:assertEquals(l:bands(), 1)
 
-        if isFile(projName) then
-            rmFile(projName)
+        if File(projName):exists() then
+            File(projName):delete()
         end
     end,
     __tostring = function(unitTest)
         local projName = "cellular_layer_print_asc.tview"
 
-        if isFile(projName) then
-            rmFile(projName)
+        if File(projName):exists() then
+            File(projName):delete()
         end
 
         local proj = Project {
@@ -153,8 +153,8 @@ source   string [asc]
         unitTest:assertEquals(tostring(l), expected, 36, true)
         -- unitTest:assertFile(projName) -- SKIP #1301
 
-        if isFile(projName) then
-            rmFile(projName)
+        if File(projName):exists() then
+            File(projName):delete()
         end
     end
 }

@@ -10,6 +10,7 @@ test = {
 	twofiles       = {arg = "-test", config = "twoFiles.lua"},
 	twotest        = {arg = "-test", config = "twoTests.lua"},
 	twodirectories = {arg = "-test", config = "twoDirectories.lua"},
+	memory         = {arg = "-test", package = "memory"},
 	pattern        = {arg = "-test", config = "pattern.lua"},
 	noload         = {arg = "-test", package = "noload"},
 	nolog          = {arg = "-test", config = "log.lua"},
@@ -30,7 +31,6 @@ package = {
 }
 
 doc = {
-	doc             = {arg = "-doc"},
 	noload          = {arg = "-doc", package = "noload"},
 	onerror         = {arg = "-doc", package = "onerror"},
 	twoerrors       = {arg = "-doc", package = "twoerrors"},
@@ -90,9 +90,10 @@ basic = {
 	traceelement        = {script = "trace-element.lua"},
 	traceorderedelement = {script = "trace-ordered-element.lua"},
 	tracefile           = {script = "trace-file.lua"},
-	tracelayer          = {script = "trace-layer.lua"},
+	tracelayer          = {script = "trace-layer.lua", arg = "-mode=quiet"},
 	tracemodel          = {script = "trace-model.lua"},
 	traceneighbor       = {script = "trace-neighbor.lua"},
+	traceneighagent     = {script = "trace-neighagent.lua"},
 	traceneighborhood   = {script = "trace-neighborhood.lua"},
 	traceself           = {script = "trace-self.lua"},
 	tracesocialnetwork  = {script = "trace-social-network.lua"},
@@ -101,7 +102,7 @@ basic = {
 	depend2             = {arg = "-build", package = "depend2"},
 	scriptdir           = {arg = packageInfo().path},
 	scriptnofile        = {arg = "abcd1234.lua"},
-	scriptnoluafile     = {arg = filePath("simple-cs.csv")},
+	scriptnoluafile     = {arg = filePath("agents.csv")},
 	tmp                 = {script = "tmp.lua"}
 }
 

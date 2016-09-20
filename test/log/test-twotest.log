@@ -1,10 +1,10 @@
 Loading configuration file 'config/twoTests.lua'
-Using log directory 'log/mac'
+Using log directory 'log/linux'
 Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Found 1 extra functions in the documentation
+Found 3 extra functions in the documentation
 Skip looking for lines of source code
 Skipping tests/database/alternative/Assert.lua
 Skipping tests/database/alternative/Cell.lua
@@ -22,24 +22,22 @@ Skipping tests/functional/alternative/Automaton.lua
 Skipping tests/functional/alternative/Cell.lua
 Skipping tests/functional/alternative/CellularSpace.lua
 Skipping tests/functional/alternative/Choice.lua
+Skipping tests/functional/alternative/Directory.lua
 Skipping tests/functional/alternative/Environment.lua
 Skipping tests/functional/alternative/ErrorHandling.lua
 Testing tests/functional/alternative/Event.lua
 Testing Event
 Skip checking asserts
-Skipping tests/functional/alternative/FileSystem.lua
+Skipping tests/functional/alternative/File.lua
 Testing tests/functional/alternative/Flow.lua
 Testing Flow
 Skip checking asserts
 Skipping tests/functional/alternative/Group.lua
 Skipping tests/functional/alternative/Jump.lua
 Skipping tests/functional/alternative/Mandatory.lua
-Testing tests/functional/alternative/Memory.lua
-Testing Event
-Testing Flow
-Skip checking asserts
 Skipping tests/functional/alternative/Model.lua
 Skipping tests/functional/alternative/Neighborhood.lua
+Skipping tests/functional/alternative/OS.lua
 Skipping tests/functional/alternative/Package.lua
 Skipping tests/functional/alternative/Random.lua
 Skipping tests/functional/alternative/SocialNetwork.lua
@@ -54,18 +52,20 @@ Skipping tests/functional/basics/Automaton.lua
 Skipping tests/functional/basics/Cell.lua
 Skipping tests/functional/basics/CellularSpace.lua
 Skipping tests/functional/basics/Choice.lua
+Skipping tests/functional/basics/Directory.lua
 Skipping tests/functional/basics/Environment.lua
 Skipping tests/functional/basics/ErrorHandling.lua
 Testing tests/functional/basics/Event.lua
 Testing Event
 Skip checking asserts
-Skipping tests/functional/basics/FileSystem.lua
+Skipping tests/functional/basics/File.lua
 Skipping tests/functional/basics/Flow.lua
 Skipping tests/functional/basics/Group.lua
 Skipping tests/functional/basics/Jump.lua
 Skipping tests/functional/basics/Mandatory.lua
 Skipping tests/functional/basics/Model.lua
 Skipping tests/functional/basics/Neighborhood.lua
+Skipping tests/functional/basics/OS.lua
 Skipping tests/functional/basics/Package.lua
 Skipping tests/functional/basics/Random.lua
 Skipping tests/functional/basics/SocialNetwork.lua
@@ -83,8 +83,9 @@ Skipping tests/observer/alternative/Cell.lua
 Skipping tests/observer/alternative/CellularSpace.lua
 Skipping tests/observer/alternative/Chart.lua
 Skipping tests/observer/alternative/Clock.lua
+Skipping tests/observer/alternative/Environment.lua
 Skipping tests/observer/alternative/InternetSender.lua
-Skipping tests/observer/alternative/LogFile.lua
+Skipping tests/observer/alternative/Log.lua
 Skipping tests/observer/alternative/Map.lua
 Skipping tests/observer/alternative/Society.lua
 Skipping tests/observer/alternative/TextScreen.lua
@@ -99,7 +100,7 @@ Testing tests/observer/basics/Event.lua
 Testing Event
 Skip checking asserts
 Skipping tests/observer/basics/InternetSender.lua
-Skipping tests/observer/basics/LogFile.lua
+Skipping tests/observer/basics/Log.lua
 Skipping tests/observer/basics/Map.lua
 Skipping tests/observer/basics/Model.lua
 Skipping tests/observer/basics/Society.lua
@@ -114,19 +115,20 @@ Skipping examples
 Skipping logs check
 
 Functional test report for package 'base':
-Tests were executed in 6.32 seconds.
-Logs were saved in '.terrametmp_WgRYu'.
+Tests were executed in 5.09 seconds.
+Logs were saved in '.terrametmp_TxjDZ'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 Execution of all asserts was not verified.
-All 237 asserts were executed successfully.
-All 6 tested functions do not have any unexpected execution error.
-All 6 tested functions have at least one assert.
-All 6 tested functions exist in the source code of the package.
+All 40 asserts were executed successfully.
+All 4 tested functions do not have any unexpected execution error.
+All 4 tested functions have at least one assert.
+All 4 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
 No source code functions were verified.
 No lines from the source code were verified.
 No examples were executed.

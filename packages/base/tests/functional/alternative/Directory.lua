@@ -23,61 +23,58 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	LogFile = function(unitTest)
-		local c = Cell{value = 5}
-
+	Directory = function(unitTest)
 		local error_func = function()
-			LogFile(2)
+			Directory()
+		end
+		unitTest:assertError(error_func, tableArgumentMsg())
+
+		error_func = function()
+			Directory(1)
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
-			LogFile{}
+			Directory("abc\"")
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
-
-		local e = Event{action = function() end}
-		error_func = function()
-			LogFile{target = e}
-		end
-		unitTest:assertError(error_func, "Invalid type. LogFile only works with Cell, CellularSpace, Agent, and Society.")
+		unitTest:assertError(error_func, "Directory name 'abc\"' cannot contain character '\"'.")
 
 		error_func = function()
-			LogFile{target = c, select = 5}
+			Directory{}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 5))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("name"))
 
 		error_func = function()
-			LogFile{target = c, overwrite = 5}
+			Directory{name = 1}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("overwrite", "boolean", 5))
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
 
 		error_func = function()
-			LogFile{target = c, select = "mvalue"}
+			Directory{
+				name = ".tmp_XXXXX",
+				tmpd = true
+			}
 		end
-		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("tmpd", "tmp"))
 
 		error_func = function()
-			LogFile{target = c, select = {}}
+			Directory{tmpd = true}
 		end
-		unitTest:assertError(error_func, "LogFile must select at least one attribute.")
-
-		error_func = function()
-			LogFile{target = c, file = 2}
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("tmpd", "tmp"))
+	end,
+	attributes = function(unitTest)
+		local dir = Directory("/my/path/my_dir")
+		local error_func = function()
+			dir:attributes(1)
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
-
-		error_func = function()
-			LogFile{target = c, separator = 2}
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
+	delete = function(unitTest)
+		local dir = Directory("abc123456")
+		local error_func = function()
+			dir:delete()
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("separator", "string", 2))
-
-		local unit = Cell{}
-
-		error_func = function()
-			LogFile{target = unit}
-		end
-		unitTest:assertError(error_func, "The target does not have at least one valid attribute to be used.")
+		unitTest:assertError(error_func, resourceNotFoundMsg("directory", tostring(dir)))
 	end
 }
 

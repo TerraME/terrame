@@ -1,2 +1,2 @@
 log = getConfig().log
-directory = {"observer/alternative", "database/alternative"}
+directory = {"observer/alternative", "internal/alternative"}

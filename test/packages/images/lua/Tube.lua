@@ -1,6 +1,5 @@
 
 --- Water in the Tube model. It contains a TubeCell, a TubeTimer, and a TubeChart.
--- @arg data.numRuns Number of simulation steps of the model.
 -- @arg data.initialWater Initial amount of water in the tube.
 -- @arg data.flow Amount of water that flows out of the tube.
 -- @arg data.observingStep Time interval to observe the amount of water along the simulation.

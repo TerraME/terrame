@@ -43,7 +43,7 @@ local function testdirectories(directory, ut)
 					found_file = true
 					table.insert(result, mdirectory)
 				end
-			elseif attributes(directory..s..mdirectory..s..value, "mode") == "directory" then
+			elseif _Gtme.File(directory..s..mdirectory..s..value):attributes("mode") == "directory" then
 				lf(mdirectory..s..value)
 				found_directory = true
 			else
@@ -150,12 +150,12 @@ local function buildLineTable(package)
 	local load_file = baseDir..s.."load.lua"
 	local load_sequence
 
-	if isFile(load_file) then
+	if File(load_file):exists() then
 		-- the 'include' below does not need to be inside a xpcall because
 		-- the package was already loaded with success
 		load_sequence = _Gtme.include(load_file).files
 	else
-		local dir = dir(baseDir..s.."lua")
+		local dir = Directory(baseDir..s.."lua"):list()
 		load_sequence = {}
 		forEachElement(dir, function(_, mfile)
 			if string.endswith(mfile, ".lua") then
@@ -242,7 +242,7 @@ function _Gtme.executeTests(package, fileName)
 
 		if data.log ~= nil then
 			local location = packageInfo(package).path..s.."log"..s..data.log
-			if isDir(location) then
+			if Directory(location):exists() then
 				printNote("Using log directory 'log"..s..data.log.."'")
 			else
 				customError("Log directory '"..location.."' does not exist.")
@@ -328,7 +328,7 @@ function _Gtme.executeTests(package, fileName)
 
 	local baseDir = packageInfo(package).path
 
-	doc_functions = luadocMain(baseDir, dir(baseDir..s.."lua"), {}, package, {}, {}, {}, true)
+	doc_functions = luadocMain(baseDir, Directory(baseDir..s.."lua"):list(), {}, package, {}, {}, {}, true)
 
 	printNote("Looking for package functions")
 	testfunctions = _Gtme.buildCountTable(package)
@@ -342,7 +342,8 @@ function _Gtme.executeTests(package, fileName)
 			testfunctions[idx] = {}
 		end
 		forEachElement(value.functions, function(midx)
-			if midx == "#" then midx = "__len" end
+			if midx == "#"  then midx = "__len"    end
+			if midx == ".." then midx = "__concat" end
 
 			if type(midx) ~= "string" then return end
 			if testfunctions[idx][midx] == nil then
@@ -356,7 +357,7 @@ function _Gtme.executeTests(package, fileName)
 		printNote("Found "..extra.." extra functions in the documentation")
 	end
 
-	if not isDir(baseDir..s.."tests") then
+	if not Directory(baseDir..s.."tests"):exists() then
 		printError("Directory 'tests' does not exist in package '"..package.."'")
 		printError("Please run 'terrame -package "..package.." -sketch' to create test files.")
 		os.exit(1)
@@ -425,13 +426,13 @@ function _Gtme.executeTests(package, fileName)
 
 	local filesDir = {}
 
-	forEachFile(_Gtme.dir("."), function(file)
+	forEachFile(_Gtme.Directory("."):list(), function(file)
 		filesDir[file] = true
 	end)
 
 	-- For each test in each file in each directory, execute the test
 	forEachElement(data.directory, function(_, eachDirectory)
-		local dirFiles = dir(baseDir..s..eachDirectory)
+		local dirFiles = Directory(baseDir..s..eachDirectory):list()
 
 		if dirFiles == nil then return end
 
@@ -439,24 +440,24 @@ function _Gtme.executeTests(package, fileName)
 		if type(data.file) == "table" then
 			forEachElement(dirFiles, function(_, value)
 				forEachElement(data.file, function(_, mfile)
-					if string.match(value, mfile) and not belong(value, myFiles) then
-						table.insert(myFiles, value)
+					if string.match(value, mfile) and not myFiles[value] then
+						myFiles[value] = true
 					end
 				end)
 			end)
 		else -- nil
 			forEachElement(dirFiles, function(_, value)
 				if string.endswith(value, ".lua") then
-					table.insert(myFiles, value)
+					myFiles[value] = true
 				end
 			end)
 		end
 
-		if #myFiles == 0 then
+		if getn(myFiles) == 0 then
 			printWarning("Skipping directory ".._Gtme.makePathCompatibleToAllOS(eachDirectory))
 		end
 
-		for _, eachFile in ipairs(myFiles) do
+		forEachOrderedElement(myFiles, function(eachFile)
 			ut.current_file = eachDirectory..s..eachFile
 			local tests
 
@@ -517,7 +518,7 @@ function _Gtme.executeTests(package, fileName)
 			if #myTests == 0 then
 				printWarning("Skipping ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
 			elseif not printTesting then
-					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+				printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
 			end
 
 			local function trace(_, line)
@@ -532,7 +533,7 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				if data.lines and short == eachFile and not string.match(ss, "tests") then
-					if executionlines[eachFile] then	
+					if executionlines[eachFile] then
 						if executionlines[eachFile][line] then
 							executionlines[eachFile][line] = executionlines[eachFile][line] + 1
 						end
@@ -591,7 +592,7 @@ function _Gtme.executeTests(package, fileName)
 
 				print = _Gtme.print
 
-				forEachFile(_Gtme.dir("."), function(file)
+				forEachFile(_Gtme.Directory("."):list(), function(file)
 					if filesDir[file] == nil then
 						printError("File '"..file.."' was created along the test.")
 						filesDir[file] = true
@@ -673,7 +674,7 @@ function _Gtme.executeTests(package, fileName)
 					end)
 				end
 			end
-		end
+		end)
 	end) 
 
 	if ut.test == 0 and not data.examples then
@@ -811,7 +812,7 @@ function _Gtme.executeTests(package, fileName)
 					io.close(logfile)
 
 					if ut.log == nil then
-						rmFile(value..".log")
+						File(value..".log"):delete()
 						printError("Error: It is not possible to test examples with print() without a configuration file pointing a log directory.")
 						os.exit(1)
 					end
@@ -820,7 +821,7 @@ function _Gtme.executeTests(package, fileName)
 					local success = ut.success
 					local fail = ut.fail 
 
-					if isFile(value..".log") then
+					if File(value..".log"):exists() then
 						ut:assertFile(value..".log")
 					else
 						printError("Error: Could not find log file "..value..".log. Possibly the example is handling temporary folders in a wrong way.")
@@ -844,7 +845,7 @@ function _Gtme.executeTests(package, fileName)
 
 	if ut.logs > 0 and check_logs then
 		printNote("Checking logs")
-		local mdir = dir(packageInfo(package).path..s.."log"..s..ut.log)
+		local mdir = Directory(packageInfo(package).path..s.."log"..s..ut.log):list()
 
 		forEachElement(mdir, function(_, value)
 			if not ut.tlogs[value] then
