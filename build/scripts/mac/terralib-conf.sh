@@ -74,4 +74,4 @@ cd $_TERRALIB_OUT_DIR
 cmake -G "Xcode" -C terralib-conf.cmake $_TERRALIB_GIT_DIR/build/cmake
 
 # Building and installing
-# cmake --build . --target install --config Release
+cmake --build . --target install --config Release
