@@ -146,12 +146,20 @@ return{
 	end,
 	read = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
-		file:read()
-		local line = file:read()
+		file:read(",")
+		local line = file:read(",")
 
+		unitTest:assertType(line, "table")
 		unitTest:assertEquals(line[1], "john")
 		unitTest:assertEquals(line[2], "20")
 		unitTest:assertEquals(line[3], "200")
+		unitTest:assertEquals(file.line, 2)
+
+		line = file:read()
+		unitTest:assertType(line, "string")
+		unitTest:assertEquals(line, "\"mary\",18,100,3,1,false")
+		unitTest:assertEquals(file.line, 3)
+		file:close()
 	end,
 	readTable = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))

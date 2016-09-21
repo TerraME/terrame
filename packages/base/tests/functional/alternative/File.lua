@@ -144,18 +144,19 @@ return{
 		file:write(csv)
 
 		local error_func = function()
-			file:read()
+			file:read(",")
 		end
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
 
+		file = File(filename)
+		file:read()
 		error_func = function()
-			file = File(filename)
-			file:readTable()
+			file:read(",")
 		end
-		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
+		unitTest:assertError(error_func, "Line 2 ('\"\"ab\"c\"') is invalid.")
 
 		file:close()
-		if File(filename):exists() then File(filename):delete() end
+		if file:exists() then file:delete() end
 
 		file = File(filePath("agents.csv", "base"))
 		error_func = function()

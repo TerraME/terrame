@@ -31,7 +31,6 @@ local function parseLine(line, sep, cline)
 
 	local res = {}
 	local pos = 1
-	sep = sep or ','
 	while true do
 		local c = string.sub(line, pos, pos)
 		if c == "" then break end
@@ -262,33 +261,38 @@ File_ = {
 			return fopen
 		end
 	end,
-	--- Read a line from the file. It stores the position
-	-- of the line internally in case of some error occur. Therefore no line number
-	-- will be used as argument for this function.
-	--- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
+	--- Read a line from the file. It stores the position of the line internally in case of
+	-- some error occur. Therefore no line number will be used as argument for this function.
+	-- @arg sep A string with the separator. Parse a single CSV line.
+	-- It returns a vector of strings with the i-th value in the position i.
 	-- This function was taken from http://lua-users.org/wiki/LuaCsv.
-	-- @arg sep A string with the separator. The default value is ','.
 	-- @usage file = File(filePath("agents.csv", "base"))
+	-- line = file:read(",")
+	-- print(line[1]) -- john
+	-- print(line[2]) -- 20
+	-- print(line[3]) -- 200
+	--
 	-- line = file:read()
-	-- print(line[1])
-	-- print(line[2])
-	-- print(line[3])
+	-- print(line) -- "mary",18,100,3,1,false
 	read = function(self, sep)
 		optionalArgument(1, "string", sep)
 
 		if not self.mode then
-			self.line = 1
+			self.line = 0
 			self.file = self:open("r")
 		elseif self.mode ~= "r" then
 			customError("Cannot read a file opened for writing.")
 		end
 
-		local data = {}
 		local line = self.file:read()
-
+		local data = {}
 		if line then
-			data = parseLine(line, sep, self.line)
 			self.line = self.line + 1
+			if not sep then
+				return line
+			end
+
+			data = parseLine(line, sep, self.line)
 		end
 
 		return data
@@ -310,6 +314,7 @@ File_ = {
 			customError("Cannot read a file opened for writing.")
 		end
 
+		sep = sep or ','
 		local data = {}
 
 		local fields = parseLine(self.file:read(), sep, self.line)
@@ -322,10 +327,12 @@ File_ = {
 				for k, v in ipairs(fields) do
 					element[v] = tonumber(tuple[k]) or tuple[k]
 				end
+
 				table.insert(data, element)
 			else
 				customError("Line "..self.line.." ('"..line.."') should contain "..#fields.." attributes but has "..#tuple..".")
 			end
+
 			line = self.file:read()
 			self.line = self.line + 1
 		end
