@@ -138,11 +138,7 @@ Chart_ = {
 	-- chart:update(3)
 	--
 	-- data = chart:getData()
-	-- forEachElement(data, function(key, select)
-	--     forEachElement(select, function(name, value)
-	--         print(key, name, value)
-	--     end)
-	-- end)
+	-- print(vardump(data))
 	getData = function(self)
 		return self.values
 	end,
@@ -189,9 +185,7 @@ Chart_ = {
 	-- chart:update(1)
 	-- chart:update(2)
 	update = function(self, modelTime)
-		if not self.values[modelTime] then
-			self.values[modelTime] = {}
-		end
+		self.values[modelTime] = {}
 
 		forEachElement(self.select, function(_, key)
 			self.values[modelTime][key] = self.target[key]
