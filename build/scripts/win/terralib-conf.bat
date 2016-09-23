@@ -23,25 +23,38 @@
 :: Script for building a TerraLib5 customized for TerraME
 :: -----------------
 
-cd D:\terralib\build-cmake
+:: Checking Terralib git dir. Path to terralib codebase
+if "%_TERRALIB_GIT_DIR%" == "" (
+  set _TERRALIB_GIT_DIR=../../git/terralib/
+)
 
 :: -----------------
 :: Setting up the environment variables: change the values of the above
 :: variables to reflect you environment.
 :: -----------------
-:: Location of the builded 3rd-parties.
-set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\terralib5-3rdparty-msvc-2013-win64
+:: Location of the built 3rd-parties.
+:: Checking terralib 3rdparty dir
+if "%_TERRALIB_3RDPARTY_DIR%" == "" (
+  set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\terralib5-3rdparty-msvc-2013-win64
+)
 
 :: Location to install TerraLib
-set _TERRALIB_INSTALL_PATH=%CD%\install
+if "%_TERRALIB_INSTALL_PATH%" == "" (
+  set _TERRALIB_INSTALL_PATH=%CD%\install
+)
 
 :: Build location (where is tha Makefile)
-set _TERRALIB_OUT_DIR=%CD%\build
+if "%_TERRALIB_OUT_DIR%" == "" (
+  set _TERRALIB_OUT_DIR=%CD%\build
+)
 
 :: -----------------
 :: Configuring output folder
 :: -----------------
 mkdir %_TERRALIB_OUT_DIR%
+
+:: Copying terralib cmake cache to output dir
+copy terralib-conf.cmae %_TERRALIB_OUT_DIR%
 
 :: -----------------
 :: Entering the output folder
@@ -51,7 +64,9 @@ cd %_TERRALIB_OUT_DIR%
 :: -----------------
 :: Calling CMake
 :: -----------------
-cmake -G "Visual Studio 12 2013 Win64" -C ./../terralib-conf.cmake ./../../git/terralib/build/cmake
+cmake -G "Visual Studio 12 2013 Win64" -C terralib-conf.cmake %_TERRALIB_GIT_DIR%/build/cmake
 
-echo "TerraLib VS2013 builded!"
-pause
+echo "TerraLib VS2013 built!"
+
+:: Building and installing
+cmake --build . --target install --config Release

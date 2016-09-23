@@ -19,30 +19,57 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-cd D:\terrame\build-cmake
-
 :: -----------------
 :: Setting up the environment variables: change the values of the above
 :: variables to reflect you environment.
 :: -----------------
 :: Location of the builded 3rd-parties.
-set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\terralib5-3rdparty-msvc-2013-win64
-set _TERRAME_DEPENDS_DIR=D:\terrame\dependencies\install
-set _TERRALIB_MODULES_DIR=D:\terralib\build-cmake\install
-set _Qt5_DIR=C:\Qt\5.5\msvc2013_64
-set _MSYS_DIR=C:\MinGW\msys\1.0\bin
+if %_TERRALIB_3RDPARTY_DIR% == "" (
+  set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\terralib5-3rdparty-msvc-2013-win64
+)
+
+:: Checking terrame depends dir or setting default
+if %_TERRAME_DEPENDS_DIR% == "" (
+  set _TERRAME_DEPENDS_DIR=D:\terrame\dependencies\install
+)
+
+:: Checking terralib install dir or setting default
+if %_TERRALIB_MODULES_DIR% == "" (
+  set _TERRALIB_MODULES_DIR=D:\terralib\build-cmake\install
+)
+
+:: Checking qt5 dir or setting default
+if %_Qt5_DIR% == "" (
+  set _Qt5_DIR=C:\Qt\5.5\msvc2013_64
+)
+
+:: Checking msys dir or setting default
+if %_MSYS_DIR% == "" (
+  set _MSYS_DIR=C:\MinGW\msys\1.0\bin
+)
 
 :: Location to install TerraLib
-set _TERRAME_INSTALL_PATH=%CD%\install
+if %_TERRAME_INSTALL_PATH% == "" (
+  set _TERRAME_INSTALL_PATH=%CD%\install
+)
 
-:: Build location (where is tha Makefile)
-set _TERRAME_OUT_DIR=%CD%\build
+:: Build location (where is the Makefile)
+if %_TERRAME_OUT_DIR% == "" (
+  set _TERRAME_OUT_DIR=%CD%\build
+)
+
+:: Checking terrame codebase dir or setting default
+  if %_TERRAME_GIT_DIR% == "" (
+  set _TERRAME_GIT_DIR=../../git/terrame/build/cmake
+)
 
 :: -----------------
 :: Configuring output folder
 :: -----------------
 mkdir %_TERRAME_OUT_DIR%
-:: copy terralib.conf.cmake %TE_OUT_DIR%
+
+:: Copying terrame cmake cache to the output dir
+copy terrame-conf.cmake %_TERRAME_OUT_DIR%
 
 :: -----------------
 :: Entering the output folder
@@ -52,8 +79,9 @@ cd %_TERRAME_OUT_DIR%
 :: -----------------
 :: Calling CMake
 :: -----------------
-cmake -G "Visual Studio 12 2013 Win64" -C ./../terrame-conf.cmake ./../../git/terrame/build/cmake
+cmake -G "Visual Studio 12 2013 Win64" -C terrame-conf.cmake %_TERRAME_GIT_DIR%/build/cmake
 
+echo "TerraME VS2013 built!"
 
-echo "TerraME VS2013 builded!"
-pause
+:: Building and installing terrame
+cmake --build . --target install --config Release
