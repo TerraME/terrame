@@ -84,7 +84,7 @@ data{
 }
 
 data{
-	file = "simple.map",
+	file = "simple.pgm",
 	image = "simple.bmp",
 	summary = "A simple CellularSpace with one attribute for sugarscape model.",
 	source = "TerraME team"

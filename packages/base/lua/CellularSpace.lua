@@ -30,9 +30,9 @@ local function separatorCheck(data)
 	local header1 = File(data.source)
 	local header2 = File(data.source)
 	local header3 = File(data.source)
-	local lineTest1 = header1:readLine("\t")
-	local lineTest2 = header2:readLine(" ")
-	local lineTest3 = header3:readLine(";")
+	local lineTest1 = header1:read("\t")
+	local lineTest2 = header2:read(" ")
+	local lineTest3 = header3:read(";")
 
 	if lineTest1[2] ~= nil and lineTest2[2] == nil or lineTest3[2] ~= nil then
 		customError("Could not read file '"..data.source.."': invalid header.")
@@ -45,7 +45,7 @@ end
 
 local function loadNeighborhoodGAL(self, data)
 	local file = File(data.source)
-	local lineTest = file:readLine(" ")
+	local lineTest = file:read(" ")
 	local layer = ""
 
 	if self.layer ~= nil then
@@ -66,7 +66,7 @@ local function loadNeighborhoodGAL(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 
-	local line = file:readLine(" ")
+	local line = file:read(" ")
 	local counterLine = 2
 
 	while #line > 0 do
@@ -76,7 +76,7 @@ local function loadNeighborhoodGAL(self, data)
 			customError("Could not find id '"..tostring(line[1]).."' in line "..counterLine..". It seems that it is corrupted.")
 		else
 			local neig = cell:getNeighborhood(data.name)
-			local lineID = file:readLine(" ")
+			local lineID = file:read(" ")
 
 			counterLine = counterLine + 1
 			for i = 1, tonumber(line[2]) do
@@ -90,7 +90,7 @@ local function loadNeighborhoodGAL(self, data)
 			end
 		end
 
-		line = file:readLine(" ")
+		line = file:read(" ")
 		counterLine = counterLine + 1
 	end
 
@@ -99,7 +99,7 @@ end
 
 local function loadNeighborhoodGPM(self, data)
 	local file = File(data.source)
-	local lineTest = file:readLine(" ")
+	local lineTest = file:read(" ")
 	local layer = ""
 
 	if self.layer ~= nil then
@@ -132,7 +132,7 @@ local function loadNeighborhoodGPM(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 
-	local line = file:readLine(" ")
+	local line = file:read(" ")
 	local counterLine = 2
 
 	while #line > 0 do
@@ -142,7 +142,7 @@ local function loadNeighborhoodGPM(self, data)
 			customError("Could not find id '"..tostring(line[i]).."' in line "..counterLine..". It seems that it is corrupted.")
 		else
 			local neig = cell:getNeighborhood(data.name)
-			local lineID = file:readLine(" ")
+			local lineID = file:read(" ")
 			local valfor = (tonumber(line[2]) * 2)
 
 			counterLine = counterLine + 1
@@ -161,7 +161,7 @@ local function loadNeighborhoodGPM(self, data)
 			end
 		end
 
-		line = file:readLine(" ")
+		line = file:read(" ")
 		counterLine = counterLine + 1
 	end
 
@@ -170,7 +170,7 @@ end
 
 local function loadNeighborhoodGWT(self, data)
 	local file = File(data.source)
-	local lineTest = file:readLine(" ")
+	local lineTest = file:read(" ")
 	local layer = ""
 
 	if self.layer ~= nil then
@@ -191,7 +191,7 @@ local function loadNeighborhoodGWT(self, data)
 		cell:addNeighborhood(Neighborhood{}, data.name)
 	end)
 
-	local line = file:readLine(" ")
+	local line = file:read(" ")
 	local counterLine = 2
 
 	while #line > 0 do
@@ -210,7 +210,7 @@ local function loadNeighborhoodGWT(self, data)
 			neig:add(n, tonumber(line[3]))
 		end
 
-		line = file:readLine(" ")
+		line = file:read(" ")
 		counterLine = counterLine + 1
 	end
 
@@ -387,7 +387,7 @@ local function checkCsv(self)
 	defaultTableValue(self, "sep", ",")
 end
 
-local function checkMap(self)
+local function checkPGM(self)
 	defaultTableValue(self, "sep", " ")
 	local file = File(self.file)
 	defaultTableValue(self, "attrname", file:name())
@@ -461,7 +461,7 @@ local function loadCsv(self)
 	self.cells = {}
 	self.cObj_:clear()
 	local file = File(self.file)
-	local data = file:read(self.sep)
+	local data = file:readTable(self.sep)
 	local cellIdCounter = 0
 	for i = 1, #data do
 		cellIdCounter = cellIdCounter + 1
@@ -473,7 +473,7 @@ local function loadCsv(self)
 	return 
 end
 
-local function loadMap(self)
+local function loadPGM(self)
 	local i = 0
 	local j = 0
 
@@ -486,19 +486,50 @@ local function loadMap(self)
 	self.cObj_:clear()
 
 	local file = File(self.file)
-	local res = file:readLine(self.sep)
+	local pgm = {}
 
-	while #res > 0 do
-		j = 0
-		forEachElement(res, function(_, value)
-			local p = Cell {x = j, y = i}
-		 	p[self.attrname] = tonumber(value)
-			self:add(p)
-			self.cObj_:addCell(p.x, p.y, p.cObj_)
-			j = j + 1
-		end)
-		i = i + 1
-		res = file:readLine(self.sep)
+	pgm.comments = {}
+	pgm.type = file:read(self.sep)[1]
+
+	verify(pgm.type == "P2", "File '"..self.file.."' does not contain the PGM identifier 'P2' in its first line.")
+
+	local res = file:read(self.sep)
+	local len = #res
+	while len > 0 do
+		if res[1]:find("#", 1) then
+			if len > 1 then
+				table.remove(res, 1)
+				table.insert(pgm.comments, table.concat(res, " "))
+			end
+		elseif len == 2 and not pgm.size then
+			pgm.size = {tonumber(res[1]), tonumber(res[2])}
+		elseif len == 1 and not pgm.maximumValue then
+			pgm.maximumValue = tonumber(res[1])
+		else
+			j = 0
+			forEachElement(res, function(_, value)
+				local p = Cell {x = j, y = i}
+				p[self.attrname] = tonumber(value)
+				self:add(p)
+				self.cObj_:addCell(p.x, p.y, p.cObj_)
+				j = j + 1
+			end)
+
+			i = i + 1
+		end
+
+		res = file:read(self.sep)
+		len = #res
+	end
+
+	file:close()
+
+	if (j ~= pgm.size[1]) or (i ~= pgm.size[2]) then
+		customWarning("File '"..self.file.."' has a diffent size declared: expected '("..pgm.size[1]..", "..pgm.size[2]..")', got '("..j..", "..i..")'.")
+	end
+
+	if not pgm.maximumValue then
+		customWarning("File '"..self.file.."' does not have a maximum value declared.")
 	end
 
 	self.xdim = self.xMax
@@ -720,10 +751,10 @@ registerCellularSpaceDriver{
 }
 
 registerCellularSpaceDriver{
-	source = "map",
+	source = "pgm",
 	optional = {"sep", "attrname"},
-	load = loadMap,
-	check = checkMap
+	load = loadPGM,
+	check = checkPGM
 }
 
 registerCellularSpaceDriver{
@@ -1513,7 +1544,7 @@ metaTableCellularSpace_ = {
 -- according to the arguments passed to the function.
 -- @tabular source
 -- source & Description & Compulsory arguments & Optional arguments\
--- "map" & Load from a text file where Cells are stored as numbers with its attribute value.
+-- "pgm" & Load from a text file where Cells are stored as numbers with its attribute value.
 -- & & sep, attrname, as \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
 -- requires at least two attributes: x and y. & file & source, sep, as, geometry, ...\

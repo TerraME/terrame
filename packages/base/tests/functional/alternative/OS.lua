@@ -28,6 +28,54 @@ return{
 			runCommand(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
+	sessionInfo = function(unitTest)
+		local s = sessionInfo()
+
+		local error_func = function()
+			s.system = "mac"
+		end
+		unitTest:assertError(error_func, "Argument 'system' is an important information about the current execution and cannot be changed.")
+
+		error_func = function()
+			s.path = "/my/path/"
+		end
+		unitTest:assertError(error_func, "Argument 'path' is an important information about the current execution and cannot be changed.")
+
+		error_func = function()
+			s.currentFile = "file.lua"
+		end
+		unitTest:assertError(error_func, "Argument 'currentFile' is an important information about the current execution and cannot be changed.")
+
+		error_func = function()
+			s.version = "5.0"
+		end
+		unitTest:assertError(error_func, "Argument 'version' is an important information about the current execution and cannot be changed.")
+
+		error_func = function()
+			s.mode = "void"
+		end
+		unitTest:assertError(error_func, "Argument 'mode' cannot be replaced by 'void'.")
+
+		error_func = function()
+			s.round = false
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("round", "number", false))
+
+		error_func = function()
+			s.round = 1.1
+		end
+		unitTest:assertError(error_func, "Argument 'round' must be a number >= 0 and < 1, got '1.1'.")
+
+		error_func = function()
+			s.silent = 1
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("silent", "boolean", 1))
+
+		error_func = function()
+			s.arg = 1
+		end
+		unitTest:assertError(error_func, "Argument 'arg' is not an information about the current execution.")
 	end
 }
 

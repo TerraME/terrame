@@ -1679,15 +1679,6 @@ function Map(data)
 
 	verifyUnnecessaryArguments(data, validArgs)
 
-	local args = {}
-	forEachElement(data, function(arg, value)
-		if belong(arg, validArgs) then
-			args[arg] = value
-		end
-	end)
-
-	data = args
-
 	if type(data.target) == "Agent" then
 		local s = Society{instance = Agent{}, quantity = 0}
 		s:add(data.target)

@@ -31,7 +31,6 @@ local function parseLine(line, sep, cline)
 
 	local res = {}
 	local pos = 1
-	sep = sep or ','
 	while true do
 		local c = string.sub(line, pos, pos)
 		if c == "" then break end
@@ -148,8 +147,8 @@ File_ = {
 	-- this string must not contain quotation marks.
 	-- @usage filename = "myfile.txt"
 	-- file = File(filename)
-	-- file:writeLine("Some text..")
-	--
+	-- file:write("Some text..")
+	-- file:close()
 	-- file:delete()
 	delete = function(self)
 		if not self:exists() then
@@ -262,14 +261,50 @@ File_ = {
 			return fopen
 		end
 	end,
+	--- Read a line from the file. It stores the position of the line internally in case of
+	-- some error occur. Therefore no line number will be used as argument for this function.
+	-- @arg sep A string with the separator. Parse a single CSV line.
+	-- It returns a vector of strings with the i-th value in the position i.
+	-- This function was taken from http://lua-users.org/wiki/LuaCsv.
+	-- @usage file = File(filePath("agents.csv", "base"))
+	-- line = file:read(",")
+	-- print(line[1]) -- john
+	-- print(line[2]) -- 20
+	-- print(line[3]) -- 200
+	--
+	-- line = file:read()
+	-- print(line) -- "mary",18,100,3,1,false
+	read = function(self, sep)
+		optionalArgument(1, "string", sep)
+
+		if not self.mode then
+			self.line = 0
+			self.file = self:open("r")
+		elseif self.mode ~= "r" then
+			customError("Cannot read a file opened for writing.")
+		end
+
+		local line = self.file:read()
+		local data = {}
+		if line then
+			self.line = self.line + 1
+			if not sep then
+				return line
+			end
+
+			data = parseLine(line, sep, self.line)
+		end
+
+		return data
+	end,
 	--- Read a file. It returns a vector (whose indexes are line numbers)
 	-- containing named tables (whose indexes are attribute names).
 	-- The first line of the file list the attribute names.
 	-- @arg sep A string with the separator. The default value is ','.
 	-- @usage file = File(filePath("agents.csv", "base"))
-	-- csv = file:read()
+	-- csv = file:readTable()
 	-- print(csv[1].age) -- 20
-	read = function(self, sep)
+	readTable = function(self, sep)
 		optionalArgument(1, "string", sep)
 
 		if not self.mode then
@@ -279,6 +314,7 @@ File_ = {
 			customError("Cannot read a file opened for writing.")
 		end
 
+		sep = sep or ','
 		local data = {}
 
 		local fields = parseLine(self.file:read(), sep, self.line)
@@ -291,46 +327,17 @@ File_ = {
 				for k, v in ipairs(fields) do
 					element[v] = tonumber(tuple[k]) or tuple[k]
 				end
+
 				table.insert(data, element)
 			else
 				customError("Line "..self.line.." ('"..line.."') should contain "..#fields.." attributes but has "..#tuple..".")
 			end
+
 			line = self.file:read()
 			self.line = self.line + 1
 		end
 
 		self:close()
-
-		return data
-	end,
-	--- Read a line from the file. It stores the position
-	-- of the line internally in case of some error occur. Therefore no line number
-	-- will be used as argument for this function.
-	--- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
-	-- This function was taken from http://lua-users.org/wiki/LuaCsv.
-	-- @arg sep A string with the separator. The default value is ','.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- line = file:readLine()
-	-- print(line[1])
-	-- print(line[2])
-	-- print(line[3])
-	readLine = function(self, sep)
-		optionalArgument(1, "string", sep)
-
-		if not self.mode then
-			self.line = 1
-			self.file = self:open("r")
-		elseif self.mode ~= "r" then
-			customError("Cannot read a file opened for writing.")
-		end
-
-		local data = {}
-		local line = self.file:read()
-
-		if line then
-			data = parseLine(line, sep, self.line)
-			self.line = self.line + 1
-		end
 
 		return data
 	end,
@@ -357,11 +364,11 @@ File_ = {
 
 		return lfs.touch(self.filename, atime, mtime)
 	end,
-	--- Write a given table into a file.
-	-- The first line of the file will list the attributes of each table.
-	-- @arg data A table to be saved. It must be a vector (whose indexes are line numbers)
+	--- Write a given string or table into a file.
+	-- @arg data A string or table to be saved. A table it must be a vector (whose indexes are line numbers)
 	-- containing named-tables (whose indexes are attribute names).
-	-- @arg sep A string with the separator. The default value is ','.
+	-- The first line of the file will list the attributes of each table.
+	-- @arg sep A string with the separator. The default value is ' ' for string and ',' for table.
 	-- @usage mytable = {
 	--     {age = 1, wealth = 10, vision = 2},
 	--     {age = 3, wealth =  8, vision = 1},
@@ -370,8 +377,17 @@ File_ = {
 	--
 	-- file = File( "file.csv")
 	-- file:write(mytable, ";")
-	-- File("file.csv"):delete()
+	-- if file:exists() then file:delete() end
+	--
+	-- file = File("file.txt")
+	-- file:write("Some text..")
+	-- file:close()
+	-- if file:exists() then file:delete() end
 	write = function(self, data, sep)
+		if type(data) == "string" then
+			data = {data}
+		end
+
 		mandatoryArgument(1, "table", data)
 		optionalArgument(2, "string", sep)
 
@@ -381,53 +397,46 @@ File_ = {
 			customError("Cannot write a file opened for reading.")
 		end
 
-		sep = sep or ","
-		local fields = {}
-
 		if data[1] == nil then
 			customError("#1 does not have position 1.")
 		elseif #data ~= getn(data) then
 			customError("#1 should be a vector.")
 		end
 
-		for k in pairs(data[1]) do
-			if type(k) ~= "string" then
-				customError("All attributes should be string, got "..type(k)..".")
-			end
-			table.insert(fields, k)
-		end
-		self.file:write(table.concat(fields, sep))
-		self.file:write("\n")
-		for _, tuple in ipairs(data) do
-			local line = {}
-			for _, k in ipairs(fields) do
-				local value = tuple[k]
-				local t = type(value)
-				if t ~= "number" then
-					value = "\""..tostring(value) .."\""
+		if type(data[1]) == "table" then
+			sep = sep or ","
+			local fields = {}
+			for k in pairs(data[1]) do
+				if type(k) ~= "string" then
+					customError("All attributes should be string, got "..type(k)..".")
 				end
-				table.insert(line, value)
+
+				table.insert(fields, k)
 			end
-			self.file:write(table.concat(line, sep))
+
+			self.file:write(table.concat(fields, sep))
 			self.file:write("\n")
-		end
-		self:close()
-	end,
-	--- Write a given text to the file.
-	-- @arg text A string to be saved.
-	-- @usage file = File( "file.txt")
-	-- file:writeLine("Text...")
-	-- File("file.txt"):delete()
-	writeLine = function(self, text)
-		mandatoryArgument(1, "string", text)
+			for _, tuple in ipairs(data) do
+				local line = {}
+				for _, k in ipairs(fields) do
+					local value = tuple[k]
+					local t = type(value)
+					if t ~= "number" then
+						value = "\""..tostring(value) .."\""
+					end
 
-		if not self.mode then
-			self.file = self:open("w")
-		elseif self.mode ~= "w" then
-			customError("Cannot write a file opened for reading.")
-		end
+					table.insert(line, value)
+				end
 
-		self.file:write(text)
+				self.file:write(table.concat(line, sep))
+				self.file:write("\n")
+			end
+
+			self:close()
+		else
+			sep = sep or " "
+			self.file:write(table.concat(data, sep))
+		end
 	end
 }
 

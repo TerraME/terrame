@@ -114,7 +114,7 @@ return{
 	end,
 	open = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
-		file:readLine()
+		file:read()
 
 		local error_func = function()
 			file:open()
@@ -134,34 +134,6 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
 	read = function(unitTest)
-		local filename = "abc.txt"
-		local file = File(filename)
-		file:writeLine("text...")
-
-		local error_func = function()
-			file:read()
-		end
-
-		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
-		if File(filename):exists() then File(filename):delete() end
-
-		file = File(filename)
-
-		error_func = function()
-			file:read()
-		end
-
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
-
-		local s = sessionInfo().separator
-		file = File(filePath("test/error"..s.."csv-error.csv"))
-
-		error_func = function()
-			file:read()
-		end
-		unitTest:assertError(error_func, "Line 2 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
-	end,
-	readLine = function(unitTest)
 		local s = sessionInfo().separator
 		local filename = currentDir()..s.."csvwrite.csv"
 		local csv = {
@@ -172,24 +144,54 @@ return{
 		file:write(csv)
 
 		local error_func = function()
-			file:readLine()
+			file:read(",")
 		end
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
 
+		file = File(filename)
+		file:read()
 		error_func = function()
-			file = File(filename)
-			file:read()
+			file:read(",")
 		end
-		unitTest:assertError(error_func, "Line 1 ('\"\"ab\"c\"') is invalid.")
+		unitTest:assertError(error_func, "Line 2 ('\"\"ab\"c\"') is invalid.")
 
 		file:close()
-		if File(filename):exists() then File(filename):delete() end
+		if file:exists() then file:delete() end
 
 		file = File(filePath("agents.csv", "base"))
 		error_func = function()
-			file:readLine(1)
+			file:read(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+	end,
+	readTable = function(unitTest)
+		local filename = "abc.txt"
+		local file = File(filename)
+		file:write("text...")
+		file:close()
+
+		local error_func = function()
+			file:readTable()
+		end
+
+		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
+		if file:exists() then file:delete() end
+
+		file = File(filename)
+
+		error_func = function()
+			file:readTable()
+		end
+
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
+
+		local s = sessionInfo().separator
+		file = File(filePath("test/error"..s.."csv-error.csv"))
+
+		error_func = function()
+			file:readTable()
+		end
+		unitTest:assertError(error_func, "Line 2 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
 	end,
 	touch = function(unitTest)
 		local file = File("abc.txt")
@@ -227,7 +229,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		file = File(filePath("agents.csv", "base"))
-		file:read()
+		file:readTable()
 
 		error_func = function()
 			file:write(example)
@@ -268,16 +270,6 @@ return{
 		end
 		unitTest:assertError(error_func, "All attributes should be string, got number.")
 
-	end,
-	writeLine = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
-		file:read()
-
-		local error_func = function()
-			file:writeLine("Text")
-		end
-
-		unitTest:assertError(error_func, "Cannot write a file opened for reading.")
 	end
 }
 
