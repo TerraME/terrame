@@ -34,12 +34,6 @@ set(TERRAME_BUILD_AS_BUNDLE OFF CACHE BOOL "If on, tells that the build will gen
 set(TERRAME_CREATE_INSTALLER OFF CACHE BOOL "Create the installer" FORCE)
 
 # Dependencies paths
-# set(PROTOBUF_INCLUDE_DIR "$ENV{TME_DEPENDS_DIR}/include" CACHE PATH "Lua include" FORCE)
-# set(PROTOBUF_PROTOC_EXECUTABLE "$ENV{TME_DEPENDS_DIR}/bin/protoc.exe" CACHE PATH "Lua include" FORCE)
-# set(PROTOBUF_LIBRARY "$ENV{TME_DEPENDS_DIR}/lib/libprotobuf.lib" CACHE PATH "Protobuf lib" FORCE)
 set(QTLUA_INCLUDE_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}/include/QtLua" CACHE PATH "QtLua include" FORCE)
 set(QTLUA_LIBRARY "$ENV{_TERRALIB_3RDPARTY_DIR}/lib/libqtlua.so" CACHE PATH "QtLua lib" FORCE)
-#set(QTLUAEXTRAS_INCLUDE_DIR "$ENV{TME_DEPENDS_DIR}/include" CACHE PATH "QtLua Extras include" FORCE)
 set(QTLUAEXTRAS_LIBRARY "${TERRAME_DEPENDENCIES_DIR}/lib/qtluae.so" CACHE PATH "QtLua Extras lib" FORCE)
-#set(QWT_INCLUDE_DIR "${TERRALIB_3RDPARTY_DIR}/lib/qwt.framework/Versions/6/Headers" CACHE PATH "Qwt include" FORCE)
-# set(QWT_LIBRARY "$ENV{TME_THIRD_DIR}/lib/qwt.lib" CACHE PATH "Qwt lib" FORCE)
