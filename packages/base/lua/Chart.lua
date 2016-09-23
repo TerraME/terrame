@@ -116,7 +116,7 @@ local function chartFromData(attrTab)
 
 	for i = 1, #indexes do
 		updateValues(indexes[i])
-		attrTab.target:notify(indexes[i])
+		chart:update(indexes[i])
 	end
 
 	return chart
@@ -124,6 +124,24 @@ end
 
 Chart_ = {
 	type_ = "Chart",
+	--- Return a table with the values got from all its notifications.
+	-- @usage cs = CellularSpace{
+	--     xdim = 10,
+	--     value1 = 5,
+	--     value2 = 7
+	-- }
+	--
+	-- chart = Chart{target = cs}
+	--
+	-- chart:update(1)
+	-- chart:update(2)
+	-- chart:update(3)
+	--
+	-- data = chart:getData()
+	-- print(vardump(data))
+	getData = function(self)
+		return self.values
+	end,
 	--- Save a Chart into a file. Supported extensions are bmp, jpg, png, and tiff.
 	-- @arg file A string with the file name.
 	-- @usage cs = CellularSpace{
@@ -167,6 +185,12 @@ Chart_ = {
 	-- chart:update(1)
 	-- chart:update(2)
 	update = function(self, modelTime)
+		self.values[modelTime] = {}
+
+		forEachElement(self.select, function(_, key)
+			self.values[modelTime][key] = self.target[key]
+		end)
+
 		self.target:notify(modelTime)
 	end
 }
@@ -581,6 +605,7 @@ function Chart(attrTab)
 
 	local observerParams = {}
 	local target = attrTab.target
+	attrTab.values = {}
 
 	table.insert(observerParams, attrTab.title)
 	table.insert(observerParams, attrTab.xLabel)

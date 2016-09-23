@@ -1483,7 +1483,7 @@ function table.save(tbl, filename)
 
 	local file = File(filename)
 	local stbl = "return"..vardump(tbl)
-	file:writeLine(stbl)
+	file:write(stbl)
 	file:close()
 end
 

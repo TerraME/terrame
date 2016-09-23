@@ -34,7 +34,7 @@ return{
 		local options = {
 			asc = true,
  			csv = true,
- 			map = true,
+			pgm = true,
 			nc = true,
 			geojson = true,
  			shp = true,
@@ -48,21 +48,45 @@ return{
  		error_func = function()
  			cs = CellularSpace{
 				file = filePath("test/simple-cs.csv", "base"), 
-				source = "map", 
+				source = "pgm",
 				sep = ";"
 			}
  		end
  		unitTest:assertError(error_func, "source and file extension should be the same.")
+
+		local pgmFile = filePath("test/error/pgm-invalid-identifier.pgm", "base")
+		error_func = function()
+ 			cs = CellularSpace{
+				file = pgmFile
+			}
+ 		end
+ 		unitTest:assertError(error_func, "File '"..pgmFile.."' does not contain the PGM identifier 'P2' in its first line.")
+
+		pgmFile = filePath("test/error/pgm-invalid-size.pgm", "base")
+		error_func = function()
+ 			cs = CellularSpace{
+				file = pgmFile
+			}
+ 		end
+ 		unitTest:assertError(error_func, "File '"..pgmFile.."' has a diffent size declared: expected '(2, 2)', got '(10, 10)'.")
+
+		pgmFile = filePath("test/error/pgm-invalid-max.pgm", "base")
+		error_func = function()
+ 			cs = CellularSpace{
+				file = pgmFile
+			}
+ 		end
+ 		unitTest:assertError(error_func, "File '"..pgmFile.."' does not have a maximum value declared.")
  
  		error_func = function()
- 			cs = CellularSpace{file = 2, source = "map", sep = ";"}
+ 			cs = CellularSpace{file = 2, source = "pgm", sep = ";"}
  		end
  		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
  
  		error_func = function()
- 			cs = CellularSpace{file = "abc123.map", sep = ";"}
+ 			cs = CellularSpace{file = "abc123.pgm", sep = ";"}
  		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.map"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.pgm"))
 		
 		error_func = function()
  			cs = CellularSpace{
@@ -139,14 +163,15 @@ return{
 	end,
 	loadNeighborhood = function(unitTest)
 		local terralib = getPackage("terralib")
-
-		local projName = "cellspace_neigh_alt.tview"
+		local file = File("cellspace_neigh_alt.tview")
 
 		local author = "Avancini"
 		local title = "Cellular Space"
 
+		if file:exists() then file:delete() end
+
 		local proj = terralib.Project{
-			file = projName,
+			file = tostring(file),
 			clean = true,
 			author = author,
 			title = title
@@ -226,8 +251,8 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
-		-- unitTest:assertFile(projName) -- SKIP #1301
-		File(projName):delete() -- #1301
+		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
+		if file:exists() then file:delete() end
 		tl:dropPgTable(pgData)			
 		
 		-- GAL from shapefile
@@ -361,13 +386,14 @@ return{
 	save = function(unitTest)
 		local terralib = getPackage("terralib")
 
-		local projName = "cellspace_save_alt.tview"
+		local projName = File("cellspace_save_alt.tview")
 
 		local author = "Avancini"
 		local title = "Cellular Space"
 
+		if projName:exists() then projName:delete() end
 		local proj = terralib.Project{
-			file = projName,
+			file = projName:name(true),
 			clean = true,
 			author = author,
 			title = title
@@ -422,8 +448,8 @@ return{
 
 		forEachCell(cs, function(cell)
 			cell.t0 = 1000
-		end)	
-		
+		end)
+
 		local cellSpaceLayerName = clName1.."_CellSpace"
 
 		local attrNotExists = function()
@@ -445,10 +471,10 @@ return{
 			cs:save()
 		end
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
-		
-		-- unitTest:assertFile(projName) -- SKIP #1301
-		File(projName):delete() -- #1301
-		tl:dropPgTable(pgData)	
+
+		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
+		if projName:exists() then projName:delete() end
+		tl:dropPgTable(pgData)
 	end
 }
 

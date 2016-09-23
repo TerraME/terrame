@@ -310,7 +310,7 @@ function Random(data)
 			local k = (data.max - data.min) / data.step
 
 			local rest = k % 1
-			if rest > 0.00001 then
+			if rest > sessionInfo().round then
 				local max1 = data.min + (k - rest) * data.step
 				local max2 = data.min + (k - rest + 1) * data.step
 				customError("Invalid 'max' value ("..data.max.."). It could be "..max1.." or "..max2..".")

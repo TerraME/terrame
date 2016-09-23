@@ -153,7 +153,7 @@ return{
 		    color = "green",
 			pen = "dash"
 		}
-		
+
 		unitTest:assertSnapshot(c1, "chart-data-1.bmp", 0.05)
 		unitTest:assertSnapshot(c2, "chart-data-2.bmp", 0.05)
 
@@ -222,6 +222,72 @@ return{
 		e:run()
 
 		unitTest:assertSnapshot(c, "chart-environment-scenarios-2.png", 0.05)
+	end,
+	getData = function(unitTest)
+		local tab = makeDataTable{
+			first = 2000,
+			step = 10,
+			demand = {7, 8, 9, 10},
+			limit = {0.1, 0.04, 0.3, 0.07}
+		}
+
+		tab.type_ = "mytab"
+
+		local c1 = Chart{
+			data = tab,
+			select = "limit",
+			xAxis = "demand",
+			color = "blue"
+		}
+
+		local data = c1:getData()
+		unitTest:assertType(data, "table")
+		unitTest:assertEquals(data[2000].limit, 0.1)
+		unitTest:assertEquals(data[2010].limit, 0.04)
+		unitTest:assertEquals(data[2020].limit, 0.3)
+		unitTest:assertEquals(data[2030].limit, 0.07)
+
+		local c2 = Chart{
+			data = tab,
+			select = "demand",
+			color = "green",
+			pen = "dash"
+		}
+
+		data = c2:getData()
+		unitTest:assertType(data, "table")
+		unitTest:assertEquals(data[2000].demand, 7)
+		unitTest:assertEquals(data[2010].demand, 8)
+		unitTest:assertEquals(data[2020].demand, 9)
+		unitTest:assertEquals(data[2030].demand, 10)
+
+		local world = CellularSpace{
+			xdim = 10,
+			count = 0,
+			mCount = function(self)
+				return self.count + 1
+			end
+		}
+
+		c1 = Chart{target = world, select = "mCount", xAxis = "count"}
+
+		c1:update(0)
+		world.count = world.count + 2
+		c1:update(1)
+		c1:update(2)
+
+		data = c1:getData()
+		unitTest:assertType(data, "table")
+		unitTest:assertEquals(data[0].count, 0)
+		unitTest:assertEquals(data[0].mCount_, 1)
+
+		unitTest:assertEquals(data[1].count, 2)
+		unitTest:assertEquals(data[1].mCount_, 1)
+
+		unitTest:assertEquals(data[2].count, 2)
+		unitTest:assertEquals(data[2].mCount_, 3)
+
+		unitTest:assertNil(data[3])
 	end,
 	update = function(unitTest)
 		local world = Cell{

@@ -156,8 +156,8 @@ return {
 		end
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
 		
-		-- unitTest:assertFile(projName) -- SKIP #1301
-		File(projName):delete() -- #1301
+		-- unitTest:assertFile(projName) -- SKIP #1242
+		File(projName):delete() -- #1242
 
 		if File(shp1):exists() then
 			File(shp1):delete()

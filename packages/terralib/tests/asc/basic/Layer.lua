@@ -151,7 +151,7 @@ sid      string [8e9b98cc-a511-4b41-9faf-5d67001c7058]
 source   string [asc]
 ]]
         unitTest:assertEquals(tostring(l), expected, 36, true)
-        -- unitTest:assertFile(projName) -- SKIP #1301
+        -- unitTest:assertFile(projName) -- SKIP #1242
 
         if File(projName):exists() then
             File(projName):delete()

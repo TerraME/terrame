@@ -277,7 +277,7 @@ return{
 		unitTest:assertEquals(toLabel2("maxValue"), "'Max Value'")
 		unitTest:assertEquals(toLabel2("maxValue", "tab"), "'Max Value' (in 'Tab')")
 
-		sessionInfo().interface = nil
+		sessionInfo().interface = false
 		unitTest:assertEquals(toLabel2("maxValue"), "'maxValue'")
 		unitTest:assertEquals(toLabel2("maxValue", "tab"), "'tab.maxValue'")
 	end,

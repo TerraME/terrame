@@ -71,12 +71,83 @@ end
 -- dbVersion & A string with the current TerraLib version for databases. \
 -- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
 -- path & A string with the location of TerraME in the computer. \
+-- round & A number used whenever it is possible to have rounding problems. For instance,
+-- it works with Events that have period less than one by rounding the execution time of
+-- an Event that is going to be scheduled to a future time if the difference between such
+-- time and the closest integer number is less then the value of this argument. In this case,
+-- if an Event that starts in time one and has period 0.1, it might execute in time 1.999999999,
+-- as we are working with real number. This argument is then useful to make sure that such Event
+-- will be executed in time exactly two. The default value is 1e-5. \
 -- separator & A string with the directory separator. \
 -- silent & A boolean value indicating whether print() calls should not be shown in the
 -- screen. This element is true when TerraME is executed with mode "silent". \
 -- system & A string with the operating system.
 -- @usage print(sessionInfo().mode)
 function sessionInfo()
-	return info_ -- this is a global variable created when TerraME is initialized
+	local info = info_ -- this is a global variable created when TerraME is initialized
+
+	local sessionInfo_ = {}
+	local metaTableSessionInfo_ = {
+		__index = function(_, idx)
+			return info[idx]
+		end,
+		__newindex = function(_, idx, value)
+			local readOnly = false
+			local args = {
+				mode = {"default", "debug", "normal", "quiet", "strict"},
+				dbVersion = readOnly,
+				separator = readOnly,
+				silent = "boolean",
+				color = "boolean",
+				fullTraceback = "boolean",
+				path = readOnly,
+				autoclose = "boolean",
+				system = readOnly,
+				version = readOnly,
+				currentFile = readOnly,
+				interface = "boolean",
+				round = function(midx, mvalue)
+					if type(mvalue) ~= "number" then
+						incompatibleTypeError(midx, "number", mvalue)
+					elseif not (mvalue >= 0 and mvalue < 1) then
+						customError("Argument '"..idx.."' must be a number >= 0 and < 1, got '"..value.."'.")
+					end
+				end
+			}
+
+			local ok = false
+			forEachElement(args, function(arg, check)
+				if idx ~= arg then return end
+
+				if not check then
+					customError("Argument '"..idx.."' is an important information about the current execution and cannot be changed.")
+				end
+
+				local mtype = type(check)
+				if mtype == "function" then
+					check(arg, value)
+				elseif mtype == "table" then
+					if not belong(value, check) then
+						customError("Argument '"..idx.."' cannot be replaced by '"..value.."'.")
+					end
+				elseif type(value) ~= check then
+					incompatibleTypeError(arg, check, value)
+				end
+
+				ok = true
+				return false
+			end)
+
+			if not ok then
+				customError("Argument '"..idx.."' is not an information about the current execution.")
+			end
+
+			info[idx] = value
+		end
+	}
+
+	setmetatable(sessionInfo_, metaTableSessionInfo_)
+
+	return sessionInfo_
 end
 

@@ -144,11 +144,9 @@ return{
 		world:notify()
 		world:notify()
 		
-		local projName = "cellspace_basic_observer.tview"
+		local projName = File("cellspace_basic_observer.tview")
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		if projName:exists() then projName:delete() end
 		
 		local author = "Avancini"
 		local title = "Cellular Space"
@@ -156,7 +154,7 @@ return{
         local terralib = getPackage("terralib")
 
 		local proj = terralib.Project{
-			file = projName,
+			file = projName:name(true),
 			clean = true,
 			author = author,
 			title = title
@@ -193,7 +191,7 @@ return{
 		}
 		
 		cs = CellularSpace{
-			project = projName,
+			project = projName:name(true),
 			layer = clName1
 		}
 		
@@ -233,9 +231,9 @@ return{
     
 		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.25)
 		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
-		-- unitTest:assertFile(projName) -- SKIP #1301
-		File(projName):delete() -- #1301
-		
+		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
+		if projName:exists() then projName:delete() end
+
 		for i = 1, #exts do
 			local f = fn1..exts[i]
 			if File(f):exists() then
