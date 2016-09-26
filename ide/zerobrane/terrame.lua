@@ -58,8 +58,8 @@ return {
             end
         end
 
-        local path = win and (terrame..[[\terrame -ide -mode=strict]])
-                    or unix and (terrame.."/terrame -mode=strict")
+        local path = win and (terrame..[[\terrame -ide -strict]])
+                    or unix and (terrame.."/terrame -strict")
         local cmd = path.." ".."\""..self:fworkdir(wfilename).."/"..wfilename:GetFullName().."\""
         local pid = CommandLineRun(cmd,self:fworkdir(wfilename),true,false, nil, nil, function() if rundebug then wx.wxRemoveFile(file) end end)
         return pid

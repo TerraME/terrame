@@ -684,9 +684,13 @@ local function version()
 end
 
 local function usage()
-	print("")
-	print("Usage: TerraME [arguments] [file1.lua file2.lua ...]\n")
-	print("Options: ")
+	print("\nUsage: TerraME [mode] [options] [file1.lua file2.lua ...]")
+	print("\nMode:")
+	print("-debug                  Warnings treated as errors.")
+	print("-normal (default)       Warnings enabled.")
+	print("-quiet                  Warnings disabled.")
+	print("-strict                 Execute additional verifications in the source code.")
+	print("\nOptions: ")
 	print("-autoclose              Automatically close TerraME after simulation.")
 	print("-color                  Show colored output. In Windows, it requires ansicon")
 	print("                        (https://github.com/adoxa/ansicon/releases).")
@@ -698,20 +702,14 @@ local function usage()
 	print("                        when an Environment or a Timer object is used.")
 	print("-ide                    Configure TerraME for running from IDEs in Windows.")
 	print("-install <f>            Install a package stored in a given file <f>.")
-	print("-mode=debug             Warnings treated as errors.")
-	print("-mode=normal (default)  Warnings enabled.")
-	print("-mode=quiet             Warnings disabled.")
-	print("-mode=strict            Execute additional verifications in the source code.")
-	print("-package <pkg>          Select a given package. If used alone and the package")
-	print("                        has a single model than it runs the graphical interface")
-	print("                        to configure such model. If not package is selected,")
-	print("                        TerraME selects base package. -package can be combined")
+	print("-package <pkg>          Select a given package. If not package is selected,")
+	print("                        TerraME uses base package. -package can be combined")
 	print("                        with the following options:")
-	print("  -build [<f>] [-clean] Build an installer for the package. It executes all")
-	print("                        tests and build the documentation of the package.")
-	print("                        -clean option remove test files and logs.")
+	print("  -build [<f>] [-clean] Test (-test [<f>]), document (-doc) and then build an")
+	print("                        installer for the package. -clean option can be used to")
+	print("                        remove test files and logs.")
 	print("  -configure <m>        Visually configure and run Model <m>.")
-	print("  -doc                  Build the documentation.")
+	print("  -doc                  Build the documentation of the package.")
 	print("  -example <exp>        Run example <exp>.")
 	print("  -examples             Run all examples.")
 	print("  -project <prj>        Create project <prj>.")
@@ -720,7 +718,7 @@ local function usage()
 	print("  -sketch               Create test scripts for source code files missing")
 	print("                        tests and initial documentation for undocumented files.")
 	print("  -test [<f>]           Execute unit tests for the package. An optional Lua")
-	print("                        file <f> can describe a subset of the tests to be ")
+	print("                        file <f> can describe a subset of the tests to be")
 	print("                        executed.")
 	print("  -uninstall            Remove an installed package.")
 	print("-silent                 print() does not show any text on the screen.")
@@ -1233,13 +1231,13 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				info_.fullTraceback = true
 			elseif arg == "-color" then
 				info_.color = true
-			elseif arg == "-mode=normal" then
+			elseif arg == "-normal" then
 				info_.mode = "normal"
-			elseif arg == "-mode=debug" then
+			elseif arg == "-debug" then
 				info_.mode = "debug"
-			elseif arg == "-mode=quiet" then
+			elseif arg == "-quiet" then
 				info_.mode = "quiet"
-			elseif arg == "-mode=strict" then
+			elseif arg == "-strict" then
 				info_.mode = "strict"
 			elseif arg == "-silent" then
 				info_.silent = true

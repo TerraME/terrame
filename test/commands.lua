@@ -58,9 +58,9 @@ build = {
 
 mode = {
 	normal = {script = "basic.lua"},
-	debug  = {script = "basic.lua", arg = "-mode=debug"},
-	strict = {script = "basic.lua", arg = "-mode=strict"},
-	quiet  = {script = "basic.lua", arg = "-mode=quiet"},
+	debug  = {script = "basic.lua", arg = "-debug"},
+	strict = {script = "basic.lua", arg = "-strict"},
+	quiet  = {script = "basic.lua", arg = "-quiet"},
 }
 
 basic = {
