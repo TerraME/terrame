@@ -349,7 +349,7 @@ Layer_ = {
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income. 
-	-- & attribute, layer, select  & area, default, band, dummy \
+	-- & attribute, layer, select  & area, default, band  \
 	-- "count" & Number of objects that have some overlay with the cell.
 	-- & attribute, layer & \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
@@ -363,13 +363,13 @@ Layer_ = {
 	-- output to string. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select & 
-	-- default, dummy, band \
+	-- default, band \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, dummy, band \
+	-- attribute, layer, select & default, band \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, dummy, band \
+	-- attribute, layer, select & default, band \
 	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
@@ -379,24 +379,22 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & default, dummy, band \
+	-- & attribute, layer, select & default, band \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
 	-- & attribute, layer & \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, dummy \
+	-- attribute, layer, select & default \
 	-- "sum" & Sum of quantitative values from objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, it
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
-	-- & attribute, layer, select & area, default, dummy \
+	-- & attribute, layer, select & area, default \
 	-- "nearest" & The value (quantitative or qualitative) of the nearest object. & attribute,
 	-- layer, select & area \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true), 
 	-- or the weights are equal for each object with some overlap (false, default value).
-	-- @arg data.dummy A value that will ignored when computing the operation, used only for
-	-- raster strategies. Note that this argument is related to the input.
 	-- @arg data.default A value that will be used to fill a cell whose attribute cannot be
 	-- computed. For example, when there is no intersection area. Note that this argument is
 	-- related to the output.
@@ -459,15 +457,15 @@ Layer_ = {
 			average = function()
 				if belong(repr, {"point", "line", "polygon"}) then
 					if repr == "polygon" then
-						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
 						defaultTableValue(data, "area", false)
 					else
-						verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					end
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -476,7 +474,6 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			count = function()
 				if belong(repr, {"point", "line", "polygon"}) then
@@ -507,15 +504,15 @@ Layer_ = {
 			mode = function()
 				if belong(repr, {"point", "line", "polygon"}) then
 					if repr == "polygon" then
-						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
 						defaultTableValue(data, "area", false)
 					else
-						verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					end
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -524,14 +521,13 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			maximum = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -540,14 +536,13 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			minimum = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -556,14 +551,13 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			coverage = function()
 				if repr == "polygon" then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -572,7 +566,6 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			nearest = function()
 				if belong(repr, {"point", "line", "polygon"}) then
@@ -594,10 +587,10 @@ Layer_ = {
 			end,
 			stdev = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -606,15 +599,14 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			sum = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 					defaultTableValue(data, "area", false)
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -623,7 +615,6 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end
 		}
 
