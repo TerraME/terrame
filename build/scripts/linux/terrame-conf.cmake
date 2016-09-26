@@ -28,18 +28,12 @@ set(TERRALIB_DIR "$ENV{_TERRALIB_MODULES_DIR}" CACHE PATH "TerraLib directory" F
 
 set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 set(CMAKE_INSTALL_PREFIX "$ENV{_TERRAME_INSTALL_PATH}" CACHE PATH "Where to install TerraME?" FORCE)
-set(CMAKE_PREFIX_PATH "${TERRALIB_3RDPARTY_DIR};${Qt5_DIR}/lib/cmake/Qt5;${TERRAME_DEPENDENCIES_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
+set(CMAKE_PREFIX_PATH "${TERRALIB_3RDPARTY_DIR};${Qt5_DIR};${TERRAME_DEPENDENCIES_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
 set(TERRAME_VERSION_STATUS "beta-3.2" CACHE STRING "Define name of installer" FORCE)
 set(TERRAME_BUILD_AS_BUNDLE OFF CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
 set(TERRAME_CREATE_INSTALLER OFF CACHE BOOL "Create the installer" FORCE)
 
 # Dependencies paths
-# set(PROTOBUF_INCLUDE_DIR "$ENV{TME_DEPENDS_DIR}/include" CACHE PATH "Lua include" FORCE)
-# set(PROTOBUF_PROTOC_EXECUTABLE "$ENV{TME_DEPENDS_DIR}/bin/protoc.exe" CACHE PATH "Lua include" FORCE)
-# set(PROTOBUF_LIBRARY "$ENV{TME_DEPENDS_DIR}/lib/libprotobuf.lib" CACHE PATH "Protobuf lib" FORCE)
 set(QTLUA_INCLUDE_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}/include/QtLua" CACHE PATH "QtLua include" FORCE)
 set(QTLUA_LIBRARY "$ENV{_TERRALIB_3RDPARTY_DIR}/lib/libqtlua.so" CACHE PATH "QtLua lib" FORCE)
-#set(QTLUAEXTRAS_INCLUDE_DIR "$ENV{TME_DEPENDS_DIR}/include" CACHE PATH "QtLua Extras include" FORCE)
 set(QTLUAEXTRAS_LIBRARY "${TERRAME_DEPENDENCIES_DIR}/lib/qtluae.so" CACHE PATH "QtLua Extras lib" FORCE)
-#set(QWT_INCLUDE_DIR "${TERRALIB_3RDPARTY_DIR}/lib/qwt.framework/Versions/6/Headers" CACHE PATH "Qwt include" FORCE)
-# set(QWT_LIBRARY "$ENV{TME_THIRD_DIR}/lib/qwt.lib" CACHE PATH "Qwt lib" FORCE)

@@ -20,12 +20,13 @@
 # of this software and its documentation.
 ############################################################################################
 
-message("CMAKE_INTALL_PREFIX $ENV{_TERRALIB_INSTALL_PATH}")
+message("CMAKE_INSTALL_PREFIX $ENV{_TERRALIB_INSTALL_PATH}")
 
-set(CMAKE_BUILD_TYPE=Debug CACHE STRING "Build type" FORCE)
+set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
 set(CMAKE_INSTALL_PREFIX "$ENV{_TERRALIB_INSTALL_PATH}" CACHE PATH "Where to install TerraLib?" FORCE)
 set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR};$ENV{_TERRALIB_3RDPARTY_DIR}/lib;$ENV{_TERRALIB_3RDPARTY_DIR}/include;$ENV{_TERRALIB_3RDPARTY_DIR}/gdal2;$ENV{_TERRALIB_3RDPARTY_DIR}/pgsql" CACHE PATH "Where are the dependencies of TerraLib?" FORCE)
 
+set(Qt5_DIR "" CACHE PATH "Disabled Qt" FORCE)
 set(SWIG_EXECUTABLE "$ENV{_TERRALIB_3RDPARTY_DIR}/bin/swig" CACHE FILEPATH "Where are the SWIG?" FORCE)
 set(TERRALIB_DIR_VAR_NAME "TME_PATH" CACHE STRING "Name of an environment variable with the base installation path of TerraLib")
 set(BOOST_ROOT "$ENV{_TERRALIB_3RDPARTY_DIR}" CACHE PATH "Boost directory" FORCE)
@@ -42,6 +43,7 @@ set(TERRALIB_DOXYGEN OFF CACHE BOOL  "Enable API documentation build?" FORCE)
 set(TERRALIB_LOGGER_ENABLED OFF CACHE BOOL  "Logger?" FORCE)
 set(TERRALIB_QTRANSLATION_ENABLED OFF CACHE BOOL "Enable translation for Qt Widgets?" FORCE)
 set(TERRALIB_MOD_WMS_QT_ENABLED OFF CACHE BOOL "Build the TerraLib Qt Web Map Service?" FORCE)
+set(TERRALIB_MOD_QT_WIDGETS_ENABLED OFF CACHE BOOL "Build Terralib Qt Widgets module?" FORCE)
 set(TERRALIB_MOD_STATISTICS_QT_ENABLED OFF CACHE BOOL "Build Qt support for Statistics module?" FORCE)
 set(TERRALIB_MOD_VP_QT_ENABLED OFF CACHE BOOL "Build Vector Processing Qt module?" FORCE)
 set(TERRALIB_MOD_SA_QT_ENABLED OFF CACHE BOOL "Build Spatial Analysis Qt module?" FORCE)
