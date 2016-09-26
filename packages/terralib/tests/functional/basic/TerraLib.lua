@@ -31,7 +31,7 @@ return {
 	end,
 	getVersion = function(unitTest)
 		local tlib = TerraLib{}
-		unitTest:assertEquals(tlib:getVersion(), "5.1.3")		
+		unitTest:assertEquals(tlib:getVersion(), "5.2.0")		
 	end,
 	openProject = function(unitTest)
 		local tl = TerraLib{}

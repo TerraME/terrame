@@ -745,7 +745,7 @@ return {
 			index = false
 		}	
 	
-		unitTest:assertEquals(layer:projection(), "Undefined, with SRID: 0.0 (PROJ4: Undefined).")
+		unitTest:assertEquals(layer:projection(), "'USER:900914', with SRID: 900914.0 (PROJ4: '+proj=poly +lat_0=0 +lon_0=-3265.859432245692 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs ').")
 		
 		customWarning = customWarningBkp
 

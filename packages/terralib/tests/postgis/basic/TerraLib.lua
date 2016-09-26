@@ -53,7 +53,7 @@ return {
 		local tableName = "sampa"
 		
 		local pgData = {
-			type = "POSTGIS",
+			type = "postgis",
 			host = host,
 			port = port,
 			user = user,
@@ -63,7 +63,7 @@ return {
 			encoding = encoding	
 		}	
 		
-		tl:copyLayer(proj, layerName1, pgData)
+		tl:saveLayerAs(proj, layerName1, pgData, true)
 		
 		local layerName2 = "SampaPg"	
 		tl:addPgLayer(proj, layerName2, pgData)

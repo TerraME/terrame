@@ -34,7 +34,7 @@ return {
 		}
 
 		local layerName1 = "Sampa"
-		Layer{
+		local layer1 = Layer{
 			project = proj1,
 			name = layerName1,
 			file = filePath("test/sampa.shp", "terralib")
@@ -50,18 +50,15 @@ return {
 
 		local data = {
 			type = "POSTGIS",
-			host = host,
-			port = port,
+			source = "postgis",
 			user = user,
 			password = password,
 			database = database,
 			table = tableName, -- USED ONLY TO DROP
-			encoding = encoding
 		}
 
-		local tl = TerraLib{}
-		tl:copyLayer(proj1, layerName1, data)
-		
+		layer1:export(data, true)
+
 		host = nil
 		port = nil
 		
@@ -90,8 +87,8 @@ return {
 			}
 		end
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName2.."' already exists in the Project.")
-
-		tl:dropPgTable(data)
+			
+		TerraLib{}:dropPgTable(data)
 		proj1.layers[layerName2] = nil
 
 		local sourceMandatory = function()
@@ -781,8 +778,7 @@ return {
 			encoding = encoding
 		}
 		
-		tl = TerraLib{}
-		tl:dropPgTable(pgData)
+		TerraLib{}:dropPgTable(pgData)
 
 		Layer{
 			project = proj,
@@ -812,7 +808,7 @@ return {
 		end
 		unitTest:assertError(tableAlreadyExists, "The table '"..tName1.."' already exists.")
 
-		tl:dropPgTable(pgData)
+		TerraLib{}:dropPgTable(pgData)
 
 		if File(projName):exists() then
 			File(projName):delete()

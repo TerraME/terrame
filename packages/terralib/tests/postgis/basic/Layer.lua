@@ -51,19 +51,17 @@ return {
 		
 		local pgData = {
 			type = "POSTGIS",
-			host = host,
-			port = port,
+			source = "postgis",
+			--host = host,
+			--port = port,
 			user = user,
 			password = password,
 			database = database,
 			table = tableName,
-			encoding = encoding
-			
+			--encoding = encoding	
 		}
 		
-		-- USED ONLY TO TESTS
-		local tl = TerraLib{}
-		tl:copyLayer(proj1, layerName1, pgData)
+		layer1:export(pgData, true)
 		
 		local layerName2 = "SampaDB"	
 		
@@ -98,7 +96,7 @@ return {
 		unitTest:assert(layer3.name ~= layer2.name)
 		unitTest:assertEquals(layer3.sid, layer2.sid)
 		
-		tl:dropPgTable(pgData)
+		TerraLib{}:dropPgTable(pgData)
 
 		-- TODO: ADO DON'T WORK (REVIEW)
 		-- if _Gtme.sessionInfo().system == "windows" then
@@ -107,7 +105,7 @@ return {
 				-- file = "D:/terrame/tests/sampa.accdb" --file("sampa.accdb", "fillcell")
 			-- }		
 			
-			-- tl:copyLayer(proj1, layerName1, adoData)
+			-- TerraLib{}:copyLayer(proj1, layerName1, adoData)
 		-- end
 		
 		-- local layerName4 = "SampaAdoDB" 
@@ -160,8 +158,7 @@ return {
 			encoding = encoding
 		}
 		
-		tl = TerraLib{}
-		tl:dropPgTable(pgData)
+		TerraLib{}:dropPgTable(pgData)
 		
 		local l1 = Layer{
 			project = proj,
@@ -181,7 +178,7 @@ return {
 		local tName2 = "add_cellslayer_basic_another"
 		
 		pgData.table = tName2
-		tl:dropPgTable(pgData)
+		TerraLib{}:dropPgTable(pgData)
 		
 		local l2 = Layer{
 			project = proj,
@@ -201,7 +198,7 @@ return {
 		local tName3 = "add_cellslayer_basic_from_db"
 		
 		pgData.table = tName3
-		tl:dropPgTable(pgData)
+		TerraLib{}:dropPgTable(pgData)
 		
 		local l3 = Layer{
 			project = proj,
@@ -219,7 +216,7 @@ return {
 
 		local newDbName = "new_pg_db_30032016"
 		pgData.database = newDbName
-		tl:dropPgDatabase(pgData)
+		TerraLib{}:dropPgDatabase(pgData)
 		pgData.database = database
 		
 		local clName4 = "New_Sampa_Cells"
@@ -244,13 +241,13 @@ return {
 		unitTest:assertEquals(layer4.table, string.lower(clName4))		
 		
 		-- BOX TEST
-		local clSet = tl:getDataSet(proj, clName1)
+		local clSet = TerraLib{}:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 68)
 		
 		clName1 = clName1.."_Box"
 		local tName4 = string.lower(clName1)
 		pgData.table = tName4
-		tl:dropPgTable(pgData)	
+		TerraLib{}:dropPgTable(pgData)	
 		
 		Layer{
 			project = proj,
@@ -264,7 +261,7 @@ return {
 			database = database
 		}
 		
-		clSet = tl:getDataSet(proj, clName1)
+		clSet = TerraLib{}:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)			
 	
 		-- END
@@ -273,15 +270,15 @@ return {
 		end	
 		
 		pgData.table = tName1
-		tl:dropPgTable(pgData)
+		TerraLib{}:dropPgTable(pgData)
 		pgData.table = tName2
-		tl:dropPgTable(pgData)	
+		TerraLib{}:dropPgTable(pgData)	
 		pgData.table = tName3
-		tl:dropPgTable(pgData)	
+		TerraLib{}:dropPgTable(pgData)	
 		pgData.table = tName4
-		tl:dropPgTable(pgData)		
+		TerraLib{}:dropPgTable(pgData)		
 		pgData.database = newDbName	
-		tl:dropPgDatabase(pgData)
+		TerraLib{}:dropPgDatabase(pgData)
 	end,
 	projection = function(unitTest)
 		local projName = "layer_basic.tview"

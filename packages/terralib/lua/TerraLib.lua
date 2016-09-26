@@ -189,10 +189,6 @@ local function makeAndOpenDataSource(connInfo, type)
 end
 
 local function hasShapeFileSpatialIndex(shapeFile)
-	if string.find(shapeFile, "WFS:http://", 1, true) then
-		return false
-	end
-
 	local qixFile = string.gsub(shapeFile, ".shp", ".qix")
 	if File(qixFile):exists() then
 		return true
@@ -232,13 +228,16 @@ local function createLayer(name, dSetName, connInfo, type)
 		local env = nil
 		local srid = 0
 
-		if (type == "OGR") or (type == "WFS") then
+		if (type == "OGR") or (type == "WFS") or (type == "POSTGIS") then
 			dSetType = ds:getDataSetType(dSetName)
 			local gp = binding.GetFirstGeomProperty(dSetType)
 			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
 			srid = gp:getSRID()
-			if not hasShapeFileSpatialIndex(connInfo.URI) and connInfo.SPATIAL_IDX then
-				addSpatialIndex(ds, dSetName)
+			
+			if connInfo.URI and (File(connInfo.URI):extension() == "shp") then
+				if not hasShapeFileSpatialIndex(connInfo.URI) and connInfo.SPATIAL_IDX then
+					addSpatialIndex(ds, dSetName)
+				end
 			end
 		elseif type == "GDAL"then
 			dSet = ds:getDataSet(dSetName)
@@ -246,11 +245,6 @@ local function createLayer(name, dSetName, connInfo, type)
 			local raster = dSet:getRaster(rpos)	
 			env = raster:getExtent()
 			srid = raster:getSRID()
-		elseif type == "POSTGIS" then
-			dSetType = ds:getDataSetType(dSetName)
-			local gp = binding.GetFirstGeomProperty(dSetType)
-			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
-			srid = gp:getSRID()
 		end
 
 		local id = binding.GetRandomicId()
@@ -260,9 +254,10 @@ local function createLayer(name, dSetName, connInfo, type)
 		layer:setTitle(name)
 		layer:setDataSourceId(ds:getId())
 		layer:setExtent(env)
-		layer:setVisibility(binding.VISIBLE)
+		layer:setVisibility(binding.NOT_VISIBLE)
 		layer:setRendererType("ABSTRACT_LAYER_RENDERER")
-
+		layer:setEncoding(binding.CharEncoding.getEncodingType("LATIN1")) -- TODO(avancinirodrigo): REVIEW ENCODING
+		-- _Gtme.print("Create Layer", name, srid)
 		if srid == binding.TE_UNKNOWN_SRS then
 			local srsPath = binding.FindInTerraLibPath("share/terralib/json/srs.json")
 			customWarning("It was not possible to find the projection of layer '"..name.."'."
@@ -537,6 +532,8 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 
 	if mask then
 		if inputDsType:hasGeom() then
+			-- _Gtme.print(cellLayerInfo, cellName, resolultion, resolultion, 
+										-- inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 			cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, 
 										inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 			return
@@ -640,6 +637,10 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 		
 		v2v:setParams(select, OperationMapper[operation], toDst)
 
+		local fromEnv =  fromLayer:getExtent()
+		local toEnv =  toLayer:getExtent()
+		-- _Gtme.print(fromEnv, toEnv, fromEnv:intersects(toEnv))	
+		
 		local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
 		if err ~= "" then
 			customError(err) -- SKIP
@@ -685,7 +686,7 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 			operation = "mean"
 		end			
 			
-		r2v:setParams(select, OperationMapper[operation], false) -- TODO: TEXTURE PARAM (REVIEW)
+		r2v:setParams(select, OperationMapper[operation], false, true) -- TODO: TEXTURE, READALL PARAMS (REVIEW)
 			
 		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
@@ -2057,7 +2058,11 @@ TerraLib_ = {
 				local bandProperty = bandObj:getProperty()
 				value = bandProperty.m_noDataValue
 			else
-				customError("The maximum band is '"..(numBands - 1).."'.")
+				if (numBands - 1) > 0 then
+					customError("The maximum band is '"..(numBands - 1).."'.")
+				else
+					customError("The only available band is '"..(numBands - 1).."'.")
+				end
 			end
 		end
 		
@@ -2082,7 +2087,8 @@ TerraLib_ = {
 			local fromDsId = from:getDataSourceId()	
 			local toType = SourceTypeMapper[toData.type]
 			local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)		
-			local fromDs = binding.GetDs(fromDsId, true)	
+			local fromDs = binding.GetDs(fromDsId, true)
+			fromDs:setEncoding(from:getEncoding())
 			from = toDataSetLayer(from)	
 			local fromDSetName = from:getDataSetName()	
 			local fromType = fromDsInfo:getType()
@@ -2100,7 +2106,7 @@ TerraLib_ = {
 					else
 						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
 					end
-				end						
+				end	
 			elseif toType == "OGR" then
 				if File(toData.file):exists() then
 					if overwrite then
@@ -2149,19 +2155,60 @@ TerraLib_ = {
 				releaseProject(project)
 				customError(errorMsg)
 			end
-						
+									
 			local fromDSetType = fromDs:getDataSetType(fromDSetName)				
 			local fromDSet = fromDs:getDataSet(fromDSetName)
-				
-			binding.Create(toDs, fromDSetType, fromDSet)
+			local converter = binding.te.da.DataSetTypeConverter(fromDSetType, toDs:getCapabilities(), toDs:getEncoding())
+			local srid = from:getSRID()
+
+			binding.AssociateDataSetTypeConverterSRID(converter, srid, srid)
+			local dstResult = converter:getResult()
+
+			if dstResult:getProperty("FID") then
+				dstResult:remove("FID")
+			end			
+			
+			dstResult:setName(fromDSetType:getName())
+			local dsetAdapted = binding.CreateAdapter(fromDSet, converter)
+
+		  -- // Check properties names
+		  -- std::vector<te::dt::Property* > props = dsTypeResult->getProperties();
+		  -- std::map<std::size_t, std::string> invalidNames;
+		  -- for (std::size_t i = 0; i < props.size(); ++i)
+		  -- {
+			-- if (!dsGPKG->isPropertyNameValid(props[i]->getName()))
+			-- {
+			  -- invalidNames[i] = props[i]->getName();
+			-- }
+		  -- }
+
+		  -- if (!invalidNames.empty())
+		  -- {
+			-- std::map<std::size_t, std::string>::iterator it = invalidNames.begin();
+			-- while (it != invalidNames.end())
+			-- {
+			  -- bool aux;
+			  -- std::string newName = te::common::ReplaceSpecialChars(it->second, aux);
+
+			  -- props[it->first]->setName(newName);
+
+			  -- ++it;
+			-- }
+		  -- }			
+		  
+			local transactor = toDs:getTransactor()
+			transactor:begin()
+			transactor:createDataSet(dstResult, {})			
+			dsetAdapted:moveBeforeFirst()
+			transactor:add(dstResult:getName(), dsetAdapted, toDs)
+			transactor:commit()
 			
 			-- #875
 			-- if toType == "POSTGIS" then
 				-- toDs:renameDataSet(string.lower(fromDSetName), toData.table)
 			-- end
-
+	
 			fromDs:close()
-			toDs:close()	
 		end
 		
 		releaseProject(project)
