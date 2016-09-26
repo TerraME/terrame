@@ -26,8 +26,7 @@ Directory_ = {
 	type_ = "Directory",
 	--- Return a table with the file attributes corresponding to filepath (or nil followed by an error
 	-- message in case of error). If the second optional argument is given, then only the value of the
-	-- named attribute is returned (this use is equivalent to lfs.attributes(filepath).aname, but the
-	-- table is not created and only one attribute is retrieved from the O.S.). The attributes are
+	-- named attribute is returned. The attributes are
 	-- described as follows; attribute mode is a string, all the others are numbers, and the time
 	-- related attributes use the same time reference of os.time.
 	-- This function uses stat internally thus if the given filepath is a symbolic link, it is followed
@@ -71,8 +70,8 @@ Directory_ = {
 
 		return lfs.attributes(self.name, attributename)
 	end,
-	--- Create a new directory.
-	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
+	--- Create the directory.
+	-- Returns true if the operation was successful. In case of error, it returns nil plus an error string.
 	-- @usage -- DONTRUN
 	-- dir = Directory("mydirectory")
 	-- dir:create()
@@ -92,9 +91,7 @@ Directory_ = {
 	end,
 	--- Remove an existing directory. It removes all internal files and directories
 	-- recursively. If the directory does not exist or it cannot be removed,
-	-- this function stops with an error. The function will automatically add
-	-- quotation marks in the beginning and in the end of the directory name in order
-	-- to avoid problems related to empty spaces in the string.
+	-- this function stops with an error.
 	-- @usage dir = Directory("mydirectory")
 	-- dir:create()
 	-- dir:delete()
@@ -107,7 +104,7 @@ Directory_ = {
 
 		return result == true or customError(result)
 	end,
-	--- Return whether a given string represents a directory stored in the computer.
+	--- Return whether the directory is stored in the computer.
 	-- @usage if Directory("C:\\TerraME\\bin"):exists() then
 	--     print("is dir")
 	-- end
@@ -118,7 +115,7 @@ Directory_ = {
 
 		return false
 	end,
-	--- Return the files in a given directory.
+	--- Return a vector of strings with the content of the directory.
 	-- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
 	-- @usage files = Directory(packageInfo("base").data):list()
 	--
@@ -146,7 +143,7 @@ Directory_ = {
 
 		return result
 	end,
-	--- Change the current working directory to the given path.
+	--- Set the current working directory with the directory path.
 	-- Returns true in case of success or nil plus an error string.
 	-- @usage -- DONTRUN
 	-- Directory("c:\\tests"):setCurrentDir()
@@ -176,11 +173,14 @@ metaTableDirectory_ = {
 
 --- An abstract representation of Directory. This type provide access to additional
 -- directory operations and directory attributes.
--- @arg data.name A mandatory string with the directory name.
--- The end of the temporary directory name might contain X's,
--- which are going to be replaced by random alphanumerica values in order to
+-- @arg data.name A string with the directory name.
+-- @arg data.tmp A boolean value indicating whether the directory should be
+-- temporary. The default value is false.
+-- When creating a temporary directory, the end of its name must contain X's,
+-- which are going to be replaced by random alphanumerical values in order to
 -- guarantee that the created directory will not replace a previous one.
--- @usage dir = Directory("/my/path/my_dir")
+-- @usage -- DONTRUN
+-- dir = Directory("/my/path/my_dir")
 --
 -- tmpDir = Directory{
 --    name = "mytmpdir_XXX",
@@ -188,7 +188,6 @@ metaTableDirectory_ = {
 -- }
 --
 -- print(tmpDir)
--- tmpDir:delete()
 function Directory(data)
 	if type(data) == "string" then
 		data = {name = data}

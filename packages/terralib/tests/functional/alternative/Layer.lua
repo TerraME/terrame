@@ -542,24 +542,12 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		local dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "minimum",
-				layer = layerName1,
-				select = "row",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
-
 		local unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
 				layer = layerName1,
 				select = "row",
-				dummy = 0,
 				defaut = 3
 			}
 		end
@@ -608,17 +596,6 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "maximum",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
-
 		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
@@ -651,17 +628,6 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "coverage",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
-
 		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
@@ -693,17 +659,6 @@ return{
 			}
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
-
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "stdev",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		defaultNotNumber = function()
 			cl:fill{
@@ -748,17 +703,6 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "average",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
-
 		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
@@ -802,17 +746,6 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "mode",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
-
 		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
@@ -855,17 +788,6 @@ return{
 			}
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
-
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "sum",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{

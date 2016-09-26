@@ -170,13 +170,12 @@ return{
 	end,
 	split = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
-		local path, name, extension, nameWithExtension = file:split()
+		local path, name, extension = file:split()
 
 		unitTest:assertType(file, "File")
 		unitTest:assertEquals(path, _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/")
 		unitTest:assertEquals(name, "agents")
 		unitTest:assertEquals(extension, "csv")
-		unitTest:assertEquals(nameWithExtension, "agents.csv")
 	end,
 	touch = function(unitTest)
 		if _Gtme.sessionInfo().system ~= "windows" then

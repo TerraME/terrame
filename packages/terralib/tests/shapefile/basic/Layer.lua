@@ -90,7 +90,6 @@ return {
 
 		File(cl1.file):delete()
 		File(cl2.file):delete()
-		-- // SPATIAL INDEX
 
 		-- VERIFY SRID
 		local customWarningBkp = customWarning
@@ -108,6 +107,19 @@ return {
 		customWarning = customWarningBkp
 		-- // VERIFY SRID		
 		
+		File(proj.file):delete()
+	end,
+	__len = function(unitTest)
+		local projName = "layer_shape_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
+			clean = true
+		}
+		
+		unitTest:assertEquals(#proj.setores, 58)
+
 		File(proj.file):delete()
 	end,
 	fill = function(unitTest)

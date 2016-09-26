@@ -109,6 +109,26 @@ return {
 			File(projName):delete()
 		end		
 	end,
+	__len = function(unitTest)
+		local projName = "layer_tiff_basic.tview"
+
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end			
+
+		local proj = Project {
+			file = projName,
+			prodes = filePath("test/prodes_polyc_10k.tif", "terralib"),
+			clean = true
+		}
+		
+		customWarning = customWarningBkp
+
+		unitTest:assertEquals(#proj.prodes, 20020)
+
+		File(proj.file):delete()
+	end,
 	fill = function(unitTest)
 		local projName = "layer_fill_tif.tview"
 		
