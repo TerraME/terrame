@@ -734,7 +734,15 @@ Layer_ = {
 }
 
 metaTableLayer_ = {
-	__index = Layer_, __tostring = _Gtme.tostring
+	__index = Layer_,
+	__tostring = _Gtme.tostring,
+	--- Return the number of objects (points, polygons, lines, or pixels) within the Layer.
+	-- @usage -- DONTRUN
+	--
+	-- print(#layer)
+	__len = function(self)
+		return self.project.terralib:getLayerSize(self.project, self.name)
+	end
 }
 	
 --- A Layer representing a geospatial dataset stored into a given data source. 
