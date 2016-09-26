@@ -28,7 +28,7 @@
 -- within the package.
 -- @arg filename A string with the name of the file.
 -- @arg package A string with the name of the package. As default, it uses paciage base.
--- @usage cs = CellularSpace{file = filePath("simple.map")}
+-- @usage cs = CellularSpace{file = filePath("simple.pgm")}
 function filePath(filename, package)
 	if package == nil then package = "base" end
 

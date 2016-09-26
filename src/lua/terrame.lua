@@ -1179,26 +1179,14 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		color = false,
 		path = os.getenv("TME_PATH"), 
 		fullTraceback = false,
-		autoclose = false
+		autoclose = false,
+		system = string.lower(cpp_getOsName()),
+		round = 1e-5
 	}
 
 	if info_.path == nil or info_.path == "" then
 		error("Error: TME_PATH environment variable should exist and point to TerraME installation directory.", 2)
 	end
-
-	info_.system = (function()
-		if info_.separator == "/" then
-			local macintosh = "/Applications/terrame.app/Contents/MacOS"
-
-			if not info_.path:match(macintosh) then
-				return "linux"
-			end
-
-			return "macintosh"
-		else
-			return "windows"
-		end
-	end)()
 
 	-- Package.lua contains functions that terrame.lua needs, but should also be
 	-- documented and availeble for the final users.
@@ -1570,7 +1558,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(1)
 			end
 
-			sessionInfo().currentFile = arg
+			info_.currentFile = arg
 
 			local success, result = _Gtme.myxpcall(function() dofile(arg) end) 
 			if not success then

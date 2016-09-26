@@ -1001,7 +1001,7 @@ function Society(data)
 			end
 
 			local f = File(data.file)
-			local csv = f:read(data.sep)
+			local csv = f:readTable(data.sep)
 			for i = 1, #csv do
 				data:add(csv[i])
 			end

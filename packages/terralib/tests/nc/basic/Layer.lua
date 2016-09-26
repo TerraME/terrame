@@ -190,7 +190,7 @@ rep      string [raster]
 sid      string [14825bac-96e7-418d-a340-f97f49ac3ed1]
 source   string [nc]
 ]], 36, true)
-			-- unitTest:assertFile(projName) -- SKIP #1301
+			-- unitTest:assertFile(projName) -- SKIP #1242
 
 			if File(projName):exists() then
 				File(projName):delete()

@@ -146,36 +146,44 @@ return{
 	end,
 	read = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
-		local csv = file:read()
+		file:read(",")
+		local line = file:read(",")
+
+		unitTest:assertType(line, "table")
+		unitTest:assertEquals(line[1], "john")
+		unitTest:assertEquals(line[2], "20")
+		unitTest:assertEquals(line[3], "200")
+		unitTest:assertEquals(file.line, 2)
+
+		line = file:read()
+		unitTest:assertType(line, "string")
+		unitTest:assertEquals(line, "\"mary\",18,100,3,1,false")
+		unitTest:assertEquals(file.line, 3)
+		file:close()
+	end,
+	readTable = function(unitTest)
+		local file = File(filePath("agents.csv", "base"))
+		local csv = file:readTable()
 
 		unitTest:assertEquals(4, #csv)
 		unitTest:assertEquals(20, csv[1].age)
 	end,
-	readLine = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
-		file:readLine()
-		local line = file:readLine()
-
-		unitTest:assertEquals(line[1], "john")
-		unitTest:assertEquals(line[2], "20")
-		unitTest:assertEquals(line[3], "200")
-	end,
 	split = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
-		local path, name, extension, nameWithExtension = file:split()
+		local path, name, extension = file:split()
 
 		unitTest:assertType(file, "File")
 		unitTest:assertEquals(path, _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/")
 		unitTest:assertEquals(name, "agents")
 		unitTest:assertEquals(extension, "csv")
-		unitTest:assertEquals(nameWithExtension, "agents.csv")
 	end,
 	touch = function(unitTest)
 		if _Gtme.sessionInfo().system ~= "windows" then
 			local pathdata = packageInfo().data.."testfile.txt"
 
 			local file = File(pathdata)
-			file:writeLine("test")
+			file:write("test")
+			file:close()
 
 			unitTest:assert(file:touch(10000, 10000)) -- SKIP
 
@@ -206,12 +214,11 @@ return{
 
 		local s = sessionInfo().separator
 		local filename = currentDir()..s.."csvwrite.csv"
-
-		local file = File(filename)
+		local file = File("csvwrite.csv")
 		file:write(example)
 
 		file = File(filename)
-		local data = file:read()
+		local data = file:readTable()
 
 		unitTest:assertNotNil(data)
 		unitTest:assertEquals(#example, #data)
@@ -222,24 +229,21 @@ return{
 			end
 		end
 
-		if File(filename):exists() then File(filename):delete() end
-	end,
-	writeLine = function(unitTest)
-		local example = "Some text.."
+		if file:exists() then file:delete() end
 
-		local s = sessionInfo().separator
-		local filename = currentDir()..s.."abc.txt"
+		example = "Some text.."
+		filename = currentDir()..s.."abc.txt"
 
-		local file = File(filename)
-		file:writeLine(example)
+		file = File(filename)
+		file:write(example)
 		file:close()
 
-		file = io.open(filename, "r")
-		local text = file:read("*all")
+		file = File(filename):open()
+		data = file:read("*all")
 		file:close()
 
-		unitTest:assertNotNil(text)
-		unitTest:assertEquals(text, example)
+		unitTest:assertNotNil(data)
+		unitTest:assertEquals(data, example)
 
 		if File(filename):exists() then File(filename):delete() end
 	end,

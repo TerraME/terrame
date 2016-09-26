@@ -43,6 +43,54 @@ return{
 		unitTest:assertEquals(s.mode, "debug")
 		unitTest:assertEquals(s.version, packageInfo().version)
 		unitTest:assertEquals(s.system == "windows", s.separator == "\\")
+		unitTest:assertEquals(s.system == "linux" or s.system == "mac", s.separator == "/")
+
+		local info = {
+			mode = s.mode,
+			round = s.round,
+			silent = s.silent
+		}
+
+		local infoMock = {
+			mode = "strict",
+			round = 0.9,
+			silent = true
+		}
+
+		s.mode = infoMock.mode
+		s.round = infoMock.round
+		s.silent = infoMock.silent
+
+		unitTest:assertEquals(s.mode, infoMock.mode)
+		unitTest:assertEquals(s.round, infoMock.round)
+		unitTest:assertEquals(s.silent, infoMock.silent)
+
+		s.mode = info.mode
+		s.silent = info.silent
+		s.round = info.round
+
+		local count = 0
+		local timer = Timer{
+			Event{period = 1.0000001, action = function()
+				count = count + 1
+			end}
+		}
+
+		timer:run(5)
+		unitTest:assertEquals(count, 5)
+
+		s.round = 0.0000001
+		count = 0
+		timer = Timer{
+			Event{period = 1.0000001, action = function()
+				count = count + 1
+			end}
+		}
+
+		timer:run(5)
+		unitTest:assertEquals(count, 4)
+
+		s.round = info.round
 	end
 }
 
