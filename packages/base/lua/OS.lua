@@ -24,9 +24,9 @@
 
 -- @header Functions to handle files and directories.
 -- Most of the functions bellow are taken from LuaFileSystem 1.6.2.
--- Copyright Kepler Project 2003 (http://www.keplerproject.org/luafilesystem).
+-- Copyright Kepler Project 2003 (https://keplerproject.github.io/luafilesystem/).
 
---- Return a string with the current working directory or nil plus an error string.
+--- Return a string with the current working directory.
 -- @usage cdir = currentDir()
 -- print(cdir)
 function currentDir()
@@ -35,7 +35,7 @@ end
 
 --- Execute a system command and return its output. It returns two tables. 
 -- The first one contains each standard output line as a position.
--- The second one contains  each error output line as a position.
+-- The second one contains each error output line as a position.
 -- @arg command A command.
 -- @usage result, error = runCommand("dir")
 function runCommand(command)
@@ -69,7 +69,7 @@ end
 -- @tabular NONE
 -- Attribute & Description \
 -- dbVersion & A string with the current TerraLib version for databases. \
--- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
+-- mode & A string with the current mode for warnings ("normal", "debug", "quiet", or "strict"). \
 -- path & A string with the location of TerraME in the computer. \
 -- separator & A string with the directory separator. \
 -- silent & A boolean value indicating whether print() calls should not be shown in the
