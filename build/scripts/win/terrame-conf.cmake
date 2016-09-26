@@ -23,7 +23,7 @@
 # Main configurations
 set(CMAKE_BUILD_TYPE "Release" CACHE PATH "Build Type" FORCE)
 set(CMAKE_INSTALL_PREFIX "$ENV{_TERRAME_INSTALL_PATH}" CACHE PATH "Where to install TerraME?" FORCE)
-set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR};$ENV{_Qt5_DIR}/lib/cmake;$ENV{_TERRAME_DEPENDS_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
+set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR};$ENV{_Qt5_DIR}/lib/cmake;$ENV{_TERRAME_DEPENDS_DIR};$ENV{_MSYS_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
 set(TERRAME_VERSION_STATUS "beta-3" CACHE STRING "Define name of installer" FORCE)
 set(TERRAME_BUILD_AS_BUNDLE ON CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
 set(TERRAME_CREATE_INSTALLER ON CACHE BOOL "Create the installer" FORCE)
@@ -34,12 +34,5 @@ set(TERRAME_DEPENDENCIES_DIR "$ENV{_TERRAME_DEPENDS_DIR}" CACHE PATH "TerraME de
 set(TERRALIB_DIR "$ENV{_TERRALIB_MODULES_DIR}" CACHE PATH "TerraLib directory" FORCE)
 set(TERRALIB_3RDPARTY_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}" CACHE PATH "TerraLib 3rdparty directory" FORCE)
 set(MSVC_REDIST_DIR "C:/Program Files (x86)/Microsoft Visual Studio 12.0/VC/redist/x64/Microsoft.VC120.CRT" CACHE PATH "Visual Studio directories" FORCE)
-# set(PROTOBUF_INCLUDE_DIR "$ENV{TME_DEPENDS_DIR}/include" CACHE PATH "Lua include" FORCE)
-# set(PROTOBUF_PROTOC_EXECUTABLE "$ENV{TME_DEPENDS_DIR}/bin/protoc.exe" CACHE PATH "Lua include" FORCE)
-# set(PROTOBUF_LIBRARY "$ENV{TME_DEPENDS_DIR}/lib/libprotobuf.lib" CACHE PATH "Protobuf lib" FORCE)
-# set(QTLUA_INCLUDE_DIR "$ENV{TME_DEPENDS_DIR}/include" CACHE PATH "QtLua include" FORCE)
-# set(QTLUA_LIBRARY "$ENV{TME_DEPENDS_DIR}/lib/qtlua.lib" CACHE PATH "QtLua include" FORCE)
-# set(QTLUAEXTRAS_INCLUDE_DIR "$ENV{TME_DEPENDS_DIR}/include" CACHE PATH "QtLua Extras include" FORCE)
-# set(QTLUAEXTRAS_LIBRARY "$ENV{TME_DEPENDS_DIR}/lib/qtluae.lib" CACHE PATH "QtLua Extras lib" FORCE)
+
 set(QWT_INCLUDE_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}/include/qwt" CACHE PATH "Qwt include" FORCE)
-# set(QWT_LIBRARY "$ENV{TME_THIRD_DIR}/lib/qwt.lib" CACHE PATH "Qwt lib" FORCE)
