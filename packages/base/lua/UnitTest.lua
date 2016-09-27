@@ -435,16 +435,6 @@ UnitTest_ = {
 			self:printError("Test should be "..mtype.." got "..type(value)..".")
 		end
 	end,
-	--- Clear the screen, removing all the visualization objects.
-	-- This function is automatically called after executing each test and each example
-	-- of the package.
-	-- @usage unitTest = UnitTest{}
-	-- unitTest:clear()
-	clear = function(self)
-		if #_Gtme.createdObservers > 0 then
-			clean()
-		end
-	end,
 	--- Internal function to print error messages along the tests.
 	-- @arg msg A string with the error message.
 	-- @usage -- DONTRUN

@@ -585,7 +585,7 @@ function _Gtme.executeTests(package, fileName)
 					end
 				end)
 
-				ut:clear()
+				clean()
 				ut.executed_functions = ut.executed_functions + 1
 
 				if count_test == ut.test and not found_error then
@@ -819,7 +819,7 @@ function _Gtme.executeTests(package, fileName)
 					ut.fail = fail
 				end
 
-				ut:clear()
+				clean()
 			end)
 		else
 			printWarning("The package has no examples")
