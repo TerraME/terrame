@@ -36,26 +36,15 @@ return{
 		local file = File(filePath("agents.csv", "base"))
 		local attr = file:attributes()
 
-		local expected = {
-			mode = "file",
-			getn = 12,
-			size = 140.0
-		}
-
-		if _Gtme.sessionInfo().system ~= "windows" then
-			expected.getn = 14
-			expected.size = 135.0
-		end
-
-		unitTest:assertEquals(getn(attr), expected.getn)
-		unitTest:assertEquals(attr.mode, expected.mode)
-		unitTest:assertEquals(attr.size, expected.size)
+		unitTest:assertEquals(getn(attr), 12, 2)
+		unitTest:assertEquals(attr.mode, "file")
+		unitTest:assertEquals(attr.size, 140, 5)
 
 		attr = file:attributes("mode")
-		unitTest:assertEquals(attr, expected.mode)
+		unitTest:assertEquals(attr, "file")
 
 		attr = file:attributes("size")
-		unitTest:assertEquals(attr, expected.size)
+		unitTest:assertEquals(attr, 140, 5)
 	end,
 	close = function(unitTest)
 		local filename = "test.csv"
