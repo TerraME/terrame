@@ -30,7 +30,6 @@ UnitTest_ = {
 	wrong_file = 0,
 	last_error = "",
 	count_last = 0,
-	delayed_time = 0,
 	--- Check if a given value is true. In any other case (number, string, false, or nil)
 	-- it generates an error.
 	-- @arg value Any value.
@@ -437,18 +436,13 @@ UnitTest_ = {
 		end
 	end,
 	--- Clear the screen, removing all the visualization objects.
-	-- Whenever there is any visualization object, it might sleep the tests for some time before
-	-- removing them. The sleeping time is the value of a variable named sleep
-	-- in the configuration file for the tests, or zero if it does not exist. 
 	-- This function is automatically called after executing each test and each example
 	-- of the package.
 	-- @usage unitTest = UnitTest{}
 	-- unitTest:clear()
 	clear = function(self)
 		if #_Gtme.createdObservers > 0 then
-			delay(self.sleep)
 			clean()
-			self.delayed_time = self.delayed_time + self.sleep
 		end
 	end,
 	--- Internal function to print error messages along the tests.
@@ -501,15 +495,13 @@ local metaTableUnitTest_ = {
 	__index = UnitTest_
 }
 
---- Type for testing packages. All its arguments (but sleep) are necessary only when the tests
+--- Type for testing packages. All its arguments are necessary only when the tests
 -- work with database access.
 -- @arg data.source Name of the data source. See CellularSpace.
 -- @arg data.host Name of the host. See CellularSpace.
 -- @arg data.port Number of the port. See CellularSpace.
 -- @arg data.password A password. See CellularSpace.
 -- @arg data.user A user name. See CellularSpace.
--- @arg data.sleep A number indicating the amount of time to sleep every time there is a UnitTest:clear() in
--- the tests as well as in the end of each test that creates some visualization object.
 -- @usage unitTest = UnitTest{}
 function UnitTest(data)
 	setmetatable(data, metaTableUnitTest_)
