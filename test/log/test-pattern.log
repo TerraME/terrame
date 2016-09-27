@@ -5,7 +5,6 @@ Looking for documented functions
 Looking for package functions
 Found 3 extra functions in the documentation
 Skip looking for lines of source code
-Skipping directory tests/database/alternative
 Testing tests/functional/alternative/Agent.lua
 Testing Agent
 Testing add
@@ -27,7 +26,6 @@ Testing reproduce
 Testing setId
 Testing walk
 Checking if all asserts were executed
-Skipping directory tests/internal/alternative
 Testing tests/observer/alternative/Agent.lua
 Testing notify
 Checking if all asserts were executed

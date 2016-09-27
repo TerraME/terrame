@@ -453,10 +453,6 @@ function _Gtme.executeTests(package, fileName)
 			end)
 		end
 
-		if getn(myFiles) == 0 then
-			printWarning("Skipping directory ".._Gtme.makePathCompatibleToAllOS(eachDirectory))
-		end
-
 		forEachOrderedElement(myFiles, function(eachFile)
 			ut.current_file = eachDirectory..s..eachFile
 			local tests
@@ -515,9 +511,7 @@ function _Gtme.executeTests(package, fileName)
 				end)
 			end
 
-			if #myTests == 0 then
-				printWarning("Skipping ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
-			elseif not printTesting then
+			if #myTests > 0 and not printTesting then
 				printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
 			end
 
