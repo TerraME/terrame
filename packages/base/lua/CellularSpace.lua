@@ -634,17 +634,10 @@ local function loadOGR(self)
 	defaultTableValue(self, "geometry", false)
 
 	setCellsByTerraLibDataSet(self, dSet)
-	local temp = ""
 
-	for i = self.file:len(), 1, -1 do
-		if self.file:sub(i, i) ~= sessionInfo().separator then
-			temp = self.file:sub(i, i)..temp
-		else
-			break
-		end
-	end
+	local file = File(self.file)
 
-	self.layer = temp
+	self.layer = tostring(file:name(true))
 	self.cObj_:setLayer(self.layer)
 end
 
