@@ -1,6 +1,7 @@
 Building package 'noexamples'
 
 Testing package 'noexamples'
+Creating log directory in '/Applications/terrame.app/Contents/MacOS/packages/noexamples/log/mac/'.
 Loading package 'noexamples'
 Looking for overwritten variables
 Looking for documented functions

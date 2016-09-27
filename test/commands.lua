@@ -13,7 +13,6 @@ test = {
 	memory         = {arg = "-test", package = "memory"},
 	pattern        = {arg = "-test", config = "pattern.lua"},
 	noload         = {arg = "-test", package = "noload"},
-	nolog          = {arg = "-test", config = "log.lua"},
 	noexamples     = {arg = "-test", package = "noexamples" },
 	linedirectory  = {arg = "-test", config = "linesDirectory.lua"}
 }
@@ -48,7 +47,6 @@ doc = {
 
 build = {
 	build           = {arg = "-build", package = "build",        config = "all.lua"},
-	buildafile      = {arg = "-build", package = "buildafile"},
 	onerrorbuild    = {arg = "-build", package = "onerrorbuild", config = "all.lua", clean = true},
 	twoerrorsbuild  = {arg = "-build", package = "twoerrorsbuild", config = "all.lua"},
 	buildunnecfiles = {arg = "-build", package = "buildunnecfiles", config = "all.lua"},
@@ -77,7 +75,6 @@ basic = {
 	builderror2         = {arg = "-build", package = "build", config = "etwdre.lua"},
 	builderror3         = {arg = "-build", package = "build", arg = "-clea"},
 	builderror4         = {arg = "-build", package = "build", config = "pattern.lua"},
-	builderror5         = {arg = "-build", package = "onerror"},
 	basictrace          = {script = "trace-basic.lua"},
 	tracepackage        = {script = "trace-package.lua"},
 	tracesyntax         = {script = "trace-syntax.lua"},

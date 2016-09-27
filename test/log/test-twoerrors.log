@@ -1,5 +1,5 @@
 Loading configuration file 'config/all.lua'
-Using log directory 'log/linux'
+Using log directory '/Applications/terrame.app/Contents/MacOS/packages/twoerrors/log/mac/'
 Loading package 'twoerrors'
 Error: print() call detected with argument 'print when loading'
 Error: print() call detected with argument 'print when loading'

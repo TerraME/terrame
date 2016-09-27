@@ -273,7 +273,7 @@ UnitTest_ = {
 
 		local s = sessionInfo().separator
 		local pkg = sessionInfo().package
-		local oldLog = packageInfo(pkg).path..s.."log"..s..self.log..s..fname
+		local oldLog = self.log..s..fname
 
 		if not File(oldLog):exists() then
 			if not self.created_logs then -- SKIP
@@ -281,7 +281,7 @@ UnitTest_ = {
 			end
 
 			self.created_logs = self.created_logs + 1 -- SKIP
-			_Gtme.printError("Creating '".._Gtme.makePathCompatibleToAllOS("log"..s..self.log..s..fname).."'.")
+			_Gtme.printError("Creating '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..fname).."'.")
 			os.execute("cp \""..self.tmpdir..s..fname.."\" \""..oldLog.."\"") -- SKIP
 			self.test = self.test + 1 -- SKIP
 			self.success = self.success + 1 -- SKIP
@@ -352,9 +352,6 @@ UnitTest_ = {
 		verify(tolerance >= 0 and tolerance <= 1, "Argument #3 should be between 0 and 1, got "..tolerance..".")
 
 		local s = sessionInfo().separator
-		if not self.log then
-			customError("It is not possible to use assertSnapshot without a log directory location in a configuration file for the tests.")
-		end
 
 		if not self.logs then
 			self.logs = 0 -- SKIP
@@ -381,7 +378,7 @@ UnitTest_ = {
 		local newImage = self.tmpdir..s..file
 
 		local pkg = sessionInfo().package
-		local oldImage = packageInfo(pkg).path..s.."log"..s..self.log..s..file
+		local oldImage = self.log..s..file
 
 		if not File(oldImage):exists() then
 			observer:save(oldImage) -- SKIP
@@ -391,7 +388,7 @@ UnitTest_ = {
 			end
 
 			self.created_logs = self.created_logs + 1 -- SKIP
-			_Gtme.printError("Creating '".._Gtme.makePathCompatibleToAllOS("log"..s..self.log..s..file).."'.")
+			_Gtme.printError("Creating '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..file).."'.")
 			self.test = self.test + 1 -- SKIP
 			self.success = self.success + 1 -- SKIP
 		else
@@ -403,13 +400,13 @@ UnitTest_ = {
 			if merror <= tolerance then
 				self.success = self.success + 1
 			elseif tolerance > 0 then
-				local message = "Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..self.log..s..file)
+				local message = "Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..file)
 					.."'\nand\n  '"..newImage.."'\nare different." -- SKIP
 					.."\nThe maximum tolerance is "..tolerance..", but got "..merror.."." -- SKIP
 				self:printError(message)
 				self.fail = self.fail + 1 -- SKIP
 			else
-				self:printError("Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..self.log..s..file).."'\nand\n  '"..newImage.."'\nare different.")
+				self:printError("Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..file).."'\nand\n  '"..newImage.."'\nare different.")
 				self.fail = self.fail + 1 -- SKIP
 			end
 		end

@@ -1,3 +1,4 @@
+Creating log directory in '/Applications/terrame.app/Contents/MacOS/packages/noload/log/mac/'.
 Loading package 'noload'
 Package 'noload' could not be loaded.
 Error: attempt to perform arithmetic on a nil value (global 'swerf')

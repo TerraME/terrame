@@ -198,7 +198,7 @@ function _Gtme.executeTests(package, fileName)
 		end)
 
 		if getn(data) == 0 then
-			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'log', 'time', 'test'}.")
+			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'time', 'test'}.")
 			os.exit(1)
 		end
 
@@ -236,18 +236,25 @@ function _Gtme.executeTests(package, fileName)
 			end
 		end
 
-		if data.log ~= nil then
-			local location = packageInfo(package).path..s.."log"..s..data.log
-			if Directory(location):exists() then
-				printNote("Using log directory 'log"..s..data.log.."'")
-			else
-				customError("Log directory '"..location.."' does not exist.")
-			end
-		end
-
-		verifyUnnecessaryArguments(data, {"directory", "file", "test", "examples", "lines", "log", 'time'})
+		verifyUnnecessaryArguments(data, {"directory", "file", "test", "examples", "lines", 'time'})
 	else
 		data = {}
+	end
+
+	data.log = Directory(packageInfo(package).path..s.."log"..s..sessionInfo().system)
+
+	if data.log:exists() then
+		printNote("Using log directory '"..data.log.."'")
+	else
+		printNote("Creating log directory in '"..data.log.."'")
+
+		local logdir = Directory(packageInfo(package).path..s.."log")
+
+		if not logdir:exists() then
+			logdir:create()
+		end
+
+		data.log:create()
 	end
 
 	local check_functions = data.directory == nil and data.test == nil
@@ -796,12 +803,6 @@ function _Gtme.executeTests(package, fileName)
 				if logfile ~= nil then
 					io.close(logfile)
 
-					if ut.log == nil then
-						File(value..".log"):delete()
-						printError("Error: It is not possible to test examples with print() without a configuration file pointing a log directory.")
-						os.exit(1)
-					end
-
 					local test = ut.test
 					local success = ut.success
 					local fail = ut.fail 
@@ -830,11 +831,11 @@ function _Gtme.executeTests(package, fileName)
 
 	if ut.logs > 0 and check_logs then
 		printNote("Checking logs")
-		local mdir = Directory(packageInfo(package).path..s.."log"..s..ut.log):list()
+		local mdir = data.log:list()
 
 		forEachElement(mdir, function(_, value)
 			if not ut.tlogs[value] then
-				printError("File 'log/"..ut.log.."/"..value.."' was not used by any assert.")
+				printError("File 'log/"..sessionInfo().system.."/"..value.."' was not used by any assert.")
 				ut.unused_log_files = ut.unused_log_files + 1
 			end
 		end)
@@ -999,9 +1000,9 @@ function _Gtme.executeTests(package, fileName)
 		end
 
 		if ut.unused_log_files == 1 then
-			printError("One file from directory 'log/"..ut.log.."' was not used.")
+			printError("One file from directory 'log/"..sessionInfo().system.."' was not used.")
 		elseif ut.unused_log_files > 1 then
-			printError(ut.unused_log_files.." files from directory 'log/"..ut.log.."' were not used.")
+			printError(ut.unused_log_files.." files from directory 'log/"..sessionInfo().system.."' were not used.")
 		else
 			printNote("All log files were used in the tests.")
 		end

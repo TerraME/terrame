@@ -3,7 +3,7 @@ Parsing configuration file 'config/all.lua'
 
 Testing package 'onerrorbuild'
 Loading configuration file 'config/all.lua'
-Using log directory 'log/mac'
+Using log directory '/Applications/terrame.app/Contents/MacOS/packages/onerrorbuild/log/mac/'
 Loading package 'onerrorbuild'
 Looking for overwritten variables
 Looking for documented functions

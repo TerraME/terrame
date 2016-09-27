@@ -60,13 +60,14 @@ forEachFile("packages", function(file)
 end)
 
 _Gtme.printNote("Removing files")
-remove = _Gtme.include("remove.lua")
+initialRemove = _Gtme.include("remove.lua")
 
-forEachElement(remove.files, function(_, value)
-	_Gtme.print("Removing '"..value.."'")
+forEachElement(initialRemove.files, function(_, value)
 	if Directory(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
 		result = Directory(value):delete()
 	elseif File(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
 		File(value):delete()
 	end
 end)
@@ -285,16 +286,16 @@ os.execute("cp config.lua packages")
 Directory(initialDir.."packages"):setCurrentDir()
 
 _Gtme.printNote("Removing files")
-remove = _Gtme.include(".."..s.."remove.lua")
+localRemove = _Gtme.include(".."..s.."remove.lua")
 
-forEachElement(remove.files, function(_, value)
-	_Gtme.print("Removing '"..value.."'")
+forEachElement(localRemove.files, function(_, value)
 	if Directory(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
 		result = Directory(value):delete()
 	elseif File(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
 		File(value):delete()
 	end
-
 end)
 
 forEachOrderedElement(commands, function(idx, group)
@@ -509,6 +510,28 @@ forEachElement(directories, function(idx, value)
 end)
 
 finalTime = os.time(os.date("*t"))
+
+_Gtme.printNote("Removing files")
+
+forEachElement(initialRemove.files, function(_, value)
+	if Directory(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
+		result = Directory(value):delete()
+	elseif File(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
+		File(value):delete()
+	end
+end)
+
+forEachElement(localRemove.files, function(_, value)
+	if Directory(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
+		result = Directory(value):delete()
+	elseif File(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
+		File(value):delete()
+	end
+end)
 
 print("\nExecution test report:")
 
