@@ -65,23 +65,24 @@ function runCommand(command)
 end
 
 --- Return information about the current execution. The result is a table
--- with the following values.
+-- with the values below. Some of them are read only, while others might
+-- be changed accordingly.
 -- @tabular NONE
--- Attribute & Description \
--- dbVersion & A string with the current TerraLib version for databases. \
--- mode & A string with the current mode for warnings ("normal", "debug", "quiet", or "strict"). \
--- path & A string with the location of TerraME in the computer. \
+-- Attribute & Description & Read only? \
+-- dbVersion & A string with the current TerraLib version for databases. & Yes \
+-- mode & A string with the current mode for warnings ("normal", "debug", "quiet", or "strict"). & No \
+-- path & A string with the location of TerraME in the computer. & Yes \
 -- round & A number used whenever it is possible to have rounding problems. For instance,
 -- it works with Events that have period less than one by rounding the execution time of
 -- an Event that is going to be scheduled to a future time if the difference between such
 -- time and the closest integer number is less then the value of this argument. In this case,
 -- if an Event that starts in time one and has period 0.1, it might execute in time 1.999999999,
 -- as we are working with real number. This argument is then useful to make sure that such Event
--- will be executed in time exactly two. The default value is 1e-5. \
--- separator & A string with the directory separator. \
+-- will be executed in time exactly two. The default value is 1e-5. & No \
+-- separator & A string with the directory separator. & Yes \
 -- silent & A boolean value indicating whether print() calls should not be shown in the
--- screen. This element is true when TerraME is executed with mode "silent". \
--- system & A string with the operating system.
+-- screen. This element is true when TerraME is executed with mode "silent". & No \
+-- system & A string with the operating system. It is one of "windows", "linux", or "mac". & Yes
 -- @usage print(sessionInfo().mode)
 function sessionInfo()
 	local info = info_ -- this is a global variable created when TerraME is initialized
