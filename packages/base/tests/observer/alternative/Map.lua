@@ -588,8 +588,6 @@ return{
 		end
 		unitTest:assertError(error_func, invalidFileExtensionMsg(1, "csv"))
 
-		unitTest:clear()
-
 		error_func = function()
 			m:save("file.bmp")
 		end
