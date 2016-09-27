@@ -383,6 +383,8 @@ return{
 
 		local chart = Chart{target = c}
 
+		clean()
+
 		local error_func = function()
 			chart:save("file.bmp")
 		end
