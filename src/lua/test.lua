@@ -198,7 +198,7 @@ function _Gtme.executeTests(package, fileName)
 		end)
 
 		if getn(data) == 0 then
-			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'log', 'time', 'sleep', 'test'}.")
+			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'log', 'time', 'test'}.")
 			os.exit(1)
 		end
 
@@ -216,10 +216,6 @@ function _Gtme.executeTests(package, fileName)
 
 		if data.test ~= nil and type(data.test) ~= "string" and type(data.test) ~= "table" then
 			customError("'test' should be string, table, or nil, got "..type(data.test)..".")
-		end
-
-		if data.sleep ~= nil and type(data.sleep) ~= "number"  then
-			customError("'sleep' should be number or nil, got "..type(data.sleep)..".")
 		end
 
 		if data.examples ~= nil and type(data.examples) ~= "boolean" then
@@ -249,13 +245,9 @@ function _Gtme.executeTests(package, fileName)
 			end
 		end
 
-		verifyUnnecessaryArguments(data, {"directory", "file", "test", "sleep", "examples", "lines", "log", 'time'})
+		verifyUnnecessaryArguments(data, {"directory", "file", "test", "examples", "lines", "log", 'time'})
 	else
 		data = {}
-	end
-
-	if data.sleep == nil then
-		data.sleep = 0
 	end
 
 	local check_functions = data.directory == nil and data.test == nil
@@ -265,7 +257,6 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	local ut = UnitTest{
-		sleep = data.sleep,
 		log = data.log,
 		package = package,
 		package_functions = 0,
@@ -453,10 +444,6 @@ function _Gtme.executeTests(package, fileName)
 			end)
 		end
 
-		if getn(myFiles) == 0 then
-			printWarning("Skipping directory ".._Gtme.makePathCompatibleToAllOS(eachDirectory))
-		end
-
 		forEachOrderedElement(myFiles, function(eachFile)
 			ut.current_file = eachDirectory..s..eachFile
 			local tests
@@ -515,9 +502,7 @@ function _Gtme.executeTests(package, fileName)
 				end)
 			end
 
-			if #myTests == 0 then
-				printWarning("Skipping ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
-			elseif not printTesting then
+			if #myTests > 0 and not printTesting then
 				printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
 			end
 
@@ -600,7 +585,7 @@ function _Gtme.executeTests(package, fileName)
 					end
 				end)
 
-				ut:clear()
+				clean()
 				ut.executed_functions = ut.executed_functions + 1
 
 				if count_test == ut.test and not found_error then
@@ -834,7 +819,7 @@ function _Gtme.executeTests(package, fileName)
 					ut.fail = fail
 				end
 
-				ut:clear()
+				clean()
 			end)
 		else
 			printWarning("The package has no examples")
@@ -861,12 +846,7 @@ function _Gtme.executeTests(package, fileName)
 
 	print("\nFunctional test report for package '"..package.."':")
 
-	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds"
-	if ut.delayed_time > 0 then
-		text = text.." ("..ut.delayed_time.. " seconds sleeping)."
-	else
-		text = text.."."
-	end
+	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds."
 	printNote(text)
 
 	if ut.logs > 0 then
@@ -1030,7 +1010,7 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
-	               -ut.logs - ut.package_functions - ut.delayed_time -ut.sleep
+	               -ut.logs - ut.package_functions
 
 	forEachElement(ut, function(_, value, mtype)
 		if mtype == "number" then

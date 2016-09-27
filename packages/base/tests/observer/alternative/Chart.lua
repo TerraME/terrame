@@ -383,7 +383,7 @@ return{
 
 		local chart = Chart{target = c}
 
-		unitTest:clear()
+		clean()
 
 		local error_func = function()
 			chart:save("file.bmp")

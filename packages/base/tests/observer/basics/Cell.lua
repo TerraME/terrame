@@ -104,7 +104,6 @@ return{
 --[[
 		world = Cell{value = 3, value2 = 5}
 
-		unitTest:clear()
 		c = InternetSender{
 			target = world,
 			select = {"value", "value2"},

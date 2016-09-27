@@ -100,8 +100,6 @@ return{
 
 		unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.1)
 
-		unitTest:clear()
-
 		world = CellularSpace{
 			xdim = 10
 		}

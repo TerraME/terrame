@@ -150,7 +150,11 @@ File_ = {
 			resourceNotFoundError(1, self.filename)
 		end
 
-		local result = os.execute("rm -f \""..self.filename.."\"")
+		local directory = Directory{name = "tmpXXXXXXXX", tmp = true}
+		local s = sessionInfo().separator
+
+		local result = os.execute("rm -f \""..self.filename.."\" 2> "..directory..s.."a.txt")
+		directory:delete()
 
 		if result ~= true then
 			if result == nil then -- SKIP
