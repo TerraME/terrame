@@ -239,7 +239,7 @@ UnitTest_ = {
 
 		if not self.log then
 			File(fname):delete()
-			customError("It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
+			customError("It is not possible to use assertFile without a 'log' directory.")
 		end
 
 		if not self.logs then self.logs = 0 end
@@ -351,6 +351,11 @@ UnitTest_ = {
 		verify(tolerance >= 0 and tolerance <= 1, "Argument #3 should be between 0 and 1, got "..tolerance..".")
 
 		local s = sessionInfo().separator
+
+		if not self.log then
+			File(file):delete()
+			customError("It is not possible to use assertSnapshot without a 'log' directory.")
+		end
 
 		if not self.logs then
 			self.logs = 0 -- SKIP

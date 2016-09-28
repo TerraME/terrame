@@ -199,7 +199,7 @@ return{
 			u:assertFile("abc.csv")
 		end
 
-		u:assertError(error_func, "It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
+		u:assertError(error_func, "It is not possible to use assertFile without a 'log' directory.")
 
 		unitTest:assert(not File("abc.csv"):exists())
 	end,
@@ -261,7 +261,7 @@ return{
 			u:assertSnapshot(ch, "file.bmp")
 		end
 
-		unitTest:assertError(error_func, "It is not possible to use assertSnapshot without a log directory location in a configuration file for the tests.")
+		unitTest:assertError(error_func, "It is not possible to use assertSnapshot without a 'log' directory.")
 	end,
 	assertType = function(unitTest)
 		local u = UnitTest{unittest = true}
