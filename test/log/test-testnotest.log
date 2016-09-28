@@ -1,0 +1,2 @@
+Loading configuration file 'config/testNoTest.lua'
+Error: It is not possible to use 'test' and 'notest' at the same time.

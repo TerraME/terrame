@@ -14,7 +14,9 @@ test = {
 	pattern        = {arg = "-test", config = "pattern.lua"},
 	noload         = {arg = "-test", package = "noload"},
 	noexamples     = {arg = "-test", package = "noexamples" },
-	linedirectory  = {arg = "-test", config = "linesDirectory.lua"}
+	linedirectory  = {arg = "-test", config = "linesDirectory.lua"},
+	testnotest     = {arg = "-test", config = "testNoTest.lua"},
+	notest         = {arg = "-test", config = "noTest.lua"}
 }
 
 package = {
