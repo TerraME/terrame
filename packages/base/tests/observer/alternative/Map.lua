@@ -493,7 +493,7 @@ return{
 				color = {"red", "blue"}
 			}
 		end
-		unitTest:assertError(error_func, "Currently it is only possible to create Maps from 'virtual' CellularSpaces, got 'shp'.")
+		unitTest:assertError(error_func, "It is only possible to create a Map from this CellularSpace as its objects do not have a valid (x, y) location.")
 
 		-- Society
 		local ag = Agent{}
