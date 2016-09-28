@@ -272,7 +272,6 @@ UnitTest_ = {
 		end
 
 		local s = sessionInfo().separator
-		local pkg = sessionInfo().package
 		local oldLog = self.log..s..fname
 
 		if not File(oldLog):exists() then
@@ -377,7 +376,6 @@ UnitTest_ = {
 
 		local newImage = self.tmpdir..s..file
 
-		local pkg = sessionInfo().package
 		local oldImage = self.log..s..file
 
 		if not File(oldImage):exists() then
