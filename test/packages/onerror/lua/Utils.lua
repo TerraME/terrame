@@ -31,10 +31,6 @@
 --- Abv
 print("print when loading")
 
---- Return whether a given value belong to a table
--- @arg value A value.
--- @usage belon2(2, {1, 2, 3})
--- DONTRUN
 function belong2(value, values)
 	if false then
 		a = 3
@@ -55,9 +51,13 @@ function belong2(value, values)
 	return found
 end
 
+--- Return a function.
+function call2() end
+
 --- Return a function that executes a given function of an object.
--- It is particularly useful as argument action for an Event.
--- @arg obj Any TerraME object.
+-- It is particularly useful as argument action for an Event
+-- @arg obj
+-- @arg func A string with the function to be executed.
 -- @arg func A string with the function to be executed.
 -- @usage a = Agent{exec = function(self, ev) print(ev:getTime()) end}
 --
@@ -76,98 +76,6 @@ function call2(obj, func)
 	end
 
 	abc = aaa + bbb
-end
-
---- Convert the time in seconds to a more readable value. It returns a string in the format
--- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is
--- more than one day.
--- @arg s A number.
--- @usage print(elapsedTime2(100)) -- 00:01:40
--- DONTRUN
-function elapsedTime2(s)
-	mandatoryArgument(1, "number", s)
-
-	local floor = math.floor
-	local seconds = s
-	local minutes = floor(s / 60);     seconds = floor(seconds % 60)
-	local hours = floor(minutes / 60); minutes = floor(minutes % 60)
-	local days = floor(hours / 24);    hours = floor(hours % 24)
-
-	if days > 0 then
-		return string.format("%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
-	else
-		return string.format("%02d:%02d:%02d", hours, minutes, seconds)
-	end
-end
-
---- Second order function to traverse a Society, Group, or Cell, applying a function to each of
--- its Agents. It returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg obj A Society, Group, or Cell. Cells need to have a placement in order to execute
--- this function.
--- @arg func A function that takes one single Agent as argument. If some call to it returns
--- false, forEachAgent() stops and does not process any other Agent. 
--- This function can optionally get a second argument with a positive number representing the
--- position of the Agent in the vector of Agents.
--- @usage forEachAgent2(group, function(agent)
---     agent.age = agent.age + 1
--- end)
--- DONTRUN
-function forEachAgent2(obj, func)
-end
-
---- Second order function to transverse a given CellularSpace, Trajectory, or Agent,
--- applying a given function to each of its Cells. If any of the function calls returns
--- false, forEachCell() stops and returns false, otherwise it returns true.
--- @arg cs A CellularSpace, Trajectory, or Agent. Agents need to have a placement
--- in order to execute this function.
--- @arg f A user-defined function that takes a Cell as argument.
--- It can optionally have a second argument with a positive number representing the position of
--- the Cell in the vector of Cells. If it returns false when processing a given Cell,
--- forEachCell() stops and does not process any other Cell.
--- @usage forEachCell2(cellularspace, function(cell)
---     cell.water = cell.water + 1
--- end)
---
--- forEachCell(cellularspace, function(cell, i)
---     print(i) -- 1, 2, 3, ...
--- end)
--- DONTRUN
-function forEachCell2(cs, f)
-end
-
---- Second order function to transverse two CellularSpaces with the same resolution and
--- size. It applies a function that gets two Cells as arguments, one from each
--- CellularSpace. Both cells share the same (x, y) location.
--- It returns true if no call to the function taken as argument returns false, otherwise
--- it returns false.
--- @arg cs1 A CellularSpace.
--- @arg cs2 Another CellularSpace.
--- @arg f A user-defined function that takes two Cells as arguments, one coming from the
--- first argument and the other from the second one.
--- If some call returns false, forEachCellPair() stops and does not
--- process any other pair of Cells.
--- @usage forEachCellPair2(cs1, cs2, function(cell1, cell2)
---     cell1.water = cell1.water + cell2.water
---     cell2.water = 0
--- end)
--- DONTRUN
-function forEachCellPair2(cs1, cs2, f)
-	if type(cs1) ~= "CellularSpace" then
-		incompatibleTypeError(1, "CellularSpace", cs1)
-	elseif type(cs2) ~= "CellularSpace" then
-		incompatibleTypeError(2, "CellularSpace", cs2)
-	elseif type(f) ~= "function" then
-		incompatibleTypeError(3, "function", f)
-	end
-
-	verify(#cs1 == #cs2, "CellularSpaces should have the same size.")
-
-	for i, cell1 in ipairs(cs1.cells) do
-		local cell2 = cs2.cells[i]
-		if f(cell1, cell2, i) == false then return false end
-	end
-	return true
 end
 
 --- Create a Neighborhood for each Cell of the CellularSpace.
@@ -218,171 +126,11 @@ end
 createNeighborhood2 = function(self, data)
 end	
 
---- Second order function to transverse a given object, applying a function to each of its
--- elements. It can be used for instance to transverse all the elements of an Agent or an
--- Environment. According to the current Lua version, if one uses this function twice, Lua
--- does not guarantee that the objects will be transversed in the same order. If you need to
--- guarantee this, it is recommended to use Utils:forEachOrderedElement2() instead.
--- This function returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg obj A TerraME object or a table.
--- @arg obj A TerraME object or a table.
--- @arg
--- @arg2 obj A TerraME object or a table.
--- @arg obj2 A TerraME object or a table.
--- @arg func A user-defined function that takes three arguments: the index of the element,
--- the element itself, and the type of the element. If some call to this function returns
--- false then forEachElement() stops.
--- @usage forEachElement2(cell, function(idx, element, etype)
---     print(element, etype)
--- end)
--- DONTRUN
-function forEachElement2(obj, func)
-	if obj == nil then
-		mandatoryArgumentError(1)
-	elseif func == nil then
-		mandatoryArgumentError(2)
-	elseif type(func) ~= "function" then
-		incompatibleTypeError(2, "function", func)
-	end
-
-	for k, ud in pairs(obj) do
-		local t = type(ud)
-		if func(k, ud, t) == false then return false end
-	end
-	return true
-end
-
---- Second order function to transverse a given directory,
--- applying a given function on each of its files. If any of the function calls returns
--- false, forEachFile() stops and returns false, otherwise it returns true.
--- @arg directory A string with the path to a directory, or a vector of files.
--- @arg f A user-defined function that takes a file name as argument. Note that
--- the name does not include the directory where the file is placed.
--- @usage forEachFile2("C:", function(file)
---     print(file)
--- end)
--- DONTRUN
-function forEachFile2(directory, f)
-	if type(directory) == "string" then
-		directory = Directory(directory):list()
-	end
-
-	mandatoryArgument(1, "table", directory)
-	mandatoryArgument(2, "function", f)
-
-	for i = 1, #directory do
-		if f(directory[i]) == false then return false end
-	end
-	return true
-end
-
---- Second order function.
--- @usage forEachCell2("C:", function(file) end)
--- DONTRUN
-function forEachCell2()
-end
-
-function forEachNeighbor2(cell, index, f)
-end
-
---- Second order function to transverse all Neighborhoods of a Cell, applying a given function
--- on them. It returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg cell A Cell.
--- @arg f A function that receives a Neighborhood index as argument.
-function forEachNeighborhood2(cell, f)
-end
-
---- Second order function to transverse a given object, applying a function to each of its
--- elements according to their alphabetical order. It can be used for instance to transverse all
--- the elements of an Agent or an
--- Environment. This function executes first the numeric indexes and then the string ones, with
--- upper case characters having priority over lower case.
--- This function returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg obj A TerraME object or a table.
--- @arg func A user-defined function that takes three arguments: the index of the element,
--- the element itself, and the type of the element. If some call to this function returns
--- false then forEachElement() stops.
--- @usage forEachOrderedElement2(cell, function(idx, element, etype)
---     print(element, etype)
--- end)
--- DONTRUN
-function forEachOrderedElement2(obj, func)
-	if obj == nil then
-		mandatoryArgumentError(1)
-	elseif type(func) ~= "function" then
-		incompatibleTypeError(2, "function", func)
-	end
-
-	local strk
-
-	local sorder = {}
-	local sreference = {}
-
-	local norder = {}
-	local nreference = {}
-
-	for k, ud in pairs(obj) do
-		if type(k) == "number" then
-			norder[#norder + 1] = k
-			nreference[k] = k
-		else
-			strk = string.lower(tostring(k))
-			sorder[#sorder + 1] = strk
-
-			if sreference[strk] then
-				customError("forEachOrderedElement() cannot work with two indexes having the same lower case.")
-			end
-
-			sreference[strk] = k
-		end
-	end
-
-	table.sort(norder)
-	table.sort(sorder)
-
-	for k = 1, #norder do
-		local idx = nreference[norder[k]]
-		if func(idx, obj[idx], type(obj[idx])) == false then return false end
-	end
-
-	for k = 1, #sorder do
-		local idx = sreference[sorder[k]]
-		if func(idx, obj[idx], type(obj[idx])) == false then return false end
-	end
-	return true
-end
-
---- Second order function to transverse all SocialNetworks of an Agent, applying a given function
--- on them. It returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg agent An Agent.
--- @arg f A function that receives a SocialNetwork index as argument.
--- @usage forEachSocialNetwork2(agent, function(idx)
---     forEachConnection(agent, idx, function()
---         -- ...
---     end)
--- end)
--- DONTRUN
-function forEachSocialNetwork2(agent, f)
-	if type(agent) ~= "Agent" then
-		incompatibleTypeError(1, "Agent", agent)
-	elseif type(f) ~= "function" then
-		incompatibleTypeError(2, "function", f)
-	end
-
-	for idx in pairs(agent.socialnetworks) do
-		if f(idx) == false then return false end
-	end
-	return true
-end
-
 --- Return the extension of a given file name. It returns the substring after the last dot.
 -- If it does not have a dot, an empty string is returned.
--- @arg filename A string with the file name.
--- @usage getExtension2("file.txt") -- ".txt"
+-- @arg filename2 A string with the file name.
+-- @bcdef xx.
+-- @usage getExtension3("file.txt") -- ".txt"
 -- DONTRUN
 function getExtension2(filename)
 	mandatoryArgument(1, "string", filename)
@@ -419,9 +167,9 @@ end
 -- objects and a given operator. If the function was not successfully built it returns nil.
 -- @arg attribute A string with the name of the attribute.
 -- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=". The default value is "<".
--- @usage greaterByAttribute2()
+-- @usage greaterByAttribute()
 -- DONTRUN
-function greaterByAttribute2(attribute, operator)
+function greaterByAttribute(attribute, operator)
 	if type(attribute) ~= "string" then
 		incompatibleTypeError(1, "string", attribute)
 	elseif operator == nil then
@@ -462,22 +210,9 @@ end
 -- See http://en.wikipedia.org/wiki/Levenshtein_distance for more details.
 -- @arg s A string.
 -- @arg t Another string.
--- @usage levenshtein("abc", "abb")
-function levenshtein(s, t)
-	mandatoryArgument(1, "string", s)
-	mandatoryArgument(2, "string", t)
-
-	local d, sn, tn = {}, #s, #t
-	local byte, min = string.byte, math.min
-	for i = 0, sn do d[i * tn] = i end
-	for j = 0, tn do d[j] = j end
-	for i = 1, sn do
-		local si = byte(s, i)
-		for j = 1, tn do
-			d[i*tn+j] = min(d[(i-1)*tn+j]+1, d[i*tn+j-1]+1, d[(i-1)*tn+j-1]+(si == byte(t,j) and 0 or 1))
-		end
-	end
-	return d[#d]
+-- @usage levenshtein2("abc", "abb")
+function levenshtein2(s, t)
+	return 1
 end
 
 --- Round a number given a precision.
@@ -524,7 +259,7 @@ end
 -- table with functions describing what to do for each case (which is the index for the respective
 -- function). This table can have a field "missing" that is used when
 -- the first argument does not have an attribute whose name is the value of the second argument.
--- The error messages of this function come from ErrorHandling:switchInvalidArgumentMsg2() and
+-- The error messages of this function come from
 -- ErrorHandling:switchInvalidArgumentSuggestionMsg2().
 -- @arg data A named table.
 -- @arg att A string with the chosen attribute of the named table.

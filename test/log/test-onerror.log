@@ -3,55 +3,12 @@ Using log directory '/Applications/terrame.app/Contents/MacOS/packages/onerror/l
 Loading package 'onerror'
 Error: print() call detected with argument 'print when loading'
 Looking for overwritten variables
-Global variable 'levenshtein' is overwritten.
+Global variable 'greaterByAttribute' is overwritten.
 Looking for documented functions
 Looking for package functions
 Found 1 extra functions in the documentation
 Looking for lines of source code
 'tests/invalidfile.txt' is not a directory neither a .lua file and will be ignored.
-Testing tests/ErrorHandling.lua
-Testing customError2
-Testing customWarning2
-Testing defaultTableValue2
-Testing defaultValueMsg2
-Testing defaultValueWarning2
-Testing deprecatedFunctionMsg2
-Testing deprecatedFunction2
-Testing incompatibleTypeError2
-Testing incompatibleTypeMsg2
-Testing incompatibleValueError2
-Testing incompatibleValueMsg2
-Testing integerArgumentMsg2
-Testing integerArgument2
-Testing integerTableArgument2
-Testing invalidFileExtensionError2
-Testing invalidFileExtensionMsg2
-Testing mandatoryArgumentError2
-Testing mandatoryArgumentMsg2
-Testing mandatoryArgument2
-Testing mandatoryTableArgument2
-Testing namedArgumentsMsg2
-Testing optionalArgument2
-Testing optionalTableArgument2
-Testing positiveArgumentMsg2
-Testing positiveArgument2
-Testing positiveTableArgument2
-Testing resourceNotFoundError2
-Testing resourceNotFoundMsg2
-Testing strictWarning2
-Testing suggestion2
-Testing switchInvalidArgumentMsg2
-Testing switchInvalidArgumentSuggestionMsg2
-Testing switchInvalidArgument2
-Testing tableArgumentMsg2
-Testing toLabel2
-Testing unnecessaryArgumentMsg2
-Testing valueNotFoundError2
-Testing valueNotFoundMsg2
-Testing verifyNamedTable2
-Testing verifyUnnecessaryArguments2
-Testing verify2
-Checking if all asserts were executed
 Testing tests/Tube.lua
 Testing Tube
 Testing w
@@ -64,27 +21,17 @@ Wrong execution, got:
 Error: attempt to perform arithmetic on a nil value (global 'aaa')
 Stack traceback:
     File ...errame.app/Contents/MacOS/packages/onerror/lua/Utils.lua, line 78, in function 'call2', in operator + (addition)
-    File ...rame.app/Contents/MacOS/packages/onerror/tests/Utils.lua, line 45, in main chunk
+    File ...rame.app/Contents/MacOS/packages/onerror/tests/Utils.lua, line 46, in main chunk
 Testing createNeighborhood2
-Testing elapsedTime2
-Testing forEachAgent2
-Testing forEachCellPair2
-Testing forEachCell2
-Testing forEachElement2
-Testing forEachFile2
-Testing forEachNeighbor2
-Testing forEachOrderedElement2
-Testing forEachSocialNetwork2
 Testing getExtension2
 Testing getn2
-Testing greaterByAttribute2
+Testing greaterByAttribute
 Testing greaterByCoord2
 Error: print() call detected with argument 'abcdef'
 Testing integrate2
 This function does not exist in the respective file in the source code.
 No asserts were found in the test.
 Test creates global variable(s): 'abcd' (number).
-Testing levenshtein
 Testing round2
 Testing sessionInfo2
 Testing string.endswith2
@@ -92,85 +39,65 @@ Testing switch2
 Testing type2
 Testing vardump2
 Checking if all asserts were executed
-Assert in line 247 was not executed.
+Assert in line 85 was not executed.
 Testing tests/alternative/Cell.lua
 Testing Cell
 Creating 'log/mac/chart_cell.bmp'.
-Error in .../terrame/bin/packages/onerror/tests/alternative/Cell.lua:57: Files 
+Error in ...ntents/MacOS/packages/onerror/tests/alternative/Cell.lua:57: Files 
   'log/mac/chart_cell_select.bmp'
 and
-  '.terrametmp_8U6Z8/chart_cell_select.bmp'
+  '/Users/pedro/github/terrame-pedro/test/.terrametmp_0gvMW/chart_cell_select.bmp'
 are different.
-Checking if all asserts were executed
-Testing tests/alternative/ErrorHandling.lua
-Testing customError2
-Testing customWarning2
-Testing defaultTableValue2
-Testing defaultValueWarning2
-Testing deprecatedFunction2
-Testing suggestion2
-Testing switchInvalidArgumentMsg2
-Testing switchInvalidArgumentSuggestionMsg2
-Testing switchInvalidArgument2
 Checking if all asserts were executed
 Testing tests/alternative/Utils.lua
 Testing belong2
 Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got:
 Error: attempt to perform arithmetic on a nil value (global 'aab')
 Stack traceback:
-    File C:/TerraME/bin/packages/onerror/lua/Utils.lua, line 44, in function 'belong2', in operator + (addition)
-    File C:/TerraME/bin/packages/onerror/tests/alternative/Utils.lua, line 30, in call to function 'belong2'
-    File C:/TerraME/bin/packages/onerror/tests/alternative/Utils.lua, line 32, in main chunk
+    File ...errame.app/Contents/MacOS/packages/onerror/lua/Utils.lua, line 40, in function 'belong2', in operator + (addition)
+    File ...tents/MacOS/packages/onerror/tests/alternative/Utils.lua, line 30, in call to function 'belong2'
+    File ...tents/MacOS/packages/onerror/tests/alternative/Utils.lua, line 32, in main chunk
 Testing call2
-Testing elapsedTime2
-Testing forEachCellPair2
-Testing forEachElement2
-Testing forEachFile2
-Testing forEachOrderedElement2
-Testing forEachSocialNetwork2
 Testing getExtension2
 Testing getn2
-Testing greaterByAttribute2
+Testing greaterByAttribute
 Testing greaterByCoord2
-Testing levenshtein
 Testing round2
 Testing switch2
 Checking if all asserts were executed
 Checking if functions from source code were tested
-Checking ErrorHandling.lua
 Checking Tube.lua
 Checking Utils.lua
-Function 'forEachNeighborhood2' was not tested.
+Function 'levenshtein2' was not tested.
 Checking lines of source code
-Checking ErrorHandling.lua
 Checking Tube.lua
 Checking Utils.lua
-Line 40 was not executed.
+Line 36 was not executed.
 Testing examples
 Testing continuous-rain
 Testing ipd
 Error in example: Error: attempt to perform arithmetic on a nil value (global 'bcs')
 Stack traceback:
-    File C:/TerraME/bin/packages/onerror/examples/ipd.lua, line 193, in call to operator + (addition)
+    File ...ame.app/Contents/MacOS/packages/onerror/examples/ipd.lua, line 193, in call to operator + (addition)
 Checking logs
 File 'log/mac/chart_cell2.bmp' was not used by any assert.
 
 Functional test report for package 'onerror':
-Tests were executed in 21.15 seconds.
-Logs were saved in '.terrametmp_WxggN'.
+Tests were executed in 2.51 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/test/.terrametmp_0gvMW'.
 One print() call was found when loading the package.
 One variable is overwritten when loading the package.
 One invalid file or directory was found in directory 'test'.
 One assert was not executed at least once.
-One out of 250 asserts failed.
-One out of 92 tested functions stopped with an unexpected error.
-One out of 92 tested functions does not have at least one assert.
-One out of 92 tested functions does not exist in the source code of the package.
-One out of 92 tested functions creates or updates some global variable.
+One out of 43 asserts failed.
+One out of 25 tested functions stopped with an unexpected error.
+One out of 25 tested functions does not have at least one assert.
+One out of 25 tested functions does not exist in the source code of the package.
+One out of 25 tested functions creates or updates some global variable.
 One print call was found in the tests.
 One assertError() call has an error message pointing to an internal file (wrong level).
 One file was created along the tests.
-One out of 67 source code functions was not tested.
+One out of 16 source code functions was not tested.
 One line from the source code was not executed at least once.
 One error was found in the 2 examples.
 One log file was created. Please run the tests again.

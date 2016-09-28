@@ -8,92 +8,38 @@ Checking properties of data files
 File 'data.csv' is not documented
 Package 'onerror' has font.lua but there are no fonts
 Parsing lua files
-Parsing lua/ErrorHandling.lua
 Parsing lua/Tube.lua
 Tube.lua should contain only a Model, got 1 additional object(s).
 Parsing lua/Utils.lua
 Invalid documentation line: --- Abv
-Description of 'belong2' does not end with '.'
+In call2(), could not infer argument and description of @arg from 'obj'
+In call2(), @arg 'func' is used more than once and will be ignored in 'func A string with the function to be executed.'
+Description of 'call2' does not end with '.'
 In createNeighborhood2, row 2 of @tabular has size (3) different from the first one (4).
-In forEachElement2(), @arg 'obj' is used more than once and will be ignored in 'obj A TerraME object or a table.'
-In forEachElement2(), @arg should be folowed by an argument name
-In forEachElement2(), Tag '@arg2' is invalid
-In forEachElement2(), undefined argument 'obj2' is documented
-Function forEachCell2 was already declared.
+In getExtension2(), undefined argument 'filename2' is documented
+In getExtension2(), Tag '@bcdef' is invalid
+Function call2 was already declared.
 Parsing examples
 Parsing examples/continuous-rain.lua
 Parsing examples/ipd.lua
 Checking undocumented files
 Example continuous-rain.lua is not documented.
 Checking @usage definition
-Checking lua/ErrorHandling.lua
 Checking lua/Tube.lua
 Checking lua/Utils.lua
-Function 'forEachNeighborhood2' has no @usage definition
+Function 'call2' has no @usage definition
 Testing @usage
-Testing file lua/ErrorHandling.lua
-Skipping customError2
-Skipping customWarning2
-Skipping defaultTableValue2
-Skipping defaultValueMsg2
-Skipping defaultValueWarning2
-Skipping deprecatedFunction2
-Skipping deprecatedFunctionMsg2
-Skipping incompatibleTypeError2
-Skipping incompatibleTypeMsg2
-Skipping incompatibleValueError2
-Skipping incompatibleValueMsg2
-Skipping integerArgument2
-Skipping integerArgumentMsg2
-Skipping integerTableArgument2
-Skipping invalidFileExtensionError2
-Skipping invalidFileExtensionMsg2
-Skipping mandatoryArgument2
-Skipping mandatoryArgumentError2
-Skipping mandatoryArgumentMsg2
-Skipping mandatoryTableArgument2
-Skipping namedArgumentsMsg2
-Skipping optionalArgument2
-Skipping optionalTableArgument2
-Skipping positiveArgument2
-Skipping positiveArgumentMsg2
-Skipping positiveTableArgument2
-Skipping resourceNotFoundError2
-Skipping resourceNotFoundMsg2
-Skipping strictWarning2
-Skipping suggestion2
-Skipping switchInvalidArgument2
-Skipping switchInvalidArgumentMsg2
-Skipping switchInvalidArgumentSuggestionMsg2
-Skipping tableArgumentMsg2
-Skipping toLabel2
-Skipping unnecessaryArgumentMsg2
-Skipping valueNotFoundError2
-Skipping valueNotFoundMsg2
-Skipping verify2
-Skipping verifyNamedTable2
-Skipping verifyUnnecessaryArguments2
 Testing file lua/Tube.lua
 Skipping w
 Testing file lua/Utils.lua
-Skipping belong2
-Skipping call2
 Skipping createNeighborhood2
-Skipping elapsedTime2
-Skipping forEachAgent2
-Skipping forEachCell2
-Skipping forEachCellPair2
-Skipping forEachElement2
-Skipping forEachFile2
-Skipping forEachOrderedElement2
-Skipping forEachSocialNetwork2
 Skipping getExtension2
 Skipping getn2
-Skipping greaterByAttribute2
+Skipping greaterByAttribute
 Testing greaterByCoord2
 print when loading
 Error: Argument 'target' is mandatory.
-Testing levenshtein
+Testing levenshtein2
 Testing round2
 Skipping sessionInfo2
 Testing string.endswith2
@@ -101,24 +47,21 @@ Skipping switch2
 Skipping type2
 Skipping vardump2
 Checking calls to functions in @usage
-Checking lua/ErrorHandling.lua
 Checking lua/Tube.lua
 Checking lua/Utils.lua
-Utils.lua: 'belong2' does not call itself in its @usage
+Utils.lua: 'getExtension2' does not call itself in its @usage
 Checking undocumented arguments
-Checking lua/ErrorHandling.lua
 Checking lua/Tube.lua
 Checking lua/Utils.lua
-Function 'belong2' has undocumented argument 'values'
+Function 'getExtension2' has undocumented argument 'filename'
 Checking 'description.lua'
 Error: Field 'date2' of 'description.lua' is unnecessary.
 Building and checking HTML files
 Building doc/index.html
-Building doc/files/ErrorHandling.html
-Invalid link to 'Model'
 Building doc/files/Utils.html
 Unknown argument 'abc' in 'createNeighborhood2'
 Argument 'wrap' in 'createNeighborhood2' is not used in the HTML table
+Invalid link to 'ErrorHandling'
 Building doc/files/examples.html
 Building doc/files/data.html
 Building doc/files/font.html
@@ -131,15 +74,14 @@ Checking examples
 Checking if all images are used
 Image file 'wrong.bmp' in directory 'images' is unnecessary
 Checking if all functions are documented
-Checking ErrorHandling.lua
 Checking Tube.lua
 Checking Utils.lua
-Function forEachNeighbor2 is not documented
+Function belong2 is not documented
 Checking if all Models are documented
 
 Documentation report for package 'onerror':
-Documentation was built in 15.51 seconds.
-6 HTML files were created.
+Documentation was built in 0.76 seconds.
+5 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
 One problem was found in the documentation of data.
@@ -156,11 +98,11 @@ One undefined argument was found.
 One documented argument is not used in the HTML tables.
 One argument used in the HTML tables is not documented.
 One non-deprecated function does not have @usage.
-One out of 66 documented functions does not call itself in its @usage.
-One out of 66 functions has error in its @usage.
+One out of 15 documented functions does not call itself in its @usage.
+One out of 15 functions has error in its @usage.
 One problem was found in @tabular.
 One invalid tag was found in the documentation.
 One problem with image files was found.
-One out of 29 links is invalid.
+One out of 1 links is invalid.
 One problem was found in the documentation of examples.
 Summing up, 22 problems were found in the documentation.

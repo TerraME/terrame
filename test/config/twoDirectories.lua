@@ -1,1 +1,1 @@
-directory = {"observer/alternative", "internal/alternative"}
+directory = {"internal/basic", "internal/alternative"}

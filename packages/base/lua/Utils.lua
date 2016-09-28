@@ -1242,6 +1242,8 @@ function levenshtein(s, t)
 	mandatoryArgument(1, "string", s)
 	mandatoryArgument(2, "string", t)
 
+	if s == t then return 0 end
+
 	local d, sn, tn = {}, #s, #t
 
 	if sn > tn then -- invert arguments

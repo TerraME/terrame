@@ -1,1 +1,1 @@
-directory = "observer/alternative"
+directory = "internal"

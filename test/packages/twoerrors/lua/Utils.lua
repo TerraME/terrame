@@ -57,17 +57,6 @@ function belong2(value, values)
 	return found
 end
 
---- Return a function that executes a given function of an object.
--- It is particularly useful as argument action for an Event.
--- @arg obj Any TerraME object.
--- @usage a = Agent{exec = function(self, ev) print(ev:getTime()) end}
--- DONTRUN
---
--- t = Timer{
---     Event{action = cal2(a, "exec")}
--- }
---
--- t:execute(10)
 function call2(obj, func)
 	mandatoryArgument(2, "string", func)
 
@@ -79,6 +68,13 @@ function call2(obj, func)
 	abc = aaa + bbb
 end
 
+--- Convert the time in seconds to a more readable value. It returns a string in the format
+-- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is
+-- more than one day.
+-- @arg s A number.
+-- @usage print(elapsedTime2(100)) -- 00:01:40
+function elapsedTime2(s) end
+	
 --- Convert the time in seconds to a more readable value. It returns a string in the format
 -- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is
 -- more than one day.
@@ -98,76 +94,6 @@ function elapsedTime2(s)
 	else
 		return string.format("%02d:%02d:%02d", hours, minutes, seconds)
 	end
-end
-
---- Second order function to traverse a Society, Group, or Cell, applying a function to each of
--- its Agents. It returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg obj A Society, Group, or Cell. Cells need to have a placement in order to execute
--- this function.
--- @arg func A function that takes one single Agent as argument. If some call to it returns
--- false, forEachAgent() stops and does not process any other Agent. 
--- This function can optionally get a second argument with a positive number representing the
--- position of the Agent in the vector of Agents.
--- @usage forEachAgent2(group, function(agent)
--- DONTRUN
---     agent.age = agent.age + 1
--- end)
-function forEachAgent2(obj, func)
-end
-
---- Second order function to transverse a given CellularSpace, Trajectory, or Agent,
--- applying a given function to each of its Cells. If any of the function calls returns
--- false, forEachCell() stops and returns false, otherwise it returns true.
--- @arg cs A CellularSpace, Trajectory, or Agent. Agents need to have a placement
--- in order to execute this function.
--- @arg f A user-defined function that takes a Cell as argument.
--- It can optionally have a second argument with a positive number representing the position of
--- the Cell in the vector of Cells. If it returns false when processing a given Cell,
--- forEachCell() stops and does not process any other Cell.
--- @usage forEachCell2(cellularspace, function(cell)
--- DONTRUN
---     cell.water = cell.water + 1
--- end)
---
--- forEachCell(cellularspace, function(cell, i)
---     print(i) -- 1, 2, 3, ...
--- end)
-function forEachCell2(cs, f)
-end
-
---- Second order function to transverse two CellularSpaces with the same resolution and
--- size. It applies a function that gets two Cells as arguments, one from each
--- CellularSpace. Both cells share the same (x, y) location.
--- It returns true if no call to the function taken as argument returns false, otherwise
--- it returns false.
--- @arg cs1 A CellularSpace.
--- @arg cs2 Another CellularSpace.
--- @arg f A user-defined function that takes two Cells as arguments, one coming from the
--- first argument and the other from the second one.
--- If some call returns false, forEachCellPair() stops and does not
--- process any other pair of Cells.
--- @usage forEachCellPair2(cs1, cs2, function(cell1, cell2)
--- DONTRUN
---     cell1.water = cell1.water + cell2.water
---     cell2.water = 0
--- end)
-function forEachCellPair2(cs1, cs2, f)
-	if type(cs1) ~= "CellularSpace" then
-		incompatibleTypeError(1, "CellularSpace", cs1)
-	elseif type(cs2) ~= "CellularSpace" then
-		incompatibleTypeError(2, "CellularSpace", cs2)
-	elseif type(f) ~= "function" then
-		incompatibleTypeError(3, "function", f)
-	end
-
-	verify(#cs1 == #cs2, "CellularSpaces should have the same size.")
-
-	for i, cell1 in ipairs(cs1.cells) do
-		local cell2 = cs2.cells[i]
-		if f(cell1, cell2, i) == false then return false end
-	end
-	return true
 end
 
 --- Create a Neighborhood for each Cell of the CellularSpace.
@@ -218,179 +144,14 @@ end
 createNeighborhood2 = function(self, data)
 end	
 
---- Second order function to transverse a given object, applying a function to each of its
--- elements. It can be used for instance to transverse all the elements of an Agent or an
--- Environment. According to the current Lua version, if one uses this function twice, Lua
--- does not guarantee that the objects will be transversed in the same order. If you need to
--- guarantee this, it is recommended to use Utils:forEachOrderedElement3() instead.
--- This function returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg obj A TerraME object or a table.
--- @arg obj A TerraME object or a table.
--- @arg obj A TerraME object or a table.
--- @arg
--- @arg
--- @abc
--- @arg2 obj A TerraME object or a table.
--- @arg obj2 A TerraME object or a table.
--- @arg obj3 A TerraME object or a table.
--- @arg func A user-defined function that takes three arguments: the index of the element,
--- the element itself, and the type of the element. If some call to this function returns
--- false then forEachElement() stops.
--- @usage forEachElement2(cell, function(idx, element, etype)
--- DONTRUN
---     print(element, etype)
--- end)
-function forEachElement2(obj, func)
-	if obj == nil then
-		mandatoryArgumentError(1)
-	elseif func == nil then
-		mandatoryArgumentError(2)
-	elseif type(func) ~= "function" then
-		incompatibleTypeError(2, "function", func)
-	end
-
-	for k, ud in pairs(obj) do
-		local t = type(ud)
-		if func(k, ud, t) == false then return false end
-	end
-	return true
-end
-
---- Second order function to transverse a given directory,
--- applying a given function on each of its files. If any of the function calls returns
--- false, forEachFile() stops and returns false, otherwise it returns true.
--- @arg directory A string with the path to a directory, or a vector of files.
--- @arg f A user-defined function that takes a file name as argument. Note that
--- the name does not include the directory where the file is placed.
--- @usage forEachFile2("C:", function(file)
--- DONTRUN
---     print(file)
--- end)
-function forEachFile2(directory, f)
-	if type(directory) == "string" then
-		directory = Directory(directory):list()
-	end
-
-	mandatoryArgument(1, "table", directory)
-	mandatoryArgument(2, "function", f)
-
-	for i = 1, #directory do
-		if f(directory[i]) == false then return false end
-	end
-	return true
-end
-
---- Second order function.
--- @usage forEachCell2("C:", function(file) end)
--- DONTRUN
-function forEachCell2()
-end
-
-function forEachNeighbor2(cell, index, f)
-end
-
---- Second order function to transverse all Neighborhoods of a Cell, applying a given function
--- on them. It returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg cell A Cell.
--- @arg f A function that receives a Neighborhood index as argument.
--- @usage forEachNeighborhood2(cell, f)
--- DONTRUN
-function forEachNeighborhood2(cell, f)
-end
-
---- Second order function to transverse all Neighborhoods of a Cell, applying a given function
--- on them. It returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg cell A Cell.
--- @arg f A function that receives a Neighborhood index as argument.
--- @usage forEachNeighborhood2(cell, f)
--- DONTRUN
-function forEachNeighborhood2(cell, f)
-end
-
---- Second order function to transverse all Neighborhoods of a Cell, applying a given function
--- on them. It returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg cell A Cell.
--- @arg f A function that receives a Neighborhood index as argument.
-function forEachNeighborhood3(cell, f)
-end
-
---- Second order function to transverse a given object, applying a function to each of its
--- elements according to their alphabetical order. It can be used for instance to transverse all
--- the elements of an Agent or an
--- Environment. This function executes first the numeric indexes and then the string ones, with
--- upper case characters having priority over lower case.
--- This function returns true if no call to the function taken as argument returns false,
--- otherwise it returns false.
--- @arg obj A TerraME object or a table.
--- @arg func A user-defined function that takes three arguments: the index of the element,
--- the element itself, and the type of the element. If some call to this function returns
--- false then forEachElement() stops.
-function forEachOrderedElement2(obj, func)
-	if obj == nil then
-		mandatoryArgumentError(1)
-	elseif type(func) ~= "function" then
-		incompatibleTypeError(2, "function", func)
-	end
-
-	local strk
-
-	local sorder = {}
-	local sreference = {}
-
-	local norder = {}
-	local nreference = {}
-
-	for k, ud in pairs(obj) do
-		if type(k) == "number" then
-			norder[#norder + 1] = k
-			nreference[k] = k
-		else
-			strk = string.lower(tostring(k))
-			sorder[#sorder + 1] = strk
-
-			if sreference[strk] then
-				customError("forEachOrderedElement() cannot work with two indexes having the same lower case.")
-			end
-
-			sreference[strk] = k
-		end
-	end
-
-	table.sort(norder)
-	table.sort(sorder)
-
-	for k = 1, #norder do
-		local idx = nreference[norder[k]]
-		if func(idx, obj[idx], type(obj[idx])) == false then return false end
-	end
-
-	for k = 1, #sorder do
-		local idx = sreference[sorder[k]]
-		if func(idx, obj[idx], type(obj[idx])) == false then return false end
-	end
-	return true
-end
-
-function forEachSocialNetwork2(agent, f)
-	if type(agent) ~= "Agent" then
-		incompatibleTypeError(1, "Agent", agent)
-	elseif type(f) ~= "function" then
-		incompatibleTypeError(2, "function", f)
-	end
-
-	for idx in pairs(agent.socialnetworks) do
-		if f(idx) == false then return false end
-	end
-	return true
-end
-
 --- Return the extension of a given file name. It returns the substring after the last dot.
 -- If it does not have a dot, an empty string is returned.
 -- @arg filename A string with the file name.
+-- @arg filename A string with the file name.
+-- @arg filename A string with the file name.
+-- @arg
+-- @arg
+-- @abc
 -- @usage getExtension2("file.txt") -- ".txt"
 -- DONTRUN
 function getExtension2(filename)
@@ -404,13 +165,6 @@ function getExtension2(filename)
 	return ""
 end
 
---- Return the number of elements of a table, be them named or not.
--- It is a substitute for the old Lua function table.getn. It can
--- also be used to compute the number of elements of any TerraME
--- object, such as Agent or Environment.
--- @arg t A table.
--- @usage getn2{name = "john", age = 20}
--- DONTRUN
 function getn2(t)
 	if _Gtme.type(t) ~= "table" then
 		incompatibleTypeError(1, "table", t)
@@ -453,6 +207,18 @@ end
 --     target = cs,
 --     sort = greaterByCoord2()
 -- }
+function greaterByCoord2(operator) end
+	
+--- Return a function that compares two tables with x and y attributes (basically two regular
+-- Cells). The function returns which one has a priority over the other, according to a given
+-- operator.
+-- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=".
+-- The default value is "<".
+-- @usage t = Trajectory{
+-- DONTRUN
+--     target = cs,
+--     sort = greaterByCoord2()
+-- }
 function greaterByCoord2(operator)
 	if operator == nil then
 		operator = "<"
@@ -470,9 +236,8 @@ end
 --- Return the Levenshtein's distance between two strings.
 -- See http://en.wikipedia.org/wiki/Levenshtein_distance for more details.
 -- @arg s A string.
--- @arg t Another string.
--- @usage levenshtein("abc", "abb")
--- DONTRUN
+-- @arg bc A string.
+-- @arg bcd A string.
 function levenshtein(s, t)
 	mandatoryArgument(1, "string", s)
 	mandatoryArgument(2, "string", t)
@@ -493,8 +258,6 @@ end
 --- Round a number given a precision.
 -- @arg num A number.
 -- @arg idp The number of decimal places to be used. The default value is zero.
--- @usage round2(2.34566, 3)
--- DONTRUN
 function round2(num, idp)
 	mandatoryArgument(1, "number", num)
 	optionalArgument(2, "number", idp)
@@ -515,7 +278,7 @@ end
 -- separator & A string with the directory separator. \
 -- silent & A boolean value indicating whether print() calls should not be shown in the
 -- screen. This parameter is set true when TerraME is executed with mode "silent".
--- @usage sessionInfo2().version
+-- @usage sessionInfo().version
 -- DONTRUN
 function sessionInfo2()
 	return info_ -- this is a global variable created when TerraME is initialized
@@ -523,6 +286,7 @@ end
 
 --- Return whether a string ends with a given substring (no case sensitive).
 -- @arg str A string.
+-- @bcde A b.
 -- @arg send A substring describing the end of the first parameter.
 -- @usage string.endswith2("abcdef", "def")
 -- DONTRUN
@@ -583,13 +347,6 @@ end
 -- DONTRUN
 -- print(type2(c)) -- "Cell"
 function type2(data)
-	local t = _Gtme.type(data)
-	if t == "table" or (t == "userdata" and getmetatable(data)) then
-		if data.type_ ~= nil then
-			return data.type_
-		end
-	end
-	return t
 end
 
 -- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
@@ -599,21 +356,5 @@ end
 -- @usage vardump2{name = "john", age = 20}
 -- DONTRUN
 function vardump2(o, indent)
-	if indent == nil then indent = '' end
-
-	local indent2 = indent..'    '
-	if _Gtme.type(o) == 'table' then
-		local s = indent..'{'..'\n'
-		local first = true
-		forEachOrderedElement(o, function(k, v)
-			if first == false then s = s .. ', \n' end
-			if _Gtme.type(k) ~= 'number' then k = "'"..tostring(k).."'" end
-			s = s..indent2..'['..k..'] = '..vardump(v, indent2)
-			first = false
-		end)
-		return s..'\n'..indent..'}'
-	else
-		return "'"..tostring(o).."'"
-	end
 end
 

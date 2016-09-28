@@ -1,4 +1,5 @@
-show = false
+show = false -- show commands
+time = true -- show execution time for each command
 
 test = {
 	--__test__     = "terrame -test config/all.lua",

@@ -12,12 +12,13 @@ initialDir:setCurrentDir()
 commands = _Gtme.include("commands.lua")
 
 show = false
+time = false
 
-if commands.show then
-	show = true
-end
+if commands.show then show = true end
+if commands.time then time = true end
 
 commands.show = nil
+commands.time = nil
 
 directories = {
 	log = {},
@@ -166,7 +167,24 @@ forEachOrderedElement(commands, function(idx, group)
 			_Gtme.printWarning(command)
 		end
 
+		local testInitialTime = os.time(os.date("*t"))
+
 		result, err = runCommand(command)
+
+		if time then
+			local testFinalTime = os.time(os.date("*t"))
+			local difference = testFinalTime - testInitialTime
+
+			local text = "Test executed in "..round(difference, 1).." seconds"
+
+			if difference > 20 then
+				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+			elseif difference > 5 then
+				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+			else
+				_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+			end
+		end
 
 		report.commands = report.commands + 1
 
@@ -332,7 +350,24 @@ forEachOrderedElement(commands, function(idx, group)
 			_Gtme.printWarning(command)
 		end
 
+		local testInitialTime = os.time(os.date("*t"))
+
 		result, err = runCommand(command)
+
+		if time then
+			local testFinalTime = os.time(os.date("*t"))
+			local difference = testFinalTime - testInitialTime
+
+			local text = "Test executed in "..round(difference, 1).." seconds"
+
+			if difference > 20 then
+				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+			elseif difference > 5 then
+				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+			else
+				_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+			end
+		end
 
 		report.commands = report.commands + 1
 

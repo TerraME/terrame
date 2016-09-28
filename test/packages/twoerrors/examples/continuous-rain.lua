@@ -1,3 +1,6 @@
+
+-- @example Continuous rain model.
+
 local s = sessionInfo().separator
 
 C = 2
