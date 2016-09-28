@@ -1674,7 +1674,12 @@ function Map(data)
 		customError("Invalid type. Maps only work with CellularSpace, Agent, Society, got "..type(data.target)..".")
 	end
 
-	local validArgs= {"background", "color", "font", "grid", "grouping", "invert", "label", "max", "min",
+	if type(data.target) == "CellularSpace" and data.target.source ~= "virtual" then
+		customError("Currently it is only possible to create Maps from 'virtual' CellularSpaces, got '"..data.target.source.."'.")
+
+	end
+
+	local validArgs = {"background", "color", "font", "grid", "grouping", "invert", "label", "max", "min",
 	"precision", "select", "size", "slices", "stdColor", "stdDeviation", "symbol", "target", "value"}
 
 	verifyUnnecessaryArguments(data, validArgs)
