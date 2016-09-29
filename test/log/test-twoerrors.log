@@ -53,7 +53,7 @@ Testing sessionInfo2
 Testing string.endswith2
 Testing switch2
 Checking if all asserts were executed
-Assert in line 94 was not executed.
+Assert in line 90 was not executed.
 Testing tests/alternative/Cell.lua
 Testing Cell
 Error in ...ents/MacOS/packages/twoerrors/tests/alternative/Cell.lua:42: Test should be Map got Chart.

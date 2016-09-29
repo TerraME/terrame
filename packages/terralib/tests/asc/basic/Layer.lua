@@ -62,7 +62,6 @@ return {
 
 		File(filePath1):deleteIfExists()
 		File(projName):deleteIfExists()
-		end
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_fill_asc_repr.tview"

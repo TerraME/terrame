@@ -39,7 +39,7 @@ Testing switch2
 Testing type2
 Testing vardump2
 Checking if all asserts were executed
-Assert in line 85 was not executed.
+Assert in line 83 was not executed.
 Testing tests/alternative/Cell.lua
 Testing Cell
 Creating 'log/mac/chart_cell.bmp'.
