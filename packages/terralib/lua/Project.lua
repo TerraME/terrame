@@ -119,9 +119,7 @@ function Project(data)
 	forEachElement(data, function(idx, value)
 		if not belong(idx, {"clean", "file", "author", "description", "title", "layers", "terralib"}) then
 			if type(data[idx]) ~= "string" then
-				if File(data.file):exists() then
-					File(data.file):delete()
-				end
+				File(data.file):deleteIfExists()
 
 				incompatibleTypeError(idx, "string", data[idx])
 			end
@@ -134,10 +132,7 @@ function Project(data)
 				}
 
 			else
-				if File(data.file):exists() then
-					File(data.file):delete()
-				end
-
+				File(data.file):deleteIfExists()
 				customError("Value of argument '"..idx.."' is not a valid file name.")
 			end
 		end

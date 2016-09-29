@@ -121,9 +121,7 @@ return {
 			-- table = tableName			
 		-- }		
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end		
+		File(projName):deleteIfExists()
 
 		projName = "cells_setores_2000.tview"
 
@@ -267,10 +265,7 @@ return {
 		clSet = tl:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)			
 	
-		-- END
-		if File(projName):exists() then
-			File(projName):delete()
-		end	
+		File(projName):deleteIfExists()
 		
 		pgData.table = tName1
 		tl:dropPgTable(pgData)

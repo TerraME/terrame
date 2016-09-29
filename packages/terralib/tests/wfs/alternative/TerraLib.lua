@@ -33,9 +33,7 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 
 		tl:createProject(proj, {})
 

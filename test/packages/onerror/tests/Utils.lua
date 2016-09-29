@@ -34,9 +34,7 @@ return{
 	end,
 	call2 = function(unitTest)
 		local mfile = File("onerror-file-1.txt")
-		if mfile:exists() then
-			mfile:delete()
-		end
+		mfile:deleteIfExists()
 
 		local cont = 0
 		local a = Agent{map = function(self, ev) cont = cont + 1 end}

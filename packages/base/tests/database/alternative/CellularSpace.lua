@@ -168,7 +168,7 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		local proj = terralib.Project{
 			file = tostring(file),
@@ -252,7 +252,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
 		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 		tl:dropPgTable(pgData)			
 		
 		-- GAL from shapefile
@@ -391,7 +391,8 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		if projName:exists() then projName:delete() end
+		projName:deleteIfExists()
+
 		local proj = terralib.Project{
 			file = projName:name(true),
 			clean = true,
@@ -473,7 +474,7 @@ return{
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
 
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
-		if projName:exists() then projName:delete() end
+		projName:deleteIfExists()
 		tl:dropPgTable(pgData)
 	end
 }

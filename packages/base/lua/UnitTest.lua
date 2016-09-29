@@ -238,7 +238,7 @@ UnitTest_ = {
 		end
 
 		if not self.log then
-			File(fname):delete()
+			File(fname):deleteIfExists()
 			customError("It is not possible to use assertFile without a 'log' directory.")
 		end
 
@@ -252,7 +252,7 @@ UnitTest_ = {
 		if self.tlogs[fname] then
 			self.fail = self.fail + 1
 			self:printError("Log file '"..fname.."' is used in more than one assert.")
-			File(fname):delete()
+			File(fname):deleteIfExists()
 			return
 		end
 
@@ -263,7 +263,7 @@ UnitTest_ = {
 		end
 
 		os.execute("cp \""..fname.."\" \""..self.tmpdir.."\"")
-		File(fname):delete()
+		File(fname):deleteIfExists()
 
 		if File(fname):exists() then
 			self.fail = self.fail + 1 -- SKIP
@@ -353,7 +353,7 @@ UnitTest_ = {
 		local s = sessionInfo().separator
 
 		if not self.log then
-			File(file):delete()
+			File(file):deleteIfExists()
 			customError("It is not possible to use assertSnapshot without a 'log' directory.")
 		end
 

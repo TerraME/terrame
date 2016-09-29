@@ -881,9 +881,7 @@ return{
 
 		unitTest:assertNil(cs:sample().past.geom)
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 	end
 }
 

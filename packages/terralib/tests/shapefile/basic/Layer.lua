@@ -125,9 +125,7 @@ return {
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_shape.tview"
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		local proj = Project {
 			file = projName,
@@ -180,9 +178,7 @@ return {
 		
 		local shp0 = clName1..".shp"
 		table.insert(shapes, shp0)
-		if File(shp0):exists() then
-			File(shp0):delete()
-		end
+		File(shp0):deleteIfExists()
 		
 		local cl = Layer{
 			project = proj,
@@ -228,7 +224,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-mode.png")
 
 		-- MODE (area = true)
-
 		cl:fill{
 			operation = "mode",
 			layer = municipios,
@@ -254,7 +249,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-mode-2.png")
 
 		-- AREA
-
 		cl:fill{
 			operation = "area",
 			layer = protecao,
@@ -278,7 +272,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-area.png", 0.05)
 
 		-- DISTANCE
-
 		cl:fill{
 			operation = "distance",
 			layer = rodovias,
@@ -346,7 +339,6 @@ return {
 		unitTest:assertSnapshot(map, "points-distance.png")
 
 		-- PRESENCE
-
 		cl:fill{
 			operation = "presence",
 			layer = rodovias,
@@ -412,9 +404,7 @@ return {
 
 		local shp1 = clName2..".shp"
 		table.insert(shapes, shp1)
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end
+		File(shp1):deleteIfExists()
 
 		local cl2 = Layer{
 			project = proj,
@@ -488,7 +478,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-count.png")
 
 		-- MAXIMUM
-
 		cl:fill{
 			operation = "maximum",
 			layer = municipios,
@@ -513,7 +502,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-maximum.png")
 
 		-- MINIMUM
-
 		cl:fill{
 			operation = "minimum",
 			layer = municipios,
@@ -538,7 +526,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-minimum.png")
 
 		-- AVERAGE
-
 		cl:fill{
 			operation = "average",
 			layer = municipios,
@@ -563,7 +550,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-average.png")
 
 		-- STDEV
-
 		cl:fill{
 			operation = "stdev",
 			layer = municipios,
@@ -588,7 +574,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-stdev.png")
 
 		-- LENGTH
-
 		local error_func = function()
 			cl:fill{
 				operation = "length",
@@ -599,7 +584,6 @@ return {
 		unitTest:assertError(error_func, "Sorry, this operation was not implemented in TerraLib yet.")
 
 		-- SUM
-
 		File(proj.file):delete()
 		
 		proj = Project {
@@ -611,9 +595,7 @@ return {
 		clName1 = "cells_set"
 		local shp2 = clName1..".shp"
 		table.insert(shapes, shp2)
-		if File(shp2):exists() then
-			File(shp2):delete()
-		end		
+		File(shp2):deleteIfExists()
 		
 		cl = Layer{
 			project = proj,
@@ -667,7 +649,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-sum-area.png")
 
 		-- AVERAGE (area = true)
-		
 		File(proj.file):delete()
 		
 		projName = "cellular_layer_fill_avg_area.tview"
@@ -682,9 +663,7 @@ return {
 		local shp3 = clName1..".shp"
 		table.insert(shapes, shp3)
 
-		if File(shp3):exists() then
-			File(shp3):delete()
-		end
+		File(shp3):deleteIfExists()
 		
 		cl = Layer{
 			project = proj,
@@ -720,7 +699,6 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-average-area.png")
 				
-
 		forEachElement(shapes, function(_, value)
 			File(value):delete()
 		end)

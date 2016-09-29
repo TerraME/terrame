@@ -30,9 +30,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -57,9 +55,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -70,9 +66,7 @@ return {
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"
 
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end	
+		File(shp1):deleteIfExists()
 		
 		local resolution = 60e3
 		local mask = false
@@ -86,11 +80,7 @@ return {
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)				
 
-		-- END
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end			
-		
+		File(shp1):deleteIfExists()
 		File(proj.file):delete()		
 	end,
 	-- addPgCellSpaceLayer = function(unitTest) -- CREATE POSTGIS CELLULAR SPACE FROM TIF
@@ -101,9 +91,7 @@ return {
 		-- proj.title = "TerraLib Tests"
 		-- proj.author = "Avancini Rodrigo"
 		
-		-- if File(proj.file):exists() then
-			-- File(proj.file):delete()
-		-- end	
+		-- File(proj.file):deleteIfExists()
 		
 		-- tl:createProject(proj, {})
 		
@@ -174,9 +162,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -196,9 +182,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -221,9 +205,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -245,9 +227,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -258,9 +238,7 @@ return {
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"
 
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end	
+		File(shp1):deleteIfExists()
 		
 		local resolution = 60e3
 		local mask = false
@@ -281,9 +259,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -316,9 +292,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 
@@ -347,7 +321,6 @@ return {
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
 		
-		
 		File("cbers_rgb342_crop1.tif"):delete()
 		File(proj.file):delete()
 		
@@ -361,9 +334,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 
 		local file = File(proj.file)
-		if file:exists() then
-			file:delete()
-		end
+		file:deleteIfExists()
 
 		tl:createProject(proj, {})
 

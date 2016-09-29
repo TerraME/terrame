@@ -54,7 +54,8 @@ return{
 			filePath("test"..s.."braz.gdal")
 		end
 		unitTest:assertError(error_func, "File 'base"..s.."data"..s.."test"..s.."braz.gdal' does not exist in package 'base'. Do you mean 'brazil.gal'?")
-		File(baseInfo.data..s.."amazonia.lua"):delete()
+
+		File(baseInfo.data..s.."amazonia.lua"):deleteIfExists()
 	end,
 	filesByExtension = function(unitTest)
 		local error_func = function()

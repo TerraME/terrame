@@ -51,7 +51,7 @@ return{
 		end
 		unitTest:assertError(error_func, "File '"..tostring(file).."' does not contain a Lua table.")
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 	end,
 	["table.save"] = function(unitTest)
 		local error_func = function()
