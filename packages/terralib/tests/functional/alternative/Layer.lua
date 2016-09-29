@@ -1065,7 +1065,7 @@ return{
 		if File(filePath1):exists() then File(filePath1):delete() end
 	end,
 	export = function(unitTest)
-		local projName = "layer_postgis_basic.tview"
+		local projName = "layer_func_alt.tview"
 
 		local proj = Project {
 			file = projName,

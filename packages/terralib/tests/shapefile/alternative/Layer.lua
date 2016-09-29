@@ -26,6 +26,10 @@ return {
 	Layer = function(unitTest)
 		local projName = "layer_shape_alt.tview"
 
+		if File(projName):exists() then -- TODO: (#1442)
+			File(projName):delete()
+		end			
+		
 		local proj = Project {
 			file = projName,
 			clean = true
