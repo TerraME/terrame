@@ -38,7 +38,7 @@ return{
 
 		local projFile = File("proj_celllayer.tview")
 
-		projFile:deleteItExists()
+		projFile:deleteIfExists()
 
 		local proj = Project{
 			file = projFile:name(true),
