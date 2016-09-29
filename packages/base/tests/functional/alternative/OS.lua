@@ -70,7 +70,7 @@ return{
 		error_func = function()
 			s.silent = 1
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("silent", "boolean", 1))
+		unitTest:assertError(error_func, "Argument 'silent' is an important information about the current execution and cannot be changed.")
 
 		error_func = function()
 			s.arg = 1
