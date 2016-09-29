@@ -28,5 +28,3 @@ m = Map{
     value = {1, 2, 3}
 }
 
-clean()
-

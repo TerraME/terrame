@@ -108,8 +108,8 @@ basic = {
 
 observer = {
 	observer    = {script = "observer.lua",    quantity = 1},
-	chart       = {script = "chart.lua",       quantity = 3},
-	map         = {script = "map.lua",         quantity = 2},
+	chart       = {script = "chart.lua",       arg = "-autoclose", quantity = 3},
+	map         = {script = "map.lua",         arg = "-autoclose", quantity = 2},
 	clock       = {script = "clock.lua",       quantity = 1},
 	textscreen  = {script = "textscreen.lua",  quantity = 8},
 	visualtable = {script = "visualtable.lua", quantity = 8}

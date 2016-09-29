@@ -1406,7 +1406,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.myxpcall(function() _Gtme.executeProject(package) end)
 				os.exit(0)
 			elseif arg == "-autoclose" then
-				argCount = argCount + 1
 				info_.autoclose = true
 			elseif arg == "-build" then
 				if package == "base" then

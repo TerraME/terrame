@@ -50,7 +50,7 @@ end
 --]]
 
 local function httpLink(text)
-	local result = string.gsub(text, "http://[%w%.%-]+[%/%w~%-_.]*", function(value)
+	local result = string.gsub(text, "http[s]://[%w%.%-]+[%/%w~%-_.]*", function(value)
 		if value:sub(-1, -1) == "." then
 			value = value:sub(1, -2)
 			return "<a href=\""..value.."\" target=\"_blank\">"..value.."</a>."
