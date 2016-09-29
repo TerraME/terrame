@@ -136,31 +136,24 @@ function sessionInfo()
 				end
 			}
 
-			local ok = false
-			forEachElement(args, function(arg, check)
-				if idx ~= arg then return end
+			local check = args[idx]
 
-				if not check then
-					customError("Argument '"..idx.."' is an important information about the current execution and cannot be changed.")
-				end
-
-				local mtype = type(check)
-				if mtype == "function" then
-					check(arg, value)
-				elseif mtype == "table" then
-					if not belong(value, check) then
-						customError("Argument '"..idx.."' cannot be replaced by '"..value.."'.")
-					end
-				elseif type(value) ~= check then
-					incompatibleTypeError(arg, check, value)
-				end
-
-				ok = true
-				return false
-			end)
-
-			if not ok then
+			if check == readOnly then
+				customError("Argument '"..idx.."' is an important information about the current execution and cannot be changed.")
+			elseif check == nil then
 				customError("Argument '"..idx.."' is not an information about the current execution.")
+			end
+
+			local mtype = type(check)
+
+			if mtype == "function" then
+				check(idx, value)
+			elseif mtype == "table" then
+				if not belong(value, check) then
+					customError("Argument '"..idx.."' cannot be replaced by '"..value.."'.")
+				end
+			elseif type(value) ~= check then
+				incompatibleTypeError(idx, check, value)
 			end
 
 			info[idx] = value

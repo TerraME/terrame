@@ -63,6 +63,11 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("round", "number", false))
 
 		error_func = function()
+			s.autoclose = 2
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("autoclose", "boolean", 2))
+
+		error_func = function()
 			s.round = 1.1
 		end
 		unitTest:assertError(error_func, "Argument 'round' must be a number >= 0 and < 1, got '1.1'.")
