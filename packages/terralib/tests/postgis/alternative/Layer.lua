@@ -358,8 +358,8 @@ return {
 		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 64) -- #1303
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		local wrongPass = "passiswrong"
+	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		local passWrong = function()
 			Layer{
 				project = proj1,
