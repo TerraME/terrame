@@ -22,6 +22,36 @@
 --
 -------------------------------------------------------------------------------------------
 
+local function simplifyPath(value)
+	value = _Gtme.makePathCompatibleToAllOS(value)
+
+	local s = sessionInfo().separator
+
+	if value:match("\n") then
+		local tempstr = ""
+
+		for line in value:gmatch("(.-)\n") do
+			local first = string.find(line, "/")
+			local last = string.find(line, "/[^/]*$")
+
+			if not first or first == last then
+				tempstr = tempstr..line.."\n"
+			else
+				tempstr = tempstr..string.sub(line, 1, first - 1)..s..string.sub(line, last + 1).."\n"
+			end
+		end
+
+		return tempstr
+	end
+
+	local first = string.find(value, "/")
+	local last = string.find(value, "/[^/]*$")
+
+	if not first or first == last then return value end
+
+	return string.sub(value, 1, first - 1)..s..string.sub(value, last + 1)
+end
+
 UnitTest_ = {
 	type_ = "UnitTest",
 	success = 0,
@@ -55,12 +85,13 @@ UnitTest_ = {
 	-- @arg tol A number indicating a maximum error tolerance. This argument is optional and can
 	-- be used with numbers or strings. When using string, the tolerance is measured according
 	-- to the Utils:levenshtein() distance. The default tolerance is zero.
-	-- @arg ignorePath A boolean to ignore path between /'s, when comparing two strings. This argument
-	-- is optional and can be used only with strings. The default value is false.
+	-- @arg ignorePath A boolean to ignore path between /'s, when comparing two strings. It
+	-- automatically converts a string such as "directory/sub1/sub2/file" into "directory/file".
+	-- This argument is optional and can be used only with strings. The default value is false.
 	-- @usage unitTest = UnitTest{}
 	-- unitTest:assertEquals(3, 3)
 	-- unitTest:assertEquals(2, 2.1, 0.2)
-	-- unitTest:assertEquals("string [terralib/data/biomassa-manaus.asc]", "string [biomassa-manaus.asc]", 0, true)
+	-- unitTest:assertEquals("string [terralib/data/biomassa-manaus.asc]", "string [terralib/biomassa-manaus.asc]", 0, true)
 	assertEquals = function (self, v1, v2, tol, ignorePath)
 		self.test = self.test + 1
 
@@ -93,26 +124,7 @@ UnitTest_ = {
 			end
 		elseif type(v1) == "string" and type(v2) == "string" then
 			if ignorePath then
-				local tempstr = ""
-
-				if v1:match("\n") then
-					for line in v1:gmatch("([^(.-)\r?\n]+)") do
-						local path = line:match("%[(.*)%]")
-						if path then
-							local _, fileNameWithExtension,_ = path:match("(.-)([^\\/]-%.?([^%.\\/]*))$")
-							line = line:gsub("%[(.*)%]", "["..fileNameWithExtension.."]")
-						end
-						tempstr = tempstr..line.."\n"
-					end
-				else
-					local path = v1:match("%[(.*)%]")
-					if path then
-						local _, fileNameWithExtension,_ = path:match("(.-)([^\\/]-%.?([^%.\\/]*))$")
-						tempstr = v1:gsub("%[(.*)%]", "["..fileNameWithExtension.."]")
-					end
-				end
-
-				if tempstr ~= "" then v1 = tempstr end
+				v1 = simplifyPath(v1)
 			end
 
 			local dist = levenshtein(v1, v2)
@@ -148,13 +160,19 @@ UnitTest_ = {
 	-- between the error produced by the error function and the expected error message.
 	-- This argument might be necessary in error messages that include information that can change
 	-- from machine to machine, such as an username. The default value is zero (no discrepance).
+	-- @arg ignorePath A boolean to ignore path between /'s, when comparing two strings. It
+	-- automatically converts a string such as "directory/sub1/sub2/file" into "directory/file".
+	-- This argument is optional and can be used only with strings. The default value is false.
 	-- @usage unitTest = UnitTest{}
 	-- error_func = function() verify(2 > 3, "wrong operator") end
 	-- unitTest:assertError(error_func, "wrong operator")
-	assertError = function(self, my_function, error_message, max_error)
+	assertError = function(self, my_function, error_message, max_error, ignorePath)
 		mandatoryArgument(1, "function", my_function)
 		mandatoryArgument(2, "string", error_message)
 		optionalArgument(3, "number", max_error)
+
+		if ignorePath == nil then ignorePath = false end
+		mandatoryArgument(4, "boolean", ignorePath)
 
 		local found_error = false
 		xpcall(my_function, function(err)
@@ -188,6 +206,10 @@ UnitTest_ = {
 			end
 
 			shortError = shortError:sub(8, shortError:len())
+
+			if ignorePath then
+				shortError = simplifyPath(shortError)
+			end
 
 			local distance = levenshtein(error_message, shortError)
 
