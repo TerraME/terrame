@@ -187,9 +187,9 @@ return {
 		
 		unitTest:assertEquals(l1.name, clName1)
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)		
 		local filePath2 = "mg_cells.shp"
-		
+
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)		
 		if File(filePath2):exists() then
 			File(filePath2):delete()
 		end			
