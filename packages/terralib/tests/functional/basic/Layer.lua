@@ -97,8 +97,8 @@ return {
 			file = projName:name(true)
 		}		
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local layerName2 = "MG"
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local layer2 = Layer{
 			project = proj2,
 			name = layerName2,
