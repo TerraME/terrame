@@ -108,6 +108,7 @@ return {
 		end
 		unitTest:assertError(sourceMandatory, mandatoryArgumentMsg("source"))
 
+	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		local nameMandatory = function()
 			Layer{
 				project = proj1,
@@ -120,7 +121,8 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(nameMandatory, mandatoryArgumentMsg("name"))
+		unitTest:assertError(nameMandatory, mandatoryArgumentMsg("name")) -- SKIP
+	end
 
 		local userMandatory = function()
 			Layer{
@@ -356,6 +358,7 @@ return {
 		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 64) -- #1303
 
+	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		local wrongPass = "passiswrong"
 		local passWrong = function()
 			Layer{
@@ -370,8 +373,9 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
+		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP 
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
+	end
 
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
@@ -749,6 +753,7 @@ return {
 		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 64) -- #1303
 
+	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		wrongPass = "passiswrong"
 		passWrong = function()
 			Layer{
@@ -763,9 +768,9 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
+		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
-
+	end
 		
 		host = "localhost"
 		port = "5432"
