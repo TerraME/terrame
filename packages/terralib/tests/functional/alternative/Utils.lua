@@ -28,7 +28,10 @@ return {
 			File("emas-count.tview"):delete()
 		end
 		
-		local project = Project{
+		local project 
+
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
+		project = Project{
 			file = "emas-count.tview",
 			clean = true,
 			firebreak = filePath("firebreak_lin.shp", "terralib"),
@@ -36,6 +39,15 @@ return {
 			river = filePath("River_lin.shp", "terralib"),
 			limit = filePath("Limit_pol.shp", "terralib")
 		}
+	else
+		project = Project{
+			file = "emas-count.tview",
+			clean = true,
+			firebreak = filePath("firebreak_lin.shp", "terralib"),
+			river = filePath("River_lin.shp", "terralib"),
+			limit = filePath("Limit_pol.shp", "terralib")
+		}
+	end		
 
 		local error_func = function()
 			forEachLayer()
