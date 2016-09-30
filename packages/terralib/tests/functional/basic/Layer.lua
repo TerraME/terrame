@@ -188,7 +188,9 @@ return {
 		unitTest:assertEquals(l1.name, clName1)
 
 		local filePath2 = "mg_cells.shp"
-
+	
+	local filePath3
+	
 	if sessionInfo().system ~= "mac" then -- TODO(#1448)		
 		if File(filePath2):exists() then
 			File(filePath2):delete()
@@ -205,7 +207,7 @@ return {
 		
 		unitTest:assertEquals(l2.name, clName2) -- SKIP
 		
-		local filePath3 = "another_sampa_cells.shp"
+		filePath3 = "another_sampa_cells.shp"
 		
 		if File(filePath3):exists() then
 			File(filePath3):delete()
