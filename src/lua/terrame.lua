@@ -70,7 +70,6 @@ local function initializeTerraLib()
 		local binding = terralib_mod_binding_lua
 		binding.TeSingleton.getInstance():initialize()
 		binding.te.plugin.PluginManager.getInstance():clear()
-		binding.te.plugin.PluginManager.getInstance():loadAll()
 		_Gtme.terralib_mod_binding_lua = terralib_mod_binding_lua
 	end
 end
@@ -1198,7 +1197,14 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	dofile(path.."Utils.lua", _Gtme)
 	dofile(info_.path..s.."lua"..s.."utils.lua")
 	dofile(info_.path..s.."lua"..s.."configure.lua")
-
+	
+	if string.lower(info_.path) == string.lower(_Gtme.currentDir()) then
+		_Gtme.printError("It is not possible to execute TerraME within its directory. Please, run it from another place.")
+		os.exit(1)
+	else
+		_Gtme.terralib_mod_binding_lua.te.plugin.PluginManager.getInstance():loadAll()
+	end	
+	
 	info_.version = _Gtme.packageInfo().version
 
 	if arguments == nil or #arguments < 1 then 
