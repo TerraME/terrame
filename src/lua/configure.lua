@@ -186,7 +186,6 @@ function _Gtme.configure(self, modelName, package)
 
 	r = r.."-- This file was created automatically from a TerraME Model ("..os.date("%c")..")\n\n"
 	r = r.."require(\"qtluae\")\n"
-	r = r.."sessionInfo().configure = true\n"
 
 	if not package then
 		rawset(_G, "__zzz", modelName)

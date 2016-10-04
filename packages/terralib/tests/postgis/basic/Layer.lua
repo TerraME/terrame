@@ -24,8 +24,12 @@
 
 return {
 	Layer = function(unitTest)
-		local projName = "layer_postgis_basic.tview"
-
+		local projName = "layer_postgis_basic.tview" -- TODO: (#1442)
+		
+		if File(projName):exists() then
+			File(projName):delete()
+		end	
+		
 		local proj1 = Project{
 			file = projName,
 			clean = true
@@ -400,6 +404,10 @@ return {
 	export = function(unitTest)
 		local projName = "layer_postgis_basic.tview"
 
+		if File(projName):exists() then -- TODO: (#1442)
+			File(projName):delete()
+		end			
+		
 		local proj = Project {
 			file = projName,
 			clean = true

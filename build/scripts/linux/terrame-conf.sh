@@ -80,7 +80,7 @@ cp -rf terrame-conf.cmake $_TERRAME_OUT_DIR
 # Entering the output folder
 cd $_TERRAME_OUT_DIR
 
-# Calling CMake: note that we are using a release configuration and Xcode generator
+# Calling CMake
 cmake -G "Unix Makefiles" -C terrame-conf.cmake $_TERRAME_GIT_DIR/build/cmake
 
 make -j4

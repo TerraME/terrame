@@ -23,11 +23,6 @@
 :: Script for building a TerraLib5 customized for TerraME
 :: -----------------
 
-:: Checking Terralib git dir. Path to terralib codebase
-if "%_TERRALIB_GIT_DIR%" == "" (
-  set _TERRALIB_GIT_DIR=../../git/terralib/
-)
-
 :: -----------------
 :: Setting up the environment variables: change the values of the above
 :: variables to reflect you environment.
@@ -48,13 +43,18 @@ if "%_TERRALIB_OUT_DIR%" == "" (
   set _TERRALIB_OUT_DIR=%CD%\build
 )
 
+:: Checking Terralib git dir. Path to terralib codebase
+if "%_TERRALIB_GIT_DIR%" == "" (
+  set _TERRALIB_GIT_DIR=../../git/terralib
+)
+
 :: -----------------
 :: Configuring output folder
 :: -----------------
 mkdir %_TERRALIB_OUT_DIR%
 
 :: Copying terralib cmake cache to output dir
-copy terralib-conf.cmae %_TERRALIB_OUT_DIR%
+copy terralib-conf.cmake %_TERRALIB_OUT_DIR%
 
 :: -----------------
 :: Entering the output folder
@@ -65,8 +65,6 @@ cd %_TERRALIB_OUT_DIR%
 :: Calling CMake
 :: -----------------
 cmake -G "Visual Studio 12 2013 Win64" -C terralib-conf.cmake %_TERRALIB_GIT_DIR%/build/cmake
-
-echo "TerraLib VS2013 built!"
-
+pause
 :: Building and installing
 cmake --build . --target install --config Release

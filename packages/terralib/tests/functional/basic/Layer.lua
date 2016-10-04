@@ -95,14 +95,15 @@ return {
 		}		
 
 		local layerName2 = "MG"
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local layer2 = Layer{
 			project = proj2,
 			name = layerName2,
 			file = filePath("test/MG_cities.shp", "terralib")
 		}
 
-		unitTest:assertEquals(layer1.name, layerName1)
-		unitTest:assertEquals(layer2.name, layerName2)
+		unitTest:assertEquals(layer1.name, layerName1) -- SKIP
+		unitTest:assertEquals(layer2.name, layerName2) -- SKIP
 		
 		local layerName21 = "MG_2"
 		local layer21 = Layer{
@@ -111,8 +112,9 @@ return {
 			file = filePath("test/MG_cities.shp", "terralib")
 		}
 
-		unitTest:assert(layer21.name ~= layer2.name)
-		unitTest:assertEquals(layer21.sid, layer2.sid)		
+		unitTest:assert(layer21.name ~= layer2.name) -- SKIP
+		unitTest:assertEquals(layer21.sid, layer2.sid) -- SKIP	
+	end
 		
 		local layerName3 = "CBERS1"
 		local layer3 = Layer{
@@ -149,12 +151,14 @@ return {
 			file = filePath("test/sampa.shp", "terralib")
 		}
 		
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)	
 		layerName2 = "MG"
 		Layer{
 			project = proj,
 			name = layerName2,
 			file = filePath("test/MG_cities.shp", "terralib")	
 		}
+	end
 
 		layerName3 = "CBERS"
 		Layer{
@@ -177,9 +181,11 @@ return {
 		}
 		
 		unitTest:assertEquals(l1.name, clName1)
-		
+
 		local filePath2 = "mg_cells.shp"
-		
+		local filePath3
+	
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)		
 		File(filePath2):deleteIfExists()
 		
 		local clName2 = "MG_Cells"
@@ -191,9 +197,9 @@ return {
 			file = filePath2		
 		}
 		
-		unitTest:assertEquals(l2.name, clName2)
+		unitTest:assertEquals(l2.name, clName2) -- SKIP
 		
-		local filePath3 = "another_sampa_cells.shp"
+		filePath3 = "another_sampa_cells.shp"
 		
 		File(filePath3):deleteIfExists()
 		
@@ -206,7 +212,8 @@ return {
 			file = filePath3		
 		}
 		
-		unitTest:assertEquals(l3.name, clName3)	
+		unitTest:assertEquals(l3.name, clName3)	-- SKIP
+	end
 		
 		-- BOX TEST
 		local tl = TerraLib{}
@@ -233,8 +240,10 @@ return {
 		projName:deleteIfExists()
 
 		File(filePath1):deleteIfExists()
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		File(filePath2):deleteIfExists()
 		File(filePath3):deleteIfExists()
+	end
 		File(filePath4):deleteIfExists()
 	end,
 	fill = function(unitTest)
@@ -256,6 +265,7 @@ return {
 		
 		File(filePath1):deleteIfExists()
 
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local cl = Layer{
 			project = proj,
 			source = "shp",
@@ -475,9 +485,9 @@ return {
 			name = cellSpaceLayerName
 		}
 
-		unitTest:assertEquals(cellSpaceLayer.source, "shp")
-		unitTest:assertEquals(cellSpaceLayer.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath22))					
-		
+		unitTest:assertEquals(cellSpaceLayer.source, "shp") -- SKIP
+		unitTest:assertEquals(cellSpaceLayer.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath22)) -- SKIP
+
 		File(projName):deleteIfExists()
 
 		File(filePath1):deleteIfExists()
@@ -490,6 +500,9 @@ return {
 		--File(filePath20):deleteIfExists()
 		--File(filePath21):deleteIfExists()
 		File(filePath22):deleteIfExists()
+	else
+		unitTest:assert(true) -- SKIP
+	end
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_representation.tview"

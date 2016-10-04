@@ -74,7 +74,11 @@ return {
 				index = true
 			}
 		end
-		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index"))
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
+		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index")) -- SKIP
+	else
+		unitTest:assert(true) -- SKIP
+	end
 		
 		File(proj.file):delete()
 		-- // SPATIAL INDEX TEST
