@@ -56,9 +56,11 @@ return{
 		tmpDir:delete()
 	end,
 	__concat = function(unitTest)
-		local dir = Directory(packageInfo("base").data)
+		local dir = Directory("data")
 
-		unitTest:assertType(dir.."internal", "string")
+		unitTest:assertEquals(dir.." internal", "/ internal", 0, true)
+		unitTest:assertEquals("Directory: "..dir, "Directory: /data", 0, true)
+		unitTest:assertEquals("Directory: "..dir.."home", "Directory: /home", 0, true)
 	end,
 	attributes = function(unitTest)
 		local dir = Directory(packageInfo("base").data)

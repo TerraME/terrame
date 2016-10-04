@@ -462,7 +462,11 @@ metaTableFile_ = {
 	-- @arg value A string or an object that can be concatenated.
 	-- @usage print(File("abcd1234").." does not exist.")
 	__concat = function(self, value)
-		return self.filename..value
+		if type(self) == "File" then
+			return self.filename..value
+		elseif type(value) == "File" then
+			return self..value.filename
+		end
 	end
 }
 

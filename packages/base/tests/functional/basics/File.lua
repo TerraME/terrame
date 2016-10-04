@@ -30,7 +30,8 @@ return{
 	__concat = function(unitTest)
     	local f = File("abcd1234")
 
-		unitTest:assertType(f.." does not exits.", "string")
+		unitTest:assertEquals(f.." does not exist.", "/abcd1234 does not exist.", 0, true)
+		unitTest:assertEquals("File does not exist: "..f, "File does not exist: /abcd1234", 0, true)
 	end,
 	attributes = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))

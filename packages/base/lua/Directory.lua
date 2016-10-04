@@ -163,11 +163,17 @@ metaTableDirectory_ = {
 	__concat = function(self, value)
 		local s = sessionInfo().separator
 
+		if type(self) == "Directory" then
+			self = self.name
+		elseif type(value) == "Directory" then
+			value = value.name
+		end
+
 		if string.sub(value, 1, 1) ~= s then
 			value = s..value
 		end
 
-		return self.name..value
+		return self..value
 	end
 }
 
