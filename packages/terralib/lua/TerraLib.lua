@@ -219,8 +219,8 @@ local function createLayer(name, dSetName, connInfo, type)
 		local ds = makeAndOpenDataSource(connInfo, type)
 		
 		if not ds:dataSetExists(dSetName) then
-			ds:close()
-			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not created.")
+			ds:close() -- SKIP
+			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not created.") -- SKIP
 		end
 		
 		ds:setId(dsId)
