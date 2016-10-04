@@ -33,7 +33,7 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		tl:createProject(proj, {})
 
@@ -67,7 +67,7 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		tl:createProject(proj, {})
 

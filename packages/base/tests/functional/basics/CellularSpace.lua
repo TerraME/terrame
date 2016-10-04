@@ -110,10 +110,7 @@ return{
 		
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
 		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
+			File(fn1..exts[i]):deleteIfExists()
 		end			
 		
 		local clName1 = "Sampa_Cells"
@@ -171,15 +168,10 @@ return{
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
+			File(fn1..exts[i]):deleteIfExists()
 		end
 
 		-- GeoJSON
@@ -216,9 +208,7 @@ return{
 		local geojson1 = "geojson_sampa_cells.geojson"
 		filePath1 = testDir.."/"..geojson1
 
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end
+		File(filePath1):deleteIfExists()
 
 		clName1 = "GeoJSON_Sampa_Cells"
 		layer = terralib.Layer{
@@ -276,13 +266,8 @@ return{
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
-
-		if File(geojson1):exists() then
-			File(geojson1):delete()
-		end
+		File(projName):deleteIfExists()
+		File(geojson1):deleteIfExists()
 
 		if _Gtme.sessionInfo().system == "windows" then
 			-- Tif
@@ -325,7 +310,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs, 10000) -- SKIP
-			if File(projName):exists() then File(projName):delete() end
+			File(projName):deleteIfExists()
 
 			-- NetCDF
 			projName = "nc_cellspace.tview"
@@ -367,8 +352,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 8904) -- SKIP
-			if File(projName):exists() then File(projName):delete() end
-
+			File(projName):deleteIfExists()
 
 			-- ASC
 			projName = "asc_cellspace.tview"
@@ -410,8 +394,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
-			if File(projName):exists() then File(projName):delete() end
-
+			File(projName):deleteIfExists()
 		end
 		
 		customWarning = customWarningBkp
@@ -1427,9 +1410,7 @@ ydim    number [20]
 	
 		local projName = "cellspace_save_basic.tview"
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		local proj = terralib.Project{
 			file = projName,
@@ -1454,10 +1435,7 @@ ydim    number [20]
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
 		
 		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
+			File(fn1..exts[i]):deleteIfExists()
 		end
 
 		local clName1 = "Sampa_Cells"
@@ -1485,9 +1463,7 @@ ydim    number [20]
 		local fn2 = File(filePath2):name()
 		fn2 = testDir.."/"..fn2	
 
-		if File(filePath2):exists() then
-			File(filePath2):delete()
-		end
+		File(filePath2):deleteIfExists()
 
 		cs:save(cellSpaceLayerNameT0, "t0")
 
@@ -1533,10 +1509,7 @@ ydim    number [20]
 		fn3 = testDir.."/"..fn3	
 		
 		for i = 1, #exts do
-			local f = fn3..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
+			File(fn3..exts[i]):deleteIfExists()
 		end			
 		
 		cs:save(cellSpaceLayerNameGeom)
@@ -1559,10 +1532,7 @@ ydim    number [20]
 		fn4 = testDir.."/"..fn4	
 		
 		for i = 1, #exts do
-			local f = fn4..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
+			File(fn4..exts[i]):deleteIfExists()
 		end			
 		
 		cs:save(cellSpaceLayerNameGeom2)
@@ -1577,30 +1547,13 @@ ydim    number [20]
 			unitTest:assertNotNil(cell.geom)
 		end)		
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 
 		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-
-			f = fn2..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-
-			f = fn3..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-		
-			f = fn4..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end				
+			File(fn1..exts[i]):deleteIfExists()
+			File(fn2..exts[i]):deleteIfExists()
+			File(fn3..exts[i]):deleteIfExists()
+			File(fn4..exts[i]):deleteIfExists()
 		end
 	end,
 	split = function(unitTest)

@@ -30,9 +30,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 	if sessionInfo().system ~= "mac" then -- TODO(#1448)	
@@ -43,9 +41,7 @@ return {
 		local clName = "Amazonia_Cells"
 		local shp1 = clName..".shp"
 
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end	
+		File(shp1):deleteIfExists()
 		
 		local resolution = 60e3
 		local mask = true
@@ -70,9 +66,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -94,9 +88,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -114,9 +106,7 @@ return {
 		local clName = "Para_Cells"
 		shp[1] = clName..".shp"
 
-		if File(shp[1]):exists() then
-			File(shp[1]):delete()
-		end
+		File(shp[1]):deleteIfExists()
 		
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 60e3
@@ -130,9 +120,7 @@ return {
 		local percTifLayerName = clName.."_"..layerName2.."_RPercentage"		
 		shp[2] = percTifLayerName..".shp"
 		
-		if File(shp[2]):exists() then
-			File(shp[2]):delete()
-		end
+		File(shp[2]):deleteIfExists()
 		
 		local operation = "coverage"
 		local attribute = "rperc"
@@ -146,11 +134,8 @@ return {
 		end
 		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in layer '"..layerName2.."'.")
 		
-		-- END
 		for j = 1, #shp do
-			if File(shp[j]):exists() then
-				File(shp[j]):delete()
-			end
+			File(shp[j]):deleteIfExists()
 		end	
 
 		File(proj.file):delete()
@@ -164,9 +149,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -188,10 +171,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 
-		local file = File(proj.file)
-		if file:exists() then
-			file:delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 

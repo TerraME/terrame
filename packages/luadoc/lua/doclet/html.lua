@@ -50,7 +50,7 @@ end
 --]]
 
 local function httpLink(text)
-	local result = string.gsub(text, "http://[%w%.%-]+[%/%w~%-_.]*", function(value)
+	local result = string.gsub(text, "http[s]://[%w%.%-]+[%/%w~%-_.]*", function(value)
 		if value:sub(-1, -1) == "." then
 			value = value:sub(1, -2)
 			return "<a href=\""..value.."\" target=\"_blank\">"..value.."</a>."
@@ -291,11 +291,14 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 	end
 	
 	--find types
-	for token in string.gmatch(description_linked, "%u[%a_]+") do
+	for token in string.gmatch(description_linked, "[%a_]+") do
 		local type_name = string.gsub(token, "ies$", "y")
 		local file_name_link = type_name .. ".lua"
 		type_name = string.gsub(type_name, "s$", "")
-		if doc.files.funcnames[type_name] or doc.files[file_name_link] and doc.files[file_name_link].type ~= "model" then
+
+		local first = string.sub(token, 1, 1)
+
+		if first == string.upper(first) and (doc.files.funcnames[type_name] or doc.files[file_name_link] and doc.files[file_name_link].type ~= "model") then
 			if type_name == fname or word_table[type_name] or types_linked[type_name] then
 				table.insert(word_table, token)
 			else

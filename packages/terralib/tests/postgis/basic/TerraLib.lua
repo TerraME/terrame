@@ -34,9 +34,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -104,9 +102,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -169,7 +165,6 @@ return {
 		clSet = tl:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)		
 		
-		-- END
 		File(proj.file):delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgTable(pgData2)
@@ -182,9 +177,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		-- CREATE A PROJECT
 		tl:createProject(proj, {})
 		
@@ -1102,9 +1095,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1212,9 +1203,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1272,9 +1261,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1326,9 +1313,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1380,9 +1365,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1433,9 +1416,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 
@@ -1473,9 +1454,7 @@ return {
 		local toData = {}
 		toData.file = "postgis2shp.shp"
 		toData.type = "shp"		
-		if File(toData.file):exists() then
-			File(toData.file):delete()
-		end		
+		File(toData.file):deleteIfExists()
 		
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)	
 		unitTest:assert(File(toData.file):exists())
@@ -1483,9 +1462,7 @@ return {
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"		
-		if File(toData.file):exists() then
-			File(toData.file):delete()
-		end	
+		File(toData.file):deleteIfExists()
 
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
@@ -1504,9 +1481,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 
 		local file = File(proj.file)
-		if file:exists() then
-			file:delete()
-		end
+		file:deleteIfExists()
 
 		tl:createProject(proj, {})
 

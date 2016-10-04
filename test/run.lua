@@ -12,12 +12,13 @@ initialDir:setCurrentDir()
 commands = _Gtme.include("commands.lua")
 
 show = false
+time = false
 
-if commands.show then
-	show = true
-end
+if commands.show then show = true end
+if commands.time then time = true end
 
 commands.show = nil
+commands.time = nil
 
 directories = {
 	log = {},
@@ -60,13 +61,14 @@ forEachFile("packages", function(file)
 end)
 
 _Gtme.printNote("Removing files")
-remove = _Gtme.include("remove.lua")
+initialRemove = _Gtme.include("remove.lua")
 
-forEachElement(remove.files, function(_, value)
-	_Gtme.print("Removing '"..value.."'")
+forEachElement(initialRemove.files, function(_, value)
 	if Directory(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
 		result = Directory(value):delete()
 	elseif File(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
 		File(value):delete()
 	end
 end)
@@ -165,7 +167,24 @@ forEachOrderedElement(commands, function(idx, group)
 			_Gtme.printWarning(command)
 		end
 
+		local testInitialTime = os.time(os.date("*t"))
+
 		result, err = runCommand(command)
+
+		if time then
+			local testFinalTime = os.time(os.date("*t"))
+			local difference = testFinalTime - testInitialTime
+
+			local text = "Test executed in "..round(difference, 1).." seconds"
+
+			if difference > 20 then
+				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+			elseif difference > 5 then
+				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+			else
+				_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+			end
+		end
 
 		report.commands = report.commands + 1
 
@@ -285,16 +304,16 @@ os.execute("cp config.lua packages")
 Directory(initialDir.."packages"):setCurrentDir()
 
 _Gtme.printNote("Removing files")
-remove = _Gtme.include(".."..s.."remove.lua")
+localRemove = _Gtme.include(".."..s.."remove.lua")
 
-forEachElement(remove.files, function(_, value)
-	_Gtme.print("Removing '"..value.."'")
+forEachElement(localRemove.files, function(_, value)
 	if Directory(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
 		result = Directory(value):delete()
 	elseif File(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
 		File(value):delete()
 	end
-
 end)
 
 forEachOrderedElement(commands, function(idx, group)
@@ -331,7 +350,24 @@ forEachOrderedElement(commands, function(idx, group)
 			_Gtme.printWarning(command)
 		end
 
+		local testInitialTime = os.time(os.date("*t"))
+
 		result, err = runCommand(command)
+
+		if time then
+			local testFinalTime = os.time(os.date("*t"))
+			local difference = testFinalTime - testInitialTime
+
+			local text = "Test executed in "..round(difference, 1).." seconds"
+
+			if difference > 20 then
+				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+			elseif difference > 5 then
+				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+			else
+				_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+			end
+		end
 
 		report.commands = report.commands + 1
 
@@ -509,6 +545,28 @@ forEachElement(directories, function(idx, value)
 end)
 
 finalTime = os.time(os.date("*t"))
+
+_Gtme.printNote("Removing files")
+
+forEachElement(initialRemove.files, function(_, value)
+	if Directory(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
+		result = Directory(value):delete()
+	elseif File(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
+		File(value):delete()
+	end
+end)
+
+forEachElement(localRemove.files, function(_, value)
+	if Directory(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
+		result = Directory(value):delete()
+	elseif File(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
+		File(value):delete()
+	end
+end)
 
 print("\nExecution test report:")
 

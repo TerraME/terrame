@@ -33,9 +33,7 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 
 		tl:createProject(proj, {})
 		unitTest:assert(File(proj.file):exists())
@@ -59,9 +57,7 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 
 		tl:createProject(proj, {})
 
@@ -78,9 +74,7 @@ return {
 		unitTest:assertEquals(layerInfo.rep, "geometry")
 		unitTest:assertNotNil(layerInfo.sid)
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 	end,
 	addGeoJSONCellSpaceLayer = function(unitTest)
 		local tl = TerraLib{}
@@ -92,9 +86,7 @@ return {
 		proj.title = title
 		proj.author = author
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end
+		File(proj.file):deleteIfExists()
 
 		tl:createProject(proj, {})
 
@@ -106,9 +98,7 @@ return {
 		local clName = "GeoJSON_Cells"
 		local geojson1 = clName..".geojson"
 
-		if File(geojson1):exists() then
-			File(geojson1):delete()
-		end
+		File(geojson1):deleteIfExists()
 
 		local resolution = 10000
 		local mask = true
@@ -129,9 +119,7 @@ return {
 		clName = clName.."_NoMask"
 		local geojson2 = clName..".geojson"
 
-		if File(geojson2):exists() then
-			File(geojson2):delete()
-		end
+		File(geojson2):deleteIfExists()
 
 		mask = false
 		tl:addGeoJSONCellSpaceLayer(proj, layerName, clName, resolution, geojson2, mask)
@@ -168,9 +156,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 
@@ -182,9 +168,7 @@ return {
 		local toData = {}
 		toData.file = "geojson2shp.shp"
 		toData.type = "shp"		
-		if File(toData.file):exists() then
-			File(toData.file):delete()
-		end
+		File(toData.file):deleteIfExists()
 		
 		local overwrite = true
 		
@@ -233,9 +217,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 
 		local file = File(proj.file)
-		if file:exists() then
-			file:delete()
-		end
+		file:deleteIfExists()
 
 		tl:createProject(proj, {})
 

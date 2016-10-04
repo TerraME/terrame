@@ -5,5 +5,3 @@ Chart{target = c}
 Chart{target = c}
 Chart{target = c}
 
-clean()
-

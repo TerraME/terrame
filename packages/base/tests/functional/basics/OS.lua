@@ -47,26 +47,21 @@ return{
 
 		local info = {
 			mode = s.mode,
-			round = s.round,
-			silent = s.silent
+			round = s.round
 		}
 
 		local infoMock = {
 			mode = "strict",
-			round = 0.9,
-			silent = true
+			round = 0.9
 		}
 
 		s.mode = infoMock.mode
 		s.round = infoMock.round
-		s.silent = infoMock.silent
 
 		unitTest:assertEquals(s.mode, infoMock.mode)
 		unitTest:assertEquals(s.round, infoMock.round)
-		unitTest:assertEquals(s.silent, infoMock.silent)
 
 		s.mode = info.mode
-		s.silent = info.silent
 		s.round = info.round
 
 		local count = 0

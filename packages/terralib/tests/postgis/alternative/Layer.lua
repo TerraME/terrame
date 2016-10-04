@@ -395,15 +395,11 @@ return {
 		end
 		unitTest:assertError(tableNotExists, "Is not possible add the Layer. The table '"..tableWrong.."' does not exist.")
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		projName = "amazonia.tview"
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 
 		local proj = Project{
 			file = projName,
@@ -822,7 +818,7 @@ return {
 		tl:dropPgTable(pgData)
 
 		if File(projName):exists() then
-			File(projName):delete()
+			File(projName):deleteIfExists()
 		end
 		
 		-- SPATIAL INDEX TEST

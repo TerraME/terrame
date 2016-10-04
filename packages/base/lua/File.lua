@@ -170,10 +170,21 @@ File_ = {
 			local prj = File(string.sub(self.filename, 1, -4).."prj")
 			local qix = File(string.sub(self.filename, 1, -4).."qix")
 
-			if dbf:exists() then dbf:delete() end
-			if shx:exists() then shx:delete() end
-			if prj:exists() then prj:delete() end
-			if qix:exists() then qix:delete() end
+			dbf:deleteIfExists()
+			shx:deleteIfExists()
+			prj:deleteIfExists()
+			qix:deleteIfExists()
+		end
+	end,
+	--- Remove a file if it exists. It does not stop with an error when the file does not exist.
+	-- @usage filename = "myfile.txt"
+	-- file = File(filename)
+	-- file:write("Some text..")
+	-- file:close()
+	-- file:deleteIfExists()
+	deleteIfExists = function(self)
+		if self:exists() then
+			self:delete()
 		end
 	end,
 	--- Return the directory of a file given its path.
@@ -379,12 +390,12 @@ File_ = {
 	--
 	-- file = File( "file.csv")
 	-- file:write(mytable, ";")
-	-- if file:exists() then file:delete() end
+	-- file:deleteIfExists()
 	--
 	-- file = File("file.txt")
 	-- file:write("Some text..")
 	-- file:close()
-	-- if file:exists() then file:delete() end
+	-- file:deleteIfExists()
 	write = function(self, data, sep)
 		if type(data) == "string" then
 			data = {data}

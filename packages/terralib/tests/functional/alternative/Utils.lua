@@ -24,9 +24,7 @@
 
 return {
 	forEachLayer = function(unitTest)
-		if File("emas-count.tview"):exists() then
-			File("emas-count.tview"):delete()
-		end
+		File("emas-count.tview"):deleteIfExists()
 		
 		local project 
 
@@ -67,7 +65,7 @@ return {
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
 		
-		File("emas-count.tview"):delete()
+		File("emas-count.tview"):deleteIfExists()
 	end
 }
 

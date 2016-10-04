@@ -156,7 +156,7 @@ return{
 		unitTest:assertError(error_func, "Line 2 ('\"\"ab\"c\"') is invalid.")
 
 		file:close()
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		file = File(filePath("agents.csv", "base"))
 		error_func = function()
@@ -175,7 +175,8 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
-		if file:exists() then file:delete() end
+		
+		file:deleteIfExists()
 
 		file = File(filename)
 

@@ -94,7 +94,7 @@ return{
     
 		-- the call to notify() above creates the file again.
 		-- remove the line below after refactoring observer.
-		if File("cellularspace.csv"):exists() then File("cellularspace.csv"):delete() end
+		File("cellularspace.csv"):deleteIfExists()
 
 		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.23)
 
@@ -144,7 +144,7 @@ return{
 		
 		local projName = File("cellspace_basic_observer.tview")
 
-		if projName:exists() then projName:delete() end
+		projName:deleteIfExists()
 		
 		local author = "Avancini"
 		local title = "Cellular Space"
@@ -168,16 +168,8 @@ return{
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = testDir.."/"..shp1
-		local fn1 = File(filePath1):name()
-		fn1 = testDir.."/"..fn1			
 		
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-		end			
+		File(filePath1):deleteIfExists()
 		
 		local clName1 = "Sampa_Cells"
 		terralib.Layer{
@@ -230,14 +222,9 @@ return{
 		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.25)
 		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
-		if projName:exists() then projName:delete() end
 
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-		end
+		projName:deleteIfExists()
+		File(filePath1):deleteIfExists()
 
 		cs = CellularSpace{
 			xdim = 10,

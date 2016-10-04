@@ -28,9 +28,7 @@ return{
 
 		local projName = "environment_alt.tview"
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 
 		local author = "Avancini"
 		local title = "Cellular Space"
@@ -84,9 +82,7 @@ return{
 			table = tName1
 		}
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		tl:dropPgTable(pgData)			
 

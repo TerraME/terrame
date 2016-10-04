@@ -30,9 +30,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})	
 	
@@ -76,9 +74,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 
@@ -128,9 +124,7 @@ return {
 		-- SHP
 		toData.file = "postgis2shp.shp"
 		toData.type = "shp"		
-		if File(toData.file):exists() then
-			File(toData.file):delete()
-		end		
+		File(toData.file):deleteIfExists()
 		
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)	
 		
@@ -144,9 +138,7 @@ return {
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"		
-		if File(toData.file):exists() then
-			File(toData.file):delete()
-		end	
+		File(toData.file):deleteIfExists()
 
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)		
 		

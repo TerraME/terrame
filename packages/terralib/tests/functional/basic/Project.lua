@@ -62,10 +62,10 @@ return {
 		unitTest:assertEquals(proj1.file, proj3clean.file)
 		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		file = File("notitlenoauthor.tview")
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		local proj4 = Project{
 			file = file:name(true)
@@ -77,10 +77,10 @@ return {
 		unitTest:assertType(proj4.layers, "table")
 		unitTest:assertEquals(getn(proj4.layers), 0)
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		file = File("emas.tview")
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		local proj5
 	if sessionInfo().system ~= "mac" then -- TODO(#1448)
@@ -113,7 +113,7 @@ return {
 		unitTest:assertType(proj5.limit, "Layer")
 		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 	end,
 	__tostring = function(unitTest)
 		local file = File("tostring.tview")
@@ -134,6 +134,6 @@ title        string [The Amazonia]
 ]])
 
 		-- unitTest:assertFile("tostring.tview") -- SKIP #TODO(#1242)
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 	end
 }

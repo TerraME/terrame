@@ -41,9 +41,7 @@ return {
 		
 		local filePath1 = "prodes_cells_tif_basic.shp"
 		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end
+		File(filePath1):deleteIfExists()
 		
 		local clName1 = "Prodes_Cells"
 		
@@ -101,15 +99,11 @@ return {
 		-- END
 		-- tl:dropPgTable(pgData)
 		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end		
+		File(filePath1):deleteIfExists()	
 	else
 		unitTest:assert(true) -- SKIP		
 	end
-		if File(projName):exists() then
-			File(projName):delete()
-		end		
+		File(projName):deleteIfExists()
 	end,
 	__len = function(unitTest)
 		local projName = "layer_tiff_basic.tview"
@@ -134,9 +128,7 @@ return {
 	fill = function(unitTest)
 		local projName = "layer_fill_tif.tview"
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		local proj = Project{
 			file = projName,
@@ -167,9 +159,7 @@ return {
 		local shapes = {}
 		
 		local shp1 = clName1..".shp"
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end
+		File(shp1):deleteIfExists()
 		table.insert(shapes, shp1)
 
 		local cl = Layer{
@@ -356,7 +346,7 @@ return {
 			file = filePath("elevation.tif", "terralib")
 		}
 
-		if File("mycells.shp"):exists() then File("mycells.shp"):delete() end
+		File("mycells.shp"):deleteIfExists()
 		table.insert(shapes, "mycells.shp")
 			
 		cl = Layer{
@@ -452,9 +442,7 @@ return {
 	bands = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		local proj = Project{
 			file = projName,
@@ -530,9 +518,7 @@ return {
 	dummy = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		local proj = Project{
 			file = projName,

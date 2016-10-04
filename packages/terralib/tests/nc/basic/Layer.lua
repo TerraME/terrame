@@ -27,10 +27,7 @@ return {
 		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "nc_basic.tview"
 
-
-			if File(projName):exists() then
-				File(projName):delete()
-			end
+			File(projName):deleteIfExists()
 
 			local proj = Project {
 				file = projName,
@@ -52,9 +49,7 @@ return {
 
 			local filePath1 = "vegtype_cells_nc_basic.shp"
 
-			if File(filePath1):exists() then
-				File(filePath1):delete()
-			end
+			File(filePath1):deleteIfExists()
 
 			local clName1 = "Vegtype_Cells"
 
@@ -71,13 +66,8 @@ return {
 			unitTest:assertEquals(cl1.source, "shp") -- SKIP
 			unitTest:assertEquals(cl1.file, _Gtme.makePathCompatibleToAllOS(currentDir() .. "/" .. filePath1)) -- SKIP
 
-			if File(filePath1):exists() then
-				File(filePath1):delete()
-			end
-
-			if File(projName):exists() then
-				File(projName):delete()
-			end
+			File(filePath1):deleteIfExists()
+			File(projName):deleteIfExists()
 			
 			customWarning = customWarningBkp
 		else
@@ -88,9 +78,7 @@ return {
 		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "cellular_layer_fill_nc_repr.tview"
 
-			if File(projName):exists() then
-				File(projName):delete()
-			end
+			File(projName):deleteIfExists()
 
 			local proj = Project {
 				file = projName,
@@ -111,9 +99,7 @@ return {
 
 			unitTest:assertEquals(l:representation(), "raster") -- SKIP
 
-			if File(projName):exists() then
-				File(projName):delete()
-			end
+			File(projName):deleteIfExists()
 			
 			customWarning = customWarningBkp
 		else
@@ -124,9 +110,7 @@ return {
 		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "cellular_layer_fill_nc_repr.tview"
 
-			if File(projName):exists() then
-				File(projName):delete()
-			end
+			File(projName):deleteIfExists()
 
 			local proj = Project {
 				file = projName,
@@ -147,9 +131,7 @@ return {
 
 			unitTest:assertEquals(l:bands(), 1) -- SKIP
 
-			if File(projName):exists() then
-				File(projName):delete()
-			end
+			File(projName):deleteIfExists()
 			
 			customWarning = customWarningBkp
 		else
@@ -160,9 +142,7 @@ return {
 		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "cellular_layer_print_nc.tview"
 
-			if File(projName):exists() then
-				File(projName):delete()
-			end
+			File(projName):deleteIfExists()
 
 			local proj = Project {
 				file = projName,
@@ -192,9 +172,7 @@ source   string [nc]
 ]], 36, true)
 			-- unitTest:assertFile(projName) -- SKIP #1242
 
-			if File(projName):exists() then
-				File(projName):delete()
-			end
+			File(projName):deleteIfExists()
 			
 			customWarning = customWarningBkp
 		else

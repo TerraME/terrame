@@ -56,9 +56,7 @@ return{
 		local shp1 = "brazil_cells.shp"
 		local filePath1 = testDir.."/"..shp1			
 		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end			
+		File(filePath1):deleteIfExists()
 		
 		local clName1 = "Brazil_Cells"
 		terralib.Layer{
@@ -126,14 +124,8 @@ return{
 		end
 		unitTest:assertError(cellWithoutGeom, "It was not possible to calculate the area. Geometry was not found.")	
 		
-		-- END
-		if File(projName):exists() then
-			File(projName):delete()
-		end
-		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end	
+		File(projName):deleteIfExists()
+		File(filePath1):deleteIfExists()
 
 		tl:dropPgTable(pgData)		
 		

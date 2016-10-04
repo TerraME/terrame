@@ -54,7 +54,7 @@ return{
 		local close = file:close()
 
 		unitTest:assert(close)
-		if File(filename):exists() then File(filename):delete() end
+		File(filename):deleteIfExists()
 	end,
 	delete = function(unitTest)
 		local filepath = packageInfo().data.."test123"
@@ -80,6 +80,17 @@ return{
 		os.execute("touch abc123.shp")
 
 		File("abc123.shp"):delete()
+	end,
+	deleteIfExists = function(unitTest)
+		local filepath = packageInfo().data.."test123"
+		os.execute("touch "..filepath)
+
+		local file = File(filepath)
+		file:deleteIfExists()
+
+		unitTest:assert(not file:exists())
+
+		File("as.dfgwe.ogoei"):deleteIfExists()
 	end,
 	directory = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -218,7 +229,7 @@ return{
 			end
 		end
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		example = "Some text.."
 		filename = currentDir()..s.."abc.txt"
@@ -234,7 +245,7 @@ return{
 		unitTest:assertNotNil(data)
 		unitTest:assertEquals(data, example)
 
-		if File(filename):exists() then File(filename):delete() end
+		File(filename):deleteIfExists()
 	end,
 	__tostring = function(unitTest)
 		local path = filePath("agents.csv", "base")

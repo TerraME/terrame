@@ -1674,7 +1674,13 @@ function Map(data)
 		customError("Invalid type. Maps only work with CellularSpace, Agent, Society, got "..type(data.target)..".")
 	end
 
-	local validArgs= {"background", "color", "font", "grid", "grouping", "invert", "label", "max", "min",
+	if type(data.target) == "CellularSpace" then
+		if (data.target.xMin == 0 and data.target.xMax == 0) or (data.target.yMin == 0 and data.target.yMax == 0) then
+			customError("It is only possible to create a Map from this CellularSpace as its objects do not have a valid (x, y) location.")
+		end
+	end
+
+	local validArgs = {"background", "color", "font", "grid", "grouping", "invert", "label", "max", "min",
 	"precision", "select", "size", "slices", "stdColor", "stdDeviation", "symbol", "target", "value"}
 
 	verifyUnnecessaryArguments(data, validArgs)

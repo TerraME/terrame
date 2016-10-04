@@ -1,4 +1,5 @@
-show = false
+show = false -- show commands
+time = false -- show execution time for each command
 
 test = {
 	--__test__     = "terrame -test config/all.lua",
@@ -13,9 +14,10 @@ test = {
 	memory         = {arg = "-test", package = "memory"},
 	pattern        = {arg = "-test", config = "pattern.lua"},
 	noload         = {arg = "-test", package = "noload"},
-	nolog          = {arg = "-test", config = "log.lua"},
 	noexamples     = {arg = "-test", package = "noexamples" },
-	linedirectory  = {arg = "-test", config = "linesDirectory.lua"}
+	linedirectory  = {arg = "-test", config = "linesDirectory.lua"},
+	testnotest     = {arg = "-test", config = "testNoTest.lua"},
+	notest         = {arg = "-test", config = "noTest.lua"}
 }
 
 package = {
@@ -48,7 +50,6 @@ doc = {
 
 build = {
 	build           = {arg = "-build", package = "build",        config = "all.lua"},
-	buildafile      = {arg = "-build", package = "buildafile"},
 	onerrorbuild    = {arg = "-build", package = "onerrorbuild", config = "all.lua", clean = true},
 	twoerrorsbuild  = {arg = "-build", package = "twoerrorsbuild", config = "all.lua"},
 	buildunnecfiles = {arg = "-build", package = "buildunnecfiles", config = "all.lua"},
@@ -77,7 +78,6 @@ basic = {
 	builderror2         = {arg = "-build", package = "build", config = "etwdre.lua"},
 	builderror3         = {arg = "-build", package = "build", arg = "-clea"},
 	builderror4         = {arg = "-build", package = "build", config = "pattern.lua"},
-	builderror5         = {arg = "-build", package = "onerror"},
 	basictrace          = {script = "trace-basic.lua"},
 	tracepackage        = {script = "trace-package.lua"},
 	tracesyntax         = {script = "trace-syntax.lua"},
@@ -108,8 +108,8 @@ basic = {
 
 observer = {
 	observer    = {script = "observer.lua",    quantity = 1},
-	chart       = {script = "chart.lua",       quantity = 3},
-	map         = {script = "map.lua",         quantity = 2},
+	chart       = {script = "chart.lua",       arg = "-autoclose", quantity = 3},
+	map         = {script = "map.lua",         arg = "-autoclose", quantity = 2},
 	clock       = {script = "clock.lua",       quantity = 1},
 	textscreen  = {script = "textscreen.lua",  quantity = 8},
 	visualtable = {script = "visualtable.lua", quantity = 8}

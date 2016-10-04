@@ -476,6 +476,25 @@ return{
 		end
 		unitTest:assertError(error_func, "Grouping 'none' cannot use ColorBrewer.")
 
+		-- non-virtual
+		error_func = function()
+			local shpcs = CellularSpace{
+				file = filePath("river.shp", "base")
+			}
+			
+			forEachCell(shpcs, function(cell)
+				cell.value = 1
+			end)
+
+			Map{
+				target = shpcs,
+				select = "value",
+				value = {1, 2},
+				color = {"red", "blue"}
+			}
+		end
+		unitTest:assertError(error_func, "It is only possible to create a Map from this CellularSpace as its objects do not have a valid (x, y) location.")
+
 		-- Society
 		local ag = Agent{}
 		local soc = Society{instance = ag, quantity = 10}

@@ -1242,6 +1242,8 @@ function levenshtein(s, t)
 	mandatoryArgument(1, "string", s)
 	mandatoryArgument(2, "string", t)
 
+	if s == t then return 0 end
+
 	local d, sn, tn = {}, #s, #t
 
 	if sn > tn then -- invert arguments
@@ -1365,7 +1367,7 @@ end
 
 --- Convert a string into a more readable name. It is useful to work
 -- with Model:init() when the model will be available through a graphical interface.
--- In graphical interfaces, if the string contains underscores, it
+-- In graphical interfaces (see OS:sessionInfo()), if the string contains underscores, it
 -- replaces them by spaces and convert the next characters to uppercase.
 -- Otherwise, it adds a space before each uppercase character.
 -- It also converts the first character of the string to uppercase.
@@ -1476,7 +1478,7 @@ end
 -- tbl = {x = 1, y = 2}
 -- table.save(tbl, filename)
 --
--- if File(filename):exists() then File(filename):delete() end
+-- File(filename):deleteIfExists()
 function table.save(tbl, filename)
 	mandatoryArgument(1, "table", tbl)
 	mandatoryArgument(2, "string", filename)

@@ -29,9 +29,7 @@ return{
 		end
 		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", false))
 
-		if File("myproj.tview"):exists() then
-			File("myproj.tview"):delete()
-		end
+		File("myproj.tview"):deleteIfExists()
 
 		local projNotExists = function()
 			Layer{project = "myproj.tview", name = "cells"}
@@ -40,7 +38,7 @@ return{
 
 		local projFile = File("proj_celllayer.tview")
 
-		if projFile:exists() then projFile:delete() end
+		projFile:deleteIfExists()
 
 		local proj
 
@@ -77,7 +75,7 @@ return{
 		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile:name(true).."'. Do you mean 'deforestation'?")
 		
 		--unitTest:assertFile(projFile:name(true)) -- SKIP #TODO(#1242)
-		if projFile:exists() then projFile:delete() end
+		projFile:deleteIfExists()
 
 		local projName = "amazonia2.tview"
 
@@ -166,9 +164,7 @@ return{
 		end
 		unitTest:assertError(inconsistentExtension, "File '"..filePath0.."' does not match to source '"..source.."'.")
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		projName = "amazonia.tview"
 
@@ -258,9 +254,7 @@ return{
 		
 		local shp1 = "setores_cells.shp"
 		
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end
+		File(shp1):deleteIfExists()
 		
 		local clName1 = "Setores_Cells"
 
@@ -361,13 +355,8 @@ return{
 		end
 		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))	
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
-
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end
+		File(projName):deleteIfExists()
+		File(shp1):deleteIfExists()
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fillcells_alternative.tview"
@@ -395,9 +384,7 @@ return{
 		local clName1 = "setores_cells2"
 		local filePath1 = clName1..".shp"
 
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end
+		File(filePath1):deleteIfExists()
 
 		local cl = Layer{
 			project = proj,
@@ -1082,11 +1069,8 @@ return{
 		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.") -- SKIP
 	end
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
-
-		if File(filePath1):exists() then File(filePath1):delete() end
+		File(projName):deleteIfExists()
+		File(filePath1):deleteIfExists()
 	end,
 	export = function(unitTest)
 		local projName = "layer_func_alt.tview"
@@ -1133,7 +1117,7 @@ return{
 		end
 		unitTest:assertError(invalidDataType,  "The attribute 'data' must be either 'file' or 'table', but received (number).")		
 		
-		File(proj.file):delete()
+		File(proj.file):deleteIfExists()
 	end
 }
 

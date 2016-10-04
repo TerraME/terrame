@@ -1,5 +1,5 @@
 Loading configuration file 'config/twoDirectories.lua'
-Using log directory 'log/mac'
+Using log directory '/Applications/terrame.app/Contents/MacOS/packages/base/log/mac/'
 Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
@@ -9,46 +9,14 @@ Skip looking for lines of source code
 Testing tests/internal/alternative/terrame.lua
 Testing verifyVersionDependency
 Checking if all asserts were executed
-Testing tests/observer/alternative/Agent.lua
-Testing notify
+Testing tests/internal/basic/terrame.lua
+Testing getVersion
+Testing insert
+Testing verifyVersionDependency
 Checking if all asserts were executed
-Testing tests/observer/alternative/Cell.lua
-Testing notify
-Checking if all asserts were executed
-Testing tests/observer/alternative/CellularSpace.lua
-Testing notify
-Checking if all asserts were executed
-Testing tests/observer/alternative/Chart.lua
-Testing Chart
-Testing save
-Checking if all asserts were executed
-Testing tests/observer/alternative/Clock.lua
-Testing Clock
-Testing save
-Checking if all asserts were executed
-Testing tests/observer/alternative/Environment.lua
-Testing Environment
-Checking if all asserts were executed
-Testing tests/observer/alternative/InternetSender.lua
-Testing InternetSender
-Checking if all asserts were executed
-Testing tests/observer/alternative/Log.lua
-Testing Log
-Checking if all asserts were executed
-Testing tests/observer/alternative/Map.lua
-Testing Map
-Testing save
-Checking if all asserts were executed
-Testing tests/observer/alternative/Society.lua
-Testing notify
-Checking if all asserts were executed
-Testing tests/observer/alternative/TextScreen.lua
-Testing TextScreen
-Testing save
-Checking if all asserts were executed
-Testing tests/observer/alternative/VisualTable.lua
-Testing VisualTable
-Testing save
+Testing tests/internal/basic/utils.lua
+Testing cleanErrorMessage
+Testing stringToLabel
 Checking if all asserts were executed
 Skipping source code functions check
 Skipping lines of source code check
@@ -56,15 +24,15 @@ Skipping examples
 Skipping logs check
 
 Functional test report for package 'base':
-Tests were executed in 38.34 seconds.
+Tests were executed in 0.88 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 188 asserts were executed successfully.
-All 18 tested functions do not have any unexpected execution error.
-All 18 tested functions have at least one assert.
-All 18 tested functions exist in the source code of the package.
+All 35 asserts were executed successfully.
+All 6 tested functions do not have any unexpected execution error.
+All 6 tested functions have at least one assert.
+All 6 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.

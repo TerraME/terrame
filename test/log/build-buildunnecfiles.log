@@ -3,7 +3,7 @@ Parsing configuration file 'config/all.lua'
 
 Testing package 'buildunnecfiles'
 Loading configuration file 'config/all.lua'
-Using log directory 'log/mac'
+Using log directory '/Applications/terrame.app/Contents/MacOS/packages/buildunnecfiles/log/mac/'
 Loading package 'buildunnecfiles'
 Looking for overwritten variables
 Looking for documented functions

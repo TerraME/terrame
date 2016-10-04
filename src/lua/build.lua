@@ -58,7 +58,7 @@ function _Gtme.buildPackage(package, config, clean)
 			os.exit(1)
 		end)
 
-		local err, msg = pcall(function() verifyUnnecessaryArguments(data, {"lines", "log"}) end)
+		local err, msg = pcall(function() verifyUnnecessaryArguments(data, {"lines"}) end)
 
 		if not err then
 			printError(msg)
@@ -235,11 +235,11 @@ function _Gtme.buildPackage(package, config, clean)
 	if clean then
 		printNote("Cleaning package")
 
-		local dlogs = package..s.."log"
+		local dlogs = Directory(package..s.."log")
 
-		if Directory(dlogs):exists() then
+		if dlogs:exists() then
 			print("Removing 'log' directory")
-			Directory(package..s.."log"):delete()
+			dlogs:delete()
 		end
 
 		local dtest = package..s.."test"
