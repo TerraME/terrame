@@ -27,6 +27,7 @@ of this software and its documentation.
 #include <QFontDatabase>
 #include <QMessageBox>
 #include <QProcess>
+#include <QLoggingCategory>
 
 #include "Downloader.h"
 #include "blackBoard.h"
@@ -308,6 +309,8 @@ int main(int argc, char *argv[])
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 
 	Q_INIT_RESOURCE(observerResource);
+
+	QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
 
 	TME_PATH = "TME_PATH";
 
