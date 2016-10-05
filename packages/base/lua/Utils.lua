@@ -509,33 +509,32 @@ end
 -- end)
 -- @see Directory:list
 function forEachFile(directory, _sof_)
-	local name = directory
-	if type(directory) == "string" then
-		if not Directory(directory):exists() then
-			customError("Directory '"..directory.."' is not valid or does not exist.")
-		end
+	if type(directory) == "string" then directory = Directory(directory) end
 
-		if not pcall(function() directory = Directory(directory):list() end) then
-			return true
-		end
-	else
-		name = ""
+	mandatoryArgument(1, "Directory", directory)
+	mandatoryArgument(2, "function", _sof_)
+
+	if not directory:exists() then
+		customError("Directory '"..directory.."' is not valid or does not exist.")
 	end
 
-	mandatoryArgument(1, "table", directory)
-	mandatoryArgument(2, "function", _sof_)
+	local files
+
+	if not pcall(function() files = directory:list() end) then
+		return true
+	end
 
 	local directoryIdx = {}
 
-	for i = 1, #directory do
-		directoryIdx[directory[i]] = true
+	for i = 1, #files do
+		directoryIdx[files[i]] = true
 	end
 
 	local s = sessionInfo().separator
 
 	return forEachOrderedElement(directoryIdx, function(file)
-		if not Directory(name..s..file):exists() then
-			if _sof_(file) == false then return false end
+		if not Directory(directory..file):exists() then
+			if _sof_(File(directory..file)) == false then return false end
 		end
 	end)
 end
@@ -552,33 +551,32 @@ end
 -- end)
 -- @see Directory:list
 function forEachDirectory(directory, _sof_)
-	local name = directory
-	if type(directory) == "string" then
-		if not Directory(directory):exists() then
-			customError("Directory '"..directory.."' is not valid or does not exist.")
-		end
+	if type(directory) == "string" then directory = Directory(directory) end
 
-		if not pcall(function() directory = Directory(directory):list() end) then
-			return true
-		end
-	else
-		name = ""
+	mandatoryArgument(1, "Directory", directory)
+	mandatoryArgument(2, "function", _sof_)
+
+	if not directory:exists() then
+		customError("Directory '"..directory.."' is not valid or does not exist.")
 	end
 
-	mandatoryArgument(1, "table", directory)
-	mandatoryArgument(2, "function", _sof_)
+	local files
+	if not pcall(function() files = directory:list() end) then
+		return true
+	end
 
 	local directoryIdx = {}
 
-	for i = 1, #directory do
-		directoryIdx[directory[i]] = true
+	for i = 1, #files do
+		directoryIdx[files[i]] = true
 	end
 
 	local s = sessionInfo().separator
 
 	return forEachOrderedElement(directoryIdx, function(file)
-		if Directory(name..s..file):exists() then
-			if _sof_(file) == false then return false end
+		local dir = Directory(directory..file)
+		if dir:exists() then
+			if _sof_(dir) == false then return false end
 		end
 	end)
 end

@@ -37,30 +37,30 @@ local function testdirectories(directory, ut)
 	lf = function(mdirectory)
 		local found_file = false
 		local found_directory = false
-		forEachFile(directory..s..mdirectory, function(value)
-			if string.endswith(value, ".lua") then
+		forEachFile(mdirectory, function(value)
+			if value:extension() == "lua" then
 				if not found_file then
 					found_file = true
 					table.insert(result, mdirectory)
 				end
-			else -- if not Directory(value):exists() then
-				printError("'".._Gtme.makePathCompatibleToAllOS(mdirectory..s..value).."' is not a directory neither a .lua file and will be ignored.")
+			else
+				printError("'"..mdirectory..value.."' is not a directory neither a .lua file and will be ignored.")
 				ut.invalid_test_file = ut.invalid_test_file + 1
 			end
 		end)
 
-		forEachDirectory(directory..s..mdirectory, function(value)
-			lf(mdirectory..s..value)
+		forEachDirectory(mdirectory, function(value)
+			lf(value)
 			found_directory = true
 		end)
 
 		if not found_file and not found_directory then
-			printError("Directory '".._Gtme.makePathCompatibleToAllOS(mdirectory).."' is empty.")
+			printError("Directory '"..mdirectory.."' is empty.")
 			ut.invalid_test_file = ut.invalid_test_file + 1
 		end
 	end
 
-	lf("tests")
+	lf(Directory(directory..s.."tests"))
 
 	return(result)
 end
@@ -158,11 +158,10 @@ local function buildLineTable(package)
 		-- the package was already loaded with success
 		load_sequence = _Gtme.include(load_file).files
 	else
-		local dir = Directory(baseDir..s.."lua"):list()
 		load_sequence = {}
-		forEachElement(dir, function(_, mfile)
-			if string.endswith(mfile, ".lua") then
-				table.insert(load_sequence, mfile)
+		forEachFile(baseDir..s.."lua", function(file)
+			if file:extension() == "lua" then
+				table.insert(load_sequence, file:name())
 			end
 		end)
 	end
@@ -450,12 +449,12 @@ function _Gtme.executeTests(package, fileName)
 	local filesDir = {}
 
 	forEachFile(".", function(file)
-		filesDir[file] = true
+		filesDir[file:name()] = true
 	end)
 
 	-- For each test in each file in each directory, execute the test
 	forEachElement(data.directory, function(_, eachDirectory)
-		local dirFiles = Directory(baseDir..s..eachDirectory):list()
+		local dirFiles = eachDirectory:list()
 
 		if dirFiles == nil then return end
 
@@ -477,7 +476,8 @@ function _Gtme.executeTests(package, fileName)
 		end
 
 		forEachOrderedElement(myFiles, function(eachFile)
-			ut.current_file = eachDirectory..s..eachFile
+			-- TODO here
+			ut.current_file = eachFile
 			local tests
 
 			local printTesting = false
@@ -486,16 +486,20 @@ function _Gtme.executeTests(package, fileName)
 				ut.print_calls = ut.print_calls + 1
 
 				if not printTesting then
-					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+					local text = eachDirectory..eachFile
+					text = string.sub(text, string.len(baseDir) + 2)
+					printNote("Testing "..text)
 					printTesting = true
 				end
 
 				printError("Error: print() call detected with argument '"..tostring(arg).."'")
 			end
 
-			xpcall(function() tests = dofile(baseDir..s..eachDirectory..s..eachFile) end, function(err)
+			xpcall(function() tests = dofile(eachDirectory..s..eachFile) end, function(err)
 				if not printTesting then
-					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+					local text = eachDirectory..eachFile
+					text = string.sub(text, string.len(baseDir) + 2)
+					printNote("Testing "..text)
 					printTesting = true
 				end
 
@@ -505,11 +509,12 @@ function _Gtme.executeTests(package, fileName)
 
 			print = _Gtme.print
 
-			local myAssertTable = assertTable(baseDir..s..eachDirectory..s..eachFile)
+			local myAssertTable = assertTable(eachDirectory..s..eachFile)
 
 			if type(tests) ~= "table" or getn(tests) == 0 then
 				if not printTesting then
-					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+					local text = eachDirectory..eachFile
+					printNote("Testing "..text)
 					printTesting = true
 				end
 
@@ -533,7 +538,9 @@ function _Gtme.executeTests(package, fileName)
 			end
 
 			if #myTests > 0 and not printTesting then
-				printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+					local text = eachDirectory..eachFile
+					text = string.sub(text, string.len(baseDir) + 2)
+					printNote("Testing "..text)
 			end
 
 			local function trace(_, line)
@@ -608,9 +615,9 @@ function _Gtme.executeTests(package, fileName)
 				print = _Gtme.print
 
 				forEachFile(".", function(file)
-					if filesDir[file] == nil then
+					if filesDir[file:name()] == nil then
 						printError("File '"..file.."' was created along the test.")
-						filesDir[file] = true
+						filesDir[file:name()] = true
 						ut.files_created = ut.files_created + 1
 					end
 				end)

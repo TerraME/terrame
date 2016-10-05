@@ -196,7 +196,6 @@ return{
 		end
 		unitTest:assertError(error_func, "Directory 'abcdef12345' is not valid or does not exist.")
 
-
 		error_func = function()
 			forEachFile(filePath("", "base"), 2)
 		end

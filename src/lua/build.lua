@@ -149,10 +149,18 @@ function _Gtme.buildPackage(package, config, clean)
 	}
 
 	print("Checking basic files and directories")
+	forEachDirectory(package, function(dir)
+		if not root[dir:name()] then
+			printError("Directory '"..package..s..dir:name().."' is unnecessary and will be ignored.")
+			dir:delete()
+			report.unnecessary_files = report.unnecessary_files + 1
+		end
+	end)
+
 	forEachFile(package, function(file)
-		if not root[file] then
-			printError("File '"..package..s..file.."' is unnecessary and will be ignored.")
-			rm(package..s..file)
+		if not root[file:name()] then
+			printError("File '"..package..s..file:name().."' is unnecessary and will be ignored.")
+			file:delete()
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
@@ -160,9 +168,9 @@ function _Gtme.buildPackage(package, config, clean)
 	if Directory(package..s.."examples"):exists() then
 		print("Checking examples")
 		forEachFile(package..s.."examples", function(file)
-			if not string.endswith(file, ".lua") and not string.endswith(file, ".tme") and not string.endswith(file, ".log") then
-				printError("File '"..package..s.."examples"..s..file.."' is unnecessary and will be ignored.")
-				rm(package..s.."examples"..s..file)
+			if not belong(file:extension(), {"lua", ".tme"}) then
+				printError("File '"..package..s.."examples"..s..file:name().."' is unnecessary and will be ignored.")
+				file:delete()
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
 		end)
@@ -172,22 +180,22 @@ function _Gtme.buildPackage(package, config, clean)
 
 	print("Checking source code")
 	forEachFile(package..s.."lua", function(file)
-		if not string.endswith(file, ".lua") then
-			printError("File '"..package..s.."lua"..s..file.."' is unnecessary and will be ignored.")
-			rm(package..s.."lua"..s..file)
+		if not file:extension() == "lua" then
+			printError("File '"..package..s.."lua"..s..file:name().."' is unnecessary and will be ignored.")
+			file:delete()
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
 	local function removeRecursiveLua(dir)
 		forEachDirectory(dir, function(mdir)
-			removeRecursiveLua(dir..s..mdir)
+			removeRecursiveLua(mdir)
 		end)
 
 		forEachFile(dir, function(file)
-			if not string.endswith(dir..s..file, ".lua") then
+			if not file:extension() == "lua" then
 				printError("File '"..dir..s..file.."' is unnecessary and will be ignored.")
-				rm(dir..s..file)
+				file:delete()
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
 		end)
@@ -206,10 +214,10 @@ function _Gtme.buildPackage(package, config, clean)
 		end)
 
 		forEachFile(package..s.."font", function(file)
-			if not fontFiles[file] then
-				local mfile = package..s.."font"..s..file
+			if not fontFiles[file:name()] then
+				local mfile = package..s.."font"..s..file:name()
 				printError("File '"..mfile.."' is unnecessary and will be ignored.")
-				rm(mfile)
+				file:delete()
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
 		end)
@@ -261,15 +269,15 @@ function _Gtme.buildPackage(package, config, clean)
 	end
 
 	forEachFile(pkgInfo.path..s.."lua", function(fname)
-		local mdata = _Gtme.include(pkgInfo.path..s.."lua"..s..fname)
+		local mdata = _Gtme.include(pkgInfo.path..s.."lua"..s..fname:name())
 		if attrTab ~= nil then
 			forEachElement(mdata, function(idx, value)
 				if value == attrTab then
-					if idx..".lua" == fname then
-						print("Model '"..idx.."' belongs to file '"..fname.."'")
+					if idx..".lua" == fname:name() then
+						print("Model '"..idx.."' belongs to file '"..fname:name().."'")
 					else
 						report.model_error = report.model_error + 1
-						printError("Model '"..idx.."' is wrongly put in file '"..fname.."'. It should be in file '"..idx..".lua'")
+						printError("Model '"..idx.."' is wrongly put in file '"..fname:name().."'. It should be in file '"..idx..".lua'")
 					end
 				end
 			end)

@@ -119,7 +119,7 @@ Directory_ = {
 	-- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
 	-- @usage files = Directory(packageInfo("base").data):list()
 	--
-	-- forEachFile(files, function(file)
+	-- forEachElement(files, function(_, file)
 	--     print(file)
 	-- end)
 	list = function(self, all)
@@ -185,7 +185,7 @@ metaTableDirectory_ = {
 			value = value.fullpath
 		end
 
-		if string.sub(value, 1, 1) ~= s then
+		if string.sub(tostring(value), 1, 1) ~= s then
 			value = s..value
 		end
 

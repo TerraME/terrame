@@ -158,7 +158,7 @@ local function verifyData(package, report)
 	local datadotlua = baseDir..s.."data.lua"
 
 	forEachFile(dataDir, function(file)
-		datafiles[file] = false
+		datafiles[file:name()] = false
 	end)
 
 	if getn(datafiles) == 0 then
@@ -198,7 +198,7 @@ local function verifyData(package, report)
 	counter = 1
 
 	forEachDirectory(dataDir, function(dir)
-		_Gtme.print("Directory '"..dir.."' will be ignored")
+		_Gtme.print("Directory '"..dir:name().."' will be ignored")
 	end)
 
 	forEachOrderedElement(datafiles, function(idx, value)
@@ -283,7 +283,7 @@ local function verifyFont(package, report)
 	local fontdotlua = baseDir..s.."font.lua"
 
 	forEachFile(fontDir, function(file)
-		fontfiles[file] = false
+		fontfiles[file:name()] = false
 	end)
 
 	if getn(fontfiles) == 0 then

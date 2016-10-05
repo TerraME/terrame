@@ -107,10 +107,10 @@ local function buildComboboxPackages(default)
 	local pos = 0
 	local index = 0
 	local pkgDir = sessionInfo().path..s.."packages"
-	forEachDirectory(pkgDir, function(file)
-		if file == "luadoc" or not Directory(pkgDir..s..file):exists() then return end
+	forEachDirectory(pkgDir, function(dir)
+		if dir:name() == "luadoc" then return end
 	
-		qt.combobox_add_item(comboboxPackages, file)
+		qt.combobox_add_item(comboboxPackages, dir:name())
 	
 		if file == default then
 			index = pos
@@ -118,6 +118,7 @@ local function buildComboboxPackages(default)
 			pos = pos + 1
 		end
 	end)
+
 	return index
 end
 
@@ -351,8 +352,6 @@ local function installButtonClicked()
 
 		if result then
 			msg = "Package '"..package.."' successfully installed."
-
-			print(_Gtme.getn(installed))
 
 			if _Gtme.getn(installed) == 1 then
 				msg = msg.." One additional dependency package was installed:"

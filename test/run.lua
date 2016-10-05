@@ -31,7 +31,7 @@ forEachElement(directories, function(idx, value)
 	if idx == "packages" then return end
 
 	forEachFile(idx, function(file)
-		value[file] = false
+		value[file:name()] = false
 	end)
 end)
 
@@ -44,7 +44,7 @@ _Gtme.printNote("Testing installed packages")
 
 _Gtme.printNote("Cleaning packages")
 forEachDirectory("packages", function(dir)
-	_Gtme.print("Cleaning '"..dir.."'")
+	_Gtme.print("Cleaning '"..dir:name().."'")
 
 	local mdir = baseDir..s.."packages"..s..dir
 
@@ -55,9 +55,9 @@ end)
 
 _Gtme.printNote("Copying packages")
 forEachDirectory("packages", function(dir)
-	_Gtme.print("Copying '"..dir.."'")
+	_Gtme.print("Copying '"..dir:name().."'")
 
-	os.execute("cp -pr \"packages"..s..dir.."\" \""..baseDir..s.."packages"..s..dir.."\"")	
+	os.execute("cp -pr \"packages"..s..dir:name().."\" \""..baseDir..s.."packages"..s..dir:name().."\"")	
 end)
 
 _Gtme.printNote("Removing files")
@@ -292,10 +292,8 @@ if commands.build then
 end
 
 _Gtme.printNote("Removing packages")
-forEachFile("packages", function(pkg)
-	if Directory(pkg):exists() then
-		_Gtme.uninstall(pkg)
-	end
+forEachDirectory("packages", function(pkg)
+	_Gtme.uninstall(pkg:name())
 end)
 
 _Gtme.printNote("Testing from local directories")

@@ -57,20 +57,20 @@ end
 
 local function imageFiles(package)
 	local s = sessionInfo().separator
-	local imagepath = packageInfo(package).path..s.."images"
+	local imagepath = Directory(packageInfo(package).path..s.."images")
 
-	if not Directory(imagepath):exists() then
+	if not imagepath:exists() then
 		return {}
 	end
 
-	local files = Directory(imagepath):list()
 	local result = {}
 
-	forEachElement(files, function(_, fname)
-		if not string.endswith(fname, ".lua") then
-			result[fname] = 0
+	forEachFile(imagepath, function(file)
+		if file:extension() ~= "lua" then
+			result[file:name()] = 0
 		end
 	end)
+
 	return result
 end
 
@@ -262,7 +262,6 @@ local function getProjects(package)
 					attributes = {}
 				}
 			end
-
 		end
 
 		setmetatable(data, mtLayer)
@@ -272,7 +271,7 @@ local function getProjects(package)
 	sessionInfo().mode = "quiet"
 	printNote("Processing lua files")
 	forEachFile(data_path, function(file)
-		if string.endswith(file, ".lua") then
+		if file:extension() == "lua" then
 			print("Processing '"..file.."'")
 
 			xpcall(function() dofile(data_path..s..file) end, function(err)

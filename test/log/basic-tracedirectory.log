@@ -1,0 +1,4 @@
+Error: attempt to perform arithmetic on a nil value (global 'w')
+Stack traceback:
+    File scripts/trace-directory.lua, line 2, in second order function
+    File scripts/trace-directory.lua, line 1, in main chunk

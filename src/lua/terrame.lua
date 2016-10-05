@@ -220,8 +220,8 @@ function _Gtme.buildCountTable(package)
 	else
 		load_sequence = {}
 		_Gtme.forEachFile(baseDir..s.."lua", function(mfile)
-			if string.endswith(mfile, ".lua") then
-				table.insert(load_sequence, mfile)
+			if mfile:extension() == "lua" then
+				table.insert(load_sequence, mfile:name())
 			end
 		end)
 	end
@@ -269,7 +269,7 @@ function _Gtme.projectFiles(package)
 	if not Directory(data_path):exists() then return files end
 
 	forEachFile(data_path, function(file)
-		if string.endswith(file, ".lua") then
+		if file:extension() == "lua" then
 			table.insert(files, file)
 		end
 	end)
@@ -308,7 +308,7 @@ function _Gtme.findModels(package)
 	_Gtme.forEachFile(srcpath, function(fname)
 		found = false
 		local a
-		a = _Gtme.include(srcpath..fname)
+		a = _Gtme.include(srcpath..fname:name())
 
 		if found then
 			_Gtme.forEachElement(a, function(idx, value)
@@ -338,12 +338,12 @@ function _Gtme.findExamples(package)
 
 	local result = {}
 
-	_Gtme.forEachFile(examplespath, function(fname)
-		if string.endswith(fname, ".lua") then
-			local _, name = File(fname):split()
-			table.insert(result, name)
-		elseif not string.endswith(fname, ".tme") and not string.endswith(fname, ".log") then
-			_Gtme.printWarning("Test file '"..fname.."' does not have a valid extension.")
+	_Gtme.forEachFile(examplespath, function(file)
+		if file:extension() == "lua" then
+			local split = {file:split()}
+			table.insert(result, split[2])
+		elseif file:extension() ~= "tme"then
+			_Gtme.printWarning("Test file '"..file:name().."' does not have a valid extension.")
 		end
 	end)
 	return result
@@ -952,22 +952,14 @@ local function loadPackgesLibPath()
 	local packsPath = tmePath.."/packages"
 	local files = Directory(packsPath):list()
 	
-	forEachFile(files, function(file)
-		if Directory(packsPath.."/"..file):exists() then
-			local packPath = packsPath.."/"..file
-			local packDirs = Directory(packPath):list()
-			forEachFile(packDirs, function(d)
-				if d == "lib"  then
-					packLibPath = packPath.."/"..d
-					if Directory(packLibPath):exists() then
-						cpp_putenv(packLibPath)
-						package.cpath = package.cpath..";"..packLibPath.."/?.dll"
-													..";"..packLibPath.."/?.so"
-													..";"..packLibPath.."/?.lib"
-													..";"..packLibPath.."/?.dylib"
-					end
-				end
-			end)
+	forEachDirectory(packsPath, function(dir)
+		local packLibPath = Directory(dir.."lib")
+		if packLibPath:exists() then
+			cpp_putenv(tostring(packLibPath))
+			package.cpath = package.cpath..";"..packLibPath.."/?.dll"
+			                             ..";"..packLibPath.."/?.so"
+			                             ..";"..packLibPath.."/?.lib"
+			                             ..";"..packLibPath.."/?.dylib"
 		end
 	end)	
 end
@@ -1035,11 +1027,11 @@ local function executeExamples(package)
 		os.exit(1)
 	end)
 
-	_Gtme.forEachFile(examplespath, function(fname)
-		if string.endswith(fname, ".lua") then
-			print("Run example '"..fname.."'.")
+	_Gtme.forEachFile(examplespath, function(file)
+		if file:extension() == "lua" then
+			print("Run example '"..file:name().."'.")
 
-			xpcall(function() dofile(examplespath..s..fname) end, function(err)
+			xpcall(function() dofile(tostring(fname)) end, function(err)
 				_Gtme.printError(err)
 				errors = errors + 1
 			end)
@@ -1365,7 +1357,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				local errors = 0
 				xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
-					_Gtme.printError(err)
+					--_Gtme.printError(err)
+					_Gtme.printError(_Gtme.traceback(err))
 					os.exit(1)
 				end)
 

@@ -66,12 +66,12 @@ function filesByExtension(package, extension)
 	mandatoryArgument(1, "string", package)
 	mandatoryArgument(2, "string", extension)
 
-	local size = string.len(extension)
 	local result = {}
 
 	forEachFile(packageInfo(package).data, function(file)
-		if string.sub(file, -size) == extension then
-			table.insert(result, string.sub(file, 1, -size - 1))
+		if file:extension() == extension then
+			local split = {file:split()}
+			table.insert(result, split[2])
 		end
 	end)
 

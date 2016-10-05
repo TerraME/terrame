@@ -298,9 +298,9 @@ return{
 			local count = 0
 			local r
 
-			r = forEachDirectory(filePath("", "base"), function(file)
+			r = forEachDirectory(filePath("", "base"), function(dir)
 				count = count + 1
-				unitTest:assertType(file, "string") -- SKIP
+				unitTest:assertType(dir, "Directory") -- SKIP
 			end)
 
 			unitTest:assert(r) -- SKIP
@@ -323,7 +323,7 @@ return{
 
 			r = forEachFile(filePath("", "base"), function(file)
 				count = count + 1
-				unitTest:assertType(file, "string") -- SKIP
+				unitTest:assertType(file, "File") -- SKIP
 			end)
 
 			unitTest:assert(r) -- SKIP
