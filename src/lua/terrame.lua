@@ -340,7 +340,8 @@ function _Gtme.findExamples(package)
 
 	_Gtme.forEachFile(examplespath, function(fname)
 		if string.endswith(fname, ".lua") then
-			table.insert(result, File(fname):name())
+			local _, name = File(fname):split()
+			table.insert(result, name)
 		elseif not string.endswith(fname, ".tme") and not string.endswith(fname, ".log") then
 			_Gtme.printWarning("Test file '"..fname.."' does not have a valid extension.")
 		end

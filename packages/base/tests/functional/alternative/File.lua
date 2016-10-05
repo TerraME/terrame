@@ -104,14 +104,6 @@ return{
 			unitTest:assert(not file:exists()) -- SKIP
 		end
 	end,
-	name = function(unitTest)
-		local file = File("abc.txt")
-
-		local error_func = function()
-			file:name(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "boolean", 1))
-	end,
 	open = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
 		file:read()

@@ -125,9 +125,11 @@ return{
 	name = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
 
-		unitTest:assertType(file, "File")
-		unitTest:assertEquals(file:name(), "agents")
-		unitTest:assertEquals(file:name(true), "agents.csv")
+		unitTest:assertEquals(file:name(), "agents.csv")
+
+		file = File("myagents")
+
+		unitTest:assertEquals(file:name(), "myagents")
 	end,
 	open = function(unitTest)
 		local file = File("test.csv")
@@ -172,11 +174,18 @@ return{
 	split = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
 		local path, name, extension = file:split()
+		local s = sessionInfo().separator
 
-		unitTest:assertType(file, "File")
 		unitTest:assertEquals(path, _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/")
 		unitTest:assertEquals(name, "agents")
 		unitTest:assertEquals(extension, "csv")
+
+		file = File("myagents")
+		local path, name, extension = file:split()
+
+		unitTest:assertEquals(path, currentDir()..s)
+		unitTest:assertEquals(name, "myagents")
+		unitTest:assertNil(extension)
 	end,
 	touch = function(unitTest)
 		if _Gtme.sessionInfo().system ~= "windows" then

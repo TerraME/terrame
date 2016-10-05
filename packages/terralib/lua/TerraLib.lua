@@ -385,8 +385,8 @@ local function addFileLayer(project, name, filePath, type, addSpatialIdx, datase
 		if addSpatialIdx then
 			connInfo.SPATIAL_IDX = true
 		end
-		local file = File(connInfo.URI)
-		dSetName = file:name()
+		local _, name = File(connInfo.URI):split()
+		dSetName = name
 	elseif type == "GDAL" then
 		local file = File(connInfo.URI)
 		dSetName = file:name(true)
@@ -1254,8 +1254,8 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
-		local file = File(connInfo.URI)
-		local dSetName = file:name()
+		local _, name = File(connInfo.URI):split()
+		local dSetName = name
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
@@ -1349,8 +1349,8 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
-		local file = File(connInfo.URI)
-		local dSetName = file:name()
+		local _, name = File(connInfo.URI):split()
+		local dSetName = name
 		
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 		
@@ -1678,8 +1678,8 @@ TerraLib_ = {
 				local toSetName = nil
 				
 				if toType == "OGR" then
-					local file = File(toConnInfo.URI)
-					toSetName = file:name()
+					local _, name = File(connInfo.URI):split()
+					toSetName = name
 				end
 				
 				overwriteLayer(self, project, out, to, toSetName)
@@ -1921,7 +1921,8 @@ TerraLib_ = {
 			if string.lower(file:extension()) == "geojson" then
 				dSetName = "OGRGeoJSON"
 			else
-				dSetName = file:name()
+				local _, name = file:split()
+				dSetName = name
 			end
 
 			local dSet = ds:getDataSet(dSetName)

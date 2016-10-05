@@ -27,7 +27,7 @@ return {
 		local file = File("amazonia.tview")
 
 		local proj1 = Project{
-			file = file:name(),
+			file = tostring(file),
 			clean = true,
 			author = "Avancini",
 			title = "The Amazonia"
@@ -37,7 +37,7 @@ return {
 		unitTest:assertEquals(proj1.file, file:name(true))
 		
 		local proj2 = Project{
-			file = file:name()
+			file = tostring(file)
 		}		
 
 		unitTest:assertEquals(proj1.author, proj2.author)
@@ -118,7 +118,7 @@ return {
 	__tostring = function(unitTest)
 		local file = File("tostring.tview")
 		local proj1 = Project{
-			file = file:name(),
+			file = tostring(file),
 			clean = true,
 			author = "Avancini",
 			title = "The Amazonia"

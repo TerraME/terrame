@@ -233,18 +233,16 @@ File_ = {
 		return not (self:extension() == "")
 	end,
 	--- Return the file name removing its path.
-	-- @arg extension A boolean that enable return the name with extension. The default value is false.
 	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:name()) -- "agents"
-	-- print(file:name(true)) -- "agents.csv"
-	name = function(self, extension)
-		extension = extension or false
-		optionalArgument(1, "boolean", extension)
-
+	-- print(file:name()) -- "agents.csv"
+	name = function(self)
 		local split = {self:split()}
-		if extension then return split[2].."."..split[3] end
 
-		return split[2]
+		if split[3] then
+			return split[2].."."..split[3]
+		else
+			return split[2]
+		end
 	end,
 	--- Open the file for reading or writing. An opened file must be closed after being used.
 	-- @arg mode A string with the mode. It can be "w" for writing or "r" for reading.
@@ -359,6 +357,11 @@ File_ = {
 	-- print(extension) -- "csv"
 	split = function(self)
 		local filePath, nameWithExtension, extension = string.match(self.filename, "(.-)([^\\/]-%.?([^%.\\/]*))$")
+
+		if nameWithExtension == extension then
+			return filePath, nameWithExtension
+		end
+
 		local _, _, fileName = string.find(nameWithExtension, "^(.*)%.[^%.]*$")
 
 		return filePath, fileName, extension

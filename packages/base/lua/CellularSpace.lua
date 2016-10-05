@@ -389,8 +389,8 @@ end
 
 local function checkPGM(self)
 	defaultTableValue(self, "sep", " ")
-	local file = File(self.file)
-	defaultTableValue(self, "attrname", file:name())
+	local _, name = File(self.file):split()
+	defaultTableValue(self, "attrname", name)
 end
 
 local function checkShape(self)

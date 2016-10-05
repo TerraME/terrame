@@ -77,7 +77,7 @@ function _Gtme.executeProject(package)
 			print("Processing '"..file.."'")
 			project_report.projects = project_report.projects + 1
 
-			local filename = File(file):name()
+			local _, filename = File(file):split()
 			local output = filename..".tview"
 
 			xpcall(function() dofile(data_path..s..file) end, function(err)
