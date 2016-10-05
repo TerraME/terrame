@@ -237,7 +237,6 @@ return{
 
 		unitTest:assertError(error_func, "Cannot write a file opened for reading.")
 
-		local s = sessionInfo().separator
 		local filename = Directory{tmp = true}.."csvwrite.csv"
 		file = File(filename)
 

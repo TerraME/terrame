@@ -196,9 +196,8 @@ return{
 		dir:setCurrentDir()
 		unitTest:assertEquals(tostring(currentDir()), newpath)
 
-		dir = Directory(cur_dir)
-		dir:setCurrentDir()
-		unitTest:assertEquals(tostring(currentDir()), cur_dir)
+		cur_dir:setCurrentDir()
+		unitTest:assertEquals(tostring(currentDir()), tostring(cur_dir))
 	end,
 	__tostring = function(unitTest)
 		local datapath = packageInfo("base").data
