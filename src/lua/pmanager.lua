@@ -107,7 +107,7 @@ local function buildComboboxPackages(default)
 	local pos = 0
 	local index = 0
 	local pkgDir = sessionInfo().path..s.."packages"
-	forEachFile(pkgDir, function(file)
+	forEachDirectory(pkgDir, function(file)
 		if file == "luadoc" or not Directory(pkgDir..s..file):exists() then return end
 	
 		qt.combobox_add_item(comboboxPackages, file)

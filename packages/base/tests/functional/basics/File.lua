@@ -103,7 +103,7 @@ return{
 		local file = File(filePath("agents.csv", "base"))
 		unitTest:assert(file:exists())
 
-		file = File("abc.lua")
+		file = File("abc123456.lua")
 		unitTest:assert(not file:exists())
 	end,
 	extension = function(unitTest)

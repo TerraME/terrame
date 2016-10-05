@@ -46,10 +46,9 @@ local function verifyTest(package, report)
 		dir:create()
 	end
 
-	forEachFile(testDir, function(mfile)
-		if Directory(testDir..s..mfile):exists() then
-			internalDirectory = true
-		end
+	forEachDirectory(testDir, function()
+		internalDirectory = true
+		return false
 	end)
 
 	if internalDirectory then
@@ -198,11 +197,13 @@ local function verifyData(package, report)
 
 	counter = 1
 
+	forEachDirectory(dataDir, function(dir)
+		_Gtme.print("Directory '"..dir.."' will be ignored")
+	end)
+
 	forEachOrderedElement(datafiles, function(idx, value)
 		if value then
 			_Gtme.print("File '"..idx.."' is already documented in 'data.lua'")
-		elseif Directory(dataDir..s..idx):exists() then
-			_Gtme.print("Directory '"..idx.."' will be ignored")
 		elseif _Gtme.ignoredFile(idx) then
 			_Gtme.print("File '"..idx.."' does not need to be documented")
 		elseif string.endswith(idx, ".tview") and File(dataDir..s..string.sub(idx, 1, -6).."lua"):exists() then

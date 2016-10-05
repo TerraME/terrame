@@ -172,7 +172,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	print("Checking source code")
 	forEachFile(package..s.."lua", function(file)
-		if not string.endswith(file, ".lua") and not Directory(package..s.."lua"..s..file):exists() then
+		if not string.endswith(file, ".lua") then
 			printError("File '"..package..s.."lua"..s..file.."' is unnecessary and will be ignored.")
 			rm(package..s.."lua"..s..file)
 			report.unnecessary_files = report.unnecessary_files + 1
@@ -180,10 +180,12 @@ function _Gtme.buildPackage(package, config, clean)
 	end)
 
 	local function removeRecursiveLua(currentDir)
+		forEachDirectory(currentDir, function(dir)
+			removeRecursiveLua(currentDir..s..dir)
+		end)
+
 		forEachFile(currentDir, function(file)
-			if Directory(currentDir..s..file):exists() then
-				removeRecursiveLua(currentDir..s..file)
-			elseif not string.endswith(currentDir..s..file, ".lua") then
+			if not string.endswith(currentDir..s..file, ".lua") then
 				printError("File '"..currentDir..s..file.."' is unnecessary and will be ignored.")
 				rm(currentDir..s..file)
 				report.unnecessary_files = report.unnecessary_files + 1

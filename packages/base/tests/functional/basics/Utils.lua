@@ -293,6 +293,29 @@ return{
 		unitTest:assert(not r)
 		unitTest:assertEquals(count, 3)
 	end,
+	forEachDirectory = function(unitTest)
+		if _Gtme.sessionInfo().system ~= "windows" then
+			local count = 0
+			local r
+
+			r = forEachDirectory(filePath("", "base"), function(file)
+				count = count + 1
+				unitTest:assertType(file, "string") -- SKIP
+			end)
+
+			unitTest:assert(r) -- SKIP
+			unitTest:assertEquals(count, 1) -- SKIP
+
+			local count2 = 0
+			forEachDirectory(Directory(filePath("", "base")):list(true), function()
+				count2 = count2 + 1
+			end)
+
+			unitTest:assertEquals(count2, count + 1) -- SKIP
+		else
+			unitTest:assert(true) -- SKIP
+		end
+	end,
 	forEachFile = function(unitTest)
 		if _Gtme.sessionInfo().system ~= "windows" then
 			local count = 0
@@ -304,14 +327,14 @@ return{
 			end)
 
 			unitTest:assert(r) -- SKIP
-			unitTest:assertEquals(count, 29) -- SKIP
+			unitTest:assertEquals(count, 28) -- SKIP
 
 			local count2 = 0
 			forEachFile(Directory(filePath("", "base")):list(true), function()
 				count2 = count2 + 1
 			end)
 
-			unitTest:assertEquals(count2, count + 2) -- SKIP
+			unitTest:assertEquals(count2, count + 1) -- SKIP
 
 			count = 0
 

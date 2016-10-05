@@ -28,9 +28,9 @@ directories = {
 }
 
 forEachElement(directories, function(idx, value)
-	forEachFile(idx, function(file)
-		if idx == "packages" and not Directory(initialDir.."packages"..s..file):exists() then return end
+	if idx == "packages" then return end
 
+	forEachFile(idx, function(file)
 		value[file] = false
 	end)
 end)
@@ -43,10 +43,10 @@ _Gtme.printNote("Temporary directory created in "..tmpdirectory)
 _Gtme.printNote("Testing installed packages")
 
 _Gtme.printNote("Cleaning packages")
-forEachFile("packages", function(file)
-	_Gtme.print("Cleaning '"..file.."'")
+forEachDirectory("packages", function(dir)
+	_Gtme.print("Cleaning '"..dir.."'")
 
-	local mdir = baseDir..s.."packages"..s..file
+	local mdir = baseDir..s.."packages"..s..dir
 
 	if Directory(mdir):exists() then
 		Directory(mdir):delete()
@@ -54,10 +54,10 @@ forEachFile("packages", function(file)
 end)
 
 _Gtme.printNote("Copying packages")
-forEachFile("packages", function(file)
-	_Gtme.print("Copying '"..file.."'")
+forEachDirectory("packages", function(dir)
+	_Gtme.print("Copying '"..dir.."'")
 
-	os.execute("cp -pr \"packages"..s..file.."\" \""..baseDir..s.."packages"..s..file.."\"")	
+	os.execute("cp -pr \"packages"..s..dir.."\" \""..baseDir..s.."packages"..s..dir.."\"")	
 end)
 
 _Gtme.printNote("Removing files")

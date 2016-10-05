@@ -43,14 +43,17 @@ local function testdirectories(directory, ut)
 					found_file = true
 					table.insert(result, mdirectory)
 				end
-			elseif _Gtme.File(directory..s..mdirectory..s..value):attributes("mode") == "directory" then
-				lf(mdirectory..s..value)
-				found_directory = true
-			else
+			else -- if not Directory(value):exists() then
 				printError("'".._Gtme.makePathCompatibleToAllOS(mdirectory..s..value).."' is not a directory neither a .lua file and will be ignored.")
 				ut.invalid_test_file = ut.invalid_test_file + 1
 			end
 		end)
+
+		forEachDirectory(directory..s..mdirectory, function(value)
+			lf(mdirectory..s..value)
+			found_directory = true
+		end)
+
 		if not found_file and not found_directory then
 			printError("Directory '".._Gtme.makePathCompatibleToAllOS(mdirectory).."' is empty.")
 			ut.invalid_test_file = ut.invalid_test_file + 1
@@ -446,7 +449,7 @@ function _Gtme.executeTests(package, fileName)
 
 	local filesDir = {}
 
-	forEachFile(_Gtme.Directory("."):list(), function(file)
+	forEachFile(".", function(file)
 		filesDir[file] = true
 	end)
 
@@ -604,7 +607,7 @@ function _Gtme.executeTests(package, fileName)
 
 				print = _Gtme.print
 
-				forEachFile(_Gtme.Directory("."):list(), function(file)
+				forEachFile(".", function(file)
 					if filesDir[file] == nil then
 						printError("File '"..file.."' was created along the test.")
 						filesDir[file] = true
