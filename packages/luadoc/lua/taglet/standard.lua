@@ -635,18 +635,6 @@ end
 -- @arg doc table with documentation
 -- @return table with documentation
 function directory(lua_path, _, doc, short_lua_path, silent)
-	forEachFile(lua_path, function(f)
-		local fullpath = lua_path..f
-		local attr = attributes(fullpath)
-		assert(attr, string.format("error stating file '%s'", fullpath))
-		
-		if attr.mode == "file" then
-			doc = file(lua_path, f, doc, short_lua_path, silent)
-		elseif attr.mode == "directory" and f ~= "." and f ~= ".." then
-			fullpath = fullpath..s
-			doc = directory(fullpath, f, doc, short_lua_path, silent)
-		end
-	end)
 	return doc
 end
 
