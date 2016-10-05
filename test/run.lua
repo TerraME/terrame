@@ -37,7 +37,7 @@ end)
 
 local baseDir = sessionInfo().path
 
-tmpdirectory = _Gtme.Directory{name = ".terramerun_XXXXX", tmp = true}.name
+tmpdirectory = _Gtme.Directory{name = ".terramerun_XXXXX", tmp = true}
 _Gtme.printNote("Temporary directory created in "..tmpdirectory)
 
 _Gtme.printNote("Testing installed packages")
