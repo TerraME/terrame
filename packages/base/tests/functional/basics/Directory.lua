@@ -152,6 +152,40 @@ return{
 
 		Directory(curDir):setCurrentDir()
 	end,
+	name = function(unitTest)
+		local dir = Directory("/usr/local/lib")
+
+		unitTest:assertEquals(dir:name(), "lib")
+
+		dir = Directory("/usr/local/lib/")
+
+		unitTest:assertEquals(dir:name(), "lib")
+
+		dir = Directory("c:\\terrame\\bin")
+
+		unitTest:assertEquals(dir:name(), "bin")
+
+		dir = Directory("c:\\terrame\\bin\\")
+
+		unitTest:assertEquals(dir:name(), "bin")
+	end,
+	path = function(unitTest)
+		local dir = Directory("/usr/local/lib")
+
+		unitTest:assertEquals(dir:path(), "/usr/local/")
+
+		dir = Directory("/usr/local/lib/")
+
+		unitTest:assertEquals(dir:path(), "/usr/local/")
+
+		dir = Directory("c:\\terrame\\bin")
+
+		unitTest:assertEquals(dir:path(), "c:/terrame/")
+
+		dir = Directory("c:\\terrame\\bin\\")
+
+		unitTest:assertEquals(dir:path(), "c:/terrame/")
+	end,
 	setCurrentDir = function(unitTest)
 		local info = sessionInfo()
 		local s = info.separator

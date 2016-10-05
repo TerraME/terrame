@@ -68,7 +68,7 @@ Directory_ = {
 	attributes = function(self, attributename)
 		optionalArgument(1, "string", attributename)
 
-		return lfs.attributes(self.name, attributename)
+		return lfs.attributes(self.fullpath, attributename)
 	end,
 	--- Create the directory.
 	-- Returns true if the operation was successful. In case of error, it returns nil plus an error string.
@@ -87,7 +87,7 @@ Directory_ = {
 	-- dir:delete()
 	-- tmpDir:delete()
 	create = function(self)
-		return lfs.mkdir(self.name)
+		return lfs.mkdir(self.fullpath)
 	end,
 	--- Remove an existing directory. It removes all internal files and directories
 	-- recursively. If the directory does not exist or it cannot be removed,
@@ -97,10 +97,10 @@ Directory_ = {
 	-- dir:delete()
 	delete = function(self)
 		if not self:exists() then
-			resourceNotFoundError("directory", self.name)
+			resourceNotFoundError("directory", self.fullpath)
 		end
 
-		local result = os.execute("rm -rf \""..self.name.."\"")
+		local result = os.execute("rm -rf \""..self.fullpath.."\"")
 
 		return result == true or customError(result)
 	end,
@@ -109,7 +109,7 @@ Directory_ = {
 	--     print("is dir")
 	-- end
 	exists = function(self)
-		if lfs.attributes(self.name:gsub("\\$", ""), "mode") == "directory" then
+		if lfs.attributes(self.fullpath:gsub("\\$", ""), "mode") == "directory" then
 			return true
 		end
 
@@ -130,32 +130,48 @@ Directory_ = {
 		local command
 
 		if all then
-			command = "ls -a1 \""..self.name.."\""
+			command = "ls -a1 \""..self.fullpath.."\""
 		else
-			command = "ls -1 \""..self.name.."\""
+			command = "ls -1 \""..self.fullpath.."\""
 		end
 
 		local result = runCommand(command)
 
 		if not result or not result[1] then
-			customError(self.name.." is not a directory or is empty or does not exist.")
+			customError(self.fullpath.." is not a directory or is empty or does not exist.")
 		end
 
 		return result
+	end,
+	--- Return the name of a given directory. It is the last directory name given a full path.
+	-- @usage print(Directory("c:\\terrame\\bin\\"):name()) -- "bin"
+	-- 
+	-- print(Directory("/usr/local/bin"):name()) -- "bin"
+	name = function(self)
+		local _, name = string.match(self.fullpath, "(.-)([^\\/]-)$")
+		return name
+	end,
+	--- Return the path of a given directory. In windows, it converts all backslashes into slashes.
+	-- @usage print(Directory("c:\\terrame\\bin\\"):path()) -- "c:/terrame"
+	-- 
+	-- print(Directory("/usr/local/bin"):path()) -- "/usr/local"
+	path = function(self)
+		local path = string.match(self.fullpath, "(.-)([^\\/]-)$")
+		return path
 	end,
 	--- Set the current working directory with the directory path.
 	-- Returns true in case of success or nil plus an error string.
 	-- @usage -- DONTRUN
 	-- Directory("c:\\tests"):setCurrentDir()
 	setCurrentDir = function(self)
-		return lfs.chdir(self.name)
+		return lfs.chdir(self.fullpath)
 	end
 }
 
 metaTableDirectory_ = {
 	__index = Directory_,
 	__tostring = function(self)
-		return self.name
+		return self.fullpath
 	end,
 	--- Concatenate the directory. It adds a path separator whenever needed.
 	-- @arg value A string or an object that can be concatenated.
@@ -164,9 +180,9 @@ metaTableDirectory_ = {
 		local s = sessionInfo().separator
 
 		if type(self) == "Directory" then
-			self = self.name
+			self = self.fullpath
 		elseif type(value) == "Directory" then
-			value = value.name
+			value = value.fullpath
 		end
 
 		if string.sub(value, 1, 1) ~= s then
@@ -209,19 +225,22 @@ function Directory(data)
 
 	mandatoryTableArgument(data, "name", "string")
 
-	local invalidChar = data.name:find("[*<>?|\"]")
+	data.fullpath = data.name
+	data.name = nil
+
+	local invalidChar = data.fullpath:find("[*<>?|\"]")
 	if invalidChar then
-		customError("Directory name '"..data.name.."' cannot contain character '"..data.name:sub(invalidChar, invalidChar).."'.")
+		customError("Directory name '"..data.fullpath.."' cannot contain character '"..data.fullpath:sub(invalidChar, invalidChar).."'.")
 	end
 
-	if not (data.name:match("\\") or data.name:match("/")) then
-		data.name = currentDir()..sessionInfo().separator..data.name
+	if not (data.fullpath:match("\\") or data.fullpath:match("/")) then
+		data.fullpath = currentDir()..sessionInfo().separator..data.fullpath
 	end
 
-	data.name = _Gtme.makePathCompatibleToAllOS(data.name)
+	data.fullpath = _Gtme.makePathCompatibleToAllOS(data.fullpath)
 
-	if data.name:sub(-1) == "/" then
-		data.name = data.name:sub(1, -2)
+	if data.fullpath:sub(-1) == "/" then
+		data.fullpath = data.fullpath:sub(1, -2)
 	end
 
 	setmetatable(data, metaTableDirectory_)
@@ -231,10 +250,10 @@ function Directory(data)
 			_Gtme.tmpdirectory__ = {}
 		end
 
-		local cmd = runCommand("mktemp -d "..data.name)[1]
+		local cmd = runCommand("mktemp -d "..data.fullpath)[1]
 		table.insert(_Gtme.tmpdirectory__, data)
 
-		data.name = cmd
+		data.fullpath = cmd
 	end
 
 	return data

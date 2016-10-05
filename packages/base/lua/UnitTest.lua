@@ -281,7 +281,7 @@ UnitTest_ = {
 		self.tlogs[fname] = true
 
 		if not self.tmpdir then
-			self.tmpdir = Directory{tmp = true}.name -- SKIP
+			self.tmpdir = Directory{tmp = true} -- SKIP
 		end
 
 		os.execute("cp \""..fname.."\" \""..self.tmpdir.."\"")
@@ -398,7 +398,7 @@ UnitTest_ = {
 		self.tlogs[file] = true
 
 		if not self.tmpdir then
-			self.tmpdir = Directory{tmp = true}.name -- SKIP
+			self.tmpdir = Directory{tmp = true} -- SKIP
 		end
 
 		local newImage = self.tmpdir..s..file
