@@ -19,7 +19,6 @@ local include = _Gtme.include
 local getn = getn
 local forEachElement = forEachElement
 local traceback = _Gtme.traceback
-local forEachFile = forEachFile
 local makepath = _Gtme.makePathCompatibleToAllOS
 
 local s = sessionInfo().separator
@@ -634,7 +633,7 @@ end
 -- @arg path directory to search
 -- @arg doc table with documentation
 -- @return table with documentation
-function directory(lua_path, _, doc, short_lua_path, silent)
+function directory()
 	return doc
 end
 
