@@ -1249,7 +1249,7 @@ TerraLib_ = {
 		loadProject(project, project.file)
 
 		if not string.find(filePath, "/") then
-			filePath = _Gtme.makePathCompatibleToAllOS(currentDir().."/")..filePath
+			filePath = currentDir()..filePath
 		end
 
 		local inputLayer = project.layers[inputLayerTitle]
@@ -1344,7 +1344,7 @@ TerraLib_ = {
 		loadProject(project, project.file)
 		
 		if not string.find(filePath, "/") then
-			filePath = _Gtme.makePathCompatibleToAllOS(currentDir().."/")..filePath
+			filePath = currentDir()..filePath
 		end
 
 		local inputLayer = project.layers[inputLayerTitle]

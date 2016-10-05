@@ -129,7 +129,7 @@ return{
 		unitTest:assert(not dir:exists())
 
 		dir = Directory("")
-		unitTest:assertEquals(tostring(dir), _Gtme.makePathCompatibleToAllOS(currentDir()))
+		unitTest:assertEquals(tostring(dir), tostring(currentDir()))
 	end,
 	list = function(unitTest)
 		local datapath = packageInfo("base").data
@@ -150,7 +150,7 @@ return{
 		d = Directory("."):list(true)
 		unitTest:assertEquals(#d, nfiles + 2)
 
-		Directory(curDir):setCurrentDir()
+		curDir:setCurrentDir()
 	end,
 	name = function(unitTest)
 		local dir = Directory("/usr/local/lib")
@@ -194,11 +194,11 @@ return{
 
 		local dir = Directory(newpath)
 		dir:setCurrentDir()
-		unitTest:assertEquals(currentDir(), newpath)
+		unitTest:assertEquals(tostring(currentDir()), newpath)
 
 		dir = Directory(cur_dir)
 		dir:setCurrentDir()
-		unitTest:assertEquals(currentDir(), cur_dir)
+		unitTest:assertEquals(tostring(currentDir()), cur_dir)
 	end,
 	__tostring = function(unitTest)
 		local datapath = packageInfo("base").data

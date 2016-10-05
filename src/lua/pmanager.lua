@@ -378,7 +378,7 @@ local function installButtonClicked()
 
 		File(mpkgfile):delete()
 
-		_Gtme.Directory(cdir):setCurrentDir()
+		cdir:setCurrentDir()
 		tmpdirectory:delete()
 		mdialog:done(0)
 	end)

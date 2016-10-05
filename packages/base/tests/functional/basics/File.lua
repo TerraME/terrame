@@ -213,8 +213,7 @@ return{
 			{age = 1, wealth = 10, vision = 3, metabolism = 2, test = "Foo(text"}
 		}
 
-		local s = sessionInfo().separator
-		local filename = currentDir()..s.."csvwrite.csv"
+		local filename = currentDir().."csvwrite.csv"
 		local file = File("csvwrite.csv")
 		file:write(example)
 
@@ -233,7 +232,7 @@ return{
 		file:deleteIfExists()
 
 		example = "Some text.."
-		filename = currentDir()..s.."abc.txt"
+		filename = currentDir().."abc.txt"
 
 		file = File(filename)
 		file:write(example)

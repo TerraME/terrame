@@ -64,7 +64,7 @@ return {
 
 			unitTest:assertEquals(clName1, cl1.name) -- SKIP
 			unitTest:assertEquals(cl1.source, "shp") -- SKIP
-			unitTest:assertEquals(cl1.file, _Gtme.makePathCompatibleToAllOS(currentDir() .. "/" .. filePath1)) -- SKIP
+			unitTest:assertEquals(cl1.file, currentDir()..filePath1) -- SKIP
 
 			File(filePath1):deleteIfExists()
 			File(projName):deleteIfExists()

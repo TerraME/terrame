@@ -605,7 +605,7 @@ function _Gtme.installPackage(file)
 
 	_Gtme.print("Copying package '"..package.."'.")
 
-	local currentDir = _Gtme.currentDir()
+	local cDir = _Gtme.currentDir()
 	local packageDir = _Gtme.sessionInfo().path..s.."packages"
 
 	if not _Gtme.isLoaded("base") then
@@ -656,7 +656,7 @@ function _Gtme.installPackage(file)
 	_Gtme.print("Installing package '"..package.."'.")
 	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")
 
-	Directory(currentDir):setCurrentDir()
+	cDir:setCurrentDir()
 
 	tmpdirectory:delete()
 	_Gtme.print("Package '"..package.."' successfully installed.")
@@ -1198,7 +1198,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	dofile(info_.path..s.."lua"..s.."utils.lua")
 	dofile(info_.path..s.."lua"..s.."configure.lua")
 	
-	if string.lower(info_.path) == string.lower(_Gtme.currentDir()) then
+	if string.lower(info_.path) == string.lower(tostring(_Gtme.currentDir())) then
 		_Gtme.printError("It is not possible to execute TerraME within its directory. Please, run it from another place.")
 		os.exit(1)
 	else

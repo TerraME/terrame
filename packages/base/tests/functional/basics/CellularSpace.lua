@@ -102,11 +102,11 @@ return{
 			file = filePath("test/sampa.shp", "terralib")
 		}
 
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local testDir = currentDir()
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
+		local filePath1 = testDir..shp1	
 		local fn1 = File(filePath1):name()
-		fn1 = testDir.."/"..fn1			
+		fn1 = testDir..fn1			
 		
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
 		for i = 1, #exts do
@@ -206,7 +206,7 @@ return{
 		end)
 
 		local geojson1 = "geojson_sampa_cells.geojson"
-		filePath1 = testDir.."/"..geojson1
+		filePath1 = testDir..geojson1
 
 		File(filePath1):deleteIfExists()
 
@@ -1426,11 +1426,11 @@ ydim    number [20]
 			file = filePath("test/sampa.shp", "terralib")
 		}	
 
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local testDir = currentDir()
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1
+		local filePath1 = testDir..shp1
 		local fn1 = File(filePath1):name()
-		fn1 = testDir.."/"..fn1
+		fn1 = testDir..fn1
 
 		local exts = {".dbf", ".prj", ".shp", ".shx"}
 		
@@ -1459,9 +1459,9 @@ ydim    number [20]
 		local cellSpaceLayerNameT0 = clName1.."_CellSpace_T0"
 
 		local shp2 = cellSpaceLayerNameT0..".shp"
-		local filePath2 = testDir.."/"..shp2	
+		local filePath2 = testDir..shp2	
 		local fn2 = File(filePath2):name()
-		fn2 = testDir.."/"..fn2	
+		fn2 = testDir..fn2	
 
 		File(filePath2):deleteIfExists()
 
@@ -1504,9 +1504,9 @@ ydim    number [20]
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
 		
 		local shp3 = cellSpaceLayerNameGeom..".shp"
-		local filePath3 = testDir.."/"..shp3	
+		local filePath3 = testDir..shp3	
 		local fn3 = File(filePath3):name()
-		fn3 = testDir.."/"..fn3	
+		fn3 = testDir..fn3	
 		
 		for i = 1, #exts do
 			File(fn3..exts[i]):deleteIfExists()
@@ -1527,9 +1527,9 @@ ydim    number [20]
 		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"
 		
 		local shp4 = cellSpaceLayerNameGeom2..".shp"
-		local filePath4 = testDir.."/"..shp4	
+		local filePath4 = testDir..shp4	
 		local fn4 = File(filePath4):name()
-		fn4 = testDir.."/"..fn4	
+		fn4 = testDir..fn4
 		
 		for i = 1, #exts do
 			File(fn4..exts[i]):deleteIfExists()

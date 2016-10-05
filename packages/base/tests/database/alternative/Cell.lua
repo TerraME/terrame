@@ -52,9 +52,9 @@ return{
 		}
 		
 		-- SHAPE
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local testDir = currentDir()
 		local shp1 = "brazil_cells.shp"
-		local filePath1 = testDir.."/"..shp1			
+		local filePath1 = testDir..shp1			
 		
 		File(filePath1):deleteIfExists()
 		

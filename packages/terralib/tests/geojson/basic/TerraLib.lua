@@ -107,7 +107,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 
 		unitTest:assertEquals(layerInfo.name, clName)
-		unitTest:assertEquals(layerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir() .. "/") .. geojson1)
+		unitTest:assertEquals(layerInfo.file, currentDir()..geojson1)
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)

@@ -180,7 +180,7 @@ return {
 		tl:addGdalLayer(proj, layerName1, layerFile1)	
 		
 		local customWarningBkp = customWarning 
-		local currDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local currDir = currentDir()
 		customWarning = function(msg) 
 			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2tif.tif'.") or
 							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'."))

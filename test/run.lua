@@ -209,7 +209,7 @@ forEachOrderedElement(commands, function(idx, group)
 			end)
 		else
 			logfile:open()
-			local resultfile = File(tmpdirectory..s..lfilename)
+			local resultfile = File(tmpdirectory..lfilename)
 
 			forEachElement(result, function(_, value)
 				value = _Gtme.makePathCompatibleToAllOS(value)
@@ -392,7 +392,7 @@ forEachOrderedElement(commands, function(idx, group)
 			end)
 		else
 			logfile:open()
-			local resultfile = File(tmpdirectory..s..lfilename)
+			local resultfile = File(tmpdirectory..lfilename)
 
 			forEachElement(result, function(_, value)
 				value = _Gtme.makePathCompatibleToAllOS(value)

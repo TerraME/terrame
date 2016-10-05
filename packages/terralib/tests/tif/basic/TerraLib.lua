@@ -75,7 +75,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(layerInfo.name, clName) -- SKIP
-		unitTest:assertEquals(layerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp1) -- SKIP
+		unitTest:assertEquals(layerInfo.file, currentDir()..shp1) -- SKIP
 		unitTest:assertEquals(layerInfo.type, "OGR") -- SKIP
 		unitTest:assertEquals(layerInfo.rep, "polygon") -- SKIP
 		unitTest:assertNotNil(layerInfo.sid) -- SKIP				
@@ -318,7 +318,7 @@ return {
 		tl:addGdalLayer(proj, layerName1, layerFile1)	
 		
 		local customWarningBkp = customWarning 
-		local currDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local currDir = currentDir()
 		customWarning = function(msg) 
 			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2nc.nc'.") or
 							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'."))

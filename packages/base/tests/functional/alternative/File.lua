@@ -134,8 +134,7 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
 	read = function(unitTest)
-		local s = sessionInfo().separator
-		local filename = currentDir()..s.."csvwrite.csv"
+		local filename = currentDir().."csvwrite.csv"
 		local csv = {
 			{name = "\"ab\"c"}
 		}

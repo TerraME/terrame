@@ -124,7 +124,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(layerInfo.name, clName)
-		unitTest:assertEquals(layerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp1)
+		unitTest:assertEquals(layerInfo.file, currentDir()..shp1)
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
@@ -218,7 +218,7 @@ return {
 		local clLayerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(clLayerInfo.name, clName)
-		unitTest:assertEquals(clLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[1])
+		unitTest:assertEquals(clLayerInfo.file, currentDir()..shp[1])
 		unitTest:assertEquals(clLayerInfo.type, "OGR")
 		unitTest:assertEquals(clLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(clLayerInfo.sid)
@@ -254,7 +254,7 @@ return {
 
 		local presLayerInfo = tl:getLayerInfo(proj, proj.layers[presLayerName])
 		unitTest:assertEquals(presLayerInfo.name, presLayerName)
-		unitTest:assertEquals(presLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[2])
+		unitTest:assertEquals(presLayerInfo.file, currentDir()..shp[2])
 		unitTest:assertEquals(presLayerInfo.type, "OGR")
 		unitTest:assertEquals(presLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(presLayerInfo.sid)
@@ -284,7 +284,7 @@ return {
 
 		local areaLayerInfo = tl:getLayerInfo(proj, proj.layers[areaLayerName])
 		unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
-		unitTest:assertEquals(areaLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[3])
+		unitTest:assertEquals(areaLayerInfo.file, currentDir()..shp[3])
 		unitTest:assertEquals(areaLayerInfo.type, "OGR")
 		unitTest:assertEquals(areaLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(areaLayerInfo.sid)		
@@ -314,7 +314,7 @@ return {
 
 		local countLayerInfo = tl:getLayerInfo(proj, proj.layers[countLayerName])
 		unitTest:assertEquals(countLayerInfo.name, countLayerName)
-		unitTest:assertEquals(countLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[4])
+		unitTest:assertEquals(countLayerInfo.file, currentDir()..shp[4])
 		unitTest:assertEquals(countLayerInfo.type, "OGR")
 		unitTest:assertEquals(countLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(countLayerInfo.sid)	
@@ -344,7 +344,7 @@ return {
 
 		local distLayerInfo = tl:getLayerInfo(proj, proj.layers[distLayerName])
 		unitTest:assertEquals(distLayerInfo.name, distLayerName)
-		unitTest:assertEquals(distLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[5])
+		unitTest:assertEquals(distLayerInfo.file, currentDir()..shp[5])
 		unitTest:assertEquals(distLayerInfo.type, "OGR")
 		unitTest:assertEquals(distLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(distLayerInfo.sid)			
@@ -379,7 +379,7 @@ return {
 
 		local minLayerInfo = tl:getLayerInfo(proj, proj.layers[minLayerName])
 		unitTest:assertEquals(minLayerInfo.name, minLayerName)
-		unitTest:assertEquals(minLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[6])
+		unitTest:assertEquals(minLayerInfo.file, currentDir()..shp[6])
 		unitTest:assertEquals(minLayerInfo.type, "OGR")
 		unitTest:assertEquals(minLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(minLayerInfo.sid)	
@@ -410,7 +410,7 @@ return {
 
 		local maxLayerInfo = tl:getLayerInfo(proj, proj.layers[maxLayerName])
 		unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
-		unitTest:assertEquals(maxLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[7])
+		unitTest:assertEquals(maxLayerInfo.file, currentDir()..shp[7])
 		unitTest:assertEquals(maxLayerInfo.type, "OGR")
 		unitTest:assertEquals(maxLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(maxLayerInfo.sid)			
@@ -441,7 +441,7 @@ return {
 
 		local percLayerInfo = tl:getLayerInfo(proj, proj.layers[percLayerName])
 		unitTest:assertEquals(percLayerInfo.name, percLayerName)
-		unitTest:assertEquals(percLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[8])
+		unitTest:assertEquals(percLayerInfo.file, currentDir()..shp[8])
 		unitTest:assertEquals(percLayerInfo.type, "OGR")
 		unitTest:assertEquals(percLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(percLayerInfo.sid)	
@@ -473,7 +473,7 @@ return {
 
 		local stdevLayerInfo = tl:getLayerInfo(proj, proj.layers[stdevLayerName])
 		unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
-		unitTest:assertEquals(stdevLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[9])
+		unitTest:assertEquals(stdevLayerInfo.file, currentDir()..shp[9])
 		unitTest:assertEquals(stdevLayerInfo.type, "OGR")
 		unitTest:assertEquals(stdevLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(stdevLayerInfo.sid)			
@@ -505,7 +505,7 @@ return {
 
 		local meanLayerInfo = tl:getLayerInfo(proj, proj.layers[meanLayerName])
 		unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
-		unitTest:assertEquals(meanLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[10])
+		unitTest:assertEquals(meanLayerInfo.file, currentDir()..shp[10])
 		unitTest:assertEquals(meanLayerInfo.type, "OGR")
 		unitTest:assertEquals(meanLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(meanLayerInfo.sid)
@@ -537,7 +537,7 @@ return {
 		
 		local weighLayerInfo = tl:getLayerInfo(proj, proj.layers[weighLayerName])
 		unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
-		unitTest:assertEquals(weighLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[11])
+		unitTest:assertEquals(weighLayerInfo.file, currentDir()..shp[11])
 		unitTest:assertEquals(weighLayerInfo.type, "OGR")
 		unitTest:assertEquals(weighLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(weighLayerInfo.sid)		
@@ -569,7 +569,7 @@ return {
 		
 		local interLayerInfo = tl:getLayerInfo(proj, proj.layers[interLayerName])
 		unitTest:assertEquals(interLayerInfo.name, interLayerName)
-		unitTest:assertEquals(interLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[12])
+		unitTest:assertEquals(interLayerInfo.file, currentDir()..shp[12])
 		unitTest:assertEquals(interLayerInfo.type, "OGR")
 		unitTest:assertEquals(interLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(interLayerInfo.sid)			
@@ -602,7 +602,7 @@ return {
 		
 		local occurLayerInfo = tl:getLayerInfo(proj, proj.layers[occurLayerName])
 		unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
-		unitTest:assertEquals(occurLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[13])
+		unitTest:assertEquals(occurLayerInfo.file, currentDir()..shp[13])
 		unitTest:assertEquals(occurLayerInfo.type, "OGR")
 		unitTest:assertEquals(occurLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(occurLayerInfo.sid)	
@@ -635,7 +635,7 @@ return {
 		
 		local sumLayerInfo = tl:getLayerInfo(proj, proj.layers[sumLayerName])
 		unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
-		unitTest:assertEquals(sumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[14])
+		unitTest:assertEquals(sumLayerInfo.file, currentDir()..shp[14])
 		unitTest:assertEquals(sumLayerInfo.type, "OGR")
 		unitTest:assertEquals(sumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(sumLayerInfo.sid)		
@@ -668,7 +668,7 @@ return {
 		
 		local wsumLayerInfo = tl:getLayerInfo(proj, proj.layers[wsumLayerName])
 		unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
-		unitTest:assertEquals(wsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[15])
+		unitTest:assertEquals(wsumLayerInfo.file, currentDir()..shp[15])
 		unitTest:assertEquals(wsumLayerInfo.type, "OGR")
 		unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(wsumLayerInfo.sid)						
@@ -706,7 +706,7 @@ return {
 
 		local percTifLayerInfo = tl:getLayerInfo(proj, proj.layers[percTifLayerName]) 
 		unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
-		unitTest:assertEquals(percTifLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[16])
+		unitTest:assertEquals(percTifLayerInfo.file, currentDir()..shp[16])
 		unitTest:assertEquals(percTifLayerInfo.type, "OGR")
 		unitTest:assertEquals(percTifLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(percTifLayerInfo.sid)					
@@ -740,7 +740,7 @@ return {
 
 		local rmeanLayerInfo = tl:getLayerInfo(proj, proj.layers[rmeanLayerName])
 		unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
-		unitTest:assertEquals(rmeanLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[17])
+		unitTest:assertEquals(rmeanLayerInfo.file, currentDir()..shp[17])
 		unitTest:assertEquals(rmeanLayerInfo.type, "OGR")
 		unitTest:assertEquals(rmeanLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rmeanLayerInfo.sid)			
@@ -774,7 +774,7 @@ return {
 
 		local rminLayerInfo = tl:getLayerInfo(proj, proj.layers[rminLayerName])
 		unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
-		unitTest:assertEquals(rminLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[18])
+		unitTest:assertEquals(rminLayerInfo.file, currentDir()..shp[18])
 		unitTest:assertEquals(rminLayerInfo.type, "OGR")
 		unitTest:assertEquals(rminLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rminLayerInfo.sid)		
@@ -808,7 +808,7 @@ return {
 
 		local rmaxLayerInfo = tl:getLayerInfo(proj, proj.layers[rmaxLayerName])
 		unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
-		unitTest:assertEquals(rmaxLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[19])
+		unitTest:assertEquals(rmaxLayerInfo.file, currentDir()..shp[19])
 		unitTest:assertEquals(rmaxLayerInfo.type, "OGR")
 		unitTest:assertEquals(rmaxLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rmaxLayerInfo.sid)	
@@ -842,7 +842,7 @@ return {
 
 		local rstdevLayerInfo = tl:getLayerInfo(proj, proj.layers[rstdevLayerName])
 		unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
-		unitTest:assertEquals(rstdevLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[20])
+		unitTest:assertEquals(rstdevLayerInfo.file, currentDir()..shp[20])
 		unitTest:assertEquals(rstdevLayerInfo.type, "OGR")
 		unitTest:assertEquals(rstdevLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rstdevLayerInfo.sid)		
@@ -876,7 +876,7 @@ return {
 
 		local rsumLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
 		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[21])
+		unitTest:assertEquals(rsumLayerInfo.file, currentDir()..shp[21])
 		unitTest:assertEquals(rsumLayerInfo.type, "OGR")
 		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rsumLayerInfo.sid)
@@ -906,7 +906,7 @@ return {
 
 		local rsumOverLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
 		unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumOverLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[21])
+		unitTest:assertEquals(rsumOverLayerInfo.file, currentDir()..shp[21])
 		unitTest:assertEquals(rsumOverLayerInfo.type, "OGR")
 		unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rsumOverLayerInfo.sid)		

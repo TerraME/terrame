@@ -69,7 +69,7 @@ return {
 		}
 		
 		unitTest:assertEquals(cl2.source, "shp")
-		unitTest:assertEquals(cl2.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath1))			
+		unitTest:assertEquals(cl2.file, currentDir()..filePath1)
 	
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 		projName:deleteIfExists()
@@ -486,7 +486,7 @@ return {
 		}
 
 		unitTest:assertEquals(cellSpaceLayer.source, "shp") -- SKIP
-		unitTest:assertEquals(cellSpaceLayer.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath22)) -- SKIP
+		unitTest:assertEquals(cellSpaceLayer.file, currentDir()..filePath22) -- SKIP
 
 		File(projName):deleteIfExists()
 

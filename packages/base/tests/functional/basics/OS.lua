@@ -29,8 +29,8 @@ return{
 		local info = sessionInfo()
 		local cur_dir = currentDir()
 		Directory(info.path):setCurrentDir()
-		unitTest:assertEquals(currentDir(), info.path)
-		Directory(cur_dir):setCurrentDir()
+		unitTest:assertEquals(tostring(currentDir()), info.path)
+		cur_dir:setCurrentDir()
 	end,
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)

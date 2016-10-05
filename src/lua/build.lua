@@ -108,7 +108,7 @@ function _Gtme.buildPackage(package, config, clean)
 	tmpdirectory:setCurrentDir()
 
 	if pkgDirectory == package then
-		os.execute("cp -pr \""..currentdir..s..pkgDirectory.."\" .")
+		os.execute("cp -pr \""..currentdir..pkgDirectory.."\" .")
 	else
 		os.execute("cp -pr \""..pkgDirectory.."\" .")
 	end
@@ -179,15 +179,15 @@ function _Gtme.buildPackage(package, config, clean)
 		end
 	end)
 
-	local function removeRecursiveLua(currentDir)
-		forEachDirectory(currentDir, function(dir)
-			removeRecursiveLua(currentDir..s..dir)
+	local function removeRecursiveLua(dir)
+		forEachDirectory(dir, function(mdir)
+			removeRecursiveLua(dir..s..mdir)
 		end)
 
-		forEachFile(currentDir, function(file)
-			if not string.endswith(currentDir..s..file, ".lua") then
-				printError("File '"..currentDir..s..file.."' is unnecessary and will be ignored.")
-				rm(currentDir..s..file)
+		forEachFile(dir, function(file)
+			if not string.endswith(dir..s..file, ".lua") then
+				printError("File '"..dir..s..file.."' is unnecessary and will be ignored.")
+				rm(dir..s..file)
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
 		end)
@@ -310,7 +310,7 @@ function _Gtme.buildPackage(package, config, clean)
 		printWarning("Could not find an MD5 sum software installed.")
 	end
 
-	Directory(currentdir):setCurrentDir()
+	currentdir:setCurrentDir()
 
 	local finalTime = os.clock()
 	print("\nBuild report for package '"..package.."':")
