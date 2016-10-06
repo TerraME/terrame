@@ -75,7 +75,7 @@ function _Gtme.executeProject(package)
 	printNote("Creating .tview files")
 	forEachFile(data_path, function(file)
 		if file:extension() == "lua" then
-			print("Processing '"..file:name.."'")
+			print("Processing '"..file:name().."'")
 			project_report.projects = project_report.projects + 1
 
 			local _, filename = file:split()
