@@ -9,8 +9,8 @@ local baseDir = sessionInfo().path
 local pkgDir = _Gtme.makePathCompatibleToAllOS(baseDir..s.."packages")
 
 _Gtme.printNote("Creating temporary directory")
-tmpdirectory = Directory{name = ".terramerepository_XXXXX", tmp = true}.name
-Directory(tmpdirectory):setCurrentDir()
+tmpdirectory = Directory{name = ".terramerepository_XXXXX", tmp = true}
+tmpdirectory:setCurrentDir()
 
 _Gtme.printNote("Copying currently installed packages")
 
@@ -86,7 +86,7 @@ local function execute(command, filename)
 			logfile:write(value.."\n")
 		end)
 	else
-		local resultfile = io.open(".."..s..tmpdirectory..s..filename, "w")
+		local resultfile = io.open(".."..s..tmpdirectory..filename, "w")
 			
 		local line = 1
 		local logerror = false

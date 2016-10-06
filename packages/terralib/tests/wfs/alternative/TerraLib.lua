@@ -53,7 +53,7 @@ return {
 			local invalidDataSet = function()
 				tl:addWfsLayer(proj, layerName, url, dataset)
 			end
-			unitTest:assertError(invalidDataSet, "It was not possible to find data set 'reddpac:B' of type 'WFS'. Layer 'WFS-Layer' does not created.") -- SKIP
+			unitTest:assertError(invalidDataSet, "It was not possible to find data set 'reddpac:B' of type 'WFS'. Layer 'WFS-Layer' does not exist.") -- SKIP
 		end		
 		
 		File(proj.file):delete()

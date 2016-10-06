@@ -22,7 +22,7 @@ end
 initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
 
-initialDir = Directory(File(sessionInfo().currentFile):directory())
+initialDir = Directory(File(sessionInfo().currentFile))
 initialDir:setCurrentDir()
 
 commands = _Gtme.include("commands.lua")

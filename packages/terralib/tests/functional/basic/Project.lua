@@ -34,7 +34,7 @@ return {
 		}
 		
 		unitTest:assertType(proj1, "Project")
-		unitTest:assertEquals(proj1.file, file:name(true))
+		unitTest:assertEquals(proj1.file, tostring(file))
 		
 		local proj2 = Project{
 			file = tostring(file)
@@ -45,21 +45,21 @@ return {
 		unitTest:assertEquals(proj1.file, proj2.file)
 
 		local proj3 = Project{
-			file = file:name(true)
+			file = file:name()
 		}
 
 		unitTest:assertEquals(proj1.author, proj3.author)
 		unitTest:assertEquals(proj1.title, proj3.title)
-		unitTest:assertEquals(proj1.file, proj3.file)
+		unitTest:assertEquals(proj3.file, "amazonia.tview")
 
 		local proj3clean = Project{
-			file = file:name(true),
+			file = file:name(),
 			clean = true
 		}
 
 		unitTest:assertEquals(proj1.author, proj3clean.author)
 		unitTest:assertEquals(proj1.title, proj3clean.title)
-		unitTest:assertEquals(proj1.file, proj3clean.file)
+		unitTest:assertEquals(proj3clean.file, "amazonia.tview")
 		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
 		file:deleteIfExists()
@@ -118,7 +118,7 @@ return {
 	__tostring = function(unitTest)
 		local file = File("tostring.tview")
 		local proj1 = Project{
-			file = tostring(file),
+			file = file:name(),
 			clean = true,
 			author = "Avancini",
 			title = "The Amazonia"

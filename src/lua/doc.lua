@@ -272,9 +272,9 @@ local function getProjects(package)
 	printNote("Processing lua files")
 	forEachFile(data_path, function(file)
 		if file:extension() == "lua" then
-			print("Processing '"..file.."'")
+			print("Processing '"..file:name().."'")
 
-			xpcall(function() dofile(data_path..s..file) end, function(err)
+			xpcall(function() dofile(tostring(file)) end, function(err)
 				printError(_Gtme.traceback(err))
 			end)
 
