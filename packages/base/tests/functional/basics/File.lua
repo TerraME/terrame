@@ -93,11 +93,11 @@ return{
 
 		File("as.dfgwe.ogoei"):deleteIfExists()
 	end,
-	directory = function(unitTest)
+	path = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
 
 		unitTest:assertType(file, "File")
-		unitTest:assertEquals(file:directory(), _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/")
+		unitTest:assertEquals(file:path(), _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/")
 	end,
 	exists = function(unitTest)
 		local file = File(filePath("agents.csv", "base"))
@@ -181,7 +181,7 @@ return{
 		unitTest:assertEquals(extension, "csv")
 
 		file = File("myagents")
-		local path, name, extension = file:split()
+		path, name, extension = file:split()
 
 		unitTest:assertEquals(path, currentDir()..s)
 		unitTest:assertEquals(name, "myagents")

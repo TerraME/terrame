@@ -44,7 +44,7 @@ local function testdirectories(directory, ut)
 					table.insert(result, mdirectory)
 				end
 			else
-				printError("'"..mdirectory..value.."' is not a directory neither a .lua file and will be ignored.")
+				printError("'"..value.."' is not a directory neither a .lua file and will be ignored.")
 				ut.invalid_test_file = ut.invalid_test_file + 1
 			end
 		end)
@@ -412,7 +412,7 @@ function _Gtme.executeTests(package, fileName)
 
 		forEachElement(tf, function(_, value)
 			forEachElement(mdirectory, function(_, mvalue)
-				local cvalue  = _Gtme.makePathCompatibleToAllOS(value)
+				local cvalue  = tostring(value)
 				local cmvalue = _Gtme.makePathCompatibleToAllOS(mvalue)
 
 				if string.match(cvalue, cmvalue) and not belong(value, data.directory) then
@@ -477,7 +477,9 @@ function _Gtme.executeTests(package, fileName)
 
 		forEachOrderedElement(myFiles, function(eachFile)
 			-- TODO here
-			ut.current_file = eachFile
+			local fileWithSmallPath = eachDirectory..eachFile
+			fileWithSmallPath = string.sub(fileWithSmallPath, string.len(baseDir) + 2)
+			ut.current_file = fileWithSmallPath
 			local tests
 
 			local printTesting = false
@@ -486,9 +488,7 @@ function _Gtme.executeTests(package, fileName)
 				ut.print_calls = ut.print_calls + 1
 
 				if not printTesting then
-					local text = eachDirectory..eachFile
-					text = string.sub(text, string.len(baseDir) + 2)
-					printNote("Testing "..text)
+					printNote("Testing "..fileWithSmallPath)
 					printTesting = true
 				end
 
@@ -497,9 +497,7 @@ function _Gtme.executeTests(package, fileName)
 
 			xpcall(function() tests = dofile(eachDirectory..s..eachFile) end, function(err)
 				if not printTesting then
-					local text = eachDirectory..eachFile
-					text = string.sub(text, string.len(baseDir) + 2)
-					printNote("Testing "..text)
+					printNote("Testing "..fileWithSmallPath)
 					printTesting = true
 				end
 
@@ -513,8 +511,7 @@ function _Gtme.executeTests(package, fileName)
 
 			if type(tests) ~= "table" or getn(tests) == 0 then
 				if not printTesting then
-					local text = eachDirectory..eachFile
-					printNote("Testing "..text)
+					printNote("Testing "..fileWithSmallPath)
 					printTesting = true
 				end
 
@@ -538,9 +535,7 @@ function _Gtme.executeTests(package, fileName)
 			end
 
 			if #myTests > 0 and not printTesting then
-					local text = eachDirectory..eachFile
-					text = string.sub(text, string.len(baseDir) + 2)
-					printNote("Testing "..text)
+					printNote("Testing "..fileWithSmallPath)
 			end
 
 			local function trace(_, line)

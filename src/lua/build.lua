@@ -179,8 +179,8 @@ function _Gtme.buildPackage(package, config, clean)
 	end
 
 	print("Checking source code")
-	forEachFile(package..s.."lua", function(file)
-		if not file:extension() == "lua" then
+	forEachFile(pkgDirectory..s.."lua", function(file)
+		if file:extension() ~= "lua" then
 			printError("File '"..package..s.."lua"..s..file:name().."' is unnecessary and will be ignored.")
 			file:delete()
 			report.unnecessary_files = report.unnecessary_files + 1
@@ -193,7 +193,7 @@ function _Gtme.buildPackage(package, config, clean)
 		end)
 
 		forEachFile(dir, function(file)
-			if not file:extension() == "lua" then
+			if file:extension() ~= "lua" then
 				printError("File '"..dir..s..file.."' is unnecessary and will be ignored.")
 				file:delete()
 				report.unnecessary_files = report.unnecessary_files + 1
@@ -201,7 +201,7 @@ function _Gtme.buildPackage(package, config, clean)
 		end)
 	end
 
-	removeRecursiveLua(package..s.."tests")
+	removeRecursiveLua(pkgDirectory..s.."tests")
 
 	print("Checking fonts")
 	if Directory(package..s.."font"):exists() then

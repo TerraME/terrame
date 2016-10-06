@@ -54,7 +54,8 @@ function _Gtme.executeProject(package)
 	printNote("Removing output files")
 	forEachFile(data_path, function(file)
 		if file:extension() == "lua" then
-			local output = File({file:split()}[2]..".tview")
+			local _, name = file:split()
+			local output = File(name..".tview")
 
 			if output:exists() then
 				print("Removing file '"..output:name().."'.")

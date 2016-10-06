@@ -2,7 +2,6 @@ show = false -- show commands
 time = false -- show execution time for each command
 
 test = {
-	--__test__     = "terrame -test config/all.lua",
 	onerror        = {arg = "-test", config = "all.lua", package = "onerror"},
 	twoerrors      = {arg = "-test", config = "all.lua", package = "twoerrors"},
 	onefile        = {arg = "-test", config = "oneFile.lua"},
@@ -124,3 +123,4 @@ sketch = {
 	terralib = {arg = "-sketch", package = "terralib"},
 	base     = {arg = "-sketch"}
 }
+

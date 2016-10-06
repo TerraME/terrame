@@ -187,13 +187,13 @@ File_ = {
 			self:delete()
 		end
 	end,
-	--- Return the directory of a file given its path.
+	--- Return the path to the file.
 	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:directory())
-	directory = function(self)
-		local path, _, _ = self:split()
+	-- print(file:path())
+	path = function(self)
+		local result, _, _ = self:split()
 
-		return path
+		return result
 	end,
 	--- Return whether the file stored in the computer.
 	-- @usage file = File(filePath("agents.csv", "base"))
@@ -491,7 +491,7 @@ function File(data)
 
 	setmetatable(data, metaTableFile_)
 
-	local dir = data:directory()
+	local dir = data:path()
 	if not Directory(dir):exists() then
 		customError("Directory '"..dir.."' does not exist.")
 	end

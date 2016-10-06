@@ -305,13 +305,6 @@ return{
 
 			unitTest:assert(r) -- SKIP
 			unitTest:assertEquals(count, 1) -- SKIP
-
-			local count2 = 0
-			forEachDirectory(Directory(filePath("", "base")):list(true), function()
-				count2 = count2 + 1
-			end)
-
-			unitTest:assertEquals(count2, count + 1) -- SKIP
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -328,13 +321,6 @@ return{
 
 			unitTest:assert(r) -- SKIP
 			unitTest:assertEquals(count, 28) -- SKIP
-
-			local count2 = 0
-			forEachFile(Directory(filePath("", "base")):list(true), function()
-				count2 = count2 + 1
-			end)
-
-			unitTest:assertEquals(count2, count + 1) -- SKIP
 
 			count = 0
 

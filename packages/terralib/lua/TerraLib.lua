@@ -220,7 +220,7 @@ local function createLayer(name, dSetName, connInfo, type)
 		
 		if not ds:dataSetExists(dSetName) then
 			ds:close() -- SKIP
-			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not created.") -- SKIP
+			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not exist.") -- SKIP
 		end
 		
 		ds:setId(dsId)
@@ -385,11 +385,12 @@ local function addFileLayer(project, name, filePath, type, addSpatialIdx, datase
 		if addSpatialIdx then
 			connInfo.SPATIAL_IDX = true
 		end
-		local _, name = File(connInfo.URI):split()
-		dSetName = name
+
+		local _, file = File(connInfo.URI):split()
+		dSetName = file
 	elseif type == "GDAL" then
 		local file = File(connInfo.URI)
-		dSetName = file:name(true)
+		dSetName = file:name()
 	elseif type == "GeoJSON" then
 		type = "OGR"
 		dSetName = "OGRGeoJSON"
@@ -1254,8 +1255,7 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
-		local _, name = File(connInfo.URI):split()
-		local dSetName = name
+		local _, dSetName = File(connInfo.URI):split()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
@@ -1349,8 +1349,7 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
-		local _, name = File(connInfo.URI):split()
-		local dSetName = name
+		local _, dSetName = File(connInfo.URI):split()
 		
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 		
@@ -1620,7 +1619,7 @@ TerraLib_ = {
 				outConnInfo.PG_NEWDB_NAME = outDSetName
 			elseif outType == "OGR" then
 				local file = File(outConnInfo.URI)
-				local outDir = _Gtme.makePathCompatibleToAllOS(file:directory())
+				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
 				outConnInfo.URI = outDir..out..".shp"
 				outConnInfo.DRIVER = "ESRI Shapefile"
 				outConnInfo.SPATIAL_IDX = true
@@ -1678,7 +1677,7 @@ TerraLib_ = {
 				local toSetName = nil
 				
 				if toType == "OGR" then
-					local _, name = File(connInfo.URI):split()
+					local _, name = File(toConnInfo.URI):split()
 					toSetName = name
 				end
 				
@@ -1839,7 +1838,7 @@ TerraLib_ = {
 				outDs = makeAndOpenDataSource(outConnInfo, outType)
 			elseif outType == "OGR" then
 				local file = File(outConnInfo.URI)
-				local outDir = _Gtme.makePathCompatibleToAllOS(file:directory())
+				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
 				outConnInfo.URI = outDir..newDstName..".shp"		
 
 				if fromLayerName == toName then
@@ -2120,7 +2119,7 @@ TerraLib_ = {
 			elseif toType == "GDAL" then
 				toData.fileTif = fromDSetName
 				local file = File(toData.file)
-				toData.dir = file:directory()
+				toData.dir = file:path()
 				local fileCopy = toData.dir..toData.fileTif
 
 				if toData.file and (file:name(true) ~= fileTif) then

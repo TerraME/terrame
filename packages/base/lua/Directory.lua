@@ -193,10 +193,15 @@ metaTableDirectory_ = {
 	end
 }
 
---- An abstract representation of Directory. This type provide access to additional
--- directory operations and directory attributes.
--- @arg data.name A string with the directory name.
--- @arg data.tmp A boolean value indicating whether the directory should be
+--- An abstract representation of a directory. When creating an instance of a Directory,
+-- it does not mean that such directory will be created. It only verifies if the
+-- directory has a valid name. This type provide a set of operations to handle directories,
+-- such as to verify if it exists, create, and remove.
+-- @arg data.name A mandatory string with the directory name. It can also be a File. In
+-- this case, its value will be File:path(). This argument can be used
+-- as a first argument in a call to Directory without named arguments, as
+-- in the example below.
+-- @arg data.tmp An optional boolean value indicating whether the directory should be
 -- temporary. The default value is false.
 -- When creating a temporary directory, the end of its name must contain X's,
 -- which are going to be replaced by random alphanumerical values in order to
@@ -213,6 +218,10 @@ metaTableDirectory_ = {
 function Directory(data)
 	if type(data) == "string" then
 		data = {name = data}
+	elseif type(data) == "File" then
+		data = {name = data:path()}
+	elseif data and type(data) ~= "table" then
+		customError(incompatibleTypeMsg(1, "string", data))
 	end
 
 	verifyNamedTable(data)
@@ -234,6 +243,8 @@ function Directory(data)
 	end
 
 	if not (data.fullpath:match("\\") or data.fullpath:match("/")) then
+		if data.fullpath == "." then data.fullpath = "" end
+
 		data.fullpath = currentDir()..sessionInfo().separator..data.fullpath
 	end
 

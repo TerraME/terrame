@@ -3,6 +3,22 @@
 --
 -- Pedro R. Andrade
 
+removeIfExists = function(_, value)
+	if Directory(value):exists() then
+		_Gtme.print("Removing '"..value.."'")
+		result = Directory(value):delete()
+	else
+		local f
+
+		pcall(function() f = File(value) end)
+
+		if f and f:exists() then
+			_Gtme.print("Removing '"..value.."'")
+			File(value):delete()
+		end
+	end
+end
+
 initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
 
@@ -63,15 +79,7 @@ end)
 _Gtme.printNote("Removing files")
 initialRemove = _Gtme.include("remove.lua")
 
-forEachElement(initialRemove.files, function(_, value)
-	if Directory(value):exists() then
-		_Gtme.print("Removing '"..value.."'")
-		result = Directory(value):delete()
-	elseif File(value):exists() then
-		_Gtme.print("Removing '"..value.."'")
-		File(value):delete()
-	end
-end)
+forEachElement(initialRemove.files, removeIfExists)
 
 local report = {
 	logerrors = 0,
@@ -91,6 +99,7 @@ local function approximateLine(line)
 	
 	if string.match(line, "Logs")                then return 120 end
 	if string.match(line, "Temporary")           then return 120 end
+	if string.match(line, "Directory")           then return 120 end
 	if string.match(line, "seconds")             then return   5 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "log")                 then return 100 end
@@ -304,15 +313,7 @@ Directory(initialDir.."packages"):setCurrentDir()
 _Gtme.printNote("Removing files")
 localRemove = _Gtme.include(".."..s.."remove.lua")
 
-forEachElement(localRemove.files, function(_, value)
-	if Directory(value):exists() then
-		_Gtme.print("Removing '"..value.."'")
-		result = Directory(value):delete()
-	elseif File(value):exists() then
-		_Gtme.print("Removing '"..value.."'")
-		File(value):delete()
-	end
-end)
+forEachElement(localRemove.files, removeIfExists)
 
 forEachOrderedElement(commands, function(idx, group)
 	_Gtme.printNote("Testing group '"..idx.."'")
@@ -545,26 +546,8 @@ end)
 finalTime = os.time(os.date("*t"))
 
 _Gtme.printNote("Removing files")
-
-forEachElement(initialRemove.files, function(_, value)
-	if Directory(value):exists() then
-		_Gtme.print("Removing '"..value.."'")
-		result = Directory(value):delete()
-	elseif File(value):exists() then
-		_Gtme.print("Removing '"..value.."'")
-		File(value):delete()
-	end
-end)
-
-forEachElement(localRemove.files, function(_, value)
-	if Directory(value):exists() then
-		_Gtme.print("Removing '"..value.."'")
-		result = Directory(value):delete()
-	elseif File(value):exists() then
-		_Gtme.print("Removing '"..value.."'")
-		File(value):delete()
-	end
-end)
+forEachElement(initialRemove.files, removeIfExists)
+forEachElement(localRemove.files, removeIfExists)
 
 print("\nExecution test report:")
 

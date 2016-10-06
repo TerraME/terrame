@@ -48,7 +48,7 @@ function filePath(filename, package)
 			end
 		end
 
-		local dir = File(file):directory()
+		local dir = File(file):path()
 		local suggest = suggestion(filename, Directory(dir):list())
 		local suggestMsg = suggestionMsg(suggest)
 

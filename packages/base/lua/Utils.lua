@@ -530,8 +530,6 @@ function forEachFile(directory, _sof_)
 		directoryIdx[files[i]] = true
 	end
 
-	local s = sessionInfo().separator
-
 	return forEachOrderedElement(directoryIdx, function(file)
 		if not Directory(directory..file):exists() then
 			if _sof_(File(directory..file)) == false then return false end
@@ -570,8 +568,6 @@ function forEachDirectory(directory, _sof_)
 	for i = 1, #files do
 		directoryIdx[files[i]] = true
 	end
-
-	local s = sessionInfo().separator
 
 	return forEachOrderedElement(directoryIdx, function(file)
 		local dir = Directory(directory..file)

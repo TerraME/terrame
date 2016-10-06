@@ -184,7 +184,7 @@ return{
 		error_func = function()
 			forEachFile(2)
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Directory", 2))
 
 		error_func = function()
 			forEachFile(filePath("", "base"))
@@ -194,7 +194,7 @@ return{
 		error_func = function()
 			forEachFile("abcdef12345", function() end)
 		end
-		unitTest:assertError(error_func, "Directory 'abcdef12345' is not valid or does not exist.")
+		unitTest:assertError(error_func, "Directory '/' is not valid or does not exist.", 0, true)
 
 		error_func = function()
 			forEachFile(filePath("", "base"), 2)

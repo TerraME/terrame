@@ -950,7 +950,6 @@ end
 local function loadPackgesLibPath()
 	local tmePath = os.getenv("TME_PATH")
 	local packsPath = tmePath.."/packages"
-	local files = Directory(packsPath):list()
 	
 	forEachDirectory(packsPath, function(dir)
 		local packLibPath = Directory(dir.."lib")
@@ -1357,8 +1356,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				local errors = 0
 				xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
-					--_Gtme.printError(err)
-					_Gtme.printError(_Gtme.traceback(err))
+					_Gtme.printError(err)
 					os.exit(1)
 				end)
 

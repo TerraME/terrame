@@ -29,7 +29,7 @@ return{
 		unitTest:assertType(filePath("test/simple-cs.csv"), "string")
 	end,
 	filesByExtension = function(unitTest)
-		local files = filesByExtension("base", ".csv")
+		local files = filesByExtension("base", "csv")
 
 		unitTest:assertType(files, "table")
 		unitTest:assertEquals(#files, 1)
