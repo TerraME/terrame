@@ -92,7 +92,6 @@ end
 
 local function getProjects(package)
 	data_path = packageInfo(package).data
-	local s = sessionInfo().separator
 
 	local projects = {}
 	local layers = {}

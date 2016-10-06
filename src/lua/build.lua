@@ -194,7 +194,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 		forEachFile(dir, function(file)
 			if file:extension() ~= "lua" then
-				printError("File '"..dir..s..file.."' is unnecessary and will be ignored.")
+				printError("File '"..file.."' is unnecessary and will be ignored.")
 				file:delete()
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
