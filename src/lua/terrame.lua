@@ -50,13 +50,14 @@ end
 function _Gtme.loadLibraryPath()
 	local dyldpath = os.getenv("DYLD_LIBRARY_PATH")
 	if dyldpath then
-		package.cpath = package.cpath..";"..dyldpath.."/?.so"
-		                             ..";"..dyldpath.."/?.dylib"
+		package.cpath = package.cpath..";"..dyldpath.."/?.so;"
+										..dyldpath.."/?.dylib"
 	end
 
 	local ldpath = os.getenv("LD_LIBRARY_PATH")
 	if ldpath then
 		package.cpath = package.cpath..";"..ldpath.."/?.so"
+		package.path = package.path..";"..ldpath.."/?.lua;"
 	end
 end
 
@@ -1522,6 +1523,16 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					end)
 					os.exit(0)
 				end
+			elseif arg == "-check" then
+				local file = arguments[argCount + 1]
+				local luacheck = require("luacheck.init")
+				local files = {file}
+				local options = {std = "min", cache = true, global = false}				
+				local issues = luacheck.check_files(files, options)[1]
+				for _, issue in ipairs(issues) do
+					print("Line: "..issue.line.." column: "..issue.column.." code:"..issue.code.." message: "..luacheck.get_message(issue))
+				end		
+				os.exit(#issues)
 			else
 				_Gtme.printError("Option not recognized: '"..arg.."'.")
 				os.exit(1)
