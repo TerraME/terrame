@@ -1168,6 +1168,28 @@ function _Gtme.execProject(project, packageName)
 	return success, _
 end
 
+local function upperFirst(str)
+	return str:gsub("^%l", string.upper)
+end
+
+local function checkFile(file, prefixMsg)
+	local luacheck = require("luacheck.init")
+	local files = {file}
+	local options = {std = "min", cache = true, global = false}				
+	local issues = luacheck.check_files(files, options)
+	
+	if (issues.errors == 0) and (issues.fatals == 0) then	
+		issues = issues[1]
+		for _, issue in ipairs(issues) do
+			print(prefixMsg..": "..upperFirst(luacheck.get_message(issue))..". In file ".. file..", line "..issue.line..".")
+		end		
+		
+		return #issues
+	end
+	
+	return 0
+end
+
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
@@ -1525,14 +1547,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 			elseif arg == "-check" then
 				local file = arguments[argCount + 1]
-				local luacheck = require("luacheck.init")
-				local files = {file}
-				local options = {std = "min", cache = true, global = false}				
-				local issues = luacheck.check_files(files, options)[1]
-				for _, issue in ipairs(issues) do
-					print("Line: "..issue.line.." column: "..issue.column.." code:"..issue.code.." message: "..luacheck.get_message(issue))
-				end		
-				os.exit(#issues)
+				os.exit(checkFile(file, "Warning"))
 			else
 				_Gtme.printError("Option not recognized: '"..arg.."'.")
 				os.exit(1)
@@ -1574,6 +1589,15 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 			info_.currentFile = arg
 
+			if info_.mode == "strict" then
+				checkFile(arg, "Warning")
+			elseif info_.mode == "debug" then
+				local numIssues = checkFile(arg, "Error")
+				if numIssues > 0 then
+					os.exit(numIssues)
+				end
+			end			
+			
 			local success, result = _Gtme.myxpcall(function() dofile(arg) end) 
 			if not success then
 				_Gtme.printError(result)
