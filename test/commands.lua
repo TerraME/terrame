@@ -104,8 +104,8 @@ basic = {
 	scriptnofile        = {arg = "abcd1234.lua"},
 	scriptnoluafile     = {arg = filePath("agents.csv")},
 	tmp                 = {script = "tmp.lua"},
-	luacheck1			= {script = "luacheck.lua", arg = "-strict"},
-	luacheck2			= {script = "luacheck.lua", arg = "-debug"}
+	luacheck1           = {script = "luacheck1.lua", arg = "-strict"},
+	luacheck2           = {script = "luacheck2.lua", arg = "-debug"}
 }
 
 observer = {

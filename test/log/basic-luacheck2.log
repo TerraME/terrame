@@ -1,0 +1,3 @@
+Error: Unused function 'printTable'. In file scripts\luacheck.lua, line 1.
+Error: Unused loop variable 'v'. In file scripts\luacheck.lua, line 2.
+Error: Unused variable 'checked'. In file scripts\luacheck.lua, line 7.
