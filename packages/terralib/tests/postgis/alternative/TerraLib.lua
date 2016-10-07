@@ -150,6 +150,6 @@ return {
 		File(toData.file):delete()
 		
 		tl:dropPgTable(pgData)
-		File(proj.file):delete()		
+		proj.file:delete()		
 	end	
 }

@@ -52,6 +52,9 @@ return{
 		unitTest:assertEquals(u.success, 1)
 		unitTest:assertEquals(u.test, 1)
 
+		unitTest:assertEquals(currentDir(), currentDir())
+		unitTest:assertEquals(File("abc.txt"), File("abc.txt"))
+
 		unitTest:assertEquals(1, 1.1, 0.15)
 		unitTest:assertEquals("abc", "abd", 1)
 

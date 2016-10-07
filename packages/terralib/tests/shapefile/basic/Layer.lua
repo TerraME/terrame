@@ -33,7 +33,7 @@ return {
 		
 		-- SPATIAL INDEX TEST
 		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
-		local qixFile = string.gsub(filePath1, ".shp", ".qix")
+		local qixFile = string.gsub(tostring(filePath1), ".shp", ".qix")
 		File(qixFile):delete()
 		
 		local layerName1 = "Setores"
@@ -89,8 +89,8 @@ return {
 		qixFile = string.gsub(cl2.file, ".shp", ".qix")
 		unitTest:assert(File(qixFile):exists()) -- SKIP
 
-		File(cl1.file):delete()
-		File(cl2.file):delete()
+		cl1.file:delete()
+		cl2.file:delete()
 	end
 
 		-- VERIFY SRID
@@ -109,12 +109,12 @@ return {
 		customWarning = customWarningBkp
 		-- // VERIFY SRID		
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	__len = function(unitTest)
 		local projName = "layer_shape_basic.tview"
 
-		local proj = Project {
+		local proj = Project{
 			file = projName,
 			setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
 			clean = true
@@ -122,14 +122,14 @@ return {
 		
 		unitTest:assertEquals(#proj.setores, 58)
 
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_shape.tview"
 		
 		File(projName):deleteIfExists()
 		
-		local proj = Project {
+		local proj = Project{
 			file = projName,
 			clean = true
 		}

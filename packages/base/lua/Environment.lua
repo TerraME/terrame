@@ -414,7 +414,9 @@ Environment_ = {
 
 		mandatoryTableArgument(data, "source", "File")
 
-		if data.source:extension() ~= "gpm" then
+		local extension = data.source:extension()
+
+		if extension ~= "gpm" then
 			invalidFileExtensionError("source", extension)
 		end
 

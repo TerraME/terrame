@@ -101,6 +101,11 @@ UnitTest_ = {
 			mandatoryArgumentError(2)
 		end
 
+		if type(v1) == type(v2) and belong(type(v1), {"File", "Directory"}) then
+			v1 = tostring(v1)
+			v2 = tostring(v2)
+		end
+
 		if tol ~= nil and type(v1) ~= "number" and type(v1) ~= "string" then
 			customError("#3 should be used only when comparing numbers or strings (#1 is "..type(v1)..").")
 		end

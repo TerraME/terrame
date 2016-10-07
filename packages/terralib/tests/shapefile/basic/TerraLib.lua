@@ -37,13 +37,13 @@ return {
 
 		tl:createProject(proj, {})
 		unitTest:assert(file:exists())
-		unitTest:assertEquals(proj.file, "myproject.tview")
+		unitTest:assertEquals(proj.file:name(), "myproject.tview")
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
 
 		-- allow overwrite
 		tl:createProject(proj, {})
-		unitTest:assert(File(proj.file):exists())
+		unitTest:assert(proj.file:exists())
 
 		file:delete()
 	end,
@@ -66,7 +66,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
 
 		unitTest:assertEquals(layerInfo.name, layerName)
-		unitTest:assertEquals(layerInfo.file, layerFile)
+		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
@@ -82,7 +82,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName1 = "ShapeLayer1"
-		local qixFile = string.gsub(layerFile, ".shp", ".qix")
+		local qixFile = string.gsub(tostring(layerFile), ".shp", ".qix")
 		File(qixFile):delete()
 		local addSpatialIdx = false
 		tl:addShpLayer(proj, layerName1, layerFile, addSpatialIdx)
@@ -124,7 +124,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(layerInfo.name, clName)
-		unitTest:assertEquals(layerInfo.file, currentDir()..shp1)
+		unitTest:assertEquals(layerInfo.file, shp1)
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
@@ -218,7 +218,7 @@ return {
 		local clLayerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(clLayerInfo.name, clName)
-		unitTest:assertEquals(clLayerInfo.file, currentDir()..shp[1])
+		unitTest:assertEquals(clLayerInfo.file, shp[1])
 		unitTest:assertEquals(clLayerInfo.type, "OGR")
 		unitTest:assertEquals(clLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(clLayerInfo.sid)
@@ -915,7 +915,7 @@ return {
 			File(shp[j]):deleteIfExists()
 		end	
 
-		File(proj.file):delete()
+		proj.file:delete()
 
 		customWarning = customWarningBkp
 	end,
@@ -1030,12 +1030,12 @@ return {
 		
 		File(cellsShp):delete()
 		File(newLayerName..".shp"):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getOGRByFilePath = function(unitTest)
 		local tl = TerraLib{}
 		local shpPath = filePath("test/sampa.shp", "terralib")
-		local dSet = tl:getOGRByFilePath(shpPath)
+		local dSet = tl:getOGRByFilePath(tostring(shpPath))
 		
 		unitTest:assertEquals(getn(dSet), 63)
 
@@ -1087,7 +1087,7 @@ return {
 		end			
 		
 		File(cellsShp):deleteIfExists()
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getProjection = function(unitTest)
 		local tl = TerraLib{}
@@ -1121,7 +1121,7 @@ return {
 		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")		
 		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")	
 		
-		File(proj.file):delete()		
+		proj.file:delete()		
 	end,
 	getPropertyNames = function(unitTest)
 		local tl = TerraLib{}
@@ -1145,7 +1145,7 @@ return {
 						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU"))
 		end
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getDistance = function(unitTest)
 		local tl = TerraLib{}
@@ -1176,13 +1176,13 @@ return {
 			
 		unitTest:assertEquals(dist, 4.4271887242357, 1.0e-13)
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		File(shp1):delete()
 	end,
 	castGeomToSubtype = function(unitTest)
 		local tl = TerraLib{}
 		local shpPath = filePath("test/sampa.shp", "terralib")
-		local dSet = tl:getOGRByFilePath(shpPath)	
+		local dSet = tl:getOGRByFilePath(tostring(shpPath))	
 		local geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPolygon")
@@ -1190,7 +1190,7 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "Polygon")
 		
 		shpPath = filePath("Rodovias_lin.shp", "terralib")
-		dSet = tl:getOGRByFilePath(shpPath)	
+		dSet = tl:getOGRByFilePath(tostring(shpPath))	
 		geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiLineString")	
@@ -1198,7 +1198,7 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "LineString")		
 
 		shpPath = filePath("test/prodes_points_10km_PA_pt.shp", "terralib")
-		dSet = tl:getOGRByFilePath(shpPath)	
+		dSet = tl:getOGRByFilePath(tostring(shpPath))
 		geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")		
@@ -1274,7 +1274,7 @@ return {
 		
 		tl:dropPgTable(pgData)		
 
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getLayerSize = function(unitTest)
 		local tl = TerraLib{}

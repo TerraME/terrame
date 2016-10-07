@@ -301,6 +301,7 @@ File_ = {
 			return line
 		end
 
+		if line == nil then return {} end
 		return  parseLine(line, sep, self.line)
 	end,
 	--- Read a file. It returns a vector (whose indexes are line numbers)
@@ -478,7 +479,7 @@ metaTableFile_ = {
 -- The file is only opened when a read function is called. The file is only created if a 
 -- write function is called.
 -- @arg data.name A string with the file name. This argument is mandatory.
--- @usage file = filePath("agents.csv", "base")
+-- @usage file = File("agents.csv")
 function File(data)
 	mandatoryArgument(1, "string", data)
 

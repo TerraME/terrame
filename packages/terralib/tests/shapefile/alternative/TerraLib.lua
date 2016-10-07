@@ -90,7 +90,7 @@ return {
 			File(shp[j]):deleteIfExists()
 		end	
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	saveLayerAs = function(unitTest)
 		local tl = TerraLib{}
@@ -173,6 +173,6 @@ return {
 		
 		tl:dropPgTable(pgData)		
 		File(toData.file):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 	end	
 }

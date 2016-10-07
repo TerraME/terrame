@@ -28,7 +28,7 @@ return {
 
 		projName:deleteIfExists()
 		local proj = Project{
-			file = projName:name(true),
+			file = projName:name(),
 			clean = true
 		}
 
@@ -60,7 +60,7 @@ return {
 			file = filePath1
 		}	
 
-		unitTest:assertEquals(projName:name(true), cl.project.file)
+		unitTest:assertEquals(projName, cl.project.file)
 		unitTest:assertEquals(clName1, cl.name)
 		
 		local cl2 = Layer{

@@ -1175,7 +1175,7 @@ CellularSpace_ = {
 
 		local ext = data.source:extension()
 	
-		if ext == nil then
+		if ext == "" then
 			customError("Argument 'source' does not have an extension.")
 		elseif belong(data.source:extension(), {"gal", "gwt", "gpm"}) then
 			if not data.source:exists() then
@@ -1194,7 +1194,7 @@ CellularSpace_ = {
 			loadNeighborhoodGAL(self, data)
 		elseif ext == "gwt" then
 			loadNeighborhoodGWT(self, data)
-		elseif ext == ".gpm" then
+		elseif ext == "gpm" then
 			loadNeighborhoodGPM(self, data)
 		end
 	end,

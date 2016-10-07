@@ -165,7 +165,7 @@ return {
 		clSet = tl:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)		
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgTable(pgData2)
 		tl:dropPgDatabase(pgData)		
@@ -1079,7 +1079,7 @@ return {
 		tl:dropPgTable(pgData)
 		-- END POSTGIS TESTS		
 
-		File(proj.file):delete()
+		proj.file:delete()
 
 		customWarning = customWarningBkp
 	end,
@@ -1192,7 +1192,7 @@ return {
 			end
 		end				
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgDatabase(pgData)		
 	end,
 	getArea = function(unitTest)
@@ -1250,7 +1250,7 @@ return {
 			end
 		end				
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgDatabase(pgData)		
 	end,	
 	getProjection = function(unitTest)
@@ -1301,7 +1301,7 @@ return {
 		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")		
 		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")			
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1354,7 +1354,7 @@ return {
 						(propNames[i] == "col") or (propNames[i] == "row"))
 		end
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1405,7 +1405,7 @@ return {
 			
 		unitTest:assertEquals(dist, 4.4271887242357, 1.0e-13)		
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1471,7 +1471,7 @@ return {
 
 		File("postgis2shp.shp"):delete()
 		File("postgis2geojson.geojson"):delete()
-		File(proj.file):delete()		
+		proj.file:delete()		
 	end,
 	getLayerSize = function(unitTest)
 		local tl = TerraLib{}

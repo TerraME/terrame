@@ -54,7 +54,7 @@ return {
 		unitTest:assert(true) -- SKIP
 	end
 
-		File(proj.file):delete()
+		proj.file:delete()
 	end,	
 	--addPgCellSpaceLayer = function(unitTest)
 		-- #1152
@@ -79,7 +79,7 @@ return {
 		end
 		unitTest:assertError(noRasterLayer, "The layer '"..layerName.."' is not a Raster.")		
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	attributeFill = function(unitTest)
 		local tl = TerraLib{}
@@ -138,7 +138,7 @@ return {
 			File(shp[j]):deleteIfExists()
 		end	
 
-		File(proj.file):delete()
+		proj.file:delete()
 
 		customWarning = customWarningBkp
 	end,
@@ -162,7 +162,7 @@ return {
 		end
 		unitTest:assertError(bandNoExists, "The maximum band is '2.0'.")	
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	saveLayerAs = function(unitTest)
 		local tl = TerraLib{}
@@ -243,7 +243,7 @@ return {
 		unitTest:assertError(overwriteError, "The file '"..currDir.."/cbers_rgb342_crop1.tif' already exists.")
 		
 		File("cbers_rgb342_crop1.tif"):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 		
 		customWarning = customWarningBkp
 	end		

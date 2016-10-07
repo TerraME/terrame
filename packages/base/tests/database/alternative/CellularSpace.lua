@@ -237,12 +237,12 @@ return{
 		error_func = function()
 			cs:loadNeighborhood{source = 123}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("source", "string", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg("source", "File", 123))
 
 		error_func = function()
 			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("source", "neighCabecaDeBoi900x900.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", File("neighCabecaDeBoi900x900.gpm")))
 
 		local mfile = filePath("cabecadeboi-neigh.gpm", "base")
 	
@@ -277,7 +277,7 @@ return{
 		error_func = function()
 			cs2:loadNeighborhood{source = "arquivo.gpm"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", File("arquivo.gpm")))
 
 		error_func = function()
 			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid"}

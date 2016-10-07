@@ -129,7 +129,7 @@ return{
 		unitTest:assert(dir:exists())
 
 		dir = Directory("")
-		unitTest:assertEquals(tostring(dir), tostring(currentDir()))
+		unitTest:assertEquals(dir, currentDir())
 	end,
 	list = function(unitTest)
 		local datapath = packageInfo("base").data
@@ -197,7 +197,7 @@ return{
 		unitTest:assertEquals(tostring(currentDir()), newpath)
 
 		cur_dir:setCurrentDir()
-		unitTest:assertEquals(tostring(currentDir()), tostring(cur_dir))
+		unitTest:assertEquals(currentDir(), cur_dir)
 	end,
 	__tostring = function(unitTest)
 		local datapath = packageInfo("base").data
@@ -207,3 +207,4 @@ return{
 		unitTest:assertEquals(tostring(dir), _Gtme.makePathCompatibleToAllOS(datapath))
 	end
 }
+

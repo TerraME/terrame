@@ -80,7 +80,7 @@ return {
 		unitTest:assert(true) -- SKIP
 	end
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		-- // SPATIAL INDEX TEST
 	end,
 	fill = function(unitTest)
