@@ -34,7 +34,7 @@ return{
 		local projNotExists = function()
 			Layer{project = "myproj.tview", name = "cells"}
 		end
-		unitTest:assertError(projNotExists, "Project file '".."myproj.tview".."' does not exist.")
+		unitTest:assertError(projNotExists, "Project file '"..File("myproj.tview").."' does not exist.")
 
 		local projFile = File("proj_celllayer.tview")
 
@@ -63,7 +63,7 @@ return{
 				name = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile:name(true).."'.")
+		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'.")
 
 		layerName = "defirestation"
 		local layerDoesNotExistsSug = function()
@@ -72,7 +72,7 @@ return{
 				name = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile:name(true).."'. Do you mean 'deforestation'?")
+		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
 		
 		--unitTest:assertFile(projFile:name(true)) -- SKIP #TODO(#1242)
 		projFile:deleteIfExists()
@@ -150,7 +150,7 @@ return{
 				file = layerFile
 			}
 		end
-		unitTest:assertError(fileLayerNonExists, "File 'linhares.shp' does not exist.")
+		unitTest:assertError(fileLayerNonExists, "File '"..File("linhares.shp").."' does not exist.")
 
 		local filePath0 = filePath("test/sampa.shp", "terralib")
 		local source = "tif"
@@ -286,7 +286,7 @@ return{
 				file = shp1
 			}
 		end
-		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..shp1.."' already exists. Please set clean = true or remove it manually.")
+		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..File(shp1).."' already exists. Please set clean = true or remove it manually.")
 
 		sourceInvalid = function()
 			Layer{
@@ -466,7 +466,7 @@ return{
 				attribute = "presence"
 			}
 		end
-		unitTest:assertError(layerNotExists, "Layer 'LayerNotExists' does not exist in Project '"..projName.."'.")
+		unitTest:assertError(layerNotExists, "Layer 'LayerNotExists' does not exist in Project '"..File(projName).."'.")
 
 		local layerNotExistsSug = function()
 			cl:fill{
@@ -475,7 +475,7 @@ return{
 				attribute = "presence"
 			}
 		end
-		unitTest:assertError(layerNotExistsSug, "Layer '"..layerName1.."_' does not exist in Project '"..projName.."'. Do you mean '"..layerName1.."'?")
+		unitTest:assertError(layerNotExistsSug, "Layer '"..layerName1.."_' does not exist in Project '"..File(projName).."'. Do you mean '"..layerName1.."'?")
 
 		local attrAlreadyExists = function()
 			cl:fill{
@@ -1117,7 +1117,7 @@ return{
 		end
 		unitTest:assertError(invalidDataType,  "The attribute 'data' must be either 'file' or 'table', but received (number).")		
 		
-		File(proj.file):deleteIfExists()
+		proj.file:deleteIfExists()
 	end
 }
 

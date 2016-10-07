@@ -337,7 +337,7 @@ return {
 
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
 
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 	end,
 	attributes = function(unitTest)
@@ -398,7 +398,7 @@ return {
 						(propNames[i] == "col") or (propNames[i] == "row"))
 		end		
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 	end,
 	export = function(unitTest)
@@ -459,7 +459,7 @@ return {
 
 		File(geojson):delete()
 		File(shp):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 		
 		pgData.table = tableName
 		TerraLib{}:dropPgTable(pgData)

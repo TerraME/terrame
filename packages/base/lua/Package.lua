@@ -24,17 +24,17 @@
 
 --@header Functions to work with packages in TerraME.
 
---- Return the path to a file of a given package. The file must be inside the directory data
--- within the package.
+--- Return a File storing the full path of a file within a given package. 
+-- The file must be inside the directory data of package.
 -- @arg filename A string with the name of the file.
--- @arg package A string with the name of the package. As default, it uses paciage base.
+-- @arg package A string with the name of the package. As default, it uses base package.
 -- @usage cs = CellularSpace{file = filePath("simple.pgm")}
 function filePath(filename, package)
 	if package == nil then package = "base" end
 
 	local s = sessionInfo().separator
-	local file = packageInfo(package).data..s..filename
-	if File(file):exists() or Directory(file):exists() then
+	local file = File(packageInfo(package).data..s..filename)
+	if file:exists() then
 		return file
 	else
 		local msg = "File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'."
@@ -48,7 +48,7 @@ function filePath(filename, package)
 			end
 		end
 
-		local dir = File(file):path()
+		local dir = file:path()
 		local suggest = suggestion(filename, Directory(dir):list())
 		local suggestMsg = suggestionMsg(suggest)
 
@@ -70,8 +70,7 @@ function filesByExtension(package, extension)
 
 	forEachFile(packageInfo(package).data, function(file)
 		if file:extension() == extension then
-			local split = {file:split()}
-			table.insert(result, split[2])
+			table.insert(result, file)
 		end
 	end)
 

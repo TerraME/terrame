@@ -26,14 +26,14 @@
 
 return{
 	filePath = function(unitTest)
-		unitTest:assertType(filePath("test/simple-cs.csv"), "string")
+		unitTest:assertType(filePath("test/simple-cs.csv"), "File")
 	end,
 	filesByExtension = function(unitTest)
 		local files = filesByExtension("base", "csv")
 
 		unitTest:assertType(files, "table")
 		unitTest:assertEquals(#files, 1)
-		unitTest:assertType(files[1], "string")
+		unitTest:assertType(files[1], "File")
 	end,
 	isLoaded = function(unitTest)
 		unitTest:assert(isLoaded("base"))

@@ -188,7 +188,7 @@ File_ = {
 		end
 	end,
 	--- Return the path to the file.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:path())
 	path = function(self)
 		local result, _, _ = self:split()
@@ -196,7 +196,7 @@ File_ = {
 		return result
 	end,
 	--- Return whether the file stored in the computer.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:exists())
 	exists = function(self)
 		local fopen = io.open(self.filename)
@@ -210,7 +210,7 @@ File_ = {
 	end,
 	--- Return the extension of the file. It returns the substring after the last dot.
 	-- If it does not have a dot, an empty string is returned.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:extension()) -- "csv"
 	extension = function(self)
 		local s = sessionInfo().separator
@@ -227,13 +227,13 @@ File_ = {
 		return ""
 	end,
 	--- Return a boolean value if the file has an extension.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:hasExtension()) -- true
 	hasExtension = function(self)
 		return not (self:extension() == "")
 	end,
 	--- Return the file name removing its path.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:name()) -- "agents.csv"
 	name = function(self)
 		local split = {self:split()}
@@ -273,7 +273,7 @@ File_ = {
 	-- @arg sep A string with the separator. Parse a single CSV line.
 	-- It returns a vector of strings with the i-th value in the position i.
 	-- This function was taken from http://lua-users.org/wiki/LuaCsv.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- line = file:read(",")
 	-- print(line[1]) -- john
 	-- print(line[2]) -- 20
@@ -292,24 +292,23 @@ File_ = {
 		end
 
 		local line = self.file:read()
-		local data = {}
+
 		if line then
 			self.line = self.line + 1
-			if not sep then
-				return line
-			end
-
-			data = parseLine(line, sep, self.line)
 		end
 
-		return data
+		if not sep then
+			return line
+		end
+
+		return  parseLine(line, sep, self.line)
 	end,
 	--- Read a file. It returns a vector (whose indexes are line numbers)
 	-- containing named tables (whose indexes are attribute names).
 	-- The first line of the file list the attribute names. This function
 	-- automatically closes the file.
 	-- @arg sep A string with the separator. The default value is ','.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- csv = file:readTable()
 	-- print(csv[1].age) -- 20
 	readTable = function(self, sep)
@@ -350,7 +349,7 @@ File_ = {
 		return data
 	end,
 	--- Split the path, name, and extension of the file into three returning values.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- directory, name, extension = file:split()
 	-- print(directory) -- "/base/data/"
 	-- print(name) -- "agents",
@@ -479,7 +478,7 @@ metaTableFile_ = {
 -- The file is only opened when a read function is called. The file is only created if a 
 -- write function is called.
 -- @arg data.name A string with the file name. This argument is mandatory.
--- @usage file = File(filePath("agents.csv", "base"))
+-- @usage file = filePath("agents.csv", "base")
 function File(data)
 	mandatoryArgument(1, "string", data)
 

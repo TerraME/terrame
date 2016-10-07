@@ -22,22 +22,8 @@
 --
 -------------------------------------------------------------------------------------------
 
--- TODO: create Common for this
-local function isEmpty(data)
-	return (data == "") or (data == nil)
-end
-
 local function isValidSource(source)
 	return belong(source, {"tif", "shp", "postgis", "access", "nc", "asc", "geojson", "wfs"})
-end
-
-local function isSourceConsistent(source, filePath)
-	if filePath ~= nil then
-		local file = File(filePath)
-		return source == file:extension()
-	end
-	
-	return true
 end
 
 local function adaptsTerraLibInfo(data)
@@ -64,38 +50,30 @@ local function addCellularLayer(self, data)
 
 	mandatoryTableArgument(data, "input", "string")
 	positiveTableArgument(data, "resolution")
-		
-	if isEmpty(data.source) then		
-		if isEmpty(data.file) then
+
+	if type(data.file) == "string" then
+		data.file = File(data.file)
+	end
+	
+	if data.source == nil then		
+		if data.file == nil then
 			if data.database then
 				data.source = "postgis"
 			else
 				customError("At least one of the following arguments must be used: 'file', 'source', or 'database'.")
 			end	
 		else
-			local file = File(data.file)
-			local source = file:extension()
+			local source = data.file:extension()
 			data.source = source	
 		end
 	end
-		
-	-- if isEmpty(data.source) then
-		-- mandatoryTableArgument(data, "file", "string")	
-		-- local file = File(data.file)
-		-- local source = file:extension()
-		-- data.source = source
-	-- else
-		-- mandatoryTableArgument(data, "source", "string")
-			
-		-- if not isSourceConsistent(data.source, data.file) then
-			-- customError("File '"..data.file.."' not match to source '"..data.source.."'.")
-		-- end
-	-- end		
 
 	mandatoryTableArgument(data, "source", "string")
 		
 	if belong(data.source, {"tif", "shp", "geojson"}) then
-		if not isSourceConsistent(data.source, data.file) then
+		mandatoryTableArgument(data, "file", "File")
+
+		if data.source ~= data.file:extension() then
 			customError("File '"..data.file.."' not match to source '"..data.source.."'.")
 		end
 	end		
@@ -116,7 +94,7 @@ local function addCellularLayer(self, data)
 
 	switch(data, "source"):caseof{
 		shp = function()
-			mandatoryTableArgument(data, "file", "string")
+			mandatoryTableArgument(data, "file", "File")
 			defaultTableValue(data, "clean", false)
 			defaultTableValue(data, "index", true)
 			
@@ -130,9 +108,9 @@ local function addCellularLayer(self, data)
 												"resolution", "file", "source", "index"})
 			end
 				
-			if File(data.file):exists() then
+			if data.file:exists() then
 				if data.clean then
-					File(data.file):delete()
+					data.file:delete()
 				else
 					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
 				end
@@ -142,7 +120,7 @@ local function addCellularLayer(self, data)
 													data.file, not data.box, data.index)
 		end,
 		geojson = function()
-			mandatoryTableArgument(data, "file", "string") -- SKIP
+			mandatoryTableArgument(data, "file", "File") -- SKIP
 
 			if repr == "raster" then -- SKIP
 				verifyUnnecessaryArguments(data, {"input", "name", "project", -- SKIP
@@ -187,19 +165,22 @@ end
 local function addLayer(self, data)	
 	verifyNamedTable(data)
 	mandatoryTableArgument(data, "name", "string")
-		
+
+	if type(data.file) == "string" then
+		data.file = File(data.file)
+	end
+	
 	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "index",
 									"host", "port", "user", "password", "database", "table",
 									"service", "feature"})
 		
-	if isEmpty(data.source) then		
-		if not isEmpty(data.file) then
-			if not File(data.file):exists() then
+	if data.source == nil then		
+		if data.file then
+			if not data.file:exists() then
 				customError("File '"..data.file.."' does not exist.")
 			end	
 
-			local file = File(data.file)
-			data.source = file:extension()
+			data.source = data.file:extension()
 		end
 	end
 		
@@ -210,7 +191,9 @@ local function addLayer(self, data)
 	end				
 		
 	if belong(data.source, {"tif", "shp", "nc", "asc", "geojson"}) then
-		if not isSourceConsistent(data.source, data.file) then
+		mandatoryTableArgument(data, "file", "File")
+
+		if data.source ~= data.file:extension() then
 			customError("File '"..data.file.."' does not match to source '"..data.source.."'.")
 		end
 	end
@@ -221,32 +204,32 @@ local function addLayer(self, data)
 
 	switch(data, "source"):caseof{
 		shp = function()
-			mandatoryTableArgument(data, "file", "string")
+			mandatoryTableArgument(data, "file", "File")
 			defaultTableValue(data, "index", true)
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index"})
 				
 			self.terralib:addShpLayer(self, data.name, data.file, data.index)
 		end,
 		geojson = function()
-			mandatoryTableArgument(data, "file", "string") -- SKIP
+			mandatoryTableArgument(data, "file", "File") -- SKIP
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 
 			self.terralib:addGeoJSONLayer(self, data.name, data.file) -- SKIP
 		end,
 		tif = function()	
-			mandatoryTableArgument(data, "file", "string")
+			mandatoryTableArgument(data, "file", "File")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 			
 			self.terralib:addGdalLayer(self, data.name, data.file)
 		end,
 		nc = function()
-			mandatoryTableArgument(data, "file", "string") -- SKIP
+			mandatoryTableArgument(data, "file", "File") -- SKIP
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"}) -- SKIP
 
 			self.terralib:addGdalLayer(self, data.name, data.file) -- SKIP
 		end,
 		asc = function()
-			mandatoryTableArgument(data, "file", "string")
+			mandatoryTableArgument(data, "file", "File")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 
 			self.terralib:addGdalLayer(self, data.name, data.file)
@@ -686,19 +669,25 @@ Layer_ = {
 	end,
 	--- Exports the data of a layer to another data source. 
 	-- The data argument can be either a file string or data table of postigis connection. 
-	-- @arg data Either a file string or data table.
+	-- @arg data Either a File, a string with the file path, or data table.
 	-- @arg overwrite Indicates if the exported data will be overwritten.
 	-- @usage -- DONTRUN
 	-- layer:export{file = "myfile.shp", true}
 	-- layer:export{file = "myfile.geojson"}	
 	export = function(self, data, overwrite)
-		if type(data) == "string" then 
-			local file = File(data) -- TODO(#1366): the file needs validation
-			local source = file:extension()
+		if type(data) == "string" then
+			data = File(data)
+		end
+
+		if type(data) == "File" then
+			local source = data:extension()
+
 			if isValidSource(source) then
-				local toData = {}
-				toData.file = data			
-				toData.type = source 
+				local toData = {
+					file = tostring(data),
+					type = source
+				}
+
 				self.project.terralib:saveLayerAs(self.project, self.name, toData, overwrite)
 			else
 				invalidFileExtensionError("data", source) 
@@ -826,7 +815,11 @@ function Layer(data)
 	mandatoryTableArgument(data, "name", "string")
 
 	if type(data.project) == "string" then
-		if not File(data.project):exists() then
+		data.project = File(data.project)
+	end
+
+	if type(data.project) == "File" then
+		if not data.project:exists() then
 			customError("Project file '"..data.project.."' does not exist.")
 		end
 

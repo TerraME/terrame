@@ -539,7 +539,7 @@ return {
 
 		unitTest:assertEquals(l:representation(), "line")
 		
-		File(proj.file):deleteIfExists()
+		proj.file:deleteIfExists()
 	end,
 	__tostring = function(unitTest)
 		local projName = File("cellular_layer_print.tview")

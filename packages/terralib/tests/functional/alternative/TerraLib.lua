@@ -64,6 +64,6 @@ return {
 		end
 		unitTest:assertError(areaError, "Geometry should be a polygon to get the area.")
 		
-		File(proj.file):deleteIfExists()
+		proj.file:deleteIfExists()
 	end
 }

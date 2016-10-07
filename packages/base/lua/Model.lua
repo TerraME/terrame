@@ -612,14 +612,18 @@ function Model(attrTab)
 				local e = getExtensions(value)
 
 				if #e > 0 then
-					mandatoryTableArgument(argv, name, "string")
-					local ext = File(argv[name]):extension()
+					if type(argv[name]) == "string" then
+						argv[name] = File(argv[name])
+					end
+
+					mandatoryTableArgument(argv, name, "File")
+					local ext = argv[name]:extension()
 
 					if ext == "" then
 						customError("No file extension for parameter "..toLabel(name)..". It should be one of '"..value.."'.")
 					elseif not belong(ext, e) then
 						customError("Invalid file extension for parameter "..toLabel(name)..". It should be one of '"..value.."'.")
-					elseif not File(argv[name]):exists() then
+					elseif not argv[name]:exists() then
 						resourceNotFoundError(toLabel(name), argv[name])
 					end
 				elseif argv[name] == nil then
@@ -658,23 +662,27 @@ function Model(attrTab)
 					elseif itype == "string" then
 						local e = getExtensions(ivalue)
 
+						if type(iargv[iname]) == "string" then
+							iargv[iname] = File(iargv[iname])
+						end
+
 						if #e > 0 then
-							if type(iargv[iname]) ~= "string" then
+							if type(iargv[iname]) ~= "File" then
 								if iargv[iname] == nil then
 									mandatoryArgumentError(toLabel(iname, name))
 								else
-									incompatibleTypeError(name.."."..iname, "string", iargv[iname])
+									incompatibleTypeError(name.."."..iname, "File", iargv[iname])
 								end
 							end
 
-							mandatoryTableArgument(iargv, iname, "string")
-							local ext = File(iargv[iname]):extension()
+							mandatoryTableArgument(iargv, iname, "File")
+							local ext = iargv[iname]:extension()
 
 							if ext == "" then
 								customError("No file extension for parameter "..toLabel(iname, name)..". It should be one of '"..ivalue.."'.")
 							elseif not belong(ext, e) then
 								customError("Invalid file extension for parameter "..toLabel(iname, name)..". It should be one of '"..ivalue.."'.")
-							elseif not File(iargv[iname]):exists() then
+							elseif not iargv[iname]:exists() then
 								resourceNotFoundError(toLabel(iname, name), iargv[iname])
 							end
 						elseif iargv[iname] == nil then

@@ -586,7 +586,7 @@ return {
 		unitTest:assertError(error_func, "Sorry, this operation was not implemented in TerraLib yet.")
 
 		-- SUM
-		File(proj.file):delete()
+		proj.file:delete()
 		
 		proj = Project {
 			file = "sum_wba.tview",
@@ -652,7 +652,7 @@ return {
 
 		-- AVERAGE (area = true)
 	if sessionInfo().system ~= "mac" then -- TODO(#1378)	
-		File(proj.file):delete()
+		proj.file:delete()
 		
 		projName = "cellular_layer_fill_avg_area.tview"
 
@@ -708,7 +708,7 @@ return {
 		end)
 
 		-- unitTest:assertFile(projName) -- SKIP #1242
-		File(proj.file):delete() -- #1242
+		proj.file:delete() -- #1242
 
 		customWarning = customWarningBkp
 	end,
@@ -743,7 +743,7 @@ return {
 		
 		customWarning = customWarningBkp
 
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	attributes = function(unitTest)
 		local projName = "layer_shape_basic.tview"
@@ -772,7 +772,7 @@ return {
 						(propNames[i] == "Densde_Pop") or (propNames[i] == "Area"))
 		end
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	export = function(unitTest)
 		local projName = "layer_shape_basic.tview"
@@ -803,7 +803,7 @@ return {
 
 		File(geojson):delete()
 		File(shp):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 	end
 }
 

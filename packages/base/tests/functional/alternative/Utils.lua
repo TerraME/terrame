@@ -187,7 +187,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Directory", 2))
 
 		error_func = function()
-			forEachFile(filePath("", "base"))
+			forEachFile(filePath("", "base"):path())
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
@@ -197,7 +197,7 @@ return{
 		unitTest:assertError(error_func, "Directory '/' is not valid or does not exist.", 0, true)
 
 		error_func = function()
-			forEachFile(filePath("", "base"), 2)
+			forEachFile(filePath("", "base"):path(), 2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2))
 	end,

@@ -59,7 +59,7 @@ return{
 		unitTest:assertError(error_func, "Filename '"..filename.."' cannot contain character '\"'.")
 	end,
 	attributes = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		local error_func = function()
 			file:attributes(1)
 		end
@@ -105,7 +105,7 @@ return{
 		end
 	end,
 	open = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		file:read()
 
 		local error_func = function()
@@ -149,7 +149,7 @@ return{
 		file:close()
 		file:deleteIfExists()
 
-		file = File(filePath("agents.csv", "base"))
+		file = filePath("agents.csv", "base")
 		error_func = function()
 			file:read(1)
 		end
@@ -178,7 +178,7 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 
 		local s = sessionInfo().separator
-		file = File(filePath("test/error"..s.."csv-error.csv"))
+		file = filePath("test/error"..s.."csv-error.csv")
 
 		error_func = function()
 			file:readTable()
@@ -199,7 +199,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "1"))
 	end,
 	write = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 
 		local error_func = function()
 			file:write()
@@ -220,7 +220,7 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
-		file = File(filePath("agents.csv", "base"))
+		file = filePath("agents.csv", "base")
 		file:readTable()
 
 		error_func = function()

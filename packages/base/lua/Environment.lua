@@ -386,7 +386,7 @@ Environment_ = {
 		return oldTime
 	end,
 	--- Load a Neighborhood between two different CellularSpaces.
-	-- @arg data.source A string representing the name of the file to be loaded.
+	-- @arg data.source A File or a string with the name of the file to be loaded.
 	-- @arg data.name A string with the name of the relation to be created.
 	-- The default value is "1".
 	-- @arg data.bidirect A boolean value. If true then, for each relation from Cell a
@@ -407,23 +407,24 @@ Environment_ = {
 		verifyNamedTable(data)
 
 		defaultTableValue(data, "name", "1")
-		mandatoryTableArgument(data, "source", "string")
 
-		local extension = string.match(data.source, "%w+$")
-		if extension ~= "gpm" then
+		if type(data.source) == "string" then
+			data.source = File(data.source)
+		end
+
+		mandatoryTableArgument(data, "source", "File")
+
+		if data.source:extension() ~= "gpm" then
 			invalidFileExtensionError("source", extension)
 		end
 
 		defaultTableValue(data, "bidirect", false)
 
-		if not File(data.source):exists() then
+		if not data.source:exists() then
 			resourceNotFoundError("source", data.source)
 		end
 
-		local f = File(data.source)
-		local file = f:open("r")
-
-		local header = file:read()
+		local header = data.source:read()
 
 		local numAttribIdx = string.find(header, "%s", 1)
 		local layer1Idx = string.find(header, "%s", numAttribIdx + 1)
@@ -471,7 +472,7 @@ Environment_ = {
 		end
 
 		repeat
-			local line_cell = file:read()
+			local line_cell = data.source:read()
 			if line_cell == nil then break; end
 
 			local cellIdIdx = string.find(line_cell, "%s", 1)
@@ -486,7 +487,7 @@ Environment_ = {
 			local weight
 
 			if numNeighbors > 0 then
-				local line_neighbors = file:read()
+				local line_neighbors = data.source:read()
 
 				local neighIdEndIdx = string.find(line_neighbors, "%s")
 
@@ -555,7 +556,7 @@ Environment_ = {
 			end
 		end
 
-		file:close()
+		data.source:close()
 	end,
 	--- Notify every Observer connected to the Environment.
 	-- @arg modelTime A number representing the notification time. The default value is zero.

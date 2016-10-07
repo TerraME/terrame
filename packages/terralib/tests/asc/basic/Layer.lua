@@ -24,9 +24,9 @@
 
 return {
 	Layer = function(unitTest)
-		local projName = "asc_basic.tview"
+		local projName = File("asc_basic.tview")
 
-		File(projName):deleteIfExists()
+		projName:deleteIfExists()
 
 		local proj = Project {
 			file = projName,
@@ -41,9 +41,9 @@ return {
 			file = filePath("test/biomassa-manaus.asc", "terralib")
 		}
 
-		local filePath1 = "biomassa_cells_asc_basic.shp"
+		local filePath1 = File("biomassa_cells_asc_basic.shp")
 
-		File(filePath1):deleteIfExists()
+		filePath1:deleteIfExists()
 
 		local clName1 = "Biomassa_Cells"
 
@@ -58,10 +58,10 @@ return {
 
 		unitTest:assertEquals(clName1, cl1.name)
 		unitTest:assertEquals(cl1.source, "shp")
-		unitTest:assertEquals(cl1.file, currentDir()..filePath1)
+		unitTest:assertEquals(tostring(cl1.file), tostring(filePath1))
 
-		File(filePath1):deleteIfExists()
-		File(projName):deleteIfExists()
+		filePath1:deleteIfExists()
+		projName:deleteIfExists()
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_fill_asc_repr.tview"
@@ -85,9 +85,9 @@ return {
 		File(projName):deleteIfExists()
 	end,
 	bands = function(unitTest)
-		local projName = "cellular_layer_fill_asc_repr.tview"
+		local projName = File("cellular_layer_fill_asc_repr.tview")
 
-		File(projName):deleteIfExists()
+		projName:deleteIfExists()
 
 		local proj = Project{
 			file = projName,
@@ -103,12 +103,12 @@ return {
 
 		unitTest:assertEquals(l:bands(), 1)
 
-		File(projName):deleteIfExists()
+		projName:deleteIfExists()
 	end,
 	__tostring = function(unitTest)
-		local projName = "cellular_layer_print_asc.tview"
+		local projName = File("cellular_layer_print_asc.tview")
 
-		File(projName):deleteIfExists()
+		projName:deleteIfExists()
 
 		local proj = Project{
 			file = projName,
@@ -133,7 +133,7 @@ source   string [asc]
 		unitTest:assertEquals(tostring(l), expected, 36, true)
 		-- unitTest:assertFile(projName) -- SKIP #1242
 
-		File(projName):deleteIfExists()
+		projName:deleteIfExists()
 	end
 }
 

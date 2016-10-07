@@ -81,19 +81,19 @@ return{
  		error_func = function()
  			cs = CellularSpace{file = 2, source = "pgm", sep = ";"}
  		end
- 		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
+ 		unitTest:assertError(error_func, incompatibleTypeMsg("file", "File", 2))
  
  		error_func = function()
  			cs = CellularSpace{file = "abc123.pgm", sep = ";"}
  		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.pgm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("abc123.pgm")))
 		
 		error_func = function()
  			cs = CellularSpace{
  				file = "abc123.shp"
  			}
  		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.shp"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("abc123.shp")))
 
 		os.execute("touch abc123.shp")
 			
@@ -102,7 +102,7 @@ return{
  				file = "abc123.shp"
  			}
  		end
-		unitTest:assertError(error_func, "File 'abc123.dbf' was not found.")
+		unitTest:assertError(error_func, "File '"..File("abc123.dbf").."' was not found.")
 
 		File("abc123.shp"):delete()
 

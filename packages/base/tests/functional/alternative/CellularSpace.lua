@@ -210,7 +210,7 @@ return{
 		local projNotExists = function()
 			CellularSpace{project = "myproj.tview", layer = "cells"}
 		end
-		unitTest:assertError(projNotExists, "Project '".."myproj.tview".."' was not found.")		
+		unitTest:assertError(projNotExists, "Project '"..File("myproj.tview").."' was not found.")		
 		
 		local projFile = "cellspace_alt.tview"
 		
@@ -234,7 +234,7 @@ return{
 				layer = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'.")
+		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..File(projFile).."'.")
 		
 		local geometryDefaultValue = function()
 			CellularSpace {

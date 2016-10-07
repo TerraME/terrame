@@ -34,7 +34,7 @@ return{
 		unitTest:assertEquals("File does not exist: "..f, "File does not exist: /abcd1234", 0, true)
 	end,
 	attributes = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		local attr = file:attributes()
 
 		unitTest:assertEquals(getn(attr), 12, 2)
@@ -94,27 +94,27 @@ return{
 		File("as.dfgwe.ogoei"):deleteIfExists()
 	end,
 	path = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 
 		unitTest:assertType(file, "File")
 		unitTest:assertEquals(file:path(), _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/")
 	end,
 	exists = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		unitTest:assert(file:exists())
 
 		file = File("abc123456.lua")
 		unitTest:assert(not file:exists())
 	end,
 	extension = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		local extension = file:extension()
 
 		unitTest:assertType(file, "File")
 		unitTest:assertEquals(extension, "csv")
 	end,
 	hasExtension = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		unitTest:assert(file:hasExtension())
 
 		file = File(packageInfo("base").data.."file")
@@ -123,7 +123,7 @@ return{
 		file:delete()
 	end,
 	name = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 
 		unitTest:assertEquals(file:name(), "agents.csv")
 
@@ -148,7 +148,7 @@ return{
 		file:delete()
 	end,
 	read = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		file:read(",")
 		local line = file:read(",")
 
@@ -165,14 +165,14 @@ return{
 		file:close()
 	end,
 	readTable = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		local csv = file:readTable()
 
 		unitTest:assertEquals(4, #csv)
 		unitTest:assertEquals(20, csv[1].age)
 	end,
 	split = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		local path, name, extension = file:split()
 		local s = sessionInfo().separator
 
@@ -257,11 +257,10 @@ return{
 		File(filename):deleteIfExists()
 	end,
 	__tostring = function(unitTest)
-		local path = filePath("agents.csv", "base")
-		local file = File(path)
+		local file = filePath("agents.csv", "base")
 
 		unitTest:assertType(file, "File")
-		unitTest:assertEquals(tostring(file), _Gtme.makePathCompatibleToAllOS(path))
+		unitTest:assertEquals(tostring(file), "/agents.csv", 0, true)
 	end
 }
 

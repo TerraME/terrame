@@ -32,7 +32,7 @@ return{
 		local attrFileNonString = function()
 			Project{file = 123}
 		end
-		unitTest:assertError(attrFileNonString, incompatibleTypeMsg("file", "string", 123))
+		unitTest:assertError(attrFileNonString, incompatibleTypeMsg("file", "File", 123))
 
 		attrFileNonString = function()
 			Project{file = "abc", author = "No author"}
@@ -72,7 +72,7 @@ return{
 		local layerShouldBeString = function()
 			Project{file = "myproj.tview", cean = true}
 		end
-		unitTest:assertError(layerShouldBeString, incompatibleTypeMsg("cean", "string", true))
+		unitTest:assertError(layerShouldBeString, incompatibleTypeMsg("cean", "File", true))
 
 		local notFile = function()
 			Project{file = "myproj.tview", cean = "true.abc"}

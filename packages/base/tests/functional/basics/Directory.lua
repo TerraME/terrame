@@ -126,7 +126,7 @@ return{
 		unitTest:assert(not dir:exists())
 
 		dir = Directory(filePath("agents.csv", "base"))
-		unitTest:assert(not dir:exists())
+		unitTest:assert(dir:exists())
 
 		dir = Directory("")
 		unitTest:assertEquals(tostring(dir), tostring(currentDir()))

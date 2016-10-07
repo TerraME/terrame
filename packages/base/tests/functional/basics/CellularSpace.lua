@@ -125,7 +125,7 @@ return{
 			layer = clName1
 		}
 		
-		unitTest:assertEquals(projName, cs.project.file)
+		unitTest:assertEquals(tostring(File(projName)), tostring(cs.project.file))
 		unitTest:assertType(cs.layer, "Layer")
 		
 		unitTest:assertEquals(proj.title, title)
@@ -219,7 +219,7 @@ return{
 			layer = clName1
 		}
 
-		unitTest:assertEquals(projName, cs.project.file)
+		unitTest:assertEquals(tostring(File(projName)), tostring(cs.project.file))
 		unitTest:assertType(cs.layer, "Layer")
 
 		unitTest:assertEquals(proj.title, title)

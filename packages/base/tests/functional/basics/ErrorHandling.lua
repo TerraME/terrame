@@ -218,8 +218,9 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", "/usr/local/file.txt"))
 	end,
 	resourceNotFoundMsg = function(unitTest)
-		unitTest:assertEquals(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for argument 'aaa'.")
-		unitTest:assertEquals(resourceNotFoundMsg(2, "bbb"), "Resource 'bbb' not found for argument '#2'.")
+		unitTest:assertEquals(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' was not found for argument 'aaa'.")
+		unitTest:assertEquals(resourceNotFoundMsg(2, "bbb"), "Resource 'bbb' was not found for argument '#2'.")
+		unitTest:assertEquals(resourceNotFoundMsg(2, File("bbb")), "File '"..File("bbb").."' was not found for argument '#2'.")
 	end,
 	strictWarning = function(unitTest)
 		local error_func = function()

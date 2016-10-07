@@ -65,7 +65,7 @@ return {
 		unitTest:assert(true) -- SKIP
 	end
 	
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	saveLayerAs = function(unitTest)
 		local tl = TerraLib{}
