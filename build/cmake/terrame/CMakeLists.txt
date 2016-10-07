@@ -393,7 +393,7 @@ if (APPLE)
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}
 				DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
 				COMPONENT runtime
-				PATTERN "win" EXCLUDE
+				PATTERN "windows" EXCLUDE
 				PATTERN "linux" EXCLUDE
 			   )
 	else()
@@ -607,7 +607,7 @@ else(UNIX)
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
 				DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/packages
 				COMPONENT runtime
-				PATTERN "win" EXCLUDE
+				PATTERN "windows" EXCLUDE
 				PATTERN "mac" EXCLUDE
 		)
 	else()
