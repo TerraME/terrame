@@ -41,12 +41,12 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
 		
 		unitTest:assertEquals(layerInfo.name, layerName)
-		unitTest:assertEquals(layerInfo.file, layerFile)
+		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
 		unitTest:assertEquals(layerInfo.type, "GDAL")
 		unitTest:assertEquals(layerInfo.rep, "raster")
 		unitTest:assertNotNil(layerInfo.sid)
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	addShpCellSpaceLayer = function(unitTest) -- CREATE SHP CELLULAR SPACE FROM TIF
 		local tl = TerraLib{}
@@ -85,7 +85,7 @@ return {
 		unitTest:assert(true) -- SKIP
 	end	
 		
-		File(proj.file):delete()		
+		proj.file:delete()		
 	end,
 	-- addPgCellSpaceLayer = function(unitTest) -- CREATE POSTGIS CELLULAR SPACE FROM TIF
 		-- #1152
@@ -177,7 +177,7 @@ return {
 		local numBands = tl:getNumOfBands(proj, layerName)
 		unitTest:assertEquals(numBands, 3)
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getProjection = function(unitTest)
 		local tl = TerraLib{}
@@ -204,7 +204,7 @@ return {
 		unitTest:assert(true) -- SKIP
 	end
 		
-		File(proj.file):delete()		
+		proj.file:delete()		
 	end,
 	getPropertyNames = function(unitTest)
 		local tl = TerraLib{}
@@ -230,7 +230,7 @@ return {
 		unitTest:assert(true) -- SKIP
 	end
 		
-		File(proj.file):delete()			
+		proj.file:delete()			
 	end,
 	getDistance = function(unitTest)
 		local tl = TerraLib{}
@@ -267,7 +267,7 @@ return {
 		unitTest:assert(true) -- SKIP
 	end
 	
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getDummyValue = function(unitTest)
 		local tl = TerraLib{}
@@ -300,7 +300,7 @@ return {
 		dummy = tl:getDummyValue(proj, layerName2, 0)
 		unitTest:assertNil(dummy)
 		
-		File(proj.file):delete()		
+		proj.file:delete()		
 	end,
 	saveLayerAs = function(unitTest)
 		local tl = TerraLib{}
@@ -339,7 +339,7 @@ return {
 		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
 		
 		File("cbers_rgb342_crop1.tif"):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 		
 		customWarning = customWarningBkp
 	end,

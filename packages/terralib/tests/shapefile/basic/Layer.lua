@@ -89,8 +89,8 @@ return {
 		qixFile = string.gsub(cl2.file, ".shp", ".qix")
 		unitTest:assert(File(qixFile):exists()) -- SKIP
 
-		cl1.file:delete()
-		cl2.file:delete()
+		File(cl1.file):delete()
+		File(cl2.file):delete()
 	end
 
 		-- VERIFY SRID

@@ -37,7 +37,7 @@ return {
 
 		tl:createProject(proj, {})
 		unitTest:assert(proj.file:exists())
-		unitTest:assertEquals(proj.file, file)
+		unitTest:assertEquals(proj.file:name(), file)
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
 
@@ -69,7 +69,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
 
 		unitTest:assertEquals(layerInfo.name, layerName)
-		unitTest:assertEquals(layerInfo.file, layerFile:name())
+		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "geometry")
 		unitTest:assertNotNil(layerInfo.sid)

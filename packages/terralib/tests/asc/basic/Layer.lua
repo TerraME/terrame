@@ -58,7 +58,7 @@ return {
 
 		unitTest:assertEquals(clName1, cl1.name)
 		unitTest:assertEquals(cl1.source, "shp")
-		unitTest:assertEquals(cl1.file, filePath1)
+		unitTest:assertEquals(cl1.file, tostring(filePath1))
 
 		filePath1:deleteIfExists()
 		projName:deleteIfExists()

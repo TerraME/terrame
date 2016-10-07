@@ -79,7 +79,7 @@ return {
 		unitTest:assertEquals(layerInfo.table, tableName)		
 		unitTest:assertNotNil(layerInfo.sid)		
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)
 	end,
