@@ -102,7 +102,6 @@ local function enableAll()
 end
 
 local function buildComboboxPackages(default)
-	local s = sessionInfo().separator
 	comboboxPackages:clear()
 	local pos = 0
 	local index = 0

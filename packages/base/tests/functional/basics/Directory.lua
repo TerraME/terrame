@@ -114,8 +114,7 @@ return{
 
 		unitTest:assert(datapath:exists())
 
-
-		dir = Directory(datapath..sessionInfo().separator.."test_dir_exists")
+		local dir = Directory(datapath..sessionInfo().separator.."test_dir_exists")
 		unitTest:assert(not dir:exists())
 
 		dir = Directory(filePath("agents.csv", "base"))
@@ -135,7 +134,7 @@ return{
 		unitTest:assertEquals(#d, nfiles + 2)
 
 		local curDir = currentDir()
-		Directory(packageInfo().data):setCurrentDir()
+		datapath:setCurrentDir()
 
 		d = Directory("."):list()
 		unitTest:assertEquals(#d, nfiles)

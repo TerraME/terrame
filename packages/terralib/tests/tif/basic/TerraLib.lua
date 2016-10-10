@@ -75,7 +75,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(layerInfo.name, clName) -- SKIP
-		unitTest:assertEquals(layerInfo.file, currentDir()..shp1) -- SKIP
+		unitTest:assertEquals(layerInfo.file, shp1) -- SKIP
 		unitTest:assertEquals(layerInfo.type, "OGR") -- SKIP
 		unitTest:assertEquals(layerInfo.rep, "polygon") -- SKIP
 		unitTest:assertNotNil(layerInfo.sid) -- SKIP				

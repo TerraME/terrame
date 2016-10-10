@@ -31,8 +31,6 @@ local printNote    = _Gtme.printNote
 local function testdirectories(directory, ut)
 	local result = {}
 
-	local s = sessionInfo().separator
-
 	local lf 
 	lf = function(mdirectory)
 		local found_file = false

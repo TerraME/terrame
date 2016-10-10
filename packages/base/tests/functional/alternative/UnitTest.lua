@@ -160,7 +160,7 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abcd1234.txt"))
 
 		error_func = function()
-			u:assertFile(sessionInfo().path)
+			u:assertFile(tostring(sessionInfo().path))
 		end
 
 		unitTest:assertError(error_func, "It is not possible to use a directory as #1 for assertFile().")

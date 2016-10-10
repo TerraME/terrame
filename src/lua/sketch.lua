@@ -201,8 +201,8 @@ local function verifyData(package, report)
 	end)
 
 	forEachOrderedElement(datafiles, function(idx, value)
-		local mfile = filePath(idx, package)
-		local _, name, extension = mfile:split()
+		local file = filePath(idx, package)
+		local _, name, extension = file:split()
 
 		if value then
 			_Gtme.print("File '"..idx.."' is already documented in 'data.lua'")

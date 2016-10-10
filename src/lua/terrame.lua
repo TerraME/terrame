@@ -110,7 +110,6 @@ function _Gtme.printWarning(value)
 end
 
 function _Gtme.fontFiles(package)
-	local s = sessionInfo().separator
 	local fontpath = packageInfo(package).path.."font"
 
 	if not Directory(fontpath):exists() then
@@ -278,8 +277,6 @@ function _Gtme.projectFiles(package)
 end
 
 function _Gtme.findModels(package)
-	local s = "/"
-	
 	if not _Gtme.isLoaded("base") then
 		_Gtme.import("base")
 	end
@@ -320,8 +317,6 @@ function _Gtme.findModels(package)
 end
 
 function _Gtme.findExamples(package)
-	local s = _Gtme.sessionInfo().separator
-
 	local examplespath
 
 	xpcall(function() examplespath = _Gtme.packageInfo(package).path.."examples" end, function(err)

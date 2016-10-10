@@ -108,7 +108,7 @@ source   string [shp]
 		local oldPrint = unitTest.printError
 		unitTest.printError = function() end
 		unitTest:assertFile("abc.csv") -- file does not exist
-		unitTest:assertFile(packageInfo().data) -- not possible to use directory
+		unitTest:assertFile(tostring(packageInfo().data)) -- not possible to use directory
 
 		unitTest.printError = oldPrint
 
