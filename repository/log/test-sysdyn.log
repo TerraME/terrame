@@ -1,5 +1,4 @@
-Loading configuration file '/Users/pedro/t.lua'
-Using log directory 'log/mac'
+Using log directory '/Applications/terrame.app/Contents/MacOS/packages/sysdyn/log/mac/'
 Loading package 'sysdyn'
 Looking for overwritten variables
 Looking for documented functions

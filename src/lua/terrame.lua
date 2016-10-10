@@ -160,7 +160,7 @@ function _Gtme.getVersion(str)
 end
 
 function _Gtme.downloadPackagesList()
-	local version = sessionInfo().version
+	local version = "2.0.0-beta-5" --sessionInfo().version
 	local list = load(cpp_listpackages("http://www.terrame.org/packages/"..version.."/packages.lua"))
 
 	if not list then return {} end
