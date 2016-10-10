@@ -170,7 +170,7 @@ function _Gtme.downloadPackagesList()
 end
 
 function _Gtme.downloadPackage(pkg)
-	local version = sessionInfo().version
+	local version = "2.0.0-beta-5" --sessionInfo().version
 	cpp_downloadpackage(pkg, "http://www.terrame.org/packages/"..version.."/")
 end
 
