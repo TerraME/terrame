@@ -135,6 +135,14 @@ local function execute(command, filename)
 					_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
 				end
 
+				_Gtme.printNote("Printing the remaining test output")
+
+				forEachElement(result, function(_, value)
+					print("    "..value)
+				end)
+
+				_Gtme.printNote("End of the remaining test output")
+
 				report.locallogerrors = report.locallogerrors + 1
 				logerror = true
 				return false
