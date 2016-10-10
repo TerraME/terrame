@@ -708,6 +708,7 @@ local function usage()
 	print("  -build [<f>] [-clean] Test (-test [<f>]), document (-doc) and then build an")
 	print("                        installer for the package. -clean option can be used to")
 	print("                        remove test files and logs.")
+	print("  -check                Analyse Lua source code.")	
 	print("  -configure <m>        Visually configure and run Model <m>.")
 	print("  -doc                  Build the documentation of the package.")
 	print("  -example <exp>        Run example <exp>.")
@@ -721,7 +722,6 @@ local function usage()
 	print("                        file <f> can describe a subset of the tests to be")
 	print("                        executed.")
 	print("  -uninstall            Remove an installed package.")
-	print("  -check                Analyse Lua source code.")
 	print("-silent                 print() does not show any text on the screen.")
 	print("-version                Show TerraME general information.")
 --	print("-workers <value>        Sets the number of threads used for spatial observers.")
@@ -1659,13 +1659,13 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					info_.package = "base"
 				end
 				
-				local path
-				xpcall(function() path = packageInfo(package).path end, function(err)
+				local pkgPath
+				xpcall(function() pkgPath = packageInfo(package).path end, function(err)
 					_Gtme.printError(err)
 					os.exit(1)
 				end)
 
-				local numIssues = checkPackage(package, path)
+				local numIssues = checkPackage(package, pkgPath)
 			
 				os.exit(numIssues)				
 			else
