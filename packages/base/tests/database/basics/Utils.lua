@@ -29,7 +29,7 @@ return{
 
 		local cd = currentDir()
 
-		Directory(packageInfo().data):setCurrentDir()
+		packageInfo().data:setCurrentDir()
 
 		local cf2 = getConfig()
 		unitTest:assertEquals(cf, cf2)

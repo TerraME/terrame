@@ -64,7 +64,7 @@ Directory_ = {
 	-- block allocated for file; (Unix only) \
 	-- "blksize" &
 	-- optimal file system I/O blocksize; (Unix only)
-	-- @usage Directory(packageInfo("base").path):attributes("mode")
+	-- @usage Directory(packageInfo("base").path.."data"):attributes("mode")
 	attributes = function(self, attributename)
 		optionalArgument(1, "string", attributename)
 
@@ -117,7 +117,7 @@ Directory_ = {
 	end,
 	--- Return a vector of strings with the content of the directory.
 	-- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
-	-- @usage files = Directory(packageInfo("base").data):list()
+	-- @usage files = packageInfo("base").data:list()
 	--
 	-- forEachElement(files, function(_, file)
 	--     print(file)

@@ -60,7 +60,7 @@ local function testdirectories(directory, ut)
 		end
 	end
 
-	lf(Directory(directory..s.."tests"))
+	lf(Directory(directory.."tests"))
 
 	return(result)
 end
@@ -150,7 +150,7 @@ local function buildLineTable(package)
 	local s = sessionInfo().separator
 	local baseDir = packageInfo(package).path
 
-	local load_file = baseDir..s.."load.lua"
+	local load_file = baseDir.."load.lua"
 	local load_sequence
 
 	if File(load_file):exists() then
@@ -159,7 +159,7 @@ local function buildLineTable(package)
 		load_sequence = _Gtme.include(load_file).files
 	else
 		load_sequence = {}
-		forEachFile(baseDir..s.."lua", function(file)
+		forEachFile(baseDir.."lua", function(file)
 			if file:extension() == "lua" then
 				table.insert(load_sequence, file:name())
 			end
@@ -171,14 +171,14 @@ local function buildLineTable(package)
 	for _, file in ipairs(load_sequence) do
 		-- the 'include' below does not need to be inside a xpcall because
 		-- the package was already loaded with success
-		testlines[file] = lineTable(baseDir..s.."lua"..s..file)
+		testlines[file] = lineTable(baseDir.."lua"..s..file)
 
 		local function trace(_, line)
 			testlines[file][line] = 1
 		end
 
 		debug.sethook(trace, "l")
-		dofile(baseDir..s.."lua"..s..file)
+		dofile(baseDir.."lua"..s..file)
 		debug.sethook()
 	end
 
@@ -265,14 +265,14 @@ function _Gtme.executeTests(package, fileName)
 		data = {notest = {}}
 	end
 
-	data.log = Directory(packageInfo(package).path..s.."log"..s..sessionInfo().system)
+	data.log = Directory(packageInfo(package).path.."log"..s..sessionInfo().system)
 
 	if data.log:exists() then
 		printNote("Using log directory '"..data.log.."'")
 	else
 		printNote("Creating log directory in '"..data.log.."'")
 
-		local logdir = Directory(packageInfo(package).path..s.."log")
+		local logdir = Directory(packageInfo(package).path.."log")
 
 		if not logdir:exists() then
 			logdir:create()
@@ -350,7 +350,7 @@ function _Gtme.executeTests(package, fileName)
 
 	local baseDir = packageInfo(package).path
 
-	doc_functions = luadocMain(baseDir, Directory(baseDir..s.."lua"):list(), {}, package, {}, {}, {}, true)
+	doc_functions = luadocMain(baseDir, Directory(baseDir.."lua"):list(), {}, package, {}, {}, {}, true)
 
 	printNote("Looking for package functions")
 	testfunctions = _Gtme.buildCountTable(package)
@@ -379,7 +379,7 @@ function _Gtme.executeTests(package, fileName)
 		printNote("Found "..extra.." extra functions in the documentation")
 	end
 
-	if not Directory(baseDir..s.."tests"):exists() then
+	if not Directory(baseDir.."tests"):exists() then
 		printError("Directory 'tests' does not exist in package '"..package.."'")
 		printError("Please run 'terrame -package "..package.." -sketch' to create test files.")
 		os.exit(1)
@@ -478,7 +478,7 @@ function _Gtme.executeTests(package, fileName)
 		forEachOrderedElement(myFiles, function(eachFile)
 			-- TODO here
 			local fileWithSmallPath = eachDirectory..eachFile
-			fileWithSmallPath = string.sub(fileWithSmallPath, string.len(baseDir) + 2)
+			fileWithSmallPath = string.sub(fileWithSmallPath, string.len(tostring(baseDir)) + 2)
 			ut.current_file = fileWithSmallPath
 			local tests
 
@@ -808,7 +808,7 @@ function _Gtme.executeTests(package, fileName)
 					local env = setmetatable({}, {__index = _G})
 					-- loadfile is necessary to avoid any global variable from one
 					-- example affect another example
-					local result, err = loadfile(baseDir..s.."examples"..s..value..".lua", 't', env)
+					local result, err = loadfile(baseDir.."examples"..s..value..".lua", 't', env)
 
 					if not result then
 						printError(err)

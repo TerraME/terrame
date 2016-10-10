@@ -114,7 +114,7 @@ File_ = {
 	-- block allocated for file; (Unix only) \
 	-- "blksize" &
 	-- optimal file system I/O blocksize; (Unix only)
-	-- @usage File(packageInfo("base").path):attributes("mode")
+	-- @usage filePath("river.shp"):attributes("mode")
 	attributes = function(self, attributename)
 		optionalArgument(1, "string", attributename)
 
@@ -373,7 +373,7 @@ File_ = {
 	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 	-- @arg atime The new access time (in seconds).
 	-- @arg mtime The new modification time (in seconds).
-	-- @usage File(packageInfo("base").path):touch(0, 0)
+	-- @usage filePath("river.shp"):touch(0, 0)
 	touch = function(self, atime, mtime)
 		mandatoryArgument(1, "number", atime)
 		mandatoryArgument(2, "number", mtime)

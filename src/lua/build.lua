@@ -107,11 +107,8 @@ function _Gtme.buildPackage(package, config, clean)
 
 	tmpdirectory:setCurrentDir()
 
-	if pkgDirectory == package then
-		os.execute("cp -pr \""..currentdir..pkgDirectory.."\" .")
-	else
-		os.execute("cp -pr \""..pkgDirectory.."\" .")
-	end
+	local dirWithoutSlash = tostring(pkgDirectory) -- needed to copy the directory using cp
+	os.execute("cp -pr \""..dirWithoutSlash.."\" .")
 
 	printNote("")
 
@@ -149,7 +146,7 @@ function _Gtme.buildPackage(package, config, clean)
 	}
 
 	print("Checking basic files and directories")
-	forEachDirectory(package, function(dir)
+	forEachDirectory(pkgDirectory, function(dir)
 		if not root[dir:name()] then
 			printError("Directory '"..package..s..dir:name().."' is unnecessary and will be ignored.")
 			dir:delete()
@@ -157,7 +154,7 @@ function _Gtme.buildPackage(package, config, clean)
 		end
 	end)
 
-	forEachFile(package, function(file)
+	forEachFile(pkgDirectory, function(file)
 		if not root[file:name()] then
 			printError("File '"..package..s..file:name().."' is unnecessary and will be ignored.")
 			file:delete()
@@ -165,9 +162,9 @@ function _Gtme.buildPackage(package, config, clean)
 		end
 	end)
 
-	if Directory(package..s.."examples"):exists() then
+	if Directory(pkgDirectory.."examples"):exists() then
 		print("Checking examples")
-		forEachFile(package..s.."examples", function(file)
+		forEachFile(pkgDirectory.."examples", function(file)
 			if not belong(file:extension(), {"lua", ".tme"}) then
 				printError("File '"..package..s.."examples"..s..file:name().."' is unnecessary and will be ignored.")
 				file:delete()
@@ -268,8 +265,8 @@ function _Gtme.buildPackage(package, config, clean)
 		return attr
 	end
 
-	forEachFile(pkgInfo.path..s.."lua", function(fname)
-		local mdata = _Gtme.include(pkgInfo.path..s.."lua"..s..fname:name())
+	forEachFile(pkgInfo.path.."lua", function(fname)
+		local mdata = _Gtme.include(pkgInfo.path.."lua"..s..fname:name())
 		if attrTab ~= nil then
 			forEachElement(mdata, function(idx, value)
 				if value == attrTab then
@@ -295,8 +292,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	printNote("Building package "..package)
 
-	local info = packageInfo(package)
-	local file = package.."_"..info.version..".zip"
+	local file = package.."_"..pkgInfo.version..".zip"
 	printNote("Creating file '"..file.."'")
 	os.execute("zip -qr \""..file.."\" "..package)
 	if File(file):exists() then

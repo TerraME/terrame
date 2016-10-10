@@ -111,7 +111,7 @@ end
 
 function _Gtme.fontFiles(package)
 	local s = sessionInfo().separator
-	local fontpath = packageInfo(package).path..s.."font"
+	local fontpath = packageInfo(package).path.."font"
 
 	if not Directory(fontpath):exists() then
 		return {}
@@ -210,7 +210,7 @@ function _Gtme.buildCountTable(package)
 	local s = _Gtme.sessionInfo().separator
 	local baseDir = _Gtme.packageInfo(package).path
 
-	local load_file = baseDir..s.."load.lua"
+	local load_file = baseDir.."load.lua"
 	local load_sequence
 
 	if _Gtme.File(load_file):exists() then
@@ -219,7 +219,7 @@ function _Gtme.buildCountTable(package)
 		load_sequence = _Gtme.include(load_file).files
 	else
 		load_sequence = {}
-		_Gtme.forEachFile(baseDir..s.."lua", function(mfile)
+		_Gtme.forEachFile(baseDir.."lua", function(mfile)
 			if mfile:extension() == "lua" then
 				table.insert(load_sequence, mfile:name())
 			end
@@ -251,7 +251,7 @@ function _Gtme.buildCountTable(package)
 	for _, file in ipairs(load_sequence) do
 		testfunctions[file] = {}
 		currentFile = file
-		lf = loadfile(baseDir..s.."lua"..s..file, 't', result)
+		lf = loadfile(baseDir.."lua"..s..file, 't', result)
 
 		if lf ~= nil then
 			lf()
@@ -266,7 +266,7 @@ function _Gtme.projectFiles(package)
 	local files = {}
 	local data_path = _Gtme.packageInfo(package).data
 
-	if not Directory(data_path):exists() then return files end
+	if not data_path:exists() then return files end
 
 	forEachFile(data_path, function(file)
 		if file:extension() == "lua" then
@@ -297,18 +297,15 @@ function _Gtme.findModels(package)
 	end
 
 	local packagepath = _Gtme.packageInfo(package).path
-	packagepath = _Gtme.makePathCompatibleToAllOS(packagepath)
 
-	if _Gtme.Directory(packagepath):attributes("mode") ~= "directory" then
+	if not packagepath:exists() then
 		_Gtme.customError("Package '"..package.."' is not installed.")
 	end
 
-	local srcpath = packagepath..s.."lua"..s
-
-	_Gtme.forEachFile(srcpath, function(fname)
+	_Gtme.forEachFile(packagepath.."lua", function(file)
 		found = false
 		local a
-		a = _Gtme.include(srcpath..fname:name())
+		a = _Gtme.include(tostring(file))
 
 		if found then
 			_Gtme.forEachElement(a, function(idx, value)
@@ -327,7 +324,7 @@ function _Gtme.findExamples(package)
 
 	local examplespath
 
-	xpcall(function() examplespath = _Gtme.packageInfo(package).path..s.."examples" end, function(err)
+	xpcall(function() examplespath = _Gtme.packageInfo(package).path.."examples" end, function(err)
 		_Gtme.printError(err)
 		os.exit(1)
 	end)
@@ -359,7 +356,7 @@ function _Gtme.showDoc(package)
 		os.exit(1)
 	end)
 
-	docpath = docpath..s.."doc"..s.."index.html"
+	docpath = docpath.."doc"..s.."index.html"
 
 	local exists 
 	ok, err = pcall(function() exists = File(docpath):exists() end)

@@ -32,11 +32,11 @@ local function verifyTest(package, report)
 
 	local baseDir = packageInfo(package).path
 	local s = sessionInfo().separator
-	local testDir = baseDir..s.."tests"
+	local testDir = baseDir.."tests"
 	local internalDirectory = false
 	local dir = Directory(testDir)
 
-	if not Directory(baseDir..s.."lua"):exists() then
+	if not Directory(baseDir.."lua"):exists() then
 		_Gtme.print("Package '"..package.."' does not have source code")
 		return
 	end
@@ -146,16 +146,15 @@ local function verifyData(package, report)
 	printNote("Verifying data files")
 
 	local baseDir = packageInfo(package).path
-	local s = sessionInfo().separator
-	local dataDir = baseDir..s.."data"
+	local dataDir = Directory(baseDir.."data")
 
-	if not Directory(dataDir):exists() then
+	if not dataDir:exists() then
 		_Gtme.print("Package '"..package.."' does not have a data directory")
 		return
 	end
 
 	local datafiles = {}
-	local datadotlua = baseDir..s.."data.lua"
+	local datadotlua = baseDir.."data.lua"
 
 	forEachFile(dataDir, function(file)
 		datafiles[file:name()] = false
@@ -202,13 +201,16 @@ local function verifyData(package, report)
 	end)
 
 	forEachOrderedElement(datafiles, function(idx, value)
+		local mfile = filePath(idx, package)
+		local _, name, extension = mfile:split()
+
 		if value then
 			_Gtme.print("File '"..idx.."' is already documented in 'data.lua'")
 		elseif _Gtme.ignoredFile(idx) then
 			_Gtme.print("File '"..idx.."' does not need to be documented")
-		elseif string.endswith(idx, ".tview") and File(dataDir..s..string.sub(idx, 1, -6).."lua"):exists() then
+		elseif extension == "tview" and File(dataDir..name..".lua"):exists() then
 			_Gtme.print("Project file '"..idx.."' does not need to be documented (a Lua file creates it)")
-		elseif string.endswith(idx, ".shp") and File(dataDir..s..string.sub(idx, 1, -4).."lua"):exists() then
+		elseif extension == "shp" and File(dataDir..name..".lua"):exists() then
 			_Gtme.print("File '"..idx.."' does not need to be documented (a Lua file creates it)")
 		else
 			_Gtme.printWarning("Adding sketch for data file '"..idx.."'")
@@ -218,7 +220,7 @@ local function verifyData(package, report)
     			.."\tsource = \"\",\n"
     			.."\treference = \"\""
 
-			if string.endswith(idx, ".shp") or string.endswith(idx, ".geojson") then
+			if extension == "shp" or extension == "geojson" then
 				layer = tl.Layer{
 					project = myProject,
 					file = filePath(idx, package),
@@ -236,7 +238,7 @@ local function verifyData(package, report)
 				end)
 
 				str = str.."\t}"
-			elseif string.endswith(idx, ".tif") then
+			elseif extension == "tif" then
 				layer = tl.Layer{
 					project = myProject,
 					file = filePath(idx, package),
@@ -271,8 +273,7 @@ local function verifyFont(package, report)
 	printNote("Verifying font files")
 
 	local baseDir = packageInfo(package).path
-	local s = sessionInfo().separator
-	local fontDir = baseDir..s.."font"
+	local fontDir = baseDir.."font"
 
 	if not Directory(fontDir):exists() then
 		_Gtme.print("Package '"..package.."' does not have a font directory")
@@ -280,7 +281,7 @@ local function verifyFont(package, report)
 	end
 
 	local fontfiles = {}
-	local fontdotlua = baseDir..s.."font.lua"
+	local fontdotlua = baseDir.."font.lua"
 
 	forEachFile(fontDir, function(file)
 		fontfiles[file:name()] = false

@@ -61,6 +61,8 @@ return{
 		unitTest:assertEquals(r.version, "2.0.0")
 		unitTest:assertEquals(r.package, "base")
 		unitTest:assertEquals(r.url, "http://www.terrame.org")
+		unitTest:assertType(r.data, "Directory")
+		unitTest:assertType(r.path, "Directory")
 	end
 }
 

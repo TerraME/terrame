@@ -24,7 +24,7 @@
 
 return{
 	Directory = function(unitTest)
-		local dir = Directory(packageInfo("base").data)
+		local dir = packageInfo("base").data
 		unitTest:assertType(dir, "Directory")
 
 		dir = Directory{
@@ -63,7 +63,7 @@ return{
 		unitTest:assertEquals("Directory: "..dir.."home", "Directory: /home", 0, true)
 	end,
 	attributes = function(unitTest)
-		local dir = Directory(packageInfo("base").data)
+		local dir = packageInfo("base").data
 		local attr = dir:attributes()
 
 		local expected = {
@@ -89,8 +89,7 @@ return{
 		unitTest:assert(dir:delete())
 
 		local datapath = packageInfo("base").data
-		local s = sessionInfo().separator
-		dir = Directory(datapath..s.."test_dir_create")
+		dir = Directory(datapath.."test_dir_create")
 		unitTest:assert(dir:create())
 		unitTest:assert(dir:exists())
 
@@ -113,14 +112,8 @@ return{
 	exists = function(unitTest)
 		local datapath = packageInfo("base").data
 
-		local dir = Directory(datapath)
-		unitTest:assert(dir:exists())
+		unitTest:assert(datapath:exists())
 
-		dir = Directory(datapath)
-		unitTest:assert(dir:exists())
-
-		dir = Directory(_Gtme.makePathCompatibleToAllOS(datapath))
-		unitTest:assert(dir:exists())
 
 		dir = Directory(datapath..sessionInfo().separator.."test_dir_exists")
 		unitTest:assert(not dir:exists())
@@ -135,10 +128,10 @@ return{
 		local datapath = packageInfo("base").data
 		local nfiles = 29
 
-		local d = Directory(datapath):list()
+		local d = datapath:list()
 		unitTest:assertEquals(#d, nfiles)
 
-		d = Directory(datapath):list(true)
+		d = datapath:list(true)
 		unitTest:assertEquals(#d, nfiles + 2)
 
 		local curDir = currentDir()
@@ -201,10 +194,9 @@ return{
 	end,
 	__tostring = function(unitTest)
 		local datapath = packageInfo("base").data
-		local dir = Directory(datapath)
 
-		unitTest:assertType(dir, "Directory")
-		unitTest:assertEquals(tostring(dir), _Gtme.makePathCompatibleToAllOS(datapath))
+		unitTest:assertType(datapath, "Directory")
+		unitTest:assertType(tostring(datapath), "string")
 	end
 }
 

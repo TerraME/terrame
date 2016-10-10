@@ -214,7 +214,7 @@ local function selectPackage()
 	end
 
 	local docpath = packageInfo(comboboxPackages.currentText).path
-	docpath = docpath..s.."doc"..s.."index.html"
+	docpath = docpath.."doc"..s.."index.html"
 
 	docButton.enabled = File(docpath):exists()
 
@@ -520,7 +520,7 @@ local function installLocalButtonClicked()
 	if pkg then
 		local ok = true
 		xpcall(function() getPackage(package) end, function(err)
-			Directory(packageInfo(package).path):delete()
+			packageInfo(package).path:delete()
 			qt.dialog.msg_critical(err)
 			ok = false
 		end)

@@ -40,7 +40,7 @@ function _Gtme.executeProject(package)
 	local s = sessionInfo().separator
 	local package_path = _Gtme.packageInfo(package).path
 
-	local data_path = package_path..s.."data"
+	local data_path = package_path.."data"
 
 	Directory(data_path):setCurrentDir()
 

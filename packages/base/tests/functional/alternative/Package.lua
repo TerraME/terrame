@@ -33,7 +33,7 @@ return{
 		local baseInfo = packageInfo()
 		local s = sessionInfo().separator
 
-		os.execute("cp "..tlInfo.data..s.."amazonia.lua "..baseInfo.data)
+		os.execute("cp "..tlInfo.data"amazonia.lua "..baseInfo.data)
 
 		error_func = function()
 			filePath("amazonia.tview")
@@ -48,14 +48,14 @@ return{
 		error_func = function()
 			filePath("error"..s.."csv-error.csv")
 		end
-		unitTest:assertError(error_func, "Directory '".._Gtme.makePathCompatibleToAllOS(baseInfo.data..s.."error"..s).."' does not exist.")
+		unitTest:assertError(error_func, "Directory '"..baseInfo.data.."error"..s.."' does not exist.")
 
 		error_func = function()
 			filePath("test"..s.."braz.gdal")
 		end
 		unitTest:assertError(error_func, "File 'base"..s.."data"..s.."test"..s.."braz.gdal' does not exist in package 'base'. Do you mean 'brazil.gal'?")
 
-		File(baseInfo.data..s.."amazonia.lua"):deleteIfExists()
+		File(baseInfo.data.."amazonia.lua"):deleteIfExists()
 	end,
 	filesByExtension = function(unitTest)
 		local error_func = function()

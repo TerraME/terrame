@@ -44,7 +44,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Directory '/my/path/' does not exist.")
 
-		local path = _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/"
+		local path = packageInfo("base").data
 
 		local filename = path.."file*"
 		error_func = function()

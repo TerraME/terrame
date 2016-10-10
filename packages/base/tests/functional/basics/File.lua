@@ -97,7 +97,7 @@ return{
 		local file = filePath("agents.csv", "base")
 
 		unitTest:assertType(file, "File")
-		unitTest:assertEquals(file:path(), _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/")
+		unitTest:assertEquals(file:path(), packageInfo("base").data.."/")
 	end,
 	exists = function(unitTest)
 		local file = filePath("agents.csv", "base")
@@ -176,7 +176,7 @@ return{
 		local path, name, extension = file:split()
 		local s = sessionInfo().separator
 
-		unitTest:assertEquals(path, _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/")
+		unitTest:assertEquals(path, packageInfo("base").data.."/")
 		unitTest:assertEquals(name, "agents")
 		unitTest:assertEquals(extension, "csv")
 

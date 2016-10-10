@@ -77,11 +77,11 @@ end
 local function dataFiles(package)
 	local datapath = packageInfo(package).data
 
-	if not Directory(datapath):exists() then
+	if not datapath:exists() then
 		return {}
 	end
 
-	local files = Directory(datapath):list()
+	local files = datapath:list()
 	local result = {}
 
 	forEachElement(files, function(_, fname)
@@ -91,8 +91,6 @@ local function dataFiles(package)
 end
 
 local function getProjects(package)
-	data_path = packageInfo(package).data
-
 	local projects = {}
 	local layers = {}
 	local currentProject
@@ -269,7 +267,7 @@ local function getProjects(package)
 	
 	sessionInfo().mode = "quiet"
 	printNote("Processing lua files")
-	forEachFile(data_path, function(file)
+	forEachFile(packageInfo(package).data, function(file)
 		if file:extension() == "lua" then
 			print("Processing '"..file:name().."'")
 

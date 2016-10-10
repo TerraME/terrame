@@ -33,7 +33,7 @@ function filePath(filename, package)
 	if package == nil then package = "base" end
 
 	local s = sessionInfo().separator
-	local file = File(packageInfo(package).data..s..filename)
+	local file = File(packageInfo(package).data..filename)
 	if file:exists() then
 		return file
 	else
@@ -42,7 +42,7 @@ function filePath(filename, package)
 		if string.endswith(filename, ".tview") then
 			local luafile = string.sub(filename, 1, -6).."lua"
 
-			if File(packageInfo(package).data..s..luafile):exists() then
+			if File(packageInfo(package).data..luafile):exists() then
 				msg = msg.." Please run 'terrame -package "..package.." -project' to create it."
 				customError(msg)
 			end
@@ -301,13 +301,13 @@ end
 -- authors & Name of the author(s) of the package.\
 -- contact & E-mail of one or more authors. \
 -- content & A description of the package. \
--- data & The path to the data directory of the package. This attribute is added
+-- data & A Directory with the path to the data directory of the package. This attribute is added
 -- by this function as it does not exist in description.lua.\
 -- date & Date of the current version.\
 -- depends & A comma-separated list of package names which this package depends on.\
 -- license & Name of the package's license. \
 -- package & Name of the package.\
--- path & Folder where the package is stored in the computer.\
+-- path & A Directory with the path where the package is stored in the computer.\
 -- title & Optional title for the HTML documentation of the package.\
 -- url & An optional value with the webpage of the package.\
 -- version & Current version of the package, in the form <number>[.<number>]*.
@@ -348,8 +348,8 @@ function packageInfo(package)
 		customError("Could not load package '"..package.."'. File 'description.lua' is empty.") -- SKIP
 	end
 
-	result.path = tostring(pkgdirectory)
-	result.data = pkgdirectory.."data"
+	result.path = pkgdirectory
+	result.data = Directory(pkgdirectory.."data")
 
 	if result.depends then
 		local ss = string.gsub(result.depends, "([%w]+ %(%g%g %d[.%d]+%))", function()
