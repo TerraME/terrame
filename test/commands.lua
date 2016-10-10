@@ -29,7 +29,8 @@ package = {
 	example           = {package = "onerror",        arg = "-example continuous-rain"},
 	loadforgotten     = {package = "load-forgotten", arg = "-example ipd"},
 	loadtwice         = {package = "load-twice",     arg = "-example ipd"},
-	loadwrong         = {package = "load-wrong",     arg = "-example ipd"}
+	loadwrong         = {package = "load-wrong",     arg = "-example ipd"},
+	check             = {package = "check",          arg = "-check"}
 }
 
 doc = {
@@ -104,8 +105,8 @@ basic = {
 	scriptnofile        = {arg = "abcd1234.lua"},
 	scriptnoluafile     = {arg = filePath("agents.csv")},
 	tmp                 = {script = "tmp.lua"},
-	luacheck1           = {script = "luacheck1.lua", arg = "-strict"},
-	luacheck2           = {script = "luacheck2.lua", arg = "-debug"}
+	luacheck1           = {script = "luacheck.lua", arg = "-strict"},
+	luacheck2           = {script = "luacheck.lua", arg = "-debug"}
 }
 
 observer = {

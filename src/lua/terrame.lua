@@ -721,6 +721,7 @@ local function usage()
 	print("                        file <f> can describe a subset of the tests to be")
 	print("                        executed.")
 	print("  -uninstall            Remove an installed package.")
+	print("  -check                Analyse Lua source code.")
 	print("-silent                 print() does not show any text on the screen.")
 	print("-version                Show TerraME general information.")
 --	print("-workers <value>        Sets the number of threads used for spatial observers.")
@@ -1181,13 +1182,121 @@ local function checkFile(file, prefixMsg)
 	if (issues.errors == 0) and (issues.fatals == 0) then	
 		issues = issues[1]
 		for _, issue in ipairs(issues) do
-			print(prefixMsg..": "..upperFirst(luacheck.get_message(issue))..". In file ".. file..", line "..issue.line..".")
+			print(prefixMsg..": "..upperFirst(luacheck.get_message(issue))..". In file "..file..", line "..issue.line..".")
 		end		
 		
 		return #issues
 	end
 	
 	return 0
+end
+
+local function getLuaFiles(dirPath)
+	local files = {}
+	_Gtme.forEachFile(dirPath, function(fname)
+		local fullPath = dirPath.."/"..fname
+		if Directory(fullPath):exists() then
+			for _, v in ipairs(getLuaFiles(fullPath)) do
+				table.insert(files, v)
+			end			
+		else 
+			local file = File(fullPath)
+			if file:extension() == "lua" then
+				table.insert(files, fullPath)
+			end
+		end
+	end)
+	
+	return files
+end
+
+local function getRelativePath(full, absoluteLength)
+	return string.sub(full, absoluteLength + 2)
+end
+
+local function checkPackage(package, packagePath)
+	_Gtme.printNote("Running code analyzer for package '"..package.."'")
+	local clock0 = os.clock()
+	
+	local testsPath = packagePath.."/tests"
+	local luaPath = packagePath.."/lua"
+	local testFiles = getLuaFiles(testsPath)
+	local luaFiles = getLuaFiles(luaPath)	
+	
+	local srcPath
+	local srcFiles = {}
+	local srcPathLenght
+	if package == "base" then
+		srcPath = sessionInfo().path.."/lua"
+		srcFiles = getLuaFiles(srcPath)
+		srcPathLenght = string.len(srcPath) 
+	end
+	
+	local luacheck = require("luacheck.init")	
+	local numIssues = 0
+	local pkgPathLenght = string.len(packagePath)
+	local options = {std = "min", cache = true, global = false}	
+	
+	_Gtme.printNote("Analysing source code")
+	for _, file in ipairs(luaFiles) do
+		local files = {file}
+		local issues = luacheck.check_files(files, options)[1]
+		for _, issue in ipairs(issues) do
+			_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, pkgPathLenght)..", line "..issue.line..".")
+		end	
+		numIssues = numIssues + #issues
+	end
+	
+	if #srcFiles > 0 then
+		for _, file in ipairs(srcFiles) do
+			local files = {file}
+			local issues = luacheck.check_files(files, options)[1]
+			for _, issue in ipairs(issues) do
+				_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, srcPathLenght)..", line "..issue.line..".")
+			end	
+			numIssues = numIssues + #issues
+		end	
+	end	
+	
+	_Gtme.printNote("Analysing tests")
+	for _, file in ipairs(testFiles) do
+		local files = {file}
+		local issues = luacheck.check_files(files, options)[1]
+		for _, issue in ipairs(issues) do
+			_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, pkgPathLenght)..", line "..issue.line..".")
+		end	
+		numIssues = numIssues + #issues
+	end	
+	
+	_Gtme.printNote("\nCode analyzer report for package '"..package.."':")
+	
+	local clock1 = os.clock()
+	local dt = clock1 - clock0
+	_Gtme.printNote("Analysis executed in "..round(dt, 2).." seconds.")
+	
+	local totalFiles = #testFiles + #luaFiles + #srcFiles
+	
+	if totalFiles > 0 then
+		if totalFiles == 1 then
+			_Gtme.printNote("One file was analysed.")
+		else
+			_Gtme.printNote(totalFiles.." files were analysed.")
+		end
+		
+		if numIssues > 0 then
+			if numIssues == 1 then
+				_Gtme.printNote("One issue was found.")
+			else
+				_Gtme.printNote(numIssues.." issues were found.")
+			end
+		else
+			_Gtme.printNote("Success, no issue found.")
+		end
+	else
+		_Gtme.printNote("No file found.")
+	end
+	
+	return numIssues
 end
 
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
@@ -1546,8 +1655,19 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(0)
 				end
 			elseif arg == "-check" then
-				local file = arguments[argCount + 1]
-				os.exit(checkFile(file, "Warning"))
+				if info_.package == nil then
+					info_.package = "base"
+				end
+				
+				local path
+				xpcall(function() path = packageInfo(package).path end, function(err)
+					_Gtme.printError(err)
+					os.exit(1)
+				end)
+
+				local numIssues = checkPackage(package, path)
+			
+				os.exit(numIssues)				
 			else
 				_Gtme.printError("Option not recognized: '"..arg.."'.")
 				os.exit(1)
