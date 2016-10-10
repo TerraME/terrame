@@ -79,7 +79,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	printNote("\nTesting package '"..package.."'")
 	local testErrors = 0
-	dofile(sessionInfo().path..s.."lua"..s.."test.lua")
+	dofile(sessionInfo().path.."lua"..s.."test.lua")
 	xpcall(function() testErrors = _Gtme.executeTests(package, config) end, function(err)
 		printError(err)
 		report.test_errors = 1
@@ -89,7 +89,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	printNote("Creating documentation of package '"..package.."'")
 	local docErrors = 0
-	dofile(sessionInfo().path..s.."lua"..s.."doc.lua")
+	dofile(sessionInfo().path.."lua"..s.."doc.lua")
 	xpcall(function() docErrors = _Gtme.executeDoc(package) end, function(err)
 		printError(err)
 		report.doc_errors = 1

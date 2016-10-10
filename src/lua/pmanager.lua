@@ -106,7 +106,7 @@ local function buildComboboxPackages(default)
 	comboboxPackages:clear()
 	local pos = 0
 	local index = 0
-	local pkgDir = sessionInfo().path..s.."packages"
+	local pkgDir = sessionInfo().path.."packages"
 	forEachDirectory(pkgDir, function(dir)
 		if dir:name() == "luadoc" then return end
 	
@@ -477,7 +477,7 @@ local function installLocalButtonClicked()
 	end
 
 	local currentVersion
-	local packageDir = _Gtme.sessionInfo().path..s.."packages"
+	local packageDir = _Gtme.sessionInfo().path.."packages"
 	if Directory(packageDir..s..package):exists() then
 		currentVersion = packageInfo(package).version
 		_Gtme.printNote("Package '"..package.."' is already installed")

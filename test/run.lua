@@ -62,7 +62,7 @@ _Gtme.printNote("Cleaning packages")
 forEachDirectory("packages", function(dir)
 	_Gtme.print("Cleaning '"..dir:name().."'")
 
-	local mdir = baseDir..s.."packages"..s..dir
+	local mdir = baseDir.."packages"..s..dir
 
 	if Directory(mdir):exists() then
 		Directory(mdir):delete()
@@ -73,7 +73,7 @@ _Gtme.printNote("Copying packages")
 forEachDirectory("packages", function(dir)
 	_Gtme.print("Copying '"..dir:name().."'")
 
-	os.execute("cp -pr \"packages"..s..dir:name().."\" \""..baseDir..s.."packages"..s..dir:name().."\"")	
+	os.execute("cp -pr \"packages"..s..dir:name().."\" \""..baseDir.."packages"..s..dir:name().."\"")	
 end)
 
 _Gtme.printNote("Removing files")
@@ -480,10 +480,10 @@ if commands.build then
 	forEachElement(files, function(package, mfile)
 		os.execute("terrame -install "..mfile)
 
-		local pkgdir = sessionInfo().path..s.."packages"..s..package
+		local pkgdir = Directory(baseDir.."packages"..s..package)
 
-		if Directory(pkgdir):exists() then
-			Directory(pkgdir):delete()
+		if pkgdir:exists() then
+			pkgdir:delete()
 		else
 			_Gtme.printError("Package could not be installed")
 			report.localbuilderrors = report.localbuilderrors + 1

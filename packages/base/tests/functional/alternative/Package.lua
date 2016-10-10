@@ -33,7 +33,7 @@ return{
 		local baseInfo = packageInfo()
 		local s = sessionInfo().separator
 
-		os.execute("cp "..tlInfo.data"amazonia.lua "..baseInfo.data)
+		os.execute("cp "..tlInfo.data.."amazonia.lua "..baseInfo.data)
 
 		error_func = function()
 			filePath("amazonia.tview")

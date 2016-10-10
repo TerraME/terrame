@@ -245,7 +245,7 @@ function Directory(data)
 	if not (data.fullpath:match("\\") or data.fullpath:match("/")) then
 		if data.fullpath == "." then data.fullpath = "" end
 
-		data.fullpath = currentDir()..sessionInfo().separator..data.fullpath
+		data.fullpath = currentDir()..data.fullpath
 	end
 
 	data.fullpath = _Gtme.makePathCompatibleToAllOS(data.fullpath)

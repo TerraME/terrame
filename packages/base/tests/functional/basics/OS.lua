@@ -28,8 +28,8 @@ return{
 	currentDir = function(unitTest)
 		local info = sessionInfo()
 		local cur_dir = currentDir()
-		Directory(info.path):setCurrentDir()
-		unitTest:assertEquals(tostring(currentDir()), info.path)
+		info.path:setCurrentDir()
+		unitTest:assertEquals(currentDir(), info.path)
 		cur_dir:setCurrentDir()
 	end,
 	runCommand = function(unitTest)
@@ -40,6 +40,7 @@ return{
 	sessionInfo = function(unitTest)
 		local s = sessionInfo()
 
+		unitTest:assertType(s.path, "Directory")
 		unitTest:assertEquals(s.mode, "debug")
 		unitTest:assertEquals(s.version, packageInfo().version)
 		unitTest:assertEquals(s.system == "windows", s.separator == "\\")

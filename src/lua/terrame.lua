@@ -604,14 +604,14 @@ function _Gtme.installPackage(file)
 	_Gtme.print("Copying package '"..package.."'.")
 
 	local cDir = _Gtme.currentDir()
-	local packageDir = _Gtme.sessionInfo().path..s.."packages"
+	local packageDir = _Gtme.sessionInfo().path.."packages"
 
 	if not _Gtme.isLoaded("base") then
 		_Gtme.import("base")
 	end
 
 	local currentVersion
-	if Directory(packageDir..s..package):exists() then
+	if Directory(packageDir..package):exists() then
 		currentVersion = packageInfo(package).version
 		_Gtme.print("Package '"..package.."' is already installed.")
 	else
@@ -639,7 +639,7 @@ function _Gtme.installPackage(file)
 			os.exit(1)
 		else
 			_Gtme.print("Removing previous version of package.")
-			Directory(packageDir..s..package):delete()
+			Directory(packageDir..package):delete()
 		end
 	end
 
@@ -1194,6 +1194,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		_Gtme.terralib_mod_binding_lua.te.plugin.PluginManager.getInstance():loadAll()
 	end	
 	
+	info_.path = _Gtme.Directory(info_.path)
 	info_.version = _Gtme.packageInfo().version
 
 	if arguments == nil or #arguments < 1 then 
@@ -1350,7 +1351,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				argCount = argCount + 1
 				dofile(path.."UnitTest.lua")
 
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."test.lua")
 				local errors = 0
 				xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
@@ -1366,9 +1367,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				info_.mode = "debug"
 				argCount = argCount + 1
 
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."sketch.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."test.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."doc.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."sketch.lua")
 				xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(_Gtme.traceback(err))
 					os.exit(1)
@@ -1382,7 +1383,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(0)
 			elseif arg == "-doc" then
 				info_.mode = "debug"
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."doc.lua")
 				local errors = 0
 				local success, result = _Gtme.myxpcall(function() errors = _Gtme.executeDoc(package) end)
 
@@ -1397,7 +1398,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				errors = errors or 0
 				os.exit(errors)
 			elseif arg == "-projects" then
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."project.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."project.lua")
 				_Gtme.myxpcall(function() _Gtme.executeProject(package) end)
 				os.exit(0)
 			elseif arg == "-autoclose" then
@@ -1406,7 +1407,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				if package == "base" then
 					_Gtme.printError("TerraME cannot be built using -build.")
 				else
-					dofile(sessionInfo().path..s.."lua"..s.."build.lua")
+					dofile(sessionInfo().path.."lua"..s.."build.lua")
 
 					argCount = argCount + 1
 					local config

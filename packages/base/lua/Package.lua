@@ -324,7 +324,7 @@ function packageInfo(package)
 	mandatoryArgument(1, "string", package)
 
 	local s = sessionInfo().separator
-	local pkgdirectory = Directory(sessionInfo().path..s.."packages"..s..package)
+	local pkgdirectory = Directory(sessionInfo().path.."packages"..s..package)
 	if not pkgdirectory:exists() then
 		pkgdirectory = Directory(package)
 		if not pkgdirectory:exists() then
