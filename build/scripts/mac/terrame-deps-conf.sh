@@ -53,3 +53,8 @@ cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFI
 
 make -j4
 make install
+
+cd ".."
+cd ".."
+mkdir -p install/luacheck
+cp -rv "luacheck/src" "install/luacheck"

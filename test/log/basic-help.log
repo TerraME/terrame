@@ -23,6 +23,7 @@ Options:
   -build [<f>] [-clean] Test (-test [<f>]), document (-doc) and then build an
                         installer for the package. -clean option can be used to
                         remove test files and logs.
+  -check                Analyse Lua source code.
   -configure <m>        Visually configure and run Model <m>.
   -doc                  Build the documentation of the package.
   -example <exp>        Run example <exp>.

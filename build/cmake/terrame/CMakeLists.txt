@@ -393,7 +393,7 @@ if (APPLE)
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}
 				DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
 				COMPONENT runtime
-				PATTERN "win" EXCLUDE
+				PATTERN "windows" EXCLUDE
 				PATTERN "linux" EXCLUDE
 			   )
 	else()
@@ -429,8 +429,12 @@ if (APPLE)
     install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
         DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share
         COMPONENT runtime
-   )
-
+	)
+	
+    install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck
+        DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
+        COMPONENT runtime
+	)	
 elseif(WIN32)
     set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
     install(DIRECTORY ${TERRAME_LUA_SRC_DIR}/
@@ -587,6 +591,10 @@ elseif(WIN32)
 		# COMPONENT runtime
 		#)	
 
+    install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
+        DESTINATION bin/luacheck
+        COMPONENT runtime
+	)		
 else(UNIX)
     set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
     install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
@@ -599,7 +607,7 @@ else(UNIX)
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
 				DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/packages
 				COMPONENT runtime
-				PATTERN "win" EXCLUDE
+				PATTERN "windows" EXCLUDE
 				PATTERN "mac" EXCLUDE
 		)
 	else()
@@ -711,6 +719,10 @@ else(UNIX)
         COMPONENT runtime	
 	)			
 	
+    install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
+        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/luacheck
+        COMPONENT runtime
+	)	
 endif()		
 		
 if (TERRAME_BUILD_AS_BUNDLE)
