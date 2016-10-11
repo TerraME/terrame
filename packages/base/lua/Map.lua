@@ -1676,7 +1676,7 @@ function Map(data)
 
 	if type(data.target) == "CellularSpace" then
 		if (data.target.xMin == 0 and data.target.xMax == 0) or (data.target.yMin == 0 and data.target.yMax == 0) then
-			customError("It is only possible to create a Map from this CellularSpace as its objects do not have a valid (x, y) location.")
+			customError("It is not possible to create a Map from this CellularSpace as its objects do not have a valid (x, y) location.")
 		end
 	end
 
