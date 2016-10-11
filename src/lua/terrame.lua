@@ -52,6 +52,7 @@ function _Gtme.loadLibraryPath()
 	if dyldpath then
 		package.cpath = package.cpath..";"..dyldpath.."/?.so;"
 										..dyldpath.."/?.dylib"
+		package.path = package.path..";"..dyldpath.."/?.lua;"
 	end
 
 	local ldpath = os.getenv("LD_LIBRARY_PATH")
@@ -1238,35 +1239,39 @@ local function checkPackage(package, packagePath)
 	local options = {std = "min", cache = true, global = false}	
 	
 	_Gtme.printNote("Analysing source code")
-	for _, file in ipairs(luaFiles) do
-		local files = {file}
-		local issues = luacheck.check_files(files, options)[1]
-		for _, issue in ipairs(issues) do
-			_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, pkgPathLenght)..", line "..issue.line..".")
-		end	
-		numIssues = numIssues + #issues
-	end
-	
-	if #srcFiles > 0 then
-		for _, file in ipairs(srcFiles) do
+	if (#luaFiles > 0) or (#srcFiles > 0) then
+		for _, file in ipairs(luaFiles) do
 			local files = {file}
 			local issues = luacheck.check_files(files, options)[1]
 			for _, issue in ipairs(issues) do
-				_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, srcPathLenght)..", line "..issue.line..".")
+				_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, pkgPathLenght)..", line "..issue.line..".")
 			end	
 			numIssues = numIssues + #issues
-		end	
-	end	
+		end
+
+		if #srcFiles > 0 then
+			for _, file in ipairs(srcFiles) do
+				local files = {file}
+				local issues = luacheck.check_files(files, options)[1]
+				for _, issue in ipairs(issues) do
+					_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, srcPathLenght)..", line "..issue.line..".")
+				end	
+				numIssues = numIssues + #issues
+			end	
+		end
+	end
 	
 	_Gtme.printNote("Analysing tests")
-	for _, file in ipairs(testFiles) do
-		local files = {file}
-		local issues = luacheck.check_files(files, options)[1]
-		for _, issue in ipairs(issues) do
-			_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, pkgPathLenght)..", line "..issue.line..".")
-		end	
-		numIssues = numIssues + #issues
-	end	
+	if #testFiles > 0 then
+		for _, file in ipairs(testFiles) do
+			local files = {file}
+			local issues = luacheck.check_files(files, options)[1]
+			for _, issue in ipairs(issues) do
+				_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, pkgPathLenght)..", line "..issue.line..".")
+			end	
+			numIssues = numIssues + #issues
+		end
+	end
 	
 	_Gtme.printNote("\nCode analyzer report for package '"..package.."':")
 	

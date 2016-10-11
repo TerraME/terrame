@@ -432,7 +432,7 @@ if (APPLE)
 	)
 	
     install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck
-        DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
+        DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
         COMPONENT runtime
 	)	
 elseif(WIN32)
