@@ -512,8 +512,7 @@ local function loadPGM(self)
 		else
 			j = 0
 			forEachElement(res, function(_, value)
-				local p = Cell {x = j, y = i}
-				p[self.attrname] = tonumber(value)
+				local p = Cell {x = j, y = i, [self.attrname] = tonumber(value)}
 				self:add(p)
 				self.cObj_:addCell(p.x, p.y, p.cObj_)
 				j = j + 1
@@ -1502,7 +1501,8 @@ metaTableCellularSpace_ = {
 -- If this name does not ends with ".tview", this extension will be added to the name
 -- of the file. It can also be an object of type Project from package terralib.
 -- @arg data.attrname A string with an attribute name. It is useful for files that have 
--- only one attribute value for each cell but no attribute name.
+-- only one attribute value for each cell but no attribute name. The default value is
+-- the name of the file being read.
 -- @arg data.as A table with string indexes and values. It renames the loaded attributes
 -- of the CellularSpace from the values to its indexes.
 -- @arg data.zero A string value describing where the zero in the y axis starts. The
