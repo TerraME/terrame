@@ -39,10 +39,11 @@ function filePath(filename, package)
 	else
 		local msg = "File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'."
 
-		if string.endswith(filename, ".tview") then
-			local luafile = string.sub(filename, 1, -6).."lua"
+		if file:extension() == "tview" then
+			local _, name = file:split()
+			local luafile = File(packageInfo(package).data..name..".lua")
 
-			if File(packageInfo(package).data..luafile):exists() then
+			if luafile:exists() then
 				msg = msg.." Please run 'terrame -package "..package.." -project' to create it."
 				customError(msg)
 			end
