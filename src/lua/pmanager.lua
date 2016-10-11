@@ -239,7 +239,8 @@ local function selectPackage()
 	projButton.enabled = #files > 0
 
 	forEachElement(files, function(_, value)
-		qt.combobox_add_item(comboboxProjects, string.sub(value, 0, string.len(value) - 4))
+		local _, file = value:split()
+		qt.combobox_add_item(comboboxProjects, file)
 	end)
 end
 
