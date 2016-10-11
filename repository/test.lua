@@ -130,11 +130,7 @@ local function execute(command, filename)
 				_Gtme.printError("Error: Strings do not match (line "..line.."):")
 				_Gtme.printError("Log file: '"..str.."'.")
 				_Gtme.printError("Test:     '"..value.."'.")
-
-				if distance > 0 then
-					_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
-				end
-
+				_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
 				_Gtme.printNote("Printing the test output")
 
 				forEachElement(result, function(_, value)

@@ -138,10 +138,7 @@ UnitTest_ = {
 			else 
 				self.fail = self.fail + 1
 				local msg = "Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'."
-
-				if tol > 0 then
-					msg = msg.."\nThe maximum tolerance is "..tol..", but got "..dist.."." -- SKIP
-				end
+					.." The maximum tolerance is "..tol..", but got "..dist.."."
 
 				self:printError(msg)
 			end
@@ -406,9 +403,8 @@ UnitTest_ = {
 			self.tmpdir = Directory{tmp = true} -- SKIP
 		end
 
-		local newImage = self.tmpdir..s..file
-
-		local oldImage = self.log..s..file
+		local newImage = self.tmpdir..file
+		local oldImage = self.log..file
 
 		if not File(oldImage):exists() then
 			observer:save(oldImage) -- SKIP
@@ -429,14 +425,11 @@ UnitTest_ = {
 
 			if merror <= tolerance then
 				self.success = self.success + 1
-			elseif tolerance > 0 then
+			else
 				local message = "Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..file)
 					.."'\nand\n  '"..newImage.."'\nare different." -- SKIP
-					.."\nThe maximum tolerance is "..tolerance..", but got "..merror.."." -- SKIP
+					.." The maximum tolerance is "..tolerance..", but got "..merror.."." -- SKIP
 				self:printError(message)
-				self.fail = self.fail + 1 -- SKIP
-			else
-				self:printError("Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..file).."'\nand\n  '"..newImage.."'\nare different.")
 				self.fail = self.fail + 1 -- SKIP
 			end
 		end
