@@ -155,7 +155,9 @@ state_          State
 
 		unitTest:assertEquals(5, #predators)
 		local dead = predators.agents[2]
-		predators.agents[2]:die()
+		dead:die()
+
+		unitTest:assertType(dead, "<Dead Agent>")
 		unitTest:assertEquals(4, #predators)
 
 		local test_function = function()
