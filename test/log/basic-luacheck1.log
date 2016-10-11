@@ -1,0 +1,3 @@
+Warning: Unused function 'printTable'. In file scripts\luacheck.lua, line 1
+Warning: Unused loop variable 'v'. In file scripts\luacheck.lua, line 2.
+Warning: Unused variable 'checked'. In file scripts\luacheck.lua, line 7.

@@ -40,3 +40,4 @@ installer/setup
 packages/*/doc
 test/packages/*/doc
 packages/*/data/*.tview
+!test/log/*.log
