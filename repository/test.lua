@@ -61,6 +61,8 @@ local function approximateLine(line)
 	if string.match(line, "Lua 5")               then return   3 end
 	if string.match(line, "Qt 5")                then return   3 end
 	if string.match(line, "Qwt 6")               then return   3 end
+	if string.match(line, "Testing")             then return  34 end
+	if string.match(line, "Skipping")            then return  34 end
 
 	return 0
 end
