@@ -22,7 +22,9 @@
 --
 -------------------------------------------------------------------------------------------
 
-local deadAgentMetaTable_ = {__index = function()
+local deadAgentMetaTable_ = {__index = function(_, idx)
+	if idx == "type_" then return "<Dead Agent>" end
+
 	customError("Trying to use a function or an attribute of a dead Agent.")
 end}
 

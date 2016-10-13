@@ -35,11 +35,12 @@ return {
 	end,
 	openProject = function(unitTest)
 		local tl = TerraLib{}
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-		
+		local proj = {
+			file = "myproject.tview",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
+		}
+	
 		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
@@ -52,7 +53,7 @@ return {
 		unitTest:assertEquals(proj2.title, proj.title)
 		unitTest:assertEquals(proj2.author, proj.author)
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end
 }
 

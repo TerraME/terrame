@@ -102,20 +102,18 @@ return{
 			file = filePath("test/sampa.shp", "terralib")
 		}
 
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local testDir = currentDir()
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
+		local filePath1 = testDir..shp1	
 		local fn1 = File(filePath1):name()
-		fn1 = testDir.."/"..fn1			
+		fn1 = testDir..fn1			
 		
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		for i = 1, #exts do
-			File(fn1..exts[i]):deleteIfExists()
-		end			
+		File(fn1):deleteIfExists()
 		
 		local clName1 = "Sampa_Cells"
 		local layer = terralib.Layer{
 			project = proj,
+			clean = true,
 			input = layerName1,
 			name = clName1,
 			resolution = 1,
@@ -127,7 +125,7 @@ return{
 			layer = clName1
 		}
 		
-		unitTest:assertEquals(projName, cs.project.file)
+		unitTest:assertEquals(File(projName), cs.project.file)
 		unitTest:assertType(cs.layer, "Layer")
 		
 		unitTest:assertEquals(proj.title, title)
@@ -169,10 +167,7 @@ return{
 		end)
 		
 		File(projName):deleteIfExists()
-		
-		for i = 1, #exts do
-			File(fn1..exts[i]):deleteIfExists()
-		end
+		File(fn1):deleteIfExists()
 
 		-- GeoJSON
 		author = "Carneiro Heitor"
@@ -206,7 +201,7 @@ return{
 		end)
 
 		local geojson1 = "geojson_sampa_cells.geojson"
-		filePath1 = testDir.."/"..geojson1
+		filePath1 = testDir..geojson1
 
 		File(filePath1):deleteIfExists()
 
@@ -224,7 +219,7 @@ return{
 			layer = clName1
 		}
 
-		unitTest:assertEquals(projName, cs.project.file)
+		unitTest:assertEquals(projName, cs.project.file:name())
 		unitTest:assertType(cs.layer, "Layer")
 
 		unitTest:assertEquals(proj.title, title)
@@ -1426,21 +1421,18 @@ ydim    number [20]
 			file = filePath("test/sampa.shp", "terralib")
 		}	
 
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local testDir = currentDir()
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1
+		local filePath1 = testDir..shp1
 		local fn1 = File(filePath1):name()
-		fn1 = testDir.."/"..fn1
+		fn1 = testDir..fn1
 
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		
-		for i = 1, #exts do
-			File(fn1..exts[i]):deleteIfExists()
-		end
+		File(fn1):deleteIfExists()
 
 		local clName1 = "Sampa_Cells"
 		terralib.Layer{
 			project = proj,
+			clean = true,
 			input = layerName1,
 			name = clName1,
 			resolution = 0.7,
@@ -1459,11 +1451,11 @@ ydim    number [20]
 		local cellSpaceLayerNameT0 = clName1.."_CellSpace_T0"
 
 		local shp2 = cellSpaceLayerNameT0..".shp"
-		local filePath2 = testDir.."/"..shp2	
+		local filePath2 = testDir..shp2	
 		local fn2 = File(filePath2):name()
-		fn2 = testDir.."/"..fn2	
+		fn2 = testDir..fn2	
 
-		File(filePath2):deleteIfExists()
+		File(fn2):deleteIfExists()
 
 		cs:save(cellSpaceLayerNameT0, "t0")
 
@@ -1504,13 +1496,11 @@ ydim    number [20]
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
 		
 		local shp3 = cellSpaceLayerNameGeom..".shp"
-		local filePath3 = testDir.."/"..shp3	
+		local filePath3 = testDir..shp3	
 		local fn3 = File(filePath3):name()
-		fn3 = testDir.."/"..fn3	
+		fn3 = testDir..fn3	
 		
-		for i = 1, #exts do
-			File(fn3..exts[i]):deleteIfExists()
-		end			
+		File(fn3):deleteIfExists()
 		
 		cs:save(cellSpaceLayerNameGeom)
 		
@@ -1527,13 +1517,11 @@ ydim    number [20]
 		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"
 		
 		local shp4 = cellSpaceLayerNameGeom2..".shp"
-		local filePath4 = testDir.."/"..shp4	
+		local filePath4 = testDir..shp4	
 		local fn4 = File(filePath4):name()
-		fn4 = testDir.."/"..fn4	
+		fn4 = testDir..fn4
 		
-		for i = 1, #exts do
-			File(fn4..exts[i]):deleteIfExists()
-		end			
+		File(fn4):deleteIfExists()
 		
 		cs:save(cellSpaceLayerNameGeom2)
 		
@@ -1549,12 +1537,10 @@ ydim    number [20]
 		
 		File(projName):deleteIfExists()
 
-		for i = 1, #exts do
-			File(fn1..exts[i]):deleteIfExists()
-			File(fn2..exts[i]):deleteIfExists()
-			File(fn3..exts[i]):deleteIfExists()
-			File(fn4..exts[i]):deleteIfExists()
-		end
+		File(fn1):deleteIfExists()
+		File(fn2):deleteIfExists()
+		File(fn3):deleteIfExists()
+		File(fn4):deleteIfExists()
 	end,
 	split = function(unitTest)
 		local cs = CellularSpace{xdim = 3}

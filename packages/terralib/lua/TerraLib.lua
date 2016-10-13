@@ -145,21 +145,13 @@ local function createPgConnInfo(host, port, user, pass, database, encoding)
 	return connInfo
 end
 
-local function createFileConnInfo(filePath)
-	local connInfo = {}
-	connInfo.URI = filePath
-	
-	return connInfo
-end
-
 local function createAdoConnInfo(dbFilePath)
-	local connInfo = {}
-	--connInfo.PROVIDER = "Microsoft.Jet.OLEDB.4.0"
-	connInfo.PROVIDER = "Microsoft.ACE.OLEDB.12.0" -- SKIP
-	connInfo.DB_NAME = dbFilePath -- SKIP
-	connInfo.CREATE_OGC_METADATA_TABLES = "TRUE" -- SKIP	
-	
-	return connInfo
+	return {
+		-- PROVIDER = "Microsoft.Jet.OLEDB.4.0",
+		PROVIDER = "Microsoft.ACE.OLEDB.12.0", -- SKIP
+		DB_NAME = dbFilePath, -- SKIP
+		CREATE_OGC_METADATA_TABLES = "TRUE" -- SKIP	
+	}
 end
 
 local function addDataSourceInfo(type, title, connInfo)
@@ -189,17 +181,17 @@ local function makeAndOpenDataSource(connInfo, type)
 end
 
 local function hasShapeFileSpatialIndex(shapeFile)
-	if string.find(shapeFile, "WFS:http://", 1, true) then
+	if string.find(tostring(shapeFile), "WFS:http://", 1, true) then
 		return false
 	end
 
-	local qixFile = string.gsub(shapeFile, ".shp", ".qix")
-	if File(qixFile):exists() then
+	local qixFile = File(string.gsub(shapeFile, ".shp", ".qix"))
+	if qixFile:exists() then
 		return true
 	end
-	
-	local sbnFile = string.gsub(shapeFile, ".shp", ".sbn")
-	if File(sbnFile):exists() then
+
+	local sbnFile = File(string.gsub(shapeFile, ".shp", ".sbn"))
+	if sbnFile:exists() then
 		return true
 	end	
 	
@@ -220,7 +212,7 @@ local function createLayer(name, dSetName, connInfo, type)
 		
 		if not ds:dataSetExists(dSetName) then
 			ds:close() -- SKIP
-			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not created.") -- SKIP
+			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not exist.") -- SKIP
 		end
 		
 		ds:setId(dsId)
@@ -279,11 +271,6 @@ local function createLayer(name, dSetName, connInfo, type)
 	collectgarbage("collect")
 	
 	return layer
-end
-
-local function isValidTviewExt(filePath)
-	local file = File(filePath)
-	return file:extension() == "tview"
 end
 
 local function releaseProject(project)
@@ -355,15 +342,15 @@ local function saveProject(project, layers)
 		i = i + 1
 	end
 	
-	binding.SaveProject(project.file, project.author, project.title, layersVector)
+	binding.SaveProject(tostring(project.file), project.author, project.title, layersVector)
 end
 
 local function loadProject(project, file)		
-	if not File(file):exists() then
+	if not file:exists() then
 		customError("Could not read project file: "..file..".") -- SKIP
 	end
 
-	local projMd = binding.LoadProject(file)
+	local projMd = binding.LoadProject(tostring(file))
 	project.author = projMd.author
 	project.title = projMd.title
 	local layers = projMd:getLayers()
@@ -375,7 +362,7 @@ local function loadProject(project, file)
 end
 
 local function addFileLayer(project, name, filePath, type, addSpatialIdx, dataset)
-	local connInfo = createFileConnInfo(filePath)
+	local connInfo = {URI = tostring(filePath)}
 	
 	loadProject(project, project.file)
 	
@@ -385,11 +372,12 @@ local function addFileLayer(project, name, filePath, type, addSpatialIdx, datase
 		if addSpatialIdx then
 			connInfo.SPATIAL_IDX = true
 		end
-		local file = File(connInfo.URI)
-		dSetName = file:name()
+
+		local _, file = File(connInfo.URI):split()
+		dSetName = file
 	elseif type == "GDAL" then
 		local file = File(connInfo.URI)
-		dSetName = file:name(true)
+		dSetName = file:name()
 	elseif type == "GeoJSON" then
 		type = "OGR"
 		dSetName = "OGRGeoJSON"
@@ -963,7 +951,7 @@ local function createOgrDataSourceToSaveAs(fromType, fileData)
 	local ds = nil
 	
 	if (fromType == "OGR") or (fromType == "POSTGIS") then
-		local connInfo = createFileConnInfo(fileData.file)
+		local connInfo = {URI = tostring(fileData.file)}
 		ds = makeAndOpenDataSource(connInfo, "OGR")	
 	end
 	
@@ -974,7 +962,7 @@ local function createGdalDataSourceToSaveAs(fromType, fileData)
 	local ds = nil
 	
 	if fromType == "GDAL" then				
-		local connInfo = createFileConnInfo(fileData.dir)
+		local connInfo = {URI = tostring(fileData.dir)}
 		ds = makeAndOpenDataSource(connInfo, "GDAL")		
 	end
 	
@@ -1025,7 +1013,11 @@ TerraLib_ = {
 	--
 	-- tl:createProject(proj, {})
 	createProject = function(_, project, layers)
-		if not isValidTviewExt(project.file) then
+		if type(project.file) == "string" then
+			project.file = File(project.file)
+		end
+
+		if project.file:extension() ~= "tview" then
 			customError("Please, the file extension must be '.tview'.")
 		end
 		
@@ -1045,7 +1037,11 @@ TerraLib_ = {
 	-- proj = {}
 	-- tl:openProject(proj2, "myproject.tview")
 	openProject = function(_, project, filePath)
-		if not isValidTviewExt(filePath) then
+		if type(filePath) == "string" then
+			filePath = File(filePath)
+		end
+
+		if filePath:extension() ~= "tview" then
 			customError("Please, the file extension must be '.tview'.")
 		end		
 		
@@ -1248,14 +1244,9 @@ TerraLib_ = {
 	addGeoJSONCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask)
 		loadProject(project, project.file)
 
-		if not string.find(filePath, "/") then
-			filePath = _Gtme.makePathCompatibleToAllOS(currentDir().."/")..filePath
-		end
-
 		local inputLayer = project.layers[inputLayerTitle]
-		local connInfo = createFileConnInfo(filePath)
-		local file = File(connInfo.URI)
-		local dSetName = file:name()
+		local connInfo = {URI = tostring(filePath)}
+		local _, dSetName = File(connInfo.URI):split()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
@@ -1343,14 +1334,9 @@ TerraLib_ = {
 	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask, addSpatialIdx) 
 		loadProject(project, project.file)
 		
-		if not string.find(filePath, "/") then
-			filePath = _Gtme.makePathCompatibleToAllOS(currentDir().."/")..filePath
-		end
-
 		local inputLayer = project.layers[inputLayerTitle]
-		local connInfo = createFileConnInfo(filePath)
-		local file = File(connInfo.URI)
-		local dSetName = file:name()
+		local connInfo = {URI = tostring(filePath)}
+		local _, dSetName = File(connInfo.URI):split()
 		
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 		
@@ -1620,7 +1606,7 @@ TerraLib_ = {
 				outConnInfo.PG_NEWDB_NAME = outDSetName
 			elseif outType == "OGR" then
 				local file = File(outConnInfo.URI)
-				local outDir = _Gtme.makePathCompatibleToAllOS(file:directory())
+				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
 				outConnInfo.URI = outDir..out..".shp"
 				outConnInfo.DRIVER = "ESRI Shapefile"
 				outConnInfo.SPATIAL_IDX = true
@@ -1678,8 +1664,8 @@ TerraLib_ = {
 				local toSetName = nil
 				
 				if toType == "OGR" then
-					local file = File(toConnInfo.URI)
-					toSetName = file:name()
+					local _, name = File(toConnInfo.URI):split()
+					toSetName = name
 				end
 				
 				overwriteLayer(self, project, out, to, toSetName)
@@ -1839,7 +1825,7 @@ TerraLib_ = {
 				outDs = makeAndOpenDataSource(outConnInfo, outType)
 			elseif outType == "OGR" then
 				local file = File(outConnInfo.URI)
-				local outDir = _Gtme.makePathCompatibleToAllOS(file:directory())
+				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
 				outConnInfo.URI = outDir..newDstName..".shp"		
 
 				if fromLayerName == toName then
@@ -1889,7 +1875,7 @@ TerraLib_ = {
 		local set
 
 		do
-			local connInfo = createFileConnInfo(filePath)
+			local connInfo = {URI = tostring(filePath)}
 			local ds = makeAndOpenDataSource(connInfo, "GDAL")
 			local file = File(connInfo.URI)
 			local dSetName = file:name(true)
@@ -1914,14 +1900,15 @@ TerraLib_ = {
 		local set
 
 		do
-			local connInfo = createFileConnInfo(filePath)
+			local connInfo = {URI = tostring(filePath)}
 			local ds = makeAndOpenDataSource(connInfo, "OGR")
 			local dSetName
 			local file = File(filePath)
 			if string.lower(file:extension()) == "geojson" then
 				dSetName = "OGRGeoJSON"
 			else
-				dSetName = file:name()
+				local _, name = file:split()
+				dSetName = name
 			end
 
 			local dSet = ds:getDataSet(dSetName)
@@ -2119,7 +2106,7 @@ TerraLib_ = {
 			elseif toType == "GDAL" then
 				toData.fileTif = fromDSetName
 				local file = File(toData.file)
-				toData.dir = file:directory()
+				toData.dir = file:path()
 				local fileCopy = toData.dir..toData.fileTif
 
 				if toData.file and (file:name(true) ~= fileTif) then

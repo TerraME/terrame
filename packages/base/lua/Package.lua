@@ -24,31 +24,32 @@
 
 --@header Functions to work with packages in TerraME.
 
---- Return the path to a file of a given package. The file must be inside the directory data
--- within the package.
+--- Return a File storing the full path of a file within a given package. 
+-- The file must be inside the directory data of package.
 -- @arg filename A string with the name of the file.
--- @arg package A string with the name of the package. As default, it uses paciage base.
+-- @arg package A string with the name of the package. As default, it uses base package.
 -- @usage cs = CellularSpace{file = filePath("simple.pgm")}
 function filePath(filename, package)
 	if package == nil then package = "base" end
 
 	local s = sessionInfo().separator
-	local file = packageInfo(package).data..s..filename
-	if File(file):exists() or Directory(file):exists() then
+	local file = File(packageInfo(package).data..filename)
+	if file:exists() then
 		return file
 	else
 		local msg = "File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'."
 
-		if string.endswith(filename, ".tview") then
-			local luafile = string.sub(filename, 1, -6).."lua"
+		if file:extension() == "tview" then
+			local _, name = file:split()
+			local luafile = File(packageInfo(package).data..name..".lua")
 
-			if File(packageInfo(package).data..s..luafile):exists() then
+			if luafile:exists() then
 				msg = msg.." Please run 'terrame -package "..package.." -project' to create it."
 				customError(msg)
 			end
 		end
 
-		local dir = File(file):directory()
+		local dir = file:path()
 		local suggest = suggestion(filename, Directory(dir):list())
 		local suggestMsg = suggestionMsg(suggest)
 
@@ -66,12 +67,11 @@ function filesByExtension(package, extension)
 	mandatoryArgument(1, "string", package)
 	mandatoryArgument(2, "string", extension)
 
-	local size = string.len(extension)
 	local result = {}
 
 	forEachFile(packageInfo(package).data, function(file)
-		if string.sub(file, -size) == extension then
-			table.insert(result, string.sub(file, 1, -size - 1))
+		if file:extension() == extension then
+			table.insert(result, file)
 		end
 	end)
 
@@ -302,13 +302,13 @@ end
 -- authors & Name of the author(s) of the package.\
 -- contact & E-mail of one or more authors. \
 -- content & A description of the package. \
--- data & The path to the data directory of the package. This attribute is added
+-- data & A Directory with the path to the data directory of the package. This attribute is added
 -- by this function as it does not exist in description.lua.\
 -- date & Date of the current version.\
 -- depends & A comma-separated list of package names which this package depends on.\
 -- license & Name of the package's license. \
 -- package & Name of the package.\
--- path & Folder where the package is stored in the computer.\
+-- path & A Directory with the path where the package is stored in the computer.\
 -- title & Optional title for the HTML documentation of the package.\
 -- url & An optional value with the webpage of the package.\
 -- version & Current version of the package, in the form <number>[.<number>]*.
@@ -325,7 +325,7 @@ function packageInfo(package)
 	mandatoryArgument(1, "string", package)
 
 	local s = sessionInfo().separator
-	local pkgdirectory = Directory(sessionInfo().path..s.."packages"..s..package)
+	local pkgdirectory = Directory(sessionInfo().path.."packages"..s..package)
 	if not pkgdirectory:exists() then
 		pkgdirectory = Directory(package)
 		if not pkgdirectory:exists() then
@@ -349,8 +349,8 @@ function packageInfo(package)
 		customError("Could not load package '"..package.."'. File 'description.lua' is empty.") -- SKIP
 	end
 
-	result.path = tostring(pkgdirectory)
-	result.data = pkgdirectory.."data"
+	result.path = pkgdirectory
+	result.data = Directory(pkgdirectory.."data")
 
 	if result.depends then
 		local ss = string.gsub(result.depends, "([%w]+ %(%g%g %d[.%d]+%))", function()

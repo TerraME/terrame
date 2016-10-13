@@ -83,11 +83,16 @@ return {
 		local ag2 = Agent{}
 
 		test_function = function()
+			ag:walk()
+		end
+		unitTest:assertError(test_function, "Trying to use a function or an attribute of a dead Agent.")
+	
+		test_function = function()
 			ag2:message{
 				receiver = ag
 			}
 		end
-		unitTest:assertError(test_function, "Trying to use a function or an attribute of a dead Agent.")
+		unitTest:assertError(test_function, incompatibleTypeMsg("receiver", "Agent", ag))
 	end,
 	enter = function(unitTest)
 		local ag1 = Agent{}

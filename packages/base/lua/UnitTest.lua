@@ -101,6 +101,11 @@ UnitTest_ = {
 			mandatoryArgumentError(2)
 		end
 
+		if type(v1) == type(v2) and belong(type(v1), {"File", "Directory"}) then
+			v1 = tostring(v1)
+			v2 = tostring(v2)
+		end
+
 		if tol ~= nil and type(v1) ~= "number" and type(v1) ~= "string" then
 			customError("#3 should be used only when comparing numbers or strings (#1 is "..type(v1)..").")
 		end
@@ -133,10 +138,7 @@ UnitTest_ = {
 			else 
 				self.fail = self.fail + 1
 				local msg = "Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'."
-
-				if tol > 0 then
-					msg = msg.."\nThe maximum tolerance is "..tol..", but got "..dist.."." -- SKIP
-				end
+					.." The maximum tolerance is "..tol..", but got "..dist.."."
 
 				self:printError(msg)
 			end
@@ -281,7 +283,7 @@ UnitTest_ = {
 		self.tlogs[fname] = true
 
 		if not self.tmpdir then
-			self.tmpdir = Directory{tmp = true}.name -- SKIP
+			self.tmpdir = Directory{tmp = true} -- SKIP
 		end
 
 		os.execute("cp \""..fname.."\" \""..self.tmpdir.."\"")
@@ -398,12 +400,11 @@ UnitTest_ = {
 		self.tlogs[file] = true
 
 		if not self.tmpdir then
-			self.tmpdir = Directory{tmp = true}.name -- SKIP
+			self.tmpdir = Directory{tmp = true} -- SKIP
 		end
 
-		local newImage = self.tmpdir..s..file
-
-		local oldImage = self.log..s..file
+		local newImage = self.tmpdir..file
+		local oldImage = self.log..file
 
 		if not File(oldImage):exists() then
 			observer:save(oldImage) -- SKIP
@@ -424,14 +425,11 @@ UnitTest_ = {
 
 			if merror <= tolerance then
 				self.success = self.success + 1
-			elseif tolerance > 0 then
+			else
 				local message = "Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..file)
 					.."'\nand\n  '"..newImage.."'\nare different." -- SKIP
-					.."\nThe maximum tolerance is "..tolerance..", but got "..merror.."." -- SKIP
+					.." The maximum tolerance is "..tolerance..", but got "..merror.."." -- SKIP
 				self:printError(message)
-				self.fail = self.fail + 1 -- SKIP
-			else
-				self:printError("Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..file).."'\nand\n  '"..newImage.."'\nare different.")
 				self.fail = self.fail + 1 -- SKIP
 			end
 		end

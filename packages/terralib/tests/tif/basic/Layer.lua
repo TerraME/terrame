@@ -56,7 +56,7 @@ return {
 		
 		unitTest:assertEquals(clName1, cl1.name) -- SKIP
 		unitTest:assertEquals(cl1.source, "shp") -- SKIP
-		unitTest:assertEquals(cl1.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath1)) -- SKIP		
+		unitTest:assertEquals(cl1.file, currentDir()..filePath1) -- SKIP		
 		
 		-- #1152
 		-- local host = "localhost"
@@ -113,7 +113,7 @@ return {
 			return msg
 		end			
 
-		local proj = Project {
+		local proj = Project{
 			file = projName,
 			prodes = filePath("test/prodes_polyc_10k.tif", "terralib"),
 			clean = true
@@ -123,7 +123,7 @@ return {
 
 		unitTest:assertEquals(#proj.prodes, 20020)
 
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	fill = function(unitTest)
 		local projName = "layer_fill_tif.tview"
@@ -487,7 +487,7 @@ return {
 		unitTest:assert(true) -- SKIP
 	end
 
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	attributes = function(unitTest)
 		local projName = "tif_basic.tview"
@@ -513,7 +513,7 @@ return {
 		unitTest:assert(true) -- SKIP
 	end
 		
-		File(proj.file):delete()	
+		proj.file:delete()	
 	end,
 	dummy = function(unitTest)
 		local projName = "layer_tif_bands.tview"

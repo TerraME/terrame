@@ -52,6 +52,9 @@ return{
 		unitTest:assertEquals(u.success, 1)
 		unitTest:assertEquals(u.test, 1)
 
+		unitTest:assertEquals(currentDir(), currentDir())
+		unitTest:assertEquals(File("abc.txt"), File("abc.txt"))
+
 		unitTest:assertEquals(1, 1.1, 0.15)
 		unitTest:assertEquals("abc", "abd", 1)
 
@@ -105,7 +108,7 @@ source   string [shp]
 		local oldPrint = unitTest.printError
 		unitTest.printError = function() end
 		unitTest:assertFile("abc.csv") -- file does not exist
-		unitTest:assertFile(packageInfo().data) -- not possible to use directory
+		unitTest:assertFile(tostring(packageInfo().data)) -- not possible to use directory
 
 		unitTest.printError = oldPrint
 

@@ -26,11 +26,11 @@
 -- Most of the functions bellow are taken from LuaFileSystem 1.6.2.
 -- Copyright Kepler Project 2003 (https://keplerproject.github.io/luafilesystem).
 
---- Return a string with the current working directory.
+--- Return a Directory with the current working directory.
 -- @usage cdir = currentDir()
 -- print(cdir)
 function currentDir()
-	return lfs.currentdir()
+	return Directory(lfs.currentdir())
 end
 
 --- Execute a system command and return its output. It returns two tables. 

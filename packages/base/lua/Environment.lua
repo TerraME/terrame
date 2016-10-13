@@ -386,7 +386,7 @@ Environment_ = {
 		return oldTime
 	end,
 	--- Load a Neighborhood between two different CellularSpaces.
-	-- @arg data.source A string representing the name of the file to be loaded.
+	-- @arg data.source A File or a string with the name of the file to be loaded.
 	-- @arg data.name A string with the name of the relation to be created.
 	-- The default value is "1".
 	-- @arg data.bidirect A boolean value. If true then, for each relation from Cell a
@@ -407,23 +407,26 @@ Environment_ = {
 		verifyNamedTable(data)
 
 		defaultTableValue(data, "name", "1")
-		mandatoryTableArgument(data, "source", "string")
 
-		local extension = string.match(data.source, "%w+$")
+		if type(data.source) == "string" then
+			data.source = File(data.source)
+		end
+
+		mandatoryTableArgument(data, "source", "File")
+
+		local extension = data.source:extension()
+
 		if extension ~= "gpm" then
 			invalidFileExtensionError("source", extension)
 		end
 
 		defaultTableValue(data, "bidirect", false)
 
-		if not File(data.source):exists() then
+		if not data.source:exists() then
 			resourceNotFoundError("source", data.source)
 		end
 
-		local f = File(data.source)
-		local file = f:open("r")
-
-		local header = file:read()
+		local header = data.source:read()
 
 		local numAttribIdx = string.find(header, "%s", 1)
 		local layer1Idx = string.find(header, "%s", numAttribIdx + 1)
@@ -438,20 +441,6 @@ Environment_ = {
 
 		verify(numAttributes < 2, "This function does not support GPM with more than one attribute.")
 
-		local beginName = layer2Idx
-		local attribNames = {}
-
-		for i = 1, numAttributes do
-			local endName = string.find(header, "%s", beginName + 1)
-			
-			attribNames[i] = string.sub(header, beginName + 1)
-			if endName ~= nil then
-				attribNames[i] = string.sub(header, beginName + 1, endName - 1)
-			else
-				break
-			end
-		end
-		
 		local cellSpaces = {}
 		for _, element in pairs(self) do
 			if type(element) == "CellularSpace" then
@@ -471,7 +460,7 @@ Environment_ = {
 		end
 
 		repeat
-			local line_cell = file:read()
+			local line_cell = data.source:read()
 			if line_cell == nil then break; end
 
 			local cellIdIdx = string.find(line_cell, "%s", 1)
@@ -486,7 +475,7 @@ Environment_ = {
 			local weight
 
 			if numNeighbors > 0 then
-				local line_neighbors = file:read()
+				local line_neighbors = data.source:read()
 
 				local neighIdEndIdx = string.find(line_neighbors, "%s")
 
@@ -555,7 +544,7 @@ Environment_ = {
 			end
 		end
 
-		file:close()
+		data.source:close()
 	end,
 	--- Notify every Observer connected to the Environment.
 	-- @arg modelTime A number representing the notification time. The default value is zero.

@@ -40,7 +40,7 @@ function _Gtme.executeProject(package)
 	local s = sessionInfo().separator
 	local package_path = _Gtme.packageInfo(package).path
 
-	local data_path = package_path..s.."data"
+	local data_path = package_path.."data"
 
 	Directory(data_path):setCurrentDir()
 
@@ -53,19 +53,20 @@ function _Gtme.executeProject(package)
 
 	printNote("Removing output files")
 	forEachFile(data_path, function(file)
-		if string.endswith(file, ".lua") then
-			local output = string.sub(file, 1, -5)..".tview"
+		if file:extension() == "lua" then
+			local _, name = file:split()
+			local output = File(name..".tview")
 
-			if File(output):exists() then
-				print("Removing file '"..output.."'.")
-				File(output):delete()
+			if output:exists() then
+				print("Removing file '"..output:name().."'.")
+				output:delete()
 			end
 		end
 	end)
 
 	printNote("Checking if data does not contain any .tview file")
 	forEachFile(data_path, function(file)
-		if string.endswith(file, ".tview") then
+		if file:extension() == "tview" then
 			printError("File '"..file.."' should not exist as there is no Lua script with this name.")
 			project_report.errors_invalid = project_report.errors_invalid + 1
 		end
@@ -73,14 +74,14 @@ function _Gtme.executeProject(package)
 
 	printNote("Creating .tview files")
 	forEachFile(data_path, function(file)
-		if string.endswith(file, ".lua") then
-			print("Processing '"..file.."'")
+		if file:extension() == "lua" then
+			print("Processing '"..file:name().."'")
 			project_report.projects = project_report.projects + 1
 
-			local filename = File(file):name()
+			local _, filename = file:split()
 			local output = filename..".tview"
 
-			xpcall(function() dofile(data_path..s..file) end, function(err)
+			xpcall(function() dofile(data_path..s..file:name()) end, function(err)
 				printError(err)
 				project_report.errors_processing = project_report.errors_processing + 1
 			end)

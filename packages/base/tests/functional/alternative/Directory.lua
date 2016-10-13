@@ -32,7 +32,7 @@ return{
 		error_func = function()
 			Directory(1)
 		end
-		unitTest:assertError(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 
 		error_func = function()
 			Directory("abc\"")

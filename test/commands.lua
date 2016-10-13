@@ -2,7 +2,6 @@ show = false -- show commands
 time = false -- show execution time for each command
 
 test = {
-	--__test__     = "terrame -test config/all.lua",
 	onerror        = {arg = "-test", config = "all.lua", package = "onerror"},
 	twoerrors      = {arg = "-test", config = "all.lua", package = "twoerrors"},
 	onefile        = {arg = "-test", config = "oneFile.lua"},
@@ -90,6 +89,7 @@ basic = {
 	traceconnection     = {script = "trace-connection.lua"},
 	traceelement        = {script = "trace-element.lua"},
 	traceorderedelement = {script = "trace-ordered-element.lua"},
+	tracedirectory      = {script = "trace-directory.lua"},
 	tracefile           = {script = "trace-file.lua"},
 	tracelayer          = {script = "trace-layer.lua", arg = "-quiet"},
 	tracemodel          = {script = "trace-model.lua"},
@@ -126,3 +126,4 @@ sketch = {
 	terralib = {arg = "-sketch", package = "terralib"},
 	base     = {arg = "-sketch"}
 }
+

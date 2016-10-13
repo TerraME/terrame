@@ -27,17 +27,17 @@ return {
 		local file = File("amazonia.tview")
 
 		local proj1 = Project{
-			file = file:name(),
+			file = tostring(file),
 			clean = true,
 			author = "Avancini",
 			title = "The Amazonia"
 		}
 		
 		unitTest:assertType(proj1, "Project")
-		unitTest:assertEquals(proj1.file, file:name(true))
+		unitTest:assertEquals(proj1.file, file)
 		
 		local proj2 = Project{
-			file = file:name()
+			file = tostring(file)
 		}		
 
 		unitTest:assertEquals(proj1.author, proj2.author)
@@ -45,21 +45,21 @@ return {
 		unitTest:assertEquals(proj1.file, proj2.file)
 
 		local proj3 = Project{
-			file = file:name(true)
+			file = file:name()
 		}
 
 		unitTest:assertEquals(proj1.author, proj3.author)
 		unitTest:assertEquals(proj1.title, proj3.title)
-		unitTest:assertEquals(proj1.file, proj3.file)
+		unitTest:assertEquals(proj3.file, File("amazonia.tview"))
 
 		local proj3clean = Project{
-			file = file:name(true),
+			file = file:name(),
 			clean = true
 		}
 
 		unitTest:assertEquals(proj1.author, proj3clean.author)
 		unitTest:assertEquals(proj1.title, proj3clean.title)
-		unitTest:assertEquals(proj1.file, proj3clean.file)
+		unitTest:assertEquals(proj3clean.file, File("amazonia.tview"))
 		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
 		file:deleteIfExists()
@@ -127,7 +127,7 @@ return {
 		unitTest:assertEquals(tostring(proj1), [[author       string [Avancini]
 clean        boolean [true]
 description  string []
-file         string [tostring.tview]
+file         File
 layers       vector of size 0
 terralib     TerraLib
 title        string [The Amazonia]

@@ -9,10 +9,10 @@ Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
 Looking for lines of source code
+'tests/unnec4.txt' is not a directory neither a .lua file and will be ignored.
+'tests/alternative/unnec5.txt' is not a directory neither a .lua file and will be ignored.
 'tests/alternative/abc/unnec6.txt' is not a directory neither a .lua file and will be ignored.
 Directory 'tests/alternative/abc' is empty.
-'tests/alternative/unnec5.txt' is not a directory neither a .lua file and will be ignored.
-'tests/unnec4.txt' is not a directory neither a .lua file and will be ignored.
 Testing tests/Tube.lua
 Testing Tube
 Checking if all asserts were executed

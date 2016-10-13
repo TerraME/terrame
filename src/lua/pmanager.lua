@@ -102,15 +102,14 @@ local function enableAll()
 end
 
 local function buildComboboxPackages(default)
-	local s = sessionInfo().separator
 	comboboxPackages:clear()
 	local pos = 0
 	local index = 0
-	local pkgDir = sessionInfo().path..s.."packages"
-	forEachFile(pkgDir, function(file)
-		if file == "luadoc" or not Directory(pkgDir..s..file):exists() then return end
+	local pkgDir = sessionInfo().path.."packages"
+	forEachDirectory(pkgDir, function(dir)
+		if dir:name() == "luadoc" then return end
 	
-		qt.combobox_add_item(comboboxPackages, file)
+		qt.combobox_add_item(comboboxPackages, dir:name())
 	
 		if file == default then
 			index = pos
@@ -118,6 +117,7 @@ local function buildComboboxPackages(default)
 			pos = pos + 1
 		end
 	end)
+
 	return index
 end
 
@@ -213,7 +213,7 @@ local function selectPackage()
 	end
 
 	local docpath = packageInfo(comboboxPackages.currentText).path
-	docpath = docpath..s.."doc"..s.."index.html"
+	docpath = docpath.."doc"..s.."index.html"
 
 	docButton.enabled = File(docpath):exists()
 
@@ -239,7 +239,8 @@ local function selectPackage()
 	projButton.enabled = #files > 0
 
 	forEachElement(files, function(_, value)
-		qt.combobox_add_item(comboboxProjects, string.sub(value, 0, string.len(value) - 4))
+		local _, file = value:split()
+		qt.combobox_add_item(comboboxProjects, file)
 	end)
 end
 
@@ -352,8 +353,6 @@ local function installButtonClicked()
 		if result then
 			msg = "Package '"..package.."' successfully installed."
 
-			print(_Gtme.getn(installed))
-
 			if _Gtme.getn(installed) == 1 then
 				msg = msg.." One additional dependency package was installed:"
 			elseif _Gtme.getn(installed) > 1 then
@@ -378,7 +377,7 @@ local function installButtonClicked()
 
 		File(mpkgfile):delete()
 
-		_Gtme.Directory(cdir):setCurrentDir()
+		cdir:setCurrentDir()
 		tmpdirectory:delete()
 		mdialog:done(0)
 	end)
@@ -478,7 +477,7 @@ local function installLocalButtonClicked()
 	end
 
 	local currentVersion
-	local packageDir = _Gtme.sessionInfo().path..s.."packages"
+	local packageDir = _Gtme.sessionInfo().path.."packages"
 	if Directory(packageDir..s..package):exists() then
 		currentVersion = packageInfo(package).version
 		_Gtme.printNote("Package '"..package.."' is already installed")
@@ -521,7 +520,7 @@ local function installLocalButtonClicked()
 	if pkg then
 		local ok = true
 		xpcall(function() getPackage(package) end, function(err)
-			Directory(packageInfo(package).path):delete()
+			packageInfo(package).path:delete()
 			qt.dialog.msg_critical(err)
 			ok = false
 		end)

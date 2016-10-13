@@ -499,7 +499,7 @@ end
 
 --- Second order function to transverse a given directory,
 -- applying a given function on each of its files. Internal directories are
--- also considered files. If any of the function calls returns
+-- ignored. If any of the function calls returns
 -- false, forEachFile() stops and returns false, otherwise it returns true.
 -- @arg directory A string with the path to a directory, or a vector of files.
 -- @arg _sof_ A user-defined function that takes a file name as argument. Note that
@@ -509,27 +509,71 @@ end
 -- end)
 -- @see Directory:list
 function forEachFile(directory, _sof_)
-	if type(directory) == "string" then
-		if not Directory(directory):exists() then
-			customError("Directory '"..directory.."' is not valid or does not exist.")
-		end
+	if type(directory) == "string" then directory = Directory(directory) end
 
-		if not pcall(function() directory = Directory(directory):list() end) then
-			return true
-		end
+	mandatoryArgument(1, "Directory", directory)
+	mandatoryArgument(2, "function", _sof_)
+
+	if not directory:exists() then
+		customError("Directory '"..directory.."' is not valid or does not exist.")
 	end
 
-	mandatoryArgument(1, "table", directory)
-	mandatoryArgument(2, "function", _sof_)
+	local files
+
+	if not pcall(function() files = directory:list() end) then
+		return true
+	end
 
 	local directoryIdx = {}
 
-	for i = 1, #directory do
-		directoryIdx[directory[i]] = true
+	for i = 1, #files do
+		directoryIdx[files[i]] = true
 	end
 
 	return forEachOrderedElement(directoryIdx, function(file)
-		if _sof_(file) == false then return false end
+		if not Directory(directory..file):exists() then
+			if _sof_(File(directory..file)) == false then return false end
+		end
+	end)
+end
+
+--- Second order function to transverse a given directory,
+-- applying a given function on each of its internal directories.
+-- If any of the function calls returns
+-- false, forEachDirectory() stops and returns false, otherwise it returns true.
+-- @arg directory A string with the path to a directory, or a vector of files.
+-- @arg _sof_ A user-defined function that takes a file name as argument. Note that
+-- the name does not include the directory where the file is placed.
+-- @usage forEachDirectory(packageInfo("base").path, function(dir)
+--     print(dir)
+-- end)
+-- @see Directory:list
+function forEachDirectory(directory, _sof_)
+	if type(directory) == "string" then directory = Directory(directory) end
+
+	mandatoryArgument(1, "Directory", directory)
+	mandatoryArgument(2, "function", _sof_)
+
+	if not directory:exists() then
+		customError("Directory '"..directory.."' is not valid or does not exist.")
+	end
+
+	local files
+	if not pcall(function() files = directory:list() end) then
+		return true
+	end
+
+	local directoryIdx = {}
+
+	for i = 1, #files do
+		directoryIdx[files[i]] = true
+	end
+
+	return forEachOrderedElement(directoryIdx, function(file)
+		local dir = Directory(directory..file)
+		if dir:exists() then
+			if _sof_(dir) == false then return false end
+		end
 	end)
 end
 

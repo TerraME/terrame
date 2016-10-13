@@ -28,7 +28,7 @@ return {
 
 		projName:deleteIfExists()
 		local proj = Project{
-			file = projName:name(true),
+			file = projName:name(),
 			clean = true
 		}
 
@@ -60,7 +60,7 @@ return {
 			file = filePath1
 		}	
 
-		unitTest:assertEquals(projName:name(true), cl.project.file)
+		unitTest:assertEquals(projName, cl.project.file)
 		unitTest:assertEquals(clName1, cl.name)
 		
 		local cl2 = Layer{
@@ -69,7 +69,7 @@ return {
 		}
 		
 		unitTest:assertEquals(cl2.source, "shp")
-		unitTest:assertEquals(cl2.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath1))			
+		unitTest:assertEquals(cl2.file, currentDir()..filePath1)
 	
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 		projName:deleteIfExists()
@@ -486,7 +486,7 @@ return {
 		}
 
 		unitTest:assertEquals(cellSpaceLayer.source, "shp") -- SKIP
-		unitTest:assertEquals(cellSpaceLayer.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath22)) -- SKIP
+		unitTest:assertEquals(cellSpaceLayer.file, currentDir()..filePath22) -- SKIP
 
 		File(projName):deleteIfExists()
 
@@ -539,7 +539,7 @@ return {
 
 		unitTest:assertEquals(l:representation(), "line")
 		
-		File(proj.file):deleteIfExists()
+		proj.file:deleteIfExists()
 	end,
 	__tostring = function(unitTest)
 		local projName = File("cellular_layer_print.tview")

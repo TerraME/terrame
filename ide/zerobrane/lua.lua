@@ -280,7 +280,7 @@ return {
       Group InternetSender Jump Layer Log Mandatory Map Model Neighborhood Project Random SocialNetwork Society
       State TextScreen Timer Trajectory UnitTest VisualTable 
       forEachAgent forEachCell forEachCellPair forEachConnection forEachElement forEachNeighbor forEachNeighborhood 
-      forEachFile forEachOrderedElement forEachSocialNetwork import
+      forEachFile forEachDirectory forEachOrderedElement forEachSocialNetwork import
       createNeighboorhood createSocialNetwork createPlacement
       greaterByCoord greaterByAttribute integrate
       table.concat table.insert table.maxn table.pack table.remove table.sort table.unpack]]

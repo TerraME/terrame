@@ -114,7 +114,7 @@ File_ = {
 	-- block allocated for file; (Unix only) \
 	-- "blksize" &
 	-- optimal file system I/O blocksize; (Unix only)
-	-- @usage File(packageInfo("base").path):attributes("mode")
+	-- @usage filePath("river.shp"):attributes("mode")
 	attributes = function(self, attributename)
 		optionalArgument(1, "string", attributename)
 
@@ -187,16 +187,16 @@ File_ = {
 			self:delete()
 		end
 	end,
-	--- Return the directory of a file given its path.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:directory())
-	directory = function(self)
-		local path, _, _ = self:split()
+	--- Return the path to the file.
+	-- @usage file = filePath("agents.csv", "base")
+	-- print(file:path())
+	path = function(self)
+		local result, _, _ = self:split()
 
-		return path
+		return result
 	end,
 	--- Return whether the file stored in the computer.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:exists())
 	exists = function(self)
 		local fopen = io.open(self.filename)
@@ -210,7 +210,7 @@ File_ = {
 	end,
 	--- Return the extension of the file. It returns the substring after the last dot.
 	-- If it does not have a dot, an empty string is returned.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:extension()) -- "csv"
 	extension = function(self)
 		local s = sessionInfo().separator
@@ -227,24 +227,22 @@ File_ = {
 		return ""
 	end,
 	--- Return a boolean value if the file has an extension.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:hasExtension()) -- true
 	hasExtension = function(self)
 		return not (self:extension() == "")
 	end,
 	--- Return the file name removing its path.
-	-- @arg extension A boolean that enable return the name with extension. The default value is false.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:name()) -- "agents"
-	-- print(file:name(true)) -- "agents.csv"
-	name = function(self, extension)
-		extension = extension or false
-		optionalArgument(1, "boolean", extension)
-
+	-- @usage file = filePath("agents.csv", "base")
+	-- print(file:name()) -- "agents.csv"
+	name = function(self)
 		local split = {self:split()}
-		if extension then return split[2].."."..split[3] end
 
-		return split[2]
+		if split[3] then
+			return split[2].."."..split[3]
+		else
+			return split[2]
+		end
 	end,
 	--- Open the file for reading or writing. An opened file must be closed after being used.
 	-- @arg mode A string with the mode. It can be "w" for writing or "r" for reading.
@@ -275,7 +273,7 @@ File_ = {
 	-- @arg sep A string with the separator. Parse a single CSV line.
 	-- It returns a vector of strings with the i-th value in the position i.
 	-- This function was taken from http://lua-users.org/wiki/LuaCsv.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- line = file:read(",")
 	-- print(line[1]) -- john
 	-- print(line[2]) -- 20
@@ -294,24 +292,24 @@ File_ = {
 		end
 
 		local line = self.file:read()
-		local data = {}
+
 		if line then
 			self.line = self.line + 1
-			if not sep then
-				return line
-			end
-
-			data = parseLine(line, sep, self.line)
 		end
 
-		return data
+		if not sep then
+			return line
+		end
+
+		if line == nil then return {} end
+		return  parseLine(line, sep, self.line)
 	end,
 	--- Read a file. It returns a vector (whose indexes are line numbers)
 	-- containing named tables (whose indexes are attribute names).
 	-- The first line of the file list the attribute names. This function
 	-- automatically closes the file.
 	-- @arg sep A string with the separator. The default value is ','.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- csv = file:readTable()
 	-- print(csv[1].age) -- 20
 	readTable = function(self, sep)
@@ -352,13 +350,18 @@ File_ = {
 		return data
 	end,
 	--- Split the path, name, and extension of the file into three returning values.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- directory, name, extension = file:split()
 	-- print(directory) -- "/base/data/"
 	-- print(name) -- "agents",
 	-- print(extension) -- "csv"
 	split = function(self)
 		local filePath, nameWithExtension, extension = string.match(self.filename, "(.-)([^\\/]-%.?([^%.\\/]*))$")
+
+		if nameWithExtension == extension then
+			return filePath, nameWithExtension
+		end
+
 		local _, _, fileName = string.find(nameWithExtension, "^(.*)%.[^%.]*$")
 
 		return filePath, fileName, extension
@@ -370,7 +373,7 @@ File_ = {
 	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 	-- @arg atime The new access time (in seconds).
 	-- @arg mtime The new modification time (in seconds).
-	-- @usage File(packageInfo("base").path):touch(0, 0)
+	-- @usage filePath("river.shp"):touch(0, 0)
 	touch = function(self, atime, mtime)
 		mandatoryArgument(1, "number", atime)
 		mandatoryArgument(2, "number", mtime)
@@ -462,7 +465,11 @@ metaTableFile_ = {
 	-- @arg value A string or an object that can be concatenated.
 	-- @usage print(File("abcd1234").." does not exist.")
 	__concat = function(self, value)
-		return self.filename..value
+		if type(self) == "File" then
+			return self.filename..value
+		elseif type(value) == "File" then
+			return self..value.filename
+		end
 	end
 }
 
@@ -472,7 +479,7 @@ metaTableFile_ = {
 -- The file is only opened when a read function is called. The file is only created if a 
 -- write function is called.
 -- @arg data.name A string with the file name. This argument is mandatory.
--- @usage file = File(filePath("agents.csv", "base"))
+-- @usage file = File("agents.csv")
 function File(data)
 	mandatoryArgument(1, "string", data)
 
@@ -484,7 +491,7 @@ function File(data)
 
 	setmetatable(data, metaTableFile_)
 
-	local dir = data:directory()
+	local dir = data:path()
 	if not Directory(dir):exists() then
 		customError("Directory '"..dir.."' does not exist.")
 	end

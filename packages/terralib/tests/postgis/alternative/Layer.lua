@@ -851,7 +851,7 @@ return {
 		end
 		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index"))
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		-- // SPATIAL INDEX TEST
 	end
 }

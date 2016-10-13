@@ -28,7 +28,7 @@ return{
 		pcall(function() cf = getConfig() end)
 
 		if not cf then
-			print([[
+			_Gtme.print([[
 ===================================================================
 Error: The environment was not correctly configured to run database
 tests in PostGIS environment. Please create file 'config.lua' in
@@ -43,7 +43,7 @@ port = 5431
 Note that the only compulsory variable is the password. Other
 variables that use the default value must not exist.
 ===================================================================]])
-			os.exit()
+			os.exit(1)
 		else
 			unitTest:assertNotNil(cf.password)
 		end

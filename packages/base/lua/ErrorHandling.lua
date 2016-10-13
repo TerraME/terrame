@@ -496,7 +496,13 @@ function resourceNotFoundMsg(attr, path)
 		attr = "#"..attr
 	end
 
-	return "Resource '"..path.."' not found for argument '"..attr.."'."
+	local msg = "Resource"
+
+	if type(path) == "File" then
+		msg = "File"
+	end
+
+	return msg.." '"..path.."' was not found for argument '"..attr.."'."
 end
 
 --- Print a strict warning. This warning is shown only in the strict mode.

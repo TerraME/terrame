@@ -36,16 +36,16 @@ return {
 		File(proj.file):deleteIfExists()
 
 		tl:createProject(proj, {})
-		unitTest:assert(File(proj.file):exists())
-		unitTest:assertEquals(proj.file, file)
+		unitTest:assert(proj.file:exists())
+		unitTest:assertEquals(proj.file:name(), file)
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
 
 		-- allow overwrite
 		tl:createProject(proj, {})
-		unitTest:assert(File(proj.file):exists())
+		unitTest:assert(proj.file:exists())
 
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	addGeoJSONLayer = function(unitTest)
 		local tl = TerraLib {}
@@ -69,12 +69,12 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
 
 		unitTest:assertEquals(layerInfo.name, layerName)
-		unitTest:assertEquals(layerInfo.file, layerFile)
+		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "geometry")
 		unitTest:assertNotNil(layerInfo.sid)
 
-		File(proj.file):deleteIfExists()
+		proj.file:deleteIfExists()
 	end,
 	addGeoJSONCellSpaceLayer = function(unitTest)
 		local tl = TerraLib{}
@@ -107,7 +107,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 
 		unitTest:assertEquals(layerInfo.name, clName)
-		unitTest:assertEquals(layerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir() .. "/") .. geojson1)
+		unitTest:assertEquals(layerInfo.file, geojson1)
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
@@ -130,12 +130,12 @@ return {
 
 		unitTest:assertFile(geojson1)
 		unitTest:assertFile(geojson2)
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getOGRByFilePath = function(unitTest)
 		local tl = TerraLib{}
 		local shpPath = filePath("test/sampa.geojson", "terralib")
-		local dSet = tl:getOGRByFilePath(shpPath)
+		local dSet = tl:getOGRByFilePath(tostring(shpPath))
 		
 		unitTest:assertEquals(getn(dSet), 63)
 
@@ -207,7 +207,7 @@ return {
 		tl:dropPgTable(pgData)		
 
 		File(toData.file):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getLayerSize = function(unitTest)
 		local tl = TerraLib{}

@@ -44,7 +44,7 @@ return{
 		end
 		unitTest:assertError(error_func, "Directory '/my/path/' does not exist.")
 
-		local path = _Gtme.makePathCompatibleToAllOS(packageInfo("base").data).."/"
+		local path = packageInfo("base").data
 
 		local filename = path.."file*"
 		error_func = function()
@@ -59,7 +59,7 @@ return{
 		unitTest:assertError(error_func, "Filename '"..filename.."' cannot contain character '\"'.")
 	end,
 	attributes = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		local error_func = function()
 			file:attributes(1)
 		end
@@ -104,16 +104,8 @@ return{
 			unitTest:assert(not file:exists()) -- SKIP
 		end
 	end,
-	name = function(unitTest)
-		local file = File("abc.txt")
-
-		local error_func = function()
-			file:name(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "boolean", 1))
-	end,
 	open = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 		file:read()
 
 		local error_func = function()
@@ -134,8 +126,7 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
 	read = function(unitTest)
-		local s = sessionInfo().separator
-		local filename = currentDir()..s.."csvwrite.csv"
+		local filename = currentDir().."csvwrite.csv"
 		local csv = {
 			{name = "\"ab\"c"}
 		}
@@ -158,7 +149,7 @@ return{
 		file:close()
 		file:deleteIfExists()
 
-		file = File(filePath("agents.csv", "base"))
+		file = filePath("agents.csv", "base")
 		error_func = function()
 			file:read(1)
 		end
@@ -187,7 +178,7 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 
 		local s = sessionInfo().separator
-		file = File(filePath("test/error"..s.."csv-error.csv"))
+		file = filePath("test/error"..s.."csv-error.csv")
 
 		error_func = function()
 			file:readTable()
@@ -208,7 +199,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "1"))
 	end,
 	write = function(unitTest)
-		local file = File(filePath("agents.csv", "base"))
+		local file = filePath("agents.csv", "base")
 
 		local error_func = function()
 			file:write()
@@ -229,7 +220,7 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
-		file = File(filePath("agents.csv", "base"))
+		file = filePath("agents.csv", "base")
 		file:readTable()
 
 		error_func = function()
@@ -238,8 +229,7 @@ return{
 
 		unitTest:assertError(error_func, "Cannot write a file opened for reading.")
 
-		local s = sessionInfo().separator
-		local filename = Directory{tmp = true}.name..s.."csvwrite.csv"
+		local filename = Directory{tmp = true}.."csvwrite.csv"
 		file = File(filename)
 
 		error_func = function()

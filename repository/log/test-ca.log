@@ -1,5 +1,4 @@
-Loading configuration file 't.lua'
-Using log directory 'log/mac'
+Using log directory '/Applications/terrame.app/Contents/MacOS/packages/ca/log/mac/'
 Loading package 'ca'
 Looking for overwritten variables
 Looking for documented functions
@@ -20,12 +19,12 @@ Checking if all asserts were executed
 Testing tests/Growth.lua
 Testing Growth
 Checking if all asserts were executed
-Testing tests/Life.lua
-Testing Life
-Checking if all asserts were executed
 Testing tests/LifePatterns.lua
 Testing getLife
 Testing insertPattern
+Checking if all asserts were executed
+Testing tests/Life.lua
+Testing Life
 Checking if all asserts were executed
 Testing tests/Oscillator.lua
 Testing Oscillator

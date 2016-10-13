@@ -165,9 +165,8 @@ return{
 			file = filePath("test/sampa.shp", "terralib")
 		}		
 		
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1
+		local filePath1 = currentDir()..shp1
 		
 		File(filePath1):deleteIfExists()
 		

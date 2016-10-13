@@ -57,31 +57,31 @@ end
 
 local function imageFiles(package)
 	local s = sessionInfo().separator
-	local imagepath = packageInfo(package).path..s.."images"
+	local imagepath = Directory(packageInfo(package).path..s.."images")
 
-	if not Directory(imagepath):exists() then
+	if not imagepath:exists() then
 		return {}
 	end
 
-	local files = Directory(imagepath):list()
 	local result = {}
 
-	forEachElement(files, function(_, fname)
-		if not string.endswith(fname, ".lua") then
-			result[fname] = 0
+	forEachFile(imagepath, function(file)
+		if file:extension() ~= "lua" then
+			result[file:name()] = 0
 		end
 	end)
+
 	return result
 end
 
 local function dataFiles(package)
 	local datapath = packageInfo(package).data
 
-	if not Directory(datapath):exists() then
+	if not datapath:exists() then
 		return {}
 	end
 
-	local files = Directory(datapath):list()
+	local files = datapath:list()
 	local result = {}
 
 	forEachElement(files, function(_, fname)
@@ -91,9 +91,6 @@ local function dataFiles(package)
 end
 
 local function getProjects(package)
-	data_path = packageInfo(package).data
-	local s = sessionInfo().separator
-
 	local projects = {}
 	local layers = {}
 	local currentProject
@@ -262,7 +259,6 @@ local function getProjects(package)
 					attributes = {}
 				}
 			end
-
 		end
 
 		setmetatable(data, mtLayer)
@@ -271,11 +267,11 @@ local function getProjects(package)
 	
 	sessionInfo().mode = "quiet"
 	printNote("Processing lua files")
-	forEachFile(data_path, function(file)
-		if string.endswith(file, ".lua") then
-			print("Processing '"..file.."'")
+	forEachFile(packageInfo(package).data, function(file)
+		if file:extension() == "lua" then
+			print("Processing '"..file:name().."'")
 
-			xpcall(function() dofile(data_path..s..file) end, function(err)
+			xpcall(function() dofile(tostring(file)) end, function(err)
 				printError(_Gtme.traceback(err))
 			end)
 
@@ -528,7 +524,7 @@ function _Gtme.executeDoc(package)
 
 				local csv 
 
-				local result, err = pcall(function() csv = File(filePath(value.file[1], package)):readTable(value.separator) end)
+				local result, err = pcall(function() csv = filePath(value.file[1], package):readTable(value.separator) end)
 
 				if not result then
 					printError(err)

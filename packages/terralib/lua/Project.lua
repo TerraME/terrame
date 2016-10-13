@@ -37,7 +37,7 @@ metaTableProject_ = {
 -- data sets only using the respective layer name. 
 -- TerraME allows the modeler to create a Project from scratch or load one already
 -- created in another software of TerraLib family.
--- @arg data.file A string with the file name to be used. If the
+-- @arg data.file A File or a string with the file name to be used. If the
 -- file does not exist then it will be created. If it exists then it will be opened.
 -- If this name does not ends with ".tview", this extension will be added to the name
 -- of the file.
@@ -73,10 +73,14 @@ metaTableProject_ = {
 function Project(data)
 	verifyNamedTable(data)
     
-	mandatoryTableArgument(data, "file", "string")
+	if type(data.file) == "string" then
+		data.file = File(data.file)
+	end
+
+	mandatoryTableArgument(data, "file", "File")
 	
-	if not string.endswith(data.file, ".tview") then
-		data.file = data.file..".tview"
+	if data.file:extension() ~= "tview" then
+		data.file = File(data.file..".tview")
 	end
 	
 	defaultTableValue(data, "clean", false)
@@ -89,11 +93,11 @@ function Project(data)
 	data.terralib = TerraLib{}
 	data.layers = {}
 
-	if File(data.file):exists() and data.clean then
+	if data.file:exists() and data.clean then
 		local proj = Project{file = data.file}
-		File(data.file):delete()
+		data.file:delete()
 
-		if File(data.file):exists() then
+		if data.file:exists() then
 			customError("File '"..data.file.."' could not be removed.") -- SKIP
 		end
 
@@ -106,7 +110,7 @@ function Project(data)
 		end
 	end
 
-	if File(data.file):exists() then
+	if data.file:exists() then
 		terralib:openProject(data, data.file)
 	else
 		terralib:createProject(data, data.layers)
@@ -118,21 +122,24 @@ function Project(data)
 
 	forEachElement(data, function(idx, value)
 		if not belong(idx, {"clean", "file", "author", "description", "title", "layers", "terralib"}) then
-			if type(data[idx]) ~= "string" then
-				File(data.file):deleteIfExists()
-
-				incompatibleTypeError(idx, "string", data[idx])
+			if type(value) == "string" then
+				value = File(value)
 			end
 
-			if File(value):exists() then
+			if type(value) ~= "File" then
+				data.file:deleteIfExists()
+
+				incompatibleTypeError(idx, "File", value)
+			end
+
+			if value:exists() then
 				layers[idx] = Layer{
 					project = data,
 					name = idx,
 					file = value
 				}
-
 			else
-				File(data.file):deleteIfExists()
+				data.file:deleteIfExists()
 				customError("Value of argument '"..idx.."' is not a valid file name.")
 			end
 		end

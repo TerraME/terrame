@@ -112,8 +112,7 @@ function _Gtme.printWarning(value)
 end
 
 function _Gtme.fontFiles(package)
-	local s = sessionInfo().separator
-	local fontpath = packageInfo(package).path..s.."font"
+	local fontpath = packageInfo(package).path.."font"
 
 	if not Directory(fontpath):exists() then
 		return {}
@@ -163,7 +162,7 @@ function _Gtme.getVersion(str)
 end
 
 function _Gtme.downloadPackagesList()
-	local version = sessionInfo().version
+	local version = "2.0.0-beta-5" --sessionInfo().version
 	local list = load(cpp_listpackages("http://www.terrame.org/packages/"..version.."/packages.lua"))
 
 	if not list then return {} end
@@ -173,7 +172,7 @@ function _Gtme.downloadPackagesList()
 end
 
 function _Gtme.downloadPackage(pkg)
-	local version = sessionInfo().version
+	local version = "2.0.0-beta-5" --sessionInfo().version
 	cpp_downloadpackage(pkg, "http://www.terrame.org/packages/"..version.."/")
 end
 
@@ -212,7 +211,7 @@ function _Gtme.buildCountTable(package)
 	local s = _Gtme.sessionInfo().separator
 	local baseDir = _Gtme.packageInfo(package).path
 
-	local load_file = baseDir..s.."load.lua"
+	local load_file = baseDir.."load.lua"
 	local load_sequence
 
 	if _Gtme.File(load_file):exists() then
@@ -221,9 +220,9 @@ function _Gtme.buildCountTable(package)
 		load_sequence = _Gtme.include(load_file).files
 	else
 		load_sequence = {}
-		_Gtme.forEachFile(baseDir..s.."lua", function(mfile)
-			if string.endswith(mfile, ".lua") then
-				table.insert(load_sequence, mfile)
+		_Gtme.forEachFile(baseDir.."lua", function(mfile)
+			if mfile:extension() == "lua" then
+				table.insert(load_sequence, mfile:name())
 			end
 		end)
 	end
@@ -253,7 +252,7 @@ function _Gtme.buildCountTable(package)
 	for _, file in ipairs(load_sequence) do
 		testfunctions[file] = {}
 		currentFile = file
-		lf = loadfile(baseDir..s.."lua"..s..file, 't', result)
+		lf = loadfile(baseDir.."lua"..s..file, 't', result)
 
 		if lf ~= nil then
 			lf()
@@ -268,10 +267,10 @@ function _Gtme.projectFiles(package)
 	local files = {}
 	local data_path = _Gtme.packageInfo(package).data
 
-	if not Directory(data_path):exists() then return files end
+	if not data_path:exists() then return files end
 
 	forEachFile(data_path, function(file)
-		if string.endswith(file, ".lua") then
+		if file:extension() == "lua" then
 			table.insert(files, file)
 		end
 	end)
@@ -280,8 +279,6 @@ function _Gtme.projectFiles(package)
 end
 
 function _Gtme.findModels(package)
-	local s = "/"
-	
 	if not _Gtme.isLoaded("base") then
 		_Gtme.import("base")
 	end
@@ -299,18 +296,15 @@ function _Gtme.findModels(package)
 	end
 
 	local packagepath = _Gtme.packageInfo(package).path
-	packagepath = _Gtme.makePathCompatibleToAllOS(packagepath)
 
-	if _Gtme.Directory(packagepath):attributes("mode") ~= "directory" then
+	if not packagepath:exists() then
 		_Gtme.customError("Package '"..package.."' is not installed.")
 	end
 
-	local srcpath = packagepath..s.."lua"..s
-
-	_Gtme.forEachFile(srcpath, function(fname)
+	_Gtme.forEachFile(packagepath.."lua", function(file)
 		found = false
 		local a
-		a = _Gtme.include(srcpath..fname)
+		a = _Gtme.include(tostring(file))
 
 		if found then
 			_Gtme.forEachElement(a, function(idx, value)
@@ -325,11 +319,9 @@ function _Gtme.findModels(package)
 end
 
 function _Gtme.findExamples(package)
-	local s = _Gtme.sessionInfo().separator
-
 	local examplespath
 
-	xpcall(function() examplespath = _Gtme.packageInfo(package).path..s.."examples" end, function(err)
+	xpcall(function() examplespath = _Gtme.packageInfo(package).path.."examples" end, function(err)
 		_Gtme.printError(err)
 		os.exit(1)
 	end)
@@ -340,11 +332,12 @@ function _Gtme.findExamples(package)
 
 	local result = {}
 
-	_Gtme.forEachFile(examplespath, function(fname)
-		if string.endswith(fname, ".lua") then
-			table.insert(result, string.sub(fname, 0, string.len(fname) - 4))
-		elseif not string.endswith(fname, ".tme") and not string.endswith(fname, ".log") then
-			_Gtme.printWarning("Test file '"..fname.."' does not have a valid extension.")
+	_Gtme.forEachFile(examplespath, function(file)
+		if file:extension() == "lua" then
+			local split = {file:split()}
+			table.insert(result, split[2])
+		elseif file:extension() ~= "tme"then
+			_Gtme.printWarning("Test file '"..file:name().."' does not have a valid extension.")
 		end
 	end)
 	return result
@@ -360,7 +353,7 @@ function _Gtme.showDoc(package)
 		os.exit(1)
 	end)
 
-	docpath = docpath..s.."doc"..s.."index.html"
+	docpath = docpath.."doc"..s.."index.html"
 
 	local exists 
 	ok, err = pcall(function() exists = File(docpath):exists() end)
@@ -607,15 +600,15 @@ function _Gtme.installPackage(file)
 
 	_Gtme.print("Copying package '"..package.."'.")
 
-	local currentDir = _Gtme.currentDir()
-	local packageDir = _Gtme.sessionInfo().path..s.."packages"
+	local cDir = _Gtme.currentDir()
+	local packageDir = _Gtme.sessionInfo().path.."packages"
 
 	if not _Gtme.isLoaded("base") then
 		_Gtme.import("base")
 	end
 
 	local currentVersion
-	if Directory(packageDir..s..package):exists() then
+	if Directory(packageDir..package):exists() then
 		currentVersion = packageInfo(package).version
 		_Gtme.print("Package '"..package.."' is already installed.")
 	else
@@ -643,7 +636,7 @@ function _Gtme.installPackage(file)
 			os.exit(1)
 		else
 			_Gtme.print("Removing previous version of package.")
-			Directory(packageDir..s..package):delete()
+			Directory(packageDir..package):delete()
 		end
 	end
 
@@ -658,7 +651,7 @@ function _Gtme.installPackage(file)
 	_Gtme.print("Installing package '"..package.."'.")
 	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")
 
-	Directory(currentDir):setCurrentDir()
+	cDir:setCurrentDir()
 
 	tmpdirectory:delete()
 	_Gtme.print("Package '"..package.."' successfully installed.")
@@ -952,24 +945,15 @@ end
 local function loadPackgesLibPath()
 	local tmePath = os.getenv("TME_PATH")
 	local packsPath = tmePath.."/packages"
-	local files = Directory(packsPath):list()
 	
-	forEachFile(files, function(file)
-		if Directory(packsPath.."/"..file):exists() then
-			local packPath = packsPath.."/"..file
-			local packDirs = Directory(packPath):list()
-			forEachFile(packDirs, function(d)
-				if d == "lib"  then
-					packLibPath = packPath.."/"..d
-					if Directory(packLibPath):exists() then
-						cpp_putenv(packLibPath)
-						package.cpath = package.cpath..";"..packLibPath.."/?.dll"
-													..";"..packLibPath.."/?.so"
-													..";"..packLibPath.."/?.lib"
-													..";"..packLibPath.."/?.dylib"
-					end
-				end
-			end)
+	forEachDirectory(packsPath, function(dir)
+		local packLibPath = Directory(dir.."lib")
+		if packLibPath:exists() then
+			cpp_putenv(tostring(packLibPath))
+			package.cpath = package.cpath..";"..packLibPath.."/?.dll"
+			                             ..";"..packLibPath.."/?.so"
+			                             ..";"..packLibPath.."/?.lib"
+			                             ..";"..packLibPath.."/?.dylib"
 		end
 	end)	
 end
@@ -1037,11 +1021,11 @@ local function executeExamples(package)
 		os.exit(1)
 	end)
 
-	_Gtme.forEachFile(examplespath, function(fname)
-		if string.endswith(fname, ".lua") then
-			print("Run example '"..fname.."'.")
+	_Gtme.forEachFile(examplespath, function(file)
+		if file:extension() == "lua" then
+			print("Run example '"..file:name().."'.")
 
-			xpcall(function() dofile(examplespath..s..fname) end, function(err)
+			xpcall(function() dofile(tostring(fname)) end, function(err)
 				_Gtme.printError(err)
 				errors = errors + 1
 			end)
@@ -1170,138 +1154,6 @@ function _Gtme.execProject(project, packageName)
 	return success, _
 end
 
-local function upperFirst(str)
-	return str:gsub("^%l", string.upper)
-end
-
-local function checkFile(file, prefixMsg)
-	local luacheck = require("luacheck.init")
-	local files = {file}
-	local options = {std = "min", cache = true, global = false}				
-	local issues = luacheck.check_files(files, options)
-	
-	if (issues.errors == 0) and (issues.fatals == 0) then	
-		issues = issues[1]
-		for _, issue in ipairs(issues) do
-			print(prefixMsg..": "..upperFirst(luacheck.get_message(issue))..". In file "..file..", line "..issue.line..".")
-		end		
-		
-		return #issues
-	end
-	
-	return 0
-end
-
-local function getLuaFiles(dirPath)
-	local files = {}
-	if Directory(dirPath):exists() then
-		_Gtme.forEachFile(dirPath, function(fname)
-			local fullPath = dirPath.."/"..fname
-			if Directory(fullPath):exists() then
-				for _, v in ipairs(getLuaFiles(fullPath)) do
-					table.insert(files, v)
-				end			
-			else 
-				local file = File(fullPath)
-				if file:extension() == "lua" then
-					table.insert(files, fullPath)
-				end
-			end
-		end)
-	end
-	
-	return files
-end
-
-local function getRelativePath(full, absoluteLength)
-	return string.sub(full, absoluteLength + 2)
-end
-
-local function checkPackage(package, packagePath)
-	_Gtme.printNote("Running code analyzer for package '"..package.."'")
-	local clock0 = os.clock()
-	
-	local testsPath = packagePath.."/tests"
-	local luaPath = packagePath.."/lua"
-	local testFiles = getLuaFiles(testsPath)
-	local luaFiles = getLuaFiles(luaPath)	
-	
-	local srcPath
-	local srcFiles = {}
-	local srcPathLenght
-	if package == "base" then
-		srcPath = sessionInfo().path.."/lua"
-		srcFiles = getLuaFiles(srcPath)
-		srcPathLenght = string.len(srcPath) 
-	end
-	
-	local luacheck = require("luacheck.init")	
-	local numIssues = 0
-	local pkgPathLenght = string.len(packagePath)
-	local options = {std = "min", cache = true, global = false}	
-	
-	_Gtme.printNote("Analysing source code")
-	for _, file in ipairs(luaFiles) do
-		local files = {file}
-		local issues = luacheck.check_files(files, options)[1]
-		for _, issue in ipairs(issues) do
-			_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, pkgPathLenght)..", line "..issue.line..".")
-		end	
-		numIssues = numIssues + #issues
-	end
-
-	if #srcFiles > 0 then
-		for _, file in ipairs(srcFiles) do
-			local files = {file}
-			local issues = luacheck.check_files(files, options)[1]
-			for _, issue in ipairs(issues) do
-				_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, srcPathLenght)..", line "..issue.line..".")
-			end	
-			numIssues = numIssues + #issues
-		end	
-	end
-	
-	_Gtme.printNote("Analysing tests")
-	for _, file in ipairs(testFiles) do
-		local files = {file}
-		local issues = luacheck.check_files(files, options)[1]
-		for _, issue in ipairs(issues) do
-			_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, pkgPathLenght)..", line "..issue.line..".")
-		end	
-		numIssues = numIssues + #issues
-	end
-	
-	_Gtme.printNote("\nCode analyzer report for package '"..package.."':")
-	
-	local clock1 = os.clock()
-	local dt = clock1 - clock0
-	_Gtme.printNote("Analysis executed in "..round(dt, 2).." seconds.")
-	
-	local totalFiles = #testFiles + #luaFiles + #srcFiles
-	
-	if totalFiles > 0 then
-		if totalFiles == 1 then
-			_Gtme.printNote("One file was analysed.")
-		else
-			_Gtme.printNote(totalFiles.." files were analysed.")
-		end
-		
-		if numIssues > 0 then
-			if numIssues == 1 then
-				_Gtme.printNote("One issue was found.")
-			else
-				_Gtme.printNote(numIssues.." issues were found.")
-			end
-		else
-			_Gtme.printNote("Success, no issue found.")
-		end
-	else
-		_Gtme.printNote("No file found.")
-	end
-	
-	return numIssues
-end
-
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
@@ -1333,13 +1185,14 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	dofile(info_.path..s.."lua"..s.."utils.lua")
 	dofile(info_.path..s.."lua"..s.."configure.lua")
 	
-	if string.lower(info_.path) == string.lower(_Gtme.currentDir()) then
+	if string.lower(info_.path) == string.lower(tostring(_Gtme.currentDir())) then
 		_Gtme.printError("It is not possible to execute TerraME within its directory. Please, run it from another place.")
 		os.exit(1)
 	else
 		_Gtme.terralib_mod_binding_lua.te.plugin.PluginManager.getInstance():loadAll()
 	end	
 	
+	info_.path = _Gtme.Directory(info_.path)
 	info_.version = _Gtme.packageInfo().version
 
 	if arguments == nil or #arguments < 1 then 
@@ -1496,7 +1349,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				argCount = argCount + 1
 				dofile(path.."UnitTest.lua")
 
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."test.lua")
 				local errors = 0
 				xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
@@ -1512,9 +1365,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				info_.mode = "debug"
 				argCount = argCount + 1
 
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."sketch.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."test.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."doc.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."sketch.lua")
 				xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(_Gtme.traceback(err))
 					os.exit(1)
@@ -1528,7 +1381,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(0)
 			elseif arg == "-doc" then
 				info_.mode = "debug"
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."doc.lua")
 				local errors = 0
 				local success, result = _Gtme.myxpcall(function() errors = _Gtme.executeDoc(package) end)
 
@@ -1543,7 +1396,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				errors = errors or 0
 				os.exit(errors)
 			elseif arg == "-projects" then
-				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."project.lua")
+				dofile(_Gtme.sessionInfo().path.."lua"..s.."project.lua")
 				_Gtme.myxpcall(function() _Gtme.executeProject(package) end)
 				os.exit(0)
 			elseif arg == "-autoclose" then
@@ -1552,7 +1405,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				if package == "base" then
 					_Gtme.printError("TerraME cannot be built using -build.")
 				else
-					dofile(sessionInfo().path..s.."lua"..s.."build.lua")
+					dofile(sessionInfo().path.."lua"..s.."build.lua")
 
 					argCount = argCount + 1
 					local config
@@ -1658,6 +1511,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(0)
 				end
 			elseif arg == "-check" then
+				dofile(sessionInfo().path.."lua"..s.."check.lua")
+
 				if info_.package == nil then
 					info_.package = "base"
 				end
@@ -1668,7 +1523,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(1)
 				end)
 
-				local numIssues = checkPackage(package, pkgPath)
+				local numIssues = _Gtme.checkPackage(package, pkgPath)
 			
 				os.exit(numIssues)				
 			else
@@ -1712,10 +1567,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 			info_.currentFile = arg
 
+			dofile(sessionInfo().path.."lua"..s.."check.lua")
+
 			if info_.mode == "strict" then
-				checkFile(arg, "Warning")
+				_Gtme.checkFile(arg, "Warning")
 			elseif info_.mode == "debug" then
-				local numIssues = checkFile(arg, "Error")
+				local numIssues = _Gtme.checkFile(arg, "Error")
 				if numIssues > 0 then
 					os.exit(numIssues)
 				end

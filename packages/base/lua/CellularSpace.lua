@@ -27,9 +27,9 @@ local terralib = getPackage("terralib")
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
 local function separatorCheck(data)
-	local header1 = File(data.source)
-	local header2 = File(data.source)
-	local header3 = File(data.source)
+	local header1 = File(tostring(data.source))
+	local header2 = File(tostring(data.source))
+	local header3 = File(tostring(data.source))
 	local lineTest1 = header1:read("\t")
 	local lineTest2 = header2:read(" ")
 	local lineTest3 = header3:read(";")
@@ -44,7 +44,7 @@ local function separatorCheck(data)
 end
 
 local function loadNeighborhoodGAL(self, data)
-	local file = File(data.source)
+	local file = data.source
 	local lineTest = file:read(" ")
 	local layer = ""
 
@@ -98,7 +98,7 @@ local function loadNeighborhoodGAL(self, data)
 end
 
 local function loadNeighborhoodGPM(self, data)
-	local file = File(data.source)
+	local file = data.source
 	local lineTest = file:read(" ")
 	local layer = ""
 
@@ -169,7 +169,7 @@ local function loadNeighborhoodGPM(self, data)
 end
 
 local function loadNeighborhoodGWT(self, data)
-	local file = File(data.source)
+	local file = data.source
 	local lineTest = file:read(" ")
 	local layer = ""
 
@@ -389,14 +389,15 @@ end
 
 local function checkPGM(self)
 	defaultTableValue(self, "sep", " ")
-	local file = File(self.file)
-	defaultTableValue(self, "attrname", file:name())
+	local _, name = self.file:split()
+	defaultTableValue(self, "attrname", name)
 end
 
 local function checkShape(self)
-	local dbf = self.file:sub(1, self.file:len() - 3).."dbf"
+	local path, name = self.file:split()
+	local dbf = File(path..name..".dbf")
 
-	if not File(dbf):exists() then
+	if not dbf:exists() then
 		customError("File '"..dbf.."' was not found.")
 	end
 end
@@ -416,14 +417,17 @@ local function checkProject(self)
 	if type(self.layer) == "string" then
 		if type(self.project) ~= "Project" then
 			if type(self.project) == "string" then
-				if not string.endswith(self.project, ".tview") then
-					self.project = self.project..".tview"
+				self.project = File(self.project)
+			end
+
+			if type(self.project) == "File" then
+				if self.project:extension() ~= "tview" then
+					self.project = File(self.project..".tview")
 				end
 
-				if File(self.project):exists() then
-					local file = self.project
+				if self.project:exists() then
 					self.project = terralib.Project{
-						file = file
+						file = self.project
 					}
 				else
 					customError("Project '"..self.project.."' was not found.")
@@ -433,7 +437,7 @@ local function checkProject(self)
 			end
 		end
 
-		if not self.project.layers[self.layer] then
+		if not self.project.layers[tostring(self.layer)] then
 			customError("Layer '"..self.layer.."' does not exist in Project '"..self.project.file.."'.")
 		end	
 
@@ -460,7 +464,7 @@ local function loadCsv(self)
 
 	self.cells = {}
 	self.cObj_:clear()
-	local file = File(self.file)
+	local file = self.file
 	local data = file:readTable(self.sep)
 	local cellIdCounter = 0
 	for i = 1, #data do
@@ -485,7 +489,7 @@ local function loadPGM(self)
 	self.cells = {}
 	self.cObj_:clear()
 
-	local file = File(self.file)
+	local file = self.file
 	local pgm = {}
 
 	pgm.comments = {}
@@ -508,8 +512,7 @@ local function loadPGM(self)
 		else
 			j = 0
 			forEachElement(res, function(_, value)
-				local p = Cell {x = j, y = i}
-				p[self.attrname] = tonumber(value)
+				local p = Cell {x = j, y = i, [self.attrname] = tonumber(value)}
 				self:add(p)
 				self.cObj_:addCell(p.x, p.y, p.cObj_)
 				j = j + 1
@@ -629,15 +632,15 @@ end
 
 local function loadOGR(self)
 	local tlib = terralib.TerraLib{}
-	local dSet = tlib:getOGRByFilePath(self.file)
+	local dSet = tlib:getOGRByFilePath(tostring(self.file))
 
 	defaultTableValue(self, "geometry", false)
 
 	setCellsByTerraLibDataSet(self, dSet)
 
-	local file = File(self.file)
+	local file = self.file
 
-	self.layer = tostring(file:name(true))
+	self.layer = file:name()
 	self.cObj_:setLayer(self.layer)
 end
 
@@ -686,7 +689,7 @@ local function loadGdal(self)
 	local dSet = tlib:getGdalByFilePath(self.file)
 
 	setRasterCells(self, dSet) -- SKIP
-	self.layer = File(self.file):name(true) -- SKIP
+	self.layer = self.file:name() -- SKIP
 	self.cObj_:setLayer(self.layer) -- SKIP
 
 	return self
@@ -1141,11 +1144,11 @@ CellularSpace_ = {
 	end,
 	--- Load a Neighborhood stored in an external source. Each Cell receives its own set of 
 	-- neighbors.
-	-- @arg data.name A string with the location of the Neighborhood 
+	-- @arg data.source A File or a string with the location of the Neighborhood 
 	-- to be loaded. See below.
 	-- @arg data.check A boolean value indicating whether this function should match the
 	-- layer name of the CellularSpace with the one described in the source. The default value is true.
-	-- @arg tbAttrLoad.source A string with the name of the Neighborhood
+	-- @arg data.name A string with the name of the Neighborhood
 	-- to be loaded within TerraME. The default value is "1".
 	-- @tabular name
 	-- Source & Description \
@@ -1163,20 +1166,22 @@ CellularSpace_ = {
 		verifyNamedTable(data)
 		verifyUnnecessaryArguments(data, {"source", "name", "check"})
 
-		mandatoryTableArgument(data, "source", "string")
+		if type(data.source) == "string" then
+			data.source = File(data.source)
+		end
 
-		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
-			local file = File(data.source)
-			if not file:exists() then
+		mandatoryTableArgument(data, "source", "File")
+
+		local ext = data.source:extension()
+	
+		if ext == "" then
+			customError("Argument 'source' does not have an extension.")
+		elseif belong(data.source:extension(), {"gal", "gwt", "gpm"}) then
+			if not data.source:exists() then
 				resourceNotFoundError("source", data.source)
 			end
 		else
-			local ext = string.match(data.source, "(([^%.]+))$")
-			if ext == data.source then
-				customError("Argument 'source' does not have an extension.")
-			else
-				invalidFileExtensionError("source", ext)
-			end
+			invalidFileExtensionError("source", ext)
 		end
 
 		separatorCheck(data)
@@ -1184,11 +1189,11 @@ CellularSpace_ = {
 		defaultTableValue(data, "name", "1")
 		defaultTableValue(data, "check", true)
 
-		if data.source:endswith(".gal") then
+		if ext == "gal" then
 			loadNeighborhoodGAL(self, data)
-		elseif data.source:endswith(".gwt") then
+		elseif ext == "gwt" then
 			loadNeighborhoodGWT(self, data)
-		elseif data.source:endswith(".gpm") then
+		elseif ext == "gpm" then
 			loadNeighborhoodGPM(self, data)
 		end
 	end,
@@ -1496,7 +1501,8 @@ metaTableCellularSpace_ = {
 -- If this name does not ends with ".tview", this extension will be added to the name
 -- of the file. It can also be an object of type Project from package terralib.
 -- @arg data.attrname A string with an attribute name. It is useful for files that have 
--- only one attribute value for each cell but no attribute name.
+-- only one attribute value for each cell but no attribute name. The default value is
+-- the name of the file being read.
 -- @arg data.as A table with string indexes and values. It renames the loaded attributes
 -- of the CellularSpace from the values to its indexes.
 -- @arg data.zero A string value describing where the zero in the y axis starts. The
@@ -1577,6 +1583,10 @@ function CellularSpace(data)
 
 	local candidates = {}
 
+	if type(data.file) == "string" then
+		data.file = File(data.file)
+	end
+
 	forEachOrderedElement(CellularSpaceDrivers, function(idx, value)
 		local all = true
 
@@ -1586,7 +1596,7 @@ function CellularSpace(data)
 			end
 		end)
 
-		if value.extension and (not data.file or (type(data.file) == "string" and File(data.file):extension() ~= idx)) then
+		if value.extension and (not data.file or (type(data.file) == "File" and data.file:extension() ~= idx)) then
 			all = false
 		end
 
@@ -1626,13 +1636,13 @@ function CellularSpace(data)
 		word = string.sub(word, 0, string.len(word) - 2).."]."
 		customError("'"..data.source.."' is an invalid value for argument 'source'. "..word)
 	elseif CellularSpaceDrivers[data.source].extension then
-		mandatoryTableArgument(data, "file", "string")
+		mandatoryTableArgument(data, "file", "File")
 
-		if File(data.file):extension() ~= data.source then
+		if data.file:extension() ~= data.source then
 			customError("source and file extension should be the same.")
 		end
 
-		if not File(data.file):exists() then
+		if not data.file:exists() then
 			resourceNotFoundError("file", data.file)
 		end
 	end
