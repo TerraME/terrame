@@ -441,20 +441,6 @@ Environment_ = {
 
 		verify(numAttributes < 2, "This function does not support GPM with more than one attribute.")
 
-		local beginName = layer2Idx
-		local attribNames = {}
-
-		for i = 1, numAttributes do
-			local endName = string.find(header, "%s", beginName + 1)
-			
-			attribNames[i] = string.sub(header, beginName + 1)
-			if endName ~= nil then
-				attribNames[i] = string.sub(header, beginName + 1, endName - 1)
-			else
-				break
-			end
-		end
-		
 		local cellSpaces = {}
 		for _, element in pairs(self) do
 			if type(element) == "CellularSpace" then
