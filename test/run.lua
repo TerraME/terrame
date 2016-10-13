@@ -436,10 +436,14 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
 					_Gtme.printError("Log file: '"..str.."'.")
 					_Gtme.printError("Test:     '"..value.."'.")
+					_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
+					_Gtme.printNote("Printing the test output")
 
-					if distance > 0 then
-						_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
-					end
+					forEachElement(result, function(_, value)
+						print("    "..value)
+					end)
+
+					_Gtme.printNote("End of the test output")
 
 					report.locallogerrors = report.locallogerrors + 1
 					logerror = true

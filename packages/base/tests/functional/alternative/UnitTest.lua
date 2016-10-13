@@ -94,7 +94,7 @@ return{
 			u:assertEquals("2", "3")
 		end
 
-		unitTest:assertError(error_func, "Values should be equal, but got \n'2' and \n'3'.")
+		unitTest:assertError(error_func, "Values should be equal, but got \n'2' and \n'3'. The maximum tolerance is 0, but got 1.")
 
 		error_func = function()
 			u:assertEquals("2", 3)
@@ -121,7 +121,7 @@ return{
 			u:assertEquals(expected, "bbb", 0, true)
 		end
 
-		unitTest:assertError(error_func, "Values should be equal, but got \n'"..expected.."' and \n'".."bbb".."'.")
+		unitTest:assertError(error_func, "Values should be equal, but got \n'"..expected.."' and \n'".."bbb".."'. The maximum tolerance is 0, but got 28.")
 	end,
 	assertError = function(unitTest)
 		local u = UnitTest{unittest = true}
