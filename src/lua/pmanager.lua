@@ -270,33 +270,43 @@ local function installButtonClicked()
 	local listPackages = qt.new_qobject(qt.meta.QListWidget)
 
 	local count = 0
-	forEachOrderedElement(packages, function(idx, data)
-		data.file = data.package.."_"..data.version..".zip"
-		data.newversion = true
+	
+	local setPackagesListWidget = function(packages)
+		listPackages:clear()
 
-		pkgsTab[count] = data
+		forEachOrderedElement(packages, function(idx, data)
+			data.file = data.package.."_"..data.version..".zip"
+			data.newversion = true
 
-		local ok, info = pcall(function() return packageInfo(idx) end)
-		local package = idx
+			pkgsTab[count] = data
 
-		if ok then
-			packages[info.package].currentVersion = info.version
+			local ok, info = pcall(function() return packageInfo(idx) end)
+			local package = idx
 
-        	if _Gtme.verifyVersionDependency(info.version, ">=", data.version) then
-				package = package.." (already installed)"
-				pkgsTab[count].newversion = false
-			else
-				package = package.." (version "..data.version.." available)"
+			if ok then
+				packages[info.package].currentVersion = info.version
+
+				if _Gtme.verifyVersionDependency(info.version, ">=", data.version) then
+					package = package.." (already installed)"
+					pkgsTab[count].newversion = false
+				else
+					package = package.." (version "..data.version.." available)"
+				end
 			end
-		end
 
-		count = count + 1
-		qt.listwidget_add_item(listPackages, package)
-	end)
+			count = count + 1
+			qt.listwidget_add_item(listPackages, package)
+		end)
+	end
+	
+	setPackagesListWidget(packages)
 
 	local installButton2 = qt.new_qobject(qt.meta.QPushButton)
 	installButton2.text = "Install"
+	installButton2.enabled = false
 	qt.connect(installButton2, "clicked()", function()
+		installButton2.enabled = false
+		
 		local tmpdirectory = _Gtme.Directory{tmp = true}
 		local cdir = currentDir()
 
@@ -379,7 +389,7 @@ local function installButtonClicked()
 
 		cdir:setCurrentDir()
 		tmpdirectory:delete()
-		mdialog:done(0)
+		setPackagesListWidget(packages)
 	end)
 
 	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
