@@ -280,7 +280,9 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	local check_functions = data.directory == nil and data.test == nil and getn(data.notest) == 0
-	local check_logs = data.directory == nil and data.test == nil and data.file == nil and getn(data.notest) == 0
+	local check_logs = data.directory == nil and data.test == nil and data.file == nil and 
+	                   getn(data.notest) == 0 and data.examples ~= false
+
 	if data.examples == nil then
 		data.examples = check_functions and data.file == nil
 	end
