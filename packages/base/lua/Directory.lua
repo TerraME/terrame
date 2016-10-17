@@ -109,11 +109,7 @@ Directory_ = {
 	--     print("is dir")
 	-- end
 	exists = function(self)
-		if lfs.attributes(self.fullpath:gsub("\\$", ""), "mode") == "directory" then
-			return true
-		end
-
-		return false
+		return isDirectory(self.fullpath)
 	end,
 	--- Return a vector of strings with the content of the directory.
 	-- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
@@ -265,6 +261,10 @@ function Directory(data)
 		table.insert(_Gtme.tmpdirectory__, data)
 
 		data.fullpath = cmd
+	end
+
+	if isFile(data.fullpath) then
+		customError("'"..data.fullpath.."' is a file, and not a directory.")
 	end
 
 	return data

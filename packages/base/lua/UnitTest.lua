@@ -251,7 +251,7 @@ UnitTest_ = {
 
 		mandatoryArgument(1, "string", fname)
 
-		if Directory(fname):exists() then
+		if isDirectory(fname) then
 			self.fail = self.fail + 1
 			self:printError("It is not possible to use a directory as #1 for assertFile().")
 			return

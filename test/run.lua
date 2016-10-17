@@ -4,9 +4,9 @@
 -- Pedro R. Andrade
 
 removeIfExists = function(_, value)
-	if Directory(value):exists() then
+	if isDirectory(value) then
 		_Gtme.print("Removing '"..value.."'")
-		result = Directory(value):delete()
+		Directory(value):delete()
 	else
 		local f
 
@@ -22,7 +22,7 @@ end
 initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
 
-initialDir = Directory(File(sessionInfo().currentFile))
+initialDir = Directory(sessionInfo().currentFile)
 initialDir:setCurrentDir()
 
 commands = _Gtme.include("commands.lua")

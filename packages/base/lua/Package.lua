@@ -153,8 +153,7 @@ function import(package, reload)
 		end
 
 		for mfile, count in pairs(count_files) do
-			local attr = _Gtme.Directory(package_path..s.."lua"..s..mfile):attributes("mode")
-			if count == 0 and attr ~= "directory" then -- SKIP
+			if count == 0 and isFile(package_path.."lua"..s..mfile) then -- SKIP
 				customWarning("File lua"..s..mfile.." is ignored by load.lua.") -- SKIP
 			elseif count > 1 then
 				customWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.") -- SKIP
@@ -281,8 +280,7 @@ function getPackage(pname)
 	end
 
 	for mfile, count in pairs(count_files) do
-		local attr = _Gtme.Directory(pname_path.."lua"..s..mfile):attributes("mode")
-		if count == 0 and attr ~= "directory" then -- SKIP
+		if count == 0 and isFile(package_path.."lua"..s..mfile) then -- SKIP
 			_Gtme.printWarning("File lua"..s..mfile.." is ignored by load.lua.")
 		elseif count > 1 then
 			_Gtme.printWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.")

@@ -32,6 +32,14 @@ return{
 		unitTest:assertEquals(currentDir(), info.path)
 		cur_dir:setCurrentDir()
 	end,
+	isDirectory = function(unitTest)
+		unitTest:assert(isDirectory(tostring(packageInfo().data)))
+		unitTest:assert(not isDirectory(tostring(filePath("agents.csv"))))
+	end,
+	isFile = function(unitTest)
+		unitTest:assert(not isFile(tostring(packageInfo().data)))
+		unitTest:assert(isFile(tostring(filePath("agents.csv"))))
+	end,
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)
 		unitTest:assertEquals(#d, 29) -- 29 files
