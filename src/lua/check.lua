@@ -144,10 +144,10 @@ _Gtme.checkPackage = function(package, packagePath)
 			if numIssues == 1 then
 				_Gtme.printError("One issue was found.")
 			else
-				_Gtme.printWarning(numIssues.." issues were found.")
+				_Gtme.printError(numIssues.." issues were found.")
 			end
 		else
-			_Gtme.printNote("Success, no issue found.")
+			_Gtme.printNote("Success, no issue was found.")
 		end
 	else
 		_Gtme.printError("No file was found.")

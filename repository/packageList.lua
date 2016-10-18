@@ -24,7 +24,7 @@ forEachDirectory(".", function(dir)
 	info.date    = nil
 	info.license = nil
 
-	result[file] = info
+	result[dir:name()] = info
 end)
 
 file = io.open("packages.lua", "w")
