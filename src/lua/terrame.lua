@@ -872,7 +872,7 @@ function _Gtme.traceback(err)
 
 		if not m1 and not m3 then
 			if (si.package and not mb) or (not (m2 or m4)) or (si.package == "base" and mb) then
-				str = str.."\n    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
+				str = str.."\n    File '".._Gtme.makePathCompatibleToAllOS(info.short_src).."'"
 
 				if info.currentline > 0 then
 					str = str..", line "..info.currentline
@@ -929,7 +929,7 @@ function _Gtme.traceback(err)
 	if str == "Stack traceback:" then
 		if file and line then
 			str = err.."\n"..str
-			str = str.."\n    File "..file..", line "..line
+			str = str.."\n    File '"..file.."', line "..line
 		else
 			str = err
 		end
@@ -1662,7 +1662,7 @@ function _Gtme.ft(err)
 		if info.short_src == "[C]" then
 			str = str.."\n    Internal C file"
 		else
-			str = str.."\n    File "..info.short_src
+			str = str.."\n    File '"..info.short_src.."'"
 		end
 
 		if info.currentline > 0 then
