@@ -279,7 +279,9 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	local check_functions = data.directory == nil and data.test == nil and getn(data.notest) == 0
-	local check_logs = data.directory == nil and data.test == nil and data.file == nil and getn(data.notest) == 0
+	local check_logs = data.directory == nil and data.test == nil and data.file == nil and 
+	                   getn(data.notest) == 0 and data.examples ~= false
+
 	if data.examples == nil then
 		data.examples = check_functions and data.file == nil
 	end
@@ -473,10 +475,7 @@ function _Gtme.executeTests(package, fileName)
 		end
 
 		forEachOrderedElement(myFiles, function(eachFile)
-			-- TODO here
-			local fileWithSmallPath = eachDirectory..eachFile
-			fileWithSmallPath = string.sub(fileWithSmallPath, string.len(tostring(baseDir)) + 2)
-			ut.current_file = fileWithSmallPath
+			ut.current_file = eachDirectory:relativePath(baseDir)..s..eachFile
 			local tests
 
 			local printTesting = false
@@ -485,7 +484,7 @@ function _Gtme.executeTests(package, fileName)
 				ut.print_calls = ut.print_calls + 1
 
 				if not printTesting then
-					printNote("Testing "..fileWithSmallPath)
+					printNote("Testing "..ut.current_file)
 					printTesting = true
 				end
 
@@ -494,7 +493,7 @@ function _Gtme.executeTests(package, fileName)
 
 			xpcall(function() tests = dofile(eachDirectory..s..eachFile) end, function(err)
 				if not printTesting then
-					printNote("Testing "..fileWithSmallPath)
+					printNote("Testing "..ut.current_file)
 					printTesting = true
 				end
 
@@ -508,7 +507,7 @@ function _Gtme.executeTests(package, fileName)
 
 			if type(tests) ~= "table" or getn(tests) == 0 then
 				if not printTesting then
-					printNote("Testing "..fileWithSmallPath)
+					printNote("Testing "..ut.current_file)
 					printTesting = true
 				end
 
@@ -532,7 +531,7 @@ function _Gtme.executeTests(package, fileName)
 			end
 
 			if #myTests > 0 and not printTesting then
-					printNote("Testing "..fileWithSmallPath)
+					printNote("Testing "..ut.current_file)
 			end
 
 			local function trace(_, line)

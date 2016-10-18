@@ -112,20 +112,20 @@ function _Gtme.printWarning(value)
 end
 
 function _Gtme.fontFiles(package)
-	local fontpath = packageInfo(package).path.."font"
+	local fontpath = Directory(packageInfo(package).path.."font")
 
-	if not Directory(fontpath):exists() then
+	if not fontpath:exists() then
 		return {}
 	end
 
-	local files = Directory(fontpath):list()
 	local result = {}
 
-	forEachElement(files, function(_, fname)
-		if string.endswith(fname, ".ttf") then
-			table.insert(result, fname)
+	forEachFile(fontpath, function(file)
+		if file:extension() == "ttf" then
+			table.insert(result, file:name())
 		end
 	end)
+
 	return result
 end
 
@@ -872,7 +872,7 @@ function _Gtme.traceback(err)
 
 		if not m1 and not m3 then
 			if (si.package and not mb) or (not (m2 or m4)) or (si.package == "base" and mb) then
-				str = str.."\n    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
+				str = str.."\n    File '".._Gtme.makePathCompatibleToAllOS(info.short_src).."'"
 
 				if info.currentline > 0 then
 					str = str..", line "..info.currentline
@@ -929,7 +929,7 @@ function _Gtme.traceback(err)
 	if str == "Stack traceback:" then
 		if file and line then
 			str = err.."\n"..str
-			str = str.."\n    File "..file..", line "..line
+			str = str.."\n    File '"..file.."', line "..line
 		else
 			str = err
 		end
@@ -1554,13 +1554,17 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end)
 			end
 
-			if Directory(arg):exists() then
+			if isDirectory(arg) then
 				_Gtme.printError("Argument '"..arg.."' is a directory, and not a Lua file.")
 				os.exit(1)
-			elseif not File(arg):exists() then
+			end
+
+			arg = File(arg)
+
+			if not arg:exists() then
 				_Gtme.printError("File '"..arg.."' does not exist.")
 				os.exit(1)
-			elseif not _Gtme.string.endswith(arg, ".lua") then
+			elseif arg:extension() ~= "lua" then
 				_Gtme.printError("Argument '"..arg.."' does not have '.lua' extension.")
 				os.exit(1)
 			end
@@ -1570,15 +1574,15 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			dofile(sessionInfo().path.."lua"..s.."check.lua")
 
 			if info_.mode == "strict" then
-				_Gtme.checkFile(arg, "Warning")
+				_Gtme.checkFile(tostring(arg), "Warning")
 			elseif info_.mode == "debug" then
-				local numIssues = _Gtme.checkFile(arg, "Error")
+				local numIssues = _Gtme.checkFile(tostring(arg), "Error")
 				if numIssues > 0 then
 					os.exit(numIssues)
 				end
 			end			
 			
-			local success, result = _Gtme.myxpcall(function() dofile(arg) end) 
+			local success, result = _Gtme.myxpcall(function() dofile(tostring(arg)) end) 
 			if not success then
 				_Gtme.printError(result)
 				os.exit(1)
@@ -1658,7 +1662,7 @@ function _Gtme.ft(err)
 		if info.short_src == "[C]" then
 			str = str.."\n    Internal C file"
 		else
-			str = str.."\n    File "..info.short_src
+			str = str.."\n    File '"..info.short_src.."'"
 		end
 
 		if info.currentline > 0 then

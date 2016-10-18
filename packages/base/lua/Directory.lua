@@ -109,11 +109,7 @@ Directory_ = {
 	--     print("is dir")
 	-- end
 	exists = function(self)
-		if lfs.attributes(self.fullpath:gsub("\\$", ""), "mode") == "directory" then
-			return true
-		end
-
-		return false
+		return isDirectory(self.fullpath)
 	end,
 	--- Return a vector of strings with the content of the directory.
 	-- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
@@ -158,6 +154,17 @@ Directory_ = {
 	path = function(self)
 		local path = string.match(self.fullpath, "(.-)([^\\/]-)$")
 		return path
+	end,
+	--- Return a relative path given a small path.
+	-- @arg path A Directory or a string with a shorter path.
+	-- @usage d = Directory("/my/full/path")
+	-- print(d:relativePath("/my")) -- "full/path"
+	relativePath = function(self, path)
+		if type(path) == "Directory" then
+			path = tostring(path)
+		end
+
+		return string.sub(self.fullpath, string.len(path) + 2)
 	end,
 	--- Set the current working directory with the directory path.
 	-- Returns true in case of success or nil plus an error string.
@@ -265,6 +272,10 @@ function Directory(data)
 		table.insert(_Gtme.tmpdirectory__, data)
 
 		data.fullpath = cmd
+	end
+
+	if isFile(data.fullpath) then
+		customError("'"..data.fullpath.."' is a file, and not a directory.")
 	end
 
 	return data

@@ -531,7 +531,7 @@ function forEachFile(directory, _sof_)
 	end
 
 	return forEachOrderedElement(directoryIdx, function(file)
-		if not Directory(directory..file):exists() then
+		if isFile(directory..file) then
 			if _sof_(File(directory..file)) == false then return false end
 		end
 	end)
@@ -570,9 +570,8 @@ function forEachDirectory(directory, _sof_)
 	end
 
 	return forEachOrderedElement(directoryIdx, function(file)
-		local dir = Directory(directory..file)
-		if dir:exists() then
-			if _sof_(dir) == false then return false end
+		if isDirectory(directory..file) then
+			if _sof_(Directory(directory..file)) == false then return false end
 		end
 	end)
 end

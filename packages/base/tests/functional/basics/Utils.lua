@@ -298,7 +298,7 @@ return{
 			local count = 0
 			local r
 
-			r = forEachDirectory(filePath("", "base"):path(), function(dir)
+			r = forEachDirectory(packageInfo("base").path.."data", function(dir)
 				count = count + 1
 				unitTest:assertType(dir, "Directory") -- SKIP
 			end)
@@ -314,7 +314,7 @@ return{
 			local count = 0
 			local r
 
-			r = forEachFile(filePath("", "base"):path(), function(file)
+			r = forEachFile(packageInfo("base").path.."data", function(file)
 				count = count + 1
 				unitTest:assertType(file, "File") -- SKIP
 			end)
@@ -324,7 +324,7 @@ return{
 
 			count = 0
 
-			r = forEachFile(filePath("", "base"):path(), function()
+			r = forEachFile(packageInfo("base").path.."data", function()
 				count = count + 1
 				if count > 1 then return false end
 			end)

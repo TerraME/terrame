@@ -33,6 +33,24 @@ function currentDir()
 	return Directory(lfs.currentdir())
 end
 
+--- Return if a given file path exists.
+-- @arg file A string with a file path.
+-- @usage print(isFile("abc.lua"))
+function isFile(file)
+	mandatoryArgument(1, "string", file)
+
+	return lfs.attributes(file, "mode") == "file"
+end
+
+--- Return if a given path represents a directory that exists.
+-- @arg directory A string with a path.
+-- @usage print(isDirectory("/home/user/mydirectory"))
+function isDirectory(directory)
+	mandatoryArgument(1, "string", directory)
+
+	return lfs.attributes(directory, "mode") == "directory"
+end
+
 --- Execute a system command and return its output. It returns two tables. 
 -- The first one contains each standard output line as a position.
 -- The second one contains each error output line as a position.
@@ -77,7 +95,7 @@ end
 -- errors are shown red, warnings are shown yellow, and some prints in executions
 -- like -test and -doc might be green. This option can only be set from TerraME
 -- command line (-color). & Yes \
--- currentFile & A string with the name of the file currently being executed. This
+-- currentFile & A File with the name of the file currently being executed. This
 -- value only exists when the file is passed as argument to the command line. & Yes \
 -- dbVersion & A string with the current TerraLib version for databases. & Yes \
 -- fullTraceback & A boolean value indicating whether TerraME should show all the

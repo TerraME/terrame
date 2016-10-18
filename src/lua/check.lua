@@ -27,6 +27,12 @@ local function upperFirst(str)
 end
 
 _Gtme.checkFile = function(file, prefixMsg)
+	local printFunction = _Gtme.printError
+
+	if prefixMsg == "Warning" then
+		printFunction = _Gtme.printWarning
+	end
+
 	local luacheck = require("luacheck.init")
 	local files = {file}
 	local options = {std = "min", cache = true, global = false}				
@@ -35,7 +41,7 @@ _Gtme.checkFile = function(file, prefixMsg)
 	if (issues.errors == 0) and (issues.fatals == 0) then	
 		issues = issues[1]
 		for _, issue in ipairs(issues) do
-			print(prefixMsg..": "..upperFirst(luacheck.get_message(issue))..". In file '"..file.."', line "..issue.line..".")
+			printFunction(prefixMsg..": "..upperFirst(luacheck.get_message(issue))..". In file '"..file.."', line "..issue.line..".")
 		end		
 		
 		return #issues
@@ -64,14 +70,11 @@ local function getLuaFiles(dirPath)
 	return files
 end
 
-local function getRelativePath(full, absoluteLength)
-	return string.sub(tostring(full), absoluteLength + 2)
-end
-
 _Gtme.checkPackage = function(package, packagePath)
 	_Gtme.printNote("Running code analyzer for package '"..package.."'")
 	local clock0 = os.clock()
-	
+
+	local s = sessionInfo().separator
 	local testsPath = Directory(packagePath.."tests")
 	local luaPath = Directory(packagePath.."lua")
 	local testFiles = getLuaFiles(testsPath)
@@ -79,16 +82,13 @@ _Gtme.checkPackage = function(package, packagePath)
 	
 	local srcPath
 	local srcFiles = {}
-	local srcPathLenght
 	if package == "base" then
 		srcPath = Directory(sessionInfo().path.."lua")
 		srcFiles = getLuaFiles(srcPath)
-		srcPathLenght = string.len(tostring(srcPath)) 
 	end
 	
 	local luacheck = require("luacheck.init")	
 	local numIssues = 0
-	local pkgPathLenght = string.len(tostring(packagePath))
 	local options = {std = "min", cache = true, global = false}	
 	
 	_Gtme.printNote("Analysing source code")
@@ -96,7 +96,8 @@ _Gtme.checkPackage = function(package, packagePath)
 		local files = {tostring(file)}
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
-			_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, pkgPathLenght)..", line "..issue.line..".")
+			local name = Directory(file):relativePath(packagePath)..s..file:name()
+			_Gtme.printWarning("Warning: "..upperFirst(luacheck.get_message(issue))..". In file '"..name.."', line "..issue.line..".")
 		end	
 		numIssues = numIssues + #issues
 	end
@@ -106,7 +107,8 @@ _Gtme.checkPackage = function(package, packagePath)
 			local files = {tostring(file)}
 			local issues = luacheck.check_files(files, options)[1]
 			for _, issue in ipairs(issues) do
-				_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, srcPathLenght)..", line "..issue.line..".")
+				local name = Directory(file):relativePath(packagePath)..s..file:name()
+				_Gtme.printWarning("Warning: "..upperFirst(luacheck.get_message(issue))..". In file '"..name.."', line "..issue.line..".")
 			end	
 			numIssues = numIssues + #issues
 		end	
@@ -117,7 +119,8 @@ _Gtme.checkPackage = function(package, packagePath)
 		local files = {tostring(file)}
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
-			_Gtme.printError("Warning: "..upperFirst(luacheck.get_message(issue))..". In file "..getRelativePath(file, pkgPathLenght)..", line "..issue.line..".")
+			local name = Directory(file):relativePath(packagePath)..s..file:name()
+			_Gtme.printWarning("Warning: "..upperFirst(luacheck.get_message(issue))..". In file '"..name.."', line "..issue.line..".")
 		end	
 		numIssues = numIssues + #issues
 	end

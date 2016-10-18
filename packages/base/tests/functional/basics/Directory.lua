@@ -178,6 +178,13 @@ return{
 
 		unitTest:assertEquals(dir:path(), "c:/terrame/")
 	end,
+	relativePath = function(unitTest)
+		local d = Directory("/a/b/c/d")
+		unitTest:assertEquals(d:relativePath("/a/b"), "c/d")
+
+		local path = packageInfo().path
+		unitTest:assertEquals(path:relativePath(path), "")
+	end,
 	setCurrentDir = function(unitTest)
 		local info = sessionInfo()
 		local s = info.separator

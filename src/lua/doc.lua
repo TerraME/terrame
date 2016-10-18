@@ -81,12 +81,12 @@ local function dataFiles(package)
 		return {}
 	end
 
-	local files = datapath:list()
 	local result = {}
 
-	forEachElement(files, function(_, fname)
-		table.insert(result, fname)
+	forEachFile(datapath, function(fname)
+		table.insert(result, fname:name())
 	end)
+
 	return result
 end
 
@@ -695,10 +695,6 @@ function _Gtme.executeDoc(package)
 		end)
 
 		forEachOrderedElement(df, function(_, mvalue)
-			if Directory(package_path..s.."data"..s..mvalue):exists() then
-				return
-			end
-
 			if filesdocumented[mvalue] == nil and not string.endswith(mvalue, ".lua") then
 				printError("File '"..mvalue.."' is not documented")
 				doc_report.error_data = doc_report.error_data + 1
@@ -717,7 +713,7 @@ function _Gtme.executeDoc(package)
 		printNote("Checking directory 'data'")
 		printError("Package has data files but data.lua does not exist")
 		forEachElement(df, function(_, mvalue)
-			if Directory(package_path..s.."data"..s..mvalue):exists() then
+			if isDirectory(package_path..s.."data"..s..mvalue) then
 				return
 			end
 
@@ -803,10 +799,6 @@ function _Gtme.executeDoc(package)
 
 		printNote("Checking directory 'font'")
 		forEachOrderedElement(df, function(_, mvalue)
-			if Directory(package_path..s.."font"..s..mvalue):exists() then
-				return
-			end
-
 			if fontsdocumented[mvalue] == nil then
 				printError("Font file '"..mvalue.."' is not documented")
 				doc_report.error_font = doc_report.error_font + 1

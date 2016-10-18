@@ -4,9 +4,9 @@
 -- Pedro R. Andrade
 
 removeIfExists = function(_, value)
-	if Directory(value):exists() then
+	if isDirectory(value) then
 		_Gtme.print("Removing '"..value.."'")
-		result = Directory(value):delete()
+		Directory(value):delete()
 	else
 		local f
 
@@ -22,7 +22,7 @@ end
 initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
 
-initialDir = Directory(File(sessionInfo().currentFile))
+initialDir = Directory(sessionInfo().currentFile)
 initialDir:setCurrentDir()
 
 commands = _Gtme.include("commands.lua")
@@ -99,13 +99,13 @@ local function approximateLine(line)
 	
 	if string.match(line, "Logs")                then return 120 end
 	if string.match(line, "Temporary")           then return 120 end
-	if string.match(line, "Directory")           then return 120 end
+	if string.match(line, "Directory")           then return 160 end
 	if string.match(line, "seconds")             then return   5 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "log")                 then return 100 end
-	if string.match(line, "Cannot open")         then return 250 end
+	if string.match(line, "Cannot open")         then return 300 end
 	if string.match(line, "configuration file")  then return   3 end
-	if string.match(line, "or is empty or does") then return  70 end
+	if string.match(line, "or is empty or does") then return 100 end
 	if string.match(line, "does not exist")      then return 200 end
 	if string.match(line, "projection should ")  then return 200 end
 	if string.match(line, "is unnecessary%.")    then return 130 end

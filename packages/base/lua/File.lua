@@ -199,14 +199,7 @@ File_ = {
 	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:exists())
 	exists = function(self)
-		local fopen = io.open(self.filename)
-
-		if fopen then
-			fopen:close()
-			return true
-		end
-
-		return false
+		return isFile(self.filename)
 	end,
 	--- Return the extension of the file. It returns the substring after the last dot.
 	-- If it does not have a dot, an empty string is returned.
@@ -496,9 +489,13 @@ function File(data)
 		customError("Directory '"..dir.."' does not exist.")
 	end
 
-	local invalidChar = data.filename:find("[~#%&*{}<>?|\"+]")
+	local invalidChar = data.filename:find("[&*{}<>?|\"+]")
 	if invalidChar then
 		customError("Filename '"..data.filename.."' cannot contain character '"..data.filename:sub(invalidChar, invalidChar).."'.")
+	end
+
+	if isDirectory(data.filename) then
+		customError("'"..data.filename.."' is a directory, and not a file.")
 	end
 
 	return data

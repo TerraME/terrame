@@ -27,7 +27,7 @@ local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
 local function rm(file)
-	if Directory(file):exists() then
+	if isDirectory(file) then
 		Directory(file):delete()
 	else
 		File(file):delete()

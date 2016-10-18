@@ -41,7 +41,7 @@ end)
 local function approximateLine(line)
 	if not line then return 0 end
 	
-	if string.match(line, "seconds")             then return   5 end
+	if string.match(line, "seconds")             then return  10 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "configuration file")  then return 120 end
 	if string.match(line, "Logs were saved")     then return 200 end
