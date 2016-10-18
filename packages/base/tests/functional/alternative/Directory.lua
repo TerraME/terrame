@@ -80,6 +80,14 @@ return{
 			dir:delete()
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("directory", tostring(dir)))
-	end
+	end,
+	relativePath = function(unitTest)
+		local dir = Directory("/a/b/c/d")
+
+		local error_func = function()
+			dir:attributes(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
 }
 

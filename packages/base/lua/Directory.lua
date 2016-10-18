@@ -155,6 +155,17 @@ Directory_ = {
 		local path = string.match(self.fullpath, "(.-)([^\\/]-)$")
 		return path
 	end,
+	--- Return a relative path given a small path.
+	-- @arg path A Directory or a string with a shorter path.
+	-- @usage d = Directory("/my/full/path")
+	-- print(d:relativePath("/my")) -- "full/path"
+	relativePath = function(self, path)
+		if type(path) == "Directory" then
+			path = tostring(path)
+		end
+
+		return string.sub(self.fullpath, string.len(path) + 2)
+	end,
 	--- Set the current working directory with the directory path.
 	-- Returns true in case of success or nil plus an error string.
 	-- @usage -- DONTRUN
