@@ -181,6 +181,9 @@ return{
 	relativePath = function(unitTest)
 		local d = Directory("/a/b/c/d")
 		unitTest:assertEquals(d:relativePath("/a/b"), "c/d")
+
+		local path = packageInfo().path
+		unitTest:assertEquals(path:relativePath(path), "")
 	end,
 	setCurrentDir = function(unitTest)
 		local info = sessionInfo()

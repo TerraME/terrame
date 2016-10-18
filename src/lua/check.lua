@@ -82,16 +82,13 @@ _Gtme.checkPackage = function(package, packagePath)
 	
 	local srcPath
 	local srcFiles = {}
-	local srcPathLenght
 	if package == "base" then
 		srcPath = Directory(sessionInfo().path.."lua")
 		srcFiles = getLuaFiles(srcPath)
-		srcPathLenght = string.len(tostring(srcPath)) 
 	end
 	
 	local luacheck = require("luacheck.init")	
 	local numIssues = 0
-	local pkgPathLenght = string.len(tostring(packagePath))
 	local options = {std = "min", cache = true, global = false}	
 	
 	_Gtme.printNote("Analysing source code")

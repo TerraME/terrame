@@ -33,6 +33,7 @@ return{
 		local error_func = function()
 			isFile(1)
 		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
 	runCommand = function(unitTest)
 		local error_func = function()
