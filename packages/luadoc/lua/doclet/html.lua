@@ -169,7 +169,7 @@ function file_func_link(symbol, doc, _, from, doc_report)
 	if filename ~= funcname then 
 		href = href .. "#" .. funcname
 	end
-	string.gsub(from, "/", function () href = "../" .. href end)
+	string.gsub(from, "/", function() href = "../"..href end)
 	return href
 end
 
@@ -268,7 +268,15 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 	local description_linked = description
 	local fname = string.match(file_doc.name, "(.-)%.lua")
 	
-	--for word in string.gmatch(description, "[%a_][%w_]-[%.%:][%a_][%w_]-%(%s-%)") do
+	-- links for other packages
+	for package, mtype in string.gmatch(description, "(%w+)%:%:(%w+)") do
+		local anchor = "<a href=\"../../../"..package.."/doc/files/"..mtype..".html\">"..mtype.." ("..package.." package)</a>"
+
+		table.insert(word_table, anchor)
+		word_table[package.."::"..mtype] = #word_table
+		description_linked = string.gsub(description_linked, package.."::"..mtype, "$"..#word_table.."$", 1)
+	end
+
 	for token, signature, te_type, func_name, braces in string.gmatch(description, "((([%u][%w_]-)[%.%:]([%a_][%w_]-))(%(.-%)))") do
 		local href = symbol_link(signature, doc, module_doc, file_doc, from, name, doc_report)
 		local anchor

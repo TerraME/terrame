@@ -1496,10 +1496,11 @@ metaTableCellularSpace_ = {
 -- See the table below with the description and the arguments of each data source.
 -- Calling Utils:forEachCell() traverses CellularSpaces.
 -- @arg data.sep A string with the file separator. The default value is ",".
--- @arg data.layer A string with the name of the layer stored in a TerraLib project. 
+-- @arg data.layer A string with the name of the layer stored in a TerraLib project, 
+-- or a terralib::Layer. 
 -- @arg data.project A string with the name of the TerraLib project to be used. 
 -- If this name does not ends with ".tview", this extension will be added to the name
--- of the file. It can also be an object of type Project from package terralib.
+-- of the file. It can also be a terralib::Project.
 -- @arg data.attrname A string with an attribute name. It is useful for files that have 
 -- only one attribute value for each cell but no attribute name. The default value is
 -- the name of the file being read.

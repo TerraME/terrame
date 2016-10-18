@@ -37,7 +37,7 @@ metaTableProject_ = {
 -- data sets only using the respective layer name. 
 -- TerraME allows the modeler to create a Project from scratch or load one already
 -- created in another software of TerraLib family.
--- @arg data.file A File or a string with the file name to be used. If the
+-- @arg data.file A base::File or a string with the file name to be used. If the
 -- file does not exist then it will be created. If it exists then it will be opened.
 -- If this name does not ends with ".tview", this extension will be added to the name
 -- of the file.
