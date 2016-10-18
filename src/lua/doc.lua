@@ -713,7 +713,7 @@ function _Gtme.executeDoc(package)
 		printNote("Checking directory 'data'")
 		printError("Package has data files but data.lua does not exist")
 		forEachElement(df, function(_, mvalue)
-			if Directory(package_path..s.."data"..s..mvalue):exists() then
+			if isDirectory(package_path..s.."data"..s..mvalue) then
 				return
 			end
 

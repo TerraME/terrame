@@ -37,6 +37,8 @@ end
 -- @arg file A string with a file path.
 -- @usage print(isFile("abc.lua"))
 function isFile(file)
+	mandatoryArgument(1, "string", file)
+
 	return lfs.attributes(file, "mode") == "file"
 end
 
@@ -44,6 +46,8 @@ end
 -- @arg directory A string with a path.
 -- @usage print(isDirectory("/home/user/mydirectory"))
 function isDirectory(directory)
+	mandatoryArgument(1, "string", directory)
+
 	return lfs.attributes(directory, "mode") == "directory"
 end
 
