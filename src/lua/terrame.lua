@@ -757,8 +757,8 @@ function _Gtme.getLevel()
 		
 		local s = "/" -- si.separator
 		local infoSource = _Gtme.makePathCompatibleToAllOS(info.source)
-		local m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."lua")))
-		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"..s.."lua")))
+		local m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."lua")))
+		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."packages"..s.."base"..s.."lua")))
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4 = string.sub(info.short_src, 1, 1) == "["
 
@@ -803,18 +803,14 @@ function _Gtme.traceback(err)
 		local infoSource = _Gtme.makePathCompatibleToAllOS(info.source)
 		local m1
 		
-		if _Gtme.sessionInfo().system == "windows" then
-			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."lua")))
-		else
+		if _Gtme.sessionInfo().system == "mac" then
 			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("MacOS"..s.."lua")))
-
-			if not m1 then
-				m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("bin"..s.."lua")))
-			end
+		else
+			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."lua")))
 		end
 
-		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages")))
-		local mb = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base")))
+		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."packages")))
+		local mb = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."packages"..s.."base")))
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4
 
@@ -1439,6 +1435,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.uninstall(package)
 				os.exit(0)
 			elseif arg == "-example" then
+				info_.fullTraceback = true
 				local file = arguments[argCount + 1]
 
 				if file then
@@ -1608,9 +1605,9 @@ function _Gtme.myxpcall(func)
 	return xpcall(func, function(err)
 		local si = _Gtme.sessionInfo()
 		local s = si.separator
-		local luaDirectory = _Gtme.replaceSpecialChars(si.path..s.."lua")
-		local baseLuaDirectory = _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"..s.."lua")
-		local luadocLuaDirectory = _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."luadoc")
+		local luaDirectory = _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."lua"))
+		local baseLuaDirectory = _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."packages"..s.."base"..s.."lua"))
+		local luadocLuaDirectory = _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."packages"..s.."luadoc"))
 				
 		local m1 = string.match(err, string.sub(luaDirectory, string.len(luaDirectory) - 25, string.len(luaDirectory)))
 		local m2 = string.match(err, string.sub(baseLuaDirectory, string.len(baseLuaDirectory) - 25, string.len(baseLuaDirectory)))
