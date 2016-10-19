@@ -1256,6 +1256,9 @@ CellularSpace_ = {
 	end,
 	--- Save the attributes of a CellularSpace into the same database it was loaded from.
 	-- @arg newLayerName Name of the TerraLib layer to store the saved attributes.
+	-- If the original data comes from a shapefile, it will create another shapefile using
+	-- the name of the layer as file name. If the data comes from a PostGIS database, it
+	-- will create a table with name equals to the the layer's name.
 	-- @arg attrNames A vector with the names of the attributes to be saved.
 	-- When saving a single attribute, you can use
 	-- attrNames = "attribute" instead of attrNames = {"attribute"}.
@@ -1320,7 +1323,7 @@ CellularSpace_ = {
 					for i = 0, #dset do
 						for k, v in pairs(dset[i]) do
 							if k == "OGR_GEOMETRY" then
-								self.cells[i + 1]["geom"] = nil
+								self.cells[i + 1].geom = nil
 								self.cells[i + 1][k] = v
 							end
 						end		
