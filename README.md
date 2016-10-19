@@ -21,3 +21,19 @@ $> terrame -showdoc
 
 ## Reporting Bugs
 If you have found a bug, open an entry in the [TerraME Issue Tracker](https://github.com/TerraME/terrame/issues).
+## Code Status
+
+The output of the daily tests is available [here](http://www.dpi.inpe.br/jenkins/view/TerraME-Daily/).
+
+| Task            | Windows | Linux | Mac |
+|---|---|---|---|
+| compile         | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-build-windows-10) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-build-linux-ubuntu-14.04) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-build-mac-el-captain)|
+| base-test       | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-unittest-base-windows-10) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-unittest-base-linux-ubuntu-14.04) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-unittest-base-mac-el-captain) |
+| base-doc        | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-doc-base-windows-10) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-doc-base-linux-ubuntu-14.04)| ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-doc-base-mac-el-captain)|
+| terralib-test   | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-unittest-terralib-windows-10) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-unittest-terralib-linux-ubuntu-14.04) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-unittest-terralib-mac-el-captain) |
+| terralib-doc    |![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-doc-terralib-windows-10) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-doc-terralib-linux-ubuntu-14.04)| ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-doc-terralib-mac-el-captain)|
+| execution-test  | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-test-execution-windows-10) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-test-execution-linux-ubuntu-14.04)| ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-test-execution-mac-el-captain) |
+| repository-test | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-repository-test-windows-10) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-repository-test-linux-ubuntu-14.04) | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-repository-test-mac-el-captain)|
+|luacheck| | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-semantics-analyzer-lua-linux-ubuntu-14.04) ||
+|cppcheck | | ![](http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-syntaxcheck-cpp-linux-ubuntu-14.04) | |
+
