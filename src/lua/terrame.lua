@@ -801,14 +801,7 @@ function _Gtme.traceback(err)
 	local info = debug.getinfo(level)
 	while info ~= nil do
 		local infoSource = _Gtme.makePathCompatibleToAllOS(info.source)
-		local m1
-		
-		if _Gtme.sessionInfo().system == "mac" then
-			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("MacOS"..s.."lua")))
-		else
-			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."lua")))
-		end
-
+		local m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."lua")))
 		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."packages")))
 		local mb = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path.."packages"..s.."base")))
 		local m3 = string.match(info.short_src, "%[C%]")
