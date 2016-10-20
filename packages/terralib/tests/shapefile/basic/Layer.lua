@@ -188,7 +188,7 @@ return {
 			clean = true,
 			input = layerName1,
 			name = clName1,
-			resolution = 50000,
+			resolution = 70000,
 			file = clName1..".shp"
 		}
 		
@@ -605,7 +605,7 @@ return {
 			clean = true,
 			input = "setores",
 			name = clName1,
-			resolution = 50000,
+			resolution = 300000,
 			file = shp2
 		}
 
@@ -643,7 +643,7 @@ return {
 			target = cs,
 			select = "polsuma",
 			min = 0,
-			max = 1300000,
+			max = 4000000,
 			slices = 20,
 			color = {"red", "green"}
 		}
