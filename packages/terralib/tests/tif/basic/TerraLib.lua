@@ -260,7 +260,7 @@ return {
 		local dSet = tl:getDataSet(proj, clName)
 		local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)	
 			
-		unitTest:assertEquals(dist, 4296603.3095924, 1.0e-7) -- SKIP
+		unitTest:assertEquals(dist, 3883297.5677895, 1.0e-7) -- SKIP
 		
 		File(shp1):delete()	
 	else
