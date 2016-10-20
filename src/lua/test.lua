@@ -534,27 +534,31 @@ function _Gtme.executeTests(package, fileName)
 				printNote("Testing "..ut.current_file)
 			end
 
-			local currentShortSrc
-			local short
-			local matchTests
+			local shortSrcs = {}
 
 			local function trace(_, line)
 				local ss = debug.getinfo(2).short_src
 
-				if ss ~= currentShortSrc then
-					currentShortSrc = ss
-					ss = _Gtme.makePathCompatibleToAllOS(ss)
-					short = string.match(ss, "([^/]-)$")
-					matchTests = string.match(ss, "tests")
+				local currentShortSrc = shortSrcs[ss]
+
+				if not currentShortSrc then
+					local mss = _Gtme.makePathCompatibleToAllOS(ss)
+
+					currentShortSrc = {
+						short = string.match(mss, "([^/]-)$"),
+						matchTests = string.match(mss, "tests")
+					}
+
+					shortSrcs[ss] = currentShortSrc
 				end
 
-				if short == eachFile and matchTests then
+				if currentShortSrc.short == eachFile and currentShortSrc.matchTests then
 					if myAssertTable[line] then
 						myAssertTable[line] = myAssertTable[line] + 1
 					end
 				end
 
-				if data.lines and short == eachFile and not matchTests then
+				if data.lines and currentShortSrc.short == eachFile and not currentShortSrc.matchTests then
 					if executionlines[eachFile] then
 						if executionlines[eachFile][line] then
 							executionlines[eachFile][line] = executionlines[eachFile][line] + 1
