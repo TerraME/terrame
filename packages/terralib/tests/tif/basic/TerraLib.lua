@@ -68,7 +68,7 @@ return {
 
 		File(shp1):deleteIfExists()
 		
-		local resolution = 60e3
+		local resolution = 2e5
 		local mask = false
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		
@@ -125,7 +125,7 @@ return {
 		-- tl:dropPgDatabase(pgData)
 		
 		-- local clName1 = "Amazonia_PG_Cells"
-		-- local resolution = 60e3
+		-- local resolution = 2e5
 		-- local mask = false
 		-- tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)		
 		
@@ -253,7 +253,7 @@ return {
 
 		File(shp1):deleteIfExists()
 		
-		local resolution = 60e3
+		local resolution = 2e5
 		local mask = false
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		

@@ -117,7 +117,7 @@ return {
 
 		File(shp1):deleteIfExists()
 		
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		
@@ -202,7 +202,7 @@ return {
 		File(shp[1]):deleteIfExists()
 		
 		-- CREATE THE CELLULAR SPACE
-		local resolution = 60e3
+		local resolution = 2e5
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
 		
@@ -940,7 +940,7 @@ return {
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 
 		local clName1 = "SampaShpCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		local cellsShp = clName1..".shp"
 		
@@ -1065,7 +1065,7 @@ return {
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 
 		local clName1 = "SampaShpCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		local cellsShp = clName1..".shp"
 		
@@ -1167,7 +1167,7 @@ return {
 
 		File(shp1):deleteIfExists()
 		
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		

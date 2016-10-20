@@ -133,7 +133,7 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 		
@@ -214,7 +214,7 @@ return {
 		
 		-- CREATE THE CELLULAR SPACE
 		local clName = "Para_Cells"	
-		local resolution = 60e3
+		local resolution = 2e5
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName, resolution, pgData, mask)
 		
@@ -1126,7 +1126,7 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 
@@ -1233,7 +1233,7 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 		
@@ -1396,7 +1396,7 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)	
 		
