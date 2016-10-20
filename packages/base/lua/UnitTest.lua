@@ -464,7 +464,7 @@ UnitTest_ = {
 		local level = 1
 		local info = debug.getinfo(level)
 		local infoSource = _Gtme.makePathCompatibleToAllOS(info.source)
-		while not string.match(infoSource, "/tests/") do
+		while debug.getinfo(level + 1) and not string.match(infoSource, "/tests/") do
 			level = level + 1
 			info = debug.getinfo(level)
 			infoSource = _Gtme.makePathCompatibleToAllOS(info.source)

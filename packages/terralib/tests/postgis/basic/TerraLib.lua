@@ -133,7 +133,7 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 		
@@ -151,7 +151,7 @@ return {
 
 		-- NO MASK TEST		
 		local clSet = tl:getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 68)
+		unitTest:assertEquals(getn(clSet), 37)
 		
 		clName1 = clName1.."_NoMask"
 		local pgData2 = pgData
@@ -163,7 +163,7 @@ return {
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData2, mask)
 		
 		clSet = tl:getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 104)		
+		unitTest:assertEquals(getn(clSet), 54)
 		
 		proj.file:delete()
 		tl:dropPgTable(pgData)
@@ -214,13 +214,13 @@ return {
 		
 		-- CREATE THE CELLULAR SPACE
 		local clName = "Para_Cells"	
-		local resolution = 60e3
+		local resolution = 2e5
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName, resolution, pgData, mask)
 		
 		local clSet = tl:getDataSet(proj, clName)
 		
-		unitTest:assertEquals(getn(clSet), 402)
+		unitTest:assertEquals(getn(clSet), 45)
 		
 		for k, v in pairs(clSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom"))
@@ -248,7 +248,7 @@ return {
 		
 		local presSet = tl:getDataSet(proj, presLayerName)
 		
-		unitTest:assertEquals(getn(presSet), 402)
+		unitTest:assertEquals(getn(presSet), 45)
 		
 		for k, v in pairs(presSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or (k == "presence"))
@@ -282,7 +282,7 @@ return {
 		
 		local areaSet = tl:getDataSet(proj, areaLayerName)
 		
-		unitTest:assertEquals(getn(areaSet), 402)
+		unitTest:assertEquals(getn(areaSet), 45)
 		
 		for k, v in pairs(areaSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -317,7 +317,7 @@ return {
 		
 		local countSet = tl:getDataSet(proj, countLayerName)
 		
-		unitTest:assertEquals(getn(countSet), 402)
+		unitTest:assertEquals(getn(countSet), 45)
 		
 		for k, v in pairs(countSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -352,7 +352,7 @@ return {
 		
 		local distSet = tl:getDataSet(proj, distLayerName)
 		
-		unitTest:assertEquals(getn(distSet), 402)
+		unitTest:assertEquals(getn(distSet), 45)
 		
 		for k, v in pairs(distSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -392,7 +392,7 @@ return {
 		
 		local minSet = tl:getDataSet(proj, minLayerName)
 		
-		unitTest:assertEquals(getn(minSet), 402)
+		unitTest:assertEquals(getn(minSet), 45)
 		
 		for k, v in pairs(minSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -428,7 +428,7 @@ return {
 		
 		local maxSet = tl:getDataSet(proj, maxLayerName)
 		
-		unitTest:assertEquals(getn(maxSet), 402)
+		unitTest:assertEquals(getn(maxSet), 45)
 		
 		for k, v in pairs(maxSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -464,7 +464,7 @@ return {
 		
 		local percentSet = tl:getDataSet(proj, percLayerName)
 		
-		unitTest:assertEquals(getn(percentSet), 402)
+		unitTest:assertEquals(getn(percentSet), 45)
 		
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -501,7 +501,7 @@ return {
 		
 		local stdevSet = tl:getDataSet(proj, stdevLayerName)
 		
-		unitTest:assertEquals(getn(stdevSet), 402)
+		unitTest:assertEquals(getn(stdevSet), 45)
 		
 		for k, v in pairs(stdevSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -538,7 +538,7 @@ return {
 		
 		local meanSet = tl:getDataSet(proj, meanLayerName)
 		
-		unitTest:assertEquals(getn(meanSet), 402)
+		unitTest:assertEquals(getn(meanSet), 45)
 		
 		for k, v in pairs(meanSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -575,7 +575,7 @@ return {
 		
 		local weighSet = tl:getDataSet(proj, weighLayerName)
 		
-		unitTest:assertEquals(getn(weighSet), 402)
+		unitTest:assertEquals(getn(weighSet), 45)
 		
 		for k, v in pairs(weighSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -613,7 +613,7 @@ return {
 		
 		local interSet = tl:getDataSet(proj, interLayerName)
 		
-		unitTest:assertEquals(getn(interSet), 402)
+		unitTest:assertEquals(getn(interSet), 45)
 		
 		for k, v in pairs(interSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -651,7 +651,7 @@ return {
 		
 		local occurSet = tl:getDataSet(proj, occurLayerName)
 		
-		unitTest:assertEquals(getn(occurSet), 402)
+		unitTest:assertEquals(getn(occurSet), 45)
 		
 		for k, v in pairs(occurSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -690,7 +690,7 @@ return {
 		
 		local sumSet = tl:getDataSet(proj, sumLayerName)
 		
-		unitTest:assertEquals(getn(sumSet), 402)
+		unitTest:assertEquals(getn(sumSet), 45)
 		
 		for k, v in pairs(sumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -729,7 +729,7 @@ return {
 		
 		local wsumSet = tl:getDataSet(proj, wsumLayerName)
 		
-		unitTest:assertEquals(getn(wsumSet), 402)
+		unitTest:assertEquals(getn(wsumSet), 45)
 		
 		for k, v in pairs(wsumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -773,7 +773,7 @@ return {
 		
 		percentSet = tl:getDataSet(proj, percTifLayerName)
 		
-		unitTest:assertEquals(getn(percentSet), 402) 
+		unitTest:assertEquals(getn(percentSet), 45) 
 		
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -812,7 +812,7 @@ return {
 		
 		local rmeanSet = tl:getDataSet(proj, rmeanLayerName)
 		
-		unitTest:assertEquals(getn(rmeanSet), 402)
+		unitTest:assertEquals(getn(rmeanSet), 45)
 		
 		for k, v in pairs(rmeanSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -852,7 +852,7 @@ return {
 		
 		local rminSet = tl:getDataSet(proj, rminLayerName)
 		
-		unitTest:assertEquals(getn(rminSet), 402)
+		unitTest:assertEquals(getn(rminSet), 45)
 		
 		for k, v in pairs(rminSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -892,7 +892,7 @@ return {
 		
 		local rmaxSet = tl:getDataSet(proj, rmaxLayerName)
 		
-		unitTest:assertEquals(getn(rmaxSet), 402)
+		unitTest:assertEquals(getn(rmaxSet), 45)
 		
 		for k, v in pairs(rmaxSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -932,7 +932,7 @@ return {
 		
 		local rstdevSet = tl:getDataSet(proj, rstdevLayerName)
 		
-		unitTest:assertEquals(getn(rstdevSet), 402)
+		unitTest:assertEquals(getn(rstdevSet), 45)
 		
 		for k, v in pairs(rstdevSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -972,7 +972,7 @@ return {
 		
 		local rsumSet = tl:getDataSet(proj, rsumLayerName)
 		
-		unitTest:assertEquals(getn(rsumSet), 402)
+		unitTest:assertEquals(getn(rsumSet), 45)
 		
 		for k, v in pairs(rsumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -1008,7 +1008,7 @@ return {
 		
 		local rsumOverSet = tl:getDataSet(proj, rsumLayerName)
 		
-		unitTest:assertEquals(getn(rsumOverSet), 402)
+		unitTest:assertEquals(getn(rsumOverSet), 45)
 		
 		for k, v in pairs(rsumOverSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -1126,13 +1126,13 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 
 		local dSet = tl:getDataSet(proj, clName1)
 		
-		unitTest:assertEquals(getn(dSet), 68)
+		unitTest:assertEquals(getn(dSet), 37)
 		
 		for i = 0, #dSet do
 			for k, v in pairs(dSet[i]) do
@@ -1157,7 +1157,7 @@ return {
 		
 		local newDSet = tl:getDataSet(proj, newLayerName)
 		
-		unitTest:assertEquals(getn(newDSet), 68)
+		unitTest:assertEquals(getn(newDSet), 37)
 		
 		for i = 0, #newDSet do
 			unitTest:assertEquals(newDSet[i].attr1, i)
@@ -1178,7 +1178,7 @@ return {
 		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1"})
 		newDSet = tl:getDataSet(proj, newLayerName)
 		
-		unitTest:assertEquals(getn(newDSet), 68)
+		unitTest:assertEquals(getn(newDSet), 37)
 		
 		for i = 0, #newDSet do
 			unitTest:assertEquals(newDSet[i].attr1, i)
@@ -1233,14 +1233,14 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 		
 		local dSet = tl:getDataSet(proj, clName1)
 		local area = tl:getArea(dSet[0].geom)
 		unitTest:assertEquals(type(area), "number")
-		unitTest:assertEquals(area, 0.49, 0.001)
+		unitTest:assertEquals(area, 1, 0.001)
 		
 		for i = 1, #dSet do
 			for k, v in pairs(dSet[i]) do
@@ -1396,14 +1396,14 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)	
 		
 		local dSet = tl:getDataSet(proj, clName1)
 		local dist = tl:getDistance(dSet[0].geom, dSet[getn(dSet) - 1].geom)	
 			
-		unitTest:assertEquals(dist, 4.4271887242357, 1.0e-13)		
+		unitTest:assertEquals(dist, 4.1231056256177, 1.0e-13)		
 		
 		proj.file:delete()
 		tl:dropPgTable(pgData)

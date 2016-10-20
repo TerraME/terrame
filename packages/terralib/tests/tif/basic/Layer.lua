@@ -167,7 +167,7 @@ return {
 			source = "shp",
 			input = layerName1,
 			name = clName1,
-			resolution = 20000,
+			resolution = 70000,
 			file = clName1..".shp"
 		}
 		
@@ -193,7 +193,7 @@ return {
 			end
 		end)
 
-		unitTest:assertEquals(count, 163) 
+		unitTest:assertEquals(count, 3) 
 
 		local map = Map{
 			target = cs,
@@ -282,7 +282,7 @@ return {
 			target = cs,
 			select = "prod_sum",
 			min = 0,
-			max = 2300,
+			max = 20000,
 			color = "RdPu",
 			slices = 8
 		}
@@ -354,7 +354,7 @@ return {
 			file = "mycells.shp",
 			input = "box",
 			name = "cells_elev",
-			resolution = 200,
+			resolution = 500,
 		}
 
 		cl:fill{

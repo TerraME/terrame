@@ -1256,6 +1256,9 @@ CellularSpace_ = {
 	end,
 	--- Save the attributes of a CellularSpace into the same database it was loaded from.
 	-- @arg newLayerName Name of the TerraLib layer to store the saved attributes.
+	-- If the original data comes from a shapefile, it will create another shapefile using
+	-- the name of the layer as file name. If the data comes from a PostGIS database, it
+	-- will create a table with name equals to the the layer's name.
 	-- @arg attrNames A vector with the names of the attributes to be saved.
 	-- When saving a single attribute, you can use
 	-- attrNames = "attribute" instead of attrNames = {"attribute"}.
@@ -1320,7 +1323,7 @@ CellularSpace_ = {
 					for i = 0, #dset do
 						for k, v in pairs(dset[i]) do
 							if k == "OGR_GEOMETRY" then
-								self.cells[i + 1]["geom"] = nil
+								self.cells[i + 1].geom = nil
 								self.cells[i + 1][k] = v
 							end
 						end		
@@ -1496,10 +1499,11 @@ metaTableCellularSpace_ = {
 -- See the table below with the description and the arguments of each data source.
 -- Calling Utils:forEachCell() traverses CellularSpaces.
 -- @arg data.sep A string with the file separator. The default value is ",".
--- @arg data.layer A string with the name of the layer stored in a TerraLib project. 
+-- @arg data.layer A string with the name of the layer stored in a TerraLib project, 
+-- or a terralib::Layer. 
 -- @arg data.project A string with the name of the TerraLib project to be used. 
 -- If this name does not ends with ".tview", this extension will be added to the name
--- of the file. It can also be an object of type Project from package terralib.
+-- of the file. It can also be a terralib::Project.
 -- @arg data.attrname A string with an attribute name. It is useful for files that have 
 -- only one attribute value for each cell but no attribute name. The default value is
 -- the name of the file being read.

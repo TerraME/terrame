@@ -192,8 +192,8 @@ metaTableDirectory_ = {
 			value = value.fullpath
 		end
 
-		if string.sub(tostring(value), 1, 1) ~= s then
-			value = s..value
+		if not belong(string.sub(tostring(value), 1, 1), {s, "/"}) then
+			value = "/"..value
 		end
 
 		return self..value
@@ -202,7 +202,9 @@ metaTableDirectory_ = {
 
 --- An abstract representation of a directory. When creating an instance of a Directory,
 -- it does not mean that such directory will be created. It only verifies if the
--- directory has a valid name. This type provide a set of operations to handle directories,
+-- directory has a valid name. Directory also converts backslashes into slashes to
+-- make sure paths are represented in the same way in different operational systems.
+-- This type provides a set of operations to handle directories,
 -- such as to verify if it exists, create, and remove.
 -- @arg data.name A mandatory string with the directory name. It can also be a File. In
 -- this case, its value will be File:path(). This argument can be used

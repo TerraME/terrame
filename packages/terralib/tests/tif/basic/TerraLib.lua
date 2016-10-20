@@ -68,7 +68,7 @@ return {
 
 		File(shp1):deleteIfExists()
 		
-		local resolution = 60e3
+		local resolution = 2e5
 		local mask = false
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		
@@ -125,7 +125,7 @@ return {
 		-- tl:dropPgDatabase(pgData)
 		
 		-- local clName1 = "Amazonia_PG_Cells"
-		-- local resolution = 60e3
+		-- local resolution = 2e5
 		-- local mask = false
 		-- tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)		
 		
@@ -253,14 +253,14 @@ return {
 
 		File(shp1):deleteIfExists()
 		
-		local resolution = 60e3
+		local resolution = 2e5
 		local mask = false
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		
 		local dSet = tl:getDataSet(proj, clName)
 		local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)	
 			
-		unitTest:assertEquals(dist, 4296603.3095924, 1.0e-7) -- SKIP
+		unitTest:assertEquals(dist, 3883297.5677895, 1.0e-7) -- SKIP
 		
 		File(shp1):delete()	
 	else

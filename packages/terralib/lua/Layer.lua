@@ -756,7 +756,7 @@ metaTableLayer_ = {
 -- of the DBMS. For example, MySQL uses 3306 as standard port.
 -- @arg data.user String with the username. The default value is "".
 -- @arg data.password A string with the password.
--- @arg data.file A string with the location of the file to be loaded or created.
+-- @arg data.file A string with the location of the file to be loaded or created, or a base::File.
 -- @arg data.box A boolean value indicating whether the cellular Layer will fill the
 -- box from the input layer (true) or only the minimal set of cells that cover all the
 -- input data (false, default).
