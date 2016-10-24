@@ -1459,6 +1459,14 @@ return {
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)	
 		unitTest:assert(File(toData.file):exists())
 		
+		-- OVERWRITE AND CHANGE SRID
+		toData.srid = 4326
+		tl:saveLayerAs(proj, layerName2, toData, overwrite)
+		local layerName3 = "SHP"
+		tl:addShpLayer(proj, layerName3, toData.file)
+		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
+		unitTest:assertEquals(info3.srid, toData.srid)
+		
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"		
@@ -1466,6 +1474,14 @@ return {
 
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
+		
+		-- OVERWRITE AND CHANGE SRID
+		toData.srid = 4326
+		tl:saveLayerAs(proj, layerName2, toData, overwrite)
+		local layerName4 = "GJ"
+		tl:addGeoJSONLayer(proj, layerName4, toData.file)
+		local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
+		unitTest:assertEquals(info4.srid, toData.srid)		
 
 		tl:dropPgTable(pgData)
 

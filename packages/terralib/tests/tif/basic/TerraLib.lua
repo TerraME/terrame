@@ -336,7 +336,7 @@ return {
 
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
+		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())	
 		
 		File("cbers_rgb342_crop1.tif"):delete()
 		proj.file:delete()
