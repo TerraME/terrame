@@ -290,14 +290,14 @@ return{
 				layer = layerName1
 			}
 
-			unitTest:assertEquals(projName, cs.project.file) -- SKIP
+			unitTest:assertEquals(projName, cs.project.file:name()) -- SKIP
 			unitTest:assertType(cs.layer, "Layer") -- SKIP
 
 			unitTest:assertEquals(proj.title, title) -- SKIP
 			unitTest:assertEquals(proj.author, author) -- SKIP
 
 			unitTest:assertEquals(layer.source, "tif") -- SKIP
-			unitTest:assertEquals(layer.file, filePath1) -- SKIP
+			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
 			unitTest:assertEquals(#cs, 10000) -- SKIP
 
 			cs = CellularSpace{
@@ -332,14 +332,14 @@ return{
 				layer = layerName1
 			}
 
-			unitTest:assertEquals(projName, cs.project.file) -- SKIP
+			unitTest:assertEquals(projName, cs.project.file:name()) -- SKIP
 			unitTest:assertType(cs.layer, "Layer") -- SKIP
 
 			unitTest:assertEquals(proj.title, title) -- SKIP
 			unitTest:assertEquals(proj.author, author) -- SKIP
 
 			unitTest:assertEquals(layer.source, "nc") -- SKIP
-			unitTest:assertEquals(layer.file, filePath1) -- SKIP
+			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
 			unitTest:assertEquals(#cs.cells, 8904) -- SKIP
 
 			cs = CellularSpace{
@@ -374,14 +374,14 @@ return{
 				layer = layerName1
 			}
 
-			unitTest:assertEquals(projName, cs.project.file) -- SKIP
+			unitTest:assertEquals(projName, cs.project.file:name()) -- SKIP
 			unitTest:assertType(cs.layer, "Layer") -- SKIP
 
 			unitTest:assertEquals(proj.title, title) -- SKIP
 			unitTest:assertEquals(proj.author, author) -- SKIP
 
 			unitTest:assertEquals(layer.source, "asc") -- SKIP
-			unitTest:assertEquals(layer.file, filePath1) -- SKIP
+			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
 
 			cs = CellularSpace{

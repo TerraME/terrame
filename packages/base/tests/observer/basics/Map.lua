@@ -249,14 +249,15 @@ return{
 		}
 
 		m:update()
-		unitTest:assertSnapshot(m, "map_society_background.bmp")
+		unitTest:assertSnapshot(m, "map_society_background.bmp", 0.02)
+
 
 		m = Map{
 			target = soc,
 			background = "green",
 			symbol = "turtle"
 		}
-		unitTest:assertSnapshot(m, "map_society_background2.bmp")
+		unitTest:assertSnapshot(m, "map_society_background2.bmp", 0.02)
 
 		m = Map{
 			target = soc,
@@ -265,7 +266,7 @@ return{
 			color = {"green", "red"}
 		}
 
-		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp")
+		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp", 0.03)
 
 		m = Map{
 			target = soc,
@@ -274,7 +275,7 @@ return{
 			symbol = "beetle"
 		}
 
-		unitTest:assertSnapshot(m, "map_society_white.bmp")
+		unitTest:assertSnapshot(m, "map_society_white.bmp", 0.03)
 
 		cs = CellularSpace{xdim = 10}
 
@@ -339,7 +340,7 @@ return{
 			color = "red"
 		}
 
-		unitTest:assertSnapshot(m2, "map_society_location.bmp")
+		unitTest:assertSnapshot(m2, "map_society_location.bmp", 0.03)
 
 		for _ = 1, 5 do
 			soc:sample():die()
@@ -351,7 +352,7 @@ return{
 			color = "red"
 		}
 		
-		unitTest:assertSnapshot(m2, "map_society_five_left.bmp")
+		unitTest:assertSnapshot(m2, "map_society_five_left.bmp", 0.02)
 		
 		local cell = Cell{
 			init = function(self)
