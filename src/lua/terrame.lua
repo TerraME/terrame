@@ -931,20 +931,21 @@ function _Gtme.traceback(err)
 	return _Gtme.makePathCompatibleToAllOS(str)
 end
 
-local function loadPackgesLibPath()
-	local tmePath = os.getenv("TME_PATH")
-	local packsPath = tmePath.."/packages"
-	
-	forEachDirectory(packsPath, function(dir)
-		local packLibPath = Directory(dir.."lib")
-		if packLibPath:exists() then
-			cpp_putenv(tostring(packLibPath))
-			package.cpath = package.cpath..";"..packLibPath.."/?.dll"
-			                             ..";"..packLibPath.."/?.so"
-			                             ..";"..packLibPath.."/?.lib"
-			                             ..";"..packLibPath.."/?.dylib"
+local function loadPackagesLib()
+	local tmePath = sessionInfo().path
+	local pkgPath = tmePath.."/packages"
+
+	forEachDirectory(pkgPath, function(dir)
+		local pkgLibPath = Directory(dir.."lib")
+		if pkgLibPath:exists() then
+			package.path = package.path..";"..pkgLibPath.."/?.lua"
+			cpp_putenv(tostring(pkgLibPath))
+			package.cpath = package.cpath..";"..pkgLibPath.."/?.dll"
+										 ..";"..pkgLibPath.."/?.so"
+										 ..";"..pkgLibPath.."/?.lib"
+										 ..";"..pkgLibPath.."/?.dylib"
 		end
-	end)	
+	end)
 end
 
 local function findExample(example, packageName)
@@ -1192,7 +1193,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 	local package = "base"
 
-	loadPackgesLibPath()
+	loadPackagesLib()
 
 	local argCount = 1
 	while argCount <= #arguments do
