@@ -280,7 +280,7 @@ function getPackage(pname)
 	end
 
 	for mfile, count in pairs(count_files) do
-		if count == 0 and isFile(package_path.."lua"..s..mfile) then -- SKIP
+		if count == 0 and isFile(pname_path.."lua"..s..mfile) then -- SKIP
 			_Gtme.printWarning("File lua"..s..mfile.." is ignored by load.lua.")
 		elseif count > 1 then
 			_Gtme.printWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.")
