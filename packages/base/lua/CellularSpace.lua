@@ -590,36 +590,44 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		self.yMax = math.max(self.yMax, col)
 	end
 
+	local tlib = terralib.TerraLib{}
+
 	for i = 0, #dSet do
 		local row = 0
 		local col = 0
+		local mdSet = dSet[i]
 
 		if type(self.xy) == "table" then
-			col = tonumber(dSet[i][self.xy[1]]) or 0
-			row = tonumber(dSet[i][self.xy[2]]) or 0
+			col = tonumber(mdSet[self.xy[1]]) or 0
+			row = tonumber(mdSet[self.xy[2]]) or 0
 		elseif type(self.xy) == "function" then
-			col, row = self.xy(dSet[i])
+			col, row = self.xy(mdSet)
 		end
 
 		if self.zero == "bottom" then
 			row = self.xMax - row + self.xMin -- bottom inverts row
 		end
 
-		local cell = Cell{id = tostring(i), x = col, y = row}
-		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
+		local cell = Cell(mdSet)
+
+		cell.id = tostring(i)
+		cell.x = col
+		cell.y = row
 		
-		local tlib = terralib.TerraLib{}
-		
-		for k, v in pairs(dSet[i]) do
-			if (k == "OGR_GEOMETRY") or (k == "geom") then
-				if self.geometry then
-					cell.geom = tlib:castGeomToSubtype(v)
-				end
-			else
-				cell[k] = v
+		if self.geometry then
+			k = "OGR_GEOMETRY"
+
+			if not cell[k] then
+				k = "geom"
 			end
+
+			cell.geom = tlib:castGeomToSubtype(cell[k])
+
+			if cell.OGR_GEOMETRY then cell.OGR_GEOMETRY = nil end
 		end
 		
+		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
+
 		if cell.object_id0 then
 			cell:setId(cell.object_id0)
 		elseif cell.object_id_ then
