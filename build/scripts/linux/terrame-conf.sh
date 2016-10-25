@@ -75,6 +75,7 @@ export _TERRAME_GIT_DIR="$_TERRAME_GIT_DIR"
 
 # Configuring output folder
 mkdir -p $_TERRAME_OUT_DIR
+
 cp -rf terrame-conf.cmake $_TERRAME_OUT_DIR
 
 # Entering the output folder
