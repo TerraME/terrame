@@ -1497,7 +1497,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					files = _Gtme.projectFiles(package)
 
 					_Gtme.forEachElement(files, function(_, value)
-						print(" - "..string.sub(value, 0, string.len(value) - 4))
+						value = value:name()
+						print(" - "..value:sub(0, string.len(value) - 4))
 					end)
 					os.exit(0)
 				end
