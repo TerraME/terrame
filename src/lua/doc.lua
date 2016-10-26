@@ -108,6 +108,42 @@ local function getProjects(package)
 	local tl = getPackage("terralib")
 	local createdFiles = {}
 
+	function processLayer(idx, value)	
+		local layer = tl.Layer{
+			project = filePath(currentProject, package),
+			name = idx
+		}
+
+		local representation = layer:representation()
+		local description
+
+		if representation == "raster" then
+			description = "Raster with "..math.floor(layer:bands()).." band"
+
+			if layer:bands() > 1 then
+				description = description.."s"
+			end
+		else
+			local cs = CellularSpace{
+				file = value
+			}
+
+			local quantity = #cs
+			description = tostring(quantity).." "..representation
+
+			if quantity > 1 then
+				description = description.."s"
+			end
+		end
+
+		description = description.."."
+
+		projects[currentProject][idx] = {
+			file = value:name(),
+			description = description
+		}
+	end
+
 	Project = function(data)
 		currentProject = data.file
 
@@ -121,45 +157,16 @@ local function getProjects(package)
 		projects[currentProject] = {description = data.description}
 
 		forEachOrderedElement(data, function(idx, value)
-			if idx ~= "file" and type(value) == "string" and File(value):exists() then
-				local layer = tl.Layer{
-					project = filePath(currentProject, "terralib"),
-					name = idx
-				}
+			if type(value) == "string" then
+				value = File(value)
+			end
 
-				local representation = layer:representation()
-
-				local description
-
-				if representation == "raster" then
-					description = "Raster with "..math.floor(layer:bands()).." band"
-
-					if layer:bands() > 1 then
-						description = description.."s"
-					end
-				else
-					local cs = CellularSpace{
-						file = value
-					}
-
-					local quantity = #cs
-					description = tostring(quantity).." "..representation
-
-					if quantity > 1 then
-						description = description.."s"
-					end
-				end
-
-				description = description.."."
-
-				projects[currentProject][idx] = {
-					file = File(value):name(true),
-					description = description
-				}
+			if idx ~= "file" and type(value) == "File" and value:exists() then
+				processLayer(idx, value)
 			end
 		end)
 
-		return filePath(currentProject, "terralib")
+		return filePath(currentProject, package)
 	end
 
 	local mLayer_ = {
@@ -217,18 +224,24 @@ local function getProjects(package)
 	local mtLayer = {__index = mLayer_}
 
 	Layer = function(data)
-		if data.resolution and data.file then
+		if not data.file then return end
+			
+		if data.resolution then
 			local mfile = data.file
 
-			if createdFiles[mfile] then
-				printError("File '"..mfile.."' is created more than once.")
-				project_report.errors_output = project_report.errors_output + 1	
-			else
-				createdFiles[mfile] = true
+			if type(mfile) == "string" then
+				mfile = File(mfile)
 			end
 
-			if not File(mfile):exists() then
-				mfile = filePath(mfile, "terralib")
+			if createdFiles[mfile:name()] then
+				printError("File '"..mfile:name().."' is created more than once.")
+				project_report.errors_output = project_report.errors_output + 1	
+			else
+				createdFiles[mfile:name()] = true
+			end
+
+			if not mfile:exists() then
+				mfile = filePath(mfile:name(), package)
 			end
 
 			local cs = CellularSpace{
@@ -259,6 +272,8 @@ local function getProjects(package)
 					attributes = {}
 				}
 			end
+		else
+			processLayer(data.name, data.file)
 		end
 
 		setmetatable(data, mtLayer)
