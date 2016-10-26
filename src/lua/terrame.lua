@@ -1093,14 +1093,14 @@ local function findProject(project, packageName)
 	local exFullPath = ""
 	local msg
 
+	local info
+	local ok, errMsg = pcall(function() info = packageInfo(packageName).path end)
+
+	if not ok then
+		return false, errMsg
+	end
+
 	if file then
-		local info
-		local ok, errMsg = pcall(function() info = packageInfo(packageName).path end)
-
-		if not ok then
-			return false, errMsg
-		end
-
 		exFullPath = info..s.."data"..s..file..".lua"
 
 		if not File(exFullPath):exists() then
@@ -1387,8 +1387,19 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(errors)
 			elseif arg == "-projects" then
 				dofile(_Gtme.sessionInfo().path.."lua"..s.."project.lua")
-				_Gtme.myxpcall(function() _Gtme.executeProject(package) end)
-				os.exit(0)
+				local errors
+				
+				xpcall(function() packageInfo(package) end, function(err)
+					_Gtme.printError(err)
+					os.exit(1)
+				end)
+
+				_Gtme.myxpcall(function() errors = _Gtme.executeProject(package) end, function(err)
+					_Gtme.printError(err)
+					os.exit(1)
+				end)
+
+				os.exit(errors)
 			elseif arg == "-autoclose" then
 				info_.autoclose = true
 			elseif arg == "-build" then
@@ -1469,13 +1480,13 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			elseif arg == "-project" then
 				local file = arguments[argCount + 1]
 
-				if file then
-					local info
-					xpcall(function() info = packageInfo(package).path end, function(err)
-						_Gtme.printError(err)
-						os.exit(1)
-					end)
+				local info
+				xpcall(function() info = packageInfo(package).path end, function(err)
+					_Gtme.printError(err)
+					os.exit(1)
+				end)
 
+				if file then
 					arg = info..s.."data"..s..file..".lua"
 
 					if not File(arg):exists() then
@@ -1484,7 +1495,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					end
 				elseif #_Gtme.projectFiles(package) == 0 then
 					_Gtme.printError("Package '"..package.."' has no projects.")
-					os.exit(0)
+					os.exit(1)
 				else
 					print("Package '"..package.."' has the following projects:")
 				end
