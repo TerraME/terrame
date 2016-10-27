@@ -118,15 +118,14 @@ Amazonia = Model{
 
 		model.amazonia = CellularSpace{
 			file = filePath("amazonia.shp"),
-			xy = {"Col", "Lin"}
+			xy = {"Col", "Lin"},
+			as = {
+				defor = "defor_10",
+				area_indigena = "areadigena",
+				dist_portos = "distportos",
+				dist_rodovias = "distdovias"
+			}
 		}
-
-		forEachCell(model.amazonia, function(cell)
-			cell.defor = cell.defor_10
-			cell.area_indigena = cell.areadigena
-			cell.dist_portos = cell.distportos
-			cell.dist_rodovias = cell.distdovias
-		end)
 
 		model.amazonia:createNeighborhood()
 
