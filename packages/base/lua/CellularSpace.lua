@@ -614,17 +614,17 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		local cell = Cell(mdSet)
 		
 		if self.geometry then
-			k = "OGR_GEOMETRY"
+			local att = "OGR_GEOMETRY"
 
 			if not cell[k] then
-				k = "geom"
+				att = "geom"
 			end
 
-			cell.geom = tlib:castGeomToSubtype(cell[k])
-
-			if cell.OGR_GEOMETRY then cell.OGR_GEOMETRY = nil end
+			cell.geom = tlib:castGeomToSubtype(cell[att])
 		end
 		
+		if cell.OGR_GEOMETRY then cell.OGR_GEOMETRY = nil end
+
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 
 		if cell.object_id0 then
