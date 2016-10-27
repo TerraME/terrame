@@ -621,6 +621,8 @@ local function setCellsByTerraLibDataSet(self, dSet)
 			end
 
 			cell.geom = tlib:castGeomToSubtype(cell[att])
+		else
+			cell.geom = nil
 		end
 		
 		if cell.OGR_GEOMETRY then cell.OGR_GEOMETRY = nil end
