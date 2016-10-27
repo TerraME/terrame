@@ -616,7 +616,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		if self.geometry then
 			local att = "OGR_GEOMETRY"
 
-			if not cell[k] then
+			if not cell[att] then
 				att = "geom"
 			end
 
