@@ -608,11 +608,10 @@ local function setCellsByTerraLibDataSet(self, dSet)
 			row = self.xMax - row + self.xMin -- bottom inverts row
 		end
 
+		mdSet.id = tostring(i)
+		mdSet.x = col
+		mdSet.y = row
 		local cell = Cell(mdSet)
-
-		cell.id = tostring(i)
-		cell.x = col
-		cell.y = row
 		
 		if self.geometry then
 			k = "OGR_GEOMETRY"
