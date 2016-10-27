@@ -129,6 +129,7 @@ project  Project
 rep      string [raster]
 sid      string [8e9b98cc-a511-4b41-9faf-5d67001c7058]
 source   string [asc]
+srid     number [4326.0]
 ]]
 		unitTest:assertEquals(tostring(l), expected, 36, true)
 		-- unitTest:assertFile(projName) -- SKIP #1242

@@ -433,10 +433,11 @@ return {
 			source = "postgis",
 			user = user,
 			password = password,
-			database = database
+			database = database,
+			overwrite = overwrite
 		}		
 		
-		layer1:export(pgData, overwrite)
+		layer1:export(pgData)
 		
 		local layerName2 = "setorespg"
 		local layer2 = Layer{
@@ -450,12 +451,50 @@ return {
 		}
 		
 		local geojson = "setores.geojson"
-		layer2:export(geojson, overwrite)
+		local data1 = {
+			file = geojson,
+			overwrite = overwrite
+		}
+		
+		layer2:export(data1)
 		unitTest:assert(File(geojson):exists())
 		
+		-- OVERWRITE AND CHANGE SRID
+		data1.srid = 4326
+		layer2:export(data1)
+		
+		local layerName3 = "GJ"
+		local layer3 = Layer{
+			project = proj,
+			name = layerName3,
+			file = geojson
+		}		
+		
+		unitTest:assertEquals(layer3.srid, data1.srid)
+		unitTest:assert(layer2.srid ~= data1.srid)		
+		
 		local shp = "setores.shp"
-		layer2:export(shp, overwrite)
+		local data2 = {
+			file = shp,
+			overwrite = overwrite
+		}		
+		
+		layer2:export(data2)
 		unitTest:assert(File(shp):exists())
+		
+		-- OVERWRITE AND CHANGE SRID
+		data2.srid = 4326
+		layer2:export(data2)
+		
+		local layerName4 = "SHP"
+		local layer4 = Layer{
+			project = proj,
+			name = layerName4,
+			file = shp
+		}		
+		
+		unitTest:assertEquals(layer4.srid, data2.srid)
+		unitTest:assert(layer2.srid ~= data2.srid)			
 
 		File(geojson):delete()
 		File(shp):delete()

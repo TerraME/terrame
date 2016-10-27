@@ -1234,6 +1234,14 @@ return {
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
+
+		-- OVERWRITE AND CHANGE SRID
+		toData.srid = 4326.0
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		local layerName2 = "GJ"
+		tl:addGeoJSONLayer(proj, layerName2, toData.file)
+		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		unitTest:assertEquals(info2.srid, toData.srid)
 		
 		File(toData.file):delete()
 		
@@ -1244,6 +1252,14 @@ return {
 		
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
+		
+		-- OVERWRITE AND CHANGE SRID
+		toData.srid = 4326
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		local layerName3 = "SHP"
+		tl:addShpLayer(proj, layerName3, toData.file)
+		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
+		unitTest:assertEquals(info3.srid, toData.srid)		
 
 		File(toData.file):delete()
 		
@@ -1271,6 +1287,14 @@ return {
 		
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		
+		-- OVERWRITE AND CHANGE SRID
+		pgData.srid = 4326
+		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		local layerName4 = "PG"
+		tl:addPgLayer(proj, layerName4, pgData)
+		local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
+		unitTest:assertEquals(info4.srid, pgData.srid)		
 		
 		tl:dropPgTable(pgData)		
 

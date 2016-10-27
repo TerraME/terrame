@@ -667,34 +667,51 @@ Layer_ = {
 	dummy = function(self, band)
 		return self.project.terralib:getDummyValue(self.project, self.name, band)
 	end,
-	--- Exports the data of a layer to another data source. 
-	-- The data argument can be either a file string or data table of postigis connection. 
-	-- @arg data Either a File, a string with the file path, or data table.
-	-- @arg overwrite Indicates if the exported data will be overwritten.
+	--- Exports the data of a layer to another data source.
+	-- The data can be either a file data or postgis. The SRID and overwrite are common arguments.
+	-- @arg data.srid The SRID related to some projection, it can be used to reproject the data.
+	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
 	-- @usage -- DONTRUN
-	-- layer:export{file = "myfile.shp", true}
-	-- layer:export{file = "myfile.geojson"}	
-	export = function(self, data, overwrite)
-		if type(data) == "string" then
-			data = File(data)
+	-- layer:export({file = "myfile.shp", overwrite = "true"})
+	-- layer:export({file = "myfile.geojson"})	
+	-- layer:export({file = "myfile.geojson", srid = 4326})	
+	export = function(self, data)
+		verifyNamedTable(data)
+		
+		if data.srid then 
+			positiveTableArgument(data, "srid")
+		end
+		
+		if data.overwrite then
+			defaultTableValue(data, "overwrite", false)
+		end
+		
+		if type(data.file) == "string" then
+			data.file = File(data.file)
 		end
 
-		if type(data) == "File" then
-			local source = data:extension()
-
+		if type(data.file) == "File" then
+			verifyUnnecessaryArguments(data, {"source", "file", "srid", "overwrite"})
+			
+			local source = data.file:extension()
+			
 			if isValidSource(source) then
 				local toData = {
-					file = tostring(data),
-					type = source
+					file = tostring(data.file),
+					type = source,
+					srid = data.srid
 				}
 
-				self.project.terralib:saveLayerAs(self.project, self.name, toData, overwrite)
+				self.project.terralib:saveLayerAs(self.project, self.name, toData, data.overwrite)
 			else
 				invalidFileExtensionError("data", source) 
 			end
-		elseif type(data) == "table" then
+		else
 			mandatoryTableArgument(data, "source", "string")
+			
 			if data.source == "postgis" then
+				verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding", "srid", "overwrite"})
+				
 				mandatoryTableArgument(data, "user", "string")
 				mandatoryTableArgument(data, "password", "string")
 				mandatoryTableArgument(data, "database", "string")
@@ -703,12 +720,12 @@ Layer_ = {
 				defaultTableValue(data, "encoding", "CP1252")		
 				local pgData = data
 				pgData.type = "postgis"
-				self.project.terralib:saveLayerAs(self.project, self.name, pgData, overwrite)
+				pgData.srid = data.srid
+				
+				self.project.terralib:saveLayerAs(self.project, self.name, pgData, pgData.overwrite)
 			else
 				customError("It only supports postgis database, use source = \"postgis\".")
 			end
-		else
-			customError("The attribute 'data' must be either 'file' or 'table', but received ("..type(data)..").")
 		end
 	end
 }
