@@ -794,12 +794,50 @@ return {
 		local overwrite = true
 		
 		local geojson = "setores.geojson"
-		layer:export(geojson, overwrite)
+		local data1 = {
+			file = geojson,
+			overwrite = overwrite
+		}
+		
+		layer:export(data1)
 		unitTest:assert(File(geojson):exists())
 		
+		-- OVERWRITE AND CHANGE SRID
+		data1.srid = 4326
+		layer:export(data1)
+		
+		local layerName2 = "GJ"
+		local layer2 = Layer{
+			project = proj,
+			name = layerName2,
+			file = geojson
+		}		
+		
+		unitTest:assertEquals(layer2.srid, data1.srid)
+		unitTest:assert(layer.srid ~= data1.srid)
+		
 		local shp = "setores.shp"
-		layer:export(shp, overwrite)
+		local data2 = {
+			file = shp,
+			overwrite = overwrite
+		}		
+		
+		layer:export(data2)
 		unitTest:assert(File(shp):exists())
+		
+		-- OVERWRITE AND CHANGE SRID
+		data2.srid = 4326
+		layer:export(data2)
+		
+		local layerName3 = "SHP"
+		local layer3 = Layer{
+			project = proj,
+			name = layerName3,
+			file = shp
+		}		
+		
+		unitTest:assertEquals(layer3.srid, data2.srid)
+		unitTest:assert(layer.srid ~= data2.srid)		
 
 		File(geojson):delete()
 		File(shp):delete()

@@ -183,7 +183,9 @@ return {
 		local currDir = currentDir()
 		customWarning = function(msg) 
 			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2tif.tif'.") or
-							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'."))
+							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'.") or
+							(msg == "It was not possible to convert the data in layer 'TifLayer' to 'cbers_rgb342_crop1.tif'.") or
+							(msg == "It was not possible to change SRID from raster data."))
 		end
 		
 		local overwrite = true
@@ -242,6 +244,13 @@ return {
 		end
 		unitTest:assertError(overwriteError, "The file '"..currDir.."/cbers_rgb342_crop1.tif' already exists.")
 		
+		-- TRY OVERWRITE AND CHANGE SRID
+		overwrite = true		
+		toData.file = "cbers_rgb342_crop1.tif"
+		toData.type = "tif"
+		toData.srid = 4326
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+	
 		File("cbers_rgb342_crop1.tif"):delete()
 		proj.file:delete()
 		

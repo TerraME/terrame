@@ -178,6 +178,14 @@ return {
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
+		
+		-- OVERWRITE AND CHANGE SRID
+		toData.srid = 4326
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		local layerName2 = "SHP"
+		tl:addShpLayer(proj, layerName2, toData.file)
+		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		unitTest:assertEquals(info2.srid, toData.srid)
 
 		-- POSTGIS
 		local host = "localhost"
@@ -201,8 +209,16 @@ return {
 		
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
-		-- OVERWRITE
+		-- OVERWRITE 
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+
+		-- OVERWRITE AND CHANGE SRID
+		pgData.srid = 4326
+		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		local layerName3 = "PG"
+		tl:addPgLayer(proj, layerName3, pgData)
+		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
+		unitTest:assertEquals(info3.srid, pgData.srid)
 		
 		tl:dropPgTable(pgData)		
 

@@ -853,6 +853,44 @@ return {
 		
 		proj.file:delete()
 		-- // SPATIAL INDEX TEST
-	end
+	end,
+	export = function(unitTest)
+		local projName = "layer_func_alt.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+		
+		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	
+		local layerName1 = "setores"
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+		
+		local overwrite = true
+		
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		
+		local pgData = {
+			source = "postgi",
+			user = user,
+			password = password,
+			database = database,
+			overwrite = overwrite
+		}		
+		
+		local pgSourceError = function()
+			layer1:export(pgData)
+		end
+		unitTest:assertError(pgSourceError, "It only supports postgis database, use source = \"postgis\".")
+		
+		proj.file:deleteIfExists()
+	end	
 }
 

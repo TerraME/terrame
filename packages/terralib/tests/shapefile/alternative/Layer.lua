@@ -71,6 +71,30 @@ return {
 		-- // SPATIAL INDEX
 		
 		proj.file:delete()
-	end
+	end,
+	export = function(unitTest)
+		local projName = "layer_func_alt.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+		
+		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	
+		local layerName1 = "setores"
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+			
+		local invalidFile = function()
+			layer1:export({file = "invalid.org"})
+		end
+		unitTest:assertError(invalidFile, invalidFileExtensionMsg("data", "org"))
+
+		proj.file:deleteIfExists()
+	end		
 }
 

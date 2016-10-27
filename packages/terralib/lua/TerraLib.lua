@@ -1088,6 +1088,7 @@ TerraLib_ = {
 		local info = {}		
 		info.name = layer:getTitle()	
 		info.sid = layer:getDataSourceId()
+		info.srid = layer:getSRID()
 		local dseName = layer:getDataSetName()
 
 		loadProject(project, project.file)
@@ -2060,16 +2061,18 @@ TerraLib_ = {
 	-- local toData = {}
 	-- toData.file = "shp2geojson.geojson"
 	-- toData.type = "geojson"			
+	-- toData.srid = 4326
 	-- tl:saveLayerAs(project, "SomeLayer", toData, true)	
 	saveLayerAs = function(_, project, layerName, toData, overwrite)
 		loadProject(project, project.file)
-	
+
 		do		
 			local from = project.layers[layerName]
 			local fromDsId = from:getDataSourceId()	
 			local toType = SourceTypeMapper[toData.type]
 			local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)		
-			local fromDs = binding.GetDs(fromDsId, true)	
+			local fromDs = binding.GetDs(fromDsId, true)
+
 			from = toDataSetLayer(from)	
 			local fromDSetName = from:getDataSetName()	
 			local fromType = fromDsInfo:getType()
@@ -2087,7 +2090,7 @@ TerraLib_ = {
 					else
 						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
 					end
-				end						
+				end	
 			elseif toType == "OGR" then
 				if File(toData.file):exists() then
 					if overwrite then
@@ -2106,7 +2109,7 @@ TerraLib_ = {
 			elseif toType == "GDAL" then
 				toData.fileTif = fromDSetName
 				local file = File(toData.file)
-				toData.dir = file:path()
+				toData.dir = Directory(file)
 				local fileCopy = toData.dir..toData.fileTif
 
 				if toData.file and (file:name(true) ~= fileTif) then
@@ -2136,19 +2139,66 @@ TerraLib_ = {
 				releaseProject(project)
 				customError(errorMsg)
 			end
-						
+									
 			local fromDSetType = fromDs:getDataSetType(fromDSetName)				
 			local fromDSet = fromDs:getDataSet(fromDSetName)
-				
-			binding.Create(toDs, fromDSetType, fromDSet)
+			local converter = binding.te.da.DataSetTypeConverter(fromDSetType, toDs:getCapabilities(), toDs:getEncoding())
+			
+			local srid
+			if toData.srid then
+				if toType ~= "GDAL" then
+					srid = toData.srid
+				else
+					customWarning("It was not possible to change SRID from raster data.") -- #1485
+					srid = from:getSRID()
+				end
+			else
+				srid = from:getSRID()
+			end
+
+			binding.AssociateDataSetTypeConverterSRID(converter, srid)
+			local dstResult = converter:getResult()
+
+			if dstResult:getProperty("FID") then
+				dstResult:remove("FID")
+			end			
+			
+			dstResult:setName(fromDSetType:getName())
+			local dsetAdapted = binding.CreateAdapter(fromDSet, converter)
+
+		  -- // TODO(avancinirodrigo): Check properties names
+		  -- std::vector<te::dt::Property* > props = dsTypeResult->getProperties();
+		  -- std::map<std::size_t, std::string> invalidNames;
+		  -- for (std::size_t i = 0; i < props.size(); ++i)
+		  -- {
+			-- if (!dsGPKG->isPropertyNameValid(props[i]->getName()))
+			-- {
+			  -- invalidNames[i] = props[i]->getName();
+			-- }
+		  -- }
+
+		  -- if (!invalidNames.empty())
+		  -- {
+			-- std::map<std::size_t, std::string>::iterator it = invalidNames.begin();
+			-- while (it != invalidNames.end())
+			-- {
+			  -- bool aux;
+			  -- std::string newName = te::common::ReplaceSpecialChars(it->second, aux);
+
+			  -- props[it->first]->setName(newName);
+
+			  -- ++it;
+			-- }
+		  -- }			
+			
+			binding.Create(toDs, dstResult, dsetAdapted)
 			
 			-- #875
 			-- if toType == "POSTGIS" then
 				-- toDs:renameDataSet(string.lower(fromDSetName), toData.table)
 			-- end
-
+			
 			fromDs:close()
-			toDs:close()	
 		end
 		
 		releaseProject(project)
@@ -2190,7 +2240,6 @@ TerraLib_ = {
 			end
 			
 			ds:close()
-			
 			releaseProject(project)
 		end
 		
