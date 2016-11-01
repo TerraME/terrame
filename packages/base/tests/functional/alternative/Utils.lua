@@ -586,7 +586,7 @@ return{
 		local wrongType = function()
 			forEachRecursiveDirectory(file, function(_) end)
 		end
-		unitTest:assertError(wrongType, "The directory argument must be a 'Directory' or 'string' path.")	
+		unitTest:assertError(wrongType, "Argument '#1' must be a 'Directory' or 'string' path.")	
 	end	
 }
 

@@ -610,13 +610,13 @@ function forEachRecursiveDirectory(directory, _sof_)
 		if type(dir) == "string" then
 			dir = Directory(dir)
 		else
-			customError("The directory argument must be a 'Directory' or 'string' path.")
+			customError("Argument '#1' must be a 'Directory' or 'string' path.")
 		end
 	end
 	
-	return 	forEachElement(getFilesRecursively(dir), function(_, file)
-				if _sof_(file) == false then return false end
-			end)
+	return forEachElement(getFilesRecursively(dir), function(_, file)
+		if _sof_(file) == false then return false end
+	end)
 end
 
 --- Second order function to transverse the instances of Models within a given Environment.
