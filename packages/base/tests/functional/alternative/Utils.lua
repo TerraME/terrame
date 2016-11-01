@@ -579,6 +579,14 @@ return{
 			vardump(vtable)
 		end
 		unitTest:assertError(error_func, "Function vardump cannot handle an index of type table.")
-	end
+	end,
+	forEachRecursiveDirectory = function(unitTest) 
+		local file = File(packageInfo("base").path.."lua/Utils.lua")		
+		
+		local wrongType = function()
+			forEachRecursiveDirectory(file, function(_) end)
+		end
+		unitTest:assertError(wrongType, "The directory argument must be a 'Directory' or 'string' path.")	
+	end	
 }
 
