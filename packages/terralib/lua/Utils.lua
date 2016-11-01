@@ -57,12 +57,14 @@ function forEachLayer(project, _sof_)
 		incompatibleTypeError(2, "function", _sof_)
 	end
 
-	for i, abstractLayer in pairs(project.layers) do
+	local result = true
+	forEachOrderedElement(project.layers, function(idx, abstractLayer)
 		local layer = Layer{project = project, name = abstractLayer:getTitle()}
-		if _sof_(layer, i) == false then return false end
-	end
+		if _sof_(layer, idx) == false then
+			result = false
+			return result
+		end
+	end)
 
-	return true
+	return result
 end
-
-
