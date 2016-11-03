@@ -24,39 +24,40 @@
 
 return {
 	forEachLayer = function(unitTest)
-		File("emas-count.tview"):deleteIfExists()
-	
-		local project
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)
-		project = Project{
-			file = "emas-count.tview",
+		local tview = File("emas-count.tview")
+		tview:deleteIfExists()
+
+		local project = Project{
+			file = tview,
 			clean = true,
 			firebreak = filePath("firebreak_lin.shp", "terralib"),
-			cover = filePath("accumulation_Nov94May00.tif", "terralib"),
 			river = filePath("River_lin.shp", "terralib"),
 			limit = filePath("Limit_pol.shp", "terralib")
 		}
-	else
-		project = Project{
-			file = "emas-count.tview",
-			clean = true,
-			firebreak = filePath("firebreak_lin.shp", "terralib"),
-			cover = filePath("test/sampa.shp", "terralib"),
-			river = filePath("River_lin.shp", "terralib"),
-			limit = filePath("Limit_pol.shp", "terralib")
-		}
-	end
 
 		local count = 0
+		local layers = {"firebreak", "limit", "river"}
 
-		forEachLayer(project, function(layer)
-			unitTest:assertType(layer, "Layer")
+		local each = forEachLayer(project, function(layer, name)
 			count = count + 1
+			unitTest:assertType(layer, "Layer")
+			unitTest:assertEquals(name, layers[count])
 		end)
 
-		unitTest:assertEquals(count, 4)
-		
-		File("emas-count.tview"):deleteIfExists()
+		unitTest:assertEquals(count, 3)
+		unitTest:assertEquals(each , true)
+
+		count = 0
+		each = forEachLayer(project, function(layer, name)
+			count = count + 1
+			unitTest:assertType(layer, "Layer")
+			unitTest:assertEquals(name, layers[count])
+
+			if count == 2 then return false end
+		end)
+
+		unitTest:assertEquals(count, 2)
+		unitTest:assertEquals(each , false)
+		tview:deleteIfExists()
 	end
 }
-
