@@ -607,11 +607,11 @@ function _Gtme.executeTests(package, fileName)
 
 					local text = "Test executed in "..round(difference, 1).." seconds"
 
-					if difference > 20 then
+					if difference > 30 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-					elseif difference > 5 then
+					elseif difference > 10 then
 						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-					else
+					elseif difference > 1 then
 						_Gtme.print("\027[00;37;42m"..text.."\027[00m")
 					end
 				end
