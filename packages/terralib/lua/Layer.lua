@@ -753,7 +753,7 @@ metaTableLayer_ = {
 -- @arg data.input Name of the input layer whose coverage area will be used to create a
 -- cellular layer.
 -- @arg data.service A string with the description of a WFS location.
--- @arg data.feature A string with the name of the featuure to be read from a WFS.
+-- @arg data.feature A string with the name of the feature to be read from a WFS.
 -- @tabular source
 -- Source & Description & Mandatory arguments & Optional arguments \
 -- "none" & Tries to open a Layer already stored in the Project & project, name & \

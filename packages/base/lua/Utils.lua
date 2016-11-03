@@ -951,7 +951,6 @@ local config
 --- Return a table with the content of the file config.lua, stored in the current directory
 -- of the simulation. All the global variables of the file are elements of the returned table. 
 -- Some packages require specific variables in this file in order to be tested or executed.
--- TerraME execution options -imporDb and -exportDb also use this file.
 -- Additional calls to getConfig will return the same output of the first call even
 -- if the current directory changes along the simulation.
 -- @usage getConfig()
@@ -959,8 +958,7 @@ function getConfig()
 	if config then
 		return config
 	elseif not File("config.lua"):exists() then
-		_Gtme.buildConfig() -- SKIP
-		return getConfig() -- SKIP
+		customError("There is no 'config.lua' in the current directory.") -- SKIP
 	else
 		config = _Gtme.include("config.lua") -- SKIP
 		return config

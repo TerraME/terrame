@@ -607,11 +607,11 @@ function _Gtme.executeTests(package, fileName)
 
 					local text = "Test executed in "..round(difference, 1).." seconds"
 
-					if difference > 20 then
+					if difference > 30 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-					elseif difference > 5 then
+					elseif difference > 10 then
 						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-					else
+					elseif difference > 1 then
 						_Gtme.print("\027[00;37;42m"..text.."\027[00m")
 					end
 				end
@@ -867,31 +867,17 @@ function _Gtme.executeTests(package, fileName)
 		printNote("Checking logs")
 		local mdir = data.log:list()
 
-		if string.find(tostring(data.log), sessionInfo().system) then
-			forEachElement(mdir, function(_, value)
-				if not ut.tlogs[value] then
-					printError("File 'log/"..sessionInfo().system.."/"..value.."' was not used by any assert.")
-					ut.unused_log_files = ut.unused_log_files + 1
-				end
-			end)
-			
-			local logdir = Directory(packageInfo(package).path.."/log")
-			mdir = logdir:list()
-			
-			forEachElement(mdir, function(_, value)
-				if not Directory(logdir.."/"..value):exists() then
-					printError("File 'log/"..value.."' was ignored. Log directory 'log/"..sessionInfo().system.."'.")
-					ut.unused_log_files = ut.unused_log_files + 1
-				end
-			end)	
-		else
-			forEachElement(mdir, function(_, value)
-				if not ut.tlogs[value] then
-					printError("File 'log/"..value.."' was not used by any assert.")
-					ut.unused_log_files = ut.unused_log_files + 1
-				end
-			end)		
+		local path = "log/"
+		if string.endswith(tostring(data.log), sessionInfo().system) then
+			path = path..sessionInfo().system.."/"
 		end
+
+		forEachElement(mdir, function(_, value)
+			if not ut.tlogs[value] then
+				printError("File '"..path..value.."' was not used by any assert.")
+				ut.unused_log_files = ut.unused_log_files + 1
+			end
+		end)
 	else
 		printWarning("Skipping logs check")
 	end
