@@ -208,7 +208,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 		local lfilename = idx.."-"..name..".log"
 
-		logfile = File("log"..s..lfilename)
+		local logfile = File("log"..s..lfilename)
 		if not logfile:exists() then
 			_Gtme.printError("Creating log file '".._Gtme.makePathCompatibleToAllOS( "log"..s..lfilename.."'"))
 			report.createdlogs = report.createdlogs + 1
@@ -216,6 +216,8 @@ forEachOrderedElement(commands, function(idx, group)
 			forEachElement(result, function(_, value)
 				logfile:write(_Gtme.makePathCompatibleToAllOS(value).."\n")
 			end)
+
+			logfile:close()
 		else
 			logfile:open()
 			local resultfile = File(tmpdirectory..lfilename)

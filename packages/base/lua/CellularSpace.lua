@@ -590,6 +590,8 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		self.yMax = math.max(self.yMax, col)
 	end
 
+	local tlib = terralib.TerraLib{}
+
 	for i = 0, #dSet do
 		local row = 0
 		local col = 0
@@ -607,9 +609,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 
 		local cell = Cell{id = tostring(i), x = col, y = row}
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
-		
-		local tlib = terralib.TerraLib{}
-		
+
 		for k, v in pairs(dSet[i]) do
 			if (k == "OGR_GEOMETRY") or (k == "geom") then
 				if self.geometry then

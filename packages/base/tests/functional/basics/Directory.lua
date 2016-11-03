@@ -187,9 +187,8 @@ return{
 	end,
 	setCurrentDir = function(unitTest)
 		local info = sessionInfo()
-		local s = info.separator
 		local cur_dir = currentDir()
-		local newpath = info.path..s.."packages"
+		local newpath = info.path.."packages"
 
 		local dir = Directory(newpath)
 		dir:setCurrentDir()

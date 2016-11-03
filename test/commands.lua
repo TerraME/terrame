@@ -32,6 +32,16 @@ package = {
 	check             = {package = "check",          arg = "-check"}
 }
 
+project = {
+	showprojects  = {package = "terralib", arg = "-project"},
+	runprojects   = {package = "terralib", arg = "-quiet -projects"},
+	errorprojects = {package = "project",  arg = "-projects"},
+	nopackage1    = {package = "abcdef",   arg = "-project"},
+	nopackage2    = {package = "abcdef",   arg = "-projects"},
+	noproject     = {                      arg = "-project"},
+	noprojects    = {                      arg = "-projects"}
+}
+
 doc = {
 	noload          = {arg = "-doc", package = "noload"},
 	onerror         = {arg = "-doc", package = "onerror"},

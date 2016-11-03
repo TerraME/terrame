@@ -23,7 +23,8 @@ using the command prompt. The graphical interface has options to run examples, c
 see documentation, as well as download and install additional packages. There are links to the source code
 of the models as well as the examples in the documentation.
 
-To develop your own models you will need a Lua editor.
+To develop your own models you will need a Lua editor. We currently recommend ZeroBraneStudio.
+Please follow the instructions available [here](http://www.terrame.org/doku.php#editor) to install and configure it properly.
 
 ### Reporting Bugs
 If you have found a bug, please report it at [TerraME Issue Tracker](https://github.com/TerraME/terrame/issues).

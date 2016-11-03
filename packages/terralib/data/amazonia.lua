@@ -26,10 +26,8 @@
 
 import("terralib")
 
-local projName = "amazonia.tview"
-
-local project = Project{
-	file = projName,
+project = Project{
+	file = "amazonia.tview",
 	clean = true,
 	author = "Andrade, P.",
 	title = "Amazonia database",

@@ -62,7 +62,11 @@ Agent_ = {
 	--
 	-- sn = SocialNetwork()
 	-- sn:add(friend1)
-	-- sn:add(friend2)
+	--
+	-- if friend2 ~= friend1 then
+	--     sn:add(friend2)
+	-- end
+	--
 	-- agent:addSocialNetwork(sn)
 	-- @see Utils:forEachConnection
 	addSocialNetwork = function(self, set, id)

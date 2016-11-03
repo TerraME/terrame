@@ -27,7 +27,7 @@ return{
 		local error_func = function()
 			filePath("mriver.shp")
 		end
-		unitTest:assertError(error_func, "File 'base/data/mriver.shp' does not exist in package 'base'. Do you mean 'river.shp'?", 2)
+		unitTest:assertError(error_func, "File 'data/mriver.shp' does not exist in package 'base'. Do you mean 'river.shp'?", 2)
 
 		local tlInfo = packageInfo("terralib")
 		local baseInfo = packageInfo()
@@ -38,22 +38,22 @@ return{
 		error_func = function()
 			filePath("amazonia.tview")
 		end
-		unitTest:assertError(error_func, "File 'base/data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project' to create it.", 2)
+		unitTest:assertError(error_func, "File 'data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project' to create it.", 2)
 
 		error_func = function()
 			filePath("test"..s.."mriver_lin.shp")
 		end
-		unitTest:assertError(error_func, "File 'base"..s.."data"..s.."test"..s.."mriver_lin.shp' does not exist in package 'base'.")
+		unitTest:assertError(error_func, "File 'data/test/mriver_lin.shp' does not exist in package 'base'.")
 
 		error_func = function()
 			filePath("error"..s.."csv-error.csv")
 		end
-		unitTest:assertError(error_func, "Directory '"..baseInfo.data.."error"..s.."' does not exist.")
+		unitTest:assertError(error_func, "Directory '"..baseInfo.data.."error/' does not exist.")
 
 		error_func = function()
 			filePath("test"..s.."braz.gdal")
 		end
-		unitTest:assertError(error_func, "File 'base"..s.."data"..s.."test"..s.."braz.gdal' does not exist in package 'base'. Do you mean 'brazil.gal'?")
+		unitTest:assertError(error_func, "File 'data/test/braz.gdal' does not exist in package 'base'. Do you mean 'brazil.gal'?")
 
 		File(baseInfo.data.."amazonia.lua"):deleteIfExists()
 	end,

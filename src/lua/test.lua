@@ -475,7 +475,7 @@ function _Gtme.executeTests(package, fileName)
 		end
 
 		forEachOrderedElement(myFiles, function(eachFile)
-			ut.current_file = eachDirectory:relativePath(baseDir)..s..eachFile
+			ut.current_file = eachDirectory:relativePath(baseDir).."/"..eachFile
 			local tests
 
 			local printTesting = false
@@ -491,7 +491,7 @@ function _Gtme.executeTests(package, fileName)
 				printError("Error: print() call detected with argument '"..tostring(arg).."'")
 			end
 
-			xpcall(function() tests = dofile(eachDirectory..s..eachFile) end, function(err)
+			xpcall(function() tests = dofile(eachDirectory.."/"..eachFile) end, function(err)
 				if not printTesting then
 					printNote("Testing "..ut.current_file)
 					printTesting = true
