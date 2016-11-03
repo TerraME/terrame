@@ -595,40 +595,31 @@ local function setCellsByTerraLibDataSet(self, dSet)
 	for i = 0, #dSet do
 		local row = 0
 		local col = 0
-		local mdSet = dSet[i]
 
 		if type(self.xy) == "table" then
-			col = tonumber(mdSet[self.xy[1]]) or 0
-			row = tonumber(mdSet[self.xy[2]]) or 0
+			col = tonumber(dSet[i][self.xy[1]]) or 0
+			row = tonumber(dSet[i][self.xy[2]]) or 0
 		elseif type(self.xy) == "function" then
-			col, row = self.xy(mdSet)
+			col, row = self.xy(dSet[i])
 		end
 
 		if self.zero == "bottom" then
 			row = self.xMax - row + self.xMin -- bottom inverts row
 		end
 
-		mdSet.id = tostring(i)
-		mdSet.x = col
-		mdSet.y = row
-		local cell = Cell(mdSet)
-		
-		if self.geometry then
-			local att = "OGR_GEOMETRY"
-
-			if not cell[att] then
-				att = "geom"
-			end
-
-			cell.geom = tlib:castGeomToSubtype(cell[att])
-		else
-			cell.geom = nil
-		end
-		
-		if cell.OGR_GEOMETRY then cell.OGR_GEOMETRY = nil end
-
+		local cell = Cell{id = tostring(i), x = col, y = row}
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 
+		for k, v in pairs(dSet[i]) do
+			if (k == "OGR_GEOMETRY") or (k == "geom") then
+				if self.geometry then
+					cell.geom = tlib:castGeomToSubtype(v)
+				end
+			else
+				cell[k] = v
+			end
+		end
+		
 		if cell.object_id0 then
 			cell:setId(cell.object_id0)
 		elseif cell.object_id_ then
