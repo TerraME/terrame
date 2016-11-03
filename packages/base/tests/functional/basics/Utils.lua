@@ -1085,6 +1085,26 @@ return{
     yMin = 0, 
     ydim = 1
 }]], 41)
+	end,
+	forEachRecursiveDirectory = function(unitTest) 
+		local count = 0
+		
+		forEachRecursiveDirectory(packageInfo("base").path.."data", function(file)
+			count = count + 1
+			unitTest:assertType(file, "File")
+		end)
+		
+		unitTest:assertEquals(count, 58)
+		
+		local dir = Directory(packageInfo("base").path.."data")
+		count = 0
+		
+		forEachRecursiveDirectory(dir, function(file)
+			count = count + 1
+			unitTest:assertType(file, "File")
+		end)
+		
+		unitTest:assertEquals(count, 58)		
 	end
 }
 

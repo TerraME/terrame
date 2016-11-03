@@ -576,6 +576,49 @@ function forEachDirectory(directory, _sof_)
 	end)
 end
 
+local function getFilesRecursively(directory)
+	local files = {}
+
+	if not directory:exists() then return files end
+
+	_Gtme.forEachDirectory(directory, function(dir)
+		for _, v in ipairs(getFilesRecursively(dir)) do
+			table.insert(files, v)
+		end			
+	end)
+ 
+	_Gtme.forEachFile(directory, function(file)
+		table.insert(files, file)
+	end)
+	
+	return files
+end
+
+--- Second order function to transverse a given directory recursively,
+-- applying a given function on each of its internal files.
+-- If any of the function calls returns
+-- false, forEachRecursiveDirectory() stops and returns false, otherwise it returns true.
+-- @arg directory A string with the path to a directory, or a base::Directory.
+-- @arg _sof_ A user-defined function that takes a file path as argument.
+-- @usage forEachRecursiveDirectory(packageInfo("base").path.."data", function(file)
+--     print(file)
+-- end)
+function forEachRecursiveDirectory(directory, _sof_)
+	local dir = directory
+
+	if type(dir) ~= "Directory" then
+		if type(dir) == "string" then
+			dir = Directory(dir)
+		else
+			customError("Argument '#1' must be a 'Directory' or 'string' path.")
+		end
+	end
+	
+	return forEachElement(getFilesRecursively(dir), function(_, file)
+		if _sof_(file) == false then return false end
+	end)
+end
+
 --- Second order function to transverse the instances of Models within a given Environment.
 -- It applies a given function on each of its instances. If any of the function calls returns
 -- false, forEachModel() stops and returns false, otherwise it returns true.
@@ -908,7 +951,6 @@ local config
 --- Return a table with the content of the file config.lua, stored in the current directory
 -- of the simulation. All the global variables of the file are elements of the returned table. 
 -- Some packages require specific variables in this file in order to be tested or executed.
--- TerraME execution options -imporDb and -exportDb also use this file.
 -- Additional calls to getConfig will return the same output of the first call even
 -- if the current directory changes along the simulation.
 -- @usage getConfig()
@@ -916,8 +958,7 @@ function getConfig()
 	if config then
 		return config
 	elseif not File("config.lua"):exists() then
-		_Gtme.buildConfig() -- SKIP
-		return getConfig() -- SKIP
+		customError("There is no 'config.lua' in the current directory.") -- SKIP
 	else
 		config = _Gtme.include("config.lua") -- SKIP
 		return config
