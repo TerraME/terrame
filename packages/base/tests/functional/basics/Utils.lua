@@ -294,46 +294,38 @@ return{
 		unitTest:assertEquals(count, 3)
 	end,
 	forEachDirectory = function(unitTest)
-		if _Gtme.sessionInfo().system ~= "windows" then
-			local count = 0
-			local r
+		local count = 0
+		local r
 
-			r = forEachDirectory(packageInfo("base").path.."data", function(dir)
-				count = count + 1
-				unitTest:assertType(dir, "Directory") -- SKIP
-			end)
+		r = forEachDirectory(packageInfo("base").path.."data", function(dir)
+			count = count + 1
+			unitTest:assertType(dir, "Directory")
+		end)
 
-			unitTest:assert(r) -- SKIP
-			unitTest:assertEquals(count, 1) -- SKIP
-		else
-			unitTest:assert(true) -- SKIP
-		end
+		unitTest:assert(r)
+		unitTest:assertEquals(count, 1)
 	end,
 	forEachFile = function(unitTest)
-		if _Gtme.sessionInfo().system ~= "windows" then
-			local count = 0
-			local r
+		local count = 0
+		local r
 
-			r = forEachFile(packageInfo("base").path.."data", function(file)
-				count = count + 1
-				unitTest:assertType(file, "File") -- SKIP
-			end)
+		r = forEachFile(packageInfo("base").path.."data", function(file)
+			count = count + 1
+			unitTest:assertType(file, "File")
+		end)
 
-			unitTest:assert(r) -- SKIP
-			unitTest:assertEquals(count, 28) -- SKIP
+		unitTest:assert(r)
+		unitTest:assertEquals(count, 28)
 
-			count = 0
+		count = 0
 
-			r = forEachFile(packageInfo("base").path.."data", function()
-				count = count + 1
-				if count > 1 then return false end
-			end)
+		r = forEachFile(packageInfo("base").path.."data", function()
+			count = count + 1
+			if count > 1 then return false end
+		end)
 
-			unitTest:assert(not r) -- SKIP
-			unitTest:assertEquals(count, 2) -- SKIP
-		else
-			unitTest:assert(true) -- SKIP
-		end
+		unitTest:assert(not r)
+		unitTest:assertEquals(count, 2)
 	end,
 	forEachModel = function(unitTest)
 		local MyTube = Model{

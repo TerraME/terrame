@@ -174,7 +174,6 @@ return{
 	split = function(unitTest)
 		local file = filePath("agents.csv", "base")
 		local path, name, extension = file:split()
-		local s = sessionInfo().separator
 
 		unitTest:assertEquals(path, packageInfo("base").data.."/")
 		unitTest:assertEquals(name, "agents")
@@ -183,7 +182,7 @@ return{
 		file = File("myagents")
 		path, name, extension = file:split()
 
-		unitTest:assertEquals(path, currentDir()..s)
+		unitTest:assertEquals(path, currentDir().."/")
 		unitTest:assertEquals(name, "myagents")
 		unitTest:assertNil(extension)
 	end,

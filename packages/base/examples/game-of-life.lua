@@ -20,17 +20,8 @@
 PROBABILITY = 0.15
 TURNS = 20
 
-r = Random{seed = 12345}
-
 cell = Cell{
-	init = function(self)
-		local v = r:number()
-		if v <= PROBABILITY then
-			self.state = "alive"
-		else
-			self.state = "dead"
-		end
-	end,
+	state = Random{alive = PROBABILITY, dead = 1 - PROBABILITY},
 	countAlive = function(self)
 		local count = 0
 		forEachNeighbor(self, function(_, neigh)
@@ -38,6 +29,7 @@ cell = Cell{
 				count = count + 1
 			end
 		end)
+
 		return count
 	end,
 	execute = function(self)

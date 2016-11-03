@@ -1,0 +1,35 @@
+Creating projects for package 'terralib'
+Removing output files
+Removing 'data/amazonia.tview'
+Removing 'data/cabecadeboi.tview'
+Removing 'data/emas.tview'
+Removing 'data/fillCellExample.tview'
+Removing 'data/itaituba.tview'
+Checking if data does not contain any .tview file
+Processing 'data/amazonia.lua'
+Creating 'data/amazonia.tview'
+Creating 'data/amazonia.shp'
+File 'amazonia.tview' was successfully created
+Processing 'data/cabecadeboi.lua'
+Creating 'data/cabecadeboi.tview'
+Creating 'data/cabecadeboi.shp'
+File 'cabecadeboi.tview' was successfully created
+Processing 'data/emas.lua'
+Creating 'data/emas.tview'
+Creating 'data/emas.shp'
+File 'emas.tview' was successfully created
+Processing 'data/fillCellExample.lua'
+Creating 'data/fillCellExample.tview'
+File 'fillCellExample.tview' was successfully created
+Processing 'data/itaituba.lua'
+Creating 'data/itaituba.tview'
+Creating 'data/itaituba.shp'
+File 'itaituba.tview' was successfully created
+
+Projects report for package 'terralib':
+Projects were created in 61.28 seconds.
+5 project files were created.
+No invalid .tview file was found in the package.
+No error was found while creating projects.
+No problem was found in the output of lua files.
+Summing up, all projects were successfully created.

@@ -188,13 +188,14 @@ metaTableDirectory_ = {
 
 		if type(self) == "Directory" then
 			self = self.fullpath
+
+			if not belong(string.sub(tostring(value), 1, 1), {s, "/"}) then
+				value = "/"..value
+			end
 		elseif type(value) == "Directory" then
 			value = value.fullpath
 		end
 
-		if not belong(string.sub(tostring(value), 1, 1), {s, "/"}) then
-			value = "/"..value
-		end
 
 		return self..value
 	end

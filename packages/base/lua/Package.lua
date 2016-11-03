@@ -32,12 +32,15 @@
 function filePath(filename, package)
 	if package == nil then package = "base" end
 
-	local s = sessionInfo().separator
-	local file = File(packageInfo(package).data..filename)
+	filename = _Gtme.makePathCompatibleToAllOS(filename)
+	
+	local data = packageInfo(package).data
+	local file = File(data..filename)
+
 	if file:exists() then
 		return file
 	else
-		local msg = "File '"..package..s.."data"..s..filename.."' does not exist in package '"..package.."'."
+		local msg = "File 'data/"..filename.."' does not exist in package '"..package.."'."
 
 		if file:extension() == "tview" then
 			local _, name = file:split()

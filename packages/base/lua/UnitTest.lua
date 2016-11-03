@@ -25,8 +25,6 @@
 local function simplifyPath(value)
 	value = _Gtme.makePathCompatibleToAllOS(value)
 
-	local s = sessionInfo().separator
-
 	if value:match("\n") then
 		local tempstr = ""
 
@@ -37,7 +35,7 @@ local function simplifyPath(value)
 			if not first or first == last then
 				tempstr = tempstr..line.."\n"
 			else
-				tempstr = tempstr..string.sub(line, 1, first - 1)..s..string.sub(line, last + 1).."\n"
+				tempstr = tempstr..string.sub(line, 1, first - 1).."/"..string.sub(line, last + 1).."\n"
 			end
 		end
 
@@ -49,7 +47,11 @@ local function simplifyPath(value)
 
 	if not first or first == last then return value end
 
-	return string.sub(value, 1, first - 1)..s..string.sub(value, last + 1)
+	if string.sub(value, first - 1, first - 1) == ":" then -- remove "C:", "D:", ...
+		first = first - 2 -- SKIP
+	end
+
+	return string.sub(value, 1, first - 1).."/"..string.sub(value, last + 1)
 end
 
 UnitTest_ = {
