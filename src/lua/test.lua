@@ -868,7 +868,7 @@ function _Gtme.executeTests(package, fileName)
 		local mdir = data.log:list()
 
 		local path = "log/"
-		if string.find(tostring(data.log), sessionInfo().system) then
+		if string.endswith(tostring(data.log), sessionInfo().system) then
 			path = path..sessionInfo().system.."/"
 		end
 
