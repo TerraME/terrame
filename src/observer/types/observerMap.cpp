@@ -873,3 +873,10 @@ void ObserverMap::setGridVisible(bool visible)
 {
 	painterWidget->gridOn(visible);
 }
+
+void ObserverMap::setTitle(const std::string& title)
+{
+	std::string t("Map - ");
+	t.append(title);
+	setWindowTitle(t.c_str());
+}

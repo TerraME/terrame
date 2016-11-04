@@ -155,6 +155,8 @@ public:
 
     void setGridVisible(bool visible);
 
+	void setTitle(const std::string& title);
+
 signals:
     /**
      * Triggers the grid draw

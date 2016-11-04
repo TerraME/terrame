@@ -60,6 +60,9 @@ public:
 	int save(lua_State* L);
 
     int setGridVisible(lua_State *L);
+
+	int setTitle(lua_State *L);
+
 public:
 	ObserverMap* obs;
 };

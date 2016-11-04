@@ -101,7 +101,7 @@
 						<%end%>
 
 						<%if count_models > 0 then%>
-							<tr><td colspan="2">
+							<tr><td class="title" colspan="2">
 							<h2><a href="<%=luadoc.link("files/models.html", from)%>">Models</a></h2>
 							</td></tr>
 							<!--<table class="file_list">-->

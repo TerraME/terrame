@@ -1059,7 +1059,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	dofile(info_.path..s.."lua"..s.."utils.lua")
 	dofile(info_.path..s.."lua"..s.."configure.lua")
 	
-	if string.lower(info_.path) == string.lower(tostring(_Gtme.currentDir())) then
+	local infopath = _Gtme.Directory(info_.path)
+	if tostring(infopath) == tostring(_Gtme.currentDir()) then
 		_Gtme.printError("It is not possible to execute TerraME within its directory. Please, run it from another place.")
 		os.exit(1)
 	else

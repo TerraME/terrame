@@ -42,6 +42,7 @@ return{
 
 		m = Map{
 			target = cs,
+			title = "Basic",
 			select = "value",
 			min = 0,
 			max = 1,
@@ -50,6 +51,7 @@ return{
 		}
 
 		unitTest:assertType(m, "Map")
+		unitTest:assertEquals(m.title, "Basic")
 
 		local mi = Map{
 			target = cs,
