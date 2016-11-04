@@ -1681,7 +1681,7 @@ function Map(data)
 	end
 
 	local validArgs = {"background", "color", "font", "grid", "grouping", "invert", "label", "max", "min",
-	"precision", "select", "size", "slices", "stdColor", "stdDeviation", "symbol", "target", "value"}
+	"precision", "select", "size", "slices", "stdColor", "stdDeviation", "symbol", "target", "value", "title"}
 
 	verifyUnnecessaryArguments(data, validArgs)
 
@@ -1694,6 +1694,7 @@ function Map(data)
 
 	optionalTableArgument(data, "value", "table")
 	optionalTableArgument(data, "select", "string")
+	optionalTableArgument(data, "title", "string")
 
 	if type(data.background) ~= "Map" then
 		defaultTableValue(data, "grid", false)
@@ -1809,7 +1810,7 @@ function Map(data)
 
 	switch(data, "grouping"):caseof{
 		equalsteps = function()
-			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid"})
+			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid", "title"})
 
 			mandatoryTableArgument(data, "select", "string")
 			mandatoryTableArgument(data, "target", "CellularSpace")
@@ -1885,7 +1886,7 @@ function Map(data)
 			verify(#data.color >= 2, "Grouping '"..data.grouping.."' requires at least two colors, got "..#data.color..".")
 		end,
 		quantil = function() -- equal to 'equalsteps'
-			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid"})
+			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid", "title"})
 
 			mandatoryTableArgument(data, "select", "string")
 			mandatoryTableArgument(data, "target", "CellularSpace")
@@ -1963,7 +1964,7 @@ function Map(data)
 			local attrs
 
 			if type(data.target) == "CellularSpace" then
-				attrs = {"target", "select", "value", "label", "color", "grouping", "grid"}
+				attrs = {"target", "select", "value", "label", "color", "grouping", "grid", "title"}
 
 				local sample = data.target.cells[1][data.select]
 
@@ -1972,7 +1973,7 @@ function Map(data)
 					customError("Selected element should be string, number, or function, got "..type(sample)..".")
 				end
 			else -- Society
-				attrs = {"target", "select", "value", "label", "color", "grouping", "background", "size", "font", "symbol", "grid"}
+				attrs = {"target", "select", "value", "label", "color", "grouping", "background", "size", "font", "symbol", "grid", "title"}
 			end
 
 			if type(data.color) == "string" then
@@ -2030,7 +2031,7 @@ function Map(data)
 
 			-- we need to verify the target before unnecessary arguments because if
 			-- target is Society then new attributes were added
-			verifyUnnecessaryArguments(data, {"target", "color", "grouping", "min", "max", "slices", "value", "grid"})
+			verifyUnnecessaryArguments(data, {"target", "color", "grouping", "min", "max", "slices", "value", "grid", "title"})
 
 			if data.grid == false then data.grid = nil end
 
@@ -2076,7 +2077,7 @@ function Map(data)
 					cell.background_ = 0
 				end)
 			else -- Society
-				verifyUnnecessaryArguments(data, {"target", "color", "grouping", "background", "size", "font", "symbol", "grid"})
+				verifyUnnecessaryArguments(data, {"target", "color", "grouping", "background", "size", "font", "symbol", "grid", "title"})
 
 				data.select = "state_"
 				data.value = {"alive", "dead"}
@@ -2205,6 +2206,14 @@ function Map(data)
 
 	if data.grid then
 		map:setGridVisible(1)
+	end
+	
+	if isModel(data.target) then
+		defaultTableValue(data, "title",  data.target:title())
+	end	
+	
+	if data.title then
+		map:setTitle(data.title)
 	end
 
 	setmetatable(data, metaTableMap_)
