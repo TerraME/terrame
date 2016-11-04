@@ -7,15 +7,9 @@ removeIfExists = function(_, value)
 	if isDirectory(value) then
 		_Gtme.print("Removing '"..value.."'")
 		Directory(value):delete()
-	else
-		local f
-
-		pcall(function() f = File(value) end)
-
-		if f and f:exists() then
-			_Gtme.print("Removing '"..value.."'")
-			File(value):delete()
-		end
+	elseif isFile(value) then
+		_Gtme.print("Removing '"..value.."'")
+		File(value):delete()
 	end
 end
 
@@ -142,6 +136,26 @@ forEachOrderedElement(commands, function(idx, group)
 		command = "terrame"
 
 		directories.log[idx.."-"..name..".log"] = true
+
+		if sessionInfo().system == "mac" then
+			if idx == "project" then
+				if name == "errorprojects" or name == "runprojects" then
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			elseif idx == "sketch" then
+				if name == "terralib" then
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			elseif idx == "observer" then
+				if belong(name, {"clock", "textscreen", "visualtable"}) then
+					directories.scripts[args.script] = true
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			end
+		end
 
 		if args.package then
 			directories.packages[args.package] = true
@@ -326,6 +340,20 @@ forEachOrderedElement(commands, function(idx, group)
 
 	forEachOrderedElement(group, function(name, args)
 		command = "terrame"
+
+		if sessionInfo().system == "mac" then
+			if idx == "project" then
+				if name == "errorprojects" or name == "runprojects" then
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			elseif idx == "sketch" then
+				if name == "terralib" then
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			end
+		end
 
 		if args.package and args.package ~= "memory" then
 			command = command.." -package "..args.package
