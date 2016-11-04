@@ -143,7 +143,7 @@ return{
 
 		error_func = function()
 			CellularSpace{
-				file = filePath("cabecadeboi.shp"),
+				file = filePath("cabecadeboi900.shp"),
 				xy = {"Col", "Lin"},
 				as = {x = "height_2"}
 			}
@@ -152,7 +152,7 @@ return{
 
 		error_func = function()
 			CellularSpace{
-				file = filePath("cabecadeboi.shp"),
+				file = filePath("cabecadeboi900.shp"),
 				xy = {"Col", "Lin"},
 				as = {
 					height = "height_2"

@@ -202,13 +202,13 @@ return {
 		File(shp[1]):deleteIfExists()
 		
 		-- CREATE THE CELLULAR SPACE
-		local resolution = 2e5
+		local resolution = 5e5
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
 		
 		local clSet = tl:getDataSet(proj, clName)
 		
-		unitTest:assertEquals(getn(clSet), 45)
+		unitTest:assertEquals(getn(clSet), 9)
 		
 		for k, v in pairs(clSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID"))
@@ -244,7 +244,7 @@ return {
 		
 		local presSet = tl:getDataSet(proj, presLayerName)
 		
-		unitTest:assertEquals(getn(presSet), 45)
+		unitTest:assertEquals(getn(presSet), 9)
 		
 		for k, v in pairs(presSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -274,7 +274,7 @@ return {
 		
 		local areaSet = tl:getDataSet(proj, areaLayerName)
 		
-		unitTest:assertEquals(getn(areaSet), 45)
+		unitTest:assertEquals(getn(areaSet), 9)
 		
 		for k, v in pairs(areaSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -304,7 +304,7 @@ return {
 		
 		local countSet = tl:getDataSet(proj, countLayerName)
 		
-		unitTest:assertEquals(getn(countSet), 45)
+		unitTest:assertEquals(getn(countSet), 9)
 		
 		for k, v in pairs(countSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -334,7 +334,7 @@ return {
 		
 		local distSet = tl:getDataSet(proj, distLayerName)
 		
-		unitTest:assertEquals(getn(distSet), 45)
+		unitTest:assertEquals(getn(distSet), 9)
 		
 		for k, v in pairs(distSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -368,7 +368,7 @@ return {
 		
 		local minSet = tl:getDataSet(proj, minLayerName)
 		
-		unitTest:assertEquals(getn(minSet), 45)
+		unitTest:assertEquals(getn(minSet), 9)
 		
 		for k, v in pairs(minSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -399,7 +399,7 @@ return {
 		
 		local maxSet = tl:getDataSet(proj, maxLayerName)
 		
-		unitTest:assertEquals(getn(maxSet), 45)
+		unitTest:assertEquals(getn(maxSet), 9)
 		
 		for k, v in pairs(maxSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -430,7 +430,7 @@ return {
 		
 		local percentSet = tl:getDataSet(proj, percLayerName)
 		
-		unitTest:assertEquals(getn(percentSet), 45)
+		unitTest:assertEquals(getn(percentSet), 9)
 		
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -461,7 +461,7 @@ return {
 		
 		local stdevSet = tl:getDataSet(proj, stdevLayerName)
 		
-		unitTest:assertEquals(getn(stdevSet), 45)
+		unitTest:assertEquals(getn(stdevSet), 9)
 		
 		for k, v in pairs(stdevSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -493,7 +493,7 @@ return {
 		
 		local meanSet = tl:getDataSet(proj, meanLayerName)
 		
-		unitTest:assertEquals(getn(meanSet), 45)
+		unitTest:assertEquals(getn(meanSet), 9)
 		
 		for k, v in pairs(meanSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -525,7 +525,7 @@ return {
 		
 		local weighSet = tl:getDataSet(proj, weighLayerName)
 		
-		unitTest:assertEquals(getn(weighSet), 45)
+		unitTest:assertEquals(getn(weighSet), 9)
 		
 		for k, v in pairs(weighSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -557,7 +557,7 @@ return {
 		
 		local interSet = tl:getDataSet(proj, interLayerName)
 		
-		unitTest:assertEquals(getn(interSet), 45)
+		unitTest:assertEquals(getn(interSet), 9)
 		
 		for k, v in pairs(interSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -589,7 +589,7 @@ return {
 		
 		local occurSet = tl:getDataSet(proj, occurLayerName)
 		
-		unitTest:assertEquals(getn(occurSet), 45)
+		unitTest:assertEquals(getn(occurSet), 9)
 		
 		for k, v in pairs(occurSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -622,7 +622,7 @@ return {
 		
 		local sumSet = tl:getDataSet(proj, sumLayerName)
 		
-		unitTest:assertEquals(getn(sumSet), 45)
+		unitTest:assertEquals(getn(sumSet), 9)
 		
 		for k, v in pairs(sumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -655,7 +655,7 @@ return {
 		
 		local wsumSet = tl:getDataSet(proj, wsumLayerName)
 		
-		unitTest:assertEquals(getn(wsumSet), 45)
+		unitTest:assertEquals(getn(wsumSet), 9)
 		
 		for k, v in pairs(wsumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -693,7 +693,7 @@ return {
 		
 		percentSet = tl:getDataSet(proj, percTifLayerName)
 		
-		unitTest:assertEquals(getn(percentSet), 45) 
+		unitTest:assertEquals(getn(percentSet), 9) 
 		
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -726,7 +726,7 @@ return {
 		
 		local rmeanSet = tl:getDataSet(proj, rmeanLayerName)
 		
-		unitTest:assertEquals(getn(rmeanSet), 45)
+		unitTest:assertEquals(getn(rmeanSet), 9)
 		
 		for k, v in pairs(rmeanSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -760,7 +760,7 @@ return {
 		
 		local rminSet = tl:getDataSet(proj, rminLayerName)
 		
-		unitTest:assertEquals(getn(rminSet), 45)
+		unitTest:assertEquals(getn(rminSet), 9)
 		
 		for k, v in pairs(rminSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -794,7 +794,7 @@ return {
 		
 		local rmaxSet = tl:getDataSet(proj, rmaxLayerName)
 		
-		unitTest:assertEquals(getn(rmaxSet), 45)
+		unitTest:assertEquals(getn(rmaxSet), 9)
 		
 		for k, v in pairs(rmaxSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -828,7 +828,7 @@ return {
 		
 		local rstdevSet = tl:getDataSet(proj, rstdevLayerName)
 		
-		unitTest:assertEquals(getn(rstdevSet), 45)
+		unitTest:assertEquals(getn(rstdevSet), 9)
 		
 		for k, v in pairs(rstdevSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -862,7 +862,7 @@ return {
 		
 		local rsumSet = tl:getDataSet(proj, rsumLayerName)
 		
-		unitTest:assertEquals(getn(rsumSet), 45)
+		unitTest:assertEquals(getn(rsumSet), 9)
 		
 		for k, v in pairs(rsumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -891,7 +891,7 @@ return {
 		
 		local rsumOverSet = tl:getDataSet(proj, rsumLayerName)
 		
-		unitTest:assertEquals(getn(rsumOverSet), 45)
+		unitTest:assertEquals(getn(rsumOverSet), 9)
 		
 		for k, v in pairs(rsumOverSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 

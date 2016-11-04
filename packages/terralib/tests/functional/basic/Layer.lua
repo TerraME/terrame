@@ -247,7 +247,7 @@ return {
 		File(filePath4):deleteIfExists()
 	end,
 	fill = function(unitTest)
-		local projName = "cellular_layer_basic.tview"
+		local projName = File("cellular_layer_basic.tview")
 		local layerName1 = "Setores_2000"
 		local localidades = "Localidades"
 		local rodovias = "Rodovias"
@@ -488,7 +488,7 @@ return {
 		unitTest:assertEquals(cellSpaceLayer.source, "shp") -- SKIP
 		unitTest:assertEquals(cellSpaceLayer.file, currentDir()..filePath22) -- SKIP
 
-		File(projName):deleteIfExists()
+		projName:deleteIfExists()
 
 		File(filePath1):deleteIfExists()
 --		File(filePath3):deleteIfExists()
@@ -501,6 +501,7 @@ return {
 		--File(filePath21):deleteIfExists()
 		File(filePath22):deleteIfExists()
 	else
+		projName:deleteIfExists()
 		unitTest:assert(true) -- SKIP
 	end
 	end,
