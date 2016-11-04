@@ -72,7 +72,7 @@ return{
 			geometry = true
 		}
 
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			unitTest:assertEquals(cs:sample():area(), 10000000000)
 		end
 
@@ -117,7 +117,7 @@ return{
 			geometry = true
 		}
 
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			unitTest:assertEquals(cs:sample():area(), 10000000000)
 		end
 
