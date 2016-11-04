@@ -1,5 +1,5 @@
 show = false -- show commands
-time = false -- show execution time for each command
+time = true -- show execution time for each command
 
 test = {
 	onerror        = {arg = "-test", config = "all.lua", package = "onerror"},

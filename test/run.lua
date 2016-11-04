@@ -186,11 +186,11 @@ forEachOrderedElement(commands, function(idx, group)
 
 			local text = "Test executed in "..round(difference, 1).." seconds"
 
-			if difference > 20 then
+			if difference > 30 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-			elseif difference > 5 then
+			elseif difference > 10 then
 				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-			else
+			elseif difference > 1 then
 				_Gtme.print("\027[00;37;42m"..text.."\027[00m")
 			end
 		end
@@ -263,7 +263,7 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printNote("Printing the test output")
 
 					forEachElement(result, function(_, value)
-						print("    "..value)
+						_Gtme.printWarning("    "..value)
 					end)
 
 					_Gtme.printNote("End of the test output")
@@ -365,11 +365,11 @@ forEachOrderedElement(commands, function(idx, group)
 
 			local text = "Test executed in "..round(difference, 1).." seconds"
 
-			if difference > 20 then
+			if difference > 30 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-			elseif difference > 5 then
+			elseif difference > 10 then
 				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-			else
+			elseif difference > 1 then
 				_Gtme.print("\027[00;37;42m"..text.."\027[00m")
 			end
 		end
@@ -442,7 +442,7 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printNote("Printing the test output")
 
 					forEachElement(result, function(_, value)
-						print("    "..value)
+						_Gtme.printWarning("    "..value)
 					end)
 
 					_Gtme.printNote("End of the test output")
