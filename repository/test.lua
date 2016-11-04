@@ -136,7 +136,7 @@ local function execute(command, filename)
 				_Gtme.printNote("Printing the test output")
 
 				forEachElement(result, function(_, value)
-					print("    "..value)
+					printWarning("    "..value)
 				end)
 
 				_Gtme.printNote("End of the test output")
@@ -160,18 +160,49 @@ end
 
 _Gtme.printNote("Executing documentation")
 forEachOrderedElement(pkgs, function(package)
+	local docInitialTime = os.time(os.date("*t"))
+
 	_Gtme.print("Documenting package '"..package.."'")
 	local command = "terrame -package "..package.." -doc"
 	execute(command, "doc-"..package..".log")
+
+	local docFinalTime = os.time(os.date("*t"))
+	local difference = docFinalTime - docInitialTime
+
+	local text = "Documentation executed in "..round(difference, 1).." seconds"
+
+	if difference > 30 then
+		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+	elseif difference > 10 then
+		_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+	elseif difference > 1 then
+		_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+	end
+
 end)
 
 _Gtme.printNote("Executing tests")
 forEachOrderedElement(pkgs, function(package)
+	local testInitialTime = os.time(os.date("*t"))
+
 	_Gtme.print("Testing package '"..package.."'")
 
 	local command = "terrame -package "..package.." -test"
 
 	execute(command, "test-"..package..".log")
+
+	local testFinalTime = os.time(os.date("*t"))
+	local difference = testFinalTime - testInitialTime
+
+	local text = "Test executed in "..round(difference, 1).." seconds"
+
+	if difference > 30 then
+		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+	elseif difference > 10 then
+		_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+	elseif difference > 1 then
+		_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+	end
 end)
 
 _Gtme.printNote("Rolling back to previously installed packages")
