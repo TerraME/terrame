@@ -1585,6 +1585,16 @@ function CellularSpace(data)
 	
 	optionalTableArgument(data, "as", "table")
 
+	if data.as then
+		forEachElement(data.as, function(idx, value)
+			if type(idx) ~= "string" then
+				customError("All indexes of 'as' should be 'string', got '"..type(idx).."'.")
+			elseif type(value) ~= "string" then
+				customError("All values of 'as' should be 'string', got '"..type(value).."'.")
+			end
+		end)
+	end
+
 	local candidates = {}
 
 	if type(data.file) == "string" then
@@ -1806,11 +1816,7 @@ function CellularSpace(data)
 
 	if data.as then
 		forEachElement(data.as, function(idx, value)
-			if type(idx) ~= "string" then
-				customError("All indexes of 'as' should be 'string', got '"..type(idx).."'.")
-			elseif type(value) ~= "string" then
-				customError("All values of 'as' should be 'string', got '"..type(value).."'.")
-			elseif data.cells[1][idx] then
+			if data.cells[1][idx] then
 				customError("Cannot rename '"..value.."' to '"..idx.."' as it already exists.")
 			elseif not data.cells[1][value] then
 				customError("Cannot rename attribute '"..value.."' as it does not exist.")
