@@ -2208,10 +2208,6 @@ function Map(data)
 		map:setGridVisible(1)
 	end
 	
-	if isModel(data.target) then
-		defaultTableValue(data, "title",  data.target:title())
-	end	
-	
 	if data.title then
 		map:setTitle(data.title)
 	end
