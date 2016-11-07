@@ -363,7 +363,11 @@ function _Gtme.executeDoc(package)
 		os.exit(1)
 	end)
 
-	local lua_files = Directory(package_path..s.."lua"):list()
+	local lua_files = {}
+
+	if isDirectory(package_path..s.."lua") then
+		lua_files = Directory(package_path..s.."lua"):list()
+	end
 
 	local example_files = _Gtme.findExamples(package)
 

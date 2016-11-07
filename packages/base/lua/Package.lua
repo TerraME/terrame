@@ -102,6 +102,7 @@ function import(package, reload)
 	else
 		local s = sessionInfo().separator
 		local package_path = packageInfo(package).path
+		if not isDirectory(package_path..s.."lua") then return true end
 
 		_Gtme.verifyDepends(package)
 
@@ -209,6 +210,7 @@ function getPackage(pname)
 
 	local s = sessionInfo().separator
 	local pname_path = packageInfo(pname).path
+	if not isDirectory(pname_path..s.."lua") then return {} end
 
 	_Gtme.verifyDepends(pname)
 

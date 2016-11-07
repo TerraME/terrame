@@ -415,7 +415,7 @@ function start(doc, doc_report)
 	printNote("Building and checking HTML files")
 
 	-- Generate index file
-	if (#doc.files > 0 or #doc.modules > 0) and (not options.noindexpage) then
+	if (#doc.files > 0 or #doc.modules > 0 or doc.mdata) and (not options.noindexpage) then
 		local filename = options.output_dir.."index.html"
 		local short_fileName = options.short_output_path.."index.html"
 		print(string.format("Building %s", makepath(short_fileName)))
