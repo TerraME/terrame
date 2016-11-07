@@ -64,3 +64,11 @@ int luaMap::setGridVisible(lua_State *L)
 	return 0;
 }
 
+int luaMap::setTitle(lua_State *L)
+{
+	std::string title = luaL_checkstring(L, -1);
+
+	obs->setTitle(title);
+
+	return 0;
+}
