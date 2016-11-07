@@ -35,7 +35,7 @@ TerraME is distributed under the GNU Lesser General Public License as published 
 
 ## Code Status
 
-The output of the [daily tests](http://www.dpi.inpe.br/jenkins/view/TerraME-Daily/) is shown below.
+The output of the [daily tests](http://www.dpi.inpe.br/jenkins/view/TerraME-Daily/) is shown below. Daily installers are available [here](http://www.dpi.inpe.br/jenkins-data/terrame/installers/) (use with care as they might be unstable).
 
 | Task            | Windows | Linux | Mac |
 |---|---|---|---|
@@ -50,5 +50,5 @@ The output of the [daily tests](http://www.dpi.inpe.br/jenkins/view/TerraME-Dail
 | terralib-doc    |[<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-doc-terralib-windows-10">](http://www.dpi.inpe.br/jenkins/job/terrame-doc-terralib-windows-10/lastBuild/consoleFull) | [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-doc-terralib-linux-ubuntu-14.04">](http://www.dpi.inpe.br/jenkins/job/terrame-doc-terralib-linux-ubuntu-14.04/lastBuild/consoleFull)| [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-doc-terralib-mac-el-captain">](http://www.dpi.inpe.br/jenkins/job/terrame-doc-terralib-mac-el-captain/lastBuild/consoleFull)|
 | execution-test  | [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-test-execution-windows-10">](http://www.dpi.inpe.br/jenkins/job/terrame-test-execution-windows-10/lastBuild/consoleFull) | [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-test-execution-linux-ubuntu-14.04">](http://www.dpi.inpe.br/jenkins/job/terrame-test-execution-linux-ubuntu-14.04/lastBuild/consoleFull)| [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-test-execution-mac-el-captain">](http://www.dpi.inpe.br/jenkins/job/terrame-test-execution-mac-el-captain/lastBuild/consoleFull) |
 | repository-test | [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-repository-test-windows-10">](http://www.dpi.inpe.br/jenkins/job/terrame-repository-test-windows-10/lastBuild/consoleFull) | [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-repository-test-linux-ubuntu-14.04">](http://www.dpi.inpe.br/jenkins/job/terrame-repository-test-linux-ubuntu-14.04/lastBuild/consoleFull) | [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-repository-test-mac-el-captain">](http://www.dpi.inpe.br/jenkins/job/terrame-repository-test-mac-el-captain/lastBuild/consoleFull)|
-| installer |  |  |  |
+| installer | [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-installer-windows-10">](http://www.dpi.inpe.br/jenkins/job/terrame-installer-windows-10/lastBuild/consoleFull) | [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-installer-linux-ubuntu-14.04">](http://www.dpi.inpe.br/jenkins/job/terrame-installer-linux-ubuntu-14.04/lastBuild/consoleFull) | [<img src="http://www.dpi.inpe.br/jenkins/buildStatus/icon?job=terrame-installer-mac-el-captain">](http://www.dpi.inpe.br/jenkins/job/terrame-installer-mac-el-captain/lastBuild/consoleFull) |
 
