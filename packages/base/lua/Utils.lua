@@ -1608,6 +1608,10 @@ function vardump(o, indent)
 
 	local indent2 = indent.."    "
 	if isTable(o) then
+		if getn(o) == 0 then
+			return "{}"
+		end
+
 		local s = "{".."\n"
 
 		if type(o) ~= "table" then
