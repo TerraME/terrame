@@ -278,7 +278,8 @@ const char luaMap::className[] = "TeMap";
 Luna<luaMap>::RegType luaMap::methods[] = {
 	method(luaMap, save),
 	method(luaMap, setObserver),
-        method(luaMap, setGridVisible),
+	method(luaMap, setGridVisible),
+	method(luaMap, setTitle),
 	{0, 0}
 };
 

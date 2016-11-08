@@ -84,8 +84,6 @@ Building and checking HTML files
 Building doc/index.html
 Building doc/files/Utils.html
 Building doc/files/examples.html
-Building doc/files/data.html
-Building doc/files/font.html
 Building doc/files/models.html
 Checking images
 Checking data.lua
@@ -98,8 +96,8 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'buildunneclean':
-Documentation was built in 0.67 seconds.
-5 HTML files were created.
+Documentation was built in 0.06 seconds.
+3 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.

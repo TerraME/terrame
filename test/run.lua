@@ -7,15 +7,9 @@ removeIfExists = function(_, value)
 	if isDirectory(value) then
 		_Gtme.print("Removing '"..value.."'")
 		Directory(value):delete()
-	else
-		local f
-
-		pcall(function() f = File(value) end)
-
-		if f and f:exists() then
-			_Gtme.print("Removing '"..value.."'")
-			File(value):delete()
-		end
+	elseif isFile(value) then
+		_Gtme.print("Removing '"..value.."'")
+		File(value):delete()
 	end
 end
 
@@ -143,6 +137,26 @@ forEachOrderedElement(commands, function(idx, group)
 
 		directories.log[idx.."-"..name..".log"] = true
 
+		if sessionInfo().system == "mac" then
+			if idx == "project" then
+				if name == "errorprojects" or name == "runprojects" then
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			elseif idx == "sketch" then
+				if name == "terralib" then
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			elseif idx == "observer" then
+				if belong(name, {"clock", "textscreen", "visualtable"}) then
+					directories.scripts[args.script] = true
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			end
+		end
+
 		if args.package then
 			directories.packages[args.package] = true
 			command = command.." -package "..args.package
@@ -186,11 +200,11 @@ forEachOrderedElement(commands, function(idx, group)
 
 			local text = "Test executed in "..round(difference, 1).." seconds"
 
-			if difference > 20 then
+			if difference > 30 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-			elseif difference > 5 then
+			elseif difference > 10 then
 				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-			else
+			elseif difference > 1 then
 				_Gtme.print("\027[00;37;42m"..text.."\027[00m")
 			end
 		end
@@ -263,7 +277,7 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printNote("Printing the test output")
 
 					forEachElement(result, function(_, value)
-						print("    "..value)
+						_Gtme.printWarning("    "..value)
 					end)
 
 					_Gtme.printNote("End of the test output")
@@ -327,6 +341,20 @@ forEachOrderedElement(commands, function(idx, group)
 	forEachOrderedElement(group, function(name, args)
 		command = "terrame"
 
+		if sessionInfo().system == "mac" then
+			if idx == "project" then
+				if name == "errorprojects" or name == "runprojects" then
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			elseif idx == "sketch" then
+				if name == "terralib" then
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			end
+		end
+
 		if args.package and args.package ~= "memory" then
 			command = command.." -package "..args.package
 		else
@@ -365,11 +393,11 @@ forEachOrderedElement(commands, function(idx, group)
 
 			local text = "Test executed in "..round(difference, 1).." seconds"
 
-			if difference > 20 then
+			if difference > 30 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-			elseif difference > 5 then
+			elseif difference > 10 then
 				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-			else
+			elseif difference > 1 then
 				_Gtme.print("\027[00;37;42m"..text.."\027[00m")
 			end
 		end
@@ -442,7 +470,7 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printNote("Printing the test output")
 
 					forEachElement(result, function(_, value)
-						print("    "..value)
+						_Gtme.printWarning("    "..value)
 					end)
 
 					_Gtme.printNote("End of the test output")

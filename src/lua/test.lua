@@ -873,7 +873,7 @@ function _Gtme.executeTests(package, fileName)
 		end
 
 		forEachElement(mdir, function(_, value)
-			if not ut.tlogs[value] then
+			if not ut.tlogs[value] and not isDirectory(data.log..value) then
 				printError("File '"..path..value.."' was not used by any assert.")
 				ut.unused_log_files = ut.unused_log_files + 1
 			end

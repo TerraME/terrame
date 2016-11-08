@@ -60,8 +60,6 @@ Error: Field 'date2' of 'description.lua' is unnecessary.
 Building and checking HTML files
 Building doc/index.html
 Building doc/files/single.html
-Building doc/files/data.html
-Building doc/files/font.html
 Checking images
 Checking data.lua
 Checking models
@@ -73,7 +71,7 @@ Checking if all Models are documented
 
 Documentation report for package 'noexamples':
 Documentation was built in 0.02 seconds.
-4 HTML files were created.
+2 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
 No problems were found in the documentation of data.

@@ -64,7 +64,6 @@ Argument 'wrap' in 'createNeighborhood2' is not used in the HTML table
 Invalid link to 'ErrorHandling'
 Building doc/files/examples.html
 Building doc/files/data.html
-Building doc/files/font.html
 Building doc/files/models.html
 print when loading
 Checking images
@@ -80,8 +79,8 @@ Function belong2 is not documented
 Checking if all Models are documented
 
 Documentation report for package 'onerror':
-Documentation was built in 0.76 seconds.
-5 HTML files were created.
+Documentation was built in 0.78 seconds.
+4 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
 One problem was found in the documentation of data.
