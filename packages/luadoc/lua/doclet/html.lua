@@ -481,7 +481,7 @@ function start(doc, doc_report)
 		f:close()
 	end
 
-	if not options.nofiles and doc.mdata then
+	if not options.nofiles and doc.mdata and #doc.mdata > 0 then
 		local filename = options.output_dir..s.."files"..s.."data.html"
 		local short_fileName = options.short_output_path.."files"..s.."data.html"
 		print(string.format("Building %s", makepath(short_fileName)))
@@ -495,7 +495,7 @@ function start(doc, doc_report)
 		f:close()
 	end
 
-	if not options.nofiles and doc.mfont then
+	if not options.nofiles and doc.mfont and #doc.mfont > 0 then
 		local filename = options.output_dir..s.."files"..s.."font.html"
 		local short_fileName = options.short_output_path.."files"..s.."font.html"
 		print(string.format("Building %s", makepath(short_fileName)))

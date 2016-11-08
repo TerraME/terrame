@@ -27,8 +27,6 @@ Checking 'description.lua'
 Building and checking HTML files
 Building doc/index.html
 Building doc/files/Utils.html
-Building doc/files/data.html
-Building doc/files/font.html
 Checking images
 Checking data.lua
 Checking models
@@ -39,8 +37,8 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'tabular':
-Documentation was built in 1.14 seconds.
-4 HTML files were created.
+Documentation was built in 0.36 seconds.
+2 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.

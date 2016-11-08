@@ -18,8 +18,6 @@ Checking undocumented arguments
 Checking 'description.lua'
 Building and checking HTML files
 Building doc/index.html
-Building doc/files/data.html
-Building doc/files/font.html
 Checking images
 Checking data.lua
 Checking models
@@ -30,8 +28,8 @@ Checking foo.lua
 Checking if all Models are documented
 
 Documentation report for package 'nodatadotlua':
-Documentation was built in 0.23 seconds.
-3 HTML files were created.
+Documentation was built in 0.2 seconds.
+One HTML file was created.
 One out of 1 files are not documented.
 All fields of 'description.lua' are correct.
 2 problems were found in the documentation of data.
