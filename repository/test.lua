@@ -136,7 +136,7 @@ local function execute(command, filename)
 				_Gtme.printNote("Printing the test output")
 
 				forEachElement(result, function(_, value)
-					printWarning("    "..value)
+					_Gtme.printWarning("    "..value)
 				end)
 
 				_Gtme.printNote("End of the test output")
