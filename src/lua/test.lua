@@ -845,8 +845,11 @@ function _Gtme.executeTests(package, fileName)
 						ut:assertFile(value..".log")
 					else
 						printError("Error: Could not find log file "..value..".log. Possibly the example is handling temporary folders in a wrong way.")
-						test = test + 1
-						fail = fail + 1
+						ut.examples_error = ut.examples_error + 1
+					end
+
+					if ut.fail > fail then
+						ut.examples_error = ut.examples_error + 1
 					end
 
 					ut.test = test
