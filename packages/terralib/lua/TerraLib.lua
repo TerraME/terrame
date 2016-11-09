@@ -132,7 +132,7 @@ local function createPgConnInfo(host, port, user, pass, database, encoding)
 
 	local errorMsg = checkConnectionParams("POSTGIS", connInfo)	
 	if errorMsg ~= "" then
-		customError(errorMsg)
+		customError(errorMsg) -- SKIP
 	end
 	
 	if not binding.te.da.DataSource.exists("POSTGIS", connInfo) then
@@ -529,7 +529,7 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 										inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 			return
 		else
-			customWarning("The 'mask' not work to Raster, it was ignored.")
+			customWarning("The 'mask' not work to Raster, it was ignored.") -- SKIP
 		end
 	end
 	

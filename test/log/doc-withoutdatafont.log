@@ -20,8 +20,6 @@ Checking 'description.lua'
 Building and checking HTML files
 Building doc/index.html
 Building doc/files/foo.html
-Building doc/files/data.html
-Building doc/files/font.html
 Checking images
 Checking data.lua
 Checking models
@@ -32,8 +30,8 @@ Checking foo.lua
 Checking if all Models are documented
 
 Documentation report for package 'withoutdatafont':
-Documentation was built in 0.84 seconds.
-4 HTML files were created.
+Documentation was built in 0.25 seconds.
+2 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.

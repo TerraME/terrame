@@ -135,7 +135,8 @@ Amazonia = Model{
 			slices = 10,
 			min = 0,
 			max = 1,
-			color = {"green", "red"}
+			color = "RdYlGn",
+			invert = true
 		}
 
 		model.deforest = function(cs, total_pot)

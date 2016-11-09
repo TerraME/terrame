@@ -211,6 +211,8 @@ function _Gtme.buildCountTable(package)
 	local s = _Gtme.sessionInfo().separator
 	local baseDir = _Gtme.packageInfo(package).path
 
+	if not isDirectory(baseDir..s.."lua") then return {} end
+
 	local load_file = baseDir.."load.lua"
 	local load_sequence
 

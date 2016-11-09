@@ -1000,7 +1000,11 @@ return{
 		unitTest:assertEquals(type(c), "Cell")
 	end,
 	vardump = function(unitTest)
-		local actual = vardump{a = 2, b = 3, w = {2, 3, [4] = 4}}
+		local actual = vardump{}
+
+		unitTest:assertEquals(actual, "{}")
+
+		actual = vardump{a = 2, b = 3, w = {2, 3, [4] = 4}}
 
 		unitTest:assertEquals(actual, [[{
     a = 2, 
@@ -1069,9 +1073,7 @@ return{
         Cell{
             cObj_ = "TeCell(0x7fad0da19a00)", 
             parent = "CellularSpace", 
-            past = {
-
-            }, 
+            past = {}, 
             x = 0, 
             y = 0
         }
@@ -1084,7 +1086,7 @@ return{
     yMax = 0, 
     yMin = 0, 
     ydim = 1
-}]], 41)
+}]], 45)
 	end,
 	forEachRecursiveDirectory = function(unitTest) 
 		local count = 0
