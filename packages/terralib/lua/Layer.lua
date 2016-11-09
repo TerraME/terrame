@@ -260,7 +260,6 @@ local function addLayer(self, data)
 			self.terralib:addWfsLayer(self, data.name, data.service, data.feature)
 		end
 	}
-	--TODO: implement all types (tif, access, etc)		
 end
 
 local function checkBand(layer, data)
@@ -434,7 +433,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 			end,
 			average = function()
@@ -463,7 +462,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 			end,
 			distance = function()
@@ -471,7 +470,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 			end,
 			length = function()
@@ -565,7 +564,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 			end,
 			stdev = function()
