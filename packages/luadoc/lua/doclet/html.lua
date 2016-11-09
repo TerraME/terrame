@@ -519,6 +519,7 @@ function start(doc, doc_report)
 		end	
 
 		if models then
+			doc_report.html_files = doc_report.html_files + 1
 			local filename = options.output_dir..s.."files"..s.."models.html"
 			local short_fileName = options.short_output_path.."files"..s.."models.html"
 			print(string.format("Building %s", makepath(short_fileName)))
