@@ -1071,8 +1071,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	if tostring(infopath) == tostring(_Gtme.currentDir()) then
 		_Gtme.printError("It is not possible to execute TerraME within its directory. Please, run it from another place.")
 		os.exit(1)
-	else
-		_Gtme.terralib_mod_binding_lua.te.plugin.PluginManager.getInstance():loadAll()
 	end
 
 	info_.path = _Gtme.Directory(info_.path)

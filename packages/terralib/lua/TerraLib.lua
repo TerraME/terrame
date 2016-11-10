@@ -230,7 +230,7 @@ local function createLayer(name, dSetName, connInfo, type)
 			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
 			srid = gp:getSRID()
 			
-			if connInfo.URI and (File(connInfo.URI):extension() == "shp") then
+			if connInfo.URI then
 				if not hasShapeFileSpatialIndex(connInfo.URI) and connInfo.SPATIAL_IDX then
 					addSpatialIndex(ds, dSetName)
 				end
@@ -253,7 +253,7 @@ local function createLayer(name, dSetName, connInfo, type)
 		layer:setVisibility(binding.NOT_VISIBLE)
 		layer:setRendererType("ABSTRACT_LAYER_RENDERER")
 		layer:setEncoding(binding.CharEncoding.getEncodingType("LATIN1")) -- TODO(avancinirodrigo): REVIEW ENCODING
-		-- _Gtme.print("Create Layer", name, srid)
+
 		if srid == binding.TE_UNKNOWN_SRS then
 			local srsPath = binding.FindInTerraLibPath("share/terralib/json/srs.json")
 			customWarning("It was not possible to find the projection of layer '"..name.."'."
@@ -524,8 +524,6 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 
 	if mask then
 		if inputDsType:hasGeom() then
-			-- _Gtme.print(cellLayerInfo, cellName, resolultion, resolultion, 
-										-- inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 			cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, 
 										inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 			return
@@ -631,7 +629,6 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		local fromEnv =  fromLayer:getExtent()
 		local toEnv =  toLayer:getExtent()
-		-- _Gtme.print(fromEnv, toEnv, fromEnv:intersects(toEnv))	
 		
 		local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
 		if err ~= "" then

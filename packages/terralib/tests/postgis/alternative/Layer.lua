@@ -49,15 +49,14 @@ return {
 		local tableName = "sampa"
 
 		local data = {
-			type = "POSTGIS",
 			source = "postgis",
 			user = user,
 			password = password,
 			database = database,
-			table = tableName, -- USED ONLY TO DROP
+			overwrite = true
 		}
 
-		layer1:export(data, true)
+		layer1:export(data)
 
 		host = nil
 		port = nil

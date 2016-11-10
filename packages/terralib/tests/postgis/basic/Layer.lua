@@ -54,15 +54,13 @@ return {
 		local tableName = "sampa"
 		
 		local pgData = {
-			type = "POSTGIS",
 			source = "postgis",
 			--host = host,
 			--port = port,
 			user = user,
 			password = password,
 			database = database,
-			table = tableName,
-			--encoding = encoding	
+			overwrite = true
 		}
 		
 		layer1:export(pgData, true)
