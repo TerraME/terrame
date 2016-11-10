@@ -123,9 +123,8 @@ metaTableEvent_ = {
 -- plotting the initial state of the simulation.
 -- @arg data.period A positive number representing the periodicity of the Event.
 -- The default value is 1.
--- @arg data.priority The priority of the Event over 
--- other Events. Smaller values have higher priority. The default value is zero for all actions but
--- those related to graphics (Chart, Map, Clock, etc.). In this case, the default value is 10.
+-- @arg data.priority A number with the priority of the Event over 
+-- other Events. Smaller values have higher priority. The default value depends on the type of its action.
 -- Priorities can also be defined as strings:
 -- @tabular priority
 -- Value & Priority\
@@ -141,14 +140,14 @@ metaTableEvent_ = {
 -- object. In this case, each type has its own set of functions that will be activated by
 -- the Event. See below how the objects are activated. Arrows indicate the execution order:
 -- @tabular action
--- Object & Function(s) activated by the Event \
--- Agent/Automaton & execute \
--- CellularSpace/Cell & synchronize and then execute (if exists) \
--- Chart/Map/Clock/Log/InternetSender/VisualTable/TextScreen & update \
--- function & the function itself \
--- Model & execute (if exists) \
--- Society & synchronize and then execute (if exists) \
--- Trajectory/Group & rebuild \
+-- Object & Function(s) activated by the Event & Default priority\
+-- Agent/Automaton & execute & 0 ("medium") \
+-- CellularSpace/Cell & synchronize and then execute (if exists) & 0 ("medium") \
+-- Chart/Map/Clock/Log/InternetSender/VisualTable/TextScreen & update & 10 ("verylow") \
+-- function & the function itself & 0 ("medium") \
+-- Model & execute (if exists) & 0 ("medium") \
+-- Society & synchronize and then execute (if exists) & 0 ("medium") \
+-- Trajectory/Group & rebuild & -5 ("high") \
 -- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
 --     print(event:getTime())
 -- end}
@@ -196,6 +195,9 @@ function Event(data)
 	if belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "Log", "TextScreen"}) then
 		defaultTableValue(data, "priority", 10)
 		defaultTableValue(data, "start", 0)
+	elseif belong(type(data.action), {"Trajectory", "Group"}) then
+		defaultTableValue(data, "priority", -5)
+		defaultTableValue(data, "start", 1)
 	else
 		defaultTableValue(data, "priority", 0)
 		defaultTableValue(data, "start", 1)
