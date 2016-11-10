@@ -69,8 +69,8 @@ local function initializeTerraLib()
 		require("terralib_mod_binding_lua")
 		local binding = terralib_mod_binding_lua
 		binding.TeSingleton.getInstance():initialize()
-		binding.te.plugin.PluginManager.getInstance():clear()
-		binding.te.plugin.PluginManager.getInstance():loadAll()
+		binding.InitializePluginSystem()
+		binding.LoadAll()
 		_Gtme.terralib_mod_binding_lua = terralib_mod_binding_lua
 	end
 end
@@ -78,7 +78,7 @@ end
 local function finalizeTerraLib()
 	if _Gtme.terralib_mod_binding_lua ~= nil then
 		local binding = terralib_mod_binding_lua
-		binding.te.plugin.PluginManager.getInstance():clear()
+		binding.FinalizePluginSystem()
 		binding.TeSingleton.getInstance():finalize()
 		_Gtme.terralib_mod_binding_lua = nil
 	end
