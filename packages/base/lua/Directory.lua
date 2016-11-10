@@ -267,7 +267,7 @@ function Directory(data)
 	setmetatable(data, metaTableDirectory_)
 
 	if data.tmp == true then
-		if not _Gtme.tmpdirectory__ then
+		if not rawget(_Gtme, "tmpdirectory__") then
 			_Gtme.tmpdirectory__ = {}
 		end
 
