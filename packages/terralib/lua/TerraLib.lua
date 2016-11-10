@@ -1766,7 +1766,7 @@ TerraLib_ = {
 						end
 					end
 				end
-			end
+			end)
 
 			-- Create the new DataSet
 			local newDse = binding.te.mem.DataSet(newDst)
