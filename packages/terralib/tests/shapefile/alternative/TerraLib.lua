@@ -30,9 +30,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 
@@ -50,9 +48,7 @@ return {
 		local clName = "Para_Cells"
 		shp[1] = clName..".shp"
 
-		if File(shp[1]):exists() then
-			File(shp[1]):delete()
-		end
+		File(shp[1]):deleteIfExists()
 		
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 60e3
@@ -69,9 +65,7 @@ return {
 		local presLayerName = clName.."_"..layerName2.."_Presence"		
 		shp[2] = presLayerName..".shp"
 		
-		if File(shp[2]):exists() then
-			File(shp[2]):delete()
-		end
+		File(shp[2]):deleteIfExists()
 
 		local operation = "presence"
 		local attribute = "presence_truncate"
@@ -92,14 +86,11 @@ return {
 		end
 		unitTest:assertError(attributeAlreadyExists, "The attribute 'FID' already exists in the Layer.")
 		
-		-- END
 		for j = 1, #shp do
-			if File(shp[j]):exists() then
-				File(shp[j]):delete()
-			end
+			File(shp[j]):deleteIfExists()
 		end	
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	saveLayerAs = function(unitTest)
 		local tl = TerraLib{}
@@ -108,9 +99,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 
@@ -184,6 +173,6 @@ return {
 		
 		tl:dropPgTable(pgData)		
 		File(toData.file):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 	end	
 }

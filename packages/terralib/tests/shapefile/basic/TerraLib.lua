@@ -33,19 +33,17 @@ return {
 		proj.author = author
 
 		local file = File(proj.file)
-		if file:exists() then
-			file:delete()
-		end
+		file:deleteIfExists()
 
 		tl:createProject(proj, {})
 		unitTest:assert(file:exists())
-		unitTest:assertEquals(proj.file, "myproject.tview")
+		unitTest:assertEquals(proj.file:name(), "myproject.tview")
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
 
 		-- allow overwrite
 		tl:createProject(proj, {})
-		unitTest:assert(File(proj.file):exists())
+		unitTest:assert(proj.file:exists())
 
 		file:delete()
 	end,
@@ -57,9 +55,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 
 		local file = File(proj.file)
-		if file:exists() then
-			file:delete()
-		end
+		file:deleteIfExists()
 
 		tl:createProject(proj, {})
 
@@ -70,7 +66,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
 
 		unitTest:assertEquals(layerInfo.name, layerName)
-		unitTest:assertEquals(layerInfo.file, layerFile)
+		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
@@ -86,7 +82,7 @@ return {
 		tl:createProject(proj, {})
 		
 		local layerName1 = "ShapeLayer1"
-		local qixFile = string.gsub(layerFile, ".shp", ".qix")
+		local qixFile = string.gsub(tostring(layerFile), ".shp", ".qix")
 		File(qixFile):delete()
 		local addSpatialIdx = false
 		tl:addShpLayer(proj, layerName1, layerFile, addSpatialIdx)
@@ -108,9 +104,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 		
 		local file = File(proj.file)
-		if file:exists() then
-			file:delete()
-		end
+		file:deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -121,38 +115,34 @@ return {
 		local clName = "Sampa_Cells"
 		local shp1 = clName..".shp"
 
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end	
+		File(shp1):deleteIfExists()
 		
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(layerInfo.name, clName)
-		unitTest:assertEquals(layerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp1)
+		unitTest:assertEquals(layerInfo.file, shp1)
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
 
 		-- NO MASK TEST
 		local clSet = tl:getDataSet(proj, clName)
-		unitTest:assertEquals(getn(clSet), 68)
+		unitTest:assertEquals(getn(clSet), 37)
 		
 		clName = clName.."_NoMask"
 		local shp2 = clName..".shp"
 		
-		if File(shp2):exists() then
-			File(shp2):delete()
-		end			
+		File(shp2):deleteIfExists()
 		
 		mask = false
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp2, mask)
 		
 		clSet = tl:getDataSet(proj, clName)
-		unitTest:assertEquals(getn(clSet), 104)
+		unitTest:assertEquals(getn(clSet), 54)
 		-- // NO MASK TEST
 		
 		-- SPATIAL INDEX TEST
@@ -160,9 +150,7 @@ return {
 		local shp3 = clName..".shp"
 		local addSpatialIdx = false
 		
-		if File(shp3):exists() then
-			File(shp3):delete()
-		end
+		File(shp3):deleteIfExists()
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp3, mask, addSpatialIdx)
 		local qixFile1 = string.gsub(shp3, ".shp", ".qix")
@@ -172,31 +160,17 @@ return {
 		local shp4 = clName..".shp"
 		addSpatialIdx = true
 		
-		if File(shp4):exists() then
-			File(shp4):delete()
-		end	
+		File(shp4):deleteIfExists()
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp4, mask, addSpatialIdx)
 		local qixFile2 = string.gsub(shp4, ".shp", ".qix")
 		unitTest:assert(File(qixFile2):exists())
 		-- // SPATIAL INDEX TEST
 		
-		-- END
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end	
-		
-		if File(shp2):exists() then
-			File(shp2):delete()
-		end			
-		
-		if File(shp3):exists() then
-			File(shp3):delete()
-		end			
-		
-		if File(shp4):exists() then
-			File(shp4):delete()
-		end	
+		File(shp1):deleteIfExists()
+		File(shp2):deleteIfExists()
+		File(shp3):deleteIfExists()
+		File(shp4):deleteIfExists()
 		
 		file:delete()
 	end,	
@@ -207,9 +181,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -227,18 +199,16 @@ return {
 		local clName = "Para_Cells"
 		shp[1] = clName..".shp"
 
-		if File(shp[1]):exists() then
-			File(shp[1]):delete()
-		end
+		File(shp[1]):deleteIfExists()
 		
 		-- CREATE THE CELLULAR SPACE
-		local resolution = 60e3
+		local resolution = 5e5
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
 		
 		local clSet = tl:getDataSet(proj, clName)
 		
-		unitTest:assertEquals(getn(clSet), 402)
+		unitTest:assertEquals(getn(clSet), 9)
 		
 		for k, v in pairs(clSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID"))
@@ -248,7 +218,7 @@ return {
 		local clLayerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(clLayerInfo.name, clName)
-		unitTest:assertEquals(clLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[1])
+		unitTest:assertEquals(clLayerInfo.file, shp[1])
 		unitTest:assertEquals(clLayerInfo.type, "OGR")
 		unitTest:assertEquals(clLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(clLayerInfo.sid)
@@ -263,9 +233,7 @@ return {
 		local presLayerName = clName.."_"..layerName2.."_Presence"		
 		shp[2] = presLayerName..".shp"
 		
-		if File(shp[2]):exists() then
-			File(shp[2]):delete()
-		end
+		File(shp[2]):deleteIfExists()
 
 		local operation = "presence"
 		local attribute = "presence"
@@ -276,7 +244,7 @@ return {
 		
 		local presSet = tl:getDataSet(proj, presLayerName)
 		
-		unitTest:assertEquals(getn(presSet), 402)
+		unitTest:assertEquals(getn(presSet), 9)
 		
 		for k, v in pairs(presSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -286,7 +254,7 @@ return {
 
 		local presLayerInfo = tl:getLayerInfo(proj, proj.layers[presLayerName])
 		unitTest:assertEquals(presLayerInfo.name, presLayerName)
-		unitTest:assertEquals(presLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[2])
+		unitTest:assertEquals(presLayerInfo.file, currentDir()..shp[2])
 		unitTest:assertEquals(presLayerInfo.type, "OGR")
 		unitTest:assertEquals(presLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(presLayerInfo.sid)
@@ -295,9 +263,7 @@ return {
 		local areaLayerName = clName.."_"..layerName2.."_Area"		
 		shp[3] = areaLayerName..".shp"
 		
-		if File(shp[3]):exists() then
-			File(shp[3]):delete()
-		end
+		File(shp[3]):deleteIfExists()
 		
 		operation = "area"
 		attribute = "area_perce" -- the attribute must have 10 characters (ogr truncate)
@@ -308,7 +274,7 @@ return {
 		
 		local areaSet = tl:getDataSet(proj, areaLayerName)
 		
-		unitTest:assertEquals(getn(areaSet), 402)
+		unitTest:assertEquals(getn(areaSet), 9)
 		
 		for k, v in pairs(areaSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -318,7 +284,7 @@ return {
 
 		local areaLayerInfo = tl:getLayerInfo(proj, proj.layers[areaLayerName])
 		unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
-		unitTest:assertEquals(areaLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[3])
+		unitTest:assertEquals(areaLayerInfo.file, currentDir()..shp[3])
 		unitTest:assertEquals(areaLayerInfo.type, "OGR")
 		unitTest:assertEquals(areaLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(areaLayerInfo.sid)		
@@ -327,9 +293,7 @@ return {
 		local countLayerName = clName.."_"..layerName2.."_Count"		
 		shp[4] = countLayerName..".shp"
 		
-		if File(shp[4]):exists() then
-			File(shp[4]):delete()
-		end
+		File(shp[4]):deleteIfExists()
 		
 		operation = "count"
 		attribute = "count"
@@ -340,7 +304,7 @@ return {
 		
 		local countSet = tl:getDataSet(proj, countLayerName)
 		
-		unitTest:assertEquals(getn(countSet), 402)
+		unitTest:assertEquals(getn(countSet), 9)
 		
 		for k, v in pairs(countSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -350,7 +314,7 @@ return {
 
 		local countLayerInfo = tl:getLayerInfo(proj, proj.layers[countLayerName])
 		unitTest:assertEquals(countLayerInfo.name, countLayerName)
-		unitTest:assertEquals(countLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[4])
+		unitTest:assertEquals(countLayerInfo.file, currentDir()..shp[4])
 		unitTest:assertEquals(countLayerInfo.type, "OGR")
 		unitTest:assertEquals(countLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(countLayerInfo.sid)	
@@ -359,9 +323,7 @@ return {
 		local distLayerName = clName.."_"..layerName2.."_Distance"		
 		shp[5] = distLayerName..".shp"
 		
-		if File(shp[5]):exists() then
-			File(shp[5]):delete()
-		end
+		File(shp[5]):deleteIfExists()
 		
 		operation = "distance"
 		attribute = "distance"
@@ -372,7 +334,7 @@ return {
 		
 		local distSet = tl:getDataSet(proj, distLayerName)
 		
-		unitTest:assertEquals(getn(distSet), 402)
+		unitTest:assertEquals(getn(distSet), 9)
 		
 		for k, v in pairs(distSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -382,7 +344,7 @@ return {
 
 		local distLayerInfo = tl:getLayerInfo(proj, proj.layers[distLayerName])
 		unitTest:assertEquals(distLayerInfo.name, distLayerName)
-		unitTest:assertEquals(distLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[5])
+		unitTest:assertEquals(distLayerInfo.file, currentDir()..shp[5])
 		unitTest:assertEquals(distLayerInfo.type, "OGR")
 		unitTest:assertEquals(distLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(distLayerInfo.sid)			
@@ -395,9 +357,7 @@ return {
 		local minLayerName = clName.."_"..layerName3.."_Minimum"		
 		shp[6] = minLayerName..".shp"
 		
-		if File(shp[6]):exists() then
-			File(shp[6]):delete()
-		end
+		File(shp[6]):deleteIfExists()
 		
 		operation = "minimum"
 		attribute = "minimum"
@@ -408,7 +368,7 @@ return {
 		
 		local minSet = tl:getDataSet(proj, minLayerName)
 		
-		unitTest:assertEquals(getn(minSet), 402)
+		unitTest:assertEquals(getn(minSet), 9)
 		
 		for k, v in pairs(minSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -419,7 +379,7 @@ return {
 
 		local minLayerInfo = tl:getLayerInfo(proj, proj.layers[minLayerName])
 		unitTest:assertEquals(minLayerInfo.name, minLayerName)
-		unitTest:assertEquals(minLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[6])
+		unitTest:assertEquals(minLayerInfo.file, currentDir()..shp[6])
 		unitTest:assertEquals(minLayerInfo.type, "OGR")
 		unitTest:assertEquals(minLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(minLayerInfo.sid)	
@@ -428,9 +388,7 @@ return {
 		local maxLayerName = clName.."_"..layerName3.."_Maximum"		
 		shp[7] = maxLayerName..".shp"
 		
-		if File(shp[7]):exists() then
-			File(shp[7]):delete()
-		end
+		File(shp[7]):deleteIfExists()
 		
 		operation = "maximum"
 		attribute = "maximum"
@@ -441,7 +399,7 @@ return {
 		
 		local maxSet = tl:getDataSet(proj, maxLayerName)
 		
-		unitTest:assertEquals(getn(maxSet), 402)
+		unitTest:assertEquals(getn(maxSet), 9)
 		
 		for k, v in pairs(maxSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -452,7 +410,7 @@ return {
 
 		local maxLayerInfo = tl:getLayerInfo(proj, proj.layers[maxLayerName])
 		unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
-		unitTest:assertEquals(maxLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[7])
+		unitTest:assertEquals(maxLayerInfo.file, currentDir()..shp[7])
 		unitTest:assertEquals(maxLayerInfo.type, "OGR")
 		unitTest:assertEquals(maxLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(maxLayerInfo.sid)			
@@ -461,9 +419,7 @@ return {
 		local percLayerName = clName.."_"..layerName2.."_Percentage"		
 		shp[8] = percLayerName..".shp"
 		
-		if File(shp[8]):exists() then
-			File(shp[8]):delete()
-		end
+		File(shp[8]):deleteIfExists()
 		
 		operation = "coverage"
 		attribute = "perc"
@@ -474,7 +430,7 @@ return {
 		
 		local percentSet = tl:getDataSet(proj, percLayerName)
 		
-		unitTest:assertEquals(getn(percentSet), 402)
+		unitTest:assertEquals(getn(percentSet), 9)
 		
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -485,7 +441,7 @@ return {
 
 		local percLayerInfo = tl:getLayerInfo(proj, proj.layers[percLayerName])
 		unitTest:assertEquals(percLayerInfo.name, percLayerName)
-		unitTest:assertEquals(percLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[8])
+		unitTest:assertEquals(percLayerInfo.file, currentDir()..shp[8])
 		unitTest:assertEquals(percLayerInfo.type, "OGR")
 		unitTest:assertEquals(percLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(percLayerInfo.sid)	
@@ -494,9 +450,7 @@ return {
 		local stdevLayerName = clName.."_"..layerName3.."_Stdev"		
 		shp[9] = stdevLayerName..".shp"
 		
-		if File(shp[9]):exists() then
-			File(shp[9]):delete()
-		end
+		File(shp[9]):deleteIfExists()
 		
 		operation = "stdev"
 		attribute = "stdev"
@@ -507,7 +461,7 @@ return {
 		
 		local stdevSet = tl:getDataSet(proj, stdevLayerName)
 		
-		unitTest:assertEquals(getn(stdevSet), 402)
+		unitTest:assertEquals(getn(stdevSet), 9)
 		
 		for k, v in pairs(stdevSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -519,7 +473,7 @@ return {
 
 		local stdevLayerInfo = tl:getLayerInfo(proj, proj.layers[stdevLayerName])
 		unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
-		unitTest:assertEquals(stdevLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[9])
+		unitTest:assertEquals(stdevLayerInfo.file, currentDir()..shp[9])
 		unitTest:assertEquals(stdevLayerInfo.type, "OGR")
 		unitTest:assertEquals(stdevLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(stdevLayerInfo.sid)			
@@ -528,9 +482,7 @@ return {
 		local meanLayerName = clName.."_"..layerName3.."_AvrgMean"		
 		shp[10] = meanLayerName..".shp"
 		
-		if File(shp[10]):exists() then
-			File(shp[10]):delete()
-		end
+		File(shp[10]):deleteIfExists()
 		
 		operation = "average"
 		attribute = "mean"
@@ -541,7 +493,7 @@ return {
 		
 		local meanSet = tl:getDataSet(proj, meanLayerName)
 		
-		unitTest:assertEquals(getn(meanSet), 402)
+		unitTest:assertEquals(getn(meanSet), 9)
 		
 		for k, v in pairs(meanSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -553,7 +505,7 @@ return {
 
 		local meanLayerInfo = tl:getLayerInfo(proj, proj.layers[meanLayerName])
 		unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
-		unitTest:assertEquals(meanLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[10])
+		unitTest:assertEquals(meanLayerInfo.file, currentDir()..shp[10])
 		unitTest:assertEquals(meanLayerInfo.type, "OGR")
 		unitTest:assertEquals(meanLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(meanLayerInfo.sid)
@@ -562,9 +514,7 @@ return {
 		local weighLayerName = clName.."_"..layerName3.."_AvrgWeighted"		
 		shp[11] = weighLayerName..".shp"
 		
-		if File(shp[11]):exists() then
-			File(shp[11]):delete()
-		end
+		File(shp[11]):deleteIfExists()
 		
 		operation = "average"
 		attribute = "weighted"
@@ -575,7 +525,7 @@ return {
 		
 		local weighSet = tl:getDataSet(proj, weighLayerName)
 		
-		unitTest:assertEquals(getn(weighSet), 402)
+		unitTest:assertEquals(getn(weighSet), 9)
 		
 		for k, v in pairs(weighSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -587,7 +537,7 @@ return {
 		
 		local weighLayerInfo = tl:getLayerInfo(proj, proj.layers[weighLayerName])
 		unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
-		unitTest:assertEquals(weighLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[11])
+		unitTest:assertEquals(weighLayerInfo.file, currentDir()..shp[11])
 		unitTest:assertEquals(weighLayerInfo.type, "OGR")
 		unitTest:assertEquals(weighLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(weighLayerInfo.sid)		
@@ -596,9 +546,7 @@ return {
 		local interLayerName = clName.."_"..layerName3.."_Intersection"		
 		shp[12] = interLayerName..".shp"
 		
-		if File(shp[12]):exists() then
-			File(shp[12]):delete()
-		end
+		File(shp[12]):deleteIfExists()
 		
 		operation = "mode"
 		attribute = "majo_int"
@@ -609,7 +557,7 @@ return {
 		
 		local interSet = tl:getDataSet(proj, interLayerName)
 		
-		unitTest:assertEquals(getn(interSet), 402)
+		unitTest:assertEquals(getn(interSet), 9)
 		
 		for k, v in pairs(interSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -621,7 +569,7 @@ return {
 		
 		local interLayerInfo = tl:getLayerInfo(proj, proj.layers[interLayerName])
 		unitTest:assertEquals(interLayerInfo.name, interLayerName)
-		unitTest:assertEquals(interLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[12])
+		unitTest:assertEquals(interLayerInfo.file, currentDir()..shp[12])
 		unitTest:assertEquals(interLayerInfo.type, "OGR")
 		unitTest:assertEquals(interLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(interLayerInfo.sid)			
@@ -630,9 +578,7 @@ return {
 		local occurLayerName = clName.."_"..layerName3.."_Occurence"		
 		shp[13] = occurLayerName..".shp"
 		
-		if File(shp[13]):exists() then
-			File(shp[13]):delete()
-		end
+		File(shp[13]):deleteIfExists()
 		
 		operation = "mode"
 		attribute = "majo_occur"
@@ -643,7 +589,7 @@ return {
 		
 		local occurSet = tl:getDataSet(proj, occurLayerName)
 		
-		unitTest:assertEquals(getn(occurSet), 402)
+		unitTest:assertEquals(getn(occurSet), 9)
 		
 		for k, v in pairs(occurSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -656,7 +602,7 @@ return {
 		
 		local occurLayerInfo = tl:getLayerInfo(proj, proj.layers[occurLayerName])
 		unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
-		unitTest:assertEquals(occurLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[13])
+		unitTest:assertEquals(occurLayerInfo.file, currentDir()..shp[13])
 		unitTest:assertEquals(occurLayerInfo.type, "OGR")
 		unitTest:assertEquals(occurLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(occurLayerInfo.sid)	
@@ -665,9 +611,7 @@ return {
 		local sumLayerName = clName.."_"..layerName3.."_Sum"		
 		shp[14] = sumLayerName..".shp"
 		
-		if File(shp[14]):exists() then
-			File(shp[14]):delete()
-		end
+		File(shp[14]):deleteIfExists()
 		
 		operation = "sum"
 		attribute = "sum"
@@ -678,7 +622,7 @@ return {
 		
 		local sumSet = tl:getDataSet(proj, sumLayerName)
 		
-		unitTest:assertEquals(getn(sumSet), 402)
+		unitTest:assertEquals(getn(sumSet), 9)
 		
 		for k, v in pairs(sumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -691,7 +635,7 @@ return {
 		
 		local sumLayerInfo = tl:getLayerInfo(proj, proj.layers[sumLayerName])
 		unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
-		unitTest:assertEquals(sumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[14])
+		unitTest:assertEquals(sumLayerInfo.file, currentDir()..shp[14])
 		unitTest:assertEquals(sumLayerInfo.type, "OGR")
 		unitTest:assertEquals(sumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(sumLayerInfo.sid)		
@@ -700,9 +644,7 @@ return {
 		local wsumLayerName = clName.."_"..layerName3.."_Wsum"		
 		shp[15] = wsumLayerName..".shp"
 		
-		if File(shp[15]):exists() then
-			File(shp[15]):delete()
-		end
+		File(shp[15]):deleteIfExists()
 		
 		operation = "sum"
 		attribute = "wsum"
@@ -713,7 +655,7 @@ return {
 		
 		local wsumSet = tl:getDataSet(proj, wsumLayerName)
 		
-		unitTest:assertEquals(getn(wsumSet), 402)
+		unitTest:assertEquals(getn(wsumSet), 9)
 		
 		for k, v in pairs(wsumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -726,7 +668,7 @@ return {
 		
 		local wsumLayerInfo = tl:getLayerInfo(proj, proj.layers[wsumLayerName])
 		unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
-		unitTest:assertEquals(wsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[15])
+		unitTest:assertEquals(wsumLayerInfo.file, currentDir()..shp[15])
 		unitTest:assertEquals(wsumLayerInfo.type, "OGR")
 		unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(wsumLayerInfo.sid)						
@@ -740,9 +682,7 @@ return {
 		local percTifLayerName = clName.."_"..layerName4.."_RPercentage"		
 		shp[16] = percTifLayerName..".shp"
 		
-		if File(shp[16]):exists() then
-			File(shp[16]):delete()
-		end
+		File(shp[16]):deleteIfExists()
 		
 		operation = "coverage"
 		attribute = "rperc"
@@ -753,7 +693,7 @@ return {
 		
 		percentSet = tl:getDataSet(proj, percTifLayerName)
 		
-		unitTest:assertEquals(getn(percentSet), 402) 
+		unitTest:assertEquals(getn(percentSet), 9) 
 		
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -766,7 +706,7 @@ return {
 
 		local percTifLayerInfo = tl:getLayerInfo(proj, proj.layers[percTifLayerName]) 
 		unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
-		unitTest:assertEquals(percTifLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[16])
+		unitTest:assertEquals(percTifLayerInfo.file, currentDir()..shp[16])
 		unitTest:assertEquals(percTifLayerInfo.type, "OGR")
 		unitTest:assertEquals(percTifLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(percTifLayerInfo.sid)					
@@ -775,9 +715,7 @@ return {
 		local rmeanLayerName = clName.."_"..layerName4.."_RMean"		
 		shp[17] = rmeanLayerName..".shp"
 		
-		if File(shp[17]):exists() then
-			File(shp[17]):delete()
-		end
+		File(shp[17]):deleteIfExists()
 		
 		operation = "average"
 		attribute = "rmean"
@@ -788,7 +726,7 @@ return {
 		
 		local rmeanSet = tl:getDataSet(proj, rmeanLayerName)
 		
-		unitTest:assertEquals(getn(rmeanSet), 402)
+		unitTest:assertEquals(getn(rmeanSet), 9)
 		
 		for k, v in pairs(rmeanSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -802,7 +740,7 @@ return {
 
 		local rmeanLayerInfo = tl:getLayerInfo(proj, proj.layers[rmeanLayerName])
 		unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
-		unitTest:assertEquals(rmeanLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[17])
+		unitTest:assertEquals(rmeanLayerInfo.file, currentDir()..shp[17])
 		unitTest:assertEquals(rmeanLayerInfo.type, "OGR")
 		unitTest:assertEquals(rmeanLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rmeanLayerInfo.sid)			
@@ -811,9 +749,7 @@ return {
 		local rminLayerName = clName.."_"..layerName4.."_RMinimum"		
 		shp[18] = rminLayerName..".shp"
 		
-		if File(shp[18]):exists() then
-			File(shp[18]):delete()
-		end
+		File(shp[18]):deleteIfExists()
 		
 		operation = "minimum"
 		attribute = "rmin"
@@ -824,7 +760,7 @@ return {
 		
 		local rminSet = tl:getDataSet(proj, rminLayerName)
 		
-		unitTest:assertEquals(getn(rminSet), 402)
+		unitTest:assertEquals(getn(rminSet), 9)
 		
 		for k, v in pairs(rminSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -838,7 +774,7 @@ return {
 
 		local rminLayerInfo = tl:getLayerInfo(proj, proj.layers[rminLayerName])
 		unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
-		unitTest:assertEquals(rminLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[18])
+		unitTest:assertEquals(rminLayerInfo.file, currentDir()..shp[18])
 		unitTest:assertEquals(rminLayerInfo.type, "OGR")
 		unitTest:assertEquals(rminLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rminLayerInfo.sid)		
@@ -847,9 +783,7 @@ return {
 		local rmaxLayerName = clName.."_"..layerName4.."_RMaximum"		
 		shp[19] = rmaxLayerName..".shp"
 		
-		if File(shp[19]):exists() then
-			File(shp[19]):delete()
-		end
+		File(shp[19]):deleteIfExists()
 		
 		operation = "maximum"
 		attribute = "rmax"
@@ -860,7 +794,7 @@ return {
 		
 		local rmaxSet = tl:getDataSet(proj, rmaxLayerName)
 		
-		unitTest:assertEquals(getn(rmaxSet), 402)
+		unitTest:assertEquals(getn(rmaxSet), 9)
 		
 		for k, v in pairs(rmaxSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -874,7 +808,7 @@ return {
 
 		local rmaxLayerInfo = tl:getLayerInfo(proj, proj.layers[rmaxLayerName])
 		unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
-		unitTest:assertEquals(rmaxLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[19])
+		unitTest:assertEquals(rmaxLayerInfo.file, currentDir()..shp[19])
 		unitTest:assertEquals(rmaxLayerInfo.type, "OGR")
 		unitTest:assertEquals(rmaxLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rmaxLayerInfo.sid)	
@@ -883,9 +817,7 @@ return {
 		local rstdevLayerName = clName.."_"..layerName4.."_RStdev"		
 		shp[20] = rstdevLayerName..".shp"
 		
-		if File(shp[20]):exists() then
-			File(shp[20]):delete()
-		end
+		File(shp[20]):deleteIfExists()
 		
 		operation = "stdev"
 		attribute = "rstdev"
@@ -896,7 +828,7 @@ return {
 		
 		local rstdevSet = tl:getDataSet(proj, rstdevLayerName)
 		
-		unitTest:assertEquals(getn(rstdevSet), 402)
+		unitTest:assertEquals(getn(rstdevSet), 9)
 		
 		for k, v in pairs(rstdevSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -910,7 +842,7 @@ return {
 
 		local rstdevLayerInfo = tl:getLayerInfo(proj, proj.layers[rstdevLayerName])
 		unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
-		unitTest:assertEquals(rstdevLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[20])
+		unitTest:assertEquals(rstdevLayerInfo.file, currentDir()..shp[20])
 		unitTest:assertEquals(rstdevLayerInfo.type, "OGR")
 		unitTest:assertEquals(rstdevLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rstdevLayerInfo.sid)		
@@ -919,9 +851,7 @@ return {
 		local rsumLayerName = clName.."_"..layerName4.."_RSum"		
 		shp[21] = rsumLayerName..".shp"
 		
-		if File(shp[21]):exists() then
-			File(shp[21]):delete()
-		end
+		File(shp[21]):deleteIfExists()
 		
 		operation = "sum"
 		attribute = "rsum"
@@ -932,7 +862,7 @@ return {
 		
 		local rsumSet = tl:getDataSet(proj, rsumLayerName)
 		
-		unitTest:assertEquals(getn(rsumSet), 402)
+		unitTest:assertEquals(getn(rsumSet), 9)
 		
 		for k, v in pairs(rsumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -946,7 +876,7 @@ return {
 
 		local rsumLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
 		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[21])
+		unitTest:assertEquals(rsumLayerInfo.file, currentDir()..shp[21])
 		unitTest:assertEquals(rsumLayerInfo.type, "OGR")
 		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rsumLayerInfo.sid)
@@ -961,7 +891,7 @@ return {
 		
 		local rsumOverSet = tl:getDataSet(proj, rsumLayerName)
 		
-		unitTest:assertEquals(getn(rsumOverSet), 402)
+		unitTest:assertEquals(getn(rsumOverSet), 9)
 		
 		for k, v in pairs(rsumOverSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or 
@@ -976,19 +906,16 @@ return {
 
 		local rsumOverLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
 		unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumOverLayerInfo.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/")..shp[21])
+		unitTest:assertEquals(rsumOverLayerInfo.file, currentDir()..shp[21])
 		unitTest:assertEquals(rsumOverLayerInfo.type, "OGR")
 		unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rsumOverLayerInfo.sid)		
 
-		-- END
 		for j = 1, #shp do
-			if File(shp[j]):exists() then
-				File(shp[j]):delete()
-			end
+			File(shp[j]):deleteIfExists()
 		end	
 
-		File(proj.file):delete()
+		proj.file:delete()
 
 		customWarning = customWarningBkp
 	end,
@@ -1003,9 +930,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1015,19 +940,17 @@ return {
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 
 		local clName1 = "SampaShpCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		local cellsShp = clName1..".shp"
 		
-		if File(cellsShp):exists() then
-			File(cellsShp):delete()
-		end
+		File(cellsShp):deleteIfExists()
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
 
 		local dSet = tl:getDataSet(proj, clName1)
 		
-		unitTest:assertEquals(getn(dSet), 68)
+		unitTest:assertEquals(getn(dSet), 37)
 		
 		for i = 0, #dSet do
 			for k, v in pairs(dSet[i]) do
@@ -1052,7 +975,7 @@ return {
 		
 		local newDSet = tl:getDataSet(proj, newLayerName)
 		
-		unitTest:assertEquals(getn(newDSet), 68)
+		unitTest:assertEquals(getn(newDSet), 37)
 		
 		for i = 0, #newDSet do
 			unitTest:assertEquals(newDSet[i].attr1, i)
@@ -1073,7 +996,7 @@ return {
 		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1"})
 		newDSet = tl:getDataSet(proj, newLayerName)
 		
-		unitTest:assertEquals(getn(newDSet), 68)
+		unitTest:assertEquals(getn(newDSet), 37)
 		
 		for i = 0, #newDSet do
 			unitTest:assertEquals(newDSet[i].attr1, i)
@@ -1091,7 +1014,7 @@ return {
 		tl:saveDataSet(proj, clName1, luaTable, clName1, {"attr1"})
 		newDSet = tl:getDataSet(proj, newLayerName)
 		
-		unitTest:assertEquals(getn(newDSet), 68)
+		unitTest:assertEquals(getn(newDSet), 37)
 		
 		for i = 0, #newDSet do
 			unitTest:assertEquals(newDSet[i].attr1, i)
@@ -1107,12 +1030,12 @@ return {
 		
 		File(cellsShp):delete()
 		File(newLayerName..".shp"):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getOGRByFilePath = function(unitTest)
 		local tl = TerraLib{}
 		local shpPath = filePath("test/sampa.shp", "terralib")
-		local dSet = tl:getOGRByFilePath(shpPath)
+		local dSet = tl:getOGRByFilePath(tostring(shpPath))
 		
 		unitTest:assertEquals(getn(dSet), 63)
 
@@ -1133,9 +1056,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1144,20 +1065,18 @@ return {
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 
 		local clName1 = "SampaShpCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		local cellsShp = clName1..".shp"
 		
-		if File(cellsShp):exists() then
-			File(cellsShp):delete()
-		end
+		File(cellsShp):deleteIfExists()
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
 
 		local dSet = tl:getDataSet(proj, clName1)
 		local area = tl:getArea(dSet[0].OGR_GEOMETRY)
 		unitTest:assertEquals(type(area), "number")
-		unitTest:assertEquals(area, 0.49, 0.001)
+		unitTest:assertEquals(area, 1, 0.001)
 		
 		for i = 1, #dSet do
 			for k, v in pairs(dSet[i]) do
@@ -1167,11 +1086,8 @@ return {
 			end
 		end			
 		
-		if File(cellsShp):exists() then
-			File(cellsShp):delete()
-		end		
-		
-		File(proj.file):delete()
+		File(cellsShp):deleteIfExists()
+		proj.file:delete()
 	end,
 	getProjection = function(unitTest)
 		local tl = TerraLib{}
@@ -1180,9 +1096,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1191,10 +1105,11 @@ return {
 		tl:addShpLayer(proj, layerName1, layerFile1)	
 		
 		local prj = tl:getProjection(proj.layers[layerName1])
-		
-		unitTest:assertEquals(prj.SRID, 4019.0)
-		unitTest:assertEquals(prj.NAME, "Unknown datum based upon the GRS 1980 ellipsoid")		
-		unitTest:assertEquals(prj.PROJ4, "+proj=longlat +ellps=GRS80 +no_defs ")
+	if sessionInfo().system ~= "mac" then -- TODO(#1380)	
+		unitTest:assertEquals(prj.SRID, 4019.0) -- SKIP
+		unitTest:assertEquals(prj.NAME, "Unknown datum based upon the GRS 1980 ellipsoid") -- SKIP
+		unitTest:assertEquals(prj.PROJ4, "+proj=longlat +ellps=GRS80 +no_defs ") -- SKIP
+	end
 		
 		local layerName2 = "Setores"
 		local layerFile2 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
@@ -1206,7 +1121,7 @@ return {
 		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")		
 		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")	
 		
-		File(proj.file):delete()		
+		proj.file:delete()		
 	end,
 	getPropertyNames = function(unitTest)
 		local tl = TerraLib{}
@@ -1215,9 +1130,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1232,7 +1145,7 @@ return {
 						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU"))
 		end
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getDistance = function(unitTest)
 		local tl = TerraLib{}
@@ -1241,9 +1154,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1254,26 +1165,24 @@ return {
 		local clName = "Sampa_Cells"
 		local shp1 = clName..".shp"
 
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end	
+		File(shp1):deleteIfExists()
 		
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		
 		local dSet = tl:getDataSet(proj, clName)
 		local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)	
 			
-		unitTest:assertEquals(dist, 4.4271887242357, 1.0e-13)
+		unitTest:assertEquals(dist, 4.1231056256177, 1.0e-13)
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		File(shp1):delete()
 	end,
 	castGeomToSubtype = function(unitTest)
 		local tl = TerraLib{}
 		local shpPath = filePath("test/sampa.shp", "terralib")
-		local dSet = tl:getOGRByFilePath(shpPath)	
+		local dSet = tl:getOGRByFilePath(tostring(shpPath))	
 		local geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPolygon")
@@ -1281,7 +1190,7 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "Polygon")
 		
 		shpPath = filePath("Rodovias_lin.shp", "terralib")
-		dSet = tl:getOGRByFilePath(shpPath)	
+		dSet = tl:getOGRByFilePath(tostring(shpPath))	
 		geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiLineString")	
@@ -1289,7 +1198,7 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "LineString")		
 
 		shpPath = filePath("test/prodes_points_10km_PA_pt.shp", "terralib")
-		dSet = tl:getOGRByFilePath(shpPath)	
+		dSet = tl:getOGRByFilePath(tostring(shpPath))
 		geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")		
@@ -1303,9 +1212,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 
@@ -1317,9 +1224,7 @@ return {
 		local toData = {}
 		toData.file = "shp2geojson.geojson"
 		toData.type = "geojson"		
-		if File(toData.file):exists() then
-			File(toData.file):delete()
-		end
+		File(toData.file):deleteIfExists()
 		
 		local overwrite = true
 		
@@ -1329,18 +1234,32 @@ return {
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
+
+		-- OVERWRITE AND CHANGE SRID
+		toData.srid = 4326.0
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		local layerName2 = "GJ"
+		tl:addGeoJSONLayer(proj, layerName2, toData.file)
+		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		unitTest:assertEquals(info2.srid, toData.srid)
 		
 		File(toData.file):delete()
 		
 		-- SHP
 		toData.file = "shp2shp.shp"
 		toData.type = "shp"		
-		if File(toData.file):exists() then
-			File(toData.file):delete()
-		end
+		File(toData.file):deleteIfExists()
 		
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
+		
+		-- OVERWRITE AND CHANGE SRID
+		toData.srid = 4326
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		local layerName3 = "SHP"
+		tl:addShpLayer(proj, layerName3, toData.file)
+		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
+		unitTest:assertEquals(info3.srid, toData.srid)		
 
 		File(toData.file):delete()
 		
@@ -1369,9 +1288,17 @@ return {
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
+		-- OVERWRITE AND CHANGE SRID
+		pgData.srid = 4326
+		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		local layerName4 = "PG"
+		tl:addPgLayer(proj, layerName4, pgData)
+		local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
+		unitTest:assertEquals(info4.srid, pgData.srid)		
+		
 		tl:dropPgTable(pgData)		
 
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	getLayerSize = function(unitTest)
 		local tl = TerraLib{}
@@ -1381,9 +1308,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 
 		local file = File(proj.file)
-		if file:exists() then
-			file:delete()
-		end
+		file:deleteIfExists()
 
 		tl:createProject(proj, {})
 

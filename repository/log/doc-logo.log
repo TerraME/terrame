@@ -1,33 +1,40 @@
 Building documentation for package 'logo'
 Loading package 'logo'
 Parsing 'data.lua'
+Processing lua files
 Checking directory 'data'
+Checking properties of data files
 Package 'logo' has no fonts
 Parsing lua files
 Parsing lua/GrowingSociety.lua
+Parsing lua/Heatbugs.lua
 Parsing lua/Labyrinth.lua
 Parsing lua/LifeCycle.lua
 Parsing lua/LogoAgent.lua
-Parsing lua/LogoModel.lua
 Parsing lua/Overpopulation.lua
+Parsing lua/PredatorPrey.lua
+Parsing lua/Schelling.lua
 Parsing lua/SingleAgent.lua
 Parsing lua/Sugarscape.lua
 Parsing lua/Utils.lua
 Parsing examples
-No examples were found.
+Parsing examples/road.lua
 Checking undocumented files
 Checking @usage definition
 Checking lua/GrowingSociety.lua
+Checking lua/Heatbugs.lua
 Checking lua/Labyrinth.lua
 Checking lua/LifeCycle.lua
 Checking lua/LogoAgent.lua
-Checking lua/LogoModel.lua
 Checking lua/Overpopulation.lua
+Checking lua/PredatorPrey.lua
+Checking lua/Schelling.lua
 Checking lua/SingleAgent.lua
 Checking lua/Sugarscape.lua
 Checking lua/Utils.lua
 Testing @usage
 Testing file lua/GrowingSociety.lua
+Testing file lua/Heatbugs.lua
 Testing file lua/Labyrinth.lua
 Testing file lua/LifeCycle.lua
 Testing file lua/LogoAgent.lua
@@ -36,31 +43,34 @@ Testing breed
 Testing countNeighbors
 Testing emptyNeighbor
 Testing relocate
-Testing file lua/LogoModel.lua
-Testing LogoModel
 Testing file lua/Overpopulation.lua
+Testing file lua/PredatorPrey.lua
+Testing file lua/Schelling.lua
 Testing file lua/SingleAgent.lua
 Testing file lua/Sugarscape.lua
 Testing file lua/Utils.lua
 Testing getLabyrinth
-Testing getSugar
 Checking calls to functions in @usage
 Checking lua/GrowingSociety.lua
+Checking lua/Heatbugs.lua
 Checking lua/Labyrinth.lua
 Checking lua/LifeCycle.lua
 Checking lua/LogoAgent.lua
-Checking lua/LogoModel.lua
 Checking lua/Overpopulation.lua
+Checking lua/PredatorPrey.lua
+Checking lua/Schelling.lua
 Checking lua/SingleAgent.lua
 Checking lua/Sugarscape.lua
 Checking lua/Utils.lua
 Checking undocumented arguments
 Checking lua/GrowingSociety.lua
+Checking lua/Heatbugs.lua
 Checking lua/Labyrinth.lua
 Checking lua/LifeCycle.lua
 Checking lua/LogoAgent.lua
-Checking lua/LogoModel.lua
 Checking lua/Overpopulation.lua
+Checking lua/PredatorPrey.lua
+Checking lua/Schelling.lua
 Checking lua/SingleAgent.lua
 Checking lua/Sugarscape.lua
 Checking lua/Utils.lua
@@ -68,10 +78,9 @@ Checking 'description.lua'
 Building and checking HTML files
 Building doc/index.html
 Building doc/files/LogoAgent.html
-Building doc/files/LogoModel.html
 Building doc/files/Utils.html
+Building doc/files/examples.html
 Building doc/files/data.html
-Building doc/files/font.html
 Building doc/files/models.html
 Checking images
 Checking data.lua
@@ -80,40 +89,42 @@ Checking examples
 Checking if all images are used
 Checking if all functions are documented
 Checking GrowingSociety.lua
+Checking Heatbugs.lua
 Checking Labyrinth.lua
 Checking LifeCycle.lua
 Checking LogoAgent.lua
-Checking LogoModel.lua
 Checking Overpopulation.lua
+Checking PredatorPrey.lua
+Checking Schelling.lua
 Checking SingleAgent.lua
 Checking Sugarscape.lua
 Checking Utils.lua
 Checking if all Models are documented
 
-Documentation report:
-Documentation was built in 1.34 seconds.
+Documentation report for package 'logo':
+Documentation was built in 0.92 seconds.
 6 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
-All 6 Models are correctly documented.
-All 8 global functions of the package are documented.
+All 9 Models are correctly documented.
+All 6 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 6 non-named arguments are documented.
+All 5 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 8 functions call themselves in their @usage.
-All 8 functions do not have any error in their @usage.
+All 6 functions call themselves in their @usage.
+All 6 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
-All 0 examples are correctly documented.
+All 1 examples are correctly documented.
 Summing up, all the documentation was successfully built.

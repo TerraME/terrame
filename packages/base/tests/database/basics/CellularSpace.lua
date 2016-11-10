@@ -25,15 +25,15 @@
 return{
 	CellularSpace = function(unitTest)
 		local cs = CellularSpace{
-			file = filePath("cabecadeboi.shp"),
+			file = filePath("cabecadeboi900.shp"),
 			xy = {"Col", "Lin"},
 			as = {
 				height = "height_"
 			}
 		}
 
-		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
-		unitTest:assertEquals(10201, #cs.cells)
+		unitTest:assertEquals("cabecadeboi900.shp", cs.layer)
+		unitTest:assertEquals(121, #cs.cells)
 
 		for _ = 1, 5 do
 			local cell = cs:sample()
@@ -62,36 +62,31 @@ return{
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(1, cell.y)
 
-		cell = cs:get(0, 99)
+		cell = cs:get(0, 9)
 		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(99, cell.y)
+		unitTest:assertEquals(9, cell.y)
 		
-		-- in TerraLib 5 we have 
-		-- [11] (0, 10)
-		-- [12] (0, 100) -- this line was not here in TerraLib 4
-		-- [13] (0, 11)
-
 		cell = cs.cells[100]
-		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(98, cell.y)
+		unitTest:assertEquals(9, cell.x)
+		unitTest:assertEquals(0, cell.y)
 
-		cell = cs:get(0, 100)
+		cell = cs:get(0, 10)
 		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(100, cell.y)
+		unitTest:assertEquals(10, cell.y)
 		
 		cell = cs.cells[101]
-		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(99, cell.y)
+		unitTest:assertEquals(9, cell.x)
+		unitTest:assertEquals(1, cell.y)
 
 		cs = CellularSpace{
-			file = filePath("cabecadeboi.shp"),
+			file = filePath("cabecadeboi900.shp"),
 			xy = function(mcell)
 				return mcell.Col, mcell.Lin
 			end
 		}
 
-		unitTest:assertEquals("cabecadeboi.shp", cs.layer)
-		unitTest:assertEquals(10201, #cs.cells)
+		unitTest:assertEquals("cabecadeboi900.shp", cs.layer)
+		unitTest:assertEquals(121, #cs.cells)
 
 		for _ = 1, 5 do
 			local mcell = cs:sample()
@@ -881,9 +876,7 @@ return{
 
 		unitTest:assertNil(cs:sample().past.geom)
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 	end
 }
 

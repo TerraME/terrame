@@ -33,16 +33,6 @@ return{
 		c:notify(3)
 
 		unitTest:assertSnapshot(ch, "chart_snapshot_test.bmp", 0.03)
-	end,
-    clear = function(unitTest)
-        local u = UnitTest{sleep = 1}
-        local cell = Cell{value = 1}
-        Chart{target = cell}
-
-        local t1 = os.time()
-        u:clear()
-        local t2 = os.time()
-        unitTest:assert(t2 - t1 >= 1)
-    end
+	end
 }
 

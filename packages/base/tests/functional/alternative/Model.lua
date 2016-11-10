@@ -406,7 +406,7 @@ return{
 		error_func = function()
 			M{file1 = "agxd.csv"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg(toLabel("file1"), "agxd.csv"))
+		unitTest:assertError(error_func, resourceNotFoundMsg(toLabel("file1"), File("agxd.csv")))
 
 		M = Model{
 			files = {
@@ -431,7 +431,7 @@ return{
 		error_func = function()
 			M{files = {file1 = 2}}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("files.file1", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("files.file1", "File", 2))
 
 		error_func = function()
 			M{files = {file1 = "agents"}}
@@ -446,7 +446,7 @@ return{
 		error_func = function()
 			M{files = {file1 = "agxd.csv"}}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg(toLabel("file1", "files"), "agxd.csv"))
+		unitTest:assertError(error_func, resourceNotFoundMsg(toLabel("file1", "files"), File("agxd.csv")))
 
 		error_func = function()
 			M()

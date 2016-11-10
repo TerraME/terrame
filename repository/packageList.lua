@@ -8,25 +8,23 @@ result = {}
 
 _Gtme.printNote("Unzipping files")
 forEachFile(".", function(file)
-	if string.endswith(file, ".zip") then
-		os.execute("unzip -q "..file)
+	if file:extension() == "zip" then
+		os.execute("unzip -q "..file:name())
 	end
 end)
 
 _Gtme.printNote("Processing packages")
-forEachFile(".", function(file)
-	if Directory(file):exists() then
-		print("Processing "..file)
-		info = packageInfo(file)
+forEachDirectory(".", function(dir)
+	print("Processing "..dir:name())
+	info = packageInfo(dir:name())
 
-		info.data    = nil
-		info.path    = nil
-		info.contact = nil
-		info.date    = nil
-		info.license = nil
+	info.data    = nil
+	info.path    = nil
+	info.contact = nil
+	info.date    = nil
+	info.license = nil
 
-		result[file] = info
-	end
+	result[dir:name()] = info
 end)
 
 file = io.open("packages.lua", "w")
@@ -36,10 +34,9 @@ file:write("\n\nreturn "..vardump(result))
 file:close()
 
 _Gtme.printNote("Cleaning folder")
-forEachFile(".", function(file)
-	if Directory(file):exists() then
-		Directory(file):delete()
-	end
+forEachDirectory(".", function(dir)
+	dir:delete()
 end)
 
 _Gtme.printNote("packages.lua was successfully created")
+

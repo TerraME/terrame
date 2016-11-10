@@ -27,17 +27,17 @@ return {
 		local file = File("amazonia.tview")
 
 		local proj1 = Project{
-			file = file:name(),
+			file = tostring(file),
 			clean = true,
 			author = "Avancini",
 			title = "The Amazonia"
 		}
 		
 		unitTest:assertType(proj1, "Project")
-		unitTest:assertEquals(proj1.file, file:name(true))
+		unitTest:assertEquals(proj1.file, file)
 		
 		local proj2 = Project{
-			file = file:name()
+			file = tostring(file)
 		}		
 
 		unitTest:assertEquals(proj1.author, proj2.author)
@@ -45,27 +45,27 @@ return {
 		unitTest:assertEquals(proj1.file, proj2.file)
 
 		local proj3 = Project{
-			file = file:name(true)
+			file = file:name()
 		}
 
 		unitTest:assertEquals(proj1.author, proj3.author)
 		unitTest:assertEquals(proj1.title, proj3.title)
-		unitTest:assertEquals(proj1.file, proj3.file)
+		unitTest:assertEquals(proj3.file, File("amazonia.tview"))
 
 		local proj3clean = Project{
-			file = file:name(true),
+			file = file:name(),
 			clean = true
 		}
 
 		unitTest:assertEquals(proj1.author, proj3clean.author)
 		unitTest:assertEquals(proj1.title, proj3clean.title)
-		unitTest:assertEquals(proj1.file, proj3clean.file)
+		unitTest:assertEquals(proj3clean.file, File("amazonia.tview"))
 		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		file = File("notitlenoauthor.tview")
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		local proj4 = Project{
 			file = file:name(true)
@@ -77,12 +77,14 @@ return {
 		unitTest:assertType(proj4.layers, "table")
 		unitTest:assertEquals(getn(proj4.layers), 0)
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		file = File("emas.tview")
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
-		local proj5 = Project{
+		local proj5
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
+		proj5 = Project{
 			file = file:name(true),
 			clean = true,
 			author = "Almeida, R.",
@@ -92,14 +94,26 @@ return {
 			river = filePath("River_lin.shp", "terralib"),
 			limit = filePath("Limit_pol.shp", "terralib")
 		}
-
+	else
+		proj5 = Project{
+			file = file:name(true),
+			clean = true,
+			author = "Almeida, R.",
+			title = "Emas database",
+			firebreak = filePath("firebreak_lin.shp", "terralib"),
+			river = filePath("River_lin.shp", "terralib"),
+			limit = filePath("Limit_pol.shp", "terralib")
+		}		
+	end
 		unitTest:assertType(proj5.firebreak, "Layer")
-		unitTest:assertType(proj5.cover, "Layer")
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)	
+		unitTest:assertType(proj5.cover, "Layer") -- SKIP
+	end
 		unitTest:assertType(proj5.river, "Layer")
 		unitTest:assertType(proj5.limit, "Layer")
 		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 	end,
 	__tostring = function(unitTest)
 		local file = File("tostring.tview")
@@ -113,13 +127,13 @@ return {
 		unitTest:assertEquals(tostring(proj1), [[author       string [Avancini]
 clean        boolean [true]
 description  string []
-file         string [tostring.tview]
+file         File
 layers       vector of size 0
 terralib     TerraLib
 title        string [The Amazonia]
 ]])
 
 		-- unitTest:assertFile("tostring.tview") -- SKIP #TODO(#1242)
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 	end
 }

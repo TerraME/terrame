@@ -1,4 +1,4 @@
--- @example Iterated Prisoner's dilemma model
+-- @example Iterated Prisoner's dilemma model.
 -- @arg COOPERATE cooperate value
 -- @arg NOT_COOPERATE not cooperate value.
 

@@ -31,33 +31,34 @@ local printNote    = _Gtme.printNote
 local function testdirectories(directory, ut)
 	local result = {}
 
-	local s = sessionInfo().separator
-
 	local lf 
 	lf = function(mdirectory)
 		local found_file = false
 		local found_directory = false
-		forEachFile(directory..s..mdirectory, function(value)
-			if string.endswith(value, ".lua") then
+		forEachFile(mdirectory, function(value)
+			if value:extension() == "lua" then
 				if not found_file then
 					found_file = true
 					table.insert(result, mdirectory)
 				end
-			elseif _Gtme.File(directory..s..mdirectory..s..value):attributes("mode") == "directory" then
-				lf(mdirectory..s..value)
-				found_directory = true
 			else
-				printError("'".._Gtme.makePathCompatibleToAllOS(mdirectory..s..value).."' is not a directory neither a .lua file and will be ignored.")
+				printError("'"..value.."' is not a directory neither a .lua file and will be ignored.")
 				ut.invalid_test_file = ut.invalid_test_file + 1
 			end
 		end)
+
+		forEachDirectory(mdirectory, function(value)
+			lf(value)
+			found_directory = true
+		end)
+
 		if not found_file and not found_directory then
-			printError("Directory '".._Gtme.makePathCompatibleToAllOS(mdirectory).."' is empty.")
+			printError("Directory '"..mdirectory.."' is empty.")
 			ut.invalid_test_file = ut.invalid_test_file + 1
 		end
 	end
 
-	lf("tests")
+	lf(Directory(directory.."tests"))
 
 	return(result)
 end
@@ -147,7 +148,7 @@ local function buildLineTable(package)
 	local s = sessionInfo().separator
 	local baseDir = packageInfo(package).path
 
-	local load_file = baseDir..s.."load.lua"
+	local load_file = baseDir.."load.lua"
 	local load_sequence
 
 	if File(load_file):exists() then
@@ -155,11 +156,10 @@ local function buildLineTable(package)
 		-- the package was already loaded with success
 		load_sequence = _Gtme.include(load_file).files
 	else
-		local dir = Directory(baseDir..s.."lua"):list()
 		load_sequence = {}
-		forEachElement(dir, function(_, mfile)
-			if string.endswith(mfile, ".lua") then
-				table.insert(load_sequence, mfile)
+		forEachFile(baseDir.."lua", function(file)
+			if file:extension() == "lua" then
+				table.insert(load_sequence, file:name())
 			end
 		end)
 	end
@@ -169,14 +169,14 @@ local function buildLineTable(package)
 	for _, file in ipairs(load_sequence) do
 		-- the 'include' below does not need to be inside a xpcall because
 		-- the package was already loaded with success
-		testlines[file] = lineTable(baseDir..s.."lua"..s..file)
+		testlines[file] = lineTable(baseDir.."lua"..s..file)
 
 		local function trace(_, line)
 			testlines[file][line] = 1
 		end
 
 		debug.sethook(trace, "l")
-		dofile(baseDir..s.."lua"..s..file)
+		dofile(baseDir.."lua"..s..file)
 		debug.sethook()
 	end
 
@@ -198,7 +198,7 @@ function _Gtme.executeTests(package, fileName)
 		end)
 
 		if getn(data) == 0 then
-			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'log', 'time', 'sleep', 'test'}.")
+			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'notest', 'time', 'test'}.")
 			os.exit(1)
 		end
 
@@ -214,12 +214,30 @@ function _Gtme.executeTests(package, fileName)
 			customError("'file' should be string, table, or nil, got "..type(data.file)..".")
 		end
 
-		if data.test ~= nil and type(data.test) ~= "string" and type(data.test) ~= "table" then
+		if data.test and data.notest then
+			customError("It is not possible to use 'test' and 'notest' at the same time.")
+		end
+
+		if type(data.test) == "string" then
+			data.test = {data.test}
+		elseif type(data.test) ~= "table" and data.test ~= nil then
 			customError("'test' should be string, table, or nil, got "..type(data.test)..".")
 		end
 
-		if data.sleep ~= nil and type(data.sleep) ~= "number"  then
-			customError("'sleep' should be number or nil, got "..type(data.sleep)..".")
+		if type(data.notest) == "string" then
+			data.notest = {[data.notest] = true}
+		elseif type(data.notest) ~= "table" and data.notest ~= nil then
+			customError("'notest' should be string, table, or nil, got "..type(data.notest)..".")
+		elseif type(data.notest) == "table" then
+			local notest = {}
+
+			forEachElement(data.notest, function(_, value)
+				notest[value] = true
+			end)
+
+			data.notest = notest
+		else -- nil
+			data.notest = {}
 		end
 
 		if data.examples ~= nil and type(data.examples) ~= "boolean" then
@@ -240,32 +258,35 @@ function _Gtme.executeTests(package, fileName)
 			end
 		end
 
-		if data.log ~= nil then
-			local location = packageInfo(package).path..s.."log"..s..data.log
-			if Directory(location):exists() then
-				printNote("Using log directory 'log"..s..data.log.."'")
-			else
-				customError("Log directory '"..location.."' does not exist.")
-			end
-		end
-
-		verifyUnnecessaryArguments(data, {"directory", "file", "test", "sleep", "examples", "lines", "log", 'time'})
+		verifyUnnecessaryArguments(data, {"directory", "file", "test", "notest", "examples", "lines", 'time'})
 	else
-		data = {}
+		data = {notest = {}}
 	end
 
-	if data.sleep == nil then
-		data.sleep = 0
+	data.log = Directory(packageInfo(package).path.."log"..s..sessionInfo().system)
+
+	if data.log:exists() then
+		printNote("Using log directory '"..data.log.."'")
+	else
+		data.log = Directory(packageInfo(package).path..s.."log")
+
+		if data.log:exists() then
+			printNote("Using log directory '"..data.log.."'")
+		else
+			printNote("Creating log directory in '"..data.log.."'")
+			data.log:create()
+		end
 	end
 
-	local check_functions = data.directory == nil and data.test == nil
-	local check_logs = data.directory == nil and data.test == nil and data.file == nil
+	local check_functions = data.directory == nil and data.test == nil and getn(data.notest) == 0
+	local check_logs = data.directory == nil and data.test == nil and data.file == nil and 
+	                   getn(data.notest) == 0 and data.examples ~= false
+
 	if data.examples == nil then
 		data.examples = check_functions and data.file == nil
 	end
 
 	local ut = UnitTest{
-		sleep = data.sleep,
 		log = data.log,
 		package = package,
 		package_functions = 0,
@@ -328,7 +349,7 @@ function _Gtme.executeTests(package, fileName)
 
 	local baseDir = packageInfo(package).path
 
-	doc_functions = luadocMain(baseDir, Directory(baseDir..s.."lua"):list(), {}, package, {}, {}, {}, true)
+	doc_functions = luadocMain(baseDir, Directory(baseDir.."lua"):list(), {}, package, {}, {}, {}, true)
 
 	printNote("Looking for package functions")
 	testfunctions = _Gtme.buildCountTable(package)
@@ -357,7 +378,7 @@ function _Gtme.executeTests(package, fileName)
 		printNote("Found "..extra.." extra functions in the documentation")
 	end
 
-	if not Directory(baseDir..s.."tests"):exists() then
+	if not Directory(baseDir.."tests"):exists() then
 		printError("Directory 'tests' does not exist in package '"..package.."'")
 		printError("Please run 'terrame -package "..package.." -sketch' to create test files.")
 		os.exit(1)
@@ -390,7 +411,7 @@ function _Gtme.executeTests(package, fileName)
 
 		forEachElement(tf, function(_, value)
 			forEachElement(mdirectory, function(_, mvalue)
-				local cvalue  = _Gtme.makePathCompatibleToAllOS(value)
+				local cvalue  = tostring(value)
 				local cmvalue = _Gtme.makePathCompatibleToAllOS(mvalue)
 
 				if string.match(cvalue, cmvalue) and not belong(value, data.directory) then
@@ -426,13 +447,13 @@ function _Gtme.executeTests(package, fileName)
 
 	local filesDir = {}
 
-	forEachFile(_Gtme.Directory("."):list(), function(file)
-		filesDir[file] = true
+	forEachFile(".", function(file)
+		filesDir[file:name()] = true
 	end)
 
 	-- For each test in each file in each directory, execute the test
 	forEachElement(data.directory, function(_, eachDirectory)
-		local dirFiles = Directory(baseDir..s..eachDirectory):list()
+		local dirFiles = eachDirectory:list()
 
 		if dirFiles == nil then return end
 
@@ -453,12 +474,8 @@ function _Gtme.executeTests(package, fileName)
 			end)
 		end
 
-		if getn(myFiles) == 0 then
-			printWarning("Skipping directory ".._Gtme.makePathCompatibleToAllOS(eachDirectory))
-		end
-
 		forEachOrderedElement(myFiles, function(eachFile)
-			ut.current_file = eachDirectory..s..eachFile
+			ut.current_file = eachDirectory:relativePath(baseDir).."/"..eachFile
 			local tests
 
 			local printTesting = false
@@ -467,16 +484,16 @@ function _Gtme.executeTests(package, fileName)
 				ut.print_calls = ut.print_calls + 1
 
 				if not printTesting then
-					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+					printNote("Testing "..ut.current_file)
 					printTesting = true
 				end
 
 				printError("Error: print() call detected with argument '"..tostring(arg).."'")
 			end
 
-			xpcall(function() tests = dofile(baseDir..s..eachDirectory..s..eachFile) end, function(err)
+			xpcall(function() tests = dofile(eachDirectory.."/"..eachFile) end, function(err)
 				if not printTesting then
-					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+					printNote("Testing "..ut.current_file)
 					printTesting = true
 				end
 
@@ -486,11 +503,11 @@ function _Gtme.executeTests(package, fileName)
 
 			print = _Gtme.print
 
-			local myAssertTable = assertTable(baseDir..s..eachDirectory..s..eachFile)
+			local myAssertTable = assertTable(eachDirectory..s..eachFile)
 
 			if type(tests) ~= "table" or getn(tests) == 0 then
 				if not printTesting then
-					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+					printNote("Testing "..ut.current_file)
 					printTesting = true
 				end
 
@@ -499,40 +516,49 @@ function _Gtme.executeTests(package, fileName)
 			end
 
 			myTests = {}
-			if type(data.test) == "string" then
-				if tests[data.test] then
-					myTests = {data.test}
-				end
-			elseif data.test == nil then
+			if data.test == nil then
 				forEachOrderedElement(tests, function(index)
-					myTests[#myTests + 1] = index
+					if not data.notest[index] then
+						table.insert(myTests, index)
+					end
 				end)
 			else -- table
 				forEachElement(data.test, function(_, value)
 					if tests[value] then
-						myTests[#myTests + 1] = value
+						table.insert(myTests, value)
 					end
 				end)
 			end
 
-			if #myTests == 0 then
-				printWarning("Skipping ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
-			elseif not printTesting then
-				printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+			if #myTests > 0 and not printTesting then
+				printNote("Testing "..ut.current_file)
 			end
+
+			local shortSrcs = {}
 
 			local function trace(_, line)
 				local ss = debug.getinfo(2).short_src
-				ss = _Gtme.makePathCompatibleToAllOS(ss)
-				local short = string.match(ss, "([^/]-)$")
 
-				if short == eachFile and string.match(ss, "tests") then
+				local currentShortSrc = shortSrcs[ss]
+
+				if not currentShortSrc then
+					local mss = _Gtme.makePathCompatibleToAllOS(ss)
+
+					currentShortSrc = {
+						short = string.match(mss, "([^/]-)$"),
+						matchTests = string.match(mss, "tests")
+					}
+
+					shortSrcs[ss] = currentShortSrc
+				end
+
+				if currentShortSrc.short == eachFile and currentShortSrc.matchTests then
 					if myAssertTable[line] then
 						myAssertTable[line] = myAssertTable[line] + 1
 					end
 				end
 
-				if data.lines and short == eachFile and not string.match(ss, "tests") then
+				if data.lines and currentShortSrc.short == eachFile and not currentShortSrc.matchTests then
 					if executionlines[eachFile] then
 						if executionlines[eachFile][line] then
 							executionlines[eachFile][line] = executionlines[eachFile][line] + 1
@@ -581,26 +607,26 @@ function _Gtme.executeTests(package, fileName)
 
 					local text = "Test executed in "..round(difference, 1).." seconds"
 
-					if difference > 20 then
+					if difference > 30 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-					elseif difference > 5 then
+					elseif difference > 10 then
 						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-					else
+					elseif difference > 1 then
 						_Gtme.print("\027[00;37;42m"..text.."\027[00m")
 					end
 				end
 
 				print = _Gtme.print
 
-				forEachFile(_Gtme.Directory("."):list(), function(file)
-					if filesDir[file] == nil then
+				forEachFile(".", function(file)
+					if filesDir[file:name()] == nil then
 						printError("File '"..file.."' was created along the test.")
-						filesDir[file] = true
+						filesDir[file:name()] = true
 						ut.files_created = ut.files_created + 1
 					end
 				end)
 
-				ut:clear()
+				clean()
 				ut.executed_functions = ut.executed_functions + 1
 
 				if count_test == ut.test and not found_error then
@@ -662,7 +688,7 @@ function _Gtme.executeTests(package, fileName)
 			debug.sethook()
 
 			if #myTests > 0 then
-				if data.test then
+				if data.test or getn(data.notest) > 0 then
 					printWarning("Skip checking asserts")
 				else
 					print("Checking if all asserts were executed")
@@ -791,7 +817,7 @@ function _Gtme.executeTests(package, fileName)
 					local env = setmetatable({}, {__index = _G})
 					-- loadfile is necessary to avoid any global variable from one
 					-- example affect another example
-					local result, err = loadfile(baseDir..s.."examples"..s..value..".lua", 't', env)
+					local result, err = loadfile(baseDir.."examples"..s..value..".lua", 't', env)
 
 					if not result then
 						printError(err)
@@ -811,12 +837,6 @@ function _Gtme.executeTests(package, fileName)
 				if logfile ~= nil then
 					io.close(logfile)
 
-					if ut.log == nil then
-						File(value..".log"):delete()
-						printError("Error: It is not possible to test examples with print() without a configuration file pointing a log directory.")
-						os.exit(1)
-					end
-
 					local test = ut.test
 					local success = ut.success
 					local fail = ut.fail 
@@ -825,8 +845,11 @@ function _Gtme.executeTests(package, fileName)
 						ut:assertFile(value..".log")
 					else
 						printError("Error: Could not find log file "..value..".log. Possibly the example is handling temporary folders in a wrong way.")
-						test = test + 1
-						fail = fail + 1
+						ut.examples_error = ut.examples_error + 1
+					end
+
+					if ut.fail > fail then
+						ut.examples_error = ut.examples_error + 1
 					end
 
 					ut.test = test
@@ -834,7 +857,7 @@ function _Gtme.executeTests(package, fileName)
 					ut.fail = fail
 				end
 
-				ut:clear()
+				clean()
 			end)
 		else
 			printWarning("The package has no examples")
@@ -845,11 +868,16 @@ function _Gtme.executeTests(package, fileName)
 
 	if ut.logs > 0 and check_logs then
 		printNote("Checking logs")
-		local mdir = Directory(packageInfo(package).path..s.."log"..s..ut.log):list()
+		local mdir = data.log:list()
+
+		local path = "log/"
+		if string.endswith(tostring(data.log), sessionInfo().system) then
+			path = path..sessionInfo().system.."/"
+		end
 
 		forEachElement(mdir, function(_, value)
-			if not ut.tlogs[value] then
-				printError("File 'log/"..ut.log.."/"..value.."' was not used by any assert.")
+			if not ut.tlogs[value] and not isDirectory(data.log..value) then
+				printError("File '"..path..value.."' was not used by any assert.")
 				ut.unused_log_files = ut.unused_log_files + 1
 			end
 		end)
@@ -861,12 +889,7 @@ function _Gtme.executeTests(package, fileName)
 
 	print("\nFunctional test report for package '"..package.."':")
 
-	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds"
-	if ut.delayed_time > 0 then
-		text = text.." ("..ut.delayed_time.. " seconds sleeping)."
-	else
-		text = text.."."
-	end
+	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds."
 	printNote(text)
 
 	if ut.logs > 0 then
@@ -1019,9 +1042,9 @@ function _Gtme.executeTests(package, fileName)
 		end
 
 		if ut.unused_log_files == 1 then
-			printError("One file from directory 'log/"..ut.log.."' was not used.")
+			printError("One file from directory 'log/"..sessionInfo().system.."' was not used.")
 		elseif ut.unused_log_files > 1 then
-			printError(ut.unused_log_files.." files from directory 'log/"..ut.log.."' were not used.")
+			printError(ut.unused_log_files.." files from directory 'log/"..sessionInfo().system.."' were not used.")
 		else
 			printNote("All log files were used in the tests.")
 		end
@@ -1030,7 +1053,7 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
-	               -ut.logs - ut.package_functions - ut.delayed_time -ut.sleep
+	               -ut.logs - ut.package_functions
 
 	forEachElement(ut, function(_, value, mtype)
 		if mtype == "number" then

@@ -45,7 +45,6 @@ return{
 		world:notify(1)
 		world.count = world.count + 5
 		world:notify(2)
-		--unitTest:clear()
 
 		local t = Timer{
 			Event{action = function(e)
@@ -67,8 +66,6 @@ return{
 		unitTest:assertSnapshot(ts, "textscreen_agent_select.bmp", 0.03)
 		unitTest:assertSnapshot(vt, "agent_visualtable.bmp", 0.15)
 		
-		unitTest:clear()
-
 		world = Agent{
 			probability = 0,
 			mx = 0

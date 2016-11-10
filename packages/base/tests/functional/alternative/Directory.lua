@@ -32,7 +32,7 @@ return{
 		error_func = function()
 			Directory(1)
 		end
-		unitTest:assertError(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 
 		error_func = function()
 			Directory("abc\"")
@@ -61,6 +61,11 @@ return{
 			Directory{tmpd = true}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("tmpd", "tmp"))
+
+		error_func = function()
+			Directory(packageInfo("base").path.."data/agents.csv")
+		end
+		unitTest:assertError(error_func, "'/agents.csv' is a file, and not a directory.", 0, true)
 	end,
 	attributes = function(unitTest)
 		local dir = Directory("/my/path/my_dir")
@@ -75,6 +80,14 @@ return{
 			dir:delete()
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("directory", tostring(dir)))
-	end
+	end,
+	relativePath = function(unitTest)
+		local dir = Directory("/a/b/c/d")
+
+		local error_func = function()
+			dir:attributes(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
 }
 

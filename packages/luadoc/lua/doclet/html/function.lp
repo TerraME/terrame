@@ -59,7 +59,7 @@ end%>
 					if j == 1 then td = "th" else td = "td"  end 
 						for _, data in ipairs(line) do %>
 							<<%=td%>>
-							<%= data %>
+							<%=luadoc.link_description(data or "", doc, module_doc, file_doc, from, true, "summary", doc_report)%></td>
 							</<%=td%>>
 						<%end 
 					end%>

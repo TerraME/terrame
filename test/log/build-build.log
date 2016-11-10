@@ -3,7 +3,7 @@ Parsing configuration file 'config/all.lua'
 
 Testing package 'build'
 Loading configuration file 'config/all.lua'
-Using log directory 'log/linux'
+Using log directory '/Applications/terrame.app/Contents/MacOS/packages/build/log/'
 Loading package 'build'
 Looking for overwritten variables
 Looking for documented functions
@@ -90,8 +90,6 @@ Building doc/index.html
 Building doc/files/Utils.html
 Building doc/files/Utils2.html
 Building doc/files/examples.html
-Building doc/files/data.html
-Building doc/files/font.html
 Building doc/files/models.html
 Checking images
 Checking data.lua
@@ -105,8 +103,8 @@ Checking Utils2.lua
 Checking if all Models are documented
 
 Documentation report for package 'build':
-Documentation was built in 0.7 seconds.
-6 HTML files were created.
+Documentation was built in 0.1 seconds.
+5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.

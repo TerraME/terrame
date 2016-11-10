@@ -3,16 +3,16 @@ Parsing configuration file 'config/all.lua'
 
 Testing package 'buildunnecfiles'
 Loading configuration file 'config/all.lua'
-Using log directory 'log/mac'
+Using log directory '/Applications/terrame.app/Contents/MacOS/packages/buildunnecfiles/log/mac/'
 Loading package 'buildunnecfiles'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
 Looking for lines of source code
+'tests/unnec4.txt' is not a directory neither a .lua file and will be ignored.
+'tests/alternative/unnec5.txt' is not a directory neither a .lua file and will be ignored.
 'tests/alternative/abc/unnec6.txt' is not a directory neither a .lua file and will be ignored.
 Directory 'tests/alternative/abc' is empty.
-'tests/alternative/unnec5.txt' is not a directory neither a .lua file and will be ignored.
-'tests/unnec4.txt' is not a directory neither a .lua file and will be ignored.
 Testing tests/Tube.lua
 Testing Tube
 Checking if all asserts were executed
@@ -86,7 +86,6 @@ Building and checking HTML files
 Building doc/index.html
 Building doc/files/Utils.html
 Building doc/files/examples.html
-Building doc/files/data.html
 Building doc/files/font.html
 Building doc/files/models.html
 Checking images
@@ -100,7 +99,7 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'buildunnecfiles':
-Documentation was built in 0.89 seconds.
+Documentation was built in 0.07 seconds.
 5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.

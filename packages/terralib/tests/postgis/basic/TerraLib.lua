@@ -34,9 +34,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -81,7 +79,7 @@ return {
 		unitTest:assertEquals(layerInfo.table, tableName)		
 		unitTest:assertNotNil(layerInfo.sid)		
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)
 	end,
@@ -104,9 +102,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -137,7 +133,7 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 		
@@ -155,7 +151,7 @@ return {
 
 		-- NO MASK TEST		
 		local clSet = tl:getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 68)
+		unitTest:assertEquals(getn(clSet), 37)
 		
 		clName1 = clName1.."_NoMask"
 		local pgData2 = pgData
@@ -167,10 +163,9 @@ return {
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData2, mask)
 		
 		clSet = tl:getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 104)		
+		unitTest:assertEquals(getn(clSet), 54)
 		
-		-- END
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgTable(pgData2)
 		tl:dropPgDatabase(pgData)		
@@ -182,9 +177,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		-- CREATE A PROJECT
 		tl:createProject(proj, {})
 		
@@ -221,13 +214,13 @@ return {
 		
 		-- CREATE THE CELLULAR SPACE
 		local clName = "Para_Cells"	
-		local resolution = 60e3
+		local resolution = 5e5
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName, resolution, pgData, mask)
 		
 		local clSet = tl:getDataSet(proj, clName)
 		
-		unitTest:assertEquals(getn(clSet), 402)
+		unitTest:assertEquals(getn(clSet), 9)
 		
 		for k, v in pairs(clSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom"))
@@ -255,7 +248,7 @@ return {
 		
 		local presSet = tl:getDataSet(proj, presLayerName)
 		
-		unitTest:assertEquals(getn(presSet), 402)
+		unitTest:assertEquals(getn(presSet), 9)
 		
 		for k, v in pairs(presSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or (k == "presence"))
@@ -289,7 +282,7 @@ return {
 		
 		local areaSet = tl:getDataSet(proj, areaLayerName)
 		
-		unitTest:assertEquals(getn(areaSet), 402)
+		unitTest:assertEquals(getn(areaSet), 9)
 		
 		for k, v in pairs(areaSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -324,7 +317,7 @@ return {
 		
 		local countSet = tl:getDataSet(proj, countLayerName)
 		
-		unitTest:assertEquals(getn(countSet), 402)
+		unitTest:assertEquals(getn(countSet), 9)
 		
 		for k, v in pairs(countSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -359,7 +352,7 @@ return {
 		
 		local distSet = tl:getDataSet(proj, distLayerName)
 		
-		unitTest:assertEquals(getn(distSet), 402)
+		unitTest:assertEquals(getn(distSet), 9)
 		
 		for k, v in pairs(distSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -399,7 +392,7 @@ return {
 		
 		local minSet = tl:getDataSet(proj, minLayerName)
 		
-		unitTest:assertEquals(getn(minSet), 402)
+		unitTest:assertEquals(getn(minSet), 9)
 		
 		for k, v in pairs(minSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -435,7 +428,7 @@ return {
 		
 		local maxSet = tl:getDataSet(proj, maxLayerName)
 		
-		unitTest:assertEquals(getn(maxSet), 402)
+		unitTest:assertEquals(getn(maxSet), 9)
 		
 		for k, v in pairs(maxSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -471,7 +464,7 @@ return {
 		
 		local percentSet = tl:getDataSet(proj, percLayerName)
 		
-		unitTest:assertEquals(getn(percentSet), 402)
+		unitTest:assertEquals(getn(percentSet), 9)
 		
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -508,7 +501,7 @@ return {
 		
 		local stdevSet = tl:getDataSet(proj, stdevLayerName)
 		
-		unitTest:assertEquals(getn(stdevSet), 402)
+		unitTest:assertEquals(getn(stdevSet), 9)
 		
 		for k, v in pairs(stdevSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -545,7 +538,7 @@ return {
 		
 		local meanSet = tl:getDataSet(proj, meanLayerName)
 		
-		unitTest:assertEquals(getn(meanSet), 402)
+		unitTest:assertEquals(getn(meanSet), 9)
 		
 		for k, v in pairs(meanSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -582,7 +575,7 @@ return {
 		
 		local weighSet = tl:getDataSet(proj, weighLayerName)
 		
-		unitTest:assertEquals(getn(weighSet), 402)
+		unitTest:assertEquals(getn(weighSet), 9)
 		
 		for k, v in pairs(weighSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -620,7 +613,7 @@ return {
 		
 		local interSet = tl:getDataSet(proj, interLayerName)
 		
-		unitTest:assertEquals(getn(interSet), 402)
+		unitTest:assertEquals(getn(interSet), 9)
 		
 		for k, v in pairs(interSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -658,7 +651,7 @@ return {
 		
 		local occurSet = tl:getDataSet(proj, occurLayerName)
 		
-		unitTest:assertEquals(getn(occurSet), 402)
+		unitTest:assertEquals(getn(occurSet), 9)
 		
 		for k, v in pairs(occurSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -697,7 +690,7 @@ return {
 		
 		local sumSet = tl:getDataSet(proj, sumLayerName)
 		
-		unitTest:assertEquals(getn(sumSet), 402)
+		unitTest:assertEquals(getn(sumSet), 9)
 		
 		for k, v in pairs(sumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -736,7 +729,7 @@ return {
 		
 		local wsumSet = tl:getDataSet(proj, wsumLayerName)
 		
-		unitTest:assertEquals(getn(wsumSet), 402)
+		unitTest:assertEquals(getn(wsumSet), 9)
 		
 		for k, v in pairs(wsumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -780,7 +773,7 @@ return {
 		
 		percentSet = tl:getDataSet(proj, percTifLayerName)
 		
-		unitTest:assertEquals(getn(percentSet), 402) 
+		unitTest:assertEquals(getn(percentSet), 9) 
 		
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -819,7 +812,7 @@ return {
 		
 		local rmeanSet = tl:getDataSet(proj, rmeanLayerName)
 		
-		unitTest:assertEquals(getn(rmeanSet), 402)
+		unitTest:assertEquals(getn(rmeanSet), 9)
 		
 		for k, v in pairs(rmeanSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -859,7 +852,7 @@ return {
 		
 		local rminSet = tl:getDataSet(proj, rminLayerName)
 		
-		unitTest:assertEquals(getn(rminSet), 402)
+		unitTest:assertEquals(getn(rminSet), 9)
 		
 		for k, v in pairs(rminSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -899,7 +892,7 @@ return {
 		
 		local rmaxSet = tl:getDataSet(proj, rmaxLayerName)
 		
-		unitTest:assertEquals(getn(rmaxSet), 402)
+		unitTest:assertEquals(getn(rmaxSet), 9)
 		
 		for k, v in pairs(rmaxSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -939,7 +932,7 @@ return {
 		
 		local rstdevSet = tl:getDataSet(proj, rstdevLayerName)
 		
-		unitTest:assertEquals(getn(rstdevSet), 402)
+		unitTest:assertEquals(getn(rstdevSet), 9)
 		
 		for k, v in pairs(rstdevSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -979,7 +972,7 @@ return {
 		
 		local rsumSet = tl:getDataSet(proj, rsumLayerName)
 		
-		unitTest:assertEquals(getn(rsumSet), 402)
+		unitTest:assertEquals(getn(rsumSet), 9)
 		
 		for k, v in pairs(rsumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -1015,7 +1008,7 @@ return {
 		
 		local rsumOverSet = tl:getDataSet(proj, rsumLayerName)
 		
-		unitTest:assertEquals(getn(rsumOverSet), 402)
+		unitTest:assertEquals(getn(rsumOverSet), 9)
 		
 		for k, v in pairs(rsumOverSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or 
@@ -1086,7 +1079,7 @@ return {
 		tl:dropPgTable(pgData)
 		-- END POSTGIS TESTS		
 
-		File(proj.file):delete()
+		proj.file:delete()
 
 		customWarning = customWarningBkp
 	end,
@@ -1102,9 +1095,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1135,13 +1126,13 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 
 		local dSet = tl:getDataSet(proj, clName1)
 		
-		unitTest:assertEquals(getn(dSet), 68)
+		unitTest:assertEquals(getn(dSet), 37)
 		
 		for i = 0, #dSet do
 			for k, v in pairs(dSet[i]) do
@@ -1166,7 +1157,7 @@ return {
 		
 		local newDSet = tl:getDataSet(proj, newLayerName)
 		
-		unitTest:assertEquals(getn(newDSet), 68)
+		unitTest:assertEquals(getn(newDSet), 37)
 		
 		for i = 0, #newDSet do
 			unitTest:assertEquals(newDSet[i].attr1, i)
@@ -1187,7 +1178,7 @@ return {
 		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1"})
 		newDSet = tl:getDataSet(proj, newLayerName)
 		
-		unitTest:assertEquals(getn(newDSet), 68)
+		unitTest:assertEquals(getn(newDSet), 37)
 		
 		for i = 0, #newDSet do
 			unitTest:assertEquals(newDSet[i].attr1, i)
@@ -1201,7 +1192,7 @@ return {
 			end
 		end				
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgDatabase(pgData)		
 	end,
 	getArea = function(unitTest)
@@ -1212,9 +1203,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1244,14 +1233,14 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 		
 		local dSet = tl:getDataSet(proj, clName1)
 		local area = tl:getArea(dSet[0].geom)
 		unitTest:assertEquals(type(area), "number")
-		unitTest:assertEquals(area, 0.49, 0.001)
+		unitTest:assertEquals(area, 1, 0.001)
 		
 		for i = 1, #dSet do
 			for k, v in pairs(dSet[i]) do
@@ -1261,7 +1250,7 @@ return {
 			end
 		end				
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgDatabase(pgData)		
 	end,	
 	getProjection = function(unitTest)
@@ -1272,9 +1261,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1314,7 +1301,7 @@ return {
 		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")		
 		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")			
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1326,9 +1313,7 @@ return {
 			author = "Avancini Rodrigo"
 		}
 
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1369,7 +1354,7 @@ return {
 						(propNames[i] == "col") or (propNames[i] == "row"))
 		end
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1380,9 +1365,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 		
@@ -1413,16 +1396,16 @@ return {
 		tl:dropPgDatabase(pgData)
 		
 		local clName1 = "SampaPgCells"	
-		local resolution = 0.7
+		local resolution = 1
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)	
 		
 		local dSet = tl:getDataSet(proj, clName1)
 		local dist = tl:getDistance(dSet[0].geom, dSet[getn(dSet) - 1].geom)	
 			
-		unitTest:assertEquals(dist, 4.4271887242357, 1.0e-13)		
+		unitTest:assertEquals(dist, 4.1231056256177, 1.0e-13)		
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)		
 	end,
@@ -1433,9 +1416,7 @@ return {
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 		
-		if File(proj.file):exists() then
-			File(proj.file):delete()
-		end	
+		File(proj.file):deleteIfExists()
 		
 		tl:createProject(proj, {})
 
@@ -1473,28 +1454,40 @@ return {
 		local toData = {}
 		toData.file = "postgis2shp.shp"
 		toData.type = "shp"		
-		if File(toData.file):exists() then
-			File(toData.file):delete()
-		end		
+		File(toData.file):deleteIfExists()
 		
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)	
 		unitTest:assert(File(toData.file):exists())
 		
+		-- OVERWRITE AND CHANGE SRID
+		toData.srid = 4326
+		tl:saveLayerAs(proj, layerName2, toData, overwrite)
+		local layerName3 = "SHP"
+		tl:addShpLayer(proj, layerName3, toData.file)
+		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
+		unitTest:assertEquals(info3.srid, toData.srid)
+		
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"		
-		if File(toData.file):exists() then
-			File(toData.file):delete()
-		end	
+		File(toData.file):deleteIfExists()
 
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
+		
+		-- OVERWRITE AND CHANGE SRID
+		toData.srid = 4326
+		tl:saveLayerAs(proj, layerName2, toData, overwrite)
+		local layerName4 = "GJ"
+		tl:addGeoJSONLayer(proj, layerName4, toData.file)
+		local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
+		unitTest:assertEquals(info4.srid, toData.srid)		
 
 		tl:dropPgTable(pgData)
 
 		File("postgis2shp.shp"):delete()
 		File("postgis2geojson.geojson"):delete()
-		File(proj.file):delete()		
+		proj.file:delete()		
 	end,
 	getLayerSize = function(unitTest)
 		local tl = TerraLib{}
@@ -1504,9 +1497,7 @@ return {
 		proj.author = "Avancini Rodrigo"
 
 		local file = File(proj.file)
-		if file:exists() then
-			file:delete()
-		end
+		file:deleteIfExists()
 
 		tl:createProject(proj, {})
 

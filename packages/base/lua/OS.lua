@@ -24,18 +24,36 @@
 
 -- @header Functions to handle files and directories.
 -- Most of the functions bellow are taken from LuaFileSystem 1.6.2.
--- Copyright Kepler Project 2003 (http://www.keplerproject.org/luafilesystem).
+-- Copyright Kepler Project 2003 (https://keplerproject.github.io/luafilesystem).
 
---- Return a string with the current working directory or nil plus an error string.
+--- Return a Directory with the current working directory.
 -- @usage cdir = currentDir()
 -- print(cdir)
 function currentDir()
-	return lfs.currentdir()
+	return Directory(lfs.currentdir())
+end
+
+--- Return if a given file path exists.
+-- @arg file A string with a file path.
+-- @usage print(isFile("abc.lua"))
+function isFile(file)
+	mandatoryArgument(1, "string", file)
+
+	return lfs.attributes(file, "mode") == "file"
+end
+
+--- Return if a given path represents a directory that exists.
+-- @arg directory A string with a path.
+-- @usage print(isDirectory("/home/user/mydirectory"))
+function isDirectory(directory)
+	mandatoryArgument(1, "string", directory)
+
+	return lfs.attributes(directory, "mode") == "directory"
 end
 
 --- Execute a system command and return its output. It returns two tables. 
 -- The first one contains each standard output line as a position.
--- The second one contains  each error output line as a position.
+-- The second one contains each error output line as a position.
 -- @arg command A command.
 -- @usage result, error = runCommand("dir")
 function runCommand(command)
@@ -65,23 +83,44 @@ function runCommand(command)
 end
 
 --- Return information about the current execution. The result is a table
--- with the following values.
+-- with the values below. Some of them are read only, while others might
+-- be changed accordingly.
 -- @tabular NONE
--- Attribute & Description \
--- dbVersion & A string with the current TerraLib version for databases. \
--- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
--- path & A string with the location of TerraME in the computer. \
+-- Attribute & Description & Read only? \
+-- autoclose & When a simulation creates graphical components (Chart, Map, etc.), 
+-- TerraME waits for the modeler to close them to finish its execution. 
+-- This attribute is a boolean value indicating whether TerraME should be
+-- automatically closed after executing the simulation. & No \
+-- color & A boolean value indicating whether text output might be colored. If colored,
+-- errors are shown red, warnings are shown yellow, and some prints in executions
+-- like -test and -doc might be green. This option can only be set from TerraME
+-- command line (-color). & Yes \
+-- currentFile & A File with the name of the file currently being executed. This
+-- value only exists when the file is passed as argument to the command line. & Yes \
+-- dbVersion & A string with the current TerraLib version for databases. & Yes \
+-- fullTraceback & A boolean value indicating whether TerraME should show all the
+-- stack when an error occurs. This means that the lines from base package and 
+-- internal files are also going to be shown when an error occurs. As default, TerraME
+-- does not show such lines. This value can be set from TerraME command line (-ft). & No \
+-- interface & A boolean value indicating whether a graphical interface to configure
+-- models is running. When this value is true, Utils:toLabel() converts errors to more
+-- readable texts referring to graphical objects instead of Model arguments. & No \
+-- mode & A string with the current mode for warnings ("normal", "debug", "quiet", or "strict"). 
+-- Run terrame -help for a description of such modes. & No \
+-- path & A string with the location of TerraME in the computer. & Yes \
 -- round & A number used whenever it is possible to have rounding problems. For instance,
 -- it works with Events that have period less than one by rounding the execution time of
 -- an Event that is going to be scheduled to a future time if the difference between such
 -- time and the closest integer number is less then the value of this argument. In this case,
 -- if an Event that starts in time one and has period 0.1, it might execute in time 1.999999999,
 -- as we are working with real number. This argument is then useful to make sure that such Event
--- will be executed in time exactly two. The default value is 1e-5. \
--- separator & A string with the directory separator. \
--- silent & A boolean value indicating whether print() calls should not be shown in the
--- screen. This element is true when TerraME is executed with mode "silent". \
--- system & A string with the operating system.
+-- will be executed in time exactly two. The default value is 1e-5. & No \
+-- separator & A character with the directory separator. Each operational system has its
+-- own separator. & Yes \
+-- silent & A boolean value indicating whether print() calls should not be shown. This
+-- value can only be set from TerraME command line (-silent). & Yes \
+-- system & A string with the operating system. It is one of "windows", "linux", or "mac". & Yes \
+-- version & A string with the current version of TerraME. & Yes
 -- @usage print(sessionInfo().mode)
 function sessionInfo()
 	local info = info_ -- this is a global variable created when TerraME is initialized
@@ -94,18 +133,18 @@ function sessionInfo()
 		__newindex = function(_, idx, value)
 			local readOnly = false
 			local args = {
-				mode = {"default", "debug", "normal", "quiet", "strict"},
-				dbVersion = readOnly,
-				separator = readOnly,
-				silent = "boolean",
-				color = "boolean",
-				fullTraceback = "boolean",
-				path = readOnly,
 				autoclose = "boolean",
+				dbVersion = readOnly,
+				color = readOnly,
+				currentFile = readOnly,
+				fullTraceback = "boolean",
+				interface = "boolean",
+				mode = {"default", "debug", "normal", "quiet", "strict"},
+				path = readOnly,
+				separator = readOnly,
+				silent = readOnly,
 				system = readOnly,
 				version = readOnly,
-				currentFile = readOnly,
-				interface = "boolean",
 				round = function(midx, mvalue)
 					if type(mvalue) ~= "number" then
 						incompatibleTypeError(midx, "number", mvalue)
@@ -115,31 +154,24 @@ function sessionInfo()
 				end
 			}
 
-			local ok = false
-			forEachElement(args, function(arg, check)
-				if idx ~= arg then return end
+			local check = args[idx]
 
-				if not check then
-					customError("Argument '"..idx.."' is an important information about the current execution and cannot be changed.")
-				end
-
-				local mtype = type(check)
-				if mtype == "function" then
-					check(arg, value)
-				elseif mtype == "table" then
-					if not belong(value, check) then
-						customError("Argument '"..idx.."' cannot be replaced by '"..value.."'.")
-					end
-				elseif type(value) ~= check then
-					incompatibleTypeError(arg, check, value)
-				end
-
-				ok = true
-				return false
-			end)
-
-			if not ok then
+			if check == readOnly then
+				customError("Argument '"..idx.."' is an important information about the current execution and cannot be changed.")
+			elseif check == nil then
 				customError("Argument '"..idx.."' is not an information about the current execution.")
+			end
+
+			local mtype = type(check)
+
+			if mtype == "function" then
+				check(idx, value)
+			elseif mtype == "table" then
+				if not belong(value, check) then
+					customError("Argument '"..idx.."' cannot be replaced by '"..value.."'.")
+				end
+			elseif type(value) ~= check then
+				incompatibleTypeError(idx, check, value)
 			end
 
 			info[idx] = value

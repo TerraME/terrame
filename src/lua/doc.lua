@@ -57,43 +57,40 @@ end
 
 local function imageFiles(package)
 	local s = sessionInfo().separator
-	local imagepath = packageInfo(package).path..s.."images"
+	local imagepath = Directory(packageInfo(package).path..s.."images")
 
-	if not Directory(imagepath):exists() then
+	if not imagepath:exists() then
 		return {}
 	end
 
-	local files = Directory(imagepath):list()
 	local result = {}
 
-	forEachElement(files, function(_, fname)
-		if not string.endswith(fname, ".lua") then
-			result[fname] = 0
+	forEachFile(imagepath, function(file)
+		if file:extension() ~= "lua" then
+			result[file:name()] = 0
 		end
 	end)
+
 	return result
 end
 
 local function dataFiles(package)
 	local datapath = packageInfo(package).data
 
-	if not Directory(datapath):exists() then
+	if not datapath:exists() then
 		return {}
 	end
 
-	local files = Directory(datapath):list()
 	local result = {}
 
-	forEachElement(files, function(_, fname)
-		table.insert(result, fname)
+	forEachFile(datapath, function(fname)
+		table.insert(result, fname:name())
 	end)
+
 	return result
 end
 
 local function getProjects(package)
-	data_path = packageInfo(package).data
-	local s = sessionInfo().separator
-
 	local projects = {}
 	local layers = {}
 	local currentProject
@@ -111,6 +108,42 @@ local function getProjects(package)
 	local tl = getPackage("terralib")
 	local createdFiles = {}
 
+	function processLayer(idx, value)	
+		local layer = tl.Layer{
+			project = filePath(currentProject, package),
+			name = idx
+		}
+
+		local representation = layer:representation()
+		local description
+
+		if representation == "raster" then
+			description = "Raster with "..math.floor(layer:bands()).." band"
+
+			if layer:bands() > 1 then
+				description = description.."s"
+			end
+		else
+			local cs = CellularSpace{
+				file = value
+			}
+
+			local quantity = #cs
+			description = tostring(quantity).." "..representation
+
+			if quantity > 1 then
+				description = description.."s"
+			end
+		end
+
+		description = description.."."
+
+		projects[currentProject][idx] = {
+			file = value:name(),
+			description = description
+		}
+	end
+
 	Project = function(data)
 		currentProject = data.file
 
@@ -124,45 +157,16 @@ local function getProjects(package)
 		projects[currentProject] = {description = data.description}
 
 		forEachOrderedElement(data, function(idx, value)
-			if idx ~= "file" and type(value) == "string" and File(value):exists() then
-				local layer = tl.Layer{
-					project = filePath(currentProject, "terralib"),
-					name = idx
-				}
+			if type(value) == "string" then
+				value = File(value)
+			end
 
-				local representation = layer:representation()
-
-				local description
-
-				if representation == "raster" then
-					description = "Raster with "..math.floor(layer:bands()).." band"
-
-					if layer:bands() > 1 then
-						description = description.."s"
-					end
-				else
-					local cs = CellularSpace{
-						file = value
-					}
-
-					local quantity = #cs
-					description = tostring(quantity).." "..representation
-
-					if quantity > 1 then
-						description = description.."s"
-					end
-				end
-
-				description = description.."."
-
-				projects[currentProject][idx] = {
-					file = File(value):name(true),
-					description = description
-				}
+			if idx ~= "file" and type(value) == "File" and value:exists() then
+				processLayer(idx, value)
 			end
 		end)
 
-		return filePath(currentProject, "terralib")
+		return filePath(currentProject, package)
 	end
 
 	local mLayer_ = {
@@ -220,18 +224,24 @@ local function getProjects(package)
 	local mtLayer = {__index = mLayer_}
 
 	Layer = function(data)
-		if data.resolution and data.file then
+		if not data.file then return end
+			
+		if data.resolution then
 			local mfile = data.file
 
-			if createdFiles[mfile] then
-				printError("File '"..mfile.."' is created more than once.")
-				project_report.errors_output = project_report.errors_output + 1	
-			else
-				createdFiles[mfile] = true
+			if type(mfile) == "string" then
+				mfile = File(mfile)
 			end
 
-			if not File(mfile):exists() then
-				mfile = filePath(mfile, "terralib")
+			if createdFiles[mfile:name()] then
+				printError("File '"..mfile:name().."' is created more than once.")
+				project_report.errors_output = project_report.errors_output + 1	
+			else
+				createdFiles[mfile:name()] = true
+			end
+
+			if not mfile:exists() then
+				mfile = filePath(mfile:name(), package)
 			end
 
 			local cs = CellularSpace{
@@ -262,7 +272,8 @@ local function getProjects(package)
 					attributes = {}
 				}
 			end
-
+		else
+			processLayer(data.name, data.file)
 		end
 
 		setmetatable(data, mtLayer)
@@ -271,11 +282,11 @@ local function getProjects(package)
 	
 	sessionInfo().mode = "quiet"
 	printNote("Processing lua files")
-	forEachFile(data_path, function(file)
-		if string.endswith(file, ".lua") then
-			print("Processing '"..file.."'")
+	forEachFile(packageInfo(package).data, function(file)
+		if file:extension() == "lua" then
+			print("Processing '"..file:name().."'")
 
-			xpcall(function() dofile(data_path..s..file) end, function(err)
+			xpcall(function() dofile(tostring(file)) end, function(err)
 				printError(_Gtme.traceback(err))
 			end)
 
@@ -352,7 +363,11 @@ function _Gtme.executeDoc(package)
 		os.exit(1)
 	end)
 
-	local lua_files = Directory(package_path..s.."lua"):list()
+	local lua_files = {}
+
+	if isDirectory(package_path..s.."lua") then
+		lua_files = Directory(package_path..s.."lua"):list()
+	end
 
 	local example_files = _Gtme.findExamples(package)
 
@@ -528,7 +543,7 @@ function _Gtme.executeDoc(package)
 
 				local csv 
 
-				local result, err = pcall(function() csv = File(filePath(value.file[1], package)):readTable(value.separator) end)
+				local result, err = pcall(function() csv = filePath(value.file[1], package):readTable(value.separator) end)
 
 				if not result then
 					printError(err)
@@ -699,10 +714,6 @@ function _Gtme.executeDoc(package)
 		end)
 
 		forEachOrderedElement(df, function(_, mvalue)
-			if Directory(package_path..s.."data"..s..mvalue):exists() then
-				return
-			end
-
 			if filesdocumented[mvalue] == nil and not string.endswith(mvalue, ".lua") then
 				printError("File '"..mvalue.."' is not documented")
 				doc_report.error_data = doc_report.error_data + 1
@@ -721,7 +732,7 @@ function _Gtme.executeDoc(package)
 		printNote("Checking directory 'data'")
 		printError("Package has data files but data.lua does not exist")
 		forEachElement(df, function(_, mvalue)
-			if Directory(package_path..s.."data"..s..mvalue):exists() then
+			if isDirectory(package_path..s.."data"..s..mvalue) then
 				return
 			end
 
@@ -807,10 +818,6 @@ function _Gtme.executeDoc(package)
 
 		printNote("Checking directory 'font'")
 		forEachOrderedElement(df, function(_, mvalue)
-			if Directory(package_path..s.."font"..s..mvalue):exists() then
-				return
-			end
-
 			if fontsdocumented[mvalue] == nil then
 				printError("Font file '"..mvalue.."' is not documented")
 				doc_report.error_font = doc_report.error_font + 1

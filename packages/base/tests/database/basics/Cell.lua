@@ -52,13 +52,10 @@ return{
 		}
 		
 		-- SHAPE
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "brazil_cells.shp"
-		local filePath1 = testDir.."/"..shp1			
+		local filePath1 = currentDir()..shp1			
 		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end			
+		File(filePath1):deleteIfExists()
 		
 		local clName1 = "Brazil_Cells"
 		terralib.Layer{
@@ -74,11 +71,11 @@ return{
 			layer = clName1,
 			geometry = true
 		}
-		
-		forEachCell(cs, function(c)
-			unitTest:assertEquals(c:area(), 10000000000)
-		end)
-		
+
+		for _ = 1, 10 do
+			unitTest:assertEquals(cs:sample():area(), 10000000000)
+		end
+
 		-- POSTGIS
 		local clName2 = "Brazil_Cells_PG"
 		local host = "localhost"
@@ -120,18 +117,12 @@ return{
 			geometry = true
 		}
 
-		forEachCell(cs, function(c)
-			unitTest:assertEquals(c:area(), 10000000000)
-		end)		
-		
-		-- END
-		if File(projName):exists() then
-			File(projName):delete()
+		for _ = 1, 10 do
+			unitTest:assertEquals(cs:sample():area(), 10000000000)
 		end
-		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end	
+
+		File(projName):deleteIfExists()
+		File(filePath1):deleteIfExists()
 
 		tl:dropPgTable(pgData)		
 		
@@ -166,13 +157,10 @@ return{
 		}
 		
 		-- SHAPE
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
 		local shp1 = "brazil_cells.shp"
-		local filePath1 = testDir.."/"..shp1			
+		local filePath1 = currentDir()..shp1			
 		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end			
+		File(filePath1):deleteIfExists()
 		
 		local clName1 = "Brazil_Cells"
 		terralib.Layer{
@@ -246,14 +234,8 @@ return{
 		
 		unitTest:assertEquals(dist, 4257933.7712088, 1.0e-7)
 		
-		-- END
-		if File(projName):exists() then
-			File(projName):delete()
-		end
-		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end	
+		File(projName):deleteIfExists()
+		File(filePath1):deleteIfExists()
 
 		tl:dropPgTable(pgData)	
 

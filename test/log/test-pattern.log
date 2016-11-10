@@ -1,11 +1,11 @@
 Loading configuration file 'config/pattern.lua'
+Using log directory '/Applications/terrame.app/Contents/MacOS/packages/base/log/mac/'
 Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
 Found 3 extra functions in the documentation
 Skip looking for lines of source code
-Skipping directory tests/database/alternative
 Testing tests/functional/alternative/Agent.lua
 Testing Agent
 Testing add
@@ -27,7 +27,6 @@ Testing reproduce
 Testing setId
 Testing walk
 Checking if all asserts were executed
-Skipping directory tests/internal/alternative
 Testing tests/observer/alternative/Agent.lua
 Testing notify
 Checking if all asserts were executed
@@ -42,7 +41,7 @@ No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 52 asserts were executed successfully.
+All 53 asserts were executed successfully.
 All 20 tested functions do not have any unexpected execution error.
 All 20 tested functions have at least one assert.
 All 20 tested functions exist in the source code of the package.

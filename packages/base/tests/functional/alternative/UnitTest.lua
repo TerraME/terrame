@@ -94,7 +94,7 @@ return{
 			u:assertEquals("2", "3")
 		end
 
-		unitTest:assertError(error_func, "Values should be equal, but got \n'2' and \n'3'.")
+		unitTest:assertError(error_func, "Values should be equal, but got \n'2' and \n'3'. The maximum tolerance is 0, but got 1.")
 
 		error_func = function()
 			u:assertEquals("2", 3)
@@ -121,7 +121,7 @@ return{
 			u:assertEquals(expected, "bbb", 0, true)
 		end
 
-		unitTest:assertError(error_func, "Values should be equal, but got \n'"..expected.."' and \n'".."bbb".."'.")
+		unitTest:assertError(error_func, "Values should be equal, but got \n'"..expected.."' and \n'".."bbb".."'. The maximum tolerance is 0, but got 28.")
 	end,
 	assertError = function(unitTest)
 		local u = UnitTest{unittest = true}
@@ -160,7 +160,7 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abcd1234.txt"))
 
 		error_func = function()
-			u:assertFile(sessionInfo().path)
+			u:assertFile(tostring(sessionInfo().path))
 		end
 
 		unitTest:assertError(error_func, "It is not possible to use a directory as #1 for assertFile().")
@@ -199,7 +199,7 @@ return{
 			u:assertFile("abc.csv")
 		end
 
-		u:assertError(error_func, "It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
+		u:assertError(error_func, "It is not possible to use assertFile without a 'log' directory.")
 
 		unitTest:assert(not File("abc.csv"):exists())
 	end,
@@ -261,7 +261,7 @@ return{
 			u:assertSnapshot(ch, "file.bmp")
 		end
 
-		unitTest:assertError(error_func, "It is not possible to use assertSnapshot without a log directory location in a configuration file for the tests.")
+		unitTest:assertError(error_func, "It is not possible to use assertSnapshot without a 'log' directory.")
 	end,
 	assertType = function(unitTest)
 		local u = UnitTest{unittest = true}

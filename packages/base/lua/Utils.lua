@@ -499,7 +499,7 @@ end
 
 --- Second order function to transverse a given directory,
 -- applying a given function on each of its files. Internal directories are
--- also considered files. If any of the function calls returns
+-- ignored. If any of the function calls returns
 -- false, forEachFile() stops and returns false, otherwise it returns true.
 -- @arg directory A string with the path to a directory, or a vector of files.
 -- @arg _sof_ A user-defined function that takes a file name as argument. Note that
@@ -509,26 +509,112 @@ end
 -- end)
 -- @see Directory:list
 function forEachFile(directory, _sof_)
-	if type(directory) == "string" then
-		if not Directory(directory):exists() then
-			customError("Directory '"..directory.."' is not valid or does not exist.")
-		end
+	if type(directory) == "string" then directory = Directory(directory) end
 
-		if not pcall(function() directory = Directory(directory):list() end) then
-			return true
-		end
+	mandatoryArgument(1, "Directory", directory)
+	mandatoryArgument(2, "function", _sof_)
+
+	if not directory:exists() then
+		customError("Directory '"..directory.."' is not valid or does not exist.")
 	end
 
-	mandatoryArgument(1, "table", directory)
-	mandatoryArgument(2, "function", _sof_)
+	local files
+
+	if not pcall(function() files = directory:list() end) then
+		return true
+	end
 
 	local directoryIdx = {}
 
-	for i = 1, #directory do
-		directoryIdx[directory[i]] = true
+	for i = 1, #files do
+		directoryIdx[files[i]] = true
 	end
 
 	return forEachOrderedElement(directoryIdx, function(file)
+		if isFile(directory..file) then
+			if _sof_(File(directory..file)) == false then return false end
+		end
+	end)
+end
+
+--- Second order function to transverse a given directory,
+-- applying a given function on each of its internal directories.
+-- If any of the function calls returns
+-- false, forEachDirectory() stops and returns false, otherwise it returns true.
+-- @arg directory A string with the path to a directory, or a vector of files.
+-- @arg _sof_ A user-defined function that takes a file name as argument. Note that
+-- the name does not include the directory where the file is placed.
+-- @usage forEachDirectory(packageInfo("base").path, function(dir)
+--     print(dir)
+-- end)
+-- @see Directory:list
+function forEachDirectory(directory, _sof_)
+	if type(directory) == "string" then directory = Directory(directory) end
+
+	mandatoryArgument(1, "Directory", directory)
+	mandatoryArgument(2, "function", _sof_)
+
+	if not directory:exists() then
+		customError("Directory '"..directory.."' is not valid or does not exist.")
+	end
+
+	local files
+	if not pcall(function() files = directory:list() end) then
+		return true
+	end
+
+	local directoryIdx = {}
+
+	for i = 1, #files do
+		directoryIdx[files[i]] = true
+	end
+
+	return forEachOrderedElement(directoryIdx, function(file)
+		if isDirectory(directory..file) then
+			if _sof_(Directory(directory..file)) == false then return false end
+		end
+	end)
+end
+
+local function getFilesRecursively(directory)
+	local files = {}
+
+	if not directory:exists() then return files end
+
+	_Gtme.forEachDirectory(directory, function(dir)
+		for _, v in ipairs(getFilesRecursively(dir)) do
+			table.insert(files, v)
+		end			
+	end)
+ 
+	_Gtme.forEachFile(directory, function(file)
+		table.insert(files, file)
+	end)
+	
+	return files
+end
+
+--- Second order function to transverse a given directory recursively,
+-- applying a given function on each of its internal files.
+-- If any of the function calls returns
+-- false, forEachRecursiveDirectory() stops and returns false, otherwise it returns true.
+-- @arg directory A string with the path to a directory, or a base::Directory.
+-- @arg _sof_ A user-defined function that takes a file path as argument.
+-- @usage forEachRecursiveDirectory(packageInfo("base").path.."data", function(file)
+--     print(file)
+-- end)
+function forEachRecursiveDirectory(directory, _sof_)
+	local dir = directory
+
+	if type(dir) ~= "Directory" then
+		if type(dir) == "string" then
+			dir = Directory(dir)
+		else
+			customError("Argument '#1' must be a 'Directory' or 'string' path.")
+		end
+	end
+	
+	return forEachElement(getFilesRecursively(dir), function(_, file)
 		if _sof_(file) == false then return false end
 	end)
 end
@@ -865,7 +951,6 @@ local config
 --- Return a table with the content of the file config.lua, stored in the current directory
 -- of the simulation. All the global variables of the file are elements of the returned table. 
 -- Some packages require specific variables in this file in order to be tested or executed.
--- TerraME execution options -imporDb and -exportDb also use this file.
 -- Additional calls to getConfig will return the same output of the first call even
 -- if the current directory changes along the simulation.
 -- @usage getConfig()
@@ -873,8 +958,7 @@ function getConfig()
 	if config then
 		return config
 	elseif not File("config.lua"):exists() then
-		_Gtme.buildConfig() -- SKIP
-		return getConfig() -- SKIP
+		customError("There is no 'config.lua' in the current directory.") -- SKIP
 	else
 		config = _Gtme.include("config.lua") -- SKIP
 		return config
@@ -1242,6 +1326,8 @@ function levenshtein(s, t)
 	mandatoryArgument(1, "string", s)
 	mandatoryArgument(2, "string", t)
 
+	if s == t then return 0 end
+
 	local d, sn, tn = {}, #s, #t
 
 	if sn > tn then -- invert arguments
@@ -1365,7 +1451,7 @@ end
 
 --- Convert a string into a more readable name. It is useful to work
 -- with Model:init() when the model will be available through a graphical interface.
--- In graphical interfaces, if the string contains underscores, it
+-- In graphical interfaces (see OS:sessionInfo()), if the string contains underscores, it
 -- replaces them by spaces and convert the next characters to uppercase.
 -- Otherwise, it adds a space before each uppercase character.
 -- It also converts the first character of the string to uppercase.
@@ -1476,7 +1562,7 @@ end
 -- tbl = {x = 1, y = 2}
 -- table.save(tbl, filename)
 --
--- if File(filename):exists() then File(filename):delete() end
+-- File(filename):deleteIfExists()
 function table.save(tbl, filename)
 	mandatoryArgument(1, "table", tbl)
 	mandatoryArgument(2, "string", filename)
@@ -1522,6 +1608,10 @@ function vardump(o, indent)
 
 	local indent2 = indent.."    "
 	if isTable(o) then
+		if getn(o) == 0 then
+			return "{}"
+		end
+
 		local s = "{".."\n"
 
 		if type(o) ~= "table" then

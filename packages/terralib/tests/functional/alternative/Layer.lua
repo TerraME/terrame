@@ -29,24 +29,32 @@ return{
 		end
 		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", false))
 
-		if File("myproj.tview"):exists() then
-			File("myproj.tview"):delete()
-		end
+		File("myproj.tview"):deleteIfExists()
 
 		local projNotExists = function()
 			Layer{project = "myproj.tview", name = "cells"}
 		end
-		unitTest:assertError(projNotExists, "Project file '".."myproj.tview".."' does not exist.")
+		unitTest:assertError(projNotExists, "Project file '"..File("myproj.tview").."' does not exist.")
 
 		local projFile = File("proj_celllayer.tview")
 
-		if projFile:exists() then projFile:delete() end
+		projFile:deleteIfExists()
 
-		local proj = Project{
+		local proj
+
+		if sessionInfo().system ~= "mac" then -- TODO(#1448)
+		proj = Project{
 			file = projFile:name(true),
 			clean = true,
 			deforestation = filePath("Desmatamento_2000.tif", "terralib"),
 		}
+		else
+		proj = Project{
+			file = projFile:name(true),
+			clean = true,
+			deforestation = filePath("test/sampa.shp", "terralib"),
+		}			
+		end
 
 		local layerName = "any"
 		local layerDoesNotExists = function()
@@ -55,7 +63,7 @@ return{
 				name = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile:name(true).."'.")
+		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'.")
 
 		layerName = "defirestation"
 		local layerDoesNotExistsSug = function()
@@ -64,10 +72,10 @@ return{
 				name = layerName
 			}
 		end
-		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile:name(true).."'. Do you mean 'deforestation'?")
+		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
 		
 		--unitTest:assertFile(projFile:name(true)) -- SKIP #TODO(#1242)
-		if projFile:exists() then projFile:delete() end
+		projFile:deleteIfExists()
 
 		local projName = "amazonia2.tview"
 
@@ -142,7 +150,7 @@ return{
 				file = layerFile
 			}
 		end
-		unitTest:assertError(fileLayerNonExists, "File 'linhares.shp' does not exist.")
+		unitTest:assertError(fileLayerNonExists, "File '"..File("linhares.shp").."' does not exist.")
 
 		local filePath0 = filePath("test/sampa.shp", "terralib")
 		local source = "tif"
@@ -156,9 +164,7 @@ return{
 		end
 		unitTest:assertError(inconsistentExtension, "File '"..filePath0.."' does not match to source '"..source.."'.")
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		projName = "amazonia.tview"
 
@@ -248,9 +254,7 @@ return{
 		
 		local shp1 = "setores_cells.shp"
 		
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end
+		File(shp1):deleteIfExists()
 		
 		local clName1 = "Setores_Cells"
 
@@ -282,7 +286,7 @@ return{
 				file = shp1
 			}
 		end
-		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..shp1.."' already exists. Please set clean = true or remove it manually.")
+		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..File(shp1).."' already exists. Please set clean = true or remove it manually.")
 
 		sourceInvalid = function()
 			Layer{
@@ -351,13 +355,8 @@ return{
 		end
 		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))	
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
-
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end
+		File(projName):deleteIfExists()
+		File(shp1):deleteIfExists()
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fillcells_alternative.tview"
@@ -368,18 +367,24 @@ return{
 		}
 
 		local layerName1 = "Setores_2000"
+		if sessionInfo().system ~= "mac" then
 		Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
+		else
+		Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("test/sampa.shp", "terralib")
+		}
+		end
 
 		local clName1 = "setores_cells2"
 		local filePath1 = clName1..".shp"
 
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end
+		File(filePath1):deleteIfExists()
 
 		local cl = Layer{
 			project = proj,
@@ -461,7 +466,7 @@ return{
 				attribute = "presence"
 			}
 		end
-		unitTest:assertError(layerNotExists, "Layer 'LayerNotExists' does not exist in Project '"..projName.."'.")
+		unitTest:assertError(layerNotExists, "Layer 'LayerNotExists' does not exist in Project '"..File(projName).."'.")
 
 		local layerNotExistsSug = function()
 			cl:fill{
@@ -470,7 +475,7 @@ return{
 				attribute = "presence"
 			}
 		end
-		unitTest:assertError(layerNotExistsSug, "Layer '"..layerName1.."_' does not exist in Project '"..projName.."'. Do you mean '"..layerName1.."'?")
+		unitTest:assertError(layerNotExistsSug, "Layer '"..layerName1.."_' does not exist in Project '"..File(projName).."'. Do you mean '"..layerName1.."'?")
 
 		local attrAlreadyExists = function()
 			cl:fill{
@@ -542,24 +547,12 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		local dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "minimum",
-				layer = layerName1,
-				select = "row",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
-
 		local unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
 				layer = layerName1,
 				select = "row",
-				dummy = 0,
 				defaut = 3
 			}
 		end
@@ -576,6 +569,7 @@ return{
 		end
 		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'.")
 
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		selected = "populaco"
 		local selectNotExistsSug = function()
 			cl:fill{
@@ -585,7 +579,8 @@ return{
 				select = selected
 			}
 		end
-		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'Populacao'?")
+		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'Populacao'?") -- SKIP
+	end
 
 		selectNotString = function()
 			cl:fill{
@@ -607,17 +602,6 @@ return{
 			}
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
-
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "maximum",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
@@ -651,17 +635,6 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "coverage",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
-
 		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
@@ -693,17 +666,6 @@ return{
 			}
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
-
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "stdev",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		defaultNotNumber = function()
 			cl:fill{
@@ -748,17 +710,6 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "average",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
-
 		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
@@ -802,17 +753,6 @@ return{
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "mode",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
-
 		unnecessaryArgument = function()
 			cl:fill{
 				attribute = "attr",
@@ -855,17 +795,6 @@ return{
 			}
 		end
 		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
-
-		dummyNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "sum",
-				layer = layerName1,
-				select = "FID",
-				dummy = false
-			}
-		end
-		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
@@ -927,6 +856,7 @@ return{
 		local cW = customWarning 
 		customWarning = function() return end
 
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		cl:fill{
 			operation = "presence",
 			layer = localidades,
@@ -940,11 +870,13 @@ return{
 				attribute = "presence2001"
 			}
 		end
-		unitTest:assertError(normalizedTrucatedError, "The attribute 'presence20' already exists in the Layer.")
+		unitTest:assertError(normalizedTrucatedError, "The attribute 'presence20' already exists in the Layer.") -- SKIP
+	end
 
 		customWarning = cW
 
 		-- RASTER TESTS ----------------------------------------------------------------
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)	
 		local layerName3 = "Desmatamento"
 
 		Layer{
@@ -962,7 +894,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
 
 		local selectNotNumber = function()
 			cl:fill{
@@ -972,7 +904,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
 
 		local bandNegative = function()
 			cl:fill{
@@ -982,7 +914,7 @@ return{
 				band = -1
 			}
 		end
-		unitTest:assertError(bandNegative, positiveArgumentMsg("band", -1, true))
+		unitTest:assertError(bandNegative, positiveArgumentMsg("band", -1, true)) -- SKIP
 
 		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT) 
 		-- local layerNotIntersect = function()
@@ -1004,7 +936,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1014,7 +946,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
 
 		areaUnnecessary = function()
 			cl:fill{
@@ -1025,7 +957,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1035,7 +967,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
 
 		areaUnnecessary = function()
 			cl:fill{
@@ -1046,7 +978,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1056,7 +988,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
 
 		areaUnnecessary = function()
 			cl:fill{
@@ -1067,7 +999,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1077,7 +1009,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
 
 		areaUnnecessary = function()
 			cl:fill{
@@ -1088,7 +1020,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1098,7 +1030,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
 
 		local op1NotAvailable = function()
 			cl:fill{
@@ -1107,7 +1039,7 @@ return{
 				layer = layerName3
 			}
 		end
-		unitTest:assertError(op1NotAvailable, "The operation 'area' is not available for layers with raster data.")
+		unitTest:assertError(op1NotAvailable, "The operation 'area' is not available for layers with raster data.") -- SKIP
 
 		local op2NotAvailable = function()
 			cl:fill{
@@ -1116,7 +1048,7 @@ return{
 				layer = layerName3
 			}
 		end
-		unitTest:assertError(op2NotAvailable, "The operation 'count' is not available for layers with raster data.")
+		unitTest:assertError(op2NotAvailable, "The operation 'count' is not available for layers with raster data.") -- SKIP
 
 		local op3NotAvailable = function()
 			cl:fill{
@@ -1125,7 +1057,7 @@ return{
 				layer = layerName3
 			}
 		end
-		unitTest:assertError(op3NotAvailable, "The operation 'distance' is not available for layers with raster data.")
+		unitTest:assertError(op3NotAvailable, "The operation 'distance' is not available for layers with raster data.") -- SKIP
 
 		local op4NotAvailable = function()
 			cl:fill{
@@ -1134,60 +1066,11 @@ return{
 				layer = layerName3
 			}
 		end
-		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.")
+		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.") -- SKIP
+	end
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
-
-		if File(filePath1):exists() then File(filePath1):delete() end
-	end,
-	export = function(unitTest)
-		local projName = "layer_postgis_basic.tview"
-
-		local proj = Project {
-			file = projName,
-			clean = true
-		}
-		
-		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
-	
-		local layerName1 = "setores"
-		local layer1 = Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath1
-		}
-		
-		local overwrite = true
-		
-		local user = "postgres"
-		local password = getConfig().password
-		local database = "postgis_22_sample"
-		
-		local pgData = {
-			source = "postgi",
-			user = user,
-			password = password,
-			database = database
-		}		
-		
-		local pgSourceError = function()
-			layer1:export(pgData, overwrite)
-		end
-		unitTest:assertError(pgSourceError, "It only supports postgis database, use source = \"postgis\".")
-		
-		local invalidFile = function()
-			layer1:export("invalid.org", overwrite)
-		end
-		unitTest:assertError(invalidFile, invalidFileExtensionMsg("data", "org"))
-
-		local invalidDataType = function()
-			layer1:export(123, overwrite)
-		end
-		unitTest:assertError(invalidDataType,  "The attribute 'data' must be either 'file' or 'table', but received (number).")		
-		
-		File(proj.file):delete()
+		File(projName):deleteIfExists()
+		File(filePath1):deleteIfExists()
 	end
 }
 

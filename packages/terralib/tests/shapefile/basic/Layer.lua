@@ -33,7 +33,7 @@ return {
 		
 		-- SPATIAL INDEX TEST
 		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
-		local qixFile = string.gsub(filePath1, ".shp", ".qix")
+		local qixFile = string.gsub(tostring(filePath1), ".shp", ".qix")
 		File(qixFile):delete()
 		
 		local layerName1 = "Setores"
@@ -59,6 +59,7 @@ return {
 		
 		unitTest:assert(File(qixFile):exists())
 		
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)	
 		local clName1 = "Setores_Cells10x10"
 		local cl1 = Layer{
 			project = proj,
@@ -72,7 +73,7 @@ return {
 		}			
 		
 		qixFile = string.gsub(cl1.file, ".shp", ".qix")
-		unitTest:assert(not File(qixFile):exists())
+		unitTest:assert(not File(qixFile):exists()) -- SKIP
 		
 		local clName2 = "Setores_Cells9x9"
 		local cl2 = Layer{
@@ -86,11 +87,11 @@ return {
 		}
 		
 		qixFile = string.gsub(cl2.file, ".shp", ".qix")
-		unitTest:assert(File(qixFile):exists())
+		unitTest:assert(File(qixFile):exists()) -- SKIP
 
 		File(cl1.file):delete()
 		File(cl2.file):delete()
-		-- // SPATIAL INDEX
+	end
 
 		-- VERIFY SRID
 		local customWarningBkp = customWarning
@@ -108,16 +109,27 @@ return {
 		customWarning = customWarningBkp
 		-- // VERIFY SRID		
 		
-		File(proj.file):delete()
+		proj.file:delete()
+	end,
+	__len = function(unitTest)
+		local projName = "layer_shape_basic.tview"
+
+		local proj = Project{
+			file = projName,
+			setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
+			clean = true
+		}
+		
+		unitTest:assertEquals(#proj.setores, 58)
+
+		proj.file:delete()
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_shape.tview"
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
-		local proj = Project {
+		local proj = Project{
 			file = projName,
 			clean = true
 		}
@@ -168,9 +180,7 @@ return {
 		
 		local shp0 = clName1..".shp"
 		table.insert(shapes, shp0)
-		if File(shp0):exists() then
-			File(shp0):delete()
-		end
+		File(shp0):deleteIfExists()
 		
 		local cl = Layer{
 			project = proj,
@@ -178,7 +188,7 @@ return {
 			clean = true,
 			input = layerName1,
 			name = clName1,
-			resolution = 50000,
+			resolution = 70000,
 			file = clName1..".shp"
 		}
 		
@@ -216,7 +226,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-mode.png")
 
 		-- MODE (area = true)
-
 		cl:fill{
 			operation = "mode",
 			layer = municipios,
@@ -242,7 +251,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-mode-2.png")
 
 		-- AREA
-
 		cl:fill{
 			operation = "area",
 			layer = protecao,
@@ -266,7 +274,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-area.png", 0.05)
 
 		-- DISTANCE
-
 		cl:fill{
 			operation = "distance",
 			layer = rodovias,
@@ -334,7 +341,6 @@ return {
 		unitTest:assertSnapshot(map, "points-distance.png")
 
 		-- PRESENCE
-
 		cl:fill{
 			operation = "presence",
 			layer = rodovias,
@@ -400,9 +406,7 @@ return {
 
 		local shp1 = clName2..".shp"
 		table.insert(shapes, shp1)
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end
+		File(shp1):deleteIfExists()
 
 		local cl2 = Layer{
 			project = proj,
@@ -476,7 +480,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-count.png")
 
 		-- MAXIMUM
-
 		cl:fill{
 			operation = "maximum",
 			layer = municipios,
@@ -501,7 +504,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-maximum.png")
 
 		-- MINIMUM
-
 		cl:fill{
 			operation = "minimum",
 			layer = municipios,
@@ -526,7 +528,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-minimum.png")
 
 		-- AVERAGE
-
 		cl:fill{
 			operation = "average",
 			layer = municipios,
@@ -551,7 +552,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-average.png")
 
 		-- STDEV
-
 		cl:fill{
 			operation = "stdev",
 			layer = municipios,
@@ -576,7 +576,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-stdev.png")
 
 		-- LENGTH
-
 		local error_func = function()
 			cl:fill{
 				operation = "length",
@@ -587,8 +586,7 @@ return {
 		unitTest:assertError(error_func, "Sorry, this operation was not implemented in TerraLib yet.")
 
 		-- SUM
-
-		File(proj.file):delete()
+		proj.file:delete()
 		
 		proj = Project {
 			file = "sum_wba.tview",
@@ -599,9 +597,7 @@ return {
 		clName1 = "cells_set"
 		local shp2 = clName1..".shp"
 		table.insert(shapes, shp2)
-		if File(shp2):exists() then
-			File(shp2):delete()
-		end		
+		File(shp2):deleteIfExists()
 		
 		cl = Layer{
 			project = proj,
@@ -609,7 +605,7 @@ return {
 			clean = true,
 			input = "setores",
 			name = clName1,
-			resolution = 50000,
+			resolution = 300000,
 			file = shp2
 		}
 
@@ -647,7 +643,7 @@ return {
 			target = cs,
 			select = "polsuma",
 			min = 0,
-			max = 1300000,
+			max = 4000000,
 			slices = 20,
 			color = {"red", "green"}
 		}
@@ -655,8 +651,8 @@ return {
 		unitTest:assertSnapshot(map, "polygons-sum-area.png")
 
 		-- AVERAGE (area = true)
-		
-		File(proj.file):delete()
+	if sessionInfo().system ~= "mac" then -- TODO(#1378)	
+		proj.file:delete()
 		
 		projName = "cellular_layer_fill_avg_area.tview"
 
@@ -670,9 +666,7 @@ return {
 		local shp3 = clName1..".shp"
 		table.insert(shapes, shp3)
 
-		if File(shp3):exists() then
-			File(shp3):delete()
-		end
+		File(shp3):deleteIfExists()
 		
 		cl = Layer{
 			project = proj,
@@ -706,15 +700,15 @@ return {
 			color = {"red", "green"}
 		}
 
-		unitTest:assertSnapshot(map, "polygons-average-area.png")
-				
+		unitTest:assertSnapshot(map, "polygons-average-area.png") -- SKIP
+	end			
 
 		forEachElement(shapes, function(_, value)
 			File(value):delete()
 		end)
 
 		-- unitTest:assertFile(projName) -- SKIP #1242
-		File(projName):delete() -- #1242
+		proj.file:delete() -- #1242
 
 		customWarning = customWarningBkp
 	end,
@@ -749,7 +743,7 @@ return {
 		
 		customWarning = customWarningBkp
 
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	attributes = function(unitTest)
 		local projName = "layer_shape_basic.tview"
@@ -778,7 +772,7 @@ return {
 						(propNames[i] == "Densde_Pop") or (propNames[i] == "Area"))
 		end
 		
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	export = function(unitTest)
 		local projName = "layer_shape_basic.tview"
@@ -800,16 +794,54 @@ return {
 		local overwrite = true
 		
 		local geojson = "setores.geojson"
-		layer:export(geojson, overwrite)
+		local data1 = {
+			file = geojson,
+			overwrite = overwrite
+		}
+		
+		layer:export(data1)
 		unitTest:assert(File(geojson):exists())
 		
+		-- OVERWRITE AND CHANGE SRID
+		data1.srid = 4326
+		layer:export(data1)
+		
+		local layerName2 = "GJ"
+		local layer2 = Layer{
+			project = proj,
+			name = layerName2,
+			file = geojson
+		}		
+		
+		unitTest:assertEquals(layer2.srid, data1.srid)
+		unitTest:assert(layer.srid ~= data1.srid)
+		
 		local shp = "setores.shp"
-		layer:export(shp, overwrite)
+		local data2 = {
+			file = shp,
+			overwrite = overwrite
+		}		
+		
+		layer:export(data2)
 		unitTest:assert(File(shp):exists())
+		
+		-- OVERWRITE AND CHANGE SRID
+		data2.srid = 4326
+		layer:export(data2)
+		
+		local layerName3 = "SHP"
+		local layer3 = Layer{
+			project = proj,
+			name = layerName3,
+			file = shp
+		}		
+		
+		unitTest:assertEquals(layer3.srid, data2.srid)
+		unitTest:assert(layer.srid ~= data2.srid)		
 
 		File(geojson):delete()
 		File(shp):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 	end
 }
 

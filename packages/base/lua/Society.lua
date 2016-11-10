@@ -826,7 +826,8 @@ metaTableSociety_ = {
 -- unique id, which is initialized while creating the Society. There are different ways to
 -- create a Society. See the argument source for the options.
 -- Calling Utils:forEachAgent() traverses Societies.
--- @arg data.file Name of the file.
+-- @arg data.file A File or a string with the name of the file where data related to the
+-- Agents is stored.
 -- @arg data.source A string with the name of the source the Society will be read from.
 -- TerraME always converts this string to lower case. See the table below:
 -- @tabular source
@@ -995,19 +996,22 @@ function Society(data)
 	end
 
 	if type(data.file) == "string" then
-		if data.file:endswith(".csv") then
+		data.file = File(data.file)
+	end
+
+	if type(data.file) == "File" then
+		if data.file:extension() == "csv" then
 			if data.sep and type(data.sep) ~= "string" then
 				incompatibleTypeError("sep", "string", data.sep)
 			end
 
-			local f = File(data.file)
-			local csv = f:readTable(data.sep)
+			local csv = data.file:readTable(data.sep)
 			for i = 1, #csv do
 				data:add(csv[i])
 			end
 		else
 			local tlib = terralib.TerraLib{}
-			local dSet = tlib:getOGRByFilePath(data.file)
+			local dSet = tlib:getOGRByFilePath(tostring(data.file))
 			
 			for i = 0, #dSet do
 				data:add(dSet[i])

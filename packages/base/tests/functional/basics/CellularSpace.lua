@@ -102,23 +102,18 @@ return{
 			file = filePath("test/sampa.shp", "terralib")
 		}
 
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local testDir = currentDir()
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
+		local filePath1 = testDir..shp1	
 		local fn1 = File(filePath1):name()
-		fn1 = testDir.."/"..fn1			
+		fn1 = testDir..fn1			
 		
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-		end			
+		File(fn1):deleteIfExists()
 		
 		local clName1 = "Sampa_Cells"
 		local layer = terralib.Layer{
 			project = proj,
+			clean = true,
 			input = layerName1,
 			name = clName1,
 			resolution = 1,
@@ -130,7 +125,7 @@ return{
 			layer = clName1
 		}
 		
-		unitTest:assertEquals(projName, cs.project.file)
+		unitTest:assertEquals(File(projName), cs.project.file)
 		unitTest:assertType(cs.layer, "Layer")
 		
 		unitTest:assertEquals(proj.title, title)
@@ -171,16 +166,8 @@ return{
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
-		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-		end
+		File(projName):deleteIfExists()
+		File(fn1):deleteIfExists()
 
 		-- GeoJSON
 		author = "Carneiro Heitor"
@@ -214,11 +201,9 @@ return{
 		end)
 
 		local geojson1 = "geojson_sampa_cells.geojson"
-		filePath1 = testDir.."/"..geojson1
+		filePath1 = testDir..geojson1
 
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end
+		File(filePath1):deleteIfExists()
 
 		clName1 = "GeoJSON_Sampa_Cells"
 		layer = terralib.Layer{
@@ -234,7 +219,7 @@ return{
 			layer = clName1
 		}
 
-		unitTest:assertEquals(projName, cs.project.file)
+		unitTest:assertEquals(projName, cs.project.file:name())
 		unitTest:assertType(cs.layer, "Layer")
 
 		unitTest:assertEquals(proj.title, title)
@@ -276,13 +261,8 @@ return{
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
-
-		if File(geojson1):exists() then
-			File(geojson1):delete()
-		end
+		File(projName):deleteIfExists()
+		File(geojson1):deleteIfExists()
 
 		if _Gtme.sessionInfo().system == "windows" then
 			-- Tif
@@ -310,14 +290,14 @@ return{
 				layer = layerName1
 			}
 
-			unitTest:assertEquals(projName, cs.project.file) -- SKIP
+			unitTest:assertEquals(projName, cs.project.file:name()) -- SKIP
 			unitTest:assertType(cs.layer, "Layer") -- SKIP
 
 			unitTest:assertEquals(proj.title, title) -- SKIP
 			unitTest:assertEquals(proj.author, author) -- SKIP
 
 			unitTest:assertEquals(layer.source, "tif") -- SKIP
-			unitTest:assertEquals(layer.file, filePath1) -- SKIP
+			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
 			unitTest:assertEquals(#cs, 10000) -- SKIP
 
 			cs = CellularSpace{
@@ -325,7 +305,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs, 10000) -- SKIP
-			if File(projName):exists() then File(projName):delete() end
+			File(projName):deleteIfExists()
 
 			-- NetCDF
 			projName = "nc_cellspace.tview"
@@ -352,14 +332,14 @@ return{
 				layer = layerName1
 			}
 
-			unitTest:assertEquals(projName, cs.project.file) -- SKIP
+			unitTest:assertEquals(projName, cs.project.file:name()) -- SKIP
 			unitTest:assertType(cs.layer, "Layer") -- SKIP
 
 			unitTest:assertEquals(proj.title, title) -- SKIP
 			unitTest:assertEquals(proj.author, author) -- SKIP
 
 			unitTest:assertEquals(layer.source, "nc") -- SKIP
-			unitTest:assertEquals(layer.file, filePath1) -- SKIP
+			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
 			unitTest:assertEquals(#cs.cells, 8904) -- SKIP
 
 			cs = CellularSpace{
@@ -367,8 +347,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 8904) -- SKIP
-			if File(projName):exists() then File(projName):delete() end
-
+			File(projName):deleteIfExists()
 
 			-- ASC
 			projName = "asc_cellspace.tview"
@@ -395,14 +374,14 @@ return{
 				layer = layerName1
 			}
 
-			unitTest:assertEquals(projName, cs.project.file) -- SKIP
+			unitTest:assertEquals(projName, cs.project.file:name()) -- SKIP
 			unitTest:assertType(cs.layer, "Layer") -- SKIP
 
 			unitTest:assertEquals(proj.title, title) -- SKIP
 			unitTest:assertEquals(proj.author, author) -- SKIP
 
 			unitTest:assertEquals(layer.source, "asc") -- SKIP
-			unitTest:assertEquals(layer.file, filePath1) -- SKIP
+			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
 
 			cs = CellularSpace{
@@ -410,8 +389,7 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
-			if File(projName):exists() then File(projName):delete() end
-
+			File(projName):deleteIfExists()
 		end
 		
 		customWarning = customWarningBkp
@@ -1427,9 +1405,7 @@ ydim    number [20]
 	
 		local projName = "cellspace_save_basic.tview"
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		local proj = terralib.Project{
 			file = projName,
@@ -1445,24 +1421,18 @@ ydim    number [20]
 			file = filePath("test/sampa.shp", "terralib")
 		}	
 
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local testDir = currentDir()
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir.."/"..shp1
+		local filePath1 = testDir..shp1
 		local fn1 = File(filePath1):name()
-		fn1 = testDir.."/"..fn1
+		fn1 = testDir..fn1
 
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
-		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-		end
+		File(fn1):deleteIfExists()
 
 		local clName1 = "Sampa_Cells"
 		terralib.Layer{
 			project = proj,
+			clean = true,
 			input = layerName1,
 			name = clName1,
 			resolution = 0.7,
@@ -1481,13 +1451,11 @@ ydim    number [20]
 		local cellSpaceLayerNameT0 = clName1.."_CellSpace_T0"
 
 		local shp2 = cellSpaceLayerNameT0..".shp"
-		local filePath2 = testDir.."/"..shp2	
+		local filePath2 = testDir..shp2	
 		local fn2 = File(filePath2):name()
-		fn2 = testDir.."/"..fn2	
+		fn2 = testDir..fn2	
 
-		if File(filePath2):exists() then
-			File(filePath2):delete()
-		end
+		File(fn2):deleteIfExists()
 
 		cs:save(cellSpaceLayerNameT0, "t0")
 
@@ -1528,16 +1496,11 @@ ydim    number [20]
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
 		
 		local shp3 = cellSpaceLayerNameGeom..".shp"
-		local filePath3 = testDir.."/"..shp3	
+		local filePath3 = testDir..shp3	
 		local fn3 = File(filePath3):name()
-		fn3 = testDir.."/"..fn3	
+		fn3 = testDir..fn3	
 		
-		for i = 1, #exts do
-			local f = fn3..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-		end			
+		File(fn3):deleteIfExists()
 		
 		cs:save(cellSpaceLayerNameGeom)
 		
@@ -1554,16 +1517,11 @@ ydim    number [20]
 		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"
 		
 		local shp4 = cellSpaceLayerNameGeom2..".shp"
-		local filePath4 = testDir.."/"..shp4	
+		local filePath4 = testDir..shp4	
 		local fn4 = File(filePath4):name()
-		fn4 = testDir.."/"..fn4	
+		fn4 = testDir..fn4
 		
-		for i = 1, #exts do
-			local f = fn4..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-		end			
+		File(fn4):deleteIfExists()
 		
 		cs:save(cellSpaceLayerNameGeom2)
 		
@@ -1577,31 +1535,12 @@ ydim    number [20]
 			unitTest:assertNotNil(cell.geom)
 		end)		
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-
-			f = fn2..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-
-			f = fn3..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end
-		
-			f = fn4..exts[i]
-			if File(f):exists() then
-				File(f):delete()
-			end				
-		end
+		File(fn1):deleteIfExists()
+		File(fn2):deleteIfExists()
+		File(fn3):deleteIfExists()
+		File(fn4):deleteIfExists()
 	end,
 	split = function(unitTest)
 		local cs = CellularSpace{xdim = 3}

@@ -101,7 +101,7 @@
 						<%end%>
 
 						<%if count_models > 0 then%>
-							<tr><td colspan="2">
+							<tr><td class="title" colspan="2">
 							<h2><a href="<%=luadoc.link("files/models.html", from)%>">Models</a></h2>
 							</td></tr>
 							<!--<table class="file_list">-->
@@ -109,7 +109,7 @@
 							<%for _, filepath in ipairs(doc.files) do%>
 								<%if doc.files[filepath].type == "model" then%>
 									<tr>
-										<td class="name"><%=doc.files[filepath].doc[1].name%></td>
+											<td class="name"><a href="files/models.html#<%=doc.files[filepath].doc[1].name%>"><%=doc.files[filepath].doc[1].name%></a></td>
 										<td class="summary"><%=luadoc.link_description(doc.files[filepath].doc[1].summary or "", doc,
 											module_doc, file_doc, from, true, "summary", doc_report)%></td>
 									</tr>

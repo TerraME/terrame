@@ -26,9 +26,7 @@ return {
 	Layer = function(unitTest)
 		local projName = "layer_wfs_basic.tview"
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 
 		local proj = Project {
 			file = projName,

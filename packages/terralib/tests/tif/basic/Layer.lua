@@ -30,7 +30,7 @@ return {
 			file = projName,
 			clean = true
 		}
-
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local layerName1 = "Prodes"
 
 		Layer{
@@ -41,9 +41,7 @@ return {
 		
 		local filePath1 = "prodes_cells_tif_basic.shp"
 		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end
+		File(filePath1):deleteIfExists()
 		
 		local clName1 = "Prodes_Cells"
 		
@@ -56,9 +54,9 @@ return {
 			file = filePath1
 		}	
 		
-		unitTest:assertEquals(clName1, cl1.name)
-		unitTest:assertEquals(cl1.source, "shp")
-		unitTest:assertEquals(cl1.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath1))			
+		unitTest:assertEquals(clName1, cl1.name) -- SKIP
+		unitTest:assertEquals(cl1.source, "shp") -- SKIP
+		unitTest:assertEquals(cl1.file, currentDir()..filePath1) -- SKIP		
 		
 		-- #1152
 		-- local host = "localhost"
@@ -101,20 +99,36 @@ return {
 		-- END
 		-- tl:dropPgTable(pgData)
 		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end				
+		File(filePath1):deleteIfExists()	
+	else
+		unitTest:assert(true) -- SKIP		
+	end
+		File(projName):deleteIfExists()
+	end,
+	__len = function(unitTest)
+		local projName = "layer_tiff_basic.tview"
+
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			return msg
+		end			
+
+		local proj = Project{
+			file = projName,
+			prodes = filePath("test/prodes_polyc_10k.tif", "terralib"),
+			clean = true
+		}
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end		
+		customWarning = customWarningBkp
+
+		unitTest:assertEquals(#proj.prodes, 20020)
+
+		proj.file:delete()
 	end,
 	fill = function(unitTest)
 		local projName = "layer_fill_tif.tview"
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		local proj = Project{
 			file = projName,
@@ -145,9 +159,7 @@ return {
 		local shapes = {}
 		
 		local shp1 = clName1..".shp"
-		if File(shp1):exists() then
-			File(shp1):delete()
-		end
+		File(shp1):deleteIfExists()
 		table.insert(shapes, shp1)
 
 		local cl = Layer{
@@ -155,7 +167,7 @@ return {
 			source = "shp",
 			input = layerName1,
 			name = clName1,
-			resolution = 20000,
+			resolution = 70000,
 			file = clName1..".shp"
 		}
 		
@@ -181,7 +193,7 @@ return {
 			end
 		end)
 
-		unitTest:assertEquals(count, 163) 
+		unitTest:assertEquals(count, 3) 
 
 		local map = Map{
 			target = cs,
@@ -270,7 +282,7 @@ return {
 			target = cs,
 			select = "prod_sum",
 			min = 0,
-			max = 2300,
+			max = 20000,
 			color = "RdPu",
 			slices = 8
 		}
@@ -334,7 +346,7 @@ return {
 			file = filePath("elevation.tif", "terralib")
 		}
 
-		if File("mycells.shp"):exists() then File("mycells.shp"):delete() end
+		File("mycells.shp"):deleteIfExists()
 		table.insert(shapes, "mycells.shp")
 			
 		cl = Layer{
@@ -342,7 +354,7 @@ return {
 			file = "mycells.shp",
 			input = "box",
 			name = "cells_elev",
-			resolution = 200,
+			resolution = 500,
 		}
 
 		cl:fill{
@@ -430,9 +442,7 @@ return {
 	bands = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		local proj = Project{
 			file = projName,
@@ -464,7 +474,7 @@ return {
 			file = projName,
 			clean = true
 		}
-
+	if sessionInfo().system ~= "mac" then -- TODO(#1380)
 		local layerName1 = "Prodes"
 
 		local layer = Layer{
@@ -472,10 +482,12 @@ return {
 			name = layerName1,
 			file = filePath("PRODES_5KM.tif", "terralib")
 		}
-		
-		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S - old 29191', with SRID: 100017.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ').")
+		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S - old 29191', with SRID: 100017.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ').") -- SKIP
+	else
+		unitTest:assert(true) -- SKIP
+	end
 
-		File(proj.file):delete()
+		proj.file:delete()
 	end,
 	attributes = function(unitTest)
 		local projName = "tif_basic.tview"
@@ -485,6 +497,7 @@ return {
 			clean = true
 		}
 
+	if sessionInfo().system ~= "mac" then -- TODO(1448)
 		local layerName1 = "Prodes"
 
 		local layer = Layer{
@@ -495,16 +508,17 @@ return {
 		
 		local props = layer:attributes()
 		
-		unitTest:assertNil(props)
+		unitTest:assertNil(props) -- SKIP
+	else
+		unitTest:assert(true) -- SKIP
+	end
 		
-		File(proj.file):delete()	
+		proj.file:delete()	
 	end,
 	dummy = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		local proj = Project{
 			file = projName,

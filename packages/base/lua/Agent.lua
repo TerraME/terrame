@@ -22,7 +22,9 @@
 --
 -------------------------------------------------------------------------------------------
 
-local deadAgentMetaTable_ = {__index = function()
+local deadAgentMetaTable_ = {__index = function(_, idx)
+	if idx == "type_" then return "<Dead Agent>" end
+
 	customError("Trying to use a function or an attribute of a dead Agent.")
 end}
 
@@ -60,7 +62,11 @@ Agent_ = {
 	--
 	-- sn = SocialNetwork()
 	-- sn:add(friend1)
-	-- sn:add(friend2)
+	--
+	-- if friend2 ~= friend1 then
+	--     sn:add(friend2)
+	-- end
+	--
 	-- agent:addSocialNetwork(sn)
 	-- @see Utils:forEachConnection
 	addSocialNetwork = function(self, set, id)

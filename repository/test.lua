@@ -1,16 +1,14 @@
 -- Script to test the package repository.
 -- To use it, just run 'terrame test.lua' within this directory.
 
-local configuration = "configuration.lua"
-
 local initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 local pkgDir = _Gtme.makePathCompatibleToAllOS(baseDir..s.."packages")
 
 _Gtme.printNote("Creating temporary directory")
-tmpdirectory = Directory{name = ".terramerepository_XXXXX", tmp = true}.name
-Directory(tmpdirectory):setCurrentDir()
+tmpdirectory = Directory{name = ".terramerepository_XXXXX", tmp = true}
+tmpdirectory:setCurrentDir()
 
 _Gtme.printNote("Copying currently installed packages")
 
@@ -43,9 +41,12 @@ end)
 local function approximateLine(line)
 	if not line then return 0 end
 	
-	if string.match(line, "seconds")             then return   5 end
+	if string.match(line, "seconds")             then return  10 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "configuration file")  then return 120 end
+	if string.match(line, "Logs were saved")     then return 200 end
+	if string.match(line, "Using log directory") then return 200 end
+	if string.match(line, "Creating log dir")    then return 200 end
 	if string.match(line, "or is empty or does") then return  50 end
 	if string.match(line, "does not exist")      then return  50 end
 	if string.match(line, "is unnecessary%.")    then return  50 end
@@ -60,6 +61,8 @@ local function approximateLine(line)
 	if string.match(line, "Lua 5")               then return   3 end
 	if string.match(line, "Qt 5")                then return   3 end
 	if string.match(line, "Qwt 6")               then return   3 end
+	if string.match(line, "Testing")             then return  34 end
+	if string.match(line, "Skipping")            then return  34 end
 
 	return 0
 end
@@ -86,7 +89,13 @@ local function execute(command, filename)
 			logfile:write(value.."\n")
 		end)
 	else
-		local resultfile = io.open(".."..s..tmpdirectory..s..filename, "w")
+		local name = tmpdirectory..filename
+		local resultfile = io.open(name, "w")
+
+		if not resultfile then
+			_Gtme.printError("File '"..name.."' could not be created")
+			os.exit(1)
+		end
 			
 		local line = 1
 		local logerror = false
@@ -123,10 +132,14 @@ local function execute(command, filename)
 				_Gtme.printError("Error: Strings do not match (line "..line.."):")
 				_Gtme.printError("Log file: '"..str.."'.")
 				_Gtme.printError("Test:     '"..value.."'.")
+				_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
+				_Gtme.printNote("Printing the test output")
 
-				if distance > 0 then
-					_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
-				end
+				forEachElement(result, function(_, value)
+					_Gtme.printWarning("    "..value)
+				end)
+
+				_Gtme.printNote("End of the test output")
 
 				report.locallogerrors = report.locallogerrors + 1
 				logerror = true
@@ -147,22 +160,49 @@ end
 
 _Gtme.printNote("Executing documentation")
 forEachOrderedElement(pkgs, function(package)
+	local docInitialTime = os.time(os.date("*t"))
+
 	_Gtme.print("Documenting package '"..package.."'")
 	local command = "terrame -package "..package.." -doc"
 	execute(command, "doc-"..package..".log")
+
+	local docFinalTime = os.time(os.date("*t"))
+	local difference = docFinalTime - docInitialTime
+
+	local text = "Documentation executed in "..round(difference, 1).." seconds"
+
+	if difference > 30 then
+		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+	elseif difference > 10 then
+		_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+	elseif difference > 1 then
+		_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+	end
+
 end)
 
 _Gtme.printNote("Executing tests")
 forEachOrderedElement(pkgs, function(package)
+	local testInitialTime = os.time(os.date("*t"))
+
 	_Gtme.print("Testing package '"..package.."'")
 
 	local command = "terrame -package "..package.." -test"
 
-	if isDir(packageInfo(package).path.."/log") then
-		command = command.." ../"..configuration
-	end
-
 	execute(command, "test-"..package..".log")
+
+	local testFinalTime = os.time(os.date("*t"))
+	local difference = testFinalTime - testInitialTime
+
+	local text = "Test executed in "..round(difference, 1).." seconds"
+
+	if difference > 30 then
+		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+	elseif difference > 10 then
+		_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+	elseif difference > 1 then
+		_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+	end
 end)
 
 _Gtme.printNote("Rolling back to previously installed packages")

@@ -29,12 +29,12 @@ return{
 
 		local cd = currentDir()
 
-		Directory(packageInfo().data):setCurrentDir()
+		packageInfo().data:setCurrentDir()
 
 		local cf2 = getConfig()
 		unitTest:assertEquals(cf, cf2)
 
-		Directory(cd):setCurrentDir()
+		cd:setCurrentDir()
 	end,
 	["table.load"] = function(unitTest)
 		local filename = "dump.lua"
@@ -57,7 +57,7 @@ return{
 			unitTest:assertEquals(tab1.vision, tab2.vision)
 		end
 
-		if File(filename):exists() then File(filename):delete() end
+		File(filename):deleteIfExists()
 	end,
 	["table.save"] = function(unitTest)
 		local filename = "dump.lua"

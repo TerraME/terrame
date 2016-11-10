@@ -28,9 +28,17 @@ return{
 	currentDir = function(unitTest)
 		local info = sessionInfo()
 		local cur_dir = currentDir()
-		Directory(info.path):setCurrentDir()
+		info.path:setCurrentDir()
 		unitTest:assertEquals(currentDir(), info.path)
-		Directory(cur_dir):setCurrentDir()
+		cur_dir:setCurrentDir()
+	end,
+	isDirectory = function(unitTest)
+		unitTest:assert(isDirectory(tostring(packageInfo().data)))
+		unitTest:assert(not isDirectory(tostring(filePath("agents.csv"))))
+	end,
+	isFile = function(unitTest)
+		unitTest:assert(not isFile(tostring(packageInfo().data)))
+		unitTest:assert(isFile(tostring(filePath("agents.csv"))))
 	end,
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)
@@ -40,6 +48,7 @@ return{
 	sessionInfo = function(unitTest)
 		local s = sessionInfo()
 
+		unitTest:assertType(s.path, "Directory")
 		unitTest:assertEquals(s.mode, "debug")
 		unitTest:assertEquals(s.version, packageInfo().version)
 		unitTest:assertEquals(s.system == "windows", s.separator == "\\")
@@ -47,26 +56,21 @@ return{
 
 		local info = {
 			mode = s.mode,
-			round = s.round,
-			silent = s.silent
+			round = s.round
 		}
 
 		local infoMock = {
 			mode = "strict",
-			round = 0.9,
-			silent = true
+			round = 0.9
 		}
 
 		s.mode = infoMock.mode
 		s.round = infoMock.round
-		s.silent = infoMock.silent
 
 		unitTest:assertEquals(s.mode, infoMock.mode)
 		unitTest:assertEquals(s.round, infoMock.round)
-		unitTest:assertEquals(s.silent, infoMock.silent)
 
 		s.mode = info.mode
-		s.silent = info.silent
 		s.round = info.round
 
 		local count = 0

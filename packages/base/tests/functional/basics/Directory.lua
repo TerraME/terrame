@@ -24,7 +24,7 @@
 
 return{
 	Directory = function(unitTest)
-		local dir = Directory(packageInfo("base").data)
+		local dir = packageInfo("base").data
 		unitTest:assertType(dir, "Directory")
 
 		dir = Directory{
@@ -56,12 +56,14 @@ return{
 		tmpDir:delete()
 	end,
 	__concat = function(unitTest)
-		local dir = Directory(packageInfo("base").data)
+		local dir = Directory("data")
 
-		unitTest:assertType(dir.."internal", "string")
+		unitTest:assertEquals(dir.." internal", "/ internal", 0, true)
+		unitTest:assertEquals("Directory: "..dir, "Directory: /data", 0, true)
+		unitTest:assertEquals("Directory: "..dir.."home", "Directory: /home", 0, true)
 	end,
 	attributes = function(unitTest)
-		local dir = Directory(packageInfo("base").data)
+		local dir = packageInfo("base").data
 		local attr = dir:attributes()
 
 		local expected = {
@@ -87,8 +89,7 @@ return{
 		unitTest:assert(dir:delete())
 
 		local datapath = packageInfo("base").data
-		local s = sessionInfo().separator
-		dir = Directory(datapath..s.."test_dir_create")
+		dir = Directory(datapath.."test_dir_create")
 		unitTest:assert(dir:create())
 		unitTest:assert(dir:exists())
 
@@ -111,36 +112,29 @@ return{
 	exists = function(unitTest)
 		local datapath = packageInfo("base").data
 
-		local dir = Directory(datapath)
-		unitTest:assert(dir:exists())
+		unitTest:assert(datapath:exists())
 
-		dir = Directory(datapath)
-		unitTest:assert(dir:exists())
-
-		dir = Directory(_Gtme.makePathCompatibleToAllOS(datapath))
-		unitTest:assert(dir:exists())
-
-		dir = Directory(datapath..sessionInfo().separator.."test_dir_exists")
+		local dir = Directory(datapath..sessionInfo().separator.."test_dir_exists")
 		unitTest:assert(not dir:exists())
 
 		dir = Directory(filePath("agents.csv", "base"))
-		unitTest:assert(not dir:exists())
+		unitTest:assert(dir:exists())
 
 		dir = Directory("")
-		unitTest:assertEquals(tostring(dir), _Gtme.makePathCompatibleToAllOS(currentDir()))
+		unitTest:assertEquals(dir, currentDir())
 	end,
 	list = function(unitTest)
 		local datapath = packageInfo("base").data
 		local nfiles = 29
 
-		local d = Directory(datapath):list()
+		local d = datapath:list()
 		unitTest:assertEquals(#d, nfiles)
 
-		d = Directory(datapath):list(true)
+		d = datapath:list(true)
 		unitTest:assertEquals(#d, nfiles + 2)
 
 		local curDir = currentDir()
-		Directory(packageInfo().data):setCurrentDir()
+		datapath:setCurrentDir()
 
 		d = Directory("."):list()
 		unitTest:assertEquals(#d, nfiles)
@@ -148,27 +142,66 @@ return{
 		d = Directory("."):list(true)
 		unitTest:assertEquals(#d, nfiles + 2)
 
-		Directory(curDir):setCurrentDir()
+		curDir:setCurrentDir()
+	end,
+	name = function(unitTest)
+		local dir = Directory("/usr/local/lib")
+
+		unitTest:assertEquals(dir:name(), "lib")
+
+		dir = Directory("/usr/local/lib/")
+
+		unitTest:assertEquals(dir:name(), "lib")
+
+		dir = Directory("c:\\terrame\\bin")
+
+		unitTest:assertEquals(dir:name(), "bin")
+
+		dir = Directory("c:\\terrame\\bin\\")
+
+		unitTest:assertEquals(dir:name(), "bin")
+	end,
+	path = function(unitTest)
+		local dir = Directory("/usr/local/lib")
+
+		unitTest:assertEquals(dir:path(), "/usr/local/")
+
+		dir = Directory("/usr/local/lib/")
+
+		unitTest:assertEquals(dir:path(), "/usr/local/")
+
+		dir = Directory("c:\\terrame\\bin")
+
+		unitTest:assertEquals(dir:path(), "c:/terrame/")
+
+		dir = Directory("c:\\terrame\\bin\\")
+
+		unitTest:assertEquals(dir:path(), "c:/terrame/")
+	end,
+	relativePath = function(unitTest)
+		local d = Directory("/a/b/c/d")
+		unitTest:assertEquals(d:relativePath("/a/b"), "c/d")
+
+		local path = packageInfo().path
+		unitTest:assertEquals(path:relativePath(path), "")
 	end,
 	setCurrentDir = function(unitTest)
 		local info = sessionInfo()
-		local s = info.separator
 		local cur_dir = currentDir()
-		local newpath = info.path..s.."packages"
+		local newpath = info.path.."packages"
 
 		local dir = Directory(newpath)
 		dir:setCurrentDir()
-		unitTest:assertEquals(currentDir(), newpath)
+		unitTest:assertEquals(tostring(currentDir()), newpath)
 
-		dir = Directory(cur_dir)
-		dir:setCurrentDir()
+		cur_dir:setCurrentDir()
 		unitTest:assertEquals(currentDir(), cur_dir)
 	end,
 	__tostring = function(unitTest)
 		local datapath = packageInfo("base").data
-		local dir = Directory(datapath)
 
-		unitTest:assertType(dir, "Directory")
-		unitTest:assertEquals(tostring(dir), _Gtme.makePathCompatibleToAllOS(datapath))
+		unitTest:assertType(datapath, "Directory")
+		unitTest:assertType(tostring(datapath), "string")
 	end
 }
+

@@ -24,11 +24,12 @@
 
 return {
 	forEachLayer = function(unitTest)
-		if File("emas-count.tview"):exists() then
-			File("emas-count.tview"):delete()
-		end
+		File("emas-count.tview"):deleteIfExists()
 		
-		local project = Project{
+		local project 
+
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
+		project = Project{
 			file = "emas-count.tview",
 			clean = true,
 			firebreak = filePath("firebreak_lin.shp", "terralib"),
@@ -36,6 +37,15 @@ return {
 			river = filePath("River_lin.shp", "terralib"),
 			limit = filePath("Limit_pol.shp", "terralib")
 		}
+	else
+		project = Project{
+			file = "emas-count.tview",
+			clean = true,
+			firebreak = filePath("firebreak_lin.shp", "terralib"),
+			river = filePath("River_lin.shp", "terralib"),
+			limit = filePath("Limit_pol.shp", "terralib")
+		}
+	end		
 
 		local error_func = function()
 			forEachLayer()
@@ -55,7 +65,7 @@ return {
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
 		
-		File("emas-count.tview"):delete()
+		File("emas-count.tview"):deleteIfExists()
 	end
 }
 

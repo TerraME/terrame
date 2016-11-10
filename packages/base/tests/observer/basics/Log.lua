@@ -115,7 +115,7 @@ return{
 
 		-- the call to update() above creates the file again.
 		-- remove the line below after refactoring observer.
-		if File("logfile-4.csv"):exists() then File("logfile-4.csv"):delete() end
+		File("logfile-4.csv"):deleteIfExists()
 
 		soc = Society{
 			instance = Agent{},

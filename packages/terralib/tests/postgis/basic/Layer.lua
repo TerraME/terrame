@@ -24,8 +24,12 @@
 
 return {
 	Layer = function(unitTest)
-		local projName = "layer_postgis_basic.tview"
-
+		local projName = "layer_postgis_basic.tview" -- TODO: (#1442)
+		
+		if File(projName):exists() then
+			File(projName):delete()
+		end	
+		
 		local proj1 = Project{
 			file = projName,
 			clean = true
@@ -119,9 +123,7 @@ return {
 			-- table = tableName			
 		-- }		
 		
-		if File(projName):exists() then
-			File(projName):delete()
-		end		
+		File(projName):deleteIfExists()
 
 		projName = "cells_setores_2000.tview"
 
@@ -264,10 +266,7 @@ return {
 		clSet = TerraLib{}:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)			
 	
-		-- END
-		if File(projName):exists() then
-			File(projName):delete()
-		end	
+		File(projName):deleteIfExists()
 		
 		pgData.table = tName1
 		TerraLib{}:dropPgTable(pgData)
@@ -335,7 +334,7 @@ return {
 
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
 
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 	end,
 	attributes = function(unitTest)
@@ -396,12 +395,16 @@ return {
 						(propNames[i] == "col") or (propNames[i] == "row"))
 		end		
 		
-		File(proj.file):delete()
+		proj.file:delete()
 		tl:dropPgTable(pgData)
 	end,
 	export = function(unitTest)
 		local projName = "layer_postgis_basic.tview"
 
+		if File(projName):exists() then -- TODO: (#1442)
+			File(projName):delete()
+		end			
+		
 		local proj = Project {
 			file = projName,
 			clean = true
@@ -427,10 +430,11 @@ return {
 			source = "postgis",
 			user = user,
 			password = password,
-			database = database
+			database = database,
+			overwrite = overwrite
 		}		
 		
-		layer1:export(pgData, overwrite)
+		layer1:export(pgData)
 		
 		local layerName2 = "setorespg"
 		local layer2 = Layer{
@@ -444,16 +448,54 @@ return {
 		}
 		
 		local geojson = "setores.geojson"
-		layer2:export(geojson, overwrite)
+		local data1 = {
+			file = geojson,
+			overwrite = overwrite
+		}
+		
+		layer2:export(data1)
 		unitTest:assert(File(geojson):exists())
 		
+		-- OVERWRITE AND CHANGE SRID
+		data1.srid = 4326
+		layer2:export(data1)
+		
+		local layerName3 = "GJ"
+		local layer3 = Layer{
+			project = proj,
+			name = layerName3,
+			file = geojson
+		}		
+		
+		unitTest:assertEquals(layer3.srid, data1.srid)
+		unitTest:assert(layer2.srid ~= data1.srid)		
+		
 		local shp = "setores.shp"
-		layer2:export(shp, overwrite)
+		local data2 = {
+			file = shp,
+			overwrite = overwrite
+		}		
+		
+		layer2:export(data2)
 		unitTest:assert(File(shp):exists())
+		
+		-- OVERWRITE AND CHANGE SRID
+		data2.srid = 4326
+		layer2:export(data2)
+		
+		local layerName4 = "SHP"
+		local layer4 = Layer{
+			project = proj,
+			name = layerName4,
+			file = shp
+		}		
+		
+		unitTest:assertEquals(layer4.srid, data2.srid)
+		unitTest:assert(layer2.srid ~= data2.srid)			
 
 		File(geojson):delete()
 		File(shp):delete()
-		File(proj.file):delete()
+		proj.file:delete()
 		
 		pgData.table = tableName
 		TerraLib{}:dropPgTable(pgData)

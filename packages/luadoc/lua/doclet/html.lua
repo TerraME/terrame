@@ -50,7 +50,7 @@ end
 --]]
 
 local function httpLink(text)
-	local result = string.gsub(text, "http://[%w%.%-]+[%/%w~%-_.]*", function(value)
+	local result = string.gsub(text, "http[s]://[%w%.%-]+[%/%w~%-_.]*", function(value)
 		if value:sub(-1, -1) == "." then
 			value = value:sub(1, -2)
 			return "<a href=\""..value.."\" target=\"_blank\">"..value.."</a>."
@@ -169,7 +169,7 @@ function file_func_link(symbol, doc, _, from, doc_report)
 	if filename ~= funcname then 
 		href = href .. "#" .. funcname
 	end
-	string.gsub(from, "/", function () href = "../" .. href end)
+	string.gsub(from, "/", function() href = "../"..href end)
 	return href
 end
 
@@ -268,7 +268,15 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 	local description_linked = description
 	local fname = string.match(file_doc.name, "(.-)%.lua")
 	
-	--for word in string.gmatch(description, "[%a_][%w_]-[%.%:][%a_][%w_]-%(%s-%)") do
+	-- links for other packages
+	for package, mtype in string.gmatch(description, "(%w+)%:%:(%w+)") do
+		local anchor = "<a href=\"../../../"..package.."/doc/files/"..mtype..".html\">"..mtype.." ("..package.." package)</a>"
+
+		table.insert(word_table, anchor)
+		word_table[package.."::"..mtype] = #word_table
+		description_linked = string.gsub(description_linked, package.."::"..mtype, "$"..#word_table.."$", 1)
+	end
+
 	for token, signature, te_type, func_name, braces in string.gmatch(description, "((([%u][%w_]-)[%.%:]([%a_][%w_]-))(%(.-%)))") do
 		local href = symbol_link(signature, doc, module_doc, file_doc, from, name, doc_report)
 		local anchor
@@ -291,11 +299,14 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 	end
 	
 	--find types
-	for token in string.gmatch(description_linked, "%u[%a_]+") do
+	for token in string.gmatch(description_linked, "[%a_]+") do
 		local type_name = string.gsub(token, "ies$", "y")
 		local file_name_link = type_name .. ".lua"
 		type_name = string.gsub(type_name, "s$", "")
-		if doc.files.funcnames[type_name] or doc.files[file_name_link] and doc.files[file_name_link].type ~= "model" then
+
+		local first = string.sub(token, 1, 1)
+
+		if first == string.upper(first) and (doc.files.funcnames[type_name] or doc.files[file_name_link] and doc.files[file_name_link].type ~= "model") then
 			if type_name == fname or word_table[type_name] or types_linked[type_name] then
 				table.insert(word_table, token)
 			else
@@ -404,7 +415,7 @@ function start(doc, doc_report)
 	printNote("Building and checking HTML files")
 
 	-- Generate index file
-	if (#doc.files > 0 or #doc.modules > 0) and (not options.noindexpage) then
+	if (#doc.files > 0 or #doc.modules > 0 or doc.mdata) and (not options.noindexpage) then
 		local filename = options.output_dir.."index.html"
 		local short_fileName = options.short_output_path.."index.html"
 		print(string.format("Building %s", makepath(short_fileName)))
@@ -470,7 +481,7 @@ function start(doc, doc_report)
 		f:close()
 	end
 
-	if not options.nofiles and doc.mdata then
+	if not options.nofiles and doc.mdata and #doc.mdata > 0 then
 		local filename = options.output_dir..s.."files"..s.."data.html"
 		local short_fileName = options.short_output_path.."files"..s.."data.html"
 		print(string.format("Building %s", makepath(short_fileName)))
@@ -484,7 +495,7 @@ function start(doc, doc_report)
 		f:close()
 	end
 
-	if not options.nofiles and doc.mfont then
+	if not options.nofiles and doc.mfont and #doc.mfont > 0 then
 		local filename = options.output_dir..s.."files"..s.."font.html"
 		local short_fileName = options.short_output_path.."files"..s.."font.html"
 		print(string.format("Building %s", makepath(short_fileName)))
@@ -508,6 +519,7 @@ function start(doc, doc_report)
 		end	
 
 		if models then
+			doc_report.html_files = doc_report.html_files + 1
 			local filename = options.output_dir..s.."files"..s.."models.html"
 			local short_fileName = options.short_output_path.."files"..s.."models.html"
 			print(string.format("Building %s", makepath(short_fileName)))

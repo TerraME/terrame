@@ -184,21 +184,20 @@ return{
 		error_func = function()
 			forEachFile(2)
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Directory", 2))
 
 		error_func = function()
-			forEachFile(filePath("", "base"))
+			forEachFile(packageInfo("base").path.."data")
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			forEachFile("abcdef12345", function() end)
 		end
-		unitTest:assertError(error_func, "Directory 'abcdef12345' is not valid or does not exist.")
-
+		unitTest:assertError(error_func, "Directory '/' is not valid or does not exist.", 0, true)
 
 		error_func = function()
-			forEachFile(filePath("", "base"), 2)
+			forEachFile(packageInfo("base").path.."data", 2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2))
 	end,
@@ -580,6 +579,14 @@ return{
 			vardump(vtable)
 		end
 		unitTest:assertError(error_func, "Function vardump cannot handle an index of type table.")
-	end
+	end,
+	forEachRecursiveDirectory = function(unitTest) 
+		local file = File(packageInfo("base").path.."lua/Utils.lua")		
+		
+		local wrongType = function()
+			forEachRecursiveDirectory(file, function(_) end)
+		end
+		unitTest:assertError(wrongType, "Argument '#1' must be a 'Directory' or 'string' path.")	
+	end	
 }
 

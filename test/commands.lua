@@ -1,7 +1,7 @@
-show = false
+show = false -- show commands
+time = true -- show execution time for each command
 
 test = {
-	--__test__     = "terrame -test config/all.lua",
 	onerror        = {arg = "-test", config = "all.lua", package = "onerror"},
 	twoerrors      = {arg = "-test", config = "all.lua", package = "twoerrors"},
 	onefile        = {arg = "-test", config = "oneFile.lua"},
@@ -13,9 +13,10 @@ test = {
 	memory         = {arg = "-test", package = "memory"},
 	pattern        = {arg = "-test", config = "pattern.lua"},
 	noload         = {arg = "-test", package = "noload"},
-	nolog          = {arg = "-test", config = "log.lua"},
 	noexamples     = {arg = "-test", package = "noexamples" },
-	linedirectory  = {arg = "-test", config = "linesDirectory.lua"}
+	linedirectory  = {arg = "-test", config = "linesDirectory.lua"},
+	testnotest     = {arg = "-test", config = "testNoTest.lua"},
+	notest         = {arg = "-test", config = "noTest.lua"}
 }
 
 package = {
@@ -27,7 +28,18 @@ package = {
 	example           = {package = "onerror",        arg = "-example continuous-rain"},
 	loadforgotten     = {package = "load-forgotten", arg = "-example ipd"},
 	loadtwice         = {package = "load-twice",     arg = "-example ipd"},
-	loadwrong         = {package = "load-wrong",     arg = "-example ipd"}
+	loadwrong         = {package = "load-wrong",     arg = "-example ipd"},
+	check             = {package = "check",          arg = "-check"}
+}
+
+project = {
+	showprojects  = {package = "terralib", arg = "-project"},
+	runprojects   = {package = "terralib", arg = "-quiet -projects"},
+	errorprojects = {package = "project",  arg = "-projects"},
+	nopackage1    = {package = "abcdef",   arg = "-project"},
+	nopackage2    = {package = "abcdef",   arg = "-projects"},
+	noproject     = {                      arg = "-project"},
+	noprojects    = {                      arg = "-projects"}
 }
 
 doc = {
@@ -48,7 +60,6 @@ doc = {
 
 build = {
 	build           = {arg = "-build", package = "build",        config = "all.lua"},
-	buildafile      = {arg = "-build", package = "buildafile"},
 	onerrorbuild    = {arg = "-build", package = "onerrorbuild", config = "all.lua", clean = true},
 	twoerrorsbuild  = {arg = "-build", package = "twoerrorsbuild", config = "all.lua"},
 	buildunnecfiles = {arg = "-build", package = "buildunnecfiles", config = "all.lua"},
@@ -58,9 +69,9 @@ build = {
 
 mode = {
 	normal = {script = "basic.lua"},
-	debug  = {script = "basic.lua", arg = "-mode=debug"},
-	strict = {script = "basic.lua", arg = "-mode=strict"},
-	quiet  = {script = "basic.lua", arg = "-mode=quiet"},
+	debug  = {script = "basic.lua", arg = "-debug"},
+	strict = {script = "basic.lua", arg = "-strict"},
+	quiet  = {script = "basic.lua", arg = "-quiet"},
 }
 
 basic = {
@@ -77,7 +88,6 @@ basic = {
 	builderror2         = {arg = "-build", package = "build", config = "etwdre.lua"},
 	builderror3         = {arg = "-build", package = "build", arg = "-clea"},
 	builderror4         = {arg = "-build", package = "build", config = "pattern.lua"},
-	builderror5         = {arg = "-build", package = "onerror"},
 	basictrace          = {script = "trace-basic.lua"},
 	tracepackage        = {script = "trace-package.lua"},
 	tracesyntax         = {script = "trace-syntax.lua"},
@@ -89,8 +99,9 @@ basic = {
 	traceconnection     = {script = "trace-connection.lua"},
 	traceelement        = {script = "trace-element.lua"},
 	traceorderedelement = {script = "trace-ordered-element.lua"},
+	tracedirectory      = {script = "trace-directory.lua"},
 	tracefile           = {script = "trace-file.lua"},
-	tracelayer          = {script = "trace-layer.lua", arg = "-mode=quiet"},
+	tracelayer          = {script = "trace-layer.lua", arg = "-quiet"},
 	tracemodel          = {script = "trace-model.lua"},
 	traceneighbor       = {script = "trace-neighbor.lua"},
 	traceneighagent     = {script = "trace-neighagent.lua"},
@@ -103,13 +114,15 @@ basic = {
 	scriptdir           = {arg = packageInfo().path},
 	scriptnofile        = {arg = "abcd1234.lua"},
 	scriptnoluafile     = {arg = filePath("agents.csv")},
-	tmp                 = {script = "tmp.lua"}
+	tmp                 = {script = "tmp.lua"},
+	luacheck1           = {script = "luacheck.lua", arg = "-strict"},
+	luacheck2           = {script = "luacheck.lua", arg = "-debug"}
 }
 
 observer = {
 	observer    = {script = "observer.lua",    quantity = 1},
-	chart       = {script = "chart.lua",       quantity = 3},
-	map         = {script = "map.lua",         quantity = 2},
+	chart       = {script = "chart.lua",       arg = "-autoclose", quantity = 3},
+	map         = {script = "map.lua",         arg = "-autoclose", quantity = 2},
 	clock       = {script = "clock.lua",       quantity = 1},
 	textscreen  = {script = "textscreen.lua",  quantity = 8},
 	visualtable = {script = "visualtable.lua", quantity = 8}
@@ -123,3 +136,4 @@ sketch = {
 	terralib = {arg = "-sketch", package = "terralib"},
 	base     = {arg = "-sketch"}
 }
+

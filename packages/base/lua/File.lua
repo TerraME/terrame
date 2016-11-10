@@ -22,6 +22,7 @@
 --
 -------------------------------------------------------------------------------------------
 
+-- This function was taken from http://lua-users.org/wiki/LuaCsv.
 local function parseLine(line, sep, cline)
 	mandatoryArgument(1, "string", line)
 	optionalArgument(2, "string", sep)
@@ -75,9 +76,7 @@ end
 File_ = {
 	type_ = "File",
 	--- Return a table with the file attributes corresponding to filepath (or nil followed by an error
-	-- message in case of error). If the second optional argument is given, then only the value of the
-	-- named attribute is returned (this use is equivalent to lfs.attributes(filepath).aname, but the
-	-- table is not created and only one attribute is retrieved from the O.S.). The attributes are
+	-- message in case of error). The attributes are
 	-- described as follows; attribute mode is a string, all the others are numbers, and the time
 	-- related attributes use the same time reference of os.time.
 	-- This function uses stat internally thus if the given filepath is a symbolic link, it is followed
@@ -115,7 +114,7 @@ File_ = {
 	-- block allocated for file; (Unix only) \
 	-- "blksize" &
 	-- optimal file system I/O blocksize; (Unix only)
-	-- @usage File(packageInfo("base").path):attributes("mode")
+	-- @usage filePath("river.shp"):attributes("mode")
 	attributes = function(self, attributename)
 		optionalArgument(1, "string", attributename)
 
@@ -138,13 +137,9 @@ File_ = {
 		end
 	end,
 	--- Remove an existing file. If the file does not exist or it cannot be removed,
-	-- this function stops with an error. Directories cannot be removed using
-	-- this function. If the file to be removed is a shapefile, it also removes
-	-- the respective dbf, shx, and prj files if they exist.
-	-- The function will automatically add
-	-- quotation marks in the beginning and in the end of this argument in order
-	-- to avoid problems related to empty spaces in the string. Therefore,
-	-- this string must not contain quotation marks.
+	-- this function stops with an error.
+	-- If the file to be removed is a shapefile, it also removes
+	-- the respective dbf, shx, prj, and qix files if they exist.
 	-- @usage filename = "myfile.txt"
 	-- file = File(filename)
 	-- file:write("Some text..")
@@ -155,7 +150,11 @@ File_ = {
 			resourceNotFoundError(1, self.filename)
 		end
 
-		local result = os.execute("rm -f \""..self.filename.."\"")
+		local directory = Directory{name = "tmpXXXXXXXX", tmp = true}
+		local s = sessionInfo().separator
+
+		local result = os.execute("rm -f \""..self.filename.."\" 2> "..directory..s.."a.txt")
+		directory:delete()
 
 		if result ~= true then
 			if result == nil then -- SKIP
@@ -171,37 +170,40 @@ File_ = {
 			local prj = File(string.sub(self.filename, 1, -4).."prj")
 			local qix = File(string.sub(self.filename, 1, -4).."qix")
 
-			if dbf:exists() then dbf:delete() end
-			if shx:exists() then shx:delete() end
-			if prj:exists() then prj:delete() end
-			if qix:exists() then qix:delete() end
+			dbf:deleteIfExists()
+			shx:deleteIfExists()
+			prj:deleteIfExists()
+			qix:deleteIfExists()
 		end
 	end,
-	--- Return the directory of a file given its path.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:directory())
-	directory = function(self)
-		local path, _, _ = self:split()
-
-		return path
+	--- Remove a file if it exists. It does not stop with an error when the file does not exist.
+	-- @usage filename = "myfile.txt"
+	-- file = File(filename)
+	-- file:write("Some text..")
+	-- file:close()
+	-- file:deleteIfExists()
+	deleteIfExists = function(self)
+		if self:exists() then
+			self:delete()
+		end
 	end,
-	--- Return whether a given string represents a file stored in the computer.
-	-- A directory is also considered a file.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	--- Return the path to the file.
+	-- @usage file = filePath("agents.csv", "base")
+	-- print(file:path())
+	path = function(self)
+		local result, _, _ = self:split()
+
+		return result
+	end,
+	--- Return whether the file stored in the computer.
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:exists())
 	exists = function(self)
-		local fopen = io.open(self.filename)
-
-		if fopen then
-			fopen:close()
-			return true
-		end
-
-		return false
+		return isFile(self.filename)
 	end,
-	--- Return the extension of a given file name. It returns the substring after the last dot.
+	--- Return the extension of the file. It returns the substring after the last dot.
 	-- If it does not have a dot, an empty string is returned.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:extension()) -- "csv"
 	extension = function(self)
 		local s = sessionInfo().separator
@@ -217,27 +219,25 @@ File_ = {
 
 		return ""
 	end,
-	--- Return a boolean value if a given file name has extension.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	--- Return a boolean value if the file has an extension.
+	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:hasExtension()) -- true
 	hasExtension = function(self)
 		return not (self:extension() == "")
 	end,
 	--- Return the file name removing its path.
-	-- @arg extension A boolean that enable return the name with extension. The default value is false.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:name()) -- "agents"
-	-- print(file:name(true)) -- "agents.csv"
-	name = function(self, extension)
-		extension = extension or false
-		optionalArgument(1, "boolean", extension)
-
+	-- @usage file = filePath("agents.csv", "base")
+	-- print(file:name()) -- "agents.csv"
+	name = function(self)
 		local split = {self:split()}
-		if extension then return split[4] end
 
-		return split[2]
+		if split[3] then
+			return split[2].."."..split[3]
+		else
+			return split[2]
+		end
 	end,
-	--- Open a file for reading or writing. An opened file must be closed after being used.
+	--- Open the file for reading or writing. An opened file must be closed after being used.
 	-- @arg mode A string with the mode. It can be "w" for writing or "r" for reading.
 	-- @see File:close
 	-- @usage -- DONTRUN
@@ -266,7 +266,7 @@ File_ = {
 	-- @arg sep A string with the separator. Parse a single CSV line.
 	-- It returns a vector of strings with the i-th value in the position i.
 	-- This function was taken from http://lua-users.org/wiki/LuaCsv.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- line = file:read(",")
 	-- print(line[1]) -- john
 	-- print(line[2]) -- 20
@@ -285,23 +285,24 @@ File_ = {
 		end
 
 		local line = self.file:read()
-		local data = {}
+
 		if line then
 			self.line = self.line + 1
-			if not sep then
-				return line
-			end
-
-			data = parseLine(line, sep, self.line)
 		end
 
-		return data
+		if not sep then
+			return line
+		end
+
+		if line == nil then return {} end
+		return  parseLine(line, sep, self.line)
 	end,
 	--- Read a file. It returns a vector (whose indexes are line numbers)
 	-- containing named tables (whose indexes are attribute names).
-	-- The first line of the file list the attribute names.
+	-- The first line of the file list the attribute names. This function
+	-- automatically closes the file.
 	-- @arg sep A string with the separator. The default value is ','.
-	-- @usage file = File(filePath("agents.csv", "base"))
+	-- @usage file = filePath("agents.csv", "base")
 	-- csv = file:readTable()
 	-- print(csv[1].age) -- 20
 	readTable = function(self, sep)
@@ -341,33 +342,41 @@ File_ = {
 
 		return data
 	end,
-	--- Split the path, file name, and extension from a given string.
-	-- @usage file = File(filePath("agents.csv", "base"))
-	-- print(file:split()) -- "/base/data/", "agents", "csv", "agents.csv"
+	--- Split the path, name, and extension of the file into three returning values.
+	-- @usage file = filePath("agents.csv", "base")
+	-- directory, name, extension = file:split()
+	-- print(directory) -- "/base/data/"
+	-- print(name) -- "agents",
+	-- print(extension) -- "csv"
 	split = function(self)
 		local filePath, nameWithExtension, extension = string.match(self.filename, "(.-)([^\\/]-%.?([^%.\\/]*))$")
+
+		if nameWithExtension == extension then
+			return filePath, nameWithExtension
+		end
+
 		local _, _, fileName = string.find(nameWithExtension, "^(.*)%.[^%.]*$")
 
-		return filePath, fileName, extension, nameWithExtension
+		return filePath, fileName, extension
 	end,
-	--- Set access and modification times of a file. This function is a bind to utime function.
+	--- Set access and modification times for the file.
 	-- Times are provided in seconds (which should be generated with Lua
 	-- standard function os.time). If the modification time is omitted, the access time provided is used;
 	-- if both times are omitted, the current time is used.
 	-- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 	-- @arg atime The new access time (in seconds).
 	-- @arg mtime The new modification time (in seconds).
-	-- @usage File(packageInfo("base").path):touch(0, 0)
+	-- @usage filePath("river.shp"):touch(0, 0)
 	touch = function(self, atime, mtime)
 		mandatoryArgument(1, "number", atime)
 		mandatoryArgument(2, "number", mtime)
 
 		return lfs.touch(self.filename, atime, mtime)
 	end,
-	--- Write a given string or table into a file.
+	--- Write a given string or table into the file.
 	-- @arg data A string or table to be saved. A table it must be a vector (whose indexes are line numbers)
 	-- containing named-tables (whose indexes are attribute names).
-	-- The first line of the file will list the attributes of each table.
+	-- When writing a table, he first line of the file will list the attributes of the table.
 	-- @arg sep A string with the separator. The default value is ' ' for string and ',' for table.
 	-- @usage mytable = {
 	--     {age = 1, wealth = 10, vision = 2},
@@ -377,12 +386,12 @@ File_ = {
 	--
 	-- file = File( "file.csv")
 	-- file:write(mytable, ";")
-	-- if file:exists() then file:delete() end
+	-- file:deleteIfExists()
 	--
 	-- file = File("file.txt")
 	-- file:write("Some text..")
 	-- file:close()
-	-- if file:exists() then file:delete() end
+	-- file:deleteIfExists()
 	write = function(self, data, sep)
 		if type(data) == "string" then
 			data = {data}
@@ -449,14 +458,21 @@ metaTableFile_ = {
 	-- @arg value A string or an object that can be concatenated.
 	-- @usage print(File("abcd1234").." does not exist.")
 	__concat = function(self, value)
-		return self.filename..value
+		if type(self) == "File" then
+			return self.filename..value
+		elseif type(value) == "File" then
+			return self..value.filename
+		end
 	end
 }
 
---- An abstract representation of file and directory pathnames. This type provide access to additional
--- file operations and file attributes.
+--- An abstract representation of a file. Whenever an instance of File is created, it only verifies
+-- whether it is possible to have a file with the given name and if its directory exists
+-- (in case of explicitly specified). It will not stop with an error if the file does not exist.
+-- The file is only opened when a read function is called. The file is only created if a 
+-- write function is called.
 -- @arg data.name A string with the file name. This argument is mandatory.
--- @usage file = File(filePath("agents.csv", "base"))
+-- @usage file = File("agents.csv")
 function File(data)
 	mandatoryArgument(1, "string", data)
 
@@ -468,14 +484,18 @@ function File(data)
 
 	setmetatable(data, metaTableFile_)
 
-	local dir = data:directory()
+	local dir = data:path()
 	if not Directory(dir):exists() then
 		customError("Directory '"..dir.."' does not exist.")
 	end
 
-	local invalidChar = data.filename:find("[~#%&*{}<>?|\"+]")
+	local invalidChar = data.filename:find("[&*{}<>?|\"+]")
 	if invalidChar then
 		customError("Filename '"..data.filename.."' cannot contain character '"..data.filename:sub(invalidChar, invalidChar).."'.")
+	end
+
+	if isDirectory(data.filename) then
+		customError("'"..data.filename.."' is a directory, and not a file.")
 	end
 
 	return data

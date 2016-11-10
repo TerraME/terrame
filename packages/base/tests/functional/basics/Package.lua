@@ -26,14 +26,14 @@
 
 return{
 	filePath = function(unitTest)
-		unitTest:assertType(filePath("test/simple-cs.csv"), "string")
+		unitTest:assertType(filePath("test/simple-cs.csv"), "File")
 	end,
 	filesByExtension = function(unitTest)
-		local files = filesByExtension("base", ".csv")
+		local files = filesByExtension("base", "csv")
 
 		unitTest:assertType(files, "table")
 		unitTest:assertEquals(#files, 1)
-		unitTest:assertType(files[1], "string")
+		unitTest:assertType(files[1], "File")
 	end,
 	isLoaded = function(unitTest)
 		unitTest:assert(isLoaded("base"))
@@ -46,7 +46,7 @@ return{
 
 		-- The assert below checks the number of functions in package 'base'.
 
-		unitTest:assertEquals(getn(base), 171)
+		unitTest:assertEquals(getn(base), 175)
 	end,
 	import = function(unitTest)
 		forEachCell = nil
@@ -61,6 +61,8 @@ return{
 		unitTest:assertEquals(r.version, "2.0.0")
 		unitTest:assertEquals(r.package, "base")
 		unitTest:assertEquals(r.url, "http://www.terrame.org")
+		unitTest:assertType(r.data, "Directory")
+		unitTest:assertType(r.path, "Directory")
 	end
 }
 

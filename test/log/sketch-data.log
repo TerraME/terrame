@@ -2,8 +2,8 @@ Verifying test files
 File 'foo.lua' already exists in the tests
 Verifying data files
 Creating 'data.lua'
-Adding sketch for data file 'data.txt'
 Directory 'directory' will be ignored
+Adding sketch for data file 'data.txt'
 Adding sketch for data file 'mycsv.csv'
 Verifying font files
 Package 'nodatadotlua' does not have a font directory

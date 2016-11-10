@@ -26,6 +26,10 @@ return {
 	Layer = function(unitTest)
 		local projName = "layer_shape_alt.tview"
 
+		if File(projName):exists() then -- TODO: (#1442)
+			File(projName):delete()
+		end			
+		
 		local proj = Project {
 			file = projName,
 			clean = true
@@ -66,7 +70,31 @@ return {
 		unitTest:assertError(indexDefaultError2, defaultValueMsg("index", true))
 		-- // SPATIAL INDEX
 		
-		File(proj.file):delete()
-	end
+		proj.file:delete()
+	end,
+	export = function(unitTest)
+		local projName = "layer_func_alt.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+		
+		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	
+		local layerName1 = "setores"
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+			
+		local invalidFile = function()
+			layer1:export({file = "invalid.org"})
+		end
+		unitTest:assertError(invalidFile, invalidFileExtensionMsg("data", "org"))
+
+		proj.file:deleteIfExists()
+	end		
 }
 

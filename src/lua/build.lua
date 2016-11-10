@@ -27,7 +27,7 @@ local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
 local function rm(file)
-	if Directory(file):exists() then
+	if isDirectory(file) then
 		Directory(file):delete()
 	else
 		File(file):delete()
@@ -58,7 +58,7 @@ function _Gtme.buildPackage(package, config, clean)
 			os.exit(1)
 		end)
 
-		local err, msg = pcall(function() verifyUnnecessaryArguments(data, {"lines", "log"}) end)
+		local err, msg = pcall(function() verifyUnnecessaryArguments(data, {"lines"}) end)
 
 		if not err then
 			printError(msg)
@@ -79,7 +79,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	printNote("\nTesting package '"..package.."'")
 	local testErrors = 0
-	dofile(sessionInfo().path..s.."lua"..s.."test.lua")
+	dofile(sessionInfo().path.."lua"..s.."test.lua")
 	xpcall(function() testErrors = _Gtme.executeTests(package, config) end, function(err)
 		printError(err)
 		report.test_errors = 1
@@ -89,7 +89,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	printNote("Creating documentation of package '"..package.."'")
 	local docErrors = 0
-	dofile(sessionInfo().path..s.."lua"..s.."doc.lua")
+	dofile(sessionInfo().path.."lua"..s.."doc.lua")
 	xpcall(function() docErrors = _Gtme.executeDoc(package) end, function(err)
 		printError(err)
 		report.doc_errors = 1
@@ -107,11 +107,8 @@ function _Gtme.buildPackage(package, config, clean)
 
 	tmpdirectory:setCurrentDir()
 
-	if pkgDirectory == package then
-		os.execute("cp -pr \""..currentdir..s..pkgDirectory.."\" .")
-	else
-		os.execute("cp -pr \""..pkgDirectory.."\" .")
-	end
+	local dirWithoutSlash = tostring(pkgDirectory) -- needed to copy the directory using cp
+	os.execute("cp -pr \""..dirWithoutSlash.."\" .")
 
 	printNote("")
 
@@ -149,20 +146,28 @@ function _Gtme.buildPackage(package, config, clean)
 	}
 
 	print("Checking basic files and directories")
-	forEachFile(package, function(file)
-		if not root[file] then
-			printError("File '"..package..s..file.."' is unnecessary and will be ignored.")
-			rm(package..s..file)
+	forEachDirectory(pkgDirectory, function(dir)
+		if not root[dir:name()] then
+			printError("Directory '"..package..s..dir:name().."' is unnecessary and will be ignored.")
+			dir:delete()
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
-	if Directory(package..s.."examples"):exists() then
+	forEachFile(pkgDirectory, function(file)
+		if not root[file:name()] then
+			printError("File '"..package..s..file:name().."' is unnecessary and will be ignored.")
+			file:delete()
+			report.unnecessary_files = report.unnecessary_files + 1
+		end
+	end)
+
+	if Directory(pkgDirectory.."examples"):exists() then
 		print("Checking examples")
-		forEachFile(package..s.."examples", function(file)
-			if not string.endswith(file, ".lua") and not string.endswith(file, ".tme") and not string.endswith(file, ".log") then
-				printError("File '"..package..s.."examples"..s..file.."' is unnecessary and will be ignored.")
-				rm(package..s.."examples"..s..file)
+		forEachFile(pkgDirectory.."examples", function(file)
+			if not belong(file:extension(), {"lua", ".tme"}) then
+				printError("File '"..package..s.."examples"..s..file:name().."' is unnecessary and will be ignored.")
+				file:delete()
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
 		end)
@@ -171,27 +176,29 @@ function _Gtme.buildPackage(package, config, clean)
 	end
 
 	print("Checking source code")
-	forEachFile(package..s.."lua", function(file)
-		if not string.endswith(file, ".lua") and not Directory(package..s.."lua"..s..file):exists() then
-			printError("File '"..package..s.."lua"..s..file.."' is unnecessary and will be ignored.")
-			rm(package..s.."lua"..s..file)
+	forEachFile(pkgDirectory..s.."lua", function(file)
+		if file:extension() ~= "lua" then
+			printError("File '"..package..s.."lua"..s..file:name().."' is unnecessary and will be ignored.")
+			file:delete()
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
-	local function removeRecursiveLua(currentDir)
-		forEachFile(currentDir, function(file)
-			if Directory(currentDir..s..file):exists() then
-				removeRecursiveLua(currentDir..s..file)
-			elseif not string.endswith(currentDir..s..file, ".lua") then
-				printError("File '"..currentDir..s..file.."' is unnecessary and will be ignored.")
-				rm(currentDir..s..file)
+	local function removeRecursiveLua(dir)
+		forEachDirectory(dir, function(mdir)
+			removeRecursiveLua(mdir)
+		end)
+
+		forEachFile(dir, function(file)
+			if file:extension() ~= "lua" then
+				printError("File '"..file.."' is unnecessary and will be ignored.")
+				file:delete()
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
 		end)
 	end
 
-	removeRecursiveLua(package..s.."tests")
+	removeRecursiveLua(pkgDirectory..s.."tests")
 
 	print("Checking fonts")
 	if Directory(package..s.."font"):exists() then
@@ -204,10 +211,10 @@ function _Gtme.buildPackage(package, config, clean)
 		end)
 
 		forEachFile(package..s.."font", function(file)
-			if not fontFiles[file] then
-				local mfile = package..s.."font"..s..file
+			if not fontFiles[file:name()] then
+				local mfile = package..s.."font"..s..file:name()
 				printError("File '"..mfile.."' is unnecessary and will be ignored.")
-				rm(mfile)
+				file:delete()
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
 		end)
@@ -235,11 +242,11 @@ function _Gtme.buildPackage(package, config, clean)
 	if clean then
 		printNote("Cleaning package")
 
-		local dlogs = package..s.."log"
+		local dlogs = Directory(package..s.."log")
 
-		if Directory(dlogs):exists() then
+		if dlogs:exists() then
 			print("Removing 'log' directory")
-			Directory(package..s.."log"):delete()
+			dlogs:delete()
 		end
 
 		local dtest = package..s.."test"
@@ -258,16 +265,16 @@ function _Gtme.buildPackage(package, config, clean)
 		return attr
 	end
 
-	forEachFile(pkgInfo.path..s.."lua", function(fname)
-		local mdata = _Gtme.include(pkgInfo.path..s.."lua"..s..fname)
+	forEachFile(pkgInfo.path.."lua", function(fname)
+		local mdata = _Gtme.include(pkgInfo.path.."lua"..s..fname:name())
 		if attrTab ~= nil then
 			forEachElement(mdata, function(idx, value)
 				if value == attrTab then
-					if idx..".lua" == fname then
-						print("Model '"..idx.."' belongs to file '"..fname.."'")
+					if idx..".lua" == fname:name() then
+						print("Model '"..idx.."' belongs to file '"..fname:name().."'")
 					else
 						report.model_error = report.model_error + 1
-						printError("Model '"..idx.."' is wrongly put in file '"..fname.."'. It should be in file '"..idx..".lua'")
+						printError("Model '"..idx.."' is wrongly put in file '"..fname:name().."'. It should be in file '"..idx..".lua'")
 					end
 				end
 			end)
@@ -285,8 +292,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	printNote("Building package "..package)
 
-	local info = packageInfo(package)
-	local file = package.."_"..info.version..".zip"
+	local file = package.."_"..pkgInfo.version..".zip"
 	printNote("Creating file '"..file.."'")
 	os.execute("zip -qr \""..file.."\" "..package)
 	if File(file):exists() then
@@ -308,7 +314,7 @@ function _Gtme.buildPackage(package, config, clean)
 		printWarning("Could not find an MD5 sum software installed.")
 	end
 
-	Directory(currentdir):setCurrentDir()
+	currentdir:setCurrentDir()
 
 	local finalTime = os.clock()
 	print("\nBuild report for package '"..package.."':")

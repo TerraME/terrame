@@ -80,7 +80,8 @@ return{
 			target = singleFooAgent
 		}
 
-		unitTest:assertSnapshot(m, "map_single_agent.bmp")
+		unitTest:assertSnapshot(m, "map_single_agent.bmp", 0.03)
+	
 
 		ag = Agent{
 			init = function(self)
@@ -118,7 +119,7 @@ return{
 		cs:notify()
 		cs:notify()
 		cs:notify()
-		unitTest:assertSnapshot(m, "map_society_reproduce.bmp")
+		unitTest:assertSnapshot(m, "map_society_reproduce.bmp", 0.03)
 	end
 }
 

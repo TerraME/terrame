@@ -24,43 +24,43 @@
 :: variables to reflect you environment.
 :: -----------------
 :: Location of the builded 3rd-parties.
-if %_TERRALIB_3RDPARTY_DIR% == "" (
+if "%_TERRALIB_3RDPARTY_DIR%" == "" (
   set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\terralib5-3rdparty-msvc-2013-win64
 )
 
 :: Checking terrame depends dir or setting default
-if %_TERRAME_DEPENDS_DIR% == "" (
+if "%_TERRAME_DEPENDS_DIR%" == "" (
   set _TERRAME_DEPENDS_DIR=D:\terrame\dependencies\install
 )
 
 :: Checking terralib install dir or setting default
-if %_TERRALIB_MODULES_DIR% == "" (
+if "%_TERRALIB_MODULES_DIR%" == "" (
   set _TERRALIB_MODULES_DIR=D:\terralib\build-cmake\install
 )
 
 :: Checking qt5 dir or setting default
-if %_Qt5_DIR% == "" (
+if "%_Qt5_DIR%" == "" (
   set _Qt5_DIR=C:\Qt\5.5\msvc2013_64
 )
 
 :: Checking msys dir or setting default
-if %_MSYS_DIR% == "" (
+if "%_MSYS_DIR%" == "" (
   set _MSYS_DIR=C:\MinGW\msys\1.0\bin
 )
 
 :: Location to install TerraLib
-if %_TERRAME_INSTALL_PATH% == "" (
+if "%_TERRAME_INSTALL_PATH%" == "" (
   set _TERRAME_INSTALL_PATH=%CD%\install
 )
 
 :: Build location (where is the Makefile)
-if %_TERRAME_OUT_DIR% == "" (
+if "%_TERRAME_OUT_DIR%" == "" (
   set _TERRAME_OUT_DIR=%CD%\build
 )
 
 :: Checking terrame codebase dir or setting default
-  if %_TERRAME_GIT_DIR% == "" (
-  set _TERRAME_GIT_DIR=../../git/terrame/build/cmake
+  if "%_TERRAME_GIT_DIR%" == "" (
+  set _TERRAME_GIT_DIR=../../git/terrame
 )
 
 :: -----------------
@@ -80,8 +80,6 @@ cd %_TERRAME_OUT_DIR%
 :: Calling CMake
 :: -----------------
 cmake -G "Visual Studio 12 2013 Win64" -C terrame-conf.cmake %_TERRAME_GIT_DIR%/build/cmake
-
-echo "TerraME VS2013 built!"
 
 :: Building and installing terrame
 cmake --build . --target install --config Release

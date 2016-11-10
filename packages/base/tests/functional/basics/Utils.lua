@@ -293,38 +293,39 @@ return{
 		unitTest:assert(not r)
 		unitTest:assertEquals(count, 3)
 	end,
+	forEachDirectory = function(unitTest)
+		local count = 0
+		local r
+
+		r = forEachDirectory(packageInfo("base").path.."data", function(dir)
+			count = count + 1
+			unitTest:assertType(dir, "Directory")
+		end)
+
+		unitTest:assert(r)
+		unitTest:assertEquals(count, 1)
+	end,
 	forEachFile = function(unitTest)
-		if _Gtme.sessionInfo().system ~= "windows" then
-			local count = 0
-			local r
+		local count = 0
+		local r
 
-			r = forEachFile(filePath("", "base"), function(file)
-				count = count + 1
-				unitTest:assertType(file, "string") -- SKIP
-			end)
+		r = forEachFile(packageInfo("base").path.."data", function(file)
+			count = count + 1
+			unitTest:assertType(file, "File")
+		end)
 
-			unitTest:assert(r) -- SKIP
-			unitTest:assertEquals(count, 29) -- SKIP
+		unitTest:assert(r)
+		unitTest:assertEquals(count, 28)
 
-			local count2 = 0
-			forEachFile(Directory(filePath("", "base")):list(true), function()
-				count2 = count2 + 1
-			end)
+		count = 0
 
-			unitTest:assertEquals(count2, count + 2) -- SKIP
+		r = forEachFile(packageInfo("base").path.."data", function()
+			count = count + 1
+			if count > 1 then return false end
+		end)
 
-			count = 0
-
-			r = forEachFile(filePath("", "base"), function()
-				count = count + 1
-				if count > 1 then return false end
-			end)
-
-			unitTest:assert(not r) -- SKIP
-			unitTest:assertEquals(count, 2) -- SKIP
-		else
-			unitTest:assert(true) -- SKIP
-		end
+		unitTest:assert(not r)
+		unitTest:assertEquals(count, 2)
 	end,
 	forEachModel = function(unitTest)
 		local MyTube = Model{
@@ -999,7 +1000,11 @@ return{
 		unitTest:assertEquals(type(c), "Cell")
 	end,
 	vardump = function(unitTest)
-		local actual = vardump{a = 2, b = 3, w = {2, 3, [4] = 4}}
+		local actual = vardump{}
+
+		unitTest:assertEquals(actual, "{}")
+
+		actual = vardump{a = 2, b = 3, w = {2, 3, [4] = 4}}
 
 		unitTest:assertEquals(actual, [[{
     a = 2, 
@@ -1068,9 +1073,7 @@ return{
         Cell{
             cObj_ = "TeCell(0x7fad0da19a00)", 
             parent = "CellularSpace", 
-            past = {
-
-            }, 
+            past = {}, 
             x = 0, 
             y = 0
         }
@@ -1083,7 +1086,27 @@ return{
     yMax = 0, 
     yMin = 0, 
     ydim = 1
-}]], 41)
+}]], 45)
+	end,
+	forEachRecursiveDirectory = function(unitTest) 
+		local count = 0
+		
+		forEachRecursiveDirectory(packageInfo("base").path.."data", function(file)
+			count = count + 1
+			unitTest:assertType(file, "File")
+		end)
+		
+		unitTest:assertEquals(count, 58)
+		
+		local dir = Directory(packageInfo("base").path.."data")
+		count = 0
+		
+		forEachRecursiveDirectory(dir, function(file)
+			count = count + 1
+			unitTest:assertType(file, "File")
+		end)
+		
+		unitTest:assertEquals(count, 58)		
 	end
 }
 

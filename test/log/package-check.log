@@ -1,0 +1,21 @@
+Running code analyzer for package 'check'
+Analysing source code
+Warning: Unused variable 'a'. In file 'lua/Check.lua', line 3.
+Warning: Unused variable 'x'. In file 'lua/Check.lua', line 6.
+Warning: Unused variable 'z'. In file 'lua/Check.lua', line 6.
+Warning: Value assigned to variable 'o' is unused. In file 'lua/Check.lua', line 12.
+Analysing tests
+Warning: Unused argument 'baz'. In file 'tests/functional/basic/Check.lua', line 3.
+Warning: Unused loop variable 'i'. In file 'tests/functional/basic/Check.lua', line 4.
+Warning: Unused variable 'q'. In file 'tests/functional/basic/Check.lua', line 5.
+Warning: Unused loop variable 'a'. In file 'tests/functional/basic/Check.lua', line 7.
+Warning: Unused loop variable 'b'. In file 'tests/functional/basic/Check.lua', line 7.
+Warning: Unused loop variable 'c'. In file 'tests/functional/basic/Check.lua', line 7.
+Warning: Value assigned to variable 'x' is unused. In file 'tests/functional/basic/Check.lua', line 13.
+Warning: Value assigned to variable 'x' is unused. In file 'tests/functional/basic/Check.lua', line 14.
+Warning: Variable 'z' is never accessed. In file 'tests/functional/basic/Check.lua', line 21.
+
+Code analyzer report for package 'check':
+Analysis executed in 0.02 seconds.
+2 files were analysed.
+13 issues were found.

@@ -52,11 +52,14 @@ return{
 		unitTest:assertEquals(u.success, 1)
 		unitTest:assertEquals(u.test, 1)
 
+		unitTest:assertEquals(currentDir(), currentDir())
+		unitTest:assertEquals(File("abc.txt"), File("abc.txt"))
+
 		unitTest:assertEquals(1, 1.1, 0.15)
 		unitTest:assertEquals("abc", "abd", 1)
 
 		local actual = "string [/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/terralib/data/biomassa-manaus.asc]"
-		local expected = "string [biomassa-manaus.asc]"
+		local expected = "string [/biomassa-manaus.asc]"
 		unitTest:assertEquals(actual, expected, 0, true)
 
 		actual = [[file     string [packages\terralib\data\Setores_Censitarios_2000_pol.shp]
@@ -66,7 +69,7 @@ rep      string [geometry]
 sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
 source   string [shp]
 ]]
-		expected = [[file     string [Setores_Censitarios_2000_pol.shp]
+		expected = [[file     string [packages/Setores_Censitarios_2000_pol.shp]
 name     string [Setores_2000]
 project  Project
 rep      string [geometry]
@@ -84,8 +87,11 @@ source   string [shp]
 		error_func = function() CellularSpace{xdim = "a"} end
 		u:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
 
-		unitTest:assertEquals(u.success, 2)
-		unitTest:assertEquals(u.test, 2)
+		error_func = function() customError("File '/a/b/c/d/e' should not be shown.") end
+		u:assertError(error_func, "File '/e' should not be shown.", 0, true)
+
+		unitTest:assertEquals(u.success, 3)
+		unitTest:assertEquals(u.test, 3)
 	end,
 	assertFile = function(unitTest)
 		local c = Cell{value = 2}
@@ -102,7 +108,7 @@ source   string [shp]
 		local oldPrint = unitTest.printError
 		unitTest.printError = function() end
 		unitTest:assertFile("abc.csv") -- file does not exist
-		unitTest:assertFile(packageInfo().data) -- not possible to use directory
+		unitTest:assertFile(tostring(packageInfo().data)) -- not possible to use directory
 
 		unitTest.printError = oldPrint
 

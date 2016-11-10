@@ -23,6 +23,18 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	isDirectory = function(unitTest)
+		local error_func = function()
+			isDirectory(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
+	isFile = function(unitTest)
+		local error_func = function()
+			isFile(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
 	runCommand = function(unitTest)
 		local error_func = function()
 			runCommand(1)
@@ -63,6 +75,11 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("round", "number", false))
 
 		error_func = function()
+			s.autoclose = 2
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("autoclose", "boolean", 2))
+
+		error_func = function()
 			s.round = 1.1
 		end
 		unitTest:assertError(error_func, "Argument 'round' must be a number >= 0 and < 1, got '1.1'.")
@@ -70,7 +87,7 @@ return{
 		error_func = function()
 			s.silent = 1
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("silent", "boolean", 1))
+		unitTest:assertError(error_func, "Argument 'silent' is an important information about the current execution and cannot be changed.")
 
 		error_func = function()
 			s.arg = 1

@@ -81,19 +81,19 @@ return{
  		error_func = function()
  			cs = CellularSpace{file = 2, source = "pgm", sep = ";"}
  		end
- 		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
+ 		unitTest:assertError(error_func, incompatibleTypeMsg("file", "File", 2))
  
  		error_func = function()
  			cs = CellularSpace{file = "abc123.pgm", sep = ";"}
  		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.pgm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("abc123.pgm")))
 		
 		error_func = function()
  			cs = CellularSpace{
  				file = "abc123.shp"
  			}
  		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.shp"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("abc123.shp")))
 
 		os.execute("touch abc123.shp")
 			
@@ -102,7 +102,7 @@ return{
  				file = "abc123.shp"
  			}
  		end
-		unitTest:assertError(error_func, "File 'abc123.dbf' was not found.")
+		unitTest:assertError(error_func, "File '"..File("abc123.dbf").."' was not found.")
 
 		File("abc123.shp"):delete()
 
@@ -143,7 +143,7 @@ return{
 
 		error_func = function()
 			CellularSpace{
-				file = filePath("cabecadeboi.shp"),
+				file = filePath("cabecadeboi900.shp"),
 				xy = {"Col", "Lin"},
 				as = {x = "height_2"}
 			}
@@ -152,7 +152,7 @@ return{
 
 		error_func = function()
 			CellularSpace{
-				file = filePath("cabecadeboi.shp"),
+				file = filePath("cabecadeboi900.shp"),
 				xy = {"Col", "Lin"},
 				as = {
 					height = "height_2"
@@ -168,7 +168,7 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 
 		local proj = terralib.Project{
 			file = tostring(file),
@@ -237,12 +237,12 @@ return{
 		error_func = function()
 			cs:loadNeighborhood{source = 123}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("source", "string", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg("source", "File", 123))
 
 		error_func = function()
 			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("source", "neighCabecaDeBoi900x900.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", File("neighCabecaDeBoi900x900.gpm")))
 
 		local mfile = filePath("cabecadeboi-neigh.gpm", "base")
 	
@@ -252,7 +252,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
 		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
-		if file:exists() then file:delete() end
+		file:deleteIfExists()
 		tl:dropPgTable(pgData)			
 		
 		-- GAL from shapefile
@@ -277,7 +277,7 @@ return{
 		error_func = function()
 			cs2:loadNeighborhood{source = "arquivo.gpm"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", File("arquivo.gpm")))
 
 		error_func = function()
 			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid"}
@@ -391,7 +391,8 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		if projName:exists() then projName:delete() end
+		projName:deleteIfExists()
+
 		local proj = terralib.Project{
 			file = projName:name(true),
 			clean = true,
@@ -473,7 +474,7 @@ return{
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
 
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
-		if projName:exists() then projName:delete() end
+		projName:deleteIfExists()
 		tl:dropPgTable(pgData)
 	end
 }

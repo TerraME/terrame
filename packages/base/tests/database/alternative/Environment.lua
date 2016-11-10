@@ -28,9 +28,7 @@ return{
 
 		local projName = "environment_alt.tview"
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 
 		local author = "Avancini"
 		local title = "Cellular Space"
@@ -84,9 +82,7 @@ return{
 			table = tName1
 		}
 
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		File(projName):deleteIfExists()
 		
 		tl:dropPgTable(pgData)			
 
@@ -152,7 +148,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("source", "string", 5))
+		unitTest:assertError(error_func, incompatibleTypeMsg("source", "File", 5))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -161,7 +157,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste1"))
+		unitTest:assertError(error_func, invalidFileExtensionMsg("source", ""))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -204,7 +200,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("source", "emas-distance-xxx.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", File("emas-distance-xxx.gpm")))
 
 		error_func = function()
 			env:loadNeighborhood{

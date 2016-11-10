@@ -27,7 +27,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			local ag = Agent{
 				id = "agent",
@@ -70,6 +70,7 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
+
 		unitTest:assertEquals(0, countAg) -- SKIP
 		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
@@ -77,7 +78,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			local at = Automaton{id = "automaton"}
 
@@ -97,6 +98,7 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
+
 			unitTest:assertEquals(1, countAt) -- SKIP
 			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
@@ -117,6 +119,7 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
+
 		unitTest:assertEquals(0, countAt) -- SKIP
 		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
@@ -124,7 +127,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			local cell = Cell{cover = "forest"}
 			unitTest:assertNotNil(cell) -- SKIP
@@ -143,6 +146,7 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
+
 			unitTest:assertEquals(1, count) -- SKIP
 			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
@@ -163,6 +167,7 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
+
 		unitTest:assertEquals(0, count) -- SKIP
 		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
@@ -170,7 +175,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			local cs = CellularSpace{xdim = 200}
 			unitTest:assertType(cs, "CellularSpace") -- SKIP
@@ -192,6 +197,7 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
+
 			unitTest:assertEquals(1, countCS) -- SKIP
 			unitTest:assertEquals(40000, countCell) -- SKIP
 			unitTest:assertEquals(0, countOutWT) -- SKIP
@@ -216,6 +222,7 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
+
 		unitTest:assertEquals(0, countCS) -- SKIP
 		unitTest:assertEquals(0, countCell) -- SKIP
 		unitTest:assertEquals(0, countOutWT) -- SKIP
@@ -224,7 +231,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			local coord1 = TeCoord{x = 10, y = 10}
 			local coord2 = TeCoord{x = 12, y = 10}
@@ -242,6 +249,7 @@ return{
 					count = count + 1
 				end
 			end
+
 			unitTest:assertEquals(2, count) -- SKIP
 
 			unitTest:assertNotNil(coord2) -- SKIP
@@ -264,6 +272,7 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
+
 		unitTest:assertEquals(0, count) -- SKIP
 		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
@@ -271,7 +280,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			local env = Environment{}
 
@@ -291,6 +300,7 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
+
 			unitTest:assertEquals(1, countEnv) -- SKIP
 			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
@@ -311,6 +321,7 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
+
 		unitTest:assertEquals(0, countEnv) -- SKIP
 		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
@@ -319,7 +330,7 @@ return{
 		local evt
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			evt = Event{priority = 1, action = function(event)
 				time = event:getTime()
@@ -334,7 +345,7 @@ return{
 		local flw
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			flw = Flow{function() end}
 
@@ -348,7 +359,7 @@ return{
 		local jmp
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			jmp = Jump{
 				function() return true end,
@@ -363,7 +374,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			local cs = CellularSpace{xdim = 50}
 
@@ -391,6 +402,7 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
+
 			unitTest:assertEquals(2500, countNeigh) -- SKIP
 			unitTest:assertEquals(2500, countCell) -- SKIP
 			unitTest:assertEquals(1, countCS) -- SKIP
@@ -419,6 +431,7 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
+
 		unitTest:assertEquals(0, countNeigh) -- SKIP
 		unitTest:assertEquals(0, countCell) -- SKIP
 		unitTest:assertEquals(0, countCS) -- SKIP
@@ -428,7 +441,7 @@ return{
 		debug.sethook()
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			local t = Timer{
 				Event{priority = 1, action = function(event)
@@ -451,9 +464,13 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
+
 			if _Gtme.sessionInfo().system ~= "windows" then
 				unitTest:assertEquals(1, countTimer) -- SKIP
+			else
+				unitTest:assert(true) -- SKIP (to make execution tests working properly)
 			end
+
 			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
@@ -473,16 +490,20 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
+
 		if _Gtme.sessionInfo().system ~= "windows" then
 			unitTest:assertEquals(0, countTimer) -- SKIP
+		else
+			unitTest:assert(true) -- SKIP (to make execution tests working properly)
 		end
+
 		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
 	Trajectory = function(unitTest)
 		debug.sethook()
 		collectgarbage("collect")
 
-		for _ = 1, 100 do
+		for _ = 1, 50 do
 			collectgarbage("collect")
 			local cs = CellularSpace{xdim = 10}
 			local traj = Trajectory{target = cs}
@@ -510,6 +531,7 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
+
 			unitTest:assertEquals(1, countTraj) -- SKIP
 			unitTest:assertEquals(1, countCS) -- SKIP
 			unitTest:assertEquals(100, countCell) -- SKIP
@@ -538,6 +560,7 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
+
 		unitTest:assertEquals(0, countTraj) -- SKIP
 		unitTest:assertEquals(0, countCS) -- SKIP
 		unitTest:assertEquals(0, countCell) -- SKIP

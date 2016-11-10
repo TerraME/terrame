@@ -22,22 +22,8 @@
 --
 -------------------------------------------------------------------------------------------
 
--- TODO: create Common for this
-local function isEmpty(data)
-	return (data == "") or (data == nil)
-end
-
 local function isValidSource(source)
 	return belong(source, {"tif", "shp", "postgis", "access", "nc", "asc", "geojson", "wfs"})
-end
-
-local function isSourceConsistent(source, filePath)
-	if filePath ~= nil then
-		local file = File(filePath)
-		return source == file:extension()
-	end
-	
-	return true
 end
 
 local function adaptsTerraLibInfo(data)
@@ -64,38 +50,30 @@ local function addCellularLayer(self, data)
 
 	mandatoryTableArgument(data, "input", "string")
 	positiveTableArgument(data, "resolution")
-		
-	if isEmpty(data.source) then		
-		if isEmpty(data.file) then
+
+	if type(data.file) == "string" then
+		data.file = File(data.file)
+	end
+	
+	if data.source == nil then		
+		if data.file == nil then
 			if data.database then
 				data.source = "postgis"
 			else
 				customError("At least one of the following arguments must be used: 'file', 'source', or 'database'.")
 			end	
 		else
-			local file = File(data.file)
-			local source = file:extension()
+			local source = data.file:extension()
 			data.source = source	
 		end
 	end
-		
-	-- if isEmpty(data.source) then
-		-- mandatoryTableArgument(data, "file", "string")	
-		-- local file = File(data.file)
-		-- local source = file:extension()
-		-- data.source = source
-	-- else
-		-- mandatoryTableArgument(data, "source", "string")
-			
-		-- if not isSourceConsistent(data.source, data.file) then
-			-- customError("File '"..data.file.."' not match to source '"..data.source.."'.")
-		-- end
-	-- end		
 
 	mandatoryTableArgument(data, "source", "string")
 		
 	if belong(data.source, {"tif", "shp", "geojson"}) then
-		if not isSourceConsistent(data.source, data.file) then
+		mandatoryTableArgument(data, "file", "File")
+
+		if data.source ~= data.file:extension() then
 			customError("File '"..data.file.."' not match to source '"..data.source.."'.")
 		end
 	end		
@@ -116,7 +94,7 @@ local function addCellularLayer(self, data)
 
 	switch(data, "source"):caseof{
 		shp = function()
-			mandatoryTableArgument(data, "file", "string")
+			mandatoryTableArgument(data, "file", "File")
 			defaultTableValue(data, "clean", false)
 			defaultTableValue(data, "index", true)
 			
@@ -130,9 +108,9 @@ local function addCellularLayer(self, data)
 												"resolution", "file", "source", "index"})
 			end
 				
-			if File(data.file):exists() then
+			if data.file:exists() then
 				if data.clean then
-					File(data.file):delete()
+					data.file:delete()
 				else
 					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
 				end
@@ -142,7 +120,7 @@ local function addCellularLayer(self, data)
 													data.file, not data.box, data.index)
 		end,
 		geojson = function()
-			mandatoryTableArgument(data, "file", "string") -- SKIP
+			mandatoryTableArgument(data, "file", "File") -- SKIP
 
 			if repr == "raster" then -- SKIP
 				verifyUnnecessaryArguments(data, {"input", "name", "project", -- SKIP
@@ -187,19 +165,22 @@ end
 local function addLayer(self, data)	
 	verifyNamedTable(data)
 	mandatoryTableArgument(data, "name", "string")
-		
+
+	if type(data.file) == "string" then
+		data.file = File(data.file)
+	end
+	
 	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "index",
 									"host", "port", "user", "password", "database", "table",
 									"service", "feature"})
 		
-	if isEmpty(data.source) then		
-		if not isEmpty(data.file) then
-			if not File(data.file):exists() then
+	if data.source == nil then		
+		if data.file then
+			if not data.file:exists() then
 				customError("File '"..data.file.."' does not exist.")
 			end	
 
-			local file = File(data.file)
-			data.source = file:extension()
+			data.source = data.file:extension()
 		end
 	end
 		
@@ -210,7 +191,9 @@ local function addLayer(self, data)
 	end				
 		
 	if belong(data.source, {"tif", "shp", "nc", "asc", "geojson"}) then
-		if not isSourceConsistent(data.source, data.file) then
+		mandatoryTableArgument(data, "file", "File")
+
+		if data.source ~= data.file:extension() then
 			customError("File '"..data.file.."' does not match to source '"..data.source.."'.")
 		end
 	end
@@ -221,32 +204,32 @@ local function addLayer(self, data)
 
 	switch(data, "source"):caseof{
 		shp = function()
-			mandatoryTableArgument(data, "file", "string")
+			mandatoryTableArgument(data, "file", "File")
 			defaultTableValue(data, "index", true)
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index"})
 				
 			self.terralib:addShpLayer(self, data.name, data.file, data.index)
 		end,
 		geojson = function()
-			mandatoryTableArgument(data, "file", "string") -- SKIP
+			mandatoryTableArgument(data, "file", "File") -- SKIP
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 
 			self.terralib:addGeoJSONLayer(self, data.name, data.file) -- SKIP
 		end,
 		tif = function()	
-			mandatoryTableArgument(data, "file", "string")
+			mandatoryTableArgument(data, "file", "File")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 			
 			self.terralib:addGdalLayer(self, data.name, data.file)
 		end,
 		nc = function()
-			mandatoryTableArgument(data, "file", "string") -- SKIP
+			mandatoryTableArgument(data, "file", "File") -- SKIP
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"}) -- SKIP
 
 			self.terralib:addGdalLayer(self, data.name, data.file) -- SKIP
 		end,
 		asc = function()
-			mandatoryTableArgument(data, "file", "string")
+			mandatoryTableArgument(data, "file", "File")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
 
 			self.terralib:addGdalLayer(self, data.name, data.file)
@@ -277,7 +260,6 @@ local function addLayer(self, data)
 			self.terralib:addWfsLayer(self, data.name, data.service, data.feature)
 		end
 	}
-	--TODO: implement all types (tif, access, etc)		
 end
 
 local function checkBand(layer, data)
@@ -349,7 +331,7 @@ Layer_ = {
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income. 
-	-- & attribute, layer, select  & area, default, band, dummy \
+	-- & attribute, layer, select  & area, default, band  \
 	-- "count" & Number of objects that have some overlay with the cell.
 	-- & attribute, layer & \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
@@ -363,13 +345,13 @@ Layer_ = {
 	-- output to string. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select & 
-	-- default, dummy, band \
+	-- default, band \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, dummy, band \
+	-- attribute, layer, select & default, band \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, dummy, band \
+	-- attribute, layer, select & default, band \
 	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
@@ -379,24 +361,22 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & default, dummy, band \
+	-- & attribute, layer, select & default, band \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
 	-- & attribute, layer & \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, dummy \
+	-- attribute, layer, select & default \
 	-- "sum" & Sum of quantitative values from objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, it
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
-	-- & attribute, layer, select & area, default, dummy \
+	-- & attribute, layer, select & area, default \
 	-- "nearest" & The value (quantitative or qualitative) of the nearest object. & attribute,
 	-- layer, select & area \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true), 
 	-- or the weights are equal for each object with some overlap (false, default value).
-	-- @arg data.dummy A value that will ignored when computing the operation, used only for
-	-- raster strategies. Note that this argument is related to the input.
 	-- @arg data.default A value that will be used to fill a cell whose attribute cannot be
 	-- computed. For example, when there is no intersection area. Note that this argument is
 	-- related to the output.
@@ -453,21 +433,21 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 			end,
 			average = function()
 				if belong(repr, {"point", "line", "polygon"}) then
 					if repr == "polygon" then
-						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
 						defaultTableValue(data, "area", false)
 					else
-						verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					end
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -476,14 +456,13 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			count = function()
 				if belong(repr, {"point", "line", "polygon"}) then
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 			end,
 			distance = function()
@@ -491,7 +470,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 			end,
 			length = function()
@@ -507,15 +486,15 @@ Layer_ = {
 			mode = function()
 				if belong(repr, {"point", "line", "polygon"}) then
 					if repr == "polygon" then
-						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
 						defaultTableValue(data, "area", false)
 					else
-						verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					end
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -524,14 +503,13 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			maximum = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -540,14 +518,13 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			minimum = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -556,14 +533,13 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			coverage = function()
 				if repr == "polygon" then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "dummy", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -572,7 +548,6 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			nearest = function()
 				if belong(repr, {"point", "line", "polygon"}) then
@@ -589,15 +564,15 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
-					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 			end,
 			stdev = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -606,15 +581,14 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end,
 			sum = function()
 				if belong(repr, {"point", "line", "polygon"}) then
-					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 					defaultTableValue(data, "area", false)
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "band"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -623,7 +597,6 @@ Layer_ = {
 				end
 
 				defaultTableValue(data, "default", 0)
-				defaultTableValue(data, "dummy", math.huge)
 			end
 		}
 
@@ -679,7 +652,7 @@ Layer_ = {
 		local luaPropNames = {}
 		
 		for i = 0, #propNames do
-			luaPropNames[i+1] = propNames[i]
+			luaPropNames[i + 1] = propNames[i]
 		end
 		
 		return luaPropNames
@@ -693,28 +666,51 @@ Layer_ = {
 	dummy = function(self, band)
 		return self.project.terralib:getDummyValue(self.project, self.name, band)
 	end,
-	--- Exports the data of a layer to another data source. 
-	-- The data argument can be either a file string or data table of postigis connection. 
-	-- @arg data Either a file string or data table.
-	-- @arg overwrite Indicates if the exported data will be overwrited.
+	--- Exports the data of a layer to another data source.
+	-- The data can be either a file data or postgis. The SRID and overwrite are common arguments.
+	-- @arg data.srid The SRID related to some projection, it can be used to reproject the data.
+	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
 	-- @usage -- DONTRUN
-	-- layer:export{file = "myfile.shp", true}
-	-- layer:export{file = "myfile.geojson"}	
-	export = function(self, data, overwrite)
-		if type(data) == "string" then 
-			local file = File(data) -- TODO(#1366): the file needs validation
-			local source = file:extension()
+	-- layer:export({file = "myfile.shp", overwrite = "true"})
+	-- layer:export({file = "myfile.geojson"})	
+	-- layer:export({file = "myfile.geojson", srid = 4326})	
+	export = function(self, data)
+		verifyNamedTable(data)
+		
+		if data.srid then 
+			positiveTableArgument(data, "srid")
+		end
+		
+		if data.overwrite then
+			defaultTableValue(data, "overwrite", false)
+		end
+		
+		if type(data.file) == "string" then
+			data.file = File(data.file)
+		end
+
+		if type(data.file) == "File" then
+			verifyUnnecessaryArguments(data, {"source", "file", "srid", "overwrite"})
+			
+			local source = data.file:extension()
+			
 			if isValidSource(source) then
-				local toData = {}
-				toData.file = data			
-				toData.type = source 
-				self.project.terralib:saveLayerAs(self.project, self.name, toData, overwrite)
+				local toData = {
+					file = tostring(data.file),
+					type = source,
+					srid = data.srid
+				}
+
+				self.project.terralib:saveLayerAs(self.project, self.name, toData, data.overwrite)
 			else
 				invalidFileExtensionError("data", source) 
 			end
-		elseif type(data) == "table" then
+		else
 			mandatoryTableArgument(data, "source", "string")
+			
 			if data.source == "postgis" then
+				verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding", "srid", "overwrite"})
+				
 				mandatoryTableArgument(data, "user", "string")
 				mandatoryTableArgument(data, "password", "string")
 				mandatoryTableArgument(data, "database", "string")
@@ -723,48 +719,60 @@ Layer_ = {
 				defaultTableValue(data, "encoding", "CP1252")		
 				local pgData = data
 				pgData.type = "postgis"
-				self.project.terralib:saveLayerAs(self.project, self.name, pgData, overwrite)
+				pgData.srid = data.srid
+				
+				self.project.terralib:saveLayerAs(self.project, self.name, pgData, pgData.overwrite)
 			else
 				customError("It only supports postgis database, use source = \"postgis\".")
 			end
-		else
-			customError("The attribute 'data' must be either 'file' or 'table', but received ("..type(data)..").")
 		end
 	end
 }
 
 metaTableLayer_ = {
-	__index = Layer_, __tostring = _Gtme.tostring
+	__index = Layer_,
+	__tostring = _Gtme.tostring,
+	--- Return the number of objects (points, polygons, lines, or pixels) within the Layer.
+	-- @usage -- DONTRUN
+	--
+	-- print(#layer)
+	__len = function(self)
+		return self.project.terralib:getLayerSize(self.project, self.name)
+	end
 }
 	
---- A Layer representing a geospatial dataset stored into a given data source. 
+--- A Layer representing a geospatial dataset stored in a given data source. 
 -- Each Layer belongs to a Project. It has operations to create new attributes from other Layers.
 -- The data of the Layer can be stored in several different sources, such as a database, 
 -- a file, or even a web service.
 -- @arg data.project A file name with the TerraView project to be used, or a Project.
--- @arg data.name A string with the layer name to be used.
+-- @arg data.name A string with the layer name to be used. If the layer already exists and no
+-- additional argument is used besides project, then it opens such layer.
 -- @arg data.source A string with the data source. See table below:
--- @arg data.input TODO: verify.
+-- @arg data.input Name of the input layer whose coverage area will be used to create a
+-- cellular layer.
+-- @arg data.service A string with the description of a WFS location.
+-- @arg data.feature A string with the name of the feature to be read from a WFS.
 -- @tabular source
 -- Source & Description & Mandatory arguments & Optional arguments \
 -- "none" & Tries to open a Layer already stored in the Project & project, name & \
--- "postgis" & Create a Layer to connect to a PostGIS database. & password, name & user, port, host \
--- "shp" & Create a Layer to work with an ESRI shapefile. & file, name & clean\
--- "webservice" & Create a Layer to connect to a web service. & host, name & \
+-- "postgis" & Create a Layer to connect to a PostGIS database. & password, name, project & user, port, host \
+-- "shp" & Create a Layer to work with an ESRI shapefile. & file, name, project & clean\
+-- "wfs" & Create a Layer to use data stored in a Web Feature Service (WFS). & service, feature, name, project & \
 -- "cell" & Create a cellular Layer. It has a raster-like
 -- representation of space with several attributes created from
 -- different spatial representations.
 -- Cellular Layers homogeneize the spatial representation of a given
 -- model, making the model simpler and requiring less computational
 -- resources. It can be stored in "postgis" or "shp". 
--- & input, resolution & box, name, user, port, host, file \
+-- & input, resolution, project & box, name, user, port, host, file \
 -- @arg data.host String with the host where the database is stored.
 -- The default value is "localhost".
 -- @arg data.port Number with the port of the connection. The default value is the standard port
 -- of the DBMS. For example, MySQL uses 3306 as standard port.
 -- @arg data.user String with the username. The default value is "".
 -- @arg data.password A string with the password.
--- @arg data.file A string with the location of the file to be loaded or created.
+-- @arg data.file A string with the location of the file to be loaded or created, or a base::File.
 -- @arg data.box A boolean value indicating whether the cellular Layer will fill the
 -- box from the input layer (true) or only the minimal set of cells that cover all the
 -- input data (false, default).
@@ -779,12 +787,14 @@ metaTableLayer_ = {
 --     file = "myproject.tview"
 -- }
 --
+-- -- Creating a layer from a shapefile.
 -- Layer{
 --     project = proj,
 --     file = filePath("TI_AMZ.shp", "terralib"),
 --     name = "ti"
 -- }
 --
+-- -- Creating a layer from a PostGIS database.
 -- Layer{
 --     project = proj,
 --     name = "roads",
@@ -793,11 +803,13 @@ metaTableLayer_ = {
 --     table = "roads"
 -- }
 --
+-- -- Opening a layer called "cells".
 -- cl = Layer{
 --     project = filePath("rondonia.tview", "terralib"),
 --     name = "cells"
 -- }
 --
+-- -- Creating a cellular layer.
 -- cl2 = Layer{
 --     project = proj,
 --     input = "amazonia-states",
@@ -805,13 +817,25 @@ metaTableLayer_ = {
 --     file = "cells.shp",
 --     resolution = 5e4 -- 50x50km
 -- }
+--
+-- -- Opening a WFS.
+-- Layer{
+--     project = proj,
+--     name = "protected",
+--     service = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes",
+--     feature = "ProtectedAreas2000",
+-- }
 function Layer(data)
 	verifyNamedTable(data)
 
 	mandatoryTableArgument(data, "name", "string")
 
 	if type(data.project) == "string" then
-		if not File(data.project):exists() then
+		data.project = File(data.project)
+	end
+
+	if type(data.project) == "File" then
+		if not data.project:exists() then
 			customError("Project file '"..data.project.."' does not exist.")
 		end
 

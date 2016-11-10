@@ -1,97 +1,80 @@
-# Find the QWT installation.
-# (c) Raian Vargas Maretto, Pedro R. Andrade 2011, December 2014
-# ----------------------------------------------------------------------------
-# Usage:
-# In your CMakeLists.txt file do something like this:
-# ...
-# # QWT
-# FIND_PACKAGE(qwt)
-# ...
-# if( QWT_FOUND )
-#   include_directories(${QWT_INCLUDE_DIR})
-#   link_directories(${QWT_LIBRARY_DIR})
-# endif( QWT_FOUND )
-# ...
-# Remember to include ${QWT_LIBRARIES} in the target_link_libraries() statement.
 #
-# ----------------------------------------------------------------------------
-# IMPORTANT - You may need to manually set:
-#  HINTS in lines 47 and 52  - path to where the qwt include files are.
-#  PATHS in line 35 and 40  - path to where the qwt library files are.
-#  in case FindGeoTIFF.cmake cannot find the include files or the library files.
+#  Copyright (C) 2008-2014 National Institute For Space Research (INPE) - Brazil.
 #
-# ----------------------------------------------------------------------------
-# The following variables are set if qwt is found:
-#  QWT_FOUND         - Set to true when qwt is found.
-#  QWT_INCLUDE_DIR  - Include directories for qwt
-#  QWT_LIBRARIES     - The qwt libraries.
-#	
+#  This file is part of the TerraLib - a Framework for building GIS enabled applications.
+#
+#  TerraLib is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published by
+#  the Free Software Foundation, either version 3 of the License,
+#  or (at your option) any later version.
+#
+#  TerraLib is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with TerraLib. See COPYING. If not, write to
+#  TerraLib Team at <terralib-team@terralib.org>.
+#
+#
+#  Description: Find Qwt - find Qwt include directory and libraries.
+#
+#  QWT_INCLUDE_DIR - where to find qwt.h.
+#  QWT_LIBRARY     - where to find Qwt libraries.
+#  QWT_FOUND       - True if Qwt found.
+#
+#  Author: Gilberto Ribeiro de Queiroz <gribeiro@dpi.inpe.br>
+#          Juan Carlos P. Garrido <juan@dpi.inpe.br>
+#
 
-cmake_minimum_required(VERSION 3.0)
-# Find library - - tries to find *.a,*.so,*.dylib in paths hard-coded by the script
+if(UNIX)
 
-find_library(QWT_LIBRARY
-   NAMES qwt qwt-qt5
-   PATHS /usr/lib 
-	 /usr/local/lib 
-	 /opt/lib 
-	 /opt/local/lib 
-	 /usr/local/qwt-6.1.1/lib 
-	 /usr/local/qwt-6.1.2/lib 	 
-)
+  find_path(QWT_INCLUDE_DIR qwt.h
+            PATHS /usr
+                  /usr/local
+                  /usr/local/qwt
+            PATH_SUFFIXES include
+                          qwt
+                          include/qwt
+                          lib/qwt.framework/Headers)
 
-# Export include and library path for linking with other libraries
-if(QWTQT5_LIBRARY)
-	# Find path - tries to find *.h in paths hard-coded by the script
-	find_path(QWT_INCLUDE_DIR qwt.h
-		HINTS /usr/local/qwt-6.1.1/lib/qwt.framework/Versions/6/Headers/ 
-		      /usr/local/qwt-6.1.2/lib/qwt.framework/Versions/6/Headers/ 
-		      ${DEPS}/qwt/src 
-		      /usr/local/qwt-6.1.1/lib 
-		      /usr/local/qwt-6.1.2/lib 
-		      /usr/local/qwt-6.1.1/include
-		      /usr/local/qwt-6.1.2/include
-		PATH_SUFFIXES Frameworks
-		NO_DEFAULT_PATH
-	)
-else(QWTQT5_LIBRARY)
-	# Find path - tries to find *.h in paths hard-coded by the script
-	find_path(QWT_INCLUDE_DIR qwt.h
-	HINTS   /usr/local/qwt-6.1.1/lib/qwt.framework/Versions/6/Headers/ 
-		/usr/local/qwt-6.1.2/lib/qwt.framework/Versions/6/Headers/ 
-		/opt/include 
-		/opt/include/qwt 
-		/opt/local/include 
-		/opt/local/include/qwt 
-		/usr/include 
-		/usr/include/qwt 
-		/usr/local/include 
-		/usr/local/include/qwt 
-		${DEPS}/qwt/src 
-		/usr/local/qwt-6.1.1/lib 
-		/usr/local/qwt-6.1.2/lib 
-		/usr/local/qwt-6.1.1/include
-		/usr/local/qwt-6.1.2/include
-	)
-endif(QWTQT5_LIBRARY)
+  find_library(QWT_LIBRARY
+               NAMES qwt
+               PATHS /usr
+                     /usr/local
+                     /usr/local/qwt
+               PATH_SUFFIXES lib
+                             lib/qwt.framework)
 
-if(QWT_INCLUDE_DIR AND (QWTQT5_LIBRARY OR QWT_LIBRARY))
-	set(QWT_FOUND TRUE)
-else(QWT_INCLUDE_DIR AND (QWTQT5_LIBRARY OR QWT_LIBRARY))
-	set(QWT_FOUND FALSE)
-	message("Looked for qwt library.")
-	message("Could NOT find qwt:")
-	if(QWT_LIBRARY)
-		message("\tLibrary: ${QWT_LIBRARY}")
-	else(QWT_LIBRARY)
-		message("\tLibrary: -- NOT FOUND --")
-	endif(QWT_LIBRARY)
-	if(QWT_INCLUDE_DIR)
-		message("\tInclude dir of qwt.h: ${QWT_INCLUDE_DIR}")
-	else(QWT_INCLUDE_DIR)
-		message("\tInflude dir of qwt.h: -- NOT FOUND --")
-	endif(QWT_INCLUDE_DIR)
-endif(QWT_INCLUDE_DIR AND (QWTQT5_LIBRARY OR QWT_LIBRARY))
+elseif(WIN32)
 
-mark_as_advanced(QWT_LIBRARY QWTQT5_LIBRARY)
+  find_path(QWT_INCLUDE_DIR
+            NAMES qwt.h
+            PATH_SUFFIXES include
+                          qwt
+                          include/qwt)
+
+  find_library(QWT_LIBRARY_RELEASE
+               NAMES qwt
+               PATH_SUFFIXES lib)
  
+  find_library(QWT_LIBRARY_DEBUG
+               NAMES qwt_d qwtd
+               PATH_SUFFIXES lib)
+ 
+  if(QWT_LIBRARY_RELEASE AND QWT_LIBRARY_DEBUG)
+    set(QWT_LIBRARY optimized ${QWT_LIBRARY_RELEASE} debug ${QWT_LIBRARY_DEBUG})
+  elseif(QWT_LIBRARY_RELEASE)
+    set(QWT_LIBRARY optimized ${QWT_LIBRARY_RELEASE} debug ${QWT_LIBRARY_RELEASE})
+  elseif(QWT_LIBRARY_DEBUG)
+    set(QWT_LIBRARY optimized ${QWT_LIBRARY_DEBUG} debug ${QWT_LIBRARY_DEBUG})
+  endif()
+
+endif()
+
+include(FindPackageHandleStandardArgs)
+
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Qwt DEFAULT_MSG QWT_LIBRARY QWT_INCLUDE_DIR)
+
+mark_as_advanced(QWT_INCLUDE_DIR QWT_LIBRARY)

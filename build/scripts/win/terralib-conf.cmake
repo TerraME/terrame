@@ -21,8 +21,8 @@
 #
 
 # Main configurations
-set (CMAKE_INSTALL_PREFIX "$ENV{_TERRALIB_INSTALL_PATH}" CACHE PATH "Where to install TerraLib?" FORCE)
-set (CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR}" CACHE PATH "Where are the dependencies of TerraLib?" FORCE)
+set(CMAKE_INSTALL_PREFIX "$ENV{_TERRALIB_INSTALL_PATH}" CACHE PATH "Where to install TerraLib?" FORCE)
+set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR}" CACHE PATH "Where are the dependencies of TerraLib?" FORCE)
 
 set(SWIG_EXECUTABLE "$ENV{_TERRALIB_3RDPARTY_DIR}/../swigwin/swig.exe" CACHE FILEPATH "Where are the SWIG?" FORCE)
 set(TERRALIB_DIR_VAR_NAME "TME_PATH" CACHE STRING "Name of an environment variable with the base installation path of TerraLib")

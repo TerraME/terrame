@@ -23,125 +23,105 @@
 -------------------------------------------------------------------------------------------
 
 return {
-    Layer = function(unitTest)
-        local projName = "asc_basic.tview"
+	Layer = function(unitTest)
+		local projName = File("asc_basic.tview")
 
+		projName:deleteIfExists()
 
-        if File(projName):exists() then
-            File(projName):delete()
-        end
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
 
-        local proj = Project {
-            file = projName,
-            clean = true
-        }
+		local layerName1 = "Biomassa_layer"
 
-        local layerName1 = "Biomassa_layer"
+		Layer {
+			project = proj,
+			name = layerName1,
+			file = filePath("test/biomassa-manaus.asc", "terralib")
+		}
 
-        Layer {
-            project = proj,
-            name = layerName1,
-            file = filePath("test/biomassa-manaus.asc", "terralib")
-        }
+		local filePath1 = File("biomassa_cells_asc_basic.shp")
 
-        local filePath1 = "biomassa_cells_asc_basic.shp"
+		filePath1:deleteIfExists()
 
-        if File(filePath1):exists() then
-            File(filePath1):delete()
-        end
+		local clName1 = "Biomassa_Cells"
 
-        local clName1 = "Biomassa_Cells"
+		local cl1 = Layer {
+			project = proj,
+			source = "shp",
+			input = layerName1,
+			name = clName1,
+			resolution = 60e3,
+			file = filePath1
+		}
 
-        local cl1 = Layer {
-            project = proj,
-            source = "shp",
-            input = layerName1,
-            name = clName1,
-            resolution = 60e3,
-            file = filePath1
-        }
+		unitTest:assertEquals(clName1, cl1.name)
+		unitTest:assertEquals(cl1.source, "shp")
+		unitTest:assertEquals(cl1.file, tostring(filePath1))
 
-        unitTest:assertEquals(clName1, cl1.name)
-        unitTest:assertEquals(cl1.source, "shp")
-        unitTest:assertEquals(cl1.file, _Gtme.makePathCompatibleToAllOS(currentDir() .. "/" .. filePath1))
+		filePath1:deleteIfExists()
+		projName:deleteIfExists()
+	end,
+	representation = function(unitTest)
+		local projName = "cellular_layer_fill_asc_repr.tview"
 
-        if File(filePath1):exists() then
-            File(filePath1):delete()
-        end
+		File(projName):deleteIfExists()
 
-        if File(projName):exists() then
-            File(projName):delete()
-        end
-    end,
-    representation = function(unitTest)
-        local projName = "cellular_layer_fill_asc_repr.tview"
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
 
-        if File(projName):exists() then
-            File(projName):delete()
-        end
+		local vegType = "Biomassa_layer"
+		local l = Layer{
+			project = proj,
+			name = vegType,
+			file = filePath("test/biomassa-manaus.asc", "terralib")
+		}
 
-        local proj = Project {
-            file = projName,
-            clean = true
-        }
+		unitTest:assertEquals(l:representation(), "raster")
 
-        local vegType = "Biomassa_layer"
-        local l = Layer {
-            project = proj,
-            name = vegType,
-            file = filePath("test/biomassa-manaus.asc", "terralib")
-        }
+		File(projName):deleteIfExists()
+	end,
+	bands = function(unitTest)
+		local projName = File("cellular_layer_fill_asc_repr.tview")
 
-        unitTest:assertEquals(l:representation(), "raster")
+		projName:deleteIfExists()
 
-        if File(projName):exists() then
-            File(projName):delete()
-        end
-    end,
-    bands = function(unitTest)
-        local projName = "cellular_layer_fill_asc_repr.tview"
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
 
-        if File(projName):exists() then
-            File(projName):delete()
-        end
+		local vegType = "Biomassa_layer"
+		local l = Layer{
+			project = proj,
+			name = vegType,
+			file = filePath("test/biomassa-manaus.asc", "terralib")
+		}
 
-        local proj = Project {
-            file = projName,
-            clean = true
-        }
+		unitTest:assertEquals(l:bands(), 1)
 
-        local vegType = "Biomassa_layer"
-        local l = Layer {
-            project = proj,
-            name = vegType,
-            file = filePath("test/biomassa-manaus.asc", "terralib")
-        }
+		projName:deleteIfExists()
+	end,
+	__tostring = function(unitTest)
+		local projName = File("cellular_layer_print_asc.tview")
 
-        unitTest:assertEquals(l:bands(), 1)
+		projName:deleteIfExists()
 
-        if File(projName):exists() then
-            File(projName):delete()
-        end
-    end,
-    __tostring = function(unitTest)
-        local projName = "cellular_layer_print_asc.tview"
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
 
-        if File(projName):exists() then
-            File(projName):delete()
-        end
+		local layerName1 = "Biomassa_layer"
 
-        local proj = Project {
-            file = projName,
-            clean = true
-        }
-
-        local layerName1 = "Biomassa_layer"
-
-        local l = Layer {
-            project = proj,
-            name = layerName1,
-            file = filePath("test/biomassa-manaus.asc", "terralib")
-        }
+		local l = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("test/biomassa-manaus.asc", "terralib")
+		}
 
 		local expected = [[file     string [biomassa-manaus.asc]
 name     string [Biomassa_layer]
@@ -149,13 +129,12 @@ project  Project
 rep      string [raster]
 sid      string [8e9b98cc-a511-4b41-9faf-5d67001c7058]
 source   string [asc]
+srid     number [4326.0]
 ]]
-        unitTest:assertEquals(tostring(l), expected, 36, true)
-        -- unitTest:assertFile(projName) -- SKIP #1242
+		unitTest:assertEquals(tostring(l), expected, 36, true)
+		-- unitTest:assertFile(projName) -- SKIP #1242
 
-        if File(projName):exists() then
-            File(projName):delete()
-        end
-    end
+		projName:deleteIfExists()
+	end
 }
 

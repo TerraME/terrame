@@ -98,13 +98,12 @@ return{
 
 		-- the call to notify() above creates the file again.
 		-- remove the line below after refactoring observer.
-		if File("cell.csv"):exists() then File("cell.csv"):delete() end
+		File("cell.csv"):deleteIfExists()
 
 -- FIXME: bug below
 --[[
 		world = Cell{value = 3, value2 = 5}
 
-		unitTest:clear()
 		c = InternetSender{
 			target = world,
 			select = {"value", "value2"},

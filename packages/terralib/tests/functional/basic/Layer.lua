@@ -26,9 +26,9 @@ return {
 	Layer = function(unitTest)
 		local projName = File("cellular_layer_basic.tview")
 
-		if projName:exists() then projName:delete() end
+		projName:deleteIfExists()
 		local proj = Project{
-			file = projName:name(true),
+			file = projName:name(),
 			clean = true
 		}
 
@@ -60,7 +60,7 @@ return {
 			file = filePath1
 		}	
 
-		unitTest:assertEquals(projName:name(true), cl.project.file)
+		unitTest:assertEquals(projName, cl.project.file)
 		unitTest:assertEquals(clName1, cl.name)
 		
 		local cl2 = Layer{
@@ -69,19 +69,16 @@ return {
 		}
 		
 		unitTest:assertEquals(cl2.source, "shp")
-		unitTest:assertEquals(cl2.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath1))			
+		unitTest:assertEquals(cl2.file, currentDir()..filePath1)
 	
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
-		if projName:exists() then projName:delete() end
-
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end
+		projName:deleteIfExists()
+		File(filePath1):deleteIfExists()
 
 		projName = File("setores_2000.tview")
 
-		if projName:exists() then projName:delete() end
-		
+		projName:deleteIfExists()
+
 		local proj1 = Project {
 			file = projName:name(true)
 		}		
@@ -98,14 +95,15 @@ return {
 		}		
 
 		local layerName2 = "MG"
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local layer2 = Layer{
 			project = proj2,
 			name = layerName2,
 			file = filePath("test/MG_cities.shp", "terralib")
 		}
 
-		unitTest:assertEquals(layer1.name, layerName1)
-		unitTest:assertEquals(layer2.name, layerName2)
+		unitTest:assertEquals(layer1.name, layerName1) -- SKIP
+		unitTest:assertEquals(layer2.name, layerName2) -- SKIP
 		
 		local layerName21 = "MG_2"
 		local layer21 = Layer{
@@ -114,8 +112,9 @@ return {
 			file = filePath("test/MG_cities.shp", "terralib")
 		}
 
-		unitTest:assert(layer21.name ~= layer2.name)
-		unitTest:assertEquals(layer21.sid, layer2.sid)		
+		unitTest:assert(layer21.name ~= layer2.name) -- SKIP
+		unitTest:assertEquals(layer21.sid, layer2.sid) -- SKIP	
+	end
 		
 		local layerName3 = "CBERS1"
 		local layer3 = Layer{
@@ -137,7 +136,7 @@ return {
 		unitTest:assertEquals(layer4.sid, layer3.sid)
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 
-		if projName:exists() then projName:delete() end
+		projName:deleteIfExists()
 
 		projName = File("cells_setores_2000.tview")
 		proj = Project{
@@ -152,12 +151,14 @@ return {
 			file = filePath("test/sampa.shp", "terralib")
 		}
 		
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)	
 		layerName2 = "MG"
 		Layer{
 			project = proj,
 			name = layerName2,
 			file = filePath("test/MG_cities.shp", "terralib")	
 		}
+	end
 
 		layerName3 = "CBERS"
 		Layer{
@@ -168,9 +169,7 @@ return {
 		
 		filePath1 = "sampa_cells.shp"
 
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end
+		File(filePath1):deleteIfExists()
 
 		clName1 = "Sampa_Cells"
 		local l1 = Layer{
@@ -182,12 +181,12 @@ return {
 		}
 		
 		unitTest:assertEquals(l1.name, clName1)
-		
+
 		local filePath2 = "mg_cells.shp"
-		
-		if File(filePath2):exists() then
-			File(filePath2):delete()
-		end			
+		local filePath3
+	
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)		
+		File(filePath2):deleteIfExists()
 		
 		local clName2 = "MG_Cells"
 		local l2 = Layer{
@@ -198,13 +197,11 @@ return {
 			file = filePath2		
 		}
 		
-		unitTest:assertEquals(l2.name, clName2)
+		unitTest:assertEquals(l2.name, clName2) -- SKIP
 		
-		local filePath3 = "another_sampa_cells.shp"
+		filePath3 = "another_sampa_cells.shp"
 		
-		if File(filePath3):exists() then
-			File(filePath3):delete()
-		end
+		File(filePath3):deleteIfExists()
 		
 		local clName3 = "Another_Sampa_Cells"
 		local l3 = Layer{
@@ -215,7 +212,8 @@ return {
 			file = filePath3		
 		}
 		
-		unitTest:assertEquals(l3.name, clName3)	
+		unitTest:assertEquals(l3.name, clName3)	-- SKIP
+	end
 		
 		-- BOX TEST
 		local tl = TerraLib{}
@@ -225,9 +223,7 @@ return {
 		clName1 = clName1.."_Box"
 		local filePath4 = clName1..".shp"
 		
-		if File(filePath4):exists() then
-			File(filePath4):delete()
-		end
+		File(filePath4):deleteIfExists()
 		
 		Layer{
 			project = proj,
@@ -241,16 +237,17 @@ return {
 		clSet = tl:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)		
 		
-		-- END
-		if projName:exists() then projName:delete() end
+		projName:deleteIfExists()
 
-		if File(filePath1):exists() then File(filePath1):delete() end
-		if File(filePath2):exists() then File(filePath2):delete() end
-		if File(filePath3):exists() then File(filePath3):delete() end
-		if File(filePath4):exists() then File(filePath4):delete() end
+		File(filePath1):deleteIfExists()
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
+		File(filePath2):deleteIfExists()
+		File(filePath3):deleteIfExists()
+	end
+		File(filePath4):deleteIfExists()
 	end,
 	fill = function(unitTest)
-		local projName = "cellular_layer_basic.tview"
+		local projName = File("cellular_layer_basic.tview")
 		local layerName1 = "Setores_2000"
 		local localidades = "Localidades"
 		local rodovias = "Rodovias"
@@ -266,10 +263,9 @@ return {
 		local clName1 = "Setores_Cells"
 		local filePath1 = clName1..".shp"
 		
-		if File(filePath1):exists() then
-			File(filePath1):delete()
-		end
+		File(filePath1):deleteIfExists()
 
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local cl = Layer{
 			project = proj,
 			source = "shp",
@@ -289,9 +285,7 @@ return {
 		local areaLayerName = clName1.."_Area"
 		local filePath3 = areaLayerName..".shp"
 		
-		if File(filePath3):exists() then
-			File(filePath3):delete()
-		end
+		File(filePath3):deleteIfExists()
 		
 		cl:fill{
 			operation = "area",
@@ -309,9 +303,7 @@ return {
 		-- local distanceLayerName = clName1.."_Distance"
 		-- local filePath5 = distanceLayerName..".shp"
 		
-		-- if File(filePath5):exists() then
-			-- File(filePath5):delete()
-		-- end	
+		-- File(filePath5):deleteIfExists()
 		
 		-- cl:fill{
 			-- operation = "distance",
@@ -402,9 +394,7 @@ return {
 		-- local rmeanLayerName = clName1.."_Mean_Raster"
 		-- local filePath16 = shp16 = rmeanLayerName..".shp"
 
-		-- if File(filePath16):exists() then
-			-- File(filePath16):delete()
-		-- end	
+		-- File(filePath16):deleteIfExists()
 		
 		-- cl:fill{
 			-- operation = "average",
@@ -416,9 +406,7 @@ return {
 		-- local rminLayerName = clName1.."_Minimum_Raster"
 		-- local filePath17 = rminLayerName..".shp"
 
-		-- if File(filePath17):exists() then
-			-- File(filePath17):delete()
-		-- end	
+		-- File(filePath17):deleteIfExists()
 		
 		-- cl:fill{
 			-- operation = "minimum",
@@ -430,9 +418,7 @@ return {
 		-- local rmaxLayerName = clName1.."_Maximum_Raster"
 		-- local filePath18 = rmaxLayerName..".shp"
 
-		-- if File(filePath18):exists() then
-			-- File(filePath18):delete()
-		-- end	
+		-- File(filePath18):deleteIfExists()
 		
 		-- cl:fill{
 			-- operation = "maximum",
@@ -444,9 +430,7 @@ return {
 		-- local rpercentLayerName = clName1.."_Percentage_Raster"
 		-- local filePath19 = rpercentLayerName..".shp"
 
-		-- if File(filePath19):exists() then
-			-- File(filePath19):delete()
-		-- end	
+		-- File(filePath19):deleteIfExists()
 		
 		-- cl:fill{
 			-- operation = "coverage",
@@ -458,9 +442,7 @@ return {
 		-- local rstdevLayerName = clName1.."_Stdev_Raster"
 		-- local filePath20 = rstdevLayerName..".shp"
 
-		-- if File(filePath20):exists() then
-			-- File(filePath20):delete()
-		-- end	
+		-- File(filePath20):deleteIfExists()
 		
 		-- cl:fill{
 			-- operation = "stdev",
@@ -472,9 +454,7 @@ return {
 		-- local rsumLayerName = clName1.."_Sum_Raster"
 		-- local filePath21 = rstdevLayerName..".shp"
 
-		-- if File(filePath21):exists() then
-			-- File(filePath21):delete()
-		-- end
+		-- File(filePath21):deleteIfExists()
 		
 		-- cl:fill{
 			-- operation = "sum",
@@ -496,9 +476,7 @@ return {
 		local cellSpaceLayerName = clName1.."_CellSpace_Sum"
 		local filePath22 = cellSpaceLayerName..".shp"
 
-		if File(filePath22):exists() then
-			File(filePath22):delete()
-		end
+		File(filePath22):deleteIfExists()
 		
 		cs:save(cellSpaceLayerName, "past_sum")
 		
@@ -507,23 +485,25 @@ return {
 			name = cellSpaceLayerName
 		}
 
-		unitTest:assertEquals(cellSpaceLayer.source, "shp")
-		unitTest:assertEquals(cellSpaceLayer.file, _Gtme.makePathCompatibleToAllOS(currentDir().."/"..filePath22))					
-		
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		unitTest:assertEquals(cellSpaceLayer.source, "shp") -- SKIP
+		unitTest:assertEquals(cellSpaceLayer.file, currentDir()..filePath22) -- SKIP
 
-		File(filePath1):delete()
---		File(filePath3):delete()
---		File(filePath5):delete()
-		--File(filePath16):delete()
-		--File(filePath17):delete()
-		--File(filePath18):delete()
-		--File(filePath19):delete()
-		--File(filePath20):delete()
-		--File(filePath21):delete()
-		File(filePath22):delete()
+		projName:deleteIfExists()
+
+		File(filePath1):deleteIfExists()
+--		File(filePath3):deleteIfExists()
+--		File(filePath5):deleteIfExists()
+		--File(filePath16):deleteIfExists()
+		--File(filePath17):deleteIfExists()
+		--File(filePath18):deleteIfExists()
+		--File(filePath19):deleteIfExists()
+		--File(filePath20):deleteIfExists()
+		--File(filePath21):deleteIfExists()
+		File(filePath22):deleteIfExists()
+	else
+		projName:deleteIfExists()
+		unitTest:assert(true) -- SKIP
+	end
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_representation.tview"
@@ -560,7 +540,7 @@ return {
 
 		unitTest:assertEquals(l:representation(), "line")
 		
-		File(proj.file):delete()
+		proj.file:deleteIfExists()
 	end,
 	__tostring = function(unitTest)
 		local projName = File("cellular_layer_print.tview")
@@ -583,10 +563,11 @@ project  Project
 rep      string [polygon]
 sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
 source   string [shp]
+srid     number [29191.0]
 ]]
 		unitTest:assertEquals(tostring(l), expected, 36, true)
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
-		if projName:exists() then projName:delete() end
+		projName:deleteIfExists()
 	end
 }
 

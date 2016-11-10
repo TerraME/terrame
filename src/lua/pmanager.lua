@@ -102,15 +102,14 @@ local function enableAll()
 end
 
 local function buildComboboxPackages(default)
-	local s = sessionInfo().separator
 	comboboxPackages:clear()
 	local pos = 0
 	local index = 0
-	local pkgDir = sessionInfo().path..s.."packages"
-	forEachFile(pkgDir, function(file)
-		if file == "luadoc" or not Directory(pkgDir..s..file):exists() then return end
+	local pkgDir = sessionInfo().path.."packages"
+	forEachDirectory(pkgDir, function(dir)
+		if dir:name() == "luadoc" then return end
 	
-		qt.combobox_add_item(comboboxPackages, file)
+		qt.combobox_add_item(comboboxPackages, dir:name())
 	
 		if file == default then
 			index = pos
@@ -118,6 +117,7 @@ local function buildComboboxPackages(default)
 			pos = pos + 1
 		end
 	end)
+
 	return index
 end
 
@@ -213,7 +213,7 @@ local function selectPackage()
 	end
 
 	local docpath = packageInfo(comboboxPackages.currentText).path
-	docpath = docpath..s.."doc"..s.."index.html"
+	docpath = docpath.."doc"..s.."index.html"
 
 	docButton.enabled = File(docpath):exists()
 
@@ -239,7 +239,8 @@ local function selectPackage()
 	projButton.enabled = #files > 0
 
 	forEachElement(files, function(_, value)
-		qt.combobox_add_item(comboboxProjects, string.sub(value, 0, string.len(value) - 4))
+		local _, file = value:split()
+		qt.combobox_add_item(comboboxProjects, file)
 	end)
 end
 
@@ -267,92 +268,114 @@ local function installButtonClicked()
 	qt.ui.layout_add(mdialog, externalLayout)
 
 	local listPackages = qt.new_qobject(qt.meta.QListWidget)
+	local hasPackageToInstall = false
+	
+	local setPackagesListWidget = function(pkgs)
+		listPackages:clear()
+		local count = 0
+		forEachOrderedElement(pkgs, function(idx, data)
+			data.file = data.package.."_"..data.version..".zip"
+			data.newversion = true
 
-	local count = 0
-	forEachOrderedElement(packages, function(idx, data)
-		data.file = data.package.."_"..data.version..".zip"
-		data.newversion = true
+			pkgsTab[count] = data
 
-		pkgsTab[count] = data
+			local ok, info = pcall(function() return packageInfo(idx) end)
+			local package = idx
 
-		local ok, info = pcall(function() return packageInfo(idx) end)
-		local package = idx
+			if ok then
+				pkgs[info.package].currentVersion = info.version
 
-		if ok then
-			packages[info.package].currentVersion = info.version
-
-        	if _Gtme.verifyVersionDependency(info.version, ">=", data.version) then
-				package = package.." (already installed)"
-				pkgsTab[count].newversion = false
-			else
-				package = package.." (version "..data.version.." available)"
+				if _Gtme.verifyVersionDependency(info.version, ">=", data.version) then
+					package = package.." (already installed)"
+					pkgsTab[count].newversion = false
+				else
+					package = package.." (version "..data.version.." available)"
+					hasPackageToInstall = true
+				end
+			elseif not hasPackageToInstall then
+				hasPackageToInstall = true
 			end
-		end
 
-		count = count + 1
-		qt.listwidget_add_item(listPackages, package)
-	end)
+			count = count + 1
+			qt.listwidget_add_item(listPackages, package)
+		end)
+	end
+	
+	setPackagesListWidget(packages)
 
 	local installButton2 = qt.new_qobject(qt.meta.QPushButton)
 	installButton2.text = "Install"
+	installButton2.enabled = false
+	
+	local installAllButton = qt.new_qobject(qt.meta.QPushButton)
+	installAllButton.text = "Install All"
+	installAllButton.enabled = hasPackageToInstall
+	
+	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
+	cancelButton.text = "Cancel"
+	qt.connect(cancelButton, "clicked()", function()
+		mdialog:done(0)
+	end)	
+	
+	local installRecursive
+	installRecursive = function(pkgfile)
+		local installed = {}
+		_Gtme.print("Downloading "..pkgfile)
+		_Gtme.downloadPackage(pkgfile)
+		_Gtme.print("Installing "..pkgfile)
+		local package = string.sub(pkgfile, 1, string.find(pkgfile, "_") - 1)
+
+		os.execute("unzip -oq \""..pkgfile.."\"")
+
+		_Gtme.print("Verifying dependencies")
+
+		local pinfo = packageInfo(package)
+
+		if pinfo.tdepends then
+			forEachElement(pinfo.tdepends, function(_, dtable)
+				if dtable.package == "terrame" or dtable.package == "base" then return end
+
+				_Gtme.print("Package depends on "..dtable.package)
+				local isInstalled = pcall(function() packageInfo(dtable.package) end)
+
+				if not isInstalled then
+					if not installRecursive(packages[dtable.package].file) then
+						return false
+					end
+
+					installed[dtable.package] = true
+					return true
+				end
+			end)
+		end
+
+		local status, err = pcall(function() _Gtme.installPackage(pkgfile) end)
+
+		if not status then
+			qt.dialog.msg_critical("File "..pkgfile.." could not be installed:\n"..err)
+			return false
+		end
+
+		return true, installed
+	end	
+	
 	qt.connect(installButton2, "clicked()", function()
+		installButton2.enabled = false
+		installAllButton.enabled = false
+		cancelButton.enabled = false
+		disableAll()
+		
 		local tmpdirectory = _Gtme.Directory{tmp = true}
 		local cdir = currentDir()
 
 		tmpdirectory:setCurrentDir()
 
 		local mpkgfile = pkgsTab[listPackages.currentRow].file
-		local installed = {}
-
-		local installRecursive
-
-		installRecursive = function(pkgfile)
-			_Gtme.print("Downloading "..pkgfile)
-			_Gtme.downloadPackage(pkgfile)
-			_Gtme.print("Installing "..pkgfile)
-			local package = string.sub(pkgfile, 1, string.find(pkgfile, "_") - 1)
-
-    		os.execute("unzip -oq \""..pkgfile.."\"")
-
-    		_Gtme.print("Verifying dependencies")
-
-    		local pinfo = packageInfo(package)
-
-    		if pinfo.tdepends then
-		    	forEachElement(pinfo.tdepends, function(_, dtable)
-					if dtable.package == "terrame" or dtable.package == "base" then return end
-
-					_Gtme.print("Package depends on "..dtable.package)
-		    	    local isInstalled = pcall(function() packageInfo(dtable.package) end)
-
-					if not isInstalled then
-						if not installRecursive(packages[dtable.package].file) then
-							return false
-						end
-
-						installed[dtable.package] = true
-						return true
-					end
-				end)
-			end
-
-			local status, err = pcall(function() _Gtme.installPackage(pkgfile) end)
-
-			if not status then
-				qt.dialog.msg_critical("File "..pkgfile.." could not be installed:\n"..err)
-				return false
-			end
-
-			return true
-		end
-
-		local result = installRecursive(mpkgfile)
+		local result, installed = installRecursive(mpkgfile)
 		local package = string.sub(mpkgfile, 1, string.find(mpkgfile, "_") - 1)
 
 		if result then
-			msg = "Package '"..package.."' successfully installed."
-
-			print(_Gtme.getn(installed))
+			local msg = "Package '"..package.."' successfully installed."
 
 			if _Gtme.getn(installed) == 1 then
 				msg = msg.." One additional dependency package was installed:"
@@ -378,16 +401,55 @@ local function installButtonClicked()
 
 		File(mpkgfile):delete()
 
-		_Gtme.Directory(cdir):setCurrentDir()
+		cdir:setCurrentDir()
 		tmpdirectory:delete()
-		mdialog:done(0)
+		setPackagesListWidget(packages)
+		installAllButton.enabled = hasPackageToInstall
+		cancelButton.enabled = true
 	end)
+	
+	qt.connect(installAllButton, "clicked()", function()
+		installAllButton.enabled = false
+		installButton2.enabled = false
+		cancelButton.enabled = false
+		disableAll()
+		
+		local tmpdirectory = _Gtme.Directory{tmp = true}
+		local cdir = currentDir()
 
-	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
-	cancelButton.text = "Cancel"
-	qt.connect(cancelButton, "clicked()", function()
-		mdialog:done(0)
-	end)
+		tmpdirectory:setCurrentDir()
+		
+		local msg = ""
+		
+		for i = 0, _Gtme.getn(pkgsTab) - 1 do
+			if pkgsTab[i].newversion then
+				local mpkgfile = pkgsTab[i].file
+				local result, _ = installRecursive(mpkgfile)
+				local package = string.sub(mpkgfile, 1, string.find(mpkgfile, "_") - 1)
+
+				if result then
+					if msg ~= "" then
+						msg = msg.."\n"
+					end
+					
+					msg = msg.."Package '"..package.."' successfully installed."
+				else
+					qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
+				end
+
+				File(mpkgfile):delete()
+				setPackagesListWidget(packages)	
+			end
+		end
+		
+		if msg ~= "" then
+			qt.dialog.msg_information(msg)
+		end
+		
+		cdir:setCurrentDir()
+		tmpdirectory:delete()		
+		cancelButton.enabled = true
+	end)	
 
 	local description = qt.new_qobject(qt.meta.QLabel)
 	description.text = "Select a package"..
@@ -447,6 +509,7 @@ local function installButtonClicked()
 
 	internalLayout = qt.new_qobject(qt.meta.QHBoxLayout)
 	qt.ui.layout_add(internalLayout, installButton2)
+	qt.ui.layout_add(internalLayout, installAllButton)
 	qt.ui.layout_add(internalLayout, cancelButton)
 
 	qt.ui.layout_add(externalLayout, internalLayout)
@@ -478,7 +541,7 @@ local function installLocalButtonClicked()
 	end
 
 	local currentVersion
-	local packageDir = _Gtme.sessionInfo().path..s.."packages"
+	local packageDir = _Gtme.sessionInfo().path.."packages"
 	if Directory(packageDir..s..package):exists() then
 		currentVersion = packageInfo(package).version
 		_Gtme.printNote("Package '"..package.."' is already installed")
@@ -521,7 +584,7 @@ local function installLocalButtonClicked()
 	if pkg then
 		local ok = true
 		xpcall(function() getPackage(package) end, function(err)
-			Directory(packageInfo(package).path):delete()
+			packageInfo(package).path:delete()
 			qt.dialog.msg_critical(err)
 			ok = false
 		end)

@@ -132,7 +132,12 @@ return{
 		error_func = function()
 			Map{target = c, select = "x", title = 5, slices = 10, color = {"blue", "red"}}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("title", "string", 5))
+		
+		error_func = function()
+			Map{target = c, select = "x", author = 5, slices = 10, color = {"blue", "red"}}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("author"))		
 
 		error_func = function()
 			Map{
@@ -251,9 +256,9 @@ return{
 		unitTest:assertError(error_func, "Invalid description for color in position 1. It should be a table or string, got number.")
 
 		error_func = function()
-			Map{target = c, select = "x", title = 5, slices = 10, color = {"blue", "red"}, grouping = "quantil"}
+			Map{target = c, select = "x", author = 5, slices = 10, color = {"blue", "red"}, grouping = "quantil"}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("author"))
 
 		error_func = function()
 			Map{target = c, select = "x", invert = 2, slices = 10, color = "Blues", grouping = "quantil"}
@@ -451,15 +456,15 @@ return{
 		unitTest:assertError(error_func, "There should not exist repeated elements in 'value'.")
 
 		error_func = function()
-			Map{target = c, select = "x", title = 5, value = {1, 2}, color = {"blue", "red"}}
+			Map{target = c, select = "x", author = 5, value = {1, 2}, color = {"blue", "red"}}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("author"))
 
 		-- none
 		error_func = function()
-			Map{target = c, grouping = "none", title =  "aaa"}
+			Map{target = c, grouping = "none", author =  "aaa"}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("author"))
 
 		error_func = function()
 			Map{target = c, grouping = "none", color = {"blue", "red"}}
@@ -475,6 +480,25 @@ return{
 			Map{target = c, grouping = "none", color = "Blues"}
 		end
 		unitTest:assertError(error_func, "Grouping 'none' cannot use ColorBrewer.")
+
+		-- non-virtual
+		error_func = function()
+			local shpcs = CellularSpace{
+				file = filePath("river.shp", "base")
+			}
+			
+			forEachCell(shpcs, function(cell)
+				cell.value = 1
+			end)
+
+			Map{
+				target = shpcs,
+				select = "value",
+				value = {1, 2},
+				color = {"red", "blue"}
+			}
+		end
+		unitTest:assertError(error_func, "It is not possible to create a Map from this CellularSpace as its objects do not have a valid (x, y) location.")
 
 		-- Society
 		local ag = Agent{}
@@ -588,7 +612,7 @@ return{
 		end
 		unitTest:assertError(error_func, invalidFileExtensionMsg(1, "csv"))
 
-		unitTest:clear()
+		clean()
 
 		error_func = function()
 			m:save("file.bmp")
