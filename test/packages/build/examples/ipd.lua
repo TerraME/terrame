@@ -178,7 +178,12 @@ p = "\t"
 for j = 1, nplayers do
 	p = p..CHAMPIONSHIP[j].name.."\t"
 end
-print(p.."_SUM_")
+
+if sessionInfo().color then
+	print(p.."\027[00;33m_SUM_")
+else
+	print(p.."_SUM_")
+end
 
 for i = 1, nplayers do
 	p = CHAMPIONSHIP[i].name.."\t"
