@@ -1266,24 +1266,26 @@ CellularSpace_ = {
 	-- @arg attrNames A vector with the names of the attributes to be saved. These
 	-- attributes should be only the attributes that were created or modified. The
 	-- other attributes of the layer will also be saved in the new output.
-	-- When saving a single attribute, you can use a string ("attribute") instead of a table ({"attribute"}).
+	-- When saving a single attribute, you can use a string "attribute" instead of a table {"attribute"}.
 	-- @usage -- DONTRUN
-	-- config = getConfig()
-	-- mhost = config.host
-	-- muser = config.user
-	-- mpassword = config.password
-	-- mport = config.port
+	-- import("terralib")
 	--
-	-- cs = CellularSpace{
-	--     host = mhost,
-	--     user = muser,
-	--     password = mpassword,
-	--     port = mport,
-	--     database = "cabecadeboi",
-	--     theme = "cells900x900"
+	-- proj = Project{
+	--     file = "amazonia.tview",
+	--     clean = true,
+	--     amazonia = filePath("amazonia.shp")
 	-- }
 	--
-	-- cs:save("themeName", "height_")
+	-- cs = CellularSpace{
+	--     project = proj,
+	--     layer = "amazonia"
+	-- }
+	--
+	-- forEachCell(cs, function(cell)
+	--     cell.distweight = 1 / cell.distroad
+	-- end)
+	--
+	-- cs:save("myamazonia", "distweight")
 	save = function(self, newLayerName, attrNames)
 		mandatoryArgument(1, "string", newLayerName)
 		
