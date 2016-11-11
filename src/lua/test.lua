@@ -827,9 +827,9 @@ function _Gtme.executeTests(package, fileName)
 						ut.examples_error = ut.examples_error + 1
 					else
 						info_.color = false
-						local value = result()
+						local output = result()
 						info_.color = color
-						return value
+						return output
 					end
 				end
 
