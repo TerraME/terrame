@@ -20,6 +20,7 @@ test = {
 }
 
 package = {
+	filepath          = {package = "filepath", arg = "-example foo"},
 	nodescription     = {package = "nodescription"},
 	nolua             = {package = "nolua"},
 	nopackage         = {package = ""},
