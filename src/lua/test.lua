@@ -122,7 +122,7 @@ local function lineTable(filename)
 					break
 				elseif c == "-" then
 					state = "-"
-				elseif c ~= " " and c ~= "\t" then
+				elseif c ~= " " and c ~= "\t" and string.byte(c) ~= 13 then
 					mtable[count] = 0
 					break
 				end
