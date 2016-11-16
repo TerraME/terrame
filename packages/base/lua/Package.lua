@@ -331,7 +331,7 @@ function packageInfo(package)
 	local pkgdirectory = Directory(sessionInfo().path.."packages"..s..package)
 	if not pkgdirectory:exists() then
 		if package == sessionInfo().package then
-			pkgdirectory = Directory(package)
+			pkgdirectory = Directory(package) -- SKIP
 		end
 	end
 	
