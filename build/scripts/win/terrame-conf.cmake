@@ -26,12 +26,8 @@ set(CMAKE_INSTALL_PREFIX "$ENV{_TERRAME_INSTALL_PATH}" CACHE PATH "Where to inst
 set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR};$ENV{_Qt5_DIR}/lib/cmake;$ENV{_TERRAME_DEPENDS_DIR};$ENV{_MSYS_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
 set(TERRAME_VERSION_STATUS "beta-4.1" CACHE STRING "Define name of installer" FORCE)
 
-if (NOT DEFINED TERRAME_BUILD_AS_BUNDLE)
-	set(TERRAME_BUILD_AS_BUNDLE ON CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
-endif()
-if (NOT DEFINED TERRAME_CREATE_INSTALLER)
-	set(TERRAME_CREATE_INSTALLER OFF CACHE BOOL "Create the installer" FORCE)
-endif()
+set(TERRAME_BUILD_AS_BUNDLE $ENV{_TERRAME_BUILD_AS_BUNDLE} CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
+set(TERRAME_CREATE_INSTALLER $ENV{_TERRAME_CREATE_INSTALLER} CACHE BOOL "Create the installer" FORCE)
 
 # Paths configurations
 set(MSYS_DIR "$ENV{_MSYS_DIR}" CACHE PATH "MSYS directory" FORCE)

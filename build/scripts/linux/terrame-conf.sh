@@ -73,6 +73,18 @@ if [ "$_TERRAME_GIT_DIR" == "" ]; then
 fi
 export _TERRAME_GIT_DIR="$_TERRAME_GIT_DIR"
 
+# Checking cmake _TERRAME_BUILD_AS_BUNDLE variable is unset
+if [ -z ${_TERRAME_BUILD_AS_BUNDLE+x} ]; then
+  _TERRAME_BUILD_AS_BUNDLE=OFF
+fi
+export _TERRAME_BUILD_AS_BUNDLE=$_TERRAME_BUILD_AS_BUNDLE
+
+# Checking cmake _TERRAME_CREATE_INSTALLER variable is unset
+if [ -z ${_TERRAME_CREATE_INSTALLER+x} ]; then
+  _TERRAME_CREATE_INSTALLER=OFF
+fi
+export _TERRAME_CREATE_INSTALLER=$_TERRAME_CREATE_INSTALLER
+
 # Configuring output folder
 mkdir -p $_TERRAME_OUT_DIR
 cp -rf terrame-conf.cmake $_TERRAME_OUT_DIR

@@ -59,8 +59,16 @@ if "%_TERRAME_OUT_DIR%" == "" (
 )
 
 :: Checking terrame codebase dir or setting default
-  if "%_TERRAME_GIT_DIR%" == "" (
+if "%_TERRAME_GIT_DIR%" == "" (
   set _TERRAME_GIT_DIR=../../git/terrame
+)
+
+if "%_TERRAME_BUILD_AS_BUNDLE%" == "" (
+  set _TERRAME_BUILD_AS_BUNDLE=ON
+)
+
+if "%_TERRAME_CREATE_INSTALLER%" == "" (
+  set _TERRAME_CREATE_INSTALLER=OFF
 )
 
 :: -----------------
