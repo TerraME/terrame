@@ -97,7 +97,7 @@ _Gtme.checkPackage = function(package, packagePath)
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
 			local name = Directory(file):relativePath(packagePath)..s..file:name()
-			_Gtme.printWarning("Warning: "..upperFirst(luacheck.get_message(issue))..". In file '"..name.."', line "..issue.line..".")
+			_Gtme.printWarning("Warning: "..upperFirst(luacheck.get_message(issue))..". In file '"..package.."/lua/"..name.."', line "..issue.line..".")
 		end	
 		numIssues = numIssues + #issues
 	end
@@ -108,7 +108,7 @@ _Gtme.checkPackage = function(package, packagePath)
 			local issues = luacheck.check_files(files, options)[1]
 			for _, issue in ipairs(issues) do
 				local name = Directory(file):relativePath(packagePath)..s..file:name()
-				_Gtme.printWarning("Warning: "..upperFirst(luacheck.get_message(issue))..". In file '"..name.."', line "..issue.line..".")
+				_Gtme.printWarning("Warning: "..upperFirst(luacheck.get_message(issue))..". In file 'lua"..name.."', line "..issue.line..".")
 			end	
 			numIssues = numIssues + #issues
 		end	
