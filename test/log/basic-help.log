@@ -16,7 +16,8 @@ Options:
 -gui                    Show the player for the application (it works only
                         when an Environment or a Timer object is used.
 -ide                    Configure TerraME for running from IDEs in Windows.
--install <f>            Install a package stored in a given file <f>.
+-install <pkg>          Install a package stored in TerraME's repository.
+                        It can also be a local .zip file.
 -package <pkg>          Select a given package. If not package is selected,
                         TerraME uses base package. -package can be combined
                         with the following options:
