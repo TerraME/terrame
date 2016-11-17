@@ -443,6 +443,11 @@ function _Gtme.uninstall(package)
 	local arg = si.path..s.."packages"..s..package
 	_Gtme.printNote("Uninstalling package \'"..package.."\'")
 
+	if package == "base" or package == "terralib" then
+		_Gtme.printError("Package '"..package.."' cannot be removed")
+		os.exit(0)
+	end
+
 	if Directory(arg):exists() then
 		Directory(arg):delete()
 		if Directory(arg):exists() then

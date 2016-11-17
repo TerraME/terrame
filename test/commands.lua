@@ -32,6 +32,8 @@ package = {
 	loadwrong         = {package = "load-wrong",     arg = "-example ipd"},
 	check             = {package = "check",          arg = "-check"},
 	install           = {script = "package.lua"},
+	removebase        = {arg = "-uninstall"},
+	removeterralib    = {package = "terralib", arg = "-uninstall"},
 	repository        = {arg = "-install abcd1234wef"}
 }
 
