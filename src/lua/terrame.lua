@@ -844,21 +844,27 @@ function _Gtme.traceback(err)
 			file = string.sub(err, 1, pos - 1)
 			err = string.sub(err, pos + 1)
 			pos = string.find(err, ":") -- remove second ":"
-			line = string.sub(err, 1, pos - 1)
 
-			if tostring(tonumber(line)) ~= line then
-				pos = string.find(err, ":") -- remove first ":"
-				file = string.sub(err, 1, pos - 1)
-				err = string.sub(err, pos + 1)
-				pos = string.find(err, ":") -- remove second ":"
+			if pos then
+
 				line = string.sub(err, 1, pos - 1)
-			end
 
-			if file and sub then -- if string starts with a windows partition (such as C:/)
-				file = sub..file
-			end
+				if tostring(tonumber(line)) ~= line then
+					pos = string.find(err, ":") -- remove first ":"
+					file = string.sub(err, 1, pos - 1)
+					err = string.sub(err, pos + 1)
+					pos = string.find(err, ":") -- remove second ":"
+					line = string.sub(err, 1, pos - 1)
+				end
+	
+				if file and sub then -- if string starts with a windows partition (such as C:/)
+					file = sub..file
+				end
 
-			err = "Error:"..string.sub(err, pos + 1)
+				err = "Error:"..string.sub(err, pos + 1)
+			else
+				err = "Error:"..err
+			end
 		end
 	end
 
