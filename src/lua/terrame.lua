@@ -1398,8 +1398,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					end)
 				else	
 					local tmpdirectory = _Gtme.Directory{tmp = true}
-					local cdir = currentDir()
-
 					tmpdirectory:setCurrentDir()
 
 					local packages = _Gtme.downloadPackagesList()
@@ -1410,7 +1408,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						os.exit(1)
 					end
 
-					local result, installed = _Gtme.installRecursive(pkg.."_"..packages[pkg].version..".zip")
+					_Gtme.installRecursive(pkg.."_"..packages[pkg].version..".zip")
 				end
 
 				os.exit(0)
