@@ -24,7 +24,7 @@
 
 -- @header Some basic and useful functions to handle file names.
 
---- Second order function to transverse all the Layers of a given Project,
+--- Second order function to traverse all the Layers of a given Project,
 -- applying a given function to each of its Layer. If any of the function calls returns
 -- false, forEachLayer() stops and returns false, otherwise it returns true.
 -- @arg project A Project.

@@ -122,7 +122,7 @@ local function lineTable(filename)
 					break
 				elseif c == "-" then
 					state = "-"
-				elseif c ~= " " and c ~= "\t" then
+				elseif c ~= " " and c ~= "\t" and string.byte(c) ~= 13 then
 					mtable[count] = 0
 					break
 				end
@@ -804,7 +804,7 @@ function _Gtme.executeTests(package, fileName)
 						logfile = io.open(lfilename, "w")
 					end
 
-					logfile:write(x.."\n")
+					logfile:write(tostring(x).."\n")
 				end
 
 				collectgarbage("collect")
@@ -813,17 +813,23 @@ function _Gtme.executeTests(package, fileName)
 
 				_Gtme.loadedPackages[package] = nil
 
+				local color = sessionInfo().color
+
 				local myfunc = function()
 					local env = setmetatable({}, {__index = _G})
 					-- loadfile is necessary to avoid any global variable from one
-					-- example affect another example
+					-- example to affect another example
+
 					local result, err = loadfile(baseDir.."examples"..s..value..".lua", 't', env)
 
 					if not result then
 						printError(err)
 						ut.examples_error = ut.examples_error + 1
 					else
-						return result()
+						info_.color = false
+						local output = result()
+						info_.color = color
+						return output
 					end
 				end
 

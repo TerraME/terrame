@@ -343,7 +343,7 @@ function forEachAgent(obj, _sof_)
 	return true
 end
 
---- Second order function to transverse a given CellularSpace, Trajectory, or Agent,
+--- Second order function to traverse a given CellularSpace, Trajectory, or Agent,
 -- applying a given function to each of its Cells. If any of the function calls returns
 -- false, forEachCell() stops and returns false, otherwise it returns true.
 -- @arg cs A CellularSpace, Trajectory, or Agent. Agents need to have a placement
@@ -372,7 +372,7 @@ function forEachCell(cs, _sof_)
 	return true
 end
 
---- Second order function to transverse two CellularSpaces with the same resolution and
+--- Second order function to traverse two CellularSpaces with the same resolution and
 -- size. It applies a function that gets two Cells as arguments, one from each
 -- CellularSpace. Both Cells share the same (x, y) location.
 -- It returns true if no call to the function taken as argument returns false, otherwise
@@ -411,12 +411,12 @@ function forEachCellPair(cs1, cs2, _sof_)
 	return true
 end
 
---- Second order function to transverse the connections of a given Agent, applying a function to
+--- Second order function to traverse the connections of a given Agent, applying a function to
 -- each of them. It returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- There are two ways of using this function because the second argument is optional.
 -- @arg agent An Agent.
--- @arg name (Optional) A string with the name of the SocialNetwork to be transversed. The default value is "1".
+-- @arg name (Optional) A string with the name of the SocialNetwork to be traversed. The default value is "1".
 -- @arg _sof_ A function that takes three arguments: the Agent itself, its connection, and the
 -- connection weight. If some call to f returns false, forEachConnection() stops and does not
 -- process any other connection. In the case where the second argument is missing, this
@@ -459,10 +459,10 @@ function forEachConnection(agent, name, _sof_)
 	return true
 end
 
---- Second order function to transverse a given object, applying a function to each of its
--- elements. It can be used for instance to transverse all the elements of an Agent or an
+--- Second order function to traverse a given object, applying a function to each of its
+-- elements. It can be used for instance to traverse all the elements of an Agent or an
 -- Environment. According to the current Lua version, if one uses this function twice, Lua
--- does not guarantee that the objects will be transversed in the same order. If you need to
+-- does not guarantee that the objects will be traversed in the same order. If you need to
 -- guarantee this, it is recommended to use Utils:forEachOrderedElement() instead.
 -- This function returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
@@ -497,7 +497,7 @@ function forEachElement(obj, _sof_)
 	return true
 end
 
---- Second order function to transverse a given directory,
+--- Second order function to traverse a given directory,
 -- applying a given function on each of its files. Internal directories are
 -- ignored. If any of the function calls returns
 -- false, forEachFile() stops and returns false, otherwise it returns true.
@@ -537,7 +537,7 @@ function forEachFile(directory, _sof_)
 	end)
 end
 
---- Second order function to transverse a given directory,
+--- Second order function to traverse a given directory,
 -- applying a given function on each of its internal directories.
 -- If any of the function calls returns
 -- false, forEachDirectory() stops and returns false, otherwise it returns true.
@@ -594,7 +594,7 @@ local function getFilesRecursively(directory)
 	return files
 end
 
---- Second order function to transverse a given directory recursively,
+--- Second order function to traverse a given directory recursively,
 -- applying a given function on each of its internal files.
 -- If any of the function calls returns
 -- false, forEachRecursiveDirectory() stops and returns false, otherwise it returns true.
@@ -619,7 +619,7 @@ function forEachRecursiveDirectory(directory, _sof_)
 	end)
 end
 
---- Second order function to transverse the instances of Models within a given Environment.
+--- Second order function to traverse the instances of Models within a given Environment.
 -- It applies a given function on each of its instances. If any of the function calls returns
 -- false, forEachModel() stops and returns false, otherwise it returns true.
 -- @arg env An Environment.
@@ -662,12 +662,12 @@ function forEachModel(env, _sof_)
 	return true
 end
 
---- Second order function to transverse a given Neighborhood of a Cell, applying a
+--- Second order function to traverse a given Neighborhood of a Cell, applying a
 -- function in each of its neighbors. It returns true if no call to the function taken as
 -- argument returns false, otherwise it returns false.
 -- There are two ways of using this function because the second argument is optional.
 -- @arg cell A Cell.
--- @arg name (Optional) A string with the name of the Neighborhood to be transversed.
+-- @arg name (Optional) A string with the name of the Neighborhood to be traversed.
 -- The default value is "1".
 -- @arg _sof_ A user-defined function that takes three arguments: the Cell itself, the neighbor
 -- Cell, and the connection weight. If some call to it returns false, forEachNeighbor() stops
@@ -736,7 +736,7 @@ end
 -- current location of a given Agent, applying a function to each of them.
 -- This function requires that the Agent has a default placement ("placement") and
 -- its Cell has a default Neighborhood ("1"). More complex placements and neighborhoods
--- need to be trasversed manually using Agent:getCell() and Cell:getNeighborhood().
+-- need to be traversed manually using Agent:getCell() and Cell:getNeighborhood().
 -- It returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg agent An Agent.
@@ -777,7 +777,7 @@ function forEachNeighborAgent(agent, _sof_)
 	end)
 end
 
---- Second order function to transverse all Neighborhoods of a Cell, applying a given function
+--- Second order function to traverse all Neighborhoods of a Cell, applying a given function
 -- on them. It returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg cell A Cell.
@@ -851,8 +851,8 @@ local function greaterString(str1, str2)
 	end
 end
 
---- Second order function to transverse a given object, applying a function to each of its
--- elements according to their alphabetical order. It can be used for instance to transverse all
+--- Second order function to traverse a given object, applying a function to each of its
+-- elements according to their alphabetical order. It can be used for instance to traverse all
 -- the elements of an Agent or an Environment. This function executes first the positions with
 -- numeric names and then the string ones, with
 -- upper case characters having priority over lower case.
@@ -913,7 +913,7 @@ function forEachOrderedElement(obj, _sof_)
 	return true
 end
 
---- Second order function to transverse all SocialNetworks of an Agent, applying a given function
+--- Second order function to traverse all SocialNetworks of an Agent, applying a given function
 -- on them. It returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg agent An Agent.

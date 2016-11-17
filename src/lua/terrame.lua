@@ -379,21 +379,84 @@ function _Gtme.showDoc(package)
 	end
 end
 
+function _Gtme.installRecursive(pkgfile)
+	local sep = string.find(pkgfile, "_")
+
+	if not sep then
+		_Gtme.printError("Argument '"..pkgfile.."' is not a valid file.")
+		os.exit(1)
+	end
+
+	local package = string.sub(pkgfile, 1, sep - 1)
+	local installed = {}
+
+	local packages = _Gtme.downloadPackagesList()
+	_Gtme.printNote("Downloading package '"..package.."'")
+	_Gtme.downloadPackage(pkgfile)
+
+	os.execute("unzip -oq \""..pkgfile.."\"")
+
+	local pinfo = packageInfo(package)
+	local depends = 0
+
+	if pinfo.tdepends then
+		_Gtme.print("Verifying dependencies")
+		forEachElement(pinfo.tdepends, function(_, dtable)
+			if dtable.package == "terrame" or dtable.package == "base" then return end
+
+			_Gtme.print("Package depends on "..dtable.package)
+			depends = depends + 1
+			local isInstalled = pcall(function() packageInfo(dtable.package) end)
+
+			if not isInstalled then
+				if not _Gtme.installRecursive(dtable.package.."_"..packages[dtable.package].version..".zip") then
+					return false
+				end
+
+				installed[dtable.package] = true
+				return true
+			end
+		end)
+	end
+
+	if depends == 0 then
+		_Gtme.print("Package has no dependencies")
+	end
+
+	local status, err = pcall(function() _Gtme.installPackage(pkgfile) end)
+
+	File(pkgfile):deleteIfExists()
+	Directory(package):delete()
+
+	if not status then
+		customError("File "..pkgfile.." could not be installed:\n"..err)
+		return false
+	end
+
+	return true, installed
+end
+
 function _Gtme.uninstall(package)
 	local si = _Gtme.sessionInfo()
 	local s = si.separator
 
 	local arg = si.path..s.."packages"..s..package
+	_Gtme.printNote("Uninstalling package \'"..package.."\'")
+
+	if package == "base" or package == "terralib" then
+		_Gtme.printError("Package '"..package.."' cannot be removed")
+		os.exit(0)
+	end
 
 	if Directory(arg):exists() then
 		Directory(arg):delete()
 		if Directory(arg):exists() then
-			_Gtme.print("Package \'"..package.."\' could not be uninstalled (wrong permission).")
+			_Gtme.printError("Package \'"..package.."\' could not be uninstalled (wrong permission)")
 		else
-			_Gtme.print("Package \'"..package.."\' was successfully uninstalled.")
+			_Gtme.printNote("Package \'"..package.."\' was successfully uninstalled")
 		end
 	else
-		_Gtme.printError("Package \'"..package.."\' is not installed.")
+		_Gtme.printWarning("Package \'"..package.."\' is not installed.")
 	end
 end
 
@@ -470,7 +533,6 @@ function _Gtme.installPackage(file)
 		return
 	end
 
-	_Gtme.printNote("Installing '"..file.."'.")
 
 	local s = "/" --_Gtme.sessionInfo().separator
 	local package
@@ -484,7 +546,7 @@ function _Gtme.installPackage(file)
 		os.exit(1)
 	end)
 
-	_Gtme.print("Copying package '"..package.."'.")
+	_Gtme.printNote("Installing package '"..package.."'")
 
 	local cDir = _Gtme.currentDir()
 	local packageDir = _Gtme.sessionInfo().path.."packages"
@@ -496,9 +558,9 @@ function _Gtme.installPackage(file)
 	local currentVersion
 	if Directory(packageDir..package):exists() then
 		currentVersion = packageInfo(package).version
-		_Gtme.print("Package '"..package.."' is already installed.")
+		_Gtme.print("Package '"..package.."' is already installed")
 	else
-		_Gtme.print("Package '"..package.."' was not installed before.")
+		_Gtme.print("Package '"..package.."' was not installed before")
 	end
 
 	local tmpdirectory = Directory{tmp = true}
@@ -508,8 +570,7 @@ function _Gtme.installPackage(file)
 
 	os.execute("unzip -oq \""..file.."\"")
 
-	_Gtme.print("Verifying dependencies.")
-
+	_Gtme.print("Verifying dependencies")
 	_Gtme.verifyDepends(package)
 
 	local newVersion = _Gtme.include(package..s.."description.lua").version
@@ -521,12 +582,12 @@ function _Gtme.installPackage(file)
 			_Gtme.printError("execute 'terrame -package "..package.." -uninstall' first.")
 			os.exit(1)
 		else
-			_Gtme.print("Removing previous version of package.")
+			_Gtme.print("Removing previous version of package")
 			Directory(packageDir..package):delete()
 		end
 	end
 
-	_Gtme.print("Trying to load package '"..package.."'.")
+	_Gtme.print("Trying to load package '"..package.."'")
 	local status, err = pcall(function() import(package) end)
 
 	if not status then
@@ -534,13 +595,13 @@ function _Gtme.installPackage(file)
 		_Gtme.customError(err)
 	end
 
-	_Gtme.print("Installing package '"..package.."'.")
+	_Gtme.print("Installing package '"..package.."'")
 	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")
 
 	cDir:setCurrentDir()
 
 	tmpdirectory:delete()
-	_Gtme.print("Package '"..package.."' successfully installed.")
+	_Gtme.printNote("Package '"..package.."' was successfully installed")
 	return package
 end
 
@@ -1328,10 +1389,28 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 				os.exit(0)
 			elseif arg == "-install" then
-				xpcall(function() _Gtme.installPackage(arguments[argCount + 1]) end, function(err)
-					_Gtme.printError(err)
-					os.exit(1)
-				end)
+				local file = File(arguments[argCount + 1])
+
+				if file:extension() == "zip" then
+					xpcall(function() _Gtme.installPackage(arguments[argCount + 1]) end, function(err)
+						_Gtme.printError(err)
+						os.exit(1)
+					end)
+				else	
+					local tmpdirectory = _Gtme.Directory{tmp = true}
+					tmpdirectory:setCurrentDir()
+
+					local packages = _Gtme.downloadPackagesList()
+					local pkg = arguments[argCount + 1]
+
+					if not packages[pkg] then
+						_Gtme.printError("Package '"..pkg.."' does not exist in TerraME repository.")
+						os.exit(1)
+					end
+
+					_Gtme.installRecursive(pkg.."_"..packages[pkg].version..".zip")
+				end
+
 				os.exit(0)
 			elseif arg == "-uninstall" then
 				_Gtme.uninstall(package)
