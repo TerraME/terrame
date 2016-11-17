@@ -30,7 +30,9 @@ package = {
 	loadforgotten     = {package = "load-forgotten", arg = "-example ipd"},
 	loadtwice         = {package = "load-twice",     arg = "-example ipd"},
 	loadwrong         = {package = "load-wrong",     arg = "-example ipd"},
-	check             = {package = "check",          arg = "-check"}
+	check             = {package = "check",          arg = "-check"},
+	install           = {script = "package.lua"},
+	repository        = {arg = "-install abcd1234wef"}
 }
 
 project = {
