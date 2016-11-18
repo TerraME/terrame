@@ -484,7 +484,6 @@ function _Gtme.verifyDepends(package)
 	return result
 end
 
-
 function _Gtme.verifyVersionDependency(newVersion, operator, oldVersion)
 	local newVersionT = _Gtme.getVersion(newVersion)
 	local oldVersionT = _Gtme.getVersion(oldVersion)
