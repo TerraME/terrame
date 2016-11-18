@@ -136,6 +136,7 @@ function _Gtme.buildPackage(package, config, clean)
 		["font.lua"] = true,
 		["license.txt"] = true,
 		lua = true,
+		lib = true,
 		tests = true,
 		examples = true,
 		data = true,
