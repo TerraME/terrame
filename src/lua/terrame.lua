@@ -809,7 +809,24 @@ function _Gtme.traceback(err)
 
 		if not m1 and not m3 then
 			if (si.package and not mb) or (not (m2 or m4)) or (si.package == "base" and mb) then
-				str = str.."\n    File '".._Gtme.makePathCompatibleToAllOS(info.short_src).."'"
+				local short = _Gtme.makePathCompatibleToAllOS(info.short_src)
+				local current = sessionInfo().currentFile
+				local currentStr = tostring(current)
+				local equals
+
+				if string.sub(short, 1, 3) == "..." then
+					local subShort = string.sub(short, 4)
+					local cut = string.sub(currentStr, string.len(currentStr) - string.len(subShort) + 1)
+					equals = cut == subShort
+				else
+					equals = currentStr == short
+				end
+
+				if equals then
+					str = str.."\n    File '"..current:name().."'"
+				else
+					str = str.."\n    File '"..short.."'"
+				end
 
 				if info.currentline > 0 then
 					str = str..", line "..info.currentline

@@ -1,4 +1,4 @@
-Error: attempt to perform arithmetic on field 'w' (a nil value)
+Error: attempt to perform arithmetic on a nil value (field 'w')
 Stack traceback:
-    File scripts/trace-cell.lua, line 6, in second order function, in operator + (addition)
-    File scripts/trace-cell.lua, line 5, in call to function 'forEachCell'
+    File 'trace-cell.lua', line 6, in second order function
+    File 'trace-cell.lua', line 5, in call to function 'forEachCell'

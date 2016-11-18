@@ -86,7 +86,7 @@ basic = {
 	version             = {arg = "-version"},
 	noexample           = {arg = "-example abc"},
 	nodoc               = {arg = "-showdoc", package = "nodoc"},
-	dofile              = {script = "dofile.lua"}
+	dofile              = {script = "dofile.lua"},
 	example             = {arg = "-example ipd"},
 	noconfigure         = {arg = "-configure abc"},
 	uninstall           = {arg = "-package abcdef -uninstall"},

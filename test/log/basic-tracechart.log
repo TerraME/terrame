@@ -1,3 +1,3 @@
 Error: Argument 'data.gr' should have 3 elements, got 2.
 Stack traceback:
-    File trace-chart.lua, line 7, in main chunk
+    File 'trace-chart.lua', line 7, in main chunk
