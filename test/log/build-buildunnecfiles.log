@@ -155,7 +155,7 @@ Temporary files are saved in .terrame_buildunnecfiles_CDETI
 MD5 sum for the package is cdbd0c40523098f5109aa0e5d2c53ae5 *buildunnecfiles_0.1.zip
 The package has a license file.
 Documentation was successfully built.
-9 files are unnecessary.
+7 files are unnecessary.
 4 errors were found in the tests.
 All Models are placed in the right files.
-Summing up, 13 problems were found along the build.
+Summing up, 11 problems were found along the build.
