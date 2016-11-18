@@ -484,7 +484,6 @@ function _Gtme.verifyDepends(package)
 	return result
 end
 
-
 function _Gtme.verifyVersionDependency(newVersion, operator, oldVersion)
 	local newVersionT = _Gtme.getVersion(newVersion)
 	local oldVersionT = _Gtme.getVersion(oldVersion)
@@ -642,7 +641,8 @@ local function usage()
 	print("-gui                    Show the player for the application (it works only")
 	print("                        when an Environment or a Timer object is used.")
 	print("-ide                    Configure TerraME for running from IDEs in Windows.")
-	print("-install <f>            Install a package stored in a given file <f>.")
+	print("-install <pkg>          Install a package stored in TerraME's repository.")
+	print("                        It can also be a local .zip file.")
 	print("-package <pkg>          Select a given package. If not package is selected,")
 	print("                        TerraME uses base package. -package can be combined")
 	print("                        with the following options:")
@@ -808,7 +808,24 @@ function _Gtme.traceback(err)
 
 		if not m1 and not m3 then
 			if (si.package and not mb) or (not (m2 or m4)) or (si.package == "base" and mb) then
-				str = str.."\n    File '".._Gtme.makePathCompatibleToAllOS(info.short_src).."'"
+				local short = _Gtme.makePathCompatibleToAllOS(info.short_src)
+				local current = sessionInfo().currentFile
+				local currentStr = tostring(current)
+				local equals
+
+				if string.sub(short, 1, 3) == "..." then
+					local subShort = string.sub(short, 4)
+					local cut = string.sub(currentStr, string.len(currentStr) - string.len(subShort) + 1)
+					equals = cut == subShort
+				else
+					equals = currentStr == short
+				end
+
+				if equals then
+					str = str.."\n    File '"..current:name().."'"
+				else
+					str = str.."\n    File '"..short.."'"
+				end
 
 				if info.currentline > 0 then
 					str = str..", line "..info.currentline
@@ -844,21 +861,27 @@ function _Gtme.traceback(err)
 			file = string.sub(err, 1, pos - 1)
 			err = string.sub(err, pos + 1)
 			pos = string.find(err, ":") -- remove second ":"
-			line = string.sub(err, 1, pos - 1)
 
-			if tostring(tonumber(line)) ~= line then
-				pos = string.find(err, ":") -- remove first ":"
-				file = string.sub(err, 1, pos - 1)
-				err = string.sub(err, pos + 1)
-				pos = string.find(err, ":") -- remove second ":"
+			if pos then
+
 				line = string.sub(err, 1, pos - 1)
-			end
 
-			if file and sub then -- if string starts with a windows partition (such as C:/)
-				file = sub..file
-			end
+				if tostring(tonumber(line)) ~= line then
+					pos = string.find(err, ":") -- remove first ":"
+					file = string.sub(err, 1, pos - 1)
+					err = string.sub(err, pos + 1)
+					pos = string.find(err, ":") -- remove second ":"
+					line = string.sub(err, 1, pos - 1)
+				end
+	
+				if file and sub then -- if string starts with a windows partition (such as C:/)
+					file = sub..file
+				end
 
-			err = "Error:"..string.sub(err, pos + 1)
+				err = "Error:"..string.sub(err, pos + 1)
+			else
+				err = "Error:"..err
+			end
 		end
 	end
 
@@ -1389,10 +1412,21 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 				os.exit(0)
 			elseif arg == "-install" then
-				local file = File(arguments[argCount + 1])
+				argCount = argCount + 1
+
+				if package ~= "base" then
+					_Gtme.printError("It is not possible to use -package with -install. Run the following command instead:")
+					_Gtme.printError("terrame -install "..package)
+					os.exit(1)
+				elseif not arguments[argCount] then
+					_Gtme.printError("Please use one extra argument with the package name or file to be installed.")
+					os.exit(1)
+				end
+
+				local file = File(arguments[argCount])
 
 				if file:extension() == "zip" then
-					xpcall(function() _Gtme.installPackage(arguments[argCount + 1]) end, function(err)
+					xpcall(function() _Gtme.installPackage(arguments[argCount]) end, function(err)
 						_Gtme.printError(err)
 						os.exit(1)
 					end)
@@ -1401,7 +1435,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					tmpdirectory:setCurrentDir()
 
 					local packages = _Gtme.downloadPackagesList()
-					local pkg = arguments[argCount + 1]
+					local pkg = arguments[argCount]
 
 					if not packages[pkg] then
 						_Gtme.printError("Package '"..pkg.."' does not exist in TerraME repository.")
