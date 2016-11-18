@@ -12,6 +12,9 @@ Skip checking asserts
 Testing tests/functional/basics/Event.lua
 Testing Event
 Skip checking asserts
+Testing tests/observer/alternative/Event.lua
+Testing Event
+Skip checking asserts
 Testing tests/observer/basics/Event.lua
 Testing Event
 Skip checking asserts
@@ -27,10 +30,10 @@ No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 Execution of all asserts was not verified.
-All 38 asserts were executed successfully.
-All 3 tested functions do not have any unexpected execution error.
-All 3 tested functions have at least one assert.
-All 3 tested functions exist in the source code of the package.
+All 45 asserts were executed successfully.
+All 4 tested functions do not have any unexpected execution error.
+All 4 tested functions have at least one assert.
+All 4 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.

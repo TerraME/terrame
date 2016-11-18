@@ -1746,7 +1746,7 @@ TerraLib_ = {
 			local outType = dsInfo:getType()
 
 			-- Config the properties of the new DataSet 
-			for k, v in pairs(toSet[1]) do		
+			forEachOrderedElement(toSet[1], function(k, v)
 				local isPk = (k == pkName)
 			
 				if types[k] ~= nil then
@@ -1768,7 +1768,7 @@ TerraLib_ = {
 						end
 					end
 				end
-			end
+			end)
 
 			-- Create the new DataSet
 			local newDse = binding.te.mem.DataSet(newDst)

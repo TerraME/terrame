@@ -20,6 +20,7 @@ test = {
 }
 
 package = {
+	filepath          = {package = "filepath", arg = "-example foo"},
 	nodescription     = {package = "nodescription"},
 	nolua             = {package = "nolua"},
 	nopackage         = {package = ""},
@@ -29,7 +30,11 @@ package = {
 	loadforgotten     = {package = "load-forgotten", arg = "-example ipd"},
 	loadtwice         = {package = "load-twice",     arg = "-example ipd"},
 	loadwrong         = {package = "load-wrong",     arg = "-example ipd"},
-	check             = {package = "check",          arg = "-check"}
+	check             = {package = "check",          arg = "-check"},
+	install           = {script = "package.lua"},
+	removebase        = {arg = "-uninstall"},
+	removeterralib    = {package = "terralib", arg = "-uninstall"},
+	repository        = {arg = "-install abcd1234wef"}
 }
 
 project = {
@@ -89,6 +94,7 @@ basic = {
 	builderror3         = {arg = "-build", package = "build", arg = "-clea"},
 	builderror4         = {arg = "-build", package = "build", config = "pattern.lua"},
 	basictrace          = {script = "trace-basic.lua"},
+	tmpdir              = {script = "tmpdir.lua", arg = "-strict"},
 	tracepackage        = {script = "trace-package.lua"},
 	tracesyntax         = {script = "trace-syntax.lua"},
 	fulltrace           = {script = "trace-basic.lua", arg = "-ft"},

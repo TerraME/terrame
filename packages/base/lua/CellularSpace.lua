@@ -813,6 +813,9 @@ CellularSpace_ = {
 		self.index_xy_ = nil
 	end,
 	--- Create a Neighborhood for each Cell of the CellularSpace.
+	-- Most of the available strategies require that each Cell has
+	-- attributes with (x, y) locations. It is possible to set the attributes
+	-- that represent (x, y) locations while creating the CellularSpace.
 	-- @arg data.inmemory If true (default), a Neighborhood will be built and stored for
 	-- each Cell of the CellularSpace. The Neighborhoods will change only if the
 	-- modeler add or remove neighbors explicitly. If false, a Neighborhood will be
@@ -1254,31 +1257,35 @@ CellularSpace_ = {
 	sample = function(self)
 		return self.cells[Random():integer(1, #self)]
 	end,
-	--- Save the attributes of a CellularSpace into the same database it was loaded from.
-	-- @arg newLayerName Name of the TerraLib layer to store the saved attributes.
+	--- Save the attributes of a CellularSpace into the same terralib::Project it was loaded from.
+	-- @arg newLayerName Name of the terralib::Layer to store the saved attributes.
 	-- If the original data comes from a shapefile, it will create another shapefile using
-	-- the name of the layer as file name. If the data comes from a PostGIS database, it
-	-- will create a table with name equals to the the layer's name.
-	-- @arg attrNames A vector with the names of the attributes to be saved.
-	-- When saving a single attribute, you can use
-	-- attrNames = "attribute" instead of attrNames = {"attribute"}.
+	-- the name of the layer as file name and will save it in the same directory where the
+	-- original shapefile is stored. If the data comes from a PostGIS database, it
+	-- will create another table with name equals to the the layer's name.
+	-- @arg attrNames A vector with the names of the attributes to be saved. These
+	-- attributes should be only the attributes that were created or modified. The
+	-- other attributes of the layer will also be saved in the new output.
+	-- When saving a single attribute, you can use a string "attribute" instead of a table {"attribute"}.
 	-- @usage -- DONTRUN
-	-- config = getConfig()
-	-- mhost = config.host
-	-- muser = config.user
-	-- mpassword = config.password
-	-- mport = config.port
+	-- import("terralib")
 	--
-	-- cs = CellularSpace{
-	--     host = mhost,
-	--     user = muser,
-	--     password = mpassword,
-	--     port = mport,
-	--     database = "cabecadeboi",
-	--     theme = "cells900x900"
+	-- proj = Project{
+	--     file = "amazonia.tview",
+	--     clean = true,
+	--     amazonia = filePath("amazonia.shp")
 	-- }
 	--
-	-- cs:save("themeName", "height_")
+	-- cs = CellularSpace{
+	--     project = proj,
+	--     layer = "amazonia"
+	-- }
+	--
+	-- forEachCell(cs, function(cell)
+	--     cell.distweight = 1 / cell.distroad
+	-- end)
+	--
+	-- cs:save("myamazonia", "distweight")
 	save = function(self, newLayerName, attrNames)
 		mandatoryArgument(1, "string", newLayerName)
 		
@@ -1296,45 +1303,45 @@ CellularSpace_ = {
 			end
 		end
 		
-		if self.project then
-			local tlib = terralib.TerraLib{}
-			
-			if not self.geometry then
-				local dset = tlib:getDataSet(self.project, self.layer.name)
+		if not self.project then
+			customError("The CellularSpace must have a valid Project. Please, check the documentation.")
+		end
 
+		local tlib = terralib.TerraLib{}
+			
+		if not self.geometry then
+			local dset = tlib:getDataSet(self.project, self.layer.name)
+
+			for i = 0, #dset do
+				for k, v in pairs(dset[i]) do
+					if (k == "OGR_GEOMETRY") or (k == "geom") then
+						self.cells[i + 1][k] = v
+					end
+				end		
+			end
+		else
+			local dset = tlib:getDataSet(self.project, self.layer.name)
+			local isOgr = false
+
+			for k in pairs(dset[0]) do
+				if k == "OGR_GEOMETRY" then
+					isOgr = true
+				end
+			end	
+				
+			if isOgr then
 				for i = 0, #dset do
 					for k, v in pairs(dset[i]) do
-						if (k == "OGR_GEOMETRY") or (k == "geom") then
+						if k == "OGR_GEOMETRY" then
+							self.cells[i + 1].geom = nil
 							self.cells[i + 1][k] = v
 						end
 					end		
 				end
-			else
-				local dset = tlib:getDataSet(self.project, self.layer.name)
-				local isOgr = false
-
-				for k in pairs(dset[0]) do
-					if k == "OGR_GEOMETRY" then
-						isOgr = true
-					end
-				end	
-				
-				if isOgr then
-					for i = 0, #dset do
-						for k, v in pairs(dset[i]) do
-							if k == "OGR_GEOMETRY" then
-								self.cells[i + 1].geom = nil
-								self.cells[i + 1][k] = v
-							end
-						end		
-					end
-				end	
-			end
-			
-			tlib:saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
-		else
-			customError("The CellularSpace must have a valid Project. Please, check the documentation.")
+			end	
 		end
+
+		tlib:saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
 	end,
 	--- Return the number of Cells in the CellularSpace.
 	-- @deprecated CellularSpace:#
@@ -1494,8 +1501,9 @@ metaTableCellularSpace_ = {
 
 --- A multivalued set of Cells. It can be retrieved from databases, files, or created
 -- directly within TerraME. 
--- Every Cell of a CellularSpace has an (x, y) location. The Cell with lower (x, y)
--- represents the upper left location.
+-- Every Cell of a CellularSpace has an (x, y) location that comes from the attributes
+-- (row, col) as default. The Cell with lower (x, y)
+-- represents the bottom left location (see argument zero below).
 -- See the table below with the description and the arguments of each data source.
 -- Calling Utils:forEachCell() traverses CellularSpaces.
 -- @arg data.sep A string with the file separator. The default value is ",".
@@ -1510,7 +1518,7 @@ metaTableCellularSpace_ = {
 -- @arg data.as A table with string indexes and values. It renames the loaded attributes
 -- of the CellularSpace from the values to its indexes.
 -- @arg data.zero A string value describing where the zero in the y axis starts. The
--- default value is "bottom" (as defined by TerraLib). When one uses argument xy, the
+-- default value is "bottom". When one uses argument xy, the
 -- default value is "top", which is the most common representation in different data
 -- formats.
 -- @arg data.xy An optional table with two strings describing the names of the
@@ -1554,10 +1562,9 @@ metaTableCellularSpace_ = {
 -- "proj" & Load from a layer within a TerraLib project. See the documentation of package terralib for
 -- more information. & project, layer & source, geometry, as, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and 
--- different extensions: .shp, .shx, and .dbf. The argument file must contain the
--- extension .shp. Each loaded Cell will have its (x, y) location according to the attributes
--- (row, col) or (Lin, Col) from the shapefile. The first pair keeps compatibility with TerraLib 5, 
--- while the last one is related to TerraLib 4. & file & source, as, xy, zero, geometry, ... \
+-- different extensions: .shp, .shx, and .dbf. The argument file must end with ".shp".
+-- As default, each Cell will have its (x, y) location according
+-- to the attributes (row, col) from the shapefile. & file & source, as, xy, zero, geometry, ... \
 -- "virtual" & Create a rectangular CellularSpace from scratch. Cells will be instantiated with
 -- only two attributes, x and y, starting from (0, 0). & xdim & ydim, as, geometry, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.

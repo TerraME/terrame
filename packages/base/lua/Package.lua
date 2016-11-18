@@ -330,6 +330,12 @@ function packageInfo(package)
 	local s = sessionInfo().separator
 	local pkgdirectory = Directory(sessionInfo().path.."packages"..s..package)
 	if not pkgdirectory:exists() then
+		if package == sessionInfo().package then
+			pkgdirectory = Directory(package) -- SKIP
+		end
+	end
+	
+	if not pkgdirectory:exists() then
 		pkgdirectory = Directory(package)
 		if not pkgdirectory:exists() then
 			customError("Package '"..package.."' is not installed.")

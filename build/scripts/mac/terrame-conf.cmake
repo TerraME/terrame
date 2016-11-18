@@ -32,13 +32,8 @@ set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
 set(CMAKE_INSTALL_PREFIX "$ENV{_TERRAME_INSTALL_PATH}" CACHE PATH "Where to install TerraME?" FORCE)
 set(CMAKE_PREFIX_PATH "${TERRALIB_3RDPARTY_DIR};${Qt5_DIR};${TERRAME_DEPENDENCIES_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
 set(TERRAME_VERSION_STATUS "beta-4.1" CACHE STRING "Define name of installer" FORCE)
-
-if (NOT DEFINED TERRAME_BUILD_AS_BUNDLE)
-	set(TERRAME_BUILD_AS_BUNDLE ON CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
-endif()
-if (NOT DEFINED TERRAME_CREATE_INSTALLER)
-	set(TERRAME_CREATE_INSTALLER OFF CACHE BOOL "Create the installer" FORCE)
-endif()
+set(TERRAME_BUILD_AS_BUNDLE $ENV{_TERRAME_BUILD_AS_BUNDLE} CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
+set(TERRAME_CREATE_INSTALLER $ENV{_TERRAME_CREATE_INSTALLER} CACHE BOOL "Create the installer" FORCE)
 
 # Dependencies paths
 set(QTLUAEXTRAS_LIBRARY "${TERRAME_DEPENDENCIES_DIR}/lib/qtluae.dylib" CACHE PATH "QtLua Extras lib" FORCE)

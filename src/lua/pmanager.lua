@@ -312,52 +312,10 @@ local function installButtonClicked()
 	installAllButton.enabled = hasPackageToInstall
 	
 	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
-	cancelButton.text = "Cancel"
+	cancelButton.text = "Close"
 	qt.connect(cancelButton, "clicked()", function()
 		mdialog:done(0)
 	end)	
-	
-	local installRecursive
-	installRecursive = function(pkgfile)
-		local installed = {}
-		_Gtme.print("Downloading "..pkgfile)
-		_Gtme.downloadPackage(pkgfile)
-		_Gtme.print("Installing "..pkgfile)
-		local package = string.sub(pkgfile, 1, string.find(pkgfile, "_") - 1)
-
-		os.execute("unzip -oq \""..pkgfile.."\"")
-
-		_Gtme.print("Verifying dependencies")
-
-		local pinfo = packageInfo(package)
-
-		if pinfo.tdepends then
-			forEachElement(pinfo.tdepends, function(_, dtable)
-				if dtable.package == "terrame" or dtable.package == "base" then return end
-
-				_Gtme.print("Package depends on "..dtable.package)
-				local isInstalled = pcall(function() packageInfo(dtable.package) end)
-
-				if not isInstalled then
-					if not installRecursive(packages[dtable.package].file) then
-						return false
-					end
-
-					installed[dtable.package] = true
-					return true
-				end
-			end)
-		end
-
-		local status, err = pcall(function() _Gtme.installPackage(pkgfile) end)
-
-		if not status then
-			qt.dialog.msg_critical("File "..pkgfile.." could not be installed:\n"..err)
-			return false
-		end
-
-		return true, installed
-	end	
 	
 	qt.connect(installButton2, "clicked()", function()
 		installButton2.enabled = false
@@ -371,7 +329,7 @@ local function installButtonClicked()
 		tmpdirectory:setCurrentDir()
 
 		local mpkgfile = pkgsTab[listPackages.currentRow].file
-		local result, installed = installRecursive(mpkgfile)
+		local result, installed = _Gtme.installRecursive(mpkgfile)
 		local package = string.sub(mpkgfile, 1, string.find(mpkgfile, "_") - 1)
 
 		if result then
@@ -399,8 +357,6 @@ local function installButtonClicked()
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
 
-		File(mpkgfile):delete()
-
 		cdir:setCurrentDir()
 		tmpdirectory:delete()
 		setPackagesListWidget(packages)
@@ -424,7 +380,7 @@ local function installButtonClicked()
 		for i = 0, _Gtme.getn(pkgsTab) - 1 do
 			if pkgsTab[i].newversion then
 				local mpkgfile = pkgsTab[i].file
-				local result, _ = installRecursive(mpkgfile)
+				local result, _ = _Gtme.installRecursive(mpkgfile)
 				local package = string.sub(mpkgfile, 1, string.find(mpkgfile, "_") - 1)
 
 				if result then

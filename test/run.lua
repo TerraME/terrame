@@ -13,6 +13,19 @@ removeIfExists = function(_, value)
 	end
 end
 
+printTestOutput = function(result)
+	_Gtme.printNote("Printing the test output")
+
+	count = 1
+
+	forEachElement(result, function(_, value)
+		_Gtme.printWarning(count.."\t"..value)
+		count = count + 1
+	end)
+
+	_Gtme.printNote("End of the test output")
+end
+
 initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
 
@@ -257,6 +270,7 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
 					_Gtme.printError("Log file: <end of file>")
 					_Gtme.printError("Test: '"..value.."'.")
+					printTestOutput(result)
 
 					logerror = true
 					report.logerrors = report.logerrors + 1
@@ -274,13 +288,7 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printError("Log file: '"..str.."'.")
 					_Gtme.printError("Test:     '"..value.."'.")
 					_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
-					_Gtme.printNote("Printing the test output")
-
-					forEachElement(result, function(_, value)
-						_Gtme.printWarning("    "..value)
-					end)
-
-					_Gtme.printNote("End of the test output")
+					printTestOutput(result)
 
 					logerror = true
 					report.logerrors = report.logerrors + 1
@@ -453,6 +461,7 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
 					_Gtme.printError("Log file: <end of file>")
 					_Gtme.printError("Test: '"..value.."'.")
+					printTestOutput(result)
 
 					logerror = true
 					report.logerrors = report.logerrors + 1
@@ -467,13 +476,7 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printError("Log file: '"..str.."'.")
 					_Gtme.printError("Test:     '"..value.."'.")
 					_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
-					_Gtme.printNote("Printing the test output")
-
-					forEachElement(result, function(_, value)
-						_Gtme.printWarning("    "..value)
-					end)
-
-					_Gtme.printNote("End of the test output")
+					printTestOutput(result)
 
 					report.locallogerrors = report.locallogerrors + 1
 					logerror = true

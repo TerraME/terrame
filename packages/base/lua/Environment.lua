@@ -574,7 +574,7 @@ metaTableEnvironment_ = {__index = Environment_, __tostring = _Gtme.tostring}
 -- relations between sets of objects. Calling
 -- Utils:forEachElement() traverses each object of an Environment.
 -- If the Environment has a set of Model instances, it is possible to call Utils:forEachModel()
--- to transverse them.
+-- to traverse them.
 -- @arg data.... Agents, Automatons, Cells, CellularSpaces, Societies, Trajectories, Groups,
 -- Timers, Environments, or instances of Models.
 -- @output cObj_ A pointer to a C++ representation of the Environment. Never use this object.
