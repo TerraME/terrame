@@ -1396,10 +1396,21 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 				os.exit(0)
 			elseif arg == "-install" then
-				local file = File(arguments[argCount + 1])
+				argCount = argCount + 1
+
+				if package ~= "base" then
+					_Gtme.printError("It is not possible to use -package with -install. Run the following command instead:")
+					_Gtme.printError("terrame -install "..package)
+					os.exit(1)
+				elseif not arguments[argCount] then
+					_Gtme.printError("Please use one extra argument with the package name or file to be installed.")
+					os.exit(1)
+				end
+
+				local file = File(arguments[argCount])
 
 				if file:extension() == "zip" then
-					xpcall(function() _Gtme.installPackage(arguments[argCount + 1]) end, function(err)
+					xpcall(function() _Gtme.installPackage(arguments[argCount]) end, function(err)
 						_Gtme.printError(err)
 						os.exit(1)
 					end)
@@ -1408,7 +1419,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					tmpdirectory:setCurrentDir()
 
 					local packages = _Gtme.downloadPackagesList()
-					local pkg = arguments[argCount + 1]
+					local pkg = arguments[argCount]
 
 					if not packages[pkg] then
 						_Gtme.printError("Package '"..pkg.."' does not exist in TerraME repository.")

@@ -20,6 +20,8 @@ test = {
 }
 
 package = {
+	installnopackage  = {arg = "-install"},
+	installpackage    = {package = "noexamples", arg = "-install"},
 	filepath          = {package = "filepath", arg = "-example foo"},
 	nodescription     = {package = "nodescription"},
 	nolua             = {package = "nolua"},
