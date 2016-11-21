@@ -186,11 +186,7 @@ int cpp_informations(lua_State *L)
 
 int cpp_version(lua_State *L)
 {
-	std::string v(to_string(TERRAME_VERSION_MAJOR));
-	v.append(".");
-	v.append(to_string(TERRAME_VERSION_MINOR));
-	v.append(".");
-	v.append(to_string(TERRAME_VERSION_PATCH));
+	std::string v(to_string(TERRAME_VERSION_STRING));
 
 	lua_pushstring(L, v.c_str());
 
