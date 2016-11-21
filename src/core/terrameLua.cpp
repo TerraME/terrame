@@ -186,9 +186,7 @@ int cpp_informations(lua_State *L)
 
 int cpp_version(lua_State *L)
 {
-	std::string v(to_string(TERRAME_VERSION_STRING));
-
-	lua_pushstring(L, v.c_str());
+	lua_pushstring(L, TERRAME_VERSION_STRING);
 
 	return 1;
 }
