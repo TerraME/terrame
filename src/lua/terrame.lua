@@ -162,7 +162,7 @@ function _Gtme.getVersion(str)
 end
 
 function _Gtme.downloadPackagesList()
-	local version = "2.0.0-beta-5" --sessionInfo().version
+	local version = sessionInfo().version
 	local list = load(cpp_listpackages("http://www.terrame.org/packages/"..version.."/packages.lua"))
 
 	if not list then return {} end
@@ -172,7 +172,7 @@ function _Gtme.downloadPackagesList()
 end
 
 function _Gtme.downloadPackage(pkg)
-	local version = "2.0.0-beta-5" --sessionInfo().version
+	local version = sessionInfo().version
 	cpp_downloadpackage(pkg, "http://www.terrame.org/packages/"..version.."/")
 end
 
@@ -907,10 +907,16 @@ local function loadModules(pkg)
 	if pkg:exists() then
 		package.path = package.path..";"..pkg.."/?.lua"
 		cpp_putenv(tostring(pkg))
-		package.cpath = package.cpath..";"..pkg.."/?.dll"
-									 ..";"..pkg.."/?.so"
-									 ..";"..pkg.."/?.lib"
-									 ..";"..pkg.."/?.dylib"
+
+		local system = sessionInfo().system
+
+		if system == "windows" then
+			package.cpath = package.cpath..";"..pkg.."/?.dll"
+		elseif system == "linux" then
+			package.cpath = package.cpath..";"..pkg.."/?.so"
+		else -- system == "mac"
+			package.cpath = package.cpath..";"..pkg.."/?.dylib"
+		end
 	end
 end
 
