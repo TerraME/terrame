@@ -907,10 +907,16 @@ local function loadModules(pkg)
 	if pkg:exists() then
 		package.path = package.path..";"..pkg.."/?.lua"
 		cpp_putenv(tostring(pkg))
-		package.cpath = package.cpath..";"..pkg.."/?.dll"
-									 ..";"..pkg.."/?.so"
-									 ..";"..pkg.."/?.lib"
-									 ..";"..pkg.."/?.dylib"
+
+		local system = sessionInfo().system
+
+		if system == "windows" then
+			package.cpath = package.cpath..";"..pkg.."/?.dll"
+		elseif system == "linux" then
+			package.cpath = package.cpath..";"..pkg.."/?.so"
+		else -- system == "mac"
+			package.cpath = package.cpath..";"..pkg.."/?.dylib"
+		end
 	end
 end
 
