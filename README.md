@@ -9,7 +9,7 @@ MS Windows, Mac OS X and Linux.
 
 ### Installing
 
-Please visit the [download page](https://github.com/TerraME/terrame/releases). There you can find installers and instructions for different operational systems. It is also possible to compile TerraME from scratch. See [How to build TerraME in Wiki Page](https://github.com/TerraME/terrame/wiki/Building-and-Configuring).
+Please visit the [download page](https://github.com/TerraME/terrame/releases). There you can find installers and instructions for different operational systems. It is also possible to [compile TerraME from scratch](https://github.com/TerraME/terrame/wiki/Building-and-Configuring).
 
 ### Getting started
 
@@ -23,7 +23,7 @@ using the command prompt. The graphical interface has options to run examples, c
 see documentation, as well as download and install additional packages. There are links to the source code
 of the models as well as the examples in the documentation.
 
-To develop your own models you will need a Lua editor. We currently recommend ZeroBraneStudio.
+To develop your own models you will need a Lua editor. We currently recommend ZeroBrane.
 Please follow the instructions available [here](http://www.terrame.org/doku.php#editor) to install and configure it properly.
 
 ## Reporting Bugs
