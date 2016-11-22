@@ -835,6 +835,7 @@ function _Gtme.executeTests(package, fileName)
 
 				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
+					info_.color = color
 					printError("Error in example: ".._Gtme.traceback(err))
 				end)
 
