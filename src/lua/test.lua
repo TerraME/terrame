@@ -603,9 +603,9 @@ function _Gtme.executeTests(package, fileName)
 
 				if data.time then
 					local testFinalTime = os.clock()
-					local difference = testFinalTime - testInitialTime
+					local difference = round(testFinalTime - testInitialTime, 1)
 
-					local text = "Test executed in "..round(difference, 1).." seconds"
+					local text = "Test executed in "..difference.." seconds"
 
 					if difference > 30 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")

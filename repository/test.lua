@@ -167,9 +167,9 @@ forEachOrderedElement(pkgs, function(package)
 	execute(command, "doc-"..package..".log")
 
 	local docFinalTime = os.time(os.date("*t"))
-	local difference = docFinalTime - docInitialTime
+	local difference = round(docFinalTime - docInitialTime, 1)
 
-	local text = "Documentation executed in "..round(difference, 1).." seconds"
+	local text = "Documentation executed in "..difference.." seconds"
 
 	if difference > 30 then
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
@@ -192,9 +192,9 @@ forEachOrderedElement(pkgs, function(package)
 	execute(command, "test-"..package..".log")
 
 	local testFinalTime = os.time(os.date("*t"))
-	local difference = testFinalTime - testInitialTime
+	local difference = round(testFinalTime - testInitialTime, 1)
 
-	local text = "Test executed in "..round(difference, 1).." seconds"
+	local text = "Test executed in "..difference.." seconds"
 
 	if difference > 30 then
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
