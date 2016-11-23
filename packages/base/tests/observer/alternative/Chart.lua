@@ -269,6 +269,68 @@ return{
 		end
 		unitTest:assertError(error_func, "All the elements of an RGB composition should be numbers, got 'string' in position 2.")
 
+		error_func = function()
+			Chart{target = cell, select = {"v1", "v2", "v3"}, value = {"abc"}}
+		end
+		unitTest:assertError(error_func, "Argument 'value' can only be used with CellularSpace or Society, got Cell.")
+
+		cell = Cell{
+			value = function() return {a = 2, b = 3, c = 4} end
+		}
+
+		error_func = function()
+			Chart{target = cell, select = "value"}
+		end
+		unitTest:assertError(error_func, "It is only possible to observe functions that return tables using CellularSpace or Society, got Cell.")
+
+		cell = Cell{
+			state = "alive"
+		}
+
+		local cs = CellularSpace{
+			xdim = 10,
+			instance = cell
+		}
+
+		error_func = function()
+			Chart{
+				target = cs,
+				select = "state",
+				value = {"dead", "alive"},
+				color = {"black"}
+			}	
+		end
+		unitTest:assertError(error_func, "Arguments 'value' and 'color' should have the same size, got 2 and 1.")
+
+		error_func = function()
+			Chart{
+				target = cs,
+				select = "state",
+				color = {"black"}
+			}	
+		end
+		unitTest:assertError(error_func, "Argument 'value' is mandatory when observing a function that returns a table.")
+
+		error_func = function()
+			Chart{
+				target = cs,
+				select = "state",
+				value = 1,
+				color = {"black"}
+			}	
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("value", "table", 1))
+
+		error_func = function()
+			Chart{
+				target = cs,
+				select = "state",
+				value = {"dead", 1},
+				color = {"black"}
+			}	
+		end
+		unitTest:assertError(error_func, "Argument 'value' should contain only strings, got number.")
+
 		-- chart using data
 		local tab = makeDataTable{
 			first = 2000,
@@ -307,7 +369,6 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("data.demand2", "table"))
-
 
 		error_func = function()
 			Chart{

@@ -28,14 +28,6 @@ local printNote  = _Gtme.printNote
 function _Gtme.executeProject(package)
 	local initialTime = os.clock()
 
-	if not isLoaded("base") then
-		import("base")
-	end
-
-	if not isLoaded("terralib") then
-		import("terralib")
-	end
-
 	printNote("Creating projects for package '"..package.."'")
 
 	local package_path = _Gtme.packageInfo(package).path
@@ -169,7 +161,6 @@ function _Gtme.executeProject(package)
 
 	if project_report.projects == 0 then
 		printNote("No project file was created.")
-		os.exit(0)
 	elseif project_report.projects == 1 then
 		printNote("One project file was created.")
 	else

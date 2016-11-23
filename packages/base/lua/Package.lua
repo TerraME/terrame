@@ -47,7 +47,7 @@ function filePath(filename, package)
 			local luafile = File(packageInfo(package).data..name..".lua")
 
 			if luafile:exists() then
-				msg = msg.." Please run 'terrame -package "..package.." -project' to create it."
+				msg = msg.." Please run 'terrame -package "..package.." -project "..name.."' to create it."
 				customError(msg)
 			end
 		end

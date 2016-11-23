@@ -40,13 +40,14 @@ package = {
 }
 
 project = {
-	showprojects  = {package = "terralib", arg = "-project"},
-	runprojects   = {package = "terralib", arg = "-quiet -projects"},
-	errorprojects = {package = "project",  arg = "-projects"},
-	nopackage1    = {package = "abcdef",   arg = "-project"},
-	nopackage2    = {package = "abcdef",   arg = "-projects"},
-	noproject     = {                      arg = "-project"},
-	noprojects    = {                      arg = "-projects"}
+	showprojects  = {package = "terralib",  arg = "-project"},
+	runprojects   = {package = "terralib",  arg = "-quiet -projects"},
+	errorprojects = {package = "project",   arg = "-projects"},
+	nopackage1    = {package = "abcdef",    arg = "-project"},
+	nopackage2    = {package = "abcdef",    arg = "-projects"},
+	noproject     = {                       arg = "-project"},
+	noprojects    = {                       arg = "-projects"},
+	wrongdata     = {package = "wrongdata", arg = "-projects"}
 }
 
 doc = {

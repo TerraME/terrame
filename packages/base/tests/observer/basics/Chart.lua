@@ -130,6 +130,55 @@ return{
 		unitTest:assertSnapshot(c1, "chart-table-1.bmp", 0.03)
 		unitTest:assertSnapshot(c2, "chart-table-2.bmp", 0.03)
 
+		-- chart observing string values from sets
+		local cell = Cell{
+			state = "alive"
+		}
+
+		local cs = CellularSpace{
+			xdim = 10,
+			instance = cell
+		}
+
+		local chart = Chart{
+			target = cs,
+			select = "state",
+			value = {"dead", "alive"},
+			color = {"black", "blue"}
+		}	
+
+		chart:update(1)
+		for i = 2, 30 do
+			cs:sample().state = "dead"
+			chart:update(i)
+		end
+
+		unitTest:assertSnapshot(chart, "chart-function-cs.bmp", 0.1)
+
+		local agent = Agent{
+			state = "alive"
+		}
+
+		soc = Society{
+			quantity = 50,
+			instance = agent
+		}
+
+		chart = Chart{
+			target = soc,
+			select = "state",
+			value = {"dead", "alive"},
+			color = {"black", "blue"}
+		}	
+
+		chart:update(1)
+		for i = 2, 30 do
+			soc:sample().state = "dead"
+			chart:update(i)
+		end
+
+		unitTest:assertSnapshot(chart, "chart-function-soc.bmp", 0.1)
+
 		-- chart using data
 		local tab = makeDataTable{
 			first = 2000,

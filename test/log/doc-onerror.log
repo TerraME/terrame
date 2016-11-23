@@ -87,6 +87,7 @@ One problem was found in the documentation of data.
 One problem was found in the documentation of fonts.
 One source code line starting with --- is invalid.
 One error was found in the documentation of Models.
+All projects were successfully processed.
 One global function is not documented.
 One function is declared twice in the source code.
 One description ends with wrong character.

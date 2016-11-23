@@ -110,6 +110,7 @@ No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 All 9 Models are correctly documented.
+All projects were successfully processed.
 All 6 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.

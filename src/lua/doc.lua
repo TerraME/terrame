@@ -90,7 +90,7 @@ local function dataFiles(package)
 	return result
 end
 
-local function getProjects(package)
+local function getProjects(package, doc_report)
 	local projects = {}
 	local layers = {}
 	local currentProject
@@ -149,7 +149,7 @@ local function getProjects(package)
 
 		if createdFiles[data.file] then
 			printError("File '"..data.file.."' is created more than once.")
-			project_report.errors_output = project_report.errors_output + 1	
+			doc_report.projects = doc_report.projects + 1	
 		else
 			createdFiles[data.file] = true
 		end
@@ -235,7 +235,7 @@ local function getProjects(package)
 
 			if createdFiles[mfile:name()] then
 				printError("File '"..mfile:name().."' is created more than once.")
-				project_report.errors_output = project_report.errors_output + 1	
+				doc_report.projects = doc_report.projects + 1	
 			else
 				createdFiles[mfile:name()] = true
 			end
@@ -288,6 +288,7 @@ local function getProjects(package)
 
 			xpcall(function() dofile(tostring(file)) end, function(err)
 				printError(_Gtme.traceback(err))
+				doc_report.projects = doc_report.projects + 1	
 			end)
 
 			clean()
@@ -378,6 +379,7 @@ function _Gtme.executeDoc(package)
 		global_functions = 0,
 		functions = 0,
 		models = 0,
+		projects = 0,
 		model_error = 0,
 		variables = 0,
 		links = 0,
@@ -490,7 +492,7 @@ function _Gtme.executeDoc(package)
 			os.exit(1)
 		end)
 
-		projects = getProjects(package)
+		projects = getProjects(package, doc_report)
 
 		forEachOrderedElement(projects, function(_, value)
 			if value.layers or string.find(value.summary, "resolution") then -- a project or a layer of cells
@@ -1056,6 +1058,14 @@ function _Gtme.executeDoc(package)
 		end
 	else
 		printNote("There are no Models in the package.")
+	end
+
+	if doc_report.projects == 1 then
+		printError("One problem was found while processing projects.")
+	elseif doc_report.projects > 1 then
+		printError(doc_report.projects.." problems were found while processing projects.")
+	else
+		printNote("All projects were successfully processed.")
 	end
 
 	if doc_report.undoc_functions == 1 then
