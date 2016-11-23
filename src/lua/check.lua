@@ -94,21 +94,24 @@ _Gtme.checkPackage = function(package, packagePath)
 	_Gtme.printNote("Analysing source code")
 	for _, file in ipairs(luaFiles) do
 		local files = {tostring(file)}
+		
+		local name = Directory(file):relativePath(packagePath)..s..file:name()
+		_Gtme.print("Checking '"..package.."/lua/"..name.."'")
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
-			local name = Directory(file):relativePath(packagePath)..s..file:name()
-			_Gtme.printWarning("Warning: "..upperFirst(luacheck.get_message(issue))..". In file '"..package.."/lua/"..name.."', line "..issue.line..".")
+			_Gtme.printError("Line "..issue.line..": "..upperFirst(luacheck.get_message(issue))..".")
 		end	
 		numIssues = numIssues + #issues
 	end
 
 	if #srcFiles > 0 then
 		for _, file in ipairs(srcFiles) do
+			local name = Directory(file):relativePath(packagePath)..s..file:name()
+			_Gtme.print("Checking 'lua"..name.."'")
 			local files = {tostring(file)}
 			local issues = luacheck.check_files(files, options)[1]
 			for _, issue in ipairs(issues) do
-				local name = Directory(file):relativePath(packagePath)..s..file:name()
-				_Gtme.printWarning("Warning: "..upperFirst(luacheck.get_message(issue))..". In file 'lua"..name.."', line "..issue.line..".")
+				_Gtme.printError("Line "..issue.line..": "..upperFirst(luacheck.get_message(issue))..".")
 			end	
 			numIssues = numIssues + #issues
 		end	
@@ -116,11 +119,12 @@ _Gtme.checkPackage = function(package, packagePath)
 	
 	_Gtme.printNote("Analysing tests")
 	for _, file in ipairs(testFiles) do
+		local name = Directory(file):relativePath(packagePath)..s..file:name()
+		_Gtme.print("Checking '"..name.."'")
 		local files = {tostring(file)}
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
-			local name = Directory(file):relativePath(packagePath)..s..file:name()
-			_Gtme.printWarning("Warning: "..upperFirst(luacheck.get_message(issue))..". In file '"..name.."', line "..issue.line..".")
+			_Gtme.printError("Line "..issue.line..": "..upperFirst(luacheck.get_message(issue))..".")
 		end	
 		numIssues = numIssues + #issues
 	end
