@@ -11,6 +11,7 @@ In the documentation of 'abc2.txt', description of attribute 'def' should be str
 In the documentation of 'abc3.txt', all names should be string, got 2 invalid names.
 Processing lua files
 Processing 'myfile.lua'
+File /Applications/terrame.app/Contents/MacOS/packages/wrongdata/data/file.csv
 Error: attempt to perform arithmetic on a nil value (global 'bbbbb')
 Stack traceback:
     File '...me.app/Contents/MacOS/packages/wrongdata/data/myfile.lua', line 2, in call to operator + (addition)

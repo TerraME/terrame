@@ -1,0 +1,15 @@
+Creating projects for package 'wrongdata'
+Removing output files
+Checking if data does not contain any .tview file
+Processing 'data/myfile.lua'
+File /Applications/terrame.app/Contents/MacOS/packages/wrongdata/data/file.csv
+Could not execute the script properly: ...me.app/Contents/MacOS/packages/wrongdata/data/myfile.lua:4: attempt to perform arithmetic on a nil value (global 'bbbbb')
+File 'myfile.tview' was not created.
+
+Projects report for package 'wrongdata':
+Projects were created in 0.01 seconds.
+One project file was created.
+No invalid .tview file was found in the package.
+One error was found while creating projects.
+One problem was found in the output of lua files.
+Summing up, 2 problems were found while creating projects.

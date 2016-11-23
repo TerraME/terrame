@@ -1381,10 +1381,34 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(1)
 				end)
 
+				import("base")
+				import("terralib")
+
+				local pkgPath = sessionInfo().path.."/packages/"..package
+				local runningLocal = false
+				local originalDir = currentDir()
+
+				if not isDirectory(pkgPath) then
+					runningLocal = true
+					os.execute("cp -r "..package.." "..pkgPath)
+				end
+
 				_Gtme.myxpcall(function() errors = _Gtme.executeProject(package) end, function(err)
 					_Gtme.printError(err)
+
+					if runningLocal then
+						Directory(pkgPath):delete()
+					end
+
 					os.exit(1)
 				end)
+
+				originalDir:setCurrentDir()
+
+				if runningLocal then
+					os.execute("cp -r "..pkgPath.."/data/* "..package.."/data")
+					Directory(pkgPath):delete()
+				end
 
 				os.exit(errors)
 			elseif arg == "-autoclose" then
