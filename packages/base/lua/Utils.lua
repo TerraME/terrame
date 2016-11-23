@@ -1590,20 +1590,15 @@ function type(data)
 	return t
 end
 
--- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
---- Function that returns a string describing the internal content of an object.
--- It converts a table into a string that represents a Lua code that declares such table.
--- If some internal object is named "parent", it will be converted into a string with the
--- type of the object. It avoids infinite loops due to the internal cyclic representation
--- of TerraME.
--- @arg o The object to be converted into a string.
--- @arg indent A string to be placed in the beginning of each line of the returning string.
--- @usage vardump{name = "john", age = 20}
--- -- {
--- --     age = 20, 
--- --     name = "john"
--- -- }
-function vardump(o, indent)
+local function recursiveVardump(o, indent, tables)
+	if isTable(o) then
+		if tables[o] then
+			return "\"<copy of another table above>\""
+		end
+
+		tables[o] = true
+	end
+
 	if indent == nil then indent = "" end
 
 	local indent2 = indent.."    "
@@ -1632,12 +1627,12 @@ function vardump(o, indent)
 			if type(k) == "string" then
 				local char = string.sub(k, 1, 1)
 				if string.match(k, "[%w_]+") == k and string.match(char, "%a") == char then
-					s = s..tostring(k).." = "..vardump(v, indent2)
+					s = s..tostring(k).." = "..recursiveVardump(v, indent2, tables)
 				else
-					s = s.."[\""..tostring(k).."\"] = "..vardump(v, indent2)
+					s = s.."[\""..tostring(k).."\"] = "..recursiveVardump(v, indent2, tables)
 				end
 			elseif type(k) == "boolean" then
-				s = s.."["..tostring(k).."] = "..vardump(v, indent2)
+				s = s.."["..tostring(k).."] = "..recursiveVardump(v, indent2, tables)
 			elseif type(k) == "number" then
 				if k ~= count then
 					s = s.."["..k.."] = "
@@ -1645,7 +1640,7 @@ function vardump(o, indent)
 					count = count + 1
 				end
 
-				s = s..vardump(v, indent2)
+				s = s..recursiveVardump(v, indent2, tables)
 			else
 				customError("Function vardump cannot handle an index of type "..type(k)..".")
 			end
@@ -1659,5 +1654,22 @@ function vardump(o, indent)
 	else
 		return "\""..string.gsub(tostring(o), "\n", "\\n").."\""
 	end
+end
+
+-- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
+--- Function that returns a string describing the internal content of an object.
+-- It converts a table into a string that represents a Lua code that declares such table.
+-- If some internal object is named "parent", it will be converted into a string with the
+-- type of the object. It avoids infinite loops due to the internal cyclic representation
+-- of TerraME.
+-- @arg o The object to be converted into a string.
+-- @arg indent A string to be placed in the beginning of each line of the returning string.
+-- @usage vardump{name = "john", age = 20}
+-- -- {
+-- --     age = 20, 
+-- --     name = "john"
+-- -- }
+function vardump(o, indent)
+	return recursiveVardump(o, indent, {})
 end
 
