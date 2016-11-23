@@ -10,6 +10,10 @@ Warning: Argument 'types' is unnecessary. In file ...ro/github/terrame-pedro/tes
 In the documentation of 'abc2.txt', description of attribute 'def' should be string, got number.
 In the documentation of 'abc3.txt', all names should be string, got 2 invalid names.
 Processing lua files
+Processing 'myfile.lua'
+Error: attempt to perform arithmetic on a nil value (global 'bbbbb')
+Stack traceback:
+    File '...me.app/Contents/MacOS/packages/wrongdata/data/myfile.lua', line 2, in call to operator + (addition)
 Checking directory 'data'
 Checking properties of data files
 File 'file.csv' is not documented
@@ -49,6 +53,7 @@ All fields of 'description.lua' are correct.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
+One problem was found while processing projects.
 All 0 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
@@ -66,4 +71,4 @@ No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
 All 0 examples are correctly documented.
-Summing up, 14 problems were found in the documentation.
+Summing up, 15 problems were found in the documentation.
