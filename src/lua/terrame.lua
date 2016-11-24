@@ -1442,9 +1442,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						os.exit(1)
 					end)
 				else	
-					local tmpdirectory = _Gtme.Directory{tmp = true}
-					tmpdirectory:setCurrentDir()
-
 					local packages = _Gtme.downloadPackagesList()
 					local pkg = arguments[argCount]
 
