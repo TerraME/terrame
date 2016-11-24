@@ -76,17 +76,17 @@ forEachDirectory("packages", function(dir)
 	end
 end)
 
+_Gtme.printNote("Removing files")
+initialRemove = _Gtme.include("remove.lua")
+
+forEachElement(initialRemove.files, removeIfExists)
+
 _Gtme.printNote("Copying packages")
 forEachDirectory("packages", function(dir)
 	_Gtme.print("Copying '"..dir:name().."'")
 
 	os.execute("cp -pr \"packages"..s..dir:name().."\" \""..baseDir.."packages"..s..dir:name().."\"")	
 end)
-
-_Gtme.printNote("Removing files")
-initialRemove = _Gtme.include("remove.lua")
-
-forEachElement(initialRemove.files, removeIfExists)
 
 local report = {
 	logerrors = 0,
@@ -502,7 +502,7 @@ if commands.build then
 	local files = {}
 
 	forEachElement(commands.build, function(package)
-		local version = packageInfo(package).version
+		local version = _Gtme.include(sessionInfo().initialDir.."packages/"..package.."/description.lua").version
 
 		local mfile = package.."_"..version..".zip"
 
@@ -656,7 +656,7 @@ if report.forgottenfiles == 0 then
 elseif report.forgottenfiles == 1 then
 	_Gtme.printError("One file or package is not used at least once in the tests.")
 else
-	_Gtme.printError(report.forgottenfiles.." files and/or packages are not used at least once in the tests..")
+	_Gtme.printError(report.forgottenfiles.." files and/or packages are not used at least once in the tests.")
 end
 
 errors = 0

@@ -135,6 +135,7 @@ function _Gtme.buildPackage(package, config, clean)
 		["data.lua"] = true,
 		["font.lua"] = true,
 		["license.txt"] = true,
+		["README.md"] = true,
 		lua = true,
 		lib = true,
 		tests = true,

@@ -49,6 +49,7 @@ return{
 		local s = sessionInfo()
 
 		unitTest:assertType(s.path, "Directory")
+		unitTest:assertType(s.initialDir, "Directory")
 		unitTest:assertEquals(s.mode, "debug")
 		unitTest:assertEquals(s.version, packageInfo().version)
 		unitTest:assertEquals(s.system == "windows", s.separator == "\\")
