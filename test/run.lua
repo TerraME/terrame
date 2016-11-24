@@ -76,17 +76,17 @@ forEachDirectory("packages", function(dir)
 	end
 end)
 
+_Gtme.printNote("Removing files")
+initialRemove = _Gtme.include("remove.lua")
+
+forEachElement(initialRemove.files, removeIfExists)
+
 _Gtme.printNote("Copying packages")
 forEachDirectory("packages", function(dir)
 	_Gtme.print("Copying '"..dir:name().."'")
 
 	os.execute("cp -pr \"packages"..s..dir:name().."\" \""..baseDir.."packages"..s..dir:name().."\"")	
 end)
-
-_Gtme.printNote("Removing files")
-initialRemove = _Gtme.include("remove.lua")
-
-forEachElement(initialRemove.files, removeIfExists)
 
 local report = {
 	logerrors = 0,
