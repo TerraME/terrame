@@ -1164,8 +1164,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		_Gtme.terralib_mod_binding_lua.te.plugin.PluginManager.getInstance():loadAll()
 	end
 
-	info_.path = _Gtme.Directory(info_.path)
-	info_.version = _Gtme.packageInfo().version
+	info_.path       = _Gtme.Directory(info_.path)
+	info_.initialDir = _Gtme.Directory(tostring(_Gtme.currentDir()))
+	info_.version    = _Gtme.packageInfo().version
 
 	if arguments == nil or #arguments < 1 then
 		dofile(info_.path..s.."lua"..s.."pmanager.lua")
@@ -1384,31 +1385,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				import("base")
 				import("terralib")
 
-				local pkgPath = sessionInfo().path.."/packages/"..package
-				local runningLocal = false
-				local originalDir = currentDir()
-
-				if not isDirectory(pkgPath) then
-					runningLocal = true
-					os.execute("cp -r "..package.." "..pkgPath)
-				end
-
 				_Gtme.myxpcall(function() errors = _Gtme.executeProject(package) end, function(err)
 					_Gtme.printError(err)
 
-					if runningLocal then
-						Directory(pkgPath):delete()
-					end
-
 					os.exit(1)
 				end)
-
-				originalDir:setCurrentDir()
-
-				if runningLocal then
-					os.execute("cp -r "..pkgPath.."/data/* "..package.."/data")
-					Directory(pkgPath):delete()
-				end
 
 				os.exit(errors)
 			elseif arg == "-autoclose" then

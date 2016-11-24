@@ -97,6 +97,9 @@ end
 -- command line (-color). & Yes \
 -- currentFile & A File with the name of the file currently being executed. This
 -- value only exists when the file is passed as argument to the command line. & Yes \
+-- initialDir & A Directory where TerraME was executed. Whenever TerraME needs to
+-- Package:import() a package and cannot find it in the installed packages, it tries
+-- to load from this directory. & Yes \
 -- dbVersion & A string with the current TerraLib version for databases. & Yes \
 -- fullTraceback & A boolean value indicating whether TerraME should show all the
 -- stack when an error occurs. This means that the lines from base package and 
@@ -138,6 +141,7 @@ function sessionInfo()
 				color = readOnly,
 				currentFile = readOnly,
 				fullTraceback = "boolean",
+				initialDir = readOnly,
 				interface = "boolean",
 				mode = {"default", "debug", "normal", "quiet", "strict"},
 				path = readOnly,

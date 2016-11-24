@@ -55,6 +55,11 @@ return{
 		unitTest:assertError(error_func, "Argument 'path' is an important information about the current execution and cannot be changed.")
 
 		error_func = function()
+			s.initialDir = "/my/path/"
+		end
+		unitTest:assertError(error_func, "Argument 'initialDir' is an important information about the current execution and cannot be changed.")
+
+		error_func = function()
 			s.currentFile = "file.lua"
 		end
 		unitTest:assertError(error_func, "Argument 'currentFile' is an important information about the current execution and cannot be changed.")
