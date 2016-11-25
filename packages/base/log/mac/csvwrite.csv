@@ -1,0 +1,11 @@
+age,metabolism,test,vision,wealth
+1,1,"Foo text",2,10
+3,1,"Foo;text",1,8
+3,1,"Foo,text",2,15
+4,2,"Foo@text",2,12
+2,1,"Foo%text",3,10
+2,1,"Foo)text",2,9
+1,1,"Foo#text",2,11
+3,2,"Foo=text",1,15
+3,1,"Foo.text",1,13
+1,2,"Foo(text",3,10

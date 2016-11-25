@@ -415,13 +415,13 @@ File_ = {
 		if type(data[1]) == "table" then
 			sep = sep or ","
 			local fields = {}
-			for k in pairs(data[1]) do
+			forEachOrderedElement(data[1], function(k)
 				if type(k) ~= "string" then
 					customError("All attributes should be string, got "..type(k)..".")
 				end
 
 				table.insert(fields, k)
-			end
+			end)
 
 			self.file:write(table.concat(fields, sep))
 			self.file:write("\n")
