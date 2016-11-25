@@ -203,6 +203,19 @@ water            number [200]
 
 		unitTest:assertEquals(t.water, 0)
 	end,
+	isRandom = function(unitTest)
+		unitTest:assert(not Tube:isRandom())
+
+		local RandomModel = Model{
+			init = function(model)
+				model.t2 = Timer{}
+			end,
+			random = true,
+			finalTime = 10
+		}
+
+		unitTest:assert(RandomModel:isRandom())
+	end,
 	run = function(unitTest)
 		local t = Tube{block = {level = 2}, filter = function() end}
 

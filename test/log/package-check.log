@@ -16,8 +16,11 @@ Line 7: Unused loop variable 'c'.
 Line 13: Value assigned to variable 'x' is unused.
 Line 14: Value assigned to variable 'x' is unused.
 Line 21: Variable 'z' is never accessed.
+Analysing examples
+Checking 'examples/foo.lua'
+Line 6: Unused argument 'x'.
 
 Code analyzer report for package 'check':
-Analysis executed in 0.01 seconds.
+Analysis executed in 0.02 seconds.
 2 files were analysed.
-13 issues were found.
+14 issues were found.

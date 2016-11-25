@@ -180,7 +180,7 @@ create_t = function(mtable, ordering)
 	return t
 end
 
-function _Gtme.configure(self, modelName, package)
+function _Gtme.configure(self, modelName, package, random)
 	local count = 0
 	local r = ""
 
@@ -754,6 +754,10 @@ function _Gtme.configure(self, modelName, package)
 		r = r.."\theader = header..\"\\n\\nimport(\\\""..package.."\\\")\"\n"
 	end
 
+	if random then
+		r = r.."\theader = header..\"\\nRandom{seed = \"..tonumber(tostring(os.time()):reverse():sub(1, 6))..\"}\"\n"
+	end
+
 	r = r.."\tif result ~= \"\" then\n"
 	r = r.."\t\tresult = \"\\n\\ninstance = "..modelName.."{\"..string.sub(result, 0, string.len(result) - 1)\n"
 	r = r.."\t\tresult = result..\"\\n}\\n\\n\"\n\n"
@@ -818,7 +822,7 @@ function _Gtme.configure(self, modelName, package)
 	-- http://stackoverflow.com/questions/12068317/calling-qapplicationexec-after-qdialogexec
 	r = r.."clean()"
 	
-	-- add the lines below for debug purposes...
+	-- add the lines below for debugging purposes...
 	-- file = io.open(modelName.."-configure.lua", "w")
 	-- file:write(r)
 	-- file:close()

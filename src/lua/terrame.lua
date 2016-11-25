@@ -728,7 +728,10 @@ local function graphicalInterface(package, model)
 	_Gtme.include(_Gtme.packageInfo(package).path..s.."lua"..s..model..".lua")
 	Model = mModel
 
-	_Gtme.configure(attrTab, model, package)
+	local random = attrTab.random
+	attrTab.random = nil
+
+	_Gtme.configure(attrTab, model, package, random)
 end
 
 function _Gtme.traceback(err)
