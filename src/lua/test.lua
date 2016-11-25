@@ -814,6 +814,7 @@ function _Gtme.executeTests(package, fileName)
 				_Gtme.loadedPackages[package] = nil
 
 				local color = sessionInfo().color
+				local exampleInitialTime = os.clock()
 
 				local myfunc = function()
 					local env = setmetatable({}, {__index = _G})
@@ -865,6 +866,21 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				clean()
+
+				if data.time then
+					local exampleFinalTime = os.clock()
+					local difference = round(exampleFinalTime - exampleInitialTime, 1)
+
+					local text = "Example executed in "..difference.." seconds"
+
+					if difference > 30 then
+						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+					elseif difference > 10 then
+						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+					elseif difference > 1 then
+						_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+					end
+				end
 			end)
 		else
 			printWarning("The package has no examples")

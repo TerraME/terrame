@@ -58,7 +58,7 @@ local function getLuaFiles(dirPath)
 	_Gtme.forEachDirectory(dirPath, function(dir)
 		for _, v in ipairs(getLuaFiles(dir)) do
 			table.insert(files, v)
-		end			
+		end
 	end)
  
 	_Gtme.forEachFile(dirPath, function(file)
@@ -76,9 +76,11 @@ _Gtme.checkPackage = function(package, packagePath)
 
 	local s = sessionInfo().separator
 	local testsPath = Directory(packagePath.."tests")
+	local examplePath = Directory(packagePath.."examples")
 	local luaPath = Directory(packagePath.."lua")
 	local testFiles = getLuaFiles(testsPath)
-	local luaFiles = getLuaFiles(luaPath)	
+	local luaFiles = getLuaFiles(luaPath)
+	local exampleFiles = getLuaFiles(examplePath)
 	
 	local srcPath
 	local srcFiles = {}
@@ -87,9 +89,9 @@ _Gtme.checkPackage = function(package, packagePath)
 		srcFiles = getLuaFiles(srcPath)
 	end
 	
-	local luacheck = require("luacheck.init")	
+	local luacheck = require("luacheck.init")
 	local numIssues = 0
-	local options = {std = "min", cache = true, global = false}	
+	local options = {std = "min", cache = true, global = false}
 	
 	_Gtme.printNote("Analysing source code")
 	for _, file in ipairs(luaFiles) do
@@ -100,7 +102,7 @@ _Gtme.checkPackage = function(package, packagePath)
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
 			_Gtme.printError("Line "..issue.line..": "..upperFirst(luacheck.get_message(issue))..".")
-		end	
+		end
 		numIssues = numIssues + #issues
 	end
 
@@ -112,11 +114,11 @@ _Gtme.checkPackage = function(package, packagePath)
 			local issues = luacheck.check_files(files, options)[1]
 			for _, issue in ipairs(issues) do
 				_Gtme.printError("Line "..issue.line..": "..upperFirst(luacheck.get_message(issue))..".")
-			end	
+			end
 			numIssues = numIssues + #issues
-		end	
+		end
 	end
-	
+
 	_Gtme.printNote("Analysing tests")
 	for _, file in ipairs(testFiles) do
 		local name = Directory(file):relativePath(packagePath)..s..file:name()
@@ -125,25 +127,37 @@ _Gtme.checkPackage = function(package, packagePath)
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
 			_Gtme.printError("Line "..issue.line..": "..upperFirst(luacheck.get_message(issue))..".")
-		end	
+		end
 		numIssues = numIssues + #issues
 	end
-	
+
+	_Gtme.printNote("Analysing examples")
+	for _, file in ipairs(exampleFiles) do
+		local name = Directory(file):relativePath(examplePath)..s..file:name()
+		_Gtme.print("Checking 'examples"..name.."'")
+		local files = {tostring(file)}
+		local issues = luacheck.check_files(files, options)[1]
+		for _, issue in ipairs(issues) do
+			_Gtme.printError("Line "..issue.line..": "..upperFirst(luacheck.get_message(issue))..".")
+		end
+		numIssues = numIssues + #issues
+	end
+
 	_Gtme.printNote("\nCode analyzer report for package '"..package.."':")
-	
+
 	local clock1 = os.clock()
 	local dt = clock1 - clock0
 	_Gtme.printNote("Analysis executed in "..round(dt, 2).." seconds.")
-	
+
 	local totalFiles = #testFiles + #luaFiles + #srcFiles
-	
+
 	if totalFiles > 0 then
 		if totalFiles == 1 then
 			_Gtme.printNote("One file was analysed.")
 		else
 			_Gtme.printNote(totalFiles.." files were analysed.")
 		end
-		
+
 		if numIssues > 0 then
 			if numIssues == 1 then
 				_Gtme.printError("One issue was found.")
@@ -157,7 +171,7 @@ _Gtme.checkPackage = function(package, packagePath)
 		_Gtme.printError("No file was found.")
 		numIssues = 1
 	end
-	
+
 	return numIssues
 end
 
