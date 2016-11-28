@@ -1,6 +1,6 @@
 Running code analyzer for package 'check'
 Analysing source code
-Checking 'check/lua/lua/Check.lua'
+Checking 'lua/Check.lua'
 Line 3: Unused variable 'a'.
 Line 6: Unused variable 'x'.
 Line 6: Unused variable 'z'.

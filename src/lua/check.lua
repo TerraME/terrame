@@ -98,7 +98,7 @@ _Gtme.checkPackage = function(package, packagePath)
 		local files = {tostring(file)}
 		
 		local name = Directory(file):relativePath(packagePath)..s..file:name()
-		_Gtme.print("Checking '"..package.."/lua/"..name.."'")
+		_Gtme.print("Checking '"..name.."'")
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
 			_Gtme.printError("Line "..issue.line..": "..upperFirst(luacheck.get_message(issue))..".")
