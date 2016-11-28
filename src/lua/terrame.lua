@@ -426,7 +426,10 @@ function _Gtme.installRecursive(pkgfile)
 	local status, err = pcall(function() _Gtme.installPackage(pkgfile) end)
 
 	File(pkgfile):deleteIfExists()
-	Directory(package):delete()
+
+	if isDirectory(package) then
+		Directory(package):delete()
+	end
 
 	if not status then
 		customError("File "..pkgfile.." could not be installed:\n"..err)
