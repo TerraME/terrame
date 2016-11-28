@@ -1168,6 +1168,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_.initialDir = _Gtme.Directory(tostring(_Gtme.currentDir()))
 	info_.version    = _Gtme.packageInfo().version
 
+	loadPackagesModules()
+
 	if arguments == nil or #arguments < 1 then
 		dofile(info_.path..s.."lua"..s.."pmanager.lua")
 		_Gtme.packageManager()
@@ -1175,8 +1177,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	end
 
 	local package = "base"
-
-	loadPackagesModules()
 
 	local argCount = 1
 	while argCount <= #arguments do
