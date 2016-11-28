@@ -225,7 +225,7 @@ forEachOrderedElement(pkgs, function(_, data)
 end)
 
 _Gtme.printNote("Removing packages.lua")
-File("packages.lua"):delete()
+File("packages.lua"):deleteIfExists()
 	
 _Gtme.printNote("Rolling back to previously installed packages")
 
