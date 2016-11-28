@@ -532,7 +532,6 @@ function _Gtme.installPackage(file)
 		return
 	end
 
-
 	local s = "/" --_Gtme.sessionInfo().separator
 	local package
 
@@ -562,11 +561,6 @@ function _Gtme.installPackage(file)
 		_Gtme.print("Package '"..package.."' was not installed before")
 	end
 
-	local tmpdirectory = Directory{tmp = true}
-
-	os.execute("cp \""..file.."\" \""..tostring(tmpdirectory).."\"")
-	tmpdirectory:setCurrentDir()
-
 	os.execute("unzip -oq \""..file.."\"")
 
 	_Gtme.print("Verifying dependencies")
@@ -590,7 +584,7 @@ function _Gtme.installPackage(file)
 	local status, err = pcall(function() import(package) end)
 
 	if not status then
-		tmpdirectory:delete()
+		Directory(package):delete()
 		_Gtme.customError(err)
 	end
 
@@ -599,7 +593,7 @@ function _Gtme.installPackage(file)
 
 	cDir:setCurrentDir()
 
-	tmpdirectory:delete()
+	Directory(package):delete()
 	_Gtme.printNote("Package '"..package.."' was successfully installed")
 	return package
 end

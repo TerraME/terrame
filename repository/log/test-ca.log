@@ -64,17 +64,17 @@ Checking Utils.lua
 Checking Wolfram.lua
 Skipping lines of source code check
 Testing examples
-The package has no examples
+Testing daisy-scenario
 Checking logs
 
 Functional test report for package 'ca':
-Tests were executed in 685.93 seconds.
-Logs were saved in '.terrametmp_jeRK9'.
+Tests were executed in 259.27 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_JBRxZ/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 51 asserts were executed successfully.
+All 955 asserts were executed successfully.
 All 15 tested functions do not have any unexpected execution error.
 All 15 tested functions have at least one assert.
 All 15 tested functions exist in the source code of the package.
@@ -84,7 +84,7 @@ No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
 All 15 functions of the package were tested.
 No lines from the source code were verified.
-The package has no examples.
+All 1 examples were successfully executed.
 No new log file was created.
 All log files were used in the tests.
 Summing up, all tests were successfully executed.
