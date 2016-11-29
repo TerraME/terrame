@@ -1017,12 +1017,54 @@ function _Gtme.execExample(example, packageName)
 
     example = res
 
+	local mdialog
+	local description
+	local okButton
+
+	print = function(value)
+		if not mdialog then
+			mdialog = qt.new_qobject(qt.meta.QDialog)
+			local _, file = File(example):split()
+    		mdialog.windowTitle = "Output of example "..file
+
+			local externalLayout = qt.new_qobject(qt.meta.QVBoxLayout)
+    		local internalLayout = qt.new_qobject(qt.meta.QHBoxLayout)
+    		description = qt.new_qobject(qt.meta.QLabel)
+    		description.text = ""
+
+		    okButton = qt.new_qobject(qt.meta.QPushButton)
+		    okButton.minimumSize = {150, 28}
+		    okButton.maximumSize = {160, 28}
+		    okButton.text = "Close"
+			okButton.enabled = false
+
+		    qt.ui.layout_add(internalLayout, okButton)
+    		qt.ui.layout_add(externalLayout, description)
+			qt.ui.layout_add(externalLayout, internalLayout)
+    		qt.ui.layout_add(mdialog, externalLayout)
+
+			qt.connect(okButton, "clicked()", function()
+				mdialog:done(0)
+			end)
+
+    		mdialog:show()
+		end
+
+		_Gtme.print(value)
+		description.text = description.text.."\n"..value
+	end
+
     local success, result = _Gtme.myxpcall(function() dofile(example) end)
     if not success then
         return false, result
     end
 
-    return success, _
+	if mdialog then
+		okButton.enabled = true
+    	mdialog:exec()
+	end
+
+    return success
 end
 
 function _Gtme.execConfigure(model, packageName)
