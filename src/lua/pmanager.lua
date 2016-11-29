@@ -323,11 +323,6 @@ local function installButtonClicked()
 		cancelButton.enabled = false
 		disableAll()
 
-		local tmpdirectory = _Gtme.Directory{tmp = true}
-		local cdir = currentDir()
-
-		tmpdirectory:setCurrentDir()
-
 		local mpkgfile = pkgsTab[listPackages.currentRow].file
 		local result, installed = _Gtme.installRecursive(mpkgfile)
 		local package = string.sub(mpkgfile, 1, string.find(mpkgfile, "_") - 1)
@@ -357,8 +352,6 @@ local function installButtonClicked()
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
 
-		cdir:setCurrentDir()
-		tmpdirectory:delete()
 		setPackagesListWidget(packages)
 		installAllButton.enabled = hasPackageToInstall
 		cancelButton.enabled = true
