@@ -48,13 +48,13 @@ local function breakLines(str)
 	for word in str:gmatch("%g+") do table.insert(words, word) end
 
 	forEachElement(words, function(_, word)
-    	if string.len(word) + 1 > spaceLeft then
+		if string.len(word) + 1 > spaceLeft then
 			result = result.."\n"..word.." "
 			lines = lines + 1
 			spaceLeft = lineWidth - string.len(word)
-    	else
+		else
 			result = result..word.." "
-        	spaceLeft = spaceLeft - (string.len(word) + 1)
+			spaceLeft = spaceLeft - (string.len(word) + 1)
 		end
 	end)
 	return result, lines
@@ -88,7 +88,7 @@ end
 local function enableAll()
 	comboboxExamples.enabled = oldState[comboboxExamples]
 	comboboxModels.enabled   = oldState[comboboxModels]
-	comboboxProjects.enabled   = oldState[comboboxProjects]
+	comboboxProjects.enabled = oldState[comboboxProjects]
 	configureButton.enabled  = oldState[configureButton]
 	projButton.enabled       = oldState[projButton]
 	docButton.enabled        = oldState[docButton]
@@ -108,9 +108,9 @@ local function buildComboboxPackages(default)
 	local pkgDir = sessionInfo().path.."packages"
 	forEachDirectory(pkgDir, function(dir)
 		if dir:name() == "luadoc" then return end
-	
+
 		qt.combobox_add_item(comboboxPackages, dir:name())
-	
+
 		if file == default then
 			index = pos
 		else
@@ -147,10 +147,10 @@ end
 local function configureButtonClicked()
 	disableAll()
 
-    local ok, res = _Gtme.execConfigure(comboboxModels.currentText, comboboxPackages.currentText)
-    if not ok then
-       qt.dialog.msg_critical(res)
-    end	
+	local ok, res = _Gtme.execConfigure(comboboxModels.currentText, comboboxPackages.currentText)
+	if not ok then
+		qt.dialog.msg_critical(res)
+	end
 	
 	enableAll()
 end
@@ -158,10 +158,10 @@ end
 local function runButtonClicked()
 	disableAll()
 
-    local ok, res = _Gtme.execExample(comboboxExamples.currentText, comboboxPackages.currentText)
-    if not ok then
-       qt.dialog.msg_critical(res)
-    end
+	local ok, res = _Gtme.execExample(comboboxExamples.currentText, comboboxPackages.currentText)
+	if not ok then
+		qt.dialog.msg_critical(res)
+	end
 
 	enableAll()
 end
@@ -269,7 +269,7 @@ local function installButtonClicked()
 
 	local listPackages = qt.new_qobject(qt.meta.QListWidget)
 	local hasPackageToInstall = false
-	
+
 	local setPackagesListWidget = function(pkgs)
 		listPackages:clear()
 		local count = 0
@@ -300,29 +300,29 @@ local function installButtonClicked()
 			qt.listwidget_add_item(listPackages, package)
 		end)
 	end
-	
+
 	setPackagesListWidget(packages)
 
 	local installButton2 = qt.new_qobject(qt.meta.QPushButton)
 	installButton2.text = "Install"
 	installButton2.enabled = false
-	
+
 	local installAllButton = qt.new_qobject(qt.meta.QPushButton)
 	installAllButton.text = "Install All"
 	installAllButton.enabled = hasPackageToInstall
-	
+
 	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
 	cancelButton.text = "Close"
 	qt.connect(cancelButton, "clicked()", function()
 		mdialog:done(0)
-	end)	
-	
+	end)
+
 	qt.connect(installButton2, "clicked()", function()
 		installButton2.enabled = false
 		installAllButton.enabled = false
 		cancelButton.enabled = false
 		disableAll()
-		
+
 		local tmpdirectory = _Gtme.Directory{tmp = true}
 		local cdir = currentDir()
 
@@ -363,20 +363,20 @@ local function installButtonClicked()
 		installAllButton.enabled = hasPackageToInstall
 		cancelButton.enabled = true
 	end)
-	
+
 	qt.connect(installAllButton, "clicked()", function()
 		installAllButton.enabled = false
 		installButton2.enabled = false
 		cancelButton.enabled = false
 		disableAll()
-		
+
 		local tmpdirectory = _Gtme.Directory{tmp = true}
 		local cdir = currentDir()
 
 		tmpdirectory:setCurrentDir()
-		
+
 		local msg = ""
-		
+
 		for i = 0, _Gtme.getn(pkgsTab) - 1 do
 			if pkgsTab[i].newversion then
 				local mpkgfile = pkgsTab[i].file
@@ -387,25 +387,25 @@ local function installButtonClicked()
 					if msg ~= "" then
 						msg = msg.."\n"
 					end
-					
+
 					msg = msg.."Package '"..package.."' successfully installed."
 				else
 					qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 				end
 
 				File(mpkgfile):delete()
-				setPackagesListWidget(packages)	
+				setPackagesListWidget(packages)
 			end
 		end
-		
+
 		if msg ~= "" then
 			qt.dialog.msg_information(msg)
 		end
-		
+
 		cdir:setCurrentDir()
-		tmpdirectory:delete()		
+		tmpdirectory:delete()
 		cancelButton.enabled = true
-	end)	
+	end)
 
 	local description = qt.new_qobject(qt.meta.QLabel)
 	description.text = "Select a package"..
@@ -416,8 +416,8 @@ local function installButtonClicked()
 
 		local idx = pkgsTab[listPackages.currentRow].file
 
-        local sep = string.find(idx, "_")
-        local package = string.sub(idx, 1, sep - 1)
+		local sep = string.find(idx, "_")
+		local package = string.sub(idx, 1, sep - 1)
 
 		local lines = 0
 
@@ -473,7 +473,7 @@ local function installButtonClicked()
 	mdialog:exec()
 	enableAll()
 end
-	
+
 local function installLocalButtonClicked()
 	disableAll()
 	local s = sessionInfo().separator
@@ -562,7 +562,7 @@ local function quitButtonClicked()
 end
 
 function _Gtme.packageManager()
-    _Gtme.loadLibraryPath()
+	_Gtme.loadLibraryPath()
 
 	require("qtluae")
 
