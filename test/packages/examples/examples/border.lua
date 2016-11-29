@@ -1,0 +1,1 @@
+print("MINAS GERAIS")

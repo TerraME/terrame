@@ -311,18 +311,51 @@ UnitTest_ = {
 			self.test = self.test + 1 -- SKIP
 			self.success = self.success + 1 -- SKIP
 		else
-			local result = runCommand("diff \""..self.tmpdir..s..fname.."\" \""..oldLog.."\"")
+			oldLog = File(oldLog)
+			local newLog = File(self.tmpdir..s..fname)
 
-			if #result == 0 then
-				self.success = self.success + 1
-			else
-				_Gtme.printError("Files \n  '".._Gtme.makePathCompatibleToAllOS(oldLog).."'\nand\n  '"..self.tmpdir..s..fname.."'\nare different.")
-				forEachElement(result, function(_, value)
-					_Gtme.printError(value)
-				end)
+			local line = 1
+			local removeCR = function(str)
+				if not str then return nil end
+
+				if string.byte(string.sub(str, string.len(str))) == 13 then
+					return string.sub(str, 1, string.len(str) - 1)
+				end
+
+				return str
+			end
+
+			local oldStr = removeCR(oldLog:read())
+			local newStr = removeCR(newLog:read())
+
+			while oldStr and newStr do
+				if oldStr ~= newStr then
+					_Gtme.printError("Error: Strings do not match (line "..line.."):")
+					_Gtme.printError("Log file: '"..oldStr.."'")
+					_Gtme.printError("Test: '"..newStr.."'")
+
+					self.fail = self.fail + 1 -- SKIP
+					return false
+				end
+
+				line = line + 1 -- SKIP
+				oldStr = removeCR(oldLog:read())
+				newStr = removeCR(newLog:read())
+			end
+
+			if oldStr or newStr then
+				if not oldStr then oldStr = "<end of file>" end
+				if not newStr then newStr = "<end of file>" end
+
+				_Gtme.printError("Error: Strings do not match (line "..line.."):")
+				_Gtme.printError("Log file: '"..oldStr.."'")
+				_Gtme.printError("Test: '"..newStr.."'")
 
 				self.fail = self.fail + 1 -- SKIP
-			end
+				return false
+			end	
+
+			self.success = self.success + 1
 		end
 	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
