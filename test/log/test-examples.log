@@ -1,0 +1,50 @@
+Using log directory '/Users/pedro/github/terrame-pedro/test/packages/examples/log/'
+Loading package 'examples'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/b.lua
+Testing a
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking a.lua
+Skipping lines of source code check
+Testing examples
+Testing a
+Error: Strings do not match (line 2):
+Log file: '<end of file>'
+Test: 'def'
+Testing b
+Error: Strings do not match (line 3):
+Log file: 'ghi'
+Test: '<end of file>'
+Testing border
+Testing c
+Error: Strings do not match (line 2):
+Log file: 'deff'
+Test: 'def'
+Testing d
+Checking logs
+
+Functional test report for package 'examples':
+Tests were executed in 0.28 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_AiSCa/'.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or directories in directory 'tests'.
+All asserts were executed at least once.
+All 1 asserts were executed successfully.
+All 1 tested functions do not have any unexpected execution error.
+All 1 tested functions have at least one assert.
+All 1 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
+All 0 functions of the package were tested.
+No lines from the source code were verified.
+3 errors were found in the 5 examples.
+No new log file was created.
+All log files were used in the tests.
+Summing up, 3 problems were found during the tests.

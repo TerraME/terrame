@@ -332,7 +332,7 @@ function _Gtme.executeTests(package, fileName)
 	print = function() end
 
 	printNote("Looking for overwritten variables")
-	if package ~= "base" then
+	if package ~= "base" and overwritten then
 		forEachOrderedElement(overwritten, function(value)
 			printError("Global variable '"..value.."' is overwritten.")
 			ut.overwritten_variables = ut.overwritten_variables + 1
