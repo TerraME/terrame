@@ -1,0 +1,84 @@
+Using log directory '/Users/pedro/github/terrame-pedro/repository/calibration/log/'
+Loading package 'calibration'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/core/alternative/GoodnessOfFit.lua
+Testing multiLevel
+Testing pixelByPixel
+Checking if all asserts were executed
+Testing tests/core/alternative/MultipleRuns.lua
+Testing MultipleRuns
+Checking if all asserts were executed
+Testing tests/core/alternative/SAMDE.lua
+Testing SAMDE
+Checking if all asserts were executed
+Testing tests/core/alternative/Utils.lua
+Testing checkParameterSingle
+Testing checkParametersRange
+Testing checkParametersSet
+Testing cloneValues
+Testing randomModel
+Checking if all asserts were executed
+Testing tests/core/basic/GoodnessOfFit.lua
+Testing multiLevel
+Testing pixelByPixel
+Checking if all asserts were executed
+Testing tests/core/basic/MultipleRuns.lua
+Testing MultipleRuns
+Testing get
+Testing saveCSV
+Checking if all asserts were executed
+Testing tests/core/basic/SAMDE.lua
+Testing SAMDE
+Checking if all asserts were executed
+Testing tests/core/basic/Utils.lua
+Testing checkParameterSingle
+Testing checkParametersRange
+Testing checkParametersSet
+Testing cloneValues
+Testing randomModel
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking GoodnessOfFit.lua
+Checking MultipleRuns.lua
+Checking SAMDE.lua
+Checking Utils.lua
+Skipping lines of source code check
+Testing examples
+Testing FireAverage
+Testing broeke
+Testing daisy
+Testing goodnessOfFit
+Testing moving-agents
+Testing sir-mr-campaign
+Testing sir-mr-probability
+Testing sir-samde-fit
+Testing sir-samde-max-infected
+Testing sir-samde-point
+Testing yeast-mr
+Testing yeast-samde
+Checking logs
+
+Functional test report for package 'calibration':
+Tests were executed in 76.11 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_LSzI8/'.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or directories in directory 'tests'.
+All asserts were executed at least once.
+All 170 asserts were executed successfully.
+All 20 tested functions do not have any unexpected execution error.
+All 20 tested functions have at least one assert.
+All 20 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
+All 11 functions of the package were tested.
+No lines from the source code were verified.
+All 12 examples were successfully executed.
+No new log file was created.
+All log files were used in the tests.
+Summing up, all tests were successfully executed.

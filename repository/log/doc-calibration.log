@@ -1,0 +1,110 @@
+Building documentation for package 'calibration'
+Loading package 'calibration'
+Parsing 'data.lua'
+Processing lua files
+Checking directory 'data'
+Checking properties of data files
+Processing 'sugarScape.csv'
+Processing 'sugarScape2.csv'
+Processing 'sugarScape3.csv'
+Processing 'sugarScape4.csv'
+Package 'calibration' has no fonts
+Parsing lua files
+Parsing lua/GoodnessOfFit.lua
+Parsing lua/MultipleRuns.lua
+Parsing lua/SAMDE.lua
+Parsing lua/Utils.lua
+Parsing examples
+Parsing examples/FireAverage.lua
+Parsing examples/broeke.lua
+Parsing examples/daisy.lua
+Parsing examples/goodnessOfFit.lua
+Parsing examples/moving-agents.lua
+Parsing examples/sir-mr-campaign.lua
+Parsing examples/sir-mr-probability.lua
+Parsing examples/sir-samde-fit.lua
+Parsing examples/sir-samde-max-infected.lua
+Parsing examples/sir-samde-point.lua
+Parsing examples/yeast-mr.lua
+Parsing examples/yeast-samde.lua
+Checking undocumented files
+Checking @usage definition
+Checking lua/GoodnessOfFit.lua
+Checking lua/MultipleRuns.lua
+Checking lua/SAMDE.lua
+Checking lua/Utils.lua
+Testing @usage
+Testing file lua/GoodnessOfFit.lua
+Testing multiLevel
+Testing pixelByPixel
+Testing file lua/MultipleRuns.lua
+Testing MultipleRuns
+Testing get
+Testing saveCSV
+Testing file lua/SAMDE.lua
+Testing SAMDE
+Testing file lua/Utils.lua
+Testing checkParameterSingle
+Testing checkParametersRange
+Testing checkParametersSet
+Testing cloneValues
+Testing randomModel
+Checking calls to functions in @usage
+Checking lua/GoodnessOfFit.lua
+Checking lua/MultipleRuns.lua
+Checking lua/SAMDE.lua
+Checking lua/Utils.lua
+Checking undocumented arguments
+Checking lua/GoodnessOfFit.lua
+Checking lua/MultipleRuns.lua
+Checking lua/SAMDE.lua
+Checking lua/Utils.lua
+Checking 'description.lua'
+Building and checking HTML files
+Building doc/index.html
+Building doc/files/GoodnessOfFit.html
+Building doc/files/MultipleRuns.html
+Building doc/files/SAMDE.html
+Building doc/files/Utils.html
+Building doc/files/examples.html
+Building doc/files/data.html
+Checking images
+Checking data.lua
+Checking models
+Checking examples
+Checking if all images are used
+Checking if all functions are documented
+Checking GoodnessOfFit.lua
+Checking MultipleRuns.lua
+Checking SAMDE.lua
+Checking Utils.lua
+Checking if all Models are documented
+
+Documentation report for package 'calibration':
+Documentation was built in 1.24 seconds.
+7 HTML files were created.
+All files are documented.
+All fields of 'description.lua' are correct.
+No problems were found in the documentation of data.
+No problems were found in the documentation of fonts.
+All source code lines starting with --- are valid.
+There are no Models in the package.
+All projects were successfully processed.
+All 11 global functions of the package are documented.
+All functions of each file are declared only once.
+All descriptions end with a correct character.
+There is no duplicated tag in the documentation.
+All tags with compulsory arguments were correctly used.
+All 24 non-named arguments are documented.
+No undefined arguments were found.
+All available arguments of functions are used in their HTML tables.
+All arguments used in the HTML tables are documented.
+All non-deprecated functions have @usage.
+All 11 functions call themselves in their @usage.
+All 11 functions do not have any error in their @usage.
+All @tabular are correctly described.
+No invalid tags were found in the documentation.
+All images are correctly used.
+All 0 links were correctly built.
+All 12 examples are correctly documented.
+Summing up, all the documentation was successfully built.
