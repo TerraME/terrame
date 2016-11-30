@@ -654,7 +654,9 @@ else(UNIX)
 		${Qt5_DIR}/../../libQt5Svg.so*
 		${Qt5_DIR}/../../libQt5OpenGL.so*
 		${Qt5_DIR}/../../libQt5DBus.so*
-		${Qt5_DIR}/../../libicu*
+		${Qt5_DIR}/../../libicui18n.so*
+		${Qt5_DIR}/../../libicuuc.so*
+		${Qt5_DIR}/../../libicudata.so*
 		${Qt5_DIR}/../../libkmldom*so*
 		${Qt5_DIR}/../../libkmlengine*so*
 		${Qt5_DIR}/../../libkmlbase*so*
