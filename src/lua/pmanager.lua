@@ -363,11 +363,6 @@ local function installButtonClicked()
 		cancelButton.enabled = false
 		disableAll()
 
-		local tmpdirectory = _Gtme.Directory{tmp = true}
-		local cdir = currentDir()
-
-		tmpdirectory:setCurrentDir()
-
 		local msg = ""
 
 		for i = 0, _Gtme.getn(pkgsTab) - 1 do
@@ -386,7 +381,6 @@ local function installButtonClicked()
 					qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 				end
 
-				File(mpkgfile):delete()
 				setPackagesListWidget(packages)
 			end
 		end
@@ -395,8 +389,6 @@ local function installButtonClicked()
 			qt.dialog.msg_information(msg)
 		end
 
-		cdir:setCurrentDir()
-		tmpdirectory:delete()
 		cancelButton.enabled = true
 	end)
 
