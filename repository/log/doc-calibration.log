@@ -4,10 +4,6 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
-Processing 'sugarScape.csv'
-Processing 'sugarScape2.csv'
-Processing 'sugarScape3.csv'
-Processing 'sugarScape4.csv'
 Package 'calibration' has no fonts
 Parsing lua files
 Parsing lua/GoodnessOfFit.lua
