@@ -498,11 +498,6 @@ local function installLocalButtonClicked()
 		_Gtme.printNote("Package '"..package.."' was not installed before")
 	end
 
-	local tmpdirectory = _Gtme.Directory{tmp = true}
-
-	os.execute("cp \""..file.."\" \""..tostring(tmpdirectory).."\"")
-	tmpdirectory:setCurrentDir()
-
 	os.execute("unzip -oq \""..file.."\"")
 
 	local newVersion = _Gtme.include(package..s.."description.lua").version
@@ -519,7 +514,8 @@ local function installLocalButtonClicked()
 				_Gtme.printNote("Removing previous version of package")
 				Directory(packageDir..s..package):delete()
 			else
-				tmpdirectory:delete()
+				if isDirectory(package) then Directory(package):delete() end
+
 				enableAll()
 				return
 			end

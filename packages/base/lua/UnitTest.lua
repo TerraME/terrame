@@ -94,7 +94,7 @@ UnitTest_ = {
 	-- unitTest:assertEquals(3, 3)
 	-- unitTest:assertEquals(2, 2.1, 0.2)
 	-- unitTest:assertEquals("string [terralib/data/biomassa-manaus.asc]", "string [terralib/biomassa-manaus.asc]", 0, true)
-	assertEquals = function (self, v1, v2, tol, ignorePath)
+	assertEquals = function(self, v1, v2, tol, ignorePath)
 		self.test = self.test + 1
 
 		if v1 == nil then
@@ -244,14 +244,19 @@ UnitTest_ = {
 	--- Check if a given file exists and remove it. Repeating: The file is removed when calling
 	-- this assert. If the file is a directory or does not exist then it shows an error.
 	-- @arg fname A string with a file name.
+	-- @arg tol An optional number indicating a maximum number of characters that can be different.
+	-- The tolerance is applied to each line of the files. The default tolerance is zero.
 	-- @usage -- DONTRUN
 	-- unitTest = UnitTest{}
 	-- os.execute("touch file.txt") -- create a file (only works in Linux and Mac)
 	-- unitTest:assertFile("file.txt")
-	assertFile = function(self, fname)
+	assertFile = function(self, fname, tol)
+		if not tol then tol = 0 end
+
 		self.test = self.test + 1
 
 		mandatoryArgument(1, "string", fname)
+		mandatoryArgument(2, "number", tol)
 
 		if isDirectory(fname) then
 			self.fail = self.fail + 1
@@ -329,10 +334,13 @@ UnitTest_ = {
 			local newStr = removeCR(newLog:read())
 
 			while oldStr and newStr do
-				if oldStr ~= newStr then
-					_Gtme.printError("Error: Strings do not match (line "..line.."):")
+				local dist = levenshtein(oldStr, newStr)
+
+				if dist > tol then
+					_Gtme.printError("Error: In file '"..fname.."', strings do not match (line "..line.."):")
 					_Gtme.printError("Log file: '"..oldStr.."'")
 					_Gtme.printError("Test: '"..newStr.."'")
+					_Gtme.printError("There are "..dist.." characters different. The maximum tolerance is "..tol..".")
 
 					self.fail = self.fail + 1 -- SKIP
 					return false

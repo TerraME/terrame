@@ -21,9 +21,10 @@ Log file: 'ghi'
 Test: '<end of file>'
 Testing border
 Testing c
-Error: Strings do not match (line 2):
+Error: In file 'c.log', strings do not match (line 2):
 Log file: 'deff'
 Test: 'def'
+There are 1 characters different. The maximum tolerance is 0.
 Testing d
 Checking logs
 
