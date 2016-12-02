@@ -148,6 +148,8 @@ end
 local function configureButtonClicked()
 	disableAll()
 
+	_Gtme.loadedPackages[comboboxPackages.currentText] = nil
+
 	local ok, res = _Gtme.execConfigure(comboboxModels.currentText, comboboxPackages.currentText)
 	if not ok then
 		qt.dialog.msg_critical(res)
