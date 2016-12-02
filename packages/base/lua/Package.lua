@@ -47,7 +47,7 @@ function filePath(filename, package)
 			local luafile = File(packageInfo(package).data..name..".lua")
 
 			if luafile:exists() then
-				msg = msg.." Please run 'terrame -package "..package.." -project' to create it."
+				msg = msg.." Please run 'terrame -package "..package.." -project "..name.."' to create it."
 				customError(msg)
 			end
 		end
@@ -329,14 +329,9 @@ function packageInfo(package)
 
 	local s = sessionInfo().separator
 	local pkgdirectory = Directory(sessionInfo().path.."packages"..s..package)
+
 	if not pkgdirectory:exists() then
-		if package == sessionInfo().package then
-			pkgdirectory = Directory(package) -- SKIP
-		end
-	end
-	
-	if not pkgdirectory:exists() then
-		pkgdirectory = Directory(package)
+		pkgdirectory = Directory(sessionInfo().initialDir..package)
 		if not pkgdirectory:exists() then
 			customError("Package '"..package.."' is not installed.")
 		end

@@ -332,7 +332,7 @@ function _Gtme.executeTests(package, fileName)
 	print = function() end
 
 	printNote("Looking for overwritten variables")
-	if package ~= "base" then
+	if package ~= "base" and overwritten then
 		forEachOrderedElement(overwritten, function(value)
 			printError("Global variable '"..value.."' is overwritten.")
 			ut.overwritten_variables = ut.overwritten_variables + 1
@@ -603,9 +603,9 @@ function _Gtme.executeTests(package, fileName)
 
 				if data.time then
 					local testFinalTime = os.clock()
-					local difference = testFinalTime - testInitialTime
+					local difference = round(testFinalTime - testInitialTime, 1)
 
-					local text = "Test executed in "..round(difference, 1).." seconds"
+					local text = "Test executed in "..difference.." seconds"
 
 					if difference > 30 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
@@ -790,6 +790,9 @@ function _Gtme.executeTests(package, fileName)
 	if data.examples then
 		printNote("Testing examples")
 		local dirFiles = _Gtme.findExamples(package)
+		_Gtme.loadedPackages[package] = nil
+		local loadedPackages = clone(_Gtme.loadedPackages)
+
 		if #dirFiles > 0 then
 			forEachElement(dirFiles, function(_, value)
 				print("Testing "..value)
@@ -811,9 +814,10 @@ function _Gtme.executeTests(package, fileName)
 				
 				ut.examples = ut.examples + 1
 
-				_Gtme.loadedPackages[package] = nil
+				_Gtme.loadedPackages = clone(loadedPackages)
 
 				local color = sessionInfo().color
+				local exampleInitialTime = os.clock()
 
 				local myfunc = function()
 					local env = setmetatable({}, {__index = _G})
@@ -835,6 +839,7 @@ function _Gtme.executeTests(package, fileName)
 
 				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
+					info_.color = color
 					printError("Error in example: ".._Gtme.traceback(err))
 				end)
 
@@ -864,6 +869,21 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				clean()
+
+				if data.time then
+					local exampleFinalTime = os.clock()
+					local difference = round(exampleFinalTime - exampleInitialTime, 1)
+
+					local text = "Example executed in "..difference.." seconds"
+
+					if difference > 30 then
+						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+					elseif difference > 10 then
+						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+					elseif difference > 1 then
+						_Gtme.print("\027[00;37;42m"..text.."\027[00m")
+					end
+				end
 			end)
 		else
 			printWarning("The package has no examples")

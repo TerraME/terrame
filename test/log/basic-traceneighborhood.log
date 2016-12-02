@@ -1,4 +1,4 @@
-Error: attempt to perform arithmetic on global 'w' (a nil value)
+Error: attempt to perform arithmetic on a nil value (global 'w')
 Stack traceback:
-    File scripts/trace-neighborhood.lua, line 8, in second order function, in operator + (addition)
-    File scripts/trace-neighborhood.lua, line 7, in call to function 'forEachNeighborhood'
+    File 'trace-neighborhood.lua', line 8, in second order function
+    File 'trace-neighborhood.lua', line 7, in call to function 'forEachNeighborhood'

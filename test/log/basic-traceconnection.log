@@ -1,4 +1,4 @@
-Error: attempt to perform arithmetic on field 'w' (a nil value)
+Error: attempt to perform arithmetic on a nil value (field 'w')
 Stack traceback:
-    File scripts/trace-connection.lua, line 9, in second order function, in operator + (addition)
-    File scripts/trace-connection.lua, line 8, in call to function 'forEachConnection'
+    File 'trace-connection.lua', line 9, in second order function
+    File 'trace-connection.lua', line 8, in call to function 'forEachConnection'

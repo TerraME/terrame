@@ -211,6 +211,9 @@ metaTableChart_ = {__index = Chart_}
 -- attribute must belong to the Model instances it contains. Chart will then create one line for
 -- each Model instance. In this case, the selected attribute will be the default title for the Chart and the
 -- default labels will be the names of the Model instances in the Environment or else their Model:title() values.
+-- @arg attrTab.value A vector of strings with the values to be observed. It is necessary when observing
+-- automatic functions from CellularSpace or Society that are created from string attributes. In this case,
+-- Chart will plot the quantity of each value described in this argument.
 -- @arg attrTab.xLabel Name of the x-axis. It shows "Time" as default.
 -- @arg attrTab.yLabel Name of the y-axis. It does not show any label as default.
 -- @arg attrTab.label Vector of the same size of select that indicates the labels for each
@@ -319,9 +322,15 @@ function Chart(attrTab)
 
 	verifyUnnecessaryArguments(attrTab, {
 		"target", "select", "yLabel", "xLabel",
-		"title", "label", "pen", "color", "xAxis",
+		"title", "label", "pen", "color", "xAxis", "value",
 		"width", "symbol", "style", "size", "data"
 	})
+
+	if attrTab.value then
+		if not belong(type(attrTab.target), {"CellularSpace", "Society"}) then
+			customError("Argument 'value' can only be used with CellularSpace or Society, got "..type(attrTab.target)..".")
+		end
+	end
 
 	defaultTableValue(attrTab, "yLabel", "")
 
@@ -510,7 +519,54 @@ function Chart(attrTab)
 				attrTab.target.obsattrs_ = {}
 			end
 
-			attrTab.target.obsattrs_[value] = true
+			local output = attrTab.target[value](attrTab.target)
+
+			if type(output) == "table" then
+				if not belong(type(attrTab.target), {"CellularSpace", "Society"}) then
+					customError("It is only possible to observe functions that return tables using CellularSpace or Society, got "..type(attrTab.target)..".")
+				end
+
+				local set
+
+				if type(attrTab.target) == "CellularSpace" then
+					set = attrTab.target.cells
+				else
+					set = attrTab.target.agents
+				end
+
+				if not attrTab.value then
+					customError("Argument 'value' is mandatory when observing a function that returns a table.")
+				end
+
+				mandatoryTableArgument(attrTab, "value", "table")
+
+				forEachElement(attrTab.value, function(_, mvalue)
+					if type(mvalue) ~= "string" then
+						customError("Argument 'value' should contain only strings, got "..type(mvalue)..".")
+					end
+
+					attrTab.target[mvalue] = function()
+						local count = 0
+						forEachElement(set, function(_, element)
+							if element[value] == mvalue then
+								count = count + 1
+							end
+						end)
+
+						return count
+					end
+
+					attrTab.target.obsattrs_[mvalue] = true
+				end)
+
+				if type(attrTab.color) == "table" then
+					verify(#attrTab.value == #attrTab.color, "Arguments 'value' and 'color' should have the same size, got "..#attrTab.value.." and "..#attrTab.color..".")
+				end
+
+				attrTab.select = attrTab.value
+			else
+				attrTab.target.obsattrs_[value] = true
+			end
 		elseif type(attrTab.target[value]) ~= "number" then
 			incompatibleTypeError(value, "number or function", attrTab.target[value])
 		end

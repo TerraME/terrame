@@ -15,6 +15,7 @@ Parsing lua/RandomWalk.lua
 Parsing lua/RoomTemperature.lua
 Parsing lua/SIR.lua
 Parsing lua/Tub.lua
+Parsing lua/Yeast.lua
 Parsing examples
 Parsing examples/coffee-scenarios.lua
 Parsing examples/infection-scenarios-1.lua
@@ -37,6 +38,7 @@ Checking lua/RandomWalk.lua
 Checking lua/RoomTemperature.lua
 Checking lua/SIR.lua
 Checking lua/Tub.lua
+Checking lua/Yeast.lua
 Testing @usage
 Testing file lua/ChaoticGrowth.lua
 Testing file lua/Coffee.lua
@@ -50,6 +52,7 @@ Testing file lua/RandomWalk.lua
 Testing file lua/RoomTemperature.lua
 Testing file lua/SIR.lua
 Testing file lua/Tub.lua
+Testing file lua/Yeast.lua
 Checking calls to functions in @usage
 Checking lua/ChaoticGrowth.lua
 Checking lua/Coffee.lua
@@ -63,6 +66,7 @@ Checking lua/RandomWalk.lua
 Checking lua/RoomTemperature.lua
 Checking lua/SIR.lua
 Checking lua/Tub.lua
+Checking lua/Yeast.lua
 Checking undocumented arguments
 Checking lua/ChaoticGrowth.lua
 Checking lua/Coffee.lua
@@ -76,6 +80,7 @@ Checking lua/RandomWalk.lua
 Checking lua/RoomTemperature.lua
 Checking lua/SIR.lua
 Checking lua/Tub.lua
+Checking lua/Yeast.lua
 Checking 'description.lua'
 Building and checking HTML files
 Building doc/index.html
@@ -99,17 +104,19 @@ Checking RandomWalk.lua
 Checking RoomTemperature.lua
 Checking SIR.lua
 Checking Tub.lua
+Checking Yeast.lua
 Checking if all Models are documented
 
 Documentation report for package 'sysdyn':
-Documentation was built in 0.31 seconds.
+Documentation was built in 0.34 seconds.
 3 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
-All 12 Models are correctly documented.
+All 13 Models are correctly documented.
+All projects were successfully processed.
 All 0 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.

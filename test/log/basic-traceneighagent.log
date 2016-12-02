@@ -1,4 +1,4 @@
 Error: attempt to perform arithmetic on a nil value (global 'w')
 Stack traceback:
-    File trace-neighagent.lua, line 16, in second order function
-    File trace-neighagent.lua, line 15, in call to function 'forEachNeighborAgent'
+    File 'trace-neighagent.lua', line 16, in second order function
+    File 'trace-neighagent.lua', line 15, in call to function 'forEachNeighborAgent'

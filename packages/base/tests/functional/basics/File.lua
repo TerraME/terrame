@@ -237,7 +237,7 @@ return{
 			end
 		end
 
-		file:deleteIfExists()
+		unitTest:assertFile("csvwrite.csv")
 
 		example = "Some text.."
 		filename = currentDir().."abc.txt"

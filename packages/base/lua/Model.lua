@@ -68,6 +68,23 @@ Model_ = {
 	-- }
 	execute = function()
 	end,
+	--- Return if a Model uses random numbers. This can be configured with the argument random
+	-- while creating a Model.
+	-- @usage RandomModel = Model{
+	--     random = true,
+	--     finalTime = 10,
+	--     init = function(model)
+	--         model.timer = Timer{
+	--             Event{action = function()
+	--                 print(Random():number())
+	--             end}
+	--        }
+	--     end
+	-- }
+	--
+	-- print(RandomModel:isRandom())
+	isRandom = function()
+	end,
 	--- Run the Model instance. It requires that the Model instance has attribute finalTime.
 	-- @usage Tube = Model{
 	--     initialWater = 200,
@@ -269,7 +286,8 @@ Model_ = {
 --  http://github.com/pedro-andrade-inpe/terrame/wiki/Models.
 -- @arg attrTab.finalTime A number with the final time of the simulation.
 -- If the Model does not have this as argument, it must be defined within function Model:init().
--- @arg attrTab.seed A number with the initial seed for Random. This argument is optional.
+-- @arg attrTab.random An optional boolean value indicating that the model uses random numbers.
+-- The default value is false.
 -- @arg attrTab.init A mandatory function to describe how an instance of Model is created.
 -- @arg attrTab.execute An optional function to define the changes of the Model in each time step.
 -- it the Model does not have a Timer after Model:init() but it has this function, a Timer will
@@ -395,20 +413,8 @@ function Model(attrTab)
 		end
 	end
 
-	if attrTab.seed ~= nil then
-		local t = type(attrTab.seed)
-		if t == "Choice" then
-			if type(attrTab.seed.default) ~= "number" then
-				customError("seed can only be a Choice with 'number' values, got '"..type(attrTab.seed.default).."'.")
-			end
-		elseif t == "Mandatory" then
-			if attrTab.seed.value ~= "number" then
-				customError("seed can only be Mandatory('number'), got Mandatory('"..attrTab.seed.value.."').")
-			end
-		else
-			optionalTableArgument(attrTab, "seed", "number")
-			positiveTableArgument(attrTab, "seed", true)
-		end
+	if attrTab.random ~= nil then
+		defaultTableValue(attrTab, "random", false)
 	end
 
 	forEachElement(attrTab, function(name, value, mtype)
@@ -462,6 +468,9 @@ function Model(attrTab)
 		return model(v, debug.getinfo(1).name)
 	end
 
+	local random = attrTab.random
+	attrTab.random = nil
+
 	local indexFunction = function(mmodel, v) -- in this case, the type of this model will be "model"
 		local options = {
 			run = function()
@@ -471,6 +480,9 @@ function Model(attrTab)
 			end,
 			configure = function()
 				_Gtme.configure(attrTab, mmodel) -- SKIP
+			end,
+			isRandom = function()
+				return random
 			end,
 			getParameters = function()
 				local result = {}
@@ -544,7 +556,6 @@ function Model(attrTab)
 		end)
 
 		-- set the default values
-		optionalTableArgument(argv, "seed", "number")
 		optionalTableArgument(argv, "finalTime", "number")
 
 		forEachElement(attrTab, function(name, value, mtype)
@@ -744,11 +755,6 @@ function Model(attrTab)
 			end
 
 			return str
-		end
-
-		if argv.seed ~= nil then
-			positiveTableArgument(argv, "seed", true)
-			Random{seed = argv.seed}
 		end
 
 		attrTab.init(argv)

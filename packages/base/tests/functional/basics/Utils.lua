@@ -1087,6 +1087,31 @@ return{
     yMin = 0, 
     ydim = 1
 }]], 45)
+
+		local tab = {
+			a = 2,
+			b = 3
+		}
+
+		tab.c = tab
+
+		unitTest:assertEquals(vardump(tab), [[{
+    a = 2, 
+    b = 3, 
+    c = "<copy of another table above>"
+}]])
+
+		tab = {}
+
+		local tab2 = {
+			tab,
+			tab
+		}
+
+		unitTest:assertEquals(vardump(tab2), [[{
+    {}, 
+    "<copy of another table above>"
+}]])
 	end,
 	forEachRecursiveDirectory = function(unitTest) 
 		local count = 0

@@ -1,4 +1,4 @@
-Error: attempt to perform arithmetic on global 'w' (a nil value)
+Error: attempt to perform arithmetic on a nil value (global 'w')
 Stack traceback:
-    File scripts/trace-file.lua, line 2, in second order function, in operator + (addition)
-    File scripts/trace-file.lua, line 1, in call to function 'forEachFile'
+    File 'trace-file.lua', line 2, in second order function
+    File 'trace-file.lua', line 1, in main chunk

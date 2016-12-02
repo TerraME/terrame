@@ -1,4 +1,4 @@
 Error: attempt to perform arithmetic on a nil value (field 'w')
 Stack traceback:
-    File scripts/trace-layer.lua, line 13, in second order function
-    File scripts/trace-layer.lua, line 12, in call to function 'forEachLayer'
+    File 'trace-layer.lua', line 13, in second order function
+    File 'trace-layer.lua', line 12, in call to function 'forEachLayer'

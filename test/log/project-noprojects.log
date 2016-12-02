@@ -3,5 +3,9 @@ Removing output files
 Checking if data does not contain any .tview file
 
 Projects report for package 'base':
-Projects were created in 0.3 seconds.
+Projects were created in 0.02 seconds.
 No project file was created.
+No invalid .tview file was found in the package.
+No error was found while creating projects.
+No problem was found in the output of lua files.
+Summing up, all projects were successfully created.

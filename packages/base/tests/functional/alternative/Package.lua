@@ -38,7 +38,7 @@ return{
 		error_func = function()
 			filePath("amazonia.tview")
 		end
-		unitTest:assertError(error_func, "File 'data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project' to create it.", 2)
+		unitTest:assertError(error_func, "File 'data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project amazonia' to create it.", 2)
 
 		error_func = function()
 			filePath("test"..s.."mriver_lin.shp")

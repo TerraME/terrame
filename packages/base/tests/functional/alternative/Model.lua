@@ -60,29 +60,14 @@ return{
 		unitTest:assertError(error_func, "finalTime can only be a Choice with 'number' values, got 'string'.")
 
 		error_func = function()
-			Model{seed = "2"}
+			Model{random = 2}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("seed", "number", "2"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("random", "boolean", 2))
 
 		error_func = function()
-			Model{seed = -2}
+			Model{random = false}
 		end
-		unitTest:assertError(error_func, positiveArgumentMsg("seed", -2, true))
-
-		error_func = function()
-			Model{seed = Mandatory("table")}
-		end
-		unitTest:assertError(error_func, "seed can only be Mandatory('number'), got Mandatory('table').")
-
-		error_func = function()
-			Model{seed = Choice{"1", "2"}}
-		end
-		unitTest:assertError(error_func, "seed can only be a Choice with 'number' values, got 'string'.")
-	
-		error_func = function()
-			Model{seed = Choice{1, 2}}
-		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("init"))
+		unitTest:assertError(error_func, defaultValueMsg("random", false))
 
 		error_func = function()
 			Model{
@@ -132,9 +117,9 @@ return{
 
 		Tube = Model{
 			init = function(model)
-				model.t2 = Timer{}
+				model.t = Timer{}
+				model.e = Environment{t2 = Timer{}}
 			end,
-			seed = 5,
 			finalTime = 10
 		}
 
@@ -143,23 +128,6 @@ return{
 		end
 		unitTest:assertError(error_func, "All the arguments must be named.")
 
-		error_func = function()
-			Tube{seed = "2"}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("seed", "number", "2"))
-
-		error_func = function()
-			Tube{seed = -2}
-		end
-		unitTest:assertError(error_func, positiveArgumentMsg("seed", -2, true))
-
-		Tube = Model{
-			init = function(model)
-				model.t = Timer{}
-				model.e = Environment{t2 = Timer{}}
-			end,
-			finalTime = 10
-		}
 
 		error_func = function()
 			Tube{}

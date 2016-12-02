@@ -14,12 +14,15 @@ test = {
 	pattern        = {arg = "-test", config = "pattern.lua"},
 	noload         = {arg = "-test", package = "noload"},
 	noexamples     = {arg = "-test", package = "noexamples" },
+	examples       = {arg = "-test", package = "examples"},
 	linedirectory  = {arg = "-test", config = "linesDirectory.lua"},
 	testnotest     = {arg = "-test", config = "testNoTest.lua"},
 	notest         = {arg = "-test", config = "noTest.lua"}
 }
 
 package = {
+	installnopackage  = {arg = "-install"},
+	installpackage    = {package = "noexamples", arg = "-install"},
 	filepath          = {package = "filepath", arg = "-example foo"},
 	nodescription     = {package = "nodescription"},
 	nolua             = {package = "nolua"},
@@ -38,13 +41,14 @@ package = {
 }
 
 project = {
-	showprojects  = {package = "terralib", arg = "-project"},
-	runprojects   = {package = "terralib", arg = "-quiet -projects"},
-	errorprojects = {package = "project",  arg = "-projects"},
-	nopackage1    = {package = "abcdef",   arg = "-project"},
-	nopackage2    = {package = "abcdef",   arg = "-projects"},
-	noproject     = {                      arg = "-project"},
-	noprojects    = {                      arg = "-projects"}
+	showprojects  = {package = "terralib",  arg = "-project"},
+	runprojects   = {package = "terralib",  arg = "-quiet -projects"},
+	errorprojects = {package = "project",   arg = "-projects"},
+	nopackage1    = {package = "abcdef",    arg = "-project"},
+	nopackage2    = {package = "abcdef",    arg = "-projects"},
+	noproject     = {                       arg = "-project"},
+	noprojects    = {                       arg = "-projects"},
+	wrongdata     = {package = "wrongdata", arg = "-projects"}
 }
 
 doc = {
@@ -84,6 +88,7 @@ basic = {
 	version             = {arg = "-version"},
 	noexample           = {arg = "-example abc"},
 	nodoc               = {arg = "-showdoc", package = "nodoc"},
+	dofile              = {script = "dofile.lua"},
 	example             = {arg = "-example ipd"},
 	noconfigure         = {arg = "-configure abc"},
 	uninstall           = {arg = "-package abcdef -uninstall"},
@@ -93,6 +98,7 @@ basic = {
 	builderror2         = {arg = "-build", package = "build", config = "etwdre.lua"},
 	builderror3         = {arg = "-build", package = "build", arg = "-clea"},
 	builderror4         = {arg = "-build", package = "build", config = "pattern.lua"},
+	dir                 = {script = "dir.lua"},
 	basictrace          = {script = "trace-basic.lua"},
 	tmpdir              = {script = "tmpdir.lua", arg = "-strict"},
 	tracepackage        = {script = "trace-package.lua"},

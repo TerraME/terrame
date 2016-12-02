@@ -1,0 +1,2 @@
+It is not possible to use -package with -install. Run the following command instead:
+terrame -install noexamples
