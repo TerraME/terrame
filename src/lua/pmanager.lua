@@ -391,6 +391,7 @@ local function installButtonClicked()
 			qt.dialog.msg_information(msg)
 		end
 
+		buildComboboxPackages("base")
 		cancelButton.enabled = true
 	end)
 
