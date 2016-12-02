@@ -300,6 +300,13 @@ sample   function
 		unitTest:assertEquals(sum.poor, 106)
 		unitTest:assertEquals(sum.middle, 60)
 		unitTest:assertEquals(sum.rich, 34)
+
+		cat = Random{poor = 0.5, middle = 0.33, rich = 0.1700001}
+
+		unitTest:assertEquals(cat:sample(), "middle")
+		unitTest:assertEquals(cat:sample(), "poor")
+		unitTest:assertEquals(cat:sample(), "middle")
+		unitTest:assertEquals(cat:sample(), "poor")
 	end
 }
 

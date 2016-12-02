@@ -355,7 +355,7 @@ function Random(data)
 				sum = sum + value
 			end)
 
-			verify(sum == 1, "Sum should be one, got "..sum..".")
+			verify(math.abs(sum - 1) < sessionInfo().round, "Sum should be one, got "..sum..".")
 
 			data.sample = categorical(data, data)
 			data.distrib = "categorical"
