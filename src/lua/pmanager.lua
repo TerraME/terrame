@@ -182,6 +182,8 @@ local function selectPackage()
 	local s = sessionInfo().separator
 	comboboxExamples:clear()
 	comboboxModels:clear()
+	comboboxProjects:clear()
+
 	local models
 
 	local result = xpcall(function() getPackage(comboboxPackages.currentText) end, function(err)
