@@ -1788,7 +1788,7 @@ function Map(data)
 					if s then
 						customError(switchInvalidArgumentSuggestionMsg(colorName, "color", s))
 					else
-						customError("Color '"..colorName.."' not found. Check the name or use a table with an RGB description.")
+						customError("Color '"..colorName.."' was not found. Check the name or use a table with an RGB description.")
 					end
 				end
 			elseif type(data.color[i]) ~= "table" then

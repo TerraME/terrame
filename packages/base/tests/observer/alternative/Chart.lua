@@ -257,7 +257,7 @@ return{
 		error_func = function()
 			Chart{target = cell, select = {"v1", "v2", "v3"}, color = {"red", "xxx", "green"}}
 		end
-		unitTest:assertError(error_func, "Color 'xxx' not found. Check the name or use a table with an RGB description.")
+		unitTest:assertError(error_func, "Color 'xxx' was not found. Check the name or use a table with an RGB description.")
 
 		error_func = function()
 			Chart{target = cell, select = {"v1", "v2", "v3"}, color = {"red", {0, 0}, "green"}}
