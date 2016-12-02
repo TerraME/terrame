@@ -183,44 +183,45 @@ return {
 		toData.srid = 4326
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		local layerName2 = "SHP"
-		tl:addShpLayer(proj, layerName2, toData.file)
+		tl:addShpLayer(proj, layerName2, File(toData.file))
 		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
 		unitTest:assertEquals(info2.srid, toData.srid)
-
-		-- POSTGIS
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
-		local password = getConfig().password
-		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = "ogrgeojson"	-- #1243
-
-		local pgData = {
-			type = "postgis",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tableName, -- it is used only to drop
-			encoding = encoding	
-		}		
 		
-		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		-- TODO(#1555)
+		-- POSTGIS 
+		-- local host = "localhost"
+		-- local port = "5432"
+		-- local user = "postgres"
+		-- local password = getConfig().password
+		-- local database = "postgis_22_sample"
+		-- local encoding = "CP1252"
+		-- local tableName = "ogrgeojson"	-- #1243
+
+		-- local pgData = {
+			-- type = "postgis",
+			-- host = host,
+			-- port = port,
+			-- user = user,
+			-- password = password,
+			-- database = database,
+			-- table = tableName, -- it is used only to drop
+			-- encoding = encoding	
+		-- }		
+		
+		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
 		-- OVERWRITE 
-		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 
 		-- OVERWRITE AND CHANGE SRID
-		pgData.srid = 4326
-		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-		local layerName3 = "PG"
-		tl:addPgLayer(proj, layerName3, pgData)
-		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
-		unitTest:assertEquals(info3.srid, pgData.srid)
+		-- pgData.srid = 4326
+		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		-- local layerName3 = "PG"
+		-- tl:addPgLayer(proj, layerName3, pgData)
+		-- local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
+		-- unitTest:assertEquals(info3.srid, pgData.srid)
 		
-		tl:dropPgTable(pgData)		
+		-- tl:dropPgTable(pgData)		
 
 		File(toData.file):delete()
 		proj.file:delete()

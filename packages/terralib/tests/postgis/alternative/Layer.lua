@@ -40,12 +40,12 @@ return {
 			file = filePath("test/sampa.shp", "terralib")
 		}
 
-		local host = "localhost"
-		local port = "5432"
+		local host
+		local port
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
+		local encoding
 		local tableName = "sampa"
 
 		local data = {
@@ -57,12 +57,8 @@ return {
 		}
 
 		layer1:export(data)
-
-		host = nil
-		port = nil
 		
 		local layerName2 = "SampaDB"
-
 		Layer{
 			project = proj1,
 			source = "postgis",

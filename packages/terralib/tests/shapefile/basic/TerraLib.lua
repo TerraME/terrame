@@ -124,7 +124,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(layerInfo.name, clName)
-		unitTest:assertEquals(layerInfo.file, shp1)
+		unitTest:assertEquals(layerInfo.file, tostring(File(shp1)))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
@@ -218,7 +218,7 @@ return {
 		local clLayerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(clLayerInfo.name, clName)
-		unitTest:assertEquals(clLayerInfo.file, shp[1])
+		unitTest:assertEquals(clLayerInfo.file, tostring(File(shp[1])))
 		unitTest:assertEquals(clLayerInfo.type, "OGR")
 		unitTest:assertEquals(clLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(clLayerInfo.sid)
@@ -1257,46 +1257,47 @@ return {
 		toData.srid = 4326
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		local layerName3 = "SHP"
-		tl:addShpLayer(proj, layerName3, toData.file)
+		tl:addShpLayer(proj, layerName3, File(toData.file))
 		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
 		unitTest:assertEquals(info3.srid, toData.srid)		
 
 		File(toData.file):delete()
 		
-		-- POSTGIS
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
-		local password = getConfig().password
-		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = "sampa"	
+		-- TODO(#1555)
+		-- POSTGIS 
+		-- local host = "localhost"
+		-- local port = "5432"
+		-- local user = "postgres"
+		-- local password = getConfig().password
+		-- local database = "postgis_22_sample"
+		-- local encoding = "CP1252"
+		-- local tableName = "sampa"	
 
-		local pgData = {
-			type = "postgis", -- it is used only to drop
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tableName, -- it is used only to drop
-			encoding = encoding	
-		}		
+		-- local pgData = {
+			-- type = "postgis", -- it is used only to drop
+			-- host = host,
+			-- port = port,
+			-- user = user,
+			-- password = password,
+			-- database = database,
+			-- table = tableName, -- it is used only to drop
+			-- encoding = encoding	
+		-- }		
 		
-		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
 		-- OVERWRITE
-		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		
 		-- OVERWRITE AND CHANGE SRID
-		pgData.srid = 4326
-		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-		local layerName4 = "PG"
-		tl:addPgLayer(proj, layerName4, pgData)
-		local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
-		unitTest:assertEquals(info4.srid, pgData.srid)		
+		-- pgData.srid = 4326
+		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		-- local layerName4 = "PG"
+		-- tl:addPgLayer(proj, layerName4, pgData)
+		-- local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
+		-- unitTest:assertEquals(info4.srid, pgData.srid) -- SKIP		
 		
-		tl:dropPgTable(pgData)		
+		-- tl:dropPgTable(pgData)		
 
 		proj.file:delete()
 	end,

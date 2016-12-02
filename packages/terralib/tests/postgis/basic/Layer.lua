@@ -45,12 +45,12 @@ return {
 
 		unitTest:assertEquals(layer1.name, layerName1)	
 		
-		local host = "localhost"
-		local port = "5432"
+		local host
+		local port
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
+		local encoding
 		local tableName = "sampa"
 		
 		local pgData = {

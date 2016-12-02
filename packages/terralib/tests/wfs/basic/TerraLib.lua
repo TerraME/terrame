@@ -46,7 +46,7 @@ return {
 
 			local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
 			unitTest:assertEquals(layerInfo.name, layerName) -- SKIP
-			unitTest:assertEquals(layerInfo.url, "WFS:"..url) -- SKIP
+			unitTest:assertEquals(layerInfo.url, url) -- SKIP
 			unitTest:assertEquals(layerInfo.type, "WFS") -- SKIP
 			unitTest:assertEquals(layerInfo.source, "wfs") -- SKIP
 			unitTest:assertEquals(layerInfo.rep, "surface") -- SKIP
