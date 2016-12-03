@@ -397,7 +397,7 @@ return{
 				label = {"1", "2", "3"}
 			}
 		end
-		unitTest:assertError(error_func, "Color 'xxxxx' not found. Check the name or use a table with an RGB description.")
+		unitTest:assertError(error_func, "Color 'xxxxx' was not found. Check the name or use a table with an RGB description.")
 
 		error_func = function()
 			Map{

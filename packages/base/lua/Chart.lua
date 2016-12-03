@@ -613,7 +613,7 @@ function Chart(attrTab)
 					if s then
 						customError(switchInvalidArgumentSuggestionMsg(value, "color", s))
 					else
-						customError("Color '"..value.."' not found. Check the name or use a table with an RGB description.")
+						customError("Color '"..value.."' was not found. Check the name or use a table with an RGB description.")
 					end
 				end
 			elseif type(value) == "table" then
