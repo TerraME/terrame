@@ -53,8 +53,26 @@ function customWarning(msg)
 	local func = _Gtme.printWarning
 	local arg = msg
 
+	local short = _Gtme.makePathCompatibleToAllOS(info.short_src)
+	local current = sessionInfo().currentFile
+	local currentStr = tostring(current)
+	local equals
+
+	if string.sub(short, 1, 3) == "..." then
+		local subShort = string.sub(short, 4)
+		local cut = string.sub(currentStr, string.len(currentStr) - string.len(subShort) + 1)
+		equals = cut == subShort
+	else
+		equals = currentStr == short -- SKIP
+	end
+
+	local file = short
+	if equals then
+		file = current:name() -- SKIP
+	end
+
 	if info then
-		arg = "Warning: "..msg.." In file '".._Gtme.makePathCompatibleToAllOS(info.short_src).."', line "..info.currentline.."."
+		arg = "Warning: "..msg.." In file '"..file.."', line "..info.currentline.."."
 	end
 
 	if sessionInfo().mode == "debug" then
