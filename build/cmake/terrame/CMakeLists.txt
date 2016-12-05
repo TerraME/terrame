@@ -473,7 +473,6 @@ elseif(WIN32)
 			)	
 			
 	list(APPEND MSYS_DEPENDENCIES 	${MSYS_DIR}/cp.exe 
-									#${MSYS_DIR}/find.exe
 									${MSYS_DIR}/ls.exe 
 									${MSYS_DIR}/md5sum.exe 
 									${MSYS_DIR}/mktemp.exe
@@ -484,22 +483,24 @@ elseif(WIN32)
 									${MSYS_DIR}/touch.exe
 									${MSYS_DIR}/unzip.exe 
 									${MSYS_DIR}/zip.exe
-		)	
-							
-	install(FILES ${MSYS_DEPENDENCIES}
-		DESTINATION bin
-		COMPONENT runtime
-	)
-	
+	)	
+						
     add_custom_command(
 		TARGET terrame
 		POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy "${MSYS_DIR}/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find.exe"
 		COMMAND ${CMAKE_COMMAND} -E rename "${CMAKE_INSTALL_PREFIX}/bin/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find-msys.exe"
-		COMMENT "rename bin/find.exe to bin/find-msys.exe..."
+		COMMENT "Renamed bin/find.exe to bin/find-msys.exe..."
 		VERBATIM
-   )	
-		
+	)	
+	
+	list(APPEND MSYS_DEPENDENCIES ${CMAKE_INSTALL_PREFIX}/bin/find-msys.exe)
+	
+	install(FILES ${MSYS_DEPENDENCIES}
+		DESTINATION bin
+		COMPONENT runtime
+	)
+   
 	install(DIRECTORY ${TERRALIB_DIR}/bin/
 			DESTINATION bin
 			COMPONENT runtime
@@ -550,8 +551,6 @@ elseif(WIN32)
 										${TERRALIB_3RDPARTY_DIR}/lib/geos_c.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/hdfdll.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/iconv.dll
-										${TERRALIB_3RDPARTY_DIR}/lib/icudt52.dll
-										${TERRALIB_3RDPARTY_DIR}/lib/icuuc52.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/libcurl.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/libeay32.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/libgeotiff.dll
@@ -568,7 +567,7 @@ elseif(WIN32)
 										${TERRALIB_3RDPARTY_DIR}/lib/ssleay32.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/xdrdll.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/xerces-c_3_1.dll
-										${TERRALIB_3RDPARTY_DIR}/lib/xercesc_messages_3_1.dll
+										${TERRALIB_3RDPARTY_DIR}/lib/xercesc_messages_3_1_1.dll
 		)
 		
 	install(FILES ${TERRALIB_DEPENDENCIES}
@@ -683,6 +682,10 @@ else(UNIX)
 		${TERRALIB_3RDPARTY_DIR}/lib/libboost_date_time.so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libboost_filesystem.so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libboost_thread.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_locale.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_regex.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_log.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_log_setup.so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libgeos*so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libproj*so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libxerces*so*
