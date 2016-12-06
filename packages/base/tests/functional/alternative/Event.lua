@@ -150,16 +150,16 @@ return{
 		unitTest:assertError(error_func, "Incompatible types. Attribute 'execute' from CellularSpace should be a function, got number.")
 
 		error_func = function()
-			Event{action = cs, priority = "medium"}
+			Event{action = cs, priority = "high"}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("priority", 0))
+		unitTest:assertError(error_func, defaultValueMsg("priority", -5))
 
 		local cell = Cell{}
 
 		error_func = function()
-			Event{action = cell, priority = "medium"}
+			Event{action = cell, priority = "high"}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("priority", 0))
+		unitTest:assertError(error_func, defaultValueMsg("priority", -5))
 
 		local agent = Agent{}
 
@@ -178,16 +178,16 @@ return{
 		local group = Group{target = soc}
 
 		error_func = function()
-			Event{action = group, priority = "high"}
+			Event{action = group, priority = "medium"}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("priority", -5))
+		unitTest:assertError(error_func, defaultValueMsg("priority", 0))
 
 		local traj = Trajectory{target = cs}
 
 		error_func = function()
-			Event{action = traj, priority = "high"}
+			Event{action = traj, priority = "medium"}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("priority", -5))
+		unitTest:assertError(error_func, defaultValueMsg("priority", 0))
 	end,
 	config = function(unitTest)
 		local event = Event{action = function() end}

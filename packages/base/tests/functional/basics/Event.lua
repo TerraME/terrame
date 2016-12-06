@@ -73,7 +73,18 @@ return{
 			end
 		}
 
-		local cs = CellularSpace{xdim = 5}
+		local sum = 0
+
+		local cinstance = Cell{
+			execute = function()
+				sum = sum + 1
+			end
+		}
+
+		local cs = CellularSpace{
+			xdim = 5,
+			instance = cinstance
+		}
 
 		forEachCell(cs, function(cell)
 			cell.value = Random():integer(10)
@@ -107,8 +118,19 @@ return{
 
 		t:run(2)
 		unitTest:assertEquals(count, 1222)
+		unitTest:assertEquals(sum, 5 * 5 * 2 + #traj * 2)
 
-		local sum = 0
+		cs = CellularSpace{xdim = 5}
+
+		t = Timer{
+			Event{action = cs}
+		}
+
+		t:run(2)
+
+		unitTest:assertType(cs.cells[1].past, "table")
+
+		sum = 0
 
 		ag = Agent{
 			on_message = function()

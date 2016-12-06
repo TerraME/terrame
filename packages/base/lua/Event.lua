@@ -142,12 +142,12 @@ metaTableEvent_ = {
 -- @tabular action
 -- Object & Function(s) activated by the Event & Default priority\
 -- Agent/Automaton & execute & 0 ("medium") \
--- CellularSpace/Cell & synchronize and then execute (if exists) & 0 ("medium") \
+-- CellularSpace/Cell & synchronize and then execute (if exists) & -5 ("high") \
 -- Chart/Map/Clock/Log/InternetSender/VisualTable/TextScreen & update & 10 ("verylow") \
 -- function & the function itself & 0 ("medium") \
 -- Model & execute (if exists) & 0 ("medium") \
 -- Society & synchronize and then execute (if exists) & 0 ("medium") \
--- Trajectory/Group & rebuild & -5 ("high") \
+-- Trajectory/Group & rebuild and then execute (if exists) & 0 ("medium") \
 -- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
 --     print(event:getTime())
 -- end}
@@ -195,7 +195,7 @@ function Event(data)
 	if belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "Log", "TextScreen"}) then
 		defaultTableValue(data, "priority", 10)
 		defaultTableValue(data, "start", 0)
-	elseif belong(type(data.action), {"Trajectory", "Group"}) then
+	elseif belong(type(data.action), {"Cell", "CellularSpace"}) then
 		defaultTableValue(data, "priority", -5)
 		defaultTableValue(data, "start", 1)
 	else
@@ -251,6 +251,10 @@ function Event(data)
 	elseif targettype == "Group" or targettype == "Trajectory" then
 		data.action = function()
 			maction:rebuild()
+
+			if maction.execute then
+				maction:execute()
+			end
 		end
 	elseif isModel(maction) then
 		if data.action.execute then

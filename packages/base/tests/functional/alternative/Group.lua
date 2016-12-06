@@ -88,6 +88,23 @@ return{
 		error_func = function()
 			group1 = Group{
 				target = sc1,
+				random = false
+			}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("random", false))
+
+		error_func = function()
+			group1 = Group{
+				target = sc1,
+				random = true,
+				greater = function() return true end
+			}
+		end
+		unitTest:assertError(error_func, "It is not possible to use arguments 'greater' and 'random' at the same time.")
+
+		error_func = function()
+			group1 = Group{
+				target = sc1,
 				select = 12,
 				greater = function(a, b)
 					return a.money > b.money 

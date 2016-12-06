@@ -227,7 +227,12 @@ Trajectory_ = {
 	-- print(#traj)
 	rebuild = function(self)
 		self:filter()
-		self:sort()
+
+		if self.random then
+			self:randomize()
+		else
+			self:sort()
+		end
 	end,
 	--- Sort the current CellularSpace subset. It updates the traversing order of the Trajectory.
 	-- @arg f An ordering function (Cell, Cell)->boolean, working in the same way of
@@ -345,7 +350,7 @@ metaTableTrajectory_ = {
 function Trajectory(data)
 	verifyNamedTable(data)
 
-	verifyUnnecessaryArguments(data, {"target", "build", "select", "greater"})
+	verifyUnnecessaryArguments(data, {"target", "build", "select", "greater", "random"})
 
 	if data.target == nil then
 		mandatoryArgumentError("target")
@@ -353,7 +358,12 @@ function Trajectory(data)
 		incompatibleTypeError("target", "CellularSpace or Trajectory", data.target)
 	end
 
+	if data.greater and data.random then
+		customError("It is not possible to use arguments 'greater' and 'random' at the same time.")
+	end
+
 	defaultTableValue(data, "build", true)
+	defaultTableValue(data, "random", false)
 
 	data.parent = data.target
 
@@ -378,6 +388,7 @@ function Trajectory(data)
 	if data.build then
 		data:filter()
 		if data.greater then data:sort() end
+		if data.random then data:randomize() end
 		data.build = nil
 	end
 
