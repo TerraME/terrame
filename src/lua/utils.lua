@@ -81,7 +81,7 @@ local TME_LEGEND_COLOR_USER = {
 	["lightCyan"]       = TME_LEGEND_COLOR.LIGHTCYAN,
 	["cyan"]            = TME_LEGEND_COLOR.CYAN,
 	["darkCyan"]        = TME_LEGEND_COLOR.DARKCYAN,
-	["lighBlue"]        = TME_LEGEND_COLOR.LIGHTBLUE,
+	["lightBlue"]        = TME_LEGEND_COLOR.LIGHTBLUE,
 	["blue"]            = TME_LEGEND_COLOR.BLUE,
 	["darkBlue"]        = TME_LEGEND_COLOR.DARKBLUE,
 	["lightGray"]       = TME_LEGEND_COLOR.LIGHTGRAY,
@@ -433,7 +433,7 @@ function _Gtme.Legend(data)
 				data.colorBar[i].color = TME_LEGEND_COLOR_USER[data.colorBar[i].color]
 
 				if data.colorBar[i].color == nil then
-					customError("Color name '" .. colorName .. "' not found. Please, check the color name or set its value using a table with the RGB composition.", 3)
+					customError("Color '" .. colorName .. "' was not found. Please, check the color name or set its value using a table with the RGB composition.", 3)
 				end
 			end
 

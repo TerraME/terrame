@@ -1726,7 +1726,7 @@ function Map(data)
 		if #data.target == 0 then
 			customError("It is not possible to create a Map from an empty Society.")
 		elseif not data.target:sample().cell then
-			customError("The Society does not have a placement. Please use Environment:createPlacement() first.")
+			customError("The Society does not have a placement. Please call Environment:createPlacement() first.")
 		end
 
 		defaultTableValue(data, "size", 1)
@@ -1788,7 +1788,7 @@ function Map(data)
 					if s then
 						customError(switchInvalidArgumentSuggestionMsg(colorName, "color", s))
 					else
-						customError("Color '"..colorName.."' not found. Check the name or use a table with an RGB description.")
+						customError("Color '"..colorName.."' was not found. Check the name or use a table with an RGB description.")
 					end
 				end
 			elseif type(data.color[i]) ~= "table" then

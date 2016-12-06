@@ -160,6 +160,7 @@ return{
 cells   vector of size 200
 load    function
 parent  CellularSpace
+random  boolean [false]
 select  function
 xyz     function
 ]])
@@ -299,6 +300,25 @@ xyz     function
 		end)
 
 		unitTest:assertEquals(#tr, 10)
+
+		tr = Trajectory{
+			target = cs,
+			random = true
+		}
+
+		unitTest:assertEquals(#tr, 25)
+
+		tr:rebuild()
+		unitTest:assertEquals(#tr, 25)
+		unitTest:assertEquals(tr.cells[2].value, 11)
+
+		tr:rebuild()
+		unitTest:assertEquals(#tr, 25)
+		unitTest:assertEquals(tr.cells[2].value, 14)
+
+		tr:rebuild()
+		unitTest:assertEquals(#tr, 25)
+		unitTest:assertEquals(tr.cells[2].value, 20)
 	end,
 	sort = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

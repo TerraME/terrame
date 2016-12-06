@@ -107,18 +107,19 @@ local function buildComboboxPackages(default)
 	local index = 0
 	local pkgDir = sessionInfo().path.."packages"
 	forEachDirectory(pkgDir, function(dir)
-		if dir:name() == "luadoc" then return end
+		local name = dir:name()
+		if name == "luadoc" then return end
 
-		qt.combobox_add_item(comboboxPackages, dir:name())
+		qt.combobox_add_item(comboboxPackages, name)
 
-		if file == default then
+		if name == default then
 			index = pos
 		else
 			pos = pos + 1
 		end
 	end)
 
-	return index
+	comboboxPackages:setCurrentIndex(index)
 end
 
 local function aboutButtonClicked()
@@ -146,6 +147,8 @@ end
 
 local function configureButtonClicked()
 	disableAll()
+
+	_Gtme.loadedPackages[comboboxPackages.currentText] = nil
 
 	local ok, res = _Gtme.execConfigure(comboboxModels.currentText, comboboxPackages.currentText)
 	if not ok then
@@ -182,6 +185,8 @@ local function selectPackage()
 	local s = sessionInfo().separator
 	comboboxExamples:clear()
 	comboboxModels:clear()
+	comboboxProjects:clear()
+
 	local models
 
 	local result = xpcall(function() getPackage(comboboxPackages.currentText) end, function(err)
@@ -344,8 +349,7 @@ local function installButtonClicked()
 
 			qt.dialog.msg_information(msg)
 
-			local index = buildComboboxPackages(package)
-			comboboxPackages:setCurrentIndex(index)
+			buildComboboxPackages(package)
 			selectPackage()
 			disableAll()
 		else
@@ -389,6 +393,7 @@ local function installButtonClicked()
 			qt.dialog.msg_information(msg)
 		end
 
+		buildComboboxPackages("base")
 		cancelButton.enabled = true
 	end)
 
@@ -528,8 +533,7 @@ local function installLocalButtonClicked()
 
 		if ok then
 			qt.dialog.msg_information("Package '"..package.."' successfully installed.")
-			local index = buildComboboxPackages(package)
-			comboboxPackages:setCurrentIndex(index)
+			buildComboboxPackages(package)
 			selectPackage()
 			disableAll()
 		end
@@ -615,8 +619,7 @@ function _Gtme.packageManager()
 	qt.ui.layout_add(internalLayout, comboboxProjects, 3, 1)
 	qt.ui.layout_add(internalLayout, projButton,       3, 2)
 
-	local index = buildComboboxPackages("base")
-	comboboxPackages:setCurrentIndex(index)
+	buildComboboxPackages("base")
 
 	qt.connect(comboboxPackages, "activated(int)", selectPackage)
 
@@ -653,4 +656,3 @@ function _Gtme.packageManager()
 	dialog:show()
 	dialog:exec()
 end
-

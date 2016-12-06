@@ -109,17 +109,17 @@ local function approximateLine(line)
 	if string.match(line, "Directory")           then return 160 end
 	if string.match(line, "seconds")             then return   5 end
 	if string.match(line, "MD5")                 then return  70 end
-	if string.match(line, "log")                 then return 100 end
-	if string.match(line, "Cannot open")         then return 300 end
+	if string.match(line, "log")                 then return 120 end
+	if string.match(line, "Cannot open")         then return 320 end
 	if string.match(line, "configuration file")  then return   3 end
 	if string.match(line, "or is empty or does") then return 100 end
 	if string.match(line, "does not exist")      then return 200 end
 	if string.match(line, "projection should ")  then return 200 end
 	if string.match(line, "is unnecessary%.")    then return 130 end
 	if string.match(line, "'%.lua' extension")   then return 130 end
-	if string.match(line, "Error: ")             then return  50 end
+	if string.match(line, "Error: ")             then return  90 end
 	if string.match(line, "File ")               then return 150 end
-	if string.match(line, "directory")           then return 150 end
+	if string.match(line, "directory")           then return 160 end
 	if string.match(line, "such file")           then return 200 end
 	if string.match(line, "In ")                 then return  50 end
 	if string.match(line, "Error in")            then return  50 end

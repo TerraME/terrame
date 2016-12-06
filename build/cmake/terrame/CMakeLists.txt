@@ -473,7 +473,6 @@ elseif(WIN32)
 			)	
 			
 	list(APPEND MSYS_DEPENDENCIES 	${MSYS_DIR}/cp.exe 
-									#${MSYS_DIR}/find.exe
 									${MSYS_DIR}/ls.exe 
 									${MSYS_DIR}/md5sum.exe 
 									${MSYS_DIR}/mktemp.exe
@@ -484,22 +483,25 @@ elseif(WIN32)
 									${MSYS_DIR}/touch.exe
 									${MSYS_DIR}/unzip.exe 
 									${MSYS_DIR}/zip.exe
-		)	
-							
-	install(FILES ${MSYS_DEPENDENCIES}
-		DESTINATION bin
-		COMPONENT runtime
-	)
-	
+									${MSYS_DIR}/mv.exe
+	)	
+						
     add_custom_command(
 		TARGET terrame
 		POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy "${MSYS_DIR}/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find.exe"
 		COMMAND ${CMAKE_COMMAND} -E rename "${CMAKE_INSTALL_PREFIX}/bin/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find-msys.exe"
-		COMMENT "rename bin/find.exe to bin/find-msys.exe..."
+		COMMENT "Renamed bin/find.exe to bin/find-msys.exe..."
 		VERBATIM
-   )	
-		
+	)	
+	
+	list(APPEND MSYS_DEPENDENCIES ${CMAKE_INSTALL_PREFIX}/bin/find-msys.exe)
+	
+	install(FILES ${MSYS_DEPENDENCIES}
+		DESTINATION bin
+		COMPONENT runtime
+	)
+			
 	install(DIRECTORY ${TERRALIB_DIR}/bin/
 			DESTINATION bin
 			COMPONENT runtime

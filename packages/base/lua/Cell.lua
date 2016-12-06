@@ -113,7 +113,11 @@ Cell_ = {
 		if type(self[placement]) == "Group" then
 			return self[placement].agents
 		elseif self[placement] == nil then
-			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.")
+			if placement == "placement" then
+				customError("The Cell does not have a default placement. Please call Environment:createPlacement() first.")
+			else
+				customError("Placement '".. placement.. "' does not exist. Please call Environment:createPlacement() first.")
+			end
 		else
 			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".")
 		end

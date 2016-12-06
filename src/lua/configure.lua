@@ -602,9 +602,16 @@ function _Gtme.configure(self, modelName, package, random)
 				if self[value] ~= math.huge then
 					r = r.."\t\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
 				end
+
 				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
 				r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
-				r = r.."\telseif tonumber(lineEdit"..value..".text) ~= "..self[value].." then\n"
+
+				if self[value] == math.huge then
+					r = r.."\telseif tonumber(lineEdit"..value..".text) ~= math.huge then\n"
+				else
+					r = r.."\telseif tonumber(lineEdit"..value..".text) ~= "..self[value].." then\n"
+				end
+
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
 			end)
