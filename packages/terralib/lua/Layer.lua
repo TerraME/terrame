@@ -117,7 +117,7 @@ local function addCellularLayer(self, data)
 			end			
 			
 			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, 
-													data.file, not data.box, data.index)
+											data.file, not data.box, data.index)
 		end,
 		geojson = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
@@ -133,7 +133,7 @@ local function addCellularLayer(self, data)
 			end
 
 			self.terralib:addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution, -- SKIP
-				data.file, not data.box) -- SKIP
+												data.file, not data.box) -- SKIP
 		end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")

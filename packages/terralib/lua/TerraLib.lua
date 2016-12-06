@@ -1243,12 +1243,12 @@ TerraLib_ = {
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
-		local connInfo = createFileConnInfo(filePath)
-		local _, dSetName = File(filePath):split()
+		local connInfo = createFileConnInfo(tostring(filePath))
+		local _, dSetName = File(tostring(filePath)):split()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		self:addGeoJSONLayer(project, name, filePath)
+		self:addGeoJSONLayer(project, name, File(tostring(filePath)))
 	end,
 	--- Add a new PostgreSQL layer to a given project.
 	-- @arg project The name of the project.
