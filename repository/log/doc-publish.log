@@ -1,0 +1,123 @@
+Building documentation for package 'publish'
+Loading package 'publish'
+Parsing 'data.lua'
+Processing lua files
+Processing 'arapiuns.lua'
+Error: Directory '/Applications/terrame.app/Contents/MacOS/packages/publish/data/' does not exist.
+Stack traceback:
+    File '...me.app/Contents/MacOS/packages/terralib/lua/TerraLib.lua', line 1111, in function 'getLayerInfo'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Layer.lua', line 31, in function 'adaptsTerraLibInfo'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Layer.lua', line 860, in function 'Layer'
+    File '...edro/github/terrame/repository/publish/data/arapiuns.lua', line 31, in call to function 'Project'
+Processing 'caragua.lua'
+Error: Directory '/Applications/terrame.app/Contents/MacOS/packages/publish/data/' does not exist.
+Stack traceback:
+    File '...me.app/Contents/MacOS/packages/terralib/lua/TerraLib.lua', line 1111, in function 'getLayerInfo'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Layer.lua', line 31, in function 'adaptsTerraLibInfo'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Layer.lua', line 860, in function 'Layer'
+    File '...pedro/github/terrame/repository/publish/data/caragua.lua', line 31, in call to function 'Project'
+Processing 'emas.lua'
+Checking directory 'data'
+Checking properties of data files
+Processing 'Cmm_Arap2012_pt.shp'
+Processing 'Traj_IDA_lin.shp'
+Processing 'Traj_VOLTA_lin.shp'
+Processing 'caragua.shp'
+Processing 'caragua_classes2010_regioes.shp'
+Processing 'emas.shp'
+Processing 'occupational2010.shp'
+Processing 'regions.shp'
+Processing 'simulation2025_baseline.shp'
+Processing 'simulation2025_lessgrowth.shp'
+Processing 'simulation2025_plusgrowth.shp'
+Processing 'simulation2025_poorer.shp'
+Processing 'simulation2025_richer_final.shp'
+Package 'publish' has no fonts
+Parsing lua files
+Parsing lua/Application.lua
+Parsing lua/Color.lua
+Parsing lua/Report.lua
+Parsing lua/View.lua
+Parsing examples
+Parsing examples/arapiunsapp.lua
+Parsing examples/caraguapp.lua
+Parsing examples/emasapp.lua
+Checking undocumented files
+Checking @usage definition
+Checking lua/Application.lua
+Checking lua/Color.lua
+Checking lua/Report.lua
+Checking lua/View.lua
+Testing @usage
+Testing file lua/Application.lua
+Testing Application
+Testing file lua/Color.lua
+Testing color
+Testing file lua/Report.lua
+Testing Report
+Testing addHeading
+Testing addImage
+Testing addSeparator
+Testing addText
+Testing get
+Testing file lua/View.lua
+Testing View
+Checking calls to functions in @usage
+Checking lua/Application.lua
+Checking lua/Color.lua
+Checking lua/Report.lua
+Checking lua/View.lua
+Checking undocumented arguments
+Checking lua/Application.lua
+Checking lua/Color.lua
+Checking lua/Report.lua
+Checking lua/View.lua
+Checking 'description.lua'
+Building and checking HTML files
+Building doc/index.html
+Building doc/files/Application.html
+Building doc/files/Color.html
+Building doc/files/Report.html
+Building doc/files/View.html
+Building doc/files/examples.html
+Building doc/files/data.html
+Checking images
+Checking data.lua
+Checking models
+Checking examples
+Checking if all images are used
+Checking if all functions are documented
+Checking Application.lua
+Checking Color.lua
+Checking Report.lua
+Checking View.lua
+Checking if all Models are documented
+
+Documentation report for package 'publish':
+Documentation was built in 5.13 seconds.
+7 HTML files were created.
+All files are documented.
+All fields of 'description.lua' are correct.
+No problems were found in the documentation of data.
+No problems were found in the documentation of fonts.
+All source code lines starting with --- are valid.
+There are no Models in the package.
+2 problems were found while processing projects.
+All 9 global functions of the package are documented.
+All functions of each file are declared only once.
+All descriptions end with a correct character.
+There is no duplicated tag in the documentation.
+All tags with compulsory arguments were correctly used.
+All 4 non-named arguments are documented.
+No undefined arguments were found.
+All available arguments of functions are used in their HTML tables.
+All arguments used in the HTML tables are documented.
+All non-deprecated functions have @usage.
+All 9 functions call themselves in their @usage.
+All 9 functions do not have any error in their @usage.
+All @tabular are correctly described.
+No invalid tags were found in the documentation.
+All images are correctly used.
+All 0 links were correctly built.
+All 3 examples are correctly documented.
+Summing up, 2 problems were found in the documentation.

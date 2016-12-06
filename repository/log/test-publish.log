@@ -1,0 +1,188 @@
+Using log directory '/Users/pedro/github/terrame/repository/publish/log/'
+Loading package 'publish'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/application/alternative/Application.lua
+Testing Application
+Checking if all asserts were executed
+Testing tests/application/basic/Application.lua
+Testing Application
+Wrong execution, got:
+Error: Directory '/Applications/terrame.app/Contents/MacOS/packages/publish/data/' does not exist.
+Stack traceback:
+    File '...me.app/Contents/MacOS/packages/terralib/lua/TerraLib.lua', line 1111, in function 'getLayerInfo'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Layer.lua', line 31, in function 'adaptsTerraLibInfo'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Layer.lua', line 860, in function 'Layer'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Utils.lua', line 62, in second order function
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Utils.lua', line 61, in function 'forEachLayer'
+    File '...ro/github/terrame/repository/publish/lua/Application.lua', line 139, in function 'exportLayers'
+    File '...ro/github/terrame/repository/publish/lua/Application.lua', line 171, in function 'loadLayers'
+    File '...ro/github/terrame/repository/publish/lua/Application.lua', line 753, in function 'Application'
+    File '...pository/publish/tests/application/basic/Application.lua', line 228, in main chunk
+Checking if all asserts were executed
+Assert in line 248 was not executed.
+Assert in line 249 was not executed.
+Assert in line 250 was not executed.
+Assert in line 251 was not executed.
+Assert in line 252 was not executed.
+Assert in line 253 was not executed.
+Assert in line 255 was not executed.
+Assert in line 256 was not executed.
+Assert in line 257 was not executed.
+Assert in line 258 was not executed.
+Assert in line 259 was not executed.
+Assert in line 261 was not executed.
+Assert in line 262 was not executed.
+Assert in line 263 was not executed.
+Assert in line 299 was not executed.
+Assert in line 300 was not executed.
+Assert in line 301 was not executed.
+Assert in line 302 was not executed.
+Assert in line 303 was not executed.
+Assert in line 304 was not executed.
+Assert in line 305 was not executed.
+Assert in line 308 was not executed.
+Assert in line 309 was not executed.
+Assert in line 310 was not executed.
+Assert in line 312 was not executed.
+Assert in line 313 was not executed.
+Assert in line 316 was not executed.
+Assert in line 317 was not executed.
+Assert in line 320 was not executed.
+Assert in line 321 was not executed.
+Assert in line 322 was not executed.
+Assert in line 324 was not executed.
+Assert in line 325 was not executed.
+Assert in line 326 was not executed.
+Assert in line 327 was not executed.
+Assert in line 328 was not executed.
+Assert in line 331 was not executed.
+Assert in line 332 was not executed.
+Assert in line 335 was not executed.
+Assert in line 336 was not executed.
+Assert in line 337 was not executed.
+Assert in line 339 was not executed.
+Assert in line 340 was not executed.
+Assert in line 341 was not executed.
+Assert in line 342 was not executed.
+Assert in line 343 was not executed.
+Assert in line 344 was not executed.
+Assert in line 345 was not executed.
+Assert in line 348 was not executed.
+Assert in line 349 was not executed.
+Testing tests/functional/alternative/Application.lua
+Testing Application
+Checking if all asserts were executed
+Testing tests/functional/alternative/Color.lua
+Testing color
+Checking if all asserts were executed
+Testing tests/functional/alternative/Report.lua
+Testing Report
+Testing addHeading
+Testing addImage
+Testing addText
+Checking if all asserts were executed
+Testing tests/functional/alternative/View.lua
+Testing View
+Checking if all asserts were executed
+Testing tests/functional/basic/Application.lua
+Testing Application
+Testing __tostring
+Checking if all asserts were executed
+Testing tests/functional/basic/Color.lua
+Testing color
+Checking if all asserts were executed
+Testing tests/functional/basic/Report.lua
+Testing Report
+Testing __tostring
+Testing addHeading
+Testing addImage
+Testing addSeparator
+Testing addText
+Testing get
+Checking if all asserts were executed
+Testing tests/functional/basic/View.lua
+Testing View
+Testing __tostring
+Checking if all asserts were executed
+Testing tests/layout/alternative/Application.lua
+Testing Application
+Checking if all asserts were executed
+Testing tests/layout/basic/Application.lua
+Testing Application
+Checking if all asserts were executed
+Testing tests/package/alternative/Application.lua
+Testing Application
+Checking if all asserts were executed
+Testing tests/package/basic/Application.lua
+Testing Application
+Checking if all asserts were executed
+Testing tests/project/alternative/Application.lua
+Testing Application
+Checking if all asserts were executed
+Testing tests/project/basic/Application.lua
+Testing Application
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking Application.lua
+Checking Color.lua
+Checking Report.lua
+Checking View.lua
+Skipping lines of source code check
+Testing examples
+Testing arapiunsapp
+Error in example: Error: Directory '/Applications/terrame.app/Contents/MacOS/packages/publish/data/' does not exist.
+Stack traceback:
+    File '...me.app/Contents/MacOS/packages/terralib/lua/TerraLib.lua', line 1111, in function 'getLayerInfo'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Layer.lua', line 31, in function 'adaptsTerraLibInfo'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Layer.lua', line 860, in function 'Layer'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Utils.lua', line 62, in second order function
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Utils.lua', line 61, in function 'forEachLayer'
+    File '...ro/github/terrame/repository/publish/lua/Application.lua', line 139, in function 'exportLayers'
+    File '...ro/github/terrame/repository/publish/lua/Application.lua', line 171, in function 'loadLayers'
+    File '...ro/github/terrame/repository/publish/lua/Application.lua', line 753, in function 'Application'
+    File '...thub/terrame/repository/publish/examples/arapiunsapp.lua', line 70, in function 'result'
+Error: Strings do not match (line 7):
+Log file: 'Exporting layer 'beginning''
+Test: '<end of file>'
+Testing caraguapp
+Error in example: Error: Directory '/Applications/terrame.app/Contents/MacOS/packages/publish/data/' does not exist.
+Stack traceback:
+    File '...me.app/Contents/MacOS/packages/terralib/lua/TerraLib.lua', line 1111, in function 'getLayerInfo'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Layer.lua', line 31, in function 'adaptsTerraLibInfo'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Layer.lua', line 860, in function 'Layer'
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Utils.lua', line 62, in second order function
+    File '...rrame.app/Contents/MacOS/packages/terralib/lua/Utils.lua', line 61, in function 'forEachLayer'
+    File '...ro/github/terrame/repository/publish/lua/Application.lua', line 139, in function 'exportLayers'
+    File '...ro/github/terrame/repository/publish/lua/Application.lua', line 171, in function 'loadLayers'
+    File '...ro/github/terrame/repository/publish/lua/Application.lua', line 753, in function 'Application'
+    File '...github/terrame/repository/publish/examples/caraguapp.lua', line 52, in function 'result'
+Error: Strings do not match (line 10):
+Log file: 'Exporting layer 'baseline''
+Test: '<end of file>'
+Testing emasapp
+Checking logs
+
+Functional test report for package 'publish':
+Tests were executed in 17.59 seconds.
+Logs were saved in '/Users/pedro/github/terrame/repository/.terrametmp_QAwb8/'.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or directories in directory 'tests'.
+50 asserts were not executed at least once.
+All 547 asserts were executed successfully.
+One out of 27 tested functions stopped with an unexpected error.
+All 27 tested functions have at least one assert.
+All 27 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
+All 12 functions of the package were tested.
+No lines from the source code were verified.
+4 errors were found in the 3 examples.
+No new log file was created.
+All log files were used in the tests.
+Summing up, 55 problems were found during the tests.

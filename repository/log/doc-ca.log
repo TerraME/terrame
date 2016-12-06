@@ -7,10 +7,12 @@ Checking properties of data files
 Package 'ca' has no fonts
 Parsing lua files
 Parsing lua/Anneal.lua
+Parsing lua/BandedVegetation.lua
 Parsing lua/DaisyWorld.lua
 Parsing lua/Excitable.lua
 Parsing lua/Fire.lua
 Parsing lua/Growth.lua
+Parsing lua/InterspecificCompetition.lua
 Parsing lua/Life.lua
 Parsing lua/LifePatterns.lua
 Parsing lua/Oscillator.lua
@@ -21,14 +23,17 @@ Parsing lua/SolidDiffusion.lua
 Parsing lua/Utils.lua
 Parsing lua/Wolfram.lua
 Parsing examples
+Parsing examples/bv-scenario.lua
 Parsing examples/daisy-scenario.lua
 Checking undocumented files
 Checking @usage definition
 Checking lua/Anneal.lua
+Checking lua/BandedVegetation.lua
 Checking lua/DaisyWorld.lua
 Checking lua/Excitable.lua
 Checking lua/Fire.lua
 Checking lua/Growth.lua
+Checking lua/InterspecificCompetition.lua
 Checking lua/Life.lua
 Checking lua/LifePatterns.lua
 Checking lua/Oscillator.lua
@@ -40,10 +45,12 @@ Checking lua/Utils.lua
 Checking lua/Wolfram.lua
 Testing @usage
 Testing file lua/Anneal.lua
+Testing file lua/BandedVegetation.lua
 Testing file lua/DaisyWorld.lua
 Testing file lua/Excitable.lua
 Testing file lua/Fire.lua
 Testing file lua/Growth.lua
+Testing file lua/InterspecificCompetition.lua
 Testing file lua/Life.lua
 Testing file lua/LifePatterns.lua
 Testing getLife
@@ -58,10 +65,12 @@ Testing countNeighbors
 Testing file lua/Wolfram.lua
 Checking calls to functions in @usage
 Checking lua/Anneal.lua
+Checking lua/BandedVegetation.lua
 Checking lua/DaisyWorld.lua
 Checking lua/Excitable.lua
 Checking lua/Fire.lua
 Checking lua/Growth.lua
+Checking lua/InterspecificCompetition.lua
 Checking lua/Life.lua
 Checking lua/LifePatterns.lua
 Checking lua/Oscillator.lua
@@ -73,10 +82,12 @@ Checking lua/Utils.lua
 Checking lua/Wolfram.lua
 Checking undocumented arguments
 Checking lua/Anneal.lua
+Checking lua/BandedVegetation.lua
 Checking lua/DaisyWorld.lua
 Checking lua/Excitable.lua
 Checking lua/Fire.lua
 Checking lua/Growth.lua
+Checking lua/InterspecificCompetition.lua
 Checking lua/Life.lua
 Checking lua/LifePatterns.lua
 Checking lua/Oscillator.lua
@@ -101,10 +112,12 @@ Checking examples
 Checking if all images are used
 Checking if all functions are documented
 Checking Anneal.lua
+Checking BandedVegetation.lua
 Checking DaisyWorld.lua
 Checking Excitable.lua
 Checking Fire.lua
 Checking Growth.lua
+Checking InterspecificCompetition.lua
 Checking LifePatterns.lua
 Checking Life.lua
 Checking Oscillator.lua
@@ -117,14 +130,14 @@ Checking Wolfram.lua
 Checking if all Models are documented
 
 Documentation report for package 'ca':
-Documentation was built in 0.59 seconds.
+Documentation was built in 0.61 seconds.
 6 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
-All 12 Models are correctly documented.
+All 14 Models are correctly documented.
 All projects were successfully processed.
 All 3 global functions of the package are documented.
 All functions of each file are declared only once.
@@ -142,5 +155,5 @@ All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
-All 1 examples are correctly documented.
+All 2 examples are correctly documented.
 Summing up, all the documentation was successfully built.
