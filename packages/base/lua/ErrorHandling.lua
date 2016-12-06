@@ -53,7 +53,12 @@ function customWarning(msg)
 	local func = _Gtme.printWarning
 	local arg = msg
 
-	local short = _Gtme.makePathCompatibleToAllOS(info.short_src)
+	local short = ""
+
+	if info then
+		short = _Gtme.makePathCompatibleToAllOS(info.short_src)
+	end
+
 	local current = sessionInfo().currentFile
 	local currentStr = tostring(current)
 	local equals

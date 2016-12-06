@@ -106,7 +106,7 @@ return{
 		end
 		unitTest:assertError(error_func, "The Cell does not have a default placement. Please call Environment:createPlacement() first.")
 
-		local error_func = function()
+		error_func = function()
 			c:getAgent("abc123")
 		end
 		unitTest:assertError(error_func, "Placement 'abc123' does not exist. Please call Environment:createPlacement() first.")
