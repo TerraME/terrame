@@ -265,7 +265,7 @@ return{
 		local error_func = function()
 			forEachNeighborAgent(predators:sample(), function() end)
 		end
-		unitTest:assertError(error_func, "Default placement does not exist. Please call 'Environment:createPlacement' first.")
+		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call Environment:createPlacement() first.")
 
 		local cs = CellularSpace{xdim = 5}
 

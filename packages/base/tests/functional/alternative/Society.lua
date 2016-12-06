@@ -405,8 +405,7 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "cell", name = "c"}
 		end
-
-		unitTest:assertError(error_func, "Society has no placement. Use Environment:createPlacement() first.")
+		unitTest:assertError(error_func, "Society has no placement. Please call Environment:createPlacement() first.")
 
 		local cs = CellularSpace{xdim = 5}
 		ag1 = Agent{}
@@ -417,7 +416,12 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = "c"}
 		end
-		unitTest:assertError(error_func, "CellularSpace has no Neighborhood named '1'. Use CellularSpace:createNeighborhood() first.")
+		unitTest:assertError(error_func, "CellularSpace has no Neighborhood. Please call CellularSpace:createNeighborhood() first.")
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "neighbor", neighborhood = "abc123", name = "c"}
+		end
+		unitTest:assertError(error_func, "CellularSpace has no Neighborhood named 'abc123'. Please call CellularSpace:createNeighborhood() first.")
 
 		ag1 = Agent{}
 		sc1 = Society{instance = ag1, quantity = 20}
@@ -428,7 +432,7 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = "c"}
 		end
-		unitTest:assertError(error_func, "Society has no placement. Use Environment:createPlacement() first.")
+		unitTest:assertError(error_func, "Society has no placement. Please call Environment:createPlacement() first.")
 
 		env:createPlacement()
 		error_func = function()
