@@ -484,6 +484,7 @@ elseif(WIN32)
 									${MSYS_DIR}/touch.exe
 									${MSYS_DIR}/unzip.exe 
 									${MSYS_DIR}/zip.exe
+									${MSYS_DIR}/mv.exe
 		)	
 							
 	install(FILES ${MSYS_DEPENDENCIES}
