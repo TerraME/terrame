@@ -18,6 +18,9 @@ forEachDirectory(".", function(dir)
 	if dir:name() == "log" then return end
 
 	local package = dir:name()
+
+	if not isFile(package.."/description.lua") then return end
+
 	print("Processing "..package)
 
 	local pkgPath = sessionInfo().path.."/packages/"..package
