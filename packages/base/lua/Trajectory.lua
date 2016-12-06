@@ -202,7 +202,8 @@ Trajectory_ = {
 		end
 	end,
 	--- Rebuild the Trajectory from the CellularSpace used as target.
-	-- It is a shortcut to Trajectory:filter() and then Trajectory:sort().
+	-- It is a shortcut to Trajectory:filter() and then Trajectory:randomize() (if the Trajectory was created
+	-- using random = true) or Trajectory:sort() (otherwise).
 	-- @usage cell = Cell{
 	--     dist = Random{min = 0, max = 50}
 	-- }
@@ -303,6 +304,9 @@ metaTableTrajectory_ = {
 -- should belong to the Trajectory. If this function returns anything but false or nil for a given
 -- Cell, it will be added to the Trajectory. If this argument is missing, all Cells will be
 -- included in the Trajectory.
+-- @arg data.random A boolean value indicating that the Trajectory must be shuffled. The Trajectory will be
+-- shuffled every time one calls Trajectory:rebuild() or when the Trajectory is an action of an Event.
+-- This argument cannot be combined with argument greater. 
 -- @arg data.greater A function (Cell, Cell)->boolean to sort the Trajectory. Such function must
 -- return true if the first Cell has priority over the second one. When using this argument,
 -- Trajectory compares each pair of Cells to establish an execution order to be used by

@@ -141,7 +141,8 @@ Group_ = {
 		end
 	end,
 	--- Rebuild the Group from the Society used as target.
-	-- It is a shortcut to Group:filter() and then Group:sort().
+	-- It is a shortcut to Group:filter() and then Group:randomize() (if the Group was created
+	-- using random = true) or Group:sort() (otherwise).
 	-- @usage agent = Agent{
 	--     age = Random{min = 0, max = 50, step = 1}
 	-- }
@@ -242,6 +243,9 @@ metaTableGroup_ = {
 -- belong to the Group. If this function returns anything but false or nil for a given Agent, it
 -- will be added to the Group. If this argument is missing, all Agents will be included 
 -- in the Group.
+-- @arg data.random A boolean value indicating that the Group must be shuffled. The Group will be
+-- shuffled every time one calls Group:rebuild() or when the Group is an action of an Event.
+-- This argument cannot be combined with argument greater. 
 -- @arg data.greater A function (Agent, Agent)->boolean to sort the Group. Such function must
 -- return true if the first Agent has priority over the second one. When using this argument,
 -- Group compares each pair of Agents to establish an execution order to be used by
