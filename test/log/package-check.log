@@ -1,12 +1,12 @@
 Running code analyzer for package 'check'
 Analysing source code
-Checking 'lua/Check.lua'
+Checking lua/Check.lua
 Line 3: Unused variable 'a'.
 Line 6: Unused variable 'x'.
 Line 6: Unused variable 'z'.
 Line 12: Value assigned to variable 'o' is unused.
 Analysing tests
-Checking 'tests/functional/basic/Check.lua'
+Checking tests/functional/basic/Check.lua
 Line 3: Unused argument 'baz'.
 Line 4: Unused loop variable 'i'.
 Line 5: Unused variable 'q'.
@@ -17,7 +17,7 @@ Line 13: Value assigned to variable 'x' is unused.
 Line 14: Value assigned to variable 'x' is unused.
 Line 21: Variable 'z' is never accessed.
 Analysing examples
-Checking 'examples/foo.lua'
+Checking examples/foo.lua
 Line 6: Unused argument 'x'.
 
 Code analyzer report for package 'check':
