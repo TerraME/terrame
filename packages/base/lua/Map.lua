@@ -1726,7 +1726,7 @@ function Map(data)
 		if #data.target == 0 then
 			customError("It is not possible to create a Map from an empty Society.")
 		elseif not data.target:sample().cell then
-			customError("The Society does not have a placement. Please use Environment:createPlacement() first.")
+			customError("The Society does not have a placement. Please call Environment:createPlacement() first.")
 		end
 
 		defaultTableValue(data, "size", 1)

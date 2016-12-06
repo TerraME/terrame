@@ -183,7 +183,7 @@ return {
 		local error_func = function()
 			ag1:getCell()
 		end
-		unitTest:assertError(error_func, "Default placement does not exist. Please call 'Environment:createPlacement' first.")
+		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call Environment:createPlacement() first.")
 
 		error_func = function()
 			ag1:getCell("pl")
@@ -470,19 +470,24 @@ return {
 		unitTest:assertError(error_func, deprecatedFunctionMsg("setId", ".id"))
 	end,
 	walk = function(unitTest)
-		local ag1 = Agent{}
+		local ag1 = Agent{mvalue = 3}
 		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		local error_func = function()
 			ag1:walk()
 		end
-		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call 'Environment:createPlacement' first.")
+		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call Environment:createPlacement() first.")
+
+		error_func = function()
+			ag1:walk("mvalue")
+		end
+		unitTest:assertError(error_func, "Placement 'mvalue' should be a Trajectory, got number.")
 
 		error_func = function()
 			ag1:walk("placement2")
 		end
-		unitTest:assertError(error_func, valueNotFoundMsg(1, "placement2"))
+		unitTest:assertError(error_func, "Placement 'placement2' does not exist. Please call Environment:createPlacement() first.")
 
 		myEnv:createPlacement{strategy = "void"}
 		local c1 = cs.cells[1]
@@ -521,7 +526,7 @@ return {
 		error_func = function()
 			ag1:walk("123")
 		end
-		unitTest:assertError(error_func, valueNotFoundMsg(1, "123"))
+		unitTest:assertError(error_func, "Placement '123' does not exist. Please call Environment:createPlacement() first.")
 	end
 }
 

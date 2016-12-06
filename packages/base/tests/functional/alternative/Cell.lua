@@ -104,7 +104,12 @@ return{
 		local error_func = function()
 			c:getAgent()
 		end
-		unitTest:assertError(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
+		unitTest:assertError(error_func, "The Cell does not have a default placement. Please call Environment:createPlacement() first.")
+
+		error_func = function()
+			c:getAgent("abc123")
+		end
+		unitTest:assertError(error_func, "Placement 'abc123' does not exist. Please call Environment:createPlacement() first.")
 
 		error_func = function()
 			c:getAgent("friends")
@@ -118,7 +123,13 @@ return{
 		local error_func = function()
 			c:getAgents()
 		end
-		unitTest:assertError(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
+		unitTest:assertError(error_func, "The Cell does not have a default placement. Please call Environment:createPlacement() first.")
+
+		error_func = function()
+			c:getAgent("abc123")
+		end
+		unitTest:assertError(error_func, "Placement 'abc123' does not exist. Please call Environment:createPlacement() first.")
+
 
 		error_func = function()
 			c:getAgents("friends")
@@ -142,7 +153,7 @@ return{
 		local error_func = function()
 			c:isEmpty()
 		end
-		unitTest:assertError(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
+		unitTest:assertError(error_func, "The Cell does not have a default placement. Please call Environment:createPlacement() first.")
 
 		error_func = function()
 			c:isEmpty("friends")

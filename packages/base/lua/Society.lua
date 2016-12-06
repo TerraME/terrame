@@ -340,7 +340,11 @@ Society_ = {
 				defaultTableValue(data, "placement", "placement")
 
 				if self.agents[1][data.placement] == nil or self.agents[1][data.placement].cells[1] == nil then
-					customError("Society has no placement. Use Environment:createPlacement() first.")
+					if data.placement == "placement" then
+						customError("Society has no placement. Please call Environment:createPlacement() first.")
+					else
+						customError("Placement '"..data.placement.."' does not exist. Please call Environment:createPlacement() first.")
+					end
 				end
 
 				data.mfunc = getSocialNetworkByCell
@@ -352,9 +356,17 @@ Society_ = {
 				defaultTableValue(data, "placement", "placement")
 
 				if self.agents[1][data.placement] == nil or self.agents[1][data.placement].cells[1] == nil then
-					customError("Society has no placement. Use Environment:createPlacement() first.")
+					if data.placement == "placement" then
+						customError("Society has no placement. Please call Environment:createPlacement() first.")
+					else
+						customError("Placement '"..data.placement.."' does not exist. Please call Environment:createPlacement() first.")
+					end
 				elseif self.agents[1].placement.cells[1]:getNeighborhood(data.neighborhood) == nil then
-					customError("CellularSpace has no Neighborhood named '"..data.neighborhood.."'. Use CellularSpace:createNeighborhood() first.")
+					if data.neighborhood == "1" then
+						customError("CellularSpace has no Neighborhood. Please call CellularSpace:createNeighborhood() first.")
+					else
+						customError("CellularSpace has no Neighborhood named '"..data.neighborhood.."'. Please call CellularSpace:createNeighborhood() first.")
+					end
 				end
 
 				data.mfunc = getSocialNetworkByNeighbor

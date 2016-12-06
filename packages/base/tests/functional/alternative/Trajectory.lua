@@ -73,6 +73,23 @@ return{
 		end
 		unitTest:assertError(error_func, defaultValueMsg("build", true))
 
+		error_func = function()
+			traj = Trajectory{
+				target = cs,
+				random = false
+			}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("random", false))
+
+		error_func = function()
+			traj = Trajectory{
+				target = cs,
+				random = true,
+				greater = function() return true end
+			}
+		end
+		unitTest:assertError(error_func, "It is not possible to use arguments 'greater' and 'random' at the same time.")
+
 		-- greater
 		error_func = function()
 			trajectory = Trajectory{

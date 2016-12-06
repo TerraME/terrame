@@ -212,7 +212,7 @@ Agent_ = {
 
 		if type(self[placement]) ~= "Trajectory" then
 			if self[placement] == nil then
-				customError("Default placement does not exist. Please call 'Environment:createPlacement' first.")
+				customError("The Agent does not have a default placement. Please call Environment:createPlacement() first.")
 			else
 				customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
 
@@ -651,9 +651,11 @@ Agent_ = {
 
 		if type(self[placement]) ~= "Trajectory" then
 			if placement == "placement" then
-				customError("The Agent does not have a default placement. Please call 'Environment:createPlacement' first.")
+				customError("The Agent does not have a default placement. Please call Environment:createPlacement() first.")
+			elseif not self[placement] then
+				customError("Placement '".. placement.. "' does not exist. Please call Environment:createPlacement() first.")
 			else
-				valueNotFoundError(1, placement)
+				customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
 			end
 		end
 

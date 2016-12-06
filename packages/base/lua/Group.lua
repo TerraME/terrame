@@ -98,6 +98,7 @@ Group_ = {
 		if self.parent == nil then
 			customError("It is not possible to filter a Group without a parent.")
 		end
+
 		self.agents = {}
 
 		if type(self.select) == "function" then
@@ -163,7 +164,12 @@ Group_ = {
 	-- group:rebuild()
 	rebuild = function(self)
 		self:filter()
-		self:sort()
+
+		if self.random then
+			self:randomize()
+		else
+			self:sort()
+		end
 	end,
 	--- Sort the current Society subset. It updates the traversing order of the Group.
 	-- @arg f An ordering function (Agent, Agent)->boolean, working in the same way of
@@ -273,13 +279,18 @@ metaTableGroup_ = {
 function Group(data)
 	verifyNamedTable(data)
 
-	verifyUnnecessaryArguments(data, {"target", "build", "select", "greater"})
+	verifyUnnecessaryArguments(data, {"target", "build", "select", "greater", "random"})
 
 	if type(data.target) ~= "Society" and type(data.target) ~= "Group" and data.target ~= nil then
 		incompatibleTypeError("target", "Society, Group, or nil", data.target)
 	end
 
+	if data.greater and data.random then
+		customError("It is not possible to use arguments 'greater' and 'random' at the same time.")
+	end
+
 	defaultTableValue(data, "build", true)
+	defaultTableValue(data, "random", false)
 
 	data.parent = data.target
 	if data.parent ~= nil then
@@ -303,6 +314,7 @@ function Group(data)
 	if data.build and data.parent then
 		data:filter()
 		if data.greater then data:sort() end
+		if data.random then data:randomize() end
 		data.build = nil
 	end
 
