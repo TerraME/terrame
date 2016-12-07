@@ -1,6 +1,8 @@
 -- Script to test the package repository.
 -- To use it, just run 'terrame test.lua' within this directory.
 
+sessionInfo().fullTraceback = true
+
 local initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
 local baseDir = sessionInfo().path
@@ -169,6 +171,26 @@ local function execute(command, filename)
 	end
 end
 
+_Gtme.printNote("Creating projects")
+forEachOrderedElement(pkgs, function(package)
+	local docInitialTime = os.time(os.date("*t"))
+
+	_Gtme.print("Creating projects for package '"..package.."'")
+	local command = "terrame -package "..package.." -projects"
+	runCommand(command)
+
+	local docFinalTime = os.time(os.date("*t"))
+	local difference = round(docFinalTime - docInitialTime, 1)
+
+	local text = "Projects created in "..difference.." seconds"
+
+	if difference > 30 then
+		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+	elseif difference > 10 then
+		_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+	end
+end)
+
 _Gtme.printNote("Executing documentation")
 forEachOrderedElement(pkgs, function(package)
 	local docInitialTime = os.time(os.date("*t"))
@@ -186,8 +208,6 @@ forEachOrderedElement(pkgs, function(package)
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
 	elseif difference > 10 then
 		_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-	elseif difference > 1 then
-		_Gtme.print("\027[00;37;42m"..text.."\027[00m")
 	end
 
 end)
@@ -211,8 +231,6 @@ forEachOrderedElement(pkgs, function(package)
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
 	elseif difference > 10 then
 		_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-	elseif difference > 1 then
-		_Gtme.print("\027[00;37;42m"..text.."\027[00m")
 	end
 end)
 
