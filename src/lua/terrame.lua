@@ -901,7 +901,7 @@ function _Gtme.traceback(err)
 	return _Gtme.makePathCompatibleToAllOS(str)
 end
 
-local function loadModules(pkg)
+function _Gtme.loadModules(pkg)
 	pkg = Directory(pkg.."lib")
 
 	if pkg:exists() then
@@ -918,15 +918,6 @@ local function loadModules(pkg)
 			package.cpath = package.cpath..";"..pkg.."/?.dylib"
 		end
 	end
-end
-
-local function loadPackagesModules()
-	local tmePath = sessionInfo().path
-	local packages = tmePath.."/packages"
-
-	forEachDirectory(packages, function(pkg)
-		loadModules(pkg)
-	end)
 end
 
 local function findExample(example, packageName)
@@ -1210,8 +1201,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_.initialDir = _Gtme.Directory(tostring(_Gtme.currentDir()))
 	info_.version    = _Gtme.packageInfo().version
 
-	loadPackagesModules()
-
 	if arguments == nil or #arguments < 1 then
 		dofile(info_.path..s.."lua"..s.."pmanager.lua")
 		_Gtme.packageManager()
@@ -1261,11 +1250,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				if package == nil then
 					_Gtme.printError("A package should be specified after -package.")
 					os.exit(1)
-				end
-
-				if not isDirectory(sessionInfo().path.."packages/"..package) then
-					local pkg = Directory(package)
-					loadModules(pkg)
 				end
 
 				info_.package = package
