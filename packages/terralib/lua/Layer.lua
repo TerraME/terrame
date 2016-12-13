@@ -26,6 +26,17 @@ local function isValidSource(source)
 	return belong(source, {"tif", "shp", "postgis", "access", "nc", "asc", "geojson", "wfs"})
 end
 
+local function isValidName(name)
+	if string.find(name, "%W") then
+		local n = string.gsub(name, "-*_*", "")
+		if string.find(n, "%W") or string.find(n, "%s") then
+			return false
+		end
+	end
+		
+	return true
+end
+
 local function adaptsTerraLibInfo(data)
 	local layer = data.project.layers[data.name]
 	local info = data.project.terralib:getLayerInfo(data.project, layer)
@@ -196,6 +207,10 @@ local function addLayer(self, data)
 		if data.source ~= data.file:extension() then
 			customError("File '"..data.file.."' does not match to source '"..data.source.."'.")
 		end
+	end
+	
+	if not isValidName(data.name) then
+		customError("Layer name '"..data.name.."' is not a valid name. Please, revise special characters or spaces from it.")
 	end
 
 	if self.layers[data.name] then
@@ -412,6 +427,10 @@ Layer_ = {
 
 		mandatoryTableArgument(data, "operation", "string")
 		mandatoryTableArgument(data, "attribute", "string")
+		
+		if not isValidName(data.attribute) then
+			customError("Attribute name '"..data.attribute.."' is not a valid name. Please, revise special characters or spaces from it.")
+		end
 
 		local tlib = TerraLib{}
 		local project = self.project

@@ -354,6 +354,42 @@ return{
 			}
 		end
 		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))	
+		
+		local invalidLayerName = function()
+			Layer{
+				project = proj,
+				name = "My Layer",
+				file = filePath("test/sampa.shp", "terralib")
+			}
+		end
+		unitTest:assertError(invalidLayerName, "Layer name 'My Layer' is not a valid name. Please, revise special characters or spaces from it.")			
+		
+		invalidLayerName = function()
+			Layer{
+				project = proj,
+				name = "Samp*a",
+				file = filePath("test/sampa.shp", "terralib")
+			}
+		end
+		unitTest:assertError(invalidLayerName, "Layer name 'Samp*a' is not a valid name. Please, revise special characters or spaces from it.")			
+		
+		invalidLayerName = function()
+			Layer{
+				project = proj,
+				name = "$ampa",
+				file = filePath("test/sampa.shp", "terralib")
+			}
+		end
+		unitTest:assertError(invalidLayerName, "Layer name '$ampa' is not a valid name. Please, revise special characters or spaces from it.")		
+		
+		invalidLayerName = function()
+			Layer{
+				project = proj,
+				name = "SãoPaulo",
+				file = filePath("test/sampa.shp", "terralib")
+			}
+		end
+		unitTest:assertError(invalidLayerName, "Layer name 'SãoPaulo' is not a valid name. Please, revise special characters or spaces from it.")	
 
 		File(projName):deleteIfExists()
 		File(shp1):deleteIfExists()
@@ -447,6 +483,42 @@ return{
 			}
 		end
 		unitTest:assertError(attributeNotString, incompatibleTypeMsg("attribute", "string", 2))
+		
+		local invalidAttribName = function()
+			cl:fill{
+				attribute = "área",
+				operation = "area",
+				layer = "cells"
+			}
+		end
+		unitTest:assertError(invalidAttribName, "Attribute name 'área' is not a valid name. Please, revise special characters or spaces from it.")			
+		
+		invalidAttribName = function()
+			cl:fill{
+				attribute = "a$ea",
+				operation = "area",
+				layer = "cells"
+			}
+		end
+		unitTest:assertError(invalidAttribName, "Attribute name 'a$ea' is not a valid name. Please, revise special characters or spaces from it.")		
+		
+		invalidAttribName = function()
+			cl:fill{
+				attribute = "Cell Area",
+				operation = "area",
+				layer = "cells"
+			}
+		end
+		unitTest:assertError(invalidAttribName, "Attribute name 'Cell Area' is not a valid name. Please, revise special characters or spaces from it.")		
+
+		invalidAttribName = function()
+			cl:fill{
+				attribute = "Are*s",
+				operation = "area",
+				layer = "cells"
+			}
+		end
+		unitTest:assertError(invalidAttribName, "Attribute name 'Are*s' is not a valid name. Please, revise special characters or spaces from it.")			
 
 	--[[ BUG:
 		local attributeDoesNotExist = function()
