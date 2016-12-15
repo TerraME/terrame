@@ -107,7 +107,6 @@ local function createPgDbIfNotExists(host, port, user, pass, database, encoding)
 					.."&PG_NEWDB_NAME="..database
 					.."&PG_NEWDB_OWNER="..user
 					.."&PG_NEWDB_ENCODING="..encoding 
-					.."&PG_NEWDB_TEMPLATE=template2" -- TODO(#1581)
 					.."&PG_CONNECT_TIMEOUT=4"
 					.."&PG_MAX_POOL_SIZE=4"
 					.."&PG_MIN_POOL_SIZE=2"
