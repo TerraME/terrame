@@ -39,9 +39,9 @@ return {
 		tl:addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"
-		local shp1 = clName..".shp"
+		local shp1 = File(clName..".shp")
 
-		File(shp1):deleteIfExists()
+		shp1:deleteIfExists()
 		
 		local resolution = 60e3
 		local mask = true
@@ -111,7 +111,7 @@ return {
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 60e3
 		local mask = true
-		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, File(shp[1]), mask)
 	
 		local layerName2 = "Prodes_PA" 
 		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "terralib")

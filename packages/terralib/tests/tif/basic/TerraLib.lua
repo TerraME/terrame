@@ -64,9 +64,9 @@ return {
 		tl:addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"
-		local shp1 = clName..".shp"
+		local shp1 = File(clName..".shp")
 
-		File(shp1):deleteIfExists()
+		shp1:deleteIfExists()
 		
 		local resolution = 2e5
 		local mask = false
@@ -75,12 +75,12 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(layerInfo.name, clName) -- SKIP
-		unitTest:assertEquals(layerInfo.file, tostring(File(shp1))) -- SKIP
+		unitTest:assertEquals(layerInfo.file, tostring(shp1)) -- SKIP
 		unitTest:assertEquals(layerInfo.type, "OGR") -- SKIP
 		unitTest:assertEquals(layerInfo.rep, "polygon") -- SKIP
 		unitTest:assertNotNil(layerInfo.sid) -- SKIP				
 
-		File(shp1):deleteIfExists()
+		shp1:deleteIfExists()
 	else
 		unitTest:assert(true) -- SKIP
 	end	
@@ -150,7 +150,7 @@ return {
 		local tlib = TerraLib{}
 		local file = filePath("PRODES_5KM.tif", "terralib")
 
-		local dSet = tlib:getGdalByFilePath(file)
+		local dSet = tlib:getGdalByFilePath(tostring(file))
 		for i = 0, #dSet do
 			for k, v in pairs(dSet[i]) do
 				unitTest:assert(belong(k, {"xdim", "ydim", "name", "srid", "bands",
@@ -249,9 +249,9 @@ return {
 		tl:addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"
-		local shp1 = clName..".shp"
+		local shp1 = File(clName..".shp")
 
-		File(shp1):deleteIfExists()
+		shp1:deleteIfExists()
 		
 		local resolution = 2e5
 		local mask = false
@@ -262,7 +262,7 @@ return {
 			
 		unitTest:assertEquals(dist, 3883297.5677895, 1.0e-7) -- SKIP
 		
-		File(shp1):delete()	
+		shp1:delete()	
 	else
 		unitTest:assert(true) -- SKIP
 	end

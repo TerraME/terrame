@@ -113,9 +113,9 @@ return {
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		local clName = "Sampa_Cells"
-		local shp1 = clName..".shp"
+		local shp1 = File(clName..".shp")
 
-		File(shp1):deleteIfExists()
+		shp1:deleteIfExists()
 		
 		local resolution = 1
 		local mask = true
@@ -124,7 +124,7 @@ return {
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(layerInfo.name, clName)
-		unitTest:assertEquals(layerInfo.file, tostring(File(shp1)))
+		unitTest:assertEquals(layerInfo.file, tostring(shp1))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
@@ -134,9 +134,9 @@ return {
 		unitTest:assertEquals(getn(clSet), 37)
 		
 		clName = clName.."_NoMask"
-		local shp2 = clName..".shp"
+		local shp2 = File(clName..".shp")
 		
-		File(shp2):deleteIfExists()
+		shp2:deleteIfExists()
 		
 		mask = false
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp2, mask)
@@ -147,30 +147,30 @@ return {
 		
 		-- SPATIAL INDEX TEST
 		clName = "Sampa_Cells_NOSIDX"
-		local shp3 = clName..".shp"
+		local shp3 = File(clName..".shp")
 		local addSpatialIdx = false
 		
-		File(shp3):deleteIfExists()
+		shp3:deleteIfExists()
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp3, mask, addSpatialIdx)
-		local qixFile1 = string.gsub(shp3, ".shp", ".qix")
+		local qixFile1 = string.gsub(tostring(shp3), ".shp", ".qix")
 		unitTest:assert(not File(qixFile1):exists())
 		
 		clName = "Sampa_Cells_SIDX"
-		local shp4 = clName..".shp"
+		local shp4 = File(clName..".shp")
 		addSpatialIdx = true
 		
-		File(shp4):deleteIfExists()
+		shp4:deleteIfExists()
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp4, mask, addSpatialIdx)
-		local qixFile2 = string.gsub(shp4, ".shp", ".qix")
+		local qixFile2 = string.gsub(tostring(shp4), ".shp", ".qix")
 		unitTest:assert(File(qixFile2):exists())
 		-- // SPATIAL INDEX TEST
 		
-		File(shp1):deleteIfExists()
-		File(shp2):deleteIfExists()
-		File(shp3):deleteIfExists()
-		File(shp4):deleteIfExists()
+		shp1:deleteIfExists()
+		shp2:deleteIfExists()
+		shp3:deleteIfExists()
+		shp4:deleteIfExists()
 		
 		file:delete()
 	end,	
@@ -204,7 +204,7 @@ return {
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 5e5
 		local mask = true
-		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
+		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, File(shp[1]), mask)
 		
 		local clSet = tl:getDataSet(proj, clName)
 		
@@ -218,7 +218,7 @@ return {
 		local clLayerInfo = tl:getLayerInfo(proj, proj.layers[clName])
 		
 		unitTest:assertEquals(clLayerInfo.name, clName)
-		unitTest:assertEquals(clLayerInfo.file, tostring(File(shp[1])))
+		unitTest:assertEquals(clLayerInfo.file, currentDir()..shp[1])
 		unitTest:assertEquals(clLayerInfo.type, "OGR")
 		unitTest:assertEquals(clLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(clLayerInfo.sid)
@@ -942,9 +942,9 @@ return {
 		local clName1 = "SampaShpCells"	
 		local resolution = 1
 		local mask = true
-		local cellsShp = clName1..".shp"
+		local cellsShp = File(clName1..".shp")
 		
-		File(cellsShp):deleteIfExists()
+		cellsShp:deleteIfExists()
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
 
@@ -970,6 +970,9 @@ return {
 		end			
 
 		local newLayerName = "New_Layer"
+		
+		local nlFile = File(newLayerName..".shp")
+		nlFile:deleteIfExists()
 		
 		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1", "attr2", "attr3"})
 		
@@ -1028,7 +1031,7 @@ return {
 			end
 		end			
 		
-		File(cellsShp):delete()
+		cellsShp:delete()
 		File(newLayerName..".shp"):delete()
 		proj.file:delete()
 	end,
@@ -1067,9 +1070,9 @@ return {
 		local clName1 = "SampaShpCells"	
 		local resolution = 1
 		local mask = true
-		local cellsShp = clName1..".shp"
+		local cellsShp = File(clName1..".shp")
 		
-		File(cellsShp):deleteIfExists()
+		cellsShp:deleteIfExists()
 		
 		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
 
@@ -1086,7 +1089,7 @@ return {
 			end
 		end			
 		
-		File(cellsShp):deleteIfExists()
+		cellsShp:deleteIfExists()
 		proj.file:delete()
 	end,
 	getProjection = function(unitTest)
@@ -1163,9 +1166,9 @@ return {
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		local clName = "Sampa_Cells"
-		local shp1 = clName..".shp"
+		local shp1 = File(clName..".shp")
 
-		File(shp1):deleteIfExists()
+		shp1:deleteIfExists()
 		
 		local resolution = 1
 		local mask = true
@@ -1177,7 +1180,7 @@ return {
 		unitTest:assertEquals(dist, 4.1231056256177, 1.0e-13)
 		
 		proj.file:delete()
-		File(shp1):delete()
+		shp1:delete()
 	end,
 	castGeomToSubtype = function(unitTest)
 		local tl = TerraLib{}

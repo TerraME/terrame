@@ -293,18 +293,17 @@ local function loadProject(project, file)
 	end
 end
 
-local function addFileLayer(project, name, filePath, type, addSpatialIdx)
-	local connInfo = createFileConnInfo(tostring(filePath))
+local function addFileLayer(project, name, file, type, addSpatialIdx)
+	local connInfo = createFileConnInfo(tostring(file))
 	
 	loadProject(project, project.file)
 	
 	local dSetName = ""
 	
 	if type == "OGR" then
-		local _, fn = filePath:split()
+		local _, fn = file:split()
 		dSetName = fn
 	elseif type == "GDAL" then
-		local file = filePath
 		dSetName = file:name()
 	elseif type == "GeoJSON" then
 		type = "OGR"
@@ -1072,22 +1071,22 @@ TerraLib_ = {
 	end,
 	--- Add a shapefile layer to a given project.
 	-- @arg _ A TerraLib object.
-	-- @arg project The name of the project.
+	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
-	-- @arg filePath The path for the project.
+	-- @arg file The file to the layer.
 	-- @arg addSpatialIdx A boolean value indicating whether a spatial index file should be created.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
-	-- tl:createProject("project.tview", {})
+	-- proj = tl:createProject("project.tview", {})
 	-- tl:addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
-	addShpLayer = function(_, project, name, filePath, addSpatialIdx)
-		addFileLayer(project, name, filePath, "OGR", addSpatialIdx)
+	addShpLayer = function(_, project, name, file, addSpatialIdx)
+		addFileLayer(project, name, file, "OGR", addSpatialIdx)
 	end,
 	--- Add a new GDAL layer to a given project.
 	-- @arg _ A TerraLib object.
-	-- @arg filePath The path for the project.
+	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
-	-- @arg project The name of the project.
+	-- @arg file The file to the layer.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
 	-- proj = {
@@ -1101,20 +1100,20 @@ TerraLib_ = {
 	-- layerName = "TifLayer"
 	-- layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
 	-- tl:addGdalLayer(proj, layerName, layerFile)
-	addGdalLayer = function(_, project, name, filePath)
-		addFileLayer(project, name, filePath, "GDAL")
+	addGdalLayer = function(_, project, name, file)
+		addFileLayer(project, name, file, "GDAL")
 	end,
 	--- Add a GeoJSON layer to a given project.
 	-- @arg _ A TerraLib object.
-	-- @arg project The name of the project.
+	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
-	-- @arg filePath The path for the project.
+	-- @arg file The file to the layer.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
 	-- tl:createProject("project.tview", {})
 	-- tl:addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
-	addGeoJSONLayer = function(_, project, name, filePath)
-		addFileLayer(project, name, filePath, "GeoJSON")
+	addGeoJSONLayer = function(_, project, name, file)
+		addFileLayer(project, name, file, "GeoJSON")
 	end,
 	--- Validates if the URL is a valid WFS server.
 	-- @arg _ A TerraLib object.
@@ -1128,7 +1127,7 @@ TerraLib_ = {
 		return isValidDataSourceUri(toWfsUrl(url), "WFS")
 	end,
 	--- Add a WFS layer to a given project.
-	-- @arg project The name of the project.
+	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg url The URL of the WFS server.
 	-- @arg dataset The data set in WFS server.
@@ -1152,8 +1151,8 @@ TerraLib_ = {
 		end
 	end,
 	--- Create a new cellular layer into a shapefile.
-	-- @arg project The name of the project.
-	-- @arg filePath The path for the project.
+	-- @arg project A table that represents a project.
+	-- @arg file The file to the cellular layer.
 	-- @arg name The name of the layer.
 	-- @arg resolution The size of a cell.
 	-- @arg inputLayerTitle The name of the layer.
@@ -1173,21 +1172,21 @@ TerraLib_ = {
 	-- tl:addGeoJSONLayer(proj, layerName1, layerFile1)
 	--
 	-- tl:addGeoJSONCellSpaceLayer(proj, layerName1, "Setores_Cells", 10000, currentDir())
-	addGeoJSONCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask)
+	addGeoJSONCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, file, mask)
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
-		local connInfo = createFileConnInfo(tostring(filePath))
-		local _, dSetName = File(tostring(filePath)):split()
+		local connInfo = createFileConnInfo(tostring(file))
+		local _, dSetName = file:split()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		self:addGeoJSONLayer(project, name, File(tostring(filePath)))
+		self:addGeoJSONLayer(project, name, file)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
-	-- @arg project The name of the project.
-	-- @arg name The name of the layer.
 	-- @arg _ A TerraLib object.
+	-- @arg project A table that represents a project.
+	-- @arg name The name of the layer.
 	-- @arg data.host Name of the host.
 	-- @arg data.port Port number.
 	-- @arg data.user The user name.
@@ -1240,11 +1239,11 @@ TerraLib_ = {
 		releaseProject(project)		
 	end,
 	--- Create a new cellular layer into a shapefile.
-	-- @arg project The name of the project.
-	-- @arg filePath The path for the project.
-	-- @arg name The name of the layer.
-	-- @arg resolution The size of a cell.
+	-- @arg project A table that represents a project.
 	-- @arg inputLayerTitle The name of the layer.
+	-- @arg name The name of the layer.	
+	-- @arg resolution The size of a cell.	
+	-- @arg file The file to the layer.
 	-- @arg mask A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
 	-- @arg addSpatialIdx A boolean value indicating whether a spatial index file should be created.
 	-- @usage -- DONTRUN
@@ -1262,16 +1261,16 @@ TerraLib_ = {
 	-- tl:addShpLayer(proj, layerName1, layerFile1)		
 	--
 	--	tl:addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
-	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask, addSpatialIdx) 
+	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, file, mask, addSpatialIdx) 
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
-		local connInfo = createFileConnInfo(tostring(filePath))
-		local _, dSetName = File(tostring(filePath)):split()
+		local connInfo = createFileConnInfo(tostring(file))
+		local _, dSetName = file:split()
 		
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 		
-		self:addShpLayer(project, name, File(tostring(filePath)), addSpatialIdx)
+		self:addShpLayer(project, name, file, addSpatialIdx)
 	end,
 	--- Add a new cellular layer to a PostgreSQL connection.
 	-- @arg project The name of the project.
@@ -1401,9 +1400,6 @@ TerraLib_ = {
 	-- tl:dropPgDatabase(pgData)
 	dropPgDatabase = function(_, data)
 		local connInfo = "pgsql://"..data.user..":"..data.password.."@"..data.host..":"..data.port.."/?"
-					--.."&PG_NEWDB_NAME="..database
-					--.."&PG_NEWDB_OWNER="..user
-					--.."&PG_NEWDB_ENCODING="..encoding
 					.."&PG_CONNECT_TIMEOUT=4"
 					.."&PG_MAX_POOL_SIZE=4"
 					.."&PG_MIN_POOL_SIZE=2"					
@@ -1806,9 +1802,9 @@ TerraLib_ = {
 		local set
 
 		do
-			local connInfo = createFileConnInfo(tostring(filePath))
+			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "GDAL")
-			local file = File(tostring(filePath))
+			local file = File(filePath)
 			local dSetName = file:name(true)
 			local dSet = ds:getDataSet(dSetName)
 			set = createDataSetAdapted(dSet)
