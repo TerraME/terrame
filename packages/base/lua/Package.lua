@@ -105,6 +105,7 @@ function import(package, reload)
 		if not isDirectory(package_path..s.."lua") then return true end
 
 		_Gtme.verifyDepends(package)
+		_Gtme.loadModules(package_path)
 
 		local load_file = package_path..s.."load.lua"
 		local all_files = Directory(package_path..s.."lua"):list()
@@ -213,6 +214,7 @@ function getPackage(pname)
 	if not isDirectory(pname_path..s.."lua") then return {} end
 
 	_Gtme.verifyDepends(pname)
+	_Gtme.loadModules(pname_path)
 
 	local load_file = pname_path..s.."load.lua"
 	local all_files = Directory(pname_path..s.."lua"):list()

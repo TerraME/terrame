@@ -74,7 +74,6 @@ _Gtme.checkPackage = function(package, packagePath)
 	_Gtme.printNote("Running code analyzer for package '"..package.."'")
 	local clock0 = os.clock()
 
-	local s = sessionInfo().separator
 	local testsPath = Directory(packagePath.."tests")
 	local examplePath = Directory(packagePath.."examples")
 	local luaPath = Directory(packagePath.."lua")
@@ -97,8 +96,8 @@ _Gtme.checkPackage = function(package, packagePath)
 	for _, file in ipairs(luaFiles) do
 		local files = {tostring(file)}
 		
-		local name = Directory(file):relativePath(packagePath)..s..file:name()
-		_Gtme.print("Checking '"..name.."'")
+		local name = Directory(file):relativePath(packagePath).."/"..file:name()
+		_Gtme.print("Checking "..name)
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
 			_Gtme.printError("Line "..issue.line..": "..upperFirst(luacheck.get_message(issue))..".")
@@ -108,8 +107,8 @@ _Gtme.checkPackage = function(package, packagePath)
 
 	if #srcFiles > 0 then
 		for _, file in ipairs(srcFiles) do
-			local name = Directory(file):relativePath(packagePath)..s..file:name()
-			_Gtme.print("Checking 'lua"..name.."'")
+			local name = Directory(file):relativePath(packagePath).."/"..file:name()
+			_Gtme.print("Checking lua"..name)
 			local files = {tostring(file)}
 			local issues = luacheck.check_files(files, options)[1]
 			for _, issue in ipairs(issues) do
@@ -121,8 +120,8 @@ _Gtme.checkPackage = function(package, packagePath)
 
 	_Gtme.printNote("Analysing tests")
 	for _, file in ipairs(testFiles) do
-		local name = Directory(file):relativePath(packagePath)..s..file:name()
-		_Gtme.print("Checking '"..name.."'")
+		local name = Directory(file):relativePath(packagePath).."/"..file:name()
+		_Gtme.print("Checking "..name)
 		local files = {tostring(file)}
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
@@ -133,8 +132,8 @@ _Gtme.checkPackage = function(package, packagePath)
 
 	_Gtme.printNote("Analysing examples")
 	for _, file in ipairs(exampleFiles) do
-		local name = Directory(file):relativePath(examplePath)..s..file:name()
-		_Gtme.print("Checking 'examples"..name.."'")
+		local name = Directory(file):relativePath(examplePath).."/"..file:name()
+		_Gtme.print("Checking examples"..name)
 		local files = {tostring(file)}
 		local issues = luacheck.check_files(files, options)[1]
 		for _, issue in ipairs(issues) do
