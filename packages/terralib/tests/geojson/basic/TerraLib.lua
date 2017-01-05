@@ -136,49 +136,49 @@ return {
 		local tl = TerraLib{}
 		local shpPath = filePath("test/sampa.geojson", "terralib")
 		local dSet = tl:getOGRByFilePath(tostring(shpPath))
-		
+
 		unitTest:assertEquals(getn(dSet), 63)
 
 		for i = 0, #dSet do
 			unitTest:assertEquals(dSet[i].FID, i)
 
 			for k, v in pairs(dSet[i]) do
-				unitTest:assert((k == "FID") or (k == "ID") or (k == "NM_MICRO") or 
+				unitTest:assert((k == "FID") or (k == "ID") or (k == "NM_MICRO") or
 								(k == "CD_GEOCODU") or (k == "OGR_GEOMETRY"))
 				unitTest:assertNotNil(v)
 			end
-		end		
-	end,	
+		end
+	end,
 	saveLayerAs = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
-		
+
 		File(proj.file):deleteIfExists()
-		
+
 		tl:createProject(proj, {})
 
 		local layerName1 = "SampaGeoJson"
 		local layerFile1 = filePath("test/sampa.geojson", "terralib")
-		tl:addGeoJSONLayer(proj, layerName1, layerFile1)	
+		tl:addGeoJSONLayer(proj, layerName1, layerFile1)
 
 		-- SHP
 		local toData = {}
 		toData.file = "geojson2shp.shp"
-		toData.type = "shp"		
+		toData.type = "shp"
 		File(toData.file):deleteIfExists()
-		
+
 		local overwrite = true
-		
-		tl:saveLayerAs(proj, layerName1, toData, overwrite)		
+
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
-		
+
 		-- OVERWRITE AND CHANGE SRID
 		toData.srid = 4326
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
@@ -204,12 +204,12 @@ return {
 			password = password,
 			database = database,
 			table = tableName, -- it is used only to drop
-			encoding = encoding	
-		}		
-		
+			encoding = encoding
+		}
+
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-		
-		-- OVERWRITE 
+
+		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 
 		-- OVERWRITE AND CHANGE SRID
@@ -219,8 +219,8 @@ return {
 		tl:addPgLayer(proj, layerName3, pgData)
 		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
 		unitTest:assertEquals(info3.srid, pgData.srid)
-		
-		tl:dropPgTable(pgData)		
+
+		tl:dropPgTable(pgData)
 
 		File(toData.file):delete()
 		proj.file:delete()

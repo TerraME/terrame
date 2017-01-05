@@ -32,13 +32,13 @@ return {
 			author = "Avancini",
 			title = "The Amazonia"
 		}
-		
+
 		unitTest:assertType(proj1, "Project")
 		unitTest:assertEquals(proj1.file, file)
-		
+
 		local proj2 = Project{
 			file = tostring(file)
-		}		
+		}
 
 		unitTest:assertEquals(proj1.author, proj2.author)
 		unitTest:assertEquals(proj1.title, proj2.title)
@@ -103,10 +103,10 @@ return {
 			firebreak = filePath("firebreak_lin.shp", "terralib"),
 			river = filePath("River_lin.shp", "terralib"),
 			limit = filePath("Limit_pol.shp", "terralib")
-		}		
+		}
 	end
 		unitTest:assertType(proj5.firebreak, "Layer")
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)	
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		unitTest:assertType(proj5.cover, "Layer") -- SKIP
 	end
 		unitTest:assertType(proj5.river, "Layer")
@@ -123,7 +123,7 @@ return {
 			author = "Avancini",
 			title = "The Amazonia"
 		}
-		
+
 		unitTest:assertEquals(tostring(proj1), [[author       string [Avancini]
 clean        boolean [true]
 description  string []

@@ -36,12 +36,12 @@ return {
 		-- Layer{
 			-- project = proj,
 			-- name = prodes,
-			-- file = filePath("PRODES_5KM.tif", "terralib")	
+			-- file = filePath("PRODES_5KM.tif", "terralib")
 		-- }
-		
+
 		-- local clName1 = "cells"
 		-- local shp1 = clName1..".shp"
-		
+
 		-- local boxUnnecessary = function()
 			-- local cl = Layer{
 				-- project = proj,
@@ -54,9 +54,9 @@ return {
 			-- }
 		-- end
 		-- unitTest:assertError(boxUnnecessary, unnecessaryArgumentMsg("box")) -- SKIP
-		
+
 		-- File(projName):delete()
-		
+
 		-- SPATIAL INDEX TEST
 		local projName = "layer_tif_alternative.tview"
 
@@ -79,7 +79,7 @@ return {
 	else
 		unitTest:assert(true) -- SKIP
 	end
-		
+
 		proj.file:delete()
 		-- // SPATIAL INDEX TEST
 	end,
@@ -94,8 +94,8 @@ return {
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
 			return msg
-		end		
-		
+		end
+
 		local layerName1 = "limitepa"
 		Layer{
 			project = proj,
@@ -107,9 +107,9 @@ return {
 		Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("test/prodes_polyc_10k.tif", "terralib")	
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")
 		}
-		
+
 		local clName1 = "cells"
 		local shp1 = clName1..".shp"
 
@@ -139,7 +139,7 @@ return {
 		end
 
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The available bands are from '0' to '4.0'.")
-		
+
 		Layer{
 			project = proj,
 			name = "altimetria",
@@ -155,36 +155,36 @@ return {
 			}
 		end
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
-		
+
 		-- unitTest:assertFile(projName) -- SKIP #1242
 		File(projName):delete() -- #1242
 		File(shp1):deleteIfExists()
-		
-		customWarning = customWarningBkp		
+
+		customWarning = customWarningBkp
 	end,
 	dummy = function(unitTest)
 		local projName = "layer_tif_dummy.tview"
-		
+
 		File(projName):deleteIfExists()
-		
+
 		local proj = Project{
 			file = projName,
 			clean = true
 		}
-		
+
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
 			return msg
-		end				
+		end
 
 		local prodes = "prodes"
 		local bandNoExists = function()
 			local l = Layer{
 				project = proj,
 				name = prodes,
-				file = filePath("test/prodes_polyc_10k.tif", "terralib")	
+				file = filePath("test/prodes_polyc_10k.tif", "terralib")
 			}
-			
+
 			l:dummy(4)
 		end
 		unitTest:assertError(bandNoExists, "The maximum band is '3.0'.")

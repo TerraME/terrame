@@ -74,7 +74,7 @@ return {
 		local url = "WFS:http://terrabrasilis.info"
 
 		unitTest:assert(not tl:isValidWfsUrl(url))
-		
+
 		file:delete()
 	end
 }

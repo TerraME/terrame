@@ -22,18 +22,18 @@
 --
 -------------------------------------------------------------------------------------------
 
-return {	
+return {
 	addPgLayer = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
-		
+
 		File(proj.file):deleteIfExists()
-		
-		tl:createProject(proj, {})	
-	
+
+		tl:createProject(proj, {})
+
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
@@ -41,7 +41,7 @@ return {
 		local database = "terralib_pg_test"
 		local encoding = "CP1252"
 		local tableName = "sampa"
-		
+
 		local pgData = {
 			type = "POSTGIS",
 			host = host,
@@ -50,11 +50,11 @@ return {
 			password = password,
 			database = database,
 			table = tableName,
-			encoding = encoding	
-		}			
-		
+			encoding = encoding
+		}
+
 		local layerName = "Postgis"
-		
+
 	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		local passWrong = function()
 			tl:addPgLayer(proj, layerName, pgData)
@@ -64,7 +64,7 @@ return {
 	else
 		unitTest:assert(true) -- SKIP
 	end
-	
+
 		proj.file:delete()
 	end,
 	saveLayerAs = function(unitTest)
@@ -73,15 +73,15 @@ return {
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
-		
+
 		File(proj.file):deleteIfExists()
-		
+
 		tl:createProject(proj, {})
 
 		local layerName1 = "Setores"
 		local layerFile1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)	
-		
+		tl:addShpLayer(proj, layerName1, layerFile1)
+
 		-- POSTGIS
 		local host = "localhost"
 		local port = "5432"
@@ -89,7 +89,7 @@ return {
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
-		local tableName = "Setores_Censitarios_2000_pol"	
+		local tableName = "Setores_Censitarios_2000_pol"
 
 		local pgData = {
 			type = "postgis",
@@ -99,57 +99,57 @@ return {
 			password = password,
 			database = database,
 			table = tableName, -- it is used only to drop
-			encoding = encoding	
-		}		
-		
+			encoding = encoding
+		}
+
 		local overwrite = true
-		
-		tl:saveLayerAs(proj, layerName1, pgData, overwrite)	
+
+		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		local layerName2 = "PgLayer"
 		tl:addPgLayer(proj, layerName2, pgData)
-		
+
 		-- TIF
 		local toData = {}
 		toData.file = "postgis2tif.tif"
-		toData.type = "tif"		
-		
+		toData.type = "tif"
+
 		local postgis2tifError = function()
 			tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
-		unitTest:assertError(postgis2tifError, "It was not possible to convert the data in layer 'PgLayer' to 'postgis2tif.tif'.")	
-		
+		unitTest:assertError(postgis2tifError, "It was not possible to convert the data in layer 'PgLayer' to 'postgis2tif.tif'.")
+
 		-- OVERWRITE
 		overwrite = false
-		
+
 		-- SHP
 		toData.file = "postgis2shp.shp"
-		toData.type = "shp"		
+		toData.type = "shp"
 		File(toData.file):deleteIfExists()
-		
-		tl:saveLayerAs(proj, layerName2, toData, overwrite)	
-		
+
+		tl:saveLayerAs(proj, layerName2, toData, overwrite)
+
 		local overwriteShpError = function()
 			tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
 		unitTest:assertError(overwriteShpError,  "The file 'postgis2shp.shp' already exists.")
-		
+
 		File(toData.file):delete()
-		
+
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
-		toData.type = "geojson"		
+		toData.type = "geojson"
 		File(toData.file):deleteIfExists()
 
-		tl:saveLayerAs(proj, layerName2, toData, overwrite)		
-		
+		tl:saveLayerAs(proj, layerName2, toData, overwrite)
+
 		local overwriteGeojsonError = function()
 			tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
 		unitTest:assertError(overwriteGeojsonError,  "The file 'postgis2geojson.geojson' already exists.")
 
 		File(toData.file):delete()
-		
+
 		tl:dropPgTable(pgData)
-		proj.file:delete()		
-	end	
+		proj.file:delete()
+	end
 }

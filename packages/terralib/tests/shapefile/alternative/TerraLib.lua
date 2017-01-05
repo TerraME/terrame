@@ -29,42 +29,42 @@ return {
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
-		
+
 		File(proj.file):deleteIfExists()
-		
+
 		tl:createProject(proj, {})
 
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
 			return msg
-		end			
-		
+		end
+
 		local layerName1 = "Para"
 		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)		
-		
+		tl:addShpLayer(proj, layerName1, layerFile1)
+
 		local shp = {}
 
 		local clName = "Para_Cells"
 		shp[1] = clName..".shp"
 
 		File(shp[1]):deleteIfExists()
-		
+
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 60e3
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
-		
+
 		-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
-		local layerName2 = "Protection_Unit" 
+		local layerName2 = "Protection_Unit"
 		local layerFile2 = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName2, layerFile2)
-		
+
 		-- SHAPE OUTPUT
 		-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
-		local presLayerName = clName.."_"..layerName2.."_Presence"		
+		local presLayerName = clName.."_"..layerName2.."_Presence"
 		shp[2] = presLayerName..".shp"
-		
+
 		File(shp[2]):deleteIfExists()
 
 		local operation = "presence"
@@ -72,24 +72,24 @@ return {
 		local select = "FID"
 		local area = nil
 		local default = nil
-		
+
 		customWarning = customWarningBkp
-		
+
 		local attributeTruncateWarning = function()
 			tl:attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
 		end
 		unitTest:assertError(attributeTruncateWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'presence_t'.")
-		
+
 		attribute = "FID"
 		local attributeAlreadyExists = function()
 			tl:attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
 		end
 		unitTest:assertError(attributeAlreadyExists, "The attribute 'FID' already exists in the Layer.")
-		
+
 		for j = 1, #shp do
 			File(shp[j]):deleteIfExists()
-		end	
-		
+		end
+
 		proj.file:delete()
 	end,
 	saveLayerAs = function(unitTest)
@@ -98,44 +98,44 @@ return {
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
-		
+
 		File(proj.file):deleteIfExists()
-		
+
 		tl:createProject(proj, {})
 
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)	
-		
+		tl:addShpLayer(proj, layerName1, layerFile1)
+
 		-- TIF
 		local toData = {}
 		toData.file = "shp2tif.tif"
-		toData.type = "tif"		
-		
+		toData.type = "tif"
+
 		local overwrite = true
-		
+
 		local shp2tifError = function()
 			tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		end
 		unitTest:assertError(shp2tifError, "It was not possible to convert the data in layer 'SampaShp' to 'shp2tif.tif'.")
-		
-		local customWarningBkp = customWarning 
-		customWarning = function(msg) 
+
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
 			return msg
-		end	
-		
+		end
+
 		shp2tifError = function()
 			tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		end
 		unitTest:assertError(shp2tifError, "It was not possible save the data in layer 'SampaShp' to raster data.")
-		
+
 		customWarning = customWarningBkp
-		
+
 		-- GEOJSON
 		toData.file = "shp2geojson.geojson"
 		toData.type = "geojson"
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		
+
 		-- POSTGIS
 		local host = "localhost"
 		local port = "5432"
@@ -143,7 +143,7 @@ return {
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
-		local tableName = "sampa"	
+		local tableName = "sampa"
 
 		local pgData = {
 			type = "postgis",
@@ -153,26 +153,26 @@ return {
 			password = password,
 			database = database,
 			table = tableName, -- it is used only to drop
-			encoding = encoding	
-		}		
-		
+			encoding = encoding
+		}
+
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-				
+
 		-- OVERWRITE
-		overwrite = false		
-			
+		overwrite = false
+
 		local overwriteGeojsonError = function()
 			tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		end
 		unitTest:assertError(overwriteGeojsonError,  "The file 'shp2geojson.geojson' already exists.")
-		
+
 		local overwritePgError = function()
 			tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		end
 		unitTest:assertError(overwritePgError, "The table 'sampa' already exists in postgis database 'postgis_22_sample'.")
-		
-		tl:dropPgTable(pgData)		
+
+		tl:dropPgTable(pgData)
 		File(toData.file):delete()
 		proj.file:delete()
-	end	
+	end
 }

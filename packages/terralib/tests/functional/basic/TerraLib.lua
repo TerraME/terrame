@@ -26,12 +26,12 @@ return {
 	TerraLib = function(unitTest)
 		local t1 = TerraLib{}
 		local t2 = TerraLib{}
-		
+
 		unitTest:assertEquals(t1, t2)
 	end,
 	getVersion = function(unitTest)
 		local tlib = TerraLib{}
-		unitTest:assertEquals(tlib:getVersion(), "5.1.3")		
+		unitTest:assertEquals(tlib:getVersion(), "5.1.3")
 	end,
 	openProject = function(unitTest)
 		local tl = TerraLib{}
@@ -40,19 +40,19 @@ return {
 			title = "TerraLib Tests",
 			author = "Avancini Rodrigo"
 		}
-	
+
 		File(proj.file):deleteIfExists()
-		
+
 		tl:createProject(proj, {})
-		
+
 		local proj2 = {}
-		
+
 		tl:openProject(proj2, proj.file)
-		
+
 		unitTest:assertEquals(proj2.file, proj.file)
 		unitTest:assertEquals(proj2.title, proj.title)
 		unitTest:assertEquals(proj2.author, proj.author)
-		
+
 		proj.file:delete()
 	end
 }

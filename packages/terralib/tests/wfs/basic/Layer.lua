@@ -32,12 +32,12 @@ return {
 			file = projName,
 			clean = true
 		}
-		
+
 		local layerName = "BAU"
 		local service = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
 		local feature = "reddpac:BAU"
-		
-		if TerraLib{}:isValidWfsUrl(service) then	
+
+		if TerraLib{}:isValidWfsUrl(service) then
 			local layer = Layer {
 				project = proj,
 				source = "wfs",
@@ -45,7 +45,7 @@ return {
 				service = service,
 				feature = feature
 			}
-			
+
 			unitTest:assertEquals(layer.name, layerName) -- SKIP
 			unitTest:assertEquals(layer.source, "wfs") -- SKIP
 			unitTest:assertEquals(layer.service, service) -- SKIP

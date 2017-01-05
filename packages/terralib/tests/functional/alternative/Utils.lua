@@ -25,8 +25,8 @@
 return {
 	forEachLayer = function(unitTest)
 		File("emas-count.tview"):deleteIfExists()
-		
-		local project 
+
+		local project
 
 	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		project = Project{
@@ -45,7 +45,7 @@ return {
 			river = filePath("River_lin.shp", "terralib"),
 			limit = filePath("Limit_pol.shp", "terralib")
 		}
-	end		
+	end
 
 		local error_func = function()
 			forEachLayer()
@@ -64,7 +64,7 @@ return {
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
-		
+
 		File("emas-count.tview"):deleteIfExists()
 	end
 }
