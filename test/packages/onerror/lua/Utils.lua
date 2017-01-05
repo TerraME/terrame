@@ -329,7 +329,7 @@ function vardump2(o, indent)
 		local s = indent..'{'..'\n'
 		local first = true
 		forEachOrderedElement(o, function(k, v)
-			if first == false then s = s .. ', \n' end
+			if first == false then s = s .. ',\n' end
 			if _Gtme.type(k) ~= 'number' then k = "'"..tostring(k).."'" end
 			s = s..indent2..'['..k..'] = '..vardump(v, indent2)
 			first = false
