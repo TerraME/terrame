@@ -324,6 +324,7 @@ local function installButtonClicked()
 	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
 	cancelButton.text = "Close"
 	qt.connect(cancelButton, "clicked()", function()
+		enableAll()
 		mdialog:done(0)
 	end)
 
@@ -331,7 +332,6 @@ local function installButtonClicked()
 		installButton2.enabled = false
 		installAllButton.enabled = false
 		cancelButton.enabled = false
-		disableAll()
 
 		local mpkgfile = pkgsTab[listPackages.currentRow].file
 		local result, installed = _Gtme.installRecursive(mpkgfile)
@@ -356,7 +356,6 @@ local function installButtonClicked()
 
 			buildComboboxPackages(package)
 			selectPackage()
-			disableAll()
 		else
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
@@ -370,7 +369,6 @@ local function installButtonClicked()
 		installAllButton.enabled = false
 		installButton2.enabled = false
 		cancelButton.enabled = false
-		disableAll()
 
 		local msg = ""
 
@@ -398,7 +396,6 @@ local function installButtonClicked()
 			qt.dialog.msg_information(msg)
 		end
 
-		buildComboboxPackages("base")
 		cancelButton.enabled = true
 	end)
 
