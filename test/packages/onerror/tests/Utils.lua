@@ -127,11 +127,11 @@ return{
 		local x = {a = 2, b = 3, w = {2, 3, 4}}
 
 		unitTest:assertEquals(vardump2(x), [[{
-    ['a'] = 2, 
-    ['b'] = 3, 
+    ['a'] = 2,
+    ['b'] = 3,
     ['w'] = {
-        2, 
-        3, 
+        2,
+        3,
         4
     }
 }]])
