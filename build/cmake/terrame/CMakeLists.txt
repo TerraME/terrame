@@ -1,6 +1,6 @@
 ############################################################################################
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-# Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+# Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 #
 # This code is part of the TerraME framework.
 # This framework is free software; you can redistribute it and/or
@@ -134,7 +134,7 @@ if (APPLE)
 
 	if (TERRAME_BUILD_AS_BUNDLE)
 		set(MACOSX_BUNDLE_BUNDLE_NAME "TerraME")
-		set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2001-2016")
+		set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2001-2017")
 		set(MACOSX_BUNDLE_SIGNATURE "TerraME")
 		set(MACOSX_BUNDLE_GUI_IDENTIFIER "http://www.terrame.org")
 		set(MACOSX_BUNDLE_EXECUTABLE_NAME "terrame")
