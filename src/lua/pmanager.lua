@@ -22,6 +22,10 @@
 --
 -------------------------------------------------------------------------------------------
 
+-- some qt values
+local qtOk = 1024
+local qtCancel = 4194304
+
 local comboboxExamples
 local comboboxModels
 local comboboxPackages
@@ -36,6 +40,7 @@ local quitButton
 local runButton
 local dialog
 local oldState
+local filesInCurrentDirectory = {}
 
 local function breakLines(str)
 	local result = ""
@@ -504,10 +509,8 @@ local function installLocalButtonClicked()
 			local msg = "New version ("..newVersion..") is older than current one ("
 				..currentVersion..").".."\nDo you really want to install "
 				.."an older version of package '"..package.."'?"
-			local ok = 1024
-			local cancel = 4194304
 
-			if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
+			if qt.dialog.msg_question(msg, "Confirm?", qtOk + qtCancel, qtCancel) == qtOk then
 				_Gtme.printNote("Removing previous version of package")
 				Directory(packageDir..s..package):delete()
 			else
@@ -543,6 +546,42 @@ local function installLocalButtonClicked()
 end
 
 local function quitButtonClicked()
+	local createdFiles = {}
+
+	forEachFile(".", function(file)
+		if not filesInCurrentDirectory[file:name()] then
+			createdFiles[file:name()] = true
+		end
+	end)
+
+	local countCreated = getn(createdFiles)
+
+	if countCreated > 0 then
+		local msg
+
+		if countCreated == 1 then
+			msg = "As you configured a model, the following file was created:"
+		else
+			msg = "As you configured some models, the following files were created:"
+		end
+
+		forEachOrderedElement(createdFiles, function(idx)
+			msg = msg.."\n - "..idx
+		end)
+
+		if countCreated == 1 then
+			msg = msg.."\n\nDo you want to delete it?"
+		else
+			msg = msg.."\n\nDo you want to delete them?"
+		end
+
+		if qt.dialog.msg_question(msg, "Confirm?", qtOk + qtCancel, qtCancel) == qtOk then
+			forEachElement(createdFiles, function(idx)
+				File(idx):delete()
+			end)
+		end
+	end
+
 	dialog:done(0)
 end
 
@@ -651,6 +690,10 @@ function _Gtme.packageManager()
 
 	qt.ui.layout_add(externalLayout, internalLayout)
 	qt.ui.layout_add(externalLayout, buttonsLayout, 4, 0)
+
+	forEachFile(".", function(file)
+		filesInCurrentDirectory[file:name()] = true
+	end)
 
 	selectPackage()
 	dialog:show()
