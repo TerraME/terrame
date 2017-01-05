@@ -1619,7 +1619,7 @@ local function recursiveVardump(o, indent, tables)
 		forEachOrderedElement(o, function(k, v)
 			if k == "parent" then v = type(v) end
 
-			if first == false then s = s .. ", \n" end
+			if first == false then s = s .. ",\n" end
 
 			first = false
 
