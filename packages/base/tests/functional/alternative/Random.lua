@@ -43,17 +43,17 @@ return{
 			Random{min = 20, max = 5}
 		end
 		unitTest:assertError(error_func, "Argument 'max' should be greater than 'min'.")
-	
+
 		error_func = function()
 			Random{min = 2, max = 5, w = 2}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("w"))
-	
+
 		error_func = function()
 			Random{p = 0.3, w = 2}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("w"))
-		
+
 		error_func = function()
 			Random{1, 2, 4, 5, 6, w = 2}
 		end

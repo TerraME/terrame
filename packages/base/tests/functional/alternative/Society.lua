@@ -96,7 +96,7 @@ return{
 		unitTest:assertError(error_func, "Attribute 'instance' belongs to both Society and Agent.")
 
 		ag1 = Agent{}
-		
+
 		Society{
 			instance = ag1,
 			quantity = 20
@@ -111,7 +111,7 @@ return{
 		unitTest:assertError(error_func, "The same instance cannot be used by two Societies.")
 
 		ag1 = Agent{enter = function() end}
-		
+
 		error_func = function()
 			sc3 = Society{
 				instance = ag1,
@@ -183,7 +183,7 @@ return{
 			water = 2,
 			exec = function() end
 		}
-    
+
 		local soc = Society{
 			quantity = 10,
 			instance = ag
@@ -258,7 +258,7 @@ return{
 			watts = true,
 			barabasi = true
 		}
-			
+
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("terralab", "strategy", options))
 
 		sc1:createSocialNetwork{
@@ -371,7 +371,7 @@ return{
 			sc1:createSocialNetwork{
 				strategy = "probability",
 				probability = 0.5,
-				quantity = 5	
+				quantity = 5
 			}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("quantity"))
@@ -604,7 +604,7 @@ return{
 			sc1:get(-1)
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg(1, -1))
-	
+
 		error_func = function()
 			sc1:get(2.2)
 		end
@@ -673,7 +673,7 @@ return{
 			soc1:remove()
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent or function"))
-	
+
 		error_func = function()
 			soc1:remove(ag)
 		end

@@ -29,7 +29,7 @@ return{
 
 			model.timer = Timer{
 				Event{action = function()
-					local proportion = model.susceptible / 
+					local proportion = model.susceptible /
 						(model.susceptible + model.infected + model.recovered)
 
 					local newInfected = model.infected * contacts * model.probability * proportion

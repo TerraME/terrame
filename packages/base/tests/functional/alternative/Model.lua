@@ -86,7 +86,7 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "'getParameters' cannot be an argument for a Model.")
-	
+
 		local Tube = Model{
 			init = function() end,
 			finalTime = 10
@@ -233,7 +233,7 @@ return{
 			Tube{checkZero = 3}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("checkZero", "boolean", 3))
-	
+
 		error_func = function()
 			Tube{initialWater = -5}
 		end
@@ -248,12 +248,12 @@ return{
 			Tube{block = {xmin = false}}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("block.xmin", "number", false))
-			
+
 		Tube = Model{
 			bb = Choice{min = 10, max = 20, step = 1},
 			init = function() end
 		}
-		
+
 		error_func = function()
 			Tube{bb = false}
 		end
@@ -263,7 +263,7 @@ return{
 			Tube{bb = 10.5}
 		end
 		unitTest:assertError(error_func, "Invalid value for argument 'bb' (10.5).")
-	
+
 		error_func = function()
 			Tube{bb = 21.5}
 		end
@@ -327,12 +327,12 @@ return{
 			M{v = {value = "1.4"}}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("v.value", "number", "1.4"))
-	
+
 		error_func = function()
 			M{v = {value = 0}}
 		end
 		unitTest:assertError(error_func, "Argument 'v.value' should be greater than or equal to 1.")
-	
+
 		error_func = function()
 			M{v = {value = 11}}
 		end

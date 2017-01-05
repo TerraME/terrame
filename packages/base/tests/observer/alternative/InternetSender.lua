@@ -66,7 +66,7 @@ return{
 			InternetSender{target = c, port = "5"}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("port", "number", "5"))
-		
+
 		error_func = function()
 			InternetSender{target = c, port = 49999}
 		end

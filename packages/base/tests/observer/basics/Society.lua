@@ -81,7 +81,6 @@ return{
 		}
 
 		unitTest:assertSnapshot(m, "map_single_agent.bmp", 0.03)
-	
 
 		ag = Agent{
 			init = function(self)

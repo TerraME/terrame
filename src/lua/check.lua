@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
 
@@ -35,18 +35,18 @@ _Gtme.checkFile = function(file, prefixMsg)
 
 	local luacheck = require("luacheck.init")
 	local files = {file}
-	local options = {std = "min", cache = true, global = false}				
+	local options = {std = "min", cache = true, global = false}
 	local issues = luacheck.check_files(files, options)
-	
-	if (issues.errors == 0) and (issues.fatals == 0) then	
+
+	if (issues.errors == 0) and (issues.fatals == 0) then
 		issues = issues[1]
 		for _, issue in ipairs(issues) do
 			printFunction(prefixMsg..": "..upperFirst(luacheck.get_message(issue))..". In file '"..file.."', line "..issue.line..".")
-		end		
-		
+		end
+
 		return #issues
 	end
-	
+
 	return 0
 end
 
@@ -60,13 +60,13 @@ local function getLuaFiles(dirPath)
 			table.insert(files, v)
 		end
 	end)
- 
+
 	_Gtme.forEachFile(dirPath, function(file)
 		if file:extension() == "lua" then
 			table.insert(files, file)
 		end
 	end)
-	
+
 	return files
 end
 
@@ -80,22 +80,22 @@ _Gtme.checkPackage = function(package, packagePath)
 	local testFiles = getLuaFiles(testsPath)
 	local luaFiles = getLuaFiles(luaPath)
 	local exampleFiles = getLuaFiles(examplePath)
-	
+
 	local srcPath
 	local srcFiles = {}
 	if package == "base" then
 		srcPath = Directory(sessionInfo().path.."lua")
 		srcFiles = getLuaFiles(srcPath)
 	end
-	
+
 	local luacheck = require("luacheck.init")
 	local numIssues = 0
 	local options = {std = "min", cache = true, global = false}
-	
+
 	_Gtme.printNote("Analysing source code")
 	for _, file in ipairs(luaFiles) do
 		local files = {tostring(file)}
-		
+
 		local name = Directory(file):relativePath(packagePath).."/"..file:name()
 		_Gtme.print("Checking "..name)
 		local issues = luacheck.check_files(files, options)[1]

@@ -63,7 +63,7 @@ return{
 			Cell{id = 2.3}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("id", "string", 2.3))
-	
+
 	end,
 	addNeighborhood = function(unitTest)
 		local cell = Cell{x = 1, y = 1}
@@ -115,7 +115,7 @@ return{
 			c:getAgent("friends")
 		end
 		unitTest:assertError(error_func, "Placement 'friends' should be a Group, got number.")
-	end,			
+	end,
 	getAgents = function(unitTest)
 		local c = Cell{}
 		c.friends = 2

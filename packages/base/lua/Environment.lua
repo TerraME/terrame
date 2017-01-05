@@ -39,7 +39,7 @@ local function createRandomPlacement(environment, cs, max, placement)
 			end)
 		elseif t == "Agent" then
 			g:add(element)
-		end 
+		end
 	end)
 
 	local traj = Trajectory{
@@ -78,15 +78,15 @@ local function createUniformPlacement(environment, cs, placement)
 				counter = counter + 1
 				if counter > #cs then
 					counter = 1
-				end 
+				end
 			end)
 		elseif mtype == "Agent" then
 			element:enter(cs.cells[counter], placement)
 			counter = counter + 1
 			if counter > #cs then
 				counter = 1
-			end 
-		end 
+			end
+		end
 	end)
 end
 
@@ -164,7 +164,7 @@ Environment_ = {
 
 		self.cObj_:add(object.cObj_)
 	end,
-	--- Create relations between behavioural entities (Agents) and spatial entities (Cells). 
+	--- Create relations between behavioural entities (Agents) and spatial entities (Cells).
 	-- It is possible to have more than one behavioural entity within the Environment, but it must
 	-- have only one CellularSpace, Trajectory, or Cell.
 	-- When distributing Agents over
@@ -178,7 +178,7 @@ Environment_ = {
 	-- between Agents and Cells. See the options below:
 	-- @arg data.name A string with the name of the relation. The default value
 	-- is "placement", which means that the modeler can use Agent:enter(), Agent:move(), and
-	-- Agent:leave() without needing to refer to the name of the placement. If the name is 
+	-- Agent:leave() without needing to refer to the name of the placement. If the name is
 	-- different from the default value, the modeler will
 	-- have to use the last argument of these functions with the name of the placement.
 	-- @arg data.max A number representing the maximum number of Agents that can enter in the
@@ -431,13 +431,13 @@ Environment_ = {
 		local numAttribIdx = string.find(header, "%s", 1)
 		local layer1Idx = string.find(header, "%s", numAttribIdx + 1)
 		local layer2Idx = string.find(header, "%s", layer1Idx + 1)
-		
+
 		local numAttributes = tonumber(string.sub(header, 1, numAttribIdx))
 		local layer1Id = string.sub(header, numAttribIdx + 1, layer1Idx - 1)
 		local layer2Id = string.sub(header, layer1Idx + 1, layer2Idx - 1)
 
 		verify(layer1Id ~= layer2Id, "This function does not load neighborhoods between cells from the same "..
-			"CellularSpace. Use CellularSpace:loadNeighborhood() instead.") 
+			"CellularSpace. Use CellularSpace:loadNeighborhood() instead.")
 
 		verify(numAttributes < 2, "This function does not support GPM with more than one attribute.")
 
@@ -445,12 +445,12 @@ Environment_ = {
 		for _, element in pairs(self) do
 			if type(element) == "CellularSpace" then
 				local cellSpaceLayer = element.layer
-				
+
 				if cellSpaceLayer == layer1Id then cellSpaces[1] = element
 				elseif cellSpaceLayer == layer2Id then cellSpaces[2] = element end
 			end
 		end
-		
+
 		if cellSpaces[1] == nil and cellSpaces[2] == nil then
 			customError("CellularSpaces with layers '"..layer1Id.."' and '"..layer2Id.."' were not found in the Environment.")
 		elseif cellSpaces[1] == nil then
@@ -485,7 +485,7 @@ Environment_ = {
 				local neighIdIdx = 1
 
 				for i = 1, numNeighbors do
-					if i ~= 1 then 
+					if i ~= 1 then
 						neighIdIdx = string.find(line_neighbors, "%s", neighIdEndIdx) + 1
 						neighIdEndIdx = string.find(line_neighbors, "%s", neighIdIdx)
 					end
@@ -496,7 +496,7 @@ Environment_ = {
 					if numAttributes > 0 then
 						local weightEndIdx = string.find(line_neighbors, "%s", neighIdEndIdx + 1)
 
-						if weightEndIdx == nil then 
+						if weightEndIdx == nil then
 							local weightAux = string.sub(line_neighbors, neighIdEndIdx + 1)
 							weight = tonumber(weightAux)
 
@@ -522,7 +522,7 @@ Environment_ = {
 					-- Adds the neighbor to the neighborhood
 					neighborhood:add(neighbor, weight)
 
-					if data.bidirect then 
+					if data.bidirect then
 						local neighborhoodNeigh = neighbor:getNeighborhood(data.name)
 						if neighborhoodNeigh == nil then
 							neighborhoodNeigh = Neighborhood()

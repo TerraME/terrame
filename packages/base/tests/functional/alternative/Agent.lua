@@ -28,7 +28,7 @@ return {
 			Agent(2)
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
-	
+
 		error_func = function()
 			Agent{id = 123}
 		end
@@ -86,7 +86,7 @@ return {
 			ag:walk()
 		end
 		unitTest:assertError(test_function, "Trying to use a function or an attribute of a dead Agent.")
-	
+
 		test_function = function()
 			ag2:message{
 				receiver = ag
@@ -129,7 +129,7 @@ return {
 		local predator = Agent{}
 
 		local predators = Society{
-			instance = predator, 
+			instance = predator,
 			quantity = 5
 		}
 
@@ -179,7 +179,7 @@ return {
 	end,
 	getCell = function(unitTest)
 		local ag1 = Agent{pl = 2}
-		
+
 		local error_func = function()
 			ag1:getCell()
 		end
@@ -192,7 +192,7 @@ return {
 	end,
 	getCells = function(unitTest)
 		local ag1 = Agent{pl = 2}
-		
+
 		local error_func = function()
 			ag1:getCells("pl")
 		end
@@ -274,7 +274,7 @@ return {
 			local ag = Agent{}
 
 			local sc = Society{instance = ag, quantity = 2}
-			local ag1 = sc.agents[1]		
+			local ag1 = sc.agents[1]
 
 			ag1:message()
 		end
@@ -284,7 +284,7 @@ return {
 			local ag = Agent{}
 
 			local sc = Society{instance = ag, quantity = 2}
-			local ag1 = sc.agents[1]		
+			local ag1 = sc.agents[1]
 
 			ag1:message(123)
 		end
@@ -292,16 +292,16 @@ return {
 
 		local ag = Agent{}
 		local sc = Society{instance = ag, quantity = 2}
-		local ag1 = sc.agents[1]		
+		local ag1 = sc.agents[1]
 		error_func = function()
 			ag1:message{}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("receiver"))
 
-		ag = Agent{}	
+		ag = Agent{}
 		sc = Society{instance = ag, quantity = 2}
-		ag1 = sc.agents[1]		
-		local ag2 = sc.agents[2]		
+		ag1 = sc.agents[1]
+		local ag2 = sc.agents[2]
 		error_func = function()
 			ag1:message{
 				receiver = ag2,
@@ -315,8 +315,8 @@ return {
 		ag = Agent{}
 
 		sc = Society{instance = ag, quantity = 2}
-		ag1 = sc.agents[1]		
-		ag2 = sc.agents[2]		
+		ag1 = sc.agents[1]
+		ag2 = sc.agents[2]
 		error_func = function()
 			ag1:message{
 				receiver = ag2,
@@ -382,7 +382,7 @@ return {
 
 		c1 = cs.cells[1]
 		ag1:enter(c1, "renting")
-		
+
 		error_func = function()
 			ag1:move(c1, 123)
 		end

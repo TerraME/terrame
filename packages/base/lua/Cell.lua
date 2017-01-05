@@ -64,12 +64,12 @@ Cell_ = {
 	-- print(dist)
 	distance = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
-		
+
 		if self.geom then
 			local tl = terralib.TerraLib{}
 			return tl:getDistance(self.geom, cell.geom)
-		end		
-		
+		end
+
 		return math.sqrt((self.x - cell.x) ^ 2 + (self.y - cell.y) ^ 2)
 	end,
 	--- Return an Agent that belongs to the Cell. It assumes that there is at most one Agent per Cell.
@@ -83,7 +83,7 @@ Cell_ = {
 	-- myEnv = Environment{cs, ag1}
 	--
 	-- myEnv:createPlacement{strategy = "void"}
-	-- 
+	--
 	-- ag1:enter(c)
 	-- if c:getAgent() == ag1 then
 	--     print("equal")
@@ -101,7 +101,7 @@ Cell_ = {
 	-- myEnv = Environment{cs, ag1}
 	--
 	-- myEnv:createPlacement{strategy = "void"}
-	-- 
+	--
 	-- ag1:enter(c)
 	-- if c:getAgents()[1] == ag1 then
 	--     print("equal")
@@ -164,7 +164,7 @@ Cell_ = {
 	--     end,
 	--     -- ...
 	-- }
-	-- 
+	--
 	-- cs = CellularSpace{
 	--     xdim = 10,
 	--     instance = cell
@@ -301,12 +301,12 @@ Cell_ = {
 	end,
 	--- Return the Cell area.
 	-- @usage -- DONTRUN
-	-- cell:area()	
+	-- cell:area()
 	area = function(self)
 		if cellArea then
 			return cellArea
 		end
-		
+
 		if self.geom then
 			local tl = terralib.TerraLib{}
 			cellArea = tl:getArea(self.geom)
@@ -334,7 +334,7 @@ metaTableCell_ = {
 
 --- A spatial location with homogeneous internal content.
 -- It is a table that may contain nearness relations as well as persistent and runtime attributes.
--- Persistent attributes can be loaded from databases using CellularSpace, 
+-- Persistent attributes can be loaded from databases using CellularSpace,
 -- while runtime attributes can be created along the simulation.
 -- @arg data.init An optional function that describes how to initialize a Cell that is going
 -- to be used as an instance of a CellularSpace. See Cell:init().
@@ -371,14 +371,14 @@ function Cell(data)
 	data.cObj_:setReference(data)
 
 	if data.x == nil then
-		data.x = 0 
+		data.x = 0
 	else
 		mandatoryTableArgument(data, "x", "number")
 		integerTableArgument(data, "x")
 	end
 
 	if data.y == nil then
-		data.y = 0 
+		data.y = 0
 	else
 		mandatoryTableArgument(data, "y", "number")
 		integerTableArgument(data, "y")

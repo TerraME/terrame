@@ -6,25 +6,25 @@
 world = Cell{
 	water = 40,
 	execute = function(world)
-    	if world.water > 5 then
-	        world.water = world.water - 5
-	    else
-	    	world.water = 0
-	    end
-    end
+		if world.water > 5 then
+			world.water = world.water - 5
+		else
+			world.water = 0
+		end
+	end
 }
 
 chart = Chart{
-    target = world,
+	target = world,
 	pen = "dash"
 }
 
 t = Timer{
-    Event{action = world},
-    Event{start = 10, period = 10, action = function()
-    	world.water = world.water + 40 -- try another value
-    end},
-    Event{action = chart}
+	Event{action = world},
+	Event{start = 10, period = 10, action = function()
+		world.water = world.water + 40 -- try another value
+	end},
+	Event{action = chart}
 }
 
 t:run(40)

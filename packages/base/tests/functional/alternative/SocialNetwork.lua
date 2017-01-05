@@ -87,7 +87,7 @@ return{
 			sn:isConnection()
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
-		
+
 		error_func = function()
 			sn:isConnection(123)
 		end

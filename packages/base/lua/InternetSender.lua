@@ -28,7 +28,7 @@ InternetSender_ = {
 
 metaTableInternetSender_ = {__index = InternetSender_}
 
---- An Internet connection to send attribute values of an object through a 
+--- An Internet connection to send attribute values of an object through a
 --- TCP or UDP protocol. Every call to notify (for example, Agent:notify()) in the target
 -- activates the InternetSender.
 -- @arg data.target An Agent, Cell, CellularSpace, or Society.
@@ -157,9 +157,9 @@ function InternetSender(data)
 			end
 		end)
 	end
- 
+
 	verify(data.port >= 50000, "Argument 'port' should be greater or equal to 50000, got "..data.port..".")
-  
+
 	for i = 1, #data.select do
 		if data.select[i] == "#" then
 			data.select[i] = "quantity_" -- SKIP

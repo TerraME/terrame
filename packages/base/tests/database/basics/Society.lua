@@ -34,7 +34,7 @@ return{
 			instance = nonFooAgent,
 			file = filePath("agents.csv", "base")
 		}
-		
+
 		unitTest:assertEquals(4, #soc)
 
 		local sum_age = 0

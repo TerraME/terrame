@@ -873,7 +873,7 @@ function _Gtme.traceback(err)
 					pos = string.find(err, ":") -- remove second ":"
 					line = string.sub(err, 1, pos - 1)
 				end
-	
+
 				if file and sub then -- if string starts with a windows partition (such as C:/)
 					file = sub..file
 				end
@@ -1000,13 +1000,13 @@ local function executeExamples(package)
 end
 
 function _Gtme.execExample(example, packageName)
-    local ok, res = findExample(example, packageName)
+	local ok, res = findExample(example, packageName)
 
-    if not ok then
-        return false, res
-    end
+	if not ok then
+		return false, res
+	end
 
-    example = res
+	example = res
 
 	local mdialog
 	local description
@@ -1016,46 +1016,46 @@ function _Gtme.execExample(example, packageName)
 		if not mdialog then
 			mdialog = qt.new_qobject(qt.meta.QDialog)
 			local _, file = File(example):split()
-    		mdialog.windowTitle = "Output of example "..file
+			mdialog.windowTitle = "Output of example "..file
 
 			local externalLayout = qt.new_qobject(qt.meta.QVBoxLayout)
-    		local internalLayout = qt.new_qobject(qt.meta.QHBoxLayout)
-    		description = qt.new_qobject(qt.meta.QLabel)
-    		description.text = ""
+			local internalLayout = qt.new_qobject(qt.meta.QHBoxLayout)
+			description = qt.new_qobject(qt.meta.QLabel)
+			description.text = ""
 
-		    okButton = qt.new_qobject(qt.meta.QPushButton)
-		    okButton.minimumSize = {150, 28}
-		    okButton.maximumSize = {160, 28}
-		    okButton.text = "Close"
+			okButton = qt.new_qobject(qt.meta.QPushButton)
+			okButton.minimumSize = {150, 28}
+			okButton.maximumSize = {160, 28}
+			okButton.text = "Close"
 			okButton.enabled = false
 
-		    qt.ui.layout_add(internalLayout, okButton)
-    		qt.ui.layout_add(externalLayout, description)
+			qt.ui.layout_add(internalLayout, okButton)
+			qt.ui.layout_add(externalLayout, description)
 			qt.ui.layout_add(externalLayout, internalLayout)
-    		qt.ui.layout_add(mdialog, externalLayout)
+			qt.ui.layout_add(mdialog, externalLayout)
 
 			qt.connect(okButton, "clicked()", function()
 				mdialog:done(0)
 			end)
 
-    		mdialog:show()
+			mdialog:show()
 		end
 
 		_Gtme.print(value)
 		description.text = description.text.."\n"..value
 	end
 
-    local success, result = _Gtme.myxpcall(function() dofile(example) end)
-    if not success then
-        return false, result
-    end
+	local success, result = _Gtme.myxpcall(function() dofile(example) end)
+	if not success then
+		return false, result
+	end
 
 	if mdialog then
 		okButton.enabled = true
-    	mdialog:exec()
+		mdialog:exec()
 	end
 
-    return success
+	return success
 end
 
 function _Gtme.execConfigure(model, packageName)
@@ -1467,7 +1467,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						_Gtme.printError(err)
 						os.exit(1)
 					end)
-				else	
+				else
 					local packages = _Gtme.downloadPackagesList()
 					local pkg = arguments[argCount]
 

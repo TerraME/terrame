@@ -88,11 +88,11 @@ return{
 			author = author,
 			title = title
 		}
-		
+
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
 			return msg
-		end				
+		end
 
 		local layerName1 = "Sampa"
 
@@ -104,12 +104,12 @@ return{
 
 		local testDir = currentDir()
 		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir..shp1	
+		local filePath1 = testDir..shp1
 		local fn1 = File(filePath1):name()
-		fn1 = testDir..fn1			
-		
+		fn1 = testDir..fn1
+
 		File(fn1):deleteIfExists()
-		
+
 		local clName1 = "Sampa_Cells"
 		local layer = terralib.Layer{
 			project = proj,
@@ -119,27 +119,27 @@ return{
 			resolution = 1,
 			file = filePath1
 		}
-		
+
 		cs = CellularSpace{
 			project = projName,
 			layer = clName1
 		}
-		
+
 		unitTest:assertEquals(File(projName), cs.project.file)
 		unitTest:assertType(cs.layer, "Layer")
-		
+
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
-		
+
 		unitTest:assertEquals(layer.source, "shp")
 		unitTest:assertEquals(layer.file, filePath1)
-		
+
 		cs = CellularSpace{
 			file = filePath1
 		}
-		
+
 		unitTest:assert(#cs.cells > 0)
-		
+
 		forEachCell(cs, function(c)
 			unitTest:assertNotNil(c.x)
 			unitTest:assertNotNil(c.y)
@@ -149,8 +149,8 @@ return{
 			project = projName,
 			layer = clName1,
 			geometry = true
-		}	
-		
+		}
+
 		forEachCell(cs, function(c)
 			unitTest:assertNotNil(c.geom)
 			unitTest:assertNil(c.OGR_GEOMETRY)
@@ -159,13 +159,13 @@ return{
 		cs = CellularSpace{
 			project = projName,
 			layer = clName1
-		}	
+		}
 
 		forEachCell(cs, function(c)
 			unitTest:assertNil(c.geom)
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
-		
+
 		File(projName):deleteIfExists()
 		File(fn1):deleteIfExists()
 
@@ -391,16 +391,16 @@ return{
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
 			File(projName):deleteIfExists()
 		end
-		
+
 		customWarning = customWarningBkp
-	end, 
+	end,
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
 		unitTest:assertEquals(#cs, 100)
 	end,
 	__tostring = function(unitTest)
-		local cs1 = CellularSpace{ 
+		local cs1 = CellularSpace{
 			xdim = 10,
 			ydim = 20,
 			xyz = function() end,
@@ -578,7 +578,7 @@ ydim    number [20]
 		unitTest:assertEquals(12, sizes[3])
 		unitTest:assertEquals(9, sizes[4])
 
-		cs:createNeighborhood{ 
+		cs:createNeighborhood{
 			strategy = "vonneumann",
 			name = "my_neighborhood1",
 			self = true
@@ -610,7 +610,7 @@ ydim    number [20]
 		unitTest:assertEquals(12, sizes[4])
 		unitTest:assertEquals(9, sizes[5])
 
-		cs:createNeighborhood{ 
+		cs:createNeighborhood{
 			strategy = "vonneumann",
 			name = "my_neighborhood2",
 			wrap = true
@@ -1226,7 +1226,7 @@ ydim    number [20]
 		--  coord
 		cs = CellularSpace{xdim = 5}
 		cs2 = CellularSpace{xdim = 5}
-	
+
 		cs:createNeighborhood{
 			strategy = "coord",
 			name = "my_neighborhood1",
@@ -1248,7 +1248,7 @@ ydim    number [20]
 				unitTest:assertEquals(1, weight)
 			end)
 		end)
-	
+
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
 
@@ -1263,7 +1263,7 @@ ydim    number [20]
 				unitTest:assertEquals(1, weight)
 			end)
 		end)
-	
+
 		-- on the fly
 		cs = CellularSpace{xdim = 5}
 
@@ -1402,11 +1402,11 @@ ydim    number [20]
 	end,
 	save = function(unitTest)
         local terralib = getPackage("terralib")
-	
+
 		local projName = "cellspace_save_basic.tview"
-		
+
 		File(projName):deleteIfExists()
-		
+
 		local proj = terralib.Project{
 			file = projName,
 			clean = true,
@@ -1419,7 +1419,7 @@ ydim    number [20]
 			project = proj,
 			name = layerName1,
 			file = filePath("test/sampa.shp", "terralib")
-		}	
+		}
 
 		local testDir = currentDir()
 		local shp1 = "sampa_cells.shp"
@@ -1451,9 +1451,9 @@ ydim    number [20]
 		local cellSpaceLayerNameT0 = clName1.."_CellSpace_T0"
 
 		local shp2 = cellSpaceLayerNameT0..".shp"
-		local filePath2 = testDir..shp2	
+		local filePath2 = testDir..shp2
 		local fn2 = File(filePath2):name()
-		fn2 = testDir..fn2	
+		fn2 = testDir..fn2
 
 		File(fn2):deleteIfExists()
 
@@ -1465,76 +1465,76 @@ ydim    number [20]
 		}
 
 		unitTest:assertEquals(layer.source, "shp")
-		unitTest:assertEquals(layer.file, filePath2)		
-		
+		unitTest:assertEquals(layer.file, filePath2)
+
 		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameT0
-		}			
-		
+		}
+
 		forEachCell(cs, function(cell)
 			unitTest:assertEquals(cell.t0, 1000)
 			cell.t0 = cell.t0 + 1000
 		end)
 
 		cs:save(cellSpaceLayerNameT0)
-		
+
 		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameT0
-		}		
+		}
 
 		forEachCell(cs, function(cell)
 			unitTest:assertEquals(cell.t0, 2000)
 		end)
-		
+
 		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameT0
-		}		
+		}
 
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
-		
+
 		local shp3 = cellSpaceLayerNameGeom..".shp"
-		local filePath3 = testDir..shp3	
+		local filePath3 = testDir..shp3
 		local fn3 = File(filePath3):name()
-		fn3 = testDir..fn3	
-		
+		fn3 = testDir..fn3
+
 		File(fn3):deleteIfExists()
-		
+
 		cs:save(cellSpaceLayerNameGeom)
-		
+
 		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameGeom,
 			geometry = true
-		}		
-		
+		}
+
 		forEachCell(cs, function(cell)
 			unitTest:assertNotNil(cell.geom)
-		end)	
+		end)
 
 		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"
-		
+
 		local shp4 = cellSpaceLayerNameGeom2..".shp"
-		local filePath4 = testDir..shp4	
+		local filePath4 = testDir..shp4
 		local fn4 = File(filePath4):name()
 		fn4 = testDir..fn4
-		
+
 		File(fn4):deleteIfExists()
-		
+
 		cs:save(cellSpaceLayerNameGeom2)
-		
+
 		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameGeom2,
 			geometry = true
-		}		
-		
+		}
+
 		forEachCell(cs, function(cell)
 			unitTest:assertNotNil(cell.geom)
-		end)		
-		
+		end)
+
 		File(projName):deleteIfExists()
 
 		File(fn1):deleteIfExists()
@@ -1580,7 +1580,7 @@ ydim    number [20]
 				return nil
 			end
 		end
-		
+
 		t2 = cs:split(v)
 
 		unitTest:assertEquals(#t2.test, 3)

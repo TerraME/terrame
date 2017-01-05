@@ -51,7 +51,7 @@ function isDirectory(directory)
 	return lfs.attributes(directory, "mode") == "directory"
 end
 
---- Execute a system command and return its output. It returns two tables. 
+--- Execute a system command and return its output. It returns two tables.
 -- The first one contains each standard output line as a position.
 -- The second one contains each error output line as a position.
 -- @arg command A command.
@@ -87,8 +87,8 @@ end
 -- be changed accordingly.
 -- @tabular NONE
 -- Attribute & Description & Read only? \
--- autoclose & When a simulation creates graphical components (Chart, Map, etc.), 
--- TerraME waits for the modeler to close them to finish its execution. 
+-- autoclose & When a simulation creates graphical components (Chart, Map, etc.),
+-- TerraME waits for the modeler to close them to finish its execution.
 -- This attribute is a boolean value indicating whether TerraME should be
 -- automatically closed after executing the simulation. & No \
 -- color & A boolean value indicating whether text output might be colored. If colored,
@@ -102,13 +102,13 @@ end
 -- to load from this directory. & Yes \
 -- dbVersion & A string with the current TerraLib version for databases. & Yes \
 -- fullTraceback & A boolean value indicating whether TerraME should show all the
--- stack when an error occurs. This means that the lines from base package and 
+-- stack when an error occurs. This means that the lines from base package and
 -- internal files are also going to be shown when an error occurs. As default, TerraME
 -- does not show such lines. This value can be set from TerraME command line (-ft). & No \
 -- interface & A boolean value indicating whether a graphical interface to configure
 -- models is running. When this value is true, Utils:toLabel() converts errors to more
 -- readable texts referring to graphical objects instead of Model arguments. & No \
--- mode & A string with the current mode for warnings ("normal", "debug", "quiet", or "strict"). 
+-- mode & A string with the current mode for warnings ("normal", "debug", "quiet", or "strict").
 -- Run terrame -help for a description of such modes. & No \
 -- path & A string with the location of TerraME in the computer. & Yes \
 -- round & A number used whenever it is possible to have rounding problems. For instance,

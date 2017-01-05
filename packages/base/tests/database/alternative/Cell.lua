@@ -41,8 +41,8 @@ return{
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
 			return msg
-		end				
-		
+		end
+
 		local layerName1 = "Brazil"
 
 		terralib.Layer{
@@ -50,14 +50,14 @@ return{
 			name = layerName1,
 			file = filePath("brazilstates.shp", "base")
 		}
-		
+
 		-- SHAPE
 		local testDir = currentDir()
 		local shp1 = "brazil_cells.shp"
-		local filePath1 = testDir..shp1			
-		
+		local filePath1 = testDir..shp1
+
 		File(filePath1):deleteIfExists()
-		
+
 		local clName1 = "Brazil_Cells"
 		terralib.Layer{
 			project = proj,
@@ -66,18 +66,18 @@ return{
 			resolution = 100e3,
 			file = filePath1
 		}
-		
+
 		local cs = CellularSpace{
 			project = projName,
 			layer = clName1
 		}
-		
+
 		local cellWithoutGeom = function()
 			local cell = cs:sample()
 			cell:area()
 		end
 		unitTest:assertError(cellWithoutGeom, "It was not possible to calculate the area. Geometry was not found.")
-		
+
 		-- POSTGIS
 		local clName2 = "Brazil_Cells_PG"
 		local host = "localhost"
@@ -122,13 +122,13 @@ return{
 			local cell = cs:sample()
 			cell:area()
 		end
-		unitTest:assertError(cellWithoutGeom, "It was not possible to calculate the area. Geometry was not found.")	
-		
+		unitTest:assertError(cellWithoutGeom, "It was not possible to calculate the area. Geometry was not found.")
+
 		File(projName):deleteIfExists()
 		File(filePath1):deleteIfExists()
 
-		tl:dropPgTable(pgData)		
-		
+		tl:dropPgTable(pgData)
+
 		customWarning = customWarningBkp
 	end
 }

@@ -171,7 +171,7 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
-		
+
 		file:deleteIfExists()
 
 		file = File(filename)

@@ -39,7 +39,7 @@ return{
 			call("value", "sum")
 		end
 		unitTest:assertError(error_func, "Cannot access elements from an object of type 'string'.")
-	
+
 		error_func = function()
 			call(Cell{}, "sum")
 		end
@@ -66,7 +66,7 @@ return{
 		local myf = function() end
 
 		error_func = function()
-			d{{myf, myf}, {1}, 0, 0, 10} 
+			d{{myf, myf}, {1}, 0, 0, 10}
 		end
 		unitTest:assertError(error_func, "You should provide the same number of differential equations and initial conditions.")
 	end,
@@ -125,7 +125,7 @@ return{
 			forEachCellPair(cs1, cs2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "function"))
-	end,	
+	end,
 	forEachConnection = function(unitTest)
 		local a = Agent{value = 2}
 		local soc = Society{instance = a, quantity = 10}
@@ -433,7 +433,7 @@ return{
 			levenshtein(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
-	
+
 		error_func = function()
 			levenshtein("abc", 2)
 		end
@@ -580,13 +580,13 @@ return{
 		end
 		unitTest:assertError(error_func, "Function vardump cannot handle an index of type table.")
 	end,
-	forEachRecursiveDirectory = function(unitTest) 
-		local file = File(packageInfo("base").path.."lua/Utils.lua")		
-		
+	forEachRecursiveDirectory = function(unitTest)
+		local file = File(packageInfo("base").path.."lua/Utils.lua")
+
 		local wrongType = function()
 			forEachRecursiveDirectory(file, function(_) end)
 		end
-		unitTest:assertError(wrongType, "Argument '#1' must be a 'Directory' or 'string' path.")	
-	end	
+		unitTest:assertError(wrongType, "Argument '#1' must be a 'Directory' or 'string' path.")
+	end
 }
 

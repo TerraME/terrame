@@ -31,7 +31,7 @@ return{
 
 		local ev = Event{action = function() end}
 		e:notify(ev)
-	
+
 		unitTest:assert(true)
 	end
 }

@@ -363,7 +363,7 @@ function Chart(attrTab)
 
 		forEachElement(attrTab.data, function(idx)
 			attrTab.target[idx] = 0
-			-- they are put zero just to pass the checks before calling 
+			-- they are put zero just to pass the checks before calling
 		end)
 
 		forEachElement(attrTab.select, function(_, idx)
@@ -706,7 +706,7 @@ function Chart(attrTab)
 		if attrTab.target.cobj_ == nil then
 			attrTab.target.type_ = nil
 			setmetatable(attrTab.target, nil)
- 			attrTab.target = Cell(attrTab.target)
+			attrTab.target = Cell(attrTab.target)
 		end
 	end
 
@@ -827,7 +827,7 @@ function Chart(attrTab)
 
 	attrTab.cObj_ = chart
 	attrTab.id = id
-	
+
 	setmetatable(attrTab, metaTableChart_)
     table.insert(_Gtme.createdObservers, attrTab)
 	return attrTab

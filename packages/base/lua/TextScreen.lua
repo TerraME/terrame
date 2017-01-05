@@ -206,7 +206,7 @@ function TextScreen(data)
 	setmetatable(data, metaTableTextScreen_)
 
 	table.insert(_Gtme.createdObservers, data)
-	
+
 	return data
 end
 

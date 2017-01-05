@@ -122,7 +122,7 @@ UnitTest_ = {
 			local dist = math.abs(v1 - v2)
 			if dist <= tol or v1 == v2 then
 				self.success = self.success + 1
-			else 
+			else
 				self.fail = self.fail + 1
 				local msg = "Values should be equal, but got '"..v1.."' and '"..v2.."'. "..
 					"The maximum difference is "..tol..", but got "..dist.."."
@@ -137,7 +137,7 @@ UnitTest_ = {
 			local dist = levenshtein(v1, v2)
 			if dist <= tol then
 				self.success = self.success + 1
-			else 
+			else
 				self.fail = self.fail + 1
 				local msg = "Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'."
 					.." The maximum tolerance is "..tol..", but got "..dist.."."
@@ -361,7 +361,7 @@ UnitTest_ = {
 
 				self.fail = self.fail + 1 -- SKIP
 				return false
-			end	
+			end
 
 			self.success = self.success + 1
 		end

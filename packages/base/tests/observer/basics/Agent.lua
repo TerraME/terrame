@@ -65,7 +65,7 @@ return{
 		unitTest:assertSnapshot(c2, "chart_agent_select.bmp", 0.03)
 		unitTest:assertSnapshot(ts, "textscreen_agent_select.bmp", 0.03)
 		unitTest:assertSnapshot(vt, "agent_visualtable.bmp", 0.15)
-		
+
 		world = Agent{
 			probability = 0,
 			mx = 0

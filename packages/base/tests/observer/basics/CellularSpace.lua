@@ -91,7 +91,7 @@ return{
 		unitTest:assertFile("cellularspace.csv")
 
 		world:notify()
-    
+
 		-- the call to notify() above creates the file again.
 		-- remove the line below after refactoring observer.
 		File("cellularspace.csv"):deleteIfExists()
@@ -141,11 +141,11 @@ return{
 
 		world:notify()
 		world:notify()
-		
+
 		local projName = File("cellspace_basic_observer.tview")
 
 		projName:deleteIfExists()
-		
+
 		local author = "Avancini"
 		local title = "Cellular Space"
 
@@ -156,20 +156,20 @@ return{
 			clean = true,
 			author = author,
 			title = title
-		}		
+		}
 
 		local layerName1 = "Sampa"
 		terralib.Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("test/sampa.shp", "terralib")
-		}		
-		
+		}
+
 		local shp1 = "sampa_cells.shp"
 		local filePath1 = currentDir()..shp1
-		
+
 		File(filePath1):deleteIfExists()
-		
+
 		local clName1 = "Sampa_Cells"
 		terralib.Layer{
 			project = proj,
@@ -178,14 +178,14 @@ return{
 			resolution = 1,
 			file = filePath1
 		}
-		
+
 		cs = CellularSpace{
 			project = projName:name(true),
 			layer = clName1
 		}
-		
+
 		r = Random()
-		
+
 		forEachCell(cs, function(cell)
 			cell.value = r:number()
 		end)
@@ -200,8 +200,8 @@ return{
 		}
 
 		cs:notify()
-		unitTest:assertSnapshot(map, "cellspace_map_project.bmp")		
-		
+		unitTest:assertSnapshot(map, "cellspace_map_project.bmp")
+
 		t = Timer{
 			Event{action = function(event)
 				forEachCell(cs, function(cell)
@@ -209,17 +209,17 @@ return{
 				end)
 				cs:notify(event)
 			end}
-		}		
-		
+		}
+
 		ts = TextScreen{target = cs}
 		vt = VisualTable{target = cs}
 
 		t:run(30)
 
 		cs:notify()
-    
+
 		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.25)
-		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
+		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 
 		projName:deleteIfExists()

@@ -141,7 +141,7 @@ Directory_ = {
 	end,
 	--- Return the name of a given directory. It is the last directory name given a full path.
 	-- @usage print(Directory("c:\\terrame\\bin\\"):name()) -- "bin"
-	-- 
+	--
 	-- print(Directory("/usr/local/bin"):name()) -- "bin"
 	name = function(self)
 		local _, name = string.match(self.fullpath, "(.-)([^\\/]-)$")
@@ -149,7 +149,7 @@ Directory_ = {
 	end,
 	--- Return the path of a given directory. In windows, it converts all backslashes into slashes.
 	-- @usage print(Directory("c:\\terrame\\bin\\"):path()) -- "c:/terrame"
-	-- 
+	--
 	-- print(Directory("/usr/local/bin"):path()) -- "/usr/local"
 	path = function(self)
 		local path = string.match(self.fullpath, "(.-)([^\\/]-)$")

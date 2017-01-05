@@ -5,7 +5,7 @@
 -- Some of the available strategies are Pavlov and Tit-for-tat.
 -- In the end, the model shows the results for each strategy. \
 -- For more information, see Axelrod, R. (1984) The Evolution of
--- Cooperation. Basic Books. See also Nowak, M., and Sigmund, K. 
+-- Cooperation. Basic Books. See also Nowak, M., and Sigmund, K.
 -- (1993) A strategy of win-stay, lose-shift that outperforms
 -- tit-for-tat in the Prisoner's Dilemma game. Nature 364.6432: 56-58.
 -- @arg TURNS The number of times an Agent plays
@@ -33,7 +33,7 @@ TFT = Agent{ -- TIT-FOR-TAT
 }
 
 TF2T = Agent{ -- TIT-FOR-TWO-TATS
-	name = "TF2T", 
+	name = "TF2T",
 	prepare_for_championship = function(ag)
 		ag.last = COOPERATE
 	end,
@@ -47,7 +47,7 @@ TF2T = Agent{ -- TIT-FOR-TWO-TATS
 		ag.previous = ag.last
 		ag.last = oponent_strategy
 		if ag.previous == ag.last and ag.last == NOT_COOPERATE then
-			ag.action = NOT_COOPERATE 
+			ag.action = NOT_COOPERATE
 		else
 			ag.action = COOPERATE
 		end

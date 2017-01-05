@@ -159,7 +159,7 @@ local function configureButtonClicked()
 	if not ok then
 		qt.dialog.msg_critical(res)
 	end
-	
+
 	enableAll()
 end
 
@@ -207,7 +207,7 @@ local function selectPackage()
 			sessionInfo().fullTraceback = true
 			local trace = _Gtme.traceback(err)
 			local merr = "Error: Package '"..comboboxPackages.currentText.."' could not be loaded:\n\n"..trace
-	
+
 			qt.dialog.msg_critical(merr)
 		end)
 	end

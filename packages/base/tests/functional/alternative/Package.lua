@@ -67,7 +67,7 @@ return{
 			filesByExtension(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
-	
+
 		error_func = function()
 			filesByExtension("base")
 		end
@@ -116,7 +116,7 @@ return{
 			packageInfo(2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
-	
+
 		error_func = function()
 			packageInfo("asdfgh")
 		end

@@ -298,7 +298,7 @@ return{
 				select = "state",
 				value = {"dead", "alive"},
 				color = {"black"}
-			}	
+			}
 		end
 		unitTest:assertError(error_func, "Arguments 'value' and 'color' should have the same size, got 2 and 1.")
 
@@ -307,7 +307,7 @@ return{
 				target = cs,
 				select = "state",
 				color = {"black"}
-			}	
+			}
 		end
 		unitTest:assertError(error_func, "Argument 'value' is mandatory when observing a function that returns a table.")
 
@@ -317,7 +317,7 @@ return{
 				select = "state",
 				value = 1,
 				color = {"black"}
-			}	
+			}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("value", "table", 1))
 
@@ -327,7 +327,7 @@ return{
 				select = "state",
 				value = {"dead", 1},
 				color = {"black"}
-			}	
+			}
 		end
 		unitTest:assertError(error_func, "Argument 'value' should contain only strings, got number.")
 
@@ -349,7 +349,7 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("target"))
-		
+
 		error_func = function()
 			Chart{
 			    data = "limit",
@@ -359,7 +359,7 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("data", "table", "limit"))
-	
+
 		error_func = function()
 			Chart{
 			    data = tab,
@@ -379,7 +379,7 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("data.limit2", "table"))
-	
+
 		tab.demand = {7, 8, 9}
 
 		error_func = function()
@@ -428,7 +428,7 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "Argument 'data.demand' should have 3 elements, got 4.")
-	
+
 		error_func = function()
 			Chart{
 			    data = tab,

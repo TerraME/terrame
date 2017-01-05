@@ -123,7 +123,7 @@ return{
 			neigh:isNeighbor()
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
-		
+
 		error_func = function()
 			neigh:isNeighbor(123)
 		end

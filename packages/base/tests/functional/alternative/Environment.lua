@@ -51,7 +51,7 @@ return{
 					end
 					if agent.cont == MAX_COUNT then agent.cont = 0 end
 					return false
-				end, 
+				end,
 				target = "seco"
 			}
 		}
@@ -181,7 +181,7 @@ return{
 			env:createPlacement()
 		end
 		unitTest:assertError(error_func, "Placements is still not implemented for groups.")
-	
+
 		env = Environment{sc1}
 
 		error_func = function()

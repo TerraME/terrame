@@ -83,8 +83,8 @@ return{
 		}
 
 		File(projName):deleteIfExists()
-		
-		tl:dropPgTable(pgData)			
+
+		tl:dropPgTable(pgData)
 
 		local cs2 = CellularSpace{xdim = 10}
 		local cs = CellularSpace{xdim = 10}
@@ -139,7 +139,7 @@ return{
 				bidirect = true
 			}
 		end
-		 unitTest:assertError(error_func, mandatoryArgumentMsg("source"))	
+		 unitTest:assertError(error_func, mandatoryArgumentMsg("source"))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -179,7 +179,7 @@ return{
 
 		error_func = function()
 			env:loadNeighborhood{
-				source = filePath("test/emas-pollin.gpm", "base"),		
+				source = filePath("test/emas-pollin.gpm", "base"),
 				name = "neigh1",
 				bidirect = 13
 		}
@@ -193,7 +193,7 @@ return{
 		}
 		end
 		unitTest:assertError(error_func, "This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.")
-		
+
 		error_func = function()
 			env:loadNeighborhood{
 				source = "emas-distance-xxx.gpm",
@@ -228,7 +228,7 @@ return{
 		local mfile = filePath("test/error"..s.."gpmAreaCellsPols-error.gpm", "base")
 
 		error_func = function()
-	   		env:loadNeighborhood{
+			env:loadNeighborhood{
 				source = mfile,
 				name = "my_neighborhood"..countTest
 			}
@@ -238,7 +238,7 @@ return{
 		mfile = filePath("test/error"..s.."gpmAreaCellsPols-error2.gpm", "base")
 
 		error_func = function()
-	   		env:loadNeighborhood{
+			env:loadNeighborhood{
 				source = mfile,
 				name = "my_neighborhood"..countTest
 			}
@@ -249,7 +249,7 @@ return{
 		mfile = filePath("test/error"..s.."gpmAreaCellsPols-error3.gpm", "base")
 
 		error_func = function()
-	   		env:loadNeighborhood{
+			env:loadNeighborhood{
 				source = mfile,
 				name = "my_neighborhood"..countTest
 			}

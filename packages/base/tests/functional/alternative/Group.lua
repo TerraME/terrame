@@ -49,11 +49,11 @@ return{
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
- 			Group{
- 				target = sc1,
- 				selection = function() return true end
- 			}
- 		end
+			Group{
+				target = sc1,
+				selection = function() return true end
+			}
+		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("selection", "select"))
 
 		error_func = function()
@@ -63,7 +63,7 @@ return{
 					return ag1.money > 90
 				end,
 				greater = function(ag1, ag2)
-					return ag1.money > ag2.money 
+					return ag1.money > ag2.money
 				end
 			}
 		end
@@ -107,7 +107,7 @@ return{
 				target = sc1,
 				select = 12,
 				greater = function(a, b)
-					return a.money > b.money 
+					return a.money > b.money
 				end
 			}
 		end

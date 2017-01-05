@@ -24,7 +24,7 @@
 
 --@header Functions to work with packages in TerraME.
 
---- Return a File storing the full path of a file within a given package. 
+--- Return a File storing the full path of a file within a given package.
 -- The file must be inside the directory data of package.
 -- @arg filename A string with the name of the file.
 -- @arg package A string with the name of the package. As default, it uses base package.
@@ -33,7 +33,7 @@ function filePath(filename, package)
 	if package == nil then package = "base" end
 
 	filename = _Gtme.makePathCompatibleToAllOS(filename)
-	
+
 	local data = packageInfo(package).data
 	local file = File(data..filename)
 
@@ -62,7 +62,7 @@ function filePath(filename, package)
 	end
 end
 
---- Return a table with the files of a package that have a given extension. 
+--- Return a table with the files of a package that have a given extension.
 -- @arg package A string with the name of the package.
 -- @arg extension A string with the extension.
 -- @usage filesByExtension("base", "csv")
@@ -166,7 +166,7 @@ function import(package, reload)
 		end
 
 		local files = _Gtme.fontFiles(package)
-		forEachElement(files, function(_, file)	
+		forEachElement(files, function(_, file)
 			if not _Gtme.loadedFonts[file] then -- SKIP
 				cpp_loadfont(package_path..s.."font"..s..file) -- SKIP
 				_Gtme.loadedFonts[file] = true -- SKIP
@@ -177,7 +177,7 @@ function import(package, reload)
 			cpp_setdefaultfont() -- SKIP
 		end
 
-		rawset(_G, "font", function(data)	
+		rawset(_G, "font", function(data)
 			_Gtme.fonts[data.name] = data.symbol -- SKIP
 		end)
 
@@ -270,7 +270,7 @@ function getPackage(pname)
 
 			local lf = loadfile(mfile, 't', result)
 
- 			if lf == nil then
+			if lf == nil then
 				collectgarbage() -- SKIP
 				lf = loadfile(mfile, 't', result) -- SKIP
 
@@ -338,14 +338,14 @@ function packageInfo(package)
 			customError("Package '"..package.."' is not installed.")
 		end
 	end
-	
+
 	local file = pkgdirectory.."description.lua"
 
 	if not File(file):exists() then -- SKIP
 		customError("Could not load package '"..package.."'. File 'description.lua' does not exist.") -- SKIP
 	end
-	
-	local result 
+
+	local result
 	xpcall(function() result = _Gtme.include(file) end, function(err)
 		_Gtme.printError("Could not load package '"..package.."': "..err)
 		os.exit(1) -- SKIP

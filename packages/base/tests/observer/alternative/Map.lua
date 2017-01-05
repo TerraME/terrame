@@ -133,11 +133,11 @@ return{
 			Map{target = c, select = "x", title = 5, slices = 10, color = {"blue", "red"}}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("title", "string", 5))
-		
+
 		error_func = function()
 			Map{target = c, select = "x", author = 5, slices = 10, color = {"blue", "red"}}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("author"))		
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("author"))
 
 		error_func = function()
 			Map{
@@ -187,7 +187,7 @@ return{
 		error_func = function()
 			Map{target = c, slices = 3, color = {"red", {0, 0}, "green"}}
 		end
-		unitTest:assertError(error_func, "RGB composition should have 3 values, got 2 values in position 2.")	
+		unitTest:assertError(error_func, "RGB composition should have 3 values, got 2 values in position 2.")
 
 		error_func = function()
 			Map{target = c, select = "x", invert = 2, slices = 10, min = 0, max = 100, color = "Blues"}
@@ -322,7 +322,7 @@ return{
 		error_func = function()
 			Map{target = c, slices = 3, color = {"red", {0, 0}, "green"}, grouping = "quantil"}
 		end
-		unitTest:assertError(error_func, "RGB composition should have 3 values, got 2 values in position 2.")	
+		unitTest:assertError(error_func, "RGB composition should have 3 values, got 2 values in position 2.")
 
 		-- uniquevalue
 		error_func = function()
@@ -469,7 +469,7 @@ return{
 		error_func = function()
 			Map{target = c, grouping = "none", color = {"blue", "red"}}
 		end
-		unitTest:assertError(error_func, "Grouping 'none' requires only one color, got 2.")	
+		unitTest:assertError(error_func, "Grouping 'none' requires only one color, got 2.")
 
 		error_func = function()
 			Map{target = c, grouping = "none", color = {"blues"}}
@@ -486,7 +486,7 @@ return{
 			local shpcs = CellularSpace{
 				file = filePath("river.shp", "base")
 			}
-			
+
 			forEachCell(shpcs, function(cell)
 				cell.value = 1
 			end)

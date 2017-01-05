@@ -123,7 +123,7 @@ function _Gtme.executeProject(package)
 				printError("File 'data/"..mfile.."' should be called 'data/"..luaName..".tview'. Please update its name.")
 				project_report.errors_output = project_report.errors_output + 1
 			end
-			
+
 			return oldProject(data)
 		end
 

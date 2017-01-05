@@ -30,7 +30,7 @@ return{
 			id = "singleFoo",
 			size = 10,
 			execute = function(self)
-				self.size = self.size + 1	
+				self.size = self.size + 1
 				self:walk()
 			end}
 
@@ -87,7 +87,7 @@ socialnetworks  vector of size 0
 		}
 
 		local predators = Society{
-			instance = predator, 
+			instance = predator,
 			quantity = 5
 		}
 
@@ -117,7 +117,7 @@ state_          State
 	end,
 	addSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
-		unitTest:assertNil(ag1:getSocialNetwork("notfriends"))	
+		unitTest:assertNil(ag1:getSocialNetwork("notfriends"))
 
 		local sn = SocialNetwork()
 		ag1:addSocialNetwork(sn)
@@ -144,7 +144,7 @@ state_          State
 		}
 
 		local predators = Society{
-			instance = predator, 
+			instance = predator,
 			quantity = 5
 		}
 
@@ -444,8 +444,8 @@ state_          State
 		}
 
 		local sc = Society{instance = ag, quantity = 2}
-		local ag1 = sc.agents[1]		
-		local ag2 = sc.agents[2]		
+		local ag1 = sc.agents[1]
+		local ag2 = sc.agents[2]
 
 		ag1:message{
 			receiver = ag2,
@@ -463,8 +463,8 @@ state_          State
 		}
 
 		local sc = Society{instance = ag, quantity = 2}
-		local ag1 = sc.agents[1]		
-		local ag2 = sc.agents[2]		
+		local ag1 = sc.agents[1]
+		local ag2 = sc.agents[2]
 
 		ag1:message{
 			receiver = ag2,
@@ -486,7 +486,7 @@ state_          State
 		}
 
 		local predators = Society{
-			instance = predator, 
+			instance = predator,
 			quantity = 5
 		}
 

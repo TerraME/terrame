@@ -331,7 +331,7 @@ function Timer(data)
 			incompatibleTypeError(idx, "Event", value)
 		end
 	end)
- 
+
 	mdata.cObj_ = cObj
 	cObj:setReference(mdata)
 	return mdata

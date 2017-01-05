@@ -210,7 +210,7 @@ Neighborhood_ = {
 	setWeight = function(self, cell, weight)
 		mandatoryArgument(1, "Cell", cell)
 		mandatoryArgument(2, "number", weight)
-	
+
 		local result = self.cObj_:setNeighWeight(cell.x, cell.y, cell.cObj_, weight)
 
 		verify(result, "Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.")
@@ -234,7 +234,7 @@ metaTableNeighborhood_ = {
 	__tostring = _Gtme.tostring
 }
 
---- A Neighborhood is a set of pairs (cell, weight), where cell is a neighbor Cell and weight 
+--- A Neighborhood is a set of pairs (cell, weight), where cell is a neighbor Cell and weight
 -- is a number storing the relation's strength.
 -- Each Cell can have one or more Neighborhoods to represent its proximity relations. \
 -- This type is used to create Neighborhoods from scratch to be used by

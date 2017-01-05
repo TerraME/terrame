@@ -149,7 +149,7 @@ beerAgent = Agent{
 }
 
 s = Society{
-	instance = beerAgent, 
+	instance = beerAgent,
 	quantity = N
 }
 

@@ -182,7 +182,7 @@ Model_ = {
 	-- In the example below, the first column of the graphical interface will show the string
 	-- argument in the top ("mapFile") and the three arguments of "agents" in the bottom of the
 	-- first column. The second column will contain the arguments of "block" in the top and the
-	-- boolean argument ("showGraphics") in the bottom. The elements that do not belong to the 
+	-- boolean argument ("showGraphics") in the bottom. The elements that do not belong to the
 	-- table will not be shown in the graphical interface (in the example, "season").
 	-- Note that all Compulsory arguments must belong to the graphical interface to allow
 	-- instantiate Model instances properly.
@@ -278,7 +278,7 @@ Model_ = {
 	end
 }
 
---- Type that defines a model. The user can use Model to describe the arguments of a model 
+--- Type that defines a model. The user can use Model to describe the arguments of a model
 -- and how it can be built. The returning value of a Model is an object that can be used
 -- directly to simulate (as long as it does not have any Mandatory parameter) or used to create
 -- as many instances as needed to simulate the Model with different parameters.
@@ -301,7 +301,7 @@ Model_ = {
 -- @tabular ...
 -- Attribute type & Description & Default value \
 -- number or bool & The instance has to belong to such type. & The value itself. \
--- string & The instance has to be a string. If it is in the format "*.a;*.b;...", it 
+-- string & The instance has to be a string. If it is in the format "*.a;*.b;...", it
 -- describes a file extension. The modeler then has to use a filename as argument with one of the
 -- extensions defined by this string. & The value itself. \
 -- Choice & The instance must have a value that belongs to the Choice. & The default value of the Choice. \
@@ -742,7 +742,7 @@ function Model(attrTab)
 				if mtype == "Choice" then
 					if self[idx] ~= value.default and idx ~= "finalTime" then
 						str = str.._Gtme.stringToLabel(idx).." = "..vardump(self[idx])..", "
-					end	
+					end
 				elseif self[idx] ~= value and idx ~= "finalTime" then
 					str = str.._Gtme.stringToLabel(idx).." = "..vardump(self[idx])..", "
 				end

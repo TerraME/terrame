@@ -32,7 +32,7 @@ return{
 		State{
 			Jump{
 				function()
-					return true 
+					return true
 				end,
 				target = "go"
 			},
@@ -47,7 +47,7 @@ return{
 				id = {},
 				Jump{
 					function()
-						return true 
+						return true
 					end,
 					target = "go"
 				},
@@ -63,7 +63,7 @@ return{
 			State{
 				id = 123,
 				Jump{ function()
-						return true 
+						return true
 					end,
 					target = "go"
 				},
@@ -81,7 +81,7 @@ return{
 				end},
 			Jump{
 				function()
-					return true 
+					return true
 				end,
 				target = "go"
 			}
@@ -97,7 +97,7 @@ return{
 			},
 			Jump{
 				function()
-					return true 
+					return true
 				end,
 				target = "go"
 			}

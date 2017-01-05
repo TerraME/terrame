@@ -46,8 +46,8 @@ function f(value) return string.format("%.2f", value) end
 scenario = 1
 
 family = Agent {
-	sum_vr = 0, 
-	received = 0, 
+	sum_vr = 0,
+	received = 0,
 	name = "Family          ",
 	id = "17",
 	sum_cost = 0,
@@ -88,8 +88,8 @@ government = Agent {
 }
 
 capital_formation = Agent{
-	sum_vr = 0, 
-	received = 0, 
+	sum_vr = 0,
+	received = 0,
 	name = "Capital formation",
 	id = "18",
 	sum_cost = 0,
@@ -113,7 +113,7 @@ capital_formation = Agent{
 
 sum_demand = 0
 basicAgent = Agent{
-	sum_vr = 0, taxes = 0, sum_cost = 0, salary = 0, received = 0, name = "", 
+	sum_vr = 0, taxes = 0, sum_cost = 0, salary = 0, received = 0, name = "",
 	family = 0, capital_formation = 0, employment = 0, sum_salary=0, sum_taxes=0, sum_employment=0, sum_r = 0,
 
 	print = function(ag)
@@ -141,7 +141,7 @@ basicAgent = Agent{
 
 		ag:message{receiver = family,            subject = "money", value = salary + profit_family}
 		ag:message{receiver = capital_formation, subject = "money", value = profit_capital}
-			
+
 		ag:message{receiver = government, subject = "money",      value = taxes}
 		ag:message{receiver = government, subject = "employment", value = employment}
 		ag:message{receiver = government, subject = "salary",     value = salary}
@@ -171,7 +171,7 @@ read_csa = function(society, matrix)
 			local value = matrix[idx][i]
 			vbp = vbp + value
 		end
-	
+
 		a.taxes      = matrix[M_TAXES]     [idx] / vbp
 		a.salary     = matrix[M_SALARIES]  [idx] / vbp
 		a.employment = matrix[M_EMPLOYMENT][idx] / vbp
@@ -192,7 +192,7 @@ read_csa = function(society, matrix)
 			if value > 0 then
 				sn:add(society:get(i), value / sum)
 			end
-		end	
+		end
 	a:addSocialNetwork(sn)
 	end
 end
@@ -223,7 +223,7 @@ print_connections = function()
 	for idx = 1, s:getn() do
 		local a = s:get(idx)
 		print("\nIDX: "..a.id.."  ".. a.name)
-	
+
 		local sum = 0
 		for i = 1, 16 do
 			local value = m_csa[i][idx]

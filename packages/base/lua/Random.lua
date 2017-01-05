@@ -75,11 +75,11 @@ local function continuous(generator, min, max)
 	end
 end
 
--- Xorshift random number generators are a class of pseudorandom number generators 
--- that was discovered by George Marsaglia [http://www.jstatsoft.org/v08/i14/paper]. 
--- They generate the next number in their sequence by repeatedly taking the exclusive or of a number 
--- with a bit shifted version of itself. This makes them extremely fast on modern computer architectures. 
--- They are a subclass of linear feedback shift registers, 
+-- Xorshift random number generators are a class of pseudorandom number generators
+-- that was discovered by George Marsaglia [http://www.jstatsoft.org/v08/i14/paper].
+-- They generate the next number in their sequence by repeatedly taking the exclusive or of a number
+-- with a bit shifted version of itself. This makes them extremely fast on modern computer architectures.
+-- They are a subclass of linear feedback shift registers,
 -- Their simple implementation typically makes them faster and use less space.
 -- Xorshift generators are among the fastest non-cryptographic random number generators.
 -- The following xorshift+ generator uses 128 bits of state and has a maximal period of 2 ^ 128 - 1.
@@ -90,7 +90,7 @@ local function xorshift128plus(self, min, max)
 	Random_.seed[1] = y
 	x = bit32.bxor(x, bit32.lshift(x, 23))
 	x = bit32.bxor(x, bit32.rshift(x, 17))
-	x = bit32.bxor(x, bit32.bxor(y, bit32.rshift(y, 26)))	
+	x = bit32.bxor(x, bit32.bxor(y, bit32.rshift(y, 26)))
 	Random_.seed[2] = x
 	return ((x + y) % (max - min + 1)) + min
 end
@@ -130,9 +130,9 @@ Random_ = {
 			return xorshift128plus(self, 0, 1)
 		end
 	end,
-	--- Return a random real number. 
+	--- Return a random real number.
 	--  By default number() will return a value between zero and one.
-	-- @arg v1 A number. 
+	-- @arg v1 A number.
 	-- If it is the only argument used, it will return a number from zero to this value.
 	-- @arg v2 A number. When used, number() will return a number between the first argument
 	-- and the second.
@@ -176,7 +176,7 @@ Random_ = {
 	--
 	-- random:reSeed(12345)
 	reSeed = function(self, seed)
-		if seed == nil then 
+		if seed == nil then
 			seed = tonumber(tostring(os.time()):reverse():sub(1, 6))
 		else
 			verify(seed ~= 0, "Argument 'seed' cannot be zero.")
@@ -188,7 +188,7 @@ Random_ = {
 		self.random.seed[1] = 1
 		self.random.seed[2] = seed
 	end,
-	--- Return a random element from the chosen distribution. 
+	--- Return a random element from the chosen distribution.
 	-- @usage random = Random{2, 3, 4, 6}
 	--
 	-- random:sample()
@@ -199,10 +199,10 @@ Random_ = {
 
 metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 
---- Type to generate random numbers. 
+--- Type to generate random numbers.
 -- It uses Xorshift generators are among the fastest non-cryptographic random number generators.
--- Xorshift random number generators are a class of pseudorandom number generators 
--- that was discovered by George Marsaglia (http://www.jstatsoft.org/v08/i14/paper). 
+-- Xorshift random number generators are a class of pseudorandom number generators
+-- that was discovered by George Marsaglia (http://www.jstatsoft.org/v08/i14/paper).
 -- Every instance of Random along a simulation has the same seed.
 -- @arg data.distrib A string representing the statistical distribution to be used. See the
 -- table below.
@@ -329,7 +329,7 @@ function Random(data)
 
 				table.insert(values, value)
 			end)
-	
+
 			verify(#data + count == getn(data), "The only named arguments should be distrib and seed.")
 			data.sample = discrete(data, data)
 			data.values = values

@@ -98,7 +98,7 @@ return{
 		cs = CellularSpace{
 			xdim = 20
 		}
-		
+
 		forEachCell(cs, function(cell)
 			cell.w = cell.x
 		end)
@@ -353,9 +353,9 @@ return{
 			target = soc,
 			color = "red"
 		}
-		
+
 		unitTest:assertSnapshot(m2, "map_society_five_left.bmp", 0.02)
-		
+
 		local cell = Cell{
 			init = function(self)
 				self.state = "alive"
@@ -372,10 +372,10 @@ return{
 			select = "state",
 			value = {"dead", "alive"},
 			color = {"red", "yellow"}
-		}		
-		
+		}
+
 		unitTest:assertSnapshot(map, "map_string_values.bmp")
-		
+
 		ag = Agent{}
 
 		soc = Society{

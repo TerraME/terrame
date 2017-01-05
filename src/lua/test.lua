@@ -31,7 +31,7 @@ local printNote    = _Gtme.printNote
 local function testdirectories(directory, ut)
 	local result = {}
 
-	local lf 
+	local lf
 	lf = function(mdirectory)
 		local found_file = false
 		local found_directory = false
@@ -279,7 +279,7 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	local check_functions = data.directory == nil and data.test == nil and getn(data.notest) == 0
-	local check_logs = data.directory == nil and data.test == nil and data.file == nil and 
+	local check_logs = data.directory == nil and data.test == nil and data.file == nil and
 	                   getn(data.notest) == 0 and data.examples ~= false
 
 	if data.examples == nil then
@@ -353,7 +353,7 @@ function _Gtme.executeTests(package, fileName)
 
 	printNote("Looking for package functions")
 	testfunctions = _Gtme.buildCountTable(package)
-	
+
 	local extra = 0
 	forEachElement(doc_functions.files, function(idx, value)
 		if type(idx) ~= "string" then return end
@@ -647,7 +647,7 @@ function _Gtme.executeTests(package, fileName)
 
 				if getn(pvariables) > 0 then
 					local variables = ""
-				
+
 					-- we need to delete the global variables created in order to ensure that a
 					-- new error will be generated if this variable is found again. This need
 					-- to be done here because we cannot change _G inside a forEachElement
@@ -701,7 +701,7 @@ function _Gtme.executeTests(package, fileName)
 				end
 			end
 		end)
-	end) 
+	end)
 
 	if ut.test == 0 and not data.examples then
 		printError("No test was executed. Aborting.")
@@ -811,7 +811,7 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				collectgarbage("collect")
-				
+
 				ut.examples = ut.examples + 1
 
 				_Gtme.loadedPackages = clone(loadedPackages)
@@ -850,7 +850,7 @@ function _Gtme.executeTests(package, fileName)
 
 					local test = ut.test
 					local success = ut.success
-					local fail = ut.fail 
+					local fail = ut.fail
 
 					if File(value..".log"):exists() then
 						ut:assertFile(value..".log")

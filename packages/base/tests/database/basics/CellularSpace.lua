@@ -49,7 +49,7 @@ return{
 		local cell = cs:get(0, 0)
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(0, cell.y)
-		
+
 		cell = cs.cells[1]
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(0, cell.y)
@@ -57,7 +57,7 @@ return{
 		cell = cs:get(0, 1)
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(1, cell.y)
-		
+
 		cell = cs.cells[2]
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(1, cell.y)
@@ -65,7 +65,7 @@ return{
 		cell = cs:get(0, 9)
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(9, cell.y)
-		
+
 		cell = cs.cells[100]
 		unitTest:assertEquals(9, cell.x)
 		unitTest:assertEquals(0, cell.y)
@@ -73,7 +73,7 @@ return{
 		cell = cs:get(0, 10)
 		unitTest:assertEquals(0, cell.x)
 		unitTest:assertEquals(10, cell.y)
-		
+
 		cell = cs.cells[101]
 		unitTest:assertEquals(9, cell.x)
 		unitTest:assertEquals(1, cell.y)
@@ -145,7 +145,7 @@ return{
 
 		local clName1 = "Sampa_Cells_DB"
 		local tName1 = "sampa_cells"
-		
+
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
@@ -213,7 +213,7 @@ return{
 		}
 
 		unitTest:assertEquals(#cs, 100)
-		
+
 		-- csv file
 		cs = CellularSpace{file = filePath("test/simple-cs.csv", "base"), sep = ";"}
 
@@ -451,7 +451,7 @@ return{
 
 		-- .GAL Regular CS
 		countTest = countTest + 1
- 
+
 		cs1:loadNeighborhood{
 			source = filePath("test/cabecadeboi-neigh.gal", "base"),
 			name = "my_neighborhood"..countTest
@@ -652,7 +652,7 @@ return{
 			count = count + #cell:getNeighborhood()
 		end)
 
-		unitTest:assertEquals(count, 7) 	
+		unitTest:assertEquals(count, 7)
 	end,
 	save = function(unitTest)
 		local terralib = getPackage("terralib")
@@ -807,7 +807,7 @@ return{
 
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
 		cs:save(cellSpaceLayerNameGeom)
-		
+
 		cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameGeom,
@@ -830,7 +830,7 @@ return{
 		forEachCell(cs, function(cell)
 			unitTest:assertNotNil(cell.geom)
 		end)
-		
+
 		if File(projName):exists() then
 			File(projName):delete()
 		end

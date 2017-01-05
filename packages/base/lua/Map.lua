@@ -1444,7 +1444,7 @@ forEachElement(brewerRGB, function(idx, value)
 			if #mmvalue ~= 3 then
 				print("Color description '"..idx.."' in position "..midx.."/"..mmidx.." does not have 3 numbers.")
 			end
-		end) 
+		end)
 	end)
 
 	local found = false
@@ -1540,7 +1540,7 @@ metaTableMap_ = {__index = Map_}
 -- interpolation of the two colors. & color, slices, max, min, target, select & precision,
 -- grid, invert \
 -- "placement" & Observe a CellularSpace showing the number of Agents in each Cell. Values can
--- be grouped in the same way of uniquevalue or equalsteps. & color, target & 
+-- be grouped in the same way of uniquevalue or equalsteps. & color, target &
 -- min, max, value, slices, grid \
 -- "quantil" & Aggregate the values into slices with approximately the same size. Values are
 -- ordered from lower to higher and then sliced. This strategy uses two colors in the same way
@@ -1550,7 +1550,7 @@ metaTableMap_ = {__index = Map_}
 -- color, stdColor, target, select & stdDeviation, precision, grid \
 -- "uniquevalue" & Associate each attribute value to a given color. Attributes with type string can
 -- only be sliced with this strategy. It can be used for CellularSpaces as well as for
--- Society. & color, target, select, value & label, background, 
+-- Society. & color, target, select, value & label, background,
 -- size, font, symbol, grid \
 -- "none" & Does not execute any color slicing. It can be used for CellularSpaces as well as for
 -- Society. & & background, size, font, symbol, target, color, grid \
@@ -1561,7 +1561,7 @@ metaTableMap_ = {__index = Map_}
 -- number greater than zero. It indicates that differences less than 10^(-digits) will
 -- not be considered. It means that, for instance, if a slice is in the interval [1.0, 2.0]
 -- and precision is 2 (0.01), a value 0.99 might belong to such slice.
--- @arg data.color A table with the colors for the attributes. Colors can be described as strings 
+-- @arg data.color A table with the colors for the attributes. Colors can be described as strings
 -- ("red", "green", "blue", "white", "black",
 -- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
 -- compositions, such as "lightGray" and "darkGray"), as tables with three integer numbers
@@ -1782,7 +1782,7 @@ function Map(data)
 			if type(data.color[i]) == "string" then
 				local colorName = data.color[i]
 				data.color[i] = colors[colorName]
-	
+
 				if data.color[i] == nil then
 					local s = suggestion(colorName, colors)
 					if s then
@@ -2072,7 +2072,7 @@ function Map(data)
 				else
 					data.color = {data.color[1], mblack}
 				end
-		
+
 				forEachCell(data.target, function(cell)
 					cell.background_ = 0
 				end)
@@ -2207,7 +2207,7 @@ function Map(data)
 	if data.grid then
 		map:setGridVisible(1)
 	end
-	
+
 	if data.title then
 		map:setTitle(data.title)
 	end

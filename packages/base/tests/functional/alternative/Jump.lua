@@ -30,14 +30,14 @@ return{
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
-			Jump{ 
+			Jump{
 				target = "wet"
 			}
 		end
 		unitTest:assertError(error_func, "Jump constructor expected a function as first argument.")
 
 		error_func = function()
-			Jump{ 
+			Jump{
 				"notFunction",
 				target = "wet"
 			}

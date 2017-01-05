@@ -117,7 +117,7 @@ return{
 		}
 
 		c1:update(0)
-	
+
 		local c2 = Chart{
 			target = t,
 			select = "value1"
@@ -145,7 +145,7 @@ return{
 			select = "state",
 			value = {"dead", "alive"},
 			color = {"black", "blue"}
-		}	
+		}
 
 		chart:update(1)
 		for i = 2, 30 do
@@ -169,7 +169,7 @@ return{
 			select = "state",
 			value = {"dead", "alive"},
 			color = {"black", "blue"}
-		}	
+		}
 
 		chart:update(1)
 		for i = 2, 30 do
@@ -211,7 +211,7 @@ return{
 
 			model.timer = Timer{
 				Event{action = function()
-					local proportion = model.susceptible / 
+					local proportion = model.susceptible /
 						(model.susceptible + model.infected + model.recovered)
 
 					local newInfected = model.infected * contacts * model.probability * proportion

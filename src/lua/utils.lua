@@ -152,7 +152,7 @@ local TME_LEGEND_STDDEVIATION_USER = {
 -- TME_LEGEND_CURVE_LEGEND_POSITION_USER = {
 -- ["top"]     = TME_LEGEND_CURVE_LEGEND_POSITION.LEFT,
 -- ["right"]   = TME_LEGEND_CURVE_LEGEND_POSITION.RIGHT,
--- ["bottom"]  = TME_LEGEND_CURVE_LEGEND_POSITION.BOTTOM,    
+-- ["bottom"]  = TME_LEGEND_CURVE_LEGEND_POSITION.BOTTOM,
 -- ["top"]     = TME_LEGEND_CURVE_LEGEND_POSITION.TOP
 -- }
 
@@ -279,7 +279,7 @@ Legend_ = {
 }
 
 local metaTableLegend_ = {__index = Legend_, __tostring = tostringTerraME}
---- Type that defines how to color an attribute to be observed. It is used only with a map 
+--- Type that defines how to color an attribute to be observed. It is used only with a map
 -- Observer. The configuration of a legend can be changed visually by double clicking the
 -- graphical interface along the simulation.
 -- @arg data A table
@@ -334,7 +334,7 @@ local metaTableLegend_ = {__index = Legend_, __tostring = tostringTerraME}
 --         {value = 2, color = "green"}
 --     }
 -- }
--- 
+--
 -- deforLeg = Legend {
 --     grouping = "equalsteps",
 --     slices = 10,
@@ -394,14 +394,14 @@ function _Gtme.Legend(data)
 				if max == nil then max = DEF_MAX end
 				if min == nil then min = DEF_MIN end
 				data.colorBar = {
-					{color = TME_LEGEND_COLOR.RED, value = min}, 
+					{color = TME_LEGEND_COLOR.RED, value = min},
 					{color = TME_LEGEND_COLOR.BLACK, value = max}
 				}
 			end
 
 			if data.type == TME_LEGEND_TYPE.BOOL then
 				data.colorBar = {
-					{color = TME_LEGEND_COLOR.BLACK, value = false}, 
+					{color = TME_LEGEND_COLOR.BLACK, value = false},
 					{color = TME_LEGEND_COLOR.WHITE, value = true}
 				}
 				data.maximum = 1
@@ -411,14 +411,14 @@ function _Gtme.Legend(data)
 
 			if data.type == TME_LEGEND_TYPE.TEXT then
 				data.colorBar = {
-					{color = TME_LEGEND_COLOR.BLACK, value = "BLACK"}, 
+					{color = TME_LEGEND_COLOR.BLACK, value = "BLACK"},
 					{color = TME_LEGEND_COLOR.WHITE, value = "WHITE"}
 				}
 			end
 
 			if data.type == TME_LEGEND_TYPE.DATETIME then
-				data.colorBar = { 
-					{color = TME_LEGEND_COLOR.BLACK, value = "2012-01-01 00:00:00"}, 
+				data.colorBar = {
+					{color = TME_LEGEND_COLOR.BLACK, value = "2012-01-01 00:00:00"},
 					{color = TME_LEGEND_COLOR.WHITE, value = "2012-01-31 00:00:00"}
 				}
 			end
@@ -480,7 +480,7 @@ function _Gtme.Legend(data)
 				if #colorBarValues > 0 and type(colorBarValues[1]) == "number" then
 					-- returns 'too many results to unpack' when colorBarValues is a big set
 					-- data.maximum = math.max(unpack(colorBarValues))
-					local auxMax = -9999999999999         
+					local auxMax = -9999999999999
 					for i = 1, #colorBarValues do
 						if colorBarValues[i] > auxMax then
 							auxMax = colorBarValues[i]
@@ -508,7 +508,7 @@ function _Gtme.Legend(data)
 			if #colorBarValues > 0 and type(colorBarValues[1]) == "number" then
 				-- returns 'too many results to unpack' when colorBarValues is a big set
 				-- .minimum = math.min(unpack(colorBarValues))
-				local auxMin = 9999999999999         
+				local auxMin = 9999999999999
 				for i = 1, #colorBarValues do
 					if colorBarValues[i] < auxMin then
 						auxMin = colorBarValues[i]
@@ -614,7 +614,7 @@ function _Gtme.Legend(data)
 					if beginI ~= nil then
 						local subStrValue = string.sub(strValue,beginI+1)
 						table.insert(precisions,#subStrValue)
-					end 
+					end
 				end
 				if #precisions > 0 then
 					--.precision = math.max(unpack(precisions))
@@ -738,7 +738,7 @@ function _Gtme.stringToLabel(mstring, parent)
 				end
 
 				result = result..nextu
-	
+
 				nextu = string.match(string.sub(mstring, i + 1, mstring:len()), "%u")
 				prevd = false
 				prevu = true

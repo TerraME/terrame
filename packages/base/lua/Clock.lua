@@ -24,13 +24,13 @@
 
 Clock_ = {
 	type_ = "Clock",
-  
+
 	--- Save a Clock into a file. Supported extensions are bmp, jpg, png, and tiff.
 	-- @arg file A string with the file name.
 	-- @usage timer = Timer{
 	--     Event{action = function() end}
 	-- }
-	-- 
+	--
 	-- clock = Clock{target = timer}
 	--
 	-- clock:save("file.bmp")
@@ -53,7 +53,7 @@ Clock_ = {
 	-- @usage timer = Timer{
 	--     Event{action = function() end}
 	-- }
-	-- 
+	--
 	-- clock = Clock{target = timer}
 	--
 	-- clock:update()
@@ -70,7 +70,7 @@ metaTableClock_ = {__index = Clock_}
 --     Event{action = function() end},
 --     Event{period = 2, action = function() end}
 -- }
--- 
+--
 -- Clock{target = timer}
 --
 -- timer:run(3)
@@ -88,17 +88,17 @@ Clock = function(data)
 	local obs
 
 	id, obs = data.target.cObj_:createObserver(observerType, observerAttrs, observerParams)
-  
+
 	local clock = TeTimer()
 	clock:setObserver(obs)
 
 	data.cObj_ = clock
 	data.id = id
 
-	setmetatable(data, metaTableClock_)  
+	setmetatable(data, metaTableClock_)
 
 	table.insert(_Gtme.createdObservers, data)
-  
+
 	return data
 end
 
