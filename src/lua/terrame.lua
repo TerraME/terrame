@@ -89,6 +89,8 @@ initializeTerraLib()
 
 local function checkUnnecessaryArguments(arguments, argCount)
 	if #arguments > argCount then
+		if belong(arguments[argCount + 1], {">", "2>"}) then return end
+
 		_Gtme.printError("It is not possible to have additional arguments after '"..arguments[argCount].."'.")
 		os.exit(1)
 	end
