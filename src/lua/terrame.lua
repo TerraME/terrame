@@ -87,6 +87,13 @@ end
 
 initializeTerraLib()
 
+local function checkUnnecessaryArguments(arguments, argCount)
+	if #arguments > argCount then
+		_Gtme.printError("It is not possible to have additional arguments after '"..arguments[argCount].."'.")
+		os.exit(1)
+	end
+end
+
 function _Gtme.printError(value)
 	if sessionInfo().color then
 		_Gtme.print(begin_red..tostring(value)..end_color)
@@ -612,7 +619,7 @@ local function version()
 	str = str.."\n  Qt "..qt_version
 	str = str.."\n  Qwt "..qwt_version
 
-    local terralib = _Gtme.getPackage("terralib")
+	local terralib = _Gtme.getPackage("terralib")
 	local tlib = terralib.TerraLib{}
 	str = str.."\n  TerraLib "..tlib:getVersion()
 	finalizeTerraLib()
@@ -921,49 +928,49 @@ function _Gtme.loadModules(pkg)
 end
 
 local function findExample(example, packageName)
-    local file = example
-    local s = package.config:sub(1, 1)
-    local errMsg = nil
-    local exFullPath = ""
+	local file = example
+	local s = package.config:sub(1, 1)
+	local errMsg = nil
+	local exFullPath = ""
 
-    if file then
-        local info
-        xpcall(function() info = packageInfo(packageName).path end, function(err)
-            errMsg = err
-        end)
+	if file then
+		local info
+		xpcall(function() info = packageInfo(packageName).path end, function(err)
+			errMsg = err
+		end)
 
-        if errMsg then
-            return false, errMsg
-        end
+		if errMsg then
+			return false, errMsg
+		end
 
-        exFullPath = info..s.."examples"..s..file..".lua"
+		exFullPath = info..s.."examples"..s..file..".lua"
 
-        if not File(exFullPath):exists() then
-            errMsg = "Example '"..file.."' does not exist in package '"..packageName.."'."
-            errMsg = errMsg.."\nPlease use one from the list below:"
-        end
-    elseif packageName == "base" then
-        errMsg = "TerraME has the following examples:"
-    elseif #_Gtme.findExamples(packageName) == 0 then
-        errMsg = "Package '"..packageName.."' has no examples."
-        return false, errMsg
-    else
-        errMsg = "Package '"..packageName.."' has the following examples:"
-    end
+		if not File(exFullPath):exists() then
+			errMsg = "Example '"..file.."' does not exist in package '"..packageName.."'."
+			errMsg = errMsg.."\nPlease use one from the list below:"
+		end
+	elseif packageName == "base" then
+		errMsg = "TerraME has the following examples:"
+	elseif #_Gtme.findExamples(packageName) == 0 then
+		errMsg = "Package '"..packageName.."' has no examples."
+		return false, errMsg
+	else
+		errMsg = "Package '"..packageName.."' has the following examples:"
+	end
 
-    if file and File(exFullPath):exists() then
-        -- it only changes the file to point to the package and let it run as it
-        -- was a call such as "TerraME .../package/examples/example.lua"
-        return true, exFullPath
-    else
-        files = _Gtme.findExamples(packageName)
+	if file and File(exFullPath):exists() then
+		-- it only changes the file to point to the package and let it run as it
+		-- was a call such as "TerraME .../package/examples/example.lua"
+		return true, exFullPath
+	else
+		files = _Gtme.findExamples(packageName)
 
-        _Gtme.forEachElement(files, function(_, value)
-            errMsg = errMsg.."\n - "..value
-        end)
-    end
+		_Gtme.forEachElement(files, function(_, value)
+			errMsg = errMsg.."\n - "..value
+		end)
+	end
 
-    return false, errMsg
+	return false, errMsg
 end
 
 local function executeExamples(package)
@@ -1214,6 +1221,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		arg = arguments[argCount]
 		if string.sub(arg, 1, 1) == "-" then
 			if arg == "-version" then
+				checkUnnecessaryArguments(arguments, argCount)
 				print("TerraME - Terra Modeling Environment")
 				print(version())
 				os.exit(0)
@@ -1304,6 +1312,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				argCount = argCount + 1
 				model = arguments[argCount]
 
+				checkUnnecessaryArguments(arguments, argCount)
+
 				if package ~= "base" then
 					import("base")
 				end
@@ -1350,7 +1360,13 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 
 				info_.mode = "debug"
-				argCount = argCount + 1
+
+				if arguments[argCount + 1] then
+					argCount = argCount + 1
+				end
+
+				checkUnnecessaryArguments(arguments, argCount)
+
 				dofile(path.."UnitTest.lua")
 
 				dofile(_Gtme.sessionInfo().path.."lua"..s.."test.lua")
@@ -1360,30 +1376,33 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(1)
 				end)
 
-                --if _Gtme.sessionInfo().system == "windows" then
-                    finalizeTerraLib()
-                --end
+				finalizeTerraLib()
 
 				os.exit(errors)
 			elseif arg == "-sketch" then
 				info_.mode = "debug"
-				argCount = argCount + 1
+				checkUnnecessaryArguments(arguments, argCount)
 
 				dofile(_Gtme.sessionInfo().path.."lua"..s.."test.lua")
 				dofile(_Gtme.sessionInfo().path.."lua"..s.."doc.lua")
 				dofile(_Gtme.sessionInfo().path.."lua"..s.."sketch.lua")
-				xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
+				xpcall(function() _Gtme.sketch(package) end, function(err)
 					_Gtme.printError(_Gtme.traceback(err))
 					os.exit(1)
 				end)
+
 				os.exit(0)
 			elseif arg == "-help" then
+				checkUnnecessaryArguments(arguments, argCount)
 				usage()
 				os.exit(0)
 			elseif arg == "-showdoc" then
+				checkUnnecessaryArguments(arguments, argCount)
 				_Gtme.showDoc(package)
 				os.exit(0)
 			elseif arg == "-doc" then
+				checkUnnecessaryArguments(arguments, argCount)
+
 				info_.mode = "debug"
 				dofile(_Gtme.sessionInfo().path.."lua"..s.."doc.lua")
 				local errors = 0
@@ -1395,11 +1414,13 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				os.exit(errors)
 			elseif arg == "-examples" then
+				checkUnnecessaryArguments(arguments, argCount)
 				local errors
 				_Gtme.myxpcall(function() errors = executeExamples(package) end)
 				errors = errors or 0
 				os.exit(errors)
 			elseif arg == "-projects" then
+				checkUnnecessaryArguments(arguments, argCount)
 				dofile(_Gtme.sessionInfo().path.."lua"..s.."project.lua")
 				local errors
 
@@ -1423,33 +1444,32 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			elseif arg == "-build" then
 				if package == "base" then
 					_Gtme.printError("TerraME cannot be built using -build.")
-				else
-					dofile(sessionInfo().path.."lua"..s.."build.lua")
-
-					argCount = argCount + 1
-					local config
-
-					if arguments[argCount] ~= "-clean" then
-						config = arguments[argCount]
-						argCount = argCount + 1
-					end
-
-					local clean
-					if arguments[argCount] ~= nil then
-						if arguments[argCount] == "-clean" then
-							clean = true
-						else
-							_Gtme.printError("Option not recognized: '"..arguments[argCount].."'.")
-							os.exit(1)
-						end
-					end
-
-					local errors = _Gtme.buildPackage(package, config, clean)
-					os.exit(errors)
+					os.exit(0)
 				end
-				os.exit(0)
+
+				dofile(sessionInfo().path.."lua"..s.."build.lua")
+
+				local config
+
+				if arguments[argCount + 1] and arguments[argCount + 1] ~= "-clean" then
+					argCount = argCount + 1
+					config = arguments[argCount]
+				end
+
+				local clean
+
+				if arguments[argCount + 1] == "-clean" then
+					clean = true
+					argCount = argCount + 1
+				end
+
+				checkUnnecessaryArguments(arguments, argCount)
+
+				local errors = _Gtme.buildPackage(package, config, clean)
+				os.exit(errors)
 			elseif arg == "-install" then
 				argCount = argCount + 1
+				checkUnnecessaryArguments(arguments, argCount)
 
 				if package ~= "base" then
 					_Gtme.printError("It is not possible to use -package with -install. Run the following command instead:")
@@ -1481,11 +1501,14 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				os.exit(0)
 			elseif arg == "-uninstall" then
+				checkUnnecessaryArguments(arguments, argCount)
 				_Gtme.uninstall(package)
 				os.exit(0)
 			elseif arg == "-example" then
 				info_.fullTraceback = true
-				local file = arguments[argCount + 1]
+				argCount = argCount + 1
+				local file = arguments[argCount]
+				checkUnnecessaryArguments(arguments, argCount)
 
 				if file then
 					local info
@@ -1522,7 +1545,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(0)
 				end
 			elseif arg == "-project" then
-				local file = arguments[argCount + 1]
+				argCount = argCount + 1
+				local file = arguments[argCount]
+				checkUnnecessaryArguments(arguments, argCount)
 
 				local info
 				xpcall(function() info = packageInfo(package).path end, function(err)
@@ -1558,6 +1583,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(0)
 				end
 			elseif arg == "-check" then
+				checkUnnecessaryArguments(arguments, argCount)
 				dofile(sessionInfo().path.."lua"..s.."check.lua")
 
 				if info_.package == nil then
@@ -1644,9 +1670,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		end)
 	end
 
---    if _Gtme.sessionInfo().system == "windows" then
-        finalizeTerraLib()
---    end
+	finalizeTerraLib()
 
 	return true
 end
