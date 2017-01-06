@@ -179,7 +179,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	print("Checking source code")
 	forEachFile(pkgDirectory..s.."lua", function(file)
-		if file:extension() ~= "lua" then
+		if not belong (file:extension(), {"lua", "tme"}) then
 			printError("File '"..package..s.."lua"..s..file:name().."' is unnecessary and will be ignored.")
 			file:delete()
 			report.unnecessary_files = report.unnecessary_files + 1

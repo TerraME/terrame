@@ -138,7 +138,9 @@ function import(package, reload)
 		end
 
 		if load_sequence then -- SKIP
-			for _, file in ipairs(load_sequence) do
+			forEachOrderedElement(load_sequence, function(_, file)
+				if string.endswith(file, ".tme") then return end
+
 				local mfile = package_path..s.."lua"..s..file
 				if not File(mfile):exists() then -- SKIP
 					customWarning("Cannot open "..mfile..". No such file. Please check "..package_path..s.."load.lua.") -- SKIP
@@ -154,12 +156,14 @@ function import(package, reload)
 
 					count_files[file] = count_files[file] + 1 -- SKIP
 				end
-			end
+			end)
 		end
 
 		for mfile, count in pairs(count_files) do
 			if count == 0 and isFile(package_path.."lua"..s..mfile) then -- SKIP
-				customWarning("File lua"..s..mfile.." is ignored by load.lua.") -- SKIP
+				if not string.endswith(mfile, ".tme") then -- SKIP
+					customWarning("File lua"..s..mfile.." is ignored by load.lua.") -- SKIP
+				end
 			elseif count > 1 then
 				customWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.") -- SKIP
 			end

@@ -791,6 +791,27 @@ function _Gtme.configure(self, modelName, package, random)
 		r = r.."\theader = \"\\n\\nif not isLoaded(\\\""..package.."\\\") then  import(\\\""..package.."\\\") end\"\n"
 		r = r.."\tresult = header..result\n"
 		r = r.."\tmfile:close()\n"
+
+		local tme = packageInfo(package).path.."lua/"..modelName..".tme"
+
+		if isFile(tme) then
+			r = r.."\tlocal cObj = TeVisualArrangement()\n"
+			r = r.."\tdisplayFile = \""..tme.."\"\n"
+			r = r.."\tcObj:setFile(displayFile)\n"
+
+			r = r..[[
+			if _Gtme.File(displayFile):exists() then
+				local display = dofile(displayFile)
+
+				_Gtme.forEachElement(display, function(idx, data)
+					cObj:addPosition(idx, data.x, data.y)
+					cObj:addSize(idx, data.width, data.height)
+				end)
+			end]]
+
+		--	r = r.."\tos.execute(\"cp "..tme.." \"..prefix..\".tme\")\n"
+		--	print("\tos.execute(\"cp "..tme.." \"..prefix..\".tme\")\n")
+		end
 	end
 
 	r = r..[[
