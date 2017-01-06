@@ -167,7 +167,7 @@ function _Gtme.buildPackage(package, config, clean)
 	if Directory(pkgDirectory.."examples"):exists() then
 		print("Checking examples")
 		forEachFile(pkgDirectory.."examples", function(file)
-			if not belong(file:extension(), {"lua", ".tme"}) then
+			if not belong(file:extension(), {"lua", "tme"}) then
 				printError("File '"..package..s.."examples"..s..file:name().."' is unnecessary and will be ignored.")
 				file:delete()
 				report.unnecessary_files = report.unnecessary_files + 1

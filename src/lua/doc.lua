@@ -42,6 +42,7 @@ _Gtme.ignoredFile = function(fname)
 		".shp.xml",
 		".cpg",
 		".qix",
+		".tme",
 		".lua"
 	}
 
