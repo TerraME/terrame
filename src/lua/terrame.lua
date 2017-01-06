@@ -1361,8 +1361,10 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				info_.mode = "debug"
 
+				local file
 				if arguments[argCount + 1] then
 					argCount = argCount + 1
+					file = arguments[argCount]
 				end
 
 				checkUnnecessaryArguments(arguments, argCount)
@@ -1371,7 +1373,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				dofile(_Gtme.sessionInfo().path.."lua"..s.."test.lua")
 				local errors = 0
-				xpcall(function() errors = _Gtme.executeTests(package, arguments[argCount]) end, function(err)
+				xpcall(function() errors = _Gtme.executeTests(package, file) end, function(err)
 					_Gtme.printError(err)
 					os.exit(1)
 				end)
