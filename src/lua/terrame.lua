@@ -978,7 +978,7 @@ local function executeExamples(package)
 		import("base")
 	end
 
-	_Gtme.printNote("Running all examples for package '"..package.."'.")
+	_Gtme.printNote("Running all examples of package '"..package.."'")
 
 	local errors = 0
 
@@ -992,9 +992,9 @@ local function executeExamples(package)
 
 	_Gtme.forEachFile(examplespath, function(file)
 		if file:extension() == "lua" then
-			print("Run example '"..file:name().."'.")
+			print("Running example '"..file:name().."'")
 
-			xpcall(function() dofile(tostring(fname)) end, function(err)
+			xpcall(function() dofile(tostring(file)) end, function(err)
 				_Gtme.printError(err)
 				errors = errors + 1
 			end)
