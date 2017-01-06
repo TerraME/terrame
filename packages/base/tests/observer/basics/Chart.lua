@@ -140,11 +140,15 @@ return{
 			instance = cell
 		}
 
-		local chart = Chart{
+		local map = Map{
 			target = cs,
 			select = "state",
 			value = {"dead", "alive"},
 			color = {"black", "blue"}
+		}
+
+		local chart = Chart{
+			target = map
 		}
 
 		chart:update(1)

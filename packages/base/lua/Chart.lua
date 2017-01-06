@@ -198,8 +198,16 @@ Chart_ = {
 metaTableChart_ = {__index = Chart_}
 
 --- Create a line chart showing the variation of one or more attributes (y axis) of an
--- object. X axis values come from the single argument of notify().
--- @arg attrTab.target An Agent, Cell, CellularSpace, Environment, Society, table, or instance of a Model.
+-- object. As default, x axis values come from the single argument of Chart:update().
+-- A Chart behaves according to its target's type. See the table below.
+-- @tabular NONE
+-- Type of the target & Behavior & Compulsory & Unnecessary \
+-- "Agent", "Cell", instance of a Model & Plots how attributes change over time. & target & value \
+-- "CellularSpace" & If the selected attributes belong to the CellularSpace, it plots how attributes change over time. If only one attribute is selected and it belongs to the Cells, then it plots the sum of the attribute values in the whole CellularSpace. & select, target &  \
+-- "Map" & Works as a Chart created from a CellularSpace, copying the values of arguments target, select, value, color, and label from the Map to itself. It only works if the Map was created using grouping "uniquevalue". If some of the colors is white, the respective attribute value will be ignored by the Chart. & target & color, label, select, value \
+-- "Environment" & Plot how a given attribute from different Models. & select, target & value \
+-- "Society" & Plot how attributes change over time. If no attribute is selected, it will plot the amount of Agents along the simulation. & target &  \
+-- "table" & Plot a set of values at once, without needing to call Chart:update(). & data & target, value \
 -- @arg attrTab.select A vector of strings with the name of the attributes to be observed. If it is only a
 -- single value then it can also be described as a string.
 -- As default, it selects all the user-defined number attributes of the target.
@@ -210,7 +218,8 @@ metaTableChart_ = {__index = Chart_}
 -- When using an Environment as target, it is possible to use only one attribute name. The selected
 -- attribute must belong to the Model instances it contains. Chart will then create one line for
 -- each Model instance. In this case, the selected attribute will be the default title for the Chart and the
--- default labels will be the names of the Model instances in the Environment or else their Model:title() values.
+-- default labels will be the names of the Model instances in the Environment (if they are named) or else their Model:title() values.
+-- @arg attrTab.target The object to be observed. 
 -- @arg attrTab.value A vector of strings with the values to be observed. It is necessary when observing
 -- automatic functions from CellularSpace or Society that are created from string attributes. In this case,
 -- Chart will plot the quantity of each value described in this argument.
@@ -226,8 +235,8 @@ metaTableChart_ = {__index = Chart_}
 -- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
 -- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
 -- representing RGB compositions.
--- @arg attrTab.data An optional table with a complete description of the data to be drawn in the Chart.
--- It must be a Utils:isTable() with a set of vectors, each one with a name. The names of these vectors can be
+-- @arg attrTab.data A table with a complete description of the data to be drawn in the Chart.
+-- It must be a valid Utils:isTable() with a set of vectors, each one with a name. The names of these vectors can be
 -- used in arguments select and xAxis. If not using xAxis, it will draw the time according to the
 -- positions of the values. When using data, argument target becomes unnecessary. This argument
 -- will automatically be converted to a Cell, in order to allow using Cell:notify().
@@ -325,6 +334,32 @@ function Chart(attrTab)
 		"title", "label", "pen", "color", "xAxis", "value",
 		"width", "symbol", "style", "size", "data"
 	})
+
+	if type(attrTab.target) == "Map" then
+		local value = {}
+		local color = {}
+		local label = {}
+
+		if type(attrTab.target.value) ~= "table" or type(attrTab.target.color) ~= "table" then
+			customError("Charts can only be created from Maps that use grouping 'uniquevalue'.")
+		end
+
+		forEachElement(attrTab.target.color, function(idx, mcolor)
+			if mcolor[1] == 255 and mcolor[2] == 255 and mcolor[3] == 255 then return end
+
+			table.insert(value, attrTab.target.value[idx])
+			table.insert(label, attrTab.target.label[idx])
+			table.insert(color, mcolor)
+		end)
+
+		attrTab.select = attrTab.target.select
+		attrTab.target = attrTab.target.target
+		attrTab.label = attrTab.target.label
+		attrTab.value = value
+		attrTab.color = color
+
+		return Chart(attrTab)
+	end
 
 	if attrTab.value then
 		if not belong(type(attrTab.target), {"CellularSpace", "Society"}) then

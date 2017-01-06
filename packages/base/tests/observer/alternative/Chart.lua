@@ -292,6 +292,22 @@ return{
 			instance = cell
 		}
 
+		local map = Map{
+			target = cs,
+			select = "x",
+			min = 0,
+			max = 10,
+			color = {"black", "blue"},
+			slices = 5
+		}
+
+		error_func = function()
+			Chart{
+				target = map
+			}
+		end
+		unitTest:assertError(error_func, "Charts can only be created from Maps that use grouping 'uniquevalue'.")
+
 		error_func = function()
 			Chart{
 				target = cs,
