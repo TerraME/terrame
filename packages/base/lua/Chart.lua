@@ -219,7 +219,7 @@ metaTableChart_ = {__index = Chart_}
 -- attribute must belong to the Model instances it contains. Chart will then create one line for
 -- each Model instance. In this case, the selected attribute will be the default title for the Chart and the
 -- default labels will be the names of the Model instances in the Environment (if they are named) or else their Model:title() values.
--- @arg attrTab.target The object to be observed. 
+-- @arg attrTab.target The object to be observed.
 -- @arg attrTab.value A vector of strings with the values to be observed. It is necessary when observing
 -- automatic functions from CellularSpace or Society that are created from string attributes. In this case,
 -- Chart will plot the quantity of each value described in this argument.
