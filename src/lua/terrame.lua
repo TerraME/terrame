@@ -1008,6 +1008,65 @@ local function executeExamples(package)
 	return errors
 end
 
+local function runScript(script)
+	if info_.mode ~= "quiet" then
+		checkNilVariables()
+	end
+
+	if not _Gtme.isLoaded("base") then
+		_Gtme.import("base")
+	end
+
+	local displayFile = string.sub(script, 0, string.len(script) - 3).."tme"
+	displayFile = _Gtme.makePathCompatibleToAllOS(displayFile)
+
+	local cObj = TeVisualArrangement()
+	cObj:setFile(displayFile)
+
+	if _Gtme.File(displayFile):exists() then
+		local display = dofile(displayFile)
+
+		_Gtme.forEachElement(display, function(idx, data)
+			cObj:addPosition(idx, data.x, data.y)
+			cObj:addSize(idx, data.width, data.height)
+		end)
+	end
+
+	if isDirectory(script) then
+		_Gtme.printError("Argument '"..script.."' is a directory, and not a Lua file.")
+		os.exit(1)
+	end
+
+	script = File(script)
+
+	if not script:exists() then
+		_Gtme.printError("File '"..script.."' does not exist.")
+		os.exit(1)
+	elseif script:extension() ~= "lua" then
+		_Gtme.printError("Argument '"..script.."' does not have '.lua' extension.")
+		os.exit(1)
+	end
+
+	info_.currentFile = script
+
+	dofile(sessionInfo().path.."lua"..sessionInfo().separator.."check.lua")
+
+	if info_.mode == "strict" then
+		_Gtme.checkFile(tostring(script), "Warning")
+	elseif info_.mode == "debug" then
+		local numIssues = _Gtme.checkFile(tostring(script), "Error")
+		if numIssues > 0 then
+			os.exit(numIssues)
+		end
+	end
+
+	local success, result = _Gtme.myxpcall(function() dofile(tostring(script)) end)
+	if not success then
+		_Gtme.printError(result)
+		os.exit(1)
+	end
+end
+
 function _Gtme.execExample(example, packageName)
 	local ok, res = findExample(example, packageName)
 
@@ -1054,7 +1113,7 @@ function _Gtme.execExample(example, packageName)
 		description.text = description.text.."\n"..value
 	end
 
-	local success, result = _Gtme.myxpcall(function() dofile(example) end)
+	local success, result = _Gtme.myxpcall(function() runScript(example) end)
 	if not success then
 		return false, result
 	end
@@ -1523,9 +1582,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 					arg = info..s.."examples"..s..file..".lua"
 
-					if not File(arg):exists() then
+					if File(arg):exists() then
+						runScript(arg)
+					else
 						_Gtme.printError("Example '"..file.."' does not exist in package '"..package.."'.")
 						print("Please use one from the list below:")
+						file = nil
 					end
 				elseif package == "base" then
 					print("TerraME has the following examples:")
@@ -1536,11 +1598,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					print("Package '"..package.."' has the following examples:")
 				end
 
-				if file and File(arg):exists() then
-					-- it only changes the file to point to the package and let it run as it
-					-- was a call such as "TerraME .../package/examples/example.lua"
-					arguments[argCount + 1] = arg
-				else
+				if not file then
 					files = _Gtme.findExamples(package)
 
 					_Gtme.forEachElement(files, function(_, value)
@@ -1607,63 +1665,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.printError("Option not recognized: '"..arg.."'.")
 				os.exit(1)
 			end
-		else -- running a Lua script
-			if info_.mode ~= "quiet" then
-				checkNilVariables()
-			end
-
-			if not _Gtme.isLoaded("base") then
-				_Gtme.import("base")
-			end
-
-			local displayFile = string.sub(arg, 0, string.len(arg) - 3).."tme"
-			displayFile = _Gtme.makePathCompatibleToAllOS(displayFile)
-
-			local cObj = TeVisualArrangement()
-			cObj:setFile(displayFile)
-
-			if _Gtme.File(displayFile):exists() then
-				local display = dofile(displayFile)
-
-				_Gtme.forEachElement(display, function(idx, data)
-					cObj:addPosition(idx, data.x, data.y)
-					cObj:addSize(idx, data.width, data.height)
-				end)
-			end
-
-			if isDirectory(arg) then
-				_Gtme.printError("Argument '"..arg.."' is a directory, and not a Lua file.")
-				os.exit(1)
-			end
-
-			arg = File(arg)
-
-			if not arg:exists() then
-				_Gtme.printError("File '"..arg.."' does not exist.")
-				os.exit(1)
-			elseif arg:extension() ~= "lua" then
-				_Gtme.printError("Argument '"..arg.."' does not have '.lua' extension.")
-				os.exit(1)
-			end
-
-			info_.currentFile = arg
-
-			dofile(sessionInfo().path.."lua"..s.."check.lua")
-
-			if info_.mode == "strict" then
-				_Gtme.checkFile(tostring(arg), "Warning")
-			elseif info_.mode == "debug" then
-				local numIssues = _Gtme.checkFile(tostring(arg), "Error")
-				if numIssues > 0 then
-					os.exit(numIssues)
-				end
-			end
-
-			local success, result = _Gtme.myxpcall(function() dofile(tostring(arg)) end)
-			if not success then
-				_Gtme.printError(result)
-				os.exit(1)
-			end
+		else
+			runScript(arg)
 		end
 		argCount = argCount + 1
 	end
