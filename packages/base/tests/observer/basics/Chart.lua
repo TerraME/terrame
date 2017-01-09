@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -117,7 +117,7 @@ return{
 		}
 
 		c1:update(0)
-	
+
 		local c2 = Chart{
 			target = t,
 			select = "value1"
@@ -140,12 +140,16 @@ return{
 			instance = cell
 		}
 
-		local chart = Chart{
+		local map = Map{
 			target = cs,
 			select = "state",
 			value = {"dead", "alive"},
 			color = {"black", "blue"}
-		}	
+		}
+
+		local chart = Chart{
+			target = map
+		}
 
 		chart:update(1)
 		for i = 2, 30 do
@@ -169,7 +173,7 @@ return{
 			select = "state",
 			value = {"dead", "alive"},
 			color = {"black", "blue"}
-		}	
+		}
 
 		chart:update(1)
 		for i = 2, 30 do
@@ -211,7 +215,7 @@ return{
 
 			model.timer = Timer{
 				Event{action = function()
-					local proportion = model.susceptible / 
+					local proportion = model.susceptible /
 						(model.susceptible + model.infected + model.recovered)
 
 					local newInfected = model.infected * contacts * model.probability * proportion

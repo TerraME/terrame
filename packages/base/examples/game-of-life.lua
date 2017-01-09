@@ -3,7 +3,7 @@
 -- changes in a society using very simple rules. Each cell
 -- represents an individual that can have two states: alive or dead.
 -- Using its own state and the state of its neighbors, each individual
--- decides its next state. The model has four rules. First, 
+-- decides its next state. The model has four rules. First,
 -- an alive cell with fewer than two alive neighbors dies by loneliness.
 -- Second, an alive cell with two or three alive neighbors stays alive.
 -- Third, an alive cell with more than three alive neighbors dies
@@ -40,14 +40,14 @@ cell = Cell{
 			self.state = "alive"
 		else
 			self.state = self.past.state
-		end 
+		end
 	end
 }
 
 cs = CellularSpace{
 	xdim = 50,
 	instance = cell
-}	   
+}
 
 cs:createNeighborhood()
 

@@ -81,7 +81,7 @@ y          number [0]
 ]])
 
 		c:synchronize()
-		
+
 		unitTest:assertEquals(tostring(c), [[agents     vector of size 0
 cObj_      userdata
 friends    Group
@@ -104,7 +104,7 @@ y          number [0]
 		unitTest:assertEquals(0, #c1)
 		c1:addNeighborhood(n)
 		unitTest:assertEquals(1, #c1)
-		
+
 		unitTest:assertType(c1:getNeighborhood(), "Neighborhood")
 	end,
 	distance = function(unitTest)

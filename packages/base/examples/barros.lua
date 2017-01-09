@@ -8,8 +8,8 @@
 -- replace those with lower income, which in turn need to search for
 -- a new cell to leave, moving randomly. Empty cells can be occupied
 -- by any kind of agent. \
--- Reference: Barros, J. "Simulating urban dynamics in Latin American cities." 
--- GeoDynamics (2005): 313-328. 
+-- Reference: Barros, J. "Simulating urban dynamics in Latin American cities."
+-- GeoDynamics (2005): 313-328.
 -- @arg P_POOR Percentage of poor agents.
 -- @arg P_MIDDLE Percentage of middle class agents.
 -- @arg P_RICH Percentage of rich agents. Note that the sum of the three percentages
@@ -54,7 +54,7 @@ citizen = Agent{
 			self.class = "poor"
 		elseif value < P_POOR + P_MIDDLE then
 			self.class = "middle"
-		else 
+		else
 			self.class = "rich"
 		end
 	end,
@@ -67,13 +67,13 @@ citizen = Agent{
 			middle = 2,
 			poor = 1
 		}
-	
+
 		return classes[self.class] > classes[other.class]
 	end,
 	-- a citizen tries to move to a cell he can stay
 	findPlace = function(self, place)
 		local occupant = place:getAgent()
-		
+
 		if not occupant then
 			self:enter(place)
 		elseif self:higherClass(occupant) then

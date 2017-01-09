@@ -91,7 +91,7 @@ return{
 		local preyFunc = function(_, q)
 			return q[1] * birthPreyRate - q[1] * q[2] * predationRate
 		end
-		
+
 		local predatorFunc = function(_, q)
 			return q[2] * q[1] * birthPredatorPerPreyRate - q[2] * deathPredatorRate
 		end
@@ -102,7 +102,7 @@ return{
 				{preyFunc, predatorFunc},
 				{ag.preys, ag.predators},
 				0,
-				timeStep, 
+				timeStep,
 				0.03125
 			}
 		end
@@ -339,7 +339,7 @@ return{
 				}
 			end
 		}
-	
+
 		local e = Environment{
 			scenario0 = MyTube{},
 			scenario1 = MyTube{water = 100},
@@ -804,7 +804,7 @@ return{
 		}
 
 		unitTest:assertType(v, "number")
-	
+
 		-- integrate with a set of functions
 		local timeStep = 0.5
 		local birthPreyRate = 0.2
@@ -815,7 +815,7 @@ return{
 		local preyFunc = function(_, q)
 			return q[1] * birthPreyRate - q[1] * q[2] * predationRate
 		end
-		
+
 		local predatorFunc = function(_, q)
 			return q[2] * q[1] * birthPredatorPerPreyRate - q[2] * deathPredatorRate
 		end
@@ -826,7 +826,7 @@ return{
 				equation = {preyFunc, predatorFunc},
 				initial = {ag.preys, ag.predators},
 				a = 0,
-				b = timeStep, 
+				b = timeStep,
 				step = 0.03125
 			}
 		end
@@ -840,7 +840,7 @@ return{
 				equation = {preyFunc, predatorFunc},
 				initial = {ag.preys, ag.predators},
 				a = 0,
-				b = timeStep, 
+				b = timeStep,
 				method = "heun",
 				step = 0.03125
 			}
@@ -855,7 +855,7 @@ return{
 				equation = {preyFunc, predatorFunc},
 				initial = {ag.preys, ag.predators},
 				a = 0,
-				b = timeStep, 
+				b = timeStep,
 				method = "rungekutta",
 				step = 0.03125
 			}
@@ -1007,11 +1007,11 @@ return{
 		actual = vardump{a = 2, b = 3, w = {2, 3, [4] = 4}}
 
 		unitTest:assertEquals(actual, [[{
-    a = 2, 
-    b = 3, 
+    a = 2,
+    b = 3,
     w = {
-        2, 
-        3, 
+        2,
+        3,
         [4] = 4
     }
 }]])
@@ -1020,19 +1020,19 @@ return{
 
 		unitTest:assertEquals(actual, [[{
     ["2bx"] = {
-        2, 
-        3, 
+        2,
+        3,
         4
-    }, 
-    abc = 2, 
+    },
+    abc = 2,
     be2 = 3
 }]])
 
 		actual = vardump{name = "john", age = 20, [false] = 5}
 
 		unitTest:assertEquals(actual, [[{
-    [false] = 5, 
-    age = 20, 
+    [false] = 5,
+    age = 20,
     name = "john"
 }]])
 
@@ -1042,13 +1042,13 @@ return{
 		unitTest:assertEquals(vardump(actual), expected)
 
 		actual = vardump{
-			name = "john", 
-			age = 20, 
+			name = "john",
+			age = 20,
 			phrase = "Phrase 1. \nPhrase 2."
 		}
 
 		expected = [[{
-    age = 20, 
+    age = 20,
     name = "john",
     phrase = "Phrase 1. \nPhrase 2."
 }]]
@@ -1056,7 +1056,7 @@ return{
 		unitTest:assertEquals(actual, expected, 1)
 
         local t = {x = true}
-        
+
         local y = (vardump(t))
 
 		unitTest:assertEquals(y, [[{
@@ -1068,23 +1068,23 @@ return{
         y = (vardump(cs))
 
 		unitTest:assertEquals(y, [[CellularSpace{
-    cObj_ = "TeCellularSpace(0x7fad0da0e840)", 
+    cObj_ = "TeCellularSpace(0x7fad0da0e840)",
     cells = {
         Cell{
-            cObj_ = "TeCell(0x7fad0da19a00)", 
-            parent = "CellularSpace", 
-            past = {}, 
-            x = 0, 
+            cObj_ = "TeCell(0x7fad0da19a00)",
+            parent = "CellularSpace",
+            past = {},
+            x = 0,
             y = 0
         }
-    }, 
-    load = "function: 0x7fad0a66aff0", 
-    source = "virtual", 
-    xMax = 0, 
-    xMin = 0, 
-    xdim = 1, 
-    yMax = 0, 
-    yMin = 0, 
+    },
+    load = "function: 0x7fad0a66aff0",
+    source = "virtual",
+    xMax = 0,
+    xMin = 0,
+    xdim = 1,
+    yMax = 0,
+    yMin = 0,
     ydim = 1
 }]], 45)
 
@@ -1096,8 +1096,8 @@ return{
 		tab.c = tab
 
 		unitTest:assertEquals(vardump(tab), [[{
-    a = 2, 
-    b = 3, 
+    a = 2,
+    b = 3,
     c = "<copy of another table above>"
 }]])
 
@@ -1109,29 +1109,29 @@ return{
 		}
 
 		unitTest:assertEquals(vardump(tab2), [[{
-    {}, 
+    {},
     "<copy of another table above>"
 }]])
 	end,
-	forEachRecursiveDirectory = function(unitTest) 
+	forEachRecursiveDirectory = function(unitTest)
 		local count = 0
-		
+
 		forEachRecursiveDirectory(packageInfo("base").path.."data", function(file)
 			count = count + 1
 			unitTest:assertType(file, "File")
 		end)
-		
+
 		unitTest:assertEquals(count, 58)
-		
+
 		local dir = Directory(packageInfo("base").path.."data")
 		count = 0
-		
+
 		forEachRecursiveDirectory(dir, function(file)
 			count = count + 1
 			unitTest:assertType(file, "File")
 		end)
-		
-		unitTest:assertEquals(count, 58)		
+
+		unitTest:assertEquals(count, 58)
 	end
 }
 

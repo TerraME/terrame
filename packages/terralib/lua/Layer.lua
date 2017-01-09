@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ local function adaptsTerraLibInfo(data)
 	local layer = data.project.layers[data.name]
 	local info = data.project.terralib:getLayerInfo(data.project, layer)
 	info.type = nil
-	
+
 	forEachElement(info, function(idx, value)
 		if idx == "url" then
 			idx = "service"
@@ -44,8 +44,8 @@ end
 
 local function addCellularLayer(self, data)
 	verifyNamedTable(data)
-	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source", 
-	                                  "clean", "host", "port", "user", "password", "database", "table", 
+	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source",
+	                                  "clean", "host", "port", "user", "password", "database", "table",
 									  "index"})
 
 	mandatoryTableArgument(data, "input", "string")
@@ -54,37 +54,37 @@ local function addCellularLayer(self, data)
 	if type(data.file) == "string" then
 		data.file = File(data.file)
 	end
-	
-	if data.source == nil then		
+
+	if data.source == nil then
 		if data.file == nil then
 			if data.database then
 				data.source = "postgis"
 			else
 				customError("At least one of the following arguments must be used: 'file', 'source', or 'database'.")
-			end	
+			end
 		else
 			local source = data.file:extension()
-			data.source = source	
+			data.source = source
 		end
 	end
 
 	mandatoryTableArgument(data, "source", "string")
-		
+
 	if belong(data.source, {"tif", "shp", "geojson"}) then
 		mandatoryTableArgument(data, "file", "File")
 
 		if data.source ~= data.file:extension() then
 			customError("File '"..data.file.."' not match to source '"..data.source.."'.")
 		end
-	end		
-		
+	end
+
 	if not isValidSource(data.source) then
 		customError("Source '"..data.source.."' is invalid.")
-	end		
-		
+	end
+
 	if not self.layers[data.input] then
 		customError("Input layer '"..data.input.."' was not found.")
-	end		
+	end
 
 	if self.layers[data.name] then
 		customError("Layer '"..data.name.."' already exists in the Project.")
@@ -97,26 +97,26 @@ local function addCellularLayer(self, data)
 			mandatoryTableArgument(data, "file", "File")
 			defaultTableValue(data, "clean", false)
 			defaultTableValue(data, "index", true)
-			
+
 			if repr == "raster" then
 				verifyUnnecessaryArguments(data, {"clean", "input", "name", "project",
 												"resolution", "file", "source", "index"})
 				data.box = true
 			else
 				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project", 
+				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project",
 												"resolution", "file", "source", "index"})
 			end
-				
+
 			if data.file:exists() then
 				if data.clean then
 					data.file:delete()
 				else
 					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
 				end
-			end			
-			
-			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, 
+			end
+
+			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution,
 													data.file, not data.box, data.index)
 		end,
 		geojson = function()
@@ -139,57 +139,57 @@ local function addCellularLayer(self, data)
 			mandatoryTableArgument(data, "user", "string")
 			mandatoryTableArgument(data, "password", "string")
 			mandatoryTableArgument(data, "database", "string")
-				
+
 			defaultTableValue(data, "table", string.lower(data.name))
 			defaultTableValue(data, "host", "localhost")
 			defaultTableValue(data, "port", 5432)
 			defaultTableValue(data, "encoding", "CP1252")
-				
+
 			data.port = tostring(data.port)
-			
+
 			if repr == "raster" then
 				verifyUnnecessaryArguments(data, {"input", "name", "resolution", "source", "encoding", -- SKIP
-										"project", "host", "port", "user", "password", "database", "table", "project"})		
+										"project", "host", "port", "user", "password", "database", "table", "project"})
 				data.box = true -- SKIP
 			else
 				defaultTableValue(data, "box", false)
 				verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "source", "encoding",
 										"project", "host", "port", "user", "password", "database", "table", "project"})
 			end
-										
+
 			self.terralib:addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data, not data.box)
 		end
 	}
 end
 
-local function addLayer(self, data)	
+local function addLayer(self, data)
 	verifyNamedTable(data)
 	mandatoryTableArgument(data, "name", "string")
 
 	if type(data.file) == "string" then
 		data.file = File(data.file)
 	end
-	
+
 	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "index",
 									"host", "port", "user", "password", "database", "table",
 									"service", "feature"})
-		
-	if data.source == nil then		
+
+	if data.source == nil then
 		if data.file then
 			if not data.file:exists() then
 				customError("File '"..data.file.."' does not exist.")
-			end	
+			end
 
 			data.source = data.file:extension()
 		end
 	end
-		
+
 	mandatoryTableArgument(data, "source", "string")
-			
+
 	if not isValidSource(data.source) then
 		customError("Source '"..data.source.."' is invalid.")
-	end				
-		
+	end
+
 	if belong(data.source, {"tif", "shp", "nc", "asc", "geojson"}) then
 		mandatoryTableArgument(data, "file", "File")
 
@@ -207,7 +207,7 @@ local function addLayer(self, data)
 			mandatoryTableArgument(data, "file", "File")
 			defaultTableValue(data, "index", true)
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index"})
-				
+
 			self.terralib:addShpLayer(self, data.name, data.file, data.index)
 		end,
 		geojson = function()
@@ -216,10 +216,10 @@ local function addLayer(self, data)
 
 			self.terralib:addGeoJSONLayer(self, data.name, data.file) -- SKIP
 		end,
-		tif = function()	
+		tif = function()
 			mandatoryTableArgument(data, "file", "File")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
-			
+
 			self.terralib:addGdalLayer(self, data.name, data.file)
 		end,
 		nc = function()
@@ -239,14 +239,14 @@ local function addLayer(self, data)
 			mandatoryTableArgument(data, "password", "string")
 			mandatoryTableArgument(data, "database", "string")
 			mandatoryTableArgument(data, "table", "string")
-			
+
 			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password", "database", "table", "project"})
-			
+
 			defaultTableValue(data, "table", string.lower(data.name))
 			defaultTableValue(data, "host", "localhost")
 			defaultTableValue(data, "port", 5432)
 			defaultTableValue(data, "encoding", "CP1252")
-				
+
 			data.port = tostring(data.port)
 
 			self.terralib:addPgLayer(self, data.name, data)
@@ -254,9 +254,9 @@ local function addLayer(self, data)
 		wfs = function()
 			mandatoryTableArgument(data, "service", "string")
 			mandatoryTableArgument(data, "feature", "string")
-			
+
 			verifyUnnecessaryArguments(data, {"name", "source", "service", "feature", "project"})
-			
+
 			self.terralib:addWfsLayer(self, data.name, data.service, data.feature)
 		end
 	}
@@ -309,7 +309,7 @@ Layer_ = {
 	-- @tabular layer
 	-- Geometry & Using only geometry & Using attribute of objects with some overlap &
 	-- Using geometry and attribute \
-	-- Points & "count", "distance", "presence" & 
+	-- Points & "count", "distance", "presence" &
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
 	-- "nearest" \
 	-- Lines & "count", "distance", "length", "presence" &
@@ -330,7 +330,7 @@ Layer_ = {
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
-	-- Useful to distribute atributes that represent averages, such as per capita income. 
+	-- Useful to distribute atributes that represent averages, such as per capita income.
 	-- & attribute, layer, select  & area, default, band  \
 	-- "count" & Number of objects that have some overlay with the cell.
 	-- & attribute, layer & \
@@ -344,7 +344,7 @@ Layer_ = {
 	-- the cell, without taking into account their geometric properties. This operation converts the
 	-- output to string. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
-	-- uses the value of the object that has larger coverage. & attribute, layer, select & 
+	-- uses the value of the object that has larger coverage. & attribute, layer, select &
 	-- default, band \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
@@ -375,7 +375,7 @@ Layer_ = {
 	-- "nearest" & The value (quantitative or qualitative) of the nearest object. & attribute,
 	-- layer, select & area \
 	-- @arg data.attribute The name of the new attribute to be created.
-	-- @arg data.area Whether the calculation will be based on the intersection area (true), 
+	-- @arg data.area Whether the calculation will be based on the intersection area (true),
 	-- or the weights are equal for each object with some overlap (false, default value).
 	-- @arg data.default A value that will be used to fill a cell whose attribute cannot be
 	-- computed. For example, when there is no intersection area. Note that this argument is
@@ -415,7 +415,7 @@ Layer_ = {
 
 		local tlib = TerraLib{}
 		local project = self.project
-		
+
 		if type(data.layer) == "string" then
 			data.layer = Layer{
 				project = self.project.file,
@@ -644,17 +644,17 @@ Layer_ = {
 	-- print(vardump(layer:attributes()))
 	attributes = function(self)
 		local propNames = self.project.terralib:getPropertyNames(self.project, self.project.layers[self.name])
-		
+
 		if propNames[0] == "raster" then
 			return nil
 		end
-		
+
 		local luaPropNames = {}
-		
+
 		for i = 0, #propNames do
 			luaPropNames[i + 1] = propNames[i]
 		end
-		
+
 		return luaPropNames
 	end,
 	--- Returns the dummy value of a raster layer. If the layer does not have a raster representation
@@ -662,7 +662,7 @@ Layer_ = {
 	-- bands minus one, if the band is greater than that, it returns an error.
 	-- @arg band The band number.
 	-- @usage -- DONTRUN
-	-- print(layer:dummy(0))	
+	-- print(layer:dummy(0))
 	dummy = function(self, band)
 		return self.project.terralib:getDummyValue(self.project, self.name, band)
 	end,
@@ -672,28 +672,28 @@ Layer_ = {
 	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
 	-- @usage -- DONTRUN
 	-- layer:export({file = "myfile.shp", overwrite = "true"})
-	-- layer:export({file = "myfile.geojson"})	
-	-- layer:export({file = "myfile.geojson", srid = 4326})	
+	-- layer:export({file = "myfile.geojson"})
+	-- layer:export({file = "myfile.geojson", srid = 4326})
 	export = function(self, data)
 		verifyNamedTable(data)
-		
-		if data.srid then 
+
+		if data.srid then
 			positiveTableArgument(data, "srid")
 		end
-		
+
 		if data.overwrite then
 			defaultTableValue(data, "overwrite", false)
 		end
-		
+
 		if type(data.file) == "string" then
 			data.file = File(data.file)
 		end
 
 		if type(data.file) == "File" then
 			verifyUnnecessaryArguments(data, {"source", "file", "srid", "overwrite"})
-			
+
 			local source = data.file:extension()
-			
+
 			if isValidSource(source) then
 				local toData = {
 					file = tostring(data.file),
@@ -703,24 +703,24 @@ Layer_ = {
 
 				self.project.terralib:saveLayerAs(self.project, self.name, toData, data.overwrite)
 			else
-				invalidFileExtensionError("data", source) 
+				invalidFileExtensionError("data", source)
 			end
 		else
 			mandatoryTableArgument(data, "source", "string")
-			
+
 			if data.source == "postgis" then
 				verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding", "srid", "overwrite"})
-				
+
 				mandatoryTableArgument(data, "user", "string")
 				mandatoryTableArgument(data, "password", "string")
 				mandatoryTableArgument(data, "database", "string")
 				defaultTableValue(data, "host", "localhost")
 				defaultTableValue(data, "port", 5432)
-				defaultTableValue(data, "encoding", "CP1252")		
+				defaultTableValue(data, "encoding", "CP1252")
 				local pgData = data
 				pgData.type = "postgis"
 				pgData.srid = data.srid
-				
+
 				self.project.terralib:saveLayerAs(self.project, self.name, pgData, pgData.overwrite)
 			else
 				customError("It only supports postgis database, use source = \"postgis\".")
@@ -740,10 +740,10 @@ metaTableLayer_ = {
 		return self.project.terralib:getLayerSize(self.project, self.name)
 	end
 }
-	
---- A Layer representing a geospatial dataset stored in a given data source. 
+
+--- A Layer representing a geospatial dataset stored in a given data source.
 -- Each Layer belongs to a Project. It has operations to create new attributes from other Layers.
--- The data of the Layer can be stored in several different sources, such as a database, 
+-- The data of the Layer can be stored in several different sources, such as a database,
 -- a file, or even a web service.
 -- @arg data.project A file name with the TerraView project to be used, or a Project.
 -- @arg data.name A string with the layer name to be used. If the layer already exists and no
@@ -764,7 +764,7 @@ metaTableLayer_ = {
 -- different spatial representations.
 -- Cellular Layers homogeneize the spatial representation of a given
 -- model, making the model simpler and requiring less computational
--- resources. It can be stored in "postgis" or "shp". 
+-- resources. It can be stored in "postgis" or "shp".
 -- & input, resolution, project & box, name, user, port, host, file \
 -- @arg data.host String with the host where the database is stored.
 -- The default value is "localhost".

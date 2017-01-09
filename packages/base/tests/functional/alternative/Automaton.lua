@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ local state1 = State{
 	Jump{
 		function(_, agent)
 			agent.acum = agent.acum + 1
-			if agent.cont < MAX_COUNT then 
+			if agent.cont < MAX_COUNT then
 				agent.cont = agent.cont + 1
 				return true
 			end
@@ -45,13 +45,13 @@ local state2 = State{
 	Jump{
 		function(_, agent)
 			agent.acum = agent.acum + 1
-			if agent.cont < MAX_COUNT then 
+			if agent.cont < MAX_COUNT then
 				agent.cont = agent.cont + 1
 				return true
 			end
 			if agent.cont == MAX_COUNT then agent.cont = 0 end
 			return false
-		end, 
+		end,
 		target = "seco"
 	}
 }
@@ -62,7 +62,7 @@ return{
 			at1 = Automaton{
 				id = 15,
 				it = Trajectory{
-					target = cs, 
+					target = cs,
 					select = function(cell)
 						local x = cell.x - 5
 						local y = cell.y - 5
@@ -92,7 +92,7 @@ return{
 	add = function(unitTest)
 		local at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -113,7 +113,7 @@ return{
 
 		at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -135,7 +135,7 @@ return{
 	execute = function(unitTest)
 		local at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -156,7 +156,7 @@ return{
 
 		at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -182,7 +182,7 @@ return{
 			a:getState("abc")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "abc"))
-	
+
 		error_func = function()
 			a:getState(-2)
 		end
@@ -191,7 +191,7 @@ return{
 	notify = function(unitTest)
 		local at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -213,7 +213,7 @@ return{
 	setId = function(unitTest)
 		local at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -237,10 +237,10 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
-	setTrajectoryStatus = function(unitTest)	
+	setTrajectoryStatus = function(unitTest)
 		local at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5

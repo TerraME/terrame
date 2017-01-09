@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -29,22 +29,22 @@ return {
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
-		
+
 		File(proj.file):deleteIfExists()
-		
+
 		tl:createProject(proj, {})
 
 		local layerName1 = "SampaGeoJson"
 		local layerFile1 = filePath("test/sampa.geojson", "terralib")
-		tl:addGeoJSONLayer(proj, layerName1, layerFile1)	
+		tl:addGeoJSONLayer(proj, layerName1, layerFile1)
 
 		-- TIF
 		local toData = {}
 		toData.file = "geojson2tif.tif"
-		toData.type = "tif"		
-		
+		toData.type = "tif"
+
 		local overwrite = true
-		
+
 		local geojson2tifError = function()
 			tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		end
@@ -54,7 +54,7 @@ return {
 		toData.file = "geojson2shp.shp"
 		toData.type = "shp"
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		
+
 		-- POSTGIS
 		local host = "localhost"
 		local port = "5432"
@@ -62,7 +62,7 @@ return {
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
-		local tableName = "sampa"	
+		local tableName = "sampa"
 
 		local pgData = {
 			type = "postgis",
@@ -72,25 +72,25 @@ return {
 			password = password,
 			database = database,
 			table = tableName, -- it is used only to drop
-			encoding = encoding	
-		}		
-		
+			encoding = encoding
+		}
+
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-				
+
 		-- OVERWRITE
-		overwrite = false		
-			
+		overwrite = false
+
 		local overwriteShpError = function()
 			tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		end
 		unitTest:assertError(overwriteShpError,  "The file 'geojson2shp.shp' already exists.")
-		
+
 		local overwritePgError = function()
 			tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		end
 		unitTest:assertError(overwritePgError, "The table 'ogrgeojson' already exists in postgis database 'postgis_22_sample'.")
-		
-		tl:dropPgTable(pgData)		
+
+		tl:dropPgTable(pgData)
 		File(toData.file):delete()
 		proj.file:delete()
 	end

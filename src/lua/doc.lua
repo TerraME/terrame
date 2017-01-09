@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -42,6 +42,7 @@ _Gtme.ignoredFile = function(fname)
 		".shp.xml",
 		".cpg",
 		".qix",
+		".tme",
 		".lua"
 	}
 
@@ -108,7 +109,7 @@ local function getProjects(package, doc_report)
 	local tl = getPackage("terralib")
 	local createdFiles = {}
 
-	function processLayer(idx, value)	
+	function processLayer(idx, value)
 		local layer = tl.Layer{
 			project = filePath(currentProject, package),
 			name = idx
@@ -149,7 +150,7 @@ local function getProjects(package, doc_report)
 
 		if createdFiles[data.file] then
 			printError("File '"..data.file.."' is created more than once.")
-			doc_report.projects = doc_report.projects + 1	
+			doc_report.projects = doc_report.projects + 1
 		else
 			createdFiles[data.file] = true
 		end
@@ -173,7 +174,7 @@ local function getProjects(package, doc_report)
 		fill = function(self, data)
 			if not self.file then return nil end
 
-			if not layers[self.file] then 
+			if not layers[self.file] then
 				layers[self.file] = {attributes = {}}
 			end
 
@@ -182,7 +183,7 @@ local function getProjects(package, doc_report)
 			if data.area then
 				description = description.." (weighted by area) "
 			end
-			
+
 			description = description.." from layer \""..data.layer.."\""
 
 			if data.band or data.select then
@@ -225,7 +226,7 @@ local function getProjects(package, doc_report)
 
 	Layer = function(data)
 		if not data.file then return end
-			
+
 		if data.resolution then
 			local mfile = data.file
 
@@ -235,7 +236,7 @@ local function getProjects(package, doc_report)
 
 			if createdFiles[mfile:name()] then
 				printError("File '"..mfile:name().."' is created more than once.")
-				doc_report.projects = doc_report.projects + 1	
+				doc_report.projects = doc_report.projects + 1
 			else
 				createdFiles[mfile:name()] = true
 			end
@@ -257,13 +258,13 @@ local function getProjects(package, doc_report)
 				description = description.."."
 			}
 
-			if not layers[data.file] then 
+			if not layers[data.file] then
 				tl.Layer{
 					project = data.project,
 					name = data.name
 				}
 
-				layers[data.file] = 
+				layers[data.file] =
 				{
 					file = {data.file},
 					summary = "Automatically created file with "..description..
@@ -279,7 +280,7 @@ local function getProjects(package, doc_report)
 		setmetatable(data, mtLayer)
 		return data
 	end
-	
+
 	sessionInfo().mode = "quiet"
 	printNote("Processing lua files")
 	forEachFile(packageInfo(package).data, function(file)
@@ -288,13 +289,13 @@ local function getProjects(package, doc_report)
 
 			xpcall(function() dofile(tostring(file)) end, function(err)
 				printError(_Gtme.traceback(err))
-				doc_report.projects = doc_report.projects + 1	
+				doc_report.projects = doc_report.projects + 1
 			end)
 
 			clean()
 		end
 	end)
-	
+
 	local output = {}
 	local allLayers = {}
 
@@ -335,7 +336,7 @@ local function getProjects(package, doc_report)
 	clean()
 
 	import = oldImport
-	
+
 	return output
 end
 
@@ -543,7 +544,7 @@ function _Gtme.executeDoc(package)
 					return
 				end
 
-				local csv 
+				local csv
 
 				local result, err = pcall(function() csv = filePath(value.file[1], package):readTable(value.separator) end)
 
@@ -626,7 +627,7 @@ function _Gtme.executeDoc(package)
 				local cs = CellularSpace{
 					layer = layer
 				}
-				
+
 				forEachElement(value.attributes, function(idx, mvalue)
 					mvalue.type = type(cs.cells[1][idx])
 				end)
@@ -704,7 +705,7 @@ function _Gtme.executeDoc(package)
 			end)
 		end)
 
-		forEachOrderedElement(df, function(_, mvalue)	
+		forEachOrderedElement(df, function(_, mvalue)
 			if _Gtme.ignoredFile(mvalue) then
 				if filesdocumented[mvalue] == nil then
 					filesdocumented[mvalue] = 1
@@ -928,7 +929,7 @@ function _Gtme.executeDoc(package)
 			else
 				images[value.image] = images[value.image] + 1
 			end
-		end	
+		end
 	end)
 
 
@@ -946,7 +947,7 @@ function _Gtme.executeDoc(package)
 		forEachOrderedElement(value, function(midx)
 			if belong(midx, {"__len", "__tostring", "__concat"}) then return end -- TODO: think about this kind of function
 
-			if not result.files[idx] or not result.files[idx].functions[midx] and 
+			if not result.files[idx] or not result.files[idx].functions[midx] and
 			  (not result.files[idx].models or not result.files[idx].models[midx]) then
 				printError("Function "..midx.." is not documented")
 				doc_report.undoc_functions = doc_report.undoc_functions + 1

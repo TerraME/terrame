@@ -322,7 +322,7 @@ id     string [env]
 		env:createPlacement{name = "house"}
 		env:createPlacement{strategy = "uniform", name = "stay"}
 		env:createPlacement{strategy = "void", name = "workingplace"}
-			
+
 		local count_house = 0
 		local count_stay = 0
 		local count_wplace = 0

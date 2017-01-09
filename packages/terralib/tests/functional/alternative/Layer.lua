@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ return{
 			file = projFile:name(true),
 			clean = true,
 			deforestation = filePath("test/sampa.shp", "terralib"),
-		}			
+		}
 		end
 
 		local layerName = "any"
@@ -73,7 +73,7 @@ return{
 			}
 		end
 		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
-		
+
 		--unitTest:assertFile(projFile:name(true)) -- SKIP #TODO(#1242)
 		projFile:deleteIfExists()
 
@@ -165,7 +165,7 @@ return{
 		unitTest:assertError(inconsistentExtension, "File '"..filePath0.."' does not match to source '"..source.."'.")
 
 		File(projName):deleteIfExists()
-		
+
 		projName = "amazonia.tview"
 
 		proj = Project{
@@ -191,7 +191,7 @@ return{
 				resolution = 5e4
 			}
 		end
-		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", 123))	
+		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", 123))
 
 		local attrResolutionNonNumber = function()
 			Layer{
@@ -251,11 +251,11 @@ return{
 			name = layerName1,
 			file = filePath("test/sampa.shp", "terralib")
 		}
-		
+
 		local shp1 = "setores_cells.shp"
-		
+
 		File(shp1):deleteIfExists()
-		
+
 		local clName1 = "Setores_Cells"
 
 		Layer{
@@ -330,7 +330,7 @@ return{
 			name = "cbers",
 			file = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		}
-		
+
 		local attrBoxNonBoolean = function()
 			Layer{
 				project = proj,
@@ -342,7 +342,7 @@ return{
 			}
 		end
 		unitTest:assertError(attrBoxNonBoolean, incompatibleTypeMsg("box", "boolean", 123))
-		
+
 		local boxDefaultError = function()
 			Layer{
 				project = proj,
@@ -353,7 +353,7 @@ return{
 				file = "sampabox.shp"
 			}
 		end
-		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))	
+		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))
 
 		File(projName):deleteIfExists()
 		File(shp1):deleteIfExists()
@@ -852,8 +852,8 @@ return{
 			name = localidades,
 			file = filePath("Localidades_pt.shp", "terralib")
 		}
-		
-		local cW = customWarning 
+
+		local cW = customWarning
 		customWarning = function() return end
 
 	if sessionInfo().system ~= "mac" then -- TODO(#1448)
@@ -876,7 +876,7 @@ return{
 		customWarning = cW
 
 		-- RASTER TESTS ----------------------------------------------------------------
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)	
+	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local layerName3 = "Desmatamento"
 
 		Layer{
@@ -916,7 +916,7 @@ return{
 		end
 		unitTest:assertError(bandNegative, positiveArgumentMsg("band", -1, true)) -- SKIP
 
-		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT) 
+		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT)
 		-- local layerNotIntersect = function()
 			-- cl:fill{
 				-- attribute = "attr",

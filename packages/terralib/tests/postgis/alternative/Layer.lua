@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -61,10 +61,10 @@ return {
 
 		local tl = TerraLib{}
 		tl:copyLayer(proj1, layerName1, data)
-		
+
 		host = nil
 		port = nil
-		
+
 		local layerName2 = "SampaDB"
 
 		Layer{
@@ -375,7 +375,7 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP 
+		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
 	end
 
@@ -396,7 +396,7 @@ return {
 		unitTest:assertError(tableNotExists, "Is not possible add the Layer. The table '"..tableWrong.."' does not exist.")
 
 		File(projName):deleteIfExists()
-		
+
 		projName = "amazonia.tview"
 
 		File(projName):deleteIfExists()
@@ -417,7 +417,7 @@ return {
 
 		local clName1 = "Sampa_Cells"
 		local tName1 = "add_cellslayer_alternative"
-		
+
 		host = "localhost"
 		port = "5432"
 		user = "postgres"
@@ -733,7 +733,7 @@ return {
 			}
 		end
 		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 188) -- #1303
-		
+
 		nonuser = "usernotexists"
 		userNotExists = function()
 			Layer{
@@ -769,10 +769,10 @@ return {
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
 	end
-		
+
 		host = "localhost"
 		port = "5432"
-		
+
 		local pgData = {
 			type = "POSTGIS",
 			host = host,
@@ -783,7 +783,7 @@ return {
 			table = tName1,
 			encoding = encoding
 		}
-		
+
 		tl = TerraLib{}
 		tl:dropPgTable(pgData)
 
@@ -820,21 +820,21 @@ return {
 		if File(projName):exists() then
 			File(projName):deleteIfExists()
 		end
-		
+
 		-- SPATIAL INDEX TEST
 		proj = Project{
 			file = projName,
 			clean = true,
 			author = "Avancini",
 			title = "The Amazonia"
-		}		
-		
+		}
+
 		Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("test/sampa.shp", "terralib")
-		}		
-		
+		}
+
 		local indexUnnecessary = function()
 			Layer{
 				project = proj,
@@ -850,7 +850,7 @@ return {
 			}
 		end
 		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index"))
-		
+
 		proj.file:delete()
 		-- // SPATIAL INDEX TEST
 	end,
@@ -861,36 +861,36 @@ return {
 			file = projName,
 			clean = true
 		}
-		
+
 		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
-	
+
 		local layerName1 = "setores"
 		local layer1 = Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath1
 		}
-		
+
 		local overwrite = true
-		
+
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		
+
 		local pgData = {
 			source = "postgi",
 			user = user,
 			password = password,
 			database = database,
 			overwrite = overwrite
-		}		
-		
+		}
+
 		local pgSourceError = function()
 			layer1:export(pgData)
 		end
 		unitTest:assertError(pgSourceError, "It only supports postgis database, use source = \"postgis\".")
-		
+
 		proj.file:deleteIfExists()
-	end	
+	end
 }
 

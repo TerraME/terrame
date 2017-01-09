@@ -99,9 +99,9 @@ return {
 
 		t:run(15)
 
-		unitTest:assertEquals(counter, 4) 
-		unitTest:assertEquals(t.events[1].time, 19) 
-		unitTest:assertEquals(t.events[1].period, 5) 
+		unitTest:assertEquals(counter, 4)
+		unitTest:assertEquals(t.events[1].time, 19)
+		unitTest:assertEquals(t.events[1].period, 5)
 		unitTest:assertEquals(t.events[1].priority, 4)
 	end,
 	addReplacement = function(unitTest)
@@ -259,7 +259,7 @@ time    number [-inf]
 
 		-- different priorities
 		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
-		local timeMemory = 0 -- memory of time test variable 
+		local timeMemory = 0 -- memory of time test variable
 		unitTest:assertEquals(orderToken, 0)
 		local clock1 = Timer{
 			Event{start = 0, action = function(event)
@@ -267,7 +267,7 @@ time    number [-inf]
 				unitTest:assert(orderToken <= 1)
 				orderToken = 1
 			end},
-			Event{priority = 1, action = function(event) 
+			Event{priority = 1, action = function(event)
 				unitTest:assertEquals(event:getTime(), timeMemory)
 				unitTest:assertEquals(1, orderToken)
 
@@ -283,7 +283,7 @@ time    number [-inf]
 		timer = Timer{
 			Event{action = function(event)
 				result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
-        	end},
+			end},
 			Event{period = 2, action = function(event)
 				result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
 			end},
@@ -312,7 +312,7 @@ time 4 event 1 priority 0
 				cont = cont + 1
 			end}
 		}
-	
+
 		t:run(-5)
 		unitTest:assertEquals(cont, 6)
 
@@ -323,7 +323,7 @@ time 4 event 1 priority 0
 				cont = cont + 0.1
 			end}
 		}
-	
+
 		t:run(10)
 		unitTest:assertEquals(cont, t:getTime(), 0.0000000001)
 	end,
@@ -357,7 +357,7 @@ time 4 event 1 priority 0
 			Event{action = function(event)
 				cont = cont + 1
 				unitTest:assertType(event, "Event")
- 
+
 				unitTest:assertEquals(1, event:getPeriod())
 			end},
 			Event{action = function()

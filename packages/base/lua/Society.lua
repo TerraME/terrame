@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -195,14 +195,14 @@ Society_ = {
 	-- each Agent of the Society. The SocialNetworks will change only if the
 	-- modeler add or remove connections explicitly. If false, a SocialNetwork will be
 	-- computed every time the simulation calls Agent:getSocialNetwork(), for
-	-- example when using Utils:forEachConnection(). In this case, if any of the attributes 
+	-- example when using Utils:forEachConnection(). In this case, if any of the attributes
 	-- the SocialNetwork is based on changes then the resulting SocialNetwork might be different.
 	-- For instance, if the SocialNetwork of an Agent is based on its Neighborhood and the Agent
-	-- walks to another Cell, a SocialNetwork not inmemory will also be updated. 
+	-- walks to another Cell, a SocialNetwork not inmemory will also be updated.
 	-- SocialNetworks not inmemory also help the simulation to run with larger datasets,
 	-- as they are not explicitly represented, but they consume more
 	-- time as they need to be built again and again along the simulation.
-	-- Note that not inmemory relations cannot be changed manually (for example by using 
+	-- Note that not inmemory relations cannot be changed manually (for example by using
 	-- SocialNetwork:add()), because the relation is recomputed every time it is needed.
 	-- @arg data.neighborhood A string with the name of the Neighborhood that will be used to
 	-- create the SocialNetwork. The default value is "1".
@@ -236,7 +236,7 @@ Society_ = {
 	-- same Cell the Agent belongs. & &
 	-- name, placement, self, inmemory \
 	-- "erdos" & Create a SocialNetwork with a given number of random connections. This strategy implements
-	-- the algorithm proposed by Erdos and Renyi (1959) "On random graphs I". Publicationes Mathematicae 
+	-- the algorithm proposed by Erdos and Renyi (1959) "On random graphs I". Publicationes Mathematicae
 	-- 6: 290-297 & strategy, quantity & name \
 	-- "function" &
 	-- Create a SocialNetwork according to a filter function applied to each Agent of the Society. & filter &
@@ -314,7 +314,7 @@ Society_ = {
 		end
 
 		switch(data, "strategy"):caseof{
-			probability = function() 
+			probability = function()
 				verifyUnnecessaryArguments(data, {"strategy", "probability", "name", "inmemory", "symmetric"})
 
 				mandatoryTableArgument(data, "probability", "number")
@@ -501,7 +501,7 @@ Society_ = {
 			end
 		}
 
-		if not data.mfunc then return end 
+		if not data.mfunc then return end
 
 		local func = data.mfunc(self, data)
 		local name = data.name
@@ -701,12 +701,12 @@ Society_ = {
 	-- groups = soc:split("gender")
 	-- print(#groups.male) -- can be zero because it comes from an instance
 	-- print(#groups.female) -- also
-	-- 
+	--
 	-- groups2 = soc:split(function(ag)
-	--     if ag.age > 60 then 
-	--         return "old" 
-	--     else 
-	--         return "notold" 
+	--     if ag.age > 60 then
+	--         return "old"
+	--     else
+	--         return "notold"
 	--     end
 	-- end)
 	--
@@ -853,7 +853,7 @@ metaTableSociety_ = {
 -- @arg data.... Any other attribute or function for the Society.
 -- @arg data.instance An Agent with the description of attributes and functions. When using this
 -- argument, each Agent of the Society will have attributes and functions according to the
--- instance. The attributes of the instance will be copyed to the Agent and Society 
+-- instance. The attributes of the instance will be copyed to the Agent and Society
 -- calls Agent:init() for each of its Agents.
 -- Every attribute from the Agent that is a Random will be converted into a Random:sample().
 -- When using this argument, additional functions are also
@@ -885,12 +885,12 @@ metaTableSociety_ = {
 --     run = function() end,
 --     age = Random{min = 1, max = 50, step = 1}
 -- }
--- 
+--
 -- s = Society{
 --     instance = instance,
 --     quantity = 20
 -- }
--- 
+--
 -- s:execute() -- call execute for each agent
 -- s:run() -- call run for each agent
 -- print(s:age()) -- sum of the ages of each agent
@@ -1024,10 +1024,10 @@ function Society(data)
 		else
 			local tlib = terralib.TerraLib{}
 			local dSet = tlib:getOGRByFilePath(tostring(data.file))
-			
+
 			for i = 0, #dSet do
 				data:add(dSet[i])
-			end 
+			end
 		end
 	else
 		mandatoryTableArgument(data, "quantity", "number")

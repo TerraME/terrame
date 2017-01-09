@@ -1,12 +1,13 @@
 scripts/trace-basic.lua:11: attempt to perform arithmetic on a nil value (global 'x')
 Stack traceback:
-    File /Applications/terrame.app/Contents/MacOS/lua/terrame.lua, line 1619, in main chunk
-    File scripts/trace-basic.lua, line 11, in function h
-    File scripts/trace-basic.lua, line 7, in function g
-    File scripts/trace-basic.lua, line 3, in function f
-    File scripts/trace-basic.lua, line 14, in main chunk
+    File '/Applications/terrame.app/Contents/MacOS/lua/terrame.lua', line 1735, in main chunk
+    File 'scripts/trace-basic.lua', line 11, in function h
+    File 'scripts/trace-basic.lua', line 7, in function g
+    File 'scripts/trace-basic.lua', line 3, in function f
+    File 'scripts/trace-basic.lua', line 14, in main chunk
     Internal C file, in function dofile
-    File /Applications/terrame.app/Contents/MacOS/lua/terrame.lua, line 1550, in main chunk
+    File '/Applications/terrame.app/Contents/MacOS/lua/terrame.lua', line 1063, in main chunk
     Internal C file, in function xpcall
-    File /Applications/terrame.app/Contents/MacOS/lua/terrame.lua, line 1570, in function myxpcall
-    File /Applications/terrame.app/Contents/MacOS/lua/terrame.lua, line 1550, in main chunk
+    File '/Applications/terrame.app/Contents/MacOS/lua/terrame.lua', line 1686, in function myxpcall
+    File '/Applications/terrame.app/Contents/MacOS/lua/terrame.lua', line 1063, in function runScript
+    File '/Applications/terrame.app/Contents/MacOS/lua/terrame.lua', line 1669, in main chunk

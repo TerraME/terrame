@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -101,7 +101,7 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Values should be equal, but they have different types (string and number).")
-	
+
 		error_func = function()
 			u:assertEquals(true, false)
 		end
@@ -244,19 +244,19 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", false))
-	
+
 		error_func = function()
 			u:assertSnapshot(ch, "file.bmp", 2)
 		end
 
 		unitTest:assertError(error_func, "Argument #3 should be between 0 and 1, got 2.")
-	
+
 		error_func = function()
 			u:assertSnapshot(ch, "file.bmp", -1)
 		end
 
 		unitTest:assertError(error_func, "Argument #3 should be between 0 and 1, got -1.")
-	
+
 		error_func = function()
 			u:assertSnapshot(ch, "file.bmp")
 		end

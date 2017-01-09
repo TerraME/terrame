@@ -61,7 +61,7 @@ return{
 			build = false
 		}
 		unitTest:assertEquals(0, #g)
-		
+
 		g:filter()
 		unitTest:assertEquals(#nonFooSociety, #g)
 
@@ -111,7 +111,7 @@ return{
 			target = soc1,
 			select = function(ag) return ag.age > 5 end
 		}
-	
+
 		unitTest:assert(#g1 == 2)
 	end,
 	__tostring = function(unitTest)
@@ -148,7 +148,7 @@ select  function
 		g:add(soc.agents[1])
 		g:add(soc.agents[2])
 		g:add(soc.agents[3])
-	
+
 		unitTest:assertEquals(#g, 3)
 	end,
 	clone = function(unitTest)

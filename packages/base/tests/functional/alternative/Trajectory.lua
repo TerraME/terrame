@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -37,11 +37,11 @@ return{
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
- 			traj = Trajectory{
- 				target = cs,
- 				selection = function() return true end
- 			}
- 		end
+			traj = Trajectory{
+				target = cs,
+				selection = function() return true end
+			}
+		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("selection", "select"))
 
 		error_func = function()
@@ -160,12 +160,12 @@ return{
 			trajectory:get("a")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "a"))
-	
+
 		error_func = function()
 			trajectory:get(1, "a")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "a"))
-	
+
 	end,
 	getCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

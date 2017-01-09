@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -123,7 +123,7 @@ return{
 			neigh:isNeighbor()
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
-		
+
 		error_func = function()
 			neigh:isNeighbor(123)
 		end

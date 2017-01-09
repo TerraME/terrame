@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -49,8 +49,8 @@ local function create_ordering(self)
 		end
 	end)
 
-	if count_string > 0 then 
-		table.insert(current_ordering, "string") 
+	if count_string > 0 then
+		table.insert(current_ordering, "string")
 		quantity = quantity + count_string
 	end
 
@@ -64,7 +64,7 @@ local function create_ordering(self)
 		quantity = quantity + count_mandatory
 	end
 
-	if count_table > 0 then 
+	if count_table > 0 then
 		if quantity + count_table > max_buffer then
 			table.insert(ordering, current_ordering)
 			quantity = 0
@@ -106,7 +106,7 @@ local function create_ordering(self)
 			quantity = quantity + qelement + 1 -- (+1 because of the title of the box)
 		end
 	end)
-	
+
 	if count_boolean > 0 then
 		if quantity + count_boolean > max_buffer then
 			table.insert(ordering, current_ordering)
@@ -213,7 +213,7 @@ function _Gtme.configure(self, modelName, package, random)
 	end
 
 
-	-- the first layout will contain a layout with the arguments in the top 
+	-- the first layout will contain a layout with the arguments in the top
 	-- and another with the buttons in the bottom
 	r = r.."ExternalLayout = qt.new_qobject(qt.meta.QVBoxLayout)\n"
 	r = r.."qt.ui.layout_add(Dialog, ExternalLayout)\n"
@@ -249,7 +249,7 @@ function _Gtme.configure(self, modelName, package, random)
 				r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
 				r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
-	
+
 				r = r.."lineEdit"..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n"
 				--r = r.."lineEdit"..value..".minimumSize = {120,28}\n"
@@ -288,7 +288,7 @@ function _Gtme.configure(self, modelName, package, random)
 				if ext then
 					ext = "*"..string.sub(self[value], ext)
 					r = r.."lineEdit"..value..".enabled = false\n"
-					
+
 					r = r.."qt.connect(SelectButton, \"clicked()\", function()\n"..
 						"local fname = qt.dialog.get_open_filename(\"Select File\", \"\", \""..ext.."\")\n"..
 						"if fname ~= \"\" then\n"..
@@ -324,7 +324,7 @@ function _Gtme.configure(self, modelName, package, random)
 				r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
 				r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
-	
+
 				r = r.."lineEdit"..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n"
 
@@ -482,7 +482,7 @@ function _Gtme.configure(self, modelName, package, random)
 						r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
 						r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 						r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
-	
+
 						r = r.."lineEdit"..idx..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
 						r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..idx..value..", "..count..", 1)\n"
 
@@ -497,7 +497,7 @@ function _Gtme.configure(self, modelName, package, random)
 						r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
 						r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 						r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
-	
+
 						r = r.."lineEdit"..idx..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
 						r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..idx..value..", "..count..", 1)\n"
 
@@ -549,7 +549,7 @@ function _Gtme.configure(self, modelName, package, random)
 						if ext then
 							ext = "*"..string.sub(self[idx][value], ext)
 							r = r.."lineEdit"..idx..value..".enabled = false\n"
-					
+
 							r = r.."qt.connect(SelectButton, \"clicked()\", function()\n"..
 								"local fname = qt.dialog.get_open_filename(\"Select File\", \"\", \""..ext.."\")\n"..
 								"if fname ~= \"\" then\n"..
@@ -791,6 +791,27 @@ function _Gtme.configure(self, modelName, package, random)
 		r = r.."\theader = \"\\n\\nif not isLoaded(\\\""..package.."\\\") then  import(\\\""..package.."\\\") end\"\n"
 		r = r.."\tresult = header..result\n"
 		r = r.."\tmfile:close()\n"
+
+		local tme = packageInfo(package).path.."lua/"..modelName..".tme"
+
+		if isFile(tme) then
+			r = r.."\tlocal cObj = TeVisualArrangement()\n"
+			r = r.."\tdisplayFile = \""..tme.."\"\n"
+			r = r.."\tcObj:setFile(displayFile)\n"
+
+			r = r..[[
+			if _Gtme.File(displayFile):exists() then
+				local display = dofile(displayFile)
+
+				_Gtme.forEachElement(display, function(idx, data)
+					cObj:addPosition(idx, data.x, data.y)
+					cObj:addSize(idx, data.width, data.height)
+				end)
+			end]]
+
+		--	r = r.."\tos.execute(\"cp "..tme.." \"..prefix..\".tme\")\n"
+		--	print("\tos.execute(\"cp "..tme.." \"..prefix..\".tme\")\n")
+		end
 	end
 
 	r = r..[[
@@ -807,7 +828,7 @@ function _Gtme.configure(self, modelName, package, random)
 				else
 					merr = merr2
 				end
-			end	
+			end
 		end
 	end
 
@@ -822,13 +843,13 @@ function _Gtme.configure(self, modelName, package, random)
 
 	r = r.."\nend\n\n"
 	r = r.."qt.connect(RunButton, \"clicked()\", mfunction)\n\n"
-	
+
 	r = r.."Dialog:show()\n"
 	r = r.."local result = Dialog:exec()\n\n"
 	-- why not changing to Dialog:show()?
 	-- http://stackoverflow.com/questions/12068317/calling-qapplicationexec-after-qdialogexec
 	r = r.."clean()"
-	
+
 	-- add the lines below for debugging purposes...
 	-- file = io.open(modelName.."-configure.lua", "w")
 	-- file:write(r)

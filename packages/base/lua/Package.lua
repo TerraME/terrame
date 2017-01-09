@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 
 --@header Functions to work with packages in TerraME.
 
---- Return a File storing the full path of a file within a given package. 
+--- Return a File storing the full path of a file within a given package.
 -- The file must be inside the directory data of package.
 -- @arg filename A string with the name of the file.
 -- @arg package A string with the name of the package. As default, it uses base package.
@@ -33,7 +33,7 @@ function filePath(filename, package)
 	if package == nil then package = "base" end
 
 	filename = _Gtme.makePathCompatibleToAllOS(filename)
-	
+
 	local data = packageInfo(package).data
 	local file = File(data..filename)
 
@@ -62,7 +62,7 @@ function filePath(filename, package)
 	end
 end
 
---- Return a table with the files of a package that have a given extension. 
+--- Return a table with the files of a package that have a given extension.
 -- @arg package A string with the name of the package.
 -- @arg extension A string with the extension.
 -- @usage filesByExtension("base", "csv")
@@ -138,7 +138,9 @@ function import(package, reload)
 		end
 
 		if load_sequence then -- SKIP
-			for _, file in ipairs(load_sequence) do
+			forEachOrderedElement(load_sequence, function(_, file)
+				if string.endswith(file, ".tme") then return end
+
 				local mfile = package_path..s.."lua"..s..file
 				if not File(mfile):exists() then -- SKIP
 					customWarning("Cannot open "..mfile..". No such file. Please check "..package_path..s.."load.lua.") -- SKIP
@@ -154,19 +156,21 @@ function import(package, reload)
 
 					count_files[file] = count_files[file] + 1 -- SKIP
 				end
-			end
+			end)
 		end
 
 		for mfile, count in pairs(count_files) do
 			if count == 0 and isFile(package_path.."lua"..s..mfile) then -- SKIP
-				customWarning("File lua"..s..mfile.." is ignored by load.lua.") -- SKIP
+				if not string.endswith(mfile, ".tme") then -- SKIP
+					customWarning("File lua"..s..mfile.." is ignored by load.lua.") -- SKIP
+				end
 			elseif count > 1 then
 				customWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.") -- SKIP
 			end
 		end
 
 		local files = _Gtme.fontFiles(package)
-		forEachElement(files, function(_, file)	
+		forEachElement(files, function(_, file)
 			if not _Gtme.loadedFonts[file] then -- SKIP
 				cpp_loadfont(package_path..s.."font"..s..file) -- SKIP
 				_Gtme.loadedFonts[file] = true -- SKIP
@@ -177,7 +181,7 @@ function import(package, reload)
 			cpp_setdefaultfont() -- SKIP
 		end
 
-		rawset(_G, "font", function(data)	
+		rawset(_G, "font", function(data)
 			_Gtme.fonts[data.name] = data.symbol -- SKIP
 		end)
 
@@ -270,7 +274,7 @@ function getPackage(pname)
 
 			local lf = loadfile(mfile, 't', result)
 
- 			if lf == nil then
+			if lf == nil then
 				collectgarbage() -- SKIP
 				lf = loadfile(mfile, 't', result) -- SKIP
 
@@ -338,14 +342,14 @@ function packageInfo(package)
 			customError("Package '"..package.."' is not installed.")
 		end
 	end
-	
+
 	local file = pkgdirectory.."description.lua"
 
 	if not File(file):exists() then -- SKIP
 		customError("Could not load package '"..package.."'. File 'description.lua' does not exist.") -- SKIP
 	end
-	
-	local result 
+
+	local result
 	xpcall(function() result = _Gtme.include(file) end, function(err)
 		_Gtme.printError("Could not load package '"..package.."': "..err)
 		os.exit(1) -- SKIP

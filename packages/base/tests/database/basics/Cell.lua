@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -41,8 +41,8 @@ return{
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
 			return msg
-		end				
-		
+		end
+
 		local layerName1 = "Brazil"
 
 		terralib.Layer{
@@ -50,13 +50,13 @@ return{
 			name = layerName1,
 			file = filePath("brazilstates.shp", "base")
 		}
-		
+
 		-- SHAPE
 		local shp1 = "brazil_cells.shp"
-		local filePath1 = currentDir()..shp1			
-		
+		local filePath1 = currentDir()..shp1
+
 		File(filePath1):deleteIfExists()
-		
+
 		local clName1 = "Brazil_Cells"
 		terralib.Layer{
 			project = proj,
@@ -65,7 +65,7 @@ return{
 			resolution = 100e3,
 			file = filePath1
 		}
-		
+
 		local cs = CellularSpace{
 			project = projName,
 			layer = clName1,
@@ -124,8 +124,8 @@ return{
 		File(projName):deleteIfExists()
 		File(filePath1):deleteIfExists()
 
-		tl:dropPgTable(pgData)		
-		
+		tl:dropPgTable(pgData)
+
 		customWarning = customWarningBkp
 	end,
 	distance = function(unitTest)
@@ -142,11 +142,11 @@ return{
 			author = author,
 			title = title
 		}
-		
+
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
 			return msg
-		end				
+		end
 
 		local layerName1 = "Brazil"
 
@@ -155,13 +155,13 @@ return{
 			name = layerName1,
 			file = filePath("brazilstates.shp", "base")
 		}
-		
+
 		-- SHAPE
 		local shp1 = "brazil_cells.shp"
-		local filePath1 = currentDir()..shp1			
-		
+		local filePath1 = currentDir()..shp1
+
 		File(filePath1):deleteIfExists()
-		
+
 		local clName1 = "Brazil_Cells"
 		terralib.Layer{
 			project = proj,
@@ -170,21 +170,21 @@ return{
 			resolution = 100e3,
 			file = filePath1
 		}
-		
+
 		local cs = CellularSpace{
 			project = projName,
 			layer = clName1,
 			geometry = true
 		}
-		
+
 		local cell = cs.cells[1]
 		unitTest:assertEquals(cell:distance(cell), 0)
-		
+
 		local othercell = cs.cells[#cs - 1]
 		local dist = cell:distance(othercell)
-		
+
 		unitTest:assertEquals(dist, 4257933.7712088, 1.0e-7)
-		
+
 		-- POSTGIS
 		local clName2 = "Brazil_Cells_PG"
 		local host = "localhost"
@@ -228,16 +228,16 @@ return{
 
 		cell = cs.cells[1]
 		unitTest:assertEquals(cell:distance(cell), 0)
-		
+
 		othercell = cs.cells[#cs - 1]
 		dist = cell:distance(othercell)
-		
+
 		unitTest:assertEquals(dist, 4257933.7712088, 1.0e-7)
-		
+
 		File(projName):deleteIfExists()
 		File(filePath1):deleteIfExists()
 
-		tl:dropPgTable(pgData)	
+		tl:dropPgTable(pgData)
 
 		customWarning = customWarningBkp
 	end

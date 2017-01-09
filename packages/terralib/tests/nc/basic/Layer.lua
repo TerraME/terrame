@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -33,11 +33,11 @@ return {
 				file = projName,
 				clean = true
 			}
-			
+
 			local customWarningBkp = customWarning
 			customWarning = function(msg)
 				return msg
-			end				
+			end
 
 			local layerName1 = "Vegtype_layer"
 
@@ -68,7 +68,7 @@ return {
 
 			File(filePath1):deleteIfExists()
 			File(projName):deleteIfExists()
-			
+
 			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
@@ -88,8 +88,8 @@ return {
 			local customWarningBkp = customWarning
 			customWarning = function(msg)
 				return msg
-			end				
-			
+			end
+
 			local vegType = "Vegtype_layer"
 			local l = Layer {
 				project = proj,
@@ -100,7 +100,7 @@ return {
 			unitTest:assertEquals(l:representation(), "raster") -- SKIP
 
 			File(projName):deleteIfExists()
-			
+
 			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
@@ -120,8 +120,8 @@ return {
 			local customWarningBkp = customWarning
 			customWarning = function(msg)
 				return msg
-			end				
-			
+			end
+
 			local vegType = "Vegtype_layer"
 			local l = Layer {
 				project = proj,
@@ -132,7 +132,7 @@ return {
 			unitTest:assertEquals(l:bands(), 1) -- SKIP
 
 			File(projName):deleteIfExists()
-			
+
 			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP
@@ -148,11 +148,11 @@ return {
 				file = projName,
 				clean = true
 			}
-			
+
 			local customWarningBkp = customWarning
 			customWarning = function(msg)
 				return msg
-			end				
+			end
 
 			local layerName1 = "Vegtype_layer"
 
@@ -174,7 +174,7 @@ srid     number [0.0]
 			-- unitTest:assertFile(projName) -- SKIP #1242
 
 			File(projName):deleteIfExists()
-			
+
 			customWarning = customWarningBkp
 		else
 			unitTest:assert(true) -- SKIP

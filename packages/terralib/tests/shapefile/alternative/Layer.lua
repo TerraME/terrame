@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -28,16 +28,16 @@ return {
 
 		if File(projName):exists() then -- TODO: (#1442)
 			File(projName):delete()
-		end			
-		
+		end
+
 		local proj = Project {
 			file = projName,
 			clean = true
 		}
-		
+
 		-- SPATIAL INDEX TEST
 		local layerName1 = "Setores"
-		
+
 		local indexDefaultError1 = function()
 			Layer{
 				project = proj,
@@ -47,13 +47,13 @@ return {
 			}
 		end
 		unitTest:assertError(indexDefaultError1, defaultValueMsg("index", true))
-			
+
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")		
-		}		
-		
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		}
+
 		local indexDefaultError2 = function()
 			local clName1 = "PA_Cells50x50"
 			Layer{
@@ -69,7 +69,7 @@ return {
 		end
 		unitTest:assertError(indexDefaultError2, defaultValueMsg("index", true))
 		-- // SPATIAL INDEX
-		
+
 		proj.file:delete()
 	end,
 	export = function(unitTest)
@@ -79,22 +79,22 @@ return {
 			file = projName,
 			clean = true
 		}
-		
+
 		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
-	
+
 		local layerName1 = "setores"
 		local layer1 = Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath1
 		}
-			
+
 		local invalidFile = function()
 			layer1:export({file = "invalid.org"})
 		end
 		unitTest:assertError(invalidFile, invalidFileExtensionMsg("data", "org"))
 
 		proj.file:deleteIfExists()
-	end		
+	end
 }
 

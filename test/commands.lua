@@ -1,6 +1,28 @@
 show = false -- show commands
 time = true -- show execution time for each command
 
+unnecessary  = {
+	doc        = {arg = "-doc -color"},
+	sketch     = {arg = "-sketch -color"},
+	version    = {arg = "-version -color"},
+	showdoc    = {arg = "-showdoc -color"},
+	help       = {arg = "-help -color"},
+	configure  = {arg = "-configure model -color"},
+	example    = {arg = "-example tube -color"},
+	examples   = {arg = "-examples -color"},
+	project    = {arg = "-project abc -color"},
+	projects   = {arg = "-projects -color"},
+	build      = {arg = "-build -color"},
+	buildclean = {arg = "-build -clean -color"},
+	install    = {arg = "-install abc.zip -color"},
+	build      = {arg = "-build -color"},
+	check      = {arg = "-check -color"},
+	uninstall  = {arg = "-uninstall -color"},
+	build      = {arg = "-build t.lua -color", package = "terralib"},
+	buildclean = {arg = "-build -clean t.lua -color", package = "terralib"},
+	test       = {arg = "-test t.lua -color"}
+}
+
 test = {
 	onerror        = {arg = "-test", config = "all.lua", package = "onerror"},
 	twoerrors      = {arg = "-test", config = "all.lua", package = "twoerrors"},

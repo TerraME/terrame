@@ -28,8 +28,8 @@ return{
 	Jump = function(unitTest)
 		local j1 = Jump{
 			function(_, cell)
-				if cell.x > 5 then 
-					return true 
+				if cell.x > 5 then
+					return true
 				end
 			end,
 			target = "go"

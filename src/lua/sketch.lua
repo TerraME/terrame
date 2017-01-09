@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -184,7 +184,7 @@ local function verifyData(package, report)
 	end
 
 	local mfile = io.open(datadotlua, "a")
-	
+
 	local tl = getPackage("terralib")
 
 	sessionInfo().mode = "quiet"
@@ -216,9 +216,9 @@ local function verifyData(package, report)
 			_Gtme.printWarning("Adding sketch for data file '"..idx.."'")
 			local str = "data{\n"
 				.."\tfile = \""..idx.."\",\n"
-    			.."\tsummary = \"\",\n"
-    			.."\tsource = \"\",\n"
-    			.."\treference = \"\""
+				.."\tsummary = \"\",\n"
+				.."\tsource = \"\",\n"
+				.."\treference = \"\""
 
 			if extension == "shp" or extension == "geojson" then
 				layer = tl.Layer{
@@ -229,7 +229,7 @@ local function verifyData(package, report)
 
 				counter = counter + 1
 
-    			str = str..",\n\tattributes = {\n"
+				str = str..",\n\tattributes = {\n"
 
 				local attributes = layer:attributes()
 
@@ -247,7 +247,7 @@ local function verifyData(package, report)
 
 				counter = counter + 1
 
-    			str = str..",\n\tattributes = {\n"
+				str = str..",\n\tattributes = {\n"
 
 				local bands = layer:bands()
 				for i = 0, bands - 1 do
@@ -257,7 +257,7 @@ local function verifyData(package, report)
 				str = str.."\t}"
 			end
 
-    		str = str.."\n}\n\n"
+			str = str.."\n}\n\n"
 			mfile:write(str)
 
 			report.created_data = report.created_data + 1
@@ -315,10 +315,10 @@ local function verifyFont(package, report)
 			_Gtme.printWarning("Adding sketch for font file '"..idx.."'")
 			local str = "font{\n"
 				.."\tfile = \""..idx.."\",\n"
-    			.."\tname = \"\",    -- optional\n"
-    			.."\tsummary = \"\",\n"
-    			.."\tsource = \"\",\n"
-    			.."\tsymbol = {}\n"
+				.."\tname = \"\",    -- optional\n"
+				.."\tsummary = \"\",\n"
+				.."\tsource = \"\",\n"
+				.."\tsymbol = {}\n"
 				.."}\n\n"
 			mfile:write(str)
 
