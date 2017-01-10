@@ -686,7 +686,7 @@ end
 
 local function loadGdal(self)
 	local tlib = terralib.TerraLib{}
-	local dSet = tlib:getGdalByFilePath(self.file)
+	local dSet = tlib:getGdalByFilePath(tostring(self.file))
 
 	setRasterCells(self, dSet) -- SKIP
 	self.layer = self.file:name() -- SKIP
