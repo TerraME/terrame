@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -127,7 +127,7 @@ Group_ = {
 	-- group = Group{
 	--     target = soc
 	-- }
-	-- 
+	--
 	-- group:randomize()
 	randomize = function(self)
 		local randomObj = Random()
@@ -157,7 +157,7 @@ Group_ = {
 	--     select = function(agent) return agent.age < 10 end,
 	--     greater = function(a1, a2) return a1.age > a2.age end
 	-- }
-	-- 
+	--
 	-- forEachAgent(group, function(agent)
 	--     agent.age = agent.age + 5
 	-- end)
@@ -232,7 +232,7 @@ metaTableGroup_ = {
 		return #self.agents
 	end,
 	__tostring = _Gtme.tostring
-} 
+}
 
 --- Type that defines an ordered selection over a Society. It inherits Society; therefore
 -- it is possible to apply all functions of such type to a Group. For instance, calling
@@ -241,11 +241,11 @@ metaTableGroup_ = {
 -- @arg data.target The Society over which the Group will take place.
 -- @arg data.select A function (Agent)->boolean indicating whether an Agent of the Society should
 -- belong to the Group. If this function returns anything but false or nil for a given Agent, it
--- will be added to the Group. If this argument is missing, all Agents will be included 
+-- will be added to the Group. If this argument is missing, all Agents will be included
 -- in the Group.
 -- @arg data.random A boolean value indicating that the Group must be shuffled. The Group will be
 -- shuffled every time one calls Group:rebuild() or when the Group is an action of an Event.
--- This argument cannot be combined with argument greater. 
+-- This argument cannot be combined with argument greater.
 -- @arg data.greater A function (Agent, Agent)->boolean to sort the Group. Such function must
 -- return true if the first Agent has priority over the second one. When using this argument,
 -- Group compares each pair of Agents to establish an execution order to be used by

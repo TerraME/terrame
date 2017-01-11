@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -170,7 +170,7 @@ function d(data)
 	if data == nil then data = {} end
 
 	local sizedata = getn(data)
-	if sizedata < 4 then 
+	if sizedata < 4 then
 		local str = "Error: bad arguments in diferential equation constructor \"d{arguments}\". "..
 		"TerraME has found ".. #data.." arguments.\n"..
 		" - the first attribute of a differential equantion must be a function which return a number. "..
@@ -187,7 +187,7 @@ function d(data)
 	end
 
 	if type(data[1]) == "table" then
-		if #data[1] ~= #data[2] then 
+		if #data[1] ~= #data[2] then
 			customError("You should provide the same number of differential equations and initial conditions.")
 		end
 	end
@@ -305,7 +305,7 @@ end
 -- @arg obj A Society, Group, or Cell. Cells need to have a placement in order to execute
 -- this function.
 -- @arg _sof_ A function that takes one single Agent as argument. If some call to it returns
--- false, forEachAgent() stops and does not process any other Agent. 
+-- false, forEachAgent() stops and does not process any other Agent.
 -- This function can optionally get a second argument with a positive number representing the
 -- position of the Agent in the vector of Agents.
 -- @usage ag = Agent{age = Random{min = 0, max = 2}}
@@ -313,7 +313,7 @@ end
 --     instance = ag,
 --     quantity = 5
 -- }
--- 
+--
 -- forEachAgent(soc, function(agent)
 --     agent.age = agent.age + 1
 -- end)
@@ -327,7 +327,7 @@ function forEachAgent(obj, _sof_)
 	end
 
 	local ags = obj.agents
-	if ags == nil then 
+	if ags == nil then
 		customError("Could not get agents from the "..type(obj)..".")
 	end
 	-- forEachAgent needs to be different from the other forEachs because the
@@ -353,7 +353,7 @@ end
 -- the Cell in the vector of Cells. If it returns false when processing a given Cell,
 -- forEachCell() stops and does not process any other Cell.
 -- @usage cellularspace = CellularSpace{xdim = 10}
--- 
+--
 -- forEachCell(cellularspace, function(cell)
 --     cell.water = 0
 -- end)
@@ -429,7 +429,7 @@ end
 -- soc = Society{instance = ag, quantity = 10}
 --
 -- soc:createSocialNetwork{quantity = 3}
--- 
+--
 -- forEachConnection(soc:sample(), function(ag1, ag2)
 --     ag1:message{receiver = ag2}
 -- end)
@@ -584,13 +584,13 @@ local function getFilesRecursively(directory)
 	_Gtme.forEachDirectory(directory, function(dir)
 		for _, v in ipairs(getFilesRecursively(dir)) do
 			table.insert(files, v)
-		end			
+		end
 	end)
- 
+
 	_Gtme.forEachFile(directory, function(file)
 		table.insert(files, file)
 	end)
-	
+
 	return files
 end
 
@@ -613,7 +613,7 @@ function forEachRecursiveDirectory(directory, _sof_)
 			customError("Argument '#1' must be a 'Directory' or 'string' path.")
 		end
 	end
-	
+
 	return forEachElement(getFilesRecursively(dir), function(_, file)
 		if _sof_(file) == false then return false end
 	end)
@@ -638,7 +638,7 @@ end
 --         }
 --     end
 -- }
--- 	
+--
 -- e = Environment{
 --     scenario0 = MyTube{},
 --     scenario1 = MyTube{water = 100},
@@ -655,7 +655,7 @@ function forEachModel(env, _sof_)
 
 	forEachOrderedElement(env, function(idx, value)
 		if isModel(value) then
-			if _sof_(value, idx) == false then return false end 
+			if _sof_(value, idx) == false then return false end
 		end
 	end)
 
@@ -743,13 +743,13 @@ end
 -- @arg _sof_ A function that takes one single Agent as argument. This function is called
 -- once for each agent within a neighbor cell of the current cell where the Agent belongs.
 -- If some call to it returns false, forEachNeighborAgent() stops and does not process
--- any other Agent. 
+-- any other Agent.
 -- @usage ag = Agent{age = Random{min = 0, max = 2}}
 -- soc = Society{
 --     instance = ag,
 --     quantity = 5
 -- }
--- 
+--
 -- cs = CellularSpace{xdim = 5}
 -- cs:createNeighborhood{}
 --
@@ -887,7 +887,7 @@ function forEachOrderedElement(obj, _sof_)
 		if type(k) == "string" then
 			local count = 1
 
-			while count <= #sorder and greaterString(sorder[count], k) do 
+			while count <= #sorder and greaterString(sorder[count], k) do
 				count = count + 1
 			end
 
@@ -926,7 +926,7 @@ end
 --     quantity = 5,
 --     name = "2"
 -- }
--- 
+--
 -- agent = soc:sample()
 -- forEachSocialNetwork(agent, function(idx)
 --     print(idx)
@@ -949,7 +949,7 @@ end
 local config
 
 --- Return a table with the content of the file config.lua, stored in the current directory
--- of the simulation. All the global variables of the file are elements of the returned table. 
+-- of the simulation. All the global variables of the file are elements of the returned table.
 -- Some packages require specific variables in this file in order to be tested or executed.
 -- Additional calls to getConfig will return the same output of the first call even
 -- if the current directory changes along the simulation.
@@ -1109,7 +1109,7 @@ function integrate(attrs)
 		mandatoryTableArgument(attrs, "event", "Event")
 		verify(attrs.a == nil, "Argument 'a' should not be used together with argument 'event'.")
 		verify(attrs.b == nil, "Argument 'b' should not be used together with argument 'event'.")
-		attrs.a = attrs.event:getTime() - attrs.event:getPeriod() 
+		attrs.a = attrs.event:getTime() - attrs.event:getPeriod()
 		attrs.b = attrs.event:getTime()
 	end
 
@@ -1619,7 +1619,7 @@ local function recursiveVardump(o, indent, tables)
 		forEachOrderedElement(o, function(k, v)
 			if k == "parent" then v = type(v) end
 
-			if first == false then s = s .. ", \n" end
+			if first == false then s = s .. ",\n" end
 
 			first = false
 
@@ -1666,7 +1666,7 @@ end
 -- @arg indent A string to be placed in the beginning of each line of the returning string.
 -- @usage vardump{name = "john", age = 20}
 -- -- {
--- --     age = 20, 
+-- --     age = 20,
 -- --     name = "john"
 -- -- }
 function vardump(o, indent)

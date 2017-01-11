@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 return {
 	createProject = function(unitTest)
 		local tl = TerraLib{}
-		
+
 		local proj = {}
 		proj.file = "file.xml"
 		local mandatoryExt = function()
@@ -35,7 +35,7 @@ return {
 	end,
 	openProject = function(unitTest)
 		local tl = TerraLib{}
-		
+
 		local proj = {}
 		local mandatoryExt = function()
 			tl:openProject(proj, "file.xml")
@@ -48,22 +48,22 @@ return {
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
-		
+
 		File(proj.file):deleteIfExists()
-		
+
 		tl:createProject(proj, {})
-		
+
 		local layerName1 = "PA"
 		local layerFile1 = filePath("Localidades_pt.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)	
+		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		local dSet = tl:getDataSet(proj, layerName1)
-		
+
 		local areaError = function()
 			tl:getArea(dSet[0].OGR_GEOMETRY)
 		end
 		unitTest:assertError(areaError, "Geometry should be a polygon to get the area.")
-		
+
 		proj.file:deleteIfExists()
 	end
 }

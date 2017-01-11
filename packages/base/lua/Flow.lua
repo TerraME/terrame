@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 metaTableFlow_ = {__tostring = _Gtme.tostring}
 
 --- A Flow describes the behavior of an automaton or Agent in a given State.
--- @arg data.1st A function(ev, agent, cell), where the arguments are: an Event that 
+-- @arg data.1st A function(ev, agent, cell), where the arguments are: an Event that
 -- activated the Flow, the Automaton or Agent that owns the Flow, and the Cell over which
 -- the Flow will be evaluated.
 -- @usage Flow{function(ev, agent, cell)

@@ -77,7 +77,7 @@ local function calculatePotMixed(cs)
 				countNeigh = countNeigh + 1
 			end
 		end)
-	
+
 		-- find the average deforestation
 		if cell.defor < 1.0 then
 			cell.ave_neigh = cell.ave_neigh / countNeigh

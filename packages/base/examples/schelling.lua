@@ -60,7 +60,7 @@ society = Society {
 	quantity = NAGTS * NDIM * NDIM,
 	unhappy_agents = function(self)
 		if not self.ua then
-			self.ua = Group { 
+			self.ua = Group {
 				target = self,
 				select = function(agent)
 					return agent:isUnhappy()
@@ -110,7 +110,7 @@ timer = Timer{
 			myagent:move(mycell)
 		else
 			return false
-		end 
+		end
 	end},
 	Event{action = map},
 	Event{action = chart}

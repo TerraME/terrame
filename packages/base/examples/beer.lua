@@ -50,7 +50,7 @@ chainAgent = Agent{
 		end
 
 		-- the overall decision
-		-- how many beers will I request according to my [stock] and the [ordered] amount of beer that I could not deliver? 
+		-- how many beers will I request according to my [stock] and the [ordered] amount of beer that I could not deliver?
 		local requested = 0
 		if agent.stock <= 20 then
 			requested = 6 + agent.ordered * 0.05
@@ -125,7 +125,7 @@ manufacturer = Agent{
 }
 
 s = Society{
-	instance = chainAgent, 
+	instance = chainAgent,
 	quantity = NUMBER_OF_AGENTS
 }
 
@@ -137,7 +137,7 @@ g = Group{
 	target = s,
     greater = function(a, b) return a.priority < b.priority end
 }
- 
+
 -- connects the i'th agent to the i+1'th
 last = {}
 forEachAgent(g, function(ag)

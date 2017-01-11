@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ Event_ = {
 	-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
     --     print(event:getTime())
     -- end}
-	-- 
+	--
 	-- time = event:getTime()
 	-- print(time)
 	getTime = function(self)
@@ -56,7 +56,7 @@ Event_ = {
 	-- @arg data.period The new periodicity of the Event.
 	-- @arg data.priority The new priority of the Event.
 	-- @usage event = Event{start = 2, action = function() end}
-	-- 
+	--
 	-- event:config{priority = -1}
 	-- event:config{time = 10, period = 2}
 	config = function(self, data)
@@ -83,7 +83,7 @@ Event_ = {
 	-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
     --     print(event:getTime())
     -- end}
-	-- 
+	--
 	-- period = event:getPeriod()
 	-- print(period)
 	getPeriod = function(self)
@@ -123,7 +123,7 @@ metaTableEvent_ = {
 -- plotting the initial state of the simulation.
 -- @arg data.period A positive number representing the periodicity of the Event.
 -- The default value is 1.
--- @arg data.priority A number with the priority of the Event over 
+-- @arg data.priority A number with the priority of the Event over
 -- other Events. Smaller values have higher priority. The default value depends on the type of its action.
 -- Priorities can also be defined as strings:
 -- @tabular priority
@@ -151,7 +151,7 @@ metaTableEvent_ = {
 -- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
 --     print(event:getTime())
 -- end}
--- 
+--
 -- agent = Agent{
 --     execute = function()
 --         print("executing")
@@ -172,7 +172,7 @@ function Event(data)
 		verifyNamedTable(data)
 	end
 
-	if data.message ~= nil then 
+	if data.message ~= nil then
 		customError("Argument 'message' is deprecated, use 'action' instead.")
 	end
 

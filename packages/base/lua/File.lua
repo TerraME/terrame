@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -469,7 +469,7 @@ metaTableFile_ = {
 --- An abstract representation of a file. Whenever an instance of File is created, it only verifies
 -- whether it is possible to have a file with the given name and if its directory exists
 -- (in case of explicitly specified). It will not stop with an error if the file does not exist.
--- The file is only opened when a read function is called. The file is only created if a 
+-- The file is only opened when a read function is called. The file is only created if a
 -- write function is called.
 -- @arg data.name A string with the file name. This argument is mandatory.
 -- @usage file = File("agents.csv")

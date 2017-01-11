@@ -29,7 +29,7 @@ local state1 = State{
 	Jump{
 		function(_, agent)
 			agent.acum = agent.acum + 1
-			if agent.cont < MAX_COUNT then 
+			if agent.cont < MAX_COUNT then
 				agent.cont = agent.cont + 1
 				return true
 			end
@@ -45,13 +45,13 @@ local state2 = State{
 	Jump{
 		function(_, agent)
 			agent.acum = agent.acum + 1
-			if agent.cont < MAX_COUNT then 
+			if agent.cont < MAX_COUNT then
 				agent.cont = agent.cont + 1
 				return true
 			end
 			if agent.cont == MAX_COUNT then agent.cont = 0 end
 			return false
-		end, 
+		end,
 		target = "seco"
 	}
 }
@@ -61,7 +61,7 @@ return{
 		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -78,7 +78,7 @@ return{
 
 		at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -94,7 +94,7 @@ return{
 		for _, v in pairs(at1) do
 			if type(v) == "State" then
 				count = count + 1
-			end		
+			end
 		end
 		unitTest:assertEquals(0, count)
 	end,
@@ -122,7 +122,7 @@ id     string [MyAutomaton]
 		}
 
 		local it = Trajectory{
-			target = cs, 
+			target = cs,
 			select = function(cell)
 				local x = cell.x - 5
 				local y = cell.y - 5
@@ -136,7 +136,7 @@ id     string [MyAutomaton]
 		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -282,7 +282,7 @@ id     string [MyAutomaton]
 		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -303,7 +303,7 @@ id     string [MyAutomaton]
 		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
@@ -329,7 +329,7 @@ id     string [MyAutomaton]
 		local cs = CellularSpace{xdim = 10}
 		local at1 = Automaton{
 			it = Trajectory{
-				target = cs, 
+				target = cs,
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5

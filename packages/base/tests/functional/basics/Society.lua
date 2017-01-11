@@ -27,7 +27,7 @@
 return {
 	Society = function(unitTest)
 		local singleFooAgent = Agent{}
-	
+
 		local nonFooSociety = Society{
 			instance = singleFooAgent,
 			quantity = 0
@@ -44,7 +44,7 @@ return {
 				self:walk()
 			end
 		}
-		
+
 		local findCounter = 0
 		local nonFooAgent = Agent{
 			name = "nonfoo",
@@ -252,7 +252,7 @@ state_          State
 			instance = predator,
 			quantity = 20
 		}
-	
+
 		forEachAgent(predators, function(ag)
 			unitTest:assertNil(ag:getSocialNetwork())
 		end)
@@ -421,7 +421,7 @@ state_          State
 			instance = predator,
 			quantity = 20
 		}
-	
+
 		predators:createSocialNetwork{probability = 0.05, name = "friends", symmetric = true}
 		predators:createSocialNetwork{quantity = 1, name = "boss", symmetric = true}
 
@@ -487,7 +487,7 @@ state_          State
 		unitTest:assertType(soc:get(1), "Agent")
 
 		unitTest:assertNil(soc.idindex)
-		
+
 		local ag = soc:get(1)
 		unitTest:assertEquals(soc:get(ag.id), ag)
 		unitTest:assertEquals(getn(soc.idindex), 10)

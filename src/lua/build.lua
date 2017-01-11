@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -167,7 +167,7 @@ function _Gtme.buildPackage(package, config, clean)
 	if Directory(pkgDirectory.."examples"):exists() then
 		print("Checking examples")
 		forEachFile(pkgDirectory.."examples", function(file)
-			if not belong(file:extension(), {"lua", ".tme"}) then
+			if not belong(file:extension(), {"lua", "tme"}) then
 				printError("File '"..package..s.."examples"..s..file:name().."' is unnecessary and will be ignored.")
 				file:delete()
 				report.unnecessary_files = report.unnecessary_files + 1
@@ -179,7 +179,7 @@ function _Gtme.buildPackage(package, config, clean)
 
 	print("Checking source code")
 	forEachFile(pkgDirectory..s.."lua", function(file)
-		if file:extension() ~= "lua" then
+		if not belong (file:extension(), {"lua", "tme"}) then
 			printError("File '"..package..s.."lua"..s..file:name().."' is unnecessary and will be ignored.")
 			file:delete()
 			report.unnecessary_files = report.unnecessary_files + 1
@@ -299,11 +299,11 @@ function _Gtme.buildPackage(package, config, clean)
 	end
 
 	os.execute("cp \""..file.."\" \""..currentdir.."\"")
-	
+
 	if _Gtme.sessionInfo().system == "windows" then
-		md5sum = runCommand("md5sum "..file) 
+		md5sum = runCommand("md5sum "..file)
 	elseif runCommand("which md5")[1] then
-		md5sum = runCommand("md5 -q "..file) 
+		md5sum = runCommand("md5 -q "..file)
 	elseif runCommand("which md5sum")[1] then
 		md5sum = runCommand("md5sum "..file)
 	else

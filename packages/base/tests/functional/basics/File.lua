@@ -28,7 +28,7 @@ return{
 		unitTest:assertType(file, "File")
 	end,
 	__concat = function(unitTest)
-    	local f = File("abcd1234")
+		local f = File("abcd1234")
 
 		unitTest:assertEquals(f.." does not exist.", "/abcd1234 does not exist.", 0, true)
 		unitTest:assertEquals("File does not exist: "..f, "File does not exist: /abcd1234", 0, true)

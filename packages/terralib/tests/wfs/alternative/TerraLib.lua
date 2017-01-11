@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -40,15 +40,15 @@ return {
 		local layerName = "WFS-Layer"
 		local url = "http://terrabrasilis.info/redd-pac"
 		local dataset = "reddpac:BAU"
-		
+
 		local invalidUrl = function()
 			tl:addWfsLayer(proj, layerName, url, dataset)
 		end
 		unitTest:assertError(invalidUrl, "The URL 'http://terrabrasilis.info/redd-pac' is invalid.")
-		
+
 		url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
 		dataset = "reddpac:B"
-		
+
 		if tl:isValidWfsUrl(url) then
 			local invalidDataSet = function()
 				tl:addWfsLayer(proj, layerName, url, dataset)

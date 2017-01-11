@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ of this software and its documentation.
 
   \brief
  */
-#define TERRAME_VERSION_STATUS "beta-4.1"
+#define TERRAME_VERSION_STATUS "beta-5"
 
 /*!
   \def TERRAME_VERSION_STRING
@@ -64,7 +64,7 @@ of this software and its documentation.
   \brief This flag is used for versioning the TerraME code. If you have plugins and other tools
          that must check the TerraME version, you can test against this string.
  */
-#define TERRAME_VERSION_STRING "2.0.0-beta-4.1"
+#define TERRAME_VERSION_STRING "2.0.0-beta-5"
 
 /*!
   \def TERRAME_VERSION

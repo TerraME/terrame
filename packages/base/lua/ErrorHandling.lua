@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -89,7 +89,7 @@ function customWarning(msg)
 end
 
 --- Verify the default value of a given attribute of a named table. It adds the attribute
--- with the default value in the table if it does not exist, 
+-- with the default value in the table if it does not exist,
 -- stops with an error (ErrorHandling:incompatibleTypeMsg()) if
 -- the value has a different type, or shows a
 -- warning (ErrorHandling:defaultValueWarning()) if it is equal to the default value.
@@ -274,7 +274,7 @@ end
 -- @usage myFunction = function(mtable)
 --     integerTableArgument(mtable, "value")
 -- end
--- 
+--
 -- _, err = pcall(function() myFunction{value = false} end)
 -- print(err)
 function integerTableArgument(table, attr)
@@ -321,7 +321,7 @@ end
 -- @usage myFunction = function(value)
 --     mandatoryArgument(1, "string", value)
 -- end
--- 
+--
 -- _, err = pcall(function() myFunction(2) end)
 -- print(err)
 function mandatoryArgument(position, mtype, value)
@@ -370,7 +370,7 @@ end
 -- @usage myFunction = function(mtable)
 --     mandatoryTableArgument(mtable, "value", "string")
 -- end
--- 
+--
 -- _, err = pcall(function() myFunction{value = 2} end)
 -- print(err)
 function mandatoryTableArgument(table, attr, mtype)
@@ -401,7 +401,7 @@ end
 -- @usage myFunction = function(value)
 --     optionalArgument(1, "string", value)
 -- end
--- 
+--
 -- _, err = pcall(function() myFunction(2) end)
 -- print(err)
 function optionalArgument(position, mtype, value)
@@ -419,7 +419,7 @@ end
 -- @usage myFunction = function(mtable)
 --     optionalTableArgument(mtable, "value", "string")
 -- end
--- 
+--
 -- _, err = pcall(function() myFunction{value = 2} end)
 -- print(err)
 function optionalTableArgument(table, attr, allowedType)
@@ -484,7 +484,7 @@ end
 -- @usage myFunction = function(mtable)
 --     positiveTableArgument(mtable, "value")
 -- end
--- 
+--
 -- _, err = pcall(function() myFunction{value = -2} end)
 -- print(err)
 function positiveTableArgument(table, attr, zero)
@@ -529,7 +529,7 @@ function resourceNotFoundMsg(attr, path)
 end
 
 --- Print a strict warning. This warning is shown only in the strict mode.
--- If TerraME is executing in the debug mode, it stops the simulation with an error. 
+-- If TerraME is executing in the debug mode, it stops the simulation with an error.
 -- @arg msg A string describing the warning.
 -- @usage -- DONTRUN
 -- strictWarning("warning message")
@@ -574,7 +574,7 @@ function suggestion(value, options)
 			customError("All the names of argument #2 should be string, got '"..type(a).."'.")
 		end
 
-		local d = levenshtein(a, value) 
+		local d = levenshtein(a, value)
 		if d < distance then
 			distance = d
 			word = a
@@ -597,7 +597,7 @@ end
 -- print(str)
 function suggestionMsg(suggestion)
 	local suggestionMsg = ""
-	if suggestion then 
+	if suggestion then
 		suggestionMsg = " Do you mean '"..suggestion.."'?"
 	end
 
@@ -739,7 +739,7 @@ end
 -- @usage myFunction = function(mtable)
 --     verifyNamedTable(mtable)
 -- end
--- 
+--
 -- _, err = pcall(function() myFunction{1, 2, 3} end)
 -- print(err)
 function verifyNamedTable(data)
@@ -766,7 +766,7 @@ end
 -- @usage myFunction = function(mtable)
 --     verifyUnnecessaryArguments(mtable, {"aaa", "bbb", "ccc"})
 -- end
--- 
+--
 -- _, err = pcall(function() myFunction{aaa = 3, value = 2} end)
 -- print(err)
 function verifyUnnecessaryArguments(data, arguments)
@@ -783,7 +783,7 @@ function verifyUnnecessaryArguments(data, arguments)
 		local correctedSuggestions = {}
 		if not belong(value, arguments) then
 			table.insert(notCorrectArguments, value)
-			local moreSimilar = "" 
+			local moreSimilar = ""
 			local moreSimilarDistance = 1000000
 			for j = 1, #arguments do
 				local distance = levenshtein(value, arguments[j])

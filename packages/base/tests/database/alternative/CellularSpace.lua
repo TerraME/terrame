@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -23,95 +23,95 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	CellularSpace = function(unitTest)	
+	CellularSpace = function(unitTest)
 		local error_func = function()
 			cs = CellularSpace{
 				source = "post",
 				layer = "layer"
 			}
 		end
-	
+
 		local options = {
 			asc = true,
- 			csv = true,
+			csv = true,
 			pgm = true,
 			nc = true,
 			geojson = true,
- 			shp = true,
- 			virtual = true,
+			shp = true,
+			virtual = true,
 			tif = true,
 			proj = true
- 		}
- 
+		}
+
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("post", "source", options))
 
- 		error_func = function()
- 			cs = CellularSpace{
-				file = filePath("test/simple-cs.csv", "base"), 
+		error_func = function()
+			cs = CellularSpace{
+				file = filePath("test/simple-cs.csv", "base"),
 				source = "pgm",
 				sep = ";"
 			}
- 		end
- 		unitTest:assertError(error_func, "source and file extension should be the same.")
+		end
+		unitTest:assertError(error_func, "source and file extension should be the same.")
 
 		local pgmFile = filePath("test/error/pgm-invalid-identifier.pgm", "base")
 		error_func = function()
- 			cs = CellularSpace{
+			cs = CellularSpace{
 				file = pgmFile
 			}
- 		end
- 		unitTest:assertError(error_func, "File '"..pgmFile.."' does not contain the PGM identifier 'P2' in its first line.")
+		end
+		unitTest:assertError(error_func, "File '"..pgmFile.."' does not contain the PGM identifier 'P2' in its first line.")
 
 		pgmFile = filePath("test/error/pgm-invalid-size.pgm", "base")
 		error_func = function()
- 			cs = CellularSpace{
+			cs = CellularSpace{
 				file = pgmFile
 			}
- 		end
- 		unitTest:assertError(error_func, "File '"..pgmFile.."' has a diffent size declared: expected '(2, 2)', got '(10, 10)'.")
+		end
+		unitTest:assertError(error_func, "File '"..pgmFile.."' has a diffent size declared: expected '(2, 2)', got '(10, 10)'.")
 
 		pgmFile = filePath("test/error/pgm-invalid-max.pgm", "base")
 		error_func = function()
- 			cs = CellularSpace{
+			cs = CellularSpace{
 				file = pgmFile
 			}
- 		end
- 		unitTest:assertError(error_func, "File '"..pgmFile.."' does not have a maximum value declared.")
- 
- 		error_func = function()
- 			cs = CellularSpace{file = 2, source = "pgm", sep = ";"}
- 		end
- 		unitTest:assertError(error_func, incompatibleTypeMsg("file", "File", 2))
- 
- 		error_func = function()
- 			cs = CellularSpace{file = "abc123.pgm", sep = ";"}
- 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("abc123.pgm")))
-		
+		end
+		unitTest:assertError(error_func, "File '"..pgmFile.."' does not have a maximum value declared.")
+
 		error_func = function()
- 			cs = CellularSpace{
- 				file = "abc123.shp"
- 			}
- 		end
+			cs = CellularSpace{file = 2, source = "pgm", sep = ";"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("file", "File", 2))
+
+		error_func = function()
+			cs = CellularSpace{file = "abc123.pgm", sep = ";"}
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("abc123.pgm")))
+
+		error_func = function()
+			cs = CellularSpace{
+				file = "abc123.shp"
+			}
+		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("abc123.shp")))
 
 		os.execute("touch abc123.shp")
-			
+
 		error_func = function()
- 			cs = CellularSpace{
- 				file = "abc123.shp"
- 			}
- 		end
+			cs = CellularSpace{
+				file = "abc123.shp"
+			}
+		end
 		unitTest:assertError(error_func, "File '"..File("abc123.dbf").."' was not found.")
 
 		File("abc123.shp"):delete()
 
 		error_func = function()
- 			cs = CellularSpace{
- 				file = "abc123.shp",
+			cs = CellularSpace{
+				file = "abc123.shp",
 				xdim = 10
- 			}
- 		end
+			}
+		end
 		unitTest:assertError(error_func, "More than one candidate to argument 'source': 'shp', 'virtual'.")
 
 		error_func = function()
@@ -223,17 +223,17 @@ return{
 			project = proj,
 			layer = clName1
 		}
-		
+
 		local error_func = function()
 			cs:loadNeighborhood()
 		end
 		unitTest:assertError(error_func, tableArgumentMsg())
-		
+
 		error_func = function()
 			cs:loadNeighborhood{}
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("source"))		
-		
+		unitTest:assertError(error_func, mandatoryArgumentMsg("source"))
+
 		error_func = function()
 			cs:loadNeighborhood{source = 123}
 		end
@@ -245,7 +245,7 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg("source", File("neighCabecaDeBoi900x900.gpm")))
 
 		local mfile = filePath("cabecadeboi-neigh.gpm", "base")
-	
+
 		error_func = function()
 			cs:loadNeighborhood{source = mfile, name = 22}
 		end
@@ -253,24 +253,24 @@ return{
 
 		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 		file:deleteIfExists()
-		tl:dropPgTable(pgData)			
-		
+		tl:dropPgTable(pgData)
+
 		-- GAL from shapefile
 		cs = CellularSpace{
 			file = filePath("brazilstates.shp", "base")
-		}		
-		
-		error_func = function()	
+		}
+
+		error_func = function()
 			cs:loadNeighborhood{source = filePath("test/brazil.gal", "base"), che = false}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("che"))		
-		
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("che"))
+
 		mfile = filePath("test/brazil.gal", "base")
 
 		error_func = function()
 			cs:loadNeighborhood{source = mfile}
 		end
-		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: 'brazilstates.shp', GAL file layer: 'mylayer'.")	
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: 'brazilstates.shp', GAL file layer: 'mylayer'.")
 
 		local cs2 = CellularSpace{xdim = 10}
 
@@ -287,7 +287,7 @@ return{
 		error_func = function()
 			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid.teste"}
 		end
-		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))	
+		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))
 
 		error_func = function()
 			local s = sessionInfo().separator
@@ -326,8 +326,8 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cabecadeboi900.shp'.")		
-		
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cabecadeboi900.shp'.")
+
 		local s = sessionInfo().separator
 		mfile = filePath("test/error"..s.."cabecadeboi-neigh-header-invalid.gpm", "base")
 

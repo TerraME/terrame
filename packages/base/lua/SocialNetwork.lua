@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -208,12 +208,12 @@ metaTableSocialNetwork_ = {
 	__tostring = _Gtme.tostring
 }
 
---- SocialNetwork represents relations between A gents. It is a set of pairs (connection, 
+--- SocialNetwork represents relations between A gents. It is a set of pairs (connection,
 -- weight), where connection is an A gent and weight
 -- is a number storing the relation's strength. \
 -- This type is used to create relations from
 -- scratch to be used by Agent:addSocialNetwork(). To create well-established SocialNetworks see
--- Society:createSocialNetwork(). 
+-- Society:createSocialNetwork().
 -- It is recommended that a SocialNetwork should contain only Agents that belong to the same Society,
 -- as it guarantees that all its Agents have unique identifiers.
 -- Calling Utils:forEachConnection()

@@ -77,7 +77,7 @@ return{
 			unitTest:assert(cell.x > 7)
 			unitTest:assert(cell.y > 5)
 			unitTest:assert(cell.y <= orderMemory)
-			orderMemory = cell.y 
+			orderMemory = cell.y
 		end)
 		unitTest:assertEquals(8, cont)
 
@@ -251,7 +251,7 @@ xyz     function
 
 		unitTest:assertEquals(100, #it)
 	end,
-	rebuild = function(unitTest) 
+	rebuild = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
 
 		forEachCell(cs, function(cell)
@@ -348,6 +348,6 @@ xyz     function
 			cont = cont + 1
 		end)
 		unitTest:assertEquals(100, cont)
-	end	
+	end
 }
 

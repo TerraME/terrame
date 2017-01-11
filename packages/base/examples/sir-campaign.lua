@@ -14,7 +14,7 @@ world = Cell{
 	recovered = 0,
 	execute = function(world)
 		world.recovered = world.recovered + world.infected / duration
-		
+
 		local new_infected
 
 		if world.infected >= 1000 then

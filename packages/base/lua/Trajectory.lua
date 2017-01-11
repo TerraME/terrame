@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -144,7 +144,7 @@ Trajectory_ = {
 
 		if type(self.select) == "function" then
 			for i, cell in ipairs(self.parent.cells) do
-				if self.select(cell) then 
+				if self.select(cell) then
 					table.insert(self.cells, cell)
 					self.cObj_:add(i, cell.cObj_)
 				end
@@ -306,7 +306,7 @@ metaTableTrajectory_ = {
 -- included in the Trajectory.
 -- @arg data.random A boolean value indicating that the Trajectory must be shuffled. The Trajectory will be
 -- shuffled every time one calls Trajectory:rebuild() or when the Trajectory is an action of an Event.
--- This argument cannot be combined with argument greater. 
+-- This argument cannot be combined with argument greater.
 -- @arg data.greater A function (Cell, Cell)->boolean to sort the Trajectory. Such function must
 -- return true if the first Cell has priority over the second one. When using this argument,
 -- Trajectory compares each pair of Cells to establish an execution order to be used by
@@ -339,14 +339,14 @@ metaTableTrajectory_ = {
 --         return c.dist < d.dist
 --     end
 -- }
--- 
+--
 -- traj = Trajectory{
 --     target = cs,
 --     greater = function(c, d)
 --         return c.dist < d.dist
 --     end
 -- }
--- 
+--
 -- traj = Trajectory{
 --     target = cs,
 --     build = false

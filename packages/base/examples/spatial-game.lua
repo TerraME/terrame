@@ -43,7 +43,7 @@ cell = Cell{
 	chooseBest = function(self)
 		self.max_payoff = self.payoff
 		self.strat_max_payoff = self.strategy
-	
+
 		forEachNeighbor(self, function(cell, neigh)
 			if neigh.payoff > cell.max_payoff then
 				cell.max_payoff = neigh.payoff

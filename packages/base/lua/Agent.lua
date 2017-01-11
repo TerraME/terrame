@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -137,7 +137,7 @@ Agent_ = {
 	--
 	-- env = Environment{soc, cs}
 	-- env:createPlacement{strategy = "void"}
-	-- 
+	--
 	-- agent = soc:sample()
 	-- agent:enter(cs:sample())
 	-- @see Environment:createPlacement
@@ -147,7 +147,7 @@ Agent_ = {
 		optionalArgument(2, "string", placement)
 		if placement == nil then placement = "placement" end
 
-		if self[placement] then 
+		if self[placement] then
 			if self[placement].cells[1] then
 				customWarning("Agent is already inside of a Cell. Use Agent:move() instead.")
 			end
@@ -203,7 +203,7 @@ Agent_ = {
 	--
 	-- env = Environment{soc, cs}
 	-- env:createPlacement{}
-	-- 
+	--
 	-- agent = soc:sample()
 	-- cell = agent:getCell()
 	getCell = function(self, placement)
@@ -234,7 +234,7 @@ Agent_ = {
 	--
 	-- env = Environment{soc, cs}
 	-- env:createPlacement{}
-	-- 
+	--
 	-- agent = soc:sample()
 	--
 	-- cell = agent:getCells()[1]
@@ -293,7 +293,7 @@ Agent_ = {
 	getStateName = function(self)
 		return self.cObj_:getControlModeName()
 	end,
-	--- Return the status of the Trajectories of the Agent. 
+	--- Return the status of the Trajectories of the Agent.
 	-- This function is useful only when the Agent is described as a State machine.
 	-- @see Agent:setTrajectoryStatus
 	-- @usage -- DONTRUN
@@ -313,7 +313,7 @@ Agent_ = {
 	--         end
 	--     end
 	-- }
-	-- 
+	--
 	-- soc = Society{
 	--     instance = agent,
 	--     quantity = 10
@@ -380,7 +380,7 @@ Agent_ = {
 	-- The efault value is zero (no delay, no synchronization required).
 	-- Whenever a delayed message is received, it comes with an attribute delay equals to true.
 	-- @arg data.... Other arguments are allowed to this function, as the message is a table.
-	-- The receiver will get all the attributes sent plus an attribute called sender. 
+	-- The receiver will get all the attributes sent plus an attribute called sender.
 	-- @usage agent1 = Agent{
 	--     on_message = function(self, message)
 	--         print("Got money:"..message.quantity)
@@ -453,7 +453,7 @@ Agent_ = {
 
 		if self[placement] == nil then
 			valueNotFoundError(2, placement)
-		elseif not self[placement].cells[1] then 
+		elseif not self[placement].cells[1] then
 			customError("Agent should belong to a Cell in order to move().")
 		end
 
@@ -638,7 +638,7 @@ Agent_ = {
 	--
 	-- e = Environment{cs, singleFooAgent}
 	-- e:createPlacement()
-	-- 
+	--
 	-- singleFooAgent:walk()
 	-- singleFooAgent:walk()
 	-- @see Environment:createPlacement

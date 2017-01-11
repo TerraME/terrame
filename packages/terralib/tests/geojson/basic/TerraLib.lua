@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -136,49 +136,49 @@ return {
 		local tl = TerraLib{}
 		local shpPath = filePath("test/sampa.geojson", "terralib")
 		local dSet = tl:getOGRByFilePath(tostring(shpPath))
-		
+
 		unitTest:assertEquals(getn(dSet), 63)
 
 		for i = 0, #dSet do
 			unitTest:assertEquals(dSet[i].FID, i)
 
 			for k, v in pairs(dSet[i]) do
-				unitTest:assert((k == "FID") or (k == "ID") or (k == "NM_MICRO") or 
+				unitTest:assert((k == "FID") or (k == "ID") or (k == "NM_MICRO") or
 								(k == "CD_GEOCODU") or (k == "OGR_GEOMETRY"))
 				unitTest:assertNotNil(v)
 			end
-		end		
-	end,	
+		end
+	end,
 	saveLayerAs = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
-		
+
 		File(proj.file):deleteIfExists()
-		
+
 		tl:createProject(proj, {})
 
 		local layerName1 = "SampaGeoJson"
 		local layerFile1 = filePath("test/sampa.geojson", "terralib")
-		tl:addGeoJSONLayer(proj, layerName1, layerFile1)	
+		tl:addGeoJSONLayer(proj, layerName1, layerFile1)
 
 		-- SHP
 		local toData = {}
 		toData.file = "geojson2shp.shp"
-		toData.type = "shp"		
+		toData.type = "shp"
 		File(toData.file):deleteIfExists()
-		
+
 		local overwrite = true
-		
-		tl:saveLayerAs(proj, layerName1, toData, overwrite)		
+
+		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
-		
+
 		-- OVERWRITE AND CHANGE SRID
 		toData.srid = 4326
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)

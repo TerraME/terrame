@@ -38,7 +38,7 @@ return{
 		unitTest:assertEquals(event:getTime(), 0.5)
 		unitTest:assertEquals(event:getPeriod(), 2)
 		unitTest:assertEquals(event:getPriority(), 1)
-	
+
 		event = Event{start = -1, period = 2, priority = -5.2, action = function() end}
 
 		unitTest:assertEquals(event:getTime(), -1)
@@ -69,7 +69,7 @@ return{
 
 		local c = Cell{
 			execute = function()
-				count = count + 1				
+				count = count + 1
 			end
 		}
 

@@ -32,7 +32,7 @@ return{
 	end,
 	__tostring = function(unitTest)
 		local m = Mandatory("number")
-		
+
 		unitTest:assertEquals(tostring(m), [[value  string [number]
 ]])
 	end

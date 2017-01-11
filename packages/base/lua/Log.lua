@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ metaTableLog_ = {__index = Log_}
 -- @arg data.target An Agent, Cell, CellularSpace, Society.
 -- @arg data.file A string with the file name to be saved. The default value is "result.csv".
 -- @arg data.separator A string with the separator. The default value is ",".
--- @arg data.overwrite A boolean value indicating whether the file should be overwritten. 
+-- @arg data.overwrite A boolean value indicating whether the file should be overwritten.
 -- The default value is true.
 -- @arg data.select A vector of strings with the name of the attributes to be observed.
 -- If it is only a single value then it can also be described as a string.
@@ -171,7 +171,7 @@ function Log(data)
 	else
 		data.mode = "w+"
 	end
-	
+
 	local observerType = 2
 	local observerParams = {}
 	local target = data.target

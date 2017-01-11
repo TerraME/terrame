@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -25,11 +25,11 @@
 return {
 	Layer = function(unitTest)
 		local projName = "layer_postgis_basic.tview" -- TODO: (#1442)
-		
+
 		if File(projName):exists() then
 			File(projName):delete()
-		end	
-		
+		end
+
 		local proj1 = Project{
 			file = projName,
 			clean = true
@@ -52,7 +52,7 @@ return {
 		local database = "postgis_22_sample"
 		local encoding
 		local tableName = "sampa"
-		
+
 		local pgData = {
 			source = "postgis",
 			--host = host,
@@ -76,12 +76,12 @@ return {
 			user = user,
 			password = password,
 			database = database,
-			table = tableName			
-		}	
+			table = tableName
+		}
 
-		unitTest:assertEquals(layer2.name, layerName2)	
+		unitTest:assertEquals(layer2.name, layerName2)
 
-		local layerName3 = "Another_SampaDB" 
+		local layerName3 = "Another_SampaDB"
 
 		local layer3 = Layer{
 			project = proj1,
@@ -92,8 +92,8 @@ return {
 			user = user,
 			password = password,
 			database = database,
-			table = tableName			
-		}		
+			table = tableName
+		}
 
 		unitTest:assert(layer3.name ~= layer2.name)
 		unitTest:assertEquals(layer3.sid, layer2.sid)
@@ -109,18 +109,18 @@ return {
 			
 			-- TerraLib{}:copyLayer(proj1, layerName1, adoData)
 		-- end
-		
-		-- local layerName4 = "SampaAdoDB" 
-		-- local adofilePath = 
+
+		-- local layerName4 = "SampaAdoDB"
+		-- local adofilePath =
 		-- proj1:addLayer{
 			-- source = "access",
 			-- name = layerName4,
 			-- user = user,
 			-- password = password,
 			-- database = database,
-			-- table = tableName			
-		-- }		
-		
+			-- table = tableName
+		-- }
+
 		File(projName):deleteIfExists()
 
 		projName = "cells_setores_2000.tview"
@@ -128,25 +128,25 @@ return {
 		local proj = Project{
 			file = projName,
 			clean = true
-		}		
+		}
 
 		layerName1 = "Sampa"
 		Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("test/sampa.shp", "terralib")
-		}	
-		
+		}
+
 		local clName1 = "Sampa_Cells"
 		local tName1 = "add_cellslayer_basic"
-		
+
 		host = "localhost"
 		port = "5432"
 		user = "postgres"
 		password = "postgres"
 		database = "postgis_22_sample"
 		encoding = "CP1252"
-		
+
 		pgData = {
 			type = "POSTGIS",
 			host = host,
@@ -170,13 +170,13 @@ return {
 			password = password,
 			database = database,
 			table = tName1
-		}	
-	
-		unitTest:assertEquals(l1.name, clName1)		
+		}
+
+		unitTest:assertEquals(l1.name, clName1)
 
 		local clName2 = "Another_Sampa_Cells"
 		local tName2 = "add_cellslayer_basic_another"
-		
+
 		pgData.table = tName2
 		TerraLib{}:dropPgTable(pgData)
 		
@@ -190,13 +190,13 @@ return {
 			password = password,
 			database = database,
 			table = tName2
-		}	
+		}
 
-		unitTest:assertEquals(l2.name, clName2)	
-		
+		unitTest:assertEquals(l2.name, clName2)
+
 		local clName3 = "Other_Sampa_Cells"
 		local tName3 = "add_cellslayer_basic_from_db"
-		
+
 		pgData.table = tName3
 		TerraLib{}:dropPgTable(pgData)
 		
@@ -210,17 +210,17 @@ return {
 			password = password,
 			database = database,
 			table = tName3
-		}	
-	
-		unitTest:assertEquals(l3.name, clName3)		
+		}
 
-		local newDbName = "new_pg_db_30032016"
+		unitTest:assertEquals(l3.name, clName3)
+
+		local newDbName = "new_pg_db_30032017"
 		pgData.database = newDbName
 		TerraLib{}:dropPgDatabase(pgData)
 		pgData.database = database
-		
+
 		local clName4 = "New_Sampa_Cells"
-		
+
 		local layer4 = Layer{
 			project = proj,
 			source = "postgis",
@@ -238,12 +238,12 @@ return {
 		unitTest:assertEquals(layer4.user, user)
 		unitTest:assertEquals(layer4.password, password)
 		unitTest:assertEquals(layer4.database, newDbName)
-		unitTest:assertEquals(layer4.table, string.lower(clName4))		
-		
+		unitTest:assertEquals(layer4.table, string.lower(clName4))
+
 		-- BOX TEST
 		local clSet = TerraLib{}:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 68)
-		
+
 		clName1 = clName1.."_Box"
 		local tName4 = string.lower(clName1)
 		pgData.table = tName4
@@ -265,7 +265,7 @@ return {
 		unitTest:assertEquals(getn(clSet), 104)			
 	
 		File(projName):deleteIfExists()
-		
+
 		pgData.table = tName1
 		TerraLib{}:dropPgTable(pgData)
 		pgData.table = tName2
@@ -293,8 +293,8 @@ return {
 			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
 
-		unitTest:assertEquals(layer1.name, layerName1)	
-		
+		unitTest:assertEquals(layer1.name, layerName1)
+
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
@@ -302,7 +302,7 @@ return {
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 		local tableName = "setores_cells"
-		
+
 		local pgData = {
 			type = "POSTGIS",
 			host = host,
@@ -312,12 +312,12 @@ return {
 			database = database,
 			table = tableName,
 			encoding = encoding
-			
-		}	
-		
+
+		}
+
 		local tl = TerraLib{}
 		tl:dropPgTable(pgData)
-		
+
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
 			project = proj,
@@ -328,7 +328,7 @@ return {
 			user = user,
 			password = password,
 			database = database
-		}			
+		}
 
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
 
@@ -351,8 +351,8 @@ return {
 			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
 
-		unitTest:assertEquals(layer1.name, layerName1)	
-		
+		unitTest:assertEquals(layer1.name, layerName1)
+
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
@@ -360,7 +360,7 @@ return {
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 		local tableName = "setores_cells"
-		
+
 		local pgData = {
 			type = "POSTGIS",
 			host = host,
@@ -370,11 +370,11 @@ return {
 			database = database,
 			table = tableName,
 			encoding = encoding
-		}	
-		
+		}
+
 		local tl = TerraLib{}
 		tl:dropPgTable(pgData)
-		
+
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
 			project = proj,
@@ -384,15 +384,15 @@ return {
 			user = user,
 			password = password,
 			database = database
-		}			
-		
+		}
+
 		local propNames = layer:attributes()
-		
+
 		for i = 1, #propNames do
-			unitTest:assert((propNames[i] == "id") or (propNames[i] == "geom") or 
+			unitTest:assert((propNames[i] == "id") or (propNames[i] == "geom") or
 						(propNames[i] == "col") or (propNames[i] == "row"))
-		end		
-		
+		end
+
 		proj.file:delete()
 		tl:dropPgTable(pgData)
 	end,
@@ -401,39 +401,39 @@ return {
 
 		if File(projName):exists() then -- TODO: (#1442)
 			File(projName):delete()
-		end			
-		
+		end
+
 		local proj = Project {
 			file = projName,
 			clean = true
 		}
-		
+
 		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
-	
+
 		local layerName1 = "setores"
 		local layer1 = Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath1
 		}
-		
+
 		local overwrite = true
-		
+
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local tableName = string.lower("Setores_Censitarios_2000_pol")
-		
+
 		local pgData = {
 			source = "postgis",
 			user = user,
 			password = password,
 			database = database,
 			overwrite = overwrite
-		}		
-		
+		}
+
 		layer1:export(pgData)
-		
+
 		local layerName2 = "setorespg"
 		local layer2 = Layer{
 			project = proj,
@@ -444,57 +444,57 @@ return {
 			database = database,
 			table = tableName
 		}
-		
+
 		local geojson = "setores.geojson"
 		local data1 = {
 			file = geojson,
 			overwrite = overwrite
 		}
-		
+
 		layer2:export(data1)
 		unitTest:assert(File(geojson):exists())
-		
+
 		-- OVERWRITE AND CHANGE SRID
 		data1.srid = 4326
 		layer2:export(data1)
-		
+
 		local layerName3 = "GJ"
 		local layer3 = Layer{
 			project = proj,
 			name = layerName3,
 			file = geojson
-		}		
-		
+		}
+
 		unitTest:assertEquals(layer3.srid, data1.srid)
-		unitTest:assert(layer2.srid ~= data1.srid)		
-		
+		unitTest:assert(layer2.srid ~= data1.srid)
+
 		local shp = "setores.shp"
 		local data2 = {
 			file = shp,
 			overwrite = overwrite
-		}		
-		
+		}
+
 		layer2:export(data2)
 		unitTest:assert(File(shp):exists())
-		
+
 		-- OVERWRITE AND CHANGE SRID
 		data2.srid = 4326
 		layer2:export(data2)
-		
+
 		local layerName4 = "SHP"
 		local layer4 = Layer{
 			project = proj,
 			name = layerName4,
 			file = shp
-		}		
-		
+		}
+
 		unitTest:assertEquals(layer4.srid, data2.srid)
-		unitTest:assert(layer2.srid ~= data2.srid)			
+		unitTest:assert(layer2.srid ~= data2.srid)
 
 		File(geojson):delete()
 		File(shp):delete()
 		proj.file:delete()
-		
+
 		pgData.table = tableName
 		TerraLib{}:dropPgTable(pgData)
 	end

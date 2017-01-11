@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -22,6 +22,12 @@
 --
 -------------------------------------------------------------------------------------------
 
+-- some qt values
+local qtOk = 2 ^ 10
+local qtYes = 2 ^ 14
+local qtNo = 2 ^ 16
+local qtCancel = 2 ^ 22
+
 local comboboxExamples
 local comboboxModels
 local comboboxPackages
@@ -36,6 +42,7 @@ local quitButton
 local runButton
 local dialog
 local oldState
+local filesInCurrentDirectory = {}
 
 local function breakLines(str)
 	local result = ""
@@ -154,7 +161,7 @@ local function configureButtonClicked()
 	if not ok then
 		qt.dialog.msg_critical(res)
 	end
-	
+
 	enableAll()
 end
 
@@ -202,7 +209,7 @@ local function selectPackage()
 			sessionInfo().fullTraceback = true
 			local trace = _Gtme.traceback(err)
 			local merr = "Error: Package '"..comboboxPackages.currentText.."' could not be loaded:\n\n"..trace
-	
+
 			qt.dialog.msg_critical(merr)
 		end)
 	end
@@ -319,6 +326,7 @@ local function installButtonClicked()
 	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
 	cancelButton.text = "Close"
 	qt.connect(cancelButton, "clicked()", function()
+		enableAll()
 		mdialog:done(0)
 	end)
 
@@ -326,7 +334,6 @@ local function installButtonClicked()
 		installButton2.enabled = false
 		installAllButton.enabled = false
 		cancelButton.enabled = false
-		disableAll()
 
 		local mpkgfile = pkgsTab[listPackages.currentRow].file
 		local result, installed = _Gtme.installRecursive(mpkgfile)
@@ -351,7 +358,6 @@ local function installButtonClicked()
 
 			buildComboboxPackages(package)
 			selectPackage()
-			disableAll()
 		else
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
@@ -365,7 +371,6 @@ local function installButtonClicked()
 		installAllButton.enabled = false
 		installButton2.enabled = false
 		cancelButton.enabled = false
-		disableAll()
 
 		local msg = ""
 
@@ -393,7 +398,6 @@ local function installButtonClicked()
 			qt.dialog.msg_information(msg)
 		end
 
-		buildComboboxPackages("base")
 		cancelButton.enabled = true
 	end)
 
@@ -504,10 +508,8 @@ local function installLocalButtonClicked()
 			local msg = "New version ("..newVersion..") is older than current one ("
 				..currentVersion..").".."\nDo you really want to install "
 				.."an older version of package '"..package.."'?"
-			local ok = 1024
-			local cancel = 4194304
 
-			if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
+			if qt.dialog.msg_question(msg, "Confirm?", qtOk + qtCancel, qtCancel) == qtOk then
 				_Gtme.printNote("Removing previous version of package")
 				Directory(packageDir..s..package):delete()
 			else
@@ -543,6 +545,42 @@ local function installLocalButtonClicked()
 end
 
 local function quitButtonClicked()
+	local createdFiles = {}
+
+	forEachFile(".", function(file)
+		if not filesInCurrentDirectory[file:name()] then
+			createdFiles[file:name()] = true
+		end
+	end)
+
+	local countCreated = getn(createdFiles)
+
+	if countCreated > 0 then
+		local msg
+
+		if countCreated == 1 then
+			msg = "The folowing file was created in directory "..currentDir().." while you run TerraME:"
+		else
+			msg = "The folowing files were created in directory "..currentDir().." while you run TerraME:"
+		end
+
+		forEachOrderedElement(createdFiles, function(idx)
+			msg = msg.."\n - "..idx
+		end)
+
+		if countCreated == 1 then
+			msg = msg.."\n\nDo you want to delete it?"
+		else
+			msg = msg.."\n\nDo you want to delete them?"
+		end
+
+		if qt.dialog.msg_question(msg, "Confirm?", qtYes + qtNo, qtNo) == qtYes then
+			forEachElement(createdFiles, function(idx)
+				File(idx):delete()
+			end)
+		end
+	end
+
 	dialog:done(0)
 end
 
@@ -651,6 +689,10 @@ function _Gtme.packageManager()
 
 	qt.ui.layout_add(externalLayout, internalLayout)
 	qt.ui.layout_add(externalLayout, buttonsLayout, 4, 0)
+
+	forEachFile(".", function(file)
+		filesInCurrentDirectory[file:name()] = true
+	end)
 
 	selectPackage()
 	dialog:show()

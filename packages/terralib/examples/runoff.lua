@@ -3,7 +3,7 @@
 -- The Neighborhood of a Cell is composed by its Moore neighbors that
 -- have lower height.
 -- There is an initial rain of 10mm in the highest cells.
--- Each cell then sends its water equally to its neighbors. 
+-- Each cell then sends its water equally to its neighbors.
 
 local init = function(model)
     model.cell = Cell{
@@ -24,7 +24,7 @@ local init = function(model)
                 cell.water = cell.water + cell.past.water
             else
                 forEachNeighbor(cell, function(_, neigh)
-                    neigh.water = neigh.water + cell.past.water / neighbors    
+                    neigh.water = neigh.water + cell.past.water / neighbors
                 end)
             end
         end,
@@ -33,16 +33,16 @@ local init = function(model)
                 return 100000
             else
                 return cell.water
-            end 
+            end
         end
     }
-    
+
     model.cs = CellularSpace{
         file = filePath("cabecadeboi.shp", "terralib"),
         instance = model.cell,
 		geometry = true
     }
-    
+
     model.cs:createNeighborhood{
         strategy = "mxn",
         filter = function(cell, neigh)
@@ -59,7 +59,7 @@ local init = function(model)
         invert = true,
         color = "Grays"
     }
-    
+
     model.map2 = Map{
         target = model.cs,
         select = "water100000",
@@ -68,7 +68,7 @@ local init = function(model)
         slices = 8,
         color = "Blues"
     }
-    
+
     model.timer = Timer{
         Event{action = model.cs},
         Event{action = model.map1},
