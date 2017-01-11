@@ -116,7 +116,7 @@ return {
 		local shp1 = File(clName..".shp")
 
 		shp1:deleteIfExists()
-		
+
 		local resolution = 1
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
@@ -135,9 +135,9 @@ return {
 
 		clName = clName.."_NoMask"
 		local shp2 = File(clName..".shp")
-		
+
 		shp2:deleteIfExists()
-		
+
 		mask = false
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp2, mask)
 
@@ -149,9 +149,9 @@ return {
 		clName = "Sampa_Cells_NOSIDX"
 		local shp3 = File(clName..".shp")
 		local addSpatialIdx = false
-		
+
 		shp3:deleteIfExists()
-		
+
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp3, mask, addSpatialIdx)
 		local qixFile1 = string.gsub(tostring(shp3), ".shp", ".qix")
 		unitTest:assert(not File(qixFile1):exists())
@@ -159,9 +159,9 @@ return {
 		clName = "Sampa_Cells_SIDX"
 		local shp4 = File(clName..".shp")
 		addSpatialIdx = true
-		
+
 		shp4:deleteIfExists()
-		
+
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp4, mask, addSpatialIdx)
 		local qixFile2 = string.gsub(tostring(shp4), ".shp", ".qix")
 		unitTest:assert(File(qixFile2):exists())
@@ -171,7 +171,7 @@ return {
 		shp2:deleteIfExists()
 		shp3:deleteIfExists()
 		shp4:deleteIfExists()
-		
+
 		file:delete()
 	end,
 	attributeFill = function(unitTest)
@@ -205,7 +205,7 @@ return {
 		local resolution = 5e5
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, File(shp[1]), mask)
-		
+
 		local clSet = tl:getDataSet(proj, clName)
 
 		unitTest:assertEquals(getn(clSet), 9)
@@ -943,9 +943,9 @@ return {
 		local resolution = 1
 		local mask = true
 		local cellsShp = File(clName1..".shp")
-		
+
 		cellsShp:deleteIfExists()
-		
+
 		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
 
 		local dSet = tl:getDataSet(proj, clName1)
@@ -969,10 +969,10 @@ return {
 			table.insert(luaTable, dSet[i])
 		end
 
-		local newLayerName = "New_Layer"		
+		local newLayerName = "New_Layer"
 		local nlFile = File(newLayerName..".shp")
 		nlFile:deleteIfExists()
-		
+
 		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1", "attr2", "attr3"})
 
 		local newDSet = tl:getDataSet(proj, newLayerName)
@@ -1028,8 +1028,8 @@ return {
 					unitTest:assertEquals(type(v), "number")
 				end
 			end
-		end			
-		
+		end
+
 		cellsShp:delete()
 		File(newLayerName..".shp"):delete()
 		proj.file:delete()
@@ -1070,9 +1070,9 @@ return {
 		local resolution = 1
 		local mask = true
 		local cellsShp = File(clName1..".shp")
-		
+
 		cellsShp:deleteIfExists()
-		
+
 		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
 
 		local dSet = tl:getDataSet(proj, clName1)
@@ -1086,8 +1086,8 @@ return {
 					unitTest:assertEquals(area, tl:getArea(v), 0.001)
 				end
 			end
-		end			
-		
+		end
+
 		cellsShp:deleteIfExists()
 		proj.file:delete()
 	end,
@@ -1168,7 +1168,7 @@ return {
 		local shp1 = File(clName..".shp")
 
 		shp1:deleteIfExists()
-		
+
 		local resolution = 1
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
@@ -1264,16 +1264,16 @@ return {
 		unitTest:assertEquals(info3.srid, toData.srid)
 
 		File(toData.file):delete()
-		
+
 		-- TODO(#1555)
-		-- POSTGIS 
+		-- POSTGIS
 		-- local host = "localhost"
 		-- local port = "5432"
 		-- local user = "postgres"
 		-- local password = getConfig().password
 		-- local database = "postgis_22_sample"
 		-- local encoding = "CP1252"
-		-- local tableName = "sampa"	
+		-- local tableName = "sampa"
 
 		-- local pgData = {
 			-- type = "postgis", -- it is used only to drop
@@ -1283,23 +1283,23 @@ return {
 			-- password = password,
 			-- database = database,
 			-- table = tableName, -- it is used only to drop
-			-- encoding = encoding	
-		-- }		
-		
+			-- encoding = encoding
+		-- }
+
 		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-		
+
 		-- OVERWRITE
 		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-		
+
 		-- OVERWRITE AND CHANGE SRID
 		-- pgData.srid = 4326
 		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		-- local layerName4 = "PG"
 		-- tl:addPgLayer(proj, layerName4, pgData)
 		-- local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
-		-- unitTest:assertEquals(info4.srid, pgData.srid) -- SKIP		
-		
-		-- tl:dropPgTable(pgData)		
+		-- unitTest:assertEquals(info4.srid, pgData.srid) -- SKIP
+
+		-- tl:dropPgTable(pgData)
 
 		proj.file:delete()
 	end,

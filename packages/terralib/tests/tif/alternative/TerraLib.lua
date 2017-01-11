@@ -42,7 +42,7 @@ return {
 		local shp1 = File(clName..".shp")
 
 		shp1:deleteIfExists()
-		
+
 		local resolution = 60e3
 		local mask = true
 
@@ -112,8 +112,8 @@ return {
 		local resolution = 60e3
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, File(shp[1]), mask)
-	
-		local layerName2 = "Prodes_PA" 
+
+		local layerName2 = "Prodes_PA"
 		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "terralib")
 		tl:addGdalLayer(proj, layerName2, layerFile4)
 

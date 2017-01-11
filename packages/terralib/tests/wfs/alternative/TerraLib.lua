@@ -54,8 +54,8 @@ return {
 				tl:addWfsLayer(proj, layerName, url, dataset)
 			end
 			unitTest:assertError(invalidDataSet, "It was not possible to find data set 'reddpac:B' of type 'WFS'. Layer 'WFS-Layer' does not created.") -- SKIP
-		end		
-		
+		end
+
 		proj.file:delete()
 	end
 }

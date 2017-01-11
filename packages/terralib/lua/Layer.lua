@@ -33,7 +33,7 @@ local function isValidName(name)
 			return false
 		end
 	end
-		
+
 	return true
 end
 
@@ -125,9 +125,9 @@ local function addCellularLayer(self, data)
 				else
 					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
 				end
-			end			
-			
-			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution, 
+			end
+
+			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution,
 											data.file, not data.box, data.index)
 		end,
 		geojson = function()
@@ -208,7 +208,7 @@ local function addLayer(self, data)
 			customError("File '"..data.file.."' does not match to source '"..data.source.."'.")
 		end
 	end
-	
+
 	if not isValidName(data.name) then
 		customError("Layer name '"..data.name.."' is not a valid name. Please, revise special characters or spaces from it.")
 	end
@@ -427,7 +427,7 @@ Layer_ = {
 
 		mandatoryTableArgument(data, "operation", "string")
 		mandatoryTableArgument(data, "attribute", "string")
-		
+
 		if not isValidName(data.attribute) then
 			customError("Attribute name '"..data.attribute.."' is not a valid name. Please, revise special characters or spaces from it.")
 		end

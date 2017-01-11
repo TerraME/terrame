@@ -127,7 +127,7 @@ return {
 		clSet = tl:getDataSet(proj, clName)
 		unitTest:assertEquals(getn(clSet), 160)
 		-- // NO MASK TEST
-	
+
 		-- unitTest:assertFile(tostring(geojson1), 45) -- SKIP TODO(#1596)
 		-- unitTest:assertFile(tostring(geojson2), 45) -- SKIP TODO(#1596)
 		proj.file:delete()
@@ -186,9 +186,9 @@ return {
 		tl:addShpLayer(proj, layerName2, File(toData.file))
 		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
 		unitTest:assertEquals(info2.srid, toData.srid)
-		
+
 		-- TODO(#1555)
-		-- POSTGIS 
+		-- POSTGIS
 		-- local host = "localhost"
 		-- local port = "5432"
 		-- local user = "postgres"
@@ -205,12 +205,12 @@ return {
 			-- password = password,
 			-- database = database,
 			-- table = tableName, -- it is used only to drop
-			-- encoding = encoding	
-		-- }		
-		
+			-- encoding = encoding
+		-- }
+
 		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-		
-		-- OVERWRITE 
+
+		-- OVERWRITE
 		-- tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 
 		-- OVERWRITE AND CHANGE SRID
@@ -220,8 +220,8 @@ return {
 		-- tl:addPgLayer(proj, layerName3, pgData)
 		-- local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
 		-- unitTest:assertEquals(info3.srid, pgData.srid)
-		
-		-- tl:dropPgTable(pgData)		
+
+		-- tl:dropPgTable(pgData)
 
 		File(toData.file):delete()
 		proj.file:delete()

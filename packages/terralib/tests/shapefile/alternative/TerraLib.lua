@@ -48,7 +48,7 @@ return {
 		local clName = "Para_Cells"
 		shp[1] = File(clName..".shp")
 		shp[1]:deleteIfExists()
-		
+
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 60e3
 		local mask = true
@@ -61,9 +61,9 @@ return {
 
 		-- SHAPE OUTPUT
 		-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
-		local presLayerName = clName.."_"..layerName2.."_Presence"		
+		local presLayerName = clName.."_"..layerName2.."_Presence"
 		shp[2] = File(presLayerName..".shp")
-		
+
 		shp[2]:deleteIfExists()
 
 		local operation = "presence"
@@ -87,8 +87,8 @@ return {
 
 		for j = 1, #shp do
 			shp[j]:deleteIfExists()
-		end	
-		
+		end
+
 		proj.file:delete()
 	end,
 	saveLayerAs = function(unitTest)

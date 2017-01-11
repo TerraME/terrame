@@ -67,7 +67,7 @@ return {
 		local shp1 = File(clName..".shp")
 
 		shp1:deleteIfExists()
-		
+
 		local resolution = 2e5
 		local mask = false
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
@@ -252,7 +252,7 @@ return {
 		local shp1 = File(clName..".shp")
 
 		shp1:deleteIfExists()
-		
+
 		local resolution = 2e5
 		local mask = false
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
@@ -261,8 +261,8 @@ return {
 		local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
 
 		unitTest:assertEquals(dist, 3883297.5677895, 1.0e-7) -- SKIP
-		
-		shp1:delete()	
+
+		shp1:delete()
 	else
 		unitTest:assert(true) -- SKIP
 	end

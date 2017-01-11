@@ -103,9 +103,9 @@ return {
 		Layer{
 			project = proj,
 			name = "PA",
-			file = filePath("cabecadeboi.shp", "terralib")		
-		}			
-		
+			file = filePath("cabecadeboi.shp", "terralib")
+		}
+
 		customWarning = customWarningBkp
 		-- // VERIFY SRID
 
@@ -737,10 +737,10 @@ return {
 			name = "PA",
 			file = filePath("test/limitePA_polyc_pol.shp", "terralib"),
 			index = false
-		}	
-	
+		}
+
 		unitTest:assertEquals(layer:projection(), "'SAD69 / Brazil Polyconic', with SRID: 29101.0 (PROJ4: '+proj=poly +lat_0=0 +lon_0=-54 +x_0=5000000 +y_0=10000000 +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
-		
+
 		customWarning = customWarningBkp
 
 		proj.file:delete()

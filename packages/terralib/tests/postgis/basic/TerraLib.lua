@@ -58,12 +58,12 @@ return {
 			password = password,
 			database = database,
 			table = tableName,
-			encoding = encoding	
-		}	
-		
+			encoding = encoding
+		}
+
 		tl:saveLayerAs(proj, layerName1, pgData, true)
-		
-		local layerName2 = "SampaPg"	
+
+		local layerName2 = "SampaPg"
 		tl:addPgLayer(proj, layerName2, pgData)
 
 		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName2])

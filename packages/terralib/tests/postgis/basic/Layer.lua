@@ -43,8 +43,8 @@ return {
 			file = filePath("test/sampa.shp", "terralib")
 		}
 
-		unitTest:assertEquals(layer1.name, layerName1)	
-		
+		unitTest:assertEquals(layer1.name, layerName1)
+
 		local host
 		local port
 		local user = "postgres"
@@ -62,11 +62,11 @@ return {
 			database = database,
 			overwrite = true
 		}
-		
+
 		layer1:export(pgData, true)
-		
-		local layerName2 = "SampaDB"	
-		
+
+		local layerName2 = "SampaDB"
+
 		local layer2 = Layer{
 			project = proj1,
 			source = "postgis",
@@ -97,7 +97,7 @@ return {
 
 		unitTest:assert(layer3.name ~= layer2.name)
 		unitTest:assertEquals(layer3.sid, layer2.sid)
-		
+
 		TerraLib{}:dropPgTable(pgData)
 
 		-- TODO: ADO DON'T WORK (REVIEW)
@@ -105,8 +105,8 @@ return {
 			-- local adoData = {
 				-- type = "ADO",
 				-- file = "D:/terrame/tests/sampa.accdb" --file("sampa.accdb", "fillcell")
-			-- }		
-			
+			-- }
+
 			-- TerraLib{}:copyLayer(proj1, layerName1, adoData)
 		-- end
 
@@ -157,9 +157,9 @@ return {
 			table = tName1,
 			encoding = encoding
 		}
-		
+
 		TerraLib{}:dropPgTable(pgData)
-		
+
 		local l1 = Layer{
 			project = proj,
 			source = "postgis",
@@ -179,7 +179,7 @@ return {
 
 		pgData.table = tName2
 		TerraLib{}:dropPgTable(pgData)
-		
+
 		local l2 = Layer{
 			project = proj,
 			source = "postgis",
@@ -199,7 +199,7 @@ return {
 
 		pgData.table = tName3
 		TerraLib{}:dropPgTable(pgData)
-		
+
 		local l3 = Layer{
 			project = proj,
 			source = "postgis",
@@ -247,8 +247,8 @@ return {
 		clName1 = clName1.."_Box"
 		local tName4 = string.lower(clName1)
 		pgData.table = tName4
-		TerraLib{}:dropPgTable(pgData)	
-		
+		TerraLib{}:dropPgTable(pgData)
+
 		Layer{
 			project = proj,
 			source = "postgis",
@@ -260,21 +260,21 @@ return {
 			password = password,
 			database = database
 		}
-		
+
 		clSet = TerraLib{}:getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 104)			
-	
+		unitTest:assertEquals(getn(clSet), 104)
+
 		File(projName):deleteIfExists()
 
 		pgData.table = tName1
 		TerraLib{}:dropPgTable(pgData)
 		pgData.table = tName2
-		TerraLib{}:dropPgTable(pgData)	
+		TerraLib{}:dropPgTable(pgData)
 		pgData.table = tName3
-		TerraLib{}:dropPgTable(pgData)	
+		TerraLib{}:dropPgTable(pgData)
 		pgData.table = tName4
-		TerraLib{}:dropPgTable(pgData)		
-		pgData.database = newDbName	
+		TerraLib{}:dropPgTable(pgData)
+		pgData.database = newDbName
 		TerraLib{}:dropPgDatabase(pgData)
 	end,
 	projection = function(unitTest)

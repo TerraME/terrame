@@ -57,7 +57,7 @@ return {
 		}
 
 		layer1:export(data)
-		
+
 		local layerName2 = "SampaDB"
 		Layer{
 			project = proj1,
@@ -82,7 +82,7 @@ return {
 			}
 		end
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName2.."' already exists in the Project.")
-			
+
 		TerraLib{}:dropPgTable(data)
 		proj1.layers[layerName2] = nil
 
@@ -775,7 +775,7 @@ return {
 			table = tName1,
 			encoding = encoding
 		}
-		
+
 		TerraLib{}:dropPgTable(pgData)
 
 		Layer{
