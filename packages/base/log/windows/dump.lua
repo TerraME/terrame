@@ -1,17 +1,17 @@
 return{
-    {
-        age = 1,
-        vision = 2,
-        wealth = 10
+    age = {
+        1,
+        3,
+        3
     },
-    {
-        age = 3,
-        vision = 1,
-        wealth = 8
+    vision = {
+        2,
+        1,
+        2
     },
-    {
-        age = 3,
-        vision = 2,
-        wealth = 15
+    wealth = {
+        10,
+        8,
+        15
     }
 }

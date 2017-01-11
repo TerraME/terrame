@@ -76,6 +76,29 @@ local function remove(self, idx)
 	end)
 end
 
+--- Save the DataFrame to a given file.
+-- @arg filename A mandatory string with the file name.
+-- @usage filename = "dump.lua"
+-- df = DataFrame{x = {1}, y = {2}}
+-- df:save(filename)
+--
+-- File(filename):deleteIfExists()
+local function save(self, filename)
+	mandatoryArgument(1, "string", filename)
+
+	local file = File(filename)
+	local stbl = "return"..vardump(self.data)
+	file:write(stbl)
+	file:close()
+end
+
+local DataFrameIndex = {
+	add = add,
+	remove = remove,
+	save = save,
+	type_ = "DataFrame"
+}
+
 metaTableDataFrame_ = {
 	--- Return a row or a column of the DataFrame.
 	-- @arg idx An index. If it is a number this function returns the given row
@@ -102,13 +125,7 @@ metaTableDataFrame_ = {
 		elseif type(idx) == "string" then
 			if self.data[idx] then return self.data[idx] end
 
-			if idx == "add" then
-				return add
-			elseif idx == "remove" then
-				return remove
-			elseif idx == "type_" then
-				return "DataFrame"
-			end
+			return DataFrameIndex[idx]
 		end
 	end,
 	__newindex = function(self, idx, value)
@@ -163,7 +180,8 @@ metaTableDataFrame_ = {
 }
 
 --- A two dimensional table. DataFrames can be accessed by row or by column, independently on the way it was created.
--- @arg data A two dimensional table. It can be a vector of named tables or a named table with whose values are vectors.
+-- @arg data.file A string or a File. It must have extension '.lua'.
+-- @arg data.... Values for the DataFrame. It can be a vector of named tables or a named table with whose values are vectors.
 -- @usage -- named table with vectors
 -- df = DataFrame{
 --     x = {1, 1, 2, 2},
@@ -185,6 +203,24 @@ metaTableDataFrame_ = {
 -- print(df[4].y) -- 2
 function DataFrame(data)
 	mandatoryArgument(1, "table", data)
+
+	if data.file then
+		if type(data.file) == "string" then
+			data.file = File(data.file)
+		end
+
+		mandatoryTableArgument(data, "file", "File")
+
+		verify(data.file:extension() == "lua", "File '"..data.file:name().."' does not have '.lua' extension.")
+		verify(data.file:exists(), resourceNotFoundMsg("file", data.file:name(true)))
+
+		local tbl
+		local ok, merror = pcall(function() tbl = dofile(tostring(data.file)) end)
+		if not ok then customError("Failed to load file "..merror) end
+
+		verify(type(tbl) == "table", "File '"..data.file:name().."' does not contain a Lua table.")
+		return DataFrame(tbl)
+	end
 
 	local df = {}
 

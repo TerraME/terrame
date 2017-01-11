@@ -23,18 +23,48 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	getConfig = function(unitTest)
-		local cf = getConfig()
-		unitTest:assertNil(cf.qwertyuiop)
+	DataFrame = function(unitTest)
+		local error_func = function()
+			DataFrame{file = "dump"}
+		end
+		unitTest:assertError(error_func, "File 'dump' does not have '.lua' extension.")
 
-		local cd = currentDir()
+		local file = File("dump.lua")
 
-		packageInfo().data:setCurrentDir()
+		error_func = function()
+			DataFrame{file = file:name(true)}
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", file:name(true)))
 
-		local cf2 = getConfig()
-		unitTest:assertEquals(cf, cf2)
+		file:write("!!#$@12334")
+		file:close()
+		error_func = function()
+			DataFrame{file = tostring(file)}
+		end
+		unitTest:assertError(error_func, "Failed to load file dump.lua:1: unexpected symbol near '!'", 110)
 
-		cd:setCurrentDir()
+		file = File("dump.lua")
+		file:write("local x = 2")
+		file:close()
+		error_func = function()
+			DataFrame{file = file}
+		end
+		unitTest:assertError(error_func, "File '"..file:name().."' does not contain a Lua table.")
+
+		file:deleteIfExists()
+	end,
+	save = function(unitTest)
+		local df = DataFrame{x = {1}, y = {2}}
+
+		local error_func = function()
+			df:save()
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
+
+		error_func = function()
+			df:save(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end
 }
 
