@@ -240,8 +240,6 @@ function disableGraphics()
 		VisualTable = VisualTable
 	}
 
-
-
 	local setConstructor = function(mtype)
 		local indexFunction = function(_, func)
 			if func == "type_" then return mtype end
