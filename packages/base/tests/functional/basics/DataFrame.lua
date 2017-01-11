@@ -48,6 +48,33 @@ return{
 		unitTest:assertEquals(df[1].x, 1)
 		unitTest:assertEquals(df[3].y, 2)
 	end,
+	add = function(unitTest)
+		local df = DataFrame{
+			{x = 1, y = 1},
+		}
+
+		df:add{x = 5, y = 2}
+		df:add{x = 4, y = 2}
+
+		unitTest:assertEquals(#df, 3)
+		unitTest:assertEquals(df[3].x, 4)
+		unitTest:assertEquals(df.y[2], 2)
+	end,
+	remove = function(unitTest)
+		local df = DataFrame{
+			{x = 1, y = 1},
+			{x = 2, y = 1},
+			{x = 3, y = 2},
+			{x = 4, y = 2},
+			{x = 5, y = 2}
+		}
+
+		unitTest:assertEquals(#df, 5)
+
+		df:remove(3)
+		unitTest:assertEquals(#df, 4)
+		unitTest:assertEquals(df[3].x, 4)
+	end,
 	__index = function(unitTest)
 		local df = DataFrame{
 			{x = 1, y = 1},
@@ -58,15 +85,13 @@ return{
 		}
 
 		unitTest:assertEquals(df[3].y, 2)
-	end,
-	__newindex = function(unitTest)
-		local df = DataFrame{
-			{x = 1, y = 1},
-			{x = 2, y = 1},
-			{x = 3, y = 2},
-			{x = 4, y = 2},
-			{x = 5, y = 2}
-		}
+
+		unitTest:assertNil(df[1].z)
+
+		df[1].z = 2
+
+		unitTest:assertEquals(df[1].z, 2)
+		unitTest:assertEquals(df.z[1], 2)
 
 		unitTest:assertEquals(df[3].y, 2)
 		unitTest:assertEquals(df.y[3], 2)
@@ -80,6 +105,21 @@ return{
 
 		unitTest:assertEquals(df[3].y, 9)
 		unitTest:assertEquals(df.y[3], 9)
+	end,
+	__newindex = function(unitTest)
+		local df = DataFrame{
+			{x = 1, y = 1},
+			{x = 2, y = 1},
+			{x = 3, y = 2},
+			{x = 4, y = 2},
+			{x = 5, y = 2}
+		}
+
+		df.z = {5, 4, 3, 2, 1}
+
+		for i = 1, 5 do
+			unitTest:assertEquals(df[i].z, 6 - i)
+		end
 	end,
 	__len = function(unitTest)
 		local df = DataFrame{

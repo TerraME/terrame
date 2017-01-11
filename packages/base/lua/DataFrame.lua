@@ -24,12 +24,57 @@
 
 local metaTableDataFrameItem_ = {
 	__newindex = function(self, idx, value)
+		if not self.data[idx] then
+			self.data[idx] = {}
+		end
+
 		self.data[idx][self.pos] = value
 	end,
 	__index = function(self, idx)
+		if not self.data[idx] then
+			return nil
+		end
+
 		return self.data[idx][self.pos]
 	end
 }
+
+--- Add a new row.
+-- @arg row A named table with the values of the row to be added.
+-- @usage df = DataFrame{
+--     {x = 1, y = 1}
+-- }
+--
+-- df:add{x = 5, y = 2}
+-- df:add{x = 4, y = 2}
+-- 
+-- print(df[3].x) -- 4
+-- print(df.y[2]) -- 2
+local function add(self, row)
+	forEachElement(row, function(idx, value)
+		table.insert(self.data[idx], value)
+	end)
+end
+
+--- Remove a given row.
+-- @arg idx A number with the position to be removed.
+-- @usage df = DataFrame{
+--     {x = 1, y = 1},
+--     {x = 2, y = 1},
+--     {x = 3, y = 2},
+--     {x = 4, y = 2},
+--     {x = 5, y = 2}
+-- }
+-- 
+-- df:remove(3)
+-- 
+-- print(#df) -- 4
+-- print(df[3].x) -- 4
+local function remove(self, idx)
+	forEachElement(self.data, function(_, value)
+		table.remove(value, idx)
+	end)
+end
 
 metaTableDataFrame_ = {
 	--- Return a row or a column of the DataFrame.
@@ -48,8 +93,6 @@ metaTableDataFrame_ = {
 	--
 	-- print(df.x[1]) -- 6
 	__index = function(self, idx)
-		if idx == "type_" then return "DataFrame" end
-
 		if type(idx) == "number" then
 			local result = {pos = idx, data = self.data}
 
@@ -57,8 +100,19 @@ metaTableDataFrame_ = {
 
 			return result
 		elseif type(idx) == "string" then
-			return self.data[idx]
+			if self.data[idx] then return self.data[idx] end
+
+			if idx == "add" then
+				return add
+			elseif idx == "remove" then
+				return remove
+			elseif idx == "type_" then
+				return "DataFrame"
+			end
 		end
+	end,
+	__newindex = function(self, idx, value)
+		self.data[idx] = value
 	end,
 	--- Return the number of rows in the DataFrame.
 	-- @usage df = DataFrame{

@@ -365,6 +365,7 @@ function _Gtme.executeTests(package, fileName)
 		forEachElement(value.functions, function(midx)
 			if midx == "#"  then midx = "__len"    end
 			if midx == ".." then midx = "__concat" end
+			if midx == "[]" then midx = "__newindex" end
 
 			if type(midx) ~= "string" then return end
 			if testfunctions[idx][midx] == nil then
