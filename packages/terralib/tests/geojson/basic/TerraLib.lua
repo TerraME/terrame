@@ -71,7 +71,7 @@ return {
 		unitTest:assertEquals(layerInfo.name, layerName)
 		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
 		unitTest:assertEquals(layerInfo.type, "OGR")
-		unitTest:assertEquals(layerInfo.rep, "geometry")
+		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
 
 		proj.file:deleteIfExists()
