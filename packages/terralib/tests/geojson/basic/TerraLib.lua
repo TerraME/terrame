@@ -109,7 +109,7 @@ return {
 		unitTest:assertEquals(layerInfo.name, clName)
 		unitTest:assertEquals(layerInfo.file, tostring(geojson1))
 		unitTest:assertEquals(layerInfo.type, "OGR")
-		unitTest:assertEquals(layerInfo.rep, "polygon")
+		unitTest:assertEquals(layerInfo.rep, "geometry")
 		unitTest:assertNotNil(layerInfo.sid)
 
 		-- NO MASK TEST
