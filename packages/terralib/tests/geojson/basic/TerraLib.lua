@@ -109,7 +109,7 @@ return {
 		unitTest:assertEquals(layerInfo.name, clName)
 		unitTest:assertEquals(layerInfo.file, tostring(geojson1))
 		unitTest:assertEquals(layerInfo.type, "OGR")
-		unitTest:assertEquals(layerInfo.rep, "geometry")
+		unitTest:assertEquals(layerInfo.rep, "polygon")
 		unitTest:assertNotNil(layerInfo.sid)
 
 		-- NO MASK TEST
@@ -219,7 +219,7 @@ return {
 		-- local layerName3 = "PG"
 		-- tl:addPgLayer(proj, layerName3, pgData)
 		-- local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
-		-- unitTest:assertEquals(info3.srid, pgData.srid)
+		-- unitTest:assertEquals(info3.srid, pgData.srid) -- SKIP
 
 		-- tl:dropPgTable(pgData)
 
