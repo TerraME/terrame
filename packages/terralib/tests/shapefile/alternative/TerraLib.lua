@@ -46,9 +46,8 @@ return {
 		local shp = {}
 
 		local clName = "Para_Cells"
-		shp[1] = clName..".shp"
-
-		File(shp[1]):deleteIfExists()
+		shp[1] = File(clName..".shp")
+		shp[1]:deleteIfExists()
 
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 60e3
@@ -63,9 +62,9 @@ return {
 		-- SHAPE OUTPUT
 		-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
 		local presLayerName = clName.."_"..layerName2.."_Presence"
-		shp[2] = presLayerName..".shp"
+		shp[2] = File(presLayerName..".shp")
 
-		File(shp[2]):deleteIfExists()
+		shp[2]:deleteIfExists()
 
 		local operation = "presence"
 		local attribute = "presence_truncate"
@@ -87,7 +86,7 @@ return {
 		unitTest:assertError(attributeAlreadyExists, "The attribute 'FID' already exists in the Layer.")
 
 		for j = 1, #shp do
-			File(shp[j]):deleteIfExists()
+			shp[j]:deleteIfExists()
 		end
 
 		proj.file:delete()
