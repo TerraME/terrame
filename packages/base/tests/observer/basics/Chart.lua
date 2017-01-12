@@ -117,8 +117,8 @@ return{
 			select = "value1"
 		}
 
-		unitTest:assertSnapshot(c1, "chart-table-1.bmp", 0.03)
-		unitTest:assertSnapshot(c2, "chart-table-2.bmp", 0.03)
+		unitTest:assertSnapshot(c1, "chart-table-1.bmp", 0.05)
+		unitTest:assertSnapshot(c2, "chart-table-2.bmp", 0.05)
 
 		-- chart observing string values from sets
 		local cell = Cell{
