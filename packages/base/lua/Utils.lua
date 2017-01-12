@@ -487,6 +487,14 @@ function forEachElement(obj, _sof_)
 		incompatibleTypeError(2, "function", _sof_)
 	end
 
+	if type(obj) == "DataFrame" then
+		local rows = obj:rows()
+
+		return forEachOrderedElement(rows, function(idx)
+			if _sof_(idx, obj[idx], "table") == false then return false end
+		end)
+	end
+
 	for k, ud in pairs(obj) do
 		local t = type(ud)
 		if _sof_(k, ud, t) == false then return false end

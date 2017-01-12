@@ -108,7 +108,7 @@ return{
 	end,
 	add = function(unitTest)
 		local df = DataFrame{
-			{x = 1, y = 1},
+			{x = 1, y = 1}
 		}
 
 		df:add{x = 5, y = 2}
@@ -117,6 +117,12 @@ return{
 		unitTest:assertEquals(#df, 3)
 		unitTest:assertEquals(df[3].x, 4)
 		unitTest:assertEquals(df.y[2], 2)
+
+		df:add({x = 9, y = 9}, 4)
+
+		unitTest:assertEquals(#df, 4)
+		unitTest:assertEquals(df[4].x, 9)
+		unitTest:assertEquals(df.y[4], 9)
 	end,
 	columns = function(unitTest)
 		local df = DataFrame{
@@ -210,6 +216,12 @@ return{
 		for i = 1, 5 do
 			unitTest:assertEquals(df[i].z, 6 - i)
 		end
+
+		df[6] = {x = 9, y = 9, z = 9}
+
+		unitTest:assertEquals(#df, 6)
+		unitTest:assertEquals(df[6].x, 9)
+		unitTest:assertEquals(df.y[6], 9)
 	end,
 	__len = function(unitTest)
 		local df = DataFrame{
@@ -233,10 +245,10 @@ return{
 
 		unitTest:assertEquals(tostring(df), [[	x	y
 1	1	1
-1	2	1
-1	3	2
-1	4	2
-1	5	2]])
+2	2	1
+3	3	2
+4	4	2
+5	5	2]])
 
 	unitTest:assertEquals(tostring(df[1]), [[{
     x = 1,

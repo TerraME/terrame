@@ -107,25 +107,15 @@ return{
 		c1:update(1)
 		unitTest:assertSnapshot(c1, "chart-table-xaxis-func.bmp", 0.03)
 
-		local t = {
-			value1 = 2,
-			value2 = 5
+		local t = DataFrame{
+			value1 = {2, 2, 2},
+			value2 = {5, 5, 5}
 		}
-
-		c1 = Chart{
-			target = t
-		}
-
-		c1:update(0)
 
 		local c2 = Chart{
 			target = t,
 			select = "value1"
 		}
-
-		c1:update(1)
-		c1:update(2)
-		c1:update(3)
 
 		unitTest:assertSnapshot(c1, "chart-table-1.bmp", 0.03)
 		unitTest:assertSnapshot(c2, "chart-table-2.bmp", 0.03)
@@ -184,31 +174,34 @@ return{
 		unitTest:assertSnapshot(chart, "chart-function-soc.bmp", 0.1)
 
 		-- chart using data
-		local tab = makeDataTable{
+		local tab = DataFrame{
 			first = 2000,
 			step = 10,
 			demand = {7, 8, 9, 10},
 			limit = {0.1, 0.04, 0.3, 0.07}
 		}
 
-		tab.type_ = "mytab"
-
 		c1 = Chart{
-		    data = tab,
+		    target = tab,
 		    select = "limit",
 		    xAxis = "demand",
 		    color = "blue"
 		}
 
 		c2 = Chart{
-		    data = tab,
+		    target = tab,
 		    select = "demand",
 		    color = "green",
 			pen = "dash"
 		}
 
+		local c3 = Chart{
+			target = tab
+		}
+
 		unitTest:assertSnapshot(c1, "chart-data-1.bmp", 0.05)
 		unitTest:assertSnapshot(c2, "chart-data-2.bmp", 0.05)
+		unitTest:assertSnapshot(c3, "chart-data-3.bmp", 0.05)
 
 		local init = function(model)
 			local contacts = 6
@@ -277,38 +270,36 @@ return{
 		unitTest:assertSnapshot(c, "chart-environment-scenarios-2.png", 0.05)
 	end,
 	getData = function(unitTest)
-		local tab = makeDataTable{
+		local tab = DataFrame{
 			first = 2000,
 			step = 10,
 			demand = {7, 8, 9, 10},
 			limit = {0.1, 0.04, 0.3, 0.07}
 		}
 
-		tab.type_ = "mytab"
-
 		local c1 = Chart{
-			data = tab,
+			target = tab,
 			select = "limit",
 			xAxis = "demand",
 			color = "blue"
 		}
 
 		local data = c1:getData()
-		unitTest:assertType(data, "table")
+		unitTest:assertType(data, "DataFrame")
 		unitTest:assertEquals(data[2000].limit, 0.1)
 		unitTest:assertEquals(data[2010].limit, 0.04)
 		unitTest:assertEquals(data[2020].limit, 0.3)
 		unitTest:assertEquals(data[2030].limit, 0.07)
 
 		local c2 = Chart{
-			data = tab,
+			target = tab,
 			select = "demand",
 			color = "green",
 			pen = "dash"
 		}
 
 		data = c2:getData()
-		unitTest:assertType(data, "table")
+		unitTest:assertType(data, "DataFrame")
 		unitTest:assertEquals(data[2000].demand, 7)
 		unitTest:assertEquals(data[2010].demand, 8)
 		unitTest:assertEquals(data[2020].demand, 9)
@@ -330,7 +321,7 @@ return{
 		c1:update(2)
 
 		data = c1:getData()
-		unitTest:assertType(data, "table")
+		unitTest:assertType(data, "DataFrame")
 		unitTest:assertEquals(data[0].count, 0)
 		unitTest:assertEquals(data[0].mCount_, 1)
 
@@ -339,8 +330,6 @@ return{
 
 		unitTest:assertEquals(data[2].count, 2)
 		unitTest:assertEquals(data[2].mCount_, 3)
-
-		unitTest:assertNil(data[3])
 	end,
 	update = function(unitTest)
 		local world = Cell{

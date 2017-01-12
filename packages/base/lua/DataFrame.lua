@@ -54,20 +54,29 @@ local metaTableDataFrameItem_ = {
 
 --- Add a new row.
 -- @arg row A named table with the values of the row to be added.
+-- @arg idx An optional number describing the position of the row. As
+-- default, this function adds the new row after the last one.
 -- @usage df = DataFrame{
 --     {x = 1, y = 1}
 -- }
 --
 -- df:add{x = 5, y = 2}
 -- df:add{x = 4, y = 2}
--- 
+--
 -- print(df[3].x) -- 4
 -- print(df.y[2]) -- 2
-local function add(self, row)
-	self.rows_[row] = true
-	forEachElement(row, function(idx, value)
-		table.insert(self.data[idx], value)
-	end)
+local function add(self, row, idx)
+	if idx == nil then
+		table.insert(self.rows_, true)
+		forEachElement(row, function(midx, value)
+			table.insert(self.data[midx], value)
+		end)
+	else
+		self.rows_[idx] = true
+		forEachElement(row, function(midx, value)
+			self.data[midx][idx] = value
+		end)
+	end
 end
 
 --- Remove a given row. This function only works properly when the rows are numbered
@@ -80,9 +89,9 @@ end
 --     {x = 4, y = 2},
 --     {x = 5, y = 2}
 -- }
--- 
+--
 -- df:remove(3)
--- 
+--
 -- print(#df) -- 4
 -- print(df[3].x) -- 4
 local function remove(self, idx)
@@ -136,7 +145,7 @@ local DataFrameIndex = {
 metaTableDataFrame_ = {
 	--- Return a row or a column of the DataFrame.
 	-- @arg idx An index. If it is a number this function returns the given row
-	-- as a named table. If it is a string this function returns the 
+	-- as a named table. If it is a string this function returns the
 	-- entire column as a vector.
 	-- @usage df = DataFrame{
 	--     x = {1, 1, 2, 2},
@@ -163,8 +172,11 @@ metaTableDataFrame_ = {
 		end
 	end,
 	__newindex = function(self, idx, value)
-		self.data[idx] = value
-		self.rows_[idx] = true
+		if type(idx) == "string" then
+			self.data[idx] = value
+		else
+			self:add(value, idx)
+		end
 	end,
 	--- Return the number of rows in the DataFrame.
 	-- @usage df = DataFrame{
@@ -180,10 +192,12 @@ metaTableDataFrame_ = {
 		local result = {}
 		local str
 
-		local names = getNames(self.data)
+		local mcolumns = self:columns()
+		local mrows = self:rows()
+
 		local first = true
 
-		forEachElement(names, function(_, value)
+		forEachOrderedElement(mcolumns, function(value)
 			if first then
 				str = "\t"..value
 				first = false
@@ -194,20 +208,20 @@ metaTableDataFrame_ = {
 
 		table.insert(result, str)
 
-		for i = 1, #self do
+		forEachOrderedElement(mrows, function(idx)
 			first = true
 
-			forEachElement(names, function(idx, value)
-				if first then
-					str = idx.."\t"..self.data[value][i]
-					first = false
+			forEachOrderedElement(mcolumns, function(col)
+				if not first then
+					str = str.."\t"..self.data[col][idx]
 				else
-				str = str.."\t"..self.data[value][i]
+					str = idx.."\t"..self.data[col][idx]
+					first = false
 				end
 			end)
 
 			table.insert(result, str)
-		end
+		end)
 
 		return table.concat(result, "\n")
 	end
@@ -287,8 +301,8 @@ function DataFrame(data)
 	end
 
 	local df = {}
-	local rows = {}
-	local columns = {}
+	local mrows = {}
+	local mcolumns = {}
 
 	if #data > 0 then
 		if getn(data) > #data then
@@ -301,13 +315,13 @@ function DataFrame(data)
 			forEachElement(value, function(midx, mvalue)
 				if not df[midx] then
 					df[midx] = {}
-					columns[midx] = true
+					mcolumns[midx] = true
 				end
 
 				df[midx][position] = mvalue
 			end)
 
-			rows[position] = true
+			mrows[position] = true
 			position = position + step
 		end)
 
@@ -331,7 +345,7 @@ function DataFrame(data)
 			length = #value
 			lastColumn = idx
 
-			columns[idx] = true
+			mcolumns[idx] = true
 
 			if first ~= 1 or step ~= 1 then
 				df[idx] = {}
@@ -339,7 +353,7 @@ function DataFrame(data)
 				local position = first
 				for i = 1, length do
 					df[idx][position] = value[i]
-					rows[position] = true
+					mrows[position] = true
 					position = position + step
 				end
 
@@ -351,7 +365,7 @@ function DataFrame(data)
 				df[idx] = value
 
 				for i = 1, #value do
-					rows[i] = true
+					mrows[i] = true
 				end
 			end
 		end)
@@ -361,8 +375,8 @@ function DataFrame(data)
 
 	data = {
 		data = df,
-		rows_ = rows,
-		columns_ = columns
+		rows_ = mrows,
+		columns_ = mcolumns
 	}
 
 	setmetatable(data, metaTableDataFrame_)
