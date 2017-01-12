@@ -71,7 +71,8 @@ local function initializeTerraLib()
 		require("terralib_mod_binding_lua")
 		local binding = terralib_mod_binding_lua
 		binding.TeSingleton.getInstance():initialize()
-		binding.te.plugin.PluginManager.getInstance():clear()
+		binding.InitializePluginSystem()
+		binding.LoadAll()
 		_Gtme.terralib_mod_binding_lua = terralib_mod_binding_lua
 	end
 end
@@ -79,7 +80,7 @@ end
 local function finalizeTerraLib()
 	if _Gtme.terralib_mod_binding_lua ~= nil then
 		local binding = terralib_mod_binding_lua
-		binding.te.plugin.PluginManager.getInstance():clear()
+		binding.FinalizePluginSystem()
 		binding.TeSingleton.getInstance():finalize()
 		_Gtme.terralib_mod_binding_lua = nil
 	end
@@ -1261,8 +1262,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	if tostring(infopath) == tostring(_Gtme.currentDir()) then
 		_Gtme.printError("It is not possible to execute TerraME within its directory. Please, run it from another place.")
 		os.exit(1)
-	else
-		_Gtme.terralib_mod_binding_lua.te.plugin.PluginManager.getInstance():loadAll()
 	end
 
 	info_.path       = _Gtme.Directory(info_.path)

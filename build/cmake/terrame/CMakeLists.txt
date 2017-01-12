@@ -552,8 +552,6 @@ elseif(WIN32)
 										${TERRALIB_3RDPARTY_DIR}/lib/geos_c.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/hdfdll.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/iconv.dll
-										${TERRALIB_3RDPARTY_DIR}/lib/icudt52.dll
-										${TERRALIB_3RDPARTY_DIR}/lib/icuuc52.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/libcurl.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/libeay32.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/libgeotiff.dll
@@ -570,7 +568,7 @@ elseif(WIN32)
 										${TERRALIB_3RDPARTY_DIR}/lib/ssleay32.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/xdrdll.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/xerces-c_3_1.dll
-										${TERRALIB_3RDPARTY_DIR}/lib/xercesc_messages_3_1.dll
+										${TERRALIB_3RDPARTY_DIR}/lib/xercesc_messages_3_1_1.dll
 		)
 		
 	install(FILES ${TERRALIB_DEPENDENCIES}
@@ -685,6 +683,10 @@ else(UNIX)
 		${TERRALIB_3RDPARTY_DIR}/lib/libboost_date_time.so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libboost_filesystem.so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libboost_thread.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_locale.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_regex.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_log.so*
+		${TERRALIB_3RDPARTY_DIR}/lib/libboost_log_setup.so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libgeos*so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libproj*so*
 		${TERRALIB_3RDPARTY_DIR}/lib/libxerces*so*
