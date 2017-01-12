@@ -24,7 +24,11 @@
 
 return{
 	DataFrame = function(unitTest)
-		local df = DataFrame{
+		local df = DataFrame{}
+
+		unitTest:assertEquals(#df, 0)
+
+		df = DataFrame{
 			x = {1, 2, 3, 4, 5},
 			y = {1, 1, 2, 2, 2}
 		}
@@ -44,9 +48,63 @@ return{
 		unitTest:assertEquals(#df, 5)
 		unitTest:assertEquals(#df.x, 5)
 		unitTest:assertEquals(#df.y, 5)
-		unitTest:assertEquals(getn(df[1]), 2)
+		unitTest:assertEquals(#df[1], 2)
 		unitTest:assertEquals(df[1].x, 1)
 		unitTest:assertEquals(df[3].y, 2)
+
+		local tab = DataFrame{
+			first = 2000,
+			step = 10,
+			demand = {7, 8, 9, 10},
+			limit = {0.1, 0.04, 0.3, 0.07}
+		}
+
+		unitTest:assertType(tab, "DataFrame")
+		unitTest:assertType(tab.demand, "table")
+		unitTest:assertType(tab.limit, "table")
+		unitTest:assertEquals(#tab, 4)
+		unitTest:assertEquals(getn(tab.demand), 4)
+		unitTest:assertEquals(getn(tab.limit), 4)
+
+		unitTest:assertEquals(tab.demand[2010], 8)
+		unitTest:assertEquals(tab.limit[2030], 0.07)
+
+		local sumidx = 0
+		local sumvalue = 0
+
+		forEachElement(tab.demand, function(idx, value)
+			sumidx = sumidx + idx
+			sumvalue = sumvalue + value
+		end)
+
+		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
+		unitTest:assertEquals(sumvalue, 7 + 8 + 9 + 10)
+
+		tab = DataFrame{
+			first = 2000,
+			step = 10,
+			last = 2030,
+			demand = {7, 8, 9, 10},
+			limit = {0.1, 0.04, 0.3, 0.07}
+		}
+
+		unitTest:assertType(tab, "DataFrame")
+		unitTest:assertType(tab.demand, "table")
+		unitTest:assertType(tab.limit, "table")
+		unitTest:assertEquals(#tab, 4)
+		unitTest:assertEquals(getn(tab.demand), 4)
+		unitTest:assertEquals(getn(tab.limit), 4)
+
+		sumidx = 0
+		sumvalue = 0
+
+		forEachElement(tab.limit, function(idx, value)
+			sumidx = sumidx + idx
+			sumvalue = sumvalue + value
+		end)
+
+		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
+		unitTest:assertEquals(sumvalue, 0.1 + 0.04 + 0.3 + 0.07)
 	end,
 	add = function(unitTest)
 		local df = DataFrame{
@@ -59,6 +117,21 @@ return{
 		unitTest:assertEquals(#df, 3)
 		unitTest:assertEquals(df[3].x, 4)
 		unitTest:assertEquals(df.y[2], 2)
+	end,
+	columns = function(unitTest)
+		local df = DataFrame{
+			{x = 1, y = 1},
+			{x = 2, y = 1},
+			{x = 3, y = 2},
+			{x = 4, y = 2},
+			{x = 5, y = 2}
+		}
+
+		local cols = df:columns()
+
+		unitTest:assert(cols.x)
+		unitTest:assert(cols.y)
+		unitTest:assertEquals(getn(cols), 2)
 	end,
 	remove = function(unitTest)
 		local df = DataFrame{
@@ -74,6 +147,23 @@ return{
 		df:remove(3)
 		unitTest:assertEquals(#df, 4)
 		unitTest:assertEquals(df[3].x, 4)
+	end,
+	rows = function(unitTest)
+		local df = DataFrame{
+			{x = 1, y = 1},
+			{x = 2, y = 1},
+			{x = 3, y = 2},
+			{x = 4, y = 2},
+			{x = 5, y = 2}
+		}
+
+		local rows = df:rows()
+
+		for i = 1, 5 do
+			unitTest:assert(rows[i])
+		end
+
+		unitTest:assertEquals(#rows, 5)
 	end,
 	__index = function(unitTest)
 		local df = DataFrame{
@@ -141,12 +231,18 @@ return{
 			{x = 5, y = 2}
 		}
 
-		unitTest:assertEquals(tostring(df), [[x	y
-1	1
-2	1
-3	2
-4	2
-5	2]])
+		unitTest:assertEquals(tostring(df), [[	x	y
+1	1	1
+1	2	1
+1	3	2
+1	4	2
+1	5	2]])
+
+	unitTest:assertEquals(tostring(df[1]), [[{
+    x = 1,
+    y = 1
+}]])
+
 	end
 }
 

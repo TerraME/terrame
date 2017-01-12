@@ -30,11 +30,6 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
 
 		error_func = function()
-			DataFrame{}
-		end
-		unitTest:assertError(error_func, "It is not possible to create a DataFrame from an empty table.")
-
-		error_func = function()
 			DataFrame{{1, 2, 3}, x = {1, 2, 3}}
 		end
 		unitTest:assertError(error_func, "It is not possible to use named and non-named elements to create a DataFrame.")
@@ -50,8 +45,56 @@ return{
 				y = {1, 1, 2, 2}
 			}
 		end
+		unitTest:assertError(error_func, "All arguments for DataFrame must have the same size, got 5 ('x') and 4 ('y').")
 
-		unitTest:assertError(error_func, "All arguments for DataFrame must have the same size, got 5 and 4.")
+		error_func = function()
+			x = DataFrame{
+				first = 2000,
+				step = 10,
+				last = 2025
+			}
+		end
+		unitTest:assertError(error_func, "Invalid 'last' value (2025). It could be 2020.0 or 2030.0.")
+
+		error_func = function()
+			x = DataFrame{
+				first = 2000,
+				step = 10
+			}
+		end
+		unitTest:assertError(error_func, "It is not possible to create a DataFrame from an empty table using arguments 'first' or 'step'.")
+
+		error_func = function()
+			x = DataFrame{
+				first = 2000,
+				step = 10,
+				last = 2030,
+				demand = {7, 8, 9}
+			}
+		end
+		unitTest:assertError(error_func, "Argument 'demand' should range until position 2030, got 2020.")
+
+		error_func = function()
+			x = DataFrame{
+				{demand = 7},
+				{demand = 8},
+				{demand = 9},
+				first = 2000,
+				step = 10,
+				last = 2030
+			}
+		end
+		unitTest:assertError(error_func, "Rows should range until position 2030, got 2020.")
+
+		error_func = function()
+			x = DataFrame{
+				first = 2000,
+				step = 10,
+				demand = {7, 8, 9, 10},
+				limit = {0.1, 0.04, 0.3}
+			}
+		end
+		unitTest:assertError(error_func, "All arguments for DataFrame must have the same size, got 4 ('demand') and 3 ('limit').")
 	end
 }
 
