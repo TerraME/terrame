@@ -461,7 +461,7 @@ return {
 			file = filePath("test/prodes_polyc_10k.tif", "terralib")
 		}
 
-		unitTest:assertEquals(l:bands(), 4)
+		unitTest:assertEquals(l:bands(), 1)
 
 		File(projName):delete()
 
@@ -538,9 +538,6 @@ return {
 		}
 
 		unitTest:assertEquals(l:dummy(0), 255.0)
-		unitTest:assertEquals(l:dummy(1), 255.0)
-		unitTest:assertEquals(l:dummy(2), 255.0)
-		unitTest:assertEquals(l:dummy(3), 255.0)
 
 		local portos = "Portos"
 		l = Layer{
