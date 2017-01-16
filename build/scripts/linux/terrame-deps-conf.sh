@@ -21,9 +21,6 @@
 # of this software and its documentation.
 ############################################################################################
 
-LUA_PATH=/home/developer/terralib/3rdparty/libs
-BUILD_TYPE=Release
-
 mkdir "build"
 cd "build"
 mkdir "protobuf-build"
