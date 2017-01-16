@@ -139,7 +139,7 @@ return {
 		local rodovias = "Rodovias"
 		local portos = "Portos"
 		local amaz = "limiteamaz"
-	
+
 		local proj = Project{
 			file = projName,
 			clean = true,

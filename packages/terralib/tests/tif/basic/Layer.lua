@@ -391,11 +391,10 @@ return {
 
 		unitTest:assertSnapshot(map, "tiff-std.png")
 
-		--[[
 		forEachElement(shapes, function(_, value)
 			File(value):delete()
 		end)
---]]
+
 		-- unitTest:assertFile(projName) -- SKIP #1242
 		File(projName):delete() -- #1242
 
