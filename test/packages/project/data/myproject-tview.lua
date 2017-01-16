@@ -1,6 +1,10 @@
 
 import("terralib")
 
+if isFile("myproject2.tview") then
+	rmFile("myproject2.tview")
+end
+
 proj = Project{
 	file = "myproject2.tview",
 	clean = true,
