@@ -106,7 +106,7 @@ end
 
 m = Map{
 	target = cs,
-	select = "defor_8",
+	select = "defor_167",
 	slices = 10,
 	color = "Greens"
 }
