@@ -805,7 +805,7 @@ function _Gtme.traceback(err)
 				update = false
 			end
 		elseif not func then
-			if last_function and string.sub(last_function, 1, 7) ~= "call to" then
+			if last_function and string.sub(last_function, 1, 7) ~= "call to" and last_function ~= "main chunk" then
 				func = "call to "..last_function
 			else
 				func = "main chunk"
