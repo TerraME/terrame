@@ -626,9 +626,8 @@ else(UNIX)
             PATTERN "cmake" EXCLUDE
     )
 
-    list(APPEND QTLUAE_LIBS  ${TERRAME_DEPENDENCIES_DIR}/lib/libqtluae.so.0.1
-                            ${TERRAME_DEPENDENCIES_DIR}/lib/qtluae.so
-    )
+    list(APPEND QTLUAE_LIBS ${TERRALIB_3RDPARTY_DIR}/lib/libqtluae.so.0.1
+                            ${TERRALIB_3RDPARTY_DIR}/lib/qtluae.so)
 
     install(FILES   ${QTLUAE_LIBS}
             DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
