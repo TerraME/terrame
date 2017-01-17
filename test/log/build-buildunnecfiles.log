@@ -142,6 +142,8 @@ File 'buildunnecfiles/font/unnec7.txt' is unnecessary and will be ignored.
 Looking for hidden files
 File 'buildunnecfiles/.hidden' is unnecessary and will be ignored.
 File 'buildunnecfiles/lua/.hidden2' is unnecessary and will be ignored.
+Removing tview files
+File 'myfile.tview' is unnecessary and will be ignored.
 Checking Models
 Model 'Tube' belongs to file 'Tube.lua'
 Checking license

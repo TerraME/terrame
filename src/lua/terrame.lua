@@ -1641,6 +1641,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						value = value:name()
 						print(" - "..value:sub(0, string.len(value) - 4))
 					end)
+
 					os.exit(0)
 				end
 			elseif arg == "-check" then
