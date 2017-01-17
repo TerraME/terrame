@@ -348,7 +348,7 @@ return{
 		unitTest:assertError(error_func, "Argument 'value' should contain only strings, got number.")
 
 		-- chart using data
-		local tab = makeDataTable{
+		local tab = DataFrame{
 			first = 2000,
 			step = 10,
 			demand = {7, 8, 9, 10},
@@ -357,103 +357,23 @@ return{
 
 		error_func = function()
 			Chart{
-			    data = tab,
-			    select = "limit",
-				target = cell,
-			    xAxis = "demand",
-			    color = "blue"
-			}
-		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("target"))
-
-		error_func = function()
-			Chart{
-			    data = "limit",
-			    select = "limit",
-			    xAxis = "demand",
-			    color = "blue"
-			}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("data", "table", "limit"))
-
-		error_func = function()
-			Chart{
-			    data = tab,
+			    target = tab,
 			    select = "limit",
 			    xAxis = "demand2",
 			    color = "blue"
 			}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("data.demand2", "table"))
+		unitTest:assertError(error_func, "Selected column 'demand2' for argument 'xAxis' does not exist in the DataFrame.")
 
 		error_func = function()
 			Chart{
-			    data = tab,
+			    target = tab,
 			    select = "limit2",
 			    xAxis = "demand",
 			    color = "blue"
 			}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("data.limit2", "table"))
-
-		tab.demand = {7, 8, 9}
-
-		error_func = function()
-			Chart{
-			    data = tab,
-			    select = "limit",
-			    xAxis = "demand",
-			    color = "blue"
-			}
-		end
-		unitTest:assertError(error_func, "Argument 'data.demand' should have 4 elements, got 3.")
-
-		tab = makeDataTable{
-			first = 2000,
-			step = 10,
-			demand = {7, 8, 9, 10},
-			limit = {0.1, 0.04, 0.3, 0.07}
-		}
-
-		tab.limit = "abc"
-
-		error_func = function()
-			Chart{
-			    data = tab,
-			    select = "limit",
-			    xAxis = "demand",
-			    color = "blue"
-			}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("data.limit", "table", "abc"))
-
-		tab = makeDataTable{
-			first = 2000,
-			step = 10,
-			demand = {7, 8, 9, 10},
-			limit = {0.1, 0.04, 0.3, 0.07}
-		}
-
-		tab.limit = {0.1, 0.04, 0.3}
-
-		error_func = function()
-			Chart{
-			    data = tab,
-			    select = {"limit", "demand"},
-			    color = "blue"
-			}
-		end
-		unitTest:assertError(error_func, "Argument 'data.demand' should have 3 elements, got 4.")
-
-		error_func = function()
-			Chart{
-			    data = tab,
-			    select = "limit",
-			    xAxis = "demand",
-			    color = "blue"
-			}
-		end
-		unitTest:assertError(error_func, "Argument 'data.demand' should have 3 elements, got 4.")
+		unitTest:assertError(error_func, "Selected column 'limit2' does not exist in the DataFrame.")
 	end,
 	save = function(unitTest)
 		local c = Cell{value = 5}

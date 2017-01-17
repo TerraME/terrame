@@ -106,14 +106,14 @@ end
 
 m = Map{
 	target = cs,
-	select = "defor_0",
+	select = "defor_167",
 	slices = 10,
 	color = "Greens"
 }
 
 m = Map{
 	target = cs,
-	select = "defor_254",
+	select = "defor_87",
 	slices = 10,
 	color = "Greens"
 }

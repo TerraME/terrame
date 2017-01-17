@@ -3,10 +3,7 @@ data{
 	summary = "",
 	source = "",
 	attributes = {
-		["0"] ="Transparency value",
-		["1"] = "Red color of a LUT table",
-		["2"] = "Green color of a LUT table",
-		["3"] = "Blue color of a LUT table"
+		["0"] ="Data with values 8 (?), 87 (?), 167 (?), and 256 (no data)"
 	}
 }
 
@@ -307,10 +304,7 @@ data{
 	source = "",
 	reference = "",
 	attributes = {
-		["0"] = "",
-		["1"] = "",
-		["2"] = "",
-		["3"] = "",
+		["0"] = ""
 	}
 }
 
@@ -320,10 +314,7 @@ data{
 	source = "",
 	reference = "",
 	attributes = {
-		["0"] = "",
-		["1"] = "",
-		["2"] = "",
-		["3"] = "",
+		["0"] = ""
 	}
 }
 

@@ -23,56 +23,38 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	["table.load"] = function(unitTest)
-		local error_func = function()
-			table.load("dump")
+	DataFrame = function(unitTest)
+		local filename = "dump.lua"
+		local expected = DataFrame{
+			{age = 1, wealth = 10, vision = 2},
+			{age = 3, wealth =  8, vision = 1},
+			{age = 3, wealth = 15, vision = 2}
+		}
+
+		expected:save(filename)
+		local actual = DataFrame{file = filename}
+
+		unitTest:assertEquals(#actual, #expected)
+
+		for i = 1, 3 do
+			unitTest:assertEquals(expected[i].age, actual[i].age)
+			unitTest:assertEquals(expected[i].wealth, actual.wealth[i])
+			unitTest:assertEquals(expected.vision[i], actual[i].vision)
 		end
-		unitTest:assertError(error_func, "File 'dump' does not have a valid extension.")
 
-		local file = File("dump.lua")
-
-		error_func = function()
-			table.load(file:name(true))
-		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file:name(true)))
-
-		file:write("!!#$@12334")
-		file:close()
-		error_func = function()
-			table.load(tostring(file))
-		end
-		unitTest:assertError(error_func, "Failed to load file dump.lua:1: unexpected symbol near '!'", 110)
-
-		file = File("dump.lua")
-		file:write("local x = 2")
-		file:close()
-		error_func = function()
-			table.load(tostring(file))
-		end
-		unitTest:assertError(error_func, "File '"..tostring(file).."' does not contain a Lua table.")
-
-		file:deleteIfExists()
+		File(filename):deleteIfExists()
 	end,
-	["table.save"] = function(unitTest)
-		local error_func = function()
-			table.save()
-		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
+	save = function(unitTest)
+		local filename = "dump.lua"
+		local expected = DataFrame{
+			{age = 1, wealth = 10, vision = 2},
+			{age = 3, wealth =  8, vision = 1},
+			{age = 3, wealth = 15, vision = 2}
+		}
 
-		error_func = function()
-			table.save({})
-		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
+		expected:save(filename)
 
-		error_func = function()
-			table.save("", "dump.lua")
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", ""))
-
-		error_func = function()
-			table.save({}, 1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
+		unitTest:assertFile(filename)
 	end
 }
 

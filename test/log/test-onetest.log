@@ -4,7 +4,7 @@ Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Found 3 extra functions in the documentation
+Found 6 extra functions in the documentation
 Skip looking for lines of source code
 Testing tests/functional/alternative/Event.lua
 Testing Event

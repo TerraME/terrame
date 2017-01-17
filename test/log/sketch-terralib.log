@@ -73,6 +73,7 @@ File 'accumulation_Nov94May00.xml' is already documented in 'data.lua'
 File 'altimetria.tif' is already documented in 'data.lua'
 File 'amazonia.dbf' does not need to be documented
 File 'amazonia.lua' does not need to be documented
+File 'amazonia.prj' does not need to be documented
 File 'amazonia.shp' does not need to be documented (a Lua file creates it)
 File 'amazonia.shx' does not need to be documented
 File 'amazonia.tme' does not need to be documented
@@ -86,8 +87,7 @@ Project file 'cabecadeboi.tview' does not need to be documented (a Lua file crea
 File 'elevation.tif' is already documented in 'data.lua'
 File 'elevation.xml' is already documented in 'data.lua'
 File 'elevation_box.dbf' does not need to be documented
-File 'elevation_box.sbn' does not need to be documented
-File 'elevation_box.sbx' does not need to be documented
+File 'elevation_box.qix' does not need to be documented
 File 'elevation_box.shp' is already documented in 'data.lua'
 File 'elevation_box.shx' does not need to be documented
 File 'emas.dbf' does not need to be documented

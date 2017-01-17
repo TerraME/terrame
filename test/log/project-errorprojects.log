@@ -8,6 +8,8 @@ Creating 'data/myproject-error.tview'
 Could not execute the script properly: C:/TerraME/bin/packages/project/data/myproject-error.lua:9: attempt to perform arithmetic on a nil value (global 'x')
 Removing file 'data/myproject-error.tview'
 Processing 'data/myproject-tview.lua'
+Creating 'data/myproject2.tview'
+File 'data/myproject2.tview' should be called 'data/myproject-tview.tview'. Please update its name.
 Creating 'data/itaituba.shp'
 File 'myproject-tview.tview' was not created.
 Processing 'data/myproject.lua'
@@ -17,9 +19,9 @@ File 'data/itaituba.shp' was created previously. Please update its name.
 File 'myproject.tview' was successfully created
 
 Projects report for package 'project':
-Projects were created in 4.27 seconds.
+Projects were created in 2.54 seconds.
 3 project files were created.
 One invalid .tview file was found in the package.
 One error was found while creating projects.
-2 problems were found in the output of lua files.
-Summing up, 4 problems were found while creating projects.
+3 problems were found in the output of lua files.
+Summing up, 5 problems were found while creating projects.
