@@ -58,7 +58,10 @@ Creating documentation of package 'buildunnecfiles'
 Building documentation for package 'buildunnecfiles'
 Loading package 'buildunnecfiles'
 Test file 'unnec2.txt' does not have a valid extension.
-Package 'buildunnecfiles' has no data
+Parsing 'data.lua'
+Processing lua files
+Checking directory 'data'
+Checking properties of data files
 Parsing 'font.lua'
 Checking directory 'font'
 Checking licenses of fonts

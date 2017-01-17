@@ -88,8 +88,6 @@ File 'elevation.tif' is already documented in 'data.lua'
 File 'elevation.xml' is already documented in 'data.lua'
 File 'elevation_box.dbf' does not need to be documented
 File 'elevation_box.qix' does not need to be documented
-File 'elevation_box.sbn' does not need to be documented
-File 'elevation_box.sbx' does not need to be documented
 File 'elevation_box.shp' is already documented in 'data.lua'
 File 'elevation_box.shx' does not need to be documented
 File 'emas.dbf' does not need to be documented
