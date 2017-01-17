@@ -233,7 +233,8 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx)
 
 		if srid == binding.TE_UNKNOWN_SRS then
 			local srsPath = binding.FindInTerraLibPath("share/terralib/json/srs.json")
-			customWarning("It was not possible to find the projection of layer '"..name.."'.".."\nThe projection should be one of the availables in: "..srsPath)
+			customWarning("It was not possible to find the projection of layer '"..name.."'." -- SKIP
+				.."\nThe projection should be one of the availables in: "..srsPath) -- SKIP
 		end
 
 		layer:setSRID(srid)
