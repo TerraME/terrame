@@ -367,9 +367,9 @@ if (APPLE)
             PATTERN "cmake" EXCLUDE
            )
 
-    list(APPEND QTLUA_LIBS  ${TERRAME_DEPENDENCIES_DIR}/lib/libqtluae.0.1.dylib
-                            ${TERRAME_DEPENDENCIES_DIR}/lib/qtluae.dylib
-                            ${TERRAME_DEPENDENCIES_DIR}/lib/libqtlua.dylib
+    list(APPEND QTLUA_LIBS  ${TERRALIB_3RDPARTY_DIR}/lib/libqtluae.0.1.dylib
+                            ${TERRALIB_3RDPARTY_DIR}/lib/qtluae.dylib
+                            ${TERRALIB_3RDPARTY_DIR}/lib/libqtlua.dylib
        )
 
     install(FILES   ${QTLUA_LIBS}
@@ -626,9 +626,8 @@ else(UNIX)
             PATTERN "cmake" EXCLUDE
     )
 
-    list(APPEND QTLUAE_LIBS  ${TERRAME_DEPENDENCIES_DIR}/lib/libqtluae.so.0.1
-                            ${TERRAME_DEPENDENCIES_DIR}/lib/qtluae.so
-    )
+    list(APPEND QTLUAE_LIBS ${TERRALIB_3RDPARTY_DIR}/lib/libqtluae.so.0.1
+                            ${TERRALIB_3RDPARTY_DIR}/lib/qtluae.so)
 
     install(FILES   ${QTLUAE_LIBS}
             DESTINATION ${TERRAME_INSTALL_PREFIX}/bin

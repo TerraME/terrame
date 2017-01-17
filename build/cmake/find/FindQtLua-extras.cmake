@@ -46,6 +46,7 @@ find_path(QTLUAEXTRAS_INCLUDE_DIR qtluae_version.hpp
 			/usr/local/include/QtLuaExtras 
 			/usr/local/qtlua-extras/include/QtLuaExtras
 			${TERRAME_DEPENDENCIES_DIR}/include/QtLuaExtras
+			${TERRALIB_3RDPARTY_DIR}/include/QtLuaExtras
 )
 
 if(QTLUAEXTRAS_INCLUDE_DIR AND QTLUAEXTRAS_LIBRARY)
