@@ -73,6 +73,7 @@ File 'accumulation_Nov94May00.xml' is already documented in 'data.lua'
 File 'altimetria.tif' is already documented in 'data.lua'
 File 'amazonia.dbf' does not need to be documented
 File 'amazonia.lua' does not need to be documented
+File 'amazonia.prj' does not need to be documented
 File 'amazonia.shp' does not need to be documented (a Lua file creates it)
 File 'amazonia.shx' does not need to be documented
 File 'amazonia.tme' does not need to be documented

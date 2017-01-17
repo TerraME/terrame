@@ -2,7 +2,7 @@
 import("terralib")
 
 if isFile("myproject2.tview") then
-	rmFile("myproject2.tview")
+	File("myproject2.tview"):delete()
 end
 
 proj = Project{
