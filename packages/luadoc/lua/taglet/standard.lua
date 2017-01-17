@@ -90,7 +90,7 @@ local function check_function(line)
 				__eq = "==",
 				-- __lt = "comparison operator",
 				-- __le = "comparison operator",
-				-- __index = "operator [] (index)"
+				__index = "[]"
 				-- __newindex = "operator [] (index)"
 				--__call = "call"
 			}
@@ -797,7 +797,7 @@ local function check_function_usage(files, doc_report)
 				local function_name = functions[j]
 				local usage = functions[function_name].usage
 				if type(usage) == "string" then
-					if not string.match(usage, function_name) then
+					if function_name ~= "[]" and not string.match(usage, function_name) then
 						local message = "%s: '%s' does not call itself in its @usage"
 						printError(message:format(file_name, function_name))
 						doc_report.no_call_itself_usage = doc_report.no_call_itself_usage + 1

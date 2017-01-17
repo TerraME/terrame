@@ -140,18 +140,25 @@ return {
 			return msg
 		end
 
-		local layerName1 = "limitepa"
+		local layerName1 = "limiteitaituba"
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/limitePA_polyc_pol.shp", "terralib")
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
 
 		local prodes = "prodes"
 		Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("test/prodes_polyc_10k.tif", "terralib")
+			file = filePath("Desmatamento_2000.tif", "terralib")
+		}
+
+		local altimetria = "altimetria"
+		Layer{
+			project = proj,
+			name = altimetria,
+			file = filePath("altimetria.tif", "terralib")
 		}
 
 		local clName1 = "CellsTif"
@@ -167,7 +174,7 @@ return {
 			source = "shp",
 			input = layerName1,
 			name = clName1,
-			resolution = 70000,
+			resolution = 10000,
 			file = clName1..".shp"
 		}
 
@@ -187,19 +194,19 @@ return {
 		local count = 0
 		forEachCell(cs, function(cell)
 			unitTest:assertType(cell.prod_mode, "string")
-			if not belong(cell.prod_mode, {"0", "49", "169", "253", "254"}) then
-				-- print(cell.prod_mode)
+			if not belong(cell.prod_mode, {"7", "87", "167", "255"}) then
+				print(cell.prod_mode)
 				count = count + 1
 			end
 		end)
 
-		unitTest:assertEquals(count, 3)
+		unitTest:assertEquals(count, 0)
 
 		local map = Map{
 			target = cs,
 			select = "prod_mode",
-			value = {"0", "49", "169", "253", "254"},
-			color = {"red", "green", "blue", "orange", "purple"}
+			value = {"7", "87", "167", "255"},
+			color = {"red", "green", "blue", "orange"}
 		}
 
 		unitTest:assertSnapshot(map, "tiff-mode.png")
@@ -209,7 +216,7 @@ return {
 		cl:fill{
 			operation = "minimum",
 			attribute = "prod_min",
-			layer = prodes
+			layer = altimetria
 		}
 
 		cs = CellularSpace{
@@ -220,14 +227,16 @@ return {
 		forEachCell(cs, function(cell)
 			unitTest:assertType(cell.prod_min, "number")
 			unitTest:assert(cell.prod_min >= 0)
-			unitTest:assert(cell.prod_min <= 254)
+			unitTest:assert(cell.prod_min <= 185)
 		end)
 
 		map = Map{
 			target = cs,
 			select = "prod_min",
-			value = {0, 49, 169, 253, 254},
-			color = {"red", "green", "blue", "orange", "purple"}
+			min = 0,
+			max = 255,
+			color = "RdPu",
+			slices = 10
 		}
 
 		unitTest:assertSnapshot(map, "tiff-min.png")
@@ -237,7 +246,7 @@ return {
 		cl:fill{
 			operation = "maximum",
 			attribute = "prod_max",
-			layer = prodes
+			layer = altimetria
 		}
 
 		cs = CellularSpace{
@@ -247,15 +256,17 @@ return {
 
 		forEachCell(cs, function(cell)
 			unitTest:assertType(cell.prod_max, "number")
-			unitTest:assert(cell.prod_max >= 0)
-			unitTest:assert(cell.prod_max <= 254)
+			unitTest:assert(cell.prod_max >= 7)
+			unitTest:assert(cell.prod_max <= 255)
 		end)
 
 		map = Map{
 			target = cs,
 			select = "prod_max",
-			value = {0, 49, 169, 253, 254},
-			color = {"red", "green", "blue", "orange", "purple"}
+			min = 0,
+			max = 255,
+			color = "RdPu",
+			slices = 10
 		}
 
 		unitTest:assertSnapshot(map, "tiff-max.png")
@@ -265,7 +276,7 @@ return {
 		cl:fill{
 			operation = "sum",
 			attribute = "prod_sum",
-			layer = prodes
+			layer = altimetria
 		}
 
 		cs = CellularSpace{
@@ -282,9 +293,9 @@ return {
 			target = cs,
 			select = "prod_sum",
 			min = 0,
-			max = 20000,
+			max = 24000,
 			color = "RdPu",
-			slices = 8
+			slices = 10
 		}
 
 		unitTest:assertSnapshot(map, "tiff-sum.png")
@@ -302,13 +313,13 @@ return {
 			layer = cl.name
 		}
 
-		local cov = {0, 49, 169, 253, 254}
+		local cov = {7, 87, 167, 255}
 
 		forEachCell(cs, function(cell)
 			local sum = 0
 
 			for i = 1, #cov do
-				unitTest:assertType(cell["cov_"..cov[i]],   "number")
+				unitTest:assertType(cell["cov_"..cov[i]], "number")
 				sum = sum + cell["cov_"..cov[i]]
 			end
 
@@ -333,29 +344,6 @@ return {
 		end
 
 		-- AVERAGE
-
-		Layer{
-			project = proj,
-			name = "box",
-			file = filePath("elevation_box.shp", "terralib")
-		}
-
-		Layer{
-			project = proj,
-			name = "altimetria",
-			file = filePath("elevation.tif", "terralib")
-		}
-
-		File("mycells.shp"):deleteIfExists()
-		table.insert(shapes, "mycells.shp")
-
-		cl = Layer{
-			project = proj,
-			file = "mycells.shp",
-			input = "box",
-			name = "cells_elev",
-			resolution = 500,
-		}
 
 		cl:fill{
 			operation = "average",
@@ -461,7 +449,7 @@ return {
 			file = filePath("test/prodes_polyc_10k.tif", "terralib")
 		}
 
-		unitTest:assertEquals(l:bands(), 4)
+		unitTest:assertEquals(l:bands(), 1)
 
 		File(projName):delete()
 
@@ -538,9 +526,6 @@ return {
 		}
 
 		unitTest:assertEquals(l:dummy(0), 255.0)
-		unitTest:assertEquals(l:dummy(1), 255.0)
-		unitTest:assertEquals(l:dummy(2), 255.0)
-		unitTest:assertEquals(l:dummy(3), 255.0)
 
 		local portos = "Portos"
 		l = Layer{

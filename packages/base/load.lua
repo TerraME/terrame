@@ -1,5 +1,6 @@
 files = {
 	"Random.lua",
+	"DataFrame.lua",
 	"Choice.lua",
 	"ErrorHandling.lua",
 	"File.lua",

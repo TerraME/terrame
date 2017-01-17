@@ -235,6 +235,17 @@ function _Gtme.buildPackage(package, config, clean)
 		rm(file)
 	end)
 
+	if isDirectory(pkgDirectory..s.."data") then
+		print("Removing tview files")
+
+		forEachFile(pkgDirectory..s.."data", function(file)
+			if file:extension() == "tview" then
+				printWarning("File '"..file:name().."' is unnecessary and will be ignored.")
+				file:delete()
+			end
+		end)
+	end
+
 	if clean then
 		printNote("Cleaning package")
 

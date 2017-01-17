@@ -642,13 +642,13 @@ Layer_ = {
 		local prj = self.project.terralib:getProjection(self.project.layers[self.name])
 
 		if prj.NAME == "" then
-			prj.NAME = "Undefined"
+			prj.NAME = "Undefined" -- SKIP
 		else
 			prj.NAME = "'"..prj.NAME.."'"
 		end
 
 		if prj.PROJ4 == "" then
-			prj.PROJ4 = "Undefined"
+			prj.PROJ4 = "Undefined" -- SKIP
 		else
 			prj.PROJ4 = "'"..prj.PROJ4.."'"
 		end

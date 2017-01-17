@@ -35,41 +35,6 @@ return{
 		unitTest:assertEquals(cf, cf2)
 
 		cd:setCurrentDir()
-	end,
-	["table.load"] = function(unitTest)
-		local filename = "dump.lua"
-		local expected = {
-			{age = 1, wealth = 10, vision = 2},
-			{age = 3, wealth =  8, vision = 1},
-			{age = 3, wealth = 15, vision = 2}
-		}
-
-		table.save(expected, filename)
-		local actual = table.load(filename)
-
-		unitTest:assertEquals(#actual, #expected)
-
-		for i, tab1 in pairs(actual) do
-			local tab2 = expected[i]
-
-			unitTest:assertEquals(tab1.age, tab2.age)
-			unitTest:assertEquals(tab1.wealth, tab2.wealth)
-			unitTest:assertEquals(tab1.vision, tab2.vision)
-		end
-
-		File(filename):deleteIfExists()
-	end,
-	["table.save"] = function(unitTest)
-		local filename = "dump.lua"
-		local expected = {
-			{age = 1, wealth = 10, vision = 2},
-			{age = 3, wealth =  8, vision = 1},
-			{age = 3, wealth = 15, vision = 2}
-		}
-
-		table.save(expected, filename)
-
-		unitTest:assertFile(filename)
 	end
 }
 
