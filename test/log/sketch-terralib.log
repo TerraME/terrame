@@ -87,6 +87,7 @@ Project file 'cabecadeboi.tview' does not need to be documented (a Lua file crea
 File 'elevation.tif' is already documented in 'data.lua'
 File 'elevation.xml' is already documented in 'data.lua'
 File 'elevation_box.dbf' does not need to be documented
+File 'elevation_box.qix' does not need to be documented
 File 'elevation_box.sbn' does not need to be documented
 File 'elevation_box.sbx' does not need to be documented
 File 'elevation_box.shp' is already documented in 'data.lua'
