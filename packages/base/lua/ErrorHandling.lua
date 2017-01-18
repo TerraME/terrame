@@ -115,6 +115,7 @@ end
 
 --- Return a message indicating that the modeler is using the default value for a
 -- given argument and therefore it could be removed.
+-- The string is "Argument '#1' could be removed as it is the default value ('#2').".
 -- @arg argument A string with the name of the argument.
 -- @arg value A number or string or boolean value with the default value for the argument.
 -- @usage str = defaultValueMsg("dbtype", "mysql")
@@ -160,6 +161,7 @@ function deprecatedFunction(functionName, functionExpected)
 end
 
 --- Return a message indicating that a function is deprecated and must be replaced.
+-- The string is "Function '#1' is deprecated. Use '#2' instead.".
 -- @arg functionName A string with the name of the deprecated function.
 -- @arg functionExpected A string indicating how to proceed to replace the
 -- deprecated function call.
@@ -181,8 +183,9 @@ function incompatibleTypeError(attr, expectedTypesString, gottenValue)
 end
 
 --- Return an error message for incompatible types.
+-- The string is "Incompatible types. Argument '#1' expected #2, got type(#3).".
 -- @arg attr A string with the name of the argument, or a number with its the position.
--- @arg expectedTypesString A string with the possible type (or types).
+-- @arg expectedTypesString A string with the possible type (or types). The default value is "nil".
 -- @arg gottenValue The value wrongly passed as argument.
 -- @usage str = incompatibleTypeMsg("source", "string", 2)
 -- print(str)
@@ -209,6 +212,7 @@ function incompatibleValueError(attr, expectedValues, gottenValue)
 end
 
 --- Return an error message for incompatible values.
+-- The string is "Incompatible values. Argument '#1' expected #2, got #3.".
 -- @arg attr A string with the name of the argument or a number with its position.
 -- @arg expectedValues A string with the expected value(s) for the argument.
 -- @arg gottenValue The value wrongly passed as argument.
@@ -252,6 +256,7 @@ function integerArgument(position, value)
 end
 
 --- Return a message indicating that a given argument of a function should be integer.
+-- It returns ErrorHandling:incompatibleValueMsg() with "integer number" as #2.
 -- @arg attr A string with the name of the argument or a number with the position of the argument.
 -- @arg value The value used as argument to the function call.
 -- @usage str = integerArgumentMsg("target", 7.4)
@@ -299,6 +304,7 @@ function invalidFileExtensionError(attr, ext)
 end
 
 --- Return a message indicating that a given file extension is incompatible.
+-- The string is "Argument '#1' does not support extension '#2'.".
 -- @arg attr A string with the name of the argument (for functions with named arguments),
 -- or its position (for functions with non-named arguments).
 -- @arg ext A string with the incompatible file extension.
@@ -345,6 +351,7 @@ function mandatoryArgumentError(attr)
 end
 
 --- Return a message indicating that a given argument of a function is mandatory.
+-- The string is "Argument '#1' is mandatory.".
 -- @arg attr The name of the argument. It can be a string or a number.
 -- @usage str = mandatoryArgumentMsg("target")
 -- print(str)
@@ -386,6 +393,7 @@ function mandatoryTableArgument(table, attr, mtype)
 end
 
 --- Return a message indicating that the arguments of a function must be named.
+-- The string is "Arguments must be named.".
 -- @usage str = namedArgumentsMsg()
 -- print(str)
 function namedArgumentsMsg()
@@ -454,6 +462,7 @@ function positiveArgument(position, value, zero)
 end
 
 --- Return a message indicating that a given argument of a function should be positive.
+-- It returns ErrorHandling:incompatibleValueMsg() with "positive number (including/excluding zero)" as #2.
 -- @arg attr The name of the argument. It can be a string or a number.
 -- @arg value The value used as argument to the function call.
 -- @arg zero A boolean value indicating whether zero should be included
@@ -510,8 +519,9 @@ function resourceNotFoundError(attr, path)
 end
 
 --- Return a message indicating that a given resource could not be found.
+-- The string is "File/Resource '#1' was not found for argument '#2'.".
 -- @arg attr A string with the name of the argument, or its position.
--- @arg path A string with the location of the resource.
+-- @arg path A File or a string with the location of the resource.
 -- @usage str = resourceNotFoundMsg("file", "c:\\myfiles\\file.csv")
 -- print(str)
 function resourceNotFoundMsg(attr, path)
@@ -585,7 +595,7 @@ function suggestion(value, options)
 	end
 end
 
---- Return the arguments of suggestion within a question " Do you mean '"..suggestion.."'?".
+--- Return the arguments of suggestion within a question " Do you mean '#1'?".
 -- @arg suggestion A string.
 -- @usage t = {
 --     blue = true,
@@ -635,6 +645,7 @@ function switchInvalidArgument(att, value, suggestions)
 end
 
 --- Return a message for a wrong argument value showing the options.
+-- The string is "'#1' is an invalid value for argument '#2'. It must be a string from the set [#3].".
 -- @arg casevar A string with the value of the argument.
 -- @arg att A string with the name of the argument.
 -- @arg options A named table indicating the available options.
@@ -660,6 +671,7 @@ function switchInvalidArgumentMsg(casevar, att, options)
 end
 
 --- Return a message for a wrong argument value showing the most similar option.
+-- The string is "'#1' is an invalid value for argument '#2'. suggestionMsg(#3)".
 -- @arg casevar A string with the value of the argument.
 -- @arg att A string with the name of the argument.
 -- @arg suggestion A string with a suggestion to replace the wrong value.
@@ -674,6 +686,7 @@ function switchInvalidArgumentSuggestionMsg(casevar, att, suggestion)
 end
 
 --- Return a message indicating that the argument of a function must be a table.
+-- The string is "Argument must be a table.".
 -- @usage str = tableArgumentMsg()
 -- print(str)
 function tableArgumentMsg()
@@ -681,6 +694,7 @@ function tableArgumentMsg()
 end
 
 --- Return a message indicating that a given argument is unnecessary.
+-- The string is "Argument '#1' is unnecessary. suggestionMsg(#2)".
 -- @arg value A string or number or boolean value.
 -- @arg suggestion A possible suggestion for the argument.
 -- This argument is optional.
@@ -704,6 +718,7 @@ function valueNotFoundError(attr, value)
 end
 
 --- Return a message indicating that a given argument of a function is mandatory.
+-- The string is "Value '#2' not found for argument '#1'.".
 -- @arg attr A string with the name of the argument or a number with its position.
 -- @arg value The valued used as argument to the function call.
 -- @usage str = valueNotFoundMsg(1, "neighborhood")
