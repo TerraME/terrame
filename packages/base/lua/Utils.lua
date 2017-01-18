@@ -977,7 +977,7 @@ end
 --- Load a lua file and return its global values as a Lua table.
 -- @arg scriptfile A File or a string with a file name.
 -- @arg basetable An optional table where the new values will be placed.
--- @usage getLuaFile(packageInfo("base").path..s.."description.lua").version
+-- @usage print(getLuaFile(packageInfo("base").path.."description.lua").version)
 function getLuaFile(scriptfile, basetable)
 	if type(scriptfile) == "string" then
 		scriptfile = File(scriptfile)
