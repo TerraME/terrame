@@ -178,7 +178,7 @@ local function addSpatialIndex(ds, dSetName)
 	ds:execute("CREATE SPATIAL INDEX ON "..dSetName)
 end
 
-local function createLayer(name, dSetName, connInfo, type, addSpatialIdx)
+local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
 	local layer
 
 	do
@@ -201,13 +201,13 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx)
 		local dSetType
 		local dSet
 		local env = nil
-		local srid = 0
+		local sridReal = 0
 
 		if (type == "OGR") or (type == "WFS") or (type == "POSTGIS") then
 			dSetType = ds:getDataSetType(dSetName)
 			local gp = binding.GetFirstGeomProperty(dSetType)
 			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
-			srid = gp:getSRID()
+			sridReal = gp:getSRID()
 
 			if addSpatialIdx then -- and not hasShapeFileSpatialIndex(connInfo.URI) then -- TODO: check if is OGR resolve it
 				addSpatialIndex(ds, dSetName)
@@ -217,7 +217,7 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx)
 			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
 			local raster = dSet:getRaster(rpos)
 			env = raster:getExtent()
-			srid = raster:getSRID()
+			sridReal = raster:getSRID()
 		end
 
 		local id = binding.GetRandomicId()
@@ -231,13 +231,15 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx)
 		layer:setRendererType("ABSTRACT_LAYER_RENDERER")
 		layer:setEncoding(binding.CharEncoding.getEncodingType("LATIN1")) -- TODO(avancinirodrigo): REVIEW ENCODING
 
-		if srid == binding.TE_UNKNOWN_SRS then
+		if srid then
+            sridReal = srid
+		elseif sridReal == binding.TE_UNKNOWN_SRS then
 			local srsPath = binding.FindInTerraLibPath("share/terralib/json/srs.json")
 			customWarning("It was not possible to find the projection of layer '"..name.."'." -- SKIP
-				.."\nThe projection should be one of the availables in: "..srsPath) -- SKIP
+						.."\nThe projection should be one of the availables in: "..srsPath) -- SKIP
 		end
 
-		layer:setSRID(srid)
+		layer:setSRID(sridReal)
 
 		binding.te.da.DataSourceManager.getInstance():detach(ds:getId())
 
@@ -292,7 +294,7 @@ local function loadProject(project, file)
 	end
 end
 
-local function addFileLayer(project, name, file, type, addSpatialIdx)
+local function addFileLayer(project, name, file, type, addSpatialIdx, srid)
 	local connInfo = createFileConnInfo(tostring(file))
 
 	loadProject(project, project.file)
@@ -309,7 +311,7 @@ local function addFileLayer(project, name, file, type, addSpatialIdx)
 		dSetName = "OGRGeoJSON"
 	end
 
-	local layer = createLayer(name, dSetName, connInfo, type, addSpatialIdx)
+	local layer = createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
 
 	project.layers[layer:getTitle()] = layer
 	saveProject(project, project.layers)
@@ -911,6 +913,22 @@ local function toWfsUrl(url)
 	return wfsPrefix..url
 end
 
+local function fixCellSpaceSrid(project, csLayerName, inputLayerName)
+    loadProject(project, project.file)
+
+    local csLayer = project.layers[csLayerName]
+    local inputLayer = project.layers[inputLayerName]
+
+    if inputLayer:getSRID() ~= csLayer:getSRID() then
+        csLayer:setSRID(inputLayer:getSRID())
+        saveProject(project, project.layers)
+        releaseProject(project)
+        return
+    end
+
+    releaseProject(project)
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 
@@ -1077,8 +1095,8 @@ TerraLib_ = {
 	-- tl = TerraLib()
 	-- proj = tl:createProject("project.tview", {})
 	-- tl:addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
-	addShpLayer = function(_, project, name, file, addSpatialIdx)
-		addFileLayer(project, name, file, "OGR", addSpatialIdx)
+	addShpLayer = function(_, project, name, file, addSpatialIdx, srid)
+		addFileLayer(project, name, file, "OGR", addSpatialIdx, srid)
 	end,
 	--- Add a new GDAL layer to a given project.
 	-- @arg _ A TerraLib object.
@@ -1098,8 +1116,8 @@ TerraLib_ = {
 	-- layerName = "TifLayer"
 	-- layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
 	-- tl:addGdalLayer(proj, layerName, layerFile)
-	addGdalLayer = function(_, project, name, file)
-		addFileLayer(project, name, file, "GDAL")
+	addGdalLayer = function(_, project, name, file, srid)
+		addFileLayer(project, name, file, "GDAL", nil, srid)
 	end,
 	--- Add a GeoJSON layer to a given project.
 	-- @arg _ A TerraLib object.
@@ -1110,8 +1128,8 @@ TerraLib_ = {
 	-- tl = TerraLib()
 	-- tl:createProject("project.tview", {})
 	-- tl:addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
-	addGeoJSONLayer = function(_, project, name, file)
-		addFileLayer(project, name, file, "GeoJSON")
+	addGeoJSONLayer = function(_, project, name, file, srid)
+		addFileLayer(project, name, file, "GeoJSON", nil, srid)
 	end,
 	--- Validates if the URL is a valid WFS server.
 	-- @arg _ A TerraLib object.
@@ -1218,7 +1236,7 @@ TerraLib_ = {
 	-- }
 	--
 	-- tl:addPgLayer(proj, "SampaPg", pgData)
-	addPgLayer = function(_, project, name, data)
+	addPgLayer = function(_, project, name, data, srid)
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 
 		loadProject(project, project.file)
@@ -1226,7 +1244,7 @@ TerraLib_ = {
 		local layer
 
 		if dataSetExists(connInfo, data.table, "POSTGIS") then
-			layer = createLayer(name, data.table, connInfo, "POSTGIS")
+			layer = createLayer(name, data.table, connInfo, "POSTGIS", nil, srid)
 		else
 			releaseProject(project) -- SKIP
 			customError("Is not possible add the Layer. The table '"..data.table.."' does not exist.")
@@ -1270,6 +1288,8 @@ TerraLib_ = {
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
 		self:addShpLayer(project, name, file, addSpatialIdx)
+
+        fixCellSpaceSrid(project, name, inputLayerTitle)
 	end,
 	--- Add a new cellular layer to a PostgreSQL connection.
 	-- @arg project The name of the project.
@@ -1492,11 +1512,17 @@ TerraLib_ = {
 			loadProject(project, project.file)
 
 			local fromLayer = project.layers[from]
-			local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
 			local toLayer = project.layers[to]
+
+            if fromLayer:getSRID() ~= toLayer:getSRID() then
+                local toSrid = toLayer:getSRID()
+                local fromSrid = fromLayer:getSRID()
+                customError("The projections of the layers are different: ("..from..", "..fromSrid..") and ("..to..", "..toSrid.."). Set the correct one.")
+            end
+
+            local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
 			local toDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
 			local outDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
-
 			local outType = outDsInfo:getType()
 
 			if outType == "OGR" then
@@ -1581,6 +1607,8 @@ TerraLib_ = {
 			loadProject(project, project.file) -- TODO: IT NEED RELOAD (REVIEW)
 			saveProject(project, project.layers)
 			releaseProject(project)
+
+			fixCellSpaceSrid(project, out, to)
 
 			outDs:close()
 

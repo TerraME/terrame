@@ -183,7 +183,7 @@ local function addLayer(self, data)
 
 	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "index",
 									"host", "port", "user", "password", "database", "table",
-									"service", "feature"})
+									"service", "feature", "srid"})
 
 	if data.source == nil then
 		if data.file then
@@ -217,37 +217,41 @@ local function addLayer(self, data)
 		customError("Layer '"..data.name.."' already exists in the Project.")
 	end
 
+	if data.srid then
+		optionalTableArgument(data, "srid", "number")
+	end
+
 	switch(data, "source"):caseof{
 		shp = function()
 			mandatoryTableArgument(data, "file", "File")
 			defaultTableValue(data, "index", true)
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index", "srid"})
 
-			self.terralib:addShpLayer(self, data.name, data.file, data.index)
+			self.terralib:addShpLayer(self, data.name, data.file, data.index, data.srid)
 		end,
 		geojson = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "srid"})
 
-			self.terralib:addGeoJSONLayer(self, data.name, data.file) -- SKIP
+			self.terralib:addGeoJSONLayer(self, data.name, data.file, data.srid) -- SKIP
 		end,
 		tif = function()
 			mandatoryTableArgument(data, "file", "File")
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "srid"})
 
-			self.terralib:addGdalLayer(self, data.name, data.file)
+			self.terralib:addGdalLayer(self, data.name, data.file, data.srid)
 		end,
 		nc = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"}) -- SKIP
 
-			self.terralib:addGdalLayer(self, data.name, data.file) -- SKIP
+			self.terralib:addGdalLayer(self, data.name, data.file, data.srid, "srid") -- SKIP
 		end,
 		asc = function()
 			mandatoryTableArgument(data, "file", "File")
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "srid"})
 
-			self.terralib:addGdalLayer(self, data.name, data.file)
+			self.terralib:addGdalLayer(self, data.name, data.file, data.srid)
 		end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")
@@ -255,7 +259,7 @@ local function addLayer(self, data)
 			mandatoryTableArgument(data, "database", "string")
 			mandatoryTableArgument(data, "table", "string")
 
-			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password", "database", "table", "project"})
+			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password", "database", "table", "project", "srid"})
 
 			defaultTableValue(data, "table", string.lower(data.name))
 			defaultTableValue(data, "host", "localhost")
@@ -264,7 +268,7 @@ local function addLayer(self, data)
 
 			data.port = tostring(data.port)
 
-			self.terralib:addPgLayer(self, data.name, data)
+			self.terralib:addPgLayer(self, data.name, data, data.srid)
 		end,
 		wfs = function()
 			mandatoryTableArgument(data, "service", "string")
@@ -797,6 +801,8 @@ metaTableLayer_ = {
 -- input data (false, default).
 -- @arg data.resolution A number with the x and y resolution. It will need to be
 -- measured in the same projection of the input layer.
+-- @arg data.srid A number that represents the Spatial Reference System Identifier. It is a unique value
+-- used to unambiguously identify projected, unprojected, and local spatial coordinate system definitions.
 -- @arg data.clean A boolean value indicating whether the argument file should be cleaned
 -- if it needs to create the file.
 -- @usage -- DONTRUN

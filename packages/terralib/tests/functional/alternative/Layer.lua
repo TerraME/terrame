@@ -391,6 +391,16 @@ return{
 		end
 		unitTest:assertError(invalidLayerName, "Layer name 'SãoPaulo' is not a valid name. Please, revise special characters or spaces from it.")
 
+		local invalidSridType = function()
+			Layer{
+				project = proj,
+				name = "SampaSrid",
+				file = filePath("test/sampa.shp", "terralib"),
+				srid = true
+			}
+		end
+		unitTest:assertError(invalidSridType, "Incompatible types. Argument 'srid' expected number, got boolean.")
+
 		File(projName):deleteIfExists()
 		File(shp1):deleteIfExists()
 	end,

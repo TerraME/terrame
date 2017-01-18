@@ -677,7 +677,7 @@ return {
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
 		local layerName4 = "Prodes_PA"
 		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "terralib")
-		tl:addGdalLayer(proj, layerName4, layerFile4)
+		tl:addGdalLayer(proj, layerName4, layerFile4, wsumLayerInfo.srid)
 
 		local percTifLayerName = clName.."_"..layerName4.."_RPercentage"
 		shp[16] = percTifLayerName..".shp"

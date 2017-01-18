@@ -129,10 +129,18 @@ return {
 		local default = nil
 		local repr = "raster"
 
-		local bandNoExists = function()
+		local differentSrids = function()
 			tl:attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
-		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in layer '"..layerName2.."'.")
+		unitTest:assertError(differentSrids, "The projections of the layers are different: (Prodes_PA, 100001.0) and (Para_Cells, 29101.0). Set the correct one.")
+
+		local layerName3 = "Prodes_PA_NewSRID"
+		tl:addGdalLayer(proj, layerName3, layerFile4, 29101)
+
+		local bandNoExists = function()
+			tl:attributeFill(proj, layerName3, clName, percTifLayerName, attribute, operation, select, area, default, repr)
+		end
+		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in layer '"..layerName3.."'.")
 
 		for j = 1, #shp do
 			File(shp[j]):deleteIfExists()

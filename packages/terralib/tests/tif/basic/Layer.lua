@@ -141,7 +141,7 @@ return {
 		end
 
 		local layerName1 = "limiteitaituba"
-		Layer{
+		local l1 = Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
@@ -151,14 +151,16 @@ return {
 		Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("Desmatamento_2000.tif", "terralib")
+			file = filePath("Desmatamento_2000.tif", "terralib"),
+			srid = l1.srid
 		}
 
 		local altimetria = "altimetria"
 		Layer{
 			project = proj,
 			name = altimetria,
-			file = filePath("altimetria.tif", "terralib")
+			file = filePath("altimetria.tif", "terralib"),
+			srid = l1.srid
 		}
 
 		local clName1 = "CellsTif"
