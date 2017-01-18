@@ -41,6 +41,7 @@ find_path(QTLUA_INCLUDE_DIR qtluafunction.hh
 			/usr/local/include/QtLua 
 			/usr/local/qtlua/include/QtLua
 			${TERRAME_DEPENDENCIES_DIR}/include/QtLua
+			${TERRALIB_3RDPARTY_DIR}/include/QtLua
 )
 
 if(QTLUA_INCLUDE_DIR AND QTLUA_LIBRARY)
