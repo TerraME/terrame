@@ -29,11 +29,23 @@ import("terralib")
 proj = Project{
 	file = "itaituba.tview",
 	clean = true,
-	deforestation = filePath("Desmatamento_2000.tif", "terralib"),
-	altimetria = filePath("altimetria.tif", "terralib"),
 	localidades = filePath("Localidades_pt.shp", "terralib"),
 	roads = filePath("Rodovias_lin.shp", "terralib"),
 	setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+}
+
+Layer{
+	project = proj,
+	name = "deforestation",
+	file = filePath("Desmatamento_2000.tif", "terralib"),
+	srid = 29191
+}
+
+Layer{
+	project = proj,
+	name = "altimetria",
+	file = filePath("altimetria.tif", "terralib"),
+	srid = 29191
 }
 
 cl = Layer{

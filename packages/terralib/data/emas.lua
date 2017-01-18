@@ -32,9 +32,15 @@ project = Project{
 	author = "Almeida, R.",
 	title = "Emas database",
 	firebreak = filePath("firebreak_lin.shp", "terralib"),
-	cover = filePath("accumulation_Nov94May00.tif", "terralib"),
 	river = filePath("River_lin.shp", "terralib"),
 	limit = filePath("Limit_pol.shp", "terralib")
+}
+
+Layer{
+	project = project,
+	name = "cover",
+	file = filePath("accumulation_Nov94May00.tif", "terralib"),
+	srid = 29192
 }
 
 cl = Layer{
