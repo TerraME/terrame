@@ -4,7 +4,7 @@
 -------------------------------------------------------------------------------
 
 local belong = belong
-local include = _Gtme.include
+local getLuaFile = getLuaFile
 local printNote = _Gtme.printNote
 local printError = _Gtme.printError
 local forEachOrderedElement = forEachOrderedElement
@@ -39,7 +39,7 @@ local function ldescription(package_path, doc_report)
 	}
 
 	local script
-	xpcall(function() script = include(package_path..s.."description.lua") end, function(err)
+	xpcall(function() script = getLuaFile(package_path..s.."description.lua") end, function(err)
 		printError("Error when executing file 'description.lua'.")
 		printError(err)
 		os.exit()
@@ -87,7 +87,7 @@ local function ldescription(package_path, doc_report)
 	return script
 	-- script.logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."terrame.png"
 	-- script.destination_logo = package_path..s.."doc"..s.."img"..s
-	-- return include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."description.lua").M
+	-- return getLuaFile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."description.lua").M
 end
 
 -------------------------------------------------------------------------------
@@ -104,8 +104,8 @@ function startDoc(files, examples, options, package_path, mdata, mfont, doc_repo
 		-- dofile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."config.lua")
 	-- end
 	
-	local taglet = include(options.taglet)	
-	local doclet = include(options.doclet)
+	local taglet = getLuaFile(options.taglet)	
+	local doclet = getLuaFile(options.doclet)
 
 	-- analyze input
 	taglet.options = options

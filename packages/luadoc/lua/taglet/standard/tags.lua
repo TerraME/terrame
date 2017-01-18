@@ -6,10 +6,10 @@
 local assert, type, tostring, ipairs = assert, type, tostring, ipairs
 local string, table = string, table
 local printError = _Gtme.printError
-local include = _Gtme.include
+local getLuaFile = getLuaFile
 
 local s = sessionInfo().separator
-local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
+local util = getLuaFile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 
 -------------------------------------------------------------------------------
 local function author(tag, block, text, silent)

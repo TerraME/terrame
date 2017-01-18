@@ -966,10 +966,46 @@ function getConfig()
 	elseif not File("config.lua"):exists() then
 		customError("There is no 'config.lua' in the current directory.") -- SKIP
 	else
-		config = _Gtme.include("config.lua") -- SKIP
+		config = getLuaFile("config.lua") -- SKIP
 		return config
 	end
 end
+
+
+-- The following function was implemented using the code available at http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
+
+--- Load a lua file and return its global values as a Lua table.
+-- @arg scriptfile A File or a string with a file name.
+-- @arg basetable An optional table where the new values will be placed.
+-- @usage getLuaFile(packageInfo("base").path..s.."description.lua").version
+function getLuaFile(scriptfile, basetable)
+	if type(scriptfile) == "string" then
+		scriptfile = File(scriptfile)
+	end
+
+	mandatoryArgument(1, "File", scriptfile)
+	optionalArgument(2, "table", basetable)
+
+	if basetable == nil then
+		basetable = {}
+	end
+
+	local env = setmetatable(basetable, {__index = _G})
+	if not scriptfile:exists() then
+		_Gtme.customError("File '"..scriptfile.."' does not exist.")
+	end
+	local lf = loadfile(tostring(scriptfile), "t", env)
+
+	if lf == nil then
+		_Gtme.printError("Could not load file '"..scriptfile.."'.")
+		dofile(tostring(scriptfile)) -- this line will show the error when parsing the file
+	end
+
+	lf()
+
+	return setmetatable(env, nil)
+end
+
 
 --- Return the number of elements of a table, be them named or not.
 -- It is a substitute for the old Lua function table.getn. It can

@@ -20,14 +20,14 @@ local print = print
 local printNote, printError, getn, belong = _Gtme.printNote, _Gtme.printError, getn, belong
 local forEachElement = forEachElement
 local forEachOrderedElement = forEachOrderedElement
-local include = _Gtme.include
+local getLuaFile = getLuaFile
 local makepath = _Gtme.makePathCompatibleToAllOS
 
 local s = sessionInfo().separator
 local ppath = packageInfo("luadoc").path
-local lp = include(ppath..s.."lua"..s.."main"..s.."lp.lua")
-local highlighting = include(ppath..s.."lua"..s.."doclet"..s.."highlighting.lua")
-local util = include(ppath..s.."lua"..s.."main"..s.."util.lua")
+local lp = getLuaFile(ppath..s.."lua"..s.."main"..s.."lp.lua")
+local highlighting = getLuaFile(ppath..s.."lua"..s.."doclet"..s.."highlighting.lua")
+local util = getLuaFile(ppath..s.."lua"..s.."main"..s.."util.lua")
 
 -------------------------------------------------------------------------------
 -- Looks for a file 'name' in given path. Removed from compat-5.1
