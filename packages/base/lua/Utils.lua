@@ -240,8 +240,6 @@ function disableGraphics()
 		VisualTable = VisualTable
 	}
 
-
-
 	local setConstructor = function(mtype)
 		local indexFunction = function(_, func)
 			if func == "type_" then return mtype end
@@ -487,6 +485,14 @@ function forEachElement(obj, _sof_)
 		mandatoryArgumentError(2)
 	elseif type(_sof_) ~= "function" then
 		incompatibleTypeError(2, "function", _sof_)
+	end
+
+	if type(obj) == "DataFrame" then
+		local rows = obj:rows()
+
+		return forEachOrderedElement(rows, function(idx)
+			if _sof_(idx, obj[idx], "table") == false then return false end
+		end)
 	end
 
 	for k, ud in pairs(obj) do
@@ -1348,93 +1354,6 @@ function levenshtein(s, t)
 	return d[#d]
 end
 
---- Create a table with indexes according to a given configuration.
--- It returns a table with a set of vectors indexed by values
--- defined in the arguments.
--- @arg data.first A number with the first index.
--- @arg data.step A number with the interval between two indexes.
--- @arg data.last A number with the last index. This argument is optional
--- and only used to check whether it is equals to first plus
--- step times the size of the data vectors.
--- @arg data.... Data vectors with the values to be indexed.
--- @usage tab = makeDataTable{
---     first = 2000,
---     step = 10,
---     demand = {7, 8, 9, 10},
---     limit = {0.1, 0.04, 0.3, 0.07}
--- }
---
--- print(tab.demand[2010]) -- 8
--- print(tab.limit[2030]) -- 0.07
-function makeDataTable(data)
-	verifyNamedTable(data)
-
-	mandatoryTableArgument(data, "first", "number")
-	mandatoryTableArgument(data, "step", "number")
-	optionalTableArgument(data, "last", "number")
-
-	local mydata = {}
-
-	forEachOrderedElement(data, function(idx)
-		if not belong(idx, {"first", "step", "last"}) then
-			table.insert(mydata, idx)
-			mandatoryTableArgument(data, idx, "table")
-		end
-	end)
-
-	if data.last then
-		local quantity = (data.last - data.first) / data.step
-
-		local rest = quantity % 1
-		if rest > 0.00001 then
-			local max1 = data.first + (quantity - rest) * data.step
-			local max2 = data.first + (quantity - rest + 1) * data.step
-			customError("Invalid 'last' value ("..data.last.."). It could be "..max1.." or "..max2..".")
-		end
-	end
-
-	if #mydata == 0 then
-		customError("It is not possible to create a table without any data.")
-	end
-
-	local quantity = #data[mydata[1]]
-
-	if data.last then
-		local mquantity = (data.last - data.first) / data.step + 1
-
-		forEachOrderedElement(mydata, function(_, idx)
-			if #data[idx] ~= mquantity then
-				customError("Argument '"..idx.."' should have "..mquantity.." elements, got "..#data[idx]..".")
-			end
-		end)
-	else
-
-		forEachOrderedElement(mydata, function(_, idx)
-			if #data[idx] ~= quantity then
-				customError("Argument '"..idx.."' should have "..quantity.." elements, got "..#data[idx]..".")
-			end
-		end)
-	end
-
-	local result = {}
-
-	forEachOrderedElement(mydata, function(_, idx)
-		local pos = data.first
-
-		local mtable = {}
-		local input = data[idx]
-
-		for i = 1, quantity do
-			mtable[pos] = input[i]
-			pos = pos + data.step
-		end
-
-		result[idx] = mtable
-	end)
-
-	return result
-end
-
 --- Round a number given a precision.
 -- @arg num A number.
 -- @arg idp The number of decimal places to be used. The default value is zero.
@@ -1533,44 +1452,6 @@ function switch(data, att)
 		end
 	}
 	return swtbl
-end
-
---- Function to load a table from a given file.
--- @arg filename A mandatory string with the file name. The filename extension must be '.lua'.
--- @usage -- DONTRUN
--- tbl = table.load("table.lua")
--- print(_Gtme.tostring(tbl))
-function table.load(filename)
-	mandatoryArgument(1, "string", filename)
-
-	local file = File(filename)
-	verify(file:extension() == "lua", "File '"..filename.."' does not have a valid extension.")
-	verify(file:exists(), resourceNotFoundMsg("file", file:name(true)))
-
-	local tbl
-	local ok, merror = pcall(function() tbl = dofile(tostring(file)) end)
-	if not ok then customError("Failed to load file "..merror) end
-
-	verify(type(tbl) == "table", "File '"..filename.."' does not contain a Lua table.")
-	return tbl
-end
-
---- Function to save a table to a given file.
--- @arg tbl A mandatory table to be saved.
--- @arg filename A mandatory string with the file name.
--- @usage filename = "dump.lua"
--- tbl = {x = 1, y = 2}
--- table.save(tbl, filename)
---
--- File(filename):deleteIfExists()
-function table.save(tbl, filename)
-	mandatoryArgument(1, "table", tbl)
-	mandatoryArgument(2, "string", filename)
-
-	local file = File(filename)
-	local stbl = "return"..vardump(tbl)
-	file:write(stbl)
-	file:close()
 end
 
 --- Return the type of an object. It extends the original Lua type() to support TerraME objects,

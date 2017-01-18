@@ -46,7 +46,7 @@ return{
 
 		-- The assert below checks the number of functions in package 'base'.
 
-		unitTest:assertEquals(getn(base), 175)
+		unitTest:assertEquals(getn(base), 176)
 	end,
 	import = function(unitTest)
 		forEachCell = nil

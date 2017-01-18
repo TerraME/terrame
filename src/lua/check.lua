@@ -35,7 +35,7 @@ _Gtme.checkFile = function(file, prefixMsg)
 
 	local luacheck = require("luacheck.init")
 	local files = {file}
-	local options = {std = "min", cache = true, global = false}
+	local options = {std = "min", cache = true, global = false, ignore = {"6"}}
 	local issues = luacheck.check_files(files, options)
 
 	if (issues.errors == 0) and (issues.fatals == 0) then

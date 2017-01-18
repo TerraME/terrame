@@ -58,7 +58,10 @@ Creating documentation of package 'buildunnecfiles'
 Building documentation for package 'buildunnecfiles'
 Loading package 'buildunnecfiles'
 Test file 'unnec2.txt' does not have a valid extension.
-Package 'buildunnecfiles' has no data
+Parsing 'data.lua'
+Processing lua files
+Checking directory 'data'
+Checking properties of data files
 Parsing 'font.lua'
 Checking directory 'font'
 Checking licenses of fonts
@@ -86,6 +89,7 @@ Building and checking HTML files
 Building doc/index.html
 Building doc/files/Utils.html
 Building doc/files/examples.html
+Building doc/files/data.html
 Building doc/files/font.html
 Building doc/files/models.html
 Checking images
@@ -99,8 +103,8 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'buildunnecfiles':
-Documentation was built in 0.07 seconds.
-5 HTML files were created.
+Documentation was built in 1.53 seconds.
+6 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
@@ -142,6 +146,8 @@ File 'buildunnecfiles/font/unnec7.txt' is unnecessary and will be ignored.
 Looking for hidden files
 File 'buildunnecfiles/.hidden' is unnecessary and will be ignored.
 File 'buildunnecfiles/lua/.hidden2' is unnecessary and will be ignored.
+Removing tview files
+File 'myfile.tview' is unnecessary and will be ignored.
 Checking Models
 Model 'Tube' belongs to file 'Tube.lua'
 Checking license

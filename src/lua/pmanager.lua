@@ -23,8 +23,10 @@
 -------------------------------------------------------------------------------------------
 
 -- some qt values
-local qtOk = 1024
-local qtCancel = 4194304
+local qtOk = 2 ^ 10
+local qtYes = 2 ^ 14
+local qtNo = 2 ^ 16
+local qtCancel = 2 ^ 22
 
 local comboboxExamples
 local comboboxModels
@@ -557,9 +559,9 @@ local function quitButtonClicked()
 		local msg
 
 		if countCreated == 1 then
-			msg = "As you configured a model, the following file was created:"
+			msg = "The folowing file was created in directory "..currentDir().." while you run TerraME:"
 		else
-			msg = "As you configured some models, the following files were created:"
+			msg = "The folowing files were created in directory "..currentDir().." while you run TerraME:"
 		end
 
 		forEachOrderedElement(createdFiles, function(idx)
@@ -572,7 +574,7 @@ local function quitButtonClicked()
 			msg = msg.."\n\nDo you want to delete them?"
 		end
 
-		if qt.dialog.msg_question(msg, "Confirm?", qtOk + qtCancel, qtCancel) == qtOk then
+		if qt.dialog.msg_question(msg, "Confirm?", qtYes + qtNo, qtNo) == qtYes then
 			forEachElement(createdFiles, function(idx)
 				File(idx):delete()
 			end)

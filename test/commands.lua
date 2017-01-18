@@ -122,6 +122,7 @@ basic = {
 	builderror4         = {arg = "-build", package = "build", config = "pattern.lua"},
 	dir                 = {script = "dir.lua"},
 	basictrace          = {script = "trace-basic.lua"},
+	tracecall           = {script = "trace-call.lua", arg = "-strict"},
 	tmpdir              = {script = "tmpdir.lua", arg = "-strict"},
 	tracepackage        = {script = "trace-package.lua"},
 	tracesyntax         = {script = "trace-syntax.lua"},

@@ -103,7 +103,7 @@ return {
 		Layer{
 			project = proj,
 			name = "PA",
-			file = filePath("test/limitePA_polyc_pol.shp", "terralib")
+			file = filePath("cabecadeboi.shp", "terralib")
 		}
 
 		customWarning = customWarningBkp
@@ -129,42 +129,25 @@ return {
 
 		File(projName):deleteIfExists()
 
-		local proj = Project{
-			file = projName,
-			clean = true
-		}
-
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
 			return msg
 		end
 
 		local layerName1 = "limitepa"
-		Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/limitePA_polyc_pol.shp", "terralib")
-		}
-
 		local protecao = "protecao"
-		Layer{
-			project = proj,
-			name = protecao,
-			file = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
-		}
-
 		local rodovias = "Rodovias"
-		Layer{
-			project = proj,
-			name = rodovias,
-			file = filePath("BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "terralib")
-		}
-
 		local portos = "Portos"
-		Layer{
-			project = proj,
-			name = portos,
-			file = filePath("PORTOS_AMZ_pt.shp", "terralib")
+		local amaz = "limiteamaz"
+
+		local proj = Project{
+			file = projName,
+			clean = true,
+			[layerName1] = filePath("test/limitePA_polyc_pol.shp", "terralib"),
+			[protecao] = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib"),
+			[rodovias] = filePath("BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "terralib"),
+			[portos] = filePath("PORTOS_AMZ_pt.shp", "terralib"),
+			[amaz] = filePath("LIMITE_AMZ_pol.shp", "terralib")
 		}
 
 		local municipios = "municipios"
@@ -190,6 +173,19 @@ return {
 			name = clName1,
 			resolution = 70000,
 			file = clName1..".shp"
+		}
+
+		table.insert(shapes, "CellsAmaz.shp")
+		File("CellsAmaz.shp"):deleteIfExists()
+
+		local clamaz = Layer{
+			project = proj,
+			source = "shp",
+			clean = true,
+			input = amaz,
+			name = "CellsAmaz",
+			resolution = 200000,
+			file = "CellsAmaz.shp"
 		}
 
 		-- MODE
@@ -318,7 +314,7 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-distance.png")
 
-		cl:fill{
+		clamaz:fill{
 			operation = "distance",
 			layer = portos,
 			attribute = "pointdist"
@@ -326,14 +322,14 @@ return {
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cl.name
+			layer = clamaz.name
 		}
 
 		map = Map{
 			target = cs,
 			select = "pointdist",
 			min = 0,
-			max = 900000,
+			max = 2000000,
 			slices = 8,
 			color = {"green", "red"}
 		}
@@ -381,7 +377,7 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-presence.png")
 
-		cl:fill{
+		clamaz:fill{
 			operation = "presence",
 			layer = portos,
 			attribute = "pointpres"
@@ -389,7 +385,7 @@ return {
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cl.name
+			layer = clamaz.name
 		}
 
 		map = Map{
@@ -417,7 +413,7 @@ return {
 			file = clName2..".shp"
 		}
 
-		cl2:fill{
+		clamaz:fill{
 			operation = "count",
 			layer = portos,
 			attribute = "pointcount"
@@ -425,7 +421,7 @@ return {
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cl2.name
+			layer = clamaz.name
 		}
 
 		map = Map{
@@ -739,7 +735,7 @@ return {
 			index = false
 		}
 
-		unitTest:assertEquals(layer:projection(), "Undefined, with SRID: 0.0 (PROJ4: Undefined).")
+		unitTest:assertEquals(layer:projection(), "'SAD69 / Brazil Polyconic', with SRID: 29101.0 (PROJ4: '+proj=poly +lat_0=0 +lon_0=-54 +x_0=5000000 +y_0=10000000 +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
 
 		customWarning = customWarningBkp
 

@@ -77,81 +77,58 @@ local SourceTypeMapper = {
 	tif = "GDAL",
 	nc = "GDAL",
 	asc = "GDAL",
-	postgis = "POSTGIS",
-	access = "ADO"
+	postgis = "POSTGIS"
 }
 
--- local function decodeUri(str)	-- TODO(#896)
-	-- str = string.gsub(str, "+", " ")
-	-- str = string.gsub(str, "%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end)
-	-- str = string.gsub(str, "\r\n", "\n")
+local function createFileConnInfo(filePath)
+	local connInfo = "file://"..filePath
+	return connInfo
+end
 
-	-- return str
--- end
-
--- local function encodeUri(str)	-- TODO(#896)
-	-- if (str) then
-		-- str = string.gsub(str, "\n", "\r\n")
-		-- str = string.gsub(str, "([^%w %-%_%.%~])", function (c)
-			-- return string.format ("%%%02X", string.byte(c))
-		-- end)
-
-		-- str = string.gsub (str, " ", "+")
-	-- end
-
-	-- return str
--- end
-
-local function checkConnectionParams(type, connInfo)
+local function checkPgConnectParams(connInfo)
 	local msg
 
 	do
-		local ds = binding.te.da.DataSourceFactory.make(type)
-		ds:setConnectionInfo(connInfo)
-		msg = binding.te.da.DataSource.Exists(ds)
+		local ds = binding.te.da.DataSourceFactory.make("POSTGIS", connInfo)
+		msg = binding.te.da.DataSource.Check(ds)
 
 		ds:close()
 	end
 
 	collectgarbage("collect")
 
-	return msg
+	if msg ~= "" then
+		customError(msg)
+	end
 end
 
-local function createPgConnInfo(host, port, user, pass, database, encoding)
-	local connInfo = {}
+local function createPgDbIfNotExists(host, port, user, pass, database, encoding)
+	local connInfo = "pgsql://"..user..":"..pass.."@"..host..":"..port.."/?"
+					.."&PG_NEWDB_NAME="..database
+					.."&PG_NEWDB_OWNER="..user
+					.."&PG_NEWDB_ENCODING="..encoding
+					.."&PG_CONNECT_TIMEOUT=4"
+					.."&PG_MAX_POOL_SIZE=4"
+					.."&PG_MIN_POOL_SIZE=2"
+					.."&PG_CHECK_DB_EXISTENCE="..database
 
-	connInfo.PG_HOST = host
-	connInfo.PG_PORT = port
-	connInfo.PG_USER = user
-	connInfo.PG_PASSWORD = pass
-	connInfo.PG_NEWDB_NAME = database
-	connInfo.PG_CONNECT_TIMEOUT = "4"
-	connInfo.PG_CLIENT_ENCODING = encoding -- "UTF-8" --"CP1252" -- "LATIN1" --"WIN1252"
-	connInfo.PG_CHECK_DB_EXISTENCE = database
-
-	local errorMsg = checkConnectionParams("POSTGIS", connInfo)
-	if errorMsg ~= "" then
-		customError(errorMsg) -- SKIP
-	end
+	checkPgConnectParams(connInfo)
 
 	if not binding.te.da.DataSource.exists("POSTGIS", connInfo) then
 		binding.te.da.DataSource.create("POSTGIS", connInfo)
 	end
-
-	connInfo.PG_NEWDB_NAME = nil
-	connInfo.PG_DB_NAME = database
-
-	return connInfo
 end
 
-local function createAdoConnInfo(dbFilePath)
-	return {
-		-- PROVIDER = "Microsoft.Jet.OLEDB.4.0",
-		PROVIDER = "Microsoft.ACE.OLEDB.12.0", -- SKIP
-		DB_NAME = dbFilePath, -- SKIP
-		CREATE_OGC_METADATA_TABLES = "TRUE" -- SKIP
-	}
+local function createPgConnInfo(host, port, user, pass, database, encoding)
+	createPgDbIfNotExists(host, port, user, pass, database, encoding)
+
+	return "pgsql://"..user..":"..pass.."@"..host..":"..port.."/"..database.."?"
+				.."&PG_CLIENT_ENCODING="..encoding
+				.."&PG_CONNECT_TIMEOUT=4"
+				.."&PG_MAX_POOL_SIZE=4"
+				.."&PG_MIN_POOL_SIZE=2"
+				.."&PG_HIDE_SPATIAL_METADATA_TABLES=FALSE"
+				.."&PG_HIDE_RASTER_TABLES=FALSE"
 end
 
 local function addDataSourceInfo(type, title, connInfo)
@@ -173,63 +150,66 @@ local function addDataSourceInfo(type, title, connInfo)
 end
 
 local function makeAndOpenDataSource(connInfo, type)
-	local ds = binding.te.da.DataSourceFactory.make(type)
-	ds:setConnectionInfo(connInfo)
+	local ds = binding.te.da.DataSourceFactory.make(type, connInfo)
 	ds:open()
 
 	return ds
 end
 
-local function hasShapeFileSpatialIndex(shapeFile)
-	if string.find(tostring(shapeFile), "WFS:http://", 1, true) then
-		return false
-	end
+-- local function hasShapeFileSpatialIndex(shapeFile) -- TODO(avancinirodrigo): review
+	-- if string.find(tostring(shapeFile), "WFS:http://", 1, true) then
+		-- return false
+	-- end
 
-	local qixFile = File(string.gsub(shapeFile, ".shp", ".qix"))
-	if qixFile:exists() then
-		return true
-	end
+	-- local qixFile = File(string.gsub(shapeFile, ".shp", ".qix"))
+	-- if qixFile:exists() then
+		-- return true
+	-- end
 
-	local sbnFile = File(string.gsub(shapeFile, ".shp", ".sbn"))
-	if sbnFile:exists() then
-		return true
-	end
+	-- local sbnFile = File(string.gsub(shapeFile, ".shp", ".sbn"))
+	-- if sbnFile:exists() then
+		-- return true
+	-- end
 
-	return false
-end
+	-- return false
+-- end
 
 local function addSpatialIndex(ds, dSetName)
 	ds:execute("CREATE SPATIAL INDEX ON "..dSetName)
 end
 
-local function createLayer(name, dSetName, connInfo, type)
+local function createLayer(name, dSetName, connInfo, type, addSpatialIdx)
 	local layer
 
 	do
 		local dsId = addDataSourceInfo(type, name, connInfo)
-
-		local ds = makeAndOpenDataSource(connInfo, type)
-
-		if not ds:dataSetExists(dSetName) then
-			ds:close() -- SKIP
-			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not exist.") -- SKIP
+		local ds = binding.te.da.DataSourceManager.getInstance():search(dsId)
+		if ds then
+			ds:open()
+		else
+			ds = makeAndOpenDataSource(connInfo, type)
+			ds:setId(dsId)
+			binding.te.da.DataSourceManager.getInstance():insert(ds)
 		end
 
-		ds:setId(dsId)
-
-		binding.te.da.DataSourceManager.getInstance():insert(ds)
+		if not ds:dataSetExists(dSetName) then
+			binding.te.da.DataSourceManager.getInstance():detach(dsId)
+			ds:close() -- SKIP
+			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not created.") -- SKIP
+		end
 
 		local dSetType
 		local dSet
 		local env = nil
 		local srid = 0
 
-		if (type == "OGR") or (type == "WFS") then
+		if (type == "OGR") or (type == "WFS") or (type == "POSTGIS") then
 			dSetType = ds:getDataSetType(dSetName)
 			local gp = binding.GetFirstGeomProperty(dSetType)
 			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
 			srid = gp:getSRID()
-			if not hasShapeFileSpatialIndex(connInfo.URI) and connInfo.SPATIAL_IDX then
+
+			if addSpatialIdx then -- and not hasShapeFileSpatialIndex(connInfo.URI) then -- TODO: check if is OGR resolve it
 				addSpatialIndex(ds, dSetName)
 			end
 		elseif type == "GDAL"then
@@ -238,11 +218,6 @@ local function createLayer(name, dSetName, connInfo, type)
 			local raster = dSet:getRaster(rpos)
 			env = raster:getExtent()
 			srid = raster:getSRID()
-		elseif type == "POSTGIS" then
-			dSetType = ds:getDataSetType(dSetName)
-			local gp = binding.GetFirstGeomProperty(dSetType)
-			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
-			srid = gp:getSRID()
 		end
 
 		local id = binding.GetRandomicId()
@@ -252,13 +227,14 @@ local function createLayer(name, dSetName, connInfo, type)
 		layer:setTitle(name)
 		layer:setDataSourceId(ds:getId())
 		layer:setExtent(env)
-		layer:setVisibility(binding.VISIBLE)
+		layer:setVisibility(binding.NOT_VISIBLE)
 		layer:setRendererType("ABSTRACT_LAYER_RENDERER")
+		layer:setEncoding(binding.CharEncoding.getEncodingType("LATIN1")) -- TODO(avancinirodrigo): REVIEW ENCODING
 
 		if srid == binding.TE_UNKNOWN_SRS then
 			local srsPath = binding.FindInTerraLibPath("share/terralib/json/srs.json")
-			customWarning("It was not possible to find the projection of layer '"..name.."'."
-						.."\nThe projection should be one of the availables in: "..srsPath)
+			customWarning("It was not possible to find the projection of layer '"..name.."'." -- SKIP
+				.."\nThe projection should be one of the availables in: "..srsPath) -- SKIP
 		end
 
 		layer:setSRID(srid)
@@ -288,51 +264,6 @@ local function releaseProject(project)
     binding.te.da.DataSourceManager.getInstance():detachAll()
 end
 
--- local function decodeDataSourceInfo(dsInfo)	-- TODO(#896)
-	-- local connInfo = dsInfo:getConnInfo()
-
-	-- dsInfo:setTitle(decodeUri(dsInfo:getTitle()))
-	-- dsInfo:setDescription(decodeUri(dsInfo:getDescription()))
-
-	-- if connInfo.URI then
-		-- connInfo.URI = decodeUri(connInfo.URI)
-		-- dsInfo:setConnInfo(connInfo)
-	-- end
-	-- if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
-		-- connInfo.SOURCE = decodeUri(connInfo.SOURCE) -- SKIP
-		-- dsInfo:setConnInfo(connInfo) -- SKIP
-	-- end
--- end
-
--- local function encodeDataSourceInfos(layers)	-- TODO(#896)
-	-- local encoded = {}
-
-	-- for _, layer in pairs(layers) do
-		-- layer:setTitle(encodeUri(layer:getTitle()))
-
-		-- local lid = layer:getDataSourceId()
-		-- if not encoded[lid] then
-			-- local dsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(lid)
-			-- local connInfo = dsInfo:getConnInfo()
-
-			-- dsInfo:setTitle(encodeUri(dsInfo:getTitle()))
-			-- dsInfo:setDescription(encodeUri(dsInfo:getDescription()))
-
-			-- if connInfo.URI then
-				-- connInfo.URI = encodeUri(connInfo.URI)
-				-- dsInfo:setConnInfo(connInfo)
-			-- end
-			-- if connInfo.SOURCE then -- TODO(avancinirodrigo): REVIEW IN TERRAVIEW INTEGRATION
-				-- connInfo.SOURCE = encodeUri(connInfo.SOURCE) -- SKIP
-				-- dsInfo:setConnInfo(connInfo) -- SKIP
-			-- end
-			-- binding.te.da.DataSourceInfoManager.getInstance():remove(lid)
-			-- binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo)
-			-- encoded[lid] = lid
-		-- end
-	-- end
--- end
-
 local function saveProject(project, layers)
 	local layersVector = {}
 	local i = 1
@@ -361,31 +292,24 @@ local function loadProject(project, file)
 	end
 end
 
-local function addFileLayer(project, name, filePath, type, addSpatialIdx, dataset)
-	local connInfo = {URI = tostring(filePath)}
+local function addFileLayer(project, name, file, type, addSpatialIdx)
+	local connInfo = createFileConnInfo(tostring(file))
 
 	loadProject(project, project.file)
 
 	local dSetName = ""
 
 	if type == "OGR" then
-		if addSpatialIdx then
-			connInfo.SPATIAL_IDX = true
-		end
-
-		local _, file = File(connInfo.URI):split()
-		dSetName = file
+		local _, fn = file:split()
+		dSetName = fn
 	elseif type == "GDAL" then
-		local file = File(connInfo.URI)
 		dSetName = file:name()
 	elseif type == "GeoJSON" then
 		type = "OGR"
 		dSetName = "OGRGeoJSON"
-	elseif type == "WFS" then -- WFS works like a file layer
-		dSetName = dataset
 	end
 
-	local layer = createLayer(name, dSetName, connInfo, type)
+	local layer = createLayer(name, dSetName, connInfo, type, addSpatialIdx)
 
 	project.layers[layer:getTitle()] = layer
 	saveProject(project, project.layers)
@@ -461,13 +385,13 @@ local function copyLayer(from, to)
 		local fromDsId = from:getDataSourceId()
 		local fromDs = binding.GetDs(fromDsId, true)
 
-		from = toDataSetLayer(from)
+		from = toDataSetLayer(from) -- SKIP
 		local dSetName = from:getDataSetName()
 
 		local toDs = nil
 
-		if to.type == "POSTGIS" then
-			to.table = dSetName
+		if to.type == "POSTGIS" then -- SKIP
+			to.table = dSetName -- SKIP
 			local toConnInfo = createPgConnInfo(to.host, to.port, to.user, to.password, to.database, to.encoding)
 			local toTable = string.lower(to.table)
 			-- TODO: IT IS NOT POSSIBLE CREATE A DATABASE (REVIEW)
@@ -478,33 +402,24 @@ local function copyLayer(from, to)
 				-- toConnInfo.PG_DB_TO_DROP = string.lower(to.dbName)
 				-- binding.te.da.DataSource.drop("POSTGIS", toConnInfo)
 			-- end
-			toDs = makeAndOpenDataSource(toConnInfo, "POSTGIS")
+			toDs = makeAndOpenDataSource(toConnInfo, "POSTGIS") -- SKIP
 
 			local tableExists = toDs:dataSetExists(toTable)
-			if tableExists then
+			if tableExists then -- SKIP
 				toDs:dropDataSet(toTable) -- SKIP
 			end
-		elseif to.type == "ADO" then
-			local toConnInfo = createAdoConnInfo(to.file)
-			-- TODO: ADO DON'T WORK (REVIEW)
-			toDs = makeAndOpenDataSource(toConnInfo, "ADO") --binding.te.da.DataSource.create("ADO", toConnInfo) -- SKIP
-			-- local tableExists = toDs:dataSetExists(toTable)
-			-- if tableExists then
-				-- toDs:dropDataSet(toTable)
-			-- end
-			--fromDs:moveFirst()
 		end
 
 		local fromDSetType = fromDs:getDataSetType(dSetName)
 		local fromDSet = fromDs:getDataSet(dSetName)
 
-		binding.Create(toDs, fromDSetType, fromDSet)
+		binding.Create(toDs, fromDSetType, fromDSet) -- SKIP
 
-		fromDs:close()
-		toDs:close()
+		fromDs:close() -- SKIP
+		toDs:close() -- SKIP
 	end
 
-	collectgarbage("collect")
+	collectgarbage("collect") -- SKIP
 end
 
 local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, type, mask)
@@ -673,7 +588,7 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 			operation = "mean"
 		end
 
-		r2v:setParams(select, OperationMapper[operation], false) -- TODO: TEXTURE PARAM (REVIEW)
+		r2v:setParams(select, OperationMapper[operation], false, true) -- TODO: TEXTURE, READALL PARAMS (REVIEW)
 
 		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
@@ -837,6 +752,19 @@ local function getGeometryTypeName(geomType)
 	return "unknown"
 end
 
+local function removeDataSource(project, dsId)
+	local count = 0
+	for _, v in ipairs(project.layers) do
+		if v:getDataSourceId() == dsId then -- SKIP
+			count = count + 1 -- SKIP
+		end
+	end
+
+	if count == 1 then
+		binding.te.da.DataSourceInfoManager.getInstance():remove(dsId) -- SKIP
+	end
+end
+
 local function removeLayer(project, layerName)
 	do
 		loadProject(project, project.file)
@@ -847,7 +775,7 @@ local function removeLayer(project, layerName)
 		local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
 
 		ds:dropDataSet(dsetName)
-		binding.te.da.DataSourceInfoManager.getInstance():remove(id)
+		removeDataSource(project, id)
 		project.layers[layerName] = nil
 
 		saveProject(project, project.layers)
@@ -951,7 +879,7 @@ local function createOgrDataSourceToSaveAs(fromType, fileData)
 	local ds = nil
 
 	if (fromType == "OGR") or (fromType == "POSTGIS") then
-		local connInfo = {URI = tostring(fileData.file)}
+		local connInfo = createFileConnInfo(tostring(fileData.file))
 		ds = makeAndOpenDataSource(connInfo, "OGR")
 	end
 
@@ -962,7 +890,7 @@ local function createGdalDataSourceToSaveAs(fromType, fileData)
 	local ds = nil
 
 	if fromType == "GDAL" then
-		local connInfo = {URI = tostring(fileData.dir)}
+		local connInfo = createFileConnInfo(tostring(fileData.dir))
 		ds = makeAndOpenDataSource(connInfo, "GDAL")
 	end
 
@@ -970,11 +898,7 @@ local function createGdalDataSourceToSaveAs(fromType, fileData)
 end
 
 local function isValidDataSourceUri(uri, type)
-	local ds = binding.te.da.DataSourceFactory.make(type)
-	local connInfo = {}
-	connInfo.URI = uri
-	ds:setConnectionInfo(connInfo)
-
+	local ds = binding.te.da.DataSourceFactory.make(type, uri)
 	return ds:isValid()
 end
 
@@ -1099,25 +1023,23 @@ TerraLib_ = {
 		local connInfo = dsInfo:getConnInfo()
 
 		if type == "POSTGIS" then
-			info.host = connInfo.PG_HOST
-			info.port = connInfo.PG_PORT
-			info.user = connInfo.PG_USER
-			info.password = connInfo.PG_PASSWORD
-			info.database = connInfo.PG_DB_NAME
+			info.host = connInfo:host()
+			info.port = connInfo:port()
+			info.user = connInfo:user()
+			info.password = connInfo:password()
+			info.database = string.gsub(connInfo:path(), "/", "")
 			info.table = dseName
 			info.source = "postgis"
 		elseif type == "OGR" then
-			info.file = connInfo.URI
+			info.file = connInfo:host()..connInfo:path()
 			local file = File(info.file)
 			info.source = file:extension()
 		elseif type == "GDAL" then
-			info.file = connInfo.URI
+			info.file = connInfo:host()..connInfo:path()
 			local file = File(info.file)
 			info.source = file:extension()
-		elseif type == "ADO" then
-			info.source = "access" -- SKIP
 		elseif type == "WFS" then
-			info.url = connInfo.URI
+			info.url = connInfo:path()
 			info.source = "wfs"
 			info.dataset = dseName
 		end
@@ -1147,22 +1069,22 @@ TerraLib_ = {
 	end,
 	--- Add a shapefile layer to a given project.
 	-- @arg _ A TerraLib object.
-	-- @arg project The name of the project.
+	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
-	-- @arg filePath The path for the project.
+	-- @arg file The file to the layer.
 	-- @arg addSpatialIdx A boolean value indicating whether a spatial index file should be created.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
-	-- tl:createProject("project.tview", {})
+	-- proj = tl:createProject("project.tview", {})
 	-- tl:addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
-	addShpLayer = function(_, project, name, filePath, addSpatialIdx)
-		addFileLayer(project, name, filePath, "OGR", addSpatialIdx)
+	addShpLayer = function(_, project, name, file, addSpatialIdx)
+		addFileLayer(project, name, file, "OGR", addSpatialIdx)
 	end,
 	--- Add a new GDAL layer to a given project.
 	-- @arg _ A TerraLib object.
-	-- @arg filePath The path for the project.
+	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
-	-- @arg project The name of the project.
+	-- @arg file The file to the layer.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
 	-- proj = {
@@ -1176,20 +1098,20 @@ TerraLib_ = {
 	-- layerName = "TifLayer"
 	-- layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
 	-- tl:addGdalLayer(proj, layerName, layerFile)
-	addGdalLayer = function(_, project, name, filePath)
-		addFileLayer(project, name, filePath, "GDAL")
+	addGdalLayer = function(_, project, name, file)
+		addFileLayer(project, name, file, "GDAL")
 	end,
 	--- Add a GeoJSON layer to a given project.
 	-- @arg _ A TerraLib object.
-	-- @arg project The name of the project.
+	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
-	-- @arg filePath The path for the project.
+	-- @arg file The file to the layer.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
 	-- tl:createProject("project.tview", {})
 	-- tl:addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
-	addGeoJSONLayer = function(_, project, name, filePath)
-		addFileLayer(project, name, filePath, "GeoJSON")
+	addGeoJSONLayer = function(_, project, name, file)
+		addFileLayer(project, name, file, "GeoJSON")
 	end,
 	--- Validates if the URL is a valid WFS server.
 	-- @arg _ A TerraLib object.
@@ -1203,7 +1125,7 @@ TerraLib_ = {
 		return isValidDataSourceUri(toWfsUrl(url), "WFS")
 	end,
 	--- Add a WFS layer to a given project.
-	-- @arg project The name of the project.
+	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg url The URL of the WFS server.
 	-- @arg dataset The data set in WFS server.
@@ -1215,14 +1137,20 @@ TerraLib_ = {
 	addWfsLayer = function(self, project, name, url, dataset)
 		local wfsUrl = toWfsUrl(url)
 		if self:isValidWfsUrl(wfsUrl) then
-			addFileLayer(project, name, wfsUrl, "WFS", nil, dataset)
+			loadProject(project, project.file)
+
+			local layer = createLayer(name, dataset, wfsUrl, "WFS", nil)
+
+			project.layers[layer:getTitle()] = layer
+			saveProject(project, project.layers)
+			releaseProject(project)
 		else
 			customError("The URL '"..url.."' is invalid.")
 		end
 	end,
 	--- Create a new cellular layer into a shapefile.
-	-- @arg project The name of the project.
-	-- @arg filePath The path for the project.
+	-- @arg project A table that represents a project.
+	-- @arg file The file to the cellular layer.
 	-- @arg name The name of the layer.
 	-- @arg resolution The size of a cell.
 	-- @arg inputLayerTitle The name of the layer.
@@ -1242,21 +1170,21 @@ TerraLib_ = {
 	-- tl:addGeoJSONLayer(proj, layerName1, layerFile1)
 	--
 	-- tl:addGeoJSONCellSpaceLayer(proj, layerName1, "Setores_Cells", 10000, currentDir())
-	addGeoJSONCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask)
+	addGeoJSONCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, file, mask)
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
-		local connInfo = {URI = tostring(filePath)}
-		local _, dSetName = File(connInfo.URI):split()
+		local connInfo = createFileConnInfo(tostring(file))
+		local _, dSetName = file:split()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		self:addGeoJSONLayer(project, name, filePath)
+		self:addGeoJSONLayer(project, name, file)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
-	-- @arg project The name of the project.
-	-- @arg name The name of the layer.
 	-- @arg _ A TerraLib object.
+	-- @arg project A table that represents a project.
+	-- @arg name The name of the layer.
 	-- @arg data.host Name of the host.
 	-- @arg data.port Port number.
 	-- @arg data.user The user name.
@@ -1295,10 +1223,9 @@ TerraLib_ = {
 
 		loadProject(project, project.file)
 
-		local layer = nil
+		local layer
 
 		if dataSetExists(connInfo, data.table, "POSTGIS") then
-			connInfo.PG_NEWDB_NAME = data.table
 			layer = createLayer(name, data.table, connInfo, "POSTGIS")
 		else
 			releaseProject(project) -- SKIP
@@ -1310,11 +1237,11 @@ TerraLib_ = {
 		releaseProject(project)
 	end,
 	--- Create a new cellular layer into a shapefile.
-	-- @arg project The name of the project.
-	-- @arg filePath The path for the project.
+	-- @arg project A table that represents a project.
+	-- @arg inputLayerTitle The name of the layer.
 	-- @arg name The name of the layer.
 	-- @arg resolution The size of a cell.
-	-- @arg inputLayerTitle The name of the layer.
+	-- @arg file The file to the layer.
 	-- @arg mask A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
 	-- @arg addSpatialIdx A boolean value indicating whether a spatial index file should be created.
 	-- @usage -- DONTRUN
@@ -1332,16 +1259,17 @@ TerraLib_ = {
 	-- tl:addShpLayer(proj, layerName1, layerFile1)
 	--
 	--	tl:addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
-	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, filePath, mask, addSpatialIdx)
+
+	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, file, mask, addSpatialIdx)
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
-		local connInfo = {URI = tostring(filePath)}
-		local _, dSetName = File(connInfo.URI):split()
+		local connInfo = createFileConnInfo(tostring(file))
+		local _, dSetName = file:split()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		self:addShpLayer(project, name, filePath, addSpatialIdx)
+		self:addShpLayer(project, name, file, addSpatialIdx)
 	end,
 	--- Add a new cellular layer to a PostgreSQL connection.
 	-- @arg project The name of the project.
@@ -1470,13 +1398,12 @@ TerraLib_ = {
 	--
 	-- tl:dropPgDatabase(pgData)
 	dropPgDatabase = function(_, data)
-		local connInfo = {}
-		connInfo.PG_DB_TO_DROP = data.database
-		connInfo.PG_HOST = data.host
-		connInfo.PG_PORT = data.port
-		connInfo.PG_USER = data.user
-		connInfo.PG_PASSWORD = data.password
-		connInfo.PG_CHECK_DB_EXISTENCE = data.database
+		local connInfo = "pgsql://"..data.user..":"..data.password.."@"..data.host..":"..data.port.."/?"
+					.."&PG_CONNECT_TIMEOUT=4"
+					.."&PG_MAX_POOL_SIZE=4"
+					.."&PG_MIN_POOL_SIZE=2"
+					.."&PG_DB_TO_DROP="..data.database
+					.."&PG_CHECK_DB_EXISTENCE="..data.database
 
 		if binding.te.da.DataSource.exists("POSTGIS", connInfo) then
 			binding.te.da.DataSource.drop("POSTGIS", connInfo)
@@ -1517,12 +1444,12 @@ TerraLib_ = {
 	--
 	-- tl:copyLayer(proj, layerName1, pgData)
 	copyLayer = function(_, project, from, to)
-		loadProject(project, project.file)
+		loadProject(project, project.file) -- SKIP
 
 		local fromLayer = project.layers[from]
-		copyLayer(fromLayer, to)
+		copyLayer(fromLayer, to) -- SKIP
 
-		releaseProject(project)
+		releaseProject(project) -- SKIP
 	end,
 	--- Fill a given attribute in a layer.
 	-- @arg project The name of the project.
@@ -1601,16 +1528,15 @@ TerraLib_ = {
 			local outConnInfo = outDsInfo:getConnInfo()
 			local outDSetName = out
 			local propCreatedName
+			local outSpatialIdx
 
 			if outType == "POSTGIS" then
 				outDSetName = string.lower(outDSetName)
-				outConnInfo.PG_NEWDB_NAME = outDSetName
 			elseif outType == "OGR" then
-				local file = File(outConnInfo.URI)
+				local file = File(outConnInfo:host()..outConnInfo:path())
 				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
-				outConnInfo.URI = outDir..out..".shp"
-				outConnInfo.DRIVER = "ESRI Shapefile"
-				outConnInfo.SPATIAL_IDX = true
+				outConnInfo = binding.te.core.URI(createFileConnInfo(outDir..out..".shp"))
+				outSpatialIdx = true
 			end
 
 			local dseType = fromLayer:getSchema()
@@ -1649,7 +1575,7 @@ TerraLib_ = {
 			-- #875
 			-- outDs:renameDataSet(outDSetName, "rename_test")
 
-			local outLayer = createLayer(out, outDSetName, outConnInfo, outType)
+			local outLayer = createLayer(out, outDSetName, outConnInfo, outType, outSpatialIdx)
 			project.layers[out] = outLayer
 
 			loadProject(project, project.file) -- TODO: IT NEED RELOAD (REVIEW)
@@ -1665,7 +1591,7 @@ TerraLib_ = {
 				local toSetName = nil
 
 				if toType == "OGR" then
-					local _, name = File(toConnInfo.URI):split()
+					local _, name = File(toConnInfo:host()..toConnInfo:path()):split()
 					toSetName = name
 				end
 
@@ -1822,12 +1748,11 @@ TerraLib_ = {
 			local outDs = nil
 			if outType == "POSTGIS" then
 				newDstName = string.lower(newDstName)
-				outConnInfo.PG_NEWDB_NAME = newDstName
 				outDs = makeAndOpenDataSource(outConnInfo, outType)
 			elseif outType == "OGR" then
-				local file = File(outConnInfo.URI)
+				local file = File(outConnInfo:host()..outConnInfo:path())
 				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
-				outConnInfo.URI = outDir..newDstName..".shp"
+				outConnInfo = createFileConnInfo(outDir..newDstName..".shp")
 
 				if fromLayerName == toName then
 					outDs = ds
@@ -1876,9 +1801,9 @@ TerraLib_ = {
 		local set
 
 		do
-			local connInfo = {URI = tostring(filePath)}
+			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "GDAL")
-			local file = File(connInfo.URI)
+			local file = File(filePath)
 			local dSetName = file:name(true)
 			local dSet = ds:getDataSet(dSetName)
 			set = createDataSetAdapted(dSet)
@@ -1901,7 +1826,7 @@ TerraLib_ = {
 		local set
 
 		do
-			local connInfo = {URI = tostring(filePath)}
+			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "OGR")
 			local dSetName
 			local file = File(filePath)
@@ -2045,7 +1970,11 @@ TerraLib_ = {
 				local bandProperty = bandObj:getProperty()
 				value = bandProperty.m_noDataValue
 			else
-				customError("The maximum band is '"..(numBands - 1).."'.")
+				if (numBands - 1) > 0 then
+					customError("The maximum band is '"..(numBands - 1).."'.")
+				else
+					customError("The only available band is '"..(numBands - 1).."'.") -- SKIP
+				end
 			end
 		end
 
@@ -2072,7 +2001,7 @@ TerraLib_ = {
 			local toType = SourceTypeMapper[toData.type]
 			local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)
 			local fromDs = binding.GetDs(fromDsId, true)
-
+			fromDs:setEncoding(from:getEncoding())
 			from = toDataSetLayer(from)
 			local fromDSetName = from:getDataSetName()
 			local fromType = fromDsInfo:getType()
@@ -2086,7 +2015,7 @@ TerraLib_ = {
 					errorMsg = "It was not possible save the data in layer '"..layerName.."' to postgis data." -- #1363
 				elseif toDs:dataSetExists(toData.table) then
 					if overwrite then
-						toDs:dropDataSet(toData.table)
+						toDs:dropDataSet(toData.table) -- SKIP
 					else
 						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
 					end
@@ -2191,7 +2120,12 @@ TerraLib_ = {
 			-- }
 		  -- }
 
-			binding.Create(toDs, dstResult, dsetAdapted)
+			local transactor = toDs:getTransactor()
+			transactor:begin()
+			transactor:createDataSet(dstResult, {})
+			dsetAdapted:moveBeforeFirst()
+			transactor:add(dstResult:getName(), dsetAdapted)
+			transactor:commit()
 
 			-- #875
 			-- if toType == "POSTGIS" then
@@ -2240,6 +2174,7 @@ TerraLib_ = {
 			end
 
 			ds:close()
+
 			releaseProject(project)
 		end
 

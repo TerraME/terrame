@@ -124,7 +124,7 @@ return{
 		enableGraphics()
 
 		local c = Chart{
-		    target = {value = 2}
+		    target = DataFrame{value = {2}}
 		}
 
 		unitTest:assertSnapshot(c, "enable_graphics_chart.png", 0.05)

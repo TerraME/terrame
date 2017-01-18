@@ -26,6 +26,17 @@ local function isValidSource(source)
 	return belong(source, {"tif", "shp", "postgis", "access", "nc", "asc", "geojson", "wfs"})
 end
 
+local function isValidName(name)
+	if string.find(name, "%W") then
+		local n = string.gsub(name, "-*_*", "")
+		if string.find(n, "%W") or string.find(n, "%s") then
+			return false
+		end
+	end
+
+	return true
+end
+
 local function adaptsTerraLibInfo(data)
 	local layer = data.project.layers[data.name]
 	local info = data.project.terralib:getLayerInfo(data.project, layer)
@@ -117,7 +128,7 @@ local function addCellularLayer(self, data)
 			end
 
 			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution,
-													data.file, not data.box, data.index)
+											data.file, not data.box, data.index)
 		end,
 		geojson = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
@@ -133,7 +144,7 @@ local function addCellularLayer(self, data)
 			end
 
 			self.terralib:addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution, -- SKIP
-				data.file, not data.box) -- SKIP
+												data.file, not data.box) -- SKIP
 		end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")
@@ -196,6 +207,10 @@ local function addLayer(self, data)
 		if data.source ~= data.file:extension() then
 			customError("File '"..data.file.."' does not match to source '"..data.source.."'.")
 		end
+	end
+
+	if not isValidName(data.name) then
+		customError("Layer name '"..data.name.."' is not a valid name. Please, revise special characters or spaces from it.")
 	end
 
 	if self.layers[data.name] then
@@ -413,6 +428,10 @@ Layer_ = {
 		mandatoryTableArgument(data, "operation", "string")
 		mandatoryTableArgument(data, "attribute", "string")
 
+		if not isValidName(data.attribute) then
+			customError("Attribute name '"..data.attribute.."' is not a valid name. Please, revise special characters or spaces from it.")
+		end
+
 		local tlib = TerraLib{}
 		local project = self.project
 
@@ -623,13 +642,13 @@ Layer_ = {
 		local prj = self.project.terralib:getProjection(self.project.layers[self.name])
 
 		if prj.NAME == "" then
-			prj.NAME = "Undefined"
+			prj.NAME = "Undefined" -- SKIP
 		else
 			prj.NAME = "'"..prj.NAME.."'"
 		end
 
 		if prj.PROJ4 == "" then
-			prj.PROJ4 = "Undefined"
+			prj.PROJ4 = "Undefined" -- SKIP
 		else
 			prj.PROJ4 = "'"..prj.PROJ4.."'"
 		end

@@ -51,7 +51,7 @@ return {
 		local tableName = "sampa"
 
 		local pgData = {
-			type = "POSTGIS",
+			type = "postgis",
 			host = host,
 			port = port,
 			user = user,
@@ -61,7 +61,7 @@ return {
 			encoding = encoding
 		}
 
-		tl:copyLayer(proj, layerName1, pgData)
+		tl:saveLayerAs(proj, layerName1, pgData, true)
 
 		local layerName2 = "SampaPg"
 		tl:addPgLayer(proj, layerName2, pgData)
@@ -1463,7 +1463,7 @@ return {
 		toData.srid = 4326
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		local layerName3 = "SHP"
-		tl:addShpLayer(proj, layerName3, toData.file)
+		tl:addShpLayer(proj, layerName3, File(toData.file))
 		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
 		unitTest:assertEquals(info3.srid, toData.srid)
 
@@ -1479,7 +1479,7 @@ return {
 		toData.srid = 4326
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		local layerName4 = "GJ"
-		tl:addGeoJSONLayer(proj, layerName4, toData.file)
+		tl:addGeoJSONLayer(proj, layerName4, File(toData.file))
 		local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
 		unitTest:assertEquals(info4.srid, toData.srid)
 

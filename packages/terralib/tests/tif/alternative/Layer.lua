@@ -138,7 +138,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(invalidBand, "Band '5' does not exist. The available bands are from '0' to '4.0'.")
+		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
 
 		Layer{
 			project = proj,
@@ -187,7 +187,7 @@ return {
 
 			l:dummy(4)
 		end
-		unitTest:assertError(bandNoExists, "The maximum band is '3.0'.")
+		unitTest:assertError(bandNoExists, "The only available band is '0.0'.")
 
 		File(projName):delete()
 

@@ -1,0 +1,5 @@
+Warning: Variable 'Print' is not declared. In file 'trace-call.lua', line 1.
+Warning: Variable 'x' is not declared. In file 'trace-call.lua', line 1.
+Error: attempt to call a nil value (global 'Print')
+Stack traceback:
+    File 'trace-call.lua', line 1, in main chunk
