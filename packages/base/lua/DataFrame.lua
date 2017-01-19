@@ -33,7 +33,7 @@ local metaTableDataFrameItem_ = {
 	end,
 	__index = function(self, idx)
 		if not self.data[idx] then
-			return nil
+			return self.parent.instance[idx]
 		end
 
 		return self.data[idx][self.pos]
@@ -69,11 +69,21 @@ local function add(self, row, idx)
 	if idx == nil then
 		table.insert(self.rows_, true)
 		forEachElement(row, function(midx, value)
+			if self.data[midx] == nil then
+				self.columns_[midx] = true
+				self.data[midx] = {}
+			end
+
 			table.insert(self.data[midx], value)
 		end)
 	else
 		self.rows_[idx] = true
 		forEachElement(row, function(midx, value)
+			if self.data[midx] == nil then
+				self.columns_[midx] = true
+				self.data[midx] = {}
+			end
+
 			self.data[midx][idx] = value
 		end)
 	end
@@ -213,9 +223,9 @@ metaTableDataFrame_ = {
 
 			forEachOrderedElement(mcolumns, function(col)
 				if not first then
-					str = str.."\t"..self.data[col][idx]
+					str = str.."\t"..tostring(self.data[col][idx])
 				else
-					str = idx.."\t"..self.data[col][idx]
+					str = idx.."\t"..tostring(self.data[col][idx])
 					first = false
 				end
 			end)
@@ -232,6 +242,7 @@ metaTableDataFrame_ = {
 -- @arg data.first A number with the first index.
 -- @arg data.step A number with the interval between two indexes.
 -- @arg data.last A number with the last index. This argument is optional
+-- @arg data.instance An optional object used as meta table for the rows of the DataFrame.
 -- and only used to check whether it is equals to first plus
 -- step times the size of the data vectors.
 -- @arg data.... Values for the DataFrame. It can be a vector of named tables or a named table with whose values are vectors.
@@ -284,10 +295,20 @@ function DataFrame(data)
 	local first = data.first
 	local step = data.step
 	local last = data.last
+	local instance = data.instance
 
 	data.first = nil
 	data.step = nil
 	data.last = nil
+	data.instance = nil
+
+	if instance then
+		if not isTable(instance) then
+			customError("Argument 'instance' should be an isTable() object, got "..type(instance)..".")
+		end
+	else
+		instance = {}
+	end
 
 	if last then
 		local quantity = (last - first) / step
@@ -375,6 +396,7 @@ function DataFrame(data)
 
 	data = {
 		data = df,
+		instance = instance,
 		rows_ = mrows,
 		columns_ = mcolumns
 	}

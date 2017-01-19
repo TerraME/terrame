@@ -105,6 +105,16 @@ return{
 
 		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
 		unitTest:assertEquals(sumvalue, 0.1 + 0.04 + 0.3 + 0.07)
+
+		local agent = Agent{}
+
+		df = DataFrame{
+			x = {1, 2, 3, 4, 5},
+			y = {1, 1, 2, 2, 2},
+			instance = agent
+		}
+
+		unitTest:assertType(df[1], "Agent")
 	end,
 	add = function(unitTest)
 		local df = DataFrame{
