@@ -69,8 +69,6 @@ cl:fill{
 	attribute = "defor"
 }
 
-if sessionInfo().system ~= "mac" then
-
 cl:fill{
 	operation = "sum",
 	layer = "setores",
@@ -91,8 +89,6 @@ cl:fill{
 	attribute = "distl"
 }
 
-end
-
 cs = CellularSpace{
 	project = proj,
 	layer = "cells"
@@ -105,16 +101,12 @@ m = Map{
 	color = "Blues"
 }
 
-if sessionInfo().system ~= "mac" then
-
 m = Map{
 	target = cs,
 	select = "distl",
 	slices = 10,
 	color = "Reds"
 }
-
-end
 
 m = Map{
 	target = cs,
@@ -130,8 +122,6 @@ m = Map{
 	color = "Greens"
 }
 
-if sessionInfo().system ~= "mac" then
-
 m = Map{
 	target = cs,
 	select = "pop",
@@ -145,6 +135,3 @@ m = Map{
 	slices = 10,
 	color = "Reds"
 }
-
-end
-
