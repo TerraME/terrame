@@ -480,9 +480,7 @@ return {
 			clean = true
 		}
 
-	if sessionInfo().system ~= "mac" then -- TODO(1448)
 		local layerName1 = "Prodes"
-
 		local layer = Layer{
 			project = proj,
 			name = layerName1,
@@ -491,10 +489,7 @@ return {
 
 		local props = layer:attributes()
 
-		unitTest:assertNil(props) -- SKIP
-	else
-		unitTest:assert(true) -- SKIP
-	end
+		unitTest:assertNil(props)
 
 		proj.file:delete()
 	end,
