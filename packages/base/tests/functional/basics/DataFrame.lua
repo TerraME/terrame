@@ -133,6 +133,14 @@ return{
 		unitTest:assertEquals(#df, 4)
 		unitTest:assertEquals(df[4].x, 9)
 		unitTest:assertEquals(df.y[4], 9)
+
+		df:add({x = 9, y = 9, z = 10}, 5)
+		df:add{x = 9, y = 9, z = 12, k = 2}
+
+		unitTest:assertEquals(#df, 6)
+		unitTest:assertEquals(df[5].z, 10)
+		unitTest:assertNil(df[5].k)
+		unitTest:assertEquals(df[6].z, 12)
 	end,
 	columns = function(unitTest)
 		local df = DataFrame{

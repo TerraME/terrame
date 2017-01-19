@@ -68,13 +68,14 @@ local metaTableDataFrameItem_ = {
 local function add(self, row, idx)
 	if idx == nil then
 		table.insert(self.rows_, true)
+		idx = getn(self.rows_)
 		forEachElement(row, function(midx, value)
 			if self.data[midx] == nil then
 				self.columns_[midx] = true
 				self.data[midx] = {}
 			end
 
-			table.insert(self.data[midx], value)
+			self.data[midx][idx] = value
 		end)
 	else
 		self.rows_[idx] = true
@@ -247,7 +248,7 @@ metaTableDataFrame_ = {
 -- @arg data.file A string or a File. It must have extension '.lua'.
 -- @arg data.first A number with the first index.
 -- @arg data.step A number with the interval between two indexes.
--- @arg data.last A number with the last index. This argument is optional
+-- @arg data.last A number with the last index. This argument is optional.
 -- @arg data.instance An optional object used as meta table for the rows of the DataFrame.
 -- and only used to check whether it is equals to first plus
 -- step times the size of the data vectors.
