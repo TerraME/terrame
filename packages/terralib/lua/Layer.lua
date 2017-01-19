@@ -779,8 +779,8 @@ metaTableLayer_ = {
 -- @tabular source
 -- Source & Description & Mandatory arguments & Optional arguments \
 -- "none" & Tries to open a Layer already stored in the Project & project, name & \
--- "postgis" & Create a Layer to connect to a PostGIS database. & password, name, project & user, port, host \
--- "shp" & Create a Layer to work with an ESRI shapefile. & file, name, project & clean\
+-- "postgis" & Create a Layer to connect to a PostGIS database. & password, name, project & user, port, host, srid \
+-- "shp" & Create a Layer to work with an ESRI shapefile. & file, name, project & clean, srid\
 -- "wfs" & Create a Layer to use data stored in a Web Feature Service (WFS). & service, feature, name, project & \
 -- "cell" & Create a cellular Layer. It has a raster-like
 -- representation of space with several attributes created from

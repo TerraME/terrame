@@ -1091,6 +1091,7 @@ TerraLib_ = {
 	-- @arg name The name of the layer.
 	-- @arg file The file to the layer.
 	-- @arg addSpatialIdx A boolean value indicating whether a spatial index file should be created.
+	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
 	-- proj = tl:createProject("project.tview", {})
@@ -1103,6 +1104,7 @@ TerraLib_ = {
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg file The file to the layer.
+	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
 	-- proj = {
@@ -1124,6 +1126,7 @@ TerraLib_ = {
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg file The file to the layer.
+	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
 	-- tl:createProject("project.tview", {})
@@ -1209,6 +1212,7 @@ TerraLib_ = {
 	-- @arg data.password The password.
 	-- @arg data.database The database name.
 	-- @arg data.encoding The encoding of the table.
+	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
 	--
