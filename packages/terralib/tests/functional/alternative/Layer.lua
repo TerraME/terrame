@@ -42,19 +42,11 @@ return{
 
 		local proj
 
-		if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		proj = Project{
 			file = projFile:name(true),
 			clean = true,
 			deforestation = filePath("Desmatamento_2000.tif", "terralib"),
 		}
-		else
-		proj = Project{
-			file = projFile:name(true),
-			clean = true,
-			deforestation = filePath("test/sampa.shp", "terralib"),
-		}
-		end
 
 		local layerName = "any"
 		local layerDoesNotExists = function()
@@ -391,6 +383,16 @@ return{
 		end
 		unitTest:assertError(invalidLayerName, "Layer name 'SãoPaulo' is not a valid name. Please, revise special characters or spaces from it.")
 
+		local invalidSridType = function()
+			Layer{
+				project = proj,
+				name = "SampaSrid",
+				file = filePath("test/sampa.shp", "terralib"),
+				srid = true
+			}
+		end
+		unitTest:assertError(invalidSridType, "Incompatible types. Argument 'srid' expected number, got boolean.")
+
 		File(projName):deleteIfExists()
 		File(shp1):deleteIfExists()
 	end,
@@ -403,19 +405,11 @@ return{
 		}
 
 		local layerName1 = "Setores_2000"
-		if sessionInfo().system ~= "mac" then
 		Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
-		else
-		Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
-		}
-		end
 
 		local clName1 = "setores_cells2"
 		local filePath1 = clName1..".shp"
@@ -641,7 +635,6 @@ return{
 		end
 		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'.")
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		selected = "populaco"
 		local selectNotExistsSug = function()
 			cl:fill{
@@ -651,8 +644,7 @@ return{
 				select = selected
 			}
 		end
-		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'Populacao'?") -- SKIP
-	end
+		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'Populacao'?")
 
 		selectNotString = function()
 			cl:fill{
@@ -928,7 +920,6 @@ return{
 		local cW = customWarning
 		customWarning = function() return end
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		cl:fill{
 			operation = "presence",
 			layer = localidades,
@@ -942,15 +933,12 @@ return{
 				attribute = "presence2001"
 			}
 		end
-		unitTest:assertError(normalizedTrucatedError, "The attribute 'presence20' already exists in the Layer.") -- SKIP
-	end
+		unitTest:assertError(normalizedTrucatedError, "The attribute 'presence20' already exists in the Layer.")
 
 		customWarning = cW
 
 		-- RASTER TESTS ----------------------------------------------------------------
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local layerName3 = "Desmatamento"
-
 		Layer{
 			project = proj,
 			name = layerName3,
@@ -966,7 +954,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		local selectNotNumber = function()
 			cl:fill{
@@ -976,7 +964,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local bandNegative = function()
 			cl:fill{
@@ -986,7 +974,7 @@ return{
 				band = -1
 			}
 		end
-		unitTest:assertError(bandNegative, positiveArgumentMsg("band", -1, true)) -- SKIP
+		unitTest:assertError(bandNegative, positiveArgumentMsg("band", -1, true))
 
 		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT)
 		-- local layerNotIntersect = function()
@@ -1008,7 +996,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1018,7 +1006,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		areaUnnecessary = function()
 			cl:fill{
@@ -1029,7 +1017,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1039,7 +1027,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		areaUnnecessary = function()
 			cl:fill{
@@ -1050,7 +1038,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1060,7 +1048,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		areaUnnecessary = function()
 			cl:fill{
@@ -1071,7 +1059,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1081,7 +1069,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		areaUnnecessary = function()
 			cl:fill{
@@ -1092,7 +1080,7 @@ return{
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area")) -- SKIP
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1102,7 +1090,7 @@ return{
 				band = "0"
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0")) -- SKIP
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local op1NotAvailable = function()
 			cl:fill{
@@ -1111,7 +1099,7 @@ return{
 				layer = layerName3
 			}
 		end
-		unitTest:assertError(op1NotAvailable, "The operation 'area' is not available for layers with raster data.") -- SKIP
+		unitTest:assertError(op1NotAvailable, "The operation 'area' is not available for layers with raster data.")
 
 		local op2NotAvailable = function()
 			cl:fill{
@@ -1120,7 +1108,7 @@ return{
 				layer = layerName3
 			}
 		end
-		unitTest:assertError(op2NotAvailable, "The operation 'count' is not available for layers with raster data.") -- SKIP
+		unitTest:assertError(op2NotAvailable, "The operation 'count' is not available for layers with raster data.")
 
 		local op3NotAvailable = function()
 			cl:fill{
@@ -1129,7 +1117,7 @@ return{
 				layer = layerName3
 			}
 		end
-		unitTest:assertError(op3NotAvailable, "The operation 'distance' is not available for layers with raster data.") -- SKIP
+		unitTest:assertError(op3NotAvailable, "The operation 'distance' is not available for layers with raster data.")
 
 		local op4NotAvailable = function()
 			cl:fill{
@@ -1138,8 +1126,7 @@ return{
 				layer = layerName3
 			}
 		end
-		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.") -- SKIP
-	end
+		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.")
 
 		File(projName):deleteIfExists()
 		File(filePath1):deleteIfExists()

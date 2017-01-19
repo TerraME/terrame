@@ -79,6 +79,16 @@ return {
 		unitTest:assertEquals(layerInfo.table, tableName)
 		unitTest:assertNotNil(layerInfo.sid)
 
+		-- CHANGE SRID
+		local layerName3 = "SampaNewSrid"
+		tl:addPgLayer(proj, layerName3, pgData, 29901)
+
+		local layerInfo3 = tl:getLayerInfo(proj, proj.layers[layerName3])
+
+		unitTest:assertEquals(layerInfo3.srid, 29901.0)
+		unitTest:assert(layerInfo3.srid ~= layerInfo.srid)
+		-- // CHANGE SRID
+
 		proj.file:delete()
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)
@@ -757,7 +767,7 @@ return {
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
 		local layerName4 = "Prodes_PA"
 		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "terralib")
-		tl:addGdalLayer(proj, layerName4, layerFile4)
+		tl:addGdalLayer(proj, layerName4, layerFile4, wsumLayerInfo.srid)
 
 		local percTifLayerName = clName.."_"..layerName4.."_RPercentage"
 
