@@ -22,6 +22,8 @@
 --
 -------------------------------------------------------------------------------------------
 
+local concat = table.concat
+
 -- @header Some basic and useful functions to handle errors and error messages.
 
 --- Stop the simulation with an error.
@@ -371,7 +373,8 @@ end
 -- or ErrorHandling:incompatibleTypeMsg().
 -- @arg table A named table.
 -- @arg attr A string with the argument name.
--- @arg mtype A string with the required type for the argument.
+-- @arg mtype A string with the required type for the argument, or a vector
+-- of strings with the allowed types.
 -- This argument is optional. If not used, then this function
 -- will check only if the argument is not nil.
 -- @usage myFunction = function(mtable)
@@ -383,12 +386,16 @@ end
 function mandatoryTableArgument(table, attr, mtype)
 	if table[attr] == nil then
 		mandatoryArgumentError(attr)
-	elseif type(table[attr]) ~= mtype then
-		if type(mtype) == "string" then
+	elseif type(mtype) == "string" then
+		if type(table[attr]) ~= mtype then
 			incompatibleTypeError(attr, mtype, table[attr])
-		elseif mtype ~= nil then
-			customError(incompatibleTypeMsg(3, "string", mtype))
 		end
+	elseif type(mtype) == "table" then
+		if not belong(type(table[attr]), mtype) then
+			incompatibleTypeError(attr, concat(mtype, " or "), table[attr])
+		end
+	else
+		customError(incompatibleTypeMsg(3, "string or table", mtype))
 	end
 end
 
@@ -423,7 +430,7 @@ end
 -- The error comes from ErrorHandling:incompatibleTypeError().
 -- @arg table A named table.
 -- @arg attr A string with the name of the argument.
--- @arg allowedType A string with the required type for the argument.
+-- @arg allowedType A string with the required type for the argument or a table with strings describing the allowed types.
 -- @usage myFunction = function(mtable)
 --     optionalTableArgument(mtable, "value", "string")
 -- end
@@ -434,8 +441,14 @@ function optionalTableArgument(table, attr, allowedType)
 	local value = table[attr]
 	local mtype = type(value)
 
-	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypeError(attr, allowedType, value)
+	if value == nil then return end
+
+	if type(allowedType) == "string" then
+		if mtype ~= allowedType then
+			incompatibleTypeError(attr, allowedType, value)
+		end
+	elseif not belong(mtype, allowedType) then
+		incompatibleTypeError(attr, concat(allowedType, " or "), value)
 	end
 end
 

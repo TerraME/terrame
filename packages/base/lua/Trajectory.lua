@@ -355,12 +355,7 @@ function Trajectory(data)
 	verifyNamedTable(data)
 
 	verifyUnnecessaryArguments(data, {"target", "build", "select", "greater", "random"})
-
-	if data.target == nil then
-		mandatoryArgumentError("target")
-	elseif type(data.target) ~= "CellularSpace" and type(data.target) ~= "Trajectory" then
-		incompatibleTypeError("target", "CellularSpace or Trajectory", data.target)
-	end
+	mandatoryTableArgument(data, "target", {"CellularSpace", "Trajectory"})
 
 	if data.greater and data.random then
 		customError("It is not possible to use arguments 'greater' and 'random' at the same time.")

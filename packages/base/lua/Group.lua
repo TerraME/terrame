@@ -285,9 +285,7 @@ function Group(data)
 
 	verifyUnnecessaryArguments(data, {"target", "build", "select", "greater", "random"})
 
-	if type(data.target) ~= "Society" and type(data.target) ~= "Group" and data.target ~= nil then
-		incompatibleTypeError("target", "Society, Group, or nil", data.target)
-	end
+	optionalTableArgument(data, "target", {"Society", "Group"})
 
 	if data.greater and data.random then
 		customError("It is not possible to use arguments 'greater' and 'random' at the same time.")

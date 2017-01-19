@@ -81,7 +81,7 @@ return{
 		local error_func = function()
 			mandatoryTableArgument(tab, "value", 2)
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(3, "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(3, "string or table", 2))
 	end,
 	positiveTableArgument = function(unitTest)
 		local error_func = function()
