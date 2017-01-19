@@ -10,7 +10,7 @@
 -- Print version number.
 
 local s = sessionInfo().separator
-local include = _Gtme.include
+local getLuaFile = getLuaFile
 
 --[[
 local function print_version ()
@@ -88,7 +88,7 @@ local OPTIONS = {
 -- local function process_options (arg)
 	-- local files = {}
 	-- local options = require "luadoc.config"
-	-- local options = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."config.lua").default_options
+	-- local options = getLuaFile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."config.lua").default_options
 	-- local i = 1
 	-- while i <= #arg do
 	-- 	local argi = arg[i]
@@ -125,7 +125,7 @@ function luadocMain(package_path, lua_files, example_files, _, mdata, mfont, doc
 
 	-- local --[[lua_files,]] options = process_options (arg)
 
-	local options = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."config.lua").default_options
+	local options = getLuaFile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."config.lua").default_options
 	options.output_dir = package_path..s.."doc"..s
 	options.short_output_path = "doc"..s
 	options.short_lua_path = "lua"..s

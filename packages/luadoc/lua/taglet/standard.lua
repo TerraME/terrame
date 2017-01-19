@@ -15,15 +15,15 @@ local ipairs, pairs = ipairs, pairs
 local printNote, printError, printWarning = _Gtme.printNote, _Gtme.printError, _Gtme.printWarning
 local print, attributes = print, function(filepath, attributename) return _Gtme.File(filepath):attributes(attributename) end
 local sessionInfo, belong = sessionInfo, belong
-local include = _Gtme.include
+local getLuaFile = getLuaFile
 local getn = getn
 local forEachElement = forEachElement
 local traceback = _Gtme.traceback
 local makepath = _Gtme.makePathCompatibleToAllOS
 
 local s = sessionInfo().separator
-local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
-local tags = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."taglet"..s.."standard"..s.."tags.lua")
+local util = getLuaFile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
+local tags = getLuaFile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."taglet"..s.."standard"..s.."tags.lua")
 
 -------------------------------------------------------------------------------
 -- Creates an iterator for an array base on a class type.
@@ -534,7 +534,7 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 
 		local a 
 
-		pcall(function() a = include(fullpath) end)
+		pcall(function() a = getLuaFile(fullpath) end)
 
 		if type(a) == "table" then
 			local quant = getn(a) - 1

@@ -21,31 +21,8 @@
 # of this software and its documentation.
 ############################################################################################
 
-LUA_PATH=/home/developer/terralib/3rdparty/libs
-BUILD_TYPE=Release
-
 mkdir "build"
 cd "build"
-#mkdir "libqtlua-build"
-#cd "libqtlua-build"
-
-#cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=../../install -DLUA_LIBRARY=${LUA_PATH}/lib/liblua.dylib -DLUA_INCLUDE_DIR=${LUA_PATH}/include ../../libqtlua
-
-#make -j4
-#make install
-
-#cd ".."
-mkdir "qtluae-build"
-cd "qtluae-build"
-
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=../../install -DLUA_LIBRARY=${LUA_PATH}/lib/liblua.so -DLUA_INCLUDE_DIR=${LUA_PATH}/include -DQTLUA_INCLUDE_DIR=${LUA_PATH}/include -DQTLUA_LIBRARY=${LUA_PATH}/lib/libqtlua.so ../../qtluae/build/cmake
-
-make -j4
-make install
-
-cp -a ../../install/lib/libqtluae.so ../../install/lib/qtluae.so
-
-cd ".."
 mkdir "protobuf-build"
 cd "protobuf-build"
 

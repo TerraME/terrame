@@ -53,7 +53,7 @@ function _Gtme.buildPackage(package, config, clean)
 	if config then
 		printNote("Parsing configuration file '"..config.."'")
 		local data
-		xpcall(function() data = _Gtme.include(config) end, function(err)
+		xpcall(function() data = _Gtme.getLuaFile(config) end, function(err)
 			printError(err)
 			os.exit(1)
 		end)
@@ -113,7 +113,7 @@ function _Gtme.buildPackage(package, config, clean)
 	printNote("")
 
 	local data
-	pcall(function() data = _Gtme.include(package..s.."description.lua") end)
+	pcall(function() data = _Gtme.getLuaFile(package..s.."description.lua") end)
 
 	if data then
 		if not data.date then
@@ -273,7 +273,7 @@ function _Gtme.buildPackage(package, config, clean)
 	end
 
 	forEachFile(pkgInfo.path.."lua", function(fname)
-		local mdata = _Gtme.include(pkgInfo.path.."lua"..s..fname:name())
+		local mdata = _Gtme.getLuaFile(pkgInfo.path.."lua"..s..fname:name())
 		if attrTab ~= nil then
 			forEachElement(mdata, function(idx, value)
 				if value == attrTab then

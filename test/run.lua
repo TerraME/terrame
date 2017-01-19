@@ -32,7 +32,7 @@ local s = sessionInfo().separator
 initialDir = Directory(sessionInfo().currentFile)
 initialDir:setCurrentDir()
 
-commands = _Gtme.include("commands.lua")
+commands = getLuaFile("commands.lua")
 
 show = false
 time = false
@@ -77,7 +77,7 @@ forEachDirectory("packages", function(dir)
 end)
 
 _Gtme.printNote("Removing files")
-initialRemove = _Gtme.include("remove.lua")
+initialRemove = getLuaFile("remove.lua")
 
 forEachElement(initialRemove.files, removeIfExists)
 
@@ -339,7 +339,7 @@ os.execute("cp config.lua packages")
 Directory(initialDir.."packages"):setCurrentDir()
 
 _Gtme.printNote("Removing files")
-localRemove = _Gtme.include(".."..s.."remove.lua")
+localRemove = getLuaFile(".."..s.."remove.lua")
 
 forEachElement(localRemove.files, removeIfExists)
 
@@ -502,7 +502,7 @@ if commands.build then
 	local files = {}
 
 	forEachElement(commands.build, function(package)
-		local version = _Gtme.include(sessionInfo().initialDir.."packages/"..package.."/description.lua").version
+		local version = getLuaFile(sessionInfo().initialDir.."packages/"..package.."/description.lua").version
 
 		local mfile = package.."_"..version..".zip"
 

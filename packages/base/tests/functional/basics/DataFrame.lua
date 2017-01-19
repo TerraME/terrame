@@ -211,6 +211,36 @@ return{
 
 		unitTest:assertEquals(df[3].y, 9)
 		unitTest:assertEquals(df.y[3], 9)
+
+		-- cache
+		df = DataFrame{
+			x = {1, 2, 3},
+			y = {4, 5, 6}
+		}
+
+		unitTest:assertEquals(getn(df.cache), 0)
+
+		do
+			local value = df[1]
+			unitTest:assertEquals(value.y, 4)
+			unitTest:assertEquals(getn(df.cache), 1)
+
+			local values = {}
+
+			for i = 1, 3 do
+				values[i] = df[i]
+				values[i].x = values[i].x + 1
+			end
+
+			collectgarbage()
+			unitTest:assertEquals(getn(df.cache), 3)
+
+			value = df[2]
+			unitTest:assertEquals(value.x, 3)
+		end
+
+		collectgarbage()
+		unitTest:assertEquals(getn(df.cache), 0)
 	end,
 	__newindex = function(unitTest)
 		local df = DataFrame{

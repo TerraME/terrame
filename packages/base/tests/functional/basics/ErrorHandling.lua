@@ -151,6 +151,11 @@ return{
 			mandatoryTableArgument(mtable, "ddd", "string")
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("ddd", "string"))
+
+		error_func = function()
+			mandatoryTableArgument(mtable, "bbb", {"string", "boolean"})
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("bbb", "string or boolean", 3))
 	end,
 	namedArgumentsMsg = function(unitTest)
 		unitTest:assertEquals(namedArgumentsMsg(), "Arguments must be named.")
@@ -168,6 +173,11 @@ return{
 			optionalTableArgument(mtable, "bbb", "string")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("bbb", "string", 3))
+
+		error_func = function()
+			optionalTableArgument(mtable, "bbb", {"string", "boolean"})
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("bbb", "string or boolean", 3))
 	end,
 	positiveArgument = function(unitTest)
 		local error_func = function()

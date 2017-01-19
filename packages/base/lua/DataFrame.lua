@@ -170,9 +170,15 @@ metaTableDataFrame_ = {
 	-- print(df.x[1]) -- 6
 	__index = function(self, idx)
 		if type(idx) == "number" then
-			local result = {pos = idx, data = self.data, parent = self}
+			local result = self.cache[idx]
+
+			if result then return result end
+
+			result = {pos = idx, data = self.data, parent = self}
 
 			setmetatable(result, metaTableDataFrameItem_)
+
+			self.cache[idx] = result
 
 			return result
 		elseif type(idx) == "string" then
@@ -398,9 +404,11 @@ function DataFrame(data)
 		data = df,
 		instance = instance,
 		rows_ = mrows,
-		columns_ = mcolumns
+		columns_ = mcolumns,
+		cache = {}
 	}
 
+	setmetatable(data.cache, {__mode = 'v'})
 	setmetatable(data, metaTableDataFrame_)
 
 	return data

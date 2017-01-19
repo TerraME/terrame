@@ -152,9 +152,9 @@ local function buildLineTable(package)
 	local load_sequence
 
 	if File(load_file):exists() then
-		-- the 'include' below does not need to be inside a xpcall because
+		-- the 'getLuaFile' below does not need to be inside a xpcall because
 		-- the package was already loaded with success
-		load_sequence = _Gtme.include(load_file).files
+		load_sequence = _Gtme.getLuaFile(load_file).files
 	else
 		load_sequence = {}
 		forEachFile(baseDir.."lua", function(file)
@@ -167,8 +167,6 @@ local function buildLineTable(package)
 	local testlines = {} -- test functions store all the functions that need to be tested, extracted from the source code
 
 	for _, file in ipairs(load_sequence) do
-		-- the 'include' below does not need to be inside a xpcall because
-		-- the package was already loaded with success
 		testlines[file] = lineTable(baseDir.."lua"..s..file)
 
 		local function trace(_, line)
@@ -192,7 +190,7 @@ function _Gtme.executeTests(package, fileName)
 	if type(fileName) == "string" then
 		printNote("Loading configuration file '".._Gtme.makePathCompatibleToAllOS(fileName).."'")
 
-		xpcall(function() data = _Gtme.include(fileName) end, function(err)
+		xpcall(function() data = _Gtme.getLuaFile(fileName) end, function(err)
 			printError(err)
 			os.exit(1)
 		end)

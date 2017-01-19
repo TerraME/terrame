@@ -570,6 +570,11 @@ return{
 		unitTest:assert(not r)
 		unitTest:assertEquals(count, 1)
 	end,
+	getLuaFile = function(unitTest)
+		local version = getLuaFile(packageInfo("base").path.."description.lua").version
+
+		unitTest:assertType(version, "string")
+	end,
 	getn = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}
 
