@@ -30,9 +30,8 @@ return {
 			file = projName,
 			clean = true
 		}
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)
-		local layerName1 = "Prodes"
 
+		local layerName1 = "Prodes"
 		Layer{
 			project = proj,
 			name = layerName1,
@@ -54,9 +53,9 @@ return {
 			file = filePath1
 		}
 
-		unitTest:assertEquals(clName1, cl1.name) -- SKIP
-		unitTest:assertEquals(cl1.source, "shp") -- SKIP
-		unitTest:assertEquals(cl1.file, currentDir()..filePath1) -- SKIP
+		unitTest:assertEquals(clName1, cl1.name)
+		unitTest:assertEquals(cl1.source, "shp")
+		unitTest:assertEquals(cl1.file, currentDir()..filePath1)
 
 		-- #1152
 		-- local host = "localhost"
@@ -100,9 +99,6 @@ return {
 		-- tl:dropPgTable(pgData)
 
 		File(filePath1):deleteIfExists()
-	else
-		unitTest:assert(true) -- SKIP
-	end
 		File(projName):deleteIfExists()
 	end,
 	__len = function(unitTest)

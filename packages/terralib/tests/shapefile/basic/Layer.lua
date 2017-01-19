@@ -59,7 +59,6 @@ return {
 
 		unitTest:assert(File(qixFile):exists())
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local clName1 = "Setores_Cells10x10"
 		local cl1 = Layer{
 			project = proj,
@@ -73,7 +72,7 @@ return {
 		}
 
 		qixFile = string.gsub(cl1.file, ".shp", ".qix")
-		unitTest:assert(not File(qixFile):exists()) -- SKIP
+		unitTest:assert(not File(qixFile):exists())
 
 		local clName2 = "Setores_Cells9x9"
 		local cl2 = Layer{
@@ -87,11 +86,10 @@ return {
 		}
 
 		qixFile = string.gsub(cl2.file, ".shp", ".qix")
-		unitTest:assert(File(qixFile):exists()) -- SKIP
+		unitTest:assert(File(qixFile):exists())
 
 		File(cl1.file):delete()
 		File(cl2.file):delete()
-	end
 
 		-- VERIFY SRID -- TODO(avancinirodrigo): Find a shape which does not have a valid srid
 		-- local customWarningBkp = customWarning
