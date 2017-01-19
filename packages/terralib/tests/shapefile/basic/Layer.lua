@@ -645,7 +645,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-sum-area.png")
 
 		-- AVERAGE (area = true)
-	if sessionInfo().system ~= "mac" then -- TODO(#1378)
 		proj.file:delete()
 
 		projName = "cellular_layer_fill_avg_area.tview"
@@ -694,8 +693,7 @@ return {
 			color = {"red", "green"}
 		}
 
-		unitTest:assertSnapshot(map, "polygons-average-area.png") -- SKIP
-	end
+		unitTest:assertSnapshot(map, "polygons-average-area.png")
 
 		forEachElement(shapes, function(_, value)
 			File(value):delete()
