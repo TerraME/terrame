@@ -1289,7 +1289,7 @@ TerraLib_ = {
 
 		self:addShpLayer(project, name, file, addSpatialIdx)
 
-        fixCellSpaceSrid(project, name, inputLayerTitle)
+		fixCellSpaceSrid(project, name, inputLayerTitle)
 	end,
 	--- Add a new cellular layer to a PostgreSQL connection.
 	-- @arg project The name of the project.
@@ -1514,11 +1514,11 @@ TerraLib_ = {
 			local fromLayer = project.layers[from]
 			local toLayer = project.layers[to]
 
-            if fromLayer:getSRID() ~= toLayer:getSRID() then
-                local toSrid = toLayer:getSRID()
-                local fromSrid = fromLayer:getSRID()
-                customError("The projections of the layers are different: ("..from..", "..fromSrid..") and ("..to..", "..toSrid.."). Set the correct one.")
-            end
+			if fromLayer:getSRID() ~= toLayer:getSRID() then
+				local toSrid = toLayer:getSRID()
+				local fromSrid = fromLayer:getSRID()
+				customError("The projections of the layers are different: ("..from..", "..fromSrid..") and ("..to..", "..toSrid.."). Set the correct one.")
+			end
 
             local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
 			local toDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
