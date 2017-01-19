@@ -187,19 +187,15 @@ return {
 
 		tl:createProject(proj, {})
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1380)
 		local layerName = "Prodes"
 		local layerFile = filePath("PRODES_5KM.tif", "terralib")
-		tl:addGdalLayer(proj, layerName, layerFile)
+		tl:addGdalLayer(proj, layerName, layerFile, 100017)
 
 		local prj = tl:getProjection(proj.layers[layerName])
 
-		unitTest:assertEquals(prj.SRID, 100017.0) -- SKIP
-		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S - old 29191")	-- SKIP
-		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ") -- SKIP
-	else
-		unitTest:assert(true) -- SKIP
-	end
+		unitTest:assertEquals(prj.SRID, 100017.0)
+		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S - old 29191")
+		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ")
 
 		proj.file:delete()
 	end,

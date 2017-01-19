@@ -1104,14 +1104,12 @@ return {
 
 		local layerName1 = "Sampa"
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)
+		tl:addShpLayer(proj, layerName1, layerFile1, nil, 4019)
 
 		local prj = tl:getProjection(proj.layers[layerName1])
-	if sessionInfo().system ~= "mac" then -- TODO(#1380)
-		unitTest:assertEquals(prj.SRID, 4019.0) -- SKIP
-		unitTest:assertEquals(prj.NAME, "Unknown datum based upon the GRS 1980 ellipsoid") -- SKIP
-		unitTest:assertEquals(prj.PROJ4, "+proj=longlat +ellps=GRS80 +no_defs ") -- SKIP
-	end
+		unitTest:assertEquals(prj.SRID, 4019.0)
+		unitTest:assertEquals(prj.NAME, "Unknown datum based upon the GRS 1980 ellipsoid")
+		unitTest:assertEquals(prj.PROJ4, "+proj=longlat +ellps=GRS80 +no_defs ")
 
 		local layerName2 = "Setores"
 		local layerFile2 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
