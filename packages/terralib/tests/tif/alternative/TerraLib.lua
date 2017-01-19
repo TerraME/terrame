@@ -33,7 +33,7 @@ return {
 		File(proj.file):deleteIfExists()
 
 		tl:createProject(proj, {})
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)
+
 		local layerName1 = "AmazoniaTif"
 		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
 		tl:addGdalLayer(proj, layerName1, layerFile1)
@@ -49,10 +49,7 @@ return {
 		local maskNotWork = function()
 			tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		end
-		unitTest:assertError(maskNotWork, "The 'mask' not work to Raster, it was ignored.") -- SKIP
-	else
-		unitTest:assert(true) -- SKIP
-	end
+		unitTest:assertError(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
 
 		proj.file:delete()
 	end,
@@ -129,10 +126,19 @@ return {
 		local default = nil
 		local repr = "raster"
 
-		local bandNoExists = function()
+		local differentSrids = function()
 			tl:attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
-		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in layer '"..layerName2.."'.")
+		local layerInfo2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		unitTest:assertError(differentSrids, "The projections of the layers are different: (Prodes_PA, "..layerInfo2.srid..") and (Para_Cells, 29101.0). Set the correct one.")
+
+		local layerName3 = "Prodes_PA_NewSRID"
+		tl:addGdalLayer(proj, layerName3, layerFile4, 29101)
+
+		local bandNoExists = function()
+			tl:attributeFill(proj, layerName3, clName, percTifLayerName, attribute, operation, select, area, default, repr)
+		end
+		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in layer '"..layerName3.."'.")
 
 		for j = 1, #shp do
 			File(shp[j]):deleteIfExists()

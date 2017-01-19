@@ -59,7 +59,6 @@ return {
 
 		unitTest:assert(File(qixFile):exists())
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)
 		local clName1 = "Setores_Cells10x10"
 		local cl1 = Layer{
 			project = proj,
@@ -73,7 +72,7 @@ return {
 		}
 
 		qixFile = string.gsub(cl1.file, ".shp", ".qix")
-		unitTest:assert(not File(qixFile):exists()) -- SKIP
+		unitTest:assert(not File(qixFile):exists())
 
 		local clName2 = "Setores_Cells9x9"
 		local cl2 = Layer{
@@ -87,26 +86,25 @@ return {
 		}
 
 		qixFile = string.gsub(cl2.file, ".shp", ".qix")
-		unitTest:assert(File(qixFile):exists()) -- SKIP
+		unitTest:assert(File(qixFile):exists())
 
 		File(cl1.file):delete()
 		File(cl2.file):delete()
-	end
 
-		-- VERIFY SRID
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			local _, nchars = string.find(msg, "It was not possible to find the projection of layer 'PA'.\nThe projection should be one of the availables in: ")
-			unitTest:assertEquals(109, nchars)
-		end
+		-- VERIFY SRID -- TODO(avancinirodrigo): Find a shape which does not have a valid srid
+		-- local customWarningBkp = customWarning
+		-- customWarning = function(msg)
+			-- local _, nchars = string.find(msg, "It was not possible to find the projection of layer 'PA'.\nThe projection should be one of the availables in: ")
+			-- unitTest:assertEquals(109, nchars) -- SKIP
+		-- end
 
-		Layer{
-			project = proj,
-			name = "PA",
-			file = filePath("cabecadeboi.shp", "terralib")
-		}
+		-- Layer{
+		--	project = proj,
+		--	name = "PA",
+		--	file = filePath("cabecadeboi.shp", "terralib")
+		-- }
 
-		customWarning = customWarningBkp
+		-- customWarning = customWarningBkp
 		-- // VERIFY SRID
 
 		proj.file:delete()
@@ -647,7 +645,6 @@ return {
 		unitTest:assertSnapshot(map, "polygons-sum-area.png")
 
 		-- AVERAGE (area = true)
-	if sessionInfo().system ~= "mac" then -- TODO(#1378)
 		proj.file:delete()
 
 		projName = "cellular_layer_fill_avg_area.tview"
@@ -696,8 +693,7 @@ return {
 			color = {"red", "green"}
 		}
 
-		unitTest:assertSnapshot(map, "polygons-average-area.png") -- SKIP
-	end
+		unitTest:assertSnapshot(map, "polygons-average-area.png")
 
 		forEachElement(shapes, function(_, value)
 			File(value):delete()

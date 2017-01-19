@@ -264,6 +264,26 @@ return {
 		clSet = TerraLib{}:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)
 
+		-- CHANGE SRID
+		local layerName5 = "SampaDBNewSrid"
+
+		local layer5 = Layer{
+			project = proj,
+			source = "postgis",
+			name = layerName5,
+			-- host = host,
+			-- port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1,
+			srid = 29901
+		}
+
+		unitTest:assertEquals(layer5.srid, 29901.0)
+		unitTest:assert(layer5.srid ~= layer4.srid)
+		-- // CHANGE SRID
+
 		File(projName):deleteIfExists()
 
 		pgData.table = tName1

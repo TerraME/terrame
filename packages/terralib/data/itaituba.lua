@@ -29,11 +29,23 @@ import("terralib")
 proj = Project{
 	file = "itaituba.tview",
 	clean = true,
-	deforestation = filePath("Desmatamento_2000.tif", "terralib"),
-	altimetria = filePath("altimetria.tif", "terralib"),
 	localidades = filePath("Localidades_pt.shp", "terralib"),
 	roads = filePath("Rodovias_lin.shp", "terralib"),
 	setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+}
+
+Layer{
+	project = proj,
+	name = "deforestation",
+	file = filePath("Desmatamento_2000.tif", "terralib"),
+	srid = 29191
+}
+
+Layer{
+	project = proj,
+	name = "altimetria",
+	file = filePath("altimetria.tif", "terralib"),
+	srid = 29191
 }
 
 cl = Layer{
@@ -57,8 +69,6 @@ cl:fill{
 	attribute = "defor"
 }
 
-if sessionInfo().system ~= "mac" then
-
 cl:fill{
 	operation = "sum",
 	layer = "setores",
@@ -79,8 +89,6 @@ cl:fill{
 	attribute = "distl"
 }
 
-end
-
 cs = CellularSpace{
 	project = proj,
 	layer = "cells"
@@ -93,16 +101,12 @@ m = Map{
 	color = "Blues"
 }
 
-if sessionInfo().system ~= "mac" then
-
 m = Map{
 	target = cs,
 	select = "distl",
 	slices = 10,
 	color = "Reds"
 }
-
-end
 
 m = Map{
 	target = cs,
@@ -118,8 +122,6 @@ m = Map{
 	color = "Greens"
 }
 
-if sessionInfo().system ~= "mac" then
-
 m = Map{
 	target = cs,
 	select = "pop",
@@ -133,6 +135,3 @@ m = Map{
 	slices = 10,
 	color = "Reds"
 }
-
-end
-

@@ -30,9 +30,8 @@ return {
 			file = projName,
 			clean = true
 		}
-	if sessionInfo().system ~= "mac" then -- TODO(#1448)
-		local layerName1 = "Prodes"
 
+		local layerName1 = "Prodes"
 		Layer{
 			project = proj,
 			name = layerName1,
@@ -54,9 +53,9 @@ return {
 			file = filePath1
 		}
 
-		unitTest:assertEquals(clName1, cl1.name) -- SKIP
-		unitTest:assertEquals(cl1.source, "shp") -- SKIP
-		unitTest:assertEquals(cl1.file, currentDir()..filePath1) -- SKIP
+		unitTest:assertEquals(clName1, cl1.name)
+		unitTest:assertEquals(cl1.source, "shp")
+		unitTest:assertEquals(cl1.file, currentDir()..filePath1)
 
 		-- #1152
 		-- local host = "localhost"
@@ -100,9 +99,6 @@ return {
 		-- tl:dropPgTable(pgData)
 
 		File(filePath1):deleteIfExists()
-	else
-		unitTest:assert(true) -- SKIP
-	end
 		File(projName):deleteIfExists()
 	end,
 	__len = function(unitTest)
@@ -141,7 +137,7 @@ return {
 		end
 
 		local layerName1 = "limiteitaituba"
-		Layer{
+		local l1 = Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
@@ -151,14 +147,16 @@ return {
 		Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("Desmatamento_2000.tif", "terralib")
+			file = filePath("Desmatamento_2000.tif", "terralib"),
+			srid = l1.srid
 		}
 
 		local altimetria = "altimetria"
 		Layer{
 			project = proj,
 			name = altimetria,
-			file = filePath("altimetria.tif", "terralib")
+			file = filePath("altimetria.tif", "terralib"),
+			srid = l1.srid
 		}
 
 		local clName1 = "CellsTif"
@@ -462,18 +460,15 @@ return {
 			file = projName,
 			clean = true
 		}
-	if sessionInfo().system ~= "mac" then -- TODO(#1380)
-		local layerName1 = "Prodes"
 
+		local layerName1 = "Prodes"
 		local layer = Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("PRODES_5KM.tif", "terralib")
+			file = filePath("PRODES_5KM.tif", "terralib"),
+			srid = 100017
 		}
-		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S - old 29191', with SRID: 100017.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ').") -- SKIP
-	else
-		unitTest:assert(true) -- SKIP
-	end
+		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S - old 29191', with SRID: 100017.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ').")
 
 		proj.file:delete()
 	end,
@@ -485,9 +480,7 @@ return {
 			clean = true
 		}
 
-	if sessionInfo().system ~= "mac" then -- TODO(1448)
 		local layerName1 = "Prodes"
-
 		local layer = Layer{
 			project = proj,
 			name = layerName1,
@@ -496,10 +489,7 @@ return {
 
 		local props = layer:attributes()
 
-		unitTest:assertNil(props) -- SKIP
-	else
-		unitTest:assert(true) -- SKIP
-	end
+		unitTest:assertNil(props)
 
 		proj.file:delete()
 	end,
