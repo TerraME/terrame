@@ -394,7 +394,7 @@ function mandatoryTableArgument(table, attr, mtype)
 		if not belong(type(table[attr]), mtype) then
 			incompatibleTypeError(attr, concat(mtype, " or "), table[attr])
 		end
-	else
+	elseif mtype then
 		customError(incompatibleTypeMsg(3, "string or table", mtype))
 	end
 end
