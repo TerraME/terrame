@@ -209,28 +209,25 @@ return{
 		}
 
 		unitTest:assertEquals(getn(df.cache), 0)
-		local value = df[1]
-		unitTest:assertEquals(value.y, 4)
-		unitTest:assertEquals(getn(df.cache), 1)
 
-		local values = {}
+		do
+			local value = df[1]
+			unitTest:assertEquals(value.y, 4)
+			unitTest:assertEquals(getn(df.cache), 1)
 
-		for i = 1, 4 do
-			values[i] = df[i]
+			local values = {}
+
+			for i = 1, 3 do
+				values[i] = df[i]
+				values[i].x = values[i].x + 1
+			end
+
+			collectgarbage()
+			unitTest:assertEquals(getn(df.cache), 3)
+
+			value = df[2]
+			unitTest:assertEquals(value.x, 3)
 		end
-
-		collectgarbage()
-		unitTest:assertEquals(getn(df.cache), 4)
-
-		value = nil
-
-		collectgarbage()
-		unitTest:assertEquals(getn(df.cache), 4)
-		value = df[2]
-		unitTest:assertEquals(value.y, 5)
-
-		value = nil
-		values = nil
 
 		collectgarbage()
 		unitTest:assertEquals(getn(df.cache), 0)
