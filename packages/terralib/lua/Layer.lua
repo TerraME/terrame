@@ -243,9 +243,9 @@ local function addLayer(self, data)
 		end,
 		nc = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project"}) -- SKIP
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "srid"}) -- SKIP
 
-			self.terralib:addGdalLayer(self, data.name, data.file, data.srid, "srid") -- SKIP
+			self.terralib:addGdalLayer(self, data.name, data.file, data.srid) -- SKIP
 		end,
 		asc = function()
 			mandatoryTableArgument(data, "file", "File")

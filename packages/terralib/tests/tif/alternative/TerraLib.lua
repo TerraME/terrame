@@ -132,7 +132,8 @@ return {
 		local differentSrids = function()
 			tl:attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
-		unitTest:assertError(differentSrids, "The projections of the layers are different: (Prodes_PA, 100001.0) and (Para_Cells, 29101.0). Set the correct one.")
+		local layerInfo2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		unitTest:assertError(differentSrids, "The projections of the layers are different: (Prodes_PA, "..layerInfo2.srid..") and (Para_Cells, 29101.0). Set the correct one.")
 
 		local layerName3 = "Prodes_PA_NewSRID"
 		tl:addGdalLayer(proj, layerName3, layerFile4, 29101)
