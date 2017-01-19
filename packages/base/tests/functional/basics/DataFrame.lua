@@ -241,6 +241,40 @@ return{
 
 		collectgarbage()
 		unitTest:assertEquals(getn(df.cache), 0)
+
+		-- cache with instance
+		df = DataFrame{
+			x = {1, 2, 3},
+			y = {4, 5, 6},
+			instance = Agent{}
+		}
+
+		unitTest:assertEquals(getn(df.cache), 0)
+
+		do
+			local value = df[1]
+			unitTest:assertType(value, "Agent")
+			unitTest:assertEquals(value.y, 4)
+			unitTest:assertEquals(getn(df.cache), 1)
+
+			local values = {}
+
+			for i = 1, 3 do
+				values[i] = df[i]
+				unitTest:assertType(values[i], "Agent")
+				values[i].x = values[i].x + 1
+			end
+
+			collectgarbage()
+			unitTest:assertEquals(getn(df.cache), 3)
+
+			value = df[2]
+			unitTest:assertEquals(value.x, 3)
+		end
+
+		collectgarbage()
+		unitTest:assertEquals(getn(df.cache), 0)
+
 	end,
 	__newindex = function(unitTest)
 		local df = DataFrame{
