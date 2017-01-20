@@ -23,7 +23,7 @@
 -------------------------------------------------------------------------------------------
 
 local function isValidSource(source)
-	return belong(source, {"tif", "shp", "postgis", "access", "nc", "asc", "geojson", "wfs"})
+	return belong(source, {"tif", "shp", "postgis", "nc", "asc", "geojson", "wfs"})
 end
 
 local function isValidName(name)
@@ -639,8 +639,6 @@ Layer_ = {
 	-- Identifier (SRID), and
 	-- its Proj4 description (www.proj4.org/parameters.html).
 	-- @usage -- DONTRUN
-	-- import("terralib")
-	--
 	-- print(layer:projection())
 	projection = function(self)
 		local prj = self.project.terralib:getProjection(self.project.layers[self.name])
@@ -757,7 +755,6 @@ metaTableLayer_ = {
 	__tostring = _Gtme.tostring,
 	--- Return the number of objects (points, polygons, lines, or pixels) within the Layer.
 	-- @usage -- DONTRUN
-	--
 	-- print(#layer)
 	__len = function(self)
 		return self.project.terralib:getLayerSize(self.project, self.name)
@@ -765,30 +762,38 @@ metaTableLayer_ = {
 }
 
 --- A Layer representing a geospatial dataset stored in a given data source.
--- Each Layer belongs to a Project. It has operations to create new attributes from other Layers.
--- The data of the Layer can be stored in several different sources, such as a database,
--- a file, or even a web service.
+-- Each Layer belongs to a Project. 
+-- It is possible to use data stored in different data sources to create
+-- a Layer, or to create a cellular Layer from scratch. Cellular Layers
+-- homogeneize the spatial representation of a given
+-- model, making the model simpler and requiring less computational
+-- resources. Layer gets different arguments, depending on the task one needs
+-- to execute. See the table below.
+-- @tabular NONE
+-- Task & Mandatory Arguments & Optional arguments\
+-- Open a Layer that already belongs to a Project. & name, project & \
+-- Create a Layer using an existent file, database, or service. & name, project, [arguments related to the source] & [arguments related to the source] \
+-- Create a cellular Layer from scratch. It has a set of squared polygons
+-- that cover its input. It can be stored in "postgis" or "shp" sources.
+-- & input, name, project, resolution, [arguments related to the source] & box, clean, [arguments related to the source] \
 -- @arg data.project A file name with the TerraView project to be used, or a Project.
 -- @arg data.name A string with the layer name to be used. If the layer already exists and no
 -- additional argument is used besides project, then it opens such layer.
--- @arg data.source A string with the data source. See table below:
+-- @arg data.source A string with the data source. See table below with the supported
+-- data sources:
 -- @arg data.input Name of the input layer whose coverage area will be used to create a
 -- cellular layer.
 -- @arg data.service A string with the description of a WFS location.
 -- @arg data.feature A string with the name of the feature to be read from a WFS.
 -- @tabular source
--- Source & Description & Mandatory arguments & Optional arguments \
--- "none" & Tries to open a Layer already stored in the Project & project, name & \
--- "postgis" & Create a Layer to connect to a PostGIS database. & password, name, project & user, port, host, srid \
--- "shp" & Create a Layer to work with an ESRI shapefile. & file, name, project & clean, srid\
--- "wfs" & Create a Layer to use data stored in a Web Feature Service (WFS). & service, feature, name, project & \
--- "cell" & Create a cellular Layer. It has a raster-like
--- representation of space with several attributes created from
--- different spatial representations.
--- Cellular Layers homogeneize the spatial representation of a given
--- model, making the model simpler and requiring less computational
--- resources. It can be stored in "postgis" or "shp".
--- & input, resolution, project & box, name, user, port, host, file \
+-- Source & Description & Mandatory & Optional \
+-- "postgis" & PostGIS database. & password & host, port, srid, user\
+-- "shp" & ESRI shapefile. & file & index, srid \
+-- "wfs" & Web Feature Service (WFS). & feature, service & \
+-- "tif" & Geotiff file. & file & srid \
+-- "asc" & ASC format. & file & srid \
+-- "nc" & NetCDF file. & file & srid \
+-- "geojson" & GeoJSON file. & file & srid\
 -- @arg data.host String with the host where the database is stored.
 -- The default value is "localhost".
 -- @arg data.port Number with the port of the connection. The default value is the standard port
@@ -804,7 +809,11 @@ metaTableLayer_ = {
 -- @arg data.srid A number that represents the Spatial Reference System Identifier. It is a unique value
 -- used to unambiguously identify projected, unprojected, and local spatial coordinate system definitions.
 -- @arg data.clean A boolean value indicating whether the argument file should be cleaned
--- if it needs to create the file.
+-- if it needs to create the file. The default value is false.
+-- @arg data.index A boolean value indicating whether a spatial index file must be created for a
+-- shapefile. The default value is true.
+-- @output srid A number with its projection identifier.
+-- @output sid A string with its unique identifier within the Project.
 -- @usage -- DONTRUN
 -- import("terralib")
 --
