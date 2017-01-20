@@ -762,7 +762,7 @@ metaTableLayer_ = {
 }
 
 --- A Layer representing a geospatial dataset stored in a given data source.
--- Each Layer belongs to a Project. 
+-- Each Layer belongs to a Project.
 -- It is possible to use data stored in different data sources to create
 -- a Layer, or to create a cellular Layer from scratch. Cellular Layers
 -- homogeneize the spatial representation of a given
