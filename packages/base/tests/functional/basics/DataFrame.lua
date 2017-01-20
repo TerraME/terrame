@@ -105,6 +105,16 @@ return{
 
 		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
 		unitTest:assertEquals(sumvalue, 0.1 + 0.04 + 0.3 + 0.07)
+
+		local agent = Agent{}
+
+		df = DataFrame{
+			x = {1, 2, 3, 4, 5},
+			y = {1, 1, 2, 2, 2},
+			instance = agent
+		}
+
+		unitTest:assertType(df[1], "Agent")
 	end,
 	add = function(unitTest)
 		local df = DataFrame{
@@ -123,6 +133,14 @@ return{
 		unitTest:assertEquals(#df, 4)
 		unitTest:assertEquals(df[4].x, 9)
 		unitTest:assertEquals(df.y[4], 9)
+
+		df:add({x = 9, y = 9, z = 10}, 5)
+		df:add{x = 9, y = 9, z = 12, k = 2}
+
+		unitTest:assertEquals(#df, 6)
+		unitTest:assertEquals(df[5].z, 10)
+		unitTest:assertNil(df[5].k)
+		unitTest:assertEquals(df[6].z, 12)
 	end,
 	columns = function(unitTest)
 		local df = DataFrame{
@@ -201,6 +219,70 @@ return{
 
 		unitTest:assertEquals(df[3].y, 9)
 		unitTest:assertEquals(df.y[3], 9)
+
+		-- cache
+		df = DataFrame{
+			x = {1, 2, 3},
+			y = {4, 5, 6}
+		}
+
+		unitTest:assertEquals(getn(df.cache), 0)
+
+		do
+			local value = df[1]
+			unitTest:assertEquals(value.y, 4)
+			unitTest:assertEquals(getn(df.cache), 1)
+
+			local values = {}
+
+			for i = 1, 3 do
+				values[i] = df[i]
+				values[i].x = values[i].x + 1
+			end
+
+			collectgarbage()
+			unitTest:assertEquals(getn(df.cache), 3)
+
+			value = df[2]
+			unitTest:assertEquals(value.x, 3)
+		end
+
+		collectgarbage()
+		unitTest:assertEquals(getn(df.cache), 0)
+
+		-- cache with instance
+		df = DataFrame{
+			x = {1, 2, 3},
+			y = {4, 5, 6},
+			instance = Agent{}
+		}
+
+		unitTest:assertEquals(getn(df.cache), 0)
+
+		do
+			local value = df[1]
+			unitTest:assertType(value, "Agent")
+			unitTest:assertEquals(value.y, 4)
+			unitTest:assertEquals(getn(df.cache), 1)
+
+			local values = {}
+
+			for i = 1, 3 do
+				values[i] = df[i]
+				unitTest:assertType(values[i], "Agent")
+				values[i].x = values[i].x + 1
+			end
+
+			collectgarbage()
+			unitTest:assertEquals(getn(df.cache), 3)
+
+			value = df[2]
+			unitTest:assertEquals(value.x, 3)
+		end
+
+		collectgarbage()
+		unitTest:assertEquals(getn(df.cache), 0)
+
 	end,
 	__newindex = function(unitTest)
 		local df = DataFrame{

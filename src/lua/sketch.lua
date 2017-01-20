@@ -177,7 +177,7 @@ local function verifyData(package, report)
 			end
 		end
 
-		_Gtme.include(datadotlua)
+		_Gtme.getLuaFile(datadotlua)
 		data = originaldata
 	else
 		_Gtme.print("Creating 'data.lua'")
@@ -300,7 +300,7 @@ local function verifyFont(package, report)
 			end
 		end
 
-		_Gtme.include(fontdotlua)
+		_Gtme.getLuaFile(fontdotlua)
 		font = originalfont
 	else
 		_Gtme.print("Creating 'font.lua'")

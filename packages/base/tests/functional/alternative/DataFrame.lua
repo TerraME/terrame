@@ -95,6 +95,15 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "All arguments for DataFrame must have the same size, got 4 ('demand') and 3 ('limit').")
+
+		error_func = function()
+			x = DataFrame{
+				instance = 10,
+				demand = {7, 8, 9, 10},
+				limit = {0.1, 0.04, 0.3}
+			}
+		end
+		unitTest:assertError(error_func, "Argument 'instance' should be an isTable() object, got number.")
 	end
 }
 

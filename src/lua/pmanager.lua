@@ -548,7 +548,7 @@ local function quitButtonClicked()
 	local createdFiles = {}
 
 	forEachFile(".", function(file)
-		if not filesInCurrentDirectory[file:name()] then
+		if not filesInCurrentDirectory[file:name()] and file:extension() == "lua" and string.match(tostring(file), "-instance") then
 			createdFiles[file:name()] = true
 		end
 	end)

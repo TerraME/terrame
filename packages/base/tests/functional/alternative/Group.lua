@@ -67,7 +67,7 @@ return{
 				end
 			}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("target", "Society, Group, or nil", cs))
+		unitTest:assertError(error_func, incompatibleTypeMsg("target", "Society or Group", cs))
 
 		error_func = function()
 			group1 = Group{

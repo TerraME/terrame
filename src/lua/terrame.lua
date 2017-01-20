@@ -139,28 +139,6 @@ function _Gtme.fontFiles(package)
 	return result
 end
 
--- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
-function _Gtme.include(scriptfile, basetable)
-	if basetable == nil then
-		basetable = {}
-	end
-
-	local env = setmetatable(basetable, {__index = _G})
-	if not File(scriptfile):exists() then
-		_Gtme.customError("File '"..scriptfile.."' does not exist.")
-	end
-	local lf = loadfile(scriptfile, "t", env)
-
-	if lf == nil then
-		_Gtme.printError("Could not load file '"..scriptfile.."'.")
-		dofile(scriptfile) -- this line will show the error when parsing the file
-	end
-
-	lf()
-
-	return setmetatable(env, nil)
-end
-
 function _Gtme.getVersion(str)
 	local version = {}
 
@@ -227,9 +205,9 @@ function _Gtme.buildCountTable(package)
 	local load_sequence
 
 	if _Gtme.File(load_file):exists() then
-		-- the 'include' below does not need to be inside a xpcall because
+		-- the 'getLuaFile' below does not need to be inside a xpcall because
 		-- the package was already loaded with success
-		load_sequence = _Gtme.include(load_file).files
+		load_sequence = _Gtme.getLuaFile(load_file).files
 	else
 		load_sequence = {}
 		_Gtme.forEachFile(baseDir.."lua", function(mfile)
@@ -316,7 +294,7 @@ function _Gtme.findModels(package)
 	_Gtme.forEachFile(packagepath.."lua", function(file)
 		found = false
 		local a
-		a = _Gtme.include(tostring(file))
+		a = _Gtme.getLuaFile(file)
 
 		if found then
 			_Gtme.forEachElement(a, function(idx, value)
@@ -579,7 +557,7 @@ function _Gtme.installPackage(file)
 	_Gtme.print("Verifying dependencies")
 	_Gtme.verifyDepends(package)
 
-	local newVersion = _Gtme.include(package..s.."description.lua").version
+	local newVersion = _Gtme.getLuaFile(package..s.."description.lua").version
 
 	if currentVersion then
 		if not _Gtme.verifyVersionDependency(newVersion, ">=", currentVersion) then
@@ -732,7 +710,7 @@ local function graphicalInterface(package, model)
 	local attrTab
 	local mModel = Model
 	Model = function(attr) attrTab = attr end
-	_Gtme.include(_Gtme.packageInfo(package).path..s.."lua"..s..model..".lua")
+	_Gtme.getLuaFile(_Gtme.packageInfo(package).path..s.."lua"..s..model..".lua")
 	Model = mModel
 
 	local random = attrTab.random
@@ -1343,7 +1321,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						os.exit(1)
 					end
 
-					local data = _Gtme.include(_Gtme.packageInfo(package).path..s.."description.lua")
+					local data = _Gtme.getLuaFile(_Gtme.packageInfo(package).path..s.."description.lua")
 					local date = data.date
 					if not date then date = "(undefined date)" end
 

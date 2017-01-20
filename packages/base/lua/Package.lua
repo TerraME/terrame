@@ -112,7 +112,7 @@ function import(package, reload)
 		local load_sequence
 
 		if File(load_file):exists() then -- SKIP
-			xpcall(function() load_sequence = _Gtme.include(load_file) end, function(err)
+			xpcall(function() load_sequence = getLuaFile(load_file) end, function(err)
 				_Gtme.customError("Package '"..package.."' could not be loaded:"..err) -- SKIP
 			end)
 
@@ -225,7 +225,7 @@ function getPackage(pname)
 	local load_sequence
 
 	if File(load_file):exists() then -- SKIP
-		xpcall(function() load_sequence = _Gtme.include(load_file) end, function(err)
+		xpcall(function() load_sequence = getLuaFile(load_file) end, function(err)
 			_Gtme.printError("Package '"..pname.."' could not be loaded.")
 			_Gtme.print(err)
 		end)
@@ -343,14 +343,14 @@ function packageInfo(package)
 		end
 	end
 
-	local file = pkgdirectory.."description.lua"
+	local file = File(pkgdirectory.."description.lua")
 
-	if not File(file):exists() then -- SKIP
+	if not file:exists() then -- SKIP
 		customError("Could not load package '"..package.."'. File 'description.lua' does not exist.") -- SKIP
 	end
 
 	local result
-	xpcall(function() result = _Gtme.include(file) end, function(err)
+	xpcall(function() result = getLuaFile(file) end, function(err)
 		_Gtme.printError("Could not load package '"..package.."': "..err)
 		os.exit(1) -- SKIP
 	end)

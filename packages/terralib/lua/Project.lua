@@ -42,9 +42,6 @@ metaTableProject_ = {
 -- If this name does not ends with ".tview", this extension will be added to the name
 -- of the file.
 -- @arg data.author An optional string with the name of the Project's author.
--- @arg data.description An optional string with a description of the Project. It is useful
--- when the script belongs to a package, as this description will be
--- displayed in the HTML documentation of the package.
 -- @arg data.title An optional string with the title of the Project.
 -- @arg data.clean An optional boolean value indicating whether the argument file should be cleaned
 -- if it already exists.
@@ -86,7 +83,6 @@ function Project(data)
 	defaultTableValue(data, "clean", false)
 	defaultTableValue(data, "title", "No title")
 	defaultTableValue(data, "author", "No author")
-	defaultTableValue(data, "description", "")
 
 	local terralib = TerraLib{}
 
@@ -121,7 +117,7 @@ function Project(data)
 	local layers = {}
 
 	forEachElement(data, function(idx, value)
-		if not belong(idx, {"clean", "file", "author", "description", "title", "layers", "terralib"}) then
+		if not belong(idx, {"clean", "file", "author", "title", "layers", "terralib"}) then
 			if type(value) == "string" then
 				value = File(value)
 			end

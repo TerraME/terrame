@@ -23,7 +23,7 @@ forEachFile(".", function(file)
 	end)
 
 	os.execute("unzip -q "..name)
-	local version = _Gtme.include(package.."/description.lua").version
+	local version = getLuaFile(package.."/description.lua").version
 
 	_Gtme.print("Package '"..package.."' version '"..version.."' will be added to the repository")
 
