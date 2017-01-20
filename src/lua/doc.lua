@@ -155,7 +155,7 @@ local function getProjects(package, doc_report)
 			createdFiles[data.file] = true
 		end
 
-		projects[currentProject] = {description = data.description}
+		projects[currentProject] = {}
 
 		forEachOrderedElement(data, function(idx, value)
 			if type(value) == "string" then
@@ -305,11 +305,6 @@ local function getProjects(package, doc_report)
 		local shortsummary = "Automatically created TerraView project file"
 		local summary = shortsummary.." from <a href=\"../../data/"..luaFile.."\">"..luaFile.."</a>."
 		local mlayers = {}
-
-		if proj.description then
-			summary = summary.." "..proj.description
-			proj.description = nil
-		end
 
 		local mproject = {
 			summary = summary,

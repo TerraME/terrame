@@ -49,11 +49,6 @@ return{
 		end
 		unitTest:assertError(attrCreateNonBool, incompatibleTypeMsg("clean", "boolean", 2))
 
-		local descriptionCreateNonString = function()
-			Project{file = "myproj.tview", description = 2}
-		end
-		unitTest:assertError(descriptionCreateNonString, incompatibleTypeMsg("description", "string", 2))
-
 		local attrTitleNonString = function()
 			Project{file = "myproj.tview", title = 2}
 		end

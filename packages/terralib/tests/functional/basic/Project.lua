@@ -113,7 +113,6 @@ return {
 
 		unitTest:assertEquals(tostring(proj1), [[author       string [Avancini]
 clean        boolean [true]
-description  string []
 file         File
 layers       vector of size 0
 terralib     TerraLib
