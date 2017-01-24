@@ -41,3 +41,4 @@ packages/*/doc
 test/packages/*/doc
 packages/*/data/*.tview
 !test/log/*.log
+terrameVersion.h
