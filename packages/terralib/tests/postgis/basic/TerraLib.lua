@@ -101,10 +101,6 @@ return {
 		-- see in addPgLayer() test --
 		unitTest:assert(true)
 	end,
-	copyLayer = function(unitTest)
-		-- see in addPgLayer() test --
-		unitTest:assert(true)
-	end,
 	addPgCellSpaceLayer = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
