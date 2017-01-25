@@ -33,9 +33,21 @@ project = Project{
 	title = "Amazonia database",
 	portos = filePath("PORTOS_AMZ_pt.shp", "terralib"),
 	roads = filePath("RODOVIAS_AMZ_lin.shp", "terralib"),
-	protected = filePath("TI_AMZ_pol.shp", "terralib"),
-	prodes = filePath("PRODES_5KM.tif", "terralib"),
 	limite = filePath("LIMITE_AMZ_pol.shp", "terralib")
+}
+
+prodes = Layer{
+	name = "prodes",
+	project = project,
+	srid = 29191.0,
+	file = filePath("PRODES_5KM.tif", "terralib")
+}
+
+protected = Layer{
+	name = "protected",
+	project = project,
+	srid = 29191.0,
+	file = filePath("TI_AMZ_pol.shp", "terralib")
 }
 
 cl = Layer{
@@ -59,29 +71,24 @@ cl:fill{
 	attribute = "distports"
 }
 
---[[ -- this call below also aborts TerraME (but without showing any error)
 cl:fill{
 	operation = "area",
 	layer = "protected",
 	attribute = "marea"
 }
---]]
 
---[[ -- this example is not working properly. it aborts terrame
 cl:fill{
 	operation = "coverage",
 	layer = "prodes",
 	attribute = "prodes"
 }
 
---[[
 cl:fill{
 	operation = "average",
 	layer = "prodes",
 	input = prodes,
 	attribute = "mheight"
 }
---]]
 
 cs = CellularSpace{
 	project = project,
@@ -104,7 +111,6 @@ Map{
 	color = "YlGn"
 }
 
---[[
 Map{
 	target = cs,
 	select = "protected",
@@ -114,9 +120,7 @@ Map{
 	invert = true,
 	color = "YlGn"
 }
---]]
 
---[[
 Map{
 	target = cs,
 	select = "mheight",
@@ -124,5 +128,4 @@ Map{
 	invert = true,
 	color = "YlGn"
 }
---]]
 
