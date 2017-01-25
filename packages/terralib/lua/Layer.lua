@@ -687,14 +687,16 @@ Layer_ = {
 	dummy = function(self, band)
 		return self.project.terralib:getDummyValue(self.project, self.name, band)
 	end,
-	--- Exports the data of a layer to another data source.
+	--- Exports the data of a Layer to another data source.
 	-- The data can be either a file data or postgis. The SRID and overwrite are common arguments.
 	-- @arg data.srid The SRID related to some projection, it can be used to reproject the data.
 	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
+	-- @arg data.... Additional arguments related to where the output will be saved. These arguments
+	-- are the same for describing the data source when one creates a layer from a file or database.
 	-- @usage -- DONTRUN
-	-- layer:export({file = "myfile.shp", overwrite = "true"})
-	-- layer:export({file = "myfile.geojson"})
-	-- layer:export({file = "myfile.geojson", srid = 4326})
+	-- layer:export{file = "myfile.shp", overwrite = true}
+	-- layer:export{file = "myfile.geojson"}
+	-- layer:export{file = "myfile.geojson", srid = 4326}
 	export = function(self, data)
 		verifyNamedTable(data)
 
