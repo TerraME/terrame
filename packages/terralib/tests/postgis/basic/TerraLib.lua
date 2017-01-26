@@ -1473,11 +1473,18 @@ return {
 		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
 		unitTest:assertEquals(info3.srid, toData.srid)
 
+		-- OVERWRITE POSTGIS AND CHANGE SRID
+		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		unitTest:assertEquals(info2.srid, 29191.0)
+		pgData.srid = 4326
+		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		unitTest:assertEquals(info2.srid, 4326.0)
+
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"
 		File(toData.file):deleteIfExists()
-
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
@@ -1489,6 +1496,23 @@ return {
 		local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
 		unitTest:assertEquals(info4.srid, toData.srid)
 
+		-- OVERWRITE POSTGIS AND CHANGE SRID
+		local table1 = pgData.table
+		pgData.table = "ogrgeojson" -- TODO(#1243)
+		tl:saveLayerAs(proj, layerName4, pgData, overwrite)
+
+		local layerName5 = "PgLayerGJ"
+		tl:addPgLayer(proj, layerName5, pgData)
+		local info5 = tl:getLayerInfo(proj, proj.layers[layerName5])
+		unitTest:assertEquals(info5.srid, 4326.0)
+
+		pgData.srid = 2309
+		tl:saveLayerAs(proj, layerName4, pgData, overwrite)
+		info5 = tl:getLayerInfo(proj, proj.layers[layerName5])
+		unitTest:assertEquals(info5.srid, 2309.0)
+
+		tl:dropPgTable(pgData)
+		pgData.table = table1
 		tl:dropPgTable(pgData)
 
 		File("postgis2shp.shp"):delete()

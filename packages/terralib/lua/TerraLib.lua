@@ -887,6 +887,16 @@ local function fixCellSpaceSrid(project, csLayerName, inputLayerName)
     releaseProject(project)
 end
 
+local function getLayerByDataSetName(layers, dsetName)
+	for _, l in pairs(layers) do
+		if l:getDataSetName() == dsetName then
+			return l
+		end
+	end
+
+	return nil
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 
@@ -1955,15 +1965,17 @@ TerraLib_ = {
 			local fromType = fromDsInfo:getType()
 			local toDs = nil
 			local errorMsg = nil
+			local toDSetName = nil
 
 			if toType == "POSTGIS" then  -- #1243
 				toData.table = string.lower(fromDSetName)
 				toDs = createPgDataSourceToSaveAs(fromType, toData)
+				toDSetName = toData.table
 				if not toDs then
 					errorMsg = "It was not possible save the data in layer '"..layerName.."' to postgis data." -- #1363
-				elseif toDs:dataSetExists(toData.table) then
+				elseif toDs:dataSetExists(toDSetName) then
 					if overwrite then
-						toDs:dropDataSet(toData.table) -- SKIP -- TODO(#1555): It seems that terralib does not exchange to postgis and change the srid at the same time
+						toDs:dropDataSet(toDSetName)
 					else
 						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
 					end
@@ -1971,6 +1983,8 @@ TerraLib_ = {
 			elseif toType == "OGR" then
 				if File(toData.file):exists() then
 					if overwrite then
+						local _, fn = File(toData.file):split()
+						toDSetName = fn
 						File(toData.file):delete() -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
 					else
 						errorMsg = "The file '"..toData.file.."' already exists."
@@ -1994,11 +2008,12 @@ TerraLib_ = {
 				end
 
 				toDs = createGdalDataSourceToSaveAs(fromType, toData)
+				toDSetName = toData.fileTif
 				if not toDs then
 					errorMsg = "It was not possible save the data in layer '"..layerName.."' to raster data." -- #1364
-				elseif toDs:dataSetExists(toData.fileTif) then
+				elseif toDs:dataSetExists(toDSetName) then
 					if overwrite then
-						toDs:dropDataSet(toData.fileTif)
+						toDs:dropDataSet(toDSetName)
 					else
 						errorMsg = "The file '"..fileCopy.."' already exists."
 					end
@@ -2079,6 +2094,15 @@ TerraLib_ = {
 			-- if toType == "POSTGIS" then
 				-- toDs:renameDataSet(string.lower(fromDSetName), toData.table)
 			-- end
+
+			-- If the data belong a layer, it will be updated in the project
+			local toLayer = getLayerByDataSetName(project.layers, toDSetName)
+			if toLayer then
+				if toLayer:getSRID() ~= srid then
+					toLayer:setSRID(srid)
+					saveProject(project, project.layers)
+				end
+			end
 
 			fromDs:close()
 		end
