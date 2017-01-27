@@ -29,22 +29,22 @@ import("terralib")
 proj = Project{
 	file = "itaituba.tview",
 	clean = true,
-	localidades = filePath("Localidades_pt.shp", "terralib"),
-	roads = filePath("Rodovias_lin.shp", "terralib"),
-	setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	localities = filePath("itaituba-localities.shp", "terralib"),
+	roads = filePath("itaituba-roads.shp", "terralib"),
+	census = filePath("itaituba-census.shp", "terralib")
 }
 
 Layer{
 	project = proj,
 	name = "deforestation",
-	file = filePath("Desmatamento_2000.tif", "terralib"),
+	file = filePath("itaituba-deforestation.tif", "terralib"),
 	srid = 29191
 }
 
 Layer{
 	project = proj,
-	name = "altimetria",
-	file = filePath("altimetria.tif", "terralib"),
+	name = "elevation",
+	file = filePath("itaituba-elevation.tif", "terralib"),
 	srid = 29191
 }
 
@@ -53,13 +53,13 @@ cl = Layer{
 	name = "cells",
 	clean = true,
 	file = "itaituba.shp",
-	input = "setores",
+	input = "census",
 	resolution = 5000
 }
 
 cl:fill{
 	operation = "average",
-	layer = "altimetria",
+	layer = "elevation",
 	attribute = "altim"
 }
 
@@ -71,9 +71,9 @@ cl:fill{
 
 cl:fill{
 	operation = "sum",
-	layer = "setores",
+	layer = "census",
 	attribute = "pop",
-	select = "Populacao",
+	select = "population",
 	area = true
 }
 
@@ -85,7 +85,7 @@ cl:fill{
 
 cl:fill{
 	operation = "distance",
-	layer = "localidades",
+	layer = "localities",
 	attribute = "distl"
 }
 

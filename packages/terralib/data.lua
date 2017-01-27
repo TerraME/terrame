@@ -1,9 +1,9 @@
 data{
-	file = {"Desmatamento_2000.tif", "Desmatamento_2000.xml"},
-	summary = "",
-	source = "",
+	file = {"itaituba-deforestation.tif", "itaituba-deforestation.xml"},
+	summary = "Deforestation in Itaituba.",
+	source = "http://www.obt.inpe.br/prodes",
 	attributes = {
-		["0"] ="Data with values 8 (?), 87 (?), 167 (?), and 256 (no data)"
+		["0"] ="Data with values 8 (?), 87 (?), 167 (?), and 256 (no data)."
 	}
 }
 
@@ -72,7 +72,7 @@ data{
 }
 
 data{
-	file = {"elevation.tif", "elevation.xml"},
+	file = {"cabecadeboi-elevation.tif", "cabecadeboi-elevation.xml"},
 	summary = "Elevation data for the Cabeca de boi region, in Minas Gerais state, Brazil.",
 	source = "",
 	attributes = {
@@ -92,13 +92,9 @@ data{
 }
 
 data{
-	file = "elevation_box.shp",
+	file = "cabecadeboi-box.shp",
 	summary = "",
-	source = "",
-	attributes = {
-		ID = "Unique identifier", 
-		GRIDCODE = "Spring code"
-	}
+	source = ""
 }
 
 data{
@@ -169,30 +165,11 @@ data{
 }
 
 data{
-	file = "Localidades_props.txt",
-	summary = "",
+	file = "itaituba-localities.shp",
+	summary = "Main localities in Itaituba.",
 	source = "",
-	reference = ""
-}
-
-data{
-	file = "Localidades_pt.shp",
-	summary = "",
-	source = "",
-	reference = "",
 	attributes = {
-		FID = "",
-		LAYER = "",
-		LOCALIDADE = "",
-		MUNICIPIO = "",
-		ATENDIMENT = "",
-		POPULA__O = "",
-		UCS_FATURA = "",
-		ALIMENTADO = "",
-		CONSUMO_FA = "",
-		CONSUMO_ME = "",
-		OBJEID_17 = "",
-		objet_id_7 = "",
+		name = "Name of the locality."
 	}
 }
 
@@ -227,29 +204,9 @@ data{
 }
 
 data{
-	file = "Rodovias_lin.shp",
-	summary = "",
-	source = "",
-	reference = "",
-	attributes = {
-		FID = "",
-		LAYER = "",
-		FEATURE_ID = "",
-		CD_NUMERO_ = "",
-		CD_ALINHAM = "",
-		CD_CLASSE = "",
-		CD_PAVIMEN = "",
-		CD_TRAFEGO = "",
-		CD_SITUACA = "",
-		CD_ADMINIS = "",
-		NM_RODOVIA = "",
-		NM_SIGLA = "",
-		PROJECT_ID = "",
-		SHAPE_LENG = "",
-		SHAPE_LEN = "",
-		OBJET_ID_8 = "",
-		objet_id_9 = "",
-	}
+	file = "itaituba-roads.shp",
+	summary = "Roads of Itaituba.",
+	source = ""
 }
 
 data{
@@ -260,19 +217,12 @@ data{
 }
 
 data{
-	file = {"Setores_Censitarios_2000_pol.shp", "Setores_Censitarios_2000_props.txt"},
-	summary = "",
-	source = "",
-	reference = "",
+	file = {"itaituba-census.shp"},
+	summary = "Census data for Itaituba in the year 2000.",
+	source = "IBGE",
 	attributes = {
-		FID = "",
-		SPRAREA = "",
-		SPRPERIMET = "",
-		SPRROTULO = "",
-		Populacao = "",
-		objet_id_8 = "",
-		Densde_Pop = "",
-		Area = "",
+		population = "Total population of the tract.",
+		dens_pop = "Total population divided by the tract's area.",
 	}
 }
 
@@ -309,12 +259,11 @@ data{
 }
 
 data{
-	file = {"altimetria.tif", "Altimetria.xml"},
-	summary = "",
+	file = {"itaituba-elevation.tif", "itaituba-elevation.xml"},
+	summary = "SRTM data within Itaituba.",
 	source = "",
-	reference = "",
 	attributes = {
-		["0"] = ""
+		["0"] = "A number with the elevation in each pixel."
 	}
 }
 
