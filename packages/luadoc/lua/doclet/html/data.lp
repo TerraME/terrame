@@ -73,7 +73,7 @@
 									<center><img src=<% =loc %> ></center><br><br>
 								<%end%>
 								<%if data.summary then%>
-									<%=data.summary%>
+									<%= httpLink(data.summary)%>
 								<%else%>
 									<font color="red"><%="undefined"%></font>
 								<%end%>
