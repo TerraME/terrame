@@ -538,6 +538,12 @@ function _Gtme.executeDoc(package)
 		forEachElement(mdata, function(_, value)
 			print("Processing '"..value.file[1].."'")
 
+			if not isFile(packageInfo(package).path.."data"..s..value.file[1]) then
+				printError("File '"..value.file[1].."' does not exist in package '"..package.."'.")
+				doc_report.error_data = doc_report.error_data + 1
+				return
+			end
+
 			if string.endswith(value.file[1], ".csv") then
 				if not value.separator then
 					doc_report.error_data = doc_report.error_data + 1
