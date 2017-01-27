@@ -644,13 +644,13 @@ Layer_ = {
 		local prj = self.project.terralib:getProjection(self.project.layers[self.name])
 
 		if prj.NAME == "" then
-			prj.NAME = "Undefined" -- SKIP
+			prj.NAME = "Undefined" -- SKIP TODO(avancinirodrigo): there is no data with undefined projection to test
 		else
 			prj.NAME = "'"..prj.NAME.."'"
 		end
 
 		if prj.PROJ4 == "" then
-			prj.PROJ4 = "Undefined" -- SKIP
+			prj.PROJ4 = "Undefined" -- SKIP TODO(avancinirodrigo): there is no data with undefined projection to test
 		else
 			prj.PROJ4 = "'"..prj.PROJ4.."'"
 		end

@@ -56,6 +56,8 @@ void VisualArrangement::addPosition(int id, PositionVisualArrangement va)
 void VisualArrangement::setFile(string f)
 {
 	file = f;
+	position.clear();
+	size.clear();
 }
 
 void VisualArrangement::resizeEventDelegate(int id,  QResizeEvent *event)
