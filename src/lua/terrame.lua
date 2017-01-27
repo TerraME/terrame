@@ -1004,7 +1004,7 @@ local function runScript(script)
 	if _Gtme.File(displayFile):exists() then
 		cObj:setFile(displayFile)
 		cpp_restartobservercounter()
-		
+
 		local display = dofile(displayFile)
 
 		_Gtme.forEachElement(display, function(idx, data)
