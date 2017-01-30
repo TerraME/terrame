@@ -46,8 +46,6 @@ cell = Cell{
 		cell.state = BURNED
 	end,
 	init = function(cell)
-		cell.accumulation = cell.accuation
-
 		if cell.firebreak == 1 then
 			cell.state = FIREBREAK
 		elseif cell.river == 1 then
@@ -62,9 +60,15 @@ cell = Cell{
 
 cs = CellularSpace{
 	file = filePath("emas.shp"),
-	xy = {"Col", "Lin"},
-	instance = cell
+	instance = cell,
+	as = {
+		accumulation = "maxcover" -- test also with "mincover"
+	}
 }
+
+cs:get(31, 36).state = BURNING
+cs:get(35, 25).state = BURNING
+cs:get(40, 75).state = BURNING
 
 map = Map{
 	target = cs,
