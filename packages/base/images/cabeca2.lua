@@ -1,11 +1,11 @@
 
 local cs = CellularSpace{
-	file = filePath("cabecadeboi900.shp")
+	file = filePath("cabecadeboi800.shp")
 }
 
 m = Map{
 	target = cs,
-	select = "height_",
+	select = "height",
 	min = 0,
 	max = 255,
 	slices = 10,

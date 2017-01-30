@@ -1,6 +1,6 @@
 
 dofile(packageInfo().path.."/examples/runoff.lua")
 
-map:save("runoff.bmp")
+map2:save("runoff.bmp")
 
 clean()

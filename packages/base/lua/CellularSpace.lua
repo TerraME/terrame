@@ -1161,7 +1161,7 @@ CellularSpace_ = {
 	-- Any other & Load a Neighborhood from table stored in the same database of the
 	-- CellularSpace. \
 	-- @usage cs = CellularSpace{
-	--     file = filePath("cabecadeboi900.shp", "base")
+	--     file = filePath("cabecadeboi800.shp", "base")
 	-- }
 	--
 	-- cs:loadNeighborhood{source = filePath("cabecadeboi-neigh.gpm", "base")}
@@ -1584,8 +1584,7 @@ metaTableCellularSpace_ = {
 -- }
 --
 -- cabecadeboi = CellularSpace{
---     file = filePath("cabecadeboi.shp"),
---     as = {height = "height_"}
+--     file = filePath("cabecadeboi.shp")
 -- }
 function CellularSpace(data)
 	verifyNamedTable(data)

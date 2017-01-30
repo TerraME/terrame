@@ -28,15 +28,11 @@ data{
 data{
 	file = "cabecadeboi.shp",
 	attributes = {
-		object_id0 = "Unique identifier of the Cell.",
-		Col = "The x location.",
-		Lin = "The y location.",
-		height_ = "Height of the Cell, measured in values between 0 and 255.",
-		soilWater = "Amount of water in the soil."
+		height = "Height of the Cell, measured in values between 0 and 255."
 	},
 	image = "cabeca.bmp",
 	source = "TerraME team",
-	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil."
+	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil, with 100x100m of resolution."
 }
 
 data{
@@ -46,15 +42,11 @@ data{
 }
 
 data{
-	file = "cabecadeboi900.shp",
+	file = "cabecadeboi800.shp",
 	image = "cabeca2.bmp",
 	source = "TerraME team",
 	attributes = {
-		object_id0 = "Unique identifier of the Cell", 
-		Col = "The x location.", 
-		Lin = "The y location.", 
-		height_ = "Height of the Cell, measured in values between 0 and 255.",
-		soilWater = "Amount of water in the soil."
+		height = "Height of the Cell, measured in values between 0 and 255."
 	},
 	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil, with a larger resolution."
 }
