@@ -194,8 +194,8 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
 
 		if not ds:dataSetExists(dSetName) then
 			binding.te.da.DataSourceManager.getInstance():detach(dsId)
-			ds:close() -- SKIP
-			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not created.") -- SKIP
+			ds:close()
+			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not created.")
 		end
 
 		local dSetType
@@ -235,8 +235,8 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
             sridReal = srid
 		elseif sridReal == binding.TE_UNKNOWN_SRS then
 			local srsPath = binding.FindInTerraLibPath("share/terralib/json/srs.json")
-			customWarning("It was not possible to find the projection of layer '"..name.."'." -- SKIP
-						.."\nThe projection should be one of the availables in: "..srsPath) -- SKIP
+			customWarning("It was not possible to find the projection of layer '"..name.."'." -- SKIP(#470)
+						.."\nThe projection should be one of the availables in: "..srsPath)	-- SKIP(#470)
 		end
 
 		layer:setSRID(sridReal)
@@ -382,48 +382,6 @@ local function toDataSetLayer(layer)
 	return layer
 end
 
-local function copyLayer(from, to)
-	do
-		local fromDsId = from:getDataSourceId()
-		local fromDs = binding.GetDs(fromDsId, true)
-
-		from = toDataSetLayer(from) -- SKIP
-		local dSetName = from:getDataSetName()
-
-		local toDs = nil
-
-		if to.type == "POSTGIS" then -- SKIP
-			to.table = dSetName -- SKIP
-			local toConnInfo = createPgConnInfo(to.host, to.port, to.user, to.password, to.database, to.encoding)
-			local toTable = string.lower(to.table)
-			-- TODO: IT IS NOT POSSIBLE CREATE A DATABASE (REVIEW)
-			--toConnInfo.PG_CHECK_DB_EXISTENCE = toDb
-			--print(binding.te.da.DataSource.exists("POSTGIS", toConnInfo))
-			--local exists = binding.te.da.DataSource.exists("POSTGIS", toConnInfo)
-			-- if exists then
-				-- toConnInfo.PG_DB_TO_DROP = string.lower(to.dbName)
-				-- binding.te.da.DataSource.drop("POSTGIS", toConnInfo)
-			-- end
-			toDs = makeAndOpenDataSource(toConnInfo, "POSTGIS") -- SKIP
-
-			local tableExists = toDs:dataSetExists(toTable)
-			if tableExists then -- SKIP
-				toDs:dropDataSet(toTable) -- SKIP
-			end
-		end
-
-		local fromDSetType = fromDs:getDataSetType(dSetName)
-		local fromDSet = fromDs:getDataSet(dSetName)
-
-		binding.Create(toDs, fromDSetType, fromDSet) -- SKIP
-
-		fromDs:close() -- SKIP
-		toDs:close() -- SKIP
-	end
-
-	collectgarbage("collect") -- SKIP
-end
-
 local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, type, mask)
 	local cLId = binding.GetRandomicId()
 	local cellLayerInfo = binding.te.da.DataSourceInfo()
@@ -446,7 +404,7 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 										inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 			return
 		else
-			customWarning("The 'mask' not work to Raster, it was ignored.") -- SKIP
+			customWarning("The 'mask' not work to Raster, it was ignored.")
 		end
 	end
 
@@ -757,13 +715,13 @@ end
 local function removeDataSource(project, dsId)
 	local count = 0
 	for _, v in ipairs(project.layers) do
-		if v:getDataSourceId() == dsId then -- SKIP
-			count = count + 1 -- SKIP
+		if v:getDataSourceId() == dsId then -- SKIP(#470)
+			count = count + 1 -- SKIP -- TODO(avancinirodrigo): terralib is mapping one by one datasource after update to release-5.2, review.
 		end
 	end
 
 	if count == 1 then
-		binding.te.da.DataSourceInfoManager.getInstance():remove(dsId) -- SKIP
+		binding.te.da.DataSourceInfoManager.getInstance():remove(dsId) -- SKIP -- TODO(avancinirodrigo): terralib is mapping one by one datasource after update to release-5.2, review.
 	end
 end
 
@@ -927,6 +885,16 @@ local function fixCellSpaceSrid(project, csLayerName, inputLayerName)
     end
 
     releaseProject(project)
+end
+
+local function getLayerByDataSetName(layers, dsetName)
+	for _, l in pairs(layers) do
+		if l:getDataSetName() == dsetName then
+			return l
+		end
+	end
+
+	return nil
 end
 
 TerraLib_ = {
@@ -1432,48 +1400,6 @@ TerraLib_ = {
 		if binding.te.da.DataSource.exists("POSTGIS", connInfo) then
 			binding.te.da.DataSource.drop("POSTGIS", connInfo)
 		end
-	end,
-	--- Copy a given layer to another.
-	-- @arg _ A TerraLib object.
-	-- @arg project The name of the project.
-	-- @arg from The name input layer.
-	-- @arg to The name of the output layer.
-	-- 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
-	--
-	-- proj = {
-	--     file = "myproject.tview",
-	--     title = "TerraLib Tests",
-	--     author = "Avancini Rodrigo"
-	-- }
-	--
-	-- tl:createProject(proj, {})
-	--
-	-- local layerName1 = "SampaShp"
-	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
-	--
-	-- pgData = {
-	--     type = "POSTGIS",
-	--     host = "localhost",
-	--     port = "5432",
-	--     user = "postgres",
-	--     password = "postgres",
-	--     database = "terralib_save_test",
-	--     table = "sampa_cells",
-	--     encoding = "CP1252"
-	-- }
-	--
-	-- tl:addPgLayer(proj, "SampaPg", pgData)
-	--
-	-- tl:copyLayer(proj, layerName1, pgData)
-	copyLayer = function(_, project, from, to)
-		loadProject(project, project.file) -- SKIP
-
-		local fromLayer = project.layers[from]
-		copyLayer(fromLayer, to) -- SKIP
-
-		releaseProject(project) -- SKIP
 	end,
 	--- Fill a given attribute in a layer.
 	-- @arg project The name of the project.
@@ -2005,7 +1931,7 @@ TerraLib_ = {
 				if (numBands - 1) > 0 then
 					customError("The maximum band is '"..(numBands - 1).."'.")
 				else
-					customError("The only available band is '"..(numBands - 1).."'.") -- SKIP
+					customError("The only available band is '"..(numBands - 1).."'.")
 				end
 			end
 		end
@@ -2039,15 +1965,17 @@ TerraLib_ = {
 			local fromType = fromDsInfo:getType()
 			local toDs = nil
 			local errorMsg = nil
+			local toDSetName = nil
 
 			if toType == "POSTGIS" then  -- #1243
 				toData.table = string.lower(fromDSetName)
 				toDs = createPgDataSourceToSaveAs(fromType, toData)
+				toDSetName = toData.table
 				if not toDs then
 					errorMsg = "It was not possible save the data in layer '"..layerName.."' to postgis data." -- #1363
-				elseif toDs:dataSetExists(toData.table) then
+				elseif toDs:dataSetExists(toDSetName) then
 					if overwrite then
-						toDs:dropDataSet(toData.table) -- SKIP
+						toDs:dropDataSet(toDSetName)
 					else
 						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
 					end
@@ -2055,6 +1983,8 @@ TerraLib_ = {
 			elseif toType == "OGR" then
 				if File(toData.file):exists() then
 					if overwrite then
+						local _, fn = File(toData.file):split()
+						toDSetName = fn
 						File(toData.file):delete() -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
 					else
 						errorMsg = "The file '"..toData.file.."' already exists."
@@ -2078,11 +2008,12 @@ TerraLib_ = {
 				end
 
 				toDs = createGdalDataSourceToSaveAs(fromType, toData)
+				toDSetName = toData.fileTif
 				if not toDs then
 					errorMsg = "It was not possible save the data in layer '"..layerName.."' to raster data." -- #1364
-				elseif toDs:dataSetExists(toData.fileTif) then
+				elseif toDs:dataSetExists(toDSetName) then
 					if overwrite then
-						toDs:dropDataSet(toData.fileTif)
+						toDs:dropDataSet(toDSetName)
 					else
 						errorMsg = "The file '"..fileCopy.."' already exists."
 					end
@@ -2163,6 +2094,15 @@ TerraLib_ = {
 			-- if toType == "POSTGIS" then
 				-- toDs:renameDataSet(string.lower(fromDSetName), toData.table)
 			-- end
+
+			-- If the data belong a layer, it will be updated in the project
+			local toLayer = getLayerByDataSetName(project.layers, toDSetName)
+			if toLayer then
+				if toLayer:getSRID() ~= srid then
+					toLayer:setSRID(srid)
+					saveProject(project, project.layers)
+				end
+			end
 
 			fromDs:close()
 		end

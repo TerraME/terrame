@@ -168,6 +168,15 @@ return {
 		end
 		unitTest:assertError(bandNoExists, "The maximum band is '2.0'.")
 
+		local layerName2 = "TifLayer2"
+		local layerFile2 = filePath("test/prodes_polyc_10k.tif", "terralib")
+		tl:addGdalLayer(proj, layerName2, layerFile2)
+
+		local bandNoExists2 =  function()
+			tl:getDummyValue(proj, layerName2, 3)
+		end
+		unitTest:assertError(bandNoExists2, "The only available band is '0.0'.")
+
 		proj.file:delete()
 	end,
 	saveLayerAs = function(unitTest)

@@ -31,30 +31,30 @@ project = Project{
 	clean = true,
 	author = "Andrade, P.",
 	title = "Amazonia database",
-	portos = filePath("PORTOS_AMZ_pt.shp", "terralib"),
-	roads = filePath("RODOVIAS_AMZ_lin.shp", "terralib"),
-	limite = filePath("LIMITE_AMZ_pol.shp", "terralib")
+	ports = filePath("amazonia-ports.shp", "terralib"),
+	roads = filePath("amazonia-roads.shp", "terralib"),
+	limit = filePath("amazonia-limit.shp", "terralib")
 }
 
 prodes = Layer{
 	name = "prodes",
 	project = project,
-	srid = 29191.0,
-	file = filePath("PRODES_5KM.tif", "terralib")
+	srid = 29191,
+	file = filePath("amazonia-prodes.tif", "terralib")
 }
 
 protected = Layer{
 	name = "protected",
 	project = project,
-	srid = 29191.0,
-	file = filePath("TI_AMZ_pol.shp", "terralib")
+	srid = 29191,
+	file = filePath("amazonia-ilands.shp", "terralib")
 }
 
 cl = Layer{
 	project = project,
 	file = "amazonia.shp",
 	clean = true,
-	input = "limite",
+	input = "limit",
 	name = "cells",
 	resolution = 40000
 }
@@ -67,7 +67,7 @@ cl:fill{
 
 cl:fill{
 	operation = "distance",
-	layer = "portos",
+	layer = "ports",
 	attribute = "distports"
 }
 
@@ -113,7 +113,7 @@ Map{
 
 Map{
 	target = cs,
-	select = "protected",
+	select = "marea",
 	min = 0,
 	max = 1,
 	slices = 10,
