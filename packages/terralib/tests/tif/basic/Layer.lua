@@ -521,7 +521,7 @@ return {
 		l = Layer{
 			project = proj,
 			name = portos,
-			file = filePath("PORTOS_AMZ_pt.shp", "terralib")
+			file = filePath("amazonia-ports.shp", "terralib")
 		}
 
 		unitTest:assertNil(l:dummy(0))

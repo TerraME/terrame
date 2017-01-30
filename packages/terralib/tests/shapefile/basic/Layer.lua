@@ -144,8 +144,8 @@ return {
 			[layerName1] = filePath("test/limitePA_polyc_pol.shp", "terralib"),
 			[protecao] = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib"),
 			[rodovias] = filePath("test/BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "terralib"),
-			[portos] = filePath("PORTOS_AMZ_pt.shp", "terralib"),
-			[amaz] = filePath("LIMITE_AMZ_pol.shp", "terralib")
+			[portos] = filePath("amazonia-ports.shp", "terralib"),
+			[amaz] = filePath("amazonia-limit.shp", "terralib")
 		}
 
 		local municipios = "municipios"

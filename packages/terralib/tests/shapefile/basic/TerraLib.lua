@@ -1189,7 +1189,7 @@ return {
 		geom = tl:castGeomToSubtype(geom:getGeometryN(0))
 		unitTest:assertEquals(geom:getGeometryType(), "Polygon")
 
-		shpPath = filePath("Rodovias_lin.shp", "terralib")
+		shpPath = filePath("amazonia-roads.shp", "terralib")
 		dSet = tl:getOGRByFilePath(tostring(shpPath))
 		geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)

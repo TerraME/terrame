@@ -74,7 +74,7 @@ return {
 	point = function(unitTest)
 		local tl = TerraLib{}
 		local cs = CellularSpace{
-			file = filePath("Localidades_pt.shp", "terralib"),
+			file = filePath("itaituba-localities.shp", "terralib"),
 			geometry = true
 		}
 
@@ -94,7 +94,7 @@ return {
 	line = function(unitTest)
 		local tl = TerraLib{}
 		local cs = CellularSpace{
-			file = filePath("River_lin.shp", "terralib"),
+			file = filePath("emas-river.shp", "terralib"),
 			geometry = true
 		}
 
@@ -126,7 +126,7 @@ return {
 	polygon = function(unitTest)
 		local tl = TerraLib{}
 		local cs = CellularSpace{
-			file = filePath("Limit_pol.shp", "terralib"),
+			file = filePath("amazonia-limit.shp", "terralib"),
 			geometry = true
 		}
 

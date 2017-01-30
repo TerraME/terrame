@@ -644,7 +644,7 @@ return{
 				select = selected
 			}
 		end
-		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'Populacao'?")
+		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'population'?")
 
 		selectNotString = function()
 			cl:fill{
@@ -914,7 +914,7 @@ return{
 		Layer{
 			project = proj,
 			name = localidades,
-			file = filePath("Localidades_pt.shp", "terralib")
+			file = filePath("itaituba-localities.shp", "terralib")
 		}
 
 		local cW = customWarning
