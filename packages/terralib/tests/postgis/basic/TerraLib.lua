@@ -235,7 +235,7 @@ return {
 
 		-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
 		local layerName2 = "Protection_Unit"
-		local layerFile2 = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
+		local layerFile2 = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName2, layerFile2)
 
 		-- POSTGIS OUTPUT
@@ -1272,7 +1272,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "SetoresShp"
-		local layerFile1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local layerFile1 = filePath("itaituba-census.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		local host = "localhost"
@@ -1324,7 +1324,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "SetoresShp"
-		local layerFile1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local layerFile1 = filePath("itaituba-census.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		local host = "localhost"
@@ -1427,7 +1427,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "Setores"
-		local layerFile1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local layerFile1 = filePath("itaituba-census.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		-- POSTGIS
@@ -1532,7 +1532,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "Setores"
-		local layerFile1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local layerFile1 = filePath("itaituba-census.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		-- POSTGIS

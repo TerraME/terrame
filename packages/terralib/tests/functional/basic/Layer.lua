@@ -247,9 +247,9 @@ return {
 		local proj = Project {
 			file = projName,
 			clean = true,
-			[layerName1] = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
-			[localidades] = filePath("Localidades_pt.shp", "terralib"),
-			[rodovias] = filePath("Rodovias_lin.shp", "terralib")
+			[layerName1] = filePath("itaituba-census.shp", "terralib"),
+			[localidades] = filePath("itaituba-localities.shp", "terralib"),
+			[rodovias] = filePath("itaituba-roads.shp", "terralib")
 		}
 
 		local clName1 = "Setores_Cells"
@@ -506,7 +506,7 @@ return {
 		local l = Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("itaituba-census.shp", "terralib")
 		}
 
 		unitTest:assertEquals(l:representation(), "polygon")
@@ -515,7 +515,7 @@ return {
 		l = Layer{
 			project = proj,
 			name = localidades,
-			file = filePath("Localidades_pt.shp", "terralib")
+			file = filePath("itaituba-localities.shp", "terralib")
 		}
 
 		unitTest:assertEquals(l:representation(), "point")
@@ -524,7 +524,7 @@ return {
 		l = Layer{
 			project = proj,
 			name = rodovias,
-			file = filePath("Rodovias_lin.shp", "terralib")
+			file = filePath("itaituba-roads.shp", "terralib")
 		}
 
 		unitTest:assertEquals(l:representation(), "line")
@@ -543,10 +543,10 @@ return {
 		local l = Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("itaituba-census.shp", "terralib")
 		}
 
-		local expected = [[file     string [Setores_Censitarios_2000_pol.shp]
+		local expected = [[file     string [itaituba-census.shp]
 name     string [Setores_2000]
 project  Project
 rep      string [polygon]

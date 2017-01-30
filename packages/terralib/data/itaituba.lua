@@ -60,7 +60,7 @@ cl = Layer{
 cl:fill{
 	operation = "average",
 	layer = "elevation",
-	attribute = "altim"
+	attribute = "elevation"
 }
 
 cl:fill{
@@ -72,7 +72,7 @@ cl:fill{
 cl:fill{
 	operation = "sum",
 	layer = "census",
-	attribute = "pop",
+	attribute = "population",
 	select = "population",
 	area = true
 }
@@ -80,58 +80,62 @@ cl:fill{
 cl:fill{
 	operation = "distance",
 	layer = "roads",
-	attribute = "distr"
+	attribute = "distroad"
 }
 
 cl:fill{
 	operation = "distance",
 	layer = "localities",
-	attribute = "distl"
+	attribute = "distlocal"
 }
 
 cs = CellularSpace{
 	project = proj,
-	layer = "cells"
+	layer = "cells",
+	as = {
+		river = "defor_167",
+		deforestation = "defor_87"
+	}
 }
 
 m = Map{
 	target = cs,
-	select = "altim",
-	slices = 10,
+	select = "elevation",
+	slices = 6,
 	color = "Blues"
 }
 
 m = Map{
 	target = cs,
-	select = "distl",
+	select = "distlocal",
 	slices = 10,
 	color = "Reds"
 }
 
 m = Map{
 	target = cs,
-	select = "defor_167",
-	slices = 10,
+	select = "river",
+	slices = 6,
+	color = "Blues"
+}
+
+m = Map{
+	target = cs,
+	select = "deforestation",
+	slices = 6,
 	color = "Greens"
 }
 
 m = Map{
 	target = cs,
-	select = "defor_87",
-	slices = 10,
-	color = "Greens"
-}
-
-m = Map{
-	target = cs,
-	select = "pop",
-	slices = 10,
+	select = "population",
+	slices = 6,
 	color = "Purples"
 }
 
 m = Map{
 	target = cs,
-	select = "distr",
+	select = "distroad",
 	slices = 10,
 	color = "Reds"
 }

@@ -1,79 +1,55 @@
+
+-- Amazonia
+
 data{
-	file = {"itaituba-deforestation.tif", "itaituba-deforestation.xml"},
-	summary = "Deforestation in Itaituba.",
+	file = "amazonia-indigenous.shp",
+	summary = "Indigenous lands within Brazilian Amazonia. This is a simplified version of the original data and must be used only for educational purposes.",
+	source = "http://www.funai.gov.br/index.php/shape",
+	attributes = {
+		TERRA_IND = "Name of the Indigenous land.",
+		GRUPO = "Name of the Indigenous people the land belongs to.",
+	}
+}
+
+data{
+	file = "amazonia-limit.shp",
+	summary = "Limit of the Brazilian Amazonia. This is a simplified and old version of the data and must be used only for educational purposes.",
+	source = "http://www.ibge.gov.br"
+}
+
+data{
+	file = "amazonia-ports.shp",
+	summary = "Main ports within Brazilian Amazonia. This is a simplified and old version of the data and must be used only for educational purposes.",
+	source = "http://www.antaq.gov.br/portal/PNIH.asp",
+	attributes = {
+		NOME_PORTO = "Name of the port.",
+		TIPO = "Type of the port: \"MARITMO\" (sea) or \"FLUVIAL\" (river).",
+	}
+}
+
+data{
+	file = {"amazonia-prodes.tif", "amazonia-prodes.jgw", "amazonia-prodes.xml"},
+	summary = "PRODES data with resolution of 5km. This is a simplified version of the data and must be used only for educational purposes.",
 	source = "http://www.obt.inpe.br/prodes",
 	attributes = {
-		["0"] ="Data with values 8 (?), 87 (?), 167 (?), and 256 (no data)."
+		["0"] = "Clear-cut deforestation (10) or pristine forest (208).",
 	}
 }
 
 data{
-	file = "LIMITE_AMZ_pol.shp",
-	summary = "",
-	source = "",
+	file = "amazonia-roads.shp",
+	summary = "Main roads in Brazilian Amazonia. This is a simplified and old version of the data and must be used only for educational purposes.",
+	source = "http://www.dnit.gov.br/mapas-multimodais/shapefiles",
 	attributes = {
-		SPRROTULO = "Name for the polygon", 
-		objet_id_2 = "Unique identifier"
+		RODOVIA = "Name of the road."
 	}
 }
 
-data{
-	file = "Limit_pol.shp",
-	summary = "",
-	source = "",
-	attributes = {
-		SPRAREA = "Area of the polygon", 
-		SPRPERIMET = "Perimeter of the polygon",
-		SPRCLASSE = "Class of the polygon", 
-		objet_id_1 = "Unique identifier"
-	}
-}
-
-data{
-	file = "PORTOS_AMZ_pt.shp",
-	summary = "",
-	source = "",
-	attributes = {
-		objet_id_6 = "",
-		SPRROTULO = "",
-		SPRNOME = "",
-		COD_MICRO = "",
-		COD_MUNICI = "",
-		COD_HIDROV = "",
-		COD_PORTO = "",
-		ANTAQ_P = "",
-		UF = "",
-		NOME_PORTO = "",
-		CIA_ADMIN = "",
-		TIPO = "",
-		ADMINISTRA = "",
-		LOCALIZA = "",
-		ENDERECO = "",
-		CEP = "",
-		INFLUENCIA = "",
-		ACESSO_ROD = "",
-		ACESSO_MAR = "",
-		ACESSO_FLU = "",
-		ACESSO_FER = "",
-		CARG_DESEM = "",
-		CARG_EMBAR = "",
-		ACESS_COMP = "",
-		objet_id_5 = ""
-	}
-}
-
-data{
-	file = {"PRODES_5KM.tif", "PRODES_5KM.jgw", "PRODES_5KM.xml"},
-	summary = "",
-	source = "",
-	attributes = {
-		["0"] = "Deforestation data",
-	}
-}
+-- Cabeca de Boi
 
 data{
 	file = {"cabecadeboi-elevation.tif", "cabecadeboi-elevation.xml"},
-	summary = "Elevation data for the Cabeca de boi region, in Minas Gerais state, Brazil.",
+	summary = "Elevation data for the Cabeca de Boi region, in Minas Gerais state, Brazil.",
 	source = "",
 	attributes = {
 		["0"] = "Elevation value based on SRTM data."
@@ -81,140 +57,45 @@ data{
 }
 
 data{
-	file = "River_lin.shp",
-	summary = "",
-	source = "",
-	attributes = {
-		SPRPERIMET = "Polygon perimeter", 
-		SPRCLASSE = "A string with the class of the polygon", 
-		objet_id_9 = "Unique identifier"
-	}
-}
-
-data{
 	file = "cabecadeboi-box.shp",
-	summary = "",
-	source = ""
+	summary = "A polygon with a bounding box for the Cabeca de Boi region.",
+	source = "TerraME team"
 }
 
+-- Emas
+
 data{
-	file = "Localidades_pt.geojson",
-	summary = "",
-	source = "",
+	file = {"emas-accumulation.tif", "emas-accumulation.xml"},
+	summary = "Land cover accumulation from November 94 to May 2000.",
+	source = "Rodolfo Almeida (see Reference)",
+	reference = "Almeida et al. (2008). Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil. In: X Simposio Brasileiro de Geoinformatica, Rio de Janeiro, Brazil",
 	attributes = {
-		LAYER = "Name of the layer",
-		LOCALIDADE = "Name of the location",
-		MUNICIPIO = "Name of the municipality it belongs",
-		ATENDIMENT = "?",
-		POPULA__O = "Population size",
-		UCS_FATURA = "?",
-		ALIMENTADO = "?",
-		CONSUMO_FA = "?",
-		CONSUMO_ME = "?",
-		OBJEID_17 = "Secondary unique object identifier",
-		objet_id_7 = "Unique object identifier"
+		["0"] = "A value between 0 and 5 describing the land cover accumulation."
 	}
 }
 
 data{
-	file = "BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp",
-	summary = "",
-	source = "",
-	reference = "",
-	attributes = {
-		FID = "",
-		objet_id_8 = "",
-		ID_TRECHO_ = "",
-		GEOMETRIAA = "",
-		CODTRECHOR = "",
-		TIPOTRECHO = "",
-		JURISDICAO = "",
-		ADMINISTRA = "",
-		CONCESSION = "",
-		REVESTIMEN = "",
-		OPERACIONA = "",
-		SITUACAOFI = "",
-		NRPISTAS = "",
-		NRFAIXAS = "",
-		TRAFEGO = "",
-		CANTEIRODI = "",
-		CAPACCARGA = "",
-	}
+	file = "emas-firebreak.shp",
+	summary = "Firebreaks in Emas National Park.",
+	source = "Rodolfo Almeida",
+	reference = "Almeida et al. (2008). Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil. In: X Simposio Brasileiro de Geoinformatica, Rio de Janeiro, Brazil"
 }
 
 data{
-	file = "BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp",
-	summary = "Conservation units of Para state, in Brazil",
-	source = "",
-	reference = "",
-	attributes = {
-		FID = "",
-		objet_id_9 = "Unique identifier",
-		ID_UNID_PR = "",
-		NOME = "Name of the conservation unit",
-		NOMEABREV = "",
-		GEOMETRIAA = "",
-		ANOCRIACAO = "Year when the conservation unit was created",
-		SIGLA = "",
-		AREAOFICIA = "",
-		ATOLEGAL = "",
-		ADMINISTRA = "",
-		TIPOUNIDPR = "",
-		objet_id_6 = "",
-	}
+	file = "emas-limit.shp",
+	source = "Rodolfo Almeida (see Reference)",
+	summary = "Limit of Emas National Park. For more information about it visit https://en.wikipedia.org/wiki/Emas_National_Park.",
+	reference = "Almeida et al. (2008). Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil. In: X Simposio Brasileiro de Geoinformatica, Rio de Janeiro, Brazil"
 }
 
 data{
-	file = "itaituba-localities.shp",
-	summary = "Main localities in Itaituba.",
-	source = "",
-	attributes = {
-		name = "Name of the locality."
-	}
+	file = "emas-river.shp",
+	source = "Rodolfo Almeida (see Reference)",
+	summary = "Rivers within Emas National Park.",
+	reference = "Almeida et al. (2008). Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil. In: X Simposio Brasileiro de Geoinformatica, Rio de Janeiro, Brazil"
 }
 
-data{
-	file = "RODOVIAS_AMZ_lin.shp",
-	summary = "",
-	source = "",
-	reference = "",
-	attributes = {
-		FID = "",
-		objet_id_4 = "",
-		SPRPERIMET = "",
-		SPRROTULO = "",
-		SPRNOME = "",
-		ID1 = "",
-		CODIGO = "",
-		RODOVIA = "",
-		COINCIDE_C = "",
-		EXTENSAO = "",
-		REVESTIMEN = "",
-		JURISDICAO = "",
-		PISTA = "",
-		KM_INICIO = "",
-		KM_FIM = "",
-		DESCRICAO = "",
-		FLUXO_TOTA = "",
-		FLUXO_PESA = "",
-		BR = "",
-		OBJEID_18 = "",
-		objet_id_3 = "",
-	}
-}
-
-data{
-	file = "itaituba-roads.shp",
-	summary = "Roads of Itaituba.",
-	source = ""
-}
-
-data{
-	file = "Rodovias_props.txt",
-	summary = "",
-	source = "",
-	reference = ""
-}
+-- Itaituba
 
 data{
 	file = {"itaituba-census.shp"},
@@ -227,34 +108,11 @@ data{
 }
 
 data{
-	file = "TI_AMZ_pol.shp",
-	summary = "",
-	source = "",
-	reference = "",
+	file = {"itaituba-deforestation.tif", "itaituba-deforestation.xml"},
+	summary = "Deforestation in Itaituba.",
+	source = "http://www.obt.inpe.br/prodes",
 	attributes = {
-		FID = "",
-		objet_id_8 = "",
-		SPRAREA = "",
-		SPRPERIMET = "",
-		SPRROTULO = "",
-		SPRNOME = "",
-		PORT__DECL = "",
-		TERRA_IND = "",
-		GRUPO = "",
-		HOMOLOGADA = "",
-		SITATUAL = "",
-		COD_INDI = "",
-		objet_id_7 = "",
-	}
-}
-
-data{
-	file = {"accumulation_Nov94May00.tif", "accumulation_Nov94May00.tif.aux.xml", "accumulation_Nov94May00.xml"},
-	summary = "",
-	source = "",
-	reference = "",
-	attributes = {
-		["0"] = ""
+		["0"] ="Data with values 8 (forest), 87 (clear-cut deforestation), 167 (river), and 256 (no data)."
 	}
 }
 
@@ -268,15 +126,17 @@ data{
 }
 
 data{
-	file = "firebreak_lin.shp",
-	summary = "",
+	file = "itaituba-localities.shp",
+	summary = "Main localities in Itaituba.",
 	source = "",
-	reference = "",
 	attributes = {
-		FID = "",
-		SPRPERIMET = "",
-		SPRCLASSE = "",
-		objet_id_6 = "",
+		name = "Name of the locality."
 	}
+}
+
+data{
+	file = "itaituba-roads.shp",
+	summary = "Roads of Itaituba.",
+	source = ""
 }
 

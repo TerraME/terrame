@@ -45,7 +45,7 @@ return{
 		proj = Project{
 			file = projFile:name(true),
 			clean = true,
-			deforestation = filePath("Desmatamento_2000.tif", "terralib"),
+			deforestation = filePath("itaituba-deforestation.tif", "terralib"),
 		}
 
 		local layerName = "any"
@@ -408,7 +408,7 @@ return{
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("itaituba-census.shp", "terralib")
 		}
 
 		local clName1 = "setores_cells2"

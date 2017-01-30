@@ -47,7 +47,7 @@ protected = Layer{
 	name = "protected",
 	project = project,
 	srid = 29191,
-	file = filePath("amazonia-ilands.shp", "terralib")
+	file = filePath("amazonia-indigenous.shp", "terralib")
 }
 
 cl = Layer{
@@ -74,7 +74,7 @@ cl:fill{
 cl:fill{
 	operation = "area",
 	layer = "protected",
-	attribute = "marea"
+	attribute = "protected"
 }
 
 cl:fill{
@@ -83,16 +83,13 @@ cl:fill{
 	attribute = "prodes"
 }
 
-cl:fill{
-	operation = "average",
-	layer = "prodes",
-	input = prodes,
-	attribute = "mheight"
-}
-
 cs = CellularSpace{
 	project = project,
-	layer = "cells"
+	layer = "cells",
+	as = {
+		forest = "prodes_208",
+		deforestation = "prodes_10"
+	}
 }
 
 Map{
@@ -100,7 +97,7 @@ Map{
 	select = "distroads",
 	slices = 10,
 	invert = true,
-	color = "YlGn"
+	color = "YlOrBr"
 }
 
 Map{
@@ -108,22 +105,20 @@ Map{
 	select = "distports",
 	slices = 10,
 	invert = true,
-	color = "YlGn"
+	color = "YlOrBr"
 }
 
 Map{
 	target = cs,
-	select = "marea",
-	min = 0,
-	max = 1,
+	select = "protected",
 	slices = 10,
 	invert = true,
-	color = "YlGn"
+	color = "PuBu"
 }
 
 Map{
 	target = cs,
-	select = "mheight",
+	select = "deforestation",
 	slices = 10,
 	invert = true,
 	color = "YlGn"

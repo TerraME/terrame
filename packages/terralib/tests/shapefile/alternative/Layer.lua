@@ -42,7 +42,7 @@ return {
 			Layer{
 				project = proj,
 				name = layerName1,
-				file = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
+				file = filePath("itaituba-census.shp", "terralib"),
 				index = true
 			}
 		end
@@ -51,7 +51,7 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("itaituba-census.shp", "terralib")
 		}
 
 		local indexDefaultError2 = function()
@@ -80,7 +80,7 @@ return {
 			clean = true
 		}
 
-		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath1 = filePath("itaituba-census.shp", "terralib")
 
 		local layerName1 = "setores"
 		local layer1 = Layer{

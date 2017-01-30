@@ -32,7 +32,7 @@ return {
 		}
 
 		-- SPATIAL INDEX TEST
-		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath1 = filePath("itaituba-census.shp", "terralib")
 		local qixFile = string.gsub(tostring(filePath1), ".shp", ".qix")
 		File(qixFile):delete()
 
@@ -101,7 +101,7 @@ return {
 		Layer{
 			project = proj,
 			name = "Elevation",
-			file = filePath("elevation_box.shp", "terralib")
+			file = filePath("cabecadeboi-box.shp", "terralib")
 		}
 
 		customWarning = customWarningBkp
@@ -114,7 +114,7 @@ return {
 
 		local proj = Project{
 			file = projName,
-			setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
+			setores = filePath("itaituba-census.shp", "terralib"),
 			clean = true
 		}
 
@@ -142,8 +142,8 @@ return {
 			file = projName,
 			clean = true,
 			[layerName1] = filePath("test/limitePA_polyc_pol.shp", "terralib"),
-			[protecao] = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib"),
-			[rodovias] = filePath("BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "terralib"),
+			[protecao] = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib"),
+			[rodovias] = filePath("test/BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "terralib"),
 			[portos] = filePath("PORTOS_AMZ_pt.shp", "terralib"),
 			[amaz] = filePath("LIMITE_AMZ_pol.shp", "terralib")
 		}
@@ -652,7 +652,7 @@ return {
 		proj = Project {
 			file = projName,
 			clean = true,
-			setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			setores = filePath("itaituba-census.shp", "terralib")
 		}
 
 		clName1 = "cells_avg_area"
@@ -713,7 +713,7 @@ return {
 		local layer = Layer{
 			project = proj,
 			name = "setores",
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
+			file = filePath("itaituba-census.shp", "terralib"),
 			index = false
 		}
 
@@ -745,7 +745,7 @@ return {
 			clean = true
 		}
 
-		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath1 = filePath("itaituba-census.shp", "terralib")
 
 		local layerName1 = "setores"
 		local layer = Layer{
@@ -774,7 +774,7 @@ return {
 			clean = true
 		}
 
-		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath1 = filePath("itaituba-census.shp", "terralib")
 
 		local layerName1 = "setores"
 		local layer = Layer{

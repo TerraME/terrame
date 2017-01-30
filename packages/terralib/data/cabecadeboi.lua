@@ -32,9 +32,21 @@ local project = Project{
 	file = projName,
 	clean = true,
 	author = "Carneiro, T.",
-	title = "Cabeca de Boi database",
-	box = filePath("cabecadeboi-box.shp", "terralib"),
-	elevation = filePath("cabecadeboi-elevation.tif", "terralib")
+	title = "Cabeca de Boi database"
+}
+
+elevation = Layer{
+	project = project,
+	name = "elevation",
+	file = filePath("cabecadeboi-elevation.tif", "terralib"),
+	srid = 2311
+}
+
+box = Layer{
+	project = project,
+	name = "box",
+	file = filePath("cabecadeboi-box.shp", "terralib"),
+	srid = 2311
 }
 
 cl = Layer{

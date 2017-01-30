@@ -445,7 +445,7 @@ function _Gtme.executeDoc(package)
 					printError("In the documentation of '"..tab.file[1].."', description of attribute '"..idx.."' should be string, got "..type(value)..".")
 					value = ""
 					doc_report.error_data = doc_report.error_data + 1
-				elseif not string.endswith(value, ".") then
+				elseif not string.endswith(value, "%.") then
 					printError("In '"..tab.file[1]..", description of attribute '"..idx.."' should end with '.'")
 					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
 				end

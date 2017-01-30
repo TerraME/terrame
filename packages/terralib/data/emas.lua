@@ -31,15 +31,15 @@ project = Project{
 	clean = true,
 	author = "Almeida, R.",
 	title = "Emas database",
-	firebreak = filePath("firebreak_lin.shp", "terralib"),
-	river = filePath("River_lin.shp", "terralib"),
-	limit = filePath("Limit_pol.shp", "terralib")
+	firebreak = filePath("emas-firebreak.shp", "terralib"),
+	river = filePath("emas-river.shp", "terralib"),
+	limit = filePath("emas-limit.shp", "terralib")
 }
 
 Layer{
 	project = project,
 	name = "cover",
-	file = filePath("accumulation_Nov94May00.tif", "terralib"),
+	file = filePath("emas-accumulation.tif", "terralib"),
 	srid = 29192
 }
 
@@ -65,8 +65,14 @@ cl:fill{
 }
 
 cl:fill{
-	operation = "average",
-	attribute = "cover",
+	operation = "maximum",
+	attribute = "maxcover",
+	layer = "cover"
+}
+
+cl:fill{
+	operation = "minimum",
+	attribute = "mincover",
 	layer = "cover"
 }
 
@@ -79,31 +85,29 @@ Map{
 	target = cs,
 	select = "firebreak",
 	value = {0, 1},
-	color = {"white", "black"}
+	color = {"darkGreen", "black"},
+	label = {"forest", "firebreak"}
 }
 
 Map{
 	target = cs,
 	select = "river",
 	value = {0, 1},
-	color = {"white", "black"}
+	color = {"darkGreen", "darkBlue"},
+	label = {"forest", "river"}
 }
 
---[[
-max = 0
-forEachCell(cs, function(cell)
-	if cell.cover > max then max = cell.cover end
-end)
---]]
-
--- the Map below will only work properly when TerraLib
--- loads the band indexes #808
 Map{
 	target = cs,
-	select = "cover",
-	min = 0,
-	max = 300, -- it will be 5 or 6 possibly
-	slices = 6,
-	color = "Greens"
+	select = "mincover",
+	slices = 5,
+	color = "YlGn"
+}
+
+Map{
+	target = cs,
+	select = "maxcover",
+	slices = 5,
+	color = "YlGn"
 }
 

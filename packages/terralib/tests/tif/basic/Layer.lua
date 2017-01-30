@@ -35,7 +35,7 @@ return {
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("PRODES_5KM.tif", "terralib")
+			file = filePath("amazonia-prodes.tif", "terralib")
 		}
 
 		local filePath1 = "prodes_cells_tif_basic.shp"
@@ -140,14 +140,14 @@ return {
 		local l1 = Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("itaituba-census.shp", "terralib")
 		}
 
 		local prodes = "prodes"
 		Layer{
 			project = proj,
 			name = prodes,
-			file = filePath("Desmatamento_2000.tif", "terralib"),
+			file = filePath("itaituba-deforestation.tif", "terralib"),
 			srid = l1.srid
 		}
 
@@ -155,7 +155,7 @@ return {
 		Layer{
 			project = proj,
 			name = altimetria,
-			file = filePath("altimetria.tif", "terralib"),
+			file = filePath("itaituba-elevation.tif", "terralib"),
 			srid = l1.srid
 		}
 
@@ -465,7 +465,7 @@ return {
 		local layer = Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("PRODES_5KM.tif", "terralib"),
+			file = filePath("amazonia-prodes.tif", "terralib"),
 			srid = 100017
 		}
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S - old 29191', with SRID: 100017.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ')")
@@ -484,7 +484,7 @@ return {
 		local layer = Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("PRODES_5KM.tif", "terralib")
+			file = filePath("amazonia-prodes.tif", "terralib")
 		}
 
 		local props = layer:attributes()
