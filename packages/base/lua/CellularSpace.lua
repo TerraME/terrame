@@ -1520,7 +1520,9 @@ metaTableCellularSpace_ = {
 -- @arg data.zero A string value describing where the zero in the y axis starts. The
 -- default value is "bottom". When one uses argument xy, the
 -- default value is "top", which is the most common representation in different data
--- formats.
+-- formats. When zero is "bottom", the y values of each cell is inverted according to
+-- the maximum and minimum values: newy = y maximum - y + y minimum. All cellular data
+-- created using package terralib will have their y values inverted.
 -- @arg data.xy An optional table with two strings describing the names of the
 -- column and row attributes, in this order. The default value is {"col", "row"},
 -- representing the attribute names created by TerraLib for CellularSpaces. A Map
