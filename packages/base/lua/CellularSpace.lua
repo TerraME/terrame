@@ -1757,6 +1757,27 @@ function CellularSpace(data)
 
 	data:load()
 
+	if data.as then
+		forEachElement(data.as, function(idx, value)
+			if data.cells[1][idx] then
+				customError("Cannot rename '"..value.."' to '"..idx.."' as it already exists.")
+			elseif not data.cells[1][value] then
+				customError("Cannot rename attribute '"..value.."' as it does not exist.")
+			end
+		end)
+
+		local s = "return function(cell)\n"
+
+		forEachElement(data.as, function(idx, value)
+			s = s.."cell."..idx.." = cell."..value.."\n"
+			s = s.."cell."..value.." = nil\n"
+		end)
+
+		s = s.."end"
+
+		forEachCell(data, load(s)())
+	end
+
 	if data.instance ~= nil then
 		mandatoryTableArgument(data, "instance", "Cell")
 
@@ -1818,27 +1839,6 @@ function CellularSpace(data)
 		forEachCell(data, function(cell)
 			setmetatable(cell, metaTableInstance)
 		end)
-	end
-
-	if data.as then
-		forEachElement(data.as, function(idx, value)
-			if data.cells[1][idx] then
-				customError("Cannot rename '"..value.."' to '"..idx.."' as it already exists.")
-			elseif not data.cells[1][value] then
-				customError("Cannot rename attribute '"..value.."' as it does not exist.")
-			end
-		end)
-
-		local s = "return function(cell)\n"
-
-		forEachElement(data.as, function(idx, value)
-			s = s.."cell."..idx.." = cell."..value.."\n"
-			s = s.."cell."..value.." = nil\n"
-		end)
-
-		s = s.."end"
-
-		forEachCell(data, load(s)())
 	end
 
 	return data
