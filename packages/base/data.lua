@@ -31,7 +31,7 @@ data{
 		height = "Height of the Cell, measured in values between 0 and 255."
 	},
 	image = "cabeca.bmp",
-	source = "TerraME team",
+	source = "This data is a copy of the file cabecadeboi.shp created by terralib package.",
 	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil, with 100x100m of resolution."
 }
 
@@ -44,7 +44,7 @@ data{
 data{
 	file = "cabecadeboi800.shp",
 	image = "cabeca2.bmp",
-	source = "TerraME team",
+	source = "This data is a copy of the file cabecadeboi.shp created by terralib package, using a resolution of 800m.",
 	attributes = {
 		height = "Height of the Cell, measured in values between 0 and 255."
 	},
@@ -73,47 +73,28 @@ data{
 data{
 	file = "amazonia.shp",
 	image = "amazonia.bmp",
-	source = "TerraME team",
+	source = "This data is a copy of the file amazonia.shp created by terralib package.",
 	summary = "Database with some data for the Amazonia region, in Brazil. The biomass was taken from Sassan Saatchi. It is represented in Ton/ha and contains three values: [minimum, average, maximum]. The original data was degradated, and therefore the biomass might be underestimated.",
 	attributes = {
-		FID = "Unique identifier (internal value).",
-		object_id0 = "Unique identifier.",
-		Col = "Column of the Cell.",
-		Lin = "Line of the Cell.",
-		areadigena = "Percentage of indigenous area.",
-		distportos = "Distance to ports.",
-		distdovias = "Distance to roads.", 
-		defor_255 = "Column with only zeros.",
-		defor_208 = "Percentage of non-forest and non-deforestation area.",
-		defor_10 = "Percentage of forest area.",
-		bioma_255 = "Biomass [350, 375, 400].",
-		bioma_224 = "Biomass [250, 275, 300].",
-		bioma_191 = "Biomass [200, 225, 250].",
-		bioma_160 = "Biomass [150, 175, 200].", 
-		bioma_127 = "Biomass [100, 125, 150].",
-		biomssa_95 = "Biomass [75, 87.5, 100].",
-		biomssa_63 = "Biomass [50, 62.5, 75].",
-		biomssa_31 = "Biomass [25, 37.5, 50].",
-		biomassa_0 = "Biomass [0, 12.5, 25]."
+		protected = "Percentage of indigenous area.",
+		distports = "Distance to ports.",
+		distroads = "Distance to roads.", 
+		prodes_208 = "Percentage of forest area.",
+		prodes_10 = "Percentage of clear-cut area.",
 	}
 }
 
 data{
 	file = "emas.shp",
 	image = "emas.bmp",
-	source = "Rodolfo Almeida (see Reference)",
+	source = "This data is a copy of the file emas.shp created by terralib package.",
 	summary = "Land cover data on Parque Nacional das Emas, Brazil.",
 	attributes = {
-		FID = "Unique identifier (internal value).",
-		object_id_ = "Unique identifier for the Cell.",
-		Col = "Column of the Cell.",
-		Lin = "Line of the Cell.",
-		river = ".",
-		firebreak = ".",
-		accuation = ".",
-		fire = ".",
-		state = ".",
+		river = "Cell has a river (1) or not (0).",
+		firebreak = "Cell has a firebreak (1) or not (0).",
+		maxcover = "A value between 1 and 5 with the maximum value for the forest cover according to the original data with lower resolution.",
+		mincover = "A value between 1 and 5 with the minimum value for the forest cover according to the original data with lower resolution."
 	},
-	reference = "Almeida, Rodolfo M., et al. 'Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil.' X Simposio Brasileiro de Geoinfoamatica (2008)"
+	reference = "Almeida, Rodolfo M., et al. 'Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil.' X Simposio Brasileiro de Geoinformatica (2008)"
 }
 
