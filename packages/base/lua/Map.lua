@@ -1840,8 +1840,8 @@ function Map(data)
 					end
 				end)
 
-				if data.min == nil then data.min = min end
-				if data.max == nil then data.max = max end
+				if data.min == nil then data.min = min * 0.99 end
+				if data.max == nil then data.max = max * 1.01 end
 			end
 
 			mandatoryTableArgument(data, "slices", "number")
