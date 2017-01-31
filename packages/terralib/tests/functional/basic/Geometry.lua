@@ -137,14 +137,14 @@ return {
 			local nPoint = ring:getNPoints()
 
 			for i = 0, nPoint do
-				unitTest:assert(ring:getX(i) ~= nil)
+				unitTest:assertNotNil(ring:getX(i))
 				unitTest:assertType(ring:getX(i), "number")
-				unitTest:assert(ring:getY(i) ~= nil)
+				unitTest:assertNotNil(ring:getY(i))
 				unitTest:assertType(ring:getX(i), "number")
 			end
 
-			unitTest:assert(centroid:getX() > 0)
-			unitTest:assert(centroid:getY() > 0)
+			unitTest:assert(centroid:getX() < 0)
+			unitTest:assert(centroid:getY() < 0)
 			unitTest:assertEquals("MultiPolygon", cell.geom:getGeometryType())
 			local npoints = cell.geom:getNPoints()
 

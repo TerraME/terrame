@@ -248,7 +248,7 @@ return {
 			file = projName,
 			clean = true,
 			[layerName1] = filePath("itaituba-census.shp", "terralib"),
-			[localidades] = filePath("itaituba-localities.shp", "terralib"),
+			[localidades] = filePath("test/Localidades_pt.shp", "terralib"),
 			[rodovias] = filePath("itaituba-roads.shp", "terralib")
 		}
 

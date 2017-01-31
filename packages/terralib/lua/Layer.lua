@@ -739,7 +739,6 @@ Layer_ = {
 				defaultTableValue(data, "encoding", "CP1252")
 				local pgData = data
 				pgData.type = "postgis"
-				pgData.srid = data.srid
 
 				self.project.terralib:saveLayerAs(self.project, self.name, pgData, pgData.overwrite)
 			else
