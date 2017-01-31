@@ -1943,12 +1943,13 @@ TerraLib_ = {
 	-- @arg project The project.
 	-- @arg layerName The layer name which is in the project.
 	-- @arg toData The data that will be saved.
-	-- @arg overwrite It indicates if the saved data will be overwrited.
+	-- @arg overwrite Indicates if the saved data will be overwritten.
 	-- @usage -- DONTRUN
-	-- local toData = {}
-	-- toData.file = "shp2geojson.geojson"
-	-- toData.type = "geojson"
-	-- toData.srid = 4326
+	-- local toData = {
+	--     file = "shp2geojson.geojson",
+	--     type = "geojson",
+	--     srid = 4326
+	-- }
 	-- tl:saveLayerAs(project, "SomeLayer", toData, true)
 	saveLayerAs = function(_, project, layerName, toData, overwrite)
 		loadProject(project, project.file)
@@ -1963,12 +1964,17 @@ TerraLib_ = {
 			from = toDataSetLayer(from)
 			local fromDSetName = from:getDataSetName()
 			local fromType = fromDsInfo:getType()
-			local toDs = nil
-			local errorMsg = nil
-			local toDSetName = nil
+			local toDs
+			local errorMsg
+			local toDSetName
 
-			if toType == "POSTGIS" then  -- #1243
-				toData.table = string.lower(fromDSetName)
+			if toType == "POSTGIS" then
+				if not toData.table then
+					toData.table = fromDSetName
+				end
+
+				toData.table = string.lower(toData.table)
+
 				toDs = createPgDataSourceToSaveAs(fromType, toData)
 				toDSetName = toData.table
 				if not toDs then
