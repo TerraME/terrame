@@ -122,7 +122,7 @@
 								<%end%>
 
       							</span>
-								<%if data.attributes then%>
+								<%if data.attributes and #data.attributes > 0 then%>
 									<table class="arg_tab">
 									<tr><th><%if data.bands then%>Band<%else%>Attribute<%end%>
 									</th><th>Type</th><th>Description</th></tr>
