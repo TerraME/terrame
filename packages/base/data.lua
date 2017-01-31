@@ -31,7 +31,7 @@ data{
 		height = "Height of the Cell, measured in values between 0 and 255."
 	},
 	image = "cabeca.bmp",
-	source = "This data is a copy of the file cabecadeboi.shp created by terralib package.",
+	source = "This data is a copy of the file with the same name created by terralib package.",
 	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil, with 100x100m of resolution."
 }
 
@@ -44,11 +44,11 @@ data{
 data{
 	file = "cabecadeboi800.shp",
 	image = "cabeca2.bmp",
-	source = "This data is a copy of the file cabecadeboi.shp created by terralib package, using a resolution of 800m.",
+	source = "This data is a copy of cabecadeboi created by terralib package, using a resolution of 800m.",
 	attributes = {
 		height = "Height of the Cell, measured in values between 0 and 255."
 	},
-	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil, with a larger resolution."
+	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil, with 800x800m of resolution."
 }
 
 data{
@@ -73,8 +73,8 @@ data{
 data{
 	file = "amazonia.shp",
 	image = "amazonia.bmp",
-	source = "This data is a copy of the file amazonia.shp created by terralib package.",
-	summary = "Database with some data for the Amazonia region, in Brazil. The biomass was taken from Sassan Saatchi. It is represented in Ton/ha and contains three values: [minimum, average, maximum]. The original data was degradated, and therefore the biomass might be underestimated.",
+	source = "This data is a copy of the file with the same name created by terralib package.",
+	summary = "Cellular data representing the Amazonia region, in Brazil. It has 50x50km of resolution.",
 	attributes = {
 		protected = "Percentage of indigenous area.",
 		distports = "Distance to ports.",
@@ -87,8 +87,8 @@ data{
 data{
 	file = "emas.shp",
 	image = "emas.bmp",
-	source = "This data is a copy of the file emas.shp created by terralib package.",
-	summary = "Land cover data on Parque Nacional das Emas, Brazil.",
+	source = "This data is a copy of the file with the same name created by terralib package.",
+	summary = "Cellular data representing Emas National Park, Brazil. It has 500x500m of resolution.",
 	attributes = {
 		river = "Cell has a river (1) or not (0).",
 		firebreak = "Cell has a firebreak (1) or not (0).",
