@@ -51,9 +51,16 @@ end
 
 local function httpLink(text)
 	-- pattern taken from http://stackoverflow.com/questions/23590304/finding-a-url-in-a-string-lua-pattern
-	local result = string.gsub(text, "()(([%w_.~!*:@&+$/?%%#-]-)(%w[-.%w]*%.)(%w+)(:?)(%d*)(/?)([%w_.~!*:@&+$/?%%#=-]*))", function(_, value)
-		if string.sub(value, 1, 2) == ".." then return value end -- internal link
+	local result = string.gsub(text, "()(([%w_.~!*:@&+$/?%%#-]-)(%w[-.%w]*%.)(%w+)(:?)(%d*)(/?)([%w_.~!*:@&+$/?%%#=-]*))", function(init, value)
+		local next4 = string.sub(text, init + string.len(value), init + string.len(value) + 3)
+
+		if next4 == "</a>" then -- it is already a link
+			return value
+		end
+
+		if string.sub(value, 1, 2) == ".."    then return value end -- internal link
 		if string.sub(value, 1, 5) == "files" then return value end -- internal link
+		if string.sub(value, 1, 1) == "#"     then return value end -- internal link
 
 		return "<a href=\""..value.."\" target=\"_blank\">"..value.."</a>"
 	end)
