@@ -26,10 +26,9 @@
 
 import("terralib")
 
-project = Project{
+amazonia = Project{
 	file = "amazonia.tview",
 	clean = true,
-	author = "Andrade, P.",
 	title = "Amazonia database",
 	ports = filePath("amazonia-ports.shp", "terralib"),
 	roads = filePath("amazonia-roads.shp", "terralib"),
@@ -38,20 +37,20 @@ project = Project{
 
 prodes = Layer{
 	name = "prodes",
-	project = project,
+	project = amazonia,
 	srid = 29191,
 	file = filePath("amazonia-prodes.tif", "terralib")
 }
 
 protected = Layer{
 	name = "protected",
-	project = project,
+	project = amazonia,
 	srid = 29191,
 	file = filePath("amazonia-indigenous.shp", "terralib")
 }
 
-cl = Layer{
-	project = project,
+amazoniaCells = Layer{
+	project = amazonia,
 	file = "amazonia.shp",
 	clean = true,
 	input = "limit",
@@ -59,32 +58,31 @@ cl = Layer{
 	resolution = 50000
 }
 
-cl:fill{
-	operation = "distance",
-	layer = "roads",
-	attribute = "distroads"
-}
-
-cl:fill{
-	operation = "distance",
-	layer = "ports",
-	attribute = "distports"
-}
-
-cl:fill{
-	operation = "area",
-	layer = "protected",
-	attribute = "protected"
-}
-
-cl:fill{
+amazoniaCells:fill{
 	operation = "coverage",
 	layer = "prodes",
 	attribute = "prodes"
 }
 
+amazoniaCells:fill{
+	operation = "distance",
+	layer = "roads",
+	attribute = "distroads"
+}
+
+amazoniaCells:fill{
+	operation = "distance",
+	layer = "ports",
+	attribute = "distports"
+}
+
+amazoniaCells:fill{
+	operation = "area",
+	layer = "protected",
+	attribute = "protected"
+}
 cs = CellularSpace{
-	project = project,
+	project = amazonia,
 	layer = "cells",
 	as = {
 		forest = "prodes_208",

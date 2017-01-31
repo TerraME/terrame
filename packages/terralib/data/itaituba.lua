@@ -26,7 +26,7 @@
 
 import("terralib")
 
-proj = Project{
+itaituba = Project{
 	file = "itaituba.tview",
 	clean = true,
 	localities = filePath("itaituba-localities.shp", "terralib"),
@@ -35,21 +35,21 @@ proj = Project{
 }
 
 Layer{
-	project = proj,
+	project = itaituba,
 	name = "deforestation",
 	file = filePath("itaituba-deforestation.tif", "terralib"),
 	srid = 29191
 }
 
 Layer{
-	project = proj,
+	project = itaituba,
 	name = "elevation",
 	file = filePath("itaituba-elevation.tif", "terralib"),
 	srid = 29191
 }
 
-cl = Layer{
-	project = proj,
+itaitubaCells = Layer{
+	project = itaituba,
 	name = "cells",
 	clean = true,
 	file = "itaituba.shp",
@@ -57,19 +57,31 @@ cl = Layer{
 	resolution = 5000
 }
 
-cl:fill{
+itaitubaCells:fill{
 	operation = "average",
 	layer = "elevation",
 	attribute = "elevation"
 }
 
-cl:fill{
+itaitubaCells:fill{
 	operation = "coverage",
 	layer = "deforestation",
 	attribute = "defor"
 }
 
-cl:fill{
+itaitubaCells:fill{
+	operation = "distance",
+	layer = "roads",
+	attribute = "distroad"
+}
+
+itaitubaCells:fill{
+	operation = "distance",
+	layer = "localities",
+	attribute = "distlocal"
+}
+
+itaitubaCells:fill{
 	operation = "sum",
 	layer = "census",
 	attribute = "population",
@@ -77,65 +89,62 @@ cl:fill{
 	area = true
 }
 
-cl:fill{
-	operation = "distance",
-	layer = "roads",
-	attribute = "distroad"
-}
-
-cl:fill{
-	operation = "distance",
-	layer = "localities",
-	attribute = "distlocal"
+cell = Cell{
+	logpop = function(self)
+		return math.log(self.population)
+	end
 }
 
 cs = CellularSpace{
-	project = proj,
+	project = itaituba,
 	layer = "cells",
 	as = {
 		river = "defor_167",
 		deforestation = "defor_87"
-	}
+	},
+	instance = cell
 }
 
-m = Map{
+Map{
 	target = cs,
 	select = "elevation",
 	slices = 6,
 	color = "Blues"
 }
 
-m = Map{
-	target = cs,
-	select = "distlocal",
-	slices = 10,
-	color = "Reds"
-}
-
-m = Map{
+Map{
 	target = cs,
 	select = "river",
 	slices = 6,
 	color = "Blues"
 }
 
-m = Map{
+Map{
 	target = cs,
 	select = "deforestation",
 	slices = 6,
+	invert = true,
 	color = "Greens"
 }
 
-m = Map{
+Map{
 	target = cs,
-	select = "population",
-	slices = 6,
-	color = "Purples"
+	select = "distlocal",
+	slices = 10,
+	color = "Reds"
 }
 
-m = Map{
+Map{
 	target = cs,
 	select = "distroad",
 	slices = 10,
 	color = "Reds"
 }
+
+Map{
+	target = cs,
+	select = "logpop",
+	slices = 10,
+	color = "Purples"
+}
+
