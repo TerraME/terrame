@@ -72,14 +72,17 @@
 									<% loc = "../../images/"..tostring(data.image) %>
 									<center><img src=<% =loc %> ></center><br><br>
 								<%end%>
+
 								<%if data.summary then%>
 									<%= httpLink(data.summary)%>
 								<%else%>
 									<font color="red"><%="undefined"%></font>
 								<%end%>
 								<dd>
+
+								<ul><span class="arg">
 								<%if #data.file > 1 then%>
-									<br><b>Files: </b>
+									<li><b>Files: </b>
 									<%for pos, f in ipairs(data.file) do%>
 										<%if pos<#data.file then%>
 											<%=f..", "%>
@@ -87,41 +90,42 @@
 											<%=f%>
 										<%end%>
 									<%end%>
-								<%end%>
-
-								<%if data.source then%>
-									<br><b>Source: </b>
-									<%= httpLink(data.source)%>
-								<%end%>
-
-								<%if data.projection then%>
-									<br><b>Projection: </b><%=data.projection%>
+									</li>
 								<%end%>
 
 								<%if data.representation then%>
-									<br><b>Representation: </b><%=data.representation%>
+									<li><b>Representation: </b><%=data.representation%></li>
 								<%end%>
 
 								<%if data.quantity then%>
-									<br><b>Quantity: </b><%=data.quantity%>
+									<li><b>Quantity: </b><%=data.quantity%></li>
 								<%end%>
 
 								<%if data.bands then%>
-									<br><b>Bands: </b><%=data.bands%>
+									<li><b>Bands: </b><%=data.bands%></li>
 								<%end%>
 
 								<%if data.separator then%>
-									<br><b>Separator: </b><%="\""..data.separator.."\""%>
+									<li><b>Separator: </b><%="\""..data.separator.."\""%></li>
+								<%end%>
+
+								<%if data.projection then%>
+									<li><b>Projection: </b><%=data.projection%></li>
+								<%end%>
+
+								<%if data.source then%>
+									<li><b>Source: </b><%= httpLink(data.source)%></li>
 								<%end%>
 
 								<%if data.reference then%>
-									<br><b>Reference: </b><%=data.reference%>
+									<li><b>Reference: </b><%=data.reference%></li>
 								<%end%>
 
+      							</span>
 								<%if data.attributes then%>
 									<table class="arg_tab">
-									<tr><td><b><%if data.bands then%>Band<%else%>Attribute<%end%>
-									</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
+									<tr><th><%if data.bands then%>Band<%else%>Attribute<%end%>
+									</th><th>Type</th><th>Description</th></tr>
 									<%if data.attributes[1] == "_incompatible_" then%>
 										<tr>
 										<td><font color="red">Incompatible sizes</font></td>
@@ -139,6 +143,7 @@
 									<%end%>
 									</table>
 								<%end%>
+								</ul>
 
 								<%if data.layers then%>
 									<table class="arg_tab">
