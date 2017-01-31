@@ -675,7 +675,7 @@ return {
 			operation = "average",
 			layer = "setores",
 			attribute = "polavg",
-			select = "Densde_Pop",
+			select = "dens_pop",
 			area = true
 		}
 
@@ -758,10 +758,7 @@ return {
 		local propNames = layer:attributes()
 
 		for i = 1, #propNames do
-			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "SPRAREA") or
-						(propNames[i] == "SPRPERIMET") or (propNames[i] == "SPRROTULO") or
-						(propNames[i] == "Populacao") or (propNames[i] == "objet_id_8") or
-						(propNames[i] == "Densde_Pop") or (propNames[i] == "Area"))
+			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "dens_pop") or (propNames[i] == "population"))
 		end
 
 		proj.file:delete()

@@ -379,7 +379,7 @@ return {
 		-- local desmatamento = "Desmatamento"
 		-- Layer{
 			-- name = desmatamento,
-			-- file = filePath("Desmatamento_2000.tif", "terralib")
+			-- file = filePath("itaituba-deforestation.tif", "terralib")
 		-- }
 
 		-- local rmeanLayerName = clName1.."_Mean_Raster"

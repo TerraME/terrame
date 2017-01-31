@@ -942,7 +942,7 @@ return{
 		Layer{
 			project = proj,
 			name = layerName3,
-			file = filePath("Desmatamento_2000.tif", "terralib")
+			file = filePath("itaituba-deforestation.tif", "terralib")
 		}
 
 		local areaUnnecessary = function()
