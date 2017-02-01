@@ -470,22 +470,26 @@ function _Gtme.executeDoc(package)
 				end)
 			end
 
-			tab.shortsummary = string.match(tab.summary, "(.-%.)")
+			if tab.summary then
+				tab.shortsummary = string.match(tab.summary, "(.-%.)")
 
-			if not string.endswith(tab.summary, ".") then
-				printError("In '"..tab.file[1]..", 'summary' should end with '.'")
-				doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
+				if not string.endswith(tab.summary, ".") then
+					printError("In '"..tab.file[1]..", 'summary' should end with '.'")
+					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
+				end
 			end
 
-			table.insert(mdata, tab)
+			if tab.file then
+				table.insert(mdata, tab)
 
-			forEachElement(tab.file, function(_, mvalue)
-				if filesdocumented[mvalue] then
-					printError("Data file '"..mvalue.."' is documented more than once.")
-					doc_report.error_data = doc_report.error_data + 1
-				end
-				filesdocumented[mvalue] = 0
-			end)
+				forEachElement(tab.file, function(_, mvalue)
+					if filesdocumented[mvalue] then
+						printError("Data file '"..mvalue.."' is documented more than once.")
+						doc_report.error_data = doc_report.error_data + 1
+					end
+					filesdocumented[mvalue] = 0
+				end)
+			end
 		end
 
 		xpcall(function() dofile(package_path..s.."data.lua") end, function(err)
@@ -515,7 +519,7 @@ function _Gtme.executeDoc(package)
 				end
 			end)
 
-			if not found then
+			if not found and value.file then
 				table.insert(mdata, value)
 			end
 		end)
@@ -539,8 +543,7 @@ function _Gtme.executeDoc(package)
 			print("Processing '"..value.file[1].."'")
 
 			if not isFile(packageInfo(package).path.."data"..s..value.file[1]) then
-				printError("File '"..value.file[1].."' does not exist in package '"..package.."'.")
-				doc_report.error_data = doc_report.error_data + 1
+				-- this will be recognized as an error afterwards
 				return
 			end
 
