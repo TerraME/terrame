@@ -151,18 +151,8 @@ forEachOrderedElement(commands, function(idx, group)
 		directories.log[idx.."-"..name..".log"] = true
 
 		if sessionInfo().system == "mac" then
-			if idx == "project" then
-				if name == "errorprojects" or name == "runprojects" then
-					_Gtme.printWarning("Skipping "..name)
-					return
-				end
-			elseif idx == "sketch" then
-				if name == "terralib" then
-					_Gtme.printWarning("Skipping "..name)
-					return
-				end
-			elseif idx == "observer" then
-				if belong(name, {"clock", "textscreen", "visualtable"}) then
+			if idx == "observer" then
+				if belong(name, {"chart", "clock", "textscreen", "visualtable"}) then
 					directories.scripts[args.script] = true
 					_Gtme.printWarning("Skipping "..name)
 					return
@@ -350,12 +340,7 @@ forEachOrderedElement(commands, function(idx, group)
 		command = "terrame"
 
 		if sessionInfo().system == "mac" then
-			if idx == "project" then
-				if name == "errorprojects" or name == "runprojects" then
-					_Gtme.printWarning("Skipping "..name)
-					return
-				end
-			elseif idx == "sketch" then
+			if idx == "sketch" then
 				if name == "terralib" then
 					_Gtme.printWarning("Skipping "..name)
 					return
