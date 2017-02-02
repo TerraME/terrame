@@ -70,7 +70,8 @@ project = {
 	nopackage2    = {package = "abcdef",    arg = "-projects"},
 	noproject     = {                       arg = "-project"},
 	noprojects    = {                       arg = "-projects"},
-	wrongdata     = {package = "wrongdata", arg = "-projects"}
+	wrongdata     = {package = "wrongdata", arg = "-projects"},
+	cabecadeboi   = {package = "project",  arg = "-project cabecadeboi"}
 }
 
 doc = {

@@ -25,7 +25,57 @@
 local printError = _Gtme.printError
 local printNote  = _Gtme.printNote
 
-function _Gtme.executeProject(package)
+function _Gtme.executeProject(package, project)
+	local oldProject = Project
+	local oldLayer = Layer
+	local oldFill = Layer_.fill
+
+	Layer_.fill = function(self, data)
+		local description = "Executing operation '"..data.operation.."'"
+
+		if data.area then
+			description = description.." (weighted by area) "
+		end
+
+		description = description.." using layer \'"..data.layer.."\'"
+
+		print(description)
+
+		oldFill(self, data)
+	end
+
+	local createdLayers = {}
+
+	Layer = function(data)
+		if data.resolution then -- a cellular layer
+			local mfile = data.file
+
+			if type(mfile) == "string" then
+				mfile = File(mfile)
+			end
+
+			mfile = mfile:name()
+			print("Creating '"..sessionInfo().path..mfile.."' with resolution "..data.resolution)
+		end
+
+		return oldLayer(data)
+	end
+
+	local s = sessionInfo().separator
+	local file = packageInfo(package).path..s.."data"..s..project..".lua"
+
+	_Gtme.loadTmeFile(file)
+
+	xpcall(function() dofile(tostring(file)) end, function(err)
+		printError("Could not execute the script properly: "..err)
+	end)
+
+	Project = oldProject
+	Layer = oldLayer
+	Layer_.fill = oldFill
+end
+
+function _Gtme.executeProjects(package)
 	local initialTime = os.clock()
 
 	printNote("Creating projects for package '"..package.."'")

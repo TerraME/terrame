@@ -1,11 +1,17 @@
 Creating projects for package 'project'
 Removing output files
+Removing 'data/cabecadeboi.tview'
 Removing 'data/myproject.tview'
 Checking if data does not contain any .tview file
 File 'data/myproject2.tview' should not exist as there is no Lua script with this name.
+Processing 'data/cabecadeboi.lua'
+Creating 'data/cabecadeboi.tview'
+Creating 'data/cabecadeboi.shp'
+Executing operation 'average' using layer 'elevation'
+File 'cabecadeboi.tview' was successfully created
 Processing 'data/myproject-error.lua'
 Creating 'data/myproject-error.tview'
-Could not execute the script properly: C:/TerraME/bin/packages/project/data/myproject-error.lua:9: attempt to perform arithmetic on a nil value (global 'x')
+Could not execute the script properly: ...Contents/MacOS/packages/project/data/myproject-error.lua:9: attempt to perform arithmetic on a nil value (global 'x')
 Removing file 'data/myproject-error.tview'
 Processing 'data/myproject-tview.lua'
 Creating 'data/myproject2.tview'
@@ -19,8 +25,8 @@ File 'data/itaituba.shp' was created previously. Please update its name.
 File 'myproject.tview' was successfully created
 
 Projects report for package 'project':
-Projects were created in 2.54 seconds.
-3 project files were created.
+Projects were created in 1.35 seconds.
+4 project files were created.
 One invalid .tview file was found in the package.
 One error was found while creating projects.
 3 problems were found in the output of lua files.

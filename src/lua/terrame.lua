@@ -1478,7 +1478,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				import("base")
 				import("terralib")
 
-				_Gtme.myxpcall(function() errors = _Gtme.executeProject(package) end, function(err)
+				_Gtme.myxpcall(function() errors = _Gtme.executeProjects(package) end, function(err)
 					_Gtme.printError(err)
 
 					os.exit(1)
@@ -1591,7 +1591,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 			elseif arg == "-project" then
 				argCount = argCount + 1
-				local file = arguments[argCount]
+				local project = arguments[argCount]
 				checkUnnecessaryArguments(arguments, argCount)
 
 				local info
@@ -1600,11 +1600,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(1)
 				end)
 
-				if file then
-					arg = info..s.."data"..s..file..".lua"
+				if project then
+					arg = info..s.."data"..s..project..".lua"
 
 					if not File(arg):exists() then
-						_Gtme.printError("Project '"..file.."' does not exist in package '"..package.."'.")
+						_Gtme.printError("Project '"..project.."' does not exist in package '"..package.."'.")
 						print("Please use one from the list below:")
 					end
 				elseif #_Gtme.projectFiles(package) == 0 then
@@ -1614,10 +1614,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					print("Package '"..package.."' has the following projects:")
 				end
 
-				if file and File(arg):exists() then
-					-- it only changes the file to point to the package and let it run as it
-					-- was a call such as "TerraME .../package/examples/example.lua"
-					arguments[argCount + 1] = arg
+				if project and File(arg):exists() then
+					dofile(_Gtme.sessionInfo().path.."lua"..s.."project.lua")
+					import("terralib")
+					import("base")
+
+					_Gtme.executeProject(package, project)
 				else
 					files = _Gtme.projectFiles(package)
 
