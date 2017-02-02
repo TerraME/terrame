@@ -277,7 +277,7 @@ return{
 			}
 
 			layerName1 = "tif_one_Layer"
-			filePath1 = filePath("elevation.tif", "terralib")
+			filePath1 = filePath("itaituba-elevation.tif", "terralib")
 
 			layer = terralib.Layer{
 				project = proj,
@@ -298,13 +298,13 @@ return{
 
 			unitTest:assertEquals(layer.source, "tif") -- SKIP
 			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
-			unitTest:assertEquals(#cs, 10000) -- SKIP
+			unitTest:assertEquals(#cs, 17928) -- SKIP
 
 			cs = CellularSpace{
 				file = filePath1
 			}
 
-			unitTest:assertEquals(#cs, 10000) -- SKIP
+			unitTest:assertEquals(#cs, 17928) -- SKIP
 			File(projName):deleteIfExists()
 
 			-- NetCDF

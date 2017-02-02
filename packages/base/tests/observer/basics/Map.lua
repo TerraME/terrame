@@ -418,7 +418,7 @@ return{
 		}
 
 		m:update()
-		unitTest:assertSnapshot(m, "map_function_2.bmp")
+		unitTest:assertSnapshot(m, "map_function_2.bmp", 0.1)
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

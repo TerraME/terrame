@@ -7,6 +7,7 @@ data{
 		NOME_UF = "Name of the state.",
 		SIGLA = "State's initials.", 
 		CAPITAL = "Name of the state's capital.", 
+		POPUL = "Population of the state."
 	}
 }
 

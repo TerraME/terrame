@@ -43,7 +43,7 @@ return{
 		error_func = function()
 			filePath("test"..s.."mriver_lin.shp")
 		end
-		unitTest:assertError(error_func, "File 'data/test/mriver_lin.shp' does not exist in package 'base'.")
+		unitTest:assertError(error_func, "File 'data/test/mriver_lin.shp' does not exist in package 'base'. Do you mean 'river.shp'?")
 
 		error_func = function()
 			filePath("error"..s.."csv-error.csv")
