@@ -25,7 +25,7 @@
 local printError = _Gtme.printError
 local printNote  = _Gtme.printNote
 
-function _Gtme.executeProject(package, project)
+function _Gtme.executeProject(package, project, resolution)
 	local oldProject = Project
 	local oldLayer = Layer
 	local oldFill = Layer_.fill
@@ -48,14 +48,25 @@ function _Gtme.executeProject(package, project)
 
 	Layer = function(data)
 		if data.resolution then -- a cellular layer
-			local mfile = data.file
-
-			if type(mfile) == "string" then
-				mfile = File(mfile)
+			if type(data.file) == "string" then
+				data.file = File(data.file)
 			end
 
-			mfile = mfile:name()
-			print("Creating '"..sessionInfo().path..mfile.."' with resolution "..data.resolution)
+			if resolution then
+				data.resolution = resolution
+
+				if data.file then
+					local path, name, ext = data.file:split()
+
+					data.file = File(path..name..resolution.."."..ext)
+				elseif data.table then
+					data.table = data.table..resolution
+				end				
+			end
+
+			local mfile = data.file
+			if not mfile then mfile = data.table end
+			print("Creating '"..mfile.."' with resolution "..data.resolution)
 		end
 
 		return oldLayer(data)

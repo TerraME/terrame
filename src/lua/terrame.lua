@@ -611,46 +611,47 @@ end
 local function usage()
 	print("\nUsage: TerraME [mode] [options] [file1.lua file2.lua ...]")
 	print("\nMode:")
-	print("-debug                  Warnings treated as errors.")
-	print("-normal (default)       Warnings enabled.")
-	print("-quiet                  Warnings disabled.")
-	print("-strict                 Execute additional verifications in the source code.")
+	print("-debug                   Warnings treated as errors.")
+	print("-normal (default)        Warnings enabled.")
+	print("-quiet                   Warnings disabled.")
+	print("-strict                  Execute additional verifications in the source code.")
 	print("\nOptions: ")
-	print("-autoclose              Automatically close TerraME after simulation.")
-	print("-color                  Show colored output. In Windows, it requires ansicon")
-	print("                        (https://github.com/adoxa/ansicon/releases).")
---	print("-draw-all-higher <value>Draw all subjects when percentage of changes was higher")
---	print("                        than <value>. Value must be between interval [0, 1].")
-	print("-ft                     Show the full traceback in case of errors (including")
-	print("                        internal lines from TerraME and loaded packages).")
-	print("-gui                    Show the player for the application (it works only")
-	print("                        when an Environment or a Timer object is used.")
-	print("-ide                    Configure TerraME for running from IDEs in Windows.")
-	print("-install <pkg>          Install a package stored in TerraME's repository.")
-	print("                        It can also be a local .zip file.")
-	print("-package <pkg>          Select a given package. If not package is selected,")
-	print("                        TerraME uses base package. -package can be combined")
-	print("                        with the following options:")
-	print("  -build [<f>] [-clean] Test (-test [<f>]), document (-doc) and then build an")
-	print("                        installer for the package. -clean option can be used to")
-	print("                        remove test files and logs.")
-	print("  -check                Analyse Lua source code.")
-	print("  -configure <m>        Visually configure and run Model <m>.")
-	print("  -doc                  Build the documentation of the package.")
-	print("  -example <exp>        Run example <exp>.")
-	print("  -examples             Run all examples.")
-	print("  -project <prj>        Create project <prj>.")
-	print("  -projects             Create the TerraView projects for the package.")
-	print("  -showdoc              Show the documentation in the default browser.")
-	print("  -sketch               Create test scripts for source code files missing")
-	print("                        tests and initial documentation for undocumented files.")
-	print("  -test [<f>]           Execute unit tests for the package. An optional Lua")
-	print("                        file <f> can describe a subset of the tests to be")
-	print("                        executed.")
-	print("  -uninstall            Remove an installed package.")
-	print("-silent                 print() does not show any text on the screen.")
-	print("-version                Show TerraME general information.")
---	print("-workers <value>        Sets the number of threads used for spatial observers.")
+	print("-autoclose               Automatically close TerraME after simulation.")
+	print("-color                   Show colored output. In Windows, it requires ansicon")
+	print("                         (https://github.com/adoxa/ansicon/releases).")
+--	print("-draw-all-higher <value> Draw all subjects when percentage of changes was higher")
+--	print("                         than <value>. Value must be between interval [0, 1].")
+	print("-ft                      Show the full traceback in case of errors (including")
+	print("                         internal lines from TerraME and loaded packages).")
+	print("-gui                     Show the player for the application (it works only")
+	print("                         when an Environment or a Timer object is used.")
+	print("-ide                     Configure TerraME for running from IDEs in Windows.")
+	print("-install <pkg>           Install a package stored in TerraME's repository.")
+	print("                         It can also be a local .zip file.")
+	print("-package <pkg>           Select a given package. If not package is selected,")
+	print("                         TerraME uses base package. -package can be combined")
+	print("                         with the following options:")
+	print("  -build [<f>] [-clean]  Test (-test [<f>]), document (-doc) and then build an")
+	print("                         installer for the package. -clean option can be used to")
+	print("                         remove test files and logs.")
+	print("  -check                 Analyse Lua source code.")
+	print("  -configure <m>         Visually configure and run Model <m>.")
+	print("  -doc                   Build the documentation of the package.")
+	print("  -example <exp>         Run example <exp>.")
+	print("  -examples              Run all examples.")
+	print("  -project <prj> [<res>] Create project <prj> in the current directory. When")
+    print("                         using <res>, it replaces the resolution of the script.")
+	print("  -projects              Create the TerraView projects for the package.")
+	print("  -showdoc               Show the documentation in the default browser.")
+	print("  -sketch                Create test scripts for source code files missing")
+	print("                         tests and initial documentation for undocumented files.")
+	print("  -test [<f>]            Execute unit tests for the package. An optional Lua")
+	print("                         file <f> can describe a subset of the tests to be")
+	print("                         executed.")
+	print("  -uninstall             Remove an installed package.")
+	print("-silent                  print() does not show any text on the screen.")
+	print("-version                 Show TerraME general information.")
+--	print("-workers <value>         Sets the number of threads used for spatial observers.")
 	print("\nFor more information, please visit www.terrame.org\n")
 end
 
@@ -1592,6 +1593,19 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			elseif arg == "-project" then
 				argCount = argCount + 1
 				local project = arguments[argCount]
+
+				argCount = argCount + 1
+				local resolution = arguments[argCount]
+
+				if resolution then
+					if tostring(tonumber(resolution)) ~= resolution then
+						_Gtme.printError("Resolution ("..resolution..") is not a number.")
+						os.exit(0)
+					end
+
+					resolution = tonumber(resolution)
+				end
+
 				checkUnnecessaryArguments(arguments, argCount)
 
 				local info
@@ -1619,7 +1633,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					import("terralib")
 					import("base")
 
-					_Gtme.executeProject(package, project)
+					_Gtme.executeProject(package, project, resolution)
+
 				else
 					files = _Gtme.projectFiles(package)
 

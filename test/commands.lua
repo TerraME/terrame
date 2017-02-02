@@ -10,7 +10,7 @@ unnecessary  = {
 	configure  = {arg = "-configure model -color"},
 	example    = {arg = "-example tube -color"},
 	examples   = {arg = "-examples -color"},
-	project    = {arg = "-project abc -color"},
+	project    = {arg = "-project abc 200 -color"},
 	projects   = {arg = "-projects -color"},
 	build      = {arg = "-build -color"},
 	buildclean = {arg = "-build -clean -color"},
@@ -71,7 +71,9 @@ project = {
 	noproject     = {                       arg = "-project"},
 	noprojects    = {                       arg = "-projects"},
 	wrongdata     = {package = "wrongdata", arg = "-projects"},
-	cabecadeboi   = {package = "project",  arg = "-project cabecadeboi"}
+	cabecadeboi   = {package = "project",  arg = "-project cabecadeboi"},
+	badresolution = {package = "project",  arg = "-project cabecadeboi abc"},
+	res2000       = {package = "project",  arg = "-project cabecadeboi 2000"}
 }
 
 doc = {
