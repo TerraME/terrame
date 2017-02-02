@@ -83,6 +83,7 @@ return {
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		-- POSTGIS
+		--[[
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
@@ -104,7 +105,6 @@ return {
 
 		local overwrite = true
 
-		--[[
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		local layerName2 = "PgLayer"
 		tl:addPgLayer(proj, layerName2, pgData)

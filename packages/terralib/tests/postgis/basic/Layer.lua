@@ -417,6 +417,7 @@ return {
 		tl:dropPgTable(pgData)
 	end,
 	export = function(unitTest)
+		--[[
 		local projName = "layer_postgis_basic.tview"
 
 		if File(projName):exists() then -- TODO: (#1442)
@@ -452,7 +453,6 @@ return {
 			overwrite = overwrite
 		}
 
-		--[[
 		layer1:export(pgData)
 
 		local layerName2 = "setorespg"

@@ -56,6 +56,7 @@ return {
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 
 		-- POSTGIS
+		--[[
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
@@ -75,7 +76,6 @@ return {
 			encoding = encoding
 		}
 
-		--[[
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 
 		-- OVERWRITE
