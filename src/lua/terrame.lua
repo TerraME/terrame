@@ -987,16 +987,8 @@ local function executeExamples(package)
 	return errors
 end
 
-local function runScript(script)
-	if info_.mode ~= "quiet" then
-		checkNilVariables()
-	end
-
-	if not _Gtme.isLoaded("base") then
-		_Gtme.import("base")
-	end
-
-	local displayFile = string.sub(script, 0, string.len(script) - 3).."tme"
+function _Gtme.loadTmeFile(luafile)
+	local displayFile = string.sub(luafile, 0, string.len(luafile) - 3).."tme"
 	displayFile = _Gtme.makePathCompatibleToAllOS(displayFile)
 
 	local cObj = TeVisualArrangement()
@@ -1012,6 +1004,18 @@ local function runScript(script)
 			cObj:addSize(idx, data.width, data.height)
 		end)
 	end
+end
+
+local function runScript(script)
+	if info_.mode ~= "quiet" then
+		checkNilVariables()
+	end
+
+	if not _Gtme.isLoaded("base") then
+		_Gtme.import("base")
+	end
+
+	_Gtme.loadTmeFile(script)
 
 	if isDirectory(script) then
 		_Gtme.printError("Argument '"..script.."' is a directory, and not a Lua file.")

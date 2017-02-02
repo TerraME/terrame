@@ -144,6 +144,8 @@ function _Gtme.executeProject(package)
 		printNote("Processing 'data/"..file:name().."'")
 		project_report.projects = project_report.projects + 1
 
+		_Gtme.loadTmeFile(tostring(file))
+
 		local _, filename = file:split()
 		local output = filename..".tview"
 
@@ -166,6 +168,8 @@ function _Gtme.executeProject(package)
 			printError("File '"..output.."' was not created.")
 			project_report.errors_output = project_report.errors_output + 1
 		end
+
+		clean()
 	end)
 
 	local finalTime = os.clock()

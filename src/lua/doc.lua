@@ -287,6 +287,8 @@ local function getProjects(package, doc_report)
 		if file:extension() == "lua" then
 			print("Processing '"..file:name().."'")
 
+			_Gtme.loadTmeFile(tostring(file))
+
 			xpcall(function() dofile(tostring(file)) end, function(err)
 				printError(_Gtme.traceback(err))
 				doc_report.projects = doc_report.projects + 1
