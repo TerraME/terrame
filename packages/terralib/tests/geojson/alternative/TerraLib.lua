@@ -75,6 +75,7 @@ return {
 			encoding = encoding
 		}
 
+		--[[
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 
 		-- OVERWRITE
@@ -83,14 +84,15 @@ return {
 		local overwriteShpError = function()
 			tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		end
-		unitTest:assertError(overwriteShpError,  "The file 'geojson2shp.shp' already exists.")
+		unitTest:assertError(overwriteShpError,  "The file 'geojson2shp.shp' already exists.") -- SKIP
 
 		local overwritePgError = function()
 			tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		end
-		unitTest:assertError(overwritePgError, "The table 'ogrgeojson' already exists in postgis database 'postgis_22_sample'.")
+		unitTest:assertError(overwritePgError, "The table 'ogrgeojson' already exists in postgis database 'postgis_22_sample'.") -- SKIP
 
 		tl:dropPgTable(pgData)
+		--]]
 		File(toData.file):delete()
 		proj.file:delete()
 	end

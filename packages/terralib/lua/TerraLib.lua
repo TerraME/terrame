@@ -1981,7 +1981,7 @@ TerraLib_ = {
 					errorMsg = "It was not possible save the data in layer '"..layerName.."' to postgis data." -- #1363
 				elseif toDs:dataSetExists(toDSetName) then
 					if overwrite then
-						toDs:dropDataSet(toDSetName)
+						toDs:dropDataSet(toDSetName) -- SKIP
 					else
 						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
 					end
@@ -2021,7 +2021,7 @@ TerraLib_ = {
 					if overwrite then
 						toDs:dropDataSet(toDSetName)
 					else
-						errorMsg = "The file '"..fileCopy.."' already exists."
+						errorMsg = "The file '"..fileCopy.."' already exists." -- SKIP
 					end
 				end
 
@@ -2047,8 +2047,8 @@ TerraLib_ = {
 				if toType ~= "GDAL" then
 					srid = toData.srid
 				else
-					customWarning("It was not possible to change SRID from raster data.") -- #1485
-					srid = from:getSRID()
+					customWarning("It was not possible to change SRID from raster data.") -- #1485 -- SKIP
+					srid = from:getSRID() -- SKIP
 				end
 			else
 				srid = from:getSRID()
@@ -2105,8 +2105,8 @@ TerraLib_ = {
 			local toLayer = getLayerByDataSetName(project.layers, toDSetName)
 			if toLayer then
 				if toLayer:getSRID() ~= srid then
-					toLayer:setSRID(srid)
-					saveProject(project, project.layers)
+					toLayer:setSRID(srid) -- SKIP
+					saveProject(project, project.layers) -- SKIP
 				end
 			end
 
