@@ -5,7 +5,7 @@ cs = CellularSpace{
 cs:createNeighborhood()
 
 soc = Society{
-	quantity = 50,
+	quantity = 100,
 	instance = Agent{}
 }
 
