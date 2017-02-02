@@ -60,7 +60,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "AmazoniaTif"
-		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
+		local layerFile1 = filePath("amazonia-prodes.tif", "terralib")
 		tl:addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"
@@ -97,7 +97,7 @@ return {
 		-- tl:createProject(proj, {})
 
 		-- local layerName1 = "AmazoniaTif"
-		-- local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
+		-- local layerFile1 = filePath("amazonia-prodes.tif", "terralib")
 		-- tl:addGdalLayer(proj, layerName1, layerFile1)
 
 		-- local host = "localhost"
@@ -145,7 +145,7 @@ return {
 	-- end,
 	getGdalByFilePath = function(unitTest)
 		local tlib = TerraLib{}
-		local file = filePath("PRODES_5KM.tif", "terralib")
+		local file = filePath("amazonia-prodes.tif", "terralib")
 
 		local dSet = tlib:getGdalByFilePath(tostring(file))
 		for i = 0, #dSet do
@@ -188,7 +188,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName = "Prodes"
-		local layerFile = filePath("PRODES_5KM.tif", "terralib")
+		local layerFile = filePath("amazonia-prodes.tif", "terralib")
 		tl:addGdalLayer(proj, layerName, layerFile, 100017)
 
 		local prj = tl:getProjection(proj.layers[layerName])
@@ -211,7 +211,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName = "Prodes"
-		local layerFile = filePath("PRODES_5KM.tif", "terralib")
+		local layerFile = filePath("amazonia-prodes.tif", "terralib")
 		tl:addGdalLayer(proj, layerName, layerFile)
 
 		local propNames = tl:getPropertyNames(proj, proj.layers[layerName])
@@ -233,7 +233,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "AmazoniaTif"
-		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
+		local layerFile1 = filePath("amazonia-prodes.tif", "terralib")
 		tl:addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"

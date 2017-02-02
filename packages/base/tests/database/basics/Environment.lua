@@ -25,11 +25,11 @@
 return{
 	loadNeighborhood = function(unitTest)
 		local cs = CellularSpace{
-			file = filePath("river.shp")
+			file = filePath("test/river.shp")
 		}
 
 		local cs2 = CellularSpace{
-			file = filePath("emas.shp"),
+			file = filePath("test/emas.shp"),
 			xy = {"Col", "Lin"}
 		}
 

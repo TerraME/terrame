@@ -26,112 +26,125 @@
 
 import("terralib")
 
-proj = Project{
+itaituba = Project{
 	file = "itaituba.tview",
 	clean = true,
-	localidades = filePath("Localidades_pt.shp", "terralib"),
-	roads = filePath("Rodovias_lin.shp", "terralib"),
-	setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	localities = filePath("itaituba-localities.shp", "terralib"),
+	roads = filePath("itaituba-roads.shp", "terralib"),
+	census = filePath("itaituba-census.shp", "terralib")
 }
 
 Layer{
-	project = proj,
+	project = itaituba,
 	name = "deforestation",
-	file = filePath("Desmatamento_2000.tif", "terralib"),
+	file = filePath("itaituba-deforestation.tif", "terralib"),
 	srid = 29191
 }
 
 Layer{
-	project = proj,
-	name = "altimetria",
-	file = filePath("altimetria.tif", "terralib"),
+	project = itaituba,
+	name = "elevation",
+	file = filePath("itaituba-elevation.tif", "terralib"),
 	srid = 29191
 }
 
-cl = Layer{
-	project = proj,
+itaitubaCells = Layer{
+	project = itaituba,
 	name = "cells",
 	clean = true,
 	file = "itaituba.shp",
-	input = "setores",
+	input = "census",
 	resolution = 5000
 }
 
-cl:fill{
+itaitubaCells:fill{
 	operation = "average",
-	layer = "altimetria",
-	attribute = "altim"
+	layer = "elevation",
+	attribute = "elevation"
 }
 
-cl:fill{
+itaitubaCells:fill{
 	operation = "coverage",
 	layer = "deforestation",
 	attribute = "defor"
 }
 
-cl:fill{
+itaitubaCells:fill{
+	operation = "distance",
+	layer = "roads",
+	attribute = "distroad"
+}
+
+itaitubaCells:fill{
+	operation = "distance",
+	layer = "localities",
+	attribute = "distlocal"
+}
+
+itaitubaCells:fill{
 	operation = "sum",
-	layer = "setores",
-	attribute = "pop",
-	select = "Populacao",
+	layer = "census",
+	attribute = "population",
+	select = "population",
 	area = true
 }
 
-cl:fill{
-	operation = "distance",
-	layer = "roads",
-	attribute = "distr"
-}
-
-cl:fill{
-	operation = "distance",
-	layer = "localidades",
-	attribute = "distl"
+cell = Cell{
+	logpop = function(self)
+		return math.log(self.population)
+	end
 }
 
 cs = CellularSpace{
-	project = proj,
-	layer = "cells"
+	project = itaituba,
+	layer = "cells",
+	as = {
+		river = "defor_167",
+		deforestation = "defor_87"
+	},
+	instance = cell
 }
 
-m = Map{
+Map{
 	target = cs,
-	select = "altim",
-	slices = 10,
+	select = "elevation",
+	slices = 6,
 	color = "Blues"
 }
 
-m = Map{
+Map{
 	target = cs,
-	select = "distl",
+	select = "river",
+	slices = 6,
+	color = "Blues"
+}
+
+Map{
+	target = cs,
+	select = "deforestation",
+	slices = 6,
+	invert = true,
+	color = "Greens"
+}
+
+Map{
+	target = cs,
+	select = "distlocal",
 	slices = 10,
 	color = "Reds"
 }
 
-m = Map{
+Map{
 	target = cs,
-	select = "defor_167",
+	select = "distroad",
 	slices = 10,
-	color = "Greens"
+	color = "Reds"
 }
 
-m = Map{
+Map{
 	target = cs,
-	select = "defor_87",
-	slices = 10,
-	color = "Greens"
-}
-
-m = Map{
-	target = cs,
-	select = "pop",
+	select = "logpop",
 	slices = 10,
 	color = "Purples"
 }
 
-m = Map{
-	target = cs,
-	select = "distr",
-	slices = 10,
-	color = "Reds"
-}

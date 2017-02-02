@@ -5,7 +5,7 @@ local cs = CellularSpace{
 
 m = Map{
 	target = cs,
-	select = "height_",
+	select = "height",
 	min = 0,
 	max = 255,
 	slices = 10,

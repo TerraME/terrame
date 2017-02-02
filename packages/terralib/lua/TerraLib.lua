@@ -1943,12 +1943,13 @@ TerraLib_ = {
 	-- @arg project The project.
 	-- @arg layerName The layer name which is in the project.
 	-- @arg toData The data that will be saved.
-	-- @arg overwrite It indicates if the saved data will be overwrited.
+	-- @arg overwrite Indicates if the saved data will be overwritten.
 	-- @usage -- DONTRUN
-	-- local toData = {}
-	-- toData.file = "shp2geojson.geojson"
-	-- toData.type = "geojson"
-	-- toData.srid = 4326
+	-- local toData = {
+	--     file = "shp2geojson.geojson",
+	--     type = "geojson",
+	--     srid = 4326
+	-- }
 	-- tl:saveLayerAs(project, "SomeLayer", toData, true)
 	saveLayerAs = function(_, project, layerName, toData, overwrite)
 		loadProject(project, project.file)
@@ -1963,19 +1964,24 @@ TerraLib_ = {
 			from = toDataSetLayer(from)
 			local fromDSetName = from:getDataSetName()
 			local fromType = fromDsInfo:getType()
-			local toDs = nil
-			local errorMsg = nil
-			local toDSetName = nil
+			local toDs
+			local errorMsg
+			local toDSetName
 
-			if toType == "POSTGIS" then  -- #1243
-				toData.table = string.lower(fromDSetName)
+			if toType == "POSTGIS" then
+				if not toData.table then
+					toData.table = fromDSetName
+				end
+
+				toData.table = string.lower(toData.table)
+
 				toDs = createPgDataSourceToSaveAs(fromType, toData)
 				toDSetName = toData.table
 				if not toDs then
 					errorMsg = "It was not possible save the data in layer '"..layerName.."' to postgis data." -- #1363
 				elseif toDs:dataSetExists(toDSetName) then
 					if overwrite then
-						toDs:dropDataSet(toDSetName)
+						toDs:dropDataSet(toDSetName) -- SKIP
 					else
 						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
 					end
@@ -2015,7 +2021,7 @@ TerraLib_ = {
 					if overwrite then
 						toDs:dropDataSet(toDSetName)
 					else
-						errorMsg = "The file '"..fileCopy.."' already exists."
+						errorMsg = "The file '"..fileCopy.."' already exists." -- SKIP
 					end
 				end
 
@@ -2041,8 +2047,8 @@ TerraLib_ = {
 				if toType ~= "GDAL" then
 					srid = toData.srid
 				else
-					customWarning("It was not possible to change SRID from raster data.") -- #1485
-					srid = from:getSRID()
+					customWarning("It was not possible to change SRID from raster data.") -- #1485 -- SKIP
+					srid = from:getSRID() -- SKIP
 				end
 			else
 				srid = from:getSRID()
@@ -2099,8 +2105,8 @@ TerraLib_ = {
 			local toLayer = getLayerByDataSetName(project.layers, toDSetName)
 			if toLayer then
 				if toLayer:getSRID() ~= srid then
-					toLayer:setSRID(srid)
-					saveProject(project, project.layers)
+					toLayer:setSRID(srid) -- SKIP
+					saveProject(project, project.layers) -- SKIP
 				end
 			end
 

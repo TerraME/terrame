@@ -1,19 +1,17 @@
-
-NO_DATA	 = 0
-INACTIVE1   = 1
-INACTIVE2   = 2
-INACTIVE3   = 3
-INACTIVE4   = 4
-INACTIVE5   = 5
-RIVER	   = 6
-FIREBREAK   = 7
-BURNING	 = 8
-BURNED	  = 9
+-- automaton states
+NODATA     = 0
+BIOMASS1   = 1
+BIOMASS2   = 2
+BIOMASS3   = 3
+BIOMASS4   = 4
+BIOMASS5   = 5
+RIVER      = 6
+FIREBREAK  = 7
+BURNING    = 8
+BURNED     = 9
 
 cell = Cell{
 	init = function(cell)
-		cell.accumulation = cell.accuation
-
 		if cell.firebreak == 1 then
 			cell.state = FIREBREAK
 		elseif cell.river == 1 then
@@ -28,17 +26,22 @@ cell = Cell{
 
 cs = CellularSpace{
 	file = filePath("emas.shp"),
-	instance = cell
+	instance = cell,
+	as = {
+		accumulation = "maxcover" -- test also with "mincover"
+	}
 }
 
-obs = Map{
+map = Map{
 	target = cs,
 	select = "state",
-	color = {"white", "green",   "green",   "green",   "green",   "green",   "blue", "brown",   "red",   "black"},
-	value = {NO_DATA, INACTIVE1, INACTIVE2, INACTIVE3, INACTIVE4, INACTIVE5, RIVER,  FIREBREAK, BURNING, BURNED}
+	color = {"white",  "lightGreen", "lightGreen", "green",    "darkGreen", "darkGreen", "blue",  "brown",     "red",     "black"},
+	value = {NODATA,   BIOMASS1,     BIOMASS2,     BIOMASS3,   BIOMASS4,    BIOMASS5,    RIVER,   FIREBREAK,   BURNING,   BURNED},
+	label = {"NoData", "Biomass1",   "Biomass2",   "Biomass3", "Biomass4",  "Biomass5",  "River", "Firebreak", "Burning", "Burned"}
 }
 
-obs:save("emas.bmp")
+
+map:save("emas.bmp")
 
 clean()
 

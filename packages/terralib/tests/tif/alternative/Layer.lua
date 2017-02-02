@@ -36,7 +36,7 @@ return {
 		-- Layer{
 			-- project = proj,
 			-- name = prodes,
-			-- file = filePath("PRODES_5KM.tif", "terralib")
+			-- file = filePath("amazonia-prodes.tif", "terralib")
 		-- }
 
 		-- local clName1 = "cells"
@@ -70,7 +70,7 @@ return {
 			Layer{
 				project = proj,
 				name = prodes,
-				file = filePath("PRODES_5KM.tif", "terralib"),
+				file = filePath("amazonia-prodes.tif", "terralib"),
 				index = true
 			}
 		end
@@ -139,7 +139,7 @@ return {
 		Layer{
 			project = proj,
 			name = "altimetria",
-			file = filePath("elevation.tif", "terralib")
+			file = filePath("cabecadeboi-elevation.tif", "terralib")
 		}
 
 		invalidBand = function()

@@ -392,7 +392,8 @@ Environment_ = {
 	-- @arg data.bidirect A boolean value. If true then, for each relation from Cell a
 	-- to Cell b loaded from the file, it will also create
 	-- a relation from b to a. The default value is false.
-	-- @usage river = CellularSpace{
+	-- @usage -- DONTRUN
+	-- river = CellularSpace{
 	--     file = filePath("river.shp")
 	-- }
 	--

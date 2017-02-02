@@ -12,9 +12,15 @@ return {
 		height = 354, 
 	}, 
 	[3] = {
-		x = 597, 
-		y = 128, 
+		x = 561, 
+		y = 48, 
 		width = 600, 
-		height = 500, 
+		height = 355, 
+	}, 
+	[4] = {
+		x = 566, 
+		y = 427, 
+		width = 600, 
+		height = 355, 
 	}, 
 }

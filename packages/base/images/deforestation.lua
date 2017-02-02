@@ -1,6 +1,6 @@
 
 dofile(packageInfo().path.."/examples/deforestation.lua")
 
-map:save("deforestation.bmp")
+scenario1.map:save("deforestation.bmp")
 
 clean()

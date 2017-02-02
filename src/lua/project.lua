@@ -65,7 +65,21 @@ function _Gtme.executeProject(package)
 
 	local oldProject = Project
 	local oldLayer = Layer
+	local oldFill = Layer_.fill
 
+	Layer_.fill = function(self, data)
+		local description = "Executing operation '"..data.operation.."'"
+
+		if data.area then
+			description = description.." (weighted by area) "
+		end
+
+		description = description.." using layer \'"..data.layer.."\'"
+
+		print(description)
+
+		oldFill(self, data)
+	end
 
 	local createdLayers = {}
 

@@ -74,7 +74,7 @@ return {
 	point = function(unitTest)
 		local tl = TerraLib{}
 		local cs = CellularSpace{
-			file = filePath("Localidades_pt.shp", "terralib"),
+			file = filePath("itaituba-localities.shp", "terralib"),
 			geometry = true
 		}
 
@@ -94,7 +94,7 @@ return {
 	line = function(unitTest)
 		local tl = TerraLib{}
 		local cs = CellularSpace{
-			file = filePath("River_lin.shp", "terralib"),
+			file = filePath("emas-river.shp", "terralib"),
 			geometry = true
 		}
 
@@ -126,7 +126,7 @@ return {
 	polygon = function(unitTest)
 		local tl = TerraLib{}
 		local cs = CellularSpace{
-			file = filePath("Limit_pol.shp", "terralib"),
+			file = filePath("amazonia-limit.shp", "terralib"),
 			geometry = true
 		}
 
@@ -137,14 +137,14 @@ return {
 			local nPoint = ring:getNPoints()
 
 			for i = 0, nPoint do
-				unitTest:assert(ring:getX(i) ~= nil)
+				unitTest:assertNotNil(ring:getX(i))
 				unitTest:assertType(ring:getX(i), "number")
-				unitTest:assert(ring:getY(i) ~= nil)
+				unitTest:assertNotNil(ring:getY(i))
 				unitTest:assertType(ring:getX(i), "number")
 			end
 
-			unitTest:assert(centroid:getX() > 0)
-			unitTest:assert(centroid:getY() > 0)
+			unitTest:assert(centroid:getX() < 0)
+			unitTest:assert(centroid:getY() < 0)
 			unitTest:assertEquals("MultiPolygon", cell.geom:getGeometryType())
 			local npoints = cell.geom:getNPoints()
 

@@ -32,9 +32,21 @@ local project = Project{
 	file = projName,
 	clean = true,
 	author = "Carneiro, T.",
-	title = "Cabeca de Boi database",
-	box = filePath("elevation_box.shp", "terralib"),
-	altimetria = filePath("elevation.tif", "terralib") -- se usar "altimetria.tif" da erro
+	title = "Cabeca de Boi database"
+}
+
+elevation = Layer{
+	project = project,
+	name = "elevation",
+	file = filePath("cabecadeboi-elevation.tif", "terralib"),
+	srid = 2311
+}
+
+box = Layer{
+	project = project,
+	name = "box",
+	file = filePath("cabecadeboi-box.shp", "terralib"),
+	srid = 2311
 }
 
 cl = Layer{
@@ -43,12 +55,12 @@ cl = Layer{
 	file = "cabecadeboi.shp",
 	input = "box",
 	name = "cells",
-	resolution = 200,
+	resolution = 100,
 }
 
 cl:fill{
 	operation = "average",
-	layer = "altimetria",
+	layer = "elevation",
 	attribute = "height"
 }
 

@@ -125,7 +125,7 @@ return{
 	end,
 	list = function(unitTest)
 		local datapath = packageInfo("base").data
-		local nfiles = 29
+		local nfiles = 33
 
 		local d = datapath:list()
 		unitTest:assertEquals(#d, nfiles)

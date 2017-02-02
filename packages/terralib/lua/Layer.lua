@@ -217,9 +217,7 @@ local function addLayer(self, data)
 		customError("Layer '"..data.name.."' already exists in the Project.")
 	end
 
-	if data.srid then
-		optionalTableArgument(data, "srid", "number")
-	end
+	optionalTableArgument(data, "srid", "number")
 
 	switch(data, "source"):caseof{
 		shp = function()
@@ -655,7 +653,7 @@ Layer_ = {
 			prj.PROJ4 = "'"..prj.PROJ4.."'"
 		end
 
-		return prj.NAME..", with SRID: "..prj.SRID.." (PROJ4: "..prj.PROJ4..")."
+		return prj.NAME..", with SRID: "..prj.SRID.." (PROJ4: "..prj.PROJ4..")"
 	end,
 	--- The attribute names of the Layer. It returns a vector of strings, whose size is
 	-- the number of attributes.
@@ -687,14 +685,17 @@ Layer_ = {
 	dummy = function(self, band)
 		return self.project.terralib:getDummyValue(self.project, self.name, band)
 	end,
-	--- Exports the data of a layer to another data source.
+	--- Exports the data of a Layer to another data source.
 	-- The data can be either a file data or postgis. The SRID and overwrite are common arguments.
-	-- @arg data.srid The SRID related to some projection, it can be used to reproject the data.
+	-- @arg data.srid A number from the EPSG Geodetic Parameter Dataset describing a projection.
+	-- It can be used to reproject the data.
 	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
+	-- @arg data.... Additional arguments related to where the output will be saved. These arguments
+	-- are the same for describing the data source when one creates a layer from a file or database.
 	-- @usage -- DONTRUN
-	-- layer:export({file = "myfile.shp", overwrite = "true"})
-	-- layer:export({file = "myfile.geojson"})
-	-- layer:export({file = "myfile.geojson", srid = 4326})
+	-- layer:export{file = "myfile.shp", overwrite = true}
+	-- layer:export{file = "myfile.geojson"}
+	-- layer:export{file = "myfile.geojson", srid = 4326}
 	export = function(self, data)
 		verifyNamedTable(data)
 
@@ -702,9 +703,7 @@ Layer_ = {
 			positiveTableArgument(data, "srid")
 		end
 
-		if data.overwrite then
-			defaultTableValue(data, "overwrite", false)
-		end
+		defaultTableValue(data, "overwrite", false)
 
 		if type(data.file) == "string" then
 			data.file = File(data.file)
@@ -740,7 +739,6 @@ Layer_ = {
 				defaultTableValue(data, "encoding", "CP1252")
 				local pgData = data
 				pgData.type = "postgis"
-				pgData.srid = data.srid
 
 				self.project.terralib:saveLayerAs(self.project, self.name, pgData, pgData.overwrite)
 			else
@@ -806,8 +804,12 @@ metaTableLayer_ = {
 -- input data (false, default).
 -- @arg data.resolution A number with the x and y resolution. It will need to be
 -- measured in the same projection of the input layer.
--- @arg data.srid A number that represents the Spatial Reference System Identifier. It is a unique value
--- used to unambiguously identify projected, unprojected, and local spatial coordinate system definitions.
+-- @arg data.srid A number from the EPSG Geodetic Parameter Dataset describing a projection.
+-- It is a unique value used to unambiguously identify projected, unprojected, and local spatial
+-- coordinate system definitions. When the projection of the data does not have this information,
+-- it is necessary to set it manually to allow combining the Layer with other Layer to execute
+-- any algorithm. If the prj file of a given data exists but there is no EPSG number, please
+-- visit http://www.prj2epsg.org to search for it.
 -- @arg data.clean A boolean value indicating whether the argument file should be cleaned
 -- if it needs to create the file. The default value is false.
 -- @arg data.index A boolean value indicating whether a spatial index file must be created for a

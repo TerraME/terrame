@@ -4,7 +4,7 @@ import("terralib")
 proj = Project{
 	file = "myproject.tview",
 	clean = true,
-	setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	setores = filePath("itaituba-census.shp", "terralib")
 }
 
 cl1 = Layer{

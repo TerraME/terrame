@@ -5,10 +5,10 @@
 -- This model was proposed by Almeida, Rodolfo M., et al. (in portuguese)
 -- 'Simulando padroes de incendios no Parque Nacional das Emas, Estado de
 -- Goias, Brasil.' X Simposio Brasileiro de Geoinfoamatica (2008).
--- @arg STEPS The final simulation time. The default value is 80.
+-- @arg STEPS The final simulation time. The default value is 35.
 -- @image fire-spread.bmp
 
-STEPS = 80
+STEPS = 35
 
 -- automaton states
 NODATA     = 0
@@ -17,10 +17,10 @@ BIOMASS2   = 2
 BIOMASS3   = 3
 BIOMASS4   = 4
 BIOMASS5   = 5
-RIVER       = 6
-FIREBREAK   = 7
-BURNING     = 8
-BURNED      = 9
+RIVER      = 6
+FIREBREAK  = 7
+BURNING    = 8
+BURNED     = 9
 
 -- probability matrix according to the levels of forest
 -- I[X][Y] is the probability of a burning cell with BIOMASSX
@@ -46,8 +46,6 @@ cell = Cell{
 		cell.state = BURNED
 	end,
 	init = function(cell)
-		cell.accumulation = cell.accuation
-
 		if cell.firebreak == 1 then
 			cell.state = FIREBREAK
 		elseif cell.river == 1 then
@@ -62,16 +60,25 @@ cell = Cell{
 
 cs = CellularSpace{
 	file = filePath("emas.shp"),
-	xy = {"Col", "Lin"},
-	instance = cell
+	instance = cell,
+	as = {
+		accumulation = "maxcover" -- test also with "mincover"
+	}
 }
+
+-- cells initially burning
+-- note that the y values are inverted
+-- using the maximum y (107)
+cs:get(35, 107 - 82).state = BURNING
+cs:get(19, 107 - 62).state = BURNING
+cs:get(40, 107 - 32).state = BURNING
 
 map = Map{
 	target = cs,
 	select = "state",
-	color = {"white", "lightGreen",   "lightGreen",   "green",   "darkGreen",   "darkGreen",   "blue", "brown",   "red",   "black"},
-	value = {NODATA, BIOMASS1, BIOMASS2, BIOMASS3, BIOMASS4, BIOMASS5, RIVER,  FIREBREAK, BURNING, BURNED},
-	label = {"NoData", "Biomass1", "Biomass2", "Biomass3", "Biomass4", "Biomass5", "River", "Firebreak", "Burning", "Burned"}
+	color = {"white",  "lightGreen", "lightGreen", "green",    "darkGreen", "darkGreen", "blue",  "brown",     "red",     "black"},
+	value = {NODATA,   BIOMASS1,     BIOMASS2,     BIOMASS3,   BIOMASS4,    BIOMASS5,    RIVER,   FIREBREAK,   BURNING,   BURNED},
+	label = {"NoData", "Biomass1",   "Biomass2",   "Biomass3", "Biomass4",  "Biomass5",  "River", "Firebreak", "Burning", "Burned"}
 }
 
 cs:createNeighborhood()

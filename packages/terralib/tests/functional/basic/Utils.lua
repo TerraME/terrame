@@ -30,9 +30,9 @@ return {
 		local project = Project{
 			file = tview,
 			clean = true,
-			firebreak = filePath("firebreak_lin.shp", "terralib"),
-			river = filePath("River_lin.shp", "terralib"),
-			limit = filePath("Limit_pol.shp", "terralib")
+			firebreak = filePath("emas-firebreak.shp", "terralib"),
+			river = filePath("emas-river.shp", "terralib"),
+			limit = filePath("emas-limit.shp", "terralib")
 		}
 
 		local count = 0

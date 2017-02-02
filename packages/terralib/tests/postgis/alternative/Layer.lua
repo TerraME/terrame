@@ -853,7 +853,7 @@ return {
 			clean = true
 		}
 
-		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath1 = filePath("itaituba-census.shp", "terralib")
 
 		local layerName1 = "setores"
 		local layer1 = Layer{

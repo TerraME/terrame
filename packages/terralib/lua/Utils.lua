@@ -32,18 +32,19 @@
 -- It can optionally have a second argument with a positive number representing the position of
 -- the Layer in the vector of Cells. If it returns false when processing a given Layer,
 -- forEachLayer() stops and does not process any other Cell.
--- @usage
--- import("terralib")
+-- @usage import("terralib")
 --
--- local filename = "emas-count.tview"
+-- filename = "emas-count.tview"
+--
 -- project = Project{
 --     file = filename,
 --     clean = true,
---     firebreak = filePath("firebreak_lin.shp", "terralib"),
---     cover = filePath("accumulation_Nov94May00.tif", "terralib"),
---     river = filePath("River_lin.shp", "terralib"),
---     limit = filePath("Limit_pol.shp", "terralib")
---}
+--     author = "Almeida, R.",
+--     title = "Emas database",
+--     firebreak = filePath("emas-firebreak.shp", "terralib"),
+--     river = filePath("emas-river.shp", "terralib"),
+--     limit = filePath("emas-limit.shp", "terralib")
+-- }
 --
 -- forEachLayer(project, function(layer, index)
 --     print(index.."\t"..layer.rep)

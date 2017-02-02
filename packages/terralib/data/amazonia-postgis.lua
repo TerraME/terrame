@@ -22,47 +22,32 @@
 --
 -------------------------------------------------------------------------------------------
 
--- @example Creates a database in a PostGIS database.
-
--- TODO(#1326)
+-- @example Creates amazonia database in PostGIS.
 
 import("terralib")
 
-local projName = "fillCellExample.tview"
-
-local project = Project{
-	file = projName,
+project = Project{
+	file = "amazonia-postgis.tview",
 	clean = true,
-	author = "Avancini",
-	title = "FillCell Example"
+	author = "Andrade, P.",
+	title = "Amazonia database",
+	ports = filePath("amazonia-ports.shp", "terralib"),
+	roads = filePath("amazonia-roads.shp", "terralib"),
+	limit = filePath("amazonia-limit.shp", "terralib")
 }
 
-local polygons = "Setores"
-Layer{
+prodes = Layer{
+	name = "prodes",
 	project = project,
-	name = polygons,
-	file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
-}
-	
-local points = "Localidades"
-Layer{
-	project = project,
-	name = points,
-	file = filePath("Localidades_pt.shp", "terralib")	
+	srid = 29191,
+	file = filePath("amazonia-prodes.tif", "terralib")
 }
 
-local lines = "Rodovias"
-Layer{
+protected = Layer{
+	name = "protected",
 	project = project,
-	name = lines,
-	file = filePath("Rodovias_lin.shp", "terralib")	
-}
-
-local tif = "Desmatamento"
-Layer{
-	project = project,
-	name = tif,
-	file = filePath("Desmatamento_2000.tif", "terralib")		
+	srid = 29191,
+	file = filePath("amazonia-indigenous.shp", "terralib")
 }
 
 -- local host = "localhost"

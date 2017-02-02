@@ -8,7 +8,7 @@ end
 proj = Project{
 	file = "myproject2.tview",
 	clean = true,
-	setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	setores = filePath("itaituba-census.shp", "terralib")
 }
 
 cl1 = Layer{

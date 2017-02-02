@@ -35,7 +35,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "AmazoniaTif"
-		local layerFile1 = filePath("PRODES_5KM.tif", "terralib")
+		local layerFile1 = filePath("amazonia-prodes.tif", "terralib")
 		tl:addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"

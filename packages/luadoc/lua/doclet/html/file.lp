@@ -97,9 +97,6 @@
 					</table>
 					<%end%>
 
-					<!--<br/>
-					<br/>-->
-
 					<%if #file_doc.functions > 0 then%>
 						<%if #file_doc.variables > 0 then%>
 							<h2><a name="functions"></a>Functions</h2>

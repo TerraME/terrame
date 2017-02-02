@@ -225,7 +225,7 @@ return {
 
 		-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
 		local layerName2 = "Protection_Unit"
-		local layerFile2 = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
+		local layerFile2 = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
 		tl:addShpLayer(proj, layerName2, layerFile2)
 
 		-- SHAPE OUTPUT
@@ -1112,7 +1112,7 @@ return {
 		unitTest:assertEquals(prj.PROJ4, "+proj=longlat +ellps=GRS80 +no_defs ")
 
 		local layerName2 = "Setores"
-		local layerFile2 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local layerFile2 = filePath("itaituba-census.shp", "terralib")
 		tl:addShpLayer(proj, layerName2, layerFile2)
 
 		prj = tl:getProjection(proj.layers[layerName2])
@@ -1189,7 +1189,7 @@ return {
 		geom = tl:castGeomToSubtype(geom:getGeometryN(0))
 		unitTest:assertEquals(geom:getGeometryType(), "Polygon")
 
-		shpPath = filePath("Rodovias_lin.shp", "terralib")
+		shpPath = filePath("amazonia-roads.shp", "terralib")
 		dSet = tl:getOGRByFilePath(tostring(shpPath))
 		geom = dSet[1].OGR_GEOMETRY
 		geom = tl:castGeomToSubtype(geom)

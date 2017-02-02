@@ -428,32 +428,37 @@ function _Gtme.executeDoc(package)
 				{"optionalTableArgument",  "separator",   "string"}
 			}
 
-			if tab.attributes then
-				local attributes = {}
-				local counter = 0
+			if not tab.attributes then
+				tab.attributes = {}
+			end
 
-				forEachElement(tab.attributes, function(idx, value)
-					if type(idx) ~= "string" then
-						counter = counter + 1
-						return
-					end
+			local attributes = {}
+			local counter = 0
 
-					if type(value) ~= "string" then
-						printError("In the documentation of '"..tab.file[1].."', description of attribute '"..idx.."' should be string, got "..type(value)..".")
-						value = ""
-						doc_report.error_data = doc_report.error_data + 1
-					end
-
-					attributes[idx] = {description = value}
-				end)
-
-				if counter > 0 then
-					printError("In the documentation of '"..tab.file[1].."', all names should be string, got "..counter.." invalid names.")
-					doc_report.error_data = doc_report.error_data + counter
+			forEachElement(tab.attributes, function(idx, value)
+				if type(idx) ~= "string" then
+					counter = counter + 1
+					return
 				end
 
-				tab.attributes = attributes
+				if type(value) ~= "string" then
+					printError("In the documentation of '"..tab.file[1].."', description of attribute '"..idx.."' should be string, got "..type(value)..".")
+					value = ""
+					doc_report.error_data = doc_report.error_data + 1
+				elseif not string.endswith(value, "%.") then
+					printError("In '"..tab.file[1]..", description of attribute '"..idx.."' should end with '.'")
+					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
+				end
+
+				attributes[idx] = {description = value}
+			end)
+
+			if counter > 0 then
+				printError("In the documentation of '"..tab.file[1].."', all names should be string, got "..counter.." invalid names.")
+				doc_report.error_data = doc_report.error_data + counter
 			end
+
+			tab.attributes = attributes
 
 			-- it is necessary to implement this way in order to get the line number of the error
 			for i = 1, #mverify do
@@ -467,6 +472,11 @@ function _Gtme.executeDoc(package)
 
 			if tab.summary then
 				tab.shortsummary = string.match(tab.summary, "(.-%.)")
+
+				if not string.endswith(tab.summary, ".") then
+					printError("In '"..tab.file[1]..", 'summary' should end with '.'")
+					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
+				end
 			end
 
 			if tab.file then
@@ -509,7 +519,7 @@ function _Gtme.executeDoc(package)
 				end
 			end)
 
-			if not found then
+			if not found and value.file then
 				table.insert(mdata, value)
 			end
 		end)
@@ -530,9 +540,14 @@ function _Gtme.executeDoc(package)
 		idx = 1
 
 		forEachElement(mdata, function(_, value)
-			if string.endswith(value.file[1], ".csv") then
-				print("Processing '"..value.file[1].."'")
+			print("Processing '"..value.file[1].."'")
 
+			if not isFile(packageInfo(package).path.."data"..s..value.file[1]) then
+				-- this will be recognized as an error afterwards
+				return
+			end
+
+			if string.endswith(value.file[1], ".csv") then
 				if not value.separator then
 					doc_report.error_data = doc_report.error_data + 1
 					printError("Documentation of CSV files must define 'separator'.")
@@ -569,8 +584,6 @@ function _Gtme.executeDoc(package)
 
 				value.quantity = #csv
 			elseif string.endswith(value.file[1], ".shp") or string.endswith(value.file[1], ".geojson") then
-				print("Processing '"..value.file[1].."'")
-
 				layer = tl.Layer{
 					project = myProject,
 					file = filePath(value.file[1], package),
@@ -631,8 +644,6 @@ function _Gtme.executeDoc(package)
 
 				idx = idx + 1
 			elseif string.endswith(value.file[1], ".tif") then
-				print("Processing '"..value.file[1].."'")
-
 				layer = tl.Layer{
 					project = myProject,
 					file = filePath(value.file[1], package),

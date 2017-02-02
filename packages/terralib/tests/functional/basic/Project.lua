@@ -87,10 +87,10 @@ return {
 			clean = true,
 			author = "Almeida, R.",
 			title = "Emas database",
-			firebreak = filePath("firebreak_lin.shp", "terralib"),
-			cover = filePath("accumulation_Nov94May00.tif", "terralib"),
-			river = filePath("River_lin.shp", "terralib"),
-			limit = filePath("Limit_pol.shp", "terralib")
+			firebreak = filePath("emas-firebreak.shp", "terralib"),
+			cover = filePath("emas-accumulation.tif", "terralib"),
+			river = filePath("emas-river.shp", "terralib"),
+			limit = filePath("emas-limit.shp", "terralib")
 		}
 
 		unitTest:assertType(proj5.firebreak, "Layer")
