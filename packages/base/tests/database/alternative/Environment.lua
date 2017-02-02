@@ -112,7 +112,7 @@ return{
 		unitTest:assertError(error_func, "CellularSpace with layer 'emas.shp' was not found in the Environment.")
 
 		cs = CellularSpace{
-			file = filePath("emas.shp"),
+			file = filePath("test/emas.shp"),
 			xy = {"Col", "Lin"}
 		}
 
@@ -211,7 +211,7 @@ return{
 		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))
 
 		cs = CellularSpace{
-			file = filePath("emas.shp"),
+			file = filePath("test/emas.shp"),
 			xy = {"Col", "Lin"}
 		}
 

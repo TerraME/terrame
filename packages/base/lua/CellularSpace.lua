@@ -1160,7 +1160,8 @@ CellularSpace_ = {
 	-- "*.gpm" & Load a Neighborhood from a GPM (generalized proximity matrix) file. \
 	-- Any other & Load a Neighborhood from table stored in the same database of the
 	-- CellularSpace. \
-	-- @usage cs = CellularSpace{
+	-- @usage -- DONTRUN
+	-- cs = CellularSpace{
 	--     file = filePath("cabecadeboi800.shp", "base")
 	-- }
 	--
