@@ -274,6 +274,7 @@ local function getFunctionNeighborhood(cs, data)
 				neighborhood:add(neighCell, data.weight(cell, neighCell))
 			end
 		end)
+
 		return neighborhood
 	end
 end
@@ -311,6 +312,7 @@ local function getMooreNeighborhood(cs, data)
 				neigh:add(index, weight)
 			end
 		end
+
 		return neigh
 	end
 end
@@ -341,6 +343,7 @@ local function getMxNNeighborhood(_, data)
 				end
 			end
 		end
+
 		return neighborhood
 	end
 end
@@ -457,10 +460,10 @@ local function checkProject(self)
 end
 
 local function loadCsv(self)
-	if self.yMin == nil then self.yMin = 100000 end
-	if self.xMin == nil then self.xMin = 100000 end
-	if self.xMax == nil then self.xMax = -self.xMin end
-	if self.yMax == nil then self.yMax = -self.yMin end
+	self.yMin = math.huge
+	self.xMin = math.huge
+	self.xMax = -math.huge
+	self.yMax = -math.huge
 
 	self.cells = {}
 	self.cObj_:clear()
@@ -474,6 +477,7 @@ local function loadCsv(self)
 		self:add(cell)
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 	end
+
 	return
 end
 
@@ -481,10 +485,10 @@ local function loadPGM(self)
 	local i = 0
 	local j = 0
 
-	if self.yMin == nil then self.yMin = 100000 end
-	if self.xMin == nil then self.xMin = 100000 end
-	if self.xMax == nil then self.xMax = -self.xMin end
-	if self.yMax == nil then self.yMax = -self.yMin end
+	self.yMin = math.huge
+	self.xMin = math.huge
+	self.xMax = -math.huge
+	self.yMax = -math.huge
 
 	self.cells = {}
 	self.cObj_:clear()
@@ -585,9 +589,9 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		end
 
 		self.xMin = math.min(self.xMin, col)
-		self.xMax = math.max(self.xMax, row)
+		self.xMax = math.max(self.xMax, col)
 		self.yMin = math.min(self.yMin, row)
-		self.yMax = math.max(self.yMax, col)
+		self.yMax = math.max(self.yMax, row)
 	end
 
 	local tlib = terralib.TerraLib{}
@@ -604,7 +608,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		end
 
 		if self.zero == "bottom" then
-			row = self.xMax - row + self.xMin -- bottom inverts row
+			row = self.yMax - row + self.yMin -- bottom inverts row
 		end
 
 		local cell = Cell{id = tostring(i), x = col, y = row}
@@ -647,8 +651,8 @@ end
 local function loadVirtual(self)
 	self.yMin = 0
 	self.xMin = 0
-	self.xMax = self.ydim - 1
-	self.yMax = self.xdim - 1
+	self.xMax = self.xdim - 1
+	self.yMax = self.ydim - 1
 
 	self.cells = {}
 	self.cObj_:clear()

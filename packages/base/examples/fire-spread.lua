@@ -69,9 +69,9 @@ cs = CellularSpace{
 -- cells initially burning
 -- note that the y values are inverted
 -- using the maximum y (107)
-cs:get(35, 107 - 82).state = BURNING
-cs:get(19, 107 - 62).state = BURNING
-cs:get(40, 107 - 32).state = BURNING
+cs:get(35, cs.yMax - 82).state = BURNING
+cs:get(19, cs.yMax - 62).state = BURNING
+cs:get(40, cs.yMax - 32).state = BURNING
 
 map = Map{
 	target = cs,
