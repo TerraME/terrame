@@ -25,7 +25,94 @@
 local printError = _Gtme.printError
 local printNote  = _Gtme.printNote
 
-function _Gtme.executeProject(package)
+function _Gtme.getResolution(package, project)
+	if not isLoaded("terralib") then
+		import("terralib")
+	end
+
+	local oldLayer = Layer
+	local oldProject = Project
+
+	local output
+
+	Project = function() end
+
+	Layer = function(data)
+		if data.resolution then -- a cellular layer
+			output = data.resolution
+			customError("An error just to stop the script.")
+		end
+	end
+
+	local s = sessionInfo().separator
+	local file = packageInfo(package).path.."data"..s..project..".lua"
+
+	pcall(function() dofile(tostring(file)) end)
+
+	Project = oldProject
+	Layer = oldLayer
+
+	return output
+end
+
+function _Gtme.executeProject(package, project, resolution)
+	local oldLayer = Layer
+	local oldFill = Layer_.fill
+
+	Layer_.fill = function(self, data)
+		local description = "Executing operation '"..data.operation.."'"
+
+		if data.area then
+			description = description.." (weighted by area) "
+		end
+
+		description = description.." using layer \'"..data.layer.."\'"
+
+		print(description)
+
+		oldFill(self, data)
+	end
+
+	Layer = function(data)
+		if data.resolution then -- a cellular layer
+			if type(data.file) == "string" then
+				data.file = File(data.file)
+			end
+
+			if resolution then
+				data.resolution = resolution
+
+				if data.file then
+					local path, name, ext = data.file:split()
+
+					data.file = File(path..name..resolution.."."..ext)
+				elseif data.table then
+					data.table = data.table..resolution
+				end
+			end
+
+			local mfile = data.file
+			if not mfile then mfile = data.table end
+			print("Creating '"..mfile.."' with resolution "..data.resolution)
+		end
+
+		return oldLayer(data)
+	end
+
+	local s = sessionInfo().separator
+	local file = packageInfo(package).path.."data"..s..project..".lua"
+
+	_Gtme.loadTmeFile(file)
+
+	xpcall(function() dofile(tostring(file)) end, function(err)
+		printError("Could not execute the script properly: "..err)
+	end)
+
+	Layer = oldLayer
+	Layer_.fill = oldFill
+end
+
+function _Gtme.executeProjects(package)
 	local initialTime = os.clock()
 
 	printNote("Creating projects for package '"..package.."'")
@@ -144,6 +231,8 @@ function _Gtme.executeProject(package)
 		printNote("Processing 'data/"..file:name().."'")
 		project_report.projects = project_report.projects + 1
 
+		_Gtme.loadTmeFile(tostring(file))
+
 		local _, filename = file:split()
 		local output = filename..".tview"
 
@@ -166,6 +255,8 @@ function _Gtme.executeProject(package)
 			printError("File '"..output.."' was not created.")
 			project_report.errors_output = project_report.errors_output + 1
 		end
+
+		clean()
 	end)
 
 	local finalTime = os.clock()

@@ -2194,7 +2194,7 @@ function Map(data)
 		data.background.target:notify()
 		return data.background
 	else
-		local tbDimensions = {data.target.yMax - data.target.yMin + 1, data.target.xMax - data.target.xMin + 1}
+		local tbDimensions = {data.target.xMax - data.target.xMin + 1, data.target.yMax - data.target.yMin + 1}
 		idObs, obs = data.target.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.target.cells)
 	end
 

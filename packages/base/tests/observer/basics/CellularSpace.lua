@@ -200,6 +200,7 @@ return{
 		}
 
 		cs:notify()
+
 		unitTest:assertSnapshot(map, "cellspace_map_project.bmp")
 
 		t = Timer{
@@ -235,8 +236,8 @@ return{
 		end)
 
 		unitTest:assertEquals(cs.source, "virtual")
-		unitTest:assertEquals(cs.xMax, cs.ydim - 1)
-		unitTest:assertEquals(cs.yMax, cs.xdim - 1)
+		unitTest:assertEquals(cs.xMax, cs.xdim - 1)
+		unitTest:assertEquals(cs.yMax, cs.ydim - 1)
 		unitTest:assertEquals(#cs, cs.xdim * cs.ydim)
 
 		map = Map{

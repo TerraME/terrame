@@ -136,6 +136,7 @@ local function approximateLine(line)
 	if string.match(line, "Checking")            then return   8 end
 	if string.match(line, "Testing")             then return  34 end
 	if string.match(line, "Skipping")            then return  34 end
+	if string.match(line, "Creating")            then return 120 end
 	if string.match(line, "Building")            then return   8 end
 	if string.match(line, "should contain only") then return   1 end
 
@@ -348,7 +349,7 @@ forEachOrderedElement(commands, function(idx, group)
 			end
 		end
 
-		if args.package and args.package ~= "memory" then
+		if args.package and not belong(args.package, {"terralib", "memory"}) then
 			command = command.." -package "..args.package
 		else
 			return

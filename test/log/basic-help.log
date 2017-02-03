@@ -2,44 +2,45 @@
 Usage: TerraME [mode] [options] [file1.lua file2.lua ...]
 
 Mode:
--debug                  Warnings treated as errors.
--normal (default)       Warnings enabled.
--quiet                  Warnings disabled.
--strict                 Execute additional verifications in the source code.
+-debug                   Warnings treated as errors.
+-normal (default)        Warnings enabled.
+-quiet                   Warnings disabled.
+-strict                  Execute additional verifications in the source code.
 
 Options: 
--autoclose              Automatically close TerraME after simulation.
--color                  Show colored output. In Windows, it requires ansicon
-                        (https://github.com/adoxa/ansicon/releases).
--ft                     Show the full traceback in case of errors (including
-                        internal lines from TerraME and loaded packages).
--gui                    Show the player for the application (it works only
-                        when an Environment or a Timer object is used.
--ide                    Configure TerraME for running from IDEs in Windows.
--install <pkg>          Install a package stored in TerraME's repository.
-                        It can also be a local .zip file.
--package <pkg>          Select a given package. If not package is selected,
-                        TerraME uses base package. -package can be combined
-                        with the following options:
-  -build [<f>] [-clean] Test (-test [<f>]), document (-doc) and then build an
-                        installer for the package. -clean option can be used to
-                        remove test files and logs.
-  -check                Analyse Lua source code.
-  -configure <m>        Visually configure and run Model <m>.
-  -doc                  Build the documentation of the package.
-  -example <exp>        Run example <exp>.
-  -examples             Run all examples.
-  -project <prj>        Create project <prj>.
-  -projects             Create the TerraView projects for the package.
-  -showdoc              Show the documentation in the default browser.
-  -sketch               Create test scripts for source code files missing
-                        tests and initial documentation for undocumented files.
-  -test [<f>]           Execute unit tests for the package. An optional Lua
-                        file <f> can describe a subset of the tests to be
-                        executed.
-  -uninstall            Remove an installed package.
--silent                 print() does not show any text on the screen.
--version                Show TerraME general information.
+-autoclose               Automatically close TerraME after simulation.
+-color                   Show colored output. In Windows, it requires ansicon
+                         (https://github.com/adoxa/ansicon/releases).
+-ft                      Show the full traceback in case of errors (including
+                         internal lines from TerraME and loaded packages).
+-gui                     Show the player for the application (it works only
+                         when an Environment or a Timer object is used.
+-ide                     Configure TerraME for running from IDEs in Windows.
+-install <pkg>           Install a package stored in TerraME's repository.
+                         It can also be a local .zip file.
+-package <pkg>           Select a given package. If not package is selected,
+                         TerraME uses base package. -package can be combined
+                         with the following options:
+  -build [<f>] [-clean]  Test (-test [<f>]), document (-doc) and then build an
+                         installer for the package. -clean option can be used to
+                         remove test files and logs.
+  -check                 Analyse Lua source code.
+  -configure <m>         Visually configure and run Model <m>.
+  -doc                   Build the documentation of the package.
+  -example <exp>         Run example <exp>.
+  -examples              Run all examples.
+  -project <prj> [<res>] Create project <prj> in the current directory. When
+                         using <res>, it replaces the resolution of the script.
+  -projects              Create the TerraView projects for the package.
+  -showdoc               Show the documentation in the default browser.
+  -sketch                Create test scripts for source code files missing
+                         tests and initial documentation for undocumented files.
+  -test [<f>]            Execute unit tests for the package. An optional Lua
+                         file <f> can describe a subset of the tests to be
+                         executed.
+  -uninstall             Remove an installed package.
+-silent                  print() does not show any text on the screen.
+-version                 Show TerraME general information.
 
 For more information, please visit www.terrame.org
 

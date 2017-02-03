@@ -22,104 +22,60 @@
 --
 -------------------------------------------------------------------------------------------
 
--- @example Creates a database that can be used by the example deforestation of base package.
+-- @example Creates a database that can be used by the example runoff of base package.
 
 import("terralib")
 
-amazonia = Project{
-	file = "amazonia.tview",
+local projName = "cabecadeboi.tview"
+
+local project = Project{
+	file = projName,
 	clean = true,
-	title = "Amazonia database",
-	ports = filePath("amazonia-ports.shp", "terralib"),
-	roads = filePath("amazonia-roads.shp", "terralib"),
-	limit = filePath("amazonia-limit.shp", "terralib")
+	author = "Carneiro, T.",
+	title = "Cabeca de Boi database"
 }
 
-prodes = Layer{
-	name = "prodes",
-	project = amazonia,
-	srid = 29191,
-	file = filePath("amazonia-prodes.tif", "terralib")
+elevation = Layer{
+	project = project,
+	name = "elevation",
+	file = filePath("cabecadeboi-elevation.tif", "terralib"),
+	srid = 2311
 }
 
-protected = Layer{
-	name = "protected",
-	project = amazonia,
-	srid = 29191,
-	file = filePath("amazonia-indigenous.shp", "terralib")
+box = Layer{
+	project = project,
+	name = "box",
+	file = filePath("cabecadeboi-box.shp", "terralib"),
+	srid = 2311
 }
 
-amazoniaCells = Layer{
-	project = amazonia,
-	file = "amazonia.shp",
+cl = Layer{
+	project = project,
 	clean = true,
-	input = "limit",
+	file = "cabecadeboi.shp",
+	input = "box",
 	name = "cells",
-	resolution = 50000
+	resolution = 1600,
 }
 
-amazoniaCells:fill{
-	operation = "coverage",
-	layer = "prodes",
-	attribute = "prodes"
-}
-
-amazoniaCells:fill{
-	operation = "distance",
-	layer = "roads",
-	attribute = "distroads"
-}
-
-amazoniaCells:fill{
-	operation = "distance",
-	layer = "ports",
-	attribute = "distports"
-}
-
-amazoniaCells:fill{
-	operation = "area",
-	layer = "protected",
-	attribute = "protected"
+cl:fill{
+	operation = "average",
+	layer = "elevation",
+	attribute = "height"
 }
 
 cs = CellularSpace{
-	project = amazonia,
-	layer = "cells",
-	as = {
-		forest = "prodes_208",
-		deforestation = "prodes_10"
-	}
+	project = project,
+	layer = "cells"
 }
 
 Map{
 	target = cs,
-	select = "distroads",
-	slices = 10,
-	invert = true,
-	color = "YlOrBr"
+	select = "height",
+	min = 0,
+	max = 255,
+	color = "RdPu",
+	slices = 7
 }
 
-Map{
-	target = cs,
-	select = "distports",
-	slices = 10,
-	invert = true,
-	color = "YlOrBr"
-}
-
-Map{
-	target = cs,
-	select = "protected",
-	slices = 10,
-	invert = true,
-	color = "PuBu"
-}
-
-Map{
-	target = cs,
-	select = "deforestation",
-	slices = 10,
-	invert = true,
-	color = "YlGn"
-}
-
+clean()
