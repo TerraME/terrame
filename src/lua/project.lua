@@ -26,7 +26,7 @@ local printError = _Gtme.printError
 local printNote  = _Gtme.printNote
 
 function _Gtme.getResolution(package, project)
-	if not isLoaded("terralib") then 
+	if not isLoaded("terralib") then
 		import("terralib")
 	end
 

@@ -390,7 +390,7 @@ Layer_ = {
 	-- sum in both layers, such as population size.
 	-- & attribute, layer, select & area, default \
 	-- "nearest" & The value (quantitative or qualitative) of the nearest object. & attribute,
-	-- layer, select & area \
+	-- layer, select & \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true),
 	-- or the weights are equal for each object with some overlap (false, default value).

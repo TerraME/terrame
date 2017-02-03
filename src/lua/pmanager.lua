@@ -206,7 +206,7 @@ local function projButtonClicked()
 	qt.connect(runProjectButton, "clicked()", function()
 		runProjectButton.enabled = false
 		cancelButton.enabled = false
-	
+
 		local resolution = tonumber(resolutionEdit.text)
 
 		if tostring(resolution) ~= resolutionEdit.text then
@@ -238,7 +238,7 @@ local function projButtonClicked()
 	qt.ui.layout_add(internalLayout, cancelButton)
 
 	qt.ui.layout_add(externalLayout, internalLayout)
-	
+
 	mdialog:show()
 	mdialog:exec()
 	enableAll()
