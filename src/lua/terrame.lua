@@ -1155,63 +1155,6 @@ function _Gtme.execConfigure(model, packageName)
 	end
 end
 
-local function findProject(project, packageName)
-	local file = project
-	local s = package.config:sub(1, 1)
-	local exFullPath = ""
-	local msg
-
-	local info
-	local ok, errMsg = pcall(function() info = packageInfo(packageName).path end)
-
-	if not ok then
-		return false, errMsg
-	end
-
-	if file then
-		exFullPath = info..s.."data"..s..file..".lua"
-
-		if not File(exFullPath):exists() then
-			msg = "Project '"..file.."' does not exist in package '"..packageName.."'."
-			msg = msg.."\nPlease use one from the list below:"
-		end
-	elseif #_Gtme.projectFiles(packageName) == 0 then
-		msg = "Package '"..packageName.."' has no projects."
-		return false, msg
-	else
-		msg = "Package '"..packageName.."' has the following projects:"
-	end
-
-	if file and File(exFullPath):exists() then
-		return true, exFullPath
-	else
-		files = _Gtme.projectFiles(packageName)
-
-		_Gtme.forEachElement(files, function(_, value)
-			msg = msg .."\n - "..value
-		end)
-	end
-
-	return false, msg
-end
-
-function _Gtme.execProject(project, packageName)
-	local ok, res = findProject(project, packageName)
-
-	if not ok then
-		return false, res
-	end
-
-	project = res
-
-	local success, result = _Gtme.myxpcall(function() dofile(project) end)
-	if not success then
-		return false, result
-	end
-
-	return success, _
-end
-
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
@@ -1255,6 +1198,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 	if arguments == nil or #arguments < 1 then
 		dofile(info_.path..s.."lua"..s.."pmanager.lua")
+		dofile(info_.path..s.."lua"..s.."project.lua")
 		_Gtme.packageManager()
 		return true
 	end

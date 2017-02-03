@@ -25,8 +25,37 @@
 local printError = _Gtme.printError
 local printNote  = _Gtme.printNote
 
-function _Gtme.executeProject(package, project, resolution)
+function _Gtme.getResolution(package, project)
+	if not isLoaded("terralib") then 
+		import("terralib")
+	end
+
+	local oldLayer = Layer
 	local oldProject = Project
+
+	local output
+
+	Project = function() end
+
+	Layer = function(data)
+		if data.resolution then -- a cellular layer
+			output = data.resolution
+			customError("An error just to stop the script.")
+		end
+	end
+
+	local s = sessionInfo().separator
+	local file = packageInfo(package).path.."data"..s..project..".lua"
+
+	pcall(function() dofile(tostring(file)) end)
+
+	Project = oldProject
+	Layer = oldLayer
+
+	return output
+end
+
+function _Gtme.executeProject(package, project, resolution)
 	local oldLayer = Layer
 	local oldFill = Layer_.fill
 
@@ -44,8 +73,6 @@ function _Gtme.executeProject(package, project, resolution)
 		oldFill(self, data)
 	end
 
-	local createdLayers = {}
-
 	Layer = function(data)
 		if data.resolution then -- a cellular layer
 			if type(data.file) == "string" then
@@ -61,7 +88,7 @@ function _Gtme.executeProject(package, project, resolution)
 					data.file = File(path..name..resolution.."."..ext)
 				elseif data.table then
 					data.table = data.table..resolution
-				end				
+				end
 			end
 
 			local mfile = data.file
@@ -73,7 +100,7 @@ function _Gtme.executeProject(package, project, resolution)
 	end
 
 	local s = sessionInfo().separator
-	local file = packageInfo(package).path..s.."data"..s..project..".lua"
+	local file = packageInfo(package).path.."data"..s..project..".lua"
 
 	_Gtme.loadTmeFile(file)
 
@@ -81,7 +108,6 @@ function _Gtme.executeProject(package, project, resolution)
 		printError("Could not execute the script properly: "..err)
 	end)
 
-	Project = oldProject
 	Layer = oldLayer
 	Layer_.fill = oldFill
 end
