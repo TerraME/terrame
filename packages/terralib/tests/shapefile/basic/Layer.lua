@@ -699,8 +699,7 @@ return {
 			File(value):delete()
 		end)
 
-		-- unitTest:assertFile(projName) -- SKIP #1242
-		proj.file:delete() -- #1242
+		proj.file:delete()
 
 		customWarning = customWarningBkp
 	end,

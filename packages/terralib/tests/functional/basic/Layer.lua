@@ -71,7 +71,6 @@ return {
 		unitTest:assertEquals(cl2.source, "shp")
 		unitTest:assertEquals(cl2.file, currentDir()..filePath1)
 
-		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 		projName:deleteIfExists()
 		File(filePath1):deleteIfExists()
 
@@ -132,7 +131,6 @@ return {
 
 		unitTest:assert(layer4.name ~= layer3.name)
 		unitTest:assertEquals(layer4.sid, layer3.sid)
-		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 
 		projName:deleteIfExists()
 
@@ -555,7 +553,6 @@ source   string [shp]
 srid     number [29191.0]
 ]]
 		unitTest:assertEquals(tostring(l), expected, 36, true)
-		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 		projName:deleteIfExists()
 	end
 }

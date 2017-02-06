@@ -108,16 +108,22 @@ source   string [shp]
 		local oldPrint = unitTest.printError
 		unitTest.printError = function() end
 		unitTest:assertFile("abc.csv") -- file does not exist
-		unitTest:assertFile(tostring(packageInfo().data)) -- not possible to use directory
 
 		unitTest.printError = oldPrint
 
 		unitTest:assertEquals(success + 1, unitTest.success)
-		unitTest:assertEquals(test + 3 + 1, unitTest.test) -- plus one because of the previous line
-		unitTest:assertEquals(fail + 2, unitTest.fail)
+		unitTest:assertEquals(test + 3, unitTest.test) -- plus one because of the previous line
+		unitTest:assertEquals(fail + 1, unitTest.fail)
 
 		unitTest.fail = unitTest.fail - 2
 		unitTest.success = unitTest.success + 2
+
+		c = Cell{value = 2}
+		Log{target = c, file = "assertFile.csv"}
+
+		c:notify()
+
+		unitTest:assertFile(File("assertFile.csv"))
 	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{}

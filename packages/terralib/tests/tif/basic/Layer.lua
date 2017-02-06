@@ -393,8 +393,7 @@ return {
 			File(value):delete()
 		end)
 
-		-- unitTest:assertFile(projName) -- SKIP #1242
-		File(projName):delete() -- #1242
+		File(projName):delete()
 
 		customWarning = customWarningBkp
 	end,
@@ -420,8 +419,7 @@ return {
 
 		unitTest:assertEquals(l:representation(), "raster")
 
-		-- unitTest:assertFile(projName) -- SKIP #1242
-		File(projName):delete() -- #1242
+		File(projName):delete()
 
 		customWarning = customWarningBkp
 	end,
