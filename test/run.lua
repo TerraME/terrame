@@ -153,7 +153,13 @@ forEachOrderedElement(commands, function(idx, group)
 
 		if sessionInfo().system == "mac" then
 			if idx == "observer" then
-				if belong(name, {"chart", "clock", "textscreen", "visualtable"}) then
+				if belong(name, {"chart", "clock", "map", "textscreen", "visualtable"}) then
+					directories.scripts[args.script] = true
+					_Gtme.printWarning("Skipping "..name)
+					return
+				end
+			elseif idx == "package" then
+				if belong(name, {"install"}) then
 					directories.scripts[args.script] = true
 					_Gtme.printWarning("Skipping "..name)
 					return
