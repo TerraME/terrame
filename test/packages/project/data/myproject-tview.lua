@@ -1,10 +1,6 @@
 
 import("terralib")
 
-if isFile("myproject2.tview") then
-	File("myproject2.tview"):delete()
-end
-
 proj = Project{
 	file = "myproject2.tview",
 	clean = true,
