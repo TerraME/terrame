@@ -695,13 +695,61 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-average-area.png")
 
+		proj.file:delete()
+
+		proj = Project{
+			file = "municipiosAML.tview",
+			clean = true,
+			cities = filePath("test/municipiosAML_ok.shp", "terralib")
+		}
+
+		cl = Layer{
+			project = proj,
+			resolution = 200000,
+			clean = true,
+			file = "munic_cells.shp",
+			name = "cells",
+			input = "cities"
+		}
+
+		table.insert(shapes, "munic_cells.shp")
+
+		cl:fill{
+			operation = "coverage",
+			layer = "cities",
+			select = "CODMESO",
+			attribute = "meso"
+		}
+
+		cs = CellularSpace{
+			project = proj,
+			layer = "cells"
+		}
+
+		map = Map{
+			target = cs,
+			select = "CODMESO_2", -- #1640
+			color = "RdPu",
+			slices = 5
+		}
+
+		unitTest:assertSnapshot(map, "polygons-coverage-1.png", 0.1)
+
+		map = Map{
+			target = cs,
+			select = "CODMESO_3", -- #1640
+			color = "RdPu",
+			slices = 5
+		}
+
+		unitTest:assertSnapshot(map, "polygons-coverage-2.png", 0.1)
+
+		customWarning = customWarningBkp
+		proj.file:delete()
+
 		forEachElement(shapes, function(_, value)
 			File(value):delete()
 		end)
-
-		proj.file:delete()
-
-		customWarning = customWarningBkp
 	end,
 	projection = function(unitTest)
 		local proj = Project {
