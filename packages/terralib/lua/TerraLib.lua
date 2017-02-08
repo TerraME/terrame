@@ -98,7 +98,7 @@ local function checkPgConnectParams(connInfo)
 	collectgarbage("collect")
 
 	if msg ~= "" then
-		customError(msg)
+		customError(msg) -- SKIP
 	end
 end
 
