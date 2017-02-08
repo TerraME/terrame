@@ -4,6 +4,19 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
+Processing '25P3H1.life'
+Processing 'blocker.life'
+Processing 'boatTie.life'
+Processing 'bookend.life'
+Processing 'dinnerTable.life'
+Processing 'figureEight.life'
+Processing 'glider.life'
+Processing 'heavySpaceship.life'
+Processing 'octagon.life'
+Processing 'pentaDecathlon.life'
+Processing 'pulsar.life'
+Processing 'rPentomino.life'
+Processing 'rabbits.life'
 Package 'ca' has no fonts
 Parsing lua files
 Parsing lua/Anneal.lua
@@ -130,7 +143,7 @@ Checking Wolfram.lua
 Checking if all Models are documented
 
 Documentation report for package 'ca':
-Documentation was built in 0.61 seconds.
+Documentation was built in 0.63 seconds.
 6 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.

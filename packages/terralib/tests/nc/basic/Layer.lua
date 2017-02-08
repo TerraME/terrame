@@ -171,7 +171,6 @@ sid      string [14825bac-96e7-418d-a340-f97f49ac3ed1]
 source   string [nc]
 srid     number [0.0]
 ]], 36, true)
-			-- unitTest:assertFile(projName) -- SKIP #1242
 
 			File(projName):deleteIfExists()
 

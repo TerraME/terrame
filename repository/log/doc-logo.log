@@ -4,6 +4,11 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
+Processing 'crossRoom.labyrinth'
+Processing 'default.pgm'
+Processing 'maze.labyrinth'
+Processing 'room.labyrinth'
+Processing 'small.pgm'
 Package 'logo' has no fonts
 Parsing lua files
 Parsing lua/GrowingSociety.lua

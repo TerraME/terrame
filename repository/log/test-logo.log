@@ -1,4 +1,4 @@
-Using log directory '/Applications/terrame.app/Contents/MacOS/packages/logo/log/mac/'
+Using log directory '/Users/pedro/github/terrame-pedro/repository/logo/log/'
 Loading package 'logo'
 Looking for overwritten variables
 Looking for documented functions
@@ -59,13 +59,13 @@ Testing road
 Checking logs
 
 Functional test report for package 'logo':
-Tests were executed in 240.17 seconds.
-Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_Ay0qc/'.
+Tests were executed in 907.59 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_fdbWA/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 42 asserts were executed successfully.
+All 44 asserts were executed successfully.
 All 15 tested functions do not have any unexpected execution error.
 All 15 tested functions have at least one assert.
 All 15 tested functions exist in the source code of the package.

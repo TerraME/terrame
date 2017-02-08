@@ -60,7 +60,6 @@ return {
 		unitTest:assertEquals(proj1.author, proj3clean.author)
 		unitTest:assertEquals(proj1.title, proj3clean.title)
 		unitTest:assertEquals(proj3clean.file, File("amazonia.tview"))
-		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
 		file:deleteIfExists()
 
@@ -98,7 +97,6 @@ return {
 
 		unitTest:assertType(proj5.river, "Layer")
 		unitTest:assertType(proj5.limit, "Layer")
-		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
 		file:deleteIfExists()
 	end,
@@ -119,7 +117,6 @@ terralib  TerraLib
 title     string [The Amazonia]
 ]])
 
-		-- unitTest:assertFile("tostring.tview") -- SKIP #TODO(#1242)
 		file:deleteIfExists()
 	end
 }

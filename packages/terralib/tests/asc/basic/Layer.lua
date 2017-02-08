@@ -132,8 +132,6 @@ source   string [asc]
 srid     number [4326.0]
 ]]
 		unitTest:assertEquals(tostring(l), expected, 36, true)
-		-- unitTest:assertFile(projName) -- SKIP #1242
-
 		projName:deleteIfExists()
 	end
 }

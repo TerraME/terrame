@@ -206,7 +206,7 @@ function _Gtme.executeProjects(package)
 
 			mfile = mfile:name()
 
-			if isFile(mfile) then return oldProject(data) end
+			if isFile(mfile) and not data.clean then return oldProject(data) end
 
 			print("Creating 'data/"..mfile.."'")
 

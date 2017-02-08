@@ -151,7 +151,7 @@ return{
 			u:assertFile(2)
 		end
 
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "File", 2))
 
 		error_func = function()
 			u:assertFile("abcd1234.txt")
@@ -163,7 +163,7 @@ return{
 			u:assertFile(tostring(sessionInfo().path))
 		end
 
-		unitTest:assertError(error_func, "It is not possible to use a directory as #1 for assertFile().")
+		unitTest:assertError(error_func, "'/MacOS' is a directory, and not a file.", 10, true)
 
 		local c = Cell{value = 2}
 		Log{target = c, file = "mabc.csv"}
@@ -185,8 +185,6 @@ return{
 		unitTest:assertFile("mabc.csv")
 		unitTest:assertEquals(str, "Log file 'mabc.csv' is used in more than one assert.")
 
-		unitTest.fail = unitTest.fail - 1
-		unitTest.success = unitTest.success + 1
 		unitTest.printError = oldPrint
 
 		u = UnitTest{}
@@ -202,6 +200,12 @@ return{
 		u:assertError(error_func, "It is not possible to use assertFile without a 'log' directory.")
 
 		unitTest:assert(not File("abc.csv"):exists())
+
+		error_func = function()
+			u:assertFile(tostring(packageInfo().data)) -- not possible to use directory
+		end
+
+		u:assertError(error_func, "'/data' is a directory, and not a file.", 0, true)
 	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{unittest = true}
