@@ -226,12 +226,12 @@ return{
 			y = {4, 5, 6}
 		}
 
-		unitTest:assertEquals(getn(df.cache), 0)
+		unitTest:assertEquals(getn(df.cache_), 0)
 
 		do
 			local value = df[1]
 			unitTest:assertEquals(value.y, 4)
-			unitTest:assertEquals(getn(df.cache), 1)
+			unitTest:assertEquals(getn(df.cache_), 1)
 
 			local values = {}
 
@@ -241,14 +241,14 @@ return{
 			end
 
 			collectgarbage()
-			unitTest:assertEquals(getn(df.cache), 3)
+			unitTest:assertEquals(getn(df.cache_), 3)
 
 			value = df[2]
 			unitTest:assertEquals(value.x, 3)
 		end
 
 		collectgarbage()
-		unitTest:assertEquals(getn(df.cache), 0)
+		unitTest:assertEquals(getn(df.cache_), 0)
 
 		-- cache with instance
 		df = DataFrame{
@@ -257,13 +257,13 @@ return{
 			instance = Agent{}
 		}
 
-		unitTest:assertEquals(getn(df.cache), 0)
+		unitTest:assertEquals(getn(df.cache_), 0)
 
 		do
 			local value = df[1]
 			unitTest:assertType(value, "Agent")
 			unitTest:assertEquals(value.y, 4)
-			unitTest:assertEquals(getn(df.cache), 1)
+			unitTest:assertEquals(getn(df.cache_), 1)
 
 			local values = {}
 
@@ -274,14 +274,14 @@ return{
 			end
 
 			collectgarbage()
-			unitTest:assertEquals(getn(df.cache), 3)
+			unitTest:assertEquals(getn(df.cache_), 3)
 
 			value = df[2]
 			unitTest:assertEquals(value.x, 3)
 		end
 
 		collectgarbage()
-		unitTest:assertEquals(getn(df.cache), 0)
+		unitTest:assertEquals(getn(df.cache_), 0)
 
 	end,
 	__newindex = function(unitTest)
