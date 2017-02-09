@@ -475,7 +475,7 @@ function _Gtme.executeDoc(package)
 			if tab.summary then
 				tab.shortsummary = string.match(tab.summary, "(.-%.)")
 
-				if not string.endswith(tab.summary, ".") then
+				if not string.endswith(tab.summary, "%.") then
 					printError("In '"..tab.file[1]..", 'summary' should end with '.'")
 					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
 				end
