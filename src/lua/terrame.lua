@@ -994,10 +994,10 @@ function _Gtme.loadTmeFile(luafile)
 
 	local cObj = TeVisualArrangement()
 
-	if _Gtme.File(displayFile):exists() then
-		cObj:setFile(displayFile)
-		cpp_restartobservercounter()
+	cObj:setFile(displayFile)
+	cpp_restartobservercounter()
 
+	if _Gtme.File(displayFile):exists() then
 		local display = dofile(displayFile)
 
 		_Gtme.forEachElement(display, function(idx, data)
