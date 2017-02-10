@@ -38,7 +38,7 @@ local report = {
 	locallogerrors = 0
 }
 
-_Gtme.printNote("Downloading packages from www.terrame.org/packages")
+_Gtme.printNote("Downloading packages from www.terrame.org/packages/"..sessionInfo().version)
 forEachOrderedElement(pkgs, function(_, data)
 	report.packages = report.packages + 1
 	pkgfile = data.package.."_"..data.version..".zip"
