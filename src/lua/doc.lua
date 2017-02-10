@@ -418,6 +418,7 @@ function _Gtme.executeDoc(package)
 			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "reference"})
 			doc_report.error_data = doc_report.error_data + count
 
+			if not tab.file then tab.file = "?" end
 			if type(tab.file) == "string" then tab.file = {tab.file} end
 
 			local mverify = {
@@ -476,12 +477,12 @@ function _Gtme.executeDoc(package)
 				tab.shortsummary = string.match(tab.summary, "(.-%.)")
 
 				if not string.endswith(tab.summary, "%.") then
-					printError("In '"..tab.file[1]..", 'summary' should end with '.'")
+					printError("In '"..tab.file[1].."', 'summary' should end with '.'")
 					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
 				end
 			end
 
-			if tab.file then
+			if tab.file[1] ~= "?" then
 				table.insert(mdata, tab)
 
 				forEachElement(tab.file, function(_, mvalue)
