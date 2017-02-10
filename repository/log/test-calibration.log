@@ -27,8 +27,6 @@ Testing pixelByPixel
 Checking if all asserts were executed
 Testing tests/core/basic/MultipleRuns.lua
 Testing MultipleRuns
-Testing get
-Testing saveCSV
 Checking if all asserts were executed
 Testing tests/core/basic/SAMDE.lua
 Testing SAMDE
@@ -47,10 +45,10 @@ Checking SAMDE.lua
 Checking Utils.lua
 Skipping lines of source code check
 Testing examples
-Testing FireAverage
 Testing broeke
 Testing daisy
-Testing goodnessOfFit
+Testing fire-average
+Testing goodness-of-fit
 Testing moving-agents
 Testing sir-mr-campaign
 Testing sir-mr-probability
@@ -62,21 +60,21 @@ Testing yeast-samde
 Checking logs
 
 Functional test report for package 'calibration':
-Tests were executed in 76.11 seconds.
-Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_LSzI8/'.
+Tests were executed in 136.96 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_mUrP9/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 170 asserts were executed successfully.
-All 20 tested functions do not have any unexpected execution error.
-All 20 tested functions have at least one assert.
-All 20 tested functions exist in the source code of the package.
+All 165 asserts were executed successfully.
+All 18 tested functions do not have any unexpected execution error.
+All 18 tested functions have at least one assert.
+All 18 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
-All 11 functions of the package were tested.
+All 9 functions of the package were tested.
 No lines from the source code were verified.
 All 12 examples were successfully executed.
 No new log file was created.

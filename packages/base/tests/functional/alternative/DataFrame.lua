@@ -37,7 +37,7 @@ return{
 		error_func = function()
 			DataFrame{y = {1, 2, 3}, x = 1}
 		end
-		unitTest:assertError(error_func, "All arguments for DataFrame must be table values.")
+		unitTest:assertError(error_func, "All arguments for DataFrame must be table values, got number ('x').")
 
 		error_func = function()
 			DataFrame{

@@ -1,4 +1,4 @@
-Using log directory '/Applications/terrame.app/Contents/MacOS/packages/publish/log/'
+Using log directory '/Users/pedro/github/terrame-pedro/repository/publish/log/'
 Loading package 'publish'
 Looking for overwritten variables
 Looking for documented functions
@@ -16,6 +16,9 @@ Checking if all asserts were executed
 Testing tests/functional/alternative/Color.lua
 Testing color
 Checking if all asserts were executed
+Testing tests/functional/alternative/List.lua
+Testing List
+Checking if all asserts were executed
 Testing tests/functional/alternative/Report.lua
 Testing Report
 Testing addHeading
@@ -31,6 +34,11 @@ Testing __tostring
 Checking if all asserts were executed
 Testing tests/functional/basic/Color.lua
 Testing color
+Checking if all asserts were executed
+Testing tests/functional/basic/List.lua
+Testing List
+Testing __len
+Testing __tostring
 Checking if all asserts were executed
 Testing tests/functional/basic/Report.lua
 Testing Report
@@ -66,6 +74,7 @@ Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking Application.lua
 Checking Color.lua
+Checking List.lua
 Checking Report.lua
 Checking View.lua
 Skipping lines of source code check
@@ -76,21 +85,21 @@ Testing emasapp
 Checking logs
 
 Functional test report for package 'publish':
-Tests were executed in 21.75 seconds.
-Logs were saved in '/Users/pedro/github/terrame/repository/.terrametmp_FhNyh/'.
+Tests were executed in 66.31 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_jITDp/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 611 asserts were executed successfully.
-All 27 tested functions do not have any unexpected execution error.
-All 27 tested functions have at least one assert.
-All 27 tested functions exist in the source code of the package.
+All 859 asserts were executed successfully.
+All 31 tested functions do not have any unexpected execution error.
+All 31 tested functions have at least one assert.
+All 31 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
-All 12 functions of the package were tested.
+All 15 functions of the package were tested.
 No lines from the source code were verified.
 All 3 examples were successfully executed.
 No new log file was created.

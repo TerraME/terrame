@@ -66,7 +66,7 @@
 
 						<dl class="function">
 							<%for _, data in ipairs(mdata) do%>
-								<dt<%=borderTop%>><h2><a name="<%=data.file[1]%>" href= <%="../../data/"..data.file[1]%>><%=data.file[1]%></a></h2></dt>
+								<dt<%=borderTop%>><h2><%=data.file[1]%></h2></dt>
 
 								<% if data.image then %>
 									<% loc = "../../images/"..tostring(data.image) %>
@@ -81,17 +81,16 @@
 								<dd>
 
 								<ul><span class="arg">
-								<%if #data.file > 1 then%>
-									<li><b>Files: </b>
-									<%for pos, f in ipairs(data.file) do%>
-										<%if pos<#data.file then%>
-											<%=f..", "%>
-										<%else%>
-											<%=f%>
-										<%end%>
+								<li><b>Files: </b>
+								<%for pos, f in ipairs(data.file) do%>
+									<%mlink = "<a href= \"../../data/"..f.."\">"..f.."</a>"%>
+									<%if pos<#data.file then%>
+										<%=mlink..", "%>
+									<%else%>
+										<%=mlink%>
 									<%end%>
-									</li>
 								<%end%>
+								</li>
 
 								<%if data.representation then%>
 									<li><b>Representation: </b><%=data.representation%></li>

@@ -1,21 +1,24 @@
 Building documentation for package 'wrongdata'
 Loading package 'wrongdata'
 Parsing 'data.lua'
-...ro/github/terrame-pedro/test/packages/wrongdata/data.lua:2: Error: Argument 'source' is mandatory.
-...ro/github/terrame-pedro/test/packages/wrongdata/data.lua:7: Error: Argument 'file' is mandatory.
-...ro/github/terrame-pedro/test/packages/wrongdata/data.lua:12: Error: Argument 'summary' is mandatory.
+...s/terrame.app/Contents/MacOS/packages/wrongdata/data.lua:2: Error: Argument 'source' is mandatory.
+In 'abc.txt', 'summary' should end with '.'
+In '?', 'summary' should end with '.'
+...s/terrame.app/Contents/MacOS/packages/wrongdata/data.lua:12: Error: Argument 'summary' is mandatory.
 Data file 'abc.txt' is documented more than once.
-Warning: Argument 'wrong' is unnecessary. In file ...ro/github/terrame-pedro/test/packages/wrongdata/data.lua, in line 17.
-Warning: Argument 'types' is unnecessary. In file ...ro/github/terrame-pedro/test/packages/wrongdata/data.lua, in line 17.
-In the documentation of 'abc2.txt', description of attribute 'def' should be string, got number.
+Warning: Argument 'wrong' is unnecessary. In file '...s/terrame.app/Contents/MacOS/packages/wrongdata/data.lua', line 17.
+Warning: Argument 'types' is unnecessary. In file '...s/terrame.app/Contents/MacOS/packages/wrongdata/data.lua', line 17.
 In 'abc2.txt, description of attribute 'abc' should end with '.'
+In the documentation of 'abc2.txt', description of attribute 'def' should be string, got number.
+In 'abc2.txt', 'summary' should end with '.'
 In the documentation of 'abc3.txt', all names should be string, got 2 invalid names.
+In 'abc3.txt', 'summary' should end with '.'
 Processing lua files
 Processing 'myfile.lua'
 File /Applications/terrame.app/Contents/MacOS/packages/wrongdata/data/file.csv
 Error: attempt to perform arithmetic on a nil value (global 'bbbbb')
 Stack traceback:
-    File '...me.app/Contents/MacOS/packages/wrongdata/data/myfile.lua', line 2, in call to operator + (addition)
+    File '...me.app/Contents/MacOS/packages/wrongdata/data/myfile.lua', line 4, in call to operator + (addition)
 Checking directory 'data'
 Checking properties of data files
 Processing 'abc.txt'
@@ -51,18 +54,18 @@ Checking foo.lua
 Checking if all Models are documented
 
 Documentation report for package 'wrongdata':
-Documentation was built in 0.24 seconds.
+Documentation was built in 0.25 seconds.
 2 HTML files were created.
 One out of 1 files are not documented.
 All fields of 'description.lua' are correct.
-13 problems were found in the documentation of data.
+12 problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
 One problem was found while processing projects.
 All 0 global functions of the package are documented.
 All functions of each file are declared only once.
-One description ends with wrong character.
+5 descriptions end with wrong characters.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
 All 0 non-named arguments are documented.
@@ -77,4 +80,4 @@ No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
 All 0 examples are correctly documented.
-Summing up, 16 problems were found in the documentation.
+Summing up, 19 problems were found in the documentation.

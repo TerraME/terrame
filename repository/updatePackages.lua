@@ -31,6 +31,9 @@ forEachFile(".", function(file)
 	newPackages[package] = version
 end)
 
+_Gtme.print("Creating projects for terralib")
+runCommand("terrame -package terralib -projects")
+
 _Gtme.printNote("Running documentation and tests")
 
 forEachDirectory(".", function(dir)
@@ -45,6 +48,9 @@ forEachDirectory(".", function(dir)
 		os.execute("mv "..pkgPath.." "..pkgPath.."-bkp")
 		rollback = true
 	end
+
+	_Gtme.print("Creating projects for "..package)
+	runCommand("terrame -package "..package.." -projects")
 
 	_Gtme.print("Documenting '"..package.."'")
     local command = "terrame -package "..package.." -doc > log/doc-"..package..".log"

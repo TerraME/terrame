@@ -798,6 +798,7 @@ function _Gtme.configure(self, modelName, package, random)
 			r = r.."\tlocal cObj = TeVisualArrangement()\n"
 			r = r.."\tdisplayFile = \""..tme.."\"\n"
 			r = r.."\tcObj:setFile(displayFile)\n"
+			r = r.."\tcpp_restartobservercounter()\n"
 
 			r = r..[[
 			if _Gtme.File(displayFile):exists() then

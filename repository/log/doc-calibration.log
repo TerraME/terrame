@@ -4,6 +4,8 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
+Processing 'Costanza.pgm'
+Processing 'Costanza2.pgm'
 Package 'calibration' has no fonts
 Parsing lua files
 Parsing lua/GoodnessOfFit.lua
@@ -11,10 +13,10 @@ Parsing lua/MultipleRuns.lua
 Parsing lua/SAMDE.lua
 Parsing lua/Utils.lua
 Parsing examples
-Parsing examples/FireAverage.lua
 Parsing examples/broeke.lua
 Parsing examples/daisy.lua
-Parsing examples/goodnessOfFit.lua
+Parsing examples/fire-average.lua
+Parsing examples/goodness-of-fit.lua
 Parsing examples/moving-agents.lua
 Parsing examples/sir-mr-campaign.lua
 Parsing examples/sir-mr-probability.lua
@@ -35,8 +37,6 @@ Testing multiLevel
 Testing pixelByPixel
 Testing file lua/MultipleRuns.lua
 Testing MultipleRuns
-Testing get
-Testing saveCSV
 Testing file lua/SAMDE.lua
 Testing SAMDE
 Testing file lua/Utils.lua
@@ -77,7 +77,7 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'calibration':
-Documentation was built in 1.24 seconds.
+Documentation was built in 1.12 seconds.
 7 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -86,18 +86,18 @@ No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
 All projects were successfully processed.
-All 11 global functions of the package are documented.
+All 9 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 24 non-named arguments are documented.
+All 21 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 11 functions call themselves in their @usage.
-All 11 functions do not have any error in their @usage.
+All 9 functions call themselves in their @usage.
+All 9 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
