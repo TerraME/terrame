@@ -587,6 +587,20 @@ function _Gtme.executeDoc(package)
 
 				value.quantity = #csv
 			elseif string.endswith(value.file[1], ".shp") or string.endswith(value.file[1], ".geojson") then
+
+				if string.endswith(value.file[1], ".shp") then
+					local file = File(packageInfo(package).path.."data/"..value.file[1])
+					local path, name = file:split()
+
+					table.insert(value.file, name..".shx")
+					table.insert(value.file, name..".dbf")
+
+					local prj = File(path..name..".prj")
+					if prj:exists() then
+						table.insert(value.file, name..".prj")
+					end
+				end
+
 				layer = tl.Layer{
 					project = myProject,
 					file = filePath(value.file[1], package),
