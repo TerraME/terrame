@@ -58,6 +58,15 @@ forEachOrderedElement(pkgs, function(_, data)
 	local result = _Gtme.installPackage(pkgfile)
 end)
 
+_Gtme.printNote("Creating projects")
+forEachOrderedElement(pkgs, function(_, data)
+	_Gtme.print("Creating projects for "..pkgname)
+	runCommand("terrame -package "..pkgname.." -projects")
+end)
+
+_Gtme.print("Creating projects for terralib")
+runCommand("terrame -package terralib -projects")
+
 local function approximateLine(line)
 	if not line then return 0 end
 	
