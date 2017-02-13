@@ -611,7 +611,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 
 		for k, v in pairs(dSet[i]) do
-			if (k == "OGR_GEOMETRY") or (k == "geom") then
+			if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
 				if self.geometry then
 					cell.geom = tlib:castGeomToSubtype(v)
 				end
@@ -1314,7 +1314,7 @@ CellularSpace_ = {
 
 			for i = 0, #dset do
 				for k, v in pairs(dset[i]) do
-					if (k == "OGR_GEOMETRY") or (k == "geom") then
+					if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
 						self.cells[i + 1][k] = v
 					end
 				end

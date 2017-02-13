@@ -952,16 +952,22 @@ return {
 
 		unitTest:assertEquals(getn(dSet), 37)
 
-		for i = 0, #dSet do
+		for i = 0, getn(dSet) - 1 do
 			for k, v in pairs(dSet[i]) do
 				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID"))
 				unitTest:assertNotNil(v)
 			end
 		end
 
+		local attrNames = tl:getPropertyNames(proj, proj.layers[clName1])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("id", attrNames[1])
+		unitTest:assertEquals("col", attrNames[2])
+		unitTest:assertEquals("row", attrNames[3])
+
 		local luaTable = {}
 
-		for i = 0, #dSet do
+		for i = 0, getn(dSet) - 1 do
 			local data = dSet[i]
 			data.attr1 = i
 			data.attr2 = "test"..i
@@ -976,10 +982,9 @@ return {
 		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1", "attr2", "attr3"})
 
 		local newDSet = tl:getDataSet(proj, newLayerName)
-
 		unitTest:assertEquals(getn(newDSet), 37)
 
-		for i = 0, #newDSet do
+		for i = 0, getn(newDSet) - 1 do
 			unitTest:assertEquals(newDSet[i].attr1, i)
 			for k, v in pairs(newDSet[i]) do
 				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
@@ -995,12 +1000,21 @@ return {
 			end
 		end
 
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLayerName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("id", attrNames[1])
+		unitTest:assertEquals("col", attrNames[2])
+		unitTest:assertEquals("row", attrNames[3])
+		unitTest:assertEquals("attr1", attrNames[4])
+		unitTest:assertEquals("attr2", attrNames[5])
+		unitTest:assertEquals("attr3", attrNames[6])
+
 		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1"})
 		newDSet = tl:getDataSet(proj, newLayerName)
 
 		unitTest:assertEquals(getn(newDSet), 37)
 
-		for i = 0, #newDSet do
+		for i = 0, getn(newDSet) - 1 do
 			unitTest:assertEquals(newDSet[i].attr1, i)
 			for k, v in pairs(newDSet[i]) do
 				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
@@ -1011,6 +1025,13 @@ return {
 				end
 			end
 		end
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLayerName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("id", attrNames[1])
+		unitTest:assertEquals("col", attrNames[2])
+		unitTest:assertEquals("row", attrNames[3])
+		unitTest:assertEquals("attr1", attrNames[4])
 
 		-- OVERWRITE CELLSPACE
 		tl:saveDataSet(proj, clName1, luaTable, clName1, {"attr1"})
@@ -1018,7 +1039,7 @@ return {
 
 		unitTest:assertEquals(getn(newDSet), 37)
 
-		for i = 0, #newDSet do
+		for i = 0, getn(newDSet) - 1 do
 			unitTest:assertEquals(newDSet[i].attr1, i)
 			for k, v in pairs(newDSet[i]) do
 				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
@@ -1030,8 +1051,266 @@ return {
 			end
 		end
 
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLayerName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("id", attrNames[1])
+		unitTest:assertEquals("col", attrNames[2])
+		unitTest:assertEquals("row", attrNames[3])
+		unitTest:assertEquals("attr1", attrNames[4])
+
+		-- SAVE POLYGONS, POINTS AND LINES THAT ARE NOT CELLSPACE SPACE
+		-- POLYGONS
+		local polName = "ES_Limit"
+		local polFile = filePath("test/limite_es_poly_wgs84.shp", "terralib")
+		tl:addShpLayer(proj, polName, polFile)
+
+		local toData = {}
+		toData.file = "limite_es_poly_wgs84-rep.shp"
+		toData.type = "shp"
+		toData.srid = 4326
+		File(toData.file):deleteIfExists()
+
+		tl:saveLayerAs(proj, polName, toData, true)
+
+		local polDset = tl:getDataSet(proj, polName)
+		local polLuaTable = {}
+		for i = 0, getn(polDset) - 1 do
+			local data = polDset[i]
+			data.attr1 = i
+			table.insert(polLuaTable, polDset[i])
+		end
+
+		polName = "ES_Limit_CurrDir"
+		polFile = File(toData.file)
+		tl:addShpLayer(proj, polName, polFile)
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[polName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("GM_LAYER", attrNames[1])
+		unitTest:assertEquals("GM_TYPE", attrNames[2])
+		unitTest:assertEquals("LAYER", attrNames[3])
+		unitTest:assertEquals("NM_ESTADO", attrNames[4])
+		unitTest:assertEquals("NM_REGIAO", attrNames[5])
+		unitTest:assertEquals("CD_GEOCUF", attrNames[6])
+		unitTest:assertEquals("NM_UF", attrNames[7])
+
+		local newPolName = "ES_Limit_New"
+		tl:saveDataSet(proj, polName, polLuaTable, newPolName, {"attr1"})
+
+		local newPolDset = tl:getDataSet(proj, newPolName)
+		unitTest:assertEquals(getn(newPolDset), 1)
+		unitTest:assertEquals(getn(newPolDset), getn(polDset))
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[newPolName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("GM_LAYER", attrNames[1])
+		unitTest:assertEquals("GM_TYPE", attrNames[2])
+		unitTest:assertEquals("LAYER", attrNames[3])
+		unitTest:assertEquals("NM_ESTADO", attrNames[4])
+		unitTest:assertEquals("NM_REGIAO", attrNames[5])
+		unitTest:assertEquals("CD_GEOCUF", attrNames[6])
+		unitTest:assertEquals("NM_UF", attrNames[7])
+		unitTest:assertEquals("attr1", attrNames[8])
+
+		-- POINTS
+		local ptName = "BR_Ports"
+		local ptFile = filePath("test/ports.shp", "terralib")
+		tl:addShpLayer(proj, ptName, ptFile)
+
+		toData = {}
+		toData.file = "ports-rep.shp"
+		toData.type = "shp"
+		toData.srid = 4326
+		File(toData.file):deleteIfExists()
+
+		tl:saveLayerAs(proj, ptName, toData, true)
+
+		local ptDset = tl:getDataSet(proj, ptName)
+		local ptLuaTable = {}
+		for i = 0, getn(ptDset) - 1 do
+			local data = ptDset[i]
+			data.attr1 = i
+			table.insert(ptLuaTable, ptDset[i])
+		end
+
+		ptName = "BR_Ports_CurrDir"
+		ptFile = File(toData.file)
+		tl:addShpLayer(proj, ptName, ptFile)
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[ptName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("tipo", attrNames[5])
+		unitTest:assertEquals("gestao", attrNames[10])
+		unitTest:assertEquals("pro_didade", attrNames[15])
+		unitTest:assertEquals("cep", attrNames[20])
+		unitTest:assertEquals("idr_rafica", attrNames[25])
+		unitTest:assertEquals("observacao", attrNames[30])
+		unitTest:assertEquals("cdc_troide", attrNames[32])
+
+		local newPtName = "BR_Ports_New"
+		tl:saveDataSet(proj, ptName, ptLuaTable, newPtName, {"attr1"})
+
+		local newPtDset = tl:getDataSet(proj, newPtName)
+		unitTest:assertEquals(getn(newPtDset), 8)
+		unitTest:assertEquals(getn(newPtDset), getn(ptDset))
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[newPtName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("tipo", attrNames[5])
+		unitTest:assertEquals("gestao", attrNames[10])
+		unitTest:assertEquals("pro_didade", attrNames[15])
+		unitTest:assertEquals("cep", attrNames[20])
+		unitTest:assertEquals("idr_rafica", attrNames[25])
+		unitTest:assertEquals("observacao", attrNames[30])
+		unitTest:assertEquals("cdc_troide", attrNames[32])
+		unitTest:assertEquals("attr1", attrNames[33])
+
+		-- LINES
+		local lnName = "ES_Rails"
+		local lnFile = filePath("test/rails.shp", "terralib")
+		tl:addShpLayer(proj, lnName, lnFile)
+
+		toData = {}
+		toData.file = "rails-rep.shp"
+		toData.type = "shp"
+		toData.srid = 4326
+		File(toData.file):deleteIfExists()
+
+		tl:saveLayerAs(proj, lnName, toData, true)
+
+		local lnDset = tl:getDataSet(proj, lnName)
+		local lnLuaTable = {}
+		for i = 0, getn(lnDset) - 1 do
+			local data = lnDset[i]
+			data.attr1 = i
+			table.insert(lnLuaTable, lnDset[i])
+		end
+
+		lnName = "ES_Rails_CurrDir"
+		lnFile = File(toData.file)
+		tl:addShpLayer(proj, lnName, lnFile)
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[lnName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("OBSERVACAO", attrNames[3])
+		unitTest:assertEquals("PRODUTOS", attrNames[6])
+		unitTest:assertEquals("OPERADORA", attrNames[9])
+		unitTest:assertEquals("Bitola_Ext", attrNames[12])
+		unitTest:assertEquals("COD_PNV", attrNames[14])
+
+		local newLnName = "ES_Rails_New"
+		tl:saveDataSet(proj, lnName, lnLuaTable, newLnName, {"attr1"})
+
+		local newLnDset = tl:getDataSet(proj, newLnName)
+		unitTest:assertEquals(getn(newLnDset), 182)
+		unitTest:assertEquals(getn(newLnDset), getn(lnDset))
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("OBSERVACAO", attrNames[3])
+		unitTest:assertEquals("PRODUTOS", attrNames[6])
+		unitTest:assertEquals("OPERADORA", attrNames[9])
+		unitTest:assertEquals("Bitola_Ext", attrNames[12])
+		unitTest:assertEquals("COD_PNV", attrNames[14])
+		unitTest:assertEquals("attr1", attrNames[15])
+
+		-- ADD NEW ATTRIBUTE AND UPDATE A OLD
+		lnLuaTable = {}
+		for i = 0, getn(lnDset) - 1 do
+			local data = lnDset[i]
+			data.attr1 = i + 1000
+			data.attr2 = "test"..i
+			data.attr3 = (i % 2) == 0
+			table.insert(lnLuaTable, lnDset[i])
+		end
+
+		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("OBSERVACAO", attrNames[3])
+		unitTest:assertEquals("PRODUTOS", attrNames[6])
+		unitTest:assertEquals("OPERADORA", attrNames[9])
+		unitTest:assertEquals("Bitola_Ext", attrNames[12])
+		unitTest:assertEquals("COD_PNV", attrNames[14])
+		unitTest:assertEquals("attr1", attrNames[15])
+		unitTest:assertEquals("attr2", attrNames[16])
+		unitTest:assertEquals("attr3", attrNames[17])
+
+		-- ADD NEW ATTRIBUTE AND UPDATE THREE OLD
+		lnLuaTable = {}
+		for i = 0, getn(lnDset) - 1 do
+			local data = lnDset[i]
+			data.attr1 = i + 1000
+			data.attr2 = "test"..i
+			data.attr3 = (i % 2) == 0
+			data.attr4 = data.attr1 * 2
+			table.insert(lnLuaTable, lnDset[i])
+		end
+
+		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3", "attr4"})
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("OBSERVACAO", attrNames[3])
+		unitTest:assertEquals("PRODUTOS", attrNames[6])
+		unitTest:assertEquals("OPERADORA", attrNames[9])
+		unitTest:assertEquals("Bitola_Ext", attrNames[12])
+		unitTest:assertEquals("COD_PNV", attrNames[14])
+		unitTest:assertEquals("attr1", attrNames[15])
+		unitTest:assertEquals("attr2", attrNames[16])
+		unitTest:assertEquals("attr3", attrNames[17])
+		unitTest:assertEquals("attr4", attrNames[18])
+
+		-- ONLY UPDATE SOME ATTRIBUTE
+		lnLuaTable = {}
+		for i = 0, getn(lnDset) - 1 do
+			local data = lnDset[i]
+			data.attr1 = i - 1000
+			table.insert(lnLuaTable, lnDset[i])
+		end
+
+		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1"})
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("OBSERVACAO", attrNames[3])
+		unitTest:assertEquals("PRODUTOS", attrNames[6])
+		unitTest:assertEquals("OPERADORA", attrNames[9])
+		unitTest:assertEquals("Bitola_Ext", attrNames[12])
+		unitTest:assertEquals("COD_PNV", attrNames[14])
+		unitTest:assertEquals("attr1", attrNames[15])
+		unitTest:assertEquals("attr2", attrNames[16])
+		unitTest:assertEquals("attr3", attrNames[17])
+
+		-- UPDATE MORE ATTRIBUTES
+		lnLuaTable = {}
+		for i = 0, getn(lnDset) - 1 do
+			local data = lnDset[i]
+			data.attr1 = i + 5000
+			data.attr2 = i.."data.attr2"
+			data.attr3 = ((i % 2) == 0) and data.attr3
+			table.insert(lnLuaTable, lnDset[i])
+		end
+
+		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("OBSERVACAO", attrNames[3])
+		unitTest:assertEquals("PRODUTOS", attrNames[6])
+		unitTest:assertEquals("OPERADORA", attrNames[9])
+		unitTest:assertEquals("Bitola_Ext", attrNames[12])
+		unitTest:assertEquals("COD_PNV", attrNames[14])
+		unitTest:assertEquals("attr1", attrNames[15])
+		unitTest:assertEquals("attr2", attrNames[16])
+		unitTest:assertEquals("attr3", attrNames[17])
+		unitTest:assertEquals("attr4", attrNames[18])
+
 		cellsShp:delete()
 		File(newLayerName..".shp"):delete()
+		polFile:delete()
+		File(newPolName..".shp"):delete()
+		ptFile:delete()
+		File(newPtName..".shp"):delete()
+		lnFile:delete()
+		File(newLnName..".shp"):delete()
 		proj.file:delete()
 	end,
 	getOGRByFilePath = function(unitTest)

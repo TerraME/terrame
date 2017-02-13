@@ -156,7 +156,7 @@ local function makeAndOpenDataSource(connInfo, type)
 	return ds
 end
 
--- local function hasShapeFileSpatialIndex(shapeFile) -- TODO(avancinirodrigo): review
+-- local function hasShapeFileSpatialIndex(shapeFile) -- TODO(#1678)
 	-- if string.find(tostring(shapeFile), "WFS:http://", 1, true) then
 		-- return false
 	-- end
@@ -361,7 +361,7 @@ local function dropDataSet(connInfo, dSetName, type)
 	do
 		local ds = makeAndOpenDataSource(connInfo, type)
 
-		if  ds:dataSetExists(dSetName) then
+		if ds:dataSetExists(dSetName) then
 			ds:dropDataSet(dSetName)
 		end
 
@@ -583,18 +583,6 @@ local function isNumber(type)
 			(type == binding.NUMERIC_TYPE)
 end
 
-local function getPropertiesTypes(dse)
-	dse:moveFirst()
-	local types = {}
-	local numProps = dse:getNumProperties()
-
-	for i = 0, numProps - 1 do
-		types[dse:getPropertyName(i)] = dse:getPropertyDataType(i)
-	end
-
-	return types
-end
-
 local function createDataSetAdapted(dSet)
 	local count = 0
 	local numProps = dSet:getNumProperties()
@@ -633,6 +621,19 @@ local function createDataSetAdapted(dSet)
 	end
 
 	return set
+end
+
+local function getPropertyPosition(dse, propName)
+	dse:moveFirst()
+	local numProps = dse:getNumProperties()
+
+	for i = 0, numProps - 1 do
+		if dse:getPropertyName(i) == propName then
+			return i
+		end
+	end
+
+	return nil
 end
 
 local function getGeometryTypeName(geomType)
@@ -895,6 +896,254 @@ local function getLayerByDataSetName(layers, dsetName)
 	end
 
 	return nil
+end
+
+local function swapFileConnInfo(connInfo, fileName)
+	local file = File(connInfo:host()..connInfo:path())
+	local outFile = file:path()..fileName.."."..file:extension()
+	return createFileConnInfo(outFile)
+end
+
+local function createConnInfoToSave(connInfo, toSetName, toType)
+	local toConnInfo
+
+	if toType == "POSTGIS" then
+		toConnInfo = connInfo
+	elseif toType == "OGR" then
+		toConnInfo = swapFileConnInfo(connInfo, toSetName)
+	end
+
+	return toConnInfo
+end
+
+local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
+	local errorMsg
+	do
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
+		local connInfo = dsInfo:getConnInfo()
+		local fromType = dsInfo:getType()
+		local ds = makeAndOpenDataSource(connInfo, fromType)
+		local dsetName = fromLayer:getDataSetName()
+		local dse = ds:getDataSet(dsetName)
+
+		-- Check new attributes
+		local attrsToIn = {}
+		local attrsToUp = {}
+		local invalidNames = {}
+		if attrs then
+			for i = 1, #attrs do
+				local propName = attrs[i]
+
+				if not ds:isPropertyNameValid(propName) then
+					table.insert(invalidNames, propName)
+				elseif ds:propertyExists(dsetName, propName) then
+					table.insert(attrsToUp, propName)
+				else
+					table.insert(attrsToIn, propName)
+				end
+			end
+		end
+
+		if #invalidNames > 0 then
+			if #invalidNames == 1 then
+				errorMsg = "Invalid attribute name '"..invalidNames[1].."'."
+			else
+				local ins = ""
+				for i = 1, #invalidNames do
+					ins = ins.."'"..invalidNames[i].."'"
+					if i ~= #invalidNames then
+						ins = ins..", "
+					end
+				end
+
+				errorMsg = "Invalid attribute names "..ins.."."
+			end
+		else
+			-- Copy from dataset to new
+			local dst = ds:getDataSetType(dsetName)
+			local newDst = ds:cloneDataSetType(dsetName)
+			newDst:setName(toSetName)
+			local newDse = binding.te.mem.DataSet(dse)
+
+			-- TODO(avancinirodrigo): why POSTGIS does not work like OGR?
+			-- Fix the primary key for postgis only
+			if fromType == "POSTGIS" then
+				local pk = newDst:getPrimaryKey()
+				local rand = string.gsub(binding.GetRandomicId(), "-", "")
+				rand = string.sub(rand, 1, 8)
+
+				if pk then
+					newDst:remove(pk:getName())
+					local newPk = binding.te.da.PrimaryKey(newDst)
+					newPk:setName("pk"..rand)
+					pk = dst:getPrimaryKey()
+					local pkPos = getPropertyPosition(dse, pk:getPropertyName(0))
+					newPk:add(pk:getProperty(pkPos))
+
+					--local pkIdx = pk:getAssociatedIndex() -- TODO(#1678)
+					-- if pkIdx then
+						-- pkIdx:setName("idx"..rand)
+						--newDst:remove(pkIdx)
+						-- pk:setAssociatedIndex(pkIdx)
+					-- end
+				end
+			end
+
+			if #attrs > 0 then
+				-- Add the new attributes to new dataset
+				local isPk = false
+				for i = 1, #attrsToIn do
+					local attr = attrsToIn[i]
+					local v = toSet[1][attr]
+
+					if type(v) == "number" then
+						newDst:add(attr, isPk, binding.DOUBLE_TYPE, false)
+						newDse:add(attr, binding.DOUBLE_TYPE)
+					elseif type(v) == "string" then
+						newDst:add(attr, isPk, binding.STRING_TYPE, false)
+						newDse:add(attr, binding.STRING_TYPE)
+					elseif type(v) == "boolean" then
+						if fromType == "OGR" then
+							newDst:add(attr, isPk, binding.STRING_TYPE, false)
+							newDse:add(attr, binding.STRING_TYPE)
+						else
+							newDst:add(attr, isPk, binding.BOOLEAN_TYPE, false)
+							newDse:add(attr, binding.BOOLEAN_TYPE)
+						end
+					end
+				end
+
+				-- Set the values of the new dataset from the data
+				local index = 1
+				newDse:moveBeforeFirst()
+				while newDse:moveNext() do
+					for i = 1, #attrsToIn do
+						local attr = attrsToIn[i]
+						local v = toSet[index][attr]
+
+						if type(v) == "number" then
+							newDse:setDouble(attr, v)
+						elseif type(v) == "string" then
+							newDse:setString(attr, v)
+						elseif type(v) == "boolean" then
+							if fromType == "OGR" then
+								newDse:setString(attr, tostring(v))
+							else
+								newDse:setBool(attr, v)
+							end
+						end
+					end
+
+					for i = 1, #attrsToUp do
+						local attr = attrsToUp[i]
+						local v = toSet[index][attr]
+
+						if type(v) == "number" then
+							newDse:setDouble(attr, v)
+						elseif type(v) == "string" then
+							newDse:setString(attr, v)
+						elseif type(v) == "boolean" then
+							if fromType == "OGR" then
+								newDse:setString(attr, tostring(v))
+							else
+								newDse:setBool(attr, v)
+							end
+						end
+					end
+
+					index = index + 1
+				end
+			end
+
+			local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
+			local toDs = makeAndOpenDataSource(toConnInfo, fromType)
+
+			-- Drop if exists
+			if toDs:dataSetExists(toSetName) then
+				toDs:dropDataSet(toSetName)
+			end
+
+			-- Create new dataset in database
+			toDs:createDataSet(newDst)
+			newDse:moveBeforeFirst()
+			toDs:add(toSetName, newDse)
+		end
+	end
+
+	collectgarbage("collect")
+
+	if errorMsg then
+		customError(errorMsg)
+	end
+end
+
+local function updateDataSet(fromLayer, toSet, attrs)
+	do
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
+		local connInfo = dsInfo:getConnInfo()
+		local fromType = dsInfo:getType()
+		local ds = makeAndOpenDataSource(connInfo, fromType)
+		local dsetName = fromLayer:getDataSetName()
+		local dse = ds:getDataSet(dsetName)
+
+		local attrsToUp = {}
+		if attrs then
+			for i = 1, #attrs do
+				attrsToUp[i] = attrs[i]
+			end
+		end
+
+		local dseUp = binding.te.mem.DataSet(dse)
+		local index = 1
+
+		dseUp:moveBeforeFirst()
+		while dseUp:moveNext() do
+			for i = 1, #attrsToUp do
+				local attr = attrsToUp[i]
+				local v = toSet[index][attr]
+
+				if type(v) == "number" then
+					dseUp:setDouble(attr, v)
+				elseif type(v) == "string" then
+					dseUp:setString(attr, v)
+				elseif type(v) == "boolean" then
+					if fromType == "OGR" then
+						dseUp:setString(attr, tostring(v))
+					else
+						dseUp:setBool(attr, v)
+					end
+				end
+			end
+
+			index = index + 1
+		end
+
+		binding.UpdateDs(ds, dsetName, dseUp, attrsToUp)
+	end
+
+	collectgarbage("collect")
+end
+
+local function hasNewAttributeOnLayer(fromLayer, attrs)
+	local result = false
+
+	do
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
+		local connInfo = dsInfo:getConnInfo()
+		local fromType = dsInfo:getType()
+		local ds = makeAndOpenDataSource(connInfo, fromType)
+		local dseName = fromLayer:getDataSetName()
+
+		for i = 1, #attrs do
+			if not ds:propertyExists(dseName, attrs[i]) then
+				result = true
+			end
+		end
+	end
+
+	collectgarbage("collect")
+
+	return result
 end
 
 TerraLib_ = {
@@ -1495,6 +1744,8 @@ TerraLib_ = {
 				outSpatialIdx = true
 			end
 
+			dropDataSet(outConnInfo, outDSetName, outType)
+
 			local dseType = fromLayer:getSchema()
 
 			if dseType:hasRaster() then
@@ -1593,13 +1844,13 @@ TerraLib_ = {
 	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg fromLayerName The input layer name.
-	-- @arg toName The output layer name.
+	-- @arg toLayerName The output layer name.
 	-- @arg toSet A table mapping the names of the attributes from the input to the output.
 	-- @arg attrs A table with the attributes to be saved.
 	-- @arg toSetName The name of the output data set.
 	-- @usage -- DONTRUN
 	-- saveDataSet(self, project, fromLayerName, toSet, toName, attrs)
-	saveDataSet = function(_, project, fromLayerName, toSet, toName, attrs, toSetName)
+	saveDataSet = function(_, project, fromLayerName, toSet, toLayerName, attrs, toSetName)
 		do
 			loadProject(project, project.file)
 
@@ -1607,143 +1858,42 @@ TerraLib_ = {
 			fromLayer = toDataSetLayer(fromLayer)
 			local dseName = fromLayer:getDataSetName()
 			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
-			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
-			local dse = ds:getDataSet(dseName)
-			local dst = ds:getDataSetType(dseName)
-			local pk = dst:getPrimaryKey()
-			local pkName = pk:getPropertyName(0)
-			local numProps
-			local newDst = binding.te.da.DataSetType(toName)
-			local geom = binding.GetFirstGeomProperty(dst)
-			local srid = geom:getSRID()
-
-			local attrsToIn = {}
-			if attrs then
-				for i = 1, #attrs do
-					attrsToIn[attrs[i]] = true
-				end
-			end
-
-			local types = getPropertiesTypes(dse)
-			local outType = dsInfo:getType()
-
-			-- Config the properties of the new DataSet
-			forEachOrderedElement(toSet[1], function(k, v)
-				local isPk = (k == pkName)
-
-				if types[k] ~= nil then
-					if types[k] == binding.GEOMETRY_TYPE then
-						newDst:add(k, srid, geom:getGeometryType(), true)
-					else
-						newDst:add(k, isPk, types[k], true)
-					end
-				elseif attrsToIn[k] then
-					if type(v) == "number" then
-						newDst:add(k, isPk, binding.DOUBLE_TYPE, true)
-					elseif type(v) == "string" then
-						newDst:add(k, isPk, binding.STRING_TYPE, true)
-					elseif type(v) == "boolean" then
-						if outType == "OGR" then
-							newDst:add(k, isPk, binding.STRING_TYPE, true)
-						else
-							newDst:add(k, isPk, binding.BOOLEAN_TYPE, true)
-						end
-					end
-				end
-			end)
-
-			-- Create the new DataSet
-			local newDse = binding.te.mem.DataSet(newDst)
-			numProps = newDse:getNumProperties()
-
-			for i = 1, #toSet do
-				local item = binding.te.mem.DataSetItem.create(newDse)
-
-				for j = 0, numProps - 1 do
-					local propName = newDse:getPropertyName(j)
-
-					for k, v in pairs(toSet[i]) do
-						if propName == k then
-							local type = newDse:getPropertyDataType(j)
-
-							if type == binding.INT16_TYPE then
-								item:setInt16(j, v) -- SKIP
-							elseif type == binding.INT32_TYPE then
-								item:setInt32(j, v)
-							elseif type == binding.INT64_TYPE then
-								item:setInt64(j, v) -- SKIP
-							elseif type == binding.FLOAT_TYPE then
-								item:setFloat(j, v) -- SKIP
-							elseif type == binding.DOUBLE_TYPE then
-								item:setDouble(j, v)
-							elseif type == binding.NUMERIC_TYPE then
-								item:setNumeric(j, tostring(v)) -- SKIP
-							elseif type == binding.BOOLEAN_TYPE then
-								item:setBool(j, v)
-							elseif type == binding.GEOMETRY_TYPE then
-								item:setGeom(j, v)
-							else
-								item:setString(j, tostring(v))
-							end
-
-							break
-						end
-					end
-				end
-				newDse:add(item)
-			end
-
-			local newDstName
+			local connInfo = dsInfo:getConnInfo()
+			local fromType = dsInfo:getType()
 
 			if not toSetName then
-				newDstName = newDst:getName()
-			else
-				newDstName = toSetName
+				toSetName = toLayerName
 			end
 
-			-- Remove the DataSet if it already exists
-			local outConnInfo = dsInfo:getConnInfo()
-			local outDs = nil
-			if outType == "POSTGIS" then
-				newDstName = string.lower(newDstName)
-				outDs = makeAndOpenDataSource(outConnInfo, outType)
-			elseif outType == "OGR" then
-				local file = File(outConnInfo:host()..outConnInfo:path())
-				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
-				outConnInfo = createFileConnInfo(outDir..newDstName..".shp")
+			if fromType == "POSTGIS" then
+				toSetName = string.lower(toSetName)
+			elseif not (fromType == "OGR") then
+				customError("Save '"..toSetName.."' does not support '"..toType.."' type.")
+			end
 
-				if fromLayerName == toName then
-					outDs = ds
-				else
-					outDs = makeAndOpenDataSource(outConnInfo, outType)
+			if not attrs then
+				attrs =  {}
+			end
+
+			if (dseName == toSetName) or (toLayerName == fromLayerName) then
+				if #attrs > 0 then
+					if hasNewAttributeOnLayer(fromLayer, attrs) then
+						createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
+					else
+						updateDataSet(fromLayer, toSet, attrs)
+					end
 				end
-			end
+			else
+				createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 
-			local overwrite = false
-			if outDs:dataSetExists(newDstName) then
-				outDs:dropDataSet(newDstName)
-				overwrite = true
-			end
+				local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
+				local toLayer = createLayer(toLayerName, toSetName, toConnInfo, fromType)
 
-			-- Save the new DataSet into the from DataSource
-			outDs:createDataSet(newDst)
-			newDse:moveBeforeFirst()
-			outDs:add(newDstName, newDse)
-
-			-- Create the new Layer
-			if not overwrite then
-				local outLayer = createLayer(toName, newDstName, outConnInfo, outType)
-				project.layers[toName] = outLayer
+				project.layers[toLayerName] = toLayer
 				saveProject(project, project.layers)
 			end
 
 			releaseProject(project)
-
-			ds:close()
-			dst:clear()
-			newDst:clear()
-			newDse:clear()
-			outDs:close()
 		end
 
 		collectgarbage("collect")
@@ -2034,7 +2184,7 @@ TerraLib_ = {
 
 			local fromDSetType = fromDs:getDataSetType(fromDSetName)
 			local fromDSet = fromDs:getDataSet(fromDSetName)
-			local converter = binding.te.da.DataSetTypeConverter(fromDSetType, toDs:getCapabilities(), toDs:getEncoding())
+			local converter = binding.te.da.DataSetTypeConverter(fromDSetType, fromDs:getCapabilities(), toDs:getEncoding())
 
 			local srid
 			if toData.srid then
@@ -2050,12 +2200,33 @@ TerraLib_ = {
 
 			binding.AssociateDataSetTypeConverterSRID(converter, srid)
 			local dstResult = converter:getResult()
+			dstResult:setName(fromDSetType:getName())
 
-			if dstResult:getProperty("FID") then
-				dstResult:remove("FID")
+			-- TODO(avancinirodrigo): why POSTGIS does not work like OGR?
+			-- Fix the primary key for postgis only
+			if toType == "POSTGIS" then
+				local pk = dstResult:getPrimaryKey()
+				if pk then
+					local rand = string.gsub(binding.GetRandomicId(), "-", "")
+					rand = string.sub(rand, 1, 8)
+					pk:setName("pk"..rand)
+
+					-- local pkIdx = pk:getAssociatedIndex() TODO(#1678)
+					-- if pkIdx then
+						-- pkIdx:setName("idx"..rand)
+					-- else
+						-- local gp = binding.GetFirstGeomProperty(dstResult)
+						-- if gp then
+							-- local idx = binding.te.da.Index(dstResult)
+							-- idx:setName("idx"..rand)
+							-- idx:setIndexType(binding.R_TREE_TYPE)
+							-- idx:add(gp:clone())
+							-- pk:setAssociatedIndex(idx)
+						-- end
+					-- end
+				end
 			end
 
-			dstResult:setName(fromDSetType:getName())
 			local dsetAdapted = binding.CreateAdapter(fromDSet, converter)
 
 		  -- // TODO(avancinirodrigo): Check properties names
