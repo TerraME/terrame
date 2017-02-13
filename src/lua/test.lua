@@ -823,6 +823,7 @@ function _Gtme.executeTests(package, fileName)
 					-- loadfile is necessary to avoid any global variable from one
 					-- example to affect another example
 
+					_Gtme.loadTmeFile(baseDir.."examples"..s..value..".lua")
 					local result, err = loadfile(baseDir.."examples"..s..value..".lua", 't', env)
 
 					if not result then

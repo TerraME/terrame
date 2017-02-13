@@ -206,8 +206,7 @@
 									<%local link = luadoc.link("files/data.html", from).."#"..data.file[1]%>
 									<td class="name"><a href="<%=link%>"><b><%=data.file[1] or ""%></b></a></td>
   
-									<td class="summary"><%=luadoc.link_description(data.shortsummary or "", doc, 
-										module_doc, file_doc, from, true, "summary", doc_report)%></td>
+									<td class="summary"><%=data.shortsummary or ""%></td>
 								</tr>
 							<%end%>
 						<!--</table>-->

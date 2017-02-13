@@ -1,33 +1,47 @@
 Creating projects for package 'terralib'
 Removing output files
+Removing 'data/amazonia-postgis.tview'
 Removing 'data/amazonia.tview'
 Removing 'data/cabecadeboi.tview'
 Removing 'data/emas.tview'
-Removing 'data/fillCellExample.tview'
 Removing 'data/itaituba.tview'
 Checking if data does not contain any .tview file
+Processing 'data/amazonia-postgis.lua'
+Creating 'data/amazonia-postgis.tview'
+File 'amazonia-postgis.tview' was successfully created
 Processing 'data/amazonia.lua'
 Creating 'data/amazonia.tview'
 Creating 'data/amazonia.shp'
+Executing operation 'coverage' using layer 'prodes'
+Executing operation 'distance' using layer 'roads'
+Executing operation 'distance' using layer 'ports'
+Executing operation 'area' using layer 'protected'
 File 'amazonia.tview' was successfully created
 Processing 'data/cabecadeboi.lua'
 Creating 'data/cabecadeboi.tview'
 Creating 'data/cabecadeboi.shp'
+Executing operation 'average' using layer 'elevation'
 File 'cabecadeboi.tview' was successfully created
 Processing 'data/emas.lua'
 Creating 'data/emas.tview'
 Creating 'data/emas.shp'
+Executing operation 'presence' using layer 'firebreak'
+Executing operation 'presence' using layer 'river'
+Executing operation 'maximum' using layer 'cover'
+Executing operation 'minimum' using layer 'cover'
 File 'emas.tview' was successfully created
-Processing 'data/fillCellExample.lua'
-Creating 'data/fillCellExample.tview'
-File 'fillCellExample.tview' was successfully created
 Processing 'data/itaituba.lua'
 Creating 'data/itaituba.tview'
 Creating 'data/itaituba.shp'
+Executing operation 'average' using layer 'elevation'
+Executing operation 'coverage' using layer 'deforestation'
+Executing operation 'distance' using layer 'roads'
+Executing operation 'distance' using layer 'localities'
+Executing operation 'sum' (weighted by area)  using layer 'census'
 File 'itaituba.tview' was successfully created
 
 Projects report for package 'terralib':
-Projects were created in 61.28 seconds.
+Projects were created in 147.72 seconds.
 5 project files were created.
 No invalid .tview file was found in the package.
 No error was found while creating projects.

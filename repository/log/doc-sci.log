@@ -5,6 +5,7 @@ Package 'sci' has no fonts
 Parsing lua files
 Parsing lua/Spline.lua
 Parsing examples
+Parsing examples/PredatorPreyFord.lua
 Parsing examples/SimpleSpline.lua
 Checking undocumented files
 Checking @usage definition
@@ -32,7 +33,7 @@ Checking Spline.lua
 Checking if all Models are documented
 
 Documentation report for package 'sci':
-Documentation was built in 0.34 seconds.
+Documentation was built in 0.42 seconds.
 3 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -57,5 +58,5 @@ All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
-All 1 examples are correctly documented.
+All 2 examples are correctly documented.
 Summing up, all the documentation was successfully built.

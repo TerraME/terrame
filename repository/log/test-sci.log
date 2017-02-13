@@ -1,4 +1,4 @@
-Using log directory '/Applications/terrame.app/Contents/MacOS/packages/sci/log/mac/'
+Using log directory '/Users/pedro/github/terrame-pedro/repository/sci/log/'
 Loading package 'sci'
 Looking for overwritten variables
 Looking for documented functions
@@ -12,11 +12,12 @@ Checking if functions from source code were tested
 Checking Spline.lua
 Skipping lines of source code check
 Testing examples
+Testing PredatorPreyFord
 Testing SimpleSpline
 Skipping logs check
 
 Functional test report for package 'sci':
-Tests were executed in 1.19 seconds.
+Tests were executed in 0.92 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -31,6 +32,6 @@ No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
 All 2 functions of the package were tested.
 No lines from the source code were verified.
-All 1 examples were successfully executed.
+All 2 examples were successfully executed.
 No log test was executed.
 Summing up, all tests were successfully executed.

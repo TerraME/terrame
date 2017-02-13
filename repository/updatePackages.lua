@@ -2,12 +2,13 @@
 -- Copy the packages to be updated to this directory and run
 -- 'terrame -color updatePackages.lua'
 
----------------------------------------------------------------
+-----------------------------------------------------------------------
 local host = "ssh.dpi.inpe.br:"
 local doc = "/home/www/terrame/packages/doc"
-local repository = "/home/www/terrame/packages/2.0.0-beta-5"
----------------------------------------------------------------
+local repository = "/home/www/terrame/packages/"..sessionInfo().version
+-----------------------------------------------------------------------
 
+_Gtme.printNote("Updating packages for version "..sessionInfo().version)
 _Gtme.printNote("Finding packages to be uploaded")
 local newPackages = {}
 
@@ -30,6 +31,9 @@ forEachFile(".", function(file)
 	newPackages[package] = version
 end)
 
+_Gtme.print("Creating projects for terralib")
+runCommand("terrame -package terralib -projects")
+
 _Gtme.printNote("Running documentation and tests")
 
 forEachDirectory(".", function(dir)
@@ -44,6 +48,9 @@ forEachDirectory(".", function(dir)
 		os.execute("mv "..pkgPath.." "..pkgPath.."-bkp")
 		rollback = true
 	end
+
+	_Gtme.print("Creating projects for "..package)
+	runCommand("terrame -package "..package.." -projects")
 
 	_Gtme.print("Documenting '"..package.."'")
     local command = "terrame -package "..package.." -doc > log/doc-"..package..".log"

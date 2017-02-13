@@ -136,6 +136,7 @@ local function approximateLine(line)
 	if string.match(line, "Checking")            then return   8 end
 	if string.match(line, "Testing")             then return  34 end
 	if string.match(line, "Skipping")            then return  34 end
+	if string.match(line, "Creating")            then return 120 end
 	if string.match(line, "Building")            then return   8 end
 	if string.match(line, "should contain only") then return   1 end
 
@@ -151,18 +152,14 @@ forEachOrderedElement(commands, function(idx, group)
 		directories.log[idx.."-"..name..".log"] = true
 
 		if sessionInfo().system == "mac" then
-			if idx == "project" then
-				if name == "errorprojects" or name == "runprojects" then
+			if idx == "observer" then
+				if belong(name, {"chart", "clock", "map", "textscreen", "visualtable"}) then
+					directories.scripts[args.script] = true
 					_Gtme.printWarning("Skipping "..name)
 					return
 				end
-			elseif idx == "sketch" then
-				if name == "terralib" then
-					_Gtme.printWarning("Skipping "..name)
-					return
-				end
-			elseif idx == "observer" then
-				if belong(name, {"clock", "textscreen", "visualtable"}) then
+			elseif idx == "package" then
+				if belong(name, {"install"}) then
 					directories.scripts[args.script] = true
 					_Gtme.printWarning("Skipping "..name)
 					return
@@ -350,12 +347,7 @@ forEachOrderedElement(commands, function(idx, group)
 		command = "terrame"
 
 		if sessionInfo().system == "mac" then
-			if idx == "project" then
-				if name == "errorprojects" or name == "runprojects" then
-					_Gtme.printWarning("Skipping "..name)
-					return
-				end
-			elseif idx == "sketch" then
+			if idx == "sketch" then
 				if name == "terralib" then
 					_Gtme.printWarning("Skipping "..name)
 					return
@@ -363,7 +355,7 @@ forEachOrderedElement(commands, function(idx, group)
 			end
 		end
 
-		if args.package and args.package ~= "memory" then
+		if args.package and not belong(args.package, {"terralib", "memory"}) then
 			command = command.." -package "..args.package
 		else
 			return

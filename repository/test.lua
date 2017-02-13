@@ -38,7 +38,7 @@ local report = {
 	locallogerrors = 0
 }
 
-_Gtme.printNote("Downloading packages from www.terrame.org/packages")
+_Gtme.printNote("Downloading packages from www.terrame.org/packages/"..sessionInfo().version)
 forEachOrderedElement(pkgs, function(_, data)
 	report.packages = report.packages + 1
 	pkgfile = data.package.."_"..data.version..".zip"
@@ -57,6 +57,15 @@ forEachOrderedElement(pkgs, function(_, data)
 	pkgfile = data.package.."_"..data.version..".zip"
 	local result = _Gtme.installPackage(pkgfile)
 end)
+
+_Gtme.printNote("Creating projects")
+forEachOrderedElement(pkgs, function(_, data)
+	_Gtme.print("Creating projects for "..pkgname)
+	runCommand("terrame -package "..pkgname.." -projects")
+end)
+
+_Gtme.print("Creating projects for terralib")
+runCommand("terrame -package terralib -projects")
 
 local function approximateLine(line)
 	if not line then return 0 end

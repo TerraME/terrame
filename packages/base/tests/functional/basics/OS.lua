@@ -42,7 +42,7 @@ return{
 	end,
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)
-		unitTest:assertEquals(#d, 29) -- 29 files
+		unitTest:assertEquals(#d, 33) -- 33 files
 		unitTest:assertEquals(#e, 0)
 	end,
 	sessionInfo = function(unitTest)

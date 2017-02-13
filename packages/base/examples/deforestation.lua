@@ -45,9 +45,9 @@ local function calculatePotRegression(cs)
 		cell.pot = 0
 
 		if cell.defor < 1.0 then
-			expected =  - 0.150 * math.log(cell.dist_rodovias)
-			            - 0.048 * cell.area_indigena
-			            - 0.060 * math.log(cell.dist_portos)
+			expected =  - 0.150 * math.log(cell.distroads)
+			            - 0.048 * cell.protected
+			            - 0.060 * math.log(cell.distports)
 			            + 2.7
 
 			if expected > cell.defor then
@@ -86,9 +86,9 @@ local function calculatePotMixed(cs)
 		-- Potential for change
 		if cell.defor < 1.0 then
 			expected =    1.056 * cell.ave_neigh
-						- 0.035 * math.log(cell.dist_rodovias)
-						+ 0.018 * math.log(cell.dist_portos)
-						- 0.051 * cell.area_indigena
+						- 0.035 * math.log(cell.distroads)
+						+ 0.018 * math.log(cell.distports)
+						- 0.051 * cell.protected
 						+ 0.059
 
 			if expected > cell.defor then
@@ -103,9 +103,9 @@ end
 
 Amazonia = Model{
 	finalTime = 2040,
-	allocation = 30000,
-	area = 10000,
-	limit = 30,
+	allocation = 10000, -- km^2
+	area = 50 * 50, -- km^2
+	limit = 30, -- km^2
 	potential = Choice{"neighborhood", "regression", "mixed"},
 	init = function(model)
 		if model.potential == "neighborhood" then
@@ -116,14 +116,17 @@ Amazonia = Model{
 			model.potential = calculatePotMixed
 		end
 
+		model.cell = Cell{
+			init = function(cell)
+				cell.defor = cell.defor / 100
+			end
+		}
+
 		model.amazonia = CellularSpace{
 			file = filePath("amazonia.shp"),
-			xy = {"Col", "Lin"},
+			instance = model.cell,
 			as = {
-				defor = "defor_10",
-				area_indigena = "areadigena",
-				dist_portos = "distportos",
-				dist_rodovias = "distdovias"
+				defor = "prodes_10"
 			}
 		}
 
@@ -144,8 +147,9 @@ Amazonia = Model{
 			-- the maximum demand for change is 100%
 			-- adjust the demand so that excess demand is
 			-- allocated to the remaining cells
-			-- there is an error limit (30 km2 or 0.1%)
+			-- there is an error limit (30 km2 as default)
 			local total_demand = model.allocation
+
 			while total_demand > model.limit do
 				forEachCell(cs, function(cell)
 					newarea = (cell.pot / total_pot) * total_demand

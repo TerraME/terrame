@@ -274,6 +274,7 @@ local function getFunctionNeighborhood(cs, data)
 				neighborhood:add(neighCell, data.weight(cell, neighCell))
 			end
 		end)
+
 		return neighborhood
 	end
 end
@@ -311,6 +312,7 @@ local function getMooreNeighborhood(cs, data)
 				neigh:add(index, weight)
 			end
 		end
+
 		return neigh
 	end
 end
@@ -341,6 +343,7 @@ local function getMxNNeighborhood(_, data)
 				end
 			end
 		end
+
 		return neighborhood
 	end
 end
@@ -457,10 +460,10 @@ local function checkProject(self)
 end
 
 local function loadCsv(self)
-	if self.yMin == nil then self.yMin = 100000 end
-	if self.xMin == nil then self.xMin = 100000 end
-	if self.xMax == nil then self.xMax = -self.xMin end
-	if self.yMax == nil then self.yMax = -self.yMin end
+	self.yMin = math.huge
+	self.xMin = math.huge
+	self.xMax = -math.huge
+	self.yMax = -math.huge
 
 	self.cells = {}
 	self.cObj_:clear()
@@ -474,6 +477,7 @@ local function loadCsv(self)
 		self:add(cell)
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 	end
+
 	return
 end
 
@@ -481,10 +485,10 @@ local function loadPGM(self)
 	local i = 0
 	local j = 0
 
-	if self.yMin == nil then self.yMin = 100000 end
-	if self.xMin == nil then self.xMin = 100000 end
-	if self.xMax == nil then self.xMax = -self.xMin end
-	if self.yMax == nil then self.yMax = -self.yMin end
+	self.yMin = math.huge
+	self.xMin = math.huge
+	self.xMax = -math.huge
+	self.yMax = -math.huge
 
 	self.cells = {}
 	self.cObj_:clear()
@@ -585,9 +589,9 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		end
 
 		self.xMin = math.min(self.xMin, col)
-		self.xMax = math.max(self.xMax, row)
+		self.xMax = math.max(self.xMax, col)
 		self.yMin = math.min(self.yMin, row)
-		self.yMax = math.max(self.yMax, col)
+		self.yMax = math.max(self.yMax, row)
 	end
 
 	local tlib = terralib.TerraLib{}
@@ -604,7 +608,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		end
 
 		if self.zero == "bottom" then
-			row = self.xMax - row + self.xMin -- bottom inverts row
+			row = self.yMax - row + self.yMin -- bottom inverts row
 		end
 
 		local cell = Cell{id = tostring(i), x = col, y = row}
@@ -647,8 +651,8 @@ end
 local function loadVirtual(self)
 	self.yMin = 0
 	self.xMin = 0
-	self.xMax = self.ydim - 1
-	self.yMax = self.xdim - 1
+	self.xMax = self.xdim - 1
+	self.yMax = self.ydim - 1
 
 	self.cells = {}
 	self.cObj_:clear()
@@ -1160,8 +1164,9 @@ CellularSpace_ = {
 	-- "*.gpm" & Load a Neighborhood from a GPM (generalized proximity matrix) file. \
 	-- Any other & Load a Neighborhood from table stored in the same database of the
 	-- CellularSpace. \
-	-- @usage cs = CellularSpace{
-	--     file = filePath("cabecadeboi900.shp", "base")
+	-- @usage -- DONTRUN
+	-- cs = CellularSpace{
+	--     file = filePath("cabecadeboi800.shp", "base")
 	-- }
 	--
 	-- cs:loadNeighborhood{source = filePath("cabecadeboi-neigh.gpm", "base")}
@@ -1520,7 +1525,9 @@ metaTableCellularSpace_ = {
 -- @arg data.zero A string value describing where the zero in the y axis starts. The
 -- default value is "bottom". When one uses argument xy, the
 -- default value is "top", which is the most common representation in different data
--- formats.
+-- formats. When zero is "bottom", the y values of each cell is inverted according to
+-- the maximum and minimum values: newy = y maximum - y + y minimum. All cellular data
+-- created using package terralib will have their y values inverted.
 -- @arg data.xy An optional table with two strings describing the names of the
 -- column and row attributes, in this order. The default value is {"col", "row"},
 -- representing the attribute names created by TerraLib for CellularSpaces. A Map
@@ -1584,8 +1591,7 @@ metaTableCellularSpace_ = {
 -- }
 --
 -- cabecadeboi = CellularSpace{
---     file = filePath("cabecadeboi.shp"),
---     as = {height = "height_"}
+--     file = filePath("cabecadeboi.shp")
 -- }
 function CellularSpace(data)
 	verifyNamedTable(data)
@@ -1758,6 +1764,27 @@ function CellularSpace(data)
 
 	data:load()
 
+	if data.as then
+		forEachElement(data.as, function(idx, value)
+			if data.cells[1][idx] then
+				customError("Cannot rename '"..value.."' to '"..idx.."' as it already exists.")
+			elseif not data.cells[1][value] then
+				customError("Cannot rename attribute '"..value.."' as it does not exist.")
+			end
+		end)
+
+		local s = "return function(cell)\n"
+
+		forEachElement(data.as, function(idx, value)
+			s = s.."cell."..idx.." = cell."..value.."\n"
+			s = s.."cell."..value.." = nil\n"
+		end)
+
+		s = s.."end"
+
+		forEachCell(data, load(s)())
+	end
+
 	if data.instance ~= nil then
 		mandatoryTableArgument(data, "instance", "Cell")
 
@@ -1819,27 +1846,6 @@ function CellularSpace(data)
 		forEachCell(data, function(cell)
 			setmetatable(cell, metaTableInstance)
 		end)
-	end
-
-	if data.as then
-		forEachElement(data.as, function(idx, value)
-			if data.cells[1][idx] then
-				customError("Cannot rename '"..value.."' to '"..idx.."' as it already exists.")
-			elseif not data.cells[1][value] then
-				customError("Cannot rename attribute '"..value.."' as it does not exist.")
-			end
-		end)
-
-		local s = "return function(cell)\n"
-
-		forEachElement(data.as, function(idx, value)
-			s = s.."cell."..idx.." = cell."..value.."\n"
-			s = s.."cell."..value.." = nil\n"
-		end)
-
-		s = s.."end"
-
-		forEachCell(data, load(s)())
 	end
 
 	return data

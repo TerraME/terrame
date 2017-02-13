@@ -143,7 +143,7 @@ return{
 
 		error_func = function()
 			CellularSpace{
-				file = filePath("cabecadeboi900.shp"),
+				file = filePath("test/cabecadeboi900.shp"),
 				xy = {"Col", "Lin"},
 				as = {x = "height_2"}
 			}
@@ -152,7 +152,7 @@ return{
 
 		error_func = function()
 			CellularSpace{
-				file = filePath("cabecadeboi900.shp"),
+				file = filePath("test/cabecadeboi900.shp"),
 				xy = {"Col", "Lin"},
 				as = {
 					height = "height_2"
@@ -251,7 +251,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
-		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
+		-- unitTest:assertFile(file) -- SKIP #TODO(#1242)
 		file:deleteIfExists()
 		tl:dropPgTable(pgData)
 
@@ -337,7 +337,7 @@ return{
 		unitTest:assertError(error_func, "Could not read file '"..mfile.."': invalid header.")
 
 		local cs3 = CellularSpace{
-			file = filePath("cabecadeboi900.shp", "base"),
+			file = filePath("test/cabecadeboi900.shp", "base"),
 			xy = {"Col", "Lin"},
 		}
 
@@ -473,7 +473,7 @@ return{
 		end
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
 
-		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
+		-- unitTest:assertFile(projName) -- SKIP #TODO(#1242)
 		projName:deleteIfExists()
 		tl:dropPgTable(pgData)
 	end

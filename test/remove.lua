@@ -3,10 +3,6 @@ local mdir = sessionInfo().initialDir
 local so = sessionInfo().system
 
 files = {
-	packageInfo("terralib").path.."data/itaituba.qix",
-	packageInfo("terralib").path.."data/amazonia.qix",
-	packageInfo("terralib").path.."data/cabecadeboi.qix",
-	packageInfo("terralib").path.."data/emas.qix",
 	mdir.."packages/onerror/log/chart_cell.bmp",
 	mdir.."packages/twoerrors/log/discrete-rain.log",
 	mdir.."packages/twoerrors/log/chart_cell_select.bmp",

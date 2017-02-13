@@ -45,7 +45,7 @@ return{
 		proj = Project{
 			file = projFile:name(true),
 			clean = true,
-			deforestation = filePath("Desmatamento_2000.tif", "terralib"),
+			deforestation = filePath("itaituba-deforestation.tif", "terralib"),
 		}
 
 		local layerName = "any"
@@ -66,7 +66,6 @@ return{
 		end
 		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
 
-		--unitTest:assertFile(projFile:name(true)) -- SKIP #TODO(#1242)
 		projFile:deleteIfExists()
 
 		local projName = "amazonia2.tview"
@@ -408,7 +407,7 @@ return{
 		Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("itaituba-census.shp", "terralib")
 		}
 
 		local clName1 = "setores_cells2"
@@ -644,7 +643,7 @@ return{
 				select = selected
 			}
 		end
-		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'Populacao'?")
+		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'population'?")
 
 		selectNotString = function()
 			cl:fill{
@@ -914,7 +913,7 @@ return{
 		Layer{
 			project = proj,
 			name = localidades,
-			file = filePath("Localidades_pt.shp", "terralib")
+			file = filePath("itaituba-localities.shp", "terralib")
 		}
 
 		local cW = customWarning
@@ -942,7 +941,7 @@ return{
 		Layer{
 			project = proj,
 			name = layerName3,
-			file = filePath("Desmatamento_2000.tif", "terralib")
+			file = filePath("itaituba-deforestation.tif", "terralib")
 		}
 
 		local areaUnnecessary = function()

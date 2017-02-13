@@ -2,75 +2,31 @@ Verifying test files
 Ignoring tests because internal directories were found in the tests
 Verifying data files
 Directory 'test' will be ignored
-File 'Altimetria.xml' is already documented in 'data.lua'
-File 'BCIM_Trecho_RodoviarioLine_PA_polyc_lin.dbf' does not need to be documented
-File 'BCIM_Trecho_RodoviarioLine_PA_polyc_lin.prj' does not need to be documented
-File 'BCIM_Trecho_RodoviarioLine_PA_polyc_lin.qix' does not need to be documented
-File 'BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp' is already documented in 'data.lua'
-File 'BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shx' does not need to be documented
-File 'BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.dbf' does not need to be documented
-File 'BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.prj' does not need to be documented
-File 'BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.qix' does not need to be documented
-File 'BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp' is already documented in 'data.lua'
-File 'BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shx' does not need to be documented
-File 'Desmatamento_2000.tif' is already documented in 'data.lua'
-File 'Desmatamento_2000.xml' is already documented in 'data.lua'
-File 'LIMITE_AMZ_pol.dbf' does not need to be documented
-File 'LIMITE_AMZ_pol.prj' does not need to be documented
-File 'LIMITE_AMZ_pol.qix' does not need to be documented
-File 'LIMITE_AMZ_pol.shp' is already documented in 'data.lua'
-File 'LIMITE_AMZ_pol.shx' does not need to be documented
-File 'Limit_pol.dbf' does not need to be documented
-File 'Limit_pol.prj' does not need to be documented
-File 'Limit_pol.qix' does not need to be documented
-File 'Limit_pol.shp' is already documented in 'data.lua'
-File 'Limit_pol.shx' does not need to be documented
-File 'Localidades_props.txt' is already documented in 'data.lua'
-File 'Localidades_pt.dbf' does not need to be documented
-File 'Localidades_pt.geojson' is already documented in 'data.lua'
-File 'Localidades_pt.prj' does not need to be documented
-File 'Localidades_pt.qix' does not need to be documented
-File 'Localidades_pt.shp' is already documented in 'data.lua'
-File 'Localidades_pt.shx' does not need to be documented
-File 'PORTOS_AMZ_pt.dbf' does not need to be documented
-File 'PORTOS_AMZ_pt.prj' does not need to be documented
-File 'PORTOS_AMZ_pt.qix' does not need to be documented
-File 'PORTOS_AMZ_pt.shp' is already documented in 'data.lua'
-File 'PORTOS_AMZ_pt.shx' does not need to be documented
-File 'PRODES_5KM.jgw' is already documented in 'data.lua'
-File 'PRODES_5KM.tif' is already documented in 'data.lua'
-File 'PRODES_5KM.xml' is already documented in 'data.lua'
-File 'RODOVIAS_AMZ_lin.dbf' does not need to be documented
-File 'RODOVIAS_AMZ_lin.prj' does not need to be documented
-File 'RODOVIAS_AMZ_lin.qix' does not need to be documented
-File 'RODOVIAS_AMZ_lin.shp' is already documented in 'data.lua'
-File 'RODOVIAS_AMZ_lin.shx' does not need to be documented
-File 'River_lin.dbf' does not need to be documented
-File 'River_lin.prj' does not need to be documented
-File 'River_lin.qix' does not need to be documented
-File 'River_lin.shp' is already documented in 'data.lua'
-File 'River_lin.shx' does not need to be documented
-File 'Rodovias_lin.dbf' does not need to be documented
-File 'Rodovias_lin.prj' does not need to be documented
-File 'Rodovias_lin.qix' does not need to be documented
-File 'Rodovias_lin.shp' is already documented in 'data.lua'
-File 'Rodovias_lin.shx' does not need to be documented
-File 'Rodovias_props.txt' is already documented in 'data.lua'
-File 'Setores_Censitarios_2000_pol.dbf' does not need to be documented
-File 'Setores_Censitarios_2000_pol.prj' does not need to be documented
-File 'Setores_Censitarios_2000_pol.qix' does not need to be documented
-File 'Setores_Censitarios_2000_pol.shp' is already documented in 'data.lua'
-File 'Setores_Censitarios_2000_pol.shx' does not need to be documented
-File 'Setores_Censitarios_2000_props.txt' is already documented in 'data.lua'
-File 'TI_AMZ_pol.dbf' does not need to be documented
-File 'TI_AMZ_pol.prj' does not need to be documented
-File 'TI_AMZ_pol.qix' does not need to be documented
-File 'TI_AMZ_pol.shp' is already documented in 'data.lua'
-File 'TI_AMZ_pol.shx' does not need to be documented
-File 'accumulation_Nov94May00.tif' is already documented in 'data.lua'
-File 'accumulation_Nov94May00.tif.aux.xml' is already documented in 'data.lua'
-File 'accumulation_Nov94May00.xml' is already documented in 'data.lua'
-File 'altimetria.tif' is already documented in 'data.lua'
+File 'amazonia-indigenous.dbf' does not need to be documented
+File 'amazonia-indigenous.prj' does not need to be documented
+File 'amazonia-indigenous.qix' does not need to be documented
+File 'amazonia-indigenous.shp' is already documented in 'data.lua'
+File 'amazonia-indigenous.shx' does not need to be documented
+File 'amazonia-limit.dbf' does not need to be documented
+File 'amazonia-limit.prj' does not need to be documented
+File 'amazonia-limit.qix' does not need to be documented
+File 'amazonia-limit.shp' is already documented in 'data.lua'
+File 'amazonia-limit.shx' does not need to be documented
+File 'amazonia-ports.dbf' does not need to be documented
+File 'amazonia-ports.prj' does not need to be documented
+File 'amazonia-ports.qix' does not need to be documented
+File 'amazonia-ports.shp' is already documented in 'data.lua'
+File 'amazonia-ports.shx' does not need to be documented
+File 'amazonia-postgis.lua' does not need to be documented
+Project file 'amazonia-postgis.tview' does not need to be documented (a Lua file creates it)
+File 'amazonia-prodes.jgw' is already documented in 'data.lua'
+File 'amazonia-prodes.tif' is already documented in 'data.lua'
+File 'amazonia-prodes.xml' is already documented in 'data.lua'
+File 'amazonia-roads.dbf' does not need to be documented
+File 'amazonia-roads.prj' does not need to be documented
+File 'amazonia-roads.qix' does not need to be documented
+File 'amazonia-roads.shp' is already documented in 'data.lua'
+File 'amazonia-roads.shx' does not need to be documented
 File 'amazonia.dbf' does not need to be documented
 File 'amazonia.lua' does not need to be documented
 File 'amazonia.prj' does not need to be documented
@@ -78,18 +34,36 @@ File 'amazonia.shp' does not need to be documented (a Lua file creates it)
 File 'amazonia.shx' does not need to be documented
 File 'amazonia.tme' does not need to be documented
 Project file 'amazonia.tview' does not need to be documented (a Lua file creates it)
+File 'cabecadeboi-box.dbf' does not need to be documented
+File 'cabecadeboi-box.qix' does not need to be documented
+File 'cabecadeboi-box.shp' is already documented in 'data.lua'
+File 'cabecadeboi-box.shx' does not need to be documented
+File 'cabecadeboi-elevation.tif' is already documented in 'data.lua'
+File 'cabecadeboi-elevation.xml' is already documented in 'data.lua'
 File 'cabecadeboi.dbf' does not need to be documented
 File 'cabecadeboi.lua' does not need to be documented
+File 'cabecadeboi.prj' does not need to be documented
 File 'cabecadeboi.shp' does not need to be documented (a Lua file creates it)
 File 'cabecadeboi.shx' does not need to be documented
 File 'cabecadeboi.tme' does not need to be documented
 Project file 'cabecadeboi.tview' does not need to be documented (a Lua file creates it)
-File 'elevation.tif' is already documented in 'data.lua'
-File 'elevation.xml' is already documented in 'data.lua'
-File 'elevation_box.dbf' does not need to be documented
-File 'elevation_box.qix' does not need to be documented
-File 'elevation_box.shp' is already documented in 'data.lua'
-File 'elevation_box.shx' does not need to be documented
+File 'emas-accumulation.tif' is already documented in 'data.lua'
+File 'emas-accumulation.xml' is already documented in 'data.lua'
+File 'emas-firebreak.dbf' does not need to be documented
+File 'emas-firebreak.prj' does not need to be documented
+File 'emas-firebreak.qix' does not need to be documented
+File 'emas-firebreak.shp' is already documented in 'data.lua'
+File 'emas-firebreak.shx' does not need to be documented
+File 'emas-limit.dbf' does not need to be documented
+File 'emas-limit.prj' does not need to be documented
+File 'emas-limit.qix' does not need to be documented
+File 'emas-limit.shp' is already documented in 'data.lua'
+File 'emas-limit.shx' does not need to be documented
+File 'emas-river.dbf' does not need to be documented
+File 'emas-river.prj' does not need to be documented
+File 'emas-river.qix' does not need to be documented
+File 'emas-river.shp' is already documented in 'data.lua'
+File 'emas-river.shx' does not need to be documented
 File 'emas.dbf' does not need to be documented
 File 'emas.lua' does not need to be documented
 File 'emas.prj' does not need to be documented
@@ -97,13 +71,25 @@ File 'emas.shp' does not need to be documented (a Lua file creates it)
 File 'emas.shx' does not need to be documented
 File 'emas.tme' does not need to be documented
 Project file 'emas.tview' does not need to be documented (a Lua file creates it)
-File 'fillCellExample.lua' does not need to be documented
-Project file 'fillCellExample.tview' does not need to be documented (a Lua file creates it)
-File 'firebreak_lin.dbf' does not need to be documented
-File 'firebreak_lin.prj' does not need to be documented
-File 'firebreak_lin.qix' does not need to be documented
-File 'firebreak_lin.shp' is already documented in 'data.lua'
-File 'firebreak_lin.shx' does not need to be documented
+File 'itaituba-census.dbf' does not need to be documented
+File 'itaituba-census.prj' does not need to be documented
+File 'itaituba-census.qix' does not need to be documented
+File 'itaituba-census.shp' is already documented in 'data.lua'
+File 'itaituba-census.shx' does not need to be documented
+File 'itaituba-deforestation.tif' is already documented in 'data.lua'
+File 'itaituba-deforestation.xml' is already documented in 'data.lua'
+File 'itaituba-elevation.tif' is already documented in 'data.lua'
+File 'itaituba-elevation.xml' is already documented in 'data.lua'
+File 'itaituba-localities.dbf' does not need to be documented
+File 'itaituba-localities.prj' does not need to be documented
+File 'itaituba-localities.qix' does not need to be documented
+File 'itaituba-localities.shp' is already documented in 'data.lua'
+File 'itaituba-localities.shx' does not need to be documented
+File 'itaituba-roads.dbf' does not need to be documented
+File 'itaituba-roads.prj' does not need to be documented
+File 'itaituba-roads.qix' does not need to be documented
+File 'itaituba-roads.shp' is already documented in 'data.lua'
+File 'itaituba-roads.shx' does not need to be documented
 File 'itaituba.dbf' does not need to be documented
 File 'itaituba.lua' does not need to be documented
 File 'itaituba.prj' does not need to be documented

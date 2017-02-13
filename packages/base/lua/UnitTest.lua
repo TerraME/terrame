@@ -243,7 +243,7 @@ UnitTest_ = {
 	end,
 	--- Check if a given file exists and remove it. Repeating: The file is removed when calling
 	-- this assert. If the file is a directory or does not exist then it shows an error.
-	-- @arg fname A string with a file name.
+	-- @arg fname A File or a string with the file name.
 	-- @arg tol An optional number indicating a maximum number of characters that can be different.
 	-- The tolerance is applied to each line of the files. The default tolerance is zero.
 	-- @usage -- DONTRUN
@@ -255,14 +255,16 @@ UnitTest_ = {
 
 		self.test = self.test + 1
 
-		mandatoryArgument(1, "string", fname)
+		if type(fname) == "string" then
+			fname = File(fname)
+		end
+
+		mandatoryArgument(1, "File", fname)
 		mandatoryArgument(2, "number", tol)
 
-		if isDirectory(fname) then
-			self.fail = self.fail + 1
-			self:printError("It is not possible to use a directory as #1 for assertFile().")
-			return
-		elseif not File(fname):exists() then
+		fname = fname:name()
+
+		if not File(fname):exists() then
 			self.fail = self.fail + 1
 			self:printError(resourceNotFoundMsg(1, fname))
 			return

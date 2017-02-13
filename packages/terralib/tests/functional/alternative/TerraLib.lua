@@ -54,7 +54,7 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName1 = "PA"
-		local layerFile1 = filePath("Localidades_pt.shp", "terralib")
+		local layerFile1 = filePath("itaituba-localities.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		local dSet = tl:getDataSet(proj, layerName1)

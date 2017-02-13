@@ -60,7 +60,6 @@ return {
 		unitTest:assertEquals(proj1.author, proj3clean.author)
 		unitTest:assertEquals(proj1.title, proj3clean.title)
 		unitTest:assertEquals(proj3clean.file, File("amazonia.tview"))
-		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
 		file:deleteIfExists()
 
@@ -87,10 +86,10 @@ return {
 			clean = true,
 			author = "Almeida, R.",
 			title = "Emas database",
-			firebreak = filePath("firebreak_lin.shp", "terralib"),
-			cover = filePath("accumulation_Nov94May00.tif", "terralib"),
-			river = filePath("River_lin.shp", "terralib"),
-			limit = filePath("Limit_pol.shp", "terralib")
+			firebreak = filePath("emas-firebreak.shp", "terralib"),
+			cover = filePath("emas-accumulation.tif", "terralib"),
+			river = filePath("emas-river.shp", "terralib"),
+			limit = filePath("emas-limit.shp", "terralib")
 		}
 
 		unitTest:assertType(proj5.firebreak, "Layer")
@@ -98,7 +97,6 @@ return {
 
 		unitTest:assertType(proj5.river, "Layer")
 		unitTest:assertType(proj5.limit, "Layer")
-		-- unitTest:assertFile(file:name(true)) -- SKIP #TODO(#1242)
 
 		file:deleteIfExists()
 	end,
@@ -119,7 +117,6 @@ terralib  TerraLib
 title     string [The Amazonia]
 ]])
 
-		-- unitTest:assertFile("tostring.tview") -- SKIP #TODO(#1242)
 		file:deleteIfExists()
 	end
 }

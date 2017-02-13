@@ -1840,8 +1840,8 @@ function Map(data)
 					end
 				end)
 
-				if data.min == nil then data.min = min end
-				if data.max == nil then data.max = max end
+				if data.min == nil then data.min = min * 0.99 end
+				if data.max == nil then data.max = max * 1.01 end
 			end
 
 			mandatoryTableArgument(data, "slices", "number")
@@ -2194,7 +2194,7 @@ function Map(data)
 		data.background.target:notify()
 		return data.background
 	else
-		local tbDimensions = {data.target.yMax - data.target.yMin + 1, data.target.xMax - data.target.xMin + 1}
+		local tbDimensions = {data.target.xMax - data.target.xMin + 1, data.target.yMax - data.target.yMin + 1}
 		idObs, obs = data.target.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.target.cells)
 	end
 

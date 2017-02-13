@@ -62,6 +62,8 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
+Processing 'file.txt'
+Processing 'myfile.tview'
 Parsing 'font.lua'
 Checking directory 'font'
 Checking licenses of fonts

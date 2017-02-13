@@ -179,11 +179,68 @@ end
 local function projButtonClicked()
 	disableAll()
 
-	local ok, res = _Gtme.execProject(comboboxProjects.currentText, comboboxPackages.currentText)
-	if not ok then
-		qt.dialog.msg_critical(res)
-	end
+	local package = comboboxPackages.currentText
+	local project = comboboxProjects.currentText
 
+	local mdialog = qt.new_qobject(qt.meta.QDialog)
+	mdialog.windowTitle = "Create Project"
+
+	local externalLayout = qt.new_qobject(qt.meta.QVBoxLayout)
+	qt.ui.layout_add(mdialog, externalLayout)
+
+	local resolutionLabel = qt.new_qobject(qt.meta.QLabel)
+	resolutionLabel.text = "Resolution:"
+
+	local resolutionEdit = qt.new_qobject(qt.meta.QLineEdit)
+	local defaultResolution = _Gtme.getResolution(package, project)
+	resolutionEdit:setText(tostring(defaultResolution))
+
+	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
+	cancelButton.text = "Cancel"
+	qt.connect(cancelButton, "clicked()", function()
+		mdialog:done(0)
+	end)
+
+	local runProjectButton = qt.new_qobject(qt.meta.QPushButton)
+	runProjectButton.text = "Run"
+	qt.connect(runProjectButton, "clicked()", function()
+		runProjectButton.enabled = false
+		cancelButton.enabled = false
+
+		local resolution = tonumber(resolutionEdit.text)
+
+		if tostring(resolution) ~= resolutionEdit.text then
+			local merr = "Error: Resolution must be a number."
+
+			qt.dialog.msg_critical(merr)
+			runProjectButton.enabled = true
+			cancelButton.enabled = true
+			return
+		end
+
+		if resolution == defaultResolution then resolution = nil end
+
+		print = _Gtme.print
+		_Gtme.executeProject(package, project, resolution)
+		print = nil
+		mdialog:done(0)
+	end)
+
+	internalLayout = qt.new_qobject(qt.meta.QHBoxLayout)
+
+	qt.ui.layout_add(internalLayout, resolutionLabel)
+	qt.ui.layout_add(internalLayout, resolutionEdit)
+
+	qt.ui.layout_add(externalLayout, internalLayout)
+
+	internalLayout = qt.new_qobject(qt.meta.QHBoxLayout)
+	qt.ui.layout_add(internalLayout, runProjectButton)
+	qt.ui.layout_add(internalLayout, cancelButton)
+
+	qt.ui.layout_add(externalLayout, internalLayout)
+
+	mdialog:show()
+	mdialog:exec()
 	enableAll()
 end
 

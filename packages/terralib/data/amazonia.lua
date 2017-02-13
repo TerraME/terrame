@@ -26,70 +26,69 @@
 
 import("terralib")
 
-project = Project{
+amazonia = Project{
 	file = "amazonia.tview",
 	clean = true,
-	author = "Andrade, P.",
 	title = "Amazonia database",
-	portos = filePath("PORTOS_AMZ_pt.shp", "terralib"),
-	roads = filePath("RODOVIAS_AMZ_lin.shp", "terralib"),
-	protected = filePath("TI_AMZ_pol.shp", "terralib"),
-	limite = filePath("LIMITE_AMZ_pol.shp", "terralib")
+	ports = filePath("amazonia-ports.shp", "terralib"),
+	roads = filePath("amazonia-roads.shp", "terralib"),
+	limit = filePath("amazonia-limit.shp", "terralib")
 }
 
-Layer{
-	project = project,
+prodes = Layer{
 	name = "prodes",
-	file = filePath("PRODES_5KM.tif", "terralib"),
-	srid = 29191
+	project = amazonia,
+	srid = 29191,
+	file = filePath("amazonia-prodes.tif", "terralib")
 }
 
-cl = Layer{
-	project = project,
+protected = Layer{
+	name = "protected",
+	project = amazonia,
+	srid = 29191,
+	file = filePath("amazonia-indigenous.shp", "terralib")
+}
+
+amazoniaCells = Layer{
+	project = amazonia,
 	file = "amazonia.shp",
 	clean = true,
-	input = "limite",
+	input = "limit",
 	name = "cells",
-	resolution = 40000
+	resolution = 50000
 }
 
-cl:fill{
-	operation = "distance",
-	layer = "roads",
-	attribute = "distroads"
-}
-
-cl:fill{
-	operation = "distance",
-	layer = "portos",
-	attribute = "distports"
-}
-
--- TODO(#815)
---[[
-cl:fill{
-	operation = "area",
-	layer = "protected",
-	attribute = "marea"
-}
---]]
-
-cl:fill{
+amazoniaCells:fill{
 	operation = "coverage",
 	layer = "prodes",
 	attribute = "prodes"
 }
 
-cl:fill{
-	operation = "average",
-	layer = "prodes",
-	input = prodes,
-	attribute = "mheight"
+amazoniaCells:fill{
+	operation = "distance",
+	layer = "roads",
+	attribute = "distroads"
+}
+
+amazoniaCells:fill{
+	operation = "distance",
+	layer = "ports",
+	attribute = "distports"
+}
+
+amazoniaCells:fill{
+	operation = "area",
+	layer = "protected",
+	attribute = "protected"
 }
 
 cs = CellularSpace{
-	project = project,
-	layer = "cells"
+	project = amazonia,
+	layer = "cells",
+	as = {
+		forest = "prodes_208",
+		deforestation = "prodes_10"
+	}
 }
 
 Map{
@@ -97,7 +96,7 @@ Map{
 	select = "distroads",
 	slices = 10,
 	invert = true,
-	color = "YlGn"
+	color = "YlOrBr"
 }
 
 Map{
@@ -105,25 +104,22 @@ Map{
 	select = "distports",
 	slices = 10,
 	invert = true,
-	color = "YlGn"
+	color = "YlOrBr"
 }
 
---[[
 Map{
 	target = cs,
 	select = "protected",
-	min = 0,
-	max = 1,
 	slices = 10,
 	invert = true,
-	color = "YlGn"
+	color = "PuBu"
 }
---]]
 
 Map{
 	target = cs,
-	select = "mheight",
+	select = "deforestation",
 	slices = 10,
 	invert = true,
 	color = "YlGn"
 }
+

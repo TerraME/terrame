@@ -2,11 +2,13 @@
 -- available at terrame.org.
 -- 'terrame -color doc-base-terralib.lua'
 
----------------------------------------------------------------
+-----------------------------------------------------------------------
 local host = "ssh.dpi.inpe.br:"
 local doc = "/home/www/terrame/packages/doc"
-local repository = "/home/www/terrame/packages/2.0.0-beta-5"
----------------------------------------------------------------
+local repository = "/home/www/terrame/packages/"..sessionInfo().version
+-----------------------------------------------------------------------
+
+_Gtme.printNote("Updating documentation for version "..sessionInfo().version)
 
 local basePath = sessionInfo().path.."/packages/base"
 local terralibPath = sessionInfo().path.."/packages/terralib"

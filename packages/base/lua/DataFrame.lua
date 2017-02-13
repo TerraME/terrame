@@ -24,25 +24,25 @@
 
 local metaTableDataFrameItem_ = {
 	__newindex = function(self, idx, value)
-		if not self.data[idx] then
-			self.data[idx] = {}
+		if not self.data_[idx] then
+			self.data_[idx] = {}
 			self.parent.columns_[idx] = true
 		end
 
-		self.data[idx][self.pos] = value
+		self.data_[idx][self.pos] = value
 	end,
 	__index = function(self, idx)
-		if not self.data[idx] then
-			return self.parent.instance[idx]
+		if not self.data_[idx] then
+			return self.parent.instance_[idx]
 		end
 
-		return self.data[idx][self.pos]
+		return self.data_[idx][self.pos]
 	end,
 	__tostring = function(self)
 		local columns = self.parent:columns()
 		local values = {}
 		forEachOrderedElement(columns, function(idx)
-			values[idx] = self.data[idx][self.pos]
+			values[idx] = self.data_[idx][self.pos]
 		end)
 
 		return vardump(values)
@@ -70,22 +70,22 @@ local function add(self, row, idx)
 		table.insert(self.rows_, true)
 		idx = getn(self.rows_)
 		forEachElement(row, function(midx, value)
-			if self.data[midx] == nil then
+			if self.data_[midx] == nil then
 				self.columns_[midx] = true
-				self.data[midx] = {}
+				self.data_[midx] = {}
 			end
 
-			self.data[midx][idx] = value
+			self.data_[midx][idx] = value
 		end)
 	else
 		self.rows_[idx] = true
 		forEachElement(row, function(midx, value)
-			if self.data[midx] == nil then
+			if self.data_[midx] == nil then
 				self.columns_[midx] = true
-				self.data[midx] = {}
+				self.data_[midx] = {}
 			end
 
-			self.data[midx][idx] = value
+			self.data_[midx][idx] = value
 		end)
 	end
 end
@@ -107,7 +107,7 @@ end
 -- print(df[3].x) -- 4
 local function remove(self, idx)
 	self.rows_[idx] = nil
-	forEachElement(self.data, function(_, value)
+	forEachElement(self.data_, function(_, value)
 		table.remove(value, idx)
 	end)
 end
@@ -123,7 +123,7 @@ local function save(self, filename)
 	mandatoryArgument(1, "string", filename)
 
 	local file = File(filename)
-	local stbl = "return"..vardump(self.data)
+	local stbl = "return"..vardump(self.data_)
 	file:write(stbl)
 	file:close()
 end
@@ -171,26 +171,26 @@ metaTableDataFrame_ = {
 	-- print(df.x[1]) -- 6
 	__index = function(self, idx)
 		if type(idx) == "number" then
-			local result = self.cache[idx]
+			local result = self.cache_[idx]
 
 			if result then return result end
 
-			result = {pos = idx, data = self.data, parent = self}
+			result = {pos = idx, data_ = self.data_, parent = self}
 
 			setmetatable(result, metaTableDataFrameItem_)
 
-			self.cache[idx] = result
+			self.cache_[idx] = result
 
 			return result
 		elseif type(idx) == "string" then
-			if self.data[idx] then return self.data[idx] end
+			if self.data_[idx] then return self.data_[idx] end
 
 			return DataFrameIndex[idx]
 		end
 	end,
 	__newindex = function(self, idx, value)
 		if type(idx) == "string" then
-			self.data[idx] = value
+			self.data_[idx] = value
 		else
 			self:add(value, idx)
 		end
@@ -230,9 +230,9 @@ metaTableDataFrame_ = {
 
 			forEachOrderedElement(mcolumns, function(col)
 				if not first then
-					str = str.."\t"..tostring(self.data[col][idx])
+					str = str.."\t"..tostring(self.data_[col][idx])
 				else
-					str = idx.."\t"..tostring(self.data[col][idx])
+					str = idx.."\t"..tostring(self.data_[col][idx])
 					first = false
 				end
 			end)
@@ -363,7 +363,7 @@ function DataFrame(data)
 
 		forEachOrderedElement(data, function(idx, value)
 			if type(value) ~= "table" then
-				customError("All arguments for DataFrame must be table values.")
+				customError("All arguments for DataFrame must be table values, got "..type(value).." ('"..idx.."').")
 			end
 
 			if length and #value ~= length then
@@ -402,14 +402,14 @@ function DataFrame(data)
 	end
 
 	data = {
-		data = df,
-		instance = instance,
+		data_ = df,
+		instance_ = instance,
 		rows_ = mrows,
 		columns_ = mcolumns,
-		cache = {}
+		cache_ = {}
 	}
 
-	setmetatable(data.cache, {__mode = 'v'})
+	setmetatable(data.cache_, {__mode = 'v'})
 	setmetatable(data, metaTableDataFrame_)
 
 	return data

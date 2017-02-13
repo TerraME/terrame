@@ -32,7 +32,7 @@ return {
 		}
 
 		-- SPATIAL INDEX TEST
-		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath1 = filePath("itaituba-census.shp", "terralib")
 		local qixFile = string.gsub(tostring(filePath1), ".shp", ".qix")
 		File(qixFile):delete()
 
@@ -101,7 +101,7 @@ return {
 		Layer{
 			project = proj,
 			name = "Elevation",
-			file = filePath("elevation_box.shp", "terralib")
+			file = filePath("cabecadeboi-box.shp", "terralib")
 		}
 
 		customWarning = customWarningBkp
@@ -114,7 +114,7 @@ return {
 
 		local proj = Project{
 			file = projName,
-			setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
+			setores = filePath("itaituba-census.shp", "terralib"),
 			clean = true
 		}
 
@@ -142,10 +142,10 @@ return {
 			file = projName,
 			clean = true,
 			[layerName1] = filePath("test/limitePA_polyc_pol.shp", "terralib"),
-			[protecao] = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib"),
-			[rodovias] = filePath("BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "terralib"),
-			[portos] = filePath("PORTOS_AMZ_pt.shp", "terralib"),
-			[amaz] = filePath("LIMITE_AMZ_pol.shp", "terralib")
+			[protecao] = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib"),
+			[rodovias] = filePath("test/BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "terralib"),
+			[portos] = filePath("amazonia-ports.shp", "terralib"),
+			[amaz] = filePath("amazonia-limit.shp", "terralib")
 		}
 
 		local municipios = "municipios"
@@ -652,7 +652,7 @@ return {
 		proj = Project {
 			file = projName,
 			clean = true,
-			setores = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			setores = filePath("itaituba-census.shp", "terralib")
 		}
 
 		clName1 = "cells_avg_area"
@@ -675,7 +675,7 @@ return {
 			operation = "average",
 			layer = "setores",
 			attribute = "polavg",
-			select = "Densde_Pop",
+			select = "dens_pop",
 			area = true
 		}
 
@@ -695,14 +695,61 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-average-area.png")
 
+		proj.file:delete()
+
+		proj = Project{
+			file = "municipiosAML.tview",
+			clean = true,
+			cities = filePath("test/municipiosAML_ok.shp", "terralib")
+		}
+
+		cl = Layer{
+			project = proj,
+			resolution = 200000,
+			clean = true,
+			file = "munic_cells.shp",
+			name = "cells",
+			input = "cities"
+		}
+
+		table.insert(shapes, "munic_cells.shp")
+
+		cl:fill{
+			operation = "coverage",
+			layer = "cities",
+			select = "CODMESO",
+			attribute = "meso"
+		}
+
+		cs = CellularSpace{
+			project = proj,
+			layer = "cells"
+		}
+
+		map = Map{
+			target = cs,
+			select = "CODMESO_2", -- #1640
+			color = "RdPu",
+			slices = 5
+		}
+
+		unitTest:assertSnapshot(map, "polygons-coverage-1.png", 0.1)
+
+		map = Map{
+			target = cs,
+			select = "CODMESO_3", -- #1640
+			color = "RdPu",
+			slices = 5
+		}
+
+		unitTest:assertSnapshot(map, "polygons-coverage-2.png", 0.1)
+
+		customWarning = customWarningBkp
+		proj.file:delete()
+
 		forEachElement(shapes, function(_, value)
 			File(value):delete()
 		end)
-
-		-- unitTest:assertFile(projName) -- SKIP #1242
-		proj.file:delete() -- #1242
-
-		customWarning = customWarningBkp
 	end,
 	projection = function(unitTest)
 		local proj = Project {
@@ -713,11 +760,11 @@ return {
 		local layer = Layer{
 			project = proj,
 			name = "setores",
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib"),
+			file = filePath("itaituba-census.shp", "terralib"),
 			index = false
 		}
 
-		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
+		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
 
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
@@ -731,7 +778,7 @@ return {
 			index = false
 		}
 
-		unitTest:assertEquals(layer:projection(), "'SAD69 / Brazil Polyconic', with SRID: 29101.0 (PROJ4: '+proj=poly +lat_0=0 +lon_0=-54 +x_0=5000000 +y_0=10000000 +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ').")
+		unitTest:assertEquals(layer:projection(), "'SAD69 / Brazil Polyconic', with SRID: 29101.0 (PROJ4: '+proj=poly +lat_0=0 +lon_0=-54 +x_0=5000000 +y_0=10000000 +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
 
 		customWarning = customWarningBkp
 
@@ -745,7 +792,7 @@ return {
 			clean = true
 		}
 
-		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath1 = filePath("itaituba-census.shp", "terralib")
 
 		local layerName1 = "setores"
 		local layer = Layer{
@@ -758,10 +805,7 @@ return {
 		local propNames = layer:attributes()
 
 		for i = 1, #propNames do
-			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "SPRAREA") or
-						(propNames[i] == "SPRPERIMET") or (propNames[i] == "SPRROTULO") or
-						(propNames[i] == "Populacao") or (propNames[i] == "objet_id_8") or
-						(propNames[i] == "Densde_Pop") or (propNames[i] == "Area"))
+			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "dens_pop") or (propNames[i] == "population"))
 		end
 
 		proj.file:delete()
@@ -774,7 +818,7 @@ return {
 			clean = true
 		}
 
-		local filePath1 = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath1 = filePath("itaituba-census.shp", "terralib")
 
 		local layerName1 = "setores"
 		local layer = Layer{

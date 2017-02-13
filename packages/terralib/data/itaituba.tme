@@ -1,20 +1,38 @@
 return {
 	[1] = {
-		x = 615, 
-		y = 90, 
+		x = 604, 
+		y = 48, 
 		width = 600, 
-		height = 500, 
+		height = 221, 
 	}, 
 	[2] = {
 		x = 3, 
-		y = 341, 
+		y = 294, 
 		width = 600, 
-		height = 291, 
+		height = 221, 
 	}, 
 	[3] = {
 		x = 1, 
 		y = 48, 
 		width = 600, 
-		height = 254, 
+		height = 221, 
+	}, 
+	[4] = {
+		x = 607, 
+		y = 293, 
+		width = 600, 
+		height = 221, 
+	}, 
+	[5] = {
+		x = 607, 
+		y = 541, 
+		width = 600, 
+		height = 221, 
+	}, 
+	[6] = {
+		x = 2, 
+		y = 541, 
+		width = 600, 
+		height = 221, 
 	}, 
 }
