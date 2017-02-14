@@ -715,7 +715,7 @@ end
 
 local function removeDataSource(project, dsId)
 	local count = 0
-	for _, v in ipairs(project.layers) do
+	for _, v in pairs(project.layers) do
 		if v:getDataSourceId() == dsId then -- SKIP(#470)
 			count = count + 1 -- SKIP -- TODO(avancinirodrigo): terralib is mapping one by one datasource after update to release-5.2, review.
 		end

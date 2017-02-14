@@ -50,6 +50,8 @@ struct SizeVisualArrangement
 class VisualArrangement
 {
 public:
+	~VisualArrangement();
+
 	static VisualArrangement* getInstance();
 
 	void addSize(int, SizeVisualArrangement);
