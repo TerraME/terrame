@@ -163,13 +163,13 @@ return {
 			}
 
 			unitTest:assertEquals( -- SKIP
-tostring(l), [[file     string [vegtype_2000.nc]
+tostring(l), [[epsg     number [0.0]
+file     string [vegtype_2000.nc]
 name     string [Vegtype_layer]
 project  Project
 rep      string [raster]
 sid      string [14825bac-96e7-418d-a340-f97f49ac3ed1]
 source   string [nc]
-srid     number [0.0]
 ]], 36, true)
 
 			File(projName):deleteIfExists()

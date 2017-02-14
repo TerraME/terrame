@@ -107,7 +107,7 @@ local function createPgDbIfNotExists(host, port, user, pass, database, encoding)
 					.."&PG_NEWDB_NAME="..database
 					.."&PG_NEWDB_OWNER="..user
 					.."&PG_NEWDB_ENCODING="..encoding
-					.."&PG_CONNECT_TIMEOUT=4"
+					.."&PG_CONNECT_TIMEOUT=10"
 					.."&PG_MAX_POOL_SIZE=4"
 					.."&PG_MIN_POOL_SIZE=2"
 					.."&PG_CHECK_DB_EXISTENCE="..database
@@ -124,7 +124,7 @@ local function createPgConnInfo(host, port, user, pass, database, encoding)
 
 	return "pgsql://"..user..":"..pass.."@"..host..":"..port.."/"..database.."?"
 				.."&PG_CLIENT_ENCODING="..encoding
-				.."&PG_CONNECT_TIMEOUT=4"
+				.."&PG_CONNECT_TIMEOUT=10"
 				.."&PG_MAX_POOL_SIZE=4"
 				.."&PG_MIN_POOL_SIZE=2"
 				.."&PG_HIDE_SPATIAL_METADATA_TABLES=FALSE"
@@ -1640,7 +1640,7 @@ TerraLib_ = {
 	-- tl:dropPgDatabase(pgData)
 	dropPgDatabase = function(_, data)
 		local connInfo = "pgsql://"..data.user..":"..data.password.."@"..data.host..":"..data.port.."/?"
-					.."&PG_CONNECT_TIMEOUT=4"
+					.."&PG_CONNECT_TIMEOUT=10"
 					.."&PG_MAX_POOL_SIZE=4"
 					.."&PG_MIN_POOL_SIZE=2"
 					.."&PG_DB_TO_DROP="..data.database

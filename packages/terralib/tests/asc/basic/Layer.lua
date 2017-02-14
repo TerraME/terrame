@@ -123,13 +123,13 @@ return {
 			file = filePath("test/biomassa-manaus.asc", "terralib")
 		}
 
-		local expected = [[file     string [biomassa-manaus.asc]
+		local expected = [[epsg     number [4326.0]
+file     string [biomassa-manaus.asc]
 name     string [Biomassa_layer]
 project  Project
 rep      string [raster]
 sid      string [8e9b98cc-a511-4b41-9faf-5d67001c7058]
 source   string [asc]
-srid     number [4326.0]
 ]]
 		unitTest:assertEquals(tostring(l), expected, 36, true)
 		projName:deleteIfExists()
