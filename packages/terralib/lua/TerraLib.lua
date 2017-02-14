@@ -973,7 +973,7 @@ local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 				rand = string.sub(rand, 1, 8)
 
 				if pk then
-					newDst:remove(pk:getName())
+					newDst:removeIndex(pk:getName())
 					local newPk = binding.te.da.PrimaryKey(newDst)
 					newPk:setName("pk"..rand)
 					pk = dst:getPrimaryKey()
