@@ -107,7 +107,7 @@ local function execute(command, filename)
 
 		logfile = io.open("log"..s..filename, "w")
 		forEachElement(result, function(_, value)
-			logfile:write(value.."\n")
+			logfile:writeLine(value.."\n")
 		end)
 	else
 		local resultfile = io.open(filename, "w")
@@ -126,7 +126,7 @@ local function execute(command, filename)
 			end
 
 			value = _Gtme.makePathCompatibleToAllOS(value)
-			resultfile:write(value.."\n")
+			resultfile:writeLine(value.."\n")
 
 			local str = logfile:readLine()
 			local distance2 = approximateLine(str)

@@ -238,7 +238,7 @@ forEachOrderedElement(commands, function(idx, group)
 			report.createdlogs = report.createdlogs + 1
 
 			forEachElement(result, function(_, value)
-				logfile:write(_Gtme.makePathCompatibleToAllOS(value).."\n")
+				logfile:writeLine(_Gtme.makePathCompatibleToAllOS(value).."\n")
 			end)
 
 			logfile:close()
@@ -248,7 +248,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 			forEachElement(result, function(_, value)
 				value = _Gtme.makePathCompatibleToAllOS(value)
-				resultfile:write(value.."\n")
+				resultfile:writeLine(value.."\n")
 			end)
 			
 			local line = 1
@@ -261,7 +261,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 				value = _Gtme.makePathCompatibleToAllOS(value)
 
-				local str = logfile.file:readLine()
+				local str = logfile.file:read()
 
 				if not str then
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
@@ -295,7 +295,7 @@ forEachOrderedElement(commands, function(idx, group)
 			end)
 
 			if not logerror then
-				local v = logfile.file:readLine()
+				local v = logfile.file:read()
 				if v then
 					_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
 					report.logerrors = report.logerrors + 1
@@ -421,7 +421,7 @@ forEachOrderedElement(commands, function(idx, group)
 			report.createdlogs = report.createdlogs + 1
 
 			forEachElement(result, function(_, value)
-				logfile:write(value.."\n")
+				logfile:writeLine(value.."\n")
 			end)
 		else
 			logfile:open()
@@ -429,7 +429,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 			forEachElement(result, function(_, value)
 				value = _Gtme.makePathCompatibleToAllOS(value)
-				resultfile:write(value.."\n")
+				resultfile:writeLine(value.."\n")
 			end)
 			
 			local line = 1
@@ -442,7 +442,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 				value = _Gtme.makePathCompatibleToAllOS(value)
 
-				local str = logfile.file:readLine()
+				local str = logfile.file:read()
 				local distance2 = approximateLine(str)
 
 				if distance > distance2 then
@@ -478,7 +478,7 @@ forEachOrderedElement(commands, function(idx, group)
 			end)
 
 			if not logerror then
-				local v = logfile.file:readLine()
+				local v = logfile.file:read()
 				if v then
 					_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
 					report.logerrors = report.logerrors + 1
