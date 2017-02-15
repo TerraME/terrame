@@ -1692,9 +1692,8 @@ TerraLib_ = {
 
 			local fromLayer = project.layers[from]
 			local toLayer = project.layers[to]
-
-			if fromLayer:getSRID() ~= toLayer:getSRID() then
-				local toSrid = toLayer:getSRID()
+			local toSrid = toLayer:getSRID()
+			if fromLayer:getSRID() ~= toSrid then
 				local fromSrid = fromLayer:getSRID()
 				customError("The projections of the layers are different: ("..from..", "..fromSrid..") and ("..to..", "..toSrid.."). Set the correct one.")
 			end
@@ -1737,6 +1736,7 @@ TerraLib_ = {
 
 			if outType == "POSTGIS" then
 				outDSetName = string.lower(outDSetName)
+				outSpatialIdx = false -- TODO(#1678)
 			elseif outType == "OGR" then
 				local file = File(outConnInfo:host()..outConnInfo:path())
 				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
@@ -1782,16 +1782,12 @@ TerraLib_ = {
 			-- #875
 			-- outDs:renameDataSet(outDSetName, "rename_test")
 
-			local outLayer = createLayer(out, outDSetName, outConnInfo, outType, outSpatialIdx)
+			local outLayer = createLayer(out, outDSetName, outConnInfo, outType, outSpatialIdx, toSrid)
 			project.layers[out] = outLayer
 
 			loadProject(project, project.file) -- TODO: IT NEED RELOAD (REVIEW)
 			saveProject(project, project.layers)
 			releaseProject(project)
-
-			fixCellSpaceSrid(project, out, to)
-
-			outDs:close()
 
 			-- TODO: REVIEW AFTER FIX #875
 			if outOverwrite then
@@ -1804,6 +1800,7 @@ TerraLib_ = {
 					toSetName = name
 				end
 
+				outDs:close()
 				overwriteLayer(self, project, out, to, toSetName)
 				removeLayer(project, out)
 			end
@@ -1865,8 +1862,11 @@ TerraLib_ = {
 				toSetName = toLayerName
 			end
 
+			local addSpatialIdx = true
+
 			if fromType == "POSTGIS" then
 				toSetName = string.lower(toSetName)
+				addSpatialIdx = false
 			elseif not (fromType == "OGR") then
 				customError("Save '"..toSetName.."' does not support '"..toType.."' type.")
 			end
@@ -1887,7 +1887,7 @@ TerraLib_ = {
 				createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 
 				local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
-				local toLayer = createLayer(toLayerName, toSetName, toConnInfo, fromType)
+				local toLayer = createLayer(toLayerName, toSetName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
 
 				project.layers[toLayerName] = toLayer
 				saveProject(project, project.layers)
