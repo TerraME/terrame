@@ -43,6 +43,11 @@ VisualArrangement* VisualArrangement::getInstance()
 	return myarrangement;
 }
 
+VisualArrangement::~VisualArrangement()
+{
+	delete myarrangement;
+}
+
 void VisualArrangement::addSize(int id, SizeVisualArrangement va)
 {
 	myarrangement->size[id] = va;

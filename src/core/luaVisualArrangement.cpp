@@ -42,8 +42,7 @@ int luaVisualArrangement::setFile(lua_State* L)
 {
 	string f = luaL_checkstring(L, -1);
 
-	VisualArrangement* v = VisualArrangement::getInstance();
-	v->setFile(f);
+	VisualArrangement::getInstance()->setFile(f);
 
 	return 0;
 }
@@ -54,13 +53,11 @@ int luaVisualArrangement::addPosition(lua_State *L)
 	int x  = luaL_checknumber(L, -2);
 	int y  = luaL_checknumber(L, -1);
 
-	VisualArrangement* v = VisualArrangement::getInstance();
-
 	PositionVisualArrangement s;
 	s.x = x;
 	s.y = y;
 
-	v->addPosition(id, s);
+	VisualArrangement::getInstance()->addPosition(id, s);
 
 	return 0;
 }
@@ -71,13 +68,11 @@ int luaVisualArrangement::addSize(lua_State *L)
 	int width  = luaL_checknumber(L, -2);
 	int height  = luaL_checknumber(L, -1);
 
-	VisualArrangement* v = VisualArrangement::getInstance();
-
 	SizeVisualArrangement s;
 	s.width = width;
 	s.height = height;
 
-	v->addSize(id, s);
+	VisualArrangement::getInstance()->addSize(id, s);
 
 	return 0;
 }

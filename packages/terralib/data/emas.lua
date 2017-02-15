@@ -40,7 +40,7 @@ Layer{
 	project = project,
 	name = "cover",
 	file = filePath("emas-accumulation.tif", "terralib"),
-	srid = 29192
+	epsg = 29192
 }
 
 cl = Layer{

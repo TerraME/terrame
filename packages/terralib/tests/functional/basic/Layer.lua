@@ -544,13 +544,13 @@ return {
 			file = filePath("itaituba-census.shp", "terralib")
 		}
 
-		local expected = [[file     string [itaituba-census.shp]
+		local expected = [[epsg     number [29191.0]
+file     string [itaituba-census.shp]
 name     string [Setores_2000]
 project  Project
 rep      string [polygon]
 sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
 source   string [shp]
-srid     number [29191.0]
 ]]
 		unitTest:assertEquals(tostring(l), expected, 36, true)
 		projName:deleteIfExists()

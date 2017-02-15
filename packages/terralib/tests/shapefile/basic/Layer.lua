@@ -91,7 +91,7 @@ return {
 		File(cl1.file):delete()
 		File(cl2.file):delete()
 
-		-- VERIFY SRID
+		-- VERIFY EPSG
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
 			local _, nchars = string.find(msg, "It was not possible to find the projection of layer 'Elevation'.\nThe projection should be one of the availables in: ")
@@ -105,7 +105,7 @@ return {
 		}
 
 		customWarning = customWarningBkp
-		-- // VERIFY SRID
+		-- // VERIFY EPSG
 
 		proj.file:delete()
 	end,
@@ -728,7 +728,7 @@ return {
 
 		map = Map{
 			target = cs,
-			select = "CODMESO_2", -- #1640
+			select = "meso_2",
 			color = "RdPu",
 			slices = 5
 		}
@@ -737,7 +737,7 @@ return {
 
 		map = Map{
 			target = cs,
-			select = "CODMESO_3", -- #1640
+			select = "meso_3",
 			color = "RdPu",
 			slices = 5
 		}
@@ -764,7 +764,7 @@ return {
 			index = false
 		}
 
-		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
+		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with EPSG: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
 
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
@@ -778,7 +778,7 @@ return {
 			index = false
 		}
 
-		unitTest:assertEquals(layer:projection(), "'SAD69 / Brazil Polyconic', with SRID: 29101.0 (PROJ4: '+proj=poly +lat_0=0 +lon_0=-54 +x_0=5000000 +y_0=10000000 +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
+		unitTest:assertEquals(layer:projection(), "'SAD69 / Brazil Polyconic', with EPSG: 29101.0 (PROJ4: '+proj=poly +lat_0=0 +lon_0=-54 +x_0=5000000 +y_0=10000000 +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
 
 		customWarning = customWarningBkp
 
@@ -838,8 +838,8 @@ return {
 		layer:export(data1)
 		unitTest:assert(File(geojson):exists())
 
-		-- OVERWRITE AND CHANGE SRID
-		data1.srid = 4326
+		-- OVERWRITE AND CHANGE EPSG
+		data1.epsg = 4326
 		layer:export(data1)
 
 		local layerName2 = "GJ"
@@ -849,8 +849,8 @@ return {
 			file = geojson
 		}
 
-		unitTest:assertEquals(layer2.srid, data1.srid)
-		unitTest:assert(layer.srid ~= data1.srid)
+		unitTest:assertEquals(layer2.epsg, data1.epsg)
+		unitTest:assert(layer.epsg ~= data1.epsg)
 
 		local shp = "setores.shp"
 		local data2 = {
@@ -861,8 +861,8 @@ return {
 		layer:export(data2)
 		unitTest:assert(File(shp):exists())
 
-		-- OVERWRITE AND CHANGE SRID
-		data2.srid = 4326
+		-- OVERWRITE AND CHANGE EPSG
+		data2.epsg = 4326
 		layer:export(data2)
 
 		local layerName3 = "SHP"
@@ -872,8 +872,8 @@ return {
 			file = shp
 		}
 
-		unitTest:assertEquals(layer3.srid, data2.srid)
-		unitTest:assert(layer.srid ~= data2.srid)
+		unitTest:assertEquals(layer3.epsg, data2.epsg)
+		unitTest:assert(layer.epsg ~= data2.epsg)
 
 		File(geojson):delete()
 		File(shp):delete()

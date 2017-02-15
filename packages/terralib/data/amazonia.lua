@@ -38,14 +38,14 @@ amazonia = Project{
 prodes = Layer{
 	name = "prodes",
 	project = amazonia,
-	srid = 29191,
+	epsg = 29191,
 	file = filePath("amazonia-prodes.tif", "terralib")
 }
 
 protected = Layer{
 	name = "protected",
 	project = amazonia,
-	srid = 29191,
+	epsg = 29191,
 	file = filePath("amazonia-indigenous.shp", "terralib")
 }
 

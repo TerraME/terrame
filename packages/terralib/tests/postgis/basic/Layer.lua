@@ -264,7 +264,7 @@ return {
 		clSet = TerraLib{}:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)
 
-		-- CHANGE SRID
+		-- CHANGE EPSG
 		local layerName5 = "SampaDBNewSrid"
 
 		local layer5 = Layer{
@@ -277,12 +277,12 @@ return {
 			password = password,
 			database = database,
 			table = tName1,
-			srid = 29901
+			epsg = 29901
 		}
 
-		unitTest:assertEquals(layer5.srid, 29901.0)
-		unitTest:assert(layer5.srid ~= layer4.srid)
-		-- // CHANGE SRID
+		unitTest:assertEquals(layer5.epsg, 29901.0)
+		unitTest:assert(layer5.epsg ~= layer4.epsg)
+		-- // CHANGE EPSG
 
 		File(projName):deleteIfExists()
 
@@ -350,7 +350,7 @@ return {
 			database = database
 		}
 
-		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with SRID: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
+		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with EPSG: 29191.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
 
 		proj.file:delete()
 		tl:dropPgTable(pgData)

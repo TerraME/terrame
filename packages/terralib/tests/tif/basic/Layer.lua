@@ -148,7 +148,7 @@ return {
 			project = proj,
 			name = prodes,
 			file = filePath("itaituba-deforestation.tif", "terralib"),
-			srid = l1.srid
+			epsg = l1.epsg
 		}
 
 		local altimetria = "altimetria"
@@ -156,7 +156,7 @@ return {
 			project = proj,
 			name = altimetria,
 			file = filePath("itaituba-elevation.tif", "terralib"),
-			srid = l1.srid
+			epsg = l1.epsg
 		}
 
 		local clName1 = "CellsTif"
@@ -464,9 +464,9 @@ return {
 			project = proj,
 			name = layerName1,
 			file = filePath("amazonia-prodes.tif", "terralib"),
-			srid = 100017
+			epsg = 100017
 		}
-		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S - old 29191', with SRID: 100017.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ')")
+		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S - old 29191', with EPSG: 100017.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ')")
 
 		proj.file:delete()
 	end,
