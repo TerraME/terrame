@@ -142,7 +142,7 @@ File_ = {
 	-- the respective dbf, shx, prj, and qix files if they exist.
 	-- @usage filename = "myfile.txt"
 	-- file = File(filename)
-	-- file:write("Some text..")
+	-- file:writeLine("Some text..")
 	-- file:close()
 	-- file:delete()
 	delete = function(self)
@@ -179,7 +179,7 @@ File_ = {
 	--- Remove a file if it exists. It does not stop with an error when the file does not exist.
 	-- @usage filename = "myfile.txt"
 	-- file = File(filename)
-	-- file:write("Some text..")
+	-- file:writeLine("Some text..")
 	-- file:close()
 	-- file:deleteIfExists()
 	deleteIfExists = function(self)
@@ -267,14 +267,14 @@ File_ = {
 	-- It returns a vector of strings with the i-th value in the position i.
 	-- This function was taken from http://lua-users.org/wiki/LuaCsv.
 	-- @usage file = filePath("agents.csv", "base")
-	-- line = file:read(",")
+	-- line = file:readLine(",")
 	-- print(line[1]) -- john
 	-- print(line[2]) -- 20
 	-- print(line[3]) -- 200
 	--
-	-- line = file:read()
+	-- line = file:readLine()
 	-- print(line) -- "mary",18,100,3,1,false
-	read = function(self, sep)
+	readLine = function(self, sep)
 		optionalArgument(1, "string", sep)
 
 		if not self.mode then
@@ -295,7 +295,7 @@ File_ = {
 		end
 
 		if line == nil then return {} end
-		return  parseLine(line, sep, self.line)
+		return parseLine(line, sep, self.line)
 	end,
 	--- Read a file. It returns a vector (whose indexes are line numbers)
 	-- containing named tables (whose indexes are attribute names).
@@ -303,10 +303,11 @@ File_ = {
 	-- automatically closes the file.
 	-- @arg sep A string with the separator. The default value is ','.
 	-- @usage file = filePath("agents.csv", "base")
-	-- csv = file:readTable()
+	-- csv = file:read()
 	-- print(csv[1].age) -- 20
-	readTable = function(self, sep)
+	read = function(self, sep)
 		optionalArgument(1, "string", sep)
+		sep = sep or ','
 
 		if not self.mode then
 			self.line = 1
@@ -315,21 +316,23 @@ File_ = {
 			customError("Cannot read a file opened for writing.")
 		end
 
-		sep = sep or ','
-		local data = {}
-
+		local data = DataFrame{}
 		local fields = parseLine(self.file:read(), sep, self.line)
-		local line = self.file:read()
 
+		forEachElement(fields, function(_, value)
+			data[value] = {}
+		end)
+
+		local line = self.file:read()
 		while line do
 			local element = {}
 			local tuple = parseLine(line, sep, self.line)
 			if #tuple == #fields then
-				for k, v in ipairs(fields) do
-					element[v] = tonumber(tuple[k]) or tuple[k]
+				for i = 1, #fields do
+					element[fields[i]] = tonumber(tuple[i]) or tuple[i]
 				end
 
-				table.insert(data, element)
+				data:add(element)
 			else
 				customError("Line "..self.line.." ('"..line.."') should contain "..#fields.." attributes but has "..#tuple..".")
 			end
@@ -373,32 +376,34 @@ File_ = {
 
 		return lfs.touch(self.filename, atime, mtime)
 	end,
-	--- Write a given string or table into the file.
+	--- Write a given string or table into the file. The file must be closed afterwards.
 	-- @arg data A string or table to be saved. A table it must be a vector (whose indexes are line numbers)
 	-- containing named-tables (whose indexes are attribute names).
 	-- When writing a table, he first line of the file will list the attributes of the table.
 	-- @arg sep A string with the separator. The default value is ' ' for string and ',' for table.
-	-- @usage mytable = {
-	--     {age = 1, wealth = 10, vision = 2},
-	--     {age = 3, wealth =  8, vision = 1},
-	--     {age = 3, wealth = 15, vision = 2}
-	-- }
+	-- @usage mytable = {"x", "y", "z"}
 	--
-	-- file = File( "file.csv")
-	-- file:write(mytable, ";")
-	-- file:deleteIfExists()
-	--
-	-- file = File("file.txt")
-	-- file:write("Some text..")
+	-- file = File("file.csv")
+	-- file:writeLine(mytable, ";")
+	-- file:writeLine("Some text..")
 	-- file:close()
 	-- file:deleteIfExists()
-	write = function(self, data, sep)
+	writeLine = function(self, data, sep)
 		if type(data) == "string" then
 			data = {data}
 		end
 
 		mandatoryArgument(1, "table", data)
 		optionalArgument(2, "string", sep)
+		sep = sep or " "
+
+		if #data ~= getn(data) then
+			customError("#1 should be a vector.")
+		end
+	
+		if data[1] == nil then
+			customError("#1 does not have position 1.")
+		end
 
 		if not self.mode then
 			self.file = self:open("w")
@@ -406,46 +411,54 @@ File_ = {
 			customError("Cannot write a file opened for reading.")
 		end
 
-		if data[1] == nil then
-			customError("#1 does not have position 1.")
-		elseif #data ~= getn(data) then
-			customError("#1 should be a vector.")
-		end
+		self.file:write(table.concat(data, sep))
+	end,
+	--- Write a given DataFrame into the file. It automatically closes the file after writing it.
+	-- @arg data A DataFrame.
+	-- @arg sep A string with the separator. The default value is ','.
+	-- @usage mytable = DataFrame{
+	--     {age = 1, wealth = 10, vision = 2},
+	--     {age = 3, wealth =  8, vision = 1},
+	--     {age = 3, wealth = 15, vision = 2}
+	-- }
+	--
+	-- file = File("file.csv")
+	-- file:write(mytable, ";")
+	-- file:deleteIfExists()
+	write = function(self, data, sep)
+		mandatoryArgument(1, "DataFrame", data)
+		optionalArgument(2, "string", sep)
+		sep = sep or ","
 
-		if type(data[1]) == "table" then
-			sep = sep or ","
-			local fields = {}
-			forEachOrderedElement(data[1], function(k)
-				if type(k) ~= "string" then
-					customError("All attributes should be string, got "..type(k)..".")
+		self.file = self:open("w")
+
+		local columns = data:columns()
+		local header = {}
+		forEachOrderedElement(columns, function(idx)
+			table.insert(header, idx)
+		end)
+
+		self.file:write(table.concat(header, sep))
+		self.file:write("\n")
+
+		for i = 1, #data do
+			local line = {}
+
+			for j = 1, #header do
+				local value = data[header[j]][i]
+				local t = type(value)
+				if t ~= "number" then
+					value = "\""..tostring(value) .."\""
 				end
 
-				table.insert(fields, k)
-			end)
-
-			self.file:write(table.concat(fields, sep))
-			self.file:write("\n")
-			for _, tuple in ipairs(data) do
-				local line = {}
-				for _, k in ipairs(fields) do
-					local value = tuple[k]
-					local t = type(value)
-					if t ~= "number" then
-						value = "\""..tostring(value) .."\""
-					end
-
-					table.insert(line, value)
-				end
-
-				self.file:write(table.concat(line, sep))
-				self.file:write("\n")
+				table.insert(line, value)
 			end
 
-			self:close()
-		else
-			sep = sep or " "
-			self.file:write(table.concat(data, sep))
+			self.file:write(table.concat(line, sep))
+			self.file:write("\n")
 		end
+
+		self:close()
 	end
 }
 

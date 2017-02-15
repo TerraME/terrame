@@ -559,7 +559,7 @@ function _Gtme.executeDoc(package)
 
 				local csv
 
-				local result, err = pcall(function() csv = filePath(value.file[1], package):readTable(value.separator) end)
+				local result, err = pcall(function() csv = filePath(value.file[1], package):read(value.separator) end)
 
 				if not result then
 					printError(err)
@@ -573,14 +573,14 @@ function _Gtme.executeDoc(package)
 					mvalue.type = type(csv[1][idx])
 				end)
 
-				forEachElement(csv[1], function(idx, mvalue)
+				forEachElement(csv:columns(), function(idx)
 					if not value.attributes[idx] then
 						doc_report.error_data = doc_report.error_data + 1
 						printError("Attribute '"..idx.."' is not documented.")
 
 						value.attributes[idx] = {
 							description = "<font color=\"red\">undefined</font>",
-							type = type(mvalue)
+							type = type(csv[1][idx])
 						}
 					end
 				end)

@@ -111,7 +111,7 @@ return{
 	end,
 	open = function(unitTest)
 		local file = filePath("agents.csv", "base")
-		file:read()
+		file:readLine()
 
 		local error_func = function()
 			file:open()
@@ -130,9 +130,9 @@ return{
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
 	end,
-	read = function(unitTest)
+	readLine = function(unitTest)
 		local filename = currentDir().."csvwrite.csv"
-		local csv = {
+		local csv = DataFrame{
 			{name = "\"ab\"c"}
 		}
 
@@ -140,14 +140,14 @@ return{
 		file:write(csv)
 
 		local error_func = function()
-			file:read(",")
+			file:readLine(",")
 		end
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
 
 		file = File(filename)
-		file:read()
+		file:readLine()
 		error_func = function()
-			file:read(",")
+			file:readLine(",")
 		end
 		unitTest:assertError(error_func, "Line 2 ('\"\"ab\"c\"') is invalid.")
 
@@ -156,18 +156,18 @@ return{
 
 		file = filePath("agents.csv", "base")
 		error_func = function()
-			file:read(1)
+			file:readLine(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
-	readTable = function(unitTest)
+	read = function(unitTest)
 		local filename = "abc.txt"
 		local file = File(filename)
-		file:write("text...")
+		file:writeLine("text...")
 		file:close()
 
 		local error_func = function()
-			file:readTable()
+			file:read()
 		end
 
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
@@ -177,7 +177,7 @@ return{
 		file = File(filename)
 
 		error_func = function()
-			file:readTable()
+			file:read()
 		end
 
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
@@ -186,7 +186,7 @@ return{
 		file = filePath("test/error"..s.."csv-error.csv")
 
 		error_func = function()
-			file:readTable()
+			file:read()
 		end
 		unitTest:assertError(error_func, "Line 2 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
 	end,
@@ -212,11 +212,10 @@ return{
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
-		local example = {
+		local example = DataFrame{
 			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
 			{age = 3, wealth =  8, vision = 1, metabolism = 1, test = "Foo;text"},
 			{age = 3, wealth = 13, vision = 1, metabolism = 1, test = "Foo.text"},
-			w3c = {age = 1, wealth = 10, vision = 3, metabolism = 2, test = "Foo(text"}
 		}
 
 		error_func = function()
@@ -224,12 +223,29 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
+	end,
+	writeLine = function(unitTest)
+		local file = filePath("agents.csv", "base")
 
-		file = filePath("agents.csv", "base")
-		file:readTable()
+		local error_func = function()
+			file:writeLine()
+		end
+
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
+
+		local example = "abc"
 
 		error_func = function()
-			file:write(example)
+			file:writeLine(example, 2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
+	
+		file = filePath("agents.csv", "base")
+		file:read()
+
+		error_func = function()
+			file:writeLine(example)
 		end
 
 		unitTest:assertError(error_func, "Cannot write a file opened for reading.")
@@ -238,34 +254,10 @@ return{
 		file = File(filename)
 
 		error_func = function()
-			file:write(example)
+			file:writeLine{abc=3, [1] = 2}
 		end
+
 		unitTest:assertError(error_func, "#1 should be a vector.")
-
-		example = {
-			[2] = {age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
-			[3] = {age = 3, wealth =  8, vision = 1, metabolism = 1, test = "Foo;text"},
-			[4] = {age = 3, wealth = 13, vision = 1, metabolism = 1, test = "Foo.text"},
-			[5] = {age = 1, wealth = 10, vision = 3, metabolism = 2, test = "Foo(text"}
-		}
-
-		error_func = function()
-			file:write(example)
-		end
-		unitTest:assertError(error_func, "#1 does not have position 1.")
-
-		example = {
-			{[1] = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
-			{age = 3, wealth =  8, vision = 1, metabolism = 1, test = "Foo;text"},
-			{age = 3, wealth = 13, vision = 1, metabolism = 1, test = "Foo.text"},
-			{age = 1, wealth = 10, vision = 3, metabolism = 2, test = "Foo(text"}
-		}
-
-		error_func = function()
-			file:write(example)
-		end
-		unitTest:assertError(error_func, "All attributes should be string, got number.")
-
 	end
 }
 

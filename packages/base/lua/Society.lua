@@ -1017,7 +1017,7 @@ function Society(data)
 				incompatibleTypeError("sep", "string", data.sep)
 			end
 
-			local csv = data.file:readTable(data.sep)
+			local csv = data.file:read(data.sep)
 			for i = 1, #csv do
 				data:add(csv[i])
 			end

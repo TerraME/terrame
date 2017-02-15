@@ -124,7 +124,7 @@ local function save(self, filename)
 
 	local file = File(filename)
 	local stbl = "return"..vardump(self.data_)
-	file:write(stbl)
+	file:writeLine(stbl)
 	file:close()
 end
 
