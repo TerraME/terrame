@@ -476,7 +476,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil))
+							(string.match(k, "perc_") ~= nil))
 			unitTest:assertNotNil(v)
 		end
 
@@ -513,7 +513,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev"))
+							(string.match(k, "perc_") ~= nil) or (k == "stdev"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -550,7 +550,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean"))
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -587,7 +587,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted"))
 			unitTest:assertNotNil(v)
 		end
@@ -625,7 +625,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int"))
 			unitTest:assertNotNil(v)
 		end
@@ -663,7 +663,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur"))
 			unitTest:assertNotNil(v)
 		end
@@ -702,7 +702,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum"))
 			unitTest:assertNotNil(v)
@@ -741,7 +741,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum") or (k == "wsum"))
 			unitTest:assertNotNil(v)
@@ -785,9 +785,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil))
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil))
 			unitTest:assertNotNil(v)
 		end
 
@@ -824,9 +824,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean"))
 			unitTest:assertNotNil(v)
 		end
@@ -864,9 +864,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin"))
 			unitTest:assertNotNil(v)
 		end
@@ -904,9 +904,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax"))
 			unitTest:assertNotNil(v)
 		end
@@ -944,9 +944,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev"))
 			unitTest:assertNotNil(v)
 		end
@@ -984,9 +984,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
 							(k == "rsum"))
 			unitTest:assertNotNil(v)
@@ -1020,9 +1020,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
 							(k == "rsum") or (k == "rsum_over"))
 			unitTest:assertNotNil(v)

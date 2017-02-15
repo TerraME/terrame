@@ -428,10 +428,8 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 				else
 					newName = string.gsub(currentProp, "B"..select.."_", property.."_")
 				end
-			elseif dsType == "POSTGIS" then
-				newName = string.gsub(currentProp, select.."_", property.."_")
 			else
-				newName = currentProp -- TODO: REVIEW TO SHAPE
+				newName = string.gsub(currentProp, select.."_", property.."_") 
 			end
 
 			if newName ~= currentProp then

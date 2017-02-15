@@ -728,7 +728,7 @@ return {
 
 		map = Map{
 			target = cs,
-			select = "CODMESO_2", -- #1640
+			select = "meso_2",
 			color = "RdPu",
 			slices = 5
 		}
@@ -737,7 +737,7 @@ return {
 
 		map = Map{
 			target = cs,
-			select = "CODMESO_3", -- #1640
+			select = "meso_3",
 			color = "RdPu",
 			slices = 5
 		}

@@ -423,7 +423,7 @@ return {
 
 		operation = "coverage"
 		attribute = "perc"
-		select = "ADMINISTRA"
+		select = "NOME"
 		area = nil
 		default = nil
 		tl:attributeFill(proj, layerName2, maxLayerName, percLayerName, attribute, operation, select, area, default)
@@ -435,7 +435,7 @@ return {
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil))
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil))
 			unitTest:assertNotNil(v)
 		end
 
@@ -466,7 +466,7 @@ return {
 		for k, v in pairs(stdevSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev"))
 			unitTest:assertNotNil(v)
 		end
@@ -498,7 +498,7 @@ return {
 		for k, v in pairs(meanSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean"))
 			unitTest:assertNotNil(v)
 		end
@@ -530,7 +530,7 @@ return {
 		for k, v in pairs(weighSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted"))
 			unitTest:assertNotNil(v)
 		end
@@ -562,7 +562,7 @@ return {
 		for k, v in pairs(interSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int"))
 			unitTest:assertNotNil(v)
 		end
@@ -594,7 +594,7 @@ return {
 		for k, v in pairs(occurSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
 							(k == "majo_occur"))
 			unitTest:assertNotNil(v)
@@ -627,7 +627,7 @@ return {
 		for k, v in pairs(sumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
 							(k == "majo_occur") or (k == "sum"))
 			unitTest:assertNotNil(v)
@@ -660,7 +660,7 @@ return {
 		for k, v in pairs(wsumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
 							(k == "majo_occur") or (k == "sum") or (k == "wsum"))
 			unitTest:assertNotNil(v)
@@ -698,9 +698,9 @@ return {
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil))
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil))
 			unitTest:assertNotNil(v)
 		end
 
@@ -731,9 +731,9 @@ return {
 		for k, v in pairs(rmeanSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean"))
 			unitTest:assertNotNil(v)
 		end
@@ -765,9 +765,9 @@ return {
 		for k, v in pairs(rminSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin"))
 			unitTest:assertNotNil(v)
 		end
@@ -799,9 +799,9 @@ return {
 		for k, v in pairs(rmaxSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax"))
 			unitTest:assertNotNil(v)
 		end
@@ -833,9 +833,9 @@ return {
 		for k, v in pairs(rstdevSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev"))
 			unitTest:assertNotNil(v)
 		end
@@ -867,9 +867,9 @@ return {
 		for k, v in pairs(rsumSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or (k == "rsum"))
 			unitTest:assertNotNil(v)
 		end
@@ -896,9 +896,9 @@ return {
 		for k, v in pairs(rsumOverSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "ADMIN") ~= nil) or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or (k == "rsum") or
 							(k == "rsum_over"))
 			unitTest:assertNotNil(v)
