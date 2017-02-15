@@ -240,7 +240,7 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
-	
+
 		file = filePath("agents.csv", "base")
 		file:read()
 

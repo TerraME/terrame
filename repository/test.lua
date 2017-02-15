@@ -128,7 +128,7 @@ local function execute(command, filename)
 			value = _Gtme.makePathCompatibleToAllOS(value)
 			resultfile:write(value.."\n")
 
-			local str = logfile:read()
+			local str = logfile:readLine()
 			local distance2 = approximateLine(str)
 
 			if distance > distance2 then
@@ -163,7 +163,7 @@ local function execute(command, filename)
 		end)
 
 		if not logerror then
-			local v = logfile:read()
+			local v = logfile:readLine()
 			if v then
 				_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
 				report.logerrors = report.logerrors + 1

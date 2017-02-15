@@ -1018,8 +1018,17 @@ function Society(data)
 			end
 
 			local csv = data.file:read(data.sep)
+			local columns = csv:columns()
+
 			for i = 1, #csv do
-				data:add(csv[i])
+				local attributes = {}
+				local row = csv[i]
+
+				forEachElement(columns, function(idx)
+					attributes[idx] = row[idx]
+				end)
+
+				data:add(attributes)
 			end
 		else
 			local tlib = terralib.TerraLib{}

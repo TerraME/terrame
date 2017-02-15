@@ -469,16 +469,20 @@ local function loadCsv(self)
 	self.cObj_:clear()
 	local file = self.file
 	local data = file:read(self.sep)
-	local cellIdCounter = 0
+	local columns = data:columns()
+
 	for i = 1, #data do
-		cellIdCounter = cellIdCounter + 1
-		data[i].id = tostring(cellIdCounter)
-		local cell = Cell(data[i])
+		local attributes = {id = tostring(i)}
+		local row = data[i]
+
+		forEachElement(columns, function(idx)
+			attributes[idx] = row[idx]
+		end)
+
+		local cell = Cell(attributes)
 		self:add(cell)
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 	end
-
-	return
 end
 
 local function loadPGM(self)

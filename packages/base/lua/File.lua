@@ -400,7 +400,7 @@ File_ = {
 		if #data ~= getn(data) then
 			customError("#1 should be a vector.")
 		end
-	
+
 		if data[1] == nil then
 			customError("#1 does not have position 1.")
 		end

@@ -261,7 +261,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 				value = _Gtme.makePathCompatibleToAllOS(value)
 
-				local str = logfile.file:read()
+				local str = logfile.file:readLine()
 
 				if not str then
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
@@ -295,7 +295,7 @@ forEachOrderedElement(commands, function(idx, group)
 			end)
 
 			if not logerror then
-				local v = logfile.file:read()
+				local v = logfile.file:readLine()
 				if v then
 					_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
 					report.logerrors = report.logerrors + 1
@@ -442,7 +442,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 				value = _Gtme.makePathCompatibleToAllOS(value)
 
-				local str = logfile.file:read()
+				local str = logfile.file:readLine()
 				local distance2 = approximateLine(str)
 
 				if distance > distance2 then
@@ -478,7 +478,7 @@ forEachOrderedElement(commands, function(idx, group)
 			end)
 
 			if not logerror then
-				local v = logfile.file:read()
+				local v = logfile.file:readLine()
 				if v then
 					_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
 					report.logerrors = report.logerrors + 1

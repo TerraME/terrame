@@ -191,6 +191,7 @@ metaTableDataFrame_ = {
 	__newindex = function(self, idx, value)
 		if type(idx) == "string" then
 			self.data_[idx] = value
+			self.columns_[idx] = true
 		else
 			self:add(value, idx)
 		end
