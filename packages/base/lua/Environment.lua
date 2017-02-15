@@ -427,7 +427,7 @@ Environment_ = {
 			resourceNotFoundError("source", data.source)
 		end
 
-		local header = data.source:read()
+		local header = data.source:readLine()
 
 		local numAttribIdx = string.find(header, "%s", 1)
 		local layer1Idx = string.find(header, "%s", numAttribIdx + 1)
@@ -461,7 +461,7 @@ Environment_ = {
 		end
 
 		repeat
-			local line_cell = data.source:read()
+			local line_cell = data.source:readLine()
 			if line_cell == nil then break; end
 
 			local cellIdIdx = string.find(line_cell, "%s", 1)
@@ -476,7 +476,7 @@ Environment_ = {
 			local weight
 
 			if numNeighbors > 0 then
-				local line_neighbors = data.source:read()
+				local line_neighbors = data.source:readLine()
 
 				local neighIdEndIdx = string.find(line_neighbors, "%s")
 

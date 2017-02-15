@@ -124,7 +124,7 @@ local function save(self, filename)
 
 	local file = File(filename)
 	local stbl = "return"..vardump(self.data_)
-	file:write(stbl)
+	file:writeLine(stbl)
 	file:close()
 end
 
@@ -191,6 +191,7 @@ metaTableDataFrame_ = {
 	__newindex = function(self, idx, value)
 		if type(idx) == "string" then
 			self.data_[idx] = value
+			self.columns_[idx] = true
 		else
 			self:add(value, idx)
 		end

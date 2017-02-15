@@ -1,4 +1,4 @@
-Using log directory '/Users/pedro/github/terrame/repository/gpm/log/'
+Using log directory '/Users/pedro/github/terrame-pedro/repository/gpm/log/'
 Loading package 'gpm'
 Looking for overwritten variables
 Looking for documented functions
@@ -25,18 +25,20 @@ Skipping lines of source code check
 Testing examples
 Testing area
 Testing border
+Testing contains
 Testing distance
 Testing farms
+Testing length
 Checking logs
 
 Functional test report for package 'gpm':
-Tests were executed in 160.29 seconds.
-Logs were saved in '/Users/pedro/github/terrame/repository/.terrametmp_RLuu0/'.
+Tests were executed in 181.1 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_ZewJ3/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 1747 asserts were executed successfully.
+All 2098 asserts were executed successfully.
 All 6 tested functions do not have any unexpected execution error.
 All 6 tested functions have at least one assert.
 All 6 tested functions exist in the source code of the package.
@@ -46,7 +48,7 @@ No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
 All 3 functions of the package were tested.
 No lines from the source code were verified.
-All 4 examples were successfully executed.
+All 6 examples were successfully executed.
 No new log file was created.
 All log files were used in the tests.
 Summing up, all tests were successfully executed.

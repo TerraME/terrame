@@ -6,16 +6,11 @@ Checking directory 'data'
 Checking properties of data files
 Processing 'censopop2000_bd.shp'
 Processing 'communities.shp'
-Processing 'comunidades_UTM.shp'
 Processing 'farms.shp'
 Processing 'farms_cells.shp'
-Processing 'farms_cells2.shp'
-Processing 'lotes_UTM.shp'
+Processing 'farms_cells3.shp'
 Processing 'partofbrasil.shp'
 Processing 'roads.shp'
-Processing 'rodovias_UTM.shp'
-Processing 'rondonia_roads_lin.shp'
-Processing 'rondonia_urban_centers_pt.shp'
 Package 'gpm' has no fonts
 Parsing lua files
 Parsing lua/GPM.lua
@@ -23,8 +18,10 @@ Parsing lua/Network.lua
 Parsing examples
 Parsing examples/area.lua
 Parsing examples/border.lua
+Parsing examples/contains.lua
 Parsing examples/distance.lua
 Parsing examples/farms.lua
+Parsing examples/length.lua
 Checking undocumented files
 Checking @usage definition
 Checking lua/GPM.lua
@@ -59,7 +56,7 @@ Checking Network.lua
 Checking if all Models are documented
 
 Documentation report for package 'gpm':
-Documentation was built in 46.72 seconds.
+Documentation was built in 33.06 seconds.
 5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -84,5 +81,5 @@ All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
-All 4 examples are correctly documented.
+All 6 examples are correctly documented.
 Summing up, all the documentation was successfully built.

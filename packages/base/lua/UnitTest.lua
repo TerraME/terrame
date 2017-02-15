@@ -332,8 +332,8 @@ UnitTest_ = {
 				return str
 			end
 
-			local oldStr = removeCR(oldLog:read())
-			local newStr = removeCR(newLog:read())
+			local oldStr = removeCR(oldLog:readLine())
+			local newStr = removeCR(newLog:readLine())
 
 			while oldStr and newStr do
 				local dist = levenshtein(oldStr, newStr)
@@ -349,8 +349,8 @@ UnitTest_ = {
 				end
 
 				line = line + 1 -- SKIP
-				oldStr = removeCR(oldLog:read())
-				newStr = removeCR(newLog:read())
+				oldStr = removeCR(oldLog:readLine())
+				newStr = removeCR(newLog:readLine())
 			end
 
 			if oldStr or newStr then

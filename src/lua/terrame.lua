@@ -183,6 +183,7 @@ local function checkNilVariables()
 			end
 			mt.__declared[n] = true
 		end
+
 		rawset(t, n, v)
 	end
 
@@ -190,6 +191,7 @@ local function checkNilVariables()
 		if not mt.__declared[n] and debug.getinfo(2, "S").what ~= "C" then
 			_Gtme.strictWarning("Variable '"..n.."' is not declared.")
 		end
+
 		return rawget(t, n)
 	end
 end

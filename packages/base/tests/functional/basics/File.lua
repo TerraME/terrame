@@ -147,10 +147,10 @@ return{
 
 		file:delete()
 	end,
-	read = function(unitTest)
+	readLine = function(unitTest)
 		local file = filePath("agents.csv", "base")
-		file:read(",")
-		local line = file:read(",")
+		file:readLine(",")
+		local line = file:readLine(",")
 
 		unitTest:assertType(line, "table")
 		unitTest:assertEquals(line[1], "john")
@@ -158,16 +158,17 @@ return{
 		unitTest:assertEquals(line[3], "200")
 		unitTest:assertEquals(file.line, 2)
 
-		line = file:read()
+		line = file:readLine()
 		unitTest:assertType(line, "string")
 		unitTest:assertEquals(line, "\"mary\",18,100,3,1,false")
 		unitTest:assertEquals(file.line, 3)
 		file:close()
 	end,
-	readTable = function(unitTest)
+	read = function(unitTest)
 		local file = filePath("agents.csv", "base")
-		local csv = file:readTable()
+		local csv = file:read()
 
+		unitTest:assertType(csv, "DataFrame")
 		unitTest:assertEquals(4, #csv)
 		unitTest:assertEquals(20, csv[1].age)
 	end,
@@ -191,7 +192,7 @@ return{
 			local pathdata = packageInfo().data.."testfile.txt"
 
 			local file = File(pathdata)
-			file:write("test")
+			file:writeLine("test")
 			file:close()
 
 			unitTest:assert(file:touch(10000, 10000)) -- SKIP
@@ -208,7 +209,7 @@ return{
 		unitTest:assert(true)
 	end,
 	write = function(unitTest)
-		local example = {
+		local example = DataFrame{
 			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
 			{age = 3, wealth =  8, vision = 1, metabolism = 1, test = "Foo;text"},
 			{age = 3, wealth = 15, vision = 2, metabolism = 1, test = "Foo,text"},
@@ -222,32 +223,33 @@ return{
 		}
 
 		local filename = currentDir().."csvwrite.csv"
-		local file = File("csvwrite.csv")
+		local file = File(filename)
 		file:write(example)
 
 		file = File(filename)
-		local data = file:readTable()
+		local data = file:read()
 
-		unitTest:assertNotNil(data)
+		unitTest:assertType(data, "DataFrame")
 		unitTest:assertEquals(#example, #data)
 
 		for i = 1, #example do
-			for k in pairs(example[i]) do
-				unitTest:assertEquals(example[i][k], data[i][k])
-			end
+			forEachElement(example:columns(), function(column)
+				unitTest:assertEquals(example[column][i], data[column][i])
+			end)
 		end
 
 		unitTest:assertFile("csvwrite.csv")
+	end,
+	writeLine = function(unitTest)
+		local example = "Some text.."
+		local filename = currentDir().."abc.txt"
 
-		example = "Some text.."
-		filename = currentDir().."abc.txt"
-
-		file = File(filename)
-		file:write(example)
+		local file = File(filename)
+		file:writeLine(example)
 		file:close()
 
 		file = File(filename):open()
-		data = file:read("*all")
+		local data = file:read("*all")
 		file:close()
 
 		unitTest:assertNotNil(data)

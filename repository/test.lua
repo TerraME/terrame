@@ -58,15 +58,6 @@ forEachOrderedElement(pkgs, function(_, data)
 	local result = _Gtme.installPackage(pkgfile)
 end)
 
-_Gtme.printNote("Creating projects")
-forEachOrderedElement(pkgs, function(_, data)
-	_Gtme.print("Creating projects for "..pkgname)
-	runCommand("terrame -package "..pkgname.." -projects")
-end)
-
-_Gtme.print("Creating projects for terralib")
-runCommand("terrame -package terralib -projects")
-
 local function approximateLine(line)
 	if not line then return 0 end
 	
@@ -116,7 +107,7 @@ local function execute(command, filename)
 
 		logfile = io.open("log"..s..filename, "w")
 		forEachElement(result, function(_, value)
-			logfile:write(value.."\n")
+			logfile:writeLine(value.."\n")
 		end)
 	else
 		local resultfile = io.open(filename, "w")
@@ -135,9 +126,9 @@ local function execute(command, filename)
 			end
 
 			value = _Gtme.makePathCompatibleToAllOS(value)
-			resultfile:write(value.."\n")
+			resultfile:writeLine(value.."\n")
 
-			local str = logfile:read()
+			local str = logfile:readLine()
 			local distance2 = approximateLine(str)
 
 			if distance > distance2 then
@@ -172,7 +163,7 @@ local function execute(command, filename)
 		end)
 
 		if not logerror then
-			local v = logfile:read()
+			local v = logfile:readLine()
 			if v then
 				_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
 				report.logerrors = report.logerrors + 1
@@ -182,6 +173,10 @@ local function execute(command, filename)
 end
 
 _Gtme.printNote("Creating projects")
+
+_Gtme.print("Creating projects for package 'terralib'")
+runCommand("terrame -package terralib -projects")
+
 forEachOrderedElement(pkgs, function(package)
 	local docInitialTime = os.time(os.date("*t"))
 
