@@ -387,10 +387,10 @@ return{
 				project = proj,
 				name = "SampaSrid",
 				file = filePath("test/sampa.shp", "terralib"),
-				srid = true
+				epsg = true
 			}
 		end
-		unitTest:assertError(invalidSridType, "Incompatible types. Argument 'srid' expected number, got boolean.")
+		unitTest:assertError(invalidSridType, "Incompatible types. Argument 'epsg' expected number, got boolean.")
 
 		File(projName):deleteIfExists()
 		File(shp1):deleteIfExists()

@@ -37,7 +37,7 @@ local function isValidName(name)
 	return true
 end
 
-local function adaptsTerraLibInfo(data)
+local function getLayerInfoAdapted(data)
 	local layer = data.project.layers[data.name]
 	local info = data.project.terralib:getLayerInfo(data.project, layer)
 	info.type = nil
@@ -48,6 +48,8 @@ local function adaptsTerraLibInfo(data)
 			value = string.gsub(value, "^WFS:", "")
 		elseif idx == "dataset" then
 			idx = "feature"
+		elseif idx == "srid" then
+			idx = "epsg"
 		end
 		data[idx] = value
 	end)
@@ -183,7 +185,7 @@ local function addLayer(self, data)
 
 	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "index",
 									"host", "port", "user", "password", "database", "table",
-									"service", "feature", "srid"})
+									"service", "feature", "epsg"})
 
 	if data.source == nil then
 		if data.file then
@@ -217,39 +219,39 @@ local function addLayer(self, data)
 		customError("Layer '"..data.name.."' already exists in the Project.")
 	end
 
-	optionalTableArgument(data, "srid", "number")
+	optionalTableArgument(data, "epsg", "number")
 
 	switch(data, "source"):caseof{
 		shp = function()
 			mandatoryTableArgument(data, "file", "File")
 			defaultTableValue(data, "index", true)
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index", "srid"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index", "epsg"})
 
-			self.terralib:addShpLayer(self, data.name, data.file, data.index, data.srid)
+			self.terralib:addShpLayer(self, data.name, data.file, data.index, data.epsg)
 		end,
 		geojson = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "srid"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
 
-			self.terralib:addGeoJSONLayer(self, data.name, data.file, data.srid) -- SKIP
+			self.terralib:addGeoJSONLayer(self, data.name, data.file, data.epsg) -- SKIP
 		end,
 		tif = function()
 			mandatoryTableArgument(data, "file", "File")
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "srid"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
 
-			self.terralib:addGdalLayer(self, data.name, data.file, data.srid)
+			self.terralib:addGdalLayer(self, data.name, data.file, data.epsg)
 		end,
 		nc = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "srid"}) -- SKIP
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"}) -- SKIP
 
-			self.terralib:addGdalLayer(self, data.name, data.file, data.srid) -- SKIP
+			self.terralib:addGdalLayer(self, data.name, data.file, data.epsg) -- SKIP
 		end,
 		asc = function()
 			mandatoryTableArgument(data, "file", "File")
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "srid"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
 
-			self.terralib:addGdalLayer(self, data.name, data.file, data.srid)
+			self.terralib:addGdalLayer(self, data.name, data.file, data.epsg)
 		end,
 		postgis = function()
 			mandatoryTableArgument(data, "user", "string")
@@ -257,7 +259,7 @@ local function addLayer(self, data)
 			mandatoryTableArgument(data, "database", "string")
 			mandatoryTableArgument(data, "table", "string")
 
-			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password", "database", "table", "project", "srid"})
+			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password", "database", "table", "project", "epsg"})
 
 			defaultTableValue(data, "table", string.lower(data.name))
 			defaultTableValue(data, "host", "localhost")
@@ -266,7 +268,7 @@ local function addLayer(self, data)
 
 			data.port = tostring(data.port)
 
-			self.terralib:addPgLayer(self, data.name, data, data.srid)
+			self.terralib:addPgLayer(self, data.name, data, data.epsg)
 		end,
 		wfs = function()
 			mandatoryTableArgument(data, "service", "string")
@@ -633,8 +635,8 @@ Layer_ = {
 
 		tlib:attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.default, repr)
 	end,
-	--- Return the Layer's projection. It contains the name of the projection, its Spatial Reference
-	-- Identifier (SRID), and
+	--- Return the Layer's projection. It contains the name of the projection, its Geodetic
+	-- Identifier (EPSG), and
 	-- its Proj4 description (www.proj4.org/parameters.html).
 	-- @usage -- DONTRUN
 	-- print(layer:projection())
@@ -653,7 +655,7 @@ Layer_ = {
 			prj.PROJ4 = "'"..prj.PROJ4.."'"
 		end
 
-		return prj.NAME..", with SRID: "..prj.SRID.." (PROJ4: "..prj.PROJ4..")"
+		return prj.NAME..", with EPSG: "..prj.SRID.." (PROJ4: "..prj.PROJ4..")"
 	end,
 	--- The attribute names of the Layer. It returns a vector of strings, whose size is
 	-- the number of attributes.
@@ -687,7 +689,7 @@ Layer_ = {
 	end,
 	--- Exports the data of a Layer to another data source.
 	-- The data can be either a file data or postgis. The SRID and overwrite are common arguments.
-	-- @arg data.srid A number from the EPSG Geodetic Parameter Dataset describing a projection.
+	-- @arg data.epsg A number from the EPSG Geodetic Parameter Dataset describing a projection.
 	-- It can be used to reproject the data.
 	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
 	-- @arg data.... Additional arguments related to where the output will be saved. These arguments
@@ -695,12 +697,12 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- layer:export{file = "myfile.shp", overwrite = true}
 	-- layer:export{file = "myfile.geojson"}
-	-- layer:export{file = "myfile.geojson", srid = 4326}
+	-- layer:export{file = "myfile.geojson", epsg = 4326}
 	export = function(self, data)
 		verifyNamedTable(data)
 
-		if data.srid then
-			positiveTableArgument(data, "srid")
+		if data.epsg then
+			positiveTableArgument(data, "epsg")
 		end
 
 		defaultTableValue(data, "overwrite", false)
@@ -710,7 +712,7 @@ Layer_ = {
 		end
 
 		if type(data.file) == "File" then
-			verifyUnnecessaryArguments(data, {"source", "file", "srid", "overwrite"})
+			verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite"})
 
 			local source = data.file:extension()
 
@@ -718,7 +720,7 @@ Layer_ = {
 				local toData = {
 					file = tostring(data.file),
 					type = source,
-					srid = data.srid
+					srid = data.epsg
 				}
 
 				self.project.terralib:saveLayerAs(self.project, self.name, toData, data.overwrite)
@@ -729,7 +731,7 @@ Layer_ = {
 			mandatoryTableArgument(data, "source", "string")
 
 			if data.source == "postgis" then
-				verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding", "srid", "overwrite"})
+				verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding", "epsg", "overwrite"})
 
 				mandatoryTableArgument(data, "user", "string")
 				mandatoryTableArgument(data, "password", "string")
@@ -739,6 +741,8 @@ Layer_ = {
 				defaultTableValue(data, "encoding", "CP1252")
 				local pgData = data
 				pgData.type = "postgis"
+				pgData.srid = pgData.epsg
+				pgData.epsg = nil
 
 				self.project.terralib:saveLayerAs(self.project, self.name, pgData, pgData.overwrite)
 			else
@@ -785,13 +789,13 @@ metaTableLayer_ = {
 -- @arg data.feature A string with the name of the feature to be read from a WFS.
 -- @tabular source
 -- Source & Description & Mandatory & Optional \
--- "postgis" & PostGIS database. & password & host, port, srid, user\
--- "shp" & ESRI shapefile. & file & index, srid \
+-- "postgis" & PostGIS database. & password & host, port, epsg, user\
+-- "shp" & ESRI shapefile. & file & index, epsg \
 -- "wfs" & Web Feature Service (WFS). & feature, service & \
--- "tif" & Geotiff file. & file & srid \
--- "asc" & ASC format. & file & srid \
--- "nc" & NetCDF file. & file & srid \
--- "geojson" & GeoJSON file. & file & srid\
+-- "tif" & Geotiff file. & file & epsg \
+-- "asc" & ASC format. & file & epsg \
+-- "nc" & NetCDF file. & file & epsg \
+-- "geojson" & GeoJSON file. & file & epsg\
 -- @arg data.host String with the host where the database is stored.
 -- The default value is "localhost".
 -- @arg data.port Number with the port of the connection. The default value is the standard port
@@ -804,7 +808,7 @@ metaTableLayer_ = {
 -- input data (false, default).
 -- @arg data.resolution A number with the x and y resolution. It will need to be
 -- measured in the same projection of the input layer.
--- @arg data.srid A number from the EPSG Geodetic Parameter Dataset describing a projection.
+-- @arg data.epsg A number from the EPSG Geodetic Parameter Dataset describing a projection.
 -- It is a unique value used to unambiguously identify projected, unprojected, and local spatial
 -- coordinate system definitions. When the projection of the data does not have this information,
 -- it is necessary to set it manually to allow combining the Layer with other Layer to execute
@@ -814,7 +818,7 @@ metaTableLayer_ = {
 -- if it needs to create the file. The default value is false.
 -- @arg data.index A boolean value indicating whether a spatial index file must be created for a
 -- shapefile. The default value is true.
--- @output srid A number with its projection identifier.
+-- @output epsg A number with its projection identifier.
 -- @output sid A string with its unique identifier within the Project.
 -- @usage -- DONTRUN
 -- import("terralib")
@@ -893,7 +897,7 @@ function Layer(data)
 
 		setmetatable(data, metaTableLayer_)
 		data.project.terralib:openProject(data.project, data.project.file)
-		adaptsTerraLibInfo(data)
+		getLayerInfoAdapted(data)
 
 		return data
 	elseif data.input or data.resolution or data.box then

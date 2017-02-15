@@ -771,7 +771,7 @@ return{
 			cell.t0 = cell.t0 + 1000
 		end)
 
-		cs:save(cellSpaceLayerNameT0)
+		cs:save(cellSpaceLayerNameT0, "t0")
 
 		cs = CellularSpace{
 			project = proj,

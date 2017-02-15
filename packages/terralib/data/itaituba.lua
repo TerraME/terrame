@@ -38,14 +38,14 @@ Layer{
 	project = itaituba,
 	name = "deforestation",
 	file = filePath("itaituba-deforestation.tif", "terralib"),
-	srid = 29191
+	epsg = 29191
 }
 
 Layer{
 	project = itaituba,
 	name = "elevation",
 	file = filePath("itaituba-elevation.tif", "terralib"),
-	srid = 29191
+	epsg = 29191
 }
 
 itaitubaCells = Layer{

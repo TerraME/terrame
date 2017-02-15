@@ -65,5 +65,59 @@ return {
 		unitTest:assertError(areaError, "Geometry should be a polygon to get the area.")
 
 		proj.file:deleteIfExists()
+	end,
+	saveDataSet = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		File(proj.file):deleteIfExists()
+
+		tl:createProject(proj, {})
+
+		-- // create a database
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)
+
+		local clName1 = "SampaShpCells"
+		local resolution = 1
+		local mask = true
+		local cellsShp = File(clName1..".shp")
+		cellsShp:deleteIfExists()
+		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
+
+		local spDset = tl:getDataSet(proj, clName1)
+
+		local luaTable = {}
+		for i = 0, getn(spDset) - 1 do
+			local data = spDset[i]
+			data["attr-1"] = i
+			table.insert(luaTable, spDset[i])
+		end
+
+		local newLayerName = "New_Layer"
+
+		local invalidAttrName = function()
+			tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1"})
+		end
+		unitTest:assertError(invalidAttrName, "Invalid attribute name 'attr-1'.")
+
+		luaTable = {}
+		for i = 0, getn(spDset) - 1 do
+			local data = spDset[i]
+			data["at?tr2"] = i
+			table.insert(luaTable, spDset[i])
+		end
+
+		local invalidAttrNames = function()
+			tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1", "at?tr2"})
+		end
+		unitTest:assertError(invalidAttrNames, "Invalid attribute names 'attr-1', 'at?tr2'.")
+
+		proj.file:delete()
+		cellsShp:delete()
 	end
 }

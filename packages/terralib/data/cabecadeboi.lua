@@ -39,14 +39,14 @@ elevation = Layer{
 	project = project,
 	name = "elevation",
 	file = filePath("cabecadeboi-elevation.tif", "terralib"),
-	srid = 2311
+	epsg = 2311
 }
 
 box = Layer{
 	project = project,
 	name = "box",
 	file = filePath("cabecadeboi-box.shp", "terralib"),
-	srid = 2311
+	epsg = 2311
 }
 
 cl = Layer{

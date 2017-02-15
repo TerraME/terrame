@@ -476,7 +476,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil))
+							(string.match(k, "perc_") ~= nil))
 			unitTest:assertNotNil(v)
 		end
 
@@ -513,7 +513,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev"))
+							(string.match(k, "perc_") ~= nil) or (k == "stdev"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -550,7 +550,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean"))
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -587,7 +587,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted"))
 			unitTest:assertNotNil(v)
 		end
@@ -625,7 +625,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int"))
 			unitTest:assertNotNil(v)
 		end
@@ -663,7 +663,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur"))
 			unitTest:assertNotNil(v)
 		end
@@ -702,7 +702,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum"))
 			unitTest:assertNotNil(v)
@@ -741,7 +741,7 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
 							(k == "sum") or (k == "wsum"))
 			unitTest:assertNotNil(v)
@@ -785,9 +785,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil))
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil))
 			unitTest:assertNotNil(v)
 		end
 
@@ -824,9 +824,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean"))
 			unitTest:assertNotNil(v)
 		end
@@ -864,9 +864,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin"))
 			unitTest:assertNotNil(v)
 		end
@@ -904,9 +904,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax"))
 			unitTest:assertNotNil(v)
 		end
@@ -944,9 +944,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev"))
 			unitTest:assertNotNil(v)
 		end
@@ -984,9 +984,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
 							(k == "rsum"))
 			unitTest:assertNotNil(v)
@@ -1020,9 +1020,9 @@ return {
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
 							(k == "presence") or (k == "area_percent") or (k == "count") or
 							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc") ~= nil) or (k == "stdev") or (k == "mean") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
 							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc") ~= nil) or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
 							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
 							(k == "rsum") or (k == "rsum_over"))
 			unitTest:assertNotNil(v)
@@ -1119,7 +1119,7 @@ return {
 		local tableName = "sampa_cells"
 
 		local pgData = {
-			type = "POSTGIS",
+			type = "postgis",
 			host = host,
 			port = port,
 			user = user,
@@ -1146,6 +1146,11 @@ return {
 				unitTest:assertNotNil(v)
 			end
 		end
+
+		local attrNames = tl:getPropertyNames(proj, proj.layers[clName1])
+		unitTest:assertEquals("id", attrNames[0])
+		unitTest:assertEquals("col", attrNames[1])
+		unitTest:assertEquals("row", attrNames[2])
 
 		local luaTable = {}
 
@@ -1181,6 +1186,15 @@ return {
 			end
 		end
 
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLayerName])
+		unitTest:assertEquals("id", attrNames[0])
+		unitTest:assertEquals("col", attrNames[1])
+		unitTest:assertEquals("row", attrNames[2])
+		unitTest:assertEquals("geom", attrNames[3])	-- TODO(avancinirodrigo): why cell space does not return geom?
+		unitTest:assertEquals("attr1", attrNames[4])
+		unitTest:assertEquals("attr2", attrNames[5])
+		unitTest:assertEquals("attr3", attrNames[6])
+
 		tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1"})
 		newDSet = tl:getDataSet(proj, newLayerName)
 
@@ -1197,6 +1211,245 @@ return {
 				end
 			end
 		end
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLayerName])
+		unitTest:assertEquals("id", attrNames[0])
+		unitTest:assertEquals("col", attrNames[1])
+		unitTest:assertEquals("row", attrNames[2])
+		unitTest:assertEquals("geom", attrNames[3])
+		unitTest:assertEquals("attr1", attrNames[4])
+
+		-- SAVE POLYGONS, POINTS AND LINES THAT ARE NOT CELLSPACE SPACE
+		-- POLYGONS
+		local polName = "ES_Limit"
+		local polFile = filePath("test/limite_es_poly_wgs84.shp", "terralib")
+		tl:addShpLayer(proj, polName, polFile)
+
+		pgData.srid = 4326
+
+		tl:saveLayerAs(proj, polName, pgData, true)
+
+		local polDset = tl:getDataSet(proj, polName)
+		local polLuaTable = {}
+		for i = 0, getn(polDset) - 1 do
+			local data = polDset[i]
+			data.attr1 = i
+			table.insert(polLuaTable, polDset[i])
+		end
+
+		polName = "ES_Limit_Pg"
+		local polTable = "limite_es_poly_wgs84"
+		pgData.table = polTable
+		tl:addPgLayer(proj, polName, pgData)
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[polName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("gm_layer", attrNames[1])
+		unitTest:assertEquals("gm_type", attrNames[2])
+		unitTest:assertEquals("layer", attrNames[3])
+		unitTest:assertEquals("nm_estado", attrNames[4])
+		unitTest:assertEquals("nm_regiao", attrNames[5])
+		unitTest:assertEquals("cd_geocuf", attrNames[6])
+		unitTest:assertEquals("nm_uf", attrNames[7])
+
+		local newPolName = "ES_Limit_New"
+		tl:saveDataSet(proj, polName, polLuaTable, newPolName, {"attr1"})
+
+		local newPolDset = tl:getDataSet(proj, newPolName)
+		unitTest:assertEquals(getn(newPolDset), 1)
+		unitTest:assertEquals(getn(newPolDset), getn(polDset))
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[newPolName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("gm_layer", attrNames[1])
+		unitTest:assertEquals("gm_type", attrNames[2])
+		unitTest:assertEquals("layer", attrNames[3])
+		unitTest:assertEquals("nm_estado", attrNames[4])
+		unitTest:assertEquals("nm_regiao", attrNames[5])
+		unitTest:assertEquals("cd_geocuf", attrNames[6])
+		unitTest:assertEquals("nm_uf", attrNames[7])
+		unitTest:assertEquals("attr1", attrNames[9])
+
+		-- POINTS
+		local ptName = "BR_Ports"
+		local ptFile = filePath("test/ports.shp", "terralib")
+		tl:addShpLayer(proj, ptName, ptFile)
+
+		tl:saveLayerAs(proj, ptName, pgData, true)
+
+		local ptDset = tl:getDataSet(proj, ptName)
+		local ptLuaTable = {}
+		for i = 0, getn(ptDset) - 1 do
+			local data = ptDset[i]
+			data.attr1 = i
+			table.insert(ptLuaTable, ptDset[i])
+		end
+
+		ptName = "BR_Ports_Pg"
+		local ptTable = "ports"
+		pgData.table = ptTable
+		tl:addPgLayer(proj, ptName, pgData)
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[ptName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("tipo", attrNames[5])
+		unitTest:assertEquals("gestao", attrNames[10])
+		unitTest:assertEquals("pro_didade", attrNames[15])
+		unitTest:assertEquals("cep", attrNames[20])
+		unitTest:assertEquals("idr_rafica", attrNames[25])
+		unitTest:assertEquals("observacao", attrNames[30])
+		unitTest:assertEquals("cdc_troide", attrNames[32])
+
+		local newPtName = "BR_Ports_New"
+		tl:saveDataSet(proj, ptName, ptLuaTable, newPtName, {"attr1"})
+
+		local newPtDset = tl:getDataSet(proj, newPtName)
+		unitTest:assertEquals(getn(newPtDset), 8)
+		unitTest:assertEquals(getn(newPtDset), getn(ptDset))
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[newPtName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("tipo", attrNames[5])
+		unitTest:assertEquals("gestao", attrNames[10])
+		unitTest:assertEquals("pro_didade", attrNames[15])
+		unitTest:assertEquals("cep", attrNames[20])
+		unitTest:assertEquals("idr_rafica", attrNames[25])
+		unitTest:assertEquals("observacao", attrNames[30])
+		unitTest:assertEquals("cdc_troide", attrNames[32])
+		unitTest:assertEquals("attr1", attrNames[34])
+
+		-- LINES
+		local lnName = "ES_Rails"
+		local lnFile = filePath("test/rails.shp", "terralib")
+		tl:addShpLayer(proj, lnName, lnFile)
+
+		tl:saveLayerAs(proj, lnName, pgData, true)
+
+		local lnDset = tl:getDataSet(proj, lnName)
+		local lnLuaTable = {}
+		for i = 0, getn(lnDset) - 1 do
+			local data = lnDset[i]
+			data.attr1 = i
+			table.insert(lnLuaTable, lnDset[i])
+		end
+
+		lnName = "ES_Rails_Pg"
+		local lnTable = "rails"
+		pgData.table = lnTable
+		tl:addPgLayer(proj, lnName, pgData)
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[lnName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("observacao", attrNames[3])
+		unitTest:assertEquals("produtos", attrNames[6])
+		unitTest:assertEquals("operadora", attrNames[9])
+		unitTest:assertEquals("bitola_ext", attrNames[12])
+		unitTest:assertEquals("cod_pnv", attrNames[14])
+
+		local newLnName = "ES_Rails_New"
+		tl:saveDataSet(proj, lnName, lnLuaTable, newLnName, {"attr1"})
+
+		local newLnDset = tl:getDataSet(proj, newLnName)
+		unitTest:assertEquals(getn(newLnDset), 182)
+		unitTest:assertEquals(getn(newLnDset), getn(lnDset))
+
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("observacao", attrNames[3])
+		unitTest:assertEquals("produtos", attrNames[6])
+		unitTest:assertEquals("operadora", attrNames[9])
+		unitTest:assertEquals("bitola_ext", attrNames[12])
+		unitTest:assertEquals("cod_pnv", attrNames[14])
+		unitTest:assertEquals("attr1", attrNames[16])
+
+		-- ADD NEW ATTRIBUTE AND UPDATE A OLD
+		lnLuaTable = {}
+		for i = 0, getn(lnDset) - 1 do
+			local data = lnDset[i]
+			data.attr1 = i + 1000
+			data.attr2 = "test"..i
+			data.attr3 = (i % 2) == 0
+			table.insert(lnLuaTable, lnDset[i])
+		end
+
+		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("observacao", attrNames[3])
+		unitTest:assertEquals("produtos", attrNames[6])
+		unitTest:assertEquals("operadora", attrNames[9])
+		unitTest:assertEquals("bitola_ext", attrNames[12])
+		unitTest:assertEquals("cod_pnv", attrNames[14])
+		unitTest:assertEquals("attr1", attrNames[16])
+		unitTest:assertEquals("attr2", attrNames[17])
+		unitTest:assertEquals("attr3", attrNames[18])
+
+		-- ADD NEW ATTRIBUTE AND UPDATE THREE OLD
+		lnLuaTable = {}
+		for i = 0, getn(lnDset) - 1 do
+			local data = lnDset[i]
+			data.attr1 = i + 1000
+			data.attr2 = "test"..i
+			data.attr3 = (i % 2) == 0
+			data.attr4 = data.attr1 * 2
+			table.insert(lnLuaTable, lnDset[i])
+		end
+
+		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3", "attr4"})
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("observacao", attrNames[3])
+		unitTest:assertEquals("produtos", attrNames[6])
+		unitTest:assertEquals("operadora", attrNames[9])
+		unitTest:assertEquals("bitola_ext", attrNames[12])
+		unitTest:assertEquals("cod_pnv", attrNames[14])
+		unitTest:assertEquals("attr1", attrNames[16])
+		unitTest:assertEquals("attr2", attrNames[17])
+		unitTest:assertEquals("attr3", attrNames[18])
+		unitTest:assertEquals("attr4", attrNames[19])
+
+		-- ONLY UPDATE SOME ATTRIBUTE
+		lnLuaTable = {}
+		for i = 0, getn(lnDset) - 1 do
+			local data = lnDset[i]
+			data.attr1 = i - 1000
+			table.insert(lnLuaTable, lnDset[i])
+		end
+
+		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1"})
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("observacao", attrNames[3])
+		unitTest:assertEquals("produtos", attrNames[6])
+		unitTest:assertEquals("operadora", attrNames[9])
+		unitTest:assertEquals("bitola_ext", attrNames[12])
+		unitTest:assertEquals("cod_pnv", attrNames[14])
+		unitTest:assertEquals("attr1", attrNames[16])
+		unitTest:assertEquals("attr2", attrNames[17])
+		unitTest:assertEquals("attr3", attrNames[18])
+
+		-- UPDATE MORE ATTRIBUTES
+		lnLuaTable = {}
+		for i = 0, getn(lnDset) - 1 do
+			local data = lnDset[i]
+			data.attr1 = i + 5000
+			data.attr2 = i.."data.attr2"
+			data.attr3 = ((i % 2) == 0) and data.attr3
+			table.insert(lnLuaTable, lnDset[i])
+		end
+
+		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
+		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("observacao", attrNames[3])
+		unitTest:assertEquals("produtos", attrNames[6])
+		unitTest:assertEquals("operadora", attrNames[9])
+		unitTest:assertEquals("bitola_ext", attrNames[12])
+		unitTest:assertEquals("cod_pnv", attrNames[14])
+		unitTest:assertEquals("attr1", attrNames[16])
+		unitTest:assertEquals("attr2", attrNames[17])
+		unitTest:assertEquals("attr3", attrNames[18])
+		unitTest:assertEquals("attr4", attrNames[19])
 
 		proj.file:delete()
 		tl:dropPgDatabase(pgData)

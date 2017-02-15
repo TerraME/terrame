@@ -619,7 +619,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 
 		for k, v in pairs(dSet[i]) do
-			if (k == "OGR_GEOMETRY") or (k == "geom") then
+			if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
 				if self.geometry then
 					cell.geom = tlib:castGeomToSubtype(v)
 				end
@@ -678,7 +678,7 @@ local function setRasterCells(self, dSet)
 	self.xdim = set.xdim -- SKIP -- TODO(#1306): raster are not tested on Linux.
 	self.ydim = set.ydim -- SKIP
 	self.name = set.name -- SKIP
-	self.srid = set.srid -- SKIP
+	self.epsg = set.srid -- SKIP
 	self.bands = set.bands -- SKIP
 	self.resolutionX = set.resolutionX -- SKIP
 	self.resolutionY = set.resolutionY -- SKIP
@@ -1323,7 +1323,7 @@ CellularSpace_ = {
 
 			for i = 0, #dset do
 				for k, v in pairs(dset[i]) do
-					if (k == "OGR_GEOMETRY") or (k == "geom") then
+					if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
 						self.cells[i + 1][k] = v
 					end
 				end
