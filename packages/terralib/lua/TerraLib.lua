@@ -429,7 +429,7 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 					newName = string.gsub(currentProp, "B"..select.."_", property.."_")
 				end
 			else
-				newName = string.gsub(currentProp, select.."_", property.."_") 
+				newName = string.gsub(currentProp, select.."_", property.."_")
 			end
 
 			if newName ~= currentProp then
