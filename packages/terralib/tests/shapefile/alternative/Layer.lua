@@ -94,6 +94,15 @@ return {
 		end
 		unitTest:assertError(invalidFile, invalidFileExtensionMsg("data", "org"))
 
+		local data = {}
+		data.select = {"uf", "pop"}
+		data.source = "shp"
+		data.file = "shape.shp"
+		local selectNoExist = function()
+			layer1:export(data)
+		end
+		unitTest:assertError(selectNoExist,  "There are no attributes 'uf' and 'pop' in layer 'setores'.")
+
 		proj.file:deleteIfExists()
 	end
 }

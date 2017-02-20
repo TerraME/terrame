@@ -1540,6 +1540,17 @@ return {
 		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
 		unitTest:assertEquals(info3.srid, toData.srid)
 
+		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE
+		tl:saveLayerAs(proj, layerName1, toData, overwrite, {"NM_MICRO"})
+		local dset3 = tl:getDataSet(proj, layerName3)
+
+		unitTest:assertEquals(getn(dset3), 63)
+
+		for k, v in pairs(dset3[0]) do
+			unitTest:assert(((k == "FID") and (v == 0)) or ((k == "OGR_GEOMETRY") and (v ~= nil) ) or
+							((k == "NM_MICRO") and (v == "VOTUPORANGA")))
+		end
+
 		File(toData.file):delete()
 		proj.file:delete()
 	end,

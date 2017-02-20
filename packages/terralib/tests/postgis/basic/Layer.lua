@@ -417,7 +417,6 @@ return {
 		tl:dropPgTable(pgData)
 	end,
 	export = function(unitTest)
-		--[[
 		local projName = "layer_postgis_basic.tview"
 
 		if File(projName):exists() then -- TODO: (#1442)
@@ -429,9 +428,9 @@ return {
 			clean = true
 		}
 
-		local filePath1 = filePath("itaituba-census.shp", "terralib")
+		local filePath1 = filePath("test/MG_cities.shp", "terralib")
 
-		local layerName1 = "setores"
+		local layerName1 = "mg"
 		local layer1 = Layer{
 			project = proj,
 			name = layerName1,
@@ -443,7 +442,7 @@ return {
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local tableName = string.lower("Setores_Censitarios_2000_pol")
+		local tableName = string.lower("mg_cities")
 
 		local pgData = {
 			source = "postgis",
@@ -455,7 +454,7 @@ return {
 
 		layer1:export(pgData)
 
-		local layerName2 = "setorespg"
+		local layerName2 = "mgpg"
 		local layer2 = Layer{
 			project = proj,
 			source = "postgis",
@@ -466,17 +465,17 @@ return {
 			table = tableName
 		}
 
-		local geojson = "setores.geojson"
+		local geojson = "mg.geojson"
 		local data1 = {
 			file = geojson,
 			overwrite = overwrite
 		}
 
 		layer2:export(data1)
-		unitTest:assert(File(geojson):exists()) -- SKIP
+		unitTest:assert(File(geojson):exists())
 
-		-- OVERWRITE AND CHANGE SRID
-		data1.srid = 4326
+		-- OVERWRITE AND CHANGE EPSG
+		data1.epsg = 4326
 		layer2:export(data1)
 
 		local layerName3 = "GJ"
@@ -486,20 +485,20 @@ return {
 			file = geojson
 		}
 
-		unitTest:assertEquals(layer3.srid, data1.srid) -- SKIP
-		unitTest:assert(layer2.srid ~= data1.srid) -- SKIP
+		unitTest:assertEquals(layer3.epsg, data1.epsg)
+		unitTest:assert(layer2.epsg ~= data1.epsg)
 
-		local shp = "setores.shp"
+		local shp = "mg.shp"
 		local data2 = {
 			file = shp,
 			overwrite = overwrite
 		}
 
 		layer2:export(data2)
-		unitTest:assert(File(shp):exists()) -- SKIP
+		unitTest:assert(File(shp):exists())
 
-		-- OVERWRITE AND CHANGE SRID
-		data2.srid = 4326
+		-- OVERWRITE AND CHANGE EPSG
+		data2.epsg = 4326
 		layer2:export(data2)
 
 		local layerName4 = "SHP"
@@ -509,8 +508,27 @@ return {
 			file = shp
 		}
 
-		unitTest:assertEquals(layer4.srid, data2.srid) -- SKIP
-		unitTest:assert(layer2.srid ~= data2.srid) -- SKIP
+		unitTest:assertEquals(layer4.epsg, data2.epsg)
+		unitTest:assert(layer2.epsg ~= data2.epsg)
+
+		-- SELECT ONE ATTRIBUTE TO GEOJSON
+		data1.select = {"populaca"}
+		layer2:export(data1)
+		local attrs1 = layer3:attributes()
+
+		unitTest:assertEquals(attrs1[1], "FID")
+		unitTest:assertEquals(attrs1[2], "populaca")
+		unitTest:assertNil(attrs1[3])
+
+		-- SELECT TWO ATTRIBUTES TO SHAPE
+		data2.select = {"populaca", "nomemeso"}
+		layer2:export(data2)
+		local attrs2 = layer4:attributes()
+
+		unitTest:assertEquals(attrs2[1], "FID")
+		unitTest:assertEquals(attrs2[2], "populaca")
+		unitTest:assertEquals(attrs2[3], "nomemeso")
+		unitTest:assertNil(attrs2[4])
 
 		File(geojson):delete()
 		File(shp):delete()
@@ -518,8 +536,6 @@ return {
 
 		pgData.table = tableName
 		TerraLib{}:dropPgTable(pgData)
-		--]]
-		unitTest:assert(true)
 	end
 }
 

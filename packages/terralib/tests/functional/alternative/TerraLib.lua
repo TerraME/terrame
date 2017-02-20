@@ -115,9 +115,40 @@ return {
 		local invalidAttrNames = function()
 			tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1", "at?tr2"})
 		end
-		unitTest:assertError(invalidAttrNames, "Invalid attribute names 'attr-1', 'at?tr2'.")
+		unitTest:assertError(invalidAttrNames, "Invalid attribute names 'attr-1' and 'at?tr2'.")
 
 		proj.file:delete()
 		cellsShp:delete()
+	end,
+	saveLayerAs = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		File(proj.file):deleteIfExists()
+
+		tl:createProject(proj, {})
+
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)
+
+		local toData = {}
+		toData.file = "shp2shp.shp"
+		toData.type = "shp"
+
+		local attrNotExist = function()
+			tl:saveLayerAs(proj, layerName1, toData, true, {"ATTR"})
+		end
+		unitTest:assertError(attrNotExist, "There is no attribute 'ATTR' in layer 'SampaShp'.")
+
+		local attrsNotExist = function()
+			tl:saveLayerAs(proj, layerName1, toData, true, {"ATTR1", "ATTR2", "ATTR3"})
+		end
+		unitTest:assertError(attrsNotExist,  "There are no attributes 'ATTR1', 'ATTR2' and 'ATTR3' in layer 'SampaShp'.")
+
+		proj.file:delete()
 	end
 }
