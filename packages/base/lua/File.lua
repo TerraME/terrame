@@ -377,10 +377,10 @@ File_ = {
 		return lfs.touch(self.filename, atime, mtime)
 	end,
 	--- Write a given string or table into the file. The file must be closed afterwards.
-	-- @arg data A string or table to be saved. A table it must be a vector (whose indexes are line numbers)
-	-- containing named-tables (whose indexes are attribute names).
-	-- When writing a table, he first line of the file will list the attributes of the table.
-	-- @arg sep A string with the separator. The default value is ' ' for string and ',' for table.
+	-- It automatically adds an end of line to the file after the string.
+	-- @arg data A string or table to be saved. A table it must be a vector
+	-- with the values to be saved in a given line.
+	-- @arg sep A string with the separator. The default value is ','.
 	-- @usage mytable = {"x", "y", "z"}
 	--
 	-- file = File("file.csv")
@@ -395,7 +395,7 @@ File_ = {
 
 		mandatoryArgument(1, "table", data)
 		optionalArgument(2, "string", sep)
-		sep = sep or " "
+		sep = sep or ","
 
 		if #data ~= getn(data) then
 			customError("#1 should be a vector.")
@@ -411,7 +411,7 @@ File_ = {
 			customError("Cannot write a file opened for reading.")
 		end
 
-		self.file:write(table.concat(data, sep))
+		self.file:write(table.concat(data, sep), "\n")
 	end,
 	--- Write a given DataFrame into the file. It automatically closes the file after writing it.
 	-- @arg data A DataFrame.
