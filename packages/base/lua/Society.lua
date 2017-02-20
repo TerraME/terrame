@@ -563,16 +563,6 @@ Society_ = {
 
 		return self.agents[position]
 	end,
-	--- Return a given Agent based on its position.
-	-- @deprecated Society:get
-	getAgent = function()
-		deprecatedFunction("getAgent", "get")
-	end,
-	--- Return a vector with the Agents of the Society.
-	-- @deprecated Society.agents
-	getAgents = function()
-		deprecatedFunction("getAgents", ".agents")
-	end,
 	--- Notify all the Agents of the Society.
 	-- @arg modelTime A positive number representing the notification time. The default value is 0.
 	-- It is also possible to use an Event as argument. In this case, it will use the result of
@@ -662,11 +652,6 @@ Society_ = {
 	-- sample = soc:sample()
 	sample = function(self)
 		return self.agents[Random():integer(1, #self.agents)]
-	end,
-	--- Return the number of Agents in the Society.
-	-- @deprecated Society:#
-	size = function()
-		deprecatedFunction("size", "operator #")
 	end,
 	--- Split the Society into a set of Groups according to a classification strategy. The
 	-- Groups will have empty intersection and union equal to the whole

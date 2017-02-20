@@ -221,15 +221,6 @@ return{
 		end
 		unitTest:assertError(error_func, "There is a Society within this Environment that already has this placement.")
 	end,
-	execute = function(unitTest)
-		local env = Environment{}
-
-		local error_func = function()
-			env:execute()
-		end
-
-		unitTest:assertError(error_func, deprecatedFunctionMsg("execute", "run"))
-	end,
 	run = function(unitTest)
 		local env = Environment{}
 

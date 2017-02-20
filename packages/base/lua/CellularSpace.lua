@@ -992,9 +992,6 @@ CellularSpace_ = {
 
 				data.func = getVonNeumannNeighborhood
 			end,
-			["3x3"] = function()
-				deprecatedFunction("createNeighborhood with strategy 3x3", "mxn")
-			end,
 			coord = function()
 				verifyUnnecessaryArguments(data, {"name", "strategy", "target", "inmemory"})
 
@@ -1129,21 +1126,6 @@ CellularSpace_ = {
 		if self.index_xy_[xIndex] then
 			return self.index_xy_[xIndex][yIndex]
 		end
-	end,
-	--- Return a Cell from the CellularSpace given its x and y location.
-	-- @deprecated CellularSpace:get
-	getCell = function()
-		deprecatedFunction("getCell", "get")
-	end,
-	--- Return a Cell from the CellularSpace given its id.
-	-- @deprecated CellularSpace:get
-	getCellByID = function()
-		deprecatedFunction("getCellByID", "get")
-	end,
-	--- Return all the Cells of the CellularSpace as a vector.
-	-- @deprecated CellularSpace.cells
-	getCells = function()
-		deprecatedFunction("getCells", ".cells")
 	end,
 	--- Load the CellularSpace from the database. TerraME automatically executes this function when
 	-- the CellularSpace is created, but one can execute this to load the attributes again, erasing
@@ -1351,11 +1333,6 @@ CellularSpace_ = {
 		end
 
 		tlib:saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
-	end,
-	--- Return the number of Cells in the CellularSpace.
-	-- @deprecated CellularSpace:#
-	size = function()
-		deprecatedFunction("size", "operator #")
 	end,
 	--- Split the CellularSpace into a table of Trajectories according to a classification
 	-- strategy. The Trajectories will have empty intersection and union equal to the

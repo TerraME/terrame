@@ -322,7 +322,6 @@ return{
 		end
 
 		local options = {
-			["3x3"] = true,
 			coord = true,
 			diagonal = true,
 			["function"] = true,
@@ -383,15 +382,6 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("wrap", "boolean", "true"))
-
-		error_func = function()
-			cs:createNeighborhood{
-				strategy = "3x3",
-				name = "my_neighborhood",
-				filter = "teste"
-			}
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("createNeighborhood with strategy 3x3", "mxn"))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -755,30 +745,6 @@ return{
 		end
 		unitTest:assertError(error_func, "As #1 is string, #2 should be nil, but got number.")
 	end,
-	getCell = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		local error_func = function()
-			cs:getCell(1, 2)
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("getCell", "get"))
-	end,
-	getCellByID = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		local error_func = function()
-			cs:getCellByID("C0L0")
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("getCellByID", "get"))
-	end,
-	getCells = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		local error_func = function()
-			cs:getCells()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("getCells", ".cells"))
-	end,
 	notify = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
@@ -798,14 +764,6 @@ return{
 			cs:save("Layer")
 		end
 		unitTest:assertError(saveNoProjectLoaded, "The CellularSpace must have a valid Project. Please, check the documentation.")
-	end,
-	size = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		local error_func = function()
-			cs:size()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end,
 	split = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

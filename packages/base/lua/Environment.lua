@@ -293,11 +293,6 @@ Environment_ = {
 			end
 		}
 	end,
-	--- Run the Environment.
-	-- @deprecated Timer:run
-	execute = function()
-		deprecatedFunction("execute", "run")
-	end,
 	--- Run the Environment until a given time. It activates the Timers it contains, the Timers
 	-- of the Environments it contains, and so on.
 	-- @arg finalTime A number representing the final time. This funcion will stop when there is no

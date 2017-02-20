@@ -610,38 +610,6 @@ return{
 		end
 		unitTest:assertError(error_func, integerArgumentMsg(1, 2.2))
 	end,
-	getAgent = function(unitTest)
-		local ag1 = Agent{
-			name = "nonfoo",
-			execute = function() end
-		}
-
-		local sc1 = Society{
-			instance = ag1,
-			quantity = 10
-		}
-
-		local error_func = function()
-			sc1:getAgent("1")
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("getAgent", "get"))
-	end,
-	getAgents = function(unitTest)
-		local ag1 = Agent{
-			name = "nonfoo",
-			execute = function() end
-		}
-
-		local sc1 = Society{
-			instance = ag1,
-			quantity = 10
-		}
-
-		local error_func = function()
-			sc1:getAgents()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("getAgents", ".agents"))
-	end,
 	notify = function(unitTest)
 		local sc1 = Society{
 			instance = Agent{},
@@ -693,22 +661,6 @@ return{
 			soc1:sample()
 		end
 		unitTest:assertError(error_func, "It is not possible to sample from an empty object.")
-	end,
-	size = function(unitTest)
-		local ag1 = Agent{
-			name = "nonfoo",
-			execute = function() end
-		}
-
-		local sc1 = Society{
-			instance = ag1,
-			quantity = 10
-		}
-
-		local error_func = function()
-			sc1:size()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end,
 	split = function(unitTest)
 		local ag1 = Agent{

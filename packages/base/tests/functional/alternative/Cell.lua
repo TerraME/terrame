@@ -180,14 +180,6 @@ return{
 			c:sample()
 		end
 		unitTest:assertError(error_func, "Cell does not have a Neighborhood named '1'.")
-	end,
-	size = function(unitTest)
-		local c = Cell{}
-
-		local error_func = function()
-			c:size()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end
 }
 

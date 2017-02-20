@@ -49,54 +49,6 @@ return{
 		end
 		unitTest:assertError(error_func, "Cell (0, 1) already belongs to the Neighborhood.")
 	end,
-	addCell = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:addCell()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("addCell", "add"))
-	end,
-	addNeighbor = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:addNeighbor()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("addNeighbor", "add"))
-	end,
-	eraseCell = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:eraseCell()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("eraseCell", "remove"))
-	end,
-	eraseNeighbor = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:eraseNeighbor()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("eraseNeighbor", "remove"))
-	end,
-	getCellWeight = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:getCellWeight()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("getCellWeight", "getWeight"))
-	end,
-	getNeighWeight = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:getNeighWeight()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("getNeighWeight", "getWeight"))
-	end,
 	getWeight = function(unitTest)
 		local cell1 = Cell{x = 0, y = 0}
 		local neigh = Neighborhood()
@@ -164,30 +116,6 @@ return{
 
 		neigh:add(c)
 	end,
-	setCellNeighbor = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:setCellNeighbor()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("setCellNeighbor", "remove and add"))
-	end,
-	setCellWeight = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:setCellWeight()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("setCellWeight", "setWeight"))
-	end,
-	setNeighWeight = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:setNeighWeight()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("setNeighWeight", "setWeight"))
-	end,
 	setWeight = function(unitTest)
 		local cell1 = Cell{}
 		local neigh = Neighborhood()
@@ -216,14 +144,6 @@ return{
 			neigh:setWeight(cell1, 0.5)
 		end
 		unitTest:assertError(error_func, "Cell (0,0) does not belong to the Neighborhood.")
-	end,
-	size = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:size()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end
 }
 
