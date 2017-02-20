@@ -37,6 +37,16 @@ return{
 		unitTest:assertEquals(#df, 5)
 
 		df = DataFrame{
+			x = {[0] = 2, 2, 3, 4},
+			y = {[0] = 0, 1, 2, 3}
+		}
+
+		unitTest:assertType(df, "DataFrame")
+		unitTest:assertEquals(#df, 4)
+		unitTest:assertEquals(df.x[0], 2)
+		unitTest:assertEquals(df.y[2], 2)
+
+		df = DataFrame{
 			{x = 1, y = 1},
 			{x = 2, y = 1},
 			{x = 3, y = 2},
