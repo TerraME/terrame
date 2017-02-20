@@ -248,12 +248,6 @@ Agent_ = {
 
 		return self[placement].cells
 	end,
-	--- Return the unique identifier of the Agent.
-	-- @usage -- id = agent:getId()
-	-- @deprecated Agent.id
-	getId = function()
-		deprecatedFunction("getId", ".id")
-	end,
 	--- Return the time when the State machine executed the transition to the current state.
 	-- Before executing for the first time, the latency is zero.
 	-- This function is useful only when the Agent is described as a State machine.
@@ -536,11 +530,6 @@ Agent_ = {
 	on_message = function(self, message)
 		customError("Agent '"..tostring(self.id).."' cannot get a message from '"..tostring(message.sender.id).."' because it does not implement 'on_message'.")
 	end,
-	--- Execute a random walk to a neighbor Cell.
-	-- @deprecated Agent:walk
-	randomWalk = function()
-		deprecatedFunction("randomWalk", "walk")
-	end,
 	--- Create an Agent with the same behavior in the same Cell where the original Agent is
 	-- (according to its placement). The new Agent is pushed into the same Society the original
 	-- Agent belongs and placements created using the Society are instantiated with size zero if
@@ -605,11 +594,6 @@ Agent_ = {
 		verify(sn, "Agent does not have a SocialNetwork named '"..id.."'.")
 
 		return sn:sample()
-	end,
-	--- Set the unique identifier of the Agent.
-	-- @deprecated Agent.id
-	setId = function()
-		deprecatedFunction("setId", ".id")
 	end,
 	--- Activate or not the Trajectories defined for a given Agent.
 	-- @arg status Use or not the Trajectories. As default, Trajectories are turned off. If

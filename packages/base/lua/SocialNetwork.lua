@@ -189,11 +189,6 @@ SocialNetwork_ = {
 		end
 
 		self.weights[id] = weight
-	end,
-	--- Retrieve the number of connections in the SocialNetwork.
-	-- @deprecated SocialNetwork:#
-	size = function()
-		deprecatedFunction("size", "operator #")
 	end
 }
 

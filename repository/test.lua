@@ -100,74 +100,65 @@ local function execute(command, filename)
 		report.errors = report.errors + 1
 	end
 
-	logfile = io.open("log"..s..filename, "r")
-	if logfile == nil then
-		_Gtme.printError("Creating log file '".._Gtme.makePathCompatibleToAllOS("log"..s..filename.."'"))
-		report.createdlogs = report.createdlogs + 1
+	local logfile = File("log"..s..filename)
 
-		logfile = io.open("log"..s..filename, "w")
-		forEachElement(result, function(_, value)
-			logfile:writeLine(value.."\n")
-		end)
-	else
-		local resultfile = io.open(filename, "w")
+	if not logfile:exists() then
+		_Gtme.printError("File '"..filename.."' should exist. Run updatePackages.lua first.")
+		os.exit(1)
+	end
 
-		if not resultfile then
-			_Gtme.printError("File '"..filename.."' could not be created")
-			os.exit(1)
+	local resultfile = File(filename)
+
+	local line = 1
+	local logerror = false
+	forEachElement(result, function(_, value)
+		local distance = 0
+		if value then
+			distance = approximateLine(value)
 		end
-			
-		local line = 1
-		local logerror = false
-		forEachElement(result, function(_, value)
-			local distance = 0
-			if value then
-				distance = approximateLine(value)
-			end
 
-			value = _Gtme.makePathCompatibleToAllOS(value)
-			resultfile:writeLine(value.."\n")
+		value = _Gtme.makePathCompatibleToAllOS(value)
+		resultfile:writeLine(value)
 
-			local str = logfile:readLine()
-			local distance2 = approximateLine(str)
+		local str = logfile:readLine()
+		local distance2 = approximateLine(str)
 
-			if distance > distance2 then
-				distance = distance2
-			end
+		if distance > distance2 then
+			distance = distance2
+		end
 				
-			if not str then
-				_Gtme.printError("Error: Strings do not match (line "..line.."):")
-				_Gtme.printError("Log file: <end of file>")
-				_Gtme.printError("Test: '"..value.."'.")
+		if not str then
+			_Gtme.printError("Error: Strings do not match (line "..line.."):")
+			_Gtme.printError("Log file: <end of file>")
+			_Gtme.printError("Test: '"..value.."'.")
 
-				logerror = true
-				report.logerrors = report.logerrors + 1
-				return false
-			end		
+			logerror = true
+			report.logerrors = report.logerrors + 1
+			return false
+		end		
 
-			str = _Gtme.makePathCompatibleToAllOS(str)				
-			value = _Gtme.makePathCompatibleToAllOS(value)				
+		str = _Gtme.makePathCompatibleToAllOS(str)				
+		value = _Gtme.makePathCompatibleToAllOS(value)				
 				
-			if levenshtein(str, value) > distance then
-				_Gtme.printError("Error: Strings do not match (line "..line.."):")
-				_Gtme.printError("Log file: '"..str.."'.")
-				_Gtme.printError("Test:     '"..value.."'.")
-				_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
-				printTestOutput(result)
+		if levenshtein(str, value) > distance then
+			_Gtme.printError("Error: Strings do not match (line "..line.."):")
+			_Gtme.printError("Log file: '"..str.."'.")
+			_Gtme.printError("Test:     '"..value.."'.")
+			_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
+			printTestOutput(result)
 
-				report.locallogerrors = report.locallogerrors + 1
-				logerror = true
-				return false
-			end
-			line = line + 1
-		end)
+			report.locallogerrors = report.locallogerrors + 1
+			logerror = true
+			return false
+		end
+		line = line + 1
+	end)
 
-		if not logerror then
-			local v = logfile:readLine()
-			if v then
-				_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
-				report.logerrors = report.logerrors + 1
-			end
+	if not logerror then
+		local v = logfile:readLine()
+		if v then
+			_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
+			report.logerrors = report.logerrors + 1
 		end
 	end
 end

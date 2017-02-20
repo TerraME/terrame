@@ -48,11 +48,6 @@ Trajectory_ = {
 		table.insert(self.cells, cell)
 		self.cObj_:add(#self, cell.cObj_)
 	end,
-	--- Add a new Cell to the Trajectory.
-	-- @deprecated Trajectory:add
-	addCell = function()
-		deprecatedFunction("addCell", "add")
-	end,
 	--- Remove all Cells from the Trajectory.
 	-- @usage cs = CellularSpace{
 	--     xdim = 10
@@ -177,11 +172,6 @@ Trajectory_ = {
 			end
 		end)
 		return result
-	end,
-	--- Return a cell given its x and y locations.
-	-- @deprecated Trajectory:get
-	getCell = function()
-		deprecatedFunction("getCell", "get")
 	end,
 	--- Randomize the Cells of the Trajectory. It will change the traversing order used by
 	-- Utils:forEachCell().

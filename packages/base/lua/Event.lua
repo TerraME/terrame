@@ -172,10 +172,6 @@ function Event(data)
 		verifyNamedTable(data)
 	end
 
-	if data.message ~= nil then
-		customError("Argument 'message' is deprecated, use 'action' instead.")
-	end
-
 	if data.action == nil then
 		customError(mandatoryArgumentMsg("action"))
 	end

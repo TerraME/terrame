@@ -84,11 +84,6 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("action", "one of the TerraME types or a function", -5.5))
 
 		error_func = function()
-			event = Event{message = function() end}
-		end
-		unitTest:assertError(error_func, "Argument 'message' is deprecated, use 'action' instead.")
-
-		error_func = function()
 			event = Event{action = function() end, myperiod = function() end}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("myperiod", "period"))

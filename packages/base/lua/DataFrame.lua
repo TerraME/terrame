@@ -393,9 +393,9 @@ function DataFrame(data)
 			else
 				df[idx] = value
 
-				for i = 1, #value do
+				forEachElement(value, function(i)
 					mrows[i] = true
-				end
+				end)
 			end
 		end)
 	elseif first ~= 1 or step ~= 1 then
