@@ -133,7 +133,7 @@ return {
 		local overwriteShpError = function()
 			tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
-		unitTest:assertError(overwriteShpError,  "The file 'postgis2shp.shp' already exists.")
+		unitTest:assertError(overwriteShpError, "File 'postgis2shp.shp' already exists.")
 
 		File(toData.file):delete()
 
@@ -147,7 +147,7 @@ return {
 		local overwriteGeojsonError = function()
 			tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
-		unitTest:assertError(overwriteGeojsonError,  "The file 'postgis2geojson.geojson' already exists.")
+		unitTest:assertError(overwriteGeojsonError, "File 'postgis2geojson.geojson' already exists.")
 
 		local overwritePgError = function()
 			tl:saveLayerAs(proj, layerName1, pgData, overwrite)

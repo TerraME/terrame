@@ -109,13 +109,14 @@ return {
 		for i = 0, getn(spDset) - 1 do
 			local data = spDset[i]
 			data["at?tr2"] = i
+			data["at#r3"] = i
 			table.insert(luaTable, spDset[i])
 		end
 
 		local invalidAttrNames = function()
-			tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1", "at?tr2"})
+			tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1", "at?tr2", "at#r3"})
 		end
-		unitTest:assertError(invalidAttrNames, "Invalid attribute names 'attr-1' and 'at?tr2'.")
+		unitTest:assertError(invalidAttrNames, "Invalid attribute names 'attr-1', 'at?tr2' and 'at#r3'.")
 
 		proj.file:delete()
 		cellsShp:delete()

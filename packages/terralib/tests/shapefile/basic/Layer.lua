@@ -876,7 +876,7 @@ return {
 		unitTest:assert(layer.epsg ~= data2.epsg)
 
 		-- SELECT ONE ATTRIBUTE TO GEOJSON
-		data1.select = {"population"}
+		data1.select = "population"
 		layer:export(data1)
 		local attrs1 = layer2:attributes()
 
@@ -885,7 +885,7 @@ return {
 		unitTest:assertNil(attrs1[3])
 
 		-- SELECT ONE ATTRIBUTE TO SHAPE
-		data2.select = {"dens_pop"}
+		data2.select = "dens_pop"
 		layer:export(data2)
 		local attrs2 = layer3:attributes()
 

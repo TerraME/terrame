@@ -952,11 +952,11 @@ local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 				local ins = ""
 				for i = 1, #invalidNames do
 					ins = ins.."'"..invalidNames[i].."'"
-						if (i ~= #invalidNames - 1) and not (i == #invalidNames) then
-							ins = ins..", "
-						elseif i == #invalidNames - 1 then
-							ins = ins.." and "
-						end
+					if (i ~= #invalidNames - 1) and not (i == #invalidNames) then
+						ins = ins..", "
+					elseif i == #invalidNames - 1 then
+						ins = ins.." and "
+					end
 				end
 
 				errorMsg = "Invalid attribute names "..ins.."."
@@ -2179,7 +2179,7 @@ TerraLib_ = {
 						toDSetName = fn
 						File(toData.file):delete() -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
 					else
-						errorMsg = "The file '"..toData.file.."' already exists."
+						errorMsg = "File '"..toData.file.."' already exists."
 					end
 				end
 
@@ -2207,7 +2207,7 @@ TerraLib_ = {
 					if overwrite then
 						toDs:dropDataSet(toDSetName)
 					else
-						errorMsg = "The file '"..fileCopy.."' already exists." -- SKIP
+						errorMsg = "File '"..fileCopy.."' already exists." -- SKIP
 					end
 				end
 

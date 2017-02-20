@@ -692,8 +692,8 @@ Layer_ = {
 	-- @arg data.epsg A number from the EPSG Geodetic Parameter Dataset describing a projection.
 	-- It can be used to reproject the data.
 	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
-	-- @arg data.select A string table with the attribute(s) that are going to be exported. Use this only if you want to
-	-- specific attribute(s).
+	-- @arg data.select  A vector with the names of the attributes to be saved. [...] When saving a
+	-- single attribute, you can use a string "attribute" instead of a table {"attribute"}.
 	-- @arg data.... Additional arguments related to where the output will be saved. These arguments
 	-- are the same for describing the data source when one creates a layer from a file or database.
 	-- @usage -- DONTRUN
@@ -714,7 +714,13 @@ Layer_ = {
 			data.file = File(data.file)
 		end
 
-		optionalTableArgument(data, "select", "table")
+		if (data.select ~= nil) and (data.select ~= "") then
+			if type(data.select) == "string" then
+				data.select = {data.select}
+			elseif type(data.select) ~= "table" then
+				customError("Incompatible types. Argument 'select' expected table or string.")
+			end
+		end
 
 		if type(data.file) == "File" then
 			verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "select"})
