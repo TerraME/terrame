@@ -33,7 +33,7 @@ No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 Execution of all asserts was not verified.
-All 49 asserts were executed successfully.
+All 48 asserts were executed successfully.
 All 5 tested functions do not have any unexpected execution error.
 All 5 tested functions have at least one assert.
 All 5 tested functions exist in the source code of the package.
