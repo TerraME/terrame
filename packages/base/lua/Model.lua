@@ -461,10 +461,6 @@ function Model(attrTab)
 	local model
 
 	local callFunction = function(_, v)
-		if v == nil then
-			customError("This call is deprecated. Use Model:getParameters() instead.")
-		end
-
 		return model(v, debug.getinfo(1).name)
 	end
 

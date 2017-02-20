@@ -242,20 +242,34 @@ return{
 	end,
 	writeLine = function(unitTest)
 		local example = "Some text.."
-		local filename = currentDir().."abc.txt"
+		local filename = "write-line-1.txt"
 
 		local file = File(filename)
 		file:writeLine(example)
+		file:writeLine(example)
 		file:close()
 
-		file = File(filename):open()
-		local data = file:read("*all")
+		unitTest:assertFile(file)
+
+		example = {"a", "b", "c"}
+		filename = "write-line-2.txt"
+
+		file = File(filename)
+		file:writeLine(example)
+		file:writeLine(example)
 		file:close()
 
-		unitTest:assertNotNil(data)
-		unitTest:assertEquals(data, example)
+		unitTest:assertFile(file)
 
-		File(filename):deleteIfExists()
+		example = {"a", "b", "c"}
+		filename = "write-line-3.txt"
+
+		file = File(filename)
+		file:writeLine(example, "-")
+		file:writeLine(example, "-")
+		file:close()
+
+		unitTest:assertFile(file)
 	end,
 	__tostring = function(unitTest)
 		local file = filePath("agents.csv", "base")

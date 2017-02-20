@@ -155,14 +155,6 @@ return{
 			sn:setWeight(ag1, 0.5)
 		end
 		unitTest:assertError(error_func, "Agent '1' does not belong to the SocialNetwork.")
-	end,
-	size = function(unitTest)
-		local sn = SocialNetwork()
-
-		local error_func = function()
-			sn:size()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end
 }
 

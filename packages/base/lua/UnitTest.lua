@@ -357,7 +357,7 @@ UnitTest_ = {
 				if not oldStr then oldStr = "<end of file>" end
 				if not newStr then newStr = "<end of file>" end
 
-				_Gtme.printError("Error: Strings do not match (line "..line.."):")
+				_Gtme.printError("Error: Strings do not match in file '"..fname.."' (line "..line.."):")
 				_Gtme.printError("Log file: '"..oldStr.."'")
 				_Gtme.printError("Test: '"..newStr.."'")
 

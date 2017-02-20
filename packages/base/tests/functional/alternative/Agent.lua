@@ -198,13 +198,6 @@ return {
 		end
 		unitTest:assertError(error_func, "Placement 'pl' should be a Trajectory, got number.")
 	end,
-	getId = function(unitTest)
-		local ag1 = Agent{}
-		local error_func = function()
-			ag1:getId()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("getId", ".id"))
-	end,
 	getSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
 
@@ -432,19 +425,6 @@ return {
 		end
 		unitTest:assertError(error_func, "Agent 'nil' cannot get a message from 'nil' because it does not implement 'on_message'.")
 	end,
-	randomWalk = function(unitTest)
-		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3}
-		local myEnv = Environment{cs, ag1}
-
-		myEnv:createPlacement{strategy = "void"}
-		local c1 = cs.cells[1]
-		ag1:enter(c1)
-		local error_func = function()
-			ag1:randomWalk()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("randomWalk", "walk"))
-	end,
 	reproduce = function(unitTest)
 		local a = Agent{}
 		local s = Society{
@@ -461,13 +441,6 @@ return {
 			s:sample():reproduce(2)
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
-	end,
-	setId = function(unitTest)
-		local ag1 = Agent{}
-		local error_func = function()
-			ag1:setId("aa")
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("setId", ".id"))
 	end,
 	walk = function(unitTest)
 		local ag1 = Agent{mvalue = 3}

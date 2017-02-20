@@ -48,10 +48,10 @@ forEachDirectory(".", function(dir)
 	end
 end)
 
-file = io.open("packages.lua", "w")
+file = File("packages.lua")
 file:writeLine("-- List of packages for TerraME "..packageInfo().version)
-file:writeLine("\n-- "..os.date("Created in %d %B %Y"))
-file:writeLine("\n\nreturn "..vardump(result))
+file:writeLine("-- "..os.date("Created in %d %B %Y"))
+file:writeLine("\nreturn "..vardump(result))
 file:close()
 
 _Gtme.printNote("Cleaning folder")

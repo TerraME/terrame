@@ -153,11 +153,6 @@ Timer_ = {
 	clear = function(self)
 		self.events = {}
 	end,
-	--- Run the simulation.
-	-- @deprecated Timer:run
-	execute = function()
-		deprecatedFunction("execute", "run")
-	end,
 	--- Return a vector with the Events of the Timer.
 	-- @usage timer = Timer{
 	--     Event{action = function() print("step") end}

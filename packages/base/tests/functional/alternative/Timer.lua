@@ -152,17 +152,6 @@ return {
 		end
 		unitTest:assertError(error_func, "Attribute 'roads2010' does not exist in the Agents.")
 	end,
-	execute = function(unitTest)
-		local timer = Timer{
-			Event{period = 2, action = function()
-			end}
-		}
-
-		local error_func = function()
-			timer:execute()
-		end
-		unitTest:assertError(error_func, deprecatedFunctionMsg("execute", "run"))
-	end,
 	run = function(unitTest)
 		local timer = Timer{
 			Event{period = 2, action = function()

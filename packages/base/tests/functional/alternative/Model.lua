@@ -415,11 +415,6 @@ return{
 			M{files = {file1 = "agxd.csv"}}
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg(toLabel("file1", "files"), File("agxd.csv")))
-
-		error_func = function()
-			M()
-		end
-		unitTest:assertError(error_func, "This call is deprecated. Use Model:getParameters() instead.")
 	end,
 	execute = function(unitTest)
 		local error_func = function()

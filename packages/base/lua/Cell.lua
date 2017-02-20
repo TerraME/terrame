@@ -272,11 +272,6 @@ Cell_ = {
 		self.id = id
 		self.cObj_:setID(self.id)
 	end,
-	--- Return the number of Neighborhoods in the Cell.
-	-- @deprecated Cell:#
-	size = function()
-		deprecatedFunction("size", "operator #")
-	end,
 	--- Synchronizes the Cell. TerraME can keep two copies of the attributes of a Cell in memory:
 	-- one stores the past values and the other stores the current (present) values. Synchronize
 	-- copies the current values to a table named past, within the Cell. The previous past is
