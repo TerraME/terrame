@@ -187,7 +187,27 @@ return {
 		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
 		unitTest:assertEquals(info2.srid, toData.srid)
 
+		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE
+		local file1 = toData.file
+		toData.file = "gj2gj.geojson"
+		toData.type = "geojson"
+		tl:saveLayerAs(proj, layerName1, toData, overwrite, {"NM_MICRO"})
+
+		local layerName3 = "GJ2GJ"
+		local layerFile3 = File(toData.file)
+		tl:addGeoJSONLayer(proj, layerName3, layerFile3)
+
+		local dset3 = tl:getDataSet(proj, layerName3)
+
+		unitTest:assertEquals(getn(dset3), 63)
+
+		for k, v in pairs(dset3[0]) do
+			unitTest:assert(((k == "FID") and (v == 0)) or ((k == "OGR_GEOMETRY") and (v ~= nil) ) or
+							((k == "NM_MICRO") and (v == "VOTUPORANGA")))
+		end
+
 		File(toData.file):delete()
+		File(file1):delete()
 		proj.file:delete()
 	end,
 	getLayerSize = function(unitTest)

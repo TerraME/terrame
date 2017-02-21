@@ -385,7 +385,7 @@ return {
 				table = tableWrong
 			}
 		end
-		unitTest:assertError(tableNotExists, "Is not possible add the Layer. The table '"..tableWrong.."' does not exist.")
+		unitTest:assertError(tableNotExists, "Is not possible add the Layer. Table '"..tableWrong.."' does not exist.")
 
 		File(projName):deleteIfExists()
 
@@ -804,7 +804,7 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(tableAlreadyExists, "The table '"..tName1.."' already exists.")
+		unitTest:assertError(tableAlreadyExists, "Table '"..tName1.."' already exists.")
 
 		TerraLib{}:dropPgTable(pgData)
 
@@ -880,6 +880,13 @@ return {
 			layer1:export(pgData)
 		end
 		unitTest:assertError(pgSourceError, "It only supports postgis database, use source = \"postgis\".")
+
+		pgData.select = {"uf"}
+		pgData.source = "postgis"
+		local selectNoExist = function()
+			layer1:export(pgData)
+		end
+		unitTest:assertError(selectNoExist,  "There is no attribute 'uf' in layer 'setores'.")
 
 		proj.file:deleteIfExists()
 	end

@@ -886,10 +886,13 @@ local function fixCellSpaceSrid(project, csLayerName, inputLayerName)
     releaseProject(project)
 end
 
-local function getLayerByDataSetName(layers, dsetName)
+local function getLayerByDataSetName(layers, dsetName, type)
 	for _, l in pairs(layers) do
 		if l:getDataSetName() == dsetName then
-			return l
+			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(l:getDataSourceId())
+			if dsInfo:getType() == type then
+				return l
+			end
 		end
 	end
 
@@ -949,8 +952,10 @@ local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 				local ins = ""
 				for i = 1, #invalidNames do
 					ins = ins.."'"..invalidNames[i].."'"
-					if i ~= #invalidNames then
+					if (i ~= #invalidNames - 1) and not (i == #invalidNames) then
 						ins = ins..", "
+					elseif i == #invalidNames - 1 then
+						ins = ins.." and "
 					end
 				end
 
@@ -1466,7 +1471,7 @@ TerraLib_ = {
 			layer = createLayer(name, data.table, connInfo, "POSTGIS", nil, srid)
 		else
 			releaseProject(project) -- SKIP
-			customError("Is not possible add the Layer. The table '"..data.table.."' does not exist.")
+			customError("Is not possible add the Layer. Table '"..data.table.."' does not exist.")
 		end
 
 		project.layers[layer:getTitle()] = layer
@@ -1554,7 +1559,7 @@ TerraLib_ = {
 			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS", mask)
 		else
 			releaseProject(project) -- SKIP
-			customError("The table '"..data.table.."' already exists.") -- SKIP
+			customError("Table '"..data.table.."' already exists.") -- SKIP
 		end
 
 		self:addPgLayer(project, name, data)
@@ -2092,14 +2097,15 @@ TerraLib_ = {
 	-- @arg layerName The layer name which is in the project.
 	-- @arg toData The data that will be saved.
 	-- @arg overwrite Indicates if the saved data will be overwritten.
+	-- @arg attrs The attribute(s) that will be saved.
 	-- @usage -- DONTRUN
 	-- local toData = {
 	--     file = "shp2geojson.geojson",
 	--     type = "geojson",
 	--     srid = 4326
 	-- }
-	-- tl:saveLayerAs(project, "SomeLayer", toData, true)
-	saveLayerAs = function(_, project, layerName, toData, overwrite)
+	-- tl:saveLayerAs(project, "SomeLayer", toData, true, {"population", "ages"})
+	saveLayerAs = function(_, project, layerName, toData, overwrite, attrs)
 		loadProject(project, project.file)
 
 		do
@@ -2108,6 +2114,8 @@ TerraLib_ = {
 			local toType = SourceTypeMapper[toData.type]
 			local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)
 			local fromDs = binding.GetDs(fromDsId, true)
+			local attrsToIn = {}
+			local attrsNoExist = {}
 			fromDs:setEncoding(from:getEncoding())
 			from = toDataSetLayer(from)
 			local fromDSetName = from:getDataSetName()
@@ -2116,22 +2124,52 @@ TerraLib_ = {
 			local errorMsg
 			local toDSetName
 
+			if attrs then
+				for i = 1, #attrs do
+					local propName = attrs[i]
+
+					if fromDs:propertyExists(fromDSetName, propName) then
+						attrsToIn[propName] = true
+					else
+						table.insert(attrsNoExist, propName)
+					end
+				end
+			end
+
+			if #attrsNoExist > 0 then
+				if #attrsNoExist == 1 then
+					errorMsg = "There is no attribute '"..attrsNoExist[1].."' in layer '"..layerName.."'."
+				else
+					local ins = ""
+					for i = 1, #attrsNoExist do
+						ins = ins.."'"..attrsNoExist[i].."'"
+						if (i ~= #attrsNoExist - 1) and not (i == #attrsNoExist) then
+							ins = ins..", "
+						elseif i == #attrsNoExist - 1 then
+							ins = ins.." and "
+						end
+					end
+
+					errorMsg = "There are no attributes "..ins.." in layer '"..layerName.."'."
+				end
+			end
+
 			if toType == "POSTGIS" then
 				if not toData.table then
 					toData.table = fromDSetName
 				end
 
 				toData.table = string.lower(toData.table)
-
-				toDs = createPgDataSourceToSaveAs(fromType, toData)
 				toDSetName = toData.table
+				toDs = createPgDataSourceToSaveAs(fromType, toData)
+
 				if not toDs then
 					errorMsg = "It was not possible save the data in layer '"..layerName.."' to postgis data." -- #1363
 				elseif toDs:dataSetExists(toDSetName) then
 					if overwrite then
-						toDs:dropDataSet(toDSetName) -- SKIP
+						toDs:dropDataSet(toDSetName)
 					else
-						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
+						errorMsg = "Table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
 					end
 				end
 			elseif toType == "OGR" then
@@ -2141,7 +2179,7 @@ TerraLib_ = {
 						toDSetName = fn
 						File(toData.file):delete() -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
 					else
-						errorMsg = "The file '"..toData.file.."' already exists."
+						errorMsg = "File '"..toData.file.."' already exists."
 					end
 				end
 
@@ -2169,7 +2207,7 @@ TerraLib_ = {
 					if overwrite then
 						toDs:dropDataSet(toDSetName)
 					else
-						errorMsg = "The file '"..fileCopy.."' already exists." -- SKIP
+						errorMsg = "File '"..fileCopy.."' already exists." -- SKIP
 					end
 				end
 
@@ -2188,7 +2226,33 @@ TerraLib_ = {
 
 			local fromDSetType = fromDs:getDataSetType(fromDSetName)
 			local fromDSet = fromDs:getDataSet(fromDSetName)
+
+			if toData.encoding then
+				toDs:setEncoding(binding.CharEncoding.getEncodingType(toData.encoding))
+			else
+				toDs:setEncoding(fromDs:getEncoding())
+			end
+
 			local converter = binding.te.da.DataSetTypeConverter(fromDSetType, fromDs:getCapabilities(), toDs:getEncoding())
+
+			-- If there are attrs, keep only them, primary key and geometries
+			if attrs then
+				local pk = fromDSetType:getPrimaryKey()
+				local pkName = ""
+				if pk then
+					pkName = pk:getName()
+				end
+
+				local numProps = fromDSet:getNumProperties()
+				fromDSet:moveFirst()
+				for i = 0, numProps - 1 do
+					local propName = fromDSet:getPropertyName(i)
+					if not (pkName == propName) and not attrsToIn[propName] and
+						not (fromDSet:getPropertyDataType(i) == binding.GEOMETRY_TYPE) then
+						converter:remove(propName)
+					end
+				end
+			end
 
 			local srid
 			if toData.srid then
@@ -2261,21 +2325,26 @@ TerraLib_ = {
 			local transactor = toDs:getTransactor()
 			transactor:begin()
 			transactor:createDataSet(dstResult, {})
+			local toDstName = dstResult:getName()
 			dsetAdapted:moveBeforeFirst()
-			transactor:add(dstResult:getName(), dsetAdapted)
+			transactor:add(toDstName, dsetAdapted)
 			transactor:commit()
+
+			if toType == "OGR" then -- TODO(#1678)
+				addSpatialIndex(toDs, toDstName)
+			end
 
 			-- #875
 			-- if toType == "POSTGIS" then
 				-- toDs:renameDataSet(string.lower(fromDSetName), toData.table)
 			-- end
 
-			-- If the data belong a layer, it will be updated in the project
-			local toLayer = getLayerByDataSetName(project.layers, toDSetName)
+			-- If the data belongs a layer, it will be updated in the project
+			local toLayer = getLayerByDataSetName(project.layers, toDSetName, toType)
 			if toLayer then
 				if toLayer:getSRID() ~= srid then
-					toLayer:setSRID(srid) -- SKIP
-					saveProject(project, project.layers) -- SKIP
+					toLayer:setSRID(srid)
+					saveProject(project, project.layers)
 				end
 			end
 

@@ -90,11 +90,21 @@ return {
 		}
 
 		local invalidFile = function()
-			layer1:export({file = "invalid.org"})
+			layer1:export{file = "invalid.org"}
 		end
 		unitTest:assertError(invalidFile, invalidFileExtensionMsg("data", "org"))
 
-		proj.file:deleteIfExists()
+		local selectNoExist = function()
+			layer1:export{select = {"uf", "pop"}, source = "shp", file = "shape.shp"}
+		end
+		unitTest:assertError(selectNoExist, "There are no attributes 'uf' and 'pop' in layer 'setores'.")
+
+		local selectWrongType = function()
+			layer1:export{select = true, source = "shp", file = "shape.shp"}
+		end
+		unitTest:assertError(selectWrongType, incompatibleTypeMsg("select", "table", true))
+
+		proj.file:delete()
 	end
 }
 

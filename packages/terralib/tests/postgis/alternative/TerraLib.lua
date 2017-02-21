@@ -78,19 +78,19 @@ return {
 
 		tl:createProject(proj, {})
 
-		local layerName1 = "Setores"
-		local layerFile1 = filePath("itaituba-census.shp", "terralib")
+		local layerName1 = "ES-Limit"
+		local layerFile1 = filePath("test/limite_es_poly_wgs84.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		-- POSTGIS
-		--[[
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
-		local tableName = "Setores_Censitarios_2000_pol"
+		local tableName = "limite_es_poly_wgs84"
+		local srid = 4326
 
 		local pgData = {
 			type = "postgis",
@@ -100,7 +100,8 @@ return {
 			password = password,
 			database = database,
 			table = tableName, -- it is used only to drop
-			encoding = encoding
+			encoding = encoding,
+			srid = srid
 		}
 
 		local overwrite = true
@@ -117,7 +118,7 @@ return {
 		local postgis2tifError = function()
 			tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
-		unitTest:assertError(postgis2tifError, "It was not possible to convert the data in layer 'PgLayer' to 'postgis2tif.tif'.") -- SKIP
+		unitTest:assertError(postgis2tifError, "It was not possible to convert the data in layer 'PgLayer' to 'postgis2tif.tif'.")
 
 		-- OVERWRITE
 		overwrite = false
@@ -132,7 +133,7 @@ return {
 		local overwriteShpError = function()
 			tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
-		unitTest:assertError(overwriteShpError,  "The file 'postgis2shp.shp' already exists.") -- SKIP
+		unitTest:assertError(overwriteShpError, "File 'postgis2shp.shp' already exists.")
 
 		File(toData.file):delete()
 
@@ -146,13 +147,16 @@ return {
 		local overwriteGeojsonError = function()
 			tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
-		unitTest:assertError(overwriteGeojsonError,  "The file 'postgis2geojson.geojson' already exists.") -- SKIP
+		unitTest:assertError(overwriteGeojsonError, "File 'postgis2geojson.geojson' already exists.")
+
+		local overwritePgError = function()
+			tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		end
+		unitTest:assertError(overwritePgError, "Table 'limite_es_poly_wgs84' already exists in postgis database 'postgis_22_sample'.")
 
 		File(toData.file):delete()
 
 		tl:dropPgTable(pgData)
-		--]]
-		unitTest:assert(true)
 		proj.file:delete()
 	end
 }

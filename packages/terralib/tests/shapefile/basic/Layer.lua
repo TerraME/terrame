@@ -875,6 +875,24 @@ return {
 		unitTest:assertEquals(layer3.epsg, data2.epsg)
 		unitTest:assert(layer.epsg ~= data2.epsg)
 
+		-- SELECT ONE ATTRIBUTE TO GEOJSON
+		data1.select = "population"
+		layer:export(data1)
+		local attrs1 = layer2:attributes()
+
+		unitTest:assertEquals(attrs1[1], "FID")
+		unitTest:assertEquals(attrs1[2], "population")
+		unitTest:assertNil(attrs1[3])
+
+		-- SELECT ONE ATTRIBUTE TO SHAPE
+		data2.select = "dens_pop"
+		layer:export(data2)
+		local attrs2 = layer3:attributes()
+
+		unitTest:assertEquals(attrs2[1], "FID")
+		unitTest:assertEquals(attrs2[2], "dens_pop")
+		unitTest:assertNil(attrs2[3])
+
 		File(geojson):delete()
 		File(shp):delete()
 		proj.file:delete()

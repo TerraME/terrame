@@ -1679,19 +1679,18 @@ return {
 
 		tl:createProject(proj, {})
 
-		local layerName1 = "Setores"
-		local layerFile1 = filePath("itaituba-census.shp", "terralib")
+		local layerName1 = "Sampa"
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
 		-- POSTGIS
-		--[[
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
-		local tableName = "Setores_Censitarios_2000_pol"
+		local tableName = "sampa"
 
 		local pgData = {
 			type = "postgis",
@@ -1717,38 +1716,38 @@ return {
 		File(toData.file):deleteIfExists()
 
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
-		unitTest:assert(File(toData.file):exists()) -- SKIP
+		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE AND CHANGE SRID
 		toData.srid = 4326
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
-		local layerName3 = "SHP"
+		local layerName3 = "PG2SHP"
 		tl:addShpLayer(proj, layerName3, File(toData.file))
 		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
-		unitTest:assertEquals(info3.srid, toData.srid) -- SKIP
+		unitTest:assertEquals(info3.srid, toData.srid)
 
 		-- OVERWRITE POSTGIS AND CHANGE SRID
 		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
-		unitTest:assertEquals(info2.srid, 29191.0) -- SKIP
+		unitTest:assertEquals(info2.srid, 4019.0)
 		pgData.srid = 4326
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
-		unitTest:assertEquals(info2.srid, 4326.0) -- SKIP
+		unitTest:assertEquals(info2.srid, 4326.0)
 
 		-- GEOJSON
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"
 		File(toData.file):deleteIfExists()
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
-		unitTest:assert(File(toData.file):exists()) -- SKIP
+		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE AND CHANGE SRID
 		toData.srid = 4326
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
-		local layerName4 = "GJ"
+		local layerName4 = "PG2GJ"
 		tl:addGeoJSONLayer(proj, layerName4, File(toData.file))
 		local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
-		unitTest:assertEquals(info4.srid, toData.srid) -- SKIP
+		unitTest:assertEquals(info4.srid, toData.srid)
 
 		-- OVERWRITE POSTGIS AND CHANGE SRID
 		local table1 = pgData.table
@@ -1758,20 +1757,56 @@ return {
 		local layerName5 = "PgLayerGJ"
 		tl:addPgLayer(proj, layerName5, pgData)
 		local info5 = tl:getLayerInfo(proj, proj.layers[layerName5])
-		unitTest:assertEquals(info5.srid, 4326.0) -- SKIP
+		unitTest:assertEquals(info5.srid, 4326.0)
 
 		pgData.srid = 2309
 		tl:saveLayerAs(proj, layerName4, pgData, overwrite)
 		info5 = tl:getLayerInfo(proj, proj.layers[layerName5])
-		unitTest:assertEquals(info5.srid, 2309.0) -- SKIP
+		unitTest:assertEquals(info5.srid, 2309.0)
+
+		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE FROM SHP
+		local table2 = pgData.table
+		pgData.table = "postgis2shp"
+		tl:saveLayerAs(proj, layerName3, pgData, overwrite, {"nm_micro"})
+
+		local layerName6 = "SHP2PG"
+		tl:addPgLayer(proj, layerName6, pgData)
+		local dset6 = tl:getDataSet(proj, layerName6)
+
+		unitTest:assertEquals(getn(dset6), 63)
+
+		for k, v in pairs(dset6[0]) do
+			unitTest:assert(((k == "fid") and (v == 0)) or ((k == "ogr_geometry") and (v ~= nil) ) or
+							((k == "nm_micro") and (v == "VOTUPORANGA")))
+		end
+
+		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE FROM GEOJSON
+		local table3 = pgData.table
+		pgData.table = "ogrgeojson"
+		tl:saveLayerAs(proj, layerName4, pgData, overwrite, {"nm_micro", "id"})
+
+		local layerName7 = "GJ2PG"
+		tl:addPgLayer(proj, layerName7, pgData)
+		local dset7 = tl:getDataSet(proj, layerName7)
+
+		unitTest:assertEquals(getn(dset7), 63)
+
+		for k, v in pairs(dset7[0]) do
+			unitTest:assert(((k == "fid") and (v == 2)) or ((k == "ogr_geometry") and (v ~= nil) ) or
+							((k == "nm_micro") and (v == "VOTUPORANGA")) or ((k == "id") and (v == 2)))
+		end
 
 		tl:dropPgTable(pgData)
 		pgData.table = table1
 		tl:dropPgTable(pgData)
+		pgData.table = table2
+		tl:dropPgTable(pgData)
+		pgData.table = table3
+		tl:dropPgTable(pgData)
 
 		File("postgis2shp.shp"):delete()
 		File("postgis2geojson.geojson"):delete()
-		--]]
+
 		unitTest:assert(true)
 		proj.file:delete()
 	end,

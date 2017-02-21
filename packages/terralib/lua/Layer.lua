@@ -692,12 +692,15 @@ Layer_ = {
 	-- @arg data.epsg A number from the EPSG Geodetic Parameter Dataset describing a projection.
 	-- It can be used to reproject the data.
 	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
+	-- @arg data.select  A vector with the names of the attributes to be saved. When saving a
+	-- single attribute, you can use a string "attribute" instead of a table {"attribute"}.
 	-- @arg data.... Additional arguments related to where the output will be saved. These arguments
 	-- are the same for describing the data source when one creates a layer from a file or database.
 	-- @usage -- DONTRUN
 	-- layer:export{file = "myfile.shp", overwrite = true}
 	-- layer:export{file = "myfile.geojson"}
 	-- layer:export{file = "myfile.geojson", epsg = 4326}
+	-- layer:export{file = "myfile.geojson", epsg = 4326, select = {"uf", "population"}}
 	export = function(self, data)
 		verifyNamedTable(data)
 
@@ -711,8 +714,14 @@ Layer_ = {
 			data.file = File(data.file)
 		end
 
+		if type(data.select) == "string" then
+			data.select = {data.select}
+		end
+
+		optionalTableArgument(data, "select", "table")
+
 		if type(data.file) == "File" then
-			verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite"})
+			verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "select"})
 
 			local source = data.file:extension()
 
@@ -723,7 +732,7 @@ Layer_ = {
 					srid = data.epsg
 				}
 
-				self.project.terralib:saveLayerAs(self.project, self.name, toData, data.overwrite)
+				self.project.terralib:saveLayerAs(self.project, self.name, toData, data.overwrite, data.select)
 			else
 				invalidFileExtensionError("data", source)
 			end
@@ -731,7 +740,8 @@ Layer_ = {
 			mandatoryTableArgument(data, "source", "string")
 
 			if data.source == "postgis" then
-				verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding", "epsg", "overwrite"})
+				verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding",
+												"epsg", "overwrite", "select"})
 
 				mandatoryTableArgument(data, "user", "string")
 				mandatoryTableArgument(data, "password", "string")
@@ -744,7 +754,7 @@ Layer_ = {
 				pgData.srid = pgData.epsg
 				pgData.epsg = nil
 
-				self.project.terralib:saveLayerAs(self.project, self.name, pgData, pgData.overwrite)
+				self.project.terralib:saveLayerAs(self.project, self.name, pgData, pgData.overwrite, data.select)
 			else
 				customError("It only supports postgis database, use source = \"postgis\".")
 			end
