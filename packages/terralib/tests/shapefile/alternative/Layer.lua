@@ -102,7 +102,7 @@ return {
 		local selectWrongType = function()
 			layer1:export{select = true, source = "shp", file = "shape.shp"}
 		end
-		unitTest:assertError(selectWrongType, "Incompatible types. Argument 'select' expected table or string.")
+		unitTest:assertError(selectWrongType, incompatibleTypeMsg("select", "table", true))
 
 		proj.file:delete()
 	end

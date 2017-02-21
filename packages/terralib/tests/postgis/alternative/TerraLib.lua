@@ -152,7 +152,7 @@ return {
 		local overwritePgError = function()
 			tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		end
-		unitTest:assertError(overwritePgError, "The table 'limite_es_poly_wgs84' already exists in postgis database 'postgis_22_sample'.")
+		unitTest:assertError(overwritePgError, "Table 'limite_es_poly_wgs84' already exists in postgis database 'postgis_22_sample'.")
 
 		File(toData.file):delete()
 

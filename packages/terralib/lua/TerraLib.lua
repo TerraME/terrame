@@ -1471,7 +1471,7 @@ TerraLib_ = {
 			layer = createLayer(name, data.table, connInfo, "POSTGIS", nil, srid)
 		else
 			releaseProject(project) -- SKIP
-			customError("Is not possible add the Layer. The table '"..data.table.."' does not exist.")
+			customError("Is not possible add the Layer. Table '"..data.table.."' does not exist.")
 		end
 
 		project.layers[layer:getTitle()] = layer
@@ -1559,7 +1559,7 @@ TerraLib_ = {
 			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS", mask)
 		else
 			releaseProject(project) -- SKIP
-			customError("The table '"..data.table.."' already exists.") -- SKIP
+			customError("Table '"..data.table.."' already exists.") -- SKIP
 		end
 
 		self:addPgLayer(project, name, data)
@@ -2169,7 +2169,7 @@ TerraLib_ = {
 					if overwrite then
 						toDs:dropDataSet(toDSetName)
 					else
-						errorMsg = "The table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
+						errorMsg = "Table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
 					end
 				end
 			elseif toType == "OGR" then
