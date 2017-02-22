@@ -302,10 +302,14 @@ end
 -- otherwise it returns false.
 -- @arg obj A Society, Group, or Cell. Cells need to have a placement in order to execute
 -- this function.
+-- @arg name (Optional) A string with the name of the placement to be traversed.
+-- The default value is "placement". This argument can only be used when the first
+-- argument is a Cell.
 -- @arg _sof_ A function that takes one single Agent as argument. If some call to it returns
 -- false, forEachAgent() stops and does not process any other Agent.
 -- This function can optionally get a second argument with a positive number representing the
--- position of the Agent in the vector of Agents.
+-- position of the Agent in the vector of Agents. In the case where the second argument
+-- is missing, this function becomes the second argument.
 -- @usage ag = Agent{age = Random{min = 0, max = 2}}
 -- soc = Society{
 --     instance = ag,
@@ -316,57 +320,98 @@ end
 --     agent.age = agent.age + 1
 -- end)
 -- @see Environment:createPlacement
-function forEachAgent(obj, _sof_)
+function forEachAgent(obj, name, _sof_)
 	local t = type(obj)
-	if t ~= "Society" and t ~= "Cell" and t ~= "Group" then
+
+	if t == "Cell" then
+		if type(name) == "function" then
+			_sof_ = name
+			name = "placement"
+		end
+
+		local ags = obj:getAgents(name)
+		local k = 1
+
+		for i = 1, #ags do
+			local ag = ags[k]
+			if ag and _sof_(ag, i) == false then return false end
+			if ag == ags[k] then k = k + 1 end
+		end
+
+		return true
+	else
+		_sof_ = name
+	end
+
+	if t ~= "Society" and t ~= "Group" then
 		incompatibleTypeError(1, "Society, Group, or Cell", obj)
 	elseif type(_sof_) ~= "function" then
 		incompatibleTypeError(2, "function", _sof_)
 	end
 
-	local ags = obj.agents
-	if ags == nil then
-		customError("Could not get agents from the "..type(obj)..".")
-	end
 	-- forEachAgent needs to be different from the other forEachs because the
 	-- ageng can die along its own execution and it shifts back all the other
 	-- agents in society.agents. If ipairs was used instead, forEach would
 	-- skip the next agent of the vector after the removed agent.
+	local ags = obj.agents
 	local k = 1
+
 	for i = 1, #ags do
 		local ag = ags[k]
 		if ag and _sof_(ag, i) == false then return false end
 		if ag == ags[k] then k = k + 1 end
 	end
+
 	return true
 end
 
 --- Second order function to traverse a given CellularSpace, Trajectory, or Agent,
 -- applying a given function to each of its Cells. If any of the function calls returns
 -- false, forEachCell() stops and returns false, otherwise it returns true.
--- @arg cs A CellularSpace, Trajectory, or Agent. Agents need to have a placement
+-- @arg object A CellularSpace, Trajectory, or Agent. Agents need to have a placement
 -- in order to execute this function.
+-- @arg name (Optional) A string with the name of the placement to be traversed.
+-- The default value is "placement". This argument can only be used when the first
+-- argument is an Agent.
 -- @arg _sof_ A user-defined function that takes a Cell as argument.
 -- It can optionally have a second argument with a positive number representing the position of
 -- the Cell in the vector of Cells. If it returns false when processing a given Cell,
--- forEachCell() stops and does not process any other Cell.
+-- forEachCell() stops and does not process any other Cell. In the case where the second argument
+-- is missing, this function becomes the second argument.
 -- @usage cellularspace = CellularSpace{xdim = 10}
 --
 -- forEachCell(cellularspace, function(cell)
 --     cell.water = 0
 -- end)
 -- @see Environment:createPlacement
-function forEachCell(cs, _sof_)
-	local t = type(cs)
-	if t ~= "CellularSpace" and t ~= "Trajectory" and t ~= "Agent" then
-		incompatibleTypeError(1, "CellularSpace, Trajectory, or Agent", cs)
+function forEachCell(object, name, _sof_)
+	local t = type(object)
+
+	if t == "Agent" then
+		if type(name) == "function" then
+			_sof_ = name
+			name = "placement"
+		end
+
+		for i, cell in ipairs(object:getCells(name)) do
+			if _sof_(cell, i) == false then return false end
+		end
+
+		return true
+	else
+		_sof_ = name
+	end
+
+	if t ~= "CellularSpace" and t ~= "Trajectory" then
+		incompatibleTypeError(1, "CellularSpace, Trajectory, or Agent", object)
 	elseif type(_sof_) ~= "function" then
 		incompatibleTypeError(2, "function", _sof_)
 	end
 
-	for i, cell in ipairs(cs.cells) do
+	for i, cell in ipairs(object.cells) do
 		if _sof_(cell, i) == false then return false end
 	end
+
 	return true
 end
 

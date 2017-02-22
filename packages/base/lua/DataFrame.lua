@@ -22,33 +22,49 @@
 --
 -------------------------------------------------------------------------------------------
 
-local metaTableDataFrameItem_ = {
+local metaTableDataFrameRow_ = {
 	__newindex = function(self, idx, value)
 		if not self.data_[idx] then
 			self.data_[idx] = {}
-			self.parent.columns_[idx] = true
+			self.parent_.columns_[idx] = true
 		end
 
-		self.data_[idx][self.pos] = value
+		self.data_[idx][self.pos_] = value
 	end,
 	__index = function(self, idx)
 		if not self.data_[idx] then
-			return self.parent.instance_[idx]
+			return self.parent_.instance_[idx]
 		end
 
-		return self.data_[idx][self.pos]
+		return self.data_[idx][self.pos_]
 	end,
 	__tostring = function(self)
-		local columns = self.parent:columns()
+		local columns = self.parent_:columns()
 		local values = {}
 		forEachOrderedElement(columns, function(idx)
-			values[idx] = self.data_[idx][self.pos]
+			values[idx] = self.data_[idx][self.pos_]
 		end)
 
 		return vardump(values)
 	end,
 	__len = function(self)
-		return getn(self.parent:columns())
+		return getn(self.parent_:columns())
+	end
+}
+
+local metaTableDataFrameColumn_ = {
+	__newindex = function(self, idx, value)
+		self.parent_.rows_[idx] = true
+		self.data_[self.pos_][idx] = value
+	end,
+	__index = function(self, idx)
+		return self.data_[self.pos_][idx]
+	end,
+	__tostring = function(self)
+		return vardump(self.data_[self.pos_])
+	end,
+	__len = function(self)
+		return getn(self.data_[self.pos_])
 	end
 }
 
@@ -171,21 +187,26 @@ metaTableDataFrame_ = {
 	-- print(df.x[1]) -- 6
 	__index = function(self, idx)
 		if type(idx) == "number" then
-			local result = self.cache_[idx]
-
+			local result = self.rowcache_[idx]
 			if result then return result end
 
-			result = {pos = idx, data_ = self.data_, parent = self}
+			result = {pos_ = idx, data_ = self.data_, parent_ = self}
+			setmetatable(result, metaTableDataFrameRow_)
 
-			setmetatable(result, metaTableDataFrameItem_)
-
-			self.cache_[idx] = result
-
+			self.rowcache_[idx] = result
 			return result
 		elseif type(idx) == "string" then
-			if self.data_[idx] then return self.data_[idx] end
+			if DataFrameIndex[idx] then return DataFrameIndex[idx] end -- an available function
+			if idx == "parent" then return nil end
 
-			return DataFrameIndex[idx]
+			local result = self.columncache_[idx]
+			if result then return result end
+
+			result = {pos_ = idx, data_ = self.data_, parent_ = self}
+			setmetatable(result, metaTableDataFrameColumn_)
+
+			self.columncache_[idx] = result
+			return result
 		end
 	end,
 	__newindex = function(self, idx, value)
@@ -407,10 +428,12 @@ function DataFrame(data)
 		instance_ = instance,
 		rows_ = mrows,
 		columns_ = mcolumns,
-		cache_ = {}
+		rowcache_ = {},
+		columncache_ = {}
 	}
 
-	setmetatable(data.cache_, {__mode = 'v'})
+	setmetatable(data.rowcache_,    {__mode = 'v'})
+	setmetatable(data.columncache_, {__mode = 'v'})
 	setmetatable(data, metaTableDataFrame_)
 
 	return data

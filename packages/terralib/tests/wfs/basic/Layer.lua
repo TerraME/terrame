@@ -34,8 +34,8 @@ return {
 		}
 
 		local layerName = "BAU"
-		local service = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
-		local feature = "reddpac:BAU"
+		local service = "http://terrabrasilis.info/redd-pac/wfs"
+		local feature = "reddpac:wfs_biomes"
 
 		if TerraLib{}:isValidWfsUrl(service) then
 			local layer = Layer {

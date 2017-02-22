@@ -126,7 +126,7 @@ local function execute(command, filename)
 		if distance > distance2 then
 			distance = distance2
 		end
-				
+
 		if not str then
 			_Gtme.printError("Error: Strings do not match (line "..line.."):")
 			_Gtme.printError("Log file: <end of file>")
@@ -135,11 +135,11 @@ local function execute(command, filename)
 			logerror = true
 			report.logerrors = report.logerrors + 1
 			return false
-		end		
+		end
 
-		str = _Gtme.makePathCompatibleToAllOS(str)				
-		value = _Gtme.makePathCompatibleToAllOS(value)				
-				
+		str = _Gtme.makePathCompatibleToAllOS(str)
+		value = _Gtme.makePathCompatibleToAllOS(value)
+
 		if levenshtein(str, value) > distance then
 			_Gtme.printError("Error: Strings do not match (line "..line.."):")
 			_Gtme.printError("Log file: '"..str.."'.")
