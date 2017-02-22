@@ -262,6 +262,8 @@ return{
 			local dfx = df.x
 			local dfy = df.y
 
+			unitTest:assertEquals(dfx[1], 2) -- note that we add one to x previously
+			unitTest:assertEquals(dfy[3], 6)
 			unitTest:assertEquals(getn(df.columncache_), 2)
 		end
 
