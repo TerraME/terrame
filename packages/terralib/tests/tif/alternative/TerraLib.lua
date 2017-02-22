@@ -245,7 +245,7 @@ return {
 		local tif2postgisError = function()
 			tl:saveLayerAs(proj, layerName1, pgData, overwrite)
 		end
-		unitTest:assertError(tif2postgisError,  "It was not possible save the data in layer 'TifLayer' to postgis data.")
+		unitTest:assertError(tif2postgisError, "It was not possible save the data in layer 'TifLayer' to postgis data.")
 
 		-- OVERWRITE
 		toData.file = "tif2tif.tif"
@@ -257,7 +257,7 @@ return {
 		local overwriteError = function()
 			tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		end
-		unitTest:assertError(overwriteError, "The file '"..currDir.."/cbers_rgb342_crop1.tif' already exists.")
+		unitTest:assertError(overwriteError, "File '"..currDir.."/cbers_rgb342_crop1.tif' already exists.")
 
 		-- TRY OVERWRITE AND CHANGE SRID
 		overwrite = true

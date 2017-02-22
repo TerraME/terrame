@@ -135,42 +135,6 @@ return {
 		toData.type = "geojson"
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 
-		-- POSTGIS
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
-		local password = getConfig().password
-		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = "sampa"
-
-		local pgData = {
-			type = "postgis",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tableName, -- it is used only to drop
-			encoding = encoding
-		}
-
-		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-
-		-- OVERWRITE
-		overwrite = false
-
-		local overwriteGeojsonError = function()
-			tl:saveLayerAs(proj, layerName1, toData, overwrite)
-		end
-		unitTest:assertError(overwriteGeojsonError,  "The file 'shp2geojson.geojson' already exists.")
-
-		local overwritePgError = function()
-			tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-		end
-		unitTest:assertError(overwritePgError, "The table 'sampa' already exists in postgis database 'postgis_22_sample'.")
-
-		tl:dropPgTable(pgData)
 		File(toData.file):delete()
 		proj.file:delete()
 	end
