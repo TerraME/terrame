@@ -73,8 +73,8 @@ return{
 		unitTest:assertType(tab.demand, "table")
 		unitTest:assertType(tab.limit, "table")
 		unitTest:assertEquals(#tab, 4)
-		unitTest:assertEquals(getn(tab.demand), 4)
-		unitTest:assertEquals(getn(tab.limit), 4)
+		unitTest:assertEquals(#tab.demand, 4)
+		unitTest:assertEquals(#tab.limit, 4)
 
 		unitTest:assertEquals(tab.demand[2010], 8)
 		unitTest:assertEquals(tab.limit[2030], 0.07)
@@ -82,9 +82,9 @@ return{
 		local sumidx = 0
 		local sumvalue = 0
 
-		forEachElement(tab.demand, function(idx, value)
+		forEachElement(tab, function(idx, value)
 			sumidx = sumidx + idx
-			sumvalue = sumvalue + value
+			sumvalue = sumvalue + value.demand
 		end)
 
 		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
@@ -102,15 +102,15 @@ return{
 		unitTest:assertType(tab.demand, "table")
 		unitTest:assertType(tab.limit, "table")
 		unitTest:assertEquals(#tab, 4)
-		unitTest:assertEquals(getn(tab.demand), 4)
-		unitTest:assertEquals(getn(tab.limit), 4)
+		unitTest:assertEquals(#tab.demand, 4)
+		unitTest:assertEquals(#tab.limit, 4)
 
 		sumidx = 0
 		sumvalue = 0
 
-		forEachElement(tab.limit, function(idx, value)
+		forEachElement(tab, function(idx, value)
 			sumidx = sumidx + idx
-			sumvalue = sumvalue + value
+			sumvalue = sumvalue + value.limit
 		end)
 
 		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
@@ -236,12 +236,13 @@ return{
 			y = {4, 5, 6}
 		}
 
-		unitTest:assertEquals(getn(df.cache_), 0)
+		unitTest:assertEquals(getn(df.rowcache_), 0)
+		unitTest:assertEquals(getn(df.columncache_), 0)
 
 		do
 			local value = df[1]
 			unitTest:assertEquals(value.y, 4)
-			unitTest:assertEquals(getn(df.cache_), 1)
+			unitTest:assertEquals(getn(df.rowcache_), 1)
 
 			local values = {}
 
@@ -251,14 +252,22 @@ return{
 			end
 
 			collectgarbage()
-			unitTest:assertEquals(getn(df.cache_), 3)
+			unitTest:assertEquals(getn(df.rowcache_), 3)
 
 			value = df[2]
 			unitTest:assertEquals(value.x, 3)
 		end
 
+		do
+			local dfx = df.x
+			local dfy = df.y
+
+			unitTest:assertEquals(getn(df.columncache_), 2)
+		end
+
 		collectgarbage()
-		unitTest:assertEquals(getn(df.cache_), 0)
+		unitTest:assertEquals(getn(df.rowcache_), 0)
+		unitTest:assertEquals(getn(df.columncache_), 0)
 
 		-- cache with instance
 		df = DataFrame{
@@ -267,13 +276,13 @@ return{
 			instance = Agent{}
 		}
 
-		unitTest:assertEquals(getn(df.cache_), 0)
+		unitTest:assertEquals(getn(df.rowcache_), 0)
 
 		do
 			local value = df[1]
 			unitTest:assertType(value, "Agent")
 			unitTest:assertEquals(value.y, 4)
-			unitTest:assertEquals(getn(df.cache_), 1)
+			unitTest:assertEquals(getn(df.rowcache_), 1)
 
 			local values = {}
 
@@ -284,15 +293,15 @@ return{
 			end
 
 			collectgarbage()
-			unitTest:assertEquals(getn(df.cache_), 3)
+			unitTest:assertEquals(getn(df.rowcache_), 3)
 
 			value = df[2]
 			unitTest:assertEquals(value.x, 3)
 		end
 
 		collectgarbage()
-		unitTest:assertEquals(getn(df.cache_), 0)
-
+		unitTest:assertEquals(getn(df.rowcache_), 0)
+		unitTest:assertEquals(getn(df.columncache_), 0)
 	end,
 	__newindex = function(unitTest)
 		local df = DataFrame{
@@ -342,11 +351,10 @@ return{
 4	4	2
 5	5	2]])
 
-	unitTest:assertEquals(tostring(df[1]), [[{
+		unitTest:assertEquals(tostring(df[1]), [[{
     x = 1,
     y = 1
 }]])
-
 	end
 }
 
