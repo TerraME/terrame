@@ -38,8 +38,8 @@ return {
 		tl:createProject(proj, {})
 
 		local layerName = "WFS-Layer"
-		local url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
-		local dataset = "reddpac:BAU"
+		local url = "http://terrabrasilis.info/redd-pac/wfs"
+		local dataset = "reddpac:wfs_biomes"
 
 		if tl:isValidWfsUrl(url) then
 			tl:addWfsLayer(proj, layerName, url, dataset)
