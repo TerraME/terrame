@@ -1818,7 +1818,7 @@ TerraLib_ = {
 					pt = "string"
 				end
 
-				customError("Operation '"..operation.."' cannot be executed with an attribute of type "..pt.. "('"..select.."').")
+				customError("Operation '"..operation.."' cannot be executed with an attribute of type "..pt.. " ('"..select.."').")
 			end
 
 			local outOverwrite = false

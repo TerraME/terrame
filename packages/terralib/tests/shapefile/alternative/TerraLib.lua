@@ -88,47 +88,47 @@ return {
 		local meanTypeError = function()
 			tl:attributeFill(proj, layerName2, clName, clName.."_Mean", "mean", "mean", "NOME", area, default)
 		end
-		unitTest:assertError(meanTypeError, "Operation 'mean' cannot be executed with an attribute of type string('NOME').")
+		unitTest:assertError(meanTypeError, "Operation 'mean' cannot be executed with an attribute of type string ('NOME').")
 
 		local sumTypeError = function()
 			tl:attributeFill(proj, layerName2, clName, clName.."_Sum", "sum", "sum", "NOME", area, default)
 		end
-		unitTest:assertError(sumTypeError, "Operation 'sum' cannot be executed with an attribute of type string('NOME').")
+		unitTest:assertError(sumTypeError, "Operation 'sum' cannot be executed with an attribute of type string ('NOME').")
 
 		local wsumTypeError = function()
 			tl:attributeFill(proj, layerName2, clName, clName.."_Wsum", "wsum", "wsum", "NOME", area, default)
 		end
-		unitTest:assertError(wsumTypeError, "Operation 'wsum' cannot be executed with an attribute of type string('NOME').")
+		unitTest:assertError(wsumTypeError, "Operation 'wsum' cannot be executed with an attribute of type string ('NOME').")
 
 		local areaTypeError = function()
 			tl:attributeFill(proj, layerName2, clName, clName.."_Area", "area", "area", "NOME", area, default)
 		end
-		unitTest:assertError(areaTypeError, "Operation 'area' cannot be executed with an attribute of type string('NOME').")
+		unitTest:assertError(areaTypeError, "Operation 'area' cannot be executed with an attribute of type string ('NOME').")
 
 		local stdevTypeError = function()
 			tl:attributeFill(proj, layerName2, clName, clName.."_Stdev", "stdev", "stdev", "NOME", area, default)
 		end
-		unitTest:assertError(stdevTypeError, "Operation 'stdev' cannot be executed with an attribute of type string('NOME').")
+		unitTest:assertError(stdevTypeError, "Operation 'stdev' cannot be executed with an attribute of type string ('NOME').")
 
 		local averageTypeError = function()
 			tl:attributeFill(proj, layerName2, clName, clName.."_Average", "average", "average", "NOME", area, default)
 		end
-		unitTest:assertError(averageTypeError, "Operation 'average' cannot be executed with an attribute of type string('NOME').")
+		unitTest:assertError(averageTypeError, "Operation 'average' cannot be executed with an attribute of type string ('NOME').")
 
 		local weightedTypeError = function()
 			tl:attributeFill(proj, layerName2, clName, clName.."_Weighted", "weighted", "weighted", "NOME", area, default)
 		end
-		unitTest:assertError(weightedTypeError, "Operation 'weighted' cannot be executed with an attribute of type string('NOME').")
+		unitTest:assertError(weightedTypeError, "Operation 'weighted' cannot be executed with an attribute of type string ('NOME').")
 
 		local coverageTypeError = function()
 			tl:attributeFill(proj, layerName2, clName, clName.."_Coverage", "coverage", "coverage", "ANOCRIACAO", area, default)
 		end
-		unitTest:assertError(coverageTypeError, "Operation 'coverage' cannot be executed with an attribute of type real('ANOCRIACAO').")
+		unitTest:assertError(coverageTypeError, "Operation 'coverage' cannot be executed with an attribute of type real ('ANOCRIACAO').")
 
 		local intersectionTypeError = function()
 			tl:attributeFill(proj, layerName2, clName, clName.."_Intersection", "intersec", "intersection", "ANOCRIACAO", area, default)
 		end
-		unitTest:assertError(intersectionTypeError, "Operation 'intersection' cannot be executed with an attribute of type real('ANOCRIACAO').")
+		unitTest:assertError(intersectionTypeError, "Operation 'intersection' cannot be executed with an attribute of type real ('ANOCRIACAO').")
 
 		for j = 1, #shp do
 			shp[j]:deleteIfExists()
