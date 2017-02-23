@@ -85,6 +85,51 @@ return {
 		end
 		unitTest:assertError(attributeAlreadyExists, "The attribute 'FID' already exists in the Layer.")
 
+		local meanTypeError = function()
+			tl:attributeFill(proj, layerName2, clName, clName.."_Mean", "mean", "mean", "NOME", area, default)
+		end
+		unitTest:assertError(meanTypeError, "Operation 'mean' is not available to selected attribute 'NOME'. Incompatible type.")
+
+		local sumTypeError = function()
+			tl:attributeFill(proj, layerName2, clName, clName.."_Sum", "sum", "sum", "NOME", area, default)
+		end
+		unitTest:assertError(sumTypeError, "Operation 'sum' is not available to selected attribute 'NOME'. Incompatible type.")
+
+		local wsumTypeError = function()
+			tl:attributeFill(proj, layerName2, clName, clName.."_Wsum", "wsum", "wsum", "NOME", area, default)
+		end
+		unitTest:assertError(wsumTypeError, "Operation 'wsum' is not available to selected attribute 'NOME'. Incompatible type.")
+
+		local areaTypeError = function()
+			tl:attributeFill(proj, layerName2, clName, clName.."_Area", "area", "area", "NOME", area, default)
+		end
+		unitTest:assertError(areaTypeError, "Operation 'area' is not available to selected attribute 'NOME'. Incompatible type.")
+
+		local stdevTypeError = function()
+			tl:attributeFill(proj, layerName2, clName, clName.."_Stdev", "stdev", "stdev", "NOME", area, default)
+		end
+		unitTest:assertError(stdevTypeError, "Operation 'stdev' is not available to selected attribute 'NOME'. Incompatible type.")
+
+		local averageTypeError = function()
+			tl:attributeFill(proj, layerName2, clName, clName.."_Average", "average", "average", "NOME", area, default)
+		end
+		unitTest:assertError(averageTypeError, "Operation 'average' is not available to selected attribute 'NOME'. Incompatible type.")
+
+		local weightedTypeError = function()
+			tl:attributeFill(proj, layerName2, clName, clName.."_Weighted", "weighted", "weighted", "NOME", area, default)
+		end
+		unitTest:assertError(weightedTypeError, "Operation 'weighted' is not available to selected attribute 'NOME'. Incompatible type.")
+
+		local coverageTypeError = function()
+			tl:attributeFill(proj, layerName2, clName, clName.."_Coverage", "coverage", "coverage", "ANOCRIACAO", area, default)
+		end
+		unitTest:assertError(coverageTypeError, "Operation 'coverage' is not available to selected attribute 'ANOCRIACAO'. Incompatible type.")
+
+		local intersectionTypeError = function()
+			tl:attributeFill(proj, layerName2, clName, clName.."_Intersection", "intersec", "intersection", "ANOCRIACAO", area, default)
+		end
+		unitTest:assertError(intersectionTypeError, "Operation 'intersection' is not available to selected attribute 'ANOCRIACAO'. Incompatible type.")
+
 		for j = 1, #shp do
 			shp[j]:deleteIfExists()
 		end
