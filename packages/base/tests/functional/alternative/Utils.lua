@@ -94,7 +94,7 @@ return{
 		error_func = function()
 			forEachAgent(c, function() end)
 		end
-		unitTest:assertError(error_func, "Could not get agents from the Cell.")
+		unitTest:assertError(error_func, "The Cell does not have a default placement. Please call Environment:createPlacement() first.")
 	end,
 	forEachCell = function(unitTest)
 		local error_func = function()

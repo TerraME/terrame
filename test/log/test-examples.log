@@ -12,11 +12,11 @@ Checking a.lua
 Skipping lines of source code check
 Testing examples
 Testing a
-Error: Strings do not match (line 2):
+Error: Strings do not match in file 'a.log' (line 2):
 Log file: '<end of file>'
 Test: 'def'
 Testing b
-Error: Strings do not match (line 3):
+Error: Strings do not match in file 'b.log' (line 3):
 Log file: 'ghi'
 Test: '<end of file>'
 Testing border

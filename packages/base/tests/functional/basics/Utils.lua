@@ -170,6 +170,18 @@ return{
 		end)
 
 		unitTest:assertEquals(count, 10)
+
+		e:createPlacement{max = 8, name = "workplace"}
+
+		count = 0
+		forEachCell(cs, function(cell)
+			forEachAgent(cell, "workplace", function(ag)
+				unitTest:assertEquals(ag.value, 2)
+				count = count + 1
+			end)
+		end)
+
+		unitTest:assertEquals(count, 10)
 	end,
 	forEachCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -205,6 +217,27 @@ return{
 
 		unitTest:assert(not r)
 		unitTest:assertEquals(count, 11)
+
+		a = Agent{}
+		local soc = Society{instance = a, quantity = 20}
+		env = Environment{cs, soc}
+		env:createPlacement{strategy = "void", name = "workplace"}
+
+		forEachAgent(soc, function(agent)
+			agent.workplace:add(cs:sample())
+			agent.workplace:add(cs:sample())
+			agent.workplace:add(cs:sample())
+		end)
+
+		r = 0
+
+		forEachAgent(soc, function(agent)
+			forEachCell(agent, "workplace", function()
+				r = r + 1
+			end)
+		end)
+
+		unitTest:assertEquals(r, 60)
 	end,
 	forEachCellPair = function(unitTest)
 		local cs1 = CellularSpace{xdim = 10}

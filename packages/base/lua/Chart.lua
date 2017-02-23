@@ -355,9 +355,9 @@ function Chart(attrTab)
 	defaultTableValue(attrTab, "yLabel", "")
 
 	if isModel(attrTab.target) then
-		defaultTableValue(attrTab, "title",  attrTab.target:title())
+		defaultTableValue(attrTab, "title", attrTab.target:title())
 	else
-		defaultTableValue(attrTab, "title",  "")
+		defaultTableValue(attrTab, "title", "")
 	end
 
 	optionalTableArgument(attrTab, "xAxis", "string")
