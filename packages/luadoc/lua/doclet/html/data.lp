@@ -66,7 +66,7 @@
 
 						<dl class="function">
 							<%for _, data in ipairs(mdata) do%>
-								<dt<%=borderTop%>><h2><%=data.file[1]%></h2></dt>
+								<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=data.file[1]%></h2></dt>
 
 								<% if data.image then %>
 									<% loc = "../../images/"..tostring(data.image) %>
