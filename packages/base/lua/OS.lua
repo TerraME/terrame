@@ -48,6 +48,10 @@ end
 function isDirectory(directory)
 	mandatoryArgument(1, "string", directory)
 
+	if sessionInfo().system == "windows" and string.sub(directory, -1, -1) == ":" then
+		directory = directory.."/" -- SKIP
+	end
+
 	return lfs.attributes(directory, "mode") == "directory"
 end
 
