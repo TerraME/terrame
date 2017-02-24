@@ -71,6 +71,26 @@ local RasterAttributeCreatedMapper = {
 	sum = "_Sum"
 }
 
+local OperationAvailablePerDataTypeMapper = {
+	value = 7,			-- 7 means that operation work with (Integer-Real-String)
+	area = 6,			-- 6 means that operation work with (Integer-Real)
+	presence = 7,		-- 5 means that operation work with (Integer-String)
+	count = 7,
+	distance = 7,
+	minimum = 7,
+	maximum = 7,
+	mode = 7,
+	coverage = 5,
+	stdev = 6,
+	average = 6,
+	mean = 6,
+	weighted = 6,
+	intersection = 5,
+	occurrence = 7,
+	sum = 6,
+	wsum = 6
+}
+
 local SourceTypeMapper = {
 	shp = "OGR",
 	geojson = "OGR",
@@ -569,16 +589,32 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 	return propCreatedName
 end
 
-local function isNumber(type)
-	return	(type == binding.INT16_TYPE) or
-			(type == binding.INT32_TYPE) or
-			(type == binding.INT64_TYPE) or
-			(type == binding.UINT16_TYPE) or
-			(type == binding.UINT32_TYPE) or
-			(type == binding.UINT64_TYPE) or
-			(type == binding.FLOAT_TYPE) or
-			(type == binding.DOUBLE_TYPE) or
-			(type == binding.NUMERIC_TYPE)
+local function isDataTypeInteger(propType)
+	return	propType == binding.INT16_TYPE or
+			propType == binding.INT32_TYPE or
+			propType == binding.INT64_TYPE or
+			propType == binding.UINT16_TYPE or
+			propType == binding.UINT32_TYPE or
+			propType == binding.UINT64_TYPE or
+			propType == binding.CINT32_TYPE
+end
+
+local function isDataTypeReal(propType)
+	return	propType == binding.FLOAT_TYPE or
+			propType == binding.DOUBLE_TYPE or
+			propType == binding.NUMERIC_TYPE or
+			propType == binding.CFLOAT_TYPE or
+			propType == binding.CDOUBLE_TYPE
+end
+
+local function isDataTypeString(propType)
+	return	propType == binding.STRING_TYPE or
+			propType == binding.CHAR_TYPE or
+			propType == binding.UCHAR_TYPE
+end
+
+local function isDataTypeNumber(propType)
+	return isDataTypeInteger(propType) or isDataTypeReal(propType)
 end
 
 local function createDataSetAdapted(dSet)
@@ -592,7 +628,7 @@ local function createDataSetAdapted(dSet)
 		for i = 0, numProps - 1 do
 			local type = dSet:getPropertyDataType(i)
 
-			if isNumber(type) then
+			if isDataTypeNumber(type) then
 				line[dSet:getPropertyName(i)] = tonumber(dSet:getAsString(i, precision))
 			elseif type == binding.BOOLEAN_TYPE then
 				line[dSet:getPropertyName(i)] = dSet:getBool(i)
@@ -1147,6 +1183,49 @@ local function hasNewAttributeOnLayer(fromLayer, attrs)
 	collectgarbage("collect")
 
 	return result
+end
+
+local function getPropertyDataType(connInfo, dstype, dsetName, propName)
+	local propType
+
+	do
+		local ds = makeAndOpenDataSource(connInfo, dstype)
+		local dse = ds:getDataSet(dsetName)
+		local numProps = dse:getNumProperties()
+
+		dse:moveFirst()
+
+		for i = 0, numProps - 1 do
+			local pn = dse:getPropertyName(i)
+			if (pn == propName) or (pn == "raster") then
+				propType = dse:getPropertyDataType(i)
+			end
+		end
+	end
+
+	collectgarbage("collect")
+
+	return propType
+end
+
+local function isOperationAvailableToPropertyDataType(operation, propType)
+	if not propType then
+		return false
+	elseif propType == binding.RASTER_TYPE then
+		return true
+	else
+		local opa = OperationAvailablePerDataTypeMapper[operation]
+
+		if isDataTypeInteger(propType) or (opa == 7) then
+			return true
+		elseif isDataTypeReal(propType) and (opa == 6) then
+			return true
+		elseif isDataTypeString(propType) and (opa == 5) then
+			return true
+		end
+	end
+
+	return false
 end
 
 TerraLib_ = {
@@ -1717,12 +1796,29 @@ TerraLib_ = {
 				customError("The attribute '"..property.."' already exists in the Layer.")
 			end
 
-			if not propertyExists(fromDsInfo:getConnInfo(), fromLayer:getDataSetName(), select, fromDsInfo:getType()) then
+			local fromConnInfo = fromDsInfo:getConnInfo()
+			local fromType = fromDsInfo:getType()
+			local fromDSetName = fromLayer:getDataSetName()
+
+			if not propertyExists(fromConnInfo, fromDSetName, select, fromType) then
 				if repr == "raster" then
 					customError("Selected band '"..select.."' does not exist in layer '"..from.."'.")
 				else
 					customError("Selected attribute '"..select.."' does not exist in layer '"..from.."'.")
 				end
+			end
+
+			local propType = getPropertyDataType(fromConnInfo, fromType, fromDSetName, select)
+
+			if not isOperationAvailableToPropertyDataType(operation, propType) then
+				local pt = "unknown"
+				if isDataTypeReal(propType) then
+					pt = "real"
+				elseif isDataTypeString(propType) then
+					pt = "string"
+				end
+
+				customError("Operation '"..operation.."' cannot be executed with an attribute of type "..pt.. " ('"..select.."').")
 			end
 
 			local outOverwrite = false

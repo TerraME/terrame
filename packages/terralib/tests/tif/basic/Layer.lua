@@ -333,7 +333,7 @@ return {
 				target = cs,
 				select = "cov_"..cov[i],
 				min = 0,
-				max = 100,
+				max = 1,
 				slices = 10,
 				color = "RdPu"
 			}
