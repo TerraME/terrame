@@ -558,7 +558,7 @@ local function installLocalButtonClicked()
 
 	os.execute("unzip -oq \""..file.."\"")
 
-	local newVersion = _Gtme.include(package..s.."description.lua").version
+	local newVersion = _Gtme.getLuaFile(package..s.."description.lua").version
 
 	if currentVersion then
 		if not _Gtme.verifyVersionDependency(newVersion, ">=", currentVersion) then
