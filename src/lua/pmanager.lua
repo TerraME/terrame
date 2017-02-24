@@ -415,6 +415,7 @@ local function installButtonClicked()
 
 			buildComboboxPackages(package)
 			selectPackage()
+			disableAll()
 		else
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
