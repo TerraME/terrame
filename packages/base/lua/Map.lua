@@ -1528,6 +1528,8 @@ metaTableMap_ = {__index = Map_}
 -- It can also be a string with a color to be used as background.
 -- @arg data.grid Draw a grid around the Cells? The default value is false.
 -- @arg data.font A string with a font name to draw Agents.
+-- @arg data.title A title for the Map to be shown on the top of the screen. Whenever
+-- the argument select is used, it is the default value for title.
 -- @arg data.size The size of the font to be used to draw agents in space.
 -- @arg data.symbol A string to be used to draw Agents in space. They can be any string,
 -- but there are some predefined symbols available. See the link Font in the left menu.
@@ -1694,7 +1696,14 @@ function Map(data)
 
 	optionalTableArgument(data, "value", "table")
 	optionalTableArgument(data, "select", "string")
-	optionalTableArgument(data, "title", "string")
+
+	if data.select then
+		local interface = sessionInfo().interface
+		sessionInfo().interface = true
+
+		defaultTableValue(data, "title", toLabel(data.select))
+		sessionInfo().interface = interface
+	end
 
 	if type(data.background) ~= "Map" then
 		defaultTableValue(data, "grid", false)
