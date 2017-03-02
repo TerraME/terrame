@@ -415,6 +415,7 @@ local function installButtonClicked()
 
 			buildComboboxPackages(package)
 			selectPackage()
+			disableAll()
 		else
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
@@ -455,6 +456,7 @@ local function installButtonClicked()
 			qt.dialog.msg_information(msg)
 		end
 
+		buildComboboxPackages(comboboxPackages.currentText)
 		cancelButton.enabled = true
 	end)
 
@@ -558,7 +560,7 @@ local function installLocalButtonClicked()
 
 	os.execute("unzip -oq \""..file.."\"")
 
-	local newVersion = _Gtme.include(package..s.."description.lua").version
+	local newVersion = _Gtme.getLuaFile(package..s.."description.lua").version
 
 	if currentVersion then
 		if not _Gtme.verifyVersionDependency(newVersion, ">=", currentVersion) then

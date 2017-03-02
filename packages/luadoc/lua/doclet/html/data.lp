@@ -66,7 +66,15 @@
 
 						<dl class="function">
 							<%for _, data in ipairs(mdata) do%>
-								<dt<%=borderTop%>><h2><%=data.file[1]%></h2></dt>
+								<% istview = #data.file == 1 and string.endswith(data.file[1], "tview") %>
+
+								<% if istview then %>
+									<%mlink = "<a href= \"../../data/"..data.file[1].."\">"..data.file[1].."</a>"%>
+									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=mlink%></h2></dt>
+
+								<% else %>
+									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=data.file[1]%></h2></dt>
+								<% end %>
 
 								<% if data.image then %>
 									<% loc = "../../images/"..tostring(data.image) %>
@@ -81,16 +89,19 @@
 								<dd>
 
 								<ul><span class="arg">
-								<li><b>Files: </b>
-								<%for pos, f in ipairs(data.file) do%>
-									<%mlink = "<a href= \"../../data/"..f.."\">"..f.."</a>"%>
-									<%if pos<#data.file then%>
-										<%=mlink..", "%>
-									<%else%>
-										<%=mlink%>
+
+								<% if not istview then %>
+									<li><b>Files: </b>
+									<%for pos, f in ipairs(data.file) do%>
+										<%mlink = "<a href= \"../../data/"..f.."\">"..f.."</a>"%>
+										<%if pos<#data.file then%>
+											<%=mlink..", "%>
+										<%else%>
+											<%=mlink%>
+										<%end%>
 									<%end%>
-								<%end%>
-								</li>
+									</li>
+								<% end %>
 
 								<%if data.representation then%>
 									<li><b>Representation: </b><%=data.representation%></li>
