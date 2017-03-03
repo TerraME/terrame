@@ -356,9 +356,7 @@ if (APPLE)
 
         install(FILES ${TERRALIB_3RDPARTY_DIR}/lib/liblua.dylib
             DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
-            COMPONENT runtime
-       )
-
+            COMPONENT runtime)
     endif()
 
     install(DIRECTORY ${TERRALIB_DIR}/lib
