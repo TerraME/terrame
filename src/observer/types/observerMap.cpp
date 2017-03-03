@@ -847,7 +847,7 @@ void ObserverMap::setupGUI()
     splitter->addWidget(frameTools);
     splitter->addWidget(scrollArea);
 	splitter->setTabOrder(frameTools, scrollArea);
-	
+
 	QList<int> sizes;
 	sizes << 0 << splitter->maximumWidth();
 	splitter->setSizes(sizes);
