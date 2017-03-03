@@ -515,7 +515,9 @@ int main(int argc, char *argv[])
 		lua_pop(L, 2);
 	}
 
+#ifndef __APPLE__
 	lua_close(L);
+#endif
 
 	if (autoClose)
 	{

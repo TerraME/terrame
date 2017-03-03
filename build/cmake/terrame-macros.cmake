@@ -100,11 +100,7 @@ MACRO(TmeInstallQtPlugins plgs)
 
   set (_dest "${TERRAME_INSTALL_PREFIX}/qtplugins")
 
-if(QT4_FOUND)
-  set (_plugin_dirs "imageformats;iconengines;sqldrivers")
-else()
-    set (_plugin_dirs "imageformats;iconengines;sqldrivers;platforms")
-endif()
+  set (_plugin_dirs "imageformats;iconengines;platforms") #TODO(#1711)
 
   foreach(_plugin_dir ${_plugin_dirs})
 

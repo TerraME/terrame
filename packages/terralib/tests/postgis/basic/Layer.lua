@@ -449,7 +449,8 @@ return {
 			user = user,
 			password = password,
 			database = database,
-			overwrite = overwrite
+			overwrite = overwrite,
+			epsg = 4036
 		}
 
 		layer1:export(pgData)
