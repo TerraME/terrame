@@ -73,8 +73,8 @@ local RasterAttributeCreatedMapper = {
 
 local OperationAvailablePerDataTypeMapper = {
 	value = 7,			-- 7 means that operation work with (Integer-Real-String)
-	area = 6,
-	presence = 7,
+	area = 6,			-- 6 means that operation work with (Integer-Real)
+	presence = 7,		-- 5 means that operation work with (Integer-String)
 	count = 7,
 	distance = 7,
 	minimum = 7,
@@ -1811,7 +1811,14 @@ TerraLib_ = {
 			local propType = getPropertyDataType(fromConnInfo, fromType, fromDSetName, select)
 
 			if not isOperationAvailableToPropertyDataType(operation, propType) then
-				customError("Operation '"..operation.."' is not available to selected attribute '"..select.."'. Incompatible type.")
+				local pt = "unknown"
+				if isDataTypeReal(propType) then
+					pt = "real"
+				elseif isDataTypeString(propType) then
+					pt = "string"
+				end
+
+				customError("Operation '"..operation.."' cannot be executed with an attribute of type "..pt.. " ('"..select.."').")
 			end
 
 			local outOverwrite = false
