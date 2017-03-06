@@ -57,47 +57,6 @@ return {
 		unitTest:assertEquals(cl1.source, "shp")
 		unitTest:assertEquals(cl1.file, currentDir()..filePath1)
 
-		-- #1152
-		-- local host = "localhost"
-		-- local port = "5432"
-		-- local user = "postgres"
-		-- local password = "postgres"
-		-- local database = "postgis_22_sample"
-		-- local encoding = "CP1252"
-		-- local tableName = "prodes_pg_cells"
-
-		-- local pgData = {
-			-- type = "POSTGIS",
-			-- host = host,
-			-- port = port,
-			-- user = user,
-			-- password = password,
-			-- database = database,
-			-- table = tableName,
-			-- encoding = encoding
-
-		-- }
-
-		-- -- USED ONLY TO TESTS
-		-- local tl = TerraLib{}
-		-- tl:dropPgTable(pgData)
-		-- local clName2 = "ProdesPg"
-
-		-- local layer2 = Layer{
-			-- project = proj,
-			-- source = "postgis",
-			-- input = layerName1
-			-- name = clName2,
-			-- resolution = 60e3,
-			-- user = user,
-			-- password = password,
-			-- database = database,
-			-- table = tableName
-		-- }
-
-		-- END
-		-- tl:dropPgTable(pgData)
-
 		File(filePath1):deleteIfExists()
 		File(projName):deleteIfExists()
 	end,
@@ -388,6 +347,30 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "tiff-std.png")
+
+		-- NODATA
+		cl:fill{
+			operation = "average",
+			layer = "altimetria",
+			attribute = "height_nd",
+			nodata = 256
+		}
+
+		cs = CellularSpace{
+			project = proj,
+			layer = cl.name
+		}
+
+		map = Map{
+			target = cs,
+			select = "height_nd",
+			min = 0,
+			max = 255,
+			color = "RdPu",
+			slices = 7
+		}
+
+		unitTest:assertSnapshot(map, "tiff-average-nodata.png")
 
 		forEachElement(shapes, function(_, value)
 			File(value):delete()

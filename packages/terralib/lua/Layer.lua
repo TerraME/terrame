@@ -431,6 +431,7 @@ Layer_ = {
 
 		mandatoryTableArgument(data, "operation", "string")
 		mandatoryTableArgument(data, "attribute", "string")
+		optionalTableArgument(data, "nodata", "number")
 
 		if not isValidName(data.attribute) then
 			customError("Attribute name '"..data.attribute.."' is not a valid name. Please, revise special characters or spaces from it.")
@@ -470,8 +471,9 @@ Layer_ = {
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation", "nodata"})
 					checkBand(data.layer, data)
+					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -519,6 +521,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
+					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -534,6 +537,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
+					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -549,6 +553,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
+					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -564,6 +569,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
+					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -597,6 +603,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
 					checkBand(data.layer, data)
+					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -613,6 +620,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
 					checkBand(data.layer, data)
+					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -633,7 +641,7 @@ Layer_ = {
 			end
 		end
 
-		tlib:attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.default, repr)
+		tlib:attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.default, repr, data.nodata)
 	end,
 	--- Return the Layer's projection. It contains the name of the projection, its Geodetic
 	-- Identifier (EPSG), and

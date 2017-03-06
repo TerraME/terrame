@@ -100,27 +100,6 @@ return {
 
 		TerraLib{}:dropPgTable(pgData)
 
-		-- TODO: ADO DON'T WORK (REVIEW)
-		-- if _Gtme.sessionInfo().system == "windows" then
-			-- local adoData = {
-				-- type = "ADO",
-				-- file = "D:/terrame/tests/sampa.accdb" --file("sampa.accdb", "fillcell")
-			-- }
-
-			-- TerraLib{}:copyLayer(proj1, layerName1, adoData)
-		-- end
-
-		-- local layerName4 = "SampaAdoDB"
-		-- local adofilePath =
-		-- proj1:addLayer{
-			-- source = "access",
-			-- name = layerName4,
-			-- user = user,
-			-- password = password,
-			-- database = database,
-			-- table = tableName
-		-- }
-
 		File(projName):deleteIfExists()
 
 		projName = "cells_setores_2000.tview"
@@ -283,6 +262,47 @@ return {
 		unitTest:assertEquals(layer5.epsg, 29901.0)
 		unitTest:assert(layer5.epsg ~= layer4.epsg)
 		-- // CHANGE EPSG
+
+		-- #1152
+		-- local host = "localhost"
+		-- local port = "5432"
+		-- local user = "postgres"
+		-- local password = "postgres"
+		-- local database = "postgis_22_sample"
+		-- local encoding = "CP1252"
+		-- local tableName = "prodes_pg_cells"
+
+		-- local pgData = {
+			-- type = "POSTGIS",
+			-- host = host,
+			-- port = port,
+			-- user = user,
+			-- password = password,
+			-- database = database,
+			-- table = tableName,
+			-- encoding = encoding
+
+		-- }
+
+		-- -- USED ONLY TO TESTS
+		-- local tl = TerraLib{}
+		-- tl:dropPgTable(pgData)
+		-- local clName2 = "ProdesPg"
+
+		-- local layer2 = Layer{
+			-- project = proj,
+			-- source = "postgis",
+			-- input = layerName1
+			-- name = clName2,
+			-- resolution = 60e3,
+			-- user = user,
+			-- password = password,
+			-- database = database,
+			-- table = tableName
+		-- }
+
+		-- END
+		-- tl:dropPgTable(pgData)
 
 		File(projName):deleteIfExists()
 

@@ -152,10 +152,30 @@ return {
 		end
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
 
+		customWarning = customWarningBkp
+
+		local nodataTypeError = function()
+			cl:fill{
+				operation = "average",
+				attribute = "aver_nd",
+				layer = "altimetria",
+				nodata = true
+			}
+		end
+		unitTest:assertError(nodataTypeError, incompatibleTypeMsg("nodata", "number", true))
+
+		local nodataDefaultError = function()
+			cl:fill{
+				operation = "average",
+				attribute = "aver_nd",
+				layer = "altimetria",
+				nodata = 255
+			}
+		end
+		unitTest:assertError(nodataDefaultError, defaultValueMsg("nodata", 255.0))
+
 		File(projName):delete()
 		File(shp1):deleteIfExists()
-
-		customWarning = customWarningBkp
 	end,
 	dummy = function(unitTest)
 		local projName = "layer_tif_dummy.tview"
