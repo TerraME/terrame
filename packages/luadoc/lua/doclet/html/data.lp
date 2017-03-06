@@ -134,7 +134,7 @@
       							</span>
 								<%if data.attributes and #data.attributes > 0 then%>
 									<table class="arg_tab">
-									<tr><th><%if data.bands then%>Band<%else%>Attribute<%end%>
+									<tr><th><%if data.bands then%>Band</th><th>Nodata<%else%>Attribute<%end%>
 									</th><th>Type</th><th>Description</th></tr>
 									<%if data.attributes[1] == "_incompatible_" then%>
 										<tr>
@@ -145,7 +145,7 @@
 									<%else%>
 										<% for j = 1,#data.attributes do %>
 											<%if data.bands then%>
-												<tr><td><%=data.attributes[j]%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
+												<tr><td><%=data.attributes[j]%></td><td><%=data.nodata[j]%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
 											<%else%>
 											<tr><td><%="\""..data.attributes[j].."\""%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
 											<%end%>

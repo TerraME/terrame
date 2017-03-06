@@ -55,7 +55,7 @@ cl = Layer{
 	file = "cabecadeboi.shp",
 	input = "box",
 	name = "cells",
-	resolution = 100,
+	resolution = 100
 }
 
 cl:fill{

@@ -157,8 +157,8 @@ return {
 
 		customWarning = customWarningBkp
 	end,
-	dummy = function(unitTest)
-		local projName = "layer_tif_dummy.tview"
+	nodata = function(unitTest)
+		local projName = "layer_tif_nodata.tview"
 
 		File(projName):deleteIfExists()
 
@@ -173,14 +173,24 @@ return {
 		end
 
 		local prodes = "prodes"
-		local bandNoExists = function()
-			local l = Layer{
-				project = proj,
-				name = prodes,
-				file = filePath("test/prodes_polyc_10k.tif", "terralib")
-			}
+		local l = Layer{
+			project = proj,
+			name = prodes,
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")
+		}
 
-			l:dummy(4)
+		local bandNoNumber = function()
+			l:nodata("4")
+		end
+		unitTest:assertError(bandNoNumber, incompatibleTypeMsg(1, "number", "4"))
+
+		local bandNoNumber = function()
+			l:nodata(-1)
+		end
+		unitTest:assertError(bandNoNumber, positiveArgumentMsg(1, -1, true))
+
+		local bandNoExists = function()
+			l:nodata(4)
 		end
 		unitTest:assertError(bandNoExists, "The only available band is '0.0'.")
 
