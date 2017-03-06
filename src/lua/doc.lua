@@ -186,14 +186,22 @@ local function getProjects(package, doc_report)
 
 			description = description.." from layer \""..data.layer.."\""
 
-			if data.band or data.select then
+			if data.band or data.select or data.nodata then
 				description = description.." using"
 			end
 
 			if data.band then
 				description = description.." band "..data.band
+
+				if data.nodata then
+					description = description.." and "
+				end
 			elseif data.select then
 				description = description.." selected attribute ".."\""..data.select.."\""
+			end
+
+			if data.nodata then
+				description = description.." nodata "..data.nodata
 			end
 
 			if data.operation == "coverage" then
@@ -670,10 +678,13 @@ function _Gtme.executeDoc(package)
 				value.representation = layer:representation()
 				value.projection = layer:projection()
 				value.bands = layer:bands()
+				value.nodata = {}
 
 				if value.attributes  == nil then value.attributes = {} end
 
 				for i = 0, value.bands - 1 do
+					table.insert(value.nodata, layer:nodata(i))
+
 					if not value.attributes[tostring(i)] then
 						printError("Band "..i.." is not documented.")
 						doc_report.error_data = doc_report.error_data + 1
