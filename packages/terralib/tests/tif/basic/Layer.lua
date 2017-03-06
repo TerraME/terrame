@@ -474,7 +474,7 @@ return {
 
 		proj.file:delete()
 	end,
-	dummy = function(unitTest)
+	nodata = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 
 		File(projName):deleteIfExists()
@@ -496,7 +496,7 @@ return {
 			file = filePath("test/prodes_polyc_10k.tif", "terralib")
 		}
 
-		unitTest:assertEquals(l:dummy(0), 255.0)
+		unitTest:assertEquals(l:nodata(), 255.0)
 
 		local portos = "Portos"
 		l = Layer{
@@ -505,7 +505,7 @@ return {
 			file = filePath("amazonia-ports.shp", "terralib")
 		}
 
-		unitTest:assertNil(l:dummy(0))
+		unitTest:assertNil(l:nodata())
 
 		File(projName):delete()
 

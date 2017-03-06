@@ -3,6 +3,7 @@ Loading package 'publish'
 Parsing 'data.lua'
 Processing lua files
 Processing 'arapiuns.lua'
+Processing 'brazil.lua'
 Processing 'caragua.lua'
 Processing 'emas.lua'
 Checking directory 'data'
@@ -10,6 +11,9 @@ Checking properties of data files
 Processing 'AllCmmTab_210316OK.shp'
 Processing 'arapiuns.tview'
 Processing 'arapiuns_traj.shp'
+Processing 'br_biomes.shp'
+Processing 'br_states.shp'
+Processing 'brazil.tview'
 Processing 'caragua.shp'
 Processing 'caragua.tview'
 Processing 'caragua_classes2010_regioes.shp'
@@ -30,9 +34,10 @@ Parsing lua/List.lua
 Parsing lua/Report.lua
 Parsing lua/View.lua
 Parsing examples
-Parsing examples/arapiunsapp.lua
-Parsing examples/caraguapp.lua
-Parsing examples/emasapp.lua
+Parsing examples/arapiuns.lua
+Parsing examples/brazil.lua
+Parsing examples/caragua.lua
+Parsing examples/emas.lua
 Checking undocumented files
 Checking @usage definition
 Checking lua/Application.lua
@@ -92,7 +97,7 @@ Checking View.lua
 Checking if all Models are documented
 
 Documentation report for package 'publish':
-Documentation was built in 7.71 seconds.
+Documentation was built in 8.72 seconds.
 8 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -117,5 +122,5 @@ All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
-All 3 examples are correctly documented.
+All 4 examples are correctly documented.
 Summing up, all the documentation was successfully built.

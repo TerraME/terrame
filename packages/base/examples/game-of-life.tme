@@ -2,7 +2,7 @@ return {
 	[1] = {
 		x = 100, 
 		y = 100, 
-		width = 882, 
-		height = 662, 
+		width = 543, 
+		height = 524, 
 	}, 
 }
