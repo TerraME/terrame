@@ -79,14 +79,15 @@ Checking Report.lua
 Checking View.lua
 Skipping lines of source code check
 Testing examples
-Testing arapiunsapp
-Testing caraguapp
-Testing emasapp
+Testing arapiuns
+Testing brazil
+Testing caragua
+Testing emas
 Checking logs
 
 Functional test report for package 'publish':
-Tests were executed in 66.31 seconds.
-Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_jITDp/'.
+Tests were executed in 71.28 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_42MpQ/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -101,7 +102,7 @@ No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
 All 15 functions of the package were tested.
 No lines from the source code were verified.
-All 3 examples were successfully executed.
+All 4 examples were successfully executed.
 No new log file was created.
 All log files were used in the tests.
 Summing up, all tests were successfully executed.
