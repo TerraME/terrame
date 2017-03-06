@@ -1691,6 +1691,7 @@ return {
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 		local tableName = "sampa"
+		local srid = 4019
 
 		local pgData = {
 			type = "postgis",
@@ -1700,7 +1701,8 @@ return {
 			password = password,
 			database = database,
 			table = tableName, -- it is used only to drop
-			encoding = encoding
+			encoding = encoding,
+			srid = srid
 		}
 
 		local overwrite = true

@@ -839,7 +839,6 @@ void ObserverMap::setupGUI()
     layoutTools->addWidget(zoomComboBox);
     layoutTools->addItem(hLayoutZoom1);
     layoutTools->addItem(hLayoutZoom2);
-
     layoutTools->addWidget(treeLayers);
     //-------------------------
 
@@ -847,10 +846,11 @@ void ObserverMap::setupGUI()
     splitter->setStyleSheet("QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
     splitter->addWidget(frameTools);
     splitter->addWidget(scrollArea);
-    splitter->setStretchFactor(0, 0);
-    splitter->setStretchFactor(1, 1);
-	//splitter->setHandleWidth(0);
+	splitter->setTabOrder(frameTools, scrollArea);
 
+	QList<int> sizes;
+	sizes << 0 << splitter->maximumWidth();
+	splitter->setSizes(sizes);
 
     QHBoxLayout *layoutDefault = new QHBoxLayout(this);
     layoutDefault->setMargin(5);
