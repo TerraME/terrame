@@ -1749,6 +1749,7 @@ TerraLib_ = {
 	-- @arg property Name of the attribute to be created.
 	-- @arg default The default value.
 	-- @arg repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
+	-- @arg nodata A number used in raster data that represents no information in a pixel value.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
 	-- proj = {

@@ -399,6 +399,7 @@ Layer_ = {
 	-- @arg data.default A value that will be used to fill a cell whose attribute cannot be
 	-- computed. For example, when there is no intersection area. Note that this argument is
 	-- related to the output.
+	-- @arg data.nodata A number used in raster data that represents no information in a pixel value.
 	-- @usage -- DONTRUN
 	-- import("terralib")
 	--
@@ -473,7 +474,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation", "nodata"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
+					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -521,7 +522,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
+					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -537,7 +538,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
+					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -553,7 +554,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
+					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -569,7 +570,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
+					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -603,7 +604,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
+					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -620,7 +621,7 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:dummy(data.band))
+					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
