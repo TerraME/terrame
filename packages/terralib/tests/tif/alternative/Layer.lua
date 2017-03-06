@@ -184,10 +184,10 @@ return {
 		end
 		unitTest:assertError(bandNoNumber, incompatibleTypeMsg(1, "number", "4"))
 
-		local bandNoNumber = function()
+		local bandNegative = function()
 			l:nodata(-1)
 		end
-		unitTest:assertError(bandNoNumber, positiveArgumentMsg(1, -1, true))
+		unitTest:assertError(bandNegative, positiveArgumentMsg(1, -1, true))
 
 		local bandNoExists = function()
 			l:nodata(4)
