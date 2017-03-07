@@ -284,6 +284,7 @@ end
 local function checkBand(layer, data)
 	defaultTableValue(data, "band", 0)
 	positiveTableArgument(data, "band", true)
+	defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 	local band = layer:bands()
 
@@ -350,7 +351,7 @@ Layer_ = {
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income.
-	-- & attribute, layer, select  & area, default, band  \
+	-- & attribute, layer, select  & area, default, band, nodata  \
 	-- "count" & Number of objects that have some overlay with the cell.
 	-- & attribute, layer & \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
@@ -364,13 +365,13 @@ Layer_ = {
 	-- output to string. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select &
-	-- default, band \
+	-- default, band, nodata \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, band \
+	-- attribute, layer, select & default, band, nodata \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, band \
+	-- attribute, layer, select & default, band, nodata \
 	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
@@ -380,17 +381,17 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & default, band \
+	-- & attribute, layer, select & default, band, nodata \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
 	-- & attribute, layer & \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default \
+	-- attribute, layer, select & default, band, nodata \
 	-- "sum" & Sum of quantitative values from objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, it
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
-	-- & attribute, layer, select & area, default \
+	-- & attribute, layer, select & area, default, band, nodata \
 	-- "nearest" & The value (quantitative or qualitative) of the nearest object. & attribute,
 	-- layer, select & \
 	-- @arg data.attribute The name of the new attribute to be created.
@@ -400,6 +401,7 @@ Layer_ = {
 	-- computed. For example, when there is no intersection area. Note that this argument is
 	-- related to the output.
 	-- @arg data.nodata A number used in raster data that represents no information in a pixel value.
+	-- Its default value can be got from Layer:nodata() function.
 	-- @usage -- DONTRUN
 	-- import("terralib")
 	--
@@ -474,7 +476,6 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation", "nodata"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -522,7 +523,6 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -538,7 +538,6 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -554,7 +553,6 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -570,7 +568,6 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -604,7 +601,6 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
@@ -621,7 +617,6 @@ Layer_ = {
 				elseif repr == "raster" then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
 					checkBand(data.layer, data)
-					defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 					data.select = data.band -- SKIP
 				else
