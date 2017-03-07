@@ -543,7 +543,7 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 	return propCreatedName
 end
 
-local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName)
+local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, nodata)
 	local propCreatedName
 
 	do
@@ -556,6 +556,12 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 	    local rDSet = rDs:getDataSet(fromLayer:getDataSetName())
 		local rpos = binding.GetFirstPropertyPos(rDSet, binding.RASTER_TYPE)
 		local raster = rDSet:getRaster(rpos)
+
+		if nodata then
+			local bandObj = raster:getBand(select)
+			local bandProperty = bandObj:getProperty()
+			bandProperty.m_noDataValue = nodata
+		end
 
 		local grid = raster:getGrid()
 		grid:setSRID(fromLayer:getSRID())
@@ -1743,6 +1749,7 @@ TerraLib_ = {
 	-- @arg property Name of the attribute to be created.
 	-- @arg default The default value.
 	-- @arg repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
+	-- @arg nodata A number used in raster data that represents no information in a pixel value.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
 	-- proj = {
@@ -1768,7 +1775,7 @@ TerraLib_ = {
 	-- tl:addShpLayer(proj, layerName2, layerFile2)
 	--
 	-- tl:attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
-	attributeFill = function(self, project, from, to, out, property, operation, select, area, default, repr)
+	attributeFill = function(self, project, from, to, out, property, operation, select, area, default, repr, nodata)
 		do
 			loadProject(project, project.file)
 
@@ -1848,7 +1855,7 @@ TerraLib_ = {
 			local dseType = fromLayer:getSchema()
 
 			if dseType:hasRaster() then
-				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out)
+				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, nodata)
 			else
 				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
 			end
