@@ -284,7 +284,6 @@ end
 local function checkBand(layer, data)
 	defaultTableValue(data, "band", 0)
 	positiveTableArgument(data, "band", true)
-	defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 
 	local band = layer:bands()
 
@@ -295,6 +294,8 @@ local function checkBand(layer, data)
 			customError("Band '"..data.band.."' does not exist. The only available band is '0'.")
 		end
 	end
+
+	defaultTableValue(data, "nodata", data.layer:nodata(data.band))
 end
 
 Layer_ = {
