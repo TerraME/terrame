@@ -177,6 +177,15 @@ Chart_ = {
 		self.values[modelTime] = values
 
 		self.target:notify(modelTime)
+	end,
+	--- Clear the Chart.
+	-- @usage -- DONTRUN
+	-- cell = Cell{value = 1}
+	-- chart = Chart{target = cell}
+	-- chart:update(1)
+	-- chart:clear()
+	clear = function(self)
+		self.cObj_:clear()
 	end
 }
 

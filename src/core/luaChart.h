@@ -58,6 +58,9 @@ public:
 	~luaChart(void);
 
 	int save(lua_State* L);
+
+	int clear(lua_State* L);
+
 public:
 	ObserverGraphic* obs;
 };

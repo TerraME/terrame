@@ -143,6 +143,8 @@ public:
      */
     int close();
 
+	void clear();
+
 private slots:
     /**
      * Treats the click in the legend and changes the curve color

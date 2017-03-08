@@ -369,6 +369,30 @@ return{
 		ch:update(3)
 
 		unitTest:assertSnapshot(ch, "save_test.bmp", 0.05)
+	end,
+	clear = function(unitTest)
+		local c = Cell{w = 1}
+
+		local chart = Chart{
+			target = c
+		}
+
+		chart:update(1)
+		chart:update(2)
+		chart:update(3)
+		chart:update(4)
+
+		unitTest:assertSnapshot(chart, "chart_clear1.png")
+
+		chart:clear()
+
+		c.w = c.w + 1
+		chart:update(1)
+		chart:update(2)
+		chart:update(3)
+		chart:update(4)
+
+		unitTest:assertSnapshot(chart, "chart_clear2.png")
 	end
 }
 

@@ -30,7 +30,6 @@ using namespace std;
 #include <QColorDialog>
 #include <QApplication>
 #include <QPalette>
-#include <QDebug>
 #include <QFontDatabase>
 
 #include <qwt_plot_legenditem.h>
@@ -125,7 +124,6 @@ bool ObserverGraphic::draw(QDataStream &state)
     QString msg, key;
     state >> msg;
     QStringList tokens = msg.split(PROTOCOL_SEPARATOR);
-
     QVector<double> *ord = 0, *abs = xAxisValues;
     // double num = 0, x = 0, y = 0;
 
@@ -451,3 +449,12 @@ int ObserverGraphic::close()
     return 0;
 }
 
+void ObserverGraphic::clear()
+{
+	for (int i = 0; i < internalCurves->keys().size(); i++)
+	{
+		internalCurves->value(internalCurves->keys().at(i))->values->clear();
+	}
+
+	xAxisValues->clear();
+}
