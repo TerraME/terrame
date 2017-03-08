@@ -911,6 +911,42 @@ return {
 		unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(rsumOverLayerInfo.sid)
 
+		-- RASTER NODATA
+		local nodataLayerName = clName.."_"..layerName4.."_ND"
+		shp[22] = nodataLayerName..".shp"
+
+		File(shp[22]):deleteIfExists()
+
+		operation = "average"
+		attribute = "aver_nd"
+		select = 0
+		area = nil
+		default = nil
+		local nodata = 256
+		tl:attributeFill(proj, layerName4, rsumLayerName, nodataLayerName, attribute, operation, select, area, default, nil, nodata)
+
+		local ndSet = tl:getDataSet(proj, nodataLayerName)
+
+		unitTest:assertEquals(getn(ndSet), 9)
+
+		for k, v in pairs(ndSet[0]) do
+			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
+							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or (k == "rsum") or
+							(k == "rsum_over") or (k == "aver_nd"))
+			unitTest:assertNotNil(v)
+		end
+
+		local nodataLayerInfo = tl:getLayerInfo(proj, proj.layers[nodataLayerName])
+		unitTest:assertEquals(nodataLayerInfo.name, nodataLayerName)
+		unitTest:assertEquals(nodataLayerInfo.file, currentDir()..shp[22])
+		unitTest:assertEquals(nodataLayerInfo.type, "OGR")
+		unitTest:assertEquals(nodataLayerInfo.rep, "polygon")
+		unitTest:assertNotNil(nodataLayerInfo.sid)
+
 		for j = 1, #shp do
 			File(shp[j]):deleteIfExists()
 		end
