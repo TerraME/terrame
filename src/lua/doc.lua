@@ -29,6 +29,7 @@ _Gtme.ignoredFile = function(fname)
 	local ignoredExtensions = {
 		".dbf",
 		".prj",
+		".qpj",
 		".shx",
 		".sbn",
 		".sbx",
@@ -606,6 +607,11 @@ function _Gtme.executeDoc(package)
 					local prj = File(path..name..".prj")
 					if prj:exists() then
 						table.insert(value.file, name..".prj")
+					end
+
+					prj = File(path..name..".qpj")
+					if prj:exists() then
+						table.insert(value.file, name..".qpj")
 					end
 				end
 
