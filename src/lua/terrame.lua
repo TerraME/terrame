@@ -1164,6 +1164,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		separator = package.config:sub(1, 1),
 		silent = false,
 		color = false,
+		interface = false,
 		path = os.getenv("TME_PATH"),
 		fullTraceback = false,
 		autoclose = false,

@@ -31,10 +31,9 @@ set(TERRALIB_DIR "$ENV{_TERRALIB_MODULES_DIR}" CACHE PATH "TerraLib directory" F
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
 set(CMAKE_INSTALL_PREFIX "$ENV{_TERRAME_INSTALL_PATH}" CACHE PATH "Where to install TerraME?" FORCE)
 set(CMAKE_PREFIX_PATH "${TERRALIB_3RDPARTY_DIR};${Qt5_DIR};${TERRAME_DEPENDENCIES_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
-set(TERRAME_VERSION_STATUS "rc1-dev" CACHE STRING "Define name of installer" FORCE)
+set(TERRAME_VERSION_STATUS "rc1" CACHE STRING "Define name of installer" FORCE)
 set(TERRAME_BUILD_AS_BUNDLE $ENV{_TERRAME_BUILD_AS_BUNDLE} CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
 set(TERRAME_CREATE_INSTALLER $ENV{_TERRAME_CREATE_INSTALLER} CACHE BOOL "Create the installer" FORCE)
 
 # Dependencies paths
-set(QTLUAEXTRAS_LIBRARY "${TERRAME_DEPENDENCIES_DIR}/lib/qtluae.dylib" CACHE PATH "QtLua Extras lib" FORCE)
 set(QWT_INCLUDE_DIR "${TERRALIB_3RDPARTY_DIR}/lib/qwt.framework/Versions/6/Headers" CACHE PATH "Qwt include" FORCE)

@@ -29,6 +29,7 @@ _Gtme.ignoredFile = function(fname)
 	local ignoredExtensions = {
 		".dbf",
 		".prj",
+		".qpj",
 		".shx",
 		".sbn",
 		".sbx",
@@ -186,14 +187,22 @@ local function getProjects(package, doc_report)
 
 			description = description.." from layer \""..data.layer.."\""
 
-			if data.band or data.select then
+			if data.band or data.select or data.nodata then
 				description = description.." using"
 			end
 
 			if data.band then
 				description = description.." band "..data.band
+
+				if data.nodata then
+					description = description.." and "
+				end
 			elseif data.select then
 				description = description.." selected attribute ".."\""..data.select.."\""
+			end
+
+			if data.nodata then
+				description = description.." nodata "..data.nodata
 			end
 
 			if data.operation == "coverage" then
@@ -267,6 +276,7 @@ local function getProjects(package, doc_report)
 				layers[data.file] =
 				{
 					file = {data.file},
+					title = data.file,
 					summary = "Automatically created file with "..description..
 						", in project <a href = \"#"..currentProject.."\">"..currentProject.."</a>.",
 					shortsummary = "Automatically created file in project \""..currentProject.."\".",
@@ -311,7 +321,8 @@ local function getProjects(package, doc_report)
 		local mproject = {
 			summary = summary,
 			shortsummary = shortsummary..".",
-			file = {idx}
+			file = {idx},
+			title = idx
 		}
 
 		forEachOrderedElement(proj, function(midx, layer)
@@ -415,7 +426,7 @@ function _Gtme.executeDoc(package)
 	if File(package_path..s.."data.lua"):exists() and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
-			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "reference"})
+			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "reference", "title"})
 			doc_report.error_data = doc_report.error_data + count
 
 			if not tab.file then tab.file = "?" end
@@ -428,12 +439,15 @@ function _Gtme.executeDoc(package)
 				{"optionalTableArgument",  "image",       "string"},
 				{"optionalTableArgument",  "attributes",  "table"},
 				{"optionalTableArgument",  "reference",   "string"},
+				{"optionalTableArgument",  "title",       "string"},
 				{"optionalTableArgument",  "separator",   "string"}
 			}
 
 			if not tab.attributes then
 				tab.attributes = {}
 			end
+
+			if not tab.title then tab.title = tab.file[1] end
 
 			local attributes = {}
 			local counter = 0
@@ -528,7 +542,7 @@ function _Gtme.executeDoc(package)
 		end)
 
 		table.sort(mdata, function(a, b)
-			return a.file[1] < b.file[1]
+			return a.title < b.title
 		end)
 
 		printNote("Checking properties of data files")
@@ -587,23 +601,33 @@ function _Gtme.executeDoc(package)
 
 				value.quantity = #csv
 			elseif string.endswith(value.file[1], ".shp") or string.endswith(value.file[1], ".geojson") then
+				local firstfile = value.file[1]
 
-				if string.endswith(value.file[1], ".shp") then
-					local file = File(packageInfo(package).path.."data/"..value.file[1])
-					local path, name = file:split()
+				for i = 1, #value.file do
+					if string.endswith(value.file[i], ".shp") then
+						local file = File(packageInfo(package).path.."data/"..value.file[i])
+						local path, name = file:split()
 
-					table.insert(value.file, name..".shx")
-					table.insert(value.file, name..".dbf")
+						table.insert(value.file, name..".shx")
+						table.insert(value.file, name..".dbf")
 
-					local prj = File(path..name..".prj")
-					if prj:exists() then
-						table.insert(value.file, name..".prj")
+						local prj = File(path..name..".prj")
+						if prj:exists() then
+							table.insert(value.file, name..".prj")
+						end
+
+						prj = File(path..name..".qpj")
+						if prj:exists() then
+							table.insert(value.file, name..".qpj")
+						end
 					end
 				end
 
+				table.sort(value.file)
+
 				layer = tl.Layer{
 					project = myProject,
-					file = filePath(value.file[1], package),
+					file = filePath(firstfile, package),
 					name = "layer"..idx
 				}
 
@@ -616,11 +640,7 @@ function _Gtme.executeDoc(package)
 
 				forEachElement(attributes, function(_, mvalue)
 					if not value.attributes[mvalue] then
-						if mvalue == "FID" then
-							value.attributes[mvalue] = {
-								description = "Unique identifier (internal value)."
-							}
-						elseif mvalue == "id" then
+						if mvalue == "id" then
 							value.attributes[mvalue] = {
 								description = "Unique identifier (internal value)."
 							}
@@ -632,7 +652,7 @@ function _Gtme.executeDoc(package)
 							value.attributes[mvalue] = {
 								description = "Cell's row."
 							}
-						else
+						elseif mvalue ~= "FID" then
 							printError("Attribute '"..mvalue.."' is not documented.")
 							doc_report.error_data = doc_report.error_data + 1
 							value.attributes[mvalue] = {
@@ -670,10 +690,13 @@ function _Gtme.executeDoc(package)
 				value.representation = layer:representation()
 				value.projection = layer:projection()
 				value.bands = layer:bands()
+				value.nodata = {}
 
 				if value.attributes  == nil then value.attributes = {} end
 
 				for i = 0, value.bands - 1 do
+					table.insert(value.nodata, layer:nodata(i))
+
 					if not value.attributes[tostring(i)] then
 						printError("Band "..i.." is not documented.")
 						doc_report.error_data = doc_report.error_data + 1

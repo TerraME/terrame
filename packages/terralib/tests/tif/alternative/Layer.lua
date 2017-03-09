@@ -152,13 +152,33 @@ return {
 		end
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
 
+		customWarning = customWarningBkp
+
+		local nodataTypeError = function()
+			cl:fill{
+				operation = "average",
+				attribute = "aver_nd",
+				layer = "altimetria",
+				nodata = true
+			}
+		end
+		unitTest:assertError(nodataTypeError, incompatibleTypeMsg("nodata", "number", true))
+
+		local nodataDefaultError = function()
+			cl:fill{
+				operation = "average",
+				attribute = "aver_nd",
+				layer = "altimetria",
+				nodata = 255
+			}
+		end
+		unitTest:assertError(nodataDefaultError, defaultValueMsg("nodata", 255.0))
+
 		File(projName):delete()
 		File(shp1):deleteIfExists()
-
-		customWarning = customWarningBkp
 	end,
-	dummy = function(unitTest)
-		local projName = "layer_tif_dummy.tview"
+	nodata = function(unitTest)
+		local projName = "layer_tif_nodata.tview"
 
 		File(projName):deleteIfExists()
 
@@ -173,14 +193,24 @@ return {
 		end
 
 		local prodes = "prodes"
-		local bandNoExists = function()
-			local l = Layer{
-				project = proj,
-				name = prodes,
-				file = filePath("test/prodes_polyc_10k.tif", "terralib")
-			}
+		local l = Layer{
+			project = proj,
+			name = prodes,
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")
+		}
 
-			l:dummy(4)
+		local bandNoNumber = function()
+			l:nodata("4")
+		end
+		unitTest:assertError(bandNoNumber, incompatibleTypeMsg(1, "number", "4"))
+
+		local bandNegative = function()
+			l:nodata(-1)
+		end
+		unitTest:assertError(bandNegative, positiveArgumentMsg(1, -1, true))
+
+		local bandNoExists = function()
+			l:nodata(4)
 		end
 		unitTest:assertError(bandNoExists, "The only available band is '0.0'.")
 

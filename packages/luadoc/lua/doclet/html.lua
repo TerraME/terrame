@@ -399,6 +399,7 @@ function start(doc, doc_report)
 				printError("IMPORTANT: You have removed type '"..mtype.."' from package 'base'.")
 				printError("Please update 'packages/luadoc/lua/doclet/highlighting.lua' and")
 				printError("remove this type from a table called 'base'.")
+				printError("Possibly you wrongly set 'base' as the name of your own package?")
 				os.exit()
 			end
 		end)

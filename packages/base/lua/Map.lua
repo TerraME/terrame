@@ -1528,6 +1528,8 @@ metaTableMap_ = {__index = Map_}
 -- It can also be a string with a color to be used as background.
 -- @arg data.grid Draw a grid around the Cells? The default value is false.
 -- @arg data.font A string with a font name to draw Agents.
+-- @arg data.title A title for the Map to be shown on the top of the screen. Whenever
+-- the argument select is used, it is the default value for title.
 -- @arg data.size The size of the font to be used to draw agents in space.
 -- @arg data.symbol A string to be used to draw Agents in space. They can be any string,
 -- but there are some predefined symbols available. See the link Font in the left menu.
@@ -1538,22 +1540,22 @@ metaTableMap_ = {__index = Map_}
 -- associated to a given color. Equalsteps require only two colors in the argument color, one for
 -- the minimum and the other for the maximum value. The other colors are computed from a linear
 -- interpolation of the two colors. & color, slices, max, min, target, select & precision,
--- grid, invert \
+-- grid, invert, title \
 -- "placement" & Observe a CellularSpace showing the number of Agents in each Cell. Values can
 -- be grouped in the same way of uniquevalue or equalsteps. & color, target &
--- min, max, value, slices, grid \
+-- min, max, value, slices, grid, title \
 -- "quantil" & Aggregate the values into slices with approximately the same size. Values are
 -- ordered from lower to higher and then sliced. This strategy uses two colors in the same way
--- of equalsteps. & color, slices, max, min, target, select & precision, invert, grid \
+-- of equalsteps. & color, slices, max, min, target, select & precision, invert, grid, title \
 -- "stdeviation" & Define slices according to the distribution of a given attribute. Values with
 -- similar positive or negative distances to the average will belong to the same slice. &
--- color, stdColor, target, select & stdDeviation, precision, grid \
+-- color, stdColor, target, select & stdDeviation, precision, grid, title \
 -- "uniquevalue" & Associate each attribute value to a given color. Attributes with type string can
 -- only be sliced with this strategy. It can be used for CellularSpaces as well as for
 -- Society. & color, target, select, value & label, background,
--- size, font, symbol, grid \
+-- size, font, symbol, grid, title \
 -- "none" & Does not execute any color slicing. It can be used for CellularSpaces as well as for
--- Society. & & background, size, font, symbol, target, color, grid \
+-- Society. & & background, size, font, symbol, target, color, grid, title \
 -- @arg data.label A table with the labels for the attributes.
 -- @arg data.stdDeviation When the grouping mode is stddeviation, it has to be one of "full",
 -- "half" "quarter", or "none".
@@ -1694,7 +1696,14 @@ function Map(data)
 
 	optionalTableArgument(data, "value", "table")
 	optionalTableArgument(data, "select", "string")
-	optionalTableArgument(data, "title", "string")
+
+	if data.select then
+		local interface = sessionInfo().interface
+		sessionInfo().interface = true
+
+		defaultTableValue(data, "title", toLabel(data.select))
+		sessionInfo().interface = interface
+	end
 
 	if type(data.background) ~= "Map" then
 		defaultTableValue(data, "grid", false)

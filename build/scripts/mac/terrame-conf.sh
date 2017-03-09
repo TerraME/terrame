@@ -49,7 +49,7 @@ export _TERRALIB_MODULES_DIR="$_TERRALIB_MODULES_DIR"
 
 # Checking QT5 dir
 if [ "$_QT5_DIR" == "" ]; then
-  _QT5_DIR="/usr/local/Cellar/qt5/5.6.0"
+  _QT5_DIR="/Users/developer/Qt/5.6/clang_64/lib/cmake"
 fi
 export _QT5_DIR="$_QT5_DIR"
 

@@ -16,7 +16,7 @@
 			<div id="product">
 				<div id="product_logo">
 					<a href="<%="http://www.terrame.org"%>">
-					<img src='<%="../img/terrame.png"%>'/><br/></div></a>
+					<img src='<%="../img/logo.png"%>'/><br/></div></a>
 				<div id="product_name"><big><b></b></big></div>
 				<div id="product_description"></div>
 			</div> <!-- id="product" -->
@@ -49,7 +49,7 @@
 						<table class="file_list">
 						<%for _, data in ipairs(mdata) do%>
 							<tr>
-								<td class="name"><a href = "#<%=data.file[1]%>"><%=data.file[1]%></a></td>
+								<td class="name"><a href = "#<%=data.file[1]%>"><%=data.title%></a></td>
 								<td class="summary"><%= data.shortsummary or "" %></td>
 							</tr>
 						<%end%>
@@ -73,7 +73,7 @@
 									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=mlink%></h2></dt>
 
 								<% else %>
-									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=data.file[1]%></h2></dt>
+									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=data.title%></h2></dt>
 								<% end %>
 
 								<% if data.image then %>
@@ -88,10 +88,14 @@
 								<%end%>
 								<dd>
 
-								<ul><span class="arg">
+								<ul><span class="arg_data">
 
 								<% if not istview then %>
-									<li><b>Files: </b>
+									<%if #data.file == 1 then%>
+										<li><b>File: </b>
+									<% else %>
+										<li><b>Files: </b>
+									<% end %>
 									<%for pos, f in ipairs(data.file) do%>
 										<%mlink = "<a href= \"../../data/"..f.."\">"..f.."</a>"%>
 										<%if pos<#data.file then%>
@@ -134,7 +138,7 @@
       							</span>
 								<%if data.attributes and #data.attributes > 0 then%>
 									<table class="arg_tab">
-									<tr><th><%if data.bands then%>Band<%else%>Attribute<%end%>
+									<tr><th><%if data.bands then%>Band</th><th>Nodata<%else%>Attribute<%end%>
 									</th><th>Type</th><th>Description</th></tr>
 									<%if data.attributes[1] == "_incompatible_" then%>
 										<tr>
@@ -145,7 +149,7 @@
 									<%else%>
 										<% for j = 1,#data.attributes do %>
 											<%if data.bands then%>
-												<tr><td><%=data.attributes[j]%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
+												<tr><td><%=data.attributes[j]%></td><td><%=data.nodata[j]%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
 											<%else%>
 											<tr><td><%="\""..data.attributes[j].."\""%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
 											<%end%>
@@ -187,7 +191,7 @@
 			</div> <!-- id="main" -->
 
 			<div id="about">
-				<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" /></a></p>
+				<p>This webpage was automatically created using <a target="_blank" href="http://www.terrame.org">TerraME</a>.</p>
 			</div> <!-- id="about" -->
 
 		</div> <!-- id="container" -->	
