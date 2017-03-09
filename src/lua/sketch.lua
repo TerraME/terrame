@@ -232,8 +232,13 @@ local function verifyData(package, report)
 				str = str..",\n\tattributes = {\n"
 
 				local attributes = layer:attributes()
+				local attributesIdx = {}
 
 				forEachElement(attributes, function(_, mvalue)
+					attributesIdx[mvalue] = true
+				end)
+
+				forEachOrderedElement(attributesIdx, function(mvalue)
 					if mvalue == "FID" then return end
 
 					str = str.."\t\t"..mvalue.." = \"\",\n"
