@@ -596,28 +596,33 @@ function _Gtme.executeDoc(package)
 
 				value.quantity = #csv
 			elseif string.endswith(value.file[1], ".shp") or string.endswith(value.file[1], ".geojson") then
+				local firstfile = value.file[1]
 
-				if string.endswith(value.file[1], ".shp") then
-					local file = File(packageInfo(package).path.."data/"..value.file[1])
-					local path, name = file:split()
+				for i = 1, #value.file do
+					if string.endswith(value.file[i], ".shp") then
+						local file = File(packageInfo(package).path.."data/"..value.file[i])
+						local path, name = file:split()
 
-					table.insert(value.file, name..".shx")
-					table.insert(value.file, name..".dbf")
+						table.insert(value.file, name..".shx")
+						table.insert(value.file, name..".dbf")
 
-					local prj = File(path..name..".prj")
-					if prj:exists() then
-						table.insert(value.file, name..".prj")
-					end
+						local prj = File(path..name..".prj")
+						if prj:exists() then
+							table.insert(value.file, name..".prj")
+						end
 
-					prj = File(path..name..".qpj")
-					if prj:exists() then
-						table.insert(value.file, name..".qpj")
+						prj = File(path..name..".qpj")
+						if prj:exists() then
+							table.insert(value.file, name..".qpj")
+						end
 					end
 				end
 
+				table.sort(value.file)
+
 				layer = tl.Layer{
 					project = myProject,
-					file = filePath(value.file[1], package),
+					file = filePath(firstfile, package),
 					name = "layer"..idx
 				}
 
