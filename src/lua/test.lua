@@ -913,13 +913,26 @@ function _Gtme.executeTests(package, fileName)
 
 	local finalTime = os.clock()
 
+	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
+	               -ut.logs - ut.package_functions
+
+	forEachElement(ut, function(_, value, mtype)
+		if mtype == "number" then
+			errors = errors + value
+		end
+	end)
+
 	print("\nFunctional test report for package '"..package.."':")
 
 	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds."
 	printNote(text)
 
 	if ut.logs > 0 then
-		printNote("Logs were saved in '"..ut.tmpdir.."'.")
+		if errors > 0 then
+			printWarning("Logs were saved in '"..ut.tmpdir.."'.")
+		else
+			ut.tmpdir:delete()
+		end
 	end
 
 	if ut.print_when_loading == 1 then
@@ -1077,15 +1090,6 @@ function _Gtme.executeTests(package, fileName)
 	else
 		printWarning("No log test was executed.")
 	end
-
-	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
-	               -ut.logs - ut.package_functions
-
-	forEachElement(ut, function(_, value, mtype)
-		if mtype == "number" then
-			errors = errors + value
-		end
-	end)
 
 	if errors == 0 then
 		printNote("Summing up, all tests were successfully executed.")
