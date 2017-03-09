@@ -26,7 +26,7 @@
 			<div id="product">
 				<div id="product_logo">
 					<a href="<%="http://www.terrame.org"%>">
-					<img src='<%="../img/terrame.png"%>'/><br/></div></a>
+					<img src='<%="../img/logo.png"%>'/><br/></div></a>
 				<div id="product_name"><big><b></b></big></div>
 				<div id="product_description"></div>
 			</div> <!-- id="product" -->
