@@ -819,9 +819,29 @@ function _Gtme.executeTests(package, fileName)
 				local exampleInitialTime = os.clock()
 
 				local myfunc = function()
-					local env = setmetatable({}, {__index = _G})
+					local maps = {}
+					local charts = {}
+
+					local mMap = function(data)
+						local map = Map(data)
+						table.insert(maps, map)
+						info_.color = color
+						ut:assertSnapshot(map, "examples-"..value.."-map-"..#maps.."-begin.png")
+						info_.color = false
+						return map
+					end
+
+					local mChart = function(data)
+						local chart = Chart(data)
+						table.insert(charts, chart)
+						return chart
+					end
+
+					local env = setmetatable({Map = mMap, Chart = mChart}, {__index = _G})
 					-- loadfile is necessary to avoid any global variable from one
 					-- example to affect another example
+
+					Random{seed = 987654321}
 
 					_Gtme.loadTmeFile(baseDir.."examples"..s..value..".lua")
 					local result, err = loadfile(baseDir.."examples"..s..value..".lua", 't', env)
@@ -832,7 +852,16 @@ function _Gtme.executeTests(package, fileName)
 					else
 						info_.color = false
 						local output = result()
+
 						info_.color = color
+						forEachElement(maps, function(pos, map)
+							ut:assertSnapshot(map, "examples-"..value.."-map-"..pos.."-end.png")
+						end)
+
+						forEachElement(charts, function(pos, chart)
+							ut:assertSnapshot(chart, "examples-"..value.."-chart-"..pos.."-end.png")
+						end)
+
 						return output
 					end
 				end
