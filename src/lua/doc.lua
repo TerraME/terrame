@@ -635,11 +635,7 @@ function _Gtme.executeDoc(package)
 
 				forEachElement(attributes, function(_, mvalue)
 					if not value.attributes[mvalue] then
-						if mvalue == "FID" then
-							value.attributes[mvalue] = {
-								description = "Unique identifier (internal value)."
-							}
-						elseif mvalue == "id" then
+						if mvalue == "id" then
 							value.attributes[mvalue] = {
 								description = "Unique identifier (internal value)."
 							}
@@ -651,7 +647,7 @@ function _Gtme.executeDoc(package)
 							value.attributes[mvalue] = {
 								description = "Cell's row."
 							}
-						else
+						elseif mvalue ~= "FID" then
 							printError("Attribute '"..mvalue.."' is not documented.")
 							doc_report.error_data = doc_report.error_data + 1
 							value.attributes[mvalue] = {
