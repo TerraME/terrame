@@ -276,6 +276,7 @@ local function getProjects(package, doc_report)
 				layers[data.file] =
 				{
 					file = {data.file},
+					title = data.file,
 					summary = "Automatically created file with "..description..
 						", in project <a href = \"#"..currentProject.."\">"..currentProject.."</a>.",
 					shortsummary = "Automatically created file in project \""..currentProject.."\".",
@@ -320,7 +321,8 @@ local function getProjects(package, doc_report)
 		local mproject = {
 			summary = summary,
 			shortsummary = shortsummary..".",
-			file = {idx}
+			file = {idx},
+			title = idx
 		}
 
 		forEachOrderedElement(proj, function(midx, layer)
@@ -424,7 +426,7 @@ function _Gtme.executeDoc(package)
 	if File(package_path..s.."data.lua"):exists() and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
-			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "reference"})
+			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "reference", "title"})
 			doc_report.error_data = doc_report.error_data + count
 
 			if not tab.file then tab.file = "?" end
@@ -437,12 +439,15 @@ function _Gtme.executeDoc(package)
 				{"optionalTableArgument",  "image",       "string"},
 				{"optionalTableArgument",  "attributes",  "table"},
 				{"optionalTableArgument",  "reference",   "string"},
+				{"optionalTableArgument",  "title",       "string"},
 				{"optionalTableArgument",  "separator",   "string"}
 			}
 
 			if not tab.attributes then
 				tab.attributes = {}
 			end
+
+			if not tab.title then tab.title = tab.file[1] end
 
 			local attributes = {}
 			local counter = 0
@@ -537,7 +542,7 @@ function _Gtme.executeDoc(package)
 		end)
 
 		table.sort(mdata, function(a, b)
-			return a.file[1] < b.file[1]
+			return a.title < b.title
 		end)
 
 		printNote("Checking properties of data files")

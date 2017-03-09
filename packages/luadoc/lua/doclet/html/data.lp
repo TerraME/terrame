@@ -49,7 +49,7 @@
 						<table class="file_list">
 						<%for _, data in ipairs(mdata) do%>
 							<tr>
-								<td class="name"><a href = "#<%=data.file[1]%>"><%=data.file[1]%></a></td>
+								<td class="name"><a href = "#<%=data.file[1]%>"><%=data.title%></a></td>
 								<td class="summary"><%= data.shortsummary or "" %></td>
 							</tr>
 						<%end%>
@@ -73,7 +73,7 @@
 									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=mlink%></h2></dt>
 
 								<% else %>
-									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=data.file[1]%></h2></dt>
+									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=data.title%></h2></dt>
 								<% end %>
 
 								<% if data.image then %>
