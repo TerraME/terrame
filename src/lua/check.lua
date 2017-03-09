@@ -88,6 +88,8 @@ _Gtme.checkPackage = function(package, packagePath)
 		srcFiles = getLuaFiles(srcPath)
 	end
 
+	local totalFiles = #testFiles + #luaFiles + #srcFiles + #exampleFiles
+
 	local luacheck = require("luacheck.init")
 	local numIssues = 0
 	local options = {std = "min", cache = true, global = false}
@@ -130,6 +132,19 @@ _Gtme.checkPackage = function(package, packagePath)
 		numIssues = numIssues + #issues
 	end
 
+	if isFile(packagePath.."data.lua") then
+		_Gtme.printNote("Analysing data.lua")
+		totalFiles = totalFiles + 1
+
+		local files = {packagePath.."data.lua"}
+		local issues = luacheck.check_files(files, options)[1]
+		for _, issue in ipairs(issues) do
+			_Gtme.printError("Line "..issue.line..": "..upperFirst(luacheck.get_message(issue))..".")
+		end
+		numIssues = numIssues + #issues
+
+	end
+
 	_Gtme.printNote("Analysing examples")
 	for _, file in ipairs(exampleFiles) do
 		local name = Directory(file):relativePath(examplePath).."/"..file:name()
@@ -147,8 +162,6 @@ _Gtme.checkPackage = function(package, packagePath)
 	local clock1 = os.clock()
 	local dt = clock1 - clock0
 	_Gtme.printNote("Analysis executed in "..round(dt, 2).." seconds.")
-
-	local totalFiles = #testFiles + #luaFiles + #srcFiles
 
 	if totalFiles > 0 then
 		if totalFiles == 1 then
