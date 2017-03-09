@@ -88,10 +88,14 @@
 								<%end%>
 								<dd>
 
-								<ul><span class="arg">
+								<ul><span class="arg_data">
 
 								<% if not istview then %>
-									<li><b>Files: </b>
+									<%if #data.file == 1 then%>
+										<li><b>File: </b>
+									<% else %>
+										<li><b>Files: </b>
+									<% end %>
 									<%for pos, f in ipairs(data.file) do%>
 										<%mlink = "<a href= \"../../data/"..f.."\">"..f.."</a>"%>
 										<%if pos<#data.file then%>

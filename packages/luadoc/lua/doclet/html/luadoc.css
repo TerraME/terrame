@@ -101,7 +101,7 @@ hr {
 }
 
 ul { list-style-type: disc; }
-ul span.arg, span.output { list-style-type: none; }
+ul span.arg, span.arg_data, span.output { list-style-type: none; }
 
 table.index { border: 1px #00007f; }
 table.index td { text-align: left; vertical-align: top; }
@@ -266,7 +266,7 @@ table.arg_tab
 	margin-top: 1em;
 	margin-bottom: 1em;
 	text-align: left;
-	margin-right:auto;
+	margin-right: auto;
 	margin-left:0px
 }
 
@@ -391,13 +391,20 @@ pre.example span.function{
   font-weight:bold;
 }
 
-.description, .arg, .output{
-  line-height:150%;
-  text-align:justify;
+.description, .arg, .arg_data, .output{
+  line-height: 150%;
 }
 
-.arg, .output{
-	text-indent:-15px;
+.arg_data{
+  text-align: left;
+}
+
+.description, .arg, .output{
+  text-align: justify;
+}
+
+.arg, .arg_data, .output{
+	text-indent: -15px;
 }
 
 #index-header {
