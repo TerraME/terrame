@@ -25,8 +25,13 @@
 		<div id="container">
 			<div id="product">
 				<div id="product_logo">
-					<a href="<%="http://www.terrame.org"%>">
-					<img src='<%="../img/logo.png"%>'/><br/></div></a>
+					<% if doc.description.url ~= "" then %>
+						<a target="_blank" href="<%=doc.description.url%>">
+					<% end %>
+					<img src='<%="../img/logo.png"%>'/><br/></div>
+					<% if doc.description.url ~= "" then %>
+						</a>
+					<% end %>
 				<div id="product_name"><big><b></b></big></div>
 				<div id="product_description"></div>
 			</div> <!-- id="product" -->
