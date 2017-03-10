@@ -431,7 +431,13 @@ function start(doc, doc_report)
 		local f = util.openFile(filename, "w")
 		assert(f, string.format("Could not open %s for writing", filename))
 		io.output(f)
-		includeMod("index.lp", { doc = doc, doc_report = doc_report })
+
+		if #doc.files == 0 and #doc.examples == 0 and #doc.mfont == 0 then
+			includeMod("index-data.lp", { doc = doc, doc_report = doc_report })
+		else
+			includeMod("index.lp", { doc = doc, doc_report = doc_report })
+		end
+
 		f:close()
 	end
 	
