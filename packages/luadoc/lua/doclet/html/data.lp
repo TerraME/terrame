@@ -152,11 +152,14 @@
 										<td><font color="red">Incompatible sizes</font></td>
 										</tr>
 									<%else%>
-										<% for j = 1,#data.attributes do %>
-											<%if data.bands then%>
+										<% for j = 1, #data.attributes do %>
+											<% if data.bands then %>
 												<tr><td><%=data.attributes[j]%></td><td><%=data.nodata[j]%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
-											<%else%>
-											<tr><td><%="\""..data.attributes[j].."\""%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
+											<% elseif type(data.attributes[j]) == "table" then %>
+												<tr><td><%=table.concat(data.attributes[j], ", ")%></td><td><%=tostring(data.types[j])%></td><td><%=data.description[j]%></td></tr>
+											
+											<% else %>
+												<tr><td><%=data.attributes[j]%></td><td><%=tostring(data.types[j])%></td><td><%=data.description[j]%></td></tr>
 											<%end%>
 										<%end%>
 									<%end%>

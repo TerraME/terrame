@@ -453,7 +453,13 @@ function _Gtme.executeDoc(package)
 			local counter = 0
 
 			forEachElement(tab.attributes, function(idx, value)
-				if type(idx) ~= "string" then
+				if type(idx) == "table" then
+					forEachElement(idx, function(_, mvalue, mtype)
+						if mtype ~= "string" then
+							counter = counter + 1
+						end
+					end)
+				elseif type(idx) ~= "string" then
 					counter = counter + 1
 					return
 				end
@@ -463,7 +469,12 @@ function _Gtme.executeDoc(package)
 					value = ""
 					doc_report.error_data = doc_report.error_data + 1
 				elseif not string.endswith(value, "%.") then
-					printError("In '"..tab.file[1]..", description of attribute '"..idx.."' should end with '.'")
+					if type(idx) == "table" then
+						printError("In '"..tab.file[1].."', description of attributes '"..table.concat(idx, "', '").."' should end with '.'")
+					else
+						printError("In '"..tab.file[1].."', description of attribute '"..idx.."' should end with '.'")
+					end
+
 					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
 				end
 
@@ -584,7 +595,11 @@ function _Gtme.executeDoc(package)
 				if value.attributes == nil then value.attributes = {} end
 
 				forEachElement(value.attributes, function(idx, mvalue)
-					mvalue.type = type(csv[1][idx])
+					if type(idx) == "table" then
+						mvalue.type = type(csv[1][idx[1]])
+					else
+						mvalue.type = type(csv[1][idx])
+					end
 				end)
 
 				forEachElement(csv:columns(), function(idx)
@@ -638,32 +653,52 @@ function _Gtme.executeDoc(package)
 
 				if value.attributes == nil then value.attributes = {} end
 
+				local allAttributes = {}
+
+				forEachElement(value.attributes, function(idx)
+					if type(idx) == "table" then
+						forEachElement(idx, function(_, mvalue)
+							--if allAttributes[mvalue] then printError("attribute is documented twice")
+							allAttributes[mvalue] = true
+						end)
+					else
+						allAttributes[idx] = true
+					end
+				end)
+
 				forEachElement(attributes, function(_, mvalue)
-					if not value.attributes[mvalue] then
-						if mvalue == "id" then
-							value.attributes[mvalue] = {
-								description = "Unique identifier (internal value)."
-							}
-						elseif mvalue == "col" then
-							value.attributes[mvalue] = {
-								description = "Cell's column."
-							}
-						elseif mvalue == "row" then
-							value.attributes[mvalue] = {
-								description = "Cell's row."
-							}
-						elseif mvalue ~= "FID" then
-							printError("Attribute '"..mvalue.."' is not documented.")
-							doc_report.error_data = doc_report.error_data + 1
-							value.attributes[mvalue] = {
-								description = "<font color=\"red\">undefined</font>"
-							}
-						end
+					if allAttributes[mvalue] then return end
+
+					if mvalue == "id" then
+						value.attributes[mvalue] = {
+							description = "Unique identifier (internal value)."
+						}
+					elseif mvalue == "col" then
+						value.attributes[mvalue] = {
+							description = "Cell's column."
+						}
+					elseif mvalue == "row" then
+						value.attributes[mvalue] = {
+							description = "Cell's row."
+						}
+					elseif mvalue ~= "FID" then
+						printError("Attribute '"..mvalue.."' is not documented.")
+						doc_report.error_data = doc_report.error_data + 1
+						value.attributes[mvalue] = {
+							description = "<font color=\"red\">undefined</font>"
+						}
 					end
 				end)
 
 				forEachElement(value.attributes, function(mvalue)
-					if not belong(mvalue, attributes) then
+					if type(mvalue) == "table" then
+						forEachElement(mvalue, function(_, mmvalue)
+							if not belong(mmvalue, attributes) then
+								doc_report.error_data = doc_report.error_data + 1
+								printError("Attribute '"..mmvalue.."' is documented but does not exist in the file.")
+							end
+						end)
+					elseif not belong(mvalue, attributes) then
 						doc_report.error_data = doc_report.error_data + 1
 						printError("Attribute '"..mvalue.."' is documented but does not exist in the file.")
 					end
@@ -674,7 +709,11 @@ function _Gtme.executeDoc(package)
 				}
 
 				forEachElement(value.attributes, function(idx, mvalue)
-					mvalue.type = type(cs.cells[1][idx])
+					if type(idx) == "table" then
+						mvalue.type = type(cs.cells[1][idx[1]])
+					else
+						mvalue.type = type(cs.cells[1][idx])
+					end
 				end)
 
 				value.quantity = #cs
@@ -692,7 +731,7 @@ function _Gtme.executeDoc(package)
 				value.bands = layer:bands()
 				value.nodata = {}
 
-				if value.attributes  == nil then value.attributes = {} end
+				if value.attributes == nil then value.attributes = {} end
 
 				for i = 0, value.bands - 1 do
 					table.insert(value.nodata, layer:nodata(i))
@@ -744,10 +783,20 @@ function _Gtme.executeDoc(package)
 			value.types = {}
 			value.description = {}
 
-			forEachOrderedElement(attributes, function(idx, mvalue)
-				table.insert(value.attributes, idx)
-				table.insert(value.description, mvalue.description)
-				table.insert(value.types, mvalue.type)
+			singleAttributes = {}
+
+			forEachElement(attributes, function(idx)
+				if type(idx) == "table" then
+					singleAttributes[idx[1]] = idx
+				else
+					singleAttributes[idx] = idx
+				end
+			end)
+
+			forEachOrderedElement(singleAttributes, function(_, mvalue)
+				table.insert(value.attributes, mvalue)
+				table.insert(value.description, attributes[mvalue].description)
+				table.insert(value.types, attributes[mvalue].type)
 			end)
 		end)
 
