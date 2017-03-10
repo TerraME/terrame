@@ -62,18 +62,17 @@
 
 						<%if doc.description.url ~= "" then%>
 						<b>URL: </b>
-							<%= "<a href= \""..doc.description.url.."\">"..string.gsub(doc.description.url, "http:%/%/", "").."</a>" %><br>
+							<%= "<a target=\"_blank\" href= \""..doc.description.url.."\">"..string.gsub(doc.description.url, "http:%/%/", "").."</a>" %><br>
 						<%end%>
 
-						<b>Contact: </b><% if doc.description.contact ~= "Undefined contact" then %>
+						<%if doc.description.contact ~= "" then%>
+							<b>Contact: </b>
 							<% local emails = {}
 							local email_link = "<a href=\"mailto:%s\"> %s</a>"
 							for contact in string.gmatch(doc.description.contact, "[^@%s]+@[^,%s]+") do	
 								table.insert(emails, string.format(email_link, contact, contact))
 							end %>
 							<%= table.concat(emails, ", ") %><br>
-						<%else%>
-							<font color="red"><b><%= doc.description.contact %></b></font><br>
 						<%end%>
 						<br>
 					</div>

@@ -30,7 +30,7 @@ local function ldescription(package_path, doc_report)
 		package = "Undefined package",
 		title   = "",
 		authors = "Undefined authors",
-		contact = "Undefined contact",
+		contact = "",
 		content = "Undefined content",
 		url     = "",
 		depends = "",
@@ -77,7 +77,7 @@ local function ldescription(package_path, doc_report)
 	checkString("package")
 	checkString("title", true)
 	checkString("authors")
-	checkString("contact")
+	checkString("contact", true)
 	checkString("content")
 	checkString("url", true)
 	checkString("license")
