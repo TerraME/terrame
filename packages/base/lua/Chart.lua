@@ -183,6 +183,7 @@ Chart_ = {
 	-- cell = Cell{value = 1}
 	-- chart = Chart{target = cell}
 	-- chart:update(1)
+	-- chart:update(2)
 	-- chart:clear()
 	clear = function(self)
 		self.cObj_:clear()

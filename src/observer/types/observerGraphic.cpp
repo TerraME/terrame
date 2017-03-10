@@ -451,10 +451,14 @@ int ObserverGraphic::close()
 
 void ObserverGraphic::clear()
 {
+	xAxisValues->clear();
+
 	for (int i = 0; i < internalCurves->keys().size(); i++)
 	{
-		internalCurves->value(internalCurves->keys().at(i))->values->clear();
+		QString k(internalCurves->keys().at(i));
+		internalCurves->value(k)->values->clear();
+		internalCurves->value(k)->plotCurve->setSamples(*xAxisValues, *internalCurves->value(k)->values);
 	}
+}
 
-	xAxisValues->clear();
 }
