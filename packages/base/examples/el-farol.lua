@@ -62,8 +62,10 @@ list_attributes = {}
 
 forEachElement(NAMES_STRATEGIES, function(_, name)
 	c[name] = 0
-	list_attributes[#list_attributes + 1] = name
+	table.insert(list_attributes, name)
 end)
+
+table.sort(list_attributes)
 
 chartBar = Chart{
 	target = c,
