@@ -77,6 +77,7 @@ function _Gtme.buildPackage(package, config, clean)
 	local s = sessionInfo().separator
 	local currentdir = currentDir()
 
+	_Gtme.print("")
 	_Gtme.executeProjects(package)
 	currentdir:setCurrentDir()
 

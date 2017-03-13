@@ -32,8 +32,10 @@ function _Gtme.getResolution(package, project)
 
 	local oldLayer = Layer
 	local oldProject = Project
-
+	local oldImport = import
 	local output
+
+	import = function(pkg) if pkg ~= "terralib" then oldImport(pkg) end end
 
 	Project = function() end
 
@@ -51,6 +53,7 @@ function _Gtme.getResolution(package, project)
 
 	Project = oldProject
 	Layer = oldLayer
+	import = oldImport
 
 	return output
 end
@@ -58,6 +61,9 @@ end
 function _Gtme.executeProject(package, project, resolution)
 	local oldLayer = Layer
 	local oldFill = Layer_.fill
+	local oldImport = import
+
+	import = function(pkg) if pkg ~= "terralib" then oldImport(pkg) end end
 
 	Layer_.fill = function(self, data)
 		local description = "Executing operation '"..data.operation.."'"
@@ -110,12 +116,13 @@ function _Gtme.executeProject(package, project, resolution)
 
 	Layer = oldLayer
 	Layer_.fill = oldFill
+	import = oldImport
 end
 
 function _Gtme.executeProjects(package)
 	local initialTime = os.clock()
 
-	printNote("\nCreating projects for package '"..package.."'")
+	printNote("Creating projects for package '"..package.."'")
 
 	local package_path = _Gtme.packageInfo(package).path
 	local data_path = Directory(package_path.."data")
@@ -157,7 +164,10 @@ function _Gtme.executeProjects(package)
 
 	local oldProject = Project
 	local oldLayer = Layer
+	local oldImport = import
 	local oldFill = Layer_.fill
+
+	import = function(pkg) if pkg ~= "terralib" then oldImport(pkg) end end
 
 	Layer_.fill = function(self, data)
 		local description = "Executing operation '"..data.operation.."'"
@@ -264,6 +274,10 @@ function _Gtme.executeProjects(package)
 
 		clean()
 	end)
+
+	Layer = oldLayer
+	Layer_.fill = oldFill
+	import = oldImport
 
 	local finalTime = os.clock()
 
