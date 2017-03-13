@@ -579,25 +579,27 @@ function _Gtme.executeDoc(package)
 
 			local allAttributes = {}
 
-			forEachElement(value.attributes, function(idx)
-				if type(idx) == "table" then
-					forEachElement(idx, function(_, mvalue)
-						if allAttributes[mvalue] then 
-							printError("Attribute '"..mvalue.."' is documented more than once.")
+			if not string.endswith(value.file[1], ".tview") then
+				forEachElement(value.attributes, function(idx)
+					if type(idx) == "table" then
+						forEachElement(idx, function(_, mvalue)
+							if allAttributes[mvalue] then
+								printError("Attribute '"..mvalue.."' is documented more than once.")
+								doc_report.error_data = doc_report.error_data + 1
+							end
+
+							allAttributes[mvalue] = true
+						end)
+					else
+						if allAttributes[idx] then
+							printError("Attribute '"..idx.."' is documented more than once.")
 							doc_report.error_data = doc_report.error_data + 1
 						end
 
-						allAttributes[mvalue] = true
-					end)
-				else
-					if allAttributes[idx] then 
-						printError("Attribute '"..idx.."' is documented more than once.")
-						doc_report.error_data = doc_report.error_data + 1
+						allAttributes[idx] = true
 					end
-
-					allAttributes[idx] = true
-				end
-			end)
+				end)
+			end
 
 			if string.endswith(value.file[1], ".csv") then
 				if not value.separator then
