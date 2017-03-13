@@ -575,6 +575,28 @@ function _Gtme.executeDoc(package)
 				return
 			end
 
+			local allAttributes = {}
+
+			forEachElement(value.attributes, function(idx)
+				if type(idx) == "table" then
+					forEachElement(idx, function(_, mvalue)
+						if allAttributes[mvalue] then 
+							printError("Attribute '"..mvalue.."' is documented more than once.")
+							doc_report.error_data = doc_report.error_data + 1
+						end
+
+						allAttributes[mvalue] = true
+					end)
+				else
+					if allAttributes[idx] then 
+						printError("Attribute '"..idx.."' is documented more than once.")
+						doc_report.error_data = doc_report.error_data + 1
+					end
+
+					allAttributes[idx] = true
+				end
+			end)
+
 			if string.endswith(value.file[1], ".csv") then
 				if not value.separator then
 					doc_report.error_data = doc_report.error_data + 1
@@ -582,9 +604,20 @@ function _Gtme.executeDoc(package)
 					return
 				end
 
-				local csv
+				local columns
+				local csv = {}
 
-				local result, err = pcall(function() csv = filePath(value.file[1], package):read(value.separator) end)
+				local result, err = pcall(function()
+					csvfile = filePath(value.file[1], package)
+					columns = csvfile:readLine(value.separator)
+					local csvtmp = csvfile:readLine(value.separator)
+
+					forEachElement(columns, function(idx, mvalue)
+						csv[mvalue] = tonumber(csvtmp[idx]) or csvtmp[idx]
+					end)
+
+					csvfile:close()
+				end)
 
 				if not result then
 					printError(err)
@@ -592,29 +625,34 @@ function _Gtme.executeDoc(package)
 					return
 				end
 
+				local lines = 0
+				for _ in io.lines(tostring(filePath(value.file[1], package))) do
+					lines = lines + 1
+				end
+
 				if value.attributes == nil then value.attributes = {} end
 
 				forEachElement(value.attributes, function(idx, mvalue)
 					if type(idx) == "table" then
-						mvalue.type = type(csv[1][idx[1]])
+						mvalue.type = type(csv[idx[1]])
 					else
-						mvalue.type = type(csv[1][idx])
+						mvalue.type = type(csv[idx])
 					end
 				end)
 
-				forEachElement(csv:columns(), function(idx)
-					if not value.attributes[idx] then
+				forEachElement(columns, function(_, idx)
+					if not allAttributes[idx] then
 						doc_report.error_data = doc_report.error_data + 1
 						printError("Attribute '"..idx.."' is not documented.")
 
 						value.attributes[idx] = {
 							description = "<font color=\"red\">undefined</font>",
-							type = type(csv[1][idx])
+							type = type(csv[idx])
 						}
 					end
 				end)
 
-				value.quantity = #csv
+				value.quantity = lines
 			elseif string.endswith(value.file[1], ".shp") or string.endswith(value.file[1], ".geojson") then
 				local firstfile = value.file[1]
 
@@ -652,19 +690,6 @@ function _Gtme.executeDoc(package)
 				local attributes = layer:attributes()
 
 				if value.attributes == nil then value.attributes = {} end
-
-				local allAttributes = {}
-
-				forEachElement(value.attributes, function(idx)
-					if type(idx) == "table" then
-						forEachElement(idx, function(_, mvalue)
-							--if allAttributes[mvalue] then printError("attribute is documented twice")
-							allAttributes[mvalue] = true
-						end)
-					else
-						allAttributes[idx] = true
-					end
-				end)
 
 				forEachElement(attributes, function(_, mvalue)
 					if allAttributes[mvalue] then return end
