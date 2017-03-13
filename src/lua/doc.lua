@@ -381,6 +381,11 @@ function _Gtme.executeDoc(package)
 		lua_files = Directory(package_path..s.."lua"):list()
 	end
 
+	local docDir = Directory(package_path..s.."doc")
+	if docDir:exists() then
+		docDir:delete()
+	end
+
 	local example_files = _Gtme.findExamples(package)
 
 	local doc_report = {
