@@ -77,6 +77,9 @@ function _Gtme.buildPackage(package, config, clean)
 	local s = sessionInfo().separator
 	local currentdir = currentDir()
 
+	_Gtme.executeProjects(package)
+	currentdir:setCurrentDir()
+
 	printNote("\nTesting package '"..package.."'")
 	local testErrors = 0
 	dofile(sessionInfo().path.."lua"..s.."test.lua")

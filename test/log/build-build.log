@@ -1,6 +1,9 @@
 Building package 'build'
 Parsing configuration file 'config/all.lua'
 
+Creating projects for package 'build'
+Package 'build' has no projects.
+
 Testing package 'build'
 Loading configuration file 'config/all.lua'
 Using log directory '/Applications/terrame.app/Contents/MacOS/packages/build/log/'

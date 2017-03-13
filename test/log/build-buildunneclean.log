@@ -1,6 +1,9 @@
 Building package 'buildunneclean'
 Parsing configuration file 'config/all.lua'
 
+Creating projects for package 'buildunneclean'
+Package 'buildunneclean' has no projects.
+
 Testing package 'buildunneclean'
 Loading configuration file 'config/all.lua'
 Using log directory '/Applications/terrame.app/Contents/MacOS/packages/buildunneclean/log/mac/'

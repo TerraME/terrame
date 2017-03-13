@@ -1441,7 +1441,10 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(0)
 				end
 
+				import("terralib")
+
 				dofile(sessionInfo().path.."lua"..s.."build.lua")
+				dofile(sessionInfo().path.."lua"..s.."project.lua")
 
 				local config
 

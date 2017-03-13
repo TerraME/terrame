@@ -97,7 +97,9 @@ local function getProjects(package, doc_report)
 	local layers = {}
 	local currentProject
 
-	import("terralib")
+	if not isLoaded("terralib") then
+		import("terralib")
+	end
 
 	local oldImport = import
 

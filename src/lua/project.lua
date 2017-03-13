@@ -115,10 +115,15 @@ end
 function _Gtme.executeProjects(package)
 	local initialTime = os.clock()
 
-	printNote("Creating projects for package '"..package.."'")
+	printNote("\nCreating projects for package '"..package.."'")
 
 	local package_path = _Gtme.packageInfo(package).path
 	local data_path = Directory(package_path.."data")
+
+	if not data_path:exists() then
+		printNote("Package '"..package.."' has no projects.")
+		return 0
+	end
 
 	data_path:setCurrentDir()
 
@@ -238,6 +243,7 @@ function _Gtme.executeProjects(package)
 
 		local ok = true
 
+		_Gtme.loadedPackages["terralib"] = false
 		xpcall(function() dofile(tostring(file)) end, function(err)
 			ok = false
 			printError("Could not execute the script properly: "..err)
