@@ -540,7 +540,7 @@ function _Gtme.installPackage(file)
 	_Gtme.printNote("Installing package '"..package.."'")
 
 	local cDir = _Gtme.currentDir()
-	local packageDir = _Gtme.sessionInfo().path.."packages"
+	local packageDir = Directory(_Gtme.sessionInfo().path.."packages")
 
 	if not _Gtme.isLoaded("base") then
 		_Gtme.import("base")
