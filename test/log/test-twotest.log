@@ -28,7 +28,6 @@ Skipping logs check
 
 Functional test report for package 'base':
 Tests were executed in 5.09 seconds.
-Logs were saved in '.terrametmp_TxjDZ'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
