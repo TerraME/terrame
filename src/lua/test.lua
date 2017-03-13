@@ -822,8 +822,8 @@ function _Gtme.executeTests(package, fileName)
 					local maps = {}
 					local charts = {}
 
-					local mMap = function(data)
-						local map = Map(data)
+					local mMap = function(mdata)
+						local map = Map(mdata)
 						table.insert(maps, map)
 						info_.color = color
 						ut:assertSnapshot(map, "examples-"..value.."-map-"..#maps.."-begin.png", 0.1)
@@ -831,8 +831,8 @@ function _Gtme.executeTests(package, fileName)
 						return map
 					end
 
-					local mChart = function(data)
-						local chart = Chart(data)
+					local mChart = function(mdata)
+						local chart = Chart(mdata)
 						table.insert(charts, chart)
 						return chart
 					end

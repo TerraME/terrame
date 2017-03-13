@@ -454,7 +454,7 @@ function _Gtme.executeDoc(package)
 
 			forEachElement(tab.attributes, function(idx, value)
 				if type(idx) == "table" then
-					forEachElement(idx, function(_, mvalue, mtype)
+					forEachElement(idx, function(_, _, mtype)
 						if mtype ~= "string" then
 							counter = counter + 1
 						end
