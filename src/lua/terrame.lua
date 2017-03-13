@@ -540,7 +540,7 @@ function _Gtme.installPackage(file)
 	_Gtme.printNote("Installing package '"..package.."'")
 
 	local cDir = _Gtme.currentDir()
-	local packageDir = _Gtme.sessionInfo().path.."packages"
+	local packageDir = Directory(_Gtme.sessionInfo().path.."packages")
 
 	if not _Gtme.isLoaded("base") then
 		_Gtme.import("base")
@@ -1441,7 +1441,10 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(0)
 				end
 
+				import("terralib")
+
 				dofile(sessionInfo().path.."lua"..s.."build.lua")
+				dofile(sessionInfo().path.."lua"..s.."project.lua")
 
 				local config
 

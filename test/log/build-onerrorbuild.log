@@ -1,6 +1,9 @@
 Building package 'onerrorbuild'
 Parsing configuration file 'config/all.lua'
 
+Creating projects for package 'onerrorbuild'
+Package 'onerrorbuild' has no projects.
+
 Testing package 'onerrorbuild'
 Loading configuration file 'config/all.lua'
 Using log directory '/Applications/terrame.app/Contents/MacOS/packages/onerrorbuild/log/mac/'

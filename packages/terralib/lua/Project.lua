@@ -136,7 +136,7 @@ function Project(data)
 				}
 			else
 				data.file:deleteIfExists()
-				customError("Value of argument '"..idx.."' is not a valid file name.")
+				customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
 			end
 		end
 	end)

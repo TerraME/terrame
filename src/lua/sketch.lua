@@ -201,18 +201,23 @@ local function verifyData(package, report)
 	end)
 
 	forEachOrderedElement(datafiles, function(idx, value)
-		local file = filePath(idx, package)
+		local file
+		local result, err = pcall(function() file = filePath(idx, package) end)
+
+		if not result then
+			_Gtme.printWarning(err)
+			return
+		end
+
 		local _, name, extension = file:split()
 
 		if value then
 			_Gtme.print("File '"..idx.."' is already documented in 'data.lua'")
-		elseif _Gtme.ignoredFile(idx) then
-			_Gtme.print("File '"..idx.."' does not need to be documented")
 		elseif extension == "tview" and File(dataDir..name..".lua"):exists() then
 			_Gtme.print("Project file '"..idx.."' does not need to be documented (a Lua file creates it)")
 		elseif extension == "shp" and File(dataDir..name..".lua"):exists() then
 			_Gtme.print("File '"..idx.."' does not need to be documented (a Lua file creates it)")
-		else
+		elseif not _Gtme.ignoredFile(idx) then
 			_Gtme.printWarning("Adding sketch for data file '"..idx.."'")
 			local str = "data{\n"
 				.."\tfile = \""..idx.."\",\n"
@@ -232,8 +237,15 @@ local function verifyData(package, report)
 				str = str..",\n\tattributes = {\n"
 
 				local attributes = layer:attributes()
+				local attributesIdx = {}
 
 				forEachElement(attributes, function(_, mvalue)
+					attributesIdx[mvalue] = true
+				end)
+
+				forEachOrderedElement(attributesIdx, function(mvalue)
+					if mvalue == "FID" then return end
+
 					str = str.."\t\t"..mvalue.." = \"\",\n"
 				end)
 

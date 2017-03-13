@@ -62,8 +62,10 @@ list_attributes = {}
 
 forEachElement(NAMES_STRATEGIES, function(_, name)
 	c[name] = 0
-	list_attributes[#list_attributes + 1] = name
+	table.insert(list_attributes, name)
 end)
+
+table.sort(list_attributes)
 
 chartBar = Chart{
 	target = c,
@@ -108,7 +110,7 @@ beerAgent = Agent{
 			ag.count_fails[i] = 0
 			local p
 			repeat
-				p = math.random(1, #STRATEGIES)
+				p = Random{min = 1, max = #STRATEGIES, step = 1}:sample()
 			until ag.chosen[p] == 0
 
 			ag.strategies [i] = STRATEGIES[p]

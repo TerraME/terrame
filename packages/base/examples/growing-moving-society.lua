@@ -11,7 +11,7 @@ GROWTH_PROB = 0.3
 singleFooAgent = Agent{
 	execute = function(self)
 		local cell = self:getCell():getNeighborhood():sample()
-		if cell:isEmpty() and math.random() < GROWTH_PROB then
+		if cell:isEmpty() and Random{p = GROWTH_PROB}:sample() then
 			local child = self:reproduce()
 			child:move(cell)
 		end

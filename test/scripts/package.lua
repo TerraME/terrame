@@ -1,3 +1,8 @@
+-- if some error occurs in this script along execution tests,
+-- possibly the version number has changed and it is necessary
+-- to create the respective directory in the package repository
+-- (www.terrame.org/packages).
+
 sci = Directory(sessionInfo().path.."/packages/sci")
 
 local packages = _Gtme.downloadPackagesList()

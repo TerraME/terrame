@@ -220,7 +220,7 @@ return{
 		cs:notify()
 
 		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.27)
-		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)
+		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.15)
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 
 		projName:deleteIfExists()
