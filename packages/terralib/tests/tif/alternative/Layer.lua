@@ -212,7 +212,7 @@ return {
 		local bandNoExists = function()
 			l:nodata(4)
 		end
-		unitTest:assertError(bandNoExists, "The only available band is '0.0'.")
+		unitTest:assertError(bandNoExists, "The only available band is '0'.")
 
 		File(projName):delete()
 

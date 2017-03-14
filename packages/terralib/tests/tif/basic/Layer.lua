@@ -449,7 +449,7 @@ return {
 			file = filePath("amazonia-prodes.tif", "terralib"),
 			epsg = 100017
 		}
-		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S - old 29191', with EPSG: 100017.0 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ')")
+		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S - old 29191', with EPSG: 100017 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs ')")
 
 		proj.file:delete()
 	end,
