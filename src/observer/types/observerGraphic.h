@@ -145,6 +145,8 @@ public:
 
 	void clear();
 
+	void restart();
+
 private slots:
     /**
      * Treats the click in the legend and changes the curve color

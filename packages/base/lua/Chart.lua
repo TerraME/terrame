@@ -187,6 +187,18 @@ Chart_ = {
 	-- chart:clear()
 	clear = function(self)
 		self.cObj_:clear()
+	end,
+	--- Restart the Chart keeping the old plots.
+	-- @usage -- DONTRUN
+	-- cell = Cell{value = 1}
+	-- chart = Chart{target = cell}
+	-- chart:update(1)
+	-- chart:update(2)
+	-- chart:restart()
+	-- chart:update(2)
+	-- chart:update(3)
+	restart = function(self)
+		self.cObj_:restart()
 	end
 }
 

@@ -169,7 +169,7 @@ bool ObserverGraphic::draw(QDataStream &state)
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
-                        internalCurves->value(key)->plotCurve->setSamples(*abs, *ord);
+                        internalCurves->value(key)->setSamples(*abs, *ord);
                     }
                     else
                     {
@@ -200,7 +200,7 @@ bool ObserverGraphic::draw(QDataStream &state)
                     {
                         ord = internalCurves->value(key)->values;
                         abs = xAxisValues;
-                        internalCurves->value(key)->plotCurve->setSamples(*abs, *ord);
+                        internalCurves->value(key)->setSamples(*abs, *ord);
                     }
                     else
                     {
@@ -229,7 +229,7 @@ bool ObserverGraphic::draw(QDataStream &state)
         for (int i = 0; i < internalCurves->keys().size(); i++)
         {
             curve = internalCurves->value(internalCurves->keys().at(i));
-            curve->plotCurve->setSamples(*abs, *internalCurves->value(internalCurves->keys().at(i))->values);
+            curve->setSamples(*abs, *internalCurves->value(internalCurves->keys().at(i))->values);
         }
     }
     plotter->repaint();
@@ -298,16 +298,16 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
         if (interCurve)
         {
             if (i < curveTitles.size())
-                interCurve->plotCurve->setTitle(curveTitles.at(i));
+                interCurve->setTitle(curveTitles.at(i));
             else
-                interCurve->plotCurve->setTitle(QString("$curve %1").arg(i + 1));
+                interCurve->setTitle(QString("$curve %1").arg(i + 1));
 
             internalCurves->insert(attribList.at(i), interCurve);
 
             // Sets a random color for the created curve
             color = QColor::fromHsvF(hueValues[(int)(qrand() % HUE_COUNT)], 1, 1);
-            interCurve->plotCurve->setPen(color);
-			interCurve->plotCurve->setLegendAttribute(QwtPlotCurve::LegendShowLine);
+            interCurve->setPen(color);
+			interCurve->setLegendAttribute(QwtPlotCurve::LegendShowLine);
 
             int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0, size = 0, penstyle = 0;
 
@@ -341,16 +341,16 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
                 num = legAttribs.at(width).toInt();
                 pen = QPen(color);
                 pen.setWidth((num > 0) ? num : 1);
-                interCurve->plotCurve->setPen(pen);
+                interCurve->setPen(pen);
 
 				// pen
                 num = legAttribs.at(penstyle).toInt();
 				pen.setStyle((Qt::PenStyle) num);
-                interCurve->plotCurve->setPen(pen);
+                interCurve->setPen(pen);
 
                 // style
                 num = legAttribs.at(style).toInt();
-                interCurve->plotCurve->setStyle((QwtPlotCurve::CurveStyle) num);
+                interCurve->setStyle((QwtPlotCurve::CurveStyle) num);
 
                 // symbol
                 num = legAttribs.at(symbol).toInt();
@@ -360,7 +360,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 
 				if ((QwtSymbol::Style) num !=(QwtSymbol::Style) -1)
 				{
-					interCurve->plotCurve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol);
+					interCurve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol);
 				}
 
 				//size
@@ -371,7 +371,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
                 if (qwtSymbol->brush().style() != Qt::NoBrush)
                     qwtSymbol->setBrush(pen.color());
 
-                interCurve->plotCurve->setSymbol(qwtSymbol);
+                interCurve->setSymbol(qwtSymbol);
 
                 for (int j = 0; j < LEGEND_ITENS; j++)
                 {
@@ -439,7 +439,7 @@ void ObserverGraphic::setModelTime(double time)
 void ObserverGraphic::setCurveStyle()
 {
     foreach(InternalCurve *curve, internalCurves->values())
-        curve->plotCurve->setStyle(QwtPlotCurve::Steps);
+        curve->setStyle(QwtPlotCurve::Steps);
 }
 
 int ObserverGraphic::close()
@@ -457,8 +457,15 @@ void ObserverGraphic::clear()
 	{
 		QString k(internalCurves->keys().at(i));
 		internalCurves->value(k)->values->clear();
-		internalCurves->value(k)->plotCurve->setSamples(*xAxisValues, *internalCurves->value(k)->values);
+		internalCurves->value(k)->setSamples(*xAxisValues, *internalCurves->value(k)->values);
 	}
 }
 
+void ObserverGraphic::restart()
+{
+	for (int i = 0; i < internalCurves->keys().size(); i++)
+	{
+		QString k(internalCurves->keys().at(i));
+		internalCurves->value(k)->insertGap();
+	}
 }

@@ -61,6 +61,8 @@ public:
 
 	int clear(lua_State* L);
 
+	int restart(lua_State* L);
+
 public:
 	ObserverGraphic* obs;
 };

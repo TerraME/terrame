@@ -33,34 +33,78 @@ of this software and its documentation.
 
 namespace TerraMEObserver {
 
-class InternalCurve
+class InternalCurve : public QwtPlotCurve
 {
+private:
+	QVector < QPair<int, int>> gaps;
+
 public:
     InternalCurve(const QString &name, QwtPlot *plotter)
     {
         values = new QVector<double>();
        //  symbol = new QwtSymbol();
-
-        plotCurve = new QwtPlotCurve(name);
-		//plotCurve->setSymbol(new QwtSymbol);
-        plotCurve->setPaintAttribute(QwtPlotCurve::FilterPoints, true);
-        plotCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
-        // plotCurve->setSymbol(*symbol);
-        plotCurve->attach(plotter);
+		//setSymbol(new QwtSymbol);
+        setPaintAttribute(QwtPlotCurve::FilterPoints, true);
+        setRenderHint(QwtPlotItem::RenderAntialiased);
+        //setSymbol(*symbol);
+        attach(plotter);
     }
 
     virtual ~InternalCurve()
     {
         delete values;
-        delete plotCurve;
         // delete symbol;
     }
 
-    QVector<double> *values;
-    QwtPlotCurve* plotCurve;
-    // QwtSymbol* symbol;
-};
+	void insertGap()
+	{
+		int from, to;
 
+		if (gaps.isEmpty())
+		{
+			from = 0;
+			to = values->size() - 1;
+			gaps.push_back(QPair<int, int>(from, to));
+		}
+		else
+		{
+			from = gaps.last().second + 1;
+			to = values->size() - 1;
+			gaps.push_back(QPair<int, int>(from, to));
+		}
+	}
+
+    QVector<double> *values;
+    // QwtSymbol* symbol;
+
+protected:
+	virtual void drawCurve(QPainter *p, int style,
+		const QwtScaleMap &xMap, const QwtScaleMap &yMap,
+		const QRectF &canvasRect, int from, int to) const
+	{
+		if (gaps.isEmpty())
+		{
+			QwtPlotCurve::drawCurve(p, style, xMap, yMap, canvasRect, from, to);
+		}
+		else
+		{
+			int f, t;
+
+			for (int i = 0; i < gaps.size(); i++)
+			{
+				f = gaps.at(i).first;
+				t = gaps.at(i).second;
+				QwtPlotCurve::drawCurve(p, style, xMap, yMap, canvasRect, f, t);
+			}
+
+			if (to > t)
+			{
+				t++;
+				QwtPlotCurve::drawCurve(p, style, xMap, yMap, canvasRect, t, to);
+			}
+		}
+	}
+};
 } // namespace TerraMEObserver
 
 #endif // INTERNAL_CURVE_H

@@ -59,3 +59,9 @@ int luaChart::clear(lua_State* L)
 	return 0;
 }
 
+int luaChart::restart(lua_State* L)
+{
+	obs->restart();
+
+	return 0;
+}
