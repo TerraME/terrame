@@ -22,5 +22,5 @@ Line 6: Unused argument 'x'.
 
 Code analyzer report for package 'check':
 Analysis executed in 0.02 seconds.
-2 files were analysed.
+3 files were analysed.
 14 issues were found.

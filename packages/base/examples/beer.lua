@@ -11,8 +11,6 @@
 -- The default value is three.
 -- @image beer.bmp
 
-math.randomseed(os.time())
-
 NUMBER_OF_AGENTS = 3
 
 RequestBeer = function(agent, quantity)
@@ -96,7 +94,7 @@ retailer = Agent{
 	ordered   = 0,
 	costs     = 0,
 	execute = function(agent)
-		local requested = math.random(30)
+		local requested = Random{min = 1, max = 30, step = 1}:sample()
 		c.beer_requested = requested
 		RequestBeer(agent, requested)
 	end,

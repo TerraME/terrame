@@ -819,9 +819,29 @@ function _Gtme.executeTests(package, fileName)
 				local exampleInitialTime = os.clock()
 
 				local myfunc = function()
-					local env = setmetatable({}, {__index = _G})
+					local maps = {}
+					local charts = {}
+
+					local mMap = function(mdata)
+						local map = Map(mdata)
+						table.insert(maps, map)
+						info_.color = color
+						ut:assertSnapshot(map, "examples-"..value.."-map-"..#maps.."-begin.png", 0.1)
+						info_.color = false
+						return map
+					end
+
+					local mChart = function(mdata)
+						local chart = Chart(mdata)
+						table.insert(charts, chart)
+						return chart
+					end
+
+					local env = setmetatable({Map = mMap, Chart = mChart}, {__index = _G})
 					-- loadfile is necessary to avoid any global variable from one
 					-- example to affect another example
+
+					Random{seed = 987654321}
 
 					_Gtme.loadTmeFile(baseDir.."examples"..s..value..".lua")
 					local result, err = loadfile(baseDir.."examples"..s..value..".lua", 't', env)
@@ -832,7 +852,16 @@ function _Gtme.executeTests(package, fileName)
 					else
 						info_.color = false
 						local output = result()
+
 						info_.color = color
+						forEachElement(maps, function(pos, map)
+							ut:assertSnapshot(map, "examples-"..value.."-map-"..pos.."-end.png", 0.1)
+						end)
+
+						forEachElement(charts, function(pos, chart)
+							ut:assertSnapshot(chart, "examples-"..value.."-chart-"..pos.."-end.png", 0.1)
+						end)
+
 						return output
 					end
 				end
@@ -913,13 +942,26 @@ function _Gtme.executeTests(package, fileName)
 
 	local finalTime = os.clock()
 
+	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
+	               -ut.logs - ut.package_functions
+
+	forEachElement(ut, function(_, value, mtype)
+		if mtype == "number" then
+			errors = errors + value
+		end
+	end)
+
 	print("\nFunctional test report for package '"..package.."':")
 
 	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds."
 	printNote(text)
 
 	if ut.logs > 0 then
-		printNote("Logs were saved in '"..ut.tmpdir.."'.")
+		if errors > 0 then
+			printWarning("Logs were saved in '"..ut.tmpdir.."'.")
+		else
+			ut.tmpdir:delete()
+		end
 	end
 
 	if ut.print_when_loading == 1 then
@@ -1077,15 +1119,6 @@ function _Gtme.executeTests(package, fileName)
 	else
 		printWarning("No log test was executed.")
 	end
-
-	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
-	               -ut.logs - ut.package_functions
-
-	forEachElement(ut, function(_, value, mtype)
-		if mtype == "number" then
-			errors = errors + value
-		end
-	end)
 
 	if errors == 0 then
 		printNote("Summing up, all tests were successfully executed.")

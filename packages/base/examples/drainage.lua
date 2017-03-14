@@ -31,7 +31,7 @@ t = Timer{
 		c.Q2 = c.Q2 + (E2 - S2)
 
 		-- Report
-		print(c.Q1, c.Q2)
+		print(c.Q1.." "..c.Q2)
 	end},
 	Event{action = chart}
 }

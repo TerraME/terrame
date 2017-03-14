@@ -72,7 +72,7 @@ return{
 		local notFile = function()
 			Project{file = "myproj.tview", cean = "true.abc"}
 		end
-		unitTest:assertError(notFile, "Value of argument 'cean' is not a valid file name.")
+		unitTest:assertError(notFile, "Value of argument 'cean' ('/true.abc') is not a valid file name.", 3, true)
 	end
 }
 

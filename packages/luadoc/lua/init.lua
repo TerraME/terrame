@@ -5,6 +5,7 @@
 
 local belong = belong
 local getLuaFile = getLuaFile
+local isFile = isFile
 local printNote = _Gtme.printNote
 local printError = _Gtme.printError
 local forEachOrderedElement = forEachOrderedElement
@@ -25,17 +26,15 @@ local function ldescription(package_path, doc_report)
 
 	local defaultFields = {
 		version = "Undefined version",
-		date    = os.date("%d %B %Y"),
+		date    = os.date("%m/%d/%Y"),
 		package = "Undefined package",
 		title   = "",
 		authors = "Undefined authors",
-		contact = "Undefined contact",
+		contact = "",
 		content = "Undefined content",
 		url     = "",
 		depends = "",
 		license = "Undefined license",
-		logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."terrame.png",
-		destination_logo = package_path..s.."doc"..s.."img"..s
 	}
 
 	local script
@@ -78,15 +77,21 @@ local function ldescription(package_path, doc_report)
 	checkString("package")
 	checkString("title", true)
 	checkString("authors")
-	checkString("contact")
+	checkString("contact", true)
 	checkString("content")
 	checkString("url", true)
 	checkString("license")
 
 	setmetatable(script, {__index = defaultFields})
+
+	if isFile(package_path..s.."logo.png") then
+		script.logo = package_path..s.."logo.png"
+	else
+		script.logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."logo.png"
+	end
+
+	script.destination_logo = package_path..s.."doc"..s.."img"..s
 	return script
-	-- script.logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."terrame.png"
-	-- script.destination_logo = package_path..s.."doc"..s.."img"..s
 	-- return getLuaFile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."description.lua").M
 end
 

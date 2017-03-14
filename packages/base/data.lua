@@ -5,8 +5,8 @@ data{
 	source = "IBGE (http://www.ibge.gov.br)",
 	attributes = {
 		NOME_UF = "Name of the state.",
-		SIGLA = "State's initials.", 
-		CAPITAL = "Name of the state's capital.", 
+		SIGLA = "State's initials.",
+		CAPITAL = "Name of the state's capital.",
 		POPUL = "Population of the state."
 	}
 }
@@ -17,8 +17,8 @@ data{
 	source = "TerraME team",
 	separator = ",",
 	attributes = {
-		name = "Name of the agents.", 
-		age = "Age of the agent.", 
+		name = "Name of the agents.",
+		age = "Age of the agent.",
 		wealth = "Amount of sugar the agent starts with.",
 		vision = "Distance in cells the agent can see.",
 		metabolism = "Energy consumed by time step.",
@@ -79,7 +79,7 @@ data{
 	attributes = {
 		protected = "Percentage of indigenous area.",
 		distports = "Distance to ports.",
-		distroads = "Distance to roads.", 
+		distroads = "Distance to roads.",
 		prodes_208 = "Percentage of forest area.",
 		prodes_10 = "Percentage of clear-cut area.",
 	}

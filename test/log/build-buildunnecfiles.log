@@ -1,6 +1,19 @@
 Building package 'buildunnecfiles'
 Parsing configuration file 'config/all.lua'
 
+Creating projects for package 'buildunnecfiles'
+Removing output files
+Checking if data does not contain any .tview file
+File 'data/myfile.tview' should not exist as there is no Lua script with this name.
+
+Projects report for package 'buildunnecfiles':
+Projects were created in 0.0 seconds.
+No project file was created.
+One invalid .tview file was found in the package.
+No error was found while creating projects.
+No problem was found in the output of lua files.
+Summing up, one problem was found while creating projects.
+
 Testing package 'buildunnecfiles'
 Loading configuration file 'config/all.lua'
 Using log directory '/Applications/terrame.app/Contents/MacOS/packages/buildunnecfiles/log/mac/'

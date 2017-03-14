@@ -1,6 +1,9 @@
 Building package 'build'
 Parsing configuration file 'config/all.lua'
 
+Creating projects for package 'build'
+Package 'build' has no projects.
+
 Testing package 'build'
 Loading configuration file 'config/all.lua'
 Using log directory '/Applications/terrame.app/Contents/MacOS/packages/build/log/'
@@ -35,7 +38,6 @@ Checking logs
 
 Functional test report for package 'build':
 Tests were executed in 1.2 seconds.
-Logs were saved in '.terrametmp_kNQtn'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
