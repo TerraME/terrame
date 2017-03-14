@@ -270,6 +270,8 @@ const char luaChart::className[] = "TeChart";
 Luna<luaChart>::RegType luaChart::methods[] = {
 	method(luaChart, save),
 	method(luaChart, setObserver),
+	method(luaChart, clear),
+	method(luaChart, restart),
 	{0, 0}
 };
 
