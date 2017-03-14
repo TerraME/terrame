@@ -188,7 +188,7 @@ return{
 		error_func = function()
 			file:read()
 		end
-		unitTest:assertError(error_func, "Line 2 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
+		unitTest:assertError(error_func, "Line 3 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
 	end,
 	touch = function(unitTest)
 		local file = File("abc.txt")
