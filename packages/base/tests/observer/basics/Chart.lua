@@ -382,7 +382,7 @@ return{
 		chart:update(3)
 		chart:update(4)
 
-		unitTest:assertSnapshot(chart, "chart_clear1.png")
+		unitTest:assertSnapshot(chart, "chart_clear1.png", 0.025)
 
 		chart:clear()
 
@@ -392,7 +392,7 @@ return{
 		chart:update(3)
 		chart:update(4)
 
-		unitTest:assertSnapshot(chart, "chart_clear2.png")
+		unitTest:assertSnapshot(chart, "chart_clear2.png", 0.025)
 	end,
 	restart = function(unitTest)
 		local c = Cell{w = 1, v = 10}
@@ -406,7 +406,7 @@ return{
 		chart:update(3)
 		chart:update(4)
 
-		unitTest:assertSnapshot(chart, "chart_restart1.png")
+		unitTest:assertSnapshot(chart, "chart_restart1.png", 0.025)
 
 		chart:restart()
 
@@ -417,7 +417,7 @@ return{
 		chart:update(4)
 		chart:update(5)
 
-		unitTest:assertSnapshot(chart, "chart_restart2.png")
+		unitTest:assertSnapshot(chart, "chart_restart2.png", 0.03)
 
 		chart:restart()
 
@@ -428,7 +428,7 @@ return{
 		chart:update(3)
 		chart:update(4)
 
-		unitTest:assertSnapshot(chart, "chart_restart3.png")
+		unitTest:assertSnapshot(chart, "chart_restart3.png", 0.04)
 
 		c = Cell{p = 0}
 
@@ -443,7 +443,7 @@ return{
 			c.p = c.p + 0.2
 		end
 
-		unitTest:assertSnapshot(chart, "chart_restart4.png")
+		unitTest:assertSnapshot(chart, "chart_restart4.png", 0.35)
 	end,
 }
 
