@@ -52,3 +52,16 @@ int luaChart::save(lua_State* L)
 	return 0;
 }
 
+int luaChart::clear(lua_State* L)
+{
+	obs->clear();
+
+	return 0;
+}
+
+int luaChart::restart(lua_State* L)
+{
+	obs->restart();
+
+	return 0;
+}

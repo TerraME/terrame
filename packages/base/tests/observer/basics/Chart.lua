@@ -369,6 +369,81 @@ return{
 		ch:update(3)
 
 		unitTest:assertSnapshot(ch, "save_test.bmp", 0.05)
-	end
+	end,
+	clear = function(unitTest)
+		local c = Cell{w = 1}
+
+		local chart = Chart{
+			target = c
+		}
+
+		chart:update(1)
+		chart:update(2)
+		chart:update(3)
+		chart:update(4)
+
+		unitTest:assertSnapshot(chart, "chart_clear1.png", 0.025)
+
+		chart:clear()
+
+		c.w = c.w + 1
+		chart:update(1)
+		chart:update(2)
+		chart:update(3)
+		chart:update(4)
+
+		unitTest:assertSnapshot(chart, "chart_clear2.png", 0.025)
+	end,
+	restart = function(unitTest)
+		local c = Cell{w = 1, v = 10}
+
+		local chart = Chart{
+			target = c
+		}
+
+		chart:update(1)
+		chart:update(2)
+		chart:update(3)
+		chart:update(4)
+
+		unitTest:assertSnapshot(chart, "chart_restart1.png", 0.025)
+
+		chart:restart()
+
+		c.w = c.w + 1
+		c.v = c.v + 1
+		chart:update(2)
+		chart:update(3)
+		chart:update(4)
+		chart:update(5)
+
+		unitTest:assertSnapshot(chart, "chart_restart2.png", 0.03)
+
+		chart:restart()
+
+		c.w = c.w + 1
+		c.v = c.v + 1
+		chart:update(1)
+		chart:update(2)
+		chart:update(3)
+		chart:update(4)
+
+		unitTest:assertSnapshot(chart, "chart_restart3.png", 0.04)
+
+		c = Cell{p = 0}
+
+		chart = Chart{
+			target = c
+		}
+
+		for i = 0, 4 do
+			chart:update(i)
+			chart:update(10 - i)
+			chart:restart()
+			c.p = c.p + 0.2
+		end
+
+		unitTest:assertSnapshot(chart, "chart_restart4.png", 0.35)
+	end,
 }
 
