@@ -503,7 +503,7 @@ function File(data)
 		customError("Directory '"..dir.."' does not exist.")
 	end
 
-	local invalidChar = data.filename:find("[&*<>?|\"+]")
+	local invalidChar = data.filename:find("[&*<>?|\"]")
 	if invalidChar then
 		customError("Filename '"..data.filename.."' cannot contain character '"..data.filename:sub(invalidChar, invalidChar).."'.")
 	end
