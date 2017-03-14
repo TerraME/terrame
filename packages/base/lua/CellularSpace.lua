@@ -224,6 +224,7 @@ local function getCoordCoupling(_, data)
 		if neighCell and not neighborhood:isNeighbor(neighCell) then
 			neighborhood:add(neighCell, 1)
 		end
+
 		return neighborhood
 	end
 end
@@ -252,6 +253,7 @@ local function getDiagonalNeighborhood(cs, data)
 
 				col = col + 1
 			end
+
 			lin = lin + 1
 		end
 

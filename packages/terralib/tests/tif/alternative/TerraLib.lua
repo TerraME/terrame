@@ -130,7 +130,7 @@ return {
 			tl:attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
 		local layerInfo2 = tl:getLayerInfo(proj, proj.layers[layerName2])
-		unitTest:assertError(differentSrids, "The projections of the layers are different: (Prodes_PA, "..layerInfo2.srid..") and (Para_Cells, 29101.0). Set the correct one.")
+		unitTest:assertError(differentSrids, "The projections of the layers are different: (Prodes_PA, "..string.format("%.0f", layerInfo2.srid)..") and (Para_Cells, 29101). Set the correct one.")
 
 		local layerName3 = "Prodes_PA_NewSRID"
 		tl:addGdalLayer(proj, layerName3, layerFile4, 29101)
@@ -166,7 +166,7 @@ return {
 		local bandNoExists =  function()
 			tl:getDummyValue(proj, layerName, 3)
 		end
-		unitTest:assertError(bandNoExists, "The maximum band is '2.0'.")
+		unitTest:assertError(bandNoExists, "The maximum band is '2'.")
 
 		local layerName2 = "TifLayer2"
 		local layerFile2 = filePath("test/prodes_polyc_10k.tif", "terralib")
@@ -175,7 +175,7 @@ return {
 		local bandNoExists2 =  function()
 			tl:getDummyValue(proj, layerName2, 3)
 		end
-		unitTest:assertError(bandNoExists2, "The only available band is '0.0'.")
+		unitTest:assertError(bandNoExists2, "The only available band is '0'.")
 
 		proj.file:delete()
 	end,

@@ -139,14 +139,14 @@ File 'buildunneclean/tests/alternative/unnec5.txt' is unnecessary and will be ig
 File 'buildunneclean/tests/unnec4.txt' is unnecessary and will be ignored.
 Checking fonts
 Looking for hidden files
-File 'buildunneclean/.hidden' is unnecessary and will be ignored.
-File 'buildunneclean/lua/.hidden2' is unnecessary and will be ignored.
+File '.hidden' is unnecessary and will be ignored.
+File 'lua/.hidden2' is unnecessary and will be ignored.
 Cleaning package
 Removing 'log' directory
 Checking Models
 Model 'Tube' belongs to file 'Tube.lua'
 Checking license
-Building package buildunneclean
+Building package 'buildunneclean'
 Creating file 'buildunneclean_0.1.zip'
 Package 'buildunneclean' successfully zipped
 

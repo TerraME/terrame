@@ -193,6 +193,14 @@ local function projButtonClicked()
 
 	local resolutionEdit = qt.new_qobject(qt.meta.QLineEdit)
 	local defaultResolution = _Gtme.getResolution(package, project)
+
+	if not defaultResolution then
+		_Gtme.executeProject(package, project, resolution)
+		enableAll()
+		qt.dialog.msg_information("Project '"..project.."' successfully created.")
+		return
+	end
+
 	resolutionEdit:setText(tostring(defaultResolution))
 
 	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
@@ -223,6 +231,7 @@ local function projButtonClicked()
 		print = _Gtme.print
 		_Gtme.executeProject(package, project, resolution)
 		print = nil
+		qt.dialog.msg_information("Project '"..project.."' successfully created.")
 		mdialog:done(0)
 	end)
 

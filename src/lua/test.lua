@@ -42,7 +42,12 @@ local function testdirectories(directory, ut)
 					table.insert(result, mdirectory)
 				end
 			else
-				printError("'"..value.."' is not a directory neither a .lua file and will be ignored.")
+				local rp = value:split()
+				rp = tostring(Directory(rp):relativePath(directory))
+
+				if rp ~= "" then rp = rp.."/" end
+
+				printError("'"..rp..value:name().."' is not a directory neither a .lua file and will be ignored.")
 				ut.invalid_test_file = ut.invalid_test_file + 1
 			end
 		end)
@@ -53,7 +58,7 @@ local function testdirectories(directory, ut)
 		end)
 
 		if not found_file and not found_directory then
-			printError("Directory '"..mdirectory.."' is empty.")
+			printError("Directory '"..mdirectory:relativePath(directory).."' is empty.")
 			ut.invalid_test_file = ut.invalid_test_file + 1
 		end
 	end

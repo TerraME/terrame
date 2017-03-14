@@ -136,7 +136,7 @@ Checking Models
 Model 'Tube' is wrongly put in file 'Tube2.lua'. It should be in file 'Tube.lua'
 Checking license
 The package does not contain file 'license.txt'
-Building package onerrorbuild
+Building package 'onerrorbuild'
 Creating file 'onerrorbuild_0.1.zip'
 Package 'onerrorbuild' successfully zipped
 

@@ -49,6 +49,7 @@ local function parseLine(line, sep, cline)
 				-- this is the way to "escape" the quote char in a quote. example:
 				-- value1,"blub""blip""boing",value3 will result in blub"blip"boing for the middle
 			until (c ~= '"')
+
 			table.insert(res, txt)
 			verify(c == sep or c == "", "Line "..cline.." ('"..line.."') is invalid.")
 			pos = pos + 1
@@ -325,6 +326,7 @@ File_ = {
 
 		local line = self.file:read()
 		while line do
+			self.line = self.line + 1
 			local element = {}
 			local tuple = parseLine(line, sep, self.line)
 			if #tuple == #fields then
@@ -334,11 +336,10 @@ File_ = {
 
 				data:add(element)
 			else
-				customError("Line "..self.line.." ('"..line.."') should contain "..#fields.." attributes but has "..#tuple..".")
+				customWarning("Line "..self.line.." ('"..line.."') should contain "..#fields.." attributes but has "..#tuple..".")
 			end
 
 			line = self.file:read()
-			self.line = self.line + 1
 		end
 
 		self:close()
@@ -502,7 +503,7 @@ function File(data)
 		customError("Directory '"..dir.."' does not exist.")
 	end
 
-	local invalidChar = data.filename:find("[&*<>?|\"+]")
+	local invalidChar = data.filename:find("[&*<>?|\"]")
 	if invalidChar then
 		customError("Filename '"..data.filename.."' cannot contain character '"..data.filename:sub(invalidChar, invalidChar).."'.")
 	end

@@ -1784,7 +1784,7 @@ TerraLib_ = {
 			local toSrid = toLayer:getSRID()
 			if fromLayer:getSRID() ~= toSrid then
 				local fromSrid = fromLayer:getSRID()
-				customError("The projections of the layers are different: ("..from..", "..fromSrid..") and ("..to..", "..toSrid.."). Set the correct one.")
+				customError("The projections of the layers are different: ("..from..", "..string.format("%.0f", fromSrid)..") and ("..to..", "..string.format("%.0f", toSrid).."). Set the correct one.")
 			end
 
             local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
@@ -2185,9 +2185,9 @@ TerraLib_ = {
 				value = bandProperty.m_noDataValue
 			else
 				if (numBands - 1) > 0 then
-					customError("The maximum band is '"..(numBands - 1).."'.")
+					customError("The maximum band is '"..string.format("%.0f", numBands - 1).."'.")
 				else
-					customError("The only available band is '"..(numBands - 1).."'.")
+					customError("The only available band is '"..string.format("%.0f", numBands - 1).."'.")
 				end
 			end
 		end

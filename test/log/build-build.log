@@ -139,11 +139,11 @@ Checking examples
 Checking source code
 Checking fonts
 Looking for hidden files
-File 'build/lib/.necessary' is unnecessary and will be ignored.
+File 'lib/.necessary' is unnecessary and will be ignored.
 Checking Models
 Model 'Tube' belongs to file 'Tube.lua'
 Checking license
-Building package build
+Building package 'build'
 Creating file 'build_0.1.zip'
 Package 'build' successfully zipped
 

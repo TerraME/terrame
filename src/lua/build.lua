@@ -112,7 +112,9 @@ function _Gtme.buildPackage(package, config, clean)
 	tmpdirectory:setCurrentDir()
 
 	local dirWithoutSlash = tostring(pkgDirectory) -- needed to copy the directory using cp
-	os.execute("cp -pr \""..dirWithoutSlash.."\" .")
+	os.execute("cp -pr \""..dirWithoutSlash.."\" "..tmpdirectory)
+
+	pkgDirectory = Directory(tmpdirectory..package)
 
 	printNote("")
 
@@ -137,6 +139,7 @@ function _Gtme.buildPackage(package, config, clean)
 		["license.lua"] = true,
 		["load.lua"] = true,
 		["data.lua"] = true,
+		["logo.png"] = true,
 		["font.lua"] = true,
 		["license.txt"] = true,
 		["README.md"] = true,
@@ -152,7 +155,8 @@ function _Gtme.buildPackage(package, config, clean)
 	}
 
 	print("Checking basic files and directories")
-	forEachDirectory(pkgDirectory, function(dir)
+
+	forEachDirectory(package..s, function(dir)
 		if not root[dir:name()] then
 			printError("Directory '"..package..s..dir:name().."' is unnecessary and will be ignored.")
 			dir:delete()
@@ -160,7 +164,7 @@ function _Gtme.buildPackage(package, config, clean)
 		end
 	end)
 
-	forEachFile(pkgDirectory, function(file)
+	forEachFile(package, function(file)
 		if not root[file:name()] then
 			printError("File '"..package..s..file:name().."' is unnecessary and will be ignored.")
 			file:delete()
@@ -168,9 +172,9 @@ function _Gtme.buildPackage(package, config, clean)
 		end
 	end)
 
-	if Directory(pkgDirectory.."examples"):exists() then
+	if Directory(package..s.."examples"):exists() then
 		print("Checking examples")
-		forEachFile(pkgDirectory.."examples", function(file)
+		forEachFile(package..s.."examples", function(file)
 			if not belong(file:extension(), {"lua", "tme"}) then
 				printError("File '"..package..s.."examples"..s..file:name().."' is unnecessary and will be ignored.")
 				file:delete()
@@ -182,7 +186,7 @@ function _Gtme.buildPackage(package, config, clean)
 	end
 
 	print("Checking source code")
-	forEachFile(pkgDirectory..s.."lua", function(file)
+	forEachFile(package..s.."lua", function(file)
 		if not belong (file:extension(), {"lua", "tme"}) then
 			printError("File '"..package..s.."lua"..s..file:name().."' is unnecessary and will be ignored.")
 			file:delete()
@@ -204,7 +208,7 @@ function _Gtme.buildPackage(package, config, clean)
 		end)
 	end
 
-	removeRecursiveLua(pkgDirectory..s.."tests")
+	removeRecursiveLua(package..s.."tests")
 
 	print("Checking fonts")
 	if Directory(package..s.."font"):exists() then
@@ -216,7 +220,7 @@ function _Gtme.buildPackage(package, config, clean)
 			fontFiles[license] = true
 		end)
 
-		forEachFile(package..s.."font", function(file)
+		forEachFile(pkgDirectory.."font", function(file)
 			if not fontFiles[file:name()] then
 				local mfile = package..s.."font"..s..file:name()
 				printError("File '"..mfile.."' is unnecessary and will be ignored.")
@@ -229,22 +233,35 @@ function _Gtme.buildPackage(package, config, clean)
 	print("Looking for hidden files")
 	local hidden
 	if _Gtme.sessionInfo().system == "windows" then
-		hidden = runCommand("find-msys '"..package.."' -name '.*'")
+		hidden = runCommand("find-msys '"..tostring(pkgDirectory).."' -name '.*'")
 	else
-		hidden = runCommand("find \""..package.."\" -name \".*\"")
+		hidden = runCommand("find \""..tostring(pkgDirectory).."\" -name \".*\"")
 	end
 
 	forEachElement(hidden, function(_, file)
-		printWarning("File '"..file.."' is unnecessary and will be ignored.")
+		if isFile(file) then
+			local mfile = File(file)
+			local dir = mfile:split()
+			dir = tostring(Directory(dir):relativePath(pkgDirectory))
+
+			if dir ~= "" then dir = dir.."/" end
+
+			printWarning("File '"..dir..mfile:name().."' is unnecessary and will be ignored.")
+		else
+			local dir = Directory(file)
+
+			printWarning("Directory '"..tostring(dir:relativePath(pkgDirectory)).."' is unnecessary and will be ignored.")
+		end
+
 		rm(file)
 	end)
 
-	if isDirectory(pkgDirectory..s.."data") then
+	if isDirectory(package..s.."data") then
 		print("Removing tview files")
 
-		forEachFile(pkgDirectory..s.."data", function(file)
+		forEachFile(package..s.."data", function(file)
 			if file:extension() == "tview" then
-				printWarning("File '"..file:name().."' is unnecessary and will be ignored.")
+				printWarning("File 'data/"..file:name().."' is unnecessary and will be ignored.")
 				file:delete()
 			end
 		end)
@@ -253,18 +270,18 @@ function _Gtme.buildPackage(package, config, clean)
 	if clean then
 		printNote("Cleaning package")
 
-		local dlogs = Directory(package..s.."log")
+		local dlogs = Directory(pkgDirectory.."log")
 
 		if dlogs:exists() then
 			print("Removing 'log' directory")
 			dlogs:delete()
 		end
 
-		local dtest = package..s.."test"
+		local dtest = pkgDirectory.."test"
 
 		if Directory(dtest):exists() then
 			print("Removing 'test' directory")
-			Directory(package..s.."test"):delete()
+			Directory(pkgDirectory.."test"):delete()
 		end
 	end
 
@@ -301,11 +318,12 @@ function _Gtme.buildPackage(package, config, clean)
 		printError("The package does not contain file 'license.txt'")
 	end
 
-	printNote("Building package "..package)
+	printNote("Building package '"..package.."'")
 
 	local file = package.."_"..pkgInfo.version..".zip"
 	printNote("Creating file '"..file.."'")
 	os.execute("zip -qr \""..file.."\" "..package)
+
 	if File(file):exists() then
 		printNote("Package '"..package.."' successfully zipped")
 	else
