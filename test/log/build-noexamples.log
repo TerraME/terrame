@@ -110,7 +110,7 @@ Looking for hidden files
 Checking Models
 Checking license
 The package does not contain file 'license.txt'
-Building package noexamples
+Building package 'noexamples'
 Creating file 'noexamples_0.1.zip'
 Package 'noexamples' successfully zipped
 

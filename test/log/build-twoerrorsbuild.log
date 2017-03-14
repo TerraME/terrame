@@ -149,7 +149,7 @@ Model 'Tube' is wrongly put in file 'Tube2.lua'. It should be in file 'Tube.lua'
 Model 'Tube2' is wrongly put in file 'Tube3.lua'. It should be in file 'Tube2.lua'
 Checking license
 The package does not contain file 'license.txt'
-Building package twoerrorsbuild
+Building package 'twoerrorsbuild'
 Creating file 'twoerrorsbuild_0.1.zip'
 Package 'twoerrorsbuild' successfully zipped
 
