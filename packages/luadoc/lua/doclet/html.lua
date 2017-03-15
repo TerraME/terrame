@@ -62,7 +62,11 @@ local function httpLink(text)
 		if string.sub(value, 1, 5) == "files" then return value end -- internal link
 		if string.sub(value, 1, 1) == "#"     then return value end -- internal link
 
-		return "<a href=\""..value.."\" target=\"_blank\">"..value.."</a>"
+		if string.sub(value, 1, 4) == "http" or string.sub(value, 1, 3) == "www" then
+			return "<a href=\""..value.."\" target=\"_blank\">"..value.."</a>"
+		end
+
+		return value
 	end)
 
 	return result
