@@ -31,7 +31,7 @@ forEachFile(".", function(file)
 	newPackages[package] = version
 end)
 
-_Gtme.print("Creating projects for terralib")
+_Gtme.print("Creating 'terralib' projects")
 runCommand("terrame -package terralib -projects")
 
 _Gtme.printNote("Running documentation and tests")
@@ -49,7 +49,7 @@ forEachDirectory(".", function(dir)
 		rollback = true
 	end
 
-	_Gtme.print("Creating projects for "..package)
+	_Gtme.print("Creating '"..package.."' projects")
 	runCommand("terrame -package "..package.." -projects")
 
 	_Gtme.print("Documenting '"..package.."'")
