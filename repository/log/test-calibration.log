@@ -61,7 +61,6 @@ Checking logs
 
 Functional test report for package 'calibration':
 Tests were executed in 136.96 seconds.
-Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_mUrP9/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
