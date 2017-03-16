@@ -56,6 +56,12 @@ public:
         // delete symbol;
     }
 
+	void clear()
+	{
+		values->clear();
+		gaps.clear();
+	}
+
 	void insertGap()
 	{
 		int from, to;
