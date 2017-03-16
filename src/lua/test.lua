@@ -831,7 +831,7 @@ function _Gtme.executeTests(package, fileName)
 						local map = Map(mdata)
 						table.insert(maps, map)
 						info_.color = color
-						ut:assertSnapshot(map, "examples-"..value.."-map-"..#maps.."-begin.png", 0.1)
+						pcall(function() ut:assertSnapshot(map, "examples-"..value.."-map-"..#maps.."-begin.png", 0.25) end)
 						info_.color = false
 						return map
 					end
@@ -860,11 +860,11 @@ function _Gtme.executeTests(package, fileName)
 
 						info_.color = color
 						forEachElement(maps, function(pos, map)
-							ut:assertSnapshot(map, "examples-"..value.."-map-"..pos.."-end.png", 0.1)
+							pcall(function() ut:assertSnapshot(map, "examples-"..value.."-map-"..pos.."-end.png", 0.25) end)
 						end)
 
 						forEachElement(charts, function(pos, chart)
-							ut:assertSnapshot(chart, "examples-"..value.."-chart-"..pos.."-end.png", 0.1)
+							pcall(function() ut:assertSnapshot(chart, "examples-"..value.."-chart-"..pos.."-end.png", 0.25) end)
 						end)
 
 						return output
