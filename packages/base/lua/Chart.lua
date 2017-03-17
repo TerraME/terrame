@@ -155,7 +155,7 @@ Chart_ = {
 		self.cObj_:save(file, extension)
 	end,
 	--- Update the Chart with the latest values of its target. It is usually recommended
-    -- to use the Chart as action of an Event instead of calling this function explicitly.
+	-- to use the Chart as action of an Event instead of calling this function explicitly.
 	-- @arg modelTime A number with the current time or an Event.
 	-- @usage cell = Cell{value = 1}
 	-- chart = Chart{target = cell}
@@ -242,11 +242,6 @@ metaTableChart_ = {__index = Chart_}
 -- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
 -- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
 -- representing RGB compositions.
--- @arg attrTab.data A table with a complete description of the data to be drawn in the Chart.
--- It must be a valid Utils:isTable() with a set of vectors, each one with a name. The names of these vectors can be
--- used in arguments select and xAxis. If not using xAxis, it will draw the time according to the
--- positions of the values. When using data, argument target becomes unnecessary. This argument
--- will automatically be converted to a Cell, in order to allow using Cell:notify().
 -- @arg attrTab.title An overall title to the Chart. The default value is "". In the case of
 -- instances of Models, the default is Model:title().
 -- @arg attrTab.symbol The symbol to be used to draw the points of the Chart. It can be a string to
@@ -846,7 +841,7 @@ function Chart(attrTab)
 	attrTab.id = id
 
 	setmetatable(attrTab, metaTableChart_)
-    table.insert(_Gtme.createdObservers, attrTab)
+	table.insert(_Gtme.createdObservers, attrTab)
 	return attrTab
 end
 

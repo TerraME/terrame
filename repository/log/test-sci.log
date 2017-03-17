@@ -14,7 +14,7 @@ Skipping lines of source code check
 Testing examples
 Testing PredatorPreyFord
 Testing SimpleSpline
-Skipping logs check
+Checking logs
 
 Functional test report for package 'sci':
 Tests were executed in 0.92 seconds.
@@ -22,7 +22,7 @@ No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 2 asserts were executed successfully.
+All 4 asserts were executed successfully.
 All 2 tested functions do not have any unexpected execution error.
 All 2 tested functions have at least one assert.
 All 2 tested functions exist in the source code of the package.
@@ -33,5 +33,6 @@ No file was created along the tests.
 All 2 functions of the package were tested.
 No lines from the source code were verified.
 All 2 examples were successfully executed.
-No log test was executed.
+No new log file was created.
+All log files were used in the tests.
 Summing up, all tests were successfully executed.

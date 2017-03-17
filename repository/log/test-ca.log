@@ -78,7 +78,6 @@ Checking logs
 
 Functional test report for package 'ca':
 Tests were executed in 365.29 seconds.
-Logs were saved in '/Users/pedro/github/terrame/repository/.terrametmp_uo9oF/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.

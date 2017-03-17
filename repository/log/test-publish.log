@@ -87,7 +87,6 @@ Checking logs
 
 Functional test report for package 'publish':
 Tests were executed in 71.28 seconds.
-Logs were saved in '/Users/pedro/github/terrame-pedro/repository/.terrametmp_42MpQ/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
