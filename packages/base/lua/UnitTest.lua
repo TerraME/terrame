@@ -365,6 +365,8 @@ UnitTest_ = {
 				return false
 			end
 
+			io.close(newLog.file)
+			io.close(oldLog.file)
 			self.success = self.success + 1
 		end
 	end,
