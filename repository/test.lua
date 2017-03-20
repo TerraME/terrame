@@ -243,10 +243,20 @@ File("packages.lua"):deleteIfExists()
 	
 _Gtme.printNote("Rolling back to previously installed packages")
 
-local rmCmd = _Gtme.makePathCompatibleToAllOS("rm -rf \""..pkgDir.."\"")
-os.execute(rmCmd)
-local cpCmd = _Gtme.makePathCompatibleToAllOS("cp -R \""..tmpdirectory.."packages\" \""..pkgDir.."\"")
-os.execute(cpCmd)
+forEachOrderedElement(pkgs, function(package)
+	local docInitialTime = os.time(os.date("*t"))
+
+	_Gtme.print("Removing package '"..package.."'")
+
+	local rmCmd = _Gtme.makePathCompatibleToAllOS("rm -rf \""..baseDir..s.."packages"..s..package.."\"")
+	os.execute(rmCmd)
+
+	if isDirectory(_Gtme.makePathCompatibleToAllOS(tmpdirectory.."packages"..s..package)) then	
+		_Gtme.print("Rolling back package '"..package.."'")
+		local cpCmd = _Gtme.makePathCompatibleToAllOS("cp -R \""..tmpdirectory.."packages"..s..package.."\" \""..baseDir..s.."packages"..s..package.."\"")
+		os.execute(cpCmd)
+	end
+end)
 
 local finalTime = os.time(os.date("*t"))
 
