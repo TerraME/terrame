@@ -136,7 +136,10 @@ local function aboutButtonClicked()
 
 	msg = msg.."\n\nVersion: "..tostring(info.version)
 	msg = msg.."\n\nAuthors: "..tostring(info.authors)
-	msg = msg.."\n\nContact: "..tostring(info.contact)
+
+	if info.contact then
+		msg = msg.."\n\nContact: "..tostring(info.contact)
+	end
 
 	if info.url then
 		msg = msg.."\n\nURL: "..info.url
