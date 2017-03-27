@@ -896,6 +896,68 @@ return {
 		File(geojson):delete()
 		File(shp):delete()
 		proj.file:delete()
+	end,
+	simplify = function(unitTest)
+		local projName = "layer_shape_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+
+		local filePath1 = filePath("test/rails.shp", "terralib")
+		local layerName1 = "ES_Rails"
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+
+		local rails = "es_rails.shp"
+		local data1 = {
+			file = rails,
+			overwrite = true
+		}
+
+		layer1:export(data1)
+
+		local layerName2 = "ES_Rails_CurrDir"
+		local filePath2 = File(rails)
+
+		local layer2 = Layer{
+			project = proj,
+			name = layerName2,
+			file = filePath2
+		}
+
+		local outputName = "slp_"..layerName2
+		local data2 = {
+			output = outputName,
+			tolerance = 500
+		}
+
+		layer2:simplify(data2)
+
+		local layerName3 = "ES_Rails_Slp"
+		local filePath3 = File(string.lower(outputName)..".shp")
+
+		local layer3 = Layer{
+			project = proj,
+			name = layerName3,
+			file = filePath3
+		}
+
+		local attrNames = layer3:attributes()
+		unitTest:assertEquals("FID", attrNames[1])
+		unitTest:assertEquals("OBSERVACAO", attrNames[4])
+		unitTest:assertEquals("PRODUTOS", attrNames[7])
+		unitTest:assertEquals("OPERADORA", attrNames[10])
+		unitTest:assertEquals("Bitola_Ext", attrNames[13])
+		unitTest:assertEquals("COD_PNV", attrNames[15])
+
+		filePath2:delete()
+		filePath3:delete()
+		proj.file:delete()
 	end
 }
 

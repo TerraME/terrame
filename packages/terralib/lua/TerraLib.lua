@@ -959,6 +959,12 @@ local function createConnInfoToSave(connInfo, toSetName, toType)
 	return toConnInfo
 end
 
+local function isGeometryProperty(propName)
+	return (propName == "OGR_GEOMETRY") or
+		   (propName == "ogr_geometry") or
+		   (propName == "geom")
+end
+
 local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 	local errorMsg
 	do
@@ -979,7 +985,7 @@ local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 
 				if not ds:isPropertyNameValid(propName) then
 					table.insert(invalidNames, propName)
-				elseif ds:propertyExists(dsetName, propName) then
+				elseif ds:propertyExists(dsetName, propName) or isGeometryProperty(propName) then
 					table.insert(attrsToUp, propName)
 				else
 					table.insert(attrsToIn, propName)
@@ -1093,6 +1099,8 @@ local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 							else
 								newDse:setBool(attr, v)
 							end
+						elseif isGeometryProperty(attr) then
+							newDse:setGeometry(attr, v)
 						end
 					end
 
@@ -2500,6 +2508,111 @@ TerraLib_ = {
 		collectgarbage("collect")
 
 		return size
+	end,
+	--- Create a new dataset applying Douglas Peucker algorithm.
+	-- @arg _ A TerraLib object (not used).
+	-- @arg project The project.
+	-- @arg fromLayerName The layer name used as reference to create a new dataset.
+	-- @arg toDSetName The new dataset name.
+	-- @arg tolerance The tolerance is a distance that defines the threshold for vertices to be
+	-- considered "insignificant" for the general structure of the geometry.
+	-- The tolerance must be expressed in the same units as the projection of the input geometry.
+	-- @usage -- DONTRUN
+	-- lnName = "ES_Rails"
+	-- lnFile = filePath("test/rails.shp", "terralib")
+	-- tl:addShpLayer(proj, lnName, lnFile)
+	-- tl:douglasPeucker(proj, lnName, "spl"..lnName, 500)
+	douglasPeucker = function(_, project, fromLayerName, toDSetName, tolerance)
+		local errorMsg
+		-- TODO(#1658): validate dataset name.
+		do
+			loadProject(project, project.file)
+
+			local layer = project.layers[fromLayerName]
+			layer = toDataSetLayer(layer)
+			local datasetName = layer:getDataSetName()
+			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+			local fromType = dsInfo:getType()
+			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), fromType)
+			local dataset = ds:getDataSet(datasetName)
+			local dst = ds:getDataSetType(datasetName)
+
+			if dst:hasGeom() then
+				local gp = binding.GetFirstGeomProperty(dst)
+				local gpt = gp:getGeometryType()
+
+				if (gpt == binding.te.gm.LineStringType) or (gpt == binding.te.gm.MultiLineStringType) then
+					local toSet = {}
+					local count = 1
+					local gname = gp:getName()
+					local gpos = getPropertyPosition(dataset, gname)
+					dataset:moveBeforeFirst()
+
+					if gpt == binding.te.gm.MultiLineStringType then
+						if fromType == "POSTGIS" then
+							while dataset:moveNext() do
+								local to = {}
+								local ml = castGeometry(dataset:getGeom(gpos))
+								ml = ml:clone()
+								local line = castGeometry(ml:getGeometryN(0))
+								local dp = binding.GEOS_DouglasPeucker(line, tolerance, 0)
+								local np = dp:size()
+								local l = binding.te.gm.LineString(np, binding.te.gm.LineStringType, line:getSRID())
+								l = l:clone()
+
+								for i = 0, np - 1 do
+									l:setPoint(i, dp:getX(i), dp:getY(i))
+								end
+
+								ml:setGeometryN(0, l)
+								to[gname] = ml
+								toSet[count] = to
+								count = count + 1
+							end
+						else
+							while dataset:moveNext() do
+								local to = {}
+								local ml = castGeometry(dataset:getGeom(gpos))
+								ml = ml:clone()
+								local line = castGeometry(ml:getGeometryN(0))
+								local dp = binding.GEOS_DouglasPeucker(line, tolerance, 0)
+
+								ml:setGeometryN(0, dp)
+								to[gname] = ml
+								toSet[count] = to
+								count = count + 1
+							end
+						end
+
+						toDSetName = string.lower(toDSetName)
+					else
+						while dataset:moveNext() do -- TODO(avancinirodrigo): there is no data with line to test.
+							local to = {}
+							local line = castGeometry(dataset:getGeom(gpos))
+							local dp = binding.GEOS_DouglasPeucker(line, tolerance, 0)
+
+							to[gname] = dp -- SKIP
+							toSet[count] = to -- SKIP
+							count = count + 1 -- SKIP
+						end
+					end
+
+					createDataSetFromLayer(layer,  toDSetName, toSet, {gname})
+				else
+					errorMsg = "This function works only with line and multi-line geometry."
+				end
+			else
+				errorMsg = "This function works only with line geometry."
+			end
+
+			ds:close()
+
+			releaseProject(project)
+		end
+
+		if errorMsg then
+			customError(errorMsg)
+		end
 	end
 }
 

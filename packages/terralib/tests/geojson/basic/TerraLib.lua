@@ -231,5 +231,53 @@ return {
 		unitTest:assertEquals(size, 63.0)
 
 		file:delete()
+	end,
+	douglasPeucker = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		local file = File(proj.file)
+		file:deleteIfExists()
+
+		tl:createProject(proj, {})
+
+		local lnName = "ES_Rails"
+		local lnFile = filePath("test/rails.shp", "terralib")
+		tl:addShpLayer(proj, lnName, lnFile)
+
+		local toData = {}
+		toData.file = "rails.geojson"
+		toData.type = "geojson"
+		File(toData.file):deleteIfExists()
+
+		tl:saveLayerAs(proj, lnName, toData, true)
+
+		lnName = "ES_Rails_CurrDir"
+		lnFile = File(toData.file)
+		tl:addGeoJSONLayer(proj, lnName, lnFile)
+
+		local dpLayerName = "ES_Rails_Peucker"
+		tl:douglasPeucker(proj, lnName, dpLayerName, 500)
+
+		local dpFile = File(string.lower(dpLayerName)..".geojson")
+		tl:addGeoJSONLayer(proj, dpLayerName, dpFile)
+
+		local dpSet = tl:getDataSet(proj, dpLayerName)
+		unitTest:assertEquals(getn(dpSet), 182)
+
+		local attrNames = tl:getPropertyNames(proj, proj.layers[dpLayerName])
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("OBSERVACAO", attrNames[3])
+		unitTest:assertEquals("PRODUTOS", attrNames[6])
+		unitTest:assertEquals("OPERADORA", attrNames[9])
+		unitTest:assertEquals("Bitola_Ext", attrNames[12])
+		unitTest:assertEquals("COD_PNV", attrNames[14])
+
+		dpFile:delete()
+		lnFile:delete()
+		proj.file:delete()
 	end
 }

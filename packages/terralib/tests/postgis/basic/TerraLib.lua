@@ -1824,19 +1824,17 @@ return {
 
 		tl:createProject(proj, {})
 
-		local layerName1 = "Setores"
-		local layerFile1 = filePath("itaituba-census.shp", "terralib")
+		local layerName1 = "Sampa"
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
-		-- POSTGIS
-		--[[
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
-		local tableName = "Setores_Censitarios_2000_pol"
+		local tableName = "sampa"
 
 		local pgData = {
 			type = "postgis",
@@ -1857,11 +1855,75 @@ return {
 
 		local size = tl:getLayerSize(proj, layerName2)
 
-		unitTest:assertEquals(size, 58.0) -- SKIP
+		unitTest:assertEquals(size, 63.0)
 
 		tl:dropPgTable(pgData)
-		--]]
+
 		unitTest:assert(true)
 		file:delete()
+	end,
+	douglasPeucker = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		local file = File(proj.file)
+		file:deleteIfExists()
+
+		tl:createProject(proj, {})
+
+		local lnName = "ES_Rails"
+		local lnFile = filePath("test/rails.shp", "terralib")
+		tl:addShpLayer(proj, lnName, lnFile, nil, 29101)
+
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+		local tableName = "rails"
+
+		local pgData = {
+			type = "postgis",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName, -- it is used only to drop
+			encoding = encoding
+		}
+
+		local overwrite = true
+		tl:saveLayerAs(proj, lnName, pgData, overwrite)
+
+		local layerName2 = "ES_Rails_Pg"
+		tl:addPgLayer(proj, layerName2, pgData)
+
+		local dpLayerName = "ES_Rails_Peucker"
+		tl:douglasPeucker(proj, layerName2, dpLayerName, 500)
+
+		pgData.table = string.lower(dpLayerName)
+		tl:addPgLayer(proj, dpLayerName, pgData)
+
+		local dpSet = tl:getDataSet(proj, dpLayerName)
+		unitTest:assertEquals(getn(dpSet), 182)
+
+		local attrNames = tl:getPropertyNames(proj, proj.layers[dpLayerName])
+		unitTest:assertEquals("fid", attrNames[0])
+		unitTest:assertEquals("observacao", attrNames[3])
+		unitTest:assertEquals("produtos", attrNames[6])
+		unitTest:assertEquals("operadora", attrNames[9])
+		unitTest:assertEquals("bitola_ext", attrNames[12])
+		unitTest:assertEquals("cod_pnv", attrNames[14])
+
+		tl:dropPgTable(pgData)
+		pgData.table = tableName
+		tl:dropPgTable(pgData)
+		proj.file:delete()
 	end
+
 }

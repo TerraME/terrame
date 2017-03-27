@@ -151,5 +151,37 @@ return {
 		unitTest:assertError(attrsNotExist,  "There are no attributes 'ATTR1', 'ATTR2' and 'ATTR3' in layer 'SampaShp'.")
 
 		proj.file:delete()
+	end,
+	douglasPeucker = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		local file = File(proj.file)
+		file:deleteIfExists()
+
+		tl:createProject(proj, {})
+
+		local lName1 = "Prodes"
+		local lFile1 = filePath("test/prodes_polyc_10k.tif", "terralib")
+		tl:addGdalLayer(proj, lName1, lFile1)
+
+		local invalidRaster = function()
+			tl:douglasPeucker(proj, lName1, "Peucker", 500)
+		end
+		unitTest:assertError(invalidRaster, "This function works only with line geometry.")
+
+		local lName2 = "Ports"
+		local lFile2 = filePath("test/ports.shp", "terralib")
+		tl:addShpLayer(proj, lName2, lFile2)
+
+		local invalidGeometry = function()
+			tl:douglasPeucker(proj, lName2, "Peucker", 500)
+		end
+		unitTest:assertError(invalidGeometry, "This function works only with line and multi-line geometry.")
+
+		proj.file:delete()
 	end
 }

@@ -557,6 +557,87 @@ return {
 
 		pgData.table = tableName
 		TerraLib{}:dropPgTable(pgData)
+	end,
+	simplify = function(unitTest)
+		local projName = "layer_postgis_basic.tview"
+
+		if File(projName):exists() then -- TODO: (#1442)
+			File(projName):delete()
+		end
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+
+		local filePath1 = filePath("test/rails.shp", "terralib")
+
+		local layerName1 = "ES_Rails"
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		local tableName = "rails"
+
+		local pgData = {
+			source = "postgis",
+			user = user,
+			password = password,
+			database = database,
+			overwrite = true,
+			epsg = 4036
+		}
+
+		layer1:export(pgData)
+
+		local layerName2 = "ES_Rails_Pg"
+		local layer2 = Layer{
+			project = proj,
+			source = "postgis",
+			name = layerName2,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName
+		}
+
+		local outputName = "spl_"..tableName
+		local data = {
+			output = outputName,
+			tolerance = 500
+		}
+
+		layer2:simplify(data)
+
+		local layerName3 = "ES_Rails_Spl"
+		local layer3 = Layer{
+			project = proj,
+			source = "postgis",
+			name = layerName3,
+			user = user,
+			password = password,
+			database = database,
+			table = outputName
+		}
+
+		local attrNames = layer3:attributes()
+		unitTest:assertEquals("fid", attrNames[1])
+		unitTest:assertEquals("observacao", attrNames[4])
+		unitTest:assertEquals("produtos", attrNames[7])
+		unitTest:assertEquals("operadora", attrNames[10])
+		unitTest:assertEquals("bitola_ext", attrNames[13])
+		unitTest:assertEquals("cod_pnv", attrNames[15])
+
+		pgData.table = tableName
+		TerraLib{}:dropPgTable(pgData)
+		pgData.table = outputName
+		TerraLib{}:dropPgTable(pgData)
+		proj.file:delete()
 	end
 }
 

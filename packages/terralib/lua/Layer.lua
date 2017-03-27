@@ -769,6 +769,27 @@ Layer_ = {
 				customError("It only supports postgis database, use source = \"postgis\".")
 			end
 		end
+	end,
+	--- Create a new data simplifying its geometry.
+	-- The data will be created using the same data source layer.
+	-- @arg data.output The data name that will be created.
+	-- @arg data.tolerance The tolerance is a distance that defines the threshold for vertices to be
+	-- considered "insignificant" for the general structure of the geometry.
+	-- The tolerance must be expressed in the same units as the projection of the input geometry.
+	-- @usage -- DONTRUN
+	-- layer:simplify{output = "layer_simplified", tolerance = 500}
+	simplify = function(self, data)
+		verifyNamedTable(data)
+		mandatoryTableArgument(data, "output")
+		mandatoryTableArgument(data, "tolerance")
+		positiveTableArgument(data, "tolerance")
+
+		local repr = self:representation()
+		if repr == "line" then
+			self.project.terralib:douglasPeucker(self.project, self.name, data.output, data.tolerance)
+		else
+			customError("Layer representation '"..repr.."' cannot be simplified.")
+		end
 	end
 }
 
