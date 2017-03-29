@@ -55,6 +55,39 @@ local function getLayerInfoAdapted(data)
 	end)
 end
 
+local function checkName(name, arg)
+	local errMsg = TerraLib{}:checkName(name)
+	if errMsg ~= "" then
+		customError(arg.." name '"..name.."' is not a valid name. "..errMsg..".")
+	end
+end
+
+local function fixName(name)
+	return string.gsub(name, "-", "_")
+end
+
+local function checkPgParams(data)
+	mandatoryTableArgument(data, "user", "string")
+	mandatoryTableArgument(data, "password", "string")
+	mandatoryTableArgument(data, "database", "string")
+
+	checkName(data.database, "Database")
+
+	if data.table then
+		mandatoryTableArgument(data, "table", "string")
+	else
+		defaultTableValue(data, "table", string.lower(data.name))
+	end
+
+	data.table = fixName(data.table)
+	checkName(data.table, "Table")
+
+	defaultTableValue(data, "host", "localhost")
+	defaultTableValue(data, "port", 5432)
+	defaultTableValue(data, "encoding", "CP1252")
+	data.port = tostring(data.port)
+end
+
 local function addCellularLayer(self, data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source",
@@ -149,16 +182,7 @@ local function addCellularLayer(self, data)
 												data.file, not data.box) -- SKIP
 		end,
 		postgis = function()
-			mandatoryTableArgument(data, "user", "string")
-			mandatoryTableArgument(data, "password", "string")
-			mandatoryTableArgument(data, "database", "string")
-
-			defaultTableValue(data, "table", string.lower(data.name))
-			defaultTableValue(data, "host", "localhost")
-			defaultTableValue(data, "port", 5432)
-			defaultTableValue(data, "encoding", "CP1252")
-
-			data.port = tostring(data.port)
+			checkPgParams(data)
 
 			if repr == "raster" then
 				verifyUnnecessaryArguments(data, {"input", "name", "resolution", "source", "encoding", -- SKIP
@@ -254,19 +278,8 @@ local function addLayer(self, data)
 			self.terralib:addGdalLayer(self, data.name, data.file, data.epsg)
 		end,
 		postgis = function()
-			mandatoryTableArgument(data, "user", "string")
-			mandatoryTableArgument(data, "password", "string")
-			mandatoryTableArgument(data, "database", "string")
-			mandatoryTableArgument(data, "table", "string")
-
 			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password", "database", "table", "project", "epsg"})
-
-			defaultTableValue(data, "table", string.lower(data.name))
-			defaultTableValue(data, "host", "localhost")
-			defaultTableValue(data, "port", 5432)
-			defaultTableValue(data, "encoding", "CP1252")
-
-			data.port = tostring(data.port)
+			checkPgParams(data)
 
 			self.terralib:addPgLayer(self, data.name, data, data.epsg)
 		end,
@@ -437,9 +450,7 @@ Layer_ = {
 		mandatoryTableArgument(data, "attribute", "string")
 		optionalTableArgument(data, "nodata", "number")
 
-		if not isValidName(data.attribute) then
-			customError("Attribute name '"..data.attribute.."' is not a valid name. Please, revise special characters or spaces from it.")
-		end
+		checkName(data.attribute, "Attribute")
 
 		local tlib = TerraLib{}
 		local project = self.project
@@ -751,14 +762,9 @@ Layer_ = {
 
 			if data.source == "postgis" then
 				verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding",
-												"epsg", "overwrite", "select"})
-
-				mandatoryTableArgument(data, "user", "string")
-				mandatoryTableArgument(data, "password", "string")
-				mandatoryTableArgument(data, "database", "string")
-				defaultTableValue(data, "host", "localhost")
-				defaultTableValue(data, "port", 5432)
-				defaultTableValue(data, "encoding", "CP1252")
+												"table", "epsg", "overwrite", "select"})
+				data.name = self.name
+				checkPgParams(data)
 				local pgData = data
 				pgData.type = "postgis"
 				pgData.srid = pgData.epsg
@@ -783,6 +789,8 @@ Layer_ = {
 		mandatoryTableArgument(data, "output")
 		mandatoryTableArgument(data, "tolerance")
 		positiveTableArgument(data, "tolerance")
+
+		checkName(data.output, "Output")
 
 		local repr = self:representation()
 		if repr == "line" then

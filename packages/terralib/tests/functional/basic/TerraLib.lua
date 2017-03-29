@@ -54,6 +54,12 @@ return {
 		unitTest:assertEquals(proj2.author, proj.author)
 
 		proj.file:delete()
+	end,
+	checkName = function(unitTest)
+		unitTest:assertEquals(TerraLib{}:checkName("count"), "Invalid name: using reserved word COUNT")
+		unitTest:assertEquals(TerraLib{}:checkName("sum"), "Invalid name: using reserved word SUM")
+		unitTest:assertEquals(TerraLib{}:checkName("file-name"), "Invalid character: mathematical symbol '-'")
+		unitTest:assertEquals(TerraLib{}:checkName("$ymbol"), "Invalid symbol: '$'")
 	end
 }
 

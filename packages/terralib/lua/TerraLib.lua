@@ -2292,6 +2292,8 @@ TerraLib_ = {
 					else
 						errorMsg = "File '"..toData.file.."' already exists."
 					end
+				else
+					toDSetName = fromDSetName
 				end
 
 				if not errorMsg then
@@ -2379,7 +2381,7 @@ TerraLib_ = {
 
 			binding.AssociateDataSetTypeConverterSRID(converter, srid)
 			local dstResult = converter:getResult()
-			dstResult:setName(fromDSetType:getName())
+			dstResult:setName(toDSetName)
 
 			-- TODO(avancinirodrigo): why POSTGIS does not work like OGR?
 			-- Fix the primary key for postgis only
@@ -2524,7 +2526,7 @@ TerraLib_ = {
 	-- tl:douglasPeucker(proj, lnName, "spl"..lnName, 500)
 	douglasPeucker = function(_, project, fromLayerName, toDSetName, tolerance)
 		local errorMsg
-		-- TODO(#1658): validate dataset name.
+
 		do
 			loadProject(project, project.file)
 
@@ -2613,6 +2615,15 @@ TerraLib_ = {
 		if errorMsg then
 			customError(errorMsg)
 		end
+	end,
+	--- Check if a name is valid.
+	-- Return a error message if the name is invalid, otherwise it returns a empty string.
+	-- @arg _ A TerraLib object (not used).
+	-- @arg name A string name.
+	-- @usage -- DONTRUN
+	-- TerraLib{}:checkName("aname")
+	checkName = function(_, name)
+		return string.gsub(string.gsub(binding.CheckName(name), "\n", ""), "^%l", string.upper)
 	end
 }
 

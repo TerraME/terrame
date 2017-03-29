@@ -158,20 +158,6 @@ return {
 		end
 		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))
 
-		local tableMandatory = function()
-			Layer{
-				project = proj1,
-				source = "postgis",
-				name = layerName2,
-				port = port,
-				user = user,
-				password = password,
-				database = database,
-				--table = tableName
-			}
-		end
-		unitTest:assertError(tableMandatory, mandatoryArgumentMsg("table"))
-
 		local fileUnnecessary = function()
 			Layer{
 				project = proj1,

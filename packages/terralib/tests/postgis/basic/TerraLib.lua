@@ -1226,6 +1226,8 @@ return {
 		tl:addShpLayer(proj, polName, polFile)
 
 		pgData.srid = 4326
+		local polTable = "limite_es_poly_wgs84"
+		pgData.table = polTable
 
 		tl:saveLayerAs(proj, polName, pgData, true)
 
@@ -1238,8 +1240,6 @@ return {
 		end
 
 		polName = "ES_Limit_Pg"
-		local polTable = "limite_es_poly_wgs84"
-		pgData.table = polTable
 		tl:addPgLayer(proj, polName, pgData)
 
 		attrNames = tl:getPropertyNames(proj, proj.layers[polName])
@@ -1275,6 +1275,8 @@ return {
 		local ptFile = filePath("test/ports.shp", "terralib")
 		tl:addShpLayer(proj, ptName, ptFile)
 
+		local ptTable = "ports"
+		pgData.table = ptTable
 		tl:saveLayerAs(proj, ptName, pgData, true)
 
 		local ptDset = tl:getDataSet(proj, ptName)
@@ -1286,8 +1288,6 @@ return {
 		end
 
 		ptName = "BR_Ports_Pg"
-		local ptTable = "ports"
-		pgData.table = ptTable
 		tl:addPgLayer(proj, ptName, pgData)
 
 		attrNames = tl:getPropertyNames(proj, proj.layers[ptName])
@@ -1323,6 +1323,8 @@ return {
 		local lnFile = filePath("test/rails.shp", "terralib")
 		tl:addShpLayer(proj, lnName, lnFile)
 
+		local lnTable = "rails"
+		pgData.table = lnTable
 		tl:saveLayerAs(proj, lnName, pgData, true)
 
 		local lnDset = tl:getDataSet(proj, lnName)
@@ -1334,8 +1336,6 @@ return {
 		end
 
 		lnName = "ES_Rails_Pg"
-		local lnTable = "rails"
-		pgData.table = lnTable
 		tl:addPgLayer(proj, lnName, pgData)
 
 		attrNames = tl:getPropertyNames(proj, proj.layers[lnName])

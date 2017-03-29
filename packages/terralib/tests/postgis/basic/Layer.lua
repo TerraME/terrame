@@ -462,7 +462,7 @@ return {
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local tableName = string.lower("mg_cities")
+		local tableName = "mg"
 
 		local pgData = {
 			source = "postgis",
@@ -582,7 +582,7 @@ return {
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local tableName = "rails"
+		local tableName = string.lower(layerName1)
 
 		local pgData = {
 			source = "postgis",

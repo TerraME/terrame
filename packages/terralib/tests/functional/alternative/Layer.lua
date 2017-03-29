@@ -484,7 +484,7 @@ return{
 				layer = "cells"
 			}
 		end
-		unitTest:assertError(invalidAttribName, "Attribute name 'área' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidAttribName, "Attribute name 'área' is not a valid name. Invalid symbol.")
 
 		invalidAttribName = function()
 			cl:fill{
@@ -493,7 +493,7 @@ return{
 				layer = "cells"
 			}
 		end
-		unitTest:assertError(invalidAttribName, "Attribute name 'a$ea' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidAttribName, "Attribute name 'a$ea' is not a valid name. Invalid symbol: '$'.")
 
 		invalidAttribName = function()
 			cl:fill{
@@ -502,7 +502,7 @@ return{
 				layer = "cells"
 			}
 		end
-		unitTest:assertError(invalidAttribName, "Attribute name 'Cell Area' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidAttribName, "Attribute name 'Cell Area' is not a valid name. Invalid character: blank space.")
 
 		invalidAttribName = function()
 			cl:fill{
@@ -511,7 +511,7 @@ return{
 				layer = "cells"
 			}
 		end
-		unitTest:assertError(invalidAttribName, "Attribute name 'Are*s' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidAttribName, "Attribute name 'Are*s' is not a valid name. Invalid character: mathematical symbol '*'.")
 
 	--[[ BUG:
 		local attributeDoesNotExist = function()
