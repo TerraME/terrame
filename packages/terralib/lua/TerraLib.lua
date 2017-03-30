@@ -2146,8 +2146,47 @@ TerraLib_ = {
 		end
 
 		releaseProject(project)
+		collectgarbage("collect")
 
 		return names
+	end,
+	--- Returns the property informations of a layer.
+	-- @arg _ A TerraLib object.
+	-- @arg project A Project.
+	-- @arg layerName A Layer name.
+	-- @usage -- DONTRUN
+	-- local propInfos = tl:getPropertyInfos(proj, "layerName")
+	-- unitTest:assertEquals(propInfos[1].name, "ID")
+	-- unitTest:assertEquals(propInfos[1].type, "integer 64")
+	-- unitTest:assertEquals(propInfos[2].name, "NM_MICRO")
+	-- unitTest:assertEquals(propInfos[2].type, "string")
+	getPropertyInfos = function(_, project, layerName)
+		loadProject(project, project.file)
+
+		local layer = project.layers[layerName]
+		local dSetLayer = toDataSetLayer(layer)
+		local dSetName = dSetLayer:getDataSetName()
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(dSetLayer:getDataSourceId())
+		local infos	= {}
+
+		do
+			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+			local dset = ds:getDataSet(dSetName)
+			local numProps = dset:getNumProperties()
+
+			dset:moveFirst()
+			for i = 0, numProps - 1 do
+				local info = {}
+				info.name = dset:getPropertyName(i)
+				info.type = string.lower(binding.ConvertDataTypeToString(dset:getPropertyDataType(i)))
+				infos[i] = info
+			end
+		end
+
+		releaseProject(project)
+		collectgarbage("collect")
+
+		return infos
 	end,
 	--- Returns the shortest distance between any two points in the two geometries.
 	-- @arg _ A TerraLib object.

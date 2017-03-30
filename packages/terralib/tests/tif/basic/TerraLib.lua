@@ -221,6 +221,29 @@ return {
 
 		proj.file:delete()
 	end,
+	getPropertyInfos = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "tlib_pg_bas.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		File(proj.file):deleteIfExists()
+
+		tl:createProject(proj, {})
+
+		local layerName = "Prodes"
+		local layerFile = filePath("amazonia-prodes.tif", "terralib")
+		tl:addGdalLayer(proj, layerName, layerFile)
+
+		local propInfos = tl:getPropertyInfos(proj, layerName)
+
+		unitTest:assertEquals(getn(propInfos), 1)
+		unitTest:assertEquals(propInfos[0].type, "raster")
+		unitTest:assertEquals(propInfos[0].type, "raster")
+
+		proj.file:delete()
+	end,
 	getDistance = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}

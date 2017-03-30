@@ -1617,6 +1617,60 @@ return {
 		tl:dropPgTable(pgData)
 		tl:dropPgDatabase(pgData)
 	end,
+	getPropertyInfos = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {
+			file = "tlib_pg_bas.tview",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
+		}
+
+		File(proj.file):deleteIfExists()
+
+		tl:createProject(proj, {})
+
+		local layerName1 = "SetoresShp"
+		local layerFile1 = filePath("itaituba-census.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)
+
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+		local tableName = "setores_cells"
+
+		local pgData = {
+			type = "postgis",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName,
+			encoding = encoding
+		}
+
+		tl:saveLayerAs(proj, layerName1, pgData, true)
+		local layerName2 = "PgLayer"
+		tl:addPgLayer(proj, layerName2, pgData)
+
+		local propInfos = tl:getPropertyInfos(proj, layerName2)
+
+		unitTest:assertEquals(getn(propInfos), 4)
+		unitTest:assertEquals(propInfos[0].name, "fid")
+		unitTest:assertEquals(propInfos[0].type, "integer 32")
+		unitTest:assertEquals(propInfos[1].name, "population")
+		unitTest:assertEquals(propInfos[1].type, "double")
+		unitTest:assertEquals(propInfos[2].name, "dens_pop")
+		unitTest:assertEquals(propInfos[2].type, "double")
+		unitTest:assertEquals(propInfos[3].name, "ogr_geometry")
+		unitTest:assertEquals(propInfos[3].type, "geometry")
+
+		proj.file:delete()
+		tl:dropPgTable(pgData)
+	end,
 	getDistance = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}

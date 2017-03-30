@@ -426,12 +426,17 @@ return {
 			database = database
 		}
 
-		local propNames = layer:attributes()
+		local propInfos = layer:attributes()
 
-		for i = 1, #propNames do
-			unitTest:assert((propNames[i] == "id") or (propNames[i] == "geom") or
-						(propNames[i] == "col") or (propNames[i] == "row"))
-		end
+		unitTest:assertEquals(#propInfos, 4)
+		unitTest:assertEquals(propInfos[1].name, "id")
+		unitTest:assertEquals(propInfos[1].type, "string")
+		unitTest:assertEquals(propInfos[2].name, "col")
+		unitTest:assertEquals(propInfos[2].type, "integer 32")
+		unitTest:assertEquals(propInfos[3].name, "row")
+		unitTest:assertEquals(propInfos[3].type, "integer 32")
+		unitTest:assertEquals(propInfos[4].name, "geom")
+		unitTest:assertEquals(propInfos[4].type, "geometry")
 
 		proj.file:delete()
 		tl:dropPgTable(pgData)
@@ -537,19 +542,21 @@ return {
 		layer2:export(data1)
 		local attrs1 = layer3:attributes()
 
-		unitTest:assertEquals(attrs1[1], "FID")
-		unitTest:assertEquals(attrs1[2], "populaca")
-		unitTest:assertNil(attrs1[3])
+		unitTest:assertEquals(attrs1[1].name, "FID")
+		unitTest:assertEquals(attrs1[2].name, "populaca")
+		unitTest:assertEquals(attrs1[3].name, "OGR_GEOMETRY")
+		unitTest:assertNil(attrs1[4])
 
 		-- SELECT TWO ATTRIBUTES TO SHAPE
 		data2.select = {"populaca", "nomemeso"}
 		layer2:export(data2)
 		local attrs2 = layer4:attributes()
 
-		unitTest:assertEquals(attrs2[1], "FID")
-		unitTest:assertEquals(attrs2[2], "populaca")
-		unitTest:assertEquals(attrs2[3], "nomemeso")
-		unitTest:assertNil(attrs2[4])
+		unitTest:assertEquals(attrs2[1].name, "FID")
+		unitTest:assertEquals(attrs2[2].name, "populaca")
+		unitTest:assertEquals(attrs2[3].name, "nomemeso")
+		unitTest:assertEquals(attrs2[4].name, "OGR_GEOMETRY")
+		unitTest:assertNil(attrs2[5])
 
 		File(geojson):delete()
 		File(shp):delete()
@@ -625,13 +632,13 @@ return {
 			table = outputName
 		}
 
-		local attrNames = layer3:attributes()
-		unitTest:assertEquals("fid", attrNames[1])
-		unitTest:assertEquals("observacao", attrNames[4])
-		unitTest:assertEquals("produtos", attrNames[7])
-		unitTest:assertEquals("operadora", attrNames[10])
-		unitTest:assertEquals("bitola_ext", attrNames[13])
-		unitTest:assertEquals("cod_pnv", attrNames[15])
+		local attrs = layer3:attributes()
+		unitTest:assertEquals("fid", attrs[1].name)
+		unitTest:assertEquals("observacao", attrs[4].name)
+		unitTest:assertEquals("produtos", attrs[7].name)
+		unitTest:assertEquals("operadora", attrs[10].name)
+		unitTest:assertEquals("bitola_ext", attrs[13].name)
+		unitTest:assertEquals("cod_pnv", attrs[15].name)
 
 		pgData.table = tableName
 		TerraLib{}:dropPgTable(pgData)

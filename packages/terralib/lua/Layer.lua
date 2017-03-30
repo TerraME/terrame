@@ -640,9 +640,16 @@ Layer_ = {
 		}
 
 		if type(data.select) == "string" then
-			if not belong(data.select, data.layer:attributes()) then
+			local attrs = data.layer:attributes()
+			local attrNames = {}
+
+			for i = 1, #attrs do
+				attrNames[i] = attrs[i].name
+			end
+
+			if not belong(data.select, attrNames) then
 				local msg = "Selected attribute '"..data.select.."' does not exist in layer '"..data.layer.name.."'."
-				local sugg = suggestion(data.select, data.layer:attributes())
+				local sugg = suggestion(data.select, attrNames)
 
 				msg = msg..suggestionMsg(sugg)
 				customError(msg)
@@ -680,19 +687,19 @@ Layer_ = {
 	--
 	-- print(vardump(layer:attributes()))
 	attributes = function(self)
-		local propNames = self.project.terralib:getPropertyNames(self.project, self.project.layers[self.name])
+		local propInfos = self.project.terralib:getPropertyInfos(self.project, self.name)
 
-		if propNames[0] == "raster" then
+		if propInfos[0].type == "raster" then
 			return nil
 		end
 
-		local luaPropNames = {}
+		local luaPropInfos = {}
 
-		for i = 0, #propNames do
-			luaPropNames[i + 1] = propNames[i]
+		for i = 0, getn(propInfos) do
+			luaPropInfos[i + 1] = propInfos[i]
 		end
 
-		return luaPropNames
+		return luaPropInfos
 	end,
 	--- Returns the nodata value of a raster layer. If the layer does not have a raster representation
 	-- then it returns nil . The bands of the raster layer are named from zero to the number of

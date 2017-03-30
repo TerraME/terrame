@@ -802,11 +802,17 @@ return {
 			index = false
 		}
 
-		local propNames = layer:attributes()
+		local propInfos = layer:attributes()
 
-		for i = 1, #propNames do
-			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "dens_pop") or (propNames[i] == "population"))
-		end
+		unitTest:assertEquals(#propInfos, 4)
+		unitTest:assertEquals(propInfos[1].name, "FID")
+		unitTest:assertEquals(propInfos[1].type, "integer 32")
+		unitTest:assertEquals(propInfos[2].name, "population")
+		unitTest:assertEquals(propInfos[2].type, "double")
+		unitTest:assertEquals(propInfos[3].name, "dens_pop")
+		unitTest:assertEquals(propInfos[3].type, "double")
+		unitTest:assertEquals(propInfos[4].name, "OGR_GEOMETRY")
+		unitTest:assertEquals(propInfos[4].type, "geometry")
 
 		proj.file:delete()
 	end,
@@ -880,18 +886,20 @@ return {
 		layer:export(data1)
 		local attrs1 = layer2:attributes()
 
-		unitTest:assertEquals(attrs1[1], "FID")
-		unitTest:assertEquals(attrs1[2], "population")
-		unitTest:assertNil(attrs1[3])
+		unitTest:assertEquals(attrs1[1].name, "FID")
+		unitTest:assertEquals(attrs1[2].name, "population")
+		unitTest:assertEquals(attrs1[3].name, "OGR_GEOMETRY")
+		unitTest:assertNil(attrs1[4])
 
 		-- SELECT ONE ATTRIBUTE TO SHAPE
 		data2.select = "dens_pop"
 		layer:export(data2)
 		local attrs2 = layer3:attributes()
 
-		unitTest:assertEquals(attrs2[1], "FID")
-		unitTest:assertEquals(attrs2[2], "dens_pop")
-		unitTest:assertNil(attrs2[3])
+		unitTest:assertEquals(attrs2[1].name, "FID")
+		unitTest:assertEquals(attrs2[2].name, "dens_pop")
+		unitTest:assertEquals(attrs2[3].name, "OGR_GEOMETRY")
+		unitTest:assertNil(attrs2[4])
 
 		File(geojson):delete()
 		File(shp):delete()
@@ -947,13 +955,13 @@ return {
 			file = filePath3
 		}
 
-		local attrNames = layer3:attributes()
-		unitTest:assertEquals("FID", attrNames[1])
-		unitTest:assertEquals("OBSERVACAO", attrNames[4])
-		unitTest:assertEquals("PRODUTOS", attrNames[7])
-		unitTest:assertEquals("OPERADORA", attrNames[10])
-		unitTest:assertEquals("Bitola_Ext", attrNames[13])
-		unitTest:assertEquals("COD_PNV", attrNames[15])
+		local attrs = layer3:attributes()
+		unitTest:assertEquals("FID", attrs[1].name)
+		unitTest:assertEquals("OBSERVACAO", attrs[4].name)
+		unitTest:assertEquals("PRODUTOS", attrs[7].name)
+		unitTest:assertEquals("OPERADORA", attrs[10].name)
+		unitTest:assertEquals("Bitola_Ext", attrs[13].name)
+		unitTest:assertEquals("COD_PNV", attrs[15].name)
 
 		filePath2:delete()
 		filePath3:delete()

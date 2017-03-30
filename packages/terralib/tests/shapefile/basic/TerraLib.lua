@@ -1462,6 +1462,37 @@ return {
 
 		proj.file:delete()
 	end,
+	getPropertyInfos = function(unitTest)
+		local tl = TerraLib{}
+		local proj = {}
+		proj.file = "tlib_shp_bas.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		File(proj.file):deleteIfExists()
+
+		tl:createProject(proj, {})
+
+		local layerName1 = "Sampa"
+		local layerFile1 = filePath("test/sampa.shp", "terralib")
+		tl:addShpLayer(proj, layerName1, layerFile1)
+
+		local propInfos = tl:getPropertyInfos(proj, layerName1)
+
+		unitTest:assertEquals(getn(propInfos), 5)
+		unitTest:assertEquals(propInfos[0].name, "FID")
+		unitTest:assertEquals(propInfos[0].type, "integer 32")
+		unitTest:assertEquals(propInfos[1].name, "ID")
+		unitTest:assertEquals(propInfos[1].type, "integer 64")
+		unitTest:assertEquals(propInfos[2].name, "NM_MICRO")
+		unitTest:assertEquals(propInfos[2].type, "string")
+		unitTest:assertEquals(propInfos[3].name, "CD_GEOCODU")
+		unitTest:assertEquals(propInfos[3].type, "string")
+		unitTest:assertEquals(propInfos[4].name, "OGR_GEOMETRY")
+		unitTest:assertEquals(propInfos[4].type, "geometry")
+
+		proj.file:delete()
+	end,
 	getDistance = function(unitTest)
 		local tl = TerraLib{}
 		local proj = {}
