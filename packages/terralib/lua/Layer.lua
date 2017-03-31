@@ -38,8 +38,7 @@ local function isValidName(name)
 end
 
 local function getLayerInfoAdapted(data)
-	local layer = data.project.layers[data.name]
-	local info = data.project.terralib:getLayerInfo(data.project, layer)
+	local info = data.project.terralib:getLayerInfo(data.project, data.name)
 	info.type = nil
 
 	forEachElement(info, function(idx, value)
@@ -136,7 +135,7 @@ local function addCellularLayer(self, data)
 		customError("Layer '"..data.name.."' already exists in the Project.")
 	end
 
-	local repr = data.project.terralib:getLayerInfo(data.project, data.project.layers[data.input]).rep
+	local repr = data.project.terralib:getLayerInfo(data.project, data.input).rep
 
 	switch(data, "source"):caseof{
 		shp = function()
@@ -317,7 +316,7 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- print(layer:representation())
 	representation = function(self)
-		return self.project.terralib:getLayerInfo(self.project, self.project.layers[self.name]).rep
+		return self.project.terralib:getLayerInfo(self.project, self.name).rep
 	end,
 	--- Return the number of bands of a raster layer. If the layer does not have a raster representation
 	-- then it will stop with an error. The bands of the raster layer are named from zero to the number of

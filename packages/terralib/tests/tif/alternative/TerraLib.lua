@@ -129,7 +129,7 @@ return {
 		local differentSrids = function()
 			tl:attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
-		local layerInfo2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		local layerInfo2 = tl:getLayerInfo(proj, layerName2)
 		unitTest:assertError(differentSrids, "The projections of the layers are different: (Prodes_PA, "..string.format("%.0f", layerInfo2.srid)..") and (Para_Cells, 29101). Set the correct one.")
 
 		local layerName3 = "Prodes_PA_NewSRID"

@@ -63,7 +63,7 @@ return {
 		local layerFile = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName, layerFile)
 
-		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
+		local layerInfo = tl:getLayerInfo(proj, layerName)
 
 		unitTest:assertEquals(layerInfo.name, layerName)
 		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
@@ -121,7 +121,7 @@ return {
 		local mask = true
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 
-		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
+		local layerInfo = tl:getLayerInfo(proj, clName)
 
 		unitTest:assertEquals(layerInfo.name, clName)
 		unitTest:assertEquals(layerInfo.file, tostring(shp1))
@@ -215,7 +215,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local clLayerInfo = tl:getLayerInfo(proj, proj.layers[clName])
+		local clLayerInfo = tl:getLayerInfo(proj, clName)
 
 		unitTest:assertEquals(clLayerInfo.name, clName)
 		unitTest:assertEquals(clLayerInfo.file, currentDir()..shp[1])
@@ -252,7 +252,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local presLayerInfo = tl:getLayerInfo(proj, proj.layers[presLayerName])
+		local presLayerInfo = tl:getLayerInfo(proj, presLayerName)
 		unitTest:assertEquals(presLayerInfo.name, presLayerName)
 		unitTest:assertEquals(presLayerInfo.file, currentDir()..shp[2])
 		unitTest:assertEquals(presLayerInfo.type, "OGR")
@@ -282,7 +282,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local areaLayerInfo = tl:getLayerInfo(proj, proj.layers[areaLayerName])
+		local areaLayerInfo = tl:getLayerInfo(proj, areaLayerName)
 		unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
 		unitTest:assertEquals(areaLayerInfo.file, currentDir()..shp[3])
 		unitTest:assertEquals(areaLayerInfo.type, "OGR")
@@ -312,7 +312,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local countLayerInfo = tl:getLayerInfo(proj, proj.layers[countLayerName])
+		local countLayerInfo = tl:getLayerInfo(proj, countLayerName)
 		unitTest:assertEquals(countLayerInfo.name, countLayerName)
 		unitTest:assertEquals(countLayerInfo.file, currentDir()..shp[4])
 		unitTest:assertEquals(countLayerInfo.type, "OGR")
@@ -342,7 +342,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local distLayerInfo = tl:getLayerInfo(proj, proj.layers[distLayerName])
+		local distLayerInfo = tl:getLayerInfo(proj, distLayerName)
 		unitTest:assertEquals(distLayerInfo.name, distLayerName)
 		unitTest:assertEquals(distLayerInfo.file, currentDir()..shp[5])
 		unitTest:assertEquals(distLayerInfo.type, "OGR")
@@ -377,7 +377,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local minLayerInfo = tl:getLayerInfo(proj, proj.layers[minLayerName])
+		local minLayerInfo = tl:getLayerInfo(proj, minLayerName)
 		unitTest:assertEquals(minLayerInfo.name, minLayerName)
 		unitTest:assertEquals(minLayerInfo.file, currentDir()..shp[6])
 		unitTest:assertEquals(minLayerInfo.type, "OGR")
@@ -408,7 +408,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local maxLayerInfo = tl:getLayerInfo(proj, proj.layers[maxLayerName])
+		local maxLayerInfo = tl:getLayerInfo(proj, maxLayerName)
 		unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
 		unitTest:assertEquals(maxLayerInfo.file, currentDir()..shp[7])
 		unitTest:assertEquals(maxLayerInfo.type, "OGR")
@@ -439,7 +439,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local percLayerInfo = tl:getLayerInfo(proj, proj.layers[percLayerName])
+		local percLayerInfo = tl:getLayerInfo(proj, percLayerName)
 		unitTest:assertEquals(percLayerInfo.name, percLayerName)
 		unitTest:assertEquals(percLayerInfo.file, currentDir()..shp[8])
 		unitTest:assertEquals(percLayerInfo.type, "OGR")
@@ -471,7 +471,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local stdevLayerInfo = tl:getLayerInfo(proj, proj.layers[stdevLayerName])
+		local stdevLayerInfo = tl:getLayerInfo(proj, stdevLayerName)
 		unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
 		unitTest:assertEquals(stdevLayerInfo.file, currentDir()..shp[9])
 		unitTest:assertEquals(stdevLayerInfo.type, "OGR")
@@ -503,7 +503,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local meanLayerInfo = tl:getLayerInfo(proj, proj.layers[meanLayerName])
+		local meanLayerInfo = tl:getLayerInfo(proj, meanLayerName)
 		unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
 		unitTest:assertEquals(meanLayerInfo.file, currentDir()..shp[10])
 		unitTest:assertEquals(meanLayerInfo.type, "OGR")
@@ -535,7 +535,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local weighLayerInfo = tl:getLayerInfo(proj, proj.layers[weighLayerName])
+		local weighLayerInfo = tl:getLayerInfo(proj, weighLayerName)
 		unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
 		unitTest:assertEquals(weighLayerInfo.file, currentDir()..shp[11])
 		unitTest:assertEquals(weighLayerInfo.type, "OGR")
@@ -567,7 +567,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local interLayerInfo = tl:getLayerInfo(proj, proj.layers[interLayerName])
+		local interLayerInfo = tl:getLayerInfo(proj, interLayerName)
 		unitTest:assertEquals(interLayerInfo.name, interLayerName)
 		unitTest:assertEquals(interLayerInfo.file, currentDir()..shp[12])
 		unitTest:assertEquals(interLayerInfo.type, "OGR")
@@ -600,7 +600,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local occurLayerInfo = tl:getLayerInfo(proj, proj.layers[occurLayerName])
+		local occurLayerInfo = tl:getLayerInfo(proj, occurLayerName)
 		unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
 		unitTest:assertEquals(occurLayerInfo.file, currentDir()..shp[13])
 		unitTest:assertEquals(occurLayerInfo.type, "OGR")
@@ -633,7 +633,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local sumLayerInfo = tl:getLayerInfo(proj, proj.layers[sumLayerName])
+		local sumLayerInfo = tl:getLayerInfo(proj, sumLayerName)
 		unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
 		unitTest:assertEquals(sumLayerInfo.file, currentDir()..shp[14])
 		unitTest:assertEquals(sumLayerInfo.type, "OGR")
@@ -666,7 +666,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local wsumLayerInfo = tl:getLayerInfo(proj, proj.layers[wsumLayerName])
+		local wsumLayerInfo = tl:getLayerInfo(proj, wsumLayerName)
 		unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
 		unitTest:assertEquals(wsumLayerInfo.file, currentDir()..shp[15])
 		unitTest:assertEquals(wsumLayerInfo.type, "OGR")
@@ -704,7 +704,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local percTifLayerInfo = tl:getLayerInfo(proj, proj.layers[percTifLayerName])
+		local percTifLayerInfo = tl:getLayerInfo(proj, percTifLayerName)
 		unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
 		unitTest:assertEquals(percTifLayerInfo.file, currentDir()..shp[16])
 		unitTest:assertEquals(percTifLayerInfo.type, "OGR")
@@ -738,7 +738,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rmeanLayerInfo = tl:getLayerInfo(proj, proj.layers[rmeanLayerName])
+		local rmeanLayerInfo = tl:getLayerInfo(proj, rmeanLayerName)
 		unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
 		unitTest:assertEquals(rmeanLayerInfo.file, currentDir()..shp[17])
 		unitTest:assertEquals(rmeanLayerInfo.type, "OGR")
@@ -772,7 +772,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rminLayerInfo = tl:getLayerInfo(proj, proj.layers[rminLayerName])
+		local rminLayerInfo = tl:getLayerInfo(proj, rminLayerName)
 		unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
 		unitTest:assertEquals(rminLayerInfo.file, currentDir()..shp[18])
 		unitTest:assertEquals(rminLayerInfo.type, "OGR")
@@ -806,7 +806,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rmaxLayerInfo = tl:getLayerInfo(proj, proj.layers[rmaxLayerName])
+		local rmaxLayerInfo = tl:getLayerInfo(proj, rmaxLayerName)
 		unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
 		unitTest:assertEquals(rmaxLayerInfo.file, currentDir()..shp[19])
 		unitTest:assertEquals(rmaxLayerInfo.type, "OGR")
@@ -840,7 +840,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rstdevLayerInfo = tl:getLayerInfo(proj, proj.layers[rstdevLayerName])
+		local rstdevLayerInfo = tl:getLayerInfo(proj, rstdevLayerName)
 		unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
 		unitTest:assertEquals(rstdevLayerInfo.file, currentDir()..shp[20])
 		unitTest:assertEquals(rstdevLayerInfo.type, "OGR")
@@ -874,7 +874,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rsumLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
+		local rsumLayerInfo = tl:getLayerInfo(proj, rsumLayerName)
 		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
 		unitTest:assertEquals(rsumLayerInfo.file, currentDir()..shp[21])
 		unitTest:assertEquals(rsumLayerInfo.type, "OGR")
@@ -904,7 +904,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rsumOverLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
+		local rsumOverLayerInfo = tl:getLayerInfo(proj, rsumLayerName)
 		unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
 		unitTest:assertEquals(rsumOverLayerInfo.file, currentDir()..shp[21])
 		unitTest:assertEquals(rsumOverLayerInfo.type, "OGR")
@@ -940,7 +940,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local nodataLayerInfo = tl:getLayerInfo(proj, proj.layers[nodataLayerName])
+		local nodataLayerInfo = tl:getLayerInfo(proj, nodataLayerName)
 		unitTest:assertEquals(nodataLayerInfo.name, nodataLayerName)
 		unitTest:assertEquals(nodataLayerInfo.file, currentDir()..shp[22])
 		unitTest:assertEquals(nodataLayerInfo.type, "OGR")
@@ -995,7 +995,7 @@ return {
 			end
 		end
 
-		local attrNames = tl:getPropertyNames(proj, proj.layers[clName1])
+		local attrNames = tl:getPropertyNames(proj, clName1)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("id", attrNames[1])
 		unitTest:assertEquals("col", attrNames[2])
@@ -1036,7 +1036,7 @@ return {
 			end
 		end
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLayerName])
+		attrNames = tl:getPropertyNames(proj, newLayerName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("id", attrNames[1])
 		unitTest:assertEquals("col", attrNames[2])
@@ -1062,7 +1062,7 @@ return {
 			end
 		end
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLayerName])
+		attrNames = tl:getPropertyNames(proj, newLayerName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("id", attrNames[1])
 		unitTest:assertEquals("col", attrNames[2])
@@ -1087,7 +1087,7 @@ return {
 			end
 		end
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLayerName])
+		attrNames = tl:getPropertyNames(proj, newLayerName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("id", attrNames[1])
 		unitTest:assertEquals("col", attrNames[2])
@@ -1120,7 +1120,7 @@ return {
 		polFile = File(toData.file)
 		tl:addShpLayer(proj, polName, polFile)
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[polName])
+		attrNames = tl:getPropertyNames(proj, polName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("GM_LAYER", attrNames[1])
 		unitTest:assertEquals("GM_TYPE", attrNames[2])
@@ -1137,7 +1137,7 @@ return {
 		unitTest:assertEquals(getn(newPolDset), 1)
 		unitTest:assertEquals(getn(newPolDset), getn(polDset))
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newPolName])
+		attrNames = tl:getPropertyNames(proj, newPolName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("GM_LAYER", attrNames[1])
 		unitTest:assertEquals("GM_TYPE", attrNames[2])
@@ -1173,7 +1173,7 @@ return {
 		ptFile = File(toData.file)
 		tl:addShpLayer(proj, ptName, ptFile)
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[ptName])
+		attrNames = tl:getPropertyNames(proj, ptName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("tipo", attrNames[5])
 		unitTest:assertEquals("gestao", attrNames[10])
@@ -1190,7 +1190,7 @@ return {
 		unitTest:assertEquals(getn(newPtDset), 8)
 		unitTest:assertEquals(getn(newPtDset), getn(ptDset))
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newPtName])
+		attrNames = tl:getPropertyNames(proj, newPtName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("tipo", attrNames[5])
 		unitTest:assertEquals("gestao", attrNames[10])
@@ -1226,7 +1226,7 @@ return {
 		lnFile = File(toData.file)
 		tl:addShpLayer(proj, lnName, lnFile)
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[lnName])
+		attrNames = tl:getPropertyNames(proj, lnName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("OBSERVACAO", attrNames[3])
 		unitTest:assertEquals("PRODUTOS", attrNames[6])
@@ -1241,7 +1241,7 @@ return {
 		unitTest:assertEquals(getn(newLnDset), 182)
 		unitTest:assertEquals(getn(newLnDset), getn(lnDset))
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		attrNames = tl:getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("OBSERVACAO", attrNames[3])
 		unitTest:assertEquals("PRODUTOS", attrNames[6])
@@ -1261,7 +1261,7 @@ return {
 		end
 
 		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		attrNames = tl:getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("OBSERVACAO", attrNames[3])
 		unitTest:assertEquals("PRODUTOS", attrNames[6])
@@ -1284,7 +1284,7 @@ return {
 		end
 
 		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3", "attr4"})
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		attrNames = tl:getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("OBSERVACAO", attrNames[3])
 		unitTest:assertEquals("PRODUTOS", attrNames[6])
@@ -1305,7 +1305,7 @@ return {
 		end
 
 		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1"})
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		attrNames = tl:getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("OBSERVACAO", attrNames[3])
 		unitTest:assertEquals("PRODUTOS", attrNames[6])
@@ -1327,7 +1327,7 @@ return {
 		end
 
 		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		attrNames = tl:getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("OBSERVACAO", attrNames[3])
 		unitTest:assertEquals("PRODUTOS", attrNames[6])
@@ -1453,7 +1453,7 @@ return {
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		tl:addShpLayer(proj, layerName1, layerFile1)
 
-		local propNames = tl:getPropertyNames(proj, proj.layers[layerName1])
+		local propNames = tl:getPropertyNames(proj, layerName1)
 
 		for i = 0, #propNames do
 			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "ID") or
@@ -1586,7 +1586,7 @@ return {
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		local layerName2 = "GJ"
 		tl:addGeoJSONLayer(proj, layerName2, toData.file)
-		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		local info2 = tl:getLayerInfo(proj, layerName2)
 		unitTest:assertEquals(info2.srid, toData.srid)
 
 		File(toData.file):delete()
@@ -1604,7 +1604,7 @@ return {
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		local layerName3 = "SHP"
 		tl:addShpLayer(proj, layerName3, File(toData.file))
-		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
+		local info3 = tl:getLayerInfo(proj, layerName3)
 		unitTest:assertEquals(info3.srid, toData.srid)
 
 		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE
@@ -1678,7 +1678,7 @@ return {
 		local dpSet = tl:getDataSet(proj, dpLayerName)
 		unitTest:assertEquals(getn(dpSet), 182)
 
-		local attrNames = tl:getPropertyNames(proj, proj.layers[dpLayerName])
+		local attrNames = tl:getPropertyNames(proj, dpLayerName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("OBSERVACAO", attrNames[3])
 		unitTest:assertEquals("PRODUTOS", attrNames[6])

@@ -66,7 +66,7 @@ return {
 		local layerName2 = "SampaPg"
 		tl:addPgLayer(proj, layerName2, pgData)
 
-		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName2])
+		local layerInfo = tl:getLayerInfo(proj, layerName2)
 
 		unitTest:assertEquals(layerInfo.name, layerName2)
 		unitTest:assertEquals(layerInfo.type, "POSTGIS")
@@ -83,7 +83,7 @@ return {
 		local layerName3 = "SampaNewSrid"
 		tl:addPgLayer(proj, layerName3, pgData, 29901)
 
-		local layerInfo3 = tl:getLayerInfo(proj, proj.layers[layerName3])
+		local layerInfo3 = tl:getLayerInfo(proj, layerName3)
 
 		unitTest:assertEquals(layerInfo3.srid, 29901.0)
 		unitTest:assert(layerInfo3.srid ~= layerInfo.srid)
@@ -143,7 +143,7 @@ return {
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 
-		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName1])
+		local layerInfo = tl:getLayerInfo(proj, clName1)
 		unitTest:assertEquals(layerInfo.name, clName1)
 		unitTest:assertEquals(layerInfo.type, "POSTGIS")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
@@ -261,7 +261,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local presLayerInfo = tl:getLayerInfo(proj, proj.layers[presLayerName])
+		local presLayerInfo = tl:getLayerInfo(proj, presLayerName)
 		unitTest:assertEquals(presLayerInfo.name, presLayerName)
 		unitTest:assertEquals(presLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(presLayerInfo.rep, "polygon")
@@ -296,7 +296,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local areaLayerInfo = tl:getLayerInfo(proj, proj.layers[areaLayerName])
+		local areaLayerInfo = tl:getLayerInfo(proj, areaLayerName)
 		unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
 		unitTest:assertEquals(areaLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(areaLayerInfo.rep, "polygon")
@@ -331,7 +331,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local countLayerInfo = tl:getLayerInfo(proj, proj.layers[countLayerName])
+		local countLayerInfo = tl:getLayerInfo(proj, countLayerName)
 		unitTest:assertEquals(countLayerInfo.name, countLayerName)
 		unitTest:assertEquals(countLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(countLayerInfo.rep, "polygon")
@@ -367,7 +367,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local distLayerInfo = tl:getLayerInfo(proj, proj.layers[distLayerName])
+		local distLayerInfo = tl:getLayerInfo(proj, distLayerName)
 		unitTest:assertEquals(distLayerInfo.name, distLayerName)
 		unitTest:assertEquals(distLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(distLayerInfo.rep, "polygon")
@@ -407,7 +407,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local minLayerInfo = tl:getLayerInfo(proj, proj.layers[minLayerName])
+		local minLayerInfo = tl:getLayerInfo(proj, minLayerName)
 		unitTest:assertEquals(minLayerInfo.name, minLayerName)
 		unitTest:assertEquals(minLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(minLayerInfo.rep, "polygon")
@@ -443,7 +443,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local maxLayerInfo = tl:getLayerInfo(proj, proj.layers[maxLayerName])
+		local maxLayerInfo = tl:getLayerInfo(proj, maxLayerName)
 		unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
 		unitTest:assertEquals(maxLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(maxLayerInfo.rep, "polygon")
@@ -480,7 +480,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local percLayerInfo = tl:getLayerInfo(proj, proj.layers[percLayerName])
+		local percLayerInfo = tl:getLayerInfo(proj, percLayerName)
 		unitTest:assertEquals(percLayerInfo.name, percLayerName)
 		unitTest:assertEquals(percLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(percLayerInfo.rep, "polygon")
@@ -517,7 +517,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local stdevLayerInfo = tl:getLayerInfo(proj, proj.layers[stdevLayerName])
+		local stdevLayerInfo = tl:getLayerInfo(proj, stdevLayerName)
 		unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
 		unitTest:assertEquals(stdevLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(stdevLayerInfo.rep, "polygon")
@@ -554,7 +554,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local meanLayerInfo = tl:getLayerInfo(proj, proj.layers[meanLayerName])
+		local meanLayerInfo = tl:getLayerInfo(proj, meanLayerName)
 		unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
 		unitTest:assertEquals(meanLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(meanLayerInfo.rep, "polygon")
@@ -592,7 +592,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local weighLayerInfo = tl:getLayerInfo(proj, proj.layers[weighLayerName])
+		local weighLayerInfo = tl:getLayerInfo(proj, weighLayerName)
 		unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
 		unitTest:assertEquals(weighLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(weighLayerInfo.rep, "polygon")
@@ -630,7 +630,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local interLayerInfo = tl:getLayerInfo(proj, proj.layers[interLayerName])
+		local interLayerInfo = tl:getLayerInfo(proj, interLayerName)
 		unitTest:assertEquals(interLayerInfo.name, interLayerName)
 		unitTest:assertEquals(interLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(interLayerInfo.rep, "polygon")
@@ -668,7 +668,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local occurLayerInfo = tl:getLayerInfo(proj, proj.layers[occurLayerName])
+		local occurLayerInfo = tl:getLayerInfo(proj, occurLayerName)
 		unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
 		unitTest:assertEquals(occurLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(occurLayerInfo.rep, "polygon")
@@ -679,7 +679,6 @@ return {
 		unitTest:assertEquals(occurLayerInfo.database, database)
 		unitTest:assertEquals(occurLayerInfo.table, string.lower(occurLayerName))
 		unitTest:assertNotNil(occurLayerInfo.sid)
-
 
 		-- FILL CELLULAR SPACE WITH SUM OPERATION
 		local sumLayerName = clName.."_"..layerName3.."_Sum"
@@ -708,7 +707,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local sumLayerInfo = tl:getLayerInfo(proj, proj.layers[sumLayerName])
+		local sumLayerInfo = tl:getLayerInfo(proj, sumLayerName)
 		unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
 		unitTest:assertEquals(sumLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(sumLayerInfo.rep, "polygon")
@@ -747,7 +746,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local wsumLayerInfo = tl:getLayerInfo(proj, proj.layers[wsumLayerName])
+		local wsumLayerInfo = tl:getLayerInfo(proj, wsumLayerName)
 		unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
 		unitTest:assertEquals(wsumLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
@@ -791,7 +790,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local percTifLayerInfo = tl:getLayerInfo(proj, proj.layers[percTifLayerName])
+		local percTifLayerInfo = tl:getLayerInfo(proj, percTifLayerName)
 		unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
 		unitTest:assertEquals(percTifLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(percTifLayerInfo.rep, "polygon")
@@ -831,7 +830,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rmeanLayerInfo = tl:getLayerInfo(proj, proj.layers[rmeanLayerName])
+		local rmeanLayerInfo = tl:getLayerInfo(proj, rmeanLayerName)
 		unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
 		unitTest:assertEquals(rmeanLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(rmeanLayerInfo.rep, "polygon")
@@ -871,7 +870,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rminLayerInfo = tl:getLayerInfo(proj, proj.layers[rminLayerName])
+		local rminLayerInfo = tl:getLayerInfo(proj, rminLayerName)
 		unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
 		unitTest:assertEquals(rminLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(rminLayerInfo.rep, "polygon")
@@ -911,7 +910,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rmaxLayerInfo = tl:getLayerInfo(proj, proj.layers[rmaxLayerName])
+		local rmaxLayerInfo = tl:getLayerInfo(proj, rmaxLayerName)
 		unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
 		unitTest:assertEquals(rmaxLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(rmaxLayerInfo.rep, "polygon")
@@ -951,7 +950,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rstdevLayerInfo = tl:getLayerInfo(proj, proj.layers[rstdevLayerName])
+		local rstdevLayerInfo = tl:getLayerInfo(proj, rstdevLayerName)
 		unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
 		unitTest:assertEquals(rstdevLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(rstdevLayerInfo.rep, "polygon")
@@ -992,7 +991,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rsumLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
+		local rsumLayerInfo = tl:getLayerInfo(proj, rsumLayerName)
 		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
 		unitTest:assertEquals(rsumLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
@@ -1028,7 +1027,7 @@ return {
 			unitTest:assertNotNil(v)
 		end
 
-		local rsumOverLayerInfo = tl:getLayerInfo(proj, proj.layers[rsumLayerName])
+		local rsumOverLayerInfo = tl:getLayerInfo(proj, rsumLayerName)
 		unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
 		unitTest:assertEquals(rsumOverLayerInfo.type, "POSTGIS")
 		unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
@@ -1147,7 +1146,7 @@ return {
 			end
 		end
 
-		local attrNames = tl:getPropertyNames(proj, proj.layers[clName1])
+		local attrNames = tl:getPropertyNames(proj, clName1)
 		unitTest:assertEquals("id", attrNames[0])
 		unitTest:assertEquals("col", attrNames[1])
 		unitTest:assertEquals("row", attrNames[2])
@@ -1186,7 +1185,7 @@ return {
 			end
 		end
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLayerName])
+		attrNames = tl:getPropertyNames(proj, newLayerName)
 		unitTest:assertEquals("id", attrNames[0])
 		unitTest:assertEquals("col", attrNames[1])
 		unitTest:assertEquals("row", attrNames[2])
@@ -1212,7 +1211,7 @@ return {
 			end
 		end
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLayerName])
+		attrNames = tl:getPropertyNames(proj, newLayerName)
 		unitTest:assertEquals("id", attrNames[0])
 		unitTest:assertEquals("col", attrNames[1])
 		unitTest:assertEquals("row", attrNames[2])
@@ -1242,7 +1241,7 @@ return {
 		polName = "ES_Limit_Pg"
 		tl:addPgLayer(proj, polName, pgData)
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[polName])
+		attrNames = tl:getPropertyNames(proj, polName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("gm_layer", attrNames[1])
 		unitTest:assertEquals("gm_type", attrNames[2])
@@ -1259,7 +1258,7 @@ return {
 		unitTest:assertEquals(getn(newPolDset), 1)
 		unitTest:assertEquals(getn(newPolDset), getn(polDset))
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newPolName])
+		attrNames = tl:getPropertyNames(proj, newPolName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("gm_layer", attrNames[1])
 		unitTest:assertEquals("gm_type", attrNames[2])
@@ -1290,7 +1289,7 @@ return {
 		ptName = "BR_Ports_Pg"
 		tl:addPgLayer(proj, ptName, pgData)
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[ptName])
+		attrNames = tl:getPropertyNames(proj, ptName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("tipo", attrNames[5])
 		unitTest:assertEquals("gestao", attrNames[10])
@@ -1307,7 +1306,7 @@ return {
 		unitTest:assertEquals(getn(newPtDset), 8)
 		unitTest:assertEquals(getn(newPtDset), getn(ptDset))
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newPtName])
+		attrNames = tl:getPropertyNames(proj, newPtName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("tipo", attrNames[5])
 		unitTest:assertEquals("gestao", attrNames[10])
@@ -1338,7 +1337,7 @@ return {
 		lnName = "ES_Rails_Pg"
 		tl:addPgLayer(proj, lnName, pgData)
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[lnName])
+		attrNames = tl:getPropertyNames(proj, lnName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("observacao", attrNames[3])
 		unitTest:assertEquals("produtos", attrNames[6])
@@ -1353,7 +1352,7 @@ return {
 		unitTest:assertEquals(getn(newLnDset), 182)
 		unitTest:assertEquals(getn(newLnDset), getn(lnDset))
 
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		attrNames = tl:getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("observacao", attrNames[3])
 		unitTest:assertEquals("produtos", attrNames[6])
@@ -1373,7 +1372,7 @@ return {
 		end
 
 		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		attrNames = tl:getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("observacao", attrNames[3])
 		unitTest:assertEquals("produtos", attrNames[6])
@@ -1396,7 +1395,7 @@ return {
 		end
 
 		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3", "attr4"})
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		attrNames = tl:getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("observacao", attrNames[3])
 		unitTest:assertEquals("produtos", attrNames[6])
@@ -1417,7 +1416,7 @@ return {
 		end
 
 		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1"})
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		attrNames = tl:getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("observacao", attrNames[3])
 		unitTest:assertEquals("produtos", attrNames[6])
@@ -1439,7 +1438,7 @@ return {
 		end
 
 		tl:saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
-		attrNames = tl:getPropertyNames(proj, proj.layers[newLnName])
+		attrNames = tl:getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("observacao", attrNames[3])
 		unitTest:assertEquals("produtos", attrNames[6])
@@ -1606,7 +1605,7 @@ return {
 		local mask = true
 		tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 
-		local propNames = tl:getPropertyNames(proj, proj.layers[clName1])
+		local propNames = tl:getPropertyNames(proj, clName1)
 
 		for i = 0, #propNames do
 			unitTest:assert((propNames[i] == "id") or (propNames[i] == "geom") or
@@ -1779,15 +1778,15 @@ return {
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		local layerName3 = "PG2SHP"
 		tl:addShpLayer(proj, layerName3, File(toData.file))
-		local info3 = tl:getLayerInfo(proj, proj.layers[layerName3])
+		local info3 = tl:getLayerInfo(proj, layerName3)
 		unitTest:assertEquals(info3.srid, toData.srid)
 
 		-- OVERWRITE POSTGIS AND CHANGE SRID
-		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		local info2 = tl:getLayerInfo(proj, layerName2)
 		unitTest:assertEquals(info2.srid, 4019.0)
 		pgData.srid = 4326
 		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
-		info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		info2 = tl:getLayerInfo(proj, layerName2)
 		unitTest:assertEquals(info2.srid, 4326.0)
 
 		-- GEOJSON
@@ -1802,7 +1801,7 @@ return {
 		tl:saveLayerAs(proj, layerName2, toData, overwrite)
 		local layerName4 = "PG2GJ"
 		tl:addGeoJSONLayer(proj, layerName4, File(toData.file))
-		local info4 = tl:getLayerInfo(proj, proj.layers[layerName4])
+		local info4 = tl:getLayerInfo(proj, layerName4)
 		unitTest:assertEquals(info4.srid, toData.srid)
 
 		-- OVERWRITE POSTGIS AND CHANGE SRID
@@ -1812,12 +1811,12 @@ return {
 
 		local layerName5 = "PgLayerGJ"
 		tl:addPgLayer(proj, layerName5, pgData)
-		local info5 = tl:getLayerInfo(proj, proj.layers[layerName5])
+		local info5 = tl:getLayerInfo(proj, layerName5)
 		unitTest:assertEquals(info5.srid, 4326.0)
 
 		pgData.srid = 2309
 		tl:saveLayerAs(proj, layerName4, pgData, overwrite)
-		info5 = tl:getLayerInfo(proj, proj.layers[layerName5])
+		info5 = tl:getLayerInfo(proj, layerName5)
 		unitTest:assertEquals(info5.srid, 2309.0)
 
 		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE FROM SHP
@@ -1966,7 +1965,7 @@ return {
 		local dpSet = tl:getDataSet(proj, dpLayerName)
 		unitTest:assertEquals(getn(dpSet), 182)
 
-		local attrNames = tl:getPropertyNames(proj, proj.layers[dpLayerName])
+		local attrNames = tl:getPropertyNames(proj, dpLayerName)
 		unitTest:assertEquals("fid", attrNames[0])
 		unitTest:assertEquals("observacao", attrNames[3])
 		unitTest:assertEquals("produtos", attrNames[6])

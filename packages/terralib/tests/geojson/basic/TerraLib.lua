@@ -66,7 +66,7 @@ return {
 
 		tl:addGeoJSONLayer(proj, layerName, layerFile)
 
-		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
+		local layerInfo = tl:getLayerInfo(proj, layerName)
 
 		unitTest:assertEquals(layerInfo.name, layerName)
 		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
@@ -104,7 +104,7 @@ return {
 		local mask = true
 		tl:addGeoJSONCellSpaceLayer(proj, layerName, clName, resolution, geojson1, mask)
 
-		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
+		local layerInfo = tl:getLayerInfo(proj, clName)
 
 		unitTest:assertEquals(layerInfo.name, clName)
 		unitTest:assertEquals(layerInfo.file, tostring(geojson1))
@@ -184,7 +184,7 @@ return {
 		tl:saveLayerAs(proj, layerName1, toData, overwrite)
 		local layerName2 = "SHP"
 		tl:addShpLayer(proj, layerName2, File(toData.file))
-		local info2 = tl:getLayerInfo(proj, proj.layers[layerName2])
+		local info2 = tl:getLayerInfo(proj, layerName2)
 		unitTest:assertEquals(info2.srid, toData.srid)
 
 		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE
@@ -268,7 +268,7 @@ return {
 		local dpSet = tl:getDataSet(proj, dpLayerName)
 		unitTest:assertEquals(getn(dpSet), 182)
 
-		local attrNames = tl:getPropertyNames(proj, proj.layers[dpLayerName])
+		local attrNames = tl:getPropertyNames(proj, dpLayerName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("OBSERVACAO", attrNames[3])
 		unitTest:assertEquals("PRODUTOS", attrNames[6])

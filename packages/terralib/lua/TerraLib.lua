@@ -1309,7 +1309,7 @@ TerraLib_ = {
 	--- Return the information of a given layer.
 	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
-	-- @arg layer The name of the layer.
+	-- @arg layerName The name of a layer.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib{}
 	--
@@ -1338,8 +1338,9 @@ TerraLib_ = {
 	--
 	-- tl:addPgLayer(proj, "SampaPg", pgData)
 	--
-	-- layerInfo = tl:getLayerInfo(proj, proj.layers[layerName2])
-	getLayerInfo = function(_, project, layer)
+	-- layerInfo = tl:getLayerInfo(proj, "SampaPg")
+	getLayerInfo = function(_, project, layerName)
+		local layer = project.layers[layerName]
 		local info = {}
 		info.name = layer:getTitle()
 		info.sid = layer:getDataSourceId()
@@ -2107,7 +2108,7 @@ TerraLib_ = {
 	end,
 	--- Returns a coordinate system name given an identification.
 	-- @arg _ A TerraLib object.
-	-- @arg layer The layer.
+	-- @arg layer A layer.
 	-- @usage -- DONTRUN
 	-- local prj = tl:getProjection(proj.layers[layerName])
 	-- print(prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4)
@@ -2124,16 +2125,17 @@ TerraLib_ = {
 	--- Returns the property names of the dataset.
 	-- @arg _ A TerraLib object.
 	-- @arg project A Project.
-	-- @arg layer A Layer.
+	-- @arg layerName A Layer name.
 	-- @usage -- DONTRUN
 	-- local propNames = tl:getPropertyNames(proj, proj.layers[layerName])
 	-- for i = 0, #propNames do
 	--		unitTest:assert((propNames[i] == "FID") or (propNames[i] == "ID") or
 	--						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU"))
 	-- end
-	getPropertyNames = function(_, project, layer)
+	getPropertyNames = function(_, project, layerName)
 		loadProject(project, project.file)
-
+		
+		local layer = project.layers[layerName]
 		local dSetLayer = toDataSetLayer(layer)
 		local dSetName = dSetLayer:getDataSetName()
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(dSetLayer:getDataSourceId())

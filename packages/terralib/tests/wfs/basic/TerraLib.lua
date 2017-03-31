@@ -44,7 +44,7 @@ return {
 		if tl:isValidWfsUrl(url) then
 			tl:addWfsLayer(proj, layerName, url, dataset)
 
-			local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
+			local layerInfo = tl:getLayerInfo(proj, layerName)
 			unitTest:assertEquals(layerInfo.name, layerName) -- SKIP
 			unitTest:assertEquals(layerInfo.url, url) -- SKIP
 			unitTest:assertEquals(layerInfo.type, "WFS") -- SKIP

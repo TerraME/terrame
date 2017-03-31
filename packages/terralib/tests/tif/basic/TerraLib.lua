@@ -38,7 +38,7 @@ return {
 		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		tl:addGdalLayer(proj, layerName, layerFile)
 
-		local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
+		local layerInfo = tl:getLayerInfo(proj, layerName)
 
 		unitTest:assertEquals(layerInfo.name, layerName)
 		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
@@ -72,7 +72,7 @@ return {
 		local mask = false
 		tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 
-		local layerInfo = tl:getLayerInfo(proj, proj.layers[clName])
+		local layerInfo = tl:getLayerInfo(proj, clName)
 
 		unitTest:assertEquals(layerInfo.name, clName)
 		unitTest:assertEquals(layerInfo.file, tostring(shp1))
@@ -214,7 +214,7 @@ return {
 		local layerFile = filePath("amazonia-prodes.tif", "terralib")
 		tl:addGdalLayer(proj, layerName, layerFile)
 
-		local propNames = tl:getPropertyNames(proj, proj.layers[layerName])
+		local propNames = tl:getPropertyNames(proj, layerName)
 
 		unitTest:assertEquals(getn(propNames), 1)
 		unitTest:assertEquals(propNames[0], "raster")
