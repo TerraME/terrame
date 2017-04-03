@@ -692,9 +692,12 @@ Layer_ = {
 		end
 
 		local luaPropInfos = {}
-
-		for i = 0, getn(propInfos) do
-			luaPropInfos[i + 1] = propInfos[i]
+		local count = 1
+		for i = 0, getn(propInfos) - 1 do
+			if not (propInfos[i].type == "geometry") then
+				luaPropInfos[count] = propInfos[i]
+				count = count + 1
+			end
 		end
 
 		return luaPropInfos

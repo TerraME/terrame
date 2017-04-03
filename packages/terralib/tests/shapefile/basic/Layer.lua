@@ -804,15 +804,13 @@ return {
 
 		local propInfos = layer:attributes()
 
-		unitTest:assertEquals(#propInfos, 4)
+		unitTest:assertEquals(#propInfos, 3)
 		unitTest:assertEquals(propInfos[1].name, "FID")
 		unitTest:assertEquals(propInfos[1].type, "integer 32")
 		unitTest:assertEquals(propInfos[2].name, "population")
 		unitTest:assertEquals(propInfos[2].type, "double")
 		unitTest:assertEquals(propInfos[3].name, "dens_pop")
 		unitTest:assertEquals(propInfos[3].type, "double")
-		unitTest:assertEquals(propInfos[4].name, "OGR_GEOMETRY")
-		unitTest:assertEquals(propInfos[4].type, "geometry")
 
 		proj.file:delete()
 	end,
@@ -888,8 +886,7 @@ return {
 
 		unitTest:assertEquals(attrs1[1].name, "FID")
 		unitTest:assertEquals(attrs1[2].name, "population")
-		unitTest:assertEquals(attrs1[3].name, "OGR_GEOMETRY")
-		unitTest:assertNil(attrs1[4])
+		unitTest:assertNil(attrs1[3])
 
 		-- SELECT ONE ATTRIBUTE TO SHAPE
 		data2.select = "dens_pop"
@@ -898,8 +895,7 @@ return {
 
 		unitTest:assertEquals(attrs2[1].name, "FID")
 		unitTest:assertEquals(attrs2[2].name, "dens_pop")
-		unitTest:assertEquals(attrs2[3].name, "OGR_GEOMETRY")
-		unitTest:assertNil(attrs2[4])
+		unitTest:assertNil(attrs2[3])
 
 		File(geojson):delete()
 		File(shp):delete()

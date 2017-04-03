@@ -425,15 +425,13 @@ return {
 
 		local propInfos = layer:attributes()
 
-		unitTest:assertEquals(#propInfos, 4)
+		unitTest:assertEquals(#propInfos, 3)
 		unitTest:assertEquals(propInfos[1].name, "id")
 		unitTest:assertEquals(propInfos[1].type, "string")
 		unitTest:assertEquals(propInfos[2].name, "col")
 		unitTest:assertEquals(propInfos[2].type, "integer 32")
 		unitTest:assertEquals(propInfos[3].name, "row")
 		unitTest:assertEquals(propInfos[3].type, "integer 32")
-		unitTest:assertEquals(propInfos[4].name, "geom")
-		unitTest:assertEquals(propInfos[4].type, "geometry")
 
 		proj.file:delete()
 		TerraLib:dropPgTable(pgData)
@@ -541,8 +539,7 @@ return {
 
 		unitTest:assertEquals(attrs1[1].name, "FID")
 		unitTest:assertEquals(attrs1[2].name, "populaca")
-		unitTest:assertEquals(attrs1[3].name, "OGR_GEOMETRY")
-		unitTest:assertNil(attrs1[4])
+		unitTest:assertNil(attrs1[3])
 
 		-- SELECT TWO ATTRIBUTES TO SHAPE
 		data2.select = {"populaca", "nomemeso"}
@@ -552,8 +549,7 @@ return {
 		unitTest:assertEquals(attrs2[1].name, "FID")
 		unitTest:assertEquals(attrs2[2].name, "populaca")
 		unitTest:assertEquals(attrs2[3].name, "nomemeso")
-		unitTest:assertEquals(attrs2[4].name, "OGR_GEOMETRY")
-		unitTest:assertNil(attrs2[5])
+		unitTest:assertNil(attrs2[4])
 
 		File(geojson):delete()
 		File(shp):delete()
