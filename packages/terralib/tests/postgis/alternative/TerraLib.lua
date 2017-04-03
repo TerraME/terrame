@@ -24,7 +24,6 @@
 
 return {
 	addPgLayer = function(unitTest)
-		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -32,7 +31,7 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib:createProject(proj, {})
 
 		local host = "localhost"
 		local port = "5432"
@@ -57,7 +56,7 @@ return {
 
 	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		local passWrong = function()
-			tl:addPgLayer(proj, layerName, pgData)
+			TerraLib:addPgLayer(proj, layerName, pgData)
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
@@ -68,7 +67,6 @@ return {
 		proj.file:delete()
 	end,
 	saveLayerAs = function(unitTest)
-		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -76,11 +74,11 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib:createProject(proj, {})
 
 		local layerName1 = "ES-Limit"
 		local layerFile1 = filePath("test/limite_es_poly_wgs84.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)
+		TerraLib:addShpLayer(proj, layerName1, layerFile1)
 
 		-- POSTGIS
 		local host = "localhost"
@@ -106,9 +104,9 @@ return {
 
 		local overwrite = true
 
-		tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+		TerraLib:saveLayerAs(proj, layerName1, pgData, overwrite)
 		local layerName2 = "PgLayer"
-		tl:addPgLayer(proj, layerName2, pgData)
+		TerraLib:addPgLayer(proj, layerName2, pgData)
 
 		-- TIF
 		local toData = {}
@@ -116,7 +114,7 @@ return {
 		toData.type = "tif"
 
 		local postgis2tifError = function()
-			tl:saveLayerAs(proj, layerName2, toData, overwrite)
+			TerraLib:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
 		unitTest:assertError(postgis2tifError, "It was not possible to convert the data in layer 'PgLayer' to 'postgis2tif.tif'.")
 
@@ -128,10 +126,10 @@ return {
 		toData.type = "shp"
 		File(toData.file):deleteIfExists()
 
-		tl:saveLayerAs(proj, layerName2, toData, overwrite)
+		TerraLib:saveLayerAs(proj, layerName2, toData, overwrite)
 
 		local overwriteShpError = function()
-			tl:saveLayerAs(proj, layerName2, toData, overwrite)
+			TerraLib:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
 		unitTest:assertError(overwriteShpError, "File 'postgis2shp.shp' already exists.")
 
@@ -142,21 +140,21 @@ return {
 		toData.type = "geojson"
 		File(toData.file):deleteIfExists()
 
-		tl:saveLayerAs(proj, layerName2, toData, overwrite)
+		TerraLib:saveLayerAs(proj, layerName2, toData, overwrite)
 
 		local overwriteGeojsonError = function()
-			tl:saveLayerAs(proj, layerName2, toData, overwrite)
+			TerraLib:saveLayerAs(proj, layerName2, toData, overwrite)
 		end
 		unitTest:assertError(overwriteGeojsonError, "File 'postgis2geojson.geojson' already exists.")
 
 		local overwritePgError = function()
-			tl:saveLayerAs(proj, layerName1, pgData, overwrite)
+			TerraLib:saveLayerAs(proj, layerName1, pgData, overwrite)
 		end
 		unitTest:assertError(overwritePgError, "Table 'limite_es_poly_wgs84' already exists in postgis database 'postgis_22_sample'.")
 
 		File(toData.file):delete()
 
-		tl:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 		proj.file:delete()
 	end
 }

@@ -66,8 +66,7 @@ Cell_ = {
 		mandatoryArgument(1, "Cell", cell)
 
 		if self.geom then
-			local tl = terralib.TerraLib{}
-			return tl:getDistance(self.geom, cell.geom)
+			return terralib.TerraLib:getDistance(self.geom, cell.geom)
 		end
 
 		return math.sqrt((self.x - cell.x) ^ 2 + (self.y - cell.y) ^ 2)
@@ -303,8 +302,7 @@ Cell_ = {
 		end
 
 		if self.geom then
-			local tl = terralib.TerraLib{}
-			cellArea = tl:getArea(self.geom)
+			cellArea = terralib.TerraLib:getArea(self.geom)
 			return cellArea
 		else
 			customError("It was not possible to calculate the area. Geometry was not found.")

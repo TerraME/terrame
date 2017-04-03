@@ -72,14 +72,13 @@ return {
 		unitTest:assert(pt:coveredBy(pt))
 	end,
 	point = function(unitTest)
-		local tl = TerraLib{}
 		local cs = CellularSpace{
 			file = filePath("itaituba-localities.shp", "terralib"),
 			geometry = true
 		}
 
 		forEachCell(cs, function(cell)
-			local geometry = tl:castGeomToSubtype(cell.geom:getGeometryN(0))
+			local geometry = TerraLib:castGeomToSubtype(cell.geom:getGeometryN(0))
 
 			unitTest:assert(geometry:getX() > 0)
 			unitTest:assert(geometry:getY() > 0)
@@ -92,14 +91,13 @@ return {
 		end)
 	end,
 	line = function(unitTest)
-		local tl = TerraLib{}
 		local cs = CellularSpace{
 			file = filePath("emas-river.shp", "terralib"),
 			geometry = true
 		}
 
 		forEachCell(cs, function(cell)
-			local geometry = tl:castGeomToSubtype(cell.geom:getGeometryN(0))
+			local geometry = TerraLib:castGeomToSubtype(cell.geom:getGeometryN(0))
 			local length = geometry:getLength()
 
 			unitTest:assert(length ~= nil)
@@ -124,16 +122,15 @@ return {
 		end)
 	end,
 	polygon = function(unitTest)
-		local tl = TerraLib{}
 		local cs = CellularSpace{
 			file = filePath("amazonia-limit.shp", "terralib"),
 			geometry = true
 		}
 
 		forEachCell(cs, function(cell)
-			local geometry = tl:castGeomToSubtype(cell.geom:getGeometryN(0))
-			local centroid = tl:castGeomToSubtype(geometry:getCentroid())
-			local ring = tl:castGeomToSubtype(geometry:getExteriorRing())
+			local geometry = TerraLib:castGeomToSubtype(cell.geom:getGeometryN(0))
+			local centroid = TerraLib:castGeomToSubtype(geometry:getCentroid())
+			local ring = TerraLib:castGeomToSubtype(geometry:getExteriorRing())
 			local nPoint = ring:getNPoints()
 
 			for i = 0, nPoint do

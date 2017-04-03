@@ -1247,8 +1247,7 @@ TerraLib_ = {
 
 	--- Return the current TerraLib version.
 	-- @usage import("terralib")
-	-- tl = TerraLib{}
-	-- print(tl:getVersion())
+	-- print(TerraLib:getVersion())
 	getVersion = function()
 		return binding.te.common.Version.asString()
 	end,
@@ -1258,7 +1257,6 @@ TerraLib_ = {
 	-- @arg layers A table where the layers will be stored.
 	-- @usage -- DONTRUN
 	-- import("terralib")
-	-- tl = TerraLib{}
 	--
 	-- proj = {
 	--     file = "myproject.tview",
@@ -1266,7 +1264,7 @@ TerraLib_ = {
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib:createProject(proj, {})
 	createProject = function(_, project, layers)
 		if type(project.file) == "string" then
 			project.file = File(project.file)
@@ -1288,9 +1286,8 @@ TerraLib_ = {
 	-- @arg filePath The path for the project.
 	-- @usage -- DONTRUN
 	-- import("terralib")
-	-- tl = TerraLib{}
 	-- proj = {}
-	-- tl:openProject(proj2, "myproject.tview")
+	-- TerraLib:openProject(proj2, "myproject.tview")
 	openProject = function(_, project, filePath)
 		if type(filePath) == "string" then
 			filePath = File(filePath)
@@ -1311,19 +1308,17 @@ TerraLib_ = {
 	-- @arg project The name of the project.
 	-- @arg layerName The name of a layer.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
-	--
 	-- proj = {
 	--     file = "myproject.tview",
 	--     title = "TerraLib Tests",
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib:createProject(proj, {})
 	--
 	-- local layerName1 = "SampaShp"
 	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib:addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- pgData = {
 	--     type = "POSTGIS",
@@ -1336,9 +1331,9 @@ TerraLib_ = {
 	--     encoding = "CP1252"
 	-- }
 	--
-	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- TerraLib:addPgLayer(proj, "SampaPg", pgData)
 	--
-	-- layerInfo = tl:getLayerInfo(proj, "SampaPg")
+	-- layerInfo = TerraLib:getLayerInfo(proj, "SampaPg")
 	getLayerInfo = function(_, project, layerName)
 		local layer = project.layers[layerName]
 		local info = {}
@@ -1408,8 +1403,8 @@ TerraLib_ = {
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
-	-- proj = tl:createProject("project.tview", {})
-	-- tl:addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
+	-- proj = TerraLib:createProject("project.tview", {})
+	-- TerraLib:addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
 	addShpLayer = function(_, project, name, file, addSpatialIdx, srid)
 		addFileLayer(project, name, file, "OGR", addSpatialIdx, srid)
 	end,
@@ -1420,18 +1415,17 @@ TerraLib_ = {
 	-- @arg file The file to the layer.
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- proj = {
 	--     file = "myproject.tview",
 	--     title = "TerraLib Tests",
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib:createProject(proj, {})
 	--
 	-- layerName = "TifLayer"
 	-- layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-	-- tl:addGdalLayer(proj, layerName, layerFile)
+	-- TerraLib:addGdalLayer(proj, layerName, layerFile)
 	addGdalLayer = function(_, project, name, file, srid)
 		addFileLayer(project, name, file, "GDAL", nil, srid)
 	end,
@@ -1443,8 +1437,8 @@ TerraLib_ = {
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
-	-- tl:createProject("project.tview", {})
-	-- tl:addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
+	-- TerraLib:createProject("project.tview", {})
+	-- TerraLib:addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
 	addGeoJSONLayer = function(_, project, name, file, srid)
 		addFileLayer(project, name, file, "GeoJSON", nil, srid)
 	end,
@@ -1455,7 +1449,7 @@ TerraLib_ = {
 	-- local layerName = "WFS-Layer"
 	-- local url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
 	-- local dataset = "reddpac:BAU"
-	-- tl:isValidWfsUrl(url)
+	-- TerraLib:isValidWfsUrl(url)
 	isValidWfsUrl = function(_, url)
 		return isValidDataSourceUri(toWfsUrl(url), "WFS")
 	end,
@@ -1468,7 +1462,7 @@ TerraLib_ = {
 	-- local layerName = "WFS-Layer"
 	-- local url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
 	-- local dataset = "reddpac:BAU"
-	-- tl:addWfsLayer(project, name, url, dataset)
+	-- TerraLib:addWfsLayer(project, name, url, dataset)
 	addWfsLayer = function(self, project, name, url, dataset)
 		local wfsUrl = toWfsUrl(url)
 		if self:isValidWfsUrl(wfsUrl) then
@@ -1491,20 +1485,19 @@ TerraLib_ = {
 	-- @arg inputLayerTitle The name of the layer.
 	-- @arg mask A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- proj = {
 	--     file = "mygeojsonproject.tview",
 	--     title = "TerraLib Tests",
 	--     author = "Carneiro Heitor"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib:createProject(proj, {})
 	--
 	-- layerName1 = "Setores_Layer"
 	-- layerFile1 = filePath("Setores_Censitarios_2000_pol.geojson", "terralib")
-	-- tl:addGeoJSONLayer(proj, layerName1, layerFile1)
+	-- TerraLib:addGeoJSONLayer(proj, layerName1, layerFile1)
 	--
-	-- tl:addGeoJSONCellSpaceLayer(proj, layerName1, "Setores_Cells", 10000, currentDir())
+	-- TerraLib:addGeoJSONCellSpaceLayer(proj, layerName1, "Setores_Cells", 10000, currentDir())
 	addGeoJSONCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, file, mask)
 		loadProject(project, project.file)
 
@@ -1528,7 +1521,6 @@ TerraLib_ = {
 	-- @arg data.encoding The encoding of the table.
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	--
 	-- proj = {
 	--     file = "myproject.tview",
@@ -1536,11 +1528,11 @@ TerraLib_ = {
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib:createProject(proj, {})
 	--
 	-- local layerName1 = "SampaShp"
 	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib:addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- pgData = {
 	--     type = "POSTGIS",
@@ -1553,7 +1545,7 @@ TerraLib_ = {
 	--     encoding = "CP1252"
 	-- }
 	--
-	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- TerraLib:addPgLayer(proj, "SampaPg", pgData)
 	addPgLayer = function(_, project, name, data, srid)
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 
@@ -1581,20 +1573,19 @@ TerraLib_ = {
 	-- @arg mask A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
 	-- @arg addSpatialIdx A boolean value indicating whether a spatial index file should be created.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- proj = {
 	--     file = "myproject.tview",
 	--     title = "TerraLib Tests",
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib:createProject(proj, {})
 	--
 	-- layerName1 = "SampaShp"
 	-- layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib:addShpLayer(proj, layerName1, layerFile1)
 	--
-	--	tl:addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
+	--	TerraLib:addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
 
 	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, file, mask, addSpatialIdx)
 		loadProject(project, project.file)
@@ -1623,11 +1614,11 @@ TerraLib_ = {
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib:createProject(proj, {})
 	--
 	-- local layerName1 = "SampaShp"
 	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib:addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- local pgData = {
 	--     type = "POSTGIS",
@@ -1642,7 +1633,7 @@ TerraLib_ = {
 	--
 	-- local clName1 = "SampaPgCells"
 	-- local resolution = 0.7
-	-- tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData)
+	-- TerraLib:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData)
 	addPgCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, data, mask)
 		loadProject(project, project.file)
 
@@ -1667,7 +1658,6 @@ TerraLib_ = {
 	-- @arg data.database The database name.
 	-- @arg data.encoding The encoding of the table.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	--
 	-- proj = {
 	--     file = "myproject.tview",
@@ -1675,11 +1665,11 @@ TerraLib_ = {
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib:createProject(proj, {})
 	--
 	-- local layerName1 = "SampaShp"
 	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib:addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- pgData = {
 	--     type = "POSTGIS",
@@ -1692,9 +1682,9 @@ TerraLib_ = {
 	--     encoding = "CP1252"
 	-- }
 	--
-	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- TerraLib:addPgLayer(proj, "SampaPg", pgData)
 	--
-	-- tl:dropPgTable(pgData)
+	-- TerraLib:dropPgTable(pgData)
 	dropPgTable = function(_, data)
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
@@ -1707,7 +1697,6 @@ TerraLib_ = {
 	-- @arg data.password The password.
 	-- @arg data.database The database name.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	--
 	-- proj = {
 	--     file = "myproject.tview",
@@ -1715,11 +1704,11 @@ TerraLib_ = {
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib:createProject(proj, {})
 	--
 	-- local layerName1 = "SampaShp"
 	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib:addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- pgData = {
 	--     type = "POSTGIS",
@@ -1732,9 +1721,9 @@ TerraLib_ = {
 	--     encoding = "CP1252"
 	-- }
 	--
-	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- TerraLib:addPgLayer(proj, "SampaPg", pgData)
 	--
-	-- tl:dropPgDatabase(pgData)
+	-- TerraLib:dropPgDatabase(pgData)
 	dropPgDatabase = function(_, data)
 		local connInfo = "pgsql://"..data.user..":"..data.password.."@"..data.host..":"..data.port.."/?"
 					.."&PG_CONNECT_TIMEOUT=10"
@@ -1760,7 +1749,6 @@ TerraLib_ = {
 	-- @arg repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
 	-- @arg nodata A number used in raster data that represents no information in a pixel value.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- proj = {
 	--     file = "myproject.tview",
 	--     title = "TerraLib Tests",
@@ -1768,22 +1756,22 @@ TerraLib_ = {
 	-- }
 	--
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib:createProject(proj, {})
 	--
 	-- layerName1 = "Para"
 	-- layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib:addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- resolution = 60e3
-	-- tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, filePath1)
+	-- TerraLib:addShpCellSpaceLayer(proj, layerName1, clName, resolution, filePath1)
 	--
-	-- clSet = tl:getDataSet(proj, clName)
+	-- clSet = TerraLib:getDataSet(proj, clName)
 	--
 	-- layerName2 = "Protection_Unit"
 	-- layerFile2 = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName2, layerFile2)
+	-- TerraLib:addShpLayer(proj, layerName2, layerFile2)
 	--
-	-- tl:attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
+	-- TerraLib:attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
 	attributeFill = function(self, project, from, to, out, property, operation, select, area, default, repr, nodata)
 		do
 			loadProject(project, project.file)
@@ -2017,9 +2005,8 @@ TerraLib_ = {
 	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the file to be loaded.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- local gdalPath = filePath("PRODES_5KM.tif", "terralib")
-	-- dSet = tl:getGdalByFilePath(gdalPath)
+	-- dSet = TerraLib:getGdalByFilePath(gdalPath)
 	getGdalByFilePath = function(_, filePath)
 		local set
 
@@ -2042,9 +2029,8 @@ TerraLib_ = {
 	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the file to be loaded.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- local shpPath = filePath("sampa.shp", "terralib")
-	-- dSet = tl:getOGRByFilePath(shpPath)
+	-- dSet = TerraLib:getOGRByFilePath(shpPath)
 	getOGRByFilePath = function(_, filePath)
 		local set
 
@@ -2075,8 +2061,8 @@ TerraLib_ = {
 	-- @arg project The project.
 	-- @arg layerName The input layer name.
 	-- @usage -- DONTRUN
-	-- tl:addGdalLayer(proj, layerName, layerFile)
-	-- local numBands = tl:getNumOfBands(proj, layerName)
+	-- TerraLib:addGdalLayer(proj, layerName, layerFile)
+	-- local numBands = TerraLib:getNumOfBands(proj, layerName)
 	getNumOfBands = function(_, project, layerName)
 		local layer = project.layers[layerName]
 		local raster = getRasterFromLayer(project, layer)
@@ -2091,8 +2077,8 @@ TerraLib_ = {
 	-- @arg _ A TerraLib object.
 	-- @arg geom The geometry of the project.
 	-- @usage -- DONTRUN
-	-- local dSet = tl:getDataSet(proj, clName1)
-	-- local area = tl:getArea(dSet[0].OGR_GEOMETRY)
+	-- local dSet = TerraLib:getDataSet(proj, clName1)
+	-- local area = TerraLib:getArea(dSet[0].OGR_GEOMETRY)
 	getArea = function(_, geom)
 		local geomType = geom:getGeometryType()
 
@@ -2110,7 +2096,7 @@ TerraLib_ = {
 	-- @arg _ A TerraLib object.
 	-- @arg layer A layer.
 	-- @usage -- DONTRUN
-	-- local prj = tl:getProjection(proj.layers[layerName])
+	-- local prj = TerraLib:getProjection(proj.layers[layerName])
 	-- print(prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4)
 	getProjection = function(_, layer)
 		local srid = layer:getSRID()
@@ -2127,14 +2113,14 @@ TerraLib_ = {
 	-- @arg project A Project.
 	-- @arg layerName A Layer name.
 	-- @usage -- DONTRUN
-	-- local propNames = tl:getPropertyNames(proj, proj.layers[layerName])
+	-- local propNames = TerraLib:getPropertyNames(proj, proj.layers[layerName])
 	-- for i = 0, #propNames do
 	--		unitTest:assert((propNames[i] == "FID") or (propNames[i] == "ID") or
 	--						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU"))
 	-- end
 	getPropertyNames = function(_, project, layerName)
 		loadProject(project, project.file)
-		
+
 		local layer = project.layers[layerName]
 		local dSetLayer = toDataSetLayer(layer)
 		local dSetName = dSetLayer:getDataSetName()
@@ -2157,7 +2143,7 @@ TerraLib_ = {
 	-- @arg project A Project.
 	-- @arg layerName A Layer name.
 	-- @usage -- DONTRUN
-	-- local propInfos = tl:getPropertyInfos(proj, "layerName")
+	-- local propInfos = TerraLib:getPropertyInfos(proj, "layerName")
 	-- unitTest:assertEquals(propInfos[1].name, "ID")
 	-- unitTest:assertEquals(propInfos[1].type, "integer 64")
 	-- unitTest:assertEquals(propInfos[2].name, "NM_MICRO")
@@ -2195,8 +2181,8 @@ TerraLib_ = {
 	-- @arg fromGeom The geometry.
 	-- @arg toGeom The other geometry.
 	-- @usage -- DONTRUN
-	-- local dSet = tl:getDataSet(proj, clName)
-	-- local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
+	-- local dSet = TerraLib:getDataSet(proj, clName)
+	-- local dist = TerraLib:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
 	getDistance = function(_, fromGeom, toGeom)
 		return fromGeom:distance(toGeom)
 	end,
@@ -2205,9 +2191,9 @@ TerraLib_ = {
 	-- @arg geom A Geometry object.
 	-- @usage -- DONTRUN
 	-- shpPath = filePath("RODOVIAS_AMZ_lin.shp", "terralib")
-	-- dSet = tl:getOGRByFilePath(shpPath)
+	-- dSet = TerraLib:getOGRByFilePath(shpPath)
 	-- geom = dSet[1].OGR_GEOMETRY
-	-- geom = tl:castGeomToSubtype(geom)
+	-- geom = TerraLib:castGeomToSubtype(geom)
 	castGeomToSubtype = function(_, geom)
 		return castGeometry(geom)
 	end,
@@ -2219,8 +2205,8 @@ TerraLib_ = {
 	-- @usage -- DONTRUN
 	-- local layerName = "TifLayer"
 	-- local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-	-- tl:addGdalLayer(proj, layerName, layerFile)
-	-- local dummy = tl:getDummyValue(proj, layerName, 0)
+	-- TerraLib:addGdalLayer(proj, layerName, layerFile)
+	-- local dummy = TerraLib:getDummyValue(proj, layerName, 0)
 	getDummyValue = function(_, project, layerName, band)
 		local layer = project.layers[layerName]
 		local raster = getRasterFromLayer(project, layer)
@@ -2256,7 +2242,7 @@ TerraLib_ = {
 	--     type = "geojson",
 	--     srid = 4326
 	-- }
-	-- tl:saveLayerAs(project, "SomeLayer", toData, true, {"population", "ages"})
+	-- TerraLib:saveLayerAs(project, "SomeLayer", toData, true, {"population", "ages"})
 	saveLayerAs = function(_, project, layerName, toData, overwrite, attrs)
 		loadProject(project, project.file)
 
@@ -2519,8 +2505,8 @@ TerraLib_ = {
 	-- @usage -- DONTRUN
 	-- local layerName = "SampaShp"
 	-- local layerFile = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName, layerFile)
-	-- local size = tl:getLayerSize(proj, layerName)
+	-- TerraLib:addShpLayer(proj, layerName, layerFile)
+	-- local size = TerraLib:getLayerSize(proj, layerName)
 	getLayerSize = function(_, project, layerName)
 		local size
 
@@ -2563,8 +2549,8 @@ TerraLib_ = {
 	-- @usage -- DONTRUN
 	-- lnName = "ES_Rails"
 	-- lnFile = filePath("test/rails.shp", "terralib")
-	-- tl:addShpLayer(proj, lnName, lnFile)
-	-- tl:douglasPeucker(proj, lnName, "spl"..lnName, 500)
+	-- TerraLib:addShpLayer(proj, lnName, lnFile)
+	-- TerraLib:douglasPeucker(proj, lnName, "spl"..lnName, 500)
 	douglasPeucker = function(_, project, fromLayerName, toDSetName, tolerance)
 		local errorMsg
 
@@ -2662,7 +2648,7 @@ TerraLib_ = {
 	-- @arg _ A TerraLib object (not used).
 	-- @arg name A string name.
 	-- @usage -- DONTRUN
-	-- TerraLib{}:checkName("aname")
+	-- TerraLib:checkName("aname")
 	checkName = function(_, name)
 		return string.gsub(string.gsub(binding.CheckName(name), "\n", ""), "^%l", string.upper)
 	end
@@ -2677,7 +2663,7 @@ metaTableTerraLib_ = {
 -- be used with care. Such functions mught stop with very strange errors because
 -- they do not check any errors in their arguments.
 -- @usage -- DONTRUN
--- TerraLib()
+-- TerraLib.getVersion()
 function TerraLib()
 	if instance then
 		return instance
@@ -2689,3 +2675,4 @@ function TerraLib()
 	end
 end
 
+TerraLib = TerraLib()

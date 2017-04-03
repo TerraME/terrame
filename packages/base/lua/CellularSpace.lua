@@ -600,8 +600,6 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		self.yMax = math.max(self.yMax, row)
 	end
 
-	local tlib = terralib.TerraLib{}
-
 	for i = 0, #dSet do
 		local row = 0
 		local col = 0
@@ -623,7 +621,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		for k, v in pairs(dSet[i]) do
 			if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
 				if self.geometry then
-					cell.geom = tlib:castGeomToSubtype(v)
+					cell.geom = terralib.TerraLib:castGeomToSubtype(v)
 				end
 			else
 				cell[k] = v
@@ -641,8 +639,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 end
 
 local function loadOGR(self)
-	local tlib = terralib.TerraLib{}
-	local dSet = tlib:getOGRByFilePath(tostring(self.file))
+	local dSet = terralib.TerraLib:getOGRByFilePath(tostring(self.file))
 
 	defaultTableValue(self, "geometry", false)
 
@@ -695,8 +692,7 @@ local function setRasterCells(self, dSet)
 end
 
 local function loadGdal(self)
-	local tlib = terralib.TerraLib{}
-	local dSet = tlib:getGdalByFilePath(tostring(self.file))
+	local dSet = terralib.TerraLib:getGdalByFilePath(tostring(self.file))
 
 	setRasterCells(self, dSet) -- SKIP
 	self.layer = self.file:name() -- SKIP
@@ -706,8 +702,7 @@ local function loadGdal(self)
 end
 
 local function loadLayer(self)
-	local tlib = terralib.TerraLib{}
-	local dset = tlib:getDataSet(self.project, self.layer.name)
+	local dset = terralib.TerraLib:getDataSet(self.project, self.layer.name)
 
 	if self.layer.rep == "raster" then
 		setRasterCells(self, dset) -- SKIP
@@ -1300,10 +1295,8 @@ CellularSpace_ = {
 			customError("The CellularSpace must have a valid Project. Please, check the documentation.")
 		end
 
-		local tlib = terralib.TerraLib{}
-
 		if not self.geometry then
-			local dset = tlib:getDataSet(self.project, self.layer.name)
+			local dset = terralib.TerraLib:getDataSet(self.project, self.layer.name)
 
 			for i = 0, #dset do
 				for k, v in pairs(dset[i]) do
@@ -1313,7 +1306,7 @@ CellularSpace_ = {
 				end
 			end
 		else
-			local dset = tlib:getDataSet(self.project, self.layer.name)
+			local dset = terralib.TerraLib:getDataSet(self.project, self.layer.name)
 			local isOgr = false
 
 			for k in pairs(dset[0]) do
@@ -1334,7 +1327,7 @@ CellularSpace_ = {
 			end
 		end
 
-		tlib:saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
+		terralib.TerraLib:saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
 	end,
 	--- Split the CellularSpace into a table of Trajectories according to a classification
 	-- strategy. The Trajectories will have empty intersection and union equal to the

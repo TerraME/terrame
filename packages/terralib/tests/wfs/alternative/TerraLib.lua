@@ -24,7 +24,6 @@
 
 return {
 	addWfsLayer = function(unitTest)
-		local tl = TerraLib {}
 		local title = "TerraLib Tests"
 		local author = "Avancini Rodrigo"
 		local file = "terralib_wfs_alternative.tview"
@@ -35,23 +34,23 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib:createProject(proj, {})
 
 		local layerName = "WFS-Layer"
 		local url = "http://terrabrasilis.info/redd-pac"
 		local dataset = "reddpac:BAU"
 
 		local invalidUrl = function()
-			tl:addWfsLayer(proj, layerName, url, dataset)
+			TerraLib:addWfsLayer(proj, layerName, url, dataset)
 		end
 		unitTest:assertError(invalidUrl, "The URL 'http://terrabrasilis.info/redd-pac' is invalid.")
 
 		url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
 		dataset = "reddpac:B"
 
-		if tl:isValidWfsUrl(url) then
+		if TerraLib:isValidWfsUrl(url) then
 			local invalidDataSet = function()
-				tl:addWfsLayer(proj, layerName, url, dataset)
+				TerraLib:addWfsLayer(proj, layerName, url, dataset)
 			end
 			unitTest:assertError(invalidDataSet, "It was not possible to find data set 'reddpac:B' of type 'WFS'. Layer 'WFS-Layer' does not created.") -- SKIP
 		end

@@ -204,8 +204,7 @@ return{
 			encoding = encoding
 		}
 
-		local tl = terralib.TerraLib{}
-		tl:dropPgTable(pgData)
+		terralib.TerraLib:dropPgTable(pgData)
 
 		terralib.Layer{
 			project = proj,
@@ -253,7 +252,7 @@ return{
 
 		-- unitTest:assertFile(file) -- SKIP #TODO(#1242)
 		file:deleteIfExists()
-		tl:dropPgTable(pgData)
+		terralib.TerraLib:dropPgTable(pgData)
 
 		-- GAL from shapefile
 		cs = CellularSpace{
@@ -427,8 +426,7 @@ return{
 			encoding = encoding
 		}
 
-		local tl = terralib.TerraLib{}
-		tl:dropPgTable(pgData)
+		terralib.TerraLib:dropPgTable(pgData)
 
 		terralib.Layer{
 			project = proj,
@@ -475,7 +473,7 @@ return{
 
 		-- unitTest:assertFile(projName) -- SKIP #TODO(#1242)
 		projName:deleteIfExists()
-		tl:dropPgTable(pgData)
+		terralib.TerraLib:dropPgTable(pgData)
 	end
 }
 

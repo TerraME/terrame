@@ -98,7 +98,7 @@ return {
 		unitTest:assert(layer3.name ~= layer2.name)
 		unitTest:assertEquals(layer3.sid, layer2.sid)
 
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 
 		File(projName):deleteIfExists()
 
@@ -137,7 +137,7 @@ return {
 			encoding = encoding
 		}
 
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 
 		local l1 = Layer{
 			project = proj,
@@ -157,7 +157,7 @@ return {
 		local tName2 = "add_cellslayer_basic_another"
 
 		pgData.table = tName2
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 
 		local l2 = Layer{
 			project = proj,
@@ -177,7 +177,7 @@ return {
 		local tName3 = "add_cellslayer_basic_from_db"
 
 		pgData.table = tName3
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 
 		local l3 = Layer{
 			project = proj,
@@ -195,7 +195,7 @@ return {
 
 		local newDbName = "new_pg_db_30032017"
 		pgData.database = newDbName
-		TerraLib{}:dropPgDatabase(pgData)
+		TerraLib:dropPgDatabase(pgData)
 		pgData.database = database
 
 		local clName4 = "New_Sampa_Cells"
@@ -220,13 +220,13 @@ return {
 		unitTest:assertEquals(layer4.table, string.lower(clName4))
 
 		-- BOX TEST
-		local clSet = TerraLib{}:getDataSet(proj, clName1)
+		local clSet = TerraLib:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 68)
 
 		clName1 = clName1.."_Box"
 		local tName4 = string.lower(clName1)
 		pgData.table = tName4
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 
 		Layer{
 			project = proj,
@@ -240,7 +240,7 @@ return {
 			database = database
 		}
 
-		clSet = TerraLib{}:getDataSet(proj, clName1)
+		clSet = TerraLib:getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)
 
 		-- CHANGE EPSG
@@ -285,8 +285,7 @@ return {
 		-- }
 
 		-- -- USED ONLY TO TESTS
-		-- local tl = TerraLib{}
-		-- tl:dropPgTable(pgData)
+		-- TerraLib:dropPgTable(pgData)
 		-- local clName2 = "ProdesPg"
 
 		-- local layer2 = Layer{
@@ -302,20 +301,20 @@ return {
 		-- }
 
 		-- END
-		-- tl:dropPgTable(pgData)
+		-- TerraLib:dropPgTable(pgData)
 
 		File(projName):deleteIfExists()
 
 		pgData.table = tName1
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 		pgData.table = tName2
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 		pgData.table = tName3
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 		pgData.table = tName4
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 		pgData.database = newDbName
-		TerraLib{}:dropPgDatabase(pgData)
+		TerraLib:dropPgDatabase(pgData)
 	end,
 	projection = function(unitTest)
 		local projName = "layer_basic.tview"
@@ -355,8 +354,7 @@ return {
 
 		}
 
-		local tl = TerraLib{}
-		tl:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
@@ -373,7 +371,7 @@ return {
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with EPSG: 29191 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
 
 		proj.file:delete()
-		tl:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 	end,
 	attributes = function(unitTest)
 		local projName = "layer_basic.tview"
@@ -412,8 +410,7 @@ return {
 			encoding = encoding
 		}
 
-		local tl = TerraLib{}
-		tl:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
@@ -439,7 +436,7 @@ return {
 		unitTest:assertEquals(propInfos[4].type, "geometry")
 
 		proj.file:delete()
-		tl:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 	end,
 	export = function(unitTest)
 		local projName = "layer_postgis_basic.tview"
@@ -563,7 +560,7 @@ return {
 		proj.file:delete()
 
 		pgData.table = tableName
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 	end,
 	simplify = function(unitTest)
 		local projName = "layer_postgis_basic.tview"
@@ -641,9 +638,9 @@ return {
 		unitTest:assertEquals("cod_pnv", attrs[15].name)
 
 		pgData.table = tableName
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 		pgData.table = outputName
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib:dropPgTable(pgData)
 		proj.file:delete()
 	end
 }

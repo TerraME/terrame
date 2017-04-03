@@ -24,26 +24,21 @@
 
 return {
 	createProject = function(unitTest)
-		local tl = TerraLib{}
-
 		local proj = {}
 		proj.file = "file.xml"
 		local mandatoryExt = function()
-			tl:createProject(proj, {})
+			TerraLib:createProject(proj, {})
 		end
 		unitTest:assertError(mandatoryExt, "Please, the file extension must be '.tview'.")
 	end,
 	openProject = function(unitTest)
-		local tl = TerraLib{}
-
 		local proj = {}
 		local mandatoryExt = function()
-			tl:openProject(proj, "file.xml")
+			TerraLib:openProject(proj, "file.xml")
 		end
 		unitTest:assertError(mandatoryExt, "Please, the file extension must be '.tview'.")
 	end,
 	getArea = function(unitTest)
-		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -51,23 +46,22 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib:createProject(proj, {})
 
 		local layerName1 = "PA"
 		local layerFile1 = filePath("itaituba-localities.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)
+		TerraLib:addShpLayer(proj, layerName1, layerFile1)
 
-		local dSet = tl:getDataSet(proj, layerName1)
+		local dSet = TerraLib:getDataSet(proj, layerName1)
 
 		local areaError = function()
-			tl:getArea(dSet[0].OGR_GEOMETRY)
+			TerraLib:getArea(dSet[0].OGR_GEOMETRY)
 		end
 		unitTest:assertError(areaError, "Geometry should be a polygon to get the area.")
 
 		proj.file:deleteIfExists()
 	end,
 	saveDataSet = function(unitTest)
-		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -75,21 +69,21 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib:createProject(proj, {})
 
 		-- // create a database
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)
+		TerraLib:addShpLayer(proj, layerName1, layerFile1)
 
 		local clName1 = "SampaShpCells"
 		local resolution = 1
 		local mask = true
 		local cellsShp = File(clName1..".shp")
 		cellsShp:deleteIfExists()
-		tl:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
+		TerraLib:addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
 
-		local spDset = tl:getDataSet(proj, clName1)
+		local spDset = TerraLib:getDataSet(proj, clName1)
 
 		local luaTable = {}
 		for i = 0, getn(spDset) - 1 do
@@ -101,7 +95,7 @@ return {
 		local newLayerName = "New_Layer"
 
 		local invalidAttrName = function()
-			tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1"})
+			TerraLib:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1"})
 		end
 		unitTest:assertError(invalidAttrName, "Invalid attribute name 'attr-1'.")
 
@@ -114,7 +108,7 @@ return {
 		end
 
 		local invalidAttrNames = function()
-			tl:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1", "at?tr2", "at#r3"})
+			TerraLib:saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1", "at?tr2", "at#r3"})
 		end
 		unitTest:assertError(invalidAttrNames, "Invalid attribute names 'attr-1', 'at?tr2' and 'at#r3'.")
 
@@ -122,7 +116,6 @@ return {
 		cellsShp:delete()
 	end,
 	saveLayerAs = function(unitTest)
-		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -130,30 +123,29 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib:createProject(proj, {})
 
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
-		tl:addShpLayer(proj, layerName1, layerFile1)
+		TerraLib:addShpLayer(proj, layerName1, layerFile1)
 
 		local toData = {}
 		toData.file = "shp2shp.shp"
 		toData.type = "shp"
 
 		local attrNotExist = function()
-			tl:saveLayerAs(proj, layerName1, toData, true, {"ATTR"})
+			TerraLib:saveLayerAs(proj, layerName1, toData, true, {"ATTR"})
 		end
 		unitTest:assertError(attrNotExist, "There is no attribute 'ATTR' in layer 'SampaShp'.")
 
 		local attrsNotExist = function()
-			tl:saveLayerAs(proj, layerName1, toData, true, {"ATTR1", "ATTR2", "ATTR3"})
+			TerraLib:saveLayerAs(proj, layerName1, toData, true, {"ATTR1", "ATTR2", "ATTR3"})
 		end
 		unitTest:assertError(attrsNotExist,  "There are no attributes 'ATTR1', 'ATTR2' and 'ATTR3' in layer 'SampaShp'.")
 
 		proj.file:delete()
 	end,
 	douglasPeucker = function(unitTest)
-		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -162,23 +154,23 @@ return {
 		local file = File(proj.file)
 		file:deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib:createProject(proj, {})
 
 		local lName1 = "Prodes"
 		local lFile1 = filePath("test/prodes_polyc_10k.tif", "terralib")
-		tl:addGdalLayer(proj, lName1, lFile1)
+		TerraLib:addGdalLayer(proj, lName1, lFile1)
 
 		local invalidRaster = function()
-			tl:douglasPeucker(proj, lName1, "Peucker", 500)
+			TerraLib:douglasPeucker(proj, lName1, "Peucker", 500)
 		end
 		unitTest:assertError(invalidRaster, "This function works only with line geometry.")
 
 		local lName2 = "Ports"
 		local lFile2 = filePath("test/ports.shp", "terralib")
-		tl:addShpLayer(proj, lName2, lFile2)
+		TerraLib:addShpLayer(proj, lName2, lFile2)
 
 		local invalidGeometry = function()
-			tl:douglasPeucker(proj, lName2, "Peucker", 500)
+			TerraLib:douglasPeucker(proj, lName2, "Peucker", 500)
 		end
 		unitTest:assertError(invalidGeometry, "This function works only with line and multi-line geometry.")
 
