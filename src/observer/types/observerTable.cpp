@@ -27,6 +27,7 @@ of this software and its documentation.
 #include <QVBoxLayout>
 #include <QTreeWidgetItem>
 #include <QDebug>
+#include <QResizeEvent>
 
 #include <math.h>
 
@@ -182,17 +183,27 @@ int ObserverTable::close()
 
 void ObserverTable::resizeEvent(QResizeEvent *event)
 {
-    VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+	if (this->isVisible())
+		VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+	else
+		event->ignore();
 }
 
 void ObserverTable::moveEvent(QMoveEvent *event)
 {
-    VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+	if (this->isVisible())
+		VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+	else
+		event->ignore();
 }
 
 void ObserverTable::closeEvent(QCloseEvent *event)
 {
-    VisualArrangement::getInstance()->closeEventDelegate();
+#ifdef __linux__
+	VisualArrangement::getInstance()->closeEventDelegate(this);
+#else
+	VisualArrangement::getInstance()->closeEventDelegate();
+#endif
 }
 
 void ObserverTable::save(std::string file, std::string extension)
