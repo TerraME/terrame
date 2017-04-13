@@ -51,7 +51,7 @@ return {
 			unitTest:assertEquals(layerInfo.rep, "surface") -- SKIP
 			unitTest:assertNotNil(layerInfo.sid) -- SKIP
 		else
-			unitTest:assert(true) -- SKIP
+			customError("WFS server '.."..service.."' is not responding, try again later.") -- SKIP
 		end
 
 		file:delete()

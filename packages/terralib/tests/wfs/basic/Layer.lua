@@ -51,7 +51,7 @@ return {
 			unitTest:assertEquals(layer.service, service) -- SKIP
 			unitTest:assertEquals(layer.feature, feature) -- SKIP
 		else
-			unitTest:assert(true) -- SKIP
+			customError("WFS server '.."..service.."' is not responding, try again later.") -- SKIP
 		end
 
 		File(projName):delete()
