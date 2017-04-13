@@ -1001,6 +1001,28 @@ local function isGeometryProperty(propName)
 		   (propName == "geom")
 end
 
+local function createInvalidNamesErrorMsg(invalidNames)
+	local errorMsg
+
+	if #invalidNames == 1 then
+		errorMsg = "Invalid attribute name '"..invalidNames[1].."'."
+	else
+		local ins = ""
+		for i = 1, #invalidNames do
+			ins = ins.."'"..invalidNames[i].."'"
+			if (i ~= #invalidNames - 1) and not (i == #invalidNames) then
+				ins = ins..", "
+			elseif i == #invalidNames - 1 then
+				ins = ins.." and "
+			end
+		end
+
+		errorMsg = "Invalid attribute names "..ins.."."
+	end
+
+	return errorMsg
+end
+
 local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 	local errorMsg
 	do
@@ -1030,21 +1052,7 @@ local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 		end
 
 		if #invalidNames > 0 then
-			if #invalidNames == 1 then
-				errorMsg = "Invalid attribute name '"..invalidNames[1].."'."
-			else
-				local ins = ""
-				for i = 1, #invalidNames do
-					ins = ins.."'"..invalidNames[i].."'"
-					if (i ~= #invalidNames - 1) and not (i == #invalidNames) then
-						ins = ins..", "
-					elseif i == #invalidNames - 1 then
-						ins = ins.." and "
-					end
-				end
-
-				errorMsg = "Invalid attribute names "..ins.."."
-			end
+			errorMsg = createInvalidNamesErrorMsg(invalidNames)
 		else
 			-- Copy from dataset to new
 			local dst = ds:getDataSetType(dsetName)
@@ -2011,7 +2019,7 @@ TerraLib_ = {
 			end
 
 			if not attrs then
-				attrs =  {}
+				attrs = {}
 			end
 
 			if (dseName == toSetName) or (toLayerName == fromLayerName) then
@@ -2301,7 +2309,6 @@ TerraLib_ = {
 			if attrs then
 				for i = 1, #attrs do
 					local propName = attrs[i]
-
 					if fromDs:propertyExists(fromDSetName, propName) then
 						attrsToIn[propName] = true
 					else
@@ -2472,32 +2479,6 @@ TerraLib_ = {
 			end
 
 			local dsetAdapted = binding.CreateAdapter(fromDSet, converter)
-
-		  -- // TODO(avancinirodrigo): Check properties names
-		  -- std::vector<te::dt::Property* > props = dsTypeResult->getProperties();
-		  -- std::map<std::size_t, std::string> invalidNames;
-		  -- for (std::size_t i = 0; i < props.size(); ++i)
-		  -- {
-			-- if (!dsGPKG->isPropertyNameValid(props[i]->getName()))
-			-- {
-			  -- invalidNames[i] = props[i]->getName();
-			-- }
-		  -- }
-
-		  -- if (!invalidNames.empty())
-		  -- {
-			-- std::map<std::size_t, std::string>::iterator it = invalidNames.begin();
-			-- while (it != invalidNames.end())
-			-- {
-			  -- bool aux;
-			  -- std::string newName = te::common::ReplaceSpecialChars(it->second, aux);
-
-			  -- props[it->first]->setName(newName);
-
-			  -- ++it;
-			-- }
-		  -- }
-
 			local transactor = toDs:getTransactor()
 			transactor:begin()
 			transactor:createDataSet(dstResult, {})
