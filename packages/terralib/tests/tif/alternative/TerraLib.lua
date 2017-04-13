@@ -31,11 +31,11 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName1 = "AmazoniaTif"
 		local layerFile1 = filePath("amazonia-prodes.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName1, layerFile1)
+		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"
 		local shp1 = File(clName..".shp")
@@ -46,7 +46,7 @@ return {
 		local mask = true
 
 		local maskNotWork = function()
-			TerraLib:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		end
 		unitTest:assertError(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
 
@@ -63,14 +63,14 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "SampaShp"
 		local layerFile = filePath("test/sampa.shp", "terralib")
-		TerraLib:addShpLayer(proj, layerName, layerFile)
+		TerraLib().addShpLayer(proj, layerName, layerFile)
 
 		local noRasterLayer = function()
-			TerraLib:getNumOfBands(proj, layerName)
+			TerraLib().getNumOfBands(proj, layerName)
 		end
 		unitTest:assertError(noRasterLayer, "The layer '"..layerName.."' is not a Raster.")
 
@@ -84,7 +84,7 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
@@ -93,7 +93,7 @@ return {
 
 		local layerName1 = "Para"
 		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "terralib")
-		TerraLib:addShpLayer(proj, layerName1, layerFile1)
+		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
 		local shp = {}
 
@@ -105,11 +105,11 @@ return {
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 60e3
 		local mask = true
-		TerraLib:addShpCellSpaceLayer(proj, layerName1, clName, resolution, File(shp[1]), mask)
+		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, File(shp[1]), mask)
 
 		local layerName2 = "Prodes_PA"
 		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName2, layerFile4)
+		TerraLib().addGdalLayer(proj, layerName2, layerFile4)
 
 		local percTifLayerName = clName.."_"..layerName2.."_RPercentage"
 		shp[2] = percTifLayerName..".shp"
@@ -124,16 +124,16 @@ return {
 		local repr = "raster"
 
 		local differentSrids = function()
-			TerraLib:attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
+			TerraLib().attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
-		local layerInfo2 = TerraLib:getLayerInfo(proj, layerName2)
+		local layerInfo2 = TerraLib().getLayerInfo(proj, layerName2)
 		unitTest:assertError(differentSrids, "The projections of the layers are different: (Prodes_PA, "..string.format("%.0f", layerInfo2.srid)..") and (Para_Cells, 29101). Set the correct one.")
 
 		local layerName3 = "Prodes_PA_NewSRID"
-		TerraLib:addGdalLayer(proj, layerName3, layerFile4, 29101)
+		TerraLib().addGdalLayer(proj, layerName3, layerFile4, 29101)
 
 		local bandNoExists = function()
-			TerraLib:attributeFill(proj, layerName3, clName, percTifLayerName, attribute, operation, select, area, default, repr)
+			TerraLib().attributeFill(proj, layerName3, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
 		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in layer '"..layerName3.."'.")
 
@@ -153,23 +153,23 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "TifLayer"
 		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName, layerFile)
+		TerraLib().addGdalLayer(proj, layerName, layerFile)
 
 		local bandNoExists =  function()
-			TerraLib:getDummyValue(proj, layerName, 3)
+			TerraLib().getDummyValue(proj, layerName, 3)
 		end
 		unitTest:assertError(bandNoExists, "The maximum band is '2'.")
 
 		local layerName2 = "TifLayer2"
 		local layerFile2 = filePath("test/prodes_polyc_10k.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName2, layerFile2)
+		TerraLib().addGdalLayer(proj, layerName2, layerFile2)
 
 		local bandNoExists2 =  function()
-			TerraLib:getDummyValue(proj, layerName2, 3)
+			TerraLib().getDummyValue(proj, layerName2, 3)
 		end
 		unitTest:assertError(bandNoExists2, "The only available band is '0'.")
 
@@ -183,11 +183,11 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName1 = "TifLayer"
 		local layerFile1 = filePath("test/cbers_rgb342_crop1.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName1, layerFile1)
+		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
 
 		local customWarningBkp = customWarning
 		local currDir = currentDir()
@@ -206,7 +206,7 @@ return {
 		toData.type = "shp"
 
 		local tif2shpError = function()
-			TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		end
 		unitTest:assertError(tif2shpError, "It was not possible save the data in layer 'TifLayer' to vector data.")
 
@@ -215,7 +215,7 @@ return {
 		toData.type = "geojson"
 
 		local tif2geojsonError = function()
-			TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		end
 		unitTest:assertError(tif2geojsonError, "It was not possible save the data in layer 'TifLayer' to vector data.")
 
@@ -238,19 +238,19 @@ return {
 		}
 
 		local tif2postgisError = function()
-			TerraLib:saveLayerAs(proj, layerName1, pgData, overwrite)
+			TerraLib().saveLayerAs(proj, layerName1, pgData, overwrite)
 		end
 		unitTest:assertError(tif2postgisError, "It was not possible save the data in layer 'TifLayer' to postgis data.")
 
 		-- OVERWRITE
 		toData.file = "tif2tif.tif"
 		toData.type = "tif"
-		TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 
 		overwrite = false
 
 		local overwriteError = function()
-			TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		end
 		unitTest:assertError(overwriteError, "File '"..currDir.."/cbers_rgb342_crop1.tif' already exists.")
 
@@ -259,7 +259,7 @@ return {
 		toData.file = "cbers_rgb342_crop1.tif"
 		toData.type = "tif"
 		toData.srid = 4326
-		TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 
 		File("cbers_rgb342_crop1.tif"):delete()
 		proj.file:delete()

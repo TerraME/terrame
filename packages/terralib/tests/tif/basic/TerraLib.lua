@@ -31,13 +31,13 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "TifLayer"
 		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName, layerFile)
+		TerraLib().addGdalLayer(proj, layerName, layerFile)
 
-		local layerInfo = TerraLib:getLayerInfo(proj, layerName)
+		local layerInfo = TerraLib().getLayerInfo(proj, layerName)
 
 		unitTest:assertEquals(layerInfo.name, layerName)
 		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
@@ -55,11 +55,11 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName1 = "AmazoniaTif"
 		local layerFile1 = filePath("amazonia-prodes.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName1, layerFile1)
+		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"
 		local shp1 = File(clName..".shp")
@@ -68,9 +68,9 @@ return {
 
 		local resolution = 2e5
 		local mask = false
-		TerraLib:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 
-		local layerInfo = TerraLib:getLayerInfo(proj, clName)
+		local layerInfo = TerraLib().getLayerInfo(proj, clName)
 
 		unitTest:assertEquals(layerInfo.name, clName)
 		unitTest:assertEquals(layerInfo.file, tostring(shp1))
@@ -92,11 +92,11 @@ return {
 
 		-- File(proj.file):deleteIfExists()
 
-		-- TerraLib:createProject(proj, {})
+		-- TerraLib().createProject(proj, {})
 
 		-- local layerName1 = "AmazoniaTif"
 		-- local layerFile1 = filePath("amazonia-prodes.tif", "terralib")
-		-- TerraLib:addGdalLayer(proj, layerName1, layerFile1)
+		-- TerraLib().addGdalLayer(proj, layerName1, layerFile1)
 
 		-- local host = "localhost"
 		-- local port = "5432"
@@ -117,14 +117,14 @@ return {
 			-- encoding = encoding
 		-- }
 
-		-- TerraLib:dropPgDatabase(pgData)
+		-- TerraLib().dropPgDatabase(pgData)
 
 		-- local clName1 = "Amazonia_PG_Cells"
 		-- local resolution = 2e5
 		-- local mask = false
-		-- TerraLib:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
+		-- TerraLib().addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
 
-		-- local layerInfo = TerraLib:getLayerInfo(proj, proj.layers[clName1])
+		-- local layerInfo = TerraLib().getLayerInfo(proj, proj.layers[clName1])
 		-- unitTest:assertEquals(layerInfo.name, clName1) -- SKIP
 		-- unitTest:assertEquals(layerInfo.type, "POSTGIS") -- SKIP
 		-- unitTest:assertEquals(layerInfo.rep, "polygon") -- SKIP
@@ -136,15 +136,15 @@ return {
 		-- unitTest:assertEquals(layerInfo.table, tableName) -- SKIP
 		-- unitTest:assertNotNil(layerInfo.sid) -- SKIP
 
-		-- TerraLib:dropPgTable(pgData)
-		-- TerraLib:dropPgDatabase(pgData)
+		-- TerraLib().dropPgTable(pgData)
+		-- TerraLib().dropPgDatabase(pgData)
 
 		-- File(proj.file):delete()
 	-- end,
 	getGdalByFilePath = function(unitTest)
 		local file = filePath("amazonia-prodes.tif", "terralib")
 
-		local dSet = TerraLib:getGdalByFilePath(tostring(file))
+		local dSet = TerraLib().getGdalByFilePath(tostring(file))
 		for i = 0, #dSet do
 			for k, v in pairs(dSet[i]) do
 				unitTest:assert(belong(k, {"xdim", "ydim", "name", "srid", "bands",
@@ -161,13 +161,13 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "TifLayer"
 		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName, layerFile)
+		TerraLib().addGdalLayer(proj, layerName, layerFile)
 
-		local numBands = TerraLib:getNumOfBands(proj, layerName)
+		local numBands = TerraLib().getNumOfBands(proj, layerName)
 		unitTest:assertEquals(numBands, 3)
 
 		proj.file:delete()
@@ -180,13 +180,13 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "Prodes"
 		local layerFile = filePath("amazonia-prodes.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName, layerFile, 100017)
+		TerraLib().addGdalLayer(proj, layerName, layerFile, 100017)
 
-		local prj = TerraLib:getProjection(proj.layers[layerName])
+		local prj = TerraLib().getProjection(proj.layers[layerName])
 
 		unitTest:assertEquals(prj.SRID, 100017.0)
 		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S - old 29191")
@@ -202,13 +202,13 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "Prodes"
 		local layerFile = filePath("amazonia-prodes.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName, layerFile)
+		TerraLib().addGdalLayer(proj, layerName, layerFile)
 
-		local propNames = TerraLib:getPropertyNames(proj, layerName)
+		local propNames = TerraLib().getPropertyNames(proj, layerName)
 
 		unitTest:assertEquals(getn(propNames), 1)
 		unitTest:assertEquals(propNames[0], "raster")
@@ -223,13 +223,13 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "Prodes"
 		local layerFile = filePath("amazonia-prodes.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName, layerFile)
+		TerraLib().addGdalLayer(proj, layerName, layerFile)
 
-		local propInfos = TerraLib:getPropertyInfos(proj, layerName)
+		local propInfos = TerraLib().getPropertyInfos(proj, layerName)
 
 		unitTest:assertEquals(getn(propInfos), 1)
 		unitTest:assertEquals(propInfos[0].type, "raster")
@@ -245,11 +245,11 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName1 = "AmazoniaTif"
 		local layerFile1 = filePath("amazonia-prodes.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName1, layerFile1)
+		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
 
 		local clName = "Amazonia_Cells"
 		local shp1 = File(clName..".shp")
@@ -258,10 +258,10 @@ return {
 
 		local resolution = 2e5
 		local mask = false
-		TerraLib:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 
-		local dSet = TerraLib:getDataSet(proj, clName)
-		local dist = TerraLib:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
+		local dSet = TerraLib().getDataSet(proj, clName)
+		local dist = TerraLib().getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
 
 		unitTest:assertEquals(dist, 3883297.5677895, 1.0e-7) -- SKIP
 
@@ -277,26 +277,26 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "TifLayer"
 		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName, layerFile)
+		TerraLib().addGdalLayer(proj, layerName, layerFile)
 
-		local dummy = TerraLib:getDummyValue(proj, layerName, 0)
+		local dummy = TerraLib().getDummyValue(proj, layerName, 0)
 		unitTest:assertEquals(tostring(dummy), tostring(1.7976931348623e+308))
 
-		dummy = TerraLib:getDummyValue(proj, layerName, 1)
+		dummy = TerraLib().getDummyValue(proj, layerName, 1)
 		unitTest:assertEquals(tostring(dummy), tostring(1.7976931348623e+308))
 
-		dummy = TerraLib:getDummyValue(proj, layerName, 2)
+		dummy = TerraLib().getDummyValue(proj, layerName, 2)
 		unitTest:assertEquals(tostring(dummy), tostring(1.7976931348623e+308))
 
 		local layerName2 = "ShapeLayer"
 		local layerFile2 = filePath("test/sampa.shp", "terralib")
-		TerraLib:addShpLayer(proj, layerName2, layerFile2)
+		TerraLib().addShpLayer(proj, layerName2, layerFile2)
 
-		dummy = TerraLib:getDummyValue(proj, layerName2, 0)
+		dummy = TerraLib().getDummyValue(proj, layerName2, 0)
 		unitTest:assertNil(dummy)
 
 		proj.file:delete()
@@ -309,11 +309,11 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName1 = "TifLayer"
 		local layerFile1 = filePath("test/cbers_rgb342_crop1.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName1, layerFile1)
+		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
 
 		local customWarningBkp = customWarning
 		local currDir = currentDir()
@@ -329,11 +329,11 @@ return {
 
 		local overwrite = true
 
-		TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
 
 		-- OVERWRITE
-		TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
 
 		File("cbers_rgb342_crop1.tif"):delete()
@@ -350,13 +350,13 @@ return {
 		local file = File(proj.file)
 		file:deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "TifLayer"
 		local layerFile = filePath("test/cbers_rgb342_crop1.tif", "terralib")
-		TerraLib:addGdalLayer(proj, layerName, layerFile)
+		TerraLib().addGdalLayer(proj, layerName, layerFile)
 
-		local size = TerraLib:getLayerSize(proj, layerName)
+		local size = TerraLib().getLayerSize(proj, layerName)
 
 		unitTest:assertEquals(size, 882875.0)
 

@@ -34,16 +34,16 @@ return {
 
 		file:deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "WFS-Layer"
 		local url = "http://terrabrasilis.info/redd-pac/wfs"
 		local dataset = "reddpac:wfs_biomes"
 
-		if TerraLib:isValidWfsUrl(url) then
-			TerraLib:addWfsLayer(proj, layerName, url, dataset)
+		if TerraLib().isValidWfsUrl(url) then
+			TerraLib().addWfsLayer(proj, layerName, url, dataset)
 
-			local layerInfo = TerraLib:getLayerInfo(proj, layerName)
+			local layerInfo = TerraLib().getLayerInfo(proj, layerName)
 			unitTest:assertEquals(layerInfo.name, layerName) -- SKIP
 			unitTest:assertEquals(layerInfo.url, url) -- SKIP
 			unitTest:assertEquals(layerInfo.type, "WFS") -- SKIP
@@ -67,11 +67,11 @@ return {
 
 		file:deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local url = "WFS:http://terrabrasilis.info"
 
-		unitTest:assert(not TerraLib:isValidWfsUrl(url))
+		unitTest:assert(not TerraLib().isValidWfsUrl(url))
 
 		file:delete()
 	end

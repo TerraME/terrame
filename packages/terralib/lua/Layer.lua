@@ -38,7 +38,7 @@ local function isValidName(name)
 end
 
 local function getLayerInfoAdapted(data)
-	local info = TerraLib:getLayerInfo(data.project, data.name)
+	local info = TerraLib().getLayerInfo(data.project, data.name)
 	info.type = nil
 
 	forEachElement(info, function(idx, value)
@@ -55,7 +55,7 @@ local function getLayerInfoAdapted(data)
 end
 
 local function checkName(name, arg)
-	local errMsg = TerraLib:checkName(name)
+	local errMsg = TerraLib().checkName(name)
 	if errMsg ~= "" then
 		customError(arg.." name '"..name.."' is not a valid name. "..errMsg..".")
 	end
@@ -135,7 +135,7 @@ local function addCellularLayer(self, data)
 		customError("Layer '"..data.name.."' already exists in the Project.")
 	end
 
-	local repr = TerraLib:getLayerInfo(data.project, data.input).rep
+	local repr = TerraLib().getLayerInfo(data.project, data.input).rep
 
 	switch(data, "source"):caseof{
 		shp = function()
@@ -161,7 +161,7 @@ local function addCellularLayer(self, data)
 				end
 			end
 
-			TerraLib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution,
+			TerraLib().addShpCellSpaceLayer(self, data.input, data.name, data.resolution,
 											data.file, not data.box, data.index)
 		end,
 		geojson = function()
@@ -177,7 +177,7 @@ local function addCellularLayer(self, data)
 					"resolution", "file", "source"})
 			end
 
-			TerraLib:addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution, -- SKIP
+			TerraLib().addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution, -- SKIP
 												data.file, not data.box) -- SKIP
 		end,
 		postgis = function()
@@ -193,7 +193,7 @@ local function addCellularLayer(self, data)
 										"project", "host", "port", "user", "password", "database", "table", "project"})
 			end
 
-			TerraLib:addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data, not data.box)
+			TerraLib().addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data, not data.box)
 		end
 	}
 end
@@ -250,37 +250,37 @@ local function addLayer(self, data)
 			defaultTableValue(data, "index", true)
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index", "epsg"})
 
-			TerraLib:addShpLayer(self, data.name, data.file, data.index, data.epsg)
+			TerraLib().addShpLayer(self, data.name, data.file, data.index, data.epsg)
 		end,
 		geojson = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
 
-			TerraLib:addGeoJSONLayer(self, data.name, data.file, data.epsg) -- SKIP
+			TerraLib().addGeoJSONLayer(self, data.name, data.file, data.epsg) -- SKIP
 		end,
 		tif = function()
 			mandatoryTableArgument(data, "file", "File")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
 
-			TerraLib:addGdalLayer(self, data.name, data.file, data.epsg)
+			TerraLib().addGdalLayer(self, data.name, data.file, data.epsg)
 		end,
 		nc = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"}) -- SKIP
 
-			TerraLib:addGdalLayer(self, data.name, data.file, data.epsg) -- SKIP
+			TerraLib().addGdalLayer(self, data.name, data.file, data.epsg) -- SKIP
 		end,
 		asc = function()
 			mandatoryTableArgument(data, "file", "File")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
 
-			TerraLib:addGdalLayer(self, data.name, data.file, data.epsg)
+			TerraLib().addGdalLayer(self, data.name, data.file, data.epsg)
 		end,
 		postgis = function()
 			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password", "database", "table", "project", "epsg"})
 			checkPgParams(data)
 
-			TerraLib:addPgLayer(self, data.name, data, data.epsg)
+			TerraLib().addPgLayer(self, data.name, data, data.epsg)
 		end,
 		wfs = function()
 			mandatoryTableArgument(data, "service", "string")
@@ -288,7 +288,7 @@ local function addLayer(self, data)
 
 			verifyUnnecessaryArguments(data, {"name", "source", "service", "feature", "project"})
 
-			TerraLib:addWfsLayer(self, data.name, data.service, data.feature)
+			TerraLib().addWfsLayer(self, data.name, data.service, data.feature)
 		end
 	}
 end
@@ -316,7 +316,7 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- print(layer:representation())
 	representation = function(self)
-		return TerraLib:getLayerInfo(self.project, self.name).rep
+		return TerraLib().getLayerInfo(self.project, self.name).rep
 	end,
 	--- Return the number of bands of a raster layer. If the layer does not have a raster representation
 	-- then it will stop with an error. The bands of the raster layer are named from zero to the number of
@@ -324,7 +324,7 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- print(layer:bands())
 	bands = function(self)
-		return TerraLib:getNumOfBands(self.project, self.name)
+		return TerraLib().getNumOfBands(self.project, self.name)
 	end,
 	--- Create a new attribute for each object of a Layer.
 	-- This attribute can be stored as a new
@@ -654,7 +654,7 @@ Layer_ = {
 			end
 		end
 
-		TerraLib:attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.default, repr, data.nodata)
+		TerraLib().attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.default, repr, data.nodata)
 	end,
 	--- Return the Layer's projection. It contains the name of the projection, its Geodetic
 	-- Identifier (EPSG), and
@@ -662,7 +662,7 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- print(layer:projection())
 	projection = function(self)
-		local prj = TerraLib:getProjection(self.project.layers[self.name])
+		local prj = TerraLib().getProjection(self.project.layers[self.name])
 
 		if prj.NAME == "" then
 			prj.NAME = "Undefined" -- SKIP TODO(avancinirodrigo): there is no data with undefined projection to test
@@ -685,7 +685,7 @@ Layer_ = {
 	--
 	-- print(vardump(layer:attributes()))
 	attributes = function(self)
-		local propInfos = TerraLib:getPropertyInfos(self.project, self.name)
+		local propInfos = TerraLib().getPropertyInfos(self.project, self.name)
 
 		if propInfos[0].type == "raster" then
 			return nil
@@ -714,7 +714,7 @@ Layer_ = {
 		mandatoryArgument(1, "number", band)
 		positiveArgument(1, band, true)
 
-		return TerraLib:getDummyValue(self.project, self.name, band)
+		return TerraLib().getDummyValue(self.project, self.name, band)
 	end,
 	--- Exports the data of a Layer to another data source.
 	-- The data can be either a file data or postgis. The SRID and overwrite are common arguments.
@@ -761,7 +761,7 @@ Layer_ = {
 					srid = data.epsg
 				}
 
-				TerraLib:saveLayerAs(self.project, self.name, toData, data.overwrite, data.select)
+				TerraLib().saveLayerAs(self.project, self.name, toData, data.overwrite, data.select)
 			else
 				invalidFileExtensionError("data", source)
 			end
@@ -778,7 +778,7 @@ Layer_ = {
 				pgData.srid = pgData.epsg
 				pgData.epsg = nil
 
-				TerraLib:saveLayerAs(self.project, self.name, pgData, pgData.overwrite, data.select)
+				TerraLib().saveLayerAs(self.project, self.name, pgData, pgData.overwrite, data.select)
 			else
 				customError("It only supports postgis database, use source = \"postgis\".")
 			end
@@ -802,7 +802,7 @@ Layer_ = {
 
 		local repr = self:representation()
 		if repr == "line" then
-			TerraLib:douglasPeucker(self.project, self.name, data.output, data.tolerance)
+			TerraLib().douglasPeucker(self.project, self.name, data.output, data.tolerance)
 		else
 			customError("Layer representation '"..repr.."' cannot be simplified.")
 		end
@@ -816,7 +816,7 @@ metaTableLayer_ = {
 	-- @usage -- DONTRUN
 	-- print(#layer)
 	__len = function(self)
-		return TerraLib:getLayerSize(self.project, self.name)
+		return TerraLib().getLayerSize(self.project, self.name)
 	end
 }
 
@@ -953,7 +953,7 @@ function Layer(data)
 		end
 
 		setmetatable(data, metaTableLayer_)
-		TerraLib:openProject(data.project, data.project.file)
+		TerraLib().openProject(data.project, data.project.file)
 		getLayerInfoAdapted(data)
 
 		return data

@@ -30,7 +30,7 @@ return {
 		unitTest:assertEquals(t1, t2)
 	end,
 	getVersion = function(unitTest)
-		unitTest:assertEquals(TerraLib:getVersion(), "5.2.0")
+		unitTest:assertEquals(TerraLib().getVersion(), "5.2.0")
 	end,
 	openProject = function(unitTest)
 		local proj = {
@@ -41,11 +41,11 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local proj2 = {}
 
-		TerraLib:openProject(proj2, proj.file)
+		TerraLib().openProject(proj2, proj.file)
 
 		unitTest:assertEquals(proj2.file, proj.file)
 		unitTest:assertEquals(proj2.title, proj.title)
@@ -54,10 +54,10 @@ return {
 		proj.file:delete()
 	end,
 	checkName = function(unitTest)
-		unitTest:assertEquals(TerraLib:checkName("count"), "Invalid name: using reserved word COUNT")
-		unitTest:assertEquals(TerraLib:checkName("sum"), "Invalid name: using reserved word SUM")
-		unitTest:assertEquals(TerraLib:checkName("file-name"), "Invalid character: mathematical symbol '-'")
-		unitTest:assertEquals(TerraLib:checkName("$ymbol"), "Invalid symbol: '$'")
+		unitTest:assertEquals(TerraLib().checkName("count"), "Invalid name: using reserved word COUNT")
+		unitTest:assertEquals(TerraLib().checkName("sum"), "Invalid name: using reserved word SUM")
+		unitTest:assertEquals(TerraLib().checkName("file-name"), "Invalid character: mathematical symbol '-'")
+		unitTest:assertEquals(TerraLib().checkName("$ymbol"), "Invalid symbol: '$'")
 	end
 }
 

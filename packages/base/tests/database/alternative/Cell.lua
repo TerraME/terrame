@@ -99,7 +99,7 @@ return{
 			encoding = encoding
 		}
 
-		terralib.TerraLib:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 
 		terralib.Layer{
 			project = proj,
@@ -126,7 +126,7 @@ return{
 		File(projName):deleteIfExists()
 		File(filePath1):deleteIfExists()
 
-		terralib.TerraLib:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 
 		customWarning = customWarningBkp
 	end

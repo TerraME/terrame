@@ -164,7 +164,7 @@ return{
 			encoding = encoding
 		}
 
-		terralib.TerraLib:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 
 		terralib.Layer{
 			project = proj,
@@ -204,7 +204,7 @@ return{
 		if projName:exists() then projName:delete() end
 
 		pgData.table = string.lower(tName1)
-		terralib.TerraLib:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 
 		-- pgm file
 		cs = CellularSpace{
@@ -694,7 +694,7 @@ return{
 			encoding = encoding
 		}
 
-		terralib.TerraLib:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 
 		local layer = terralib.Layer{
 			project = proj,
@@ -834,15 +834,15 @@ return{
 		end
 
 		pgData.table = string.lower(tName1)
-		terralib.TerraLib:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 		pgData.table = string.lower(cellSpaceLayerName)
-		terralib.TerraLib:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 		pgData.table = string.lower(cellSpaceLayerNameT0)
-		terralib.TerraLib:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 		pgData.table = string.lower(cellSpaceLayerNameGeom)
-		terralib.TerraLib:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 		pgData.table = string.lower(cellSpaceLayerNameGeom2)
-		terralib.TerraLib:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 	end,
 	synchronize = function(unitTest)
 		local terralib = getPackage("terralib")

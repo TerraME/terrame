@@ -34,14 +34,14 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 		unitTest:assert(proj.file:exists())
 		unitTest:assertEquals(proj.file:name(), file)
 		unitTest:assertEquals(proj.title, title)
 		unitTest:assertEquals(proj.author, author)
 
 		-- allow overwrite
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 		unitTest:assert(proj.file:exists())
 
 		proj.file:delete()
@@ -57,14 +57,14 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "GeoJSONLayer"
 		local layerFile = filePath("test/Setores_Censitarios_2000_pol.geojson", "terralib")
 
-		TerraLib:addGeoJSONLayer(proj, layerName, layerFile)
+		TerraLib().addGeoJSONLayer(proj, layerName, layerFile)
 
-		local layerInfo = TerraLib:getLayerInfo(proj, layerName)
+		local layerInfo = TerraLib().getLayerInfo(proj, layerName)
 
 		unitTest:assertEquals(layerInfo.name, layerName)
 		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
@@ -85,12 +85,12 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "GeoJSONLayer"
 		local layerFile = filePath("test/Setores_Censitarios_2000_pol.geojson", "terralib")
 
-		TerraLib:addGeoJSONLayer(proj, layerName, layerFile)
+		TerraLib().addGeoJSONLayer(proj, layerName, layerFile)
 
 		local clName = "GeoJSON_Cells"
 		local geojson1 = File(clName..".geojson")
@@ -99,9 +99,9 @@ return {
 
 		local resolution = 10000
 		local mask = true
-		TerraLib:addGeoJSONCellSpaceLayer(proj, layerName, clName, resolution, geojson1, mask)
+		TerraLib().addGeoJSONCellSpaceLayer(proj, layerName, clName, resolution, geojson1, mask)
 
-		local layerInfo = TerraLib:getLayerInfo(proj, clName)
+		local layerInfo = TerraLib().getLayerInfo(proj, clName)
 
 		unitTest:assertEquals(layerInfo.name, clName)
 		unitTest:assertEquals(layerInfo.file, tostring(geojson1))
@@ -110,7 +110,7 @@ return {
 		unitTest:assertNotNil(layerInfo.sid)
 
 		-- NO MASK TEST
-		local clSet = TerraLib:getDataSet(proj, clName)
+		local clSet = TerraLib().getDataSet(proj, clName)
 		unitTest:assertEquals(getn(clSet), 160)
 
 		clName = clName.."_NoMask"
@@ -119,9 +119,9 @@ return {
 		geojson2:deleteIfExists()
 
 		mask = false
-		TerraLib:addGeoJSONCellSpaceLayer(proj, layerName, clName, resolution, geojson2, mask)
+		TerraLib().addGeoJSONCellSpaceLayer(proj, layerName, clName, resolution, geojson2, mask)
 
-		clSet = TerraLib:getDataSet(proj, clName)
+		clSet = TerraLib().getDataSet(proj, clName)
 		unitTest:assertEquals(getn(clSet), 160)
 		-- // NO MASK TEST
 
@@ -131,7 +131,7 @@ return {
 	end,
 	getOGRByFilePath = function(unitTest)
 		local shpPath = filePath("test/sampa.geojson", "terralib")
-		local dSet = TerraLib:getOGRByFilePath(tostring(shpPath))
+		local dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
 
 		unitTest:assertEquals(getn(dSet), 63)
 
@@ -153,11 +153,11 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName1 = "SampaGeoJson"
 		local layerFile1 = filePath("test/sampa.geojson", "terralib")
-		TerraLib:addGeoJSONLayer(proj, layerName1, layerFile1)
+		TerraLib().addGeoJSONLayer(proj, layerName1, layerFile1)
 
 		-- SHP
 		local toData = {}
@@ -167,32 +167,32 @@ return {
 
 		local overwrite = true
 
-		TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE
-		TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE AND CHANGE SRID
 		toData.srid = 4326
-		TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		local layerName2 = "SHP"
-		TerraLib:addShpLayer(proj, layerName2, File(toData.file))
-		local info2 = TerraLib:getLayerInfo(proj, layerName2)
+		TerraLib().addShpLayer(proj, layerName2, File(toData.file))
+		local info2 = TerraLib().getLayerInfo(proj, layerName2)
 		unitTest:assertEquals(info2.srid, toData.srid)
 
 		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE
 		local file1 = toData.file
 		toData.file = "gj2gj.geojson"
 		toData.type = "geojson"
-		TerraLib:saveLayerAs(proj, layerName1, toData, overwrite, {"NM_MICRO"})
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite, {"NM_MICRO"})
 
 		local layerName3 = "GJ2GJ"
 		local layerFile3 = File(toData.file)
-		TerraLib:addGeoJSONLayer(proj, layerName3, layerFile3)
+		TerraLib().addGeoJSONLayer(proj, layerName3, layerFile3)
 
-		local dset3 = TerraLib:getDataSet(proj, layerName3)
+		local dset3 = TerraLib().getDataSet(proj, layerName3)
 
 		unitTest:assertEquals(getn(dset3), 63)
 
@@ -214,13 +214,13 @@ return {
 		local file = File(proj.file)
 		file:deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName1 = "SampaGeoJson"
 		local layerFile1 = filePath("test/sampa.geojson", "terralib")
-		TerraLib:addGeoJSONLayer(proj, layerName1, layerFile1)
+		TerraLib().addGeoJSONLayer(proj, layerName1, layerFile1)
 
-		local size = TerraLib:getLayerSize(proj, layerName1)
+		local size = TerraLib().getLayerSize(proj, layerName1)
 
 		unitTest:assertEquals(size, 63.0)
 
@@ -235,33 +235,33 @@ return {
 		local file = File(proj.file)
 		file:deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local lnName = "ES_Rails"
 		local lnFile = filePath("test/rails.shp", "terralib")
-		TerraLib:addShpLayer(proj, lnName, lnFile)
+		TerraLib().addShpLayer(proj, lnName, lnFile)
 
 		local toData = {}
 		toData.file = "rails.geojson"
 		toData.type = "geojson"
 		File(toData.file):deleteIfExists()
 
-		TerraLib:saveLayerAs(proj, lnName, toData, true)
+		TerraLib().saveLayerAs(proj, lnName, toData, true)
 
 		lnName = "ES_Rails_CurrDir"
 		lnFile = File(toData.file)
-		TerraLib:addGeoJSONLayer(proj, lnName, lnFile)
+		TerraLib().addGeoJSONLayer(proj, lnName, lnFile)
 
 		local dpLayerName = "ES_Rails_Peucker"
-		TerraLib:douglasPeucker(proj, lnName, dpLayerName, 500)
+		TerraLib().douglasPeucker(proj, lnName, dpLayerName, 500)
 
 		local dpFile = File(string.lower(dpLayerName)..".geojson")
-		TerraLib:addGeoJSONLayer(proj, dpLayerName, dpFile)
+		TerraLib().addGeoJSONLayer(proj, dpLayerName, dpFile)
 
-		local dpSet = TerraLib:getDataSet(proj, dpLayerName)
+		local dpSet = TerraLib().getDataSet(proj, dpLayerName)
 		unitTest:assertEquals(getn(dpSet), 182)
 
-		local attrNames = TerraLib:getPropertyNames(proj, dpLayerName)
+		local attrNames = TerraLib().getPropertyNames(proj, dpLayerName)
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("OBSERVACAO", attrNames[3])
 		unitTest:assertEquals("PRODUTOS", attrNames[6])

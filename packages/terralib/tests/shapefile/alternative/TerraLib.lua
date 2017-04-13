@@ -31,7 +31,7 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
@@ -40,7 +40,7 @@ return {
 
 		local layerName1 = "Para"
 		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "terralib")
-		TerraLib:addShpLayer(proj, layerName1, layerFile1)
+		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
 		local shp = {}
 
@@ -51,12 +51,12 @@ return {
 		-- CREATE THE CELLULAR SPACE
 		local resolution = 60e3
 		local mask = true
-		TerraLib:addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
+		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp[1], mask)
 
 		-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
 		local layerName2 = "Protection_Unit"
 		local layerFile2 = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
-		TerraLib:addShpLayer(proj, layerName2, layerFile2)
+		TerraLib().addShpLayer(proj, layerName2, layerFile2)
 
 		-- SHAPE OUTPUT
 		-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
@@ -74,58 +74,58 @@ return {
 		customWarning = customWarningBkp
 
 		local attributeTruncateWarning = function()
-			TerraLib:attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
 		end
 		unitTest:assertError(attributeTruncateWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'presence_t'.")
 
 		attribute = "FID"
 		local attributeAlreadyExists = function()
-			TerraLib:attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
 		end
 		unitTest:assertError(attributeAlreadyExists, "The attribute 'FID' already exists in the Layer.")
 
 		local meanTypeError = function()
-			TerraLib:attributeFill(proj, layerName2, clName, clName.."_Mean", "mean", "mean", "NOME", area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Mean", "mean", "mean", "NOME", area, default)
 		end
 		unitTest:assertError(meanTypeError, "Operation 'mean' cannot be executed with an attribute of type string ('NOME').")
 
 		local sumTypeError = function()
-			TerraLib:attributeFill(proj, layerName2, clName, clName.."_Sum", "sum", "sum", "NOME", area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Sum", "sum", "sum", "NOME", area, default)
 		end
 		unitTest:assertError(sumTypeError, "Operation 'sum' cannot be executed with an attribute of type string ('NOME').")
 
 		local wsumTypeError = function()
-			TerraLib:attributeFill(proj, layerName2, clName, clName.."_Wsum", "wsum", "wsum", "NOME", area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Wsum", "wsum", "wsum", "NOME", area, default)
 		end
 		unitTest:assertError(wsumTypeError, "Operation 'wsum' cannot be executed with an attribute of type string ('NOME').")
 
 		local areaTypeError = function()
-			TerraLib:attributeFill(proj, layerName2, clName, clName.."_Area", "area", "area", "NOME", area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Area", "area", "area", "NOME", area, default)
 		end
 		unitTest:assertError(areaTypeError, "Operation 'area' cannot be executed with an attribute of type string ('NOME').")
 
 		local stdevTypeError = function()
-			TerraLib:attributeFill(proj, layerName2, clName, clName.."_Stdev", "stdev", "stdev", "NOME", area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Stdev", "stdev", "stdev", "NOME", area, default)
 		end
 		unitTest:assertError(stdevTypeError, "Operation 'stdev' cannot be executed with an attribute of type string ('NOME').")
 
 		local averageTypeError = function()
-			TerraLib:attributeFill(proj, layerName2, clName, clName.."_Average", "average", "average", "NOME", area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Average", "average", "average", "NOME", area, default)
 		end
 		unitTest:assertError(averageTypeError, "Operation 'average' cannot be executed with an attribute of type string ('NOME').")
 
 		local weightedTypeError = function()
-			TerraLib:attributeFill(proj, layerName2, clName, clName.."_Weighted", "weighted", "weighted", "NOME", area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Weighted", "weighted", "weighted", "NOME", area, default)
 		end
 		unitTest:assertError(weightedTypeError, "Operation 'weighted' cannot be executed with an attribute of type string ('NOME').")
 
 		local coverageTypeError = function()
-			TerraLib:attributeFill(proj, layerName2, clName, clName.."_Coverage", "coverage", "coverage", "ANOCRIACAO", area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Coverage", "coverage", "coverage", "ANOCRIACAO", area, default)
 		end
 		unitTest:assertError(coverageTypeError, "Operation 'coverage' cannot be executed with an attribute of type real ('ANOCRIACAO').")
 
 		local intersectionTypeError = function()
-			TerraLib:attributeFill(proj, layerName2, clName, clName.."_Intersection", "intersec", "intersection", "ANOCRIACAO", area, default)
+			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Intersection", "intersec", "intersection", "ANOCRIACAO", area, default)
 		end
 		unitTest:assertError(intersectionTypeError, "Operation 'intersection' cannot be executed with an attribute of type real ('ANOCRIACAO').")
 
@@ -143,11 +143,11 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		TerraLib:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
-		TerraLib:addShpLayer(proj, layerName1, layerFile1)
+		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
 		-- TIF
 		local toData = {}
@@ -157,7 +157,7 @@ return {
 		local overwrite = true
 
 		local shp2tifError = function()
-			TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		end
 		unitTest:assertError(shp2tifError, "It was not possible to convert the data in layer 'SampaShp' to 'shp2tif.tif'.")
 
@@ -167,7 +167,7 @@ return {
 		end
 
 		shp2tifError = function()
-			TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		end
 		unitTest:assertError(shp2tifError, "It was not possible save the data in layer 'SampaShp' to raster data.")
 
@@ -176,7 +176,7 @@ return {
 		-- GEOJSON
 		toData.file = "shp2geojson.geojson"
 		toData.type = "geojson"
-		TerraLib:saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 
 		File(toData.file):delete()
 		proj.file:delete()

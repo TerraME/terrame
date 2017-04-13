@@ -621,7 +621,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		for k, v in pairs(dSet[i]) do
 			if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
 				if self.geometry then
-					cell.geom = terralib.TerraLib:castGeomToSubtype(v)
+					cell.geom = terralib.TerraLib().castGeomToSubtype(v)
 				end
 			else
 				cell[k] = v
@@ -639,7 +639,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 end
 
 local function loadOGR(self)
-	local dSet = terralib.TerraLib:getOGRByFilePath(tostring(self.file))
+	local dSet = terralib.TerraLib().getOGRByFilePath(tostring(self.file))
 
 	defaultTableValue(self, "geometry", false)
 
@@ -692,7 +692,7 @@ local function setRasterCells(self, dSet)
 end
 
 local function loadGdal(self)
-	local dSet = terralib.TerraLib:getGdalByFilePath(tostring(self.file))
+	local dSet = terralib.TerraLib().getGdalByFilePath(tostring(self.file))
 
 	setRasterCells(self, dSet) -- SKIP
 	self.layer = self.file:name() -- SKIP
@@ -702,7 +702,7 @@ local function loadGdal(self)
 end
 
 local function loadLayer(self)
-	local dset = terralib.TerraLib:getDataSet(self.project, self.layer.name)
+	local dset = terralib.TerraLib().getDataSet(self.project, self.layer.name)
 
 	if self.layer.rep == "raster" then
 		setRasterCells(self, dset) -- SKIP
@@ -1296,7 +1296,7 @@ CellularSpace_ = {
 		end
 
 		if not self.geometry then
-			local dset = terralib.TerraLib:getDataSet(self.project, self.layer.name)
+			local dset = terralib.TerraLib().getDataSet(self.project, self.layer.name)
 
 			for i = 0, #dset do
 				for k, v in pairs(dset[i]) do
@@ -1306,7 +1306,7 @@ CellularSpace_ = {
 				end
 			end
 		else
-			local dset = terralib.TerraLib:getDataSet(self.project, self.layer.name)
+			local dset = terralib.TerraLib().getDataSet(self.project, self.layer.name)
 			local isOgr = false
 
 			for k in pairs(dset[0]) do
@@ -1327,7 +1327,7 @@ CellularSpace_ = {
 			end
 		end
 
-		terralib.TerraLib:saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
+		terralib.TerraLib().saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
 	end,
 	--- Split the CellularSpace into a table of Trajectories according to a classification
 	-- strategy. The Trajectories will have empty intersection and union equal to the

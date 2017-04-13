@@ -104,9 +104,9 @@ function Project(data)
 	end
 
 	if data.file:exists() then
-		TerraLib:openProject(data, data.file)
+		TerraLib().openProject(data, data.file)
 	else
-		TerraLib:createProject(data, data.layers)
+		TerraLib().createProject(data, data.layers)
 	end
 
 	setmetatable(data, metaTableProject_)

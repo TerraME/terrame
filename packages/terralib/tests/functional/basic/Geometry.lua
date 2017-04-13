@@ -78,7 +78,7 @@ return {
 		}
 
 		forEachCell(cs, function(cell)
-			local geometry = TerraLib:castGeomToSubtype(cell.geom:getGeometryN(0))
+			local geometry = TerraLib().castGeomToSubtype(cell.geom:getGeometryN(0))
 
 			unitTest:assert(geometry:getX() > 0)
 			unitTest:assert(geometry:getY() > 0)
@@ -97,7 +97,7 @@ return {
 		}
 
 		forEachCell(cs, function(cell)
-			local geometry = TerraLib:castGeomToSubtype(cell.geom:getGeometryN(0))
+			local geometry = TerraLib().castGeomToSubtype(cell.geom:getGeometryN(0))
 			local length = geometry:getLength()
 
 			unitTest:assert(length ~= nil)
@@ -128,9 +128,9 @@ return {
 		}
 
 		forEachCell(cs, function(cell)
-			local geometry = TerraLib:castGeomToSubtype(cell.geom:getGeometryN(0))
-			local centroid = TerraLib:castGeomToSubtype(geometry:getCentroid())
-			local ring = TerraLib:castGeomToSubtype(geometry:getExteriorRing())
+			local geometry = TerraLib().castGeomToSubtype(cell.geom:getGeometryN(0))
+			local centroid = TerraLib().castGeomToSubtype(geometry:getCentroid())
+			local ring = TerraLib().castGeomToSubtype(geometry:getExteriorRing())
 			local nPoint = ring:getNPoints()
 
 			for i = 0, nPoint do
