@@ -432,6 +432,12 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 								inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 end
 
+local function fixNameTo10Characters(name, property)
+	local dif = string.len(name) - 10
+	local prop = string.sub(property, 1, string.len(property) - dif)
+	return string.gsub(name, property.."_", prop.."_")
+end
+
 local function renameEachClass(ds, dSetName, dsType, select, property)
 	local dSet = ds:getDataSet(dSetName)
 	local numProps = dSet:getNumProperties()
@@ -449,7 +455,17 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 					newName = string.gsub(currentProp, "B"..select.."_", property.."_")
 				end
 			else
-				newName = string.gsub(currentProp, select.."_", property.."_")
+				if (dsType == "OGR") and (string.len(select) == 10) then
+					if not string.find(currentProp, "_") then
+						newName = string.gsub(currentProp, select, property.."_0")
+					end
+				else
+					newName = string.gsub(currentProp, select.."_", property.."_")
+				end
+			end
+
+			if (string.len(newName) > 10) and (dsType ~= "POSTGIS") then
+				newName = fixNameTo10Characters(newName, property)
 			end
 
 			if newName ~= currentProp then
@@ -457,6 +473,26 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 			end
 
 			propsRenamed[newName] = newName
+
+		elseif (dsType == "OGR") and (string.len(select) == 10) then
+			local idx = string.find(currentProp, "_")
+			if idx then
+				local propSub = string.sub(currentProp, 1, idx - 1)
+				if string.match(select, propSub) then
+					newName = string.gsub(currentProp, "(.*)_", property.."_")
+
+					if (string.len(newName) > 10) and (dsType ~= "POSTGIS") then
+						newName = fixNameTo10Characters(newName, property)
+					end
+
+					if newName ~= currentProp then
+						ds:renameProperty(dSetName, currentProp, newName)
+					end
+
+					propsRenamed[newName] = newName
+				end
+			end
+
 		end
 	end
 

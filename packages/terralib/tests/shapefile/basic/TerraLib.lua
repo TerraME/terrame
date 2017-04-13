@@ -419,7 +419,7 @@ return {
 
 		operation = "coverage"
 		attribute = "perc"
-		select = "NOME"
+		select = "ADMINISTRA"
 		area = nil
 		default = nil
 		TerraLib:attributeFill(proj, layerName2, maxLayerName, percLayerName, attribute, operation, select, area, default)
@@ -431,7 +431,7 @@ return {
 		for k, v in pairs(percentSet[0]) do
 			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil))
+							(k == "minimum") or (k == "maximum") or (k == "perc_0") or (k == "perc_1"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -681,7 +681,7 @@ return {
 		File(shp[16]):deleteIfExists()
 
 		operation = "coverage"
-		attribute = "rperc"
+		attribute = "rpercentage"
 		select = 0
 		area = nil
 		default = nil
@@ -696,7 +696,8 @@ return {
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil))
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+							(string.match(k, "rpercen_") ~= nil))
 			unitTest:assertNotNil(v)
 		end
 
@@ -729,8 +730,8 @@ return {
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean"))
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+							(string.match(k, "rpercen_") ~= nil) or (k == "rmean"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -763,8 +764,8 @@ return {
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin"))
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -797,8 +798,8 @@ return {
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin") or (k == "rmax"))
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -831,8 +832,9 @@ return {
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev"))
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
+							(k == "rstdev"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -865,8 +867,9 @@ return {
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or (k == "rsum"))
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
+							(k == "rstdev") or (k == "rsum"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -894,9 +897,9 @@ return {
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or (k == "rsum") or
-							(k == "rsum_over"))
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
+							(k == "rstdev") or (k == "rsum") or (k == "rsum_over"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -930,9 +933,9 @@ return {
 							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or (k == "rsum") or
-							(k == "rsum_over") or (k == "aver_nd"))
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
+							(k == "rstdev") or (k == "rsum") or (k == "rsum_over") or (k == "aver_nd"))
 			unitTest:assertNotNil(v)
 		end
 
@@ -942,6 +945,47 @@ return {
 		unitTest:assertEquals(nodataLayerInfo.type, "OGR")
 		unitTest:assertEquals(nodataLayerInfo.rep, "polygon")
 		unitTest:assertNotNil(nodataLayerInfo.sid)
+
+		-- COVERAGE ATTRIBUTE + SELECTED WITH MORE THAN 10 CHARACTERS
+		local percLayerName2 = clName.."_"..layerName2.."_Percentage2"
+		shp[23] = percLayerName2..".shp"
+
+		File(shp[23]):deleteIfExists()
+
+		operation = "coverage"
+		attribute = "percentage"
+		select = "ADMINISTRA"
+		area = nil
+		default = nil
+		TerraLib:attributeFill(proj, layerName2, nodataLayerName, percLayerName2, attribute, operation, select, area, default)
+
+		local percentSet2 = TerraLib:getDataSet(proj, percLayerName2)
+
+		unitTest:assertEquals(getn(percentSet2), 9)
+
+		unitTest:assertNotNil(percentSet2[0].percenta_0)
+		unitTest:assertNotNil(percentSet2[0].percenta_1)
+
+		-- COVERAGE ATTRIBUTE WITH 9 CHARACTERS
+		local percLayerName3 = clName.."_"..layerName2.."_Percentage3"
+		shp[24] = percLayerName3..".shp"
+
+		File(shp[24]):deleteIfExists()
+
+		operation = "coverage"
+		attribute = "ninechars"
+		select = "NOME"
+		area = nil
+		default = nil
+		TerraLib:attributeFill(proj, layerName2, percLayerName2, percLayerName3, attribute, operation, select, area, default)
+
+		local percentSet3 = TerraLib:getDataSet(proj, percLayerName3)
+
+		unitTest:assertEquals(getn(percentSet3), 9)
+
+		unitTest:assertNotNil(percentSet3[0].nine_REBIO)
+		unitTest:assertNotNil(percentSet3[0].nine_PARES)
+		unitTest:assertNotNil(percentSet3[0].nine_PARNA)
 
 		for j = 1, #shp do
 			File(shp[j]):deleteIfExists()
