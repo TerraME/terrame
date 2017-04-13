@@ -1296,7 +1296,6 @@ TerraLib_ = {
 		return binding.te.common.Version.asString()
 	end,
 	--- Create a new Project.
-	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg layers A table where the layers will be stored.
 	-- @usage -- DONTRUN
@@ -1325,7 +1324,6 @@ TerraLib_ = {
 		saveProject(project, layers)
 	end,
 	--- Open a new project.
-	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg filePath The path for the project.
 	-- @usage -- DONTRUN
@@ -1348,7 +1346,6 @@ TerraLib_ = {
 		loadProject(project, filePath)
 	end,
 	--- Return the information of a given layer.
-	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg layerName The name of a layer.
 	-- @usage -- DONTRUN
@@ -1439,7 +1436,6 @@ TerraLib_ = {
 		return info
 	end,
 	--- Add a shapefile layer to a given project.
-	-- @arg _ A TerraLib object.
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg file The file to the layer.
@@ -1453,7 +1449,6 @@ TerraLib_ = {
 		addFileLayer(project, name, file, "OGR", addSpatialIdx, srid)
 	end,
 	--- Add a new GDAL layer to a given project.
-	-- @arg _ A TerraLib object.
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg file The file to the layer.
@@ -1474,7 +1469,6 @@ TerraLib_ = {
 		addFileLayer(project, name, file, "GDAL", nil, srid)
 	end,
 	--- Add a GeoJSON layer to a given project.
-	-- @arg _ A TerraLib object.
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg file The file to the layer.
@@ -1487,7 +1481,6 @@ TerraLib_ = {
 		addFileLayer(project, name, file, "GeoJSON", nil, srid)
 	end,
 	--- Validates if the URL is a valid WFS server.
-	-- @arg _ A TerraLib object.
 	-- @arg url The URL of the WFS server.
 	-- @usage -- DONTRUN
 	-- local layerName = "WFS-Layer"
@@ -1554,7 +1547,6 @@ TerraLib_ = {
 		instance.addGeoJSONLayer(project, name, file)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
-	-- @arg _ A TerraLib object.
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg data.host Name of the host.
@@ -1694,7 +1686,6 @@ TerraLib_ = {
 		instance.addPgLayer(project, name, data)
 	end,
 	--- Remove a PostreSQL table.
-	-- @arg _ A TerraLib object.
 	-- @arg data.host Name of the host.
 	-- @arg data.port Port number.
 	-- @arg data.user The user name.
@@ -1734,7 +1725,6 @@ TerraLib_ = {
 		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
 	end,
 	--- Remove a PostreSQL database.
-	-- @arg _ A TerraLib object.
 	-- @arg data.host Name of the host.
 	-- @arg data.port Port number.
 	-- @arg data.user The user name.
@@ -1956,7 +1946,6 @@ TerraLib_ = {
 		collectgarbage("collect")
 	end,
 	--- Returns a given dataset from a layer.
-	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg layerName Name of the layer to be read.
 	-- @usage -- DONTRUN
@@ -1985,7 +1974,6 @@ TerraLib_ = {
 		return set
 	end,
 	--- Save a given dataset.
-	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg fromLayerName The input layer name.
 	-- @arg toLayerName The output layer name.
@@ -2046,7 +2034,6 @@ TerraLib_ = {
 		collectgarbage("collect")
 	end,
 	--- Return the content of a GDAL file.
-	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the file to be loaded.
 	-- @usage -- DONTRUN
 	-- local gdalPath = filePath("PRODES_5KM.tif", "terralib")
@@ -2070,7 +2057,6 @@ TerraLib_ = {
 		return set
 	end,
 	--- Return the content of an OGR file.
-	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the file to be loaded.
 	-- @usage -- DONTRUN
 	-- local shpPath = filePath("sampa.shp", "terralib")
@@ -2101,7 +2087,6 @@ TerraLib_ = {
 		return set
 	end,
 	--- Returns the number of bands of some Raster.
-	-- @arg _ A TerraLib object.
 	-- @arg project The project.
 	-- @arg layerName The input layer name.
 	-- @usage -- DONTRUN
@@ -2118,7 +2103,6 @@ TerraLib_ = {
 		customError("The layer '"..layerName.."' is not a Raster.")
 	end,
 	--- Returns the area of this envelope as measured in the spatial reference system of it.
-	-- @arg _ A TerraLib object.
 	-- @arg geom The geometry of the project.
 	-- @usage -- DONTRUN
 	-- local dSet = TerraLib().getDataSet(proj, clName1)
@@ -2137,7 +2121,6 @@ TerraLib_ = {
 		return 0
 	end,
 	--- Returns a coordinate system name given an identification.
-	-- @arg _ A TerraLib object.
 	-- @arg layer A layer.
 	-- @usage -- DONTRUN
 	-- local prj = TerraLib().getProjection(proj.layers[layerName])
@@ -2153,7 +2136,6 @@ TerraLib_ = {
 		return prj
 	end,
 	--- Returns the property names of the dataset.
-	-- @arg _ A TerraLib object.
 	-- @arg project A Project.
 	-- @arg layerName A Layer name.
 	-- @usage -- DONTRUN
@@ -2183,7 +2165,6 @@ TerraLib_ = {
 		return names
 	end,
 	--- Returns the property informations of a layer.
-	-- @arg _ A TerraLib object.
 	-- @arg project A Project.
 	-- @arg layerName A Layer name.
 	-- @usage -- DONTRUN
@@ -2221,7 +2202,6 @@ TerraLib_ = {
 		return infos
 	end,
 	--- Returns the shortest distance between any two points in the two geometries.
-	-- @arg _ A TerraLib object.
 	-- @arg fromGeom The geometry.
 	-- @arg toGeom The other geometry.
 	-- @usage -- DONTRUN
@@ -2231,7 +2211,6 @@ TerraLib_ = {
 		return fromGeom:distance(toGeom)
 	end,
 	--- Returns a subtype of Geometry object.
-	-- @arg _ A TerraLib object.
 	-- @arg geom A Geometry object.
 	-- @usage -- DONTRUN
 	-- shpPath = filePath("RODOVIAS_AMZ_lin.shp", "terralib")
@@ -2242,7 +2221,6 @@ TerraLib_ = {
 		return castGeometry(geom)
 	end,
 	--- Returns the dummy value of a raster data.
-	-- @arg _ A TerraLib object.
 	-- @arg project The project.
 	-- @arg layerName The layer name which is in the project.
 	-- @arg band The band number.
@@ -2274,7 +2252,6 @@ TerraLib_ = {
 		return value
 	end,
 	--- Save some data of a layer to another data type.
-	-- @arg _ A TerraLib object (not used).
 	-- @arg project The project.
 	-- @arg layerName The layer name which is in the project.
 	-- @arg toData The data that will be saved.
@@ -2516,7 +2493,6 @@ TerraLib_ = {
 	end,
 	--- Returns the size of a layer.
 	-- When it stores vector data, it returns the number of elements. If it stores raster data, return the number of pixels.
-	-- @arg _ A TerraLib object (not used).
 	-- @arg project The project.
 	-- @arg layerName The layer name which is in the project.
 	-- @usage -- DONTRUN
@@ -2556,7 +2532,6 @@ TerraLib_ = {
 		return size
 	end,
 	--- Create a new dataset applying Douglas Peucker algorithm.
-	-- @arg _ A TerraLib object (not used).
 	-- @arg project The project.
 	-- @arg fromLayerName The layer name used as reference to create a new dataset.
 	-- @arg toDSetName The new dataset name.
@@ -2662,7 +2637,6 @@ TerraLib_ = {
 	end,
 	--- Check if a name is valid.
 	-- Return a error message if the name is invalid, otherwise it returns a empty string.
-	-- @arg _ A TerraLib object (not used).
 	-- @arg name A string name.
 	-- @usage -- DONTRUN
 	-- TerraLib().checkName("aname")
