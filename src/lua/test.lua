@@ -321,10 +321,10 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	printNote("Loading package '"..package.."'")
-	print = function(arg)
+	print = function(...)
 		ut.print_when_loading = ut.print_when_loading + 1
 
-		printError("Error: print() call detected with argument '"..tostring(arg).."'")
+		printError("Error: print() call detected with the following content: '"..table.concat({...}, "\t").."'")
 	end
 
 	local overwritten
@@ -487,7 +487,7 @@ function _Gtme.executeTests(package, fileName)
 
 			local printTesting = false
 
-			print = function(arg)
+			print = function(...)
 				ut.print_calls = ut.print_calls + 1
 
 				if not printTesting then
@@ -495,7 +495,7 @@ function _Gtme.executeTests(package, fileName)
 					printTesting = true
 				end
 
-				printError("Error: print() call detected with argument '"..tostring(arg).."'")
+				printError("Error: print() call detected with the following content: '"..table.concat({...}, "\t").."'")
 			end
 
 			xpcall(function() tests = dofile(eachDirectory.."/"..eachFile) end, function(err)
@@ -593,9 +593,9 @@ function _Gtme.executeTests(package, fileName)
 
 				collectgarbage("collect")
 
-				print = function(arg)
+				print = function(...)
 					ut.print_calls = ut.print_calls + 1
-					printError("Error: print() call detected with argument '"..tostring(arg).."'")
+					printError("Error: print() call detected with the following content: '"..table.concat({...}, "\t").."'")
 				end
 
 				local found_error = false
