@@ -221,10 +221,13 @@ function _Gtme.executeTests(package, fileName)
 			customError("It is not possible to use 'test' and 'notest' at the same time.")
 		end
 
-		if type(data.test) == "string" then
+		if data.test == false then
+			data.examples = true
+			data.test = {"zzzzzzzzzzzzz"}
+		elseif type(data.test) == "string" then
 			data.test = {data.test}
 		elseif type(data.test) ~= "table" and data.test ~= nil then
-			customError("'test' should be string, table, or nil, got "..type(data.test)..".")
+			customError("'test' should be a string, a table, false, or nil, got "..type(data.test)..".")
 		end
 
 		if type(data.notest) == "string" then
