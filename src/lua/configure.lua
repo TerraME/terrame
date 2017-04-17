@@ -343,20 +343,35 @@ function _Gtme.configure(self, modelName, package, random)
 				if self[value].values then
 					r = r.."combobox"..value.." = qt.new_qobject(qt.meta.QComboBox)".."\n"
 
+					local tvalue = "\ntvalue"..value.." = {"
 					local pos = 0
 					local index
-					table.sort(self[value].values)
-					local tvalue = "\ntvalue"..value.." = {"
-					forEachElement(self[value].values, function(_, mstring)
-						r = r.."qt.combobox_add_item(combobox"..value..", \"".._Gtme.stringToLabel(mstring).."\")\n"
-						tvalue = tvalue.."\""..mstring.."\", "
 
-						if mstring == self[value].default then
-							index = pos
-						else
-							pos = pos + 1
-						end
-					end)
+					if #self[value].values == 0 then
+						forEachOrderedElement(self[value].values, function(mstring)
+							r = r.."qt.combobox_add_item(combobox"..value..", \"".._Gtme.stringToLabel(mstring).."\")\n"
+							tvalue = tvalue.."\""..mstring.."\", "
+
+							if mstring == self[value].default then
+								index = pos
+							else
+								pos = pos + 1
+							end
+						end)
+					else
+						table.sort(self[value].values)
+						forEachElement(self[value].values, function(_, mstring)
+							r = r.."qt.combobox_add_item(combobox"..value..", \"".._Gtme.stringToLabel(mstring).."\")\n"
+							tvalue = tvalue.."\""..mstring.."\", "
+
+							if mstring == self[value].default then
+								index = pos
+							else
+								pos = pos + 1
+							end
+						end)
+					end
+
 					tvalue = tvalue.."}\n"
 					r = r..tvalue
 
@@ -421,17 +436,32 @@ function _Gtme.configure(self, modelName, package, random)
 							local pos = 0
 							local index
 							local tvalue = "\ntvalue"..idx..value.." = {"
-							table.sort(self[idx][value].values)
-							forEachElement(self[idx][value].values, function(_, mstring)
-								r = r.."qt.combobox_add_item(combobox"..idx..value..", \"".._Gtme.stringToLabel(mstring).."\")\n"
-								tvalue = tvalue.."\""..mstring.."\", "
 
-								if mstring == self[idx][value].default then
-									index = pos
-								else
-									pos = pos + 1
-								end
-							end)
+							if #self[idx][value].values == 0 then
+								forEachOrderedElement(self[idx][value].values, function(mstring)
+									r = r.."qt.combobox_add_item(combobox"..idx..value..", \"".._Gtme.stringToLabel(mstring).."\")\n"
+									tvalue = tvalue.."\""..mstring.."\", "
+
+									if mstring == self[idx][value].default then
+										index = pos
+									else
+										pos = pos + 1
+									end
+								end)
+							else
+								table.sort(self[idx][value].values)
+								forEachElement(self[idx][value].values, function(_, mstring)
+									r = r.."qt.combobox_add_item(combobox"..idx..value..", \"".._Gtme.stringToLabel(mstring).."\")\n"
+									tvalue = tvalue.."\""..mstring.."\", "
+
+									if mstring == self[idx][value].default then
+										index = pos
+									else
+										pos = pos + 1
+									end
+								end)
+							end
+
 							tvalue = tvalue.."}\n"
 							r = r..tvalue
 

@@ -1,0 +1,41 @@
+Using log directory '/Users/pedro/github/terrame-pedro/test/packages/print/log/'
+Loading package 'print'
+Error: print() call detected with the following content: '3	3'
+Error: print() call detected with the following content: '3'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/M.lua
+Error: print() call detected with the following content: '4	4'
+Error: print() call detected with the following content: '44'
+Testing abc
+Error: print() call detected with the following content: '5	5'
+Error: print() call detected with the following content: '55'
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking M.lua
+Skipping lines of source code check
+Testing examples
+The package has no examples
+Skipping logs check
+
+Functional test report for package 'print':
+Tests were executed in 0.24 seconds.
+2 print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or directories in directory 'tests'.
+All asserts were executed at least once.
+All 1 asserts were executed successfully.
+All 1 tested functions do not have any unexpected execution error.
+All 1 tested functions have at least one assert.
+All 1 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+4 print calls were found in the tests.
+No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
+All 1 functions of the package were tested.
+No lines from the source code were verified.
+The package has no examples.
+No log test was executed.
+Summing up, 6 problems were found during the tests.

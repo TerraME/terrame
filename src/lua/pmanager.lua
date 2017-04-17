@@ -342,7 +342,7 @@ local function installButtonClicked()
 	local pkgsTab = {}
 
 	local mdialog = qt.new_qobject(qt.meta.QDialog)
-	mdialog.windowTitle = "Download and install package"
+	mdialog.windowTitle = "Download and install packages"
 
 	local externalLayout = qt.new_qobject(qt.meta.QVBoxLayout)
 

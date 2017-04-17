@@ -556,7 +556,7 @@ function _Gtme.executeDoc(package)
 			forEachElement(mdata, function(_, mvalue)
 				if value.file[1] == mvalue.file[1] then
 					if value.layers or string.find(value.summary, "resolution") then -- a project or a layer of cells
-						printError("File "..value.file[1].." should not be documented as it would be automatically created.")
+						printError("File "..value.file[1].." should not be documented as it is automatically created.")
 						found = true
 						doc_report.error_data = doc_report.error_data + 1
 					end
@@ -586,6 +586,7 @@ function _Gtme.executeDoc(package)
 		forEachElement(mdata, function(_, value)
 			print("Processing '"..value.file[1].."'")
 
+			value.name = value.file[1] or ""
 			if not isFile(packageInfo(package).path.."data"..s..value.file[1]) then
 				-- this will be recognized as an error afterwards
 				return
@@ -614,6 +615,7 @@ function _Gtme.executeDoc(package)
 					end
 				end)
 			end
+
 
 			if string.endswith(value.file[1], ".csv") then
 				if not value.separator then
@@ -704,6 +706,7 @@ function _Gtme.executeDoc(package)
 
 				value.representation = layer:representation()
 				value.projection = layer:projection()
+				value.epsg = TerraLib().getProjection(layer.project.layers[layer.name]).SRID
 
 				local attributes
 				local attrs = layer:attributes()
@@ -778,6 +781,7 @@ function _Gtme.executeDoc(package)
 
 				value.representation = layer:representation()
 				value.projection = layer:projection()
+				value.epsg = TerraLib().getProjection(layer.project.layers[layer.name]).SRID
 				value.bands = layer:bands()
 				value.nodata = {}
 

@@ -180,6 +180,28 @@ water            number [200]
 
 		unitTest:assertEquals(m.file0, "def")
 		unitTest:assertEquals(m.files.file3, "abc")
+
+		local func1 = function() return 1 end
+		local func2 = function() return 2 end
+
+		M = Model{
+			quantity = Choice{a = func1, b = func2},
+			internal = {
+				quantity = Choice{a = func1, b = func2}
+			},
+			finalTime = 20,
+			init = function(model)
+				model.timer = Timer{Event{action = function() end}}
+			end
+		}
+
+		m = M{}
+		unitTest:assertEquals(m.quantity, func1)
+		unitTest:assertEquals(m.internal.quantity, func1)
+
+		m = M{quantity = "b", internal = {quantity = "b"}}
+		unitTest:assertEquals(m.quantity, func2)
+		unitTest:assertEquals(m.internal.quantity, func2)
 	end,
 	execute = function(unitTest)
 		local Tube3 = Model{

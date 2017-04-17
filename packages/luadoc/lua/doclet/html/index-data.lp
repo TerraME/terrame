@@ -140,7 +140,7 @@
 										<li><b>Files: </b>
 									<% end %>
 									<%for pos, f in ipairs(data.file) do%>
-										<%mlink = "<a href= \"../../data/"..f.."\">"..f.."</a>"%>
+										<%mlink = "<a href= \"../data/"..f.."\">"..f.."</a>"%>
 										<%if pos<#data.file then%>
 											<%=mlink..", "%>
 										<%else%>

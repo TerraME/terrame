@@ -221,10 +221,13 @@ function _Gtme.executeTests(package, fileName)
 			customError("It is not possible to use 'test' and 'notest' at the same time.")
 		end
 
-		if type(data.test) == "string" then
+		if data.test == false then
+			data.examples = true
+			data.test = {"zzzzzzzzzzzzz"}
+		elseif type(data.test) == "string" then
 			data.test = {data.test}
 		elseif type(data.test) ~= "table" and data.test ~= nil then
-			customError("'test' should be string, table, or nil, got "..type(data.test)..".")
+			customError("'test' should be a string, a table, false, or nil, got "..type(data.test)..".")
 		end
 
 		if type(data.notest) == "string" then
@@ -318,10 +321,10 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	printNote("Loading package '"..package.."'")
-	print = function(arg)
+	print = function(...)
 		ut.print_when_loading = ut.print_when_loading + 1
 
-		printError("Error: print() call detected with argument '"..tostring(arg).."'")
+		printError("Error: print() call detected with the following content: '"..table.concat({...}, "\t").."'")
 	end
 
 	local overwritten
@@ -484,7 +487,7 @@ function _Gtme.executeTests(package, fileName)
 
 			local printTesting = false
 
-			print = function(arg)
+			print = function(...)
 				ut.print_calls = ut.print_calls + 1
 
 				if not printTesting then
@@ -492,7 +495,7 @@ function _Gtme.executeTests(package, fileName)
 					printTesting = true
 				end
 
-				printError("Error: print() call detected with argument '"..tostring(arg).."'")
+				printError("Error: print() call detected with the following content: '"..table.concat({...}, "\t").."'")
 			end
 
 			xpcall(function() tests = dofile(eachDirectory.."/"..eachFile) end, function(err)
@@ -590,9 +593,9 @@ function _Gtme.executeTests(package, fileName)
 
 				collectgarbage("collect")
 
-				print = function(arg)
+				print = function(...)
 					ut.print_calls = ut.print_calls + 1
-					printError("Error: print() call detected with argument '"..tostring(arg).."'")
+					printError("Error: print() call detected with the following content: '"..table.concat({...}, "\t").."'")
 				end
 
 				local found_error = false

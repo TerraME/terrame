@@ -13,13 +13,18 @@ removeIfExists = function(_, value)
 	end
 end
 
-printTestOutput = function(result)
+printTestOutput = function(result, line)
 	_Gtme.printNote("Printing the test output")
 
 	count = 1
 
 	forEachElement(result, function(_, value)
-		_Gtme.printWarning(count.."\t"..value)
+		if count == line then
+			_Gtme.printError(count.."\t"..value)
+		else
+			_Gtme.printWarning(count.."\t"..value)
+		end
+
 		count = count + 1
 	end)
 
@@ -210,12 +215,10 @@ forEachOrderedElement(commands, function(idx, group)
 
 			local text = "Test executed in "..difference.." seconds"
 
-			if difference > 30 then
+			if difference > 60 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
 			elseif difference > 10 then
 				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-			elseif difference > 1 then
-				_Gtme.print("\027[00;37;42m"..text.."\027[00m")
 			end
 		end
 
@@ -285,7 +288,7 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printError("Log file: '"..str.."'.")
 					_Gtme.printError("Test:     '"..value.."'.")
 					_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
-					printTestOutput(result)
+					printTestOutput(result, line)
 
 					logerror = true
 					report.logerrors = report.logerrors + 1
@@ -468,7 +471,7 @@ forEachOrderedElement(commands, function(idx, group)
 					_Gtme.printError("Log file: '"..str.."'.")
 					_Gtme.printError("Test:     '"..value.."'.")
 					_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
-					printTestOutput(result)
+					printTestOutput(result, line)
 
 					report.locallogerrors = report.locallogerrors + 1
 					logerror = true
