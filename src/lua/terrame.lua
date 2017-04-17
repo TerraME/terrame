@@ -1403,6 +1403,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				if not success then
 					_Gtme.printError(result)
+					os.exit(1)
 				end
 
 				os.exit(errors)
