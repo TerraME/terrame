@@ -615,6 +615,8 @@ function _Gtme.executeDoc(package)
 				end)
 			end
 
+			value.name = value.file[1]
+
 			if string.endswith(value.file[1], ".csv") then
 				if not value.separator then
 					doc_report.error_data = doc_report.error_data + 1

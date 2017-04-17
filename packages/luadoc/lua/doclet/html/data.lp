@@ -54,7 +54,7 @@
 						<table class="file_list">
 						<%for _, data in ipairs(mdata) do%>
 							<tr>
-								<td class="name"><a href = "#<%=data.file[1]%>"><%=data.title%></a></td>
+								<td class="name"><a href = "#<%=data.name%>"><%=data.title%></a></td>
 								<td class="summary"><%= data.shortsummary or "" %></td>
 							</tr>
 						<%end%>
@@ -74,11 +74,11 @@
 								<% istview = #data.file == 1 and string.endswith(data.file[1], "tview") %>
 
 								<% if istview then %>
-									<%mlink = "<a href= \"../../data/"..data.file[1].."\">"..data.file[1].."</a>"%>
-									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=mlink%></h2></dt>
+									<%mlink = "<a href= \"../../data/"..data.name.."\">"..data.file[1].."</a>"%>
+									<dt<%=borderTop%>><h2 id = <%=data.name%>><%=mlink%></h2></dt>
 
 								<% else %>
-									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=data.title%></h2></dt>
+									<dt<%=borderTop%>><h2 id = <%=data.name%>><%=data.title%></h2></dt>
 								<% end %>
 
 								<% if data.image then %>
