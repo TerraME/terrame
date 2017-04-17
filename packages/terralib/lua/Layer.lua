@@ -467,11 +467,13 @@ Layer_ = {
 		switch(data, "operation"):caseof{
 			area = function()
 				if repr == "polygon" then
-					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
+
+				defaultTableValue(data, "default", 0)
 			end,
 			average = function()
 				if belong(repr, {"point", "line", "polygon"}) then
