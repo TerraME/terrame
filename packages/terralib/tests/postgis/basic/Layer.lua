@@ -98,7 +98,7 @@ return {
 		unitTest:assert(layer3.name ~= layer2.name)
 		unitTest:assertEquals(layer3.sid, layer2.sid)
 
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 
 		File(projName):deleteIfExists()
 
@@ -137,7 +137,7 @@ return {
 			encoding = encoding
 		}
 
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 
 		local l1 = Layer{
 			project = proj,
@@ -157,7 +157,7 @@ return {
 		local tName2 = "add_cellslayer_basic_another"
 
 		pgData.table = tName2
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 
 		local l2 = Layer{
 			project = proj,
@@ -177,7 +177,7 @@ return {
 		local tName3 = "add_cellslayer_basic_from_db"
 
 		pgData.table = tName3
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 
 		local l3 = Layer{
 			project = proj,
@@ -195,7 +195,7 @@ return {
 
 		local newDbName = "new_pg_db_30032017"
 		pgData.database = newDbName
-		TerraLib{}:dropPgDatabase(pgData)
+		TerraLib().dropPgDatabase(pgData)
 		pgData.database = database
 
 		local clName4 = "New_Sampa_Cells"
@@ -220,13 +220,13 @@ return {
 		unitTest:assertEquals(layer4.table, string.lower(clName4))
 
 		-- BOX TEST
-		local clSet = TerraLib{}:getDataSet(proj, clName1)
+		local clSet = TerraLib().getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 68)
 
 		clName1 = clName1.."_Box"
 		local tName4 = string.lower(clName1)
 		pgData.table = tName4
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 
 		Layer{
 			project = proj,
@@ -240,7 +240,7 @@ return {
 			database = database
 		}
 
-		clSet = TerraLib{}:getDataSet(proj, clName1)
+		clSet = TerraLib().getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)
 
 		-- CHANGE EPSG
@@ -285,8 +285,7 @@ return {
 		-- }
 
 		-- -- USED ONLY TO TESTS
-		-- local tl = TerraLib{}
-		-- tl:dropPgTable(pgData)
+		-- TerraLib().dropPgTable(pgData)
 		-- local clName2 = "ProdesPg"
 
 		-- local layer2 = Layer{
@@ -302,20 +301,20 @@ return {
 		-- }
 
 		-- END
-		-- tl:dropPgTable(pgData)
+		-- TerraLib().dropPgTable(pgData)
 
 		File(projName):deleteIfExists()
 
 		pgData.table = tName1
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 		pgData.table = tName2
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 		pgData.table = tName3
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 		pgData.table = tName4
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 		pgData.database = newDbName
-		TerraLib{}:dropPgDatabase(pgData)
+		TerraLib().dropPgDatabase(pgData)
 	end,
 	projection = function(unitTest)
 		local projName = "layer_basic.tview"
@@ -355,8 +354,7 @@ return {
 
 		}
 
-		local tl = TerraLib{}
-		tl:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
@@ -373,7 +371,7 @@ return {
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with EPSG: 29191 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
 
 		proj.file:delete()
-		tl:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 	end,
 	attributes = function(unitTest)
 		local projName = "layer_basic.tview"
@@ -412,8 +410,7 @@ return {
 			encoding = encoding
 		}
 
-		local tl = TerraLib{}
-		tl:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
@@ -426,15 +423,18 @@ return {
 			database = database
 		}
 
-		local propNames = layer:attributes()
+		local propInfos = layer:attributes()
 
-		for i = 1, #propNames do
-			unitTest:assert((propNames[i] == "id") or (propNames[i] == "geom") or
-						(propNames[i] == "col") or (propNames[i] == "row"))
-		end
+		unitTest:assertEquals(#propInfos, 3)
+		unitTest:assertEquals(propInfos[1].name, "id")
+		unitTest:assertEquals(propInfos[1].type, "string")
+		unitTest:assertEquals(propInfos[2].name, "col")
+		unitTest:assertEquals(propInfos[2].type, "integer 32")
+		unitTest:assertEquals(propInfos[3].name, "row")
+		unitTest:assertEquals(propInfos[3].type, "integer 32")
 
 		proj.file:delete()
-		tl:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 	end,
 	export = function(unitTest)
 		local projName = "layer_postgis_basic.tview"
@@ -462,7 +462,7 @@ return {
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local tableName = string.lower("mg_cities")
+		local tableName = "mg"
 
 		local pgData = {
 			source = "postgis",
@@ -537,8 +537,8 @@ return {
 		layer2:export(data1)
 		local attrs1 = layer3:attributes()
 
-		unitTest:assertEquals(attrs1[1], "FID")
-		unitTest:assertEquals(attrs1[2], "populaca")
+		unitTest:assertEquals(attrs1[1].name, "FID")
+		unitTest:assertEquals(attrs1[2].name, "populaca")
 		unitTest:assertNil(attrs1[3])
 
 		-- SELECT TWO ATTRIBUTES TO SHAPE
@@ -546,9 +546,9 @@ return {
 		layer2:export(data2)
 		local attrs2 = layer4:attributes()
 
-		unitTest:assertEquals(attrs2[1], "FID")
-		unitTest:assertEquals(attrs2[2], "populaca")
-		unitTest:assertEquals(attrs2[3], "nomemeso")
+		unitTest:assertEquals(attrs2[1].name, "FID")
+		unitTest:assertEquals(attrs2[2].name, "populaca")
+		unitTest:assertEquals(attrs2[3].name, "nomemeso")
 		unitTest:assertNil(attrs2[4])
 
 		File(geojson):delete()
@@ -556,7 +556,88 @@ return {
 		proj.file:delete()
 
 		pgData.table = tableName
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
+	end,
+	simplify = function(unitTest)
+		local projName = "layer_postgis_basic.tview"
+
+		if File(projName):exists() then -- TODO: (#1442)
+			File(projName):delete()
+		end
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+
+		local filePath1 = filePath("test/rails.shp", "terralib")
+
+		local layerName1 = "ES_Rails"
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+
+		local user = "postgres"
+		local password = getConfig().password
+		local database = "postgis_22_sample"
+		local tableName = string.lower(layerName1)
+
+		local pgData = {
+			source = "postgis",
+			user = user,
+			password = password,
+			database = database,
+			overwrite = true,
+			epsg = 4036
+		}
+
+		layer1:export(pgData)
+
+		local layerName2 = "ES_Rails_Pg"
+		local layer2 = Layer{
+			project = proj,
+			source = "postgis",
+			name = layerName2,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName
+		}
+
+		local outputName = "spl_"..tableName
+		local data = {
+			output = outputName,
+			tolerance = 500
+		}
+
+		layer2:simplify(data)
+
+		local layerName3 = "ES_Rails_Spl"
+		local layer3 = Layer{
+			project = proj,
+			source = "postgis",
+			name = layerName3,
+			user = user,
+			password = password,
+			database = database,
+			table = outputName
+		}
+
+		local attrs = layer3:attributes()
+		unitTest:assertEquals("fid", attrs[1].name)
+		unitTest:assertEquals("observacao", attrs[4].name)
+		unitTest:assertEquals("produtos", attrs[7].name)
+		unitTest:assertEquals("operadora", attrs[10].name)
+		unitTest:assertEquals("bitola_ext", attrs[13].name)
+		unitTest:assertEquals("cod_pnv", attrs[15].name)
+
+		pgData.table = tableName
+		TerraLib().dropPgTable(pgData)
+		pgData.table = outputName
+		TerraLib().dropPgTable(pgData)
+		proj.file:delete()
 	end
 }
 

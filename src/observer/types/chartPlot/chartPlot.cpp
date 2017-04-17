@@ -139,18 +139,28 @@ const int ChartPlot::getId() const
 
 void ChartPlot::resizeEvent(QResizeEvent *event)
 {
-    VisualArrangement::getInstance()->resizeEventDelegate(id, event);
-
-    QwtPlot::resizeEvent(event);
+	if (this->isVisible())
+	{
+		VisualArrangement::getInstance()->resizeEventDelegate(id, event);
+		QwtPlot::resizeEvent(event);
+	}
+	else
+		event->ignore();
 }
 
 void ChartPlot::moveEvent(QMoveEvent *event)
 {
-    VisualArrangement::getInstance()->moveEventDelegate(id, event);
+	if (this->isVisible())
+		VisualArrangement::getInstance()->moveEventDelegate(id, event);
+	else
+		event->ignore();
 }
 
 void ChartPlot::closeEvent(QCloseEvent *event)
 {
+#ifdef __linux__
+	VisualArrangement::getInstance()->closeEventDelegate(this);
+#else
     VisualArrangement::getInstance()->closeEventDelegate();
+#endif
 }
-

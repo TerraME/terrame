@@ -432,6 +432,12 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 								inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 end
 
+local function fixNameTo10Characters(name, property)
+	local dif = string.len(name) - 10
+	local prop = string.sub(property, 1, string.len(property) - dif)
+	return string.gsub(name, property.."_", prop.."_")
+end
+
 local function renameEachClass(ds, dSetName, dsType, select, property)
 	local dSet = ds:getDataSet(dSetName)
 	local numProps = dSet:getNumProperties()
@@ -449,7 +455,17 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 					newName = string.gsub(currentProp, "B"..select.."_", property.."_")
 				end
 			else
-				newName = string.gsub(currentProp, select.."_", property.."_")
+				if (dsType == "OGR") and (string.len(select) == 10) then
+					if not string.find(currentProp, "_") then
+						newName = string.gsub(currentProp, select, property.."_0")
+					end
+				else
+					newName = string.gsub(currentProp, select.."_", property.."_")
+				end
+			end
+
+			if (string.len(newName) > 10) and (dsType ~= "POSTGIS") then
+				newName = fixNameTo10Characters(newName, property)
 			end
 
 			if newName ~= currentProp then
@@ -457,6 +473,26 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 			end
 
 			propsRenamed[newName] = newName
+
+		elseif (dsType == "OGR") and (string.len(select) == 10) then
+			local idx = string.find(currentProp, "_")
+			if idx then
+				local propSub = string.sub(currentProp, 1, idx - 1)
+				if string.match(select, propSub) then
+					newName = string.gsub(currentProp, "(.*)_", property.."_")
+
+					if (string.len(newName) > 10) and (dsType ~= "POSTGIS") then
+						newName = fixNameTo10Characters(newName, property)
+					end
+
+					if newName ~= currentProp then
+						ds:renameProperty(dSetName, currentProp, newName)
+					end
+
+					propsRenamed[newName] = newName
+				end
+			end
+
 		end
 	end
 
@@ -788,15 +824,15 @@ local function removeLayer(project, layerName)
 	collectgarbage("collect")
 end
 
-local function overwriteLayer(self, project, fromName, toName, toSetName)
-	local fromDset = self:getDataSet(project, fromName)
+local function overwriteLayer(project, fromName, toName, toSetName)
+	local fromDset = instance.getDataSet(project, fromName)
 
 	local luaTable = {}
 	for i = 0, #fromDset do
 		table.insert(luaTable, fromDset[i])
 	end
 
-	self:saveDataSet(project, fromName, luaTable, toName, {}, toSetName)
+	instance.saveDataSet(project, fromName, luaTable, toName, {}, toSetName)
 end
 
 local function castGeometry(geom)
@@ -959,6 +995,34 @@ local function createConnInfoToSave(connInfo, toSetName, toType)
 	return toConnInfo
 end
 
+local function isGeometryProperty(propName)
+	return (propName == "OGR_GEOMETRY") or
+		   (propName == "ogr_geometry") or
+		   (propName == "geom")
+end
+
+local function createInvalidNamesErrorMsg(invalidNames)
+	local errorMsg
+
+	if #invalidNames == 1 then
+		errorMsg = "Invalid attribute name '"..invalidNames[1].."'."
+	else
+		local ins = ""
+		for i = 1, #invalidNames do
+			ins = ins.."'"..invalidNames[i].."'"
+			if (i ~= #invalidNames - 1) and not (i == #invalidNames) then
+				ins = ins..", "
+			elseif i == #invalidNames - 1 then
+				ins = ins.." and "
+			end
+		end
+
+		errorMsg = "Invalid attribute names "..ins.."."
+	end
+
+	return errorMsg
+end
+
 local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 	local errorMsg
 	do
@@ -979,7 +1043,7 @@ local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 
 				if not ds:isPropertyNameValid(propName) then
 					table.insert(invalidNames, propName)
-				elseif ds:propertyExists(dsetName, propName) then
+				elseif ds:propertyExists(dsetName, propName) or isGeometryProperty(propName) then
 					table.insert(attrsToUp, propName)
 				else
 					table.insert(attrsToIn, propName)
@@ -988,21 +1052,7 @@ local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 		end
 
 		if #invalidNames > 0 then
-			if #invalidNames == 1 then
-				errorMsg = "Invalid attribute name '"..invalidNames[1].."'."
-			else
-				local ins = ""
-				for i = 1, #invalidNames do
-					ins = ins.."'"..invalidNames[i].."'"
-					if (i ~= #invalidNames - 1) and not (i == #invalidNames) then
-						ins = ins..", "
-					elseif i == #invalidNames - 1 then
-						ins = ins.." and "
-					end
-				end
-
-				errorMsg = "Invalid attribute names "..ins.."."
-			end
+			errorMsg = createInvalidNamesErrorMsg(invalidNames)
 		else
 			-- Copy from dataset to new
 			local dst = ds:getDataSetType(dsetName)
@@ -1093,6 +1143,8 @@ local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
 							else
 								newDse:setBool(attr, v)
 							end
+						elseif isGeometryProperty(attr) then
+							newDse:setGeometry(attr, v)
 						end
 					end
 
@@ -1239,18 +1291,15 @@ TerraLib_ = {
 
 	--- Return the current TerraLib version.
 	-- @usage import("terralib")
-	-- tl = TerraLib{}
-	-- print(tl:getVersion())
+	-- print(TerraLib().getVersion())
 	getVersion = function()
 		return binding.te.common.Version.asString()
 	end,
 	--- Create a new Project.
-	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg layers A table where the layers will be stored.
 	-- @usage -- DONTRUN
 	-- import("terralib")
-	-- tl = TerraLib{}
 	--
 	-- proj = {
 	--     file = "myproject.tview",
@@ -1258,8 +1307,8 @@ TerraLib_ = {
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
-	createProject = function(_, project, layers)
+	-- TerraLib().createProject(proj, {})
+	createProject = function(project, layers)
 		if type(project.file) == "string" then
 			project.file = File(project.file)
 		end
@@ -1275,15 +1324,13 @@ TerraLib_ = {
 		saveProject(project, layers)
 	end,
 	--- Open a new project.
-	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg filePath The path for the project.
 	-- @usage -- DONTRUN
 	-- import("terralib")
-	-- tl = TerraLib{}
 	-- proj = {}
-	-- tl:openProject(proj2, "myproject.tview")
-	openProject = function(_, project, filePath)
+	-- TerraLib().openProject(proj2, "myproject.tview")
+	openProject = function(project, filePath)
 		if type(filePath) == "string" then
 			filePath = File(filePath)
 		end
@@ -1299,23 +1346,20 @@ TerraLib_ = {
 		loadProject(project, filePath)
 	end,
 	--- Return the information of a given layer.
-	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
-	-- @arg layer The name of the layer.
+	-- @arg layerName The name of a layer.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
-	--
 	-- proj = {
 	--     file = "myproject.tview",
 	--     title = "TerraLib Tests",
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib().createProject(proj, {})
 	--
 	-- local layerName1 = "SampaShp"
 	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib().addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- pgData = {
 	--     type = "POSTGIS",
@@ -1328,10 +1372,11 @@ TerraLib_ = {
 	--     encoding = "CP1252"
 	-- }
 	--
-	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- TerraLib().addPgLayer(proj, "SampaPg", pgData)
 	--
-	-- layerInfo = tl:getLayerInfo(proj, proj.layers[layerName2])
-	getLayerInfo = function(_, project, layer)
+	-- layerInfo = TerraLib().getLayerInfo(proj, "SampaPg")
+	getLayerInfo = function(project, layerName)
+		local layer = project.layers[layerName]
 		local info = {}
 		info.name = layer:getTitle()
 		info.sid = layer:getDataSourceId()
@@ -1391,7 +1436,6 @@ TerraLib_ = {
 		return info
 	end,
 	--- Add a shapefile layer to a given project.
-	-- @arg _ A TerraLib object.
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg file The file to the layer.
@@ -1399,55 +1443,51 @@ TerraLib_ = {
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
-	-- proj = tl:createProject("project.tview", {})
-	-- tl:addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
-	addShpLayer = function(_, project, name, file, addSpatialIdx, srid)
+	-- proj = TerraLib().createProject("project.tview", {})
+	-- TerraLib().addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
+	addShpLayer = function(project, name, file, addSpatialIdx, srid)
 		addFileLayer(project, name, file, "OGR", addSpatialIdx, srid)
 	end,
 	--- Add a new GDAL layer to a given project.
-	-- @arg _ A TerraLib object.
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg file The file to the layer.
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- proj = {
 	--     file = "myproject.tview",
 	--     title = "TerraLib Tests",
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib().createProject(proj, {})
 	--
 	-- layerName = "TifLayer"
 	-- layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-	-- tl:addGdalLayer(proj, layerName, layerFile)
-	addGdalLayer = function(_, project, name, file, srid)
+	-- TerraLib().addGdalLayer(proj, layerName, layerFile)
+	addGdalLayer = function(project, name, file, srid)
 		addFileLayer(project, name, file, "GDAL", nil, srid)
 	end,
 	--- Add a GeoJSON layer to a given project.
-	-- @arg _ A TerraLib object.
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg file The file to the layer.
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
-	-- tl:createProject("project.tview", {})
-	-- tl:addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
-	addGeoJSONLayer = function(_, project, name, file, srid)
+	-- TerraLib().createProject("project.tview", {})
+	-- TerraLib().addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
+	addGeoJSONLayer = function(project, name, file, srid)
 		addFileLayer(project, name, file, "GeoJSON", nil, srid)
 	end,
 	--- Validates if the URL is a valid WFS server.
-	-- @arg _ A TerraLib object.
 	-- @arg url The URL of the WFS server.
 	-- @usage -- DONTRUN
 	-- local layerName = "WFS-Layer"
 	-- local url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
 	-- local dataset = "reddpac:BAU"
-	-- tl:isValidWfsUrl(url)
-	isValidWfsUrl = function(_, url)
+	-- TerraLib().isValidWfsUrl(url)
+	isValidWfsUrl = function(url)
 		return isValidDataSourceUri(toWfsUrl(url), "WFS")
 	end,
 	--- Add a WFS layer to a given project.
@@ -1459,10 +1499,10 @@ TerraLib_ = {
 	-- local layerName = "WFS-Layer"
 	-- local url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
 	-- local dataset = "reddpac:BAU"
-	-- tl:addWfsLayer(project, name, url, dataset)
-	addWfsLayer = function(self, project, name, url, dataset)
+	-- TerraLib().addWfsLayer(project, name, url, dataset)
+	addWfsLayer = function(project, name, url, dataset)
 		local wfsUrl = toWfsUrl(url)
-		if self:isValidWfsUrl(wfsUrl) then
+		if instance.isValidWfsUrl(wfsUrl) then
 			loadProject(project, project.file)
 
 			local layer = createLayer(name, dataset, wfsUrl, "WFS", nil)
@@ -1482,21 +1522,20 @@ TerraLib_ = {
 	-- @arg inputLayerTitle The name of the layer.
 	-- @arg mask A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- proj = {
 	--     file = "mygeojsonproject.tview",
 	--     title = "TerraLib Tests",
 	--     author = "Carneiro Heitor"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib().createProject(proj, {})
 	--
 	-- layerName1 = "Setores_Layer"
 	-- layerFile1 = filePath("Setores_Censitarios_2000_pol.geojson", "terralib")
-	-- tl:addGeoJSONLayer(proj, layerName1, layerFile1)
+	-- TerraLib().addGeoJSONLayer(proj, layerName1, layerFile1)
 	--
-	-- tl:addGeoJSONCellSpaceLayer(proj, layerName1, "Setores_Cells", 10000, currentDir())
-	addGeoJSONCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, file, mask)
+	-- TerraLib().addGeoJSONCellSpaceLayer(proj, layerName1, "Setores_Cells", 10000, currentDir())
+	addGeoJSONCellSpaceLayer = function(project, inputLayerTitle, name, resolution, file, mask)
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
@@ -1505,10 +1544,9 @@ TerraLib_ = {
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		self:addGeoJSONLayer(project, name, file)
+		instance.addGeoJSONLayer(project, name, file)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
-	-- @arg _ A TerraLib object.
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
 	-- @arg data.host Name of the host.
@@ -1519,7 +1557,6 @@ TerraLib_ = {
 	-- @arg data.encoding The encoding of the table.
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	--
 	-- proj = {
 	--     file = "myproject.tview",
@@ -1527,11 +1564,11 @@ TerraLib_ = {
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib().createProject(proj, {})
 	--
 	-- local layerName1 = "SampaShp"
 	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib().addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- pgData = {
 	--     type = "POSTGIS",
@@ -1544,8 +1581,8 @@ TerraLib_ = {
 	--     encoding = "CP1252"
 	-- }
 	--
-	-- tl:addPgLayer(proj, "SampaPg", pgData)
-	addPgLayer = function(_, project, name, data, srid)
+	-- TerraLib().addPgLayer(proj, "SampaPg", pgData)
+	addPgLayer = function(project, name, data, srid)
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 
 		loadProject(project, project.file)
@@ -1572,22 +1609,21 @@ TerraLib_ = {
 	-- @arg mask A boolean value indicating whether the cells should cover only the input data (true) or its bounding box (false).
 	-- @arg addSpatialIdx A boolean value indicating whether a spatial index file should be created.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- proj = {
 	--     file = "myproject.tview",
 	--     title = "TerraLib Tests",
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib().createProject(proj, {})
 	--
 	-- layerName1 = "SampaShp"
 	-- layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib().addShpLayer(proj, layerName1, layerFile1)
 	--
-	--	tl:addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
+	--	TerraLib().addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
 
-	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, file, mask, addSpatialIdx)
+	addShpCellSpaceLayer = function(project, inputLayerTitle, name, resolution, file, mask, addSpatialIdx)
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
@@ -1596,7 +1632,7 @@ TerraLib_ = {
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		self:addShpLayer(project, name, file, addSpatialIdx)
+		instance.addShpLayer(project, name, file, addSpatialIdx)
 
 		fixCellSpaceSrid(project, name, inputLayerTitle)
 	end,
@@ -1614,11 +1650,11 @@ TerraLib_ = {
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib().createProject(proj, {})
 	--
 	-- local layerName1 = "SampaShp"
 	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib().addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- local pgData = {
 	--     type = "POSTGIS",
@@ -1633,8 +1669,8 @@ TerraLib_ = {
 	--
 	-- local clName1 = "SampaPgCells"
 	-- local resolution = 0.7
-	-- tl:addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData)
-	addPgCellSpaceLayer = function(self, project, inputLayerTitle, name, resolution, data, mask)
+	-- TerraLib().addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData)
+	addPgCellSpaceLayer = function(project, inputLayerTitle, name, resolution, data, mask)
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
@@ -1647,10 +1683,9 @@ TerraLib_ = {
 			customError("Table '"..data.table.."' already exists.") -- SKIP
 		end
 
-		self:addPgLayer(project, name, data)
+		instance.addPgLayer(project, name, data)
 	end,
 	--- Remove a PostreSQL table.
-	-- @arg _ A TerraLib object.
 	-- @arg data.host Name of the host.
 	-- @arg data.port Port number.
 	-- @arg data.user The user name.
@@ -1658,7 +1693,6 @@ TerraLib_ = {
 	-- @arg data.database The database name.
 	-- @arg data.encoding The encoding of the table.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	--
 	-- proj = {
 	--     file = "myproject.tview",
@@ -1666,11 +1700,11 @@ TerraLib_ = {
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib().createProject(proj, {})
 	--
 	-- local layerName1 = "SampaShp"
 	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib().addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- pgData = {
 	--     type = "POSTGIS",
@@ -1683,22 +1717,20 @@ TerraLib_ = {
 	--     encoding = "CP1252"
 	-- }
 	--
-	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- TerraLib().addPgLayer(proj, "SampaPg", pgData)
 	--
-	-- tl:dropPgTable(pgData)
-	dropPgTable = function(_, data)
+	-- TerraLib().dropPgTable(pgData)
+	dropPgTable = function(data)
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
 	end,
 	--- Remove a PostreSQL database.
-	-- @arg _ A TerraLib object.
 	-- @arg data.host Name of the host.
 	-- @arg data.port Port number.
 	-- @arg data.user The user name.
 	-- @arg data.password The password.
 	-- @arg data.database The database name.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	--
 	-- proj = {
 	--     file = "myproject.tview",
@@ -1706,11 +1738,11 @@ TerraLib_ = {
 	--     author = "Avancini Rodrigo"
 	-- }
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib().createProject(proj, {})
 	--
 	-- local layerName1 = "SampaShp"
 	-- local layerFile1 = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib().addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- pgData = {
 	--     type = "POSTGIS",
@@ -1723,10 +1755,10 @@ TerraLib_ = {
 	--     encoding = "CP1252"
 	-- }
 	--
-	-- tl:addPgLayer(proj, "SampaPg", pgData)
+	-- TerraLib().addPgLayer(proj, "SampaPg", pgData)
 	--
-	-- tl:dropPgDatabase(pgData)
-	dropPgDatabase = function(_, data)
+	-- TerraLib().dropPgDatabase(pgData)
+	dropPgDatabase = function(data)
 		local connInfo = "pgsql://"..data.user..":"..data.password.."@"..data.host..":"..data.port.."/?"
 					.."&PG_CONNECT_TIMEOUT=10"
 					.."&PG_MAX_POOL_SIZE=4"
@@ -1751,7 +1783,6 @@ TerraLib_ = {
 	-- @arg repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
 	-- @arg nodata A number used in raster data that represents no information in a pixel value.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- proj = {
 	--     file = "myproject.tview",
 	--     title = "TerraLib Tests",
@@ -1759,23 +1790,23 @@ TerraLib_ = {
 	-- }
 	--
 	--
-	-- tl:createProject(proj, {})
+	-- TerraLib().createProject(proj, {})
 	--
 	-- layerName1 = "Para"
 	-- layerFile1 = filePath("limitePA_polyc_pol.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName1, layerFile1)
+	-- TerraLib().addShpLayer(proj, layerName1, layerFile1)
 	--
 	-- resolution = 60e3
-	-- tl:addShpCellSpaceLayer(proj, layerName1, clName, resolution, filePath1)
+	-- TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, filePath1)
 	--
-	-- clSet = tl:getDataSet(proj, clName)
+	-- clSet = TerraLib().getDataSet(proj, clName)
 	--
 	-- layerName2 = "Protection_Unit"
 	-- layerFile2 = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName2, layerFile2)
+	-- TerraLib().addShpLayer(proj, layerName2, layerFile2)
 	--
-	-- tl:attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
-	attributeFill = function(self, project, from, to, out, property, operation, select, area, default, repr, nodata)
+	-- TerraLib().attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
+	attributeFill = function(project, from, to, out, property, operation, select, area, default, repr, nodata)
 		do
 			loadProject(project, project.file)
 
@@ -1907,7 +1938,7 @@ TerraLib_ = {
 				end
 
 				outDs:close()
-				overwriteLayer(self, project, out, to, toSetName)
+				overwriteLayer(project, out, to, toSetName)
 				removeLayer(project, out)
 			end
 		end
@@ -1915,12 +1946,11 @@ TerraLib_ = {
 		collectgarbage("collect")
 	end,
 	--- Returns a given dataset from a layer.
-	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg layerName Name of the layer to be read.
 	-- @usage -- DONTRUN
 	-- ds = terralib:getDataSet("myproject.tview", "mylayer")
-	getDataSet = function(_, project, layerName)
+	getDataSet = function(project, layerName)
 		local set
 
 		do
@@ -1944,7 +1974,6 @@ TerraLib_ = {
 		return set
 	end,
 	--- Save a given dataset.
-	-- @arg _ A TerraLib object.
 	-- @arg project The name of the project.
 	-- @arg fromLayerName The input layer name.
 	-- @arg toLayerName The output layer name.
@@ -1952,8 +1981,8 @@ TerraLib_ = {
 	-- @arg attrs A table with the attributes to be saved.
 	-- @arg toSetName The name of the output data set.
 	-- @usage -- DONTRUN
-	-- saveDataSet(self, project, fromLayerName, toSet, toName, attrs)
-	saveDataSet = function(_, project, fromLayerName, toSet, toLayerName, attrs, toSetName)
+	-- saveDataSet(project, fromLayerName, toSet, toName, attrs)
+	saveDataSet = function(project, fromLayerName, toSet, toLayerName, attrs, toSetName)
 		do
 			loadProject(project, project.file)
 
@@ -1978,7 +2007,7 @@ TerraLib_ = {
 			end
 
 			if not attrs then
-				attrs =  {}
+				attrs = {}
 			end
 
 			if (dseName == toSetName) or (toLayerName == fromLayerName) then
@@ -2005,13 +2034,11 @@ TerraLib_ = {
 		collectgarbage("collect")
 	end,
 	--- Return the content of a GDAL file.
-	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the file to be loaded.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- local gdalPath = filePath("PRODES_5KM.tif", "terralib")
-	-- dSet = tl:getGdalByFilePath(gdalPath)
-	getGdalByFilePath = function(_, filePath)
+	-- dSet = TerraLib().getGdalByFilePath(gdalPath)
+	getGdalByFilePath = function(filePath)
 		local set
 
 		do
@@ -2030,13 +2057,11 @@ TerraLib_ = {
 		return set
 	end,
 	--- Return the content of an OGR file.
-	-- @arg _ A TerraLib object.
 	-- @arg filePath The path for the file to be loaded.
 	-- @usage -- DONTRUN
-	-- tl = TerraLib{}
 	-- local shpPath = filePath("sampa.shp", "terralib")
-	-- dSet = tl:getOGRByFilePath(shpPath)
-	getOGRByFilePath = function(_, filePath)
+	-- dSet = TerraLib().getOGRByFilePath(shpPath)
+	getOGRByFilePath = function(filePath)
 		local set
 
 		do
@@ -2062,13 +2087,12 @@ TerraLib_ = {
 		return set
 	end,
 	--- Returns the number of bands of some Raster.
-	-- @arg _ A TerraLib object.
 	-- @arg project The project.
 	-- @arg layerName The input layer name.
 	-- @usage -- DONTRUN
-	-- tl:addGdalLayer(proj, layerName, layerFile)
-	-- local numBands = tl:getNumOfBands(proj, layerName)
-	getNumOfBands = function(_, project, layerName)
+	-- TerraLib().addGdalLayer(proj, layerName, layerFile)
+	-- local numBands = TerraLib().getNumOfBands(proj, layerName)
+	getNumOfBands = function(project, layerName)
 		local layer = project.layers[layerName]
 		local raster = getRasterFromLayer(project, layer)
 
@@ -2079,12 +2103,11 @@ TerraLib_ = {
 		customError("The layer '"..layerName.."' is not a Raster.")
 	end,
 	--- Returns the area of this envelope as measured in the spatial reference system of it.
-	-- @arg _ A TerraLib object.
 	-- @arg geom The geometry of the project.
 	-- @usage -- DONTRUN
-	-- local dSet = tl:getDataSet(proj, clName1)
-	-- local area = tl:getArea(dSet[0].OGR_GEOMETRY)
-	getArea = function(_, geom)
+	-- local dSet = TerraLib().getDataSet(proj, clName1)
+	-- local area = TerraLib().getArea(dSet[0].OGR_GEOMETRY)
+	getArea = function(geom)
 		local geomType = geom:getGeometryType()
 
 		if (geomType == "MultiPolygon") or (geomType == "CurvePolygon") or
@@ -2098,12 +2121,11 @@ TerraLib_ = {
 		return 0
 	end,
 	--- Returns a coordinate system name given an identification.
-	-- @arg _ A TerraLib object.
-	-- @arg layer The layer.
+	-- @arg layer A layer.
 	-- @usage -- DONTRUN
-	-- local prj = tl:getProjection(proj.layers[layerName])
+	-- local prj = TerraLib().getProjection(proj.layers[layerName])
 	-- print(prj.NAME..". SRID: "..prj.SRID..". PROJ4: "..prj.PROJ4)
-	getProjection = function(_, layer)
+	getProjection = function(layer)
 		local srid = layer:getSRID()
 		local proj4 = binding.te.srs.SpatialReferenceSystemManager.getInstance():getP4Txt(srid)
 		local name = binding.te.srs.SpatialReferenceSystemManager.getInstance():getName(srid)
@@ -2114,18 +2136,18 @@ TerraLib_ = {
 		return prj
 	end,
 	--- Returns the property names of the dataset.
-	-- @arg _ A TerraLib object.
 	-- @arg project A Project.
-	-- @arg layer A Layer.
+	-- @arg layerName A Layer name.
 	-- @usage -- DONTRUN
-	-- local propNames = tl:getPropertyNames(proj, proj.layers[layerName])
+	-- local propNames = TerraLib().getPropertyNames(proj, proj.layers[layerName])
 	-- for i = 0, #propNames do
 	--		unitTest:assert((propNames[i] == "FID") or (propNames[i] == "ID") or
 	--						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU"))
 	-- end
-	getPropertyNames = function(_, project, layer)
+	getPropertyNames = function(project, layerName)
 		loadProject(project, project.file)
 
+		local layer = project.layers[layerName]
 		local dSetLayer = toDataSetLayer(layer)
 		local dSetName = dSetLayer:getDataSetName()
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(dSetLayer:getDataSourceId())
@@ -2138,41 +2160,76 @@ TerraLib_ = {
 		end
 
 		releaseProject(project)
+		collectgarbage("collect")
 
 		return names
 	end,
+	--- Returns the property informations of a layer.
+	-- @arg project A Project.
+	-- @arg layerName A Layer name.
+	-- @usage -- DONTRUN
+	-- local propInfos = TerraLib().getPropertyInfos(proj, "layerName")
+	-- unitTest:assertEquals(propInfos[1].name, "ID")
+	-- unitTest:assertEquals(propInfos[1].type, "integer 64")
+	-- unitTest:assertEquals(propInfos[2].name, "NM_MICRO")
+	-- unitTest:assertEquals(propInfos[2].type, "string")
+	getPropertyInfos = function(project, layerName)
+		loadProject(project, project.file)
+
+		local layer = project.layers[layerName]
+		local dSetLayer = toDataSetLayer(layer)
+		local dSetName = dSetLayer:getDataSetName()
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(dSetLayer:getDataSourceId())
+		local infos	= {}
+
+		do
+			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+			local dset = ds:getDataSet(dSetName)
+			local numProps = dset:getNumProperties()
+
+			dset:moveFirst()
+			for i = 0, numProps - 1 do
+				local info = {}
+				info.name = dset:getPropertyName(i)
+				info.type = string.lower(binding.ConvertDataTypeToString(dset:getPropertyDataType(i)))
+				infos[i] = info
+			end
+		end
+
+		releaseProject(project)
+		collectgarbage("collect")
+
+		return infos
+	end,
 	--- Returns the shortest distance between any two points in the two geometries.
-	-- @arg _ A TerraLib object.
 	-- @arg fromGeom The geometry.
 	-- @arg toGeom The other geometry.
 	-- @usage -- DONTRUN
-	-- local dSet = tl:getDataSet(proj, clName)
-	-- local dist = tl:getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
-	getDistance = function(_, fromGeom, toGeom)
+	-- local dSet = TerraLib().getDataSet(proj, clName)
+	-- local dist = TerraLib().getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
+	getDistance = function(fromGeom, toGeom)
 		return fromGeom:distance(toGeom)
 	end,
 	--- Returns a subtype of Geometry object.
-	-- @arg _ A TerraLib object.
 	-- @arg geom A Geometry object.
 	-- @usage -- DONTRUN
 	-- shpPath = filePath("RODOVIAS_AMZ_lin.shp", "terralib")
-	-- dSet = tl:getOGRByFilePath(shpPath)
+	-- dSet = TerraLib().getOGRByFilePath(shpPath)
 	-- geom = dSet[1].OGR_GEOMETRY
-	-- geom = tl:castGeomToSubtype(geom)
-	castGeomToSubtype = function(_, geom)
+	-- geom = TerraLib().castGeomToSubtype(geom)
+	castGeomToSubtype = function(geom)
 		return castGeometry(geom)
 	end,
 	--- Returns the dummy value of a raster data.
-	-- @arg _ A TerraLib object.
 	-- @arg project The project.
 	-- @arg layerName The layer name which is in the project.
 	-- @arg band The band number.
 	-- @usage -- DONTRUN
 	-- local layerName = "TifLayer"
 	-- local layerFile = filePath("cbers_rgb342_crop1.tif", "terralib")
-	-- tl:addGdalLayer(proj, layerName, layerFile)
-	-- local dummy = tl:getDummyValue(proj, layerName, 0)
-	getDummyValue = function(_, project, layerName, band)
+	-- TerraLib().addGdalLayer(proj, layerName, layerFile)
+	-- local dummy = TerraLib().getDummyValue(proj, layerName, 0)
+	getDummyValue = function(project, layerName, band)
 		local layer = project.layers[layerName]
 		local raster = getRasterFromLayer(project, layer)
 		local value = nil
@@ -2195,7 +2252,6 @@ TerraLib_ = {
 		return value
 	end,
 	--- Save some data of a layer to another data type.
-	-- @arg _ A TerraLib object (not used).
 	-- @arg project The project.
 	-- @arg layerName The layer name which is in the project.
 	-- @arg toData The data that will be saved.
@@ -2207,8 +2263,8 @@ TerraLib_ = {
 	--     type = "geojson",
 	--     srid = 4326
 	-- }
-	-- tl:saveLayerAs(project, "SomeLayer", toData, true, {"population", "ages"})
-	saveLayerAs = function(_, project, layerName, toData, overwrite, attrs)
+	-- TerraLib().saveLayerAs(project, "SomeLayer", toData, true, {"population", "ages"})
+	saveLayerAs = function(project, layerName, toData, overwrite, attrs)
 		loadProject(project, project.file)
 
 		do
@@ -2230,7 +2286,6 @@ TerraLib_ = {
 			if attrs then
 				for i = 1, #attrs do
 					local propName = attrs[i]
-
 					if fromDs:propertyExists(fromDSetName, propName) then
 						attrsToIn[propName] = true
 					else
@@ -2284,6 +2339,8 @@ TerraLib_ = {
 					else
 						errorMsg = "File '"..toData.file.."' already exists."
 					end
+				else
+					toDSetName = fromDSetName
 				end
 
 				if not errorMsg then
@@ -2371,7 +2428,7 @@ TerraLib_ = {
 
 			binding.AssociateDataSetTypeConverterSRID(converter, srid)
 			local dstResult = converter:getResult()
-			dstResult:setName(fromDSetType:getName())
+			dstResult:setName(toDSetName)
 
 			-- TODO(avancinirodrigo): why POSTGIS does not work like OGR?
 			-- Fix the primary key for postgis only
@@ -2399,32 +2456,6 @@ TerraLib_ = {
 			end
 
 			local dsetAdapted = binding.CreateAdapter(fromDSet, converter)
-
-		  -- // TODO(avancinirodrigo): Check properties names
-		  -- std::vector<te::dt::Property* > props = dsTypeResult->getProperties();
-		  -- std::map<std::size_t, std::string> invalidNames;
-		  -- for (std::size_t i = 0; i < props.size(); ++i)
-		  -- {
-			-- if (!dsGPKG->isPropertyNameValid(props[i]->getName()))
-			-- {
-			  -- invalidNames[i] = props[i]->getName();
-			-- }
-		  -- }
-
-		  -- if (!invalidNames.empty())
-		  -- {
-			-- std::map<std::size_t, std::string>::iterator it = invalidNames.begin();
-			-- while (it != invalidNames.end())
-			-- {
-			  -- bool aux;
-			  -- std::string newName = te::common::ReplaceSpecialChars(it->second, aux);
-
-			  -- props[it->first]->setName(newName);
-
-			  -- ++it;
-			-- }
-		  -- }
-
 			local transactor = toDs:getTransactor()
 			transactor:begin()
 			transactor:createDataSet(dstResult, {})
@@ -2462,15 +2493,14 @@ TerraLib_ = {
 	end,
 	--- Returns the size of a layer.
 	-- When it stores vector data, it returns the number of elements. If it stores raster data, return the number of pixels.
-	-- @arg _ A TerraLib object (not used).
 	-- @arg project The project.
 	-- @arg layerName The layer name which is in the project.
 	-- @usage -- DONTRUN
 	-- local layerName = "SampaShp"
 	-- local layerFile = filePath("sampa.shp", "terralib")
-	-- tl:addShpLayer(proj, layerName, layerFile)
-	-- local size = tl:getLayerSize(proj, layerName)
-	getLayerSize = function(_, project, layerName)
+	-- TerraLib().addShpLayer(proj, layerName, layerFile)
+	-- local size = TerraLib().getLayerSize(proj, layerName)
+	getLayerSize = function(project, layerName)
 		local size
 
 		do
@@ -2500,6 +2530,118 @@ TerraLib_ = {
 		collectgarbage("collect")
 
 		return size
+	end,
+	--- Create a new dataset applying Douglas Peucker algorithm.
+	-- @arg project The project.
+	-- @arg fromLayerName The layer name used as reference to create a new dataset.
+	-- @arg toDSetName The new dataset name.
+	-- @arg tolerance The tolerance is a distance that defines the threshold for vertices to be
+	-- considered "insignificant" for the general structure of the geometry.
+	-- The tolerance must be expressed in the same units as the projection of the input geometry.
+	-- @usage -- DONTRUN
+	-- lnName = "ES_Rails"
+	-- lnFile = filePath("test/rails.shp", "terralib")
+	-- TerraLib().addShpLayer(proj, lnName, lnFile)
+	-- TerraLib().douglasPeucker(proj, lnName, "spl"..lnName, 500)
+	douglasPeucker = function(project, fromLayerName, toDSetName, tolerance)
+		local errorMsg
+
+		do
+			loadProject(project, project.file)
+
+			local layer = project.layers[fromLayerName]
+			layer = toDataSetLayer(layer)
+			local datasetName = layer:getDataSetName()
+			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+			local fromType = dsInfo:getType()
+			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), fromType)
+			local dataset = ds:getDataSet(datasetName)
+			local dst = ds:getDataSetType(datasetName)
+
+			if dst:hasGeom() then
+				local gp = binding.GetFirstGeomProperty(dst)
+				local gpt = gp:getGeometryType()
+
+				if (gpt == binding.te.gm.LineStringType) or (gpt == binding.te.gm.MultiLineStringType) then
+					local toSet = {}
+					local count = 1
+					local gname = gp:getName()
+					local gpos = getPropertyPosition(dataset, gname)
+					dataset:moveBeforeFirst()
+
+					if gpt == binding.te.gm.MultiLineStringType then
+						if fromType == "POSTGIS" then
+							while dataset:moveNext() do
+								local to = {}
+								local ml = castGeometry(dataset:getGeom(gpos))
+								ml = ml:clone()
+								local line = castGeometry(ml:getGeometryN(0))
+								local dp = binding.GEOS_DouglasPeucker(line, tolerance, 0)
+								local np = dp:size()
+								local l = binding.te.gm.LineString(np, binding.te.gm.LineStringType, line:getSRID())
+								l = l:clone()
+
+								for i = 0, np - 1 do
+									l:setPoint(i, dp:getX(i), dp:getY(i))
+								end
+
+								ml:setGeometryN(0, l)
+								to[gname] = ml
+								toSet[count] = to
+								count = count + 1
+							end
+						else
+							while dataset:moveNext() do
+								local to = {}
+								local ml = castGeometry(dataset:getGeom(gpos))
+								ml = ml:clone()
+								local line = castGeometry(ml:getGeometryN(0))
+								local dp = binding.GEOS_DouglasPeucker(line, tolerance, 0)
+
+								ml:setGeometryN(0, dp)
+								to[gname] = ml
+								toSet[count] = to
+								count = count + 1
+							end
+						end
+
+						toDSetName = string.lower(toDSetName)
+					else
+						while dataset:moveNext() do -- TODO(avancinirodrigo): there is no data with line to test.
+							local to = {}
+							local line = castGeometry(dataset:getGeom(gpos))
+							local dp = binding.GEOS_DouglasPeucker(line, tolerance, 0)
+
+							to[gname] = dp -- SKIP
+							toSet[count] = to -- SKIP
+							count = count + 1 -- SKIP
+						end
+					end
+
+					createDataSetFromLayer(layer,  toDSetName, toSet, {gname})
+				else
+					errorMsg = "This function works only with line and multi-line geometry."
+				end
+			else
+				errorMsg = "This function works only with line geometry."
+			end
+
+			ds:close()
+
+			releaseProject(project)
+		end
+
+		if errorMsg then
+			customError(errorMsg)
+		end
+	end,
+	--- Check if a name is valid.
+	-- Return a error message if the name is invalid, otherwise it returns a empty string.
+	-- @arg name A string name.
+	-- @usage -- DONTRUN
+	-- TerraLib().checkName("aname")
+	checkName = function(name)
+		return string.gsub(string.gsub(binding.CheckName(name), "\n", ""), "^%l", string.upper)
 	end
 }
 
@@ -2511,8 +2653,9 @@ metaTableTerraLib_ = {
 -- are used by the other types of the package. If needed, these functions should
 -- be used with care. Such functions mught stop with very strange errors because
 -- they do not check any errors in their arguments.
+-- All functions must be called by '.'.
 -- @usage -- DONTRUN
--- TerraLib()
+-- TerraLib().getVersion()
 function TerraLib()
 	if instance then
 		return instance
@@ -2523,4 +2666,3 @@ function TerraLib()
 		return data
 	end
 end
-

@@ -213,7 +213,16 @@ local function getProjects(package, doc_report)
 					name = self.name
 				}
 
-				forEachElement(layer:attributes(), function(_, mvalue)
+				local attrNames
+				local attrs = layer:attributes()
+				if attrs then
+					attrNames = {}
+					for i = 1, #attrs do
+						attrNames[i] = attrs[i].name
+					end
+				end
+
+				forEachElement(attrNames, function(_, mvalue)
 					if string.sub(mvalue, 1, string.len(data.attribute)) == data.attribute then
 						local v = string.sub(mvalue, string.len(data.attribute) + 2)
 						layers[self.file].attributes[mvalue] = {
@@ -696,7 +705,14 @@ function _Gtme.executeDoc(package)
 				value.representation = layer:representation()
 				value.projection = layer:projection()
 
-				local attributes = layer:attributes()
+				local attributes
+				local attrs = layer:attributes()
+				if attrs then
+					attributes = {}
+					for i = 1, #attrs do
+						attributes[i] = attrs[i].name
+					end
+				end
 
 				if value.attributes == nil then value.attributes = {} end
 

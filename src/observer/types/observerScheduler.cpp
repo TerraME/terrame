@@ -30,6 +30,7 @@ of this software and its documentation.
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QDebug>
+#include <QResizeEvent>
 
 #include "visualArrangement.h"
 
@@ -290,17 +291,27 @@ int ObserverScheduler::close()
 
 void ObserverScheduler::resizeEvent(QResizeEvent *event)
 {
-    VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+	if (this->isVisible())
+		VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+	else
+		event->ignore();
 }
 
 void ObserverScheduler::moveEvent(QMoveEvent *event)
 {
-    VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+	if (this->isVisible())
+		VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+	else
+		event->ignore();
 }
 
 void ObserverScheduler::closeEvent(QCloseEvent *event)
 {
-    VisualArrangement::getInstance()->closeEventDelegate();
+#ifdef __linux__
+	VisualArrangement::getInstance()->closeEventDelegate(this);
+#else
+	VisualArrangement::getInstance()->closeEventDelegate();
+#endif
 }
 
 void ObserverScheduler::save(std::string file, std::string extension)

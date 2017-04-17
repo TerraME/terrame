@@ -37,7 +37,7 @@ return {
 		local service = "http://terrabrasilis.info/redd-pac/wfs"
 		local feature = "reddpac:wfs_biomes"
 
-		if TerraLib{}:isValidWfsUrl(service) then
+		if TerraLib().isValidWfsUrl(service) then
 			local layer = Layer {
 				project = proj,
 				source = "wfs",
@@ -51,7 +51,7 @@ return {
 			unitTest:assertEquals(layer.service, service) -- SKIP
 			unitTest:assertEquals(layer.feature, feature) -- SKIP
 		else
-			unitTest:assert(true) -- SKIP
+			customError("WFS server '.."..service.."' is not responding, try again later.") -- SKIP
 		end
 
 		File(projName):delete()

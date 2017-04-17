@@ -67,8 +67,7 @@ return{
 			encoding = encoding
 		}
 
-		local tl = terralib.TerraLib{}
-		tl:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 
 		terralib.Layer{
 			project = proj,
@@ -84,7 +83,7 @@ return{
 
 		File(projName):deleteIfExists()
 
-		tl:dropPgTable(pgData)
+		terralib.TerraLib().dropPgTable(pgData)
 
 		local cs2 = CellularSpace{xdim = 10}
 		local cs = CellularSpace{xdim = 10}

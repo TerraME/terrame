@@ -66,6 +66,7 @@ public:
     void resizeEventDelegate(int id, QResizeEvent *event);
     void moveEventDelegate(int id,  QMoveEvent *event);
     void closeEventDelegate();
+	void closeEventDelegate(QWidget* widget);
     void starts(int id, QWidget *widget);
 
 protected:
@@ -73,8 +74,12 @@ protected:
 	static VisualArrangement* myarrangement;
 	string file;
 private:
+	void adjustHeight(QWidget* widget);
+
 	map<int, PositionVisualArrangement> position;
 	map<int, SizeVisualArrangement> size;
+	bool shiftedX = false;
+	bool shiftedY = false;
 };
 
 #endif

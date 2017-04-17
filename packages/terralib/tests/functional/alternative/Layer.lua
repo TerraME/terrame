@@ -484,7 +484,7 @@ return{
 				layer = "cells"
 			}
 		end
-		unitTest:assertError(invalidAttribName, "Attribute name 'área' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidAttribName, "Attribute name 'área' is not a valid name. Invalid symbol.")
 
 		invalidAttribName = function()
 			cl:fill{
@@ -493,7 +493,7 @@ return{
 				layer = "cells"
 			}
 		end
-		unitTest:assertError(invalidAttribName, "Attribute name 'a$ea' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidAttribName, "Attribute name 'a$ea' is not a valid name. Invalid symbol: '$'.")
 
 		invalidAttribName = function()
 			cl:fill{
@@ -502,7 +502,7 @@ return{
 				layer = "cells"
 			}
 		end
-		unitTest:assertError(invalidAttribName, "Attribute name 'Cell Area' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidAttribName, "Attribute name 'Cell Area' is not a valid name. Invalid character: blank space.")
 
 		invalidAttribName = function()
 			cl:fill{
@@ -511,7 +511,7 @@ return{
 				layer = "cells"
 			}
 		end
-		unitTest:assertError(invalidAttribName, "Attribute name 'Are*s' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidAttribName, "Attribute name 'Are*s' is not a valid name. Invalid character: mathematical symbol '*'.")
 
 	--[[ BUG:
 		local attributeDoesNotExist = function()
@@ -1129,6 +1129,50 @@ return{
 
 		File(projName):deleteIfExists()
 		File(filePath1):deleteIfExists()
+	end,
+	simplify = function(unitTest)
+		local projName = "layer_func_alt.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+
+		local filePath1 = filePath("test/rails.shp", "terralib")
+		local layerName1 = "ES_Rails"
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+
+		local mandatoryOut = function()
+			layer1:simplify{tolerance = 500}
+		end
+		unitTest:assertError(mandatoryOut, mandatoryArgumentMsg("output"))
+
+		local mandatoryTolerance = function()
+			layer1:simplify{output = "simplify"}
+		end
+		unitTest:assertError(mandatoryTolerance, mandatoryArgumentMsg("tolerance"))
+
+		local positiveTolerance = function()
+			layer1:simplify{output = "simplify", tolerance = 0}
+		end
+		unitTest:assertError(positiveTolerance, positiveArgumentMsg("tolerance", 0))
+
+		local layer2 = Layer{
+			project = proj,
+			name = "Tif",
+			file = filePath("test/prodes_polyc_10k.tif", "terralib")
+		}
+
+		local reprError = function()
+			layer2:simplify{output = "simplify", tolerance = 500}
+		end
+		unitTest:assertError(reprError, "Layer representation 'raster' cannot be simplified.")
+
+		proj.file:delete()
 	end
 }
 
