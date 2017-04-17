@@ -449,7 +449,6 @@ return{
 			M{internal = {quantity = "c"}}
 		end
 		unitTest:assertError(error_func, "Incompatible values. Argument 'quantity' expected one of {'a', 'b'}, got 'c'.")
-	
 	end,
 	execute = function(unitTest)
 		local error_func = function()

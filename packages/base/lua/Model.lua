@@ -662,15 +662,15 @@ function Model(attrTab)
 			elseif mtype == "table" and #value == 0 then
 				local internalNamedChoices = {}
 
-				forEachElement(attrTab[name], function(idx, value, mtype)
-					if mtype == "Choice" and value.values and #value.values == 0 then
+				forEachElement(attrTab[name], function(idx, ivalue, imtype)
+					if imtype == "Choice" and ivalue.values and #ivalue.values == 0 then
 						internalNamedChoices[idx] = true
 					end
 				end)
 
 				local iargv = argv[name]
 				forEachOrderedElement(value, function(iname, ivalue, itype)
-					if namedChoices[iname] then
+					if internalNamedChoices[iname] then
 						if type(iargv[iname]) ~= type(ivalue.default) then
 							incompatibleTypeError(iname, type(ivalue.default), iargv[iname])
 						elseif ivalue.values[iargv[iname]] == nil then

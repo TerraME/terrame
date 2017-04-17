@@ -88,13 +88,13 @@ return{
 		local func1 = function() return 1 end
 		local func2 = function() return 2 end
 
-    	c = Choice{a = func1, b = func2}
+		c = Choice{a = func1, b = func2}
 
 		unitTest:assertEquals(#c.values, 0)
 		unitTest:assertEquals(getn(c.values), 2)
 		unitTest:assertEquals(c.default, "a")
 
-    	c = Choice{a = func1, b = func2, default = "b"}
+		c = Choice{a = func1, b = func2, default = "b"}
 
 		unitTest:assertEquals(#c.values, 0)
 		unitTest:assertEquals(getn(c.values), 2)

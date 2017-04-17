@@ -184,7 +184,7 @@ water            number [200]
 		local func1 = function() return 1 end
 		local func2 = function() return 2 end
 
-		local M = Model{
+		M = Model{
 			quantity = Choice{a = func1, b = func2},
 			internal = {
 				quantity = Choice{a = func1, b = func2}
