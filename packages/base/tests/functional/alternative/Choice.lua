@@ -39,7 +39,6 @@ return{
 		end
 		unitTest:assertError(error_func, "Choice has only one available value.")
 
-
 		error_func = function()
 			Choice{1, 2, "3"}
 		end
@@ -174,6 +173,26 @@ return{
 			Choice{min = 2, max = 20, slices = 2.5}
 		end
 		unitTest:assertError(error_func, "Invalid 'slices' value (2.5). It could be 2 or 3.")
+
+		error_func = function()
+			Choice{abc = function() end, def = 2}
+		end
+		unitTest:assertError(error_func, "All values should belong to the same type, got 'function' and 'number'.")
+
+		error_func = function()
+			Choice{abc = function() end, [false] = 5}
+		end
+		unitTest:assertError(error_func, "All the indexes must be string, got 'boolean'.")
+
+		error_func = function()
+			Choice{abc = function() end, def = function() end, default = 5}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("default", "string", 5))
+
+		error_func = function()
+			Choice{abc = function() end, def = function() end, default = "ghi"}
+		end
+		unitTest:assertError(error_func, "The default value (ghi) does not belong to Choice.")
 	end
 }
 

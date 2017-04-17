@@ -1563,16 +1563,16 @@ local function recursiveVardump(o, indent, tables)
 
 	if indent == nil then indent = "" end
 
-	local indent2 = indent.."    "
+	local indent2 = table.concat{indent, "    "}
 	if isTable(o) then
 		if getn(o) == 0 then
 			return "{}"
 		end
 
-		local s = "{".."\n"
+		local s = table.concat{"{", "\n"}
 
 		if type(o) ~= "table" then
-			s = type(o)..s
+			s = table.concat{type(o), s}
 		end
 
 		local first = true
@@ -1581,40 +1581,40 @@ local function recursiveVardump(o, indent, tables)
 		forEachOrderedElement(o, function(k, v)
 			if k == "parent" then v = type(v) end
 
-			if first == false then s = s .. ",\n" end
+			if first == false then s = table.concat{s, ",\n"} end
 
 			first = false
 
-			s = s..indent2
+			s = table.concat{s, indent2}
 			if type(k) == "string" then
 				local char = string.sub(k, 1, 1)
 				if string.match(k, "[%w_]+") == k and string.match(char, "%a") == char then
-					s = s..tostring(k).." = "..recursiveVardump(v, indent2, tables)
+					s = table.concat{s, tostring(k), " = ", recursiveVardump(v, indent2, tables)}
 				else
-					s = s.."[\""..tostring(k).."\"] = "..recursiveVardump(v, indent2, tables)
+					s = table.concat{s, "[\"", tostring(k), "\"] = ", recursiveVardump(v, indent2, tables)}
 				end
 			elseif type(k) == "boolean" then
-				s = s.."["..tostring(k).."] = "..recursiveVardump(v, indent2, tables)
+				s = table.concat{s, "[", tostring(k), "] = ", recursiveVardump(v, indent2, tables)}
 			elseif type(k) == "number" then
 				if k ~= count then
-					s = s.."["..k.."] = "
+					s = table.concat{s, "[", k, "] = "}
 				else
 					count = count + 1
 				end
 
-				s = s..recursiveVardump(v, indent2, tables)
+				s = table.concat{s, recursiveVardump(v, indent2, tables)}
 			else
 				customError("Function vardump cannot handle an index of type "..type(k)..".")
 			end
 		end)
 
-		return s.."\n"..indent.."}"
+		return table.concat{s, "\n", indent, "}"}
 	elseif type(o) == "number" then
 		return tostring(o)
 	elseif type(o) == "boolean" then
 		return tostring(o)
 	else
-		return "\""..string.gsub(tostring(o), "\n", "\\n").."\""
+		return table.concat{"\"", string.gsub(tostring(o), "\n", "\\n"), "\""}
 	end
 end
 
