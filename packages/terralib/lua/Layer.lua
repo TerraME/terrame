@@ -359,7 +359,7 @@ Layer_ = {
 	-- @tabular operation
 	-- Operation & Description & Mandatory arguments & Optional arguments \
 	-- "area" & Total overlay area between the cell and a layer of polygons. The created values
-	-- will range from zero to one, indicating its area of coverage. & attribute, layer & \
+	-- will range from zero to one, indicating its area of coverage. & attribute, layer & default \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
@@ -412,7 +412,7 @@ Layer_ = {
 	-- or the weights are equal for each object with some overlap (false, default value).
 	-- @arg data.default A value that will be used to fill a cell whose attribute cannot be
 	-- computed. For example, when there is no intersection area. Note that this argument is
-	-- related to the output.
+	-- related to the output. Its default value is zero.
 	-- @arg data.nodata A number used in raster data that represents no information in a pixel value.
 	-- Its default value can be got from Layer:nodata() function.
 	-- @usage -- DONTRUN
