@@ -208,8 +208,7 @@ return {
 		unitTest:assertEquals(l3.name, clName3)
 
 		-- BOX TEST
-		local tl = TerraLib{}
-		local clSet = tl:getDataSet(proj, clName1)
+		local clSet = TerraLib().getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 68)
 
 		clName1 = clName1.."_Box"
@@ -226,7 +225,7 @@ return {
 			file = filePath4
 		}
 
-		clSet = tl:getDataSet(proj, clName1)
+		clSet = TerraLib().getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)
 
 		projName:deleteIfExists()
@@ -286,7 +285,7 @@ return {
 		cl:fill{
 			operation = "count",
 			layer = localidades,
-			attribute = "count"
+			attribute = "num"
 		}
 
 		-- local distanceLayerName = clName1.."_Distance"
@@ -361,7 +360,7 @@ return {
 		cl:fill{
 			operation = "sum",
 			layer = localidades,
-			attribute = "sum",
+			attribute = "ucs_sum",
 			select = "UCS_FATURA"
 		}
 
@@ -458,8 +457,8 @@ return {
 		}
 
 		forEachCell(cs, function(cell)
-			cell.past_sum = cell.sum
-			cell.sum = cell.sum + 10000
+			cell.past_ucs_sum = cell.ucs_sum
+			cell.ucs_sum = cell.ucs_sum + 10000
 		end)
 
 		local cellSpaceLayerName = clName1.."_CellSpace_Sum"
@@ -467,7 +466,7 @@ return {
 
 		File(filePath22):deleteIfExists()
 
-		cs:save(cellSpaceLayerName, "past_sum")
+		cs:save(cellSpaceLayerName, "past_ucs_sum")
 
 		local cellSpaceLayer = Layer{
 			project = proj,

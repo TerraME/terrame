@@ -24,17 +24,15 @@
 
 return {
 	TerraLib = function(unitTest)
-		local t1 = TerraLib{}
-		local t2 = TerraLib{}
+		local t1 = TerraLib
+		local t2 = TerraLib
 
 		unitTest:assertEquals(t1, t2)
 	end,
 	getVersion = function(unitTest)
-		local tlib = TerraLib{}
-		unitTest:assertEquals(tlib:getVersion(), "5.2.0")
+		unitTest:assertEquals(TerraLib().getVersion(), "5.2.0")
 	end,
 	openProject = function(unitTest)
-		local tl = TerraLib{}
 		local proj = {
 			file = "myproject.tview",
 			title = "TerraLib Tests",
@@ -43,17 +41,23 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local proj2 = {}
 
-		tl:openProject(proj2, proj.file)
+		TerraLib().openProject(proj2, proj.file)
 
 		unitTest:assertEquals(proj2.file, proj.file)
 		unitTest:assertEquals(proj2.title, proj.title)
 		unitTest:assertEquals(proj2.author, proj.author)
 
 		proj.file:delete()
+	end,
+	checkName = function(unitTest)
+		unitTest:assertEquals(TerraLib().checkName("count"), "Invalid name: using reserved word COUNT")
+		unitTest:assertEquals(TerraLib().checkName("sum"), "Invalid name: using reserved word SUM")
+		unitTest:assertEquals(TerraLib().checkName("file-name"), "Invalid character: mathematical symbol '-'")
+		unitTest:assertEquals(TerraLib().checkName("$ymbol"), "Invalid symbol: '$'")
 	end
 }
 

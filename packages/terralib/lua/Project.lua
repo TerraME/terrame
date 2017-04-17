@@ -84,9 +84,6 @@ function Project(data)
 	defaultTableValue(data, "title", "No title")
 	defaultTableValue(data, "author", "No author")
 
-	local terralib = TerraLib{}
-
-	data.terralib = TerraLib{}
 	data.layers = {}
 
 	if data.file:exists() and data.clean then
@@ -107,9 +104,9 @@ function Project(data)
 	end
 
 	if data.file:exists() then
-		terralib:openProject(data, data.file)
+		TerraLib().openProject(data, data.file)
 	else
-		terralib:createProject(data, data.layers)
+		TerraLib().createProject(data, data.layers)
 	end
 
 	setmetatable(data, metaTableProject_)
@@ -117,7 +114,7 @@ function Project(data)
 	local layers = {}
 
 	forEachElement(data, function(idx, value)
-		if not belong(idx, {"clean", "file", "author", "title", "layers", "terralib"}) then
+		if not belong(idx, {"clean", "file", "author", "title", "layers"}) then
 			if type(value) == "string" then
 				value = File(value)
 			end

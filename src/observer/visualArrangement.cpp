@@ -28,6 +28,8 @@ of this software and its documentation.
 #include <QWidget>
 #include <QResizeEvent>
 #include <QMoveEvent>
+#include <QApplication>
+#include <QScreen>
 
 using namespace std;
 
@@ -88,14 +90,43 @@ void VisualArrangement::closeEventDelegate()
     buildLuaCode();
 }
 
+void VisualArrangement::adjustHeight(QWidget* widget)
+{
+	int dY = widget->frameGeometry().y() - widget->geometry().y();
+	int dHeight = widget->frameGeometry().height() - widget->geometry().height();
+	int d = abs(abs(dHeight) - abs(dY));
+
+	widget->move(widget->geometry().x(), widget->frameGeometry().y() + d);
+}
+
+void VisualArrangement::closeEventDelegate(QWidget* widget)
+{
+	adjustHeight(widget);
+	buildLuaCode();
+}
+
 void VisualArrangement::starts(int id, QWidget *widget)
 {
     SizeVisualArrangement s = getSize(id);
     PositionVisualArrangement p = getPosition(id);
+	int shiftX = qApp->primaryScreen()->availableGeometry().x();
+	int shiftY = qApp->primaryScreen()->availableGeometry().y();
 
     if ((p.x > 0) && (p.y > 0) && (s.width > 0) && (s.height > 0))
     {
-        widget->setGeometry(p.x, p.y, s.width, s.height);
+		if ((p.x < shiftX) || shiftedX)
+		{
+			p.x += shiftX;
+			shiftedX = true;
+		}
+
+		if ((p.y < shiftY) || shiftedY)
+		{
+			p.y += shiftY;
+			shiftedY = true;
+		}
+
+		widget->setGeometry(p.x, p.y, s.width, s.height);
     }
     else
     {

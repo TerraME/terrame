@@ -24,7 +24,6 @@
 
 return {
 	addWfsLayer = function(unitTest)
-		local tl = TerraLib {}
 		local title = "TerraLib Tests"
 		local author = "Avancini Rodrigo"
 		local file = File("terralib_wfs_basic.tview")
@@ -35,16 +34,16 @@ return {
 
 		file:deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName = "WFS-Layer"
 		local url = "http://terrabrasilis.info/redd-pac/wfs"
 		local dataset = "reddpac:wfs_biomes"
 
-		if tl:isValidWfsUrl(url) then
-			tl:addWfsLayer(proj, layerName, url, dataset)
+		if TerraLib().isValidWfsUrl(url) then
+			TerraLib().addWfsLayer(proj, layerName, url, dataset)
 
-			local layerInfo = tl:getLayerInfo(proj, proj.layers[layerName])
+			local layerInfo = TerraLib().getLayerInfo(proj, layerName)
 			unitTest:assertEquals(layerInfo.name, layerName) -- SKIP
 			unitTest:assertEquals(layerInfo.url, url) -- SKIP
 			unitTest:assertEquals(layerInfo.type, "WFS") -- SKIP
@@ -52,13 +51,12 @@ return {
 			unitTest:assertEquals(layerInfo.rep, "surface") -- SKIP
 			unitTest:assertNotNil(layerInfo.sid) -- SKIP
 		else
-			unitTest:assert(true) -- SKIP
+			customError("WFS server '.."..service.."' is not responding, try again later.") -- SKIP
 		end
 
 		file:delete()
 	end,
 	isValidWfsUrl = function(unitTest)
-		local tl = TerraLib {}
 		local title = "TerraLib Tests"
 		local author = "Avancini Rodrigo"
 		local file = File("terralib_wfs_basic.tview")
@@ -69,11 +67,11 @@ return {
 
 		file:deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local url = "WFS:http://terrabrasilis.info"
 
-		unitTest:assert(not tl:isValidWfsUrl(url))
+		unitTest:assert(not TerraLib().isValidWfsUrl(url))
 
 		file:delete()
 	end

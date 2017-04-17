@@ -38,8 +38,7 @@ local function isValidName(name)
 end
 
 local function getLayerInfoAdapted(data)
-	local layer = data.project.layers[data.name]
-	local info = data.project.terralib:getLayerInfo(data.project, layer)
+	local info = TerraLib().getLayerInfo(data.project, data.name)
 	info.type = nil
 
 	forEachElement(info, function(idx, value)
@@ -53,6 +52,39 @@ local function getLayerInfoAdapted(data)
 		end
 		data[idx] = value
 	end)
+end
+
+local function checkName(name, arg)
+	local errMsg = TerraLib().checkName(name)
+	if errMsg ~= "" then
+		customError(arg.." name '"..name.."' is not a valid name. "..errMsg..".")
+	end
+end
+
+local function fixName(name)
+	return string.gsub(name, "-", "_")
+end
+
+local function checkPgParams(data)
+	mandatoryTableArgument(data, "user", "string")
+	mandatoryTableArgument(data, "password", "string")
+	mandatoryTableArgument(data, "database", "string")
+
+	checkName(data.database, "Database")
+
+	if data.table then
+		mandatoryTableArgument(data, "table", "string")
+	else
+		defaultTableValue(data, "table", string.lower(data.name))
+	end
+
+	data.table = fixName(data.table)
+	checkName(data.table, "Table")
+
+	defaultTableValue(data, "host", "localhost")
+	defaultTableValue(data, "port", 5432)
+	defaultTableValue(data, "encoding", "CP1252")
+	data.port = tostring(data.port)
 end
 
 local function addCellularLayer(self, data)
@@ -103,7 +135,7 @@ local function addCellularLayer(self, data)
 		customError("Layer '"..data.name.."' already exists in the Project.")
 	end
 
-	local repr = data.project.terralib:getLayerInfo(data.project, data.project.layers[data.input]).rep
+	local repr = TerraLib().getLayerInfo(data.project, data.input).rep
 
 	switch(data, "source"):caseof{
 		shp = function()
@@ -129,7 +161,7 @@ local function addCellularLayer(self, data)
 				end
 			end
 
-			self.terralib:addShpCellSpaceLayer(self, data.input, data.name, data.resolution,
+			TerraLib().addShpCellSpaceLayer(self, data.input, data.name, data.resolution,
 											data.file, not data.box, data.index)
 		end,
 		geojson = function()
@@ -145,20 +177,11 @@ local function addCellularLayer(self, data)
 					"resolution", "file", "source"})
 			end
 
-			self.terralib:addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution, -- SKIP
+			TerraLib().addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution, -- SKIP
 												data.file, not data.box) -- SKIP
 		end,
 		postgis = function()
-			mandatoryTableArgument(data, "user", "string")
-			mandatoryTableArgument(data, "password", "string")
-			mandatoryTableArgument(data, "database", "string")
-
-			defaultTableValue(data, "table", string.lower(data.name))
-			defaultTableValue(data, "host", "localhost")
-			defaultTableValue(data, "port", 5432)
-			defaultTableValue(data, "encoding", "CP1252")
-
-			data.port = tostring(data.port)
+			checkPgParams(data)
 
 			if repr == "raster" then
 				verifyUnnecessaryArguments(data, {"input", "name", "resolution", "source", "encoding", -- SKIP
@@ -170,7 +193,7 @@ local function addCellularLayer(self, data)
 										"project", "host", "port", "user", "password", "database", "table", "project"})
 			end
 
-			self.terralib:addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data, not data.box)
+			TerraLib().addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data, not data.box)
 		end
 	}
 end
@@ -227,48 +250,37 @@ local function addLayer(self, data)
 			defaultTableValue(data, "index", true)
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index", "epsg"})
 
-			self.terralib:addShpLayer(self, data.name, data.file, data.index, data.epsg)
+			TerraLib().addShpLayer(self, data.name, data.file, data.index, data.epsg)
 		end,
 		geojson = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
 
-			self.terralib:addGeoJSONLayer(self, data.name, data.file, data.epsg) -- SKIP
+			TerraLib().addGeoJSONLayer(self, data.name, data.file, data.epsg) -- SKIP
 		end,
 		tif = function()
 			mandatoryTableArgument(data, "file", "File")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
 
-			self.terralib:addGdalLayer(self, data.name, data.file, data.epsg)
+			TerraLib().addGdalLayer(self, data.name, data.file, data.epsg)
 		end,
 		nc = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"}) -- SKIP
 
-			self.terralib:addGdalLayer(self, data.name, data.file, data.epsg) -- SKIP
+			TerraLib().addGdalLayer(self, data.name, data.file, data.epsg) -- SKIP
 		end,
 		asc = function()
 			mandatoryTableArgument(data, "file", "File")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
 
-			self.terralib:addGdalLayer(self, data.name, data.file, data.epsg)
+			TerraLib().addGdalLayer(self, data.name, data.file, data.epsg)
 		end,
 		postgis = function()
-			mandatoryTableArgument(data, "user", "string")
-			mandatoryTableArgument(data, "password", "string")
-			mandatoryTableArgument(data, "database", "string")
-			mandatoryTableArgument(data, "table", "string")
-
 			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password", "database", "table", "project", "epsg"})
+			checkPgParams(data)
 
-			defaultTableValue(data, "table", string.lower(data.name))
-			defaultTableValue(data, "host", "localhost")
-			defaultTableValue(data, "port", 5432)
-			defaultTableValue(data, "encoding", "CP1252")
-
-			data.port = tostring(data.port)
-
-			self.terralib:addPgLayer(self, data.name, data, data.epsg)
+			TerraLib().addPgLayer(self, data.name, data, data.epsg)
 		end,
 		wfs = function()
 			mandatoryTableArgument(data, "service", "string")
@@ -276,7 +288,7 @@ local function addLayer(self, data)
 
 			verifyUnnecessaryArguments(data, {"name", "source", "service", "feature", "project"})
 
-			self.terralib:addWfsLayer(self, data.name, data.service, data.feature)
+			TerraLib().addWfsLayer(self, data.name, data.service, data.feature)
 		end
 	}
 end
@@ -304,7 +316,7 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- print(layer:representation())
 	representation = function(self)
-		return self.project.terralib:getLayerInfo(self.project, self.project.layers[self.name]).rep
+		return TerraLib().getLayerInfo(self.project, self.name).rep
 	end,
 	--- Return the number of bands of a raster layer. If the layer does not have a raster representation
 	-- then it will stop with an error. The bands of the raster layer are named from zero to the number of
@@ -312,7 +324,7 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- print(layer:bands())
 	bands = function(self)
-		return self.project.terralib:getNumOfBands(self.project, self.name)
+		return TerraLib().getNumOfBands(self.project, self.name)
 	end,
 	--- Create a new attribute for each object of a Layer.
 	-- This attribute can be stored as a new
@@ -437,11 +449,8 @@ Layer_ = {
 		mandatoryTableArgument(data, "attribute", "string")
 		optionalTableArgument(data, "nodata", "number")
 
-		if not isValidName(data.attribute) then
-			customError("Attribute name '"..data.attribute.."' is not a valid name. Please, revise special characters or spaces from it.")
-		end
+		checkName(data.attribute, "Attribute")
 
-		local tlib = TerraLib{}
 		local project = self.project
 
 		if type(data.layer) == "string" then
@@ -629,16 +638,23 @@ Layer_ = {
 		}
 
 		if type(data.select) == "string" then
-			if not belong(data.select, data.layer:attributes()) then
+			local attrs = data.layer:attributes()
+			local attrNames = {}
+
+			for i = 1, #attrs do
+				attrNames[i] = attrs[i].name
+			end
+
+			if not belong(data.select, attrNames) then
 				local msg = "Selected attribute '"..data.select.."' does not exist in layer '"..data.layer.name.."'."
-				local sugg = suggestion(data.select, data.layer:attributes())
+				local sugg = suggestion(data.select, attrNames)
 
 				msg = msg..suggestionMsg(sugg)
 				customError(msg)
 			end
 		end
 
-		tlib:attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.default, repr, data.nodata)
+		TerraLib().attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.default, repr, data.nodata)
 	end,
 	--- Return the Layer's projection. It contains the name of the projection, its Geodetic
 	-- Identifier (EPSG), and
@@ -646,7 +662,7 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- print(layer:projection())
 	projection = function(self)
-		local prj = self.project.terralib:getProjection(self.project.layers[self.name])
+		local prj = TerraLib().getProjection(self.project.layers[self.name])
 
 		if prj.NAME == "" then
 			prj.NAME = "Undefined" -- SKIP TODO(avancinirodrigo): there is no data with undefined projection to test
@@ -669,19 +685,22 @@ Layer_ = {
 	--
 	-- print(vardump(layer:attributes()))
 	attributes = function(self)
-		local propNames = self.project.terralib:getPropertyNames(self.project, self.project.layers[self.name])
+		local propInfos = TerraLib().getPropertyInfos(self.project, self.name)
 
-		if propNames[0] == "raster" then
+		if propInfos[0].type == "raster" then
 			return nil
 		end
 
-		local luaPropNames = {}
-
-		for i = 0, #propNames do
-			luaPropNames[i + 1] = propNames[i]
+		local luaPropInfos = {}
+		local count = 1
+		for i = 0, getn(propInfos) - 1 do
+			if not (propInfos[i].type == "geometry") then
+				luaPropInfos[count] = propInfos[i]
+				count = count + 1
+			end
 		end
 
-		return luaPropNames
+		return luaPropInfos
 	end,
 	--- Returns the nodata value of a raster layer. If the layer does not have a raster representation
 	-- then it returns nil . The bands of the raster layer are named from zero to the number of
@@ -695,7 +714,7 @@ Layer_ = {
 		mandatoryArgument(1, "number", band)
 		positiveArgument(1, band, true)
 
-		return self.project.terralib:getDummyValue(self.project, self.name, band)
+		return TerraLib().getDummyValue(self.project, self.name, band)
 	end,
 	--- Exports the data of a Layer to another data source.
 	-- The data can be either a file data or postgis. The SRID and overwrite are common arguments.
@@ -742,7 +761,7 @@ Layer_ = {
 					srid = data.epsg
 				}
 
-				self.project.terralib:saveLayerAs(self.project, self.name, toData, data.overwrite, data.select)
+				TerraLib().saveLayerAs(self.project, self.name, toData, data.overwrite, data.select)
 			else
 				invalidFileExtensionError("data", source)
 			end
@@ -751,23 +770,41 @@ Layer_ = {
 
 			if data.source == "postgis" then
 				verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding",
-												"epsg", "overwrite", "select"})
-
-				mandatoryTableArgument(data, "user", "string")
-				mandatoryTableArgument(data, "password", "string")
-				mandatoryTableArgument(data, "database", "string")
-				defaultTableValue(data, "host", "localhost")
-				defaultTableValue(data, "port", 5432)
-				defaultTableValue(data, "encoding", "CP1252")
+												"table", "epsg", "overwrite", "select"})
+				data.name = self.name
+				checkPgParams(data)
 				local pgData = data
 				pgData.type = "postgis"
 				pgData.srid = pgData.epsg
 				pgData.epsg = nil
 
-				self.project.terralib:saveLayerAs(self.project, self.name, pgData, pgData.overwrite, data.select)
+				TerraLib().saveLayerAs(self.project, self.name, pgData, pgData.overwrite, data.select)
 			else
 				customError("It only supports postgis database, use source = \"postgis\".")
 			end
+		end
+	end,
+	--- Create a new data simplifying its geometry.
+	-- The data will be created using the same data source layer.
+	-- @arg data.output The data name that will be created.
+	-- @arg data.tolerance The tolerance is a distance that defines the threshold for vertices to be
+	-- considered "insignificant" for the general structure of the geometry.
+	-- The tolerance must be expressed in the same units as the projection of the input geometry.
+	-- @usage -- DONTRUN
+	-- layer:simplify{output = "layer_simplified", tolerance = 500}
+	simplify = function(self, data)
+		verifyNamedTable(data)
+		mandatoryTableArgument(data, "output")
+		mandatoryTableArgument(data, "tolerance")
+		positiveTableArgument(data, "tolerance")
+
+		checkName(data.output, "Output")
+
+		local repr = self:representation()
+		if repr == "line" then
+			TerraLib().douglasPeucker(self.project, self.name, data.output, data.tolerance)
+		else
+			customError("Layer representation '"..repr.."' cannot be simplified.")
 		end
 	end
 }
@@ -779,7 +816,7 @@ metaTableLayer_ = {
 	-- @usage -- DONTRUN
 	-- print(#layer)
 	__len = function(self)
-		return self.project.terralib:getLayerSize(self.project, self.name)
+		return TerraLib().getLayerSize(self.project, self.name)
 	end
 }
 
@@ -916,7 +953,7 @@ function Layer(data)
 		end
 
 		setmetatable(data, metaTableLayer_)
-		data.project.terralib:openProject(data.project, data.project.file)
+		TerraLib().openProject(data.project, data.project.file)
 		getLayerInfoAdapted(data)
 
 		return data

@@ -24,7 +24,6 @@
 
 return {
 	saveLayerAs = function(unitTest)
-		local tl = TerraLib{}
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -32,11 +31,11 @@ return {
 
 		File(proj.file):deleteIfExists()
 
-		tl:createProject(proj, {})
+		TerraLib().createProject(proj, {})
 
 		local layerName1 = "SampaGeoJson"
 		local layerFile1 = filePath("test/sampa.geojson", "terralib")
-		tl:addGeoJSONLayer(proj, layerName1, layerFile1)
+		TerraLib().addGeoJSONLayer(proj, layerName1, layerFile1)
 
 		-- TIF
 		local toData = {}
@@ -46,14 +45,14 @@ return {
 		local overwrite = true
 
 		local geojson2tifError = function()
-			tl:saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		end
 		unitTest:assertError(geojson2tifError, "It was not possible to convert the data in layer 'SampaGeoJson' to 'geojson2tif.tif'.")
 
 		-- SHP
 		toData.file = "geojson2shp.shp"
 		toData.type = "shp"
-		tl:saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 
 		File(toData.file):delete()
 		proj.file:delete()

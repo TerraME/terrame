@@ -186,18 +186,30 @@ int ObserverTextScreen::close()
 
 void ObserverTextScreen::resizeEvent(QResizeEvent *event)
 {
-    VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
-    textEdit->setFixedSize(this->size());
+	if (this->isVisible())
+	{
+		VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+		textEdit->setFixedSize(this->size());
+	}
+	else
+		event->ignore();
 }
 
 void ObserverTextScreen::moveEvent(QMoveEvent *event)
 {
-    VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+	if (this->isVisible())
+		VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+	else
+		event->ignore();
 }
 
 void ObserverTextScreen::closeEvent(QCloseEvent *event)
 {
-    VisualArrangement::getInstance()->closeEventDelegate();
+#ifdef __linux__
+	VisualArrangement::getInstance()->closeEventDelegate(this);
+#else
+	VisualArrangement::getInstance()->closeEventDelegate();
+#endif
 }
 
 void ObserverTextScreen::save(std::string file, std::string extension)

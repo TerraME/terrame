@@ -83,7 +83,7 @@ return {
 		end
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName2.."' already exists in the Project.")
 
-		TerraLib{}:dropPgTable(data)
+		TerraLib().dropPgTable(data)
 		proj1.layers[layerName2] = nil
 
 		local sourceMandatory = function()
@@ -157,20 +157,6 @@ return {
 			}
 		end
 		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))
-
-		local tableMandatory = function()
-			Layer{
-				project = proj1,
-				source = "postgis",
-				name = layerName2,
-				port = port,
-				user = user,
-				password = password,
-				database = database,
-				--table = tableName
-			}
-		end
-		unitTest:assertError(tableMandatory, mandatoryArgumentMsg("table"))
 
 		local fileUnnecessary = function()
 			Layer{
@@ -776,7 +762,7 @@ return {
 			encoding = encoding
 		}
 
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 
 		Layer{
 			project = proj,
@@ -806,7 +792,7 @@ return {
 		end
 		unitTest:assertError(tableAlreadyExists, "Table '"..tName1.."' already exists.")
 
-		TerraLib{}:dropPgTable(pgData)
+		TerraLib().dropPgTable(pgData)
 
 		if File(projName):exists() then
 			File(projName):deleteIfExists()

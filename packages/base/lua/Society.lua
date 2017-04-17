@@ -1016,8 +1016,7 @@ function Society(data)
 				data:add(attributes)
 			end
 		else
-			local tlib = terralib.TerraLib{}
-			local dSet = tlib:getOGRByFilePath(tostring(data.file))
+			local dSet = terralib.TerraLib().getOGRByFilePath(tostring(data.file))
 
 			for i = 0, #dSet do
 				data:add(dSet[i])

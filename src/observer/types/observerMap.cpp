@@ -527,12 +527,17 @@ QStringList ObserverMap::getAttributes()
 
 void ObserverMap::resizeEvent(QResizeEvent *event)
 {
-    if (zoomComboBox->currentText() == WINDOW)
-        zoomWindow();
+	if (this->isVisible())
+	{
+		if (zoomComboBox->currentText() == WINDOW)
+			zoomWindow();
 
-    painterWidget->calculateResult();
+		painterWidget->calculateResult();
 
-    VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+		VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+	}
+	else
+		event->ignore();
 }
 
 void ObserverMap::zoomWindow()
@@ -861,12 +866,19 @@ void ObserverMap::setupGUI()
 
 void ObserverMap::moveEvent(QMoveEvent *event)
 {
-    VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+	if (this->isVisible())
+		VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+	else
+		event->ignore();
 }
 
 void ObserverMap::closeEvent(QCloseEvent *event)
 {
-    VisualArrangement::getInstance()->closeEventDelegate();
+#ifdef __linux__
+	VisualArrangement::getInstance()->closeEventDelegate(this);
+#else
+	VisualArrangement::getInstance()->closeEventDelegate();
+#endif
 }
 
 void ObserverMap::setGridVisible(bool visible)

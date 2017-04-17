@@ -802,11 +802,15 @@ return {
 			index = false
 		}
 
-		local propNames = layer:attributes()
+		local propInfos = layer:attributes()
 
-		for i = 1, #propNames do
-			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "dens_pop") or (propNames[i] == "population"))
-		end
+		unitTest:assertEquals(#propInfos, 3)
+		unitTest:assertEquals(propInfos[1].name, "FID")
+		unitTest:assertEquals(propInfos[1].type, "integer 32")
+		unitTest:assertEquals(propInfos[2].name, "population")
+		unitTest:assertEquals(propInfos[2].type, "double")
+		unitTest:assertEquals(propInfos[3].name, "dens_pop")
+		unitTest:assertEquals(propInfos[3].type, "double")
 
 		proj.file:delete()
 	end,
@@ -880,8 +884,8 @@ return {
 		layer:export(data1)
 		local attrs1 = layer2:attributes()
 
-		unitTest:assertEquals(attrs1[1], "FID")
-		unitTest:assertEquals(attrs1[2], "population")
+		unitTest:assertEquals(attrs1[1].name, "FID")
+		unitTest:assertEquals(attrs1[2].name, "population")
 		unitTest:assertNil(attrs1[3])
 
 		-- SELECT ONE ATTRIBUTE TO SHAPE
@@ -889,12 +893,74 @@ return {
 		layer:export(data2)
 		local attrs2 = layer3:attributes()
 
-		unitTest:assertEquals(attrs2[1], "FID")
-		unitTest:assertEquals(attrs2[2], "dens_pop")
+		unitTest:assertEquals(attrs2[1].name, "FID")
+		unitTest:assertEquals(attrs2[2].name, "dens_pop")
 		unitTest:assertNil(attrs2[3])
 
 		File(geojson):delete()
 		File(shp):delete()
+		proj.file:delete()
+	end,
+	simplify = function(unitTest)
+		local projName = "layer_shape_basic.tview"
+
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
+
+		local filePath1 = filePath("test/rails.shp", "terralib")
+		local layerName1 = "ES_Rails"
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath1
+		}
+
+		local rails = "es_rails.shp"
+		local data1 = {
+			file = rails,
+			overwrite = true
+		}
+
+		layer1:export(data1)
+
+		local layerName2 = "ES_Rails_CurrDir"
+		local filePath2 = File(rails)
+
+		local layer2 = Layer{
+			project = proj,
+			name = layerName2,
+			file = filePath2
+		}
+
+		local outputName = "slp_"..layerName2
+		local data2 = {
+			output = outputName,
+			tolerance = 500
+		}
+
+		layer2:simplify(data2)
+
+		local layerName3 = "ES_Rails_Slp"
+		local filePath3 = File(string.lower(outputName)..".shp")
+
+		local layer3 = Layer{
+			project = proj,
+			name = layerName3,
+			file = filePath3
+		}
+
+		local attrs = layer3:attributes()
+		unitTest:assertEquals("FID", attrs[1].name)
+		unitTest:assertEquals("OBSERVACAO", attrs[4].name)
+		unitTest:assertEquals("PRODUTOS", attrs[7].name)
+		unitTest:assertEquals("OPERADORA", attrs[10].name)
+		unitTest:assertEquals("Bitola_Ext", attrs[13].name)
+		unitTest:assertEquals("COD_PNV", attrs[15].name)
+
+		filePath2:delete()
+		filePath3:delete()
 		proj.file:delete()
 	end
 }
