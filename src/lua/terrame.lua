@@ -603,7 +603,7 @@ local function version()
 	str = str.."\n  Qwt "..qwt_version
 
 	local terralib = _Gtme.getPackage("terralib")
-	str = str.."\n  TerraLib "..terralib.TerraLib:getVersion()
+	str = str.."\n  TerraLib "..terralib.TerraLib().getVersion()
 	finalizeTerraLib()
 
 	return str

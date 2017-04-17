@@ -2653,8 +2653,9 @@ metaTableTerraLib_ = {
 -- are used by the other types of the package. If needed, these functions should
 -- be used with care. Such functions mught stop with very strange errors because
 -- they do not check any errors in their arguments.
+-- All functions must be called by '.'.
 -- @usage -- DONTRUN
--- TerraLib.getVersion()
+-- TerraLib().getVersion()
 function TerraLib()
 	if instance then
 		return instance
