@@ -115,7 +115,7 @@ function Choice(attrTab)
 		end)
 
 		result = {values = attrTab, default = default}
-	elseif getn(attrTab) > 0 then
+	elseif getn(attrTab) > 0 and (attrTab.min ~= nil or attrTab.max ~= nil) then
 		verifyUnnecessaryArguments(attrTab, {"default", "min", "max", "step", "slices"})
 
 		optionalTableArgument(attrTab, "min", "number")
@@ -189,10 +189,45 @@ function Choice(attrTab)
 				table.insert(attrTab.values, value)
 				value = value + attrTab.step
 			end
-
 		end
 
 		result = attrTab
+	elseif getn(attrTab) > 0 then
+		local valuetype
+		local values = {}
+
+		forEachOrderedElement(attrTab, function(idx, value)
+			if idx == "default" then return end
+
+			if type(idx) ~= "string" then
+				customError("All the indexes must be string, got '"..type(idx).."'.")
+			end
+
+			if valuetype then
+				if valuetype ~= type(value) then
+					customError("All values should belong to the same type, got '"..valuetype.."' and '"..type(value).."'.")
+				end
+			else
+				valuetype = type(value)
+			end
+
+			values[idx] = value
+		end)
+
+		local default
+
+		forEachOrderedElement(attrTab, function(idx)
+			default = idx
+			return false
+		end)
+
+		defaultTableValue(attrTab, "default", default)
+
+		if not attrTab[attrTab.default] then
+			customError("The default value ("..attrTab.default..") does not belong to Choice.")
+		end
+
+		result = {values = values, default = attrTab.default}
 	else
 		customError("There are no options for the Choice (table is empty).")
 	end

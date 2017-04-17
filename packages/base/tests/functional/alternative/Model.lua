@@ -415,6 +415,41 @@ return{
 			M{files = {file1 = "agxd.csv"}}
 		end
 		unitTest:assertError(error_func, resourceNotFoundMsg(toLabel("file1", "files"), File("agxd.csv")))
+
+		local func1 = function() return 1 end
+		local func2 = function() return 2 end
+
+		M = Model{
+			quantity = Choice{a = func1, b = func2},
+			internal = {
+				quantity = Choice{a = func1, b = func2}
+			},
+			finalTime = 20,
+			init = function(model)
+				model.timer = Timer{Event{action = function() end}}
+			end
+		}
+
+		error_func = function()
+			M{quantity = func1}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("quantity", "string", func1))
+
+		error_func = function()
+			M{quantity = "c"}
+		end
+		unitTest:assertError(error_func, "Incompatible values. Argument 'quantity' expected one of {'a', 'b'}, got 'c'.")
+
+		error_func = function()
+			M{internal = {quantity = func1}}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("quantity", "string", func1))
+
+		error_func = function()
+			M{internal = {quantity = "c"}}
+		end
+		unitTest:assertError(error_func, "Incompatible values. Argument 'quantity' expected one of {'a', 'b'}, got 'c'.")
+	
 	end,
 	execute = function(unitTest)
 		local error_func = function()

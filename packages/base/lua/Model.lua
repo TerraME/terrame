@@ -563,7 +563,7 @@ function Model(attrTab)
 				if argv[name] == nil then
 					mandatoryArgumentError(name)
 				end
-			elseif mtype == "table" and #value == 0 then
+			elseif mtype == "table" then
 				if argv[name] == nil then
 					argv[name] = {}
 				end
@@ -583,9 +583,31 @@ function Model(attrTab)
 			end
 		end)
 
+		local namedChoices = {}
+
+		forEachElement(attrTab, function(idx, value, mtype)
+			if mtype == "Choice" and value.values and #value.values == 0 then
+				namedChoices[idx] = true
+			end
+		end)
+
 		-- check types and values
 		forEachOrderedElement(attrTab, function(name, value, mtype)
-			if mtype == "Choice" then
+			if namedChoices[name] then
+				if type(argv[name]) ~= type(value.default) then
+					incompatibleTypeError(name, type(value.default), argv[name])
+				elseif value.values[argv[name]] == nil then
+					local str = "one of {"
+					forEachOrderedElement(value.values, function(v)
+						str = str.."'"..v.."', "
+					end)
+
+					str = string.sub(str, 1, str:len() - 2).."}"
+					incompatibleValueError(name, str, argv[name])
+				else
+					argv[name] = value.values[argv[name]] -- updating idx by its value
+				end
+			elseif mtype == "Choice" then
 				if value.values then
 					if type(argv[name]) ~= type(value.default) then
 						incompatibleTypeError(name, type(value.default), argv[name])
@@ -594,6 +616,7 @@ function Model(attrTab)
 						forEachElement(value.values, function(_, v)
 							str = str..v..", "
 						end)
+
 						str = string.sub(str, 1, str:len() - 2).."}"
 						incompatibleValueError(name, str, argv[name])
 					end
@@ -637,9 +660,31 @@ function Model(attrTab)
 					argv[name] = attrTab[name]
 				end
 			elseif mtype == "table" and #value == 0 then
+				local internalNamedChoices = {}
+
+				forEachElement(attrTab[name], function(idx, value, mtype)
+					if mtype == "Choice" and value.values and #value.values == 0 then
+						internalNamedChoices[idx] = true
+					end
+				end)
+
 				local iargv = argv[name]
 				forEachOrderedElement(value, function(iname, ivalue, itype)
-					if itype == "Choice" then
+					if namedChoices[iname] then
+						if type(iargv[iname]) ~= type(ivalue.default) then
+							incompatibleTypeError(iname, type(ivalue.default), iargv[iname])
+						elseif ivalue.values[iargv[iname]] == nil then
+							local str = "one of {"
+							forEachOrderedElement(ivalue.values, function(v)
+								str = str.."'"..v.."', "
+							end)
+
+							str = string.sub(str, 1, str:len() - 2).."}"
+							incompatibleValueError(iname, str, iargv[iname])
+						else
+							iargv[iname] = ivalue.values[iargv[iname]] -- updating idx by its value
+						end
+					elseif itype == "Choice" then
 						if ivalue.values then
 							if type(iargv[iname]) ~= type(ivalue.default) then
 								incompatibleTypeError(name.."."..iname, type(ivalue.default), iargv[iname])
