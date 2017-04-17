@@ -586,6 +586,7 @@ function _Gtme.executeDoc(package)
 		forEachElement(mdata, function(_, value)
 			print("Processing '"..value.file[1].."'")
 
+			value.name = value.file[1] or ""
 			if not isFile(packageInfo(package).path.."data"..s..value.file[1]) then
 				-- this will be recognized as an error afterwards
 				return
@@ -615,7 +616,6 @@ function _Gtme.executeDoc(package)
 				end)
 			end
 
-			value.name = value.file[1]
 
 			if string.endswith(value.file[1], ".csv") then
 				if not value.separator then
