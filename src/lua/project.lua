@@ -132,6 +132,14 @@ function _Gtme.executeProjects(package)
 		return 0
 	end
 
+	local config = false
+
+	if isFile("config.lua") then
+		config = true
+		printNote("Using 'config.lua' in the current directory")
+		os.execute("cp config.lua "..data_path)
+	end
+
 	data_path:setCurrentDir()
 
 	local project_report = {
@@ -209,6 +217,7 @@ function _Gtme.executeProjects(package)
 
 	forEachFile(data_path, function(file)
 		if file:extension() ~= "lua" then return end
+		if file:name() == "config.lua" then return end
 
 		local hasProject = false
 
@@ -278,6 +287,11 @@ function _Gtme.executeProjects(package)
 	Layer = oldLayer
 	Layer_.fill = oldFill
 	import = oldImport
+
+	if config then
+		printNote("Removing 'config.lua'")
+		os.execute("rm -f config.lua")
+	end
 
 	local finalTime = os.clock()
 
