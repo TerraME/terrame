@@ -201,14 +201,26 @@ function _Gtme.executeProjects(package)
 				mfile = File(mfile)
 			end
 
-			mfile = mfile:name()
-			print("Creating 'data/"..mfile.."'")
+			if data.database then
+				mfile = data.database
+				print("Creating database '"..mfile.."'")
 
-			if createdLayers[mfile] then
-				printError("File 'data/"..mfile.."' was created previously. Please update its name.")
-				project_report.errors_output = project_report.errors_output + 1
+				if createdLayers[mfile] then
+					printError("Database '"..mfile.."' was created previously. Please update its name.")
+					project_report.errors_output = project_report.errors_output + 1
+				else
+					createdLayers[mfile] = true
+				end
 			else
-				createdLayers[mfile] = true
+				mfile = mfile:name()
+				print("Creating 'data/"..mfile.."'")
+
+				if createdLayers[mfile] then
+					printError("File 'data/"..mfile.."' was created previously. Please update its name.")
+					project_report.errors_output = project_report.errors_output + 1
+				else
+					createdLayers[mfile] = true
+				end
 			end
 		end
 
