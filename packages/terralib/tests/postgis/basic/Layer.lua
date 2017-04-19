@@ -283,21 +283,14 @@ return {
 			-- table = tableName
 		-- }
 
-		-- END
-		-- TerraLib().dropPgTable(pgData)
-
 		File(projName):deleteIfExists()
 
-		pgData.table = tName1
-		TerraLib().dropPgTable(pgData)
-		pgData.table = tName2
-		TerraLib().dropPgTable(pgData)
-		pgData.table = tName3
-		TerraLib().dropPgTable(pgData)
-		pgData.table = tName4
-		TerraLib().dropPgTable(pgData)
-		pgData.database = newDbName
-		TerraLib().dropPgDatabase(pgData)
+		l1:delete()
+--		layer1:delete() -- layer1 should not be deleted. What must be deleted is the exported data.
+--		layer2:delete() -- layer2 was read from a pg database. it does not have an encoding
+--		layer3:delete() -- same for layer3
+		layer4:delete()
+--		layer5:delete() -- same here
 	end,
 	projection = function(unitTest)
 		local projName = "layer_basic.tview"
@@ -317,12 +310,8 @@ return {
 
 		unitTest:assertEquals(layer1.name, layerName1)
 
-		local host = "localhost"
-		local port = "5432"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = "setores_cells"
 
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
@@ -339,7 +328,7 @@ return {
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with EPSG: 29191 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
 
 		proj.file:delete()
-		TerraLib().dropPgTable(pgData)
+		layer:delete()
 	end,
 	attributes = function(unitTest)
 		local projName = "layer_basic.tview"
@@ -359,22 +348,8 @@ return {
 
 		unitTest:assertEquals(layer1.name, layerName1)
 
-		local host = "localhost"
-		local port = "5432"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = "setores_cells"
-
-		local pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			password = password,
-			database = database,
-			table = tableName,
-			encoding = encoding
-		}
 
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
@@ -398,7 +373,7 @@ return {
 		unitTest:assertEquals(propInfos[3].type, "integer 32")
 
 		proj.file:delete()
-		TerraLib().dropPgTable(pgData)
+		layer:delete()
 	end,
 	export = function(unitTest)
 		local projName = "layer_postgis_basic.tview"

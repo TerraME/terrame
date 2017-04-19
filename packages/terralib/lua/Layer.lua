@@ -87,7 +87,7 @@ local function addCellularLayer(self, data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source",
 	                                  "clean", "host", "port", "user", "password", "database", "table",
-									  "index"})
+									  "index", "encoding"})
 
 	mandatoryTableArgument(data, "input", "string")
 	positiveTableArgument(data, "resolution")
@@ -209,7 +209,7 @@ local function addLayer(self, data)
 	end
 
 	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "index",
-									"host", "port", "user", "password", "database", "table",
+									"host", "port", "user", "password", "encoding", "database", "table",
 									"service", "feature", "epsg"})
 
 	if data.source == nil then
@@ -319,6 +319,21 @@ Layer_ = {
 	-- print(layer:representation())
 	representation = function(self)
 		return TerraLib().getLayerInfo(self.project, self.name).rep
+	end,
+	--- Delete the data source of the Layer. If it is a file or a set of files, remove them. If it is a
+	-- database table, remove it.
+	delete = function(self)
+		if type(self.file) == "string" then
+			self.file = File(self.file)
+		end
+
+		if self.file and self.file:exists() then
+			self.file:delete()
+		elseif self.database then
+			TerraLib().dropPgTable(self)
+		else
+			customError("TerraME does not know how to remove such data source.")
+		end
 	end,
 	--- Return the number of bands of a raster layer. If the layer does not have a raster representation
 	-- then it will stop with an error. The bands of the raster layer are named from zero to the number of
@@ -947,7 +962,7 @@ function Layer(data)
 
 	mandatoryTableArgument(data, "project", "Project")
 
-	if getn(data) == 2 then
+	if getn(data) == 2 or (getn(data) == 3 and data.encoding) then
 		if not data.project.layers[data.name] then
 			local msg = "Layer '"..data.name.."' does not exist in Project '"..data.project.file.."'."
 			local sug = suggestion(data.name, data.project.layers)
@@ -963,7 +978,8 @@ function Layer(data)
 		return data
 	elseif data.input or data.resolution or data.box then
 		addCellularLayer(data.project, data)
-		return Layer{project = data.project, name = data.name}
+
+		return Layer{project = data.project, name = data.name, encoding = data.encoding}
 	else
 		addLayer(data.project, data)
 		return Layer{project = data.project, name = data.name}
