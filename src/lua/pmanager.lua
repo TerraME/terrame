@@ -24,8 +24,8 @@
 
 -- some qt values
 local qtOk = 2 ^ 10
-local qtYes = 2 ^ 14
-local qtNo = 2 ^ 16
+--local qtYes = 2 ^ 14
+--local qtNo = 2 ^ 16
 local qtCancel = 2 ^ 22
 
 local comboboxExamples
@@ -627,29 +627,69 @@ local function quitButtonClicked()
 	local countCreated = getn(createdFiles)
 
 	if countCreated > 0 then
-		local msg
+		local Dialog = qt.new_qobject(qt.meta.QDialog)
+		Dialog.windowTitle = "?"
 
+		local VBoxLayout = qt.new_qobject(qt.meta.QVBoxLayout)
+		qt.ui.layout_add(Dialog, VBoxLayout)
+
+		local msg
 		if countCreated == 1 then
-			msg = "The folowing file was created in directory "..currentDir().." while you run TerraME:"
+			msg = "The folowing file was created in directory "..currentDir().." while you run TerraME:\n"
 		else
-			msg = "The folowing files were created in directory "..currentDir().." while you run TerraME:"
+			msg = "The folowing "..countCreated.." files were created in directory "..currentDir().." while you run TerraME:\n"
 		end
+
+		label = qt.new_qobject(qt.meta.QLabel)
+		label.text = msg
+		qt.ui.layout_add(VBoxLayout, label)
+
+		local checkBoxes = {}
 
 		forEachOrderedElement(createdFiles, function(idx)
-			msg = msg.."\n - "..idx
+			local checkBox = qt.new_qobject(qt.meta.QCheckBox)
+			checkBox.text = idx
+			checkBox.checked = true
+			checkBoxes[checkBox] = true
+			qt.ui.layout_add(VBoxLayout, checkBox)
 		end)
 
+		ButtonsLayout = qt.new_qobject(qt.meta.QHBoxLayout)
+		OkButton = qt.new_qobject(qt.meta.QPushButton)
+		OkButton.text = "Delete Selected"
+		OkButton.minimumSize = {100, 28}
+		OkButton.maximumSize = {110, 28}
+		qt.ui.layout_add(ButtonsLayout, OkButton)
+
+		QuitButton = qt.new_qobject(qt.meta.QPushButton)
+		QuitButton.minimumSize = {100, 28}
+		QuitButton.maximumSize = {110, 28}
+
 		if countCreated == 1 then
-			msg = msg.."\n\nDo you want to delete it?"
+			QuitButton.text = "Keep It"
 		else
-			msg = msg.."\n\nDo you want to delete them?"
+			QuitButton.text = "Keep All"
 		end
 
-		if qt.dialog.msg_question(msg, "Confirm?", qtYes + qtNo, qtNo) == qtYes then
-			forEachElement(createdFiles, function(idx)
-				File(idx):delete()
+		qt.ui.layout_add(ButtonsLayout, QuitButton)
+
+		qt.ui.layout_add(VBoxLayout, ButtonsLayout)
+
+		qt.connect(QuitButton, "clicked()", function()
+			Dialog:done(0)
+		end)
+
+		qt.connect(OkButton, "clicked()", function()
+			forEachElement(checkBoxes, function(idx)
+				if idx.checked then
+					File(idx.text):delete()
+				end
 			end)
-		end
+			Dialog:done(0)
+		end)
+
+		Dialog:show()
+		Dialog:exec()
 	end
 
 	dialog:done(0)
