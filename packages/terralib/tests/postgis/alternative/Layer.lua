@@ -95,7 +95,6 @@ return {
 		end
 		unitTest:assertError(sourceMandatory, mandatoryArgumentMsg("source"))
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		local nameMandatory = function()
 			Layer{
 				project = proj1,
@@ -107,8 +106,7 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(nameMandatory, mandatoryArgumentMsg("name")) -- SKIP
-	end
+		unitTest:assertError(nameMandatory, mandatoryArgumentMsg("name"))
 
 		local passMandatory = function()
 			Layer{
@@ -269,8 +267,7 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 38) -- #1303
+		unitTest:assertError(hostNonExists, "...")
 
 		local wrongPort = 2345
 		local portWrong = function()
@@ -285,7 +282,7 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 188) -- #1303
+		unitTest:assertError(portWrong, "...")
 
 		local nonuser = "usernotexists"
 		local userNotExists = function()
@@ -306,7 +303,6 @@ return {
 
 		local wrongPass
 		local passWrong
-	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		wrongPass = "passiswrong"
 		passWrong = function()
 			Layer{
@@ -320,9 +316,7 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP
-							.."FATAL:  password authentication failed for user \"postgres\"\n.", 59) -- #1303
-	end
+		unitTest:assertError(passWrong, "...")
 
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
@@ -624,8 +618,7 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 38) -- #1303
+		unitTest:assertError(hostNonExists, "...")
 
 		wrongPort = 2345
 		portWrong = function()
@@ -657,10 +650,8 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 64) -- #1303
+		unitTest:assertError(userNotExists, "...")
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		wrongPass = "passiswrong"
 		passWrong = function()
 			Layer{
@@ -674,9 +665,7 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP
-							.."FATAL:  password authentication failed for user \"postgres\"\n.", 59) -- #1303
-	end
+		unitTest:assertError(passWrong, "...")
 
 		host = "localhost"
 		port = "5432"
