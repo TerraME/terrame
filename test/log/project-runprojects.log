@@ -9,6 +9,11 @@ Removing 'data/itaituba.tview'
 Checking if data does not contain any .tview file
 Processing 'data/amazonia-postgis.lua'
 Creating 'data/amazonia-postgis.tview'
+Creating database 'amazonia'
+Executing operation 'coverage' using layer 'prodes'
+Executing operation 'distance' using layer 'roads'
+Executing operation 'distance' using layer 'ports'
+Executing operation 'area' using layer 'protected'
 File 'amazonia-postgis.tview' was successfully created
 Processing 'data/amazonia.lua'
 Creating 'data/amazonia.tview'

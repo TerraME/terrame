@@ -1,3 +1,1 @@
-password = ""
-drop = true
-dbType = "mysql"
+password = "postgres"
