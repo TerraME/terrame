@@ -53,20 +53,6 @@ if not getConfig() then
 	customError("You should provide connection information in a config.lua file.")
 end
 
--- the lines below related to terralib should not be necessary. Layer{} call
--- below shoud handle that as it uses 'clean = true'.
-local terralib = TerraLib()
-terralib.dropPgTable{
-	type = "POSTGIS",
-	port = 5432,
-	user = getConfig().user or "postgres",
-	password = getConfig().password,
-	database = "amazonia",
-	table = "amazonia", 
-	host = "localhost",
-	encoding = "CP1252"
-}
-
 amazoniaCells = Layer{
 	project = amazonia,
 	clean = true,
@@ -103,7 +89,6 @@ amazoniaCells:fill{
 	layer = "protected",
 	attribute = "protected"
 }
-
 
 cs = CellularSpace{
 	project = amazonia,

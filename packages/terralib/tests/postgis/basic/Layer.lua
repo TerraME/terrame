@@ -98,8 +98,6 @@ return {
 		unitTest:assert(layer3.name ~= layer2.name)
 		unitTest:assertEquals(layer3.sid, layer2.sid)
 
-		TerraLib().dropPgTable(pgData)
-
 		File(projName):deleteIfExists()
 
 		projName = "cells_setores_2000.tview"
@@ -137,11 +135,10 @@ return {
 			encoding = encoding
 		}
 
-		TerraLib().dropPgTable(pgData)
-
 		local l1 = Layer{
 			project = proj,
 			source = "postgis",
+			clean = true,
 			input = layerName1,
 			name = clName1,
 			resolution = 0.7,
@@ -157,12 +154,12 @@ return {
 		local tName2 = "add_cellslayer_basic_another"
 
 		pgData.table = tName2
-		TerraLib().dropPgTable(pgData)
 
 		local l2 = Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
+			clean = true,
 			name = clName2,
 			resolution = 0.7,
 			user = user,
@@ -177,13 +174,13 @@ return {
 		local tName3 = "add_cellslayer_basic_from_db"
 
 		pgData.table = tName3
-		TerraLib().dropPgTable(pgData)
 
 		local l3 = Layer{
 			project = proj,
 			source = "postgis",
 			input = clName2,
 			name = clName3,
+			clean = true,
 			resolution = 0.7,
 			user = user,
 			password = password,
@@ -226,12 +223,12 @@ return {
 		clName1 = clName1.."_Box"
 		local tName4 = string.lower(clName1)
 		pgData.table = tName4
-		TerraLib().dropPgTable(pgData)
 
 		Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
+			clean = true,
 			name = clName1,
 			resolution = 0.7,
 			box = true,
@@ -284,13 +281,12 @@ return {
 
 		-- }
 
-		-- -- USED ONLY TO TESTS
-		-- TerraLib().dropPgTable(pgData)
 		-- local clName2 = "ProdesPg"
 
 		-- local layer2 = Layer{
 			-- project = proj,
 			-- source = "postgis",
+			-- clean = true,
 			-- input = layerName1
 			-- name = clName2,
 			-- resolution = 60e3,
@@ -354,8 +350,6 @@ return {
 
 		}
 
-		TerraLib().dropPgTable(pgData)
-
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
 			project = proj,
@@ -364,6 +358,7 @@ return {
 			name = clName1,
 			resolution = 5e3,
 			user = user,
+			clean = true,
 			password = password,
 			database = database
 		}
@@ -410,8 +405,6 @@ return {
 			encoding = encoding
 		}
 
-		TerraLib().dropPgTable(pgData)
-
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
 			project = proj,
@@ -419,6 +412,7 @@ return {
 			name = clName1,
 			resolution = 5e3,
 			user = user,
+			clean = true,
 			password = password,
 			database = database
 		}

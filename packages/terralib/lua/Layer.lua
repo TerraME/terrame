@@ -183,14 +183,20 @@ local function addCellularLayer(self, data)
 		postgis = function()
 			checkPgParams(data)
 
+			defaultTableValue(data, "clean", false)
+
 			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"input", "name", "resolution", "source", "encoding", -- SKIP
+				verifyUnnecessaryArguments(data, {"clean", "input", "name", "resolution", "source", "encoding", -- SKIP
 										"project", "host", "port", "user", "password", "database", "table", "project"})
 				data.box = true -- SKIP
 			else
 				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "source", "encoding",
+				verifyUnnecessaryArguments(data, {"box", "clean", "input", "name", "resolution", "source", "encoding",
 										"project", "host", "port", "user", "password", "database", "table", "project"})
+			end
+
+			if data.clean then
+				TerraLib().dropPgTable(data)
 			end
 
 			TerraLib().addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data, not data.box)
