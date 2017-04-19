@@ -47,7 +47,6 @@ return {
 
 		local host
 		local port
-		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local encoding
@@ -57,7 +56,6 @@ return {
 			source = "postgis",
 			--host = host,
 			--port = port,
-			user = user,
 			password = password,
 			database = database,
 			overwrite = true
@@ -73,7 +71,6 @@ return {
 			name = layerName2,
 			-- host = host,
 			-- port = port,
-			user = user,
 			password = password,
 			database = database,
 			table = tableName
@@ -89,7 +86,6 @@ return {
 			name = layerName3,
 			-- host = host,
 			-- port = port,
-			user = user,
 			password = password,
 			database = database,
 			table = tableName
@@ -119,7 +115,6 @@ return {
 
 		host = "localhost"
 		port = "5432"
-		user = "postgres"
 		password = "postgres"
 		database = "postgis_22_sample"
 		encoding = "CP1252"
@@ -128,10 +123,10 @@ return {
 			type = "POSTGIS",
 			host = host,
 			port = port,
-			user = user,
 			password = password,
 			database = database,
 			table = tName1,
+			user = "postgres",
 			encoding = encoding
 		}
 
@@ -142,7 +137,6 @@ return {
 			input = layerName1,
 			name = clName1,
 			resolution = 0.7,
-			user = user,
 			password = password,
 			database = database,
 			table = tName1
@@ -162,7 +156,6 @@ return {
 			clean = true,
 			name = clName2,
 			resolution = 0.7,
-			user = user,
 			password = password,
 			database = database,
 			table = tName2
@@ -182,7 +175,6 @@ return {
 			name = clName3,
 			clean = true,
 			resolution = 0.7,
-			user = user,
 			password = password,
 			database = database,
 			table = tName3
@@ -203,7 +195,6 @@ return {
 			input = clName2,
 			name = clName4,
 			resolution = 0.7,
-			user = user,
 			password = password,
 			database = newDbName
 		}
@@ -211,7 +202,7 @@ return {
 		unitTest:assertEquals(layer4.source, "postgis")
 		unitTest:assertEquals(layer4.host, host)
 		unitTest:assertEquals(layer4.port, port)
-		unitTest:assertEquals(layer4.user, user)
+		unitTest:assertEquals(layer4.user, "postgres")
 		unitTest:assertEquals(layer4.password, password)
 		unitTest:assertEquals(layer4.database, newDbName)
 		unitTest:assertEquals(layer4.table, string.lower(clName4))
@@ -232,7 +223,6 @@ return {
 			name = clName1,
 			resolution = 0.7,
 			box = true,
-			user = user,
 			password = password,
 			database = database
 		}
@@ -249,7 +239,6 @@ return {
 			name = layerName5,
 			-- host = host,
 			-- port = port,
-			user = user,
 			password = password,
 			database = database,
 			table = tName1,
@@ -263,7 +252,6 @@ return {
 		-- #1152
 		-- local host = "localhost"
 		-- local port = "5432"
-		-- local user = "postgres"
 		-- local password = "postgres"
 		-- local database = "postgis_22_sample"
 		-- local encoding = "CP1252"
@@ -273,10 +261,10 @@ return {
 			-- type = "POSTGIS",
 			-- host = host,
 			-- port = port,
-			-- user = user,
 			-- password = password,
 			-- database = database,
 			-- table = tableName,
+			-- user = "postgis",
 			-- encoding = encoding
 
 		-- }
@@ -290,7 +278,6 @@ return {
 			-- input = layerName1
 			-- name = clName2,
 			-- resolution = 60e3,
-			-- user = user,
 			-- password = password,
 			-- database = database,
 			-- table = tableName
@@ -332,23 +319,10 @@ return {
 
 		local host = "localhost"
 		local port = "5432"
-		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
 		local tableName = "setores_cells"
-
-		local pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tableName,
-			encoding = encoding
-
-		}
 
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
@@ -357,7 +331,6 @@ return {
 			input = layerName1,
 			name = clName1,
 			resolution = 5e3,
-			user = user,
 			clean = true,
 			password = password,
 			database = database
@@ -388,7 +361,6 @@ return {
 
 		local host = "localhost"
 		local port = "5432"
-		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
 		local encoding = "CP1252"
@@ -398,7 +370,6 @@ return {
 			type = "POSTGIS",
 			host = host,
 			port = port,
-			user = user,
 			password = password,
 			database = database,
 			table = tableName,
@@ -411,7 +382,6 @@ return {
 			input = layerName1,
 			name = clName1,
 			resolution = 5e3,
-			user = user,
 			clean = true,
 			password = password,
 			database = database
@@ -453,14 +423,12 @@ return {
 
 		local overwrite = true
 
-		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local tableName = "mg"
 
 		local pgData = {
 			source = "postgis",
-			user = user,
 			password = password,
 			database = database,
 			overwrite = overwrite,
@@ -474,7 +442,6 @@ return {
 			project = proj,
 			source = "postgis",
 			name = layerName2,
-			user = user,
 			password = password,
 			database = database,
 			table = tableName
@@ -573,14 +540,12 @@ return {
 			file = filePath1
 		}
 
-		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 		local tableName = string.lower(layerName1)
 
 		local pgData = {
 			source = "postgis",
-			user = user,
 			password = password,
 			database = database,
 			overwrite = true,
@@ -594,7 +559,6 @@ return {
 			project = proj,
 			source = "postgis",
 			name = layerName2,
-			user = user,
 			password = password,
 			database = database,
 			table = tableName
@@ -613,7 +577,6 @@ return {
 			project = proj,
 			source = "postgis",
 			name = layerName3,
-			user = user,
 			password = password,
 			database = database,
 			table = outputName

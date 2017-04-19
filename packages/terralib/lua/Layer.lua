@@ -66,22 +66,18 @@ local function fixName(name)
 end
 
 local function checkPgParams(data)
-	mandatoryTableArgument(data, "user", "string")
 	mandatoryTableArgument(data, "password", "string")
 	mandatoryTableArgument(data, "database", "string")
 
 	checkName(data.database, "Database")
 
-	if data.table then
-		mandatoryTableArgument(data, "table", "string")
-	else
-		defaultTableValue(data, "table", string.lower(data.name))
-	end
+	defaultTableValue(data, "table", string.lower(data.name))
 
 	data.table = fixName(data.table)
 	checkName(data.table, "Table")
 
 	defaultTableValue(data, "host", "localhost")
+	defaultTableValue(data, "user", "postgres")
 	defaultTableValue(data, "port", 5432)
 	defaultTableValue(data, "encoding", "CP1252")
 	data.port = tostring(data.port)

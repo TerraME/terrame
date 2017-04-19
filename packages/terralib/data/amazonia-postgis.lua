@@ -60,7 +60,6 @@ amazoniaCells = Layer{
 	name = "cells",
 	resolution = 50000,
 	source = "postgis",
-	user = getConfig().user or "postgres", -- this should be only "user = getConfig().user" - "postgres" should be the default value for user
 	password = getConfig().password,
 	database = "amazonia",
 	table = "amazonia"
