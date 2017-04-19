@@ -267,7 +267,7 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(hostNonExists, "...")
+		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: could not translate host name \"inotexist\" to address: Name or service not known\n.")
 
 		local wrongPort = 2345
 		local portWrong = function()
@@ -282,7 +282,10 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(portWrong, "...")
+		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: "..
+			"could not connect to server: Connection refused\n"..
+			"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
+			"\tTCP/IP connections on port 2345?\n.")
 
 		local nonuser = "usernotexists"
 		local userNotExists = function()
@@ -299,7 +302,7 @@ return {
 			}
 		end
 		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 64) -- #1303
+			.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 5)
 
 		local wrongPass
 		local passWrong
@@ -316,7 +319,9 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(passWrong, "...")
+		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "..
+			"FATAL:  password authentication failed for user \"postgres\"\n"..
+			"FATAL:  password authentication failed for user \"postgres\"\n.")
 
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
@@ -618,7 +623,8 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(hostNonExists, "...")
+		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "..
+			"could not translate host name \"inotexist\" to address: Name or service not known\n.")
 
 		wrongPort = 2345
 		portWrong = function()
@@ -634,7 +640,13 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 188) -- #1303
+		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: "..
+			"could not connect to server: Connection refused (0x0000274D/10061)\n"..
+			"\tIs the server running on host \"localhost\" (::1) and accepting\n"..
+			"\tTCP/IP connections on port 2345?\n"..
+			"could not connect to server: Connection refused (0x0000274D/10061)\n"..
+			"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
+			"\tTCP/IP connections on port 2345?\n.", 5)
 
 		nonuser = "usernotexists"
 		userNotExists = function()
@@ -650,7 +662,9 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(userNotExists, "...")
+		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "..
+			"FATAL:  password authentication failed for user \"usernotexists\"\n"..
+			"FATAL:  password authentication failed for user \"usernotexists\"\n.")
 
 		wrongPass = "passiswrong"
 		passWrong = function()
@@ -665,7 +679,9 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(passWrong, "...")
+		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "..
+			"FATAL:  password authentication failed for user \"postgres\"\n"..
+			"FATAL:  password authentication failed for user \"postgres\"\n.")
 
 		host = "localhost"
 		port = "5432"
