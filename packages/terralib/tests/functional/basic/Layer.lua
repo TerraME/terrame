@@ -235,6 +235,41 @@ return {
 		File(filePath3):deleteIfExists()
 		File(filePath4):deleteIfExists()
 	end,
+	delete = function(unitTest)
+		local projName = File("cellular_layer_del.tview")
+
+		projName:deleteIfExists()
+		local proj = Project{
+			file = projName:name(),
+			clean = true
+		}
+
+		local layerName1 = "Sampa"
+
+		Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("test/sampa.shp", "terralib")
+		}
+
+		local filePath1 = "setores_cells_basic.shp"
+
+		local clName1 = "Sampa_Cells"
+
+		local cl = Layer{
+			project = proj,
+			source = "shp",
+			input = layerName1,
+			name = clName1,
+			clean = true,
+			resolution = 0.3,
+			file = filePath1
+		}
+
+		cl:delete()
+		projName:delete()
+		unitTest:assert(not File(filePath1):exists())
+	end,
 	fill = function(unitTest)
 		local projName = File("cellular_layer_basic.tview")
 		local layerName1 = "Setores_2000"

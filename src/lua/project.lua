@@ -132,6 +132,14 @@ function _Gtme.executeProjects(package)
 		return 0
 	end
 
+	local config = false
+
+	if isFile("config.lua") then
+		config = true
+		printNote("Using 'config.lua' in the current directory")
+		os.execute("cp config.lua "..data_path)
+	end
+
 	data_path:setCurrentDir()
 
 	local project_report = {
@@ -193,14 +201,26 @@ function _Gtme.executeProjects(package)
 				mfile = File(mfile)
 			end
 
-			mfile = mfile:name()
-			print("Creating 'data/"..mfile.."'")
+			if data.database then
+				mfile = data.database
+				print("Creating database '"..mfile.."'")
 
-			if createdLayers[mfile] then
-				printError("File 'data/"..mfile.."' was created previously. Please update its name.")
-				project_report.errors_output = project_report.errors_output + 1
+				if createdLayers[mfile] then
+					printError("Database '"..mfile.."' was created previously. Please update its name.")
+					project_report.errors_output = project_report.errors_output + 1
+				else
+					createdLayers[mfile] = true
+				end
 			else
-				createdLayers[mfile] = true
+				mfile = mfile:name()
+				print("Creating 'data/"..mfile.."'")
+
+				if createdLayers[mfile] then
+					printError("File 'data/"..mfile.."' was created previously. Please update its name.")
+					project_report.errors_output = project_report.errors_output + 1
+				else
+					createdLayers[mfile] = true
+				end
 			end
 		end
 
@@ -209,6 +229,7 @@ function _Gtme.executeProjects(package)
 
 	forEachFile(data_path, function(file)
 		if file:extension() ~= "lua" then return end
+		if file:name() == "config.lua" then return end
 
 		local hasProject = false
 
@@ -278,6 +299,11 @@ function _Gtme.executeProjects(package)
 	Layer = oldLayer
 	Layer_.fill = oldFill
 	import = oldImport
+
+	if config then
+		printNote("Removing 'config.lua'")
+		os.execute("rm -f config.lua")
+	end
 
 	local finalTime = os.clock()
 

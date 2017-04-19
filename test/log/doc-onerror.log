@@ -5,7 +5,6 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
-Processing 'brazilstates.dbx'
 File 'data.csv' is not documented
 Package 'onerror' has font.lua but there are no fonts
 Parsing lua files

@@ -54,15 +54,12 @@ return {
 
 		local layerName = "Postgis"
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		local passWrong = function()
 			TerraLib().addPgLayer(proj, layerName, pgData)
 		end
-		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP
-							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
-	else
-		unitTest:assert(true) -- SKIP
-	end
+		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "..
+			"FATAL:  password authentication failed for user \"postgres\"\n"..
+			"FATAL:  password authentication failed for user \"postgres\"\n.")
 
 		proj.file:delete()
 	end,

@@ -6,7 +6,6 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
-Processing 'brazilstates.dbf'
 File 'data.csv' is not documented
 File 'brazilstates.dbf' is documented but does not exist in directory 'data'
 Checking directory 'font'
