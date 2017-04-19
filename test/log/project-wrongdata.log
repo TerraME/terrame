@@ -1,10 +1,12 @@
 Creating projects for package 'wrongdata'
+Using 'config.lua' in the current directory
 Removing output files
 Checking if data does not contain any .tview file
 Processing 'data/myfile.lua'
 File /Applications/terrame.app/Contents/MacOS/packages/wrongdata/data/file.csv
 Could not execute the script properly: ...me.app/Contents/MacOS/packages/wrongdata/data/myfile.lua:4: attempt to perform arithmetic on a nil value (global 'bbbbb')
 File 'myfile.tview' was not created.
+Removing 'config.lua'
 
 Projects report for package 'wrongdata':
 Projects were created in 0.01 seconds.

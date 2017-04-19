@@ -1,6 +1,8 @@
 Creating projects for package 'base'
+Using 'config.lua' in the current directory
 Removing output files
 Checking if data does not contain any .tview file
+Removing 'config.lua'
 
 Projects report for package 'base':
 Projects were created in 0.02 seconds.

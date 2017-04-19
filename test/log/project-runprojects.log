@@ -1,4 +1,5 @@
 Creating projects for package 'terralib'
+Using 'config.lua' in the current directory
 Removing output files
 Removing 'data/amazonia-postgis.tview'
 Removing 'data/amazonia.tview'
@@ -39,6 +40,7 @@ Executing operation 'distance' using layer 'roads'
 Executing operation 'distance' using layer 'localities'
 Executing operation 'sum' (weighted by area)  using layer 'census'
 File 'itaituba.tview' was successfully created
+Removing 'config.lua'
 
 Projects report for package 'terralib':
 Projects were created in 147.72 seconds.
