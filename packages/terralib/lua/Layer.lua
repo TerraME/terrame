@@ -322,6 +322,8 @@ Layer_ = {
 	end,
 	--- Delete the data source of the Layer. If it is a file or a set of files, remove them. If it is a
 	-- database table, remove it.
+	-- @usage -- DONTRUN
+	-- layer:delete()
 	delete = function(self)
 		if type(self.file) == "string" then
 			self.file = File(self.file)

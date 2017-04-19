@@ -292,6 +292,42 @@ return {
 		layer4:delete()
 --		layer5:delete() -- same here
 	end,
+	delete = function(unitTest)
+		local projName = "layer_delete_pgis.tview"
+
+		local proj = Project{
+			file = projName,
+			clean = true
+		}
+
+		local layerName1 = "Setores"
+
+		local layer1 = Layer{
+			project = proj,
+			name = layerName1,
+			file = filePath("itaituba-census.shp", "terralib")
+		}
+
+		local password = "postgres"
+		local database = "postgis_del"
+
+		local clName1 = "Setores_Cells"
+		local layer = Layer{
+			project = proj,
+			source = "postgis",
+			input = layerName1,
+			name = clName1,
+			resolution = 5e3,
+			clean = true,
+			password = password,
+			database = database
+		}
+
+		proj.file:delete()
+		layer:delete()
+
+		unitTest:assert(true)
+	end,
 	projection = function(unitTest)
 		local projName = "layer_basic.tview"
 
