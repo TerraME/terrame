@@ -675,7 +675,7 @@ return {
 			}
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP
-							.."FATAL:  password authentication failed for user \"postgis\"\n.", 59) -- #1303
+							.."FATAL:  password authentication failed for user \"postgres\"\n.", 59) -- #1303
 	end
 
 		host = "localhost"

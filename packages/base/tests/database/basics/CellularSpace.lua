@@ -145,34 +145,16 @@ return{
 
 		local clName1 = "Sampa_Cells_DB"
 		local tName1 = "sampa_cells"
-
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
 
-		local pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tName1,
-			encoding = encoding
-		}
-
-		terralib.TerraLib().dropPgTable(pgData)
-
-		terralib.Layer{
+		local layer1 = terralib.Layer{
 			project = proj,
 			source = "postgis",
+			clean = true,
 			input = layerName1,
 			name = clName1,
 			resolution = 0.3,
-			user = user,
 			password = password,
 			database = database,
 			table = tName1
@@ -203,8 +185,7 @@ return{
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 		if projName:exists() then projName:delete() end
 
-		pgData.table = string.lower(tName1)
-		terralib.TerraLib().dropPgTable(pgData)
+		layer1:delete()
 
 		-- pgm file
 		cs = CellularSpace{
@@ -681,35 +662,21 @@ return{
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
 
-		local pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tName1,
-			encoding = encoding
-		}
-
-		terralib.TerraLib().dropPgTable(pgData)
-
-		local layer = terralib.Layer{
+		local layer1 = terralib.Layer{
 			project = proj,
 			source = "postgis",
+			clean = true,
 			input = layerName1,
 			name = clName1,
 			resolution = 0.3,
-			user = user,
 			password = password,
 			database = database,
 			table = tName1
 		}
 
 		local cs = CellularSpace{
-			layer = layer
+			layer = layer1
 		}
 
 		unitTest:assertEquals(#cs, 303)
@@ -729,35 +696,37 @@ return{
 
 		cs:save(cellSpaceLayerNameT0, "t0")
 
-		layer = terralib.Layer{
+		local layer2 = terralib.Layer{
 			project = proj,
-			name = cellSpaceLayerNameT0
+			name = cellSpaceLayerNameT0,
+			encoding = "CP1252"
 		}
 
-		unitTest:assertEquals(layer.source, "postgis")
-		unitTest:assertEquals(layer.host, host)
-		unitTest:assertEquals(layer.port, port)
-		unitTest:assertEquals(layer.user, user)
-		unitTest:assertEquals(layer.password, password)
-		unitTest:assertEquals(layer.database, database)
-		unitTest:assertEquals(layer.table, string.lower(cellSpaceLayerNameT0))
+		unitTest:assertEquals(layer2.source, "postgis")
+		unitTest:assertEquals(layer2.host, host)
+		unitTest:assertEquals(layer2.port, port)
+		unitTest:assertEquals(layer2.user, user)
+		unitTest:assertEquals(layer2.password, password)
+		unitTest:assertEquals(layer2.database, database)
+		unitTest:assertEquals(layer2.table, string.lower(cellSpaceLayerNameT0))
 
 		local cellSpaceLayerName = clName1.."_CellSpace"
 
 		cs:save(cellSpaceLayerName)
 
-		layer = terralib.Layer{
+		local layer3 = terralib.Layer{
 			project = proj,
-			name = cellSpaceLayerName
+			name = cellSpaceLayerName,
+			encoding = "CP1252"
 		}
 
-		unitTest:assertEquals(layer.source, "postgis")
-		unitTest:assertEquals(layer.host, host)
-		unitTest:assertEquals(layer.port, port)
-		unitTest:assertEquals(layer.user, user)
-		unitTest:assertEquals(layer.password, password)
-		unitTest:assertEquals(layer.database, database)
-		unitTest:assertEquals(layer.table, string.lower(cellSpaceLayerName))
+		unitTest:assertEquals(layer3.source, "postgis")
+		unitTest:assertEquals(layer3.host, host)
+		unitTest:assertEquals(layer3.port, port)
+		unitTest:assertEquals(layer3.user, user)
+		unitTest:assertEquals(layer3.password, password)
+		unitTest:assertEquals(layer3.database, database)
+		unitTest:assertEquals(layer3.table, string.lower(cellSpaceLayerName))
 
 		cs = CellularSpace{
 			project = proj,
@@ -799,15 +768,21 @@ return{
 		end)
 
 		cs = CellularSpace{
-			project = projName,
+			project = proj,
 			layer = cellSpaceLayerNameT0
 		}
 
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
 		cs:save(cellSpaceLayerNameGeom)
 
+		local layer4 = terralib.Layer{
+			project = proj,
+			name = cellSpaceLayerNameGeom,
+			encoding = "CP1252"
+		}
+
 		cs = CellularSpace{
-			project = projName,
+			project = proj,
 			layer = cellSpaceLayerNameGeom,
 			geometry = true
 		}
@@ -819,8 +794,14 @@ return{
 		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"
 		cs:save(cellSpaceLayerNameGeom2)
 
+		local layer5 = terralib.Layer{
+			project = proj,
+			name = cellSpaceLayerNameGeom2,
+			encoding = "CP1252"
+		}
+
 		cs = CellularSpace{
-			project = projName,
+			project = proj,
 			layer = cellSpaceLayerNameGeom2,
 			geometry = true
 		}
@@ -833,16 +814,11 @@ return{
 			File(projName):delete()
 		end
 
-		pgData.table = string.lower(tName1)
-		terralib.TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(cellSpaceLayerName)
-		terralib.TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(cellSpaceLayerNameT0)
-		terralib.TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(cellSpaceLayerNameGeom)
-		terralib.TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(cellSpaceLayerNameGeom2)
-		terralib.TerraLib().dropPgTable(pgData)
+		layer1:delete()
+		layer2:delete()
+		layer3:delete()
+		layer4:delete()
+		layer5:delete()
 	end,
 	synchronize = function(unitTest)
 		local terralib = getPackage("terralib")

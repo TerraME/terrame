@@ -49,41 +49,23 @@ return{
 
 		local clName1 = "Sampa_Cells_DB"
 		local tName1 = "sampa_cells"
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
 
-		local pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tName1,
-			encoding = encoding
-		}
-
-		terralib.TerraLib().dropPgTable(pgData)
-
-		terralib.Layer{
+		local layer1 = terralib.Layer{
 			project = proj,
 			source = "postgis",
+			clean = true,
 			input = layerName1,
 			name = clName1,
 			resolution = 0.3,
-			user = user,
 			password = password,
 			database = database,
 			table = tName1
 		}
 
 		File(projName):deleteIfExists()
-
-		terralib.TerraLib().dropPgTable(pgData)
+		layer1:delete()
 
 		local cs2 = CellularSpace{xdim = 10}
 		local cs = CellularSpace{xdim = 10}

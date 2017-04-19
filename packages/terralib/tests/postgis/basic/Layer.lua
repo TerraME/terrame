@@ -302,7 +302,7 @@ return {
 
 		local layerName1 = "Setores"
 
-		local layer1 = Layer{
+		Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("itaituba-census.shp", "terralib")
