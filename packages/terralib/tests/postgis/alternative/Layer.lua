@@ -301,8 +301,9 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-			.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 5)
+		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "..
+			"FATAL:  password authentication failed for user \"usernotexists\"\n"..
+			"FATAL:  password authentication failed for user \"usernotexists\"\n.", 5)
 
 		local wrongPass
 		local passWrong
@@ -641,10 +642,7 @@ return {
 			}
 		end
 		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: "..
-			"could not connect to server: Connection refused (0x0000274D/10061)\n"..
-			"\tIs the server running on host \"localhost\" (::1) and accepting\n"..
-			"\tTCP/IP connections on port 2345?\n"..
-			"could not connect to server: Connection refused (0x0000274D/10061)\n"..
+			"could not connect to server: Connection refused\n"..
 			"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
 			"\tTCP/IP connections on port 2345?\n.", 5)
 
