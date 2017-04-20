@@ -276,7 +276,8 @@ return {
 				"could not translate host name \"inotexist\" to address: nodename nor servname provided, or not known\n.")
 		else
 			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not translate host name \"inotexist\" to address: Unknown host\n.")
+				"could not translate host name \"inotexist\" to address: Unknown host\n.", 12)
+				-- it can also be "Unknown server error"
 		end
 
 		local wrongPort = 2345
@@ -684,7 +685,8 @@ return {
 				"could not translate host name \"inotexist\" to address: nodename nor servname provided, or not known\n.")
 		else
 			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not translate host name \"inotexist\" to address: Unknown host\n.")
+				"could not translate host name \"inotexist\" to address: Unknown host\n.", 12)
+				-- it can also be "Unknown server error"
 		end
 
 		wrongPort = 2345
