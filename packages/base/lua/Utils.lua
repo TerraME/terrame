@@ -1458,7 +1458,7 @@ end
 -- @arg mstring A string with the parameter name.
 -- @arg parent A string with the name of the table the parameter belongs to.
 -- This parameter is optional.
--- @usage toLabel("maxValue") --  'Max Value' (with graphical interface) or 'maxValue' (without)
+-- @usage toLabel("maxValue") -- 'Max Value' (with graphical interface) or 'maxValue' (without)
 function toLabel(mstring, parent)
 	if type(mstring) == "number" then
 		mstring = tostring(mstring)
