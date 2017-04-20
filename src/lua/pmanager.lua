@@ -619,7 +619,9 @@ local function quitButtonClicked()
 	local createdFiles = {}
 
 	forEachFile(".", function(file)
-		if not filesInCurrentDirectory[file:name()] and file:extension() == "lua" and string.match(tostring(file), "-instance") then
+		if not filesInCurrentDirectory[file:name()] then
+			if belong(file:extension(), {"shx", "dbf", "prj", "qix"}) then return end
+
 			createdFiles[file:name()] = true
 		end
 	end)
@@ -628,7 +630,7 @@ local function quitButtonClicked()
 
 	if countCreated > 0 then
 		local Dialog = qt.new_qobject(qt.meta.QDialog)
-		Dialog.windowTitle = "?"
+		Dialog.windowTitle = "Delete created files?"
 
 		local VBoxLayout = qt.new_qobject(qt.meta.QVBoxLayout)
 		qt.ui.layout_add(Dialog, VBoxLayout)
