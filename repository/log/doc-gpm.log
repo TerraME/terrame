@@ -2,6 +2,8 @@ Building documentation for package 'gpm'
 Loading package 'gpm'
 Parsing 'data.lua'
 Processing lua files
+Processing 'farms_cells.lua'
+Processing 'farms_cells3.lua'
 Checking directory 'data'
 Checking properties of data files
 Processing 'censopop2000_bd.shp'
