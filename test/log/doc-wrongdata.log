@@ -21,10 +21,6 @@ Stack traceback:
     File '...me.app/Contents/MacOS/packages/wrongdata/data/myfile.lua', line 4, in call to operator + (addition)
 Checking directory 'data'
 Checking properties of data files
-Processing 'abc.txt'
-Processing 'abc.txt'
-Processing 'abc2.txt'
-Processing 'abc3.txt'
 File 'file.csv' is not documented
 File 'abc.txt' is documented but does not exist in directory 'data'
 File 'abc2.txt' is documented but does not exist in directory 'data'

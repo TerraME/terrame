@@ -175,10 +175,11 @@ local function getProjects(package, doc_report)
 
 	local mLayer_ = {
 		fill = function(self, data)
-			if not self.file then return nil end
+			local name = self.file or self.database
+			if not name then return nil end
 
-			if not layers[self.file] then
-				layers[self.file] = {attributes = {}}
+			if not layers[name] then
+				layers[name] = {attributes = {}}
 			end
 
 			local description = "Operation "..data.operation
@@ -225,16 +226,16 @@ local function getProjects(package, doc_report)
 				forEachElement(attrNames, function(_, mvalue)
 					if string.sub(mvalue, 1, string.len(data.attribute)) == data.attribute then
 						local v = string.sub(mvalue, string.len(data.attribute) + 2)
-						layers[self.file].attributes[mvalue] = {
+						layers[name].attributes[mvalue] = {
 							description = description.. " using value "..v..".",
-							types = "number"
+							type = "number"
 						}
 					end
 				end)
 			else
 				description = description.."."
 
-				layers[self.file].attributes[data.attribute] = {
+				layers[name].attributes[data.attribute] = {
 					description = description,
 					type = "number"
 				}
@@ -245,28 +246,38 @@ local function getProjects(package, doc_report)
 	local mtLayer = {__index = mLayer_}
 
 	Layer = function(data)
-		if not data.file then return end
+		if not data.file and not data.database then return end
 
 		if data.resolution then
-			local mfile = data.file
+			local dataType
 
-			if type(mfile) == "string" then
-				mfile = File(mfile)
-			end
+			if data.file then
+				local mfile = data.file
+				dataType = "file"
 
-			if createdFiles[mfile:name()] then
-				printError("File '"..mfile:name().."' is created more than once.")
-				doc_report.projects = doc_report.projects + 1
-			else
-				createdFiles[mfile:name()] = true
-			end
+				if type(mfile) == "string" then
+					mfile = File(mfile)
+				end
 
-			if not mfile:exists() then
-				mfile = filePath(mfile:name(), package)
+				if createdFiles[mfile:name()] then
+					printError("File '"..mfile:name().."' is created more than once.")
+					doc_report.projects = doc_report.projects + 1
+				else
+					createdFiles[mfile:name()] = true
+				end
+			else -- data.database
+				dataType = "PostGIS database table"
+				if createdFiles[data.database] then
+					printError("Database '"..data.database.."' is created more than once.")
+					doc_report.projects = doc_report.projects + 1
+				else
+					createdFiles[data.database] = true
+				end
 			end
 
 			local cs = CellularSpace{
-				file = mfile
+				project = data.project,
+				layer = data.name
 			}
 
 			local quantity = #cs
@@ -274,23 +285,26 @@ local function getProjects(package, doc_report)
 				data.resolution.." built from layer \""..data.input.."\""
 
 			projects[currentProject][data.name] = {
-				file = data.file,
+				file = data.file or data.database,
+				database = data.database,
 				description = description.."."
 			}
 
-			if not layers[data.file] then
+			if not layers[data.file or data.database] then
 				tl.Layer{
 					project = data.project,
 					name = data.name
 				}
 
-				layers[data.file] =
+				layers[data.file or data.database] =
 				{
-					file = {data.file},
-					title = data.file,
-					summary = "Automatically created file with "..description..
+					file = {data.file or data.database},
+					database = data.database,
+					arguments = data,
+					title = data.file or data.database,
+					summary = "Automatically created "..dataType.." with "..description..
 						", in project <a href = \"#"..currentProject.."\">"..currentProject.."</a>.",
-					shortsummary = "Automatically created file in project \""..currentProject.."\".",
+					shortsummary = "Automatically created "..dataType.." in project \""..currentProject.."\".",
 					attributes = {}
 				}
 			end
@@ -545,7 +559,7 @@ function _Gtme.executeDoc(package)
 		projects = getProjects(package, doc_report)
 
 		forEachOrderedElement(projects, function(_, value)
-			if value.layers or string.find(value.summary, "resolution") then -- a project or a layer of cells
+			if value.layers or string.find(value.summary, "resolution") and value.file[1] then -- a project or a layer of cells
 				filesdocumented[value.file[1]] = 1
 			end
 		end)
@@ -584,17 +598,17 @@ function _Gtme.executeDoc(package)
 		idx = 1
 
 		forEachElement(mdata, function(_, value)
-			print("Processing '"..value.file[1].."'")
-
-			value.name = value.file[1] or ""
-			if not isFile(packageInfo(package).path.."data"..s..value.file[1]) then
-				-- this will be recognized as an error afterwards
-				return
+			if not value.database then
+				value.name = value.file[1] or ""
+				if not isFile(packageInfo(package).path.."data"..s..value.file[1]) then
+					-- this will be recognized as an error afterwards
+					return
+				end
 			end
 
 			local allAttributes = {}
 
-			if not string.endswith(value.file[1], ".tview") then
+			if value.database or not string.endswith(value.file[1], ".tview") then
 				forEachElement(value.attributes, function(idx)
 					if type(idx) == "table" then
 						forEachElement(idx, function(_, mvalue)
@@ -616,8 +630,51 @@ function _Gtme.executeDoc(package)
 				end)
 			end
 
+			if value.database then
+				print("Processing database '"..value.database.."'")
+				value.name = value.database
 
-			if string.endswith(value.file[1], ".csv") then
+				layer = tl.Layer{
+					project = value.arguments.project,
+					name = value.arguments.name,
+				}
+
+				value.representation = layer:representation()
+				value.projection = layer:projection()
+				value.epsg = TerraLib().getProjection(layer.project.layers[layer.name]).SRID
+
+				local attributes
+				local attrs = layer:attributes()
+				if attrs then
+					attributes = {}
+					for i = 1, #attrs do
+						attributes[i] = attrs[i].name
+					end
+				end
+
+				if value.attributes == nil then value.attributes = {} end
+
+				forEachElement(attributes, function(_, mvalue)
+					if mvalue == "id" then
+						value.attributes[mvalue] = {
+							description = "Unique identifier (internal value).",
+							type = "string"
+						}
+					elseif mvalue == "col" then
+						value.attributes[mvalue] = {
+							description = "Cell's column.",
+							type = "number"
+						}
+					elseif mvalue == "row" then
+						value.attributes[mvalue] = {
+							description = "Cell's row.",
+							type = "number"
+						}
+					end
+				end)
+			elseif string.endswith(value.file[1], ".csv") then
+				print("Processing '"..value.file[1].."'")
+
 				if not value.separator then
 					doc_report.error_data = doc_report.error_data + 1
 					printError("Documentation of CSV files must define 'separator'.")
@@ -674,6 +731,8 @@ function _Gtme.executeDoc(package)
 
 				value.quantity = lines
 			elseif string.endswith(value.file[1], ".shp") or string.endswith(value.file[1], ".geojson") then
+				print("Processing '"..value.file[1].."'")
+
 				local firstfile = value.file[1]
 
 				for i = 1, #value.file do
@@ -773,6 +832,8 @@ function _Gtme.executeDoc(package)
 
 				idx = idx + 1
 			elseif string.endswith(value.file[1], ".tif") then
+				print("Processing '"..value.file[1].."'")
+
 				layer = tl.Layer{
 					project = myProject,
 					file = filePath(value.file[1], package),
@@ -1080,7 +1141,6 @@ function _Gtme.executeDoc(package)
 			end
 		end
 	end)
-
 
 	print("Checking if all images are used")
 	forEachOrderedElement(images, function(file, value)

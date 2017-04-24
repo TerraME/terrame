@@ -70,22 +70,18 @@ local function fixName(name)
 end
 
 local function checkPgParams(data)
-	mandatoryTableArgument(data, "user", "string")
 	mandatoryTableArgument(data, "password", "string")
 	mandatoryTableArgument(data, "database", "string")
 
 	checkName(data.database, "Database")
 
-	if data.table then
-		mandatoryTableArgument(data, "table", "string")
-	else
-		defaultTableValue(data, "table", string.lower(data.name))
-	end
+	defaultTableValue(data, "table", string.lower(data.name))
 
 	data.table = fixName(data.table)
 	checkName(data.table, "Table")
 
 	defaultTableValue(data, "host", "localhost")
+	defaultTableValue(data, "user", "postgres")
 	defaultTableValue(data, "port", 5432)
 	defaultTableValue(data, "encoding", "CP1252")
 	data.port = tostring(data.port)
@@ -95,7 +91,7 @@ local function addCellularLayer(self, data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source",
 	                                  "clean", "host", "port", "user", "password", "database", "table",
-									  "index"})
+									  "index", "encoding"})
 
 	mandatoryTableArgument(data, "input", "string")
 	positiveTableArgument(data, "resolution")
@@ -187,14 +183,20 @@ local function addCellularLayer(self, data)
 		postgis = function()
 			checkPgParams(data)
 
+			defaultTableValue(data, "clean", false)
+
 			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"input", "name", "resolution", "source", "encoding", -- SKIP
+				verifyUnnecessaryArguments(data, {"clean", "input", "name", "resolution", "source", "encoding", -- SKIP
 										"project", "host", "port", "user", "password", "database", "table", "project"})
 				data.box = true -- SKIP
 			else
 				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "source", "encoding",
+				verifyUnnecessaryArguments(data, {"box", "clean", "input", "name", "resolution", "source", "encoding",
 										"project", "host", "port", "user", "password", "database", "table", "project"})
+			end
+
+			if data.clean then
+				TerraLib().dropPgTable(data)
 			end
 
 			TerraLib().addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data, not data.box)
@@ -211,7 +213,7 @@ local function addLayer(self, data)
 	end
 
 	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "index",
-									"host", "port", "user", "password", "database", "table",
+									"host", "port", "user", "password", "encoding", "database", "table",
 									"service", "feature", "epsg", "map"})
 
 	if data.source == nil then
@@ -342,6 +344,23 @@ Layer_ = {
 	representation = function(self)
 		return TerraLib().getLayerInfo(self.project, self.name).rep
 	end,
+	--- Delete the data source of the Layer. If it is a file or a set of files, remove them. If it is a
+	-- database table, remove it.
+	-- @usage -- DONTRUN
+	-- layer:delete()
+	delete = function(self)
+		if type(self.file) == "string" then
+			self.file = File(self.file)
+		end
+
+		if self.file and self.file:exists() then
+			self.file:delete()
+		elseif self.database then
+			TerraLib().dropPgTable(self)
+		else
+			customError("TerraME does not know how to remove such data source.")
+		end
+	end,
 	--- Return the number of bands of a raster layer. If the layer does not have a raster representation
 	-- then it will stop with an error. The bands of the raster layer are named from zero to the number of
 	-- bands minus one.
@@ -383,7 +402,7 @@ Layer_ = {
 	-- @tabular operation
 	-- Operation & Description & Mandatory arguments & Optional arguments \
 	-- "area" & Total overlay area between the cell and a layer of polygons. The created values
-	-- will range from zero to one, indicating its area of coverage. & attribute, layer & \
+	-- will range from zero to one, indicating its area of coverage. & attribute, layer & default \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
@@ -436,7 +455,7 @@ Layer_ = {
 	-- or the weights are equal for each object with some overlap (false, default value).
 	-- @arg data.default A value that will be used to fill a cell whose attribute cannot be
 	-- computed. For example, when there is no intersection area. Note that this argument is
-	-- related to the output.
+	-- related to the output. Its default value is zero.
 	-- @arg data.nodata A number used in raster data that represents no information in a pixel value.
 	-- Its default value can be got from Layer:nodata() function.
 	-- @usage -- DONTRUN
@@ -972,7 +991,7 @@ function Layer(data)
 
 	mandatoryTableArgument(data, "project", "Project")
 
-	if getn(data) == 2 then
+	if getn(data) == 2 or (getn(data) == 3 and data.encoding) then
 		if not data.project.layers[data.name] then
 			local msg = "Layer '"..data.name.."' does not exist in Project '"..data.project.file.."'."
 			local sug = suggestion(data.name, data.project.layers)
@@ -988,7 +1007,8 @@ function Layer(data)
 		return data
 	elseif data.input or data.resolution or data.box then
 		addCellularLayer(data.project, data)
-		return Layer{project = data.project, name = data.name}
+
+		return Layer{project = data.project, name = data.name, encoding = data.encoding}
 	else
 		addLayer(data.project, data)
 		return Layer{project = data.project, name = data.name}

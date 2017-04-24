@@ -2,9 +2,11 @@ Building package 'buildunnecfiles'
 Parsing configuration file 'config/all.lua'
 
 Creating projects for package 'buildunnecfiles'
+Using 'config.lua' in the current directory
 Removing output files
 Checking if data does not contain any .tview file
 File 'data/myfile.tview' should not exist as there is no Lua script with this name.
+Removing 'config.lua'
 
 Projects report for package 'buildunnecfiles':
 Projects were created in 0.0 seconds.
@@ -75,8 +77,6 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
-Processing 'file.txt'
-Processing 'myfile.tview'
 Parsing 'font.lua'
 Checking directory 'font'
 Checking licenses of fonts

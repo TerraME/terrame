@@ -42,7 +42,6 @@ return {
 
 		local host
 		local port
-		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
 		local encoding
@@ -50,7 +49,6 @@ return {
 
 		local data = {
 			source = "postgis",
-			user = user,
 			password = password,
 			database = database,
 			overwrite = true
@@ -63,7 +61,6 @@ return {
 			project = proj1,
 			source = "postgis",
 			name = layerName2,
-			user = user,
 			password = password,
 			database = database,
 			table = tableName
@@ -75,7 +72,6 @@ return {
 				source = "postgis",
 				name = layerName2,
 				port = port,
-				user = user,
 				password = password,
 				database = database,
 				table = tableName
@@ -92,7 +88,6 @@ return {
 				-- source = "postgis",
 				name = layerName2,
 				port = port,
-				user = user,
 				password = password,
 				database = database,
 				table = tableName
@@ -100,35 +95,18 @@ return {
 		end
 		unitTest:assertError(sourceMandatory, mandatoryArgumentMsg("source"))
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		local nameMandatory = function()
 			Layer{
 				project = proj1,
 				source = "postgis",
 				--name = layerName2,
 				port = port,
-				user = user,
 				password = password,
 				database = database,
 				table = tableName
 			}
 		end
-		unitTest:assertError(nameMandatory, mandatoryArgumentMsg("name")) -- SKIP
-	end
-
-		local userMandatory = function()
-			Layer{
-				project = proj1,
-				source = "postgis",
-				name = layerName2,
-				port = port,
-				--user = user,
-				password = password,
-				database = database,
-				table = tableName
-			}
-		end
-		unitTest:assertError(userMandatory, mandatoryArgumentMsg("user"))
+		unitTest:assertError(nameMandatory, mandatoryArgumentMsg("name"))
 
 		local passMandatory = function()
 			Layer{
@@ -136,7 +114,6 @@ return {
 				source = "postgis",
 				name = layerName2,
 				port = port,
-				user = user,
 				--password = password,
 				database = database,
 				table = tableName
@@ -150,7 +127,6 @@ return {
 				source = "postgis",
 				name = layerName2,
 				port = port,
-				user = user,
 				password = password,
 				--database = database,
 				table = tableName
@@ -164,7 +140,6 @@ return {
 				source = "postgis",
 				name = layerName2,
 				port = port,
-				user = user,
 				password = password,
 				database = database,
 				table = tableName,
@@ -179,7 +154,6 @@ return {
 				source = 123,
 				name = layerName2,
 				port = port,
-				user = user,
 				password = password,
 				database = database,
 				table = tableName
@@ -193,7 +167,6 @@ return {
 				source = "postgis",
 				name = 123,
 				port = port,
-				user = user,
 				password = password,
 				database = database,
 				table = tableName
@@ -208,7 +181,6 @@ return {
 				name = layerName2,
 				host = 123,
 				port = port,
-				user = user,
 				password = password,
 				database = database,
 				table = tableName
@@ -222,7 +194,6 @@ return {
 				source = "postgis",
 				name = layerName2,
 				port = "123",
-				user = user,
 				password = password,
 				database = database,
 				table = tableName
@@ -250,7 +221,6 @@ return {
 				source = "postgis",
 				name = layerName2,
 				port = port,
-				user = user,
 				password = 123,
 				database = database,
 				table = tableName
@@ -264,7 +234,6 @@ return {
 				source = "postgis",
 				name = layerName2,
 				port = port,
-				user = user,
 				password = password,
 				database = 123,
 				table = tableName
@@ -278,7 +247,6 @@ return {
 				source = "postgis",
 				name = layerName2,
 				port = port,
-				user = user,
 				password = password,
 				database = database,
 				table = 123
@@ -294,14 +262,23 @@ return {
 				name = layerName2,
 				host = wrongHost,
 				port = port,
-				user = user,
 				password = password,
 				database = database,
 				table = tableName
 			}
 		end
-		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 38) -- #1303
+
+		if sessionInfo().system == "linux" then
+			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not translate host name \"inotexist\" to address: Name or service not known\n.")
+		elseif sessionInfo().system == "mac" then
+			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not translate host name \"inotexist\" to address: nodename nor servname provided, or not known\n.")
+		else
+			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not translate host name \"inotexist\" to address: Unknown host\n.", 12)
+				-- it can also be "Unknown server error"
+		end
 
 		local wrongPort = 2345
 		local portWrong = function()
@@ -311,13 +288,34 @@ return {
 				name = layerName2,
 				host = host,
 				port = wrongPort,
-				user = user,
 				password = password,
 				database = database,
 				table = tableName
 			}
 		end
-		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 188) -- #1303
+
+		if sessionInfo().system == "linux" then
+			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not connect to server: Connection refused\n"..
+				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
+				"\tTCP/IP connections on port 2345?\n.")
+		elseif sessionInfo().system == "mac" then
+			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not connect to server: Connection refused\n"..
+				"\tIs the server running on host \"localhost\" (::1) and accepting\n"..
+				"\tTCP/IP connections on port 2345?\n"..
+				"could not connect to server: Connection refused\n"..
+				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
+				"\tTCP/IP connections on port 2345?\n.")
+		else
+			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not connect to server: Connection refused (0x0000274D/10061)\n"..
+				"\tIs the server running on host \"localhost\" (::1) and accepting\n"..
+				"\tTCP/IP connections on port 2345?\n"..
+				"could not connect to server: Connection refused (0x0000274D/10061)\n"..
+				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
+				"\tTCP/IP connections on port 2345?\n.")
+		end
 
 		local nonuser = "usernotexists"
 		local userNotExists = function()
@@ -333,12 +331,21 @@ return {
 				table = tableName
 			}
 		end
-		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 64) -- #1303
+
+		if sessionInfo().system == "linux" then
+			unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"FATAL:  password authentication failed for user \"usernotexists\"\n"..
+				"FATAL:  password authentication failed for user \"usernotexists\"\n.")
+		elseif sessionInfo().system == "mac" then
+			unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"FATAL:  role \"usernotexists\" does not exist\n.")
+		else
+			unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"FATAL:  password authentication failed for user \"usernotexists\"\n.")
+		end
 
 		local wrongPass
 		local passWrong
-	if sessionInfo().system ~= "mac" then -- TODO(#1379)
 		wrongPass = "passiswrong"
 		passWrong = function()
 			Layer{
@@ -347,15 +354,22 @@ return {
 				name = layerName2,
 				host = host,
 				port = port,
-				user = user,
 				password = wrongPass,
 				database = database,
 				table = tableName
 			}
 		end
-		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP
-							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
-	end
+
+		if sessionInfo().system == "linux" then
+			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"FATAL:  password authentication failed for user \"postgres\"\n"..
+				"FATAL:  password authentication failed for user \"postgres\"\n.")
+		elseif sessionInfo().system == "mac" then
+			unitTest:assertError(passWrong, "Is not possible add the Layer. Table 'sampa' does not exist.") -- SKIP
+		else
+			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"FATAL:  password authentication failed for user \"postgres\"\n.")
+		end
 
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
@@ -365,13 +379,17 @@ return {
 				name = layerName2,
 				host = host,
 				port = port,
-				user = user,
 				password = getConfig().password,
 				database = database,
 				table = tableWrong
 			}
 		end
-		unitTest:assertError(tableNotExists, "Is not possible add the Layer. Table '"..tableWrong.."' does not exist.")
+
+		if sessionInfo().system == "mac" then
+			unitTest:assertError(tableNotExists, "Layer 'SampaDB' already exists in the Project.") -- SKIP
+		else
+			unitTest:assertError(tableNotExists, "Is not possible add the Layer. Table '"..tableWrong.."' does not exist.") -- SKIP
+		end
 
 		File(projName):deleteIfExists()
 
@@ -398,7 +416,6 @@ return {
 
 		host = "localhost"
 		port = "5432"
-		user = "postgres"
 		password = getConfig().password
 		database = "postgis_22_sample"
 		encoding = "CP1252"
@@ -410,7 +427,6 @@ return {
 				--input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
@@ -425,7 +441,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				--database = database,
 				table = tName1
@@ -440,28 +455,12 @@ return {
 				input = layerName1,
 				--name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
 			}
 		end
 		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("name"))
-
-		userMandatory = function()
-			Layer{
-				project = proj,
-				source = "postgis",
-				input = layerName1,
-				name = clName1,
-				resolution = 0.7,
-				--user = user,
-				password = password,
-				database = database,
-				table = tName1
-			}
-		end
-		unitTest:assertError(userMandatory, mandatoryArgumentMsg("user"))
 
 		passMandatory = function()
 			Layer{
@@ -470,7 +469,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				--password = password,
 				database = database,
 				table = tName1
@@ -485,7 +483,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				--database = database,
 				table = tName1
@@ -500,7 +497,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
@@ -515,7 +511,6 @@ return {
 				input = 123,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
@@ -530,7 +525,6 @@ return {
 				input = layerName1,
 				name = 123,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
@@ -545,7 +539,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = "10000",
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
@@ -560,7 +553,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = -1,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
@@ -576,7 +568,6 @@ return {
 				name = clName1,
 				resolution = 0.7,
 				host = 123,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
@@ -592,7 +583,6 @@ return {
 				name = clName1,
 				resolution = 0.7,
 				port = "123",
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
@@ -607,7 +597,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = 123,
 				database = database,
 				table = tName1
@@ -622,7 +611,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				database = 123,
 				table = tName1
@@ -637,7 +625,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				database = database,
 				table = 123
@@ -652,7 +639,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1,
@@ -669,7 +655,6 @@ return {
 				name = clName1,
 				resolution = 0.7,
 				box = 123,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
@@ -686,14 +671,23 @@ return {
 				name = clName1,
 				resolution = 0.7,
 				host = wrongHost,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
 			}
 		end
-		unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: "
-								.."could not translate host name \""..wrongHost.."\" to address: Unknown host\n.", 38) -- #1303
+
+		if sessionInfo().system == "linux" then
+			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not translate host name \"inotexist\" to address: Name or service not known\n.")
+		elseif sessionInfo().system == "mac" then
+			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not translate host name \"inotexist\" to address: nodename nor servname provided, or not known\n.")
+		else
+			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not translate host name \"inotexist\" to address: Unknown host\n.", 12)
+				-- it can also be "Unknown server error"
+		end
 
 		wrongPort = 2345
 		portWrong = function()
@@ -704,13 +698,34 @@ return {
 				name = clName1,
 				resolution = 0.7,
 				port = wrongPort,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
 			}
 		end
-		unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 2345?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 2345?\n.", 188) -- #1303
+
+		if sessionInfo().system == "linux" then
+			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not connect to server: Connection refused\n"..
+				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
+				"\tTCP/IP connections on port 2345?\n.", 5)
+		elseif sessionInfo().system == "mac" then
+			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not connect to server: Connection refused\n"..
+				"\tIs the server running on host \"localhost\" (::1) and accepting\n"..
+				"\tTCP/IP connections on port 2345?\n"..
+				"could not connect to server: Connection refused\n"..
+				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
+				"\tTCP/IP connections on port 2345?\n.")
+		else
+			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"could not connect to server: Connection refused (0x0000274D/10061)\n"..
+				"\tIs the server running on host \"localhost\" (::1) and accepting\n"..
+				"\tTCP/IP connections on port 2345?\n"..
+				"could not connect to server: Connection refused (0x0000274D/10061)\n"..
+				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
+				"\tTCP/IP connections on port 2345?\n.")
+		end
 
 		nonuser = "usernotexists"
 		userNotExists = function()
@@ -726,10 +741,19 @@ return {
 				table = tName1
 			}
 		end
-		unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  password authentication failed for user \""..nonuser.."\"\n.", 64) -- #1303
 
-	if sessionInfo().system ~= "mac" then -- TODO(#1379)
+		if sessionInfo().system == "linux" then
+			unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"FATAL:  password authentication failed for user \"usernotexists\"\n"..
+				"FATAL:  password authentication failed for user \"usernotexists\"\n.")
+		elseif sessionInfo().system == "mac" then
+			unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"FATAL:  role \"usernotexists\" does not exist\n.")
+		else
+			unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"FATAL:  password authentication failed for user \"usernotexists\"\n.")
+		end
+
 		wrongPass = "passiswrong"
 		passWrong = function()
 			Layer{
@@ -738,15 +762,20 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = wrongPass,
 				database = database,
 				table = tName1
 			}
 		end
-		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: " -- SKIP
-							.."FATAL:  password authentication failed for user \""..user.."\"\n.", 59) -- #1303
-	end
+
+		if sessionInfo().system == "linux" then
+			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"FATAL:  password authentication failed for user \"postgres\"\n"..
+				"FATAL:  password authentication failed for user \"postgres\"\n.")
+		else
+			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
+				"FATAL:  password authentication failed for user \"postgres\"\n.")
+		end
 
 		host = "localhost"
 		port = "5432"
@@ -755,7 +784,7 @@ return {
 			type = "POSTGIS",
 			host = host,
 			port = port,
-			user = user,
+			user = "postgres",
 			password = password,
 			database = database,
 			table = tName1,
@@ -770,7 +799,6 @@ return {
 			input = layerName1,
 			name = clName1,
 			resolution = 0.7,
-			user = user,
 			password = password,
 			database = database,
 			table = tName1
@@ -784,7 +812,6 @@ return {
 				input = layerName1,
 				name = clName2,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1
@@ -819,7 +846,6 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 0.7,
-				user = user,
 				password = password,
 				database = database,
 				table = tName1,
@@ -850,13 +876,11 @@ return {
 
 		local overwrite = true
 
-		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 
 		local pgData = {
 			source = "postgi",
-			user = user,
 			password = password,
 			database = database,
 			overwrite = overwrite

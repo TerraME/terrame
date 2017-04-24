@@ -22,14 +22,13 @@
 --
 -------------------------------------------------------------------------------------------
 
--- @example Creates amazonia database in PostGIS.
+-- @example Creates and fills amazonia database in PostGIS DataBase Management System.
 
 import("terralib")
 
-project = Project{
+amazonia = Project{
 	file = "amazonia-postgis.tview",
 	clean = true,
-	author = "Andrade, P.",
 	title = "Amazonia database",
 	ports = filePath("amazonia-ports.shp", "terralib"),
 	roads = filePath("amazonia-roads.shp", "terralib"),
@@ -38,135 +37,96 @@ project = Project{
 
 prodes = Layer{
 	name = "prodes",
-	project = project,
+	project = amazonia,
 	epsg = 29191,
 	file = filePath("amazonia-prodes.tif", "terralib")
 }
 
 protected = Layer{
 	name = "protected",
-	project = project,
+	project = amazonia,
 	epsg = 29191,
 	file = filePath("amazonia-indigenous.shp", "terralib")
 }
 
--- local host = "localhost"
--- local port = "5432"
--- local user = "postgres"
--- local password = "postgres"
--- local database = "postgis_22_sample"
--- local encoding = "CP1252"
--- local tableName = "setores_cells"
+if not getConfig() then
+	customError("You should provide connection information in a config.lua file.")
+end
 
--- HUNK USED ONLY TO TEST
--- local pgData = {
-	-- type = "POSTGIS",
-	-- host = host,
-	-- port = port,
-	-- user = user,
-	-- password = password,
-	-- database = database,
-	-- table = tableName, 
-	-- encoding = encoding
--- }
+amazoniaCells = Layer{
+	project = amazonia,
+	clean = true,
+	input = "limit",
+	name = "cells",
+	resolution = 50000,
+	source = "postgis",
+	password = getConfig().password,
+	database = "amazonia",
+	table = "amazonia"
+}
 
--- local terralib = TerraLib{}
--- terralib:dropPgTable(pgData)
--- END HUNK
+amazoniaCells:fill{
+	operation = "coverage",
+	layer = "prodes",
+	attribute = "prodes"
+}
 
--- local cellDbLayerName = "Setores_Cells_DB"
--- cl = Layer{
-	-- project = project,
-	-- input = polygons,
-	-- name = cellDbLayerName,
-	-- resolution = 2e4, -- 50x50km
-	-- source = "postgis",
-	-- user = user,
-	-- password = password,
-	-- database = database,
-	-- table = tableName
--- }
+amazoniaCells:fill{
+	operation = "distance",
+	layer = "roads",
+	attribute = "distroads"
+}
 
--- local distLayer = cellDbLayerName.."_Distance"
+amazoniaCells:fill{
+	operation = "distance",
+	layer = "ports",
+	attribute = "distports"
+}
 
--- HUNK USED ONLY TO TEST
--- pgData.table = distLayer
--- terralib:dropPgTable(pgData)
--- END HUNK
+amazoniaCells:fill{
+	operation = "area",
+	layer = "protected",
+	attribute = "protected"
+}
 
--- cl:fill{
-	-- operation = "distance",
-	-- layer = points,
-	-- attribute = "distpoints",
-	-- output = distLayer
--- }
+cs = CellularSpace{
+	project = amazonia,
+	layer = "cells",
+	as = {
+		forest = "prodes_208",
+		deforestation = "prodes_10"
+	}
+}
 
--- TODO: OPERATION NOT IMPLEMENTED YET
--- cl:fill{
-	-- strategy = "lenght",
-	-- name = "lines",
-	-- attribute = "llenght"
--- }
+Map{
+	target = cs,
+	select = "distroads",
+	slices = 10,
+	invert = true,
+	color = "YlOrBr"
+}
 
--- local sumLayer = cellDbLayerName.."_Sum"
+Map{
+	target = cs,
+	select = "distports",
+	slices = 10,
+	invert = true,
+	color = "YlOrBr"
+}
 
--- HUNK USED ONLY TO TEST
--- pgData.table = sumLayer
--- terralib:dropPgTable(pgData)
--- END HUNK
+Map{
+	target = cs,
+	select = "protected",
+	slices = 10,
+	invert = true,
+	color = "PuBu"
+}
 
--- cl:fill{
-	-- operation = "sum",
-	-- layer = polygons,
-	-- attribute = "sum_population",
-	-- select = "Populacao",
-	-- output = sumLayer,
-	-- area = true
--- }
-
--- local averageLayer = cellDbLayerName.."_Average"
-
--- HUNK USED ONLY TO TEST
--- pgData.table = averageLayer
--- terralib:dropPgTable(pgData)
--- END HUNK
-
--- cl:fill{
-	-- layer = polygons,
-	-- operation = "average",
-	-- attribute = "income",
-	-- select = "Populacao",
-	-- output = averageLayer,
-	-- area = true
--- }
-
--- local rasterLayer = cellDbLayerName.."_Dematamento_Average"
-
--- HUNK USED ONLY TO TEST
--- pgData.table = rasterLayer
--- terralib:dropPgTable(pgData)
--- END HUNK
-
--- cl:fill{
-	-- operation = "average",
-	-- layer = tif,
-	-- attribute = "raverage",
-	-- output = rasterLayer,
--- }
-
--- USED ONLY TO TEST
--- pgData.table = tableName
--- terralib:dropPgTable(pgData)
-
--- pgData.table = distLayer
--- terralib:dropPgTable(pgData)
-
--- pgData.table = sumLayer
--- terralib:dropPgTable(pgData)
-
--- pgData.table = averageLayer
--- terralib:dropPgTable(pgData)
-
--- pgData.table = rasterLayer
--- terralib:dropPgTable(pgData)
+Map{
+	target = cs,
+	select = "deforestation",
+	slices = 10,
+	invert = true,
+	color = "YlGn"
+}
 

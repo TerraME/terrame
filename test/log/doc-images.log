@@ -4,8 +4,6 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
-Processing 'abc.txt'
-Processing 'abc2.txt'
 Package 'images' has no fonts
 Parsing lua files
 Parsing lua/Tube.lua

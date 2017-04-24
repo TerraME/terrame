@@ -1,4 +1,5 @@
 Creating projects for package 'project'
+Using 'config.lua' in the current directory
 Removing output files
 Removing 'data/cabecadeboi.tview'
 Removing 'data/myproject.tview'
@@ -23,6 +24,7 @@ Creating 'data/myproject.tview'
 Creating 'data/itaituba.shp'
 File 'data/itaituba.shp' was created previously. Please update its name.
 File 'myproject.tview' was successfully created
+Removing 'config.lua'
 
 Projects report for package 'project':
 Projects were created in 1.35 seconds.

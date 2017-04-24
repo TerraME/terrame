@@ -42,9 +42,7 @@ end
 <span class="description"><%
 local description = func.description
 description = string.gsub(description, "\\[ ]*", "<br><br>")
-if file_doc.functions[file_doc.functions[1]] ~= func then
-	description = description.."<br><br>"
-end%>
+description = description.."<br><br>"%>
 
 <%=luadoc.link_description(description or "", doc, module_doc, file_doc, from, true, func.name, doc_report)%></span>
 
