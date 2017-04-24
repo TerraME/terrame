@@ -1,5 +1,7 @@
 Verifying test files
 Package 'nolua' does not have source code
+Verifying documentation of Models
+Package 'nolua' does not have source code
 Verifying data files
 Package 'nolua' does not have a data directory
 Verifying font files
@@ -7,6 +9,7 @@ Package 'nolua' does not have a font directory
 
 Sketch report for package 'nolua':
 No new test file was necessary.
+All Models are already documented.
 All data is already documented.
 All font files are already documented.
 Summing up, no sketch was created.
