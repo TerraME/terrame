@@ -157,20 +157,20 @@ local function createWmsConnInfo(url, user, password, port, query, fragment, dir
 	local connInfo = url
 
 	if user and password then
-		local uri = binding.te.core.URI(connInfo)
-		connInfo = uri:schema().."://"..user..":"..password.."@"..uri:host()
+		local uri = binding.te.core.URI(connInfo) -- SKIP
+		connInfo = uri:schema().."://"..user..":"..password.."@"..uri:host() -- SKIP
 	end
 
 	if port then
-		connInfo = connInfo..":"..port
+		connInfo = connInfo..":"..port -- SKIP
 	end
 
 	if query then
-		connInfo = connInfo.."?"..query
+		connInfo = connInfo.."?"..query -- SKIP
 	end
 
 	if fragment then
-		connInfo = connInfo.."#"..fragment
+		connInfo = connInfo.."#"..fragment -- SKIP
 	end
 
 	local encodedUri = binding.URIEncode(connInfo)
