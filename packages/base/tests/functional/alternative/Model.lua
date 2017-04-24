@@ -124,13 +124,17 @@ return{
 		}
 
 		error_func = function()
+			Tube(2)
+		end
+		unitTest:assertError(error_func, "Models can only be instantiated using a 'table' as argument, got 'number'.")
+
+		error_func = function()
 			Tube{2}
 		end
 		unitTest:assertError(error_func, "All the arguments must be named.")
 
-
 		error_func = function()
-			Tube{}
+			Tube()
 		end
 		unitTest:assertError(error_func, "The object has two running objects: 't' (Timer) and 'e' (Environment).")
 
