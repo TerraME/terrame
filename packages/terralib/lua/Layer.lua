@@ -23,7 +23,7 @@
 -------------------------------------------------------------------------------------------
 
 local function isValidSource(source)
-	return belong(source, {"tif", "shp", "postgis", "nc", "asc", "geojson", "wfs"})
+	return belong(source, {"tif", "shp", "postgis", "nc", "asc", "geojson", "wfs", "wms"})
 end
 
 local function isValidName(name)
@@ -46,7 +46,11 @@ local function getLayerInfoAdapted(data)
 			idx = "service"
 			value = string.gsub(value, "^WFS:", "")
 		elseif idx == "dataset" then
-			idx = "feature"
+			if info.source == "wfs" then
+				idx = "feature"
+			elseif info.source == "wms" then
+				idx = "map"
+			end
 		elseif idx == "srid" then
 			idx = "epsg"
 		end
@@ -208,7 +212,7 @@ local function addLayer(self, data)
 
 	verifyUnnecessaryArguments(data, {"name", "source", "project", "file", "index",
 									"host", "port", "user", "password", "database", "table",
-									"service", "feature", "epsg"})
+									"service", "feature", "epsg", "map"})
 
 	if data.source == nil then
 		if data.file then
@@ -277,7 +281,8 @@ local function addLayer(self, data)
 			TerraLib().addGdalLayer(self, data.name, data.file, data.epsg)
 		end,
 		postgis = function()
-			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password", "database", "table", "project", "epsg"})
+			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password",
+									"database", "table", "project", "epsg"})
 			checkPgParams(data)
 
 			TerraLib().addPgLayer(self, data.name, data, data.epsg)
@@ -289,6 +294,25 @@ local function addLayer(self, data)
 			verifyUnnecessaryArguments(data, {"name", "source", "service", "feature", "project"})
 
 			TerraLib().addWfsLayer(self, data.name, data.service, data.feature)
+		end,
+		wms = function()
+			mandatoryTableArgument(data, "service", "string")
+			mandatoryTableArgument(data, "map", "string")
+			defaultTableValue(data, "format", "png")
+
+			verifyUnnecessaryArguments(data, {"name", "source", "service", "map", "project", "format",
+									"user", "password", "port"})
+
+			local connect = {
+				url = data.service,
+				directory = currentDir(),
+				format = data.format,
+				user = data.user,
+				password = data.password,
+				port = data.port
+			}
+
+			TerraLib().addWmsLayer(self, data.name, connect, data.map)
 		end
 	}
 end
@@ -844,13 +868,16 @@ metaTableLayer_ = {
 -- data sources:
 -- @arg data.input Name of the input layer whose coverage area will be used to create a
 -- cellular layer.
--- @arg data.service A string with the description of a WFS location.
+-- @arg data.service A string with the description of a WFS or WMS location.
 -- @arg data.feature A string with the name of the feature to be read from a WFS.
+-- @arg data.map A string with the name of the map to be read from a WMS.
+-- @arg data.format A string with the image format available in a WMS (png, default).
 -- @tabular source
 -- Source & Description & Mandatory & Optional \
 -- "postgis" & PostGIS database. & password & host, port, epsg, user\
 -- "shp" & ESRI shapefile. & file & index, epsg \
 -- "wfs" & Web Feature Service (WFS). & feature, service & \
+-- "wms" & Web Map Service (WMS). & map, service & format, user, password, port\
 -- "tif" & Geotiff file. & file & epsg \
 -- "asc" & ASC format. & file & epsg \
 -- "nc" & NetCDF file. & file & epsg \

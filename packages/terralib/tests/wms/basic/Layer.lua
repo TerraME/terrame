@@ -6,7 +6,7 @@
 -- This framework is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU Lesser General Public
 -- License as published by the Free Software Foundation; either
--- version 2.3 of the License, or (at your option) any later version.
+-- version 2.1 of the License, or (at your option) any later version.
 
 -- You should have received a copy of the GNU Lesser General Public
 -- License along with this library.
@@ -23,38 +23,34 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	addWfsLayer = function(unitTest)
-		local title = "TerraLib Tests"
-		local author = "Avancini Rodrigo"
-		local file = "terralib_wfs_alternative.tview"
-		local proj = {}
-		proj.file = file
-		proj.title = title
-		proj.author = author
+	Layer = function(unitTest)
+		local projName = "layer_wms_basic.tview"
 
-		File(proj.file):deleteIfExists()
+		File(projName):deleteIfExists()
 
-		TerraLib().createProject(proj, {})
+		local proj = Project {
+			file = projName,
+			clean = true
+		}
 
-		local layerName = "WFS-Layer"
-		local url = "http://terrabrasilis.info/redd-pac"
-		local dataset = "reddpac:BAU"
+		local layerName = "WMS-Layer"
+		local service = "http://terrabrasilis.info/terraamazon/ows"
+		local map = "IMG_02082016_321077D"
 
-		local invalidUrl = function()
-			TerraLib().addWfsLayer(proj, layerName, url, dataset)
-		end
-		unitTest:assertError(invalidUrl, "The URL 'http://terrabrasilis.info/redd-pac' is invalid.")
+		local layer = Layer {
+			project = proj,
+			source = "wms",
+			name = layerName,
+			service = service,
+			map = map
+		}
 
-		url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
-		dataset = "reddpac:B"
+		unitTest:assertEquals(layer.name, layerName)
+		unitTest:assertEquals(layer.source, "wms")
+		unitTest:assertEquals(layer.service, service)
+		unitTest:assertEquals(layer.map, map)
 
-		if TerraLib().isValidWfsUrl(url) then
-			local invalidDataSet = function()
-				TerraLib().addWfsLayer(proj, layerName, url, dataset)
-			end
-			unitTest:assertError(invalidDataSet, "It was not possible to find data set 'reddpac:B' of type 'WFS'. Layer 'WFS-Layer' was not created.") -- SKIP
-		end
-
-		proj.file:delete()
+		File(projName):delete()
 	end
 }
+
