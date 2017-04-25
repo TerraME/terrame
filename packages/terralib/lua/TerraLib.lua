@@ -97,7 +97,9 @@ local SourceTypeMapper = {
 	tif = "GDAL",
 	nc = "GDAL",
 	asc = "GDAL",
-	postgis = "POSTGIS"
+	postgis = "POSTGIS",
+	wfs = "WFS",
+	wms = "WMS2"
 }
 
 local function createFileConnInfo(filePath)
@@ -149,6 +151,35 @@ local function createPgConnInfo(host, port, user, pass, database, encoding)
 				.."&PG_MIN_POOL_SIZE=2"
 				.."&PG_HIDE_SPATIAL_METADATA_TABLES=FALSE"
 				.."&PG_HIDE_RASTER_TABLES=FALSE"
+end
+
+local function createWmsConnInfo(url, user, password, port, query, fragment, directory, format)
+	local connInfo = url
+
+	if user and password then
+		local uri = binding.te.core.URI(connInfo) -- SKIP
+		connInfo = uri:schema().."://"..user..":"..password.."@"..uri:host() -- SKIP
+	end
+
+	if port then
+		connInfo = connInfo..":"..port -- SKIP
+	end
+
+	if query then
+		connInfo = connInfo.."?"..query -- SKIP
+	end
+
+	if fragment then
+		connInfo = connInfo.."#"..fragment -- SKIP
+	end
+
+	local encodedUri = binding.URIEncode(connInfo)
+
+	if format then
+		encodedUri = encodedUri.."&FORMAT="..format
+	end
+
+	return "wms://".."?URI="..encodedUri.."&VERSION=1.3.0".."&USERDATADIR=".. directory
 end
 
 local function addDataSourceInfo(type, title, connInfo)
@@ -204,6 +235,7 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
 	do
 		local dsId = addDataSourceInfo(type, name, connInfo)
 		local ds = binding.te.da.DataSourceManager.getInstance():search(dsId)
+
 		if ds then
 			ds:open()
 		else
@@ -212,43 +244,73 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
 			binding.te.da.DataSourceManager.getInstance():insert(ds)
 		end
 
-		if not ds:dataSetExists(dSetName) then
-			binding.te.da.DataSourceManager.getInstance():detach(dsId)
-			ds:close()
-			customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' does not created.")
-		end
-
-		local dSetType
-		local dSet
-		local env = nil
+		local env
 		local sridReal = 0
-
-		if (type == "OGR") or (type == "WFS") or (type == "POSTGIS") then
-			dSetType = ds:getDataSetType(dSetName)
-			local gp = binding.GetFirstGeomProperty(dSetType)
-			env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
-			sridReal = gp:getSRID()
-
-			if addSpatialIdx then -- and not hasShapeFileSpatialIndex(connInfo.URI) then -- TODO: check if is OGR resolve it
-				addSpatialIndex(ds, dSetName)
-			end
-		elseif type == "GDAL"then
-			dSet = ds:getDataSet(dSetName)
-			local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
-			local raster = dSet:getRaster(rpos)
-			env = raster:getExtent()
-			sridReal = raster:getSRID()
-		end
-
 		local id = binding.GetRandomicId()
-		layer = binding.te.map.DataSetLayer(id)
+
+		if type == "WMS2" then
+			local uri = binding.te.core.URI(connInfo)
+			local infos = binding.Expand(uri:query())
+			local client = binding.te.ws.ogc.WMSClient(infos.USERDATADIR, infos.URI, infos.VERSION)
+			client:updateCapabilities()
+			local capblts = client:getCapabilities()
+			local rootLayer = capblts.m_capability.m_layer
+			local wmsLayer = rootLayer:getLayerByTitle(dSetName)
+
+			if wmsLayer.m_title == "" then
+				binding.te.da.DataSourceManager.getInstance():detach(dsId)
+				ds:close()
+				customError("Map '"..dSetName.."' was not found in WMS server.")
+			end
+
+			local request = wmsLayer:createMapRequest()
+
+			if infos.FORMAT then
+				request.m_format = "image/"..infos.FORMAT
+			end
+
+			local bbox = request.m_boundingBox
+			env = binding.te.gm.Envelope(bbox.m_minX, bbox.m_minY, bbox.m_maxX, bbox.m_maxY)
+			local srs = binding.SplitString(request.m_srs, ":")
+			sridReal = tonumber(srs[1])
+			layer = binding.te.ws.ogc.wms.WMSLayer(id, name)
+			layer:setGetMapRequest(request)
+		else
+			local dSetType
+			local dSet
+
+			if not ds:dataSetExists(dSetName) then
+				binding.te.da.DataSourceManager.getInstance():detach(dsId)
+				ds:close()
+				customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' was not created.")
+			end
+
+			if (type == "OGR") or (type == "WFS") or (type == "POSTGIS") then
+				dSetType = ds:getDataSetType(dSetName)
+				local gp = binding.GetFirstGeomProperty(dSetType)
+				env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
+				sridReal = gp:getSRID()
+
+				if addSpatialIdx then -- and not hasShapeFileSpatialIndex(connInfo.URI) then -- TODO: check if is OGR resolve it
+					addSpatialIndex(ds, dSetName)
+				end
+			elseif type == "GDAL"then
+				dSet = ds:getDataSet(dSetName)
+				local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+				local raster = dSet:getRaster(rpos)
+				env = raster:getExtent()
+				sridReal = raster:getSRID()
+			end
+
+			layer = binding.te.map.DataSetLayer(id)
+			layer:setRendererType("ABSTRACT_LAYER_RENDERER")
+		end
 
 		layer:setDataSetName(dSetName)
 		layer:setTitle(name)
 		layer:setDataSourceId(ds:getId())
 		layer:setExtent(env)
 		layer:setVisibility(binding.NOT_VISIBLE)
-		layer:setRendererType("ABSTRACT_LAYER_RENDERER")
 		layer:setEncoding(binding.CharEncoding.getEncodingType("LATIN1")) -- TODO(avancinirodrigo): REVIEW ENCODING
 
 		if srid then
@@ -1410,6 +1472,15 @@ TerraLib_ = {
 			info.url = connInfo:path()
 			info.source = "wfs"
 			info.dataset = dseName
+		elseif type == "WMS2" then
+			local infos = binding.Expand(connInfo:query())
+			info.url = infos.URI
+			info.source = "wms"
+			info.dataset = dseName
+			info.rep = "wms"
+			collectgarbage("collect")
+			releaseProject(project)
+			return info
 		end
 
 		do
@@ -1430,7 +1501,6 @@ TerraLib_ = {
 		end
 
 		collectgarbage("collect")
-
 		releaseProject(project)
 
 		return info
@@ -1505,7 +1575,7 @@ TerraLib_ = {
 		if instance.isValidWfsUrl(wfsUrl) then
 			loadProject(project, project.file)
 
-			local layer = createLayer(name, dataset, wfsUrl, "WFS", nil)
+			local layer = createLayer(name, dataset, wfsUrl, "WFS")
 
 			project.layers[layer:getTitle()] = layer
 			saveProject(project, project.layers)
@@ -1513,6 +1583,36 @@ TerraLib_ = {
 		else
 			customError("The URL '"..url.."' is invalid.")
 		end
+	end,
+	--- Add a WMS layer to a given project.
+	-- @arg project A table that represents a project.
+	-- @arg name The name of the layer.
+	-- @arg connect A table with the WMS connection parameters.
+	-- @arg dataset The data set in WMS server.
+	-- @usage -- DONTRUN
+	-- local layerName = "WMS-Layer"
+	-- local url = "http://terrabrasilis.info/terraamazon/ows"
+	-- local dataset = "IMG_02082016_321077D"
+	-- local directory = currentDir()
+	-- local conn = {
+		-- url = url,
+		-- directory = directory,
+		-- format = "jpeg"
+	-- }
+	-- TerraLib().addWmsLayer(project, layerName, conn, dataset)
+	addWmsLayer = function(project, name, connect, dataset)
+		local connInfo = createWmsConnInfo(connect.url, connect.user, connect.password, connect.port,
+										connect.query, connect.fragment, connect.directory, connect.format)
+
+		if not isValidDataSourceUri(connInfo, "WMS2") then
+			customError("WMS server '"..connect.url.."' is unreachable.")
+		end
+
+		loadProject(project, project.file)
+		local layer = createLayer(name, dataset, connInfo, "WMS2")
+		project.layers[layer:getTitle()] = layer
+		saveProject(project, project.layers)
+		releaseProject(project)
 	end,
 	--- Create a new cellular layer into a shapefile.
 	-- @arg project A table that represents a project.

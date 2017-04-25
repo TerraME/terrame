@@ -23,38 +23,39 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	addWfsLayer = function(unitTest)
+	addWmsLayer = function(unitTest)
 		local title = "TerraLib Tests"
 		local author = "Avancini Rodrigo"
-		local file = "terralib_wfs_alternative.tview"
+		local file = File("terralib_wms_basic.tview")
 		local proj = {}
-		proj.file = file
+		proj.file = file:name(true)
 		proj.title = title
 		proj.author = author
 
-		File(proj.file):deleteIfExists()
+		file:deleteIfExists()
 
 		TerraLib().createProject(proj, {})
 
-		local layerName = "WFS-Layer"
-		local url = "http://terrabrasilis.info/redd-pac"
-		local dataset = "reddpac:BAU"
+		local layerName = "WMS-Layer"
+		local url = "http://terrabrasilis.info/terraamazon/ows"
+		local dataset = "IMG_02082016_321077D"
+		local directory = currentDir()
+		local conn = {
+			url = url,
+			directory = directory,
+			format = "jpeg"
+		}
 
-		local invalidUrl = function()
-			TerraLib().addWfsLayer(proj, layerName, url, dataset)
-		end
-		unitTest:assertError(invalidUrl, "The URL 'http://terrabrasilis.info/redd-pac' is invalid.")
+		TerraLib().addWmsLayer(proj, layerName, conn, dataset)
 
-		url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
-		dataset = "reddpac:B"
+		local layerInfo = TerraLib().getLayerInfo(proj, layerName)
+		unitTest:assertEquals(layerInfo.name, layerName)
+		unitTest:assertEquals(layerInfo.url, url)
+		unitTest:assertEquals(layerInfo.type, "WMS2")
+		unitTest:assertEquals(layerInfo.source, "wms")
+		unitTest:assertEquals(layerInfo.rep, "wms")
+		unitTest:assertNotNil(layerInfo.sid)
 
-		if TerraLib().isValidWfsUrl(url) then
-			local invalidDataSet = function()
-				TerraLib().addWfsLayer(proj, layerName, url, dataset)
-			end
-			unitTest:assertError(invalidDataSet, "It was not possible to find data set 'reddpac:B' of type 'WFS'. Layer 'WFS-Layer' was not created.") -- SKIP
-		end
-
-		proj.file:delete()
+		file:delete()
 	end
 }
