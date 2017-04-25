@@ -244,39 +244,11 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
 			binding.te.da.DataSourceManager.getInstance():insert(ds)
 		end
 
-		local dSetType
-		local dSet
-		local env = nil
+		local env
 		local sridReal = 0
 		local id = binding.GetRandomicId()
 
-		if not (type == "WMS2") then
-			if not ds:dataSetExists(dSetName) then
-				binding.te.da.DataSourceManager.getInstance():detach(dsId)
-				ds:close()
-				customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' was not created.")
-			end
-
-			if (type == "OGR") or (type == "WFS") or (type == "POSTGIS") then
-				dSetType = ds:getDataSetType(dSetName)
-				local gp = binding.GetFirstGeomProperty(dSetType)
-				env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
-				sridReal = gp:getSRID()
-
-				if addSpatialIdx then -- and not hasShapeFileSpatialIndex(connInfo.URI) then -- TODO: check if is OGR resolve it
-					addSpatialIndex(ds, dSetName)
-				end
-			elseif type == "GDAL"then
-				dSet = ds:getDataSet(dSetName)
-				local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
-				local raster = dSet:getRaster(rpos)
-				env = raster:getExtent()
-				sridReal = raster:getSRID()
-			end
-
-			layer = binding.te.map.DataSetLayer(id)
-			layer:setRendererType("ABSTRACT_LAYER_RENDERER")
-		else
+		if type == "WMS2" then
 			local uri = binding.te.core.URI(connInfo)
 			local infos = binding.Expand(uri:query())
 			local client = binding.te.ws.ogc.WMSClient(infos.USERDATADIR, infos.URI, infos.VERSION)
@@ -303,6 +275,35 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
 			sridReal = tonumber(srs[1])
 			layer = binding.te.ws.ogc.wms.WMSLayer(id, name)
 			layer:setGetMapRequest(request)
+		else
+			local dSetType
+			local dSet
+
+			if not ds:dataSetExists(dSetName) then
+				binding.te.da.DataSourceManager.getInstance():detach(dsId)
+				ds:close()
+				customError("It was not possible to find data set '"..dSetName.."' of type '"..type.."'. Layer '"..name.."' was not created.")
+			end
+
+			if (type == "OGR") or (type == "WFS") or (type == "POSTGIS") then
+				dSetType = ds:getDataSetType(dSetName)
+				local gp = binding.GetFirstGeomProperty(dSetType)
+				env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
+				sridReal = gp:getSRID()
+
+				if addSpatialIdx then -- and not hasShapeFileSpatialIndex(connInfo.URI) then -- TODO: check if is OGR resolve it
+					addSpatialIndex(ds, dSetName)
+				end
+			elseif type == "GDAL"then
+				dSet = ds:getDataSet(dSetName)
+				local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+				local raster = dSet:getRaster(rpos)
+				env = raster:getExtent()
+				sridReal = raster:getSRID()
+			end
+
+			layer = binding.te.map.DataSetLayer(id)
+			layer:setRendererType("ABSTRACT_LAYER_RENDERER")
 		end
 
 		layer:setDataSetName(dSetName)
@@ -1604,7 +1605,7 @@ TerraLib_ = {
 										connect.query, connect.fragment, connect.directory, connect.format)
 
 		if not isValidDataSourceUri(connInfo, "WMS2") then
-			customError("WMS server '"..connect.url.."' unreachable.")
+			customError("WMS server '"..connect.url.."' is unreachable.")
 		end
 
 		loadProject(project, project.file)
