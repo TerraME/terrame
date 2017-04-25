@@ -30,7 +30,7 @@ return {
 		unitTest:assertEquals(t1, t2)
 	end,
 	getVersion = function(unitTest)
-		unitTest:assertEquals(TerraLib().getVersion(), "5.2.0")
+		unitTest:assertEquals(TerraLib().getVersion(), "5.2.1")
 	end,
 	openProject = function(unitTest)
 		local proj = {
