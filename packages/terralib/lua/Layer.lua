@@ -890,7 +890,8 @@ metaTableLayer_ = {
 -- @arg data.service A string with the description of a WFS or WMS location.
 -- @arg data.feature A string with the name of the feature to be read from a WFS.
 -- @arg data.map A string with the name of the map to be read from a WMS.
--- @arg data.format A string with the image format available in a WMS (png, default).
+-- @arg data.format A string with the image format available in a WMS ("png", default).
+-- You can use another format if available in the WMS ("jpeg", "tiff", "geotiff", etc).
 -- @tabular source
 -- Source & Description & Mandatory & Optional \
 -- "postgis" & PostGIS database. & password & host, port, epsg, user\
