@@ -4,6 +4,10 @@ Creating Space.lua
 Creating Tube.lua
 Ignoring Model 'Tube2' as it has a Mandatory argument
 Creating Utils.lua
+Verifying documentation of Models
+Creating documentation for Model 'Space'
+Model 'Tube' is already documented
+Model 'Tube2' is already documented
 Verifying data files
 Package 'models' does not have a data directory
 Verifying font files
@@ -11,6 +15,7 @@ Package 'models' does not have a font directory
 
 Sketch report for package 'models':
 3 sketches to test files were created.
+One source code file was updated with the documentation of a Model.
 All data is already documented.
 All font files are already documented.
-Summing up, 3 sketches were created. Please fill them.
+Summing up, 4 sketches were created. Please fill them.

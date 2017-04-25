@@ -142,6 +142,86 @@ local function verifyTest(package, report)
 	end)
 end
 
+local function verifyDoc(package, report)
+	printNote("Verifying documentation of Models")
+
+	local baseDir = packageInfo(package).path
+	local s = sessionInfo().separator
+
+	if not Directory(baseDir.."lua"):exists() then
+		_Gtme.print("Package '"..package.."' does not have source code")
+		return
+	end
+
+	local models = _Gtme.findModels(package)
+	local pkgData = _G.getPackage(package)
+
+	forEachElement(models, function(_, name)
+		local fname = baseDir.."lua"..s..name..".lua"
+		local mfile = io.open(fname)
+		local content = mfile:read("*all")
+		mfile:close()
+
+		if string.find(content, "%-%-%-") then
+			print("Model '"..name.."' is already documented")
+			return
+		end
+
+		printWarning("Creating documentation for Model '"..name.."'")
+		report.documented_models = report.documented_models + 1
+
+		local documentation = "--- <Describe the model here>.\n"
+		forEachOrderedElement(pkgData[name]:getParameters(), function(idx, v, t)
+			local str = ""
+
+			if idx == "finalTime" then
+				str = "Final simulation time. "
+			end
+
+			if t == "Choice" then
+				if v.step then
+					str = str.."A number between "..v.min.." and "..v.max.." with step "..v.step
+					str = str.." and "..v.default.." as default value."
+				elseif v.values and #v.values > 0 then
+					str = str.."A value in the set {"..v.values[1]
+
+					for i = 2, #v.values do
+						str = str..", "..v.values[i]
+					end
+
+					str = str.."} with "..v.default.." as default value."
+				elseif v.min then
+					str = str.."A number of at least "..v.min
+					if v.max then
+						str = str.." and at most "..v.max
+					end
+
+					str = str.." with "..v.default.." as default value."
+				elseif v.max then
+					str = str.."A value of at most "..v.max
+					str = str.." with "..v.default.." as default value."
+				end
+			elseif t == "number" then
+				str = str.."A number with "..v.." as default value."
+			elseif t == "boolean" then
+				str = str.."A boolean with "..tostring(v).." as default value."
+			elseif t == "Mandatory" then
+				str = str.."A mandatory "..v.value.."."
+			end
+
+			if str ~= "" then
+				documentation = documentation.."-- data."..idx.." "..str.."\n"
+			end
+		end)
+
+		content = content:gsub(name, documentation..name, 1)
+
+		mfile = io.open(fname, "w")
+		mfile:write(content)
+		mfile:close()
+	end)
+end
+
 local function verifyData(package, report)
 	printNote("Verifying data files")
 
@@ -348,11 +428,13 @@ function _Gtme.sketch(package)
 		created_files = 0,
 		created_data = 0,
 		created_font = 0,
+		documented_models = 0
 	}
 
 	import("base")
 
 	verifyTest(package, report)
+	verifyDoc(package, report)
 	verifyData(package, report)
 	verifyFont(package, report)
 
@@ -364,6 +446,14 @@ function _Gtme.sketch(package)
 		printWarning("One sketch to test a file was created.")
 	else
 		printWarning(report.created_files.." sketches to test files were created.")
+	end
+
+	if report.documented_models == 0 then
+		printNote("All Models are already documented.")
+	elseif report.documented_models == 1 then
+		printWarning("One source code file was updated with the documentation of a Model.")
+	else
+		printWarning(report.created_data.." source code files were updated with the documentation of Models.")
 	end
 
 	if report.created_data == 0 then

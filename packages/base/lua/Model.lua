@@ -461,6 +461,12 @@ function Model(attrTab)
 	local model
 
 	local callFunction = function(_, v)
+		if v == nil then v = {} end
+
+		if type(v) ~= "table" then
+			customError("Models can only be instantiated using a 'table' as argument, got '"..type(v).."'.")
+		end
+
 		return model(v, debug.getinfo(1).name)
 	end
 

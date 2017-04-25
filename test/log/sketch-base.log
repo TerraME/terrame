@@ -1,5 +1,6 @@
 Verifying test files
 Ignoring tests because internal directories were found in the tests
+Verifying documentation of Models
 Verifying data files
 Directory 'test' will be ignored
 File 'agents.csv' is already documented in 'data.lua'
@@ -24,6 +25,7 @@ File 'Ubuntu-L.txt' will be ignored
 
 Sketch report for package 'base':
 No new test file was necessary.
+All Models are already documented.
 All data is already documented.
 All font files are already documented.
 Summing up, no sketch was created.
