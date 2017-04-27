@@ -55,6 +55,49 @@ return {
 		end
 
 		File(projName):delete()
+	end,
+	fill = function(unitTest)
+		local projName = "layer_wfs_fill.tview"
+
+		local proj = Project {
+				file = projName,
+				clean = true
+		}
+
+		local layerName = "biomes"
+		local service = "http://terrabrasilis.info/redd-pac/wfs"
+		local feature = "reddpac:wfs_biomes"
+
+		local layer = Layer{
+			project = proj,
+			source = "wfs",
+			name = layerName,
+			service = service,
+			feature = feature
+		}
+
+		local file = File("cells.shp")
+
+		local cl1 = Layer{
+			project = proj,
+			clean = true,
+			input = layerName,
+			name = "cells",
+			resolution = 8,
+			file = file,
+			index = false
+		}
+
+		unitTest:assertEquals(#cl1, 20)
+		local attributes = cl1:attributes()
+
+		unitTest:assertEquals(#attributes, 4)
+		unitTest:assertEquals(attributes[1].name, "FID")
+		unitTest:assertEquals(attributes[2].type, "string")
+		unitTest:assertEquals(cl1:projection(), "'WGS 84', with EPSG: 4326 (PROJ4: '+proj=longlat +datum=WGS84 +no_defs ')")
+		unitTest:assertEquals(cl1:representation(), "polygon")
+
+		file:delete()
 	end
 }
 
