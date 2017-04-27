@@ -505,7 +505,7 @@ Layer_ = {
 
 		switch(data, "operation"):caseof{
 			area = function()
-				if repr == "polygon" then
+				if repr == "polygon" or repr == "surface" then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation"})
 					data.select = "FID"
 				else
@@ -515,8 +515,8 @@ Layer_ = {
 				defaultTableValue(data, "default", 0)
 			end,
 			average = function()
-				if belong(repr, {"point", "line", "polygon"}) then
-					if repr == "polygon" then
+				if belong(repr, {"point", "line", "polygon", "surface"}) then
+					if repr == "polygon" or repr == "surface" then
 						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
 						defaultTableValue(data, "area", false)
 					else
@@ -536,7 +536,7 @@ Layer_ = {
 				defaultTableValue(data, "default", 0)
 			end,
 			count = function()
-				if belong(repr, {"point", "line", "polygon"}) then
+				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
@@ -544,7 +544,7 @@ Layer_ = {
 				end
 			end,
 			distance = function()
-				if belong(repr, {"point", "line", "polygon"}) then
+				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
@@ -562,8 +562,8 @@ Layer_ = {
 				customError("Sorry, this operation was not implemented in TerraLib yet.")
 			end,
 			mode = function()
-				if belong(repr, {"point", "line", "polygon"}) then
-					if repr == "polygon" then
+				if belong(repr, {"point", "line", "polygon", "surface"}) then
+					if repr == "polygon" or repr == "surface" then
 						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
 						defaultTableValue(data, "area", false)
 					else
@@ -583,7 +583,7 @@ Layer_ = {
 				defaultTableValue(data, "default", 0)
 			end,
 			maximum = function()
-				if belong(repr, {"point", "line", "polygon"}) then
+				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
@@ -598,7 +598,7 @@ Layer_ = {
 				defaultTableValue(data, "default", 0)
 			end,
 			minimum = function()
-				if belong(repr, {"point", "line", "polygon"}) then
+				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
@@ -613,7 +613,7 @@ Layer_ = {
 				defaultTableValue(data, "default", 0)
 			end,
 			coverage = function()
-				if repr == "polygon" then
+				if repr == "polygon" or repr == "surface" then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
@@ -628,7 +628,7 @@ Layer_ = {
 				defaultTableValue(data, "default", 0)
 			end,
 			presence = function()
-				if belong(repr, {"point", "line", "polygon"}) then
+				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 					data.select = "FID"
 				else
@@ -636,7 +636,7 @@ Layer_ = {
 				end
 			end,
 			stdev = function()
-				if belong(repr, {"point", "line", "polygon"}) then
+				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
@@ -651,7 +651,7 @@ Layer_ = {
 				defaultTableValue(data, "default", 0)
 			end,
 			sum = function()
-				if belong(repr, {"point", "line", "polygon"}) then
+				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 					defaultTableValue(data, "area", false)
