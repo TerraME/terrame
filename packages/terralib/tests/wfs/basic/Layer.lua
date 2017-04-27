@@ -116,6 +116,14 @@ return {
 			layer = biomes,
 			attribute = "mcount"
 		}
+
+		cl1:fill{
+			operation = "average", -- use average as well
+			attribute = "defor",
+			select = "desflorest",
+			layer = prodes
+		}
+
 		local cs = CellularSpace{
 			project = proj,
 			layer = "cells"
@@ -130,7 +138,7 @@ return {
 
 		unitTest:assertSnapshot(map, "map-wfs-area.png")
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "mcount",
 			slices = 4,
@@ -138,6 +146,16 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "map-wfs-count.png")
+
+		map = Map{
+			target = cs,
+			select = "defor",
+			slices = 8,
+			color = "RdYlGn",
+			invert = true
+		}
+
+		unitTest:assertSnapshot(map, "map-wfs-average.png")
 
 		projName:delete()
 		file:delete()
