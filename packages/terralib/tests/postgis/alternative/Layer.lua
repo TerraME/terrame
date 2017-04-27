@@ -270,7 +270,7 @@ return {
 
 		if sessionInfo().system == "linux" then
 			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not translate host name \"inotexist\" to address: Name or service not known\n.")
+				"could not translate host name \"inotexist\" to address: Name or service not known\n.", 16) -- the last paramerter is the difference related to system idiom
 		elseif sessionInfo().system == "mac" then
 			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
 				"could not translate host name \"inotexist\" to address: nodename nor servname provided, or not known\n.")
@@ -298,7 +298,7 @@ return {
 			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
 				"could not connect to server: Connection refused\n"..
 				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n.")
+				"\tTCP/IP connections on port 2345?\n.", 16) -- the last paramerter is the difference related to system idiom
 		elseif sessionInfo().system == "mac" then
 			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
 				"could not connect to server: Connection refused\n"..
@@ -679,7 +679,7 @@ return {
 
 		if sessionInfo().system == "linux" then
 			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not translate host name \"inotexist\" to address: Name or service not known\n.")
+				"could not translate host name \"inotexist\" to address: Name or service not known\n.", 16) -- the last paramerter is the difference related to system idiom
 		elseif sessionInfo().system == "mac" then
 			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
 				"could not translate host name \"inotexist\" to address: nodename nor servname provided, or not known\n.")
@@ -708,7 +708,7 @@ return {
 			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
 				"could not connect to server: Connection refused\n"..
 				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n.", 5)
+				"\tTCP/IP connections on port 2345?\n.", 8) -- the last paramerter is the difference related to system idiom
 		elseif sessionInfo().system == "mac" then
 			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
 				"could not connect to server: Connection refused\n"..
