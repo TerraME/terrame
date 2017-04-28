@@ -386,9 +386,9 @@ Layer_ = {
 	-- Geometry & Using only geometry & Using attribute of objects with some overlap &
 	-- Using geometry and attribute \
 	-- Points & "count", "distance", "presence" &
-	-- "average", "mode", "maximum", "minimum", "stdev", "sum" \
+	-- "average", "mode", "maximum", "minimum", "stdev", "sum" & (none) \
 	-- Lines & "count", "distance", "length", "presence" &
-	-- "average", "mode", "maximum", "minimum", "stdev", "sum" \
+	-- "average", "mode", "maximum", "minimum", "stdev", "sum" & (none) \
 	-- Polygons & "area", "count", "distance", "presence" &
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
 	-- "average", "mode", "coverage", "sum" \
