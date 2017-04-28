@@ -62,9 +62,7 @@ return {
 			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
 				"FATAL:  password authentication failed for user \"postgres\"\n"..
 				"FATAL:  password authentication failed for user \"postgres\"\n.")
-		elseif sessionInfo().system == "mac" then
-			unitTest:assertError(passWrong, "Is not possible add the Layer. Table 'sampa' does not exist.") -- SKIP
-		else -- windows
+		else
 			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
 				"FATAL:  password authentication failed for user \"postgres\"\n.")
 		end
