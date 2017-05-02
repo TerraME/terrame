@@ -780,16 +780,6 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-stdev-pg.png")
 
-		-- LENGTH
-		local error_func = function()
-			cl:fill{
-				operation = "length",
-				layer = rodovias,
-				attribute = "mlength"
-			}
-		end
-		unitTest:assertError(error_func, "Sorry, this operation was not implemented in TerraLib yet.")
-
 		-- SUM
 		proj.file:delete()
 
