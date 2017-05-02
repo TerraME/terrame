@@ -387,7 +387,7 @@ Layer_ = {
 	-- Using geometry and attribute \
 	-- Points & "count", "distance", "presence" &
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" & (none) \
-	-- Lines & "count", "distance", "length", "presence" &
+	-- Lines & "count", "distance", "presence" &
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" & (none) \
 	-- Polygons & "area", "count", "distance", "presence" &
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
@@ -410,9 +410,6 @@ Layer_ = {
 	-- & attribute, layer & \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
 	-- centroid of the cell to the closest point, line, or border of a polygon.
-	-- & attribute, layer & \
-	-- "length" & Total length of overlay between the cell and a layer of lines. If there is
-	-- more than one line, it sums all lengths.
 	-- & attribute, layer & \
 	-- "mode" & More common qualitative value from the objects that have some intersection with
 	-- the cell, without taking into account their geometric properties. This operation converts the
@@ -551,16 +548,14 @@ Layer_ = {
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 			end,
-			length = function()
-				if repr == "line" then
-					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
-					data.select = "FID"
-				else
-					customError("Operation '"..data.operation.."' is not available for layers with "..repr.." data.")
-				end
-
-				customError("Sorry, this operation was not implemented in TerraLib yet.")
-			end,
+			-- length = function() -- TODO(#795)
+				-- if repr == "line" then
+					-- verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+					-- data.select = "FID"
+				-- else
+					-- customError("Operation '"..data.operation.."' is not available for layers with "..repr.." data.")
+				-- end
+			-- end,
 			mode = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					if repr == "polygon" or repr == "surface" then

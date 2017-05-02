@@ -880,15 +880,6 @@ return{
 		end
 		unitTest:assertError(normalizedNameWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'max10allow'.")
 
-		local lengthInvalidGeom = function()
-			cl:fill{
-				operation = "length",
-				attribute = "attr",
-				layer = layerName1
-			}
-		end
-		unitTest:assertError(lengthInvalidGeom, "Operation 'length' is not available for layers with polygon data.")
-
 		local localidades = "Localidades"
 
 		Layer{
