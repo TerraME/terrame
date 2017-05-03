@@ -531,6 +531,7 @@ UnitTest_ = {
 			if self.unittest then
 				func = customError
 			end
+
 			func("[The error above occurs more "..count.." times.]")
 		else
 			self.last_error = str
@@ -543,6 +544,7 @@ UnitTest_ = {
 				func = customError
 				arg = msg
 			end
+
 			func(arg)
 		end
 	end

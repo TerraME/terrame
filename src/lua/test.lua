@@ -823,6 +823,18 @@ function _Gtme.executeTests(package, fileName)
 
 				local color = sessionInfo().color
 				local exampleInitialTime = os.clock()
+				local pe = _Gtme.printError
+
+				local myassert = function(observer, file, message)
+					_Gtme.printError = function(str) -- to avoid showing that the error occurs in terrame.lua
+						local errorWithoutFile = string.match(str, "Files.*")
+						pe("Error in a "..message..". "..errorWithoutFile)
+					end
+
+					ut:assertSnapshot(observer, file, 0.35)
+
+					_Gtme.printError = pe
+				end
 
 				local myfunc = function()
 					local maps = {}
@@ -832,7 +844,8 @@ function _Gtme.executeTests(package, fileName)
 						local map = Map(mdata)
 						table.insert(maps, map)
 						info_.color = color
-						pcall(function() ut:assertSnapshot(map, "examples-"..value.."-map-"..#maps.."-begin.png", 0.35) end)
+						myassert(map, "examples-"..value.."-map-"..#maps.."-begin.png", "Map in the beginning of the simulation")
+
 						info_.color = false
 						return map
 					end
@@ -861,11 +874,11 @@ function _Gtme.executeTests(package, fileName)
 
 						info_.color = color
 						forEachElement(maps, function(pos, map)
-							pcall(function() ut:assertSnapshot(map, "examples-"..value.."-map-"..pos.."-end.png", 0.35) end)
+							myassert(map, "examples-"..value.."-map-"..pos.."-end.png", "Map in the end of the simulation")
 						end)
 
 						forEachElement(charts, function(pos, chart)
-							pcall(function() ut:assertSnapshot(chart, "examples-"..value.."-chart-"..pos.."-end.png", 0.35) end)
+							myassert(chart, "examples-"..value.."-chart-"..pos.."-end.png", "Chart in the end of the simulation")
 						end)
 
 						return output
