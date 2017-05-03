@@ -826,8 +826,8 @@ function _Gtme.executeTests(package, fileName)
 				local pe = _Gtme.printError
 
 				local myassert = function(observer, file, message)
-					_Gtme.printError = function(value) -- to avoid showing that the error occurs in terrame.lua
-						local errorWithoutFile = string.match(value, "Files.*")
+					_Gtme.printError = function(str) -- to avoid showing that the error occurs in terrame.lua
+						local errorWithoutFile = string.match(str, "Files.*")
 						pe("Error in a "..message..". "..errorWithoutFile)
 					end
 
