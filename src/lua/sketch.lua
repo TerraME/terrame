@@ -210,7 +210,7 @@ local function verifyDoc(package, report)
 			end
 
 			if str ~= "" then
-				documentation = documentation.."-- data."..idx.." "..str.."\n"
+				documentation = documentation.."-- @arg data."..idx.." "..str.."\n"
 			end
 		end)
 
