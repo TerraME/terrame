@@ -831,7 +831,7 @@ function _Gtme.executeTests(package, fileName)
 						pe("Error in a "..message..". "..errorWithoutFile)
 					end
 
-					ut:assertSnapshot(observer, file, 0.35)
+					pcall(function() ut:assertSnapshot(observer, file, 0.35) end)
 
 					_Gtme.printError = pe
 				end
