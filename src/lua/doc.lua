@@ -887,6 +887,13 @@ function _Gtme.executeDoc(package)
 				forEachElement(value.attributes, function(idx, mvalue)
 					if type(idx) == "table" then
 						mvalue.type = type(cs.cells[1][idx[1]])
+
+						forEachElement(idx, function(_, mmvalue)
+							if mvalue.type ~= type(cs.cells[1][mmvalue]) then
+								printError("All the attributes documented together should have the same type, got "..mvalue.type.." ('"..idx[1].."') and "..type(cs.cells[1][mmvalue]).." ('"..mmvalue.."').")
+								doc_report.error_data = doc_report.error_data + 1
+							end
+						end)
 					else
 						mvalue.type = type(cs.cells[1][idx])
 					end
