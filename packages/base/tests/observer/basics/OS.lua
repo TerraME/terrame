@@ -109,21 +109,19 @@ return{
 
 		sessionInfo().graphics = true
 
-		local c = Chart{
+		c = Chart{
 		    target = DataFrame{value = {2}}
 		}
 
 		unitTest:assertSnapshot(c, "enable_graphics_chart.png", 0.05)
 
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
 		Map{
 			target = cs
 		}
 
 		unitTest:assertSnapshot(c, "enable_graphics_map.png", 0.05)
-
-		local timer
 
 		timer = Timer{
 			ev1 = Event{action = function() timer:notify() end},
@@ -133,14 +131,14 @@ return{
 
 		unitTest:assertSnapshot(c, "enable_graphics_clock.png", 0.45)
 
-		local world = Cell{
+		world = Cell{
 			count = 0,
 			mcount = function(self)
 				return self.count + 1
 			end
 		}
 
-		local ts = TextScreen{target = world}
+		ts = TextScreen{target = world}
 
 		unitTest:assertSnapshot(ts, "enable_graphics_textscreen.png", 0.05)
 
@@ -151,7 +149,7 @@ return{
 			end
 		}
 
-		local vt1 = VisualTable{target = world}
+		vt1 = VisualTable{target = world}
 
 		unitTest:assertSnapshot(vt1, "enable_graphics_visualtable.png", 0.2)
 	end

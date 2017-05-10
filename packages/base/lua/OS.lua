@@ -154,7 +154,7 @@ end
 -- does not show such lines. This value can be set from TerraME command line (-ft). & No \
 -- graphics & A boolean value indicating whether the graphics are enabled. If false and one creates
 -- a Chart, Map, or any other object that has a graphical interface, it will not be shown. Because
--- of that, it will not be possible to save the output from these objects. 
+-- of that, it will not be possible to save the output from these objects.
 -- TerraME starts with graphics enabled (true). & No \
 -- interface & A boolean value indicating whether a graphical interface to configure
 -- models is running. When this value is true, Utils:toLabel() converts errors to more
