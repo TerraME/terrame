@@ -24,7 +24,7 @@ cell = Cell{
 	state = Random{alive = PROBABILITY, dead = 1 - PROBABILITY},
 	countAlive = function(self)
 		local count = 0
-		forEachNeighbor(self, function(_, neigh)
+		forEachNeighbor(self, function(neigh)
 			if neigh.past.state == "alive" then
 				count = count + 1
 			end

@@ -35,7 +35,7 @@ randomObj = Random{seed = 600}
 
 cell = Cell{
 	execute = function(cell)
-		forEachNeighbor(cell, function(_, neigh)
+		forEachNeighbor(cell, function(neigh)
 			if neigh.state <= BIOMASS5 then
 				local p = randomObj:number()
 				if p < I[cell.accumulation][neigh.accumulation] then

@@ -465,13 +465,15 @@ ydim    number [20]
 
 		cs:createNeighborhood{name = "neigh2"}
 
-		forEachNeighbor(cs:sample(), "neigh2", function(neigh)
-				unitTest:assert(cell ~= neigh)
+		local sample = cs:sample()
 
-				unitTest:assert(neigh.x >= (cell.x - 1))
-				unitTest:assert(neigh.x <= (cell.x + 1))
-				unitTest:assert(neigh.y >= (cell.y - 1))
-				unitTest:assert(neigh.y <= (cell.y + 1))
+		forEachNeighbor(sample, "neigh2", function(neigh)
+				unitTest:assert(sample ~= neigh)
+
+				unitTest:assert(neigh.x >= (sample.x - 1))
+				unitTest:assert(neigh.x <= (sample.x + 1))
+				unitTest:assert(neigh.y >= (sample.y - 1))
+				unitTest:assert(neigh.y <= (sample.y + 1))
 			end)
 
 		cs:createNeighborhood{name = "my_neighborhood2", self = true}
@@ -844,7 +846,7 @@ ydim    number [20]
 				unitTest:assert(neigh.y >= cell.y - 1)
 				unitTest:assert(neigh.y <= cell.y + 1)
 
-				unitTest:assert(filterFunction(c, neigh))
+				unitTest:assert(filterFunction(cell, neigh))
 			end)
 		end)
 

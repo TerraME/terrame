@@ -16,7 +16,7 @@ local function calculatePotNeighborhood(cs)
 		local countNeigh = 0
 
 		if cell.defor < 1.0 then
-			forEachNeighbor(cell, function(_, neigh)
+			forEachNeighbor(cell, function(neigh)
 				-- The potential of change for each cell is
 				-- the average of neighbors deforestation.
 				-- fully deforested cells have zero potential
@@ -69,7 +69,7 @@ local function calculatePotMixed(cs)
 
 		-- Calculate the average deforestation
 		countNeigh = 0
-		forEachNeighbor(cell, function(_, neigh)
+		forEachNeighbor(cell, function(neigh)
 			-- The potential of change for each cell is
 			-- the average of neighbors' deforestation.
 			if cell.defor < 1.0 then
