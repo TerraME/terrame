@@ -86,6 +86,49 @@ function runCommand(command)
 	return result, err
 end
 
+local observers
+
+local function disableGraphics()
+	observers = {
+		Chart = Chart,
+		Map = Map,
+		Clock = Clock,
+		TextScreen = TextScreen,
+		VisualTable = VisualTable
+	}
+
+	local setConstructor = function(mtype)
+		local indexFunction = function(_, func)
+			if func == "type_" then return mtype end
+			if func == "parent" then return nil end
+			if func == "update" then return function() end end
+
+			customError("It is not possible to call '"..func.."' with graphics disabled.")
+		end
+
+		local constructor = function(attrTab)
+			setmetatable(attrTab, {__index = indexFunction})
+			return attrTab
+		end
+
+		rawset(_G, mtype, constructor)
+	end
+
+	forEachElement(observers, function(idx)
+		setConstructor(idx)
+	end)
+end
+
+local function enableGraphics()
+	if observers == nil then return end
+
+	rawset(_G, "Chart", observers.Chart)
+	rawset(_G, "Map", observers.Map)
+	rawset(_G, "Clock", observers.Clock)
+	rawset(_G, "TextScreen", observers.TextScreen)
+	rawset(_G, "VisualTable", observers.VisualTable)
+end
+
 --- Return information about the current execution. The result is a table
 -- with the values below. Some of them are read only, while others might
 -- be changed accordingly.
@@ -109,6 +152,10 @@ end
 -- stack when an error occurs. This means that the lines from base package and
 -- internal files are also going to be shown when an error occurs. As default, TerraME
 -- does not show such lines. This value can be set from TerraME command line (-ft). & No \
+-- graphics & A boolean value indicating whether the graphics are enabled. If false and one creates
+-- a Chart, Map, or any other object that has a graphical interface, it will not be shown. Because
+-- of that, it will not be possible to save the output from these objects. 
+-- TerraME starts with graphics enabled (true). & No \
 -- interface & A boolean value indicating whether a graphical interface to configure
 -- models is running. When this value is true, Utils:toLabel() converts errors to more
 -- readable texts referring to graphical objects instead of Model arguments. & No \
@@ -139,6 +186,7 @@ function sessionInfo()
 		end,
 		__newindex = function(_, idx, value)
 			local readOnly = false
+
 			local args = {
 				autoclose = "boolean",
 				dbVersion = readOnly,
@@ -147,6 +195,15 @@ function sessionInfo()
 				fullTraceback = "boolean",
 				initialDir = readOnly,
 				interface = "boolean",
+				graphics = function(midx, mvalue)
+					if type(mvalue) ~= "boolean" then
+						incompatibleTypeError(midx, "boolean", mvalue)
+					elseif mvalue then
+						enableGraphics()
+					else
+						disableGraphics()
+					end
+				end,
 				mode = {"default", "debug", "normal", "quiet", "strict"},
 				path = readOnly,
 				separator = readOnly,

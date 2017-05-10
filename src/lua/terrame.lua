@@ -1164,6 +1164,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		silent = false,
 		color = false,
 		interface = false,
+		graphics = true,
 		path = os.getenv("TME_PATH"),
 		fullTraceback = false,
 		autoclose = false,

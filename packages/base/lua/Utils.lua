@@ -24,8 +24,6 @@
 
 -- @header Some basic and useful functions for modeling.
 
-local observers
-
 local deadObserverMetaTable_ = {__index = function(self, idx)
 	if idx == "type_" then return "<DestroyedObserver>" end
 	if idx == "update" then return function() end end
@@ -53,6 +51,7 @@ function clean()
 		end
 		setmetatable(obs, deadObserverMetaTable_)
 	end)
+
 	_Gtme.createdObservers = {}
 	cpp_restartobservercounter()
 end
@@ -223,57 +222,6 @@ function delay(delay_s)
 
 	local time_to = os.time() + delay_s
 	while os.time() <= time_to do end
-end
-
---- Disable all graphics. If one create a Chart, Map, or any other object that
--- has a graphical interface, it will not be shown. Because of that, it will
--- not be possible to save the output from these objects.
--- @see Utils:enableGraphics
--- @usage -- DONTRUN
--- disableGraphics()
-function disableGraphics()
-	observers = {
-		Chart = Chart,
-		Map = Map,
-		Clock = Clock,
-		TextScreen = TextScreen,
-		VisualTable = VisualTable
-	}
-
-	local setConstructor = function(mtype)
-		local indexFunction = function(_, func)
-			if func == "type_" then return mtype end
-			if func == "parent" then return nil end
-			if func == "update" then return function() end end
-
-			customError("It is not possible to call '"..func.."' with graphics disabled.")
-		end
-
-		local constructor = function(attrTab)
-			setmetatable(attrTab, {__index = indexFunction})
-			return attrTab
-		end
-
-		rawset(_G, mtype, constructor)
-	end
-
-	forEachElement(observers, function(idx)
-		setConstructor(idx)
-	end)
-end
-
---- Enable all graphics. This function is useful to restore
--- TerraME status after calling Utils:disableGraphics().
--- @usage -- DONTRUN
--- enableGraphics()
-function enableGraphics()
-	if observers == nil then return end
-
-	rawset(_G, "Chart", observers.Chart)
-	rawset(_G, "Map", observers.Map)
-	rawset(_G, "Clock", observers.Clock)
-	rawset(_G, "TextScreen", observers.TextScreen)
-	rawset(_G, "VisualTable", observers.VisualTable)
 end
 
 --- Convert the time in seconds to a more readable value. It returns a string in the format
