@@ -99,7 +99,7 @@ end
 -- Main function
 -- @see luadoc.doclet.html, luadoc.doclet.formatter, luadoc.doclet.raw
 -- @see luadoc.taglet.standard
-function startDoc(files, examples, options, package_path, mdata, mfont, doc_report, silent)
+function startDoc(files, examples, options, package_path, mdata, mdirectory, mfont, doc_report, silent)
 	-- load config file
 	-- if options.config ~= nil then
 		-- load specified config file
@@ -124,6 +124,7 @@ function startDoc(files, examples, options, package_path, mdata, mfont, doc_repo
 	doclet.options = options
 	-- doclet.logger = logger
 	doc.mdata = mdata
+	doc.mdirectory = mdirectory
 	doc.mfont = mfont
 
 	doclet.start(doc, doc_report)

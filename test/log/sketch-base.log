@@ -2,7 +2,7 @@ Verifying test files
 Ignoring tests because internal directories were found in the tests
 Verifying documentation of Models
 Verifying data files
-Directory 'test' will be ignored
+Directory 'test' is already documented in 'data.lua'
 File 'agents.csv' is already documented in 'data.lua'
 File 'amazonia.shp' is already documented in 'data.lua'
 File 'brazilstates.shp' is already documented in 'data.lua'

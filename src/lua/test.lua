@@ -355,7 +355,7 @@ function _Gtme.executeTests(package, fileName)
 
 	local baseDir = packageInfo(package).path
 
-	doc_functions = luadocMain(baseDir, Directory(baseDir.."lua"):list(), {}, package, {}, {}, {}, true)
+	doc_functions = luadocMain(baseDir, Directory(baseDir.."lua"):list(), {}, package, {}, {}, {}, {}, true)
 
 	printNote("Looking for package functions")
 	testfunctions = _Gtme.buildCountTable(package)

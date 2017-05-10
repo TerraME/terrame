@@ -448,6 +448,7 @@ function _Gtme.executeDoc(package)
 	}
 
 	local mdata = {}
+	local mdirectory = {}
 	local filesdocumented = {}
 	local df = dataFiles(package)
 
@@ -455,6 +456,68 @@ function _Gtme.executeDoc(package)
 
 	if File(package_path..s.."data.lua"):exists() and #df > 0 then
 		printNote("Parsing 'data.lua'")
+
+		directory = function(tab)
+			local count = verifyUnnecessaryArguments(tab, {"name", "summary", "source", "reference"})
+			doc_report.error_data = doc_report.error_data + count
+
+			if not tab.file then tab.file = "?" end
+			if type(tab.file) == "string" then tab.file = {tab.file} end
+
+			local mverify = {
+				{"mandatoryTableArgument", "name",      "string"},
+				{"mandatoryTableArgument", "summary",   "string"},
+				{"mandatoryTableArgument", "source",    "string"},
+				{"optionalTableArgument",  "reference", "string"}
+			}
+
+			-- it is necessary to implement this way in order to get the line number of the error
+			for i = 1, #mverify do
+				local func = "return function(tab) "..mverify[i][1].."(tab, \""..mverify[i][2].."\", \""..mverify[i][3].."\") end"
+
+				xpcall(function() load(func)()(tab) end, function(err)
+					doc_report.error_data = doc_report.error_data + 1
+					printError(err)
+				end)
+			end
+
+			tab.title = tab.name
+			tab.extensions = {}
+			tab.files = 0
+
+			local dataDir = Directory(package_path..s.."data")
+
+			if not Directory(dataDir..tab.name):exists() then
+				printError("Documented directory '"..dataDir..tab.name.."' does not exist.")
+				doc_report.error_data = doc_report.error_data + 1
+				return
+			end
+
+			extensions = {}
+			forEachFile(dataDir..tab.name, function(file)
+				tab.files = tab.files + 1
+
+				extensions[file:extension()] = true
+			end)
+
+			forEachOrderedElement(extensions, function(idx)
+				table.insert(tab.extensions, idx)
+			end)
+
+			tab.extensions = table.concat(tab.extensions, ", ")
+
+			if tab.summary then
+				tab.shortsummary = string.match(tab.summary, "(.-%.)")
+
+				if not string.endswith(tab.summary, "%.") then
+					printError("In '"..tab.name.."', 'summary' should end with '.'")
+					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
+				end
+			end
+
+			table.insert(mdirectory, tab)
+		end
+
 		data = function(tab)
 			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "separator", "reference", "title"})
 			doc_report.error_data = doc_report.error_data + count
@@ -545,6 +608,7 @@ function _Gtme.executeDoc(package)
 						printError("Data file '"..mvalue.."' is documented more than once.")
 						doc_report.error_data = doc_report.error_data + 1
 					end
+
 					filesdocumented[mvalue] = 0
 				end)
 			end
@@ -1070,7 +1134,7 @@ function _Gtme.executeDoc(package)
 		printNote("Package '"..package.."' has no fonts")
 	end
 
-	local result = luadocMain(package_path, lua_files, example_files, package, mdata, mfont, doc_report)
+	local result = luadocMain(package_path, lua_files, example_files, package, mdata, mdirectory, mfont, doc_report)
 
 	if Directory(package_path..s.."font"):exists() then
 		local cmd = "cp "..package_path..s.."font"..s.."* "..package_path..s.."doc"..s.."files"

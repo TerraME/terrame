@@ -61,6 +61,33 @@
 						</table>
 					<%end%>
 
+					<%local function buildDirectory(mdata)%>
+						<dl class="function">
+							<%for _, data in ipairs(mdata) do%>
+								<dt><h2 id = <%=data.name%>><%=data.title%></h2></dt>
+								<%= httpLink(data.summary)%>
+								<ul><span class="arg_data">
+								<%if data.files == 1 then%>
+									<li><b>File: </b>1
+								<% else %>
+									<li><b>Files: </b><%=data.files%>
+								<% end %>
+
+								<li><b>Extensions: </b><%=data.extensions%>
+
+								<%if data.source then%>
+									<li><b>Source: </b><%= httpLink(data.source)%></li>
+								<%end%>
+
+								<%if data.reference then%>
+									<li><b>Reference: </b><%=data.reference%></li>
+								<%end%>
+
+								</ul></dd>
+							<%end%>
+						</dl>
+					<%end%>
+
 					<%local function buildAttributes(mdata, borderTop)%>
 						<%if type(borderTop) == "number" then%>
 							<%borderTop = "border-top: "..borderTop.."px"%>
@@ -195,8 +222,18 @@
 					<%if #doc.dataFiles > 0 then%>
 						<h1>Data</h1>
 						<%buildIndex(doc.dataFiles)%>
+					<%end%>
+					<%if #doc.mdirectory > 0 then%>
+						<h1>Directory</h1>
+						<%buildIndex(doc.mdirectory)%>
+					<%end%>
+					<%if #doc.dataFiles > 0 then%>
 						<%buildAttributes(doc.dataFiles)%>
 					<%end%>
+					<%if #doc.mdirectory > 0 then%>
+						<%buildDirectory(doc.mdirectory)%>
+					<%end%>
+
 					<!-- /data -->
 				</div>
 				<!-- id="content" -->
