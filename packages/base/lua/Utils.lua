@@ -24,8 +24,6 @@
 
 -- @header Some basic and useful functions for modeling.
 
-local observers
-
 local deadObserverMetaTable_ = {__index = function(self, idx)
 	if idx == "type_" then return "<DestroyedObserver>" end
 	if idx == "update" then return function() end end
@@ -53,6 +51,7 @@ function clean()
 		end
 		setmetatable(obs, deadObserverMetaTable_)
 	end)
+
 	_Gtme.createdObservers = {}
 	cpp_restartobservercounter()
 end
@@ -223,57 +222,6 @@ function delay(delay_s)
 
 	local time_to = os.time() + delay_s
 	while os.time() <= time_to do end
-end
-
---- Disable all graphics. If one create a Chart, Map, or any other object that
--- has a graphical interface, it will not be shown. Because of that, it will
--- not be possible to save the output from these objects.
--- @see Utils:enableGraphics
--- @usage -- DONTRUN
--- disableGraphics()
-function disableGraphics()
-	observers = {
-		Chart = Chart,
-		Map = Map,
-		Clock = Clock,
-		TextScreen = TextScreen,
-		VisualTable = VisualTable
-	}
-
-	local setConstructor = function(mtype)
-		local indexFunction = function(_, func)
-			if func == "type_" then return mtype end
-			if func == "parent" then return nil end
-			if func == "update" then return function() end end
-
-			customError("It is not possible to call '"..func.."' with graphics disabled.")
-		end
-
-		local constructor = function(attrTab)
-			setmetatable(attrTab, {__index = indexFunction})
-			return attrTab
-		end
-
-		rawset(_G, mtype, constructor)
-	end
-
-	forEachElement(observers, function(idx)
-		setConstructor(idx)
-	end)
-end
-
---- Enable all graphics. This function is useful to restore
--- TerraME status after calling Utils:disableGraphics().
--- @usage -- DONTRUN
--- enableGraphics()
-function enableGraphics()
-	if observers == nil then return end
-
-	rawset(_G, "Chart", observers.Chart)
-	rawset(_G, "Map", observers.Map)
-	rawset(_G, "Clock", observers.Clock)
-	rawset(_G, "TextScreen", observers.TextScreen)
-	rawset(_G, "VisualTable", observers.VisualTable)
 end
 
 --- Convert the time in seconds to a more readable value. It returns a string in the format
@@ -720,8 +668,8 @@ end
 -- @arg cell A Cell.
 -- @arg name (Optional) A string with the name of the Neighborhood to be traversed.
 -- The default value is "1".
--- @arg _sof_ A user-defined function that takes three arguments: the Cell itself, the neighbor
--- Cell, and the connection weight. If some call to it returns false, forEachNeighbor() stops
+-- @arg _sof_ A user-defined function that takes three arguments: the neighbor
+-- Cell, the connection weight, and the Cell itself. If some call to it returns false, forEachNeighbor() stops
 -- and does not process any other neighbor. In the case where the second argument is missing,
 -- this function becomes the second argument.
 -- @usage cs = CellularSpace{
@@ -730,8 +678,9 @@ end
 -- }
 --
 -- cs:createNeighborhood()
+-- cell = cs:sample()
 --
--- forEachNeighbor(cs:sample(), function(cell, neighbor)
+-- forEachNeighbor(cell, function(neighbor)
 --     if neighbor.deforestation > 0.9 then
 --         cell.deforestation = cell.deforestation * 1.01
 --     end
@@ -743,7 +692,7 @@ end
 --     self = true
 -- }
 --
--- forEachNeighbor(cs:sample(), "vonneumann", function(cell, neighbor)
+-- forEachNeighbor(cell, "vonneumann", function(neighbor)
 --     if cell.deforestation <= neighbor.deforestation then
 --         cell.deforestation = neighbor.deforestation
 --     end
@@ -776,7 +725,7 @@ function forEachNeighbor(cell, name, _sof_)
 	while not neighborhood.cObj_:isLast() do
 		local neigh = neighborhood.cObj_:getNeighbor()
 		local weight = neighborhood.cObj_:getWeight()
-		if _sof_(cell, neigh, weight) == false then return false end
+		if _sof_(neigh, weight, cell) == false then return false end
 		neighborhood.cObj_:next()
 	end
 
@@ -821,7 +770,7 @@ function forEachNeighborAgent(agent, _sof_)
 
 	local cell = agent:getCell()
 
-	forEachNeighbor(cell, function(_, neigh)
+	forEachNeighbor(cell, function(neigh)
 		forEachAgent(neigh, function(ag)
 			if _sof_(ag) == false then return false end
 		end)

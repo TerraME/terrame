@@ -3,7 +3,7 @@ File 'foo.lua' already exists in the tests
 Verifying documentation of Models
 Verifying data files
 Creating 'data.lua'
-Directory 'directory' will be ignored
+Adding sketch for directory 'directory'
 Adding sketch for data file 'data.txt'
 Adding sketch for data file 'mycsv.csv'
 Verifying font files
@@ -12,6 +12,6 @@ Package 'nodatadotlua' does not have a font directory
 Sketch report for package 'nodatadotlua':
 No new test file was necessary.
 All Models are already documented.
-2 sketches for data files were created in 'data.lua'.
+3 sketches for data files were created in 'data.lua'.
 All font files are already documented.
-Summing up, 2 sketches were created. Please fill them.
+Summing up, 3 sketches were created. Please fill them.

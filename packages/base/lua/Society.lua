@@ -58,7 +58,7 @@ end
 local function getSocialNetworkByNeighbor(_, data)
 	return function(agent)
 		local rs = SocialNetwork()
-		forEachNeighbor(agent:getCell(data.placement), data.neighborhood, function(_, neigh)
+		forEachNeighbor(agent:getCell(data.placement), data.neighborhood, function(neigh)
 			forEachAgent(neigh, function(agentwithin)
 				rs:add(agentwithin, 1)
 			end)

@@ -447,11 +447,11 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, function(c, neigh, weight)
-				unitTest:assert(neigh.x >= (c.x - 1))
-				unitTest:assert(neigh.x <= (c.x + 1))
-				unitTest:assert(neigh.y >= (c.y -1))
-				unitTest:assert(neigh.y <= (c.y + 1))
+			forEachNeighbor(cell, function(neigh, weight)
+				unitTest:assert(neigh.x >= (cell.x - 1))
+				unitTest:assert(neigh.x <= (cell.x + 1))
+				unitTest:assert(neigh.y >= (cell.y -1))
+				unitTest:assert(neigh.y <= (cell.y + 1))
 
 				sumWeight = sumWeight + weight
 			end)
@@ -465,13 +465,15 @@ ydim    number [20]
 
 		cs:createNeighborhood{name = "neigh2"}
 
-		forEachNeighbor(cs:sample(), "neigh2", function(c, neigh)
-				unitTest:assert(c ~= neigh)
+		local sample = cs:sample()
 
-				unitTest:assert(neigh.x >= (c.x - 1))
-				unitTest:assert(neigh.x <= (c.x + 1))
-				unitTest:assert(neigh.y >= (c.y - 1))
-				unitTest:assert(neigh.y <= (c.y + 1))
+		forEachNeighbor(sample, "neigh2", function(neigh)
+				unitTest:assert(sample ~= neigh)
+
+				unitTest:assert(neigh.x >= (sample.x - 1))
+				unitTest:assert(neigh.x <= (sample.x + 1))
+				unitTest:assert(neigh.y >= (sample.y - 1))
+				unitTest:assert(neigh.y <= (sample.y + 1))
 			end)
 
 		cs:createNeighborhood{name = "my_neighborhood2", self = true}
@@ -487,11 +489,11 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood2", function(c, neigh)
-				unitTest:assert(neigh.x >= c.x - 1)
-				unitTest:assert(neigh.x <= c.x + 1)
-				unitTest:assert(neigh.y >= c.y - 1)
-				unitTest:assert(neigh.y <= c.y + 1)
+			forEachNeighbor(cell, "my_neighborhood2", function(neigh)
+				unitTest:assert(neigh.x >= cell.x - 1)
+				unitTest:assert(neigh.x <= cell.x + 1)
+				unitTest:assert(neigh.y >= cell.y - 1)
+				unitTest:assert(neigh.y <= cell.y + 1)
 			end)
 		end)
 
@@ -521,9 +523,9 @@ ydim    number [20]
 
 			unitTest:assert(not neighborhood:isNeighbor(cell))
 
-			forEachNeighbor(cell, function(c, neigh)
-				unitTest:assert(verifyWrapX(cs, c, neigh))
-				unitTest:assert(verifyWrapY(cs, c, neigh))
+			forEachNeighbor(cell, function(neigh)
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
 			end)
 		end)
 
@@ -541,9 +543,9 @@ ydim    number [20]
 
 			unitTest:assert(neighborhood:isNeighbor(cell))
 
-			forEachNeighbor(cell, function(c, neigh)
-				unitTest:assert(verifyWrapX(cs, c, neigh))
-				unitTest:assert(verifyWrapY(cs, c, neigh))
+			forEachNeighbor(cell, function(neigh)
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
 			end)
 		end)
 
@@ -563,8 +565,8 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, function(c, neigh, weight)
-				unitTest:assert(neigh.x == c.x or neigh.y == c.y)
+			forEachNeighbor(cell, function(neigh, weight)
+				unitTest:assert(neigh.x == cell.x or neigh.y == cell.y)
 
 				sumWeight = sumWeight + weight
 			end)
@@ -595,10 +597,10 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
-				unitTest:assertEquals((1/neighborhoodSize), weight, 0.00001)
+			forEachNeighbor(cell, "my_neighborhood1", function(neigh, weight)
+				unitTest:assertEquals(1 / neighborhoodSize, weight, 0.00001)
 
-				unitTest:assert(neigh.x == c.x or neigh.y == c.y)
+				unitTest:assert(neigh.x == cell.x or neigh.y == cell.y)
 
 				sumWeight = sumWeight + weight
 			end)
@@ -624,12 +626,12 @@ ydim    number [20]
 
 			local sumWeight = 0
 
-			forEachNeighbor(cell, "my_neighborhood2", function(c, neigh, weight)
-				unitTest:assertEquals((1/neighborhoodSize), weight, 0.00001)
+			forEachNeighbor(cell, "my_neighborhood2", function(neigh, weight)
+				unitTest:assertEquals(1 / neighborhoodSize, weight, 0.00001)
 
-				unitTest:assert(c ~= neigh)
+				unitTest:assert(cell ~= neigh)
 
-				unitTest:assert(neigh.x == c.x or neigh.y == c.y)
+				unitTest:assert(neigh.x == cell.x or neigh.y == cell.y)
 
 				sumWeight = sumWeight + weight
 			end)
@@ -638,9 +640,9 @@ ydim    number [20]
 
 			unitTest:assert(not neighborhood:isNeighbor(cell))
 
-			forEachNeighbor(cell, function(c, neigh)
-				unitTest:assert(verifyWrapX(cs, c, neigh))
-				unitTest:assert(verifyWrapY(cs, c, neigh))
+			forEachNeighbor(cell, function(neigh)
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
 			end)
 		end)
 
@@ -657,10 +659,10 @@ ydim    number [20]
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(5, neighborhoodSize)
 
-			forEachNeighbor(cell, "my_neighborhood3", function(c, neigh, weight)
-				unitTest:assertEquals((1 / neighborhoodSize), weight, 0.00001)
+			forEachNeighbor(cell, "my_neighborhood3", function(neigh, weight)
+				unitTest:assertEquals(1 / neighborhoodSize, weight, 0.00001)
 
-				unitTest:assert(neigh.x == c.x or neigh.y == c.y)
+				unitTest:assert(neigh.x == cell.x or neigh.y == cell.y)
 				unitTest:assert(verifyWrapX(cs, cell, neigh))
 				unitTest:assert(verifyWrapY(cs, cell, neigh))
 			end)
@@ -684,8 +686,8 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, function(c, neigh, weight)
-				unitTest:assert(neigh.x ~= c.x and neigh.y ~= c.y)
+			forEachNeighbor(cell, function(neigh, weight)
+				unitTest:assert(neigh.x ~= cell.x and neigh.y ~= cell.y)
 
 				sumWeight = sumWeight + weight
 			end)
@@ -718,8 +720,8 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, function(c, neigh, weight)
-				unitTest:assert(neigh.x ~= c.x and neigh.y ~= c.y)
+			forEachNeighbor(cell, function(neigh, weight)
+				unitTest:assert(neigh.x ~= cell.x and neigh.y ~= cell.y)
 
 				sumWeight = sumWeight + weight
 
@@ -754,8 +756,8 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, function(c, neigh, weight)
-				unitTest:assert((neigh.x ~= c.x and neigh.y ~= c.y) or (c == neigh))
+			forEachNeighbor(cell, function(neigh, weight)
+				unitTest:assert((neigh.x ~= cell.x and neigh.y ~= cell.y) or (cell == neigh))
 
 				sumWeight = sumWeight + weight
 				unitTest:assert(verifyWrapX(cs, cell, neigh))
@@ -784,11 +786,11 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, function(c, neigh, weight)
-				unitTest:assert(neigh.x >= c.x - 1)
-				unitTest:assert(neigh.x <= c.x + 1)
-				unitTest:assert(neigh.y >= c.y - 1)
-				unitTest:assert(neigh.y <= c.y + 1)
+			forEachNeighbor(cell, function(neigh, weight)
+				unitTest:assert(neigh.x >= cell.x - 1)
+				unitTest:assert(neigh.x <= cell.x + 1)
+				unitTest:assert(neigh.y >= cell.y - 1)
+				unitTest:assert(neigh.y <= cell.y + 1)
 
 				unitTest:assertEquals(1, weight)
 			end)
@@ -812,9 +814,9 @@ ydim    number [20]
 			unitTest:assert(neighborhood:isNeighbor(cell))
 			unitTest:assertEquals(#neighborhood, 25)
 
-			forEachNeighbor(cell, function(c, neigh)
-				unitTest:assert(verifyWrapX(cs, c, neigh))
-				unitTest:assert(verifyWrapY(cs, c, neigh))
+			forEachNeighbor(cell, function(neigh)
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
 			end)
 		end)
 
@@ -838,13 +840,13 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh)
-				unitTest:assert(neigh.x >= c.x - 1)
-				unitTest:assert(neigh.x <= c.x + 1)
-				unitTest:assert(neigh.y >= c.y - 1)
-				unitTest:assert(neigh.y <= c.y + 1)
+			forEachNeighbor(cell, "my_neighborhood1", function(neigh)
+				unitTest:assert(neigh.x >= cell.x - 1)
+				unitTest:assert(neigh.x <= cell.x + 1)
+				unitTest:assert(neigh.y >= cell.y - 1)
+				unitTest:assert(neigh.y <= cell.y + 1)
 
-				unitTest:assert(filterFunction(c, neigh))
+				unitTest:assert(filterFunction(cell, neigh))
 			end)
 		end)
 
@@ -873,14 +875,14 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood2", function(c, neigh, weight)
-				unitTest:assert(neigh.x >= c.x - 1)
-				unitTest:assert(neigh.x <= c.x + 1)
-				unitTest:assert(neigh.y >= c.y - 1)
-				unitTest:assert(neigh.y <= c.y + 1)
-				unitTest:assert(filterFunction(c, neigh))
+			forEachNeighbor(cell, "my_neighborhood2", function(neigh, weight)
+				unitTest:assert(neigh.x >= cell.x - 1)
+				unitTest:assert(neigh.x <= cell.x + 1)
+				unitTest:assert(neigh.y >= cell.y - 1)
+				unitTest:assert(neigh.y <= cell.y + 1)
+				unitTest:assert(filterFunction(cell, neigh))
 
-				unitTest:assertEquals(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
+				unitTest:assertEquals(((neigh.y - cell.y) / (neigh.y + cell.y)), weight, 0.00001)
 			end)
 		end)
 
@@ -908,11 +910,11 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
-				unitTest:assert(neigh.x >= c.x - 2)
-				unitTest:assert(neigh.x <= c.x + 2)
-				unitTest:assert(neigh.y >= c.y - 2)
-				unitTest:assert(neigh.y <= c.y + 2)
+			forEachNeighbor(cell, "my_neighborhood1", function(neigh, weight)
+				unitTest:assert(neigh.x >= cell.x - 2)
+				unitTest:assert(neigh.x <= cell.x + 2)
+				unitTest:assert(neigh.y >= cell.y - 2)
+				unitTest:assert(neigh.y <= cell.y + 2)
 
 				unitTest:assertEquals(1, weight)
 			end)
@@ -941,11 +943,11 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood2", function(c, neigh, weight)
-				unitTest:assert(neigh.x >= c.x - 2)
-				unitTest:assert(neigh.x <= c.x + 2)
-				unitTest:assert(neigh.y >= c.y - 2)
-				unitTest:assert(neigh.y <= c.y + 2)
+			forEachNeighbor(cell, "my_neighborhood2", function(neigh, weight)
+				unitTest:assert(neigh.x >= cell.x - 2)
+				unitTest:assert(neigh.x <= cell.x + 2)
+				unitTest:assert(neigh.y >= cell.y - 2)
+				unitTest:assert(neigh.y <= cell.y + 2)
 
 				unitTest:assertEquals(1, weight)
 			end)
@@ -979,14 +981,14 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood3", function(c, neigh, weight)
-				unitTest:assert(neigh.x >= c.x - 1)
-				unitTest:assert(neigh.x <= c.x + 1)
-				unitTest:assert(neigh.y >= c.y - 2)
-				unitTest:assert(neigh.y <= c.y + 2)
-				unitTest:assert(neigh.y > c.y)
+			forEachNeighbor(cell, "my_neighborhood3", function(neigh, weight)
+				unitTest:assert(neigh.x >= cell.x - 1)
+				unitTest:assert(neigh.x <= cell.x + 1)
+				unitTest:assert(neigh.y >= cell.y - 2)
+				unitTest:assert(neigh.y <= cell.y + 2)
+				unitTest:assert(neigh.y > cell.y)
 
-				unitTest:assert(filterFunction(c, neigh))
+				unitTest:assert(filterFunction(cell, neigh))
 
 				unitTest:assertEquals(1, weight)
 			end)
@@ -1020,16 +1022,16 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood4", function(c, neigh, weight)
-				unitTest:assert(neigh.x >= c.x - 2)
-				unitTest:assert(neigh.x <= c.x + 2)
-				unitTest:assert(neigh.y >= c.y - 2)
-				unitTest:assert(neigh.y <= c.y + 2)
-				unitTest:assert(neigh.y > c.y)
+			forEachNeighbor(cell, "my_neighborhood4", function(neigh, weight)
+				unitTest:assert(neigh.x >= cell.x - 2)
+				unitTest:assert(neigh.x <= cell.x + 2)
+				unitTest:assert(neigh.y >= cell.y - 2)
+				unitTest:assert(neigh.y <= cell.y + 2)
+				unitTest:assert(neigh.y > cell.y)
 
-				unitTest:assert(filterFunction(c, neigh))
+				unitTest:assert(filterFunction(cell, neigh))
 
-				unitTest:assertEquals(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
+				unitTest:assertEquals(((neigh.y - cell.y) / (neigh.y + cell.y)), weight, 0.00001)
 			end)
 		end)
 
@@ -1059,16 +1061,16 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood5", function(c, neigh, weight)
-				unitTest:assert(neigh.x >= c.x - 1)
-				unitTest:assert(neigh.x <= c.x + 1)
-				unitTest:assert(neigh.y >= c.y - 2)
-				unitTest:assert(neigh.y <= c.y + 2)
-				unitTest:assert(neigh.y > c.y)
+			forEachNeighbor(cell, "my_neighborhood5", function(neigh, weight)
+				unitTest:assert(neigh.x >= cell.x - 1)
+				unitTest:assert(neigh.x <= cell.x + 1)
+				unitTest:assert(neigh.y >= cell.y - 2)
+				unitTest:assert(neigh.y <= cell.y + 2)
+				unitTest:assert(neigh.y > cell.y)
 
-				unitTest:assert(filterFunction(c, neigh))
+				unitTest:assert(filterFunction(cell, neigh))
 
-				unitTest:assertEquals(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
+				unitTest:assertEquals(((neigh.y - cell.y) / (neigh.y + cell.y)), weight, 0.00001)
 			end)
 		end)
 
@@ -1105,13 +1107,13 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood6", function(c, neigh, weight)
-				unitTest:assert(neigh.y >= c.y)
-				unitTest:assert(neigh.x >= c.x - 2)
-				unitTest:assert(neigh.x <= c.x + 2)
+			forEachNeighbor(cell, "my_neighborhood6", function(neigh, weight)
+				unitTest:assert(neigh.y >= cell.y)
+				unitTest:assert(neigh.x >= cell.x - 2)
+				unitTest:assert(neigh.x <= cell.x + 2)
 
-				unitTest:assert(filterFunction(c, neigh))
-				unitTest:assertEquals(weightFunction(c, neigh), weight, 0.00001)
+				unitTest:assert(filterFunction(cell, neigh))
+				unitTest:assertEquals(weightFunction(cell, neigh), weight, 0.00001)
 			end)
 		end)
 
@@ -1134,14 +1136,14 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood6", function(c, neigh, weight)
-				unitTest:assert(neigh.y > c.y)
-				unitTest:assert(neigh.x >= c.x - 2)
-				unitTest:assert(neigh.x <= c.x + 2)
+			forEachNeighbor(cell, "my_neighborhood6", function(neigh, weight)
+				unitTest:assert(neigh.y > cell.y)
+				unitTest:assert(neigh.x >= cell.x - 2)
+				unitTest:assert(neigh.x <= cell.x + 2)
 
-				unitTest:assert(filterFunction(c, neigh))
+				unitTest:assert(filterFunction(cell, neigh))
 
-				unitTest:assertEquals(weightFunction(c, neigh), weight, 0.00001)
+				unitTest:assertEquals(weightFunction(cell, neigh), weight, 0.00001)
 			end)
 		end)
 
@@ -1172,15 +1174,14 @@ ydim    number [20]
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(4, neighborhoodSize)
 
-			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood1", function(neigh, weight)
 				unitTest:assertEquals(neigh.x, cell.x)
 				unitTest:assert(neigh.y ~= cell.y)
 
-				unitTest:assert(filterFunction(c, neigh))
+				unitTest:assert(filterFunction(cell, neigh))
 
 				unitTest:assertEquals(1, weight)
-			end
-			)
+			end)
 		end)
 
 		weightFunction = function(cell, neighbor)
@@ -1204,13 +1205,13 @@ ydim    number [20]
 
 			local sumWeight = 0
 
-			forEachNeighbor(cell, "my_neighborhood2", function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood2", function(neigh, weight)
 				unitTest:assertEquals(neigh.x, cell.x)
 				unitTest:assert(neigh.y ~= cell.y)
 
-				unitTest:assert(filterFunction(c, neigh))
+				unitTest:assert(filterFunction(cell, neigh))
 
-				unitTest:assertEquals(math.abs(neigh.y - c.y), weight)
+				unitTest:assertEquals(math.abs(neigh.y - cell.y), weight)
 
 				sumWeight = sumWeight + weight
 			end)
@@ -1240,10 +1241,10 @@ ydim    number [20]
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(1, neighborhoodSize)
 
-			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
-				unitTest:assertEquals(neigh.x, c.x)
-				unitTest:assertEquals(neigh.y, c.y)
-				unitTest:assert(neigh ~= c)
+			forEachNeighbor(cell, "my_neighborhood1", function(neigh, weight)
+				unitTest:assertEquals(neigh.x, cell.x)
+				unitTest:assertEquals(neigh.y, cell.y)
+				unitTest:assert(neigh ~= cell)
 
 				unitTest:assertEquals(1, weight)
 			end)
@@ -1255,10 +1256,10 @@ ydim    number [20]
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(1, neighborhoodSize)
 
-			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
-				unitTest:assertEquals(neigh.x, c.x)
-				unitTest:assertEquals(neigh.y, c.y)
-				unitTest:assert(neigh ~= c)
+			forEachNeighbor(cell, "my_neighborhood1", function(neigh, weight)
+				unitTest:assertEquals(neigh.x, cell.x)
+				unitTest:assertEquals(neigh.y, cell.y)
+				unitTest:assert(neigh ~= cell)
 
 				unitTest:assertEquals(1, weight)
 			end)
@@ -1286,11 +1287,11 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, function(c, neigh, weight)
-				unitTest:assert(neigh.x >= (c.x - 1))
-				unitTest:assert(neigh.x <= (c.x + 1))
-				unitTest:assert(neigh.y >= (c.y -1))
-				unitTest:assert(neigh.y <= (c.y + 1))
+			forEachNeighbor(cell, function(neigh, weight)
+				unitTest:assert(neigh.x >= (cell.x - 1))
+				unitTest:assert(neigh.x <= (cell.x + 1))
+				unitTest:assert(neigh.y >= (cell.y -1))
+				unitTest:assert(neigh.y <= (cell.y + 1))
 
 				sumWeight = sumWeight + weight
 			end)
@@ -1320,8 +1321,8 @@ ydim    number [20]
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, function(c, neigh, weight)
-				unitTest:assert(neigh.x == c.x or neigh.y == c.y)
+			forEachNeighbor(cell, function(neigh, weight)
+				unitTest:assert(neigh.x == cell.x or neigh.y == cell.y)
 
 				sumWeight = sumWeight + weight
 			end)
