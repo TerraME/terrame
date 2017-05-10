@@ -668,8 +668,8 @@ end
 -- @arg cell A Cell.
 -- @arg name (Optional) A string with the name of the Neighborhood to be traversed.
 -- The default value is "1".
--- @arg _sof_ A user-defined function that takes three arguments: the Cell itself, the neighbor
--- Cell, and the connection weight. If some call to it returns false, forEachNeighbor() stops
+-- @arg _sof_ A user-defined function that takes three arguments: the neighbor
+-- Cell, the connection weight, and the Cell itself. If some call to it returns false, forEachNeighbor() stops
 -- and does not process any other neighbor. In the case where the second argument is missing,
 -- this function becomes the second argument.
 -- @usage cs = CellularSpace{
@@ -678,8 +678,9 @@ end
 -- }
 --
 -- cs:createNeighborhood()
+-- cell = cs:sample()
 --
--- forEachNeighbor(cs:sample(), function(cell, neighbor)
+-- forEachNeighbor(cell, function(neighbor)
 --     if neighbor.deforestation > 0.9 then
 --         cell.deforestation = cell.deforestation * 1.01
 --     end
@@ -691,7 +692,7 @@ end
 --     self = true
 -- }
 --
--- forEachNeighbor(cs:sample(), "vonneumann", function(cell, neighbor)
+-- forEachNeighbor(cell, "vonneumann", function(neighbor)
 --     if cell.deforestation <= neighbor.deforestation then
 --         cell.deforestation = neighbor.deforestation
 --     end
@@ -724,7 +725,7 @@ function forEachNeighbor(cell, name, _sof_)
 	while not neighborhood.cObj_:isLast() do
 		local neigh = neighborhood.cObj_:getNeighbor()
 		local weight = neighborhood.cObj_:getWeight()
-		if _sof_(cell, neigh, weight) == false then return false end
+		if _sof_(neigh, weight, cell) == false then return false end
 		neighborhood.cObj_:next()
 	end
 
@@ -769,7 +770,7 @@ function forEachNeighborAgent(agent, _sof_)
 
 	local cell = agent:getCell()
 
-	forEachNeighbor(cell, function(_, neigh)
+	forEachNeighbor(cell, function(neigh)
 		forEachAgent(neigh, function(ag)
 			if _sof_(ag) == false then return false end
 		end)
