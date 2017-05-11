@@ -93,6 +93,27 @@ return{
 			Random{male = 0.4, female = 0.5}
 		end
 		unitTest:assertError(error_func, "Sum should be one, got 0.9.")
+
+		error_func = function()
+			Random{mean = 1, sd = 0.5}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("mean", 1))
+
+		error_func = function()
+			Random{mean = 0.5, sd = 1}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("sd", 1))
+
+		error_func = function()
+			Random{mean = 0.5, sd = 0.5, abc = 2}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("abc"))
+
+		error_func = function()
+			Random{lambda = 1}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("lambda", 1))
+
 	end,
 	integer = function(unitTest)
 		local randomObj = Random{}

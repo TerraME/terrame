@@ -307,6 +307,102 @@ sample   function
 		unitTest:assertEquals(cat:sample(), "poor")
 		unitTest:assertEquals(cat:sample(), "middle")
 		unitTest:assertEquals(cat:sample(), "poor")
+
+		local normal = Random{mean = 0, sd = 2}
+		sum = 0
+
+		unitTest:assertType(normal:sample(), "number")
+
+		for _ = 1, 1000 do
+			local sample = normal:sample()
+			sum = sum + sample
+			unitTest:assert(sample <= 7)
+			unitTest:assert(sample >= -7)
+
+			if sample > 7 or sample < -7 then print(sample) end
+		end
+
+		unitTest:assertEquals(sum / 1000, 0, 0.02)
+
+		local lognormal = Random{distrib = "lognormal", mean = 0, sd = 2}
+		sum = 0
+
+		unitTest:assertType(lognormal:sample(), "number")
+
+		for _ = 1, 1000 do
+			local sample = lognormal:sample()
+			sum = sum + sample
+			unitTest:assert(sample <= 280)
+			unitTest:assert(sample >= 0)
+
+			if sample > 280 or sample < 0 then print(sample) end
+		end
+
+		unitTest:assertEquals(sum / 1000, 5.26, 0.04)
+
+		local poisson = Random{lambda = 4}
+		sum = 0
+
+		unitTest:assertType(poisson:sample(), "number")
+
+		for _ = 1, 5000 do
+			local sample = poisson:sample()
+			sum = sum + sample
+			unitTest:assert(sample <= 15)
+			unitTest:assert(sample >= 0)
+
+			if sample > 15 or sample < 0 then print(sample) end
+		end
+
+		unitTest:assertEquals(sum / 5000, 4, 0.02)
+
+		local exponential = Random{distrib = "exponential"}
+		sum = 0
+
+		unitTest:assertType(exponential:sample(), "number")
+
+		for _ = 1, 5000 do
+			local sample = exponential:sample()
+			sum = sum + sample
+			unitTest:assert(sample <= 15)
+			unitTest:assert(sample >= 0)
+
+			if sample > 15 or sample < 0 then print(sample) end
+		end
+
+		unitTest:assertEquals(sum / 5000, 1, 0.02)
+
+		local logistic = Random{scale = 2}
+		sum = 0
+
+		unitTest:assertType(logistic:sample(), "number")
+
+		for _ = 1, 5000 do
+			local sample = logistic:sample()
+			sum = sum + sample
+			unitTest:assert(sample <= 17)
+			unitTest:assert(sample >= -15)
+
+			if sample > 17 or sample < -15 then print(sample) end
+		end
+
+		unitTest:assertEquals(sum / 5000, 1, 0.04)
+
+		local power = Random{min = 0, max = 10, lambda = 2}
+		sum = 0
+
+		unitTest:assertType(power:sample(), "number")
+
+		for _ = 1, 5000 do
+			local sample = power:sample()
+			sum = sum + sample
+			unitTest:assert(sample <= 10)
+			unitTest:assert(sample >= 0)
+
+			if sample > 10 or sample < 0 then print(sample) end
+		end
+
+		unitTest:assertEquals(sum / 5000, 7.5, 0.02)
 	end
 }
 
