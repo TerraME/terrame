@@ -323,7 +323,7 @@ sample   function
 		end
 
 		unitTest:assertEquals(sum / 1000, 0, 0.02)
-		
+
 		local lognormal = Random{distrib = "lognormal", mean = 0, sd = 2}
 		sum = 0
 
@@ -339,7 +339,7 @@ sample   function
 		end
 
 		unitTest:assertEquals(sum / 1000, 5.26, 0.04)
-	
+
 		local poisson = Random{lambda = 4}
 		sum = 0
 
@@ -355,7 +355,7 @@ sample   function
 		end
 
 		unitTest:assertEquals(sum / 5000, 4, 0.02)
-	
+
 		local exponential = Random{distrib = "exponential"}
 		sum = 0
 

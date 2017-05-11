@@ -297,12 +297,12 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- & ... & seed \
 -- "exponential" & Generate exponentialy distributed pseudo random numbers from a uniformly
 -- distributed number in the range [0,1]. For this purpose, it uses the Inverse Transform Samplig
--- method & & lambda, seed \ 
+-- method & & lambda, seed \
 -- "logistic" & Generate logistic distributed pseudo random numbers from a uniformly distributed
 -- number in the range [0,1].  For this purpose, it uses the Inverse Transform Samplig method.
 -- & & mean, scale, seed \
 -- "lognormal" & Generate log-normally distributed pseudo random numbers from a normaly
--- distributed number in the range [0,1] using the Box-Muller (1978) method. & & mean, sd, seed \ 
+-- distributed number in the range [0,1] using the Box-Muller (1978) method. & & mean, sd, seed \
 -- "none" & No distribution. This is useful only when the modeler wants only to set
 -- seed. & & seed \
 -- "normal" & Generate Normally (Gaussian) distributed pseudo random numbers from a uniformly
@@ -316,7 +316,7 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- "step" & A discrete uniform distribution whose values belong to a given [min, max] interval
 -- using step values.
 -- & max, min, step & seed \
--- @arg data.lambda Some distributions use the term lambda instead of mean. This number 
+-- @arg data.lambda Some distributions use the term lambda instead of mean. This number
 -- representing the mean for such distributions. The default value is 1.
 -- @arg data.max A number indicating the maximum value to be randomly selected.
 -- @arg data.mean A number indicating the mean value. The default value is 1.
