@@ -22,6 +22,72 @@
 --
 -------------------------------------------------------------------------------------------
 
+local function poisson(generator, mean)
+	return function()
+		local x = 0
+		local p = math.exp(-mean)
+		local s = p
+		local r = generator:number()
+		repeat
+			x = x + 1
+			p = p * mean / x
+			s = s + p
+		until r <= s
+
+		return x
+	end
+end
+
+local function normal(generator, mean, std)
+	local pitimes2 = 2 * math.pi
+	local exp = math.exp(1)
+
+	return function()
+		local r1 = generator:number()
+		local r2 = generator:number()
+
+		if r1 == 0 then r1 = 1e-10 end
+		if r2 == 0 then r1 = 1e-10 end
+
+		local beta = math.sqrt( -2 * math.log(r1, exp))
+		return mean + std * (beta * math.sin(pitimes2 * r2))
+	end
+end
+
+local function lognormal(generator, mean, std)
+	local mnormal = normal(generator, mean, std)
+
+	return function()
+		return math.exp(mnormal())
+	end
+end
+
+local function exponential(generator, lambda)
+	local exp = math.exp(1)
+
+	return function()
+		local rand = generator:number()
+		if rand == 0 then rand = 1e-10 end
+		return -math.log(rand, exp) / lambda
+	end
+end
+
+local function power(generator, lambda, low, high)
+	lambda = lambda + 1
+
+	return function()
+		local rand = generator:number()
+		return math.pow((high ^ lambda - low ^ lambda) * rand + low ^ lambda, 1 / lambda)
+	end
+end
+
+local function logistic(generator, mean, scale)
+	return function()
+		local u = generator:number()
+		return mean - scale * math.log((1 / u) - 1)
+	end
+end
+
 local function bernoulli(generator, p)
 	return function()
 		return generator:number() < p
@@ -167,6 +233,7 @@ Random_ = {
 					max = 0
 				end
 			end
+
 			return (max - min) * (xorshift128plus(self, 0, 1000000) / 1000000) + min
 		end
 	end,
@@ -203,7 +270,19 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- It uses Xorshift generators are among the fastest non-cryptographic random number generators.
 -- Xorshift random number generators are a class of pseudorandom number generators
 -- that was discovered by George Marsaglia (http://www.jstatsoft.org/v08/i14/paper).
--- Every instance of Random along a simulation has the same seed.
+-- All the instances of Random along a given simulation have the same seed. The distribution
+-- can be inferred according to the selected arguments, as shown below.
+-- @tabular NONE
+-- Arguments & Default distribution \
+-- p & "bernoulli" \
+-- lambda, min, max & "power" \
+-- lambda & "poisson" \
+-- mean (or) sd & "normal" \
+-- scale & "logistic" \
+-- min, max, step & "step" \
+-- min, max  & "continuous" \
+-- (set of values) & "discrete" \
+-- (set of named values) & "categorical"
 -- @arg data.distrib A string representing the statistical distribution to be used. See the
 -- table below.
 -- @tabular distrib
@@ -216,12 +295,31 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- interval. & max, min & seed \
 -- "discrete" & A discrete uniform distribition. Elements are described as a vector.
 -- & ... & seed \
+-- "exponential" & Generate exponentialy distributed pseudo random numbers from a uniformly
+-- distributed number in the range [0,1]. For this purpose, it uses the Inverse Transform Samplig
+-- method & & lambda, seed \ 
+-- "logistic" & Generate logistic distributed pseudo random numbers from a uniformly distributed
+-- number in the range [0,1].  For this purpose, it uses the Inverse Transform Samplig method.
+-- & & mean, scale, seed \
+-- "lognormal" & Generate log-normally distributed pseudo random numbers from a normaly
+-- distributed number in the range [0,1] using the Box-Muller (1978) method. & & mean, sd, seed \ 
 -- "none" & No distribution. This is useful only when the modeler wants only to set
 -- seed. & & seed \
+-- "normal" & Generate Normally (Gaussian) distributed pseudo random numbers from a uniformly
+-- distributed number in the range [0,1] using the Box-Muller (1978) method . & & mean, sd, seed \
+-- "poisson" & Generate Poisson distributed pseudo random numbers from a uniformly distributed
+-- number in the range [0,1]. For this purpose, it uses the Inverse Transform Samplig method.
+-- & & lambda, seed \
+-- "power" & Generate Power Law distributed pseudo random numbers from a Uniformly distributed
+-- number in the range [0,1]. For this purpose, it uses the Inverse Transform Samplig method. &
+-- min, max & lambda, seed \
 -- "step" & A discrete uniform distribution whose values belong to a given [min, max] interval
 -- using step values.
 -- & max, min, step & seed \
+-- @arg data.lambda Some distributions use the term lambda instead of mean. This number 
+-- representing the mean for such distributions. The default value is 1.
 -- @arg data.max A number indicating the maximum value to be randomly selected.
+-- @arg data.mean A number indicating the mean value. The default value is 1.
 -- @arg data.min A number indicating the minimum value to be randomly selected.
 -- @arg data.p A number between 0 and 1 representing a probability.
 -- @arg data.seed A number to generate the pseudo-random numbers.
@@ -231,6 +329,8 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- despite using random numbers.
 -- It is a good programming practice to set
 -- the seed in the beginning of the simulation and only once.
+-- @arg data.scale The scale value proportional the standard deviation. The default value is 1.
+-- @arg data.sd A number indicating the standard deviation. The default value is 1.
 -- @arg attrTab.step The step where possible values are computed from minimum to maximum.
 -- When using this argument, min and max become mandatory.
 -- @arg attrTab.... Other values to build a categorical or discrete uniform distribution.
@@ -258,7 +358,8 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 --
 -- person = Agent{
 --     gender = Random{male = 0.49, female = 0.51},
---     --age = Random{mean = 20, sd = 2} TODO
+--     age = Random{mean = 20, sd = 2},
+--     contacts = Random{lambda = 5}
 -- }
 --
 -- soc = Society{
@@ -277,13 +378,17 @@ function Random(data)
 	if not data.distrib then
 		if data.p ~= nil then
 			data.distrib = "bernoulli"
-		--elseif data.lambda ~= nil then
-		--	data.distrib = "poisson"
-		--elseif data.mean ~= nil or data.sd ~= nil then
-		--	data.distrib = "normal"
+		elseif data.lambda and data.min and data.max then
+			data.distrib = "power"
+		elseif data.lambda ~= nil then
+			data.distrib = "poisson"
+		elseif data.mean ~= nil or data.sd ~= nil then
+			data.distrib = "normal"
+		elseif data.scale ~= nil then
+			data.distrib = "logistic"
 		elseif data.min ~= nil and data.max ~= nil and data.step ~= nil then
 			data.distrib = "step"
-		elseif data.min ~= nil or data.max ~= nil then
+		elseif data.min ~= nil and data.max ~= nil then
 			data.distrib = "continuous"
 		elseif #data > 0 then
 			data.distrib = "discrete"
@@ -362,7 +467,55 @@ function Random(data)
 			data.seed = seed
 			data.values = values
 		end,
+		exponential = function()
+			defaultTableValue(data, "lambda", 1)
+
+			verifyUnnecessaryArguments(data, {"distrib", "lambda", "seed"})
+
+			data.sample = exponential(data, data.lambda)
+		end,
+		logistic = function()
+			defaultTableValue(data, "scale", 1)
+			defaultTableValue(data, "mean", 1)
+
+			verifyUnnecessaryArguments(data, {"distrib", "mean", "scale", "seed"})
+
+			data.sample = logistic(data, data.mean, data.scale)
+		end,
+		normal = function()
+			defaultTableValue(data, "mean", 1)
+			defaultTableValue(data, "sd", 1)
+
+			verifyUnnecessaryArguments(data, {"distrib", "mean", "sd", "seed"})
+
+			data.sample = normal(data, data.mean, data.sd)
+		end,
+		lognormal = function()
+			defaultTableValue(data, "mean", 1)
+			defaultTableValue(data, "sd", 1)
+
+			verifyUnnecessaryArguments(data, {"distrib", "mean", "sd", "seed"})
+
+			data.sample = lognormal(data, data.mean, data.sd)
+		end,
 		none = function()
+		end,
+		poisson = function()
+			defaultTableValue(data, "lambda", 1)
+
+			verifyUnnecessaryArguments(data, {"distrib", "lambda", "seed"})
+
+			data.sample = poisson(data, data.lambda)
+		end,
+		power = function()
+			defaultTableValue(data, "lambda", 1)
+			mandatoryTableArgument(data, "min", "number")
+			mandatoryTableArgument(data, "max", "number")
+			verify(data.max > data.min, "Argument 'max' should be greater than 'min'.")
+
+			verifyUnnecessaryArguments(data, {"distrib", "lambda", "min", "max", "seed"})
+
+			data.sample = power(data, data.lambda, data.min, data.max)
 		end
 	}
 
