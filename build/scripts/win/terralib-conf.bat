@@ -30,7 +30,7 @@
 :: Location of the built 3rd-parties.
 :: Checking terralib 3rdparty dir
 if "%_TERRALIB_3RDPARTY_DIR%" == "" (
-  set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\terralib5-3rdparty-msvc-2013-win64
+  set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\libs
 )
 
 :: Location to install TerraLib
@@ -65,6 +65,6 @@ cd %_TERRALIB_OUT_DIR%
 :: Calling CMake
 :: -----------------
 cmake -G "Visual Studio 12 2013 Win64" -C terralib-conf.cmake %_TERRALIB_GIT_DIR%/build/cmake
-pause
+
 :: Building and installing
-cmake --build . --target install --config Release
+cmake --build . --target INSTALL --config Release
