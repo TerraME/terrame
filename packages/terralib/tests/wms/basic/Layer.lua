@@ -26,8 +26,6 @@ return {
 	Layer = function(unitTest)
 		local projName = "layer_wms_basic.tview"
 
-		File(projName):deleteIfExists()
-
 		local proj = Project {
 			file = projName,
 			clean = true

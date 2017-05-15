@@ -83,8 +83,6 @@ return {
 	fill = function(unitTest)
 		local projName = "layer_fill_tif.tview"
 
-		File(projName):deleteIfExists()
-
 		local proj = Project{
 			file = projName,
 			clean = true
@@ -409,8 +407,6 @@ return {
 	bands = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 
-		File(projName):deleteIfExists()
-
 		local proj = Project{
 			file = projName,
 			clean = true
@@ -476,8 +472,6 @@ return {
 	end,
 	nodata = function(unitTest)
 		local projName = "layer_tif_bands.tview"
-
-		File(projName):deleteIfExists()
 
 		local proj = Project{
 			file = projName,

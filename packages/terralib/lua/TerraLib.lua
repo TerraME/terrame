@@ -1085,7 +1085,7 @@ local function createInvalidNamesErrorMsg(invalidNames)
 	return errorMsg
 end
 
-local function createDataSetFromLayer(fromLayer,  toSetName, toSet, attrs)
+local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 	local errorMsg
 	do
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())

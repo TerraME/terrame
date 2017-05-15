@@ -24,11 +24,7 @@
 
 return {
 	Layer = function(unitTest)
-		local projName = "layer_postgis_basic.tview" -- TODO: (#1442)
-
-		if File(projName):exists() then
-			File(projName):delete()
-		end
+		local projName = "layer_postgis_basic.tview"
 
 		local proj1 = Project{
 			file = projName,
@@ -330,8 +326,6 @@ return {
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_pgis.tview"
-
-		File(projName):deleteIfExists()
 
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
@@ -948,8 +942,6 @@ return {
 		-- TIFF
 		projName = "layer_fill_tif.tview"
 
-		File(projName):deleteIfExists()
-
 		proj = Project{
 			file = projName,
 			clean = true
@@ -1323,10 +1315,6 @@ return {
 	export = function(unitTest)
 		local projName = "layer_postgis_basic.tview"
 
-		if File(projName):exists() then -- TODO: (#1442)
-			File(projName):delete()
-		end
-
 		local proj = Project {
 			file = projName,
 			clean = true
@@ -1441,10 +1429,6 @@ return {
 	end,
 	simplify = function(unitTest)
 		local projName = "layer_postgis_basic.tview"
-
-		if File(projName):exists() then -- TODO: (#1442)
-			File(projName):delete()
-		end
 
 		local proj = Project {
 			file = projName,
