@@ -43,6 +43,9 @@ metaTableProject_ = {
 -- of the file.
 -- @arg data.author An optional string with the name of the Project's author.
 -- @arg data.title An optional string with the title of the Project.
+-- @arg data.directory An optional Directory where shapefile(s) and/or tiff file(s) are stored. When
+-- using this argument, all such files will be added to the project using the respective file names without
+-- extension as layer names. This argument can also be a string that will be converted to a Directory.
 -- @arg data.clean An optional boolean value indicating whether the argument file should be cleaned
 -- if it already exists.
 -- The default value is false.
