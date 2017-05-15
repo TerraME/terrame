@@ -125,8 +125,8 @@ return {
 		unitTest:assertEquals(getn(clSet), 160)
 		-- // NO MASK TEST
 
-		unitTest:assertFile(geojson1, 45)
-		unitTest:assertFile(geojson2, 45)
+		unitTest:assertFile(geojson1)
+		unitTest:assertFile(geojson2)
 		proj.file:delete()
 	end,
 	getOGRByFilePath = function(unitTest)

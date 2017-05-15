@@ -25,7 +25,7 @@
 :: -----------------
 :: Location of the builded 3rd-parties.
 if "%_TERRALIB_3RDPARTY_DIR%" == "" (
-  set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\terralib5-3rdparty-msvc-2013-win64
+  set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\libs
 )
 
 :: Checking terrame depends dir or setting default
@@ -90,4 +90,4 @@ cd %_TERRAME_OUT_DIR%
 cmake -G "Visual Studio 12 2013 Win64" -C terrame-conf.cmake %_TERRAME_GIT_DIR%/build/cmake
 
 :: Building and installing terrame
-cmake --build . --target install --config Release
+cmake --build . --target INSTALL --config Release

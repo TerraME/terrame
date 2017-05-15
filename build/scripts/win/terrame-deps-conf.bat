@@ -19,26 +19,5 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-set LUA_PATH=D:\terralib\3rdparty\terralib5-3rdparty-msvc-2013-win64
-set Qt5_DIR=C:\Qt\5.5\msvc2013_64
-
-mkdir %CD%\build
-cd %CD%\build
-
-mkdir %CD%\libqtlua-build
-cd %CD%\libqtlua-build
-cmake -G "Visual Studio 12 2013 Win64" -DCMAKE_INSTALL_PREFIX="../../install" -DCMAKE_PREFIX_PATH="%Qt5_DIR%/bin;%Qt5_DIR%/lib/cmake;" -DLUA_LIBRARY="%LUA_PATH%/lib/lua.lib" -DLUA_INCLUDE_DIR="%LUA_PATH%/include/lua" ..\..\libqtlua
-
-cd ..
-
-mkdir %CD%\qtluae-build
-cd %CD%\qtluae-build
-cmake -G "Visual Studio 12 2013 Win64" -DCMAKE_INSTALL_PREFIX="../../install"  -DCMAKE_PREFIX_PATH="%Qt5_DIR%/bin;%Qt5_DIR%/lib/cmake;" -DLUA_LIBRARY="%LUA_PATH%/lib/lua.lib" -DLUA_INCLUDE_DIR="%LUA_PATH%/include/lua" -DQTLUA_INCLUDE_DIR="../../install/include" -DQTLUA_LIBRARY="../../install/lib/qtlua.lib" ..\..\qtluae\build\cmake
-
-cd ..
-cd ..
-
 mkdir %CD%\install\luacheck\src
 xcopy luacheck\src %CD%\install\luacheck\src /S /E
-
-pause
