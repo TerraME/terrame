@@ -23,7 +23,7 @@ local init = function(model)
             if neighbors == 0 then
                 cell.water = cell.water + cell.past.water
             else
-                forEachNeighbor(cell, function(_, neigh)
+                forEachNeighbor(cell, function(neigh)
                     neigh.water = neigh.water + cell.past.water / neighbors
                 end)
             end

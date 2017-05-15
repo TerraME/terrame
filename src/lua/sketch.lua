@@ -210,7 +210,7 @@ local function verifyDoc(package, report)
 			end
 
 			if str ~= "" then
-				documentation = documentation.."-- data."..idx.." "..str.."\n"
+				documentation = documentation.."-- @arg data."..idx.." "..str.."\n"
 			end
 		end)
 
@@ -234,19 +234,25 @@ local function verifyData(package, report)
 	end
 
 	local datafiles = {}
+	local directoryfiles = {}
 	local datadotlua = baseDir.."data.lua"
 
 	forEachFile(dataDir, function(file)
 		datafiles[file:name()] = false
 	end)
 
-	if getn(datafiles) == 0 then
+	forEachDirectory(dataDir, function(dir)
+		directoryfiles[dir:name()] = false
+	end)
+
+	if getn(datafiles) == 0 and getn(datadirectories) == 0 then
 		_Gtme.print("Package '"..package.."' has no data")
 		return
 	end
 
 	if File(datadotlua):exists() then
 		local originaldata = data
+		local originaldirectory = directory
 		data = function(mdata)
 			if type(mdata.file) == "string" then
 				datafiles[mdata.file] = true
@@ -257,8 +263,15 @@ local function verifyData(package, report)
 			end
 		end
 
+		directory = function(mdata)
+			if type(mdata.name) == "string" then
+				directoryfiles[mdata.name] = true
+			end
+		end
+
 		_Gtme.getLuaFile(datadotlua)
 		data = originaldata
+		directory = originaldirectory
 	else
 		_Gtme.print("Creating 'data.lua'")
 	end
@@ -276,8 +289,21 @@ local function verifyData(package, report)
 
 	counter = 1
 
-	forEachDirectory(dataDir, function(dir)
-		_Gtme.print("Directory '"..dir:name().."' will be ignored")
+	forEachOrderedElement(directoryfiles, function(idx, value)
+		if value then
+			_Gtme.print("Directory '"..idx.."' is already documented in 'data.lua'")
+		else
+			_Gtme.printWarning("Adding sketch for directory '"..idx.."'")
+			local str = "directory{\n"
+				.."\tname = \""..idx.."\",\n"
+				.."\tsummary = \"\",\n"
+				.."\tsource = \"\",\n"
+				.."\treference = \"\"\n"
+				.."}\n\n"
+			mfile:write(str)
+
+			report.created_data = report.created_data + 1
+		end
 	end)
 
 	forEachOrderedElement(datafiles, function(idx, value)

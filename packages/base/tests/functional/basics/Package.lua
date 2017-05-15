@@ -45,8 +45,7 @@ return{
 		unitTest:assertType(cs, "CellularSpace")
 
 		-- The assert below checks the number of functions in package 'base'.
-
-		unitTest:assertEquals(getn(base), 177)
+		unitTest:assertEquals(getn(base), 175)
 	end,
 	import = function(unitTest)
 		forEachCell = nil
@@ -58,7 +57,7 @@ return{
 	packageInfo = function(unitTest)
 		local r = packageInfo()
 
-		unitTest:assertEquals(r.version, "2.0.0-rc2-dev")
+		unitTest:assertEquals(r.version, "2.0.0-dev")
 		unitTest:assertEquals(r.package, "base")
 		unitTest:assertEquals(r.url, "http://www.terrame.org")
 		unitTest:assertType(r.data, "Directory")

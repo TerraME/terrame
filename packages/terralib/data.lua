@@ -140,3 +140,9 @@ data{
 	source = ""
 }
 
+directory{
+	name = "test",
+	summary = "Directory with files used only for internal tests. This directory is not available within TerraME installer, but it can be downloaded from GitHub.",
+	source = "TerraME team"
+}
+

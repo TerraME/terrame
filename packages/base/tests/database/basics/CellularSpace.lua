@@ -248,7 +248,7 @@ return{
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, function(c, neigh, weight)
+			forEachNeighbor(cell, function(neigh, weight, c)
 				unitTest:assertNotNil(c)
 				unitTest:assertNotNil(neigh)
 
@@ -306,7 +306,7 @@ return{
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(neigh, weight, c)
 				unitTest:assertNotNil(c)
 				unitTest:assertNotNil(neigh)
 
@@ -362,7 +362,7 @@ return{
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(neigh, weight, c)
 				unitTest:assertNotNil(c)
 				unitTest:assertNotNil(neigh)
 
@@ -410,7 +410,7 @@ return{
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(neigh, weight, c)
 				unitTest:assertNotNil(c)
 				unitTest:assertNotNil(neigh)
 
@@ -458,7 +458,7 @@ return{
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(neigh, weight, c)
 				unitTest:assertNotNil(c)
 				unitTest:assertNotNil(neigh)
 
@@ -502,7 +502,7 @@ return{
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(neigh, weight, c)
 				unitTest:assertNotNil(c)
 				unitTest:assertNotNil(neigh)
 				unitTest:assertEquals(1, weight)
@@ -546,7 +546,7 @@ return{
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(neigh, weight, c)
 				unitTest:assertNotNil(c)
 				unitTest:assertNotNil(neigh)
 
@@ -597,7 +597,7 @@ return{
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(neigh, weight, c)
 				unitTest:assertNotNil(c)
 				unitTest:assertNotNil(neigh)
 				unitTest:assertType(weight, "number")

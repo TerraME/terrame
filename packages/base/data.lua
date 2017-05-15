@@ -99,3 +99,9 @@ data{
 	reference = "Almeida, Rodolfo M., et al. 'Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil.' X Simposio Brasileiro de Geoinformatica (2008)"
 }
 
+directory{
+	name = "test",
+	summary = "Directory with files used only for internal tests. This directory is not available within TerraME installer, but it can be downloaded from GitHub.",
+	source = "TerraME team"
+}
+

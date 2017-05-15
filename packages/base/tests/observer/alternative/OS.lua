@@ -23,15 +23,11 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	clean = function(unitTest)
-		local a = Agent{value = 2}
-		local ch = Chart{
-			target = a
-		}
-
-		clean()
-
-		unitTest:assertType(ch, "<DestroyedObserver>")
+	sessionInfo = function(unitTest)
+		local error_func = function()
+			sessionInfo().graphics = 2
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("graphics", "boolean", 2))
 	end
 }
 

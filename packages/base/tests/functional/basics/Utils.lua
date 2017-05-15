@@ -407,7 +407,7 @@ return{
 		local c = cs.cells[1]
 		local r
 
-		r = forEachNeighbor(c, function(cell1, cell2, w)
+		r = forEachNeighbor(c, function(cell2, w, cell1)
 			unitTest:assertType(cell2, "Cell")
 			unitTest:assertEquals(cell1, c)
 			unitTest:assertType(w, "number")

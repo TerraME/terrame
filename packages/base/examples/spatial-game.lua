@@ -34,9 +34,9 @@ cell = Cell{
 		self.payoff = 0
 	end,
 	turn = function(self)
-		forEachNeighbor(self, function(cell, neigh)
-			g = Game(cell.strategy, neigh.strategy)
-			cell.payoff  = cell.payoff  + g[1]
+		forEachNeighbor(self, function(neigh)
+			g = Game(self.strategy, neigh.strategy)
+			self.payoff  = self.payoff  + g[1]
 			neigh.payoff = neigh.payoff + g[2]
 		end)
 	end,
@@ -44,14 +44,14 @@ cell = Cell{
 		self.max_payoff = self.payoff
 		self.strat_max_payoff = self.strategy
 
-		forEachNeighbor(self, function(cell, neigh)
-			if neigh.payoff > cell.max_payoff then
-				cell.max_payoff = neigh.payoff
-				cell.strat_max_payoff = neigh.strategy
-			elseif neigh.payoff == cell.max_payoff then
-				if neigh.strategy ~= cell.strategy then
-					cell.max_payoff = neigh.payoff
-					cell.strat_max_payoff = neigh.strategy
+		forEachNeighbor(self, function(neigh)
+			if neigh.payoff > self.max_payoff then
+				self.max_payoff = neigh.payoff
+				self.strat_max_payoff = neigh.strategy
+			elseif neigh.payoff == self.max_payoff then
+				if neigh.strategy ~= self.strategy then
+					self.max_payoff = neigh.payoff
+					self.strat_max_payoff = neigh.strategy
 				end
 			end
 		end)

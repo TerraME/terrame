@@ -72,7 +72,7 @@ return{
 			if(sizes[neighborhoodSize] == nil)then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, _, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, weight)
 				unitTest:assertEquals(1, weight)
 				sumWeight = sumWeight + weight
 			end)
@@ -112,7 +112,7 @@ return{
 
 			unitTest:assertEquals(1, neighborhoodSize)
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, _, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, weight)
 				unitTest:assert(weight <= 1000000)
 				unitTest:assert(weight >= 304.628)
 
@@ -145,7 +145,7 @@ return{
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(1, neighborhoodSize)
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, _, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, weight)
 				unitTest:assert(weight <= 1000000)
 				unitTest:assert(weight >= 304.628)
 
@@ -180,7 +180,7 @@ return{
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(1, neighborhoodSize)
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, _, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, weight)
 				unitTest:assert(weight <= 1000000)
 				unitTest:assert(weight >= 304.628)
 
@@ -207,7 +207,7 @@ return{
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(1435, neighborhoodSize)
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, _, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, weight)
 				unitTest:assert(1000000 >= weight)
 				unitTest:assert(304.628 <= weight)
 
@@ -240,7 +240,7 @@ return{
 
 			unitTest:assertEquals(207, neighborhoodSize)
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, _, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(_, weight)
 				unitTest:assertEquals(weight, 1)
 
 				sumWeight = sumWeight + weight
@@ -267,7 +267,7 @@ return{
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(207, neighborhoodSize)
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(neigh, weight, c)
 				unitTest:assertEquals(weight, 1)
 				unitTest:assert(neigh:getNeighborhood("my_neighborhood"..countTest):isNeighbor(c))
 
@@ -290,7 +290,7 @@ return{
 			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(neigh, weight, c)
 				unitTest:assertEquals(weight, 1)
 				unitTest:assert(neigh:getNeighborhood("my_neighborhood"..countTest):isNeighbor(c))
 
