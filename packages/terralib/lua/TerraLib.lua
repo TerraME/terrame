@@ -1120,7 +1120,7 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 			local dst = ds:getDataSetType(dsetName)
 			local newDst = ds:cloneDataSetType(dsetName)
 			newDst:setName(toSetName)
-			local newDse = binding.te.mem.DataSet(dst)
+			local newDse = binding.te.mem.DataSet(dse)
 
 			-- TODO(avancinirodrigo): why POSTGIS does not work like OGR?
 			-- Fix the primary key for postgis only
