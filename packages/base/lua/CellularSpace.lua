@@ -537,7 +537,7 @@ local function loadPGM(self)
 
 	file:close()
 
-	if (j ~= pgm.size[1]) or (i ~= pgm.size[2]) then
+	if j ~= pgm.size[1] or i ~= pgm.size[2] then
 		customWarning("File '"..self.file.."' has a diffent size declared: expected '("..pgm.size[1]..", "..pgm.size[2]..")', got '("..j..", "..i..")'.")
 	end
 
@@ -1484,7 +1484,7 @@ metaTableCellularSpace_ = {
 -- directly within TerraME. Each spatial object read from a data source becomes a Cell,
 -- be it a point, a polygon, a line, or a pixel.
 -- If the Cells have attributes "row" and "col" (the name can be set by argument xy, as shown below),
--- they can be used to CellularSpace:createNeighborhood() 
+-- they can be used to CellularSpace:createNeighborhood()
 -- and to draw the CellularSpace in the screen by using a Map.
 -- The Cell with lower (row, col) represents the bottom left location (see argument zero below).
 -- See the table below with the description and the arguments of each data source.
