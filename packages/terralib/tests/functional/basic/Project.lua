@@ -99,6 +99,14 @@ return {
 		unitTest:assertType(proj5.limit, "Layer")
 
 		file:deleteIfExists()
+
+		local proj = Project{
+			file = "abc.tview",
+			clean = true,
+			directory = packageInfo("terralib").data.."test"
+		}
+
+		unitTest:assertEquals(getn(proj.layers), 13)
 	end,
 	__tostring = function(unitTest)
 		local file = File("tostring.tview")

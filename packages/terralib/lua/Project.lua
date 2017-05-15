@@ -113,28 +113,48 @@ function Project(data)
 
 	local layers = {}
 
-	forEachElement(data, function(idx, value)
-		if not belong(idx, {"clean", "file", "author", "title", "layers"}) then
-			if type(value) == "string" then
-				value = File(value)
-			end
+	if data.directory then
+		if type(data.directory) == "string" then
+			data.directory = Directory(data.directory)
+		end
 
-			if type(value) ~= "File" then
-				data.file:deleteIfExists()
+		optionalTableArgument(data, "directory", "Directory")
 
-				incompatibleTypeError(idx, "File", value)
-			end
+		forEachFile(data.directory, function(file)
+			local _, name, ext = file:split()
 
-			if value:exists() then
-				layers[idx] = Layer{
+			if belong(ext, {"shp", "tif"}) then
+				layers[name] = Layer{
 					project = data,
-					name = idx,
-					file = value
+					name = name,
+					file = file
 				}
-			else
-				data.file:deleteIfExists()
-				customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
 			end
+		end)
+	end
+
+	forEachElement(data, function(idx, value)
+		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
+
+		if type(value) == "string" then
+			value = File(value)
+		end
+
+		if type(value) ~= "File" then
+			data.file:deleteIfExists()
+
+			incompatibleTypeError(idx, "File", value)
+		end
+
+		if value:exists() then
+			layers[idx] = Layer{
+				project = data,
+				name = idx,
+				file = value
+			}
+		else
+			data.file:deleteIfExists()
+			customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
 		end
 	end)
 

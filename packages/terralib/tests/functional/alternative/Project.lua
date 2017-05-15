@@ -73,6 +73,16 @@ return{
 			Project{file = "myproj.tview", cean = "true.abc"}
 		end
 		unitTest:assertError(notFile, "Value of argument 'cean' ('/true.abc') is not a valid file name.", 3, true)
+
+		local directoryNotString = function()
+			Project{file = "myproj.tview", directory = 2}
+		end
+		unitTest:assertError(directoryNotString, incompatibleTypeMsg("directory", "Directory", 2))
+
+		local notDirectory = function()
+			Project{file = "myproj.tview", directory = tostring(filePath("emas.lua", "terralib"))}
+		end
+		unitTest:assertError(notDirectory, "/emas.lua is a file, and not a directory.", 2, true)
 	end
 }
 
