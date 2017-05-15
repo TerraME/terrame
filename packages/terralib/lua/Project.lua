@@ -103,6 +103,30 @@ function Project(data)
 		end
 	end
 
+	if data.directory then
+		if type(data.directory) == "string" then
+			data.directory = Directory(data.directory)
+		end
+
+		optionalTableArgument(data, "directory", "Directory")
+	end
+
+	forEachElement(data, function(idx, value)
+		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
+
+		if type(value) == "string" then
+			value = File(value)
+		end
+
+		if type(value) ~= "File" then
+			incompatibleTypeError(idx, "File", value)
+		end
+
+		if not value:exists() then
+			customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
+		end
+	end)
+
 	if data.file:exists() then
 		TerraLib().openProject(data, data.file)
 	else
@@ -114,12 +138,6 @@ function Project(data)
 	local layers = {}
 
 	if data.directory then
-		if type(data.directory) == "string" then
-			data.directory = Directory(data.directory)
-		end
-
-		optionalTableArgument(data, "directory", "Directory")
-
 		forEachFile(data.directory, function(file)
 			local _, name, ext = file:split()
 
@@ -136,26 +154,11 @@ function Project(data)
 	forEachElement(data, function(idx, value)
 		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
 
-		if type(value) == "string" then
-			value = File(value)
-		end
-
-		if type(value) ~= "File" then
-			data.file:deleteIfExists()
-
-			incompatibleTypeError(idx, "File", value)
-		end
-
-		if value:exists() then
-			layers[idx] = Layer{
-				project = data,
-				name = idx,
-				file = value
-			}
-		else
-			data.file:deleteIfExists()
-			customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
-		end
+		layers[idx] = Layer{
+			project = data,
+			name = idx,
+			file = value
+		}
 	end)
 
 	forEachElement(layers, function(idx, layer)
