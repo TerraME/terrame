@@ -458,13 +458,13 @@ elseif(WIN32)
 			   )
 	endif()
 	
-	set(QTLUA_LIBRARY_DLL ${QTLUA_INCLUDE_DIR}/../../bin/qtlua.dll)
+	set(QTLUA_LIBRARY_DLL ${QTLUA_INCLUDE_DIR}/../../lib/qtlua.dll)
 	install(FILES ${QTLUA_LIBRARY_DLL}
 			DESTINATION bin
 			COMPONENT runtime
 			)
 
-	set(QTLUAEXTRAS_LIBRARY_DLL ${QTLUAEXTRAS_INCLUDE_DIR}/../../bin/qtluae.dll)		
+	set(QTLUAEXTRAS_LIBRARY_DLL ${QTLUAEXTRAS_INCLUDE_DIR}/../../lib/qtluae.dll)		
 	install(FILES ${QTLUAEXTRAS_LIBRARY_DLL}
 			DESTINATION bin
 			COMPONENT runtime
@@ -545,7 +545,7 @@ elseif(WIN32)
 										${TERRALIB_3RDPARTY_DIR}/lib/boost_thread-mt.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/expat.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/freexl.dll
-										${TERRALIB_3RDPARTY_DIR}/lib/gdal200.dll
+										${TERRALIB_3RDPARTY_DIR}/lib/gdal213.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/geos.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/geos_c.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/hdfdll.dll
