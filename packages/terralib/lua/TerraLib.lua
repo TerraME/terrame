@@ -1477,7 +1477,7 @@ TerraLib_ = {
 			info.url = infos.URI
 			info.source = "wms"
 			info.dataset = dseName
-			info.rep = "wms"
+			info.rep = "raster"
 			collectgarbage("collect")
 			releaseProject(project)
 			return info

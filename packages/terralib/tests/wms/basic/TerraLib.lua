@@ -53,7 +53,7 @@ return {
 		unitTest:assertEquals(layerInfo.url, url)
 		unitTest:assertEquals(layerInfo.type, "WMS2")
 		unitTest:assertEquals(layerInfo.source, "wms")
-		unitTest:assertEquals(layerInfo.rep, "wms")
+		unitTest:assertEquals(layerInfo.rep, "raster")
 		unitTest:assertNotNil(layerInfo.sid)
 
 		file:delete()
