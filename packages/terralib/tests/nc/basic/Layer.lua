@@ -27,8 +27,6 @@ return {
 		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "nc_basic.tview"
 
-			File(projName):deleteIfExists()
-
 			local proj = Project {
 				file = projName,
 				clean = true
@@ -78,8 +76,6 @@ return {
 		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "cellular_layer_fill_nc_repr.tview"
 
-			File(projName):deleteIfExists()
-
 			local proj = Project {
 				file = projName,
 				clean = true
@@ -110,8 +106,6 @@ return {
 		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "cellular_layer_fill_nc_repr.tview"
 
-			File(projName):deleteIfExists()
-
 			local proj = Project {
 				file = projName,
 				clean = true
@@ -141,8 +135,6 @@ return {
 	__tostring = function(unitTest)
 		if _Gtme.sessionInfo().system == "windows" then
 			local projName = "cellular_layer_print_nc.tview"
-
-			File(projName):deleteIfExists()
 
 			local proj = Project {
 				file = projName,

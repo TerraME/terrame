@@ -79,7 +79,6 @@ return {
 		file:deleteIfExists()
 
 		file = File("emas.tview")
-		file:deleteIfExists()
 
 		local proj5 = Project{
 			file = file:name(true),
@@ -98,6 +97,16 @@ return {
 		unitTest:assertType(proj5.river, "Layer")
 		unitTest:assertType(proj5.limit, "Layer")
 
+		file:deleteIfExists()
+
+		file = File("abc.tview")
+		local proj = Project{
+			file = file,
+			clean = true,
+			directory = packageInfo("terralib").data.."test"
+		}
+
+		unitTest:assertEquals(getn(proj.layers), 13)
 		file:deleteIfExists()
 	end,
 	__tostring = function(unitTest)

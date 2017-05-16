@@ -125,8 +125,6 @@ return {
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_shape.tview"
 
-		File(projName):deleteIfExists()
-
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
 			return msg

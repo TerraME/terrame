@@ -537,7 +537,7 @@ local function loadPGM(self)
 
 	file:close()
 
-	if (j ~= pgm.size[1]) or (i ~= pgm.size[2]) then
+	if j ~= pgm.size[1] or i ~= pgm.size[2] then
 		customWarning("File '"..self.file.."' has a diffent size declared: expected '("..pgm.size[1]..", "..pgm.size[2]..")', got '("..j..", "..i..")'.")
 	end
 
@@ -1481,10 +1481,12 @@ metaTableCellularSpace_ = {
 }
 
 --- A multivalued set of Cells. It can be retrieved from databases, files, or created
--- directly within TerraME.
--- Every Cell of a CellularSpace has an (x, y) location that comes from the attributes
--- (row, col) as default. The Cell with lower (x, y)
--- represents the bottom left location (see argument zero below).
+-- directly within TerraME. Each spatial object read from a data source becomes a Cell,
+-- be it a point, a polygon, a line, or a pixel.
+-- If the Cells have attributes "row" and "col" (the name can be set by argument xy, as shown below),
+-- they can be used to CellularSpace:createNeighborhood()
+-- and to draw the CellularSpace in the screen by using a Map.
+-- The Cell with lower (row, col) represents the bottom left location (see argument zero below).
 -- See the table below with the description and the arguments of each data source.
 -- Calling Utils:forEachCell() traverses CellularSpaces.
 -- @arg data.sep A string with the file separator. The default value is ",".

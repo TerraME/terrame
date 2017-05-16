@@ -26,8 +26,6 @@ return {
 	Layer = function(unitTest)
 		local projName = File("asc_basic.tview")
 
-		projName:deleteIfExists()
-
 		local proj = Project {
 			file = projName,
 			clean = true
@@ -66,8 +64,6 @@ return {
 	representation = function(unitTest)
 		local projName = "cellular_layer_fill_asc_repr.tview"
 
-		File(projName):deleteIfExists()
-
 		local proj = Project{
 			file = projName,
 			clean = true
@@ -87,8 +83,6 @@ return {
 	bands = function(unitTest)
 		local projName = File("cellular_layer_fill_asc_repr.tview")
 
-		projName:deleteIfExists()
-
 		local proj = Project{
 			file = projName,
 			clean = true
@@ -107,8 +101,6 @@ return {
 	end,
 	__tostring = function(unitTest)
 		local projName = File("cellular_layer_print_asc.tview")
-
-		projName:deleteIfExists()
 
 		local proj = Project{
 			file = projName,

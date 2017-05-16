@@ -43,6 +43,9 @@ metaTableProject_ = {
 -- of the file.
 -- @arg data.author An optional string with the name of the Project's author.
 -- @arg data.title An optional string with the title of the Project.
+-- @arg data.directory An optional Directory where shapefile(s) and/or tiff file(s) are stored. When
+-- using this argument, all such files will be added to the project using the respective file names without
+-- extension as layer names. This argument can also be a string that will be converted to a Directory.
 -- @arg data.clean An optional boolean value indicating whether the argument file should be cleaned
 -- if it already exists.
 -- The default value is false.
@@ -103,6 +106,30 @@ function Project(data)
 		end
 	end
 
+	if data.directory then
+		if type(data.directory) == "string" then
+			data.directory = Directory(data.directory)
+		end
+
+		optionalTableArgument(data, "directory", "Directory")
+	end
+
+	forEachElement(data, function(idx, value)
+		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
+
+		if type(value) == "string" then
+			value = File(value)
+		end
+
+		if type(value) ~= "File" then
+			incompatibleTypeError(idx, "File", value)
+		end
+
+		if not value:exists() then
+			customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
+		end
+	end)
+
 	if data.file:exists() then
 		TerraLib().openProject(data, data.file)
 	else
@@ -113,29 +140,28 @@ function Project(data)
 
 	local layers = {}
 
-	forEachElement(data, function(idx, value)
-		if not belong(idx, {"clean", "file", "author", "title", "layers"}) then
-			if type(value) == "string" then
-				value = File(value)
-			end
+	if data.directory then
+		forEachFile(data.directory, function(file)
+			local _, name, ext = file:split()
 
-			if type(value) ~= "File" then
-				data.file:deleteIfExists()
-
-				incompatibleTypeError(idx, "File", value)
-			end
-
-			if value:exists() then
-				layers[idx] = Layer{
+			if belong(ext, {"shp", "tif"}) then
+				layers[name] = Layer{
 					project = data,
-					name = idx,
-					file = value
+					name = name,
+					file = file
 				}
-			else
-				data.file:deleteIfExists()
-				customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
 			end
-		end
+		end)
+	end
+
+	forEachElement(data, function(idx, value)
+		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
+
+		layers[idx] = Layer{
+			project = data,
+			name = idx,
+			file = value
+		}
 	end)
 
 	forEachElement(layers, function(idx, layer)
