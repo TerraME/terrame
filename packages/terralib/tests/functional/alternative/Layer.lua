@@ -353,7 +353,7 @@ return{
 				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
-		unitTest:assertError(invalidLayerName, "Layer name 'My Layer' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidLayerName, "'My Layer' is not a valid Layer name. Please check special characters or spaces.")
 
 		invalidLayerName = function()
 			Layer{
@@ -362,7 +362,7 @@ return{
 				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
-		unitTest:assertError(invalidLayerName, "Layer name 'Samp*a' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidLayerName, "'Samp*a' is not a valid Layer name. Please check special characters or spaces.")
 
 		invalidLayerName = function()
 			Layer{
@@ -371,7 +371,7 @@ return{
 				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
-		unitTest:assertError(invalidLayerName, "Layer name '$ampa' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidLayerName, "'$ampa' is not a valid Layer name. Please check special characters or spaces.")
 
 		invalidLayerName = function()
 			Layer{
@@ -380,7 +380,7 @@ return{
 				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
-		unitTest:assertError(invalidLayerName, "Layer name 'SãoPaulo' is not a valid name. Please, revise special characters or spaces from it.")
+		unitTest:assertError(invalidLayerName, "'SãoPaulo' is not a valid Layer name. Please check special characters or spaces.")
 
 		local invalidSridType = function()
 			Layer{
