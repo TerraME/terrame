@@ -2,6 +2,8 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 	<%if doc.description.title == "" then%>
 		<title><%=doc.description.package%></title>
 	<%else%>
