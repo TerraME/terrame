@@ -401,6 +401,7 @@ if (APPLE)
 				PATTERN "log" EXCLUDE
 				PATTERN "test" EXCLUDE
 				PATTERN "tests" EXCLUDE
+				PATTERN "*.tview" EXCLUDE
 			   )	
 	endif()
 
@@ -455,6 +456,7 @@ elseif(WIN32)
 				PATTERN "log" EXCLUDE
 				PATTERN "test" EXCLUDE
 				PATTERN "tests" EXCLUDE
+				PATTERN "*.tview" EXCLUDE
 			   )
 	endif()
 	
@@ -615,6 +617,7 @@ else(UNIX)
 				PATTERN "log" EXCLUDE
 				PATTERN "test" EXCLUDE
 				PATTERN "tests" EXCLUDE
+				PATTERN "*.tview" EXCLUDE
 		)
 	endif()
 

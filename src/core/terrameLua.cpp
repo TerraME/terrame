@@ -341,8 +341,10 @@ int main(int argc, char *argv[])
 
 	if (tmePath.isEmpty())
 	{
-		qFatal("%s environment variable should exist and point to TerraME "
-			"installation folder.", TME_PATH);
+		qCritical("Error: %s environment variable should exist and point to TerraME "
+			"installation directory.", TME_PATH);
+		app->exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	openLuaEnvironment();  // Opens Lua environment and libraries

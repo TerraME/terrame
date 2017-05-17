@@ -130,17 +130,18 @@ return {
 		proj.file:delete()
 	end,
 	getOGRByFilePath = function(unitTest)
-		local shpPath = filePath("test/sampa.geojson", "terralib")
+		local shpPath = filePath("test/malha2015.geojson", "terralib")
 		local dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
 
-		unitTest:assertEquals(getn(dSet), 63)
+		unitTest:assertEquals(getn(dSet), 102)
 
-		for i = 0, #dSet do
-			-- unitTest:assertEquals(dSet[i].FID, i) -- SKIP TODO(#1615)
+		for i = 0, getn(dSet) - 1 do
+			unitTest:assertEquals(dSet[i].FID, i)
 
 			for k, v in pairs(dSet[i]) do
-				unitTest:assert((k == "FID") or (k == "ID") or (k == "NM_MICRO") or
-								(k == "CD_GEOCODU") or (k == "OGR_GEOMETRY"))
+				unitTest:assert((k == "FID") or (k == "NM_MUNICIP") or (k == "Proposta") or
+								(k == "UF") or (k == "OGR_GEOMETRY") or (k == "masc") or
+								(k == "fem") or (k == "PPA") or (k == "IBGE") or (k == "CD_GEOCMU"))
 				unitTest:assertNotNil(v)
 			end
 		end
