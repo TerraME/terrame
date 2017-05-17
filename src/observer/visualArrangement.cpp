@@ -130,7 +130,7 @@ void VisualArrangement::starts(int id, QWidget *widget)
     }
     else
     {
-        widget->setGeometry((50 + id * 50), (50 + id * 50), 600, 500);		
+		widget->setGeometry((50 + id * 50), (50 + id * 50), 600, 500);
 		s.height = widget->size().height();
 		s.width = widget->size().width();
 		addSize(id, s);
