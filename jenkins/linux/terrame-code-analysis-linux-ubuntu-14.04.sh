@@ -46,7 +46,6 @@ terrame -version
 # Extra commands if package is terralib
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
   TERRAME_COMMANDS="-package $1"
-  # terrame -color -package $PACKAGE -uninstall
 fi
 
 # Execute TerraME doc generation

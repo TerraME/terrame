@@ -40,7 +40,6 @@
 #
 ## USAGE:
 ## ./terrame-terralib-build-linux-ubuntu-14.04.sh
-##
 #
 
 # Constants
@@ -57,16 +56,16 @@ if [ ! -z "$ghprbActualCommit" ]; then
   cd $_TERRAME_GIT_DIR
   git init
   git config remote.origin.url https://github.com/terrame/terrame.git
-  git fetch --tags --progress https://github.com/TerraME/terrame.git +refs/pull/*:refs/remotes/origin/pr/* 2> /dev/null
-  git checkout -f $ghprbActualCommit
+  git fetch --tags --progress https://github.com/TerraME/terrame.git +refs/pull/*:refs/remotes/origin/pr/* --quiet
+  git checkout -f $ghprbActualCommit --quiet
   cd -
 else
   # Just clone
-  git clone https://github.com/raphaelrpl/terrame.git -b jenkins $_TERRAME_GIT_DIR
+  git clone https://github.com/terrame/terrame.git -b jenkins $_TERRAME_GIT_DIR --quiet
 fi
 
 echo "### TerraLib ###"
-git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR
+git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
 
 # Creating TerraME Test folders and TerraLib solution
 mkdir $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERRALIB_BUILD_BASE/solution $_TERRAME_BUILD_BASE/solution
