@@ -53,7 +53,7 @@ terrame -color $TERRAME_COMMANDS -test test.lua 2> /dev/null
 RESULT=$?
 
 # Compressing Log
-tar -czvf build-daily-mac-$BUILD_NUMBER.tar.gz .terrame*
+tar -czvf $WORKSPACE/build-daily-mac-$BUILD_NUMBER.tar.gz .terrame*
 
 # Cleaning up
 rm -rf .terrame*

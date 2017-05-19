@@ -42,6 +42,21 @@ cd $_TERRAME_TEST_DIR
 
 terrame -version
 
+# You may use $ghprbActualCommit for handling if job has triggered by CI event or daily timer.
+# In this way, if you need a specific configuration for CI execution, use this flag
+#
+# if [ -z "$ghprbActualCommit" ]; then
+  # Daily execution config
+
+#  if [ "$1" == "terralib" ]; then
+#    echo "myconfig" > test.lua
+#  else
+#    echo "myconfig2" > test.lua
+#  fi
+# else
+#  # CI execution config
+# fi
+
 TERRAME_COMMANDS=""
 # Extra commands if package is terralib
 if [ "$1" != "" ] && [ "$1" != "base" ]; then

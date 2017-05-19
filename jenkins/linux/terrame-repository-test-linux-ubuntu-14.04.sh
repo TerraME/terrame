@@ -40,7 +40,7 @@ terrame -color test.lua 2> /dev/null
 
 RESULT=$?
 
-tar -czf build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
+tar -czf $WORKSPACE/build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
 rm -rf .terrame*
 
 exit $RESULT
