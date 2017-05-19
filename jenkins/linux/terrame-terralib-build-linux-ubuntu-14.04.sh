@@ -56,12 +56,12 @@ if [ ! -z "$ghprbActualCommit" ]; then
   cd $_TERRAME_GIT_DIR
   git init
   git config remote.origin.url https://github.com/terrame/terrame.git
-  git fetch --tags --progress https://github.com/TerraME/terrame.git +refs/pull/*:refs/remotes/origin/pr/* --quiet
-  git checkout -f $ghprbActualCommit --quiet
+  git fetch --tags --progress https://github.com/TerraME/terrame.git +refs/pull/*:refs/remotes/origin/pr/* --quiet > /dev/null
+  git checkout -f $ghprbActualCommit --quiet > /dev/null
   cd -
 else
   # Just clone
-  git clone https://github.com/terrame/terrame.git -b jenkins $_TERRAME_GIT_DIR --quiet
+  git clone https://github.com/terrame/terrame.git $_TERRAME_GIT_DIR --quiet
 fi
 
 echo "### TerraLib ###"

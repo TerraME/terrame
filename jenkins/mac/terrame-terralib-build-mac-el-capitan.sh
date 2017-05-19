@@ -54,7 +54,7 @@ rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua $_TERRALIB_INSTALL_PATH $_TER
 rm -rf $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
 
 echo "### TerraME ###"
-git clone https://github.com/raphaelrpl/terrame.git -b jenkins $_TERRAME_GIT_DIR
+git clone https://github.com/terrame/terrame.git $_TERRAME_GIT_DIR
 
 echo "### TerraLib ###"
 git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR

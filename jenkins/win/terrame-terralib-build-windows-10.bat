@@ -51,7 +51,7 @@ rmdir %_TERRAME_REPOSITORY_DIR% /s /q
 rmdir %_TERRAME_TEST_DIR% /s /q
 
 echo ":::: TerraME ::::"
-git clone https://github.com/raphaelrpl/terrame.git -b jenkins %_TERRAME_GIT_DIR% --quiet
+git clone https://github.com/terrame/terrame.git %_TERRAME_GIT_DIR% --quiet
 
 echo ":::: TerraLib ::::"
 git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRALIB_GIT_DIR% --quiet
