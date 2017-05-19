@@ -1252,6 +1252,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(1)
 				end
 
+				package = Directory(package):name()
+
 				info_.package = package
 				if #arguments <= argCount then
 					local models
