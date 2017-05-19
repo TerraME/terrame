@@ -1201,12 +1201,12 @@ return {
 
 		unitTest:assertSnapshot(map, "tiff-std-pg.png")
 
-		-- NODATA
+		-- DUMMY
 		cl:fill{
 			operation = "average",
 			layer = "altimetria",
 			attribute = "height_nd",
-			nodata = 256
+			dummy = 256
 		}
 
 		cs = CellularSpace{

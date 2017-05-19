@@ -601,16 +601,16 @@ return{
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
-		local defaultNotNumber = function()
+		local missingNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "minimum",
 				layer = layerName1,
 				select = "row",
-				default = false
+				missing = false
 			}
 		end
-		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		local unnecessaryArgument = function()
 			cl:fill{
@@ -618,10 +618,10 @@ return{
 				operation = "minimum",
 				layer = layerName1,
 				select = "row",
-				defaut = 3
+				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		local selected = "ITNOTEXISTS"
 		local selectNotExists = function()
@@ -655,16 +655,16 @@ return{
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
-		defaultNotNumber = function()
+		missingNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				default = false
+				missing = false
 			}
 		end
-		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
@@ -672,10 +672,10 @@ return{
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				defaut = 3
+				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -687,16 +687,16 @@ return{
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
-		defaultNotNumber = function()
+		missingNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "coverage",
 				layer = layerName1,
 				select = "FID",
-				default = false
+				missing = false
 			}
 		end
-		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
@@ -704,10 +704,10 @@ return{
 				operation = "coverage",
 				layer = layerName1,
 				select = "FID",
-				defaut = 3
+				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -719,27 +719,27 @@ return{
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
-		defaultNotNumber = function()
+		missingNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
 				layer = layerName1,
 				select = "FID",
-				default = false
+				missing = false
 			}
 		end
-		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
-		defaultNotNumber = function()
+		missingNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "stdev",
 				layer = layerName1,
 				select = "FID",
-				defaut = 3
+				missin = 3
 			}
 		end
-		unitTest:assertError(defaultNotNumber, unnecessaryArgumentMsg("defaut", "default"))
+		unitTest:assertError(missingNotNumber, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -762,16 +762,16 @@ return{
 		end
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
-		defaultNotNumber = function()
+		missingNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "average",
 				layer = layerName1,
 				select = "FID",
-				default = false
+				missing = false
 			}
 		end
-		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
@@ -779,10 +779,10 @@ return{
 				operation = "average",
 				layer = layerName1,
 				select = "FID",
-				defaut = 3
+				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -805,16 +805,16 @@ return{
 		end
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
-		defaultNotNumber = function()
+		missingNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "mode",
 				layer = layerName1,
 				select = "FID",
-				default = false
+				missing = false
 			}
 		end
-		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
@@ -822,10 +822,10 @@ return{
 				operation = "mode",
 				layer = layerName1,
 				select = "FID",
-				defaut = 3
+				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -848,16 +848,16 @@ return{
 		end
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
-		defaultNotNumber = function()
+		missingNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "sum",
 				layer = layerName1,
 				select = "FID",
-				default = false
+				missing = false
 			}
 		end
-		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
@@ -865,10 +865,10 @@ return{
 				operation = "sum",
 				layer = layerName1,
 				select = "FID",
-				defaut = 3
+				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		local normalizedNameWarning = function()
 			cl:fill{
