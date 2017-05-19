@@ -592,9 +592,15 @@ function suggestion(value, options)
 
 	local distance = string.len(value)
 	local word
+	local substr = {}
+
 	forEachOrderedElement(options, function(a)
 		if type(a) ~= "string" then
 			customError("All the names of argument #2 should be string, got '"..type(a).."'.")
+		end
+
+		if string.match(a, value) then
+			table.insert(substr, a)
 		end
 
 		local d = levenshtein(a, value)
@@ -603,8 +609,13 @@ function suggestion(value, options)
 			word = a
 		end
 	end)
+
 	if distance < string.len(value) * 0.6 then
 		return word
+	end
+
+	if #substr == 1 then
+		return substr[1]
 	end
 end
 
