@@ -73,7 +73,9 @@ terrame -color $TERRAME_COMMANDS -test test.lua 2> /dev/null
 RESULT=$?
 
 # Compressing Log
-tar -czf $WORKSPACE/build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
+LOG_NAME="build-daily-linux-$BUILD_NUMBER.tar.gz"
+echo "Compressing $WORKSPACE/$LOG_NAME"
+tar -czf $WORKSPACE/$LOG_NAME .terrame*
 
 # Cleaning up
 rm -rf .terrame*
