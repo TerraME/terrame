@@ -24,7 +24,9 @@
 
 local metaTableDataFrameRow_ = {
 	__newindex = function(self, idx, value)
-		if not self.data_[idx] then
+		if idx == nil then
+			customError("Table index should not be nil.")
+		elseif not self.data_[idx] then
 			self.data_[idx] = {}
 			self.parent_.columns_[idx] = true
 		end
@@ -195,7 +197,7 @@ metaTableDataFrame_ = {
 
 			self.rowcache_[idx] = result
 			return result
-		elseif type(idx) == "string" then
+		else -- if type(idx) == "string" then
 			if DataFrameIndex[idx] then return DataFrameIndex[idx] end -- an available function
 			if idx == "parent" then return nil end
 
@@ -210,11 +212,15 @@ metaTableDataFrame_ = {
 		end
 	end,
 	__newindex = function(self, idx, value)
+		mandatoryArgument(2, "table", value)
+		
 		if type(idx) == "string" then
 			self.data_[idx] = value
 			self.columns_[idx] = true
-		else
+		elseif type(idx) == "number" then
 			self:add(value, idx)
+		else
+			incompatibleTypeError("#1", "string or number", idx)
 		end
 	end,
 	--- Return the number of rows in the DataFrame.
