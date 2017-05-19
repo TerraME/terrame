@@ -61,6 +61,9 @@ TERRAME_COMMANDS=""
 # Extra commands if package is terralib
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
   TERRAME_COMMANDS="-package $1"
+
+  # Temp code to ensure unittest terralib does not take too long to execute
+  echo directory = {"functional", "shapefile", "postgis", "tif", "geojson", "asc", "wms", "nc"} > test.lua
 fi
 
 # Executing unittest
@@ -68,7 +71,7 @@ terrame -color $TERRAME_COMMANDS -test test.lua 2> /dev/null
 RESULT=$?
 
 # Compressing Log
-tar -czf build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
+tar -czf $WORKSPACE/build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
 
 # Cleaning up
 rm -rf .terrame*
