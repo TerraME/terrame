@@ -61,11 +61,10 @@ TERRAME_COMMANDS=""
 # Extra commands if package is terralib
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
   TERRAME_COMMANDS="-package $1"
-
-  if [ ! -z "$ghprbActualCommit" ]; then
-    # Temp code to ensure unittest terralib does not take too long to execute. Only CI trigger
-    echo -e '\ndirectory = {"functional", "shapefile", "postgis", "tif", "geojson", "asc", "wms", "nc"}' >> test.lua
-  fi
+  # if [ ! -z "$ghprbActualCommit" ]; then
+  #   # Temp code to ensure unittest terralib does not take too long to execute. Only CI trigger
+  #   echo -e '\ndirectory = {"functional", "shapefile", "postgis", "tif", "geojson", "asc", "wms", "nc"}' >> test.lua
+  # fi
 fi
 
 # Executing unittest
