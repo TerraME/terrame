@@ -104,6 +104,31 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "Argument 'instance' should be an isTable() object, got number.")
+	end,
+	__index = function(unitTest)
+		local df = DataFrame{}
+
+		df[2000] = {}
+
+		local error_func = function()
+			df[2000][nil] = 5
+		end
+		unitTest:assertError(error_func, "Table index should not be nil.")
+
+		error_func = function()
+			df[nil] = {}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string or number"))
+
+		error_func = function()
+			df[2] = 2
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "table", 2))
+
+		error_func = function()
+			df["2"] = 2
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "table", 2))
 	end
 }
 

@@ -84,13 +84,11 @@ Documentation was built in 0.78 seconds.
 All files are documented.
 One problem was found in 'description.lua'.
 One problem was found in the documentation of data.
-One problem was found in the documentation of fonts.
-One source code line starting with --- is invalid.
+One description ends with wrong character.
 One error was found in the documentation of Models.
-All projects were successfully processed.
+One source code line starting with --- is invalid.
 One global function is not documented.
 One function is declared twice in the source code.
-One description ends with wrong character.
 One tag is duplicated in the documentation.
 One tag should have a compulsory argument.
 One non-named argument is not documented.

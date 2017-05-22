@@ -241,7 +241,7 @@ local function addLayer(self, data)
 	end
 
 	if not isValidName(data.name) then
-		customError("Layer name '"..data.name.."' is not a valid name. Please, revise special characters or spaces from it.")
+		customError("'"..data.name.."' is not a valid Layer name. Please check special characters or spaces.")
 	end
 
 	if self.layers[data.name] then

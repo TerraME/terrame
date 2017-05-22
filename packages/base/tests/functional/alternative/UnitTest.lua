@@ -182,6 +182,7 @@ return{
 		Log{target = c, file = "mabc.csv"}
 
 		c:notify()
+
 		unitTest:assertFile("mabc.csv")
 		unitTest:assertEquals(str, "Log file 'mabc.csv' is used in more than one assert.")
 

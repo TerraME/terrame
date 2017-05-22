@@ -142,7 +142,7 @@ local function verifyTest(package, report)
 	end)
 end
 
-local function verifyDoc(package, report)
+local function verifyModel(package, report)
 	printNote("Verifying documentation of Models")
 
 	local baseDir = packageInfo(package).path
@@ -346,7 +346,7 @@ local function verifyData(package, report)
 				local attributesIdx = {}
 
 				forEachElement(attributes, function(_, mvalue)
-					attributesIdx[mvalue] = true
+					attributesIdx[mvalue.name] = true
 				end)
 
 				forEachOrderedElement(attributesIdx, function(mvalue)
@@ -460,7 +460,7 @@ function _Gtme.sketch(package)
 	import("base")
 
 	verifyTest(package, report)
-	verifyDoc(package, report)
+	verifyModel(package, report)
 	verifyData(package, report)
 	verifyFont(package, report)
 
