@@ -62,7 +62,7 @@ echo "$_TERRALIB_GIT_DIR"
 # -----------------
 # Configuring output folder
 # -----------------
-mkdir $_TERRALIB_OUT_DIR
+mkdir $_TERRALIB_OUT_DIR -p
 cp terralib-conf.cmake $_TERRALIB_OUT_DIR
 
 # -----------------
