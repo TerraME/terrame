@@ -1502,7 +1502,7 @@ function _Gtme.executeDoc(package)
 	end
 
 	local errors = -doc_report.examples -doc_report.arguments - doc_report.links -doc_report.functions -doc_report.models
-	               -doc_report.html_files - doc_report.lua_files - doc_report.fonts
+	               -doc_report.html_files - doc_report.lua_files - doc_report.fonts - doc_report.projects
 
 	forEachElement(doc_report, function(_, value)
 		errors = errors + value
