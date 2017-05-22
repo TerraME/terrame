@@ -40,7 +40,13 @@ terrame -color test.lua 2> /dev/null
 
 RESULT=$?
 
-tar -czf $WORKSPACE/build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
+if [ -z "$ghprbActualCommit" ]; then
+  LOG_NAME="build-daily-linux-$BUILD_NUMBER.tar.gz"
+else
+  LOG_NAME="build-ci-linux-$BUILD_NUMBER.tar.gz"
+fi
+
+tar -czf $WORKSPACE/$LOG_NAME .terrame*
 rm -rf .terrame*
 
 exit $RESULT
