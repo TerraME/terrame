@@ -247,6 +247,7 @@ return{
 
 		unitTest:assertEquals(suggestion("aaaab", t), "aaaaa")
 		unitTest:assertNil(suggestion("ddddd", t))
+		unitTest:assertEquals(suggestion("aa", t), "aaaaa")
 	end,
 	suggestionMsg = function(unitTest)
 		local t = {

@@ -59,8 +59,8 @@ Summing up, all tests were successfully executed.
 Creating documentation of package 'build'
 Building documentation for package 'build'
 Loading package 'build'
-Package 'build' has no data
-Package 'build' has no fonts
+Package has no data
+Package has no fonts
 Parsing lua files
 Parsing lua/Tube.lua
 Parsing lua/Utils.lua
@@ -110,13 +110,11 @@ Documentation was built in 0.1 seconds.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
-No problems were found in the documentation of fonts.
-All source code lines starting with --- are valid.
+All descriptions end with a correct character.
 The single Model is correctly documented.
-All projects were successfully processed.
+All source code lines starting with --- are valid.
 All 2 global functions of the package are documented.
 All functions of each file are declared only once.
-All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
 All 2 non-named arguments are documented.

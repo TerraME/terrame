@@ -1,11 +1,10 @@
 Building documentation for package 'withoutdatafont'
 Loading package 'withoutdatafont'
-Package 'withoutdatafont' has no data
-Package 'withoutdatafont' has no fonts
+Package has no data
+Package has no fonts
 Parsing lua files
 Parsing lua/foo.lua
-Parsing examples
-No examples were found.
+Package has no examples
 Checking undocumented files
 Checking @usage definition
 Checking lua/foo.lua
@@ -22,12 +21,9 @@ Building doc/index.html
 Building doc/files/foo.html
 Checking images
 Checking data.lua
-Checking models
-Checking examples
 Checking if all images are used
 Checking if all functions are documented
 Checking foo.lua
-Checking if all Models are documented
 
 Documentation report for package 'withoutdatafont':
 Documentation was built in 0.25 seconds.
@@ -35,13 +31,10 @@ Documentation was built in 0.25 seconds.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
-No problems were found in the documentation of fonts.
+All descriptions end with a correct character.
 All source code lines starting with --- are valid.
-There are no Models in the package.
-All projects were successfully processed.
 All 1 global functions of the package are documented.
 All functions of each file are declared only once.
-All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
 All 0 non-named arguments are documented.

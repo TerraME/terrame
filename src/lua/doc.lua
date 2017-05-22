@@ -153,7 +153,7 @@ local function getProjects(package, doc_report)
 
 		if createdFiles[data.file] then
 			printError("File '"..data.file.."' is created more than once.")
-			doc_report.projects = doc_report.projects + 1
+			doc_report.project_error = doc_report.project_error + 1
 		else
 			createdFiles[data.file] = true
 		end
@@ -261,7 +261,7 @@ local function getProjects(package, doc_report)
 
 				if createdFiles[mfile:name()] then
 					printError("File '"..mfile:name().."' is created more than once.")
-					doc_report.projects = doc_report.projects + 1
+					doc_report.project_error = doc_report.project_error + 1
 				else
 					createdFiles[mfile:name()] = true
 				end
@@ -269,7 +269,7 @@ local function getProjects(package, doc_report)
 				dataType = "PostGIS database table"
 				if createdFiles[data.database] then
 					printError("Database '"..data.database.."' is created more than once.")
-					doc_report.projects = doc_report.projects + 1
+					doc_report.project_error = doc_report.project_error + 1
 				else
 					createdFiles[data.database] = true
 				end
@@ -326,7 +326,7 @@ local function getProjects(package, doc_report)
 
 			xpcall(function() dofile(tostring(file)) end, function(err)
 				printError(_Gtme.traceback(err))
-				doc_report.projects = doc_report.projects + 1
+				doc_report.project_error = doc_report.project_error + 1
 			end)
 
 			clean()
@@ -418,8 +418,9 @@ function _Gtme.executeDoc(package)
 		global_functions = 0,
 		functions = 0,
 		models = 0,
-		projects = 0,
 		model_error = 0,
+		projects = 0,
+		project_error = 0,
 		variables = 0,
 		links = 0,
 		examples = 0,
@@ -441,6 +442,7 @@ function _Gtme.executeDoc(package)
 		undoc_functions = 0,
 		error_data = 0,
 		error_font = 0,
+		fonts = 0,
 		wrong_line = 0,
 		wrong_tabular = 0,
 		wrong_image = 0,
@@ -621,6 +623,7 @@ function _Gtme.executeDoc(package)
 		end)
 
 		projects = getProjects(package, doc_report)
+		doc_report.projects = getn(projects)
 
 		forEachOrderedElement(projects, function(_, value)
 			if value.layers or string.find(value.summary, "resolution") and value.file[1] then -- a project or a layer of cells
@@ -1027,14 +1030,15 @@ function _Gtme.executeDoc(package)
 		printError("Package '"..package.."' has data.lua but there is no data")
 		doc_report.error_data = doc_report.error_data + 1
 	else
-		printNote("Package '"..package.."' has no data")
+		printNote("Package has no data")
 	end
 
 	local mfont = {}
 	local fontsdocumented = {}
 	df = _Gtme.fontFiles(package)
+	doc_report.fonts = #df
 
-	if File(package_path..s.."font.lua"):exists() and #df > 0 then
+	if File(package_path..s.."font.lua"):exists() and doc_report.fonts > 0 then
 		printNote("Parsing 'font.lua'")
 		font = function(tab)
 			local count = verifyUnnecessaryArguments(tab, {"name", "file", "summary", "source", "symbol"})
@@ -1084,6 +1088,7 @@ function _Gtme.executeDoc(package)
 					printError("Font file '"..tab.file.."' is documented more than once.")
 					doc_report.error_font = doc_report.error_font + 1
 				end
+
 				fontsdocumented[tab.file] = 0
 			end
 		end
@@ -1138,7 +1143,7 @@ function _Gtme.executeDoc(package)
 		printError("Package '"..package.."' has font.lua but there are no fonts")
 		doc_report.error_font = doc_report.error_font + 1
 	else
-		printNote("Package '"..package.."' has no fonts")
+		printNote("Package has no fonts")
 	end
 
 	local result = luadocMain(package_path, lua_files, example_files, package, mdata, mdirectory, mfont, doc_report)
@@ -1179,39 +1184,41 @@ function _Gtme.executeDoc(package)
 		end
 	end)
 
-	print("Checking models")
+	if doc_report.models > 0 then
+		print("Checking models")
+		forEachOrderedElement(result.files, function(idx, value)
+			if type(idx) ~= "string" then return end
+			if not string.endswith(idx, ".lua") then return end
 
-	forEachOrderedElement(result.files, function(idx, value)
-		if type(idx) ~= "string" then return end
-		if not string.endswith(idx, ".lua") then return end
+			forEachElement(value.models, function(_, mvalue, mtype)
+				if mtype == "table" and mvalue.image then
+					if not images[mvalue.image] then
+						printError("Image file '"..mvalue.image.."' does not exist in directory 'images'")
+						doc_report.wrong_image = doc_report.wrong_image + 1
+					else
+						images[mvalue.image] = images[mvalue.image] + 1
+					end
+				end
+			end)
+		end)
+	end
 
-		forEachElement(value.models, function(_, mvalue, mtype)
-			if mtype == "table" and mvalue.image then
-				if not images[mvalue.image] then
-					printError("Image file '"..mvalue.image.."' does not exist in directory 'images'")
+	if doc_report.examples > 0 then
+		print("Checking examples")
+		forEachOrderedElement(result.files, function(idx, value)
+			if type(idx) ~= "string" then return end
+			if not string.endswith(idx, ".lua") then return end
+
+			if value.image then
+				if not images[value.image] then
+					printError("Image file '"..value.image.."' does not exist in directory 'images'")
 					doc_report.wrong_image = doc_report.wrong_image + 1
 				else
-					images[mvalue.image] = images[mvalue.image] + 1
+					images[value.image] = images[value.image] + 1
 				end
 			end
 		end)
-	end)
-
-	print("Checking examples")
-
-	forEachOrderedElement(result.files, function(idx, value)
-		if type(idx) ~= "string" then return end
-		if not string.endswith(idx, ".lua") then return end
-
-		if value.image then
-			if not images[value.image] then
-				printError("Image file '"..value.image.."' does not exist in directory 'images'")
-				doc_report.wrong_image = doc_report.wrong_image + 1
-			else
-				images[value.image] = images[value.image] + 1
-			end
-		end
-	end)
+	end
 
 	print("Checking if all images are used")
 	forEachOrderedElement(images, function(file, value)
@@ -1221,29 +1228,34 @@ function _Gtme.executeDoc(package)
 		end
 	end)
 
-	printNote("Checking if all functions are documented")
-	forEachOrderedElement(all_functions, function(idx, value)
-		print("Checking "..idx)
-		forEachOrderedElement(value, function(midx)
-			if belong(midx, {"__len", "__tostring", "__concat", "__index", "__newindex"}) then return end -- TODO: think about this kind of function
+	if doc_report.functions > 0 then
+		printNote("Checking if all functions are documented")
+		forEachOrderedElement(all_functions, function(idx, value)
+			print("Checking "..idx)
+			forEachOrderedElement(value, function(midx)
+				if belong(midx, {"__len", "__tostring", "__concat", "__index", "__newindex"}) then return end -- TODO: think about this kind of function
 
-			if not result.files[idx] or not result.files[idx].functions[midx] and
-			  (not result.files[idx].models or not result.files[idx].models[midx]) then
-				printError("Function "..midx.." is not documented")
-				doc_report.undoc_functions = doc_report.undoc_functions + 1
-			end
+				if not result.files[idx] or not result.files[idx].functions[midx] and
+				  (not result.files[idx].models or not result.files[idx].models[midx]) then
+					printError("Function "..midx.." is not documented")
+					doc_report.undoc_functions = doc_report.undoc_functions + 1
+				end
+			end)
 		end)
-	end)
+	end
 
-	printNote("Checking if all Models are documented")
-	forEachOrderedElement(result.files, function(idx, value)
-		if type(idx) ~= "string" then return end
-		if not string.endswith(idx, ".lua") then return end
+	if doc_report.models > 0 then
+		printNote("Checking if all Models are documented")
 
-		local documentedArguments = {}
+		forEachOrderedElement(result.files, function(idx, value)
+			if type(idx) ~= "string" then return end
+			if not string.endswith(idx, ".lua") then return end
 
-		forEachOrderedElement(value.models, function(_, mvalue, mtype)
-			if mtype == "table" then
+			local documentedArguments = {}
+
+			forEachOrderedElement(value.models, function(_, mvalue, mtype)
+				if mtype ~= "table" then return end
+
 				if type(mvalue.arg) == "table" then -- if some argument is documented
 					forEachOrderedElement(mvalue.arg, function(mmidx)
 						if type(mmidx) == "string" then
@@ -1251,28 +1263,28 @@ function _Gtme.executeDoc(package)
 						end
 					end)
 				end
+			end)
+
+			local modelName = string.sub(idx, 0, -5)
+			if value.models and type(pkg[modelName]) == "Model" then
+				local args = pkg[modelName]:getParameters()
+
+				forEachOrderedElement(args, function(midx)
+					if not documentedArguments[midx] then
+						printError("Model '"..modelName.."' has undocumented argument '"..midx.."'")
+						doc_report.model_error = doc_report.model_error + 1
+					end
+				end)
+
+				forEachOrderedElement(documentedArguments, function(midx)
+					if args[midx] == nil and midx ~= "named" then
+						printError("Model '"..modelName.."' does not have documented argument '"..midx.."'")
+						doc_report.model_error = doc_report.model_error + 1
+					end
+				end)
 			end
 		end)
-
-		local modelName = string.sub(idx, 0, -5)
-		if value.models and type(pkg[modelName]) == "Model" then
-			local args = pkg[modelName]:getParameters()
-
-			forEachOrderedElement(args, function(midx)
-				if not documentedArguments[midx] then
-					printError("Model '"..modelName.."' has undocumented argument '"..midx.."'")
-					doc_report.model_error = doc_report.model_error + 1
-				end
-			end)
-
-			forEachOrderedElement(documentedArguments, function(midx)
-				if args[midx] == nil and midx ~= "named" then
-					printError("Model '"..modelName.."' does not have documented argument '"..midx.."'")
-					doc_report.model_error = doc_report.model_error + 1
-				end
-			end)
-		end
-	end)
+	end
 
 	local finalTime = os.clock()
 
@@ -1309,60 +1321,24 @@ function _Gtme.executeDoc(package)
 		printNote("No problems were found in the documentation of data.")
 	end
 
-	if doc_report.error_font == 1 then
-		printError("One problem was found in the documentation of fonts.")
-	elseif doc_report.error_font > 1 then
-		printError(doc_report.error_font.." problems were found in the documentation of fonts.")
-	else
-		printNote("No problems were found in the documentation of fonts.")
-	end
-
-	if doc_report.wrong_line == 1 then
-		printError("One source code line starting with --- is invalid.")
-	elseif doc_report.wrong_line > 1 then
-		printError(doc_report.wrong_line.." source code lines starting with --- are invalid.")
-	else
-		printNote("All source code lines starting with --- are valid.")
-	end
-
-	if doc_report.models > 0 then
-		if doc_report.model_error == 0 then
-			if doc_report.models == 1 then
-				printNote("The single Model is correctly documented.")
-			else
-				printNote("All "..doc_report.models.." Models are correctly documented.")
-			end
-		elseif doc_report.model_error == 1 then
-			printError("One error was found in the documentation of Models.")
+	if doc_report.fonts > 0 then
+		if doc_report.error_font == 1 then
+			printError("One problem was found in the documentation of fonts.")
+		elseif doc_report.error_font > 1 then
+			printError(doc_report.error_font.." problems were found in the documentation of fonts.")
 		else
-			printError(doc_report.model_error.." errors were found in the documentation of Models.")
+			printNote("No problems were found in the documentation of fonts.")
 		end
-	else
-		printNote("There are no Models in the package.")
 	end
 
-	if doc_report.projects == 1 then
-		printError("One problem was found while processing projects.")
-	elseif doc_report.projects > 1 then
-		printError(doc_report.projects.." problems were found while processing projects.")
-	else
-		printNote("All projects were successfully processed.")
-	end
-
-	if doc_report.undoc_functions == 1 then
-		printError("One global function is not documented.")
-	elseif doc_report.undoc_functions > 1 then
-		printError(doc_report.undoc_functions.." global functions are not documented.")
-	else
-		printNote("All "..doc_report.functions.." global functions of the package are documented.")
-	end
-
-	if doc_report.duplicated_functions == 1 then
-		printError("One function is declared twice in the source code.")
-	elseif doc_report.duplicated_functions > 1 then
-		printError(doc_report.duplicated_functions.." functions are declared twice in the source code.")
-	else
-		printNote("All functions of each file are declared only once.")
+	if doc_report.projects > 0 then
+		if doc_report.project_error == 1 then
+			printError("One problem was found while processing projects.")
+		elseif doc_report.project_error > 1 then
+			printError(doc_report.project_error.." problems were found while processing projects.")
+		else
+			printNote("All projects were successfully processed.")
+		end
 	end
 
 	if doc_report.wrong_descriptions == 1 then
@@ -1373,120 +1349,160 @@ function _Gtme.executeDoc(package)
 		printNote("All descriptions end with a correct character.")
 	end
 
-	if doc_report.duplicated == 1 then
-		printError("One tag is duplicated in the documentation.")
-	elseif doc_report.duplicated > 1 then
-		printError(doc_report.duplicated.." tags are duplicated in the documentation.")
-	else
-		printNote("There is no duplicated tag in the documentation.")
-	end
+	if doc_report.functions > 0 or doc_report.examples > 0 or doc_report.models > 0 then
+		if doc_report.models > 0 then
+			if doc_report.model_error == 0 then
+				if doc_report.models == 1 then
+					printNote("The single Model is correctly documented.")
+				else
+					printNote("All "..doc_report.models.." Models are correctly documented.")
+				end
+			elseif doc_report.model_error == 1 then
+				printError("One error was found in the documentation of Models.")
+			else
+				printError(doc_report.model_error.." errors were found in the documentation of Models.")
+			end
+		end
 
-	if doc_report.compulsory_arguments == 1 then
-		printError("One tag should have a compulsory argument.")
-	elseif doc_report.compulsory_arguments > 1 then
-		printError(doc_report.compulsory_arguments.." tags should have compulsory arguments.")
-	else
-		printNote("All tags with compulsory arguments were correctly used.")
-	end
+		if doc_report.wrong_line == 1 then
+			printError("One source code line starting with --- is invalid.")
+		elseif doc_report.wrong_line > 1 then
+			printError(doc_report.wrong_line.." source code lines starting with --- are invalid.")
+		else
+			printNote("All source code lines starting with --- are valid.")
+		end
 
-	if doc_report.undoc_arg == 1 then
-		printError("One non-named argument is not documented.")
-	elseif doc_report.undoc_arg > 1 then
-		printError(doc_report.undoc_arg.." non-named arguments are not documented.")
-	else
-		printNote("All "..doc_report.arguments.." non-named arguments are documented.")
-	end
+		if doc_report.undoc_functions == 1 then
+			printError("One global function is not documented.")
+		elseif doc_report.undoc_functions > 1 then
+			printError(doc_report.undoc_functions.." global functions are not documented.")
+		else
+			printNote("All "..doc_report.functions.." global functions of the package are documented.")
+		end
 
-	if doc_report.undefined_arg == 1 then
-		printError("One undefined argument was found.")
-	elseif doc_report.undefined_arg > 1 then
-		printError(doc_report.undefined_arg.." undefined arguments were found.")
-	else
-		printNote("No undefined arguments were found.")
-	end
+		if doc_report.duplicated_functions == 1 then
+			printError("One function is declared twice in the source code.")
+		elseif doc_report.duplicated_functions > 1 then
+			printError(doc_report.duplicated_functions.." functions are declared twice in the source code.")
+		else
+			printNote("All functions of each file are declared only once.")
+		end
 
-	if doc_report.unused_arg == 1 then
-		printError("One documented argument is not used in the HTML tables.")
-	elseif doc_report.unused_arg > 1 then
-		printError(doc_report.unused_arg.." documented arguments are not used in the HTML tables.")
-	else
-		printNote("All available arguments of functions are used in their HTML tables.")
-	end
+		if doc_report.duplicated == 1 then
+			printError("One tag is duplicated in the documentation.")
+		elseif doc_report.duplicated > 1 then
+			printError(doc_report.duplicated.." tags are duplicated in the documentation.")
+		else
+			printNote("There is no duplicated tag in the documentation.")
+		end
 
-	if doc_report.unknown_arg == 1 then
-		printError("One argument used in the HTML tables is not documented.")
-	elseif doc_report.unknown_arg > 1 then
-		printError(doc_report.unknown_arg.." arguments used in the HTML tables are not documented.")
-	else
-		printNote("All arguments used in the HTML tables are documented.")
-	end
+		if doc_report.compulsory_arguments == 1 then
+			printError("One tag should have a compulsory argument.")
+		elseif doc_report.compulsory_arguments > 1 then
+			printError(doc_report.compulsory_arguments.." tags should have compulsory arguments.")
+		else
+			printNote("All tags with compulsory arguments were correctly used.")
+		end
 
-	if doc_report.lack_usage == 1 then
-		printError("One non-deprecated function does not have @usage.")
-	elseif doc_report.lack_usage > 1 then
-		printError(doc_report.lack_usage.." non-deprecated functions do not have @usage.")
-	else
-		printNote("All non-deprecated functions have @usage.")
-	end
+		if doc_report.undoc_arg == 1 then
+			printError("One non-named argument is not documented.")
+		elseif doc_report.undoc_arg > 1 then
+			printError(doc_report.undoc_arg.." non-named arguments are not documented.")
+		else
+			printNote("All "..doc_report.arguments.." non-named arguments are documented.")
+		end
 
-	if doc_report.no_call_itself_usage == 1 then
-		printError("One out of "..doc_report.functions.." documented functions does not call itself in its @usage.")
-	elseif doc_report.no_call_itself_usage > 1 then
-		printError(doc_report.no_call_itself_usage.." out of "..doc_report.functions.." documented functions do not call themselves in their @usage.")
-	else
-		printNote("All "..doc_report.functions.." functions call themselves in their @usage.")
-	end
+		if doc_report.undefined_arg == 1 then
+			printError("One undefined argument was found.")
+		elseif doc_report.undefined_arg > 1 then
+			printError(doc_report.undefined_arg.." undefined arguments were found.")
+		else
+			printNote("No undefined arguments were found.")
+		end
 
-	if doc_report.usage_error == 1 then
-		printError("One out of "..doc_report.functions.." functions has error in its @usage.")
-	elseif doc_report.usage_error > 1 then
-		printError(doc_report.usage_error.." out of "..doc_report.functions.." functions have error in their @usage.")
-	else
-		printNote("All "..doc_report.functions.." functions do not have any error in their @usage.")
-	end
+		if doc_report.unused_arg == 1 then
+			printError("One documented argument is not used in the HTML tables.")
+		elseif doc_report.unused_arg > 1 then
+			printError(doc_report.unused_arg.." documented arguments are not used in the HTML tables.")
+		else
+			printNote("All available arguments of functions are used in their HTML tables.")
+		end
 
-	if doc_report.wrong_tabular == 1 then
-		printError("One problem was found in @tabular.")
-	elseif doc_report.wrong_tabular > 1 then
-		printError(doc_report.wrong_tabular.." problems were found in @tabular.")
-	else
-		printNote("All @tabular are correctly described.")
-	end
+		if doc_report.unknown_arg == 1 then
+			printError("One argument used in the HTML tables is not documented.")
+		elseif doc_report.unknown_arg > 1 then
+			printError(doc_report.unknown_arg.." arguments used in the HTML tables are not documented.")
+		else
+			printNote("All arguments used in the HTML tables are documented.")
+		end
 
-	if doc_report.invalid_tags == 1 then
-		printError("One invalid tag was found in the documentation.")
-	elseif doc_report.invalid_tags > 1 then
-		printError(doc_report.invalid_tags.." invalid tags were found in the documentation.")
-	else
-		printNote("No invalid tags were found in the documentation.")
-	end
+		if doc_report.lack_usage == 1 then
+			printError("One non-deprecated function does not have @usage.")
+		elseif doc_report.lack_usage > 1 then
+			printError(doc_report.lack_usage.." non-deprecated functions do not have @usage.")
+		else
+			printNote("All non-deprecated functions have @usage.")
+		end
 
-	if doc_report.wrong_image == 1 then
-		printError("One problem with image files was found.")
-	elseif doc_report.wrong_image > 1 then
-		printError(doc_report.wrong_image.." problems with image files were found.")
-	else
-		printNote("All images are correctly used.")
-	end
+		if doc_report.no_call_itself_usage == 1 then
+			printError("One out of "..doc_report.functions.." documented functions does not call itself in its @usage.")
+		elseif doc_report.no_call_itself_usage > 1 then
+			printError(doc_report.no_call_itself_usage.." out of "..doc_report.functions.." documented functions do not call themselves in their @usage.")
+		else
+			printNote("All "..doc_report.functions.." functions call themselves in their @usage.")
+		end
 
-	if doc_report.wrong_links == 1 then
-		printError("One out of "..doc_report.links.." links is invalid.")
-	elseif doc_report.wrong_links > 1 then
-		printError(doc_report.wrong_links.." out of "..doc_report.links.." links are invalid.")
-	else
-		printNote("All "..doc_report.links.." links were correctly built.")
-	end
+		if doc_report.usage_error == 1 then
+			printError("One out of "..doc_report.functions.." functions has error in its @usage.")
+		elseif doc_report.usage_error > 1 then
+			printError(doc_report.usage_error.." out of "..doc_report.functions.." functions have error in their @usage.")
+		else
+			printNote("All "..doc_report.functions.." functions do not have any error in their @usage.")
+		end
 
-	if doc_report.problem_examples == 1 then
-		printError("One problem was found in the documentation of examples.")
-	elseif doc_report.problem_examples > 1 then
-		printError(doc_report.problem_examples.." problems were found in the documentation of examples.")
-	else
-		printNote("All "..doc_report.examples.." examples are correctly documented.")
+		if doc_report.wrong_tabular == 1 then
+			printError("One problem was found in @tabular.")
+		elseif doc_report.wrong_tabular > 1 then
+			printError(doc_report.wrong_tabular.." problems were found in @tabular.")
+		else
+			printNote("All @tabular are correctly described.")
+		end
+
+		if doc_report.invalid_tags == 1 then
+			printError("One invalid tag was found in the documentation.")
+		elseif doc_report.invalid_tags > 1 then
+			printError(doc_report.invalid_tags.." invalid tags were found in the documentation.")
+		else
+			printNote("No invalid tags were found in the documentation.")
+		end
+
+		if doc_report.wrong_image == 1 then
+			printError("One problem with image files was found.")
+		elseif doc_report.wrong_image > 1 then
+			printError(doc_report.wrong_image.." problems with image files were found.")
+		else
+			printNote("All images are correctly used.")
+		end
+
+		if doc_report.wrong_links == 1 then
+			printError("One out of "..doc_report.links.." links is invalid.")
+		elseif doc_report.wrong_links > 1 then
+			printError(doc_report.wrong_links.." out of "..doc_report.links.." links are invalid.")
+		else
+			printNote("All "..doc_report.links.." links were correctly built.")
+		end
+
+		if doc_report.problem_examples == 1 then
+			printError("One problem was found in the documentation of examples.")
+		elseif doc_report.problem_examples > 1 then
+			printError(doc_report.problem_examples.." problems were found in the documentation of examples.")
+		else
+			printNote("All "..doc_report.examples.." examples are correctly documented.")
+		end
 	end
 
 	local errors = -doc_report.examples -doc_report.arguments - doc_report.links -doc_report.functions -doc_report.models
-	               -doc_report.html_files - doc_report.lua_files
+	               -doc_report.html_files - doc_report.lua_files - doc_report.fonts - doc_report.projects
 
 	forEachElement(doc_report, function(_, value)
 		errors = errors + value
