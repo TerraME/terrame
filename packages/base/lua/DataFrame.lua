@@ -213,7 +213,7 @@ metaTableDataFrame_ = {
 	end,
 	__newindex = function(self, idx, value)
 		mandatoryArgument(2, "table", value)
-		
+
 		if type(idx) == "string" then
 			self.data_[idx] = value
 			self.columns_[idx] = true

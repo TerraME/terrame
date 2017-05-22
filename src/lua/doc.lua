@@ -1330,7 +1330,7 @@ function _Gtme.executeDoc(package)
 			printNote("No problems were found in the documentation of fonts.")
 		end
 	end
-	
+
 	if doc_report.projects > 0 then
 		if doc_report.project_error == 1 then
 			printError("One problem was found while processing projects.")

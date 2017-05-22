@@ -115,17 +115,17 @@ return{
 		end
 		unitTest:assertError(error_func, "Table index should not be nil.")
 
-		local error_func = function()
+		error_func = function()
 			df[nil] = {}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string or number"))
 
-		local error_func = function()
+		error_func = function()
 			df[2] = 2
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "table", 2))
 
-		local error_func = function()
+		error_func = function()
 			df["2"] = 2
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "table", 2))
