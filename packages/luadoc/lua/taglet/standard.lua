@@ -673,6 +673,8 @@ local function reserved_words(tab)
 end
 
 local function exclude_undoc(tab, doc_report, doc)
+	if #tab == 0 then return end
+
 	printNote("Checking undocumented files")
 	for i = #tab, 1, -1 do
 		local example = 0
@@ -703,6 +705,8 @@ end
 
 -- report functions with no usage definition
 local function check_usage(files, doc_report)
+	if #files == 0 then return end
+
 	printNote("Checking @usage definition")
 	for i = 1, #files do
 		local file_name = files[i]
@@ -787,6 +791,8 @@ local function check_usage(files, doc_report)
 end
 
 local function check_function_usage(files, doc_report)
+	if #files == 0 then return end
+
 	printNote("Checking calls to functions in @usage")
 	for i = 1, #files do
 		local file_name = files[i]
@@ -830,6 +836,8 @@ local function check_tab_cols()
 end
 
 local function check_undoc_args(files, doc_report)
+	if #files == 0 then return end
+
 	printNote("Checking undocumented arguments")
 	for i = 1, #files do
 		local file_name = files[i]
@@ -1039,31 +1047,39 @@ function start(files, examples, package_path, short_lua_path, doc_report, silent
 		examples = examples
 	}
 	
-	if not silent then
-		printNote("Parsing lua files")
-	end
 
-	for _, file_ in ipairs(files) do
-		local attr = attributes(lua_path..file_)
-		assert(attr, string.format("error stating path '%s'", lua_path..file_))
+	if #files < 1 then
+		if not silent then
+			printNote("Package has no source code files")
+		end
+	else	
+		if not silent then
+			printNote("Parsing lua files")
+		end
+
+		for _, file_ in ipairs(files) do
+			local attr = attributes(lua_path..file_)
+			assert(attr, string.format("error stating path '%s'", lua_path..file_))
 		
-		if attr.mode == "file" then
-			doc = file(lua_path, file_, doc, short_lua_path, doc_report, silent)
-		elseif attr.mode == "directory" then
-			local dir_path = lua_path..file_..s
-			local short_dir_path = short_lua_path..file_..s
-			doc = directory(dir_path, file_, doc, short_dir_path, silent)
+			if attr.mode == "file" then
+				doc = file(lua_path, file_, doc, short_lua_path, doc_report, silent)
+			elseif attr.mode == "directory" then
+				local dir_path = lua_path..file_..s
+				local short_dir_path = short_lua_path..file_..s
+				doc = directory(dir_path, file_, doc, short_dir_path, silent)
+			end
 		end
 	end
 
-	if not silent then
-		printNote("Parsing examples")
-	end
 	if #examples < 1 then
 		if not silent then
-			printWarning("No examples were found.")
+			printNote("Package has no examples")
 		end
 	else
+		if not silent then
+			printNote("Parsing examples")
+		end
+
 		for _, file_ in ipairs(examples) do
 			local mfile = file_..".lua"
 			local attr = attributes(examples_path..mfile)
