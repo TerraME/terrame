@@ -120,6 +120,22 @@ return{
 			unitTest:assertEquals(valuesDefault[i], cs.cells[i].POPUL)
 		end
 
+		-- MISSING TEST
+		local missing = -1
+		cs = CellularSpace{
+			file = filePath("test/CellsAmaz.shp"),
+			missing = missing
+		}
+
+		local missCount = 0
+		forEachCell(cs, function(c)
+			if c.pointcount == -1 then
+				missCount = missCount + 1
+			end
+		end)
+
+		unitTest:assertEquals(missCount, 156)
+
 		-- project
 		local terralib = getPackage("terralib")
 		local projName = File("cellspace_basic.tview")
@@ -183,6 +199,30 @@ return{
 
 		unitTest:assertEquals(303, #cs.cells)
 		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
+
+		-- MISSING TEST
+		local missLayerName = "CellsAmaz"
+		terralib.Layer{
+			project = proj,
+			name = missLayerName,
+			file = filePath("test/CellsAmaz.shp")
+		}
+
+		cs = CellularSpace{
+			project = proj,
+			layer = missLayerName,
+			missing = missing
+		}
+
+		missCount = 0
+		forEachCell(cs, function(c)
+			if c.pointcount == -1 then
+				missCount = missCount + 1
+			end
+		end)
+
+		unitTest:assertEquals(missCount, 156)
+
 		if projName:exists() then projName:delete() end
 
 		layer1:delete()

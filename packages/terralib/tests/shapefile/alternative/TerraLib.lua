@@ -129,6 +129,22 @@ return {
 		end
 		unitTest:assertError(intersectionTypeError, "Operation 'intersection' cannot be executed with an attribute of type real ('ANOCRIACAO').")
 
+		local percLayerName = clName.."_"..layerName2.."_Percentage"
+		shp[3] = File(percLayerName..".shp")
+		shp[3]:deleteIfExists()
+
+		operation = "coverage"
+		attribute = "perc"
+		select = "ADMINISTRA"
+		area = nil
+		default = nil
+		TerraLib().attributeFill(proj, layerName2, clName, percLayerName, attribute, operation, select, area, default)
+
+		local missingError = function()
+			TerraLib().getDataSet(proj, percLayerName)
+		end
+		unitTest:assertError(missingError, "Data has a missing value in attribute 'perc_0'. Use argument 'missing' to set its value.")
+
 		for j = 1, #shp do
 			shp[j]:deleteIfExists()
 		end

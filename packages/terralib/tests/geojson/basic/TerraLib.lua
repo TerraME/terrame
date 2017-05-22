@@ -259,8 +259,17 @@ return {
 		local dpFile = File(string.lower(dpLayerName)..".geojson")
 		TerraLib().addGeoJSONLayer(proj, dpLayerName, dpFile)
 
-		local dpSet = TerraLib().getDataSet(proj, dpLayerName)
+		local dpSet = TerraLib().getDataSet(proj, dpLayerName, -1)
 		unitTest:assertEquals(getn(dpSet), 182)
+
+		local missingCount = 0
+		for i = 0, getn(dpSet) - 1 do
+			if dpSet[i].PNVCOIN == -1 then
+				missingCount = missingCount + 1
+			end
+		end
+
+		unitTest:assertEquals(missingCount, 177)
 
 		local attrNames = TerraLib().getPropertyNames(proj, dpLayerName)
 		unitTest:assertEquals("FID", attrNames[0])

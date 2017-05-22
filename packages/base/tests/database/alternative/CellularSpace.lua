@@ -160,6 +160,50 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "Cannot rename attribute 'height_2' as it does not exist.")
+
+		local missingShpError = function()
+			CellularSpace{
+				file = filePath("test/CellsAmaz.shp")
+			}
+		end
+		unitTest:assertError(missingShpError, "Data has a missing value in attribute 'pointcount'. Use argument 'missing' to set its value.")
+
+		local missingNotNumber = function()
+			CellularSpace{
+				file = filePath("test/CellsAmaz.shp"),
+				missing = "null"
+			}
+		end
+		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", "null"))
+
+		local terralib = getPackage("terralib")
+		local file = File("cellspace_alt.tview")
+		local author = "Avancini"
+		local title = "Cellular Space"
+
+		local proj = terralib.Project{
+			file = tostring(file),
+			clean = true,
+			author = author,
+			title = title
+		}
+
+		local missLayerName = "CellsAmaz"
+		terralib.Layer{
+			project = proj,
+			name = missLayerName,
+			file = filePath("test/CellsAmaz.shp")
+		}
+
+		local missingLayerError = function()
+			CellularSpace{
+				project = proj,
+				layer = missLayerName
+			}
+		end
+		unitTest:assertError(missingLayerError, "Data has a missing value in attribute 'pointcount'. Use argument 'missing' to set its value.")
+
+		file:deleteIfExists()
 	end,
 	loadNeighborhood = function(unitTest)
 		local terralib = getPackage("terralib")
@@ -234,6 +278,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
 		-- unitTest:assertFile(file) -- SKIP #TODO(#1242)
+
 		file:deleteIfExists()
 		layer1:delete()
 
