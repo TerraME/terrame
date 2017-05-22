@@ -346,7 +346,7 @@ local function verifyData(package, report)
 				local attributesIdx = {}
 
 				forEachElement(attributes, function(_, mvalue)
-					attributesIdx[mvalue] = true
+					attributesIdx[mvalue.name] = true
 				end)
 
 				forEachOrderedElement(attributesIdx, function(mvalue)
