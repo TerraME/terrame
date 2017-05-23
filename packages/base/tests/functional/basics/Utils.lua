@@ -1104,7 +1104,7 @@ return{
 			unitTest:assertType(file, "File")
 		end)
 
-		unitTest:assertEquals(count, 74)
+		unitTest:assertEquals(count, 79)
 
 		local dir = Directory(packageInfo("base").path.."data")
 		count = 0
