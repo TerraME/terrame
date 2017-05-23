@@ -346,12 +346,12 @@ return {
 
 		unitTest:assertSnapshot(map, "tiff-std.png")
 
-		-- NODATA
+		-- DUMMY
 		cl:fill{
 			operation = "average",
 			layer = "altimetria",
 			attribute = "height_nd",
-			nodata = 256
+			dummy = 256
 		}
 
 		cs = CellularSpace{
@@ -470,7 +470,7 @@ return {
 
 		proj.file:delete()
 	end,
-	nodata = function(unitTest)
+	dummy = function(unitTest)
 		local projName = "layer_tif_bands.tview"
 
 		local proj = Project{
@@ -490,7 +490,7 @@ return {
 			file = filePath("test/prodes_polyc_10k.tif", "terralib")
 		}
 
-		unitTest:assertEquals(l:nodata(), 255.0)
+		unitTest:assertEquals(l:dummy(), 255.0)
 
 		local portos = "Portos"
 		l = Layer{
@@ -499,7 +499,7 @@ return {
 			file = filePath("amazonia-ports.shp", "terralib")
 		}
 
-		unitTest:assertNil(l:nodata())
+		unitTest:assertNil(l:dummy())
 
 		File(projName):delete()
 

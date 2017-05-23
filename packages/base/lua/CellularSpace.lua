@@ -639,7 +639,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 end
 
 local function loadOGR(self)
-	local dSet = terralib.TerraLib().getOGRByFilePath(tostring(self.file))
+	local dSet = terralib.TerraLib().getOGRByFilePath(tostring(self.file), self.missing)
 
 	defaultTableValue(self, "geometry", false)
 
@@ -702,7 +702,7 @@ local function loadGdal(self)
 end
 
 local function loadLayer(self)
-	local dset = terralib.TerraLib().getDataSet(self.project, self.layer.name)
+	local dset = terralib.TerraLib().getDataSet(self.project, self.layer.name, self.missing)
 
 	if self.layer.rep == "raster" then
 		setRasterCells(self, dset) -- SKIP
@@ -1295,9 +1295,9 @@ CellularSpace_ = {
 			customError("The CellularSpace must have a valid Project. Please, check the documentation.")
 		end
 
+		local dset = terralib.TerraLib().getDataSet(self.project, self.layer.name)
+		-- TODO(#1793)
 		if not self.geometry then
-			local dset = terralib.TerraLib().getDataSet(self.project, self.layer.name)
-
 			for i = 0, #dset do
 				for k, v in pairs(dset[i]) do
 					if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
@@ -1306,19 +1306,16 @@ CellularSpace_ = {
 				end
 			end
 		else
-			local dset = terralib.TerraLib().getDataSet(self.project, self.layer.name)
 			local isOgr = false
 
-			for k in pairs(dset[0]) do
-				if k == "OGR_GEOMETRY" then
-					isOgr = true
-				end
+			if dset[0].OGR_GEOMETRY or dset[0].ogr_geometry then
+				isOgr = true
 			end
 
 			if isOgr then
 				for i = 0, #dset do
 					for k, v in pairs(dset[i]) do
-						if k == "OGR_GEOMETRY" then
+						if (k == "OGR_GEOMETRY") or (k == "ogr_geometry") then
 							self.cells[i + 1].geom = nil
 							self.cells[i + 1][k] = v
 						end
@@ -1495,6 +1492,8 @@ metaTableCellularSpace_ = {
 -- @arg data.project A string with the name of the TerraLib project to be used.
 -- If this name does not ends with ".tview", this extension will be added to the name
 -- of the file. It can also be a terralib::Project.
+-- @arg data.missing An optional number that means all numeric values read from a data source
+-- that do not have any value should be replaced by it.
 -- @arg data.attrname A string with an attribute name. It is useful for files that have
 -- only one attribute value for each cell but no attribute name. The default value is
 -- the name of the file being read.
@@ -1575,6 +1574,7 @@ function CellularSpace(data)
 	verifyNamedTable(data)
 
 	optionalTableArgument(data, "as", "table")
+	optionalTableArgument(data, "missing", "number")
 
 	if data.as then
 		forEachElement(data.as, function(idx, value)

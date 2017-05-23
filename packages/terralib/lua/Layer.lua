@@ -333,7 +333,7 @@ local function checkBand(layer, data)
 		end
 	end
 
-	defaultTableValue(data, "nodata", data.layer:nodata(data.band))
+	defaultTableValue(data, "dummy", data.layer:dummy(data.band))
 end
 
 Layer_ = {
@@ -378,7 +378,7 @@ Layer_ = {
 	-- the selected operation needs a value associated to the geometry (average, sum, mode).
 	-- When using a raster data as input, use argument band instead.
 	-- @arg data.band An integer value representing the band of the raster to be used.
-	-- The default value is one.
+	-- The missing value is one.
 	-- @arg data.layer An input Layer belonging to the same Project. It can also be a
 	-- string with the Layer's name. There are
 	-- several strategies available, depending on the geometry of the Layer. See below:
@@ -400,12 +400,12 @@ Layer_ = {
 	-- @tabular operation
 	-- Operation & Description & Mandatory arguments & Optional arguments \
 	-- "area" & Total overlay area between the cell and a layer of polygons. The created values
-	-- will range from zero to one, indicating its area of coverage. & attribute, layer & default \
+	-- will range from zero to one, indicating its area of coverage. & attribute, layer & missing \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income.
-	-- & attribute, layer, select  & area, default, band, nodata  \
+	-- & attribute, layer, select  & area, missing, band, dummy  \
 	-- "count" & Number of objects that have some overlay with the cell.
 	-- & attribute, layer & \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
@@ -416,13 +416,13 @@ Layer_ = {
 	-- output to string. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select &
-	-- default, band, nodata \
+	-- missing, band, dummy \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, band, nodata \
+	-- attribute, layer, select & missing, band, dummy \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, band, nodata \
+	-- attribute, layer, select & missing, band, dummy \
 	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
@@ -432,25 +432,25 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & default, band, nodata \
+	-- & attribute, layer, select & missing, band, dummy \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
 	-- & attribute, layer & \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & default, band, nodata \
+	-- attribute, layer, select & missing, band, dummy \
 	-- "sum" & Sum of quantitative values from objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, it
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
-	-- & attribute, layer, select & area, default, band, nodata \
+	-- & attribute, layer, select & area, missing, band, dummy \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true),
-	-- or the weights are equal for each object with some overlap (false, default value).
-	-- @arg data.default A value that will be used to fill a cell whose attribute cannot be
+	-- or the weights are equal for each object with some overlap (false, missing value).
+	-- @arg data.missing A value that will be used to fill a cell whose attribute cannot be
 	-- computed. For example, when there is no intersection area. Note that this argument is
-	-- related to the output. Its default value is zero.
-	-- @arg data.nodata A number used in raster data that represents no information in a pixel value.
-	-- Its default value can be got from Layer:nodata() function.
+	-- related to the output. Its missing value is zero.
+	-- @arg data.dummy A number used in raster data that represents no information in a pixel value.
+	-- Its default value can be got from Layer:dummy() function.
 	-- @usage -- DONTRUN
 	-- import("terralib")
 	--
@@ -483,7 +483,7 @@ Layer_ = {
 
 		mandatoryTableArgument(data, "operation", "string")
 		mandatoryTableArgument(data, "attribute", "string")
-		optionalTableArgument(data, "nodata", "number")
+		optionalTableArgument(data, "dummy", "number")
 
 		checkName(data.attribute, "Attribute")
 
@@ -503,26 +503,26 @@ Layer_ = {
 		switch(data, "operation"):caseof{
 			area = function()
 				if repr == "polygon" or repr == "surface" then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
-				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "missing", 0)
 			end,
 			average = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					if repr == "polygon" or repr == "surface" then
-						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"area", "attribute", "missing", "layer", "operation", "select"})
 						defaultTableValue(data, "area", false)
 					else
-						verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					end
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation", "nodata"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation", "dummy"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -530,15 +530,17 @@ Layer_ = {
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
-				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "missing", 0)
 			end,
 			count = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "missing"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
+
+				defaultTableValue(data, "missing", 0)
 			end,
 			distance = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
@@ -559,15 +561,15 @@ Layer_ = {
 			mode = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					if repr == "polygon" or repr == "surface" then
-						verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"area", "attribute", "missing", "layer", "operation", "select"})
 						defaultTableValue(data, "area", false)
 					else
-						verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					end
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -575,14 +577,14 @@ Layer_ = {
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
-				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "missing", 0)
 			end,
 			maximum = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -590,14 +592,14 @@ Layer_ = {
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
-				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "missing", 0)
 			end,
 			minimum = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -605,14 +607,14 @@ Layer_ = {
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
-				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "missing", 0)
 			end,
 			coverage = function()
 				if repr == "polygon" or repr == "surface" then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "default", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -620,7 +622,7 @@ Layer_ = {
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
-				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "missing", 0)
 			end,
 			presence = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
@@ -632,10 +634,10 @@ Layer_ = {
 			end,
 			stdev = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -643,15 +645,15 @@ Layer_ = {
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
-				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "missing", 0)
 			end,
 			sum = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"area", "attribute", "missing", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 					defaultTableValue(data, "area", false)
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "default", "layer", "operation", "band"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "band"})
 					checkBand(data.layer, data)
 
 					data.select = data.band -- SKIP
@@ -659,7 +661,7 @@ Layer_ = {
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
-				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "missing", 0)
 			end
 		}
 
@@ -680,7 +682,7 @@ Layer_ = {
 			end
 		end
 
-		TerraLib().attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.default, repr, data.nodata)
+		TerraLib().attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.missing, repr, data.dummy)
 	end,
 	--- Return the Layer's projection. It contains the name of the projection, its Geodetic
 	-- Identifier (EPSG), and
@@ -728,13 +730,13 @@ Layer_ = {
 
 		return luaPropInfos
 	end,
-	--- Returns the nodata value of a raster layer. If the layer does not have a raster representation
+	--- Returns the dummy value of a raster layer. If the layer does not have a raster representation
 	-- then it returns nil . The bands of the raster layer are named from zero to the number of
 	-- bands minus one. If the band is greater than that, it returns an error.
 	-- @arg band The band number. The default value is zero.
 	-- @usage -- DONTRUN
-	-- print(layer:nodata())
-	nodata = function(self, band)
+	-- print(layer:dummy())
+	dummy = function(self, band)
 		if band == nil then band = 0 end
 
 		mandatoryArgument(1, "number", band)

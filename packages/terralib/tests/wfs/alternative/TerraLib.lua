@@ -45,7 +45,7 @@ return {
 		end
 		unitTest:assertError(invalidUrl, "The URL 'http://terrabrasilis.info/redd-pac' is invalid.")
 
-		url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
+		url = "http://terrabrasilis.info/redd-pac/wfs"
 		dataset = "reddpac:B"
 
 		if TerraLib().isValidWfsUrl(url) then

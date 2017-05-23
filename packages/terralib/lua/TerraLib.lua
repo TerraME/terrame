@@ -721,7 +721,7 @@ local function isDataTypeNumber(propType)
 	return isDataTypeInteger(propType) or isDataTypeReal(propType)
 end
 
-local function createDataSetAdapted(dSet)
+local function createDataSetAdapted(dSet, missing)
 	local count = 0
 	local numProps = dSet:getNumProperties()
 	local set = {}
@@ -732,7 +732,13 @@ local function createDataSetAdapted(dSet)
 		for i = 0, numProps - 1 do
 			local type = dSet:getPropertyDataType(i)
 
-			if isDataTypeNumber(type) then
+			if dSet:isNull(i) then
+				if missing then
+					line[dSet:getPropertyName(i)] = missing
+				else
+					customError("Data has a missing value in attribute '"..dSet:getPropertyName(i).."'. Use argument 'missing' to set its value.")
+				end
+			elseif isDataTypeNumber(type) then
 				line[dSet:getPropertyName(i)] = tonumber(dSet:getAsString(i, precision))
 			elseif type == binding.BOOLEAN_TYPE then
 				line[dSet:getPropertyName(i)] = dSet:getBool(i)
@@ -886,8 +892,8 @@ local function removeLayer(project, layerName)
 	collectgarbage("collect")
 end
 
-local function overwriteLayer(project, fromName, toName, toSetName)
-	local fromDset = instance.getDataSet(project, fromName)
+local function overwriteLayer(project, fromName, toName, toSetName, default)
+	local fromDset = instance.getDataSet(project, fromName, default)
 
 	local luaTable = {}
 	for i = 0, #fromDset do
@@ -2038,7 +2044,7 @@ TerraLib_ = {
 				end
 
 				outDs:close()
-				overwriteLayer(project, out, to, toSetName)
+				overwriteLayer(project, out, to, toSetName, default)
 				removeLayer(project, out)
 			end
 		end
@@ -2048,9 +2054,10 @@ TerraLib_ = {
 	--- Returns a given dataset from a layer.
 	-- @arg project The name of the project.
 	-- @arg layerName Name of the layer to be read.
+	-- @arg missing A value to replace null values.
 	-- @usage -- DONTRUN
 	-- ds = terralib:getDataSet("myproject.tview", "mylayer")
-	getDataSet = function(project, layerName)
+	getDataSet = function(project, layerName, missing)
 		local set
 
 		do
@@ -2063,7 +2070,7 @@ TerraLib_ = {
 			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
 			local dse = ds:getDataSet(dseName)
 
-			set = createDataSetAdapted(dse)
+			set = createDataSetAdapted(dse, missing)
 
 			releaseProject(project)
 			ds:close()
@@ -2158,10 +2165,11 @@ TerraLib_ = {
 	end,
 	--- Return the content of an OGR file.
 	-- @arg filePath The path for the file to be loaded.
+	-- @arg missing A value to replace null values.
 	-- @usage -- DONTRUN
 	-- local shpPath = filePath("sampa.shp", "terralib")
 	-- dSet = TerraLib().getOGRByFilePath(shpPath)
-	getOGRByFilePath = function(filePath)
+	getOGRByFilePath = function(filePath, missing)
 		local set
 
 		do
@@ -2177,7 +2185,7 @@ TerraLib_ = {
 			end
 
 			local dSet = ds:getDataSet(dSetName)
-			set = createDataSetAdapted(dSet)
+			set = createDataSetAdapted(dSet, missing)
 
 			ds:close()
 		end

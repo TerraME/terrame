@@ -190,22 +190,22 @@ local function getProjects(package, doc_report)
 
 			description = description.." from layer \""..data.layer.."\""
 
-			if data.band or data.select or data.nodata then
+			if data.band or data.select or data.dummy then
 				description = description.." using"
 			end
 
 			if data.band then
 				description = description.." band "..data.band
 
-				if data.nodata then
+				if data.dummy then
 					description = description.." and "
 				end
 			elseif data.select then
 				description = description.." selected attribute ".."\""..data.select.."\""
 			end
 
-			if data.nodata then
-				description = description.." nodata "..data.nodata
+			if data.dummy then
+				description = description.." dummy "..data.dummy
 			end
 
 			if data.operation == "coverage" then
@@ -918,12 +918,12 @@ function _Gtme.executeDoc(package)
 				value.projection = layer:projection()
 				value.epsg = TerraLib().getProjection(layer.project.layers[layer.name]).SRID
 				value.bands = layer:bands()
-				value.nodata = {}
+				value.dummy = {}
 
 				if value.attributes == nil then value.attributes = {} end
 
 				for i = 0, value.bands - 1 do
-					table.insert(value.nodata, layer:nodata(i))
+					table.insert(value.dummy, layer:dummy(i))
 
 					if not value.attributes[tostring(i)] then
 						printError("Band "..i.." is not documented.")

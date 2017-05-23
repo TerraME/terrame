@@ -62,7 +62,7 @@ cl:fill{
 	operation = "average",
 	layer = "elevation",
 	attribute = "height",
-	nodata = 300
+	dummy = 300
 }
 
 cs = CellularSpace{

@@ -154,30 +154,30 @@ return {
 
 		customWarning = customWarningBkp
 
-		local nodataTypeError = function()
+		local dummyTypeError = function()
 			cl:fill{
 				operation = "average",
 				attribute = "aver_nd",
 				layer = "altimetria",
-				nodata = true
+				dummy = true
 			}
 		end
-		unitTest:assertError(nodataTypeError, incompatibleTypeMsg("nodata", "number", true))
+		unitTest:assertError(dummyTypeError, incompatibleTypeMsg("dummy", "number", true))
 
 		local nodataDefaultError = function()
 			cl:fill{
 				operation = "average",
 				attribute = "aver_nd",
 				layer = "altimetria",
-				nodata = 255
+				dummy = 255
 			}
 		end
-		unitTest:assertError(nodataDefaultError, defaultValueMsg("nodata", 255.0))
+		unitTest:assertError(nodataDefaultError, defaultValueMsg("dummy", 255.0))
 
 		File(projName):delete()
 		File(shp1):deleteIfExists()
 	end,
-	nodata = function(unitTest)
+	dummy = function(unitTest)
 		local projName = "layer_tif_nodata.tview"
 
 		File(projName):deleteIfExists()
@@ -200,17 +200,17 @@ return {
 		}
 
 		local bandNoNumber = function()
-			l:nodata("4")
+			l:dummy("4")
 		end
 		unitTest:assertError(bandNoNumber, incompatibleTypeMsg(1, "number", "4"))
 
 		local bandNegative = function()
-			l:nodata(-1)
+			l:dummy(-1)
 		end
 		unitTest:assertError(bandNegative, positiveArgumentMsg(1, -1, true))
 
 		local bandNoExists = function()
-			l:nodata(4)
+			l:dummy(4)
 		end
 		unitTest:assertError(bandNoExists, "The only available band is '0'.")
 
