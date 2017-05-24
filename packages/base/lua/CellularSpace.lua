@@ -1492,8 +1492,9 @@ metaTableCellularSpace_ = {
 -- @arg data.project A string with the name of the TerraLib project to be used.
 -- If this name does not ends with ".tview", this extension will be added to the name
 -- of the file. It can also be a terralib::Project.
--- @arg data.missing An optional number that means all numeric values read from a data source
--- that do not have any value should be replaced by it.
+-- @arg data.missing An optional number that replaces all numeric attributes read from a data source
+-- that do not have any value. If this argument is not set and TerraME finds some attribute without
+-- a value, the simulation will stop with an error.
 -- @arg data.attrname A string with an attribute name. It is useful for files that have
 -- only one attribute value for each cell but no attribute name. The default value is
 -- the name of the file being read.
@@ -1544,11 +1545,11 @@ metaTableCellularSpace_ = {
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
 -- requires at least two attributes: x and y. & file & source, sep, as, geometry, ...\
 -- "proj" & Load from a layer within a TerraLib project. See the documentation of package terralib for
--- more information. & project, layer & source, geometry, as, ... \
+-- more information. & project, layer & source, geometry, as, missing, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and
 -- different extensions: .shp, .shx, and .dbf. The argument file must end with ".shp".
 -- As default, each Cell will have its (x, y) location according
--- to the attributes (row, col) from the shapefile. & file & source, as, xy, zero, geometry, ... \
+-- to the attributes (row, col) from the shapefile. & file & source, as, xy, missing, zero, geometry, ... \
 -- "virtual" & Create a rectangular CellularSpace from scratch. Cells will be instantiated with
 -- only two attributes, x and y, starting from (0, 0). & xdim & ydim, as, geometry, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.
