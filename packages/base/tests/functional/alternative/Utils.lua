@@ -494,6 +494,14 @@ return{
 
 		error_func = function()
 			local data = {att = "abd"}
+			switch(data, "atx"):caseof{
+				xxx = function() end
+			}
+		end
+		unitTest:assertError(error_func, "Value of #2 ('atx') does not belong to #1.")
+
+		error_func = function()
+			local data = {att = "abd"}
 			switch(data, "att"):caseof(2)
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
