@@ -1072,15 +1072,6 @@ return{
 		end
 		unitTest:assertError(op1NotAvailable, "The operation 'area' is not available for layers with raster data.")
 
-		local op2NotAvailable = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "count",
-				layer = layerName3
-			}
-		end
-		unitTest:assertError(op2NotAvailable, "The operation 'count' is not available for layers with raster data.")
-
 		local op3NotAvailable = function()
 			cl:fill{
 				attribute = "attr",

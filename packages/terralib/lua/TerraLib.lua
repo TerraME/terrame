@@ -68,7 +68,8 @@ local RasterAttributeCreatedMapper = {
 	mode = "_Mode",
 	coverage = "",
 	stdev = "_Standard_Deviation",
-	sum = "_Sum"
+	sum = "_Sum",
+	count = "_Count"
 }
 
 local OperationAvailablePerDataTypeMapper = {
