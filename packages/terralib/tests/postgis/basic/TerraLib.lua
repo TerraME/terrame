@@ -1044,6 +1044,47 @@ return {
 		unitTest:assertEquals(rsumOverLayerInfo.table, string.lower(rsumLayerName))
 		unitTest:assertNotNil(rsumOverLayerInfo.sid)
 
+		-- FILL CELLULAR SPACE WITH COUNT OPERATION FROM RASTER
+		local rcountLayerName = clName.."_"..layerName4.."_RCount"
+
+		pgData.table = string.lower(rcountLayerName)
+		TerraLib().dropPgTable(pgData)
+
+		operation = "count"
+		attribute = "rcount"
+		select = 0
+		area = nil
+		default = nil
+		TerraLib().attributeFill(proj, layerName4, rsumLayerName, rcountLayerName, attribute, operation, select, area, default)
+
+		local rcountSet = TerraLib().getDataSet(proj, rcountLayerName, 0)
+
+		unitTest:assertEquals(getn(rcountSet), 9)
+
+		for k, v in pairs(rcountSet[0]) do
+			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+							(k == "presence") or (k == "area_percent") or (k == "count") or
+							(k == "distance") or (k == "minimum") or (k == "maximum") or
+							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
+							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
+							(k == "rsum") or (k == "rsum_over") or (k == "rcount"))
+			unitTest:assertNotNil(v)
+		end
+
+		local rcountLayerInfo = TerraLib().getLayerInfo(proj, rcountLayerName)
+		unitTest:assertEquals(rcountLayerInfo.name, rcountLayerName)
+		unitTest:assertEquals(rcountLayerInfo.type, "POSTGIS")
+		unitTest:assertEquals(rcountLayerInfo.rep, "polygon")
+		unitTest:assertEquals(rcountLayerInfo.host, host)
+		unitTest:assertEquals(rcountLayerInfo.port, port)
+		unitTest:assertEquals(rcountLayerInfo.user, user)
+		unitTest:assertEquals(rcountLayerInfo.password, password)
+		unitTest:assertEquals(rcountLayerInfo.database, database)
+		unitTest:assertEquals(rcountLayerInfo.table, string.lower(rcountLayerName))
+		unitTest:assertNotNil(rcountLayerInfo.sid)
+
 		-- END
 		pgData.table = string.lower(clName)
 		TerraLib().dropPgTable(pgData)
@@ -1086,6 +1127,8 @@ return {
 		pgData.table = string.lower(rstdevLayerName)
 		TerraLib().dropPgTable(pgData)
 		pgData.table = string.lower(rsumLayerName)
+		TerraLib().dropPgTable(pgData)
+		pgData.table = string.lower(rcountLayerName)
 		TerraLib().dropPgTable(pgData)
 		-- END POSTGIS TESTS
 

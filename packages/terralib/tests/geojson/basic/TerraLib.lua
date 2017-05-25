@@ -130,8 +130,8 @@ return {
 		proj.file:delete()
 	end,
 	getOGRByFilePath = function(unitTest)
-		local shpPath = filePath("test/malha2015.geojson", "terralib")
-		local dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
+		local shpFile = filePath("test/malha2015.geojson", "terralib")
+		local dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 
 		unitTest:assertEquals(getn(dSet), 102)
 
