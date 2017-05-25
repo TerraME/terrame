@@ -1432,8 +1432,8 @@ return {
 		proj.file:delete()
 	end,
 	getOGRByFilePath = function(unitTest)
-		local shpPath = filePath("test/sampa.shp", "terralib")
-		local dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
+		local shpFile = filePath("test/sampa.shp", "terralib")
+		local dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 
 		unitTest:assertEquals(getn(dSet), 63)
 
@@ -1602,24 +1602,24 @@ return {
 		shp1:delete()
 	end,
 	castGeomToSubtype = function(unitTest)
-		local shpPath = filePath("test/sampa.shp", "terralib")
-		local dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
+		local shpFile = filePath("test/sampa.shp", "terralib")
+		local dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 		local geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPolygon")
 		geom = TerraLib().castGeomToSubtype(geom:getGeometryN(0))
 		unitTest:assertEquals(geom:getGeometryType(), "Polygon")
 
-		shpPath = filePath("amazonia-roads.shp", "terralib")
-		dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
+		shpFile = filePath("amazonia-roads.shp", "terralib")
+		dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 		geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiLineString")
 		geom = TerraLib().castGeomToSubtype(geom:getGeometryN(0))
 		unitTest:assertEquals(geom:getGeometryType(), "LineString")
 
-		shpPath = filePath("test/prodes_points_10km_PA_pt.shp", "terralib")
-		dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
+		shpFile = filePath("test/prodes_points_10km_PA_pt.shp", "terralib")
+		dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 		geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")

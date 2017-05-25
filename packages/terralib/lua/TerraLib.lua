@@ -2148,8 +2148,8 @@ TerraLib_ = {
 	--- Return the content of a GDAL file.
 	-- @arg filePath The path for the file to be loaded.
 	-- @usage -- DONTRUN
-	-- local gdalPath = filePath("PRODES_5KM.tif", "terralib")
-	-- dSet = TerraLib().getGdalByFilePath(gdalPath)
+	-- local gdalFile = filePath("PRODES_5KM.tif", "terralib")
+	-- dSet = TerraLib().getGdalByFilePath(tostring(gdalFile))
 	getGdalByFilePath = function(filePath)
 		local set
 
@@ -2172,10 +2172,10 @@ TerraLib_ = {
 	-- @arg filePath The path for the file to be loaded.
 	-- @arg missing A value to replace null values.
 	-- @usage -- DONTRUN
-	-- local shpPath = filePath("sampa.shp", "terralib")
-	-- dSet = TerraLib().getOGRByFilePath(shpPath)
+	-- local shpFile = filePath("sampa.shp", "terralib")
+	-- dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 	getOGRByFilePath = function(filePath, missing)
-		local set
+		local set, err
 
 		do
 			local connInfo = createFileConnInfo(filePath)
@@ -2190,12 +2190,16 @@ TerraLib_ = {
 			end
 
 			local dSet = ds:getDataSet(dSetName)
-			set = createDataSetAdapted(dSet, missing)
+			set, err = createDataSetAdapted(dSet, missing)
 
 			ds:close()
 		end
 
 		collectgarbage("collect")
+
+		if not set then
+			customError(err)
+		end
 
 		return set
 	end,
