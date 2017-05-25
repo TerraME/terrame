@@ -737,7 +737,7 @@ local function createDataSetAdapted(dSet, missing)
 				if missing then
 					line[dSet:getPropertyName(i)] = missing
 				else
-					customError("Data has a missing value in attribute '"..dSet:getPropertyName(i).."'. Use argument 'missing' to set its value.")
+					return nil, "Data has a missing value in attribute '"..dSet:getPropertyName(i).."'. Use argument 'missing' to set its value."
 				end
 			elseif isDataTypeNumber(type) then
 				line[dSet:getPropertyName(i)] = tonumber(dSet:getAsString(i, precision))
@@ -2059,7 +2059,7 @@ TerraLib_ = {
 	-- @usage -- DONTRUN
 	-- ds = terralib:getDataSet("myproject.tview", "mylayer")
 	getDataSet = function(project, layerName, missing)
-		local set
+		local set, err
 
 		do
 			loadProject(project, project.file)
@@ -2071,13 +2071,17 @@ TerraLib_ = {
 			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
 			local dse = ds:getDataSet(dseName)
 
-			set = createDataSetAdapted(dse, missing)
+			set, err = createDataSetAdapted(dse, missing)
 
 			releaseProject(project)
 			ds:close()
 		end
 
 		collectgarbage("collect")
+
+		if not set then
+			customError(err)
+		end
 
 		return set
 	end,
