@@ -393,7 +393,7 @@ Layer_ = {
 	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
 	-- "average", "mode", "coverage", "sum" \
 	-- Raster & (none) &
-	-- "average", "mode", "maximum", "minimum", "coverage", "stdev", "sum" &
+	-- "average", "mode", "maximum", "minimum", "coverage", "stdev", "sum", "count" &
 	-- (none) \
 	-- @arg data.operation The way to compute the attribute of each cell. See the
 	-- table below:
@@ -536,6 +536,11 @@ Layer_ = {
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "missing"})
 					data.select = "FID"
+				elseif repr == "raster" then
+					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation", "dummy"})
+					checkBand(data.layer, data)
+
+					data.select = data.band
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end

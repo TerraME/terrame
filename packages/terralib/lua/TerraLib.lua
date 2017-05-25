@@ -68,7 +68,8 @@ local RasterAttributeCreatedMapper = {
 	mode = "_Mode",
 	coverage = "",
 	stdev = "_Standard_Deviation",
-	sum = "_Sum"
+	sum = "_Sum",
+	count = "_Count"
 }
 
 local OperationAvailablePerDataTypeMapper = {
@@ -736,7 +737,7 @@ local function createDataSetAdapted(dSet, missing)
 				if missing then
 					line[dSet:getPropertyName(i)] = missing
 				else
-					customError("Data has a missing value in attribute '"..dSet:getPropertyName(i).."'. Use argument 'missing' to set its value.")
+					return nil, "Data has a missing value in attribute '"..dSet:getPropertyName(i).."'. Use argument 'missing' to set its value."
 				end
 			elseif isDataTypeNumber(type) then
 				line[dSet:getPropertyName(i)] = tonumber(dSet:getAsString(i, precision))
@@ -2058,7 +2059,7 @@ TerraLib_ = {
 	-- @usage -- DONTRUN
 	-- ds = terralib:getDataSet("myproject.tview", "mylayer")
 	getDataSet = function(project, layerName, missing)
-		local set
+		local set, err
 
 		do
 			loadProject(project, project.file)
@@ -2070,13 +2071,17 @@ TerraLib_ = {
 			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
 			local dse = ds:getDataSet(dseName)
 
-			set = createDataSetAdapted(dse, missing)
+			set, err = createDataSetAdapted(dse, missing)
 
 			releaseProject(project)
 			ds:close()
 		end
 
 		collectgarbage("collect")
+
+		if not set then
+			customError(err)
+		end
 
 		return set
 	end,
@@ -2143,8 +2148,8 @@ TerraLib_ = {
 	--- Return the content of a GDAL file.
 	-- @arg filePath The path for the file to be loaded.
 	-- @usage -- DONTRUN
-	-- local gdalPath = filePath("PRODES_5KM.tif", "terralib")
-	-- dSet = TerraLib().getGdalByFilePath(gdalPath)
+	-- local gdalFile = filePath("PRODES_5KM.tif", "terralib")
+	-- dSet = TerraLib().getGdalByFilePath(tostring(gdalFile))
 	getGdalByFilePath = function(filePath)
 		local set
 
@@ -2167,10 +2172,10 @@ TerraLib_ = {
 	-- @arg filePath The path for the file to be loaded.
 	-- @arg missing A value to replace null values.
 	-- @usage -- DONTRUN
-	-- local shpPath = filePath("sampa.shp", "terralib")
-	-- dSet = TerraLib().getOGRByFilePath(shpPath)
+	-- local shpFile = filePath("sampa.shp", "terralib")
+	-- dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 	getOGRByFilePath = function(filePath, missing)
-		local set
+		local set, err
 
 		do
 			local connInfo = createFileConnInfo(filePath)
@@ -2185,12 +2190,16 @@ TerraLib_ = {
 			end
 
 			local dSet = ds:getDataSet(dSetName)
-			set = createDataSetAdapted(dSet, missing)
+			set, err = createDataSetAdapted(dSet, missing)
 
 			ds:close()
 		end
 
 		collectgarbage("collect")
+
+		if not set then
+			customError(err)
+		end
 
 		return set
 	end,

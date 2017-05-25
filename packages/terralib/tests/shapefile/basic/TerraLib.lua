@@ -995,6 +995,41 @@ return {
 		unitTest:assertNotNil(percentSet3[0].nine_PARES)
 		unitTest:assertNotNil(percentSet3[0].nine_PARNA)
 
+		-- FILL CELLULAR SPACE WITH COUNT OPERATION FROM RASTER
+		local rcountLayerName = clName.."_"..layerName4.."_RCount"
+		shp[25] = rcountLayerName..".shp"
+
+		File(shp[25]):deleteIfExists()
+
+		operation = "count"
+		attribute = "rcount"
+		select = 0
+		area = nil
+		default = nil
+		TerraLib().attributeFill(proj, layerName4, nodataLayerName, rcountLayerName, attribute, operation, select, area, default)
+
+		local rcountSet = TerraLib().getDataSet(proj, rcountLayerName, 0)
+
+		unitTest:assertEquals(getn(rcountSet), 9)
+
+		for k, v in pairs(rcountSet[0]) do
+			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
+							(k == "rstdev") or (k == "rsum") or (k == "rsum_over") or (k == "aver_nd") or (k == "rcount"))
+			unitTest:assertNotNil(v)
+		end
+
+		local rcountLayerInfo = TerraLib().getLayerInfo(proj, rcountLayerName)
+		unitTest:assertEquals(rcountLayerInfo.name, rcountLayerName)
+		unitTest:assertEquals(rcountLayerInfo.file, currentDir()..shp[25])
+		unitTest:assertEquals(rcountLayerInfo.type, "OGR")
+		unitTest:assertEquals(rcountLayerInfo.rep, "polygon")
+		unitTest:assertNotNil(rcountLayerInfo.sid)
+
 		for j = 1, #shp do
 			File(shp[j]):deleteIfExists()
 		end
@@ -1397,8 +1432,8 @@ return {
 		proj.file:delete()
 	end,
 	getOGRByFilePath = function(unitTest)
-		local shpPath = filePath("test/sampa.shp", "terralib")
-		local dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
+		local shpFile = filePath("test/sampa.shp", "terralib")
+		local dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 
 		unitTest:assertEquals(getn(dSet), 63)
 
@@ -1567,24 +1602,24 @@ return {
 		shp1:delete()
 	end,
 	castGeomToSubtype = function(unitTest)
-		local shpPath = filePath("test/sampa.shp", "terralib")
-		local dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
+		local shpFile = filePath("test/sampa.shp", "terralib")
+		local dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 		local geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPolygon")
 		geom = TerraLib().castGeomToSubtype(geom:getGeometryN(0))
 		unitTest:assertEquals(geom:getGeometryType(), "Polygon")
 
-		shpPath = filePath("amazonia-roads.shp", "terralib")
-		dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
+		shpFile = filePath("amazonia-roads.shp", "terralib")
+		dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 		geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiLineString")
 		geom = TerraLib().castGeomToSubtype(geom:getGeometryN(0))
 		unitTest:assertEquals(geom:getGeometryType(), "LineString")
 
-		shpPath = filePath("test/prodes_points_10km_PA_pt.shp", "terralib")
-		dSet = TerraLib().getOGRByFilePath(tostring(shpPath))
+		shpFile = filePath("test/prodes_points_10km_PA_pt.shp", "terralib")
+		dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
 		geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")
