@@ -376,6 +376,51 @@ return {
 
 		File(projName):delete()
 
+		-- COUNT
+
+		os.execute("cp "..filePath("amazonia-indigenous.shp", "terralib").." .")
+		os.execute("cp "..filePath("amazonia-indigenous.shx", "terralib").." .")
+		os.execute("cp "..filePath("amazonia-indigenous.prj", "terralib").." .")
+		os.execute("cp "..filePath("amazonia-indigenous.dbf", "terralib").." .")
+
+		proj = Project{
+			file = "fill_mcount.tview",
+			clean = true,
+		}
+
+		local protec = Layer{
+		    name = "protected",
+		    project = proj,
+		    epsg = 29191,
+		    file = "amazonia-indigenous.shp"
+		}
+
+		prodes = Layer{
+		    name = "prodes",
+		    project = proj,
+		    epsg = 29191,
+		    file = filePath("amazonia-prodes.tif", "terralib")
+		}
+
+		protec:fill{
+			operation = "count",
+			attribute = "prod_count",
+			layer = prodes
+		}
+
+		cs = CellularSpace{
+			layer = protec
+		}
+
+		forEachCell(cs, function(cell)
+			unitTest:assertType(cell.prod_count, "number")
+			unitTest:assert(cell.prod_count >= 1)
+			unitTest:assert(cell.prod_count <= 3796)
+		end)
+
+		File("amazonia-indigenous.shp"):delete()
+		File("fill_mcount.tview"):delete()
+
 		customWarning = customWarningBkp
 	end,
 	representation = function(unitTest)
