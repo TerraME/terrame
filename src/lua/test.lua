@@ -595,7 +595,8 @@ function _Gtme.executeTests(package, fileName)
 
 				print = function(...)
 					ut.print_calls = ut.print_calls + 1
-					printError("Error: print() call detected with the following content: '"..table.concat({...}, "\t").."'")
+					local info = debug.getinfo(2)
+					printError("Error: print() detected in "..info.short_src.." (line "..info.currentline.."): '"..table.concat({...}, "\t").."'")
 				end
 
 				local found_error = false

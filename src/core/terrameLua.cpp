@@ -191,6 +191,18 @@ int cpp_version(lua_State *L)
 	return 1;
 }
 
+int cpp_imagesize(lua_State *L)
+{
+    const char* s = lua_tostring(L, -1);
+	int width, height;
+
+	imageSize(s, width, height);
+
+	lua_pushnumber(L, width);
+	lua_pushnumber(L, height);
+	return 2;
+}
+
 int cpp_imagecompare(lua_State *L)
 {
     const char* s1 = lua_tostring(L, -1);
@@ -382,6 +394,9 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_imagecompare);
 	lua_setglobal(L, "cpp_imagecompare");
+
+	lua_pushcfunction(L, cpp_imagesize);
+	lua_setglobal(L, "cpp_imagesize");
 
 	lua_pushcfunction(L, cpp_loadfont);
 	lua_setglobal(L, "cpp_loadfont");

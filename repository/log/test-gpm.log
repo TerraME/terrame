@@ -6,6 +6,7 @@ Looking for package functions
 Skip looking for lines of source code
 Testing tests/alternative/GPM.lua
 Testing GPM
+Testing fill
 Testing save
 Checking if all asserts were executed
 Testing tests/alternative/Network.lua
@@ -13,6 +14,8 @@ Testing Network
 Checking if all asserts were executed
 Testing tests/basic/GPM.lua
 Testing GPM
+Testing __tostring
+Testing fill
 Testing save
 Checking if all asserts were executed
 Testing tests/basic/Network.lua
@@ -26,9 +29,10 @@ Testing examples
 Testing area
 Testing border
 Testing contains
-Testing distance
-Testing farms
+Testing distance-all
+Testing distance-limit
 Testing length
+Testing network
 Checking logs
 
 Functional test report for package 'gpm':
@@ -37,17 +41,17 @@ No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 2110 asserts were executed successfully.
-All 6 tested functions do not have any unexpected execution error.
-All 6 tested functions have at least one assert.
-All 6 tested functions exist in the source code of the package.
+All 2050 asserts were executed successfully.
+All 9 tested functions do not have any unexpected execution error.
+All 9 tested functions have at least one assert.
+All 9 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
-All 3 functions of the package were tested.
+All 5 functions of the package were tested.
 No lines from the source code were verified.
-All 6 examples were successfully executed.
+All 7 examples were successfully executed.
 No new log file was created.
 All log files were used in the tests.
 Summing up, all tests were successfully executed.

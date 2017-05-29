@@ -1572,13 +1572,12 @@ metaTableMap_ = {__index = Map_}
 -- of them are:
 -- @tabular color
 -- Name & Max \
--- Accent, Dark, Set2 & 7 \
--- Pastel2, Set1 & 8 \
--- Pastel1 & 9 \
--- PRGn, RdYlGn, Spectral & 10 \
--- BrBG, Paired, PiYG, PuOr, RdBu, RdGy, RdYlBu, Set3 & 11 \
--- BuGn, BuPu, OrRd, PuBu & 19 \
--- Blues, GnBu, Greens, Greys, Oranges, PuBuGn, PuRd, Purples, RdPu, Reds, YlGn, YlGnBu, YlOrBr, YlOrRd & 20 \
+-- Accent, Dark, Pastel2, Set2 & 8 \
+-- Pastel1, Set1 & 9 \
+-- BrBG, PRGn, RdYlGn, Spectral & 11 \
+-- PiYG, PuOr, RdBu, RdGy, RdYlBu & 11 \
+-- Paired, Set3 & 12 \
+-- Blues, BuGn, BuPu, GnBu, Greens, Greys, Oranges, OrRd, PuBu, PuBuGn, PuRd, Purples, RdPu, Reds, YlGn, YlGnBu, YlOrBr, YlOrRd & 20 \
 -- @arg data.stdColor A table just as argument color. It is needed only when standard deviation is
 -- the chosen strategy.
 -- @arg data.invert Invert the order of the colors when using ColorBrewer. The default value is false.

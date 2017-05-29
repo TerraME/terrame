@@ -2,18 +2,15 @@ Building documentation for package 'gpm'
 Loading package 'gpm'
 Parsing 'data.lua'
 Processing lua files
-Processing 'farms_cells.lua'
-Processing 'farms_cells3.lua'
+Processing 'cells.lua'
 Checking directory 'data'
 Checking properties of data files
-Processing 'censopop2000_bd.shp'
+Processing 'cells.shp'
 Processing 'communities.shp'
 Processing 'farms.shp'
-Processing 'farms_cells.shp'
-Processing 'farms_cells3.shp'
-Processing 'partofbrasil.shp'
+Processing 'partofbrazil.shp'
 Processing 'roads.shp'
-Package 'gpm' has no fonts
+Package has no fonts
 Parsing lua files
 Parsing lua/GPM.lua
 Parsing lua/Network.lua
@@ -21,9 +18,10 @@ Parsing examples
 Parsing examples/area.lua
 Parsing examples/border.lua
 Parsing examples/contains.lua
-Parsing examples/distance.lua
-Parsing examples/farms.lua
+Parsing examples/distance-all.lua
+Parsing examples/distance-limit.lua
 Parsing examples/length.lua
+Parsing examples/network.lua
 Checking undocumented files
 Checking @usage definition
 Checking lua/GPM.lua
@@ -31,6 +29,7 @@ Checking lua/Network.lua
 Testing @usage
 Testing file lua/GPM.lua
 Testing GPM
+Testing fill
 Testing save
 Testing file lua/Network.lua
 Testing Network
@@ -49,13 +48,11 @@ Building doc/files/examples.html
 Building doc/files/data.html
 Checking images
 Checking data.lua
-Checking models
 Checking examples
 Checking if all images are used
 Checking if all functions are documented
 Checking GPM.lua
 Checking Network.lua
-Checking if all Models are documented
 
 Documentation report for package 'gpm':
 Documentation was built in 33.06 seconds.
@@ -63,13 +60,11 @@ Documentation was built in 33.06 seconds.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
-No problems were found in the documentation of fonts.
-All source code lines starting with --- are valid.
-There are no Models in the package.
 All projects were successfully processed.
-All 3 global functions of the package are documented.
-All functions of each file are declared only once.
 All descriptions end with a correct character.
+All source code lines starting with --- are valid.
+All 4 global functions of the package are documented.
+All functions of each file are declared only once.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
 All 1 non-named arguments are documented.
@@ -77,11 +72,11 @@ No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 3 functions call themselves in their @usage.
-All 3 functions do not have any error in their @usage.
+All 4 functions call themselves in their @usage.
+All 4 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
-All 6 examples are correctly documented.
+All 7 examples are correctly documented.
 Summing up, all the documentation was successfully built.

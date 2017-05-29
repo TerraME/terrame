@@ -1,13 +1,14 @@
 Building documentation for package 'sysdyn'
 Loading package 'sysdyn'
-Package 'sysdyn' has no data
-Package 'sysdyn' has no fonts
+Package has no data
+Package has no fonts
 Parsing lua files
 Parsing lua/ChaoticGrowth.lua
 Parsing lua/Coffee.lua
 Parsing lua/Daisyworld.lua
 Parsing lua/Homeostasis.lua
 Parsing lua/LimitedGrowth.lua
+Parsing lua/Lorenz.lua
 Parsing lua/MonoLake.lua
 Parsing lua/PopulationGrowth.lua
 Parsing lua/PredatorPrey.lua
@@ -31,6 +32,7 @@ Checking lua/Coffee.lua
 Checking lua/Daisyworld.lua
 Checking lua/Homeostasis.lua
 Checking lua/LimitedGrowth.lua
+Checking lua/Lorenz.lua
 Checking lua/MonoLake.lua
 Checking lua/PopulationGrowth.lua
 Checking lua/PredatorPrey.lua
@@ -45,6 +47,7 @@ Testing file lua/Coffee.lua
 Testing file lua/Daisyworld.lua
 Testing file lua/Homeostasis.lua
 Testing file lua/LimitedGrowth.lua
+Testing file lua/Lorenz.lua
 Testing file lua/MonoLake.lua
 Testing file lua/PopulationGrowth.lua
 Testing file lua/PredatorPrey.lua
@@ -59,6 +62,7 @@ Checking lua/Coffee.lua
 Checking lua/Daisyworld.lua
 Checking lua/Homeostasis.lua
 Checking lua/LimitedGrowth.lua
+Checking lua/Lorenz.lua
 Checking lua/MonoLake.lua
 Checking lua/PopulationGrowth.lua
 Checking lua/PredatorPrey.lua
@@ -73,6 +77,7 @@ Checking lua/Coffee.lua
 Checking lua/Daisyworld.lua
 Checking lua/Homeostasis.lua
 Checking lua/LimitedGrowth.lua
+Checking lua/Lorenz.lua
 Checking lua/MonoLake.lua
 Checking lua/PopulationGrowth.lua
 Checking lua/PredatorPrey.lua
@@ -91,20 +96,6 @@ Checking data.lua
 Checking models
 Checking examples
 Checking if all images are used
-Checking if all functions are documented
-Checking ChaoticGrowth.lua
-Checking Coffee.lua
-Checking Daisyworld.lua
-Checking Homeostasis.lua
-Checking LimitedGrowth.lua
-Checking MonoLake.lua
-Checking PopulationGrowth.lua
-Checking PredatorPrey.lua
-Checking RandomWalk.lua
-Checking RoomTemperature.lua
-Checking SIR.lua
-Checking Tub.lua
-Checking Yeast.lua
 Checking if all Models are documented
 
 Documentation report for package 'sysdyn':
@@ -113,13 +104,11 @@ Documentation was built in 0.34 seconds.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
-No problems were found in the documentation of fonts.
+All descriptions end with a correct character.
+All 14 Models are correctly documented.
 All source code lines starting with --- are valid.
-All 13 Models are correctly documented.
-All projects were successfully processed.
 All 0 global functions of the package are documented.
 All functions of each file are declared only once.
-All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
 All 0 non-named arguments are documented.

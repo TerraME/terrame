@@ -970,9 +970,8 @@ return{
 			abc = function() count = count + 1 end
 		}
 
-		data = {}
 		switch(data, "att"):caseof{
-			missing = function() count = count + 1 end
+			default = function() count = count + 1 end
 		}
 
 		unitTest:assertEquals(count, 2)

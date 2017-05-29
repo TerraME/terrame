@@ -473,9 +473,18 @@ UnitTest_ = {
 			if merror <= tolerance then
 				self.success = self.success + 1
 			else
+				local wnew, hnew = cpp_imagesize(newImage) -- SKIP
+				local wold, hold = cpp_imagesize(oldImage) -- SKIP
+
 				local message = "Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..file)
 					.."'\nand\n  '"..newImage.."'\nare different." -- SKIP
-					.." The maximum tolerance is "..tolerance..", but got "..merror.."." -- SKIP
+
+				if wnew ~= wold or hnew ~= hold then -- SKIP
+					message = message.." Image sizes are different: "..string.format("%.0fx%.0f", wnew, hnew).." (created) and "..string.format("%.0fx%.0f", wold, hold).." (log)." -- SKIP
+				else
+					message = message.." The maximum tolerance is "..tolerance..", but got "..merror.."." -- SKIP
+				end
+
 				self:printError(message)
 				self.fail = self.fail + 1 -- SKIP
 			end
