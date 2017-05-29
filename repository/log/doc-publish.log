@@ -22,7 +22,7 @@ Processing 'simulation2025_lessgrowth.shp'
 Processing 'simulation2025_plusgrowth.shp'
 Processing 'simulation2025_poorer.shp'
 Processing 'simulation2025_richer_final.shp'
-Package 'publish' has no fonts
+Package has no fonts
 Parsing lua files
 Parsing lua/Application.lua
 Parsing lua/Color.lua
@@ -81,7 +81,6 @@ Building doc/files/examples.html
 Building doc/files/data.html
 Checking images
 Checking data.lua
-Checking models
 Checking examples
 Checking if all images are used
 Checking if all functions are documented
@@ -90,7 +89,6 @@ Checking Color.lua
 Checking List.lua
 Checking Report.lua
 Checking View.lua
-Checking if all Models are documented
 
 Documentation report for package 'publish':
 Documentation was built in 8.72 seconds.
@@ -98,13 +96,11 @@ Documentation was built in 8.72 seconds.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
-No problems were found in the documentation of fonts.
-All source code lines starting with --- are valid.
-There are no Models in the package.
 All projects were successfully processed.
+All descriptions end with a correct character.
+All source code lines starting with --- are valid.
 All 10 global functions of the package are documented.
 All functions of each file are declared only once.
-All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
 All 5 non-named arguments are documented.
