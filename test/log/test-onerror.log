@@ -47,7 +47,7 @@ Error in ...ntents/MacOS/packages/onerror/tests/alternative/Cell.lua:57: Files
   'log/mac/chart_cell_select.bmp'
 and
   '/Users/pedro/github/terrame-pedro/test/.terrametmp_0gvMW/chart_cell_select.bmp'
-are different. The maximum tolerance is 0, but got 1.0.
+are different. Image sizes are different: 600x500 (created) and 450x350 (log).
 Checking if all asserts were executed
 Testing tests/alternative/Utils.lua
 Testing belong2

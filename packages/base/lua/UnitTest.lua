@@ -480,7 +480,7 @@ UnitTest_ = {
 					.."'\nand\n  '"..newImage.."'\nare different." -- SKIP
 
 				if wnew ~= wold or hnew ~= hold then -- SKIP
-					message = message.." Image sizes are different: "..wnew.."x"..hnew.." (created) and "..wold.."x"..hold.." (log)." -- SKIP
+					message = message.." Image sizes are different: "..string.format("%.0fx%.0f", wnew, hnew).." (created) and "..string.format("%.0fx%.0f", wold, hold).." (log)." -- SKIP
 				else
 					message = message.." The maximum tolerance is "..tolerance..", but got "..merror.."." -- SKIP
 				end
