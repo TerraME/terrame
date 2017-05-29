@@ -738,8 +738,7 @@ return{
 
 		local layer2 = terralib.Layer{
 			project = proj,
-			name = cellSpaceLayerNameT0,
-			encoding = "CP1252"
+			name = cellSpaceLayerNameT0
 		}
 
 		unitTest:assertEquals(layer2.source, "postgis")
@@ -756,8 +755,7 @@ return{
 
 		local layer3 = terralib.Layer{
 			project = proj,
-			name = cellSpaceLayerName,
-			encoding = "CP1252"
+			name = cellSpaceLayerName
 		}
 
 		unitTest:assertEquals(layer3.source, "postgis")
@@ -817,8 +815,7 @@ return{
 
 		local layer4 = terralib.Layer{
 			project = proj,
-			name = cellSpaceLayerNameGeom,
-			encoding = "CP1252"
+			name = cellSpaceLayerNameGeom
 		}
 
 		cs = CellularSpace{
@@ -836,8 +833,7 @@ return{
 
 		local layer5 = terralib.Layer{
 			project = proj,
-			name = cellSpaceLayerNameGeom2,
-			encoding = "CP1252"
+			name = cellSpaceLayerNameGeom2
 		}
 
 		cs = CellularSpace{

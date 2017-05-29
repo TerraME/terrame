@@ -63,7 +63,7 @@ return {
 		TerraLib().saveLayerAs(proj, layerName1, pgData, true)
 
 		local layerName2 = "SampaPg"
-		TerraLib().addPgLayer(proj, layerName2, pgData)
+		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
 		local layerInfo = TerraLib().getLayerInfo(proj, layerName2)
 
@@ -76,11 +76,10 @@ return {
 		unitTest:assertEquals(layerInfo.password, password)
 		unitTest:assertEquals(layerInfo.database, database)
 		unitTest:assertEquals(layerInfo.table, tableName)
-		unitTest:assertNotNil(layerInfo.sid)
 
 		-- CHANGE SRID
 		local layerName3 = "SampaNewSrid"
-		TerraLib().addPgLayer(proj, layerName3, pgData, 29901)
+		TerraLib().addPgLayer(proj, layerName3, pgData, 29901, encoding)
 
 		local layerInfo3 = TerraLib().getLayerInfo(proj, layerName3)
 
@@ -1286,7 +1285,7 @@ return {
 		end
 
 		polName = "ES_Limit_Pg"
-		TerraLib().addPgLayer(proj, polName, pgData)
+		TerraLib().addPgLayer(proj, polName, pgData, nil, encoding)
 
 		attrNames = TerraLib().getPropertyNames(proj, polName)
 		unitTest:assertEquals("fid", attrNames[0])
@@ -1334,7 +1333,7 @@ return {
 		end
 
 		ptName = "BR_Ports_Pg"
-		TerraLib().addPgLayer(proj, ptName, pgData)
+		TerraLib().addPgLayer(proj, ptName, pgData, nil, encoding)
 
 		attrNames = TerraLib().getPropertyNames(proj, ptName)
 		unitTest:assertEquals("fid", attrNames[0])
@@ -1382,7 +1381,7 @@ return {
 		end
 
 		lnName = "ES_Rails_Pg"
-		TerraLib().addPgLayer(proj, lnName, pgData)
+		TerraLib().addPgLayer(proj, lnName, pgData, nil, encoding)
 
 		attrNames = TerraLib().getPropertyNames(proj, lnName)
 		unitTest:assertEquals("fid", attrNames[0])
@@ -1696,7 +1695,7 @@ return {
 
 		TerraLib().saveLayerAs(proj, layerName1, pgData, true)
 		local layerName2 = "PgLayer"
-		TerraLib().addPgLayer(proj, layerName2, pgData)
+		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
 		local propInfos = TerraLib().getPropertyInfos(proj, layerName2)
 
@@ -1803,7 +1802,7 @@ return {
 
 		TerraLib().saveLayerAs(proj, layerName1, pgData, overwrite)
 		local layerName2 = "PgLayer"
-		TerraLib().addPgLayer(proj, layerName2, pgData)
+		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
 		-- SHP
 		local toData = {}
@@ -1851,7 +1850,7 @@ return {
 		TerraLib().saveLayerAs(proj, layerName4, pgData, overwrite)
 
 		local layerName5 = "PgLayerGJ"
-		TerraLib().addPgLayer(proj, layerName5, pgData)
+		TerraLib().addPgLayer(proj, layerName5, pgData, nil, encoding)
 		local info5 = TerraLib().getLayerInfo(proj, layerName5)
 		unitTest:assertEquals(info5.srid, 4326.0)
 
@@ -1866,7 +1865,7 @@ return {
 		TerraLib().saveLayerAs(proj, layerName3, pgData, overwrite, {"nm_micro"})
 
 		local layerName6 = "SHP2PG"
-		TerraLib().addPgLayer(proj, layerName6, pgData)
+		TerraLib().addPgLayer(proj, layerName6, pgData, nil, encoding)
 		local dset6 = TerraLib().getDataSet(proj, layerName6)
 
 		unitTest:assertEquals(getn(dset6), 63)
@@ -1882,7 +1881,7 @@ return {
 		TerraLib().saveLayerAs(proj, layerName4, pgData, overwrite, {"nm_micro", "id"})
 
 		local layerName7 = "GJ2PG"
-		TerraLib().addPgLayer(proj, layerName7, pgData)
+		TerraLib().addPgLayer(proj, layerName7, pgData, nil, encoding)
 		local dset7 = TerraLib().getDataSet(proj, layerName7)
 
 		unitTest:assertEquals(getn(dset7), 63)
@@ -1944,7 +1943,7 @@ return {
 
 		TerraLib().saveLayerAs(proj, layerName1, pgData, overwrite)
 		local layerName2 = "PgLayer"
-		TerraLib().addPgLayer(proj, layerName2, pgData)
+		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
 		local size = TerraLib().getLayerSize(proj, layerName2)
 
@@ -1993,13 +1992,13 @@ return {
 		TerraLib().saveLayerAs(proj, lnName, pgData, overwrite)
 
 		local layerName2 = "ES_Rails_Pg"
-		TerraLib().addPgLayer(proj, layerName2, pgData)
+		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
 		local dpLayerName = "ES_Rails_Peucker"
 		TerraLib().douglasPeucker(proj, layerName2, dpLayerName, 500)
 
 		pgData.table = string.lower(dpLayerName)
-		TerraLib().addPgLayer(proj, dpLayerName, pgData)
+		TerraLib().addPgLayer(proj, dpLayerName, pgData, nil, encoding)
 
 		local dpSet = TerraLib().getDataSet(proj, dpLayerName, -1)
 		unitTest:assertEquals(getn(dpSet), 182)

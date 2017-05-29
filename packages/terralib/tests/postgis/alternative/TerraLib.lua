@@ -42,20 +42,18 @@ return {
 		local tableName = "sampa"
 
 		local pgData = {
-			type = "POSTGIS",
 			host = host,
 			port = port,
 			user = user,
 			password = password,
 			database = database,
-			table = tableName,
-			encoding = encoding
+			table = tableName
 		}
 
 		local layerName = "Postgis"
 
 		local passWrong = function()
-			TerraLib().addPgLayer(proj, layerName, pgData)
+			TerraLib().addPgLayer(proj, layerName, pgData, nil, encoding)
 		end
 
 		if sessionInfo().system == "linux" then
@@ -109,7 +107,7 @@ return {
 
 		TerraLib().saveLayerAs(proj, layerName1, pgData, overwrite)
 		local layerName2 = "PgLayer"
-		TerraLib().addPgLayer(proj, layerName2, pgData)
+		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
 		-- TIF
 		local toData = {}

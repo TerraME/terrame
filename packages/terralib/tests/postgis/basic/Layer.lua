@@ -45,7 +45,6 @@ return {
 		local port
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local encoding
 		local tableName = "sampa"
 
 		local pgData = {
@@ -88,7 +87,7 @@ return {
 		}
 
 		unitTest:assert(layer3.name ~= layer2.name)
-		unitTest:assertEquals(layer3.sid, layer2.sid)
+		unitTest:assertEquals(layer3.epsg, layer2.epsg)
 
 		File(projName):deleteIfExists()
 
@@ -113,7 +112,6 @@ return {
 		port = "5432"
 		password = "postgres"
 		database = "postgis_22_sample"
-		encoding = "CP1252"
 
 		pgData = {
 			type = "POSTGIS",
@@ -122,8 +120,7 @@ return {
 			password = password,
 			database = database,
 			table = tName1,
-			user = "postgres",
-			encoding = encoding
+			user = "postgres"
 		}
 
 		local l1 = Layer{

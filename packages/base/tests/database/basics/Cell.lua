@@ -83,23 +83,9 @@ return{
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
 		local tName = string.lower(clName2)
 
-		local pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tName,
-			encoding = encoding
-		}
-
-		terralib.TerraLib().dropPgTable(pgData)
-
-		terralib.Layer{
+		local pgLayer = terralib.Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
@@ -107,7 +93,8 @@ return{
 			resolution = 100e3,
 			user = user,
 			password = password,
-			database = database
+			database = database,
+			clean = true
 		}
 
 		cs = CellularSpace{
@@ -123,7 +110,7 @@ return{
 		File(projName):deleteIfExists()
 		File(filePath1):deleteIfExists()
 
-		terralib.TerraLib().dropPgTable(pgData)
+		pgLayer:delete()
 
 		customWarning = customWarningBkp
 	end,
@@ -191,23 +178,9 @@ return{
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
 		local tName = string.lower(clName2)
 
-		local pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tName,
-			encoding = encoding
-		}
-
-		terralib.TerraLib().dropPgTable(pgData)
-
-		terralib.Layer{
+		local pgLayer = terralib.Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
@@ -215,7 +188,8 @@ return{
 			resolution = 100e3,
 			user = user,
 			password = password,
-			database = database
+			database = database,
+			clean = true
 		}
 
 		cs = CellularSpace{
@@ -235,7 +209,7 @@ return{
 		File(projName):deleteIfExists()
 		File(filePath1):deleteIfExists()
 
-		terralib.TerraLib().dropPgTable(pgData)
+		pgLayer:delete()
 
 		customWarning = customWarningBkp
 	end
