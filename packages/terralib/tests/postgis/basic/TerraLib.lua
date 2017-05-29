@@ -150,7 +150,6 @@ return {
 		unitTest:assertEquals(layerInfo.password, password)
 		unitTest:assertEquals(layerInfo.database, database)
 		unitTest:assertEquals(layerInfo.table, tableName)
-		unitTest:assertNotNil(layerInfo.sid)
 
 		-- NO MASK TEST
 		local clSet = TerraLib().getDataSet(proj, clName1)
@@ -267,7 +266,6 @@ return {
 		unitTest:assertEquals(presLayerInfo.password, password)
 		unitTest:assertEquals(presLayerInfo.database, database)
 		unitTest:assertEquals(presLayerInfo.table, string.lower(presLayerName))
-		unitTest:assertNotNil(presLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH PERCENTAGE TOTAL AREA OPERATION
 		local areaLayerName = clName.."_"..layerName2.."_Area"
@@ -302,7 +300,6 @@ return {
 		unitTest:assertEquals(areaLayerInfo.password, password)
 		unitTest:assertEquals(areaLayerInfo.database, database)
 		unitTest:assertEquals(areaLayerInfo.table, string.lower(areaLayerName))
-		unitTest:assertNotNil(areaLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH COUNT OPERATION
 		local countLayerName = clName.."_"..layerName2.."_Count"
@@ -337,7 +334,6 @@ return {
 		unitTest:assertEquals(countLayerInfo.password, password)
 		unitTest:assertEquals(countLayerInfo.database, database)
 		unitTest:assertEquals(countLayerInfo.table, string.lower(countLayerName))
-		unitTest:assertNotNil(countLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH DISTANCE OPERATION
 		local distLayerName = clName.."_"..layerName2.."_Distance"
@@ -373,7 +369,6 @@ return {
 		unitTest:assertEquals(distLayerInfo.password, password)
 		unitTest:assertEquals(distLayerInfo.database, database)
 		unitTest:assertEquals(distLayerInfo.table, string.lower(distLayerName))
-		unitTest:assertNotNil(distLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION
 		local layerName3 = "Amazon_Munic"
@@ -413,7 +408,6 @@ return {
 		unitTest:assertEquals(minLayerInfo.password, password)
 		unitTest:assertEquals(minLayerInfo.database, database)
 		unitTest:assertEquals(minLayerInfo.table, string.lower(minLayerName))
-		unitTest:assertNotNil(minLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION
 		local maxLayerName = clName.."_"..layerName3.."_Maximum"
@@ -449,7 +443,6 @@ return {
 		unitTest:assertEquals(maxLayerInfo.password, password)
 		unitTest:assertEquals(maxLayerInfo.database, database)
 		unitTest:assertEquals(maxLayerInfo.table, string.lower(maxLayerName))
-		unitTest:assertNotNil(maxLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION
 		local percLayerName = clName.."_"..layerName2.."_Percentage"
@@ -494,7 +487,6 @@ return {
 		unitTest:assertEquals(percLayerInfo.password, password)
 		unitTest:assertEquals(percLayerInfo.database, database)
 		unitTest:assertEquals(percLayerInfo.table, string.lower(percLayerName))
-		unitTest:assertNotNil(percLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION
 		local stdevLayerName = clName.."_"..layerName3.."_Stdev"
@@ -531,7 +523,6 @@ return {
 		unitTest:assertEquals(stdevLayerInfo.password, password)
 		unitTest:assertEquals(stdevLayerInfo.database, database)
 		unitTest:assertEquals(stdevLayerInfo.table, string.lower(stdevLayerName))
-		unitTest:assertNotNil(stdevLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
 		local meanLayerName = clName.."_"..layerName3.."_AvrgMean"
@@ -568,7 +559,6 @@ return {
 		unitTest:assertEquals(meanLayerInfo.password, password)
 		unitTest:assertEquals(meanLayerInfo.database, database)
 		unitTest:assertEquals(meanLayerInfo.table, string.lower(meanLayerName))
-		unitTest:assertNotNil(meanLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
 		local weighLayerName = clName.."_"..layerName3.."_AvrgWeighted"
@@ -606,7 +596,6 @@ return {
 		unitTest:assertEquals(weighLayerInfo.password, password)
 		unitTest:assertEquals(weighLayerInfo.database, database)
 		unitTest:assertEquals(weighLayerInfo.table, string.lower(weighLayerName))
-		unitTest:assertNotNil(weighLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MAJORITY INTERSECTION OPERATION
 		local interLayerName = clName.."_"..layerName3.."_Intersection"
@@ -644,7 +633,6 @@ return {
 		unitTest:assertEquals(interLayerInfo.password, password)
 		unitTest:assertEquals(interLayerInfo.database, database)
 		unitTest:assertEquals(interLayerInfo.table, string.lower(interLayerName))
-		unitTest:assertNotNil(interLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MAJORITY OCCURRENCE OPERATION
 		local occurLayerName = clName.."_"..layerName3.."_Occurence"
@@ -682,7 +670,6 @@ return {
 		unitTest:assertEquals(occurLayerInfo.password, password)
 		unitTest:assertEquals(occurLayerInfo.database, database)
 		unitTest:assertEquals(occurLayerInfo.table, string.lower(occurLayerName))
-		unitTest:assertNotNil(occurLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH SUM OPERATION
 		local sumLayerName = clName.."_"..layerName3.."_Sum"
@@ -721,7 +708,6 @@ return {
 		unitTest:assertEquals(sumLayerInfo.password, password)
 		unitTest:assertEquals(sumLayerInfo.database, database)
 		unitTest:assertEquals(sumLayerInfo.table, string.lower(sumLayerName))
-		unitTest:assertNotNil(sumLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH WEIGHTED SUM OPERATION
 		local wsumLayerName = clName.."_"..layerName3.."_Wsum"
@@ -760,7 +746,6 @@ return {
 		unitTest:assertEquals(wsumLayerInfo.password, password)
 		unitTest:assertEquals(wsumLayerInfo.database, database)
 		unitTest:assertEquals(wsumLayerInfo.table, string.lower(wsumLayerName))
-		unitTest:assertNotNil(wsumLayerInfo.sid)
 
 		-- RASTER TESTS WITH POSTGIS
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
@@ -804,7 +789,6 @@ return {
 		unitTest:assertEquals(percTifLayerInfo.password, password)
 		unitTest:assertEquals(percTifLayerInfo.database, database)
 		unitTest:assertEquals(percTifLayerInfo.table, string.lower(percTifLayerName))
-		unitTest:assertNotNil(percTifLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION FROM RASTER
 		local rmeanLayerName = clName.."_"..layerName4.."_RMean"
@@ -844,7 +828,6 @@ return {
 		unitTest:assertEquals(rmeanLayerInfo.password, password)
 		unitTest:assertEquals(rmeanLayerInfo.database, database)
 		unitTest:assertEquals(rmeanLayerInfo.table, string.lower(rmeanLayerName))
-		unitTest:assertNotNil(rmeanLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION FROM RASTER
 		local rminLayerName = clName.."_"..layerName4.."_RMinimum"
@@ -884,7 +867,6 @@ return {
 		unitTest:assertEquals(rminLayerInfo.password, password)
 		unitTest:assertEquals(rminLayerInfo.database, database)
 		unitTest:assertEquals(rminLayerInfo.table, string.lower(rminLayerName))
-		unitTest:assertNotNil(rminLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION FROM RASTER
 		local rmaxLayerName = clName.."_"..layerName4.."_RMaximum"
@@ -924,7 +906,6 @@ return {
 		unitTest:assertEquals(rmaxLayerInfo.password, password)
 		unitTest:assertEquals(rmaxLayerInfo.database, database)
 		unitTest:assertEquals(rmaxLayerInfo.table, string.lower(rmaxLayerName))
-		unitTest:assertNotNil(rmaxLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION FROM RASTER
 		local rstdevLayerName = clName.."_"..layerName4.."_RStdev"
@@ -964,7 +945,6 @@ return {
 		unitTest:assertEquals(rstdevLayerInfo.password, password)
 		unitTest:assertEquals(rstdevLayerInfo.database, database)
 		unitTest:assertEquals(rstdevLayerInfo.table, string.lower(rstdevLayerName))
-		unitTest:assertNotNil(rstdevLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH SUM OPERATION FROM RASTER
 		local rsumLayerName = clName.."_"..layerName4.."_RSum"
@@ -1005,7 +985,6 @@ return {
 		unitTest:assertEquals(rsumLayerInfo.password, password)
 		unitTest:assertEquals(rsumLayerInfo.database, database)
 		unitTest:assertEquals(rsumLayerInfo.table, string.lower(rsumLayerName))
-		unitTest:assertNotNil(rsumLayerInfo.sid)
 
 		-- OVERWRITE OUTPUT
 		operation = "sum"
@@ -1041,7 +1020,6 @@ return {
 		unitTest:assertEquals(rsumOverLayerInfo.password, password)
 		unitTest:assertEquals(rsumOverLayerInfo.database, database)
 		unitTest:assertEquals(rsumOverLayerInfo.table, string.lower(rsumLayerName))
-		unitTest:assertNotNil(rsumOverLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH COUNT OPERATION FROM RASTER
 		local rcountLayerName = clName.."_"..layerName4.."_RCount"
@@ -1082,7 +1060,6 @@ return {
 		unitTest:assertEquals(rcountLayerInfo.password, password)
 		unitTest:assertEquals(rcountLayerInfo.database, database)
 		unitTest:assertEquals(rcountLayerInfo.table, string.lower(rcountLayerName))
-		unitTest:assertNotNil(rcountLayerInfo.sid)
 
 		-- END
 		pgData.table = string.lower(clName)

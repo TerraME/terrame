@@ -49,7 +49,6 @@ return {
 			unitTest:assertEquals(layerInfo.type, "WFS") -- SKIP
 			unitTest:assertEquals(layerInfo.source, "wfs") -- SKIP
 			unitTest:assertEquals(layerInfo.rep, "surface") -- SKIP
-			unitTest:assertNotNil(layerInfo.sid) -- SKIP
 		else
 			customError("WFS server '.."..url.."' is not responding, try again later.") -- SKIP
 		end

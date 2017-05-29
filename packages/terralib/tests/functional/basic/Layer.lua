@@ -111,7 +111,7 @@ return {
 		}
 
 		unitTest:assert(layer21.name ~= layer2.name)
-		unitTest:assertEquals(layer21.sid, layer2.sid)
+		unitTest:assertEquals(layer21.epsg, layer2.epsg)
 
 		local layerName3 = "CBERS1"
 		local layer3 = Layer{
@@ -130,7 +130,7 @@ return {
 		}
 
 		unitTest:assert(layer4.name ~= layer3.name)
-		unitTest:assertEquals(layer4.sid, layer3.sid)
+		unitTest:assertEquals(layer4.epsg, layer3.epsg)
 
 		projName:deleteIfExists()
 

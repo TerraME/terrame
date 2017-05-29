@@ -120,10 +120,9 @@ file     string [biomassa-manaus.asc]
 name     string [Biomassa_layer]
 project  Project
 rep      string [raster]
-sid      string [8e9b98cc-a511-4b41-9faf-5d67001c7058]
 source   string [asc]
 ]]
-		unitTest:assertEquals(tostring(l), expected, 36, true)
+		unitTest:assertEquals(tostring(l), expected, 1, true)
 		projName:deleteIfExists()
 	end
 }

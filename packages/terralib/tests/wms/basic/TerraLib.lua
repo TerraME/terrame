@@ -54,7 +54,6 @@ return {
 		unitTest:assertEquals(layerInfo.type, "WMS2")
 		unitTest:assertEquals(layerInfo.source, "wms")
 		unitTest:assertEquals(layerInfo.rep, "raster")
-		unitTest:assertNotNil(layerInfo.sid)
 
 		file:delete()
 	end

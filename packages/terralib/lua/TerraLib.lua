@@ -1453,12 +1453,11 @@ TerraLib_ = {
 		local layer = project.layers[layerName]
 		local info = {}
 		info.name = layer:getTitle()
-		info.sid = layer:getDataSourceId()
 		info.srid = layer:getSRID()
 		local dseName = layer:getDataSetName()
 
 		loadProject(project, project.file)
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(info.sid)
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
 
 		local type = dsInfo:getType()
 		info.type = type

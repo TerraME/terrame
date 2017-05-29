@@ -70,7 +70,6 @@ return {
 		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertNotNil(layerInfo.sid)
 
 		proj.file:deleteIfExists()
 	end,
@@ -107,7 +106,6 @@ return {
 		unitTest:assertEquals(layerInfo.file, tostring(geojson1))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertNotNil(layerInfo.sid)
 
 		-- NO MASK TEST
 		local clSet = TerraLib().getDataSet(proj, clName)

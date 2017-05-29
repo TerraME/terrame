@@ -766,16 +766,6 @@ return {
 		host = "localhost"
 		port = "5432"
 
-		local pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			user = "postgres",
-			password = password,
-			database = database,
-			table = tName1
-		}
-
 		local pgLayer = Layer{
 			project = proj,
 			source = "postgis",

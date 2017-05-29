@@ -43,7 +43,6 @@ return {
 		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
 		unitTest:assertEquals(layerInfo.type, "GDAL")
 		unitTest:assertEquals(layerInfo.rep, "raster")
-		unitTest:assertNotNil(layerInfo.sid)
 
 		proj.file:delete()
 	end,
@@ -76,7 +75,6 @@ return {
 		unitTest:assertEquals(layerInfo.file, tostring(shp1))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertNotNil(layerInfo.sid)
 
 		shp1:deleteIfExists()
 
@@ -134,7 +132,6 @@ return {
 		-- unitTest:assertEquals(layerInfo.password, password) -- SKIP
 		-- unitTest:assertEquals(layerInfo.database, database) -- SKIP
 		-- unitTest:assertEquals(layerInfo.table, tableName) -- SKIP
-		-- unitTest:assertNotNil(layerInfo.sid) -- SKIP
 
 		-- TerraLib().dropPgTable(pgData)
 		-- TerraLib().dropPgDatabase(pgData)
