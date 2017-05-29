@@ -26,6 +26,7 @@ of this software and its documentation.
 
 #include <qimage.h>
 
+void imageSize(const QString &img, int &width, int &height);
 double comparePerPixel(const QString &img1, const QString &img2);
 
 #endif
