@@ -412,11 +412,18 @@ return {
 			layer = protec
 		}
 
+		local sum = 0
+
 		forEachCell(cs, function(cell)
 			unitTest:assertType(cell.prod_count, "number")
-			unitTest:assert(cell.prod_count >= 1)
+
+			sum = sum + cell.prod_count
+
+			unitTest:assert(cell.prod_count >= 0)
 			unitTest:assert(cell.prod_count <= 3796)
 		end)
+
+		unitTest:assertEquals(sum, 42890)
 
 		File("amazonia-indigenous.shp"):delete()
 		File("fill_mcount.tview"):delete()
