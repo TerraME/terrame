@@ -78,12 +78,9 @@ return{
 
 		-- POSTGIS
 		local clName2 = "Brazil_Cells_PG"
-		local host = "localhost"
-		local port = "5432"
 		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
-		local tName = string.lower(clName2)
 
 		local pgLayer = terralib.Layer{
 			project = proj,
@@ -173,12 +170,9 @@ return{
 
 		-- POSTGIS
 		local clName2 = "Brazil_Cells_PG"
-		local host = "localhost"
-		local port = "5432"
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local tName = string.lower(clName2)
 
 		local pgLayer = terralib.Layer{
 			project = proj,

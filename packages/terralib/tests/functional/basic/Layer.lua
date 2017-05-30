@@ -34,7 +34,7 @@ return {
 
 		local layerName1 = "Sampa"
 
-		Layer{
+		local layer0 = Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("test/sampa.shp", "terralib")
@@ -85,9 +85,12 @@ return {
 		local layer1 = Layer{
 			project = proj1,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib"),
+			encoding = "utf8"
 		}
 		unitTest:assertEquals(layer1.name, layerName1)
+		unitTest:assertEquals("utf8", layer1.encoding)
+		unitTest:assertEquals("latin1", layer0.encoding)
 
 		local proj2 = Project {
 			file = projName:name(true)

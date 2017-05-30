@@ -33,14 +33,6 @@ local EncodingMapper = {
 	latin1 = "LATIN1",  --Latin1 encoding (ISO8859-1)
 }
 
-local function isValidEncoding(encoding)
-	if EncodingMapper[encoding] then
-		return true
-	end
-
-	return false
-end
-
 local function isValidSource(source)
 	return belong(source, {"tif", "shp", "postgis", "nc", "asc", "geojson", "wfs", "wms"})
 end
@@ -111,7 +103,7 @@ local function addCellularLayer(self, data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source",
 	                                  "clean", "host", "port", "user", "password", "database", "table",
-									  "index", "encoding"})
+									  "index"})
 
 	mandatoryTableArgument(data, "input", "string")
 	positiveTableArgument(data, "resolution")
@@ -155,13 +147,8 @@ local function addCellularLayer(self, data)
 		customError("Layer '"..data.name.."' already exists in the Project.")
 	end
 
-	local repr = TerraLib().getLayerInfo(data.project, data.input).rep
-
-	if data.encoding then
-		if not isValidEncoding(data.encoding) then
-			customError("Encoding '"..data.encoding.."' is invalid.")
-		end
-	end
+	local inputInfos = TerraLib().getLayerInfo(data.project, data.input)
+	local repr = inputInfos.rep
 
 	switch(data, "source"):caseof{
 		shp = function()
@@ -177,7 +164,6 @@ local function addCellularLayer(self, data)
 				defaultTableValue(data, "box", false)
 				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project",
 												"resolution", "file", "source", "index"})
-				defaultTableValue(data, "encoding", "latin1")
 			end
 
 			if data.file:exists() then
@@ -202,7 +188,6 @@ local function addCellularLayer(self, data)
 				defaultTableValue(data, "box", false) -- SKIP
 				verifyUnnecessaryArguments(data, {"box", "input", "name", "project", -- SKIP
 					"resolution", "file", "source"})
-				defaultTableValue(data, "encoding", "latin1")
 			end
 
 			TerraLib().addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution, -- SKIP
@@ -214,21 +199,19 @@ local function addCellularLayer(self, data)
 			defaultTableValue(data, "clean", false)
 
 			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"clean", "input", "name", "resolution", "source", "encoding", -- SKIP
-										"project", "host", "port", "user", "password", "database", "table", "project"})
+				verifyUnnecessaryArguments(data, {"clean", "input", "name", "resolution", "source", -- SKIP
+										"project", "host", "port", "user", "password", "database", "table"})
 				data.box = true -- SKIP
 			else
 				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"box", "clean", "input", "name", "resolution", "source", "encoding",
-										"project", "host", "port", "user", "password", "database", "table", "project"})
-				defaultTableValue(data, "encoding", "latin1")
+				verifyUnnecessaryArguments(data, {"box", "clean", "input", "name", "resolution", "source",
+										"project", "host", "port", "user", "password", "database", "table"})
 			end
 
 			if data.clean then
+				data.encoding = inputInfos.encoding
 				TerraLib().dropPgTable(data)
 			end
-
-			data.encoding = EncodingMapper[data.encoding]
 
 			TerraLib().addPgCellSpaceLayer(self, data.input, data.name, data.resolution, data, not data.box)
 		end
@@ -280,7 +263,7 @@ local function addLayer(self, data)
 	end
 
 	if data.encoding then
-		if not isValidEncoding(data.encoding) then
+		if not EncodingMapper[data.encoding] then
 			customError("Encoding '"..data.encoding.."' is invalid.")
 		end
 	end
@@ -953,7 +936,9 @@ metaTableLayer_ = {
 -- if it needs to create the file. The default value is false.
 -- @arg data.index A boolean value indicating whether a spatial index file must be created for a
 -- shapefile. The default value is true.
--- @arg data.encoding A string value used to set the character encoding. The default value is "latin1".
+-- @arg data.encoding A string value used to set the character encoding.
+-- Supported encodings ("utf8", "cp1250", "cp1251", "cp1252", "cp1253", "cp1254", "cp1257", "latin1").
+-- The default value is "latin1".
 -- @output epsg A number with its projection identifier.
 -- @usage -- DONTRUN
 -- import("terralib")

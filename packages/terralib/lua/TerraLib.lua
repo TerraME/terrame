@@ -1442,8 +1442,7 @@ TerraLib_ = {
 	--     user = "postgres",
 	--     password = "postgres",
 	--     database = "terralib_save_test",
-	--     table = "sampa_cells",
-	--     encoding = "CP1252"
+	--     table = "sampa_cells"
 	-- }
 	--
 	-- TerraLib().addPgLayer(proj, "SampaPg", pgData)
@@ -1659,7 +1658,8 @@ TerraLib_ = {
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		instance.addGeoJSONLayer(project, name, file)
+		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
+		instance.addGeoJSONLayer(project, name, file, nil, encoding)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
 	-- @arg project A table that represents a project.
@@ -1746,7 +1746,8 @@ TerraLib_ = {
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		instance.addShpLayer(project, name, file, addSpatialIdx)
+		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
+		instance.addShpLayer(project, name, file, addSpatialIdx, nil, encoding)
 
 		fixCellSpaceSrid(project, name, inputLayerTitle)
 	end,
@@ -1777,8 +1778,7 @@ TerraLib_ = {
 	--     user = "postgres",
 	--     password = "postgres",
 	--     database = "terralib_save_test",
-	--     table = "sampa_cells",
-	--     encoding = "CP1252"
+	--     table = "sampa_cells"
 	-- }
 	--
 	-- local clName1 = "SampaPgCells"
@@ -1788,7 +1788,8 @@ TerraLib_ = {
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
-		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
+		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
+		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, encoding)
 
 		if not dataSetExists(connInfo, data.table, "POSTGIS") then
 			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS", mask)
@@ -1797,7 +1798,7 @@ TerraLib_ = {
 			customError("Table '"..data.table.."' already exists.") -- SKIP
 		end
 
-		instance.addPgLayer(project, name, data, nil, data.encoding)
+		instance.addPgLayer(project, name, data, nil, encoding)
 	end,
 	--- Remove a PostreSQL table.
 	-- @arg data.host Name of the host.
