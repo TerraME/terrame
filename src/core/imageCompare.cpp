@@ -27,6 +27,14 @@ of this software and its documentation.
 
 using namespace std;
 
+void imageSize(const QString &img, int &width, int &height)
+{
+	QImage image(img);
+
+	width = image.width();
+	height = image.height();
+}
+
 double comparePerPixel(const QString &img1, const QString &img2)
 {
 	QImage image1(img1);

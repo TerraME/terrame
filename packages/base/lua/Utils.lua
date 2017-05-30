@@ -1443,8 +1443,8 @@ end
 --- Implement a switch case function, where functions are associated to the available options.
 -- This function returns a table that contains a function called caseof, that gets a named
 -- table with functions describing what to do for each case (which is the name for the respective
--- function). This table can have a field "missing" that is used when
--- the first argument does not have an attribute whose name is the value of the second argument.
+-- function). This table can have a field "default" that is executed when
+-- the selected value is not one of the available options within caseof.
 -- The error messages of this function come from ErrorHandling:switchInvalidArgumentMsg() and
 -- ErrorHandling:switchInvalidArgumentSuggestionMsg().
 -- @arg data A named table.
@@ -1459,16 +1459,15 @@ function switch(data, att)
 	mandatoryArgument(1, "table", data)
 	mandatoryArgument(2, "string", att)
 
+	if data[att] == nil then
+		customError("Value of #2 ('"..att.."') does not belong to #1.")
+	end
+
 	local swtbl = {
 		casevar = data[att],
 		caseof = function(self, code)
 			verifyNamedTable(code)
-			local f
-			if self.casevar then
-				f = code[self.casevar] or code.default
-			else
-				f = code.missing or code.default
-			end
+			local f = code[self.casevar] or code.default
 
 			if f then
 				if type(f) == "function" then

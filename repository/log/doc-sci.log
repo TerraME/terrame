@@ -1,7 +1,7 @@
 Building documentation for package 'sci'
 Loading package 'sci'
-Package 'sci' has no data
-Package 'sci' has no fonts
+Package has no data
+Package has no fonts
 Parsing lua files
 Parsing lua/Spline.lua
 Parsing examples
@@ -25,12 +25,10 @@ Building doc/files/Spline.html
 Building doc/files/examples.html
 Checking images
 Checking data.lua
-Checking models
 Checking examples
 Checking if all images are used
 Checking if all functions are documented
 Checking Spline.lua
-Checking if all Models are documented
 
 Documentation report for package 'sci':
 Documentation was built in 0.42 seconds.
@@ -38,13 +36,10 @@ Documentation was built in 0.42 seconds.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
-No problems were found in the documentation of fonts.
+All descriptions end with a correct character.
 All source code lines starting with --- are valid.
-There are no Models in the package.
-All projects were successfully processed.
 All 2 global functions of the package are documented.
 All functions of each file are declared only once.
-All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
 All 1 non-named arguments are documented.

@@ -400,7 +400,7 @@ Layer_ = {
 	-- the selected operation needs a value associated to the geometry (average, sum, mode).
 	-- When using a raster data as input, use argument band instead.
 	-- @arg data.band An integer value representing the band of the raster to be used.
-	-- The missing value is one.
+	-- The default value is one.
 	-- @arg data.layer An input Layer belonging to the same Project. It can also be a
 	-- string with the Layer's name. There are
 	-- several strategies available, depending on the geometry of the Layer. See below:
@@ -469,10 +469,12 @@ Layer_ = {
 	-- @arg data.area Whether the calculation will be based on the intersection area (true),
 	-- or the weights are equal for each object with some overlap (false, missing value).
 	-- @arg data.missing A value that will be used to fill a cell whose attribute cannot be
-	-- computed. For example, when there is no intersection area. Note that this argument is
-	-- related to the output. Its missing value is zero.
-	-- @arg data.dummy A number used in raster data that represents no information in a pixel value.
-	-- Its default value can be got from Layer:dummy() function.
+	-- computed (for example, when there is no intersection area). Note that this argument is
+	-- related to the output. Its default value is zero.
+	-- @arg data.dummy A number related to the input raster data that represents no information in a pixel value.
+	-- This value will be ignored by all operations as if it did not exist.
+	-- For example, in averages, dummy values will not be used in the sum nor to count the number of pixels.
+	-- Its default value is the result of Layer:dummy().
 	-- @usage -- DONTRUN
 	-- import("terralib")
 	--
