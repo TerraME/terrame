@@ -113,6 +113,7 @@ return {
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
+		local layerInfo1 = TerraLib().getLayerInfo(proj, layerName1)
 
 		local host = "localhost"
 		local port = "5432"
@@ -150,6 +151,7 @@ return {
 		unitTest:assertEquals(layerInfo.password, password)
 		unitTest:assertEquals(layerInfo.database, database)
 		unitTest:assertEquals(layerInfo.table, tableName)
+		unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
 
 		-- NO MASK TEST
 		local clSet = TerraLib().getDataSet(proj, clName1)

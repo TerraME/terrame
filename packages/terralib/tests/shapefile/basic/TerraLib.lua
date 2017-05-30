@@ -107,6 +107,7 @@ return {
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
+		local layerInfo1 = TerraLib().getLayerInfo(proj, layerName1)
 
 		local clName = "Sampa_Cells"
 		local shp1 = File(clName..".shp")
@@ -123,6 +124,7 @@ return {
 		unitTest:assertEquals(layerInfo.file, tostring(shp1))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
+		unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
 
 		-- NO MASK TEST
 		local clSet = TerraLib().getDataSet(proj, clName)

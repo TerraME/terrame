@@ -1022,22 +1022,6 @@ local function toWfsUrl(url)
 	return wfsPrefix..url
 end
 
-local function fixCellSpaceSrid(project, csLayerName, inputLayerName)
-    loadProject(project, project.file)
-
-    local csLayer = project.layers[csLayerName]
-    local inputLayer = project.layers[inputLayerName]
-
-    if inputLayer:getSRID() ~= csLayer:getSRID() then
-        csLayer:setSRID(inputLayer:getSRID())
-        saveProject(project, project.layers)
-        releaseProject(project)
-        return
-    end
-
-    releaseProject(project)
-end
-
 local function getLayerByDataSetName(layers, dsetName, type)
 	for _, l in pairs(layers) do
 		if l:getDataSetName() == dsetName then
@@ -1655,11 +1639,12 @@ TerraLib_ = {
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(tostring(file))
 		local _, dSetName = file:split()
+		local srid = inputLayer:getSRID()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
 		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
-		instance.addGeoJSONLayer(project, name, file, nil, encoding)
+		instance.addGeoJSONLayer(project, name, file, srid, encoding)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
 	-- @arg project A table that represents a project.
@@ -1743,13 +1728,12 @@ TerraLib_ = {
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(tostring(file))
 		local _, dSetName = file:split()
+		local srid = inputLayer:getSRID()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
 		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
-		instance.addShpLayer(project, name, file, addSpatialIdx, nil, encoding)
-
-		fixCellSpaceSrid(project, name, inputLayerTitle)
+		instance.addShpLayer(project, name, file, addSpatialIdx, srid, encoding)
 	end,
 	--- Add a new cellular layer to a PostgreSQL connection.
 	-- @arg project The name of the project.
@@ -1790,6 +1774,7 @@ TerraLib_ = {
 		local inputLayer = project.layers[inputLayerTitle]
 		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, encoding)
+		local srid = inputLayer:getSRID()
 
 		if not dataSetExists(connInfo, data.table, "POSTGIS") then
 			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS", mask)
@@ -1798,7 +1783,7 @@ TerraLib_ = {
 			customError("Table '"..data.table.."' already exists.") -- SKIP
 		end
 
-		instance.addPgLayer(project, name, data, nil, encoding)
+		instance.addPgLayer(project, name, data, srid, encoding)
 	end,
 	--- Remove a PostreSQL table.
 	-- @arg data.host Name of the host.
