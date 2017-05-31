@@ -381,7 +381,7 @@ Environment_ = {
 		return oldTime
 	end,
 	--- Load a Neighborhood between two different CellularSpaces.
-	-- @arg data.source A File or a string with the name of the file to be loaded.
+	-- @arg data.file A File or a string with the name of the file to be loaded.
 	-- @arg data.name A string with the name of the relation to be created.
 	-- The default value is "1".
 	-- @arg data.bidirect A boolean value. If true then, for each relation from Cell a
@@ -397,32 +397,32 @@ Environment_ = {
 	-- }
 	--
 	-- env = Environment{emas, river}
-	-- env:loadNeighborhood{source = filePath("gpmlinesDbEmas.gpm", "base")}
+	-- env:loadNeighborhood{file = filePath("gpmlinesDbEmas.gpm", "base")}
 	-- @see Package:filePath
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
 
 		defaultTableValue(data, "name", "1")
 
-		if type(data.source) == "string" then
-			data.source = File(data.source)
+		if type(data.file) == "string" then
+			data.file = File(data.file)
 		end
 
-		mandatoryTableArgument(data, "source", "File")
+		mandatoryTableArgument(data, "file", "File")
 
-		local extension = data.source:extension()
+		local extension = data.file:extension()
 
 		if extension ~= "gpm" then
-			invalidFileExtensionError("source", extension)
+			invalidFileExtensionError("file", extension)
 		end
 
 		defaultTableValue(data, "bidirect", false)
 
-		if not data.source:exists() then
-			resourceNotFoundError("source", data.source)
+		if not data.file:exists() then
+			resourceNotFoundError("file", data.file)
 		end
 
-		local header = data.source:readLine()
+		local header = data.file:readLine()
 
 		local numAttribIdx = string.find(header, "%s", 1)
 		local layer1Idx = string.find(header, "%s", numAttribIdx + 1)
@@ -456,7 +456,7 @@ Environment_ = {
 		end
 
 		repeat
-			local line_cell = data.source:readLine()
+			local line_cell = data.file:readLine()
 			if line_cell == nil then break; end
 
 			local cellIdIdx = string.find(line_cell, "%s", 1)
@@ -471,7 +471,7 @@ Environment_ = {
 			local weight
 
 			if numNeighbors > 0 then
-				local line_neighbors = data.source:readLine()
+				local line_neighbors = data.file:readLine()
 
 				local neighIdEndIdx = string.find(line_neighbors, "%s")
 
@@ -497,7 +497,7 @@ Environment_ = {
 							weight = tonumber(weightAux)
 
 							if weight == nil then
-								customError("The string '"..weightAux.."' found as weight in the file '"..data.source..
+								customError("The string '"..weightAux.."' found as weight in the file '"..data.file..
 								"' could not be converted to a number.")
 							end
 						else
@@ -505,7 +505,7 @@ Environment_ = {
 							weight = tonumber(weightAux)
 
 							if weight == nil then
-								customError("The string '"..weightAux.."' found as weight in the file '"..data.source..
+								customError("The string '"..weightAux.."' found as weight in the file '"..data.file..
 								"' could not be converted to a number.")
 							end
 						end
@@ -540,7 +540,7 @@ Environment_ = {
 			end
 		end
 
-		data.source:close()
+		data.file:close()
 	end,
 	--- Notify every Observer connected to the Environment.
 	-- @arg modelTime A number representing the notification time. The default value is zero.

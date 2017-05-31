@@ -206,48 +206,8 @@ return{
 		file:deleteIfExists()
 	end,
 	loadNeighborhood = function(unitTest)
-		local terralib = getPackage("terralib")
-		local file = File("cellspace_neigh_alt.tview")
-
-		local author = "Avancini"
-		local title = "Cellular Space"
-
-		file:deleteIfExists()
-
-		local proj = terralib.Project{
-			file = tostring(file),
-			clean = true,
-			author = author,
-			title = title
-		}
-
-		local layerName1 = "Sampa"
-		terralib.Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
-		}
-
-		local clName1 = "Sampa_Cells_DB"
-		local tName1 = "sampa_cells"
-		local password = getConfig().password
-		local database = "postgis_22_sample"
-
-		local layer1 = terralib.Layer{
-			project = proj,
-			source = "postgis",
-			clean = true,
-			input = layerName1,
-			name = clName1,
-			resolution = 0.3,
-			password = password,
-			database = database,
-			table = tName1
-		}
-
 		local cs = CellularSpace{
-			project = proj,
-			layer = clName1
+			xdim = 2
 		}
 
 		local error_func = function()
@@ -258,29 +218,25 @@ return{
 		error_func = function()
 			cs:loadNeighborhood{}
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("source"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("file"))
 
 		error_func = function()
-			cs:loadNeighborhood{source = 123}
+			cs:loadNeighborhood{file = 123}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("source", "File", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg("file", "File", 123))
 
 		error_func = function()
-			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm"}
+			cs:loadNeighborhood{file = "neighCabecaDeBoi900x900.gpm"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("source", File("neighCabecaDeBoi900x900.gpm")))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("neighCabecaDeBoi900x900.gpm")))
 
 		local mfile = filePath("cabecadeboi-neigh.gpm", "base")
 
 		error_func = function()
-			cs:loadNeighborhood{source = mfile, name = 22}
+			cs:loadNeighborhood{file = mfile, name = 22}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
-		-- unitTest:assertFile(file) -- SKIP #TODO(#1242)
-
-		file:deleteIfExists()
-		layer1:delete()
 
 		-- GAL from shapefile
 		cs = CellularSpace{
@@ -288,38 +244,38 @@ return{
 		}
 
 		error_func = function()
-			cs:loadNeighborhood{source = filePath("test/brazil.gal", "base"), che = false}
+			cs:loadNeighborhood{file = filePath("test/brazil.gal", "base"), che = false}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("che"))
 
 		mfile = filePath("test/brazil.gal", "base")
 
 		error_func = function()
-			cs:loadNeighborhood{source = mfile}
+			cs:loadNeighborhood{file = mfile}
 		end
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: 'brazilstates.shp', GAL file layer: 'mylayer'.")
 
 		local cs2 = CellularSpace{xdim = 10}
 
 		error_func = function()
-			cs2:loadNeighborhood{source = "arquivo.gpm"}
+			cs2:loadNeighborhood{file = "arquivo.gpm"}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("source", File("arquivo.gpm")))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("arquivo.gpm")))
 
 		error_func = function()
-			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid"}
+			cs2:loadNeighborhood{file = "gpmlinesDbEmas_invalid"}
 		end
-		unitTest:assertError(error_func, "Argument 'source' does not have an extension.")
+		unitTest:assertError(error_func, "Argument 'file' does not have an extension.")
 
 		error_func = function()
-			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid.teste"}
+			cs2:loadNeighborhood{file = "gpmlinesDbEmas_invalid.teste"}
 		end
-		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))
+		unitTest:assertError(error_func, invalidFileExtensionMsg("file", "teste"))
 
 		error_func = function()
 			local s = sessionInfo().separator
 			cs:loadNeighborhood{
-				source = filePath("test/error"..s.."cabecadeboi-invalid-neigh.gpm", "base"),
+				file = filePath("test/error"..s.."cabecadeboi-invalid-neigh.gpm", "base"),
 				check = false
 			}
 		end
@@ -329,7 +285,7 @@ return{
 
 		error_func = function()
 			cs2:loadNeighborhood{
-				source = mfile,
+				file = mfile,
 				name = "my_neighborhood"
 			}
 		end
@@ -339,7 +295,7 @@ return{
 
 		error_func = function()
 			cs2:loadNeighborhood{
-				source = mfile,
+				file = mfile,
 				name = "my_neighborhood"
 			}
 		end
@@ -349,7 +305,7 @@ return{
 
 		error_func = function()
 			cs2:loadNeighborhood{
-				source = mfile,
+				file = mfile,
 				name = "my_neighborhood"
 			}
 		end
@@ -359,7 +315,7 @@ return{
 		mfile = filePath("test/error"..s.."cabecadeboi-neigh-header-invalid.gpm", "base")
 
 		error_func = function()
-			cs:loadNeighborhood{source = mfile}
+			cs:loadNeighborhood{file = mfile}
 		end
 		unitTest:assertError(error_func, "Could not read file '"..mfile.."': invalid header.")
 
@@ -369,43 +325,43 @@ return{
 		}
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gal", "base")}
+			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gal", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id '' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gal", "base")}
+			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gal", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 3. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gpm", "base")}
+			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gpm", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gpm", "base")}
+			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gpm", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 3. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gwt", "base")}
+			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gwt", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gwt", "base")}
+			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gwt", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id '' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
-			cs3:loadNeighborhood{source = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid3.gwt", "base")}
+			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid3.gwt", "base")}
 		end
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")

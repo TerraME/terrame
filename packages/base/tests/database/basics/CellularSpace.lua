@@ -264,7 +264,7 @@ return{
 
 		local countTest = 1
 
-		cs1:loadNeighborhood{source = filePath("cabecadeboi-neigh.gpm", "base")}
+		cs1:loadNeighborhood{file = filePath("cabecadeboi-neigh.gpm", "base")}
 
 		local sizes = {}
 		local minSize = math.huge
@@ -319,7 +319,7 @@ return{
 		countTest = countTest + 1
 
 		cs1:loadNeighborhood{
-			source = filePath("cabecadeboi-neigh.gpm", "base"),
+			file = filePath("cabecadeboi-neigh.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -377,7 +377,7 @@ return{
 		countTest = countTest + 1
 
 		cs3:loadNeighborhood{
-			source = filePath("test/gpmdistanceDbEmasCells.gpm", "base"),
+			file = filePath("test/gpmdistanceDbEmasCells.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -427,7 +427,7 @@ return{
 		countTest = countTest + 1
 
 		cs2:loadNeighborhood{
-			source = filePath("test/emas-distance.gpm", "base"),
+			file = filePath("test/emas-distance.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -465,15 +465,15 @@ return{
 
 		unitTest:assertEquals(5, minSize)
 		unitTest:assertEquals(120, maxSize)
-		unitTest:assertEquals(142.7061, minWeight, 0.00001) -- it was 70.8015
-		unitTest:assertEquals(9993.341, maxWeight, 0.00001) -- it was 9999.513
-		unitTest:assertEquals(108624082.31201, sumWeight, 0.00001) -- it was 84604261.92974
+		unitTest:assertEquals(70.8015, minWeight, 0.00001)
+		unitTest:assertEquals(9999.513, maxWeight, 0.00001)
+		unitTest:assertEquals(84604261.93974, sumWeight, 0.00001)
 
 		-- .GAL Regular CS
 		countTest = countTest + 1
 
 		cs1:loadNeighborhood{
-			source = filePath("test/cabecadeboi-neigh.gal", "base"),
+			file = filePath("test/cabecadeboi-neigh.gal", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -522,7 +522,7 @@ return{
 		countTest = countTest + 1
 
 		cs2:loadNeighborhood{
-			source = filePath("test/emas-distance.gal", "base"),
+			file = filePath("test/emas-distance.gal", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -558,7 +558,7 @@ return{
 		countTest = countTest + 1
 
 		cs1:loadNeighborhood{
-			source = filePath("test/cabecadeboi-neigh.gwt", "base"),
+			file = filePath("test/cabecadeboi-neigh.gwt", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -614,7 +614,7 @@ return{
 		countTest = countTest + 1
 
 		cs2:loadNeighborhood{
-			source = filePath("test/emas-distance.gwt", "base"),
+			file = filePath("test/emas-distance.gwt", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -651,11 +651,11 @@ return{
 			end)
 		end)
 
-		unitTest:assertEquals(9993.341, maxWeight) -- it was 9999.513
-		unitTest:assertEquals(142.7061, minWeight) -- it was 70.8015
+		unitTest:assertEquals(9999.513, maxWeight)
+		unitTest:assertEquals(70.8015, minWeight)
 		unitTest:assertEquals(5, minSize)
 		unitTest:assertEquals(120, maxSize)
-		unitTest:assertEquals(108624082.31201, sumWeight, 0.00001) -- it was 84604261
+		unitTest:assertEquals(84604261.93974, sumWeight, 0.00001)
 
 		-- GAL from shapefile
 		local cs = CellularSpace{
@@ -663,7 +663,7 @@ return{
 		}
 
 		cs:loadNeighborhood{
-			source = filePath("test/brazil.gal", "base"),
+			file = filePath("test/brazil.gal", "base"),
 			check = false
 		}
 
