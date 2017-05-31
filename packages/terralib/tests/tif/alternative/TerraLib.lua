@@ -122,7 +122,7 @@ return {
 			TerraLib().attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
 		local layerInfo2 = TerraLib().getLayerInfo(proj, layerName2)
-		unitTest:assertError(differentSrids, "Layer projections are different: (Prodes_PA, 900914) and (Para_Cells, 29101). Corrected to '29101'.")
+		unitTest:assertError(differentSrids, "Layer projections are different: (Prodes_PA, 900914) and (Para_Cells, 29101). Please, reproject your data to the right one.")
 
 		local layerName3 = "Prodes_PA_NewSRID"
 		TerraLib().addGdalLayer(proj, layerName3, layerFile4, 29101)

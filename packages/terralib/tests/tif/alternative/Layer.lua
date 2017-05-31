@@ -181,7 +181,7 @@ return {
 				layer = "altimetria"
 			}
 		end
-		unitTest:assertError(diffSridWarning, "Layer projections are different: (altimetria, 0) and (cells, 29101). Corrected to '29101'.")
+		unitTest:assertError(diffSridWarning, "Layer projections are different: (altimetria, 0) and (cells, 29101). Please, reproject your data to the right one.")
 
 		File(projName):delete()
 		File(shp1):deleteIfExists()
