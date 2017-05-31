@@ -271,7 +271,7 @@ return{
 		local r
 		local s = soc:sample()
 
-		r = forEachConnection(s, function(ag1, ag2, w)
+		r = forEachConnection(s, function(ag2, w, ag1)
 			unitTest:assertType(ag2, "Agent")
 			unitTest:assertEquals(ag1, s)
 			unitTest:assertType(w, "number")
