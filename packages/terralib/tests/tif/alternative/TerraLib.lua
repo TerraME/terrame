@@ -86,11 +86,6 @@ return {
 
 		TerraLib().createProject(proj, {})
 
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		local layerName1 = "Para"
 		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
@@ -118,7 +113,7 @@ return {
 
 		local operation = "coverage"
 		local attribute = "rperc"
-		local select = 5
+		local select = 0
 		local area = nil
 		local default = nil
 		local repr = "raster"
@@ -127,11 +122,12 @@ return {
 			TerraLib().attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
 		local layerInfo2 = TerraLib().getLayerInfo(proj, layerName2)
-		unitTest:assertError(differentSrids, "The projections of the layers are different: (Prodes_PA, "..string.format("%.0f", layerInfo2.srid)..") and (Para_Cells, 29101). Set the correct one.")
+		unitTest:assertError(differentSrids, "Layer projections are different: (Prodes_PA, 900914) and (Para_Cells, 29101). Corrected to '29101'.")
 
 		local layerName3 = "Prodes_PA_NewSRID"
 		TerraLib().addGdalLayer(proj, layerName3, layerFile4, 29101)
-
+		
+		select = 5
 		local bandNoExists = function()
 			TerraLib().attributeFill(proj, layerName3, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
@@ -142,8 +138,6 @@ return {
 		end
 
 		proj.file:delete()
-
-		customWarning = customWarningBkp
 	end,
 	getDummyValue = function(unitTest)
 		local proj = {}
