@@ -589,8 +589,8 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		local col = 0
 
 		if type(self.xy) == "table" then
-			col = tonumber(dSet[i][self.xy[1]]) or 0
-			row = tonumber(dSet[i][self.xy[2]]) or 0
+			col = tonumber(dSet[i][self.xy[1]]) or i
+			row = tonumber(dSet[i][self.xy[2]]) or i
 		elseif type(self.xy) == "function" then
 			col, row = self.xy(dSet[i])
 		end
@@ -606,8 +606,8 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		local col = 0
 
 		if type(self.xy) == "table" then
-			col = tonumber(dSet[i][self.xy[1]]) or 0
-			row = tonumber(dSet[i][self.xy[2]]) or 0
+			col = tonumber(dSet[i][self.xy[1]]) or i
+			row = tonumber(dSet[i][self.xy[2]]) or i
 		elseif type(self.xy) == "function" then
 			col, row = self.xy(dSet[i])
 		end
