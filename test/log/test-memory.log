@@ -14,7 +14,6 @@ Testing Environment
 Testing Event
 Testing Flow
 Testing Jump
-Testing Neighborhood
 Testing Timer
 Testing Trajectory
 Checking if all asserts were executed
@@ -26,15 +25,15 @@ The package has no examples
 Skipping logs check
 
 Functional test report for package 'memory':
-Tests were executed in 28.14 seconds.
+Tests were executed in 23.05 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 1823 asserts were executed successfully.
-All 12 tested functions do not have any unexpected execution error.
-All 12 tested functions have at least one assert.
-All 12 tested functions exist in the source code of the package.
+All 1569 asserts were executed successfully.
+All 11 tested functions do not have any unexpected execution error.
+All 11 tested functions have at least one assert.
+All 11 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.

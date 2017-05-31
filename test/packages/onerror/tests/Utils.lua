@@ -66,7 +66,7 @@ return{
 		mvector = {}
 		unitTest:assertEquals(getn2(mvector), 0)
 
-		unitTest:assertEquals(getn2(Cell{}), 4)
+		unitTest:assertEquals(getn2(Cell{}), 5)
 	end,
 	greaterByAttribute = function(unitTest)
 		local gt = greaterByAttribute("cover")

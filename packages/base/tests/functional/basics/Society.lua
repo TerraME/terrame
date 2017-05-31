@@ -100,7 +100,7 @@ return {
 
 		t:run(50)
 
-		unitTest:assertEquals(4, findCounter)
+		unitTest:assertEquals(1, findCounter)
 
 		local count1 = 0
 		local count2 = 0
@@ -109,7 +109,7 @@ return {
 			if not cell:isEmpty() then count2 = count2 + 1 end
 		end)
 		unitTest:assertEquals(51, count1)
-		unitTest:assertEquals(48, count2)
+		unitTest:assertEquals(47, count2)
 
 		local agent1 = Agent{}
 

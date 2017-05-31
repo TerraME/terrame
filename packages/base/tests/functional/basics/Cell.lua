@@ -96,9 +96,9 @@ y              number [0]
 ]])
 	end,
 	addNeighborhood = function(unitTest)
-		local c1 = Cell{}
-		local c2 = Cell{}
-		local c3 = Cell{}
+		local c1 = Cell{id = "1"}
+		local c2 = Cell{id = "2"}
+		local c3 = Cell{id = "3"}
 
 		local n = Neighborhood()
 		n:add(c2)

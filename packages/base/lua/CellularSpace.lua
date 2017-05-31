@@ -368,6 +368,7 @@ local function getVonNeumannNeighborhood(cs, data)
 					else
 						index = cs:get(cell.x + col, cell.y + lin)
 					end
+
 					if index ~= nil then
 						table.insert(indexes, index)
 					end
@@ -1774,7 +1775,7 @@ function CellularSpace(data)
 		forEachCell(data, function(cell)
 			setmetatable(cell, {__index = data.instance})
 			forEachElement(data.instance, function(attribute, value)
-				if not string.endswith(attribute, "_") and not belong(attribute, {"x", "id", "y", "past"}) then
+				if not string.endswith(attribute, "_") and not belong(attribute, {"x", "id", "y", "past", "neighborhoods"}) then
 					cell[attribute] = value
 				end
 			end)

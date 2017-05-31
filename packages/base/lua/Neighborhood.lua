@@ -149,6 +149,7 @@ Neighborhood_ = {
 				result = value
 				return false
 			end
+
 			count = count + 1
 		end)
 
