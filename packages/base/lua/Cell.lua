@@ -48,12 +48,7 @@ Cell_ = {
 		if id == nil then id = "1" end
 		mandatoryArgument(2, "string", id)
 
-		if self.neighborhoods == nil then self.neighborhoods = {} end
 		self.neighborhoods[id] = neigh
-
-		if type(neigh) == "Neighborhood" then
-			self.cObj_:addNeighborhood(id, neigh.cObj_)
-		end
 	end,
 	--- Returns the shortest distance between the cells. If the cell do not have geometry, it
 	-- calculates the Euclidean distance to a given Cell using the attributes x and y of both Cells.
@@ -151,9 +146,9 @@ Cell_ = {
 			if type(s) == "function" then
 				return s(self)
 			end
-		end
 
-		return self.cObj_:getNeighborhood(name)
+			return s
+		end
 	end,
 	--- User-defined function that is used to initialize a Cell when a CellularSpace is
 	-- created. This function gets the Cell itself as argument.
@@ -284,7 +279,7 @@ Cell_ = {
 	synchronize = function(self)
 		self.past = {}
 		for k, v in pairs(self) do
-			if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
+			if not belong(k, {"past", "cObj_", "x", "y", "geom", "neighborhoods"}) then
 				self.past[k] = v
 			end
 		end
@@ -320,7 +315,7 @@ metaTableCell_ = {
 	-- size = #cell
 	-- print(size)
 	__len = function(self)
-		return self.cObj_:size()
+		return getn(self.neighborhoods)
 	end,
 	__tostring = _Gtme.tostring
 }
@@ -389,6 +384,7 @@ function Cell(data)
 	data.cObj_:setID(data.id)
 	data.id = nil
 --	data.id = data.cObj_:getID()
+	data.neighborhoods = {}
 
 	data.cObj_:setIndex(data.x, data.y)
 	return data

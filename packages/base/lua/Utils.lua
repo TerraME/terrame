@@ -720,13 +720,9 @@ function forEachNeighbor(cell, name, _sof_)
 		end
 	end
 
-	neighborhood.cObj_:first()
-
-	while not neighborhood.cObj_:isLast() do
-		local neigh = neighborhood.cObj_:getNeighbor()
-		local weight = neighborhood.cObj_:getWeight()
-		if _sof_(neigh, weight, cell) == false then return false end
-		neighborhood.cObj_:next()
+	for mname, connection in pairs(neighborhood.connections) do
+		local weight = neighborhood.weights[mname]
+		if _sof_(connection, weight, cell) == false then return false end
 	end
 
 	return true
@@ -803,11 +799,8 @@ function forEachNeighborhood(cell, _sof_)
 		incompatibleTypeError(2, "function", _sof_)
 	end
 
-	cell.cObj_:first()
-	while not cell.cObj_:isLast() do
-		local idx = cell.cObj_:getCurrentNeighborhood():getID()
+	for idx in pairs(cell.neighborhoods) do
 		if _sof_(idx) == false then return false end
-		cell.cObj_:next()
 	end
 
 	return true

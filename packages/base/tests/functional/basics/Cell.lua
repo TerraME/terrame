@@ -46,15 +46,16 @@ return {
 	__tostring = function(unitTest)
 		local c1 = Cell{w = 3, t = 4, s = "alguem", twr = false, dfg = Cell()}
 
-		unitTest:assertEquals(tostring(c1), [[cObj_  userdata
-dfg    Cell
-past   vector of size 0
-s      string [alguem]
-t      number [4]
-twr    boolean [false]
-w      number [3]
-x      number [0]
-y      number [0]
+		unitTest:assertEquals(tostring(c1), [[cObj_          userdata
+dfg            Cell
+neighborhoods  vector of size 0
+past           vector of size 0
+s              string [alguem]
+t              number [4]
+twr            boolean [false]
+w              number [3]
+x              number [0]
+y              number [0]
 ]])
 
 		local ag = Agent{}
@@ -70,26 +71,28 @@ y      number [0]
 
 		local c = cs.cells[1]
 
-		unitTest:assertEquals(tostring(c), [[agents     vector of size 0
-cObj_      userdata
-friends    Group
-parent     CellularSpace
-past       vector of size 0
-placement  Group
-x          number [0]
-y          number [0]
+		unitTest:assertEquals(tostring(c), [[agents         vector of size 0
+cObj_          userdata
+friends        Group
+neighborhoods  vector of size 0
+parent         CellularSpace
+past           vector of size 0
+placement      Group
+x              number [0]
+y              number [0]
 ]])
 
 		c:synchronize()
 
-		unitTest:assertEquals(tostring(c), [[agents     vector of size 0
-cObj_      userdata
-friends    Group
-parent     CellularSpace
-past       named table of size 4
-placement  Group
-x          number [0]
-y          number [0]
+		unitTest:assertEquals(tostring(c), [[agents         vector of size 0
+cObj_          userdata
+friends        Group
+neighborhoods  vector of size 0
+parent         CellularSpace
+past           named table of size 4
+placement      Group
+x              number [0]
+y              number [0]
 ]])
 	end,
 	addNeighborhood = function(unitTest)

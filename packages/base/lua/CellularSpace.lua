@@ -141,7 +141,7 @@ local function loadNeighborhoodGPM(self, data)
 		if cell == nil then
 			customError("Could not find id '"..tostring(line[i]).."' in line "..counterLine..". It seems that it is corrupted.")
 		end
-		
+
 		local neig = cell:getNeighborhood(data.name)
 		local lineID = file:readLine(" ")
 		local valfor = (tonumber(line[2]) * 2)
@@ -589,8 +589,8 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		local col = 0
 
 		if type(self.xy) == "table" then
-			col = tonumber(dSet[i][self.xy[1]]) or i
-			row = tonumber(dSet[i][self.xy[2]]) or i
+			col = tonumber(dSet[i][self.xy[1]]) or 0
+			row = tonumber(dSet[i][self.xy[2]]) or 0
 		elseif type(self.xy) == "function" then
 			col, row = self.xy(dSet[i])
 		end
@@ -606,8 +606,8 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		local col = 0
 
 		if type(self.xy) == "table" then
-			col = tonumber(dSet[i][self.xy[1]]) or i
-			row = tonumber(dSet[i][self.xy[2]]) or i
+			col = tonumber(dSet[i][self.xy[1]]) or 0
+			row = tonumber(dSet[i][self.xy[2]]) or 0
 		elseif type(self.xy) == "function" then
 			col, row = self.xy(dSet[i])
 		end
@@ -1146,7 +1146,6 @@ CellularSpace_ = {
 	-- "gal" & Load a Neighborhood from contiguity relationships described as a GAL file.\
 	-- "gwt" & Load a Neighborhood from a GWT (generalized weights) file.\
 	-- "gpm" & Load a Neighborhood from a GPM (generalized proximity matrix) file. \
-	-- CellularSpace. \
 	-- @usage -- DONTRUN
 	-- cs = CellularSpace{
 	--     file = filePath("cabecadeboi800.shp", "base")
