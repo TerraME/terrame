@@ -392,6 +392,30 @@ return{
 		end
 		unitTest:assertError(invalidSridType, "Incompatible types. Argument 'epsg' expected number, got boolean.")
 
+		local invalidEncoding = function()
+			Layer{
+				project = proj,
+				name = "SampaSrid",
+				file = filePath("test/sampa.shp", "terralib"),
+				encoding = "utf16"
+			}
+		end
+		unitTest:assertError(invalidEncoding, "Encoding 'utf16' is invalid.")
+
+		local encodingUnnecessary = function()
+			Layer{
+				project = proj,
+				source = "shp",
+				input = layerName1,
+				name = "SPCells",
+				clean = true,
+				resolution = 0.7,
+				file = "csSp.shp",
+				encoding = "utf8"
+			}
+		end
+		unitTest:assertError(encodingUnnecessary, unnecessaryArgumentMsg("encoding"))
+
 		File(projName):deleteIfExists()
 		File(shp1):deleteIfExists()
 	end,

@@ -63,7 +63,7 @@ return {
 	end,
 	saveDataSet = function(unitTest)
 		local proj = {}
-		proj.file = "myproject.tview"
+		proj.file = "tlib_savedset.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 

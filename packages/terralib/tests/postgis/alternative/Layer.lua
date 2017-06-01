@@ -44,7 +44,6 @@ return {
 		local port
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding
 		local tableName = "sampa"
 
 		local data = {
@@ -409,7 +408,6 @@ return {
 		port = "5432"
 		password = getConfig().password
 		database = "postgis_22_sample"
-		encoding = "CP1252"
 
 		local inputMandatory = function()
 			Layer{
@@ -768,20 +766,7 @@ return {
 		host = "localhost"
 		port = "5432"
 
-		local pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			user = "postgres",
-			password = password,
-			database = database,
-			table = tName1,
-			encoding = encoding
-		}
-
-		TerraLib().dropPgTable(pgData)
-
-		Layer{
+		local pgLayer = Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
@@ -789,7 +774,8 @@ return {
 			resolution = 0.7,
 			password = password,
 			database = database,
-			table = tName1
+			table = tName1,
+			clean = true
 		}
 
 		local clName2 = "Another_Setores_Cells"
@@ -807,7 +793,7 @@ return {
 		end
 		unitTest:assertError(tableAlreadyExists, "Table '"..tName1.."' already exists.")
 
-		TerraLib().dropPgTable(pgData)
+		pgLayer:delete()
 
 		if File(projName):exists() then
 			File(projName):deleteIfExists()

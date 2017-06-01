@@ -160,9 +160,8 @@ file     string [vegtype_2000.nc]
 name     string [Vegtype_layer]
 project  Project
 rep      string [raster]
-sid      string [14825bac-96e7-418d-a340-f97f49ac3ed1]
 source   string [nc]
-]], 36, true)
+]], 1, true)
 
 			File(projName):deleteIfExists()
 

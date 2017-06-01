@@ -67,7 +67,6 @@ return {
 		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertNotNil(layerInfo.sid)
 
 		file:delete()
 
@@ -108,6 +107,7 @@ return {
 		local layerName1 = "SampaShp"
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
+		local layerInfo1 = TerraLib().getLayerInfo(proj, layerName1)
 
 		local clName = "Sampa_Cells"
 		local shp1 = File(clName..".shp")
@@ -124,7 +124,7 @@ return {
 		unitTest:assertEquals(layerInfo.file, tostring(shp1))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertNotNil(layerInfo.sid)
+		unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
 
 		-- NO MASK TEST
 		local clSet = TerraLib().getDataSet(proj, clName)
@@ -217,7 +217,6 @@ return {
 		unitTest:assertEquals(clLayerInfo.file, currentDir()..shp[1])
 		unitTest:assertEquals(clLayerInfo.type, "OGR")
 		unitTest:assertEquals(clLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(clLayerInfo.sid)
 
 		-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
 		local layerName2 = "Protection_Unit"
@@ -253,7 +252,6 @@ return {
 		unitTest:assertEquals(presLayerInfo.file, currentDir()..shp[2])
 		unitTest:assertEquals(presLayerInfo.type, "OGR")
 		unitTest:assertEquals(presLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(presLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH PERCENTAGE TOTAL AREA OPERATION
 		local areaLayerName = clName.."_"..layerName2.."_Area"
@@ -283,7 +281,6 @@ return {
 		unitTest:assertEquals(areaLayerInfo.file, currentDir()..shp[3])
 		unitTest:assertEquals(areaLayerInfo.type, "OGR")
 		unitTest:assertEquals(areaLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(areaLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH COUNT OPERATION
 		local countLayerName = clName.."_"..layerName2.."_Count"
@@ -313,7 +310,6 @@ return {
 		unitTest:assertEquals(countLayerInfo.file, currentDir()..shp[4])
 		unitTest:assertEquals(countLayerInfo.type, "OGR")
 		unitTest:assertEquals(countLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(countLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH DISTANCE OPERATION
 		local distLayerName = clName.."_"..layerName2.."_Distance"
@@ -343,7 +339,6 @@ return {
 		unitTest:assertEquals(distLayerInfo.file, currentDir()..shp[5])
 		unitTest:assertEquals(distLayerInfo.type, "OGR")
 		unitTest:assertEquals(distLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(distLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION
 		local layerName3 = "Amazon_Munic"
@@ -378,7 +373,6 @@ return {
 		unitTest:assertEquals(minLayerInfo.file, currentDir()..shp[6])
 		unitTest:assertEquals(minLayerInfo.type, "OGR")
 		unitTest:assertEquals(minLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(minLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION
 		local maxLayerName = clName.."_"..layerName3.."_Maximum"
@@ -409,7 +403,6 @@ return {
 		unitTest:assertEquals(maxLayerInfo.file, currentDir()..shp[7])
 		unitTest:assertEquals(maxLayerInfo.type, "OGR")
 		unitTest:assertEquals(maxLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(maxLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION
 		local percLayerName = clName.."_"..layerName2.."_Percentage"
@@ -448,7 +441,6 @@ return {
 		unitTest:assertEquals(percLayerInfo.file, currentDir()..shp[8])
 		unitTest:assertEquals(percLayerInfo.type, "OGR")
 		unitTest:assertEquals(percLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(percLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION
 		local stdevLayerName = clName.."_"..layerName3.."_Stdev"
@@ -480,7 +472,6 @@ return {
 		unitTest:assertEquals(stdevLayerInfo.file, currentDir()..shp[9])
 		unitTest:assertEquals(stdevLayerInfo.type, "OGR")
 		unitTest:assertEquals(stdevLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(stdevLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
 		local meanLayerName = clName.."_"..layerName3.."_AvrgMean"
@@ -512,7 +503,6 @@ return {
 		unitTest:assertEquals(meanLayerInfo.file, currentDir()..shp[10])
 		unitTest:assertEquals(meanLayerInfo.type, "OGR")
 		unitTest:assertEquals(meanLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(meanLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
 		local weighLayerName = clName.."_"..layerName3.."_AvrgWeighted"
@@ -544,7 +534,6 @@ return {
 		unitTest:assertEquals(weighLayerInfo.file, currentDir()..shp[11])
 		unitTest:assertEquals(weighLayerInfo.type, "OGR")
 		unitTest:assertEquals(weighLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(weighLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MAJORITY INTERSECTION OPERATION
 		local interLayerName = clName.."_"..layerName3.."_Intersection"
@@ -576,7 +565,6 @@ return {
 		unitTest:assertEquals(interLayerInfo.file, currentDir()..shp[12])
 		unitTest:assertEquals(interLayerInfo.type, "OGR")
 		unitTest:assertEquals(interLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(interLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MAJORITY OCCURRENCE OPERATION
 		local occurLayerName = clName.."_"..layerName3.."_Occurence"
@@ -609,7 +597,6 @@ return {
 		unitTest:assertEquals(occurLayerInfo.file, currentDir()..shp[13])
 		unitTest:assertEquals(occurLayerInfo.type, "OGR")
 		unitTest:assertEquals(occurLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(occurLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH SUM OPERATION
 		local sumLayerName = clName.."_"..layerName3.."_Sum"
@@ -642,7 +629,6 @@ return {
 		unitTest:assertEquals(sumLayerInfo.file, currentDir()..shp[14])
 		unitTest:assertEquals(sumLayerInfo.type, "OGR")
 		unitTest:assertEquals(sumLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(sumLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH WEIGHTED SUM OPERATION
 		local wsumLayerName = clName.."_"..layerName3.."_Wsum"
@@ -675,7 +661,6 @@ return {
 		unitTest:assertEquals(wsumLayerInfo.file, currentDir()..shp[15])
 		unitTest:assertEquals(wsumLayerInfo.type, "OGR")
 		unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(wsumLayerInfo.sid)
 
 		-- RASTER TESTS WITH SHAPE
 		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
@@ -714,7 +699,6 @@ return {
 		unitTest:assertEquals(percTifLayerInfo.file, currentDir()..shp[16])
 		unitTest:assertEquals(percTifLayerInfo.type, "OGR")
 		unitTest:assertEquals(percTifLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(percTifLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION FROM RASTER
 		local rmeanLayerName = clName.."_"..layerName4.."_RMean"
@@ -748,7 +732,6 @@ return {
 		unitTest:assertEquals(rmeanLayerInfo.file, currentDir()..shp[17])
 		unitTest:assertEquals(rmeanLayerInfo.type, "OGR")
 		unitTest:assertEquals(rmeanLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(rmeanLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION FROM RASTER
 		local rminLayerName = clName.."_"..layerName4.."_RMinimum"
@@ -782,7 +765,6 @@ return {
 		unitTest:assertEquals(rminLayerInfo.file, currentDir()..shp[18])
 		unitTest:assertEquals(rminLayerInfo.type, "OGR")
 		unitTest:assertEquals(rminLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(rminLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION FROM RASTER
 		local rmaxLayerName = clName.."_"..layerName4.."_RMaximum"
@@ -816,7 +798,6 @@ return {
 		unitTest:assertEquals(rmaxLayerInfo.file, currentDir()..shp[19])
 		unitTest:assertEquals(rmaxLayerInfo.type, "OGR")
 		unitTest:assertEquals(rmaxLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(rmaxLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION FROM RASTER
 		local rstdevLayerName = clName.."_"..layerName4.."_RStdev"
@@ -851,7 +832,6 @@ return {
 		unitTest:assertEquals(rstdevLayerInfo.file, currentDir()..shp[20])
 		unitTest:assertEquals(rstdevLayerInfo.type, "OGR")
 		unitTest:assertEquals(rstdevLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(rstdevLayerInfo.sid)
 
 		-- FILL CELLULAR SPACE WITH SUM OPERATION FROM RASTER
 		local rsumLayerName = clName.."_"..layerName4.."_RSum"
@@ -886,7 +866,6 @@ return {
 		unitTest:assertEquals(rsumLayerInfo.file, currentDir()..shp[21])
 		unitTest:assertEquals(rsumLayerInfo.type, "OGR")
 		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(rsumLayerInfo.sid)
 
 		-- OVERWRITE OUTPUT
 		operation = "sum"
@@ -916,7 +895,6 @@ return {
 		unitTest:assertEquals(rsumOverLayerInfo.file, currentDir()..shp[21])
 		unitTest:assertEquals(rsumOverLayerInfo.type, "OGR")
 		unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(rsumOverLayerInfo.sid)
 
 		-- RASTER NODATA
 		local nodataLayerName = clName.."_"..layerName4.."_ND"
@@ -952,7 +930,6 @@ return {
 		unitTest:assertEquals(nodataLayerInfo.file, currentDir()..shp[22])
 		unitTest:assertEquals(nodataLayerInfo.type, "OGR")
 		unitTest:assertEquals(nodataLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(nodataLayerInfo.sid)
 
 		-- COVERAGE ATTRIBUTE + SELECTED WITH MORE THAN 10 CHARACTERS
 		local percLayerName2 = clName.."_"..layerName2.."_Percentage2"
@@ -1028,7 +1005,6 @@ return {
 		unitTest:assertEquals(rcountLayerInfo.file, currentDir()..shp[25])
 		unitTest:assertEquals(rcountLayerInfo.type, "OGR")
 		unitTest:assertEquals(rcountLayerInfo.rep, "polygon")
-		unitTest:assertNotNil(rcountLayerInfo.sid)
 
 		for j = 1, #shp do
 			File(shp[j]):deleteIfExists()

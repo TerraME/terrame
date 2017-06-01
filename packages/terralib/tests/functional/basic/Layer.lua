@@ -34,7 +34,7 @@ return {
 
 		local layerName1 = "Sampa"
 
-		Layer{
+		local layer0 = Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("test/sampa.shp", "terralib")
@@ -85,9 +85,12 @@ return {
 		local layer1 = Layer{
 			project = proj1,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "terralib"),
+			encoding = "utf8"
 		}
 		unitTest:assertEquals(layer1.name, layerName1)
+		unitTest:assertEquals("utf8", layer1.encoding)
+		unitTest:assertEquals("latin1", layer0.encoding)
 
 		local proj2 = Project {
 			file = projName:name(true)
@@ -111,7 +114,7 @@ return {
 		}
 
 		unitTest:assert(layer21.name ~= layer2.name)
-		unitTest:assertEquals(layer21.sid, layer2.sid)
+		unitTest:assertEquals(layer21.epsg, layer2.epsg)
 
 		local layerName3 = "CBERS1"
 		local layer3 = Layer{
@@ -130,7 +133,7 @@ return {
 		}
 
 		unitTest:assert(layer4.name ~= layer3.name)
-		unitTest:assertEquals(layer4.sid, layer3.sid)
+		unitTest:assertEquals(layer4.epsg, layer3.epsg)
 
 		projName:deleteIfExists()
 
@@ -578,15 +581,16 @@ return {
 			file = filePath("itaituba-census.shp", "terralib")
 		}
 
-		local expected = [[epsg     number [29191.0]
-file     string [itaituba-census.shp]
-name     string [Setores_2000]
-project  Project
-rep      string [polygon]
-sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
-source   string [shp]
+		local expected = [[
+encoding  string [latin1]
+epsg      number [29191.0]
+file      string [/itaituba-census.shp]
+name      string [Setores_2000]
+project   Project
+rep       string [polygon]
+source    string [shp]
 ]]
-		unitTest:assertEquals(tostring(l), expected, 36, true)
+		unitTest:assertEquals(tostring(l), expected, 1, true)
 		projName:deleteIfExists()
 	end
 }

@@ -230,7 +230,7 @@ local function addSpatialIndex(ds, dSetName)
 	ds:execute("CREATE SPATIAL INDEX ON "..dSetName)
 end
 
-local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
+local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, encoding)
 	local layer
 
 	do
@@ -312,7 +312,12 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
 		layer:setDataSourceId(ds:getId())
 		layer:setExtent(env)
 		layer:setVisibility(binding.NOT_VISIBLE)
-		layer:setEncoding(binding.CharEncoding.getEncodingType("LATIN1")) -- TODO(avancinirodrigo): REVIEW ENCODING
+
+		if not encoding then
+			encoding = "LATIN1"
+		end
+
+		layer:setEncoding(binding.CharEncoding.getEncodingType(encoding))
 
 		if srid then
             sridReal = srid
@@ -377,7 +382,7 @@ local function loadProject(project, file)
 	end
 end
 
-local function addFileLayer(project, name, file, type, addSpatialIdx, srid)
+local function addFileLayer(project, name, file, type, addSpatialIdx, srid, encoding)
 	local connInfo = createFileConnInfo(tostring(file))
 
 	loadProject(project, project.file)
@@ -394,7 +399,7 @@ local function addFileLayer(project, name, file, type, addSpatialIdx, srid)
 		dSetName = "OGRGeoJSON"
 	end
 
-	local layer = createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid)
+	local layer = createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, encoding)
 
 	project.layers[layer:getTitle()] = layer
 	saveProject(project, project.layers)
@@ -1017,22 +1022,6 @@ local function toWfsUrl(url)
 	return wfsPrefix..url
 end
 
-local function fixCellSpaceSrid(project, csLayerName, inputLayerName)
-    loadProject(project, project.file)
-
-    local csLayer = project.layers[csLayerName]
-    local inputLayer = project.layers[inputLayerName]
-
-    if inputLayer:getSRID() ~= csLayer:getSRID() then
-        csLayer:setSRID(inputLayer:getSRID())
-        saveProject(project, project.layers)
-        releaseProject(project)
-        return
-    end
-
-    releaseProject(project)
-end
-
 local function getLayerByDataSetName(layers, dsetName, type)
 	for _, l in pairs(layers) do
 		if l:getDataSetName() == dsetName then
@@ -1437,8 +1426,7 @@ TerraLib_ = {
 	--     user = "postgres",
 	--     password = "postgres",
 	--     database = "terralib_save_test",
-	--     table = "sampa_cells",
-	--     encoding = "CP1252"
+	--     table = "sampa_cells"
 	-- }
 	--
 	-- TerraLib().addPgLayer(proj, "SampaPg", pgData)
@@ -1448,12 +1436,11 @@ TerraLib_ = {
 		local layer = project.layers[layerName]
 		local info = {}
 		info.name = layer:getTitle()
-		info.sid = layer:getDataSourceId()
 		info.srid = layer:getSRID()
 		local dseName = layer:getDataSetName()
 
 		loadProject(project, project.file)
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(info.sid)
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
 
 		local type = dsInfo:getType()
 		info.type = type
@@ -1467,10 +1454,12 @@ TerraLib_ = {
 			info.database = string.gsub(connInfo:path(), "/", "")
 			info.table = dseName
 			info.source = "postgis"
+			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "OGR" then
 			info.file = connInfo:host()..connInfo:path()
 			local file = File(info.file)
 			info.source = file:extension()
+			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "GDAL" then
 			info.file = connInfo:host()..connInfo:path()
 			local file = File(info.file)
@@ -1479,6 +1468,7 @@ TerraLib_ = {
 			info.url = connInfo:path()
 			info.source = "wfs"
 			info.dataset = dseName
+			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "WMS2" then
 			local infos = binding.Expand(connInfo:query())
 			info.url = infos.URI
@@ -1518,12 +1508,13 @@ TerraLib_ = {
 	-- @arg file The file to the layer.
 	-- @arg addSpatialIdx A boolean value indicating whether a spatial index file should be created.
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
+	-- @arg encoding A string value used to set the character encoding.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
 	-- proj = TerraLib().createProject("project.tview", {})
 	-- TerraLib().addShpLayer(proj, "ShapeLayer", filePath("sampa.shp", "terralib"))
-	addShpLayer = function(project, name, file, addSpatialIdx, srid)
-		addFileLayer(project, name, file, "OGR", addSpatialIdx, srid)
+	addShpLayer = function(project, name, file, addSpatialIdx, srid, encoding)
+		addFileLayer(project, name, file, "OGR", addSpatialIdx, srid, encoding)
 	end,
 	--- Add a new GDAL layer to a given project.
 	-- @arg project A table that represents a project.
@@ -1550,12 +1541,13 @@ TerraLib_ = {
 	-- @arg name The name of the layer.
 	-- @arg file The file to the layer.
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
+	-- @arg encoding A string value used to set the character encoding.
 	-- @usage -- DONTRUN
 	-- tl = TerraLib()
 	-- TerraLib().createProject("project.tview", {})
 	-- TerraLib().addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "terralib"))
-	addGeoJSONLayer = function(project, name, file, srid)
-		addFileLayer(project, name, file, "GeoJSON", nil, srid)
+	addGeoJSONLayer = function(project, name, file, srid, encoding)
+		addFileLayer(project, name, file, "GeoJSON", nil, srid, encoding)
 	end,
 	--- Validates if the URL is a valid WFS server.
 	-- @arg url The URL of the WFS server.
@@ -1572,17 +1564,19 @@ TerraLib_ = {
 	-- @arg name The name of the layer.
 	-- @arg url The URL of the WFS server.
 	-- @arg dataset The data set in WFS server.
+	-- @arg srid A number value that represents the Spatial Reference System Identifier.
+	-- @arg encoding A string value used to set the character encoding.
 	-- @usage -- DONTRUN
 	-- local layerName = "WFS-Layer"
 	-- local url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
 	-- local dataset = "reddpac:BAU"
 	-- TerraLib().addWfsLayer(project, name, url, dataset)
-	addWfsLayer = function(project, name, url, dataset)
+	addWfsLayer = function(project, name, url, dataset, srid, encoding)
 		local wfsUrl = toWfsUrl(url)
 		if instance.isValidWfsUrl(wfsUrl) then
 			loadProject(project, project.file)
 
-			local layer = createLayer(name, dataset, wfsUrl, "WFS")
+			local layer = createLayer(name, dataset, wfsUrl, "WFS", nil, srid, encoding)
 
 			project.layers[layer:getTitle()] = layer
 			saveProject(project, project.layers)
@@ -1596,6 +1590,7 @@ TerraLib_ = {
 	-- @arg name The name of the layer.
 	-- @arg connect A table with the WMS connection parameters.
 	-- @arg dataset The data set in WMS server.
+	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	-- local layerName = "WMS-Layer"
 	-- local url = "http://terrabrasilis.info/terraamazon/ows"
@@ -1607,7 +1602,7 @@ TerraLib_ = {
 		-- format = "jpeg"
 	-- }
 	-- TerraLib().addWmsLayer(project, layerName, conn, dataset)
-	addWmsLayer = function(project, name, connect, dataset)
+	addWmsLayer = function(project, name, connect, dataset, srid)
 		local connInfo = createWmsConnInfo(connect.url, connect.user, connect.password, connect.port,
 										connect.query, connect.fragment, connect.directory, connect.format)
 
@@ -1616,7 +1611,7 @@ TerraLib_ = {
 		end
 
 		loadProject(project, project.file)
-		local layer = createLayer(name, dataset, connInfo, "WMS2")
+		local layer = createLayer(name, dataset, connInfo, "WMS2", nil, srid)
 		project.layers[layer:getTitle()] = layer
 		saveProject(project, project.layers)
 		releaseProject(project)
@@ -1648,20 +1643,22 @@ TerraLib_ = {
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(tostring(file))
 		local _, dSetName = file:split()
+		local srid = inputLayer:getSRID()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		instance.addGeoJSONLayer(project, name, file)
+		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
+		instance.addGeoJSONLayer(project, name, file, srid, encoding)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
 	-- @arg project A table that represents a project.
 	-- @arg name The name of the layer.
-	-- @arg data.host Name of the host.
-	-- @arg data.port Port number.
-	-- @arg data.user The user name.
-	-- @arg data.password The password.
-	-- @arg data.database The database name.
-	-- @arg data.encoding The encoding of the table.
+	-- @arg conn.host Name of the host.
+	-- @arg conn.port Port number.
+	-- @arg conn.user The user name.
+	-- @arg conn.password The password.
+	-- @arg conn.database The database name.
+	-- @arg encoding A string value used to set the character encoding.
 	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	--
@@ -1685,22 +1682,21 @@ TerraLib_ = {
 	--     password = "postgres",
 	--     database = "terralib_save_test",
 	--     table = "sampa_cells",
-	--     encoding = "CP1252"
 	-- }
 	--
 	-- TerraLib().addPgLayer(proj, "SampaPg", pgData)
-	addPgLayer = function(project, name, data, srid)
-		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
+	addPgLayer = function(project, name, conn, srid, encoding)
+		local connInfo = createPgConnInfo(conn.host, conn.port, conn.user, conn.password, conn.database, encoding)
 
 		loadProject(project, project.file)
 
 		local layer
 
-		if dataSetExists(connInfo, data.table, "POSTGIS") then
-			layer = createLayer(name, data.table, connInfo, "POSTGIS", nil, srid)
+		if dataSetExists(connInfo, conn.table, "POSTGIS") then
+			layer = createLayer(name, conn.table, connInfo, "POSTGIS", nil, srid, encoding)
 		else
 			releaseProject(project) -- SKIP
-			customError("Is not possible add the Layer. Table '"..data.table.."' does not exist.")
+			customError("Is not possible add the Layer. Table '"..conn.table.."' does not exist.")
 		end
 
 		project.layers[layer:getTitle()] = layer
@@ -1736,12 +1732,12 @@ TerraLib_ = {
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(tostring(file))
 		local _, dSetName = file:split()
+		local srid = inputLayer:getSRID()
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		instance.addShpLayer(project, name, file, addSpatialIdx)
-
-		fixCellSpaceSrid(project, name, inputLayerTitle)
+		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
+		instance.addShpLayer(project, name, file, addSpatialIdx, srid, encoding)
 	end,
 	--- Add a new cellular layer to a PostgreSQL connection.
 	-- @arg project The name of the project.
@@ -1770,8 +1766,7 @@ TerraLib_ = {
 	--     user = "postgres",
 	--     password = "postgres",
 	--     database = "terralib_save_test",
-	--     table = "sampa_cells",
-	--     encoding = "CP1252"
+	--     table = "sampa_cells"
 	-- }
 	--
 	-- local clName1 = "SampaPgCells"
@@ -1781,7 +1776,9 @@ TerraLib_ = {
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
-		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
+		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
+		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, encoding)
+		local srid = inputLayer:getSRID()
 
 		if not dataSetExists(connInfo, data.table, "POSTGIS") then
 			createCellSpaceLayer(inputLayer, name, data.table, resolution, connInfo, "POSTGIS", mask)
@@ -1790,7 +1787,7 @@ TerraLib_ = {
 			customError("Table '"..data.table.."' already exists.") -- SKIP
 		end
 
-		instance.addPgLayer(project, name, data)
+		instance.addPgLayer(project, name, data, srid, encoding)
 	end,
 	--- Remove a PostreSQL table.
 	-- @arg data.host Name of the host.
@@ -1922,7 +1919,8 @@ TerraLib_ = {
 			local toSrid = toLayer:getSRID()
 			if fromLayer:getSRID() ~= toSrid then
 				local fromSrid = fromLayer:getSRID()
-				customError("The projections of the layers are different: ("..from..", "..string.format("%.0f", fromSrid)..") and ("..to..", "..string.format("%.0f", toSrid).."). Set the correct one.")
+				customWarning("Layer projections are different: ("..from..", "..string.format("%.0f", fromSrid)..") and ("
+								..to..", "..string.format("%.0f", toSrid).."). Please, reproject your data to the right one.")
 			end
 
             local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())

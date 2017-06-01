@@ -174,6 +174,15 @@ return {
 		end
 		unitTest:assertError(nodataDefaultError, defaultValueMsg("dummy", 255.0))
 
+		local diffSridWarning = function()
+			cl:fill{
+				operation = "average",
+				attribute = "aver",
+				layer = "altimetria"
+			}
+		end
+		unitTest:assertError(diffSridWarning, "Layer projections are different: (altimetria, 0) and (cells, 29101). Please, reproject your data to the right one.")
+
 		File(projName):delete()
 		File(shp1):deleteIfExists()
 	end,
