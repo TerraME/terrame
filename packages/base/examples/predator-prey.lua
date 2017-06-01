@@ -19,7 +19,7 @@ predator = Agent{
 			end
 		end)
 
-		self.energy = self.energy - 4
+		self.energy = self.energy - 5
 		self:walk()
 		if self.energy >= 50 then
 			self.energy = self.energy / 2
