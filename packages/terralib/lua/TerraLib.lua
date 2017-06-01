@@ -1468,6 +1468,7 @@ TerraLib_ = {
 			info.url = connInfo:path()
 			info.source = "wfs"
 			info.dataset = dseName
+			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "WMS2" then
 			local infos = binding.Expand(connInfo:query())
 			info.url = infos.URI
@@ -1563,17 +1564,19 @@ TerraLib_ = {
 	-- @arg name The name of the layer.
 	-- @arg url The URL of the WFS server.
 	-- @arg dataset The data set in WFS server.
+	-- @arg srid A number value that represents the Spatial Reference System Identifier.
+	-- @arg encoding A string value used to set the character encoding.
 	-- @usage -- DONTRUN
 	-- local layerName = "WFS-Layer"
 	-- local url = "http://terrabrasilis.info/redd-pac/wfs/wfs_biomes"
 	-- local dataset = "reddpac:BAU"
 	-- TerraLib().addWfsLayer(project, name, url, dataset)
-	addWfsLayer = function(project, name, url, dataset)
+	addWfsLayer = function(project, name, url, dataset, srid, encoding)
 		local wfsUrl = toWfsUrl(url)
 		if instance.isValidWfsUrl(wfsUrl) then
 			loadProject(project, project.file)
 
-			local layer = createLayer(name, dataset, wfsUrl, "WFS")
+			local layer = createLayer(name, dataset, wfsUrl, "WFS", nil, srid, encoding)
 
 			project.layers[layer:getTitle()] = layer
 			saveProject(project, project.layers)

@@ -34,6 +34,8 @@ return {
 		local layerName = "BAU"
 		local service = "http://terrabrasilis.info/redd-pac/wfs"
 		local feature = "reddpac:wfs_biomes"
+		local epsg = 4601
+		local encoding = "utf8"
 
 		if TerraLib().isValidWfsUrl(service) then
 			local layer = Layer {
@@ -41,13 +43,28 @@ return {
 				source = "wfs",
 				name = layerName,
 				service = service,
-				feature = feature
+				feature = feature,
+				epsg = epsg,
+				encoding = encoding
 			}
 
 			unitTest:assertEquals(layer.name, layerName) -- SKIP
 			unitTest:assertEquals(layer.source, "wfs") -- SKIP
 			unitTest:assertEquals(layer.service, service) -- SKIP
 			unitTest:assertEquals(layer.feature, feature) -- SKIP
+			unitTest:assertEquals(layer.epsg, epsg) -- SKIP
+			unitTest:assertEquals(layer.encoding, encoding) -- SKIP
+
+			local layer2 = Layer {
+				project = proj,
+				source = "wfs",
+				name = "AnotherWfsLayer",
+				service = service,
+				feature = feature,
+			}
+
+			unitTest:assertEquals(layer2.epsg, 4326) -- SKIP
+			unitTest:assertEquals(layer2.encoding, "latin1") -- SKIP
 		else
 			customError("WFS server '.."..service.."' is not responding, try again later.") -- SKIP
 		end
@@ -65,13 +82,17 @@ return {
 		local biomesName = "biomes"
 		local prodesName = "prodes"
 		local service = "http://terrabrasilis.info/redd-pac/wfs"
+		local epsg = 4601
+		local encoding = "utf8"
 
 		local prodes = Layer{
 			project = proj,
 			source = "wfs",
 			name = prodesName,
 			service = service,
-			feature = "reddpac:wfs_simus_prodes"
+			feature = "reddpac:wfs_simus_prodes",
+			epsg = epsg,
+			encoding = encoding
 		}
 
 		local biomes = Layer{
@@ -79,7 +100,9 @@ return {
 			source = "wfs",
 			name = biomesName,
 			service = service,
-			feature = "reddpac:wfs_biomes"
+			feature = "reddpac:wfs_biomes",
+			epsg = epsg,
+			encoding = encoding
 		}
 
 		local file = File("cells.shp")
@@ -100,7 +123,7 @@ return {
 		unitTest:assertEquals(#attributes, 4)
 		unitTest:assertEquals(attributes[1].name, "FID")
 		unitTest:assertEquals(attributes[2].type, "string")
-		unitTest:assertEquals(cl1:projection(), "'WGS 84', with EPSG: 4326 (PROJ4: '+proj=longlat +datum=WGS84 +no_defs ')")
+		unitTest:assertEquals(cl1:projection(), "'Antigua 1943', with EPSG: 4601 (PROJ4: '+proj=longlat +ellps=clrk80 +towgs84=-255,-15,71,0,0,0,0 +no_defs ')")
 		unitTest:assertEquals(cl1:representation(), "polygon")
 
 		cl1:fill{

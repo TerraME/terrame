@@ -315,9 +315,9 @@ local function addLayer(self, data)
 		wfs = function()
 			mandatoryTableArgument(data, "service", "string")
 			mandatoryTableArgument(data, "feature", "string")
-			verifyUnnecessaryArguments(data, {"name", "source", "service", "feature", "project"})
+			verifyUnnecessaryArguments(data, {"name", "source", "service", "feature", "project", "epsg", "encoding"})
 
-			TerraLib().addWfsLayer(self, data.name, data.service, data.feature)
+			TerraLib().addWfsLayer(self, data.name, data.service, data.feature, data.epsg, EncodingMapper[data.encoding])
 		end,
 		wms = function()
 			mandatoryTableArgument(data, "service", "string")
