@@ -125,6 +125,7 @@ basic = {
 	builderror3         = {arg = "-build", package = "build", arg = "-clea"},
 	builderror4         = {arg = "-build", package = "build", config = "pattern.lua"},
 	dir                 = {script = "dir.lua"},
+	table               = {script = "table.lua"},
 	basictrace          = {script = "trace-basic.lua"},
 	tracecall           = {script = "trace-call.lua", arg = "-strict"},
 	tmpdir              = {script = "tmpdir.lua", arg = "-strict"},
