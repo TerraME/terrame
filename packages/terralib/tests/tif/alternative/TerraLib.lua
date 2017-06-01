@@ -86,11 +86,6 @@ return {
 
 		TerraLib().createProject(proj, {})
 
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		local layerName1 = "Para"
 		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
@@ -109,7 +104,7 @@ return {
 
 		local layerName2 = "Prodes_PA"
 		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "terralib")
-		TerraLib().addGdalLayer(proj, layerName2, layerFile4)
+		TerraLib().addGdalLayer(proj, layerName2, layerFile4, 29100)
 
 		local percTifLayerName = clName.."_"..layerName2.."_RPercentage"
 		shp[2] = percTifLayerName..".shp"
@@ -118,7 +113,7 @@ return {
 
 		local operation = "coverage"
 		local attribute = "rperc"
-		local select = 5
+		local select = 0
 		local area = nil
 		local default = nil
 		local repr = "raster"
@@ -126,12 +121,12 @@ return {
 		local differentSrids = function()
 			TerraLib().attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
-		local layerInfo2 = TerraLib().getLayerInfo(proj, layerName2)
-		unitTest:assertError(differentSrids, "The projections of the layers are different: (Prodes_PA, "..string.format("%.0f", layerInfo2.srid)..") and (Para_Cells, 29101). Set the correct one.")
+		unitTest:assertError(differentSrids, "Layer projections are different: (Prodes_PA, 29100) and (Para_Cells, 29101). Please, reproject your data to the right one.")
 
 		local layerName3 = "Prodes_PA_NewSRID"
 		TerraLib().addGdalLayer(proj, layerName3, layerFile4, 29101)
 
+		select = 5
 		local bandNoExists = function()
 			TerraLib().attributeFill(proj, layerName3, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
@@ -142,8 +137,6 @@ return {
 		end
 
 		proj.file:delete()
-
-		customWarning = customWarningBkp
 	end,
 	getDummyValue = function(unitTest)
 		local proj = {}

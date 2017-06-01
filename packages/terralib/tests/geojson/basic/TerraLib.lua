@@ -70,7 +70,6 @@ return {
 		unitTest:assertEquals(layerInfo.file, tostring(layerFile))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertNotNil(layerInfo.sid)
 
 		proj.file:deleteIfExists()
 	end,
@@ -89,8 +88,8 @@ return {
 
 		local layerName = "GeoJSONLayer"
 		local layerFile = filePath("test/Setores_Censitarios_2000_pol.geojson", "terralib")
-
 		TerraLib().addGeoJSONLayer(proj, layerName, layerFile)
+		local layerInfo1 = TerraLib().getLayerInfo(proj, layerName)
 
 		local clName = "GeoJSON_Cells"
 		local geojson1 = File(clName..".geojson")
@@ -107,7 +106,7 @@ return {
 		unitTest:assertEquals(layerInfo.file, tostring(geojson1))
 		unitTest:assertEquals(layerInfo.type, "OGR")
 		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertNotNil(layerInfo.sid)
+		unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
 
 		-- NO MASK TEST
 		local clSet = TerraLib().getDataSet(proj, clName)

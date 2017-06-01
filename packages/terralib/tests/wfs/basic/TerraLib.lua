@@ -39,9 +39,11 @@ return {
 		local layerName = "WFS-Layer"
 		local url = "http://terrabrasilis.info/redd-pac/wfs"
 		local dataset = "reddpac:wfs_biomes"
+		local srid = 29901
+		local encoding = "UTF-8"
 
 		if TerraLib().isValidWfsUrl(url) then
-			TerraLib().addWfsLayer(proj, layerName, url, dataset)
+			TerraLib().addWfsLayer(proj, layerName, url, dataset, srid, encoding)
 
 			local layerInfo = TerraLib().getLayerInfo(proj, layerName)
 			unitTest:assertEquals(layerInfo.name, layerName) -- SKIP
@@ -49,7 +51,8 @@ return {
 			unitTest:assertEquals(layerInfo.type, "WFS") -- SKIP
 			unitTest:assertEquals(layerInfo.source, "wfs") -- SKIP
 			unitTest:assertEquals(layerInfo.rep, "surface") -- SKIP
-			unitTest:assertNotNil(layerInfo.sid) -- SKIP
+			unitTest:assertEquals(layerInfo.srid, srid) -- SKIP
+			unitTest:assertEquals(layerInfo.encoding, encoding) -- SKIP
 		else
 			customError("WFS server '.."..url.."' is not responding, try again later.") -- SKIP
 		end

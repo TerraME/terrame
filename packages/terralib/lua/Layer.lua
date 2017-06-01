@@ -22,6 +22,17 @@
 --
 -------------------------------------------------------------------------------------------
 
+local EncodingMapper = {
+	utf8 = "UTF-8",
+	cp1250 = "CP1250",
+	cp1251 = "CP1251",
+	cp1252 = "CP1252",
+	cp1253 = "CP1253",
+	cp1254 = "CP1254",
+	cp1257 = "CP1257",
+	latin1 = "LATIN1",  --Latin1 encoding (ISO8859-1)
+}
+
 local function isValidSource(source)
 	return belong(source, {"tif", "shp", "postgis", "nc", "asc", "geojson", "wfs", "wms"})
 end
@@ -53,6 +64,8 @@ local function getLayerInfoAdapted(data)
 			end
 		elseif idx == "srid" then
 			idx = "epsg"
+		elseif idx == "encoding" then
+			value = string.lower(string.gsub(value, "-", ""))
 		end
 		data[idx] = value
 	end)
@@ -83,7 +96,6 @@ local function checkPgParams(data)
 	defaultTableValue(data, "host", "localhost")
 	defaultTableValue(data, "user", "postgres")
 	defaultTableValue(data, "port", 5432)
-	defaultTableValue(data, "encoding", "CP1252")
 	data.port = tostring(data.port)
 end
 
@@ -91,7 +103,7 @@ local function addCellularLayer(self, data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source",
 	                                  "clean", "host", "port", "user", "password", "database", "table",
-									  "index", "encoding"})
+									  "index"})
 
 	mandatoryTableArgument(data, "input", "string")
 	positiveTableArgument(data, "resolution")
@@ -135,7 +147,8 @@ local function addCellularLayer(self, data)
 		customError("Layer '"..data.name.."' already exists in the Project.")
 	end
 
-	local repr = TerraLib().getLayerInfo(data.project, data.input).rep
+	local inputInfos = TerraLib().getLayerInfo(data.project, data.input)
+	local repr = inputInfos.rep
 
 	switch(data, "source"):caseof{
 		shp = function()
@@ -186,16 +199,17 @@ local function addCellularLayer(self, data)
 			defaultTableValue(data, "clean", false)
 
 			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"clean", "input", "name", "resolution", "source", "encoding", -- SKIP
-										"project", "host", "port", "user", "password", "database", "table", "project"})
+				verifyUnnecessaryArguments(data, {"clean", "input", "name", "resolution", "source", -- SKIP
+										"project", "host", "port", "user", "password", "database", "table"})
 				data.box = true -- SKIP
 			else
 				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"box", "clean", "input", "name", "resolution", "source", "encoding",
-										"project", "host", "port", "user", "password", "database", "table", "project"})
+				verifyUnnecessaryArguments(data, {"box", "clean", "input", "name", "resolution", "source",
+										"project", "host", "port", "user", "password", "database", "table"})
 			end
 
 			if data.clean then
+				data.encoding = inputInfos.encoding
 				TerraLib().dropPgTable(data)
 			end
 
@@ -248,19 +262,27 @@ local function addLayer(self, data)
 		customError("Layer '"..data.name.."' already exists in the Project.")
 	end
 
+	if data.encoding then
+		if not EncodingMapper[data.encoding] then
+			customError("Encoding '"..data.encoding.."' is invalid.")
+		end
+	end
+
 	optionalTableArgument(data, "epsg", "number")
 
 	switch(data, "source"):caseof{
 		shp = function()
 			mandatoryTableArgument(data, "file", "File")
 			defaultTableValue(data, "index", true)
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index", "epsg"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "index", "epsg", "encoding"})
+			defaultTableValue(data, "encoding", "latin1")
 
-			TerraLib().addShpLayer(self, data.name, data.file, data.index, data.epsg)
+			TerraLib().addShpLayer(self, data.name, data.file, data.index, data.epsg, EncodingMapper[data.encoding])
 		end,
 		geojson = function()
 			mandatoryTableArgument(data, "file", "File") -- SKIP
-			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg", "encoding"})
+			defaultTableValue(data, "encoding", "latin1")
 
 			TerraLib().addGeoJSONLayer(self, data.name, data.file, data.epsg) -- SKIP
 		end,
@@ -284,18 +306,18 @@ local function addLayer(self, data)
 		end,
 		postgis = function()
 			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password",
-									"database", "table", "project", "epsg"})
+									"database", "table", "project", "epsg", "encoding"})
 			checkPgParams(data)
+			defaultTableValue(data, "encoding", "latin1")
 
-			TerraLib().addPgLayer(self, data.name, data, data.epsg)
+			TerraLib().addPgLayer(self, data.name, data, data.epsg, EncodingMapper[data.encoding])
 		end,
 		wfs = function()
 			mandatoryTableArgument(data, "service", "string")
 			mandatoryTableArgument(data, "feature", "string")
+			verifyUnnecessaryArguments(data, {"name", "source", "service", "feature", "project", "epsg", "encoding"})
 
-			verifyUnnecessaryArguments(data, {"name", "source", "service", "feature", "project"})
-
-			TerraLib().addWfsLayer(self, data.name, data.service, data.feature)
+			TerraLib().addWfsLayer(self, data.name, data.service, data.feature, data.epsg, EncodingMapper[data.encoding])
 		end,
 		wms = function()
 			mandatoryTableArgument(data, "service", "string")
@@ -303,7 +325,7 @@ local function addLayer(self, data)
 			defaultTableValue(data, "format", "png")
 
 			verifyUnnecessaryArguments(data, {"name", "source", "service", "map", "project", "format",
-									"user", "password", "port"})
+									"user", "password", "port", "epsg"})
 
 			local connect = {
 				url = data.service,
@@ -314,7 +336,7 @@ local function addLayer(self, data)
 				port = data.port
 			}
 
-			TerraLib().addWmsLayer(self, data.name, connect, data.map)
+			TerraLib().addWmsLayer(self, data.name, connect, data.map, data.epsg)
 		end
 	}
 end
@@ -793,7 +815,8 @@ Layer_ = {
 				local toData = {
 					file = tostring(data.file),
 					type = source,
-					srid = data.epsg
+					srid = data.epsg,
+					encoding = EncodingMapper[self.encoding]
 				}
 
 				TerraLib().saveLayerAs(self.project, self.name, toData, data.overwrite, data.select)
@@ -812,6 +835,7 @@ Layer_ = {
 				pgData.type = "postgis"
 				pgData.srid = pgData.epsg
 				pgData.epsg = nil
+				pgData.encoding = EncodingMapper[self.encoding]
 
 				TerraLib().saveLayerAs(self.project, self.name, pgData, pgData.overwrite, data.select)
 			else
@@ -914,8 +938,10 @@ metaTableLayer_ = {
 -- if it needs to create the file. The default value is false.
 -- @arg data.index A boolean value indicating whether a spatial index file must be created for a
 -- shapefile. The default value is true.
+-- @arg data.encoding A string value used to set the character encoding.
+-- Supported encodings ("utf8", "cp1250", "cp1251", "cp1252", "cp1253", "cp1254", "cp1257", "latin1").
+-- The default value is "latin1".
 -- @output epsg A number with its projection identifier.
--- @output sid A string with its unique identifier within the Project.
 -- @usage -- DONTRUN
 -- import("terralib")
 --
@@ -982,7 +1008,7 @@ function Layer(data)
 
 	mandatoryTableArgument(data, "project", "Project")
 
-	if getn(data) == 2 or (getn(data) == 3 and data.encoding) then
+	if getn(data) == 2 then
 		if not data.project.layers[data.name] then
 			local msg = "Layer '"..data.name.."' does not exist in Project '"..data.project.file.."'."
 			local sug = suggestion(data.name, data.project.layers)
@@ -999,7 +1025,7 @@ function Layer(data)
 	elseif data.input or data.resolution or data.box then
 		addCellularLayer(data.project, data)
 
-		return Layer{project = data.project, name = data.name, encoding = data.encoding}
+		return Layer{project = data.project, name = data.name}
 	else
 		addLayer(data.project, data)
 		return Layer{project = data.project, name = data.name}

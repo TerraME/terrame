@@ -34,19 +34,36 @@ return {
 		local layerName = "WMS-Layer"
 		local service = "http://terrabrasilis.info/terraamazon/ows"
 		local map = "IMG_02082016_321077D"
+		local epsg = 29901
 
 		local layer = Layer {
 			project = proj,
 			source = "wms",
 			name = layerName,
 			service = service,
-			map = map
+			map = map,
+			epsg = epsg
 		}
 
 		unitTest:assertEquals(layer.name, layerName)
 		unitTest:assertEquals(layer.source, "wms")
 		unitTest:assertEquals(layer.service, service)
 		unitTest:assertEquals(layer.map, map)
+		unitTest:assertEquals(layer.epsg, epsg)
+
+		epsg = 4601
+		map = "Landsat 8 226 066"
+
+		local layer2 = Layer {
+			project = proj,
+			source = "wms",
+			name = "AnotherWmsLayer",
+			service = service,
+			map = map,
+			epsg = epsg
+		}
+
+		unitTest:assertEquals(layer2.epsg, epsg)
 
 		File(projName):delete()
 	end
