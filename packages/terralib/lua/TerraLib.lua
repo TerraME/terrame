@@ -1917,7 +1917,6 @@ TerraLib_ = {
 				local fromSrid = fromLayer:getSRID()
 				customWarning("Layer projections are different: ("..from..", "..string.format("%.0f", fromSrid)..") and ("
 								..to..", "..string.format("%.0f", toSrid).."). Please, reproject your data to the right one.")
-				fromLayer:setSRID(toSrid)
 			end
 
             local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
