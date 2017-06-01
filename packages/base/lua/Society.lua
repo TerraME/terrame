@@ -762,7 +762,7 @@ Society_ = {
 	--
 	-- forEachAgent(soc, function(agent)
 	--     forEachConnection(agent, function(friend)
-	--         self:message{receiver = friend, delay = 5}
+	--         agent:message{receiver = friend, delay = 5}
 	--     end)
 	-- end)
 	--
