@@ -578,18 +578,18 @@ state_          State
 		unitTest:assertEquals(2, #myself:getSocialNetwork())
 
 		local sum = 0
-		forEachConnection(myself, function(_, friend)
+		forEachConnection(myself, function(friend)
 			sum = sum + friend.age
 		end)
 
 		unitTest:assertEquals(15, sum)
 
-		forEachConnection(myself, function(_, friend)
+		forEachConnection(myself, function(friend)
 			myself:message{receiver = friend}
 		end)
 		unitTest:assertEquals(2, received)
 
-		forEachConnection(myself, function(_, friend)
+		forEachConnection(myself, function(friend)
 			myself:message{receiver = friend, delay = Random():integer(1, 10)}
 			myself:message{receiver = friend, delay = Random():integer(1, 10)}
 			myself:message{receiver = friend, delay = Random():integer(1, 10)}

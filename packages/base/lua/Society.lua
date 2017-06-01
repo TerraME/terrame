@@ -517,11 +517,11 @@ Society_ = {
 
 		if data.symmetric then
 			forEachAgent(self, function(agent)
-				forEachConnection(agent, name, function(magent, connection)
+				forEachConnection(agent, name, function(connection)
 					local sn = connection:getSocialNetwork(name)
 
-					if not sn:isConnection(magent) then
-						sn:add(magent)
+					if not sn:isConnection(agent) then
+						sn:add(agent)
 					end
 				end)
 			end)
@@ -761,7 +761,7 @@ Society_ = {
 	-- soc:createSocialNetwork{quantity = 5}
 	--
 	-- forEachAgent(soc, function(agent)
-	--     forEachConnection(agent, function(self, friend)
+	--     forEachConnection(agent, function(friend)
 	--         self:message{receiver = friend, delay = 5}
 	--     end)
 	-- end)
