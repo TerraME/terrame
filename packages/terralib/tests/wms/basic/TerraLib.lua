@@ -40,13 +40,15 @@ return {
 		local url = "http://terrabrasilis.info/terraamazon/ows"
 		local dataset = "IMG_02082016_321077D"
 		local directory = currentDir()
+		local srid = 29901
+
 		local conn = {
 			url = url,
 			directory = directory,
 			format = "jpeg"
 		}
 
-		TerraLib().addWmsLayer(proj, layerName, conn, dataset)
+		TerraLib().addWmsLayer(proj, layerName, conn, dataset, srid)
 
 		local layerInfo = TerraLib().getLayerInfo(proj, layerName)
 		unitTest:assertEquals(layerInfo.name, layerName)
@@ -54,6 +56,7 @@ return {
 		unitTest:assertEquals(layerInfo.type, "WMS2")
 		unitTest:assertEquals(layerInfo.source, "wms")
 		unitTest:assertEquals(layerInfo.rep, "raster")
+		unitTest:assertEquals(layerInfo.srid, srid)
 
 		file:delete()
 	end

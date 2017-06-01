@@ -1590,6 +1590,7 @@ TerraLib_ = {
 	-- @arg name The name of the layer.
 	-- @arg connect A table with the WMS connection parameters.
 	-- @arg dataset The data set in WMS server.
+	-- @arg srid A number value that represents the Spatial Reference System Identifier.
 	-- @usage -- DONTRUN
 	-- local layerName = "WMS-Layer"
 	-- local url = "http://terrabrasilis.info/terraamazon/ows"
@@ -1601,7 +1602,7 @@ TerraLib_ = {
 		-- format = "jpeg"
 	-- }
 	-- TerraLib().addWmsLayer(project, layerName, conn, dataset)
-	addWmsLayer = function(project, name, connect, dataset)
+	addWmsLayer = function(project, name, connect, dataset, srid)
 		local connInfo = createWmsConnInfo(connect.url, connect.user, connect.password, connect.port,
 										connect.query, connect.fragment, connect.directory, connect.format)
 
@@ -1610,7 +1611,7 @@ TerraLib_ = {
 		end
 
 		loadProject(project, project.file)
-		local layer = createLayer(name, dataset, connInfo, "WMS2")
+		local layer = createLayer(name, dataset, connInfo, "WMS2", nil, srid)
 		project.layers[layer:getTitle()] = layer
 		saveProject(project, project.layers)
 		releaseProject(project)

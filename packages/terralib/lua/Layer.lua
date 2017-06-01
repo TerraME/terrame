@@ -325,7 +325,7 @@ local function addLayer(self, data)
 			defaultTableValue(data, "format", "png")
 
 			verifyUnnecessaryArguments(data, {"name", "source", "service", "map", "project", "format",
-									"user", "password", "port"})
+									"user", "password", "port", "epsg"})
 
 			local connect = {
 				url = data.service,
@@ -336,7 +336,7 @@ local function addLayer(self, data)
 				port = data.port
 			}
 
-			TerraLib().addWmsLayer(self, data.name, connect, data.map)
+			TerraLib().addWmsLayer(self, data.name, connect, data.map, data.epsg)
 		end
 	}
 end
