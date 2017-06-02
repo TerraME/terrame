@@ -421,8 +421,9 @@ Layer_ = {
 	-- table below:
 	-- @tabular operation
 	-- Operation & Description & Mandatory arguments & Optional arguments \
-	-- "area" & Total overlay area between the cell and a layer of polygons. The created values
-	-- will range from zero to one, indicating its area of coverage. & attribute, layer & missing \
+	-- "area" & Percentage of area with some overlay with a layer of polygons. The created values
+	-- will range from zero (no intersection) to one (area fully covered by polygons).
+	-- & attribute, layer & missing \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
@@ -938,8 +939,8 @@ metaTableLayer_ = {
 -- if it needs to create the file. The default value is false.
 -- @arg data.index A boolean value indicating whether a spatial index file must be created for a
 -- shapefile. The default value is true.
--- @arg data.encoding A string value used to set the character encoding.
--- Supported encodings ("utf8", "cp1250", "cp1251", "cp1252", "cp1253", "cp1254", "cp1257", "latin1").
+-- @arg data.encoding A string value to set the character encoding.
+-- Supported encodings are "utf8", "cp1250", "cp1251", "cp1252", "cp1253", "cp1254", "cp1257", and "latin1".
 -- The default value is "latin1".
 -- @output epsg A number with its projection identifier.
 -- @usage -- DONTRUN
