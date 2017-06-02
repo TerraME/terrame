@@ -30,9 +30,9 @@ local function separatorCheck(data)
 	local header1 = File(tostring(data.file))
 	local header2 = File(tostring(data.file))
 	local header3 = File(tostring(data.file))
-	local lineTest1 = header1:readLine("\t")
-	local lineTest2 = header2:readLine(" ")
-	local lineTest3 = header3:readLine(";")
+	local lineTest1 = header1:readLine("\t") -- must not have \t
+	local lineTest2 = header2:readLine(" ")  -- must have space
+	local lineTest3 = header3:readLine(";")  -- must not have ;
 
 	if lineTest1[2] ~= nil and lineTest2[2] == nil or lineTest3[2] ~= nil then
 		customError("Could not read file '"..data.file.."': invalid header.")
