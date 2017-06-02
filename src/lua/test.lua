@@ -813,6 +813,10 @@ function _Gtme.executeTests(package, fileName)
 						logfile = io.open(lfilename, "w")
 					end
 
+					if type(x) == "table" then
+						x = vardump(x)
+					end
+
 					logfile:write(tostring(x).."\n")
 				end
 
