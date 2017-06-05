@@ -778,6 +778,7 @@ Layer_ = {
 	-- The data can be either a file data or postgis. The SRID and overwrite are common arguments.
 	-- @arg data.epsg A number from the EPSG Geodetic Parameter Dataset describing a projection.
 	-- It can be used to reproject the data.
+	-- A list with the supported epsg numbers is available at http://www.terrame.org/projections.html .
 	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
 	-- @arg data.select  A vector with the names of the attributes to be saved. When saving a
 	-- single attribute, you can use a string "attribute" instead of a table {"attribute"}.
@@ -935,6 +936,7 @@ metaTableLayer_ = {
 -- it is necessary to set it manually to allow combining the Layer with other Layer to execute
 -- any algorithm. If the prj file of a given data exists but there is no EPSG number, please
 -- visit http://www.prj2epsg.org to search for it.
+-- A list with the supported epsg numbers is available at http://www.terrame.org/projections.html .
 -- @arg data.clean A boolean value indicating whether the argument file should be cleaned
 -- if it needs to create the file. The default value is false.
 -- @arg data.index A boolean value indicating whether a spatial index file must be created for a
