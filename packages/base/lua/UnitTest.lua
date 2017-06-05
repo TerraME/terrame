@@ -29,14 +29,7 @@ local function simplifyPath(value)
 		local tempstr = ""
 
 		for line in value:gmatch("(.-)\n") do
-			local first = string.find(line, "/")
-			local last = string.find(line, "/[^/]*$")
-
-			if not first or first == last then
-				tempstr = tempstr..line.."\n"
-			else
-				tempstr = tempstr..string.sub(line, 1, first - 1).."/"..string.sub(line, last + 1).."\n"
-			end
+			tempstr = tempstr..simplifyPath(line).."\n"
 		end
 
 		return tempstr

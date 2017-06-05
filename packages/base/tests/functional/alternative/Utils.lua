@@ -194,7 +194,7 @@ return{
 		error_func = function()
 			forEachFile("abcdef12345", function() end)
 		end
-		unitTest:assertError(error_func, "Directory '/' is not valid or does not exist.", 0, true)
+		unitTest:assertError(error_func, "Directory '' is not valid or does not exist.", 0, true)
 
 		error_func = function()
 			forEachFile(packageInfo("base").path.."data", 2)

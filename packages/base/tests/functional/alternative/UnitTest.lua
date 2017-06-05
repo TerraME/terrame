@@ -206,7 +206,7 @@ return{
 			u:assertFile(tostring(packageInfo().data)) -- not possible to use directory
 		end
 
-		u:assertError(error_func, "'/data' is a directory, and not a file.", 0, true)
+		u:assertError(error_func, "'data' is a directory, and not a file.", 0, true)
 	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{unittest = true}

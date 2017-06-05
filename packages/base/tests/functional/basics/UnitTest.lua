@@ -96,7 +96,7 @@ source   string [shp]
 		u:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
 
 		error_func = function() customError("File '/a/b/c/d/e' should not be shown.") end
-		u:assertError(error_func, "File '/e' should not be shown.", 0, true)
+		u:assertError(error_func, "File 'e' should not be shown.", 0, true)
 
 		unitTest:assertEquals(u.success, 3)
 		unitTest:assertEquals(u.test, 3)
