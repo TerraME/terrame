@@ -77,7 +77,7 @@ rep      string [geometry]
 sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
 source   string [shp]
 ]]
-		expected = [[file     string [packages/Setores_Censitarios_2000_pol.shp]
+		expected = [[file     string [packagesSetores_Censitarios_2000_pol.shp]
 name     string [Setores_2000]
 project  Project
 rep      string [geometry]
