@@ -161,7 +161,7 @@ name     string [Vegtype_layer]
 project  Project
 rep      string [raster]
 source   string [nc]
-]], 1, true)
+]], 0, true)
 
 			File(projName):deleteIfExists()
 

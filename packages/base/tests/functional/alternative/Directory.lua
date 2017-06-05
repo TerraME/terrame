@@ -65,7 +65,7 @@ return{
 		error_func = function()
 			Directory(packageInfo("base").path.."data/agents.csv")
 		end
-		unitTest:assertError(error_func, "'/agents.csv' is a file, and not a directory.", 0, true)
+		unitTest:assertError(error_func, "'agents.csv' is a file, and not a directory.", 0, true)
 	end,
 	attributes = function(unitTest)
 		local dir = Directory("/my/path/my_dir")

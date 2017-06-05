@@ -58,9 +58,9 @@ return{
 	__concat = function(unitTest)
 		local dir = Directory("data")
 
-		unitTest:assertEquals(dir.." internal", "/ internal", 0, true)
-		unitTest:assertEquals("Directory: "..dir, "Directory: /data", 0, true)
-		unitTest:assertEquals("Directory: "..dir.."home", "Directory: /home", 0, true)
+		unitTest:assertEquals(dir.." internal", " internal", 0, true)
+		unitTest:assertEquals("Directory: "..dir, "Directory: data", 0, true)
+		unitTest:assertEquals("Directory: "..dir.."home", "Directory: home", 0, true)
 	end,
 	attributes = function(unitTest)
 		local dir = packageInfo("base").data

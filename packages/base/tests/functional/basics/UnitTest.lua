@@ -59,7 +59,15 @@ return{
 		unitTest:assertEquals("abc", "abd", 1)
 
 		local actual = "string [/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/terralib/data/biomassa-manaus.asc]"
-		local expected = "string [/biomassa-manaus.asc]"
+		local expected = "string [biomassa-manaus.asc]"
+		unitTest:assertEquals(actual, expected, 0, true)
+
+		actual = "string [C:/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/terralib/data/biomassa-manaus.asc]"
+		expected = "string [biomassa-manaus.asc]"
+		unitTest:assertEquals(actual, expected, 0, true)
+
+		actual = "string [C:/biomassa-manaus.asc]"
+		expected = "string [biomassa-manaus.asc]"
 		unitTest:assertEquals(actual, expected, 0, true)
 
 		actual = [[file     string [packages\terralib\data\Setores_Censitarios_2000_pol.shp]

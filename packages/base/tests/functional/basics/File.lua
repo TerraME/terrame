@@ -30,8 +30,8 @@ return{
 	__concat = function(unitTest)
 		local f = File("abcd1234")
 
-		unitTest:assertEquals(f.." does not exist.", "/abcd1234 does not exist.", 0, true)
-		unitTest:assertEquals("File does not exist: "..f, "File does not exist: /abcd1234", 0, true)
+		unitTest:assertEquals(f.." does not exist.", "abcd1234 does not exist.", 0, true)
+		unitTest:assertEquals("File does not exist: "..f, "File does not exist: abcd1234", 0, true)
 	end,
 	attributes = function(unitTest)
 		local file = filePath("agents.csv", "base")
@@ -275,7 +275,7 @@ return{
 		local file = filePath("agents.csv", "base")
 
 		unitTest:assertType(file, "File")
-		unitTest:assertEquals(tostring(file), "/agents.csv", 0, true)
+		unitTest:assertEquals(tostring(file), "agents.csv", 0, true)
 	end
 }
 

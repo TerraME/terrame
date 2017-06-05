@@ -45,13 +45,15 @@ local function simplifyPath(value)
 	local first = string.find(value, "/")
 	local last = string.find(value, "/[^/]*$")
 
-	if not first or first == last then return value end
+	if not first then return value end
 
 	if string.sub(value, first - 1, first - 1) == ":" then -- remove "C:", "D:", ...
 		first = first - 2 -- SKIP
 	end
 
-	return string.sub(value, 1, first - 1).."/"..string.sub(value, last + 1)
+	if first == last then return value end
+
+	return string.sub(value, 1, first - 1)..string.sub(value, last + 1)
 end
 
 UnitTest_ = {
