@@ -322,8 +322,8 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 		if srid then
             sridReal = srid
 		elseif sridReal == binding.TE_UNKNOWN_SRS then
-			customWarning("It was not possible to find the projection of layer '"..name.."'." -- SKIP(#470)
-						.."\nIt should be one of the projections available at www.terrame.org/projections.html")	-- SKIP(#470)
+			customWarning("It was not possible to find the projection of layer '"..name.."'. " -- SKIP(#470)
+						.."It should be one of the projections available at www.terrame.org/projections.html")	-- SKIP(#470)
 		end
 
 		layer:setSRID(sridReal)

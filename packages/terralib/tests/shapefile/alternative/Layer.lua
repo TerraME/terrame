@@ -64,7 +64,15 @@ return {
 			}
 		end
 		unitTest:assertError(indexDefaultError2, defaultValueMsg("index", true))
-		-- // SPATIAL INDEX
+
+		local epsgError = function()
+			Layer{
+				project = proj,
+				name = "Elevation",
+				file = filePath("cabecadeboi-box.shp", "terralib")
+			}
+		end
+		unitTest:assertError(epsgError, "It was not possible to find the projection of layer 'Elevation'. It should be one of the projections available at www.terrame.org/projections.html")
 
 		proj.file:delete()
 	end,
