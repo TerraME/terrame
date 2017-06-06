@@ -867,7 +867,8 @@ function _Gtme.executeTests(package, fileName)
 
 					Random{seed = 987654321}
 
-					_Gtme.loadTmeFile(baseDir.."examples"..s..value..".lua")
+					-- the line below was removed because it caused errors in Linux, that resized the canvas
+					-- _Gtme.loadTmeFile(baseDir.."examples"..s..value..".lua")
 					local result, err = loadfile(baseDir.."examples"..s..value..".lua", 't', env)
 
 					if not result then
