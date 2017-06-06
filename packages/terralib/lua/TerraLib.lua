@@ -1081,6 +1081,43 @@ local function createInvalidNamesErrorMsg(invalidNames)
 	return errorMsg
 end
 
+local function createAttributesToUpdateInfos(dataset, attrNames)
+	local attrsToUp = {}
+
+	if attrNames then
+		for i = 1, #attrNames do
+			attrsToUp[i] = {name = attrNames[i], pos = nil, type = nil}
+		end
+	end
+
+	local numProps = dataset:getNumProperties()
+	for i = 0, numProps - 1 do
+		local pn = dataset:getPropertyName(i)
+		for j = 1, #attrsToUp do
+			if pn == attrsToUp[j].name then
+				attrsToUp[j].pos = i
+				attrsToUp[j].type = dataset:getPropertyDataType(i)
+			end
+		end
+	end
+
+	return attrsToUp
+end
+
+local function updateAttributeNumberByType(dataset, type, pos, value)
+	if type == binding.DOUBLE_TYPE then
+		dataset:setDouble(pos, value)
+	elseif type == binding.INT64_TYPE then
+		dataset:setInt64(pos, value)
+	elseif type == binding.INT32_TYPE then
+		dataset:setInt32(pos, value)
+	elseif type == binding.INT16_TYPE then
+		dataset:setInt16(pos, value)
+	else
+		dataset:setDouble(pos, value)
+	end
+end
+
 local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 	local errorMsg
 	do
@@ -1166,6 +1203,10 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 					end
 				end
 
+				if #attrsToUp > 0 then
+					attrsToUp = createAttributesToUpdateInfos(dse, attrsToUp)
+				end
+
 				-- Set the values of the new dataset from the data
 				local index = 1
 				newDse:moveBeforeFirst()
@@ -1188,11 +1229,11 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 					end
 
 					for i = 1, #attrsToUp do
-						local attr = attrsToUp[i]
+						local attr = attrsToUp[i].name
 						local v = toSet[index][attr]
 
 						if type(v) == "number" then
-							newDse:setDouble(attr, v)
+							updateAttributeNumberByType(newDse, attrsToUp[i].type, attrsToUp[i].pos, v)
 						elseif type(v) == "string" then
 							newDse:setString(attr, v)
 						elseif type(v) == "boolean" then
@@ -1241,12 +1282,7 @@ local function updateDataSet(fromLayer, toSet, attrs)
 		local dsetName = fromLayer:getDataSetName()
 		local dse = ds:getDataSet(dsetName)
 
-		local attrsToUp = {}
-		if attrs then
-			for i = 1, #attrs do
-				attrsToUp[i] = attrs[i]
-			end
-		end
+		local attrsToUp = createAttributesToUpdateInfos(dse, attrs)
 
 		local dseUp = binding.te.mem.DataSet(dse)
 		local index = 1
@@ -1254,11 +1290,11 @@ local function updateDataSet(fromLayer, toSet, attrs)
 		dseUp:moveBeforeFirst()
 		while dseUp:moveNext() do
 			for i = 1, #attrsToUp do
-				local attr = attrsToUp[i]
+				local attr = attrsToUp[i].name
 				local v = toSet[index][attr]
 
 				if type(v) == "number" then
-					dseUp:setDouble(attr, v)
+					updateAttributeNumberByType(dseUp, attrsToUp[i].type, attrsToUp[i].pos, v)
 				elseif type(v) == "string" then
 					dseUp:setString(attr, v)
 				elseif type(v) == "boolean" then
@@ -1273,7 +1309,12 @@ local function updateDataSet(fromLayer, toSet, attrs)
 			index = index + 1
 		end
 
-		binding.UpdateDs(ds, dsetName, dseUp, attrsToUp)
+		local attrsNameToUpVector = {}
+		for i = 1, #attrsToUp do
+			attrsNameToUpVector[i] = attrsToUp[i].name
+		end
+
+		binding.UpdateDs(ds, dsetName, dseUp, attrsNameToUpVector)
 	end
 
 	collectgarbage("collect")
