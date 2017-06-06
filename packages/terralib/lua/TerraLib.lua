@@ -1110,11 +1110,11 @@ local function updateAttributeNumberByType(dataset, type, pos, value)
 	elseif type == binding.INT64_TYPE then
 		dataset:setInt64(pos, value)
 	elseif type == binding.INT32_TYPE then
-		dataset:setInt32(pos, value)
+		dataset:setInt32(pos, value) -- SKIP TODO(avancinirodrigo): there is no that type to test
 	elseif type == binding.INT16_TYPE then
-		dataset:setInt16(pos, value)
+		dataset:setInt16(pos, value)  -- SKIP
 	else
-		dataset:setDouble(pos, value)
+		dataset:setDouble(pos, value) -- SKIP
 	end
 end
 
