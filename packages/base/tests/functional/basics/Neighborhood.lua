@@ -48,7 +48,6 @@ return{
 		local neigh = Neighborhood()
 
 		unitTest:assertEquals(tostring(neigh),[[connections  vector of size 0
-count        number [0]
 weights      vector of size 0
 ]])
 	end,

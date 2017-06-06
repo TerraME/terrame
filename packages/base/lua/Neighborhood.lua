@@ -40,20 +40,22 @@ Neighborhood_ = {
 		local id = cell:getId()
 		if id == nil then
 			customError("Cell should have an id in order to be added to a Neighborhood.") -- SKIP
-		elseif self.connections[id] ~= nil then
-			customWarning("Cell '"..id.."' already belongs to the Neighborhood.")
-		else
-			self.connections[id] = cell
-			self.weights[id] = weight
-			self.count = self.count + 1
 		end
+
+		for i = 1, #self do
+			if self.connections[i] == cell then
+				customWarning("Cell '"..id.."' already belongs to the Neighborhood.")
+			end
+		end
+
+		table.insert(self.connections, cell)
+		table.insert(self.weights, weight)
 	end,
 	--- Remove all Cells from the Neighborhood. In practice, it has the same behavior
 	-- as calling Neighborhood() again if the Neighborhood was not added to any Cell.
 	-- @usage n = Neighborhood()
 	-- n:clear()
 	clear = function(self)
-		self.count = 0
 		self.connections = {}
 		self.weights = {}
 	end,
@@ -72,11 +74,15 @@ Neighborhood_ = {
 
 		if id == nil then
 			customError("Cell does not belong to the Neighborhood because it does not have an id.")
-		elseif self.connections[id] == nil then
-			customError("Cell '"..id.."' does not belong to the Neighborhood.")
 		end
 
-		return self.weights[id]
+		for i = 1, #self do
+			if self.connections[i] == cell then
+				return self.weights[i]
+			end
+		end
+
+		customError("Cell '"..id.."' does not belong to the Neighborhood.")
 	end,
 	--- Return whether the Neighborhood does not contain any Cell.
 	-- @usage n = Neighborhood()
@@ -85,7 +91,7 @@ Neighborhood_ = {
 	--     print("is empty")
 	-- end
 	isEmpty = function(self)
-		return self.count == 0
+		return #(self.connections) == 0
 	end,
 	--- Return whether a given Cell belongs to the Neighborhood.
 	-- @arg cell A Cell.
@@ -99,7 +105,11 @@ Neighborhood_ = {
 	isNeighbor = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 
-		return self.connections[cell:getId()] ~= nil
+		for i = 1, #self do
+			if self.connections[i] == cell then return true end
+		end
+
+		return false
 	end,
 	--- Remove a Cell from the Neighborhood.
 	-- @arg cell The Cell that is going to be removed.
@@ -116,14 +126,15 @@ Neighborhood_ = {
 	remove = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 
-		local id = cell:getId()
-		if self.connections[id] == nil then
-			customWarning("Trying to remove a Cell that does not belong to the Neighborhood.")
-		else
-			self.connections[id] = nil
-			self.weights[id] = nil
-			self.count = self.count - 1
+		for i = 1, #self do
+			if self.connections[i] == cell then
+				table.remove(self.connections, i)
+				table.remove(self.weights, i)
+				return true
+			end
 		end
+
+		customWarning("Trying to remove a Cell that does not belong to the Neighborhood.")
 	end,
 	--- Return a random Cell from the Neighborhood.
 	-- @usage c1 = Cell{id = "1"}
@@ -140,20 +151,7 @@ Neighborhood_ = {
 			customError("It is not possible to sample the Neighborhood because it is empty.")
 		end
 
-		local pos = Random():integer(1, #self)
-
-		local count = 1
-		local result
-		forEachOrderedElement(self.connections, function(_, value)
-			if count == pos then
-				result = value
-				return false
-			end
-
-			count = count + 1
-		end)
-
-		return result
+		return self.connections[Random():integer(1, #self)]
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
 	-- @arg cell A Cell.
@@ -173,11 +171,16 @@ Neighborhood_ = {
 
 		if id == nil then
 			customError("Cell does not belong to the Neighborhood because it does not have an id.")
-		elseif self.connections[id] == nil then
-			customError("Cell '"..id.."' does not belong to the Neighborhood.")
 		end
 
-		self.weights[id] = weight
+		for i = 1, #self do
+			if self.connections[i] == cell then
+				self.weights[i] = weight
+				return true
+			end
+		end
+
+		customError("Cell '"..id.."' does not belong to the Neighborhood.")
 	end
 }
 
@@ -188,7 +191,7 @@ metaTableNeighborhood_ = {
 	--
 	-- print(#n)
 	__len = function(self)
-		return self.count
+		return #self.connections
 	end,
 	__tostring = _Gtme.tostring
 }
