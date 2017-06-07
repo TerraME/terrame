@@ -159,7 +159,7 @@
 
 								<%if data.projection then%>
 									<%if data.epsg > 0 and data.epsg < 100000 then%>
-										<li><b>Projection: </b><a target = "_blank" href = <%="\"https://epsg.io/"..string.format("%.0f", data.epsg).."\">"..data.projection%></a></li>
+										<li><b>Projection: </b><a target = "_blank" href = <%="\"https://epsg.io/"..data.epsg.."\">"..data.projection%></a></li>
 									<%else%>
 										<li><b>Projection: </b><%=data.projection%></li>
 									<%end%>

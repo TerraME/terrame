@@ -734,7 +734,7 @@ Layer_ = {
 			prj.PROJ4 = "'"..prj.PROJ4.."'"
 		end
 
-		return prj.NAME..", with EPSG: "..string.format("%.0f", prj.SRID).." (PROJ4: "..prj.PROJ4..")"
+		return prj.NAME..", with EPSG: "..self.epsg.." (PROJ4: "..prj.PROJ4..")"
 	end,
 	--- The attribute names of the Layer. It returns a vector of strings, whose size is
 	-- the number of attributes.
@@ -1023,6 +1023,8 @@ function Layer(data)
 		setmetatable(data, metaTableLayer_)
 		TerraLib().openProject(data.project, data.project.file)
 		getLayerInfoAdapted(data)
+
+		data.epsg = math.floor(data.epsg)
 
 		return data
 	elseif data.input or data.resolution or data.box then

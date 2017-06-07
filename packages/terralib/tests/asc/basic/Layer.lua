@@ -115,7 +115,7 @@ return {
 			file = filePath("test/biomassa-manaus.asc", "terralib")
 		}
 
-		local expected = [[epsg     number [4326.0]
+		local expected = [[epsg     number [4326]
 file     string [biomassa-manaus.asc]
 name     string [Biomassa_layer]
 project  Project

@@ -583,7 +583,7 @@ return {
 
 		local expected = [[
 encoding  string [latin1]
-epsg      number [29191.0]
+epsg      number [29191]
 file      string [itaituba-census.shp]
 name      string [Setores_2000]
 project   Project
