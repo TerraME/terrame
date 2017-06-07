@@ -232,6 +232,7 @@ end
 
 local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, encoding)
 	local layer
+	local sridReal = 0
 
 	do
 		local dsId = addDataSourceInfo(type, name, connInfo)
@@ -246,7 +247,6 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 		end
 
 		local env
-		local sridReal = 0
 		local id = binding.GetRandomicId()
 
 		if type == "WMS2" then
@@ -320,10 +320,7 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 		layer:setEncoding(binding.CharEncoding.getEncodingType(encoding))
 
 		if srid then
-            sridReal = srid
-		elseif sridReal == binding.TE_UNKNOWN_SRS then
-			customWarning("It was not possible to find the projection of layer '"..name.."'. " -- SKIP(#470)
-						.."It should be one of the projections available at www.terrame.org/projections.html")	-- SKIP(#470)
+			sridReal = srid
 		end
 
 		layer:setSRID(sridReal)
@@ -334,6 +331,11 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 	end
 
 	collectgarbage("collect")
+
+	if sridReal == binding.TE_UNKNOWN_SRS then
+		customWarning("It was not possible to find the projection of layer '"..name.."'. " -- SKIP(#470)
+					.."It should be one of the projections available at www.terrame.org/projections.html")	-- SKIP(#470)
+	end
 
 	return layer
 end
