@@ -56,7 +56,7 @@ family = Agent {
 
 		ag.sum_cost = ag.sum_cost + ag.received
 
-		forEachConnection(ag, function(_, neigh, weigh)
+		forEachConnection(ag, function(neigh, weigh)
 			ag:message{receiver = neigh, subject = "money", value = ag.received * weigh}
 		end)
 		ag.received = 0
@@ -98,7 +98,7 @@ capital_formation = Agent{
 
 		ag.sum_cost = ag.sum_cost + ag.received
 
-		forEachConnection(ag, function(_, neigh, weigh)
+		forEachConnection(ag, function(neigh, weigh)
 			ag:message{receiver = neigh, subject = "money", value = ag.received * weigh}
 		end)
 		ag.received = 0
@@ -149,7 +149,7 @@ basicAgent = Agent{
 		ag:message{receiver = government, subject = "profit",     value = profit}
 --		ag:message{receiver = family,     subject = "money",      value = salary}
 
-		forEachConnection(ag, function(_, neigh, weigh)
+		forEachConnection(ag, function(neigh, weigh)
 			ag:message{receiver = neigh, subject = "money", value = cost * weigh}
 		end)
 		ag.received = 0

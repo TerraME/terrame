@@ -139,6 +139,7 @@ local function lineTable(filename)
 					break
 				end
 			end
+
 			pos = pos + 1
 		end
 
@@ -813,6 +814,10 @@ function _Gtme.executeTests(package, fileName)
 						logfile = io.open(lfilename, "w")
 					end
 
+					if type(x) == "table" then
+						x = vardump(x)
+					end
+
 					logfile:write(tostring(x).."\n")
 				end
 
@@ -829,10 +834,15 @@ function _Gtme.executeTests(package, fileName)
 				local myassert = function(observer, file, message)
 					_Gtme.printError = function(str) -- to avoid showing that the error occurs in terrame.lua
 						local errorWithoutFile = string.match(str, "Files.*")
-						pe("Error in a "..message..". "..errorWithoutFile)
+
+						if errorWithoutFile then
+							pe("Error in a "..message..". "..errorWithoutFile)
+						else
+							pe(str)
+						end
 					end
 
-					pcall(function() ut:assertSnapshot(observer, file, 0.35) end)
+					pcall(function() ut:assertSnapshot(observer, file, 0.4) end)
 
 					_Gtme.printError = pe
 				end
@@ -863,7 +873,8 @@ function _Gtme.executeTests(package, fileName)
 
 					Random{seed = 987654321}
 
-					_Gtme.loadTmeFile(baseDir.."examples"..s..value..".lua")
+					-- the line below was removed because it caused errors in Linux, that resized the canvas
+					-- _Gtme.loadTmeFile(baseDir.."examples"..s..value..".lua")
 					local result, err = loadfile(baseDir.."examples"..s..value..".lua", 't', env)
 
 					if not result then

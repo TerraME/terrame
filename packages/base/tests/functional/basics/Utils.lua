@@ -271,7 +271,7 @@ return{
 		local r
 		local s = soc:sample()
 
-		r = forEachConnection(s, function(ag1, ag2, w)
+		r = forEachConnection(s, function(ag2, w, ag1)
 			unitTest:assertType(ag2, "Agent")
 			unitTest:assertEquals(ag1, s)
 			unitTest:assertType(w, "number")
@@ -450,9 +450,9 @@ return{
 		unitTest:assertEquals(count, 4)
 	end,
 	forEachNeighborhood = function(unitTest)
-		local c1 = Cell{}
-		local c2 = Cell{}
-		local c3 = Cell{}
+		local c1 = Cell{id = "1"}
+		local c2 = Cell{id = "2"}
+		local c3 = Cell{id = "3"}
 
 		local n1 = Neighborhood()
 		n1:add(c2)
@@ -622,7 +622,7 @@ return{
 		mvector = {}
 		unitTest:assertEquals(getn(mvector), 0)
 
-		unitTest:assertEquals(getn(Cell{}), 4)
+		unitTest:assertEquals(getn(Cell{}), 5)
 	end,
 	getNames = function(unitTest)
 		local t = {
@@ -1054,6 +1054,7 @@ return{
     cells = {
         Cell{
             cObj_ = "TeCell(0x7fad0da19a00)",
+			neighborhoods = {},
             parent = "CellularSpace",
             past = {},
             x = 0,

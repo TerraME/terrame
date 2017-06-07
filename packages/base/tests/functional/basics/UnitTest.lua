@@ -59,7 +59,15 @@ return{
 		unitTest:assertEquals("abc", "abd", 1)
 
 		local actual = "string [/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/terralib/data/biomassa-manaus.asc]"
-		local expected = "string [/biomassa-manaus.asc]"
+		local expected = "string [biomassa-manaus.asc]"
+		unitTest:assertEquals(actual, expected, 0, true)
+
+		actual = "string [C:/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/terralib/data/biomassa-manaus.asc]"
+		expected = "string [biomassa-manaus.asc]"
+		unitTest:assertEquals(actual, expected, 0, true)
+
+		actual = "string [C:/biomassa-manaus.asc]"
+		expected = "string [biomassa-manaus.asc]"
 		unitTest:assertEquals(actual, expected, 0, true)
 
 		actual = [[file     string [packages\terralib\data\Setores_Censitarios_2000_pol.shp]
@@ -69,7 +77,7 @@ rep      string [geometry]
 sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
 source   string [shp]
 ]]
-		expected = [[file     string [packages/Setores_Censitarios_2000_pol.shp]
+		expected = [[file     string [packagesSetores_Censitarios_2000_pol.shp]
 name     string [Setores_2000]
 project  Project
 rep      string [geometry]
@@ -88,7 +96,7 @@ source   string [shp]
 		u:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
 
 		error_func = function() customError("File '/a/b/c/d/e' should not be shown.") end
-		u:assertError(error_func, "File '/e' should not be shown.", 0, true)
+		u:assertError(error_func, "File 'e' should not be shown.", 0, true)
 
 		unitTest:assertEquals(u.success, 3)
 		unitTest:assertEquals(u.test, 3)

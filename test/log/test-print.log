@@ -17,11 +17,12 @@ Checking if functions from source code were tested
 Checking M.lua
 Skipping lines of source code check
 Testing examples
-The package has no examples
-Skipping logs check
+Testing pr
+Checking logs
 
 Functional test report for package 'print':
 Tests were executed in 0.24 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_dmFXh/'.
 2 print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -36,6 +37,7 @@ No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
 All 1 functions of the package were tested.
 No lines from the source code were verified.
-The package has no examples.
-No log test was executed.
+All 1 examples were successfully executed.
+No new log file was created.
+All log files were used in the tests.
 Summing up, 6 problems were found during the tests.

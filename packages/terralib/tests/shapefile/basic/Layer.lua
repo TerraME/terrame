@@ -91,22 +91,6 @@ return {
 		File(cl1.file):delete()
 		File(cl2.file):delete()
 
-		-- VERIFY EPSG
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			local _, nchars = string.find(msg, "It was not possible to find the projection of layer 'Elevation'.\nThe projection should be one of the availables in: ")
-			unitTest:assertEquals(116, nchars)
-		end
-
-		Layer{
-			project = proj,
-			name = "Elevation",
-			file = filePath("cabecadeboi-box.shp", "terralib")
-		}
-
-		customWarning = customWarningBkp
-		-- // VERIFY EPSG
-
 		proj.file:delete()
 	end,
 	__len = function(unitTest)

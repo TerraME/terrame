@@ -162,6 +162,7 @@ SocialNetwork_ = {
 			end
 			count = count + 1
 		end)
+
 		return result
 	end,
 	--- Update the weight of a connection.

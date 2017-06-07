@@ -408,8 +408,8 @@ end
 -- There are two ways of using this function because the second argument is optional.
 -- @arg agent An Agent.
 -- @arg name (Optional) A string with the name of the SocialNetwork to be traversed. The default value is "1".
--- @arg _sof_ A function that takes three arguments: the Agent itself, its connection, and the
--- connection weight. If some call to f returns false, forEachConnection() stops and does not
+-- @arg _sof_ A function that takes three arguments: A connection (Agent), the
+-- connection weight, and the Agent itself. If some call to f returns false, forEachConnection() stops and does not
 -- process any other connection. In the case where the second argument is missing, this
 -- function becomes the second argument.
 -- @usage ag = Agent{
@@ -421,8 +421,9 @@ end
 --
 -- soc:createSocialNetwork{quantity = 3}
 --
--- forEachConnection(soc:sample(), function(ag1, ag2)
---     ag1:message{receiver = ag2}
+-- agent = soc:sample()
+-- forEachConnection(agent, function(conn)
+--     agent:message{receiver = conn}
 -- end)
 -- @see Society:createSocialNetwork
 function forEachConnection(agent, name, _sof_)
@@ -444,7 +445,7 @@ function forEachConnection(agent, name, _sof_)
 
 	for mname, connection in pairs(socialnetwork.connections) do
 		local weight = socialnetwork.weights[mname]
-		if _sof_(agent, connection, weight) == false then return false end
+		if _sof_(connection, weight, agent) == false then return false end
 	end
 
 	return true
@@ -720,13 +721,9 @@ function forEachNeighbor(cell, name, _sof_)
 		end
 	end
 
-	neighborhood.cObj_:first()
-
-	while not neighborhood.cObj_:isLast() do
-		local neigh = neighborhood.cObj_:getNeighbor()
-		local weight = neighborhood.cObj_:getWeight()
-		if _sof_(neigh, weight, cell) == false then return false end
-		neighborhood.cObj_:next()
+	for mname, connection in pairs(neighborhood.connections) do
+		local weight = neighborhood.weights[mname]
+		if _sof_(connection, weight, cell) == false then return false end
 	end
 
 	return true
@@ -803,11 +800,8 @@ function forEachNeighborhood(cell, _sof_)
 		incompatibleTypeError(2, "function", _sof_)
 	end
 
-	cell.cObj_:first()
-	while not cell.cObj_:isLast() do
-		local idx = cell.cObj_:getCurrentNeighborhood():getID()
+	for idx in pairs(cell.neighborhoods) do
 		if _sof_(idx) == false then return false end
-		cell.cObj_:next()
 	end
 
 	return true

@@ -708,7 +708,7 @@ function _Gtme.executeDoc(package)
 
 				value.representation = layer:representation()
 				value.projection = layer:projection()
-				value.epsg = TerraLib().getProjection(layer.project.layers[layer.name]).SRID
+				value.epsg = layer.epsg
 
 				local attributes
 				local attrs = layer:attributes()
@@ -832,7 +832,7 @@ function _Gtme.executeDoc(package)
 
 				value.representation = layer:representation()
 				value.projection = layer:projection()
-				value.epsg = TerraLib().getProjection(layer.project.layers[layer.name]).SRID
+				value.epsg = layer.epsg
 
 				local attributes
 				local attrs = layer:attributes()
@@ -916,7 +916,7 @@ function _Gtme.executeDoc(package)
 
 				value.representation = layer:representation()
 				value.projection = layer:projection()
-				value.epsg = TerraLib().getProjection(layer.project.layers[layer.name]).SRID
+				value.epsg = layer.epsg
 				value.bands = layer:bands()
 				value.dummy = {}
 

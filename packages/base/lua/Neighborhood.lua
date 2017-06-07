@@ -37,36 +37,27 @@ Neighborhood_ = {
 
 		if weight == nil then weight = 1 end
 
-		verify(not self:isNeighbor(cell), "Cell ("..cell.x..", "..cell.y..") already belongs to the Neighborhood.")
+		local id = cell:getId()
+		if id == nil then
+			customError("Cell should have an id in order to be added to a Neighborhood.") -- SKIP
+		end
 
-		self.cObj_:addNeighbor(cell.x, cell.y, cell.cObj_, weight)
+		for i = 1, #self do
+			if self.connections[i] == cell then
+				customWarning("Cell '"..id.."' already belongs to the Neighborhood.")
+			end
+		end
+
+		table.insert(self.connections, cell)
+		table.insert(self.weights, weight)
 	end,
 	--- Remove all Cells from the Neighborhood. In practice, it has the same behavior
 	-- as calling Neighborhood() again if the Neighborhood was not added to any Cell.
 	-- @usage n = Neighborhood()
 	-- n:clear()
 	clear = function(self)
-		self.cObj_:clear()
-	end,
-	--- Return the unique identifier of the Neighborhood. It represents
-	-- the name of the Neighborhood in the Cell it was added.
-	-- @usage n = Neighborhood()
-	-- n:getID()
-	getID = function(self)
-		return self.cObj_:getID()
-	end,
-	--- Return the parent of the Neighborhood, which is the last Cell where the Neighborhood
-	-- was added.
-	-- @usage cell = Cell{}
-	-- neigh = Neighborhood()
-	--
-	-- cell:addNeighborhood(neigh)
-	-- parent = neigh:getParent()
-	-- if parent == cell then
-	--     print("equal")
-	-- end
-	getParent = function(self)
-		return self.cObj_:getParent()
+		self.connections = {}
+		self.weights = {}
 	end,
 	--- Return the weight of the connection to a given neighbor Cell. It returns nil when
 	-- the Cell is not a neighbor.
@@ -79,10 +70,19 @@ Neighborhood_ = {
 	getWeight = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 
-		local result = self.cObj_:getNeighWeight(cell.x, cell.y, cell.cObj_)
-		verify(result, "Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.")
+		local id = cell:getId()
 
-		return result
+		if id == nil then
+			customError("Cell does not belong to the Neighborhood because it does not have an id.")
+		end
+
+		for i = 1, #self do
+			if self.connections[i] == cell then
+				return self.weights[i]
+			end
+		end
+
+		customError("Cell '"..id.."' does not belong to the Neighborhood.")
 	end,
 	--- Return whether the Neighborhood does not contain any Cell.
 	-- @usage n = Neighborhood()
@@ -91,7 +91,7 @@ Neighborhood_ = {
 	--     print("is empty")
 	-- end
 	isEmpty = function(self)
-		return self.cObj_:isEmpty()
+		return #(self.connections) == 0
 	end,
 	--- Return whether a given Cell belongs to the Neighborhood.
 	-- @arg cell A Cell.
@@ -105,12 +105,16 @@ Neighborhood_ = {
 	isNeighbor = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 
-		return self.cObj_:isNeighbor(cell.x, cell.y, cell.cObj_)
+		for i = 1, #self do
+			if self.connections[i] == cell then return true end
+		end
+
+		return false
 	end,
 	--- Remove a Cell from the Neighborhood.
 	-- @arg cell The Cell that is going to be removed.
-	-- @usage c1 = Cell{}
-	-- c2 = Cell{}
+	-- @usage c1 = Cell{id = "1"}
+	-- c2 = Cell{id = "2"}
 	--
 	-- n = Neighborhood()
 	-- n:add(c1)
@@ -122,13 +126,19 @@ Neighborhood_ = {
 	remove = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 
-		verify(self:isNeighbor(cell), "Trying to remove a Cell that does not belong to the Neighborhood.")
+		for i = 1, #self do
+			if self.connections[i] == cell then
+				table.remove(self.connections, i)
+				table.remove(self.weights, i)
+				return true
+			end
+		end
 
-		self.cObj_:eraseNeighbor(cell.x, cell.y, cell.cObj_)
+		customWarning("Trying to remove a Cell that does not belong to the Neighborhood.")
 	end,
 	--- Return a random Cell from the Neighborhood.
-	-- @usage c1 = Cell{}
-	-- c2 = Cell{}
+	-- @usage c1 = Cell{id = "1"}
+	-- c2 = Cell{id = "2"}
 	--
 	-- n = Neighborhood()
 	-- n:add(c1)
@@ -141,16 +151,7 @@ Neighborhood_ = {
 			customError("It is not possible to sample the Neighborhood because it is empty.")
 		end
 
-		local pos = Random():integer(1, #self)
-
-		local count = 1
-		self.cObj_:first()
-		while not self.cObj_:isLast() do
-			local neigh = self.cObj_:getNeighbor()
-			if count == pos then return neigh end
-			self.cObj_:next()
-			count = count + 1
-		end
+		return self.connections[Random():integer(1, #self)]
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
 	-- @arg cell A Cell.
@@ -166,9 +167,20 @@ Neighborhood_ = {
 		mandatoryArgument(1, "Cell", cell)
 		mandatoryArgument(2, "number", weight)
 
-		local result = self.cObj_:setNeighWeight(cell.x, cell.y, cell.cObj_, weight)
+		local id = cell:getId()
 
-		verify(result, "Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.")
+		if id == nil then
+			customError("Cell does not belong to the Neighborhood because it does not have an id.")
+		end
+
+		for i = 1, #self do
+			if self.connections[i] == cell then
+				self.weights[i] = weight
+				return true
+			end
+		end
+
+		customError("Cell '"..id.."' does not belong to the Neighborhood.")
 	end
 }
 
@@ -179,7 +191,7 @@ metaTableNeighborhood_ = {
 	--
 	-- print(#n)
 	__len = function(self)
-		return self.cObj_:size()
+		return #self.connections
 	end,
 	__tostring = _Gtme.tostring
 }
@@ -194,21 +206,14 @@ metaTableNeighborhood_ = {
 -- It is recommended that a Neighborhood should contain only Cells that belong to the same
 -- CellularSpace, as it guarantees that all its Cells have unique identifiers.
 -- Calling Utils:forEachNeighbor() from a Cell traverses one of its Neighborhoods.
--- @arg data.... Attributes with only internal purposes. They should not be used explicitly by the user.
--- @output cObj_ A pointer to a C++ representation of the Neighborhood. Never use this object.
 -- @usage n = Neighborhood()
 -- n = Neighborhood{}
-function Neighborhood(data)
-	if data == nil then
-		data = {}
-	end
+function Neighborhood()
+	local data = {}
 
-	if not data.cObj_ then
-		data.cObj_ = TeNeighborhood()
-	end
-
-	data.cObj_:setReference(data)
 	setmetatable(data, metaTableNeighborhood_)
+	data:clear()
+
 	return data
 end
 

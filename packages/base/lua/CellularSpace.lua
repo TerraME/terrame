@@ -27,15 +27,15 @@ local terralib = getPackage("terralib")
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
 local function separatorCheck(data)
-	local header1 = File(tostring(data.source))
-	local header2 = File(tostring(data.source))
-	local header3 = File(tostring(data.source))
-	local lineTest1 = header1:readLine("\t")
-	local lineTest2 = header2:readLine(" ")
-	local lineTest3 = header3:readLine(";")
+	local header1 = File(tostring(data.file))
+	local header2 = File(tostring(data.file))
+	local header3 = File(tostring(data.file))
+	local lineTest1 = header1:readLine("\t") -- must not have \t
+	local lineTest2 = header2:readLine(" ")  -- must have space
+	local lineTest3 = header3:readLine(";")  -- must not have ;
 
 	if lineTest1[2] ~= nil and lineTest2[2] == nil or lineTest3[2] ~= nil then
-		customError("Could not read file '"..data.source.."': invalid header.")
+		customError("Could not read file '"..data.file.."': invalid header.")
 	end
 
 	header1:close()
@@ -44,7 +44,7 @@ local function separatorCheck(data)
 end
 
 local function loadNeighborhoodGAL(self, data)
-	local file = data.source
+	local file = data.file
 	local lineTest = file:readLine(" ")
 	local layer = ""
 
@@ -57,8 +57,8 @@ local function loadNeighborhoodGAL(self, data)
 
 		if lineTest[3] ~= nil then vallayer = lineTest[3] end
 
-		if vallayer ~= self.layer then
-			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GAL file layer: '"..vallayer.."'.")
+		if vallayer ~= self.layer and vallayer ~= self.file then
+			customError("Neighborhood file '"..data.file.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GAL file layer: '"..vallayer.."'.")
 		end
 	end
 
@@ -98,7 +98,7 @@ local function loadNeighborhoodGAL(self, data)
 end
 
 local function loadNeighborhoodGPM(self, data)
-	local file = data.source
+	local file = data.file
 	local lineTest = file:readLine(" ")
 	local layer = ""
 
@@ -111,8 +111,8 @@ local function loadNeighborhoodGPM(self, data)
 
 		if lineTest[2] ~= nil then vallayer = lineTest[2] end
 
-		if vallayer ~= self.layer then
-			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GPM file layer: '"..vallayer.."'.")
+		if vallayer ~= self.layer and vallayer ~= self.file then
+			customError("Neighborhood file '"..data.file.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GPM file layer: '"..vallayer.."'.")
 		end
 	end
 
@@ -140,23 +140,24 @@ local function loadNeighborhoodGPM(self, data)
 
 		if cell == nil then
 			customError("Could not find id '"..tostring(line[i]).."' in line "..counterLine..". It seems that it is corrupted.")
-		else
-			local neig = cell:getNeighborhood(data.name)
-			local lineID = file:readLine(" ")
-			local valfor = (tonumber(line[2]) * 2)
+		end
 
-			counterLine = counterLine + 1
-			for i = 1, valfor, values do
-				if lineID[i] == nil and tonumber(line[2]) * values >= i then
-					customError("Could not find id '"..tostring(lineID[i]).."' in line "..counterLine..". It seems that it is corrupted.")
-				elseif lineID[i] ~= nil then
-					local n = self:get(lineID[i])
+		local neig = cell:getNeighborhood(data.name)
+		local lineID = file:readLine(" ")
+		local valfor = (tonumber(line[2]) * 2)
 
-					if values == 2 and n ~= nilthen  then
-						neig:add(n, tonumber(lineID[i + 1]))
-					elseif values == 1 and n ~= nil then
-						neig:add(n, 1)
-					end
+		counterLine = counterLine + 1
+
+		for i = 1, valfor, values do
+			if lineID[i] == nil and tonumber(line[2]) * values >= i then
+				customError("Could not find id '"..tostring(lineID[i]).."' in line "..counterLine..". It seems that it is corrupted.")
+			elseif lineID[i] ~= nil then
+				local n = self:get(lineID[i])
+
+				if values == 2 and n ~= nilthen  then
+					neig:add(n, tonumber(lineID[i + 1]))
+				elseif values == 1 and n ~= nil then
+					neig:add(n, 1)
 				end
 			end
 		end
@@ -169,7 +170,7 @@ local function loadNeighborhoodGPM(self, data)
 end
 
 local function loadNeighborhoodGWT(self, data)
-	local file = data.source
+	local file = data.file
 	local lineTest = file:readLine(" ")
 	local layer = ""
 
@@ -182,8 +183,8 @@ local function loadNeighborhoodGWT(self, data)
 
 		if lineTest[3] ~= nil then vallayer = lineTest[3] end
 
-		if vallayer ~= self.layer then
-			customError("Neighborhood file '"..data.source.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GWT file layer: '"..vallayer.."'.")
+		if vallayer ~= self.layer and vallayer ~= self.file then
+			customError("Neighborhood file '"..data.file.."' was not built for this CellularSpace. CellularSpace layer: '"..layer.."', GWT file layer: '"..vallayer.."'.")
 		end
 	end
 
@@ -367,6 +368,7 @@ local function getVonNeumannNeighborhood(cs, data)
 					else
 						index = cs:get(cell.x + col, cell.y + lin)
 					end
+
 					if index ~= nil then
 						table.insert(indexes, index)
 					end
@@ -1134,45 +1136,44 @@ CellularSpace_ = {
 	end,
 	--- Load a Neighborhood stored in an external source. Each Cell receives its own set of
 	-- neighbors.
-	-- @arg data.source A File or a string with the location of the Neighborhood
-	-- to be loaded. See below.
+	-- @arg data.file A File or a string with the location of the Neighborhood
+	-- file to be loaded.
 	-- @arg data.check A boolean value indicating whether this function should match the
-	-- layer name of the CellularSpace with the one described in the source. The default value is true.
+	-- layer name of the CellularSpace with the one described in the file. The default value is true.
 	-- @arg data.name A string with the name of the Neighborhood
 	-- to be loaded within TerraME. The default value is "1".
 	-- @tabular name
-	-- Source & Description \
-	--"*.gal" & Load a Neighborhood from contiguity relationships described as a GAL file.\
-	-- "*.gwt" & Load a Neighborhood from a GWT (generalized weights) file.\
-	-- "*.gpm" & Load a Neighborhood from a GPM (generalized proximity matrix) file. \
-	-- Any other & Load a Neighborhood from table stored in the same database of the
-	-- CellularSpace. \
+	-- Extension & Description \
+	-- "gal" & Load a Neighborhood from contiguity relationships described as a GAL file.\
+	-- "gwt" & Load a Neighborhood from a GWT (generalized weights) file.\
+	-- "gpm" & Load a Neighborhood from a GPM (generalized proximity matrix) file. \
 	-- @usage -- DONTRUN
 	-- cs = CellularSpace{
 	--     file = filePath("cabecadeboi800.shp", "base")
 	-- }
 	--
-	-- cs:loadNeighborhood{source = filePath("cabecadeboi-neigh.gpm", "base")}
+	-- cs:loadNeighborhood{file = filePath("cabecadeboi-neigh.gpm", "base")}
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
-		verifyUnnecessaryArguments(data, {"source", "name", "check"})
+		verifyUnnecessaryArguments(data, {"file", "name", "check"})
 
-		if type(data.source) == "string" then
-			data.source = File(data.source)
+		if type(data.file) == "string" then
+			data.file = File(data.file)
 		end
 
-		mandatoryTableArgument(data, "source", "File")
 
-		local ext = data.source:extension()
+		mandatoryTableArgument(data, "file", "File")
+
+		local ext = data.file:extension()
 
 		if ext == "" then
-			customError("Argument 'source' does not have an extension.")
-		elseif belong(data.source:extension(), {"gal", "gwt", "gpm"}) then
-			if not data.source:exists() then
-				resourceNotFoundError("source", data.source)
+			customError("Argument 'file' does not have an extension.")
+		elseif belong(ext, {"gal", "gwt", "gpm"}) then
+			if not data.file:exists() then
+				resourceNotFoundError("file", data.file)
 			end
 		else
-			invalidFileExtensionError("source", ext)
+			invalidFileExtensionError("file", ext)
 		end
 
 		separatorCheck(data)
@@ -1774,7 +1775,7 @@ function CellularSpace(data)
 		forEachCell(data, function(cell)
 			setmetatable(cell, {__index = data.instance})
 			forEachElement(data.instance, function(attribute, value)
-				if not string.endswith(attribute, "_") and not belong(attribute, {"x", "id", "y", "past"}) then
+				if not string.endswith(attribute, "_") and not belong(attribute, {"x", "id", "y", "past", "neighborhoods"}) then
 					cell[attribute] = value
 				end
 			end)

@@ -6,6 +6,11 @@
 sci = Directory(sessionInfo().path.."/packages/sci")
 
 local packages = _Gtme.downloadPackagesList()
+
+if not packages or getn(packages) == 0 then
+	print("Could not download package list for version "..sessionInfo().version)
+end
+
 local package = "sci_"..packages["sci"].version..".zip"
 
 if isDirectory(tostring(sci)) or isFile(tostring(sci)) then

@@ -47,7 +47,7 @@ return{
 
 		-- .gpm Regular CS x Irregular CS - without weights
 		env:loadNeighborhood{
-			source = filePath("gpmlinesDbEmas.gpm", "base"),
+			file = filePath("gpmlinesDbEmas.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -96,7 +96,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = filePath("test/gpmAreaCellsPols.gpm", "base"),
+			file = filePath("test/gpmAreaCellsPols.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -131,7 +131,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = filePath("test/gpmAreaCellsPols.gpm", "base"),
+			file = filePath("test/gpmAreaCellsPols.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -164,7 +164,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = filePath("test/gpmAreaCellsPols.gpm", "base"),
+			file = filePath("test/gpmAreaCellsPols.gpm", "base"),
 			name = "my_neighborhood"..countTest,
 			bidirect = true
 		}
@@ -226,7 +226,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = filePath("test/emas-pollin.gpm", "base"),
+			file = filePath("test/emas-pollin.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -253,7 +253,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = filePath("test/emas-pollin.gpm", "base"),
+			file = filePath("test/emas-pollin.gpm", "base"),
 			name = "my_neighborhood"..countTest,
 			bidirect = true
 		}

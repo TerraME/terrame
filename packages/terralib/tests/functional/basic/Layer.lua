@@ -583,14 +583,14 @@ return {
 
 		local expected = [[
 encoding  string [latin1]
-epsg      number [29191.0]
-file      string [/itaituba-census.shp]
+epsg      number [29191]
+file      string [itaituba-census.shp]
 name      string [Setores_2000]
 project   Project
 rep       string [polygon]
 source    string [shp]
 ]]
-		unitTest:assertEquals(tostring(l), expected, 1, true)
+		unitTest:assertEquals(tostring(l), expected, 0, true)
 		projName:deleteIfExists()
 	end
 }

@@ -47,7 +47,8 @@ return{
 	__tostring = function(unitTest)
 		local neigh = Neighborhood()
 
-		unitTest:assertEquals(tostring(neigh),[[cObj_  userdata
+		unitTest:assertEquals(tostring(neigh),[[connections  vector of size 0
+weights      vector of size 0
 ]])
 	end,
 	add = function(unitTest)
@@ -80,21 +81,6 @@ return{
 		neigh:clear()
 
 		unitTest:assert(neigh:isEmpty())
-	end,
-	getID = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-		cs:createNeighborhood()
-
-		unitTest:assertEquals(cs.cells[1]:getNeighborhood():getID(), "1")
-	end,
-	getParent = function(unitTest)
-		local neigh = Neighborhood()
-		local cell1 = Cell{}
-		local cell2 = Cell{x = 0, y = 1}
-
-		neigh:add(cell1, 0.5)
-		cell2:addNeighborhood(neigh)
-		unitTest:assertEquals(cell2, neigh:getParent())
 	end,
 	getWeight = function(unitTest)
 		local neigh = Neighborhood()

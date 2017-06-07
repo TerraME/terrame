@@ -429,7 +429,8 @@ ydim    number [20]
 		unitTest:assertEquals(cs.cells[101], c)
 	end,
 	createNeighborhood = function(unitTest)
-		local cs = CellularSpace{xdim = 5}
+		local icell = Cell{}
+		local cs = CellularSpace{xdim = 5, instance = icell}
 
 		cs:createNeighborhood()
 

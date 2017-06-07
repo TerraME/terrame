@@ -100,7 +100,7 @@ return {
 
 		t:run(50)
 
-		unitTest:assertEquals(4, findCounter)
+		unitTest:assertEquals(5, findCounter)
 
 		local count1 = 0
 		local count2 = 0
@@ -109,7 +109,7 @@ return {
 			if not cell:isEmpty() then count2 = count2 + 1 end
 		end)
 		unitTest:assertEquals(51, count1)
-		unitTest:assertEquals(48, count2)
+		unitTest:assertEquals(50, count2)
 
 		local agent1 = Agent{}
 
@@ -578,18 +578,18 @@ state_          State
 		unitTest:assertEquals(2, #myself:getSocialNetwork())
 
 		local sum = 0
-		forEachConnection(myself, function(_, friend)
+		forEachConnection(myself, function(friend)
 			sum = sum + friend.age
 		end)
 
 		unitTest:assertEquals(15, sum)
 
-		forEachConnection(myself, function(_, friend)
+		forEachConnection(myself, function(friend)
 			myself:message{receiver = friend}
 		end)
 		unitTest:assertEquals(2, received)
 
-		forEachConnection(myself, function(_, friend)
+		forEachConnection(myself, function(friend)
 			myself:message{receiver = friend, delay = Random():integer(1, 10)}
 			myself:message{receiver = friend, delay = Random():integer(1, 10)}
 			myself:message{receiver = friend, delay = Random():integer(1, 10)}

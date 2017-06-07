@@ -4,7 +4,7 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
-Package 'calibration' has no fonts
+Package has no fonts
 Parsing lua files
 Parsing lua/GoodnessOfFit.lua
 Parsing lua/MultipleRuns.lua
@@ -64,7 +64,6 @@ Building doc/files/examples.html
 Building doc/files/data.html
 Checking images
 Checking data.lua
-Checking models
 Checking examples
 Checking if all images are used
 Checking if all functions are documented
@@ -72,7 +71,6 @@ Checking GoodnessOfFit.lua
 Checking MultipleRuns.lua
 Checking SAMDE.lua
 Checking Utils.lua
-Checking if all Models are documented
 
 Documentation report for package 'calibration':
 Documentation was built in 1.12 seconds.
@@ -80,13 +78,10 @@ Documentation was built in 1.12 seconds.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
-No problems were found in the documentation of fonts.
+All descriptions end with a correct character.
 All source code lines starting with --- are valid.
-There are no Models in the package.
-All projects were successfully processed.
 All 9 global functions of the package are documented.
 All functions of each file are declared only once.
-All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
 All 21 non-named arguments are documented.

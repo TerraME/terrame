@@ -47,7 +47,7 @@ return{
 			neigh:add(cell2)
 			neigh:add(cell2)
 		end
-		unitTest:assertError(error_func, "Cell (0, 1) already belongs to the Neighborhood.")
+		unitTest:assertError(error_func, "Cell 'C00L01' already belongs to the Neighborhood.")
 	end,
 	getWeight = function(unitTest)
 		local cell1 = Cell{x = 0, y = 0}
@@ -66,7 +66,7 @@ return{
 		error_func = function()
 			neigh:getWeight(cell1)
 		end
-		unitTest:assertError(error_func, "Cell (0,0) does not belong to the Neighborhood.")
+		unitTest:assertError(error_func, "Cell 'C00L00' does not belong to the Neighborhood.")
 	end,
 	isNeighbor = function(unitTest)
 		local neigh = Neighborhood()
@@ -143,7 +143,7 @@ return{
 		error_func = function()
 			neigh:setWeight(cell1, 0.5)
 		end
-		unitTest:assertError(error_func, "Cell (0,0) does not belong to the Neighborhood.")
+		unitTest:assertError(error_func, "Cell 'C00L00' does not belong to the Neighborhood.")
 	end
 }
 
