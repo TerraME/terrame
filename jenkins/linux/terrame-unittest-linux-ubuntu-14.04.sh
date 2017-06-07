@@ -72,7 +72,12 @@ terrame -color $TERRAME_COMMANDS -test test.lua 2> /dev/null
 RESULT=$?
 
 # Compressing Log
-LOG_NAME="build-daily-linux-$BUILD_NUMBER.tar.gz"
+if [ -z "$ghprbActualCommit" ]; then
+  LOG_NAME="build-daily-linux-$BUILD_NUMBER.tar.gz"
+else
+  LOG_NAME="build-ci-linux-$BUILD_NUMBER.tar.gz"
+fi
+
 echo "Compressing $WORKSPACE/$LOG_NAME"
 tar -czf $WORKSPACE/$LOG_NAME .terrame*
 
