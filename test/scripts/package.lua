@@ -7,7 +7,7 @@ sci = Directory(sessionInfo().path.."/packages/sci")
 
 local packages = _Gtme.downloadPackagesList()
 
-if not packages or #packages == 0 then
+if not packages or getn(packages) == 0 then
 	print("Could not download package list for version "..sessionInfo().version)
 end
 
