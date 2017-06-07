@@ -139,6 +139,7 @@ local function lineTable(filename)
 					break
 				end
 			end
+
 			pos = pos + 1
 		end
 
@@ -833,7 +834,12 @@ function _Gtme.executeTests(package, fileName)
 				local myassert = function(observer, file, message)
 					_Gtme.printError = function(str) -- to avoid showing that the error occurs in terrame.lua
 						local errorWithoutFile = string.match(str, "Files.*")
-						pe("Error in a "..message..". "..errorWithoutFile)
+
+						if errorWithoutFile then
+							pe("Error in a "..message..". "..errorWithoutFile)
+						else
+							pe(str)
+						end
 					end
 
 					pcall(function() ut:assertSnapshot(observer, file, 0.4) end)
