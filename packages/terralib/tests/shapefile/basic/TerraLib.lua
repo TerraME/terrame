@@ -1259,6 +1259,50 @@ return {
 		unitTest:assertEquals("cdc_troide", attrNames[32])
 		unitTest:assertEquals("attr1", attrNames[33])
 
+		-- TODO(#1857)
+		-- -- CHANGING INTEGER DATA AND OVERWRITE LAYER
+		-- local numSum1 = 0
+		-- local newPtLuaTable = {}
+		-- for i = 0, getn(newPtDset) - 1 do
+			-- local data = newPtDset[i]
+			-- numSum1 = numSum1 + data.numero
+			-- data.numero = data.numero * 2
+			-- table.insert(newPtLuaTable, newPtDset[i])
+		-- end
+		-- TerraLib().saveDataSet(proj, newPtName, newPtLuaTable, newPtName, {"numero"})
+
+		-- newPtDset = TerraLib().getDataSet(proj, newPtName, 0)
+		-- local numSum2 = 0
+		-- for i = 0, getn(newPtDset) - 1 do
+			-- local data = newPtDset[i]
+			-- numSum2 = numSum2 + data.numero
+		-- end
+
+		-- unitTest:assertEquals(numSum2, 2 * numSum1) -- SKIP
+
+		-- -- CHANGING INTEGER AND CREATE A NEW LAYER
+		-- local newPtName2 = "BR_Ports_New2"
+		-- newPtLuaTable = {}
+		-- for i = 0, getn(newPtDset) - 1 do
+			-- local data = newPtDset[i]
+			-- data.numbkp = data.numero
+			-- data.numero = data.numero * 2
+			-- table.insert(newPtLuaTable, newPtDset[i])
+		-- end
+		-- TerraLib().saveDataSet(proj, newPtName, newPtLuaTable, newPtName2, {"numero", "numbkp"})
+
+		-- local newPtDset2 = TerraLib().getDataSet(proj, newPtName2, 0)
+		-- local numSum3 = 0
+		-- local numBkpSum = 0
+		-- for i = 0, getn(newPtDset2) - 1 do
+			-- local data = newPtDset2[i]
+			-- numSum3 = numSum3 + data.numero
+			-- numBkpSum = numBkpSum + data.numbkp
+		-- end
+
+		-- unitTest:assertEquals(numSum3, 4 * numSum1) -- SKIP
+		-- unitTest:assertEquals(numSum3, 2 * numBkpSum) -- SKIP
+
 		-- LINES
 		local lnName = "ES_Rails"
 		local lnFile = filePath("test/rails.shp", "terralib")
@@ -1403,6 +1447,7 @@ return {
 		File(newPolName..".shp"):delete()
 		ptFile:delete()
 		File(newPtName..".shp"):delete()
+		-- File(newPtName2..".shp"):delete() -- TODO(#1857)
 		lnFile:delete()
 		File(newLnName..".shp"):delete()
 		proj.file:delete()
