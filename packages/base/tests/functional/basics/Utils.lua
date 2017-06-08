@@ -1054,7 +1054,7 @@ return{
     cells = {
         Cell{
             cObj_ = "TeCell(0x7fad0da19a00)",
-			neighborhoods = {},
+            neighborhoods = {},
             parent = "CellularSpace",
             past = {},
             x = 0,
@@ -1069,7 +1069,7 @@ return{
     yMax = 0,
     yMin = 0,
     ydim = 1
-}]], 45)
+}]], 50)
 
 		local tab = {
 			a = 2,
