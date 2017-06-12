@@ -203,6 +203,36 @@ return {
 
 		File(toData.file):delete()
 		File(file1):delete()
+
+		-- SAVE A DATA SUBSET
+		local dset1 = TerraLib().getDataSet(proj, layerName1)
+		local sjc
+		for i = 0, getn(dset1) - 1 do
+			if dset1[i].ID == 27 then
+				sjc = dset1[i]
+			end
+		end
+
+		local touches = {}
+		local j = 1
+		for i = 0, getn(dset1) - 1 do
+			if sjc.OGR_GEOMETRY:touches(dset1[i].OGR_GEOMETRY) then
+				touches[j] = dset1[i]
+				j = j + 1
+			end
+		end
+
+		toData.file = "touches_sjc.geojson"
+		toData.srid = nil
+		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+
+		local tchsSjc = TerraLib().getOGRByFilePath(toData.file)
+
+		unitTest:assertEquals(getn(tchsSjc), 2)
+		unitTest:assertEquals(tchsSjc[0].ID, 55)
+		unitTest:assertEquals(tchsSjc[1].ID, 109)
+
+		File(toData.file):delete()
 		proj.file:delete()
 	end,
 	getLayerSize = function(unitTest)

@@ -1913,6 +1913,37 @@ return {
 							((k == "nm_micro") and (v == "VOTUPORANGA")) or ((k == "id") and (v == 2)))
 		end
 
+		-- SAVE A DATA SUBSET
+		local dset2 = TerraLib().getDataSet(proj, layerName2)
+		local sjc
+		for i = 0, getn(dset2) - 1 do
+			if dset2[i].id == 27 then
+				sjc = dset2[i]
+			end
+		end
+
+		local touches = {}
+		local j = 1
+		for i = 0, getn(dset2) - 1 do
+			if sjc.ogr_geometry:touches(dset2[i].ogr_geometry) then
+				touches[j] = dset2[i]
+				j = j + 1
+			end
+		end
+
+		local table4 = pgData.table
+		pgData.table = "touches_sjc"
+		pgData.srid = nil
+		TerraLib().saveLayerAs(proj, layerName2, pgData, overwrite, {"nm_micro", "id"}, touches)
+
+		local layerName8 = "SJC"
+		TerraLib().addPgLayer(proj, layerName8, pgData, nil, encoding)
+		local tchsSjc = TerraLib().getDataSet(proj, layerName8)
+
+		unitTest:assertEquals(getn(tchsSjc), 2)
+		unitTest:assertEquals(tchsSjc[0].id, 55)
+		unitTest:assertEquals(tchsSjc[1].id, 109)
+
 		TerraLib().dropPgTable(pgData)
 		pgData.table = table1
 		TerraLib().dropPgTable(pgData)
@@ -1920,11 +1951,12 @@ return {
 		TerraLib().dropPgTable(pgData)
 		pgData.table = table3
 		TerraLib().dropPgTable(pgData)
+		pgData.table = table4
+		TerraLib().dropPgTable(pgData)
 
 		File("postgis2shp.shp"):delete()
 		File("postgis2geojson.geojson"):delete()
 
-		unitTest:assert(true)
 		proj.file:delete()
 	end,
 	getLayerSize = function(unitTest)

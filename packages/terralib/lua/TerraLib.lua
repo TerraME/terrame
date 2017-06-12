@@ -979,7 +979,7 @@ end
 local function createPgDataSourceToSaveAs(fromType, pgData)
 	local ds = nil
 
-	if fromType == "OGR" then
+	if (fromType == "OGR") or (fromType == "POSTGIS") then
 		local connInfo = createPgConnInfo(pgData.host, pgData.port, pgData.user, pgData.password, pgData.database, pgData.encoding)
 		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
 	end
@@ -1082,27 +1082,27 @@ local function createInvalidNamesErrorMsg(invalidNames)
 	return errorMsg
 end
 
-local function createAttributesToUpdateInfos(dataset, attrNames)
-	local attrsToUp = {}
+local function createAttributeInfos(dataset, attrNames)
+	local attrInfos = {}
 
 	if attrNames then
 		for i = 1, #attrNames do
-			attrsToUp[i] = {name = attrNames[i], pos = nil, type = nil}
+			attrInfos[i] = {name = attrNames[i], pos = nil, type = nil}
 		end
 	end
 
 	local numProps = dataset:getNumProperties()
 	for i = 0, numProps - 1 do
 		local pn = dataset:getPropertyName(i)
-		for j = 1, #attrsToUp do
-			if pn == attrsToUp[j].name then
-				attrsToUp[j].pos = i
-				attrsToUp[j].type = dataset:getPropertyDataType(i)
+		for j = 1, #attrInfos do
+			if pn == attrInfos[j].name then
+				attrInfos[j].pos = i
+				attrInfos[j].type = dataset:getPropertyDataType(i)
 			end
 		end
 	end
 
-	return attrsToUp
+	return attrInfos
 end
 
 local function updateAttributeNumberByType(dataset, type, pos, value)
@@ -1205,7 +1205,7 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 				end
 
 				if #attrsToUp > 0 then
-					attrsToUp = createAttributesToUpdateInfos(dse, attrsToUp)
+					attrsToUp = createAttributeInfos(dse, attrsToUp)
 				end
 
 				-- Set the values of the new dataset from the data
@@ -1283,7 +1283,7 @@ local function updateDataSet(fromLayer, toSet, attrs)
 		local dsetName = fromLayer:getDataSetName()
 		local dse = ds:getDataSet(dsetName)
 
-		local attrsToUp = createAttributesToUpdateInfos(dse, attrs)
+		local attrsToUp = createAttributeInfos(dse, attrs)
 
 		local dseUp = binding.te.mem.DataSet(dse)
 		local index = 1
@@ -2414,6 +2414,8 @@ TerraLib_ = {
 	-- @arg toData The data that will be saved.
 	-- @arg overwrite Indicates if the saved data will be overwritten.
 	-- @arg attrs The attribute(s) that will be saved.
+	-- @arg values A table with a data's subset of the Layer.
+	-- If this parameter is set, the saved data will have only its values.
 	-- @usage -- DONTRUN
 	-- local toData = {
 	--     file = "shp2geojson.geojson",
@@ -2421,7 +2423,7 @@ TerraLib_ = {
 	--     srid = 4326
 	-- }
 	-- TerraLib().saveLayerAs(project, "SomeLayer", toData, true, {"population", "ages"})
-	saveLayerAs = function(project, layerName, toData, overwrite, attrs)
+	saveLayerAs = function(project, layerName, toData, overwrite, attrs, values)
 		loadProject(project, project.file)
 
 		do
@@ -2553,13 +2555,18 @@ TerraLib_ = {
 			local converter = binding.te.da.DataSetTypeConverter(fromDSetType, fromDs:getCapabilities(), toDs:getEncoding())
 
 			-- If there are attrs, keep only them, primary key and geometries
+			local pkName = ""
 			if attrs then
 				local pk = fromDSetType:getPrimaryKey()
-				local pkName = ""
 				if pk then
-					pkName = pk:getName()
+					if fromType == "POSTGIS" then
+						pkName = pk:getPropertyName(0)
+					else
+						pkName = pk:getName()
+					end
 				end
 
+				attrs = {}
 				local numProps = fromDSet:getNumProperties()
 				fromDSet:moveFirst()
 				for i = 0, numProps - 1 do
@@ -2567,6 +2574,8 @@ TerraLib_ = {
 					if not (pkName == propName) and not attrsToIn[propName] and
 						not (fromDSet:getPropertyDataType(i) == binding.GEOMETRY_TYPE) then
 						converter:remove(propName)
+					else
+						table.insert(attrs, propName)
 					end
 				end
 			end
@@ -2612,7 +2621,36 @@ TerraLib_ = {
 				end
 			end
 
-			local dsetAdapted = binding.CreateAdapter(fromDSet, converter)
+			local dsetAdapted
+
+			-- It can create a new data with only some values
+			if values then
+				local newDst = converter:getConvertee()
+				local newDse = binding.te.mem.DataSet(newDst)
+				attrsToIn = createAttributeInfos(fromDSet, attrs)
+				local pkPos = getPropertyPosition(fromDSet, pkName)
+
+				fromDSet:moveBeforeFirst()
+
+				for i = 1, #values do
+					local next = true
+					while fromDSet:moveNext() and next do
+						if fromDSet:getInt(pkPos) == values[i][pkName] then
+							local item = binding.te.mem.DataSetItem.create(newDse)
+							for j = 1, #attrsToIn do
+								item:setValue(attrsToIn[j].pos, fromDSet:getValue(attrsToIn[j].pos):clone())
+							end
+							newDse:add(item)
+							next = false
+						end
+					end
+				end
+
+				dsetAdapted = binding.CreateAdapter(newDse, converter)
+			else
+				dsetAdapted = binding.CreateAdapter(fromDSet, converter)
+			end
+
 			local transactor = toDs:getTransactor()
 			transactor:begin()
 			transactor:createDataSet(dstResult, {})
@@ -2643,7 +2681,6 @@ TerraLib_ = {
 		end
 
 		releaseProject(project)
-
 		collectgarbage("collect")
 
 		return true
