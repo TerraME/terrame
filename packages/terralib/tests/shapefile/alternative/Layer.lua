@@ -37,12 +37,13 @@ return {
 		local indexDefaultError1 = function()
 			Layer{
 				project = proj,
-				name = layerName1,
+				name = layerName1.."c",
 				file = filePath("itaituba-census.shp", "terralib"),
 				index = true
 			}
 		end
-		unitTest:assertError(indexDefaultError1, defaultValueMsg("index", true))
+
+		unitTest:assertWarning(indexDefaultError1, defaultValueMsg("index", true))
 
 		Layer{
 			project = proj,
@@ -50,8 +51,8 @@ return {
 			file = filePath("itaituba-census.shp", "terralib")
 		}
 
+		local clName1 = "PA_Cells50x50"
 		local indexDefaultError2 = function()
-			local clName1 = "PA_Cells50x50"
 			Layer{
 				project = proj,
 				source = "shp",
@@ -63,7 +64,9 @@ return {
 				index = true
 			}
 		end
-		unitTest:assertError(indexDefaultError2, defaultValueMsg("index", true))
+
+		unitTest:assertWarning(indexDefaultError2, defaultValueMsg("index", true))
+		File(clName1..".shp"):delete()
 
 		local epsgError = function()
 			Layer{
@@ -72,7 +75,8 @@ return {
 				file = filePath("cabecadeboi-box.shp", "terralib")
 			}
 		end
-		unitTest:assertError(epsgError, "It was not possible to find the projection of layer 'Elevation'. It should be one of the projections available at www.terrame.org/projections.html")
+
+		unitTest:assertWarning(epsgError, "It was not possible to find the projection of layer 'Elevation'. It should be one of the projections available at www.terrame.org/projections.html")
 
 		proj.file:delete()
 	end,
@@ -96,16 +100,19 @@ return {
 		local invalidFile = function()
 			layer1:export{file = "invalid.org"}
 		end
+
 		unitTest:assertError(invalidFile, invalidFileExtensionMsg("data", "org"))
 
 		local selectNoExist = function()
 			layer1:export{select = {"uf", "pop"}, source = "shp", file = "shape.shp"}
 		end
+
 		unitTest:assertError(selectNoExist, "There are no attributes 'uf' and 'pop' in layer 'setores'.")
 
 		local selectWrongType = function()
 			layer1:export{select = true, source = "shp", file = "shape.shp"}
 		end
+
 		unitTest:assertError(selectWrongType, incompatibleTypeMsg("select", "table", true))
 
 		proj.file:delete()

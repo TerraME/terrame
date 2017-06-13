@@ -2513,7 +2513,7 @@ TerraLib_ = {
 				local fileCopy = toData.dir..toData.fileTif
 
 				if toData.file and (file:name(true) ~= fileTif) then
-					customWarning("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364
+					customError("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364
 				end
 
 				toDs = createGdalDataSourceToSaveAs(fromType, toData)

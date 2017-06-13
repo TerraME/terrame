@@ -27,6 +27,7 @@ return{
 		local attrLayerNonString = function()
 			Layer{project = "myproj.tview", name = false}
 		end
+
 		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", false))
 
 		File("myproj.tview"):deleteIfExists()
@@ -34,6 +35,7 @@ return{
 		local projNotExists = function()
 			Layer{project = "myproj.tview", name = "cells"}
 		end
+
 		unitTest:assertError(projNotExists, "Project file '"..File("myproj.tview").."' does not exist.")
 
 		local projFile = File("proj_celllayer.tview")
@@ -55,6 +57,7 @@ return{
 				name = layerName
 			}
 		end
+
 		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'.")
 
 		layerName = "defirestation"
@@ -64,6 +67,7 @@ return{
 				name = layerName
 			}
 		end
+
 		unitTest:assertError(layerDoesNotExistsSug, "Layer '"..layerName.."' does not exist in Project '"..projFile.."'. Do you mean 'deforestation'?")
 
 		projFile:deleteIfExists()
@@ -78,6 +82,7 @@ return{
 		local noDataInLayer = function()
 			Layer()
 		end
+
 		unitTest:assertError(noDataInLayer, tableArgumentMsg())
 
 		attrLayerNonString = function()
@@ -88,6 +93,7 @@ return{
 			}
 
 		end
+
 		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", 123))
 
 		local attrSourceNonString = function()
@@ -97,6 +103,7 @@ return{
 				source = 123
 			}
 		end
+
 		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))
 
 		local noFilePass = function()
@@ -106,6 +113,7 @@ return{
 				source = "tif"
 			}
 		end
+
 		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))
 
 		layerName = "Sampa"
@@ -122,6 +130,7 @@ return{
 				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
+
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName.."' already exists in the Project.")
 
 		local sourceInvalid = function()
@@ -131,6 +140,7 @@ return{
 				file = filePath("test/sampa.dbf", "terralib")
 			}
 		end
+
 		unitTest:assertError(sourceInvalid, "Source 'dbf' is invalid.")
 
 		local layerFile = "linhares.shp"
@@ -141,6 +151,7 @@ return{
 				file = layerFile
 			}
 		end
+
 		unitTest:assertError(fileLayerNonExists, "File '"..File("linhares.shp").."' does not exist.")
 
 		local filePath0 = filePath("test/sampa.shp", "terralib")
@@ -153,6 +164,7 @@ return{
 				source = "tif"
 			}
 		end
+
 		unitTest:assertError(inconsistentExtension, "File '"..filePath0.."' does not match to source '"..source.."'.")
 
 		File(projName):deleteIfExists()
@@ -161,6 +173,7 @@ return{
 
 		proj = Project{
 			file = projName,
+			limit = filePath("amazonia-limit.shp", "terralib"),
 			clean = true
 		}
 
@@ -172,61 +185,71 @@ return{
 				resolution = 5e4
 			}
 		end
+
 		unitTest:assertError(attrInputNonString, incompatibleTypeMsg("input", "string", 123))
 
 		attrLayerNonString = function()
 			Layer{
 				project = proj,
-				input = "amazonia-states",
+				input = "limit",
 				name = 123,
 				resolution = 5e4
 			}
 		end
+
 		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("name", "string", 123))
 
 		local attrResolutionNonNumber = function()
 			Layer{
 				project = proj,
-				input = "amazonia-states",
+				input = "limit",
 				name = "cells",
 				resolution = false
 			}
 		end
+
 		unitTest:assertError(attrResolutionNonNumber, incompatibleTypeMsg("resolution", "number", false))
 
 		local attrResolutionNonPositive = function()
 			Layer{
 				project = proj,
-				input = "amazonia-states",
+				input = "limit",
 				name = "cells",
 				resolution = 0
 			}
 		end
+
 		unitTest:assertError(attrResolutionNonPositive, positiveArgumentMsg("resolution", 0))
 
 		local unnecessaryArgument = function()
 			Layer{
 				project = proj,
-				input = "amazonia-states",
+				input = "limit",
+				file = "abc1234.shp",
 				name = "cells",
-				resoltion = 200
+				resoltion = 200,
+				resolution = 100000
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
+
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
+
+		File("abc1234.shp"):delete()
 
 		noFilePass = function()
 			Layer{
 				project = proj,
-				input = "amazonia-states",
+				input = "limit",
 				name = "cells",
 				resolution = 0.7
 			}
 		end
+
 		unitTest:assertError(noFilePass, "At least one of the following arguments must be used: 'file', 'source', or 'database'.")
 
 		attrSourceNonString = function()
 			Layer{
-				input = "amazonia-states",
+				input = "limit",
 				project = proj,
 				resolution = 0.7,
 				name = "layer",
@@ -234,6 +257,7 @@ return{
 				source = 123
 			}
 		end
+
 		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))
 
 		local layerName1 = "Sampa"
@@ -266,6 +290,7 @@ return{
 				file = "setores_cells_x.shp"
 			}
 		end
+
 		unitTest:assertError(cellLayerAlreadyExists, "Layer '"..clName1.."' already exists in the Project.")
 
 		local cellLayerFileAlreadyExists = function()
@@ -277,6 +302,7 @@ return{
 				file = shp1
 			}
 		end
+
 		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..File(shp1).."' already exists. Please set clean = true or remove it manually.")
 
 		sourceInvalid = function()
@@ -288,6 +314,7 @@ return{
 				file = filePath("test/sampa.dbf", "terralib")
 			}
 		end
+
 		unitTest:assertError(sourceInvalid, "Source 'dbf' is invalid.")
 
 		local filePath1 = filePath("test/sampa.shp", "terralib")
@@ -302,6 +329,7 @@ return{
 				source = "tif"
 			}
 		end
+
 		unitTest:assertError(inconsistentExtension, "File '"..filePath1.."' not match to source '"..source.."'.")
 
 		local inLayer = "no_exists"
@@ -314,6 +342,7 @@ return{
 				file = "some.shp"
 			}
 		end
+
 		unitTest:assertError(inputNonExists, "Input layer 'no_exists' was not found.")
 
 		Layer{
@@ -326,25 +355,29 @@ return{
 			Layer{
 				project = proj,
 				input = layerName1,
-				name = "cells",
+				name = "cells2",
 				resolution = 5e4,
 				box = 123,
 				file = "sampabox.shp"
 			}
 		end
+
 		unitTest:assertError(attrBoxNonBoolean, incompatibleTypeMsg("box", "boolean", 123))
 
 		local boxDefaultError = function()
 			Layer{
 				project = proj,
 				input = layerName1,
-				name = "cells",
+				name = "cells3",
 				resolution = 5e4,
 				box = false,
 				file = "sampabox.shp"
 			}
 		end
-		unitTest:assertError(boxDefaultError, defaultValueMsg("box", false))
+
+		unitTest:assertWarning(boxDefaultError, defaultValueMsg("box", false))
+
+		File("sampabox.shp"):delete()
 
 		local invalidLayerName = function()
 			Layer{
@@ -353,6 +386,7 @@ return{
 				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
+
 		unitTest:assertError(invalidLayerName, "'My Layer' is not a valid Layer name. Please check special characters or spaces.")
 
 		invalidLayerName = function()
@@ -362,6 +396,7 @@ return{
 				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
+
 		unitTest:assertError(invalidLayerName, "'Samp*a' is not a valid Layer name. Please check special characters or spaces.")
 
 		invalidLayerName = function()
@@ -371,6 +406,7 @@ return{
 				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
+
 		unitTest:assertError(invalidLayerName, "'$ampa' is not a valid Layer name. Please check special characters or spaces.")
 
 		invalidLayerName = function()
@@ -380,6 +416,7 @@ return{
 				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
+
 		unitTest:assertError(invalidLayerName, "'SãoPaulo' is not a valid Layer name. Please check special characters or spaces.")
 
 		local invalidSridType = function()
@@ -390,6 +427,7 @@ return{
 				epsg = true
 			}
 		end
+
 		unitTest:assertError(invalidSridType, "Incompatible types. Argument 'epsg' expected number, got boolean.")
 
 		local invalidEncoding = function()
@@ -400,6 +438,7 @@ return{
 				encoding = "utf16"
 			}
 		end
+
 		unitTest:assertError(invalidEncoding, "Encoding 'utf16' is invalid.")
 
 		local encodingUnnecessary = function()
@@ -414,7 +453,8 @@ return{
 				encoding = "utf8"
 			}
 		end
-		unitTest:assertError(encodingUnnecessary, unnecessaryArgumentMsg("encoding"))
+
+		unitTest:assertWarning(encodingUnnecessary, unnecessaryArgumentMsg("encoding"))
 
 		File(projName):deleteIfExists()
 		File(shp1):deleteIfExists()
@@ -454,6 +494,7 @@ return{
 				layer = "population"
 			}
 		end
+
 		unitTest:assertError(operationMandatory, mandatoryArgumentMsg("operation"))
 
 		local operationNotString = function()
@@ -463,6 +504,7 @@ return{
 				layer = "roads"
 			}
 		end
+
 		unitTest:assertError(operationNotString, incompatibleTypeMsg("operation", "string", 2))
 
 		local layerMandatory = function()
@@ -472,6 +514,7 @@ return{
 				operation = "area"
 			}
 		end
+
 		unitTest:assertError(layerMandatory, mandatoryArgumentMsg("layer"))
 
 		local layerNotString = function()
@@ -482,6 +525,7 @@ return{
 				layer = 2
 			}
 		end
+
 		unitTest:assertError(layerNotString, incompatibleTypeMsg("layer", "Layer", 2))
 
 		local attributeMandatory = function()
@@ -490,6 +534,7 @@ return{
 				operation = "area"
 			}
 		end
+
 		unitTest:assertError(attributeMandatory, mandatoryArgumentMsg("attribute"))
 
 		local attributeNotString = function()
@@ -499,6 +544,7 @@ return{
 				layer = "cells"
 			}
 		end
+
 		unitTest:assertError(attributeNotString, incompatibleTypeMsg("attribute", "string", 2))
 
 		local invalidAttribName = function()
@@ -508,6 +554,7 @@ return{
 				layer = "cells"
 			}
 		end
+
 		unitTest:assertError(invalidAttribName, "Attribute name 'área' is not a valid name. Invalid symbol.")
 
 		invalidAttribName = function()
@@ -517,6 +564,7 @@ return{
 				layer = "cells"
 			}
 		end
+
 		unitTest:assertError(invalidAttribName, "Attribute name 'a$ea' is not a valid name. Invalid symbol: '$'.")
 
 		invalidAttribName = function()
@@ -526,6 +574,7 @@ return{
 				layer = "cells"
 			}
 		end
+
 		unitTest:assertError(invalidAttribName, "Attribute name 'Cell Area' is not a valid name. Invalid character: blank space.")
 
 		invalidAttribName = function()
@@ -535,6 +584,7 @@ return{
 				layer = "cells"
 			}
 		end
+
 		unitTest:assertError(invalidAttribName, "Attribute name 'Are*s' is not a valid name. Invalid character: mathematical symbol '*'.")
 
 	--[[ BUG:
@@ -545,6 +595,7 @@ return{
 				layer = clName1
 			}
 		end
+
 		unitTest:assertError(attributeDoesNotExist, "string") -- SKIP
 		--]]
 
@@ -555,6 +606,7 @@ return{
 				attribute = "presence"
 			}
 		end
+
 		unitTest:assertError(layerNotExists, "Layer 'LayerNotExists' does not exist in Project '"..File(projName).."'.")
 
 		local layerNotExistsSug = function()
@@ -564,6 +616,7 @@ return{
 				attribute = "presence"
 			}
 		end
+
 		unitTest:assertError(layerNotExistsSug, "Layer '"..layerName1.."_' does not exist in Project '"..File(projName).."'. Do you mean '"..layerName1.."'?")
 
 		local attrAlreadyExists = function()
@@ -573,6 +626,7 @@ return{
 				attribute = "row"
 			}
 		end
+
 		unitTest:assertError(attrAlreadyExists, "The attribute '".."row".."' already exists in the Layer.")
 
 		local presenceSelectUnnecessary = function()
@@ -583,37 +637,41 @@ return{
 				select = "FID"
 			}
 		end
-		unitTest:assertError(presenceSelectUnnecessary, unnecessaryArgumentMsg("select"))
+
+		unitTest:assertWarning(presenceSelectUnnecessary, unnecessaryArgumentMsg("select"))
 
 		local areaSelectUnnecessary = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "areattr",
 				operation = "area",
 				layer = layerName1,
 				select = "FID"
 			}
 		end
-		unitTest:assertError(areaSelectUnnecessary, unnecessaryArgumentMsg("select"))
+
+		unitTest:assertWarning(areaSelectUnnecessary, unnecessaryArgumentMsg("select"))
 
 		local countSelectUnnecessary = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "counttr",
 				operation = "count",
 				layer = layerName1,
 				select = "FID"
 			}
 		end
-		unitTest:assertError(countSelectUnnecessary, unnecessaryArgumentMsg("select"))
+
+		unitTest:assertWarning(countSelectUnnecessary, unnecessaryArgumentMsg("select"))
 
 		local distanceSelectUnnecessary = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "disttr",
 				operation = "distance",
 				layer = layerName1,
 				select = "FID"
 			}
 		end
-		unitTest:assertError(distanceSelectUnnecessary, unnecessaryArgumentMsg("select"))
+
+		unitTest:assertWarning(distanceSelectUnnecessary, unnecessaryArgumentMsg("select"))
 
 		local selectNotString = function()
 			cl:fill{
@@ -623,6 +681,7 @@ return{
 				select = 2
 			}
 		end
+
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		local missingNotNumber = function()
@@ -634,18 +693,20 @@ return{
 				missing = false
 			}
 		end
+
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		local unnecessaryArgument = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "minttr",
 				operation = "minimum",
 				layer = layerName1,
-				select = "row",
+				select = "FID",
 				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		local selected = "ITNOTEXISTS"
 		local selectNotExists = function()
@@ -656,6 +717,7 @@ return{
 				select = selected
 			}
 		end
+
 		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'.")
 
 		selected = "populaco"
@@ -667,6 +729,7 @@ return{
 				select = selected
 			}
 		end
+
 		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'population'?")
 
 		selectNotString = function()
@@ -677,6 +740,7 @@ return{
 				select = 2
 			}
 		end
+
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		missingNotNumber = function()
@@ -688,6 +752,7 @@ return{
 				missing = false
 			}
 		end
+
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		unnecessaryArgument = function()
@@ -699,7 +764,8 @@ return{
 				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -709,6 +775,7 @@ return{
 				select = 2
 			}
 		end
+
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		missingNotNumber = function()
@@ -720,18 +787,20 @@ return{
 				missing = false
 			}
 		end
+
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "covttr",
 				operation = "coverage",
 				layer = layerName1,
 				select = "FID",
 				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -741,6 +810,7 @@ return{
 				select = 2
 			}
 		end
+
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		missingNotNumber = function()
@@ -752,18 +822,20 @@ return{
 				missing = false
 			}
 		end
+
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		missingNotNumber = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "sttr",
 				operation = "stdev",
 				layer = layerName1,
 				select = "FID",
 				missin = 3
 			}
 		end
-		unitTest:assertError(missingNotNumber, unnecessaryArgumentMsg("missin", "missing"))
+
+		unitTest:assertWarning(missingNotNumber, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -773,6 +845,7 @@ return{
 				select = 2
 			}
 		end
+
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		local areaNotBoolean = function()
@@ -784,6 +857,7 @@ return{
 				area = 2
 			}
 		end
+
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
 		missingNotNumber = function()
@@ -795,18 +869,20 @@ return{
 				missing = false
 			}
 		end
+
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "avettr",
 				operation = "average",
 				layer = layerName1,
 				select = "FID",
 				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -816,6 +892,7 @@ return{
 				select = 2
 			}
 		end
+
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		areaNotBoolean = function()
@@ -827,6 +904,7 @@ return{
 				area = 2
 			}
 		end
+
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
 		missingNotNumber = function()
@@ -838,18 +916,20 @@ return{
 				missing = false
 			}
 		end
+
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "modttr",
 				operation = "mode",
 				layer = layerName1,
 				select = "FID",
 				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -859,6 +939,7 @@ return{
 				select = 2
 			}
 		end
+
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
 		areaNotBoolean = function()
@@ -870,6 +951,7 @@ return{
 				area = 2
 			}
 		end
+
 		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
 
 		missingNotNumber = function()
@@ -881,18 +963,20 @@ return{
 				missing = false
 			}
 		end
+
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
 		unnecessaryArgument = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "sumttr",
 				operation = "sum",
 				layer = layerName1,
 				select = "FID",
 				missin = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		local normalizedNameWarning = function()
 			cl:fill{
@@ -902,7 +986,8 @@ return{
 				select = "FID"
 			}
 		end
-		unitTest:assertError(normalizedNameWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'max10allow'.")
+
+		unitTest:assertWarning(normalizedNameWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'max10allow'.")
 
 		local localidades = "Localidades"
 
@@ -912,44 +997,41 @@ return{
 			file = filePath("itaituba-localities.shp", "terralib")
 		}
 
-		local cW = customWarning
-		customWarning = function() return end
-
 		cl:fill{
 			operation = "presence",
 			layer = localidades,
-			attribute = "presence2000"
+			attribute = "presence20"
 		}
 
 		local normalizedTrucatedError = function()
 			cl:fill{
 				operation = "presence",
 				layer = localidades,
-				attribute = "presence2001"
+				attribute = "presence20"
 			}
 		end
-		unitTest:assertError(normalizedTrucatedError, "The attribute 'presence20' already exists in the Layer.")
 
-		customWarning = cW
+		unitTest:assertError(normalizedTrucatedError, "The attribute 'presence20' already exists in the Layer.")
 
 		-- RASTER TESTS ----------------------------------------------------------------
 		local layerName3 = "Desmatamento"
 		Layer{
 			project = proj,
 			name = layerName3,
+			epsg = 29191,
 			file = filePath("itaituba-deforestation.tif", "terralib")
 		}
 
 		local areaUnnecessary = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "argattr",
 				operation = "average",
 				layer = layerName3,
-				band = 0,
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		local selectNotNumber = function()
 			cl:fill{
@@ -959,6 +1041,7 @@ return{
 				band = "0"
 			}
 		end
+
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local bandNegative = function()
@@ -969,6 +1052,7 @@ return{
 				band = -1
 			}
 		end
+
 		unitTest:assertError(bandNegative, positiveArgumentMsg("band", -1, true))
 
 		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT)
@@ -980,18 +1064,19 @@ return{
 				-- select = 0
 			-- }
 		-- end
+
 		-- unitTest:assertError(layerNotIntersect, "The two layers do not intersect.") -- SKIP
 
 		areaUnnecessary = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "mmittr",
 				operation = "minimum",
 				layer = layerName3,
-				band = 0,
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1001,39 +1086,41 @@ return{
 				band = "0"
 			}
 		end
+
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		areaUnnecessary = function()
+			cl:fill{
+				attribute = "mmaxttr",
+				operation = "maximum",
+				layer = layerName3,
+				area = 2
+			}
+		end
+
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
+
+		selectNotNumber = function()
 			cl:fill{
 				attribute = "attr",
 				operation = "maximum",
 				layer = layerName3,
-				band = 0,
-				area = 2
-			}
-		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
-
-		selectNotNumber = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "maximum",
-				layer = layerName3,
 				band = "0"
 			}
 		end
+
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		areaUnnecessary = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "ccvattr",
 				operation = "coverage",
 				layer = layerName3,
-				band = 0,
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1043,18 +1130,19 @@ return{
 				band = "0"
 			}
 		end
+
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		areaUnnecessary = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "ssdvattr",
 				operation = "stdev",
 				layer = layerName3,
-				band = 0,
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1064,18 +1152,19 @@ return{
 				band = "0"
 			}
 		end
+
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		areaUnnecessary = function()
 			cl:fill{
-				attribute = "attr",
+				attribute = "ssuattr",
 				operation = "sum",
 				layer = layerName3,
-				band = 0,
 				area = 2
 			}
 		end
-		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1085,6 +1174,7 @@ return{
 				band = "0"
 			}
 		end
+
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
 		local op1NotAvailable = function()
@@ -1094,6 +1184,7 @@ return{
 				layer = layerName3
 			}
 		end
+
 		unitTest:assertError(op1NotAvailable, "The operation 'area' is not available for layers with raster data.")
 
 		local op3NotAvailable = function()
@@ -1103,6 +1194,7 @@ return{
 				layer = layerName3
 			}
 		end
+
 		unitTest:assertError(op3NotAvailable, "The operation 'distance' is not available for layers with raster data.")
 
 		local op4NotAvailable = function()
@@ -1112,6 +1204,7 @@ return{
 				layer = layerName3
 			}
 		end
+
 		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.")
 
 		File(projName):deleteIfExists()
@@ -1136,16 +1229,19 @@ return{
 		local mandatoryOut = function()
 			layer1:simplify{tolerance = 500}
 		end
+
 		unitTest:assertError(mandatoryOut, mandatoryArgumentMsg("output"))
 
 		local mandatoryTolerance = function()
 			layer1:simplify{output = "simplify"}
 		end
+
 		unitTest:assertError(mandatoryTolerance, mandatoryArgumentMsg("tolerance"))
 
 		local positiveTolerance = function()
 			layer1:simplify{output = "simplify", tolerance = 0}
 		end
+
 		unitTest:assertError(positiveTolerance, positiveArgumentMsg("tolerance", 0))
 
 		local layer2 = Layer{
@@ -1157,6 +1253,7 @@ return{
 		local reprError = function()
 			layer2:simplify{output = "simplify", tolerance = 500}
 		end
+
 		unitTest:assertError(reprError, "Layer representation 'raster' cannot be simplified.")
 
 		proj.file:delete()

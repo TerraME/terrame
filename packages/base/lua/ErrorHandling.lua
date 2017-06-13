@@ -811,8 +811,7 @@ end
 function verifyUnnecessaryArguments(data, arguments)
 	forEachElement(data, function(idx)
 		if type(idx) ~= "string" then
-			strictWarning("Arguments should have only string names, got "..type(idx)..".")
-			return 1
+			customError("Arguments should have only string names, got "..type(idx)..".")
 		end
 	end)
 

@@ -27,61 +27,73 @@ return{
 		local noDataInContructor = function()
 			Project()
 		end
+
 		unitTest:assertError(noDataInContructor, tableArgumentMsg())
 
 		local attrFileNonString = function()
 			Project{file = 123}
 		end
+
 		unitTest:assertError(attrFileNonString, incompatibleTypeMsg("file", "File", 123))
 
 		attrFileNonString = function()
 			Project{file = "abc", author = "No author"}
 		end
-		unitTest:assertError(attrFileNonString, defaultValueMsg("author", "No author"))
+
+		unitTest:assertWarning(attrFileNonString, defaultValueMsg("author", "No author"))
 
 		attrFileNonString = function()
 			Project{file = "abc", title = "No title"}
 		end
-		unitTest:assertError(attrFileNonString, defaultValueMsg("title", "No title"))
+
+		unitTest:assertWarning(attrFileNonString, defaultValueMsg("title", "No title"))
 
 		local attrCreateNonBool = function()
 			Project{file = "myproj.tview", clean = 2}
 		end
+
 		unitTest:assertError(attrCreateNonBool, incompatibleTypeMsg("clean", "boolean", 2))
 
 		local attrTitleNonString = function()
 			Project{file = "myproj.tview", title = 2}
 		end
+
 		unitTest:assertError(attrTitleNonString, incompatibleTypeMsg("title", "string", 2))
 
 		local attrAuthorNonString = function()
 			Project{file = "myproj.tview", author = 2}
 		end
+
 		unitTest:assertError(attrAuthorNonString, incompatibleTypeMsg("author", "string", 2))
 
 		local fileMandatory = function()
 			Project{clean = true}
 		end
+
 		unitTest:assertError(fileMandatory, mandatoryArgumentMsg("file"))
 
 		local layerShouldBeString = function()
 			Project{file = "myproj.tview", cean = true}
 		end
+
 		unitTest:assertError(layerShouldBeString, incompatibleTypeMsg("cean", "File", true))
 
 		local notFile = function()
 			Project{file = "myproj.tview", cean = "true.abc"}
 		end
+
 		unitTest:assertError(notFile, "Value of argument 'cean' ('/true.abc') is not a valid file name.", 3, true)
 
 		local directoryNotString = function()
 			Project{file = "myproj.tview", directory = 2}
 		end
+
 		unitTest:assertError(directoryNotString, incompatibleTypeMsg("directory", "Directory", 2))
 
 		local notDirectory = function()
 			Project{file = "myproj.tview", directory = tostring(filePath("emas.lua", "terralib"))}
 		end
+
 		unitTest:assertError(notDirectory, "/emas.lua is a file, and not a directory.", 2, true)
 	end
 }

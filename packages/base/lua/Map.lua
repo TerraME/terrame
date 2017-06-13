@@ -2105,6 +2105,10 @@ function Map(data)
 	}
 
 	if data.grouping == "placement" then
+		if not data.slices and not data.value then
+			customError("It is necessary to set 'value' or 'slices' to draw the placement.")
+		end
+
 		return Map{
 			target = data.target,
 			select = "quantity_",

@@ -40,7 +40,8 @@ test = {
 	examples       = {arg = "-test", package = "examples"},
 	linedirectory  = {arg = "-test", config = "linesDirectory.lua"},
 	testnotest     = {arg = "-test", config = "testNoTest.lua"},
-	notest         = {arg = "-test", config = "noTest.lua"}
+	notest         = {arg = "-test", config = "noTest.lua"},
+	unittest       = {arg = "-test", package = "unittest"}
 }
 
 package = {

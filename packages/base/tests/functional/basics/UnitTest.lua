@@ -38,19 +38,27 @@ return{
 		unitTest:assertEquals(u.source, "test")
 	end,
 	assert = function(unitTest)
-		local u = UnitTest{}
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
-		u:assert(true)
+		unitTest:assert(true)
 
-		unitTest:assertEquals(u.success, 1)
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 1)
+		unitTest:assertEquals(test2, test1 + 1)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertEquals = function(unitTest)
-		local u = UnitTest{}
-		u:assertEquals(true, true)
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
+		unitTest:assertEquals(true, true)
 		unitTest:assertEquals(math.huge, math.huge)
-		unitTest:assertEquals(u.success, 1)
-		unitTest:assertEquals(u.test, 1)
 
 		unitTest:assertEquals(currentDir(), currentDir())
 		unitTest:assertEquals(File("abc.txt"), File("abc.txt"))
@@ -85,72 +93,141 @@ sid      string [055e2e78-18d7-4246-9e03-dbe2277a7e77]
 source   string [shp]
 ]]
 		unitTest:assertEquals(actual, expected, 0, true)
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 10)
+		unitTest:assertEquals(test2, test1 + 10)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertError = function(unitTest)
-		local u = UnitTest{}
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
-		local error_func = function() CellularSpace{xdim = "a"} end
-		u:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got string.")
+		local error_func = function()
+			CellularSpace{xdim = "a"}
+		end
 
-		error_func = function() CellularSpace{xdim = "a"} end
-		u:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
+		unitTest:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got string.")
 
-		error_func = function() customError("File '/a/b/c/d/e' should not be shown.") end
-		u:assertError(error_func, "File 'e' should not be shown.", 0, true)
+		error_func = function()
+			CellularSpace{xdim = "a"}
+		end
 
-		unitTest:assertEquals(u.success, 3)
-		unitTest:assertEquals(u.test, 3)
+		unitTest:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
+
+		error_func = function()
+			customError("File '/a/b/c/d/e' should not be shown.")
+		end
+
+		unitTest:assertError(error_func, "File 'e' should not be shown.", 0, true)
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 3)
+		unitTest:assertEquals(test2, test1 + 3)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertFile = function(unitTest)
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
+
 		local c = Cell{value = 2}
 		Log{target = c, file = "abc.csv"}
-
-		local success = unitTest.success
-		local test = unitTest.test
-		local fail = unitTest.fail
-
 		c:notify()
 
 		unitTest:assertFile("abc.csv")
 
-		local oldPrint = unitTest.printError
-		unitTest.printError = function() end
-		unitTest:assertFile("abc.csv") -- file does not exist
-
-		unitTest.printError = oldPrint
-
-		unitTest:assertEquals(success + 1, unitTest.success)
-		unitTest:assertEquals(test + 3, unitTest.test) -- plus one because of the previous line
-		unitTest:assertEquals(fail + 1, unitTest.fail)
-
-		unitTest.fail = unitTest.fail - 2
-		unitTest.success = unitTest.success + 2
-
 		c = Cell{value = 2}
 		Log{target = c, file = "assertFile.csv"}
-
 		c:notify()
 
 		unitTest:assertFile(File("assertFile.csv"))
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 2)
+		unitTest:assertEquals(test2, test1 + 2)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertNil = function(unitTest)
-		local u = UnitTest{}
-		u:assertNil()
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
-		unitTest:assertEquals(u.success, 1)
+		unitTest:assertNil()
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 1)
+		unitTest:assertEquals(test2, test1 + 1)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertNotNil = function(unitTest)
-		local u = UnitTest{}
-		u:assertNotNil(true)
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
-		unitTest:assertEquals(u.success, 1)
+		unitTest:assertNotNil(true)
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 1)
+		unitTest:assertEquals(test2, test1 + 1)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertType = function(unitTest)
-		local u = UnitTest{}
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
-		u:assertType(2, "number")
+		unitTest:assertType(2, "number")
 
-		unitTest:assertEquals(u.success, 1)
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 1)
+		unitTest:assertEquals(test2, test1 + 1)
+		unitTest:assertEquals(fail2, fail1)
+	end,
+	assertWarning = function(unitTest)
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
+
+		local warning_func = function()
+			customWarning("abc")
+		end
+
+		unitTest:assertWarning(warning_func, "abc")
+
+		warning_func = function()
+			customWarning("abc")
+		end
+
+		unitTest:assertWarning(warning_func, "abc2", 1)
+
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 2)
+		unitTest:assertEquals(test2, test1 + 2)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	printError = function(unitTest)
 		unitTest:assert(true)

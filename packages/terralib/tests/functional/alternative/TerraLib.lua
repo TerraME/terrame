@@ -29,6 +29,7 @@ return {
 		local mandatoryExt = function()
 			TerraLib().createProject(proj, {})
 		end
+
 		unitTest:assertError(mandatoryExt, "Please, the file extension must be '.tview'.")
 	end,
 	openProject = function(unitTest)
@@ -36,6 +37,7 @@ return {
 		local mandatoryExt = function()
 			TerraLib().openProject(proj, "file.xml")
 		end
+
 		unitTest:assertError(mandatoryExt, "Please, the file extension must be '.tview'.")
 	end,
 	getArea = function(unitTest)
@@ -57,7 +59,8 @@ return {
 		local areaError = function()
 			TerraLib().getArea(dSet[0].OGR_GEOMETRY)
 		end
-		unitTest:assertError(areaError, "Geometry should be a polygon to get the area.")
+
+		unitTest:assertWarning(areaError, "Geometry should be a polygon to get the area.")
 
 		proj.file:deleteIfExists()
 	end,
@@ -97,6 +100,7 @@ return {
 		local invalidAttrName = function()
 			TerraLib().saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1"})
 		end
+
 		unitTest:assertError(invalidAttrName, "Invalid attribute name 'attr-1'.")
 
 		luaTable = {}
@@ -110,6 +114,7 @@ return {
 		local invalidAttrNames = function()
 			TerraLib().saveDataSet(proj, clName1, luaTable, newLayerName, {"attr-1", "at?tr2", "at#r3"})
 		end
+
 		unitTest:assertError(invalidAttrNames, "Invalid attribute names 'attr-1', 'at?tr2' and 'at#r3'.")
 
 		proj.file:delete()
@@ -136,11 +141,13 @@ return {
 		local attrNotExist = function()
 			TerraLib().saveLayerAs(proj, layerName1, toData, true, {"ATTR"})
 		end
+
 		unitTest:assertError(attrNotExist, "There is no attribute 'ATTR' in layer 'SampaShp'.")
 
 		local attrsNotExist = function()
 			TerraLib().saveLayerAs(proj, layerName1, toData, true, {"ATTR1", "ATTR2", "ATTR3"})
 		end
+
 		unitTest:assertError(attrsNotExist,  "There are no attributes 'ATTR1', 'ATTR2' and 'ATTR3' in layer 'SampaShp'.")
 
 		proj.file:delete()
@@ -163,6 +170,7 @@ return {
 		local invalidRaster = function()
 			TerraLib().douglasPeucker(proj, lName1, "Peucker", 500)
 		end
+
 		unitTest:assertError(invalidRaster, "This function works only with line geometry.")
 
 		local lName2 = "Ports"
@@ -172,6 +180,7 @@ return {
 		local invalidGeometry = function()
 			TerraLib().douglasPeucker(proj, lName2, "Peucker", 500)
 		end
+
 		unitTest:assertError(invalidGeometry, "This function works only with line and multi-line geometry.")
 
 		proj.file:delete()

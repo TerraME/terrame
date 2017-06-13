@@ -29,13 +29,15 @@ return{
 		local error_func = function()
 			customError("test.")
 		end
+
 		unitTest:assertError(error_func, "test.")
 	end,
 	customWarning = function(unitTest)
-		local error_func = function()
+		local warning_func = function()
 			customWarning("test.")
 		end
-		unitTest:assertError(error_func, "test.")
+
+		unitTest:assertWarning(warning_func, "test.")
 	end,
 	defaultTableValue = function(unitTest)
 		local t = {x = 5}
@@ -49,15 +51,17 @@ return{
 		unitTest:assertEquals(defaultValueMsg("aaa", "2"), "Argument 'aaa' could be removed as it is the default value ('2').")
 	end,
 	defaultValueWarning = function(unitTest)
-		local error_func = function()
+		local warning_func = function()
 			defaultValueWarning("size", 2)
 		end
-		unitTest:assertError(error_func, defaultValueMsg("size", 2))
+
+		unitTest:assertWarning(warning_func, defaultValueMsg("size", 2))
 	end,
 	deprecatedFunction = function(unitTest)
 		local error_func = function()
 			deprecatedFunction("abc", "def")
 		end
+
 		unitTest:assertError(error_func, deprecatedFunctionMsg("abc", "def"))
 	end,
 	deprecatedFunctionMsg = function(unitTest)
@@ -67,6 +71,7 @@ return{
 		local error_func = function()
 			incompatibleTypeError("cell", "Cell", Agent{})
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("cell", "Cell", Agent{}))
 	end,
 	incompatibleTypeMsg = function(unitTest)
@@ -76,16 +81,19 @@ return{
 		local error_func = function()
 			incompatibleValueError("position", "1, 2, or 3", "4")
 		end
+
 		unitTest:assertError(error_func, incompatibleValueMsg("position", "1, 2, or 3", "4"))
 
 		error_func = function()
 			incompatibleValueError(1, "1, 2, or 3", "4")
 		end
+
 		unitTest:assertError(error_func, incompatibleValueMsg(1, "1, 2, or 3", "4"))
 
 		error_func = function()
 			incompatibleValueError(1, "1, 2, or 3")
 		end
+
 		unitTest:assertError(error_func, incompatibleValueMsg(1, "1, 2, or 3"))
 	end,
 	incompatibleValueMsg = function(unitTest)
@@ -213,18 +221,21 @@ return{
 		error_func = function()
 			positiveTableArgument(t, "x")
 		end
+
 		unitTest:assertError(error_func, positiveArgumentMsg("x", 0))
 
 		t = {x = -1}
 		error_func = function()
 			positiveTableArgument(t, "x", true)
 		end
+
 		unitTest:assertError(error_func, positiveArgumentMsg("x", -1, true))
 	end,
 	resourceNotFoundError = function(unitTest)
 		local error_func = function()
 			resourceNotFoundError("file", "/usr/local/file.txt")
 		end
+
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", "/usr/local/file.txt"))
 	end,
 	resourceNotFoundMsg = function(unitTest)
@@ -233,10 +244,11 @@ return{
 		unitTest:assertEquals(resourceNotFoundMsg(2, File("bbb")), "File '"..File("bbb").."' was not found for argument '#2'.")
 	end,
 	strictWarning = function(unitTest)
-		local error_func = function()
+		local warning_func = function()
 			strictWarning("test.")
 		end
-		unitTest:assertError(error_func, "test.")
+
+		unitTest:assertWarning(warning_func, "test.")
 	end,
 	suggestion = function(unitTest)
 		local t = {
@@ -301,26 +313,36 @@ return{
 		unitTest:assertEquals(valueNotFoundMsg(2, "bbb"), "Value 'bbb' not found for argument '#2'.")
 	end,
 	verifyUnnecessaryArguments = function(unitTest)
+		local mtable = {aaa = "aaa"}
+
+		local warning_func = function()
+			verifyUnnecessaryArguments(mtable, {"abc", "acd", "aab"})
+		end
+
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("aaa"))
+		unitTest:assertNil(mtable.aaa)
+
+		mtable = {aaaa = "aaa"}
+
+		warning_func = function()
+			verifyUnnecessaryArguments(mtable, {"aabc", "aacd", "aaab"})
+		end
+
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("aaaa", "aaab"))
+		unitTest:assertNil(mtable.aaaa)
+
 		local error_func = function()
-			verifyUnnecessaryArguments({aaa = "aaa"}, {"abc", "acd", "aab"})
-		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("aaa"))
-
-		error_func = function()
-			verifyUnnecessaryArguments({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
-		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("aaaa", "aaab"))
-
-		error_func = function()
 			verifyUnnecessaryArguments({[1] = "aaa"}, {"aabc", "aacd", "aaab"})
 		end
+
 		unitTest:assertError(error_func, "Arguments should have only string names, got number.")
 
 		local args = {x = 1, y = 2, a = 0}
-		error_func = function()
+		warning_func = function()
 			verifyUnnecessaryArguments(args, {"x", "y", "z"})
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("a"))
+
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("a"))
 		unitTest:assertEquals(getn(args), 2)
 		unitTest:assertNil(args.a)
 	end,
@@ -328,28 +350,33 @@ return{
 		local error_func = function()
 			verifyNamedTable()
 		end
+
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			verifyNamedTable(123)
 		end
+
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
 			verifyNamedTable{x = 3, 3, 4}
 		end
+
 		unitTest:assertError(error_func, "All elements of the argument must be named.")
 	end,
 	valueNotFoundError = function(unitTest)
 		local error_func = function()
 			valueNotFoundError("1", "neighborhood")
 		end
+
 		unitTest:assertError(error_func, "Value 'neighborhood' not found for argument '1'.")
 	end,
 	verify = function(unitTest)
 		local error_func = function()
 			verify(false, "error")
 		end
+
 		unitTest:assertError(error_func, "error")
 	end
 }

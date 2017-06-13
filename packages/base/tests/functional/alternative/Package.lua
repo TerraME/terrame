@@ -27,6 +27,7 @@ return{
 		local error_func = function()
 			filePath("mriver.shp")
 		end
+
 		unitTest:assertError(error_func, "File 'data/mriver.shp' does not exist in package 'base'. Do you mean 'river.shp'?", 2)
 
 		local tlInfo = packageInfo("terralib")
@@ -38,21 +39,25 @@ return{
 		error_func = function()
 			filePath("amazonia.tview")
 		end
+
 		unitTest:assertError(error_func, "File 'data/amazonia.tview' does not exist in package 'base'. Please run 'terrame -package base -project amazonia' to create it.", 2)
 
 		error_func = function()
 			filePath("test"..s.."mriver_lin.shp")
 		end
+
 		unitTest:assertError(error_func, "File 'data/test/mriver_lin.shp' does not exist in package 'base'. Do you mean 'river.shp'?")
 
 		error_func = function()
 			filePath("error"..s.."csv-error.csv")
 		end
+
 		unitTest:assertError(error_func, "Directory '"..baseInfo.data.."error/' does not exist.")
 
 		error_func = function()
 			filePath("test"..s.."braz.gdal")
 		end
+
 		unitTest:assertError(error_func, "File 'data/test/braz.gdal' does not exist in package 'base'. Do you mean 'brazil.gal'?")
 
 		File(baseInfo.data.."amazonia.lua"):deleteIfExists()
@@ -61,65 +66,77 @@ return{
 		local error_func = function()
 			filesByExtension()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			filesByExtension(2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
 			filesByExtension("base")
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			filesByExtension("base", 2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 	end,
 	import = function(unitTest)
 		local error_func = function()
 			import()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			import("asdfgh")
 		end
+
 		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
 
-		error_func = function()
+		local warning_func = function()
 			import("base")
 		end
-		unitTest:assertError(error_func, "Package 'base' is already loaded.")
+
+		unitTest:assertWarning(warning_func, "Package 'base' is already loaded.")
 	end,
 	isLoaded = function(unitTest)
 		local error_func = function()
 			isLoaded()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 	end,
 	getPackage = function(unitTest)
 		local error_func = function()
 			getPackage()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			getPackage("asdfgh")
 		end
+
 		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
 	end,
 	packageInfo = function(unitTest)
 		local error_func = function()
 			packageInfo(2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
 			packageInfo("asdfgh")
 		end
+
 		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
 	end
 }

@@ -71,22 +71,25 @@ return{
 				select = "infected"
 			}
 		end
+
 		unitTest:assertError(error_func, "There is no Model instance within the Environment.")
 
-		error_func = function()
-			c = Chart{
+		local warning_func = function()
+			Chart{
 				target = e,
 				select = "infected",
 				title = "Infected"
 			}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("title", "Infected"))
+
+		unitTest:assertWarning(warning_func, defaultValueMsg("title", "Infected"))
 
 		error_func = function()
 			c = Chart{
 				target = e
 			}
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg("select"))
 
 		error_func = function()
@@ -96,6 +99,7 @@ return{
 				color = {"blue", "red", "green"}
 			}
 		end
+
 		unitTest:assertError(error_func, "Arguments 'select' and 'color' should have the same size, got 2 and 3.")
 	end
 }

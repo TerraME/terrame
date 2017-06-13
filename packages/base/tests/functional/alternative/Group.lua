@@ -41,20 +41,23 @@ return{
 		local error_func = function()
 			group1 = Group()
 		end
+
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			group1 = Group(3)
 		end
+
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
-		error_func = function()
+		local warning_func = function()
 			Group{
 				target = sc1,
 				selection = function() return true end
 			}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("selection", "select"))
+
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("selection", "select"))
 
 		error_func = function()
 			group1 = Group{
@@ -67,6 +70,7 @@ return{
 				end
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("target", "Society or Group", cs))
 
 		error_func = function()
@@ -75,23 +79,26 @@ return{
 				build = 15
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("build", "boolean", 15))
 
-		error_func = function()
-			group1 = Group{
+		warning_func = function()
+			Group{
 				target = sc1,
 				build = true
 			}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("build", true))
 
-		error_func = function()
-			group1 = Group{
+		unitTest:assertWarning(warning_func, defaultValueMsg("build", true))
+
+		warning_func = function()
+			Group{
 				target = sc1,
 				random = false
 			}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("random", false))
+
+		unitTest:assertWarning(warning_func, defaultValueMsg("random", false))
 
 		error_func = function()
 			group1 = Group{
@@ -100,6 +107,7 @@ return{
 				greater = function() return true end
 			}
 		end
+
 		unitTest:assertError(error_func, "It is not possible to use arguments 'greater' and 'random' at the same time.")
 
 		error_func = function()
@@ -111,6 +119,7 @@ return{
 				end
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "function", 12))
 
 		error_func = function()
@@ -122,6 +131,7 @@ return{
 				greater = 12
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("greater", "function", 12))
 	end,
 	add = function(unitTest)
@@ -130,11 +140,13 @@ return{
 		local error_func = function()
 			group:add()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			group:add("wrongType")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent", "wrongType"))
 	end,
 	filter = function(unitTest)
@@ -142,11 +154,13 @@ return{
 		local error_func = function()
 			group:filter("notFunction")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
 
 		error_func = function()
 			group:filter(function() return true end)
 		end
+
 		unitTest:assertError(error_func, "It is not possible to filter a Group without a parent.")
 	end,
 	sort = function(unitTest)
@@ -154,12 +168,14 @@ return{
 		local error_func = function()
 			group:sort("notFunction")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
 
-		error_func = function()
+		local warning_func = function()
 			group:sort()
 		end
-		unitTest:assertError(error_func, "Cannot sort the Group because there is no previous function.")
+
+		unitTest:assertWarning(warning_func, "Cannot sort the Group because there is no previous function.")
 	end
 }
 
