@@ -131,7 +131,7 @@ return {
 
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
 
-		local alt = Layer{
+		Layer{
 			project = proj,
 			name = "altimetria",
 			epsg = 2311,
@@ -177,7 +177,7 @@ return {
 		unitTest:assertError(dummyTypeError, incompatibleTypeMsg("dummy", "number", true))
 
 		local nodataDefaultError = function()
-			clcabecadeboi:fill{
+			clcabeca:fill{
 				operation = "average",
 				attribute = "aver_nd",
 				layer = "altimetria",
@@ -185,7 +185,7 @@ return {
 			}
 		end
 
-		--unitTest:assertWarning(nodataDefaultError, defaultValueMsg("dummy", 255.0)) -- SKIP
+		unitTest:assertWarning(nodataDefaultError, defaultValueMsg("dummy", 255.0)) -- SKIP
 
 		local diffSridWarning = function()
 			cl:fill{
