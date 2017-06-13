@@ -195,19 +195,8 @@ return {
 		local shp2tifError = function()
 			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		end
+
 		unitTest:assertError(shp2tifError, "It was not possible to convert the data in layer 'SampaShp' to 'shp2tif.tif'.")
-
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
-		shp2tifError = function()
-			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
-		end
-		unitTest:assertError(shp2tifError, "It was not possible save the data in layer 'SampaShp' to raster data.")
-
-		customWarning = customWarningBkp
 
 		-- GEOJSON
 		toData.file = "shp2geojson.geojson"

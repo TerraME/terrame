@@ -74,10 +74,10 @@ return {
 				index = true
 			}
 		end
-		unitTest:assertError(indexUnnecessary, unnecessaryArgumentMsg("index"))
+
+		unitTest:assertWarning(indexUnnecessary, unnecessaryArgumentMsg("index"))
 
 		proj.file:delete()
-		-- // SPATIAL INDEX TEST
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_tiff_alternative.tview"
@@ -86,11 +86,6 @@ return {
 			file = projName,
 			clean = true
 		}
-
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
 
 		local layerName1 = "limitepa"
 		Layer{
@@ -136,10 +131,27 @@ return {
 
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
 
-		Layer{
+		local alt = Layer{
 			project = proj,
 			name = "altimetria",
+			epsg = 2311,
 			file = filePath("cabecadeboi-elevation.tif", "terralib")
+		}
+
+		Layer{
+			project = proj,
+			name = "box",
+			file = filePath("cabecadeboi-box.shp", "terralib"),
+			epsg = 2311
+		}
+
+		local clcabeca = Layer{
+			project = proj,
+			clean = true,
+			file = "cabecadeboi.shp",
+			input = "box",
+			name = "cellscabeca",
+			resolution = 600
 		}
 
 		invalidBand = function()
@@ -150,9 +162,8 @@ return {
 				band = 5
 			}
 		end
-		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
 
-		customWarning = customWarningBkp
+		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
 
 		local dummyTypeError = function()
 			cl:fill{
@@ -162,17 +173,19 @@ return {
 				dummy = true
 			}
 		end
+
 		unitTest:assertError(dummyTypeError, incompatibleTypeMsg("dummy", "number", true))
 
 		local nodataDefaultError = function()
-			cl:fill{
+			clcabecadeboi:fill{
 				operation = "average",
 				attribute = "aver_nd",
 				layer = "altimetria",
 				dummy = 255
 			}
 		end
-		unitTest:assertError(nodataDefaultError, defaultValueMsg("dummy", 255.0))
+
+		--unitTest:assertWarning(nodataDefaultError, defaultValueMsg("dummy", 255.0)) -- SKIP
 
 		local diffSridWarning = function()
 			cl:fill{
@@ -181,7 +194,8 @@ return {
 				layer = "altimetria"
 			}
 		end
-		unitTest:assertError(diffSridWarning, "Layer projections are different: (altimetria, 0) and (cells, 29101). Please, reproject your data to the right one.")
+
+		unitTest:assertWarning(diffSridWarning, "Layer projections are different: (altimetria, 2311) and (cells, 29101). Please, reproject your data to the right one.")
 
 		File(projName):delete()
 		File(shp1):deleteIfExists()
@@ -195,11 +209,6 @@ return {
 			file = projName,
 			clean = true
 		}
-
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
 
 		local prodes = "prodes"
 		local l = Layer{
@@ -225,7 +234,6 @@ return {
 
 		File(projName):delete()
 
-		customWarning = customWarningBkp
 	end
 }
 
