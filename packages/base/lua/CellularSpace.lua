@@ -540,7 +540,7 @@ local function loadPGM(self)
 	file:close()
 
 	if j ~= pgm.size[1] or i ~= pgm.size[2] then
-		customWarning("File '"..self.file.."' has a diffent size declared: expected '("..pgm.size[1]..", "..pgm.size[2]..")', got '("..j..", "..i..")'.")
+		customWarning("Data from file '"..self.file.."' does not match declared size: expected '("..pgm.size[1]..", "..pgm.size[2]..")', got '("..j..", "..i..")'.")
 	end
 
 	if not pgm.maximumValue then

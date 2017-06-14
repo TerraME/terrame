@@ -456,6 +456,7 @@ return{
 
 		unitTest:assertWarning(encodingUnnecessary, unnecessaryArgumentMsg("encoding"))
 
+		File("csSp.shp"):delete()
 		File(projName):deleteIfExists()
 		File(shp1):deleteIfExists()
 	end,

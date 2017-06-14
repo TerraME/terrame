@@ -30,6 +30,15 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
+	customWarning = function(unitTest)
+		local originalCustomWarning = customWarning
+
+		local error_func = function()
+			originalCustomWarning(2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+	end,
 	defaultTableValue = function(unitTest)
 		local t = {x = 5}
 		local error_func = function()

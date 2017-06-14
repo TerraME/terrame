@@ -47,7 +47,7 @@ function customWarning(msg)
 	if sessionInfo().mode == "quiet" then return end
 
 	if type(msg) ~= "string" then
-		customError(incompatibleTypeMsg(1, "string", msg))
+		incompatibleTypeError(1, "string", msg)
 	end
 
 	local level = _Gtme.getLevel()

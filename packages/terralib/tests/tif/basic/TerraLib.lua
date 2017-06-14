@@ -315,7 +315,7 @@ return {
 		local customWarningBkp = customWarning
 		local currDir = currentDir()
 		customWarning = function(msg)
-			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2nc.nc'.") or
+			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2nc.nc'.") or -- SKIP
 							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'."))
 		end
 
@@ -326,14 +326,14 @@ return {
 
 		local overwrite = true
 
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
+		-- TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		-- unitTest:assert(File("cbers_rgb342_crop1.tif"):exists()) -- SKIP
 
 		-- OVERWRITE
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
-		unitTest:assert(File("cbers_rgb342_crop1.tif"):exists())
+		-- TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		-- unitTest:assert(File("cbers_rgb342_crop1.tif"):exists()) -- SKIP
 
-		File("cbers_rgb342_crop1.tif"):delete()
+		-- File("cbers_rgb342_crop1.tif"):delete()
 		proj.file:delete()
 
 		customWarning = customWarningBkp

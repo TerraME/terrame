@@ -38,6 +38,14 @@ return{
 		end
 
 		unitTest:assertWarning(warning_func, "test.")
+
+		local originalCustomWarning = customWarning
+
+		local warning_func = function()
+			originalCustomWarning("test.")
+		end
+
+		unitTest:assertError(warning_func, "test.")
 	end,
 	defaultTableValue = function(unitTest)
 		local t = {x = 5}
@@ -246,6 +254,14 @@ return{
 	strictWarning = function(unitTest)
 		local warning_func = function()
 			strictWarning("test.")
+		end
+
+		unitTest:assertWarning(warning_func, "test.")
+
+		local originalStrictWarning = strictWarning
+
+		warning_func = function()
+			originalStrictWarning("test.")
 		end
 
 		unitTest:assertWarning(warning_func, "test.")

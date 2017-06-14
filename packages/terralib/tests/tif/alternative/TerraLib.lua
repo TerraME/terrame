@@ -52,6 +52,7 @@ return {
 		unitTest:assertWarning(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
 
 		proj.file:delete()
+		File("Amazonia_Cells.shp"):delete()
 	end,
 	--addPgCellSpaceLayer = function(unitTest)
 		-- #1152
@@ -270,6 +271,8 @@ return {
 --]]
 
 		customWarning = customWarningBkp
+
+		File("myproject.tview"):delete()
 	end
 }
 

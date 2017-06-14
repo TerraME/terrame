@@ -197,6 +197,7 @@ return {
 
 		unitTest:assertWarning(diffSridWarning, "Layer projections are different: (altimetria, 2311) and (cells, 29101). Please, reproject your data to the right one.")
 
+		File("cabecadeboi.shp"):delete()
 		File(projName):delete()
 		File(shp1):deleteIfExists()
 	end,
