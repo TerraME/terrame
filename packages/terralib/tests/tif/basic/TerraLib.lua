@@ -334,6 +334,9 @@ return {
 		-- unitTest:assert(File("cbers_rgb342_crop1.tif"):exists()) -- SKIP
 
 		-- File("cbers_rgb342_crop1.tif"):delete()
+
+		unitTest:assert(true)
+
 		proj.file:delete()
 
 		customWarning = customWarningBkp

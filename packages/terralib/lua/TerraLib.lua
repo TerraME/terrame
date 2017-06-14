@@ -1001,9 +1001,9 @@ end
 local function createGdalDataSourceToSaveAs(fromType, fileData)
 	local ds = nil
 
-	if fromType == "GDAL" then
+	if fromType == "GDAL" then -- SKIP
 		local connInfo = createFileConnInfo(tostring(fileData.dir))
-		ds = makeAndOpenDataSource(connInfo, "GDAL")
+		ds = makeAndOpenDataSource(connInfo, "GDAL") -- SKIP
 	end
 
 	return ds
@@ -2516,19 +2516,19 @@ TerraLib_ = {
 					customError("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364
 				end
 
-				toDs = createGdalDataSourceToSaveAs(fromType, toData)
-				toDSetName = toData.fileTif
-				if not toDs then
-					errorMsg = "It was not possible save the data in layer '"..layerName.."' to raster data." -- #1364
-				elseif toDs:dataSetExists(toDSetName) then
-					if overwrite then
-						toDs:dropDataSet(toDSetName)
+				toDs = createGdalDataSourceToSaveAs(fromType, toData) -- SKIP
+				toDSetName = toData.fileTif -- SKIP
+				if not toDs then -- SKIP
+					errorMsg = "It was not possible save the data in layer '"..layerName.."' to raster data." -- #1364 -- SKIP
+				elseif toDs:dataSetExists(toDSetName) then -- SKIP
+					if overwrite then -- SKIP
+						toDs:dropDataSet(toDSetName) -- SKIP
 					else
 						errorMsg = "File '"..fileCopy.."' already exists." -- SKIP
 					end
 				end
 
-				customWarning("Attempt to save data of the layer in '"..fileCopy.."'.") -- REVIEW
+				customWarning("Attempt to save data of the layer in '"..fileCopy.."'.") -- REVIEW -- SKIP
 			end
 
 			if errorMsg then

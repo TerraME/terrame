@@ -661,7 +661,7 @@ return {
 				resolution = 0.7,
 				password = password,
 				database = database,
-				table = tName1,
+				table = tName1.."b",
 				file = filePath("test/sampa.shp", "terralib")
 			}
 		end
