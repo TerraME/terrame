@@ -41,7 +41,7 @@ return{
 
 		local originalCustomWarning = customWarning
 
-		local warning_func = function()
+		warning_func = function()
 			originalCustomWarning("test.")
 		end
 

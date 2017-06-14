@@ -320,11 +320,11 @@ return {
 		end
 
 		-- NC (IT WAS ONLY TO COPY TIF TO A CURRENT DIR)
-		local toData = {}
-		toData.file = "tif2nc.nc"
-		toData.type = "nc"
+		--local toData = {}
+		--toData.file = "tif2nc.nc"
+		--toData.type = "nc"
 
-		local overwrite = true
+		--local overwrite = true
 
 		-- TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 		-- unitTest:assert(File("cbers_rgb342_crop1.tif"):exists()) -- SKIP

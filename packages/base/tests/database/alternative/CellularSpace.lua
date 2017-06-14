@@ -66,7 +66,7 @@ return{
 
 		pgmFile = filePath("test/error/pgm-invalid-size.pgm", "base")
 		error_func = function()
-			cs = CellularSpace{
+			CellularSpace{
 				file = pgmFile
 			}
 		end
@@ -75,7 +75,7 @@ return{
 
 		pgmFile = filePath("test/error/pgm-invalid-max.pgm", "base")
 		error_func = function()
-			cs = CellularSpace{
+			CellularSpace{
 				file = pgmFile
 			}
 		end

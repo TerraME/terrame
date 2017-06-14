@@ -79,6 +79,21 @@ return {
 
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName2.."' already exists in the Project.")
 
+		local fileUnnecessary = function()
+			Layer{
+				project = proj1,
+				source = "postgis",
+				name = layerName2.."u",
+				port = port,
+				password = password,
+				database = database,
+				table = tableName,
+				file = filePath("test/sampa.shp", "terralib")
+			}
+		end
+
+		unitTest:assertWarning(fileUnnecessary, unnecessaryArgumentMsg("file"))
+
 		TerraLib().dropPgTable(data)
 		proj1.layers[layerName2] = nil
 
@@ -95,6 +110,8 @@ return {
 		end
 
 		unitTest:assertError(sourceMandatory, mandatoryArgumentMsg("source"))
+
+		layerName2 = "SampaDB2"
 
 		local nameMandatory = function()
 			Layer{
@@ -137,21 +154,6 @@ return {
 		end
 
 		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))
-
-		local fileUnnecessary = function()
-			Layer{
-				project = proj1,
-				source = "postgis",
-				name = layerName2.."u",
-				port = port,
-				password = password,
-				database = database,
-				table = tableName,
-				file = filePath("test/sampa.shp", "terralib")
-			}
-		end
-
-		unitTest:assertWarning(fileUnnecessary, unnecessaryArgumentMsg("file"))
 
 		local sourceNotString = function()
 			Layer{
