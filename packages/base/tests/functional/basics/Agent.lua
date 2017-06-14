@@ -617,6 +617,50 @@ state_          State
 
 		ag1:walk()
 		unitTest:assertType(ag1:getCell(), "Cell")
+	end,
+	walkIfEmpty = function(unitTest)
+		local ag = Agent{}
+		local cs = CellularSpace{xdim = 2}
+		cs:createNeighborhood()
+		local soc = Society{instance = ag, quantity = 4}
+		Environment{soc, cs}:createPlacement{}
+
+		unitTest:assert(not soc:sample():walkIfEmpty())
+
+		cs = CellularSpace{xdim = 2}
+		cs:createNeighborhood{}
+		ag = Agent{}
+		soc = Society{instance = ag, quantity = 3}
+		Environment{soc, cs}:createPlacement{}
+
+		local quant = 0
+
+		for _ = 1, 100 do
+			if soc:sample():walkIfEmpty() then
+				quant = quant + 1
+			end
+		end
+
+		unitTest:assertEquals(quant, 33)
+	end,
+	walkToEmpty = function(unitTest)
+		local ag = Agent{}
+		local cs = CellularSpace{xdim = 2}
+		cs:createNeighborhood()
+		local soc = Society{instance = ag, quantity = 4}
+		Environment{soc, cs}:createPlacement{}
+
+		unitTest:assert(not soc:sample():walkToEmpty())
+
+		cs = CellularSpace{xdim = 2}
+		cs:createNeighborhood{}
+		ag = Agent{}
+		soc = Society{instance = ag, quantity = 3}
+		Environment{soc, cs}:createPlacement{}
+
+		for _ = 1, 20 do
+			unitTest:assert(soc:sample():walkToEmpty())
+		end
 	end
 }
 

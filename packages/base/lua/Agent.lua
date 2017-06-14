@@ -652,7 +652,108 @@ Agent_ = {
 				customError("Neighborhood '"..neighborhood.."' does not exist.")
 			end
 		end
+
 		self:move(neigh:sample(), placement)
+	end,
+	--- Choose a random neighbor cell and move if it is empty. Note that, in this
+	-- function, there might exist other empty cells.
+	-- The Agent needs to have a placement to be able to use this function.
+	-- @arg placement A string representing the placement to be used. The default value
+	-- is "placement".
+	-- @arg neighborhood A string representing the Neighborhood to be used.
+	-- The default value is "1.
+	-- @usage singleFooAgent = Agent{}
+	--
+	-- cs = CellularSpace{xdim = 10}
+	-- cs:createNeighborhood()
+	--
+	-- e = Environment{cs, singleFooAgent}
+	-- e:createPlacement()
+	--
+	-- singleFooAgent:walkIfEmpty()
+	-- @see Environment:createPlacement
+	walkIfEmpty = function(self, placement, neighborhood)
+		optionalArgument(1, "string", placement)
+		if placement == nil then placement = "placement" end
+
+		optionalArgument(2, "string", neighborhood)
+		if neighborhood == nil then neighborhood = "1" end
+
+		if type(self[placement]) ~= "Trajectory" then
+			if placement == "placement" then
+				customError("The Agent does not have a default placement. Please call Environment:createPlacement() first.")
+			elseif not self[placement] then
+				customError("Placement '".. placement.. "' does not exist. Please call Environment:createPlacement() first.")
+			else
+				customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
+			end
+		end
+
+		local neigh = self:getCell(placement):getNeighborhood(neighborhood)
+
+		if neigh == nil then
+			if neighborhood == "1" then
+				customError("The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
+			else
+				customError("Neighborhood '"..neighborhood.."' does not exist.")
+			end
+		end
+
+		local cell = neigh:sample()
+
+		if cell:isEmpty(placement) then
+			self:move(cell)
+			return true
+		end
+
+		return false
+	end,
+	--- Walk to one of the available empty cells. If there is no neighbor cell
+	-- is empty, the Agent will not move.
+	-- The Agent needs to have a placement to be able to use this function.
+	-- @arg placement A string representing the placement to be used. The default value
+	-- is "placement".
+	-- @arg neighborhood A string representing the Neighborhood to be used.
+	-- The default value is "1.
+	-- @usage singleFooAgent = Agent{}
+	--
+	-- cs = CellularSpace{xdim = 10}
+	-- cs:createNeighborhood()
+	--
+	-- e = Environment{cs, singleFooAgent}
+	-- e:createPlacement()
+	--
+	-- singleFooAgent:walkToEmpty()
+	-- @see Environment:createPlacement
+	walkToEmpty = function(self, placement, neighborhood)
+		optionalArgument(1, "string", placement)
+		if placement == nil then placement = "placement" end
+
+		optionalArgument(2, "string", neighborhood)
+		if neighborhood == nil then neighborhood = "1" end
+
+		if type(self[placement]) ~= "Trajectory" then
+			if placement == "placement" then
+				customError("The Agent does not have a default placement. Please call Environment:createPlacement() first.")
+			elseif not self[placement] then
+				customError("Placement '".. placement.. "' does not exist. Please call Environment:createPlacement() first.")
+			else
+				customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
+			end
+		end
+
+		local cells = {}
+
+		forEachNeighbor(self:getCell(placement), neighborhood, function(neigh)
+			if neigh:isEmpty(placement) then
+				table.insert(cells, neigh)
+			end
+		end)
+
+		if #cells == 0 then return false end
+
+		self:move(Random(cells):sample())
+		return true
 	end
 }
 
