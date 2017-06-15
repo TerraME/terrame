@@ -122,7 +122,7 @@ return {
 		local postgis2tifError = function()
 			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(postgis2tifError, "It was not possible to convert the data in 'PgLayer' to 'postgis2tif.tif'.")
+		unitTest:assertError(postgis2tifError, "It was not possible to convert 'PgLayer' to 'postgis2tif.tif'.")
 
 		-- OVERWRITE
 		overwrite = false

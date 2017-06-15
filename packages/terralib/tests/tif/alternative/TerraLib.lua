@@ -185,9 +185,9 @@ return {
 		local customWarningBkp = customWarning
 		local currDir = currentDir()
 		customWarning = function(msg)
-			unitTest:assert((msg == "It was not possible to convert the data in 'TifLayer' to 'tif2tif.tif'.") or
+			unitTest:assert((msg == "It was not possible to convert 'TifLayer' to 'tif2tif.tif'.") or
 							(msg == "Attempt to save data in '"..currDir.."/cbers_rgb342_crop1.tif'.") or
-							(msg == "It was not possible to convert the data in 'TifLayer' to 'cbers_rgb342_crop1.tif'.") or
+							(msg == "It was not possible to convert 'TifLayer' to 'cbers_rgb342_crop1.tif'.") or
 							(msg == "It was not possible to change SRID from raster data."))
 		end
 
@@ -205,7 +205,7 @@ return {
 		local tif2shpError = function()
 			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(tif2shpError, "It was not possible save the data in 'TifLayer' to vector data.")
+		unitTest:assertError(tif2shpError, "It was not possible save 'TifLayer' to vector data.")
 
 		-- GEOJSON
 		toData.file = "tif2geojson.geojson"
@@ -214,7 +214,7 @@ return {
 		local tif2geojsonError = function()
 			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(tif2geojsonError, "It was not possible save the data in 'TifLayer' to vector data.")
+		unitTest:assertError(tif2geojsonError, "It was not possible save 'TifLayer' to vector data.")
 
 		-- POSTGIS
 		local host = "localhost"
@@ -237,7 +237,7 @@ return {
 		local tif2postgisError = function()
 			TerraLib().saveLayerAs(fromData, pgData, overwrite)
 		end
-		unitTest:assertError(tif2postgisError, "It was not possible save the data in 'TifLayer' to postgis data.")
+		unitTest:assertError(tif2postgisError, "It was not possible save 'TifLayer' to postgis data.")
 
 		-- OVERWRITE
 		toData.file = "tif2tif.tif"

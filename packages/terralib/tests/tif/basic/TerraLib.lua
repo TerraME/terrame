@@ -315,7 +315,7 @@ return {
 		local customWarningBkp = customWarning
 		local currDir = currentDir()
 		customWarning = function(msg)
-			unitTest:assert((msg == "It was not possible to convert the data in 'TifLayer' to 'tif2nc.nc'.") or
+			unitTest:assert((msg == "It was not possible to convert 'TifLayer' to 'tif2nc.nc'.") or
 							(msg == "Attempt to save data in '"..currDir.."/cbers_rgb342_crop1.tif'."))
 		end
 

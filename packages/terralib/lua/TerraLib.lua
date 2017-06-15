@@ -1444,7 +1444,7 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 		toDs = createPgDataSourceToSaveAs(fromType, toData)
 
 		if not toDs then
-			errorMsg = "It was not possible save the data in '"..fromData.name.."' to postgis data." -- #1363
+			errorMsg = "It was not possible save '"..fromData.name.."' to postgis data." -- #1363
 		elseif toDs:dataSetExists(toDSetName) then
 			if overwrite then
 				toDs:dropDataSet(toDSetName)
@@ -1468,7 +1468,7 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 		if not errorMsg then
 			toDs = createOgrDataSourceToSaveAs(fromType, toData)
 			if not toDs then
-				errorMsg = "It was not possible save the data in '"..fromData.name.."' to vector data."
+				errorMsg = "It was not possible save '"..fromData.name.."' to vector data."
 			end
 		end
 	elseif toType == "GDAL" then
@@ -1478,13 +1478,13 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 		local fileCopy = toData.dir..toData.fileTif
 
 		if toData.file and (file:name(true) ~= fileTif) then
-			customWarning("It was not possible to convert the data in '"..fromData.name.."' to '"..toData.file.."'.") -- #1364
+			customWarning("It was not possible to convert '"..fromData.name.."' to '"..toData.file.."'.") -- #1364
 		end
 
 		toDs = createGdalDataSourceToSaveAs(fromType, toData)
 		toDSetName = toData.fileTif
 		if not toDs then
-			errorMsg = "It was not possible save the data in '"..fromData.name.."' to raster data." -- #1364
+			errorMsg = "It was not possible save '"..fromData.name.."' to raster data." -- #1364
 		elseif toDs:dataSetExists(toDSetName) then
 			if overwrite then
 				toDs:dropDataSet(toDSetName)
@@ -2726,7 +2726,6 @@ TerraLib_ = {
 		return value
 	end,
 	--- Save some data of a layer to another data type.
-	-- @arg project The project.
 	-- @arg fromData The reference information data.
 	-- @arg toData The data that will be saved.
 	-- @arg overwrite Indicates if the saved data will be overwritten.

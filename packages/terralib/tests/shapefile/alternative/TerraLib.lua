@@ -186,7 +186,7 @@ return {
 		local shp2tifError = function()
 			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(shp2tifError, "It was not possible to convert the data in 'SampaShp' to 'shp2tif.tif'.")
+		unitTest:assertError(shp2tifError, "It was not possible to convert 'SampaShp' to 'shp2tif.tif'.")
 
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
@@ -196,7 +196,14 @@ return {
 		shp2tifError = function()
 			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(shp2tifError, "It was not possible save the data in 'SampaShp' to raster data.")
+		unitTest:assertError(shp2tifError, "It was not possible save 'SampaShp' to raster data.")
+		
+		fromData = {}
+		fromData.file = layerFile1
+		shp2tifError = function()
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
+		end
+		unitTest:assertError(shp2tifError, "It was not possible save 'sampa.shp' to raster data.")		
 
 		customWarning = customWarningBkp
 
