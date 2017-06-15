@@ -101,7 +101,7 @@ return {
 		local selectNoExist = function()
 			layer1:export{select = {"uf", "pop"}, source = "shp", file = "shape.shp"}
 		end
-		unitTest:assertError(selectNoExist, "There are no attributes 'uf' and 'pop' in layer 'setores'.")
+		unitTest:assertError(selectNoExist, "There are no attributes 'uf' and 'pop' in 'setores'.")
 
 		local selectWrongType = function()
 			layer1:export{select = true, source = "shp", file = "shape.shp"}

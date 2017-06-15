@@ -159,6 +159,10 @@ return {
 		local layerFile1 = filePath("test/sampa.geojson", "terralib")
 		TerraLib().addGeoJSONLayer(proj, layerName1, layerFile1)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
+
 		-- SHP
 		local toData = {}
 		toData.file = "geojson2shp.shp"
@@ -167,16 +171,16 @@ return {
 
 		local overwrite = true
 
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE AND CHANGE SRID
 		toData.srid = 4326
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		local layerName2 = "SHP"
 		TerraLib().addShpLayer(proj, layerName2, File(toData.file))
 		local info2 = TerraLib().getLayerInfo(proj, layerName2)
@@ -186,7 +190,7 @@ return {
 		local file1 = toData.file
 		toData.file = "gj2gj.geojson"
 		toData.type = "geojson"
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite, {"NM_MICRO"})
+		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO"})
 
 		local layerName3 = "GJ2GJ"
 		local layerFile3 = File(toData.file)
@@ -224,7 +228,7 @@ return {
 
 		toData.file = "touches_sjc.geojson"
 		toData.srid = nil
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
 
 		local tchsSjc = TerraLib().getOGRByFilePath(toData.file)
 
@@ -234,6 +238,21 @@ return {
 
 		File(toData.file):delete()
 		proj.file:delete()
+
+		-- SAVE WITHOUT LAYER
+		fromData = {}
+		fromData.file = layerFile1
+		toData.file = "touches_sjc_2.shp"
+
+		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+
+		local tchsSjc2 = TerraLib().getOGRByFilePath(toData.file)
+
+		unitTest:assertEquals(getn(tchsSjc2), 2)
+		unitTest:assertEquals(tchsSjc2[0].ID, 55)
+		unitTest:assertEquals(tchsSjc2[1].ID, 109)
+
+		File(toData.file):delete()
 	end,
 	getLayerSize = function(unitTest)
 		local proj = {}
@@ -271,12 +290,16 @@ return {
 		local lnFile = filePath("test/rails.shp", "terralib")
 		TerraLib().addShpLayer(proj, lnName, lnFile)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = lnName
+
 		local toData = {}
 		toData.file = "rails.geojson"
 		toData.type = "geojson"
 		File(toData.file):deleteIfExists()
 
-		TerraLib().saveLayerAs(proj, lnName, toData, true)
+		TerraLib().saveLayerAs(fromData, toData, true)
 
 		lnName = "ES_Rails_CurrDir"
 		lnFile = File(toData.file)

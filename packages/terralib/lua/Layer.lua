@@ -808,6 +808,11 @@ Layer_ = {
 
 		optionalTableArgument(data, "select", "table")
 
+		local fromData = {
+			project = self.project,
+			layer = self.name
+		}
+
 		if type(data.file) == "File" then
 			verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "select"})
 
@@ -821,7 +826,7 @@ Layer_ = {
 					encoding = EncodingMapper[self.encoding]
 				}
 
-				TerraLib().saveLayerAs(self.project, self.name, toData, data.overwrite, data.select)
+				TerraLib().saveLayerAs(fromData, toData, data.overwrite, data.select)
 			else
 				invalidFileExtensionError("data", source)
 			end
@@ -839,7 +844,7 @@ Layer_ = {
 				pgData.epsg = nil
 				pgData.encoding = EncodingMapper[self.encoding]
 
-				TerraLib().saveLayerAs(self.project, self.name, pgData, pgData.overwrite, data.select)
+				TerraLib().saveLayerAs(fromData, pgData, pgData.overwrite, data.select)
 			else
 				customError("It only supports postgis database, use source = \"postgis\".")
 			end

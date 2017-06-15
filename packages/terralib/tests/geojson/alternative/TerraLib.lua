@@ -37,6 +37,10 @@ return {
 		local layerFile1 = filePath("test/sampa.geojson", "terralib")
 		TerraLib().addGeoJSONLayer(proj, layerName1, layerFile1)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
+
 		-- TIF
 		local toData = {}
 		toData.file = "geojson2tif.tif"
@@ -45,14 +49,14 @@ return {
 		local overwrite = true
 
 		local geojson2tifError = function()
-			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(geojson2tifError, "It was not possible to convert the data in layer 'SampaGeoJson' to 'geojson2tif.tif'.")
+		unitTest:assertError(geojson2tifError, "It was not possible to convert the data in 'SampaGeoJson' to 'geojson2tif.tif'.")
 
 		-- SHP
 		toData.file = "geojson2shp.shp"
 		toData.type = "shp"
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 
 		File(toData.file):delete()
 		proj.file:delete()

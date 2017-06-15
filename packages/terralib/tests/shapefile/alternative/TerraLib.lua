@@ -172,6 +172,10 @@ return {
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
+
 		-- TIF
 		local toData = {}
 		toData.file = "shp2tif.tif"
@@ -180,9 +184,9 @@ return {
 		local overwrite = true
 
 		local shp2tifError = function()
-			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(shp2tifError, "It was not possible to convert the data in layer 'SampaShp' to 'shp2tif.tif'.")
+		unitTest:assertError(shp2tifError, "It was not possible to convert the data in 'SampaShp' to 'shp2tif.tif'.")
 
 		local customWarningBkp = customWarning
 		customWarning = function(msg)
@@ -190,16 +194,16 @@ return {
 		end
 
 		shp2tifError = function()
-			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(shp2tifError, "It was not possible save the data in layer 'SampaShp' to raster data.")
+		unitTest:assertError(shp2tifError, "It was not possible save the data in 'SampaShp' to raster data.")
 
 		customWarning = customWarningBkp
 
 		-- GEOJSON
 		toData.file = "shp2geojson.geojson"
 		toData.type = "geojson"
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 
 		File(toData.file):delete()
 		proj.file:delete()
