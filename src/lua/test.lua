@@ -193,6 +193,15 @@ function _Gtme.executeTests(package, fileName)
 
 	local data
 
+	if not fileName then
+		file = File(packageInfo(package).path.."config.lua")
+
+		if file:exists() then
+			printNote("Using package's configuration file")
+			fileName = tostring(file)
+		end
+	end
+
 	if type(fileName) == "string" then
 		printNote("Loading configuration file '".._Gtme.makePathCompatibleToAllOS(fileName).."'")
 
