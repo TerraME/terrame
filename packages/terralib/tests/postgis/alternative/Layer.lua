@@ -653,7 +653,7 @@ return {
 
 		unitTest:assertError(tableNotString, incompatibleTypeMsg("table", "string", 123))
 
-		data.table = data.table.."b"
+		data.table = tName1.."b"
 
 		TerraLib().dropPgTable(data)
 
