@@ -119,6 +119,54 @@ Agent_ = {
 
 		setmetatable(self, deadAgentMetaTable_)
 	end,
+	--- Return an empty Neighbor Cell. If there is no empty neighbor, it returns nil.
+	-- The Agent needs to have a placement to be able to use this function, and the
+	-- CellularSpace must have a Neighborhood.
+	-- This function is recommended to be used only when it is possible to have only
+	-- one Agent per Cell.
+	-- @arg placement A string representing the placement to be used. The default value
+	-- is "placement".
+	-- @arg neighborhood A string representing the Neighborhood to be used.
+	-- The default value is "1.
+	-- @usage singleFooAgent = Agent{}
+	--
+	-- cs = CellularSpace{xdim = 10}
+	-- cs:createNeighborhood()
+	--
+	-- e = Environment{cs, singleFooAgent}
+	-- e:createPlacement()
+	--
+	-- singleFooAgent:move(singleFooAgent:emptyNeighbor()) -- same as singleFooAgent:moveToEmpty()
+	-- @see Environment:createPlacement
+	emptyNeighbor = function(self, placement, neighborhood)
+		optionalArgument(1, "string", placement)
+		if placement == nil then placement = "placement" end
+
+		optionalArgument(2, "string", neighborhood)
+		if neighborhood == nil then neighborhood = "1" end
+
+		if type(self[placement]) ~= "Trajectory" then
+			if placement == "placement" then
+				customError("The Agent does not have a default placement. Please call Environment:createPlacement() first.")
+			elseif not self[placement] then
+				customError("Placement '".. placement.. "' does not exist. Please call Environment:createPlacement() first.")
+			else
+				customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
+			end
+		end
+
+		local cells = {}
+
+		forEachNeighbor(self:getCell(placement), neighborhood, function(neigh)
+			if neigh:isEmpty(placement) then
+				table.insert(cells, neigh)
+			end
+		end)
+
+		if #cells == 0 then return end
+
+		return Random(cells):sample()
+	end,
 	--- Put the Agent into a Cell. This function supposes that each Agent can be in one and
 	-- only one Cell along the simulation. If the Agent is already inside of a
 	-- Cell, use Agent:move() instead. The agent needs to have a placement to be able to
@@ -655,9 +703,13 @@ Agent_ = {
 
 		self:move(neigh:sample(), placement)
 	end,
-	--- Choose a random neighbor cell and move if it is empty. Note that, in this
-	-- function, there might exist other empty cells.
-	-- The Agent needs to have a placement to be able to use this function.
+	--- Choose a random Neighbor Cell and move if it is empty. Note that if it
+	-- selects a non-empty Cell the Agent will not move, even if there are empty Cells
+	-- in the Neighborhood.
+	-- The Agent needs to have a placement to be able to use this function, and the
+	-- CellularSpace must have a Neighborhood.
+	-- This function is recommended to be used only when it is possible to have only
+	-- one Agent per Cell.
 	-- @arg placement A string representing the placement to be used. The default value
 	-- is "placement".
 	-- @arg neighborhood A string representing the Neighborhood to be used.
@@ -708,9 +760,12 @@ Agent_ = {
 
 		return false
 	end,
-	--- Walk to one of the available empty cells. If there is no neighbor cell
-	-- is empty, the Agent will not move.
-	-- The Agent needs to have a placement to be able to use this function.
+	--- Walk to one of the available empty Cells in the Neighborhood. If there is no empty
+	-- neighbor, the Agent will not move.
+	-- The Agent needs to have a placement to be able to use this function, and the
+	-- CellularSpace must have a Neighborhood.
+	-- This function is recommended to be used only when it is possible to have only
+	-- one Agent per Cell.
 	-- @arg placement A string representing the placement to be used. The default value
 	-- is "placement".
 	-- @arg neighborhood A string representing the Neighborhood to be used.

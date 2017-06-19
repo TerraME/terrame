@@ -165,6 +165,25 @@ state_          State
 		end
 		unitTest:assertError(test_function, "Trying to use a function or an attribute of a dead Agent.")
 	end,
+	emptyNeighbor = function(unitTest)
+		local ag = Agent{}
+		local cs = CellularSpace{xdim = 2}
+		cs:createNeighborhood()
+		local soc = Society{instance = ag, quantity = 4}
+		Environment{soc, cs}:createPlacement{}
+
+		unitTest:assertNil(soc:sample():emptyNeighbor())
+
+		cs = CellularSpace{xdim = 2}
+		cs:createNeighborhood{}
+		ag = Agent{}
+		soc = Society{instance = ag, quantity = 3}
+		Environment{soc, cs}:createPlacement{}
+
+		for _ = 1, 20 do
+			unitTest:assertType(soc:sample():emptyNeighbor(), "Cell")
+		end
+	end,
 	execute = function(unitTest)
 		local count = 0
 		local ag = Agent{

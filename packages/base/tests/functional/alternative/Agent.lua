@@ -104,6 +104,72 @@ return {
 
 		unitTest:assertError(test_function, incompatibleTypeMsg("receiver", "Agent", ag))
 	end,
+	emptyNeighbor = function(unitTest)
+		local ag1 = Agent{mvalue = 3}
+		local cs = CellularSpace{xdim = 3}
+		local myEnv = Environment{cs, ag1}
+
+		local error_func = function()
+			ag1:emptyNeighbor()
+		end
+
+		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call Environment:createPlacement() first.")
+
+		error_func = function()
+			ag1:emptyNeighbor("mvalue")
+		end
+
+		unitTest:assertError(error_func, "Placement 'mvalue' should be a Trajectory, got number.")
+
+		error_func = function()
+			ag1:emptyNeighbor("placement2")
+		end
+
+		unitTest:assertError(error_func, "Placement 'placement2' does not exist. Please call Environment:createPlacement() first.")
+
+		myEnv:createPlacement{strategy = "void"}
+		local c1 = cs.cells[1]
+		ag1:enter(c1)
+
+		error_func = function()
+			ag1:emptyNeighbor()
+		end
+
+		unitTest:assertError(error_func, "The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
+
+		error_func = function()
+			ag1:emptyNeighbor("placement", "2")
+		end
+
+		unitTest:assertError(error_func, "Neighborhood '2' does not exist.")
+
+		error_func = function()
+			ag1 = Agent{}
+			cs = CellularSpace{xdim = 3}
+			myEnv = Environment{cs, ag1}
+
+			myEnv:createPlacement{strategy = "void"}
+			c1 = cs.cells[1]
+			ag1:enter(c1)
+			ag1:emptyNeighbor(123)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
+
+		ag1 = Agent{}
+		cs = CellularSpace{xdim = 3}
+		myEnv = Environment{cs, ag1}
+
+		myEnv:createPlacement{strategy = "void"}
+		c1 = cs.cells[1]
+		ag1:enter(c1,"placement")
+
+		error_func = function()
+			ag1:emptyNeighbor("123")
+		end
+
+		unitTest:assertError(error_func, "Placement '123' does not exist. Please call Environment:createPlacement() first.")
+	end,
 	enter = function(unitTest)
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
