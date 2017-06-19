@@ -261,7 +261,7 @@ UnitTest_ = {
 	--- Check if a given file exists and remove it. Repeating: The file is removed when calling
 	-- this assert. If the file is a directory or does not exist then it shows an error.
 	-- @arg fname A File or a string with the file name.
-	-- @arg tol An optional number indicating a maximum number of characters that can be different.
+	-- @arg tol An optional number indicating the percentage of characters in the line that can be different.
 	-- The tolerance is applied to each line of the files. The default tolerance is zero.
 	-- @usage -- DONTRUN
 	-- unitTest = UnitTest{}
@@ -276,6 +276,10 @@ UnitTest_ = {
 
 		mandatoryArgument(1, "File", fname)
 		mandatoryArgument(2, "number", tol)
+
+		if tol < 0 or tol > 1 then
+			customError("#2 should be between [0, 1], got "..tol..".")
+		end
 
 		fname = fname:name()
 
@@ -352,16 +356,20 @@ UnitTest_ = {
 			local newStr = removeCR(newLog:readLine())
 
 			while oldStr and newStr do
-				local dist = levenshtein(oldStr, newStr)
+				if oldStr ~= newStr then
+					local dist = levenshtein(oldStr, newStr)
 
-				if dist > tol then
-					_Gtme.printError("Error: In file '"..fname.."', strings do not match (line "..line.."):")
-					_Gtme.printError("Log file: '"..oldStr.."'")
-					_Gtme.printError("Test: '"..newStr.."'")
-					_Gtme.printError("There are "..dist.." characters different. The maximum tolerance is "..tol..".")
+					if dist > tol * string.len(oldStr) then -- SKIP (to test this line, run execution tests, package 'unittest')
+						_Gtme.printError("Error: In file '"..fname.."', strings do not match (line "..line.."):")
+						_Gtme.printError("Log file: '"..oldStr.."'")
+						_Gtme.printError("Test: '"..newStr.."'")
+						_Gtme.printError("There are "..dist.." characters different. The maximum tolerance is "..tol * string.len(oldStr)..".")
 
-					self.fail = self.fail + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
-					return false
+						io.close(newLog.file) -- SKIP (to test this line, run execution tests, package 'unittest')
+						io.close(oldLog.file) -- SKIP (to test this line, run execution tests, package 'unittest')
+						self.fail = self.fail + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
+						return false
+					end
 				end
 
 				line = line + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
@@ -377,6 +385,8 @@ UnitTest_ = {
 				_Gtme.printError("Log file: '"..oldStr.."'")
 				_Gtme.printError("Test: '"..newStr.."'")
 
+				io.close(newLog.file) -- SKIP (to test this line, run execution tests, package 'unittest')
+				io.close(oldLog.file) -- SKIP (to test this line, run execution tests, package 'unittest')
 				self.fail = self.fail + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
 				return false
 			end

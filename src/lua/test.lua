@@ -202,7 +202,7 @@ function _Gtme.executeTests(package, fileName)
 		end)
 
 		if getn(data) == 0 then
-			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'notest', 'time', 'test'}.")
+			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'notest', 'time', 'test', 'tolerance'}.")
 			os.exit(1)
 		end
 
@@ -247,6 +247,16 @@ function _Gtme.executeTests(package, fileName)
 			data.notest = {}
 		end
 
+		if data.tolerance then
+			if type(data.tolerance) ~= "number" then
+				customError("'tolerance' should be a number, got "..type(data.tolerance)..".")
+			elseif data.tolerance < 0 or data.tolerance > 1 then
+				customError("'tolerance' should belong to the interval [0, 1], got "..data.tolerance..".")
+			end
+		else
+			data.tolerance = 0
+		end
+
 		if data.examples ~= nil and type(data.examples) ~= "boolean" then
 			customError("'examples' should be boolean or nil, got "..type(data.examples)..".")
 		end
@@ -265,7 +275,7 @@ function _Gtme.executeTests(package, fileName)
 			end
 		end
 
-		verifyUnnecessaryArguments(data, {"directory", "file", "test", "notest", "examples", "lines", 'time'})
+		verifyUnnecessaryArguments(data, {"directory", "file", "test", "notest", "examples", "lines", "time", "tolerance"})
 	else
 		data = {notest = {}}
 	end
@@ -842,7 +852,7 @@ function _Gtme.executeTests(package, fileName)
 						end
 					end
 
-					pcall(function() ut:assertSnapshot(observer, file, 0.4) end)
+					pcall(function() ut:assertSnapshot(observer, file, data.tolerance) end)
 
 					_Gtme.printError = pe
 				end
@@ -913,7 +923,7 @@ function _Gtme.executeTests(package, fileName)
 					local fail = ut.fail
 
 					if File(value..".log"):exists() then
-						ut:assertFile(value..".log")
+						ut:assertFile(value..".log", data.tolerance)
 					else
 						printError("Error: Could not find log file "..value..".log. Possibly the example is handling temporary folders in a wrong way.")
 						ut.examples_error = ut.examples_error + 1

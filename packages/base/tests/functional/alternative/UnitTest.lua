@@ -146,6 +146,13 @@ return{
 		Log{target = c, file = "mabc.csv"}
 
 		c:notify()
+
+		error_func = function()
+			unitTest:assertFile("mabc.csv", 2)
+		end
+
+		unitTest:assertError(error_func, "#2 should be between [0, 1], got 2.")
+
 		unitTest:assertFile("mabc.csv")
 
 		error_func = function()
@@ -171,8 +178,8 @@ return{
 		local test2 = unitTest.test
 		local fail2 = unitTest.fail
 
-		unitTest:assertEquals(suc2, suc1 + 6)
-		unitTest:assertEquals(test2, test1 + 6)
+		unitTest:assertEquals(suc2, suc1 + 7)
+		unitTest:assertEquals(test2, test1 + 7)
 		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertSnapshot = function(unitTest)
