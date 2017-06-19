@@ -79,8 +79,6 @@ return {
 
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName2.."' already exists in the Project.")
 
-		TerraLib().dropPgTable(data)
-
 		local mlayer
 
 		local fileUnnecessary = function()
