@@ -1,3 +1,0 @@
-
-xyz = function() end
-

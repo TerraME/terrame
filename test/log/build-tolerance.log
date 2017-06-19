@@ -1,0 +1,130 @@
+Building package 'tolerance'
+Using package's configuration file
+Parsing configuration file '/Users/pedro/github/terrame-pedro/test/packages/tolerance/config.lua'
+
+Creating projects for package 'tolerance'
+Package 'tolerance' has no projects.
+
+Testing package 'tolerance'
+Loading configuration file '/Users/pedro/github/terrame-pedro/test/packages/tolerance/config.lua'
+Using log directory '/Users/pedro/github/terrame-pedro/test/packages/tolerance/log/'
+Loading package 'tolerance'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/b.lua
+Testing xyz
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking b.lua
+Skipping lines of source code check
+Testing examples
+Testing a
+Error: In file 'a.log', strings do not match (line 2):
+Log file: 'ddddddddddd'
+Test: 'dddddddddddddddef'
+There are 6 characters different. The maximum tolerance is 2.2.
+Checking logs
+
+Functional test report for package 'tolerance':
+Tests were executed in 0.09 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_UVg9f/'.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or directories in directory 'tests'.
+All asserts were executed at least once.
+All 1 asserts were executed successfully.
+All 1 tested functions do not have any unexpected execution error.
+All 1 tested functions have at least one assert.
+All 1 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
+All 1 functions of the package were tested.
+No lines from the source code were verified.
+One error was found in the 1 examples.
+No new log file was created.
+All log files were used in the tests.
+Summing up, one problem was found during the tests.
+Creating documentation of package 'tolerance'
+Building documentation for package 'tolerance'
+Loading package 'tolerance'
+Package has no data
+Package has no fonts
+Parsing lua files
+Parsing lua/b.lua
+Parsing examples
+Parsing examples/a.lua
+Checking undocumented files
+Checking @usage definition
+Checking lua/b.lua
+Testing @usage
+Testing file lua/b.lua
+Testing xyz
+Checking calls to functions in @usage
+Checking lua/b.lua
+Checking undocumented arguments
+Checking lua/b.lua
+Checking 'description.lua'
+Building and checking HTML files
+Building doc/index.html
+Building doc/files/b.html
+Building doc/files/examples.html
+Checking images
+Checking data.lua
+Checking examples
+Checking if all images are used
+Checking if all functions are documented
+Checking b.lua
+
+Documentation report for package 'tolerance':
+Documentation was built in 0.06 seconds.
+3 HTML files were created.
+All files are documented.
+All fields of 'description.lua' are correct.
+No problems were found in the documentation of data.
+All descriptions end with a correct character.
+All source code lines starting with --- are valid.
+All 1 global functions of the package are documented.
+All functions of each file are declared only once.
+There is no duplicated tag in the documentation.
+All tags with compulsory arguments were correctly used.
+All 0 non-named arguments are documented.
+No undefined arguments were found.
+All available arguments of functions are used in their HTML tables.
+All arguments used in the HTML tables are documented.
+All non-deprecated functions have @usage.
+All 1 functions call themselves in their @usage.
+All 1 functions do not have any error in their @usage.
+All @tabular are correctly described.
+No invalid tags were found in the documentation.
+All images are correctly used.
+All 0 links were correctly built.
+All 1 examples are correctly documented.
+Summing up, all the documentation was successfully built.
+
+Checking unnecessary files
+Checking basic files and directories
+Checking examples
+Checking source code
+Checking fonts
+Looking for hidden files
+Checking Models
+Checking license
+Building package 'tolerance'
+Creating file 'tolerance_0.1.zip'
+Package 'tolerance' successfully zipped
+
+Build report for package 'tolerance':
+Package was built in 0.59 seconds.
+Build created file 'tolerance_0.1.zip'.
+Temporary files are saved in /Users/pedro/github/terrame-pedro/test/packages/.terrame_tolerance_AjB2Q
+MD5 sum for the package is 69635db0bc481cf7f61f917fdc7924f9
+The package has a license file.
+Documentation was successfully built.
+There are no unnecessary files in the package.
+One error was found in the tests.
+All Models are placed in the right files.
+Summing up, one problem was found along the build.

@@ -50,6 +50,15 @@ function _Gtme.buildPackage(package, config, clean)
 
 	info_.mode = "debug"
 
+	if not config then
+		file = File(packageInfo(package).path.."config.lua")
+
+		if file:exists() then
+			printNote("Using package's configuration file")
+			config = tostring(file)
+		end
+	end
+
 	if config then
 		printNote("Parsing configuration file '"..config.."'")
 		local data
@@ -58,7 +67,7 @@ function _Gtme.buildPackage(package, config, clean)
 			os.exit(1)
 		end)
 
-		local err, msg = pcall(function() verifyUnnecessaryArguments(data, {"lines"}) end)
+		local err, msg = pcall(function() verifyUnnecessaryArguments(data, {"lines", "tolerance"}) end)
 
 		if not err then
 			printError(msg)
@@ -139,6 +148,7 @@ function _Gtme.buildPackage(package, config, clean)
 		["license.lua"] = true,
 		["load.lua"] = true,
 		["data.lua"] = true,
+		["config.lua"] = true,
 		["logo.png"] = true,
 		["font.lua"] = true,
 		["license.txt"] = true,

@@ -36,6 +36,7 @@ test = {
 	memory         = {arg = "-test", package = "memory"},
 	noload         = {arg = "-test", package = "noload"},
 	print          = {arg = "-test", package = "print"},
+	tolerance      = {arg = "-test", package = "tolerance"},
 	noexamples     = {arg = "-test", package = "noexamples" },
 	examples       = {arg = "-test", package = "examples"},
 	linedirectory  = {arg = "-test", config = "linesDirectory.lua"},
@@ -100,6 +101,7 @@ build = {
 	twoerrorsbuild  = {arg = "-build", package = "twoerrorsbuild", config = "all.lua"},
 	buildunnecfiles = {arg = "-build", package = "buildunnecfiles", config = "all.lua"},
 	buildunneclean  = {arg = "-build", package = "buildunneclean", config = "all.lua", clean = true},
+	tolerance       = {arg = "-build", package = "tolerance"},
 	noexamples      = {arg = "-build", package = "noexamples"}
 }
 
