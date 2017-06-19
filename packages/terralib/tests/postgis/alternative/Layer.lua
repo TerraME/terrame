@@ -79,8 +79,12 @@ return {
 
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName2.."' already exists in the Project.")
 
+		TerraLib().dropPgTable(data)
+
+		local mlayer
+
 		local fileUnnecessary = function()
-			Layer{
+			mlayer = Layer{
 				project = proj1,
 				source = "postgis",
 				name = layerName2.."u",
@@ -94,8 +98,7 @@ return {
 
 		unitTest:assertWarning(fileUnnecessary, unnecessaryArgumentMsg("file"))
 
-		TerraLib().dropPgTable(data)
-		proj1.layers[layerName2] = nil
+		mlayer:delete()
 
 		local sourceMandatory = function()
 			Layer{
@@ -652,8 +655,12 @@ return {
 
 		unitTest:assertError(tableNotString, incompatibleTypeMsg("table", "string", 123))
 
+		data.table = data.table.."b"
+
+		TerraLib().dropPgTable(data)
+
 		local unnecessaryArgument = function()
-			Layer{
+			mlayer = Layer{
 				project = proj,
 				source = "postgis",
 				input = layerName1,
@@ -667,6 +674,8 @@ return {
 		end
 
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("file"))
+
+		mlayer:delete()
 
 		local boxNonBoolean = function()
 			Layer{
