@@ -1,0 +1,43 @@
+Using package's configuration file
+Loading configuration file '/Users/pedro/github/terrame-pedro/test/packages/tolerance/config.lua'
+Using log directory '/Users/pedro/github/terrame-pedro/test/packages/tolerance/log/'
+Loading package 'tolerance'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/b.lua
+Testing xyz
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking b.lua
+Skipping lines of source code check
+Testing examples
+Testing a
+Error: In file 'a.log', strings do not match (line 2):
+Log file: 'ddddddddddd'
+Test: 'dddddddddddddddef'
+There are 6 characters different. The maximum tolerance is 2.2.
+Checking logs
+
+Functional test report for package 'tolerance':
+Tests were executed in 0.5 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_QB3LM/'.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or directories in directory 'tests'.
+All asserts were executed at least once.
+All 1 asserts were executed successfully.
+All 1 tested functions do not have any unexpected execution error.
+All 1 tested functions have at least one assert.
+All 1 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
+All 1 functions of the package were tested.
+No lines from the source code were verified.
+One error was found in the 1 examples.
+No new log file was created.
+All log files were used in the tests.
+Summing up, one problem was found during the tests.

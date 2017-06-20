@@ -27,93 +27,110 @@ return{
 		local error_func = function()
 			Random(12345)
 		end
+
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			Random{min = false}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("min", "number", false))
 
 		error_func = function()
 			Random{min = 2, max = false}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("max", "number", false))
 
 		error_func = function()
 			Random{min = 20, max = 5}
 		end
+
 		unitTest:assertError(error_func, "Argument 'max' should be greater than 'min'.")
 
-		error_func = function()
+		local warning_func = function()
 			Random{min = 2, max = 5, w = 2}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("w"))
 
-		error_func = function()
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("w"))
+
+		warning_func = function()
 			Random{p = 0.3, w = 2}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("w"))
+
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("w"))
 
 		error_func = function()
 			Random{1, 2, 4, 5, 6, w = 2}
 		end
+
 		unitTest:assertError(error_func, "The only named arguments should be distrib and seed.")
 
 		error_func = function()
 			Random{min = 2, max = 5, step = 2}
 		end
+
 		unitTest:assertError(error_func, "Invalid 'max' value (5). It could be 4.0 or 6.0.")
 
 		error_func = function()
 			Random{min = 2, max = 5, step = false}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("step", "number", false))
 
 		error_func = function()
 			Random{min = "2", max = 5, step = 2}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("min", "number", "2"))
 
 		error_func = function()
 			Random{min = 2, max = "5", step = 2}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("max", "number", "5"))
 
 		error_func = function()
 			Random{min = 20, max = 5, step = 2}
 		end
+
 		unitTest:assertError(error_func, "Argument 'max' should be greater than 'min'.")
 
 		error_func = function()
 			Random{male = 0.4, female = "0.6"}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("female", "number", "0.6"))
 
 		error_func = function()
 			Random{male = 0.4, female = 0.5}
 		end
+
 		unitTest:assertError(error_func, "Sum should be one, got 0.9.")
 
-		error_func = function()
+		warning_func = function()
 			Random{mean = 1, sd = 0.5}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("mean", 1))
 
-		error_func = function()
+		unitTest:assertWarning(warning_func, defaultValueMsg("mean", 1))
+
+		warning_func = function()
 			Random{mean = 0.5, sd = 1}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("sd", 1))
 
-		error_func = function()
+		unitTest:assertWarning(warning_func, defaultValueMsg("sd", 1))
+
+		warning_func = function()
 			Random{mean = 0.5, sd = 0.5, abc = 2}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("abc"))
 
-		error_func = function()
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
+
+		warning_func = function()
 			Random{lambda = 1}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("lambda", 1))
 
+		unitTest:assertWarning(warning_func, defaultValueMsg("lambda", 1))
 	end,
 	integer = function(unitTest)
 		local randomObj = Random{}
@@ -121,26 +138,31 @@ return{
 		local error_func = function()
 			randomObj:integer("terralab")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "terralab"))
 
 		error_func = function()
 			randomObj:integer(2.5)
 		end
+
 		unitTest:assertError(error_func, integerArgumentMsg(1, 2.5))
 
 		error_func = function()
 			randomObj:integer(2, "terralab")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "terralab"))
 
 		error_func = function()
 			randomObj:integer(1, 2.5)
 		end
+
 		unitTest:assertError(error_func, integerArgumentMsg(2, 2.5))
 
 		error_func = function()
 			randomObj:integer(1, 0)
 		end
+
 		unitTest:assertError(error_func, "It is not possible to sample from an empty object.")
 	end,
 	number = function(unitTest)
@@ -149,11 +171,13 @@ return{
 		local error_func = function()
 			randomObj:number("terralab")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "terralab"))
 
 		error_func = function()
 			randomObj:number(2.5, "terralab")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "terralab"))
 	end,
 	reSeed = function(unitTest)
@@ -161,16 +185,19 @@ return{
 		local error_func = function()
 			randomObj:reSeed("terralab")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "terralab"))
 
 		error_func = function()
 			randomObj:reSeed(2.3)
 		end
+
 		unitTest:assertError(error_func, integerArgumentMsg(1, 2.3))
 
 		error_func = function()
 			randomObj:reSeed(0)
 		end
+
 		unitTest:assertError(error_func, "Argument 'seed' cannot be zero.")
 	end
 }

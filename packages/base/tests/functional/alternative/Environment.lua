@@ -94,27 +94,30 @@ return{
 
 		unitTest:assertError(error_func, "The Environment has an Automaton but not a CellularSpace.")
 
-		error_func = function()
-			envmt = Environment{2}
+		local warning_func = function()
+			Environment{2}
 		end
 
-		unitTest:assertError(error_func, "Argument '1' (a 'number') is unnecessary for the Environment.")
+		unitTest:assertWarning(warning_func, "Argument '1' (a 'number') is unnecessary for the Environment.")
 	end,
 	add = function(unitTest)
 		local env = Environment{}
 		local error_func = function()
-			env:add(nil)
+			env:add()
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory"))
 
 		error_func = function()
 			env:add{}
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg("action"))
 
 		error_func = function()
 			env:add(unitTest)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory", unitTest))
 	end,
 	createPlacement = function(unitTest)
@@ -131,16 +134,19 @@ return{
 		local error_func = function()
 			env:createPlacement(2)
 		end
+
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
 			env:createPlacement{max = "13"}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("max", "number", "13"))
 
 		error_func = function()
 			env:createPlacement{strategy = 15, max = 13}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("strategy", "string", 13))
 
 		error_func = function()
@@ -158,16 +164,19 @@ return{
 		error_func = function()
 			env:createPlacement{strategy = "unifor", max = 13}
 		end
+
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("unifor", "strategy", "uniform"))
 
 		error_func = function()
 			env:createPlacement{name = 15, max = 13}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 13))
 
 		error_func = function()
 			env:createPlacement{max = -13}
 		end
+
 		unitTest:assertError(error_func, positiveArgumentMsg("max", -13))
 
 		cs = CellularSpace{xdim = 2}
@@ -180,6 +189,7 @@ return{
 		error_func = function()
 			env:createPlacement()
 		end
+
 		unitTest:assertError(error_func, "Placements is still not implemented for groups.")
 
 		env = Environment{sc1}
@@ -187,6 +197,7 @@ return{
 		error_func = function()
 			env:createPlacement()
 		end
+
 		unitTest:assertError(error_func, "The Environment does not contain a CellularSpace.")
 
 		env = Environment{cs = cs, cs2 = cs}
@@ -194,6 +205,7 @@ return{
 		error_func = function()
 			env:createPlacement()
 		end
+
 		unitTest:assertError(error_func, "Environment should contain only one CellularSpace, Trajectory, or Cell.")
 
 		env = Environment{cs}
@@ -201,6 +213,7 @@ return{
 		error_func = function()
 			env:createPlacement()
 		end
+
 		unitTest:assertError(error_func, "Could not find a behavioral entity (Society or Agent) within the Environment.")
 
 		env = Environment{cs, sc1}
@@ -208,6 +221,7 @@ return{
 		error_func = function()
 			env:createPlacement{}
 		end
+
 		unitTest:assertError(error_func, "It is not possible to put such amount of agents in space.")
 
 		local cs2 = CellularSpace{xdim = 7, ydim = 3}
@@ -219,6 +233,7 @@ return{
 		error_func = function()
 			env:createPlacement()
 		end
+
 		unitTest:assertError(error_func, "There is a Society within this Environment that already has this placement.")
 	end,
 	run = function(unitTest)
@@ -236,11 +251,13 @@ return{
 		local error_func = function()
 			env:notify("not_int")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			env:notify(-1)
 		end
+
 		unitTest:assertError(error_func, positiveArgumentMsg(1, -1, true))
 	end
 }

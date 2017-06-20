@@ -27,16 +27,19 @@ return {
 		local error_func = function()
 			Timer(2)
 		end
+
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			Timer{Cell()}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event", Cell()))
 
 		error_func = function()
 			Timer{b = Cell()}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("b", "Event", Cell()))
 	end,
 	add = function(unitTest)
@@ -47,6 +50,7 @@ return {
 		local error_func = function()
 			timer:add(nil)
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		timer = Timer{
@@ -56,14 +60,16 @@ return {
 		error_func = function()
 			timer:add("ev")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event", "ev"))
 
 		timer:run(10)
 
-		error_func = function()
+		local warning_func = function()
 			timer:add(Event{period = 2, action = function() end})
 		end
-		unitTest:assertError(error_func, "Adding an Event with time (1) before the current simulation time (10).")
+
+		unitTest:assertWarning(warning_func, "Adding an Event with time (1) before the current simulation time (10).")
 	end,
 	addReplacement = function(unitTest)
 		local timer = Timer{}
@@ -71,6 +77,7 @@ return {
 		local error_func = function()
 			timer:addReplacement()
 		end
+
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		local cs = CellularSpace{
@@ -85,6 +92,7 @@ return {
 				time = {2010, 2020}
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("target", "CellularSpace or Society", timer))
 
 		error_func = function()
@@ -95,6 +103,7 @@ return {
 				time = {2010, 2020, 2030}
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 2))
 
 		error_func = function()
@@ -105,6 +114,7 @@ return {
 				time = {2010, 2020, 2030}
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("attribute", "string", 2))
 
 		error_func = function()
@@ -115,6 +125,7 @@ return {
 				time = 2
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("time", "table", 2))
 
 		error_func = function()
@@ -125,6 +136,7 @@ return {
 				time = {2010, 2020, 2030}
 			}
 		end
+
 		unitTest:assertError(error_func, "The size of argument 'time' should be 2, got 3.")
 
 		error_func = function()
@@ -135,6 +147,7 @@ return {
 				time = {2010, 2020}
 			}
 		end
+
 		unitTest:assertError(error_func, "Attribute 'roads2010' does not exist in the Cells.")
 
 		local soc = Society{
@@ -150,6 +163,7 @@ return {
 				time = {2010, 2020}
 			}
 		end
+
 		unitTest:assertError(error_func, "Attribute 'roads2010' does not exist in the Agents.")
 	end,
 	run = function(unitTest)
@@ -161,6 +175,7 @@ return {
 		local error_func = function()
 			timer:run()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		timer = Timer{
@@ -171,6 +186,7 @@ return {
 		error_func = function()
 			timer:run("2")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "2"))
 
 		timer = Timer{
@@ -179,10 +195,11 @@ return {
 		}
 
 		timer:run(10)
-		error_func = function()
+		local warning_func = function()
 			timer:run(2)
 		end
-		unitTest:assertError(error_func, "Simulating until a time (2) before the current simulation time (10).")
+
+		unitTest:assertWarning(warning_func, "Simulating until a time (2) before the current simulation time (10).")
 	end
 }
 

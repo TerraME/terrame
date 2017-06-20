@@ -27,11 +27,11 @@ return{
 		local cell = Cell{value = 3}
 		local chart = Chart{target = cell, select = "value"}
 
-		local error_func = function()
-			event = Event{action = chart, priority = "verylow"}
+		local warning_func = function()
+			Event{action = chart, priority = "verylow"}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("priority", 10))
 
+		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 10))
 	end
 }
 

@@ -24,143 +24,120 @@
 
 return{
 	assert = function(unitTest)
-		local u = UnitTest{unittest = true}
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
 		local error_func = function()
-			u:assert(2)
+			unitTest:assert(2)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "boolean", 2))
 
-		for i = 1, 5 do
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
 
-			error_func = function()
-				u:assert(false)
-			end
-
-			if i == 1 then
-				unitTest:assertError(error_func, "Test should be true, got false.")
-			else
-				error_func()
-			end
-		end
-
-		error_func = function()
-			u:assert(false)
-		end
-
-		unitTest:assertError(error_func, "[The error above occurs more 4 times.]")
+		unitTest:assertEquals(suc2, suc1 + 1)
+		unitTest:assertEquals(test2, test1 + 1)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertEquals = function(unitTest)
-		local u = UnitTest{unittest = true}
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
 		local error_func = function()
-			u:assertEquals()
+			unitTest:assertEquals()
 		end
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
-			u:assertEquals(1)
+			unitTest:assertEquals(1)
 		end
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
-			u:assertEquals(2, 2, "a")
+			unitTest:assertEquals(2, 2, "a")
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "a"))
 
 		error_func = function()
-			u:assertEquals(false, true, 2)
+			unitTest:assertEquals(false, true, 2)
 		end
 
 		unitTest:assertError(error_func, "#3 should be used only when comparing numbers or strings (#1 is boolean).")
-
-		error_func = function()
-			u:assertEquals(2, 3)
-		end
-
-		unitTest:assertError(error_func, "Values should be equal, but got '2' and '3'. The maximum difference is 0, but got 1.")
-
-		error_func = function()
-			u:assertEquals(2, 3, 0.5)
-		end
-
-		unitTest:assertError(error_func, "Values should be equal, but got '2' and '3'. The maximum difference is 0.5, but got 1.")
-
-		error_func = function()
-			u:assertEquals("2", "3")
-		end
-
-		unitTest:assertError(error_func, "Values should be equal, but got \n'2' and \n'3'. The maximum tolerance is 0, but got 1.")
-
-		error_func = function()
-			u:assertEquals("2", 3)
-		end
-
-		unitTest:assertError(error_func, "Values should be equal, but they have different types (string and number).")
-
-		error_func = function()
-			u:assertEquals(true, false)
-		end
-
-		unitTest:assertError(error_func, "Values have the same type (boolean) but different values.")
 
 		local expected = [[string [biomassa-manaus.asc] ]]
 		local actual = [[string [/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/terralib/data/biomassa-manaus.asc] ]]
 
 		error_func = function()
-			u:assertEquals(expected, actual, 0, "")
+			unitTest:assertEquals(expected, actual, 0, "")
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(4, "boolean", actual))
 
-		error_func = function()
-			u:assertEquals(expected, "bbb", 0, true)
-		end
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
 
-		unitTest:assertError(error_func, "Values should be equal, but got \n'"..expected.."' and \n'".."bbb".."'. The maximum tolerance is 0, but got 28.")
+		unitTest:assertEquals(suc2, suc1 + 5)
+		unitTest:assertEquals(test2, test1 + 5)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertError = function(unitTest)
-		local u = UnitTest{unittest = true}
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
 		local error_func = function()
-			u:assertError(2)
+			unitTest:assertError(2)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", 2))
 
 		error_func = function()
-			u:assertError(function() end, 2)
+			unitTest:assertError(function() end, 2)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		error_func = function()
-			u:assertError(function() end, "aaa", false)
+			unitTest:assertError(function() end, "aaa", false)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", false))
+
+		error_func = function()
+			unitTest:assertError(function() end, "aaa", 2, 2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(4, "boolean", 2))
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 4)
+		unitTest:assertEquals(test2, test1 + 4)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertFile = function(unitTest)
-		local u = UnitTest{unittest = true}
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
 		local error_func = function()
-			u:assertFile(2)
+			unitTest:assertFile(2)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "File", 2))
 
 		error_func = function()
-			u:assertFile("abcd1234.txt")
-		end
-
-		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abcd1234.txt"))
-
-		error_func = function()
-			u:assertFile(tostring(sessionInfo().path))
+			unitTest:assertFile(tostring(sessionInfo().path))
 		end
 
 		unitTest:assertError(error_func, "'/MacOS' is a directory, and not a file.", 10, true)
@@ -169,68 +146,49 @@ return{
 		Log{target = c, file = "mabc.csv"}
 
 		c:notify()
-		unitTest:assertFile("mabc.csv")
-
-		local str
-
-		local oldPrint = unitTest.printError
-
-		unitTest.printError = function(_, v)
-			str = v
-		end
-
-		Log{target = c, file = "mabc.csv"}
-
-		c:notify()
-
-		unitTest:assertFile("mabc.csv")
-		unitTest:assertEquals(str, "Log file 'mabc.csv' is used in more than one assert.")
-
-		unitTest.printError = oldPrint
-
-		u = UnitTest{}
-		c = Cell{value = 2}
-		Log{target = c, file = "abc.csv"}
-
-		c:notify()
 
 		error_func = function()
+			unitTest:assertFile("mabc.csv", 2)
+		end
+
+		unitTest:assertError(error_func, "#2 should be between [0, 1], got 2.")
+
+		unitTest:assertFile("mabc.csv")
+
+		error_func = function()
+			c = Cell{value = 2}
+			Log{target = c, file = "abc.csv"}
+
+			c:notify()
+			local u = UnitTest{}
 			u:assertFile("abc.csv")
 		end
 
-		u:assertError(error_func, "It is not possible to use assertFile without a 'log' directory.")
+		unitTest:assertError(error_func, "It is not possible to use assertFile without a 'log' directory.")
 
 		unitTest:assert(not File("abc.csv"):exists())
 
 		error_func = function()
-			u:assertFile(tostring(packageInfo().data)) -- not possible to use directory
+			unitTest:assertFile(tostring(packageInfo().data)) -- not possible to use directory
 		end
 
-		u:assertError(error_func, "'data' is a directory, and not a file.", 0, true)
-	end,
-	assertNil = function(unitTest)
-		local u = UnitTest{unittest = true}
+		unitTest:assertError(error_func, "'data' is a directory, and not a file.", 0, true)
 
-		local error_func = function()
-			u:assertNil(2)
-		end
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
 
-		unitTest:assertError(error_func, "Test should be nil, got number.")
-	end,
-	assertNotNil = function(unitTest)
-		local u = UnitTest{unittest = true}
-
-		local error_func = function()
-			u:assertNotNil()
-		end
-
-		unitTest:assertError(error_func, "Test should not be nil.")
+		unitTest:assertEquals(suc2, suc1 + 7)
+		unitTest:assertEquals(test2, test1 + 7)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertSnapshot = function(unitTest)
-		local u = UnitTest{unittest = true}
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
 		local error_func = function()
-			u:assertSnapshot()
+			unitTest:assertSnapshot()
 		end
 
 		unitTest:assertError(error_func, "Argument #1 should be Chart, Map, TextScreen, Clock or VisualTable, got nil.")
@@ -239,55 +197,105 @@ return{
 		local ch = Chart{target = ce}
 
 		error_func = function()
-			u:assertSnapshot(ch)
+			unitTest:assertSnapshot(ch)
 		end
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
-			u:assertSnapshot(ch, "file.bmp", false)
+			unitTest:assertSnapshot(ch, "file.bmp", false)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", false))
 
 		error_func = function()
-			u:assertSnapshot(ch, "file.bmp", 2)
+			unitTest:assertSnapshot(ch, "file.bmp", 2)
 		end
 
 		unitTest:assertError(error_func, "Argument #3 should be between 0 and 1, got 2.")
 
 		error_func = function()
-			u:assertSnapshot(ch, "file.bmp", -1)
+			unitTest:assertSnapshot(ch, "file.bmp", -1)
 		end
 
 		unitTest:assertError(error_func, "Argument #3 should be between 0 and 1, got -1.")
 
 		error_func = function()
+			local u = UnitTest{}
 			u:assertSnapshot(ch, "file.bmp")
 		end
 
 		unitTest:assertError(error_func, "It is not possible to use assertSnapshot without a 'log' directory.")
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 6)
+		unitTest:assertEquals(test2, test1 + 6)
+		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertType = function(unitTest)
-		local u = UnitTest{unittest = true}
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
 
 		local error_func = function()
-			u:assertType()
+			unitTest:assertType()
 		end
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
-			u:assertType(2, 2)
+			unitTest:assertType(2, 2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 2)
+		unitTest:assertEquals(test2, test1 + 2)
+		unitTest:assertEquals(fail2, fail1)
+	end,
+	assertWarning = function(unitTest)
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
+
+		local error_func = function()
+			unitTest:assertWarning(2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", 2))
+
+		error_func = function()
+			unitTest:assertWarning(function() end, 2)
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		error_func = function()
-			u:assertType(2, "string")
+			unitTest:assertWarning(function() end, "aaa", false)
 		end
 
-		unitTest:assertError(error_func, "Test should be string got number.")
+		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", false))
+
+		error_func = function()
+			unitTest:assertWarning(function() end, "aaa", 2, 2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(4, "boolean", 2))
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		unitTest:assertEquals(suc2, suc1 + 4)
+		unitTest:assertEquals(test2, test1 + 4)
+		unitTest:assertEquals(fail2, fail1)
 	end
 }
 

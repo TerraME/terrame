@@ -36,17 +36,21 @@ return{
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
-		error_func = function()
+		local traj
+		local warning_func = function()
 			traj = Trajectory{
 				target = cs,
 				selection = function() return true end
 			}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("selection", "select"))
+
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("selection", "select"))
+		unitTest:assertEquals(#traj, #cs)
 
 		error_func = function()
 			trajectory = Trajectory{}
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
 
 		error_func = function()
@@ -54,6 +58,7 @@ return{
 				target = "cs"
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("target", "CellularSpace or Trajectory", "cs"))
 
 		-- build
@@ -63,26 +68,31 @@ return{
 				build = "build"
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("build", "boolean", "build"))
 
-		error_func = function()
+		warning_func = function()
 			traj = Trajectory{
 				target = cs,
 				build = true
 			}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("build", true))
 
-		error_func = function()
+		unitTest:assertWarning(warning_func, defaultValueMsg("build", true))
+		unitTest:assertEquals(#traj, #cs)
+
+		warning_func = function()
 			traj = Trajectory{
 				target = cs,
 				random = false
 			}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("random", false))
+
+		unitTest:assertWarning(warning_func, defaultValueMsg("random", false))
+		unitTest:assertEquals(#traj, #cs)
 
 		error_func = function()
-			traj = Trajectory{
+			Trajectory{
 				target = cs,
 				random = true,
 				greater = function() return true end
@@ -140,23 +150,26 @@ return{
 		local error_func = function()
 			trajectory:get()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			trajectory:get(2)
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			trajectory:get("a")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "a"))
 
 		error_func = function()
 			trajectory:get(1, "a")
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "a"))
 
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "a"))
 	end,
 	sort = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -165,12 +178,14 @@ return{
 		local error_func = function()
 			trajectory:sort("func")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "func"))
 
 		error_func = function()
 			trajectory:sort()
 		end
-		unitTest:assertError(error_func, "Cannot sort the Trajectory because there is no previous function.")
+
+		unitTest:assertWarning(error_func, "Cannot sort the Trajectory because there is no previous function.")
 	end
 }
 

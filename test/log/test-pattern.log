@@ -11,6 +11,7 @@ Testing Agent
 Testing add
 Testing addSocialNetwork
 Testing die
+Testing emptyNeighbor
 Testing enter
 Testing execute
 Testing getCell
@@ -23,6 +24,8 @@ Testing notify
 Testing on_message
 Testing reproduce
 Testing walk
+Testing walkIfEmpty
+Testing walkToEmpty
 Checking if all asserts were executed
 Testing tests/observer/alternative/Agent.lua
 Testing notify
@@ -38,10 +41,10 @@ No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 51 asserts were executed successfully.
-All 17 tested functions do not have any unexpected execution error.
-All 17 tested functions have at least one assert.
-All 17 tested functions exist in the source code of the package.
+All 72 asserts were executed successfully.
+All 20 tested functions do not have any unexpected execution error.
+All 20 tested functions have at least one assert.
+All 20 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.

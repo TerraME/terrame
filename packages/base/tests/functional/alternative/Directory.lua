@@ -27,40 +27,47 @@ return{
 		local error_func = function()
 			Directory()
 		end
+
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			Directory(1)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 
 		error_func = function()
 			Directory("abc\"")
 		end
+
 		unitTest:assertError(error_func, "Directory name 'abc\"' cannot contain character '\"'.")
 
 		error_func = function()
 			Directory{}
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg("name"))
 
 		error_func = function()
 			Directory{name = 1}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
 
-		error_func = function()
+		local warning_func = function()
 			Directory{
 				name = ".tmp_XXXXX",
 				tmpd = true
 			}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("tmpd", "tmp"))
 
-		error_func = function()
-			Directory{tmpd = true}
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("tmpd", "tmp"))
+
+		warning_func = function()
+			Directory{name = "abc", tmpd = true}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("tmpd", "tmp"))
+
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("tmpd", "tmp"))
 
 		error_func = function()
 			Directory(packageInfo("base").path.."data/agents.csv")
@@ -72,6 +79,7 @@ return{
 		local error_func = function()
 			dir:attributes(1)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
 	delete = function(unitTest)
@@ -79,6 +87,7 @@ return{
 		local error_func = function()
 			dir:delete()
 		end
+
 		unitTest:assertError(error_func, resourceNotFoundMsg("directory", tostring(dir)))
 	end,
 	relativePath = function(unitTest)
@@ -87,7 +96,8 @@ return{
 		local error_func = function()
 			dir:attributes(1)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-	end,
+	end
 }
 

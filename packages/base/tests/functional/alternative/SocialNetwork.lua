@@ -31,28 +31,33 @@ return{
 		local error_func = function()
 			sn:add()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			sn:add(112)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent", 112))
 
 		error_func = function()
 			sn:add(ag1, "not_number")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "not_number"))
 
 		error_func = function()
 			sn:add(ag1)
 		end
+
 		unitTest:assertError(error_func, "Agent should have an id in order to be added to a SocialNetwork.")
 
-		error_func = function()
+		local warning_func = function()
 			sn:add(ag2)
 			sn:add(ag2)
 		end
-		unitTest:assertError(error_func, "Agent '2' already belongs to the SocialNetwork.")
+
+		unitTest:assertWarning(warning_func, "Agent '2' already belongs to the SocialNetwork.")
 	end,
 	getWeight = function(unitTest)
 		local ag1 = Agent{id = "1"}
@@ -63,21 +68,25 @@ return{
 		local error_func = function()
 			sn:getWeight()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			sn:getWeight(cell)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent", cell))
 
 		error_func = function()
 			sn:getWeight(ag2)
 		end
+
 		unitTest:assertError(error_func, "Agent does not belong to the SocialNetwork because it does not have an id.")
 
 		error_func = function()
 			sn:getWeight(ag1)
 		end
+
 		unitTest:assertError(error_func, "Agent '1' does not belong to the SocialNetwork.")
 	end,
 	isConnection = function(unitTest)
@@ -86,11 +95,13 @@ return{
 		local error_func = function()
 			sn:isConnection()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			sn:isConnection(123)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent", 123))
 	end,
 	remove = function(unitTest)
@@ -100,17 +111,20 @@ return{
 		local error_func = function()
 			sn:remove()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			sn:remove(123)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent", 123))
 
-		error_func = function()
+		local warning_func = function()
 			sn:remove(ag1)
 		end
-		unitTest:assertError(error_func, "Trying to remove an Agent that does not belong to the SocialNetwork.")
+
+		unitTest:assertWarning(warning_func, "Trying to remove an Agent that does not belong to the SocialNetwork.")
 	end,
 	sample = function(unitTest)
 		local sn = SocialNetwork()
@@ -118,6 +132,7 @@ return{
 		local error_func = function()
 			sn:sample()
 		end
+
 		unitTest:assertError(error_func, "It is not possible to sample the SocialNetwork because it is empty.")
 	end,
 	setWeight = function(unitTest)
@@ -129,31 +144,37 @@ return{
 		local error_func = function()
 			sn:setWeight()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			sn:setWeight(cell)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent", cell))
 
 		error_func = function()
 			sn:setWeight(ag1)
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			sn:setWeight(ag1, "notnumber")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "notnumber"))
 
 		error_func = function()
 			sn:setWeight(ag2, 0.5)
 		end
+
 		unitTest:assertError(error_func, "Agent does not belong to the SocialNetwork because it does not have an id.")
 
 		error_func = function()
 			sn:setWeight(ag1, 0.5)
 		end
+
 		unitTest:assertError(error_func, "Agent '1' does not belong to the SocialNetwork.")
 	end
 }

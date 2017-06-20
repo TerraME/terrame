@@ -1,0 +1,91 @@
+Using log directory '/Users/pedro/github/terrame-pedro/test/packages/unittest/log/'
+Loading package 'unittest'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/UnitTest.lua
+Testing assertEquals
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:34: Values should be equal, but got '2' and '3'. The maximum difference is 0, but got 1.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:35: Values should be equal, but got '2' and '3'. The maximum difference is 0.5, but got 1.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:36: Values should be equal, but got 
+'2' and 
+'3'. The maximum tolerance is 0, but got 1.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:37: Values should be equal, but they have different types (string and number).
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:38: Values have the same type (boolean) but different values.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:42: Values should be equal, but got 
+'string [biomassa-manaus.asc] ' and 
+'bbb'. The maximum tolerance is 0, but got 28.
+Testing assertError
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:61: Test expected an error ('abc'), but no error was found.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:64: Test should be true, got false.
+[The error above occurs more 4 times.]
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:68: Warning function called with argument 'abc' within an UnitTest:assertError(). Please use UnitTest:assertWarning() instead.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:74: Test expected:
+  "def"
+  got:
+  "abc"
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:80: Test expected:
+  "def"
+  got:
+  "abc"
+It would accept an error of at most 2 character(s), but got 3.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:87: Test should be true, got false.
+[The error above occurs 4 more times.]
+Testing assertFile
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:108: Resource 'abc123.csv' was not found for argument '#1'.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:122: Log file 'mabc.csv' is used in more than one assert.
+Testing assertNil
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:138: Test should be nil, got number.
+Testing assertNotNil
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:154: Test should not be nil.
+Testing assertSnapshot
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:178: Files 
+  'log/mac/my-chart-1.png'
+and
+  '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_lCPhj/my-chart-1.png'
+are different. The maximum tolerance is 0, but got 0.0029766666666667.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:179: Files 
+  'log/mac/my-chart-2.png'
+and
+  '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_lCPhj/my-chart-2.png'
+are different. Image sizes are different: 600x500 (created) and 0x0 (log).
+Testing assertType
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:196: Test should be string got number.
+Testing assertWarning
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:213: Error function called with argument 'abc' within UnitTest:assertWarning(). Please use UnitTest:assertError() instead.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:219: Test expected:
+  "abc"
+  got:
+  "abc1"
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:220: Test should produce only one warning, got 'abc1' and 'abc2'.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:228: Test should produce only one warning, got 'abc' at least twice.
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking a.lua
+Skipping lines of source code check
+Testing examples
+The package has no examples
+Checking logs
+
+Functional test report for package 'unittest':
+Tests were executed in 1.17 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_lCPhj/'.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or directories in directory 'tests'.
+All asserts were executed at least once.
+30 out of 56 asserts failed.
+All 8 tested functions do not have any unexpected execution error.
+All 8 tested functions have at least one assert.
+All 8 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+No file was created along the tests.
+All 0 functions of the package were tested.
+No lines from the source code were verified.
+The package has no examples.
+No new log file was created.
+All log files were used in the tests.
+Summing up, 30 problems were found during the tests.
