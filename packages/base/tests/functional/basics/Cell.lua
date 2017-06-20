@@ -89,7 +89,7 @@ cObj_          userdata
 friends        Group
 neighborhoods  vector of size 0
 parent         CellularSpace
-past           named table of size 4
+past           named table of size 1
 placement      Group
 x              number [0]
 y              number [0]
