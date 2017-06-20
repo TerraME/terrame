@@ -775,3 +775,27 @@ function _Gtme.cleanErrorMessage(err)
 	return str
 end
 
+_Gtme.internalCellVariables = {
+	agents = true,
+	cObj_ = true,
+	geom = true,
+	neighborhoods = true,
+	parent = true,
+	past = true,
+	placement = true,
+	x = true,
+	y = true
+}
+
+_Gtme.internalAgentVariables = {
+	cell = true,
+	cells = true,
+	cObj_ = true,
+	geometry = true,
+	id = true,
+	parent = true,
+	placement = true,
+	socialnetworks = true,
+	state_ = true
+}
+

@@ -1435,7 +1435,7 @@ CellularSpace_ = {
 			values = {}
 			local cell = self.cells[1]
 			for k in pairs(cell) do
-				if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
+				if not _Gtme.internalCellVariables[k] then
 					table.insert(values, k)
 				end
 			end

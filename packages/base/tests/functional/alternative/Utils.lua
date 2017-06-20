@@ -107,6 +107,22 @@ return{
 
 		unitTest:assertError(error_func, "The Cell does not have a default placement. Please call Environment:createPlacement() first.")
 	end,
+	forEachAttribute = function(unitTest)
+		local a = Agent{value = 2}
+		local soc = Society{instance = a, quantity = 10}
+
+		local error_func = function()
+			forEachAttribute(soc, function() end)
+		end
+
+		unitTest:assertError(error_func, "#1 should be Cell or Agent, got Society.")
+
+		error_func = function()
+			forEachAttribute(soc:sample(), 2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2))
+	end,
 	forEachCell = function(unitTest)
 		local error_func = function()
 			forEachCell()
