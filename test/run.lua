@@ -109,6 +109,7 @@ local report = {
 local function approximateLine(line)
 	if not line then return 0 end
 	
+	if string.match(line, "configuration file")  then return 120 end
 	if string.match(line, "maximum tolerance")   then return  20 end
 	if string.match(line, "Logs")                then return 120 end
 	if string.match(line, "Temporary")           then return 120 end
