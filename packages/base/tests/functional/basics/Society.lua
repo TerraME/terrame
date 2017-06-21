@@ -668,12 +668,22 @@ state_          State
 
 		soc = Society{
 			instance = ag,
-			quantity = 1
+			quantity = 10
 		}
 
 		local groups = soc:split("gender")
-		unitTest:assertEquals(#groups.male, 0)
-		unitTest:assertEquals(#groups.female, 1)
+		unitTest:assertEquals(#groups.male, 2)
+		unitTest:assertEquals(#groups.female, 8)
+
+		forEachAgent(soc, function(magent)
+			magent.gender = "male"
+		end)
+
+		groups.male:filter()
+		groups.female:filter()
+
+		unitTest:assertEquals(#groups.male, 10)
+		unitTest:assertEquals(#groups.female, 0)
 	end
 }
 

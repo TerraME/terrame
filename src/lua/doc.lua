@@ -768,7 +768,6 @@ function _Gtme.executeDoc(package)
 				local file = filePath(value.file[1], package)
 				local firstLine = file:readLine(" ")
 
-				local countOrigins = 0
 				local countConnections = 0
 
 				local line = file:readLine(" ")

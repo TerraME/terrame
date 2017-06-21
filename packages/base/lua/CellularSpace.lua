@@ -1381,8 +1381,11 @@ CellularSpace_ = {
 
 		local result = {}
 		local class
+		local stringargument
 
 		if type(argument) == "string" then
+			stringargument = argument
+
 			if self:sample()[argument] == nil then
 				customError("Attribute '"..argument.."' does not exist.")
 			end
@@ -1409,6 +1412,14 @@ CellularSpace_ = {
 			table.insert(result[class].cells, cell)
 			result[class].cObj_:add(#result[class], cell.cObj_)
 		end)
+
+		if stringargument then
+			forEachElement(result, function(idx, traj)
+				traj.select = function(cell)
+					return cell[stringargument] == idx
+				end
+			end)
+		end
 
 		return result
 	end,

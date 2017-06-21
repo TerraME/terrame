@@ -709,8 +709,11 @@ Society_ = {
 
 		local result = {}
 		local class_
+		local stringargument
 
 		if type(argument) == "string" then
+			stringargument = argument
+
 			if self:sample()[argument] == nil then
 				customError("Attribute '"..argument.."' does not exist.")
 			end
@@ -739,6 +742,14 @@ Society_ = {
 
 			table.insert(result[class_].agents, agent)
 		end)
+
+		if stringargument then
+			forEachElement(result, function(idx, group)
+				group.select = function(cell)
+					return cell[stringargument] == idx
+				end
+			end)
+		end
 
 		return result
 	end,
