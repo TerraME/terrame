@@ -263,6 +263,48 @@ Trajectory_ = {
 		else
 			customWarning("Cannot sort the Trajectory because there is no previous function.")
 		end
+	end,
+	--- Save a subset from the target CellularSpace into a file.
+	-- @arg file A File which can be a .shp or .geojson extension.
+	-- @arg attrs A vector with the names of the attributes to be saved.
+	-- If attrs is nil, all attributes will be saved.
+	save = function(self, file, attrs)
+		mandatoryArgument(1, "File", file)
+
+		local cs = self.parent
+
+		if (attrs ~= nil) and (attrs ~= "") then
+			if type(attrs) == "string" then
+				attrs = {attrs}
+			elseif type(attrs) ~= "table" then
+				customError("Incompatible types. Argument '#2' expected table or string.")
+			end
+
+			for _, attr in pairs(attrs) do
+				if not self.cells[1][attr] then
+					customError("Attribute '"..attr.."' does not exist in the target CellularSpace.")
+				end
+			end
+		end
+
+		local from = {}
+
+		if cs.project then
+			from.project = cs.project
+			from.layer = cs.layer.name
+		elseif cs.file then
+			from.file = cs.file
+		else
+			customError("Target CellularSpace must come from a file or layer.")
+		end
+
+		local to = {
+			file = tostring(file),
+			type = file:extension()
+		}
+
+		local terralib = getPackage("terralib")
+		terralib.TerraLib().saveLayerAs(from, to, false, attrs, self.cells)
 	end
 }
 

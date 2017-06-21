@@ -1768,7 +1768,21 @@ return {
 		unitTest:assertEquals(tchsSjc2[0].ID, 55)
 		unitTest:assertEquals(tchsSjc2[1].ID, 109)
 
+		local toFile1 = toData.file
+		toData.file = "touches_sjc_3.shp"
+
+		TerraLib().saveLayerAs(fromData, toData, overwrite, nil, touches)
+
+		local tchsSjc3 = TerraLib().getOGRByFilePath(toData.file)
+
+		unitTest:assertEquals(getn(tchsSjc3), 2)
+		unitTest:assertEquals(tchsSjc3[1].FID, 1)
+		unitTest:assertEquals(tchsSjc3[1].ID, 109)
+		unitTest:assertEquals(tchsSjc3[1].NM_MICRO, "GUARULHOS")
+		unitTest:assertEquals(tchsSjc3[1].CD_GEOCODU, "35")
+
 		File(toData.file):delete()
+		File(toFile1):delete()
 	end,
 	getLayerSize = function(unitTest)
 		local proj = {}

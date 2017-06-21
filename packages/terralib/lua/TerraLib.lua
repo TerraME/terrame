@@ -1082,7 +1082,7 @@ local function createInvalidNamesErrorMsg(invalidNames)
 	return errorMsg
 end
 
-local function createAttributeInfos(dataset, attrNames)
+local function createAttributesInfo(dataset, attrNames)
 	local attrInfos = {}
 
 	if attrNames then
@@ -1205,7 +1205,7 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 				end
 
 				if #attrsToUp > 0 then
-					attrsToUp = createAttributeInfos(dse, attrsToUp)
+					attrsToUp = createAttributesInfo(dse, attrsToUp)
 				end
 
 				-- Set the values of the new dataset from the data
@@ -1283,7 +1283,7 @@ local function updateDataSet(fromLayer, toSet, attrs)
 		local dsetName = fromLayer:getDataSetName()
 		local dse = ds:getDataSet(dsetName)
 
-		local attrsToUp = createAttributeInfos(dse, attrs)
+		local attrsToUp = createAttributesInfo(dse, attrs)
 
 		local dseUp = binding.te.mem.DataSet(dse)
 		local index = 1
@@ -1586,19 +1586,19 @@ local function saveLayerAs(fromData, toData, attrs, values)
 		local fromDSet = fromDs:getDataSet(fromData.dataset)
 		local converter = binding.te.da.DataSetTypeConverter(fromDSetType, fromDs:getCapabilities(), toDs:getEncoding())
 
-		-- If there are attrs, keep only them, primary key and geometries
 		local pkName = ""
+		local pk = fromDSetType:getPrimaryKey()
+		if pk then
+			if fromData.type == "POSTGIS" then
+				pkName = pk:getPropertyName(0)
+			else
+				pkName = pk:getName()
+			end
+		end
+
+		-- If there are attrs, keep only them, primary key and geometries
 		local attrsFilter = {}
 		if attrs then
-			local pk = fromDSetType:getPrimaryKey()
-			if pk then
-				if fromData.type == "POSTGIS" then
-					pkName = pk:getPropertyName(0)
-				else
-					pkName = pk:getName()
-				end
-			end
-
 			local numProps = fromDSet:getNumProperties()
 			fromDSet:moveFirst()
 			for i = 0, numProps - 1 do
@@ -1610,6 +1610,13 @@ local function saveLayerAs(fromData, toData, attrs, values)
 					table.insert(attrsFilter, propName)
 				end
 			end
+		elseif values then -- if there is a subset without attrs, it will save all properties from the subset
+			local numProps = fromDSet:getNumProperties()
+			fromDSet:moveFirst()
+			for i = 0, numProps - 1 do
+				local propName = fromDSet:getPropertyName(i)
+				table.insert(attrsFilter, propName)
+			end
 		end
 
 		binding.AssociateDataSetTypeConverterSRID(converter, toData.srid)
@@ -1619,13 +1626,13 @@ local function saveLayerAs(fromData, toData, attrs, values)
 		-- TODO(avancinirodrigo): why POSTGIS does not work like OGR?
 		-- Fix the primary key for postgis only
 		if toData.type == "POSTGIS" then
-			local pk = dstResult:getPrimaryKey()
-			if pk then
+			local pkToFix = dstResult:getPrimaryKey()
+			if pkToFix then
 				local rand = string.gsub(binding.GetRandomicId(), "-", "")
 				rand = string.sub(rand, 1, 8)
-				pk:setName("pk"..rand)
+				pkToFix:setName("pk"..rand)
 
-				-- local pkIdx = pk:getAssociatedIndex() TODO(#1678)
+				-- local pkIdx = pkToFix:getAssociatedIndex() TODO(#1678)
 				-- if pkIdx then
 					-- pkIdx:setName("idx"..rand)
 				-- else
@@ -1635,7 +1642,7 @@ local function saveLayerAs(fromData, toData, attrs, values)
 						-- idx:setName("idx"..rand)
 						-- idx:setIndexType(binding.R_TREE_TYPE)
 						-- idx:add(gp:clone())
-						-- pk:setAssociatedIndex(idx)
+						-- pkToFix:setAssociatedIndex(idx)
 					-- end
 				-- end
 			end
@@ -1655,20 +1662,24 @@ local function saveLayerAs(fromData, toData, attrs, values)
 
 			local newDst = converter:getConvertee()
 			local newDse = binding.te.mem.DataSet(newDst)
-			attrsToIn = createAttributeInfos(fromDSet, attrsFilter)
+			attrsToIn = createAttributesInfo(fromDSet, attrsFilter)
 			local pkPos = getPropertyPosition(fromDSet, pkName)
 
 			fromDSet:moveBeforeFirst()
 			for i = 1, #values do
 				local next = true
-				while fromDSet:moveNext() and next do
-					if fromDSet:getInt(pkPos) == values[i][pkName] then
-						local item = binding.te.mem.DataSetItem.create(newDse)
-						for j = 1, #attrsToIn do
-							item:setValue(attrsToIn[j].pos, fromDSet:getValue(attrsToIn[j].pos):clone())
+				while next do
+					if fromDSet:moveNext() then
+						if fromDSet:getInt(pkPos) == values[i][pkName] then
+							local item = binding.te.mem.DataSetItem.create(newDse)
+							for j = 1, #attrsToIn do
+								item:setValue(attrsToIn[j].pos, fromDSet:getValue(attrsToIn[j].pos):clone())
+							end
+							newDse:add(item)
+							next = false
 						end
-						newDse:add(item)
-						next = false
+					else
+						next = false -- SKIP
 					end
 				end
 			end
@@ -2731,7 +2742,8 @@ TerraLib_ = {
 	-- @arg overwrite Indicates if the saved data will be overwritten.
 	-- @arg attrs The attribute(s) that will be saved.
 	-- @arg values A table with a data's subset of the Layer.
-	-- If this parameter is set, the saved data will have only its values.
+	-- If this parameter is set with a subset of from data, the saved data will have only its values.
+	-- And, if values is set and attrs is nil, all attributes will be saved.
 	-- @usage -- DONTRUN
 	-- local toData = {
 	--     file = "shp2geojson.geojson",
