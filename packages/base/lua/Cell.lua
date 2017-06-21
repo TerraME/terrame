@@ -279,7 +279,7 @@ Cell_ = {
 	synchronize = function(self)
 		self.past = {}
 		for k, v in pairs(self) do
-			if not belong(k, {"past", "cObj_", "x", "y", "geom", "neighborhoods"}) then
+			if not _Gtme.internalCellVariables[k] then
 				self.past[k] = v
 			end
 		end

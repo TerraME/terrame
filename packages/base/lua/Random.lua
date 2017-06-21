@@ -430,7 +430,7 @@ function Random(data)
 			local values = {}
 
 			forEachElement(data, function(idx, value)
-				if idx == "seed" then return end
+				if idx == "seed" or idx == "distrib" then return end
 
 				table.insert(values, value)
 			end)

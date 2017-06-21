@@ -313,6 +313,49 @@ function forEachAgent(obj, name, _sof_)
 	return true
 end
 
+--- Second order function to traverse the attributes of a Cell or Agent defined by the user.
+-- It hides all the attributes and functions automatically created by TerraME.
+-- Note that, if the Agent (Cell) belongs to a Society (CellularSpace) created with an
+-- instance, those attributes from the instance that were not yet updated will not be
+-- captured by this function.
+-- @arg obj An Agent or a Cell.
+-- @arg _sof_ A function that takes two arguments. The first argument is the attribute name
+-- and the second is its value.
+-- @usage ag = Agent{
+--     age = 5,
+--     color = "blue"
+-- }
+--
+-- forEachAttribute(ag, function(att)
+--     print(att)
+-- end)
+function forEachAttribute(obj, _sof_)
+	mandatoryArgument(2, "function", _sof_)
+
+	local objt = type(obj)
+
+	if objt == "Cell" then
+		forEachOrderedElement(obj, function(idx, value)
+			if not _Gtme.internalCellVariables[idx] then
+				_sof_(idx, value)
+			end
+		end)
+
+		return true
+	elseif objt == "Agent" then
+		forEachOrderedElement(obj, function(idx, value)
+			if not _Gtme.internalAgentVariables[idx] then
+				_sof_(idx, value)
+			end
+		end)
+
+		return true
+	end
+
+	customError("#1 should be Cell or Agent, got "..objt..".")
+end
+
+
 --- Second order function to traverse a given CellularSpace, Trajectory, or Agent,
 -- applying a given function to each of its Cells. If any of the function calls returns
 -- false, forEachCell() stops and returns false, otherwise it returns true.

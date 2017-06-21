@@ -1381,8 +1381,11 @@ CellularSpace_ = {
 
 		local result = {}
 		local class
+		local stringargument
 
 		if type(argument) == "string" then
+			stringargument = argument
+
 			if self:sample()[argument] == nil then
 				customError("Attribute '"..argument.."' does not exist.")
 			end
@@ -1410,6 +1413,14 @@ CellularSpace_ = {
 			result[class].cObj_:add(#result[class], cell.cObj_)
 		end)
 
+		if stringargument then
+			forEachElement(result, function(idx, traj)
+				traj.select = function(cell)
+					return cell[stringargument] == idx
+				end
+			end)
+		end
+
 		return result
 	end,
 	--- Synchronize the CellularSpace, calling the function synchronize() for each of its Cells.
@@ -1435,7 +1446,7 @@ CellularSpace_ = {
 			values = {}
 			local cell = self.cells[1]
 			for k in pairs(cell) do
-				if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
+				if not _Gtme.internalCellVariables[k] then
 					table.insert(values, k)
 				end
 			end

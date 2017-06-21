@@ -165,6 +165,22 @@
 									<%end%>
 								<%end%>
 
+								<%if data.origin then%>
+									<%if not data.destination or data.origin == data.destination then%>
+										<li><b>Connected file/layer: </b><%=data.origin%></li>
+									<%else%>
+										<li><b>Connected files/layers: </b><%=data.origin%> and <%=data.destination%></li>
+									<%end%>
+								<%end%>
+
+								<%if data.origins then%>
+									<li><b>Number of origins: </b><%=data.origins%></li>
+								<%end%>
+
+								<%if data.connections then%>
+									<li><b>Number of connections: </b><%=data.connections%></li>
+								<%end%>
+
 								<%if data.source then%>
 									<li><b>Source: </b><%= httpLink(data.source)%></li>
 								<%end%>
