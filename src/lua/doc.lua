@@ -739,6 +739,71 @@ function _Gtme.executeDoc(package)
 						}
 					end
 				end)
+			elseif string.endswith(value.file[1], ".gal") then
+				print("Processing '"..value.file[1].."'")
+
+				local file = filePath(value.file[1], package)
+				local firstLine = file:readLine(" ")
+
+				local countOrigins = 0
+				local countConnections = 0
+
+				local line = file:readLine(" ")
+				while #line > 0 do
+					countOrigins = countOrigins + 1
+					countConnections = countConnections + tonumber(line[2])
+					if tonumber(line[2]) > 0 then
+						file:readLine(" ")
+					end
+
+					line = file:readLine(" ")
+				end
+
+				value.origin = firstLine[3]
+				value.origins = countOrigins
+				value.connections = countConnections
+			elseif string.endswith(value.file[1], ".gwt") then
+				print("Processing '"..value.file[1].."'")
+
+				local file = filePath(value.file[1], package)
+				local firstLine = file:readLine(" ")
+
+				local countOrigins = 0
+				local countConnections = 0
+
+				local line = file:readLine(" ")
+				while #line > 0 do
+					countConnections = countConnections + 1
+					line = file:readLine(" ")
+				end
+
+				value.origin = firstLine[3]
+				value.origins = firstLine[2]
+				value.connections = countConnections
+			elseif string.endswith(value.file[1], ".gpm") then
+				print("Processing '"..value.file[1].."'")
+
+				local file = filePath(value.file[1], package)
+				local firstLine = file:readLine(" ")
+
+				local countOrigins = 0
+				local countConnections = 0
+
+				local line = file:readLine(" ")
+				while #line > 0 do
+					countOrigins = countOrigins + 1
+					countConnections = countConnections + tonumber(line[2])
+					if tonumber(line[2]) > 0 then
+						file:readLine(" ")
+					end
+
+					line = file:readLine(" ")
+				end
+
+				value.origin = firstLine[2]
+				value.destination = firstLine[3]
+				value.origins = countOrigins
+				value.connections = countConnections
 			elseif string.endswith(value.file[1], ".csv") then
 				print("Processing '"..value.file[1].."'")
 
