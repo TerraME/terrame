@@ -268,6 +268,19 @@ Trajectory_ = {
 	-- @arg file A File which can be a .shp or .geojson extension.
 	-- @arg attrs A vector with the names of the attributes to be saved.
 	-- If attrs is nil, all attributes will be saved.
+	-- @usage -- DONTRUN
+	-- cs = CellularSpace{
+	--     file = filePath("test/sampa.shp", "terralib")
+	-- }
+	--
+	-- t = Trajectory{
+	--     target = cs,
+	--     select = function(cell)
+	--         return cell.ID % 2 == 0
+	--     end
+	-- }
+	--
+	-- t:save("odd.shp")
 	save = function(self, file, attrs)
 		mandatoryArgument(1, "File", file)
 
