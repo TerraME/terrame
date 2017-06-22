@@ -353,14 +353,14 @@ forEachOrderedElement(commands, function(idx, group)
 
 		if sessionInfo().system == "mac" then
 			if idx == "sketch" then
-				if name == "terralib" then
+				if name == "gis" then
 					_Gtme.printWarning("Skipping "..name)
 					return
 				end
 			end
 		end
 
-		if args.package and not belong(args.package, {"terralib", "memory"}) then
+		if args.package and not belong(args.package, {"gis", "memory"}) then
 			command = command.." -package "..args.package
 		else
 			return

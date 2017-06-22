@@ -248,9 +248,9 @@ return{
 			os.execute("rm -f "..projFile)
 		end
 
-        local terralib = getPackage("terralib")
+        local gis = getPackage("gis")
 
-		local proj = terralib.Project{
+		local proj = gis.Project{
 			file = projFile,
 			clean = true,
 			author = "Avancini",
@@ -291,17 +291,17 @@ return{
 		end
 
 		projFile = "sampa.tview"
-		local project = terralib.Project{
+		local project = gis.Project{
 			file = projFile,
 			clean = true,
 			author = "Carneiro, H.",
 			title = "Sampa Example",
 		}
 
-		local layer = terralib.Layer{
+		local layer = gis.Layer{
 			project = project,
 			name = "sampa_layer",
-			file = filePath("test/sampa.shp", "terralib"),
+			file = filePath("test/sampa.shp", "gis"),
 		}
 
 		local projAndLayerExists = function()

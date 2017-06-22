@@ -22,7 +22,7 @@
 --
 -------------------------------------------------------------------------------------------
 
-local terralib = getPackage("terralib")
+local gis = getPackage("gis")
 
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
@@ -433,7 +433,7 @@ local function checkProject(self)
 				end
 
 				if self.project:exists() then
-					self.project = terralib.Project{
+					self.project = gis.Project{
 						file = self.project
 					}
 				else
@@ -448,7 +448,7 @@ local function checkProject(self)
 			customError("Layer '"..self.layer.."' does not exist in Project '"..self.project.file.."'.")
 		end
 
-		self.layer = terralib.Layer{
+		self.layer = gis.Layer{
 			project = self.project,
 			name = self.layer
 		}
@@ -623,7 +623,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		for k, v in pairs(dSet[i]) do
 			if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
 				if self.geometry then
-					cell.geom = terralib.TerraLib().castGeomToSubtype(v)
+					cell.geom = gis.TerraLib().castGeomToSubtype(v)
 				end
 			else
 				cell[k] = v
@@ -641,7 +641,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 end
 
 local function loadOGR(self)
-	local dSet = terralib.TerraLib().getOGRByFilePath(tostring(self.file), self.missing)
+	local dSet = gis.TerraLib().getOGRByFilePath(tostring(self.file), self.missing)
 
 	defaultTableValue(self, "geometry", false)
 
@@ -694,7 +694,7 @@ local function setRasterCells(self, dSet)
 end
 
 local function loadGdal(self)
-	local dSet = terralib.TerraLib().getGdalByFilePath(tostring(self.file))
+	local dSet = gis.TerraLib().getGdalByFilePath(tostring(self.file))
 
 	setRasterCells(self, dSet) -- SKIP
 	self.layer = self.file:name() -- SKIP
@@ -704,7 +704,7 @@ local function loadGdal(self)
 end
 
 local function loadLayer(self)
-	local dset = terralib.TerraLib().getDataSet(self.project, self.layer.name, self.missing)
+	local dset = gis.TerraLib().getDataSet(self.project, self.layer.name, self.missing)
 
 	if self.layer.rep == "raster" then
 		setRasterCells(self, dset) -- SKIP
@@ -1246,8 +1246,8 @@ CellularSpace_ = {
 	sample = function(self)
 		return self.cells[Random():integer(1, #self)]
 	end,
-	--- Save the attributes of a CellularSpace into the same terralib::Project it was loaded from.
-	-- @arg newLayerName Name of the terralib::Layer to store the saved attributes.
+	--- Save the attributes of a CellularSpace into the same gis::Project it was loaded from.
+	-- @arg newLayerName Name of the gis::Layer to store the saved attributes.
 	-- If the original data comes from a shapefile, it will create another shapefile using
 	-- the name of the layer as file name and will save it in the same directory where the
 	-- original shapefile is stored. If the data comes from a PostGIS database, it
@@ -1257,7 +1257,7 @@ CellularSpace_ = {
 	-- other attributes of the layer will also be saved in the new output.
 	-- When saving a single attribute, you can use a string "attribute" instead of a table {"attribute"}.
 	-- @usage -- DONTRUN
-	-- import("terralib")
+	-- import("gis")
 	--
 	-- proj = Project{
 	--     file = "amazonia.tview",
@@ -1296,7 +1296,7 @@ CellularSpace_ = {
 			customError("The CellularSpace must have a valid Project. Please, check the documentation.")
 		end
 
-		local dset = terralib.TerraLib().getDataSet(self.project, self.layer.name)
+		local dset = gis.TerraLib().getDataSet(self.project, self.layer.name)
 		-- TODO(#1793)
 		if not self.geometry then
 			for i = 0, #dset do
@@ -1325,7 +1325,7 @@ CellularSpace_ = {
 			end
 		end
 
-		terralib.TerraLib().saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
+		gis.TerraLib().saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
 	end,
 	--- Split the CellularSpace into a table of Trajectories according to a classification
 	-- strategy. The Trajectories will have empty intersection and union equal to the
@@ -1499,11 +1499,11 @@ metaTableCellularSpace_ = {
 -- See the table below with the description and the arguments of each data source.
 -- Calling Utils:forEachCell() traverses CellularSpaces.
 -- @arg data.sep A string with the file separator. The default value is ",".
--- @arg data.layer A string with the name of the layer stored in a TerraLib project,
--- or a terralib::Layer.
--- @arg data.project A string with the name of the TerraLib project to be used.
+-- @arg data.layer A string with the name of the layer stored in a GIS project,
+-- or a gis::Layer.
+-- @arg data.project A string with the name of the GIS project to be used.
 -- If this name does not ends with ".tview", this extension will be added to the name
--- of the file. It can also be a terralib::Project.
+-- of the file. It can also be a gis::Project.
 -- @arg data.missing An optional number that replaces all numeric attributes read from a data source
 -- that do not have any value. If this argument is not set and TerraME finds some attribute without
 -- a value, the simulation will stop with an error.
@@ -1517,7 +1517,7 @@ metaTableCellularSpace_ = {
 -- default value is "top", which is the most common representation in different data
 -- formats. When zero is "bottom", the y values of each cell is inverted according to
 -- the maximum and minimum values: newy = y maximum - y + y minimum. All cellular data
--- created using package terralib will have their y values inverted.
+-- created using package gis will have their y values inverted.
 -- @arg data.xy An optional table with two strings describing the names of the
 -- column and row attributes, in this order. The default value is {"col", "row"},
 -- representing the attribute names created by TerraLib for CellularSpaces. A Map
@@ -1556,7 +1556,7 @@ metaTableCellularSpace_ = {
 -- & & sep, attrname, as \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
 -- requires at least two attributes: x and y. & file & source, sep, as, geometry, ...\
--- "proj" & Load from a layer within a TerraLib project. See the documentation of package terralib for
+-- "proj" & Load from a layer within a GIS project. See the documentation of package gis for
 -- more information. & project, layer & source, geometry, as, missing, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and
 -- different extensions: .shp, .shx, and .dbf. The argument file must end with ".shp".

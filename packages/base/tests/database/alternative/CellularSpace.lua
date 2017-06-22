@@ -192,12 +192,12 @@ return{
 
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", "null"))
 
-		local terralib = getPackage("terralib")
+		local gis = getPackage("gis")
 		local file = File("cellspace_alt.tview")
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = terralib.Project{
+		local proj = gis.Project{
 			file = tostring(file),
 			clean = true,
 			author = author,
@@ -205,7 +205,7 @@ return{
 		}
 
 		local missLayerName = "CellsAmaz"
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = missLayerName,
 			file = filePath("test/CellsAmaz.shp")
@@ -406,7 +406,7 @@ return{
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
 	end,
 	save = function(unitTest)
-		local terralib = getPackage("terralib")
+		local gis = getPackage("gis")
 
 		local projName = File("cellspace_save_alt.tview")
 
@@ -415,7 +415,7 @@ return{
 
 		projName:deleteIfExists()
 
-		local proj = terralib.Project{
+		local proj = gis.Project{
 			file = projName:name(true),
 			clean = true,
 			author = author,
@@ -423,10 +423,10 @@ return{
 		}
 
 		local layerName1 = "Sampa"
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "gis")
 		}
 
 		local clName1 = "Sampa_Cells_DB"
@@ -434,7 +434,7 @@ return{
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 
-		local layer1 = terralib.Layer{
+		local layer1 = gis.Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,

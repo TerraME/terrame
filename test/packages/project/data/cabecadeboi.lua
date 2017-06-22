@@ -24,7 +24,7 @@
 
 -- @example Creates a database that can be used by the example runoff of base package.
 
-import("terralib")
+import("gis")
 
 local projName = "cabecadeboi.tview"
 
@@ -38,14 +38,14 @@ local project = Project{
 elevation = Layer{
 	project = project,
 	name = "elevation",
-	file = filePath("cabecadeboi-elevation.tif", "terralib"),
+	file = filePath("cabecadeboi-elevation.tif", "gis"),
 	epsg = 2311
 }
 
 box = Layer{
 	project = project,
 	name = "box",
-	file = filePath("cabecadeboi-box.shp", "terralib"),
+	file = filePath("cabecadeboi-box.shp", "gis"),
 	epsg = 2311
 }
 

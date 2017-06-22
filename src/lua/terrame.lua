@@ -436,7 +436,7 @@ function _Gtme.uninstall(package)
 	local arg = si.path..s.."packages"..s..package
 	_Gtme.printNote("Uninstalling package \'"..package.."\'")
 
-	if package == "base" or package == "terralib" then
+	if package == "base" or package == "gis" then
 		_Gtme.printError("Package '"..package.."' cannot be removed")
 		os.exit(0)
 	end
@@ -602,7 +602,7 @@ local function version()
 	str = str.."\n  Qt "..qt_version
 	str = str.."\n  Qwt "..qwt_version
 
-	local terralib = _Gtme.getPackage("terralib")
+	local terralib = _Gtme.getPackage("gis")
 	str = str.."\n  TerraLib "..terralib.TerraLib().getVersion()
 	finalizeTerraLib()
 
@@ -1432,7 +1432,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end)
 
 				import("base")
-				import("terralib")
+				import("gis")
 
 				_Gtme.myxpcall(function() errors = _Gtme.executeProjects(package) end, function(err)
 					_Gtme.printError(err)
@@ -1449,7 +1449,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit(0)
 				end
 
-				import("terralib")
+				import("gis")
 
 				dofile(sessionInfo().path.."lua"..s.."build.lua")
 				dofile(sessionInfo().path.."lua"..s.."project.lua")
@@ -1588,7 +1588,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				if project and File(arg):exists() then
 					dofile(_Gtme.sessionInfo().path.."lua"..s.."project.lua")
-					import("terralib")
+					import("gis")
 					import("base")
 
 					_Gtme.executeProject(package, project, resolution)

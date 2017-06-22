@@ -72,7 +72,7 @@ return{
 		unitTest:assertError(error_func, "#3 should be used only when comparing numbers or strings (#1 is boolean).")
 
 		local expected = [[string [biomassa-manaus.asc] ]]
-		local actual = [[string [/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/terralib/data/biomassa-manaus.asc] ]]
+		local actual = [[string [/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/gis/data/biomassa-manaus.asc] ]]
 
 		error_func = function()
 			unitTest:assertEquals(expected, actual, 0, "")

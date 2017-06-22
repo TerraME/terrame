@@ -25,7 +25,7 @@
 return{
 	save = function(unitTest)
 		local cs = CellularSpace{
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "gis")
 		}
 
 		local t = Trajectory{

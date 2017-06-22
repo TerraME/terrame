@@ -137,14 +137,14 @@ return{
 		unitTest:assertEquals(missCount, 156)
 
 		-- project
-		local terralib = getPackage("terralib")
+		local gis = getPackage("gis")
 		local projName = File("cellspace_basic.tview")
 		local author = "Avancini"
 		local title = "Cellular Space"
 
 		if projName:exists() then projName:delete() end
 
-		local proj = terralib.Project{
+		local proj = gis.Project{
 			file = projName:name(true),
 			clean = true,
 			author = author,
@@ -153,10 +153,10 @@ return{
 
 		local layerName1 = "Sampa"
 
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "gis")
 		}
 
 		local clName1 = "Sampa_Cells_DB"
@@ -164,7 +164,7 @@ return{
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 
-		local layer1 = terralib.Layer{
+		local layer1 = gis.Layer{
 			project = proj,
 			source = "postgis",
 			clean = true,
@@ -202,7 +202,7 @@ return{
 
 		-- MISSING TEST
 		local missLayerName = "CellsAmaz"
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = missLayerName,
 			file = filePath("test/CellsAmaz.shp")
@@ -675,12 +675,12 @@ return{
 		unitTest:assertEquals(count, 7)
 	end,
 	save = function(unitTest)
-		local terralib = getPackage("terralib")
+		local gis = getPackage("gis")
 		local projName = "cellspace_save_basic.tview"
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = terralib.Project{
+		local proj = gis.Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -688,10 +688,10 @@ return{
 		}
 
 		local layerName1 = "Sampa"
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "gis")
 		}
 
 		local clName1 = "Sampa_Cells_DB"
@@ -703,7 +703,7 @@ return{
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 
-		local layer1 = terralib.Layer{
+		local layer1 = gis.Layer{
 			project = proj,
 			source = "postgis",
 			clean = true,
@@ -736,7 +736,7 @@ return{
 
 		cs:save(cellSpaceLayerNameT0, "t0")
 
-		local layer2 = terralib.Layer{
+		local layer2 = gis.Layer{
 			project = proj,
 			name = cellSpaceLayerNameT0
 		}
@@ -753,7 +753,7 @@ return{
 
 		cs:save(cellSpaceLayerName)
 
-		local layer3 = terralib.Layer{
+		local layer3 = gis.Layer{
 			project = proj,
 			name = cellSpaceLayerName
 		}
@@ -813,7 +813,7 @@ return{
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
 		cs:save(cellSpaceLayerNameGeom)
 
-		local layer4 = terralib.Layer{
+		local layer4 = gis.Layer{
 			project = proj,
 			name = cellSpaceLayerNameGeom
 		}
@@ -831,7 +831,7 @@ return{
 		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"
 		cs:save(cellSpaceLayerNameGeom2)
 
-		local layer5 = terralib.Layer{
+		local layer5 = gis.Layer{
 			project = proj,
 			name = cellSpaceLayerNameGeom2
 		}
@@ -857,12 +857,12 @@ return{
 		layer5:delete()
 	end,
 	synchronize = function(unitTest)
-		local terralib = getPackage("terralib")
+		local gis = getPackage("gis")
 		local projName = "cellspace_basic.tview"
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local proj = terralib.Project {
+		local proj = gis.Project {
 			file = projName,
 			clean = true,
 			author = author,
@@ -870,10 +870,10 @@ return{
 		}
 
 		local layerName1 = "Sampa"
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "gis")
 		}
 
 		local cs = CellularSpace{

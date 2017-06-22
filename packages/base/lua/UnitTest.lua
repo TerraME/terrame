@@ -88,7 +88,7 @@ UnitTest_ = {
 	-- @usage unitTest = UnitTest{}
 	-- unitTest:assertEquals(3, 3)
 	-- unitTest:assertEquals(2, 2.1, 0.2)
-	-- unitTest:assertEquals("string [terralib/data/biomassa-manaus.asc]", "string [terralib/biomassa-manaus.asc]", 0, true)
+	-- unitTest:assertEquals("string [gis/data/biomassa-manaus.asc]", "string [gis/biomassa-manaus.asc]", 0, true)
 	assertEquals = function(self, v1, v2, tol, ignorePath)
 		if v1 == nil then
 			mandatoryArgumentError(1)

@@ -149,9 +149,9 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-        local terralib = getPackage("terralib")
+        local gis = getPackage("gis")
 
-		local proj = terralib.Project{
+		local proj = gis.Project{
 			file = projName:name(true),
 			clean = true,
 			author = author,
@@ -159,10 +159,10 @@ return{
 		}
 
 		local layerName1 = "Sampa"
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "gis")
 		}
 
 		local shp1 = "sampa_cells.shp"
@@ -171,7 +171,7 @@ return{
 		File(filePath1):deleteIfExists()
 
 		local clName1 = "Sampa_Cells"
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,

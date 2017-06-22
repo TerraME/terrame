@@ -22,7 +22,7 @@
 --
 -------------------------------------------------------------------------------------------
 
-local terralib = getPackage("terralib")
+local gis = getPackage("gis")
 local cellArea
 
 Cell_ = {
@@ -61,7 +61,7 @@ Cell_ = {
 		mandatoryArgument(1, "Cell", cell)
 
 		if self.geom then
-			return terralib.TerraLib().getDistance(self.geom, cell.geom)
+			return gis.TerraLib().getDistance(self.geom, cell.geom)
 		end
 
 		return math.sqrt((self.x - cell.x) ^ 2 + (self.y - cell.y) ^ 2)
@@ -297,7 +297,7 @@ Cell_ = {
 		end
 
 		if self.geom then
-			cellArea = terralib.TerraLib().getArea(self.geom)
+			cellArea = gis.TerraLib().getArea(self.geom)
 			return cellArea
 		else
 			customError("It was not possible to calculate the area. Geometry was not found.")
