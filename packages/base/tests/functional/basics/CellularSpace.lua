@@ -1549,7 +1549,6 @@ ydim    number [20]
 
 		local counter = 0
 		forEachCell(cs, function(cell)
-			cell.height = 0.4
 			if counter >= 3 then
 				cell.cover = "forest"
 			else
@@ -1592,13 +1591,24 @@ ydim    number [20]
 		}
 
 		cs = CellularSpace{
-			xdim = 1,
+			xdim = 5,
 			instance = cell
 		}
 
 		ts = cs:split("cover")
-		unitTest:assertEquals(#ts.forest, 1)
-		unitTest:assertEquals(#ts.pasture, 0)
+		unitTest:assertEquals(getn(ts), 2)
+		unitTest:assertEquals(#ts.forest, 14)
+		unitTest:assertEquals(#ts.pasture, 11)
+
+		forEachCell(cs, function(mcell)
+			mcell.cover = "pasture"
+		end)
+
+		ts.forest:filter()
+		ts.pasture:filter()
+
+		unitTest:assertEquals(#ts.forest, 0)
+		unitTest:assertEquals(#ts.pasture, 25)
 	end,
 	synchronize = function(unitTest)
 		local cs = CellularSpace{xdim = 5}

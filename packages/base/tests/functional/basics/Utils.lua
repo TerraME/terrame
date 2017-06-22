@@ -183,6 +183,44 @@ return{
 
 		unitTest:assertEquals(count, 10)
 	end,
+	forEachAttribute = function(unitTest)
+		local a = Agent{}
+		local soc = Society{instance = a, quantity = 10}
+		local cell = Cell{}
+		local cs = CellularSpace{xdim = 6, instance = cell}
+		local e = Environment{soc, cs}
+
+		e:createPlacement{}
+
+		a = soc:sample()
+		a.value1 = 2
+		a.value2 = 3
+
+		local count = 0
+		forEachAttribute(a, function(idx, value)
+			unitTest:assert(belong(idx, {"value1", "value2"}))
+			unitTest:assert(value >= 2)
+			unitTest:assert(value <= 3)
+			count = count + 1
+		end)
+
+		unitTest:assertEquals(count, 2)
+
+		count = 0
+		cell = cs:sample()
+
+		cell.v1 = 2
+		cell.v2 = 3
+
+		forEachAttribute(cell, function(idx, value)
+			unitTest:assert(belong(idx, {"v1", "v2"}))
+			unitTest:assert(value >= 2)
+			unitTest:assert(value <= 3)
+			count = count + 1
+		end)
+
+		unitTest:assertEquals(count, 2)
+	end,
 	forEachCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
