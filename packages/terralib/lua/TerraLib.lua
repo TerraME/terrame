@@ -979,7 +979,7 @@ end
 local function createPgDataSourceToSaveAs(fromType, pgData)
 	local ds = nil
 
-	if fromType == "OGR" then
+	if (fromType == "OGR") or (fromType == "POSTGIS") then
 		local connInfo = createPgConnInfo(pgData.host, pgData.port, pgData.user, pgData.password, pgData.database, pgData.encoding)
 		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
 	end
@@ -998,16 +998,16 @@ local function createOgrDataSourceToSaveAs(fromType, fileData)
 	return ds
 end
 
-local function createGdalDataSourceToSaveAs(fromType, fileData)
-	local ds = nil
+-- local function createGdalDataSourceToSaveAs(fromType, fileData) -- TODO(#1364)
+	-- local ds = nil
 
-	if fromType == "GDAL" then -- SKIP
-		local connInfo = createFileConnInfo(tostring(fileData.dir))
-		ds = makeAndOpenDataSource(connInfo, "GDAL") -- SKIP
-	end
+	-- if fromType == "GDAL" then -- SKIP
+		-- local connInfo = createFileConnInfo(tostring(fileData.dir))
+		-- ds = makeAndOpenDataSource(connInfo, "GDAL") -- SKIP
+	-- end
 
-	return ds
-end
+	-- return ds
+-- end
 
 local function isValidDataSourceUri(uri, type)
 	local ds = binding.te.da.DataSourceFactory.make(type, uri)
@@ -1082,27 +1082,27 @@ local function createInvalidNamesErrorMsg(invalidNames)
 	return errorMsg
 end
 
-local function createAttributesToUpdateInfos(dataset, attrNames)
-	local attrsToUp = {}
+local function createAttributesInfo(dataset, attrNames)
+	local attrInfos = {}
 
 	if attrNames then
 		for i = 1, #attrNames do
-			attrsToUp[i] = {name = attrNames[i], pos = nil, type = nil}
+			attrInfos[i] = {name = attrNames[i], pos = nil, type = nil}
 		end
 	end
 
 	local numProps = dataset:getNumProperties()
 	for i = 0, numProps - 1 do
 		local pn = dataset:getPropertyName(i)
-		for j = 1, #attrsToUp do
-			if pn == attrsToUp[j].name then
-				attrsToUp[j].pos = i
-				attrsToUp[j].type = dataset:getPropertyDataType(i)
+		for j = 1, #attrInfos do
+			if pn == attrInfos[j].name then
+				attrInfos[j].pos = i
+				attrInfos[j].type = dataset:getPropertyDataType(i)
 			end
 		end
 	end
 
-	return attrsToUp
+	return attrInfos
 end
 
 local function updateAttributeNumberByType(dataset, type, pos, value)
@@ -1205,7 +1205,7 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 				end
 
 				if #attrsToUp > 0 then
-					attrsToUp = createAttributesToUpdateInfos(dse, attrsToUp)
+					attrsToUp = createAttributesInfo(dse, attrsToUp)
 				end
 
 				-- Set the values of the new dataset from the data
@@ -1283,7 +1283,7 @@ local function updateDataSet(fromLayer, toSet, attrs)
 		local dsetName = fromLayer:getDataSetName()
 		local dse = ds:getDataSet(dsetName)
 
-		local attrsToUp = createAttributesToUpdateInfos(dse, attrs)
+		local attrsToUp = createAttributesInfo(dse, attrs)
 
 		local dseUp = binding.te.mem.DataSet(dse)
 		local index = 1
@@ -1384,6 +1384,338 @@ local function isOperationAvailableToPropertyDataType(operation, propType)
 	end
 
 	return false
+end
+
+local function createFromDataInfoToSaveAsByLayer(layer)
+	local info = {}
+	local fromDsId = layer:getDataSourceId()
+	local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)
+	info.datasource = binding.GetDs(fromDsId, true)
+	info.datasource:setEncoding(layer:getEncoding())
+	layer = toDataSetLayer(layer)
+	info.dataset = layer:getDataSetName()
+	info.type = fromDsInfo:getType()
+	info.name = layer:getTitle()
+	info.srid = layer:getSRID()
+
+	return info
+end
+
+local function createFromDataInfoToSaveAsByFile(file)
+	local info = {}
+	local connInfo = createFileConnInfo(tostring(file))
+	local fileExt = file:extension()
+
+	if fileExt == "shp" then
+		local _, fileName = file:split()
+		info.dataset = fileName
+	elseif fileExt == "geojson" then
+		info.dataset = "OGRGeoJSON"
+	else
+		customError("File extension '"..fileExt.."' is not supported to save.")
+	end
+
+	info.datasource = makeAndOpenDataSource(connInfo, "OGR")
+	info.type = "OGR"
+	local dst = info.datasource:getDataSetType(info.dataset)
+	local gp = binding.GetFirstGeomProperty(dst)
+	info.srid = gp:getSRID()
+	info.name = info.dataset.."."..fileExt
+
+	return info
+end
+
+local function createToDataInfoToSaveAs(toData, fromData, overwrite)
+	local info = {}
+	local toType = SourceTypeMapper[toData.type]
+	local toDs
+	local toDSetName
+	local fromDSetName = fromData.dataset
+	local fromType = fromData.type
+	local errorMsg
+
+	if toType == "POSTGIS" then
+		if not toData.table then
+			toData.table = fromDSetName
+		end
+
+		toData.table = string.lower(toData.table)
+		toDSetName = toData.table
+		toDs = createPgDataSourceToSaveAs(fromType, toData)
+
+		if not toDs then
+			errorMsg = "It was not possible save '"..fromData.name.."' to postgis data." -- #1363
+		elseif toDs:dataSetExists(toDSetName) then
+			if overwrite then
+				toDs:dropDataSet(toDSetName)
+			else
+				errorMsg = "Table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
+			end
+		end
+	elseif toType == "OGR" then
+		if File(toData.file):exists() then
+			if overwrite then
+				local _, fn = File(toData.file):split()
+				toDSetName = fn
+				File(toData.file):delete() -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
+			else
+				errorMsg = "File '"..toData.file.."' already exists."
+			end
+		else
+			toDSetName = fromDSetName
+		end
+
+		if not errorMsg then
+			toDs = createOgrDataSourceToSaveAs(fromType, toData)
+			if not toDs then
+				errorMsg = "It was not possible save '"..fromData.name.."' to vector data."
+			end
+		end
+	elseif (toType == "GDAL") or (fromType == "GDAL") then
+		if fromType == "GDAL" then
+			errorMsg = "Raster data '"..fromDSetName.."' cannot be saved."
+		else
+			errorMsg = "It was not possible save '"..fromData.name.."' to raster data."
+		end
+		-- TODO(#1364)
+		-- toData.fileTif = fromDSetName
+		-- local file = File(toData.file)
+		-- toData.dir = Directory(file)
+		-- local fileCopy = toData.dir..toData.fileTif
+
+		-- if toData.file and (file:name(true) ~= fileTif) then
+			-- customWarning("It was not possible to convert '"..fromData.name.."' to '"..toData.file.."'.") -- #1364
+		-- end
+
+		-- toDs = createGdalDataSourceToSaveAs(fromType, toData)
+		-- toDSetName = toData.fileTif
+		-- if not toDs then
+			-- errorMsg = "It was not possible save '"..fromData.name.."' to raster data."
+		-- elseif toDs:dataSetExists(toDSetName) then
+			-- if overwrite then
+				-- toDs:dropDataSet(toDSetName)
+			-- else
+				-- errorMsg = "File '"..fileCopy.."' already exists." -- SKIP
+			-- end
+		-- end
+	end
+
+	if errorMsg then
+		if toDs then
+			toDs:close()
+		end
+
+		fromData.datasource:close()
+		return false, errorMsg
+	end
+
+	info.dataset = toDSetName
+	info.datasource = toDs
+	info.type = toType
+
+	if toData.encoding then
+		toDs:setEncoding(binding.CharEncoding.getEncodingType(toData.encoding))
+	else
+		toDs:setEncoding(fromData.datasource:getEncoding())
+	end
+
+	if toData.srid then
+		if toType ~= "GDAL" then
+			info.srid = toData.srid
+		else
+			customWarning("It was not possible to change SRID from raster data.") -- #1485 -- SKIP
+			info.srid = fromData.srid -- SKIP
+		end
+	else
+		info.srid = fromData.srid
+	end
+
+	return info
+end
+
+local function hasValuesSamePrimaryKey(values, pkName)
+	return values[1][pkName] ~= nil
+end
+
+local function saveLayerAs(fromData, toData, attrs, values)
+	do
+		local fromDs = fromData.datasource
+
+		local attrsToIn = {}
+		local attrsNoExist = {}
+		local errorMsg
+
+		if attrs then
+			for i = 1, #attrs do
+				local propName = attrs[i]
+				if fromDs:propertyExists(fromData.dataset, propName) then
+					attrsToIn[propName] = true
+				else
+					table.insert(attrsNoExist, propName)
+				end
+			end
+		end
+
+		if #attrsNoExist > 0 then
+			if #attrsNoExist == 1 then
+				errorMsg = "There is no attribute '"..attrsNoExist[1].."' in '"..fromData.name.."'."
+			else
+				local ins = ""
+				for i = 1, #attrsNoExist do
+					ins = ins.."'"..attrsNoExist[i].."'"
+					if (i ~= #attrsNoExist - 1) and not (i == #attrsNoExist) then
+						ins = ins..", "
+					elseif i == #attrsNoExist - 1 then
+						ins = ins.." and "
+					end
+				end
+
+				errorMsg = "There are no attributes "..ins.." in '"..fromData.name.."'."
+			end
+		end
+
+		local toDs = toData.datasource
+		local toDSetName = toData.dataset
+
+		if errorMsg then
+			if toDs then
+				toDs:close()
+			end
+
+			fromDs:close()
+			customError(errorMsg)
+		end
+
+		local fromDSetType = fromDs:getDataSetType(fromData.dataset)
+		local fromDSet = fromDs:getDataSet(fromData.dataset)
+		local converter = binding.te.da.DataSetTypeConverter(fromDSetType, fromDs:getCapabilities(), toDs:getEncoding())
+
+		local pkName = ""
+		local pk = fromDSetType:getPrimaryKey()
+		if pk then
+			if fromData.type == "POSTGIS" then
+				pkName = pk:getPropertyName(0)
+			else
+				pkName = pk:getName()
+			end
+		end
+
+		-- If there are attrs, keep only them, primary key and geometries
+		local attrsFilter = {}
+		if attrs then
+			local numProps = fromDSet:getNumProperties()
+			fromDSet:moveFirst()
+			for i = 0, numProps - 1 do
+				local propName = fromDSet:getPropertyName(i)
+				if not (pkName == propName) and not attrsToIn[propName] and
+					not (fromDSet:getPropertyDataType(i) == binding.GEOMETRY_TYPE) then
+					converter:remove(propName)
+				else
+					table.insert(attrsFilter, propName)
+				end
+			end
+		elseif values then -- if there is a subset without attrs, it will save all properties from the subset
+			local numProps = fromDSet:getNumProperties()
+			fromDSet:moveFirst()
+			for i = 0, numProps - 1 do
+				local propName = fromDSet:getPropertyName(i)
+				table.insert(attrsFilter, propName)
+			end
+		end
+
+		binding.AssociateDataSetTypeConverterSRID(converter, toData.srid)
+		local dstResult = converter:getResult()
+		dstResult:setName(toDSetName)
+
+		-- TODO(avancinirodrigo): why POSTGIS does not work like OGR?
+		-- Fix the primary key for postgis only
+		if toData.type == "POSTGIS" then
+			local pkToFix = dstResult:getPrimaryKey()
+			if pkToFix then
+				local rand = string.gsub(binding.GetRandomicId(), "-", "")
+				rand = string.sub(rand, 1, 8)
+				pkToFix:setName("pk"..rand)
+
+				-- local pkIdx = pkToFix:getAssociatedIndex() TODO(#1678)
+				-- if pkIdx then
+					-- pkIdx:setName("idx"..rand)
+				-- else
+					-- local gp = binding.GetFirstGeomProperty(dstResult)
+					-- if gp then
+						-- local idx = binding.te.da.Index(dstResult)
+						-- idx:setName("idx"..rand)
+						-- idx:setIndexType(binding.R_TREE_TYPE)
+						-- idx:add(gp:clone())
+						-- pkToFix:setAssociatedIndex(idx)
+					-- end
+				-- end
+			end
+		end
+
+		local dsetAdapted
+
+		-- It can create a new data with only some values
+		if values then
+			if not hasValuesSamePrimaryKey(values, pkName) then
+				if toDs then
+					toDs:close()
+				end
+				fromDs:close()
+				customError("Primary key not found ("..fromData.name..", "..pkName.."). Please, check your subset.")
+			end
+
+			local newDst = converter:getConvertee()
+			local newDse = binding.te.mem.DataSet(newDst)
+			attrsToIn = createAttributesInfo(fromDSet, attrsFilter)
+			local pkPos = getPropertyPosition(fromDSet, pkName)
+
+			fromDSet:moveBeforeFirst()
+			for i = 1, #values do
+				local next = true
+				while next do
+					if fromDSet:moveNext() then
+						if fromDSet:getInt(pkPos) == values[i][pkName] then
+							local item = binding.te.mem.DataSetItem.create(newDse)
+							for j = 1, #attrsToIn do
+								item:setValue(attrsToIn[j].pos, fromDSet:getValue(attrsToIn[j].pos):clone())
+							end
+							newDse:add(item)
+							next = false
+						end
+					else
+						next = false -- SKIP
+					end
+				end
+			end
+
+			dsetAdapted = binding.CreateAdapter(newDse, converter)
+		else
+			dsetAdapted = binding.CreateAdapter(fromDSet, converter)
+		end
+
+		local transactor = toDs:getTransactor()
+		transactor:begin()
+		transactor:createDataSet(dstResult, {})
+		local toDstName = dstResult:getName()
+		dsetAdapted:moveBeforeFirst()
+		transactor:add(toDstName, dsetAdapted)
+		transactor:commit()
+
+		if toData.type == "OGR" then -- TODO(#1678)
+			addSpatialIndex(toDs, toDstName)
+		end
+
+		-- #875
+		-- if toData.type == "POSTGIS" then
+			-- toDs:renameDataSet(string.lower(fromData.dataset), toData.table)
+		-- end
+
+		fromDs:close()
+	end
+
+	collectgarbage("collect")
+
+	return true
 end
 
 TerraLib_ = {
@@ -2409,240 +2741,58 @@ TerraLib_ = {
 		return value
 	end,
 	--- Save some data of a layer to another data type.
-	-- @arg project The project.
-	-- @arg layerName The layer name which is in the project.
+	-- @arg fromData The reference information data.
 	-- @arg toData The data that will be saved.
 	-- @arg overwrite Indicates if the saved data will be overwritten.
 	-- @arg attrs The attribute(s) that will be saved.
+	-- @arg values A table with a data's subset of the Layer.
+	-- If this parameter is set with a subset of from data, the saved data will have only its values.
+	-- And, if values is set and attrs is nil, all attributes will be saved.
 	-- @usage -- DONTRUN
+	-- local fromData = {
+	--     project = aProject,
+	--     layer = "aLayerName"
+	-- }
 	-- local toData = {
 	--     file = "shp2geojson.geojson",
 	--     type = "geojson",
 	--     srid = 4326
 	-- }
-	-- TerraLib().saveLayerAs(project, "SomeLayer", toData, true, {"population", "ages"})
-	saveLayerAs = function(project, layerName, toData, overwrite, attrs)
-		loadProject(project, project.file)
+	-- TerraLib().saveLayerAs(fromData, toData, true, {"population", "ages"})
+	saveLayerAs = function(fromData, toData, overwrite, attrs, values)
+		if fromData.project then
+			local project = fromData.project
+			loadProject(project, project.file)
+			local layer = project.layers[fromData.layer]
+			local fromDataToSave = createFromDataInfoToSaveAsByLayer(layer)
+			local toDataToSave, err = createToDataInfoToSaveAs(toData, fromDataToSave, overwrite)
 
-		do
-			local from = project.layers[layerName]
-			local fromDsId = from:getDataSourceId()
-			local toType = SourceTypeMapper[toData.type]
-			local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)
-			local fromDs = binding.GetDs(fromDsId, true)
-			local attrsToIn = {}
-			local attrsNoExist = {}
-			fromDs:setEncoding(from:getEncoding())
-			from = toDataSetLayer(from)
-			local fromDSetName = from:getDataSetName()
-			local fromType = fromDsInfo:getType()
-			local toDs
-			local errorMsg
-			local toDSetName
-
-			if attrs then
-				for i = 1, #attrs do
-					local propName = attrs[i]
-					if fromDs:propertyExists(fromDSetName, propName) then
-						attrsToIn[propName] = true
-					else
-						table.insert(attrsNoExist, propName)
-					end
-				end
+			if err then
+				customError(err)
 			end
 
-			if #attrsNoExist > 0 then
-				if #attrsNoExist == 1 then
-					errorMsg = "There is no attribute '"..attrsNoExist[1].."' in layer '"..layerName.."'."
-				else
-					local ins = ""
-					for i = 1, #attrsNoExist do
-						ins = ins.."'"..attrsNoExist[i].."'"
-						if (i ~= #attrsNoExist - 1) and not (i == #attrsNoExist) then
-							ins = ins..", "
-						elseif i == #attrsNoExist - 1 then
-							ins = ins.." and "
-						end
-					end
-
-					errorMsg = "There are no attributes "..ins.." in layer '"..layerName.."'."
-				end
-			end
-
-			if toType == "POSTGIS" then
-				if not toData.table then
-					toData.table = fromDSetName
-				end
-
-				toData.table = string.lower(toData.table)
-				toDSetName = toData.table
-				toDs = createPgDataSourceToSaveAs(fromType, toData)
-
-				if not toDs then
-					errorMsg = "It was not possible save the data in layer '"..layerName.."' to postgis data." -- #1363
-				elseif toDs:dataSetExists(toDSetName) then
-					if overwrite then
-						toDs:dropDataSet(toDSetName)
-					else
-						errorMsg = "Table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
-					end
-				end
-			elseif toType == "OGR" then
-				if File(toData.file):exists() then
-					if overwrite then
-						local _, fn = File(toData.file):split()
-						toDSetName = fn
-						File(toData.file):delete() -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
-					else
-						errorMsg = "File '"..toData.file.."' already exists."
-					end
-				else
-					toDSetName = fromDSetName
-				end
-
-				if not errorMsg then
-					toDs = createOgrDataSourceToSaveAs(fromType, toData)
-					if not toDs then
-						errorMsg = "It was not possible save the data in layer '"..layerName.."' to vector data."
-					end
-				end
-			elseif toType == "GDAL" then
-				toData.fileTif = fromDSetName
-				local file = File(toData.file)
-				toData.dir = Directory(file)
-				local fileCopy = toData.dir..toData.fileTif
-
-				if toData.file and (file:name(true) ~= fileTif) then
-					customError("It was not possible to convert the data in layer '"..layerName.."' to '"..toData.file.."'.") -- #1364
-				end
-
-				toDs = createGdalDataSourceToSaveAs(fromType, toData) -- SKIP
-				toDSetName = toData.fileTif -- SKIP
-				if not toDs then -- SKIP
-					errorMsg = "It was not possible save the data in layer '"..layerName.."' to raster data." -- #1364 -- SKIP
-				elseif toDs:dataSetExists(toDSetName) then -- SKIP
-					if overwrite then -- SKIP
-						toDs:dropDataSet(toDSetName) -- SKIP
-					else
-						errorMsg = "File '"..fileCopy.."' already exists." -- SKIP
-					end
-				end
-
-				customWarning("Attempt to save data of the layer in '"..fileCopy.."'.") -- REVIEW -- SKIP
-			end
-
-			if errorMsg then
-				if toDs then
-					toDs:close()
-				end
-
-				fromDs:close()
-				releaseProject(project)
-				customError(errorMsg)
-			end
-
-			local fromDSetType = fromDs:getDataSetType(fromDSetName)
-			local fromDSet = fromDs:getDataSet(fromDSetName)
-
-			if toData.encoding then
-				toDs:setEncoding(binding.CharEncoding.getEncodingType(toData.encoding))
-			else
-				toDs:setEncoding(fromDs:getEncoding())
-			end
-
-			local converter = binding.te.da.DataSetTypeConverter(fromDSetType, fromDs:getCapabilities(), toDs:getEncoding())
-
-			-- If there are attrs, keep only them, primary key and geometries
-			if attrs then
-				local pk = fromDSetType:getPrimaryKey()
-				local pkName = ""
-				if pk then
-					pkName = pk:getName()
-				end
-
-				local numProps = fromDSet:getNumProperties()
-				fromDSet:moveFirst()
-				for i = 0, numProps - 1 do
-					local propName = fromDSet:getPropertyName(i)
-					if not (pkName == propName) and not attrsToIn[propName] and
-						not (fromDSet:getPropertyDataType(i) == binding.GEOMETRY_TYPE) then
-						converter:remove(propName)
-					end
-				end
-			end
-
-			local srid
-			if toData.srid then
-				if toType ~= "GDAL" then
-					srid = toData.srid
-				else
-					customWarning("It was not possible to change SRID from raster data.") -- #1485 -- SKIP
-					srid = from:getSRID() -- SKIP
-				end
-			else
-				srid = from:getSRID()
-			end
-
-			binding.AssociateDataSetTypeConverterSRID(converter, srid)
-			local dstResult = converter:getResult()
-			dstResult:setName(toDSetName)
-
-			-- TODO(avancinirodrigo): why POSTGIS does not work like OGR?
-			-- Fix the primary key for postgis only
-			if toType == "POSTGIS" then
-				local pk = dstResult:getPrimaryKey()
-				if pk then
-					local rand = string.gsub(binding.GetRandomicId(), "-", "")
-					rand = string.sub(rand, 1, 8)
-					pk:setName("pk"..rand)
-
-					-- local pkIdx = pk:getAssociatedIndex() TODO(#1678)
-					-- if pkIdx then
-						-- pkIdx:setName("idx"..rand)
-					-- else
-						-- local gp = binding.GetFirstGeomProperty(dstResult)
-						-- if gp then
-							-- local idx = binding.te.da.Index(dstResult)
-							-- idx:setName("idx"..rand)
-							-- idx:setIndexType(binding.R_TREE_TYPE)
-							-- idx:add(gp:clone())
-							-- pk:setAssociatedIndex(idx)
-						-- end
-					-- end
-				end
-			end
-
-			local dsetAdapted = binding.CreateAdapter(fromDSet, converter)
-			local transactor = toDs:getTransactor()
-			transactor:begin()
-			transactor:createDataSet(dstResult, {})
-			local toDstName = dstResult:getName()
-			dsetAdapted:moveBeforeFirst()
-			transactor:add(toDstName, dsetAdapted)
-			transactor:commit()
-
-			if toType == "OGR" then -- TODO(#1678)
-				addSpatialIndex(toDs, toDstName)
-			end
-
-			-- #875
-			-- if toType == "POSTGIS" then
-				-- toDs:renameDataSet(string.lower(fromDSetName), toData.table)
-			-- end
+			saveLayerAs(fromDataToSave, toDataToSave, attrs, values)
 
 			-- If the data belongs a layer, it will be updated in the project
-			local toLayer = getLayerByDataSetName(project.layers, toDSetName, toType)
+			local toLayer = getLayerByDataSetName(project.layers, toDataToSave.dataset, toDataToSave.type)
 			if toLayer then
-				if toLayer:getSRID() ~= srid then
-					toLayer:setSRID(srid)
+				if toLayer:getSRID() ~= toDataToSave.srid then
+					toLayer:setSRID(toDataToSave.srid)
 					saveProject(project, project.layers)
 				end
 			end
 
-			fromDs:close()
-		end
+			releaseProject(project)
+		elseif fromData.file then
+			local fromDataToSave = createFromDataInfoToSaveAsByFile(fromData.file)
+			local toDataToSave, err = createToDataInfoToSaveAs(toData, fromDataToSave, overwrite)
 
-		releaseProject(project)
+			if err then
+				customError(err)
+			end
+
+			saveLayerAs(fromDataToSave, toDataToSave, attrs, values)
+		end
 
 		collectgarbage("collect")
 

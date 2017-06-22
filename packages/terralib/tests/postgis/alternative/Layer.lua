@@ -906,7 +906,6 @@ return {
 		local pgSourceError = function()
 			layer1:export(pgData)
 		end
-
 		unitTest:assertError(pgSourceError, "It only supports postgis database, use source = \"postgis\".")
 
 		pgData.select = {"uf"}
@@ -914,8 +913,7 @@ return {
 		local selectNoExist = function()
 			layer1:export(pgData)
 		end
-
-		unitTest:assertError(selectNoExist,  "There is no attribute 'uf' in layer 'setores'.")
+		unitTest:assertError(selectNoExist,  "There is no attribute 'uf' in 'setores'.")
 
 		proj.file:deleteIfExists()
 	end

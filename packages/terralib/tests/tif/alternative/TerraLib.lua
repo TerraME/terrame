@@ -189,16 +189,11 @@ return {
 		local layerFile1 = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
 
-		local customWarningBkp = customWarning
-		local currDir = currentDir()
-		customWarning = function(msg)
-			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2tif.tif'.") or -- SKIP
-							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'.") or
-							(msg == "It was not possible to convert the data in layer 'TifLayer' to 'cbers_rgb342_crop1.tif'.") or
-							(msg == "It was not possible to change SRID from raster data."))
-		end
-
 		local overwrite = true
+
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
 
 		-- SHP
 		local toData = {}
@@ -206,20 +201,18 @@ return {
 		toData.type = "shp"
 
 		local tif2shpError = function()
-			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-
-		unitTest:assertError(tif2shpError, "It was not possible save the data in layer 'TifLayer' to vector data.")
+		unitTest:assertError(tif2shpError, "It was not possible save 'TifLayer' to vector data.")
 
 		-- GEOJSON
 		toData.file = "tif2geojson.geojson"
 		toData.type = "geojson"
 
 		local tif2geojsonError = function()
-			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-
-		unitTest:assertError(tif2geojsonError, "It was not possible save the data in layer 'TifLayer' to vector data.")
+		unitTest:assertError(tif2geojsonError, "It was not possible save 'TifLayer' to vector data.")
 
 		-- POSTGIS
 		local host = "localhost"
@@ -240,39 +233,20 @@ return {
 		}
 
 		local tif2postgisError = function()
-			TerraLib().saveLayerAs(proj, layerName1, pgData, overwrite)
+			TerraLib().saveLayerAs(fromData, pgData, overwrite)
 		end
-
-		unitTest:assertError(tif2postgisError, "It was not possible save the data in layer 'TifLayer' to postgis data.")
+		unitTest:assertError(tif2postgisError, "It was not possible save 'TifLayer' to postgis data.")
 
 		-- OVERWRITE
---[[
 		toData.file = "tif2tif.tif"
 		toData.type = "tif"
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
 
-		overwrite = false
-
-		local overwriteError = function()
-			TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		local tif2tifError = function()
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
+		unitTest:assertError(tif2tifError, "Raster data 'cbers_rgb342_crop1.tif' cannot be saved.")
 
-		unitTest:assertError(overwriteError, "File '"..currDir.."/cbers_rgb342_crop1.tif' already exists.") -- SKIP
-
-		-- TRY OVERWRITE AND CHANGE SRID
-		overwrite = true
-		toData.file = "cbers_rgb342_crop1.tif"
-		toData.type = "tif"
-		toData.srid = 4326
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
-
-		File("cbers_rgb342_crop1.tif"):delete()
 		proj.file:delete()
---]]
-
-		customWarning = customWarningBkp
-
-		File("myproject.tview"):delete()
 	end
 }
 

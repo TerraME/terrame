@@ -1158,13 +1158,17 @@ return {
 		local polFile = filePath("test/limite_es_poly_wgs84.shp", "terralib")
 		TerraLib().addShpLayer(proj, polName, polFile)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = polName
+
 		local toData = {}
 		toData.file = "limite_es_poly_wgs84-rep.shp"
 		toData.type = "shp"
 		toData.srid = 4326
 		File(toData.file):deleteIfExists()
 
-		TerraLib().saveLayerAs(proj, polName, toData, true)
+		TerraLib().saveLayerAs(fromData, toData, true)
 
 		local polDset = TerraLib().getDataSet(proj, polName)
 		local polLuaTable = {}
@@ -1216,8 +1220,8 @@ return {
 		toData.type = "shp"
 		toData.srid = 4326
 		File(toData.file):deleteIfExists()
-
-		TerraLib().saveLayerAs(proj, ptName, toData, true)
+		fromData.layer = ptName
+		TerraLib().saveLayerAs(fromData, toData, true)
 
 		local ptDset = TerraLib().getDataSet(proj, ptName, 0)
 		local ptLuaTable = {}
@@ -1313,8 +1317,8 @@ return {
 		toData.type = "shp"
 		toData.srid = 4326
 		File(toData.file):deleteIfExists()
-
-		TerraLib().saveLayerAs(proj, lnName, toData, true)
+		fromData.layer = lnName
+		TerraLib().saveLayerAs(fromData, toData, true)
 
 		local lnDset = TerraLib().getDataSet(proj, lnName, 0)
 		local lnLuaTable = {}
@@ -1661,24 +1665,28 @@ return {
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
-		-- GEOJSON
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
+
 		local toData = {}
+
+		-- GEOJSON
 		toData.file = "shp2geojson.geojson"
 		toData.type = "geojson"
 		File(toData.file):deleteIfExists()
 
-		local overwrite = true
-
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		local overwrite = true
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE AND CHANGE SRID
-		toData.srid = 4326.0
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		toData.srid = 4326
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		local layerName2 = "GJ"
 		TerraLib().addGeoJSONLayer(proj, layerName2, toData.file)
 		local info2 = TerraLib().getLayerInfo(proj, layerName2)
@@ -1691,19 +1699,19 @@ return {
 		toData.type = "shp"
 		File(toData.file):deleteIfExists()
 
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE AND CHANGE SRID
 		toData.srid = 4326
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		local layerName3 = "SHP"
 		TerraLib().addShpLayer(proj, layerName3, File(toData.file))
 		local info3 = TerraLib().getLayerInfo(proj, layerName3)
 		unitTest:assertEquals(info3.srid, toData.srid)
 
 		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE
-		TerraLib().saveLayerAs(proj, layerName1, toData, overwrite, {"NM_MICRO"})
+		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO"})
 		local dset3 = TerraLib().getDataSet(proj, layerName3)
 
 		unitTest:assertEquals(getn(dset3), 63)
@@ -1714,7 +1722,67 @@ return {
 		end
 
 		File(toData.file):delete()
+
+		-- SAVE A DATA SUBSET
+		local dset1 = TerraLib().getDataSet(proj, layerName1)
+		local sjc
+		for i = 0, getn(dset1) - 1 do
+			if dset1[i].ID == 27 then
+				sjc = dset1[i]
+			end
+		end
+
+		local touches = {}
+		local j = 1
+		for i = 0, getn(dset1) - 1 do
+			if sjc.OGR_GEOMETRY:touches(dset1[i].OGR_GEOMETRY) then
+				touches[j] = dset1[i]
+				j = j + 1
+			end
+		end
+
+		toData.file = "touches_sjc.shp"
+		toData.srid = nil
+
+		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+
+		local tchsSjc = TerraLib().getOGRByFilePath(toData.file)
+
+		unitTest:assertEquals(getn(tchsSjc), 2)
+		unitTest:assertEquals(tchsSjc[0].ID, 55)
+		unitTest:assertEquals(tchsSjc[1].ID, 109)
+
+		File(toData.file):delete()
 		proj.file:delete()
+
+		-- SAVE WITHOUT LAYER
+		fromData = {}
+		fromData.file = layerFile1
+		toData.file = "touches_sjc_2.shp"
+
+		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+
+		local tchsSjc2 = TerraLib().getOGRByFilePath(toData.file)
+
+		unitTest:assertEquals(getn(tchsSjc2), 2)
+		unitTest:assertEquals(tchsSjc2[0].ID, 55)
+		unitTest:assertEquals(tchsSjc2[1].ID, 109)
+
+		local toFile1 = toData.file
+		toData.file = "touches_sjc_3.shp"
+
+		TerraLib().saveLayerAs(fromData, toData, overwrite, nil, touches)
+
+		local tchsSjc3 = TerraLib().getOGRByFilePath(toData.file)
+
+		unitTest:assertEquals(getn(tchsSjc3), 2)
+		unitTest:assertEquals(tchsSjc3[1].FID, 1)
+		unitTest:assertEquals(tchsSjc3[1].ID, 109)
+		unitTest:assertEquals(tchsSjc3[1].NM_MICRO, "GUARULHOS")
+		unitTest:assertEquals(tchsSjc3[1].CD_GEOCODU, "35")
+
+		File(toData.file):delete()
+		File(toFile1):delete()
 	end,
 	getLayerSize = function(unitTest)
 		local proj = {}
@@ -1751,12 +1819,16 @@ return {
 		local lnFile = filePath("test/rails.shp", "terralib")
 		TerraLib().addShpLayer(proj, lnName, lnFile)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = lnName
+
 		local toData = {}
 		toData.file = "rails-rep.shp"
 		toData.type = "shp"
 		File(toData.file):deleteIfExists()
 
-		TerraLib().saveLayerAs(proj, lnName, toData, true)
+		TerraLib().saveLayerAs(fromData, toData, true)
 
 		lnName = "ES_Rails_CurrDir"
 		lnFile = File(toData.file)
