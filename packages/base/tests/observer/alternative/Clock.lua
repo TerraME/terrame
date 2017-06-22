@@ -29,31 +29,35 @@ return{
 		local error_func = function()
 			Clock(2)
 		end
+
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
 			Clock{}
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
 
 		error_func = function()
 			Clock{target = Cell{}}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("target", "Timer", Cell{}))
 
-		error_func = function()
+		local warning_func = function()
 			Clock{target = t, xwc = 5}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("xwc"))
-	end,
 
-  save = function(unitTest)
-    local c = Clock{target = Timer{}}
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("xwc"))
+	end,
+	save = function(unitTest)
+		local c = Clock{target = Timer{}}
 
 		local error_func = function()
 			c:save("file.csv")
 		end
+
 		unitTest:assertError(error_func, invalidFileExtensionMsg(1, "csv"))
-  end
+	end
 }
 

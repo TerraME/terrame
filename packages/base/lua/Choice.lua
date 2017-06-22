@@ -102,7 +102,7 @@ function Choice(attrTab)
 			attrTab.default = nil
 
 			if default == attrTab[1] then
-				customWarning(defaultValueWarning("default", default))
+				customWarning(defaultValueMsg("default", default))
 			elseif not belong(default, attrTab) then
 				customError("The default value ("..default..") does not belong to Choice.")
 			end

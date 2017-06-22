@@ -48,9 +48,11 @@ return {
 		local maskNotWork = function()
 			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		end
-		unitTest:assertError(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
+
+		unitTest:assertWarning(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
 
 		proj.file:delete()
+		File("Amazonia_Cells.shp"):delete()
 	end,
 	--addPgCellSpaceLayer = function(unitTest)
 		-- #1152
@@ -72,6 +74,7 @@ return {
 		local noRasterLayer = function()
 			TerraLib().getNumOfBands(proj, layerName)
 		end
+
 		unitTest:assertError(noRasterLayer, "The layer '"..layerName.."' is not a Raster.")
 
 		proj.file:delete()
@@ -121,7 +124,8 @@ return {
 		local differentSrids = function()
 			TerraLib().attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
-		unitTest:assertError(differentSrids, "Layer projections are different: (Prodes_PA, 29100) and (Para_Cells, 29101). Please, reproject your data to the right one.")
+
+		unitTest:assertWarning(differentSrids, "Layer projections are different: (Prodes_PA, 29100) and (Para_Cells, 29101). Please, reproject your data to the right one.")
 
 		local layerName3 = "Prodes_PA_NewSRID"
 		TerraLib().addGdalLayer(proj, layerName3, layerFile4, 29101)
@@ -130,6 +134,7 @@ return {
 		local bandNoExists = function()
 			TerraLib().attributeFill(proj, layerName3, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
+
 		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in layer '"..layerName3.."'.")
 
 		for j = 1, #shp do
@@ -155,6 +160,7 @@ return {
 		local bandNoExists =  function()
 			TerraLib().getDummyValue(proj, layerName, 3)
 		end
+
 		unitTest:assertError(bandNoExists, "The maximum band is '2'.")
 
 		local layerName2 = "TifLayer2"
@@ -164,6 +170,7 @@ return {
 		local bandNoExists2 =  function()
 			TerraLib().getDummyValue(proj, layerName2, 3)
 		end
+
 		unitTest:assertError(bandNoExists2, "The only available band is '0'.")
 
 		proj.file:delete()
@@ -181,15 +188,6 @@ return {
 		local layerName1 = "TifLayer"
 		local layerFile1 = filePath("test/cbers_rgb342_crop1.tif", "terralib")
 		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
-
-		local customWarningBkp = customWarning
-		local currDir = currentDir()
-		customWarning = function(msg)
-			unitTest:assert((msg == "It was not possible to convert 'TifLayer' to 'tif2tif.tif'.") or
-							(msg == "Attempt to save data in '"..currDir.."/cbers_rgb342_crop1.tif'.") or
-							(msg == "It was not possible to convert 'TifLayer' to 'cbers_rgb342_crop1.tif'.") or
-							(msg == "It was not possible to change SRID from raster data."))
-		end
 
 		local overwrite = true
 
@@ -242,26 +240,13 @@ return {
 		-- OVERWRITE
 		toData.file = "tif2tif.tif"
 		toData.type = "tif"
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
 
-		overwrite = false
-
-		local overwriteError = function()
+		local tif2tifError = function()
 			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(overwriteError, "File '"..currDir.."/cbers_rgb342_crop1.tif' already exists.")
+		unitTest:assertError(tif2tifError, "Raster data 'cbers_rgb342_crop1.tif' cannot be saved.")
 
-		-- TRY OVERWRITE AND CHANGE SRID
-		overwrite = true
-		toData.file = "cbers_rgb342_crop1.tif"
-		toData.type = "tif"
-		toData.srid = 4326
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-
-		File("cbers_rgb342_crop1.tif"):delete()
 		proj.file:delete()
-
-		customWarning = customWarningBkp
 	end
 }
 

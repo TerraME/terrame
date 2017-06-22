@@ -47,7 +47,7 @@ function customWarning(msg)
 	if sessionInfo().mode == "quiet" then return end
 
 	if type(msg) ~= "string" then
-		customError(incompatibleTypeMsg(1, "string", msg))
+		incompatibleTypeError(1, "string", msg)
 	end
 
 	local level = _Gtme.getLevel()
@@ -811,8 +811,7 @@ end
 function verifyUnnecessaryArguments(data, arguments)
 	forEachElement(data, function(idx)
 		if type(idx) ~= "string" then
-			strictWarning("Arguments should have only string names, got "..type(idx)..".")
-			return 1
+			customError("Arguments should have only string names, got "..type(idx)..".")
 		end
 	end)
 

@@ -27,11 +27,13 @@ return {
 		local error_func = function()
 			Agent(2)
 		end
+
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			Agent{id = 123}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("id", "string", 123))
 	end,
 	add = function(unitTest)
@@ -40,11 +42,13 @@ return {
 		local error_func = function()
 			ag1:add()
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "State or Trajectory", nil))
 
 		error_func = function()
 			ag1:add(123)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "State or Trajectory", 123))
 	end,
 	addSocialNetwork = function(unitTest)
@@ -53,12 +57,14 @@ return {
 		local error_func = function()
 			ag1:addSocialNetwork(nil, "friends")
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			Agent{}
 			ag1:addSocialNetwork({}, "friends")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "SocialNetwork", {}))
 
 		ag1 = Agent{}
@@ -66,6 +72,7 @@ return {
 		error_func = function()
 			ag1:addSocialNetwork(sn, 123)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 123))
 	end,
 	die = function(unitTest)
@@ -75,16 +82,18 @@ return {
 
 		ag:die()
 
-		local test_function = function()
+		local warning_function = function()
 			ag:execute()
 		end
-		unitTest:assertError(test_function, "Trying to execute a dead agent.")
+
+		unitTest:assertWarning(warning_function, "Trying to execute a dead agent.")
 
 		local ag2 = Agent{}
 
-		test_function = function()
+		local test_function = function()
 			ag:walk()
 		end
+
 		unitTest:assertError(test_function, "Trying to use a function or an attribute of a dead Agent.")
 
 		test_function = function()
@@ -92,7 +101,74 @@ return {
 				receiver = ag
 			}
 		end
+
 		unitTest:assertError(test_function, incompatibleTypeMsg("receiver", "Agent", ag))
+	end,
+	emptyNeighbor = function(unitTest)
+		local ag1 = Agent{mvalue = 3}
+		local cs = CellularSpace{xdim = 3}
+		local myEnv = Environment{cs, ag1}
+
+		local error_func = function()
+			ag1:emptyNeighbor()
+		end
+
+		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call Environment:createPlacement() first.")
+
+		error_func = function()
+			ag1:emptyNeighbor("mvalue")
+		end
+
+		unitTest:assertError(error_func, "Placement 'mvalue' should be a Trajectory, got number.")
+
+		error_func = function()
+			ag1:emptyNeighbor("placement2")
+		end
+
+		unitTest:assertError(error_func, "Placement 'placement2' does not exist. Please call Environment:createPlacement() first.")
+
+		myEnv:createPlacement{strategy = "void"}
+		local c1 = cs.cells[1]
+		ag1:enter(c1)
+
+		error_func = function()
+			ag1:emptyNeighbor()
+		end
+
+		unitTest:assertError(error_func, "The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
+
+		error_func = function()
+			ag1:emptyNeighbor("placement", "2")
+		end
+
+		unitTest:assertError(error_func, "Neighborhood '2' does not exist.")
+
+		error_func = function()
+			ag1 = Agent{}
+			cs = CellularSpace{xdim = 3}
+			myEnv = Environment{cs, ag1}
+
+			myEnv:createPlacement{strategy = "void"}
+			c1 = cs.cells[1]
+			ag1:enter(c1)
+			ag1:emptyNeighbor(123)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
+
+		ag1 = Agent{}
+		cs = CellularSpace{xdim = 3}
+		myEnv = Environment{cs, ag1}
+
+		myEnv:createPlacement{strategy = "void"}
+		c1 = cs.cells[1]
+		ag1:enter(c1,"placement")
+
+		error_func = function()
+			ag1:emptyNeighbor("123")
+		end
+
+		unitTest:assertError(error_func, "Placement '123' does not exist. Please call Environment:createPlacement() first.")
 	end,
 	enter = function(unitTest)
 		local ag1 = Agent{}
@@ -103,6 +179,7 @@ return {
 		local error_func = function()
 			ag1:enter(nil, "placement")
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
@@ -113,6 +190,7 @@ return {
 			myEnv:createPlacement{strategy = "void"}
 			ag1:enter({}, "placement")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", {}))
 
 		ag1 = Agent{}
@@ -124,6 +202,7 @@ return {
 		error_func = function()
 			ag1:enter(cell, 123)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 123))
 
 		local predator = Agent{}
@@ -138,20 +217,24 @@ return {
 		local e = Environment{predators, cs}
 		e:createPlacement()
 
-		local c = Cell{}
+		local c = cs:sample()
 
-		error_func = function()
+		local warning_func = function()
 			predators:sample():enter(c)
 		end
-		unitTest:assertError(error_func, "Agent is already inside of a Cell. Use Agent:move() instead.")
+
+		unitTest:assertWarning(warning_func, "Agent is already inside of a Cell. Use Agent:move() instead.")
 
 		local ag = predators:sample()
 
 		ag:leave()
 
+		c = Cell{}
+
 		error_func = function()
 			ag:enter(c)
 		end
+
 		unitTest:assertError(error_func, "Placement 'placement' was not found in the Cell.")
 	end,
 	execute = function(unitTest)
@@ -164,6 +247,7 @@ return {
 		local error_func = function()
 			ag1:execute()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
@@ -175,6 +259,7 @@ return {
 			}
 			ag1:execute({})
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event", {}))
 	end,
 	getCell = function(unitTest)
@@ -183,11 +268,13 @@ return {
 		local error_func = function()
 			ag1:getCell()
 		end
+
 		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call Environment:createPlacement() first.")
 
 		error_func = function()
 			ag1:getCell("pl")
 		end
+
 		unitTest:assertError(error_func, "Placement 'pl' should be a Trajectory, got number.")
 	end,
 	getCells = function(unitTest)
@@ -196,6 +283,7 @@ return {
 		local error_func = function()
 			ag1:getCells("pl")
 		end
+
 		unitTest:assertError(error_func, "Placement 'pl' should be a Trajectory, got number.")
 	end,
 	getSocialNetwork = function(unitTest)
@@ -206,6 +294,7 @@ return {
 		local error_func = function()
 			sn2 = ag1:getSocialNetwork{}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
 	end,
 	leave = function(unitTest)
@@ -219,6 +308,7 @@ return {
 			ag1:enter(cell, "placement")
 			ag1:leave({})
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
 
 		error_func = function()
@@ -231,6 +321,7 @@ return {
 			ag1:enter(cell, "placement")
 			ag1:leave(123)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
 
 		error_func = function()
@@ -241,6 +332,7 @@ return {
 			myEnv:createPlacement{strategy = "void"}
 			ag1:leave()
 		end
+
 		unitTest:assertError(error_func, "Agent should belong to a Cell in order to leave().")
 
 		local ag1 = Agent{}
@@ -253,6 +345,7 @@ return {
 		error_func = function()
 			ag1:leave("notplacement")
 		end
+
 		unitTest:assertError(error_func, valueNotFoundMsg(1, "notplacement"))
 
 		ag1 = Agent{pl = 2}
@@ -260,6 +353,7 @@ return {
 		error_func = function()
 			ag1:leave("pl")
 		end
+
 		unitTest:assertError(error_func, "Placement 'pl' should be a Trajectory, got number.")
 	end,
 	message = function(unitTest)
@@ -271,6 +365,7 @@ return {
 
 			ag1:message()
 		end
+
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
@@ -281,6 +376,7 @@ return {
 
 			ag1:message(123)
 		end
+
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		local ag = Agent{}
@@ -289,6 +385,7 @@ return {
 		error_func = function()
 			ag1:message{}
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg("receiver"))
 
 		ag = Agent{}
@@ -317,6 +414,7 @@ return {
 				content = "money"
 			}
 		end
+
 		unitTest:assertError(error_func, positiveArgumentMsg("delay", -1, true))
 
 		error_func = function()
@@ -325,6 +423,7 @@ return {
 				subject = 2
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("subject", "string", 2))
 	end,
 	move = function(unitTest)
@@ -338,6 +437,7 @@ return {
 			ag1:enter(c1,"renting")
 			ag1:move()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		local ag1 = Agent{}
@@ -352,6 +452,7 @@ return {
 		error_func = function()
 			ag1:move(ag2, "renting")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", ag2))
 
 		ag1 = Agent{}
@@ -364,6 +465,7 @@ return {
 		error_func = function()
 			ag1:enter(c1)
 		end
+
 		unitTest:assertError(error_func, "Placement 'placement' was not found in the Agent.")
 
 		ag1 = Agent{}
@@ -394,6 +496,7 @@ return {
 		error_func = function()
 			ag1:move(c1, "not_placement")
 		end
+
 		unitTest:assertError(error_func, valueNotFoundMsg(2, "not_placement"))
 
 		ag1:leave("renting")
@@ -401,6 +504,7 @@ return {
 		error_func = function()
 			ag1:move(c1, "renting")
 		end
+
 		unitTest:assertError(error_func, "Agent should belong to a Cell in order to move().")
 	end,
 	notify = function(unitTest)
@@ -409,11 +513,13 @@ return {
 		local error_func = function()
 			ag:notify("not_int")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			ag:notify(-1)
 		end
+
 		unitTest:assertError(error_func, positiveArgumentMsg(1, -1, true))
 	end,
 	on_message = function(unitTest)
@@ -423,6 +529,7 @@ return {
 		local error_func = function()
 			ag1:message{receiver = ag2}
 		end
+
 		unitTest:assertError(error_func, "Agent 'nil' cannot get a message from 'nil' because it does not implement 'on_message'.")
 	end,
 	reproduce = function(unitTest)
@@ -435,11 +542,13 @@ return {
 		local error_func = function()
 			a:reproduce()
 		end
+
 		unitTest:assertError(error_func, "Agent should belong to a Society to be able to reproduce.")
 
 		error_func = function()
 			s:sample():reproduce(2)
 		end
+
 		unitTest:assertError(error_func, namedArgumentsMsg())
 	end,
 	walk = function(unitTest)
@@ -450,16 +559,19 @@ return {
 		local error_func = function()
 			ag1:walk()
 		end
+
 		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call Environment:createPlacement() first.")
 
 		error_func = function()
 			ag1:walk("mvalue")
 		end
+
 		unitTest:assertError(error_func, "Placement 'mvalue' should be a Trajectory, got number.")
 
 		error_func = function()
 			ag1:walk("placement2")
 		end
+
 		unitTest:assertError(error_func, "Placement 'placement2' does not exist. Please call Environment:createPlacement() first.")
 
 		myEnv:createPlacement{strategy = "void"}
@@ -469,11 +581,13 @@ return {
 		error_func = function()
 			ag1:walk()
 		end
+
 		unitTest:assertError(error_func, "The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
 
 		error_func = function()
 			ag1:walk("placement", "2")
 		end
+
 		unitTest:assertError(error_func, "Neighborhood '2' does not exist.")
 
 		error_func = function()
@@ -486,6 +600,7 @@ return {
 			ag1:enter(c1)
 			ag1:walk(123)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
 
 		ag1 = Agent{}
@@ -499,6 +614,139 @@ return {
 		error_func = function()
 			ag1:walk("123")
 		end
+
+		unitTest:assertError(error_func, "Placement '123' does not exist. Please call Environment:createPlacement() first.")
+	end,
+	walkIfEmpty = function(unitTest)
+		local ag1 = Agent{mvalue = 3}
+		local cs = CellularSpace{xdim = 3}
+		local myEnv = Environment{cs, ag1}
+
+		local error_func = function()
+			ag1:walkIfEmpty()
+		end
+
+		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call Environment:createPlacement() first.")
+
+		error_func = function()
+			ag1:walkIfEmpty("mvalue")
+		end
+
+		unitTest:assertError(error_func, "Placement 'mvalue' should be a Trajectory, got number.")
+
+		error_func = function()
+			ag1:walkIfEmpty("placement2")
+		end
+
+		unitTest:assertError(error_func, "Placement 'placement2' does not exist. Please call Environment:createPlacement() first.")
+
+		myEnv:createPlacement{strategy = "void"}
+		local c1 = cs.cells[1]
+		ag1:enter(c1)
+
+		error_func = function()
+			ag1:walkIfEmpty()
+		end
+
+		unitTest:assertError(error_func, "The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
+
+		error_func = function()
+			ag1:walkIfEmpty("placement", "2")
+		end
+
+		unitTest:assertError(error_func, "Neighborhood '2' does not exist.")
+
+		error_func = function()
+			ag1 = Agent{}
+			cs = CellularSpace{xdim = 3}
+			myEnv = Environment{cs, ag1}
+
+			myEnv:createPlacement{strategy = "void"}
+			c1 = cs.cells[1]
+			ag1:enter(c1)
+			ag1:walkIfEmpty(123)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
+
+		ag1 = Agent{}
+		cs = CellularSpace{xdim = 3}
+		myEnv = Environment{cs, ag1}
+
+		myEnv:createPlacement{strategy = "void"}
+		c1 = cs.cells[1]
+		ag1:enter(c1,"placement")
+
+		error_func = function()
+			ag1:walkIfEmpty("123")
+		end
+
+		unitTest:assertError(error_func, "Placement '123' does not exist. Please call Environment:createPlacement() first.")
+	end,
+	walkToEmpty = function(unitTest)
+		local ag1 = Agent{mvalue = 3}
+		local cs = CellularSpace{xdim = 3}
+		local myEnv = Environment{cs, ag1}
+
+		local error_func = function()
+			ag1:walkToEmpty()
+		end
+
+		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call Environment:createPlacement() first.")
+
+		error_func = function()
+			ag1:walkToEmpty("mvalue")
+		end
+
+		unitTest:assertError(error_func, "Placement 'mvalue' should be a Trajectory, got number.")
+
+		error_func = function()
+			ag1:walkToEmpty("placement2")
+		end
+
+		unitTest:assertError(error_func, "Placement 'placement2' does not exist. Please call Environment:createPlacement() first.")
+
+		myEnv:createPlacement{strategy = "void"}
+		local c1 = cs.cells[1]
+		ag1:enter(c1)
+
+		error_func = function()
+			ag1:walkToEmpty()
+		end
+
+		unitTest:assertError(error_func, "The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
+
+		error_func = function()
+			ag1:walkToEmpty("placement", "2")
+		end
+
+		unitTest:assertError(error_func, "Neighborhood '2' does not exist.")
+
+		error_func = function()
+			ag1 = Agent{}
+			cs = CellularSpace{xdim = 3}
+			myEnv = Environment{cs, ag1}
+
+			myEnv:createPlacement{strategy = "void"}
+			c1 = cs.cells[1]
+			ag1:enter(c1)
+			ag1:walkToEmpty(123)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
+
+		ag1 = Agent{}
+		cs = CellularSpace{xdim = 3}
+		myEnv = Environment{cs, ag1}
+
+		myEnv:createPlacement{strategy = "void"}
+		c1 = cs.cells[1]
+		ag1:enter(c1,"placement")
+
+		error_func = function()
+			ag1:walkToEmpty("123")
+		end
+
 		unitTest:assertError(error_func, "Placement '123' does not exist. Please call Environment:createPlacement() first.")
 	end
 }

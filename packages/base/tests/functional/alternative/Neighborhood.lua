@@ -31,23 +31,27 @@ return{
 		local error_func = function()
 			neigh:add()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			neigh:add(112)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 112))
 
 		error_func = function()
 			neigh:add(cell1, "not_number")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "not_number"))
 
-		error_func = function()
+		local warning_func = function()
 			neigh:add(cell2)
 			neigh:add(cell2)
 		end
-		unitTest:assertError(error_func, "Cell 'C00L01' already belongs to the Neighborhood.")
+
+		unitTest:assertWarning(warning_func, "Cell 'C00L01' already belongs to the Neighborhood.")
 	end,
 	getWeight = function(unitTest)
 		local cell1 = Cell{x = 0, y = 0}
@@ -56,16 +60,19 @@ return{
 		local error_func = function()
 			neigh:getWeight()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			neigh:getWeight(12345)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 12345))
 
 		error_func = function()
 			neigh:getWeight(cell1)
 		end
+
 		unitTest:assertError(error_func, "Cell 'C00L00' does not belong to the Neighborhood.")
 	end,
 	isNeighbor = function(unitTest)
@@ -74,11 +81,13 @@ return{
 		local error_func = function()
 			neigh:isNeighbor()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			neigh:isNeighbor(123)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 123))
 	end,
 	remove = function(unitTest)
@@ -88,22 +97,26 @@ return{
 		local error_func = function()
 			neigh:remove()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			neigh:remove(123)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 123))
 
 		error_func = function()
 			neigh:remove(123)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 123))
 
-		error_func = function()
+		local warning_func = function()
 			neigh:remove(cell1)
 		end
-		unitTest:assertError(error_func, "Trying to remove a Cell that does not belong to the Neighborhood.")
+
+		unitTest:assertWarning(warning_func, "Trying to remove a Cell that does not belong to the Neighborhood.")
 	end,
 	sample = function(unitTest)
 		local neigh = Neighborhood()
@@ -112,6 +125,7 @@ return{
 		local error_func = function()
 			neigh:sample()
 		end
+
 		unitTest:assertError(error_func, "It is not possible to sample the Neighborhood because it is empty.")
 
 		neigh:add(c)
@@ -123,26 +137,31 @@ return{
 		local error_func = function()
 			neigh:setWeight()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			neigh:setWeight(12345)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 12345))
 
 		error_func = function()
 			neigh:setWeight(cell1)
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			neigh:setWeight(cell1, "notnumber")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "notnumber"))
 
 		error_func = function()
 			neigh:setWeight(cell1, 0.5)
 		end
+
 		unitTest:assertError(error_func, "Cell 'C00L00' does not belong to the Neighborhood.")
 	end
 }

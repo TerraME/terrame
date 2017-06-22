@@ -1200,6 +1200,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_.version    = _Gtme.packageInfo().version
 
 	if arguments == nil or #arguments < 1 then
+		if not _Gtme.Directory(info_.path.."/packages/base/doc"):exists() then
+			_Gtme.printError("TerraME does not have documentation. Please run 'terrame -doc' first.")
+			os.exit(1)
+		end
+
 		dofile(info_.path..s.."lua"..s.."pmanager.lua")
 		dofile(info_.path..s.."lua"..s.."project.lua")
 		_Gtme.packageManager()

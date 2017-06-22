@@ -52,6 +52,7 @@ return{
 				sep = ";"
 			}
 		end
+
 		unitTest:assertError(error_func, "source and file extension should be the same.")
 
 		local pgmFile = filePath("test/error/pgm-invalid-identifier.pgm", "base")
@@ -60,32 +61,37 @@ return{
 				file = pgmFile
 			}
 		end
+
 		unitTest:assertError(error_func, "File '"..pgmFile.."' does not contain the PGM identifier 'P2' in its first line.")
 
 		pgmFile = filePath("test/error/pgm-invalid-size.pgm", "base")
 		error_func = function()
-			cs = CellularSpace{
+			CellularSpace{
 				file = pgmFile
 			}
 		end
-		unitTest:assertError(error_func, "File '"..pgmFile.."' has a diffent size declared: expected '(2, 2)', got '(10, 10)'.")
+
+		unitTest:assertWarning(error_func, "Data from file '"..pgmFile.."' does not match declared size: expected '(2, 2)', got '(10, 10)'.")
 
 		pgmFile = filePath("test/error/pgm-invalid-max.pgm", "base")
 		error_func = function()
-			cs = CellularSpace{
+			CellularSpace{
 				file = pgmFile
 			}
 		end
-		unitTest:assertError(error_func, "File '"..pgmFile.."' does not have a maximum value declared.")
+
+		unitTest:assertWarning(error_func, "File '"..pgmFile.."' does not have a maximum value declared.")
 
 		error_func = function()
 			cs = CellularSpace{file = 2, source = "pgm", sep = ";"}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("file", "File", 2))
 
 		error_func = function()
 			cs = CellularSpace{file = "abc123.pgm", sep = ";"}
 		end
+
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("abc123.pgm")))
 
 		error_func = function()
@@ -93,6 +99,7 @@ return{
 				file = "abc123.shp"
 			}
 		end
+
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("abc123.shp")))
 
 		os.execute("touch abc123.shp")
@@ -102,6 +109,7 @@ return{
 				file = "abc123.shp"
 			}
 		end
+
 		unitTest:assertError(error_func, "File '"..File("abc123.dbf").."' was not found.")
 
 		File("abc123.shp"):delete()
@@ -112,6 +120,7 @@ return{
 				xdim = 10
 			}
 		end
+
 		unitTest:assertError(error_func, "More than one candidate to argument 'source': 'shp', 'virtual'.")
 
 		error_func = function()
@@ -121,6 +130,7 @@ return{
 				as = 2
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("as", "table", 2))
 
 		error_func = function()
@@ -130,6 +140,7 @@ return{
 				as = {x = 2}
 			}
 		end
+
 		unitTest:assertError(error_func, "All values of 'as' should be 'string', got 'number'.")
 
 		error_func = function()
@@ -139,6 +150,7 @@ return{
 				as = {"height_"}
 			}
 		end
+
 		unitTest:assertError(error_func, "All indexes of 'as' should be 'string', got 'number'.")
 
 		error_func = function()
@@ -148,6 +160,7 @@ return{
 				as = {x = "height_2"}
 			}
 		end
+
 		unitTest:assertError(error_func, "Cannot rename 'height_2' to 'x' as it already exists.")
 
 		error_func = function()
@@ -159,6 +172,7 @@ return{
 				}
 			}
 		end
+
 		unitTest:assertError(error_func, "Cannot rename attribute 'height_2' as it does not exist.")
 
 		local missingShpError = function()
@@ -166,6 +180,7 @@ return{
 				file = filePath("test/CellsAmaz.shp")
 			}
 		end
+
 		unitTest:assertError(missingShpError, "Data has a missing value in attribute 'pointcount'. Use argument 'missing' to set its value.")
 
 		local missingNotNumber = function()
@@ -174,6 +189,7 @@ return{
 				missing = "null"
 			}
 		end
+
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", "null"))
 
 		local terralib = getPackage("terralib")
@@ -201,6 +217,7 @@ return{
 				layer = missLayerName
 			}
 		end
+
 		unitTest:assertError(missingLayerError, "Data has a missing value in attribute 'pointcount'. Use argument 'missing' to set its value.")
 
 		file:deleteIfExists()
@@ -213,21 +230,25 @@ return{
 		local error_func = function()
 			cs:loadNeighborhood()
 		end
+
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			cs:loadNeighborhood{}
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg("file"))
 
 		error_func = function()
 			cs:loadNeighborhood{file = 123}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("file", "File", 123))
 
 		error_func = function()
 			cs:loadNeighborhood{file = "neighCabecaDeBoi900x900.gpm"}
 		end
+
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("neighCabecaDeBoi900x900.gpm")))
 
 		local mfile = filePath("cabecadeboi-neigh.gpm", "base")
@@ -235,24 +256,27 @@ return{
 		error_func = function()
 			cs:loadNeighborhood{file = mfile, name = 22}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
 
 		-- GAL from shapefile
 		cs = CellularSpace{
-			file = filePath("brazilstates.shp", "base")
+			file = filePath("brazilstates.shp")
 		}
 
 		error_func = function()
-			cs:loadNeighborhood{file = filePath("test/brazil.gal", "base"), che = false}
+			cs:loadNeighborhood{file = filePath("test/brazil-ok.gal"), che = false}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("che"))
 
-		mfile = filePath("test/brazil.gal", "base")
+		unitTest:assertWarning(error_func, unnecessaryArgumentMsg("che"))
+
+		mfile = filePath("test/brazil.gal")
 
 		error_func = function()
 			cs:loadNeighborhood{file = mfile}
 		end
+
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: 'brazilstates.shp', GAL file layer: 'mylayer'.")
 
 		local cs2 = CellularSpace{xdim = 10}
@@ -260,16 +284,19 @@ return{
 		error_func = function()
 			cs2:loadNeighborhood{file = "arquivo.gpm"}
 		end
+
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", File("arquivo.gpm")))
 
 		error_func = function()
 			cs2:loadNeighborhood{file = "gpmlinesDbEmas_invalid"}
 		end
+
 		unitTest:assertError(error_func, "Argument 'file' does not have an extension.")
 
 		error_func = function()
 			cs2:loadNeighborhood{file = "gpmlinesDbEmas_invalid.teste"}
 		end
+
 		unitTest:assertError(error_func, invalidFileExtensionMsg("file", "teste"))
 
 		error_func = function()
@@ -279,6 +306,7 @@ return{
 				check = false
 			}
 		end
+
 		unitTest:assertError(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
 
 		mfile = filePath("cabecadeboi-neigh.gpm", "base")
@@ -289,6 +317,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
+
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cabecadeboi900.shp'.")
 
 		mfile = filePath("test/cabecadeboi-neigh.gal", "base")
@@ -299,6 +328,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
+
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cabecadeboi900.shp'.")
 
 		mfile = filePath("test/cabecadeboi-neigh.gwt", "base")
@@ -309,6 +339,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
+
 		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cabecadeboi900.shp'.")
 
 		local s = sessionInfo().separator
@@ -317,6 +348,7 @@ return{
 		error_func = function()
 			cs:loadNeighborhood{file = mfile}
 		end
+
 		unitTest:assertError(error_func, "Could not read file '"..mfile.."': invalid header.")
 
 		local cs3 = CellularSpace{
@@ -328,11 +360,13 @@ return{
 			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gal", "base")}
 		end
 
+
 		unitTest:assertError(error_func, "Could not find id '' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
 			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gal", "base")}
 		end
+
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 3. It seems that it is corrupted.")
 
@@ -340,11 +374,13 @@ return{
 			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gpm", "base")}
 		end
 
+
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
 			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gpm", "base")}
 		end
+
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 3. It seems that it is corrupted.")
 
@@ -352,17 +388,20 @@ return{
 			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid1.gwt", "base")}
 		end
 
+
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
 			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid2.gwt", "base")}
 		end
 
+
 		unitTest:assertError(error_func, "Could not find id '' in line 2. It seems that it is corrupted.")
 
 		error_func = function()
 			cs3:loadNeighborhood{file = filePath("test/error"..s.."cabecadeboi-neigh-line-invalid3.gwt", "base")}
 		end
+
 
 		unitTest:assertError(error_func, "Could not find id 'nil' in line 2. It seems that it is corrupted.")
 	end,
@@ -421,21 +460,25 @@ return{
 		local attrNotExists = function()
 			cs:save(cellSpaceLayerName, "t1")
 		end
+
 		unitTest:assertError(attrNotExists, "Attribute 't1' does not exist in the CellularSpace.")
 
 		local outLayerNotString = function()
 			cs:save(123, "t0")
 		end
+
 		unitTest:assertError(outLayerNotString, incompatibleTypeMsg("#1", "string", 123))
 
 		local attrNotStringOrTable = function()
 			cs:save(cellSpaceLayerName, 123)
 		end
+
 		unitTest:assertError(attrNotStringOrTable, "Incompatible types. Argument '#2' expected table or string.")
 
 		local outLayerMandatory = function()
 			cs:save()
 		end
+
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
 
 		-- unitTest:assertFile(projName) -- SKIP #TODO(#1242)

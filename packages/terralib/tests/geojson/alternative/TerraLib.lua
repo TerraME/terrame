@@ -51,14 +51,8 @@ return {
 		local geojson2tifError = function()
 			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(geojson2tifError, "It was not possible to convert 'SampaGeoJson' to 'geojson2tif.tif'.")
+		unitTest:assertError(geojson2tifError, "It was not possible save 'SampaGeoJson' to raster data.")
 
-		-- SHP
-		toData.file = "geojson2shp.shp"
-		toData.type = "shp"
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-
-		File(toData.file):delete()
 		proj.file:delete()
 	end
 }

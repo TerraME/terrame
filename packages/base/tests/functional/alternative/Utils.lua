@@ -27,34 +27,40 @@ return{
 		local error_func = function()
 			belong("2", "2")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "table", "2"))
 	end,
 	call = function(unitTest)
 		local error_func = function()
 			call(Cell{}, 2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		error_func = function()
 			call("value", "sum")
 		end
+
 		unitTest:assertError(error_func, "Cannot access elements from an object of type 'string'.")
 
 		error_func = function()
 			call(Cell{}, "sum")
 		end
+
 		unitTest:assertError(error_func, "Function 'sum' does not exist.")
 	end,
 	clone = function(unitTest)
 		local error_func = function()
 			clone(2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
 	end,
 	d = function(unitTest)
 		local error_func = function()
 			d()
 		end
+
 		unitTest:assertError(error_func, [[Error: bad arguments in diferential equation constructor "d{arguments}". TerraME has found 0 arguments.
  - the first attribute of a differential equantion must be a function which return a number. It can also be a table of functions like that,
  - the second one must be the initial condition value. It can also be a table of initial conditions,
@@ -68,12 +74,14 @@ return{
 		error_func = function()
 			d{{myf, myf}, {1}, 0, 0, 10}
 		end
+
 		unitTest:assertError(error_func, "You should provide the same number of differential equations and initial conditions.")
 	end,
 	elapsedTime = function(unitTest)
 		local error_func = function()
 			elapsedTime("2")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "2"))
 	end,
 	forEachAgent = function(unitTest)
@@ -84,27 +92,32 @@ return{
 		local error_func = function()
 			forEachAgent(nil, function() end)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Society, Group, or Cell"))
 
 		error_func = function()
 			forEachAgent(soc)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
 
 		error_func = function()
 			forEachAgent(c, function() end)
 		end
+
 		unitTest:assertError(error_func, "The Cell does not have a default placement. Please call Environment:createPlacement() first.")
 	end,
 	forEachCell = function(unitTest)
 		local error_func = function()
 			forEachCell()
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "CellularSpace, Trajectory, or Agent"))
 
 		error_func = function()
 			forEachCell(CellularSpace{xdim = 5})
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
 	end,
 	forEachCellPair = function(unitTest)
@@ -114,16 +127,19 @@ return{
 		local error_func = function()
 			forEachCellPair()
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "CellularSpace"))
 
 		error_func = function()
 			forEachCellPair(cs1)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "CellularSpace"))
 
 		error_func = function()
 			forEachCellPair(cs1, cs2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "function"))
 	end,
 	forEachConnection = function(unitTest)
@@ -135,27 +151,32 @@ return{
 		local error_func = function()
 			forEachConnection(nil, function() end)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent"))
 
 		error_func = function()
 			forEachConnection(soc.agents[1])
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function or string"))
 
 		error_func = function()
 			forEachConnection(soc.agents[1], "1")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "function"))
 
 		error_func = function()
 			forEachConnection(soc.agents[1], "2", function() end)
 		end
+
 		unitTest:assertError(error_func, "Agent does not have a SocialNetwork named '2'.")
 	end,
 	forEachElement = function(unitTest)
 		local error_func = function()
 			forEachElement()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		local agent = Agent{w = 3, f = 5}
@@ -163,63 +184,75 @@ return{
 		error_func = function()
 			forEachElement(agent)
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			forEachElement(agent, 12345)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 12345))
 
 		error_func = function()
 			forEachElement("abc", function() end)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", "abc"))
 	end,
 	forEachFile = function(unitTest)
 		local error_func = function()
 			forEachFile()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			forEachFile(2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Directory", 2))
 
 		error_func = function()
 			forEachFile(packageInfo("base").path.."data")
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			forEachFile("abcdef12345", function() end)
 		end
+
 		unitTest:assertError(error_func, "Directory '' is not valid or does not exist.", 0, true)
 
 		error_func = function()
 			forEachFile(packageInfo("base").path.."data", 2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2))
 	end,
 	forEachModel = function(unitTest)
 		local error_func = function()
 			forEachModel()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			forEachModel(2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Environment", 2))
 
 		error_func = function()
 			forEachModel(Environment{})
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			forEachModel(Environment{}, 2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2))
 	end,
 	forEachNeighbor = function(unitTest)
@@ -230,21 +263,25 @@ return{
 		local error_func = function()
 			forEachNeighbor(nil, function() end)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell"))
 
 		error_func = function()
 			forEachNeighbor(cell)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function or string"))
 
 		error_func = function()
 			forEachNeighbor(cell, "1")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "function"))
 
 		error_func = function()
 			forEachNeighbor(cell, "2", function() end)
 		end
+
 		unitTest:assertError(error_func, "Neighborhood '2' does not exist.")
 	end,
 	forEachNeighborAgent = function(unitTest)
@@ -265,6 +302,7 @@ return{
 		local error_func = function()
 			forEachNeighborAgent(predators:sample(), function() end)
 		end
+
 		unitTest:assertError(error_func, "The Agent does not have a default placement. Please call Environment:createPlacement() first.")
 
 		local cs = CellularSpace{xdim = 5}
@@ -275,6 +313,7 @@ return{
 		error_func = function()
 			forEachNeighborAgent(predators:sample(), function() end)
 		end
+
 		unitTest:assertError(error_func, "The CellularSpace does not have a default neighborhood. Please call 'CellularSpace:createNeighborhood' first.")
 
 		cs:createNeighborhood()
@@ -282,11 +321,13 @@ return{
 		error_func = function()
 			forEachNeighborAgent(nil, function() end)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent"))
 
 		error_func = function()
 			forEachNeighborAgent(predators:sample())
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
 	end,
 	forEachNeighborhood = function(unitTest)
@@ -295,27 +336,32 @@ return{
 		local error_func = function()
 			forEachNeighborhood(nil, function() end)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell"))
 
 		error_func = function()
 			forEachNeighborhood(cs:sample())
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
 	end,
 	forEachOrderedElement = function(unitTest)
 		local error_func = function()
 			forEachOrderedElement()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			forEachOrderedElement({1, 2, 3})
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
 
 		error_func = function()
 			forEachOrderedElement("abc", function() end)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", "abc"))
 	end,
 	forEachSocialNetwork = function(unitTest)
@@ -324,152 +370,180 @@ return{
 		local error_func = function()
 			forEachSocialNetwork(nil, function() end)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent"))
 
 		error_func = function()
 			forEachSocialNetwork(ag)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
 	end,
 	getn = function(unitTest)
 		local error_func = function()
 			getn("2")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", "2"))
 	end,
 	getNames = function(unitTest)
 		local error_func = function()
 			getNames(2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
 	end,
 	greaterByAttribute = function(unitTest)
 		local error_func = function()
 			greaterByAttribute(2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
 			greaterByAttribute("cover", "==")
 		end
+
 		unitTest:assertError(error_func, incompatibleValueMsg(2, "<, >, <=, or >=", "=="))
 	end,
 	greaterByCoord = function(unitTest)
 		local error_func = function()
 			greaterByCoord("==")
 		end
+
 		unitTest:assertError(error_func, incompatibleValueMsg(1, "<, >, <=, or >=", "=="))
 	end,
 	integrate = function(unitTest)
 		local error_func = function()
 			integrate()
 		end
+
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			integrate{step = "a", equation = function() end, initial = 0}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("step", "number", "a"))
 
 		error_func = function()
 			integrate{step = -0.5, equation = function() end, initial = 0}
 		end
+
 		unitTest:assertError(error_func, positiveArgumentMsg("step", -0.5))
 
-		error_func = function()
+		local warning_func = function()
 			integrate{step = 0.1, method = "euler", equation = function() end, initial = 0}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("method", "euler"))
+
+		unitTest:assertWarning(warning_func, defaultValueMsg("method", "euler"))
 
 		error_func = function()
 			integrate{step = 0.1, method = "eler", equation = function() end, initial = 0}
 		end
+
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("eler", "method", "euler"))
 
 		error_func = function()
 			integrate{equation = 0.1}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("equation", "table", 0.1))
 
 		error_func = function()
 			integrate{equation = function() end, initial = "aaa"}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("initial", "table", "aaa"))
 
 		error_func = function()
 			integrate{equation = {function() end, 2}}
 		end
+
 		unitTest:assertError(error_func, "Table 'equation' should contain only functions, got number.")
 
 		error_func = function()
 			integrate{equation = {function() end, function() end}, initial = {1, "b"}}
 		end
+
 		unitTest:assertError(error_func, "Table 'initial' should contain only numbers, got string.")
 
 		error_func = function()
 			integrate{equation = {function() end, function() end}, initial = {1, 2, 3}}
 		end
+
 		unitTest:assertError(error_func, "Tables equation and initial shoud have the same size.")
 
-		error_func = function()
+		warning_func = function()
 			integrate{equation = function() end, initial = 1, step = 5, metod = 3}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("metod", "method"))
+
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("metod", "method"))
 
 		local event = Event{start = 0.5, period = 2, priority = 1, action = function() end}
 
 		error_func = function()
 			integrate{equation = function() end, initial = 1, event = event, a = 2}
 		end
+
 		unitTest:assertError(error_func, "Argument 'a' should not be used together with argument 'event'.")
 
 		error_func = function()
 			integrate{equation = function() end, initial = 1, event = event, b = 2}
 		end
+
 		unitTest:assertError(error_func, "Argument 'b' should not be used together with argument 'event'.")
 	end,
 	levenshtein = function(unitTest)
 		local error_func = function()
 			levenshtein(2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
 			levenshtein("abc", 2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 	end,
 	round = function(unitTest)
 		local error_func = function()
 			x = round("a")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "a"))
 
 		error_func = function()
 			x = round(2.5, "a")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "a"))
 	end,
 	toLabel = function(unitTest)
 		local error_func = function()
 			x = toLabel(false)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", false))
 
 		error_func = function()
 			x = toLabel("abc", false)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", false))
 	end,
 	switch = function(unitTest)
 		local error_func = function()
 			switch("aaaab")
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", "aaaab"))
 
 		error_func = function()
 			switch({}, 2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		error_func = function()
@@ -478,6 +552,7 @@ return{
 				abc = function() end
 			}
 		end
+
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("abd", "att", "abc"))
 
 		local options = {
@@ -490,6 +565,7 @@ return{
 				xxx = function() end
 			}
 		end
+
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("abd", "att", options))
 
 		error_func = function()
@@ -498,12 +574,14 @@ return{
 				xxx = function() end
 			}
 		end
+
 		unitTest:assertError(error_func, "Value of #2 ('atx') does not belong to #1.")
 
 		error_func = function()
 			local data = {att = "abd"}
 			switch(data, "att"):caseof(2)
 		end
+
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
@@ -512,6 +590,7 @@ return{
 				abd = 2
 			}
 		end
+
 		unitTest:assertError(error_func, "Case 'abd' should be a function, got number.")
 	end,
 	vardump = function(unitTest)
@@ -521,6 +600,7 @@ return{
 		local error_func = function()
 			vardump(vtable)
 		end
+
 		unitTest:assertError(error_func, "Function vardump cannot handle an index of type table.")
 	end,
 	forEachRecursiveDirectory = function(unitTest)
@@ -529,6 +609,7 @@ return{
 		local wrongType = function()
 			forEachRecursiveDirectory(file, function(_) end)
 		end
+
 		unitTest:assertError(wrongType, "Argument '#1' must be a 'Directory' or 'string' path.")
 	end
 }

@@ -998,16 +998,16 @@ local function createOgrDataSourceToSaveAs(fromType, fileData)
 	return ds
 end
 
-local function createGdalDataSourceToSaveAs(fromType, fileData)
-	local ds = nil
+-- local function createGdalDataSourceToSaveAs(fromType, fileData) -- TODO(#1364)
+	-- local ds = nil
 
-	if fromType == "GDAL" then
-		local connInfo = createFileConnInfo(tostring(fileData.dir))
-		ds = makeAndOpenDataSource(connInfo, "GDAL")
-	end
+	-- if fromType == "GDAL" then -- SKIP
+		-- local connInfo = createFileConnInfo(tostring(fileData.dir))
+		-- ds = makeAndOpenDataSource(connInfo, "GDAL") -- SKIP
+	-- end
 
-	return ds
-end
+	-- return ds
+-- end
 
 local function isValidDataSourceUri(uri, type)
 	local ds = binding.te.da.DataSourceFactory.make(type, uri)
@@ -1471,29 +1471,33 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 				errorMsg = "It was not possible save '"..fromData.name.."' to vector data."
 			end
 		end
-	elseif toType == "GDAL" then
-		toData.fileTif = fromDSetName
-		local file = File(toData.file)
-		toData.dir = Directory(file)
-		local fileCopy = toData.dir..toData.fileTif
-
-		if toData.file and (file:name(true) ~= fileTif) then
-			customWarning("It was not possible to convert '"..fromData.name.."' to '"..toData.file.."'.") -- #1364
+	elseif (toType == "GDAL") or (fromType == "GDAL") then
+		if fromType == "GDAL" then
+			errorMsg = "Raster data '"..fromDSetName.."' cannot be saved."
+		else
+			errorMsg = "It was not possible save '"..fromData.name.."' to raster data."
 		end
+		-- TODO(#1364)
+		-- toData.fileTif = fromDSetName
+		-- local file = File(toData.file)
+		-- toData.dir = Directory(file)
+		-- local fileCopy = toData.dir..toData.fileTif
 
-		toDs = createGdalDataSourceToSaveAs(fromType, toData)
-		toDSetName = toData.fileTif
-		if not toDs then
-			errorMsg = "It was not possible save '"..fromData.name.."' to raster data." -- #1364
-		elseif toDs:dataSetExists(toDSetName) then
-			if overwrite then
-				toDs:dropDataSet(toDSetName)
-			else
-				errorMsg = "File '"..fileCopy.."' already exists." -- SKIP
-			end
-		end
+		-- if toData.file and (file:name(true) ~= fileTif) then
+			-- customWarning("It was not possible to convert '"..fromData.name.."' to '"..toData.file.."'.") -- #1364
+		-- end
 
-		customWarning("Attempt to save data in '"..fileCopy.."'.") -- REVIEW
+		-- toDs = createGdalDataSourceToSaveAs(fromType, toData)
+		-- toDSetName = toData.fileTif
+		-- if not toDs then
+			-- errorMsg = "It was not possible save '"..fromData.name.."' to raster data."
+		-- elseif toDs:dataSetExists(toDSetName) then
+			-- if overwrite then
+				-- toDs:dropDataSet(toDSetName)
+			-- else
+				-- errorMsg = "File '"..fileCopy.."' already exists." -- SKIP
+			-- end
+		-- end
 	end
 
 	if errorMsg then
@@ -2745,6 +2749,10 @@ TerraLib_ = {
 	-- If this parameter is set with a subset of from data, the saved data will have only its values.
 	-- And, if values is set and attrs is nil, all attributes will be saved.
 	-- @usage -- DONTRUN
+	-- local fromData = {
+	--     project = aProject,
+	--     layer = "aLayerName"
+	-- }
 	-- local toData = {
 	--     file = "shp2geojson.geojson",
 	--     type = "geojson",
@@ -2755,7 +2763,6 @@ TerraLib_ = {
 		if fromData.project then
 			local project = fromData.project
 			loadProject(project, project.file)
-
 			local layer = project.layers[fromData.layer]
 			local fromDataToSave = createFromDataInfoToSaveAsByLayer(layer)
 			local toDataToSave, err = createToDataInfoToSaveAs(toData, fromDataToSave, overwrite)
