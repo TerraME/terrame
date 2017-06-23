@@ -722,7 +722,8 @@ function _Gtme.stringToLabel(mstring, parent)
 		local nextu = string.match(mstring, "%u")
 		local nextd = string.match(mstring, "%d")
 
-		local prevu = false
+		local firstchar = string.sub(mstring, 1, 1)
+		local prevu = firstchar == string.upper(firstchar)
 		local prevd = false
 
 		if tostring(tonumber(result)) == result then
