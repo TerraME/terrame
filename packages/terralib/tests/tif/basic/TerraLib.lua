@@ -298,49 +298,6 @@ return {
 
 		proj.file:delete()
 	end,
-	saveLayerAs = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-
-		File(proj.file):deleteIfExists()
-
-		TerraLib().createProject(proj, {})
-
-		local layerName1 = "TifLayer"
-		local layerFile1 = filePath("test/cbers_rgb342_crop1.tif", "terralib")
-		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
-
-		local customWarningBkp = customWarning
-		local currDir = currentDir()
-		customWarning = function(msg)
-			unitTest:assert((msg == "It was not possible to convert the data in layer 'TifLayer' to 'tif2nc.nc'.") or -- SKIP
-							(msg == "Attempt to save data of the layer in '"..currDir.."/cbers_rgb342_crop1.tif'."))
-		end
-
-		-- NC (IT WAS ONLY TO COPY TIF TO A CURRENT DIR)
-		--local toData = {}
-		--toData.file = "tif2nc.nc"
-		--toData.type = "nc"
-
-		--local overwrite = true
-
-		-- TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
-		-- unitTest:assert(File("cbers_rgb342_crop1.tif"):exists()) -- SKIP
-
-		-- OVERWRITE
-		-- TerraLib().saveLayerAs(proj, layerName1, toData, overwrite)
-		-- unitTest:assert(File("cbers_rgb342_crop1.tif"):exists()) -- SKIP
-
-		-- File("cbers_rgb342_crop1.tif"):delete()
-
-		unitTest:assert(true)
-
-		proj.file:delete()
-
-		customWarning = customWarningBkp
-	end,
 	getLayerSize = function(unitTest)
 		local proj = {}
 		proj.file = "myproject.tview"

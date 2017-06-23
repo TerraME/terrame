@@ -41,6 +41,10 @@ return {
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
+
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
@@ -60,7 +64,7 @@ return {
 			encoding = encoding
 		}
 
-		TerraLib().saveLayerAs(proj, layerName1, pgData, true)
+		TerraLib().saveLayerAs(fromData, pgData, true)
 
 		local layerName2 = "SampaPg"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
@@ -1249,11 +1253,15 @@ return {
 		local polFile = filePath("test/limite_es_poly_wgs84.shp", "terralib")
 		TerraLib().addShpLayer(proj, polName, polFile)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = polName
+
 		pgData.srid = 4326
 		local polTable = "limite_es_poly_wgs84"
 		pgData.table = polTable
 
-		TerraLib().saveLayerAs(proj, polName, pgData, true)
+		TerraLib().saveLayerAs(fromData, pgData, true)
 
 		local polDset = TerraLib().getDataSet(proj, polName)
 		local polLuaTable = {}
@@ -1301,7 +1309,8 @@ return {
 
 		local ptTable = "ports"
 		pgData.table = ptTable
-		TerraLib().saveLayerAs(proj, ptName, pgData, true)
+		fromData.layer = ptName
+		TerraLib().saveLayerAs(fromData, pgData, true)
 
 		local ptDset = TerraLib().getDataSet(proj, ptName, 0)
 		local ptLuaTable = {}
@@ -1392,7 +1401,8 @@ return {
 
 		local lnTable = "rails"
 		pgData.table = lnTable
-		TerraLib().saveLayerAs(proj, lnName, pgData, true)
+		fromData.layer = lnName
+		TerraLib().saveLayerAs(fromData, pgData, true)
 
 		local lnDset = TerraLib().getDataSet(proj, lnName, 0)
 		local lnLuaTable = {}
@@ -1696,6 +1706,10 @@ return {
 		local layerFile1 = filePath("itaituba-census.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
+
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
@@ -1715,7 +1729,7 @@ return {
 			encoding = encoding
 		}
 
-		TerraLib().saveLayerAs(proj, layerName1, pgData, true)
+		TerraLib().saveLayerAs(fromData, pgData, true)
 		local layerName2 = "PgLayer"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
@@ -1798,6 +1812,10 @@ return {
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
+
 		-- POSTGIS
 		local host = "localhost"
 		local port = "5432"
@@ -1822,7 +1840,7 @@ return {
 
 		local overwrite = true
 
-		TerraLib().saveLayerAs(proj, layerName1, pgData, overwrite)
+		TerraLib().saveLayerAs(fromData, pgData, overwrite)
 		local layerName2 = "PgLayer"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
@@ -1831,13 +1849,13 @@ return {
 		toData.file = "postgis2shp.shp"
 		toData.type = "shp"
 		File(toData.file):deleteIfExists()
-
-		TerraLib().saveLayerAs(proj, layerName2, toData, overwrite)
+		fromData.layer = layerName2
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE AND CHANGE SRID
 		toData.srid = 4326
-		TerraLib().saveLayerAs(proj, layerName2, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		local layerName3 = "PG2SHP"
 		TerraLib().addShpLayer(proj, layerName3, File(toData.file))
 		local info3 = TerraLib().getLayerInfo(proj, layerName3)
@@ -1847,7 +1865,8 @@ return {
 		local info2 = TerraLib().getLayerInfo(proj, layerName2)
 		unitTest:assertEquals(info2.srid, 4019.0)
 		pgData.srid = 4326
-		TerraLib().saveLayerAs(proj, layerName1, pgData, overwrite)
+		fromData.layer = layerName1
+		TerraLib().saveLayerAs(fromData, pgData, overwrite)
 		info2 = TerraLib().getLayerInfo(proj, layerName2)
 		unitTest:assertEquals(info2.srid, 4326.0)
 
@@ -1855,12 +1874,13 @@ return {
 		toData.file = "postgis2geojson.geojson"
 		toData.type = "geojson"
 		File(toData.file):deleteIfExists()
-		TerraLib().saveLayerAs(proj, layerName2, toData, overwrite)
+		fromData.layer = layerName2
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		unitTest:assert(File(toData.file):exists())
 
 		-- OVERWRITE AND CHANGE SRID
 		toData.srid = 4326
-		TerraLib().saveLayerAs(proj, layerName2, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 		local layerName4 = "PG2GJ"
 		TerraLib().addGeoJSONLayer(proj, layerName4, File(toData.file))
 		local info4 = TerraLib().getLayerInfo(proj, layerName4)
@@ -1869,7 +1889,8 @@ return {
 		-- OVERWRITE POSTGIS AND CHANGE SRID
 		local table1 = pgData.table
 		pgData.table = "ogrgeojson" -- TODO(#1243)
-		TerraLib().saveLayerAs(proj, layerName4, pgData, overwrite)
+		fromData.layer = layerName4
+		TerraLib().saveLayerAs(fromData, pgData, overwrite)
 
 		local layerName5 = "PgLayerGJ"
 		TerraLib().addPgLayer(proj, layerName5, pgData, nil, encoding)
@@ -1877,14 +1898,15 @@ return {
 		unitTest:assertEquals(info5.srid, 4326.0)
 
 		pgData.srid = 2309
-		TerraLib().saveLayerAs(proj, layerName4, pgData, overwrite)
+		TerraLib().saveLayerAs(fromData, pgData, overwrite)
 		info5 = TerraLib().getLayerInfo(proj, layerName5)
 		unitTest:assertEquals(info5.srid, 2309.0)
 
 		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE FROM SHP
 		local table2 = pgData.table
 		pgData.table = "postgis2shp"
-		TerraLib().saveLayerAs(proj, layerName3, pgData, overwrite, {"nm_micro"})
+		fromData.layer = layerName3
+		TerraLib().saveLayerAs(fromData, pgData, overwrite, {"nm_micro"})
 
 		local layerName6 = "SHP2PG"
 		TerraLib().addPgLayer(proj, layerName6, pgData, nil, encoding)
@@ -1900,7 +1922,8 @@ return {
 		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE FROM GEOJSON
 		local table3 = pgData.table
 		pgData.table = "ogrgeojson"
-		TerraLib().saveLayerAs(proj, layerName4, pgData, overwrite, {"nm_micro", "id"})
+		fromData.layer = layerName4
+		TerraLib().saveLayerAs(fromData, pgData, overwrite, {"nm_micro", "id"})
 
 		local layerName7 = "GJ2PG"
 		TerraLib().addPgLayer(proj, layerName7, pgData, nil, encoding)
@@ -1913,6 +1936,58 @@ return {
 							((k == "nm_micro") and (v == "VOTUPORANGA")) or ((k == "id") and (v == 2)))
 		end
 
+		-- SAVE A DATA SUBSET
+		local dset2 = TerraLib().getDataSet(proj, layerName2)
+		local sjc
+		for i = 0, getn(dset2) - 1 do
+			if dset2[i].id == 27 then
+				sjc = dset2[i]
+			end
+		end
+
+		local touches = {}
+		local j = 1
+		for i = 0, getn(dset2) - 1 do
+			if sjc.ogr_geometry:touches(dset2[i].ogr_geometry) then
+				touches[j] = dset2[i]
+				j = j + 1
+			end
+		end
+
+		local table4 = pgData.table
+		pgData.table = "touches_sjc"
+		pgData.srid = nil
+		fromData.layer = layerName2
+		TerraLib().saveLayerAs(fromData, pgData, overwrite, {"nm_micro", "id"}, touches)
+
+		local layerName8 = "SJC"
+		TerraLib().addPgLayer(proj, layerName8, pgData, nil, encoding)
+		local tchsSjc = TerraLib().getDataSet(proj, layerName8)
+
+		unitTest:assertEquals(getn(tchsSjc), 2)
+		unitTest:assertEquals(tchsSjc[0].id, 55)
+		unitTest:assertEquals(tchsSjc[1].id, 109)
+
+		-- SAVE WITHOUT LAYER
+		fromData = {}
+		fromData.file = layerFile1
+		local table5 = pgData.table
+		pgData.table = "touches_sjc_2"
+
+		for i = 1, #touches do
+			touches[i].FID = touches[i].fid
+		end
+
+		TerraLib().saveLayerAs(fromData, pgData, overwrite, {"NM_MICRO", "ID"}, touches)
+
+		local layerName9 = "SJC2"
+		TerraLib().addPgLayer(proj, layerName9, pgData, nil, encoding)
+		local tchsSjc2 = TerraLib().getDataSet(proj, layerName9)
+
+		unitTest:assertEquals(getn(tchsSjc2), 2)
+		unitTest:assertEquals(tchsSjc2[0].id, 55)
+		unitTest:assertEquals(tchsSjc2[1].id, 109)
+
 		TerraLib().dropPgTable(pgData)
 		pgData.table = table1
 		TerraLib().dropPgTable(pgData)
@@ -1920,11 +1995,14 @@ return {
 		TerraLib().dropPgTable(pgData)
 		pgData.table = table3
 		TerraLib().dropPgTable(pgData)
+		pgData.table = table4
+		TerraLib().dropPgTable(pgData)
+		pgData.table = table5
+		TerraLib().dropPgTable(pgData)
 
 		File("postgis2shp.shp"):delete()
 		File("postgis2geojson.geojson"):delete()
 
-		unitTest:assert(true)
 		proj.file:delete()
 	end,
 	getLayerSize = function(unitTest)
@@ -1941,6 +2019,10 @@ return {
 		local layerName1 = "Sampa"
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
+
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
 
 		local host = "localhost"
 		local port = "5432"
@@ -1963,7 +2045,7 @@ return {
 
 		local overwrite = true
 
-		TerraLib().saveLayerAs(proj, layerName1, pgData, overwrite)
+		TerraLib().saveLayerAs(fromData, pgData, overwrite)
 		local layerName2 = "PgLayer"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
@@ -1991,6 +2073,10 @@ return {
 		local lnFile = filePath("test/rails.shp", "terralib")
 		TerraLib().addShpLayer(proj, lnName, lnFile, nil, 29101)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = lnName
+
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
@@ -2011,7 +2097,7 @@ return {
 		}
 
 		local overwrite = true
-		TerraLib().saveLayerAs(proj, lnName, pgData, overwrite)
+		TerraLib().saveLayerAs(fromData, pgData, overwrite)
 
 		local layerName2 = "ES_Rails_Pg"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)

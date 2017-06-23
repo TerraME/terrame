@@ -134,21 +134,60 @@ return {
 		local layerFile1 = filePath("test/sampa.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
+
 		local toData = {}
 		toData.file = "shp2shp.shp"
 		toData.type = "shp"
 
 		local attrNotExist = function()
-			TerraLib().saveLayerAs(proj, layerName1, toData, true, {"ATTR"})
+			TerraLib().saveLayerAs(fromData, toData, true, {"ATTR"})
 		end
-
-		unitTest:assertError(attrNotExist, "There is no attribute 'ATTR' in layer 'SampaShp'.")
+		unitTest:assertError(attrNotExist, "There is no attribute 'ATTR' in 'SampaShp'.")
 
 		local attrsNotExist = function()
-			TerraLib().saveLayerAs(proj, layerName1, toData, true, {"ATTR1", "ATTR2", "ATTR3"})
+			TerraLib().saveLayerAs(fromData, toData, true, {"ATTR1", "ATTR2", "ATTR3"})
+		end
+		unitTest:assertError(attrsNotExist,  "There are no attributes 'ATTR1', 'ATTR2' and 'ATTR3' in 'SampaShp'.")
+
+		fromData = {}
+		fromData.file = filePath("test/prodes_polyc_10k.tif", "terralib")
+
+		local tifSaveError = function()
+			TerraLib().saveLayerAs(fromData, toData, true)
+		end
+		unitTest:assertError(tifSaveError, "File extension 'tif' is not supported to save.")
+
+		local dset1 = TerraLib().getDataSet(proj, layerName1)
+		local sjc
+		for i = 0, getn(dset1) - 1 do
+			if dset1[i].ID == 27 then
+				sjc = dset1[i]
+			end
 		end
 
-		unitTest:assertError(attrsNotExist,  "There are no attributes 'ATTR1', 'ATTR2' and 'ATTR3' in layer 'SampaShp'.")
+		local touches = {}
+		local j = 1
+		for i = 0, getn(dset1) - 1 do
+			if sjc.OGR_GEOMETRY:touches(dset1[i].OGR_GEOMETRY) then
+				touches[j] = dset1[i]
+				j = j + 1
+			end
+		end
+
+		fromData.file = layerFile1
+		toData.file = "touches_sjc.shp"
+
+		for i = 1, #touches do
+			touches[i].FID = nil
+		end
+
+		local pkSaveError = function()
+			TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+		end
+		unitTest:assertError(pkSaveError,  "Primary key not found (sampa.shp, FID). Please, check your subset.")
 
 		proj.file:delete()
 	end,

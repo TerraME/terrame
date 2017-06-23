@@ -81,6 +81,10 @@ return {
 		local layerFile1 = filePath("test/limite_es_poly_wgs84.shp", "terralib")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
+		local fromData = {}
+		fromData.project = proj
+		fromData.layer = layerName1
+
 		-- POSTGIS
 		local host = "localhost"
 		local port = "5432"
@@ -105,7 +109,7 @@ return {
 
 		local overwrite = true
 
-		TerraLib().saveLayerAs(proj, layerName1, pgData, overwrite)
+		TerraLib().saveLayerAs(fromData, pgData, overwrite)
 		local layerName2 = "PgLayer"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
@@ -113,11 +117,12 @@ return {
 		local toData = {}
 		toData.file = "postgis2tif.tif"
 		toData.type = "tif"
+		fromData.layer = layerName2
 
-		local postgis2tifError = function()
-			TerraLib().saveLayerAs(proj, layerName2, toData, overwrite)
+		local postgis2tifWarn = function()
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(postgis2tifError, "It was not possible to convert the data in layer 'PgLayer' to 'postgis2tif.tif'.")
+		unitTest:assertError(postgis2tifWarn, "It was not possible save 'PgLayer' to raster data.")
 
 		-- OVERWRITE
 		overwrite = false
@@ -127,10 +132,10 @@ return {
 		toData.type = "shp"
 		File(toData.file):deleteIfExists()
 
-		TerraLib().saveLayerAs(proj, layerName2, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 
 		local overwriteShpError = function()
-			TerraLib().saveLayerAs(proj, layerName2, toData, overwrite)
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
 		unitTest:assertError(overwriteShpError, "File 'postgis2shp.shp' already exists.")
 
@@ -141,15 +146,17 @@ return {
 		toData.type = "geojson"
 		File(toData.file):deleteIfExists()
 
-		TerraLib().saveLayerAs(proj, layerName2, toData, overwrite)
+		TerraLib().saveLayerAs(fromData, toData, overwrite)
 
 		local overwriteGeojsonError = function()
-			TerraLib().saveLayerAs(proj, layerName2, toData, overwrite)
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
 		end
 		unitTest:assertError(overwriteGeojsonError, "File 'postgis2geojson.geojson' already exists.")
 
+		fromData.layer = layerName1
+
 		local overwritePgError = function()
-			TerraLib().saveLayerAs(proj, layerName1, pgData, overwrite)
+			TerraLib().saveLayerAs(fromData, pgData, overwrite)
 		end
 		unitTest:assertError(overwritePgError, "Table 'limite_es_poly_wgs84' already exists in postgis database 'postgis_22_sample'.")
 

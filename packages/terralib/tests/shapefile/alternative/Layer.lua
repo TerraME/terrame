@@ -75,7 +75,6 @@ return {
 				file = filePath("cabecadeboi-box.shp", "terralib")
 			}
 		end
-
 		unitTest:assertWarning(epsgError, "It was not possible to find the projection of layer 'Elevation'. It should be one of the projections available at www.terrame.org/projections.html")
 
 		proj.file:delete()
@@ -106,8 +105,7 @@ return {
 		local selectNoExist = function()
 			layer1:export{select = {"uf", "pop"}, source = "shp", file = "shape.shp"}
 		end
-
-		unitTest:assertError(selectNoExist, "There are no attributes 'uf' and 'pop' in layer 'setores'.")
+		unitTest:assertError(selectNoExist, "There are no attributes 'uf' and 'pop' in 'setores'.")
 
 		local selectWrongType = function()
 			layer1:export{select = true, source = "shp", file = "shape.shp"}

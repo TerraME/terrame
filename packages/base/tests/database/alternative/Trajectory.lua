@@ -6,7 +6,7 @@
 -- This framework is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU Lesser General Public
 -- License as published by the Free Software Foundation; either
--- version 2.3 of the License, or (at your option) any later version.
+-- version 2.1 of the License, or (at your option) any later version.
 
 -- You should have received a copy of the GNU Lesser General Public
 -- License along with this library.
@@ -22,37 +22,55 @@
 --
 -------------------------------------------------------------------------------------------
 
-return {
-	saveLayerAs = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
+return{
+	save = function(unitTest)
+		local cs = CellularSpace{
+			file = filePath("test/sampa.shp", "terralib")
+		}
 
-		File(proj.file):deleteIfExists()
+		local t = Trajectory{
+			target = cs,
+			select = function(cell)
+				return cell.ID % 2 == 0
+			end
+		}
 
-		TerraLib().createProject(proj, {})
-
-		local layerName1 = "SampaGeoJson"
-		local layerFile1 = filePath("test/sampa.geojson", "terralib")
-		TerraLib().addGeoJSONLayer(proj, layerName1, layerFile1)
-
-		local fromData = {}
-		fromData.project = proj
-		fromData.layer = layerName1
-
-		-- TIF
-		local toData = {}
-		toData.file = "geojson2tif.tif"
-		toData.type = "tif"
-
-		local overwrite = true
-
-		local geojson2tifError = function()
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+		local mandatoryFileError = function()
+			t:save("foo.shp")
 		end
-		unitTest:assertError(geojson2tifError, "It was not possible save 'SampaGeoJson' to raster data.")
+		unitTest:assertError(mandatoryFileError, incompatibleTypeMsg("#1", "File", "foo.shp"))
 
-		proj.file:delete()
+		local file = File("odd.shp")
+
+		local paramTypeError = function()
+			t:save(file, true)
+		end
+		unitTest:assertError(paramTypeError, "Incompatible types. Argument '#2' expected table or string.")
+
+		local attrNotExist = function()
+			t:save(file, "FOO")
+		end
+		unitTest:assertError(attrNotExist, "Attribute 'FOO' does not exist in the target CellularSpace.")
+
+		local attrNotExist2 = function()
+			t:save(file, {"ID", "BAR"})
+		end
+		unitTest:assertError(attrNotExist2, "Attribute 'BAR' does not exist in the target CellularSpace.")
+
+		local cs1 = CellularSpace{
+			xdim = 3
+		}
+
+		local t1 = Trajectory{
+			target = cs1
+		}
+
+		local file1 = File("foo.shp")
+
+		local targetSourceError = function()
+			t1:save(file1)
+		end
+		unitTest:assertError(targetSourceError, "Target CellularSpace must come from a file or layer.")
 	end
 }
+
