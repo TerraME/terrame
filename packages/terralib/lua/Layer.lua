@@ -417,12 +417,19 @@ Layer_ = {
 	-- Raster & (none) &
 	-- "average", "mode", "maximum", "minimum", "coverage", "stdev", "sum", "count" &
 	-- (none) \
-	-- @arg data.operation The way to compute the attribute of each cell. See the
-	-- table below:
+	-- @arg data.operation The way to compute the attribute of each cell. When using raster
+	-- data, a pixel is considered within a given geometry if there is some intersection
+	-- between the pixel and the geometry. This means that the same pixel might belong to
+	-- two or more geometries of the layer. See the
+	-- table below with the available operations:
 	-- @tabular operation
 	-- Operation & Description & Mandatory arguments & Optional arguments \
 	-- "area" & Percentage of area with some overlay with a layer of polygons. The created values
 	-- will range from zero (no intersection) to one (area fully covered by polygons).
+	-- This algorithm supposes that there is no intersection area between each pair of polygons
+	-- from the reference layer. It sums the intersection areas of the object with all the polygons
+	-- of the reference layer. Because of that, if there is some overlay between the polygons of the
+	-- reference layer, it might create attribute values greater than one.
 	-- & attribute, layer & missing \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
