@@ -47,6 +47,9 @@ return{
 	end,
 	sessionInfo = function(unitTest)
 		local s = sessionInfo()
+		local time = s.time
+
+		unitTest:assert(time > 0)
 
 		unitTest:assertType(s.path, "Directory")
 		unitTest:assertType(s.initialDir, "Directory")
@@ -96,6 +99,9 @@ return{
 		unitTest:assertEquals(count, 4)
 
 		s.round = info.round
+
+		unitTest:assert(sessionInfo().time >= time)
+		unitTest:assert(sessionInfo().time - time < 20)
 	end
 }
 

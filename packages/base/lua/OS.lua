@@ -174,6 +174,7 @@ end
 -- silent & A boolean value indicating whether print() calls should not be shown. This
 -- value can only be set from TerraME command line (-silent). & Yes \
 -- system & A string with the operating system. It is one of "windows", "linux", or "mac". & Yes \
+-- time & A number with the execution time of TerraME in seconds. & Yes \
 -- version & A string with the current version of TerraME. & Yes
 -- @usage print(sessionInfo().mode)
 function sessionInfo()
@@ -182,6 +183,10 @@ function sessionInfo()
 	local sessionInfo_ = {}
 	local metaTableSessionInfo_ = {
 		__index = function(_, idx)
+			if idx == "time" then
+				return os.clock() - info.time
+			end
+
 			return info[idx]
 		end,
 		__newindex = function(_, idx, value)
@@ -209,6 +214,7 @@ function sessionInfo()
 				separator = readOnly,
 				silent = readOnly,
 				system = readOnly,
+				time = readOnly,
 				version = readOnly,
 				round = function(midx, mvalue)
 					if type(mvalue) ~= "number" then

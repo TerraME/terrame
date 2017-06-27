@@ -120,8 +120,6 @@ function _Gtme.executeProject(package, project, resolution)
 end
 
 function _Gtme.executeProjects(package)
-	local initialTime = os.clock()
-
 	printNote("Creating projects for package '"..package.."'")
 
 	local package_path = _Gtme.packageInfo(package).path
@@ -305,10 +303,8 @@ function _Gtme.executeProjects(package)
 		os.execute("rm -f config.lua")
 	end
 
-	local finalTime = os.clock()
-
 	print("\nProjects report for package '"..package.."':")
-	printNote("Projects were created in "..round(finalTime - initialTime, 2).." seconds.")
+	printNote("Projects were created in "..round(sessionInfo().time, 2).." seconds.")
 
 	if project_report.projects == 0 then
 		printNote("No project file was created.")

@@ -35,8 +35,6 @@ local function rm(file)
 end
 
 function _Gtme.buildPackage(package, config, clean)
-	local initialTime = os.clock()
-
 	printNote("Building package '"..package.."'")
 
 	if not isLoaded("base") then
@@ -355,9 +353,8 @@ function _Gtme.buildPackage(package, config, clean)
 
 	currentdir:setCurrentDir()
 
-	local finalTime = os.clock()
 	print("\nBuild report for package '"..package.."':")
-	printNote("Package was built in "..round(finalTime - initialTime, 2).." seconds.")
+	printNote("Package was built in "..round(sessionInfo().time, 2).." seconds.")
 	printNote("Build created file '"..file.."'.")
 	printNote("Temporary files are saved in "..tostring(tmpdirectory))
 

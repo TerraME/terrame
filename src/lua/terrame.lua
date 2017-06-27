@@ -1168,6 +1168,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		path = os.getenv("TME_PATH"),
 		fullTraceback = false,
 		autoclose = false,
+		time = os.clock(),
 		system = string.lower(cpp_getOsName()),
 		round = 1e-5
 	}
