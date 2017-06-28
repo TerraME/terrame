@@ -35,9 +35,9 @@ File 'itaituba-roads.shp' is already documented in 'data.lua'
 File 'itaituba.shp' does not need to be documented (a Lua file creates it)
 Project file 'itaituba.tview' does not need to be documented (a Lua file creates it)
 Verifying font files
-Package 'terralib' does not have a font directory
+Package 'gis' does not have a font directory
 
-Sketch report for package 'terralib':
+Sketch report for package 'gis':
 No new test file was necessary.
 All Models are already documented.
 All data is already documented.
