@@ -12,7 +12,7 @@ m = Map{
 	color = "Grays"
 }
 
-m:save("cabeca2.bmp")
+m:save("cabeca2.png")
 
 clean()
 

@@ -1,6 +1,6 @@
 
 dofile(packageInfo().path.."/examples/sir-basic.lua")
 
-chart:save("sir-basic.bmp")
+chart:save("sir-basic.png")
 
 clean()

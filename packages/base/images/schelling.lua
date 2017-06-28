@@ -1,6 +1,6 @@
 
 dofile(packageInfo().path.."/examples/schelling.lua")
 
-map:save("schelling.bmp")
+map:save("schelling.png")
 
 clean()

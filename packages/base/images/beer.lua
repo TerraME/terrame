@@ -1,6 +1,6 @@
 
 dofile(packageInfo().path.."/examples/beer.lua")
 
-reqDeliv:save("beer.bmp")
+chartDeliv:save("beer.png")
 
 clean()

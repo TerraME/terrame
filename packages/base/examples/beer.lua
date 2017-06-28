@@ -9,7 +9,7 @@
 -- For more information, see https://en.wikipedia.org/wiki/Beer_distribution_game.
 -- @arg NUMBER_OF_AGENTS Number of agents in the chain, excluding the manufacturer and the retailer.
 -- The default value is three.
--- @image beer.bmp
+-- @image beer.png
 
 NUMBER_OF_AGENTS = 3
 

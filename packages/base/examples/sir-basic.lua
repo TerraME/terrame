@@ -4,7 +4,7 @@
 -- the susceptible ones. After some time, infected become recovered,
 -- which cannot be infected again. \
 -- For mode details visit http://en.wikipedia.org/wiki/Epidemic_model.
--- @image sir-basic.bmp
+-- @image sir-basic.png
 
 world = Cell{
 	susceptible = 9998,

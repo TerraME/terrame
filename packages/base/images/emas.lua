@@ -41,7 +41,7 @@ map = Map{
 }
 
 
-map:save("emas.bmp")
+map:save("emas.png")
 
 clean()
 

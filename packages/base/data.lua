@@ -31,7 +31,7 @@ data{
 	attributes = {
 		height = "Height of the Cell, measured in values between 0 and 255."
 	},
-	image = "cabeca.bmp",
+	image = "cabeca.png",
 	source = "This data is a copy of the file with the same name created by terralib package.",
 	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil, with 100x100m of resolution."
 }
@@ -44,7 +44,7 @@ data{
 
 data{
 	file = "cabecadeboi800.shp",
-	image = "cabeca2.bmp",
+	image = "cabeca2.png",
 	source = "This data is a copy of cabecadeboi created by terralib package, using a resolution of 800m.",
 	attributes = {
 		height = "Height of the Cell, measured in values between 0 and 255."
@@ -66,14 +66,14 @@ data{
 
 data{
 	file = "simple.pgm",
-	image = "simple.bmp",
+	image = "simple.png",
 	summary = "A simple CellularSpace with one attribute for sugarscape model.",
 	source = "TerraME team"
 }
 
 data{
 	file = "amazonia.shp",
-	image = "amazonia.bmp",
+	image = "amazonia.png",
 	source = "This data is a copy of the file with the same name created by terralib package.",
 	summary = "Cellular data representing the Amazonia region, in Brazil. It has 50x50km of resolution.",
 	attributes = {
@@ -87,7 +87,7 @@ data{
 
 data{
 	file = "emas.shp",
-	image = "emas.bmp",
+	image = "emas.png",
 	source = "This data is a copy of the file with the same name created by terralib package.",
 	summary = "Cellular data representing Emas National Park, Brazil. It has 500x500m of resolution.",
 	attributes = {

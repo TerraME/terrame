@@ -3,7 +3,7 @@
 -- feed grass and the other composed by predators that feed
 -- preys. Agents move randomly in space and can reproduce.
 -- The output is similar to Lotka-Volterra equations.
--- @image predator-prey.bmp
+-- @image predator-prey.png
 
 Random{seed = 200}
 

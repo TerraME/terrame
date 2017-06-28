@@ -1,5 +1,5 @@
 -- @example A simple example with one Agent that moves randomly in space.
--- @image single-agent.bmp
+-- @image single-agent.png
 
 singleFooAgent = Agent{
 	execute = function(self)

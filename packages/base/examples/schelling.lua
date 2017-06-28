@@ -13,7 +13,7 @@
 -- number between 3 and 5.
 -- @arg NAGTS The proportion of agents in space.
 -- @arg MAX_TURNS Maximum number of simulation steps.
--- @image schelling.bmp
+-- @image schelling.png
 
 NDIM = 30
 NAGTS = 0.9

@@ -3,7 +3,7 @@
 -- probability.
 -- @arg GROWTH_PROB The probability of an agent to reproduce in an
 -- empty neighbor cell. The default value is 0.3.
--- @image growing-society.bmp
+-- @image growing-society.png
 
 singleFooAgent = Agent{
 	execute = function(self)

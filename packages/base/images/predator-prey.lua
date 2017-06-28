@@ -1,6 +1,6 @@
 
 dofile(packageInfo().path.."/examples/predator-prey.lua")
 
-chart:save("predator-prey.bmp")
+chart1:save("predator-prey.png")
 
 clean()
