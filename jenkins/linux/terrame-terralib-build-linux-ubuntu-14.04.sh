@@ -52,8 +52,6 @@ rm -rf $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
 echo "### TerraME ###"
 # Identifying when PR to clone respective changes
 if [ ! -z "$ghprbActualCommit" ]; then
-  rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
-
   mkdir -p $_TERRAME_GIT_DIR
   cd $_TERRAME_GIT_DIR
   git init
@@ -64,6 +62,7 @@ if [ ! -z "$ghprbActualCommit" ]; then
 else
   # Just clone
   git clone https://github.com/terrame/terrame.git $_TERRAME_GIT_DIR --quiet
+  rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution  
 fi
 
 echo "### TerraLib ###"
