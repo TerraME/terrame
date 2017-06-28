@@ -23,7 +23,7 @@
 # of this software and its documentation.
 
 # 
-## It performs a TerraME functional test of any package. For TerraME purporses, "base" and "terralib" internal packages. 
+## It performs a TerraME functional test of any package. For TerraME purporses, "base" and "gis" internal packages. 
 ## It may be useful for TerraME external packages.
 #
 ## USAGE:
@@ -48,7 +48,7 @@ terrame -version
 # if [ -z "$ghprbActualCommit" ]; then
   # Daily execution config
 
-#  if [ "$1" == "terralib" ]; then
+#  if [ "$1" == "gis" ]; then
 #    echo "myconfig" > test.lua
 #  else
 #    echo "myconfig2" > test.lua
@@ -58,11 +58,11 @@ terrame -version
 # fi
 
 TERRAME_COMMANDS=""
-# Extra commands if package is terralib
+# Extra commands if package is gis
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
   TERRAME_COMMANDS="-package $1"
   # if [ ! -z "$ghprbActualCommit" ]; then
-  #   # Temp code to ensure unittest terralib does not take too long to execute. Only CI trigger
+  #   # Temp code to ensure unittest gis does not take too long to execute. Only CI trigger
   #   echo -e '\ndirectory = {"functional", "shapefile", "postgis", "tif", "geojson", "asc", "wms", "nc"}' >> test.lua
   # fi
 fi
