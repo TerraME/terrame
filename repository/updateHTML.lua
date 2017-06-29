@@ -1,6 +1,6 @@
--- Script to update the documentation of base and terralib
+-- Script to update the documentation of base and gis
 -- available at terrame.org.
--- 'terrame -color doc-base-terralib.lua'
+-- 'terrame -color doc-base-gis.lua'
 
 -----------------------------------------------------------------------
 local host = "ssh.dpi.inpe.br:"
@@ -28,13 +28,13 @@ forEachOrderedElement(packages, function(name, data)
 end)
 
 
-list = list.."base terralib"
+list = list.."base gis"
 
 _Gtme.print("\027[00;37;43mCreating documentation of package 'base'\027[00m")
 --os.execute("terrame -color -doc")
 
-_Gtme.print("\027[00;37;43mCreating documentation of package 'terralib'\027[00m")
---os.execute("terrame -color -package terralib -doc")
+_Gtme.print("\027[00;37;43mCreating documentation of package 'gis'\027[00m")
+--os.execute("terrame -color -package gis -doc")
 
 _Gtme.printNote("Copying files to terrame.org")
 

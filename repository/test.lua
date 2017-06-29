@@ -170,8 +170,8 @@ end
 
 _Gtme.printNote("Creating projects")
 
-_Gtme.print("Creating projects for package 'terralib'")
-runCommand("terrame -package terralib -projects")
+_Gtme.print("Creating projects for package 'gis'")
+runCommand("terrame -package gis -projects")
 
 forEachOrderedElement(pkgs, function(package)
 	local docInitialTime = os.time(os.date("*t"))

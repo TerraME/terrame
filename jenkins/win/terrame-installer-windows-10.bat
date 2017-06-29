@@ -34,7 +34,7 @@ cd %_TERRAME_OUT_DIR%\..
 
 :: Copying generated logs to GIT dir
 xcopy %_TERRAME_INSTALL_PATH%\bin\packages\base\doc %_TERRAME_GIT_DIR%\packages\base\doc /i /h /e /y
-xcopy %_TERRAME_INSTALL_PATH%\bin\packages\terralib\doc %_TERRAME_GIT_DIR%\packages\terralib\doc /i /h /e /y
+xcopy %_TERRAME_INSTALL_PATH%\bin\packages\gis\doc %_TERRAME_GIT_DIR%\packages\gis\doc /i /h /e /y
 
 :: Removing build and install in order to generate again
 rmdir %_TERRAME_INSTALL_PATH% /s /q

@@ -1,0 +1,5 @@
+Verifying test files
+Ignoring tests because internal directories were found in the tests
+Verifying documentation of Models
+Verifying data files
+Error: Package 'terralib' is not installed.
