@@ -278,7 +278,7 @@ local function verifyData(package, report)
 
 	local mfile = io.open(datadotlua, "a")
 
-	local tl = getPackage("terralib")
+	local tl = getPackage("gis")
 
 	sessionInfo().mode = "quiet"
 

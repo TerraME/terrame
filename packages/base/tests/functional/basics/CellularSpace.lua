@@ -80,9 +80,9 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local terralib = getPackage("terralib")
+		local gis = getPackage("gis")
 
-		local proj = terralib.Project{
+		local proj = gis.Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -96,10 +96,10 @@ return{
 
 		local layerName1 = "Sampa"
 
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "gis")
 		}
 
 		local testDir = currentDir()
@@ -111,7 +111,7 @@ return{
 		File(fn1):deleteIfExists()
 
 		local clName1 = "Sampa_Cells"
-		local layer = terralib.Layer{
+		local layer = gis.Layer{
 			project = proj,
 			clean = true,
 			input = layerName1,
@@ -175,7 +175,7 @@ return{
 		projName = "geojson_cellspace.tview"
 		title = "GeoJSON Cellular Space"
 
-		proj = terralib.Project{
+		proj = gis.Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -184,10 +184,10 @@ return{
 
 		layerName1 = "GeoJSON_Sampa"
 
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/sampa.geojson", "terralib")
+			file = filePath("test/sampa.geojson", "gis")
 		}
 
 		cs = CellularSpace{
@@ -206,7 +206,7 @@ return{
 		File(filePath1):deleteIfExists()
 
 		clName1 = "GeoJSON_Sampa_Cells"
-		layer = terralib.Layer{
+		layer = gis.Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
@@ -269,7 +269,7 @@ return{
 			projName = "tif_four_cellspace.tview"
 			title = "Tif Cellular Space"
 
-			proj = terralib.Project{
+			proj = gis.Project{
 				file = projName,
 				clean = true,
 				author = author,
@@ -277,9 +277,9 @@ return{
 			}
 
 			layerName1 = "tif_one_Layer"
-			filePath1 = filePath("itaituba-elevation.tif", "terralib")
+			filePath1 = filePath("itaituba-elevation.tif", "gis")
 
-			layer = terralib.Layer{
+			layer = gis.Layer{
 				project = proj,
 				name = layerName1,
 				file = filePath1
@@ -311,7 +311,7 @@ return{
 			projName = "nc_cellspace.tview"
 			title = "NC Cellular Space"
 
-			proj = terralib.Project{
+			proj = gis.Project{
 				file = projName,
 				clean = true,
 				author = author,
@@ -319,9 +319,9 @@ return{
 			}
 
 			layerName1 = "NC_vegtype2000"
-			filePath1 = filePath("test/vegtype_2000.nc", "terralib")
+			filePath1 = filePath("test/vegtype_2000.nc", "gis")
 
-			layer = terralib.Layer{
+			layer = gis.Layer{
 				project = proj,
 				name = layerName1,
 				file = filePath1
@@ -353,7 +353,7 @@ return{
 			projName = "asc_cellspace.tview"
 			title = "Asc Cellular Space"
 
-			proj = terralib.Project{
+			proj = gis.Project{
 				file = projName,
 				clean = true,
 				author = author,
@@ -361,9 +361,9 @@ return{
 			}
 
 			layerName1 = "ASC_biomassa-manaus"
-			filePath1 = filePath("test/biomassa-manaus.asc", "terralib")
+			filePath1 = filePath("test/biomassa-manaus.asc", "gis")
 
-			layer = terralib.Layer{
+			layer = gis.Layer{
 				project = proj,
 				name = layerName1,
 				file = filePath1
@@ -1403,13 +1403,13 @@ ydim    number [20]
 		unitTest:assertType(cs:sample(), "Cell")
 	end,
 	save = function(unitTest)
-        local terralib = getPackage("terralib")
+        local gis = getPackage("gis")
 
 		local projName = "cellspace_save_basic.tview"
 
 		File(projName):deleteIfExists()
 
-		local proj = terralib.Project{
+		local proj = gis.Project{
 			file = projName,
 			clean = true,
 			author = "Avancini",
@@ -1417,10 +1417,10 @@ ydim    number [20]
 		}
 
 		local layerName1 = "Sampa"
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "gis")
 		}
 
 		local testDir = currentDir()
@@ -1432,7 +1432,7 @@ ydim    number [20]
 		File(fn1):deleteIfExists()
 
 		local clName1 = "Sampa_Cells"
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			clean = true,
 			input = layerName1,
@@ -1461,7 +1461,7 @@ ydim    number [20]
 
 		cs:save(cellSpaceLayerNameT0, "t0")
 
-		local layer = terralib.Layer{
+		local layer = gis.Layer{
 			project = proj,
 			name = cellSpaceLayerNameT0,
 		}

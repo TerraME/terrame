@@ -46,7 +46,7 @@
 _TERRALIB_BRANCH=release-5.2
 
 # Removing TerraLib Mod Binding Lua in order to re-generate folder if there is
-rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua $_TERRALIB_INSTALL_PATH $_TERRAME_GIT_DIR $_TERRALIB_GIT_DIR $_TERRAME_BUILD_BASE/solution
+rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua $_TERRALIB_INSTALL_PATH $_TERRAME_GIT_DIR $_TERRAME_BUILD_BASE/solution
 rm -rf $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
 
 echo "### TerraME ###"
@@ -62,6 +62,7 @@ if [ ! -z "$ghprbActualCommit" ]; then
 else
   # Just clone
   git clone https://github.com/terrame/terrame.git $_TERRAME_GIT_DIR --quiet
+  rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution  
 fi
 
 echo "### TerraLib ###"

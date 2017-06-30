@@ -303,6 +303,7 @@ forEachOrderedElement(commands, function(idx, group)
 				local v = logfile.file:read()
 				if v then
 					_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
+					printTestOutput(result, line)
 					report.logerrors = report.logerrors + 1
 				end
 			end
@@ -353,14 +354,14 @@ forEachOrderedElement(commands, function(idx, group)
 
 		if sessionInfo().system == "mac" then
 			if idx == "sketch" then
-				if name == "terralib" then
+				if name == "gis" then
 					_Gtme.printWarning("Skipping "..name)
 					return
 				end
 			end
 		end
 
-		if args.package and not belong(args.package, {"terralib", "memory"}) then
+		if args.package and not belong(args.package, {"gis", "memory"}) then
 			command = command.." -package "..args.package
 		else
 			return
@@ -486,6 +487,7 @@ forEachOrderedElement(commands, function(idx, group)
 				local v = logfile.file:read()
 				if v then
 					_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
+					printTestOutput(result, line)
 					report.logerrors = report.logerrors + 1
 				end
 			end

@@ -35,10 +35,10 @@ set "PATH=%PATH%;%TME_PATH%"
 cd %_TERRAME_TEST_DIR%
 
 terrame -version
-:: Extra commands if package is terralib
+:: Extra commands if package is gis
 IF NOT "%1" == "" (
-  terrame -color -package terralib -projects
-  terrame -color -package terralib -doc
+  terrame -color -package gis -projects
+  terrame -color -package gis -doc
 ) ELSE (
   terrame -color -doc
 )

@@ -18,8 +18,8 @@ unnecessary  = {
 	build      = {arg = "-build -color"},
 	check      = {arg = "-check -color"},
 	uninstall  = {arg = "-uninstall -color"},
-	build      = {arg = "-build t.lua -color", package = "terralib"},
-	buildclean = {arg = "-build -clean t.lua -color", package = "terralib"},
+	build      = {arg = "-build t.lua -color", package = "gis"},
+	buildclean = {arg = "-build -clean t.lua -color", package = "gis"},
 	test       = {arg = "-test t.lua -color"}
 }
 
@@ -61,13 +61,13 @@ package = {
 	check             = {package = "check",          arg = "-check"},
 	install           = {script = "package.lua"},
 	removebase        = {arg = "-uninstall"},
-	removeterralib    = {package = "terralib", arg = "-uninstall"},
+	removeterralib    = {package = "gis", arg = "-uninstall"},
 	repository        = {arg = "-install abcd1234wef"}
 }
 
 project = {
-	showprojects  = {package = "terralib",  arg = "-project"},
-	runprojects   = {package = "terralib",  arg = "-quiet -projects"},
+	showprojects  = {package = "gis",  arg = "-project"},
+	runprojects   = {package = "gis",  arg = "-quiet -projects"},
 	errorprojects = {package = "project",   arg = "-projects"},
 	nopackage1    = {package = "abcdef",    arg = "-project"},
 	nopackage2    = {package = "abcdef",    arg = "-projects"},
@@ -176,7 +176,7 @@ sketch = {
 	font     = {arg = "-sketch", package = "nofontdotlua"},
 	void     = {arg = "-sketch", package = "nolua"},
 	test     = {arg = "-sketch", package = "models"},
-	terralib = {arg = "-sketch", package = "terralib"},
+	gis      = {arg = "-sketch", package = "gis"},
 	base     = {arg = "-sketch"}
 }
 

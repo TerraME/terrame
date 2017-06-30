@@ -97,19 +97,19 @@ local function getProjects(package, doc_report)
 	local layers = {}
 	local currentProject
 
-	if not isLoaded("terralib") then
-		import("terralib")
+	if not isLoaded("gis") then
+		import("gis")
 	end
 
 	local oldImport = import
 
 	import = function(pkg)
-		if pkg ~= "terralib" then
+		if pkg ~= "gis" then
 			oldImport(pkg)
 		end
 	end
 
-	local tl = getPackage("terralib")
+	local tl = getPackage("gis")
 	local createdFiles = {}
 
 	function processLayer(idx, value)
@@ -655,7 +655,7 @@ function _Gtme.executeDoc(package)
 
 		printNote("Checking properties of data files")
 		-- add quantity and type for each documented file
-		local tl = getPackage("terralib")
+		local tl = getPackage("gis")
 
 		myProject = tl.Project{
 			file = "tmpproj.tview",

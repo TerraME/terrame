@@ -22,7 +22,7 @@
 --
 -------------------------------------------------------------------------------------------
 
-local terralib = getPackage("terralib")
+local gis = getPackage("gis")
 
 local function getEmptySocialNetwork()
 	return function()
@@ -1027,7 +1027,7 @@ function Society(data)
 				data:add(attributes)
 			end
 		else
-			local dSet = terralib.TerraLib().getOGRByFilePath(tostring(data.file))
+			local dSet = gis.TerraLib().getOGRByFilePath(tostring(data.file))
 
 			for i = 0, #dSet do
 				data:add(dSet[i])

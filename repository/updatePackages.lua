@@ -31,8 +31,8 @@ forEachFile(".", function(file)
 	newPackages[package] = version
 end)
 
-_Gtme.print("Creating 'terralib' projects")
-runCommand("terrame -package terralib -projects")
+_Gtme.print("Creating 'gis' projects")
+runCommand("terrame -package gis -projects")
 
 _Gtme.printNote("Running documentation and tests")
 

@@ -36,7 +36,7 @@ cd $_TERRAME_OUT_DIR/..
 
 # Copying Generated documentation to Git directory
 cp -rap $_TERRAME_INSTALL_PATH/bin/packages/base/doc $_TERRAME_GIT_DIR/packages/base/doc
-cp -rap $_TERRAME_INSTALL_PATH/bin/packages/terralib/doc $_TERRAME_GIT_DIR/packages/terralib/doc
+cp -rap $_TERRAME_INSTALL_PATH/bin/packages/gis/doc $_TERRAME_GIT_DIR/packages/gis/doc
 
 # Removing old builds
 rm -rf $_TERRAME_INSTALL_PATH $_TERRAME_OUT_DIR

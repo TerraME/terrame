@@ -29,9 +29,9 @@ return{
 		local author = "Avancini"
 		local title = "Cellular Space"
 
-		local terralib = getPackage("terralib")
+		local gis = getPackage("gis")
 
-		local proj = terralib.Project{
+		local proj = gis.Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -45,7 +45,7 @@ return{
 
 		local layerName1 = "Brazil"
 
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			name = layerName1,
 			file = filePath("brazilstates.shp", "base")
@@ -59,7 +59,7 @@ return{
 		File(filePath1):deleteIfExists()
 
 		local clName1 = "Brazil_Cells"
-		terralib.Layer{
+		gis.Layer{
 			project = proj,
 			input = layerName1,
 			name = clName1,
@@ -84,7 +84,7 @@ return{
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 
-		local pgLayer = terralib.Layer{
+		local pgLayer = gis.Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,

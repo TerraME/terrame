@@ -1,4 +1,4 @@
-Creating projects for package 'terralib'
+Creating projects for package 'gis'
 Using 'config.lua' in the current directory
 Removing output files
 Removing 'data/amazonia-postgis.tview'
@@ -47,7 +47,7 @@ Executing operation 'sum' (weighted by area)  using layer 'census'
 File 'itaituba.tview' was successfully created
 Removing 'config.lua'
 
-Projects report for package 'terralib':
+Projects report for package 'gis':
 Projects were created in 147.72 seconds.
 5 project files were created.
 No invalid .tview file was found in the package.
