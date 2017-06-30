@@ -1,7 +1,7 @@
 -- @example A Susceptible-Infected-Recovered (SIR) model. In this model
 -- the disease has a duration of 8 weeks. We can see that the maximum
 -- number of infected is proportional to the duration of the disease.
--- @image sir-improved.bmp
+-- @image sir-improved.png
 
 contacts = 6
 infections = 0.25

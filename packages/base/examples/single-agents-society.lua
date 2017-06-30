@@ -1,5 +1,5 @@
 -- @example Simulation of a Society with 30 moving Agents.
--- @image single-agents-society.bmp
+-- @image single-agents-society.png
 
 singleFooAgent = Agent{
 	execute = function(self)

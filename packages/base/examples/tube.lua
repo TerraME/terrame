@@ -1,5 +1,5 @@
 -- @example A simple model that describes water flowing out of a tube.
--- @image tube.bmp
+-- @image tube.png
 
 world = Cell{
 	water = 40,

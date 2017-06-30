@@ -374,7 +374,7 @@ local function getProjects(package, doc_report)
 end
 
 function _Gtme.executeDoc(package)
-	local initialTime = os.clock()
+	local initialTime = sessionInfo().time
 
 	if not isLoaded("luadoc") then
 		import("luadoc")
@@ -1350,7 +1350,7 @@ function _Gtme.executeDoc(package)
 		end)
 	end
 
-	local finalTime = os.clock()
+	local finalTime = sessionInfo().time
 
 	print("\nDocumentation report for package '"..package.."':")
 	printNote("Documentation was built in "..round(finalTime - initialTime, 2).." seconds.")

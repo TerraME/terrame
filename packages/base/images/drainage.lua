@@ -1,6 +1,6 @@
 
 dofile(packageInfo().path.."/examples/drainage.lua")
 
-chart:save("drainage.bmp")
+chart:save("drainage.png")
 
 clean()

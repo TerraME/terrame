@@ -16,7 +16,7 @@
 -- must be one.
 -- @arg DIM The x and y dimensions of space.
 -- @arg AGENTS The number of agents in the simulation.
--- @image barros.bmp
+-- @image barros.png
 
 P_POOR   = 0.65
 P_MIDDLE = 0.30

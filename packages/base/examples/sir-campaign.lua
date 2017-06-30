@@ -2,7 +2,7 @@
 -- campaign asks the population to stop leaving home, which reduces the number of
 -- contacts by half. It is activated whenever there are more than 1000
 -- infected individuous in the population.
--- @image sir-campaign.bmp
+-- @image sir-campaign.png
 
 contacts = 6
 infections = 0.25

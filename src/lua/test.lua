@@ -188,7 +188,7 @@ local function buildLineTable(package)
 end
 
 function _Gtme.executeTests(package, fileName)
-	local initialTime = os.clock()
+	local initialTime = sessionInfo().time
 	local s = sessionInfo().separator
 
 	local data
@@ -988,7 +988,7 @@ function _Gtme.executeTests(package, fileName)
 		printWarning("Skipping logs check")
 	end
 
-	local finalTime = os.clock()
+	local finalTime = sessionInfo().time
 
 	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
 	               -ut.logs - ut.package_functions

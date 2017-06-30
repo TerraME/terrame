@@ -72,7 +72,6 @@ end
 
 _Gtme.checkPackage = function(package, packagePath)
 	_Gtme.printNote("Running code analyzer for package '"..package.."'")
-	local clock0 = os.clock()
 
 	local testsPath = Directory(packagePath.."tests")
 	local examplePath = Directory(packagePath.."examples")
@@ -159,9 +158,7 @@ _Gtme.checkPackage = function(package, packagePath)
 
 	_Gtme.printNote("\nCode analyzer report for package '"..package.."':")
 
-	local clock1 = os.clock()
-	local dt = clock1 - clock0
-	_Gtme.printNote("Analysis executed in "..round(dt, 2).." seconds.")
+	_Gtme.printNote("Analysis executed in "..round(sessionInfo().time, 2).." seconds.")
 
 	if totalFiles > 0 then
 		if totalFiles == 1 then

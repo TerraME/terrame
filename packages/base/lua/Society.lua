@@ -38,6 +38,7 @@ local function getSocialNetworkByCell(_, data)
 				rs:add(agentwithin, 1)
 			end
 		end)
+
 		return rs
 	end
 end
@@ -51,6 +52,7 @@ local function getSocialNetworkByFunction(soc, data)
 				rs:add(hint, 1)
 			end
 		end)
+
 		return rs
 	end
 end
@@ -63,6 +65,7 @@ local function getSocialNetworkByNeighbor(_, data)
 				rs:add(agentwithin, 1)
 			end)
 		end)
+
 		return rs
 	end
 end
@@ -77,6 +80,7 @@ local function getSocialNetworkByProbability(soc, data)
 				rs:add(hint, 1)
 			end
 		end)
+
 		return rs
 	end
 end
@@ -93,6 +97,7 @@ local function getSocialNetworkByQuantity(soc, data)
 				quant = quant + 1
 			end
 		end
+
 		return rs
 	end
 end
@@ -553,6 +558,7 @@ Society_ = {
 			if not result then
 				customError("Agent '"..position.."' does not belong to the Society.")
 			end
+
 			return result
 		end
 
@@ -964,6 +970,7 @@ function Society(data)
 
 						quantity = quantity + magent[attribute]
 					end)
+
 					return quantity
 				end
 			elseif mtype == "boolean" then
@@ -979,6 +986,7 @@ function Society(data)
 							quantity = quantity + 1
 						end
 					end)
+
 					return quantity
 				end
 			elseif mtype == "string" or (mtype == "Random" and (value.distrib == "categorical" or (value.distrib == "discrete" and type(value[1]) == "string"))) then
@@ -997,6 +1005,7 @@ function Society(data)
 							result[mvalue] = 1
 						end
 					end)
+
 					return result
 				end
 			end
@@ -1063,6 +1072,7 @@ function Society(data)
 				if not data.instance[idx] then
 					data.instance[idx] = value
 				end
+
 				return
 			end
 

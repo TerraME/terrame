@@ -1,6 +1,6 @@
 -- @example A simple drainage model. It uses a Chart to
 -- show the output of the simulation.
--- @image drainage.bmp
+-- @image drainage.png
 
 -- model parameters
 

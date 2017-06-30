@@ -1,7 +1,7 @@
 -- @example A model that describes water flowing in and out of a tube.
 -- This implementation also verifies does not allow to have negative
 -- amounts of water in the tube.
--- @image tube-inflow-outflow.bmp
+-- @image tube-inflow-outflow.png
 
 world = Cell{
 	water = 40,

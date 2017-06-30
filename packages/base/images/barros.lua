@@ -1,6 +1,6 @@
 
 dofile(packageInfo().path.."/examples/barros.lua")
 
-map:save("barros.bmp")
+map:save("barros.png")
 
 clean()

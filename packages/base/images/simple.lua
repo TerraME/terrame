@@ -1,7 +1,6 @@
 
 cs = CellularSpace{
-	database = filePath("simple.pgm", "base"),
-	attrname = "simple"
+	file = filePath("simple.pgm", "base")
 }
 
 m = Map{
@@ -14,7 +13,7 @@ m = Map{
 }
 
 
-m:save("simple.bmp")
+m:save("simple.png")
 clean()
 
 

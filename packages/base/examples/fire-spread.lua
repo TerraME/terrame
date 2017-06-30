@@ -6,7 +6,7 @@
 -- 'Simulando padroes de incendios no Parque Nacional das Emas, Estado de
 -- Goias, Brasil.' X Simposio Brasileiro de Geoinfoamatica (2008).
 -- @arg STEPS The final simulation time. The default value is 35.
--- @image fire-spread.bmp
+-- @image fire-spread.png
 
 STEPS = 35
 

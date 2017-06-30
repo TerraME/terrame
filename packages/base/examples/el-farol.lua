@@ -13,7 +13,7 @@
 -- @arg K number of strategies each individual has (if only one then the
 -- agent will never change its strategy). The default value is 3.
 -- @arg MAX Maximum number of people in the bar. The default value is 60.
--- @image el-farol.bmp
+-- @image el-farol.png
 
 N = 100
 K = 3

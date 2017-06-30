@@ -4,7 +4,7 @@
 -- probability.
 -- @arg GROWTH_PROB The probability of an agent to reproduce in an
 -- empty neighbor cell. The default value is 0.3.
--- @image growing-moving-society.bmp
+-- @image growing-moving-society.png
 
 GROWTH_PROB = 0.3
 

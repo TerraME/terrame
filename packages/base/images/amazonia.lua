@@ -13,6 +13,6 @@ map = Map{
 	invert = true
 }
 
-map:save("amazonia.bmp")
+map:save("amazonia.png")
 
 clean()

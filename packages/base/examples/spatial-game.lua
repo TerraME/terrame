@@ -8,7 +8,7 @@
 -- Biological Games, Science 303(5659):793-799.
 -- @arg N Space dimensions in x and y axis.
 -- @arg TURNS Number of simulation steps.
--- @image spatial-game.bmp
+-- @image spatial-game.png
 
 N = 69
 TURNS = 80
