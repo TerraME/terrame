@@ -2,4 +2,44 @@ Verifying test files
 Ignoring tests because internal directories were found in the tests
 Verifying documentation of Models
 Verifying data files
-Error: Package 'terralib' is not installed.
+Directory 'test' is already documented in 'data.lua'
+File 'amazonia-indigenous.shp' is already documented in 'data.lua'
+File 'amazonia-limit.shp' is already documented in 'data.lua'
+File 'amazonia-ports.shp' is already documented in 'data.lua'
+Project file 'amazonia-postgis.tview' does not need to be documented (a Lua file creates it)
+File 'amazonia-prodes.jgw' is already documented in 'data.lua'
+File 'amazonia-prodes.tif' is already documented in 'data.lua'
+File 'amazonia-prodes.xml' is already documented in 'data.lua'
+File 'amazonia-roads.shp' is already documented in 'data.lua'
+File 'amazonia.shp' does not need to be documented (a Lua file creates it)
+Project file 'amazonia.tview' does not need to be documented (a Lua file creates it)
+File 'cabecadeboi-box.shp' is already documented in 'data.lua'
+File 'cabecadeboi-elevation.tif' is already documented in 'data.lua'
+File 'cabecadeboi-elevation.xml' is already documented in 'data.lua'
+File 'cabecadeboi.shp' does not need to be documented (a Lua file creates it)
+Project file 'cabecadeboi.tview' does not need to be documented (a Lua file creates it)
+File 'emas-accumulation.tif' is already documented in 'data.lua'
+File 'emas-accumulation.xml' is already documented in 'data.lua'
+File 'emas-firebreak.shp' is already documented in 'data.lua'
+File 'emas-limit.shp' is already documented in 'data.lua'
+File 'emas-river.shp' is already documented in 'data.lua'
+File 'emas.shp' does not need to be documented (a Lua file creates it)
+Project file 'emas.tview' does not need to be documented (a Lua file creates it)
+File 'itaituba-census.shp' is already documented in 'data.lua'
+File 'itaituba-deforestation.tif' is already documented in 'data.lua'
+File 'itaituba-deforestation.xml' is already documented in 'data.lua'
+File 'itaituba-elevation.tif' is already documented in 'data.lua'
+File 'itaituba-elevation.xml' is already documented in 'data.lua'
+File 'itaituba-localities.shp' is already documented in 'data.lua'
+File 'itaituba-roads.shp' is already documented in 'data.lua'
+File 'itaituba.shp' does not need to be documented (a Lua file creates it)
+Project file 'itaituba.tview' does not need to be documented (a Lua file creates it)
+Verifying font files
+Package 'gis' does not have a font directory
+
+Sketch report for package 'gis':
+No new test file was necessary.
+All Models are already documented.
+All data is already documented.
+All font files are already documented.
+Summing up, no sketch was created.
