@@ -18,7 +18,7 @@ ag = Agent{
 		self.parent.infected = self.parent.infected + 1
 		self.parent.susceptible = self.parent.susceptible - 1
 	end,
-	on_message = function(self, msg)
+	on_message = function(self)
 		if self.state == "susceptible" and Random{p = 0.25}:sample() then
 			self:sick()
 		end
