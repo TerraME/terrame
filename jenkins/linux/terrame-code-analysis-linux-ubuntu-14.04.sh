@@ -23,7 +23,7 @@
 # of this software and its documentation.
 
 # 
-## It performs a TerraME code analysis of any package. For TerraME purporses, "base" and "terralib" internal packages. 
+## It performs a TerraME code analysis of any package. For TerraME purporses, "base" and "gis" internal packages. 
 ## It may be useful for TerraME external packages.
 #
 ## USAGE:
@@ -40,10 +40,10 @@ export LD_LIBRARY_PATH=$TME_PATH
 
 cd $_TERRAME_TEST_DIR
 
-# TerraME command arguments. Used for packages like "terralib", "sci", "calibration" etc.
+# TerraME command arguments. Used for packages like "gis", "sci", "calibration" etc.
 TERRAME_COMMANDS=""
 terrame -version
-# Extra commands if package is terralib
+# Extra commands if package is gis
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
   TERRAME_COMMANDS="-package $1"
 fi

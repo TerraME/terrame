@@ -25,12 +25,12 @@
 return{
 	save = function(unitTest)
 		-- WITH LAYER
-		local terralib = getPackage("terralib")
+		local gis = getPackage("gis")
 		local projName = "trajectory_save_basic.tview"
 		local author = "Avancini"
 		local title = "Trajectory"
 
-		local proj = terralib.Project{
+		local proj = gis.Project{
 			file = projName,
 			clean = true,
 			author = author,
@@ -38,10 +38,10 @@ return{
 		}
 
 		local layerName1 = "Sampa"
-		local layer1 = terralib.Layer{
+		local layer1 = gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "gis")
 		}
 
 		local cs = CellularSpace{
@@ -71,7 +71,7 @@ return{
 
 		unitTest:assertEquals(#t1, #cs2)
 
-		local layer2 = terralib.Layer{
+		local layer2 = gis.Layer{
 			project = proj,
 			name = "Odd",
 			file = file2
@@ -104,7 +104,7 @@ return{
 
 		unitTest:assertEquals(#t2, #cs3)
 
-		local layer3 = terralib.Layer{
+		local layer3 = gis.Layer{
 			project = proj,
 			name = "Even",
 			file = file3
@@ -126,7 +126,7 @@ return{
 		layer1:export(pgData, true)
 
 		local layerName2 = "SampaDB"
-		local layer4 = terralib.Layer{
+		local layer4 = gis.Layer{
 			project = proj,
 			source = "postgis",
 			name = layerName2,
@@ -154,7 +154,7 @@ return{
 		unitTest:assertEquals(#cs7, #t5)
 		unitTest:assertEquals(#cs8, #t5)
 
-		local layer5 = terralib.Layer{
+		local layer5 = gis.Layer{
 			project = proj,
 			name = "All",
 			file = file6
@@ -174,7 +174,7 @@ return{
 
 		-- WITHOUT LAYER
 		local cs4 = CellularSpace{
-			file = filePath("test/sampa.shp", "terralib")
+			file = filePath("test/sampa.shp", "gis")
 		}
 
 		local t3 = Trajectory{

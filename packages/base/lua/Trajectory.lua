@@ -270,7 +270,7 @@ Trajectory_ = {
 	-- If attrs is nil, all attributes will be saved.
 	-- @usage -- DONTRUN
 	-- cs = CellularSpace{
-	--     file = filePath("test/sampa.shp", "terralib")
+	--     file = filePath("test/sampa.shp", "gis")
 	-- }
 	--
 	-- t = Trajectory{
@@ -316,8 +316,8 @@ Trajectory_ = {
 			type = file:extension()
 		}
 
-		local terralib = getPackage("terralib")
-		terralib.TerraLib().saveLayerAs(from, to, false, attrs, self.cells)
+		local gis = getPackage("gis")
+		gis.TerraLib().saveLayerAs(from, to, false, attrs, self.cells)
 	end
 }
 

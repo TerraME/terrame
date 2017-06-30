@@ -26,8 +26,8 @@ local printError = _Gtme.printError
 local printNote  = _Gtme.printNote
 
 function _Gtme.getResolution(package, project)
-	if not isLoaded("terralib") then
-		import("terralib")
+	if not isLoaded("gis") then
+		import("gis")
 	end
 
 	local oldLayer = Layer
@@ -35,7 +35,7 @@ function _Gtme.getResolution(package, project)
 	local oldImport = import
 	local output
 
-	import = function(pkg) if pkg ~= "terralib" then oldImport(pkg) end end
+	import = function(pkg) if pkg ~= "gis" then oldImport(pkg) end end
 
 	Project = function() end
 
@@ -63,7 +63,7 @@ function _Gtme.executeProject(package, project, resolution)
 	local oldFill = Layer_.fill
 	local oldImport = import
 
-	import = function(pkg) if pkg ~= "terralib" then oldImport(pkg) end end
+	import = function(pkg) if pkg ~= "gis" then oldImport(pkg) end end
 
 	Layer_.fill = function(self, data)
 		local description = "Executing operation '"..data.operation.."'"
@@ -173,7 +173,7 @@ function _Gtme.executeProjects(package)
 	local oldImport = import
 	local oldFill = Layer_.fill
 
-	import = function(pkg) if pkg ~= "terralib" then oldImport(pkg) end end
+	import = function(pkg) if pkg ~= "gis" then oldImport(pkg) end end
 
 	Layer_.fill = function(self, data)
 		local description = "Executing operation '"..data.operation.."'"
@@ -272,7 +272,7 @@ function _Gtme.executeProjects(package)
 
 		local ok = true
 
-		_Gtme.loadedPackages["terralib"] = false
+		_Gtme.loadedPackages["gis"] = false
 		xpcall(function() dofile(tostring(file)) end, function(err)
 			ok = false
 			printError("Could not execute the script properly: "..err)

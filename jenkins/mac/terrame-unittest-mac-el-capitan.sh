@@ -43,7 +43,7 @@ terrame -version
 
 TERRAME_COMMANDS=""
 terrame -version
-# Extra commands if package is terralib
+# Extra commands if package is gis
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
   TERRAME_COMMANDS="-package $1"
 fi

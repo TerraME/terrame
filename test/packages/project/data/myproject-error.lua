@@ -1,5 +1,5 @@
 
-import("terralib")
+import("gis")
 
 proj = Project{
 	file = "myproject-error.tview",

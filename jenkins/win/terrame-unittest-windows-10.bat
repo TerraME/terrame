@@ -21,7 +21,7 @@
 :: of this software and its documentation.
 
 :: 
-:: It performs a TerraME functional test of any package. For TerraME purporses, "base" and "terralib" internal packages. 
+:: It performs a TerraME functional test of any package. For TerraME purporses, "base" and "gis" internal packages. 
 :: It may be useful for TerraME external packages.
 ::
 :: USAGE:
@@ -40,7 +40,7 @@ cd %_TERRAME_TEST_DIR%
 terrame -version
 
 IF NOT "%1" == "" (
-  terrame -color -package terralib -test test.lua
+  terrame -color -package gis -test test.lua
 ) ELSE (
   terrame -color -test test.lua
 )

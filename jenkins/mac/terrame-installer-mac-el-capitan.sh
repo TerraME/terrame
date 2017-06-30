@@ -35,7 +35,7 @@ export _TERRAME_BUILD_AS_BUNDLE="ON"
 cd $_TERRAME_OUT_DIR/..
 
 cp -r $_TERRAME_INSTALL_PATH/terrame.app/Contents/MacOS/packages/base/doc $_TERRAME_GIT_DIR/packages/base/doc
-cp -r $_TERRAME_INSTALL_PATH/terrame.app/Contents/MacOS/packages/terralib/doc $_TERRAME_GIT_DIR/packages/terralib/doc
+cp -r $_TERRAME_INSTALL_PATH/terrame.app/Contents/MacOS/packages/gis/doc $_TERRAME_GIT_DIR/packages/gis/doc
 
 # Removing old builds
 rm -rf $_TERRAME_INSTALL_PATH $_TERRAME_OUT_DIR

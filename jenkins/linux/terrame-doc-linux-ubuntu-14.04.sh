@@ -22,7 +22,7 @@
 # of this software and its documentation.
 
 # 
-## It performs a TerraME doc generation of any package. For TerraME purporses, "base" and "terralib" internal packages. 
+## It performs a TerraME doc generation of any package. For TerraME purporses, "base" and "gis" internal packages. 
 ## It may be useful for TerraME external packages.
 #
 ## USAGE:

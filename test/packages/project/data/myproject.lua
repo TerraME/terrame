@@ -1,10 +1,10 @@
 
-import("terralib")
+import("gis")
 
 proj = Project{
 	file = "myproject.tview",
 	clean = true,
-	setores = filePath("itaituba-census.shp", "terralib")
+	setores = filePath("itaituba-census.shp", "gis")
 }
 
 cl1 = Layer{

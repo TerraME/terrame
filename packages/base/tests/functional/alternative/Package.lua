@@ -30,7 +30,7 @@ return{
 
 		unitTest:assertError(error_func, "File 'data/mriver.shp' does not exist in package 'base'. Do you mean 'river.shp'?", 2)
 
-		local tlInfo = packageInfo("terralib")
+		local tlInfo = packageInfo("gis")
 		local baseInfo = packageInfo()
 		local s = sessionInfo().separator
 

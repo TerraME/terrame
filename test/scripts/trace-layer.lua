@@ -1,11 +1,11 @@
-import("terralib")
+import("gis")
 
 project = Project{
 	file = "trace-layer.tview",
 	clean = true,
-	firebreak = filePath("emas-firebreak.shp", "terralib"),
-	river = filePath("emas-river.shp", "terralib"),
-	limit = filePath("emas-limit.shp", "terralib")
+	firebreak = filePath("emas-firebreak.shp", "gis"),
+	river = filePath("emas-river.shp", "gis"),
+	limit = filePath("emas-limit.shp", "gis")
 }
 
 forEachLayer(project, function(layer)
