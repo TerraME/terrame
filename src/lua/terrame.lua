@@ -602,8 +602,8 @@ local function version()
 	str = str.."\n  Qt "..qt_version
 	str = str.."\n  Qwt "..qwt_version
 
-	local terralib = _Gtme.getPackage("gis")
-	str = str.."\n  TerraLib "..terralib.TerraLib().getVersion()
+	local gis = _Gtme.getPackage("gis")
+	str = str.."\n  TerraLib "..gis.TerraLib().getVersion()
 	finalizeTerraLib()
 
 	return str
