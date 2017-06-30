@@ -303,6 +303,7 @@ forEachOrderedElement(commands, function(idx, group)
 				local v = logfile.file:read()
 				if v then
 					_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
+					printTestOutput(result, line)
 					report.logerrors = report.logerrors + 1
 				end
 			end
@@ -486,6 +487,7 @@ forEachOrderedElement(commands, function(idx, group)
 				local v = logfile.file:read()
 				if v then
 					_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
+					printTestOutput(result, line)
 					report.logerrors = report.logerrors + 1
 				end
 			end
