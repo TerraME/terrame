@@ -1709,8 +1709,6 @@ local function saveLayerAs(fromData, toData, attrs, values)
 		-- if toData.type == "POSTGIS" then
 			-- toDs:renameDataSet(string.lower(fromData.dataset), toData.table)
 		-- end
-
-		fromDs:close()
 	end
 
 	collectgarbage("collect")
@@ -2446,7 +2444,6 @@ TerraLib_ = {
 			set, err = createDataSetAdapted(dse, missing)
 
 			releaseProject(project)
-			ds:close()
 		end
 
 		collectgarbage("collect")
@@ -2829,8 +2826,6 @@ TerraLib_ = {
 				size = raster:getNumberOfRows() * raster:getNumberOfColumns()
 			end
 
-			ds:close()
-
 			releaseProject(project)
 		end
 
@@ -2932,8 +2927,6 @@ TerraLib_ = {
 			else
 				errorMsg = "This function works only with line geometry."
 			end
-
-			ds:close()
 
 			releaseProject(project)
 		end
