@@ -385,11 +385,17 @@ void PainterThread::drawGrid(QImage &imgResult, double &width, double &height)
     QPainter p(&imgResult);
     p.setPen(QPen(Qt::black));
 
-    for (int j = 0; j < imgResult.height(); j++)
+	int adjust = p.pen().width();
+	int sizeX = ceil(imgResult.width() / width);
+	int sizeY = ceil(imgResult.height() / height);
+
+	p.drawRect(0, 0, imgResult.width() - adjust, imgResult.height() - adjust);
+
+    for (int j = 0; j < sizeY; j++)
     {
-        for (int i = 0; i < imgResult.width(); i++)
+        for (int i = 0; i < sizeX; i++)
         {
-            p.drawRect(QRectF(i * width, j * height, width, height));
+			p.drawRect(QRectF(i * width, j * height, width, height));
         }
     }
 
