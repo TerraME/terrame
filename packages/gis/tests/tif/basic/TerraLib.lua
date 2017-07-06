@@ -67,7 +67,7 @@ return {
 
 		local resolution = 2e5
 		local mask = true
-		
+
 		local maskNotWork = function()
 			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 		end

@@ -132,11 +132,11 @@ title   string [The Amazonia]
 		end
 		unitTest:assertWarning(defaultValueError, defaultValueMsg("title", "No title"))
 		File("abc.tview"):delete()
-		
+
 		defaultValueError = function()
 			Project{file = "abc", author = "No author"}
 		end
 		unitTest:assertWarning(defaultValueError, defaultValueMsg("author", "No author"))
-		File("abc.tview"):delete()		
+		File("abc.tview"):delete()
 	end
 }

@@ -61,12 +61,11 @@ return {
 		shp[2]:deleteIfExists()
 
 		local operation = "presence"
-		local attribute = "presence_truncate"
+		local attribute = "FID"
 		local select = "FID"
 		local area = nil
 		local default = nil
 
-		attribute = "FID"
 		local attributeAlreadyExists = function()
 			TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
 		end

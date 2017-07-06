@@ -673,12 +673,12 @@ return {
 		select = 0
 		area = nil
 		default = nil
-		
+
 		local attributeTruncateWarning = function()
 			TerraLib().attributeFill(proj, layerName4, wsumLayerName, percTifLayerName, attribute, operation, select, area, default)
 		end
 		unitTest:assertWarning(attributeTruncateWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'rpercentag'.")
-		
+
 		percentSet = TerraLib().getDataSet(proj, percTifLayerName, 0)
 
 		unitTest:assertEquals(getn(percentSet), 9)

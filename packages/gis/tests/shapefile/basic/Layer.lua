@@ -108,25 +108,25 @@ return {
 		unitTest:assertWarning(epsgWarn, "It was not possible to find the projection of layer 'Elevation'. It should be one of the projections available at www.terrame.org/projections.html")
 		unitTest:assertEquals(l1.name, l1Name)
 
-		local clName1 = "PA_Cells50x50"
-		local clLayer1
+		local clName3 = "PA_Cells50x50"
+		local clLayer3
 		local indexWarn = function()
-			clLayer1 = Layer{
+			clLayer3 = Layer{
 				project = proj,
 				source = "shp",
 				clean = true,
 				input = layerName1,
-				name = clName1,
+				name = clName3,
 				resolution = 50000,
-				file = clName1..".shp",
+				file = clName3..".shp",
 				index = true
 			}
 		end
 		unitTest:assertWarning(indexWarn, defaultValueMsg("index", true))
-		unitTest:assertEquals(clLayer1.name, clName1)
+		unitTest:assertEquals(clLayer3.name, clName3)
 
 		proj.file:delete()
-		File(clLayer1.file):delete()
+		File(clLayer3.file):delete()
 	end,
 	__len = function(unitTest)
 		local projName = "layer_shape_basic.tview"

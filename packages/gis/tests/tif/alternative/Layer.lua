@@ -56,7 +56,7 @@ return {
 		-- unitTest:assertError(boxUnnecessary, unnecessaryArgumentMsg("box")) -- SKIP
 
 		-- File(projName):delete()
-		
+
 		unitTest:assert(true)
 	end,
 	fill = function(unitTest)
@@ -125,15 +125,6 @@ return {
 			epsg = 2311
 		}
 
-		local clcabeca = Layer{
-			project = proj,
-			clean = true,
-			file = "cabecadeboi.shp",
-			input = "box",
-			name = "cellscabeca",
-			resolution = 600
-		}
-
 		invalidBand = function()
 			cl:fill{
 				operation = "mode",
@@ -166,7 +157,6 @@ return {
 
 		unitTest:assertError(diffSridError, "Layer projections are different: (altimetria, 2311) and (cells, 29101). Please, reproject your data to the right one.")
 
-		File("cabecadeboi.shp"):delete()
 		File(projName):delete()
 		File(shp1):delete()
 	end,
