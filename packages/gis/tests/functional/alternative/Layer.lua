@@ -221,21 +221,6 @@ return{
 
 		unitTest:assertError(attrResolutionNonPositive, positiveArgumentMsg("resolution", 0))
 
-		local unnecessaryArgument = function()
-			Layer{
-				project = proj,
-				input = "limit",
-				file = "abc1234.shp",
-				name = "cells",
-				resoltion = 200,
-				resolution = 100000
-			}
-		end
-
-		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
-
-		File("abc1234.shp"):delete()
-
 		noFilePass = function()
 			Layer{
 				project = proj,
@@ -364,21 +349,6 @@ return{
 
 		unitTest:assertError(attrBoxNonBoolean, incompatibleTypeMsg("box", "boolean", 123))
 
-		local boxDefaultError = function()
-			Layer{
-				project = proj,
-				input = layerName1,
-				name = "cells3",
-				resolution = 5e4,
-				box = false,
-				file = "sampabox.shp"
-			}
-		end
-
-		unitTest:assertWarning(boxDefaultError, defaultValueMsg("box", false))
-
-		File("sampabox.shp"):delete()
-
 		local invalidLayerName = function()
 			Layer{
 				project = proj,
@@ -441,22 +411,6 @@ return{
 
 		unitTest:assertError(invalidEncoding, "Encoding 'utf16' is invalid.")
 
-		local encodingUnnecessary = function()
-			Layer{
-				project = proj,
-				source = "shp",
-				input = layerName1,
-				name = "SPCells",
-				clean = true,
-				resolution = 0.7,
-				file = "csSp.shp",
-				encoding = "utf8"
-			}
-		end
-
-		unitTest:assertWarning(encodingUnnecessary, unnecessaryArgumentMsg("encoding"))
-
-		File("csSp.shp"):delete()
 		File(projName):deleteIfExists()
 		File(shp1):deleteIfExists()
 	end,
@@ -630,50 +584,6 @@ return{
 
 		unitTest:assertError(attrAlreadyExists, "The attribute '".."row".."' already exists in the Layer.")
 
-		local presenceSelectUnnecessary = function()
-			cl:fill{
-				operation = "presence",
-				layer = layerName1,
-				attribute = "presence",
-				select = "FID"
-			}
-		end
-
-		unitTest:assertWarning(presenceSelectUnnecessary, unnecessaryArgumentMsg("select"))
-
-		local areaSelectUnnecessary = function()
-			cl:fill{
-				attribute = "areattr",
-				operation = "area",
-				layer = layerName1,
-				select = "FID"
-			}
-		end
-
-		unitTest:assertWarning(areaSelectUnnecessary, unnecessaryArgumentMsg("select"))
-
-		local countSelectUnnecessary = function()
-			cl:fill{
-				attribute = "counttr",
-				operation = "count",
-				layer = layerName1,
-				select = "FID"
-			}
-		end
-
-		unitTest:assertWarning(countSelectUnnecessary, unnecessaryArgumentMsg("select"))
-
-		local distanceSelectUnnecessary = function()
-			cl:fill{
-				attribute = "disttr",
-				operation = "distance",
-				layer = layerName1,
-				select = "FID"
-			}
-		end
-
-		unitTest:assertWarning(distanceSelectUnnecessary, unnecessaryArgumentMsg("select"))
-
 		local selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -696,18 +606,6 @@ return{
 		end
 
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
-
-		local unnecessaryArgument = function()
-			cl:fill{
-				attribute = "minttr",
-				operation = "minimum",
-				layer = layerName1,
-				select = "FID",
-				missin = 3
-			}
-		end
-
-		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
 
 		local selected = "ITNOTEXISTS"
 		local selectNotExists = function()
@@ -756,18 +654,6 @@ return{
 
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
-		unnecessaryArgument = function()
-			cl:fill{
-				attribute = "attr",
-				operation = "maximum",
-				layer = layerName1,
-				select = "FID",
-				missin = 3
-			}
-		end
-
-		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
-
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -791,18 +677,6 @@ return{
 
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
-		unnecessaryArgument = function()
-			cl:fill{
-				attribute = "covttr",
-				operation = "coverage",
-				layer = layerName1,
-				select = "FID",
-				missin = 3
-			}
-		end
-
-		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
-
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -825,18 +699,6 @@ return{
 		end
 
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
-
-		missingNotNumber = function()
-			cl:fill{
-				attribute = "sttr",
-				operation = "stdev",
-				layer = layerName1,
-				select = "FID",
-				missin = 3
-			}
-		end
-
-		unitTest:assertWarning(missingNotNumber, unnecessaryArgumentMsg("missin", "missing"))
 
 		selectNotString = function()
 			cl:fill{
@@ -873,18 +735,6 @@ return{
 
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
-		unnecessaryArgument = function()
-			cl:fill{
-				attribute = "avettr",
-				operation = "average",
-				layer = layerName1,
-				select = "FID",
-				missin = 3
-			}
-		end
-
-		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
-
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -920,18 +770,6 @@ return{
 
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
 
-		unnecessaryArgument = function()
-			cl:fill{
-				attribute = "modttr",
-				operation = "mode",
-				layer = layerName1,
-				select = "FID",
-				missin = 3
-			}
-		end
-
-		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
-
 		selectNotString = function()
 			cl:fill{
 				attribute = "attr",
@@ -966,29 +804,6 @@ return{
 		end
 
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", false))
-
-		unnecessaryArgument = function()
-			cl:fill{
-				attribute = "sumttr",
-				operation = "sum",
-				layer = layerName1,
-				select = "FID",
-				missin = 3
-			}
-		end
-
-		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
-
-		local normalizedNameWarning = function()
-			cl:fill{
-				attribute = "max10allowed",
-				operation = "sum",
-				layer = layerName1,
-				select = "FID"
-			}
-		end
-
-		unitTest:assertWarning(normalizedNameWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'max10allow'.")
 
 		local localidades = "Localidades"
 
@@ -1022,17 +837,6 @@ return{
 			epsg = 29191,
 			file = filePath("itaituba-deforestation.tif", "gis")
 		}
-
-		local areaUnnecessary = function()
-			cl:fill{
-				attribute = "argattr",
-				operation = "average",
-				layer = layerName3,
-				area = 2
-			}
-		end
-
-		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		local selectNotNumber = function()
 			cl:fill{
@@ -1068,17 +872,6 @@ return{
 
 		-- unitTest:assertError(layerNotIntersect, "The two layers do not intersect.") -- SKIP
 
-		areaUnnecessary = function()
-			cl:fill{
-				attribute = "mmittr",
-				operation = "minimum",
-				layer = layerName3,
-				area = 2
-			}
-		end
-
-		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
-
 		selectNotNumber = function()
 			cl:fill{
 				attribute = "attr",
@@ -1089,17 +882,6 @@ return{
 		end
 
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
-
-		areaUnnecessary = function()
-			cl:fill{
-				attribute = "mmaxttr",
-				operation = "maximum",
-				layer = layerName3,
-				area = 2
-			}
-		end
-
-		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{
@@ -1112,17 +894,6 @@ return{
 
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
-		areaUnnecessary = function()
-			cl:fill{
-				attribute = "ccvattr",
-				operation = "coverage",
-				layer = layerName3,
-				area = 2
-			}
-		end
-
-		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
-
 		selectNotNumber = function()
 			cl:fill{
 				attribute = "attr",
@@ -1134,17 +905,6 @@ return{
 
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
 
-		areaUnnecessary = function()
-			cl:fill{
-				attribute = "ssdvattr",
-				operation = "stdev",
-				layer = layerName3,
-				area = 2
-			}
-		end
-
-		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
-
 		selectNotNumber = function()
 			cl:fill{
 				attribute = "attr",
@@ -1155,17 +915,6 @@ return{
 		end
 
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("band", "number", "0"))
-
-		areaUnnecessary = function()
-			cl:fill{
-				attribute = "ssuattr",
-				operation = "sum",
-				layer = layerName3,
-				area = 2
-			}
-		end
-
-		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
 
 		selectNotNumber = function()
 			cl:fill{

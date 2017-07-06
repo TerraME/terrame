@@ -66,8 +66,12 @@ return {
 		shp1:deleteIfExists()
 
 		local resolution = 2e5
-		local mask = false
-		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+		local mask = true
+		
+		local maskNotWork = function()
+			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+		end
+		unitTest:assertWarning(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
 
 		local layerInfo = TerraLib().getLayerInfo(proj, clName)
 

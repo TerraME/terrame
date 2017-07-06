@@ -33,11 +33,6 @@ return {
 
 		TerraLib().createProject(proj, {})
 
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		local layerName1 = "Para"
 		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "gis")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
@@ -70,14 +65,6 @@ return {
 		local select = "FID"
 		local area = nil
 		local default = nil
-
-		customWarning = customWarningBkp
-
-		local attributeTruncateWarning = function()
-			TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
-		end
-
-		unitTest:assertWarning(attributeTruncateWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'presence_t'.")
 
 		attribute = "FID"
 		local attributeAlreadyExists = function()

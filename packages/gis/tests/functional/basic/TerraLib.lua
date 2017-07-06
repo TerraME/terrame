@@ -58,6 +58,29 @@ return {
 		unitTest:assertEquals(TerraLib().checkName("sum"), "Invalid name: using reserved word SUM")
 		unitTest:assertEquals(TerraLib().checkName("file-name"), "Invalid character: mathematical symbol '-'")
 		unitTest:assertEquals(TerraLib().checkName("$ymbol"), "Invalid symbol: '$'")
-	end
+	end,
+	getArea = function(unitTest)
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		File(proj.file):deleteIfExists()
+
+		TerraLib().createProject(proj, {})
+
+		local layerName1 = "PA"
+		local layerFile1 = filePath("itaituba-localities.shp", "gis")
+		TerraLib().addShpLayer(proj, layerName1, layerFile1)
+
+		local dSet = TerraLib().getDataSet(proj, layerName1)
+
+		local areaWarn = function()
+			TerraLib().getArea(dSet[0].OGR_GEOMETRY)
+		end
+		unitTest:assertWarning(areaWarn, "Geometry should be a polygon to get the area.")
+
+		proj.file:delete()
+	end,
 }
 

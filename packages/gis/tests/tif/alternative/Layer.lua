@@ -56,28 +56,8 @@ return {
 		-- unitTest:assertError(boxUnnecessary, unnecessaryArgumentMsg("box")) -- SKIP
 
 		-- File(projName):delete()
-
-		-- SPATIAL INDEX TEST
-		local projName = "layer_tif_alternative.tview"
-
-		local proj = Project{
-			file = projName,
-			clean = true
-		}
-
-		local prodes = "prodes"
-		local indexUnnecessary = function()
-			Layer{
-				project = proj,
-				name = prodes,
-				file = filePath("amazonia-prodes.tif", "gis"),
-				index = true
-			}
-		end
-
-		unitTest:assertWarning(indexUnnecessary, unnecessaryArgumentMsg("index"))
-
-		proj.file:delete()
+		
+		unitTest:assert(true)
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_tiff_alternative.tview"
@@ -176,18 +156,7 @@ return {
 
 		unitTest:assertError(dummyTypeError, incompatibleTypeMsg("dummy", "number", true))
 
-		local nodataDefaultError = function()
-			clcabeca:fill{
-				operation = "average",
-				attribute = "aver_nd",
-				layer = "altimetria",
-				dummy = 255
-			}
-		end
-
-		unitTest:assertWarning(nodataDefaultError, defaultValueMsg("dummy", 255.0)) -- SKIP
-
-		local diffSridWarning = function()
+		local diffSridError = function()
 			cl:fill{
 				operation = "average",
 				attribute = "aver",
@@ -195,11 +164,11 @@ return {
 			}
 		end
 
-		unitTest:assertWarning(diffSridWarning, "Layer projections are different: (altimetria, 2311) and (cells, 29101). Please, reproject your data to the right one.")
+		unitTest:assertError(diffSridError, "Layer projections are different: (altimetria, 2311) and (cells, 29101). Please, reproject your data to the right one.")
 
 		File("cabecadeboi.shp"):delete()
 		File(projName):delete()
-		File(shp1):deleteIfExists()
+		File(shp1):delete()
 	end,
 	dummy = function(unitTest)
 		local projName = "layer_tif_nodata.tview"

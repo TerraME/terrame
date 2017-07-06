@@ -125,6 +125,18 @@ layers  vector of size 0
 title   string [The Amazonia]
 ]])
 
-		file:deleteIfExists()
+		file:delete()
+
+		local defaultValueError = function()
+			Project{file = "abc", title = "No title"}
+		end
+		unitTest:assertWarning(defaultValueError, defaultValueMsg("title", "No title"))
+		File("abc.tview"):delete()
+		
+		defaultValueError = function()
+			Project{file = "abc", author = "No author"}
+		end
+		unitTest:assertWarning(defaultValueError, defaultValueMsg("author", "No author"))
+		File("abc.tview"):delete()		
 	end
 }

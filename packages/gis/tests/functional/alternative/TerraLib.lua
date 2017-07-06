@@ -40,30 +40,6 @@ return {
 
 		unitTest:assertError(mandatoryExt, "Please, the file extension must be '.tview'.")
 	end,
-	getArea = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-
-		File(proj.file):deleteIfExists()
-
-		TerraLib().createProject(proj, {})
-
-		local layerName1 = "PA"
-		local layerFile1 = filePath("itaituba-localities.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName1, layerFile1)
-
-		local dSet = TerraLib().getDataSet(proj, layerName1)
-
-		local areaError = function()
-			TerraLib().getArea(dSet[0].OGR_GEOMETRY)
-		end
-
-		unitTest:assertWarning(areaError, "Geometry should be a polygon to get the area.")
-
-		proj.file:deleteIfExists()
-	end,
 	saveDataSet = function(unitTest)
 		local proj = {}
 		proj.file = "tlib_savedset.tview"

@@ -2291,7 +2291,7 @@ TerraLib_ = {
 			local toSrid = toLayer:getSRID()
 			if fromLayer:getSRID() ~= toSrid then
 				local fromSrid = fromLayer:getSRID()
-				customWarning("Layer projections are different: ("..from..", "..string.format("%.0f", fromSrid)..") and ("
+				customError("Layer projections are different: ("..from..", "..string.format("%.0f", fromSrid)..") and ("
 								..to..", "..string.format("%.0f", toSrid).."). Please, reproject your data to the right one.")
 			end
 

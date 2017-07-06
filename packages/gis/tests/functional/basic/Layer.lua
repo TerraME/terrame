@@ -231,12 +231,56 @@ return {
 		clSet = TerraLib().getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)
 
-		projName:deleteIfExists()
+		local filePath6 = "sampabox.shp"
+		local boxDefaultError = function()
+			Layer{
+				project = proj,
+				input = layerName1,
+				name = "cells3",
+				resolution = 0.7,
+				box = false,
+				file = filePath6
+			}
+		end
+		unitTest:assertWarning(boxDefaultError, defaultValueMsg("box", false))
+		-- \\ BOX
 
-		File(filePath1):deleteIfExists()
-		File(filePath2):deleteIfExists()
-		File(filePath3):deleteIfExists()
-		File(filePath4):deleteIfExists()
+		local filePath5 = "csSp.shp"
+		local encodingUnnecessary = function()
+			Layer{
+				project = proj,
+				source = "shp",
+				input = layerName1,
+				name = "SPCells",
+				clean = true,
+				resolution = 0.7,
+				file = filePath5,
+				encoding = "utf8"
+			}
+		end
+		unitTest:assertWarning(encodingUnnecessary, unnecessaryArgumentMsg("encoding"))
+
+		local filePath7 = "cells7.shp"
+		local unnecessaryArgument = function()
+			Layer{
+				project = proj,
+				input = layerName1,
+				file = filePath7,
+				name = "cells7",
+				resoltion = 200,
+				resolution = 0.7
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
+
+		projName:delete()
+		File(filePath1):delete()
+		File(filePath2):delete()
+		File(filePath3):delete()
+		File(filePath4):delete()
+		File(filePath5):delete()
+		File(filePath6):delete()
+		File(filePath7):delete()
 	end,
 	delete = function(unitTest)
 		local projName = File("cellular_layer_del.tview")

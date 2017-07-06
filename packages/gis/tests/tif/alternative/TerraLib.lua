@@ -23,37 +23,6 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	addShpCellSpaceLayer = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-
-		File(proj.file):deleteIfExists()
-
-		TerraLib().createProject(proj, {})
-
-		local layerName1 = "AmazoniaTif"
-		local layerFile1 = filePath("amazonia-prodes.tif", "gis")
-		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
-
-		local clName = "Amazonia_Cells"
-		local shp1 = File(clName..".shp")
-
-		shp1:deleteIfExists()
-
-		local resolution = 60e3
-		local mask = true
-
-		local maskNotWork = function()
-			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
-		end
-
-		unitTest:assertWarning(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
-
-		proj.file:delete()
-		File("Amazonia_Cells.shp"):delete()
-	end,
 	--addPgCellSpaceLayer = function(unitTest)
 		-- #1152
 	--end,
@@ -125,7 +94,7 @@ return {
 			TerraLib().attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
 
-		unitTest:assertWarning(differentSrids, "Layer projections are different: (Prodes_PA, 29100) and (Para_Cells, 29101). Please, reproject your data to the right one.")
+		unitTest:assertError(differentSrids, "Layer projections are different: (Prodes_PA, 29100) and (Para_Cells, 29101). Please, reproject your data to the right one.")
 
 		local layerName3 = "Prodes_PA_NewSRID"
 		TerraLib().addGdalLayer(proj, layerName3, layerFile4, 29101)

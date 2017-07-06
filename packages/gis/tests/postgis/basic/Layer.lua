@@ -208,36 +208,43 @@ return {
 		local tName4 = string.lower(clName1)
 		pgData.table = tName4
 
-		Layer{
-			project = proj,
-			source = "postgis",
-			input = layerName1,
-			clean = true,
-			name = clName1,
-			resolution = 0.7,
-			box = true,
-			password = password,
-			database = database
-		}
-
+		local unnecessaryArgument = function()
+			Layer{
+				project = proj,
+				source = "postgis",
+				input = layerName1,
+				clean = true,
+				name = clName1,
+				resolution = 0.7,
+				box = true,
+				password = password,
+				database = database,
+				file = filePath("test/sampa.shp", "gis")
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("file"))
 		clSet = TerraLib().getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)
 
 		-- CHANGE EPSG
 		local layerName5 = "SampaDBNewSrid"
 
-		local layer5 = Layer{
-			project = proj,
-			source = "postgis",
-			name = layerName5,
-			-- host = host,
-			-- port = port,
-			password = password,
-			database = database,
-			table = tName1,
-			epsg = 29901
-		}
-
+		local layer5
+		local indexUnnecessary = function()
+			layer5 = Layer{
+				project = proj,
+				source = "postgis",
+				name = layerName5,
+				-- host = host,
+				-- port = port,
+				password = password,
+				database = database,
+				table = tName1,
+				epsg = 29901,
+				index = true
+			}
+		end
+		unitTest:assertWarning(indexUnnecessary, unnecessaryArgumentMsg("index"))
 		unitTest:assertEquals(layer5.epsg, 29901.0)
 		unitTest:assert(layer5.epsg ~= layer4.epsg)
 		-- // CHANGE EPSG
@@ -276,8 +283,7 @@ return {
 			-- table = tableName
 		-- }
 
-		File(projName):deleteIfExists()
-
+		File(projName):delete()
 		l1:delete()
 --		layer1:delete() -- layer1 should not be deleted. What must be deleted is the exported data.
 --		layer2:delete() -- layer2 was read from a pg database. it does not have an encoding
@@ -323,12 +329,6 @@ return {
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_pgis.tview"
-
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		local layerName1 = "limitepa"
 		local protecao = "protecao"
 		local rodovias = "Rodovias"
@@ -933,7 +933,6 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-coverage-2-pg.png", 0.1)
 
-		customWarning = customWarningBkp
 		proj.file:delete()
 
 		-- TIFF
@@ -943,11 +942,6 @@ return {
 			file = projName,
 			clean = true
 		}
-
-		customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
 
 		layerName1 = "limiteitaituba"
 		local l1 = Layer{
@@ -1223,8 +1217,6 @@ return {
 		unitTest:assertSnapshot(map, "tiff-average-nodata-pg.png")
 
 		File(projName):delete()
-
-		customWarning = customWarningBkp
 	end,
 	projection = function(unitTest)
 		local projName = "layer_basic.tview"
