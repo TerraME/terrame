@@ -24,7 +24,7 @@
 set(CMAKE_BUILD_TYPE "Release" CACHE PATH "Build Type" FORCE)
 set(CMAKE_INSTALL_PREFIX "$ENV{_TERRAME_INSTALL_PATH}" CACHE PATH "Where to install TerraME?" FORCE)
 set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR};$ENV{_Qt5_DIR}/lib/cmake;$ENV{_TERRAME_DEPENDS_DIR};$ENV{_MSYS_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
-set(TERRAME_VERSION_STATUS "rc4-dev" CACHE STRING "Define name of installer" FORCE)
+set(TERRAME_VERSION_STATUS "rc4" CACHE STRING "Define name of installer" FORCE)
 
 set(TERRAME_BUILD_AS_BUNDLE $ENV{_TERRAME_BUILD_AS_BUNDLE} CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
 set(TERRAME_CREATE_INSTALLER $ENV{_TERRAME_CREATE_INSTALLER} CACHE BOOL "Create the installer" FORCE)
