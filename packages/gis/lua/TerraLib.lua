@@ -103,6 +103,12 @@ local SourceTypeMapper = {
 	wms = "WMS2"
 }
 
+
+local function getFilePath(connInfo)
+	local file = connInfo:host()..connInfo:path()
+	return  string.gsub(file, "%%20", " ")
+end
+
 local function createFileConnInfo(filePath)
 	local connInfo = "file://"..filePath
 	return connInfo
@@ -1037,7 +1043,8 @@ local function getLayerByDataSetName(layers, dsetName, type)
 end
 
 local function swapFileConnInfo(connInfo, fileName)
-	local file = File(connInfo:host()..connInfo:path())
+	local connFileName = getFilePath(connInfo)
+	local file = File(connFileName)
 	local outFile = file:path()..fileName.."."..file:extension()
 	return createFileConnInfo(outFile)
 end
@@ -1830,8 +1837,8 @@ TerraLib_ = {
 			info.source = "postgis"
 			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "OGR" then
-			info.file = connInfo:host()..connInfo:path()
-			local file = File(info.file)
+			local fileName = getFilePath(connInfo)
+			local file = File(fileName)
 			info.source = file:extension()
 			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "GDAL" then
@@ -2354,7 +2361,8 @@ TerraLib_ = {
 				outDSetName = string.lower(outDSetName)
 				outSpatialIdx = false -- TODO(#1678)
 			elseif outType == "OGR" then
-				local file = File(outConnInfo:host()..outConnInfo:path())
+				local fileName = getFilePath(outConnInfo)
+				local file = File(fileName)
 				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
 				outConnInfo = binding.te.core.URI(createFileConnInfo(outDir..out..".shp"))
 				outSpatialIdx = true
@@ -2412,7 +2420,8 @@ TerraLib_ = {
 				local toSetName = nil
 
 				if toType == "OGR" then
-					local _, name = File(toConnInfo:host()..toConnInfo:path()):split()
+					local fileName = getFilePath(toConnInfo)
+					local _, name = File(fileName):split()
 					toSetName = name
 				end
 
