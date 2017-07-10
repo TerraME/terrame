@@ -7,11 +7,11 @@ Checking properties of data files
 Package has no fonts
 Parsing lua files
 Parsing lua/Ants.lua
+Parsing lua/Disease.lua
 Parsing lua/GrowingSociety.lua
 Parsing lua/Heatbugs.lua
 Parsing lua/Labyrinth.lua
 Parsing lua/LifeCycle.lua
-Parsing lua/LogoAgent.lua
 Parsing lua/Overpopulation.lua
 Parsing lua/PredatorPrey.lua
 Parsing lua/Schelling.lua
@@ -20,15 +20,16 @@ Parsing lua/Sugarscape.lua
 Parsing lua/Utils.lua
 Parsing examples
 Parsing examples/ants.lua
+Parsing examples/disease.lua
 Parsing examples/road.lua
 Checking undocumented files
 Checking @usage definition
 Checking lua/Ants.lua
+Checking lua/Disease.lua
 Checking lua/GrowingSociety.lua
 Checking lua/Heatbugs.lua
 Checking lua/Labyrinth.lua
 Checking lua/LifeCycle.lua
-Checking lua/LogoAgent.lua
 Checking lua/Overpopulation.lua
 Checking lua/PredatorPrey.lua
 Checking lua/Schelling.lua
@@ -37,16 +38,11 @@ Checking lua/Sugarscape.lua
 Checking lua/Utils.lua
 Testing @usage
 Testing file lua/Ants.lua
+Testing file lua/Disease.lua
 Testing file lua/GrowingSociety.lua
 Testing file lua/Heatbugs.lua
 Testing file lua/Labyrinth.lua
 Testing file lua/LifeCycle.lua
-Testing file lua/LogoAgent.lua
-Testing LogoAgent
-Testing breed
-Testing countNeighbors
-Testing emptyNeighbor
-Testing relocate
 Testing file lua/Overpopulation.lua
 Testing file lua/PredatorPrey.lua
 Testing file lua/Schelling.lua
@@ -56,11 +52,11 @@ Testing file lua/Utils.lua
 Testing getLabyrinth
 Checking calls to functions in @usage
 Checking lua/Ants.lua
+Checking lua/Disease.lua
 Checking lua/GrowingSociety.lua
 Checking lua/Heatbugs.lua
 Checking lua/Labyrinth.lua
 Checking lua/LifeCycle.lua
-Checking lua/LogoAgent.lua
 Checking lua/Overpopulation.lua
 Checking lua/PredatorPrey.lua
 Checking lua/Schelling.lua
@@ -69,11 +65,11 @@ Checking lua/Sugarscape.lua
 Checking lua/Utils.lua
 Checking undocumented arguments
 Checking lua/Ants.lua
+Checking lua/Disease.lua
 Checking lua/GrowingSociety.lua
 Checking lua/Heatbugs.lua
 Checking lua/Labyrinth.lua
 Checking lua/LifeCycle.lua
-Checking lua/LogoAgent.lua
 Checking lua/Overpopulation.lua
 Checking lua/PredatorPrey.lua
 Checking lua/Schelling.lua
@@ -83,7 +79,6 @@ Checking lua/Utils.lua
 Checking 'description.lua'
 Building and checking HTML files
 Building doc/index.html
-Building doc/files/LogoAgent.html
 Building doc/files/Utils.html
 Building doc/files/examples.html
 Building doc/files/data.html
@@ -95,11 +90,11 @@ Checking examples
 Checking if all images are used
 Checking if all functions are documented
 Checking Ants.lua
+Checking Disease.lua
 Checking GrowingSociety.lua
 Checking Heatbugs.lua
 Checking Labyrinth.lua
 Checking LifeCycle.lua
-Checking LogoAgent.lua
 Checking Overpopulation.lua
 Checking PredatorPrey.lua
 Checking Schelling.lua
@@ -109,28 +104,28 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'logo':
-Documentation was built in 1.19 seconds.
-6 HTML files were created.
+Documentation was built in 0.71 seconds.
+5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
 All descriptions end with a correct character.
-All 10 Models are correctly documented.
+All 11 Models are correctly documented.
 All source code lines starting with --- are valid.
-All 6 global functions of the package are documented.
+All 1 global functions of the package are documented.
 All functions of each file are declared only once.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 5 non-named arguments are documented.
+All 1 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 6 functions call themselves in their @usage.
-All 6 functions do not have any error in their @usage.
+All 1 functions call themselves in their @usage.
+All 1 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
-All 2 examples are correctly documented.
+All 3 examples are correctly documented.
 Summing up, all the documentation was successfully built.
