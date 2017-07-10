@@ -52,6 +52,13 @@ return{
 		defaultTableValue(t, "y", 8)
 
 		unitTest:assertEquals(t.y, 8)
+
+		local warning_func = function()
+			defaultTableValue(t, "x", 5)
+		end
+
+		unitTest:assertWarning(warning_func, defaultValueMsg("x", 5))
+		unitTest:assertEquals(t.x, 5)
 	end,
 	defaultValueMsg = function(unitTest)
 		unitTest:assertEquals(defaultValueMsg("aaa", 2), "Argument 'aaa' could be removed as it is the default value (2).")

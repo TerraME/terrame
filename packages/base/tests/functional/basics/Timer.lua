@@ -231,6 +231,12 @@ time    number [-inf]
 		}
 
 		timer2:run(6)
+
+		local warning_func = function()
+			timer2:add(Event{period = 2, action = function() end})
+		end
+		unitTest:assertWarning(warning_func, "Adding an Event with time (1) before the current simulation time (6).")
+
 		unitTest:assertEquals(6, timer2:getTime())
 		unitTest:assertEquals(10, cont)
 	end,
@@ -252,6 +258,11 @@ time    number [-inf]
 		}
 
 		timer:run(4)
+
+		local warning_func = function()
+			timer:run(2)
+		end
+		unitTest:assertWarning(warning_func, "Simulating until a time (2) before the current simulation time (4).")
 
 		unitTest:assertEquals(4, qt1)
 		unitTest:assertEquals(3, qt2)

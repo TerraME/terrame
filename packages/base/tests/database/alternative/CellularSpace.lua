@@ -64,24 +64,6 @@ return{
 
 		unitTest:assertError(error_func, "File '"..pgmFile.."' does not contain the PGM identifier 'P2' in its first line.")
 
-		pgmFile = filePath("test/error/pgm-invalid-size.pgm", "base")
-		error_func = function()
-			CellularSpace{
-				file = pgmFile
-			}
-		end
-
-		unitTest:assertWarning(error_func, "Data from file '"..pgmFile.."' does not match declared size: expected '(2, 2)', got '(10, 10)'.")
-
-		pgmFile = filePath("test/error/pgm-invalid-max.pgm", "base")
-		error_func = function()
-			CellularSpace{
-				file = pgmFile
-			}
-		end
-
-		unitTest:assertWarning(error_func, "File '"..pgmFile.."' does not have a maximum value declared.")
-
 		error_func = function()
 			cs = CellularSpace{file = 2, source = "pgm", sep = ";"}
 		end
@@ -264,12 +246,6 @@ return{
 		cs = CellularSpace{
 			file = filePath("brazilstates.shp")
 		}
-
-		error_func = function()
-			cs:loadNeighborhood{file = filePath("test/brazil-ok.gal"), che = false}
-		end
-
-		unitTest:assertWarning(error_func, unnecessaryArgumentMsg("che"))
 
 		mfile = filePath("test/brazil.gal")
 

@@ -54,21 +54,6 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
 
-		local warning_func = function()
-			Directory{
-				name = ".tmp_XXXXX",
-				tmpd = true
-			}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("tmpd", "tmp"))
-
-		warning_func = function()
-			Directory{name = "abc", tmpd = true}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("tmpd", "tmp"))
-
 		error_func = function()
 			Directory(packageInfo("base").path.."data/agents.csv")
 		end

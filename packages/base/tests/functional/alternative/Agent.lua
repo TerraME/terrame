@@ -82,12 +82,6 @@ return {
 
 		ag:die()
 
-		local warning_function = function()
-			ag:execute()
-		end
-
-		unitTest:assertWarning(warning_function, "Trying to execute a dead agent.")
-
 		local ag2 = Agent{}
 
 		local test_function = function()
@@ -217,19 +211,11 @@ return {
 		local e = Environment{predators, cs}
 		e:createPlacement()
 
-		local c = cs:sample()
-
-		local warning_func = function()
-			predators:sample():enter(c)
-		end
-
-		unitTest:assertWarning(warning_func, "Agent is already inside of a Cell. Use Agent:move() instead.")
-
 		local ag = predators:sample()
 
 		ag:leave()
 
-		c = Cell{}
+		local c = Cell{}
 
 		error_func = function()
 			ag:enter(c)

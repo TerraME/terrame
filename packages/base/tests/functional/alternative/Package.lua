@@ -99,12 +99,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
-
-		local warning_func = function()
-			import("base")
-		end
-
-		unitTest:assertWarning(warning_func, "Package 'base' is already loaded.")
 	end,
 	isLoaded = function(unitTest)
 		local error_func = function()

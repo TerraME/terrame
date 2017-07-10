@@ -71,14 +71,7 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
 	close = function(unitTest)
-		local file = File("abc.txt")
-		local warning_func = function()
-			file:close()
-		end
-
-		unitTest:assertWarning(warning_func, "File is not opened.")
-
-		file = File("123")
+		local file = File("123")
 		file.file = true
 
 		local error_func = function()
@@ -181,15 +174,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
-
-		local s = sessionInfo().separator
-		file = filePath("test/error"..s.."csv-error.csv")
-
-		local warning_func = function()
-			file:read()
-		end
-
-		unitTest:assertWarning(warning_func, "Line 3 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
 	end,
 	touch = function(unitTest)
 		local file = File("abc.txt")

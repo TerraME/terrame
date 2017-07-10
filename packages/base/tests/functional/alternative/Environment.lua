@@ -93,12 +93,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "The Environment has an Automaton but not a CellularSpace.")
-
-		local warning_func = function()
-			Environment{2}
-		end
-
-		unitTest:assertWarning(warning_func, "Argument '1' (a 'number') is unnecessary for the Environment.")
 	end,
 	add = function(unitTest)
 		local env = Environment{}

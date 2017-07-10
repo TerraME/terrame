@@ -52,6 +52,7 @@ return {
 			init = function(self)
 				self.charge = 0
 				unitTest:assertType(self.parent, "Society")
+				self.male = true
 			end,
 			age = Random{min = 0, max = 10, step = 1},
 			gender = Random{"male", "female"},
@@ -68,11 +69,14 @@ return {
 
 		unitTest:assertNil(nonFooAgent.charge)
 
-		nonFooSociety = Society{
-			instance = nonFooAgent,
-			quantity = 50
-		}
-
+		local warning_func = function()
+			nonFooSociety = Society{
+				instance = nonFooAgent,
+				quantity = 50,
+				male = 5
+			}
+		end
+		unitTest:assertWarning(warning_func, "Attribute 'male' will not be replaced by a summary function.")
 		unitTest:assertType(nonFooSociety, "Society")
 		unitTest:assertEquals(50, #nonFooSociety)
 		unitTest:assertEquals(nonFooSociety:gender().male, 24)
@@ -111,12 +115,18 @@ return {
 		unitTest:assertEquals(51, count1)
 		unitTest:assertEquals(50, count2)
 
-		local agent1 = Agent{}
+		local agent1 = Agent{set = function() end}
 
-		local soc1 = Society{
-			instance = agent1,
-			quantity = 10
-		}
+		local soc1
+
+		warning_func = function()
+			soc1 = Society{
+				instance = agent1,
+				quantity = 10,
+				set = 5
+			}
+		end
+		unitTest:assertWarning(warning_func, "Attribute 'set' will not be replaced by a summary function.")
 		unitTest:assertEquals(10, #soc1)
 
 		local counter = 1
@@ -152,14 +162,143 @@ return {
 				end
 
 				self.age = self.age + 1
-			end
+			end,
+			value = 4,
+			male = true
 		}
 
-		local soc = Society{
-			instance = ag,
-			quantity = 10
+		local soc
+
+		warning_func = function()
+			soc = Society{
+				instance = ag,
+				quantity = 10,
+				value = 5
+			}
+		end
+		unitTest:assertWarning(warning_func, "Attribute 'value' will not be replaced by a summary function.")
+		unitTest:assertEquals(soc:age(), 0)
+		unitTest:assertEquals(soc:human(), 10)
+		unitTest:assertEquals(soc:gender().male, 10)
+
+		unitTest:assert(soc:getOld())
+		unitTest:assertEquals(soc:age(), 10)
+		unitTest:assert(not soc:getOld())
+		unitTest:assertEquals(soc:age(), 10)
+
+		ag = Agent{
+			age = 0,
+			human = true,
+			gender = "male",
+			getOld = function(self)
+				if self.age > 0 then
+					return false
+				end
+
+				self.age = self.age + 1
+			end,
+			male = true
 		}
 
+		warning_func = function()
+			soc = Society{
+				instance = ag,
+				quantity = 10,
+				male = 5
+			}
+		end
+		unitTest:assertWarning(warning_func, "Attribute 'male' will not be replaced by a summary function.")
+		unitTest:assertEquals(soc:age(), 0)
+		unitTest:assertEquals(soc:human(), 10)
+		unitTest:assertEquals(soc:gender().male, 10)
+
+		unitTest:assert(soc:getOld())
+		unitTest:assertEquals(soc:age(), 10)
+		unitTest:assert(not soc:getOld())
+		unitTest:assertEquals(soc:age(), 10)
+
+		ag = Agent{
+			age = 0,
+			human = true,
+			gender = "male",
+			getOld = function(self)
+				if self.age > 0 then
+					return false
+				end
+
+				self.age = self.age + 1
+			end,
+			status = "alive"
+		}
+
+		warning_func = function()
+			soc = Society{
+				instance = ag,
+				quantity = 10,
+				status = 5
+			}
+		end
+		unitTest:assertWarning(warning_func, "Attribute 'status' will not be replaced by a summary function.")
+		unitTest:assertEquals(soc:age(), 0)
+		unitTest:assertEquals(soc:human(), 10)
+		unitTest:assertEquals(soc:gender().male, 10)
+
+		unitTest:assert(soc:getOld())
+		unitTest:assertEquals(soc:age(), 10)
+		unitTest:assert(not soc:getOld())
+		unitTest:assertEquals(soc:age(), 10)
+
+		ag = Agent{
+			age = 0,
+			human = true,
+			gender = "male",
+			getOld = function(self)
+				if self.age > 0 then
+					return false
+				end
+
+				self.age = self.age + 1
+			end,
+			enter = function() end
+		}
+
+		warning_func = function()
+			soc = Society{
+				instance = ag,
+				quantity = 10
+			}
+		end
+		unitTest:assertWarning(warning_func, "Function 'enter()' from Agent is replaced in the instance.")
+		unitTest:assertEquals(soc:age(), 0)
+		unitTest:assertEquals(soc:human(), 10)
+		unitTest:assertEquals(soc:gender().male, 10)
+
+		unitTest:assert(soc:getOld())
+		unitTest:assertEquals(soc:age(), 10)
+		unitTest:assert(not soc:getOld())
+		unitTest:assertEquals(soc:age(), 10)
+
+		ag = Agent{
+			age = 0,
+			human = true,
+			gender = "male",
+			getOld = function(self)
+				if self.age > 0 then
+					return false
+				end
+
+				self.age = self.age + 1
+			end,
+			instance = function() end
+		}
+
+		warning_func = function()
+			soc = Society{
+				instance = ag,
+				quantity = 10
+			}
+		end
+		unitTest:assertWarning(warning_func, "Attribute 'instance' belongs to both Society and Agent.")
 		unitTest:assertEquals(soc:age(), 0)
 		unitTest:assertEquals(soc:human(), 10)
 		unitTest:assertEquals(soc:gender().male, 10)
@@ -259,7 +398,10 @@ state_          State
 
 		predators:createSocialNetwork{probability = 0.5, name = "friends"}
 		predators:createSocialNetwork{quantity = 1, name = "boss"}
-		predators:createSocialNetwork{filter = function() return true end, name = "all"}
+		local warning_func = function()
+			predators:createSocialNetwork{filter = function() return true end, name = "all", abc = true}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
 
 		local count_prob = 0
 		local count_quant = 0
@@ -282,8 +424,16 @@ state_          State
 		local env = Environment{cs, predators}
 		env:createPlacement{max = 5}
 
-		predators:createSocialNetwork{strategy = "cell", name = "c"}
-		predators:createSocialNetwork{strategy = "neighbor", name = "n"}
+		warning_func = function()
+			predators:createSocialNetwork{strategy = "cell", name = "c", quantity = 1}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("quantity"))
+
+		warning_func = function()
+			predators:createSocialNetwork{strategy = "neighbor", name = "n", quantity = 1}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("quantity"))
+
 		predators:createSocialNetwork{neighborhood = "2", name = "n2"}
 
 		local count_c = 0
@@ -320,10 +470,14 @@ state_          State
 			quantity = 10
 		}
 
-		sc:createSocialNetwork{
-			strategy = "void",
-			name = "void"
-		}
+		warning_func = function()
+			sc:createSocialNetwork{
+				strategy = "void",
+				name = "void",
+				probability = 0.5
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("probability"))
 		unitTest:assertEquals(0, #sc:sample():getSocialNetwork("void"))
 
 		ag1 = sc:sample()
@@ -447,9 +601,20 @@ state_          State
 			quantity = 20
 		}
 
-		predators:createSocialNetwork{strategy = "erdos", quantity = 40, name = "erdos"}
-		predators:createSocialNetwork{strategy = "barabasi", start = 10, quantity = 2, name = "barabasi"}
-		predators:createSocialNetwork{strategy = "watts", probability = 0.1, quantity = 2, name = "watts"}
+		warning_func = function()
+			predators:createSocialNetwork{strategy = "erdos", quantity = 40, name = "erdos", abc = false}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
+
+		warning_func = function()
+			predators:createSocialNetwork{strategy = "barabasi", start = 10, quantity = 2, name = "barabasi", abc = true}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
+
+		warning_func = function()
+			predators:createSocialNetwork{strategy = "watts", probability = 0.1, quantity = 2, name = "watts", abc = true}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
 
 		local count_barabasi = 0
 		local count_erdos = 0

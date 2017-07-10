@@ -231,7 +231,24 @@ return{
 		cs = CellularSpace{
 			file = filePath("simple.pgm", "base")
 		}
+		unitTest:assertEquals(#cs, 100)
 
+		local pgmFile = filePath("test/error/pgm-invalid-max.pgm", "base")
+		local pgmWarn = function()
+			cs = CellularSpace{
+				file = pgmFile
+			}
+		end
+		unitTest:assertWarning(pgmWarn, "File '"..pgmFile.."' does not have a maximum value declared.")
+		unitTest:assertEquals(#cs, 100)
+
+		pgmFile = filePath("test/error/pgm-invalid-size.pgm", "base")
+		local pgmWarn2 = function()
+			cs = CellularSpace{
+				file = pgmFile
+			}
+		end
+		unitTest:assertWarning(pgmWarn2, "Data from file '"..pgmFile.."' does not match declared size: expected '(2, 2)', got '(10, 10)'.")
 		unitTest:assertEquals(#cs, 100)
 
 		-- csv file
@@ -472,10 +489,14 @@ return{
 		-- .GAL Regular CS
 		countTest = countTest + 1
 
-		cs1:loadNeighborhood{
-			file = filePath("test/cabecadeboi-neigh.gal", "base"),
-			name = "my_neighborhood"..countTest
-		}
+		local unnecessaryArgument = function()
+			cs1:loadNeighborhood{
+				file = filePath("test/cabecadeboi-neigh.gal", "base"),
+				name = "my_neighborhood"..countTest,
+				che = false
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("che"))
 
 		sizes = {}
 

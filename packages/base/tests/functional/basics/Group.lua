@@ -45,9 +45,44 @@ return{
 			quantity = 10
 		}
 
-		local g = Group{
-			target = nonFooSociety
-		}
+		local g
+		local warning_func = function()
+			g = Group{
+				target = nonFooSociety,
+				random = false
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("random", false))
+		unitTest:assertType(g, "Group")
+		unitTest:assertEquals(#g, #nonFooSociety)
+		unitTest:assertEquals(g.agents[1], nonFooSociety.agents[1])
+		unitTest:assertNil(g.select)
+		unitTest:assertNil(g.greater)
+		unitTest:assertEquals(g:w(), 30)
+		unitTest:assertEquals(g:p(), 50)
+
+		warning_func = function()
+			g = Group{
+				target = nonFooSociety,
+				build = true
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("build", true))
+		unitTest:assertType(g, "Group")
+		unitTest:assertEquals(#g, #nonFooSociety)
+		unitTest:assertEquals(g.agents[1], nonFooSociety.agents[1])
+		unitTest:assertNil(g.select)
+		unitTest:assertNil(g.greater)
+		unitTest:assertEquals(g:w(), 30)
+		unitTest:assertEquals(g:p(), 50)
+
+		warning_func = function()
+			g = Group{
+				target = nonFooSociety,
+				selection = function() return true end
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("selection", "select"))
 		unitTest:assertType(g, "Group")
 		unitTest:assertEquals(#g, #nonFooSociety)
 		unitTest:assertEquals(g.agents[1], nonFooSociety.agents[1])
@@ -339,6 +374,11 @@ select  function
 		local g = Group{
 			target = nonFooSociety
 		}
+
+		local warning_func = function()
+			g:sort()
+		end
+		unitTest:assertWarning(warning_func, "Cannot sort the Group because there is no previous function.")
 
 		g:sort(function(ag1, ag2)
 			return ag1.age < ag2.age

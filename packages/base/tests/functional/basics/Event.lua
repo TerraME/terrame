@@ -26,15 +26,48 @@
 
 return{
 	Event = function(unitTest)
-		local event = Event{action = function() end}
+		local event
 
+		local warning_func = function()
+			event = Event{
+				action = function() end,
+				priority = "medium"
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
 		unitTest:assertEquals(event:getTime(), 1)
 		unitTest:assertEquals(event:getPeriod(), 1)
 		unitTest:assertEquals(event:getPriority(), 0)
 		unitTest:assertEquals(type(event), "Event")
 
-		event = Event{start = 0.5, period = 2, priority = 1, action = function() end}
+		warning_func = function()
+			event = Event{
+				action = function() end,
+				start = 1
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("start", 1))
+		unitTest:assertEquals(event:getTime(), 1)
+		unitTest:assertEquals(event:getPeriod(), 1)
+		unitTest:assertEquals(event:getPriority(), 0)
+		unitTest:assertEquals(type(event), "Event")
 
+		warning_func = function()
+			event = Event{
+				action = function() end,
+				period = 1
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("period", 1))
+		unitTest:assertEquals(event:getTime(), 1)
+		unitTest:assertEquals(event:getPeriod(), 1)
+		unitTest:assertEquals(event:getPriority(), 0)
+		unitTest:assertEquals(type(event), "Event")
+
+		local unnecessaryArgument = function()
+			event = Event{start = 0.5, period = 2, priority = 1, action = function() end, myperiod = function() end}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("myperiod", "period"))
 		unitTest:assertEquals(event:getTime(), 0.5)
 		unitTest:assertEquals(event:getPeriod(), 2)
 		unitTest:assertEquals(event:getPriority(), 1)
@@ -107,14 +140,55 @@ return{
 
 		local instance = m{}
 
-		local t = Timer{
-			Event{action = soc}, -- 1000
-			Event{action = c},   -- 2
-			Event{action = cs},
-			Event{action = instance}, -- 20
-			Event{action = ag},  -- 100
-			Event{action = traj}
-		}
+		local t
+		-- TODO(#1906)
+		warning_func = function()
+			t = Timer{
+				Event{action = soc}, -- 1000
+				Event{action = c},   -- 2
+				Event{action = cs},
+				Event{action = instance}, -- 20
+				Event{action = ag},  -- 100
+				Event{action = traj, priority = "medium"}
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
+
+		warning_func = function()
+			t = Timer{
+				Event{action = soc, priority = "medium"}, -- 1000
+				Event{action = c},   -- 2
+				Event{action = cs},
+				Event{action = instance}, -- 20
+				Event{action = ag},  -- 100
+				Event{action = traj}
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
+
+		warning_func = function()
+			t = Timer{
+				Event{action = soc}, -- 1000
+				Event{action = c},   -- 2
+				Event{action = cs},
+				Event{action = instance}, -- 20
+				Event{action = ag, priority = "medium"},  -- 100
+				Event{action = traj}
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
+
+		warning_func = function()
+			t = Timer{
+				Event{action = soc}, -- 1000
+				Event{action = c, priority = "high"},   -- 2
+				Event{action = cs},
+				Event{action = instance}, -- 20
+				Event{action = ag},  -- 100
+				Event{action = traj}
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("priority", -5))
 
 		t:run(2)
 		unitTest:assertEquals(count, 1222)
@@ -173,12 +247,15 @@ return{
 	config = function(unitTest)
 		local event = Event{action = function() end}
 
-		event:config{
-			time = 0.5,
-			period = 2,
-			priority = 1
-		}
-
+		local warning_func = function()
+			event:config{
+				time = 0.5,
+				period = 2,
+				priority = 1,
+				perod = false
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("perod", "period"))
 		unitTest:assertEquals(event:getTime(), 0.5)
 		unitTest:assertEquals(event:getPeriod(), 2)
 		unitTest:assertEquals(event:getPriority(), 1)

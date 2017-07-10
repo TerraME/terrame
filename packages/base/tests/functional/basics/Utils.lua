@@ -703,23 +703,31 @@ return{
 
 		unitTest:assertEquals(16.48360, v, 0.0001)
 
-		v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			step = 0.01
-		}
+		local warning_func = function()
+			v = integrate{
+				equation = f,
+				initial = 0,
+				a = 0,
+				b = 3,
+				step = 0.01,
+				metod = 3
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("metod", "method"))
 
 		unitTest:assertEquals(20.11522, v, 0.0001)
 
-		v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			step = 0.001
-		}
+		warning_func = function()
+			v = integrate{
+				equation = f,
+				initial = 0,
+				a = 0,
+				b = 3,
+				step = 0.001,
+				method = "euler"
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("method", "euler"))
 
 		unitTest:assertEquals(20.23650, v, 0.0001)
 

@@ -969,16 +969,14 @@ CellularSpace_ = {
 				positiveTableArgument(data, "m")
 
 				if data.m % 2 == 0 then
-					data.m = data.m + 1
-					customWarning("Argument 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
+					customError("Value or argument 'm' should be even, got "..data.m..".")
 				end
 
 				defaultTableValue(data, "n", data.m)
 				integerTableArgument(data, "n")
 				positiveTableArgument(data, "n")
 				if data.n % 2 == 0 then
-					data.n = data.n + 1
-					customWarning("Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
+					customError("Value or argument 'n' should be even, got "..data.n..".")
 				end
 
 				data.func = getMxNNeighborhood

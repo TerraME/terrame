@@ -34,12 +34,16 @@ return{
 				}
 
 				model.timer = Timer{
-					Event{action = model.ch}
+					Event{action = model.ch, priority = "verylow"}
 				}
 			end
 		}
 
-		local instance = m{}
+		local instance
+		local warning_func = function()
+			instance = m{}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 10))
 
 		instance:run()
 

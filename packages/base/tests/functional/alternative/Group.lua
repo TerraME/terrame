@@ -50,15 +50,6 @@ return{
 
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
-		local warning_func = function()
-			Group{
-				target = sc1,
-				selection = function() return true end
-			}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("selection", "select"))
-
 		error_func = function()
 			group1 = Group{
 				target = cs,
@@ -81,24 +72,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("build", "boolean", 15))
-
-		warning_func = function()
-			Group{
-				target = sc1,
-				build = true
-			}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("build", true))
-
-		warning_func = function()
-			Group{
-				target = sc1,
-				random = false
-			}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("random", false))
 
 		error_func = function()
 			group1 = Group{
@@ -170,12 +143,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
-
-		local warning_func = function()
-			group:sort()
-		end
-
-		unitTest:assertWarning(warning_func, "Cannot sort the Group because there is no previous function.")
 	end
 }
 

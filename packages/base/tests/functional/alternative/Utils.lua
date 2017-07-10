@@ -448,12 +448,6 @@ return{
 
 		unitTest:assertError(error_func, positiveArgumentMsg("step", -0.5))
 
-		local warning_func = function()
-			integrate{step = 0.1, method = "euler", equation = function() end, initial = 0}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("method", "euler"))
-
 		error_func = function()
 			integrate{step = 0.1, method = "eler", equation = function() end, initial = 0}
 		end
@@ -489,12 +483,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Tables equation and initial shoud have the same size.")
-
-		warning_func = function()
-			integrate{equation = function() end, initial = 1, step = 5, metod = 3}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("metod", "method"))
 
 		local event = Event{start = 0.5, period = 2, priority = 1, action = function() end}
 

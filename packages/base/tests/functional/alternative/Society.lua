@@ -92,17 +92,6 @@ return{
 
 		unitTest:assertError(error_func, "Argument 'instance' should not have attribute 'parent'.")
 
-		ag1 = Agent{instance = 2}
-
-		local warning_func = function()
-			Society{
-				instance = ag1,
-				quantity = 20
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'instance' belongs to both Society and Agent.")
-
 		ag1 = Agent{}
 
 		Society{
@@ -118,81 +107,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "The same instance cannot be used by two Societies.")
-
-		ag1 = Agent{enter = function() end}
-
-		warning_func = function()
-			Society{
-				instance = ag1,
-				quantity = 20
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Function 'enter()' from Agent is replaced in the instance.")
-
-		ag1 = Agent{status = "alive"}
-
-		warning_func = function()
-			Society{
-				instance = ag1,
-				quantity = 20,
-				status = 5
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'status' will not be replaced by a summary function.")
-
-		ag1 = Agent{male = true}
-
-		warning_func = function()
-			Society{
-				instance = ag1,
-				quantity = 20,
-				male = 4
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'male' will not be replaced by a summary function.")
-
-		ag1 = Agent{value = 4}
-
-		warning_func = function()
-			Society{
-				instance = ag1,
-				quantity = 20,
-				value = 5
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'value' will not be replaced by a summary function.")
-
-		ag1 = Agent{set = function() end}
-
-		warning_func = function()
-			Society{
-				instance = ag1,
-				quantity = 20,
-				set = 5
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'set' will not be replaced by a summary function.")
-
-		ag1 = Agent{
-			init = function(self)
-				self.male = true
-			end
-		}
-
-		warning_func = function()
-			Society{
-				instance = ag1,
-				quantity = 20,
-				male = 5
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'male' will not be replaced by a summary function.")
 
 		local ag = Agent{
 			water = 2,
@@ -297,16 +211,6 @@ return{
 
 		unitTest:assertError(error_func, "SocialNetwork 'void' already exists in the Society.")
 
-		local warning_func = function()
-			sc1:createSocialNetwork{
-				strategy = "void",
-				name = "void2",
-				probability = 0.5
-			}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("probability"))
-
 		error_func = function()
 			sc1:createSocialNetwork{
 				strategy = "void",
@@ -344,7 +248,8 @@ return{
 
 		unitTest:assertError(error_func, integerArgumentMsg("quantity", 2.2))
 
-		warning_func = function()
+		-- TODO(#1910)
+		local warning_func = function()
 			sc1:createSocialNetwork{
 				strategy = "quantity",
 				quantity = 5,
@@ -355,6 +260,7 @@ return{
 
 		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("probability"))
 
+		-- TODO(#1910)
 		warning_func = function()
 			sc1:createSocialNetwork{
 				strategy = "quantity",
@@ -402,6 +308,7 @@ return{
 
 		unitTest:assertError(error_func, incompatibleValueMsg("probability", "a number between 0 and 1", 0))
 
+		-- TODO(#1910)
 		warning_func = function()
 			sc1:createSocialNetwork{
 				strategy = "probability",
@@ -470,7 +377,6 @@ return{
 		sc1 = Society{instance = ag1, quantity = 20}
 		cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
-		env = Environment{cs, sc1}
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = "c"}
@@ -478,24 +384,11 @@ return{
 
 		unitTest:assertError(error_func, "Society has no placement. Please call Environment:createPlacement() first.")
 
-		env:createPlacement()
-		warning_func = function()
-			sc1:createSocialNetwork{strategy = "cell", quantity = 5, name = "5"}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("quantity"))
-
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = 22}
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
-
-		warning_func = function()
-			sc1:createSocialNetwork{strategy = "neighbor", quantity = 1, name = "6"}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("quantity"))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "function", name = "c", filter = 3}
@@ -503,6 +396,7 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("filter", "function", 3))
 
+		-- TODO(#1910)
 		warning_func = function()
 			sc1:createSocialNetwork{strategy = "function", name = "c", filter = function() return true end, quantity = 1}
 		end
@@ -536,12 +430,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Argument 'inmemory' does not work with strategy 'erdos'.")
-
-		warning_func = function()
-			sc1:createSocialNetwork{strategy = "erdos", quantity = 5, abc = true, name = "8"}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "barabasi", start = 3, quantity = "abc"}
@@ -584,12 +472,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Argument 'inmemory' does not work with strategy 'barabasi'.")
-
-		warning_func = function()
-			sc1:createSocialNetwork{strategy = "barabasi", quantity = 5, start = 8, abc = true, name = "9"}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "barabasi", quantity = 5, start = 21}
@@ -638,12 +520,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Argument 'inmemory' does not work with strategy 'watts'.")
-
-		warning_func = function()
-			sc1:createSocialNetwork{strategy = "watts", quantity = 5, probability = 0.8, abc = true}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
 	end,
 	get = function(unitTest)
 		local ag1 = Agent{

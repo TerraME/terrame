@@ -27,10 +27,14 @@ return{
 		local dir = packageInfo("base").data
 		unitTest:assertType(dir, "Directory")
 
-		dir = Directory{
-			name = ".tmp_XXXXX",
-			tmp = true
-		}
+		local unnecessaryArgument = function()
+			dir = Directory{
+				name = ".tmp_XXXXX",
+				tmp = true,
+				tmpd = true,
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("tmpd", "tmp"))
 
 		unitTest:assert(dir:exists())
 

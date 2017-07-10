@@ -72,6 +72,7 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("random", "boolean", 2))
 
+		-- TODO(#1908): remove this test after fix it
 		local warning_func = function()
 			Model{random = false, init = function() end}
 		end
@@ -249,18 +250,6 @@ return{
 
 		unitTest:assertError(error_func, incompatibleValueMsg("block.level", "one of {1, 2, 3}", 40))
 
-		warning_func = function()
-			Tube{block = {mblock = 40}}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("block.mblock"))
-
-		warning_func = function()
-			Tube{s = 3}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("s"))
-
 		error_func = function()
 			Tube{checkZero = 3}
 		end
@@ -273,6 +262,7 @@ return{
 
 		unitTest:assertError(error_func, "Initial water should be greater than zero.")
 
+		-- TODO(#1908): remove this test after fix it
 		warning_func = function()
 			Tube{block = {xmix = 5}}
 		end
@@ -573,6 +563,7 @@ return{
 
 		unitTest:assertError(error_func, "Argument 'number' cannot be displayed twice in the interface().")
 
+		-- TODO(#1907)
 		local warning_func = function()
 			Model{
 				simulationSteps = 10,

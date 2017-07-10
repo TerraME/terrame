@@ -46,6 +46,7 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "not_number"))
 
+		-- TODO(#1909): remove this test after fix it
 		local warning_func = function()
 			neigh:add(cell2)
 			neigh:add(cell2)
@@ -91,7 +92,6 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 123))
 	end,
 	remove = function(unitTest)
-		local cell1 = Cell{}
 		local neigh = Neighborhood()
 
 		local error_func = function()
@@ -111,12 +111,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 123))
-
-		local warning_func = function()
-			neigh:remove(cell1)
-		end
-
-		unitTest:assertWarning(warning_func, "Trying to remove a Cell that does not belong to the Neighborhood.")
 	end,
 	sample = function(unitTest)
 		local neigh = Neighborhood()

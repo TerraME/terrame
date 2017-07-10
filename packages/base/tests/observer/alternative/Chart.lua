@@ -98,12 +98,6 @@ return{
 
 		unitTest:assertError(error_func, "Attribute 'value' cannot belong to argument 'select' as it was already selected as 'xAxis'.")
 
-		local warning_func = function()
-			Chart{target = c, xwc = 5}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("xwc"))
-
 		error_func = function()
 			Chart{target = c, select = {}}
 		end
@@ -420,6 +414,74 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Selected column 'limit2' does not exist in the DataFrame.")
+
+		local init = function(model)
+			local contacts = 6
+
+			model.timer = Timer{
+				Event{action = function()
+					local proportion = model.susceptible /
+						(model.susceptible + model.infected + model.recovered)
+
+					local newInfected = model.infected * contacts * model.probability * proportion
+
+					local newRecovered = model.infected / model.duration
+
+					model.susceptible = model.susceptible - newInfected
+					model.recovered = model.recovered + newRecovered
+					model.infected = model.infected + newInfected - newRecovered
+				end},
+				Event{action = function()
+					if model.infected >= model.maximum then
+						contacts = contacts / 2
+						return false
+					end
+				end}
+			}
+		end
+
+		local SIR = Model{
+			susceptible = 9998,
+			infected = 2,
+			recovered = 0,
+			duration = 2,
+			finalTime = 30,
+			maximum = 1000,
+			probability = 0.25,
+			init = init
+		}
+
+		local e = Environment{
+			max1000 = SIR{maximum = 1000},
+			max2000 = SIR{maximum = 2000}
+		}
+
+		error_func = function()
+			c = Chart{
+				target = Environment{},
+				select = "infected"
+			}
+		end
+
+		unitTest:assertError(error_func, "There is no Model instance within the Environment.")
+
+		error_func = function()
+			c = Chart{
+				target = e
+			}
+		end
+
+		unitTest:assertError(error_func, mandatoryArgumentMsg("select"))
+
+		error_func = function()
+			c = Chart{
+				target = e,
+				select = "infected",
+				color = {"blue", "red", "green"}
+			}
+		end
+
+		unitTest:assertError(error_func, "Arguments 'select' and 'color' should have the same size, got 2 and 3.")
 	end,
 	save = function(unitTest)
 		local c = Cell{value = 5}

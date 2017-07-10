@@ -51,6 +51,11 @@ return{
 		local filename = "test.csv"
 		local file = File(filename)
 
+		local warning_func = function()
+			file:close()
+		end
+		unitTest:assertWarning(warning_func, "File is not opened.")
+
 		file.file = io.open(file.filename, "a+")
 		local close = file:close()
 
@@ -170,6 +175,17 @@ return{
 
 		unitTest:assertType(csv, "DataFrame")
 		unitTest:assertEquals(4, #csv)
+		unitTest:assertEquals(20, csv[1].age)
+
+		local s = sessionInfo().separator
+		file = filePath("test/error"..s.."csv-error.csv")
+
+		local warning_func = function()
+			csv = file:read()
+		end
+		unitTest:assertWarning(warning_func, "Line 3 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
+		unitTest:assertType(csv, "DataFrame")
+		unitTest:assertEquals(3, #csv)
 		unitTest:assertEquals(20, csv[1].age)
 	end,
 	split = function(unitTest)

@@ -160,10 +160,10 @@ state_          State
 		unitTest:assertType(dead, "<Dead Agent>")
 		unitTest:assertEquals(4, #predators)
 
-		local test_function = function()
-			print(dead.a)
+		local warning_function = function()
+			dead:execute()
 		end
-		unitTest:assertError(test_function, "Trying to use a function or an attribute of a dead Agent.")
+		unitTest:assertWarning(warning_function, "Trying to execute a dead agent.")
 	end,
 	emptyNeighbor = function(unitTest)
 		local ag = Agent{}
@@ -680,6 +680,26 @@ state_          State
 		for _ = 1, 20 do
 			unitTest:assert(soc:sample():walkToEmpty())
 		end
-	end
+	end,
+	enter = function(unitTest)
+		local predator = Agent{}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 5
+		}
+
+		local cs = CellularSpace{xdim = 5}
+
+		local e = Environment{predators, cs}
+		e:createPlacement()
+
+		local c = cs:sample()
+
+		local warning_func = function()
+			predators:sample():enter(c)
+		end
+		unitTest:assertWarning(warning_func, "Agent is already inside of a Cell. Use Agent:move() instead.")
+	end,
 }
 

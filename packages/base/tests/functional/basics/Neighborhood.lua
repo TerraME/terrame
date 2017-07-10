@@ -62,6 +62,10 @@ weights      vector of size 0
 		unitTest:assertEquals(#neigh, 1)
 
 		neigh:add(cell2, 0.5)
+		--local warning_func = function() -- TODO(#1909)
+		--	neigh:add(cell2)
+		--end
+		--unitTest:assertWarning(warning_func, "Cell 'C01L01' already belongs to the Neighborhood.") -- SKIP
 		unitTest:assert(neigh:isNeighbor(cell1))
 		unitTest:assertEquals(neigh:getWeight(cell1), 1)
 		unitTest:assert(neigh:isNeighbor(cell2))
@@ -125,10 +129,16 @@ weights      vector of size 0
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
 		local cell3 = Cell{x = 1, y = 1}
+		local cell4 = Cell{}
 
 		neigh:add(cell1)
 		neigh:add(cell2)
 		neigh:add(cell3)
+
+		local warning_func = function()
+			neigh:remove(cell4)
+		end
+		unitTest:assertWarning(warning_func, "Trying to remove a Cell that does not belong to the Neighborhood.")
 
 		neigh:remove(cell1)
 		unitTest:assertEquals(#neigh, 2)

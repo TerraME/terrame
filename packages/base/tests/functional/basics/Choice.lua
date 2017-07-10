@@ -25,8 +25,26 @@
 
 return{
 	Choice = function(unitTest)
-		local c = Choice{1, 2, 3}
+		local c
 
+		local oneValueWarn = function()
+			c = Choice{1}
+		end
+		unitTest:assertWarning(oneValueWarn, "Choice has only one available value.")
+		unitTest:assertType(c, "Choice")
+		unitTest:assertEquals(#c.values, 1)
+
+		local unnecessaryArgument = function()
+			c = Choice{1, 2, 3, max = 4}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("max"))
+		unitTest:assertType(c, "Choice")
+		unitTest:assertEquals(#c.values, 3)
+
+		local defaultValue = function()
+			c = Choice{1, 2, 3, default = 1}
+		end
+		unitTest:assertWarning(defaultValue, defaultValueMsg("default", 1))
 		unitTest:assertType(c, "Choice")
 		unitTest:assertEquals(#c.values, 3)
 
@@ -42,11 +60,17 @@ return{
 		unitTest:assertEquals(c.min, 5)
 		unitTest:assertEquals(c.default, 7)
 
-		c = Choice{min = 5}
+		defaultValue = function()
+			c = Choice{min = 5, default = 5}
+		end
+		unitTest:assertWarning(defaultValue, defaultValueMsg("default", 5))
 		unitTest:assertType(c, "Choice")
 		unitTest:assertEquals(c.default, 5)
 
-		c = Choice{max = 5, default = 3}
+		unnecessaryArgument = function()
+			c = Choice{max = 5, default = 3, w = false}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("w"))
 		unitTest:assertType(c, "Choice")
 		unitTest:assertEquals(c.max, 5)
 		unitTest:assertEquals(c.default, 3)

@@ -75,12 +75,6 @@ return{
 
 		unitTest:assertError(error_func, "All the elements of an RGB composition should be numbers, got 'string' in position 1.")
 
-		local warning_func = function()
-			Map{target = c, select = "x", slices = 10, min = 0, max = 10, values = {"a"}, color = "Blues"}
-		end
-
-		unitTest:assertWarning(warning_func, "Argument 'values' is unnecessary. Do you mean 'value'?")
-
 		-- equalsteps
 		error_func = function()
 			Map{target = c, grouping = "equalsteps"}
@@ -154,12 +148,6 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("title", "string", 5))
 
-		warning_func = function()
-			Map{target = c, select = "x", author = 5, slices = 10, color = {"blue", "red"}}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
-
 		error_func = function()
 			Map{
 				target = c,
@@ -221,12 +209,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("invert", "boolean", 2))
-
-		warning_func = function()
-			Map{target = c, select = "x", invert = false, slices = 10, min = 0, max = 100, color = "Blues"}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("invert", false))
 
 		-- quantil
 		error_func = function()
@@ -295,19 +277,14 @@ return{
 
 		unitTest:assertError(error_func, "Invalid description for color in position 1. It should be a table or string, got number.")
 
-		warning_func = function()
-			Map{target = c, select = "x", author = 5, slices = 10, color = {"blue", "red"}, grouping = "quantil"}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
-
 		error_func = function()
 			Map{target = c, select = "x", invert = 2, slices = 10, color = "Blues", grouping = "quantil"}
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("invert", "boolean", 2))
 
-		warning_func = function()
+		-- TODO(#1914): remove it
+		local warning_func = function()
 			Map{target = c, select = "x", invert = false, slices = 10, color = "Blues", grouping = "quantil"}
 		end
 
@@ -517,19 +494,6 @@ return{
 
 		unitTest:assertError(error_func, "There should not exist repeated elements in 'value'.")
 
-		warning_func = function()
-			Map{target = c, select = "x", author = 5, value = {1, 2}, color = {"blue", "red"}}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
-
-		-- none
-		warning_func = function()
-			Map{target = c, grouping = "none", author =  "aaa"}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
-
 		error_func = function()
 			Map{target = c, grouping = "none", color = {"blue", "red"}}
 		end
@@ -579,18 +543,7 @@ return{
 
 		unitTest:assertError(error_func, "The Society does not have a placement. Please call Environment:createPlacement() first.")
 
-		local map = Map{
-			target = cs,
-			grouping = "none"
-		}
-
 		Environment{soc, cs}:createPlacement{}
-
-		warning_func = function()
-			Map{target = soc, background = map, grid = true}
-		end
-
-		unitTest:assertWarning(warning_func, "Argument 'grid' cannot be used with a Map 'background'.")
 
 		error_func = function()
 			Map{target = soc, grid = 2}
@@ -598,18 +551,13 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("grid", "boolean", 2))
 
-		warning_func = function()
-			Map{target = soc, grid = false}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("grid", false))
-
 		error_func = function()
 			Map{target = soc, color = "Blues"}
 		end
 
 		unitTest:assertError(error_func, "Grouping 'none' cannot use ColorBrewer.")
 
+		-- TODO(#1912): remove after
 		warning_func = function()
 			Map{target = soc, font = "Blues"}
 		end
@@ -657,18 +605,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "It is necessary to set 'value' or 'slices' to draw the placement.")
-
-		warning_func = function()
-			Map{
-				target = cs,
-				grouping = "placement",
-				abx = 2,
-				value = {0, 1},
-				color = {"red", "blue"}
-			}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abx"))
 
 		error_func = function()
 			Map{
