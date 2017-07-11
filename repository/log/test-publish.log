@@ -25,6 +25,9 @@ Testing addHeading
 Testing addImage
 Testing addText
 Checking if all asserts were executed
+Testing tests/functional/alternative/Utils.lua
+Testing link
+Checking if all asserts were executed
 Testing tests/functional/alternative/View.lua
 Testing View
 Checking if all asserts were executed
@@ -48,6 +51,9 @@ Testing addImage
 Testing addSeparator
 Testing addText
 Testing get
+Checking if all asserts were executed
+Testing tests/functional/basic/Utils.lua
+Testing link
 Checking if all asserts were executed
 Testing tests/functional/basic/View.lua
 Testing View
@@ -76,6 +82,7 @@ Checking Application.lua
 Checking Color.lua
 Checking List.lua
 Checking Report.lua
+Checking Utils.lua
 Checking View.lua
 Skipping lines of source code check
 Testing examples
@@ -86,20 +93,20 @@ Testing emas
 Checking logs
 
 Functional test report for package 'publish':
-Tests were executed in 71.28 seconds.
+Tests were executed in 71.69 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 860 asserts were executed successfully.
-All 31 tested functions do not have any unexpected execution error.
-All 31 tested functions have at least one assert.
-All 31 tested functions exist in the source code of the package.
+All 833 asserts were executed successfully.
+All 33 tested functions do not have any unexpected execution error.
+All 33 tested functions have at least one assert.
+All 33 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
-All 15 functions of the package were tested.
+All 16 functions of the package were tested.
 No lines from the source code were verified.
 All 4 examples were successfully executed.
 No new log file was created.

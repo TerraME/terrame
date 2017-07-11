@@ -28,6 +28,7 @@ Parsing lua/Application.lua
 Parsing lua/Color.lua
 Parsing lua/List.lua
 Parsing lua/Report.lua
+Parsing lua/Utils.lua
 Parsing lua/View.lua
 Parsing examples
 Parsing examples/arapiuns.lua
@@ -40,6 +41,7 @@ Checking lua/Application.lua
 Checking lua/Color.lua
 Checking lua/List.lua
 Checking lua/Report.lua
+Checking lua/Utils.lua
 Checking lua/View.lua
 Testing @usage
 Testing file lua/Application.lua
@@ -55,6 +57,8 @@ Testing addImage
 Testing addSeparator
 Testing addText
 Testing get
+Testing file lua/Utils.lua
+Testing link
 Testing file lua/View.lua
 Testing View
 Checking calls to functions in @usage
@@ -62,12 +66,14 @@ Checking lua/Application.lua
 Checking lua/Color.lua
 Checking lua/List.lua
 Checking lua/Report.lua
+Checking lua/Utils.lua
 Checking lua/View.lua
 Checking undocumented arguments
 Checking lua/Application.lua
 Checking lua/Color.lua
 Checking lua/List.lua
 Checking lua/Report.lua
+Checking lua/Utils.lua
 Checking lua/View.lua
 Checking 'description.lua'
 Building and checking HTML files
@@ -76,6 +82,7 @@ Building doc/files/Application.html
 Building doc/files/Color.html
 Building doc/files/List.html
 Building doc/files/Report.html
+Building doc/files/Utils.html
 Building doc/files/View.html
 Building doc/files/examples.html
 Building doc/files/data.html
@@ -88,28 +95,29 @@ Checking Application.lua
 Checking Color.lua
 Checking List.lua
 Checking Report.lua
+Checking Utils.lua
 Checking View.lua
 
 Documentation report for package 'publish':
-Documentation was built in 8.72 seconds.
-8 HTML files were created.
+Documentation was built in 9.15 seconds.
+9 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
 All projects were successfully processed.
 All descriptions end with a correct character.
 All source code lines starting with --- are valid.
-All 10 global functions of the package are documented.
+All 11 global functions of the package are documented.
 All functions of each file are declared only once.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 5 non-named arguments are documented.
+All 7 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 10 functions call themselves in their @usage.
-All 10 functions do not have any error in their @usage.
+All 11 functions call themselves in their @usage.
+All 11 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
