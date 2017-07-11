@@ -22,7 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It prepares a entire TerraME build process. Firstly, it prepares environment, cloning both TerraME and TerraLib.
 ## After that, It copies required scripts to respective folders. Once done, it compiles TerraLib.
 #
@@ -62,7 +62,7 @@ if [ ! -z "$ghprbActualCommit" ]; then
 else
   # Just clone
   git clone https://github.com/terrame/terrame.git $_TERRAME_GIT_DIR --quiet
-  rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution  
+  rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
 fi
 
 echo "### TerraLib ###"
@@ -79,6 +79,7 @@ cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
 cp -r $_TERRAME_GIT_DIR/test/* $_TERRAME_EXECUTION_DIR
 # Copying TerraME test and config file to Test folder
 cp $_TERRAME_GIT_DIR/jenkins/all/*.lua $_TERRAME_TEST_DIR
+cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-unittest-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
 # Copying TerraME TerraLib compilation scripts to TerraLib solution folder
 cp $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* .
 # Copying TerraME compilation scripts to TerraME Solution folder
