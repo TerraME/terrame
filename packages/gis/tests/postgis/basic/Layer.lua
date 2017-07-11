@@ -123,7 +123,7 @@ return {
 			user = "postgres"
 		}
 
-		local l1 = Layer{
+		local cl1 = Layer{
 			project = proj,
 			source = "postgis",
 			clean = true,
@@ -135,14 +135,14 @@ return {
 			table = tName1
 		}
 
-		unitTest:assertEquals(l1.name, clName1)
+		unitTest:assertEquals(cl1.name, clName1)
 
 		local clName2 = "Another_Sampa_Cells"
 		local tName2 = "add_cellslayer_basic_another"
 
 		pgData.table = tName2
 
-		local l2 = Layer{
+		local cl2 = Layer{
 			project = proj,
 			source = "postgis",
 			input = layerName1,
@@ -154,14 +154,14 @@ return {
 			table = tName2
 		}
 
-		unitTest:assertEquals(l2.name, clName2)
+		unitTest:assertEquals(cl2.name, clName2)
 
 		local clName3 = "Other_Sampa_Cells"
 		local tName3 = "add_cellslayer_basic_from_db"
 
 		pgData.table = tName3
 
-		local l3 = Layer{
+		local cl3 = Layer{
 			project = proj,
 			source = "postgis",
 			input = clName2,
@@ -173,7 +173,7 @@ return {
 			table = tName3
 		}
 
-		unitTest:assertEquals(l3.name, clName3)
+		unitTest:assertEquals(cl3.name, clName3)
 
 		local newDbName = "new_pg_db_30032017"
 		pgData.database = newDbName
@@ -208,8 +208,9 @@ return {
 		local tName4 = string.lower(clName1)
 		pgData.table = tName4
 
+		local cl4
 		local unnecessaryArgument = function()
-			Layer{
+			cl4 = Layer{
 				project = proj,
 				source = "postgis",
 				input = layerName1,
@@ -284,12 +285,14 @@ return {
 		-- }
 
 		File(projName):delete()
-		l1:delete()
---		layer1:delete() -- layer1 should not be deleted. What must be deleted is the exported data.
---		layer2:delete() -- layer2 was read from a pg database. it does not have an encoding
---		layer3:delete() -- same for layer3
+		cl1:delete()
+		cl2:delete()
+		cl3:delete()
+		cl4:delete()
+		layer2:delete()
+		layer3:delete()
 		layer4:delete()
---		layer5:delete() -- same here
+		layer5:delete()
 	end,
 	delete = function(unitTest)
 		local projName = "layer_delete_pgis.tview"

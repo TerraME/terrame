@@ -57,8 +57,8 @@ return {
 			clean = true
 		}
 
-		unitTest:assertEquals(proj1.author, proj3clean.author)
-		unitTest:assertEquals(proj1.title, proj3clean.title)
+		unitTest:assertEquals("No author", proj3clean.author)
+		unitTest:assertEquals("No title", proj3clean.title)
 		unitTest:assertEquals(proj3clean.file, File("amazonia.tview"))
 
 		file:deleteIfExists()
@@ -133,6 +133,7 @@ return {
 		unitTest:assertType(proj5.limit, "Layer")
 		unitTest:assertEquals(proj5.limit.rep, "polygon")
 		unitTest:assertEquals(proj5.limit.source, "shp")
+		unitTest:assertEquals(proj5.limit.epsg, 29192)
 
 		local cl = Layer{
 			project = proj5,
@@ -146,6 +147,7 @@ return {
 		unitTest:assertType(cl, "Layer")
 		unitTest:assertEquals(cl.rep, "polygon")
 		unitTest:assertEquals(cl.source, "shp")
+		unitTest:assertEquals(cl.epsg, 29192)
 
 		proj5 = Project{
 			file = file:name(true),
@@ -172,6 +174,7 @@ return {
 		unitTest:assertType(cover, "Layer")
 		unitTest:assertEquals(cover.rep, "raster")
 		unitTest:assertEquals(cover.source, "tif")
+		unitTest:assertEquals(cover.epsg, proj5.cells.epsg)
 
 		unitTest:assertType(proj5.river, "Layer")
 		unitTest:assertEquals(proj5.river.rep, "line")
