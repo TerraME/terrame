@@ -232,6 +232,8 @@ return {
 		unitTest:assertEquals(getn(clSet), 104)
 
 		local filePath6 = "sampabox.shp"
+		File(filePath6):deleteIfExists()
+
 		local boxDefaultError = function()
 			Layer{
 				project = proj,
@@ -267,11 +269,42 @@ return {
 				input = layerName1,
 				file = filePath7,
 				name = "cells7",
+				clean = true,
 				resoltion = 200,
 				resolution = 0.7
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
+
+		local dir = Directory("a b")
+		dir:create()
+		local filePath8 = tostring(dir).."/cells8.shp"
+
+		local cl8 = Layer{
+			project = proj,
+			input = layerName1,
+			file = filePath8,
+			name = "cells8",
+			clean = true,
+			resolution = 0.7
+		}
+
+		unitTest:assertEquals(filePath8, cl8.file)
+
+		local dir2 = Directory("a  b c")
+		dir2:create()
+		local filePath9 = tostring(dir2).."/cells9.shp"
+
+		local cl9 = Layer{
+			project = proj,
+			input = layerName1,
+			file = filePath9,
+			name = "cells9",
+			clean = true,
+			resolution = 0.7
+		}
+
+		unitTest:assertEquals(filePath9, cl9.file)
 
 		projName:delete()
 		File(filePath1):delete()
@@ -281,6 +314,10 @@ return {
 		File(filePath5):delete()
 		File(filePath6):delete()
 		File(filePath7):delete()
+		File(filePath8):delete()
+		File(filePath9):delete()
+		dir:delete()
+		dir2:delete()
 	end,
 	delete = function(unitTest)
 		local projName = File("cellular_layer_del.tview")
