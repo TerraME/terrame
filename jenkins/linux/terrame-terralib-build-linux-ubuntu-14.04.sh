@@ -64,7 +64,7 @@ else
   git clone https://github.com/terrame/terrame.git $_TERRAME_GIT_DIR --quiet
   rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
 fi
-
+rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
 echo "### TerraLib ###"
 git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
 
