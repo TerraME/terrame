@@ -62,16 +62,16 @@ if [ ! -z "$ghprbActualCommit" ]; then
 else
   # Just clone
   git clone https://github.com/terrame/terrame.git $_TERRAME_GIT_DIR --quiet
-  rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
+  rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution/*
   mkdir $_TERRALIB_GIT_DIR
 fi
-rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
+rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution/*
 mkdir $_TERRALIB_GIT_DIR
 echo "### TerraLib ###"
 git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
 
 # Creating TerraME Test folders and TerraLib solution
-mkdir $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERRALIB_BUILD_BASE/solution $_TERRAME_BUILD_BASE/solution
+mkdir $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERRAME_BUILD_BASE/solution
 
 # Copying TerraLib compilation scripts to TerraLib Solution folder
 cp $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
