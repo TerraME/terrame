@@ -22,8 +22,8 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
-## It performs a TerraME functional test of any package. For TerraME purporses, "base" and "gis" internal packages. 
+#
+## It performs a TerraME functional test of any package. For TerraME purporses, "base" and "gis" internal packages.
 ## It may be useful for TerraME external packages.
 #
 ## USAGE:
@@ -37,10 +37,6 @@
 export TME_PATH=$_TERRAME_INSTALL_PATH/bin
 export PATH=$PATH:$TME_PATH
 export LD_LIBRARY_PATH=$TME_PATH
-
-cd $_TERRAME_TEST_DIR
-
-terrame -version
 
 # You may use $ghprbActualCommit for handling if job has triggered by CI event or daily timer.
 # In this way, if you need a specific configuration for CI execution, use this flag
@@ -57,14 +53,16 @@ terrame -version
 #  # CI execution config
 # fi
 
+terrame -version
+
 TERRAME_COMMANDS=""
 # Extra commands if package is gis
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
   TERRAME_COMMANDS="-package $1"
-  # if [ ! -z "$ghprbActualCommit" ]; then
+  if [ ! -z "$ghprbActualCommit" ]; then
   #   # Temp code to ensure unittest gis does not take too long to execute. Only CI trigger
-  #   echo -e '\ndirectory = {"functional", "shapefile", "postgis", "tif", "geojson", "asc", "wms", "nc"}' >> test.lua
-  # fi
+    echo -e '\ndirectory = {"functional", "shapefile", "postgis", "tif", "geojson", "asc", "wms", "nc"}' >> test.lua
+  fi
 fi
 
 # Executing unittest

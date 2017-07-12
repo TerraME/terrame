@@ -22,8 +22,8 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
-## It performs a TerraME code analysis of any package. For TerraME purporses, "base" and "gis" internal packages. 
+#
+## It performs a TerraME code analysis of any package. For TerraME purporses, "base" and "gis" internal packages.
 ## It may be useful for TerraME external packages.
 #
 ## USAGE:
@@ -37,8 +37,6 @@
 export TME_PATH="$_TERRAME_INSTALL_PATH/bin"
 export PATH=$PATH:$TME_PATH
 export LD_LIBRARY_PATH=$TME_PATH
-
-cd $_TERRAME_TEST_DIR
 
 # TerraME command arguments. Used for packages like "gis", "sci", "calibration" etc.
 TERRAME_COMMANDS=""

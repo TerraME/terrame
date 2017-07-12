@@ -71,17 +71,24 @@ git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terra
 # Creating TerraME Test folders and TerraLib solution
 mkdir $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERRALIB_BUILD_BASE/solution $_TERRAME_BUILD_BASE/solution
 
-cd $_TERRALIB_BUILD_BASE/solution
+# Copying TerraLib compilation scripts to TerraLib Solution folder
+cp $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
 
 # Copying TerraME Git Repository to Test Repository Folder
 cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
+cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-linux-ubuntu-14.04.sh $_TERRAME_REPOSITORY_DIR
+
 # Copying TerraME Git Test Execution to Test Execution Folder
 cp -r $_TERRAME_GIT_DIR/test/* $_TERRAME_EXECUTION_DIR
+cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-test-execution-linux-ubuntu-14.04.sh $_TERRAME_EXECUTION_DIR
+
 # Copying TerraME test and config file to Test folder
 cp $_TERRAME_GIT_DIR/jenkins/all/*.lua $_TERRAME_TEST_DIR
 cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-unittest-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
-# Copying TerraME TerraLib compilation scripts to TerraLib solution folder
-cp $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* .
+cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-code-analysis-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-doc-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-syntaxcheck-cpp-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+
 # Copying TerraME compilation scripts to TerraME Solution folder
 cp $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUILD_BASE/solution
 

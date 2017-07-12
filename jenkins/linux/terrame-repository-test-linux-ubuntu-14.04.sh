@@ -22,7 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It performs a TerraME Repository Tests.
 #
 ## USAGE:
@@ -32,8 +32,6 @@
 export TME_PATH="$_TERRAME_INSTALL_PATH/bin"
 export PATH=$PATH:$TME_PATH
 export LD_LIBRARY_PATH=$TME_PATH
-
-cd $_TERRAME_REPOSITORY_DIR
 
 terrame -version
 terrame -color test.lua 2> /dev/null
