@@ -74,7 +74,6 @@ mkdir $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERR
 
 # Copying TerraLib compilation scripts to TerraLib Solution folder
 cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRALIB_BUILD_BASE/solution
 
 # Copying TerraME Git Repository to Test Repository Folder
 cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
@@ -93,6 +92,7 @@ cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-syntaxcheck-cpp-linux-ubunt
 
 # Copying TerraME compilation scripts to TerraME Solution folder
 cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUILD_BASE/solution
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
 
 # Compile TerraLib
 ./terralib-conf.sh
