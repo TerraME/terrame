@@ -157,7 +157,7 @@ return {
 			firebreak = filePath("emas-firebreak.shp", "gis"),
 			river = filePath("emas-river.shp", "gis"),
 			limit = filePath("emas-limit.shp", "gis"),
-			cells = "emas.shp"
+			cells = File("emas.shp")
 		}
 
 		local cover = Layer{
@@ -201,7 +201,7 @@ return {
 			title = "Emas database",
 			firebreak = filePath("emas-firebreak.shp", "gis"),
 			river = filePath("emas-river.shp", "gis"),
-			cells = "emas.shp"
+			cells = File("emas.shp")
 		}
 
 		unitTest:assertType(proj5.firebreak, "Layer")
