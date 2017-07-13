@@ -54,6 +54,9 @@ echo "### TerraME ###"
 if [ ! -z "$ghprbActualCommit" ]; then
   mkdir -p $_TERRAME_GIT_DIR
   cd $_TERRAME_GIT_DIR
+  git init
+  git config remote.origin.url https://github.com/TerraME/terrame.git
+  git fetch --tags https://github.com/TerraME/terrame.git +refs/pull/*:refs/remotes/origin/pr/* --quiet > /dev/null
   git checkout -f $ghprbActualCommit --quiet > /dev/null
   cd -
 else
