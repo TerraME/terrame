@@ -40,5 +40,6 @@ installer/setup
 packages/*/doc
 test/packages/*/doc
 packages/*/data/*.tview
+test/packages/**/*.tview
 !test/log/*.log
 terrameVersion.h
