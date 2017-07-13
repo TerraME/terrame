@@ -41,6 +41,5 @@ packages/*/doc
 test/packages/*/doc
 packages/*/data/*.tview
 test/packages/**/*.tview
-!test/packages/buildunnecfiles/data/myfile.tview
 !test/log/*.log
 terrameVersion.h
