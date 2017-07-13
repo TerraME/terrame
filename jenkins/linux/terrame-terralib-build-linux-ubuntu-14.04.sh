@@ -54,9 +54,6 @@ echo "### TerraME ###"
 if [ ! -z "$ghprbActualCommit" ]; then
   mkdir -p $_TERRAME_GIT_DIR
   cd $_TERRAME_GIT_DIR
-#  git init
-#  git config remote.origin.url https://github.com/terrame/terrame.git
-#  git fetch --tags --progress https://github.com/TerraME/terrame.git +refs/pull/*:refs/remotes/origin/pr/* --quiet > /dev/null
   git checkout -f $ghprbActualCommit --quiet > /dev/null
   cd -
 else
@@ -95,6 +92,7 @@ cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUIL
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
 
 # Compile TerraLib
+cd $_TERRALIB_BUILD_BASE/solution
 ./terralib-conf.sh
 
 # Returns a TerraLib compilation execution code in order to Jenkins be able to set build status
