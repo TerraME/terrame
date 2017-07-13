@@ -42,29 +42,29 @@
 ## ./terrame-terralib-build-linux-ubuntu-14.04.sh
 #
 
-# Constants
-_TERRALIB_BRANCH=release-5.2
+# # Constants
+# _TERRALIB_BRANCH=release-5.2
 
-# Removing TerraLib Mod Binding Lua in order to re-generate folder if there is
-rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua $_TERRALIB_INSTALL_PATH $_TERRAME_GIT_DIR $_TERRAME_BUILD_BASE/solution
-rm -rf $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
+# # Removing TerraLib Mod Binding Lua in order to re-generate folder if there is
+# rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua $_TERRALIB_INSTALL_PATH $_TERRAME_GIT_DIR $_TERRAME_BUILD_BASE/solution
+# rm -rf $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
 
-echo "### TerraME ###"
-# Identifying when PR to clone respective changes
-if [ ! -z "$ghprbActualCommit" ]; then
-  mkdir -p $_TERRAME_GIT_DIR
-  cd $_TERRAME_GIT_DIR
-  git init
-  git config remote.origin.url https://github.com/TerraME/terrame.git
-  git fetch --tags https://github.com/TerraME/terrame.git +refs/pull/*:refs/remotes/origin/pr/* --quiet > /dev/null
-  git checkout -f $ghprbActualCommit --quiet > /dev/null
-  cd -
-else
-  # Just clone
-  git clone https://github.com/terrame/terrame.git $_TERRAME_GIT_DIR --quiet
-  rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution/*
-  mkdir $_TERRALIB_GIT_DIR
-fi
+# echo "### TerraME ###"
+# # Identifying when PR to clone respective changes
+# if [ ! -z "$ghprbActualCommit" ]; then
+  # mkdir -p $_TERRAME_GIT_DIR
+  # cd $_TERRAME_GIT_DIR
+  # git init
+  # git config remote.origin.url https://github.com/TerraME/terrame.git
+  # git fetch --tags https://github.com/TerraME/terrame.git +refs/pull/*:refs/remotes/origin/pr/* --quiet > /dev/null
+  # git checkout -f $ghprbActualCommit --quiet > /dev/null
+  # cd -
+# else
+  # # Just clone
+  # git clone https://github.com/terrame/terrame.git $_TERRAME_GIT_DIR --quiet
+  # rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution/*
+  # mkdir $_TERRALIB_GIT_DIR
+# fi
 
 echo "### TerraLib ###"
 git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
@@ -95,7 +95,6 @@ cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUIL
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
 
 # Compile TerraLib
-cd $_TERRALIB_BUILD_BASE/solution
 ./terralib-conf.sh
 
 # Returns a TerraLib compilation execution code in order to Jenkins be able to set build status
