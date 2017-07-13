@@ -5,6 +5,10 @@ Processing lua files
 Processing 'cells.lua'
 Checking directory 'data'
 Checking properties of data files
+Processing 'area.gpm'
+Processing 'border.gal'
+Processing 'border.gpm'
+Processing 'border.gwt'
 Processing 'cells.shp'
 Processing 'communities.shp'
 Processing 'farms.shp'

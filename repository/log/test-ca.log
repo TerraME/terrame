@@ -1,4 +1,6 @@
-Using log directory '/Users/pedro/github/terrame/repository/ca/log/'
+Using package's configuration file
+Loading configuration file '/Users/pedro/github/terrame-pedro/repository/ca/config.lua'
+Using log directory '/Users/pedro/github/terrame-pedro/repository/ca/log/'
 Loading package 'ca'
 Looking for overwritten variables
 Looking for documented functions
