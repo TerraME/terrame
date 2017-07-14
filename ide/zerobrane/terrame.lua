@@ -16,17 +16,18 @@ return {
             -- path to TerraME
             terrame = os.getenv("TME_PATH")
             -- hack in Mac OS X
-            if terrame == nil then
+            if terrame == nil and ide.osname == "Macintosh" then
                 terrame = "/Applications/terrame.app/Contents/bin"
-            end
-
-            local fopen = io.open(terrame..executable)
-            if not fopen then
-                DisplayOutputLn("Please define 'path.terrame_install' in your cfg/user.lua")
             else
-                fopen:close()
-            end
+                DisplayOutputLn("Could not find TME_PATH. Is TerraME installed?")
+				return
+			end
         end
+
+      	if not wx.wxDirExists(terrame) then
+        	DisplayOutputLn("Can't find terrame executable in "..terrame)
+ 			return
+		end
 
         wx.wxSetEnv("TME_PATH", terrame)
 
