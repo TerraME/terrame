@@ -26,7 +26,6 @@ return{
 	add = function(unitTest)
 		local sn = SocialNetwork()
 		local ag1 = Agent{}
-		local ag2 = Agent{id = "2"}
 
 		local error_func = function()
 			sn:add()
@@ -51,13 +50,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Agent should have an id in order to be added to a SocialNetwork.")
-
-		local warning_func = function()
-			sn:add(ag2)
-			sn:add(ag2)
-		end
-
-		unitTest:assertWarning(warning_func, "Agent '2' already belongs to the SocialNetwork.")
 	end,
 	getWeight = function(unitTest)
 		local ag1 = Agent{id = "1"}
@@ -105,7 +97,6 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent", 123))
 	end,
 	remove = function(unitTest)
-		local ag1 = Agent{id = "1"}
 		local sn = SocialNetwork()
 
 		local error_func = function()
@@ -119,12 +110,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent", 123))
-
-		local warning_func = function()
-			sn:remove(ag1)
-		end
-
-		unitTest:assertWarning(warning_func, "Trying to remove an Agent that does not belong to the SocialNetwork.")
 	end,
 	sample = function(unitTest)
 		local sn = SocialNetwork()

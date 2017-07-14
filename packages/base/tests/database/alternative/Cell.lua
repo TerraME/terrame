@@ -38,17 +38,13 @@ return{
 			title = title
 		}
 
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		local layerName1 = "Brazil"
 
 		gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("brazilstates.shp", "base")
+			file = filePath("brazilstates.shp", "base"),
+			epsg = 4326
 		}
 
 		-- SHAPE
@@ -80,7 +76,6 @@ return{
 
 		-- POSTGIS
 		local clName2 = "Brazil_Cells_PG"
-		local user = "postgres"
 		local password = getConfig().password
 		local database = "postgis_22_sample"
 
@@ -90,7 +85,6 @@ return{
 			input = layerName1,
 			name = clName2,
 			resolution = 100e3,
-			user = user,
 			password = password,
 			database = database,
 			clean = true
@@ -111,7 +105,5 @@ return{
 		File(filePath1):deleteIfExists()
 
 		pgLayer:delete()
-
-		customWarning = customWarningBkp
 	end
 }

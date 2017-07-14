@@ -48,18 +48,6 @@ return{
 
 		unitTest:assertError(error_func, "Argument 'max' should be greater than 'min'.")
 
-		local warning_func = function()
-			Random{min = 2, max = 5, w = 2}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("w"))
-
-		warning_func = function()
-			Random{p = 0.3, w = 2}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("w"))
-
 		error_func = function()
 			Random{1, 2, 4, 5, 6, w = 2}
 		end
@@ -107,30 +95,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Sum should be one, got 0.9.")
-
-		warning_func = function()
-			Random{mean = 1, sd = 0.5}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("mean", 1))
-
-		warning_func = function()
-			Random{mean = 0.5, sd = 1}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("sd", 1))
-
-		warning_func = function()
-			Random{mean = 0.5, sd = 0.5, abc = 2}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
-
-		warning_func = function()
-			Random{lambda = 1}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("lambda", 1))
 	end,
 	integer = function(unitTest)
 		local randomObj = Random{}

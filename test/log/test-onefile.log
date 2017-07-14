@@ -19,9 +19,6 @@ Testing getPeriod
 Testing getPriority
 Testing getTime
 Checking if all asserts were executed
-Testing tests/observer/alternative/Event.lua
-Testing Event
-Checking if all asserts were executed
 Testing tests/observer/basics/Event.lua
 Testing Event
 Checking if all asserts were executed
@@ -32,15 +29,15 @@ Skipping examples
 Skipping logs check
 
 Functional test report for package 'base':
-Tests were executed in 6.0 seconds.
+Tests were executed in 2.07 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 64 asserts were executed successfully.
-All 11 tested functions do not have any unexpected execution error.
-All 11 tested functions have at least one assert.
-All 11 tested functions exist in the source code of the package.
+All 70 asserts were executed successfully.
+All 10 tested functions do not have any unexpected execution error.
+All 10 tested functions have at least one assert.
+All 10 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.

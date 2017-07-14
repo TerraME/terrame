@@ -46,7 +46,7 @@ metaTableProject_ = {
 -- @arg data.directory An optional Directory where shapefile(s) and/or tiff file(s) are stored. When
 -- using this argument, all such files will be added to the project using the respective file names without
 -- extension as layer names. This argument can also be a string that will be converted to a Directory.
--- @arg data.clean An optional boolean value indicating whether the argument file should be cleaned
+-- @arg data.clean An optional boolean value indicating whether the argument file should be removed
 -- if it already exists.
 -- The default value is false.
 -- @arg data.... Names of layers to be created from files. Each argument that has a string as value
@@ -90,19 +90,10 @@ function Project(data)
 	data.layers = {}
 
 	if data.file:exists() and data.clean then
-		local proj = Project{file = data.file}
 		data.file:delete()
 
 		if data.file:exists() then
 			customError("File '"..data.file.."' could not be removed.") -- SKIP
-		end
-
-		if data.author == "No author" and proj.author ~= "No author" then
-			data.author = proj.author
-		end
-
-		if data.title == "No title" and proj.title ~= "No title" then
-			data.title = proj.title
 		end
 	end
 
@@ -170,4 +161,3 @@ function Project(data)
 
 	return data
 end
-

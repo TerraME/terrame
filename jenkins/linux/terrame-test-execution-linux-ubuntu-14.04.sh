@@ -22,7 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It performs a TerraME test execution.
 #
 ## USAGE:
@@ -33,9 +33,6 @@
 export TME_PATH=$_TERRAME_INSTALL_PATH/bin
 export PATH=$PATH:$TME_PATH
 export LD_LIBRARY_PATH=$TME_PATH
-
-# Copying TerraME configuration
-cd $_TERRAME_EXECUTION_DIR
 
 terrame -version
 terrame -color run.lua 2> /dev/null

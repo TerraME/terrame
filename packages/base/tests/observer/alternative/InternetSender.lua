@@ -63,6 +63,7 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("host", "string", 5))
 
+		-- TODO(#1911)
 		local warning_func = function()
 			InternetSender{target = c, host = "localhost"}
 		end
@@ -81,6 +82,7 @@ return{
 
 		unitTest:assertError(error_func, "Argument 'port' should be greater or equal to 50000, got 49999.")
 
+		-- TODO(#1911)
 		warning_func = function()
 			InternetSender{target = c, port = 456456}
 		end
@@ -93,6 +95,7 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("protocol", "string", 5))
 
+		-- TODO(#1911)
 		warning_func = function()
 			InternetSender{target = c, protocol = "udp"}
 		end
@@ -111,6 +114,7 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("visible", "boolean", 4))
 
+		-- TODO(#1911)
 		warning_func = function()
 			InternetSender{target = c, visible = true}
 		end
@@ -123,6 +127,7 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("compress", "boolean", 4))
 
+		-- TODO(#1911)
 		warning_func = function()
 			InternetSender{target = c, compress = true}
 		end

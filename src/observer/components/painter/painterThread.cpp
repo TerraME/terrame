@@ -380,18 +380,24 @@ void PainterThread::drawNeighborhood(QPainter *p, double &xCell, double &yCell, 
 
 void PainterThread::drawGrid(QImage &imgResult, double &width, double &height)
 {
-    mutex.lock();
+	mutex.lock();
 
-    QPainter p(&imgResult);
-    p.setPen(QPen(Qt::black));
+	QPainter p(&imgResult);
+	p.setPen(QPen(Qt::black));
 
-    for (int j = 0; j < imgResult.height(); j++)
-    {
-        for (int i = 0; i < imgResult.width(); i++)
-        {
-            p.drawRect(QRectF(i * width, j * height, width, height));
-        }
-    }
+	int adjust = p.pen().width();
+	int sizeX = ceil(imgResult.width() / width);
+	int sizeY = ceil(imgResult.height() / height);
 
-    mutex.unlock();
+	p.drawRect(0, 0, imgResult.width() - adjust, imgResult.height() - adjust);
+
+	for (int j = 0; j < sizeY; j++)
+	{
+		for (int i = 0; i < sizeX; i++)
+		{
+			p.drawRect(QRectF(i * width, j * height, width, height));
+		}
+	}
+
+	mutex.unlock();
 }

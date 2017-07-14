@@ -36,12 +36,12 @@ Skipping examples
 Skipping logs check
 
 Functional test report for package 'base':
-Tests were executed in 7.18 seconds.
+Tests were executed in 2.57 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 72 asserts were executed successfully.
+All 70 asserts were executed successfully.
 All 20 tested functions do not have any unexpected execution error.
 All 20 tested functions have at least one assert.
 All 20 tested functions exist in the source code of the package.

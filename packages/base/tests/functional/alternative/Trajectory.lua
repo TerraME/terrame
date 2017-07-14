@@ -36,17 +36,6 @@ return{
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
-		local traj
-		local warning_func = function()
-			traj = Trajectory{
-				target = cs,
-				selection = function() return true end
-			}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("selection", "select"))
-		unitTest:assertEquals(#traj, #cs)
-
 		error_func = function()
 			trajectory = Trajectory{}
 		end
@@ -70,26 +59,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("build", "boolean", "build"))
-
-		warning_func = function()
-			traj = Trajectory{
-				target = cs,
-				build = true
-			}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("build", true))
-		unitTest:assertEquals(#traj, #cs)
-
-		warning_func = function()
-			traj = Trajectory{
-				target = cs,
-				random = false
-			}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("random", false))
-		unitTest:assertEquals(#traj, #cs)
 
 		error_func = function()
 			Trajectory{
@@ -180,12 +149,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "func"))
-
-		error_func = function()
-			trajectory:sort()
-		end
-
-		unitTest:assertWarning(error_func, "Cannot sort the Trajectory because there is no previous function.")
 	end
 }
 

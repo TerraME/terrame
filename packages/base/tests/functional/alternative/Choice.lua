@@ -36,37 +36,17 @@ return{
 
 		unitTest:assertError(error_func, "There are no options for the Choice (table is empty).")
 
-		local ch
-		local warning_func = function()
-			ch = Choice{1}
-		end
-
-		unitTest:assertWarning(warning_func, "Choice has only one available value.")
-		unitTest:assertType(ch, "Choice")
-
 		error_func = function()
 			Choice{1, 2, "3"}
 		end
 
 		unitTest:assertError(error_func, "All the elements of Choice should have the same type.")
 
-		warning_func = function()
-			Choice{1, 2, 3, default = 1}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("default", 1))
-
 		error_func = function()
 			Choice{1, 2, 3, default = 4}
 		end
 
 		unitTest:assertError(error_func, "The default value (4) does not belong to Choice.")
-
-		warning_func = function()
-			Choice{1, 2, 3, max = 4}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("max"))
 
 		error_func = function()
 			Choice{false, true}
@@ -110,23 +90,11 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("step", "number", false))
 
-		warning_func = function()
-			Choice{min = 2, max = 4, w = false}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("w"))
-
 		error_func = function()
 			Choice{10, 20, "30"}
 		end
 
 		unitTest:assertError(error_func, "All the elements of Choice should have the same type.")
-
-		warning_func = function()
-			Choice{min = 1, max = 10, step = 1, default = 1}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("default", 1))
 
 		error_func = function()
 			Choice{min = 1, max = 10, step = 1, default = "a"}
@@ -157,12 +125,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Argument 'max' should be greater than 'min'.")
-
-		warning_func = function()
-			Choice{min = 1, max = 10, step = 1, default = 1}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("default", 1))
 
 		error_func = function()
 			Choice{min = 1, max = 10, step = 4}

@@ -188,11 +188,6 @@ return {
 		-- CREATE A PROJECT
 		TerraLib().createProject(proj, {})
 
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		-- CREATE A LAYER THAT WILL BE USED AS REFERENCE TO CREATE THE CELLULAR SPACE
 		local layerName1 = "Para"
 		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "gis")
@@ -1115,8 +1110,6 @@ return {
 		-- END POSTGIS TESTS
 
 		proj.file:delete()
-
-		customWarning = customWarningBkp
 	end,
 	getDataSet = function(unitTest)
 		-- see in saveDataSet() test --

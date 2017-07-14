@@ -22,7 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It performs a TerraME Installer generation
 #
 ## USAGE:
@@ -31,8 +31,6 @@
 
 export _TERRAME_CREATE_INSTALLER="ON"
 export _TERRAME_BUILD_AS_BUNDLE="OFF"
-
-cd $_TERRAME_OUT_DIR/..
 
 # Copying Generated documentation to Git directory
 cp -rap $_TERRAME_INSTALL_PATH/bin/packages/base/doc $_TERRAME_GIT_DIR/packages/base/doc

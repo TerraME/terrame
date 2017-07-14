@@ -74,12 +74,6 @@ return{
 
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("aaa", "priority", options))
 
-		local warning_func = function()
-			Event{start = 0.5, period = 2, priority = "medium", action = function() end}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
-
 		error_func = function()
 			event = Event{period = 0, priority = 1, action = function() end}
 		end
@@ -91,30 +85,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("action", "one of the TerraME types or a function", -5.5))
-
-		warning_func = function()
-			Event{action = function() end, myperiod = function() end}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("myperiod", "period"))
-
-		warning_func = function()
-			Event{period = 1, priority = 1, action = function() end}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("period", 1))
-
-		warning_func = function()
-			Event{start = 1, priority = 1, action = function() end}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("start", 1))
-
-		warning_func = function()
-			Event{priority = 0, action = function() end}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
 
 		local t = Timer{
 			Event{action = function()
@@ -161,48 +131,11 @@ return{
 
 		unitTest:assertError(error_func, "Incompatible types. Attribute 'execute' from CellularSpace should be a function, got number.")
 
-		local cell = Cell{execute = function() end}
-
-		warning_func = function()
-			Event{action = cell, priority = "high"}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("priority", -5))
-
-		warning_func = function()
-			Event{action = cell, priority = "high"}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("priority", -5))
-
-		local agent = Agent{}
-
-		warning_func = function()
-			Event{action = agent, priority = "medium"}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
-
-		soc = Society{instance = Agent{}, quantity = 2}
-
-		warning_func = function()
-			Event{action = soc, priority = "medium"}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
-
+		-- TODO(#1905)
 		local group = Group{target = soc}
 
-		warning_func = function()
+		local warning_func = function()
 			Event{action = group, priority = "medium"}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
-
-		local traj = Trajectory{target = cs}
-
-		warning_func = function()
-			Event{action = traj, priority = "medium"}
 		end
 
 		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
@@ -215,12 +148,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, tableArgumentMsg())
-
-		local warning_func = function()
-			event:config{perod = false}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("perod", "period"))
 
 		error_func = function()
 			event:config{period = false}

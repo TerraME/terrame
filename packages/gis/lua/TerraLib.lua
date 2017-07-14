@@ -1716,6 +1716,10 @@ local function saveLayerAs(fromData, toData, attrs, values)
 	return true
 end
 
+local function fixSpaceInPath(path)
+	return string.gsub(path, "%%20", " ")
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 
@@ -1828,12 +1832,12 @@ TerraLib_ = {
 			info.source = "postgis"
 			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "OGR" then
-			info.file = connInfo:host()..connInfo:path()
+			info.file = fixSpaceInPath(connInfo:host()..connInfo:path())
 			local file = File(info.file)
 			info.source = file:extension()
 			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "GDAL" then
-			info.file = connInfo:host()..connInfo:path()
+			info.file = fixSpaceInPath(connInfo:host()..connInfo:path())
 			local file = File(info.file)
 			info.source = file:extension()
 		elseif type == "WFS" then
@@ -2291,7 +2295,7 @@ TerraLib_ = {
 			local toSrid = toLayer:getSRID()
 			if fromLayer:getSRID() ~= toSrid then
 				local fromSrid = fromLayer:getSRID()
-				customWarning("Layer projections are different: ("..from..", "..string.format("%.0f", fromSrid)..") and ("
+				customError("Layer projections are different: ("..from..", "..string.format("%.0f", fromSrid)..") and ("
 								..to..", "..string.format("%.0f", toSrid).."). Please, reproject your data to the right one.")
 			end
 

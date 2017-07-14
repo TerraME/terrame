@@ -104,17 +104,6 @@ return{
 
 		unitTest:assertError(error_func, "The same instance cannot be used in two CellularSpaces.")
 
-		c1 = Cell{getNeighborhood = function() end}
-
-		local warning_func = function()
-			CellularSpace{
-				xdim = 10,
-				instance = c1
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Function 'getNeighborhood()' from Cell is replaced in the instance.")
-
 		error_func = function()
 			CellularSpace{
 				xdim = 10,
@@ -123,79 +112,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("instance", "Cell", 2))
-
-		c1 = Cell{
-			status = "forest"
-		}
-
-		warning_func = function()
-			CellularSpace{
-				xdim = 10,
-				instance = c1,
-				status = 5
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'status' will not be replaced by a summary function.")
-
-		c1 = Cell{
-			alive = true
-		}
-
-
-		warning_func = function()
-			CellularSpace{
-				xdim = 10,
-				instance = c1,
-				alive = 5
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'alive' will not be replaced by a summary function.")
-
-		c1 = Cell{
-			value = 4
-		}
-
-		warning_func = function()
-			CellularSpace{
-				xdim = 10,
-				instance = c1,
-				value = 5
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'value' will not be replaced by a summary function.")
-
-		c1 = Cell{
-			set = function() end
-		}
-
-		warning_func = function()
-			CellularSpace{
-				xdim = 10,
-				instance = c1,
-				set = 5
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'set' will not be replaced by a summary function.")
-
-		c1 = Cell{
-			init = function(self)
-				self.status = "forest"
-			end
-		}
-
-		warning_func = function()
-			CellularSpace{
-				xdim = 10,
-				instance = c1,
-				status = 5
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Attribute 'status' will not be replaced by a summary function.")
 
 		local cell = Cell{
 			water = 2,
@@ -266,15 +182,6 @@ return{
 		end
 
 		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exist in Project '"..File(projFile).."'.")
-
-		local geometryDefaultValue = function()
-			CellularSpace {
-				file = filePath("cabecadeboi.shp"),
-				geometry = false
-			}
-		end
-
-		unitTest:assertWarning(geometryDefaultValue, defaultValueMsg("geometry", false))
 
 		local geometryNotBoolean = function()
 			CellularSpace {
@@ -539,19 +446,6 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("weight", "function", true))
 
-		local warning_func = function()
-			cs:createNeighborhood{
-				strategy = "mxn",
-				name = "my_neighborhood_w",
-				m = 5,
-				n = 5,
-				filter = function() end,
-				weight = function() end
-			}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("n", 5))
-
 		error_func = function()
 			cs:createNeighborhood{
 				strategy = "mxn",
@@ -564,27 +458,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("target", "CellularSpace", "teste"))
-
-		warning_func = function()
-			cs:createNeighborhood{
-				strategy = "mxn",
-				name = "my_neighborhood_x",
-				m = 4
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Argument 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
-
-		warning_func = function()
-			cs:createNeighborhood{
-				strategy = "mxn",
-				name = "my_neighborhood_z",
-				m = 5,
-				n = 4
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -690,6 +563,28 @@ return{
 
 		error_func = function()
 			cs:createNeighborhood{
+				strategy = "mxn",
+				name = "my_neighborhood",
+				target = cs2,
+				m = 4
+			}
+		end
+
+		unitTest:assertError(error_func, "Value or argument 'm' should be even, got 4.")
+
+		error_func = function()
+			cs:createNeighborhood{
+				strategy = "mxn",
+				name = "my_neighborhood",
+				target = cs2,
+				n = 2
+			}
+		end
+
+		unitTest:assertError(error_func, "Value or argument 'n' should be even, got 2.")
+
+		error_func = function()
+			cs:createNeighborhood{
 				strategy = "function"
 			}
 		end
@@ -745,12 +640,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Neighborhood 'abc' already exists.")
-
-		warning_func = function()
-			cs:createNeighborhood{namen = "abc"}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("namen", "name"))
 	end,
 	cut = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -766,12 +655,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("xmin", "number", false))
-
-		local warning_func = function()
-			cs:cut{xmin = 0}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("xmin", 0))
 
 		error_func = function()
 			cs:cut{xmax = false}
@@ -790,12 +673,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("ymax", "number", false))
-
-		warning_func = function()
-			cs:cut{xmox = 5}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("xmox", "xmax"))
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -823,12 +700,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, integerArgumentMsg(2, 2.3))
-
-		local warning_func = function()
-			cs:get("4", 2.3)
-		end
-
-		unitTest:assertWarning(warning_func, "As #1 is string, #2 should be nil, but got number.")
 	end,
 	notify = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

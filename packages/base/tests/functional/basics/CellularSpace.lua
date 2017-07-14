@@ -39,14 +39,18 @@ return{
 			road = true,
 			cover = "pasture",
 			deforest = function(self) self.defor = self.defor + 1 end,
-			water = Random{1, 2, 3}
+			water = Random{1, 2, 3},
+			set = function() end
 		}
 
-		cs = CellularSpace{
-			instance = cell,
-			xdim = 10
-		}
-
+		local replaceWarn = function()
+			cs = CellularSpace{
+				instance = cell,
+				xdim = 10,
+				set = 5
+			}
+		end
+		unitTest:assertWarning(replaceWarn, "Attribute 'set' will not be replaced by a summary function.")
 		unitTest:assertEquals(cs:defor(), 100)
 		unitTest:assertEquals(cs:road(), 100)
 		unitTest:assertEquals(cs:cover().pasture, 100)
@@ -63,17 +67,112 @@ return{
 				end
 
 				self.defor = self.defor + 1
-			end
+			end,
+			init = function(self)
+				self.status = "forest"
+			end,
+			value = 4
 		}
 
-		cs = CellularSpace{
-			instance = cell,
-			xdim = 10
-		}
-
+		replaceWarn = function()
+			cs = CellularSpace{
+				instance = cell,
+				xdim = 10,
+				status = 5
+			}
+		end
+		unitTest:assertWarning(replaceWarn, "Attribute 'status' will not be replaced by a summary function.")
 		unitTest:assertEquals(cs:defor(), 100)
 		unitTest:assert(not cs:deforest())
 		unitTest:assertEquals(cs:defor(), 150)
+
+
+		cell = Cell{
+			defor = 1,
+			deforest = function(self)
+				if self.x > 4 then
+					return false
+				end
+
+				self.defor = self.defor + 1
+			end,
+			value = 4
+		}
+
+		replaceWarn = function()
+			cs = CellularSpace{
+				instance = cell,
+				xdim = 10,
+				value = 5
+			}
+		end
+		unitTest:assertWarning(replaceWarn, "Attribute 'value' will not be replaced by a summary function.")
+		unitTest:assertEquals(cs:defor(), 100)
+		unitTest:assert(not cs:deforest())
+		unitTest:assertEquals(cs:defor(), 150)
+
+		cell = Cell{
+			defor = 1,
+			deforest = function(self)
+				if self.x > 4 then
+					return false
+				end
+
+				self.defor = self.defor + 1
+			end,
+			alive = true
+		}
+
+		replaceWarn = function()
+			cs = CellularSpace{
+				instance = cell,
+				xdim = 10,
+				alive = 5
+			}
+		end
+		unitTest:assertWarning(replaceWarn, "Attribute 'alive' will not be replaced by a summary function.")
+		unitTest:assertEquals(cs:defor(), 100)
+		unitTest:assert(not cs:deforest())
+		unitTest:assertEquals(cs:defor(), 150)
+
+		cell = Cell{
+			defor = 1,
+			deforest = function(self)
+				if self.x > 4 then
+					return false
+				end
+
+				self.defor = self.defor + 1
+			end,
+			status = "forest"
+		}
+
+		replaceWarn = function()
+			cs = CellularSpace{
+				instance = cell,
+				xdim = 10,
+				status = 5
+			}
+		end
+		unitTest:assertWarning(replaceWarn, "Attribute 'status' will not be replaced by a summary function.")
+		unitTest:assertEquals(cs:defor(), 100)
+		unitTest:assert(not cs:deforest())
+		unitTest:assertEquals(cs:defor(), 150)
+
+		cell = Cell{
+			getNeighborhood = function()
+				return "neighbor"
+			end
+		}
+
+		replaceWarn = function()
+			cs = CellularSpace{
+				instance = cell,
+				xdim = 10
+			}
+		end
+		unitTest:assertWarning(replaceWarn, "Function 'getNeighborhood()' from Cell is replaced in the instance.")
+		unitTest:assertEquals(cs:sample():getNeighborhood(), "neighbor")
 
 		-- Shapefile
 		local projName = "cellspace.tview"
@@ -89,17 +188,12 @@ return{
 			title = title
 		}
 
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		local layerName1 = "Sampa"
 
 		gis.Layer{
 			project = proj,
 			name = layerName1,
-			file = filePath("test/sampa.shp", "gis")
+			file = filePath("test/sampa.shp", "gis"),
 		}
 
 		local testDir = currentDir()
@@ -120,10 +214,14 @@ return{
 			file = filePath1
 		}
 
-		cs = CellularSpace{
-			project = projName,
-			layer = clName1
-		}
+		local geometryDefaultValue = function()
+			cs = CellularSpace{
+				project = projName,
+				layer = clName1,
+				geometry = false
+			}
+		end
+		unitTest:assertWarning(geometryDefaultValue, defaultValueMsg("geometry", false))
 
 		unitTest:assertEquals(File(projName), cs.project.file)
 		unitTest:assertType(cs.layer, "Layer")
@@ -391,8 +489,6 @@ return{
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
 			File(projName):deleteIfExists()
 		end
-
-		customWarning = customWarningBkp
 	end,
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -432,7 +528,10 @@ ydim    number [20]
 		local icell = Cell{}
 		local cs = CellularSpace{xdim = 5, instance = icell}
 
-		cs:createNeighborhood()
+		local unnecessaryArgument = function()
+			cs:createNeighborhood{namen = "abc"}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("namen", "name"))
 
 		-- Vector of size counters - Used to verify the size of the neighborhoods
 		local sizes = {}
@@ -1089,14 +1188,18 @@ ydim    number [20]
 			end
 		end
 
-		cs:createNeighborhood{
-			strategy = "mxn",
-			name = "my_neighborhood6",
-			target = cs2,
-			m = 5,
-			filter = filterFunction,
-			weight = weightFunction
-		}
+		local defaultValue = function()
+			cs:createNeighborhood{
+				strategy = "mxn",
+				name = "my_neighborhood6",
+				target = cs2,
+				m = 5,
+				n = 5,
+				filter = filterFunction,
+				weight = weightFunction
+			}
+		end
+		unitTest:assertWarning(defaultValue, defaultValueMsg("n", 5))
 
 		sizes = {}
 
@@ -1369,8 +1472,17 @@ ydim    number [20]
 		region = cs:cut{xmin = 5}
 		unitTest:assertEquals(#region, 50)
 
-		region = cs:cut{xmin = 1, xmax = 5, ymin = 3, ymax = 7}
+		local unnecessaryArgument = function()
+			region = cs:cut{xmin = 1, xmax = 5, ymin = 3, ymax = 7, xmox = 5}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("xmox", "xmax"))
 		unitTest:assertEquals(#region, 25)
+
+		local defaultValue = function()
+			region = cs:cut{xmin = 0}
+		end
+		unitTest:assertWarning(defaultValue, defaultValueMsg("xmin", 0))
+		unitTest:assertEquals(#region, #cs)
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -1385,6 +1497,13 @@ ydim    number [20]
 
 		c = cs:get(100, 100)
 		unitTest:assertNil(c)
+
+		local warningFunc = function()
+			c = cs:get("4", 2.3)
+		end
+		unitTest:assertWarning(warningFunc, "As #1 is string, #2 should be nil, but got number.")
+		unitTest:assertEquals(c.x, 0)
+		unitTest:assertEquals(c.y, 3)
 	end,
 	load = function(unitTest)
 		local cs = CellularSpace{xdim = 5}

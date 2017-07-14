@@ -57,8 +57,8 @@ return {
 			clean = true
 		}
 
-		unitTest:assertEquals(proj1.author, proj3clean.author)
-		unitTest:assertEquals(proj1.title, proj3clean.title)
+		unitTest:assertEquals("No author", proj3clean.author)
+		unitTest:assertEquals("No title", proj3clean.title)
 		unitTest:assertEquals(proj3clean.file, File("amazonia.tview"))
 
 		file:deleteIfExists()
@@ -92,12 +92,148 @@ return {
 		}
 
 		unitTest:assertType(proj5.firebreak, "Layer")
+		unitTest:assertEquals(proj5.firebreak.rep, "line")
+		unitTest:assertEquals(proj5.firebreak.source, "shp")
+
 		unitTest:assertType(proj5.cover, "Layer")
+		unitTest:assertEquals(proj5.cover.rep, "raster")
+		unitTest:assertEquals(proj5.cover.source, "tif")
 
 		unitTest:assertType(proj5.river, "Layer")
-		unitTest:assertType(proj5.limit, "Layer")
+		unitTest:assertEquals(proj5.river.rep, "line")
+		unitTest:assertEquals(proj5.river.source, "shp")
 
-		file:deleteIfExists()
+		unitTest:assertType(proj5.limit, "Layer")
+		unitTest:assertEquals(proj5.limit.rep, "polygon")
+		unitTest:assertEquals(proj5.limit.source, "shp")
+
+		proj5 = Project{
+			file = file:name(true),
+			clean = true,
+			author = "Almeida, R.",
+			title = "Emas database",
+			firebreak = filePath("emas-firebreak.shp", "gis"),
+			cover = filePath("emas-accumulation.tif", "gis"),
+			river = filePath("emas-river.shp", "gis"),
+			limit = filePath("emas-limit.shp", "gis")
+		}
+
+		unitTest:assertType(proj5.firebreak, "Layer")
+		unitTest:assertEquals(proj5.firebreak.rep, "line")
+		unitTest:assertEquals(proj5.firebreak.source, "shp")
+
+		unitTest:assertType(proj5.cover, "Layer")
+		unitTest:assertEquals(proj5.cover.rep, "raster")
+		unitTest:assertEquals(proj5.cover.source, "tif")
+
+		unitTest:assertType(proj5.river, "Layer")
+		unitTest:assertEquals(proj5.river.rep, "line")
+		unitTest:assertEquals(proj5.river.source, "shp")
+
+		unitTest:assertType(proj5.limit, "Layer")
+		unitTest:assertEquals(proj5.limit.rep, "polygon")
+		unitTest:assertEquals(proj5.limit.source, "shp")
+		unitTest:assertEquals(proj5.limit.epsg, 29192)
+
+		local cl = Layer{
+			project = proj5,
+			file = "emas.shp",
+			clean = true,
+			input = "limit",
+			name = "cells",
+			resolution = 2e3
+		}
+
+		unitTest:assertType(cl, "Layer")
+		unitTest:assertEquals(cl.rep, "polygon")
+		unitTest:assertEquals(cl.source, "shp")
+		unitTest:assertEquals(cl.epsg, 29192)
+
+		proj5 = Project{
+			file = file:name(true),
+			clean = true,
+			author = "Almeida, R.",
+			title = "Emas database",
+			firebreak = filePath("emas-firebreak.shp", "gis"),
+			river = filePath("emas-river.shp", "gis"),
+			limit = filePath("emas-limit.shp", "gis"),
+			cells = File("emas.shp")
+		}
+
+		local cover = Layer{
+			project = proj5,
+			name = "cover",
+			file = filePath("emas-accumulation.tif", "gis"),
+			epsg = 29192
+		}
+
+		unitTest:assertType(proj5.firebreak, "Layer")
+		unitTest:assertEquals(proj5.firebreak.rep, "line")
+		unitTest:assertEquals(proj5.firebreak.source, "shp")
+
+		unitTest:assertType(cover, "Layer")
+		unitTest:assertEquals(cover.rep, "raster")
+		unitTest:assertEquals(cover.source, "tif")
+		unitTest:assertEquals(cover.epsg, proj5.cells.epsg)
+
+		unitTest:assertType(proj5.river, "Layer")
+		unitTest:assertEquals(proj5.river.rep, "line")
+		unitTest:assertEquals(proj5.river.source, "shp")
+
+		unitTest:assertType(proj5.limit, "Layer")
+		unitTest:assertEquals(proj5.limit.rep, "polygon")
+		unitTest:assertEquals(proj5.limit.source, "shp")
+
+		unitTest:assertType(proj5.cells, "Layer")
+		unitTest:assertEquals(proj5.cells.rep, "polygon")
+		unitTest:assertEquals(proj5.cells.source, "shp")
+
+		cl:fill{
+			operation = "maximum",
+			attribute = "maxcover",
+			layer = "cover"
+		}
+
+		proj5 = Project{
+			file = file:name(true),
+			clean = true,
+			author = "Almeida, R.",
+			title = "Emas database",
+			firebreak = filePath("emas-firebreak.shp", "gis"),
+			river = filePath("emas-river.shp", "gis"),
+			cells = File("emas.shp")
+		}
+
+		unitTest:assertType(proj5.firebreak, "Layer")
+		unitTest:assertEquals(proj5.firebreak.rep, "line")
+		unitTest:assertEquals(proj5.firebreak.source, "shp")
+
+		unitTest:assertType(cover, "Layer")
+		unitTest:assertEquals(cover.rep, "raster")
+		unitTest:assertEquals(cover.source, "tif")
+
+		unitTest:assertType(proj5.river, "Layer")
+		unitTest:assertEquals(proj5.river.rep, "line")
+		unitTest:assertEquals(proj5.river.source, "shp")
+
+		unitTest:assertType(proj5.cells, "Layer")
+		unitTest:assertEquals(proj5.cells.rep, "polygon")
+		unitTest:assertEquals(proj5.cells.source, "shp")
+
+		local attrs = proj5.cells:attributes()
+		unitTest:assertEquals(attrs[5].name, "maxcover")
+
+		proj5 = Project{
+			file = file:name(true),
+			clean = true,
+			author = "Almeida, R.",
+			title = "Emas database",
+		}
+
+		unitTest:assertEquals(#proj5.layers, 0)
+
+		file:delete()
+		cl:delete()
 
 		file = File("abc.tview")
 		local proj = Project{
@@ -125,6 +261,18 @@ layers  vector of size 0
 title   string [The Amazonia]
 ]])
 
-		file:deleteIfExists()
+		file:delete()
+
+		local defaultValueError = function()
+			Project{file = "abc", title = "No title"}
+		end
+		unitTest:assertWarning(defaultValueError, defaultValueMsg("title", "No title"))
+		File("abc.tview"):delete()
+
+		defaultValueError = function()
+			Project{file = "abc", author = "No author"}
+		end
+		unitTest:assertWarning(defaultValueError, defaultValueMsg("author", "No author"))
+		File("abc.tview"):delete()
 	end
 }

@@ -28,9 +28,14 @@ return{
 	Trajectory = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
-		local it = Trajectory{
-			target = cs
-		}
+		local it
+		local warning_func = function()
+			it = Trajectory{
+				target = cs,
+				build = true
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("build", true))
 
 		local cont = 0
 		forEachCell(cs, function(cell)
@@ -38,6 +43,7 @@ return{
 			unitTest:assert(cell.id == it.cells[cont].id)
 		end)
 
+		unitTest:assertEquals(#it, #cs)
 		unitTest:assertType(it, "Trajectory")
 		unitTest:assertNil(it.select)
 		unitTest:assertNil(it.greater)
@@ -51,22 +57,32 @@ return{
 
 		unitTest:assertEquals(100, cont)
 
-		local tr = Trajectory{
-			target = cs,
-			build = false
-		}
+		local tr
+		warning_func = function()
+			tr = Trajectory{
+				target = cs,
+				build = false,
+				random = false
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("random", false))
 
 		unitTest:assertEquals(#tr, 0)
 
-		local t = Trajectory{
-			target = cs,
-			select = function(c)
-				if c.x > 7 and c.y > 5 then return true end
-			end,
-			greater = function(a, b)
-				return a.y > b.y
-			end
-		}
+		local t
+		warning_func = function()
+			t = Trajectory{
+				target = cs,
+				select = function(c)
+					if c.x > 7 and c.y > 5 then return true end
+				end,
+				greater = function(a, b)
+					return a.y > b.y
+				end,
+				selection = function() return true end
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("selection", "select"))
 
 		cont = 0
 		local orderMemory = 10
@@ -323,6 +339,11 @@ xyz     function
 	sort = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 		local it = Trajectory{target = cs}
+
+		local sortWarn = function()
+			it:sort()
+		end
+		unitTest:assertWarning(sortWarn, "Cannot sort the Trajectory because there is no previous function.")
 
 		it:sort(function(a, b)
 			return a.y > b.y

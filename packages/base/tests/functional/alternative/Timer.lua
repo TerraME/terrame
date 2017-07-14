@@ -62,14 +62,6 @@ return {
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event", "ev"))
-
-		timer:run(10)
-
-		local warning_func = function()
-			timer:add(Event{period = 2, action = function() end})
-		end
-
-		unitTest:assertWarning(warning_func, "Adding an Event with time (1) before the current simulation time (10).")
 	end,
 	addReplacement = function(unitTest)
 		local timer = Timer{}
@@ -193,13 +185,6 @@ return {
 			Event{period = 2, action = function()
 			end}
 		}
-
-		timer:run(10)
-		local warning_func = function()
-			timer:run(2)
-		end
-
-		unitTest:assertWarning(warning_func, "Simulating until a time (2) before the current simulation time (10).")
 	end
 }
 

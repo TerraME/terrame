@@ -29,7 +29,11 @@ return{
 			ev1 = Event{action = function() c:update() end},
 		}
 
-		c = Clock{target = timer}
+		local warning_func = function()
+			c = Clock{target = timer, xwc = 5}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("xwc"))
+
 		timer:run(50)
 
 		unitTest:assertSnapshot(c, "clock_single_event.bmp", 0.5)

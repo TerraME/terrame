@@ -46,13 +46,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("x", "boolean", 5))
-
-		local warning_func = function()
-			defaultTableValue(t, "x", 5)
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("x", 5))
-		unitTest:assertEquals(t.x, 5)
 	end,
 	defaultValueWarning = function(unitTest)
 		local error_func = function()

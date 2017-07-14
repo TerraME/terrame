@@ -231,12 +231,93 @@ return {
 		clSet = TerraLib().getDataSet(proj, clName1)
 		unitTest:assertEquals(getn(clSet), 104)
 
-		projName:deleteIfExists()
+		local filePath6 = "sampabox.shp"
+		File(filePath6):deleteIfExists()
 
-		File(filePath1):deleteIfExists()
-		File(filePath2):deleteIfExists()
-		File(filePath3):deleteIfExists()
-		File(filePath4):deleteIfExists()
+		local boxDefaultError = function()
+			Layer{
+				project = proj,
+				input = layerName1,
+				name = "cells3",
+				resolution = 0.7,
+				box = false,
+				file = filePath6
+			}
+		end
+		unitTest:assertWarning(boxDefaultError, defaultValueMsg("box", false))
+		-- \\ BOX
+
+		local filePath5 = "csSp.shp"
+		local encodingUnnecessary = function()
+			Layer{
+				project = proj,
+				source = "shp",
+				input = layerName1,
+				name = "SPCells",
+				clean = true,
+				resolution = 0.7,
+				file = filePath5,
+				encoding = "utf8"
+			}
+		end
+		unitTest:assertWarning(encodingUnnecessary, unnecessaryArgumentMsg("encoding"))
+
+		local filePath7 = "cells7.shp"
+		local unnecessaryArgument = function()
+			Layer{
+				project = proj,
+				input = layerName1,
+				file = filePath7,
+				name = "cells7",
+				clean = true,
+				resoltion = 200,
+				resolution = 0.7
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
+
+		local dir = Directory("a b")
+		dir:create()
+		local filePath8 = tostring(dir).."/cells8.shp"
+
+		local cl8 = Layer{
+			project = proj,
+			input = layerName1,
+			file = filePath8,
+			name = "cells8",
+			clean = true,
+			resolution = 0.7
+		}
+
+		unitTest:assertEquals(filePath8, cl8.file)
+
+		local dir2 = Directory("a  b c")
+		dir2:create()
+		local filePath9 = tostring(dir2).."/cells9.shp"
+
+		local cl9 = Layer{
+			project = proj,
+			input = layerName1,
+			file = filePath9,
+			name = "cells9",
+			clean = true,
+			resolution = 0.7
+		}
+
+		unitTest:assertEquals(filePath9, cl9.file)
+
+		projName:delete()
+		File(filePath1):delete()
+		File(filePath2):delete()
+		File(filePath3):delete()
+		File(filePath4):delete()
+		File(filePath5):delete()
+		File(filePath6):delete()
+		File(filePath7):delete()
+		File(filePath8):delete()
+		File(filePath9):delete()
+		dir:delete()
+		dir2:delete()
 	end,
 	delete = function(unitTest)
 		local projName = File("cellular_layer_del.tview")
@@ -274,7 +355,7 @@ return {
 		unitTest:assert(not File(filePath1):exists())
 	end,
 	fill = function(unitTest)
-		local projName = File("cellular_layer_basic.tview")
+		local projName = File("gis_fill_func_basic.tview")
 		local layerName1 = "Setores_2000"
 		local localidades = "Localidades"
 		local rodovias = "Rodovias"
@@ -301,233 +382,268 @@ return {
 			file = filePath1
 		}
 
+		local presenceSelectUnnecessary = function()
+			cl:fill{
+				operation = "presence",
+				layer = localidades,
+				attribute = "presence",
+				select = "FID"
+			}
+		end
+		unitTest:assertWarning(presenceSelectUnnecessary, unnecessaryArgumentMsg("select"))
+		local attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "presence")
 
-		cl:fill{
-			operation = "presence",
-			layer = localidades,
-			attribute = "presence"
-		}
---[[
-		local areaLayerName = clName1.."_Area"
-		local filePath3 = areaLayerName..".shp"
+		local areaSelectUnnecessary = function()
+			cl:fill{
+				attribute = "areattr",
+				operation = "area",
+				layer = layerName1,
+				select = "FID"
+			}
+		end
+		unitTest:assertWarning(areaSelectUnnecessary, unnecessaryArgumentMsg("select"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "areattr")
 
-		File(filePath3):deleteIfExists()
+		local countSelectUnnecessary = function()
+			cl:fill{
+				attribute = "counttr",
+				operation = "count",
+				layer = localidades,
+				select = "FID"
+			}
+		end
+		unitTest:assertWarning(countSelectUnnecessary, unnecessaryArgumentMsg("select"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "counttr")
 
-		cl:fill{
-			operation = "area",
-			layer = layerName1,
-			attribute = "area"
-		}
---]]
+		local distanceSelectUnnecessary = function()
+			cl:fill{
+				attribute = "disttr",
+				operation = "distance",
+				layer = layerName1,
+				select = "FID"
+			}
+		end
+		unitTest:assertWarning(distanceSelectUnnecessary, unnecessaryArgumentMsg("select"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "disttr")
 
-		cl:fill{
-			operation = "count",
-			layer = localidades,
-			attribute = "num"
-		}
+		local unnecessaryArgument = function()
+			cl:fill{
+				attribute = "minttr",
+				operation = "minimum",
+				layer = localidades,
+				select = "UCS_FATURA",
+				missin = 3
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "minttr")
 
-		-- local distanceLayerName = clName1.."_Distance"
-		-- local filePath5 = distanceLayerName..".shp"
+		unnecessaryArgument = function()
+			cl:fill{
+				attribute = "maxattr",
+				operation = "maximum",
+				layer = localidades,
+				select = "UCS_FATURA",
+				missin = 3
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "maxattr")
 
-		-- File(filePath5):deleteIfExists()
+		unnecessaryArgument = function()
+			cl:fill{
+				attribute = "covttr",
+				operation = "coverage",
+				layer = layerName1,
+				select = "FID",
+				missin = 3
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "covttr_57")
 
-		-- cl:fill{
-			-- operation = "distance",
-			-- layer = localidades,
-			-- attribute = "distance"
-		-- }
+		unnecessaryArgument = function()
+			cl:fill{
+				operation = "stdev",
+				layer = localidades,
+				attribute = "stdev",
+				select = "UCS_FATURA",
+				missin = 3
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "stdev")
 
-		cl:fill{
-			operation = "minimum",
-			layer = localidades,
-			attribute = "minimum",
-			select = "UCS_FATURA"
-		}
+		unnecessaryArgument = function()
+			cl:fill{
+				operation = "average",
+				layer = localidades,
+				attribute = "mean",
+				select = "UCS_FATURA",
+				missin = 3
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "mean")
 
-		cl:fill{
-			operation = "maximum",
-			layer = localidades,
-			attribute = "maximum",
-			select = "UCS_FATURA"
-		}
+		unnecessaryArgument = function()
+			cl:fill{
+				operation = "average",
+				layer = localidades,
+				attribute = "weighted",
+				select = "UCS_FATURA",
+				missin = 3
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "weighted")
 
-	--[[
-		cl:fill{
-			operation = "coverage",
-			layer = localidades,
-			attribute = "coverage",
-			select = "LOCALIDADE"
-		}
-		--]]
 
-		cl:fill{
-			operation = "stdev",
-			layer = localidades,
-			attribute = "stdev",
-			select = "UCS_FATURA"
-		}
+		unnecessaryArgument = function()
+			cl:fill{
+				operation = "mode",
+				layer = localidades,
+				attribute = "modttr",
+				select = "UCS_FATURA",
+				missin = 3
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "modttr")
 
-		cl:fill{
-			operation = "average",
-			layer = localidades,
-			attribute = "mean",
-			select = "UCS_FATURA"
-		}
+		unnecessaryArgument = function()
+			cl:fill{
+				operation = "sum",
+				layer = localidades,
+				attribute = "ucs_sum",
+				select = "UCS_FATURA",
+				missin = 3
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "ucs_sum")
 
-		cl:fill{
-			operation = "average",
-			layer = localidades,
-			attribute = "weighted",
-			select = "UCS_FATURA"
-		}
+		unnecessaryArgument = function()
+			cl:fill{
+				operation = "sum",
+				layer = localidades,
+				attribute = "wsum",
+				select = "UCS_FATURA",
+				area = true,
+				missin = 3
+			}
+		end
+		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "wsum")
 
-		cl:fill{
-			operation = "mode",
-			layer = localidades,
-			attribute = "high_inter",
-			select = "UCS_FATURA"
-		}
+		local normalizedNameWarning = function()
+			cl:fill{
+				attribute = "max10allowed",
+				operation = "sum",
+				layer = layerName1,
+				select = "FID"
+			}
+		end
+		unitTest:assertWarning(normalizedNameWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'max10allow'.")
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "max10allow")
 
-		cl:fill{
-			operation = "mode",
-			layer = localidades,
-			attribute = "high_occur",
-			select = "UCS_FATURA"
-		}
-
-		cl:fill{
-			operation = "sum",
-			layer = localidades,
-			attribute = "ucs_sum",
-			select = "UCS_FATURA"
-		}
-
-		cl:fill{
-			operation = "sum",
-			layer = localidades,
-			attribute = "wsum",
-			select = "UCS_FATURA",
-			area = true
-		}
-
-		-- RASTER TESTS ------------------------------------------	issue #928
-		-- local desmatamento = "Desmatamento"
-		-- Layer{
-			-- name = desmatamento,
-			-- file = filePath("itaituba-deforestation.tif", "gis")
-		-- }
-
-		-- local rmeanLayerName = clName1.."_Mean_Raster"
-		-- local filePath16 = shp16 = rmeanLayerName..".shp"
-
-		-- File(filePath16):deleteIfExists()
-
-		-- cl:fill{
-			-- operation = "average",
-			-- layer = desmatamento,
-			-- attribute = "mean_0",
-			-- select = 0
-		-- }
-
-		-- local rminLayerName = clName1.."_Minimum_Raster"
-		-- local filePath17 = rminLayerName..".shp"
-
-		-- File(filePath17):deleteIfExists()
-
-		-- cl:fill{
-			-- operation = "minimum",
-			-- layer = desmatamento,
-			-- attribute = "minimum_0",
-			-- select = 0
-		-- }
-
-		-- local rmaxLayerName = clName1.."_Maximum_Raster"
-		-- local filePath18 = rmaxLayerName..".shp"
-
-		-- File(filePath18):deleteIfExists()
-
-		-- cl:fill{
-			-- operation = "maximum",
-			-- layer = desmatamento,
-			-- attribute = "maximum_0",
-			-- select = 0
-		-- }
-
-		-- local rpercentLayerName = clName1.."_Percentage_Raster"
-		-- local filePath19 = rpercentLayerName..".shp"
-
-		-- File(filePath19):deleteIfExists()
-
-		-- cl:fill{
-			-- operation = "coverage",
-			-- layer = desmatamento,
-			-- attribute = "percent_0",
-			-- select = 0
-		-- }
-
-		-- local rstdevLayerName = clName1.."_Stdev_Raster"
-		-- local filePath20 = rstdevLayerName..".shp"
-
-		-- File(filePath20):deleteIfExists()
-
-		-- cl:fill{
-			-- operation = "stdev",
-			-- layer = desmatamento,
-			-- attribute = "stdev_0",
-			-- select = 0
-		-- }
-
-		-- local rsumLayerName = clName1.."_Sum_Raster"
-		-- local filePath21 = rstdevLayerName..".shp"
-
-		-- File(filePath21):deleteIfExists()
-
-		-- cl:fill{
-			-- operation = "sum",
-			-- layer = desmatamento,
-			-- attribute = "sum_0",
-			-- select = 0
-		-- }
-
-		local cs = CellularSpace{
+		-- RASTER TESTS
+		local deforest = "Deforestation"
+		Layer{
 			project = proj,
-			layer = cl.name
+			name = deforest,
+			epsg = 29191,
+			file = filePath("itaituba-deforestation.tif", "gis")
 		}
 
-		forEachCell(cs, function(cell)
-			cell.past_ucs_sum = cell.ucs_sum
-			cell.ucs_sum = cell.ucs_sum + 10000
-		end)
+		local areaUnnecessary = function()
+			cl:fill{
+				attribute = "argattr",
+				operation = "average",
+				layer = deforest,
+				area = 2
+			}
+		end
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "argattr")
 
-		local cellSpaceLayerName = clName1.."_CellSpace_Sum"
-		local filePath22 = cellSpaceLayerName..".shp"
+		areaUnnecessary = function()
+			cl:fill{
+				attribute = "mmittr",
+				operation = "minimum",
+				layer = deforest,
+				area = 2
+			}
+		end
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "mmittr")
 
-		File(filePath22):deleteIfExists()
+		areaUnnecessary = function()
+			cl:fill{
+				attribute = "mmaxttr",
+				operation = "maximum",
+				layer = deforest,
+				area = 2
+			}
+		end
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "mmaxttr")
 
-		cs:save(cellSpaceLayerName, "past_ucs_sum")
+		areaUnnecessary = function()
+			cl:fill{
+				attribute = "ccvattr",
+				operation = "coverage",
+				layer = deforest,
+				area = 2
+			}
+		end
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "ccvatt_255")
 
-		local cellSpaceLayer = Layer{
-			project = proj,
-			name = cellSpaceLayerName
-		}
+		areaUnnecessary = function()
+			cl:fill{
+				attribute = "ssdvattr",
+				operation = "stdev",
+				layer = deforest,
+				area = 2
+			}
+		end
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "ssdvattr")
 
-		unitTest:assertEquals(cellSpaceLayer.source, "shp")
-		unitTest:assertEquals(cellSpaceLayer.file, currentDir()..filePath22)
+		areaUnnecessary = function()
+			cl:fill{
+				attribute = "ssuattr",
+				operation = "sum",
+				layer = deforest,
+				area = 2
+			}
+		end
+		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		attrs = cl:attributes()
+		unitTest:assertEquals(attrs[#attrs].name, "ssuattr")
 
-		projName:deleteIfExists()
-
-		File(filePath1):deleteIfExists()
---		File(filePath3):deleteIfExists()
---		File(filePath5):deleteIfExists()
-		--File(filePath16):deleteIfExists()
-		--File(filePath17):deleteIfExists()
-		--File(filePath18):deleteIfExists()
-		--File(filePath19):deleteIfExists()
-		--File(filePath20):deleteIfExists()
-		--File(filePath21):deleteIfExists()
-		File(filePath22):deleteIfExists()
-
-		projName:deleteIfExists()
+		projName:delete()
+		File(filePath1):delete()
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_representation.tview"

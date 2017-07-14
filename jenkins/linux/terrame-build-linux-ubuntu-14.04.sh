@@ -22,7 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It performs TerraME compilation. It does not create installer or even build as bundle.
 #
 ## USAGE:
@@ -30,8 +30,6 @@
 ##
 #
 
-cd $_TERRAME_BUILD_BASE/solution
- 
 # Turning OFF installer flags
 export _TERRAME_CREATE_INSTALLER="OFF"
 export _TERRAME_BUILD_AS_BUNDLE="OFF"

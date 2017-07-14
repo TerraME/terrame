@@ -26,11 +26,11 @@
 #
 
 if [ -z "$_TERRALIB_TARGET_3RDPARTY_DIR" ]; then
-  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/daily/terralib/3rdparty/5.2"
+  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/5.2"
 fi
 
 if [ -z "$_TERRAME_TARGET_3RDPARTY_DIR" ]; then
-  export _TERRAME_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/daily/terrame/3rdparty"
+  export _TERRAME_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/3rdparty"
 fi
 
 if [ -z "$_TERRALIB_3RDPARTY_NAME" ]; then

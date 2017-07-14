@@ -40,28 +40,38 @@ return{
 			cell.value = r:number()
 		end)
 
-		m = Map{
-			target = cs,
-			title = "Basic",
-			select = "value",
-			min = 0,
-			max = 1,
-			slices = 10,
-			color = "Blues"
-		}
+		local warning_func = function()
+			m = Map{
+				target = cs,
+				title = "Basic",
+				select = "value",
+				min = 0,
+				max = 1,
+				slices = 10,
+				color = "Blues",
+				abx = 2
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abx"))
 
 		unitTest:assertType(m, "Map")
 		unitTest:assertEquals(m.title, "Basic")
 
+		-- TODO(#1912)
+		--local mi
+		--warning_func = function()
 		local mi = Map{
-			target = cs,
-			select = "value",
-			min = 0,
-			max = 1,
-			slices = 10,
-			invert = true,
-			color = "Blues"
-		}
+				target = cs,
+				select = "value",
+				min = 0,
+				max = 1,
+				slices = 10,
+				invert = true,
+				color = "Blues",
+		--		font = "Blues"
+			}
+		--end
+		--unitTest:assertWarning(warning_func, "Font 'Blues' is not installed. Using default font.") -- SKIP
 
 		unitTest:assertType(m, "Map")
 
@@ -127,14 +137,18 @@ return{
 			instance = c
 		}
 
-		m = Map{
-			target = cs,
-			select = "mvalue",
-			min = 0,
-			max = 1,
-			slices = 10,
-			color = "Blues"
-		}
+		warning_func = function()
+			m = Map{
+				target = cs,
+				select = "mvalue",
+				min = 0,
+				max = 1,
+				slices = 10,
+				color = "Blues",
+				invert = false
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("invert", false))
 
 		m:update()
 		unitTest:assertSnapshot(m, "map_function.bmp")
@@ -145,12 +159,16 @@ return{
 			cell.level = c:sample()
 		end)
 
-		m = Map{
-			target = cs,
-			select = "level",
-			color = {"blue", "green", "red"},
-			value = {"low", "medium", "high"}
-		}
+		warning_func = function()
+			m = Map{
+				target = cs,
+				select = "level",
+				color = {"blue", "green", "red"},
+				value = {"low", "medium", "high"},
+				author = 5
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
 
 		unitTest:assertType(m, "Map")
 
@@ -175,16 +193,20 @@ return{
 			color = "Blues"
 		}
 
-		mi = Map{
-			target = cs,
-			select = "value",
-			min = 0,
-			max = 1,
-			slices = 10,
-			grouping = "quantil",
-			invert = true,
-			color = "Blues"
-		}
+		warning_func = function()
+			mi = Map{
+				target = cs,
+				select = "value",
+				min = 0,
+				max = 1,
+				slices = 10,
+				grouping = "quantil",
+				invert = true,
+				color = "Blues",
+				values = {"a"}
+			}
+		end
+		unitTest:assertWarning(warning_func, "Argument 'values' is unnecessary. Do you mean 'value'?")
 
 		unitTest:assertType(m, "Map")
 		unitTest:assertSnapshot(m, "map_quantil.bmp")
@@ -194,27 +216,36 @@ return{
 			cell.w = cell.x
 		end)
 
-		m = Map{
-			target = cs,
-			select = "w",
-			min = 0,
-			max = 10,
-			slices = 3,
-			grouping = "quantil",
-			color = "Blues"
-		}
+		warning_func = function()
+			m = Map{
+				target = cs,
+				select = "w",
+				min = 0,
+				max = 10,
+				slices = 3,
+				grouping = "quantil",
+				color = "Blues",
+				author = 5
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
 
 		unitTest:assertSnapshot(m, "map_quantil_3.bmp")
 
-		m = Map{
-			target = cs,
-			select = "w",
-			min = 0,
-			max = 10,
-			slices = 10,
-			grouping = "quantil",
-			color = "Blues"
-		}
+		-- TODO(#1914)
+		--warning_func = function()
+			m = Map{
+				target = cs,
+				select = "w",
+				min = 0,
+				max = 10,
+				slices = 10,
+				grouping = "quantil",
+				color = "Blues",
+		--		invert = false
+			}
+		--end
+		--unitTest:assertWarning(warning_func, defaultValueMsg("invert", false)) -- SKIP
 
 		unitTest:assertSnapshot(m, "map_quantil_10.bmp")
 
@@ -253,20 +284,28 @@ return{
 		m:update()
 		unitTest:assertSnapshot(m, "map_society_background.bmp", 0.02)
 
-
-		m = Map{
-			target = soc,
-			background = "green",
-			symbol = "turtle"
-		}
+		-- TODO(#1912)
+		--warning_func = function()
+			m = Map{
+				target = soc,
+				background = "green",
+				symbol = "turtle",
+			--	font = "Blues"
+			}
+		--end
+		--unitTest:assertWarning(warning_func, "Font 'Blues' is not installed. Using default font.") -- SKIP
 		unitTest:assertSnapshot(m, "map_society_background2.bmp", 0.02)
 
-		m = Map{
-			target = soc,
-			select = "class",
-			value = {"small", "large"},
-			color = {"green", "red"}
-		}
+		warning_func = function()
+			m = Map{
+				target = soc,
+				select = "class",
+				value = {"small", "large"},
+				color = {"green", "red"},
+				grid = false
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("grid", false))
 
 		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp", 0.03)
 
@@ -287,14 +326,18 @@ return{
 			cell.value = r:number()
 		end)
 
-		m = Map{
-			target = cs,
-			select = "value",
-			min = 0,
-			max = 1,
-			slices = 10,
-			color = "Blues"
-		}
+		warning_func = function()
+			m = Map{
+				target = cs,
+				select = "value",
+				min = 0,
+				max = 1,
+				slices = 10,
+				color = "Blues",
+				author = "aaa"
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
 
 		m:update()
 		unitTest:assertType(m, "Map")
@@ -329,18 +372,27 @@ return{
 			end
 		end)
 
-		m = Map{
-			target = cs,
-			select = "state",
-			value = {"empty", "full"},
-			color = {"white", "yellow"}
-		}
+		warning_func = function()
+			m = Map{
+				target = cs,
+				select = "state",
+				value = {"empty", "full"},
+				color = {"white", "yellow"},
+				author = 5
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
 
-		local m2 = Map{
-			background = m,
-			target = soc,
-			color = "red"
-		}
+		local m2
+		warning_func = function()
+			m2 = Map{
+				background = m,
+				target = soc,
+				color = "red",
+				grid = true
+			}
+		end
+		unitTest:assertWarning(warning_func, "Argument 'grid' cannot be used with a Map 'background'.")
 
 		unitTest:assertSnapshot(m2, "map_society_location.bmp", 0.03)
 

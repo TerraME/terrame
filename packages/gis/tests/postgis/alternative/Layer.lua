@@ -79,25 +79,6 @@ return {
 
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName2.."' already exists in the Project.")
 
-		local mlayer
-
-		local fileUnnecessary = function()
-			mlayer = Layer{
-				project = proj1,
-				source = "postgis",
-				name = layerName2.."u",
-				port = port,
-				password = password,
-				database = database,
-				table = tableName,
-				file = filePath("test/sampa.shp", "gis")
-			}
-		end
-
-		unitTest:assertWarning(fileUnnecessary, unnecessaryArgumentMsg("file"))
-
-		mlayer:delete()
-
 		local sourceMandatory = function()
 			Layer{
 				project = proj1,
@@ -657,24 +638,6 @@ return {
 
 		TerraLib().dropPgTable(data)
 
-		local unnecessaryArgument = function()
-			mlayer = Layer{
-				project = proj,
-				source = "postgis",
-				input = layerName1,
-				name = clName1.."f",
-				resolution = 0.7,
-				password = password,
-				database = database,
-				table = tName1.."b",
-				file = filePath("test/sampa.shp", "gis")
-			}
-		end
-
-		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("file"))
-
-		mlayer:delete()
-
 		local boxNonBoolean = function()
 			Layer{
 				project = proj,
@@ -840,39 +803,6 @@ return {
 		if File(projName):exists() then
 			File(projName):deleteIfExists()
 		end
-
-		-- SPATIAL INDEX TEST
-		proj = Project{
-			file = projName,
-			clean = true,
-			author = "Avancini",
-			title = "The Amazonia"
-		}
-
-		Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/sampa.shp", "gis")
-		}
-
-		local indexUnnecessary = function()
-			Layer{
-				project = proj,
-				source = "postgis",
-				input = layerName1,
-				name = clName1.."i",
-				resolution = 0.7,
-				password = password,
-				database = database,
-				table = tName1,
-				index = true
-			}
-		end
-
-		unitTest:assertWarning(indexUnnecessary, unnecessaryArgumentMsg("index"))
-
-		proj.file:delete()
-		-- // SPATIAL INDEX TEST
 	end,
 	export = function(unitTest)
 		local projName = "layer_func_alt.tview"

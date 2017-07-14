@@ -181,11 +181,6 @@ return {
 
 		TerraLib().createProject(proj, {})
 
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		local layerName1 = "Para"
 		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "gis")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
@@ -678,7 +673,11 @@ return {
 		select = 0
 		area = nil
 		default = nil
-		TerraLib().attributeFill(proj, layerName4, wsumLayerName, percTifLayerName, attribute, operation, select, area, default)
+
+		local attributeTruncateWarning = function()
+			TerraLib().attributeFill(proj, layerName4, wsumLayerName, percTifLayerName, attribute, operation, select, area, default)
+		end
+		unitTest:assertWarning(attributeTruncateWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'rpercentag'.")
 
 		percentSet = TerraLib().getDataSet(proj, percTifLayerName, 0)
 
@@ -1011,8 +1010,6 @@ return {
 		end
 
 		proj.file:delete()
-
-		customWarning = customWarningBkp
 	end,
 	getDataSet = function(unitTest)
 		-- see in saveDataSet() test --

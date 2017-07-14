@@ -25,16 +25,64 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	Random = function(self)
+	Random = function(unitTest)
 		local r = Random()
-		self:assertEquals(type(r), "Random")
-		self:assertEquals(type(r:integer()), "number")
-		self:assertEquals(type(r:number()), "number")
+		unitTest:assertEquals(type(r), "Random")
+		unitTest:assertEquals(type(r:integer()), "number")
+		unitTest:assertEquals(type(r:number()), "number")
+
+		local warning_func = function()
+			r = Random{lambda = 1}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("lambda", 1))
+		unitTest:assertEquals(type(r), "Random")
+		unitTest:assertEquals(type(r:integer()), "number")
+		unitTest:assertEquals(type(r:number()), "number")
+
+		warning_func = function()
+			r = Random{mean = 0.5, sd = 0.5, abc = 2}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
+		unitTest:assertEquals(type(r), "Random")
+		unitTest:assertEquals(type(r:integer()), "number")
+		unitTest:assertEquals(type(r:number()), "number")
+
+		warning_func = function()
+			r = Random{p = 0.3, w = 2}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("w"))
+		unitTest:assertEquals(type(r), "Random")
+		unitTest:assertEquals(type(r:integer()), "number")
+		unitTest:assertEquals(type(r:number()), "number")
+
+		warning_func = function()
+			r = Random{min = 2, max = 5, w = 2}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("w"))
+		unitTest:assertEquals(type(r), "Random")
+		unitTest:assertEquals(type(r:integer()), "number")
+		unitTest:assertEquals(type(r:number()), "number")
+
+		warning_func = function()
+			Random{mean = 0.5, sd = 1}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("sd", 1))
+		unitTest:assertEquals(type(r), "Random")
+		unitTest:assertEquals(type(r:integer()), "number")
+		unitTest:assertEquals(type(r:number()), "number")
+
+		warning_func = function()
+			Random{mean = 1, sd = 0.5}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("mean", 1))
+		unitTest:assertEquals(type(r), "Random")
+		unitTest:assertEquals(type(r:integer()), "number")
+		unitTest:assertEquals(type(r:number()), "number")
 
 		Random_.cObj_ = nil
 		r = Random()
-		self:assertEquals(type(r:integer()), "number")
-		self:assertEquals(type(r:number()), "number")
+		unitTest:assertEquals(type(r:integer()), "number")
+		unitTest:assertEquals(type(r:number()), "number")
 	end,
 	__tostring = function(unitTest)
 		local bern = Random{p = 0.3}

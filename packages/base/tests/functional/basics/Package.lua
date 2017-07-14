@@ -53,11 +53,17 @@ return{
 		import("base", true)
 
 		unitTest:assertType(forEachCell, "function")
+
+		local warning_func = function()
+			import("base")
+		end
+		unitTest:assertWarning(warning_func, "Package 'base' is already loaded.")
+		unitTest:assertType(forEachCell, "function")
 	end,
 	packageInfo = function(unitTest)
 		local r = packageInfo()
 
-		unitTest:assertEquals(r.version, "2.0.0-rc4-dev")
+		unitTest:assertEquals(r.version, "2.0.0-rc4")
 		unitTest:assertEquals(r.package, "base")
 		unitTest:assertEquals(r.url, "http://www.terrame.org")
 		unitTest:assertType(r.data, "Directory")

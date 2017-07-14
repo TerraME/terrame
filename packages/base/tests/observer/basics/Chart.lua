@@ -90,7 +90,12 @@ return{
 			end
 		}
 
-		local c1 = Chart{target = world}
+		local c1
+		local warning_func = function()
+			c1 = Chart{target = world, xwc = 5}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("xwc"))
+
 		c1:update(0)
 		c1:update(1)
 		unitTest:assertSnapshot(c1, "chart-table-base.bmp", 0.03)
@@ -244,10 +249,15 @@ return{
 			max2000 = SIR{maximum = 2000}
 		}
 
-		local c = Chart{
-			target = e,
-			select = "infected"
-		}
+		local c
+		warning_func = function()
+			c = Chart{
+				target = e,
+				select = "infected",
+				title = "Infected"
+			}
+		end
+		unitTest:assertWarning(warning_func, defaultValueMsg("title", "Infected"))
 
 		e:add(Event{action = c})
 		e:run()

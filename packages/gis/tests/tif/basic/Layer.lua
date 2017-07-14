@@ -32,11 +32,15 @@ return {
 		}
 
 		local layerName1 = "Prodes"
-		Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("amazonia-prodes.tif", "gis")
-		}
+		local indexUnnecessary = function()
+			Layer{
+				project = proj,
+				name = layerName1,
+				file = filePath("amazonia-prodes.tif", "gis"),
+				index = true
+			}
+		end
+		unitTest:assertWarning(indexUnnecessary, unnecessaryArgumentMsg("index"))
 
 		local filePath1 = "prodes_cells_tif_basic.shp"
 
@@ -63,18 +67,11 @@ return {
 	__len = function(unitTest)
 		local projName = "layer_tiff_basic.tview"
 
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		local proj = Project{
 			file = projName,
 			prodes = filePath("test/prodes_polyc_10k.tif", "gis"),
 			clean = true
 		}
-
-		customWarning = customWarningBkp
 
 		unitTest:assertEquals(#proj.prodes, 20020)
 
@@ -87,11 +84,6 @@ return {
 			file = projName,
 			clean = true
 		}
-
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
 
 		local layerName1 = "limiteitaituba"
 		local l1 = Layer{
@@ -109,7 +101,7 @@ return {
 		}
 
 		local altimetria = "altimetria"
-		Layer{
+		local altLayer = Layer{
 			project = proj,
 			name = altimetria,
 			file = filePath("itaituba-elevation.tif", "gis"),
@@ -299,12 +291,15 @@ return {
 		end
 
 		-- AVERAGE
-
-		cl:fill{
-			operation = "average",
-			layer = "altimetria",
-			attribute = "height"
-		}
+		local nodataDefaultWarn = function()
+			cl:fill{
+				operation = "average",
+				layer = "altimetria",
+				attribute = "height",
+				dummy = altLayer:dummy()
+			}
+		end
+		unitTest:assertWarning(nodataDefaultWarn, defaultValueMsg("dummy", altLayer:dummy()))
 
 		cs = CellularSpace{
 			project = proj,
@@ -427,8 +422,6 @@ return {
 
 		File("amazonia-indigenous.shp"):delete()
 		File("fill_mcount.tview"):delete()
-
-		customWarning = customWarningBkp
 	end,
 	representation = function(unitTest)
 		local projName = "layer_fill_tiff_repr.tview"
@@ -437,11 +430,6 @@ return {
 			file = projName,
 			clean = true
 		}
-
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
 
 		local prodes = "prodes"
 		local l = Layer{
@@ -453,8 +441,6 @@ return {
 		unitTest:assertEquals(l:representation(), "raster")
 
 		File(projName):delete()
-
-		customWarning = customWarningBkp
 	end,
 	bands = function(unitTest)
 		local projName = "layer_tif_bands.tview"
@@ -463,11 +449,6 @@ return {
 			file = projName,
 			clean = true
 		}
-
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
 
 		local prodes = "prodes"
 		local l = Layer{
@@ -479,8 +460,6 @@ return {
 		unitTest:assertEquals(l:bands(), 1)
 
 		File(projName):delete()
-
-		customWarning = customWarningBkp
 	end,
 	projection = function(unitTest)
 		local projName = "tif_basic.tview"
@@ -530,11 +509,6 @@ return {
 			clean = true
 		}
 
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		local prodes = "prodes"
 		local l = Layer{
 			project = proj,
@@ -554,8 +528,6 @@ return {
 		unitTest:assertNil(l:dummy())
 
 		File(projName):delete()
-
-		customWarning = customWarningBkp
 	end
 }
 

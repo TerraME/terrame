@@ -36,22 +36,6 @@ return{
 
 		unitTest:assertError(attrFileNonString, incompatibleTypeMsg("file", "File", 123))
 
-		attrFileNonString = function()
-			Project{file = "abc", author = "No author"}
-		end
-
-		unitTest:assertWarning(attrFileNonString, defaultValueMsg("author", "No author"))
-
-		File("abc.tview"):delete()
-
-		attrFileNonString = function()
-			Project{file = "abc", title = "No title"}
-		end
-
-		unitTest:assertWarning(attrFileNonString, defaultValueMsg("title", "No title"))
-
-		File("abc.tview"):delete()
-
 		local attrCreateNonBool = function()
 			Project{file = "myproj.tview", clean = 2}
 		end

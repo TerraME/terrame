@@ -75,7 +75,12 @@ local Tube2 = Model{
 return{
 	Model = function(unitTest)
 		unitTest:assertType(Tube, "Model")
-		local t = Tube{filter = function() end}
+		-- TODO(#1908)
+		--local t
+		--local warning_func = function()
+		local t = Tube{filter = function() end} --, block = {xmix = 5}}
+		--end
+		--unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("block.xmix", "block.xmax")) -- SKIP
 		unitTest:assertType(t, "Tube")
 
 		unitTest:assertEquals(t.simulationSteps, 10)
@@ -121,16 +126,60 @@ title            function
 type_            string [Tube]
 water            number [200]
 ]])
+		local warning_func = function()
+			t = Tube{
+				simulationSteps = 20,
+				observingStep = 0.7,
+				block = {xmin = 2, xmax = 10},
+				checkZero = true,
+				finalTime = 5,
+				filter = function() end,
+				s = 3
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("s"))
+		unitTest:assertEquals(t.simulationSteps, 20)
+		unitTest:assertEquals(t.block.xmin, 2)
+		unitTest:assertEquals(t.block.xmax, 10)
+		unitTest:assertEquals(t.block.level, 1)
+		unitTest:assertEquals(t.block.sleep, 2)
+		unitTest:assertEquals(t.observingStep, 0.7)
+		unitTest:assertEquals(t.finalTime, 5)
+		unitTest:assert(t.checkZero)
 
-		t = Tube{
-			simulationSteps = 20,
-			observingStep = 0.7,
-			block = {xmin = 2, xmax = 10},
-			checkZero = true,
-			finalTime = 5,
-			filter = function() end
-		}
+		warning_func = function()
+			t = Tube{
+				simulationSteps = 20,
+				observingStep = 0.7,
+				block = {xmin = 2, xmax = 10, mblock = 40},
+				checkZero = true,
+				finalTime = 5,
+				filter = function() end
+			}
+		end
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("block.mblock"))
+		unitTest:assertEquals(t.simulationSteps, 20)
+		unitTest:assertEquals(t.block.xmin, 2)
+		unitTest:assertEquals(t.block.xmax, 10)
+		unitTest:assertEquals(t.block.level, 1)
+		unitTest:assertEquals(t.block.sleep, 2)
+		unitTest:assertEquals(t.observingStep, 0.7)
+		unitTest:assertEquals(t.finalTime, 5)
+		unitTest:assert(t.checkZero)
 
+		-- TODO(#1908)
+		--local defaultValue = function()
+			t = Tube{
+				simulationSteps = 20,
+				observingStep = 0.7,
+				block = {xmin = 2, xmax = 10},
+				checkZero = true,
+				finalTime = 5,
+				filter = function() end,
+		--		random = false
+			}
+		--end
+		--unitTest:assertWarning(defaultValue, defaultValueMsg("random", false)) -- SKIP
 		unitTest:assertEquals(t.simulationSteps, 20)
 		unitTest:assertEquals(t.block.xmin, 2)
 		unitTest:assertEquals(t.block.xmax, 10)

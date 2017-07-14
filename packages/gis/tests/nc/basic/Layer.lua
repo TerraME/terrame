@@ -32,11 +32,6 @@ return {
 				clean = true
 			}
 
-			local customWarningBkp = customWarning
-			customWarning = function(msg)
-				return msg
-			end
-
 			local layerName1 = "Vegtype_layer"
 
 			Layer {
@@ -64,10 +59,8 @@ return {
 			unitTest:assertEquals(cl1.source, "shp") -- SKIP
 			unitTest:assertEquals(cl1.file, currentDir()..filePath1) -- SKIP
 
-			File(filePath1):deleteIfExists()
-			File(projName):deleteIfExists()
-
-			customWarning = customWarningBkp
+			File(filePath1):delete()
+			File(projName):delete()
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -81,11 +74,6 @@ return {
 				clean = true
 			}
 
-			local customWarningBkp = customWarning
-			customWarning = function(msg)
-				return msg
-			end
-
 			local vegType = "Vegtype_layer"
 			local l = Layer {
 				project = proj,
@@ -95,9 +83,7 @@ return {
 
 			unitTest:assertEquals(l:representation(), "raster") -- SKIP
 
-			File(projName):deleteIfExists()
-
-			customWarning = customWarningBkp
+			File(projName):delete()
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -111,11 +97,6 @@ return {
 				clean = true
 			}
 
-			local customWarningBkp = customWarning
-			customWarning = function(msg)
-				return msg
-			end
-
 			local vegType = "Vegtype_layer"
 			local l = Layer {
 				project = proj,
@@ -125,9 +106,7 @@ return {
 
 			unitTest:assertEquals(l:bands(), 1) -- SKIP
 
-			File(projName):deleteIfExists()
-
-			customWarning = customWarningBkp
+			File(projName):delete()
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -140,11 +119,6 @@ return {
 				file = projName,
 				clean = true
 			}
-
-			local customWarningBkp = customWarning
-			customWarning = function(msg)
-				return msg
-			end
 
 			local layerName1 = "Vegtype_layer"
 
@@ -163,9 +137,7 @@ rep      string [raster]
 source   string [nc]
 ]], 0, true)
 
-			File(projName):deleteIfExists()
-
-			customWarning = customWarningBkp
+			File(projName):delete()
 		else
 			unitTest:assert(true) -- SKIP
 		end

@@ -55,7 +55,10 @@ return{
 		env:run(10)
 		unitTest:assertEquals(13, a.x)
 
-		env = Environment{}
+		local unnecessaryArg = function()
+			env = Environment{2}
+		end
+		unitTest:assertWarning(unnecessaryArg, "Argument '1' (a 'number') is unnecessary for the Environment.")
 
 		env:add(cs)
 		env:add(a)

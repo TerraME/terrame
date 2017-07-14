@@ -75,23 +75,58 @@ return {
 		unitTest:assert(not File(qixFile):exists())
 
 		local clName2 = "Setores_Cells9x9"
-		local cl2 = Layer{
-			project = proj,
-			source = "shp",
-			clean = true,
-			input = layerName1,
-			name = clName2,
-			resolution = 9e3,
-			file = clName2..".shp"
-		}
-
+		local cl2
+		local indexWarn2 = function()
+			cl2 = Layer{
+				project = proj,
+				source = "shp",
+				clean = true,
+				input = layerName1,
+				name = clName2,
+				resolution = 9e3,
+				file = clName2..".shp",
+				index = true
+			}
+		end
+		unitTest:assertWarning(indexWarn2, defaultValueMsg("index", true))
 		qixFile = string.gsub(cl2.file, ".shp", ".qix")
 		unitTest:assert(File(qixFile):exists())
 
 		File(cl1.file):delete()
 		File(cl2.file):delete()
+		-- \\ SPATIAL INDEX
+
+		local l1Name = "Elevation"
+		local l1
+		local epsgWarn = function()
+			l1 = Layer{
+				project = proj,
+				name = l1Name,
+				file = filePath("cabecadeboi-box.shp", "gis")
+			}
+		end
+		unitTest:assertWarning(epsgWarn, "It was not possible to find the projection of layer 'Elevation'. It should be one of the projections available at www.terrame.org/projections.html")
+		unitTest:assertEquals(l1.name, l1Name)
+
+		local clName3 = "PA_Cells50x50"
+		local clLayer3
+		local indexWarn = function()
+			clLayer3 = Layer{
+				project = proj,
+				source = "shp",
+				clean = true,
+				input = layerName1,
+				name = clName3,
+				resolution = 50000,
+				file = clName3..".shp",
+				index = true
+			}
+		end
+		unitTest:assertWarning(indexWarn, defaultValueMsg("index", true))
+		unitTest:assertEquals(clLayer3.name, clName3)
 
 		proj.file:delete()
+		File(clLayer3.file):delete()
 	end,
 	__len = function(unitTest)
 		local projName = "layer_shape_basic.tview"
@@ -108,12 +143,6 @@ return {
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_shape.tview"
-
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		local layerName1 = "limitepa"
 		local protecao = "protecao"
 		local rodovias = "Rodovias"
@@ -716,7 +745,6 @@ return {
 
 		unitTest:assertSnapshot(map, "polygons-coverage-2.png", 0.1)
 
-		customWarning = customWarningBkp
 		proj.file:delete()
 
 		forEachElement(shapes, function(_, value)
@@ -738,11 +766,6 @@ return {
 
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with EPSG: 29191 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
 
-		local customWarningBkp = customWarning
-		customWarning = function(msg)
-			return msg
-		end
-
 		layer = Layer{
 			project = proj,
 			name = "PA",
@@ -751,8 +774,6 @@ return {
 		}
 
 		unitTest:assertEquals(layer:projection(), "'SAD69 / Brazil Polyconic', with EPSG: 29101 (PROJ4: '+proj=poly +lat_0=0 +lon_0=-54 +x_0=5000000 +y_0=10000000 +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
-
-		customWarning = customWarningBkp
 
 		proj.file:delete()
 	end,
