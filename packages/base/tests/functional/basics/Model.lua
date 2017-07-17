@@ -130,7 +130,7 @@ title            function
 type_            string [Tube]
 water            number [200]
 ]])
-		local warning_func = function()
+		warning_func = function()
 			t = Tube{
 				simulationSteps = 20,
 				observingStep = 0.7,

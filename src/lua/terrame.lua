@@ -712,12 +712,12 @@ local function graphicalInterface(package, modelName)
 	local data = _Gtme.getLuaFile(_Gtme.packageInfo(package).path..s.."lua"..s..modelName..".lua")
 	local model
 
-	forEachElement(data, function(idx, value, mtype)
+	forEachElement(data, function(_, value, mtype)
 		if mtype == "Model" then
 			model = value
 		end
 	end)
-	
+
 	_Gtme.configure(model, modelName, package)
 end
 
