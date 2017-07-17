@@ -52,14 +52,11 @@ return{
 				abx = 2
 			}
 		end
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abx"))
 
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abx"))
 		unitTest:assertType(m, "Map")
 		unitTest:assertEquals(m.title, "Basic")
 
-		-- TODO(#1912)
-		--local mi
-		--warning_func = function()
 		local mi = Map{
 				target = cs,
 				select = "value",
@@ -68,10 +65,7 @@ return{
 				slices = 10,
 				invert = true,
 				color = "Blues",
-		--		font = "Blues"
 			}
-		--end
-		--unitTest:assertWarning(warning_func, "Font 'Blues' is not installed. Using default font.") -- SKIP
 
 		unitTest:assertType(m, "Map")
 
@@ -148,8 +142,8 @@ return{
 				invert = false
 			}
 		end
-		unitTest:assertWarning(warning_func, defaultValueMsg("invert", false))
 
+		unitTest:assertWarning(warning_func, defaultValueMsg("invert", false))
 		m:update()
 		unitTest:assertSnapshot(m, "map_function.bmp")
 
@@ -168,8 +162,8 @@ return{
 				author = 5
 			}
 		end
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
 
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
 		unitTest:assertType(m, "Map")
 
 		m:update()
@@ -206,8 +200,8 @@ return{
 				values = {"a"}
 			}
 		end
-		unitTest:assertWarning(warning_func, "Argument 'values' is unnecessary. Do you mean 'value'?")
 
+		unitTest:assertWarning(warning_func, "Argument 'values' is unnecessary. Do you mean 'value'?")
 		unitTest:assertType(m, "Map")
 		unitTest:assertSnapshot(m, "map_quantil.bmp")
 		unitTest:assertSnapshot(mi, "map_quantil_invert.bmp")
@@ -228,8 +222,8 @@ return{
 				author = 5
 			}
 		end
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
 
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
 		unitTest:assertSnapshot(m, "map_quantil_3.bmp")
 
 		-- TODO(#1914)
@@ -283,18 +277,6 @@ return{
 
 		m:update()
 		unitTest:assertSnapshot(m, "map_society_background.bmp", 0.02)
-
-		-- TODO(#1912)
-		--warning_func = function()
-			m = Map{
-				target = soc,
-				background = "green",
-				symbol = "turtle",
-			--	font = "Blues"
-			}
-		--end
-		--unitTest:assertWarning(warning_func, "Font 'Blues' is not installed. Using default font.") -- SKIP
-		unitTest:assertSnapshot(m, "map_society_background2.bmp", 0.02)
 
 		warning_func = function()
 			m = Map{

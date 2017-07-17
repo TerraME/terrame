@@ -557,12 +557,11 @@ return{
 
 		unitTest:assertError(error_func, "Grouping 'none' cannot use ColorBrewer.")
 
-		-- TODO(#1912): remove after
-		warning_func = function()
+		error_func = function()
 			Map{target = soc, font = "Blues"}
 		end
 
-		unitTest:assertWarning(warning_func, "Font 'Blues' is not installed. Using default font.")
+		unitTest:assertError(error_func, "Font 'Blues' is not installed.")
 
 		error_func = function()
 			Map{target = soc, font = 2}
