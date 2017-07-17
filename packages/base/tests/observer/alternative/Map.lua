@@ -283,13 +283,6 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("invert", "boolean", 2))
 
-		-- TODO(#1914): remove it
-		local warning_func = function()
-			Map{target = c, select = "x", invert = false, slices = 10, color = "Blues", grouping = "quantil"}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("invert", false))
-
 		error_func = function()
 			Map{
 				target = c,

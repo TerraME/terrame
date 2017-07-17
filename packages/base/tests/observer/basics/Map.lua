@@ -226,8 +226,7 @@ return{
 		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("author"))
 		unitTest:assertSnapshot(m, "map_quantil_3.bmp")
 
-		-- TODO(#1914)
-		--warning_func = function()
+		warning_func = function()
 			m = Map{
 				target = cs,
 				select = "w",
@@ -236,11 +235,11 @@ return{
 				slices = 10,
 				grouping = "quantil",
 				color = "Blues",
-		--		invert = false
+				invert = false
 			}
-		--end
-		--unitTest:assertWarning(warning_func, defaultValueMsg("invert", false)) -- SKIP
+		end
 
+		unitTest:assertWarning(warning_func, defaultValueMsg("invert", false))
 		unitTest:assertSnapshot(m, "map_quantil_10.bmp")
 
 		local ag = Agent{
