@@ -37,7 +37,8 @@ return {
 			Layer {
 				project = proj,
 				name = layerName1,
-				file = filePath("test/vegtype_2000.nc", "gis")
+				file = filePath("test/vegtype_2000.nc", "gis"),
+				epsg = 4326
 			}
 
 			local filePath1 = "vegtype_cells_nc_basic.shp"
@@ -78,7 +79,8 @@ return {
 			local l = Layer {
 				project = proj,
 				name = vegType,
-				file = filePath("test/vegtype_2000.nc", "gis")
+				file = filePath("test/vegtype_2000.nc", "gis"),
+				epsg = 4326
 			}
 
 			unitTest:assertEquals(l:representation(), "raster") -- SKIP
@@ -101,7 +103,8 @@ return {
 			local l = Layer {
 				project = proj,
 				name = vegType,
-				file = filePath("test/vegtype_2000.nc", "gis")
+				file = filePath("test/vegtype_2000.nc", "gis"),
+				epsg = 4326
 			}
 
 			unitTest:assertEquals(l:bands(), 1) -- SKIP
@@ -125,11 +128,12 @@ return {
 			local l = Layer {
 				project = proj,
 				name = layerName1,
-				file = filePath("test/vegtype_2000.nc", "gis")
+				file = filePath("test/vegtype_2000.nc", "gis"),
+				epsg = 4326
 			}
 
 			unitTest:assertEquals( -- SKIP
-tostring(l), [[epsg     number [0]
+tostring(l), [[epsg     number [4326]
 file     string [vegtype_2000.nc]
 name     string [Vegtype_layer]
 project  Project
