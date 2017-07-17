@@ -78,12 +78,13 @@ local Tube2 = Model{
 return{
 	Model = function(unitTest)
 		unitTest:assertType(Tube, "Model")
-		-- TODO(#1908)
-		--local t
-		--local warning_func = function()
-		local t = Tube{filter = function() end} --, block = {xmix = 5}}
-		--end
-		--unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("block.xmix", "block.xmax")) -- SKIP
+
+		local t
+		local warning_func = function()
+			t = Tube{filter = function() end, block = {xmix = 5}}
+		end
+
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("block.xmix", "block.xmax"))
 		unitTest:assertType(t, "Tube")
 
 		unitTest:assertEquals(t.simulationSteps, 10)
@@ -170,8 +171,7 @@ water            number [200]
 		unitTest:assertEquals(t.finalTime, 5)
 		unitTest:assert(t.checkZero)
 
-		-- TODO(#1908)
-		--local defaultValue = function()
+		local defaultValue = function()
 			t = Tube{
 				simulationSteps = 20,
 				observingStep = 0.7,
@@ -179,10 +179,11 @@ water            number [200]
 				checkZero = true,
 				finalTime = 5,
 				filter = function() end,
-		--		random = false
+				random = false
 			}
-		--end
-		--unitTest:assertWarning(defaultValue, defaultValueMsg("random", false)) -- SKIP
+		end
+
+		unitTest:assertWarning(defaultValue, unnecessaryArgumentMsg("random"))
 		unitTest:assertEquals(t.simulationSteps, 20)
 		unitTest:assertEquals(t.block.xmin, 2)
 		unitTest:assertEquals(t.block.xmax, 10)

@@ -547,8 +547,13 @@ function Model(attrTab)
 					return -- this error will be shown later on
 				end
 
-				forEachElement(value, function(mname, _, _)
+				-- unnecessary arguments will be removed after forEachElement
+				-- to avoid problems changing a table while traversing it
+				local remove = {}
+
+				forEachElement(value, function(mname)
 					if attrTabValue[mname] == nil then
+						remove[mname] = true
 						local msg = "Argument '"..name.."."..mname.."' is unnecessary."
 						local s = suggestion(mname, attrTabValue)
 
@@ -558,6 +563,10 @@ function Model(attrTab)
 
 						customWarning(msg)
 					end
+				end)
+
+				forEachElement(remove, function(idx)
+					value[idx] = nil
 				end)
 			end
 		end)
