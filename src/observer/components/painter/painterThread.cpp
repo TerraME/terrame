@@ -26,6 +26,7 @@ of this software and its documentation.
 #include <QtGui/QPainter>
 #include <QDebug>
 #include <time.h>
+#include <math.h>
 #include "terrameGlobals.h"
 
 #include "../legend/legendAttributes.h"
