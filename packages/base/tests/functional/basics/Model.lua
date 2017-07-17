@@ -58,6 +58,9 @@ local Tube = Model{
 local Tube2 = Model{
 	initialWater    = 0,
 	finalTime       = 10,
+	interface = function()
+		return {{"number"}}
+	end,
 	init = function(model)
 		model.water = model.initialWater
 		model.aenv = Environment{} -- this line is necessary because TerraME must see that
@@ -75,12 +78,13 @@ local Tube2 = Model{
 return{
 	Model = function(unitTest)
 		unitTest:assertType(Tube, "Model")
-		-- TODO(#1908)
-		--local t
-		--local warning_func = function()
-		local t = Tube{filter = function() end} --, block = {xmix = 5}}
-		--end
-		--unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("block.xmix", "block.xmax")) -- SKIP
+
+		local t
+		local warning_func = function()
+			t = Tube{filter = function() end, block = {xmix = 5}}
+		end
+
+		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("block.xmix", "block.xmax"))
 		unitTest:assertType(t, "Tube")
 
 		unitTest:assertEquals(t.simulationSteps, 10)
@@ -126,7 +130,7 @@ title            function
 type_            string [Tube]
 water            number [200]
 ]])
-		local warning_func = function()
+		warning_func = function()
 			t = Tube{
 				simulationSteps = 20,
 				observingStep = 0.7,
@@ -167,8 +171,7 @@ water            number [200]
 		unitTest:assertEquals(t.finalTime, 5)
 		unitTest:assert(t.checkZero)
 
-		-- TODO(#1908)
-		--local defaultValue = function()
+		local defaultValue = function()
 			t = Tube{
 				simulationSteps = 20,
 				observingStep = 0.7,
@@ -176,10 +179,11 @@ water            number [200]
 				checkZero = true,
 				finalTime = 5,
 				filter = function() end,
-		--		random = false
+				random = false
 			}
-		--end
-		--unitTest:assertWarning(defaultValue, defaultValueMsg("random", false)) -- SKIP
+		end
+
+		unitTest:assertWarning(defaultValue, unnecessaryArgumentMsg("random"))
 		unitTest:assertEquals(t.simulationSteps, 20)
 		unitTest:assertEquals(t.block.xmin, 2)
 		unitTest:assertEquals(t.block.xmax, 10)
@@ -286,6 +290,33 @@ water            number [200]
 		}
 
 		unitTest:assert(RandomModel:isRandom())
+	end,
+	interface = function(unitTest)
+		unitTest:assertNil(Tube:interface())
+
+		local interf = Tube2:interface()
+
+		unitTest:assertType(interf, "table")
+		unitTest:assertEquals(#interf, 1)
+		unitTest:assertEquals(#interf[1], 1)
+
+		local model
+
+		local warning_func = function()
+			model = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				interface = function() return {{"number", "string"}} end,
+				init = function() end
+			}
+		end
+
+		unitTest:assertWarning(warning_func, "There is no argument 'string' in the Model, although it is described in the interface().")
+
+		interf = model:interface()
+		unitTest:assertType(interf, "table")
+		unitTest:assertEquals(#interf, 1)
+		unitTest:assertEquals(#interf[1], 2)
 	end,
 	run = function(unitTest)
 		local t = Tube{block = {level = 2}, filter = function() end}

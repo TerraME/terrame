@@ -706,19 +706,19 @@ function _Gtme.getLevel()
 	end
 end
 
-local function graphicalInterface(package, model)
+local function graphicalInterface(package, modelName)
 	local s = _Gtme.sessionInfo().separator
 	_Gtme.sessionInfo().interface = true
-	local attrTab
-	local mModel = Model
-	Model = function(attr) attrTab = attr end
-	_Gtme.getLuaFile(_Gtme.packageInfo(package).path..s.."lua"..s..model..".lua")
-	Model = mModel
+	local data = _Gtme.getLuaFile(_Gtme.packageInfo(package).path..s.."lua"..s..modelName..".lua")
+	local model
 
-	local random = attrTab.random
-	attrTab.random = nil
+	forEachElement(data, function(_, value, mtype)
+		if mtype == "Model" then
+			model = value
+		end
+	end)
 
-	_Gtme.configure(attrTab, model, package, random)
+	_Gtme.configure(model, modelName, package)
 end
 
 function _Gtme.traceback(err)

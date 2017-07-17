@@ -1753,15 +1753,15 @@ function Map(data)
 			defaultTableValue(data, "font", "Ubuntu")
 		end
 
+		if cpp_hasfont(data.font) == 0 then
+			customError("Font '"..data.font.."' is not installed.")
+		end
+
 		if _Gtme.fonts[data.font] then
 			local symbol = _Gtme.fonts[data.font][data.symbol]
 			if symbol then
 				data.symbol = symbol
 			end
-		end
-
-		if cpp_hasfont(data.font) == 0 then
-			customWarning("Font '"..data.font.."' is not installed. Using default font.")
 		end
 
 		local mcolor = "white"

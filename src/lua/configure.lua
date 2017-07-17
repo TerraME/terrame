@@ -180,7 +180,7 @@ create_t = function(mtable, ordering)
 	return t
 end
 
-function _Gtme.configure(self, modelName, package, random)
+function _Gtme.configure(self, modelName, package)
 	local count = 0
 	local r = ""
 
@@ -192,11 +192,11 @@ function _Gtme.configure(self, modelName, package, random)
 		modelName = "__zzz"
 	end
 
-	local ordering
+	local ordering = self.interface()
+	local random = self:isRandom()
 
-	if type(self.interface) == "function" then
-		ordering = self.interface()
-	end
+	self = self:getParameters()
+
 
 	if type(ordering) ~= "table" then
 		ordering = create_ordering(self)
