@@ -58,6 +58,9 @@ local Tube = Model{
 local Tube2 = Model{
 	initialWater    = 0,
 	finalTime       = 10,
+	interface = function()
+		return {{"number"}}
+	end,
 	init = function(model)
 		model.water = model.initialWater
 		model.aenv = Environment{} -- this line is necessary because TerraME must see that
@@ -286,6 +289,33 @@ water            number [200]
 		}
 
 		unitTest:assert(RandomModel:isRandom())
+	end,
+	interface = function(unitTest)
+		unitTest:assertNil(Tube:interface())
+
+		local interf = Tube2:interface()
+
+		unitTest:assertType(interf, "table")
+		unitTest:assertEquals(#interf, 1)
+		unitTest:assertEquals(#interf[1], 1)
+
+		local model
+
+		local warning_func = function()
+			model = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				interface = function() return {{"number", "string"}} end,
+				init = function() end
+			}
+		end
+
+		unitTest:assertWarning(warning_func, "There is no argument 'string' in the Model, although it is described in the interface().")
+
+		interf = model:interface()
+		unitTest:assertType(interf, "table")
+		unitTest:assertEquals(#interf, 1)
+		unitTest:assertEquals(#interf[1], 2)
 	end,
 	run = function(unitTest)
 		local t = Tube{block = {level = 2}, filter = function() end}

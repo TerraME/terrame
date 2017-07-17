@@ -483,6 +483,11 @@ function Model(attrTab)
 			configure = function()
 				_Gtme.configure(attrTab, mmodel) -- SKIP
 			end,
+			interface = function()
+				if attrTab.interface then
+					return attrTab.interface()
+				end
+			end,
 			isRandom = function()
 				return random
 			end,

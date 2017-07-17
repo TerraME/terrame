@@ -563,18 +563,6 @@ return{
 
 		unitTest:assertError(error_func, "Argument 'number' cannot be displayed twice in the interface().")
 
-		-- TODO(#1907)
-		local warning_func = function()
-			Model{
-				simulationSteps = 10,
-				finalTime = 5,
-				interface = function() return {{"number", "string"}} end,
-				init = function() end
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "There is no argument 'string' in the Model, although it is described in the interface().")
-
 		error_func = function()
 			Model{
 				simulationSteps = 10,
