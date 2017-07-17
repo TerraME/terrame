@@ -100,6 +100,10 @@ return{
 			quantity = 5
 		}
 
+		local group = Group{
+			target = soc,
+			greater = function(ag1, ag2) return ag1.id > ag2.id end}
+
 		local c = Cell{
 			execute = function()
 				count = count + 1
@@ -174,9 +178,19 @@ return{
 		unitTest:assertEquals(event:getPeriod(), 1)
 		unitTest:assertEquals(event:getPriority(), -5)
 
+		warning_func = function()
+			event = Event{action = group, priority = "medium"}
+		end
+
+		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
+		unitTest:assertEquals(event:getTime(), 1)
+		unitTest:assertEquals(event:getPeriod(), 1)
+		unitTest:assertEquals(event:getPriority(), 0)
+
 		local instance = m{}
 		local t = Timer{
 			Event{action = soc}, -- 1000
+			Event{action = group}, -- 1000
 			Event{action = c},   -- 2
 			Event{action = cs},
 			Event{action = instance}, -- 20
@@ -185,7 +199,7 @@ return{
 		}
 
 		t:run(2)
-		unitTest:assertEquals(count, 1222)
+		unitTest:assertEquals(count, 2222)
 		unitTest:assertEquals(sum, 5 * 5 * 2 + #traj * 2)
 
 		cs = CellularSpace{xdim = 5}
