@@ -844,7 +844,7 @@ state_          State
 			magent.gender = "male"
 		end)
 
-		groups.male:filter()
+		groups.male:rebuild()
 		groups.female:filter()
 
 		unitTest:assertEquals(#groups.male, 10)

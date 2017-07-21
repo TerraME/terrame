@@ -100,16 +100,15 @@ Trajectory_ = {
 
 		return cloneT
 	end,
-	--- Apply a filter over the CellularSpace used as target for the Trajectory. It replaces the
-	-- previous set of Cells belonging to the Trajectory.
-	-- @arg f A function (Cell)->boolean, working in the same way of the argument select to
-	-- create the Trajectory. If this argument is missing, this function filters the CellularSpace
-	-- with the function used as argument for the last call to filter itself, or then the value of
-	-- argument select used to build the Trajectory. When it cannot find any function to be used,
-	-- this function will add all the Cells of the CellularSpace to the Trajectory.
+	--- Apply the filter over the Cells of the Trajectory.
+	-- Cells that belong to the CellularSpace but do not belong to the
+	-- Trajectory are ignored. This way, this function creates a subset
+	-- over the subset of the CellularSpace.
 	-- @usage cell = Cell{
-	--     cover = Random{"forest", "deforested"},
-	--     dist = Random{min = 0, max = 50}
+	--     dist = Random{min = 0, max = 50},
+	--     increase = function(self)
+	--         self.dist = self.dist + 2
+	--     end
 	-- }
 	--
 	-- cs = CellularSpace{
@@ -117,38 +116,26 @@ Trajectory_ = {
 	--     instance = cell
 	-- }
 	--
-	-- traj = Trajectory{
-	--     target = cs,
-	--     select = function(c)
-	--         return c.dist > 20
-	--     end
-	-- }
+	-- traj = Trajectory{target = cs, select = function(c)
+	--     return c.dist > 20
+	-- end}
 	--
-	-- print(#traj)
-	-- traj:filter(function(cell)
-	--     return cell.cover == "forest"
-	-- end)
-	-- print(#traj)
-	filter = function(self, f)
-		optionalArgument(1, "function", f)
-
-		if f then self.select = f end
-
+	-- traj:increase()
+	-- traj:filter()
+	filter = function(self)
+		local cells = self.cells
 		self.cells = {}
 		self.cObj_:clear()
 
 		if type(self.select) == "function" then
-			for i, cell in ipairs(self.parent.cells) do
+			for i, cell in ipairs(cells) do
 				if self.select(cell) then
 					table.insert(self.cells, cell)
 					self.cObj_:add(i, cell.cObj_)
 				end
 			end
 		else
-			for i, cell in ipairs(self.parent.cells) do
-				table.insert(self.cells, cell)
-				self.cObj_:add(i, cell.cObj_)
-			end
+			customError("Cannot filter a Trajectory without a 'select' function.")
 		end
 	end,
 	--- Return a Cell from the Trajectory given its x and y locations.
@@ -191,9 +178,7 @@ Trajectory_ = {
 			cells[i], cells[r] = cells[r], cells[i]
 		end
 	end,
-	--- Rebuild the Trajectory from the CellularSpace used as target.
-	-- It is a shortcut to Trajectory:filter() and then Trajectory:randomize() (if the Trajectory was created
-	-- using random = true) or Trajectory:sort() (otherwise).
+	--- Rebuild the Trajectory. It works as if the Trajectory was declared again with the same arguments.
 	-- @usage cell = Cell{
 	--     dist = Random{min = 0, max = 50}
 	-- }
@@ -217,24 +202,35 @@ Trajectory_ = {
 	-- traj:rebuild()
 	-- print(#traj)
 	rebuild = function(self)
-		self:filter()
+		self.cells = {}
+		self.cObj_:clear()
+
+		if type(self.select) == "function" then
+			for i, cell in ipairs(self.parent.cells) do
+				if self.select(cell) then
+					table.insert(self.cells, cell)
+					self.cObj_:add(i, cell.cObj_)
+				end
+			end
+		else
+			for i, cell in ipairs(self.parent.cells) do
+				table.insert(self.cells, cell)
+				self.cObj_:add(i, cell.cObj_)
+			end
+		end
 
 		if self.random then
 			self:randomize()
-		else
+		elseif self.greater then
 			self:sort()
 		end
 	end,
 	--- Sort the current CellularSpace subset. It updates the traversing order of the Trajectory.
-	-- @arg f An ordering function (Cell, Cell)->boolean, working in the same way of
-	-- argument greater to create the Trajectory. If this argument is missing, this function
-	-- sorts the Trajectory with the function used as argument for the last call to sort itself,
-	-- or then the value of argument greater used to build the Trajectory. When it cannot find
-	-- any function to be used, it shows a warning.
-	-- @see Utils:greaterByAttribute
-	-- @see Utils:greaterByCoord
 	-- @usage cell = Cell{
-	--     dist = Random{min = 0, max = 50}
+	--     dist = Random{min = 0, max = 50},
+	--     increase = function(self)
+	--         self.dist = self.dist + Random{min = 0, max = 3}:sample()
+	--     end
 	-- }
 	--
 	-- cs = CellularSpace{
@@ -242,18 +238,13 @@ Trajectory_ = {
 	--     instance = cell
 	-- }
 	--
-	-- traj = Trajectory{
-	--     target = cs
-	-- }
-	--
-	-- traj:sort(function(c, d)
+	-- traj = Trajectory{target = cs, greater = function(c, d)
 	--     return c.dist < d.dist
-	-- end)
-	sort = function(self, f)
-		optionalArgument(1, "function", f)
-
-		if f then self.greater = f end
-
+	-- end}
+	--
+	-- traj:increase()
+	-- traj:sort()
+	sort = function(self)
 		if type(self.greater) == "function" then
 			table.sort(self.cells, self.greater)
 			self.cObj_:clear()
@@ -261,7 +252,7 @@ Trajectory_ = {
 				self.cObj_:add(i, cell.cObj_)
 			end
 		else
-			customWarning("Cannot sort the Trajectory because there is no previous function.")
+			customError("Cannot sort a Trajectory without a 'greater' function.")
 		end
 	end,
 	--- Save a subset from the target CellularSpace into a file.
@@ -430,12 +421,10 @@ function Trajectory(data)
 	setmetatable(data, metaTableTrajectory_)
 
 	if data.build then
-		data:filter()
-		if data.greater then data:sort() end
-		if data.random then data:randomize() end
-		data.build = nil
+		data:rebuild()
 	end
 
+	data.build = nil
 	cObj:setReference(data)
 
 	return data

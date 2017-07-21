@@ -593,28 +593,34 @@ state_          State
 		local ev = Event{action = function() end}
 
 		ag1:setTrajectoryStatus(false)
-		ag1.it:sort(function(a, b) return a.x > b.x end)
+		ag1.it.greater = function(a, b) return a.x > b.x end
+		ag1.it:sort()
 		cont = 0
 		ag1:execute(ev)
 		unitTest:assertEquals(11, cont)
 
 		ag1:setTrajectoryStatus(true)
-		ag1.it:sort(function(a, b) return a.x > b.x end)
+		ag1.it.greater = function(a, b) return a.x > b.x end
+		ag1.it:sort()
 		cont = 0
 		ag1:execute(ev)
 		unitTest:assertEquals(44, cont)
 
-		ag1.it:sort(greaterByCoord(">"))
+
+		ag1.it.greater = greaterByCoord(">")
+		ag1.it:sort()
 		cont = 0
 		ag1:execute(ev)
 		unitTest:assertEquals(44, cont)
 
-		ag1.it:filter(function(cell) return cell.x ~= 1 end)
+		ag1.it.select = function(cell) return cell.x ~= 1 end
+		ag1.it:filter()
 		cont = 0
 		ag1:execute(ev)
 		unitTest:assertEquals(22, cont)
 
-		ag1.it:filter(function() return true end)
+		ag1.it.select = function() return true end
+		ag1.it:rebuild()
 		cont = 0
 		ag1:execute(ev)
 		unitTest:assertEquals(44, cont)

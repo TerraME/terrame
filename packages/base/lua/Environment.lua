@@ -104,7 +104,7 @@ local function createVoidPlacement(environment, cs, data)
 			if t == "Trajectory" then melement = element.parent end -- use the CellularSpace
 
 			forEachCell(melement, function(cell)
-				cell[nplacement] = Group{build = false}
+				cell[nplacement] = Group{}
 				cell[nplacement].agents = {}
 				cell.agents = cell[nplacement].agents
 			end)
