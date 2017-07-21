@@ -188,7 +188,7 @@ function _Gtme.configure(self, modelName, package)
 	r = r.."require(\"qtluae\")\n"
 
 	if not package then
-		rawset(_G, "__zzz", modelName)
+		rawset(_G, "__zzz", self)
 		modelName = "__zzz"
 	end
 
@@ -196,7 +196,6 @@ function _Gtme.configure(self, modelName, package)
 	local random = self:isRandom()
 
 	self = self:getParameters()
-
 
 	if type(ordering) ~= "table" then
 		ordering = create_ordering(self)

@@ -481,7 +481,7 @@ function Model(attrTab)
 				return m
 			end,
 			configure = function()
-				_Gtme.configure(attrTab, mmodel) -- SKIP
+				_Gtme.configure(mmodel, "model") -- SKIP
 			end,
 			interface = function()
 				if attrTab.interface then
