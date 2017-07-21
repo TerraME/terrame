@@ -422,7 +422,8 @@ return{
 			layer = gis.Layer{
 				project = proj,
 				name = layerName1,
-				file = filePath1
+				file = filePath1,
+				epsg = 4326
 			}
 
 			cs = CellularSpace{
