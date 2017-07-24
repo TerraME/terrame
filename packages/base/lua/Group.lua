@@ -67,15 +67,15 @@ Group_ = {
 
 		return cloneG
 	end,
-	--- Apply a filter over the Society used as target for the Group. It replaces the previous
-	-- set of Agents belonging to the Group.
-	-- @arg f A function (Agent)->boolean, working in the same way of the argument select to
-	-- create the Group. If this argument is missing, this function
-	-- filters the Society with the function used as argument for the last call to filter itself,
-	-- or then the value of argument select used to build the Group. When it cannot find any
-	-- function to be used, this function will add all the Agents of the Society to the Group.
+	--- Apply the filter again over the Society used as target for the Group.
+	-- Agents that belong to the Society but do not belong to the
+	-- Group are ignored. This way, this function creates a subset
+	-- over the subset of the Society.
 	-- @usage agent = Agent{
-	--     age = Random{min = 0, max = 50, step = 1}
+	--     age = Random{min = 0, max = 50, step = 1},
+	--     execute = function(self)
+	--         self.age = self.age + 1
+	--     end
 	-- }
 	--
 	-- soc = Society{
@@ -83,34 +83,24 @@ Group_ = {
 	--     quantity = 20
 	-- }
 	--
-	-- group = Group{
-	--     target = soc
-	-- }
-	--
-	-- group:filter(function(agent)
+	-- group = Group{target = soc, select = function(agent)
 	--     return agent.age >= 18
-	-- end)
-	filter = function(self, f)
-		optionalArgument(1, "function", f)
-
-		if f then self.select = f end
-
-		if self.parent == nil then
-			customError("It is not possible to filter a Group without a parent.")
-		end
-
+	-- end}
+	--
+	-- group:execute()
+	-- group:filter()
+	filter = function(self)
+		local agents = self.agents
 		self.agents = {}
 
 		if type(self.select) == "function" then
-			forEachAgent(self.parent, function(agent)
+			forEachElement(agents, function(_, agent)
 				if self.select(agent) then
 					table.insert(self.agents, agent)
 				end
 			end)
 		else
-			forEachAgent(self.parent, function(agent)
-				table.insert(self.agents, agent)
-			end)
+			customError("Cannot filter a Group without a 'select' function.")
 		end
 	end,
 	--- Randomize the Agents of the Group. It will change the traversing order used by
@@ -140,9 +130,7 @@ Group_ = {
 			agents[i], agents[r] = agents[r], agents[i]
 		end
 	end,
-	--- Rebuild the Group from the Society used as target.
-	-- It is a shortcut to Group:filter() and then Group:randomize() (if the Group was created
-	-- using random = true) or Group:sort() (otherwise).
+	--- Rebuild the Group. It works as if the Group was declared again with the same arguments.
 	-- @usage agent = Agent{
 	--     age = Random{min = 0, max = 50, step = 1}
 	-- }
@@ -164,23 +152,36 @@ Group_ = {
 	--
 	-- group:rebuild()
 	rebuild = function(self)
-		self:filter()
+		if self.parent == nil then
+			customError("It is not possible to rebuild a Group without a parent.")
+		end
+
+		self.agents = {}
+
+		if type(self.select) == "function" then
+			forEachAgent(self.parent, function(agent)
+				if self.select(agent) then
+					table.insert(self.agents, agent)
+				end
+			end)
+		else
+			forEachAgent(self.parent, function(agent)
+				table.insert(self.agents, agent)
+			end)
+		end
 
 		if self.random then
 			self:randomize()
-		else
+		elseif self.greater then
 			self:sort()
 		end
 	end,
 	--- Sort the current Society subset. It updates the traversing order of the Group.
-	-- @arg f An ordering function (Agent, Agent)->boolean, working in the same way of
-	-- argument greater to create the Group. If this argument is missing, this function
-	-- sorts the Group with the function used as argument for the last call to sort itself,
-	-- or then the value of argument greater used to build the Group. When it cannot find
-	-- any function to be used, it shows a warning.
-	-- @see Utils:greaterByAttribute
 	-- @usage agent = Agent{
-	--     age = Random{min = 0, max = 50, step = 1}
+	--     age = Random{min = 0, max = 50, step = 1},
+	--     execute = function(self)
+	--         self.age = self.age + Random{min = 0, max = 2}:sample()
+	--     end
 	-- }
 	--
 	-- soc = Society{
@@ -188,22 +189,17 @@ Group_ = {
 	--     quantity = 20
 	-- }
 	--
-	-- group = Group{
-	--     target = soc
-	-- }
-	--
-	-- group:sort(function(ag1, ag2)
+	-- group = Group{target = soc, greater = function(ag1, ag2)
 	--     return ag1.age > ag2.age
-	-- end)
-	sort = function(self, f)
-		optionalArgument(1, "function", f)
-
-		if f then self.greater = f end
-
+	-- end}
+	--
+	-- group:execute()
+	-- group:sort()
+	sort = function(self)
 		if type(self.greater) == "function" then
 			table.sort(self.agents, self.greater)
 		else
-			customWarning("Cannot sort the Group because there is no previous function.")
+			customError("Cannot sort a Group without a 'greater' function.")
 		end
 	end
 }
@@ -291,7 +287,7 @@ function Group(data)
 		customError("It is not possible to use arguments 'greater' and 'random' at the same time.")
 	end
 
-	defaultTableValue(data, "build", true)
+	defaultTableValue(data, "build", data.target ~= nil)
 	defaultTableValue(data, "random", false)
 
 	data.parent = data.target
@@ -313,13 +309,15 @@ function Group(data)
 
 	setmetatable(data, metaTableGroup_)
 
-	if data.build and data.parent then
-		data:filter()
-		if data.greater then data:sort() end
-		if data.random then data:randomize() end
-		data.build = nil
+	if data.build then
+		if not data.parent then
+			customError("It is not possible to build a Group without a parent.")
+		end
+
+		data:rebuild()
 	end
 
+	data.build = nil
 	return data
 end
 

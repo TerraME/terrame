@@ -373,24 +373,37 @@ water            number [200]
 			finalTime = 100,
 			init = function(model)
 				model.timer = Timer{
-					Event{action = function() end}
+					Event{action = function()
+						model.initialWater = model.initialWater + 1
+						model.sun = model.sun + 1
+					end}
 				}
 			end
 		}
 
 		local scenario0 = MyTube{}
 		unitTest:assertEquals("Default", scenario0:title())
+		scenario0:run()
+		unitTest:assertEquals("Default", scenario0:title())
 
 		local scenario1 = MyTube{initialWater = 100}
+		unitTest:assertEquals("Initial Water = 100", scenario1:title())
+		scenario1:run()
 		unitTest:assertEquals("Initial Water = 100", scenario1:title())
 
 		local scenario2 = MyTube{initialWater = 100, sun = 5}
 		unitTest:assertEquals("Initial Water = 100, Sun = 5", scenario2:title())
+		scenario2:run()
+		unitTest:assertEquals("Initial Water = 100, Sun = 5", scenario2:title())
 
 		local scenario3 = MyTube{initialWater = 100, sun = 10}
 		unitTest:assertEquals("Initial Water = 100", scenario3:title())
+		scenario3:run()
+		unitTest:assertEquals("Initial Water = 100", scenario3:title())
 
 		local scenario4 = MyTube{initialWater = 100, finalTime = 50}
+		unitTest:assertEquals("Initial Water = 100", scenario4:title())
+		scenario4:run()
 		unitTest:assertEquals("Initial Water = 100", scenario4:title())
 	end
 }

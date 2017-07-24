@@ -97,7 +97,7 @@ return{
 		}
 		unitTest:assertEquals(0, #g)
 
-		g:filter()
+		g:rebuild()
 		unitTest:assertEquals(#nonFooSociety, #g)
 
 		g = Group{
@@ -237,15 +237,24 @@ select  function
 			quantity = 10
 		}
 
-		local g = Group{target = nonFooSociety}
-
-		g:filter(function(ag)
+		local g = Group{target = nonFooSociety, select = function(ag)
 			return ag.age > 5 and ag.age < 8
-		end)
+		end}
 
 		forEachAgent(g, function(agent)
 			unitTest:assert(agent.age > 5 and agent.age < 8)
 		end)
+
+		local g1 = #g
+		g:execute()
+
+		g:filter()
+
+		forEachAgent(g, function(agent)
+			unitTest:assert(agent.age > 5 and agent.age < 8)
+		end)
+
+		unitTest:assert(#g <= g1)
 	end,
 	randomize = function(unitTest)
 		local nonFooAgent = Agent{
@@ -371,20 +380,19 @@ select  function
 			quantity = 10
 		}
 
-		local g = Group{
-			target = nonFooSociety
-		}
-
-		local warning_func = function()
-			g:sort()
-		end
-		unitTest:assertWarning(warning_func, "Cannot sort the Group because there is no previous function.")
-
-		g:sort(function(ag1, ag2)
+		local g = Group{target = nonFooSociety, greater = function(ag1, ag2)
 			return ag1.age < ag2.age
-		end)
+		end}
 
 		local lastAge = 0
+		forEachAgent(g, function(agent)
+			unitTest:assert(agent.age >= lastAge)
+			lastAge = agent.age
+		end)
+
+		g:sort()
+
+		lastAge = 0
 		forEachAgent(g, function(agent)
 			unitTest:assert(agent.age >= lastAge)
 			lastAge = agent.age

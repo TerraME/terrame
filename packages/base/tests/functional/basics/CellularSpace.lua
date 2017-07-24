@@ -1725,7 +1725,7 @@ ydim    number [20]
 		end)
 
 		ts.forest:filter()
-		ts.pasture:filter()
+		ts.pasture:rebuild()
 
 		unitTest:assertEquals(#ts.forest, 0)
 		unitTest:assertEquals(#ts.pasture, 25)

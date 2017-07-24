@@ -481,7 +481,7 @@ function Model(attrTab)
 				return m
 			end,
 			configure = function()
-				_Gtme.configure(attrTab, mmodel) -- SKIP
+				_Gtme.configure(mmodel, "model") -- SKIP
 			end,
 			interface = function()
 				if attrTab.interface then
@@ -795,27 +795,27 @@ function Model(attrTab)
 			self.cObj_:notify(modelTime)
 		end
 
-		argv.title = function(self)
-			local parameters = self.parent:getParameters()
-			local str = ""
+		local parameters = argv.parent:getParameters()
+		local titleStr = ""
 
-			forEachOrderedElement(parameters, function(idx, value, mtype)
-				if mtype == "Choice" then
-					if self[idx] ~= value.default and idx ~= "finalTime" then
-						str = str.._Gtme.stringToLabel(idx).." = "..vardump(self[idx])..", "
-					end
-				elseif self[idx] ~= value and idx ~= "finalTime" then
-					str = str.._Gtme.stringToLabel(idx).." = "..vardump(self[idx])..", "
+		forEachOrderedElement(parameters, function(idx, value, mtype)
+			if mtype == "Choice" then
+				if argv[idx] ~= value.default and idx ~= "finalTime" then
+					titleStr = titleStr.._Gtme.stringToLabel(idx).." = "..vardump(argv[idx])..", "
 				end
-			end)
-
-			if str == "" then
-				str = "Default"
-			else
-				str = string.sub(str, 1, -3)
+			elseif argv[idx] ~= value and idx ~= "finalTime" then
+				titleStr = titleStr.._Gtme.stringToLabel(idx).." = "..vardump(argv[idx])..", "
 			end
+		end)
 
-			return str
+		if titleStr == "" then
+			titleStr = "Default"
+		else
+			titleStr = string.sub(titleStr, 1, -3)
+		end
+
+		argv.title = function()
+			return titleStr
 		end
 
 		attrTab.init(argv)

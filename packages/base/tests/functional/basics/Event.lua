@@ -34,6 +34,7 @@ return{
 				priority = "medium"
 			}
 		end
+
 		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
 		unitTest:assertEquals(event:getTime(), 1)
 		unitTest:assertEquals(event:getPeriod(), 1)
@@ -46,6 +47,7 @@ return{
 				start = 1
 			}
 		end
+
 		unitTest:assertWarning(warning_func, defaultValueMsg("start", 1))
 		unitTest:assertEquals(event:getTime(), 1)
 		unitTest:assertEquals(event:getPeriod(), 1)
@@ -58,6 +60,7 @@ return{
 				period = 1
 			}
 		end
+
 		unitTest:assertWarning(warning_func, defaultValueMsg("period", 1))
 		unitTest:assertEquals(event:getTime(), 1)
 		unitTest:assertEquals(event:getPeriod(), 1)
@@ -67,6 +70,7 @@ return{
 		local unnecessaryArgument = function()
 			event = Event{start = 0.5, period = 2, priority = 1, action = function() end, myperiod = function() end}
 		end
+
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("myperiod", "period"))
 		unitTest:assertEquals(event:getTime(), 0.5)
 		unitTest:assertEquals(event:getPeriod(), 2)
@@ -251,6 +255,52 @@ return{
 
 		log:update()
 		unitTest:assertFile("logfile-event.csv")
+
+		local MyModel = Model{
+			water = 2228,
+			finalTime = 10,
+			execute = function(self)
+				self.water = self.water + 1
+				return false
+			end,
+			init = function(self)
+				self.timer = Timer{
+					Event{action = self}
+				}
+			end
+		}
+
+		local mm = MyModel{}
+
+		mm:run()
+		unitTest:assertEquals(mm.water, 2229)
+
+		local total = 0
+
+		local exec = function()
+			total = total + 1
+			return false
+		end
+
+		local cell = Cell{execute = exec}
+		cs = CellularSpace{xdim = 2, execute = exec}
+		traj = Trajectory{target = cs}
+		local agent = Agent{execute = exec}
+		soc = Society{instance = Agent{}, quantity = 2, execute = exec}
+		group = Group{target = soc}
+
+		local timer = Timer{
+			Event{action = cell},
+			Event{action = cs},
+			Event{action = agent},
+			Event{action = soc},
+			Event{action = traj},
+			Event{action = group}
+		}
+
+		timer:run(10)
+
+		unitTest:assertEquals(total, 6)
 	end,
 	config = function(unitTest)
 		local event = Event{action = function() end}
