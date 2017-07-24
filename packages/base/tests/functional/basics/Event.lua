@@ -255,7 +255,7 @@ return{
 
 		log:update()
 		unitTest:assertFile("logfile-event.csv")
-		
+
 		local MyModel = Model{
 			water = 2228,
 			finalTime = 10,
@@ -283,11 +283,11 @@ return{
 		end
 
 		local cell = Cell{execute = exec}
-		local cs = CellularSpace{xdim = 2, execute = exec}
-		local traj = Trajectory{target = cs}
+		cs = CellularSpace{xdim = 2, execute = exec}
+		traj = Trajectory{target = cs}
 		local agent = Agent{execute = exec}
-		local soc = Society{instance = Agent{}, quantity = 2, execute = exec}
-		local group = Group{target = soc}
+		soc = Society{instance = Agent{}, quantity = 2, execute = exec}
+		group = Group{target = soc}
 
 		local timer = Timer{
 			Event{action = cell},

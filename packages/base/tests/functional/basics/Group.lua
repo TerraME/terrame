@@ -392,12 +392,11 @@ select  function
 
 		g:sort()
 
-		local lastAge = 0
+		lastAge = 0
 		forEachAgent(g, function(agent)
 			unitTest:assert(agent.age >= lastAge)
 			lastAge = agent.age
 		end)
-
 	end
 }
 

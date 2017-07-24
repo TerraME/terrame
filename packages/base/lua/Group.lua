@@ -90,7 +90,7 @@ Group_ = {
 	-- group:execute()
 	-- group:filter()
 	filter = function(self)
-		local agents = self.agents	
+		local agents = self.agents
 		self.agents = {}
 
 		if type(self.select) == "function" then
@@ -191,7 +191,7 @@ Group_ = {
 	--
 	-- group = Group{target = soc, greater = function(ag1, ag2)
 	--     return ag1.age > ag2.age
-	-- end}	
+	-- end}
 	--
 	-- group:execute()
 	-- group:sort()
