@@ -68,10 +68,6 @@ weights      named table of size 1
 		unitTest:assertEquals(sntw.count, 1)
 
 		sntw:add(ag2, 0.5)
-		local warning_func = function()
-			sntw:add(ag2)
-		end
-		unitTest:assertWarning(warning_func, "Agent '2' already belongs to the SocialNetwork.")
 		unitTest:assertEquals(ag1, sntw.connections["1"])
 		unitTest:assertEquals(ag2, sntw.connections["2"])
 		unitTest:assertEquals(sntw.weights["1"], 1)

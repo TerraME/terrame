@@ -398,7 +398,13 @@ function Chart(attrTab)
 
 		forEachModel(attrTab.target, function(value, idx)
 			local midx = tostring(idx)
-			c[midx] = function() return value[mselect] end
+
+			if type(value[mselect]) == "function" then
+				c[midx] = function() return value[mselect](value) end
+			else
+				c[midx] = function() return value[mselect] end
+			end
+
 			table.insert(select, midx)
 
 			if type(idx) ~= "string" then

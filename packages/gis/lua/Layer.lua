@@ -1037,6 +1037,7 @@ function Layer(data)
 		getLayerInfoAdapted(data)
 
 		data.epsg = math.floor(data.epsg)
+		data.project[data.name] = data
 
 		return data
 	elseif data.input or data.resolution or data.box then

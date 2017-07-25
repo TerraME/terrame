@@ -43,8 +43,8 @@ Neighborhood_ = {
 		end
 
 		for i = 1, #self do
-			if self.connections[i] == cell then
-				customWarning("Cell '"..id.."' already belongs to the Neighborhood.")
+			if self.connections[i]:getId() == id then
+				customError("Cell '"..id.."' already belongs to the Neighborhood.")
 			end
 		end
 

@@ -54,7 +54,7 @@ weights      vector of size 0
 	add = function(unitTest)
 		local neigh = Neighborhood()
 		local cell1 = Cell{}
-		local cell2 = Cell{x = 1, y = 1}
+		local cell2 = Cell{x = 1, y = 2}
 
 		neigh:add(cell1)
 		unitTest:assert(neigh:isNeighbor(cell1))
@@ -62,10 +62,6 @@ weights      vector of size 0
 		unitTest:assertEquals(#neigh, 1)
 
 		neigh:add(cell2, 0.5)
-		--local warning_func = function() -- TODO(#1909)
-		--	neigh:add(cell2)
-		--end
-		--unitTest:assertWarning(warning_func, "Cell 'C01L01' already belongs to the Neighborhood.") -- SKIP
 		unitTest:assert(neigh:isNeighbor(cell1))
 		unitTest:assertEquals(neigh:getWeight(cell1), 1)
 		unitTest:assert(neigh:isNeighbor(cell2))
@@ -76,7 +72,7 @@ weights      vector of size 0
 		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
-		local cell3 = Cell{x = 1, y = 1}
+		local cell3 = Cell{x = 1, y = 2}
 
 		neigh:add(cell1)
 		neigh:add(cell2)
@@ -90,7 +86,7 @@ weights      vector of size 0
 		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
-		local cell3 = Cell{x = 1, y = 1}
+		local cell3 = Cell{x = 1, y = 2}
 
 		neigh:add(cell1, 0.5)
 		neigh:add(cell2, 0.3)
@@ -115,7 +111,7 @@ weights      vector of size 0
 		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
-		local cell3 = Cell{x = 1, y = 1}
+		local cell3 = Cell{x = 1, y = 2}
 
 		neigh:add(cell1)
 		neigh:add(cell2)
