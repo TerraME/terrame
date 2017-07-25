@@ -72,7 +72,6 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("random", "boolean", 2))
 
-		-- TODO(#1908): remove this test after fix it
 		local warning_func = function()
 			Model{random = false, init = function() end}
 		end
@@ -261,13 +260,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Initial water should be greater than zero.")
-
-		-- TODO(#1908): remove this test after fix it
-		warning_func = function()
-			Tube{block = {xmix = 5}}
-		end
-
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("block.xmix", "block.xmax"))
 
 		error_func = function()
 			Tube{block = {xmin = false}}
@@ -562,18 +554,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Argument 'number' cannot be displayed twice in the interface().")
-
-		-- TODO(#1907)
-		local warning_func = function()
-			Model{
-				simulationSteps = 10,
-				finalTime = 5,
-				interface = function() return {{"number", "string"}} end,
-				init = function() end
-			}
-		end
-
-		unitTest:assertWarning(warning_func, "There is no argument 'string' in the Model, although it is described in the interface().")
 
 		error_func = function()
 			Model{

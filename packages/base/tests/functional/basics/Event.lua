@@ -38,7 +38,7 @@ return{
 		unitTest:assertEquals(event:getTime(), 1)
 		unitTest:assertEquals(event:getPeriod(), 1)
 		unitTest:assertEquals(event:getPriority(), 0)
-		unitTest:assertEquals(type(event), "Event")
+		unitTest:assertType(event, "Event")
 
 		warning_func = function()
 			event = Event{
@@ -50,7 +50,7 @@ return{
 		unitTest:assertEquals(event:getTime(), 1)
 		unitTest:assertEquals(event:getPeriod(), 1)
 		unitTest:assertEquals(event:getPriority(), 0)
-		unitTest:assertEquals(type(event), "Event")
+		unitTest:assertType(event, "Event")
 
 		warning_func = function()
 			event = Event{
@@ -62,7 +62,7 @@ return{
 		unitTest:assertEquals(event:getTime(), 1)
 		unitTest:assertEquals(event:getPeriod(), 1)
 		unitTest:assertEquals(event:getPriority(), 0)
-		unitTest:assertEquals(type(event), "Event")
+		unitTest:assertType(event, "Event")
 
 		local unnecessaryArgument = function()
 			event = Event{start = 0.5, period = 2, priority = 1, action = function() end, myperiod = function() end}
@@ -99,6 +99,10 @@ return{
 			instance = ag,
 			quantity = 5
 		}
+
+		local group = Group{
+			target = soc,
+			greater = function(ag1, ag2) return ag1.id > ag2.id end}
 
 		local c = Cell{
 			execute = function()
@@ -138,60 +142,64 @@ return{
 			end
 		}
 
-		local instance = m{}
-
-		local t
-		-- TODO(#1906)
 		warning_func = function()
-			t = Timer{
-				Event{action = soc}, -- 1000
-				Event{action = c},   -- 2
-				Event{action = cs},
-				Event{action = instance}, -- 20
-				Event{action = ag},  -- 100
-				Event{action = traj, priority = "medium"}
-			}
+			event = Event{action = traj, priority = "medium"}
 		end
+
 		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
+		unitTest:assertEquals(event:getTime(), 1)
+		unitTest:assertEquals(event:getPeriod(), 1)
+		unitTest:assertEquals(event:getPriority(), 0)
 
 		warning_func = function()
-			t = Timer{
-				Event{action = soc, priority = "medium"}, -- 1000
-				Event{action = c},   -- 2
-				Event{action = cs},
-				Event{action = instance}, -- 20
-				Event{action = ag},  -- 100
-				Event{action = traj}
-			}
+			event = Event{action = soc, priority = "medium"}
 		end
+
 		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
+		unitTest:assertEquals(event:getTime(), 1)
+		unitTest:assertEquals(event:getPeriod(), 1)
+		unitTest:assertEquals(event:getPriority(), 0)
 
 		warning_func = function()
-			t = Timer{
-				Event{action = soc}, -- 1000
-				Event{action = c},   -- 2
-				Event{action = cs},
-				Event{action = instance}, -- 20
-				Event{action = ag, priority = "medium"},  -- 100
-				Event{action = traj}
-			}
+			event = Event{action = ag, priority = "medium"}
 		end
+
 		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
+		unitTest:assertEquals(event:getTime(), 1)
+		unitTest:assertEquals(event:getPeriod(), 1)
+		unitTest:assertEquals(event:getPriority(), 0)
 
 		warning_func = function()
-			t = Timer{
-				Event{action = soc}, -- 1000
-				Event{action = c, priority = "high"},   -- 2
-				Event{action = cs},
-				Event{action = instance}, -- 20
-				Event{action = ag},  -- 100
-				Event{action = traj}
-			}
+			event = Event{action = c, priority = "high"}
 		end
+
 		unitTest:assertWarning(warning_func, defaultValueMsg("priority", -5))
+		unitTest:assertEquals(event:getTime(), 1)
+		unitTest:assertEquals(event:getPeriod(), 1)
+		unitTest:assertEquals(event:getPriority(), -5)
+
+		warning_func = function()
+			event = Event{action = group, priority = "medium"}
+		end
+
+		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
+		unitTest:assertEquals(event:getTime(), 1)
+		unitTest:assertEquals(event:getPeriod(), 1)
+		unitTest:assertEquals(event:getPriority(), 0)
+
+		local instance = m{}
+		local t = Timer{
+			Event{action = soc}, -- 1000
+			Event{action = group}, -- 1000
+			Event{action = c},   -- 2
+			Event{action = cs},
+			Event{action = instance}, -- 20
+			Event{action = ag},  -- 100
+			Event{action = traj}
+		}
 
 		t:run(2)
-		unitTest:assertEquals(count, 1222)
+		unitTest:assertEquals(count, 2222)
 		unitTest:assertEquals(sum, 5 * 5 * 2 + #traj * 2)
 
 		cs = CellularSpace{xdim = 5}

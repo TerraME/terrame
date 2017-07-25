@@ -283,13 +283,6 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("invert", "boolean", 2))
 
-		-- TODO(#1914): remove it
-		local warning_func = function()
-			Map{target = c, select = "x", invert = false, slices = 10, color = "Blues", grouping = "quantil"}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("invert", false))
-
 		error_func = function()
 			Map{
 				target = c,
@@ -557,12 +550,11 @@ return{
 
 		unitTest:assertError(error_func, "Grouping 'none' cannot use ColorBrewer.")
 
-		-- TODO(#1912): remove after
-		warning_func = function()
+		error_func = function()
 			Map{target = soc, font = "Blues"}
 		end
 
-		unitTest:assertWarning(warning_func, "Font 'Blues' is not installed. Using default font.")
+		unitTest:assertError(error_func, "Font 'Blues' is not installed.")
 
 		error_func = function()
 			Map{target = soc, font = 2}

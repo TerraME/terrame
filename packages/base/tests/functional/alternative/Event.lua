@@ -130,15 +130,6 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Incompatible types. Attribute 'execute' from CellularSpace should be a function, got number.")
-
-		-- TODO(#1905)
-		local group = Group{target = soc}
-
-		local warning_func = function()
-			Event{action = group, priority = "medium"}
-		end
-
-		unitTest:assertWarning(warning_func, defaultValueMsg("priority", 0))
 	end,
 	config = function(unitTest)
 		local event = Event{action = function() end}
