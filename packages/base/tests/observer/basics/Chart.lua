@@ -187,16 +187,16 @@ return{
 		}
 
 		c1 = Chart{
-		    target = tab,
-		    select = "limit",
-		    xAxis = "demand",
-		    color = "blue"
+			target = tab,
+			select = "limit",
+			xAxis = "demand",
+			color = "blue"
 		}
 
 		c2 = Chart{
-		    target = tab,
-		    select = "demand",
-		    color = "green",
+			target = tab,
+			select = "demand",
+			color = "green",
 			pen = "dash"
 		}
 
@@ -278,6 +278,37 @@ return{
 		e:run()
 
 		unitTest:assertSnapshot(c, "chart-environment-scenarios-2.png", 0.05)
+
+		local MonoLake = Model{
+			waterInLake = 2228,
+			finalTime = 2090,
+			elevation = function(self)
+				return self.waterInLake + 1
+			end,
+			execute = function(self)
+				self.waterInLake = self.waterInLake + 1
+			end,
+			init = function(self)
+				self.timer = Timer{
+					Event{action = self}
+				}
+			end
+		}
+
+		local env = Environment{
+			MonoLake{},
+			MonoLake{waterInLake = 1000},
+		}
+
+		chart = Chart{
+			target = env,
+			select = "elevation"
+		}
+
+		env:add(Event{action = chart})
+		env:run()
+
+		unitTest:assertSnapshot(chart, "chart-environment-function.png", 0.1)
 	end,
 	getData = function(unitTest)
 		local tab = DataFrame{
