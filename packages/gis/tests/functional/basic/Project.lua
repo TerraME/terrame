@@ -148,6 +148,7 @@ return {
 		unitTest:assertEquals(cl.rep, "polygon")
 		unitTest:assertEquals(cl.source, "shp")
 		unitTest:assertEquals(cl.epsg, 29192)
+		unitTest:assertEquals(proj5.cells, cl)
 
 		proj5 = Project{
 			file = file:name(true),
@@ -170,6 +171,7 @@ return {
 		unitTest:assertType(proj5.firebreak, "Layer")
 		unitTest:assertEquals(proj5.firebreak.rep, "line")
 		unitTest:assertEquals(proj5.firebreak.source, "shp")
+		unitTest:assertEquals(proj5.cover, cover)
 
 		unitTest:assertType(cover, "Layer")
 		unitTest:assertEquals(cover.rep, "raster")
