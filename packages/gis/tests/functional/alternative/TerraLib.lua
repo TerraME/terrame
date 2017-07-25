@@ -30,7 +30,7 @@ return {
 			TerraLib().createProject(proj, {})
 		end
 
-		unitTest:assertError(mandatoryExt, "Please, the file extension must be '.tview'.")
+		unitTest:assertError(mandatoryExt, "Please, the file extension must be '.tview' or '.qgs'.")
 	end,
 	openProject = function(unitTest)
 		local proj = {}

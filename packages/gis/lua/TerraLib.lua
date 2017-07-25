@@ -256,7 +256,7 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 			client:updateCapabilities()
 			local capblts = client:getCapabilities()
 			local rootLayer = capblts.m_capability.m_layer
-			local wmsLayer = rootLayer:getLayerByTitle(dSetName)
+			local wmsLayer = rootLayer:getLayerByDataSetName(dSetName)
 
 			if wmsLayer.m_title == "" then
 				binding.te.da.DataSourceManager.getInstance():detach(dsId)
@@ -356,6 +356,13 @@ local function releaseProject(project)
 end
 
 local function saveProject(project, layers)
+	local file = tostring(project.file)
+	local _, fileName, ext = project.file:split()
+
+	if ext == "qgs" then
+		file = currentDir()..fileName..".tview"
+	end
+
 	local layersVector = {}
 	local i = 1
 
@@ -364,12 +371,18 @@ local function saveProject(project, layers)
 		i = i + 1
 	end
 
-	binding.SaveProject(tostring(project.file), project.author, project.title, layersVector)
+	binding.SaveProject(file, project.author, project.title, layersVector)
 end
 
 local function loadProject(project, file)
 	if not file:exists() then
 		customError("Could not read project file: "..file..".") -- SKIP
+	end
+
+	local _, fileName, ext = project.file:split()
+
+	if ext == "qgs" then
+		file = currentDir()..fileName..".tview"
 	end
 
 	local projMd = binding.LoadProject(tostring(file))
@@ -1720,6 +1733,94 @@ local function fixSpaceInPath(path)
 	return string.gsub(path, "%%20", " ")
 end
 
+-- debug function
+-- local function showUri(uri)
+	-- _Gtme.print("uri()", uri:uri())
+	-- _Gtme.print("scheme()", uri:scheme())
+	-- _Gtme.print("user()", uri:user())
+	-- _Gtme.print("password()", uri:password())
+	-- _Gtme.print("host()", uri:host())
+	-- _Gtme.print("port()", uri:port())
+	-- _Gtme.print("path()", uri:path())
+	-- _Gtme.print("query()", uri:query())
+	-- _Gtme.print("fragment()", uri:fragment())
+-- end
+
+local function splitString(str, delimiter)
+	local tokens = {}
+	for token in string.gmatch(str, "([^"..delimiter.."]+)") do
+		table.insert(tokens, token)
+	end
+	return tokens
+end
+
+local function createProjectFromQgis(project)
+	local qgisProjInfo = binding.QgisProject.load(tostring(project.file))
+	local layers = qgisProjInfo:getLayers()
+
+	project.title = qgisProjInfo:getTitle()
+
+	if project.title == "" then
+		project.title = "QGis Project"
+	end
+
+	project.author = project.title
+	project.layers = {}
+
+	saveProject(project, project.layers)
+
+	for i = 0, getn(layers) - 1 do
+		local qgisLayer = layers[i]
+		local uri = qgisLayer:getUri()
+
+		if uri:scheme() == "file" then
+			local file = File(uri:host()..uri:path())
+			local ext = file:extension()
+			if ext == "shp" then
+				instance.addShpLayer(project, qgisLayer:getName(), file, true, qgisLayer:getSrid())
+			elseif ext == "tif" then
+				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+			elseif ext == "geojson" then
+				instance.addGeoJSONLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+			elseif ext == "nc" then
+				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+			elseif ext == "asc" then
+				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+			else
+				customError("Layer QGis ignored '"..qgisLayer:getName().."'.Type '"..ext.."' is not supported.")
+			end
+		elseif uri:scheme() == "pgsql" then
+			local conn = {
+				host = uri:host(),
+				port = uri:port(),
+				user = uri:user(),
+				password = uri:password(),
+				database = string.gsub(uri:path(), "/", ""),
+				table = uri:query(),
+				encoding = "LATIN1"
+			}
+
+			instance.addPgLayer(project,  qgisLayer:getName(), conn, qgisLayer:getSrid(), conn.encoding)
+		elseif uri:scheme() == "wfs" then
+			instance.addWfsLayer(project, qgisLayer:getName(), uri:path(), uri:query(), qgisLayer:getSrid())
+		elseif uri:scheme() == "wms" then
+			local values = splitString(uri:query(), "&")
+			local format = splitString(values[1], "=")[2]
+			local layer = splitString(values[2], "=")[2]
+
+			local conn = {
+				url = uri:path(),
+				format = format,
+				directory = currentDir()
+			}
+
+			instance.addWmsLayer(project, qgisLayer:getName(), conn, layer, qgisLayer:getSrid())
+		else
+			customWarning("Layer QGis ignored '"..qgisLayer:getName().."'. Unsupported type.")
+		end
+	end
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 
@@ -1747,15 +1848,19 @@ TerraLib_ = {
 			project.file = File(project.file)
 		end
 
-		if project.file:extension() ~= "tview" then
-			customError("Please, the file extension must be '.tview'.")
+		if not ((project.file:extension() == "tview") or (project.file:extension() == "qgs")) then
+			customError("Please, the file extension must be '.tview' or '.qgs'.")
 		end
 
-		if not project.layers then
-			project.layers = layers
-		end
+		if project.file:extension() == "qgs" then
+			createProjectFromQgis(project)
+		else
+			if not project.layers then
+				project.layers = layers
+			end
 
-		saveProject(project, layers)
+			saveProject(project, layers)
+		end
 	end,
 	--- Open a new project.
 	-- @arg project The name of the project.
@@ -1769,8 +1874,8 @@ TerraLib_ = {
 			filePath = File(filePath)
 		end
 
-		if filePath:extension() ~= "tview" then
-			customError("Please, the file extension must be '.tview'.")
+		if not ((filePath:extension() ~= "tview") or  (filePath:extension() ~= "qgs")) then
+			customError("Please, the file extension must be '.tview' or '.ags'.")
 		end
 
 		if not project.file then

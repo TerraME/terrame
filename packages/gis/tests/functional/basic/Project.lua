@@ -244,6 +244,47 @@ return {
 
 		unitTest:assertEquals(getn(proj.layers), 13)
 		file:deleteIfExists()
+
+		-- QGIS PROJECT
+		local qgisproj = Project {
+			file = filePath("test/various.qgs", "gis")
+		}
+
+		local l1 = Layer{
+			project = qgisproj,
+			name = "sampa"
+		}
+		unitTest:assertEquals(l1.name, "sampa")
+		unitTest:assertEquals(l1.rep, "polygon")
+		unitTest:assertEquals(l1.epsg, 4019)
+		unitTest:assertEquals(File(l1.file):name(), "sampa.geojson")
+		unitTest:assertEquals(l1.source, "geojson")
+		unitTest:assertEquals(l1.encoding, "latin1")
+
+		local l2 = Layer{
+			project = qgisproj,
+			name = "biomassa-manaus"
+		}
+		unitTest:assertEquals(l2.name, "biomassa-manaus")
+		unitTest:assertEquals(l2.rep, "raster")
+		unitTest:assertEquals(l2.epsg, 4326)
+		unitTest:assertEquals(File(l2.file):name(), "biomassa-manaus.asc")
+		unitTest:assertEquals(l2.source, "asc")
+		unitTest:assertNil(l2.encoding)
+
+		local l3 = Layer{
+			project = qgisproj,
+			name = "vegtype_2000"
+		}
+		unitTest:assertEquals(l3.name, "vegtype_2000")
+		unitTest:assertEquals(l3.rep, "raster")
+		unitTest:assertEquals(l3.epsg, 4326)
+		unitTest:assertEquals(File(l3.file):name(), "vegtype_2000.nc")
+		unitTest:assertEquals(l3.source, "nc")
+		unitTest:assertNil(l3.encoding)
+
+		File("various.tview"):delete()
+		-- // QGIS PROJECT
 	end,
 	__tostring = function(unitTest)
 		local file = File("tostring.tview")
@@ -264,15 +305,28 @@ title   string [The Amazonia]
 		file:delete()
 
 		local defaultValueError = function()
-			Project{file = "abc", title = "No title"}
+			Project{file = "abc.tview", title = "No title"}
 		end
 		unitTest:assertWarning(defaultValueError, defaultValueMsg("title", "No title"))
 		File("abc.tview"):delete()
 
 		defaultValueError = function()
-			Project{file = "abc", author = "No author"}
+			Project{file = "abc.tview", author = "No author"}
 		end
 		unitTest:assertWarning(defaultValueError, defaultValueMsg("author", "No author"))
 		File("abc.tview"):delete()
+
+		local qgisproj = Project {
+			file = filePath("test/amazonia.qgs", "gis")
+		}
+
+		unitTest:assertEquals(tostring(qgisproj), [[author  string [QGis Project]
+clean   boolean [false]
+file    File
+layers  named table of size 3
+title   string [QGis Project]
+]])
+
+		File("amazonia.tview"):delete()
 	end
 }
