@@ -40,6 +40,7 @@ return{
         unitTest:assertEquals(_Gtme.stringToLabel("my_first_string_"), "My First String")
         unitTest:assertEquals(_Gtme.stringToLabel("myFirstString_"), "My First String")
         unitTest:assertEquals(_Gtme.stringToLabel("myFirstStr", "myParent"), "My First Str (in My Parent)")
+		unitTest:assertEquals(_Gtme.stringToLabel("scenario1rain"), "Scenario 1 Rain")
 	end
 }
 

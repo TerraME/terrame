@@ -719,8 +719,8 @@ function _Gtme.stringToLabel(mstring, parent)
 		end
 	else
 		mstring = string.sub(mstring, 2)
-		local nextu = string.match(mstring, "%u")
-		local nextd = string.match(mstring, "%d")
+		local nextu = string.match(mstring, "%u") -- uppercase
+		local nextd = string.match(mstring, "%d") -- digits
 
 		local firstchar = string.sub(mstring, 1, 1)
 		local prevu = firstchar == string.upper(firstchar)
@@ -753,7 +753,12 @@ function _Gtme.stringToLabel(mstring, parent)
 				prevu = false
 				prevd = true
 			else
-				result = result..nextchar
+				if prevd then
+					result = result.." "..string.upper(nextchar)
+				else
+					result = result..nextchar
+				end
+
 				prevu = false
 				prevd = false
 			end
