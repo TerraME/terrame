@@ -66,8 +66,8 @@
   # mkdir $_TERRALIB_GIT_DIR
 # fi
 
-echo "### TerraLib ###"
-git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
+#echo "### TerraLib ###"
+#git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
 
 # Creating TerraME Test folders and TerraLib solution
 mkdir $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERRAME_BUILD_BASE/solution
