@@ -35,6 +35,7 @@ local comboboxProjects
 local aboutButton
 local configureButton
 local projButton
+local projsButton
 local docButton
 local installLocalButton
 local installButton
@@ -74,6 +75,7 @@ local function disableAll()
 		[comboboxModels]   = comboboxModels.enabled,
 		[comboboxProjects] = comboboxProjects.enabled,
 		[projButton]       = projButton.enabled,
+		[projsButton]      = projsButton.enabled,
 		[docButton]        = docButton.enabled,
 		[configureButton]  = configureButton.enabled,
 		[runButton]        = runButton.enabled
@@ -86,6 +88,7 @@ local function disableAll()
 	aboutButton.enabled        = false
 	configureButton.enabled    = false
 	projButton.enabled         = false
+	projsButton.enabled        = false
 	docButton.enabled          = false
 	installLocalButton.enabled = false
 	installButton.enabled      = false
@@ -99,6 +102,7 @@ local function enableAll()
 	comboboxProjects.enabled = oldState[comboboxProjects]
 	configureButton.enabled  = oldState[configureButton]
 	projButton.enabled       = oldState[projButton]
+	projsButton.enabled      = oldState[projsButton]
 	docButton.enabled        = oldState[docButton]
 	runButton.enabled        = oldState[runButton]
 
@@ -257,6 +261,55 @@ local function projButtonClicked()
 	enableAll()
 end
 
+local function projsButtonClicked()
+	disableAll()
+
+	local s = sessionInfo().separator
+	local package = comboboxPackages.currentText
+	dofile(_Gtme.sessionInfo().path.."lua"..s.."project.lua")
+
+	local dataPath = Directory(packageInfo(package).path.."data")
+	dataPath:setCurrentDir()
+
+	local quantity = 0
+	forEachFile(".", function(file)
+		if file:extension() == "lua" then
+			quantity = quantity + 1
+		end
+	end)
+
+	qt.dialog.msg_information(quantity.." projects will be created within the data directory of package "..package..". This operation might take some time.")
+
+	local errors = 0
+	local msg = ""
+	forEachFile(".", function(file)
+		if file:extension() == "lua" then
+			_Gtme.print("Processing "..file:name())
+    		_Gtme.loadTmeFile(tostring(file))
+
+    		xpcall(function() dofile(tostring(file)) end, function(err)
+    		    _Gtme.print("Could not execute the script properly: "..err)
+    		    msg = msg.."\nCould not execute the script properly: "..err
+				errors = errors + 1
+    		end)
+
+			clean()
+		end
+	end)
+
+	sessionInfo().initialDir:setCurrentDir()
+
+	if errors == 1 then
+		qt.dialog.msg_critical("One error was found while creating projects:"..msg)
+	elseif errors > 1 then
+		qt.dialog.msg_critical(errors.." errors were found while creating projects:"..msg)
+	else
+		qt.dialog.msg_information("All the projects were successfully executed.")
+	end
+
+	enableAll()
+end
+
 -- what to do when a new package is selected
 local function selectPackage()
 	local s = sessionInfo().separator
@@ -290,6 +343,7 @@ local function selectPackage()
 		comboboxExamples.enabled = false
 		runButton.enabled = false
 		projButton.enabled = false
+		projsButton.enabled = false
 		docButton.enabled = false
 		return
 	end
@@ -319,6 +373,7 @@ local function selectPackage()
 
 	comboboxProjects.enabled = #files > 1
 	projButton.enabled = #files > 0
+	projsButton.enabled = #files > 0
 
 	forEachElement(files, function(_, value)
 		local _, file = value:split()
@@ -790,9 +845,14 @@ function _Gtme.packageManager()
 	projButton.text = "Create"
 	qt.connect(projButton, "clicked()", projButtonClicked)
 
+	projsButton = qt.new_qobject(qt.meta.QPushButton)
+	projsButton.text = "Create All"
+	qt.connect(projsButton, "clicked()", projsButtonClicked)
+
 	qt.ui.layout_add(internalLayout, label,            3, 0)
 	qt.ui.layout_add(internalLayout, comboboxProjects, 3, 1)
 	qt.ui.layout_add(internalLayout, projButton,       3, 2)
+	qt.ui.layout_add(internalLayout, projsButton,      3, 3)
 
 	buildComboboxPackages("base")
 
