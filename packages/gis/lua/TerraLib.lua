@@ -1782,12 +1782,12 @@ local function createProjectFromQgis(project)
 				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
 			elseif ext == "geojson" then
 				instance.addGeoJSONLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
-			elseif ext == "nc" then
+			elseif (ext == "nc") and (_Gtme.sessionInfo().system == "windows") then
 				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
 			elseif ext == "asc" then
 				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
 			else
-				customError("Layer QGis ignored '"..qgisLayer:getName().."'.Type '"..ext.."' is not supported.")
+				customWarning("Layer QGis ignored '"..qgisLayer:getName().."'. Type '"..ext.."' is not supported.")
 			end
 		elseif uri:scheme() == "pgsql" then
 			local conn = {
@@ -1874,8 +1874,8 @@ TerraLib_ = {
 			filePath = File(filePath)
 		end
 
-		if not ((filePath:extension() ~= "tview") or  (filePath:extension() ~= "qgs")) then
-			customError("Please, the file extension must be '.tview' or '.ags'.")
+		if not ((filePath:extension() == "tview") or  (filePath:extension() == "qgs")) then
+			customError("Please, the file extension must be '.tview' or '.qgs'.")
 		end
 
 		if not project.file then

@@ -246,9 +246,20 @@ return {
 		file:deleteIfExists()
 
 		-- QGIS PROJECT
-		local qgisproj = Project {
-			file = filePath("test/various.qgs", "gis")
-		}
+		local qgisproj
+
+		if _Gtme.sessionInfo().system == "windows" then
+			qgisproj = Project {
+				file = filePath("test/various.qgs", "gis")
+			}
+		else
+			local ncWarn = function()
+				qgisproj = Project {
+					file = filePath("test/various.qgs", "gis")
+				}
+			end
+			unitTest:assertWarning(ncWarn, "Layer QGis ignored 'vegtype_2000'. Type 'nc' is not supported.")
+		end
 
 		local l1 = Layer{
 			project = qgisproj,
@@ -272,16 +283,18 @@ return {
 		unitTest:assertEquals(l2.source, "asc")
 		unitTest:assertNil(l2.encoding)
 
-		local l3 = Layer{
-			project = qgisproj,
-			name = "vegtype_2000"
-		}
-		unitTest:assertEquals(l3.name, "vegtype_2000")
-		unitTest:assertEquals(l3.rep, "raster")
-		unitTest:assertEquals(l3.epsg, 4326)
-		unitTest:assertEquals(File(l3.file):name(), "vegtype_2000.nc")
-		unitTest:assertEquals(l3.source, "nc")
-		unitTest:assertNil(l3.encoding)
+		if _Gtme.sessionInfo().system == "windows" then
+			local l3 = Layer{
+				project = qgisproj,
+				name = "vegtype_2000"
+			}
+			unitTest:assertEquals(l3.name, "vegtype_2000") -- SKIP
+			unitTest:assertEquals(l3.rep, "raster") -- SKIP
+			unitTest:assertEquals(l3.epsg, 4326) -- SKIP
+			unitTest:assertEquals(File(l3.file):name(), "vegtype_2000.nc") -- SKIP
+			unitTest:assertEquals(l3.source, "nc") -- SKIP
+			unitTest:assertNil(l3.encoding) -- SKIP
+		end
 
 		File("various.tview"):delete()
 		-- // QGIS PROJECT

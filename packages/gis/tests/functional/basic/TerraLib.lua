@@ -151,7 +151,15 @@ return {
 		-- various types
 		proj = {}
 		proj.file = filePath("test/various.qgs", "gis")
-		TerraLib().createProject(proj)
+
+		if _Gtme.sessionInfo().system == "windows" then
+			TerraLib().createProject(proj)
+		else
+			local ncWarn = function()
+				TerraLib().createProject(proj)
+			end
+			unitTest:assertWarning(ncWarn, "Layer QGis ignored 'vegtype_2000'. Type 'nc' is not supported.")
+		end
 
 		layerInfo = TerraLib().getLayerInfo(proj, "sampa")
 		unitTest:assertEquals(layerInfo.name, "sampa")
@@ -169,13 +177,15 @@ return {
 		unitTest:assertEquals(layerInfo.source, "asc")
 		unitTest:assertNil(layerInfo.encoding)
 
-		layerInfo = TerraLib().getLayerInfo(proj, "vegtype_2000")
-		unitTest:assertEquals(layerInfo.name, "vegtype_2000")
-		unitTest:assertEquals(layerInfo.rep, "raster")
-		unitTest:assertEquals(layerInfo.srid, 4326)
-		unitTest:assertEquals(layerInfo.type, "GDAL")
-		unitTest:assertEquals(layerInfo.source, "nc")
-		unitTest:assertNil(layerInfo.encoding)
+		if _Gtme.sessionInfo().system == "windows" then
+			layerInfo = TerraLib().getLayerInfo(proj, "vegtype_2000")
+			unitTest:assertEquals(layerInfo.name, "vegtype_2000") -- SKIP
+			unitTest:assertEquals(layerInfo.rep, "raster") -- SKIP
+			unitTest:assertEquals(layerInfo.srid, 4326) -- SKIP
+			unitTest:assertEquals(layerInfo.type, "GDAL") -- SKIP
+			unitTest:assertEquals(layerInfo.source, "nc") -- SKIP
+			unitTest:assertNil(layerInfo.encoding) -- SKIP
+		end
 
 		File("various.tview"):delete()
 

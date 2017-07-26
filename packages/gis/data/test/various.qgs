@@ -78,7 +78,7 @@
         <ymax>-1.7426536076618997</ymax>
       </extent>
       <id>biomassa_manaus20170724153344180</id>
-      <datasource>D:/terrame/git/terrame/packages/gis/data/test/biomassa-manaus.asc</datasource>
+      <datasource>./biomassa-manaus.asc</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -122,7 +122,7 @@
     </maplayer>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" readOnly="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <id>sampa20170724153352835</id>
-      <datasource>D:/terrame/git/terrame/packages/gis/data/test/sampa.geojson</datasource>
+      <datasource>./sampa.geojson</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -211,7 +211,7 @@
         <multilineenabled fieldname="" on=""/>
         <selectedonly on=""/>
       </labelattributes>
-      <annotationform></annotationform>
+      <annotationform>.</annotationform>
       <aliases>
         <alias field="ID" index="0" name=""/>
         <alias field="NM_MICRO" index="1" name=""/>
@@ -223,10 +223,10 @@
       <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
         <columns/>
       </attributetableconfig>
-      <editform></editform>
+      <editform>.</editform>
       <editforminit/>
       <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath></editforminitfilepath>
+      <editforminitfilepath>.</editforminitfilepath>
       <editforminitcode><![CDATA[]]></editforminitcode>
       <featformsuppress>0</featformsuppress>
       <editorlayout>generatedlayout</editorlayout>
@@ -244,7 +244,7 @@
         <ymax>6.5</ymax>
       </extent>
       <id>vegtype_200020170724153315917</id>
-      <datasource>D:/terrame/git/terrame/packages/gis/data/test/vegtype_2000.nc</datasource>
+      <datasource>./vegtype_2000.nc</datasource>
       <keywordList>
         <value></value>
       </keywordList>
