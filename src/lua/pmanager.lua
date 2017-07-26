@@ -325,13 +325,13 @@ local function projsButtonClicked()
 	forEachFile(".", function(file)
 		if file:extension() == "lua" then
 			_Gtme.print("Processing "..file:name())
-    		_Gtme.loadTmeFile(tostring(file))
+			_Gtme.loadTmeFile(tostring(file))
 
-    		xpcall(function() dofile(tostring(file)) end, function(err)
-    		    _Gtme.print("Could not execute the script properly: "..err)
-    		    msg = msg.."\nCould not execute the script properly: "..err
+			xpcall(function() dofile(tostring(file)) end, function(err)
+				_Gtme.print("Could not execute the script properly: "..err)
+				msg = msg.."\nCould not execute the script properly: "..err
 				errors = errors + 1
-    		end)
+			end)
 
 			clean()
 		end
@@ -932,7 +932,7 @@ function _Gtme.packageManager()
 	end)
 
 	forEachDirectory(".", function(dir)
-		directoriesInCurrentDirectory[dif:name()] = true
+		directoriesInCurrentDirectory[dir:name()] = true
 	end)
 
 	selectPackage()
