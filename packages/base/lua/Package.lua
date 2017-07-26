@@ -42,7 +42,7 @@ function filePath(filename, package)
 	else
 		local msg = "File 'data/"..filename.."' does not exist in package '"..package.."'."
 
-		if file:extension() == "tview" then
+		if file:extension() ~= "" then
 			local _, name = file:split()
 			local luafile = File(packageInfo(package).data..name..".lua")
 

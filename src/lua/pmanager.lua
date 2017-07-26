@@ -176,7 +176,47 @@ end
 local function runButtonClicked()
 	disableAll()
 
+	local oldFilePath = filePath
+	filePath = function(filename, package)
+		if package == nil then package = "base" end
+
+		filename = _Gtme.makePathCompatibleToAllOS(filename)
+
+		local data = packageInfo(package).data
+		local file = File(data..filename)
+
+		if file:exists() then
+			return file
+		elseif file:extension() ~= "" then
+			file = File(filename)
+
+			if file:exists() then return file end
+
+			local _, name = file:split()
+			local luafile = File(packageInfo(package).data..name..".lua")
+
+			if luafile:exists() then
+				local msg = "This example requires project "..name..". It will be created locally before running the example."
+				qt.dialog.msg_information(msg)
+				local oldPrint = print
+				print = function(value) _Gtme.print(value) end
+				_Gtme.executeProject(package, name)
+				print = oldPrint
+				qt.dialog.msg_information("Project '"..name.."' successfully created.")
+				clean()
+				local s = sessionInfo().separator
+				_Gtme.loadTmeFile(packageInfo(package).path..s.."examples"..s..comboboxExamples.currentText..".lua")
+				return file
+			end
+		else
+			customError("Could not find data file. The example is corrupted.")
+		end
+	end
+
 	local ok, res = _Gtme.execExample(comboboxExamples.currentText, comboboxPackages.currentText)
+
+	filePath = oldFilePath
+
 	if not ok then
 		qt.dialog.msg_critical(res)
 	end
