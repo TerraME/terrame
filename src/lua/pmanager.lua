@@ -43,6 +43,7 @@ local runButton
 local dialog
 local oldState
 local filesInCurrentDirectory = {}
+local directoriesInCurrentDirectory = {}
 
 local function breakLines(str)
 	local result = ""
@@ -617,6 +618,7 @@ end
 
 local function quitButtonClicked()
 	local createdFiles = {}
+	local createdDirectories = {}
 
 	forEachFile(".", function(file)
 		if not filesInCurrentDirectory[file:name()] then
@@ -626,7 +628,13 @@ local function quitButtonClicked()
 		end
 	end)
 
-	local countCreated = getn(createdFiles)
+	forEachDirectory(".", function(dir)
+		if not directoriesInCurrentDirectory[dir:name()] then
+			createdDirectories[dir:name()] = true
+		end
+	end)
+
+	local countCreated = getn(createdFiles) + getn(createdDirectories)
 
 	if countCreated > 0 then
 		local Dialog = qt.new_qobject(qt.meta.QDialog)
@@ -646,13 +654,22 @@ local function quitButtonClicked()
 		label.text = msg
 		qt.ui.layout_add(VBoxLayout, label)
 
-		local checkBoxes = {}
+		local checkBoxesFiles = {}
+		local checkBoxesDirectories = {}
 
 		forEachOrderedElement(createdFiles, function(idx)
 			local checkBox = qt.new_qobject(qt.meta.QCheckBox)
 			checkBox.text = idx
 			checkBox.checked = true
-			checkBoxes[checkBox] = true
+			checkBoxesFiles[checkBox] = idx
+			qt.ui.layout_add(VBoxLayout, checkBox)
+		end)
+
+		forEachOrderedElement(createdDirectories, function(idx)
+			local checkBox = qt.new_qobject(qt.meta.QCheckBox)
+			checkBox.text = idx.." (directory)"
+			checkBox.checked = true
+			checkBoxesDirectories[checkBox] = idx
 			qt.ui.layout_add(VBoxLayout, checkBox)
 		end)
 
@@ -682,11 +699,18 @@ local function quitButtonClicked()
 		end)
 
 		qt.connect(OkButton, "clicked()", function()
-			forEachElement(checkBoxes, function(idx)
+			forEachElement(checkBoxesFiles, function(idx, name)
 				if idx.checked then
-					File(idx.text):delete()
+					File(name):delete()
 				end
 			end)
+
+			forEachElement(checkBoxesDirectories, function(idx, name)
+				if idx.checked then
+					Directory(name):delete()
+				end
+			end)
+
 			Dialog:done(0)
 		end)
 
@@ -805,6 +829,10 @@ function _Gtme.packageManager()
 
 	forEachFile(".", function(file)
 		filesInCurrentDirectory[file:name()] = true
+	end)
+
+	forEachDirectory(".", function(dir)
+		directoriesInCurrentDirectory[dif:name()] = true
 	end)
 
 	selectPackage()
