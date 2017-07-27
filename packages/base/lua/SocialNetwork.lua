@@ -44,7 +44,7 @@ SocialNetwork_ = {
 		if id == nil then
 			customError("Agent should have an id in order to be added to a SocialNetwork.")
 		elseif self.connections[id] ~= nil then
-			customWarning("Agent '"..id.."' already belongs to the SocialNetwork.")
+			customError("Agent '"..id.."' already belongs to the SocialNetwork.")
 		else
 			self.connections[id] = connection
 			self.weights[id] = weight

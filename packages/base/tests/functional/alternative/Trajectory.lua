@@ -102,15 +102,14 @@ return{
 		unitTest:assertError(error_func, "Cell (0, 0) already belongs to the Trajectory.")
 	end,
 	filter = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-		local trajectory = Trajectory{
-			target = cs
-		}
+		local cs = CellularSpace{xdim = 2}
+		local traj = Trajectory{target = cs}
 
 		local error_func = function()
-			trajectory:filter("filter")
+			traj:filter()
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "filter"))
+
+		unitTest:assertError(error_func, "Cannot filter a Trajectory without a 'select' function.")
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -142,13 +141,12 @@ return{
 	end,
 	sort = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
-		local trajectory = Trajectory{target = cs}
+		local it = Trajectory{target = cs}
 
-		local error_func = function()
-			trajectory:sort("func")
+		local sortError = function()
+			it:sort()
 		end
-
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "func"))
+		unitTest:assertError(sortError, "Cannot sort a Trajectory without a 'greater' function.")
 	end
 }
 

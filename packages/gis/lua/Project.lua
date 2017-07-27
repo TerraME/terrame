@@ -148,6 +148,7 @@ function Project(data)
 
 	forEachElement(data, function(idx, value)
 		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
+		if type(value) == "Layer" then return end
 
 		layers[idx] = Layer{
 			project = data,

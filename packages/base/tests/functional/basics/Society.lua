@@ -396,11 +396,18 @@ state_          State
 			unitTest:assertNil(ag:getSocialNetwork())
 		end)
 
-		predators:createSocialNetwork{probability = 0.5, name = "friends"}
-		predators:createSocialNetwork{quantity = 1, name = "boss"}
 		local warning_func = function()
+			predators:createSocialNetwork{strategy = "probability", probability = 0.5, name = "friends"}
+		end
+
+		unitTest:assertWarning(warning_func, defaultValueMsg("strategy", "probability"))
+
+		predators:createSocialNetwork{quantity = 1, name = "boss"}
+
+		warning_func = function()
 			predators:createSocialNetwork{filter = function() return true end, name = "all", abc = true}
 		end
+
 		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("abc"))
 
 		local count_prob = 0
@@ -844,7 +851,7 @@ state_          State
 			magent.gender = "male"
 		end)
 
-		groups.male:filter()
+		groups.male:rebuild()
 		groups.female:filter()
 
 		unitTest:assertEquals(#groups.male, 10)

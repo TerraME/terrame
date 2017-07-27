@@ -46,13 +46,12 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "not_number"))
 
-		-- TODO(#1909): remove this test after fix it
-		local warning_func = function()
+		error_func = function()
 			neigh:add(cell2)
 			neigh:add(cell2)
 		end
 
-		unitTest:assertWarning(warning_func, "Cell 'C00L01' already belongs to the Neighborhood.")
+		unitTest:assertError(error_func, "Cell 'C00L01' already belongs to the Neighborhood.")
 	end,
 	getWeight = function(unitTest)
 		local cell1 = Cell{x = 0, y = 0}

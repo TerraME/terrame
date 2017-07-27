@@ -232,18 +232,23 @@ xyz     function
 	end,
 	filter = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
-		local it = Trajectory{target = cs}
-
-		it:filter(function(c)
+		local it = Trajectory{target = cs, select = function(c)
 			if c.x < 9 and c.x > 7 and c.y > 5 then return true end
-		end)
+		end}
+
+		local qit = #it
 
 		forEachCell(it, function(cell)
 			unitTest:assert(cell.x < 9)
 			unitTest:assert(cell.x > 7)
 			unitTest:assert(cell.y > 5)
 		end)
+
 		unitTest:assertEquals(4, #it)
+
+		it:filter()
+
+		unitTest:assertEquals(#it, qit)
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -338,16 +343,10 @@ xyz     function
 	end,
 	sort = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
-		local it = Trajectory{target = cs}
 
-		local sortWarn = function()
-			it:sort()
-		end
-		unitTest:assertWarning(sortWarn, "Cannot sort the Trajectory because there is no previous function.")
-
-		it:sort(function(a, b)
+		local it = Trajectory{target = cs, greater = function(a, b)
 			return a.y > b.y
-		end)
+		end}
 
 		local orderMemory = 10e10
 		forEachCell(it, function(cell)
@@ -358,16 +357,23 @@ xyz     function
 		local xMemory = 0
 		local yMemory = 0
 		local cont = 0
-		it:sort(greaterByCoord("<"))
+
+		it = Trajectory{
+			target = cs,
+			greater = greaterByCoord("<")
+		}
+
 		forEachCell(it, function(cell)
 			unitTest:assert(cell.x >= xMemory)
 			if cell.x == xMemory then
 				unitTest:assert(cell.y >= yMemory)
 			end
+
 			xMemory = cell.x
 			yMemory = cell.y
 			cont = cont + 1
 		end)
+
 		unitTest:assertEquals(100, cont)
 	end
 }

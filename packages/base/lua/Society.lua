@@ -291,19 +291,23 @@ Society_ = {
 	createSocialNetwork = function(self, data)
 		verifyNamedTable(data)
 
+		optionalTableArgument(data, "strategy", "string")
+
+		local defaultStrategy = {}
+
+		if data.probability ~= nil  then table.insert(defaultStrategy, "probability") end
+		if data.quantity ~= nil     then table.insert(defaultStrategy, "quantity")    end
+		if data.filter ~= nil       then table.insert(defaultStrategy, "function")    end
+		if data.neighborhood ~= nil then table.insert(defaultStrategy, "neighbor")    end
+
+		if #defaultStrategy == 1 then
+			defaultTableValue(data, "strategy", defaultStrategy[1])
+		elseif #defaultStrategy > 1 and data.strategy == nil then
+			customError("Could not infer the value of argument 'strategy'. More than one candidate available.")
+		end
+
 		if data.strategy == nil then
-			if data.probability ~= nil then
-				data.strategy = "probability"
-			elseif data.quantity ~= nil then
-				data.strategy = "quantity"
-				if data.quantity == 1 then data.quantity = nil end
-			elseif data.filter ~= nil then
-				data.strategy = "function"
-			elseif data.neighborhood ~= nil then
-				data.strategy = "neighbor"
-			else
-				customError("It was not possible to infer a value for argument 'strategy'.")
-			end
+			customError("It was not possible to infer a value for argument 'strategy'.")
 		end
 
 		defaultTableValue(data, "name", "1")
@@ -379,8 +383,9 @@ Society_ = {
 			quantity = function()
 				verifyUnnecessaryArguments(data, {"strategy", "quantity", "name", "inmemory", "symmetric"})
 
-				defaultTableValue(data, "quantity", 1)
 				defaultTableValue(data, "symmetric", false)
+				integerTableArgument(data, "quantity")
+				positiveTableArgument(data, "quantity")
 
 				if data.quantity > #self then
 					local merror = "It is not possible to connect such amount of agents ("..data.quantity.."). "..
@@ -389,9 +394,6 @@ Society_ = {
 				elseif data.quantity > #self * 0.9 then
 					customWarning("Connecting more than 90% of the Agents randomly might take too much time.")
 				end
-
-				integerTableArgument(data, "quantity")
-				positiveTableArgument(data, "quantity")
 
 				data.mfunc = getSocialNetworkByQuantity
 			end,

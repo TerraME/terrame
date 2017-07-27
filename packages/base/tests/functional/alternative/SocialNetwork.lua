@@ -50,6 +50,15 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Agent should have an id in order to be added to a SocialNetwork.")
+
+		ag1 = Agent{id = "1"}
+		sn:add(ag1)
+
+		error_func = function()
+			sn:add(ag1)
+		end
+
+		unitTest:assertError(error_func, "Agent '1' already belongs to the SocialNetwork.")
 	end,
 	getWeight = function(unitTest)
 		local ag1 = Agent{id = "1"}

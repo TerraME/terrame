@@ -106,6 +106,12 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("greater", "function", 12))
+
+		error_func = function()
+			Group{build = true}
+		end
+
+		unitTest:assertError(error_func, "It is not possible to build a Group without a parent.")
 	end,
 	add = function(unitTest)
 		local group = Group{}
@@ -124,25 +130,38 @@ return{
 	end,
 	filter = function(unitTest)
 		local group = Group{}
+
 		local error_func = function()
-			group:filter("notFunction")
+			group:filter()
 		end
 
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
+		unitTest:assertError(error_func, "Cannot filter a Group without a 'select' function.")
+	end,
+	rebuild = function(unitTest)
+		local group = Group{}
 
-		error_func = function()
-			group:filter(function() return true end)
+		local error_func = function()
+			group:rebuild()
 		end
 
-		unitTest:assertError(error_func, "It is not possible to filter a Group without a parent.")
+		unitTest:assertError(error_func, "It is not possible to rebuild a Group without a parent.")
 	end,
 	sort = function(unitTest)
-		local group = Group{}
-		local error_func = function()
-			group:sort("notFunction")
-		end
+		local nonFooAgent = Agent{}
 
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
+		local nonFooSociety = Society{
+			instance = nonFooAgent,
+			quantity = 10
+		}
+
+		local g = Group{
+			target = nonFooSociety
+		}
+
+		local error_func = function()
+			g:sort()
+		end
+		unitTest:assertError(error_func, "Cannot sort a Group without a 'greater' function.")
 	end
 }
 

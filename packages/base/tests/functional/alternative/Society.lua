@@ -223,7 +223,6 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "quantity",
 				quantity = "terralab"
 			}
 		end
@@ -232,7 +231,6 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "quantity",
 				quantity = 0
 			}
 		end
@@ -241,29 +239,24 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "quantity",
 				quantity = 2.2
 			}
 		end
 
 		unitTest:assertError(error_func, integerArgumentMsg("quantity", 2.2))
 
-		-- TODO(#1910)
-		local warning_func = function()
+		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "quantity",
 				quantity = 5,
 				name = "2",
 				probability = 0.2
 			}
 		end
 
-		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("probability"))
+		unitTest:assertError(error_func, "Could not infer the value of argument 'strategy'. More than one candidate available.")
 
-		-- TODO(#1910)
-		warning_func = function()
+		local warning_func = function()
 			sc1:createSocialNetwork{
-				strategy = "quantity",
 				quantity = 19,
 				name = "3"
 			}
@@ -273,7 +266,6 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "quantity",
 				quantity = 21,
 			}
 		end
@@ -282,7 +274,6 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "quantity",
 				quantity = 2,
 				symmetric = 2
 			}
@@ -292,7 +283,6 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "probability",
 				probability = "wrongValue"
 			}
 		end
@@ -301,14 +291,12 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "probability",
 				probability = 0
 			}
 		end
 
 		unitTest:assertError(error_func, incompatibleValueMsg("probability", "a number between 0 and 1", 0))
 
-		-- TODO(#1910)
 		warning_func = function()
 			sc1:createSocialNetwork{
 				strategy = "probability",
@@ -322,7 +310,6 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "probability",
 				probability = 1.5,
 			}
 		end
@@ -331,7 +318,6 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "probability",
 				probability = 0.5,
 				name = 2
 			}
@@ -341,7 +327,6 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "probability",
 				probability = 0.1,
 				symmetric = 2
 			}
@@ -368,7 +353,7 @@ return{
 		unitTest:assertError(error_func, "CellularSpace has no Neighborhood. Please call CellularSpace:createNeighborhood() first.")
 
 		error_func = function()
-			sc1:createSocialNetwork{strategy = "neighbor", neighborhood = "abc123", name = "c"}
+			sc1:createSocialNetwork{neighborhood = "abc123", name = "c"}
 		end
 
 		unitTest:assertError(error_func, "CellularSpace has no Neighborhood named 'abc123'. Please call CellularSpace:createNeighborhood() first.")
@@ -391,12 +376,11 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
 		error_func = function()
-			sc1:createSocialNetwork{strategy = "function", name = "c", filter = 3}
+			sc1:createSocialNetwork{name = "c", filter = 3}
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("filter", "function", 3))
 
-		-- TODO(#1910)
 		warning_func = function()
 			sc1:createSocialNetwork{strategy = "function", name = "c", filter = function() return true end, quantity = 1}
 		end

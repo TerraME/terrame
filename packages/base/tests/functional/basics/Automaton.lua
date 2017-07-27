@@ -201,23 +201,27 @@ id     string [MyAutomaton]
 		local ev = Event{action = function() end}
 
 		at1:setTrajectoryStatus(true)
-		at1.it:sort(function(a,b) return a.x > b.x; end)
+		at1.it.greater = function(a,b) return a.x > b.x; end
+		at1.it:sort()
 		at1:execute(ev)
 		unitTest:assertEquals(4, at1.cont)
 		unitTest:assertEquals(4, cont)
 
 		ev = Event{start = 4, action = function() end}
-		at1.it:sort(greaterByCoord(">"))
+		at1.it.greater = greaterByCoord(">")
+		at1.it:sort()
 		at1:execute(ev)
 		unitTest:assertEquals(8, at1.cont)
 		unitTest:assertEquals(8, cont)
 
-		at1.it:filter(function(cell) return cell.x == cell.y end)
+		at1.it.select = function(cell) return cell.x == cell.y end
+		at1.it:filter()
 		at1:execute(ev)
 		unitTest:assertEquals(10, at1.cont)
 		unitTest:assertEquals(10, at1.cont)
 
-		at1.it:filter(function() return true end)
+		at1.it.select = function() return true end
+		at1.it:rebuild()
 		at1:execute(ev)
 		unitTest:assertEquals(3, at1.cont)
 		unitTest:assertEquals(14, cont)
