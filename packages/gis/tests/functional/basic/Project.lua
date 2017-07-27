@@ -258,7 +258,7 @@ return {
 					file = filePath("test/various.qgs", "gis")
 				}
 			end
-			unitTest:assertWarning(ncWarn, "Layer QGis ignored 'vegtype_2000'. Type 'nc' is not supported.")
+			unitTest:assertWarning(ncWarn, "Layer QGis ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
 		end
 
 		local l1 = Layer{

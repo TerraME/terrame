@@ -83,6 +83,11 @@ return{
 		end
 
 		unitTest:assertError(notDirectory, "/emas.lua is a file, and not a directory.", 2, true)
+
+		local extError = function()
+			Project{file = "foo.xml"}
+		end
+		unitTest:assertError(extError, "Project file extension must be '.tview' or '.qgs'.")
 	end
 }
 

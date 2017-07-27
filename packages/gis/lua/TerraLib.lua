@@ -1782,12 +1782,12 @@ local function createProjectFromQgis(project)
 				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
 			elseif ext == "geojson" then
 				instance.addGeoJSONLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
-			elseif (ext == "nc") and (_Gtme.sessionInfo().system == "windows") then
-				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+			elseif (ext == "nc") and (_Gtme.sessionInfo().system == "windows") then -- TODO(#1302)
+				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid()) -- SKIP
 			elseif ext == "asc" then
 				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
-			else
-				customWarning("Layer QGis ignored '"..qgisLayer:getName().."'. Type '"..ext.."' is not supported.")
+			else -- TODO(#avancinirodrigo): there is no data to test this else in windows
+				customWarning("Layer QGis ignored '"..qgisLayer:getName().."'. Type '"..ext.."' is not supported.") -- SKIP
 			end
 		elseif uri:scheme() == "pgsql" then
 			local conn = {
@@ -1815,8 +1815,8 @@ local function createProjectFromQgis(project)
 			}
 
 			instance.addWmsLayer(project, qgisLayer:getName(), conn, layer, qgisLayer:getSrid())
-		else
-			customWarning("Layer QGis ignored '"..qgisLayer:getName().."'. Unsupported type.")
+		else -- TODO(avancinirodrigo): there is no data to test this else
+			customWarning("Layer QGis ignored '"..qgisLayer:getName().."'. Unsupported type.") -- SKIP
 		end
 	end
 end
