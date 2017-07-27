@@ -59,6 +59,10 @@ function _Gtme.getResolution(package, project)
 end
 
 function _Gtme.executeProject(package, project, resolution)
+	if not isLoaded("gis") then
+		import("gis")
+	end
+
 	local oldLayer = Layer
 	local oldFill = Layer_.fill
 	local oldImport = import
@@ -124,7 +128,6 @@ function _Gtme.executeProjects(package)
 
 	local package_path = _Gtme.packageInfo(package).path
 	local data_path = Directory(package_path.."data")
-
 	if not data_path:exists() then
 		printNote("Package '"..package.."' has no projects.")
 		return 0
@@ -348,6 +351,7 @@ function _Gtme.executeProjects(package)
 		printError("Summing up, "..errors.." problems were found while creating projects.")
 	end
 
+	sessionInfo().initialDir:setCurrentDir()
 	return errors
 end
 
