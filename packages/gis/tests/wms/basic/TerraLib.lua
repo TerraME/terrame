@@ -38,7 +38,7 @@ return {
 
 		local layerName = "WMS-Layer"
 		local url = "http://terrabrasilis.info/terraamazon/ows"
-		local dataset = "IMG_02082016_321077D"
+		local dataset = "inpe:02082016_321077D"
 		local directory = currentDir()
 		local srid = 29901
 
