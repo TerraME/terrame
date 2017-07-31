@@ -35,6 +35,7 @@ local comboboxProjects
 local aboutButton
 local configureButton
 local projButton
+local projsButton
 local docButton
 local installLocalButton
 local installButton
@@ -43,6 +44,7 @@ local runButton
 local dialog
 local oldState
 local filesInCurrentDirectory = {}
+local directoriesInCurrentDirectory = {}
 
 local function breakLines(str)
 	local result = ""
@@ -73,6 +75,7 @@ local function disableAll()
 		[comboboxModels]   = comboboxModels.enabled,
 		[comboboxProjects] = comboboxProjects.enabled,
 		[projButton]       = projButton.enabled,
+		[projsButton]      = projsButton.enabled,
 		[docButton]        = docButton.enabled,
 		[configureButton]  = configureButton.enabled,
 		[runButton]        = runButton.enabled
@@ -85,6 +88,7 @@ local function disableAll()
 	aboutButton.enabled        = false
 	configureButton.enabled    = false
 	projButton.enabled         = false
+	projsButton.enabled        = false
 	docButton.enabled          = false
 	installLocalButton.enabled = false
 	installButton.enabled      = false
@@ -98,6 +102,7 @@ local function enableAll()
 	comboboxProjects.enabled = oldState[comboboxProjects]
 	configureButton.enabled  = oldState[configureButton]
 	projButton.enabled       = oldState[projButton]
+	projsButton.enabled      = oldState[projsButton]
 	docButton.enabled        = oldState[docButton]
 	runButton.enabled        = oldState[runButton]
 
@@ -171,7 +176,47 @@ end
 local function runButtonClicked()
 	disableAll()
 
+	local oldFilePath = filePath
+	filePath = function(filename, package)
+		if package == nil then package = "base" end
+
+		filename = _Gtme.makePathCompatibleToAllOS(filename)
+
+		local data = packageInfo(package).data
+		local file = File(data..filename)
+
+		if file:exists() then
+			return file
+		elseif file:extension() ~= "" then
+			file = File(filename)
+
+			if file:exists() then return file end
+
+			local _, name = file:split()
+			local luafile = File(packageInfo(package).data..name..".lua")
+
+			if luafile:exists() then
+				local msg = "This example requires project "..name..". It will be created locally before running the example."
+				qt.dialog.msg_information(msg)
+				local oldPrint = print
+				print = function(value) _Gtme.print(value) end
+				_Gtme.executeProject(package, name)
+				print = oldPrint
+				qt.dialog.msg_information("Project '"..name.."' successfully created.")
+				clean()
+				local s = sessionInfo().separator
+				_Gtme.loadTmeFile(packageInfo(package).path..s.."examples"..s..comboboxExamples.currentText..".lua")
+				return file
+			end
+		else
+			customError("Could not find data file. The example is corrupted.")
+		end
+	end
+
 	local ok, res = _Gtme.execExample(comboboxExamples.currentText, comboboxPackages.currentText)
+
+	filePath = oldFilePath
+
 	if not ok then
 		qt.dialog.msg_critical(res)
 	end
@@ -256,6 +301,55 @@ local function projButtonClicked()
 	enableAll()
 end
 
+local function projsButtonClicked()
+	disableAll()
+
+	local s = sessionInfo().separator
+	local package = comboboxPackages.currentText
+	dofile(_Gtme.sessionInfo().path.."lua"..s.."project.lua")
+
+	local dataPath = Directory(packageInfo(package).path.."data")
+	dataPath:setCurrentDir()
+
+	local quantity = 0
+	forEachFile(".", function(file)
+		if file:extension() == "lua" then
+			quantity = quantity + 1
+		end
+	end)
+
+	qt.dialog.msg_information(quantity.." projects will be created within the data directory of package "..package..". This operation might take some time.")
+
+	local errors = 0
+	local msg = ""
+	forEachFile(".", function(file)
+		if file:extension() == "lua" then
+			_Gtme.print("Processing "..file:name())
+			_Gtme.loadTmeFile(tostring(file))
+
+			xpcall(function() dofile(tostring(file)) end, function(err)
+				_Gtme.print("Could not execute the script properly: "..err)
+				msg = msg.."\nCould not execute the script properly: "..err
+				errors = errors + 1
+			end)
+
+			clean()
+		end
+	end)
+
+	sessionInfo().initialDir:setCurrentDir()
+
+	if errors == 1 then
+		qt.dialog.msg_critical("One error was found while creating projects:"..msg)
+	elseif errors > 1 then
+		qt.dialog.msg_critical(errors.." errors were found while creating projects:"..msg)
+	else
+		qt.dialog.msg_information("All the projects were successfully executed.")
+	end
+
+	enableAll()
+end
+
 -- what to do when a new package is selected
 local function selectPackage()
 	local s = sessionInfo().separator
@@ -289,6 +383,7 @@ local function selectPackage()
 		comboboxExamples.enabled = false
 		runButton.enabled = false
 		projButton.enabled = false
+		projsButton.enabled = false
 		docButton.enabled = false
 		return
 	end
@@ -318,6 +413,7 @@ local function selectPackage()
 
 	comboboxProjects.enabled = #files > 1
 	projButton.enabled = #files > 0
+	projsButton.enabled = #files > 0
 
 	forEachElement(files, function(_, value)
 		local _, file = value:split()
@@ -617,6 +713,7 @@ end
 
 local function quitButtonClicked()
 	local createdFiles = {}
+	local createdDirectories = {}
 
 	forEachFile(".", function(file)
 		if not filesInCurrentDirectory[file:name()] then
@@ -626,7 +723,13 @@ local function quitButtonClicked()
 		end
 	end)
 
-	local countCreated = getn(createdFiles)
+	forEachDirectory(".", function(dir)
+		if not directoriesInCurrentDirectory[dir:name()] then
+			createdDirectories[dir:name()] = true
+		end
+	end)
+
+	local countCreated = getn(createdFiles) + getn(createdDirectories)
 
 	if countCreated > 0 then
 		local Dialog = qt.new_qobject(qt.meta.QDialog)
@@ -646,13 +749,22 @@ local function quitButtonClicked()
 		label.text = msg
 		qt.ui.layout_add(VBoxLayout, label)
 
-		local checkBoxes = {}
+		local checkBoxesFiles = {}
+		local checkBoxesDirectories = {}
 
 		forEachOrderedElement(createdFiles, function(idx)
 			local checkBox = qt.new_qobject(qt.meta.QCheckBox)
 			checkBox.text = idx
 			checkBox.checked = true
-			checkBoxes[checkBox] = true
+			checkBoxesFiles[checkBox] = idx
+			qt.ui.layout_add(VBoxLayout, checkBox)
+		end)
+
+		forEachOrderedElement(createdDirectories, function(idx)
+			local checkBox = qt.new_qobject(qt.meta.QCheckBox)
+			checkBox.text = idx.." (directory)"
+			checkBox.checked = true
+			checkBoxesDirectories[checkBox] = idx
 			qt.ui.layout_add(VBoxLayout, checkBox)
 		end)
 
@@ -682,11 +794,18 @@ local function quitButtonClicked()
 		end)
 
 		qt.connect(OkButton, "clicked()", function()
-			forEachElement(checkBoxes, function(idx)
+			forEachElement(checkBoxesFiles, function(idx, name)
 				if idx.checked then
-					File(idx.text):delete()
+					File(name):delete()
 				end
 			end)
+
+			forEachElement(checkBoxesDirectories, function(idx, name)
+				if idx.checked then
+					Directory(name):delete()
+				end
+			end)
+
 			Dialog:done(0)
 		end)
 
@@ -766,9 +885,14 @@ function _Gtme.packageManager()
 	projButton.text = "Create"
 	qt.connect(projButton, "clicked()", projButtonClicked)
 
+	projsButton = qt.new_qobject(qt.meta.QPushButton)
+	projsButton.text = "Create All"
+	qt.connect(projsButton, "clicked()", projsButtonClicked)
+
 	qt.ui.layout_add(internalLayout, label,            3, 0)
 	qt.ui.layout_add(internalLayout, comboboxProjects, 3, 1)
 	qt.ui.layout_add(internalLayout, projButton,       3, 2)
+	qt.ui.layout_add(internalLayout, projsButton,      3, 3)
 
 	buildComboboxPackages("base")
 
@@ -805,6 +929,10 @@ function _Gtme.packageManager()
 
 	forEachFile(".", function(file)
 		filesInCurrentDirectory[file:name()] = true
+	end)
+
+	forEachDirectory(".", function(dir)
+		directoriesInCurrentDirectory[dir:name()] = true
 	end)
 
 	selectPackage()

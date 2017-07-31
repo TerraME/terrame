@@ -1100,7 +1100,7 @@ function _Gtme.execExample(example, packageName)
 		description.text = description.text.."\n"..value
 	end
 
-	local success, result = _Gtme.myxpcall(function() runScript(example) end)
+	local success, result = pcall(function() runScript(example) end)
 	if not success then
 		return false, result
 	end
@@ -1437,7 +1437,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				_Gtme.myxpcall(function() errors = _Gtme.executeProjects(package) end, function(err)
 					_Gtme.printError(err)
-
 					os.exit(1)
 				end)
 
