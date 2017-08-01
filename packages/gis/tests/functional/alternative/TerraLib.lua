@@ -93,6 +93,25 @@ return {
 
 		unitTest:assertError(invalidAttrNames, "Invalid attribute names 'attr-1', 'at?tr2' and 'at#r3'.")
 
+		luaTable = {}
+		for i = 0, getn(spDset) - 1 do
+			local data = spDset[i]
+			data.id = i
+			table.insert(luaTable, spDset[i])
+		end
+
+		local typeValueError = function()
+			TerraLib().saveDataSet(proj, clName1, luaTable, newLayerName, {"id"})
+		end
+
+		unitTest:assertError(typeValueError, "Attempt to set 'id' with type 'number'. Please, set the correct type.")
+
+		local typeValueError2 = function()
+			TerraLib().saveDataSet(proj, clName1, luaTable, clName1, {"id"})
+		end
+
+		unitTest:assertError(typeValueError2, "Attempt to set 'id' with type 'number'. Please, set the correct type.")
+
 		proj.file:delete()
 		cellsShp:delete()
 	end,

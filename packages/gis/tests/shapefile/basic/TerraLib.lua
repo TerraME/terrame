@@ -1260,50 +1260,6 @@ return {
 		unitTest:assertEquals("cdc_troide", attrNames[32])
 		unitTest:assertEquals("attr1", attrNames[33])
 
-		-- TODO(#1857)
-		-- -- CHANGING INTEGER DATA AND OVERWRITE LAYER
-		-- local numSum1 = 0
-		-- local newPtLuaTable = {}
-		-- for i = 0, getn(newPtDset) - 1 do
-			-- local data = newPtDset[i]
-			-- numSum1 = numSum1 + data.numero
-			-- data.numero = data.numero * 2
-			-- table.insert(newPtLuaTable, newPtDset[i])
-		-- end
-		-- TerraLib().saveDataSet(proj, newPtName, newPtLuaTable, newPtName, {"numero"})
-
-		-- newPtDset = TerraLib().getDataSet(proj, newPtName, 0)
-		-- local numSum2 = 0
-		-- for i = 0, getn(newPtDset) - 1 do
-			-- local data = newPtDset[i]
-			-- numSum2 = numSum2 + data.numero
-		-- end
-
-		-- unitTest:assertEquals(numSum2, 2 * numSum1) -- SKIP
-
-		-- -- CHANGING INTEGER AND CREATE A NEW LAYER
-		-- local newPtName2 = "BR_Ports_New2"
-		-- newPtLuaTable = {}
-		-- for i = 0, getn(newPtDset) - 1 do
-			-- local data = newPtDset[i]
-			-- data.numbkp = data.numero
-			-- data.numero = data.numero * 2
-			-- table.insert(newPtLuaTable, newPtDset[i])
-		-- end
-		-- TerraLib().saveDataSet(proj, newPtName, newPtLuaTable, newPtName2, {"numero", "numbkp"})
-
-		-- local newPtDset2 = TerraLib().getDataSet(proj, newPtName2, 0)
-		-- local numSum3 = 0
-		-- local numBkpSum = 0
-		-- for i = 0, getn(newPtDset2) - 1 do
-			-- local data = newPtDset2[i]
-			-- numSum3 = numSum3 + data.numero
-			-- numBkpSum = numBkpSum + data.numbkp
-		-- end
-
-		-- unitTest:assertEquals(numSum3, 4 * numSum1) -- SKIP
-		-- unitTest:assertEquals(numSum3, 2 * numBkpSum) -- SKIP
-
 		-- LINES
 		local lnName = "ES_Rails"
 		local lnFile = filePath("test/rails.shp", "gis")
@@ -1442,15 +1398,74 @@ return {
 		unitTest:assertEquals("attr3", attrNames[17])
 		unitTest:assertEquals("attr4", attrNames[18])
 
+		-- CHANGING INTEGER DATA AND OVERWRITE LAYER
+		local amlName = "Amazonia"
+		local amlFile = filePath("test/municipiosAML_ok.shp", "gis")
+		TerraLib().addShpLayer(proj, amlName, amlFile)
+
+		local amlCurrDirName = "AmlCurrDirName"
+		toData = {}
+		toData.file = amlCurrDirName..".shp"
+		toData.type = "shp"
+		fromData.layer = amlName
+		TerraLib().saveLayerAs(fromData, toData, true)
+		TerraLib().addShpLayer(proj, amlCurrDirName, File(toData.file))
+
+		local amlDset = TerraLib().getDataSet(proj, amlName, 0)
+		local amlLuaTable = {}
+		local sum1 = 0
+		for i = 0, getn(amlDset) - 1 do
+			local data = amlDset[i]
+			sum1 = sum1 + data.CODMESO
+			data.CODMESO = data.CODMESO * 2
+			table.insert(amlLuaTable, amlDset[i])
+		end
+
+		local amlCurrDirNameNew = "AmlCurrDirNameNew"
+		TerraLib().saveDataSet(proj, amlCurrDirName, amlLuaTable, amlCurrDirNameNew, {"CODMESO"})
+
+		local amlDsetNew = TerraLib().getDataSet(proj, amlCurrDirNameNew, 0)
+		local sum2 = 0
+		for i = 0, getn(amlDsetNew) - 1 do
+			local data = amlDsetNew[i]
+			sum2 = sum2 + data.CODMESO
+		end
+
+		unitTest:assertEquals(sum2, 2 * sum1)
+
+		-- CHANGING INTEGER AND CREATE A NEW LAYER
+		local amlCurrDirNameNew2 = "AmlCurrDirNameNew2"
+		local amlCurrDirLuaTable = {}
+		for i = 0, getn(amlDsetNew) - 1 do
+			local data = amlDsetNew[i]
+			data.CODMESOBKP = data.CODMESO
+			data.CODMESO = data.CODMESO * 2
+			table.insert(amlCurrDirLuaTable, amlDsetNew[i])
+		end
+		TerraLib().saveDataSet(proj, amlCurrDirNameNew, amlCurrDirLuaTable, amlCurrDirNameNew2, {"CODMESO", "CODMESOBKP"})
+
+		local amlDsetNew2 = TerraLib().getDataSet(proj, amlCurrDirNameNew2, 0)
+		local sum3 = 0
+		local bkpSum = 0
+		for i = 0, getn(amlDsetNew2) - 1 do
+			local data = amlDsetNew2[i]
+			sum3 = sum3 + data.CODMESO
+			bkpSum = bkpSum + data.CODMESOBKP
+		end
+
+		unitTest:assertEquals(sum3, 4 * sum1)
+		unitTest:assertEquals(sum3, 2 * bkpSum)
+
 		cellsShp:delete()
 		File(newLayerName..".shp"):delete()
 		polFile:delete()
 		File(newPolName..".shp"):delete()
 		ptFile:delete()
 		File(newPtName..".shp"):delete()
-		-- File(newPtName2..".shp"):delete() -- TODO(#1857)
 		lnFile:delete()
 		File(newLnName..".shp"):delete()
+		File(amlCurrDirNameNew..".shp"):delete()
+		File(amlCurrDirNameNew2..".shp"):delete()
 		proj.file:delete()
 	end,
 	getOGRByFilePath = function(unitTest)
