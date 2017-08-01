@@ -1153,6 +1153,8 @@ local function fillDataSetWithUpdatedData(dseToUp, dseType, newDataSet, attrsToU
 					dseToUp:setString(attr, tostring(v))
 			elseif (t == "boolean") and isDataTypeBoolean(attrsToUp[i].type) then
 					dseToUp:setBool(attr, v)
+			elseif isGeometryProperty(attr) then
+					dseToUp:setGeometry(attr, v)
 			else
 				return "Attempt to set '"..attr.."' with type '"..t.."'. Please, set the correct type."
 			end
