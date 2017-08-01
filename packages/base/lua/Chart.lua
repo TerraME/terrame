@@ -401,8 +401,12 @@ function Chart(attrTab)
 
 			if type(value[mselect]) == "function" then
 				c[midx] = function() return value[mselect](value) end
-			else
+			elseif type(value[mselect]) == "number" then
 				c[midx] = function() return value[mselect] end
+			elseif value[mselect] ~= nil then
+				customError("Selected value '"..mselect.."' should be a number or a function, got "..type(value[mselect])..".")
+			else
+				customError("Selected value '"..mselect.."' does not exist.")
 			end
 
 			table.insert(select, midx)
