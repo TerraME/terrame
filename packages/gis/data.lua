@@ -28,7 +28,7 @@ data{
 }
 
 data{
-	file = {"amazonia-prodes.tif", "amazonia-prodes.jgw", "amazonia-prodes.xml"},
+	file = {"amazonia-prodes.tif", "amazonia-prodes.jgw", "amazonia-prodes.xml", "amazonia-prodes.tif.aux.xml"},
 	summary = "PRODES data with resolution of 5km. This is a simplified version of the data and must be used only for educational purposes.",
 	source = "http://www.obt.inpe.br/prodes",
 	attributes = {

@@ -33,7 +33,7 @@ return {
 
 		local layerName = "WMS-Layer"
 		local service = "http://terrabrasilis.info/terraamazon/ows"
-		local map = "IMG_02082016_321077D"
+		local map = "inpe:02082016_321077D"
 		local epsg = 29901
 
 		local layer = Layer {
@@ -52,7 +52,7 @@ return {
 		unitTest:assertEquals(layer.epsg, epsg)
 
 		epsg = 4601
-		map = "Landsat 8 226 066"
+		map = "inpe:landsat8_226_066"
 
 		local layer2 = Layer {
 			project = proj,

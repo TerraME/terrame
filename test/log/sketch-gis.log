@@ -9,6 +9,7 @@ File 'amazonia-ports.shp' is already documented in 'data.lua'
 Project file 'amazonia-postgis.tview' does not need to be documented (a Lua file creates it)
 File 'amazonia-prodes.jgw' is already documented in 'data.lua'
 File 'amazonia-prodes.tif' is already documented in 'data.lua'
+File 'amazonia-prodes.tif.aux.xml' is already documented in 'data.lua'
 File 'amazonia-prodes.xml' is already documented in 'data.lua'
 File 'amazonia-roads.shp' is already documented in 'data.lua'
 File 'amazonia.shp' does not need to be documented (a Lua file creates it)
