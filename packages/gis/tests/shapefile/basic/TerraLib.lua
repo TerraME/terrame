@@ -1403,7 +1403,7 @@ return {
 		local amlFile = filePath("test/municipiosAML_ok.shp", "gis")
 		TerraLib().addShpLayer(proj, amlName, amlFile)
 
-		local amlCurrDirName = "AmlCurrDirName"
+		local amlCurrDirName = "AmlCurrDir"
 		toData = {}
 		toData.file = amlCurrDirName..".shp"
 		toData.type = "shp"
@@ -1421,7 +1421,7 @@ return {
 			table.insert(amlLuaTable, amlDset[i])
 		end
 
-		local amlCurrDirNameNew = "AmlCurrDirNameNew"
+		local amlCurrDirNameNew = "AmlCurrDirNew"
 		TerraLib().saveDataSet(proj, amlCurrDirName, amlLuaTable, amlCurrDirNameNew, {"CODMESO"})
 
 		local amlDsetNew = TerraLib().getDataSet(proj, amlCurrDirNameNew, 0)
@@ -1434,7 +1434,7 @@ return {
 		unitTest:assertEquals(sum2, 2 * sum1)
 
 		-- CHANGING INTEGER AND CREATE A NEW LAYER
-		local amlCurrDirNameNew2 = "AmlCurrDirNameNew2"
+		local amlCurrDirNameNew2 = "AmlCurrDirNew2"
 		local amlCurrDirLuaTable = {}
 		for i = 0, getn(amlDsetNew) - 1 do
 			local data = amlDsetNew[i]
@@ -1464,6 +1464,7 @@ return {
 		File(newPtName..".shp"):delete()
 		lnFile:delete()
 		File(newLnName..".shp"):delete()
+		File(amlCurrDirName..".shp"):delete()
 		File(amlCurrDirNameNew..".shp"):delete()
 		File(amlCurrDirNameNew2..".shp"):delete()
 		proj.file:delete()
