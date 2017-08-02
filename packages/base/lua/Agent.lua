@@ -607,6 +607,7 @@ Agent_ = {
 				verifyNamedTable(data)
 			end
 		end
+
 		local ag = self.parent:add(data)
 
 		if self.placement ~= nil then
@@ -812,7 +813,21 @@ Agent_ = {
 	end
 }
 
-metaTableAgent_ = {__index = Agent_, __tostring = _Gtme.tostring}
+local function callFunction(self, v)
+	if v == nil then v = {} end
+
+	mandatoryArgument(1, "table", v)
+
+	if self.id then
+		customError("It is not possible to use an Agent that has attribute 'id' as a constructor.")
+	end
+
+	v = Agent(v)
+	setmetatable(v, {__index = self, __call = callFunction})
+	return v
+end
+
+metaTableAgent_ = {__index = Agent_, __tostring = _Gtme.tostring, __call = callFunction}
 
 --- An autonomous entity that is capable of performing actions as well as interacting with other
 -- Agents and the spatial representation of the model. The Agent constructor gets a table

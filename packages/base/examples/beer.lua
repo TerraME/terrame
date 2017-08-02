@@ -13,18 +13,19 @@
 
 NUMBER_OF_AGENTS = 3
 
-RequestBeer = function(agent, quantity)
-	agent:message{receiver = agent.from, delay = 1, content = "request", value = quantity}
-	agent.requested = quantity
-end
-
-SendBeer = function(agent, quantity)
-	agent:message{receiver = agent.to, content = "deliver", delay = 3,  value = quantity}
-	agent.sended = quantity
-end
+BasicAgent = Agent{
+	requestBeer = function(agent, quantity)
+		agent:message{receiver = agent.from, delay = 1, content = "request", value = quantity}
+		agent.requested = quantity
+	end,
+	sendBeer = function(agent, quantity)
+		agent:message{receiver = agent.to, content = "deliver", delay = 3,  value = quantity}
+		agent.sended = quantity
+	end
+}
 
 COUNTER = 1
-chainAgent = Agent{
+chainAgent = BasicAgent{
 	init = function(agent)
 		agent.stock     = 20
 		agent.ordered   = 0
@@ -38,11 +39,11 @@ chainAgent = Agent{
 	end,
 	execute = function(agent)
 		if agent.ordered <= agent.stock then
-			SendBeer(agent, agent.ordered)
+			agent:sendBeer(agent.ordered)
 			agent.stock = agent.stock - agent.ordered
 			agent.ordered = 0
 		else
-			SendBeer(agent, agent.stock)
+			agent:sendBeer(agent.stock)
 			agent.ordered = agent.ordered - agent.stock
 			agent.stock = 0
 		end
@@ -54,7 +55,7 @@ chainAgent = Agent{
 			requested = 6 + agent.ordered * 0.05
 		end
 
-		RequestBeer(agent, requested)
+		agent:requestBeer(requested)
 		-- end of the overall decision
 
 		agent:update_costs()
@@ -88,7 +89,7 @@ chartCost = Chart{
 	style = "sticks"
 }
 
-retailer = Agent{
+retailer = BasicAgent{
 	priority  = 0,
 	received  = 0,
 	ordered   = 0,
@@ -96,7 +97,7 @@ retailer = Agent{
 	execute = function(agent)
 		local requested = Random{min = 1, max = 30, step = 1}:sample()
 		c.beer_requested = requested
-		RequestBeer(agent, requested)
+		agent:requestBeer(requested)
 	end,
 	on_message = function(agent, message)
 		if message.content == "deliver" then
@@ -106,13 +107,13 @@ retailer = Agent{
 	end
 }
 
-manufacturer = Agent{
+manufacturer = BasicAgent{
 	priority = NUMBER_OF_AGENTS + 1,
 	received  = 0,
 	ordered   = 0,
 	costs     = 0,
 	execute = function(agent)
-		SendBeer(agent, agent.ordered)
+		agent:sendBeer(agent.ordered)
 		agent.ordered = 0
 	end,
 	on_message = function(agent, message)
@@ -136,7 +137,7 @@ g = Group{
     greater = function(a, b) return a.priority < b.priority end
 }
 
--- connects the i'th agent to the i+1'th
+-- connects the i'th agent to the i + 1'th
 last = {}
 forEachAgent(g, function(ag)
 	ag.to     = last

@@ -43,16 +43,17 @@ prey = Agent{
 		self:walk()
 
 		if self.energy >= 30 then
-			neigh = self:getCell():getNeighborhood():sample()
+			neigh = self:emptyNeighbor() -- getCell():getNeighborhood():sample()
 
-			if neigh:isEmpty() then
-				child = self:reproduce()
+			self.energy = self.energy - 10
+
+			if neigh then
+				local child = self:reproduce()
 				child:move(neigh)
 			end
 		elseif self.energy <= 0 then
 			self:die()
 		end
-
 	end
 }
 

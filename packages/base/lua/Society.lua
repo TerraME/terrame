@@ -132,9 +132,7 @@ Society_ = {
 		if mtype == "table" then
 			agent.state_ = State{id = "state"} -- remove this in the next version
 			agent.id = tostring(self.autoincrement)
-			agent = Agent(agent)
-			local metaTable = {__index = self.instance, __tostring = _Gtme.tostring}
-			setmetatable(agent, metaTable)
+			agent = self.instance(agent)
 
 			forEachOrderedElement(self.instance, function(idx, value, mmtype)
 				if mmtype == "Random" then

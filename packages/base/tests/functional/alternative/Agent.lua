@@ -36,6 +36,23 @@ return {
 
 		unitTest:assertError(error_func, incompatibleTypeMsg("id", "string", 123))
 	end,
+	__call = function(unitTest)
+		local BasicAgent = Agent{
+			id = "2"
+		}
+
+		local error_func = function()
+			BasicAgent(2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
+
+		error_func = function()
+			BasicAgent{}
+		end
+
+		unitTest:assertError(error_func, "It is not possible to use an Agent that has attribute 'id' as a constructor.")
+	end,
 	add = function(unitTest)
 		local ag1 = Agent{}
 

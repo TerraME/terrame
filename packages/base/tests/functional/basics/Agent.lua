@@ -56,7 +56,7 @@ return{
 		}
 
 		t:run(10)
-		unitTest:assertEquals(20,singleFooAgent.size)
+		unitTest:assertEquals(20, singleFooAgent.size)
 
 		unitTest:assertType(singleFooAgent:getCell(), "Cell")
 		unitTest:assertEquals(1, #singleFooAgent:getCell().placement)
@@ -66,6 +66,29 @@ return{
 			count = count + #cell.placement
 		end)
 		unitTest:assertEquals(1, count)
+	end,
+	__call = function(unitTest)
+		local BasicAgent = Agent{
+			value = 0,
+			add = function(self)
+				self.value = self.value + 1
+			end
+		}
+
+		local instance = BasicAgent{}
+
+		unitTest:assertType(instance, "Agent")
+		unitTest:assertEquals(instance.value, 0)
+		instance:add()
+		unitTest:assertEquals(instance.value, 1)
+
+		local Ag1 = Agent{value = 0}
+		local Ag2 = Ag1{value2 = 5}
+		local Ag3 = Ag2{value3 = 4}
+
+		unitTest:assertEquals(Ag3.value, 0)
+		unitTest:assertEquals(Ag3.value2, 5)
+		unitTest:assertEquals(Ag3.value3, 4)
 	end,
 	__tostring = function(unitTest)
 		local ag1 = Agent{
