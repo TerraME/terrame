@@ -690,7 +690,7 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 			operation = "mean"
 		end
 
-		r2v:setParams(select, OperationMapper[operation], false, true) -- TODO: TEXTURE, READALL PARAMS (REVIEW)
+		r2v:setParams(select, OperationMapper[operation], false, false, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
 
 		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
