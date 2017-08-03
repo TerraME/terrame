@@ -82,13 +82,17 @@ return{
 		instance:add()
 		unitTest:assertEquals(instance.value, 1)
 
-		local Ag1 = Agent{value = 0}
-		local Ag2 = Ag1{value2 = 5}
-		local Ag3 = Ag2{value3 = 4}
+		local Ag1 = Agent{value1 = 0, rand1 = Random{min = 0,   max = 100}}
+		local Ag2 = Ag1  {value2 = 5, rand2 = Random{min = 100, max = 200}}
+		local Ag3 = Ag2  {value3 = 4, rand3 = Random{min = 200, max = 300}}
 
-		unitTest:assertEquals(Ag3.value, 0)
+		unitTest:assertEquals(Ag3.value1, 0)
 		unitTest:assertEquals(Ag3.value2, 5)
 		unitTest:assertEquals(Ag3.value3, 4)
+
+		unitTest:assertType(Ag3.rand1, "Random")
+		unitTest:assertType(Ag3.rand2, "Random")
+		unitTest:assertType(Ag3.rand3, "Random")
 	end,
 	__tostring = function(unitTest)
 		local ag1 = Agent{

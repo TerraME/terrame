@@ -268,7 +268,7 @@ return {
 				quantity = 10
 			}
 		end
-		unitTest:assertWarning(warning_func, "Function 'enter()' from Agent is replaced in the instance.")
+		unitTest:assertWarning(warning_func, "Function 'enter()' is replaced in the instance.")
 		unitTest:assertEquals(soc:age(), 0)
 		unitTest:assertEquals(soc:human(), 10)
 		unitTest:assertEquals(soc:gender().male, 10)
@@ -298,6 +298,7 @@ return {
 				quantity = 10
 			}
 		end
+
 		unitTest:assertWarning(warning_func, "Attribute 'instance' belongs to both Society and Agent.")
 		unitTest:assertEquals(soc:age(), 0)
 		unitTest:assertEquals(soc:human(), 10)
@@ -307,6 +308,42 @@ return {
 		unitTest:assertEquals(soc:age(), 10)
 		unitTest:assert(not soc:getOld())
 		unitTest:assertEquals(soc:age(), 10)
+
+		-- inheritance
+		local Ag1 = Agent{
+			value1 = 0,
+			rand1 = Random{min = 0,   max = 100},
+			copy = 3
+		}
+
+		local Ag2 = Ag1{
+			value2 = 5,
+			rand2 = Random{min = 100, max = 200},
+			copy = 5
+		}
+
+		local Ag3 = Ag2{
+			value3 = 4,
+			rand3 = Random{min = 200, max = 300}
+		}
+
+		warning_func = function()
+			soc = Society{
+				instance = Ag3,
+				quantity = 5
+			}
+		end
+
+		unitTest:assertWarning(warning_func, "Attribute 'copy' is replaced in the instance.")
+
+		ag = soc:sample()
+
+		unitTest:assertEquals(ag.value1, 0)
+		unitTest:assertEquals(ag.value2, 5)
+		unitTest:assertEquals(ag.value3, 4)
+		unitTest:assertType(ag.rand1, "number")
+		unitTest:assertType(ag.rand2, "number")
+		unitTest:assertType(ag.rand3, "number")
 	end,
 	__len = function(unitTest)
 		local sc1 = Society{
@@ -329,16 +366,35 @@ return {
 			instance = ag1,
 			quantity = 2
 		}
-		unitTest:assertEquals(tostring(soc1), [[age            function
-agents         vector of size 2
-autoincrement  number [3]
-cObj_          userdata
-execute        function
-init           function
-instance       Agent
-messages       vector of size 0
-name           function
-placements     vector of size 0
+		unitTest:assertEquals(tostring(soc1), [[addSocialNetwork     function
+age                  function
+agents               vector of size 2
+autoincrement        number [3]
+cObj_                userdata
+die                  function
+emptyNeighbor        function
+enter                function
+execute              function
+getCell              function
+getCells             function
+getLatency           function
+getSocialNetwork     function
+getStateName         function
+getTrajectoryStatus  function
+init                 function
+instance             Agent
+leave                function
+message              function
+messages             vector of size 0
+move                 function
+name                 function
+on_message           function
+placements           vector of size 0
+reproduce            function
+setTrajectoryStatus  function
+walk                 function
+walkIfEmpty          function
+walkToEmpty          function
 ]])
 
 		local aa = soc1.agents[2]

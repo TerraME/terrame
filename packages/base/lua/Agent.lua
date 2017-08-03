@@ -480,7 +480,7 @@ Agent_ = {
 	--     quantity = 5
 	-- }
 	--
-	-- myEnv = Environment{cs, ag1}
+	-- myEnv = Environment{cs, soc}
 	-- myEnv:createPlacement()
 	--
 	-- ag = soc:sample()
@@ -823,7 +823,7 @@ local function callFunction(self, v)
 	end
 
 	v = Agent(v)
-	setmetatable(v, {__index = self, __call = callFunction})
+	setmetatable(v, {__index = self, __tostring = _Gtme.tostring, __call = callFunction})
 	return v
 end
 
