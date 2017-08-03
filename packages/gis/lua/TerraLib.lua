@@ -690,7 +690,7 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 			operation = "mean"
 		end
 
-		r2v:setParams(select, OperationMapper[operation], false, true) -- TODO: TEXTURE, READALL PARAMS (REVIEW)
+		r2v:setParams(select, OperationMapper[operation], false, false, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
 
 		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
@@ -739,6 +739,10 @@ end
 
 local function isDataTypeNumber(propType)
 	return isDataTypeInteger(propType) or isDataTypeReal(propType)
+end
+
+local function isDataTypeBoolean(propType)
+	return propType == binding.BOOLEAN_TYPE
 end
 
 local function createDataSetAdapted(dSet, missing)
@@ -1132,6 +1136,34 @@ local function updateAttributeNumberByType(dataset, type, pos, value)
 	end
 end
 
+local function fillDataSetWithUpdatedData(dseToUp, dseType, newDataSet, attrsToUp)
+	local index = 1
+	dseToUp:moveBeforeFirst()
+	while dseToUp:moveNext() do
+		for i = 1, #attrsToUp do
+			local attr = attrsToUp[i].name
+			local v = newDataSet[index][attr]
+			local t = type(v)
+
+			if (t == "number") and isDataTypeNumber(attrsToUp[i].type) then
+				updateAttributeNumberByType(dseToUp, attrsToUp[i].type, attrsToUp[i].pos, v)
+			elseif (t == "string") and isDataTypeString(attrsToUp[i].type) then
+				dseToUp:setString(attr, v)
+			elseif (t == "boolean") and (dseType == "OGR") then
+					dseToUp:setString(attr, tostring(v))
+			elseif (t == "boolean") and isDataTypeBoolean(attrsToUp[i].type) then
+					dseToUp:setBool(attr, v)
+			elseif isGeometryProperty(attr) then
+					dseToUp:setGeometry(attr, v)
+			else
+				return "Attempt to set '"..attr.."' with type '"..t.."'. Please, set the correct type."
+			end
+		end
+
+		index = index + 1
+	end
+end
+
 local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 	local errorMsg
 	do
@@ -1217,10 +1249,6 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 					end
 				end
 
-				if #attrsToUp > 0 then
-					attrsToUp = createAttributesInfo(dse, attrsToUp)
-				end
-
 				-- Set the values of the new dataset from the data
 				local index = 1
 				newDse:moveBeforeFirst()
@@ -1242,41 +1270,29 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 						end
 					end
 
-					for i = 1, #attrsToUp do
-						local attr = attrsToUp[i].name
-						local v = toSet[index][attr]
-
-						if type(v) == "number" then
-							updateAttributeNumberByType(newDse, attrsToUp[i].type, attrsToUp[i].pos, v)
-						elseif type(v) == "string" then
-							newDse:setString(attr, v)
-						elseif type(v) == "boolean" then
-							if fromType == "OGR" then
-								newDse:setString(attr, tostring(v))
-							else
-								newDse:setBool(attr, v)
-							end
-						elseif isGeometryProperty(attr) then
-							newDse:setGeometry(attr, v)
-						end
-					end
-
 					index = index + 1
+				end
+
+				if #attrsToUp > 0 then
+					attrsToUp = createAttributesInfo(dse, attrsToUp)
+					errorMsg = fillDataSetWithUpdatedData(newDse, fromType, toSet, attrsToUp)
 				end
 			end
 
-			local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
-			local toDs = makeAndOpenDataSource(toConnInfo, fromType)
+			if not errorMsg then
+				local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
+				local toDs = makeAndOpenDataSource(toConnInfo, fromType)
 
-			-- Drop if exists
-			if toDs:dataSetExists(toSetName) then
-				toDs:dropDataSet(toSetName)
+				-- Drop if exists
+				if toDs:dataSetExists(toSetName) then
+					toDs:dropDataSet(toSetName)
+				end
+
+				-- Create new dataset in database
+				toDs:createDataSet(newDst)
+				newDse:moveBeforeFirst()
+				toDs:add(toSetName, newDse)
 			end
-
-			-- Create new dataset in database
-			toDs:createDataSet(newDst)
-			newDse:moveBeforeFirst()
-			toDs:add(toSetName, newDse)
 		end
 	end
 
@@ -1288,6 +1304,7 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 end
 
 local function updateDataSet(fromLayer, toSet, attrs)
+	local errorMsg
 	do
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
 		local connInfo = dsInfo:getConnInfo()
@@ -1297,41 +1314,24 @@ local function updateDataSet(fromLayer, toSet, attrs)
 		local dse = ds:getDataSet(dsetName)
 
 		local attrsToUp = createAttributesInfo(dse, attrs)
-
 		local dseUp = binding.te.mem.DataSet(dse)
-		local index = 1
+		errorMsg = fillDataSetWithUpdatedData(dseUp, fromType, toSet, attrsToUp)
 
-		dseUp:moveBeforeFirst()
-		while dseUp:moveNext() do
+		if not errorMsg then
+			local attrsNameToUpVector = {}
 			for i = 1, #attrsToUp do
-				local attr = attrsToUp[i].name
-				local v = toSet[index][attr]
-
-				if type(v) == "number" then
-					updateAttributeNumberByType(dseUp, attrsToUp[i].type, attrsToUp[i].pos, v)
-				elseif type(v) == "string" then
-					dseUp:setString(attr, v)
-				elseif type(v) == "boolean" then
-					if fromType == "OGR" then
-						dseUp:setString(attr, tostring(v))
-					else
-						dseUp:setBool(attr, v)
-					end
-				end
+				attrsNameToUpVector[i] = attrsToUp[i].name
 			end
 
-			index = index + 1
+			binding.UpdateDs(ds, dsetName, dseUp, attrsNameToUpVector)
 		end
-
-		local attrsNameToUpVector = {}
-		for i = 1, #attrsToUp do
-			attrsNameToUpVector[i] = attrsToUp[i].name
-		end
-
-		binding.UpdateDs(ds, dsetName, dseUp, attrsNameToUpVector)
 	end
 
 	collectgarbage("collect")
+
+	if errorMsg then
+		customError(errorMsg)
+	end
 end
 
 local function hasNewAttributeOnLayer(fromLayer, attrs)
