@@ -226,7 +226,7 @@ end
 		unitTest:assertEquals(proj5.cells.source, "shp")
 
 		local attrs = proj5.cells:attributes()
-if _Gtme.sessionInfo().system ~= "mac" then	-- TODO(#1934)	
+if _Gtme.sessionInfo().system ~= "mac" then	-- TODO(#1934)
 		unitTest:assertEquals(attrs[5].name, "maxcover") -- SKIP
 end
 		proj5 = Project{
