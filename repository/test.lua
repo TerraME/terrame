@@ -40,7 +40,7 @@ local report = {
 	packages = 0,
 	errors = 0,
 	createdlogs = 0,
-	locallogerrors = 0
+	logerrors = 0
 }
 
 _Gtme.printNote("Downloading packages from www.terrame.org/packages/"..sessionInfo().version)
@@ -152,7 +152,7 @@ local function execute(command, filename)
 			_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
 			printTestOutput(result, line)
 
-			report.locallogerrors = report.locallogerrors + 1
+			report.logerrors = report.logerrors + 1
 			logerror = true
 			return false
 		end
@@ -286,12 +286,12 @@ else
 	_Gtme.printError(report.errors.." verifications stopped with an error.")
 end
 
-if report.locallogerrors == 0 then
+if report.logerrors == 0 then
 	_Gtme.printNote("Test and doc were successfully executed.")
-elseif report.locallogerrors == 1 then
+elseif report.logerrors == 1 then
 	_Gtme.printError("One log error was found.")
 else
-	_Gtme.printError(report.locallogerrors.." log errors were found.")
+	_Gtme.printError(report.logerrors.." log errors were found.")
 end
 
 errors = 0
