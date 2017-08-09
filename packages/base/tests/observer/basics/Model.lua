@@ -57,6 +57,7 @@ return{
 	notify = function(unitTest)
 		local Tube = Model{
 			waterValue = 200,
+			strategy = Choice{"veryLow", "veryHigh"},
 			init = function(model)
 				model.finalTime = 100
 				model.timer = Timer{
@@ -68,7 +69,7 @@ return{
 			end
 		}
 
-		local m = Tube{waterValue = 100}
+		local m = Tube{waterValue = 100, strategy = "veryHigh"}
 
 		local ch = Chart{
 			target = m,
