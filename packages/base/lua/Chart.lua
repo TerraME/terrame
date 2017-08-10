@@ -243,7 +243,8 @@ metaTableChart_ = {__index = Chart_}
 -- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
 -- representing RGB compositions.
 -- @arg attrTab.title An overall title to the Chart. The default value is "". In the case of
--- instances of Models, the default is Model:title().
+-- instances of Models, the default is Model:title(). When the title is a Model instance, it
+-- automatically uses the Model:title() as its value.
 -- @arg attrTab.symbol The symbol to be used to draw the points of the Chart. It can be a string to
 -- be used by all lines, or a vector of strings, describing the symbol for each line. The available
 -- values are: "square", "diamond", "triangle", "ltriangle" (left), "dtriangle" (downwards triangle),
@@ -370,6 +371,10 @@ function Chart(attrTab)
 	end
 
 	defaultTableValue(attrTab, "yLabel", "")
+
+	if isModel(attrTab.title) then
+		attrTab.title = attrTab.title:title()
+	end
 
 	if isModel(attrTab.target) then
 		defaultTableValue(attrTab, "title", attrTab.target:title())
