@@ -443,7 +443,7 @@ Layer_ = {
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
 	-- value represent the different values in the input data.
 	-- The sum of the created attribute values for a given cell will range
-	-- from zero to one hundred, according to the coverage of the cell.
+	-- from zero to one, according to the area of the cell covered by pixels.
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
