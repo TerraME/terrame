@@ -37,8 +37,8 @@ return {
 		TerraLib().createProject(proj, {})
 
 		local layerName = "WMS-Layer"
-		local url = "http://terrabrasilis.info/terraamazon/ows"
-		local dataset = "inpe:02082016_321077D"
+		local url = "http://terrabrasilis.info/geoserver/ows"
+		local dataset = "Auxiliares:Global Land Cover 2000"
 		local directory = currentDir()
 		local srid = 29901
 
