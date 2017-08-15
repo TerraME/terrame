@@ -32,8 +32,8 @@ return {
 		}
 
 		local layerName = "WMS-Layer"
-		local service = "http://terrabrasilis.info/terraamazon/ows"
-		local map = "inpe:02082016_321077D"
+		local service = "http://terrabrasilis.info/geoserver/ows"
+		local map = "Prodes_2013:LANDSAT2013"
 		local epsg = 29901
 
 		local layer = Layer {
@@ -51,8 +51,9 @@ return {
 		unitTest:assertEquals(layer.map, map)
 		unitTest:assertEquals(layer.epsg, epsg)
 
+		service = "http://www.geoservicos.inde.gov.br:80/geoserver/ows"
+		map = "MPOG:BASE_SPI_pol"
 		epsg = 4601
-		map = "inpe:landsat8_226_066"
 
 		local layer2 = Layer {
 			project = proj,
