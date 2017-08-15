@@ -22,6 +22,17 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
+echo "### TerraLib ###"
+cd $_TERRALIB_GIT_DIR
+GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
+git status
+echo $?
+
+
+#if [ ! -z "$ghprbActualCommit" ]; then
+#else
+#fi
+
 echo $BUILD_URL
 
 ls -la $WORKSPACE
