@@ -24,3 +24,6 @@
 
 echo $BUILD_URL
 
+ls -la $WORKSPACE
+
+
