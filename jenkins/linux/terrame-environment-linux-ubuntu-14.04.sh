@@ -25,10 +25,12 @@
 echo "### TerraLib ###"
 cd $_TERRALIB_GIT_DIR
 GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
-if [ ! $(git status --porcelain) ]; then
-	echo "CHANGED"
-else
-	echo "NOT CHANGED"
+git status
+if [ $(git status --porcelain) ]; then # Check if TerraLib must be compiled
+	git pull
+	rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua # Removing TerraLib Mod Binding Lua in order to re-generate it
+#else
+#	git status
 fi
 
 
