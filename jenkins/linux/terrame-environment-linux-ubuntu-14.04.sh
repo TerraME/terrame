@@ -25,8 +25,11 @@
 echo "### TerraLib ###"
 cd $_TERRALIB_GIT_DIR
 GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
-git status
-echo $?
+if [ git status --porcelain ]; then
+	echo "CHANGED"
+else
+	echo "NOT CHANGED"
+fi
 
 
 #if [ ! -z "$ghprbActualCommit" ]; then
