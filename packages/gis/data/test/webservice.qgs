@@ -5,7 +5,7 @@
   <evaluateDefaultValues active="0"/>
   <layer-tree-group expanded="1" checked="Qt::Checked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="IMG_02082016_321077D20170724155459999" name="IMG_02082016_321077D">
+    <layer-tree-layer expanded="1" checked="Qt::Checked" id="LANDSAT201320170814161519198" name="LANDSAT2013">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="reddpac_LandCover200020170724154939127" name="reddpac:LandCover2000">
@@ -45,13 +45,13 @@
   <layer-tree-canvas>
     <custom-order enabled="0">
       <item>reddpac_LandCover200020170724154939127</item>
-      <item>IMG_02082016_321077D20170724155459999</item>
+      <item>LANDSAT201320170814161519198</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="IMG_02082016_321077D" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="LANDSAT2013" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="IMG_02082016_321077D20170724155459999" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="LANDSAT201320170814161519198" visible="1"/>
       </filegroup>
     </legendlayer>
     <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="reddpac:LandCover2000" showFeatureCount="0">
@@ -63,17 +63,17 @@
   <projectlayers>
     <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
       <extent>
-        <xmin>-53.32860566114015199</xmin>
-        <ymin>-6.39760765710309265</ymin>
-        <xmax>-48.9521822329653844</xmax>
-        <ymax>-2.30104584228650744</ymax>
+        <xmin>-75.18767599999999618</xmin>
+        <ymin>-18.42369758992556683</ymin>
+        <xmax>-42.54174263057062433</xmax>
+        <ymax>6.83652899999999963</ymax>
       </extent>
-      <id>IMG_02082016_321077D20170724155459999</id>
-      <datasource>contextualWMSLegend=0&amp;crs=EPSG:4326&amp;dpiMode=7&amp;featureCount=10&amp;format=image/png&amp;layers=inpe:02082016_321077D&amp;styles=&amp;url=http://terrabrasilis.info/terraamazon/ows</datasource>
+      <id>LANDSAT201320170814161519198</id>
+      <datasource>contextualWMSLegend=0&amp;crs=EPSG:4326&amp;dpiMode=7&amp;featureCount=10&amp;format=image/png&amp;layers=Prodes_2013:LANDSAT2013&amp;styles=&amp;url=http://terrabrasilis.info/geoserver/ows</datasource>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>IMG_02082016_321077D</layername>
+      <layername>LANDSAT2013</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>

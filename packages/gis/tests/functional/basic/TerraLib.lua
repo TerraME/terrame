@@ -194,14 +194,14 @@ return {
 		proj.file = filePath("test/webservice.qgs", "gis")
 		TerraLib().createProject(proj)
 
-		layerInfo = TerraLib().getLayerInfo(proj, "IMG_02082016_321077D")
-		unitTest:assertEquals(layerInfo.name, "IMG_02082016_321077D")
+		layerInfo = TerraLib().getLayerInfo(proj, "LANDSAT2013")
+		unitTest:assertEquals(layerInfo.name, "LANDSAT2013")
 		unitTest:assertEquals(layerInfo.rep, "raster")
 		unitTest:assertEquals(layerInfo.srid, 4326)
 		unitTest:assertEquals(layerInfo.type, "WMS2")
 		unitTest:assertEquals(layerInfo.source, "wms")
-		unitTest:assertEquals(layerInfo.url, "http://terrabrasilis.info/terraamazon/ows")
-		unitTest:assertEquals(layerInfo.dataset, "inpe:02082016_321077D")
+		unitTest:assertEquals(layerInfo.url, "http://terrabrasilis.info/geoserver/ows")
+		unitTest:assertEquals(layerInfo.dataset, "Prodes_2013:LANDSAT2013")
 		unitTest:assertNil(layerInfo.encoding)
 
 		layerInfo = TerraLib().getLayerInfo(proj, "reddpac:LandCover2000")
