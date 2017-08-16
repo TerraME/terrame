@@ -22,6 +22,19 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
+if [ ! -z "$ghprbActualCommit" ]; then
+	echo "Triggering Builds"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "C++ Syntax" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Linux Compilation" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package base" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package gis" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Documentation of package base" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Documentation of package gis" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Functional test of package base" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Functional test of package gis" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Execution Test" "$BUILD_URL/consoleFull" "Build Triggered"
+fi
+
 echo "### TerraLib ###"
 cd $_TERRALIB_GIT_DIR
 GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
@@ -38,8 +51,8 @@ fi
 #else
 #fi
 
-echo $BUILD_URL
+#echo $BUILD_URL
 
-ls -la $WORKSPACE
+#ls -la $WORKSPACE
 
 
