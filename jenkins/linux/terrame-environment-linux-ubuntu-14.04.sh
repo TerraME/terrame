@@ -23,7 +23,7 @@
 # of this software and its documentation.
 
 if [ ! -z "$ghprbActualCommit" ]; then
-	echo "Triggering Builds"
+	echo "Triggering All Builds"
 	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "C++ Syntax" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
 	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Linux Compilation" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
 	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package base" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
