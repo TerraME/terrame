@@ -24,15 +24,15 @@
 
 if [ ! -z "$ghprbActualCommit" ]; then
 	echo "Triggering Builds"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "C++ Syntax" "$BUILD_URL/consoleFull" "Build Triggered"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Linux Compilation" "$BUILD_URL/consoleFull" "Build Triggered"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package base" "$BUILD_URL/consoleFull" "Build Triggered"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package gis" "$BUILD_URL/consoleFull" "Build Triggered"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Documentation of package base" "$BUILD_URL/consoleFull" "Build Triggered"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Documentation of package gis" "$BUILD_URL/consoleFull" "Build Triggered"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Functional test of package base" "$BUILD_URL/consoleFull" "Build Triggered"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Functional test of package gis" "$BUILD_URL/consoleFull" "Build Triggered"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Execution Test" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "pending" "C++ Syntax" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "pending" "Linux Compilation" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "pending" "Code analysis of package base" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "pending" "Code analysis of package gis" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "pending" "Documentation of package base" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "pending" "Documentation of package gis" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "pending" "Functional test of package base" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "pending" "Functional test of package gis" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "pending" "Execution Test" "$BUILD_URL/consoleFull" "Build Triggered"
 fi
 
 echo "### TerraLib ###"
