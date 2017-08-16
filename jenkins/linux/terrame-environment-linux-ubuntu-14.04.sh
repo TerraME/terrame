@@ -22,6 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
+####################### GitHub Triggers
 if [ ! -z "$ghprbActualCommit" ]; then
 	echo "Triggering All Builds"
 	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "C++ Syntax" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
@@ -35,24 +36,27 @@ if [ ! -z "$ghprbActualCommit" ]; then
 	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Execution Test" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
 fi
 
-echo "### TerraLib ###"
+######################## TerraLib Environment
+echo "### TerraLib Environment ###"
+
+echo "Cleaning last config scripts"
+rm -rf $_TERRALIB_BUILD_BASE/solution/terralib-conf.*
+valid $? "Error: Clean fail"
+
 cd $_TERRALIB_GIT_DIR
+
 GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
 git status
 if [ $(git status --porcelain) ]; then # Check if TerraLib must be compiled
 	git pull
-	rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua # Removing TerraLib Mod Binding Lua in order to re-generate it
-#else
-#	git status
+	if [ ! -z "$ghprbActualCommit" ]; then
+		echo "Cleaning last install"
+		rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua  $_TERRALIB_INSTALL_PATH # Removing TerraLib Mod Binding Lua in order to re-generate it
+		valid $? "Error: Clean fail"
+	else
+		echo "TODO"
+	fi
 fi
 
-
-#if [ ! -z "$ghprbActualCommit" ]; then
-#else
-#fi
-
-#echo $BUILD_URL
-
-#ls -la $WORKSPACE
-
+echo "### TerraLib Environment Finished ###"
 
