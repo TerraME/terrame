@@ -1,5 +1,5 @@
 #!/bin/bash
-exit 1
+#exit 1
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -69,33 +69,74 @@ exit 1
 #echo "### TerraLib ###"
 #git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
 
-# Creating TerraME Test folders and TerraLib solution
-mkdir $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERRAME_BUILD_BASE/solution
+# # Creating TerraME Test folders and TerraLib solution
+# mkdir $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERRAME_BUILD_BASE/solution
 
-# Copying TerraLib compilation scripts to TerraLib Solution folder
-cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
+# # Copying TerraLib compilation scripts to TerraLib Solution folder
+# cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
 
-# Copying TerraME Git Repository to Test Repository Folder
-cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
-cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-linux-ubuntu-14.04.sh $_TERRAME_REPOSITORY_DIR
+# # Copying TerraME Git Repository to Test Repository Folder
+# cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
+# cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-linux-ubuntu-14.04.sh $_TERRAME_REPOSITORY_DIR
 
-# Copying TerraME Git Test Execution to Test Execution Folder
-cp -r $_TERRAME_GIT_DIR/test/* $_TERRAME_EXECUTION_DIR
-cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-test-execution-linux-ubuntu-14.04.sh $_TERRAME_EXECUTION_DIR
+# # Copying TerraME Git Test Execution to Test Execution Folder
+# cp -r $_TERRAME_GIT_DIR/test/* $_TERRAME_EXECUTION_DIR
+# cp $_TERRAME_GIT_DIR/jenkins/linux/terrame-test-execution-linux-ubuntu-14.04.sh $_TERRAME_EXECUTION_DIR
 
-# Copying TerraME test and config file to Test folder
-cp --verbose $_TERRAME_GIT_DIR/jenkins/all/*.lua $_TERRAME_TEST_DIR
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-unittest-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-code-analysis-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-doc-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-syntaxcheck-cpp-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+# # Copying TerraME test and config file to Test folder
+# cp --verbose $_TERRAME_GIT_DIR/jenkins/all/*.lua $_TERRAME_TEST_DIR
+# cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-unittest-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+# cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-code-analysis-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+# cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-doc-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+# cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-syntaxcheck-cpp-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
 
-# Copying TerraME compilation scripts to TerraME Solution folder
-cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUILD_BASE/solution
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
+# # Copying TerraME compilation scripts to TerraME Solution folder
+# cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUILD_BASE/solution
+# cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
 
-# Compile TerraLib
-./terralib-conf.sh
+#
+# Valid parameter val or abort script
+#
+function valid()
+{
+  if [ $1 -ne 0 ]; then
+    echo $2
+    echo ""
+    exit 1
+  fi
+}
+
+######################## TerraLib Environment
+echo "### TerraLib Environment ###"
+
+cd $_TERRALIB_GIT_DIR
+
+GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
+git status
+if [ $(git status --porcelain) ]; then # Check if TerraLib must be compiled
+	git pull
+	if [ ! -z "$ghprbActualCommit" ]; then
+		echo "Cleaning last install"
+		rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua  $_TERRALIB_INSTALL_PATH # Removing TerraLib Mod Binding Lua in order to re-generate it
+		valid $? "Error: Cleaning fail"
+	else
+		echo "TODO"
+	fi
+	
+	echo "Cleaning last config scripts"
+	rm -rf $_TERRALIB_BUILD_BASE/solution/terralib-conf.*
+	valid $? "Error: Cleaning fail"	
+	
+	echo "Copying TerraLib compilation scripts to TerraLib Solution folder"
+	cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
+	valid $? "Error: Copying fail"	
+	
+	echo "Compiling TerraLib"
+	./terralib-conf.sh	
+	valid $? "Error: Compiling fail"
+fi
+
+echo "### TerraLib Environment Finished ###"
 
 # Returns a TerraLib compilation execution code in order to Jenkins be able to set build status
 exit $?

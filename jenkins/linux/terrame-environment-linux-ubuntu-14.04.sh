@@ -56,34 +56,6 @@ if [ ! -z "$ghprbActualCommit" ]; then
 	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Execution Test" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
 fi
 
-######################## TerraLib Environment
-echo "### TerraLib Environment ###"
-
-echo "Cleaning last config scripts"
-rm -rf $_TERRALIB_BUILD_BASE/solution/terralib-conf.*
-valid $? "Error: Cleaning fail"
-
-cd $_TERRALIB_GIT_DIR
-
-GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
-git status
-if [ $(git status --porcelain) ]; then # Check if TerraLib must be compiled
-	git pull
-	if [ ! -z "$ghprbActualCommit" ]; then
-		echo "Cleaning last install"
-		rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua  $_TERRALIB_INSTALL_PATH # Removing TerraLib Mod Binding Lua in order to re-generate it
-		valid $? "Error: Cleaning fail"
-	else
-		echo "TODO"
-	fi
-	
-	echo "Copying TerraLib compilation scripts to TerraLib Solution folder"
-	cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
-	valid $? "Error: Copying fail"	
-fi
-
-echo "### TerraLib Environment Finished ###"
-
 ##################### TerraME Environment
 echo "### TerraME Environment ###"
 
@@ -96,13 +68,13 @@ mkdir $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR 
 valid $? "Error: Creating fail"
 
 echo "Copying TerraME Git Repository to Test Repository Folder"
-cp --verbose -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
+cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
 valid $? "Error: Copying fail"	
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-linux-ubuntu-14.04.sh $_TERRAME_REPOSITORY_DIR
 valid $? "Error: Copying fail"	
 
 echo "Copying TerraME Git Test Execution to Test Execution Folder"
-cp --verbose -r $_TERRAME_GIT_DIR/test/* $_TERRAME_EXECUTION_DIR
+cp -r $_TERRAME_GIT_DIR/test/* $_TERRAME_EXECUTION_DIR
 valid $? "Error: Copying fail"	
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-test-execution-linux-ubuntu-14.04.sh $_TERRAME_EXECUTION_DIR
 valid $? "Error: Copying fail"	
