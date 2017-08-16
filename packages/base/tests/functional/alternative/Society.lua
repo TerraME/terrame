@@ -92,22 +92,6 @@ return{
 
 		unitTest:assertError(error_func, "Argument 'instance' should not have attribute 'parent'.")
 
-		ag1 = Agent{}
-
-		Society{
-			instance = ag1,
-			quantity = 20
-		}
-
-		error_func = function()
-			sc3 = Society{
-				instance = ag1,
-				quantity = 20
-			}
-		end
-
-		unitTest:assertError(error_func, "The same instance cannot be used by two Societies.")
-
 		local ag = Agent{
 			water = 2,
 			exec = function() end

@@ -160,11 +160,33 @@ return{
 			target = soc1,
 			select = function(ag) return ag.age > 5 end
 		}
-		unitTest:assertEquals(tostring(g1), [[age     function
-agents  vector of size 2
-parent  Society
-random  boolean [false]
-select  function
+
+		unitTest:assertEquals(tostring(g1), [[addSocialNetwork     function
+age                  function
+agents               vector of size 2
+die                  function
+emptyNeighbor        function
+enter                function
+execute              function
+getCell              function
+getCells             function
+getLatency           function
+getSocialNetwork     function
+getStateName         function
+getTrajectoryStatus  function
+init                 function
+leave                function
+message              function
+move                 function
+on_message           function
+parent               Society
+random               boolean [false]
+reproduce            function
+select               function
+setTrajectoryStatus  function
+walk                 function
+walkIfEmpty          function
+walkToEmpty          function
 ]])
 	end,
 	add = function(unitTest)
@@ -209,6 +231,7 @@ select  function
 			target = soc,
 			select = function(ag) return ag.age > 5 end
 		}
+
 		unitTest:assertType(g, "Group")
 		unitTest:assertEquals(5, #g)
 

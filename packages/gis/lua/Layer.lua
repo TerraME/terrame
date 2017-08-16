@@ -438,31 +438,31 @@ Layer_ = {
 	-- & attribute, layer, select  & area, missing, band, dummy  \
 	-- "count" & Number of objects that have some overlay with the cell.
 	-- & attribute, layer & \
+	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
+	-- raster data. It creates one new attribute for each available value, in the form
+	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
+	-- value represent the different values in the input data.
+	-- The sum of the created attribute values for a given cell will range
+	-- from zero to one, according to the area of the cell covered by pixels.
+	-- When using shapefiles, keep in mind the total limit of ten characters, as
+	-- it removes the characters after the tenth in the name. This function will stop with
+	-- an error if two attribute names in the output are the same.
+	-- & attribute, layer, select & missing, band, dummy \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
 	-- centroid of the cell to the closest point, line, or border of a polygon.
 	-- & attribute, layer & \
-	-- "mode" & More common qualitative value from the objects that have some intersection with
-	-- the cell, without taking into account their geometric properties. This operation converts the
-	-- output to string. Whenever there are two or more values with the same count, the resulting
-	-- value will contain all them separated by comma. When using argument area, it
-	-- uses the value of the object that has larger coverage. & attribute, layer, select &
-	-- missing, band, dummy \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
 	-- attribute, layer, select & missing, band, dummy \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
 	-- attribute, layer, select & missing, band, dummy \
-	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
-	-- raster data. It creates one new attribute for each available value, in the form
-	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
-	-- value represent the different values in the input data.
-	-- The sum of the created attribute values for a given cell will range
-	-- from zero to one hundred, according to the coverage of the cell.
-	-- When using shapefiles, keep in mind the total limit of ten characters, as
-	-- it removes the characters after the tenth in the name. This function will stop with
-	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & missing, band, dummy \
+	-- "mode" & More common qualitative value from the objects that have some intersection with
+	-- the cell, without taking into account their geometric properties. This operation converts the
+	-- output to string. Whenever there are two or more values with the same count, the resulting
+	-- value will contain all them separated by comma. When using argument area, it
+	-- uses the value of the object that has larger coverage. & attribute, layer, select &
+	-- missing, band, dummy \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
 	-- & attribute, layer & \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some

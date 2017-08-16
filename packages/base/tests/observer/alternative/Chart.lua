@@ -448,6 +448,7 @@ return{
 			finalTime = 30,
 			maximum = 1000,
 			probability = 0.25,
+			policy = false,
 			init = init
 		}
 
@@ -472,6 +473,24 @@ return{
 		end
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg("select"))
+
+		error_func = function()
+			c = Chart{
+				target = e,
+				select = "infected2"
+			}
+		end
+
+		unitTest:assertError(error_func, "Selected value 'infected2' does not exist.")
+
+		error_func = function()
+			c = Chart{
+				target = e,
+				select = "policy"
+			}
+		end
+
+		unitTest:assertError(error_func, "Selected value 'policy' should be a number or a function, got boolean.")
 
 		error_func = function()
 			c = Chart{

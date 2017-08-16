@@ -370,6 +370,7 @@ water            number [200]
 		local MyTube = Model{
 			initialWater = 200,
 			sun = Choice{min = 0, default = 10},
+			limit = Choice{"veryLow", "veryHigh"},
 			finalTime = 100,
 			init = function(model)
 				model.timer = Timer{
@@ -405,6 +406,11 @@ water            number [200]
 		unitTest:assertEquals("Initial Water = 100", scenario4:title())
 		scenario4:run()
 		unitTest:assertEquals("Initial Water = 100", scenario4:title())
+
+		local scenario5 = MyTube{limit = "veryHigh", finalTime = 50}
+		unitTest:assertEquals("Limit = Very High", scenario5:title())
+		scenario5:run()
+		unitTest:assertEquals("Limit = Very High", scenario5:title())
 	end
 }
 

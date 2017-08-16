@@ -801,7 +801,11 @@ function Model(attrTab)
 		forEachOrderedElement(parameters, function(idx, value, mtype)
 			if mtype == "Choice" then
 				if argv[idx] ~= value.default and idx ~= "finalTime" then
-					titleStr = titleStr.._Gtme.stringToLabel(idx).." = "..vardump(argv[idx])..", "
+					if type(argv[idx]) == "string" then
+						titleStr = titleStr.._Gtme.stringToLabel(idx).." = ".._Gtme.stringToLabel(argv[idx])..", "
+					else
+						titleStr = titleStr.._Gtme.stringToLabel(idx).." = "..vardump(argv[idx])..", "
+					end
 				end
 			elseif argv[idx] ~= value and idx ~= "finalTime" then
 				titleStr = titleStr.._Gtme.stringToLabel(idx).." = "..vardump(argv[idx])..", "

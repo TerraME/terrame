@@ -57,7 +57,7 @@
 									<%end%>
 									<%= httpLink(doc.files[filepath].doc[1].description)%>
 									<% if func.arg then %>
-										<p><h3>Arguments</h3>
+										<p><h3>Parameters</h3>
 										<ul><span class="arg">
 										<%for i = 1, #func.arg do
 											local arg_desc = func.arg[func.arg[i]] or ""

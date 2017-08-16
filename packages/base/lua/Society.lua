@@ -132,9 +132,7 @@ Society_ = {
 		if mtype == "table" then
 			agent.state_ = State{id = "state"} -- remove this in the next version
 			agent.id = tostring(self.autoincrement)
-			agent = Agent(agent)
-			local metaTable = {__index = self.instance, __tostring = _Gtme.tostring}
-			setmetatable(agent, metaTable)
+			agent = self.instance(agent)
 
 			forEachOrderedElement(self.instance, function(idx, value, mmtype)
 				if mmtype == "Random" then
@@ -924,10 +922,6 @@ function Society(data)
 
 	mandatoryTableArgument(data, "instance", "Agent")
 
-	if data.instance.isinstance then
-		customError("The same instance cannot be used by two Societies.")
-	end
-
 	if data.instance.id ~= nil then
 		customError("Argument 'instance' should not have attribute 'id'.")
 	end
@@ -939,7 +933,7 @@ function Society(data)
 	local function createSummaryFunctions(agent)
 		-- create functions for the society according to the attributes of its instance
 		forEachElement(agent, function(attribute, value, mtype)
-			if belong(attribute, {"id", "parent"}) then return
+			if belong(attribute, {"id", "parent", "type_", "add", "notify", "sample"}) then return
 			elseif belong(attribute, {"messages", "instance", "autoincrement", "placements"}) then
 				customWarning("Attribute '"..attribute.."' belongs to both Society and Agent.")
 			elseif mtype == "function" then
@@ -1014,6 +1008,35 @@ function Society(data)
 		end)
 	end
 
+	local instance = {}
+	local internalInstance = data.instance
+
+	while internalInstance do
+		forEachOrderedElement(internalInstance, function(idx, value)
+			if instance[idx] then
+				if belong(idx, {"init", "execute", "on_message", "cObj_", "socialnetworks"}) then return end
+
+				if type(instance[idx]) == "function" then
+					customWarning("Function '"..idx.."()' is replaced in the instance.")
+				else
+					customWarning("Attribute '"..idx.."' is replaced in the instance.")
+				end
+			else
+				instance[idx] = value
+			end
+		end)
+
+		internalInstance = getmetatable(internalInstance)
+		if internalInstance then
+			internalInstance = internalInstance.__index
+		end
+	end
+
+	createSummaryFunctions(instance)
+
+	setmetatable(instance, metaTableAgent_)
+	data.instance = instance
+
 	if type(data.file) == "string" then
 		data.file = File(data.file)
 	end
@@ -1053,52 +1076,21 @@ function Society(data)
 		for _ = 1, quantity do
 			data:add{}
 		end
+
+		data.quantity = nil
 	end
 
-	if not (data.quantity and data.quantity == 0) then
-		local newAttTable = {}
-		forEachElement(data.agents[1], function(idx, value)
+	if data.agents[1] then
+		local initAttributes = {}
+
+		forEachOrderedElement(data.agents[1], function(idx, value)
 			if data.instance[idx] == nil then
-				newAttTable[idx] = value
+				initAttributes[idx] = value
 			end
 		end)
 
-		createSummaryFunctions(newAttTable)
-
-		local mt = getmetatable(data.instance)
-		setmetatable(data.instance, nil)
-		createSummaryFunctions(data.instance)
-
-		forEachElement(Agent_, function(idx, value)
-			if belong(idx, {"execute", "init", "on_message"}) then
-				if not data.instance[idx] then
-					data.instance[idx] = value
-				end
-
-				return
-			end
-
-			if data.instance[idx] then
-				if type(value) == "function" then
-					customWarning("Function '"..idx.."()' from Agent is replaced in the instance.")
-				end
-			else
-				data.instance[idx] = value
-			end
-		end)
-
-		setmetatable(data.instance, mt)
+		createSummaryFunctions(initAttributes)
 	end
-
-	data.quantity = nil
-	local metaTableInstance = {__index = data.instance, __tostring = _Gtme.tostring}
-
-	data.instance.type_ = "Agent"
-	data.instance.isinstance = true
-
-	forEachAgent(data, function(agent)
-		setmetatable(agent, metaTableInstance)
-	end)
 
 	return data
 end

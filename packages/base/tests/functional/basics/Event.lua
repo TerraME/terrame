@@ -131,7 +131,9 @@ return{
 			cell.value = Random():integer(10)
 		end)
 
-		local traj = Trajectory{target = cs, greater = function(c1, c2) return c1.value > c2.value end}
+		local traj = Trajectory{target = cs, greater = function(c1, c2)
+			return c1.value > c2.value
+		end}
 
 		local m = Model{
 			finalTime = 10,
@@ -286,7 +288,8 @@ return{
 		cs = CellularSpace{xdim = 2, execute = exec}
 		traj = Trajectory{target = cs}
 		local agent = Agent{execute = exec}
-		soc = Society{instance = Agent{}, quantity = 2, execute = exec}
+		soc = Society{instance = Agent{}, quantity = 2}
+		soc.execute = exec
 		group = Group{target = soc}
 
 		local timer = Timer{

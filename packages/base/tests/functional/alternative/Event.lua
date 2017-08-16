@@ -110,9 +110,10 @@ return{
 
 		local soc = Society{
 			instance = Agent{a = 2},
-			quantity = 4,
-			execute = 2
+			quantity = 4
 		}
+
+		soc.execute = 2
 
 		error_func = function()
 			Event{action = soc}

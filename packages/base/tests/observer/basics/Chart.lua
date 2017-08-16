@@ -178,6 +178,31 @@ return{
 
 		unitTest:assertSnapshot(chart, "chart-function-soc.bmp", 0.1)
 
+		Tube = Model{
+			waterValue = 200,
+			strategy = Choice{"veryLow", "veryHigh"},
+			init = function(model)
+				model.finalTime = 100
+				model.timer = Timer{
+					Event{action = function() end}
+				}
+			end
+		}
+
+		local m = Tube{waterValue = 100, strategy = "veryHigh"}
+		cell = Cell{value = 0}
+
+		local ch = Chart{
+			target = cell,
+			title = m
+		}
+
+		ch:update(0)
+		ch:update(1)
+		ch:update(2)
+
+		unitTest:assertSnapshot(ch, "chart-model-4.png", 0.05)
+
 		-- chart using data
 		local tab = DataFrame{
 			first = 2000,
@@ -257,6 +282,7 @@ return{
 				title = "Infected"
 			}
 		end
+
 		unitTest:assertWarning(warning_func, defaultValueMsg("title", "Infected"))
 
 		e:add(Event{action = c})

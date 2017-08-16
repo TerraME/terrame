@@ -254,12 +254,14 @@ id     string [env]
 		forEachCell(cs, function(cell)
 			cont = cont + #cell.placement
 		end)
+
 		unitTest:assertEquals(21, cont)
 
 		cont = 0
 		forEachAgent(predators, function(agent)
 			cont = cont + #agent.placement
 		end)
+
 		unitTest:assertEquals(20, cont)
 
 		forEachAgent(predators, function(agent)
@@ -273,6 +275,7 @@ id     string [env]
 		forEachCell(cs, function(cell)
 			cont = cont + #cell.placement
 		end)
+
 		unitTest:assertEquals(41, cont)
 
 		cont = 0
