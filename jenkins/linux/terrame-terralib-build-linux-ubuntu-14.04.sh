@@ -155,7 +155,7 @@ echo ""
 echo ""
 echo ""
 
-tree -D -I "git|install|build" $_TERRALIB_BUILD_BASE
+tree -D -I "3rdparty|git|install|build" $_TERRALIB_BUILD_BASE
 
 echo "### TerraLib Environment Finished ###"
 
