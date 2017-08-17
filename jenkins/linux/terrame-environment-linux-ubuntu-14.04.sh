@@ -69,7 +69,7 @@ echo "Cleaning last directories"
 rm -rf $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
 valid $? "Error: Cleaning fail"
 
-echo "Creating TerraME Test folders and TerraLib solution"
+echo "Creating TerraME Test directories"
 mkdir $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR 
 valid $? "Error: Creating fail"
 
@@ -100,14 +100,3 @@ valid $? "Error: Copying fail"
 echo ""
 echo ""
 echo ""
-######################## TerraLib Environment
-echo "### TerraLib Environment ###"
-echo "Cleaning last config scripts"
-rm -rf $_TERRALIB_BUILD_BASE/solution/terralib-conf.*
-valid $? "Error: Cleaning fail"	
-
-echo "Copying TerraLib compilation scripts to TerraLib Solution folder"
-cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
-valid $? "Error: Copying fail"	
-
-echo "### TerraLib Environment Finished ###"

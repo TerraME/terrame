@@ -110,6 +110,7 @@ echo ""
 echo ""
 echo ""
 
+echo "TerraLib GitLab environment"
 cd $_TERRALIB_GIT_DIR
 
 GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
@@ -137,9 +138,31 @@ else
 	echo "Not updated"
 fi
 
+echo ""
+echo ""
+echo ""
+######################## TerraLib Environment
+echo "### TerraLib Environment ###"
+echo "Cleaning last config scripts"
+rm -rf $_TERRALIB_BUILD_BASE/solution/terralib-conf.*
+valid $? "Error: Cleaning fail"	
+
+echo "Copying TerraLib compilation scripts to TerraLib Solution folder"
+cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
+valid $? "Error: Copying fail"	
+
+echo "### TerraLib Environment Finished ###"
+
+echo ""
+echo ""
+echo ""
 
 # Returns a TerraLib compilation execution code in order to Jenkins be able to set build status
 echo "Compiling TerraLib"
 cd $_TERRALIB_BUILD_BASE/solution
 ./terralib-conf.sh	
 valid $? "Error: Compiling fail"
+
+echo ""
+echo ""
+echo ""
