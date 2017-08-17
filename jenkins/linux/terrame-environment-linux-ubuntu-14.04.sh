@@ -56,6 +56,9 @@ if [ ! -z "$ghprbActualCommit" ]; then
 	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Execution Test" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
 fi
 
+echo ""
+echo ""
+echo ""
 ##################### TerraME Environment
 echo "### TerraME Environment ###"
 
@@ -91,3 +94,17 @@ valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-syntaxcheck-cpp-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
 
+echo ""
+echo ""
+echo ""
+######################## TerraLib Environment
+echo "### TerraLib Environment ###"
+echo "Cleaning last config scripts"
+rm -rf $_TERRALIB_BUILD_BASE/solution/terralib-conf.*
+valid $? "Error: Cleaning fail"	
+
+echo "Copying TerraLib compilation scripts to TerraLib Solution folder"
+cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
+valid $? "Error: Copying fail"	
+
+echo "### TerraLib Environment Finished ###"

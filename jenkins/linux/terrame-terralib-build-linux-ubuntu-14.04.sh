@@ -106,37 +106,35 @@ function valid()
   fi
 }
 
-######################## TerraLib Environment
-echo "### TerraLib Environment ###"
-
 cd $_TERRALIB_GIT_DIR
 
 GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
 git status
-if [ $(git status --porcelain) ]; then # Check if TerraLib must be compiled
+
+echo "Check if TerraLib must be updated"
+if [ -z "$ghprbActualCommit" ]; then
+	echo "Daily tests always update"
+	rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution $_TERRALIB_INSTALL_PATH
+	valid $? "Error: Cleaning fail"
+	
+	mkdir $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
+	valid $? "Error: Cleaning fail"
+	
+	git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet 	
+	
+elif [ $(git status --porcelain) ]; then
 	git pull
 	if [ ! -z "$ghprbActualCommit" ]; then
 		echo "Cleaning last install"
-		rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua  $_TERRALIB_INSTALL_PATH # Removing TerraLib Mod Binding Lua in order to re-generate it
+		rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua  $_TERRALIB_INSTALL_PATH
 		valid $? "Error: Cleaning fail"
-	else
-		echo "TODO"
 	fi
-	
-	echo "Cleaning last config scripts"
-	rm -rf $_TERRALIB_BUILD_BASE/solution/terralib-conf.*
-	valid $? "Error: Cleaning fail"	
-	
-	echo "Copying TerraLib compilation scripts to TerraLib Solution folder"
-	cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
-	valid $? "Error: Copying fail"	
-	
-	echo "Compiling TerraLib"
-	./terralib-conf.sh	
-	valid $? "Error: Compiling fail"
+else 
+	echo "Not updated"
 fi
 
-echo "### TerraLib Environment Finished ###"
 
 # Returns a TerraLib compilation execution code in order to Jenkins be able to set build status
-exit $?
+echo "Compiling TerraLib"
+./terralib-conf.sh	
+valid $? "Error: Compiling fail"
