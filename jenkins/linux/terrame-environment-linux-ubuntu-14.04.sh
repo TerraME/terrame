@@ -79,15 +79,9 @@ valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
 valid $? "Error: Copying fail"
 
-echo "Copying TerraME Git Repository to Test Repository Folder"
-cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
-valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-linux-ubuntu-14.04.sh $_TERRAME_REPOSITORY_DIR
 valid $? "Error: Copying fail"
 
-echo "Copying TerraME Git Test Execution to Test Execution Folder"
-cp -r $_TERRAME_GIT_DIR/test/* $_TERRAME_EXECUTION_DIR
-valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-test-execution-linux-ubuntu-14.04.sh $_TERRAME_EXECUTION_DIR
 valid $? "Error: Copying fail"
 
@@ -103,11 +97,15 @@ valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-syntaxcheck-cpp-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
 
-echo ""
-echo ""
-echo ""
+tree -D -I "git" $_TERRAME_BUILD_BASE
 
-tree -D $_TERRAME_BUILD_BASE
+echo "Copying TerraME Git Repository to Test Repository Folder"
+cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
+valid $? "Error: Copying fail"
+
+echo "Copying TerraME Git Test Execution to Test Execution Folder"
+cp -r $_TERRAME_GIT_DIR/test/* $_TERRAME_EXECUTION_DIR
+valid $? "Error: Copying fail"
 
 echo ""
 echo ""
