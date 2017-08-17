@@ -27,11 +27,11 @@
 #
 function valid()
 {
-  if [ $1 -ne 0 ]; then
-    echo $2
-    echo ""
-    exit 1
-  fi
+	if [ $1 -ne 0 ]; then
+		echo $2
+		echo ""
+		exit 1
+	fi
 }
 
 echo ""
@@ -40,23 +40,23 @@ echo ""
 ####################### GitHub Triggers
 if [ ! -z "$ghprbActualCommit" ]; then
 	echo "Triggering All Builds"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "C++ Syntax" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "C++ Syntax" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Linux Compilation" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Linux Compilation" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package base" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package base" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package gis" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package gis" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Documentation of package base" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Documentation of package base" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Documentation of package gis" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Documentation of package gis" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Functional test of package base" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Functional test of package base" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Functional test of package gis" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Functional test of package gis" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Execution Test" "pending" "$BUILD_URL/consoleFull" "Build Triggered"
+	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Execution Test" "pending" "$BUILD_URL/consoleFull" "Triggered"
 fi
 
 echo ""
@@ -97,7 +97,11 @@ valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-syntaxcheck-cpp-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
 
-tree -D -I "git" $_TERRAME_BUILD_BASE
+echo ""
+echo ""
+echo ""
+
+tree -D -L 2 $_TERRAME_BUILD_BASE
 
 echo "Copying TerraME Git Repository to Test Repository Folder"
 cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
