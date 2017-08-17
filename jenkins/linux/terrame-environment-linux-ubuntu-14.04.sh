@@ -34,6 +34,9 @@ function valid()
   fi
 }
 
+echo ""
+echo ""
+echo ""
 ####################### GitHub Triggers
 if [ ! -z "$ghprbActualCommit" ]; then
 	echo "Triggering All Builds"

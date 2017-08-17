@@ -106,6 +106,10 @@ function valid()
   fi
 }
 
+echo ""
+echo ""
+echo ""
+
 cd $_TERRALIB_GIT_DIR
 
 GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
@@ -136,5 +140,6 @@ fi
 
 # Returns a TerraLib compilation execution code in order to Jenkins be able to set build status
 echo "Compiling TerraLib"
+cd $_TERRALIB_BUILD_BASE/solution
 ./terralib-conf.sh	
 valid $? "Error: Compiling fail"
