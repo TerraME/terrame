@@ -99,11 +99,11 @@
 #
 function valid()
 {
-  if [ $1 -ne 0 ]; then
-    echo $2
-    echo ""
-    exit 1
-  fi
+	if [ $1 -ne 0 ]; then
+		echo $2
+		echo ""
+		exit 1
+	fi
 }
 
 echo ""
@@ -150,6 +150,12 @@ valid $? "Error: Cleaning fail"
 echo "Copying TerraLib compilation scripts to TerraLib Solution folder"
 cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
 valid $? "Error: Copying fail"	
+
+echo ""
+echo ""
+echo ""
+
+tree -D -I "git|install|build" $_TERRALIB_BUILD_BASE
 
 echo "### TerraLib Environment Finished ###"
 
