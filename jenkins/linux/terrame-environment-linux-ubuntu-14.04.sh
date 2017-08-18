@@ -78,6 +78,8 @@ cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUIL
 valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
 valid $? "Error: Copying fail"
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-git-notify-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
+valid $? "Error: Copying fail"
 
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-linux-ubuntu-14.04.sh $_TERRAME_REPOSITORY_DIR
 valid $? "Error: Copying fail"
