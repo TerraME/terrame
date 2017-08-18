@@ -24,11 +24,6 @@
 
 # usage: ./terrame-git-notify-linux-ubuntu-14.04.sh COMMIT_HASH STATUS_CONTEXT STATUS JOB_URL
 
-# If it is daily tests, it doesn't notify
-if [ -z "$1" ]; then
-	exit 0
-fi
-
 STATUS="$3"
 
 # Define the status
