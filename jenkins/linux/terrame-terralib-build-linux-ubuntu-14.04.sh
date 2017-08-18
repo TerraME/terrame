@@ -1,5 +1,5 @@
 #!/bin/bash
-#exit 1
+exit 0
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -54,8 +54,6 @@ function valid()
 		exit 1
 	fi
 }
-
-$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Linux TerraLib Compilation" -1 "$BUILD_URL/consoleFull"
 
 echo ""
 echo ""
@@ -118,8 +116,6 @@ echo ""
 echo "Compiling TerraLib"
 cd $_TERRALIB_BUILD_BASE/solution
 ./terralib-conf.sh
-
-$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Linux TerraLib Compilation" $? "$BUILD_URL/consoleFull"
 
 echo ""
 echo ""
