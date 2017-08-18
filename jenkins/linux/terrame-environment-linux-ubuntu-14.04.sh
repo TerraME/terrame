@@ -37,6 +37,28 @@ function valid()
 echo ""
 echo ""
 echo ""
+##################### TerraME Environment
+echo "### TerraME Environment ###"
+
+echo "Cleaning last directories"
+rm -rf $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
+valid $? "Error: Cleaning fail"
+
+echo "Creating TerraME Test directories"
+mkdir $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
+valid $? "Error: Creating fail"
+
+echo "Copying TerraME compilation scripts to TerraME Solution directory"
+cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUILD_BASE/solution
+valid $? "Error: Copying fail"
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
+valid $? "Error: Copying fail"
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-git-notify-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
+valid $? "Error: Copying fail"
+
+echo ""
+echo ""
+echo ""
 ####################### GitHub Triggers
 if [ ! -z "$ghprbActualCommit" ]; then
 	echo "Triggering All Builds"
@@ -59,28 +81,6 @@ if [ ! -z "$ghprbActualCommit" ]; then
 	sleep 1s
 	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Execution Test" "pending" "$BUILD_URL/consoleFull" "Triggered"
 fi
-
-echo ""
-echo ""
-echo ""
-##################### TerraME Environment
-echo "### TerraME Environment ###"
-
-echo "Cleaning last directories"
-rm -rf $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
-valid $? "Error: Cleaning fail"
-
-echo "Creating TerraME Test directories"
-mkdir $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
-valid $? "Error: Creating fail"
-
-echo "Copying TerraME compilation scripts to TerraME Solution directory"
-cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUILD_BASE/solution
-valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
-valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-git-notify-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
-valid $? "Error: Copying fail"
 
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-linux-ubuntu-14.04.sh $_TERRAME_REPOSITORY_DIR
 valid $? "Error: Copying fail"
