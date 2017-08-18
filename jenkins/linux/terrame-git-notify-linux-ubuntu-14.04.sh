@@ -51,4 +51,4 @@ fi
 
 /home/jenkins/Configs/terrame/status/send.sh "$1" "$2" $GITHUB_STATUS "$4" $GITHUB_DESCRIPTION
 
-exit $?
+exit $STATUS
