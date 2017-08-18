@@ -41,9 +41,7 @@ echo ""
 if [ ! -z "$ghprbActualCommit" ]; then
 	echo "Triggering All Builds"
 	#/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "C++ Syntax" "pending" "$BUILD_URL/consoleFull" "Triggered"
-	ls -la $_TERRAME_BUILD_BASE/solution
-	ls -la $_TERRAME_GIT_DIR/jenkins/linux
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh "C++ Syntax" "pending" "$BUILD_URL/consoleFull" -2
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "C++ Syntax" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
 	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Linux Compilation" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	sleep 1s
