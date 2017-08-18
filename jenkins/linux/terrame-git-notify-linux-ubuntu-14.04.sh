@@ -22,7 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# usage: ./terrame-git-notify-ubuntu-14.04.sh COMMIT_HASH STATUS_CONTEXT STATUS JOB_URL
+# usage: ./terrame-git-notify-linux-ubuntu-14.04.sh COMMIT_HASH STATUS_CONTEXT STATUS JOB_URL
 
 STATUS=$3
 
