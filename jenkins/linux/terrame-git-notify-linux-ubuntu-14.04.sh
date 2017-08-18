@@ -44,7 +44,6 @@ else
 	GITHUB_DESCRIPTION="Failure: $STATUS errors found"
 fi
 
-echo "$1"
 echo "$2"
 echo "$3"
 echo "$4"
