@@ -117,6 +117,4 @@ echo "Compiling TerraLib"
 cd $_TERRALIB_BUILD_BASE/solution
 ./terralib-conf.sh
 
-echo ""
-echo ""
-echo ""
+exit $?
