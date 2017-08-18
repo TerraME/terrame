@@ -33,6 +33,8 @@ exit 0
 ## PACKAGE_NAME - Represents a name of TerraME package to execute
 #
 
+$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit $_TERRAME_GITHUB_STATUS_CONTEXT -1 "$BUILD_URL/consoleFull"
+
 # Exporting terrame vars
 export TME_PATH="$_TERRAME_INSTALL_PATH/bin"
 export PATH=$PATH:$TME_PATH
@@ -49,4 +51,4 @@ fi
 # Execute TerraME doc generation
 terrame -color $TERRAME_COMMANDS -check
 
-exit $?
+$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit $_TERRAME_GITHUB_STATUS_CONTEXT $? "$BUILD_URL/consoleFull"

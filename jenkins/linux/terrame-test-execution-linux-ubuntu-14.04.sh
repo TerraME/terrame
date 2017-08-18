@@ -29,6 +29,8 @@ exit 0
 ## ./terrame-test-execution-linux-ubuntu-14.04.sh
 #
 
+$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit $_TERRAME_GITHUB_STATUS_CONTEXT -1 "$BUILD_URL/consoleFull"
+
 # Exporting enviroment variables
 export TME_PATH=$_TERRAME_INSTALL_PATH/bin
 export PATH=$PATH:$TME_PATH
@@ -41,4 +43,4 @@ RESULT=$?
 tar -czf $WORKSPACE/build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
 rm -rf .terrame*
 
-exit $RESULT
+$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit $_TERRAME_GITHUB_STATUS_CONTEXT $RESULT "$BUILD_URL/consoleFull"

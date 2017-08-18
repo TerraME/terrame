@@ -34,6 +34,8 @@ exit 0
 ##
 #
 
+$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit $_TERRAME_GITHUB_STATUS_CONTEXT -1 "$BUILD_URL/consoleFull"
+
 # Exporting context
 export TME_PATH=$_TERRAME_INSTALL_PATH/bin
 export PATH=$PATH:$TME_PATH
@@ -48,5 +50,5 @@ fi
 
 # Execute TerraME doc generation
 terrame -color $TERRAME_COMMANDS -doc 2> /dev/null
-# Retrieve TerraME exit code
-exit $?
+
+$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit $_TERRAME_GITHUB_STATUS_CONTEXT $? "$BUILD_URL/consoleFull"

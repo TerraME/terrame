@@ -30,6 +30,7 @@ function valid()
 	if [ $1 -ne 0 ]; then
 		echo $2
 		echo ""
+		$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Environment Config" 1 "$BUILD_URL/consoleFull"
 		exit 1
 	fi
 }
@@ -62,24 +63,23 @@ echo ""
 ####################### GitHub Triggers
 if [ ! -z "$ghprbActualCommit" ]; then
 	echo "Triggering All Builds"
-	#/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "C++ Syntax" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "C++ Syntax" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Linux Compilation" "pending" "$BUILD_URL/consoleFull" "Triggered"
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Linux Compilation" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package base" "pending" "$BUILD_URL/consoleFull" "Triggered"
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Code analysis of package base" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Code analysis of package gis" "pending" "$BUILD_URL/consoleFull" "Triggered"
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Code analysis of package gis" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Documentation of package base" "pending" "$BUILD_URL/consoleFull" "Triggered"
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Documentation of package base" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Documentation of package gis" "pending" "$BUILD_URL/consoleFull" "Triggered"
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Documentation of package gis" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Functional test of package base" "pending" "$BUILD_URL/consoleFull" "Triggered"
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Functional test of package base" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Functional test of package gis" "pending" "$BUILD_URL/consoleFull" "Triggered"
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Functional test of package gis" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Execution Test" "pending" "$BUILD_URL/consoleFull" "Triggered"
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Execution Test" -2 "$BUILD_URL/consoleFull"
 fi
 
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-linux-ubuntu-14.04.sh $_TERRAME_REPOSITORY_DIR

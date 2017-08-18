@@ -24,6 +24,11 @@
 
 # usage: ./terrame-git-notify-linux-ubuntu-14.04.sh COMMIT_HASH STATUS_CONTEXT STATUS JOB_URL
 
+# If it is daily tests, it doesn't notify
+if [ -z "$1" ]; then
+	exit 0
+fi
+
 STATUS="$3"
 
 # Define the status
@@ -43,10 +48,7 @@ else
 	GITHUB_STATUS="failure"
 	GITHUB_DESCRIPTION="Failure: $STATUS errors found"
 fi
-echo "$1" 
-echo "$2" 
-echo "$3"
-echo "$4"
+
 /home/jenkins/Configs/terrame/status/send.sh "$1" "$2" $GITHUB_STATUS "$4" $GITHUB_DESCRIPTION
 
 exit $?
