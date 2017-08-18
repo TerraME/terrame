@@ -40,7 +40,8 @@ echo ""
 ####################### GitHub Triggers
 if [ ! -z "$ghprbActualCommit" ]; then
 	echo "Triggering All Builds"
-	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "C++ Syntax" "pending" "$BUILD_URL/consoleFull" "Triggered"
+	#/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "C++ Syntax" "pending" "$BUILD_URL/consoleFull" "Triggered"
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh "C++ Syntax" "pending" "$BUILD_URL/consoleFull" -2
 	sleep 1s
 	/home/jenkins/Configs/terrame/status/send.sh $ghprbActualCommit "Linux Compilation" "pending" "$BUILD_URL/consoleFull" "Triggered"
 	sleep 1s
