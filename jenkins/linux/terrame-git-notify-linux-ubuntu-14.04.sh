@@ -43,7 +43,10 @@ else
 	GITHUB_STATUS="failure"
 	GITHUB_DESCRIPTION="Failure: $STATUS errors found"
 fi
-
-/home/jenkins/Configs/terrame/status/send.sh $1 $2 "$GITHUB_STATUS" $4 "$GITHUB_DESCRIPTION"
+echo $1 
+echo $2 
+echo $3
+echo $4
+/home/jenkins/Configs/terrame/status/send.sh $1 $2 $GITHUB_STATUS $4 $GITHUB_DESCRIPTION
 
 exit $?
