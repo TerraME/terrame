@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -21,10 +23,6 @@
 # of this software and its documentation.
 
 # usage: ./terrame-git-notify-linux-ubuntu-14.04.sh COMMIT_HASH STATUS_CONTEXT STATUS JOB_URL
-
-echo $ghprbActualCommit 
-echo $_TERRAME_GITHUB_STATUS_CONTEXT 
-echo "$BUILD_URL/consoleFull"
 
 STATUS="$3"
 
