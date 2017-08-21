@@ -117,3 +117,5 @@ valid $? "Error: Copying fail"
 echo ""
 echo ""
 echo ""
+
+exit 1
