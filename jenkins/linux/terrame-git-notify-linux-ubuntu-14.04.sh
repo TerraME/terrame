@@ -38,12 +38,15 @@ elif [ $STATUS -eq -1 ]; then
 elif [ $STATUS -eq 255 ]; then
 	GITHUB_STATUS="failure"
 	GITHUB_DESCRIPTION="Failure: $STATUS or more errors found"
+elif [ $STATUS -eq 1 ]; then
+	GITHUB_STATUS="failure"
+	GITHUB_DESCRIPTION="Failure: $STATUS error found"	
 else
 	GITHUB_STATUS="failure"
 	GITHUB_DESCRIPTION="Failure: $STATUS errors found"
 fi
 
-echo "$2: "$GITHUB_DESCRIPTION
+echo "$2 - "$GITHUB_DESCRIPTION
 
 /home/jenkins/Configs/terrame/status/send.sh "$1" "$2" $GITHUB_STATUS "$4" $GITHUB_DESCRIPTION
 
