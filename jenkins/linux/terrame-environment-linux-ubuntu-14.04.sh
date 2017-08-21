@@ -81,7 +81,7 @@ if [ ! -z "$ghprbActualCommit" ]; then
 	sleep 1s
 	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Execution Test" -2 "$BUILD_URL/consoleFull"
 fi
-exit 1
+
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-linux-ubuntu-14.04.sh $_TERRAME_REPOSITORY_DIR
 valid $? "Error: Copying fail"
 
@@ -117,5 +117,3 @@ valid $? "Error: Copying fail"
 echo ""
 echo ""
 echo ""
-
-exit 1
