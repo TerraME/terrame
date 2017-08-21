@@ -50,7 +50,6 @@ function valid()
 	if [ $1 -ne 0 ]; then
 		echo $2
 		echo ""
-		$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Linux TerraLib Compilation" 1 "$BUILD_URL/consoleFull"
 		exit 1
 	fi
 }
