@@ -78,4 +78,3 @@ tar -czf $WORKSPACE/$LOG_NAME .terrame*
 rm -rf .terrame*
 
 exit $RESULT
-
