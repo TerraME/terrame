@@ -33,8 +33,6 @@ exit 0
 ## PACKAGE_NAME - Represents a name of TerraME package to execute
 #
 
-$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit $_TERRAME_GITHUB_STATUS_CONTEXT -1 "$BUILD_URL/consoleFull"
-
 # Exporting enviroment variables
 export TME_PATH=$_TERRAME_INSTALL_PATH/bin
 export PATH=$PATH:$TME_PATH
@@ -79,4 +77,5 @@ tar -czf $WORKSPACE/$LOG_NAME .terrame*
 # Cleaning up
 rm -rf .terrame*
 
-$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit $_TERRAME_GITHUB_STATUS_CONTEXT $RESULT "$BUILD_URL/consoleFull"
+exit $RESULT
+
