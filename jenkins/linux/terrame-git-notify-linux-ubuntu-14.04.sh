@@ -23,7 +23,6 @@
 # of this software and its documentation.
 
 # usage: ./terrame-git-notify-linux-ubuntu-14.04.sh COMMIT_HASH STATUS_CONTEXT STATUS JOB_URL
-
 STATUS=$3
 
 # Define the status
@@ -44,7 +43,7 @@ else
 	GITHUB_DESCRIPTION="Failure: $STATUS errors found"
 fi
 
-echo "$2"
+echo "$2: "$GITHUB_DESCRIPTION
 
 /home/jenkins/Configs/terrame/status/send.sh "$1" "$2" $GITHUB_STATUS "$4" $GITHUB_DESCRIPTION
 
