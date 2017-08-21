@@ -24,6 +24,10 @@
 
 # usage: ./terrame-git-notify-linux-ubuntu-14.04.sh COMMIT_HASH STATUS_CONTEXT STATUS JOB_URL
 
+echo $ghprbActualCommit 
+echo $_TERRAME_GITHUB_STATUS_CONTEXT 
+echo "$BUILD_URL/consoleFull"
+
 STATUS="$3"
 
 # Define the status
@@ -44,10 +48,10 @@ else
 	GITHUB_DESCRIPTION="Failure: $STATUS errors found"
 fi
 
-echo "$2"
+echo $2
 echo "$3"
 echo "$4"
 
-/home/jenkins/Configs/terrame/status/send.sh "$1" "$2" $GITHUB_STATUS "$4" $GITHUB_DESCRIPTION
+/home/jenkins/Configs/terrame/status/send.sh "$1" $2 $GITHUB_STATUS "$4" $GITHUB_DESCRIPTION
 
 exit $STATUS
