@@ -34,6 +34,10 @@
 ##
 #
 
+$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "$_TERRAME_GITHUB_STATUS_CONTEXT" -1 "$BUILD_URL/consoleFull"
+
 python $HOME/Programs/cpplint/cpplint.py --filter=-whitespace/comments,-whitespace/tab,-whitespace/indent,-whitespace/braces,-build/namespaces,-build/header_guard,-whitespace/line_length,-readability/casting,-runtime/references,-build/include,-runtime/printf,-whitespace/newline,-runtime/explicit,-whitespace/parens,-runtime/int,-runtime/threadsafe --extensions=c,h,cpp `find "$_TERRAME_GIT_DIR/src/" -name *.h -o -name *.c*`
+
+$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "$_TERRAME_GITHUB_STATUS_CONTEXT" $? "$BUILD_URL/consoleFull"
 
 exit $?
