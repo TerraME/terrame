@@ -30,8 +30,6 @@
 ##
 #
 
-$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit $_TERRAME_GITHUB_STATUS_CONTEXT -1 "$BUILD_URL/consoleFull"
-
 # Turning OFF installer flags
 export _TERRAME_CREATE_INSTALLER="OFF"
 export _TERRAME_BUILD_AS_BUNDLE="OFF"
@@ -39,4 +37,4 @@ export _TERRAME_BUILD_AS_BUNDLE="OFF"
 # Executing TerraME build script
 ./terrame-conf.sh
 
-$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit $_TERRAME_GITHUB_STATUS_CONTEXT $? "$BUILD_URL/consoleFull"
+exit $?
