@@ -22,18 +22,32 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It executes a static code inspection for TerraME C++ files
-##
-#
-## VARIABLES:
-## _TERRAME_GIT_DIR - Path to TerraME clone
-#
-## USAGE:
-## ./terrame-syntaxcheck-cpp-linux-ubuntu-14.04.sh
-##
-#
+# usage: ./terrame-git-notify-linux-ubuntu-14.04.sh COMMIT_HASH STATUS_CONTEXT STATUS JOB_URL
+STATUS=$3
 
-python $HOME/Programs/cpplint/cpplint.py --filter=-whitespace/comments,-whitespace/tab,-whitespace/indent,-whitespace/braces,-build/namespaces,-build/header_guard,-whitespace/line_length,-readability/casting,-runtime/references,-build/include,-runtime/printf,-whitespace/newline,-runtime/explicit,-whitespace/parens,-runtime/int,-runtime/threadsafe --extensions=c,h,cpp `find "$_TERRAME_GIT_DIR/src/" -name *.h -o -name *.c*`
+# Define the status
+if [ $STATUS -eq 0 ]; then
+	GITHUB_STATUS="success"
+	GITHUB_DESCRIPTION="Success"
+elif [ $STATUS -eq -2 ]; then
+	GITHUB_STATUS="pending"
+	GITHUB_DESCRIPTION="Triggered"
+elif [ $STATUS -eq -1 ]; then
+	GITHUB_STATUS="pending"
+	GITHUB_DESCRIPTION="Running"
+elif [ $STATUS -ge 255 ]; then
+	GITHUB_STATUS="failure"
+	GITHUB_DESCRIPTION="Failure: $STATUS or more errors found"
+elif [ $STATUS -eq 1 ]; then
+	GITHUB_STATUS="failure"
+	GITHUB_DESCRIPTION="Failure: $STATUS error found"	
+else
+	GITHUB_STATUS="failure"
+	GITHUB_DESCRIPTION="Failure: $STATUS errors found"
+fi
 
-exit $?
+echo "$2 - "$GITHUB_DESCRIPTION
+
+/home/jenkins/Configs/terrame/status/send.sh "$1" "$2" "$GITHUB_STATUS" "$4" "$GITHUB_DESCRIPTION"
+
+exit $STATUS

@@ -1,4 +1,5 @@
 #!/bin/bash -l
+
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -47,5 +48,5 @@ fi
 
 # Execute TerraME doc generation
 terrame -color $TERRAME_COMMANDS -doc 2> /dev/null
-# Retrieve TerraME exit code
+
 exit $?
