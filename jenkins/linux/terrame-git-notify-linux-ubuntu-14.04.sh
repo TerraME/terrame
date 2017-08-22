@@ -48,6 +48,7 @@ fi
 
 echo "$2 - "$GITHUB_DESCRIPTION
 echo "$1" "$2" $GITHUB_STATUS "$4" $GITHUB_DESCRIPTION
+echo $STATUS
 
 /home/jenkins/Configs/terrame/status/send.sh "$1" "$2" $GITHUB_STATUS "$4" $GITHUB_DESCRIPTION
 
