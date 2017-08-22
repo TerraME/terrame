@@ -73,10 +73,10 @@ if [ -z "$ghprbActualCommit" ]; then
 
 	mkdir $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
 	valid $? "Error: Cleaning fail"
-
-	git clone -b "$_TERRALIB_BRANCH" https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git "$_TERRALIB_GIT_DIR"
-	echo git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR
-
+	
+	git init $_TERRALIB_GIT_DIR
+	git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR
+	ls -la $_TERRALIB_BUILD_BASE 
 elif [ $(git status --porcelain) ]; then
 	git pull
 	if [ ! -z "$ghprbActualCommit" ]; then
