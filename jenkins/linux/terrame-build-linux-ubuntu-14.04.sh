@@ -1,5 +1,5 @@
 #!/bin/bash
-exit 1
+exit 255
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
