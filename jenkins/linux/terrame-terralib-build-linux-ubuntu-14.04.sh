@@ -66,6 +66,7 @@ git status
 
 echo "Check if TerraLib must be updated"
 if [ -z "$ghprbActualCommit" ]; then
+	cd -
 	echo "Daily tests always update"
 	rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution $_TERRALIB_INSTALL_PATH
 	valid $? "Error: Cleaning fail"
@@ -73,7 +74,7 @@ if [ -z "$ghprbActualCommit" ]; then
 	mkdir $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
 	valid $? "Error: Cleaning fail"
 
-	GIT_SSL_NO_VERIFY=true git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git --quiet
+	GIT_SSL_NO_VERIFY=true git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
 
 elif [ $(git status --porcelain) ]; then
 	git pull
