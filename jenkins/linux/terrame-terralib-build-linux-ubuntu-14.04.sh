@@ -74,7 +74,7 @@ if [ -z "$ghprbActualCommit" ]; then
 	mkdir $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
 	valid $? "Error: Cleaning fail"
 
-	GIT_SSL_NO_VERIFY=true git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
+	GIT_SSL_NO_VERIFY=true git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR
 
 elif [ $(git status --porcelain) ]; then
 	git pull
