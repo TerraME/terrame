@@ -1,5 +1,5 @@
 #!/bin/bash
-exit 300
+
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -22,7 +22,7 @@ exit 300
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It executes a static code inspection for TerraME C++ files
 ##
 #
