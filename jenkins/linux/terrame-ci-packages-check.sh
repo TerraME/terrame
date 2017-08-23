@@ -33,12 +33,12 @@ mkdir -p $TERRAME_PACKAGE_PATH/$PACKAGE
 
 cp -rap git/* $TERRAME_PACKAGE_PATH/$PACKAGE
 
+tree -D $TERRAME_PACKAGE_PATH
+
 cd $TERRAME_PACKAGE_PATH
 
 rm -rf terrame-code-analysis-linux-ubuntu-14.04.sh
 cp $TERRAME_JENKINS_SCRIPTS_PATH/terrame-code-analysis-linux-ubuntu-14.04.sh .
 ./terrame-code-analysis-linux-ubuntu-14.04.sh $PACKAGE
-
-tree -D $TERRAME_PACKAGE_PATH
 
 exit $?

@@ -23,30 +23,16 @@
 COMMIT=$1
 PACKAGE=$2
 CONTEXT="Documentation of package $PACKAGE"
-STATUS="pending"
-DESCRIPTION="Running."
 TARGET_URL="$BUILD_URL/consoleFull"
 
-/home/jenkins/Configs/terrame/status/send.sh $COMMIT "$CONTEXT" "$STATUS" "$TARGET_URL" "$DESCRIPTION" "$PACKAGE"
-
-export TME_PATH=$TERRAME_PATH/bin
-export PATH=$PATH:$TME_PATH
-export LD_LIBRARY_PATH=$TME_PATH
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" -1 "$TARGET_URL" "$PACKAGE"
 
 cd $TERRAME_PACKAGE_PATH
 
-terrame -color -package $PACKAGE -projects 2> /dev/null
-terrame -color -package $PACKAGE -doc 2> /dev/null
-RESULT=$?
+rm -rf terrame-doc-linux-ubuntu-14.04.sh
+cp $TERRAME_JENKINS_SCRIPTS_PATH/terrame-doc-linux-ubuntu-14.04.sh .
+./terrame-doc-linux-ubuntu-14.04.sh $PACKAGE
 
-if [ $RESULT -eq 0 ]; then
-  STATUS="success"
-  DESCRIPTION="Executed Successfully"
-else
-  STATUS="failure"
-  DESCRIPTION="$RESULT errors found"
-fi
-
-/home/jenkins/Configs/terrame/status/send.sh $COMMIT "$CONTEXT" "$STATUS" "$TARGET_URL" "$DESCRIPTION" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" $? "$TARGET_URL" "$PACKAGE"
 
 exit $RESULT

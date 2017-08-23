@@ -22,7 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# usage: ./terrame-git-notify-linux-ubuntu-14.04.sh COMMIT_HASH STATUS_CONTEXT STATUS JOB_URL
+# usage: ./terrame-git-notify-linux-ubuntu-14.04.sh COMMIT_HASH STATUS_CONTEXT STATUS JOB_URL PACKAGE
 STATUS=$3
 
 # Define the status
@@ -40,7 +40,7 @@ elif [ $STATUS -ge 255 ]; then
 	GITHUB_DESCRIPTION="Failure: $STATUS or more errors found"
 elif [ $STATUS -eq 1 ]; then
 	GITHUB_STATUS="failure"
-	GITHUB_DESCRIPTION="Failure: $STATUS error found"	
+	GITHUB_DESCRIPTION="Failure: $STATUS error found"
 else
 	GITHUB_STATUS="failure"
 	GITHUB_DESCRIPTION="Failure: $STATUS errors found"
@@ -48,6 +48,6 @@ fi
 
 echo "$2 - "$GITHUB_DESCRIPTION
 
-/home/jenkins/Configs/terrame/status/send.sh "$1" "$2" "$GITHUB_STATUS" "$4" "$GITHUB_DESCRIPTION"
+/home/jenkins/Configs/terrame/status/send.sh "$1" "$2" "$GITHUB_STATUS" "$4" "$GITHUB_DESCRIPTION" "$5"
 
 exit $STATUS

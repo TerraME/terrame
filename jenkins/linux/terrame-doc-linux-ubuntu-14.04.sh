@@ -1,5 +1,5 @@
 #!/bin/bash -l
-exit 0
+
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -22,8 +22,8 @@ exit 0
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
-## It performs a TerraME doc generation of any package. For TerraME purporses, "base" and "gis" internal packages. 
+#
+## It performs a TerraME doc generation of any package. For TerraME purporses, "base" and "gis" internal packages.
 ## It may be useful for TerraME external packages.
 #
 ## USAGE:
