@@ -67,11 +67,11 @@ fi
 
 # Executing unittest
 TEST_FILE=""
-if [ -f "test.lua" ]; then
-	TEST_FILE = "test.lua"
+if [ -e "test.lua" ]; then
+	TEST_FILE="test.lua"
 fi
 
-terrame -color $TERRAME_COMMANDS -test "$TEST_FILE" 2> /dev/null
+terrame -color $TERRAME_COMMANDS -test $TEST_FILE 2> /dev/null
 RESULT=$?
 
 # Compressing Log
