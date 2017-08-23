@@ -66,9 +66,12 @@ if [ "$1" != "" ] && [ "$1" != "base" ]; then
 fi
 
 # Executing unittest
-TEST_FILE=""
-if [ -e "test.lua" ]; then
-	TEST_FILE="test.lua"
+if [ -f "$(pwd)/test.lua" ]; then
+	terrame -color $TERRAME_COMMANDS -test test.lua 2> /dev/null
+	RESULT=$
+else
+	terrame -color $TERRAME_COMMANDS -test 2> /dev/null
+	RESULT=$
 fi
 
 terrame -color $TERRAME_COMMANDS -test $TEST_FILE 2> /dev/null
