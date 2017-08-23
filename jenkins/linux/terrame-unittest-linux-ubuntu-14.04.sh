@@ -58,7 +58,7 @@ terrame -version
 TERRAME_COMMANDS=""
 # Extra commands if package is gis
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
-  TERRAME_COMMANDS="-package $1"
+	TERRAME_COMMANDS="-package $1"
 #  if [ ! -z "$ghprbActualCommit" ]; then
   #   # Temp code to ensure unittest gis does not take too long to execute. Only CI trigger
 #    echo -e '\ndirectory = {"functional", "shapefile", "postgis", "tif", "geojson", "asc", "wms", "nc"}' > test.lua
@@ -66,11 +66,16 @@ if [ "$1" != "" ] && [ "$1" != "base" ]; then
 fi
 
 # Executing unittest
-terrame -color $TERRAME_COMMANDS -test test.lua 2> /dev/null
+TEST_FILE=""
+if [ -f "test.lua" ]; then
+	TEST_FILE = "test.lua"
+fi
+
+terrame -color $TERRAME_COMMANDS -test "$TEST_FILE" 2> /dev/null
 RESULT=$?
 
 # Compressing Log
-LOG_NAME="build-daily-linux-$BUILD_NUMBER.tar.gz"
+LOG_NAME="build-daily-linux-$1-$BUILD_NUMBER.tar.gz"
 echo "Compressing $WORKSPACE/$LOG_NAME"
 tar -czf $WORKSPACE/$LOG_NAME .terrame*
 

@@ -25,7 +25,7 @@ PACKAGE=$2
 CONTEXT="Documentation of package $PACKAGE"
 TARGET_URL="$BUILD_URL/consoleFull"
 
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" -1 "$TARGET_URL" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" "-1" "$TARGET_URL" "$PACKAGE"
 
 cd $TERRAME_PACKAGE_PATH
 
