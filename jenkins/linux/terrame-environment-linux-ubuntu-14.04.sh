@@ -30,7 +30,6 @@ function valid()
 	if [ $1 -ne 0 ]; then
 		echo $2
 		echo ""
-		$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Environment Config" 1 "$BUILD_URL/consoleFull"
 		exit 1
 	fi
 }
@@ -99,7 +98,7 @@ cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-doc-linux-ubuntu-14.04.sh $
 valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-syntaxcheck-cpp-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-ci-packges* $_TERRAME_TEST_DIR
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-ci-packages* $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
 
 echo ""
