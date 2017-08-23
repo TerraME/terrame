@@ -34,6 +34,6 @@ cp $TERRAME_JENKINS_SCRIPTS_PATH/terrame-doc-linux-ubuntu-14.04.sh .
 ./terrame-doc-linux-ubuntu-14.04.sh $PACKAGE
 RESULT=$?
 
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" $? "$TARGET_URL" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" "$RESULT" "$TARGET_URL" "$PACKAGE"
 
 exit $RESULT
