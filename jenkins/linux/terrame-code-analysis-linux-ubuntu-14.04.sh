@@ -43,7 +43,10 @@ TERRAME_COMMANDS=""
 terrame -version
 # Extra commands if package is gis
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
-  TERRAME_COMMANDS="-package $1"
+	TERRAME_COMMANDS="-package $1"
+	if [ "$1" != "gis" ] && [ "$1" != "luadoc" ]; then
+		terrame -color $TERRAME_COMMANDS -uninstall
+	fi
 fi
 
 # Execute TerraME doc generation
