@@ -32,6 +32,7 @@ cd $TERRAME_PACKAGE_PATH
 rm -rf terrame-doc-linux-ubuntu-14.04.sh
 cp $TERRAME_JENKINS_SCRIPTS_PATH/terrame-doc-linux-ubuntu-14.04.sh .
 ./terrame-doc-linux-ubuntu-14.04.sh $PACKAGE
+RESULT=$?
 
 $TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" $? "$TARGET_URL" "$PACKAGE"
 
