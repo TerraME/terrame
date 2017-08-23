@@ -22,6 +22,10 @@
 
 set +e
 
+echo ""
+echo ""
+echo ""
+
 PACKAGE=$1
 
 rm -rf $TERRAME_PACKAGE_PATH
@@ -33,7 +37,7 @@ cd $TERRAME_PACKAGE_PATH
 
 rm -rf terrame-code-analysis-linux-ubuntu-14.04.sh
 cp $TERRAME_JENKINS_SCRIPTS_PATH/terrame-code-analysis-linux-ubuntu-14.04.sh .
-./terrame-code-analysis-linux-ubuntu-14.04.sh "$PACKAGE"
+./terrame-code-analysis-linux-ubuntu-14.04.sh $PACKAGE
 
 tree -D $TERRAME_PACKAGE_PATH
 
