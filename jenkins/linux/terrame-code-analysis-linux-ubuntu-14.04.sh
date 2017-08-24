@@ -51,9 +51,10 @@ echo ""
 
 # Extra commands
 if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
-	TERRAME_COMMANDS="-package "$PACKAGE
+	TERRAME_COMMANDS="-package $PACKAGE"
 	if [ "$PACKAGE" != "gis" ] && [ "$PACKAGE" != "luadoc" ]; then
 		terrame -color $TERRAME_COMMANDS -uninstall
+		terrame -color $TERRAME_COMMANDS -check
 		if [ ! -z $DEPENDS ]; then
 			IFS=";" deps=($DEPENDS)
 			for dep in "${deps[@]}"; do
@@ -65,6 +66,8 @@ if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
 		fi
 	fi
 fi
+
+echo ""
 
 # Execute check
 terrame -color $TERRAME_COMMANDS -check
