@@ -74,9 +74,6 @@ else
 	RESULT=$
 fi
 
-terrame -color $TERRAME_COMMANDS -test $TEST_FILE 2> /dev/null
-RESULT=$?
-
 # Compressing Log
 LOG_NAME="build-daily-linux-$1-$BUILD_NUMBER.tar.gz"
 echo "Compressing $WORKSPACE/$LOG_NAME"
