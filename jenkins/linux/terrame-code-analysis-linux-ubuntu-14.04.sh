@@ -41,26 +41,9 @@ export TME_PATH="$_TERRAME_INSTALL_PATH/bin"
 export PATH=$PATH:$TME_PATH
 export LD_LIBRARY_PATH=$TME_PATH
 
-# TerraME command arguments. Used for packages like "gis", "sci", "calibration" etc.
-TERRAME_COMMANDS=""
+echo ""
+
 terrame -version
-
-echo ""
-echo ""
-
-echo "Verifing packages"
-if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
-	TERRAME_COMMANDS="-package $PACKAGE"
-	if [ "$PACKAGE" != "gis" ] && [ "$PACKAGE" != "luadoc" ]; then
-		terrame -color $TERRAME_COMMANDS -uninstall
-	fi
-fi
-
-echo ""
-
-echo "Executing check"
-terrame -color $TERRAME_COMMANDS -check
-RESULT=$?
 
 echo ""
 echo "Verifing dependencies"
@@ -74,4 +57,22 @@ if [ ! -z $DEPENDS ]; then
 	done
 fi
 
-exit $RESULT
+echo ""
+echo ""
+
+# TerraME command arguments. Used for packages like "gis", "sci", "calibration" etc.
+TERRAME_COMMANDS=""
+echo "Verifing packages"
+if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
+	TERRAME_COMMANDS="-package $PACKAGE"
+	if [ "$PACKAGE" != "gis" ] && [ "$PACKAGE" != "luadoc" ]; then
+		terrame -color $TERRAME_COMMANDS -uninstall
+	fi
+fi
+
+echo ""
+
+echo "Executing check"
+terrame -color $TERRAME_COMMANDS -check
+
+exit $?
