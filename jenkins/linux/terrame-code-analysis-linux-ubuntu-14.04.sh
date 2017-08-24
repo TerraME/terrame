@@ -33,6 +33,9 @@
 ## PACKAGE_NAME - Represents a name of TerraME package to execute
 #
 
+PACKAGE=$1
+DEPENDS="$2"
+
 # Exporting terrame vars
 export TME_PATH="$_TERRAME_INSTALL_PATH/bin"
 export PATH=$PATH:$TME_PATH
@@ -41,11 +44,25 @@ export LD_LIBRARY_PATH=$TME_PATH
 # TerraME command arguments. Used for packages like "gis", "sci", "calibration" etc.
 TERRAME_COMMANDS=""
 terrame -version
+
+echo ""
+echo ""
+echo ""
+
 # Extra commands if package is gis
-if [ "$1" != "" ] && [ "$1" != "base" ]; then
-	TERRAME_COMMANDS="-package $1"
-	if [ "$1" != "gis" ] && [ "$1" != "luadoc" ]; then
+if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
+	TERRAME_COMMANDS="-package $PACKAGE"
+	if [ "$PACKAGE" != "gis" ] && [ "$PACKAGE" != "luadoc" ]; then
 		terrame -color $TERRAME_COMMANDS -uninstall
+		if [ ! -z $DEPENDS ]; then
+			IFS=";" deps=($DEPENDS)
+			for dep in "${deps[@]}"; do
+				echo ""
+				terrame -color -package $dep -uninstall
+				terrame -color -install $dep
+				echo ""
+			done
+		fi
 	fi
 fi
 

@@ -33,6 +33,10 @@
 ## PACKAGE_NAME - Represents a name of TerraME package to execute
 #
 
+echo ""
+echo ""
+echo ""
+
 # Exporting enviroment variables
 export TME_PATH=$_TERRAME_INSTALL_PATH/bin
 export PATH=$PATH:$TME_PATH
@@ -55,6 +59,10 @@ export LD_LIBRARY_PATH=$TME_PATH
 
 terrame -version
 
+echo ""
+echo ""
+echo ""
+
 TERRAME_COMMANDS=""
 # Extra commands if package is gis
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
@@ -68,11 +76,15 @@ fi
 # Executing unittest
 if [ -f "$(pwd)/test.lua" ]; then
 	terrame -color $TERRAME_COMMANDS -test test.lua 2> /dev/null
-	RESULT=$
+	RESULT=$?
 else
 	terrame -color $TERRAME_COMMANDS -test 2> /dev/null
-	RESULT=$
+	RESULT=$?
 fi
+
+echo ""
+echo ""
+echo ""
 
 # Compressing Log
 LOG_NAME="build-daily-linux-$1-$BUILD_NUMBER.tar.gz"
