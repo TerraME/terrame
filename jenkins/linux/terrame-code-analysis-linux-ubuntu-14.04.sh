@@ -55,6 +55,7 @@ if [ ! -z $DEPENDS ]; then
 		terrame -color -install $dep
 		echo ""
 	done
+	unset IFS
 fi
 
 echo ""
