@@ -27,7 +27,7 @@
 ## It may be useful for TerraME external packages.
 #
 ## USAGE:
-## ./terrame-code-analysis-linux-ubuntu-14.04.sh PACKAGE_NAME
+## ./terrame-code-analysis-linux-ubuntu-14.04.sh PACKAGE_NAME DEPENDENCIES
 #
 ## WHERE:
 ## PACKAGE_NAME - Represents a name of TerraME package to execute
@@ -49,9 +49,9 @@ echo ""
 echo ""
 echo ""
 
-# Extra commands if package is gis
+# Extra commands
 if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
-	TERRAME_COMMANDS="-package $PACKAGE"
+	TERRAME_COMMANDS="-package "$PACKAGE
 	if [ "$PACKAGE" != "gis" ] && [ "$PACKAGE" != "luadoc" ]; then
 		terrame -color $TERRAME_COMMANDS -uninstall
 		if [ ! -z $DEPENDS ]; then
@@ -66,7 +66,7 @@ if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
 	fi
 fi
 
-# Execute TerraME doc generation
+# Execute check
 terrame -color $TERRAME_COMMANDS -check
 
 exit $?
