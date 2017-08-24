@@ -47,18 +47,16 @@ terrame -version
 
 echo ""
 echo ""
-echo ""
 
-# Extra commands
+echo "Verifing packages"
 if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
 	TERRAME_COMMANDS="-package $PACKAGE"
 	if [ "$PACKAGE" != "gis" ] && [ "$PACKAGE" != "luadoc" ]; then
 		terrame -color $TERRAME_COMMANDS -uninstall
-		terrame -color $TERRAME_COMMANDS -check
 		if [ ! -z $DEPENDS ]; then
 			IFS=";" deps=($DEPENDS)
 			for dep in "${deps[@]}"; do
-				echo ""
+				echo "Installing package $dep"
 				terrame -color -package $dep -uninstall
 				terrame -color -install $dep
 				echo ""
@@ -69,7 +67,7 @@ fi
 
 echo ""
 
-# Execute check
+echo "Executing check"
 terrame -color $TERRAME_COMMANDS -check
-
+echo terrame -color $TERRAME_COMMANDS -check
 exit $?
