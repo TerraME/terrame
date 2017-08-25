@@ -34,6 +34,9 @@
 ##
 #
 
+echo ""
+echo ""
+
 # Exporting context
 export TME_PATH=$_TERRAME_INSTALL_PATH/bin
 export PATH=$PATH:$TME_PATH
@@ -41,6 +44,10 @@ export LD_LIBRARY_PATH=$TME_PATH
 
 TERRAME_COMMANDS=""
 terrame -version
+
+echo ""
+echo ""
+
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
   TERRAME_COMMANDS="-package $1"
   terrame -color $TERRAME_COMMANDS -projects 2>/dev/null
@@ -48,5 +55,10 @@ fi
 
 # Execute TerraME doc generation
 terrame -color $TERRAME_COMMANDS -doc 2> /dev/null
+RESULT=$?
 
-exit $?
+echo ""
+echo ""
+echo ""
+
+exit $RESULT

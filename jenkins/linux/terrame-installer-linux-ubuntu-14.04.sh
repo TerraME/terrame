@@ -29,6 +29,10 @@
 ## ./terrame-installer-linux-ubuntu-14.04.sh
 #
 
+echo ""
+echo ""
+echo ""
+
 export _TERRAME_CREATE_INSTALLER="ON"
 export _TERRAME_BUILD_AS_BUNDLE="OFF"
 
@@ -45,5 +49,10 @@ rm -rf $_TERRAME_INSTALL_PATH $_TERRAME_OUT_DIR
 cd $_TERRAME_OUT_DIR
 
 cpack -G TGZ -C Release --config ./CPackConfig.cmake
+RESULT=$?
 
-exit $?
+echo ""
+echo ""
+echo ""
+
+exit $RESULT

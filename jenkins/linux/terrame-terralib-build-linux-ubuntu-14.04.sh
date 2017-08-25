@@ -1,5 +1,5 @@
 #!/bin/bash
-exit 0
+
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -117,5 +117,10 @@ echo ""
 echo "Compiling TerraLib"
 cd $_TERRALIB_BUILD_BASE/solution
 ./terralib-conf.sh
+RESULT=$?
 
-exit $?
+echo ""
+echo ""
+echo ""
+
+exit $RESULT
