@@ -130,7 +130,9 @@ return {
 		cl:fill{
 			operation = "mode",
 			attribute = "prod_mode",
-			layer = prodes
+			layer = prodes,
+			pixel = "overlap",
+			missing = 1000
 		}
 
 		local cs = CellularSpace{
@@ -141,7 +143,7 @@ return {
 		local count = 0
 		forEachCell(cs, function(cell)
 			unitTest:assertType(cell.prod_mode, "string")
-			if not belong(cell.prod_mode, {"7", "87", "167", "255"}) then
+			if not belong(cell.prod_mode, {"7", "87", "167", "255", "1000"}) then
 				print(cell.prod_mode)
 				count = count + 1
 			end
@@ -152,19 +154,24 @@ return {
 		local map = Map{
 			target = cs,
 			select = "prod_mode",
-			value = {"7", "87", "167", "255"},
-			color = {"red", "green", "blue", "orange"}
+			value = {"7", "87", "167", "255", "1000"},
+			color = {"red", "green", "blue", "orange", "black"}
 		}
 
-		unitTest:assertSnapshot(map, "tiff-mode.png")
+		unitTest:assertSnapshot(map, "tiff-mode.png", 0.1)
 
 		-- MINIMUM
 
-		cl:fill{
-			operation = "minimum",
-			attribute = "prod_min",
-			layer = altimetria
-		}
+		local warningFunc = function()
+			cl:fill{
+				operation = "minimum",
+				attribute = "prod_min",
+				layer = altimetria,
+				pixel = "centroid"
+			}
+		end
+
+		unitTest:assertWarning(warningFunc, defaultValueMsg("pixel", "centroid"))
 
 		cs = CellularSpace{
 			project = proj,
@@ -270,7 +277,7 @@ return {
 				sum = sum + cell["cov_"..cov[i]]
 			end
 
-			--unitTest:assert(math.abs(sum - 100) < 0.001) -- SKIP
+			unitTest:assert(sum -0.1 <= 1) -- this should be 'sum <= 1' #1968
 
 			--if math.abs(sum - 100) > 0.001 then
 			--	print(sum)
@@ -287,7 +294,7 @@ return {
 				color = "RdPu"
 			}
 
-			unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i]..".png")
+			unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i]..".png", 0.1)
 		end
 
 		-- AVERAGE
@@ -400,7 +407,8 @@ return {
 		protec:fill{
 			operation = "count",
 			attribute = "prod_count",
-			layer = prodes
+			layer = prodes,
+			pixel = "overlap" -- TerraME aborts if this line was removed
 		}
 
 		cs = CellularSpace{
@@ -418,7 +426,7 @@ return {
 			unitTest:assert(cell.prod_count <= 3796)
 		end)
 
-		unitTest:assertEquals(sum, 42890)
+		unitTest:assertEquals(sum, 42844)
 
 		File("amazonia-indigenous.shp"):delete()
 		File("fill_mcount.tview"):delete()

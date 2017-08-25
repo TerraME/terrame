@@ -661,7 +661,7 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 	return propCreatedName
 end
 
-local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, nodata)
+local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, nodata, pixel)
 	local propCreatedName
 
 	do
@@ -690,7 +690,7 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 			operation = "mean"
 		end
 
-		r2v:setParams(select, OperationMapper[operation], false, false, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
+		r2v:setParams(select, OperationMapper[operation], false, pixel, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
 
 		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
@@ -2367,6 +2367,8 @@ TerraLib_ = {
 	-- @arg default The default value.
 	-- @arg repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
 	-- @arg nodata A number used in raster data that represents no information in a pixel value.
+	-- @arg pixel A boolean value. If true, a pixel is considered within a polygon if they have some overlap.
+	-- If false, a pixel is within a polygon if its centroid is within the polygon.
 	-- @usage -- DONTRUN
 	-- proj = {
 	--     file = "myproject.tview",
@@ -2391,7 +2393,7 @@ TerraLib_ = {
 	-- TerraLib().addShpLayer(proj, layerName2, layerFile2)
 	--
 	-- TerraLib().attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
-	attributeFill = function(project, from, to, out, property, operation, select, area, default, repr, nodata)
+	attributeFill = function(project, from, to, out, property, operation, select, area, default, repr, nodata, pixel)
 		do
 			loadProject(project, project.file)
 
@@ -2472,7 +2474,7 @@ TerraLib_ = {
 			local dseType = fromLayer:getSchema()
 
 			if dseType:hasRaster() then
-				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, nodata)
+				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, nodata, pixel)
 			else
 				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
 			end

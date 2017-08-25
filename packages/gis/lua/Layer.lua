@@ -341,11 +341,21 @@ local function addLayer(self, data)
 	}
 end
 
-local function checkBand(layer, data)
+local function checkRaster(data)
+	verifyUnnecessaryArguments(data, {"attribute", "band", "dummy", "missing", "layer", "operation", "pixel"})
+
 	defaultTableValue(data, "band", 0)
 	positiveTableArgument(data, "band", true)
+	data.select = data.band
 
-	local band = layer:bands()
+	defaultTableValue(data, "pixel", "centroid")
+
+	switch(data, "pixel"):caseof{
+		overlap  = function() data.pixel = false end,
+		centroid = function() data.pixel = true  end
+	}
+
+	local band = data.layer:bands()
 
 	if data.band >= band then
 		if band > 1 then
@@ -430,14 +440,14 @@ Layer_ = {
 	-- from the reference layer. It sums the intersection areas of the object with all the polygons
 	-- of the reference layer. Because of that, if there is some overlay between the polygons of the
 	-- reference layer, it might create attribute values greater than one.
-	-- & attribute, layer & missing \
+	-- & attribute, layer & \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income.
-	-- & attribute, layer, select  & area, missing, band, dummy  \
+	-- & attribute, layer, select  & area, missing, band, dummy, pixel  \
 	-- "count" & Number of objects that have some overlay with the cell.
-	-- & attribute, layer & \
+	-- & attribute, layer & dummy, pixel \
 	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
@@ -447,32 +457,32 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & missing, band, dummy \
+	-- & attribute, layer, select & missing, band, dummy, pixel \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
 	-- centroid of the cell to the closest point, line, or border of a polygon.
 	-- & attribute, layer & \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy \
+	-- attribute, layer, select & missing, band, dummy, pixel \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy \
+	-- attribute, layer, select & missing, band, dummy, pixel \
 	-- "mode" & More common qualitative value from the objects that have some intersection with
-	-- the cell, without taking into account their geometric properties. This operation converts the
-	-- output to string. Whenever there are two or more values with the same count, the resulting
+	-- the cell, without taking into account their geometric properties. This operation creates an
+	-- attribute with string values. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select &
-	-- missing, band, dummy \
+	-- missing, band, dummy, pixel \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
 	-- & attribute, layer & \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy \
+	-- attribute, layer, select & missing, band, dummy, pixel \
 	-- "sum" & Sum of quantitative values from objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, it
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
-	-- & attribute, layer, select & area, missing, band, dummy \
+	-- & attribute, layer, select & area, missing, band, dummy, pixel \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true),
 	-- or the weights are equal for each object with some overlap (false, missing value).
@@ -483,6 +493,18 @@ Layer_ = {
 	-- This value will be ignored by all operations as if it did not exist.
 	-- For example, in averages, dummy values will not be used in the sum nor to count the number of pixels.
 	-- Its default value is the result of Layer:dummy().
+	-- @arg data.pixel A string value indicating when a pixel is within a polygon. See the table below.
+	-- @tabular pixel Pixel & Description \
+	-- "centroid" (default) & A pixel is within a polygon if its centroid is within the polygon. It is recommended to
+	-- use this strategy when one wants to keep the sum of the amount of pixels in the created output, and when the
+	-- resolution of the polygons is greater than the resolution of the pixels. If the resolution of polygons
+	-- is smaller than the resolution of pixels, there might exist polygons that do not contain any pixel. For cellular
+	-- representations, when the cells were created using the raster and the
+	-- resolution of polygons is considerably smaller than the resolution of pixels, a pixel might belong to two
+	-- polygons as its centroid might be located in the limit of both polygons. \
+	-- "overlap" & A pixel is considered within a polygon if they have some overlap. This way, a pixel might belong to
+	-- two or more polygons at the same time. This strategy is usually recommended when the resolution of the polygons
+	-- is smaller than the resolution of the pixels.\
 	-- @usage -- DONTRUN
 	-- import("gis")
 	--
@@ -554,10 +576,7 @@ Layer_ = {
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation", "dummy"})
-					checkBand(data.layer, data)
-
-					data.select = data.band -- SKIP
+					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -569,10 +588,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "missing"})
 					data.select = "FID"
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation", "dummy"})
-					checkBand(data.layer, data)
-
-					data.select = data.band
+					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -606,10 +622,7 @@ Layer_ = {
 
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation"})
-					checkBand(data.layer, data)
-
-					data.select = data.band -- SKIP
+					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -621,10 +634,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation"})
-					checkBand(data.layer, data)
-
-					data.select = data.band -- SKIP
+					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -636,10 +646,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation"})
-					checkBand(data.layer, data)
-
-					data.select = data.band -- SKIP
+					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -651,10 +658,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation"})
-					checkBand(data.layer, data)
-
-					data.select = data.band -- SKIP
+					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -674,10 +678,7 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "band"})
-					checkBand(data.layer, data)
-
-					data.select = data.band -- SKIP
+					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -690,10 +691,7 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 					defaultTableValue(data, "area", false)
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "band"})
-					checkBand(data.layer, data)
-
-					data.select = data.band -- SKIP
+					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
@@ -719,7 +717,7 @@ Layer_ = {
 			end
 		end
 
-		TerraLib().attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.missing, repr, data.dummy)
+		TerraLib().attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.missing, repr, data.dummy, data.pixel)
 	end,
 	--- Return the Layer's projection. It contains the name of the projection, its Geodetic
 	-- Identifier (EPSG), and
