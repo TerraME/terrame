@@ -24,17 +24,18 @@ set +e
 
 echo ""
 echo ""
-echo ""
 
 PACKAGE=$1
 DEPENDS=$2
 
+echo "Triggering All Builds"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Documentation of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
+sleep 1s
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Functional tests of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
+
 rm -rf $TERRAME_PACKAGE_PATH
 mkdir -p $TERRAME_PACKAGE_PATH/$PACKAGE
-
 cp -rap git/* $TERRAME_PACKAGE_PATH/$PACKAGE
-
-tree -D $TERRAME_PACKAGE_PATH
 
 cd $TERRAME_PACKAGE_PATH
 
