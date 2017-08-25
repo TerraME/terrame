@@ -3,6 +3,7 @@ time = true -- show execution time for each command
 
 unnecessary  = {
 	doc        = {arg = "-doc -color"},
+	script     = {script = "basic.lua"},
 	sketch     = {arg = "-sketch -color"},
 	version    = {arg = "-version -color"},
 	showdoc    = {arg = "-showdoc -color"},

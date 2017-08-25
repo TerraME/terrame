@@ -1625,8 +1625,10 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit(1)
 			end
 		else
+			checkUnnecessaryArguments(arguments, argCount)
 			runScript(arg)
 		end
+
 		argCount = argCount + 1
 	end
 
