@@ -315,7 +315,9 @@ end
 -- data & A Directory with the path to the data directory of the package. This attribute is added
 -- by this function as it does not exist in description.lua.\
 -- date & Date of the current version.\
--- depends & A comma-separated list of package names which this package depends on.\
+-- depends & A string containing a comma-separated list of package names which this package depends on.\
+-- tdepends & A table describing the dependencies of the package using internal tables containing three
+-- values: operator (a string), package (a string), and version (a vector of numbers). \
 -- license & Name of the package's license. \
 -- package & Name of the package.\
 -- path & A Directory with the path where the package is stored in the computer.\
