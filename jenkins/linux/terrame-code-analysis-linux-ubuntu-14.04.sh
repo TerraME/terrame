@@ -75,5 +75,10 @@ echo ""
 
 echo "Executing check"
 terrame -color $TERRAME_COMMANDS -check
+RESULT=$?
 
-exit $?
+echo ""
+echo ""
+echo ""
+
+exit $RESULT

@@ -1,5 +1,5 @@
 #!/bin/bash
-exit 0
+
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -30,11 +30,20 @@ exit 0
 ##
 #
 
+echo ""
+echo ""
+echo ""
+
 # Turning OFF installer flags
 export _TERRAME_CREATE_INSTALLER="OFF"
 export _TERRAME_BUILD_AS_BUNDLE="OFF"
 
 # Executing TerraME build script
 ./terrame-conf.sh
+RESULT=$?
 
-exit $?
+echo ""
+echo ""
+echo ""
+
+exit $RESULT

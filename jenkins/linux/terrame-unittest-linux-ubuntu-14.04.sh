@@ -91,6 +91,10 @@ LOG_NAME="build-daily-linux-$1-$BUILD_NUMBER.tar.gz"
 echo "Compressing $WORKSPACE/$LOG_NAME"
 tar -czf $WORKSPACE/$LOG_NAME .terrame*
 
+echo ""
+echo ""
+echo ""
+
 # Cleaning up
 rm -rf .terrame*
 

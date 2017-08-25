@@ -1,5 +1,5 @@
 #!/bin/bash
-exit 0
+
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -28,6 +28,9 @@ exit 0
 ## USAGE:
 ## ./terrame-repository-test-linux-ubuntu-14.04.sh
 #
+echo ""
+echo ""
+echo ""
 
 export TME_PATH="$_TERRAME_INSTALL_PATH/bin"
 export PATH=$PATH:$TME_PATH
@@ -35,10 +38,17 @@ export LD_LIBRARY_PATH=$TME_PATH
 
 terrame -version
 terrame -color test.lua 2> /dev/null
-
 RESULT=$?
+
+echo ""
+echo ""
+echo ""
 
 tar -czf $WORKSPACE/build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
 rm -rf .terrame*
+
+echo ""
+echo ""
+echo ""
 
 exit $RESULT
