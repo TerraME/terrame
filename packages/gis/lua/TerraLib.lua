@@ -3052,8 +3052,8 @@ TerraLib_ = {
 	checkName = function(name)
 		return string.gsub(string.gsub(binding.CheckName(name), "\n", ""), "^%l", string.upper)
 	end,
-	--- Return the bounding box of a Layer
-	-- @arg layer A Layer
+	--- Return the bounding box of a Layer.
+	-- @arg layer A Layer.
 	-- @usage -- DONTRUN
 	-- TerraLib().getBoundingBox(proj.layers["layerName"])
 	getBoundingBox = function(layer)
