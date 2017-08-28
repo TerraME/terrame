@@ -708,6 +708,26 @@ source    string [shp]
 ]]
 		unitTest:assertEquals(tostring(l), expected, 0, true)
 		projName:deleteIfExists()
+	end,
+	box = function(unitTest)
+		local proj = Project {
+			file = "box.tview",
+			author = "Avancini, R.",
+			clean = true
+		}
+
+		local layer = Layer{
+			project = proj,
+			name = "ES",
+			file = filePath("test/limite_es_poly_wgs84.shp", "gis")
+		}
+
+		local bbox = layer:box()
+
+		unitTest:assertEquals(bbox.xMin, 1260967.0129458, 1.0e-7)
+		unitTest:assertEquals(bbox.yMin, -2412410.0831509, 1.0e-7)
+		unitTest:assertEquals(bbox.xMax, 1513600.341338, 1.0e-6)
+		unitTest:assertEquals(bbox.yMax, -2030571.5856793, 1.0e-7)
 	end
 }
 

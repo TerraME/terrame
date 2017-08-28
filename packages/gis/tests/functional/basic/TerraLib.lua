@@ -267,5 +267,28 @@ return {
 
 		proj.file:delete()
 	end,
+	getBoundingBox = function(unitTest)
+		local proj = {}
+		proj.file = "bbox.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		File(proj.file):deleteIfExists()
+
+		TerraLib().createProject(proj, {})
+
+		local layerName1 = "PA"
+		local layerFile1 = filePath("itaituba-localities.shp", "gis")
+		TerraLib().addShpLayer(proj, layerName1, layerFile1)
+
+		local bbox = TerraLib().getBoundingBox(proj.layers[layerName1])
+
+		unitTest:assertEquals(bbox.xMin, 550450.93221054, 1.0e-8)
+		unitTest:assertEquals(bbox.xMax, 693339.43694636, 1.0e-8)
+		unitTest:assertEquals(bbox.yMin, 9487489.6139118, 1.0e-7)
+		unitTest:assertEquals(bbox.yMax, 9583620.4323347, 1.0e-7)
+
+		proj.file:delete()
+	end
 }
 
