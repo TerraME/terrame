@@ -881,7 +881,7 @@ Layer_ = {
 		end
 	end,
 	--- Returns the bounding box as a table with the keys xMin, yMin, xMax and yMax.
-	-- @under -- DONTRUN
+	-- @usage -- DONTRUN
 	-- bbox = alayer:box()
 	-- print(bbox.xMin, bbox.yMin, bbox.xMax, bbox.yMax)
 	box = function(self)

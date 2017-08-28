@@ -3054,7 +3054,7 @@ TerraLib_ = {
 	end,
 	--- Return the bounding box of a Layer
 	-- @arg layer A Layer
-	-- @under -- DONTRUN
+	-- @usage -- DONTRUN
 	-- TerraLib().getBoundingBox(proj.layers["layerName"])
 	getBoundingBox = function(layer)
 		local ext = layer:getExtent()
