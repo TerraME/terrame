@@ -879,6 +879,13 @@ Layer_ = {
 		else
 			customError("Layer representation '"..repr.."' cannot be simplified.")
 		end
+	end,
+	--- Returns the bounding box as a table with the keys xMin, yMin, xMax and yMax.
+	-- @usage -- DONTRUN
+	-- bbox = alayer:box()
+	-- print(bbox.xMin, bbox.yMin, bbox.xMax, bbox.yMax)
+	box = function(self)
+		return TerraLib().getBoundingBox(self.project.layers[self.name])
 	end
 }
 

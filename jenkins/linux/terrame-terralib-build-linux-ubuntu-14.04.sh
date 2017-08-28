@@ -77,7 +77,7 @@ if [ -z "$ghprbActualCommit" ]; then
 
 	git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR
 
-elif [ $(git status --porcelain) ]; then
+elif [[ $(git status --porcelain) ]]; then
 	git pull
 	if [ ! -z "$ghprbActualCommit" ]; then
 		echo "Cleaning last install"

@@ -3051,6 +3051,21 @@ TerraLib_ = {
 	-- TerraLib().checkName("aname")
 	checkName = function(name)
 		return string.gsub(string.gsub(binding.CheckName(name), "\n", ""), "^%l", string.upper)
+	end,
+	--- Return the bounding box of a Layer.
+	-- @arg layer A Layer.
+	-- @usage -- DONTRUN
+	-- TerraLib().getBoundingBox(proj.layers["layerName"])
+	getBoundingBox = function(layer)
+		local ext = layer:getExtent()
+		local box = {
+			xMin = ext:getLowerLeftX(),
+			xMax = ext:getUpperRightX(),
+			yMin = ext:getLowerLeftY(),
+			yMax = ext:getUpperRightY()
+		}
+
+		return box
 	end
 }
 
