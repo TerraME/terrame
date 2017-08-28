@@ -680,7 +680,7 @@ return {
 
 		unitTest:assertEquals(l:representation(), "line")
 
-		proj.file:deleteIfExists()
+		proj.file:delete()
 	end,
 	__tostring = function(unitTest)
 		local projName = File("cellular_layer_print.tview")
@@ -728,6 +728,8 @@ source    string [shp]
 		unitTest:assertEquals(bbox.yMin, -2412410.0831509, 1.0e-7)
 		unitTest:assertEquals(bbox.xMax, 1513600.341338, 1.0e-6)
 		unitTest:assertEquals(bbox.yMax, -2030571.5856793, 1.0e-7)
+
+		proj.file:delete()
 	end
 }
 

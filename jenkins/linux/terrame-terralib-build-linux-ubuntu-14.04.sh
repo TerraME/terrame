@@ -63,8 +63,7 @@ cd $_TERRALIB_GIT_DIR
 
 GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
 git status
-git pull
-rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua  $_TERRALIB_INSTALL_PATH
+
 echo "Check if TerraLib must be updated"
 if [ -z "$ghprbActualCommit" ]; then
 	echo "Daily tests always update"
