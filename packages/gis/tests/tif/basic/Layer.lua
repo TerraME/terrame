@@ -167,12 +167,12 @@ return {
 			missing = 1000
 		}
 
-		local cs = CellularSpace{
+		cs = CellularSpace{
 			project = proj,
 			layer = cl.name
 		}
 
-		local count = 0
+		count = 0
 		forEachCell(cs, function(cell)
 			unitTest:assertType(cell.prod_m_ov, "string")
 			if not belong(cell.prod_mode, {"7", "87", "167", "255", "1000"}) then
@@ -183,7 +183,7 @@ return {
 
 		unitTest:assertEquals(count, 0)
 
-		local map = Map{
+		map = Map{
 			target = cs,
 			select = "prod_m_ov",
 			value = {"7", "87", "167", "255", "1000"},
