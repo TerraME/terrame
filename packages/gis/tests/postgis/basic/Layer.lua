@@ -1144,7 +1144,7 @@ return {
 				color = "RdPu"
 			}
 
-			unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i].."-pg.png")
+			unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i].."-pg.png", 0.1)
 		end
 
 		-- AVERAGE
