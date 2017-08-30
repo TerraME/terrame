@@ -351,8 +351,8 @@ local function checkRaster(data)
 	defaultTableValue(data, "pixel", "centroid")
 
 	switch(data, "pixel"):caseof{
-		overlap  = function() data.pixel = false end,
-		centroid = function() data.pixel = true  end
+		overlap  = function() data.pixel = true  end,
+		centroid = function() data.pixel = false end
 	}
 
 	local band = data.layer:bands()
@@ -504,7 +504,7 @@ Layer_ = {
 	-- polygons as its centroid might be located in the limit of both polygons. \
 	-- "overlap" & A pixel is considered within a polygon if they have some overlap. This way, a pixel might belong to
 	-- two or more polygons at the same time. This strategy is usually recommended when the resolution of the polygons
-	-- is smaller than the resolution of the pixels.\
+	-- is smaller than the resolution of the pixels. This strategy takes more time to run. \
 	-- @usage -- DONTRUN
 	-- import("gis")
 	--
