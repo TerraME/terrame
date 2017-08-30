@@ -190,7 +190,7 @@ return {
 			color = {"red", "green", "blue", "orange", "black"}
 		}
 
-		unitTest:assertSnapshot(map, "tiff-mode-ov.png", 0.1)
+		unitTest:assertSnapshot(map, "tiff-mode-ov.png", 0.9) -- #1990
 
 		-- MINIMUM
 
