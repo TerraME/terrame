@@ -131,7 +131,6 @@ return {
 			operation = "mode",
 			attribute = "prod_mode",
 			layer = prodes,
-			pixel = "overlap",
 			missing = 1000
 		}
 
@@ -159,6 +158,39 @@ return {
 		}
 
 		unitTest:assertSnapshot(map, "tiff-mode.png", 0.1)
+
+		cl:fill{
+			operation = "mode",
+			attribute = "prod_m_ov",
+			layer = prodes,
+			pixel = "overlap",
+			missing = 1000
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = cl.name
+		}
+
+		local count = 0
+		forEachCell(cs, function(cell)
+			unitTest:assertType(cell.prod_m_ov, "string")
+			if not belong(cell.prod_mode, {"7", "87", "167", "255", "1000"}) then
+				print(cell.prod_mode)
+				count = count + 1
+			end
+		end)
+
+		unitTest:assertEquals(count, 0)
+
+		local map = Map{
+			target = cs,
+			select = "prod_m_ov",
+			value = {"7", "87", "167", "255", "1000"},
+			color = {"red", "green", "blue", "orange", "black"}
+		}
+
+		unitTest:assertSnapshot(map, "tiff-mode-ov.png", 0.1)
 
 		-- MINIMUM
 
@@ -407,26 +439,37 @@ return {
 		protec:fill{
 			operation = "count",
 			attribute = "prod_count",
-			layer = prodes,
-			pixel = "overlap" -- TerraME aborts if this line was removed
+			layer = prodes
 		}
+
+		protec:fill{
+			operation = "count",
+			attribute = "prod_c_ov",
+			layer = prodes,
+			pixel = "overlap"
+		}
+
 
 		cs = CellularSpace{
 			layer = protec
 		}
 
 		local sum = 0
+		local sum_ov = 0
+
+		unitTest:assertType(cs:sample().prod_count, "number")
+		unitTest:assertType(cs:sample().prod_c_ov, "number")
 
 		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_count, "number")
-
 			sum = sum + cell.prod_count
+			sum_ov = sum_ov + cell.prod_c_ov
 
-			unitTest:assert(cell.prod_count >= 0)
-			unitTest:assert(cell.prod_count <= 3796)
+			unitTest:assert(cell.prod_count >= 0 and cell.prod_count <= 3796)
+			unitTest:assert(cell.prod_c_ov >= 0 and cell.prod_c_ov <= 3989)
 		end)
 
 		unitTest:assertEquals(sum, 42844)
+		unitTest:assertEquals(sum_ov, 51116)
 
 		File("amazonia-indigenous.shp"):delete()
 		File("fill_mcount.tview"):delete()

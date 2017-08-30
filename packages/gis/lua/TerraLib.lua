@@ -2474,6 +2474,8 @@ TerraLib_ = {
 			local dseType = fromLayer:getSchema()
 
 			if dseType:hasRaster() then
+				if pixel == nil then pixel = true end
+
 				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, nodata, pixel)
 			else
 				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
