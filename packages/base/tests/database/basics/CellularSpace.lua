@@ -738,7 +738,8 @@ return{
 		}
 
 		local cs = CellularSpace{
-			layer = layer1
+			layer = layer1,
+			geometry = false
 		}
 
 		unitTest:assertEquals(#cs, 303)
@@ -790,7 +791,8 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameT0
+			layer = cellSpaceLayerNameT0,
+			geometry = false
 		}
 
 		forEachCell(cs, function(cell)
@@ -802,7 +804,8 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameT0
+			layer = cellSpaceLayerNameT0,
+			geometry = false
 		}
 
 		forEachCell(cs, function(cell)
@@ -820,7 +823,8 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameT0
+			layer = cellSpaceLayerNameT0,
+			geometry = false
 		}
 
 		forEachCell(cs, function(cell)
@@ -829,7 +833,8 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameT0
+			layer = cellSpaceLayerNameT0,
+			geometry = false
 		}
 
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"

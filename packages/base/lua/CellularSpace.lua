@@ -1303,20 +1303,12 @@ CellularSpace_ = {
 					end
 				end
 			end
-		else
-			local isOgr = false
-
-			if dset[0].OGR_GEOMETRY or dset[0].ogr_geometry then
-				isOgr = true
-			end
-
-			if isOgr then
-				for i = 0, #dset do
-					for k, v in pairs(dset[i]) do
-						if (k == "OGR_GEOMETRY") or (k == "ogr_geometry") then
-							self.cells[i + 1].geom = nil
-							self.cells[i + 1][k] = v
-						end
+		elseif dset[0].OGR_GEOMETRY or dset[0].ogr_geometry then
+			for i = 0, #dset do
+				for k, v in pairs(dset[i]) do
+					if (k == "OGR_GEOMETRY") or (k == "ogr_geometry") then
+						self.cells[i + 1].geom = nil
+						self.cells[i + 1][k] = v
 					end
 				end
 			end
