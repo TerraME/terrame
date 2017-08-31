@@ -70,7 +70,7 @@ Event_ = {
 
 		if data.period ~= nil then
 			optionalTableArgument(data, "period", "number")
-			positiveTableArgument(data, "period")
+			positiveTableArgument(data, "period", true)
 			self.period = data.period
 		end
 
@@ -99,14 +99,6 @@ Event_ = {
 	getPriority = function(self)
 		return self.priority
 	end
-	--#- Change the priority of the Event. This change will take place as soon as the Event
-	-- is rescheduled.
-	-- @arg period The new periodicity of the Event (default is 1).
-	-- @usage event:setPriority(4)
-	-- setPriority = function(period) end,
-	--#- Notify every Observer connected to the Event.
-	-- @usage event:notify()
-	-- notify = function() end,
 }
 
 metaTableEvent_ = {
@@ -122,7 +114,8 @@ metaTableEvent_ = {
 -- when using graphics (Chart, Map, Clock, etc.) as action. In this case the default value is zero,
 -- plotting the initial state of the simulation.
 -- @arg data.period A positive number representing the periodicity of the Event.
--- The default value is 1.
+-- The default value is 1. If it is zero or false, the Event will execute only
+-- once and then it will be removed from its Timer.
 -- @arg data.priority A number with the priority of the Event over
 -- other Events. Smaller values have higher priority. The default value depends on the type of its action.
 -- Priorities can also be defined as strings:
@@ -199,8 +192,12 @@ function Event(data)
 		defaultTableValue(data, "start", 1)
 	end
 
+	if data.period == false then
+		data.period = 0
+	end
+
 	defaultTableValue(data, "period", 1)
-	positiveTableArgument(data, "period")
+	positiveTableArgument(data, "period", true)
 
 	data.time = data.start
 	data.start = nil
