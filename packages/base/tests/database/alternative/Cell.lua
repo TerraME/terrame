@@ -65,7 +65,8 @@ return{
 
 		local cs = CellularSpace{
 			project = projName,
-			layer = clName1
+			layer = clName1,
+			geometry = false
 		}
 
 		local cellWithoutGeom = function()
@@ -92,7 +93,8 @@ return{
 
 		cs = CellularSpace{
 			project = projName,
-			layer = clName2
+			layer = clName2,
+			geometry = false
 		}
 
 		cellWithoutGeom = function()

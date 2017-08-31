@@ -256,7 +256,8 @@ return{
 
 		cs = CellularSpace{
 			project = projName,
-			layer = clName1
+			layer = clName1,
+			geometry = false
 		}
 
 		forEachCell(cs, function(c)
@@ -350,7 +351,8 @@ return{
 
 		cs = CellularSpace{
 			project = projName,
-			layer = clName1
+			layer = clName1,
+			geometry = false
 		}
 
 		forEachCell(cs, function(c)

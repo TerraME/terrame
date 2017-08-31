@@ -73,8 +73,7 @@ return {
 	end,
 	point = function(unitTest)
 		local cs = CellularSpace{
-			file = filePath("itaituba-localities.shp", "gis"),
-			geometry = true
+			file = filePath("itaituba-localities.shp", "gis")
 		}
 
 		forEachCell(cs, function(cell)
@@ -92,8 +91,7 @@ return {
 	end,
 	line = function(unitTest)
 		local cs = CellularSpace{
-			file = filePath("emas-river.shp", "gis"),
-			geometry = true
+			file = filePath("emas-river.shp", "gis")
 		}
 
 		forEachCell(cs, function(cell)
@@ -123,8 +121,7 @@ return {
 	end,
 	polygon = function(unitTest)
 		local cs = CellularSpace{
-			file = filePath("amazonia-limit.shp", "gis"),
-			geometry = true
+			file = filePath("amazonia-limit.shp", "gis")
 		}
 
 		forEachCell(cs, function(cell)

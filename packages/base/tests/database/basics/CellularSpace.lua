@@ -29,7 +29,8 @@ return{
 			xy = {"Col", "Lin"},
 			as = {
 				height = "height_"
-			}
+			},
+			geometry = false
 		}
 
 		unitTest:assertEquals("cabecadeboi900.shp", cs.layer)
@@ -188,7 +189,8 @@ return{
 
 		cs = CellularSpace{
 			project = "cellspace_basic",
-			layer = clName1
+			layer = clName1,
+			geometry = false
 		}
 
 		forEachCell(cs, function(c)
