@@ -632,6 +632,12 @@ function _Gtme.executeTests(package, fileName)
 					errors_in_tests = true
 				end)
 
+				if ut.count_last > 0 then
+					printError("[The error above occurs "..ut.count_last.." more times.]")
+					ut.count_last = 0
+					ut.last_error = ""
+				end
+
 				if data.time then
 					local testFinalTime = os.clock()
 					local difference = round(testFinalTime - testInitialTime, 1)
@@ -708,12 +714,6 @@ function _Gtme.executeTests(package, fileName)
 
 				if getn(pvariables) > 0 or getn(rpvariables) > 0 then
 					ut.functions_with_global_variables = ut.functions_with_global_variables + 1
-				end
-
-				if ut.count_last > 0 then
-					printError("[The error above occurs "..ut.count_last.." more times.]")
-					ut.count_last = 0
-					ut.last_error = ""
 				end
 			end
 
