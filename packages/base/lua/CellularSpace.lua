@@ -1406,6 +1406,7 @@ CellularSpace_ = {
 			if result[class] == nil then
 				result[class] = Trajectory{target = self, build = false}
 			end
+
 			table.insert(result[class].cells, cell)
 			result[class].cObj_:add(#result[class], cell.cObj_)
 		end)
