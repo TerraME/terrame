@@ -27,6 +27,12 @@
 return{
 	Tube = function(unitTest)
 		local t = Tube{}
+
+		if false then
+			unitTest:assert(true)
+			unitTest:assert(true)
+		end
+
 		unitTest:assert(true)
 	end,
 	w = function(unitTest)

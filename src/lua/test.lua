@@ -594,6 +594,8 @@ function _Gtme.executeTests(package, fileName)
 				end
 			end
 
+			local errors_in_tests = false
+
 			for _, eachTest in ipairs(myTests) do
 				print("Testing "..eachTest)
 				Random{seed = 987654321}
@@ -627,6 +629,7 @@ function _Gtme.executeTests(package, fileName)
 					ut.functions_with_error = ut.functions_with_error + 1
 					printError("Wrong execution, got:\n".._Gtme.traceback(err))
 					found_error = true
+					errors_in_tests = true
 				end)
 
 				if data.time then
@@ -646,9 +649,12 @@ function _Gtme.executeTests(package, fileName)
 
 				forEachFile(".", function(file)
 					if filesDir[file:name()] == nil then
-						printError("File '"..file.."' was created along the test.")
 						filesDir[file:name()] = true
-						ut.files_created = ut.files_created + 1
+
+						if not errors_in_tests then
+							printError("File '"..file.."' was created along the test.")
+							ut.files_created = ut.files_created + 1
+						end
 					end
 				end)
 
@@ -714,7 +720,7 @@ function _Gtme.executeTests(package, fileName)
 			debug.sethook()
 
 			if #myTests > 0 then
-				if data.test or getn(data.notest) > 0 then
+				if data.test or getn(data.notest) > 0 or errors_in_tests then
 					printWarning("Skip checking asserts")
 				else
 					print("Checking if all asserts were executed")
