@@ -331,13 +331,14 @@ sample   function
 		unitTest:assertEquals(sum[3], 53)
 		unitTest:assertEquals(sum[4], 52)
 
-		local cat = Random{poor = 0.5, middle = 0.33, rich = 0.17}
+		local cat = Random{poor = 0.5, middle = 0.33, rich = 0.17, none = 0}
 		sum = {
 			poor = 0,
 			middle = 0,
 			rich = 0
 		}
 
+		unitTest:assertEquals(#cat.values, 4)
 		unitTest:assertType(cat:sample(), "string")
 
 		for _ = 1, 200 do

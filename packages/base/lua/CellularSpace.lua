@@ -419,7 +419,7 @@ local function checkVirtual(self)
 end
 
 local function checkProject(self)
-	defaultTableValue(self, "geometry", false)
+	defaultTableValue(self, "geometry", true)
 
 	if type(self.layer) == "string" then
 		if type(self.project) ~= "Project" then
@@ -643,7 +643,7 @@ end
 local function loadOGR(self)
 	local dSet = gis.TerraLib().getOGRByFilePath(tostring(self.file), self.missing)
 
-	defaultTableValue(self, "geometry", false)
+	defaultTableValue(self, "geometry", true)
 
 	setCellsByTerraLibDataSet(self, dSet)
 
@@ -1159,7 +1159,6 @@ CellularSpace_ = {
 			data.file = File(data.file)
 		end
 
-
 		mandatoryTableArgument(data, "file", "File")
 
 		local ext = data.file:extension()
@@ -1304,20 +1303,12 @@ CellularSpace_ = {
 					end
 				end
 			end
-		else
-			local isOgr = false
-
-			if dset[0].OGR_GEOMETRY or dset[0].ogr_geometry then
-				isOgr = true
-			end
-
-			if isOgr then
-				for i = 0, #dset do
-					for k, v in pairs(dset[i]) do
-						if (k == "OGR_GEOMETRY") or (k == "ogr_geometry") then
-							self.cells[i + 1].geom = nil
-							self.cells[i + 1][k] = v
-						end
+		elseif dset[0].OGR_GEOMETRY or dset[0].ogr_geometry then
+			for i = 0, #dset do
+				for k, v in pairs(dset[i]) do
+					if (k == "OGR_GEOMETRY") or (k == "ogr_geometry") then
+						self.cells[i + 1].geom = nil
+						self.cells[i + 1][k] = v
 					end
 				end
 			end
@@ -1407,6 +1398,7 @@ CellularSpace_ = {
 			if result[class] == nil then
 				result[class] = Trajectory{target = self, build = false}
 			end
+
 			table.insert(result[class].cells, cell)
 			result[class].cObj_:add(#result[class], cell.cObj_)
 		end)
@@ -1541,7 +1533,7 @@ metaTableCellularSpace_ = {
 -- @arg data.xdim Number of columns, in the case of creating a CellularSpace without needing to
 -- load from a database.
 -- @arg data.geometry A boolean value indicating whether the geometry should also be loaded.
--- The default value is false. If true, each cell will have an attribute called geom with a TerraLib object.
+-- The default value is true. If true, each cell will have an attribute called geom with a TerraLib object.
 -- @arg data.ydim Number of lines, in the case of creating a CellularSpace without needing to
 -- load from a database. The default value is equal to xdim.
 -- @arg data.file A string with a file name (if it is stored in the current directory), or the complete

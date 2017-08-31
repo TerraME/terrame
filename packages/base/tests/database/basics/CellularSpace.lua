@@ -29,7 +29,8 @@ return{
 			xy = {"Col", "Lin"},
 			as = {
 				height = "height_"
-			}
+			},
+			geometry = false
 		}
 
 		unitTest:assertEquals("cabecadeboi900.shp", cs.layer)
@@ -178,8 +179,7 @@ return{
 
 		cs = CellularSpace{
 			project = projName:name(true),
-			layer = clName1,
-			geometry = true
+			layer = clName1
 		}
 
 		forEachCell(cs, function(c)
@@ -189,7 +189,8 @@ return{
 
 		cs = CellularSpace{
 			project = "cellspace_basic",
-			layer = clName1
+			layer = clName1,
+			geometry = false
 		}
 
 		forEachCell(cs, function(c)
@@ -737,7 +738,8 @@ return{
 		}
 
 		local cs = CellularSpace{
-			layer = layer1
+			layer = layer1,
+			geometry = false
 		}
 
 		unitTest:assertEquals(#cs, 303)
@@ -789,7 +791,8 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameT0
+			layer = cellSpaceLayerNameT0,
+			geometry = false
 		}
 
 		forEachCell(cs, function(cell)
@@ -801,7 +804,8 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameT0
+			layer = cellSpaceLayerNameT0,
+			geometry = false
 		}
 
 		forEachCell(cs, function(cell)
@@ -819,7 +823,8 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameT0
+			layer = cellSpaceLayerNameT0,
+			geometry = false
 		}
 
 		forEachCell(cs, function(cell)
@@ -828,7 +833,8 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameT0
+			layer = cellSpaceLayerNameT0,
+			geometry = false
 		}
 
 		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
@@ -841,8 +847,7 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameGeom,
-			geometry = true
+			layer = cellSpaceLayerNameGeom
 		}
 
 		forEachCell(cs, function(cell)
@@ -859,8 +864,7 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameGeom2,
-			geometry = true
+			layer = cellSpaceLayerNameGeom2
 		}
 
 		forEachCell(cs, function(cell)
@@ -899,8 +903,7 @@ return{
 
 		local cs = CellularSpace{
 			project = proj,
-			layer = layerName1,
-			geometry = true
+			layer = layerName1
 		}
 
 		cs:synchronize()

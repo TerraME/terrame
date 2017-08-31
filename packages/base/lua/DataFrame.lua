@@ -131,19 +131,31 @@ local function remove(self, idx)
 end
 
 --- Save the DataFrame to a given file.
--- @arg filename A mandatory string with the file name.
+-- @arg filename A mandatory string with the file name or a File.
+-- It can be a Lua file (.lua) or a CSV (.csv).
 -- @usage filename = "dump.lua"
 -- df = DataFrame{x = {1}, y = {2}}
 -- df:save(filename)
 --
 -- File(filename):deleteIfExists()
 local function save(self, filename)
-	mandatoryArgument(1, "string", filename)
+	if type(filename) == "string" then
+		filename = File(filename)
+	end
 
-	local file = File(filename)
-	local stbl = "return"..vardump(self.data_)
-	file:writeLine(stbl)
-	file:close()
+	mandatoryArgument(1, "File", filename)
+
+	local ext = filename:extension()
+
+	if ext == "csv" then
+		filename:write(self)
+	elseif ext == "lua" then
+		local stbl = "return"..vardump(self.data_)
+		filename:writeLine(stbl)
+		filename:close()
+	else
+		customError("Extension '"..ext.."' is not supported. Use 'csv' or 'lua' instead.")
+	end
 end
 
 --- Return the columns of the DataFrame. It is a named table whose indexes are

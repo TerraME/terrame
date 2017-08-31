@@ -39,8 +39,7 @@ local init = function(model)
 
     model.cs = CellularSpace{
         file = filePath("cabecadeboi.shp", "gis"),
-        instance = model.cell,
-		geometry = true
+        instance = model.cell
     }
 
     model.cs:createNeighborhood{

@@ -91,6 +91,9 @@ return{
 		event = Event{start = 0.5, period = 2, priority = "veryhigh", action = function() end}
 		unitTest:assertEquals(event:getPriority(), -10)
 
+		event = Event{start = 0.5, period = false, priority = "veryhigh", action = function() end}
+		unitTest:assertEquals(event:getPeriod(), 0)
+
 		local count = 0
 
 		local ag = Agent{

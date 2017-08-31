@@ -239,7 +239,7 @@ Timer_ = {
 
 			local result = ev.action(ev, self)
 
-			if result == false then
+			if result == false or ev.period == 0 then
 				ev.parent = nil
 			else
 				ev.time = ev.time + ev.period
