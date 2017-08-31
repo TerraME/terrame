@@ -45,16 +45,20 @@ return{
 		File(filename):deleteIfExists()
 	end,
 	save = function(unitTest)
-		local filename = "dump.lua"
+		local filename1 = "dump.lua"
+		local filename2 = "dump.csv"
+
 		local expected = DataFrame{
 			{age = 1, wealth = 10, vision = 2},
 			{age = 3, wealth =  8, vision = 1},
 			{age = 3, wealth = 15, vision = 2}
 		}
 
-		expected:save(filename)
+		expected:save(filename1)
+		unitTest:assertFile(filename1)
 
-		unitTest:assertFile(filename)
+		expected:save(filename2)
+		unitTest:assertFile(filename2)
 	end
 }
 

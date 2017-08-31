@@ -1159,7 +1159,6 @@ CellularSpace_ = {
 			data.file = File(data.file)
 		end
 
-
 		mandatoryTableArgument(data, "file", "File")
 
 		local ext = data.file:extension()
