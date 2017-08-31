@@ -419,7 +419,7 @@ local function checkVirtual(self)
 end
 
 local function checkProject(self)
-	defaultTableValue(self, "geometry", false)
+	defaultTableValue(self, "geometry", true)
 
 	if type(self.layer) == "string" then
 		if type(self.project) ~= "Project" then
@@ -643,7 +643,7 @@ end
 local function loadOGR(self)
 	local dSet = gis.TerraLib().getOGRByFilePath(tostring(self.file), self.missing)
 
-	defaultTableValue(self, "geometry", false)
+	defaultTableValue(self, "geometry", true)
 
 	setCellsByTerraLibDataSet(self, dSet)
 
@@ -1540,7 +1540,7 @@ metaTableCellularSpace_ = {
 -- @arg data.xdim Number of columns, in the case of creating a CellularSpace without needing to
 -- load from a database.
 -- @arg data.geometry A boolean value indicating whether the geometry should also be loaded.
--- The default value is false. If true, each cell will have an attribute called geom with a TerraLib object.
+-- The default value is true. If true, each cell will have an attribute called geom with a TerraLib object.
 -- @arg data.ydim Number of lines, in the case of creating a CellularSpace without needing to
 -- load from a database. The default value is equal to xdim.
 -- @arg data.file A string with a file name (if it is stored in the current directory), or the complete

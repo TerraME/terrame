@@ -178,8 +178,7 @@ return{
 
 		cs = CellularSpace{
 			project = projName:name(true),
-			layer = clName1,
-			geometry = true
+			layer = clName1
 		}
 
 		forEachCell(cs, function(c)
@@ -841,8 +840,7 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameGeom,
-			geometry = true
+			layer = cellSpaceLayerNameGeom
 		}
 
 		forEachCell(cs, function(cell)
@@ -859,8 +857,7 @@ return{
 
 		cs = CellularSpace{
 			project = proj,
-			layer = cellSpaceLayerNameGeom2,
-			geometry = true
+			layer = cellSpaceLayerNameGeom2
 		}
 
 		forEachCell(cs, function(cell)
@@ -899,8 +896,7 @@ return{
 
 		local cs = CellularSpace{
 			project = proj,
-			layer = layerName1,
-			geometry = true
+			layer = layerName1
 		}
 
 		cs:synchronize()
