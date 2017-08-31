@@ -60,18 +60,21 @@ local colors = {
 local function chartFromData(attrTab)
 	local columns = attrTab.target:columns()
 	local rows = attrTab.target:rows()
+	local values = {}
 
 	forEachElement(attrTab.select, function(_, idx)
 		if not columns[idx] then
 			customError("Selected column '"..idx.."' does not exist in the DataFrame.")
 		end
+
+		values[idx] = attrTab.target[1][idx]
 	end)
 
 	if attrTab.xAxis and not columns[attrTab.xAxis] then
 		customError("Selected column '"..attrTab.xAxis.."' for argument 'xAxis' does not exist in the DataFrame.")
 	end
 
-	local cell = Cell(clone(columns))
+	local cell = Cell(values)
 	local df = attrTab.target
 
 	local function updateValues(time)

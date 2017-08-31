@@ -233,6 +233,14 @@ return{
 		unitTest:assertSnapshot(c2, "chart-data-2.bmp", 0.05)
 		unitTest:assertSnapshot(c3, "chart-data-3.bmp", 0.05)
 
+		tab = DataFrame{
+			x = {1, 1, 2, 2},
+			y = {1, 2, 1, 2}
+		}
+
+		c1 = Chart{target = tab, select = "y", xAxis = "x"}
+		unitTest:assertSnapshot(c1, "chart-data-4.bmp", 0.05)
+
 		local init = function(model)
 			local contacts = 6
 
