@@ -289,6 +289,10 @@ return {
 		unitTest:assertEquals(bbox.yMax, 9583620.4323347, 1.0e-7)
 
 		proj.file:delete()
+	end,
+	random = function(unitTest)
+		-- Random tests is on functional/basic/Random.lua
+		unitTest:assert(true)
 	end
 }
 
