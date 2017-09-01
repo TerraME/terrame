@@ -3066,6 +3066,14 @@ TerraLib_ = {
 		}
 
 		return box
+	end,
+	--- Return pseudo-random number generations exported from Boost.
+	-- @usage -- DONTRUN
+	-- mt = TerraLib().random().MersenneTwister(1)
+	-- nd = TerraLib().random().NormalDistribution(mt, 1, 6)
+	-- print(nd())
+	random = function()
+		return binding.te.random
 	end
 }
 
