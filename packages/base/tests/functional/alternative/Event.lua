@@ -52,7 +52,7 @@ return{
 			event = Event{period = -1, priority = 1, action = function() end}
 		end
 
-		unitTest:assertError(error_func, incompatibleValueMsg("period", "positive number (except zero)", -1))
+		unitTest:assertError(error_func, incompatibleValueMsg("period", "positive number (including zero)", -1))
 
 		error_func = function()
 			event = Event{period = 2, priority = true, action = function() end}
@@ -73,12 +73,6 @@ return{
 		}
 
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("aaa", "priority", options))
-
-		error_func = function()
-			event = Event{period = 0, priority = 1, action = function() end}
-		end
-
-		unitTest:assertError(error_func, incompatibleValueMsg("period", "positive number (except zero)", 0))
 
 		error_func = function()
 			event = Event{period = 2, priority = 1, action = -5.5}
@@ -148,10 +142,10 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("period", "number", false))
 
 		error_func = function()
-			event:config{period = 0}
+			event:config{period = -1}
 		end
 
-		unitTest:assertError(error_func, incompatibleValueMsg("period", "positive number (except zero)", 0))
+		unitTest:assertError(error_func, incompatibleValueMsg("period", "positive number (including zero)", -1))
 
 		error_func = function()
 			event:config{priority = false}

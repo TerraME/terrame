@@ -13,6 +13,7 @@ Testing tests/Tube.lua
 Testing Tube
 Testing w
 Checking if all asserts were executed
+Assert in line 32 was not executed.
 Testing tests/Utils.lua
 Testing belong2
 File 'onerror-file-1.txt' was created along the test.
@@ -38,8 +39,7 @@ Testing string.endswith2
 Testing switch2
 Testing type2
 Testing vardump2
-Checking if all asserts were executed
-Assert in line 83 was not executed.
+Skip checking asserts
 Testing tests/alternative/Cell.lua
 Testing Cell
 Creating 'log/mac/chart_cell.bmp'.

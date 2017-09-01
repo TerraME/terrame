@@ -64,8 +64,7 @@ return{
 
 		local cs = CellularSpace{
 			project = projName,
-			layer = clName1,
-			geometry = true
+			layer = clName1
 		}
 
 		for _ = 1, 10 do
@@ -90,8 +89,7 @@ return{
 
 		cs = CellularSpace{
 			project = projName,
-			layer = clName2,
-			geometry = true
+			layer = clName2
 		}
 
 		for _ = 1, 10 do
@@ -144,8 +142,7 @@ return{
 
 		local cs = CellularSpace{
 			project = projName,
-			layer = clName1,
-			geometry = true
+			layer = clName1
 		}
 
 		local cell = cs.cells[1]
@@ -174,8 +171,7 @@ return{
 
 		cs = CellularSpace{
 			project = projName,
-			layer = clName2,
-			geometry = true
+			layer = clName2
 		}
 
 		cell = cs.cells[1]

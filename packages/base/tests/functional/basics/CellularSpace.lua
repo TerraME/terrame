@@ -218,10 +218,10 @@ return{
 			cs = CellularSpace{
 				project = projName,
 				layer = clName1,
-				geometry = false
+				geometry = true
 			}
 		end
-		unitTest:assertWarning(geometryDefaultValue, defaultValueMsg("geometry", false))
+		unitTest:assertWarning(geometryDefaultValue, defaultValueMsg("geometry", true))
 
 		unitTest:assertEquals(File(projName), cs.project.file)
 		unitTest:assertType(cs.layer, "Layer")
@@ -246,17 +246,18 @@ return{
 		cs = CellularSpace{
 			project = projName,
 			layer = clName1,
-			geometry = true
+			geometry = false
 		}
 
 		forEachCell(cs, function(c)
-			unitTest:assertNotNil(c.geom)
+			unitTest:assertNil(c.geom)
 			unitTest:assertNil(c.OGR_GEOMETRY)
 		end)
 
 		cs = CellularSpace{
 			project = projName,
-			layer = clName1
+			layer = clName1,
+			geometry = false
 		}
 
 		forEachCell(cs, function(c)
@@ -340,8 +341,7 @@ return{
 
 		cs = CellularSpace{
 			project = projName,
-			layer = clName1,
-			geometry = true
+			layer = clName1
 		}
 
 		forEachCell(cs, function(c)
@@ -351,7 +351,8 @@ return{
 
 		cs = CellularSpace{
 			project = projName,
-			layer = clName1
+			layer = clName1,
+			geometry = false
 		}
 
 		forEachCell(cs, function(c)
@@ -1628,8 +1629,7 @@ ydim    number [20]
 
 		cs = CellularSpace{
 			project = projName,
-			layer = cellSpaceLayerNameGeom,
-			geometry = true
+			layer = cellSpaceLayerNameGeom
 		}
 
 		forEachCell(cs, function(cell)
@@ -1649,8 +1649,7 @@ ydim    number [20]
 
 		cs = CellularSpace{
 			project = projName,
-			layer = cellSpaceLayerNameGeom2,
-			geometry = true
+			layer = cellSpaceLayerNameGeom2
 		}
 
 		forEachCell(cs, function(cell)

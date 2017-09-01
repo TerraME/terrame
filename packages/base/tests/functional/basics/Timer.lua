@@ -76,12 +76,16 @@ return {
 			Event{action = soc},
 			Event{action = c},
 			Event{action = cs},
-			Event{action = traj}
+			Event{action = traj},
+			Event{period = false, action = function() count = count + 1 end},
+			Event{period = 0,     action = function() count = count + 1 end},
 		}
 
+		unitTest:assertEquals(#t, 7)
 		t:run(10)
+		unitTest:assertEquals(#t, 5)
 
-		unitTest:assertEquals(60, count)
+		unitTest:assertEquals(62, count)
 
 		local counter = 0
 

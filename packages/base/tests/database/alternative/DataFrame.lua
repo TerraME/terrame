@@ -59,12 +59,20 @@ return{
 		local error_func = function()
 			df:save()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			df:save(1)
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "File", 1))
+
+		error_func = function()
+			df:save("abc.xyz")
+		end
+
+		unitTest:assertError(error_func, "Extension 'xyz' is not supported. Use 'csv' or 'lua' instead.")
 	end
 }
 

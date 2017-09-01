@@ -136,6 +136,17 @@ return {
 
 		unitTest:assertError(invalidBand, "Band '5' does not exist. The only available band is '0'.")
 
+		local invalidPixel = function()
+			cl:fill{
+				operation = "mode",
+				attribute = "alt_mode",
+				layer = "altimetria",
+				pixel = "overlop"
+			}
+		end
+
+		unitTest:assertError(invalidPixel, switchInvalidArgumentSuggestionMsg("overlop", "pixel", "overlap"))
+
 		local dummyTypeError = function()
 			cl:fill{
 				operation = "average",
