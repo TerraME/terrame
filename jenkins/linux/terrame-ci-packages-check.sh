@@ -27,13 +27,14 @@ echo ""
 
 PACKAGE=$1
 DEPENDS=$2
+COMMIT=$ghprbActualCommit
 
 echo "Triggering All Builds"
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Code analysis of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "Code analysis of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
 sleep 1s
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Documentation of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "Documentation of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
 sleep 1s
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Functional tests of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "Functional tests of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
 sleep 1s
 
 rm -rf $TERRAME_PACKAGE_PATH
@@ -42,6 +43,7 @@ cp -rap git/* $TERRAME_PACKAGE_PATH/$PACKAGE
 
 CONTEXT="Code analysis of package $PACKAGE"
 TARGET_URL="$BUILD_URL/consoleFull"
+
 $TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" "-1" "$TARGET_URL" "$PACKAGE"
 
 cd $TERRAME_PACKAGE_PATH
