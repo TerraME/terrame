@@ -26,7 +26,7 @@
 :: USAGE:
 :: terrame-installer-windows-10.bat
 ::
-
+exit
 set "_TERRAME_CREATE_INSTALLER=ON"
 set "_TERRAME_BUILD_AS_BUNDLE=ON"
 

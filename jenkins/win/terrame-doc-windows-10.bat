@@ -27,7 +27,7 @@
 ::
 :: PACKAGE_NAME - Represents a name of TerraME package to execute
 ::
-
+exit
 :: setting context
 set "TME_PATH=%_TERRAME_INSTALL_PATH%\bin"
 set "PATH=%PATH%;%TME_PATH%"
