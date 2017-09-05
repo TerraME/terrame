@@ -81,11 +81,11 @@ mkdir %_TERRALIB_GIT_DIR%
 
 git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRALIB_GIT_DIR% --quiet
 
-set _CURL_DIR=C:\curl
-set PATH=%PATH%;%_CURL_DIR%
+set "_CURL_DIR=C:\curl"
+set "PATH=%PATH%;%_CURL_DIR%"
 
-set _TERRALIB_3RDPARTY_NAME=terralib-3rdparty-msvc12.zip
-set _TERRALIB_TARGET_URL=http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/%_TERRALIB_3RDPARTY_NAME%
+set "_TERRALIB_3RDPARTY_NAME=terralib-3rdparty-msvc12.zip"
+set "_TERRALIB_TARGET_URL=http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/%_TERRALIB_3RDPARTY_NAME%"
 
 :: echo done.
 :: Downloading TerraME
@@ -97,7 +97,37 @@ echo Downloading TerraLib 3rdparty
 :: echo | set /p="Downloading TerraLib 3rdparty ... "<nul
 curl -L -s -O %_TERRALIB_TARGET_URL%
 :: echo done.
+
+"C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
+
+copy %_TERRALIB_GIT_DIR%\install\install-3rdparty.bat .
+
+echo Cofiguring Install Variables
+:: Where to install the third-parties 
+set "TERRALIB_DEPENDENCIES_DIR=%_TERRALIB_TARGET_3RDPARTY_DIR%\5.2"
+
+:: Where is qmake.exe
+set "QMAKE_FILEPATH=%_QMAKE_DIR%"
+
+set "TERRALIB_X64=1"
+
+set "VCVARS_FILEPATH=%PROGRAMFILES(x86)%\Microsoft Visual Studio 12.0\VC"
+
+:: Where is cmake.exe
+set "CMAKE_FILEPATH=%PROGRAMFILES(x86)%\CMake\bin"
+
+:: Where is win32.mak file of the system.
+set "WIN32MAK_FILEPATH=%PROGRAMFILES(x86)%\Microsoft SDKs\Windows\v7.1A\Include"
+
+:: Where is the TerraLib5 codebase
+set TERRALIB5_CODEBASE_PATH=%_TERRALIB_GIT_DIR%
 dir
+:: Enter directory containing codebase of the third parties.
+cd terralib-3rdparty-msvc12
+
+dir
+
+
 :: copy terrame\build\scripts\win\terrame-deps-conf.bat %_TERRAME_3RDPARTY_DIR%
 :: Extracting TerraLib 3rdparty and moving short-named directory. It prevents Windows directory and filename limitation (255 chars)
 :: "C:\Program Files\7-Zip\7z.exe" x terralib-3rdparty-msvc12.zip -y
