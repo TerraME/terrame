@@ -84,7 +84,7 @@ git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terr
 set _CURL_DIR=C:\curl
 set PATH=%PATH%;%_CURL_DIR%
 
-set _TERRALIB_3RDPARTY_NAME=terralib5-3rdparty-msvc12.zip
+set _TERRALIB_3RDPARTY_NAME=terralib-3rdparty-msvc12.zip
 set _TERRALIB_TARGET_URL=http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/%_TERRALIB_3RDPARTY_NAME%
 
 :: echo done.
@@ -97,7 +97,7 @@ echo Downloading TerraLib 3rdparty
 :: echo | set /p="Downloading TerraLib 3rdparty ... "<nul
 curl -L -s -O %_TERRALIB_TARGET_URL%
 :: echo done.
-
+dir
 :: copy terrame\build\scripts\win\terrame-deps-conf.bat %_TERRAME_3RDPARTY_DIR%
 :: Extracting TerraLib 3rdparty and moving short-named directory. It prevents Windows directory and filename limitation (255 chars)
 :: "C:\Program Files\7-Zip\7z.exe" x terralib-3rdparty-msvc12.zip -y
