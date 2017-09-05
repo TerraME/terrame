@@ -30,92 +30,103 @@
 
 :: Turn off system messages
 
-@echo off
+::@echo off
 
-set "_CURL_DIR=C:\curl"
-set "PATH=%PATH%;%_CURL_DIR%"
+::set "_CURL_DIR=C:\curl"
+::set "PATH=%PATH%;%_CURL_DIR%"
 
-echo ""
-echo "TerraME Dependencies compilation on Windows 10"
-echo ""
+:: echo ""
+:: echo "TerraME Dependencies compilation on Windows 10"
+:: echo ""
 
-set "_TERRALIB_3RDPARTY_NAME=terralib5-3rdparty-msvc12.zip"
-set "_TERRALIB_TARGET_URL=http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_3RDPARTY_NAME"
-set "_TERRAME_3RDPARTY_DIR=C:\MyDevel\terrame\daily-build\terrame\3rdparty"
-set "_BUILD_PATH=C:\tme-3rdparty"
+:: set "_TERRALIB_3RDPARTY_NAME=terralib5-3rdparty-msvc12.zip"
+:: set "_TERRALIB_TARGET_URL=http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_3RDPARTY_NAME"
+:: set "_TERRAME_3RDPARTY_DIR=C:\MyDevel\terrame\daily-build\terrame\3rdparty"
+:: set "_BUILD_PATH=C:\tme-3rdparty"
 :: TerraLib 3rdparty variables
-set "TERRALIB_X64=1"
-set "_config=x64"
-set "QMAKE_FILEPATH=C:\Qt\5.6\msvc2013_64\bin"
-set "TERRALIB_DEPENDENCIES_DIR=C:\MyDevel\terrame\daily-build\terralib\3rdparty\5.2"
-set "TERRALIB5_CODEBASE_PATH=%CD%\terralib"
-set "VCVARS_FILEPATH=%PROGRAMFILES(x86)%\Microsoft Visual Studio 12.0\VC"
+:: set "TERRALIB_X64=1"
+:: set "_config=x64"
+:: set "QMAKE_FILEPATH=C:\Qt\5.6\msvc2013_64\bin"
+:: set "TERRALIB_DEPENDENCIES_DIR=C:\MyDevel\terrame\daily-build\terralib\3rdparty\5.2"
+:: set "TERRALIB5_CODEBASE_PATH=%CD%\terralib"
+:: set "VCVARS_FILEPATH=%PROGRAMFILES(x86)%\Microsoft Visual Studio 12.0\VC"
 
 :: Configuring VStudio
-echo | set /p="Configuring visual studio... "<nul
+:: echo | set /p="Configuring visual studio... "<nul
 
-call "%VCVARS_FILEPATH%"\vcvarsall.bat %_config%
+:: call "%VCVARS_FILEPATH%"\vcvarsall.bat %_config%
 
-echo done.
+:: echo done.
 
-echo | set /p="Cleaning up old builds ... "<nul
-rmdir %_BUILD_PATH% /s /q >nul 2>nul
-rmdir %TERRALIB_DEPENDENCIES_DIR% /s /q >nul 2>nul
-rmdir %TERRALIB5_CODEBASE_PATH% /s /q >nul 2>nul
-rmdir %_TERRAME_3RDPARTY_DIR% /s /q >nul 2>nul
-mkdir %TERRALIB5_CODEBASE_PATH% /s /q >nul 2>nul
-mkdir %_TERRAME_3RDPARTY_DIR% /s /q >nul 2>nul
-echo done.
+:: echo | set /p="Cleaning up old builds ... "<nul
+echo Cleaning up old builds ...
+rmdir %_TERRALIB_TARGET_3RDPARTY_DIR% /s /q
+rmdir %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
 
-:: Downloading TerraLib
-echo | set /p="Downloading TerraLib ... "<nul
-git clone -b release-5.2 https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %TERRALIB5_CODEBASE_PATH% --quiet
-echo done.
+mkdir %_TERRALIB_TARGET_3RDPARTY_DIR% %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
+
+cd %_TERRALIB_TARGET_3RDPARTY_DIR%
+::rmdir %_BUILD_PATH% /s /q >nul 2>nul
+:: rmdir %TERRALIB_DEPENDENCIES_DIR% /s /q >nul 2>nul
+:: rmdir %TERRALIB5_CODEBASE_PATH% /s /q >nul 2>nul
+:: rmdir %_TERRAME_3RDPARTY_DIR% /s /q >nul 2>nul
+:: mkdir %TERRALIB5_CODEBASE_PATH% /s /q >nul 2>nul
+:: mkdir %_TERRAME_3RDPARTY_DIR% /s /q >nul 2>nul
+:: echo done.
+
+echo Downloading TerraLib
+:: echo | set /p="Downloading TerraLib ... "<nul
+rmdir %_TERRAME_GIT_DIR% /s /q
+mkdir %_TERRAME_GIT_DIR% /s /q
+
+git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRAME_GIT_DIR% --quiet
+:: echo done.
 :: Downloading TerraME
-echo | set /p="Downloading TerraME ... "<nul
-git clone https://github.com/TerraME/terrame.git terrame --quiet
-echo done.
+:: echo | set /p="Downloading TerraME ... "<nul
+:: git clone https://github.com/TerraME/terrame.git terrame --quiet
+:: echo done.
 
-echo | set /p="Downloading TerraLib 3rdparty ... "<nul
-curl -L -s -O %_TERRALIB_TARGET_3RDPARTY_DIR%
-echo done.
+:: echo | set /p="Downloading TerraLib 3rdparty ... "<nul
+:: curl -L -s -O %_TERRALIB_TARGET_3RDPARTY_DIR%
+:: echo done.
 
-copy terrame\build\scripts\win\terrame-deps-conf.bat %_TERRAME_3RDPARTY_DIR%
+:: copy terrame\build\scripts\win\terrame-deps-conf.bat %_TERRAME_3RDPARTY_DIR%
 :: Extracting TerraLib 3rdparty and moving short-named directory. It prevents Windows directory and filename limitation (255 chars)
-"C:\Program Files\7-Zip\7z.exe" x terralib-3rdparty-msvc12.zip -y
-mv terralib-3rdparty-msvc12 %_BUILD_PATH%
-cd %_BUILD_PATH%\terralib-3rdparty-msvc12
+:: "C:\Program Files\7-Zip\7z.exe" x terralib-3rdparty-msvc12.zip -y
+:: mv terralib-3rdparty-msvc12 %_BUILD_PATH%
+:: cd %_BUILD_PATH%\terralib-3rdparty-msvc12
 
 :: Compile TerraLib 3rdparty Dependencies
-start /wait %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat
+:: start /wait %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat
 
-cd %_TERRAME_3RDPARTY_DIR%
+:: cd %_TERRAME_3RDPARTY_DIR%
 
-echo | set /p="Downloading Protobuf ... "<nul
-curl -O -J -L https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.zip --silent
-echo done.
-"C:\Program Files\7-Zip\7z.exe" x protobuf-2.6.1.zip -y
-rename protobuf-2.6.1 protobuf
+:: echo | set /p="Downloading Protobuf ... "<nul
+:: curl -O -J -L https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.zip --silent
+:: echo done.
+:: "C:\Program Files\7-Zip\7z.exe" x protobuf-2.6.1.zip -y
+:: rename protobuf-2.6.1 protobuf
 
-echo | set /p="Downloading Luacheck ... "<nul
-curl -L -s -O https://github.com/mpeterv/luacheck/archive/0.17.0.zip
-echo done.
-"C:\Program Files\7-Zip\7z.exe" x 0.17.0.zip -y
-rename luacheck-0.17.0 luacheck
+:: echo | set /p="Downloading Luacheck ... "<nul
+:: curl -L -s -O https://github.com/mpeterv/luacheck/archive/0.17.0.zip
+:: echo done.
+:: "C:\Program Files\7-Zip\7z.exe" x 0.17.0.zip -y
+:: rename luacheck-0.17.0 luacheck
 
-copy %WORKSPACE%\build\scripts\win\terrame-deps-conf.bat .
-:: Installing Luacheck
-call terrame-deps-conf.bat
+:: copy %WORKSPACE%\build\scripts\win\terrame-deps-conf.bat .
+:: :: Installing Luacheck
+:: call terrame-deps-conf.bat
 
 :: Compiling Protobuf
-cd %_TERRAME_3RDPARTY_DIR%\protobuf\vsprojects
-msbuild /m protobuf.sln /target:libprotobuf /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
-msbuild /m protobuf.sln /target:libprotobuf-lite /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
-msbuild /m protobuf.sln /target:libprotoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
-msbuild /m protobuf.sln /target:protoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+:: cd %_TERRAME_3RDPARTY_DIR%\protobuf\vsprojects
+:: msbuild /m protobuf.sln /target:libprotobuf /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+:: msbuild /m protobuf.sln /target:libprotobuf-lite /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+:: msbuild /m protobuf.sln /target:libprotoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+:: msbuild /m protobuf.sln /target:protoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
 :: Extract Protobuf includes
-call extract_includes.bat
+:: call extract_includes.bat
 :: Copying Protobuf includes
-xcopy include %_TERRAME_3RDPARTY_DIR%\install\include /i /h /e /y
+::xcopy include %_TERRAME_3RDPARTY_DIR%\install\include /i /h /e /y
 
-exit %ERRORLEVEL%
+:: exit %ERRORLEVEL%
+:: exit %ERRORLEVEL%
