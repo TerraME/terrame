@@ -158,7 +158,8 @@ return {
 			local ncWarn = function()
 				TerraLib().createProject(proj)
 			end
-			unitTest:assertWarning(ncWarn, "Layer QGis ignored 'vegtype_2000'. Type 'nc' is not supported.")
+
+			unitTest:assertWarning(ncWarn, "Layer QGis ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
 		end
 
 		layerInfo = TerraLib().getLayerInfo(proj, "sampa")
