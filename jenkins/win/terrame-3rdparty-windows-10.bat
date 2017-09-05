@@ -20,7 +20,7 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-:: 
+::
 :: It performs TerraME compilation. It does not create installer or even build as bundle.'
 ::
 ::
@@ -74,7 +74,7 @@ cd %_TERRALIB_TARGET_3RDPARTY_DIR%
 :: mkdir %_TERRAME_3RDPARTY_DIR% /s /q >nul 2>nul
 :: echo done.
 
-echo Downloading GitLab TerraLib 
+echo Downloading GitLab TerraLib
 :: echo | set /p="Downloading TerraLib ... "<nul
 rmdir %_TERRALIB_GIT_DIR% /s /q
 mkdir %_TERRALIB_GIT_DIR%
@@ -98,12 +98,10 @@ echo Downloading TerraLib 3rdparty
 curl -L -s -O %_TERRALIB_TARGET_URL%
 :: echo done.
 
-"C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
-
-copy %_TERRALIB_GIT_DIR%\install\install-3rdparty.bat .
+:: "C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
 
 echo Cofiguring Install Variables
-:: Where to install the third-parties 
+:: Where to install the third-parties
 set "TERRALIB_DEPENDENCIES_DIR=%_TERRALIB_TARGET_3RDPARTY_DIR%\5.2"
 
 :: Where is qmake.exe
@@ -127,6 +125,28 @@ cd terralib-3rdparty-msvc12
 
 dir
 
+:: Calling the script on TerraLib5
+
+call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat && (
+echo.
+echo.
+echo ******************************************
+echo *** Dependencies builded successfully! ***
+echo ******************************************
+echo.
+) || (
+echo.
+echo.
+echo ********************************
+echo *** Dependencies build fail! ***
+echo ********************************
+echo.
+)
+
+rmdir %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
+mkdir %_TERRAME_TARGET_3RDPARTY_DIR%
+
+cd %_TERRAME_TARGET_3RDPARTY_DIR%
 
 :: copy terrame\build\scripts\win\terrame-deps-conf.bat %_TERRAME_3RDPARTY_DIR%
 :: Extracting TerraLib 3rdparty and moving short-named directory. It prevents Windows directory and filename limitation (255 chars)
@@ -139,11 +159,12 @@ dir
 
 :: cd %_TERRAME_3RDPARTY_DIR%
 
+echo Downloading Protobuf ...
 :: echo | set /p="Downloading Protobuf ... "<nul
-:: curl -O -J -L https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.zip --silent
+curl -O -J -L https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.zip --silent
 :: echo done.
-:: "C:\Program Files\7-Zip\7z.exe" x protobuf-2.6.1.zip -y
-:: rename protobuf-2.6.1 protobuf
+"C:\Program Files\7-Zip\7z.exe" x protobuf-2.6.1.zip -y
+rename protobuf-2.6.1 protobuf
 
 :: echo | set /p="Downloading Luacheck ... "<nul
 :: curl -L -s -O https://github.com/mpeterv/luacheck/archive/0.17.0.zip
@@ -155,16 +176,26 @@ dir
 :: :: Installing Luacheck
 :: call terrame-deps-conf.bat
 
-:: Compiling Protobuf
-:: cd %_TERRAME_3RDPARTY_DIR%\protobuf\vsprojects
-:: msbuild /m protobuf.sln /target:libprotobuf /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
-:: msbuild /m protobuf.sln /target:libprotobuf-lite /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
-:: msbuild /m protobuf.sln /target:libprotoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
-:: msbuild /m protobuf.sln /target:protoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
-:: Extract Protobuf includes
-:: call extract_includes.bat
-:: Copying Protobuf includes
-::xcopy include %_TERRAME_3RDPARTY_DIR%\install\include /i /h /e /y
+echo Compiling Protobuf
+cd protobuf\vsprojects
+msbuild /m protobuf.sln /target:libprotobuf /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+msbuild /m protobuf.sln /target:libprotobuf-lite /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+msbuild /m protobuf.sln /target:libprotoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+msbuild /m protobuf.sln /target:protoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+
+echo Copying Protobuf exec
+copy x64\Release\protoc.exe
+
+echo Copying Protobuf libs
+xcopy x64\Release\libproto* %_TERRAME_TARGET_3RDPARTY_DIR%\install\lib /i /h /e /y
+
+echo Extract Protobuf includes
+call extract_includes.bat
+
+echo Copying Protobuf includes
+xcopy include %_TERRAME_TARGET_3RDPARTY_DIR%\install\include /i /h /e /y
+
+tree /F /A %_TERRAME_TARGET_3RDPARTY_DIR%\install
 
 :: exit %ERRORLEVEL%
 :: exit %ERRORLEVEL%
