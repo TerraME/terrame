@@ -127,21 +127,21 @@ dir
 
 :: Calling the script on TerraLib5
 
-call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat && (
-echo.
-echo.
-echo ******************************************
-echo *** Dependencies builded successfully! ***
-echo ******************************************
-echo.
-) || (
-echo.
-echo.
-echo ********************************
-echo *** Dependencies build fail! ***
-echo ********************************
-echo.
-)
+:: call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat && (
+:: echo.
+:: echo.
+:: echo ******************************************
+:: echo *** Dependencies builded successfully! ***
+:: echo ******************************************
+:: echo.
+:: ) || (
+:: echo.
+:: echo.
+:: echo ********************************
+:: echo *** Dependencies build fail! ***
+:: echo ********************************
+:: echo.
+:: )
 
 rmdir %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
 mkdir %_TERRAME_TARGET_3RDPARTY_DIR%
@@ -178,10 +178,10 @@ rename protobuf-2.6.1 protobuf
 
 echo Compiling Protobuf
 cd protobuf\vsprojects
-msbuild /m protobuf.sln /target:libprotobuf /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
-msbuild /m protobuf.sln /target:libprotobuf-lite /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
-msbuild /m protobuf.sln /target:libprotoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
-msbuild /m protobuf.sln /target:protoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+msbuild /t:libprotobuf /p:Configuration=Release /p:Platform=x64 protobuf.sln 
+:: msbuild /m protobuf.sln /target:libprotobuf-lite /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+:: msbuild /m protobuf.sln /target:libprotoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
+:: msbuild /m protobuf.sln /target:protoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
 
 echo Copying Protobuf exec
 copy x64\Release\protoc.exe
