@@ -77,15 +77,17 @@ if [ -z "$ghprbActualCommit" ]; then
 
 	git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR
 
-elif [[ $(git status --porcelain) ]]; then
-	git pull
-	if [ ! -z "$ghprbActualCommit" ]; then
+#elif [[ $(git status --porcelain) ]]; then TODO(#1994): this cmd is not working
+	#git pull
+	#if [ ! -z "$ghprbActualCommit" ]; then
+else
+		git pull
 		echo "Cleaning last install"
 		rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua  $_TERRALIB_INSTALL_PATH
 		valid $? "Error: Cleaning fail"
-	fi
-else
-	echo "Not updated"
+	#fi
+#else
+#	echo "Not updated"
 fi
 
 echo ""

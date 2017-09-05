@@ -43,14 +43,10 @@ set "_TERRALIB_BRANCH=release-5.2"
 :: Removing TerraLib Mod Binding Lua in order to re-generate folder if there is
 rmdir %_TERRALIB_GIT_DIR% /s /q
 rmdir %_TERRALIB_BUILD_BASE%\solution /s /q
-rmdir %_TERRAME_GIT_DIR% /s /q
 rmdir %_TERRAME_BUILD_BASE%\solution /s /q
 rmdir %_TERRAME_EXECUTION_DIR% /s /q
 rmdir %_TERRAME_REPOSITORY_DIR% /s /q
 rmdir %_TERRAME_TEST_DIR% /s /q
-
-echo ":::: TerraME ::::"
-git clone https://github.com/TerraME/terrame.git %_TERRAME_GIT_DIR% --quiet
 
 echo ":::: TerraLib ::::"
 git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRALIB_GIT_DIR% --quiet

@@ -22,7 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It prepares a entire TerraME build process. Firstly, it prepares environment, cloning both TerraME and TerraLib.
 ## After that, It copies required scripts to respective folders. Once done, it compiles TerraLib.
 ## Jenkins will export variables defined in jenkins/linux for respective build type. If PR events, it uses VARIABLES-ci.
@@ -50,11 +50,8 @@
 _TERRALIB_BRANCH=release-5.2
 
 # Removing TerraLib Mod Binding Lua in order to re-generate folder if there is
-rm -rf $_TERRALIB_BUILD_BASE/solution $_TERRALIB_GIT_DIR $_TERRAME_GIT_DIR $_TERRAME_BUILD_BASE/solution 
+rm -rf $_TERRALIB_BUILD_BASE/solution $_TERRALIB_GIT_DIR $_TERRAME_BUILD_BASE/solution
 rm -rf $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
-
-echo "### TerraME ###"
-git clone https://github.com/TerraME/terrame.git $_TERRAME_GIT_DIR
 
 echo "### TerraLib ###"
 git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR
