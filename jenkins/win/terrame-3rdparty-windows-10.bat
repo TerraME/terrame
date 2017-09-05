@@ -74,20 +74,28 @@ cd %_TERRALIB_TARGET_3RDPARTY_DIR%
 :: mkdir %_TERRAME_3RDPARTY_DIR% /s /q >nul 2>nul
 :: echo done.
 
-echo Downloading TerraLib
+echo Downloading GitLab TerraLib 
 :: echo | set /p="Downloading TerraLib ... "<nul
-rmdir %_TERRAME_GIT_DIR% /s /q
-mkdir %_TERRAME_GIT_DIR% /s /q
+rmdir %_TERRALIB_GIT_DIR% /s /q
+mkdir %_TERRALIB_GIT_DIR%
 
-git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRAME_GIT_DIR% --quiet
+git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRALIB_GIT_DIR% --quiet
+
+set _CURL_DIR=C:\curl
+set PATH=%PATH%;%_CURL_DIR%
+
+set _TERRALIB_3RDPARTY_NAME=terralib5-3rdparty-msvc12.zip
+set _TERRALIB_TARGET_URL=http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/%_TERRALIB_3RDPARTY_NAME%
+
 :: echo done.
 :: Downloading TerraME
 :: echo | set /p="Downloading TerraME ... "<nul
 :: git clone https://github.com/TerraME/terrame.git terrame --quiet
 :: echo done.
 
+echo Downloading TerraLib 3rdparty
 :: echo | set /p="Downloading TerraLib 3rdparty ... "<nul
-:: curl -L -s -O %_TERRALIB_TARGET_3RDPARTY_DIR%
+curl -L -s -O %_TERRALIB_TARGET_URL%
 :: echo done.
 
 :: copy terrame\build\scripts\win\terrame-deps-conf.bat %_TERRAME_3RDPARTY_DIR%
