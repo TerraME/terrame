@@ -125,23 +125,23 @@ cd terralib-3rdparty-msvc12
 
 dir
 
-:: Calling the script on TerraLib5
+Calling the script on TerraLib5
 
-:: call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat && (
-:: echo.
-:: echo.
-:: echo ******************************************
-:: echo *** Dependencies builded successfully! ***
-:: echo ******************************************
-:: echo.
-:: ) || (
-:: echo.
-:: echo.
-:: echo ********************************
-:: echo *** Dependencies build fail! ***
-:: echo ********************************
-:: echo.
-:: )
+call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat && (
+echo.
+echo.
+echo ******************************************
+echo *** Dependencies builded successfully! ***
+echo ******************************************
+echo.
+) || (
+echo.
+echo.
+echo ********************************
+echo *** Dependencies build fail! ***
+echo ********************************
+echo.
+)
 
 rmdir %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
 mkdir %_TERRAME_TARGET_3RDPARTY_DIR%
