@@ -20,11 +20,11 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-:: turn off system messages
+:: turn off|on system messages
 @echo %_ECHO_ENABLED%
 
 echo | set /p="Cleaning up old builds ... "<nul
-:: rmdir %_TERRALIB_TARGET_3RDPARTY_DIR% /s /q
+rmdir %_TERRALIB_TARGET_3RDPARTY_DIR% /s /q
 rmdir %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
 
 mkdir %_TERRALIB_TARGET_3RDPARTY_DIR% %_TERRAME_TARGET_3RDPARTY_DIR%
@@ -53,7 +53,7 @@ curl -L -s -O %_TERRALIB_TARGET_URL%
 echo done.
 echo.
 
-:: "C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
+"C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
 
 echo.
 
@@ -77,6 +77,9 @@ set "WIN32MAK_FILEPATH=%PROGRAMFILES(x86)%\Microsoft SDKs\Windows\v7.1A\Include"
 :: Where is the TerraLib5 codebase
 set TERRALIB5_CODEBASE_PATH=%_TERRALIB_GIT_DIR%
 
+echo done.
+echo.
+
 dir
 echo.
 
@@ -91,7 +94,7 @@ call "%VCVARS_FILEPATH%\vcvarsall.bat %_config%"
 echo done.
 
 echo | set /p="Calling the script on TerraLib5 ... "<nul
-:: call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat
+call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat
 echo done.
 echo.
 
@@ -99,6 +102,7 @@ dir %TERRALIB_DEPENDENCIES_DIR%
 
 echo | set /p="TerraME Dependencies ... "<nul
 cd %_TERRAME_TARGET_3RDPARTY_DIR%
+echo.
 
 echo | set /p="Downloading Protobuf ... "<nul
 set "_PROTOBUF_VERSION=3.1.0"
