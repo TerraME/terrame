@@ -57,6 +57,7 @@ Random_ = {
 	-- value = random:integer(10) -- from 0 to 10
 	-- value = random:integer(5, 10) -- from 5 to 10
 	integer = function(self, v1, v2)
+		optionalArgument(0, "Random", self)
 		optionalArgument(1, "number", v1)
 		optionalArgument(2, "number", v2)
 
@@ -101,6 +102,7 @@ Random_ = {
 	-- value = random:number(10) -- between 0 and 10
 	-- value = random:number(5, 10) -- between 5 and 10
 	number = function(self, v1, v2)
+		optionalArgument(0, "Random", self)
 		optionalArgument(1, "number", v1)
 		optionalArgument(2, "number", v2)
 
@@ -141,6 +143,7 @@ Random_ = {
 	--
 	-- random:reSeed(12345)
 	reSeed = function(self, seed)
+		optionalArgument(0, "Random", self)
 		if seed == nil then
 			seed = os.time()
 		else
@@ -208,12 +211,12 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- "step" & A discrete uniform distribution whose values belong to a given [min, max] interval
 -- using step values.
 -- & max, min, step & seed \
--- "weibull" The Weibull distribution is a real valued distribution with two parameters a and b, producing values
--- greater than or equals to zero.
+-- "weibull" & The Weibull distribution is a real valued distribution with two parameters a and b, producing values
+-- greater than or equals to zero. & & k \
 -- @arg data.lambda An argument of some distributions. It might be interpreted as mean or as scale, according
 -- to the given distribution. The default value is 1.
 -- @arg data.k The shape parameter for Weibull distribution. The default value is 1.
--- @arg data.alhpa Argument of beta distribution. The default value is 1.
+-- @arg data.alpha Argument of beta distribution. The default value is 1.
 -- @arg data.beta Argument of beta distribution. The default value is 1.
 -- @arg data.max A number indicating the maximum value to be randomly selected.
 -- @arg data.mean A number indicating the mean value. The default value is 1.
@@ -226,7 +229,6 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- despite using random numbers.
 -- It is a good programming practice to set
 -- the seed in the beginning of the simulation and only once.
--- @arg data.scale The scale value proportional the standard deviation. The default value is 1.
 -- @arg data.sd A number indicating the standard deviation. The default value is 1.
 -- @arg attrTab.step The step where possible values are computed from minimum to maximum.
 -- When using this argument, min and max become mandatory.
@@ -298,7 +300,7 @@ function Random(data)
 
 	mandatoryTableArgument(data, "distrib", "string")
 
-	if data.seed then 
+	if data.seed then
 		integerTableArgument(data, "seed")
 		verify(data.seed ~= 0, "Argument 'seed' cannot be zero.")
 
@@ -342,7 +344,7 @@ function Random(data)
 			local values = {}
 			data.distrib = nil
 
-			forEachElement(data, function(idx, value)
+			forEachElement(data, function(_, value)
 				table.insert(values, value)
 			end)
 

@@ -91,14 +91,14 @@ return {
 		local v2 = nd:sample()
 		local v3 = nd:sample()
 
-    	nd = Random{min = 1, max = 6}
+		nd = Random{min = 1, max = 6}
 		unitTest:assert(v1 ~= nd:sample())
 		unitTest:assert(v2 ~= nd:sample())
 		unitTest:assert(v3 ~= nd:sample())
 
 		Random{seed = 1}
 
-    	nd = Random{min = 1, max = 6}
+		nd = Random{min = 1, max = 6}
 		unitTest:assertEquals(v1, nd:sample())
 		unitTest:assertEquals(v2, nd:sample())
 		unitTest:assertEquals(v3, nd:sample())

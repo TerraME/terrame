@@ -1,4 +1,17 @@
 -- @example Iterated Prisoner's dilemma model.
+-- It implements a championship with a set of Agents
+-- where they play with each other a non-cooperative game
+-- repeatedly.
+-- Some of the available strategies are Pavlov and Tit-for-tat.
+-- In the end, the model shows the results for each strategy. \
+-- For more information, see Axelrod, R. (1984) The Evolution of
+-- Cooperation. Basic Books. See also Nowak, M., and Sigmund, K.
+-- (1993) A strategy of win-stay, lose-shift that outperforms
+-- tit-for-tat in the Prisoner's Dilemma game. Nature 364.6432: 56-58.
+-- @arg TURNS The number of times an Agent plays
+-- with each opponent.
+-- @arg CHAMPIONSHIP A vector with the strategies used
+-- in the championship.
 
 Random{seed = 12345}
 
@@ -20,7 +33,7 @@ TFT = Agent{ -- TIT-FOR-TAT
 }
 
 TF2T = Agent{ -- TIT-FOR-TWO-TATS
-	name = "TF2T", 
+	name = "TF2T",
 	prepare_for_championship = function(ag)
 		ag.last = COOPERATE
 	end,
@@ -34,7 +47,7 @@ TF2T = Agent{ -- TIT-FOR-TWO-TATS
 		ag.previous = ag.last
 		ag.last = oponent_strategy
 		if ag.previous == ag.last and ag.last == NOT_COOPERATE then
-			ag.action = NOT_COOPERATE 
+			ag.action = NOT_COOPERATE
 		else
 			ag.action = COOPERATE
 		end
@@ -74,32 +87,34 @@ NTFT = Agent{ -- NOT TIT-FOR-TAT
 
 AD = Agent{ -- ALWAYS DEFECT
 	name = "AD",
-	play = function(ag)
+	play = function()
 		return NOT_COOPERATE
 	end,
-	update = function(ag, oponent_strategy) end,
+	update = function() end,
 	prepare_for_championship = function() end
 }
 
 AC = Agent{ -- ALWAYS COOPERATE
 	name = "AC",
-	play = function(ag)
+	play = function()
 		return COOPERATE
 	end,
-	update = function(ag, oponent_strategy) end,
+	update = function() end,
 	prepare_for_championship = function() end
 }
 
+local fifty = Random{p = 0.5}
+
 RANDOM = Agent{
 	name = "RANDOM",
-	play = function(ag)
-		if Random():number() > 0.5 then
+	play = function()
+		if fifty:sample() then
 			return COOPERATE
 		else
 			return NOT_COOPERATE
 		end
 	end,
-	update = function(ag, oponent_strategy) end,
+	update = function() end,
 	prepare_for_championship = function() end
 }
 
@@ -138,6 +153,7 @@ nplayers = getn(CHAMPIONSHIP)
 results = {}
 for i = 1, nplayers do
 	results[i] = {}
+
 	for j = 1, nplayers do
 		results[i][j] = 0
 	end
@@ -155,7 +171,7 @@ for i = 1, nplayers do
 		payoff1 = 0
 		payoff2 = 0
 
-		for k = 1, TURNS do
+		for _ = 1, TURNS do
 			a1 = player1:play()
 			a2 = player2:play()
 
@@ -175,9 +191,11 @@ end
 
 -- plot the results
 p = "\t"
+
 for j = 1, nplayers do
 	p = p..CHAMPIONSHIP[j].name.."\t"
 end
+
 print(p.."_SUM_")
 
 for i = 1, nplayers do
@@ -189,6 +207,4 @@ for i = 1, nplayers do
 	end
 	print(p..sum)
 end
-
-a = bcs + dfg
 
