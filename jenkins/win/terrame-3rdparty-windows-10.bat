@@ -161,39 +161,41 @@ cd %_TERRAME_TARGET_3RDPARTY_DIR%
 
 echo Downloading Protobuf ...
 :: echo | set /p="Downloading Protobuf ... "<nul
-curl -O -J -L https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.zip --silent
+curl -O -J -L https://github.com/google/protobuf/releases/download/v3.1.0/protobuf-cpp-3.1.0.zip --silent
 :: echo done.
 "C:\Program Files\7-Zip\7z.exe" x protobuf-2.6.1.zip -y
-rename protobuf-2.6.1 protobuf
+rename protobuf-3.1.0 protobuf
 
+echo "Downloading Luacheck ...
 :: echo | set /p="Downloading Luacheck ... "<nul
-:: curl -L -s -O https://github.com/mpeterv/luacheck/archive/0.17.0.zip
+curl -L -s -O https://github.com/mpeterv/luacheck/archive/0.17.0.zip
 :: echo done.
-:: "C:\Program Files\7-Zip\7z.exe" x 0.17.0.zip -y
-:: rename luacheck-0.17.0 luacheck
+"C:\Program Files\7-Zip\7z.exe" x 0.17.0.zip -y
+rename luacheck-0.17.0 luacheck
 
+copy %_TERRALIB_GIT_DIR%\build\scripts\win\terrame-deps-conf.bat .
 :: copy %WORKSPACE%\build\scripts\win\terrame-deps-conf.bat .
 :: :: Installing Luacheck
-:: call terrame-deps-conf.bat
+call terrame-deps-conf.bat
 
-echo Compiling Protobuf
-cd protobuf\vsprojects
-msbuild /t:libprotobuf /p:Configuration=Release /p:Platform=x64 protobuf.sln 
+:: echo Compiling Protobuf
+:: cd protobuf\vsprojects
+:: msbuild /t:libprotobuf /p:Configuration=Release /p:Platform=x64 protobuf.sln 
 :: msbuild /m protobuf.sln /target:libprotobuf-lite /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
 :: msbuild /m protobuf.sln /target:libprotoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
 :: msbuild /m protobuf.sln /target:protoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
 
-echo Copying Protobuf exec
-copy x64\Release\protoc.exe
+:: echo Copying Protobuf exec
+:: copy x64\Release\protoc.exe
 
-echo Copying Protobuf libs
-xcopy x64\Release\libproto* %_TERRAME_TARGET_3RDPARTY_DIR%\install\lib /i /h /e /y
+:: echo Copying Protobuf libs
+:: xcopy x64\Release\libproto* %_TERRAME_TARGET_3RDPARTY_DIR%\install\lib /i /h /e /y
 
-echo Extract Protobuf includes
-call extract_includes.bat
+:: echo Extract Protobuf includes
+:: call extract_includes.bat
 
-echo Copying Protobuf includes
-xcopy include %_TERRAME_TARGET_3RDPARTY_DIR%\install\include /i /h /e /y
+:: echo Copying Protobuf includes
+:: xcopy include %_TERRAME_TARGET_3RDPARTY_DIR%\install\include /i /h /e /y
 
 tree /F /A %_TERRAME_TARGET_3RDPARTY_DIR%\install
 
