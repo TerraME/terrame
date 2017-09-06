@@ -98,7 +98,7 @@ echo Downloading TerraLib 3rdparty
 curl -L -s -O %_TERRALIB_TARGET_URL%
 :: echo done.
 
-:: "C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
+"C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
 
 echo Cofiguring Install Variables
 :: Where to install the third-parties
