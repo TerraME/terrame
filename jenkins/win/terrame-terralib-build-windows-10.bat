@@ -19,8 +19,8 @@
 :: In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
-exit
-:: 
+
+::
 :: It prepares a entire TerraME build process. Firstly, it prepares environment, cloning both TerraME and TerraLib.
 :: After that, It copies required scripts to respective folders. Once done, it compiles TerraLib.
 ::
@@ -38,37 +38,17 @@ exit
 :: terrame-terralib-build-windows-10.bat
 ::
 
-set "_TERRALIB_BRANCH=release-5.2"
-
 :: Removing TerraLib Mod Binding Lua in order to re-generate folder if there is
 rmdir %_TERRALIB_GIT_DIR% /s /q
-rmdir %_TERRALIB_BUILD_BASE%\solution /s /q
-rmdir %_TERRAME_BUILD_BASE%\solution /s /q
-rmdir %_TERRAME_EXECUTION_DIR% /s /q
-rmdir %_TERRAME_REPOSITORY_DIR% /s /q
-rmdir %_TERRAME_TEST_DIR% /s /q
+mkdir %_TERRALIB_GIT_DIR%
 
-echo ":::: TerraLib ::::"
 git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRALIB_GIT_DIR% --quiet
 
-:: Creating TerraME Test folders and TerraLib solution
-mkdir %_TERRAME_REPOSITORY_DIR% %_TERRAME_TEST_DIR% %_TERRAME_EXECUTION_DIR% %_TERRALIB_BUILD_BASE%\solution %_TERRAME_BUILD_BASE%\solution
-
-cd %_TERRALIB_BUILD_BASE%\solution
-
-:: Copying TerraME Git Repository to Test Repository Folder
-xcopy %_TERRAME_GIT_DIR%\repository\* %_TERRAME_REPOSITORY_DIR% /i /h /e /y
-:: Copying TerraME Git Test Execution to Test Execution Folder
-xcopy %_TERRAME_GIT_DIR%\test\* %_TERRAME_EXECUTION_DIR% /i /h /e /y
-:: Copying TerraME test and config file to Test folder
-xcopy %_TERRAME_GIT_DIR%\jenkins\all\*.lua %_TERRAME_TEST_DIR% /i /h /e /y
-:: Copying TerraME TerraLib compilation scripts to TerraLib solution folder
-xcopy %_TERRAME_GIT_DIR%\build\scripts\win\terralib-conf.* . /i /h /e /y
-:: Copying TerraME compilation scripts to TerraME Solution folder
-xcopy %_TERRAME_GIT_DIR%\build\scripts\win\terrame-conf.* %_TERRAME_BUILD_BASE%\solution /i /h /e /y
+:: Copying TerraLib compilation scripts to TerraLib Solution folder
+xcopy %_TERRAME_GIT_DIR%/build/scripts/linux/terralib-conf.* .
 
 :: Compile TerraLib
-terralib-conf.bat
+call terralib-conf.bat
 
 :: Returns a TerraLib compilation execution code in order to Jenkins be able to set build status
 exit %ERRORLEVEL%

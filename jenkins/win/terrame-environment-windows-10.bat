@@ -21,23 +21,19 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-echo.
-echo.
-echo.
-:::::::::::::::::::::::::::::::::::::::::: TerraME Environment
-echo :::::: TerraME Environment ::::::
 
-echo Cleaning last directories
+:::::::::::::::::::::::::::::::::::::::::: TerraME Environment
+:: Cleaning last directories
 rmdir %_TERRAME_BUILD_BASE%\solution /s /q
 rmdir %_TERRAME_REPOSITORY_DIR% /s /q
 rmdir %_TERRAME_TEST_DIR% /s /q
 rmdir %_TERRAME_EXECUTION_DIR% /s /q
 
 
-echo ::::::: Creating TerraME Test directories :::::::
+:: Creating TerraME Test directories
 mkdir %_TERRAME_BUILD_BASE%\solution %_TERRAME_REPOSITORY_DIR% %_TERRAME_TEST_DIR% %_TERRAME_EXECUTION_DIR%
 
-echo Copying TerraME compilation scripts to TerraME Solution directory
+:: Copying TerraME compilation scripts to TerraME Solution directory
 xcopy %_TERRAME_GIT_DIR%\build\scripts\linux\terrame-conf.* %_TERRAME_BUILD_BASE%\solution /i /h /e /y
 
 xcopy %_TERRAME_GIT_DIR%\jenkins\linux\terrame-build-windows-10.bat %_TERRAME_BUILD_BASE%\solution /i /h /e /y
@@ -46,25 +42,15 @@ xcopy %_TERRAME_GIT_DIR%\jenkins\linux\terrame-repository-test-windows-10.bat %_
 
 xcopy %_TERRAME_GIT_DIR%\jenkins\linux\terrame-test-execution-windows-10.bat %_TERRAME_EXECUTION_DIR% /i /h /e /y
 
-echo ::::::: Copying TerraME test and config file to Test folder :::::::
+:: Copying TerraME test and config file to Test folder
 xcopy %_TERRAME_GIT_DIR%\jenkins\all\*.lua %_TERRAME_TEST_DIR% /i /h /e /y
 
 xcopy %_TERRAME_GIT_DIR%\jenkins\linux\terrame-unittest-windows-10.bat %_TERRAME_TEST_DIR% /i /h /e /y
 
 xcopy %_TERRAME_GIT_DIR%\jenkins\linux\terrame-doc-windows-10.bat %_TERRAME_TEST_DIR% /i /h /e /y
 
-echo.
-echo.
-echo.
-
-dir %_TERRAME_BUILD_BASE% /s
-
-echo ::::::: Copying TerraME Git Repository to Test Repository Folder :::::::
+:: Copying TerraME Git Repository to Test Repository Folder
 xcopy %_TERRAME_GIT_DIR%\repository\* %_TERRAME_REPOSITORY_DIR% /i /h /e /y
 
-echo ::::::: Copying TerraME Git Test Execution to Test Execution Folder :::::::
+:: Copying TerraME Git Test Execution to Test Execution Folder
 xcopy %_TERRAME_GIT_DIR%\test\* %_TERRAME_EXECUTION_DIR%
-
-echo.
-echo.
-echo.
