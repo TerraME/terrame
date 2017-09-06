@@ -199,6 +199,7 @@ endif()
 
 find_package(Protobuf REQUIRED)
 if (PROTOBUF_FOUND)
+	add_definitions(-DPROTOBUF_USE_DLLS)
 	message("Protobuf found!")
 	message("library: ${PROTOBUF_LIBRARY}")
 	message("include: ${PROTOBUF_INCLUDE_DIR}")
