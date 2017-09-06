@@ -98,7 +98,7 @@ echo Downloading TerraLib 3rdparty
 curl -L -s -O %_TERRALIB_TARGET_URL%
 :: echo done.
 
-:: "C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
+"C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
 
 echo Cofiguring Install Variables
 :: Where to install the third-parties
@@ -125,26 +125,13 @@ cd terralib-3rdparty-msvc12
 
 dir
 
-:: Calling the script on TerraLib5
+echo Configuring Visual Studio...
 
-:: call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat && (
-:: echo.
-:: echo.
-:: echo ******************************************
-:: echo *** Dependencies builded successfully! ***
-:: echo ******************************************
-:: echo.
-:: ) || (
-:: echo.
-:: echo.
-:: echo ********************************
-:: echo *** Dependencies build fail! ***
-:: echo ********************************
-:: echo.
-:: )
+call "%VCVARS_FILEPATH%\vcvarsall.bat %_config%"
 
-rmdir %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
-mkdir %_TERRAME_TARGET_3RDPARTY_DIR%
+echo Calling the script on TerraLib5
+
+call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat
 
 cd %_TERRAME_TARGET_3RDPARTY_DIR%
 
@@ -159,41 +146,41 @@ cd %_TERRAME_TARGET_3RDPARTY_DIR%
 
 :: cd %_TERRAME_3RDPARTY_DIR%
 
-echo Downloading Protobuf ...
-:: echo | set /p="Downloading Protobuf ... "<nul
-curl -O -J -L https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.zip --silent
-:: echo done.
-"C:\Program Files\7-Zip\7z.exe" x protobuf-2.6.1.zip -y
-rename protobuf-2.6.1 protobuf
+:: echo Downloading Protobuf ...
+::set "_PROTOBUF_VERSION=3.1.0"
+:: set "_PROTOBUF_NAME=protobuf-cpp-%_PROTOBUF_VERSION%.zip"
+:: curl -O -J -L https://github.com/google/protobuf/releases/download/v%_PROTOBUF_VERSION%/%_PROTOBUF_NAME% --silent
+:: "C:\Program Files\7-Zip\7z.exe" x %_PROTOBUF_NAME% -y
+:: rename protobuf-%_PROTOBUF_VERSION% protobuf
 
-:: echo | set /p="Downloading Luacheck ... "<nul
+:: echo "Downloading Luacheck ...
+:: set "_LUACHECK_VERSION=0.17.0"
+:: set "_LUACHECK_NAME=%_LUACHECK_VERSION%.zip"
 :: curl -L -s -O https://github.com/mpeterv/luacheck/archive/0.17.0.zip
-:: echo done.
-:: "C:\Program Files\7-Zip\7z.exe" x 0.17.0.zip -y
-:: rename luacheck-0.17.0 luacheck
+:: "C:\Program Files\7-Zip\7z.exe" x %_LUACHECK_NAME% -y
+:: rename luacheck-%_LUACHECK_VERSION% luacheck
 
-:: copy %WORKSPACE%\build\scripts\win\terrame-deps-conf.bat .
-:: :: Installing Luacheck
+:: copy %_TERRAME_GIT_DIR%\build\scripts\win\terrame-deps-conf.bat .
 :: call terrame-deps-conf.bat
 
-echo Compiling Protobuf
-cd protobuf\vsprojects
-msbuild /t:libprotobuf /p:Configuration=Release /p:Platform=x64 protobuf.sln 
+:: echo Compiling Protobuf
+:: cd protobuf\vsprojects
+:: msbuild /t:libprotobuf /p:Configuration=Release /p:Platform=x64 protobuf.sln
 :: msbuild /m protobuf.sln /target:libprotobuf-lite /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
 :: msbuild /m protobuf.sln /target:libprotoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
 :: msbuild /m protobuf.sln /target:protoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
 
-echo Copying Protobuf exec
-copy x64\Release\protoc.exe
+:: echo Copying Protobuf exec
+:: copy x64\Release\protoc.exe
 
-echo Copying Protobuf libs
-xcopy x64\Release\libproto* %_TERRAME_TARGET_3RDPARTY_DIR%\install\lib /i /h /e /y
+:: echo Copying Protobuf libs
+:: xcopy x64\Release\libproto* %_TERRAME_TARGET_3RDPARTY_DIR%\install\lib /i /h /e /y
 
-echo Extract Protobuf includes
-call extract_includes.bat
+:: echo Extract Protobuf includes
+:: call extract_includes.bat
 
-echo Copying Protobuf includes
-xcopy include %_TERRAME_TARGET_3RDPARTY_DIR%\install\include /i /h /e /y
+:: echo Copying Protobuf includes
+:: xcopy include %_TERRAME_TARGET_3RDPARTY_DIR%\install\include /i /h /e /y
 
 tree /F /A %_TERRAME_TARGET_3RDPARTY_DIR%\install
 
