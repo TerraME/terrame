@@ -110,13 +110,13 @@ return{
 			end
 		}
 
-		unitTest:assertEquals(6, #g)
+		unitTest:assertEquals(5, #g)
 		local sum = 0
 		forEachAgent(g, function(ag)
 			sum = sum + ag.age
 		end)
 
-		unitTest:assertEquals(46, sum)
+		unitTest:assertEquals(40, sum)
 
 		local g2 = Group{
 			target = g,
@@ -236,7 +236,7 @@ walkToEmpty          function
 		}
 
 		unitTest:assertType(g, "Group")
-		unitTest:assertEquals(4, #g)
+		unitTest:assertEquals(1, #g)
 
 		local g2 = g:clone()
 		unitTest:assertType(g2, "Group")
@@ -304,10 +304,10 @@ walkToEmpty          function
 			end
 		}
 
-		unitTest:assertEquals(#g, 5)
+		unitTest:assertEquals(#g, 4)
 		g:randomize()
-		unitTest:assertEquals(#g, 5)
-		unitTest:assertEquals(4, g.agents[1].age)
+		unitTest:assertEquals(#g, 4)
+		unitTest:assertEquals(0, g.agents[1].age)
 	end,
 	rebuild = function(unitTest)
 		local nonFooAgent = Agent{
@@ -334,20 +334,20 @@ walkToEmpty          function
 			end
 		}
 
-		unitTest:assertEquals(0, g.agents[1].age)
+		unitTest:assertEquals(1, g.agents[1].age)
 		unitTest:assertEquals(3, g.agents[6].age)
 
 		nonFooSociety:execute()
 		g:rebuild()
 
-		unitTest:assertEquals(7, #g)
+		unitTest:assertEquals(6, #g)
 		g:execute()
 		g:execute()
 		g:execute()
 		g:rebuild()
 
 		unitTest:assertEquals(6, #g)
-		unitTest:assertEquals(4, g.agents[1].age)
+		unitTest:assertEquals(5, g.agents[1].age)
 
 		nonFooAgent = Agent{
 			init = function(self)
@@ -371,23 +371,23 @@ walkToEmpty          function
 			end
 		}
 
-		unitTest:assertEquals(#g, 17)
+		unitTest:assertEquals(#g, 16)
 
 		g:rebuild()
-		unitTest:assertEquals(#g, 17)
-		unitTest:assertEquals(7, g.agents[1].age)
+		unitTest:assertEquals(#g, 16)
+		unitTest:assertEquals(2, g.agents[1].age)
 
 		g:rebuild()
-		unitTest:assertEquals(4, g.agents[1].age)
+		unitTest:assertEquals(2, g.agents[1].age)
 
 		g:rebuild()
-		unitTest:assertEquals(4, g.agents[1].age)
+		unitTest:assertEquals(1, g.agents[1].age)
 
 		g.agents[1]:die()
 
 		g:rebuild()
-		unitTest:assertEquals(#g, 16)
-		unitTest:assertEquals(5, g.agents[1].age)
+		unitTest:assertEquals(#g, 15)
+		unitTest:assertEquals(3, g.agents[1].age)
 	end,
 	sort = function(unitTest)
 		local count = 0
