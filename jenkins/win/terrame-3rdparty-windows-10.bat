@@ -125,17 +125,13 @@ cd terralib-3rdparty-msvc12
 
 dir
 
+echo Configuring Visual Studio...
 
-echo Configuring Visual Studio... 
-
-call %VCVARS_FILEPATH%\vcvarsall.bat %_config%
+call "%VCVARS_FILEPATH%\vcvarsall.bat %_config%"
 
 echo Calling the script on TerraLib5
 
 call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat
-
-rmdir %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
-mkdir %_TERRAME_TARGET_3RDPARTY_DIR%
 
 cd %_TERRAME_TARGET_3RDPARTY_DIR%
 
@@ -169,7 +165,7 @@ cd %_TERRAME_TARGET_3RDPARTY_DIR%
 
 :: echo Compiling Protobuf
 :: cd protobuf\vsprojects
-:: msbuild /t:libprotobuf /p:Configuration=Release /p:Platform=x64 protobuf.sln 
+:: msbuild /t:libprotobuf /p:Configuration=Release /p:Platform=x64 protobuf.sln
 :: msbuild /m protobuf.sln /target:libprotobuf-lite /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
 :: msbuild /m protobuf.sln /target:libprotoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
 :: msbuild /m protobuf.sln /target:protoc /p:Configuration=Release /p:Platform=x64 /maxcpucount:4
