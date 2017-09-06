@@ -20,6 +20,9 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
+:: turn off system messages
+@echo %_ECHO_ENABLED%
+
 echo | set /p="Cleaning up old builds ... "<nul
 :: rmdir %_TERRALIB_TARGET_3RDPARTY_DIR% /s /q
 rmdir %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
@@ -92,7 +95,7 @@ echo | set /p="Calling the script on TerraLib5 ... "<nul
 echo done.
 echo.
 
-tree /F /A %TERRALIB_DEPENDENCIES_DIR%
+dir %TERRALIB_DEPENDENCIES_DIR%
 
 echo | set /p="TerraME Dependencies ... "<nul
 cd %_TERRAME_TARGET_3RDPARTY_DIR%
@@ -128,6 +131,6 @@ call terrame-deps-conf.bat
 echo done.
 echo.
 
-tree /F /A %_TERRAME_TARGET_3RDPARTY_DIR%\install
+dir %_TERRAME_TARGET_3RDPARTY_DIR%\install
 
 exit %ERRORLEVEL%
