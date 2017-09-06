@@ -19,5 +19,18 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
+set "_ROOT_DIR=%CD%"
+set "_BUILD_TYPE=Release"
+
+mkdir "build"
+cd "build"
+mkdir "protobuf-build"
+cd "protobuf-build"
+
+cmake -G "Visual Studio 12 2013 Win64" -DCMAKE_BUILD_TYPE=%_BUILD_TYPE% -DCMAKE_INSTALL_PREFIX=..\..\install -Dprotobuf_WITH_ZLIB=OFF -Dprotobuf_BUILD_TESTS=OFF ..\..\protobuf\cmake
+cmake --build . --target INSTALL --config %_BUILD_TYPE%
+
+cd %_ROOT_DIR%
+
 mkdir %CD%\install\luacheck\src
 xcopy luacheck\src %CD%\install\luacheck\src /S /E
