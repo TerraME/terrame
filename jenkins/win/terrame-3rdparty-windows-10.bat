@@ -173,7 +173,7 @@ curl -L -s -O https://github.com/mpeterv/luacheck/archive/0.17.0.zip
 "C:\Program Files\7-Zip\7z.exe" x 0.17.0.zip -y
 rename luacheck-0.17.0 luacheck
 
-copy %_TERRALIB_GIT_DIR%\build\scripts\win\terrame-deps-conf.bat .
+copy %_TERRAME_GIT_DIR%\build\scripts\win\terrame-deps-conf.bat .
 :: copy %WORKSPACE%\build\scripts\win\terrame-deps-conf.bat .
 :: :: Installing Luacheck
 call terrame-deps-conf.bat
