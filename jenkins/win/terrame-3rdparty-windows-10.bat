@@ -161,17 +161,21 @@ cd %_TERRAME_TARGET_3RDPARTY_DIR%
 
 echo Downloading Protobuf ...
 :: echo | set /p="Downloading Protobuf ... "<nul
-curl -O -J -L https://github.com/google/protobuf/releases/download/v3.1.0/protobuf-cpp-3.1.0.zip --silent
+set "_PROTOBUF_VERSION=3.1.0"
+set "_PROTOBUF_NAME=protobuf-cpp-%_PROTOBUF_VERSION%.zip"
+curl -O -J -L https://github.com/google/protobuf/releases/download/v%_PROTOBUF_VERSION%/%_PROTOBUF_NAME% --silent
 :: echo done.
-"C:\Program Files\7-Zip\7z.exe" x protobuf-2.6.1.zip -y
-rename protobuf-3.1.0 protobuf
+"C:\Program Files\7-Zip\7z.exe" x %_PROTOBUF_NAME% -y
+rename protobuf-%_PROTOBUF_VERSION% protobuf
 
 echo "Downloading Luacheck ...
 :: echo | set /p="Downloading Luacheck ... "<nul
+set "_LUACHECK_VERSION=0.17.0"
+set "_LUACHECK_NAME=%_LUACHECK_VERSION%.zip"
 curl -L -s -O https://github.com/mpeterv/luacheck/archive/0.17.0.zip
 :: echo done.
-"C:\Program Files\7-Zip\7z.exe" x 0.17.0.zip -y
-rename luacheck-0.17.0 luacheck
+"C:\Program Files\7-Zip\7z.exe" x %_LUACHECK_NAME% -y
+rename luacheck-%_LUACHECK_VERSION% luacheck
 
 copy %_TERRAME_GIT_DIR%\build\scripts\win\terrame-deps-conf.bat .
 :: copy %WORKSPACE%\build\scripts\win\terrame-deps-conf.bat .
