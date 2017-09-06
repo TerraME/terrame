@@ -264,7 +264,6 @@ return{
 		forEachAgent(soc, function(agent)
 			agent.workplace:add(cs:sample())
 			agent.workplace:add(cs:sample())
-			agent.workplace:add(cs:sample())
 		end)
 
 		r = 0
@@ -275,7 +274,7 @@ return{
 			end)
 		end)
 
-		unitTest:assertEquals(r, 60)
+		unitTest:assertEquals(r, 40)
 	end,
 	forEachCellPair = function(unitTest)
 		local cs1 = CellularSpace{xdim = 10}
@@ -485,7 +484,7 @@ return{
 			count = count + 1
 		end)
 
-		unitTest:assertEquals(count, 4)
+		unitTest:assertEquals(count, 6)
 	end,
 	forEachNeighborhood = function(unitTest)
 		local c1 = Cell{id = "1"}

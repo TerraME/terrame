@@ -155,22 +155,21 @@ weights      named table of size 1
 		unitTest:assert(not sntw:isConnection(ag3))
 	end,
 	sample = function(unitTest)
-		local randomObj = Random{seed = 12345}
 		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 		local ag2 = Agent{id = "2"}
 		local ag3 = Agent{id = "3"}
 
 		sntw:add(ag1)
-		unitTest:assertEquals(sntw:sample(randomObj), ag1)
+		unitTest:assertEquals(sntw:sample(), ag1)
 
 		sntw:add(ag2)
-		unitTest:assertEquals(sntw:sample(randomObj), ag1)
+		unitTest:assertEquals(sntw:sample(), ag1)
 
 		sntw:add(ag3)
-		unitTest:assertEquals(sntw:sample(randomObj), ag3)
-		unitTest:assertEquals(sntw:sample(randomObj), ag2)
-		unitTest:assertEquals(sntw:sample(randomObj), ag1)
+		unitTest:assertEquals(sntw:sample(), ag3)
+		unitTest:assertEquals(sntw:sample(), ag2)
+		unitTest:assertEquals(sntw:sample(), ag1)
 	end,
 	setWeight = function(unitTest)
 		local sntw = SocialNetwork()

@@ -52,6 +52,7 @@ return{
 				random = false
 			}
 		end
+
 		unitTest:assertWarning(warning_func, defaultValueMsg("random", false))
 		unitTest:assertType(g, "Group")
 		unitTest:assertEquals(#g, #nonFooSociety)
@@ -67,6 +68,7 @@ return{
 				build = true
 			}
 		end
+
 		unitTest:assertWarning(warning_func, defaultValueMsg("build", true))
 		unitTest:assertType(g, "Group")
 		unitTest:assertEquals(#g, #nonFooSociety)
@@ -82,6 +84,7 @@ return{
 				selection = function() return true end
 			}
 		end
+
 		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("selection", "select"))
 		unitTest:assertType(g, "Group")
 		unitTest:assertEquals(#g, #nonFooSociety)
@@ -107,13 +110,13 @@ return{
 			end
 		}
 
-		unitTest:assertEquals(5, #g)
+		unitTest:assertEquals(6, #g)
 		local sum = 0
 		forEachAgent(g, function(ag)
 			sum = sum + ag.age
 		end)
 
-		unitTest:assertEquals(41, sum)
+		unitTest:assertEquals(46, sum)
 
 		local g2 = Group{
 			target = g,
@@ -132,8 +135,8 @@ return{
 		}
 
 		unitTest:assertEquals(10, #g)
-		unitTest:assertEquals(10, g.agents[1].age)
-		unitTest:assertEquals(1, g.agents[10].age)
+		unitTest:assertEquals(9, g.agents[1].age)
+		unitTest:assertEquals(0, g.agents[10].age)
 	end,
 	__len = function(unitTest)
 		local ag1 = Agent{age = 8}
@@ -233,7 +236,7 @@ walkToEmpty          function
 		}
 
 		unitTest:assertType(g, "Group")
-		unitTest:assertEquals(5, #g)
+		unitTest:assertEquals(4, #g)
 
 		local g2 = g:clone()
 		unitTest:assertType(g2, "Group")
@@ -297,14 +300,14 @@ walkToEmpty          function
 		local g = Group{
 			target = nonFooSociety,
 			select = function(ag)
-				return ag.age < 8
+				return ag.age < 5
 			end
 		}
 
-		unitTest:assertEquals(#g, 7)
+		unitTest:assertEquals(#g, 5)
 		g:randomize()
-		unitTest:assertEquals(#g, 7)
-		unitTest:assertEquals(5, g.agents[1].age)
+		unitTest:assertEquals(#g, 5)
+		unitTest:assertEquals(4, g.agents[1].age)
 	end,
 	rebuild = function(unitTest)
 		local nonFooAgent = Agent{
@@ -331,20 +334,20 @@ walkToEmpty          function
 			end
 		}
 
-		unitTest:assertEquals(1, g.agents[1].age)
-		unitTest:assertEquals(6, g.agents[6].age)
+		unitTest:assertEquals(0, g.agents[1].age)
+		unitTest:assertEquals(3, g.agents[6].age)
 
 		nonFooSociety:execute()
 		g:rebuild()
 
-		unitTest:assertEquals(6, #g)
+		unitTest:assertEquals(7, #g)
 		g:execute()
 		g:execute()
 		g:execute()
 		g:rebuild()
 
-		unitTest:assertEquals(4, #g)
-		unitTest:assertEquals(5, g.agents[1].age)
+		unitTest:assertEquals(6, #g)
+		unitTest:assertEquals(4, g.agents[1].age)
 
 		nonFooAgent = Agent{
 			init = function(self)
@@ -368,23 +371,23 @@ walkToEmpty          function
 			end
 		}
 
-		unitTest:assertEquals(#g, 16)
+		unitTest:assertEquals(#g, 17)
 
 		g:rebuild()
-		unitTest:assertEquals(#g, 16)
+		unitTest:assertEquals(#g, 17)
+		unitTest:assertEquals(7, g.agents[1].age)
+
+		g:rebuild()
 		unitTest:assertEquals(4, g.agents[1].age)
 
 		g:rebuild()
-		unitTest:assertEquals(6, g.agents[1].age)
-
-		g:rebuild()
-		unitTest:assertEquals(2, g.agents[1].age)
+		unitTest:assertEquals(4, g.agents[1].age)
 
 		g.agents[1]:die()
 
 		g:rebuild()
-		unitTest:assertEquals(#g, 15)
-		unitTest:assertEquals(2, g.agents[1].age)
+		unitTest:assertEquals(#g, 16)
+		unitTest:assertEquals(5, g.agents[1].age)
 	end,
 	sort = function(unitTest)
 		local count = 0

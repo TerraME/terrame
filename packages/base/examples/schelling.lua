@@ -15,19 +15,13 @@
 -- @arg MAX_TURNS Maximum number of simulation steps.
 -- @image schelling.png
 
-NDIM = 30
+NDIM = 25
 NAGTS = 0.9
 PREFERENCE = 3
-MAX_TURNS = 500
+MAX_TURNS = 600
 
 agent = Agent{
-	init = function(self)
-		if Random():number() < 0.5 then
-			self.color = "red"
-		else
-			self.color = "black"
-		end
-	end,
+	color = Random{"red", "black"},
 	isUnhappy = function(agent)
 		local likeme = 0
 
@@ -57,7 +51,7 @@ cells:createNeighborhood{}
 
 society = Society {
 	instance = agent,
-	quantity = NAGTS * NDIM * NDIM,
+	quantity = math.ceil(NAGTS * NDIM * NDIM),
 	unhappy_agents = function(self)
 		if not self.ua then
 			self.ua = Group {
@@ -66,9 +60,10 @@ society = Society {
 					return agent:isUnhappy()
 				end
 			}
+		else
+			self.ua:rebuild()
 		end
 
-		self.ua:filter()
 		return self.ua
 	end,
 	unhappy = function(self) return #self:unhappy_agents() end

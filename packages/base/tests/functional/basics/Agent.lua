@@ -126,7 +126,7 @@ socialnetworks  vector of size 0
 		unitTest:assertEquals(tostring(predators:sample()), [[cObj_           userdata
 cell            Cell
 cells           vector of size 1
-id              string [4]
+id              string [3]
 parent          Society
 placement       Trajectory
 socialnetworks  vector of size 0
@@ -693,7 +693,7 @@ state_          State
 			end
 		end
 
-		unitTest:assertEquals(quant, 33)
+		unitTest:assertEquals(quant, 39)
 	end,
 	walkToEmpty = function(unitTest)
 		local ag = Agent{}
