@@ -275,7 +275,7 @@ return{
 		}
 
 		m:update()
-		unitTest:assertSnapshot(m, "map_society_background.bmp", 0.02)
+		unitTest:assertSnapshot(m, "map_society_background.bmp", 0.07)
 
 		warning_func = function()
 			m = Map{
@@ -288,7 +288,7 @@ return{
 		end
 		unitTest:assertWarning(warning_func, defaultValueMsg("grid", false))
 
-		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp", 0.03)
+		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp", 0.07)
 
 		m = Map{
 			target = soc,
@@ -297,7 +297,7 @@ return{
 			symbol = "beetle"
 		}
 
-		unitTest:assertSnapshot(m, "map_society_white.bmp", 0.03)
+		unitTest:assertSnapshot(m, "map_society_white.bmp", 0.05)
 
 		cs = CellularSpace{xdim = 10}
 
@@ -387,7 +387,7 @@ return{
 			color = "red"
 		}
 
-		unitTest:assertSnapshot(m2, "map_society_five_left.bmp", 0.02)
+		unitTest:assertSnapshot(m2, "map_society_five_left.bmp", 0.05)
 
 		local cell = Cell{
 			init = function(self)

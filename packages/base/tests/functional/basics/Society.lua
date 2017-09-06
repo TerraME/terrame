@@ -104,7 +104,7 @@ return {
 
 		t:run(100)
 
-		unitTest:assertEquals(9, findCounter)
+		unitTest:assertEquals(10, findCounter)
 
 		local count1 = 0
 		local count2 = 0
@@ -113,7 +113,7 @@ return {
 			if not cell:isEmpty() then count2 = count2 + 1 end
 		end)
 		unitTest:assertEquals(51, count1)
-		unitTest:assertEquals(49, count2)
+		unitTest:assertEquals(50, count2)
 
 		local agent1 = Agent{set = function() end}
 
@@ -474,7 +474,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(188, count_prob)
+		unitTest:assertEquals(193, count_prob)
 		unitTest:assertEquals(20,  count_quant)
 		unitTest:assertEquals(400, count_all)
 
@@ -509,8 +509,8 @@ state_          State
 		end)
 
 		unitTest:assertEquals(80, count_c)
-		unitTest:assertEquals(50, count_n)
-		unitTest:assertEquals(50, count_n2)
+		unitTest:assertEquals(100, count_n)
+		unitTest:assertEquals(100, count_n2)
 
 		local ag1 = Agent{
 			name = "nonfoo",
@@ -580,7 +580,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(204, count_prob)
+		unitTest:assertEquals(180, count_prob)
 		unitTest:assertEquals(20,  count_quant)
 		unitTest:assertEquals(400, count_all)
 
@@ -594,7 +594,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(193, count_prob)
+		unitTest:assertEquals(212, count_prob)
 		unitTest:assertEquals(20,  count_quant)
 		unitTest:assertEquals(400, count_all)
 
@@ -627,7 +627,7 @@ state_          State
 		end)
 
 		unitTest:assertEquals(54, count_c)
-		unitTest:assertEquals(152, count_n)
+		unitTest:assertEquals(136, count_n)
 
 		predator = Agent{
 			energy = 40,
@@ -810,7 +810,7 @@ state_          State
 			sum = sum + friend.age
 		end)
 
-		unitTest:assertEquals(12, sum)
+		unitTest:assertEquals(11, sum)
 
 		forEachConnection(myself, function(friend)
 			myself:message{receiver = friend}
@@ -837,14 +837,14 @@ state_          State
 		--]]
 
 		soc:synchronize()
-		unitTest:assertEquals(3, received)
+		unitTest:assertEquals(4, received)
 
 		local t = Timer{
 			Event{period = 4, action = soc}
 		}
 
 		t:run(8)
-		unitTest:assertEquals(15, received)
+		unitTest:assertEquals(14, received)
 		unitTest:assertEquals(0, sugar)
 
 		soc:synchronize(1.1)

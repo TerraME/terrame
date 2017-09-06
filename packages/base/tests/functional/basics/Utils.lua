@@ -484,7 +484,7 @@ return{
 			count = count + 1
 		end)
 
-		unitTest:assertEquals(count, 6)
+		unitTest:assertEquals(count, 3)
 	end,
 	forEachNeighborhood = function(unitTest)
 		local c1 = Cell{id = "1"}
