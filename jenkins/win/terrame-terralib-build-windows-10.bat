@@ -45,7 +45,7 @@ mkdir %_TERRALIB_GIT_DIR%
 git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRALIB_GIT_DIR% --quiet
 
 :: Copying TerraLib compilation scripts to TerraLib Solution folder
-xcopy %_TERRAME_GIT_DIR%\build\scripts\linux\terralib-conf.* .
+xcopy %_TERRAME_GIT_DIR%\build\scripts\win\terralib-conf.* .
 
 :: Compile TerraLib
 call terralib-conf.bat
