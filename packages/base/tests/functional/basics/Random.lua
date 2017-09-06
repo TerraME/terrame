@@ -453,6 +453,20 @@ sample   function
 		end
 
 		unitTest:assertEquals(sum / 5000, 1.7522, 0.001)
+
+		local beta = Random{alpha = 2, beta = 2}
+		sum = 0
+
+		unitTest:assertType(beta:sample(), "number")
+
+		for _ = 1, 5000 do
+			local sample = beta:sample()
+			sum = sum + sample
+			unitTest:assert(sample <= 15)
+			unitTest:assert(sample >= 0)
+		end
+
+		unitTest:assertEquals(sum / 5000, 0.496, 0.001)
 	end
 }
 

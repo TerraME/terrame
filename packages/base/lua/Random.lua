@@ -183,6 +183,9 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- @tabular distrib
 -- Distrib & Description & Compulsory Arguments & Optional Arguments \
 -- "bernoulli" & A boolean distribution that returns true with probability p. & p & seed \
+-- "beta" & A family of continuous probability distributions defined on the interval [0, 1]
+-- parametrized by two positive shape parameters, denoted by alpha and beta, that appear as
+-- exponents of the random variable and control the shape of the distribution. & & alpha, beta, seed \
 -- "categorical" & A distribution that has names associated to probabilities. Each name is an
 -- argument and has a value between zero and one, indicating the probability to be selected. The
 -- sum of all probabilities must be one. & ... & seed \
@@ -210,6 +213,8 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- @arg data.lambda An argument of some distributions. It might be interpreted as mean or as scale, according
 -- to the given distribution. The default value is 1.
 -- @arg data.k The shape parameter for Weibull distribution. The default value is 1.
+-- @arg data.alhpa Argument of beta distribution. The default value is 1.
+-- @arg data.beta Argument of beta distribution. The default value is 1.
 -- @arg data.max A number indicating the maximum value to be randomly selected.
 -- @arg data.mean A number indicating the mean value. The default value is 1.
 -- @arg data.min A number indicating the minimum value to be randomly selected.
@@ -280,6 +285,8 @@ function Random(data)
 			data.distrib = "step"
 		elseif data.min ~= nil and data.max ~= nil then
 			data.distrib = "continuous"
+		elseif data.alpha or data.beta then
+			data.distrib = "beta"
 		elseif #data > 0 then
 			data.distrib = "discrete"
 		elseif getn(data) > 1 or (getn(data) > 0 and data.seed == nil) then
@@ -430,6 +437,18 @@ function Random(data)
 			local wd = TerraLib().random().WeibullDistribution(getMT(), data.k, data.lambda)
 			data.sample = function() return wd() end
 		end,
+		beta = function()
+			defaultTableValue(data, "alpha", 1)
+			defaultTableValue(data, "beta", 1)
+
+			positiveTableArgument(data, "alpha")
+			positiveTableArgument(data, "beta")
+
+			local betad = TerraLib().random().BetaDistribution(data.alpha, data.beta)
+			local urd = TerraLib().random().UniformRealDistribution(getMT(), 0, 1)
+
+			data.sample = function() return betad(urd()) end
+		end
 	}
 
 	setmetatable(data, metaTableRandom_)
