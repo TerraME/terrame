@@ -25,14 +25,9 @@
 :: After that, It copies required scripts to respective folders. Once done, it compiles TerraLib.
 ::
 :: VARIABLES:
-:: _TERRAME_GIT_DIR - Path to TerraME clone
 :: _TERRALIB_GIT_DIR - Path to TerraLib clone
-:: _TERRAME_DEPENDS_DIR - Path to TerraME dependencies
 :: _TERRALIB_INSTALL_PATH - Path to TerraLib Installation
 :: _TERRALIB_3RDPARTY_DIR - Path to TerraLib dependencies
-:: _TERRAME_TEST_DIR - Path where TerraME tests will execute.
-:: _TERRAME_REPOSITORY_DIR - Path where TerraME repository test will execute
-:: _TERRAME_EXECUTION_DIR - Path where TerraME test execution will run
 ::
 :: USAGE:
 :: terrame-terralib-build-windows-10.bat
