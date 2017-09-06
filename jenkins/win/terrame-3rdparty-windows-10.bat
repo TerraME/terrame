@@ -24,7 +24,7 @@
 @echo %_ECHO_ENABLED%
 
 echo | set /p="Cleaning up old builds ... "<nul
-rmdir %_TERRALIB_TARGET_3RDPARTY_DIR% /s /q
+:: rmdir %_TERRALIB_TARGET_3RDPARTY_DIR% /s /q
 rmdir %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
 
 mkdir %_TERRALIB_TARGET_3RDPARTY_DIR% %_TERRAME_TARGET_3RDPARTY_DIR%
@@ -34,10 +34,10 @@ echo.
 cd %_TERRALIB_TARGET_3RDPARTY_DIR%
 
 echo | set /p="Cloning TerraLib ... "<nul
-rmdir %_TERRALIB_GIT_DIR% /s /q
-mkdir %_TERRALIB_GIT_DIR%
+:: rmdir %_TERRALIB_GIT_DIR% /s /q
+:: mkdir %_TERRALIB_GIT_DIR%
 
-git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRALIB_GIT_DIR% --quiet
+:: git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRALIB_GIT_DIR% --quiet
 
 echo done.
 echo.
@@ -49,11 +49,11 @@ set "PATH=%PATH%;%_CURL_DIR%"
 set "_TERRALIB_3RDPARTY_NAME=terralib-3rdparty-msvc12.zip"
 set "_TERRALIB_TARGET_URL=http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/%_TERRALIB_3RDPARTY_NAME%"
 
-curl -L -s -O %_TERRALIB_TARGET_URL%
+:: curl -L -s -O %_TERRALIB_TARGET_URL%
 echo done.
 echo.
 
-"C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
+:: "C:\Program Files\7-Zip\7z.exe" x %_TERRALIB_3RDPARTY_NAME% -y
 
 echo.
 
