@@ -205,6 +205,8 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- "step" & A discrete uniform distribution whose values belong to a given [min, max] interval
 -- using step values.
 -- & max, min, step & seed \
+-- "weibull" The Weibull distribution is a real valued distribution with two parameters a and b, producing values
+-- greater than or equals to zero.
 -- @arg data.lambda An argument of some distributions. It might be interpreted as mean or as scale, according
 -- to the given distribution. The default value is 1.
 -- @arg data.k The shape parameter for Weibull distribution. The default value is 1.
@@ -268,6 +270,8 @@ function Random(data)
 	if not data.distrib then
 		if data.p ~= nil then
 			data.distrib = "bernoulli"
+		elseif data.lambda and data.k then
+			data.distrib = "weibull"
 		elseif data.lambda ~= nil then
 			data.distrib = "poisson"
 		elseif data.mean ~= nil or data.sd ~= nil then
@@ -415,6 +419,16 @@ function Random(data)
 
 			local pd = TerraLib().random().PoissonDistribution(getMT(), data.lambda)
 			data.sample = function() return pd() end
+		end,
+		weibull = function()
+			defaultTableValue(data, "lambda", 1)
+			defaultTableValue(data, "k", 1)
+
+			positiveTableArgument(data, "lambda")
+			positiveTableArgument(data, "k")
+
+			local wd = TerraLib().random().WeibullDistribution(getMT(), data.k, data.lambda)
+			data.sample = function() return wd() end
 		end,
 	}
 

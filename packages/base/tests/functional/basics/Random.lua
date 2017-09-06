@@ -439,6 +439,20 @@ sample   function
 		end
 
 		unitTest:assertEquals(sum / 5000, 0.9739, 0.001)
+
+		local weibull = Random{lambda = 2, k = 2}
+		sum = 0
+
+		unitTest:assertType(weibull:sample(), "number")
+
+		for _ = 1, 5000 do
+			local sample = weibull:sample()
+			sum = sum + sample
+			unitTest:assert(sample <= 10)
+			unitTest:assert(sample >= 0)
+		end
+
+		unitTest:assertEquals(sum / 5000, 1.7522, 0.001)
 	end
 }
 
