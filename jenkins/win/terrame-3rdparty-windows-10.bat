@@ -125,23 +125,14 @@ cd terralib-3rdparty-msvc12
 
 dir
 
-Calling the script on TerraLib5
 
-call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat && (
-echo.
-echo.
-echo ******************************************
-echo *** Dependencies builded successfully! ***
-echo ******************************************
-echo.
-) || (
-echo.
-echo.
-echo ********************************
-echo *** Dependencies build fail! ***
-echo ********************************
-echo.
-)
+echo Configuring Visual Studio... 
+
+call %VCVARS_FILEPATH%\vcvarsall.bat %_config%
+
+echo Calling the script on TerraLib5
+
+call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat
 
 rmdir %_TERRAME_TARGET_3RDPARTY_DIR% /s /q
 mkdir %_TERRAME_TARGET_3RDPARTY_DIR%
@@ -159,28 +150,22 @@ cd %_TERRAME_TARGET_3RDPARTY_DIR%
 
 :: cd %_TERRAME_3RDPARTY_DIR%
 
-echo Downloading Protobuf ...
-:: echo | set /p="Downloading Protobuf ... "<nul
-set "_PROTOBUF_VERSION=3.1.0"
-set "_PROTOBUF_NAME=protobuf-cpp-%_PROTOBUF_VERSION%.zip"
-curl -O -J -L https://github.com/google/protobuf/releases/download/v%_PROTOBUF_VERSION%/%_PROTOBUF_NAME% --silent
-:: echo done.
-"C:\Program Files\7-Zip\7z.exe" x %_PROTOBUF_NAME% -y
-rename protobuf-%_PROTOBUF_VERSION% protobuf
+:: echo Downloading Protobuf ...
+::set "_PROTOBUF_VERSION=3.1.0"
+:: set "_PROTOBUF_NAME=protobuf-cpp-%_PROTOBUF_VERSION%.zip"
+:: curl -O -J -L https://github.com/google/protobuf/releases/download/v%_PROTOBUF_VERSION%/%_PROTOBUF_NAME% --silent
+:: "C:\Program Files\7-Zip\7z.exe" x %_PROTOBUF_NAME% -y
+:: rename protobuf-%_PROTOBUF_VERSION% protobuf
 
-echo "Downloading Luacheck ...
-:: echo | set /p="Downloading Luacheck ... "<nul
-set "_LUACHECK_VERSION=0.17.0"
-set "_LUACHECK_NAME=%_LUACHECK_VERSION%.zip"
-curl -L -s -O https://github.com/mpeterv/luacheck/archive/0.17.0.zip
-:: echo done.
-"C:\Program Files\7-Zip\7z.exe" x %_LUACHECK_NAME% -y
-rename luacheck-%_LUACHECK_VERSION% luacheck
+:: echo "Downloading Luacheck ...
+:: set "_LUACHECK_VERSION=0.17.0"
+:: set "_LUACHECK_NAME=%_LUACHECK_VERSION%.zip"
+:: curl -L -s -O https://github.com/mpeterv/luacheck/archive/0.17.0.zip
+:: "C:\Program Files\7-Zip\7z.exe" x %_LUACHECK_NAME% -y
+:: rename luacheck-%_LUACHECK_VERSION% luacheck
 
-copy %_TERRAME_GIT_DIR%\build\scripts\win\terrame-deps-conf.bat .
-:: copy %WORKSPACE%\build\scripts\win\terrame-deps-conf.bat .
-:: :: Installing Luacheck
-call terrame-deps-conf.bat
+:: copy %_TERRAME_GIT_DIR%\build\scripts\win\terrame-deps-conf.bat .
+:: call terrame-deps-conf.bat
 
 :: echo Compiling Protobuf
 :: cd protobuf\vsprojects
