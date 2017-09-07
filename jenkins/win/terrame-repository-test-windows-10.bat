@@ -19,7 +19,7 @@
 :: In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
-exit
+
 :: 
 :: It performs a TerraME Repository Tests.
 ::
@@ -30,8 +30,6 @@ exit
 
 set "TME_PATH=%_TERRAME_INSTALL_PATH%\bin"
 set "PATH=%PATH%;%TME_PATH%
-
-cd %_TERRAME_REPOSITORY_DIR%
 
 terrame -version
 terrame -color test.lua
