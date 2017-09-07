@@ -38,6 +38,8 @@ xcopy %_TERRAME_GIT_DIR%\build\scripts\win\terrame-conf.* %_TERRAME_BUILD_BASE%\
 
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-build-windows-10.bat %_TERRAME_BUILD_BASE%\solution /i /h /e /y
 
+xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-installer-windows-10.bat %_TERRAME_BUILD_BASE%\solution /i /h /e /y
+
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-repository-test-windows-10.bat %_TERRAME_REPOSITORY_DIR% /i /h /e /y
 
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-test-execution-windows-10.bat %_TERRAME_EXECUTION_DIR% /i /h /e /y

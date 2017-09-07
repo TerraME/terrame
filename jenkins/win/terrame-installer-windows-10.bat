@@ -20,17 +20,15 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-:: 
+::
 :: It performs a TerraME Installer generation
 ::
 :: USAGE:
 :: terrame-installer-windows-10.bat
 ::
-exit
+
 set "_TERRAME_CREATE_INSTALLER=ON"
 set "_TERRAME_BUILD_AS_BUNDLE=ON"
-
-cd %_TERRAME_OUT_DIR%\..
 
 :: Copying generated logs to GIT dir
 xcopy %_TERRAME_INSTALL_PATH%\bin\packages\base\doc %_TERRAME_GIT_DIR%\packages\base\doc /i /h /e /y
