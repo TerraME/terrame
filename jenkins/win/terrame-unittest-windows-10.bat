@@ -31,22 +31,26 @@
 :: PACKAGE_NAME - Represents a name of TerraME package to execute
 ::
 
+set "PACKAGE=%1"
+
 :: Exporting enviroment variables
 set "TME_PATH=%_TERRAME_INSTALL_PATH%\bin"
 set "PATH=%PATH%;%TME_PATH%"
 
 terrame -version
 
-IF NOT "%1" == "" (
+IF NOT "%PACKAGE%" == "" (
   terrame -color -package gis -test test.lua
 ) ELSE (
   terrame -color -test test.lua
+  set "PACKAGE=base"
 )
 
 set "RESULT=%ERRORLEVEL%"
 
 :: Compressing Log
-"C:\Program Files\7-Zip\7z.exe" a -tzip "%WORKSPACE%\build-win-%BUILD_NUMBER%.zip" .terrame*
+set "LOG_NAME=unittest-win-%PACKAGE%-%BUILD_NUMBER%.zip"
+"C:\Program Files\7-Zip\7z.exe" a -tzip "%WORKSPACE%\%LOG_NAME%" .terrame*
 
 :: Cleaning up
 for /d %%G in (".terrame*") do rd /s /q "%%~G"
