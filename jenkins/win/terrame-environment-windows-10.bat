@@ -53,4 +53,4 @@ xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-doc-windows-10.bat %_TERRAME_TEST_D
 xcopy %_TERRAME_GIT_DIR%\repository\* %_TERRAME_REPOSITORY_DIR% /i /h /e /y
 
 :: Copying TerraME Git Test Execution to Test Execution Folder
-xcopy %_TERRAME_GIT_DIR%\test\* %_TERRAME_EXECUTION_DIR%
+xcopy %_TERRAME_GIT_DIR%\test\* %_TERRAME_EXECUTION_DIR% /i /h /e /y
