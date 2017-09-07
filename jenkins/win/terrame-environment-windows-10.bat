@@ -24,7 +24,7 @@
 
 :::::::::::::::::::::::::::::::::::::::::: TerraME Environment
 :: Cleaning last directories
-:: rmdir %_TERRAME_BUILD_BASE%\solution /s /q
+rmdir %_TERRAME_BUILD_BASE%\solution /s /q
 rmdir %_TERRAME_REPOSITORY_DIR% /s /q
 rmdir %_TERRAME_TEST_DIR% /s /q
 rmdir %_TERRAME_EXECUTION_DIR% /s /q
