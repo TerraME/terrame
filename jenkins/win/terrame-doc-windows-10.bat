@@ -27,12 +27,10 @@
 ::
 :: PACKAGE_NAME - Represents a name of TerraME package to execute
 ::
-exit
+
 :: setting context
 set "TME_PATH=%_TERRAME_INSTALL_PATH%\bin"
 set "PATH=%PATH%;%TME_PATH%"
-
-cd %_TERRAME_TEST_DIR%
 
 terrame -version
 :: Extra commands if package is gis
