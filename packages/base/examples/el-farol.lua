@@ -99,6 +99,8 @@ function count_strategies(soc)
 	end
 end
 
+local generator = Random{min = 1, max = #STRATEGIES, step = 1}
+
 beerAgent = Agent{
 	init = function(ag)
 		ag.strategies = {}
@@ -110,7 +112,7 @@ beerAgent = Agent{
 			ag.count_fails[i] = 0
 			local p
 			repeat
-				p = Random{min = 1, max = #STRATEGIES, step = 1}:sample()
+				p = generator:sample()
 			until ag.chosen[p] == 0
 
 			ag.strategies [i] = STRATEGIES[p]

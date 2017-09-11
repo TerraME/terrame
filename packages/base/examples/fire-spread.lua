@@ -31,7 +31,7 @@ I =	{{0.100, 0.250, 0.261, 0.273, 0.285},
 	 {0.119, 0.259, 0.270, 0.282, 0.294},
 	 {0.122, 0.262, 0.273, 0.285, 0.297}}
 
-randomObj = Random{seed = 600}
+randomObj = Random{seed = 800}
 
 cell = Cell{
 	execute = function(cell)
@@ -43,6 +43,7 @@ cell = Cell{
 				end
 			end
 		end)
+
 		cell.state = BURNED
 	end,
 	init = function(cell)
@@ -50,8 +51,6 @@ cell = Cell{
 			cell.state = FIREBREAK
 		elseif cell.river == 1 then
 			cell.state = RIVER
-		elseif cell.fire == 1 then
-			cell.state = BURNING
 		else
 			cell.state = cell.accumulation
 		end
@@ -71,7 +70,6 @@ cs = CellularSpace{
 -- using the maximum y (107)
 cs:get(35, cs.yMax - 82).state = BURNING
 cs:get(19, cs.yMax - 62).state = BURNING
-cs:get(40, cs.yMax - 32).state = BURNING
 
 map = Map{
 	target = cs,
@@ -91,7 +89,7 @@ itF = Trajectory{
 t = Timer{
 	Event{action = function()
 		itF:execute()
-		itF:filter()
+		itF:rebuild()
 	end},
 	Event{action = map}
 }

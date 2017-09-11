@@ -5,14 +5,16 @@
 -- The output is similar to Lotka-Volterra equations.
 -- @image predator-prey.png
 
-Random{seed = 200}
+Random{seed = 700}
+
+fifty = Random{p = 0.5}
 
 predator = Agent{
 	energy = 40,
 	name = "predator",
 	execute = function(self)
 		forEachNeighborAgent(self, function(other)
-			if other.name == "prey" and Random():number() < 0.5 then
+			if other.name == "prey" and fifty:sample() then
 				self.energy = self.energy + other.energy / 5
 				other:die()
 				return false -- found a prey, stop forEachAgent

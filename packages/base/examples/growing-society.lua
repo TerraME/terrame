@@ -5,10 +5,12 @@
 -- empty neighbor cell. The default value is 0.3.
 -- @image growing-society.png
 
+local p30 = Random{p = 0.3}
+
 singleFooAgent = Agent{
 	execute = function(self)
 		local cell = self:getCell():getNeighborhood():sample()
-		if cell:isEmpty() and Random{p = 0.3}:sample() then
+		if cell:isEmpty() and p30:sample() then
 			local child = self:reproduce()
 			child:move(cell)
 		end

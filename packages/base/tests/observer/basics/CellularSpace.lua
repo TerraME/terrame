@@ -49,7 +49,7 @@ return{
 		unitTest:assertType(m, "Map")
 
 		cs:notify()
-		unitTest:assertSnapshot(m, "map_slices.bmp")
+		unitTest:assertSnapshot(m, "map_slices.bmp", 0.95)
 
 		local e = Event{action = function() end}[1]
 
@@ -201,7 +201,7 @@ return{
 
 		cs:notify()
 
-		unitTest:assertSnapshot(map, "cellspace_map_project.bmp")
+		unitTest:assertSnapshot(map, "cellspace_map_project.bmp", 0.65)
 
 		t = Timer{
 			Event{action = function(event)

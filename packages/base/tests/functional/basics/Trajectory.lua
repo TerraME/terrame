@@ -296,7 +296,7 @@ xyz     function
 		unitTest:assertEquals(tr.parent, cs)
 		unitTest:assertEquals(tr.select, s)
 		unitTest:assertEquals(tr.greater, g)
-		unitTest:assertEquals(#tr, 14)
+		unitTest:assertEquals(#tr, 10)
 
 		forEachCell(cs, function(cell)
 			cell.value = cell.value + 10
@@ -331,15 +331,15 @@ xyz     function
 
 		tr:rebuild()
 		unitTest:assertEquals(#tr, 25)
-		unitTest:assertEquals(tr.cells[2].value, 11)
+		unitTest:assertEquals(tr.cells[2].value, 12)
 
 		tr:rebuild()
 		unitTest:assertEquals(#tr, 25)
-		unitTest:assertEquals(tr.cells[2].value, 14)
+		unitTest:assertEquals(tr.cells[2].value, 12)
 
 		tr:rebuild()
 		unitTest:assertEquals(#tr, 25)
-		unitTest:assertEquals(tr.cells[2].value, 20)
+		unitTest:assertEquals(tr.cells[2].value, 19)
 	end,
 	sort = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

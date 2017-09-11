@@ -47,17 +47,7 @@ mid = (DIM - 1) / 2
 centralCell = cellspace:get(mid, mid)
 
 citizen = Agent{
-	init = function(self)
-		local value = Random():number()
-
-		if value < P_POOR then
-			self.class = "poor"
-		elseif value < P_POOR + P_MIDDLE then
-			self.class = "middle"
-		else
-			self.class = "rich"
-		end
-	end,
+	class = Random{poor = P_POOR, middle = P_MIDDLE, rich = 1 - P_POOR - P_MIDDLE},
 	execute = function(self)
 		self:findPlace(centralCell)
 	end,

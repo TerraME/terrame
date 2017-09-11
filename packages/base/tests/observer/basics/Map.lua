@@ -70,8 +70,8 @@ return{
 		unitTest:assertType(m, "Map")
 
 		m:update()
-		unitTest:assertSnapshot(m, "map_basic.bmp")
-		unitTest:assertSnapshot(mi, "map_basic_invert.bmp")
+		unitTest:assertSnapshot(m, "map_basic.bmp", 0.95)
+		unitTest:assertSnapshot(mi, "map_basic_invert.bmp", 0.95)
 
 		forEachCell(cs, function(cell)
 			cell.value = r:integer(1, 3)
@@ -87,7 +87,7 @@ return{
 		unitTest:assertType(m, "Map")
 
 		m:update()
-		unitTest:assertSnapshot(m, "map_uniquevalue.bmp")
+		unitTest:assertSnapshot(m, "map_uniquevalue.bmp", 0.75)
 
 		m = Map{
 			target = cs,
@@ -145,7 +145,7 @@ return{
 
 		unitTest:assertWarning(warning_func, defaultValueMsg("invert", false))
 		m:update()
-		unitTest:assertSnapshot(m, "map_function.bmp")
+		unitTest:assertSnapshot(m, "map_function.bmp", 1.0)
 
 		c = Random{"low", "medium", "high"}
 		cs = CellularSpace{xdim = 5}
@@ -203,8 +203,8 @@ return{
 
 		unitTest:assertWarning(warning_func, "Argument 'values' is unnecessary. Do you mean 'value'?")
 		unitTest:assertType(m, "Map")
-		unitTest:assertSnapshot(m, "map_quantil.bmp")
-		unitTest:assertSnapshot(mi, "map_quantil_invert.bmp")
+		unitTest:assertSnapshot(m, "map_quantil.bmp", 0.95)
+		unitTest:assertSnapshot(mi, "map_quantil_invert.bmp", 0.95)
 
 		forEachCell(cs, function(cell)
 			cell.w = cell.x
@@ -275,7 +275,7 @@ return{
 		}
 
 		m:update()
-		unitTest:assertSnapshot(m, "map_society_background.bmp", 0.02)
+		unitTest:assertSnapshot(m, "map_society_background.bmp", 0.07)
 
 		warning_func = function()
 			m = Map{
@@ -288,7 +288,7 @@ return{
 		end
 		unitTest:assertWarning(warning_func, defaultValueMsg("grid", false))
 
-		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp", 0.03)
+		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp", 0.07)
 
 		m = Map{
 			target = soc,
@@ -297,7 +297,7 @@ return{
 			symbol = "beetle"
 		}
 
-		unitTest:assertSnapshot(m, "map_society_white.bmp", 0.03)
+		unitTest:assertSnapshot(m, "map_society_white.bmp", 0.05)
 
 		cs = CellularSpace{xdim = 10}
 
@@ -322,7 +322,7 @@ return{
 
 		m:update()
 		unitTest:assertType(m, "Map")
-		unitTest:assertSnapshot(m, "map_save.bmp")
+		unitTest:assertSnapshot(m, "map_save.bmp", 0.9)
 
 		local singleFooAgent = Agent{}
 		cs = CellularSpace{xdim = 10}
@@ -375,7 +375,7 @@ return{
 		end
 		unitTest:assertWarning(warning_func, "Argument 'grid' cannot be used with a Map 'background'.")
 
-		unitTest:assertSnapshot(m2, "map_society_location.bmp", 0.03)
+		unitTest:assertSnapshot(m2, "map_society_location.bmp", 0.25)
 
 		for _ = 1, 5 do
 			soc:sample():die()
@@ -387,7 +387,7 @@ return{
 			color = "red"
 		}
 
-		unitTest:assertSnapshot(m2, "map_society_five_left.bmp", 0.02)
+		unitTest:assertSnapshot(m2, "map_society_five_left.bmp", 0.05)
 
 		local cell = Cell{
 			init = function(self)
@@ -430,7 +430,7 @@ return{
 			color = "Reds"
 		}
 
-		unitTest:assertSnapshot(map, "map_placement.bmp")
+		unitTest:assertSnapshot(map, "map_placement.bmp", 0.25)
 
 		c = Cell{
 			mvalue = function()
@@ -451,7 +451,7 @@ return{
 		}
 
 		m:update()
-		unitTest:assertSnapshot(m, "map_function_2.bmp", 0.1)
+		unitTest:assertSnapshot(m, "map_function_2.bmp", 1.0)
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

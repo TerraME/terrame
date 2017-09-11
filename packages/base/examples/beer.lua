@@ -89,13 +89,15 @@ chartCost = Chart{
 	style = "sticks"
 }
 
+local generator = Random{min = 1, max = 30, step = 1}
+
 retailer = BasicAgent{
 	priority  = 0,
 	received  = 0,
 	ordered   = 0,
 	costs     = 0,
 	execute = function(agent)
-		local requested = Random{min = 1, max = 30, step = 1}:sample()
+		local requested = generator:sample()
 		c.beer_requested = requested
 		agent:requestBeer(requested)
 	end,

@@ -118,7 +118,7 @@ return{
 		cs:notify()
 		cs:notify()
 		cs:notify()
-		unitTest:assertSnapshot(m, "map_society_reproduce.bmp", 0.03)
+		unitTest:assertSnapshot(m, "map_society_reproduce.bmp", 0.05)
 	end
 }
 

@@ -9,6 +9,8 @@
 
 Random{seed = 500}
 
+local p25 = Random{p = 0.25}
+
 ag = Agent{
 	state = "susceptible",
 	sick = function(self)
@@ -19,7 +21,7 @@ ag = Agent{
 		self.parent.susceptible = self.parent.susceptible - 1
 	end,
 	on_message = function(self)
-		if self.state == "susceptible" and Random{p = 0.25}:sample() then
+		if self.state == "susceptible" and p25:sample() then
 			self:sick()
 		end
 	end,

@@ -22,143 +22,26 @@
 --
 -------------------------------------------------------------------------------------------
 
-local function poisson(generator, mean)
-	return function()
-		local x = 0
-		local p = math.exp(-mean)
-		local s = p
-		local r = generator:number()
-		repeat
-			x = x + 1
-			p = p * mean / x
-			s = s + p
-		until r <= s
+local MersenneTwister
+local UniformReal
+local TerraLib = getPackage("gis").TerraLib
 
-		return x
-	end
+local function getMT()
+	MersenneTwister()
+	return MersenneTwister
 end
 
-local function normal(generator, mean, std)
-	local pitimes2 = 2 * math.pi
-	local exp = math.exp(1)
-
-	return function()
-		local r1 = generator:number()
-		local r2 = generator:number()
-
-		if r1 == 0 then r1 = 1e-10 end
-		if r2 == 0 then r1 = 1e-10 end
-
-		local beta = math.sqrt( -2 * math.log(r1, exp))
-		return mean + std * (beta * math.sin(pitimes2 * r2))
-	end
-end
-
-local function lognormal(generator, mean, std)
-	local mnormal = normal(generator, mean, std)
-
-	return function()
-		return math.exp(mnormal())
-	end
-end
-
-local function exponential(generator, lambda)
-	local exp = math.exp(1)
-
-	return function()
-		local rand = generator:number()
-		if rand == 0 then rand = 1e-10 end
-		return -math.log(rand, exp) / lambda
-	end
-end
-
-local function power(generator, lambda, low, high)
-	lambda = lambda + 1
-
-	return function()
-		local rand = generator:number()
-		return math.pow((high ^ lambda - low ^ lambda) * rand + low ^ lambda, 1 / lambda)
-	end
-end
-
-local function logistic(generator, mean, scale)
-	return function()
-		local u = generator:number()
-		return mean - scale * math.log((1 / u) - 1)
-	end
-end
-
-local function bernoulli(generator, p)
-	return function()
-		return generator:number() < p
-	end
-end
-
-local function categorical(generator, values)
+local function categorical(values)
 	local str = "return function(number)\n"
 
-	local previous = 0
-	local sum = {}
 	forEachOrderedElement(values, function(idx, value)
-		previous = previous + value
-		sum[idx] = previous
-	end)
-
-	forEachOrderedElement(sum, function(idx, value)
 		str = str.."\tif number <= "..value.." then\n"
 		         .."\t\treturn \""..idx.."\"\n"
 		         .."\tend\n"
 	end)
 
 	str = str.."end"
-
-	local func = load(str)()
-
-	return function()
-		local number = generator:number()
-		return func(number)
-	end
-end
-
-local function discrete(generator, values)
-	local quantity = #values
-	return function()
-		return values[generator:integer(1, quantity)]
-	end
-end
-
-local function step(generator, min, max, mstep)
-	local quantity = (max - min) / mstep
-
-	return function()
-		return min + mstep * generator:integer(0, quantity)
-	end
-end
-
-local function continuous(generator, min, max)
-	return function()
-		return generator:number(min, max)
-	end
-end
-
--- Xorshift random number generators are a class of pseudorandom number generators
--- that was discovered by George Marsaglia [http://www.jstatsoft.org/v08/i14/paper].
--- They generate the next number in their sequence by repeatedly taking the exclusive or of a number
--- with a bit shifted version of itself. This makes them extremely fast on modern computer architectures.
--- They are a subclass of linear feedback shift registers,
--- Their simple implementation typically makes them faster and use less space.
--- Xorshift generators are among the fastest non-cryptographic random number generators.
--- The following xorshift+ generator uses 128 bits of state and has a maximal period of 2 ^ 128 - 1.
--- It passes the BigCrush tests and is considered better than the Mersenne twister.
-local function xorshift128plus(self, min, max)
-	local x = self.seed[1]
-	local y = self.seed[2]
-	Random_.seed[1] = y
-	x = bit32.bxor(x, bit32.lshift(x, 23))
-	x = bit32.bxor(x, bit32.rshift(x, 17))
-	x = bit32.bxor(x, bit32.bxor(y, bit32.rshift(y, 26)))
-	Random_.seed[2] = x
-	return ((x + y) % (max - min + 1)) + min
+	return load(str)()
 end
 
 Random_ = {
@@ -174,6 +57,7 @@ Random_ = {
 	-- value = random:integer(10) -- from 0 to 10
 	-- value = random:integer(5, 10) -- from 5 to 10
 	integer = function(self, v1, v2)
+		optionalArgument(0, "Random", self)
 		optionalArgument(1, "number", v1)
 		optionalArgument(2, "number", v2)
 
@@ -181,20 +65,30 @@ Random_ = {
 			integerArgument(2, v2)
 			if v1 and v2 >= v1 then
 				integerArgument(1, v1)
-				return xorshift128plus(self, v1, v2)
 			else
 				customError("It is not possible to sample from an empty object.")
 			end
 		elseif v1 then
 			integerArgument(1, v1)
 			if v1 < 0 then
-				return xorshift128plus(self, v1, 0)
+				v2 = 0
 			else
-				return xorshift128plus(self, 0, v1)
+				v2 = v1
+				v1 = 0
 			end
 		else
-			return xorshift128plus(self, 0, 1)
+			v1 = 0
+			v2 = 1
 		end
+
+		v1 = math.floor(v1)
+		v2 = math.floor(v2)
+
+		if not UniformReal then
+			UniformReal = TerraLib().random().UniformRealDistribution(getMT(), 0, 1)
+		end
+
+		return math.floor(v1 + UniformReal() * (v2 - v1 + 1))
 	end,
 	--- Return a random real number.
 	--  By default number() will return a value between zero and one.
@@ -208,11 +102,16 @@ Random_ = {
 	-- value = random:number(10) -- between 0 and 10
 	-- value = random:number(5, 10) -- between 5 and 10
 	number = function(self, v1, v2)
+		optionalArgument(0, "Random", self)
 		optionalArgument(1, "number", v1)
 		optionalArgument(2, "number", v2)
 
+		if not UniformReal then
+			UniformReal = TerraLib().random().UniformRealDistribution(getMT(), 0, 1)
+		end
+
 		if not v1 and not v2 then
-			return xorshift128plus(self, 0, 1000000) / 1000000
+			return UniformReal()
 		else
 			local max = 1
 			local min = 0
@@ -234,17 +133,19 @@ Random_ = {
 				end
 			end
 
-			return (max - min) * (xorshift128plus(self, 0, 1000000) / 1000000) + min
+			return (max - min) * UniformReal() + min
 		end
 	end,
-	--- Reset the seed to generate random numbers.
+	--- Set the seed to generate random numbers. This seed will be used in new instances
+	-- of Random. All Random objecs previously created will still use the previous seed.
 	-- @arg seed An integer number with the new seed.
 	-- @usage random = Random()
 	--
 	-- random:reSeed(12345)
 	reSeed = function(self, seed)
+		optionalArgument(0, "Random", self)
 		if seed == nil then
-			seed = tonumber(tostring(os.time()):reverse():sub(1, 6))
+			seed = os.time()
 		else
 			verify(seed ~= 0, "Argument 'seed' cannot be zero.")
 		end
@@ -252,8 +153,7 @@ Random_ = {
 		optionalArgument(1, "number", seed)
 		integerArgument(1, seed)
 
-		self.random.seed[1] = 1
-		self.random.seed[2] = seed
+		MersenneTwister = TerraLib().random().MersenneTwister(seed)
 	end,
 	--- Return a random element from the chosen distribution.
 	-- @usage random = Random{2, 3, 4, 6}
@@ -275,10 +175,8 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- @tabular NONE
 -- Arguments & Default distribution \
 -- p & "bernoulli" \
--- lambda, min, max & "power" \
 -- lambda & "poisson" \
 -- mean (or) sd & "normal" \
--- scale & "logistic" \
 -- min, max, step & "step" \
 -- min, max  & "continuous" \
 -- (set of values) & "discrete" \
@@ -288,6 +186,9 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- @tabular distrib
 -- Distrib & Description & Compulsory Arguments & Optional Arguments \
 -- "bernoulli" & A boolean distribution that returns true with probability p. & p & seed \
+-- "beta" & A family of continuous probability distributions defined on the interval [0, 1]
+-- parametrized by two positive shape parameters, denoted by alpha and beta, that appear as
+-- exponents of the random variable and control the shape of the distribution. & & alpha, beta, seed \
 -- "categorical" & A distribution that has names associated to probabilities. Each name is an
 -- argument and has a value between zero and one, indicating the probability to be selected. The
 -- sum of all probabilities must be one. & ... & seed \
@@ -298,9 +199,6 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- "exponential" & Generate exponentialy distributed pseudo random numbers from a uniformly
 -- distributed number in the range [0,1]. For this purpose, it uses the Inverse Transform Samplig
 -- method & & lambda, seed \
--- "logistic" & Generate logistic distributed pseudo random numbers from a uniformly distributed
--- number in the range [0,1].  For this purpose, it uses the Inverse Transform Samplig method.
--- & & mean, scale, seed \
 -- "lognormal" & Generate log-normally distributed pseudo random numbers from a normaly
 -- distributed number in the range [0,1] using the Box-Muller (1978) method. & & mean, sd, seed \
 -- "none" & No distribution. This is useful only when the modeler wants only to set
@@ -310,14 +208,16 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- "poisson" & Generate Poisson distributed pseudo random numbers from a uniformly distributed
 -- number in the range [0,1]. For this purpose, it uses the Inverse Transform Samplig method.
 -- & & lambda, seed \
--- "power" & Generate Power Law distributed pseudo random numbers from a Uniformly distributed
--- number in the range [0,1]. For this purpose, it uses the Inverse Transform Samplig method. &
--- min, max & lambda, seed \
 -- "step" & A discrete uniform distribution whose values belong to a given [min, max] interval
 -- using step values.
 -- & max, min, step & seed \
--- @arg data.lambda Some distributions use the term lambda instead of mean. This number
--- representing the mean for such distributions. The default value is 1.
+-- "weibull" & The Weibull distribution is a real valued distribution with two parameters a and b, producing values
+-- greater than or equals to zero. & & k \
+-- @arg data.lambda An argument of some distributions. It might be interpreted as mean or as scale, according
+-- to the given distribution. The default value is 1.
+-- @arg data.k The shape parameter for Weibull distribution. The default value is 1.
+-- @arg data.alpha Argument of beta distribution. The default value is 1.
+-- @arg data.beta Argument of beta distribution. The default value is 1.
 -- @arg data.max A number indicating the maximum value to be randomly selected.
 -- @arg data.mean A number indicating the mean value. The default value is 1.
 -- @arg data.min A number indicating the minimum value to be randomly selected.
@@ -329,7 +229,6 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- despite using random numbers.
 -- It is a good programming practice to set
 -- the seed in the beginning of the simulation and only once.
--- @arg data.scale The scale value proportional the standard deviation. The default value is 1.
 -- @arg data.sd A number indicating the standard deviation. The default value is 1.
 -- @arg attrTab.step The step where possible values are computed from minimum to maximum.
 -- When using this argument, min and max become mandatory.
@@ -378,18 +277,18 @@ function Random(data)
 	if not data.distrib then
 		if data.p ~= nil then
 			data.distrib = "bernoulli"
-		elseif data.lambda and data.min and data.max then
-			data.distrib = "power"
+		elseif data.lambda and data.k then
+			data.distrib = "weibull"
 		elseif data.lambda ~= nil then
 			data.distrib = "poisson"
 		elseif data.mean ~= nil or data.sd ~= nil then
 			data.distrib = "normal"
-		elseif data.scale ~= nil then
-			data.distrib = "logistic"
 		elseif data.min ~= nil and data.max ~= nil and data.step ~= nil then
 			data.distrib = "step"
 		elseif data.min ~= nil and data.max ~= nil then
 			data.distrib = "continuous"
+		elseif data.alpha or data.beta then
+			data.distrib = "beta"
 		elseif #data > 0 then
 			data.distrib = "discrete"
 		elseif getn(data) > 1 or (getn(data) > 0 and data.seed == nil) then
@@ -401,10 +300,22 @@ function Random(data)
 
 	mandatoryTableArgument(data, "distrib", "string")
 
+	if data.seed then
+		integerTableArgument(data, "seed")
+		verify(data.seed ~= 0, "Argument 'seed' cannot be zero.")
+
+		MersenneTwister = TerraLib().random().MersenneTwister(data.seed)
+		data.seed = nil
+	elseif not MersenneTwister then
+		local seed = os.time() -- SKIP
+		MersenneTwister = TerraLib().random().MersenneTwister(seed) -- SKIP
+	end
+
 	switch(data, "distrib"):caseof{
 		bernoulli = function()
-			verifyUnnecessaryArguments(data, {"distrib", "seed", "p"})
-			data.sample = bernoulli(data, data.p)
+			verifyUnnecessaryArguments(data, {"distrib", "p"})
+			local bd = TerraLib().random().BernoulliDistribution(getMT(), data.p)
+			data.sample = function() return bd() end
 		end,
 		step = function()
 			mandatoryTableArgument(data, "min", "number")
@@ -421,115 +332,127 @@ function Random(data)
 				customError("Invalid 'max' value ("..data.max.."). It could be "..max1.." or "..max2..".")
 			end
 
-			data.sample = step(data, data.min, data.max, data.step)
+			local ud = TerraLib().random().UniformIntDistribution(getMT(), 0, k)
+			local min = data.min
+			local step = data.step
+
+			data.sample = function()
+				return min + step * ud()
+			end
 		end,
 		discrete = function()
-			local count = 1
-			if data.seed then count = 2 end
-
 			local values = {}
+			data.distrib = nil
 
-			forEachElement(data, function(idx, value)
-				if idx == "seed" or idx == "distrib" then return end
-
+			forEachElement(data, function(_, value)
 				table.insert(values, value)
 			end)
 
-			verify(#data + count == getn(data), "The only named arguments should be distrib and seed.")
-			data.sample = discrete(data, data)
-			data.values = values
+			verify(#data == getn(data), "The only named arguments should be distrib and seed.")
+			data.distrib = "discrete"
+
+			local dd = TerraLib().random().UniformIntDistribution(getMT(), 1, #values)
+			data.sample = function() return values[dd()] end
 		end,
 		continuous = function()
-			verifyUnnecessaryArguments(data, {"distrib", "seed", "max", "min"})
+			verifyUnnecessaryArguments(data, {"distrib", "max", "min"})
 			mandatoryTableArgument(data, "min", "number")
 			mandatoryTableArgument(data, "max", "number")
 			verify(data.max > data.min, "Argument 'max' should be greater than 'min'.")
-			data.sample = continuous(data, data.min, data.max)
+
+			local urd = TerraLib().random().UniformRealDistribution(getMT(), data.min, data.max)
+
+			data.sample = function() return urd() end
 		end,
 		categorical = function()
 			local sum = 0
-			local seed = data.seed
-			data.seed = nil
 			data.distrib = nil
 
 			local values = {}
+			local probabilities = {}
 
-			forEachElement(data, function(idx, value)
+			forEachOrderedElement(data, function(idx, value)
 				mandatoryTableArgument(data, idx, "number")
-				table.insert(values, idx)
 				sum = sum + value
+				probabilities[idx] = sum
+				table.insert(values, idx)
 			end)
 
 			verify(math.abs(sum - 1) < sessionInfo().round, "Sum should be one, got "..sum..".")
 
-			data.sample = categorical(data, data)
+			local categoricalFunc = categorical(probabilities)
+			local discrete = Random{min = 0, max = 1}
+
+			data.sample = function() return categoricalFunc(discrete:sample()) end
 			data.distrib = "categorical"
-			data.seed = seed
 			data.values = values
 		end,
 		exponential = function()
 			defaultTableValue(data, "lambda", 1)
 
-			verifyUnnecessaryArguments(data, {"distrib", "lambda", "seed"})
+			verifyUnnecessaryArguments(data, {"distrib", "lambda"})
 
-			data.sample = exponential(data, data.lambda)
-		end,
-		logistic = function()
-			defaultTableValue(data, "scale", 1)
-			defaultTableValue(data, "mean", 1)
+			local exp = TerraLib().random().ExponentialDistribution(getMT(), data.lambda)
 
-			verifyUnnecessaryArguments(data, {"distrib", "mean", "scale", "seed"})
-
-			data.sample = logistic(data, data.mean, data.scale)
+			data.sample = function()
+				return exp()
+			end
 		end,
 		normal = function()
 			defaultTableValue(data, "mean", 1)
 			defaultTableValue(data, "sd", 1)
 
-			verifyUnnecessaryArguments(data, {"distrib", "mean", "sd", "seed"})
+			verifyUnnecessaryArguments(data, {"distrib", "mean", "sd"})
 
-			data.sample = normal(data, data.mean, data.sd)
+			local nd = TerraLib().random().NormalDistribution(getMT(), data.mean, data.sd)
+			data.sample = function() return nd() end
 		end,
 		lognormal = function()
 			defaultTableValue(data, "mean", 1)
 			defaultTableValue(data, "sd", 1)
 
-			verifyUnnecessaryArguments(data, {"distrib", "mean", "sd", "seed"})
+			positiveTableArgument(data, "mean")
+			positiveTableArgument(data, "sd")
 
-			data.sample = lognormal(data, data.mean, data.sd)
+			verifyUnnecessaryArguments(data, {"distrib", "mean", "sd"})
+
+			local ln = TerraLib().random().LogNormalDistribution(getMT(), data.mean, data.sd)
+			data.sample = function() return ln() end
 		end,
 		none = function()
 		end,
 		poisson = function()
 			defaultTableValue(data, "lambda", 1)
 
-			verifyUnnecessaryArguments(data, {"distrib", "lambda", "seed"})
+			verifyUnnecessaryArguments(data, {"distrib", "lambda"})
 
-			data.sample = poisson(data, data.lambda)
+			local pd = TerraLib().random().PoissonDistribution(getMT(), data.lambda)
+			data.sample = function() return pd() end
 		end,
-		power = function()
+		weibull = function()
 			defaultTableValue(data, "lambda", 1)
-			mandatoryTableArgument(data, "min", "number")
-			mandatoryTableArgument(data, "max", "number")
-			verify(data.max > data.min, "Argument 'max' should be greater than 'min'.")
+			defaultTableValue(data, "k", 1)
 
-			verifyUnnecessaryArguments(data, {"distrib", "lambda", "min", "max", "seed"})
+			positiveTableArgument(data, "lambda")
+			positiveTableArgument(data, "k")
 
-			data.sample = power(data, data.lambda, data.min, data.max)
+			local wd = TerraLib().random().WeibullDistribution(getMT(), data.k, data.lambda)
+			data.sample = function() return wd() end
+		end,
+		beta = function()
+			defaultTableValue(data, "alpha", 1)
+			defaultTableValue(data, "beta", 1)
+
+			positiveTableArgument(data, "alpha")
+			positiveTableArgument(data, "beta")
+
+			local betad = TerraLib().random().BetaDistribution(data.alpha, data.beta)
+			local urd = TerraLib().random().UniformRealDistribution(getMT(), 0, 1)
+
+			data.sample = function() return betad(urd()) end
 		end
 	}
 
-	if data.seed then
-		integerTableArgument(data, "seed")
-		verify(data.seed ~= 0, "Argument 'seed' cannot be zero.")
-		Random_.seed = {data.seed, data.seed}
-		data.seed = nil
-	elseif not Random_.seed then
-		local seed = tonumber(tostring(os.time()):reverse():sub(1, 6))
-		Random_.seed = {seed, seed}
-	end
-
-	data.random = Random_
 	setmetatable(data, metaTableRandom_)
 	return data
 end

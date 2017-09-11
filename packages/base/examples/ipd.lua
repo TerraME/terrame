@@ -103,10 +103,12 @@ AC = Agent{ -- ALWAYS COOPERATE
 	prepare_for_championship = function() end
 }
 
+local fifty = Random{p = 0.5}
+
 RANDOM = Agent{
 	name = "RANDOM",
 	play = function()
-		if Random():number() > 0.5 then
+		if fifty:sample() then
 			return COOPERATE
 		else
 			return NOT_COOPERATE
