@@ -10,6 +10,7 @@
 -- tit-for-tat in the Prisoner's Dilemma game. Nature 364.6432: 56-58.
 -- @arg TURNS The number of times an Agent plays
 -- with each opponent.
+-- @arg COOPERATE Cooperate value
 -- @arg CHAMPIONSHIP A vector with the strategies used
 -- in the championship.
 
@@ -207,4 +208,6 @@ for i = 1, nplayers do
 	end
 	print(p..sum)
 end
+
+a = fff + eee
 
