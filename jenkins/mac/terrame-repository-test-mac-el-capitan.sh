@@ -22,12 +22,12 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It performs a TerraME Repository Tests.
 ##
 #
 ## USAGE:
-## ./terrame-repository-test-m,ac-el-capitan.sh
+## ./terrame-repository-test-mac-el-capitan.sh
 #
 
 export TME_PATH="$_TERRAME_INSTALL_PATH/bin"
@@ -36,11 +36,14 @@ export PATH=$PATH:$TME_PATH
 cd $_TERRAME_REPOSITORY_DIR
 
 terrame -version
-terrame -color test.lua 2> /dev/null
-
+terrame -color test.lua
 RESULT=$?
 
-tar -czvf $WORKSPACE/build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
+# Compressing Log
+LOG_NAME="repository-mac-$BUILD_NUMBER.tar.gz"
+echo "Compressing $WORKSPACE/$LOG_NAME"
+tar -czf $WORKSPACE/$LOG_NAME .terrame*
+
 rm -rf .terrame*
 
 exit $RESULT

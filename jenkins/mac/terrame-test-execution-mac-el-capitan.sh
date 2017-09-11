@@ -22,7 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It performs a TerraME test execution.
 #
 ## USAGE:
@@ -37,10 +37,13 @@ export PATH=$PATH:$TME_PATH
 cd $_TERRAME_EXECUTION_DIR
 
 terrame -version
-terrame -color run.lua 2> /dev/null
+terrame -color run.lua
 RESULT=$?
 
-tar -czvf $WORKSPACE/build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
+# Compressing Log
+LOG_NAME="execution-mac-$BUILD_NUMBER.tar.gz"
+echo "Compressing $WORKSPACE/$LOG_NAME"
+tar -czf $WORKSPACE/$LOG_NAME .terrame*
 rm -rf .terrame*
 
 exit $RESULT

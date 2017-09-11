@@ -35,7 +35,7 @@ terrame -version
 terrame -color run.lua
 set "RESULT=%ERRORLEVEL%"
 
-"C:\Program Files\7-Zip\7z.exe" a -tzip "%WORKSPACE%\build-daily-win-%BUILD_NUMBER%.zip" .terrame*
+"C:\Program Files\7-Zip\7z.exe" a -tzip "%WORKSPACE%\execution-win-%BUILD_NUMBER%.zip" .terrame*
 
 for /d %%G in (".terrame*") do rd /s /q "%%~G"
 

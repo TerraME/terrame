@@ -37,14 +37,18 @@ export PATH=$PATH:$TME_PATH
 export LD_LIBRARY_PATH=$TME_PATH
 
 terrame -version
-terrame -color test.lua 2> /dev/null
+terrame -color test.lua
 RESULT=$?
 
 echo ""
 echo ""
 echo ""
 
-tar -czf $WORKSPACE/build-daily-linux-$BUILD_NUMBER.tar.gz .terrame*
+# Compressing Log
+LOG_NAME="repository-linux-$BUILD_NUMBER.tar.gz"
+echo "Compressing $WORKSPACE/$LOG_NAME"
+tar -czf $WORKSPACE/$LOG_NAME .terrame*
+
 rm -rf .terrame*
 
 echo ""

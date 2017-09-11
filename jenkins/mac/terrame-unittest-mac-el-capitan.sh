@@ -33,6 +33,8 @@
 ##
 #
 
+PACKAGE=$1
+
 # Exporting enviroment variables
 export TME_PATH=$_TERRAME_INSTALL_PATH/bin
 export PATH=$PATH:$TME_PATH
@@ -44,16 +46,20 @@ terrame -version
 TERRAME_COMMANDS=""
 terrame -version
 # Extra commands if package is gis
-if [ "$1" != "" ] && [ "$1" != "base" ]; then
-  TERRAME_COMMANDS="-package $1"
+if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
+	TERRAME_COMMANDS="-package $PACKAGE"
+else
+	PACKAGE="base"
 fi
 
 # Executing unittest
-terrame -color $TERRAME_COMMANDS -test test.lua 2> /dev/null
+terrame -color $TERRAME_COMMANDS -test test.lua
 RESULT=$?
 
 # Compressing Log
-tar -czvf $WORKSPACE/build-daily-mac-$BUILD_NUMBER.tar.gz .terrame*
+LOG_NAME="unittest-mac-$PACKAGE-$BUILD_NUMBER.tar.gz"
+echo "Compressing $WORKSPACE/$LOG_NAME"
+tar -czf $WORKSPACE/$LOG_NAME .terrame*
 
 # Cleaning up
 rm -rf .terrame*
