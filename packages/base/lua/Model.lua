@@ -647,11 +647,19 @@ function Model(attrTab)
 						customError("Argument "..toLabel(name).." should be greater than or equal to "..value.min..".")
 					elseif value.max and argv[name] > value.max then
 						customError("Argument "..toLabel(name).." should be less than or equal to "..value.max..".")
-					elseif value.step and (((argv[name] - value.min)) * 1000) % (value.step * 1000) > 0.000001 then
-						-- There is a small bug in Lua with operator % using numbers between 0 and 1
-						-- For example, 0.7 % 0.1 == 0.1, but should be 0.0. That's why we need
-						-- to multiplicate by 1000 above
-						customError("Invalid value for argument "..toLabel(name).." ("..argv[name]..").")
+					elseif value.step then
+						local remainder = (((argv[name] - value.min)) * 1000) % (value.step * 1000)
+
+						if math.abs(remainder - value.step * 1000) < sessionInfo().round then
+							-- There is a small bug in Lua with operator % using numbers between 0 and 1
+							-- For example, 0.7 % 0.1 == 0.1, but should be 0.0. That's why we need
+							-- to multiplicate by 1000 above
+							remainder = remainder - value.step * 1000
+						end
+
+						if math.abs(remainder) > sessionInfo().round then
+							customError("Invalid value for argument "..toLabel(name).." ("..argv[name]..").")
+						end
 					end
 				end
 			elseif mtype == "Mandatory" then
