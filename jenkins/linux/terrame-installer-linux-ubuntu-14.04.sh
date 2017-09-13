@@ -49,7 +49,7 @@ rm -rf $_TERRAME_INSTALL_PATH $_TERRAME_OUT_DIR
 cd $_TERRAME_OUT_DIR
 
 cpack -G TGZ -C Release --config ./CPackConfig.cmake
-cp --verbose *.tar.gz $WORKSPACE
+cp --verbose terrame*.tar.gz $WORKSPACE
 RESULT=$?
 
 echo ""
