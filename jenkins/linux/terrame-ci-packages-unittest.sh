@@ -33,6 +33,16 @@ TARGET_URL="$BUILD_URL/consoleFull"
 
 $TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" "-1" "$TARGET_URL" "$PACKAGE"
 
+echo "Check if TerraME is running"
+if pgrep -x "terrame" > /dev/null; then
+    echo "TerrME is already running, waiting it finishes..."
+	echo ""
+	sleep 30s
+	while pgrep -x "terrame" > /dev/null; do
+		sleep 30s
+	done
+fi
+
 cd $TERRAME_PACKAGE_PATH
 
 rm -rf terrame-unittest-linux-ubuntu-14.04.sh
