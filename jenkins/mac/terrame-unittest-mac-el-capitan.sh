@@ -22,7 +22,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It performs a TerraME functional test package
 #
 ## USAGE:
@@ -44,7 +44,7 @@ cd $_TERRAME_TEST_DIR
 terrame -version
 
 TERRAME_COMMANDS=""
-terrame -version
+
 # Extra commands if package is gis
 if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
 	TERRAME_COMMANDS="-package $PACKAGE"
