@@ -5,7 +5,7 @@ Loading package 'ca'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Skip looking for lines of source code
+Looking for lines of source code
 Testing tests/Anneal.lua
 Testing Anneal
 Checking if all asserts were executed
@@ -72,7 +72,23 @@ Checking Snow.lua
 Checking SolidDiffusion.lua
 Checking Utils.lua
 Checking Wolfram.lua
-Skipping lines of source code check
+Checking lines of source code
+Checking Anneal.lua
+Checking BandedVegetation.lua
+Checking DaisyWorld.lua
+Checking Excitable.lua
+Checking Fire.lua
+Checking Growth.lua
+Checking InterspecificCompetition.lua
+Checking LifePatterns.lua
+Checking Life.lua
+Checking Oscillator.lua
+Checking Parasit.lua
+Checking Parity.lua
+Checking Snow.lua
+Checking SolidDiffusion.lua
+Checking Utils.lua
+Checking Wolfram.lua
 Testing examples
 Testing bv-scenario
 Testing daisy-scenario
@@ -93,7 +109,7 @@ No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
 All 17 functions of the package were tested.
-No lines from the source code were verified.
+All lines from the source code were executed.
 All 2 examples were successfully executed.
 No new log file was created.
 All log files were used in the tests.

@@ -237,6 +237,19 @@ water            number [200]
 		local func1 = function() return 1 end
 		local func2 = function() return 2 end
 
+
+		local MChoice = Model{
+			quantity = Choice{min = 0.1, max = 0.9, step = 0.1, default = 0.3},
+			finalTime = 20,
+			init = function(model)
+				model.timer = Timer{Event{action = function() end}}
+			end
+		}
+
+		m = MChoice{}
+
+		unitTest:assertEquals(m.quantity, 0.3)
+
 		M = Model{
 			quantity = Choice{a = func1, b = func2},
 			internal = {

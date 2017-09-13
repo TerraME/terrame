@@ -288,7 +288,7 @@ return{
 		end
 		unitTest:assertWarning(warning_func, defaultValueMsg("grid", false))
 
-		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp", 0.07)
+		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp", 0.1)
 
 		m = Map{
 			target = soc,

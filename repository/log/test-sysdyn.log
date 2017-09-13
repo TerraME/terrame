@@ -5,7 +5,7 @@ Loading package 'sysdyn'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Skip looking for lines of source code
+Looking for lines of source code
 Testing tests/ChaoticGrowth.lua
 Testing ChaoticGrowth
 Checking if all asserts were executed
@@ -14,6 +14,9 @@ Testing Coffee
 Checking if all asserts were executed
 Testing tests/Daisyworld.lua
 Testing Daisyworld
+Checking if all asserts were executed
+Testing tests/Dam.lua
+Testing Dam
 Checking if all asserts were executed
 Testing tests/Homeostasis.lua
 Testing Homeostasis
@@ -52,6 +55,7 @@ Checking if functions from source code were tested
 Checking ChaoticGrowth.lua
 Checking Coffee.lua
 Checking Daisyworld.lua
+Checking Dam.lua
 Checking Homeostasis.lua
 Checking LimitedGrowth.lua
 Checking Lorenz.lua
@@ -63,7 +67,22 @@ Checking RoomTemperature.lua
 Checking SIR.lua
 Checking Tub.lua
 Checking Yeast.lua
-Skipping lines of source code check
+Checking lines of source code
+Checking ChaoticGrowth.lua
+Checking Coffee.lua
+Checking Daisyworld.lua
+Checking Dam.lua
+Checking Homeostasis.lua
+Checking LimitedGrowth.lua
+Checking Lorenz.lua
+Checking MonoLake.lua
+Checking PopulationGrowth.lua
+Checking PredatorPrey.lua
+Checking RandomWalk.lua
+Checking RoomTemperature.lua
+Checking SIR.lua
+Checking Tub.lua
+Checking Yeast.lua
 Testing examples
 Testing coffee-scenarios
 Testing infection-scenarios-1
@@ -75,21 +94,21 @@ Testing tub-scenarios
 Checking logs
 
 Functional test report for package 'sysdyn':
-Tests were executed in 12.07 seconds.
+Tests were executed in 22.8 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 38 asserts were executed successfully.
-All 14 tested functions do not have any unexpected execution error.
-All 14 tested functions have at least one assert.
-All 14 tested functions exist in the source code of the package.
+All 40 asserts were executed successfully.
+All 15 tested functions do not have any unexpected execution error.
+All 15 tested functions have at least one assert.
+All 15 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
-All 14 functions of the package were tested.
-No lines from the source code were verified.
+All 15 functions of the package were tested.
+All lines from the source code were executed.
 All 7 examples were successfully executed.
 No new log file was created.
 All log files were used in the tests.
