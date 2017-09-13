@@ -5,7 +5,7 @@ Loading package 'calibration'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Skip looking for lines of source code
+Looking for lines of source code
 Testing tests/core/alternative/GoodnessOfFit.lua
 Testing multiLevel
 Testing pixelByPixel
@@ -45,7 +45,11 @@ Checking GoodnessOfFit.lua
 Checking MultipleRuns.lua
 Checking SAMDE.lua
 Checking Utils.lua
-Skipping lines of source code check
+Checking lines of source code
+Checking GoodnessOfFit.lua
+Checking MultipleRuns.lua
+Checking SAMDE.lua
+Checking Utils.lua
 Testing examples
 Testing broeke
 Testing daisy
@@ -76,7 +80,7 @@ No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No file was created along the tests.
 All 9 functions of the package were tested.
-No lines from the source code were verified.
+All lines from the source code were executed.
 All 12 examples were successfully executed.
 No new log file was created.
 All log files were used in the tests.
