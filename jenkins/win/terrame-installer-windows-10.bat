@@ -43,5 +43,6 @@ call terrame-conf.bat
 
 :: Packing
 cpack -G NSIS -C Release --config CPackConfig.cmake
+copy terrame*.exe %WORKSPACE%
 
 exit %ERRORLEVEL%

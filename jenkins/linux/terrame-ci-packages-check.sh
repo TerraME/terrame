@@ -37,6 +37,16 @@ sleep 1s
 $TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "Functional tests of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
 sleep 1s
 
+echo "Check if TerraME is running"
+if pgrep -x "terrame" > /dev/null; then
+    echo "TerrME is already running, waiting it finishes..."
+	echo ""
+	sleep 30s
+	while pgrep -x "terrame" > /dev/null; do
+		sleep 30s
+	done
+fi
+
 rm -rf $TERRAME_PACKAGE_PATH
 mkdir -p $TERRAME_PACKAGE_PATH/$PACKAGE
 cp -rap git/* $TERRAME_PACKAGE_PATH/$PACKAGE
