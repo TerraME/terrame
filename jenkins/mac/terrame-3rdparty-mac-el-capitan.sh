@@ -36,7 +36,7 @@ fi
 
 _TERRALIB_BRANCH="release-5.2"
 export _TERRALIB_3RDPARTY_NAME="terralib-3rdparty-macosx-el-capitan.tar.gz"
-export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_3RDPARTY_NAME"
+export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/5.2/$_TERRALIB_3RDPARTY_NAME"
 
 export PATH=$PATH:$HOME/Qt5.6.0/5.6/clang_64/bin
 
