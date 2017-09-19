@@ -76,7 +76,7 @@ git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terra
 valid_operation $? "Error. Could not clone TerraLib $_TERRALIB_BRANCH" terralib
 
 # Configuring TerraLib 3rdparty compilation
-cp --verbose $_TERRALIB_GIT_DIR/install/install-3rdparty-macosx-el-capitan.sh .
+cp --v $_TERRALIB_GIT_DIR/install/install-3rdparty-macosx-el-capitan.sh .
 
 echo -ne "Compiling TerraLib dependencies ... "
 TERRALIB_DEPENDENCIES_DIR="$_TERRALIB_TARGET_3RDPARTY_DIR" ./install-3rdparty-macosx-el-capitan.sh
@@ -88,7 +88,7 @@ echo ""
 cd $_TERRAME_TARGET_3RDPARTY_DIR
 
 # Configuring TerraME dependencies compilation
-cp --verbose $_TERRAME_GIT_DIR/build/scripts/mac/terrame-deps-conf.sh .
+cp -v $_TERRAME_GIT_DIR/build/scripts/mac/terrame-deps-conf.sh .
 
 echo -ne "Downloading Protobuf ... "
 curl -L -O https://github.com/google/protobuf/releases/download/v3.1.0/protobuf-cpp-3.1.0.tar.gz --silent
