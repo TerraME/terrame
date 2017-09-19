@@ -22,23 +22,23 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It performs TerraME TerraLib compilation on MacOSX El Capitan system
 #
 
 if [ -z "$_TERRALIB_TARGET_3RDPARTY_DIR" ]; then
-  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/daily/terralib/3rdparty/5.2"
+  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/5.2"
 fi
 
 if [ -z "$_TERRAME_TARGET_3RDPARTY_DIR" ]; then
-  export _TERRAME_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/daily/terrame/3rdparty"
+  export _TERRAME_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terrame/3rdparty"
 fi
 
 _TERRALIB_BRANCH="release-5.2"
 export _TERRALIB_3RDPARTY_NAME="terralib-3rdparty-macosx-el-capitan.tar.gz"
 export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/5.2/$_TERRALIB_3RDPARTY_NAME"
 
-export PATH=$PATH:$HOME/Qt5.6.0/5.6/clang_64/bin
+export PATH=$PATH:$_QT5_DIR:$_CMAKE_DIR
 
 #
 # Valid parameter val or abort script
@@ -72,18 +72,11 @@ curl -L -O $_TERRALIB_TARGET_URL --silent
 valid_operation $? "Error. Check $_TERRALIB_TARGET_URL"
 
 echo -ne "Downloading TerraLib ... "
-git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git --quiet
+git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
 valid_operation $? "Error. Could not clone TerraLib $_TERRALIB_BRANCH" terralib
 
-echo -ne "Downloading TerraME ... "
-git clone https://github.com/TerraME/terrame.git terrame --quiet
-valid_operation $? "Error: Could not download TerraME"
-
 # Configuring TerraLib 3rdparty compilation
-cp terralib/install/install-3rdparty-macosx-el-capitan.sh .
-
-# Configuring TerraME dependencies compilation
-cp terrame/build/scripts/mac/terrame-deps-conf.sh $_TERRAME_TARGET_3RDPARTY_DIR
+cp --verbose $_TERRALIB_GIT_DIR/install/install-3rdparty-macosx-el-capitan.sh .
 
 echo -ne "Compiling TerraLib dependencies ... "
 TERRALIB_DEPENDENCIES_DIR="$_TERRALIB_TARGET_3RDPARTY_DIR" ./install-3rdparty-macosx-el-capitan.sh
@@ -93,6 +86,9 @@ echo ""
 echo ""
 
 cd $_TERRAME_TARGET_3RDPARTY_DIR
+
+# Configuring TerraME dependencies compilation
+cp --verbose $_TERRAME_GIT_DIR/build/scripts/mac/terrame-deps-conf.sh .
 
 echo -ne "Downloading Protobuf ... "
 curl -L -O https://github.com/google/protobuf/releases/download/v3.1.0/protobuf-cpp-3.1.0.tar.gz --silent
@@ -107,11 +103,11 @@ echo -ne "Preparing to compilation ... "
 tar zxf protobuf-cpp-3.1.0.tar.gz
 valid_operation $? "Error: Could not extract protobuff"
 mv protobuf-3.1.0 protobuf
-valid_operation $? "Error: Could find 'protobuf' folder inside compressed protobuf"  
+valid_operation $? "Error: Could find 'protobuf' folder inside compressed protobuf"
 tar zxf 0.17.0.tar.gz
-valid_operation $? "Error: Could not extract Luacheck" 
+valid_operation $? "Error: Could not extract Luacheck"
 mv luacheck* luacheck
-valid_operation $? "Error: Could find luacheck inside luacheck compressed file" 
+valid_operation $? "Error: Could find luacheck inside luacheck compressed file"
 
 echo -ne "Compiling TerraME dependencies ... "
 ./terrame-deps-conf.sh
