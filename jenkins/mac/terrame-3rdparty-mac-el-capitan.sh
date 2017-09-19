@@ -71,7 +71,9 @@ echo -ne "Downloading TerraLib 3rdparty ... "
 curl -L -O $_TERRALIB_TARGET_URL --silent
 valid_operation $? "Error. Check $_TERRALIB_TARGET_URL"
 
-echo -ne "Downloading TerraLib ... "
+echo -ne "Cloning TerraLib ... "
+rm -rf $_TERRALIB_GIT_DIR
+mkdir $_TERRALIB_GIT_DIR
 git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
 valid_operation $? "Error. Could not clone TerraLib $_TERRALIB_BRANCH" terralib
 
