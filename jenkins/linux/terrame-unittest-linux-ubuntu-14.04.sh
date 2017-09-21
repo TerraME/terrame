@@ -79,10 +79,10 @@ fi
 
 # Executing unittest
 if [ -f "$(pwd)/test.lua" ]; then
-	terrame -color $TERRAME_COMMANDS -test test.lua
+	terrame -color $TERRAME_COMMANDS -test test.lua 2> /dev/null
 	RESULT=$?
 else
-	terrame -color $TERRAME_COMMANDS -test
+	terrame -color $TERRAME_COMMANDS -test 2> /dev/null
 	RESULT=$?
 fi
 
