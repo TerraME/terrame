@@ -75,6 +75,22 @@ return{
 
 		unitTest:assertError(error_func, "All the elements of an RGB composition should be numbers, got 'string' in position 1.")
 
+		local amaz = CellularSpace{
+			file = filePath("amazonia.shp")
+		}
+
+		error_func = function()
+			Map{target = amaz, select = "distance", min = 0, max = 100, slices = 10, color = "Blues"}
+		end
+
+		unitTest:assertError(error_func, "Could not execute selected function 'distance' properly.")
+
+		error_func = function()
+			Map{target = amaz, select = "distance", slices = 10, color = "Blues"}
+		end
+
+		unitTest:assertError(error_func, "Could not execute selected function 'distance' properly.")
+
 		-- equalsteps
 		error_func = function()
 			Map{target = c, grouping = "equalsteps"}

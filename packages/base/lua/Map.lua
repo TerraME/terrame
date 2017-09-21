@@ -1838,7 +1838,9 @@ function Map(data)
 					local mdata = cell[data.select]
 
 					if type(mdata) == "function" then
-						mdata = mdata(cell)
+						if not pcall(function() mdata = mdata(cell) end) then
+							customError("Could not execute selected function '"..data.select.."' properly.")
+						end
 					end
 
 					if min > mdata then
@@ -2131,9 +2133,14 @@ function Map(data)
 
 			data.target.cellobsattrs_[data.select] = true
 
+			if not pcall(function() local cell = data.target:sample(); cell[data.select](cell) end) then
+				customError("Could not execute selected function '"..data.select.."' properly.")
+			end
+
 			forEachCell(data.target, function(cell)
 				cell[data.select.."_"] = cell[data.select](cell)
 			end)
+
 			data.select = data.select.."_"
 		end
 	end
