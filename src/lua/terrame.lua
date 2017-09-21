@@ -587,6 +587,8 @@ function _Gtme.installPackage(file)
 	cDir:setCurrentDir()
 
 	Directory(package):delete()
+
+	_Gtme.loadedPackages[package] = nil
 	_Gtme.printNote("Package '"..package.."' was successfully installed")
 	return package
 end
