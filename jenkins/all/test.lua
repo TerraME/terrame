@@ -1,4 +1,4 @@
 time = true
 examples = true
 lines = true
-tolerance = 0.6
+tolerance = 0.65

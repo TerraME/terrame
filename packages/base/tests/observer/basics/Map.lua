@@ -203,8 +203,8 @@ return{
 
 		unitTest:assertWarning(warning_func, "Argument 'values' is unnecessary. Do you mean 'value'?")
 		unitTest:assertType(m, "Map")
-		unitTest:assertSnapshot(m, "map_quantil.bmp", 0.95)
-		unitTest:assertSnapshot(mi, "map_quantil_invert.bmp", 0.95)
+		unitTest:assertSnapshot(m, "map_quantil.bmp", 0.97)
+		unitTest:assertSnapshot(mi, "map_quantil_invert.bmp", 0.97)
 
 		forEachCell(cs, function(cell)
 			cell.w = cell.x
