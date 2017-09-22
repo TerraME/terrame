@@ -1816,6 +1816,13 @@ function Map(data)
 		customError(incompatibleTypeMsg("color", "string or table", data.color))
 	end
 
+	if type(data.target) == "CellularSpace" then
+		local func = data.target:sample()[data.select]
+		if func and func == Cell_[data.select] then
+			customError("It is not possible to use a TerraME function as selected attribute for Maps.")
+		end
+	end
+
 	switch(data, "grouping"):caseof{
 		equalsteps = function()
 			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid", "title"})
@@ -1825,7 +1832,7 @@ function Map(data)
 
 			local sample = data.target.cells[1][data.select]
 
-			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the target.")
+			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the Cells of the target.")
 			if not belong(type(sample), {"number", "function"}) then
 				customError("Selected element should be number or function, got "..type(sample)..".")
 			end
@@ -1838,9 +1845,7 @@ function Map(data)
 					local mdata = cell[data.select]
 
 					if type(mdata) == "function" then
-						if not pcall(function() mdata = mdata(cell) end) then
-							customError("Could not execute selected function '"..data.select.."' properly.")
-						end
+						mdata = mdata(cell)
 					end
 
 					if min > mdata then
