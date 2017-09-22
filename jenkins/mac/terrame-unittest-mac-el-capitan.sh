@@ -36,8 +36,7 @@
 PACKAGE=$1
 
 # Exporting enviroment variables
-export TME_PATH=$_TERRAME_INSTALL_PATH/bin
-export PATH=$PATH:$TME_PATH
+export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
 
 cd $_TERRAME_TEST_DIR
 

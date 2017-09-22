@@ -30,8 +30,7 @@
 ## ./terrame-repository-test-mac-el-capitan.sh
 #
 
-export TME_PATH="$_TERRAME_INSTALL_PATH/bin"
-export PATH=$PATH:$TME_PATH
+export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
 
 cd $_TERRAME_REPOSITORY_DIR
 

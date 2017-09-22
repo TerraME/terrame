@@ -30,8 +30,7 @@
 #
 
 # Exporting enviroment variables
-export TME_PATH=$_TERRAME_INSTALL_PATH/bin
-export PATH=$PATH:$TME_PATH
+export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
 
 # Copying TerraME configuration
 cd $_TERRAME_EXECUTION_DIR
