@@ -322,7 +322,7 @@ return{
 
 		m:update()
 		unitTest:assertType(m, "Map")
-		unitTest:assertSnapshot(m, "map_save.bmp", 0.9)
+		unitTest:assertSnapshot(m, "map_save.bmp", 0.96)
 
 		local singleFooAgent = Agent{}
 		cs = CellularSpace{xdim = 10}
