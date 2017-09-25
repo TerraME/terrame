@@ -201,7 +201,7 @@ return{
 
 		cs:notify()
 
-		unitTest:assertSnapshot(map, "cellspace_map_project.bmp", 0.65)
+		unitTest:assertSnapshot(map, "cellspace_map_project.bmp", 0.68)
 
 		t = Timer{
 			Event{action = function(event)

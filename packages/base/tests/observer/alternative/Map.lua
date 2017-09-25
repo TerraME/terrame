@@ -75,6 +75,27 @@ return{
 
 		unitTest:assertError(error_func, "All the elements of an RGB composition should be numbers, got 'string' in position 1.")
 
+		local cs = CellularSpace{
+			xdim = 3,
+			instance = Cell{
+				myfunc = function()
+					customError("My error.")
+				end
+			}
+		}
+
+		error_func = function()
+			Map{target = cs, select = "addNeighborhood", min = 0, max = 100, slices = 10, color = "Blues"}
+		end
+
+		unitTest:assertError(error_func, "It is not possible to use a TerraME function as selected attribute for Maps.")
+
+		error_func = function()
+			Map{target = cs, select = "myfunc", slices = 10, color = "Blues"}
+		end
+
+		unitTest:assertError(error_func, "My error.")
+
 		-- equalsteps
 		error_func = function()
 			Map{target = c, grouping = "equalsteps"}
@@ -86,7 +107,7 @@ return{
 			Map{target = c, select = "mvalue", grouping = "equalsteps"}
 		end
 
-		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
+		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the Cells of the target.")
 
 		error_func = function()
 			Map{target = c, select = "bvalue", grouping = "equalsteps"}
@@ -528,7 +549,7 @@ return{
 		-- Society
 		local ag = Agent{}
 		local soc = Society{instance = ag, quantity = 10}
-		local cs = CellularSpace{xdim = 10}
+		cs = CellularSpace{xdim = 10}
 
 		error_func = function()
 			Map{target = soc}

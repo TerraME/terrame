@@ -55,9 +55,11 @@ Skipping w2
 Testing file lua/Utils.lua
 Testing belong2
 Error: [string "belon2(2, {1, 2, 3})"]:1: attempt to call a nil value (global 'belon2')
+Could not find any import() call to load the package in the @usage.
 Skipping createNeighborhood2
 Testing elapsedTime2
 Error: [string "print(elapsedTime2(100)) -- 00:01:40"]:1: attempt to call a nil value (global 'elapsedTime2')
+Could not find any import() call to load the package in the @usage.
 Skipping getExtension2
 Skipping greaterByAttribute
 Skipping greaterByCoord2
