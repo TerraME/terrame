@@ -27,10 +27,16 @@ local function split(text, delim)
 end
 
 local function package(directory)
-    directories = split(directory, "/")
+    local directories
+
+	if win then
+		directories = split(directory, "\\")
+	else
+		directories = split(directory, "/")
+	end
 
     for i = #directories, 1, -1 do
-        if directories[i] == "lua" or directories[i] == "test" then
+        if directories[i] == "lua" or directories[i] == "tests" then
             return directories[i - 1]
         end
     end
