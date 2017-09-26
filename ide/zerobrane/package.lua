@@ -36,10 +36,13 @@ local function package(directory)
 	end
 
     for i = #directories, 1, -1 do
-        if directories[i] == "lua" or directories[i] == "tests" then
+		local md = directories[i]
+        if md == "lua" or md == "tests" or md == "examples" or md == "data" then
             return directories[i - 1]
         end
     end
+
+	return directories[#directories]
 end
 
 return {
