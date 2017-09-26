@@ -893,17 +893,17 @@ function _Gtme.loadModules(pkg)
 	pkg = Directory(pkg.."lib")
 
 	if pkg:exists() then
-		package.path = package.path..";"..pkg.."/?.lua"
+		package.path = pkg.."/?.lua;"..package.path
 		cpp_putenv(tostring(pkg))
 
 		local system = sessionInfo().system
 
 		if system == "windows" then
-			package.cpath = package.cpath..";"..pkg.."/?.dll"
+			package.cpath = pkg.."/?.dll;"..package.cpath
 		elseif system == "linux" then
-			package.cpath = package.cpath..";"..pkg.."/?.so"
+			package.cpath = pkg.."/?.so;"..package.cpath
 		else -- system == "mac"
-			package.cpath = package.cpath..";"..pkg.."/?.dylib"
+			package.cpath = pkg.."/?.dylib;"..package.cpath
 		end
 	end
 end
