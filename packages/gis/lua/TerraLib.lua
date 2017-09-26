@@ -2428,9 +2428,9 @@ TerraLib_ = {
 
 			if not propertyExists(fromConnInfo, fromDSetName, select, fromType) then
 				if repr == "raster" then
-					customError("Selected band '"..select.."' does not exist in layer '"..from.."'.")
+					customError("Selected band '"..select.."' does not exist in Layer '"..from.."'.")
 				else
-					customError("Selected attribute '"..select.."' does not exist in layer '"..from.."'.")
+					customError("Selected attribute '"..select.."' does not exist in Layer '"..from.."'.")
 				end
 			end
 
