@@ -104,7 +104,7 @@ return {
 			TerraLib().attributeFill(proj, layerName3, clName, percTifLayerName, attribute, operation, select, area, default, repr)
 		end
 
-		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in layer '"..layerName3.."'.")
+		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in Layer '"..layerName3.."'.")
 
 		for j = 1, #shp do
 			File(shp[j]):deleteIfExists()

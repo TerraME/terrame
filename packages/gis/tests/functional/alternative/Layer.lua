@@ -617,7 +617,7 @@ return{
 			}
 		end
 
-		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'.")
+		unitTest:assertError(selectNotExists, "Selected attribute '"..selected.."' does not exist in Layer '"..layerName1.."'. The available attributes are: 'FID', 'population', 'dens_pop'.")
 
 		selected = "populaco"
 		local selectNotExistsSug = function()
@@ -629,7 +629,7 @@ return{
 			}
 		end
 
-		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in layer '"..layerName1.."'. Do you mean 'population'?")
+		unitTest:assertError(selectNotExistsSug, "Selected attribute '"..selected.."' does not exist in Layer '"..layerName1.."'. Do you mean 'population'?")
 
 		selectNotString = function()
 			cl:fill{
