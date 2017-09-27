@@ -276,9 +276,7 @@ local function projButtonClicked()
 
 		if resolution == defaultResolution then resolution = nil end
 
-		print = _Gtme.print
 		_Gtme.executeProject(package, project, resolution)
-		print = nil
 		qt.dialog.msg_information("Project '"..project.."' successfully created.")
 		mdialog:done(0)
 	end)
@@ -655,37 +653,6 @@ local function installLocalButtonClicked()
 	if not package then
 		enableAll()
 		return
-	end
-
-	local currentVersion
-	local packageDir = _Gtme.sessionInfo().path.."packages"
-	if Directory(packageDir..s..package):exists() then
-		currentVersion = packageInfo(package).version
-		_Gtme.printNote("Package '"..package.."' is already installed")
-	else
-		_Gtme.printNote("Package '"..package.."' was not installed before")
-	end
-
-	os.execute("unzip -oq \""..file.."\"")
-
-	local newVersion = _Gtme.getLuaFile(package..s.."description.lua").version
-
-	if currentVersion then
-		if not _Gtme.verifyVersionDependency(newVersion, ">=", currentVersion) then
-			local msg = "New version ("..newVersion..") is older than current one ("
-				..currentVersion..").".."\nDo you really want to install "
-				.."an older version of package '"..package.."'?"
-
-			if qt.dialog.msg_question(msg, "Confirm?", qtOk + qtCancel, qtCancel) == qtOk then
-				_Gtme.printNote("Removing previous version of package")
-				Directory(packageDir..s..package):delete()
-			else
-				if isDirectory(package) then Directory(package):delete() end
-
-				enableAll()
-				return
-			end
-		end
 	end
 
 	local pkg = xpcall(function() _Gtme.installPackage(fname) end, function(err)

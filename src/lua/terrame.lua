@@ -525,7 +525,7 @@ function _Gtme.installPackage(file)
 		return
 	end
 
-	local s = "/" --_Gtme.sessionInfo().separator
+	local s = "/"
 	local package
 
 	file = _Gtme.makePathCompatibleToAllOS(file)
@@ -537,8 +537,6 @@ function _Gtme.installPackage(file)
 		os.exit(1)
 	end)
 
-	_Gtme.printNote("Installing package '"..package.."'")
-
 	local cDir = _Gtme.currentDir()
 	local packageDir = Directory(_Gtme.sessionInfo().path.."packages")
 
@@ -546,12 +544,9 @@ function _Gtme.installPackage(file)
 		_Gtme.import("base")
 	end
 
-	local currentVersion
 	if Directory(packageDir..package):exists() then
-		currentVersion = packageInfo(package).version
-		_Gtme.print("Package '"..package.."' is already installed")
-	else
-		_Gtme.print("Package '"..package.."' was not installed before")
+		_Gtme.print("Removing previous version of package")
+		Directory(packageDir..package):delete()
 	end
 
 	_Gtme.print("Installing package '"..package.."'")
@@ -559,20 +554,6 @@ function _Gtme.installPackage(file)
 
 	_Gtme.print("Verifying dependencies")
 	_Gtme.verifyDepends(package)
-
-	local newVersion = _Gtme.getLuaFile(package..s.."description.lua").version
-
-	if currentVersion then
-		if not _Gtme.verifyVersionDependency(newVersion, ">=", currentVersion) then
-			_Gtme.printError("Error: New version ("..newVersion..") is older than current one ("..currentVersion..").")
-			_Gtme.printError("If you really want to install a previous version, please")
-			_Gtme.printError("execute 'terrame -package "..package.." -uninstall' first.")
-			os.exit(1)
-		else
-			_Gtme.print("Removing previous version of package")
-			Directory(packageDir..package):delete()
-		end
-	end
 
 	_Gtme.print("Trying to load package '"..package.."'")
 	local status, err = pcall(function() import(package) end)
