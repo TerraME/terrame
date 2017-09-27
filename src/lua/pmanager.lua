@@ -23,10 +23,10 @@
 -------------------------------------------------------------------------------------------
 
 -- some qt values
-local qtOk = 2 ^ 10
+--local qtOk = 2 ^ 10
 --local qtYes = 2 ^ 14
 --local qtNo = 2 ^ 16
-local qtCancel = 2 ^ 22
+--local qtCancel = 2 ^ 22
 
 local comboboxExamples
 local comboboxModels
@@ -635,7 +635,6 @@ end
 
 local function installLocalButtonClicked()
 	disableAll()
-	local s = sessionInfo().separator
 	local fname = qt.dialog.get_open_filename("Select Package", "", "*.zip")
 	if fname == "" then
 		enableAll()
