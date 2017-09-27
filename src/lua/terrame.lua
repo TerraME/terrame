@@ -560,7 +560,7 @@ function _Gtme.installPackage(file)
 	_Gtme.print("Verifying dependencies")
 	_Gtme.verifyDepends(package)
 
-	local newVersion = _Gtme.getLuaFile(package..s.."description.lua").version
+	local newVersion = _Gtme.getLuaFile(packageDir..package..s.."description.lua").version
 
 	if currentVersion then
 		if not _Gtme.verifyVersionDependency(newVersion, ">=", currentVersion) then
