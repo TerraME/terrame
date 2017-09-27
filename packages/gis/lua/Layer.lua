@@ -709,10 +709,15 @@ Layer_ = {
 			end
 
 			if not belong(data.select, attrNames) then
-				local msg = "Selected attribute '"..data.select.."' does not exist in layer '"..data.layer.name.."'."
+				local msg = "Selected attribute '"..data.select.."' does not exist in Layer '"..data.layer.name.."'."
 				local sugg = suggestion(data.select, attrNames)
 
-				msg = msg..suggestionMsg(sugg)
+				if sugg then
+					msg = msg..suggestionMsg(sugg)
+				else
+					msg = msg.." The available attributes are: '"..table.concat(attrNames, "', '").."'."
+				end
+
 				customError(msg)
 			end
 		end

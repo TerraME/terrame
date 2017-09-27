@@ -196,6 +196,11 @@ _Gtme.printNote("Executing documentation")
 forEachOrderedElement(pkgs, function(package)
 	local docInitialTime = os.time(os.date("*t"))
 
+	if package == "rstats" then
+		_Gtme.printWarning("Skipping package '"..package.."'")
+		return
+	end
+
 	_Gtme.print("Documenting package '"..package.."'")
 	local command = "terrame -package "..package.." -doc"
 	execute(command, "doc-"..package..".log")
@@ -216,6 +221,11 @@ end)
 _Gtme.printNote("Executing tests")
 forEachOrderedElement(pkgs, function(package)
 	local testInitialTime = os.time(os.date("*t"))
+
+	if package == "rstats" then
+		_Gtme.printWarning("Skipping package '"..package.."'")
+		return
+	end
 
 	_Gtme.print("Testing package '"..package.."'")
 

@@ -554,7 +554,8 @@ function _Gtme.installPackage(file)
 		_Gtme.print("Package '"..package.."' was not installed before")
 	end
 
-	os.execute("unzip -oq \""..file.."\"")
+	_Gtme.print("Installing package '"..package.."'")
+	os.execute("unzip -oq \""..file.."\" -d "..packageDir)
 
 	_Gtme.print("Verifying dependencies")
 	_Gtme.verifyDepends(package)
@@ -577,16 +578,11 @@ function _Gtme.installPackage(file)
 	local status, err = pcall(function() import(package) end)
 
 	if not status then
-		Directory(package):delete()
+		Directory(packageDir..package):delete()
 		_Gtme.customError(err)
 	end
 
-	_Gtme.print("Installing package '"..package.."'")
-	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")
-
 	cDir:setCurrentDir()
-
-	Directory(package):delete()
 
 	_Gtme.loadedPackages[package] = nil
 	_Gtme.printNote("Package '"..package.."' was successfully installed")
@@ -897,17 +893,17 @@ function _Gtme.loadModules(pkg)
 	pkg = Directory(pkg.."lib")
 
 	if pkg:exists() then
-		package.path = package.path..";"..pkg.."/?.lua"
+		package.path = pkg.."/?.lua;"..package.path
 		cpp_putenv(tostring(pkg))
 
 		local system = sessionInfo().system
 
 		if system == "windows" then
-			package.cpath = package.cpath..";"..pkg.."/?.dll"
+			package.cpath = pkg.."/?.dll;"..package.cpath
 		elseif system == "linux" then
-			package.cpath = package.cpath..";"..pkg.."/?.so"
+			package.cpath = pkg.."/?.so;"..package.cpath
 		else -- system == "mac"
-			package.cpath = package.cpath..";"..pkg.."/?.dylib"
+			package.cpath = pkg.."/?.dylib;"..package.cpath
 		end
 	end
 end

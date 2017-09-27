@@ -146,9 +146,14 @@ function import(package, reload)
 					customWarning("Cannot open "..mfile..". No such file. Please check "..package_path..s.."load.lua.") -- SKIP
 				else
 					local merror
+					local mode = sessionInfo().mode
+
+					sessionInfo().mode = "quiet"
 					xpcall(function() dofile(mfile) end, function(err)
 						merror = "Package '"..package.."' could not be loaded: "..err -- SKIP
 					end)
+
+					sessionInfo().mode = mode
 
 					if merror then -- SKIP
 						_Gtme.customError(merror) -- SKIP
