@@ -1044,6 +1044,7 @@ function _Gtme.execExample(example, packageName)
 	local description
 	local okButton
 
+	local oldPrint = print
 	print = function(value)
 		if not mdialog then
 			mdialog = qt.new_qobject(qt.meta.QDialog)
@@ -1079,6 +1080,7 @@ function _Gtme.execExample(example, packageName)
 
 	local success, result = pcall(function() runScript(example) end)
 	if not success then
+		print = oldPrint
 		return false, result
 	end
 
@@ -1087,6 +1089,7 @@ function _Gtme.execExample(example, packageName)
 		mdialog:exec()
 	end
 
+	print = oldPrint	
 	return success
 end
 
