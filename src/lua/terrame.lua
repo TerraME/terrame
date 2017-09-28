@@ -1089,7 +1089,7 @@ function _Gtme.execExample(example, packageName)
 		mdialog:exec()
 	end
 
-	print = oldPrint	
+	print = oldPrint
 	return success
 end
 
