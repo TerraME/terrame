@@ -297,7 +297,7 @@ return{
 			symbol = "beetle"
 		}
 
-		unitTest:assertSnapshot(m, "map_society_white.bmp", 0.05)
+		unitTest:assertSnapshot(m, "map_society_white.bmp", 0.1)
 
 		cs = CellularSpace{xdim = 10}
 
