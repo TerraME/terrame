@@ -584,11 +584,10 @@ function Model(attrTab)
 					mandatoryArgumentError(name)
 				end
 			elseif mtype == "table" then
-				if argv[name] == nil then
-					argv[name] = {}
-				end
+				defaultTableValue(argv, name, {})
 
 				local iargv = argv[name]
+
 				forEachElement(value, function(iname, ivalue, itype)
 					if itype == "Choice" and iargv[iname] == nil then
 						iargv[iname] = ivalue.default

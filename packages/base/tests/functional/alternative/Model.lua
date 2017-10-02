@@ -244,6 +244,12 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("simulationSteps", "number", "40"))
 
 		error_func = function()
+			Tube{block = "abc"}
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg("block", "table", "abc"))
+
+		error_func = function()
 			Tube{block = {level = 40}}
 		end
 
