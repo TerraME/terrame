@@ -808,15 +808,23 @@ function Model(attrTab)
 
 		forEachOrderedElement(parameters, function(idx, value, mtype)
 			if mtype == "Choice" then
-				if argv[idx] ~= value.default and idx ~= "finalTime" then
+				if value.values and #value.values == 0 then -- Choice with named values
+					if value.values[value.default] ~= argv[idx] then
+						forEachElement(value.values, function(midx, mvalue)
+							if argv[idx] == mvalue then
+								titleStr = table.concat{titleStr, _Gtme.stringToLabel(idx), " = ", _Gtme.stringToLabel(midx), ", "}
+							end
+						end)
+					end
+				elseif argv[idx] ~= value.default and idx ~= "finalTime" then
 					if type(argv[idx]) == "string" then
-						titleStr = titleStr.._Gtme.stringToLabel(idx).." = ".._Gtme.stringToLabel(argv[idx])..", "
+						titleStr = table.concat{titleStr, _Gtme.stringToLabel(idx), " = ", _Gtme.stringToLabel(argv[idx]), ", "}
 					else
-						titleStr = titleStr.._Gtme.stringToLabel(idx).." = "..vardump(argv[idx])..", "
+						titleStr = table.concat{titleStr, _Gtme.stringToLabel(idx), " = ", vardump(argv[idx]), ", "}
 					end
 				end
 			elseif argv[idx] ~= value and idx ~= "finalTime" then
-				titleStr = titleStr.._Gtme.stringToLabel(idx).." = "..vardump(argv[idx])..", "
+				titleStr = table.concat{titleStr, _Gtme.stringToLabel(idx), " = ", vardump(argv[idx]), ", "}
 			end
 		end)
 
