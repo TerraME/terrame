@@ -168,7 +168,8 @@ end
 -- time and the closest integer number is less then the value of this argument. In this case,
 -- if an Event that starts in time one and has period 0.1, it might execute in time 1.999999999,
 -- as we are working with real number. This argument is then useful to make sure that such Event
--- will be executed in time exactly two. The default value is 1e-5. & No \
+-- will be executed in time exactly two. The default value is 1e-5. There is a function to compare
+-- numbers called Utils:equals(), that uses this value internally. & No \
 -- separator & A character with the directory separator. Each operational system has its
 -- own separator. & Yes \
 -- silent & A boolean value indicating whether print() calls should not be shown. This
