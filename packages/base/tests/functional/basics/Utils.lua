@@ -126,6 +126,10 @@ return{
 	elapsedTime = function(unitTest)
 		unitTest:assertType(elapsedTime(50), "string")
 	end,
+	equals = function(unitTest)
+		unitTest:assert(equals(2, 2.00000001))
+		unitTest:assert(not equals(2, 2.1))
+	end,
 	forEachAgent = function(unitTest)
 		local a = Agent{value = 2}
 		local soc = Society{instance = a, quantity = 10}

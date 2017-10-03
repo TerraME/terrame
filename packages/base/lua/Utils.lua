@@ -104,6 +104,16 @@ function belong(value, values)
 	return found
 end
 
+--- Return whether two numbers are equals. It supposes that there can exist
+-- a maximum difference of sessionInfo().round between them.
+-- @arg v1 A number.
+-- @arg v2 Another number.
+-- @usage print(equals(2, 2.0000001))
+-- @see OS:sessionInfo()
+function equals(v1, v2)
+	return math.abs(v1 - v2) < sessionInfo().round
+end
+
 --- Return whether a given value is a Model or an instance of a Model.
 -- @arg value A value.
 -- @usage print(isModel(2)) -- false

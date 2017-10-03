@@ -14,21 +14,20 @@ local function calculatePotNeighborhood(cs)
 	forEachCell(cs, function(cell)
 		cell.pot = 0
 		local countNeigh = 0
+		local potential = 0
+
+		forEachNeighbor(cell, function(neigh)
+			-- The potential of change for each cell is
+			-- the average of neighbors deforestation.
+			-- fully deforested cells have zero potential
+			potential = potential + neigh.defor
+			countNeigh = countNeigh + 1
+		end)
 
 		if cell.defor < 1.0 then
-			forEachNeighbor(cell, function(neigh)
-				-- The potential of change for each cell is
-				-- the average of neighbors deforestation.
-				-- fully deforested cells have zero potential
-				cell.pot = cell.pot + neigh.defor
-				countNeigh = countNeigh + 1
-			end)
-
-			if cell.pot > 0 then
-				-- increment the total potential
-				cell.pot = cell.pot / countNeigh
-				total_pot = total_pot + cell.pot
-			end
+			-- increment the total potential
+			cell.pot = potential / countNeigh
+			total_pot = total_pot + cell.pot
 		end
 	end)
 
@@ -37,6 +36,7 @@ end
 
 local function calculatePotRegression(cs)
 	local total_pot = 0
+	local expected
 
 	-- The potential for change is the residue of a
 	-- linear regression between the cell's
@@ -44,16 +44,16 @@ local function calculatePotRegression(cs)
 	forEachCell(cs, function(cell)
 		cell.pot = 0
 
-		if cell.defor < 1.0 then
-			expected =  - 0.150 * math.log(cell.distroads)
-			            - 0.048 * cell.protected
-			            - 0.060 * math.log(cell.distports)
-			            + 2.7
+		expected = - 0.150 * math.log(cell.distroads)
+		           - 0.048 * cell.protected
+		           - 0.060 * math.log(cell.distports)
+		           + 2.7
 
-			if expected > cell.defor then
-				cell.pot = expected - cell.defor
-				total_pot = total_pot + cell.pot
-			end
+		if expected > 1 then expected = 1 end
+
+		if cell.defor < 1.0 and expected > cell.defor then
+			cell.pot = expected - cell.defor
+			total_pot = total_pot + cell.pot
 		end
 	end)
 
@@ -62,39 +62,36 @@ end
 
 local function calculatePotMixed(cs)
 	local total_pot = 0
+	local expected
 
 	forEachCell(cs, function(cell)
 		cell.pot = 0
 		cell.ave_neigh = 0
 
 		-- Calculate the average deforestation
-		countNeigh = 0
+		local countNeigh = 0
 		forEachNeighbor(cell, function(neigh)
 			-- The potential of change for each cell is
 			-- the average of neighbors' deforestation.
-			if cell.defor < 1.0 then
-				cell.ave_neigh = cell.ave_neigh + neigh.defor
-				countNeigh = countNeigh + 1
-			end
+			cell.ave_neigh = cell.ave_neigh + neigh.defor
+			countNeigh = countNeigh + 1
 		end)
 
 		-- find the average deforestation
-		if cell.defor < 1.0 then
-			cell.ave_neigh = cell.ave_neigh / countNeigh
-		end
+		cell.ave_neigh = cell.ave_neigh / countNeigh
 
 		-- Potential for change
-		if cell.defor < 1.0 then
-			expected =    1.056 * cell.ave_neigh
-						- 0.035 * math.log(cell.distroads)
-						+ 0.018 * math.log(cell.distports)
-						- 0.051 * cell.protected
-						+ 0.059
+		expected =   1.056 * cell.ave_neigh
+		           - 0.035 * math.log(cell.distroads)
+		           + 0.018 * math.log(cell.distports)
+		           - 0.051 * cell.protected
+		           + 0.059
 
-			if expected > cell.defor then
-				cell.pot = expected - cell.defor
-				total_pot = total_pot + cell.pot
-			end
+		if expected > 1 then expected = 1 end
+
+		if expected > cell.defor then
+			cell.pot = expected - cell.defor
+			total_pot = total_pot + cell.pot
 		end
 	end)
 
@@ -106,16 +103,12 @@ Amazonia = Model{
 	allocation = 10000, -- km^2
 	area = 50 * 50, -- km^2
 	limit = 30, -- km^2
-	potential = Choice{"neighborhood", "regression", "mixed"},
+	potential = Choice{
+		mixed = calculatePotMixed,
+		neighborhood = calculatePotNeighborhood,
+		regression = calculatePotRegression
+	},
 	init = function(model)
-		if model.potential == "neighborhood" then
-			model.potential = calculatePotNeighborhood
-		elseif model.potential == "regression" then
-			model.potential = calculatePotRegression
-		else
-			model.potential = calculatePotMixed
-		end
-
 		model.cell = Cell{
 			init = function(cell)
 				cell.defor = cell.defor / 100
@@ -139,7 +132,8 @@ Amazonia = Model{
 			min = 0,
 			max = 1,
 			color = "RdYlGn",
-			invert = true
+			invert = true,
+			title = model:title()
 		}
 
 		model.deforest = function(cs, total_pot)
@@ -149,6 +143,7 @@ Amazonia = Model{
 			-- allocated to the remaining cells
 			-- there is an error limit (30 km2 as default)
 			local total_demand = model.allocation
+			local newarea, excess
 
 			while total_demand > model.limit do
 				forEachCell(cs, function(cell)
@@ -162,6 +157,7 @@ Amazonia = Model{
 					else
 						excess = 0
 					end
+
 					-- adjust the total demand
 					total_demand = total_demand - (newarea - excess)
 				end)
@@ -171,7 +167,7 @@ Amazonia = Model{
 		model.traj = Trajectory{
 			target = model.amazonia,
 			select = function(cell) return cell.pot > 0 end,
-			greater = function (cell1, cell2) return cell1.pot > cell2.pot end,
+			greater = function(cell1, cell2) return cell1.pot > cell2.pot end,
 			build = false
 		}
 
@@ -186,7 +182,11 @@ Amazonia = Model{
 	end
 }
 
-scenario1 = Amazonia{}
+env = Environment{
+	Amazonia{potential = "neighborhood"},
+	Amazonia{potential = "regression"},
+	Amazonia{potential = "mixed"}
+}
 
-scenario1:run()
+env:run()
 
