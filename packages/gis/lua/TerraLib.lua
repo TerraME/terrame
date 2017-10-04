@@ -22,8 +22,14 @@
 --
 -------------------------------------------------------------------------------------------
 
+local function makeWeakTable(table)
+	setmetatable(table, {__mode = 'v'})
+	return table
+end
+
 local binding = _Gtme.terralib_mod_binding_lua
 local instance = nil
+local dataCache = makeWeakTable{}
 
 local OperationMapper = {
 	value = binding.VALUE_OPERATION,
@@ -2544,6 +2550,16 @@ TerraLib_ = {
 	getDataSet = function(project, layerName, missing)
 		local set, err
 
+		if dataCache[project] and dataCache[project][layerName] then
+			if missing then
+				if dataCache[project][layerName][missing] then
+					return dataCache[project][layerName][missing] -- SKIP
+				end
+			else
+				return dataCache[project][layerName] -- SKIP
+			end
+		end
+
 		do
 			loadProject(project, project.file)
 
@@ -2555,6 +2571,24 @@ TerraLib_ = {
 			local dse = ds:getDataSet(dseName)
 
 			set, err = createDataSetAdapted(dse, missing)
+
+			if not dataCache[project] then
+				dataCache[project] = makeWeakTable{} -- SKIP
+			end
+
+			if not dataCache[project][layerName] then
+				dataCache[project][layerName] = makeWeakTable{} -- SKIP
+			end
+
+			if missing and not dataCache[project][layerName][missing] then
+				dataCache[project][layerName][missing] = makeWeakTable{} -- SKIP
+			end
+
+			if missing then
+				dataCache[project][layerName][missing] = set
+			else
+				dataCache[project][layerName] = set
+			end
 
 			releaseProject(project)
 		end
@@ -2659,6 +2693,16 @@ TerraLib_ = {
 	getOGRByFilePath = function(filePath, missing)
 		local set, err
 
+		if dataCache[filePath] then
+			if missing then
+				if dataCache[filePath][missing] then
+					return dataCache[filePath][missing] -- SKIP
+				end
+			else
+				return dataCache[filePath] -- SKIP
+			end
+		end
+
 		do
 			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "OGR")
@@ -2673,6 +2717,20 @@ TerraLib_ = {
 
 			local dSet = ds:getDataSet(dSetName)
 			set, err = createDataSetAdapted(dSet, missing)
+
+			if not dataCache[filePath] then
+				dataCache[filePath] = makeWeakTable{} -- SKIP
+			end
+
+			if missing and not dataCache[filePath][missing] then
+				dataCache[filePath][missing] = makeWeakTable{} -- SKIP
+			end
+
+			if missing then
+				dataCache[filePath][missing] = set -- SKIP
+			else
+				dataCache[filePath] = set -- SKIP
+			end
 
 			ds:close()
 		end
