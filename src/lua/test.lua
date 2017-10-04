@@ -905,6 +905,8 @@ function _Gtme.executeTests(package, fileName)
 					-- _Gtme.loadTmeFile(baseDir.."examples"..s..value..".lua")
 					local result, err = loadfile(baseDir.."examples"..s..value..".lua", 't', env)
 
+					setmetatable(_G, nil)
+
 					if not result then
 						printError(err)
 						ut.examples_error = ut.examples_error + 1
