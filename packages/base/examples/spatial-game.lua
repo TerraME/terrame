@@ -35,7 +35,7 @@ cell = Cell{
 	end,
 	turn = function(self)
 		forEachNeighbor(self, function(neigh)
-			g = Game(self.strategy, neigh.strategy)
+			local g = Game(self.strategy, neigh.strategy)
 			self.payoff  = self.payoff  + g[1]
 			neigh.payoff = neigh.payoff + g[2]
 		end)

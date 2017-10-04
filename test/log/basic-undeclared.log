@@ -1,0 +1,1 @@
+Warning: Assign to undeclared variable 'xyz'. Please declare it as local. In file 'undeclared.lua', line 3.

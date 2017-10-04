@@ -892,7 +892,10 @@ function _Gtme.executeTests(package, fileName)
 						return chart
 					end
 
-					local env = setmetatable({Map = mMap, Chart = mChart}, {__index = _G})
+					local mt = _Gtme.checkNilVariables()
+					mt.__index = _G
+
+					local env = setmetatable({Map = mMap, Chart = mChart}, mt)
 					-- loadfile is necessary to avoid any global variable from one
 					-- example to affect another example
 

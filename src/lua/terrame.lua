@@ -165,21 +165,19 @@ function _Gtme.downloadPackage(pkg)
 end
 
 -- from http://metalua.luaforge.net/src/lib/strict.lua.html
-local function checkNilVariables()
-	local mt = getmetatable(_G)
+function _Gtme.checkNilVariables(mt)
 	if mt == nil then
 		mt = {}
 		setmetatable(_G, mt)
 	end
 
-	local __STRICT = true
 	mt.__declared = {}
 
 	mt.__newindex = function(t, n, v)
-		if __STRICT and not mt.__declared[n] then
+		if not mt.__declared[n] then
 			local w = debug.getinfo(2, "S").what
 			if w ~= "main" and w ~= "C" then
-				_Gtme.strictWarning("Assign to undeclared variable '"..n.."'.")
+				_Gtme.strictWarning("Assign to undeclared variable '"..n.."'. Please declare it as local.")
 			end
 			mt.__declared[n] = true
 		end
@@ -194,6 +192,8 @@ local function checkNilVariables()
 
 		return rawget(t, n)
 	end
+
+	return mt
 end
 
 -- builds a table with zero counts for each element of the table gotten as argument
@@ -987,7 +987,8 @@ end
 
 local function runScript(script)
 	if info_.mode ~= "quiet" then
-		checkNilVariables()
+		local mt = getmetatable(_G)
+		_Gtme.checkNilVariables(mt)
 	end
 
 	if not _Gtme.isLoaded("base") then

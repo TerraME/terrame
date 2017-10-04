@@ -45,7 +45,7 @@ prey = Agent{
 		self:walk()
 
 		if self.energy >= 30 then
-			neigh = self:emptyNeighbor() -- getCell():getNeighborhood():sample()
+			local neigh = self:emptyNeighbor() -- getCell():getNeighborhood():sample()
 
 			self.energy = self.energy - 10
 

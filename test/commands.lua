@@ -152,6 +152,7 @@ basic = {
 	traceneighborhood   = {script = "trace-neighborhood.lua"},
 	traceself           = {script = "trace-self.lua"},
 	tracesocialnetwork  = {script = "trace-social-network.lua"},
+	undeclared          = {script = "undeclared.lua", arg = "-strict"},
 	qwerty4321          = {package = "qwerty4321"},
 	depend              = {arg = "-build", package = "depend"},
 	depend2             = {arg = "-build", package = "depend2"},
