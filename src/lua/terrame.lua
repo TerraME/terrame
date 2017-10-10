@@ -24,10 +24,10 @@
 
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
-local begin_red    = "\027[00;31m"
-local begin_yellow = "\027[00;33m"
-local begin_green  = "\027[00;32m"
-local end_color    = "\027[00m"
+local begin_red    = "\027[1;31m"
+local begin_yellow = "\027[1;33m"
+local begin_green  = "\027[1;32m"
+local end_color    = "\027[0m"
 
 _Gtme = {}
 setmetatable(_Gtme, {__index = _G})
