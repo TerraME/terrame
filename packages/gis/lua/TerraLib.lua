@@ -2551,8 +2551,8 @@ TerraLib_ = {
 		local set, err
 
 		if dataCache[project] and dataCache[project][layerName] then
-			if missing then
-				if dataCache[project][layerName][missing] then
+			if missing then -- SKIP
+				if dataCache[project][layerName][missing] then -- SKIP
 					return dataCache[project][layerName][missing] -- SKIP
 				end
 			else
@@ -2694,8 +2694,8 @@ TerraLib_ = {
 		local set, err
 
 		if dataCache[filePath] then
-			if missing then
-				if dataCache[filePath][missing] then
+			if missing then -- SKIP
+				if dataCache[filePath][missing] then -- SKIP
 					return dataCache[filePath][missing] -- SKIP
 				end
 			else
