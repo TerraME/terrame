@@ -21,7 +21,7 @@ chart = Chart{
 
 t = Timer{
 	Event{action = world},
-	Event{start = 10, period = 10, action = function()
+	Event{period = 10, action = function()
 		world.water = world.water + 40 -- try another value
 	end},
 	Event{action = chart}
