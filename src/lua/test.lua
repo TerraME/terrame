@@ -379,6 +379,7 @@ function _Gtme.executeTests(package, fileName)
 
 	printNote("Looking for package functions")
 	testfunctions = _Gtme.buildCountTable(package)
+	additionaltestfunctions = {}
 
 	local extra = 0
 	forEachElement(doc_functions.files, function(idx, value)
@@ -489,6 +490,7 @@ function _Gtme.executeTests(package, fileName)
 			forEachElement(dirFiles, function(_, value)
 				forEachElement(data.file, function(_, mfile)
 					if string.match(value, mfile) and not myFiles[value] then
+						additionaltestfunctions[mfile] = true
 						myFiles[value] = true
 					end
 				end)
@@ -767,7 +769,7 @@ function _Gtme.executeTests(package, fileName)
 			end)
 
 			forEachElement(data.file, function(_, value)
-				if not found[value] then
+				if not found[value] and not additionaltestfunctions[value] then
 					printError("Could not find any file for pattern '"..value.."'.")
 				end
 			end)
