@@ -31,6 +31,50 @@ local binding = _Gtme.terralib_mod_binding_lua
 local instance = nil
 local dataCache = makeWeakTable{}
 
+local function getCache(level1, level2, level3)
+	-- level1 is compulsory. The other ones are optional.
+
+	local dataCacheLevel1 = dataCache[level1] -- SKIP
+	if not dataCacheLevel1 then return end -- SKIP
+
+	if not level2 then return dataCacheLevel1 end -- SKIP
+
+	local dataCacheLevel2 = dataCacheLevel1[level2] -- SKIP
+	if not dataCacheLevel2 then return end -- SKIP
+
+	if not level3 then return dataCacheLevel2 end -- SKIP
+
+	return dataCacheLevel2[level3] -- SKIP
+end
+
+local function addCache(value, level1, level2, level3)
+	-- Again: level1 is compulsory. The other ones are optional.
+
+	if not level2 then -- SKIP
+		dataCache[level1] = value -- SKIP
+		return
+	end
+
+	local dataCacheLevel1 = dataCache[level1] -- SKIP
+	if not dataCacheLevel1 then -- SKIP
+		dataCacheLevel1 = makeWeakTable{} -- SKIP
+		dataCache[level1] = dataCacheLevel1 -- SKIP
+	end
+
+	if not level3 then -- SKIP
+		dataCacheLevel1[level2] = value -- SKIP
+		return
+	end
+
+	local dataCacheLevel2 = dataCacheLevel1[level2] -- SKIP
+	if not dataCacheLevel2 then -- SKIP
+		dataCacheLevel2 = makeWeakTable{} -- SKIP
+		dataCacheLevel1[level2] = dataCacheLevel2 -- SKIP
+	end
+
+	dataCacheLevel2[level3] = value -- SKIP
+end
+
 local OperationMapper = {
 	value = binding.VALUE_OPERATION,
 	area = binding.PERCENT_TOTAL_AREA,
@@ -2550,15 +2594,8 @@ TerraLib_ = {
 	getDataSet = function(project, layerName, missing)
 		local set, err
 
-		if dataCache[project] and dataCache[project][layerName] then
-			if missing then -- SKIP
-				if dataCache[project][layerName][missing] then -- SKIP
-					return dataCache[project][layerName][missing] -- SKIP
-				end
-			else
-				return dataCache[project][layerName] -- SKIP
-			end
-		end
+		local cache = getCache(project, layerName, missing)
+		if cache then return cache end
 
 		do
 			loadProject(project, project.file)
@@ -2572,24 +2609,7 @@ TerraLib_ = {
 
 			set, err = createDataSetAdapted(dse, missing)
 
-			if not dataCache[project] then
-				dataCache[project] = makeWeakTable{} -- SKIP
-			end
-
-			if not dataCache[project][layerName] then
-				dataCache[project][layerName] = makeWeakTable{} -- SKIP
-			end
-
-			if missing and not dataCache[project][layerName][missing] then
-				dataCache[project][layerName][missing] = makeWeakTable{} -- SKIP
-			end
-
-			if missing then
-				dataCache[project][layerName][missing] = set
-			else
-				dataCache[project][layerName] = set
-			end
-
+			addCache(set, project, layerName, missing)
 			releaseProject(project)
 		end
 
@@ -2693,15 +2713,8 @@ TerraLib_ = {
 	getOGRByFilePath = function(filePath, missing)
 		local set, err
 
-		if dataCache[filePath] then
-			if missing then -- SKIP
-				if dataCache[filePath][missing] then -- SKIP
-					return dataCache[filePath][missing] -- SKIP
-				end
-			else
-				return dataCache[filePath] -- SKIP
-			end
-		end
+		local cache = getCache(filePath, missing)
+		if cache then return cache end
 
 		do
 			local connInfo = createFileConnInfo(filePath)
@@ -2718,20 +2731,7 @@ TerraLib_ = {
 			local dSet = ds:getDataSet(dSetName)
 			set, err = createDataSetAdapted(dSet, missing)
 
-			if not dataCache[filePath] then
-				dataCache[filePath] = makeWeakTable{} -- SKIP
-			end
-
-			if missing and not dataCache[filePath][missing] then
-				dataCache[filePath][missing] = makeWeakTable{} -- SKIP
-			end
-
-			if missing then
-				dataCache[filePath][missing] = set -- SKIP
-			else
-				dataCache[filePath] = set -- SKIP
-			end
-
+			addCache(set, filePath, missing)
 			ds:close()
 		end
 
