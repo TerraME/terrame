@@ -30,7 +30,7 @@ return {
 			srid = 4326
 		}
 
-		local pt = _Gtme.terralib_mod_binding_lua.te.gm.Point(point.x, point.y, point.srid)
+		local pt = TerraLib().geometry().Point(point.x, point.y, point.srid)
 
 		unitTest:assertEquals(point.x, pt:getX())
 		unitTest:assertEquals(point.y, pt:getY())
@@ -77,7 +77,7 @@ return {
 		}
 
 		forEachCell(cs, function(cell)
-			local geometry = TerraLib().castGeomToSubtype(cell.geom:getGeometryN(0))
+			local geometry = cell.geom:getGeometryN(0)
 
 			unitTest:assert(geometry:getX() > 0)
 			unitTest:assert(geometry:getY() > 0)
@@ -95,7 +95,7 @@ return {
 		}
 
 		forEachCell(cs, function(cell)
-			local geometry = TerraLib().castGeomToSubtype(cell.geom:getGeometryN(0))
+			local geometry = cell.geom:getGeometryN(0)
 			local length = geometry:getLength()
 
 			unitTest:assert(length ~= nil)
@@ -125,9 +125,9 @@ return {
 		}
 
 		forEachCell(cs, function(cell)
-			local geometry = TerraLib().castGeomToSubtype(cell.geom:getGeometryN(0))
-			local centroid = TerraLib().castGeomToSubtype(geometry:getCentroid())
-			local ring = TerraLib().castGeomToSubtype(geometry:getExteriorRing())
+			local geometry = cell.geom:getGeometryN(0)
+			local centroid = geometry:getCentroid()
+			local ring = geometry:getExteriorRing()
 			local nPoint = ring:getNPoints()
 
 			for i = 0, nPoint do
