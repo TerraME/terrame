@@ -237,7 +237,7 @@ time    number [-inf]
 		timer2:run(6)
 
 		local warning_func = function()
-			timer2:add(Event{period = 2, action = function() end})
+			timer2:add(Event{start = 1, period = 2, action = function() end})
 		end
 		unitTest:assertWarning(warning_func, "Adding an Event with time (1) before the current simulation time (6).")
 
@@ -299,7 +299,7 @@ time    number [-inf]
 			Event{action = function(event)
 				result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
 			end},
-			Event{period = 2, action = function(event)
+			Event{start = 1, period = 2, action = function(event)
 				result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
 			end},
 			Event{start = 3, action = function(event)
@@ -334,7 +334,7 @@ time 4 event 1 priority 0
 		--	time fraction
 		cont = 0
 		t = Timer{
-			Event{start = 0.1, period = 0.1, action = function()
+			Event{period = 0.1, action = function()
 				cont = cont + 0.1
 			end}
 		}

@@ -181,23 +181,23 @@ function Event(data)
 		}
 	end
 
-	if belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "Log", "TextScreen"}) then
-		defaultTableValue(data, "priority", 10)
-		defaultTableValue(data, "start", 0)
-	elseif belong(type(data.action), {"Cell", "CellularSpace"}) then
-		defaultTableValue(data, "priority", -5)
-		defaultTableValue(data, "start", 1)
-	else
-		defaultTableValue(data, "priority", 0)
-		defaultTableValue(data, "start", 1)
-	end
-
 	if data.period == false then
 		data.period = 0
 	end
 
 	defaultTableValue(data, "period", 1)
 	positiveTableArgument(data, "period", true)
+
+	if belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "Log", "TextScreen"}) then
+		defaultTableValue(data, "priority", 10)
+		defaultTableValue(data, "start", 0)
+	elseif belong(type(data.action), {"Cell", "CellularSpace"}) then
+		defaultTableValue(data, "priority", -5)
+		defaultTableValue(data, "start", data.period)
+	else
+		defaultTableValue(data, "priority", 0)
+		defaultTableValue(data, "start", data.period)
+	end
 
 	data.time = data.start
 	data.start = nil
