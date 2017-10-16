@@ -525,19 +525,15 @@ function _Gtme.installPackage(file)
 		return
 	end
 
-	local s = "/" --_Gtme.sessionInfo().separator
-	local package
-
 	file = _Gtme.makePathCompatibleToAllOS(file)
 
 	local _, pfile = string.match(file, "(.-)([^/]-([^%.]+))$") -- remove path from the file
+	local package
 
 	xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function()
 		_Gtme.printError(file.." is not a valid file name for a TerraME package.")
 		os.exit(1)
 	end)
-
-	_Gtme.printNote("Installing package '"..package.."'")
 
 	local cDir = _Gtme.currentDir()
 	local packageDir = Directory(_Gtme.sessionInfo().path.."packages")
@@ -546,47 +542,28 @@ function _Gtme.installPackage(file)
 		_Gtme.import("base")
 	end
 
-	local currentVersion
 	if Directory(packageDir..package):exists() then
-		currentVersion = packageInfo(package).version
-		_Gtme.print("Package '"..package.."' is already installed")
-	else
-		_Gtme.print("Package '"..package.."' was not installed before")
+		_Gtme.print("Removing previous version of package")
+		Directory(packageDir..package):delete()
 	end
 
-	os.execute("unzip -oq \""..file.."\"")
+	_Gtme.print("Installing package '"..package.."'")
+	os.execute("unzip -oq \""..file.."\" -d "..packageDir)
 
 	_Gtme.print("Verifying dependencies")
 	_Gtme.verifyDepends(package)
-
-	local newVersion = _Gtme.getLuaFile(package..s.."description.lua").version
-
-	if currentVersion then
-		if not _Gtme.verifyVersionDependency(newVersion, ">=", currentVersion) then
-			_Gtme.printError("Error: New version ("..newVersion..") is older than current one ("..currentVersion..").")
-			_Gtme.printError("If you really want to install a previous version, please")
-			_Gtme.printError("execute 'terrame -package "..package.." -uninstall' first.")
-			os.exit(1)
-		else
-			_Gtme.print("Removing previous version of package")
-			Directory(packageDir..package):delete()
-		end
-	end
 
 	_Gtme.print("Trying to load package '"..package.."'")
 	local status, err = pcall(function() import(package) end)
 
 	if not status then
-		Directory(package):delete()
+		Directory(packageDir..package):delete()
 		_Gtme.customError(err)
 	end
 
-	_Gtme.print("Installing package '"..package.."'")
-	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")
-
 	cDir:setCurrentDir()
 
-	Directory(package):delete()
+	_Gtme.loadedPackages[package] = nil
 	_Gtme.printNote("Package '"..package.."' was successfully installed")
 	return package
 end
@@ -895,17 +872,17 @@ function _Gtme.loadModules(pkg)
 	pkg = Directory(pkg.."lib")
 
 	if pkg:exists() then
-		package.path = package.path..";"..pkg.."/?.lua"
+		package.path = pkg.."/?.lua;"..package.path
 		cpp_putenv(tostring(pkg))
 
 		local system = sessionInfo().system
 
 		if system == "windows" then
-			package.cpath = package.cpath..";"..pkg.."/?.dll"
+			package.cpath = pkg.."/?.dll;"..package.cpath
 		elseif system == "linux" then
-			package.cpath = package.cpath..";"..pkg.."/?.so"
+			package.cpath = pkg.."/?.so;"..package.cpath
 		else -- system == "mac"
-			package.cpath = package.cpath..";"..pkg.."/?.dylib"
+			package.cpath = pkg.."/?.dylib;"..package.cpath
 		end
 	end
 end
@@ -1067,6 +1044,7 @@ function _Gtme.execExample(example, packageName)
 	local description
 	local okButton
 
+	local oldPrint = print
 	print = function(value)
 		if not mdialog then
 			mdialog = qt.new_qobject(qt.meta.QDialog)
@@ -1102,6 +1080,7 @@ function _Gtme.execExample(example, packageName)
 
 	local success, result = pcall(function() runScript(example) end)
 	if not success then
+		print = oldPrint
 		return false, result
 	end
 
@@ -1110,6 +1089,7 @@ function _Gtme.execExample(example, packageName)
 		mdialog:exec()
 	end
 
+	print = oldPrint
 	return success
 end
 

@@ -203,8 +203,8 @@ return{
 
 		unitTest:assertWarning(warning_func, "Argument 'values' is unnecessary. Do you mean 'value'?")
 		unitTest:assertType(m, "Map")
-		unitTest:assertSnapshot(m, "map_quantil.bmp", 0.95)
-		unitTest:assertSnapshot(mi, "map_quantil_invert.bmp", 0.95)
+		unitTest:assertSnapshot(m, "map_quantil.bmp", 0.97)
+		unitTest:assertSnapshot(mi, "map_quantil_invert.bmp", 0.97)
 
 		forEachCell(cs, function(cell)
 			cell.w = cell.x
@@ -297,7 +297,7 @@ return{
 			symbol = "beetle"
 		}
 
-		unitTest:assertSnapshot(m, "map_society_white.bmp", 0.05)
+		unitTest:assertSnapshot(m, "map_society_white.bmp", 0.1)
 
 		cs = CellularSpace{xdim = 10}
 
@@ -322,7 +322,7 @@ return{
 
 		m:update()
 		unitTest:assertType(m, "Map")
-		unitTest:assertSnapshot(m, "map_save.bmp", 0.9)
+		unitTest:assertSnapshot(m, "map_save.bmp", 0.96)
 
 		local singleFooAgent = Agent{}
 		cs = CellularSpace{xdim = 10}

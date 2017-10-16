@@ -584,11 +584,10 @@ function Model(attrTab)
 					mandatoryArgumentError(name)
 				end
 			elseif mtype == "table" then
-				if argv[name] == nil then
-					argv[name] = {}
-				end
+				defaultTableValue(argv, name, {})
 
 				local iargv = argv[name]
+
 				forEachElement(value, function(iname, ivalue, itype)
 					if itype == "Choice" and iargv[iname] == nil then
 						iargv[iname] = ivalue.default
@@ -648,13 +647,13 @@ function Model(attrTab)
 					elseif value.max and argv[name] > value.max then
 						customError("Argument "..toLabel(name).." should be less than or equal to "..value.max..".")
 					elseif value.step then
-						local remainder = (((argv[name] - value.min)) * 1000) % (value.step * 1000)
+						local remainder = (argv[name] - value.min) % value.step
 
-						if math.abs(remainder - value.step * 1000) < sessionInfo().round then
-							-- There is a small bug in Lua with operator % using numbers between 0 and 1
+						if math.abs(remainder - value.step) < sessionInfo().round then
+							-- There is a problem in Lua with operator % using numbers between 0 and 1
 							-- For example, 0.7 % 0.1 == 0.1, but should be 0.0. That's why we need
 							-- to multiplicate by 1000 above
-							remainder = remainder - value.step * 1000
+							remainder = remainder - value.step
 						end
 
 						if math.abs(remainder) > sessionInfo().round then
@@ -731,8 +730,16 @@ function Model(attrTab)
 								customError("Argument "..toLabel(iname, name).." should be greater than or equal to "..ivalue.min..".")
 							elseif ivalue.max and iargv[iname] > ivalue.max then
 								customError("Argument "..toLabel(iname, name).." should be less than or equal to "..ivalue.max..".")
-							elseif ivalue.step and (iargv[iname] - ivalue.min) % ivalue.step > 0.000001 then
-								customError("Invalid value for argument "..toLabel(iname, name).." ("..iargv[iname]..").")
+							elseif ivalue.step then
+								local remainder = (iargv[iname] - ivalue.min) % ivalue.step
+
+								if math.abs(remainder - ivalue.step) < sessionInfo().round then
+									remainder = remainder - ivalue.step
+								end
+
+								if remainder > sessionInfo().round then
+									customError("Invalid value for argument "..toLabel(iname, name).." ("..iargv[iname]..").")
+								end
 							end
 						end
 					elseif itype == "Mandatory" then
@@ -808,15 +815,23 @@ function Model(attrTab)
 
 		forEachOrderedElement(parameters, function(idx, value, mtype)
 			if mtype == "Choice" then
-				if argv[idx] ~= value.default and idx ~= "finalTime" then
+				if value.values and #value.values == 0 then -- Choice with named values
+					if value.values[value.default] ~= argv[idx] then
+						forEachElement(value.values, function(midx, mvalue)
+							if argv[idx] == mvalue then
+								titleStr = table.concat{titleStr, _Gtme.stringToLabel(idx), " = ", _Gtme.stringToLabel(midx), ", "}
+							end
+						end)
+					end
+				elseif argv[idx] ~= value.default and idx ~= "finalTime" then
 					if type(argv[idx]) == "string" then
-						titleStr = titleStr.._Gtme.stringToLabel(idx).." = ".._Gtme.stringToLabel(argv[idx])..", "
+						titleStr = table.concat{titleStr, _Gtme.stringToLabel(idx), " = ", _Gtme.stringToLabel(argv[idx]), ", "}
 					else
-						titleStr = titleStr.._Gtme.stringToLabel(idx).." = "..vardump(argv[idx])..", "
+						titleStr = table.concat{titleStr, _Gtme.stringToLabel(idx), " = ", vardump(argv[idx]), ", "}
 					end
 				end
 			elseif argv[idx] ~= value and idx ~= "finalTime" then
-				titleStr = titleStr.._Gtme.stringToLabel(idx).." = "..vardump(argv[idx])..", "
+				titleStr = table.concat{titleStr, _Gtme.stringToLabel(idx), " = ", vardump(argv[idx]), ", "}
 			end
 		end)
 

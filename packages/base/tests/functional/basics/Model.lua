@@ -41,6 +41,7 @@ local Tube = Model{
 		ymin = 0,
 		ymax = math.huge,
 		level = Choice{1, 2, 3},
+		y = Choice{min = 0, max = 1.0, step = 0.1},
 		sleep = Choice{min = 1, max = 2, step = 0.5, default = 2}
 	},
 	init = function(model)
@@ -81,7 +82,7 @@ return{
 
 		local t
 		local warning_func = function()
-			t = Tube{filter = function() end, block = {xmix = 5}}
+			t = Tube{filter = function() end, block = {xmix = 5, y = 0.3}}
 		end
 
 		unitTest:assertWarning(warning_func, unnecessaryArgumentMsg("block.xmix", "block.xmax"))
@@ -95,7 +96,7 @@ return{
 		unitTest:assertEquals(t.block.level, 1)
 		unitTest:assertType(t.filter, "function")
 
-		unitTest:assertEquals(tostring(Tube), [[block            named table of size 6
+		unitTest:assertEquals(tostring(Tube), [[block            named table of size 7
 checkZero        boolean [false]
 filter           Mandatory
 finalTime        number [10]
@@ -109,7 +110,7 @@ soilInf          Choice
 subwater         Choice
 ]])
 
-		unitTest:assertEquals(tostring(t), [[block            named table of size 6
+		unitTest:assertEquals(tostring(t), [[block            named table of size 7
 cObj_            userdata
 checkZero        boolean [false]
 filter           function
@@ -384,6 +385,7 @@ water            number [200]
 			initialWater = 200,
 			sun = Choice{min = 0, default = 10},
 			limit = Choice{"veryLow", "veryHigh"},
+			value = Choice{abc = 1, def = 2, ghi = 3},
 			finalTime = 100,
 			init = function(model)
 				model.timer = Timer{
@@ -422,6 +424,11 @@ water            number [200]
 
 		local scenario5 = MyTube{limit = "veryHigh", finalTime = 50}
 		unitTest:assertEquals("Limit = Very High", scenario5:title())
+		scenario5:run()
+		unitTest:assertEquals("Limit = Very High", scenario5:title())
+
+		local scenario6 = MyTube{value = "def"}
+		unitTest:assertEquals("Value = Def", scenario6:title())
 		scenario5:run()
 		unitTest:assertEquals("Limit = Very High", scenario5:title())
 	end

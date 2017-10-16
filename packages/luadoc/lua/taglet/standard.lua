@@ -775,6 +775,12 @@ local function check_usage(files, doc_report)
 								err = "Error: "..err
 							end
 
+							if string.find(err, "attempt to call a nil value") then
+								if not string.find(err, "import(") then
+									err = err.."\nCould not find any import() call to load the package in the @usage."
+								end
+							end
+
 							printError(err)
 							doc_report.usage_error = doc_report.usage_error + 1
 						end)
