@@ -57,7 +57,7 @@ return{
 		local test1 = unitTest.test
 		local fail1 = unitTest.fail
 
-		unitTest:assertEquals(true, true)
+		unitTest:assertEquals(0, 0)
 		unitTest:assertEquals(math.huge, math.huge)
 
 		unitTest:assertEquals(currentDir(), currentDir())

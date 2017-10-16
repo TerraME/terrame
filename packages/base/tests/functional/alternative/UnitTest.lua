@@ -60,16 +60,22 @@ return{
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
+			unitTest:assertEquals(true, false)
+		end
+
+		unitTest:assertError(error_func, "#1 is a boolean value. Use UnitTest:assert() instead of UnitTest:assertEquals().")
+
+		error_func = function()
 			unitTest:assertEquals(2, 2, "a")
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "a"))
 
 		error_func = function()
-			unitTest:assertEquals(false, true, 2)
+			unitTest:assertEquals({}, {}, 2)
 		end
 
-		unitTest:assertError(error_func, "#3 should be used only when comparing numbers or strings (#1 is boolean).")
+		unitTest:assertError(error_func, "#3 should be used only when comparing numbers or strings (#1 is table).")
 
 		local expected = [[string [biomassa-manaus.asc] ]]
 		local actual = [[string [/home/jenkins/Documents/ba1c13592dcf65f3d0b2929f8eff266c4e622470/install/bin/packages/gis/data/biomassa-manaus.asc] ]]
@@ -84,8 +90,8 @@ return{
 		local test2 = unitTest.test
 		local fail2 = unitTest.fail
 
-		unitTest:assertEquals(suc2, suc1 + 5)
-		unitTest:assertEquals(test2, test1 + 5)
+		unitTest:assertEquals(suc2, suc1 + 6)
+		unitTest:assertEquals(test2, test1 + 6)
 		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertError = function(unitTest)
