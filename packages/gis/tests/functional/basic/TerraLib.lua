@@ -294,6 +294,10 @@ return {
 	random = function(unitTest)
 		-- Random tests is on functional/basic/Random.lua
 		unitTest:assert(true)
+	end,
+	geometry = function(unitTest)
+		-- Geometry tests is on functional/basic/Geometry.lua
+		unitTest:assert(true)
 	end
 }
 

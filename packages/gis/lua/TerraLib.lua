@@ -3078,6 +3078,12 @@ TerraLib_ = {
 	-- print(nd())
 	random = function()
 		return binding.te.random
+	end,
+	--- Return a handle to TerraLib Geometry Objects.
+	-- @usage -- DONTRUN
+	-- TerraLib().geometry().Point(0, 0)
+	geometry = function()
+		return binding.te.gm
 	end
 }
 
