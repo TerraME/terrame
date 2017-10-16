@@ -35,7 +35,7 @@ return{
 		unitTest:assertEquals(2, 3, 0.5)
 		unitTest:assertEquals("2", "3")
 		unitTest:assertEquals("2", 3)
-		unitTest:assertEquals(true, false)
+		unitTest:assertEquals({}, {})
 
 		local expected = [[string [biomassa-manaus.asc] ]]
 

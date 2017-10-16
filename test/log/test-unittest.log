@@ -12,7 +12,7 @@ Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:36: Values 
 '2' and 
 '3'. The maximum tolerance is 0, but got 1.
 Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:37: Values should be equal, but they have different types (string and number).
-Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:38: Values have the same type (boolean) but different values.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:38: Values have the same type (table) but different values.
 Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:42: Values should be equal, but got 
 'string [biomassa-manaus.asc] ' and 
 'bbb'. The maximum tolerance is 0, but got 28.

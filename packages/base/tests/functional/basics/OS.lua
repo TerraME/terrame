@@ -55,8 +55,8 @@ return{
 		unitTest:assertType(s.initialDir, "Directory")
 		unitTest:assertEquals(s.mode, "debug")
 		unitTest:assertEquals(s.version, packageInfo().version)
-		unitTest:assertEquals(s.system == "windows", s.separator == "\\")
-		unitTest:assertEquals(s.system == "linux" or s.system == "mac", s.separator == "/")
+		unitTest:assert((s.system == "windows") == (s.separator == "\\"))
+		unitTest:assert((s.system == "linux" or s.system == "mac") == (s.separator == "/"))
 
 		local info = {
 			mode = s.mode,

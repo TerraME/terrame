@@ -45,7 +45,7 @@ return {
 		end)
 
 		unitTest:assertEquals(count, 3)
-		unitTest:assertEquals(each , true)
+		unitTest:assert(each)
 
 		count = 0
 		each = forEachLayer(project, function(layer, name)
@@ -57,7 +57,7 @@ return {
 		end)
 
 		unitTest:assertEquals(count, 2)
-		unitTest:assertEquals(each , false)
+		unitTest:assert(not each)
 		tview:deleteIfExists()
 	end
 }
