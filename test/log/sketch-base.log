@@ -14,12 +14,22 @@ File 'gpmlinesDbEmas.gpm' is already documented in 'data.lua'
 File 'river.shp' is already documented in 'data.lua'
 File 'simple.pgm' is already documented in 'data.lua'
 Verifying font files
+File 'CHEQ_TT.ttf' is already documented in 'font.lua'
+File 'CHEQ_TT.txt' will be ignored
 File 'Grissom Free.ttf' is already documented in 'font.lua'
 File 'Grissom Free.txt' will be ignored
 File 'JLS Smiles Sampler.ttf' is already documented in 'font.lua'
 File 'JLS Smiles Sampler.txt' will be ignored
+File 'LLFACES2.ttf' is already documented in 'font.lua'
+File 'LLFACES2.txt' will be ignored
 File 'Pet Animals.ttf' is already documented in 'font.lua'
 File 'Pet Animals.txt' will be ignored
+File 'Pregnancy.ttf' is already documented in 'font.lua'
+File 'Pregnancy.txt' will be ignored
+File 'Science Icons.ttf' is already documented in 'font.lua'
+File 'Science Icons.txt' will be ignored
+File 'TheFreakyFace.ttf' is already documented in 'font.lua'
+File 'TheFreakyFace.txt' will be ignored
 File 'Ubuntu-L.ttf' is already documented in 'font.lua'
 File 'Ubuntu-L.txt' will be ignored
 
