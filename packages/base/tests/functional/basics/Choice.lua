@@ -127,34 +127,34 @@ return{
 	sample = function(unitTest)
 		local c = Choice{1, 2, 3}
 
-		unitTest:assertEquals(c:sample(), 2)
+		unitTest:assertEquals(c:sample(), 1)
+		unitTest:assertEquals(c:sample(), 1)
 		unitTest:assertEquals(c:sample(), 3)
-		unitTest:assertEquals(c:sample(), 1)
-		unitTest:assertEquals(c:sample(), 1)
+		unitTest:assertEquals(c:sample(), 2)
 
 		c = Choice{min = 2, max = 3, step = 0.1}
 
+		unitTest:assertEquals(c:sample(), 2.3)
+		unitTest:assertEquals(c:sample(), 2.6)
 		unitTest:assertEquals(c:sample(), 2.8)
-		unitTest:assertEquals(c:sample(), 2.2)
-		unitTest:assertEquals(c:sample(), 2.1)
 
 		c = Choice{min = 1, max = 3}
 
-		unitTest:assertEquals(c:sample(), 2.6052886084653, 0.01)
-		unitTest:assertEquals(c:sample(), 1.5730080236681, 0.01)
-		unitTest:assertEquals(c:sample(), 2.6954102120362, 0.01)
+		unitTest:assertEquals(c:sample(), 2.236, 0.01)
+		unitTest:assertEquals(c:sample(), 1.994, 0.01)
+		unitTest:assertEquals(c:sample(), 1.854, 0.01)
 
 		c = Choice{min = 1}
 
-		unitTest:assertEquals(c:sample(), 1.6879130110853e+15, 100)
-		unitTest:assertEquals(c:sample(), 3.9509684723384e+15, 100)
-		unitTest:assertEquals(c:sample(), 3.7332099184722e+15, 100)
+		unitTest:assertEquals(c:sample(), 3.3884630994125e+15, 100)
+		unitTest:assertEquals(c:sample(), 5.0140468373094e+14, 100)
+		unitTest:assertEquals(c:sample(), 4.1242769468948e+15, 100)
 
 		c = Choice{max = 1}
 
-		unitTest:assertEquals(c:sample(), -3.3568731598684e+15, 100)
-		unitTest:assertEquals(c:sample(), -2.0879216601989e+15, 100)
-		unitTest:assertEquals(c:sample(), -4.4337854142218e+15, 100)
+		unitTest:assertEquals(c:sample(), -2.1345040596992e+15, 100)
+		unitTest:assertEquals(c:sample(), -3.3091094786867e+14, 100)
+		unitTest:assertEquals(c:sample(), -3.2912742086083e+15, 100)
 	end,
 	__tostring = function(unitTest)
 		local c = Choice{min = 2, max = 3, step = 0.1}

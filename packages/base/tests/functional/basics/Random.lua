@@ -183,7 +183,7 @@ sample   function
 			self:assert(v <= 1)
 		end
 
-		self:assertEquals(randomObj:number(), 0.6622, 0.001)
+		self:assertEquals(randomObj:number(), 0.9563, 0.001)
 
 		randomObj = Random{}
 		randomObj:reSeed(54321)
@@ -242,32 +242,33 @@ sample   function
 	reSeed = function(self)
 		local randomObj = Random{}
 		randomObj:reSeed(987654321)
+		self:assertEquals(randomObj:integer(3), 1)
 		self:assertEquals(randomObj:integer(3), 0)
-		self:assertEquals(randomObj:integer(3), 2)
 		self:assertEquals(randomObj:integer(3), 3)
-		self:assertEquals(randomObj:integer(3), 3)
-		self:assertEquals(randomObj:integer(3), 3)
+		self:assertEquals(randomObj:integer(3), 1)
+		self:assertEquals(randomObj:integer(3), 1)
 
 		randomObj:reSeed(987654321)
+		self:assertEquals(randomObj:integer(33, 45), 36)
+		self:assertEquals(randomObj:integer(33, 45), 35)
 		self:assertEquals(randomObj:integer(33, 45), 42)
-		self:assertEquals(randomObj:integer(33, 45), 34)
-		self:assertEquals(randomObj:integer(33, 45), 34)
+		self:assertEquals(randomObj:integer(33, 45), 39)
 
 		randomObj:reSeed(567890123)
 
 		self:assertEquals(randomObj:integer(3), 0)
 		self:assertEquals(randomObj:integer(3), 3)
-		self:assertEquals(randomObj:integer(3), 2)
-		self:assertEquals(randomObj:integer(3), 0)
-		self:assertEquals(randomObj:integer(3), 2)
-		self:assertEquals(randomObj:integer(3), 3)
-		self:assertEquals(randomObj:integer(3), 3)
 		self:assertEquals(randomObj:integer(3), 0)
 		self:assertEquals(randomObj:integer(3), 3)
+		self:assertEquals(randomObj:integer(3), 1)
+		self:assertEquals(randomObj:integer(3), 3)
+		self:assertEquals(randomObj:integer(3), 1)
+		self:assertEquals(randomObj:integer(3), 1)
+		self:assertEquals(randomObj:integer(3), 0)
 
-		self:assertEquals(randomObj:integer(33, 45), 39)
-		self:assertEquals(randomObj:integer(33, 45), 38)
+		self:assertEquals(randomObj:integer(33, 45), 45)
 		self:assertEquals(randomObj:integer(33, 45), 36)
+		self:assertEquals(randomObj:integer(33, 45), 43)
 	end,
 	sample = function(unitTest)
 		local bern = Random{p = 0.3}
@@ -281,7 +282,7 @@ sample   function
 			end
 		end
 
-		unitTest:assertEquals(counter, 308) -- exact average: 300
+		unitTest:assertEquals(counter, 307) -- exact average: 300
 
 		local continuous = Random{min = 0, max = 10}
 		local sum = 0
@@ -295,7 +296,7 @@ sample   function
 			unitTest:assert(sample >= 0)
 		end
 
-		unitTest:assertEquals(sum, 4877.15, 0.01) -- exact average: 5000
+		unitTest:assertEquals(sum, 4874.248, 0.01) -- exact average: 5000
 
 		local discrete = Random{1, 2, 5, 6}
 		sum = 0
@@ -309,7 +310,7 @@ sample   function
 			unitTest:assert(sample >= 1)
 		end
 
-		unitTest:assertEquals(sum, 3416)
+		unitTest:assertEquals(sum, 3419)
 
 		discrete = Random{"a", "b", "c"}
 		sum = {
@@ -325,8 +326,8 @@ sample   function
 			sum[sample] = sum[sample] + 1
 		end
 
-		unitTest:assertEquals(sum.a, 654)
-		unitTest:assertEquals(sum.b, 684)
+		unitTest:assertEquals(sum.a, 653)
+		unitTest:assertEquals(sum.b, 685)
 		unitTest:assertEquals(sum.c, 662)
 
 		local step = Random{min = 1, max = 4, step = 1}
@@ -341,8 +342,8 @@ sample   function
 
 		unitTest:assertEquals(sum[1], 487)
 		unitTest:assertEquals(sum[2], 494)
-		unitTest:assertEquals(sum[3], 536)
-		unitTest:assertEquals(sum[4], 483)
+		unitTest:assertEquals(sum[3], 535)
+		unitTest:assertEquals(sum[4], 484)
 
 		local cat = Random{poor = 0.5, middle = 0.33, rich = 0.17, none = 0}
 		sum = {
@@ -369,11 +370,11 @@ sample   function
 		unitTest:assertEquals(cat:sample(), "poor")
 		unitTest:assertEquals(cat:sample(), "poor")
 		unitTest:assertEquals(cat:sample(), "poor")
-		unitTest:assertEquals(cat:sample(), "poor")
 		unitTest:assertEquals(cat:sample(), "middle")
 		unitTest:assertEquals(cat:sample(), "rich")
 		unitTest:assertEquals(cat:sample(), "poor")
 		unitTest:assertEquals(cat:sample(), "rich")
+		unitTest:assertEquals(cat:sample(), "middle")
 
 		local normal = Random{mean = 0, sd = 2}
 		sum = 0
@@ -406,7 +407,7 @@ sample   function
 			if sample > 45 or sample < 0 then print(sample) end
 		end
 
-		unitTest:assertEquals(sum / 5000, 0.99806, 0.0001)
+		unitTest:assertEquals(sum / 5000, 0.99826, 0.0001)
 
 		local poisson = Random{lambda = 4}
 		sum = 0

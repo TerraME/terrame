@@ -79,7 +79,7 @@ return {
 		unitTest:assertWarning(warning_func, "Attribute 'male' will not be replaced by a summary function.")
 		unitTest:assertType(nonFooSociety, "Society")
 		unitTest:assertEquals(50, #nonFooSociety)
-		unitTest:assertEquals(nonFooSociety:gender().male, 20)
+		unitTest:assertEquals(nonFooSociety:gender().male, 19)
 		unitTest:assertEquals(nonFooSociety:sample().money, 100)
 		unitTest:assertEquals(nonFooSociety:money(), 100 * #nonFooSociety)
 
@@ -104,7 +104,7 @@ return {
 
 		t:run(100)
 
-		unitTest:assertEquals(10, findCounter)
+		unitTest:assertEquals(12, findCounter)
 
 		local count1 = 0
 		local count2 = 0
@@ -113,7 +113,7 @@ return {
 			if not cell:isEmpty() then count2 = count2 + 1 end
 		end)
 		unitTest:assertEquals(51, count1)
-		unitTest:assertEquals(50, count2)
+		unitTest:assertEquals(46, count2)
 
 		local agent1 = Agent{set = function() end}
 
@@ -474,7 +474,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(193, count_prob)
+		unitTest:assertEquals(194, count_prob)
 		unitTest:assertEquals(20,  count_quant)
 		unitTest:assertEquals(400, count_all)
 
@@ -509,8 +509,8 @@ state_          State
 		end)
 
 		unitTest:assertEquals(80, count_c)
-		unitTest:assertEquals(100, count_n)
-		unitTest:assertEquals(100, count_n2)
+		unitTest:assertEquals(50, count_n)
+		unitTest:assertEquals(50, count_n2)
 
 		local ag1 = Agent{
 			name = "nonfoo",
@@ -580,7 +580,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(180, count_prob)
+		unitTest:assertEquals(192, count_prob)
 		unitTest:assertEquals(20,  count_quant)
 		unitTest:assertEquals(400, count_all)
 
@@ -594,7 +594,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(212, count_prob)
+		unitTest:assertEquals(192, count_prob)
 		unitTest:assertEquals(20,  count_quant)
 		unitTest:assertEquals(400, count_all)
 
@@ -615,7 +615,7 @@ state_          State
 		end)
 
 		unitTest:assertEquals(60, count_c)
-		unitTest:assertEquals(160, count_n)
+		unitTest:assertEquals(64, count_n)
 
 		predators:sample():die()
 
@@ -627,7 +627,7 @@ state_          State
 		end)
 
 		unitTest:assertEquals(54, count_c)
-		unitTest:assertEquals(136, count_n)
+		unitTest:assertEquals(56, count_n)
 
 		predator = Agent{
 			energy = 40,
@@ -650,7 +650,7 @@ state_          State
 			count_quant = count_quant + #ag:getSocialNetwork("boss")
 		end)
 
-		unitTest:assertEquals(40, count_prob)
+		unitTest:assertEquals(28, count_prob)
 		unitTest:assertEquals(40, count_quant)
 
 		-- social networks that must be "in memory"
@@ -810,7 +810,7 @@ state_          State
 			sum = sum + friend.age
 		end)
 
-		unitTest:assertEquals(11, sum)
+		unitTest:assertEquals(5, sum)
 
 		forEachConnection(myself, function(friend)
 			myself:message{receiver = friend}
@@ -837,14 +837,14 @@ state_          State
 		--]]
 
 		soc:synchronize()
-		unitTest:assertEquals(4, received)
+		unitTest:assertEquals(2, received)
 
 		local t = Timer{
 			Event{period = 4, action = soc}
 		}
 
 		t:run(8)
-		unitTest:assertEquals(14, received)
+		unitTest:assertEquals(13, received)
 		unitTest:assertEquals(0, sugar)
 
 		soc:synchronize(1.1)
@@ -876,7 +876,7 @@ state_          State
 
 		local g = soc:split("name")
 
-		unitTest:assertEquals(4, #g.foo)
+		unitTest:assertEquals(3, #g.foo)
 		unitTest:assertEquals(10, #g.foo + #g.nonfoo)
 
 		local g3 = soc:split(function(ag)
@@ -886,7 +886,7 @@ state_          State
 			end
 		end)
 
-		unitTest:assertEquals(7, #g3[2])
+		unitTest:assertEquals(6, #g3[2])
 		unitTest:assertEquals(10, #g3[1] + #g3[2] + #g3[3])
 
 		local ag = Agent{

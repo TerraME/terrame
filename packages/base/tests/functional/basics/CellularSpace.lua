@@ -54,7 +54,7 @@ return{
 		unitTest:assertEquals(cs:defor(), 100)
 		unitTest:assertEquals(cs:road(), 100)
 		unitTest:assertEquals(cs:cover().pasture, 100)
-		unitTest:assertEquals(cs:water(), 220)
+		unitTest:assertEquals(cs:water(), 218)
 
 		unitTest:assert(cs:deforest())
 		unitTest:assertEquals(cs:sample().defor, 2)
@@ -1716,8 +1716,8 @@ ydim    number [20]
 
 		ts = cs:split("cover")
 		unitTest:assertEquals(getn(ts), 2)
-		unitTest:assertEquals(#ts.forest, 15)
-		unitTest:assertEquals(#ts.pasture, 10)
+		unitTest:assertEquals(#ts.forest, 16)
+		unitTest:assertEquals(#ts.pasture, 9)
 
 		forEachCell(cs, function(mcell)
 			mcell.cover = "pasture"
