@@ -74,11 +74,11 @@ return {
 		unitTest:assertEquals(tostring(wd()), "1.6158237460576")
 
 		local bd = TerraLib().random().BernoulliDistribution(mt, 0.5)
-		unitTest:assertEquals(bd(), true)
-		unitTest:assertEquals(bd(), true)
-		unitTest:assertEquals(bd(), false)
-		unitTest:assertEquals(bd(), true)
-		unitTest:assertEquals(bd(), true)
+		unitTest:assert(bd())
+		unitTest:assert(bd())
+		unitTest:assert(not bd())
+		unitTest:assert(bd())
+		unitTest:assert(bd())
 
 		local pd = TerraLib().random().PoissonDistribution(mt, 1.0)
 		unitTest:assertEquals(pd(), 0.0)

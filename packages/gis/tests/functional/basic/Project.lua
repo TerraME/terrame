@@ -72,7 +72,7 @@ return {
 
 		unitTest:assertEquals(proj4.title, "No title")
 		unitTest:assertEquals(proj4.author, "No author")
-		unitTest:assertEquals(proj4.clean, false)
+		unitTest:assert(not proj4.clean)
 		unitTest:assertType(proj4.layers, "table")
 		unitTest:assertEquals(getn(proj4.layers), 0)
 

@@ -478,7 +478,7 @@ return{
 
 		local cs = CellularSpace{xdim = 5}
 
-		local env = Environment{cs, predators = predators}
+		local env = Environment{cs, predators}
 		env:createPlacement{}
 		cs:createNeighborhood()
 
@@ -848,7 +848,7 @@ return{
 			return t - 0.1
 		end
 
-		local event = Event{start = 2, period = 2, priority = 1, action = function() end}
+		local event = Event{period = 2, priority = 1, action = function() end}
 
 		v = integrate{
 			equation = df,

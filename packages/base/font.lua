@@ -60,6 +60,105 @@ font {
 	}
 }
 
+local eyes = {}
+
+for i = 48, 57 do
+	eyes["eye"..i - 48] = i
+end
+
+font {
+	name = "Freaky Face",
+	file = "TheFreakyFace.ttf",
+	summary = "Some faces with different number of eyes.",
+	source = "https://www.dafont.com/the-freaky-face.font",
+	symbol = eyes
+}
+
+font{
+	name = "LL Faces",
+	file = "LLFACES2.ttf",
+	summary = "Head faces of different sizes and internal content.",
+	source = "https://www.dafont.com/llfaces.font",
+	symbol = {
+		size0 = 49,
+		size1 = 50,
+		size2m = 51,
+		size2f = 52,
+		size3m = 53,
+		size3f = 54,
+		size4m = 55,
+		size4f = 56,
+		head1 = 76,
+		head2 = 77,
+		head3 = 78,
+		head4 = 79,
+		head5 = 80,
+		head6 = 81,
+		head7 = 82,
+		head8 = 83,
+		head9 = 84,
+		head10 = 85,
+		head11 = 86,
+		head12 = 87
+	}
+}
+
+font {
+	name = "Science",
+	file = "Science Icons.ttf",
+	summary = "Some science objects and symbols.",
+	source = "https://dl.dafont.com/dl/?f=science",
+	symbol = {
+		magnifier = 42,
+		lamp = 39,
+		atom = 91,
+		researcher = 97,
+		mask = 101,
+		doubt = 102
+	}
+}
+
+font {
+	name = "Chess",
+	file = "CHEQ_TT.ttf",
+	summary = "Chess icons.",
+	source = "https://www.dafont.com/chess.font",
+	symbol = {
+		bishop = 98,
+		pawn = 112,
+		king = 107,
+		rook = 114,
+		knight = 104,
+		queen = 113
+	}
+}
+
+font {
+	name = "Pregnancy",
+	file = "Pregnancy.ttf",
+	summary = "Pregnancy icons.",
+	source = "https://www.dafont.com/pregnancy.font",
+	symbol = {
+		doctor = 60,
+		pregnant1 = 68,
+		pregnant2 = 71,
+		pregnant3 = 72,
+		pregnant4 = 75,
+		baby1 = 82,
+		baby2 = 87,
+		feet = 84,
+		nurse = 90,
+		hands = 92,
+		dna = 93,
+		coupple = 109,
+		ambulance = 120,
+		embryo1 = 51,
+		embryo2 = 63
+	}
+}
+
+
+
 local symbols = {}
 
 for i = 65, 90 do

@@ -96,6 +96,10 @@ UnitTest_ = {
 			mandatoryArgumentError(2)
 		end
 
+		if type(v1) == "boolean" then
+			customError("#1 is a boolean value. Use UnitTest:assert() instead of UnitTest:assertEquals().")
+		end
+
 		if type(v1) == type(v2) and belong(type(v1), {"File", "Directory"}) then
 			v1 = tostring(v1)
 			v2 = tostring(v2)

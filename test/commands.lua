@@ -43,7 +43,8 @@ test = {
 	linedirectory  = {arg = "-test", config = "linesDirectory.lua"},
 	testnotest     = {arg = "-test", config = "testNoTest.lua"},
 	notest         = {arg = "-test", config = "noTest.lua"},
-	unittest       = {arg = "-test", package = "unittest"}
+	unittest       = {arg = "-test", package = "unittest"},
+	singlefile     = {arg = "-test", config = "single.lua", package = "gis"}, -- file that does not belong to the source code
 }
 
 package = {
@@ -152,6 +153,7 @@ basic = {
 	traceneighborhood   = {script = "trace-neighborhood.lua"},
 	traceself           = {script = "trace-self.lua"},
 	tracesocialnetwork  = {script = "trace-social-network.lua"},
+	undeclared          = {script = "undeclared.lua", arg = "-strict"},
 	qwerty4321          = {package = "qwerty4321"},
 	depend              = {arg = "-build", package = "depend"},
 	depend2             = {arg = "-build", package = "depend2"},

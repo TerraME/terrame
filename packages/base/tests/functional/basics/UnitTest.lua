@@ -57,7 +57,10 @@ return{
 		local test1 = unitTest.test
 		local fail1 = unitTest.fail
 
-		unitTest:assertEquals(true, true)
+		local emptyTable = {}
+
+		unitTest:assertEquals(emptyTable, emptyTable)
+		unitTest:assertEquals(0, 0)
 		unitTest:assertEquals(math.huge, math.huge)
 
 		unitTest:assertEquals(currentDir(), currentDir())
@@ -98,8 +101,8 @@ source   string [shp]
 		local test2 = unitTest.test
 		local fail2 = unitTest.fail
 
-		unitTest:assertEquals(suc2, suc1 + 10)
-		unitTest:assertEquals(test2, test1 + 10)
+		unitTest:assertEquals(suc2, suc1 + 11)
+		unitTest:assertEquals(test2, test1 + 11)
 		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertError = function(unitTest)

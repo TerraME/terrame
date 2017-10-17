@@ -22,8 +22,58 @@
 --
 -------------------------------------------------------------------------------------------
 
+local function makeWeakTable(table)
+	setmetatable(table, {__mode = 'v'})
+	return table
+end
+
 local binding = _Gtme.terralib_mod_binding_lua
 local instance = nil
+local dataCache = makeWeakTable{}
+
+local function getCache(level1, level2, level3)
+	-- level1 is compulsory. The other ones are optional.
+
+	local dataCacheLevel1 = dataCache[level1] -- SKIP
+	if not dataCacheLevel1 then return end -- SKIP
+
+	if not level2 then return dataCacheLevel1 end -- SKIP
+
+	local dataCacheLevel2 = dataCacheLevel1[level2] -- SKIP
+	if not dataCacheLevel2 then return end -- SKIP
+
+	if not level3 then return dataCacheLevel2 end -- SKIP
+
+	return dataCacheLevel2[level3] -- SKIP
+end
+
+local function addCache(value, level1, level2, level3)
+	-- Again: level1 is compulsory. The other ones are optional.
+
+	if not level2 then -- SKIP
+		dataCache[level1] = value -- SKIP
+		return
+	end
+
+	local dataCacheLevel1 = dataCache[level1] -- SKIP
+	if not dataCacheLevel1 then -- SKIP
+		dataCacheLevel1 = makeWeakTable{} -- SKIP
+		dataCache[level1] = dataCacheLevel1 -- SKIP
+	end
+
+	if not level3 then -- SKIP
+		dataCacheLevel1[level2] = value -- SKIP
+		return
+	end
+
+	local dataCacheLevel2 = dataCacheLevel1[level2] -- SKIP
+	if not dataCacheLevel2 then -- SKIP
+		dataCacheLevel2 = makeWeakTable{} -- SKIP
+		dataCacheLevel1[level2] = dataCacheLevel2 -- SKIP
+	end
+
+	dataCacheLevel2[level3] = value -- SKIP
+end
 
 local OperationMapper = {
 	value = binding.VALUE_OPERATION,
@@ -2544,6 +2594,9 @@ TerraLib_ = {
 	getDataSet = function(project, layerName, missing)
 		local set, err
 
+		local cache = getCache(project, layerName, missing)
+		if cache then return cache end
+
 		do
 			loadProject(project, project.file)
 
@@ -2556,6 +2609,7 @@ TerraLib_ = {
 
 			set, err = createDataSetAdapted(dse, missing)
 
+			addCache(set, project, layerName, missing)
 			releaseProject(project)
 		end
 
@@ -2659,6 +2713,9 @@ TerraLib_ = {
 	getOGRByFilePath = function(filePath, missing)
 		local set, err
 
+		local cache = getCache(filePath, missing)
+		if cache then return cache end
+
 		do
 			local connInfo = createFileConnInfo(filePath)
 			local ds = makeAndOpenDataSource(connInfo, "OGR")
@@ -2674,6 +2731,7 @@ TerraLib_ = {
 			local dSet = ds:getDataSet(dSetName)
 			set, err = createDataSetAdapted(dSet, missing)
 
+			addCache(set, filePath, missing)
 			ds:close()
 		end
 

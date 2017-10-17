@@ -24,10 +24,10 @@
 
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
-local begin_red    = "\027[00;31m"
-local begin_yellow = "\027[00;33m"
-local begin_green  = "\027[00;32m"
-local end_color    = "\027[00m"
+local begin_red    = "\027[1;31m"
+local begin_yellow = "\027[1;33m"
+local begin_green  = "\027[1;32m"
+local end_color    = "\027[0m"
 
 _Gtme = {}
 setmetatable(_Gtme, {__index = _G})
@@ -165,21 +165,19 @@ function _Gtme.downloadPackage(pkg)
 end
 
 -- from http://metalua.luaforge.net/src/lib/strict.lua.html
-local function checkNilVariables()
-	local mt = getmetatable(_G)
+function _Gtme.checkNilVariables(mt)
 	if mt == nil then
 		mt = {}
 		setmetatable(_G, mt)
 	end
 
-	local __STRICT = true
 	mt.__declared = {}
 
 	mt.__newindex = function(t, n, v)
-		if __STRICT and not mt.__declared[n] then
+		if not mt.__declared[n] then
 			local w = debug.getinfo(2, "S").what
 			if w ~= "main" and w ~= "C" then
-				_Gtme.strictWarning("Assign to undeclared variable '"..n.."'.")
+				_Gtme.strictWarning("Assign to undeclared variable '"..n.."'. Please declare it as local.")
 			end
 			mt.__declared[n] = true
 		end
@@ -194,6 +192,8 @@ local function checkNilVariables()
 
 		return rawget(t, n)
 	end
+
+	return mt
 end
 
 -- builds a table with zero counts for each element of the table gotten as argument
@@ -987,7 +987,8 @@ end
 
 local function runScript(script)
 	if info_.mode ~= "quiet" then
-		checkNilVariables()
+		local mt = getmetatable(_G)
+		_Gtme.checkNilVariables(mt)
 	end
 
 	if not _Gtme.isLoaded("base") then

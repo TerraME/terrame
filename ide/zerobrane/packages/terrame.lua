@@ -6,6 +6,7 @@ local id2 = ID("maketoolbar.makemenu2")
 local id3 = ID("maketoolbar.makemenu3")
 local id4 = ID("maketoolbar.makemenu4")
 local id5 = ID("maketoolbar.makemenu5")
+local id6 = ID("maketoolbar.makemenu5")
 
 local function split(text, delim)
     -- returns an array of fields based on text and delimiter (one character only)
@@ -46,19 +47,21 @@ local function package(directory)
 end
 
 return {
-	name = "TerraME-doc",
+	name = "TerraME-commands",
 	description = "TerraME interpreter",
-	author = "Tiago Carneiro, Pedro Andrade, Rodrigo Avancini, Raian Maretto, Rodrigo Reis",
+	author = "Pedro Andrade, Rodrigo Avancini",
 	version = "2.0",
 	api = {"baselib", "terrame"},
 	onRegister = function(self)
 		local menu = ide:FindTopMenu("&Project")
 		menu:AppendSeparator()
-		menu:Append(id1, "Build Documentation\tCtrl-Shift-D")
-		menu:Append(id2, "Documentation Sketch\tCtrl-Shift-S")
-		menu:Append(id3, "View Documentation\tCtrl-Shift-V")
-		menu:Append(id4, "Run tests\tCtrl-Shift-T")
-		menu:Append(id5, "Check package\tCtrl-Shift-C")
+		menu:Append(id1, "Package Manager\tCtrl-Shift-P")
+		menu:AppendSeparator()
+		menu:Append(id2, "Build Documentation\tCtrl-Shift-D")
+		menu:Append(id3, "Documentation Sketch\tCtrl-Shift-S")
+		menu:Append(id4, "View Documentation\tCtrl-Shift-V")
+		menu:Append(id5, "Run tests\tCtrl-Shift-T")
+		menu:Append(id6, "Check package\tCtrl-Shift-C")
 
 		function myConnect(id, command)
 			ide:GetMainFrame():Connect(id, wx.wxEVT_COMMAND_MENU_SELECTED, function()
@@ -70,11 +73,12 @@ return {
 			end)
 		end
 
-		myConnect(id1, "doc")
-		myConnect(id2, "sketch")
-		myConnect(id3, "showdoc")
-		myConnect(id4, "test")
-		myConnect(id5, "check")
+		myConnect(id1)
+		myConnect(id2, "doc")
+		myConnect(id3, "sketch")
+		myConnect(id4, "showdoc")
+		myConnect(id5, "test")
+		myConnect(id6, "check")
 	end,
 	onUnRegister = function(self)
 		ide:RemoveMenuItem(id1)
@@ -105,7 +109,15 @@ return {
 
 		wx.wxSetEnv("TME_PATH", terrame)
 
-		local cmd = terrame.."/terrame -package "..package(self:fworkdir(wfilename)).." -"..command
+		local cmd
+
+		if command then
+			cmd = terrame.."/terrame -package "..package(self:fworkdir(wfilename)).." -"..command
+		else
+			cmd = terrame.."/terrame"
+		end
+				DisplayOutputLn(cmd)
+
 		local pid = CommandLineRun(cmd,self:fworkdir(wfilename).."/..",true,false, nil, nil, function() if rundebug then wx.wxRemoveFile(file) end end)
 		return pid
 	end,

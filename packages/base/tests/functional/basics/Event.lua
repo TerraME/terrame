@@ -82,6 +82,14 @@ return{
 		unitTest:assertEquals(event:getPeriod(), 2)
 		unitTest:assertEquals(event:getPriority(), -5.2)
 
+		local unnecessaryStart = function()
+			event = Event{start = 2, period = 2, action = function() end}
+		end
+
+		unitTest:assertWarning(unnecessaryStart, defaultValueMsg("start", 2))
+		unitTest:assertEquals(event:getTime(), 2)
+		unitTest:assertEquals(event:getPeriod(), 2)
+
 		event = Event{start = 0.5, period = 2, priority = "verylow", action = function() end}
 		unitTest:assertEquals(event:getPriority(), 10)
 

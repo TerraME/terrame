@@ -96,7 +96,7 @@ chart = Chart{
 
 timer = Timer{
 	Event{action = function()
-		unhappy_agents = society:unhappy_agents()
+		local unhappy_agents = society:unhappy_agents()
 		empty_cells:rebuild()
 
 		if #unhappy_agents > 0 then

@@ -379,6 +379,7 @@ function _Gtme.executeTests(package, fileName)
 
 	printNote("Looking for package functions")
 	testfunctions = _Gtme.buildCountTable(package)
+	additionaltestfunctions = {}
 
 	local extra = 0
 	forEachElement(doc_functions.files, function(idx, value)
@@ -489,6 +490,7 @@ function _Gtme.executeTests(package, fileName)
 			forEachElement(dirFiles, function(_, value)
 				forEachElement(data.file, function(_, mfile)
 					if string.match(value, mfile) and not myFiles[value] then
+						additionaltestfunctions[mfile] = true
 						myFiles[value] = true
 					end
 				end)
@@ -767,7 +769,7 @@ function _Gtme.executeTests(package, fileName)
 			end)
 
 			forEachElement(data.file, function(_, value)
-				if not found[value] then
+				if not found[value] and not additionaltestfunctions[value] then
 					printError("Could not find any file for pattern '"..value.."'.")
 				end
 			end)
@@ -892,7 +894,10 @@ function _Gtme.executeTests(package, fileName)
 						return chart
 					end
 
-					local env = setmetatable({Map = mMap, Chart = mChart}, {__index = _G})
+					local mt = _Gtme.checkNilVariables()
+					mt.__index = _G
+
+					local env = setmetatable({Map = mMap, Chart = mChart}, mt)
 					-- loadfile is necessary to avoid any global variable from one
 					-- example to affect another example
 
@@ -901,6 +906,8 @@ function _Gtme.executeTests(package, fileName)
 					-- the line below was removed because it caused errors in Linux, that resized the canvas
 					-- _Gtme.loadTmeFile(baseDir.."examples"..s..value..".lua")
 					local result, err = loadfile(baseDir.."examples"..s..value..".lua", 't', env)
+
+					setmetatable(_G, nil)
 
 					if not result then
 						printError(err)
