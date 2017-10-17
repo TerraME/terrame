@@ -5,7 +5,7 @@
 -- The output is similar to Lotka-Volterra equations.
 -- @image predator-prey.png
 
-Random{seed = 700}
+Random{seed = 500}
 
 fifty = Random{p = 0.5}
 
