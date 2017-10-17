@@ -84,10 +84,6 @@ Random_ = {
 		v1 = math.floor(v1)
 		v2 = math.floor(v2)
 
-		if not UniformReal then
-			UniformReal = TerraLib().random().UniformRealDistribution(getMT(), 0, 1)
-		end
-
 		return math.floor(v1 + UniformReal() * (v2 - v1 + 1))
 	end,
 	--- Return a random real number.
@@ -105,10 +101,6 @@ Random_ = {
 		optionalArgument(0, "Random", self)
 		optionalArgument(1, "number", v1)
 		optionalArgument(2, "number", v2)
-
-		if not UniformReal then
-			UniformReal = TerraLib().random().UniformRealDistribution(getMT(), 0, 1)
-		end
 
 		if not v1 and not v2 then
 			return UniformReal()
@@ -154,6 +146,7 @@ Random_ = {
 		integerArgument(1, seed)
 
 		MersenneTwister = TerraLib().random().MersenneTwister(seed)
+		UniformReal = TerraLib().random().UniformRealDistribution(getMT(), 0, 1)
 	end,
 	--- Return a random element from the chosen distribution.
 	-- @usage random = Random{2, 3, 4, 6}
@@ -305,10 +298,12 @@ function Random(data)
 		verify(data.seed ~= 0, "Argument 'seed' cannot be zero.")
 
 		MersenneTwister = TerraLib().random().MersenneTwister(data.seed)
+		UniformReal = TerraLib().random().UniformRealDistribution(getMT(), 0, 1)
 		data.seed = nil
 	elseif not MersenneTwister then
 		local seed = os.time() -- SKIP
 		MersenneTwister = TerraLib().random().MersenneTwister(seed) -- SKIP
+		UniformReal = TerraLib().random().UniformRealDistribution(getMT(), 0, 1) -- SKIP
 	end
 
 	switch(data, "distrib"):caseof{

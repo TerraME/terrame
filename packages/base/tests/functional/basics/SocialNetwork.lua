@@ -164,11 +164,11 @@ weights      named table of size 1
 		unitTest:assertEquals(sntw:sample(), ag1)
 
 		sntw:add(ag2)
-		unitTest:assertEquals(sntw:sample(), ag2)
+		unitTest:assertEquals(sntw:sample(), ag1)
 
 		sntw:add(ag3)
 		unitTest:assertEquals(sntw:sample(), ag3)
-		unitTest:assertEquals(sntw:sample(), ag3)
+		unitTest:assertEquals(sntw:sample(), ag2)
 		unitTest:assertEquals(sntw:sample(), ag1)
 	end,
 	setWeight = function(unitTest)
