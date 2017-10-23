@@ -121,6 +121,10 @@ Directory_ = {
 	list = function(self, all)
 		optionalArgument(1, "boolean", all)
 
+		if not self:exists() then
+			resourceNotFoundError("directory", self.fullpath)
+		end
+
 		if all == nil then all = false end
 
 		local command
@@ -132,10 +136,6 @@ Directory_ = {
 		end
 
 		local result = runCommand(command)
-
-		if not result or not result[1] then
-			customError(self.fullpath.." is not a directory or is empty or does not exist.")
-		end
 
 		return result
 	end,

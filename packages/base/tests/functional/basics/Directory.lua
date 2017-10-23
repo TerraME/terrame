@@ -147,6 +147,13 @@ return{
 		unitTest:assertEquals(#d, nfiles + 2)
 
 		curDir:setCurrentDir()
+
+		d = Directory("abc123456")
+		d:create()
+		local files = d:list()
+
+		unitTest:assertEquals(#files, 0)
+		d:delete()
 	end,
 	name = function(unitTest)
 		local dir = Directory("/usr/local/lib")

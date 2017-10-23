@@ -75,6 +75,14 @@ return{
 
 		unitTest:assertError(error_func, resourceNotFoundMsg("directory", tostring(dir)))
 	end,
+	list = function(unitTest)
+		local dir = Directory("abc123456")
+		local error_func = function()
+			dir:list()
+		end
+
+		unitTest:assertError(error_func, resourceNotFoundMsg("directory", tostring(dir)))
+	end,
 	relativePath = function(unitTest)
 		local dir = Directory("/a/b/c/d")
 
