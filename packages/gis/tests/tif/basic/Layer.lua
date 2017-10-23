@@ -121,7 +121,7 @@ return {
 			source = "shp",
 			input = layerName1,
 			name = clName1,
-			resolution = 10000,
+			resolution = 5000,
 			file = clName1..".shp"
 		}
 
@@ -139,22 +139,20 @@ return {
 			layer = cl.name
 		}
 
-		local count = 0
-		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_mode, "string")
-			if not belong(cell.prod_mode, {"7", "87", "167", "255", "1000"}) then
-				print(cell.prod_mode)
-				count = count + 1
-			end
-		end)
+		local split = cs:split("prod_mode")
 
-		unitTest:assertEquals(count, 0)
+		unitTest:assertEquals(getn(split), 3)
+		unitTest:assertEquals(#split["7"], 498)
+		unitTest:assertEquals(#split["87"], 102)
+		unitTest:assertEquals(#split["167"], 20)
+
+		unitTest:assertEquals(#cs, 498 + 102 + 20)
 
 		local map = Map{
 			target = cs,
 			select = "prod_mode",
-			value = {"7", "87", "167", "255", "1000"},
-			color = {"red", "green", "blue", "orange", "black"}
+			value = {"7", "87", "167"},
+			color = {"red", "green", "blue"}
 		}
 
 		unitTest:assertSnapshot(map, "tiff-mode.png", 0.1)
@@ -172,16 +170,13 @@ return {
 			layer = cl.name
 		}
 
-		count = 0
-		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_m_ov, "string")
-			if not belong(cell.prod_mode, {"7", "87", "167", "255", "1000"}) then
-				print(cell.prod_mode)
-				count = count + 1
-			end
-		end)
+		split = cs:split("prod_m_ov")
 
-		unitTest:assertEquals(count, 0)
+		unitTest:assertEquals(getn(split), 4)
+		unitTest:assertEquals(#split["7"], 497)
+		unitTest:assertEquals(#split["87"], 102)
+		unitTest:assertEquals(#split["167"], 20)
+
 
 		map = Map{
 			target = cs,
@@ -190,9 +185,23 @@ return {
 			color = {"red", "green", "blue", "orange", "black"}
 		}
 
-		unitTest:assertSnapshot(map, "tiff-mode-ov.png", 0.9) -- #1990
+		unitTest:assertSnapshot(map, "tiff-mode-ov.png", 0.05)
 
 		-- MINIMUM
+
+		local clName2 = "itaituba2"
+		local shp2 = clName2..".shp"
+		File(shp2):deleteIfExists()
+		table.insert(shapes, shp2)
+
+		cl = Layer{
+			project = proj,
+			source = "shp",
+			input = layerName1,
+			name = clName2,
+			resolution = 10000,
+			file = clName2..".shp"
+		}
 
 		local warningFunc = function()
 			cl:fill{
