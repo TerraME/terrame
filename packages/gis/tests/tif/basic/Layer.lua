@@ -175,14 +175,16 @@ return {
 		unitTest:assertEquals(getn(split), 4)
 		unitTest:assertEquals(#split["7"], 497)
 		unitTest:assertEquals(#split["87"], 102)
+		unitTest:assertEquals(#split["7,87"], 1)
 		unitTest:assertEquals(#split["167"], 20)
 
+		unitTest:assertEquals(#cs, 497 + 102 + 1 + 20)
 
 		map = Map{
 			target = cs,
 			select = "prod_m_ov",
-			value = {"7", "87", "167", "255", "1000"},
-			color = {"red", "green", "blue", "orange", "black"}
+			value = {"7", "87", "167", "7,87"},
+			color = {"red", "green", "blue", "black"}
 		}
 
 		unitTest:assertSnapshot(map, "tiff-mode-ov.png", 0.05)
