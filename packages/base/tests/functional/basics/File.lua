@@ -62,6 +62,23 @@ return{
 		unitTest:assert(close)
 		File(filename):deleteIfExists()
 	end,
+	copy = function(unitTest)
+		local dir = Directory("abcd123efg")
+		dir:create()
+
+		local file = filePath("river.dbf")
+		file:copy(dir)
+
+		local file2 = File(dir.."river.dbf")
+		unitTest:assert(file2:exists())
+		file2:delete()
+
+		file:copy("abcd123efg")
+
+		unitTest:assert(file2:exists())
+		file2:delete()
+		dir:delete()
+	end,
 	delete = function(unitTest)
 		local filepath = packageInfo().data.."test123"
 		os.execute("touch "..filepath)

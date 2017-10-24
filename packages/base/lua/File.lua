@@ -134,7 +134,30 @@ File_ = {
 			io.close(self.file)
 			return true
 		else
-			resourceNotFoundError("file", self.filename)
+			customError("File '"..self.."' does not exist.")
+		end
+	end,
+	--- Copy the file to a given destination.
+	-- @arg destination A Directory or a string with the destination path.
+	-- @usage -- DONTRUN
+	-- path = Directory("c:/mypath")
+	-- file = File(path.."file.lua")
+	-- file:copy(path.."file2.lua") -- from c:/mypath/file.lua to c:/mypath/file2.lua
+	copy = function(self, destination)
+		if not self:exists() then
+			customError("File '"..self.."' does not exist.")
+		elseif type(destination) == "string" then
+			destination = Directory(destination)
+		end
+
+		if not belong(type(destination), {"Directory", "File"}) then
+			incompatibleTypeError(1, "Directory or File", destination)
+		end
+
+		local result = os.execute("cp \""..self.."\" \""..destination.."\"")
+
+		if not result then
+			customError("Could not copy file to '"..destination.."'.")
 		end
 	end,
 	--- Remove an existing file. If the file does not exist or it cannot be removed,
@@ -148,7 +171,7 @@ File_ = {
 	-- file:delete()
 	delete = function(self)
 		if not self:exists() then
-			resourceNotFoundError(1, self.filename)
+			customError("File '"..self.."' does not exist.")
 		end
 
 		local directory = Directory{name = "tmpXXXXXXXX", tmp = true}
@@ -192,7 +215,7 @@ File_ = {
 	-- @usage file = filePath("agents.csv", "base")
 	-- print(file:path())
 	path = function(self)
-		local result, _, _ = self:split()
+		local result = self:split()
 
 		return result
 	end,
@@ -256,7 +279,7 @@ File_ = {
 
 		local fopen = io.open(self.filename, self.mode)
 		if fopen == nil then
-			resourceNotFoundError("file", self.filename)
+			customError("File '"..self.."' does not exist.")
 		else
 			self.file = fopen
 			return fopen

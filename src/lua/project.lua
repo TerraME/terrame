@@ -138,7 +138,7 @@ function _Gtme.executeProjects(package)
 	if isFile("config.lua") then
 		config = true
 		printNote("Using 'config.lua' in the current directory")
-		os.execute("cp config.lua "..data_path)
+		File("config.lua"):copy(data_path)
 	end
 
 	data_path:setCurrentDir()

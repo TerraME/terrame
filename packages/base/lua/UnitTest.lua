@@ -319,10 +319,12 @@ UnitTest_ = {
 			self.tmpdir = Directory{tmp = true} -- SKIP (to test this line, run execution tests, package 'unittest')
 		end
 
-		os.execute("cp \""..fname.."\" \""..self.tmpdir.."\"")
-		File(fname):deleteIfExists()
+		local file = File(fname)
 
-		if File(fname):exists() then
+		file:copy(self.tmpdir)
+		file:deleteIfExists()
+
+		if file:exists() then
 			self.fail = self.fail + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
 			self:printError("Could not remove file '"..fname.."'.")
 			return
@@ -338,7 +340,7 @@ UnitTest_ = {
 
 			self.created_logs = self.created_logs + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
 			_Gtme.printError("Creating '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..fname).."'.")
-			os.execute("cp \""..self.tmpdir..s..fname.."\" \""..oldLog.."\"") -- SKIP (to test this line, run execution tests, package 'unittest')
+			File(self.tmpdir..s..fname):copy(oldLog) -- SKIP (to test this line, run execution tests, package 'unittest')
 			self.test = self.test + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
 			self.success = self.success + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
 		else
