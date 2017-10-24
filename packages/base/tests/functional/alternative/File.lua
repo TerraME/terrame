@@ -97,7 +97,7 @@ return{
 
 		unitTest:assertError(error_func, "File '"..file.."' does not exist.")
 
-		local file = filePath("river.dbf")
+		file = filePath("river.dbf")
 
 		error_func = function()
 			file:copy(2)
