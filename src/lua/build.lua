@@ -339,7 +339,7 @@ function _Gtme.buildPackage(package, config, clean)
 		os.exit(1)
 	end
 
-	os.execute("cp \""..file.."\" \""..currentdir.."\"")
+	File(file):copy(currentdir)
 
 	if _Gtme.sessionInfo().system == "windows" then
 		md5sum = runCommand("md5sum "..file)

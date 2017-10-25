@@ -838,9 +838,6 @@ function _Gtme.configure(self, modelName, package)
 					cObj:addSize(idx, data.width, data.height)
 				end)
 			end]]
-
-		--	r = r.."\tos.execute(\"cp "..tme.." \"..prefix..\".tme\")\n"
-		--	print("\tos.execute(\"cp "..tme.." \"..prefix..\".tme\")\n")
 		end
 	end
 

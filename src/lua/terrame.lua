@@ -24,6 +24,9 @@
 
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
+local qtOk = 2 ^ 10
+local qtCancel = 2 ^ 22
+
 local begin_red    = "\027[1;31m"
 local begin_yellow = "\027[1;33m"
 local begin_green  = "\027[1;32m"
@@ -87,6 +90,63 @@ local function finalizeTerraLib()
 end
 
 initializeTerraLib()
+
+local function configureZeroBrane(arguments, argCount)
+	_Gtme.loadLibraryPath()
+
+	require("qtluae")
+
+	local installationDir = {
+		windows = "C:/ZeroBraneStudio",
+		linux = "/opt/zbstudio/",
+		mac = "/Applications/ZeroBraneStudio.app/Contents/ZeroBraneStudio/"
+	}
+
+	local dir = Directory(installationDir[info_.system])
+
+	argCount = argCount + 1
+
+	local msg = "ZeroBrane was installed in its default directory. It is going to be configured to run TerraME. Confirm?"
+
+	if arguments[argCount] then
+		dir = Directory(arguments[argCount])
+
+		if dir:exists() then
+			msg = "ZeroBrane was installed in '"..dir.."'. It is going to be configured to run TerraME. Confirm?"
+		else
+			qt.dialog.msg_critical("Could not find ZeroBrane installation directory in '"..dir.."'. Please set the correct location.")
+			os.exit()
+		end
+	elseif not dir:exists() then
+		qt.dialog.msg_critical("Could not find ZeroBrane in its default installation directory ("..dir.."). Please indicate where it is installed as an additional argument, such as:\nterrame -zb c:/myprograms/zerobrane")
+		os.exit()
+	end
+
+	if qt.dialog.msg_question(msg, "Confirm?", qtOk + qtCancel, qtCancel) == qtOk then
+		local ide
+
+		if info_.system == "mac" then
+			ide = Directory(info_.path.."../ide/zerobrane")
+		else
+			ide = Directory(info_.path.."/bin/ide/zerobrane")
+		end
+
+		_Gtme.printNote("Copying syntax highlight file")
+		File(ide.."lua.lua"):copy(dir.."spec")
+		_Gtme.printNote("Copying script to run TerraME")
+		File(ide.."terrame.lua"):copy(dir.."interpreters")
+		_Gtme.printNote("Copying layout script")
+		File(ide.."user.lua"):copy(dir.."cfg")
+		_Gtme.printNote("Copying packages")
+
+		forEachFile(ide.."packages", function(file)
+			file:copy(dir.."packages")
+		end)
+
+		msg = "ZeroBrane was successfully configured. Please close it and open again."
+		qt.dialog.msg_information(msg)
+	end
+end
 
 local function checkUnnecessaryArguments(arguments, argCount)
 	if #arguments > argCount then
@@ -629,6 +689,8 @@ local function usage()
 	print("  -uninstall             Remove an installed package.")
 	print("-silent                  print() does not show any text on the screen.")
 	print("-version                 Show TerraME general information.")
+	print("-zb <dir>                Configures ZeroBrane to run TerraME. It uses the")
+	print("                         default installation directory or <dir>.")
 --	print("-workers <value>         Sets the number of threads used for spatial observers.")
 	print("\nFor more information, please visit www.terrame.org\n")
 end
@@ -1227,6 +1289,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			elseif arg == "-silent" then
 				info_.silent = true
 				print = function() end
+			elseif arg == "-zb" then
+				configureZeroBrane(arguments, argCount)
+				os.exit(0)
 			elseif string.sub(arg, 1, 6) == "-mode=" then
 				_Gtme.printError("Invalid mode '"..string.sub(arg, 7).."'.")
 				os.exit(1)

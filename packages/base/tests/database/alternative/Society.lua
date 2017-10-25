@@ -32,7 +32,8 @@ return{
 				file = tostring(filename)
 			}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", tostring(filename)))
+
+		unitTest:assertError(error_func, "File '"..filename.."' does not exist.")
 
 		error_func = function()
 			sc2 = Society{
@@ -41,6 +42,7 @@ return{
 				sep = 10
 			}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg("sep", "string", 10))
 	end
 }

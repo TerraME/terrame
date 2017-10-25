@@ -27,21 +27,25 @@ return{
 		local error_func = function()
 			File()
 		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			File{}
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
 
 		error_func = function()
 			File(1)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 
 		error_func = function()
 			File("/my/path/file.txt")
 		end
+
 		unitTest:assertError(error_func, "Directory '/my/path/' does not exist.")
 
 		local path = packageInfo("base").data
@@ -50,17 +54,20 @@ return{
 		error_func = function()
 			File(filename)
 		end
+
 		unitTest:assertError(error_func, "Filename '"..filename.."' cannot contain character '*'.")
 
 		filename = path.."file\""
 		error_func = function()
 			File(filename)
 		end
+
 		unitTest:assertError(error_func, "Filename '"..filename.."' cannot contain character '\"'.")
 
 		error_func = function()
 			File(tostring(packageInfo("base").path))
 		end
+
 		unitTest:assertError(error_func, "'base' is a directory, and not a file.", 0, true)
 	end,
 	attributes = function(unitTest)
@@ -68,6 +75,7 @@ return{
 		local error_func = function()
 			file:attributes(1)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
 	close = function(unitTest)
@@ -78,14 +86,38 @@ return{
 			file:close()
 		end
 
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
+		unitTest:assertError(error_func, "File '"..file.."' does not exist.")
+	end,
+	copy = function(unitTest)
+		local file = File("123")
+
+		local error_func = function()
+			file:copy()
+		end
+
+		unitTest:assertError(error_func, "File '"..file.."' does not exist.")
+
+		file = filePath("river.dbf")
+
+		error_func = function()
+			file:copy(2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Directory or File", 2))
+
+		error_func = function()
+			file:copy("abcdefghijkl4u")
+		end
+
+		unitTest:assertError(error_func, "Could not copy file to '"..Directory("abcdefghijkl4u").."'.")
 	end,
 	delete = function(unitTest)
 		local file = File("abc123456")
 		local error_func = function()
 			file:delete()
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg(1, file.filename))
+
+		unitTest:assertError(error_func, "File '"..file.."' does not exist.")
 
 		if _Gtme.sessionInfo().system == "windows" then
 			file = File("myfile.txt")
@@ -94,6 +126,7 @@ return{
 			error_func = function()
 				file:delete()
 			end
+
 			unitTest:assertError(error_func, "Could not remove file '"..file.filename.."'.") -- SKIP
 
 			file:close()
@@ -109,19 +142,23 @@ return{
 		local error_func = function()
 			file:open()
 		end
+
 		unitTest:assertError(error_func, "File '"..file.filename.."' is already open.")
+
 		file:close()
 
 		file = File("test.txt")
 		error_func = function()
 			file:open(2)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
 			file:open("r")
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
+
+		unitTest:assertError(error_func, "File '"..file.."' does not exist.")
 	end,
 	readLine = function(unitTest)
 		local filename = currentDir().."csvwrite.csv"
@@ -135,6 +172,7 @@ return{
 		local error_func = function()
 			file:readLine(",")
 		end
+
 		unitTest:assertError(error_func, "Cannot read a file opened for writing.")
 
 		file = File(filename)
@@ -142,6 +180,7 @@ return{
 		error_func = function()
 			file:readLine(",")
 		end
+
 		unitTest:assertError(error_func, "Line 2 ('\"\"ab\"c\"') is invalid.")
 
 		file:close()
@@ -151,6 +190,7 @@ return{
 		error_func = function()
 			file:readLine(1)
 		end
+
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	read = function(unitTest)
@@ -173,7 +213,7 @@ return{
 			file:read()
 		end
 
-		unitTest:assertError(error_func, resourceNotFoundMsg("file", file.filename))
+		unitTest:assertError(error_func, "File '"..file.."' does not exist.")
 	end,
 	touch = function(unitTest)
 		local file = File("abc.txt")

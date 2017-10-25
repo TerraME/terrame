@@ -41,6 +41,8 @@ Options:
   -uninstall             Remove an installed package.
 -silent                  print() does not show any text on the screen.
 -version                 Show TerraME general information.
+-zb <dir>                Configures ZeroBrane to run TerraME. It uses the
+                         default installation directory or <dir>.
 
 For more information, please visit www.terrame.org
 

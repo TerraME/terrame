@@ -338,7 +338,7 @@ end)
 
 _Gtme.printNote("Testing from local directories")
 
-os.execute("cp config.lua packages")
+File("config.lua"):copy("packages")
 Directory(initialDir.."packages"):setCurrentDir()
 
 _Gtme.printNote("Removing files")
