@@ -340,7 +340,7 @@ UnitTest_ = {
 
 			self.created_logs = self.created_logs + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
 			_Gtme.printError("Creating '".._Gtme.makePathCompatibleToAllOS("log"..s..sessionInfo().system..s..fname).."'.")
-			File(self.tmpdir..s..fname):copy(oldLog) -- SKIP (to test this line, run execution tests, package 'unittest')
+			File(self.tmpdir..s..fname):copy(self.log) -- SKIP (to test this line, run execution tests, package 'unittest')
 			self.test = self.test + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
 			self.success = self.success + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
 		else

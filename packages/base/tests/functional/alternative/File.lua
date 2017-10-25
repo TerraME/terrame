@@ -109,7 +109,7 @@ return{
 			file:copy("abcdefghijkl4u")
 		end
 
-		unitTest:assertError(error_func, "Could not copy file to '/Users/pedro/abcdefghijkl4u/'.")
+		unitTest:assertError(error_func, "Could not copy file to '"..Directory("abcdefghijkl4u").."'.")
 	end,
 	delete = function(unitTest)
 		local file = File("abc123456")
