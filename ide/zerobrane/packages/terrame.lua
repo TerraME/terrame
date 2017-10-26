@@ -113,10 +113,13 @@ return {
 
 		if command then
 			cmd = terrame.."/terrame -package "..package(self:fworkdir(wfilename)).." -"..command
+		elseif win then
+			cmd = terrame.."/terrame -ide"
 		else
 			cmd = terrame.."/terrame"
 		end
-				DisplayOutputLn(cmd)
+
+		DisplayOutputLn(cmd)
 
 		local pid = CommandLineRun(cmd,self:fworkdir(wfilename).."/..",true,false, nil, nil, function() if rundebug then wx.wxRemoveFile(file) end end)
 		return pid

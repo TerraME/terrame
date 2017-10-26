@@ -1283,7 +1283,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_.initialDir = _Gtme.Directory(tostring(_Gtme.currentDir()))
 	info_.version    = _Gtme.packageInfo().version
 
-	if arguments == nil or #arguments < 1 then
+	if arguments == nil or #arguments < 1 or (#arguments == 1 and arguments[1] == "-ide") then
 		if not _Gtme.Directory(info_.path.."/packages/base/doc"):exists() then
 			_Gtme.printError("TerraME does not have documentation. Please run 'terrame -doc' first.")
 			os.exit(1)
