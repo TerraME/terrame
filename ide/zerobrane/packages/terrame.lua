@@ -6,7 +6,7 @@ local id2 = ID("maketoolbar.makemenu2")
 local id3 = ID("maketoolbar.makemenu3")
 local id4 = ID("maketoolbar.makemenu4")
 local id5 = ID("maketoolbar.makemenu5")
-local id6 = ID("maketoolbar.makemenu5")
+local id6 = ID("maketoolbar.makemenu6")
 
 local function split(text, delim)
     -- returns an array of fields based on text and delimiter (one character only)
