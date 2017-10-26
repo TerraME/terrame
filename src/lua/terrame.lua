@@ -124,6 +124,7 @@ local function setDefaultZeroBraneInterpreter()
 	end
 
 	file:close()
+	file = File(path)
 
 	file:writeLine(table.concat(output, "\n"))
 end
