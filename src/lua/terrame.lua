@@ -135,7 +135,7 @@ local function configureZeroBrane(arguments, argCount)
 	require("qtluae")
 
 	local installationDir = {
-		windows = "C:/ZeroBraneStudio",
+		windows = "C:/zerobrane",
 		linux = "/opt/zbstudio/",
 		mac = "/Applications/ZeroBraneStudio.app/Contents/ZeroBraneStudio/"
 	}
