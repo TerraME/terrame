@@ -132,6 +132,7 @@ File_ = {
 
 		if io.type(self.file) == "file" then
 			io.close(self.file)
+			self.mode = nil
 			return true
 		else
 			customError("File '"..self.."' does not exist.")
