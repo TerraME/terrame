@@ -91,6 +91,44 @@ end
 
 initializeTerraLib()
 
+local function setDefaultZeroBraneInterpreter()
+	local path
+
+	if info_.system == "mac" then
+		path = os.getenv("HOME").."/Library/Preferences/ZeroBraneStudio Preferences"
+	elseif info_.system == "windows" then
+		path = os.getenv("appdata").."/ZeroBraneStudio.ini"
+	else
+		path = os.getenv("HOME").."/.ZeroBraneStudio"
+	end
+
+	local file = File(path)
+
+	if not file:exists() then
+		qt.dialog.msg_critical("Could not find ZeroBrane configuration file. Please open and close ZeroBrane in order to create such file. Then run terrame -zb again.")
+		os.exit()
+	end
+
+	local line = file:readLine()
+	local output = {}
+
+	while line do
+		table.insert(output, line)
+
+		if line == "[editor]" then
+			file:readLine()
+			table.insert(output, "interpreter=terrame")
+		end
+
+		line = file:readLine()
+	end
+
+	file:close()
+	file = File(path)
+
+	file:writeLine(table.concat(output, "\n"))
+end
+
 local function configureZeroBrane(arguments, argCount)
 	_Gtme.loadLibraryPath()
 
@@ -128,7 +166,7 @@ local function configureZeroBrane(arguments, argCount)
 		if info_.system == "mac" then
 			ide = Directory(info_.path.."../ide/zerobrane")
 		else
-			ide = Directory(info_.path.."/bin/ide/zerobrane")
+			ide = Directory(info_.path.."/ide/zerobrane")
 		end
 
 		_Gtme.printNote("Copying syntax highlight file")
@@ -142,6 +180,9 @@ local function configureZeroBrane(arguments, argCount)
 		forEachFile(ide.."packages", function(file)
 			file:copy(dir.."packages")
 		end)
+
+		_Gtme.printNote("Setting TerraME as current interpreter")
+		setDefaultZeroBraneInterpreter()
 
 		msg = "ZeroBrane was successfully configured. Please close it and open again."
 		qt.dialog.msg_information(msg)
@@ -1243,7 +1284,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_.initialDir = _Gtme.Directory(tostring(_Gtme.currentDir()))
 	info_.version    = _Gtme.packageInfo().version
 
-	if arguments == nil or #arguments < 1 then
+	if arguments == nil or #arguments < 1 or (#arguments == 1 and arguments[1] == "-ide") then
 		if not _Gtme.Directory(info_.path.."/packages/base/doc"):exists() then
 			_Gtme.printError("TerraME does not have documentation. Please run 'terrame -doc' first.")
 			os.exit(1)

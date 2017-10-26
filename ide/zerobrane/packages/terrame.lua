@@ -6,7 +6,7 @@ local id2 = ID("maketoolbar.makemenu2")
 local id3 = ID("maketoolbar.makemenu3")
 local id4 = ID("maketoolbar.makemenu4")
 local id5 = ID("maketoolbar.makemenu5")
-local id6 = ID("maketoolbar.makemenu5")
+local id6 = ID("maketoolbar.makemenu6")
 
 local function split(text, delim)
     -- returns an array of fields based on text and delimiter (one character only)
@@ -113,10 +113,13 @@ return {
 
 		if command then
 			cmd = terrame.."/terrame -package "..package(self:fworkdir(wfilename)).." -"..command
+		elseif win then
+			cmd = terrame.."/terrame -ide"
 		else
 			cmd = terrame.."/terrame"
 		end
-				DisplayOutputLn(cmd)
+
+		DisplayOutputLn(cmd)
 
 		local pid = CommandLineRun(cmd,self:fworkdir(wfilename).."/..",true,false, nil, nil, function() if rundebug then wx.wxRemoveFile(file) end end)
 		return pid
