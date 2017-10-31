@@ -105,8 +105,7 @@ local function setDefaultZeroBraneInterpreter()
 	local file = File(path)
 
 	if not file:exists() then
-		qt.dialog.msg_critical("Could not find ZeroBrane configuration file. Please open and close ZeroBrane in order to create such file. Then run terrame -zb again.")
-		os.exit()
+		customError("Could not find ZeroBrane configuration file in '"..file.."'. You can set TerraME as ZeroBrane interpreter by selecting Project -> Lua Interpreter -> TerraME from within ZeroBrane.")
 	end
 
 	local line = file:readLine()
@@ -169,23 +168,33 @@ local function configureZeroBrane(arguments, argCount)
 			ide = Directory(info_.path.."/ide/zerobrane")
 		end
 
-		_Gtme.printNote("Copying syntax highlight file")
-		File(ide.."lua.lua"):copy(dir.."spec")
-		_Gtme.printNote("Copying script to run TerraME")
-		File(ide.."terrame.lua"):copy(dir.."interpreters")
-		_Gtme.printNote("Copying layout script")
-		File(ide.."user.lua"):copy(dir.."cfg")
-		_Gtme.printNote("Copying packages")
+		local ok, err = pcall(function()
+			_Gtme.printNote("Copying syntax highlight file")
+			File(ide.."lua.lua"):copy(dir.."spec")
+			_Gtme.printNote("Copying script to run TerraME")
+			File(ide.."terrame.lua"):copy(dir.."interpreters")
+			_Gtme.printNote("Copying layout script")
+			File(ide.."user.lua"):copy(dir.."cfg")
+			_Gtme.printNote("Copying packages")
 
-		forEachFile(ide.."packages", function(file)
-			file:copy(dir.."packages")
+			forEachFile(ide.."packages", function(file)
+				file:copy(dir.."packages")
+			end)
+
+			_Gtme.printNote("Setting TerraME as current interpreter")
+			setDefaultZeroBraneInterpreter()
 		end)
 
-		_Gtme.printNote("Setting TerraME as current interpreter")
-		setDefaultZeroBraneInterpreter()
-
-		msg = "ZeroBrane was successfully configured. Please close it and open again."
-		qt.dialog.msg_information(msg)
+		if not ok then
+			msg = "ZeroBrane was not properly configured. The following error was found: "..err
+			qt.dialog.msg_critical(msg)
+		elseif info_.system == "windows" then
+			msg = "ZeroBrane was successfully configured. Please close it and open again."
+			qt.dialog.msg_information(msg)
+		else
+			msg = "ZeroBrane was successfully configured. If it is running, please close and reopen it."
+			qt.dialog.msg_information(msg)
+		end
 	end
 end
 
