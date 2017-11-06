@@ -1065,6 +1065,20 @@ return{
 
 		unitTest:assertError(invalidDatabase, "The only supported database is 'postgis'. Please, set source = \"postgis\".")
 
+		outData = {
+			source = "postgis",
+			password = "postgres",
+			database = "postgis_22_sample",
+			table = "polygonized",
+			encoding = "latin2"
+		}
+
+		local invalidEncoding = function()
+			tifLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(invalidEncoding, "Encoding 'latin2' is invalid.")
+
 		proj.file:delete()
 	end
 }
