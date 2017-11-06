@@ -1036,7 +1036,7 @@ return{
 			shpLayer:polygonize(outData)
 		end
 
-		unitTest:assertError(invalidInput, "Layer must be a Raster.")
+		unitTest:assertError(invalidInput,  "Function polygonize only works from a raster Layer.")
 
 		outData.band = 1
 

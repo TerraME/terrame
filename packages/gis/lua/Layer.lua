@@ -412,6 +412,16 @@ local function deleteData(data)
 	end
 end
 
+local function createFileFromInputData(input)
+	local file = input
+	if type(file) == "string" then
+		file = File(input)
+	elseif type(file) ~= "File" then
+		customError("Type of 'file' argument must be either a File or string.")
+	end
+	return file
+end
+
 Layer_ = {
 	type_ = "Layer",
 	--- Return a string with the representation of the layer. It can be "point", "polygon", "line", or "raster".
@@ -857,13 +867,14 @@ Layer_ = {
 			layer = self.name
 		}
 
-		if type(data.file) == "File" then
+		if data.file then
 			verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "select"})
-			local ext = data.file:extension()
+			local file = createFileFromInputData(data.file)
+			local ext = file:extension()
 			checkSourceExtension(ext)
 
 			local toData = {
-				file = tostring(data.file),
+				file = tostring(file),
 				type = ext,
 				srid = data.epsg,
 				encoding = EncodingMapper[self.encoding]
@@ -916,14 +927,15 @@ Layer_ = {
 	box = function(self)
 		return TerraLib().getBoundingBox(self.project.layers[self.name])
 	end,
-	--- Creates a vector data from a raster layer using polygons that have an homogeneous internal content.
+	--- Creates a vector data from a raster layer using polygons covering contiguous pixels that share the same value.
 	-- The output data can be either a file data or postgis.
-	-- @arg data.band The band number. The default value is zero.
+	-- @arg data.band The band number (0, default). The output data created will have an attribute
+	-- named 'value' with the value of the pixel according to the band selected.
 	-- @arg data.overwrite Optional argument that indicates if the output data will be overwritten, the default is false.
 	-- @arg data.... Additional arguments related to where the output will be saved. These arguments
 	-- are the same for describing the data source when one creates a layer from a file or database.
 	-- @usage -- DONTRUN
-	-- layer:polygonize{file = File("polygonized.shp"), overwrite = true}
+	-- layer:polygonize{file = "polygonized.shp", overwrite = true}
 	-- layer:polygonize{
 	-- 	source = "postgis",
 	-- 	password = "postgres",
@@ -938,10 +950,10 @@ Layer_ = {
 		optionalTableArgument(data, "overwrite", "boolean")
 
 		if not isRasterSource(self.source) then
-			customError("Layer must be a Raster.")
+			customError("Function polygonize only works from a raster Layer.")
 		end
 
-		checkIfRasterBandExists({layer = self, band = data.band})
+		checkIfRasterBandExists{layer = self, band = data.band}
 
 		local rasterInfo = {
 			project = self.project,
@@ -951,15 +963,15 @@ Layer_ = {
 
 		local outInfo
 
-		if type(data.file) == "File" then
+		if data.file then
 			verifyUnnecessaryArguments(data, {"source", "file", "band", "overwrite"})
-
-			local ext = data.file:extension()
+			local file = createFileFromInputData(data.file)
+			local ext = file:extension()
 			checkSourceExtension(ext)
 
 			outInfo = {
 				type = ext,
-				file = data.file
+				file = file
 			}
 		else
 			mandatoryTableArgument(data, "source", "string")

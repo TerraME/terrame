@@ -37,12 +37,12 @@ return {
 			file = filePath("emas-accumulation.tif", "gis")
 		}
 
-		tifLayer:polygonize{file = File("polygonized.geojson"), overwrite = true}
+		tifLayer:polygonize{file = "polygonized.geojson", overwrite = true}
 
 		local gjsonLayer = Layer{
 			project = proj,
 			name = "GeoJson",
-			file = File("polygonized.geojson")
+			file = "polygonized.geojson"
 		}
 
 		local attrs = gjsonLayer:attributes()
