@@ -37,6 +37,28 @@ local function isValidSource(source)
 	return belong(source, {"tif", "shp", "postgis", "nc", "asc", "geojson", "wfs", "wms"})
 end
 
+local function checkSourceExtension(ext)
+	if not isValidSource(ext) then
+		invalidFileExtensionError("file", ext)
+	end
+end
+
+local function checkSourcePostgis(source)
+	if source ~= "postgis" then
+		customError("The only supported database is 'postgis'. Please, set source = \"postgis\".")
+	end
+end
+
+local function checkEncodingExists(encoding)
+	if not EncodingMapper[encoding] then
+		customError("Encoding '"..encoding.."' is invalid.")
+	end
+end
+
+local function isRasterSource(source)
+	return belong(source, {"tif", "nc", "asc"})
+end
+
 local function isValidName(name)
 	if string.find(name, "%W") then
 		local n = string.gsub(name, "-*_*", "")
@@ -82,13 +104,15 @@ local function fixName(name)
 	return string.gsub(name, "-", "_")
 end
 
-local function checkPgParams(data)
+local function checkPostgisParams(data)
 	mandatoryTableArgument(data, "password", "string")
 	mandatoryTableArgument(data, "database", "string")
 
 	checkName(data.database, "Database")
 
-	defaultTableValue(data, "table", string.lower(data.name))
+	if data.name then
+		defaultTableValue(data, "table", string.lower(data.name))
+	end
 
 	data.table = fixName(data.table)
 	checkName(data.table, "Table")
@@ -194,7 +218,7 @@ local function addCellularLayer(self, data)
 												data.file, not data.box) -- SKIP
 		end,
 		postgis = function()
-			checkPgParams(data)
+			checkPostgisParams(data)
 
 			defaultTableValue(data, "clean", false)
 
@@ -263,9 +287,7 @@ local function addLayer(self, data)
 	end
 
 	if data.encoding then
-		if not EncodingMapper[data.encoding] then
-			customError("Encoding '"..data.encoding.."' is invalid.")
-		end
+		checkEncodingExists(data.encoding)
 	end
 
 	optionalTableArgument(data, "epsg", "number")
@@ -307,7 +329,7 @@ local function addLayer(self, data)
 		postgis = function()
 			verifyUnnecessaryArguments(data, {"name", "source", "host", "port", "user", "password",
 									"database", "table", "project", "epsg", "encoding"})
-			checkPgParams(data)
+			checkPostgisParams(data)
 			defaultTableValue(data, "encoding", "latin1")
 
 			TerraLib().addPgLayer(self, data.name, data, data.epsg, EncodingMapper[data.encoding])
@@ -341,6 +363,20 @@ local function addLayer(self, data)
 	}
 end
 
+local function checkIfRasterBandExists(data)
+	local band = data.layer:bands()
+
+	if data.band >= band then
+		if band > 1 then
+			customError("Band '"..data.band.."' does not exist. The available bands are from '0' to '"..band.."'.")
+		else
+			customError("Band '"..data.band.."' does not exist. The only available band is '0'.")
+		end
+	end
+
+	return true
+end
+
 local function checkRaster(data)
 	verifyUnnecessaryArguments(data, {"attribute", "band", "dummy", "missing", "layer", "operation", "pixel"})
 
@@ -355,17 +391,25 @@ local function checkRaster(data)
 		centroid = function() data.pixel = false end
 	}
 
-	local band = data.layer:bands()
-
-	if data.band >= band then
-		if band > 1 then
-			customError("Band '"..data.band.."' does not exist. The available bands are from '0' to '"..band.."'.")
-		else
-			customError("Band '"..data.band.."' does not exist. The only available band is '0'.")
-		end
-	end
+	checkIfRasterBandExists(data)
 
 	defaultTableValue(data, "dummy", data.layer:dummy(data.band))
+end
+
+local function deleteData(data)
+	if type(data.file) == "string" then
+		data.file = File(data.file)
+	end
+
+	if type(data.file) == "File" then
+		if data.file:exists() then
+			data.file:delete()
+		end
+	elseif data.database then
+		TerraLib().dropPgTable(data)
+	else
+		customError("TerraME does not know how to remove such data source.")
+	end
 end
 
 Layer_ = {
@@ -381,17 +425,7 @@ Layer_ = {
 	-- @usage -- DONTRUN
 	-- layer:delete()
 	delete = function(self)
-		if type(self.file) == "string" then
-			self.file = File(self.file)
-		end
-
-		if self.file and self.file:exists() then
-			self.file:delete()
-		elseif self.database then
-			TerraLib().dropPgTable(self)
-		else
-			customError("TerraME does not know how to remove such data source.")
-		end
+		deleteData(self)
 	end,
 	--- Return the number of bands of a raster layer. If the layer does not have a raster representation
 	-- then it will stop with an error. The bands of the raster layer are named from zero to the number of
@@ -825,39 +859,31 @@ Layer_ = {
 
 		if type(data.file) == "File" then
 			verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "select"})
+			local ext = data.file:extension()
+			checkSourceExtension(ext)
 
-			local source = data.file:extension()
+			local toData = {
+				file = tostring(data.file),
+				type = ext,
+				srid = data.epsg,
+				encoding = EncodingMapper[self.encoding]
+			}
 
-			if isValidSource(source) then
-				local toData = {
-					file = tostring(data.file),
-					type = source,
-					srid = data.epsg,
-					encoding = EncodingMapper[self.encoding]
-				}
-
-				TerraLib().saveLayerAs(fromData, toData, data.overwrite, data.select)
-			else
-				invalidFileExtensionError("data", source)
-			end
+			TerraLib().saveLayerAs(fromData, toData, data.overwrite, data.select)
 		else
 			mandatoryTableArgument(data, "source", "string")
+			checkSourcePostgis(data.source)
+			verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding",
+											"table", "epsg", "overwrite", "select"})
+			data.name = self.name
+			checkPostgisParams(data)
+			local pgData = data
+			pgData.type = "postgis"
+			pgData.srid = pgData.epsg
+			pgData.epsg = nil
+			pgData.encoding = EncodingMapper[self.encoding]
 
-			if data.source == "postgis" then
-				verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding",
-												"table", "epsg", "overwrite", "select"})
-				data.name = self.name
-				checkPgParams(data)
-				local pgData = data
-				pgData.type = "postgis"
-				pgData.srid = pgData.epsg
-				pgData.epsg = nil
-				pgData.encoding = EncodingMapper[self.encoding]
-
-				TerraLib().saveLayerAs(fromData, pgData, pgData.overwrite, data.select)
-			else
-				customError("It only supports postgis database, use source = \"postgis\".")
-			end
+			TerraLib().saveLayerAs(fromData, pgData, pgData.overwrite, data.select)
 		end
 	end,
 	--- Create a new data simplifying its geometry.
@@ -889,6 +915,80 @@ Layer_ = {
 	-- print(bbox.xMin, bbox.yMin, bbox.xMax, bbox.yMax)
 	box = function(self)
 		return TerraLib().getBoundingBox(self.project.layers[self.name])
+	end,
+	--- Creates a vector data from a raster layer using polygons that have an homogeneous internal content.
+	-- The output data can be either a file data or postgis.
+	-- @arg data.band The band number. The default value is zero.
+	-- @arg data.overwrite Optional argument that indicates if the output data will be overwritten, the default is false.
+	-- @arg data.... Additional arguments related to where the output will be saved. These arguments
+	-- are the same for describing the data source when one creates a layer from a file or database.
+	-- @usage -- DONTRUN
+	-- layer:polygonize{file = File("polygonized.shp"), overwrite = true}
+	-- layer:polygonize{
+	-- 	source = "postgis",
+	-- 	password = "postgres",
+	-- 	database = "postgis_22_sample",
+	-- 	table = "polygonized",
+	-- 	overwrite = true
+	-- }
+	polygonize = function(self, data)
+		verifyNamedTable(data)
+		defaultTableValue(data, "band", 0)
+		positiveTableArgument(data, "band", true)
+		optionalTableArgument(data, "overwrite", "boolean")
+
+		if not isRasterSource(self.source) then
+			customError("Layer must be a Raster.")
+		end
+
+		checkIfRasterBandExists({layer = self, band = data.band})
+
+		local rasterInfo = {
+			project = self.project,
+			layer = self.name,
+			band = data.band
+		}
+
+		local outInfo
+
+		if type(data.file) == "File" then
+			verifyUnnecessaryArguments(data, {"source", "file", "band", "overwrite"})
+
+			local ext = data.file:extension()
+			checkSourceExtension(ext)
+
+			outInfo = {
+				type = ext,
+				file = data.file
+			}
+		else
+			mandatoryTableArgument(data, "source", "string")
+			checkSourcePostgis(data.source)
+			verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host",
+											"port", "encoding", "table", "band", "overwrite"})
+			if data.encoding then
+				checkEncodingExists(data.encoding)
+			end
+			defaultTableValue(data, "encoding", "latin1")
+			checkPostgisParams(data)
+
+			outInfo = {
+				type = data.source,
+				host = data.host,
+				port = data.port,
+				user = data.user,
+				password = data.password,
+				database = data.database,
+				table = data.table,
+				encoding = EncodingMapper[data.encoding]
+			}
+		end
+
+		if data.overwrite then
+			deleteData(outInfo)
+		end
+
+		TerraLib().polygonize(rasterInfo, outInfo)
 	end
 }
 

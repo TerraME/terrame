@@ -6,7 +6,7 @@
 -- This framework is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU Lesser General Public
 -- License as published by the Free Software Foundation; either
--- version 2.1 of the License, or (at your option) any later version.
+-- version 2.3 of the License, or (at your option) any later version.
 
 -- You should have received a copy of the GNU Lesser General Public
 -- License along with this library.
@@ -23,41 +23,34 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	export = function(unitTest)
-		local projName = "layer_func_alt.tview"
+	polygonize = function(unitTest)
+		local projFile = File("polygonize_basic_geojson.tview")
 
-		local proj = Project {
-			file = projName,
-			clean = true
+		local proj = Project{
+			file = projFile,
+			clean = true,
 		}
 
-		local filePath1 = filePath("itaituba-census.shp", "gis")
-
-		local layerName1 = "setores"
-		local layer1 = Layer{
+		local tifLayer = Layer{
 			project = proj,
-			name = layerName1,
-			file = filePath1
+			name = "Tif",
+			file = filePath("emas-accumulation.tif", "gis")
 		}
 
-		local invalidFile = function()
-			layer1:export{file = "invalid.org"}
-		end
+		tifLayer:polygonize{file = File("polygonized.geojson"), overwrite = true}
 
-		unitTest:assertError(invalidFile, invalidFileExtensionMsg("file", "org"))
+		local gjsonLayer = Layer{
+			project = proj,
+			name = "GeoJson",
+			file = File("polygonized.geojson")
+		}
 
-		local selectNoExist = function()
-			layer1:export{select = {"uf", "pop"}, source = "shp", file = "shape.shp"}
-		end
-		unitTest:assertError(selectNoExist, "There are no attributes 'uf' and 'pop' in 'setores'.")
+		local attrs = gjsonLayer:attributes()
+		unitTest:assertEquals("FID", attrs[1].name)
+		unitTest:assertEquals("id", attrs[2].name)
+		unitTest:assertEquals("value", attrs[3].name)
 
-		local selectWrongType = function()
-			layer1:export{select = true, source = "shp", file = "shape.shp"}
-		end
-
-		unitTest:assertError(selectWrongType, incompatibleTypeMsg("select", "table", true))
-
+		gjsonLayer:delete()
 		proj.file:delete()
 	end
 }
-

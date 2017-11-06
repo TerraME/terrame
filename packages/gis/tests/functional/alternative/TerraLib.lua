@@ -218,5 +218,53 @@ return {
 		unitTest:assertError(invalidGeometry, "This function works only with line and multi-line geometry.")
 
 		proj.file:delete()
+	end,
+	polygonize = function(unitTest)
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		File(proj.file):deleteIfExists()
+
+		TerraLib().createProject(proj, {})
+
+		local layerName = "TifLayer"
+		local layerFile = filePath("emas-accumulation.tif", "gis")
+		TerraLib().addGdalLayer(proj, layerName, layerFile)
+
+		local layerName1 = "SampaShp"
+		local layerFile1 = filePath("test/sampa.shp", "gis")
+		TerraLib().addShpLayer(proj, layerName1, layerFile1)
+
+		local inInfo = {
+			project = proj,
+			layer = layerName1,
+			band = 0,
+		}
+
+		local outFile = File("emas-polygonized.shp")
+
+		local outInfo = {
+			type = "shp",
+			file = outFile
+		}
+
+		local invalidInput = function()
+			TerraLib().polygonize(inInfo, outInfo)
+		end
+
+		unitTest:assertError(invalidInput, "Input layer must be a Raster.")
+
+		inInfo.layer = layerName
+		outInfo.type = "nc"
+
+		local invalidOutput = function()
+			TerraLib().polygonize(inInfo, outInfo)
+		end
+
+		unitTest:assertError(invalidOutput, "Output type 'nc' is not supported.")
+
+		proj.file:delete()
 	end
 }

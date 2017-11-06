@@ -1007,6 +1007,65 @@ return{
 		unitTest:assertError(reprError, "Layer representation 'raster' cannot be simplified.")
 
 		proj.file:delete()
+	end,
+	polygonize = function(unitTest)
+		local projFile = File("polygonize_func_alt.tview")
+
+		local proj = Project{
+			file = projFile,
+			clean = true,
+		}
+
+		local tifLayer = Layer{
+			project = proj,
+			name = "Tif",
+			file = filePath("emas-accumulation.tif", "gis")
+		}
+
+		local shpLayer = Layer{
+			project = proj,
+			name = "Shp",
+			file = filePath("emas-limit.shp", "gis")
+		}
+
+		local outData = {
+			file = File("polygonized.shp")
+		}
+
+		local invalidInput = function()
+			shpLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(invalidInput, "Layer must be a Raster.")
+
+		outData.band = 1
+
+		local bandNoExists = function()
+			tifLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(bandNoExists, "Band '1' does not exist. The only available band is '0'.")
+
+		outData.file = File("polygonize.shx")
+		outData.band = nil
+
+		local invalidOutFileExtension = function()
+			tifLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(invalidOutFileExtension, "Argument 'file' does not support extension 'shx'.")
+
+		outData = {
+			source = "mydatabase"
+		}
+
+		local invalidDatabase = function()
+			tifLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(invalidDatabase, "The only supported database is 'postgis'. Please, set source = \"postgis\".")
+
+		proj.file:delete()
 	end
 }
 

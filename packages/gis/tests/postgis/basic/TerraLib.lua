@@ -2125,6 +2125,54 @@ return {
 		pgData.table = tableName
 		TerraLib().dropPgTable(pgData)
 		proj.file:delete()
-	end
+	end,
+	polygonize = function(unitTest)
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
 
+		File(proj.file):deleteIfExists()
+
+		TerraLib().createProject(proj, {})
+
+		local layerName = "TifLayer"
+		local layerFile = filePath("emas-accumulation.tif", "gis")
+		TerraLib().addGdalLayer(proj, layerName, layerFile, 29192)
+
+		local inInfo = {
+			project = proj,
+			layer = layerName,
+			band = 0,
+		}
+
+		local outInfo = {
+			type = "postgis",
+			host = "localhost",
+			port = "5432",
+			user = "postgres",
+			password = "postgres",
+			database = "postgis_22_sample",
+			table = "polygonized",
+			encoding = "LATIN1"
+		}
+
+		TerraLib().dropPgTable(outInfo)
+
+		TerraLib().polygonize(inInfo, outInfo)
+
+		local polyName = "Polygonized"
+		TerraLib().addPgLayer(proj, polyName, outInfo, nil, outInfo.encoding)
+		local dset = TerraLib().getDataSet(proj, polyName)
+
+		unitTest:assertEquals(getn(dset), 381)
+
+		local attrNames = TerraLib().getPropertyNames(proj, polyName)
+		unitTest:assertEquals("id", attrNames[0])
+		unitTest:assertEquals("value", attrNames[1])
+		unitTest:assertEquals("geom", attrNames[2])
+
+		proj.file:delete()
+		TerraLib().dropPgTable(outInfo)
+	end
 }
