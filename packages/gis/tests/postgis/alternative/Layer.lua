@@ -836,7 +836,7 @@ return {
 		local pgSourceError = function()
 			layer1:export(pgData)
 		end
-		unitTest:assertError(pgSourceError, "It only supports postgis database, use source = \"postgis\".")
+		unitTest:assertError(pgSourceError, "The only supported database is 'postgis'. Please, set source = \"postgis\".")
 
 		pgData.select = {"uf"}
 		pgData.source = "postgis"

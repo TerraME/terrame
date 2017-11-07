@@ -334,5 +334,49 @@ return {
 		dpFile:delete()
 		lnFile:delete()
 		proj.file:delete()
+	end,
+	polygonize = function(unitTest)
+		local proj = {}
+		proj.file = "myproject.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		File(proj.file):deleteIfExists()
+
+		TerraLib().createProject(proj, {})
+
+		local layerName = "TifLayer"
+		local layerFile = filePath("emas-accumulation.tif", "gis")
+		TerraLib().addGdalLayer(proj, layerName, layerFile)
+
+		local inInfo = {
+			project = proj,
+			layer = layerName,
+			band = 0,
+		}
+
+		local outFile = File("emas-polygonized.geojson")
+		outFile:deleteIfExists()
+
+		local outInfo = {
+			type = "geojson",
+			file = outFile
+		}
+
+		TerraLib().polygonize(inInfo, outInfo)
+
+		local polyName = "Polygonized"
+		TerraLib().addGeoJSONLayer(proj, polyName, outFile)
+		local dset = TerraLib().getDataSet(proj, polyName)
+
+		unitTest:assertEquals(getn(dset), 381)
+
+		local attrNames = TerraLib().getPropertyNames(proj, polyName)
+		unitTest:assertEquals("FID", attrNames[0])
+		unitTest:assertEquals("id", attrNames[1])
+		unitTest:assertEquals("value", attrNames[2])
+
+		proj.file:delete()
+		outFile:delete()
 	end
 }

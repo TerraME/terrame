@@ -1007,6 +1007,88 @@ return{
 		unitTest:assertError(reprError, "Layer representation 'raster' cannot be simplified.")
 
 		proj.file:delete()
+	end,
+	polygonize = function(unitTest)
+		local projFile = File("polygonize_func_alt.tview")
+
+		local proj = Project{
+			file = projFile,
+			clean = true,
+		}
+
+		local tifLayer = Layer{
+			project = proj,
+			name = "Tif",
+			file = filePath("emas-accumulation.tif", "gis")
+		}
+
+		local shpLayer = Layer{
+			project = proj,
+			name = "Shp",
+			file = filePath("emas-limit.shp", "gis")
+		}
+
+		local outData = {
+			file = File("polygonized.shp")
+		}
+
+		local invalidInput = function()
+			shpLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(invalidInput,  "Function polygonize only works from a raster Layer.")
+
+		outData.band = 1
+
+		local bandNoExists = function()
+			tifLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(bandNoExists, "Band '1' does not exist. The only available band is '0'.")
+
+		outData.file = File("polygonize.shx")
+		outData.band = nil
+
+		local invalidOutFileExtension = function()
+			tifLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(invalidOutFileExtension, "Argument 'file' does not support extension 'shx'.")
+
+		outData.file = 5432
+		outData.band = nil
+
+		local invalidFileType = function()
+			tifLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(invalidFileType, "Type of 'file' argument must be either a File or string.")
+
+		outData = {
+			source = "mydatabase"
+		}
+
+		local invalidDatabase = function()
+			tifLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(invalidDatabase, "The only supported database is 'postgis'. Please, set source = \"postgis\".")
+
+		outData = {
+			source = "postgis",
+			password = "postgres",
+			database = "postgis_22_sample",
+			table = "polygonized",
+			encoding = "latin2"
+		}
+
+		local invalidEncoding = function()
+			tifLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(invalidEncoding, "Encoding 'latin2' is invalid.")
+
+		proj.file:delete()
 	end
 }
 
