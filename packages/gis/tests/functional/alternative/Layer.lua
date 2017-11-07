@@ -1055,6 +1055,15 @@ return{
 
 		unitTest:assertError(invalidOutFileExtension, "Argument 'file' does not support extension 'shx'.")
 
+		outData.file = 5432
+		outData.band = nil
+
+		local invalidFileType = function()
+			tifLayer:polygonize(outData)
+		end
+
+		unitTest:assertError(invalidFileType, "Type of 'file' argument must be either a File or string.")
+
 		outData = {
 			source = "mydatabase"
 		}
