@@ -704,8 +704,8 @@ Layer_ = {
 					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					checkRaster(data)
 					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation", "pixel"})
+					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
