@@ -1871,6 +1871,13 @@ local function createProjectFromQgis(project)
 	end
 end
 
+local function getLayerDataSourceInfo(project, layer)
+	loadProject(project, project.file)
+	local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+	releaseProject(project)
+	return dsInfo
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 
@@ -3142,6 +3149,66 @@ TerraLib_ = {
 	-- TerraLib().geometry().Point(0, 0)
 	geometry = function()
 		return binding.te.gm
+	end,
+	--- Creates a polygonized data using GDALPolygonize().
+	-- @arg rasterInfo A table with input Raster layer information.
+	-- @arg rasterInfo.project The project which contains the layer.
+	-- @arg rasterInfo.layer The layer name.
+	-- @arg rasterInfo.band The band which will be created the values.
+	-- @arg outInfo A table with output information according to data source with
+	-- the same arguments when creates a layer from a file or database.
+	-- @usage -- DONTRUN
+	-- local rasterInfo = {
+	-- 	project = aProject,
+	-- 	layer = aLayerName,
+	-- 	band = 0,
+	-- }
+	--
+	-- local outInfo = {
+	-- 	source = "postgis",
+	-- 	host = "localhost",
+	-- 	port = "5432",
+	-- 	user = "postgres",
+	-- 	password = "postgres",
+	-- 	database = "postgis_22_sample",
+	-- 	table = "aTableName",
+	-- 	encoding = "LATIN1"
+	-- }
+	--
+	-- TerraLib().polygonize(rasterInfo, outInfo)
+	polygonize = function(rasterInfo, outInfo)
+		local project = rasterInfo.project
+		local layer = project.layers[rasterInfo.layer]
+		local inInfo = getLayerDataSourceInfo(project, layer)
+
+		if inInfo:getType() ~= "GDAL" then
+			customError("Input layer must be a Raster.")
+		end
+
+		local raster = getRasterFromLayer(project, layer)
+		local type = SourceTypeMapper[outInfo.type]
+		local dsInfo = binding.te.da.DataSourceInfo()
+		local connInfo
+		local dseName
+
+		if type == "OGR" then
+			connInfo = createFileConnInfo(tostring(outInfo.file))
+			local _, fileName = outInfo.file:split()
+			dseName = fileName
+		elseif type == "POSTGIS" then
+			connInfo = createPgConnInfo(outInfo.host, outInfo.port, outInfo.user,
+										outInfo.password, outInfo.database, outInfo.encoding)
+			dseName = outInfo.table
+		else
+			customError("Output type '"..outInfo.type.."' is not supported.")
+		end
+
+		dsInfo:setType(type)
+		dsInfo:setAccessDriver(type)
+		dsInfo:setTitle(dseName)
+		dsInfo:setConnInfo(connInfo)
+
+		raster:polygonize(rasterInfo.band, dsInfo, layer:getSRID())
 	end
 }
 

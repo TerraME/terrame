@@ -1491,6 +1491,47 @@ return {
 		pgData.table = outputName
 		TerraLib().dropPgTable(pgData)
 		proj.file:delete()
+	end,
+	polygonize = function(unitTest)
+		local projFile = File("polygonize_basic_postgis.tview")
+
+		local proj = Project{
+			file = projFile,
+			clean = true,
+		}
+
+		local tifLayer = Layer{
+			project = proj,
+			name = "Tif",
+			file = filePath("emas-accumulation.tif", "gis"),
+			epsg = 29192
+		}
+
+		local outInfo = {
+			source = "postgis",
+			password = "postgres",
+			database = "postgis_22_sample",
+			table = "polygonized",
+			overwrite = true
+		}
+
+		tifLayer:polygonize(outInfo)
+
+		local pgLayer = Layer{
+			project = proj,
+			name = "Postgis",
+			source = outInfo.source,
+			password = outInfo.password,
+			database = outInfo.database,
+			table = outInfo.table
+		}
+
+		local attrs = pgLayer:attributes()
+		unitTest:assertEquals("id", attrs[1].name)
+		unitTest:assertEquals("value", attrs[2].name)
+
+		pgLayer:delete()
+		proj.file:delete()
 	end
 }
 

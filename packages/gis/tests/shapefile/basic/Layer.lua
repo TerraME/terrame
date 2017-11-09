@@ -961,6 +961,36 @@ return {
 		filePath2:delete()
 		filePath3:delete()
 		proj.file:delete()
+	end,
+	polygonize = function(unitTest)
+		local projFile = File("polygonize_basic_shp.tview")
+
+		local proj = Project{
+			file = projFile,
+			clean = true,
+		}
+
+		local tifLayer = Layer{
+			project = proj,
+			name = "Tif",
+			file = filePath("emas-accumulation.tif", "gis")
+		}
+
+		tifLayer:polygonize{file = File("polygonized.shp"), overwrite = true}
+
+		local shpLayer = Layer{
+			project = proj,
+			name = "Shp",
+			file = File("polygonized.shp")
+		}
+
+		local attrs = shpLayer:attributes()
+		unitTest:assertEquals("FID", attrs[1].name)
+		unitTest:assertEquals("id", attrs[2].name)
+		unitTest:assertEquals("value", attrs[3].name)
+
+		shpLayer:delete()
+		proj.file:delete()
 	end
 }
 
