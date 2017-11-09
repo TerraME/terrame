@@ -24,9 +24,6 @@
 
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
-local qtOk = 2 ^ 10
-local qtCancel = 2 ^ 22
-
 local begin_red    = "\027[1;31m"
 local begin_yellow = "\027[1;33m"
 local begin_green  = "\027[1;32m"
@@ -98,7 +95,7 @@ local function setDefaultZeroBraneInterpreter()
 		path = os.getenv("HOME").."/Library/Preferences/ZeroBraneStudio Preferences"
 	elseif info_.system == "windows" then
 		path = os.getenv("appdata").."/ZeroBraneStudio.ini"
-	else
+	else -- linux
 		path = os.getenv("HOME").."/.ZeroBraneStudio"
 	end
 
@@ -128,73 +125,69 @@ local function setDefaultZeroBraneInterpreter()
 	file:writeLine(table.concat(output, "\n"))
 end
 
-local function configureZeroBrane(arguments, argCount)
+local function configureZeroBrane()
 	_Gtme.loadLibraryPath()
 
 	require("qtluae")
 
-	local installationDir = {
-		windows = "C:/zerobrane",
-		linux = "/opt/zbstudio/",
-		mac = "/Applications/ZeroBraneStudio.app/Contents/ZeroBraneStudio/"
-	}
+	local ide
 
-	local dir = Directory(installationDir[info_.system])
-
-	argCount = argCount + 1
-
-	local msg = "ZeroBrane was installed in its default directory. It is going to be configured to run TerraME. Confirm?"
-
-	if arguments[argCount] then
-		dir = Directory(arguments[argCount])
-
-		if dir:exists() then
-			msg = "ZeroBrane was installed in '"..dir.."'. It is going to be configured to run TerraME. Confirm?"
-		else
-			qt.dialog.msg_critical("Could not find ZeroBrane installation directory in '"..dir.."'. Please set the correct location.")
-			os.exit()
-		end
-	elseif not dir:exists() then
-		qt.dialog.msg_critical("Could not find ZeroBrane in its default installation directory ("..dir.."). Please indicate where it is installed as an additional argument, such as:\nterrame -zb c:/myprograms/zerobrane")
-		os.exit()
+	if info_.system == "mac" then
+		ide = Directory(info_.path.."../ide/zerobrane")
+	else
+		ide = Directory(info_.path.."/ide/zerobrane")
 	end
 
-	if qt.dialog.msg_question(msg, "Confirm?", qtOk + qtCancel, qtCancel) == qtOk then
-		local ide
+	local path
 
-		if info_.system == "mac" then
-			ide = Directory(info_.path.."../ide/zerobrane")
+	if info_.system == "mac" then
+		path = os.getenv("HOME")
+	elseif info_.system == "windows" then
+		path = os.getenv("appdata")
+	else -- linux
+		path = os.getenv("HOME")
+	end
+
+	path = Directory(path.."/.zbstudio")
+
+	if path:exists() then
+		_Gtme.printNote("Directory '"..path.."' already exists")
+	else
+		_Gtme.printNote("Creating directory '"..path.."'")
+		path:create()
+	end
+
+	local ok, err = pcall(function()
+		_Gtme.printNote("Copying user.lua")
+		File(ide.."user.lua"):copy(path)
+
+		local packages = Directory(path.."packages")
+
+		if packages:exists() then
+			_Gtme.printNote("Directory '"..packages.."' already exists")
 		else
-			ide = Directory(info_.path.."/ide/zerobrane")
+			_Gtme.printNote("Creating directory '"..packages.."'")
+			packages:create()
 		end
 
-		local ok, err = pcall(function()
-			_Gtme.printNote("Copying syntax highlight file")
-			File(ide.."lua.lua"):copy(dir.."spec")
-			_Gtme.printNote("Copying script to run TerraME")
-			File(ide.."terrame.lua"):copy(dir.."interpreters")
-			_Gtme.printNote("Copying layout script")
-			File(ide.."user.lua"):copy(dir.."cfg")
-			_Gtme.printNote("Copying packages")
-
-			forEachFile(ide.."packages", function(file)
-				file:copy(dir.."packages")
-			end)
-
-			_Gtme.printNote("Setting TerraME as current interpreter")
-			setDefaultZeroBraneInterpreter()
+		_Gtme.printNote("Copying packages")
+		forEachFile(ide.."packages", function(file)
+			file:copy(packages)
 		end)
 
-		if not ok then
-			msg = "ZeroBrane was not properly configured. The following error was found: "..err
-			qt.dialog.msg_critical(msg)
-		elseif info_.system == "windows" then
-			msg = "ZeroBrane was successfully configured. Please close it and open again."
-			qt.dialog.msg_information(msg)
-		else
-			msg = "ZeroBrane was successfully configured. If it is running, please close and reopen it."
-			qt.dialog.msg_information(msg)
-		end
+		_Gtme.printNote("Setting TerraME as current interpreter")
+		setDefaultZeroBraneInterpreter()
+	end)
+
+	if not ok then
+		msg = "ZeroBrane was not properly configured. The following error was found: "..err
+		qt.dialog.msg_critical(msg)
+	elseif info_.system == "windows" then
+		msg = "ZeroBrane was successfully configured. Please close it and open again."
+		qt.dialog.msg_information(msg)
+	else
+		msg = "ZeroBrane was successfully configured. If it is running, please close and reopen it."
+		qt.dialog.msg_information(msg)
 	end
 end
 
@@ -1340,7 +1333,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				info_.silent = true
 				print = function() end
 			elseif arg == "-zb" then
-				configureZeroBrane(arguments, argCount)
+				checkUnnecessaryArguments(arguments, argCount)
+				configureZeroBrane()
 				os.exit(0)
 			elseif string.sub(arg, 1, 6) == "-mode=" then
 				_Gtme.printError("Invalid mode '"..string.sub(arg, 7).."'.")

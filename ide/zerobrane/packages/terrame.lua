@@ -9,26 +9,26 @@ local id5 = ID("maketoolbar.makemenu5")
 local id6 = ID("maketoolbar.makemenu6")
 
 local function split(text, delim)
-    -- returns an array of fields based on text and delimiter (one character only)
-    local result = {}
-    local magic = "().%+-*?[]^$"
+	-- returns an array of fields based on text and delimiter (one character only)
+	local result = {}
+	local magic = "().%+-*?[]^$"
 
-    if delim == nil then
-        delim = "%s"
-    elseif string.find(delim, magic, 1, true) then
-        -- escape magic
-        delim = "%"..delim
-    end
+	if delim == nil then
+		delim = "%s"
+	elseif string.find(delim, magic, 1, true) then
+		-- escape magic
+		delim = "%"..delim
+	end
 
-    local pattern = "[^"..delim.."]+"
-    for w in string.gmatch(text, pattern) do
-        table.insert(result, w)
-    end
-    return result
+	local pattern = "[^"..delim.."]+"
+	for w in string.gmatch(text, pattern) do
+		table.insert(result, w)
+	end
+	return result
 end
 
 local function package(directory)
-    local directories
+	local directories
 
 	if win then
 		directories = split(directory, "\\")
@@ -36,15 +36,87 @@ local function package(directory)
 		directories = split(directory, "/")
 	end
 
-    for i = #directories, 1, -1 do
+	for i = #directories, 1, -1 do
 		local md = directories[i]
-        if md == "lua" or md == "tests" or md == "examples" or md == "data" then
-            return directories[i - 1]
-        end
-    end
+		if md == "lua" or md == "tests" or md == "examples" or md == "data" then
+			return directories[i - 1]
+		end
+	end
 
 	return directories[#directories]
 end
+
+local interpreter = {
+    name = "TerraME",
+    description = "TerraME interpreter",
+    author = "Tiago Carneiro, Pedro Andrade, Rodrigo Avancini, Raian Maretto, Rodrigo Reis",
+    version = "2.0",
+    api = {"baselib", "terrame"},
+    frun = function(self,wfilename,rundebug)
+        terrame = terrame or ide.config.path.terrame_install
+
+        if not terrame then
+            local executable = win and "\\terrame.exe" or "/terrame"
+            -- path to TerraME
+            terrame = os.getenv("TME_PATH")
+            -- hack in Mac OS X
+            if terrame == nil and ide.osname == "Macintosh" then
+                terrame = "/Applications/terrame.app/Contents/bin"
+            else
+                DisplayOutputLn("Could not find TME_PATH. Is TerraME installed?")
+				return
+			end
+        end
+
+      	if not wx.wxDirExists(terrame) then
+        	DisplayOutputLn("Can't find terrame executable in "..terrame)
+ 			return
+		end
+
+        wx.wxSetEnv("TME_PATH", terrame)
+
+        if rundebug then
+            DebuggerAttachDefault({runstart = ide.config.debugger.runonstart == true})
+
+            local tmpfile = wx.wxFileName()
+            tmpfile:AssignTempFileName(".")
+            filepath = tmpfile:GetFullPath()
+            local f = io.open(filepath, "w")
+            if not f then
+                DisplayOutput("Can't open temporary file '"..filepath.."' for writing\n")
+                return
+            end
+            f:write(rundebug)
+            f:close()
+        else
+            -- if running on Windows and can't open the file, this may mean that
+            -- the file path includes unicode characters that need special handling
+            local tmpfile = wx.wxFileName()
+            tmpfile:AssignTempFileName(".")
+            filepath = tmpfile:GetFullPath()
+            local fh = io.open(filepath, "r")
+            if fh then fh:close() end
+            if ide.osname == 'Windows' and pcall(require, "winapi")
+                and wfilename:FileExists() and not fh then
+                winapi.set_encoding(winapi.CP_UTF8)
+                filepath = winapi.short_path(filepath)
+            end
+        end
+
+        local path = win and (terrame..[[\terrame -ide -strict]])
+                    or unix and (terrame.."/terrame -strict")
+        local cmd = path.." ".."\""..self:fworkdir(wfilename).."/"..wfilename:GetFullName().."\""
+        local pid = CommandLineRun(cmd,self:fworkdir(wfilename),true,false, nil, nil, function() if rundebug then wx.wxRemoveFile(file) end end)
+        return pid
+    end,
+    fprojdir = function(self,wfilename)
+        return wfilename:GetPath(wx.wxPATH_GET_VOLUME)
+    end,
+    fworkdir = function (self,wfilename)
+        return wfilename:GetPath(wx.wxPATH_GET_VOLUME)
+    end,
+    fattachdebug = function(self) DebuggerAttachDefault() end,
+}
 
 return {
 	name = "TerraME-commands",
@@ -79,6 +151,7 @@ return {
 		myConnect(id4, "showdoc")
 		myConnect(id5, "test")
 		myConnect(id6, "check")
+		ide:AddInterpreter("TerraME", interpreter)
 	end,
 	onUnRegister = function(self)
 		ide:RemoveMenuItem(id1)
@@ -86,6 +159,7 @@ return {
 		ide:RemoveMenuItem(id3)
 		ide:RemoveMenuItem(id4)
 		ide:RemoveMenuItem(id5)
+		ide:RemoveInterpreter("TerraME")
 	end,
 	frun = function(self, wfilename, command)
 		terrame = terrame or ide.config.path.terrame_install
