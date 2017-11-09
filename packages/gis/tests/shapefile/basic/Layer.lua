@@ -715,12 +715,18 @@ return {
 
 		table.insert(shapes, "munic_cells.shp")
 
-		cl:fill{
-			operation = "coverage",
-			layer = "cities",
-			select = "CODMESO",
-			attribute = "meso"
-		}
+
+		local warning_function = function()
+			cl:fill{
+				operation = "coverage",
+				layer = "cities",
+				dummy = -1,
+				select = "CODMESO",
+				attribute = "meso"
+			}
+		end
+
+		unitTest:assertWarning(warning_function, unnecessaryArgumentMsg("dummy"))
 
 		cs = CellularSpace{
 			project = proj,

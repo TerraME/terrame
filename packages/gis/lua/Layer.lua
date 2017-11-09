@@ -457,7 +457,7 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & missing, band, dummy, pixel \
+	-- & attribute, layer, select & missing, band, pixel \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
 	-- centroid of the cell to the closest point, line, or border of a polygon.
 	-- & attribute, layer & \
@@ -659,6 +659,7 @@ Layer_ = {
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					checkRaster(data)
+					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation", "pixel"})
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
