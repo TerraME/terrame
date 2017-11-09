@@ -498,6 +498,8 @@ Layer_ = {
 	-- value represent the different values in the input data.
 	-- The sum of the created attribute values for a given cell will range
 	-- from zero to one, according to the area of the cell covered by pixels.
+	-- Note that this operation does not use dummy value, therefore one attribute will also
+	-- be created for the dummy values.
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
