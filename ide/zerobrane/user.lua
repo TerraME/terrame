@@ -8,6 +8,20 @@ local G = ...
 styles = G.loadfile('cfg/tomorrow.lua')('Palleton')
 stylesoutshell = styles -- also apply the same scheme to Output/Console windows
 
+local luaspec = G.ide.specs.lua
+luaspec.keywords[3] = luaspec.keywords[3] .. [[
+      Agent Automaton Cell CellularSpace Chart Choice Clock Directory Environment Event File Flow
+      Group InternetSender Jump Layer Log Mandatory Map Model Neighborhood Project Random SocialNetwork Society
+      State TextScreen Timer Trajectory UnitTest VisualTable]]
+
+luaspec.keywords[4] = luaspec.keywords[4] .. [[
+      forEachAgent forEachCell forEachCellPair forEachConnection forEachElement forEachNeighbor forEachNeighborhood 
+      forEachFile forEachDirectory forEachOrderedElement forEachSocialNetwork import
+      createNeighboorhood createSocialNetwork createPlacement
+      greaterByCoord greaterByAttribute integrate]]
+
+luaspec.keywords[3] = string.gsub(luaspec.keywords[3], "select ", "")
+
 -- Editor preferences
 editor.fontsize = 14 -- this is mapped to ide.config.editor.fontsize
 editor.fontname = "Consolas"
