@@ -80,6 +80,8 @@ function customWarning(msg)
 
 	if info then
 		arg = "Warning: "..msg.." In file '"..file.."', line "..info.currentline.."."
+	else
+		arg = "Warning: "..msg -- SKIP
 	end
 
 	if sessionInfo().mode == "debug" then
