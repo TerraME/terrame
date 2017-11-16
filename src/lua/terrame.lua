@@ -200,28 +200,33 @@ local function checkUnnecessaryArguments(arguments, argCount)
 	end
 end
 
+local function colorText(value, color)
+	value = string.gsub(value, "\n", end_color.."\n"..color)
+	return color..value..end_color
+end
+
 function _Gtme.printError(value)
 	if sessionInfo().color then
-		_Gtme.print(begin_red..tostring(value)..end_color)
-	else
-		_Gtme.print(value)
+		value = colorText(value, begin_red)
 	end
+
+	_Gtme.print(value)
 end
 
 function _Gtme.printNote(value)
 	if sessionInfo().color then
-		_Gtme.print(begin_green..tostring(value)..end_color)
-	else
-		_Gtme.print(value)
+		value = colorText(value, begin_green)
 	end
+
+	_Gtme.print(value)
 end
 
 function _Gtme.printWarning(value)
 	if sessionInfo().color then
-		_Gtme.print(begin_yellow..tostring(value)..end_color)
-	else
-		_Gtme.print(value)
+		value = colorText(value, begin_yellow)
 	end
+
+	_Gtme.print(value)
 end
 
 function _Gtme.fontFiles(package)

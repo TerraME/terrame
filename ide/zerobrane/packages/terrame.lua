@@ -103,8 +103,8 @@ local interpreter = {
             end
         end
 
-        local path = win and (terrame..[[\terrame -ide -strict]])
-                    or unix and (terrame.."/terrame -strict")
+        local path = win and (terrame..[[\terrame -color -ide -strict]])
+                    or unix and (terrame.."/terrame -color -strict")
         local cmd = path.." ".."\""..self:fworkdir(wfilename).."/"..wfilename:GetFullName().."\""
         local pid = CommandLineRun(cmd,self:fworkdir(wfilename),true,false, nil, nil, function() if rundebug then wx.wxRemoveFile(file) end end)
         return pid
@@ -186,14 +186,12 @@ return {
 		local cmd
 
 		if command then
-			cmd = terrame.."/terrame -package "..package(self:fworkdir(wfilename)).." -"..command
+			cmd = terrame.."/terrame -color -package "..package(self:fworkdir(wfilename)).." -"..command
 		elseif win then
 			cmd = terrame.."/terrame -ide"
 		else
-			cmd = terrame.."/terrame"
+			cmd = terrame.."/terrame -color "
 		end
-
-		DisplayOutputLn(cmd)
 
 		local pid = CommandLineRun(cmd,self:fworkdir(wfilename).."/..",true,false, nil, nil, function() if rundebug then wx.wxRemoveFile(file) end end)
 		return pid
