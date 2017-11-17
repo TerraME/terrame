@@ -24,6 +24,148 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
+local TestDistributions = Model{
+	finalTime = 1000,
+	distribution = Choice{"exponential", "normal", "lognormal", "beta"},
+	minChart = 0,
+	maxChart = 10,
+	stepChart = 0.5,
+
+	beta = function()
+		return Random{distrib = "beta"}
+	end,
+	exponential = function()
+		return Random{distrib = "exponential"}
+	end,
+	normal = function()
+		return Random{distrib = "normal", mean = 0}
+	end,
+	lognormal = function()
+		return Random{distrib = "lognormal", sd = 0.5}
+	end,
+	init = function(model)
+		Random{seed = 10}
+		model.data = {}
+		model.expected = {}
+		model.random = model[model.distribution](model)
+
+		local file = filePath("test/"..model.distribution.."_data.csv")
+		model.csv = file:read()
+
+		model.timer = Timer{
+			Event{
+				action = function()
+					table.insert(model.data, model.random:sample())
+					table.insert(model.expected, model.csv[model.timer:getTime()].x)
+				end
+			},
+			Event{
+				start = model.finalTime,
+				priority = 100,
+				action = function()
+					local dfData = model:density(model.data, model.minChart, model.maxChart, model.stepChart)
+					local dfExpected = model:density(model.expected, model.minChart, model.maxChart, model.stepChart)
+					local minimum
+					if #dfData.x < #dfExpected.x then
+						minimum = dfData.x
+					else
+						minimum = dfExpected.x
+					end
+					local tme = {}
+					local r = {}
+					local x = {}
+					for i = 1, #minimum do
+						table.insert(tme, dfData.density[i])
+						table.insert(r, dfExpected.density[i])
+						table.insert(x, minimum[i])
+					end
+					local df = DataFrame{TerraME = tme, R = r, x = x}
+					Chart{target = df, select = {"TerraME", "R"}, xAxis = "x", yLabel = "density"}
+					return false
+				end
+			}
+		}
+	end,
+
+	reduce = function(_, data, binaryFunction, initialValue)
+		if not initialValue then initialValue = 0 end
+		local s = initialValue
+		for _, v in pairs(data) do s = binaryFunction(s, v) end
+		return s
+	end,
+	max = function(self, data)
+		return self:reduce(data, math.max, -math.huge)
+	end,
+	min = function(self, data)
+		return self:reduce(data, math.min, math.huge)
+	end,
+	sum = function(self, data)
+		return self:reduce(data, function(a, b) return a+b end)
+	end,
+	mean = function(self, data)
+		return self:sum(data)/#data
+	end,
+	sd = function(self, data)
+		local mean = self:mean(data)
+		local sd = 0
+		for i = 1, #data do
+			sd = sd + (math.pow(data[i]-mean, 2))/(#data-1)
+		end
+		return math.sqrt(sd)
+	end,
+	meanSquaredError = function(_, data1, data2)
+		local sortedData1 = {}
+		for _, v in pairs(data1) do table.insert(sortedData1, v) end
+		table.sort(sortedData1)
+
+		local sortedData2 = {}
+		for _, v in pairs(data2) do table.insert(sortedData2, v) end
+		table.sort(sortedData2)
+
+		local mse = 0
+		for i = 1, #data1 do
+			mse = mse + math.pow(sortedData1[i] - sortedData2[i], 2)
+		end
+		return mse/#data1
+	end,
+	difference = function(_, data1, data2)
+		local diff = {}
+		for i = 1, #data1 do
+			table.insert(diff, math.abs(data1[i]-data2[i]))
+		end
+		return diff
+	end,
+	density = function(self, data, minX, maxX, step)
+		if not minX then minX = self:min(data) end
+		if not maxX then maxX = self:max(data) end
+		if not step then step = 0.1 end
+
+		local xs = {}
+		local density = {}
+		local maxArea = 0
+
+		for x = minX, maxX, step do
+			local counter = function(y, v)
+				if math.abs(x-v) < 1 then
+					return y + 1
+				else
+					return y
+				end
+			end
+
+			local y = self:reduce(data, counter)
+			table.insert(xs, x)
+			table.insert(density, y)
+			maxArea = maxArea + x - minX
+		end
+		for i=1, #density do
+			density[i] = density[i] / maxArea
+		end
+
+		return DataFrame{x = xs, density = density}
+	end
+}
+
 return {
 	Random = function(unitTest)
 		local r = Random()
@@ -102,6 +244,32 @@ return {
 		unitTest:assertEquals(v1, nd:sample())
 		unitTest:assertEquals(v2, nd:sample())
 		unitTest:assertEquals(v3, nd:sample())
+
+		local model = TestDistributions{distribution = "normal", minChart = -4, maxChart = 4}
+		model:run()
+		unitTest:assertEquals(model:mean(model.data), model:mean(model.expected), 0.2)
+		unitTest:assertEquals(model:sd(model.data), model:sd(model.expected), 0.2)
+		unitTest:assertEquals(model:meanSquaredError(model.data, model.expected), 0, 0.2)
+
+		model = TestDistributions{distribution = "exponential"}
+		model:run()
+		unitTest:assertEquals(model:mean(model.data), model:mean(model.expected), 0.2)
+		unitTest:assertEquals(model:sd(model.data), model:sd(model.expected), 0.2)
+		unitTest:assertEquals(model:meanSquaredError(model.data, model.expected), 0, 0.2)
+
+		model = TestDistributions{distribution = "lognormal", minChart = -1, maxChart = 20} -- wrong
+		model:run()
+		unitTest:assertEquals(model:mean(model.data), model:mean(model.expected), 0.2)
+		unitTest:assertEquals(model:sd(model.data), model:sd(model.expected), 0.2)
+		unitTest:assertEquals(model:meanSquaredError(model.data, model.expected), 0, 0.2)
+
+		model = TestDistributions{distribution = "beta", minChart = -0.2, maxChart = 1.2, stepChart = 0.1}
+		model:run()
+		unitTest:assertEquals(model:mean(model.data), model:mean(model.expected), 0.2)
+		unitTest:assertEquals(model:sd(model.data), model:sd(model.expected), 0.2)
+		unitTest:assertEquals(model:meanSquaredError(model.data, model.expected), 0, 0.2)
+
+		--left logistic
 	end,
 	__tostring = function(unitTest)
 		local bern = Random{p = 0.3}
