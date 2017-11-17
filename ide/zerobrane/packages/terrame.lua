@@ -193,6 +193,7 @@ return {
 			cmd = terrame.."/terrame -color "
 		end
 
+		ide:GetOutput():Erase()
 		local pid = CommandLineRun(cmd,self:fworkdir(wfilename).."/..",true,false, nil, nil, function() if rundebug then wx.wxRemoveFile(file) end end)
 		return pid
 	end,
