@@ -53,7 +53,6 @@ function customWarning(msg)
 	local level = _Gtme.getLevel()
 	local info = debug.getinfo(level)
 	local func = _Gtme.printWarning
-	local arg = msg
 
 	local short = ""
 
@@ -78,10 +77,10 @@ function customWarning(msg)
 		file = current:name() -- SKIP
 	end
 
+	local arg = "Warning: "..msg
+
 	if info then
-		arg = "Warning: "..msg.." In file '"..file.."', line "..info.currentline.."."
-	else
-		arg = "Warning: "..msg -- SKIP
+		arg = arg.." In file '"..file.."', line "..info.currentline.."."
 	end
 
 	if sessionInfo().mode == "debug" then
