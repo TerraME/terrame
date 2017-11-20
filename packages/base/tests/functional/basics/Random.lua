@@ -53,12 +53,12 @@ local TestDistributions = Model{
 			end}
 		}
 	end,
-	mean = function(self, data)
+	mean = function(_, data)
 		local s = 0
 		for _, v in pairs(data) do
 			s = s + v
 		end
-		
+
 		return s / #data
 	end,
 	sd = function(self, data)
