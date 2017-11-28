@@ -34,6 +34,8 @@
 ##
 #
 
-export GTEST_COLOR=1
-ctest -VV unittest
+# Exporting enviroment variables
+export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
+
+unittest
 exit $?
