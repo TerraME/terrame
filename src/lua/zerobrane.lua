@@ -22,8 +22,8 @@
 --
 -------------------------------------------------------------------------------------------
 
-local qtYes = 2 ^ 14
-local qtNo = 2 ^ 16
+--local qtYes = 2 ^ 14
+--local qtNo = 2 ^ 16
 
 local ide
 local zbpreferencespath
