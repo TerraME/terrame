@@ -88,109 +88,6 @@ end
 
 initializeTerraLib()
 
-local function setDefaultZeroBraneInterpreter()
-	local path
-
-	if info_.system == "mac" then
-		path = os.getenv("HOME").."/Library/Preferences/ZeroBraneStudio Preferences"
-	elseif info_.system == "windows" then
-		path = os.getenv("appdata").."/ZeroBraneStudio.ini"
-	else -- linux
-		path = os.getenv("HOME").."/.ZeroBraneStudio"
-	end
-
-	local file = File(path)
-
-	if not file:exists() then
-		customError("Could not find ZeroBrane configuration file in '"..file.."'. You can set TerraME as ZeroBrane interpreter by selecting Project -> Lua Interpreter -> TerraME from within ZeroBrane.")
-	end
-
-	local line = file:readLine()
-	local output = {}
-
-	while line do
-		table.insert(output, line)
-
-		if line == "[editor]" then
-			file:readLine()
-			table.insert(output, "interpreter=terrame")
-		end
-
-		line = file:readLine()
-	end
-
-	file:close()
-	file = File(path)
-
-	file:writeLine(table.concat(output, "\n"))
-end
-
-local function configureZeroBrane()
-	_Gtme.loadLibraryPath()
-
-	require("qtluae")
-
-	local ide
-
-	if info_.system == "mac" then
-		ide = Directory(info_.path.."../ide/zerobrane")
-	else
-		ide = Directory(info_.path.."/ide/zerobrane")
-	end
-
-	local path
-
-	if info_.system == "mac" then
-		path = os.getenv("HOME")
-	elseif info_.system == "windows" then
-		path = os.getenv("appdata")
-	else -- linux
-		path = os.getenv("HOME")
-	end
-
-	path = Directory(path.."/.zbstudio")
-
-	if path:exists() then
-		_Gtme.printNote("Directory '"..path.."' already exists")
-	else
-		_Gtme.printNote("Creating directory '"..path.."'")
-		path:create()
-	end
-
-	local ok, err = pcall(function()
-		_Gtme.printNote("Copying user.lua")
-		File(ide.."user.lua"):copy(path)
-
-		local packages = Directory(path.."packages")
-
-		if packages:exists() then
-			_Gtme.printNote("Directory '"..packages.."' already exists")
-		else
-			_Gtme.printNote("Creating directory '"..packages.."'")
-			packages:create()
-		end
-
-		_Gtme.printNote("Copying packages")
-		forEachFile(ide.."packages", function(file)
-			file:copy(packages)
-		end)
-
-		_Gtme.printNote("Setting TerraME as current interpreter")
-		setDefaultZeroBraneInterpreter()
-	end)
-
-	if not ok then
-		msg = "ZeroBrane was not properly configured. The following error was found: "..err
-		qt.dialog.msg_critical(msg)
-	elseif info_.system == "windows" then
-		msg = "ZeroBrane was successfully configured. Please close it and open again."
-		qt.dialog.msg_information(msg)
-	else
-		msg = "ZeroBrane was successfully configured. If it is running, please close and reopen it."
-		qt.dialog.msg_information(msg)
-	end
-end
-
 local function checkUnnecessaryArguments(arguments, argCount)
 	if #arguments > argCount then
 		if belong(arguments[argCount + 1], {">", "2>"}) then return end
@@ -200,28 +97,33 @@ local function checkUnnecessaryArguments(arguments, argCount)
 	end
 end
 
+local function colorText(value, color)
+	value = string.gsub(value, "\n", end_color.."\n"..color)
+	return color..value..end_color
+end
+
 function _Gtme.printError(value)
 	if sessionInfo().color then
-		_Gtme.print(begin_red..tostring(value)..end_color)
-	else
-		_Gtme.print(value)
+		value = colorText(value, begin_red)
 	end
+
+	_Gtme.print(value)
 end
 
 function _Gtme.printNote(value)
 	if sessionInfo().color then
-		_Gtme.print(begin_green..tostring(value)..end_color)
-	else
-		_Gtme.print(value)
+		value = colorText(value, begin_green)
 	end
+
+	_Gtme.print(value)
 end
 
 function _Gtme.printWarning(value)
 	if sessionInfo().color then
-		_Gtme.print(begin_yellow..tostring(value)..end_color)
-	else
-		_Gtme.print(value)
+		value = colorText(value, begin_yellow)
 	end
+
+	_Gtme.print(value)
 end
 
 function _Gtme.fontFiles(package)
@@ -778,7 +680,7 @@ function _Gtme.getLevel()
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4 = string.sub(info.short_src, 1, 1) == "["
 
-		local mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(s.."lua")))
+		local mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(s.."lua"..s)))
 
 		if m1 or m2 or m3 or m4 or mpackage then
 			level = level + 1
@@ -1334,7 +1236,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				print = function() end
 			elseif arg == "-zb" then
 				checkUnnecessaryArguments(arguments, argCount)
-				configureZeroBrane()
+				dofile(info_.path..s.."lua"..s.."zerobrane.lua")
+				_Gtme.configureZeroBrane()
 				os.exit(0)
 			elseif string.sub(arg, 1, 6) == "-mode=" then
 				_Gtme.printError("Invalid mode '"..string.sub(arg, 7).."'.")
