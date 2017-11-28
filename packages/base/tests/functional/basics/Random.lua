@@ -24,6 +24,76 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
+local TestDistributions = Model{
+	finalTime = 1000,
+	distribution = Choice{"exponential", "normal", "lognormal", "beta"},
+	beta = function()
+		return Random{distrib = "beta"}
+	end,
+	exponential = function()
+		return Random{distrib = "exponential"}
+	end,
+	normal = function()
+		return Random{distrib = "normal", mean = 0}
+	end,
+	lognormal = function()
+		return Random{distrib = "lognormal", sd = 0.5}
+	end,
+	init = function(model)
+		Random{seed = 10}
+		model.data = {}
+		model.expected = {}
+		model.random = model[model.distribution](model)
+		local file = filePath("test/"..model.distribution.."_data.csv")
+		model.csv = file:read()
+		model.timer = Timer{
+			Event{action = function()
+				table.insert(model.data, model.random:sample())
+				table.insert(model.expected, model.csv[model.timer:getTime()].x)
+			end}
+		}
+	end,
+	mean = function(_, data)
+		local s = 0
+		for _, v in pairs(data) do
+			s = s + v
+		end
+
+		return s / #data
+	end,
+	sd = function(self, data)
+		local mean = self:mean(data)
+		local sd = 0
+		for i = 1, #data do
+			sd = sd + (math.pow(data[i] - mean, 2)) / (#data - 1)
+		end
+
+		return math.sqrt(sd)
+	end,
+	meanSquaredError = function(_, data1, data2)
+		local sortedData1 = {}
+		for _, v in pairs(data1) do
+			table.insert(sortedData1, v)
+		end
+
+		table.sort(sortedData1)
+
+		local sortedData2 = {}
+		for _, v in pairs(data2) do
+			table.insert(sortedData2, v)
+		end
+
+		table.sort(sortedData2)
+
+		local mse = 0
+		for i = 1, #data1 do
+			mse = mse + math.pow(sortedData1[i] - sortedData2[i], 2)
+		end
+
+		return mse / #data1
+	end
+}
+
 return {
 	Random = function(unitTest)
 		local r = Random()
@@ -102,6 +172,31 @@ return {
 		unitTest:assertEquals(v1, nd:sample())
 		unitTest:assertEquals(v2, nd:sample())
 		unitTest:assertEquals(v3, nd:sample())
+
+		local modelNormal = TestDistributions{distribution = "normal"}
+		modelNormal:run()
+		unitTest:assertEquals(modelNormal:mean(modelNormal.data), modelNormal:mean(modelNormal.expected), 0.03)
+		unitTest:assertEquals(modelNormal:sd(modelNormal.data), modelNormal:sd(modelNormal.expected), 0.03)
+		unitTest:assertEquals(modelNormal:meanSquaredError(modelNormal.data, modelNormal.expected), 0, 0.03)
+
+		local modelExponential = TestDistributions{distribution = "exponential"}
+		modelExponential:run()
+		unitTest:assertEquals(modelExponential:mean(modelExponential.data), modelExponential:mean(modelExponential.expected), 0.12)
+		unitTest:assertEquals(modelExponential:sd(modelExponential.data), modelExponential:sd(modelExponential.expected), 0.1)
+		unitTest:assertEquals(modelExponential:meanSquaredError(modelExponential.data, modelExponential.expected), 0, 0.03)
+
+		-- Need revision: Seems lognormal does not work properly for some parameters.
+		local modelLognormal = TestDistributions{distribution = "lognormal"}
+		modelLognormal:run()
+		unitTest:assertEquals(modelLognormal:mean(modelLognormal.data), modelLognormal:mean(modelLognormal.expected), 0.15)
+		unitTest:assertEquals(modelLognormal:sd(modelLognormal.data), modelLognormal:sd(modelLognormal.expected), 0.11)
+		unitTest:assertEquals(modelLognormal:meanSquaredError(modelLognormal.data, modelLognormal.expected), 0, 0.05)
+
+		local modelBeta = TestDistributions{distribution = "beta"}
+		modelBeta:run()
+		unitTest:assertEquals(modelBeta:mean(modelBeta.data), modelBeta:mean(modelBeta.expected), 0.02)
+		unitTest:assertEquals(modelBeta:sd(modelBeta.data), modelBeta:sd(modelBeta.expected), 0.02)
+		unitTest:assertEquals(modelBeta:meanSquaredError(modelBeta.data, modelBeta.expected), 0, 0.02)
 	end,
 	__tostring = function(unitTest)
 		local bern = Random{p = 0.3}
