@@ -68,7 +68,7 @@ if [ ! -z "$ghprbActualCommit" ]; then
 	sleep 1s
 	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Linux Compilation" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "C++ Unit Testing" -2 "$BUILD_URL/consoleFull"
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "C++ Unit Testing" -2 ""
 	sleep 1s
 	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Code analysis of package base" -2 "$BUILD_URL/consoleFull"
 	sleep 1s
