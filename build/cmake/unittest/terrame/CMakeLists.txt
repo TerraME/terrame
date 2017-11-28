@@ -48,10 +48,8 @@ add_executable(unittest ${TERRAME_UNITTEST_SRC_FILES}
 
 target_link_libraries(unittest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
 
-if(MSVC) #TODO: add_test is not working on Windows
-	install(TARGETS unittest
-			RUNTIME DESTINATION bin
-			COMPONENT runtime)
-endif(MSVC)		
+install(TARGETS unittest
+		RUNTIME DESTINATION bin
+		COMPONENT runtime)
 
 add_test(NAME unittest COMMAND unittest)
