@@ -1,4 +1,4 @@
---[[ [previous](00-contents.lua) | [contents](00-contents.lua) | [next](Tub.lua)
+--[[ [previous](00-contents.lua) | [back to index](../welcome.lua) | [next](Tub.lua)
 
 # Modeling Paradigms
 

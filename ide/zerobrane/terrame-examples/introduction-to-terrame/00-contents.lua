@@ -1,4 +1,4 @@
---[[ [previous](00-contents.lua) | [contents](00-contents.lua) | [next](01-random.lua)
+--[[ [previous](00-contents.lua) | [back to index](../welcome.lua) | [next](01-random.lua)
 
 # An Introduction to TerraME
 
