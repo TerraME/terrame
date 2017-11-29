@@ -62,7 +62,7 @@ local interpreter = {
             -- hack in Mac OS X
             if terrame == nil and ide.osname == "Macintosh" then
                 terrame = "/Applications/terrame.app/Contents/bin"
-            else
+            elseif terrame == nil then
                 DisplayOutputLn("Could not find TME_PATH. Is TerraME installed?")
 				return
 			end

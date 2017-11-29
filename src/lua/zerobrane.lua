@@ -22,24 +22,32 @@
 --
 -------------------------------------------------------------------------------------------
 
+-- lincense to be removed
+local licenseTextLines = 23 -- last line of license text
+local licenseTextPart = "This code is part of the TerraME framework" -- some part of license text
+
 --local qtYes = 2 ^ 14
 --local qtNo = 2 ^ 16
 
 local ide
 local zbpreferencespath
 local path
+local home
 
 if info_.system == "mac" then
 	ide = Directory(info_.path.."../ide/zerobrane")
-	path = os.getenv("HOME")
+	home = os.getenv("HOME")
+	path = home
 	zbpreferencespath = os.getenv("HOME").."/Library/Preferences/ZeroBraneStudio Preferences"
 elseif info_.system == "windows" then
 	ide = Directory(info_.path.."/ide/zerobrane")
+	home = os.getenv("HOMEDRIVE").."/"..os.getenv("HOMEPATH")
 	path = os.getenv("appdata")
 	zbpreferencespath = os.getenv("appdata").."/ZeroBraneStudio.ini"
 else
 	ide = Directory(info_.path.."/ide/zerobrane")
-	path = os.getenv("HOME")
+	home = os.getenv("HOME")
+	path = home
 	zbpreferencespath = os.getenv("HOME").."/.ZeroBraneStudio"
 end
 
@@ -55,10 +63,12 @@ local function setZeroBranePreferences()
 
 	local line = file:readLine()
 	local output = {}
-	local home = os.getenv("HOME")
 
 	while line do
-		local value = string.gsub(line, "PATH", home.."/terrame-examples")
+		local value = string.gsub(line, "PATH", path.."/terrame-examples")
+		if info_.system == "windows" then
+			value = string.gsub(value, "\\", "\\\\")
+		end
 		table.insert(output, value)
 		line = file:readLine()
 	end
@@ -67,6 +77,114 @@ local function setZeroBranePreferences()
 	file = File(zbpreferencespath)
 
 	file:writeLine(table.concat(output, "\n"))
+	file:close()
+end
+
+local function setupPackageFile(fileName, previousFile, nextFile)
+	local file = File(fileName)
+	local line = file:readLine()
+	local fileBegin = line
+	local output = {}
+	table.insert(output, string.format("--[[ [previous](%s) | [contents](00-contents.lua) | [next](%s) ]]\n", previousFile, nextFile))
+	foundLicense = false
+	for _ = 1, licenseTextLines do
+		if not line then
+			break
+		end
+
+		if string.find(line, licenseTextPart) then
+			foundLicense = true
+		end
+
+		line = file:readLine()
+	end
+
+	if foundLicense then
+		line = file:readLine() -- after license
+	else
+		line = fileBegin -- back to begin to read all file
+	end
+
+	while line do
+		table.insert(output, line)
+		line = file:readLine()
+	end
+
+	file:close()
+	file = File(fileName)
+	local contents = table.concat(output, "\n")
+	file:writeLine(contents)
+	file:close()
+end
+
+local function createPackageIndex(packageName, packageExamplesPath, luaFiles, title)
+	local file = File(packageExamplesPath.."/00-contents.lua")
+	file:writeLine("--[[ [previous](00-contents.lua) | [back to index](../welcome.lua) | [next]("..luaFiles[1].indexed..")")
+	file:writeLine("\n# ".._Gtme.stringToLabel(title).." of ".._Gtme.stringToLabel(packageName).."\n")
+	for i = 1, #luaFiles do
+		file:writeLine(string.format("(%02d) [%s](%s)", i, string.gsub(luaFiles[i].fileName, ".lua", ""), luaFiles[i].indexed))
+	end
+
+	file:writeLine("]]")
+	file:close()
+end
+
+local function copyPackage(packageName, examplesPath, subfolders)
+	forEachElement(subfolders, function(_, subfolder)
+		local packagePath = Directory(packageInfo(packageName).path.."/"..subfolder)
+		local folder = subfolder
+		if folder == "data" then
+			folder = "projects"
+		end
+
+		local outputDir = Directory(examplesPath.."/"..packageName.."-"..folder)
+		if not outputDir:exists() then
+			outputDir:create()
+		end
+
+		os.execute("cp -r "..packagePath.."/*.{tme,lua} "..outputDir)
+		local files = outputDir:list()
+		local luaFiles = {}
+		if #files > 0 then
+			table.sort(files, function(f1, f2)
+				return f1 < f2
+			end)
+
+			local index = 0
+			forEachElement(files, function(_, fileName)
+				if not File(packagePath..fileName):exists() then
+					return
+				end
+
+				if string.endswith(fileName, ".lua") then
+					index = index+1
+				end
+
+				local newFileName = string.format("%02d-%s", index, fileName)
+				os.execute("mv "..outputDir.."/"..fileName.." "..outputDir.."/"..newFileName)
+				if string.endswith(newFileName, ".lua") then
+					table.insert(luaFiles, {indexed = newFileName, fileName = fileName})
+				end
+			end)
+		else -- delete folder if its empty
+			outputDir:delete()
+			return
+		end
+
+		table.sort(luaFiles, function(f1, f2)
+			return f1.indexed < f2.indexed
+		end)
+
+		luaFiles[0] = {indexed = "00-contents.lua"}
+		for i = 1, #luaFiles do
+			local fileName = luaFiles[i].indexed
+			local prevFile = luaFiles[(i - 1)].indexed
+			local nextFile = luaFiles[(i + 1) % (#luaFiles+1)].indexed
+			setupPackageFile(outputDir.."/"..fileName, prevFile, nextFile)
+		end
+
+		createPackageIndex(packageName, outputDir, luaFiles, subfolder)
+	end)
 end
 
 local function copyExamplesTutorials()
@@ -81,12 +199,12 @@ local function copyExamplesTutorials()
 	end
 
 	os.execute("cp -r "..ide.."terrame-examples "..path)
-
-	-- TODO: #2060 copy examples here
+	copyPackage("base", examples, {"examples"})
+	copyPackage("gis", examples, {"examples", "data"})
 end
 
 local function updateConfigurationDirectory()
-	local zbpath = Directory(path.."/.zbstudio")
+	local zbpath = Directory(home.."/.zbstudio")
 
 	if zbpath:exists() then
 		_Gtme.printNote("Directory '"..zbpath.."' already exists")
