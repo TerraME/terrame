@@ -52,6 +52,7 @@ local interpreter = {
 	author = "Tiago Carneiro, Pedro Andrade, Rodrigo Avancini, Raian Maretto, Rodrigo Reis",
 	version = "2.0",
 	api = {"baselib", "terrame"},
+	skipcompile = true,
 	frun = function(self,wfilename,rundebug)
 		terrame = terrame or ide.config.path.terrame_install
 
