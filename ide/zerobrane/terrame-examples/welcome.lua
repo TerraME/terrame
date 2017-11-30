@@ -16,6 +16,13 @@ in the bottom.
 - [An Introduction to TerraME](introduction-to-terrame/00-contents.lua)
 - [Modeling paradigms](modeling-paradigms/00-contents.lua)
 
+#Examples
+- [Bases](base-examples/00-contents.lua)
+- [GIS](gis-examples/00-contents.lua)
+
+#Projects
+- [GIS](gis-projects/00-contents.lua)
+
 ]]
 
 print("Hello world!")

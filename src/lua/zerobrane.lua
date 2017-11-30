@@ -83,7 +83,6 @@ end
 local function setupPackageFile(fileName, previousFile, nextFile)
 	local file = File(fileName)
 	local line = file:readLine()
-	local fileBegin = line
 	local output = {}
 	table.insert(output, string.format("--[[ [previous](%s) | [contents](00-contents.lua) | [next](%s) ]]\n", previousFile, nextFile))
 	foundLicense = false
@@ -102,7 +101,9 @@ local function setupPackageFile(fileName, previousFile, nextFile)
 	if foundLicense then
 		line = file:readLine() -- after license
 	else
-		line = fileBegin -- back to begin to read all file
+		file:close()
+		file = File(fileName)
+		line = file:readLine() -- restart line
 	end
 
 	while line do
@@ -121,7 +122,7 @@ local function createPackageIndex(packageName, packageExamplesPath, luaFiles, ti
 	local file = File(packageExamplesPath.."/00-contents.lua")
 	file:writeLine("--[[ [previous](00-contents.lua) | [back to index](../welcome.lua) | [next]("..luaFiles[1].indexed..")")
 	file:writeLine("\n# ".._Gtme.stringToLabel(title).." of ".._Gtme.stringToLabel(packageName).."\n")
-	for i = 1, #luaFiles do
+	for i = 1, #luaFiles - 1 do
 		file:writeLine(string.format("(%02d) [%s](%s)", i, string.gsub(luaFiles[i].fileName, ".lua", ""), luaFiles[i].indexed))
 	end
 
@@ -129,7 +130,8 @@ local function createPackageIndex(packageName, packageExamplesPath, luaFiles, ti
 	file:close()
 end
 
-local function copyPackage(packageName, examplesPath, subfolders)
+local function copyPackage(packageName, examplesPath)
+	local subfolders = {"examples", "data"}
 	forEachElement(subfolders, function(_, subfolder)
 		local packagePath = Directory(packageInfo(packageName).path.."/"..subfolder)
 		local folder = subfolder
@@ -142,48 +144,49 @@ local function copyPackage(packageName, examplesPath, subfolders)
 			outputDir:create()
 		end
 
-		os.execute("cp -r "..packagePath.."/*.{tme,lua} "..outputDir)
+		runCommand("cp -r "..packagePath.."/*.{tme,lua} "..outputDir) -- suppress 'not found' errors
 		local files = outputDir:list()
 		local luaFiles = {}
-		if #files > 0 then
-			table.sort(files, function(f1, f2)
-				return f1 < f2
-			end)
-
-			local index = 0
-			forEachElement(files, function(_, fileName)
-				if not File(packagePath..fileName):exists() then
-					return
-				end
-
-				if string.endswith(fileName, ".lua") then
-					index = index+1
-				end
-
-				local newFileName = string.format("%02d-%s", index, fileName)
-				os.execute("mv "..outputDir.."/"..fileName.." "..outputDir.."/"..newFileName)
-				if string.endswith(newFileName, ".lua") then
-					table.insert(luaFiles, {indexed = newFileName, fileName = fileName})
-				end
-			end)
-		else -- delete folder if its empty
+		if #files == 0 then -- delete folder if its empty
 			outputDir:delete()
 			return
 		end
+
+		table.sort(files, function(f1, f2)
+			return f1 < f2
+		end)
+
+		local index = 0
+		forEachElement(files, function(_, fileName)
+			if not File(packagePath..fileName):exists() then
+				return
+			end
+
+			if string.endswith(fileName, ".lua") then
+				index = index + 1
+			end
+
+			local newFileName = string.format("%02d-%s", index, fileName)
+			os.execute("mv "..outputDir.."/"..fileName.." "..outputDir.."/"..newFileName)
+			if string.endswith(newFileName, ".lua") then
+				table.insert(luaFiles, {indexed = newFileName, fileName = fileName})
+			end
+		end)
 
 		table.sort(luaFiles, function(f1, f2)
 			return f1.indexed < f2.indexed
 		end)
 
 		luaFiles[0] = {indexed = "00-contents.lua"}
-		for i = 1, #luaFiles do
+		luaFiles[#luaFiles + 1] = luaFiles[0]
+		for i = 1, #luaFiles - 1 do
 			local fileName = luaFiles[i].indexed
 			local prevFile = luaFiles[(i - 1)].indexed
-			local nextFile = luaFiles[(i + 1) % (#luaFiles+1)].indexed
+			local nextFile = luaFiles[(i + 1)].indexed
 			setupPackageFile(outputDir.."/"..fileName, prevFile, nextFile)
 		end
 
-		createPackageIndex(packageName, outputDir, luaFiles, subfolder)
+		createPackageIndex(packageName, outputDir, luaFiles, folder)
 	end)
 end
 
@@ -199,8 +202,8 @@ local function copyExamplesTutorials()
 	end
 
 	os.execute("cp -r "..ide.."terrame-examples "..path)
-	copyPackage("base", examples, {"examples"})
-	copyPackage("gis", examples, {"examples", "data"})
+	copyPackage("base", examples)
+	copyPackage("gis", examples)
 end
 
 local function updateConfigurationDirectory()
