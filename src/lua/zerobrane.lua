@@ -26,8 +26,12 @@
 local licenseTextLines = 23 -- last line of license text
 local licenseTextPart = "This code is part of the TerraME framework" -- some part of license text
 
---local qtYes = 2 ^ 14
---local qtNo = 2 ^ 16
+local qtOk = 2 ^ 10
+local qtYes = 2 ^ 14
+local qtNo = 2 ^ 16
+local qtCancel = 2 ^ 22
+local qtYesToAll = 32768
+local qtNoToAll = 131072
 
 local ide
 local zbpreferencespath
@@ -58,7 +62,18 @@ local function setZeroBranePreferences()
 
 	if file:exists() then
 		_Gtme.print("Overwriting ZeroBrane configuration file")
-		-- TODO: ask to overwrite here
+		local msg = string.format("The configuration file '%s' already exists.", file:name())
+		local informativeMsg = "Do you want to overwrite it?"
+		local MessageBox = qt.new_qobject(qt.meta.QMessageBox)
+		MessageBox.windowTitle = "Do you want to overwrite it?"
+		MessageBox.text = msg
+		MessageBox.informativeText = informativeMsg
+		MessageBox.icon = 2
+		MessageBox.standardButtons = qtYes|qtNo
+		local ret = MessageBox:exec()
+		if ret == qtNo then
+			return
+		end
 	end
 
 	local line = file:readLine()
@@ -132,6 +147,7 @@ end
 
 local function copyPackage(packageName, examplesPath)
 	local subfolders = {"examples", "data"}
+	_Gtme.printNote("Copying package "..packageName)
 	forEachElement(subfolders, function(_, subfolder)
 		local packagePath = Directory(packageInfo(packageName).path.."/"..subfolder)
 		local folder = subfolder
@@ -173,10 +189,6 @@ local function copyPackage(packageName, examplesPath)
 			end
 		end)
 
-		table.sort(luaFiles, function(f1, f2)
-			return f1.indexed < f2.indexed
-		end)
-
 		luaFiles[0] = {indexed = "00-contents.lua"}
 		luaFiles[#luaFiles + 1] = luaFiles[0]
 		for i = 1, #luaFiles - 1 do
@@ -192,13 +204,31 @@ end
 
 local function copyExamplesTutorials()
 	examples = Directory(path.."/terrame-examples")
-
+	local MessageBox = qt.new_qobject(qt.meta.QMessageBox)
+	MessageBox.informativeText = "Do you want to select another directory?"
+	MessageBox.windowTitle = "Do you want to select another directory?"
+	MessageBox.icon = 2
+	MessageBox.standardButtons = qtYes|qtNo
 	if examples:exists() then
-		msg = "Directory '"..examples.."' already exists. Do you want to replace it or choose a new directory?"
-		-- TODO: give the option here
+		MessageBox.text = "Directory '"..examples.."' already exists. All files and changes on this directory will be lost."
+		local ret = MessageBox:exec()
+		if ret == qtYes then
+			local dirname = qt.dialog.get_existing_directory("Select Directory", home)
+			if dirname and dirname ~= "" then
+				examples = Directory(dirname.."/terrame-examples")
+				path = dirname
+			end
+		end
 	else
-		msg = "Files will be copied to directory '"..examples.."'. Do you want to select another directory to store them?"
-		-- TODO: give the option here
+		MessageBox.text = "Files will be copied to directory '"..examples.."'"
+		local ret = MessageBox:exec()
+		if ret == qtYes then
+			local dirname = qt.dialog.get_existing_directory("Select Directory", home)
+			if dirname and dirname ~= "" then
+				examples = Directory(dirname.."/terrame-examples")
+				path = dirname
+			end
+		end
 	end
 
 	os.execute("cp -r "..ide.."terrame-examples "..path)
@@ -231,8 +261,31 @@ local function updateConfigurationDirectory()
 
 		_Gtme.printNote("Copying packages")
 		forEachFile(ide.."packages", function(file)
-			-- TODO: ask if plugins could be replaced when they exist
-			file:copy(packages)
+			if File(packages.."/"..file:name()):exists() then
+				if yesToAll then
+					file:copy(packages)
+					return
+				end
+
+				local msg = string.format("The plugin '%s' already exists.", file:name())
+				local informativeMsg = "Do you want to overwrite it?"
+				local MessageBox = qt.new_qobject(qt.meta.QMessageBox)
+				MessageBox.windowTitle = "Do you want to overwrite it?"
+				MessageBox.text = msg
+				MessageBox.informativeText = informativeMsg
+				MessageBox.icon = 2
+				MessageBox.standardButtons = qtYes|qtYesToAll|qtNo|qtNoToAll
+				local ret = MessageBox:exec()
+				if ret == qtNoToAll then
+					return false
+				elseif ret ~= qtNo then
+					file:copy(packages)
+				end
+
+				if ret == qtYesToAll then
+					yesToAll = true
+				end
+			end
 		end)
 	end)
 
@@ -244,8 +297,18 @@ _Gtme.configureZeroBrane = function()
 
 	require("qtluae")
 
-	-- TODO: say that some files will be copied, and it is necessary to close zerobrane before
-	-- executing it, otherwise zerobrane will overwrite such files
+	local msg = "Some files will be copied. Please make sure Zerobrane is already closed, otherwise, it will overwrite such files."
+	local informativeMsg = "Please, close ZeroBrane before continue."
+	local MessageBox = qt.new_qobject(qt.meta.QMessageBox)
+	MessageBox.windowTitle = "Close ZeroBrane before continue."
+	MessageBox.text = msg
+	MessageBox.informativeText = informativeMsg
+	MessageBox.icon = 2
+	MessageBox.standardButtons = qtOk|qtCancel
+	local ret = MessageBox:exec()
+	if ret == qtCancel then
+		return
+	end
 
 	copyExamplesTutorials()
 	local ok, err = updateConfigurationDirectory()
