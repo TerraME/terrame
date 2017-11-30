@@ -17,11 +17,11 @@ in the bottom.
 - [Modeling paradigms](modeling-paradigms/00-contents.lua)
 
 #Examples
-- [Bases](base-examples/00-contents.lua)
-- [GIS](gis-examples/00-contents.lua)
+- [base](base-examples/00-contents.lua)
+- [gis](gis-examples/00-contents.lua)
 
 #Projects
-- [GIS](gis-projects/00-contents.lua)
+- [gis](gis-projects/00-contents.lua)
 
 ]]
 
