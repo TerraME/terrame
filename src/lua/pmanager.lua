@@ -386,10 +386,27 @@ local function selectPackage()
 		return
 	end
 
-	local docpath = packageInfo(comboboxPackages.currentText).path
-	docpath = docpath.."doc"..s.."index.html"
+	local docpath = packageInfo(comboboxPackages.currentText).path..s.."doc"
+	docButton.enabled = true
+	if not Directory(docpath):exists() then
+		docButton.enabled = false
+		local msg = string.format(
+			"Warning: The documentation of package '%s' was not found.\nPlease execute 'TerraME -package %s -doc' to generate the documentation.",
+			comboboxPackages.currentText,
+			comboboxPackages.currentText
+		)
 
-	docButton.enabled = File(docpath):exists()
+		qt.dialog.msg_warning(msg)
+	elseif not File(docpath..s.."index.html"):exists() then
+		docButton.enabled = false
+		local msg = string.format(
+			"Warning: The documentation of package '%s' was not created properly.\nPlease execute 'TerraME -package %s -doc' to generate the documentation.",
+			comboboxPackages.currentText,
+			comboboxPackages.currentText
+		)
+
+		qt.dialog.msg_warning(msg)
+	end
 
 	comboboxModels.enabled = #models > 1
 	configureButton.enabled = #models > 0
