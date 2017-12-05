@@ -21,8 +21,35 @@
 # of this software and its documentation.
 ############################################################################################
 
-find_package(GTest)
-find_package(GMock)
-enable_testing()
+project(inttest)
 
-add_subdirectory(terrame)
+if(MSVC)
+  set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+endif(MSVC)
+
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER MATCHES ".*clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+endif()
+
+include_directories(${TERRAME_ABSOLUTE_ROOT_DIR}/src)
+include_directories(${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/terrame)
+include_directories(${GTEST_INCLUDE_DIRS} ${GMOCK_INCLUDE_DIRS})
+
+file(GLOB TERRAME_integration_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/*.cpp)
+file(GLOB TERRAME_integration_CORE_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/core/*.cpp)
+file(GLOB TERRAME_integration_CORE_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/core/*.h)
+
+source_group("Source Files" FILES ${TERRAME_integration_SRC_FILES})
+source_group("Source Files\\core" FILES ${TERRAME_integration_CORE_SRC_FILES})
+source_group("Header Files\\core" FILES ${TERRAME_integration_CORE_HDR_FILES})
+
+add_executable(inttest ${TERRAME_integration_SRC_FILES}
+						${TERRAME_integration_CORE_SRC_FILES} ${TERRAME_integration_CORE_HDR_FILES})
+
+target_link_libraries(inttest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
+
+install(TARGETS inttest
+		RUNTIME DESTINATION bin
+		COMPONENT runtime)
+
+add_test(NAME inttest COMMAND inttest)
