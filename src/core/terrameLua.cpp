@@ -53,6 +53,9 @@ extern "C"
 	#include "lfs.h"
 }
 
+#include "LuaSystem.h"
+#include "LuaFacade.h"
+
 QApplication* app;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -317,6 +320,8 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(observerResource);
 
 	QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
+
+	terrame::lua::LuaSystem::getInstance().setLuaApi(terrame::lua::LuaFacade::getInstance());	
 
 	TME_PATH = "TME_PATH";
 

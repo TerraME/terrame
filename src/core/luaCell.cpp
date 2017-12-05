@@ -40,6 +40,7 @@ of this software and its documentation.
 // #include "../observer/types/observerScheduler.h"
 #include "../observer/types/agentObserverMap.h"
 #include "luaUtils.h"
+#include "LuaSystem.h"
 
 ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L;
@@ -57,6 +58,8 @@ luaCell::luaCell(lua_State *L)
     observedAttribs.clear();
 
     attrNeighName = "";
+
+	lua = terrame::lua::LuaSystem::getInstance().getLuaApi();
 }
 
 /// Returns the current internal state of the LocalAgent (Automaton) within the cell and received as parameter
@@ -65,8 +68,8 @@ int luaCell::getCurrentStateName(lua_State *L)
     luaLocalAgent *agent = Luna<luaLocalAgent>::check(L, -1);
     ControlMode* controlMode = getControlMode((LocalAgent*)agent);
 
-    if (controlMode) lua_pushstring(L, controlMode->getControlModeName().c_str());
-    else lua_pushnil(L);
+    if (controlMode) lua->pushString(L, controlMode->getControlModeName().c_str());
+    else lua->pushNil(L);
 
     return 1;
 }
@@ -89,7 +92,7 @@ int luaCell::last(lua_State *L) {
 /// no parameters
 int luaCell::isFirst(lua_State *L) {
     NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
-    lua_pushboolean(L, it == nhgs.begin());
+    lua->pushBoolean(L, it == nhgs.begin());
     return  1;
 }
 
@@ -97,7 +100,7 @@ int luaCell::isFirst(lua_State *L) {
 /// no parameters
 int luaCell::isLast(lua_State *L) {
     NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
-    lua_pushboolean(L, it == nhgs.end());
+    lua->pushBoolean(L, it == nhgs.end());
     return  1;
 }
 
@@ -105,7 +108,7 @@ int luaCell::isLast(lua_State *L) {
 /// no parameters
 int luaCell::isEmpty(lua_State *L) {
     NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
-    lua_pushboolean(L, nhgs.empty());
+    lua->pushBoolean(L, nhgs.empty());
     return 1;
 }
 
@@ -120,7 +123,7 @@ int luaCell::clear(lua_State *L) {
 /// Returns the number of Neighbors cells in the Neighborhood
 int luaCell::size(lua_State *L) {
     NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
-    lua_pushnumber(L, nhgs.size());
+    lua->pushNumber(L, nhgs.size());
     return 1;
 }
 
@@ -140,10 +143,16 @@ int luaCell::next(lua_State *)
 luaCell::~luaCell(void) { }
 
 /// Sets the Cell latency
-int luaCell::setLatency(lua_State *L) { Cell::setLatency(luaL_checknumber(L, 1)); return 0; }
+int luaCell::setLatency(lua_State *L) { 
+	Cell::setLatency(lua->getNumberAtTop(L)); 
+	return 0; 
+}
 
 /// Gets the Cell latency
-int luaCell::getLatency(lua_State *L) { lua_pushnumber(L, Cell::getLatency()); return 1; }
+int luaCell::getLatency(lua_State *L) { 
+	lua->pushNumber(L, Cell::getLatency()); 
+	return 1; 
+}
 
 /// Sets the neighborhood
 int luaCell::setNeighborhood(lua_State *L) {
@@ -161,10 +170,10 @@ int luaCell::getCurrentNeighborhood(lua_State *L) {
         if (neigh != NULL)
             neigh->getReference(L);
         else
-            lua_pushnil(L);
+            lua->pushNil(L);
     }
     else
-        lua_pushnil(L);
+        lua->pushNil(L);
 
     return 1;
 }
@@ -174,24 +183,26 @@ int luaCell::getNeighborhood(lua_State *L) {
     NeighCmpstInterf& neighs = Cell::getNeighborhoods();
 
     // Get and test parameters
-    const char* charIndex = luaL_checkstring(L, -1);
+    const char* charIndex = lua->getStringAtTop(L).c_str();
     string index = string(charIndex);
-    if (neighs.empty()) lua_pushnil(L); // return nil
+    if (neighs.empty()) 
+		lua->pushNil(L); // return nil
     else
     {
         // Get the cell	neighborhood
         NeighCmpstInterf::iterator location = neighs.find(index);
         if (location == neighs.end())
         {
-            lua_pushnil(L);
+            lua->pushNil(L);
             return 1;
         }
+
         luaNeighborhood* neigh =(luaNeighborhood*) location->second;
 
         if (neigh != NULL)
             neigh->getReference(L);
         else
-            lua_pushnil(L);
+            lua->pushNil(L);
     }
 
     return 1;
@@ -201,8 +212,8 @@ int luaCell::getNeighborhood(lua_State *L) {
 /// parameters: identifier, luaNeighborhood
 int luaCell::addNeighborhood(lua_State *L)
 {
-    string id = string(luaL_checkstring(L, -2));
     luaNeighborhood* neigh = Luna<luaNeighborhood>::check(L, -1);
+    string id(lua->getStringAtSecond(L));	
     NeighCmpstInterf& neighs = Cell::getNeighborhoods();
     pair< string, CellNeighborhood*> pStrNeigh;
     neigh->CellNeighborhood::setID(id);
@@ -242,38 +253,27 @@ int luaCell::synchronize(lua_State *L) {
 //    return 1;
 //}
 
-/// Gets the luaCell identifier
 int luaCell::getID(lua_State *L)
 {
-    lua_pushstring(L, objectId_.c_str());
+	lua->pushString(L, objectId_);
     return 1;
 }
 
-//@RAIAN
-/// Gets the luaCell identifier
-/// \author Raian Vargas Maretto
 const char* luaCell::getID()
 {
     return this->objectId_.c_str();
 }
-//@RAIAN: Fim.
 
-/// Sets the luaCell identifier
 int luaCell::setID(lua_State *L)
 {
-    const char* id = luaL_checkstring(L , -1);
-    objectId_ = string(id);
+    objectId_ = lua->getStringAtTop(L);
     return 0;
 }
 
-//Raian
-/// Sets the cell index (x,y)
-/// Parameters: cell.x, cell.y
-/// \author Raian Vargas Maretto
 int luaCell::setIndex(lua_State *L)
 {
-    this->idx.second = luaL_checknumber(L, -1);
-    this->idx.first = luaL_checknumber(L, -2);
+    this->idx.second = lua->getNumberAtTop(L);
+    this->idx.first = lua->getNumberAtSecond(L);
     return 0;
 }
 
@@ -304,12 +304,12 @@ int luaCell::createObserver(lua_State *)
 
     // recupero a tabela de
     // atributos da celula
-    int top = lua_gettop(luaL);
+    int top = lua->getTopIndex(luaL);
 
     // Nao modifica em nada a pilha
     // recupera o enum referente ao tipo
     // do observer
-    int typeObserver =(int)luaL_checkinteger(luaL, -4);
+    int typeObserver = lua->getNumberAt(luaL, -4);
 
     //@RAIAN
     // Para o Observer do tipo Neighbohrood
@@ -321,38 +321,32 @@ int luaCell::createObserver(lua_State *)
         QStringList allAttribs, obsAttribs;
 
         // Pecorre a pilha lua recuperando todos os atributos celula
-        lua_pushnil(luaL);
-        while (lua_next(luaL, top) != 0)
+        lua->pushNil(luaL);
+        while (lua->nextAt(luaL, top) != 0)
         {
-            QString key(luaL_checkstring(luaL, -2));
-
+            QString key(lua->getStringAtSecond(luaL).c_str());
             allAttribs.push_back(key);
-            lua_pop(luaL, 1);
+            lua->popOneElement(luaL);
         }
 
         //------------------------
         // pecorre a pilha lua recuperando
         // os atributos celula que se quer observar
-        lua_settop(luaL, top - 1);
-        top = lua_gettop(luaL);
+        lua->setTop(luaL, top - 1);
+        top = lua->getTopIndex(luaL);
 
         // Verificacao da sintaxe da tabela Atributos
-        if (!lua_istable(luaL, top))
+        if (!lua->isTableAt(luaL, top))
         {
-            string err_out = string("Error: Attribute table not found. Incorrect sintax.");
-            lua_getglobal(L, "customError");
-            lua_pushstring(L, err_out.c_str());
-            lua_pushnumber(L, 3);
-            lua_call(L, 2, 0);
-            return -1;
+            return callCustomError("Error: Attribute table not found. Incorrect sintax.");
         }
 
         bool attribTable = false;
 
-        lua_pushnil(luaL);
-        while (lua_next(luaL, top - 1) != 0)
+        lua->pushNil(luaL);
+        while (lua->nextAt(luaL, top - 1) != 0)
         {
-            QString key(luaL_checkstring(luaL, -1));
+            QString key(lua->getStringAtTop(luaL).c_str());
             attribTable = true;
 
             // Verifica se o atributo informado n?o existe deve ter sido digitado errado
@@ -366,15 +360,11 @@ int luaCell::createObserver(lua_State *)
             {
                 if (!key.isNull() || !key.isEmpty())
                 {
-                    string err_out = string("Error: Attribute '"+ key.toStdString() +"' not found.");
-                    lua_getglobal(L, "customError");
-                    lua_pushstring(L, err_out.c_str());
-                    lua_pushnumber(L, 3);
-                    lua_call(L, 2, 0);
-                    return -1;
+                    return callCustomError("Error: Attribute '"+ key.toStdString() +"' not found.");
                 }
             }
-            lua_pop(luaL, 1);
+
+            lua->popOneElement(luaL);
         }
 
         if (obsAttribs.empty())
@@ -393,60 +383,55 @@ int luaCell::createObserver(lua_State *)
 
         // Recupera a tabela de parametros os observadores do tipo Table e Graphic
         // caso nao seja um tabela a sintaxe do metodo esta incorreta
-        lua_pushnil(luaL);
-        while (lua_next(luaL, top) != 0)
+        lua->pushNil(luaL);
+        while (lua->nextAt(luaL, top) != 0)
         {
             QString key;
-            if (lua_type(luaL, -2) == LUA_TSTRING)
-                key = QString(luaL_checkstring(luaL, -2));
+            if(lua->isStringAt(luaL, -2))
+                key = QString(lua->getStringAtSecond(luaL).c_str());
+			
+			int luaType = lua->getTypeAt(luaL, -1);
 
-            switch (lua_type(luaL, -1))
-            {
-            case LUA_TSTRING:
-            {
-                QString value(luaL_checkstring(luaL, -1));
-                cols.push_back(value);
-                break;
-            }
+			if(lua->isString(luaType))
+			{
+				QString value(lua->getStringAtTop(luaL).c_str());
+				cols.push_back(value);
+				
+			}
+			else if(lua->isBoolean(luaType))
+			{
+				bool val = lua->toBooleanAt(luaL, -1);
+				if (key == "visible")
+					obsVisible = val;
+				else // if (key == "compress")
+					compressDatagram = val;
+			}
+			else if(lua->isTable(luaType))
+			{
+				int tableTop = lua->getTopIndex(luaL);
 
-            case LUA_TBOOLEAN:
-            {
-                bool val = lua_toboolean(luaL, -1);
-                if (key == "visible")
-                    obsVisible = val;
-                else // if (key == "compress")
-                    compressDatagram = val;
-                break;
-            }
+				lua->pushNil(luaL);
+				while (lua->nextAt(luaL, tableTop) != 0)
+				{
+					if (lua->isStringAt(luaL, -2))
+						obsParams.append(lua->getStringAtSecond(luaL).c_str());
+					
+					luaType = lua->getTypeAt(luaL, -1);
 
-            case LUA_TTABLE:
-            {
-                int tableTop = lua_gettop(luaL);
+					if (lua->isNumber(luaType))
+					{
+						cols.append(QString::number(lua->getNumberAtTop(luaL)));
+					}
+					else if (lua->isString(luaType))
+					{
+						cols.append(lua->getStringAtTop(luaL).c_str());
+					}
 
-                lua_pushnil(luaL);
-                while (lua_next(luaL, tableTop) != 0)
-                {
-                    if (lua_type(luaL, -2) == LUA_TSTRING)
-                        obsParams.append(luaL_checkstring(luaL, -2));
+					lua->popOneElement(luaL);
+				}
+			}
 
-                    switch (lua_type(luaL, -1))
-                    {
-                    case LUA_TNUMBER:
-                        cols.append(QString::number(luaL_checknumber(luaL, -1)));
-                        break;
-
-                    case LUA_TSTRING:
-                        cols.append(luaL_checkstring(luaL, -1));
-                        break;
-                    }
-                    lua_pop(luaL, 1);
-                }
-            }
-
-            default:
-                break;
-            }
-            lua_pop(luaL, 1);
+			lua->popOneElement(luaL);
         }
 
         ObserverTextScreen *obsText = 0;
@@ -460,129 +445,126 @@ int luaCell::createObserver(lua_State *)
 
         switch (typeObserver)
         {
-        case TObsTextScreen:
-            obsText =(ObserverTextScreen*)
-                    CellSubjectInterf::createObserver(TObsTextScreen);
-            if (obsText)
-            {
-                obsId = obsText->getId();
-            }
-            else
-            {
-                if (execModes != Quiet)
-                    qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-            }
-            break;
-
-        case TObsLogFile:
-            obsLog =(ObserverLogFile*)
-                    CellSubjectInterf::createObserver(TObsLogFile);
-            if (obsLog)
-            {
-                obsId = obsLog->getId();
-            }
-            else
-            {
-                if (execModes != Quiet)
-                    qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-            }
-            break;
-
-        case TObsTable:
-            obsTable =(ObserverTable *)
-                    CellSubjectInterf::createObserver(TObsTable);
-            if (obsTable)
-            {
-                obsId = obsTable->getId();
-            }
-            else
-            {
-                if (execModes != Quiet)
-                    qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-            }
-            break;
-
-        case TObsDynamicGraphic:
-            obsGraphic =(ObserverGraphic *)
-                    CellSubjectInterf::createObserver(TObsDynamicGraphic);
-            if (obsGraphic)
-            {
-                obsGraphic->setObserverType(TObsDynamicGraphic);
-                obsId = obsGraphic->getId();
-            }
-            else
-            {
-                if (execModes != Quiet)
-                    qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-            }
-            break;
-
-        case TObsGraphic:
-            obsGraphic =(ObserverGraphic *)
-                    CellSubjectInterf::createObserver(TObsGraphic);
-            if (obsGraphic)
-            {
-                obsId = obsGraphic->getId();
-            }
-            else
-            {
-                if (execModes != Quiet)
-                    qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-            }
-            break;
-
-        case TObsUDPSender:
-            obsUDPSender =(ObserverUDPSender *)
-                    CellSubjectInterf::createObserver(TObsUDPSender);
-            if (obsUDPSender)
-            {
-                obsId = obsUDPSender->getId();
-                obsUDPSender->setCompressDatagram(compressDatagram);
-
-                if (obsVisible)
-                    obsUDPSender->show();
-            }
-            else
-            {
-                if (execModes != Quiet)
-                    qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-            }
-        break;
-
-		case TObsTCPSender:
-			obsTCPSender =(ObserverTCPSender *)
-			CellSubjectInterf::createObserver(TObsTCPSender);
-			if (obsTCPSender)
-			{
-				obsId = obsTCPSender->getId();
-				obsTCPSender->setCompress(compressDatagram);
-
-				if (obsVisible)
-					obsTCPSender->show();
-			}
-			else
-			{
-				if (execModes != Quiet) {
-					QString str = QString(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-					lua_getglobal(L, "customWarning");
-					lua_pushstring(L, str.toLatin1().constData());
-					lua_call(L, 1, 0);
+			case TObsTextScreen:
+				obsText =(ObserverTextScreen*)
+						CellSubjectInterf::createObserver(TObsTextScreen);
+				if (obsText)
+				{
+					obsId = obsText->getId();
 				}
-			}
-		break;
-        case TObsMap:
-        default:
-            if (execModes != Quiet)
-            {
-                string err_out = string("Warning: In this context, the code '")
-                        + string(getObserverName(typeObserver))
-                        + string("' does not correspond to a valid type of Observer.");
-                lua_getglobal(L, "customWarning");
-                lua_pushstring(L, err_out.c_str());
-                lua_pushnumber(L, 5);
-                lua_call(L, 2, 0);
-            }
-            return 0;
+				else
+				{
+					if (execModes != Quiet)
+						qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
+				}
+				break;
+
+			case TObsLogFile:
+				obsLog =(ObserverLogFile*)
+						CellSubjectInterf::createObserver(TObsLogFile);
+				if (obsLog)
+				{
+					obsId = obsLog->getId();
+				}
+				else
+				{
+					if (execModes != Quiet)
+						qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
+				}
+				break;
+
+			case TObsTable:
+				obsTable =(ObserverTable *)
+						CellSubjectInterf::createObserver(TObsTable);
+				if (obsTable)
+				{
+					obsId = obsTable->getId();
+				}
+				else
+				{
+					if (execModes != Quiet)
+						qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
+				}
+				break;
+
+			case TObsDynamicGraphic:
+				obsGraphic =(ObserverGraphic *)
+						CellSubjectInterf::createObserver(TObsDynamicGraphic);
+				if (obsGraphic)
+				{
+					obsGraphic->setObserverType(TObsDynamicGraphic);
+					obsId = obsGraphic->getId();
+				}
+				else
+				{
+					if (execModes != Quiet)
+						qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
+				}
+				break;
+
+			case TObsGraphic:
+				obsGraphic =(ObserverGraphic *)
+						CellSubjectInterf::createObserver(TObsGraphic);
+				if (obsGraphic)
+				{
+					obsId = obsGraphic->getId();
+				}
+				else
+				{
+					if (execModes != Quiet)
+						qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
+				}
+				break;
+
+			case TObsUDPSender:
+				obsUDPSender =(ObserverUDPSender *)
+						CellSubjectInterf::createObserver(TObsUDPSender);
+				if (obsUDPSender)
+				{
+					obsId = obsUDPSender->getId();
+					obsUDPSender->setCompressDatagram(compressDatagram);
+
+					if (obsVisible)
+						obsUDPSender->show();
+				}
+				else
+				{
+					if (execModes != Quiet)
+						qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
+				}
+			break;
+
+			case TObsTCPSender:
+				obsTCPSender =(ObserverTCPSender *)
+				CellSubjectInterf::createObserver(TObsTCPSender);
+				if (obsTCPSender)
+				{
+					obsId = obsTCPSender->getId();
+					obsTCPSender->setCompress(compressDatagram);
+
+					if (obsVisible)
+						obsTCPSender->show();
+				}
+				else
+				{
+					if (execModes != Quiet) { // TODO(avancinirodrigo): review this warn
+						QString str = QString(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
+						lua->pushGlobalByName(L, "customWarning");
+						lua->pushString(L, str.toLatin1().constData());
+						lua->call(L, 1, 0);
+					}
+				}
+			break;
+			case TObsMap:
+			default:
+				if (execModes != Quiet)
+				{
+					string errOut = string("Warning: In this context, the code '")
+							+ string(getObserverName(typeObserver))
+							+ string("' does not correspond to a valid type of Observer.");
+					callCustomWarning(errOut);
+				}
+				return 0;
         }
 
         /// Define alguns parametros do observador instanciado ---------------------------------------------------
@@ -594,16 +576,16 @@ int luaCell::createObserver(lua_State *)
             obsLog->setSeparator(cols.at(1));
 			obsLog->setWriteMode(cols.at(2));
 
-            lua_pushnumber(luaL, obsId);
-            lua_pushlightuserdata(luaL, (void*) obsLog);
+            lua->pushNumber(luaL, obsId);
+            lua->pushLightUserdata(luaL, (void*) obsLog);
             return 2;
         }
 
         if (obsText)
         {
             obsText->setAttributes(obsAttribs);
-            lua_pushnumber(luaL, obsId);
-            lua_pushlightuserdata(luaL, (void*) obsText);
+            lua->pushNumber(luaL, obsId);
+            lua->pushLightUserdata(luaL, (void*) obsText);
 
             return 2;
         }
@@ -613,8 +595,8 @@ int luaCell::createObserver(lua_State *)
             obsTable->setColumnHeaders(cols);
             obsTable->setAttributes(obsAttribs);
 
-            lua_pushnumber(luaL, obsId);
-            lua_pushlightuserdata(luaL, (void*) obsTable);
+            lua->pushNumber(luaL, obsId);
+            lua->pushLightUserdata(luaL, (void*) obsTable);
 
             return 2;
         }
@@ -633,8 +615,8 @@ int luaCell::createObserver(lua_State *)
             obsGraphic->setAttributes(obsAttribs, cols.takeFirst().split(";", QString::SkipEmptyParts),
                                       obsParams, cols);
 
-            lua_pushnumber(luaL, obsId);
-			lua_pushlightuserdata(luaL, (void*) obsGraphic);
+            lua->pushNumber(luaL, obsId);
+			lua->pushLightUserdata(luaL, (void*) obsGraphic);
 
 			return 2;
         }
@@ -658,8 +640,9 @@ int luaCell::createObserver(lua_State *)
                         obsUDPSender->addHost(cols.at(i));
                 }
             }
-            lua_pushnumber(luaL, obsId);
-            lua_pushlightuserdata(luaL, (void*) obsUDPSender);
+
+            lua->pushNumber(luaL, obsId);
+            lua->pushLightUserdata(luaL, (void*) obsUDPSender);
 
             return 2;
         }
@@ -677,13 +660,13 @@ int luaCell::createObserver(lua_State *)
         luaCellularSpace *cellSpace = 0;
 
         // Recupera os parametros
-        lua_pushnil(luaL);
-        while (lua_next(luaL, top - 1) != 0)
+        lua->pushNil(luaL);
+        while (lua->nextAt(luaL, top - 1) != 0)
         {
             // Recupera o ID do observer map
-            if (lua_isnumber(luaL, -1) && (!getObserverID))
+            if (lua->isNumberOrStringNumberAt(luaL, -1) && (!getObserverID))
             {
-                obsID = luaL_checknumber(luaL, -1);
+                obsID = lua->getNumberAtTop(luaL);
                 getObserverID = true;
                 isLegend = true;
             }
@@ -691,12 +674,12 @@ int luaCell::createObserver(lua_State *)
             //Recupera o espaco celular e a legenda
             if (lua_istable(luaL, -1))
             {
-                int paramTop = lua_gettop(luaL);
+                int paramTop = lua->getTopIndex(luaL);
 
-                lua_pushnil(luaL);
-                while (lua_next(luaL, paramTop) != 0)
+                lua->pushNil(luaL);
+                while (lua->nextAt(luaL, paramTop) != 0)
                 {
-                    if (isudatatype(luaL, -1, "TeCellularSpace"))
+                    if (lua->isUserdataAt(luaL, -1, "TeCellularSpace"))
                     {
                         cellSpace = Luna<luaCellularSpace>::check(luaL, -1);
                     }
@@ -704,58 +687,54 @@ int luaCell::createObserver(lua_State *)
                     {
                         if (isLegend)
                         {
-                            QString key(luaL_checkstring(luaL, -2));
+                            QString key(lua->getStringAt(luaL, -2).c_str());
                             obsParams.push_back(key);
 
-                            bool boolAux;
+                            bool boolAux; // TODO(avancinirodrigo): review this vars
                             double numAux;
                             QString strAux;
-
-                            switch (lua_type(luaL, -1))
+							
+							int luaType = lua->getTypeAt(luaL, -1);
+                            if(lua->isBoolean(luaType))
                             {
-                            case LUA_TBOOLEAN:
-                                boolAux = lua_toboolean(luaL, -1);
-                                break;
-
-                            case LUA_TNUMBER:
-                                numAux = luaL_checknumber(luaL, -1);
+                                boolAux = lua->toBooleanAt(luaL, -1);
+							}
+							else if(lua->isNumber(luaType))
+                            {
+                                numAux = lua->getNumberAtTop(luaL);
                                 obsParamsAtribs.push_back(QString::number(numAux));
-                                break;
-
-                            case LUA_TSTRING:
-                                strAux = luaL_checkstring(luaL, -1);
+                            }
+							else if(lua->isString(luaType))
+                            {
+                                strAux = lua->getStringAtTop(luaL).c_str();
                                 obsParamsAtribs.push_back(QString(strAux));
-
-                            //case LUA_TNIL:
-                            //case LUA_TTABLE:
-							//default:;
                             }
                         }
                     }
-                    lua_pop(luaL, 1);
+
+                    lua->popOneElement(luaL);
                 }
             }
-            lua_pop(luaL, 1);
+
+            lua->popOneElement(luaL);
         }
 
         QString errorMsg = QString("Error: The Observer ID '%1' was not found. "
                                    "Check the declaration of this observer.\n").arg(obsID);
 
-        if (!cellSpace){
-            string err_out = string(errorMsg.toStdString());
-            lua_getglobal(L, "customError");
-            lua_pushstring(L, err_out.c_str());
-            lua_pushnumber(L, 3);
-            lua_call(L, 2, 0);
+        if (!cellSpace)
+		{
+			callCustomError(errorMsg.toStdString());
         }
+
         QStringList neighIDs;
         QString exhibitionName;
 
         // Recupera os IDs das Vizinhancas a serem observadas
-        lua_pushnil(luaL);
-        while (lua_next(luaL, top - 2) != 0)
+        lua->pushNil(luaL);
+        while (lua->nextAt(luaL, top - 2) != 0)
         {
-            const char* key = luaL_checkstring(luaL, -1);
+            const char* key = lua->getStringAtTop(luaL).c_str();
             this->attrNeighName.append(key);
             exhibitionName = QString("neighborhood(%1)").arg(this->attrNeighName);
 
@@ -766,30 +745,47 @@ int luaCell::createObserver(lua_State *)
             // Solucao provisoria para o observer do tipo Neighbohrood
             observedAttribs.push_front("@getNeighborhoodState");
 #endif
-            lua_pop(luaL, 1);
+            lua->popOneElement(luaL);
         }
 
         if (typeObserver == TObsNeigh)
         {
             obsMap =(AgentObserverMap *)cellSpace->getObserver(obsID);
-            if (!obsMap){
-                string err_out = string(errorMsg.toStdString());
-                lua_getglobal(L, "customError");
-                lua_pushstring(L, err_out.c_str());
-                lua_pushnumber(L, 3);
-                lua_call(L, 2, 0);
+
+            if (!obsMap)
+			{
+				callCustomError(errorMsg.toStdString());
+
             }
+
             obsMap->registry(this, exhibitionName);
             obsMap->setAttributes(neighIDs, obsParams, obsParamsAtribs);
             obsMap->setSubjectAttributes(neighIDs, TObsNeighborhood, this->attrNeighName);
         }
 
         // @RAIAN: Acrescentei estas linhas para retornar o ID do observer, que estava faltando
-        lua_pushnumber(luaL, obsID);
+        lua->pushNumber(luaL, obsID);
         return 1;
     }
     //@RAIAN - FIM
     return 0;
+}
+
+int luaCell::callCustomError(const std::string& msg)
+{
+    lua->pushGlobalByName(L, "customError");
+    lua->pushString(L, msg);
+    lua->pushNumber(L, 3);
+    lua->call(L, 2, 0);	
+	return -1;
+}
+
+void luaCell::callCustomWarning(const std::string& msg)
+{
+	lua->pushGlobalByName(L, "customWarning");
+	lua->pushString(L, msg);
+	lua->pushNumber(L, 5);
+	lua->call(L, 2, 0);
 }
 
 const TypesOfSubjects luaCell::getType()
@@ -800,7 +796,7 @@ const TypesOfSubjects luaCell::getType()
 /// Notifies observers about changes in the luaCell internal state
 int luaCell::notify(lua_State *L)
 {
-    double time = luaL_checknumber(L, -1);
+    double time = lua->getNumberAtTop(L);
 
     CellSubjectInterf::notify(time);
     return 0;
@@ -824,7 +820,7 @@ QString luaCell::pop(lua_State *luaL, QStringList& attribs)
     QString msg, attrs, key, text;
 
     int attrCounter = 0;
-    int cellsPos = lua_gettop(luaL);
+    int cellsPos = lua->getTopIndex(luaL);
     // int type = lua_type(luaL, cellsPos);
 
     // @RAIAN: Serializa a vizinhanca
@@ -880,8 +876,8 @@ QString luaCell::pop(lua_State *luaL, QStringList& attribs)
 
                     int ref = neighbor->getReference(luaL);
                     cellMsg = neighbor->pop(luaL, QStringList() << "x" << "y" << "@getWeight");
-                    lua_settop(luaL, 0);
-
+                    lua->setTop(luaL, 0);
+				
                     cellMsg.append(QString::number(TObsNumber));
                     cellMsg.append(PROTOCOL_SEPARATOR);
                     cellMsg.append(QString::number(weight));
@@ -910,89 +906,84 @@ QString luaCell::pop(lua_State *luaL, QStringList& attribs)
         msg.append(PROTOCOL_SEPARATOR);
 
 
-        lua_pushnil(luaL);
-        while (lua_next(luaL, cellsPos) != 0)
+        lua->pushNil(luaL);
+        while (lua->nextAt(luaL, cellsPos) != 0)
         {
-            key = QString(luaL_checkstring(luaL, -2));
+            key = QString(lua->getStringAt(luaL, -2).c_str());
 
             if (attribs.contains(key))
             {
                 attrCounter++;
                 attrs.append(key);
                 attrs.append(PROTOCOL_SEPARATOR);
+				
+				int luaType = lua->getTypeAt(luaL, -1);
 
-                switch (lua_type(luaL, -1))
-                {
-                case LUA_TBOOLEAN:
-                    boolAux = lua_toboolean(luaL, -1);
+				if(lua->isBoolean(luaType))
+				{
+                    boolAux = lua->toBooleanAt(luaL, -1);
                     attrs.append(QString::number(TObsBool));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString::number(boolAux));
                     attrs.append(PROTOCOL_SEPARATOR);
-                    break;
-
-                case LUA_TNUMBER:
-                    num = luaL_checknumber(luaL, -1);
+				}
+				else if(lua->isNumber(luaType))
+				{
+                    num = lua->getNumberAtTop(luaL);
                     doubleToQString(num, text, 20);
                     attrs.append(QString::number(TObsNumber));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(text);
                     attrs.append(PROTOCOL_SEPARATOR);
-                    break;
-
-                case LUA_TSTRING:
-                    text = QString(luaL_checkstring(luaL, -1));
+				}
+				else if(lua->isString(luaType))
+				{
+                    text = QString(lua->getStringAtTop(luaL).c_str());
                     attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append((text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text));
                     attrs.append(PROTOCOL_SEPARATOR);
-                    break;
-
-                case LUA_TTABLE:
+				}
+				else if(lua->isTable(luaType))
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    sprintf(result, "%p", lua->toPointerAt(luaL, -1));
                     attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString("Lua-Address(TB): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
-                    break;
                 }
-                case LUA_TUSERDATA:
+				else if(lua->isUserdata(luaType))
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    sprintf(result, "%p", lua->toPointerAt(luaL, -1));
                     attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString("Lua-Address(UD): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
-                    break;
                 }
-
-                case LUA_TFUNCTION:
+				else if(lua->isFunction(luaType))
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    sprintf(result, "%p", lua->toPointerAt(luaL, -1));
                     attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString("Lua-Address(FT): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
-                    break;
                 }
-
-                default:
+				else
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    sprintf(result, "%p", lua->toPointerAt(luaL, -1));
                     attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append(QString("Lua-Address(O): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
                     break;
                 }
-                }
             }
-            lua_pop(luaL, 1);
+
+            lua->popOneElement(luaL);
         }
 
         //@RAIAN: Para uso na serializacao da Vizinhanca
@@ -1072,14 +1063,14 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId, QStri
 
 int luaCell::kill(lua_State *luaL)
 {
-    int id = luaL_checknumber(luaL, 1);
+    int id = lua->getNumberAt(luaL, 1);
 
     bool result = CellSubjectInterf::kill(id);
 
     //@RAIAN: Para "matar" o observer Neighbohrood
     if (!result)
     {
-        if (isudatatype(luaL, 2, "TeCellularSpace"))
+        if (lua->isUserdataAt(luaL, 2, "TeCellularSpace"))
         {
             luaCellularSpace *cellSpace = Luna<luaCellularSpace>::check(luaL, 2);
 
@@ -1093,12 +1084,9 @@ int luaCell::kill(lua_State *luaL)
     }
     //@RAIAN: FIM
 
-    lua_pushboolean(luaL, result);
+    lua->pushBoolean(luaL, result);
     return 1;
 }
-
-
-
 
 /// Gets the luaCell position of the luaCell in the Lua stack
 /// \param L is a pointer to the Lua stack
