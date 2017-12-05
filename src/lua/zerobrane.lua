@@ -260,6 +260,7 @@ local function updateConfigurationDirectory()
 		end
 
 		_Gtme.printNote("Copying packages")
+		local yesToAll = false
 		forEachFile(ide.."packages", function(file)
 			if File(packages.."/"..file:name()):exists() then
 				if yesToAll then
@@ -285,6 +286,8 @@ local function updateConfigurationDirectory()
 				if ret == qtYesToAll then
 					yesToAll = true
 				end
+			else
+				file:copy(packages)
 			end
 		end)
 	end)
