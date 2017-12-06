@@ -396,12 +396,7 @@ local function selectPackage()
 	docButton.enabled = true
 	if not Directory(docpath):exists() or not File(docpath..s.."index.html"):exists() then
 		docButton.enabled = false
-		local msg = string.format(
-			"Warning: The documentation of package '%s' was not created properly.",
-			comboboxPackages.currentText,
-			comboboxPackages.currentText
-		)
-
+		local msg = "Warning: The documentation of package '"..comboboxPackages.currentText.."' was not created properly."
 		qt.dialog.msg_warning(msg)
 	end
 
