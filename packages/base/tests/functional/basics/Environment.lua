@@ -394,6 +394,17 @@ id     string [env]
 		end)
 
 		unitTest:assertEquals(count, #predators)
+
+		cs = CellularSpace{xdim = 10}
+		predator = Agent{name = "predator"}
+		env = Environment{cs, predator}
+		env:createPlacement{strategy = "spread"}
+		count = 0
+		forEachCell(cs, function(cell)
+			count = count + #cell:getAgents()
+		end)
+
+		unitTest:assertEquals(count, 1)
 	end,
 	run = function(unitTest)
 		local result = ""
