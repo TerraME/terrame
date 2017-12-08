@@ -63,6 +63,44 @@ local function createRandomPlacement(environment, cs, max, placement)
 	end)
 end
 
+local function createSpreadPlacement(environment, cs, max, placement)
+	local nplacement = placement
+	if nplacement == nil then
+		nplacement = "placement"
+	end
+
+	local g = Group{}
+	forEachOrderedElement(environment, function(_, element)
+		local t = type(element)
+		if t == "Society" then
+			element.placements[nplacement] = cs
+			forEachAgent(element, function(agent)
+				g:add(agent)
+			end)
+		elseif t == "Agent" then
+			g:add(element)
+		end
+	end)
+
+	local cells = {}
+	forEachCell(cs, function(cell)
+		table.insert(cells, cell)
+	end)
+
+	local numCells = #cells
+	local randomObj = Random{}
+	g:randomize()
+	forEachAgent(g, function(agent)
+		local index = randomObj:integer(1, numCells)
+		local cell = cells[index]
+		agent:enter(cell)
+		if #cell:getAgents() == max then
+			cells[index] = cells[numCells] -- swap with last cell
+			numCells = numCells - 1 -- reduce quantity of possible cells
+		end
+	end)
+end
+
 local function createUniformPlacement(environment, cs, placement)
 	local nplacement = placement
 	if nplacement == nil then
@@ -190,6 +228,9 @@ Environment_ = {
 	-- "random"(default) & Choose a Cell randomly and put max agents also chosen randomly.
 	-- Repeat this process until allocate all Agents. The last Cell chosen might have less than
 	-- max Agents. All the Cells that were not chosen in this process will remain empty. & name, max \
+	-- "spread" & Choose a Cell randomly and put one agent also chosen randomly.
+	-- Repeat this process until allocate all Agents.
+	-- This strategy guarantees that the quantity of agents in each cell is up to max Agents. & name, max \
 	-- "uniform" & Create placements uniformly. The first Agent enters in the first Cell, the second
 	-- one in the second Cell, and so on. If it reaches the last Cell of the CellularSpace or Trajectory
 	-- then it starts again in the first Cell. The
@@ -290,6 +331,18 @@ Environment_ = {
 			void = function()
 				verifyUnnecessaryArguments(data, {"strategy", "name"})
 				createVoidPlacement(self, mycs, data)
+			end,
+			spread = function()
+				defaultTableValue(data, "max", 1)
+				positiveTableArgument(data, "max")
+				if data.max ~= nil then
+					if qty_agents > #mycs * data.max then
+						customError("It is not possible to put such amount of agents in space.")
+					end
+				end
+
+				createVoidPlacement(self, mycs, data)
+				createSpreadPlacement(self, mycs, data.max, data.name)
 			end
 		}
 	end,

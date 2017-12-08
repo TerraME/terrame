@@ -379,6 +379,54 @@ id     string [env]
 		env:createPlacement{max = 200}
 
 		unitTest:assertEquals(#cs.cells[1]:getAgents(), #predators)
+		predators = Society{
+			instance = predator,
+			quantity = 100
+		}
+
+		cs = CellularSpace{xdim = 10}
+		env = Environment{cs, predators}
+		env:createPlacement{strategy = "spread"}
+		local count = 0
+		forEachCell(cs, function(cell)
+			unitTest:assertEquals(1, #cell:getAgents())
+			count = count + #cell:getAgents()
+		end)
+
+		unitTest:assertEquals(count, #predators)
+		forEachAgent(predators, function(pred)
+			unitTest:assertNotNil(pred:getCell())
+		end)
+
+		predators = Society{
+			instance = predator,
+			quantity = 100
+		}
+
+		cs = CellularSpace{xdim = 10}
+		env = Environment{cs, predators}
+		env:createPlacement{strategy = "spread", max = 3}
+		count = 0
+		forEachCell(cs, function(cell)
+			unitTest:assert(#cell:getAgents() <= 3)
+			count = count + #cell:getAgents()
+		end)
+
+		unitTest:assertEquals(count, #predators)
+		forEachAgent(predators, function(pred)
+			unitTest:assertNotNil(pred:getCell())
+		end)
+
+		cs = CellularSpace{xdim = 10}
+		predator = Agent{name = "predator"}
+		env = Environment{cs, predator}
+		env:createPlacement{strategy = "spread"}
+		count = 0
+		forEachCell(cs, function(cell)
+			count = count + #cell:getAgents()
+		end)
+
+		unitTest:assertEquals(count, 1)
 	end,
 	run = function(unitTest)
 		local result = ""

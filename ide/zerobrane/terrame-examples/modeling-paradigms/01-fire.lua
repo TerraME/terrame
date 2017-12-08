@@ -1,4 +1,4 @@
---[[ [previous](Tub.lua) | [contents](00-contents.lua) | [next](GrowingSociety.lua) ]]
+--[[ [previous](00-contents.lua) | [contents](00-contents.lua) | [next](02-growing-society.lua) ]]
 
 Fire = Model{
     finalTime = 50,
