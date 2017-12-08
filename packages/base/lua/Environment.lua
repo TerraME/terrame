@@ -82,16 +82,20 @@ local function createSpreadPlacement(environment, cs, max, placement)
 		end
 	end)
 
-	local traj = Trajectory{target = cs, select = function(cell)
-		return #cell:getAgents() < max
-	end}
+	local cells = {}
+	forEachCell(cs, function(cell)
+		table.insert(cells, cell)
+	end)
 
+	local numCells = #cells
 	g:randomize()
 	forEachAgent(g, function(agent)
-		local cell = traj:sample()
+		local index = Random{}:integer(1, numCells)
+		local cell = cells[index]
 		agent:enter(cell)
-		if #cell:getAgents() >= max then
-			traj = Trajectory{target = traj, select = traj.select}
+		if #cell:getAgents() == max then
+			cells[index] = cells[numCells] -- swap with last cell
+			numCells = numCells - 1 -- reduce quantity of possible cells
 		end
 	end)
 end
@@ -225,7 +229,7 @@ Environment_ = {
 	-- max Agents. All the Cells that were not chosen in this process will remain empty. & name, max \
 	-- "spread" & Choose a Cell randomly and put one agent also chosen randomly.
 	-- Repeat this process until allocate all Agents.
-	-- This strategy guarantees only that the quantity of agents in each cell is up to max Agents. & name, max \
+	-- This strategy guarantees that the quantity of agents in each cell is up to max Agents. & name, max \
 	-- "uniform" & Create placements uniformly. The first Agent enters in the first Cell, the second
 	-- one in the second Cell, and so on. If it reaches the last Cell of the CellularSpace or Trajectory
 	-- then it starts again in the first Cell. The
