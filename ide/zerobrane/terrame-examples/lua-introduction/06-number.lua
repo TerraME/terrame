@@ -4,7 +4,7 @@
 
 Numbers represent real numbers. They can be written as integers (e.g. 52), as
 real values (e.g. 3.14), or using scientific notation (e.g. 5e+2 for 500).
-Besides the traditional arithmetic operators (+, –, *, /), Lua provides the
+Besides the traditional arithmetic operators (+, -, *, /), Lua provides the
 exponent (^) and the modulo (%) operators for working with number values.
 
 **For programmers:** Numbers represent double-precision floating-point values.
