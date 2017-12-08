@@ -88,9 +88,10 @@ local function createSpreadPlacement(environment, cs, max, placement)
 	end)
 
 	local numCells = #cells
+	local randomObj = Random{}
 	g:randomize()
 	forEachAgent(g, function(agent)
-		local index = Random{}:integer(1, numCells)
+		local index = randomObj:integer(1, numCells)
 		local cell = cells[index]
 		agent:enter(cell)
 		if #cell:getAgents() == max then
