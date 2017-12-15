@@ -34,7 +34,7 @@ of this software and its documentation.
 #include "luaCellularSpace.h"
 #include "luaUtils.h"
 #include "terrameGlobals.h"
-#include "Luna.h"
+#include "luna.h"
 
 extern ExecutionModes execModes;
 
