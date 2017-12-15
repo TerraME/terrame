@@ -55,6 +55,8 @@ extern "C"
 
 #include "LuaSystem.h"
 #include "LuaFacade.h"
+#include "luna.h"
+#include "LuaBindingDelegate.h"
 
 QApplication* app;
 
@@ -129,33 +131,40 @@ void registerClasses()
 {
 	//lua_register(L, "msgbox",  lua_msgbox);
 
-	Luna<luaCellIndex>::Register(L);
+	Luna<luaCellIndex>::getInstance()->setup(L);
+	terrame::lua::LuaBindingDelegate<luaCellIndex>::getInstance().setBinding(Luna<luaCellIndex>::getInstance());
 
-	Luna<luaCell>::Register(L);
-	Luna<luaNeighborhood>::Register(L);
-	Luna<luaCellularSpace>::Register(L);
+	Luna<luaCell>::getInstance()->setup(L);
+	terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setBinding(Luna<luaCell>::getInstance());
+	
+	Luna<luaNeighborhood>::getInstance()->setup(L);
+	terrame::lua::LuaBindingDelegate<luaNeighborhood>::getInstance().setBinding(Luna<luaNeighborhood>::getInstance());
 
-	Luna<luaFlowCondition>::Register(L);
-	Luna<luaJumpCondition>::Register(L);
-	Luna<luaControlMode>::Register(L);
-	Luna<luaLocalAgent>::Register(L);
-	Luna<luaGlobalAgent>::Register(L);
+	Luna<luaCellularSpace>::getInstance()->setup(L);
+	terrame::lua::LuaBindingDelegate<luaCellularSpace>::getInstance().setBinding(Luna<luaCellularSpace>::getInstance());
 
-	Luna<luaTimer>::Register(L);
-	Luna<luaEvent>::Register(L);
-	Luna<luaMessage>::Register(L);
+	Luna<luaFlowCondition>::getInstance()->setup(L);
+	Luna<luaJumpCondition>::getInstance()->setup(L);
+	Luna<luaControlMode>::getInstance()->setup(L);
+	Luna<luaLocalAgent>::getInstance()->setup(L);
+	terrame::lua::LuaBindingDelegate<luaLocalAgent>::getInstance().setBinding(Luna<luaLocalAgent>::getInstance());
+	Luna<luaGlobalAgent>::getInstance()->setup(L);
 
-	Luna<luaEnvironment>::Register(L);
-	Luna<luaTrajectory>::Register(L);
-	Luna<luaVisualArrangement>::Register(L);
-	Luna<luaMap>::Register(L);
-	Luna<luaChart>::Register(L);
-	Luna<luaSociety>::Register(L);
-    Luna<luaTextScreen>::Register(L);
-    Luna<luaTable>::Register(L);
-    Luna<luaLogFile>::Register(L);
-    Luna<luaTcpSender>::Register(L);
-    Luna<luaUdpSender>::Register(L);
+	Luna<luaTimer>::getInstance()->setup(L);
+	Luna<luaEvent>::getInstance()->setup(L);
+	Luna<luaMessage>::getInstance()->setup(L);
+
+	Luna<luaEnvironment>::getInstance()->setup(L);
+	Luna<luaTrajectory>::getInstance()->setup(L);
+	Luna<luaVisualArrangement>::getInstance()->setup(L);
+	Luna<luaMap>::getInstance()->setup(L);
+	Luna<luaChart>::getInstance()->setup(L);
+	Luna<luaSociety>::getInstance()->setup(L);
+    Luna<luaTextScreen>::getInstance()->setup(L);
+    Luna<luaTable>::getInstance()->setup(L);
+    Luna<luaLogFile>::getInstance()->setup(L);
+    Luna<luaTcpSender>::getInstance()->setup(L);
+    Luna<luaUdpSender>::getInstance()->setup(L);
 }
 
 int cpp_runcommand(lua_State *L)
@@ -321,7 +330,7 @@ int main(int argc, char *argv[])
 
 	QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
 
-	terrame::lua::LuaSystem::getInstance().setLuaApi(terrame::lua::LuaFacade::getInstance());	
+	terrame::lua::LuaSystem::getInstance().setLuaApi(terrame::lua::LuaFacade::getInstance());
 
 	TME_PATH = "TME_PATH";
 

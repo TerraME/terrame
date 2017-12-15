@@ -28,29 +28,21 @@ of this software and its documentation.
 #ifndef LUANEIGHBORHOOD_H
 #define LUANEIGHBORHOOD_H
 
-
-extern "C"
-{
-#include <lua.h>
-}
-#include "luna.h"
+#include <QString>
+#include <QDataStream>
 
 #include "luaCellIndex.h"
 #include "luaCell.h"
 #include "neighborhood.h"
 
-#include <QString>
-#include <QDataStream>
-
 class luaCellularSpace;
-
 
 /**
 * \brief  
 *  Implementation for a luaNeighborhood object.
 *
 */
-class luaNeighborhood : public CellNeighborhood, public Reference<luaNeighborhood>
+class luaNeighborhood : public CellNeighborhood
 {
     CellNeighborhood::iterator it; ///< luaNeighboorhood interator
     // @DANIEL
@@ -192,13 +184,13 @@ public:
     /// Registers the Lua object in the Lua stack, storing its reference
     // @DANIEL
     // Movido para Reference
-    // int setReference(lua_State* L);
+    int setReference(lua_State* L);
 
     /// Gets the luaNeighborhood object reference.
     /// no parameters
     // @DANIEL
     // Movido para Reference
-    // int getReference(lua_State *L);
+    int getReference(lua_State *L);
 
     //@RAIAN
         /// Gets the Neighborhood Parent, i. e., the "central" cell in the neighborhood graph.
@@ -230,6 +222,8 @@ public:
 
     // /// Destroys the observer object instance
     // int kill(lua_State *L);
+private:
+	terrame::lua::LuaApi* lua;	
 };
 
 #endif

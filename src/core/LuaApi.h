@@ -47,6 +47,9 @@ namespace terrame
 				virtual void pushNil(lua_State* L) = 0;
 				virtual void pushLightUserdata(lua_State* L, void* pointer) = 0;
 				virtual void pushBoolean(lua_State* L, bool b) = 0;
+
+				virtual int pushGlobalByName(lua_State* L, const std::string& name) = 0;
+				virtual int pushTableAt(lua_State* L, int index) = 0;
 				
 				virtual void pop(lua_State* L, int numberOfElements) = 0;
 				virtual void popOneElement(lua_State* L) = 0;
@@ -55,15 +58,14 @@ namespace terrame
 
 				virtual std::string getStringAt(lua_State* L, int index) = 0;
 				virtual std::string getStringAtTop(lua_State* L) = 0;
-				virtual std::string getStringAtSecond(lua_State* L) = 0;
 
 				virtual double getNumberAt(lua_State* L, int index) = 0;
 				virtual double getNumberAtTop(lua_State* L) = 0;
-				virtual double getNumberAtSecond(lua_State* L) = 0;
+
+				virtual long long getIntegerAt(lua_State* L, int index) = 0;
 
 				virtual int getTopIndex(lua_State* L) = 0;
 				virtual int nextAt(lua_State* L, int index) = 0;
-				virtual int pushGlobalByName(lua_State* L, const std::string& name) = 0;
 				virtual int getTypeAt(lua_State* L, int index) = 0;
 
 				virtual bool isStringAt(lua_State* L, int index) = 0;
@@ -83,6 +85,13 @@ namespace terrame
 
 				virtual bool toBooleanAt(lua_State* L, int index) = 0;
 				virtual const void* toPointerAt(lua_State* L, int index) = 0;
+				virtual long long toIntegerAt(lua_State* L, int index) = 0;
+				virtual std::string toStringAt(lua_State* L, int index) = 0;
+				
+				virtual void callError(lua_State* L, const std::string& msg) = 0;
+				virtual void callWarning(lua_State* L, const std::string& msg) = 0;
+
+				virtual int createWeakTable(lua_State *L) = 0;
 
 				virtual void stack(lua_State* L) = 0;
 		};

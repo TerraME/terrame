@@ -24,25 +24,39 @@ of this software and its documentation.
 #ifndef LUNA_H
 #define LUNA_H
 
-extern "C" {
-#include "lua.h"
-#include "lauxlib.h"
+extern "C" 
+{
+	#include "lua.h"
+	#include "lauxlib.h"
 }
 
-template <typename T> class Luna {
+#include "LuaBinding.h"
+#include "LuaSystem.h"
+
+template <typename T> 
+class Luna : public terrame::lua::LuaBinding<T>
+{
     typedef struct { T *pT; } userdataType;
+	static int m_ref;
+
 public:
     typedef int(T::*mfp)(lua_State *L);
     typedef struct { const char *name; mfp mfunc; } RegType;
 
-	static int t_error(lua_State *L, int narg, const char *tname)
+	static Luna<T>* getInstance()
+	{		
+		static Luna<T>* instance = new Luna<T>();
+		return instance;
+	}
+
+	int t_error(lua_State *L, int narg, const char *tname)
     {
       const char *msg = lua_pushfstring(
     		  L, "%s expected, got %s", tname, luaL_typename(L, narg));
       return luaL_argerror(L, narg, msg);
     }
 
-    static void Register(lua_State *L) {
+    void setup(lua_State *L) {
         lua_newtable(L);
         int methods = lua_gettop(L);
 
@@ -101,7 +115,7 @@ public:
     }
 
     // get userdata from Lua stack and return pointer to T object
-    static T *check(lua_State *L, int narg) {
+    T* check(lua_State *L, int narg) {
         userdataType *ud =
                 static_cast<userdataType*>(luaL_checkudata(L, narg, T::className));
         //if (!ud) luaL_typerror(L, narg, T::className);
@@ -111,13 +125,38 @@ public:
         return ud->pT;  // pointer to T object
     }
 
-private:
-    Luna();  // hide default constructor
+	int setReference(lua_State* L)
+	{
+		if (m_ref == LUA_REFNIL)
+			m_ref = terrame::lua::LuaSystem::getInstance().getLuaApi()->createWeakTable(L); //createWeakTable(L);
+		// retrieves the container
+		lua_rawgeti(L, LUA_REGISTRYINDEX, m_ref);
 
+		// container[cObj] = lua_object
+		lua_pushvalue(L, -2);
+		lua_rawsetp(L, -2, this);
+		lua_pop(L, 2);	
+					
+		return 0;				
+	}
+
+	int getReference(lua_State* L)
+	{
+		// retrieves the container
+		lua_rawgeti(L, LUA_REGISTRYINDEX, m_ref);
+
+		// container[cObj]
+		lua_rawgetp(L, -1, this);
+		lua_remove(L, -2);
+
+		return 1;
+	}
+
+private:
     // member function dispatcher
     static int thunk(lua_State *L) {
         // stack has userdata, followed by method args
-        T *obj = check(L, 1);  // get 'self', or if you prefer, 'this'
+        T *obj = getInstance()->check(L, 1);  // get 'self', or if you prefer, 'this'
         lua_remove(L, 1);  // remove self so member function args start at index 1
         // get member function from upvalue
         RegType *l = static_cast<RegType*>(lua_touserdata(L, lua_upvalueindex(1)));
@@ -153,6 +192,14 @@ private:
         lua_pushfstring(L, "%s(%s)", T::className, buff);
         return 1;
     }
+
+	Luna() {}
+	Luna(const Luna& old);
+	const Luna &operator=(const Luna& old);				
+	~Luna() {}	
 };
+
+template <typename T> 
+int Luna<T>::m_ref = LUA_REFNIL;
 
 #endif

@@ -53,7 +53,7 @@ int luaEnvironment::add(lua_State *L)
     if (isudatatype(L, -1, "TeTimer"))
     {
         pair<Event, Scheduler>  timeSchedulerPair;
-        Scheduler* pTimer = Luna<luaTimer>::check(L, -1);
+        Scheduler* pTimer = Luna<luaTimer>::getInstance()->check(L, -1);
 
         timeSchedulerPair.first = pTimer->getEvent();
         timeSchedulerPair.second = *pTimer;
@@ -64,21 +64,21 @@ int luaEnvironment::add(lua_State *L)
 	{
 		if (isudatatype(L, -1, "TeCellularSpace"))
 		{
-			CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
+			CellularSpace* pCS = Luna<luaCellularSpace>::getInstance()->check(L, -1);
 			Environment::add(*pCS);
 		}
 		else
 		{
 			if (isudatatype(L, -1, "TeLocalAutomaton"))
 			{
-				LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
+				LocalAgent* pAg = Luna<luaLocalAgent>::getInstance()->check(L, -1);
 				Environment::add(*pAg);
 			}
 			else
 			{
 				if (isudatatype(L, -1, "TeGlobalAutomaton"))
 				{
-					GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
+					GlobalAgent* pAg = Luna<luaGlobalAgent>::getInstance()->check(L, -1);
 					Environment::add(*pAg);
 				}
 				else
@@ -86,7 +86,7 @@ int luaEnvironment::add(lua_State *L)
 					if ((ud = luaL_checkudata(L, -1, "TeScale")) != NULL)
 					{
 						pair<Event, Environment>  timeEnvPair;
-						Environment* pEnv = Luna<luaEnvironment>::check(L, -1);
+						Environment* pEnv = Luna<luaEnvironment>::getInstance()->check(L, -1);
 
 						timeEnvPair.first = pEnv->getEvent();
 						timeEnvPair.second = *pEnv;
@@ -104,7 +104,7 @@ int luaEnvironment::add(lua_State *L)
 int luaEnvironment::addTimer(lua_State *L)
 {
     pair<Event, Scheduler>  timeSchedulerPair;
-    Scheduler* pTimer = Luna<luaTimer>::check(L, -1);
+    Scheduler* pTimer = Luna<luaTimer>::getInstance()->check(L, -1);
 
     timeSchedulerPair.first = lua_tonumber(L, -2);
     timeSchedulerPair.second = *pTimer;
@@ -116,14 +116,14 @@ int luaEnvironment::addTimer(lua_State *L)
 
 int luaEnvironment::addCellularSpace(lua_State *L)
 {
-    CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
+    CellularSpace* pCS = Luna<luaCellularSpace>::getInstance()->check(L, -1);
     Environment::add(*pCS);
 
     return 0;
 }
 
 int luaEnvironment::addLocalAgent(lua_State *L) {
-    LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
+    LocalAgent* pAg = Luna<luaLocalAgent>::getInstance()->check(L, -1);
     Environment::add(*pAg);
 
     return 0;
@@ -131,7 +131,7 @@ int luaEnvironment::addLocalAgent(lua_State *L) {
 
 int luaEnvironment::addGlobalAgent(lua_State *L)
 {
-    GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
+    GlobalAgent* pAg = Luna<luaGlobalAgent>::getInstance()->check(L, -1);
     Environment::add(*pAg);
 
     return 0;

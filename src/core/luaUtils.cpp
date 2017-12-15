@@ -32,6 +32,12 @@ of this software and its documentation.
 #include <cstring>
 #include <cstdlib>
 
+extern "C" 
+{
+	#include "lua.h"
+	#include "lauxlib.h"
+}
+
 extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 
 /// UTILIITARY FUNCTION - Print the Lua stack. Used for debugging purpose.

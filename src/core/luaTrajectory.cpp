@@ -34,6 +34,7 @@ of this software and its documentation.
 #include "luaCellularSpace.h"
 #include "luaUtils.h"
 #include "terrameGlobals.h"
+#include "Luna.h"
 
 extern ExecutionModes execModes;
 
@@ -53,7 +54,8 @@ luaTrajectory::~luaTrajectory(void)
 int luaTrajectory::add(lua_State* L)
 {
     int i = luaL_checknumber(L, -2);
-    luaCell *cell =(luaCell*)Luna<luaCell>::check(L, -1);
+    luaCell *cell = Luna<luaCell>::getInstance()->check(L, -1);
+
     CellIndex idx;
     idx.first = i;
     idx.second = 0;
@@ -445,7 +447,7 @@ int luaTrajectory::createObserver(lua_State *L)
                 {
                     if (isudatatype(luaL, -1, "TeCellularSpace"))
                     {
-                        cellSpace = Luna<luaCellularSpace>::check(L, -1);
+                        cellSpace = Luna<luaCellularSpace>::getInstance()->check(L, -1);
                     }
                     else
                     {
@@ -691,7 +693,7 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
                             lua_gettable(luaL, cellTop);
 
                             luaCell*  cell;
-                            cell =(luaCell*)Luna<luaCell>::check(L, -1);
+                            cell = Luna<luaCell>::getInstance()->check(L, -1);
                             lua_pop(luaL, 1);
 
                             // luaCell->pop(...) requer uma celula no topo da pilha

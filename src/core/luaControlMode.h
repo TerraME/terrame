@@ -77,14 +77,14 @@ public:
 
         if (isudatatype(L, -1, "TeJump"))
         {
-            luaJumpCondition* const jump = Luna<luaJumpCondition>::check(L, -1);
+            luaJumpCondition* const jump = Luna<luaJumpCondition>::getInstance()->check(L, -1);
             uniqueProcess.JumpCompositeInterf::add(jump);
         }
 		else
 		{
 			if ((ud = luaL_checkudata(L, -1, "TeFlow")) != NULL)
 			{
-				luaFlowCondition* const flow = Luna<luaFlowCondition>::check(L, -1);
+				luaFlowCondition* const flow = Luna<luaFlowCondition>::getInstance()->check(L, -1);
 				uniqueProcess.FlowCompositeInterf::add(flow);
 			}
 		}
@@ -95,7 +95,7 @@ public:
     /// parameter: luaJumpCondition
     int addJump(lua_State* L)
     {
-        luaJumpCondition* const jump = Luna<luaJumpCondition>::check(L, -1);
+        luaJumpCondition* const jump = Luna<luaJumpCondition>::getInstance()->check(L, -1);
         uniqueProcess.JumpCompositeInterf::add(jump);
         return 0;
     }
@@ -104,7 +104,7 @@ public:
     /// parameter: luaFlowCondition
     int addFlow(lua_State* L)
     {
-        luaFlowCondition* const flow = Luna<luaFlowCondition>::check(L, -1);
+        luaFlowCondition* const flow = Luna<luaFlowCondition>::getInstance()->check(L, -1);
         uniqueProcess.FlowCompositeInterf::add(flow);
         return 0;
     }
