@@ -25,5 +25,11 @@
 export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
 
 export GTEST_COLOR=1
+
 unittest
-exit $?
+utResult=$?
+
+inttest
+itResult=$?
+
+exit $(($utResult + $itResult))
