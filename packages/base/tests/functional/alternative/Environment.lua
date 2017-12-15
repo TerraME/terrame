@@ -149,6 +149,7 @@ return{
 
 		local options = {
 			random = true,
+			spread = true,
 			uniform = true,
 			void = true
 		}
@@ -229,6 +230,15 @@ return{
 		end
 
 		unitTest:assertError(error_func, "There is a Society within this Environment that already has this placement.")
+
+		sc1 = Society{instance = ag1, quantity = 20}
+		cs = CellularSpace{xdim = 2}
+		env = Environment{cs, sc1}
+		error_func = function()
+			env:createPlacement{strategy = "spread", max = 2}
+		end
+
+		unitTest:assertError(error_func, "It is not possible to put such amount of agents in space.")
 	end,
 	run = function(unitTest)
 		local env = Environment{}

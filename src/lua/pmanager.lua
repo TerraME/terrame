@@ -45,6 +45,7 @@ local dialog
 local oldState
 local filesInCurrentDirectory = {}
 local directoriesInCurrentDirectory = {}
+local currentPackage = ""
 
 local function breakLines(str)
 	local result = ""
@@ -350,6 +351,10 @@ end
 
 -- what to do when a new package is selected
 local function selectPackage()
+	if currentPackage == comboboxPackages.currentText then
+		return
+	end
+
 	local s = sessionInfo().separator
 	comboboxExamples:clear()
 	comboboxModels:clear()
@@ -386,10 +391,14 @@ local function selectPackage()
 		return
 	end
 
-	local docpath = packageInfo(comboboxPackages.currentText).path
-	docpath = docpath.."doc"..s.."index.html"
-
-	docButton.enabled = File(docpath):exists()
+	currentPackage = comboboxPackages.currentText
+	local docpath = packageInfo(comboboxPackages.currentText).path..s.."doc"
+	docButton.enabled = true
+	if not Directory(docpath):exists() or not File(docpath..s.."index.html"):exists() then
+		docButton.enabled = false
+		local msg = "Warning: The documentation of package '"..comboboxPackages.currentText.."' was not created properly."
+		qt.dialog.msg_warning(msg)
+	end
 
 	comboboxModels.enabled = #models > 1
 	configureButton.enabled = #models > 0

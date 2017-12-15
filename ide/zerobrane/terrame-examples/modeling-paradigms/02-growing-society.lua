@@ -1,4 +1,4 @@
---[[ [previous](Fire.lua) | [contents](00-contents.lua) | [next](00-contents.lua) ]]
+--[[ [previous](01-fire.lua) | [contents](00-contents.lua) | [next](03-tub.lua) ]]
 
 GrowingSociety = Model{
     quantity = 10,
