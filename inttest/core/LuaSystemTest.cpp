@@ -23,8 +23,9 @@ of this software and its documentation.
 
 #include "LuaSystemTest.h"
 
-#include "LuaApiMock.h"
 #include "core/LuaSystem.cpp"
+#include "LuaApiMock.h"
+
 
 TEST_F(LuaSystemTest, SetAndGetLuaApi)
 {

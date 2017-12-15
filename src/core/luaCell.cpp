@@ -41,6 +41,7 @@ of this software and its documentation.
 #include "../observer/types/agentObserverMap.h"
 #include "luaUtils.h"
 #include "LuaSystem.h"
+#include "LuaBindingDelegate.h"
 
 ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L;
@@ -65,7 +66,7 @@ luaCell::luaCell(lua_State *L)
 /// Returns the current internal state of the LocalAgent (Automaton) within the cell and received as parameter
 int luaCell::getCurrentStateName(lua_State *L)
 {
-    luaLocalAgent *agent = Luna<luaLocalAgent>::check(L, -1);
+    luaLocalAgent *agent = terrame::lua::LuaBindingDelegate<luaLocalAgent>::getInstance().check(L, -1);
     ControlMode* controlMode = getControlMode((LocalAgent*)agent);
 
     if (controlMode) lua->pushString(L, controlMode->getControlModeName().c_str());
@@ -212,8 +213,8 @@ int luaCell::getNeighborhood(lua_State *L) {
 /// parameters: identifier, luaNeighborhood
 int luaCell::addNeighborhood(lua_State *L)
 {
-    luaNeighborhood* neigh = Luna<luaNeighborhood>::check(L, -1);
-    string id(lua->getStringAtSecond(L));	
+    luaNeighborhood* neigh = terrame::lua::LuaBindingDelegate<luaNeighborhood>::getInstance().check(L, -1);
+    string id(lua->getStringAt(L, -2));	
     NeighCmpstInterf& neighs = Cell::getNeighborhoods();
     pair< string, CellNeighborhood*> pStrNeigh;
     neigh->CellNeighborhood::setID(id);
@@ -239,19 +240,22 @@ int luaCell::synchronize(lua_State *L) {
 // @DANIEL:
 // Movido para a classe Reference
 /// Registers the luaCell object in the Lua stack
-//int luaCell::setReference(lua_State* L)
-//{
-//    ref = luaL_ref(L, LUA_REGISTRYINDEX);
-//    return 0;
-//}
+int luaCell::setReference(lua_State* L)
+{
+    //ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    //return 0;
+	return terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setReference(L);
+}
+
 // @DANIEL:
 // Movido para a classe Reference
 /// Gets the luaCell object reference
-//int luaCell::getReference(lua_State *L)
-//{
+int luaCell::getReference(lua_State *L)
+{
 //    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
 //    return 1;
-//}
+	return terrame::lua::LuaBindingDelegate<luaCell>::getInstance().getReference(L);
+}
 
 int luaCell::getID(lua_State *L)
 {
@@ -273,7 +277,7 @@ int luaCell::setID(lua_State *L)
 int luaCell::setIndex(lua_State *L)
 {
     this->idx.second = lua->getNumberAtTop(L);
-    this->idx.first = lua->getNumberAtSecond(L);
+    this->idx.first = lua->getNumberAt(L, -2);
     return 0;
 }
 
@@ -295,7 +299,8 @@ int luaCell::createObserver(lua_State *)
     // @DANIEL
     // Responsabilidade da classe Reference
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
-    Reference<luaCell>::getReference(luaL);
+    
+	getReference(luaL);
 
     // flags para a defini??o do uso de compress?o
     // na transmiss?o de datagramas e da visibilidade
@@ -324,7 +329,8 @@ int luaCell::createObserver(lua_State *)
         lua->pushNil(luaL);
         while (lua->nextAt(luaL, top) != 0)
         {
-            QString key(lua->getStringAtSecond(luaL).c_str());
+            QString key(lua->getStringAt(luaL, -2).c_str());
+
             allAttribs.push_back(key);
             lua->popOneElement(luaL);
         }
@@ -338,7 +344,8 @@ int luaCell::createObserver(lua_State *)
         // Verificacao da sintaxe da tabela Atributos
         if (!lua->isTableAt(luaL, top))
         {
-            return callCustomError("Error: Attribute table not found. Incorrect sintax.");
+            lua->callError(luaL, "Error: Attribute table not found. Incorrect sintax.");
+			return -1;
         }
 
         bool attribTable = false;
@@ -360,7 +367,8 @@ int luaCell::createObserver(lua_State *)
             {
                 if (!key.isNull() || !key.isEmpty())
                 {
-                    return callCustomError("Error: Attribute '"+ key.toStdString() +"' not found.");
+                    lua->callError(luaL, "Error: Attribute '"+ key.toStdString() +"' not found.");
+					return -1;
                 }
             }
 
@@ -388,7 +396,7 @@ int luaCell::createObserver(lua_State *)
         {
             QString key;
             if(lua->isStringAt(luaL, -2))
-                key = QString(lua->getStringAtSecond(luaL).c_str());
+                key = QString(lua->getStringAt(luaL, -2).c_str());
 			
 			int luaType = lua->getTypeAt(luaL, -1);
 
@@ -396,7 +404,6 @@ int luaCell::createObserver(lua_State *)
 			{
 				QString value(lua->getStringAtTop(luaL).c_str());
 				cols.push_back(value);
-				
 			}
 			else if(lua->isBoolean(luaType))
 			{
@@ -414,7 +421,7 @@ int luaCell::createObserver(lua_State *)
 				while (lua->nextAt(luaL, tableTop) != 0)
 				{
 					if (lua->isStringAt(luaL, -2))
-						obsParams.append(lua->getStringAtSecond(luaL).c_str());
+						obsParams.append(lua->getStringAt(luaL, -2).c_str());
 					
 					luaType = lua->getTypeAt(luaL, -1);
 
@@ -562,7 +569,7 @@ int luaCell::createObserver(lua_State *)
 					string errOut = string("Warning: In this context, the code '")
 							+ string(getObserverName(typeObserver))
 							+ string("' does not correspond to a valid type of Observer.");
-					callCustomWarning(errOut);
+					lua->callWarning(luaL, errOut);
 				}
 				return 0;
         }
@@ -672,7 +679,7 @@ int luaCell::createObserver(lua_State *)
             }
 
             //Recupera o espaco celular e a legenda
-            if (lua_istable(luaL, -1))
+            if (lua->isTableAt(luaL, -1))
             {
                 int paramTop = lua->getTopIndex(luaL);
 
@@ -681,7 +688,7 @@ int luaCell::createObserver(lua_State *)
                 {
                     if (lua->isUserdataAt(luaL, -1, "TeCellularSpace"))
                     {
-                        cellSpace = Luna<luaCellularSpace>::check(luaL, -1);
+                        cellSpace = terrame::lua::LuaBindingDelegate<luaCellularSpace>::getInstance().check(L, -1);
                     }
                     else
                     {
@@ -724,7 +731,7 @@ int luaCell::createObserver(lua_State *)
 
         if (!cellSpace)
 		{
-			callCustomError(errorMsg.toStdString());
+			lua->callError(luaL, errorMsg.toStdString());
         }
 
         QStringList neighIDs;
@@ -754,8 +761,7 @@ int luaCell::createObserver(lua_State *)
 
             if (!obsMap)
 			{
-				callCustomError(errorMsg.toStdString());
-
+				lua->callError(luaL, errorMsg.toStdString());
             }
 
             obsMap->registry(this, exhibitionName);
@@ -769,23 +775,6 @@ int luaCell::createObserver(lua_State *)
     }
     //@RAIAN - FIM
     return 0;
-}
-
-int luaCell::callCustomError(const std::string& msg)
-{
-    lua->pushGlobalByName(L, "customError");
-    lua->pushString(L, msg);
-    lua->pushNumber(L, 3);
-    lua->call(L, 2, 0);	
-	return -1;
-}
-
-void luaCell::callCustomWarning(const std::string& msg)
-{
-	lua->pushGlobalByName(L, "customWarning");
-	lua->pushString(L, msg);
-	lua->pushNumber(L, 5);
-	lua->call(L, 2, 0);
 }
 
 const TypesOfSubjects luaCell::getType()
@@ -807,8 +796,8 @@ QString luaCell::getAll(QDataStream & /*in*/, int /*observerId*/, QStringList& a
     // @DANIEL
     // Responsabilidade da classe Reference
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
-    Reference<luaCell>::getReference(luaL);
 
+	getReference(luaL);
     return pop(luaL, attribs);
 }
 
@@ -1072,7 +1061,7 @@ int luaCell::kill(lua_State *luaL)
     {
         if (lua->isUserdataAt(luaL, 2, "TeCellularSpace"))
         {
-            luaCellularSpace *cellSpace = Luna<luaCellularSpace>::check(luaL, 2);
+            luaCellularSpace *cellSpace = terrame::lua::LuaBindingDelegate<luaCellularSpace>::getInstance().check(L, 2);
 
             if (cellSpace)
             {

@@ -34,6 +34,9 @@ class LuaApiMock : public terrame::lua::LuaApi
 		MOCK_METHOD1(pushNil, void(lua_State* L));
 		MOCK_METHOD2(pushLightUserdata, void(lua_State* L, void* pointer));
 		MOCK_METHOD2(pushBoolean, void(lua_State* L, bool b));
+
+		MOCK_METHOD2(pushGlobalByName, int(lua_State* L, const std::string& name));
+		MOCK_METHOD2(pushTableAt, int(lua_State* L, int index));
 				
 		MOCK_METHOD2(pop, void(lua_State* L, int numberOfElements));
 		MOCK_METHOD1(popOneElement, void(lua_State* L));
@@ -42,15 +45,14 @@ class LuaApiMock : public terrame::lua::LuaApi
 
 		MOCK_METHOD2(getStringAt, std::string(lua_State* L, int position));
 		MOCK_METHOD1(getStringAtTop, std::string(lua_State* L));
-		MOCK_METHOD1(getStringAtSecond, std::string(lua_State* L));
 
 		MOCK_METHOD2(getNumberAt, double(lua_State* L, int index));
 		MOCK_METHOD1(getNumberAtTop, double(lua_State* L));
-		MOCK_METHOD1(getNumberAtSecond, double(lua_State* L));
+
+		MOCK_METHOD2(getIntegerAt, long long(lua_State* L, int index));
 
 		MOCK_METHOD1(getTopIndex, int(lua_State* L));
 		MOCK_METHOD2(nextAt, int(lua_State* L, int index));
-		MOCK_METHOD2(pushGlobalByName, int(lua_State* L, const std::string& name));
 		MOCK_METHOD2(getTypeAt, int(lua_State* L, int index));
 
 		MOCK_METHOD2(isStringAt, bool(lua_State* L, int index));
@@ -69,7 +71,14 @@ class LuaApiMock : public terrame::lua::LuaApi
 		MOCK_METHOD1(isFunction, bool(int type));
 
 		MOCK_METHOD2(toBooleanAt, bool(lua_State* L, int index));
-		MOCK_METHOD2(toPointerAt, const void*(lua_State* L, int index));		
+		MOCK_METHOD2(toPointerAt, const void*(lua_State* L, int index));
+		MOCK_METHOD2(toIntegerAt, long long(lua_State* L, int index));		
+		MOCK_METHOD2(toStringAt, std::string(lua_State* L, int index));	
+
+		MOCK_METHOD2(callError, void(lua_State* L, const std::string& msg));
+		MOCK_METHOD2(callWarning, void(lua_State* L, const std::string& msg));
+
+		MOCK_METHOD1(createWeakTable, int(lua_State* L));
 
 		MOCK_METHOD1(stack, void(lua_State* L));
 };

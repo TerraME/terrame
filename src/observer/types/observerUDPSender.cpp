@@ -22,6 +22,7 @@ of this software and its documentation.
 *************************************************************************************/
 
 #include "observerUDPSender.h"
+#include "core/LuaSystem.h"
 
 #include <QtNetwork/QUdpSocket>
 #include <QApplication>
@@ -126,11 +127,9 @@ bool ObserverUDPSender::draw(QDataStream &state)
         str = QString("Warning: Reducing the datagram's size for %1 bytes.").arg(datagramSize);
         udpGUI->appendMessage(str);
 
-        if (execModes != Quiet){
-            lua_getglobal(L, "customWarning");
-            lua_pushstring(L, str.toLatin1().constData());
-            lua_pushnumber(L, 4);
-            lua_call(L, 2, 0);
+        if (execModes != Quiet)
+		{
+			terrame::lua::LuaSystem::getInstance().getLuaApi()->callWarning(L, str.toLatin1().constData());	
         }
     }
     qApp->processEvents();
@@ -209,11 +208,9 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
                 udpGUI->appendMessage(error);
 
 #ifdef TME_LUA_5_2
-                if (execModes != Quiet){
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L, error.toLatin1().constData());
-                    lua_pushnumber(L, 4);
-                    lua_call(L, 2, 0);
+                if (execModes != Quiet)
+				{
+					terrame::lua::LuaSystem::getInstance().getLuaApi()->callWarning(L, error.toLatin1().constData());
                 }
 #else
 

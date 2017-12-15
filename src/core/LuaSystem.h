@@ -45,12 +45,11 @@ namespace terrame
 				void destroy();
 
 			private:
-				terrame::lua::LuaApi* luaApi;
+				terrame::lua::LuaApi* luaApi;	
 				
 				LuaSystem() {}
 				LuaSystem(const LuaSystem& old);
 				const LuaSystem &operator=(const LuaSystem& old);				
-				LuaSystem(terrame::lua::LuaApi* luaApi);
 				~LuaSystem() {}					
 		};
 	}

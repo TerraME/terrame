@@ -30,19 +30,9 @@ of this software and its documentation.
 
 #include "../observer/cellSubjectInterf.h"
 #include "luaLocalAgent.h"
-
-#include "reference.h"
-
-extern "C"
-{
-	#include <lua.h>
-}
-#include "luna.h"
-
 // Raian: Tive que acrescentar este include para poder utilizar o CellularSpace nas
 // no observer do tipo Neighborhood.
 #include "luaCellularSpace.h"
-
 #include "LuaApi.h"
 
 //@Rodrigo /Antonio
@@ -55,7 +45,7 @@ extern "C"
 * Represents a set of Cells in the Lua runtime environment. 
 *
 */
-class luaCell : public CellSubjectInterf, public Reference<luaCell>
+class luaCell : public CellSubjectInterf
 {
 public:
     /// Constructor
@@ -127,12 +117,12 @@ public:
     // @DANIEL:
     // Movido para a classe Reference
     /// Registers the luaCell object in the Lua stack
-    //int setReference(lua_State* L);
+    int setReference(lua_State* L);
 
     // @DANIEL:
     // Movido para a classe Reference
     /// Gets the luaCell object reference
-    //int getReference(lua_State *L);
+    int getReference(lua_State *L);
 
     /// Gets the luaCell identifier
     int getID(lua_State *L);
@@ -193,9 +183,6 @@ private:
     lua_State *luaL; ///< Stores locally the lua stack location in memory
 	
 	terrame::lua::LuaApi* lua;
-
-	int callCustomError(const std::string& msg);
-	void callCustomWarning(const std::string& msg);
 
     QStringList observedAttribs;
     QString attrNeighName;

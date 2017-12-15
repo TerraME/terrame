@@ -49,6 +49,9 @@ namespace terrame
 				void pushLightUserdata(lua_State* L, void* pointer);
 				void pushBoolean(lua_State* L, bool b);
 
+				int pushGlobalByName(lua_State* L, const std::string& name); 
+				int pushTableAt(lua_State* L, int index); 
+
 				void pop(lua_State* L, int numberOfElements);
 				void popOneElement(lua_State* L);
 				void setTop(lua_State* L, int index);				
@@ -56,15 +59,14 @@ namespace terrame
 
 				std::string getStringAt(lua_State* L, int index);
 				std::string getStringAtTop(lua_State* L);
-				std::string getStringAtSecond(lua_State* L);
 
 				double getNumberAt(lua_State* L, int index);
 				double getNumberAtTop(lua_State* L);
-				double getNumberAtSecond(lua_State* L);
+
+				long long getIntegerAt(lua_State* L, int index);
 
 				int getTopIndex(lua_State* L);
 				int nextAt(lua_State* L, int index);
-				int pushGlobalByName(lua_State* L, const std::string& name); 
 				int getTypeAt(lua_State* L, int index);
 
 				bool isStringAt(lua_State* L, int index);
@@ -84,6 +86,13 @@ namespace terrame
 
 				bool toBooleanAt(lua_State* L, int index);
 				const void* toPointerAt(lua_State* L, int index);
+				long long toIntegerAt(lua_State* L, int index);
+				std::string toStringAt(lua_State* L, int index);
+
+				void callError(lua_State* L, const std::string& msg);
+				void callWarning(lua_State* L, const std::string& msg);
+
+				int createWeakTable(lua_State *L);
 
 				void stack(lua_State* L);
 

@@ -21,25 +21,11 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <chrono>
-#include <thread>
-#include <QApplication>
-
-void qtQuit()
+class LuaCellTest : public ::testing::Test
 {
-	std::this_thread::sleep_for(std::chrono::seconds(3));
-	QApplication::quit();
-}
-
-int main(int argc, char *argv[])
-{
-	QApplication app(argc, argv);
-	testing::InitGoogleMock(&argc, argv);
-	int result = RUN_ALL_TESTS();
-	std::thread quit(qtQuit);
-	app.exec();
-	quit.join();
-	return result;
-}
+protected:
+	void SetUp();
+	void TearDown();
+};

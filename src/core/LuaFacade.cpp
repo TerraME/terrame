@@ -66,6 +66,11 @@ void terrame::lua::LuaFacade::pushBoolean(lua_State* L, bool b)
 	lua_pushboolean(L, b);
 }
 
+int terrame::lua::LuaFacade::pushTableAt(lua_State* L, int index)
+{
+	return lua_gettable(L, index);
+}
+
 void terrame::lua::LuaFacade::pop(lua_State* L, int numberOfElements)
 {
 	lua_pop(L, numberOfElements);
@@ -97,11 +102,6 @@ std::string terrame::lua::LuaFacade::getStringAtTop(lua_State* L)
 	return getStringAt(L, -1);
 }
 
-std::string terrame::lua::LuaFacade::getStringAtSecond(lua_State* L)
-{ 
-	return getStringAt(L, -2);
-}
-
 double terrame::lua::LuaFacade::getNumberAt(lua_State* L, int index)
 {
 	return luaL_checknumber(L, index);
@@ -112,9 +112,9 @@ double terrame::lua::LuaFacade::getNumberAtTop(lua_State* L)
 	return getNumberAt(L, -1);
 }
 
-double terrame::lua::LuaFacade::getNumberAtSecond(lua_State* L)
+long long terrame::lua::LuaFacade::getIntegerAt(lua_State* L, int index)
 {
-	return getNumberAt(L, -2);
+	return luaL_checkinteger(L, index);
 }
 
 int terrame::lua::LuaFacade::getTopIndex(lua_State* L)
@@ -184,6 +184,17 @@ bool terrame::lua::LuaFacade::toBooleanAt(lua_State* L, int index)
 	return lua_toboolean(L, index);
 }
 
+long long terrame::lua::LuaFacade::toIntegerAt(lua_State* L, int index)
+{
+	return lua_tointeger(L, index);
+}
+
+std::string terrame::lua::LuaFacade::toStringAt(lua_State* L, int index)
+{
+	const char* str = lua_tostring(L , index);
+	return std::string(str);
+}
+
 bool terrame::lua::LuaFacade::isString(int type)
 {
 	return type == getStringType();
@@ -247,6 +258,41 @@ int terrame::lua::LuaFacade::getUserdataType()
 int terrame::lua::LuaFacade::getFunctionType()
 {
 	return (int)LUA_TUSERDATA;
+}
+
+
+
+void terrame::lua::LuaFacade::callError(lua_State *L, const std::string& msg)
+{
+    pushGlobalByName(L, "customError");
+    pushString(L, msg);
+    pushNumber(L, 3);
+    call(L, 2, 0);	
+}
+
+void terrame::lua::LuaFacade::callWarning(lua_State *L, const std::string& msg)
+{
+	pushGlobalByName(L, "customWarning");
+	pushString(L, msg);
+	pushNumber(L, 5);
+	call(L, 2, 0);
+}
+
+int terrame::lua::LuaFacade::createWeakTable(lua_State *L)
+{
+    // weaktable = {}
+    lua_newtable(L);
+
+    // mt = {__mode = "kv"}
+    lua_newtable(L);
+    lua_pushstring(L, "__mode");
+    lua_pushstring(L, "kv");
+    lua_rawset(L, -3);
+
+    // setmetatable(weaktable, mt)
+    lua_setmetatable(L, -2);
+
+    return luaL_ref(L, LUA_REGISTRYINDEX);	
 }
 
 void terrame::lua::LuaFacade::stack(lua_State *L)
