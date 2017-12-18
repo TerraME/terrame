@@ -23,7 +23,7 @@
 # of this software and its documentation.
 
 export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
-
+export LD_LIBRARY_PATH=$_TERRAME_INSTALL_PATH/bin
 export GTEST_COLOR=1
 
 unittest
