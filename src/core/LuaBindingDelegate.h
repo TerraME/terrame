@@ -32,8 +32,10 @@ class lua_State;
 
 #include "LuaBinding.h"
 
-namespace terrame {
-	namespace lua {
+namespace terrame
+{
+	namespace lua
+	{
 		template <typename T>
 		class LuaBindingDelegate : public LuaBinding<T>
 		{
@@ -89,7 +91,7 @@ namespace terrame {
 						throw std::runtime_error("Binding is not set. Please, set it firstly.");
 				}
 		};
-	} // lua
-} // terrame
+	} // namespace lua
+} // namespace terrame
 
 #endif // LUA_BINDING_DELEGATE_H

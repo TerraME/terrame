@@ -34,8 +34,10 @@ class lua_State;
 
 #include "LuaApi.h"
 
-namespace terrame {
-	namespace lua {
+namespace terrame
+{
+	namespace lua
+	{
 		class LuaFacade : public LuaApi
 		{
 			public:
@@ -109,7 +111,7 @@ namespace terrame {
 				int getUserdataType();
 				int getFunctionType();
 		};
-	} // lua
-} // terrame
+	} // namespace lua
+} // namespace terrame
 
 #endif // LUA_FACADE_H

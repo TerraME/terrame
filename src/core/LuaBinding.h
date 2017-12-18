@@ -30,8 +30,10 @@ of this software and its documentation.
 
 class lua_State;
 
-namespace terrame {
-	namespace lua {
+namespace terrame
+{
+	namespace lua
+	{
 		template <typename T>
 		class LuaBinding
 		{
@@ -40,7 +42,7 @@ namespace terrame {
 				virtual int setReference(lua_State* L) = 0;
 				virtual int getReference(lua_State* L) = 0;
 		};
-	} // lua
-} // terrame
+	} // namespace lua
+} // namespace terrame
 
 #endif // LUA_BINDING_H

@@ -35,8 +35,10 @@ of this software and its documentation.
 
 class lua_State;
 
-namespace terrame {
-	namespace lua {
+namespace terrame
+{
+	namespace lua
+	{
 		class LuaApi
 		{
 			public:
@@ -93,7 +95,7 @@ namespace terrame {
 
 				virtual void stack(lua_State* L) = 0;
 		};
-	} // lua
-} // terrame
+	} // namespace lua
+} // namespace terrame
 
 #endif // LUA_API_H

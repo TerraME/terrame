@@ -129,7 +129,7 @@ bool ObserverUDPSender::draw(QDataStream &state)
 
         if (execModes != Quiet)
 		{
-			terrame::lua::LuaSystem::getInstance().getLuaApi()->callWarning(L, str.toLatin1().constData());	
+			terrame::lua::LuaSystem::getInstance().getLuaApi()->callWarning(L, str.toLatin1().constData());
         }
     }
     qApp->processEvents();
