@@ -50,5 +50,5 @@ TEST_F(CellTest, SetAndGetLatency)
 TEST_F(CellTest, Synchronize)
 {
 	c->synchronize(sizeof(Cell*));
-	//ASSERT_EQ(c->getLatency(), 1);
+	// ASSERT_EQ(c->getLatency(), 1);
 }

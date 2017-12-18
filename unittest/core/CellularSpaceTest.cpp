@@ -23,7 +23,7 @@ of this library and its documentation.
 
 #include "CellularSpaceTest.h"
 
-#include "core/model.cpp" //< TODO(#1919): change after
+#include "core/model.cpp"  //< TODO(#1919): change after
 #include "core/cellularSpace.h"
 
 void CellularSpaceTest::SetUp()
@@ -73,7 +73,7 @@ TEST_F(CellularSpaceTest, Add2SameCells)
 	Region_<CellIndex>::iterator cit2 = cs->find(cidx2);
 
 	ASSERT_NE(cit1, cit2);
-	ASSERT_EQ(cit1->second, cit2->second); //< it is possible add same cell
+	ASSERT_EQ(cit1->second, cit2->second);  //< it is possible add same cell
 	ASSERT_NE(cit1->first, cit2->first);
 	ASSERT_EQ(cit1->first.first, cit2->first.first);
 	ASSERT_NE(cit1->first.second, cit2->first.second);
@@ -99,7 +99,7 @@ TEST_F(CellularSpaceTest, Add2SameCellsAndIndexes)
 	Region_<CellIndex>::iterator cit1 = cs->find(cidx1);
 	Region_<CellIndex>::iterator cit2 = cs->find(cidx2);
 
-	ASSERT_EQ(cit1, cit2); //< it is possible add same cell and same index
+	ASSERT_EQ(cit1, cit2);  //< it is possible add same cell and same index
 	ASSERT_EQ(cit1->second, cit2->second);
 	ASSERT_EQ(cit1->first, cit2->first);
 }
@@ -125,7 +125,7 @@ TEST_F(CellularSpaceTest, Add2CellsWithSameIndexes)
 	Region_<CellIndex>::iterator cit1 = cs->find(cidx1);
 	Region_<CellIndex>::iterator cit2 = cs->find(cidx2);
 
-	ASSERT_EQ(cit1, cit2); //< the its are the same, is this a problem?
+	ASSERT_EQ(cit1, cit2);  //< the its are the same, is this a problem?
 	ASSERT_EQ(cit1->second, cit2->second);
 	ASSERT_EQ(cit1->first, cit2->first);
 }

@@ -25,9 +25,7 @@ of this software and its documentation.
 
 #include "core/LuaBindingDelegate.h"
 #include "core/LuaBinding.h"
-//#include "core/luaCell.h"
 
-//#include "LuaBindingMock.h"
 #include "LuaApiMock.h"
 
 void LuaBindingDelegateTest::SetUp()
