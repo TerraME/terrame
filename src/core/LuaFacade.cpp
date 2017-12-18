@@ -280,16 +280,11 @@ void terrame::lua::LuaFacade::callWarning(lua_State *L, const std::string& msg)
 
 int terrame::lua::LuaFacade::createWeakTable(lua_State *L)
 {
-    // weaktable = {}
     lua_newtable(L);
-
-    // mt = {__mode = "kv"}
     lua_newtable(L);
     lua_pushstring(L, "__mode");
     lua_pushstring(L, "kv");
     lua_rawset(L, -3);
-
-    // setmetatable(weaktable, mt)
     lua_setmetatable(L, -2);
 
     return luaL_ref(L, LUA_REGISTRYINDEX);

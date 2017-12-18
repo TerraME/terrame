@@ -362,6 +362,3 @@ void saveInFile(QString & msg)
         // out << msg;
     }
 }
-
-
-

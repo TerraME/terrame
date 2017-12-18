@@ -31,10 +31,8 @@ of this software and its documentation.
 
 #include "LuaApi.h"
 
-namespace terrame
-{
-	namespace lua
-	{
+namespace terrame {
+	namespace lua {
 		class LuaSystem
 		{
 			public:
@@ -52,7 +50,7 @@ namespace terrame
 				const LuaSystem &operator=(const LuaSystem& old);
 				~LuaSystem() {}
 		};
-	}
-}
+	} // lua
+} // terrame
 
 #endif // LUA_SYSTEM_H
