@@ -29,7 +29,7 @@ of this software and its documentation.
 #define LUARULE_H
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaRule object.
 *
 */

@@ -34,7 +34,7 @@ of this software and its documentation.
 #include "observerScheduler.h"
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaTimer object.
 *
 */

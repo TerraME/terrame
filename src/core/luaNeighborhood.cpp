@@ -84,8 +84,8 @@ int luaNeighborhood::addCell(lua_State *L) {
     double weight = lua->getNumberAtTop(L);
     luaCellularSpace *cs = terrame::lua::LuaBindingDelegate<luaCellularSpace>::getInstance().check(L, -2);
     luaCellIndex *cI = terrame::lua::LuaBindingDelegate<luaCellIndex>::getInstance().check(L, -3);
-    CellIndex cellIndex; 
-	cellIndex.first = cI->x; 
+    CellIndex cellIndex;
+	cellIndex.first = cI->x;
 	cellIndex.second = cI->y;
     luaCell *cell = ::findCell(cs, cellIndex);
     if (cell != NULL) {
@@ -119,8 +119,8 @@ int luaNeighborhood::eraseCell(lua_State *L) {
 /// return weight
 int luaNeighborhood::getCellWeight(lua_State *L) {
     luaCellIndex *cI = terrame::lua::LuaBindingDelegate<luaCellIndex>::getInstance().check(L, -1);
-    CellIndex cellIndex; 
-	cellIndex.first = cI->x; 
+    CellIndex cellIndex;
+	cellIndex.first = cI->x;
 	cellIndex.second = cI->y;
     lua->pushNumber(L, CellNeighborhood::getWeight(cellIndex));
     return 1;
@@ -131,8 +131,8 @@ int luaNeighborhood::getCellWeight(lua_State *L) {
 /// return luaCell
 int luaNeighborhood::getCellNeighbor(lua_State *L) {
     luaCellIndex *cI = terrame::lua::LuaBindingDelegate<luaCellIndex>::getInstance().check(L, -1);
-    CellIndex cellIndex; 
-	cellIndex.first = cI->x; 
+    CellIndex cellIndex;
+	cellIndex.first = cI->x;
 	cellIndex.second = cI->y;
     luaCell *cell =(luaCell*)(*CellNeighborhood::pImpl_)[ cellIndex ];
     if (cell) cell->getReference(L);
@@ -181,9 +181,9 @@ int luaNeighborhood::getNeighbor(lua_State *L)
 int luaNeighborhood::getID(lua_State *L)
 {
     const char *str = this->CellNeighborhood::getID().c_str();
-    if (str) 
+    if (str)
 		lua->pushString(L, str);
-    else 
+    else
 		lua->pushNil(L);
 
     return 1;
@@ -243,8 +243,8 @@ int luaNeighborhood::getNeighWeight(lua_State *L) {
 int luaNeighborhood::setCellWeight(lua_State *L) {
     double weight = lua->getNumberAtTop(L);
     luaCellIndex *cI = terrame::lua::LuaBindingDelegate<luaCellIndex>::getInstance().check(L, -2);
-    CellIndex cellIndex; 
-	cellIndex.first = cI->x; 
+    CellIndex cellIndex;
+	cellIndex.first = cI->x;
 	cellIndex.second = cI->y;
     CellNeighborhood::setWeight(cellIndex, weight);
     return 0;

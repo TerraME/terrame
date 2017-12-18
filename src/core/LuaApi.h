@@ -21,13 +21,13 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-/*! 
+/*!
 	\brief	LuaApi is a interface abstract that encapsulates the methods called from Lua API.
 			The system must call a concrete class that implements this interface,
-			and must never call Lua API directly. 
+			and must never call Lua API directly.
 			This allows a low coupling between Lua and the system.
 */
-	
+
 #ifndef LUA_API_H
 #define LUA_API_H
 
@@ -35,7 +35,7 @@ of this software and its documentation.
 
 class lua_State;
 
-namespace terrame 
+namespace terrame
 {
 	namespace lua
 	{
@@ -50,7 +50,7 @@ namespace terrame
 
 				virtual int pushGlobalByName(lua_State* L, const std::string& name) = 0;
 				virtual int pushTableAt(lua_State* L, int index) = 0;
-				
+
 				virtual void pop(lua_State* L, int numberOfElements) = 0;
 				virtual void popOneElement(lua_State* L) = 0;
 				virtual void setTop(lua_State* L, int index) = 0;
@@ -87,7 +87,7 @@ namespace terrame
 				virtual const void* toPointerAt(lua_State* L, int index) = 0;
 				virtual long long toIntegerAt(lua_State* L, int index) = 0;
 				virtual std::string toStringAt(lua_State* L, int index) = 0;
-				
+
 				virtual void callError(lua_State* L, const std::string& msg) = 0;
 				virtual void callWarning(lua_State* L, const std::string& msg) = 0;
 

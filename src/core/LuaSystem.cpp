@@ -33,11 +33,11 @@ terrame::lua::LuaSystem& terrame::lua::LuaSystem::getInstance()
 
 void terrame::lua::LuaSystem::setLuaApi(terrame::lua::LuaApi* luaApi)
 {
-	this->luaApi = luaApi;	
+	this->luaApi = luaApi;
 }
 
 terrame::lua::LuaApi* terrame::lua::LuaSystem::getLuaApi()
-{	
+{
 	if(!luaApi)
 		throw std::runtime_error("Lua API is not set. Please, set it firstly.");
 
@@ -45,9 +45,9 @@ terrame::lua::LuaApi* terrame::lua::LuaSystem::getLuaApi()
 }
 
 void terrame::lua::LuaSystem::destroy()
-{	
+{
 	if(luaApi)
-	{				
+	{
 		delete luaApi;
 		luaApi = 0;
 	}

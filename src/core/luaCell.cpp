@@ -144,15 +144,15 @@ int luaCell::next(lua_State *)
 luaCell::~luaCell(void) { }
 
 /// Sets the Cell latency
-int luaCell::setLatency(lua_State *L) { 
-	Cell::setLatency(lua->getNumberAtTop(L)); 
-	return 0; 
+int luaCell::setLatency(lua_State *L) {
+	Cell::setLatency(lua->getNumberAtTop(L));
+	return 0;
 }
 
 /// Gets the Cell latency
-int luaCell::getLatency(lua_State *L) { 
-	lua->pushNumber(L, Cell::getLatency()); 
-	return 1; 
+int luaCell::getLatency(lua_State *L) {
+	lua->pushNumber(L, Cell::getLatency());
+	return 1;
 }
 
 /// Sets the neighborhood
@@ -186,7 +186,7 @@ int luaCell::getNeighborhood(lua_State *L) {
     // Get and test parameters
     const char* charIndex = lua->getStringAtTop(L).c_str();
     string index = string(charIndex);
-    if (neighs.empty()) 
+    if (neighs.empty())
 		lua->pushNil(L); // return nil
     else
     {
@@ -214,7 +214,7 @@ int luaCell::getNeighborhood(lua_State *L) {
 int luaCell::addNeighborhood(lua_State *L)
 {
     luaNeighborhood* neigh = terrame::lua::LuaBindingDelegate<luaNeighborhood>::getInstance().check(L, -1);
-    string id(lua->getStringAt(L, -2));	
+    string id(lua->getStringAt(L, -2));
     NeighCmpstInterf& neighs = Cell::getNeighborhoods();
     pair< string, CellNeighborhood*> pStrNeigh;
     neigh->CellNeighborhood::setID(id);
@@ -299,7 +299,7 @@ int luaCell::createObserver(lua_State *)
     // @DANIEL
     // Responsabilidade da classe Reference
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
-    
+
 	getReference(luaL);
 
     // flags para a defini??o do uso de compress?o
@@ -397,7 +397,7 @@ int luaCell::createObserver(lua_State *)
             QString key;
             if(lua->isStringAt(luaL, -2))
                 key = QString(lua->getStringAt(luaL, -2).c_str());
-			
+
 			int luaType = lua->getTypeAt(luaL, -1);
 
 			if(lua->isString(luaType))
@@ -422,7 +422,7 @@ int luaCell::createObserver(lua_State *)
 				{
 					if (lua->isStringAt(luaL, -2))
 						obsParams.append(lua->getStringAt(luaL, -2).c_str());
-					
+
 					luaType = lua->getTypeAt(luaL, -1);
 
 					if (lua->isNumber(luaType))
@@ -700,7 +700,7 @@ int luaCell::createObserver(lua_State *)
                             bool boolAux; // TODO(avancinirodrigo): review this vars
                             double numAux;
                             QString strAux;
-							
+
 							int luaType = lua->getTypeAt(luaL, -1);
                             if(lua->isBoolean(luaType))
                             {
@@ -866,7 +866,7 @@ QString luaCell::pop(lua_State *luaL, QStringList& attribs)
                     int ref = neighbor->getReference(luaL);
                     cellMsg = neighbor->pop(luaL, QStringList() << "x" << "y" << "@getWeight");
                     lua->setTop(luaL, 0);
-				
+
                     cellMsg.append(QString::number(TObsNumber));
                     cellMsg.append(PROTOCOL_SEPARATOR);
                     cellMsg.append(QString::number(weight));
@@ -905,7 +905,7 @@ QString luaCell::pop(lua_State *luaL, QStringList& attribs)
                 attrCounter++;
                 attrs.append(key);
                 attrs.append(PROTOCOL_SEPARATOR);
-				
+
 				int luaType = lua->getTypeAt(luaL, -1);
 
 				if(lua->isBoolean(luaType))

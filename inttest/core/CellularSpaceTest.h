@@ -33,5 +33,5 @@ protected:
 	void addCell(int first, int second);
 
 	CellularSpace *cs;
-	
+
 };

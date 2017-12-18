@@ -54,7 +54,7 @@ void LuaCellTest::SetUp()
 	execModes = ExecutionModes::Normal;
 }
 
-void LuaCellTest::TearDown() 
+void LuaCellTest::TearDown()
 {
 }
 
@@ -70,9 +70,9 @@ TEST_F(LuaCellTest, SetAndGetId)
 	LuaApiMock* luaApiMock = new LuaApiMock();
 	terrame::lua::LuaSystem::getInstance().setLuaApi(luaApiMock);
 	luaCell* lc = new luaCell(L);
-	
+
 	EXPECT_CALL(*luaApiMock, getStringAtTop(testing::_))
-		.Times(testing::AnyNumber())	
+		.Times(testing::AnyNumber())
 		.WillRepeatedly(testing::Return(std::string("1")));
 
 	lc->setID(L);
@@ -87,22 +87,22 @@ TEST_F(LuaCellTest, CreateObserverAndKill)
 	LuaApiMock* luaApiMock = new LuaApiMock();
 	terrame::lua::LuaSystem::getInstance().setLuaApi(luaApiMock);
 	LuaBindingMock<luaCell>* bindMock = new LuaBindingMock<luaCell>();
-	terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setBinding(bindMock);	
+	terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setBinding(bindMock);
 
 	luaCell* lc = new luaCell(L);
 
 	EXPECT_CALL(*luaApiMock, getStringAtTop(testing::_))
-		.Times(testing::AnyNumber())	
+		.Times(testing::AnyNumber())
 		.WillRepeatedly(testing::Return(std::string("1")));
 
 	lc->setID(L);
-	
+
 	EXPECT_CALL(*luaApiMock, getNumberAt(testing::_, -4))
-		.Times(testing::AnyNumber())	
+		.Times(testing::AnyNumber())
 		.WillRepeatedly(testing::Return(TerraMEObserver::TypesOfObservers::TObsDynamicGraphic));
 
 	EXPECT_CALL(*luaApiMock, nextAt(testing::_, testing::_))
-		.Times(8)	
+		.Times(8)
 		.WillOnce(testing::Return(1))
 		.WillOnce(testing::Return(0))
 		.WillOnce(testing::Return(0))
@@ -113,11 +113,11 @@ TEST_F(LuaCellTest, CreateObserverAndKill)
 		.WillRepeatedly(testing::Return(0));
 
 	EXPECT_CALL(*luaApiMock, getStringAt(testing::_, -2))
-		.Times(1)	
+		.Times(1)
 		.WillOnce(testing::Return(std::string("status")));
 
 	EXPECT_CALL(*luaApiMock, getStringAtTop(testing::_))
-		.Times(4)	
+		.Times(4)
 		.WillOnce(testing::Return(std::string("status")))
 		.WillOnce(testing::Return(std::string("X")))
 		.WillOnce(testing::Return(std::string("Y")))
@@ -129,7 +129,7 @@ TEST_F(LuaCellTest, CreateObserverAndKill)
 
 	EXPECT_CALL(*luaApiMock, isTableAt(testing::_, testing::_))
 		.Times(1)
-		.WillOnce(testing::Return(true));	
+		.WillOnce(testing::Return(true));
 
 	EXPECT_CALL(*luaApiMock, pushNil(testing::_))
 		.Times(testing::AnyNumber());
@@ -144,15 +144,15 @@ TEST_F(LuaCellTest, CreateObserverAndKill)
 
 	EXPECT_CALL(*bindMock, getReference(testing::_))
 		.Times(1)
-		.WillOnce(testing::Return(1));	
+		.WillOnce(testing::Return(1));
 
 	EXPECT_CALL(*luaApiMock, isStringAt(testing::_, -2))
 		.Times(testing::AnyNumber())
-		.WillRepeatedly(testing::Return(false));	
+		.WillRepeatedly(testing::Return(false));
 
 	EXPECT_CALL(*luaApiMock, isString(testing::_))
 		.Times(4)
-		.WillRepeatedly(testing::Return(true));	
+		.WillRepeatedly(testing::Return(true));
 
 	EXPECT_CALL(*luaApiMock, pushLightUserdata(testing::_, testing::_));
 
@@ -167,7 +167,7 @@ TEST_F(LuaCellTest, CreateObserverAndKill)
 	EXPECT_CALL(*luaApiMock, pushBoolean(testing::_, testing::_));
 
 	lc->kill(L);
-	
+
 	delete luaApiMock;
 	delete bindMock;
 }

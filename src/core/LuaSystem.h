@@ -21,7 +21,7 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-/*! 
+/*!
 	\brief	LuaSystem is a Singleton to configure the Lua API used in the system.
 		\see	LuaApi inteface and LuaFacade classes.
 */
@@ -33,7 +33,7 @@ of this software and its documentation.
 
 namespace terrame
 {
-	namespace lua 
+	namespace lua
 	{
 		class LuaSystem
 		{
@@ -45,12 +45,12 @@ namespace terrame
 				void destroy();
 
 			private:
-				terrame::lua::LuaApi* luaApi;	
-				
+				terrame::lua::LuaApi* luaApi;
+
 				LuaSystem() {}
 				LuaSystem(const LuaSystem& old);
-				const LuaSystem &operator=(const LuaSystem& old);				
-				~LuaSystem() {}					
+				const LuaSystem &operator=(const LuaSystem& old);
+				~LuaSystem() {}
 		};
 	}
 }

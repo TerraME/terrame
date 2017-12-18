@@ -47,10 +47,10 @@ TEST_F(LuaBindingDelegateTest, Check)
 	bindmock = new LuaBindingMock<luaCell>();
 	terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setBinding(bindmock);
 	luaCell* cell;
-	
+
 	EXPECT_CALL(*bindmock, check(testing::_, testing::_))
-		.Times(1)		
-		.WillOnce(testing::Return(cell));	
+		.Times(1)
+		.WillOnce(testing::Return(cell));
 
 	ASSERT_EQ(terrame::lua::LuaBindingDelegate<luaCell>::getInstance().check(L, 1), cell);
 
@@ -64,7 +64,7 @@ TEST_F(LuaBindingDelegateTest, SetReference)
 
 	EXPECT_CALL(*bindmock, setReference(testing::_))
 		.Times(1)
-		.WillOnce(testing::Return(1));	
+		.WillOnce(testing::Return(1));
 
 	ASSERT_EQ(terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setReference(L), 1);
 
@@ -78,7 +78,7 @@ TEST_F(LuaBindingDelegateTest, GetReference)
 
 	EXPECT_CALL(*bindmock, getReference(testing::_))
 		.Times(1)
-		.WillOnce(testing::Return(1));	
+		.WillOnce(testing::Return(1));
 
 	ASSERT_EQ(terrame::lua::LuaBindingDelegate<luaCell>::getInstance().getReference(L), 1);
 

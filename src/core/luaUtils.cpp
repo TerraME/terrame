@@ -32,7 +32,7 @@ of this software and its documentation.
 #include <cstring>
 #include <cstdlib>
 
-extern "C" 
+extern "C"
 {
 	#include "lua.h"
 	#include "lauxlib.h"

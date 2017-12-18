@@ -32,7 +32,7 @@ extern "C"
 terrame::lua::LuaFacade* terrame::lua::LuaFacade::instance = 0;
 
 terrame::lua::LuaFacade* terrame::lua::LuaFacade::getInstance()
-{	
+{
 	if(!instance)
 	{
 		instance = new terrame::lua::LuaFacade();
@@ -92,13 +92,13 @@ void terrame::lua::LuaFacade::call(lua_State* L, int numberOfArguments, int numb
 }
 
 std::string terrame::lua::LuaFacade::getStringAt(lua_State* L, int index)
-{ 
+{
 	const char* str = luaL_checkstring(L , index);
 	return std::string(str);
 }
 
 std::string terrame::lua::LuaFacade::getStringAtTop(lua_State* L)
-{ 
+{
 	return getStringAt(L, -1);
 }
 
@@ -127,7 +127,7 @@ int terrame::lua::LuaFacade::nextAt(lua_State* L, int index)
 	return (int)lua_next(L, index);
 }
 
-int terrame::lua::LuaFacade::pushGlobalByName(lua_State* L, const std::string& name) 
+int terrame::lua::LuaFacade::pushGlobalByName(lua_State* L, const std::string& name)
 {
 	return lua_getglobal(L, name.c_str());
 }
@@ -159,7 +159,7 @@ bool terrame::lua::LuaFacade::isTableAt(lua_State* L, int index)
 
 bool terrame::lua::LuaFacade::isUserdataAt(lua_State* L, int index, const std::string& type)
 {
-    if (lua_type(L, index) != LUA_TUSERDATA) 
+    if (lua_type(L, index) != LUA_TUSERDATA)
 		return false;
 
     lua_getmetatable(L, index);
@@ -267,7 +267,7 @@ void terrame::lua::LuaFacade::callError(lua_State *L, const std::string& msg)
     pushGlobalByName(L, "customError");
     pushString(L, msg);
     pushNumber(L, 3);
-    call(L, 2, 0);	
+    call(L, 2, 0);
 }
 
 void terrame::lua::LuaFacade::callWarning(lua_State *L, const std::string& msg)
@@ -292,29 +292,29 @@ int terrame::lua::LuaFacade::createWeakTable(lua_State *L)
     // setmetatable(weaktable, mt)
     lua_setmetatable(L, -2);
 
-    return luaL_ref(L, LUA_REGISTRYINDEX);	
+    return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
 void terrame::lua::LuaFacade::stack(lua_State *L)
 {
 	int top = lua_gettop(L);
-	for (int i = 1; i <= top; i++) 
+	for (int i = 1; i <= top; i++)
 	{
 		int t = lua_type(L, i);
-		switch (t) 
+		switch (t)
 		{
 			case LUA_TSTRING:
 			printf("`%s'", lua_tostring(L, i));
 			break;
-    
+
 			case LUA_TBOOLEAN:
 			printf(lua_toboolean(L, i) ? "true" : "false");
 			break;
-    
+
 			case LUA_TNUMBER:
 			printf("%g", lua_tonumber(L, i));
 			break;
-    
+
 			default:
 			printf("%s", lua_typename(L, t));
 			break;

@@ -136,7 +136,7 @@ void registerClasses()
 
 	Luna<luaCell>::getInstance()->setup(L);
 	terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setBinding(Luna<luaCell>::getInstance());
-	
+
 	Luna<luaNeighborhood>::getInstance()->setup(L);
 	terrame::lua::LuaBindingDelegate<luaNeighborhood>::getInstance().setBinding(Luna<luaNeighborhood>::getInstance());
 

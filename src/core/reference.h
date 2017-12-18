@@ -74,7 +74,7 @@ public:
     }
 };
 
-template <typename T> 
+template <typename T>
 int Reference<T>::m_ref = LUA_REFNIL;
 
 #endif // REFFERENCE_H

@@ -366,7 +366,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
                     }
                 }
                 obsParams.push_back(key);
-				
+
 				int luaType = lua->getTypeAt(luaL, -1);
 
 				if(lua->isBoolean(luaType))

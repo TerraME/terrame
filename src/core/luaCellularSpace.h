@@ -36,7 +36,7 @@ of this software and its documentation.
 #include "LuaApi.h"
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaCellularSpace object. It is integrated with TerraLib geographical databases.
 *
 */

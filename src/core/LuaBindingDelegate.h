@@ -21,7 +21,7 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-/*! 
+/*!
 	\brief	A Singleton for inject the bindings.
 */
 
@@ -44,7 +44,7 @@ namespace terrame
 				{
 					static terrame::lua::LuaBindingDelegate<T> instance;
 					return instance;
-				}	
+				}
 
 				void setBinding(LuaBinding<T>* binding)
 				{
@@ -75,21 +75,21 @@ namespace terrame
 					{
 						binding = 0;
 					}
-				}			
-				
+				}
+
 			private:
 				LuaBinding<T>* binding;
 
 				LuaBindingDelegate() {}
 				LuaBindingDelegate(const LuaBindingDelegate& old);
-				const LuaBindingDelegate &operator=(const LuaBindingDelegate& old);				
-				~LuaBindingDelegate() {}		
+				const LuaBindingDelegate &operator=(const LuaBindingDelegate& old);
+				~LuaBindingDelegate() {}
 
-				void checkBinding() 
+				void checkBinding()
 				{
 					if(!binding)
 						throw std::runtime_error("Binding is not set. Please, set it firstly.");
-				} 
+				}
 		};
 	}
 }

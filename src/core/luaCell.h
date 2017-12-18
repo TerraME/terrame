@@ -40,9 +40,9 @@ of this software and its documentation.
 
 //////////////////////////////////////////////////////////////////////////////////////
 /**
-* \brief 
+* \brief
 *
-* Represents a set of Cells in the Lua runtime environment. 
+* Represents a set of Cells in the Lua runtime environment.
 *
 */
 class luaCell : public CellSubjectInterf
@@ -181,7 +181,7 @@ private:
     // Antonio - construtor
     TypesOfSubjects subjectType;
     lua_State *luaL; ///< Stores locally the lua stack location in memory
-	
+
 	terrame::lua::LuaApi* lua;
 
     QStringList observedAttribs;

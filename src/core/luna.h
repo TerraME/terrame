@@ -24,7 +24,7 @@ of this software and its documentation.
 #ifndef LUNA_H
 #define LUNA_H
 
-extern "C" 
+extern "C"
 {
 	#include "lua.h"
 	#include "lauxlib.h"
@@ -33,7 +33,7 @@ extern "C"
 #include "LuaBinding.h"
 #include "LuaSystem.h"
 
-template <typename T> 
+template <typename T>
 class Luna : public terrame::lua::LuaBinding<T>
 {
     typedef struct { T *pT; } userdataType;
@@ -44,7 +44,7 @@ public:
     typedef struct { const char *name; mfp mfunc; } RegType;
 
 	static Luna<T>* getInstance()
-	{		
+	{
 		static Luna<T>* instance = new Luna<T>();
 		return instance;
 	}
@@ -135,9 +135,9 @@ public:
 		// container[cObj] = lua_object
 		lua_pushvalue(L, -2);
 		lua_rawsetp(L, -2, this);
-		lua_pop(L, 2);	
-					
-		return 0;				
+		lua_pop(L, 2);
+
+		return 0;
 	}
 
 	int getReference(lua_State* L)
@@ -195,11 +195,11 @@ private:
 
 	Luna() {}
 	Luna(const Luna& old);
-	const Luna &operator=(const Luna& old);				
-	~Luna() {}	
+	const Luna &operator=(const Luna& old);
+	~Luna() {}
 };
 
-template <typename T> 
+template <typename T>
 int Luna<T>::m_ref = LUA_REFNIL;
 
 #endif

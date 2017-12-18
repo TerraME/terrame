@@ -21,7 +21,7 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-/*! 
+/*!
 	\brief Abstract class that represents the communication with Lua.
 */
 

@@ -26,12 +26,12 @@ of this library and its documentation.
 #include "core/composite.h"
 #include "core/cell.h"
 
-void CellTest::SetUp() 
+void CellTest::SetUp()
 {
 	c = new Cell();
 }
 
-void CellTest::TearDown() 
+void CellTest::TearDown()
 {
 	delete c;
 }

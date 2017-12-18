@@ -38,7 +38,7 @@ of this software and its documentation.
 class luaCellularSpace;
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaNeighborhood object.
 *
 */
@@ -223,7 +223,7 @@ public:
     // /// Destroys the observer object instance
     // int kill(lua_State *L);
 private:
-	terrame::lua::LuaApi* lua;	
+	terrame::lua::LuaApi* lua;
 };
 
 #endif

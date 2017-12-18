@@ -21,7 +21,7 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-/*! 
+/*!
 	\brief LuaFacade is a Singleton that implements LuaApi inteface.
 */
 
@@ -34,7 +34,7 @@ class lua_State;
 
 #include "LuaApi.h"
 
-namespace terrame 
+namespace terrame
 {
 	namespace lua
 	{
@@ -49,12 +49,12 @@ namespace terrame
 				void pushLightUserdata(lua_State* L, void* pointer);
 				void pushBoolean(lua_State* L, bool b);
 
-				int pushGlobalByName(lua_State* L, const std::string& name); 
-				int pushTableAt(lua_State* L, int index); 
+				int pushGlobalByName(lua_State* L, const std::string& name);
+				int pushTableAt(lua_State* L, int index);
 
 				void pop(lua_State* L, int numberOfElements);
 				void popOneElement(lua_State* L);
-				void setTop(lua_State* L, int index);				
+				void setTop(lua_State* L, int index);
 				void call(lua_State* L, int numberOfArguments, int numberOfResults);
 
 				std::string getStringAt(lua_State* L, int index);

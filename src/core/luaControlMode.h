@@ -33,7 +33,7 @@ of this software and its documentation.
 #include "luaUtils.h"
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaControlMode object.
 *
 */

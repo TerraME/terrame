@@ -24,7 +24,7 @@ of this software and its documentation.
 #include <gtest/gtest.h>
 
 class lua_State;
-//class luaCell; 
+//class luaCell;
 #include "core/luaCell.h"
 
 #include "LuaBindingMock.h"
@@ -32,7 +32,7 @@ class lua_State;
 class LuaBindingDelegateTest : public ::testing::Test
 {
 	public:
-		void SetUp(); 
+		void SetUp();
 		void TearDown();
 
 	protected:

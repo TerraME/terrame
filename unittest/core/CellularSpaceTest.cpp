@@ -23,15 +23,15 @@ of this library and its documentation.
 
 #include "CellularSpaceTest.h"
 
-#include "core/model.cpp" //< TODO(#1919): change after 
+#include "core/model.cpp" //< TODO(#1919): change after
 #include "core/cellularSpace.h"
 
-void CellularSpaceTest::SetUp() 
+void CellularSpaceTest::SetUp()
 {
 	cs = new CellularSpace();
 }
 
-void CellularSpaceTest::TearDown() 
+void CellularSpaceTest::TearDown()
 {
 	cs->clear();
 	delete cs;
@@ -67,7 +67,7 @@ TEST_F(CellularSpaceTest, Add2SameCells)
 
 	cs->add(cidx2, c);
 
-	ASSERT_EQ(cs->size(), 2);	
+	ASSERT_EQ(cs->size(), 2);
 
 	Region_<CellIndex>::iterator cit1 = cs->find(cidx1);
 	Region_<CellIndex>::iterator cit2 = cs->find(cidx2);
@@ -94,13 +94,13 @@ TEST_F(CellularSpaceTest, Add2SameCellsAndIndexes)
 
 	cs->add(cidx2, c);
 
-	ASSERT_EQ(cs->size(), 2);	
-	
+	ASSERT_EQ(cs->size(), 2);
+
 	Region_<CellIndex>::iterator cit1 = cs->find(cidx1);
 	Region_<CellIndex>::iterator cit2 = cs->find(cidx2);
 
 	ASSERT_EQ(cit1, cit2); //< it is possible add same cell and same index
-	ASSERT_EQ(cit1->second, cit2->second); 
+	ASSERT_EQ(cit1->second, cit2->second);
 	ASSERT_EQ(cit1->first, cit2->first);
 }
 
@@ -120,13 +120,13 @@ TEST_F(CellularSpaceTest, Add2CellsWithSameIndexes)
 
 	cs->add(cidx2, c2);
 
-	ASSERT_EQ(cs->size(), 2);	
-	
+	ASSERT_EQ(cs->size(), 2);
+
 	Region_<CellIndex>::iterator cit1 = cs->find(cidx1);
 	Region_<CellIndex>::iterator cit2 = cs->find(cidx2);
 
 	ASSERT_EQ(cit1, cit2); //< the its are the same, is this a problem?
-	ASSERT_EQ(cit1->second, cit2->second); 
+	ASSERT_EQ(cit1->second, cit2->second);
 	ASSERT_EQ(cit1->first, cit2->first);
 }
 
@@ -138,7 +138,7 @@ TEST_F(CellularSpaceTest, Synchronize)
 	addCell(1, 0);
 	addCell(1, 1);
 
-	ASSERT_EQ(cs->size(), 4);	
+	ASSERT_EQ(cs->size(), 4);
 
 	cs->synchronize(sizeof(multimapComposite<CellIndex, Cell* >));
 }
