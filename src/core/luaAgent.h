@@ -37,7 +37,7 @@ extern "C"
 extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaAgent object.
 *
 */

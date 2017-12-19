@@ -133,7 +133,7 @@ set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${TERRAME_ABSOLUTE_ROOT_DIR};/")
 # including TerraME C++ testing
 #
 if (NOT TERRAME_CREATE_INSTALLER)
-	add_subdirectory(unittest)
+	add_subdirectory(testing)
 endif()
 
 #

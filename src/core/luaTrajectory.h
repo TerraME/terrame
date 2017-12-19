@@ -38,7 +38,7 @@ of this software and its documentation.
 class luaCellularSpace;
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaTrajectory object.
 *
 */

@@ -25,4 +25,5 @@ find_package(GTest)
 find_package(GMock)
 enable_testing()
 
-add_subdirectory(terrame)
+add_subdirectory(terrame/unittest)
+add_subdirectory(terrame/inttest)

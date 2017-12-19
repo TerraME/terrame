@@ -37,7 +37,7 @@ of this software and its documentation.
 using namespace std;
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaJumpCondition object.
 *
 */

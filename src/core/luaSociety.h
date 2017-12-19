@@ -39,9 +39,9 @@ extern "C"
 #include "reference.h"
 
 /**
-* \brief 
+* \brief
 *
-* Represents a set of Societys in the Lua runtime environment. 
+* Represents a set of Societys in the Lua runtime environment.
 *
 */
 //class SocietySubjectInterf;

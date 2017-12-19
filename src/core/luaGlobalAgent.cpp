@@ -68,7 +68,7 @@ int luaGlobalAgent::add(lua_State *L)
     //void *ud;
     if (isudatatype(L, -1, "TeState"))
     {
-        ControlMode*  lcm =(ControlMode*)Luna<luaControlMode>::check(L, -1);
+        ControlMode*  lcm = Luna<luaControlMode>::getInstance()->check(L, -1);
         ControlMode &cm = *lcm;
         GlobalAgent::add(cm);
     }
@@ -76,7 +76,7 @@ int luaGlobalAgent::add(lua_State *L)
     {
         if (isudatatype(L, -1, "TeTrajectory"))
         {
-            luaRegion& actRegion = *((luaRegion*) Luna<luaTrajectory>::check(L, -1));
+            luaRegion& actRegion = *((luaRegion*) Luna<luaTrajectory>::getInstance()->check(L, -1));
             ActionRegionCompositeInterf& actRegions = luaGlobalAgent::getActionRegions();
             actRegions.add(actRegion);
         }
@@ -100,7 +100,7 @@ int luaGlobalAgent::getActionRegionStatus(lua_State* L)
 
 int luaGlobalAgent::execute(lua_State* L)
 {
-    luaEvent* ev = Luna<luaEvent>::check(L, -1);
+    luaEvent* ev = Luna<luaEvent>::getInstance()->check(L, -1);
     GlobalAgent::execute(*ev);
     return 0;
 }
@@ -180,7 +180,7 @@ int luaGlobalAgent::createObserver(lua_State *L)
             // Recupero os estados do TeState
             if (isudatatype(luaL, -1, "TeState"))
             {
-                ControlMode*  lcm =(ControlMode*)Luna<luaControlMode>::check(L, -1);
+                ControlMode*  lcm = Luna<luaControlMode>::getInstance()->check(L, -1);
 
                 QString state, transition;
                 state.append(lcm->getControlModeName().c_str());
@@ -621,7 +621,7 @@ int luaGlobalAgent::createObserver(lua_State *L)
                 {
                     if (isudatatype(luaL, -1, "TeCellularSpace"))
                     {
-                        cellSpace = Luna<luaCellularSpace>::check(L, -1);
+                        cellSpace = Luna<luaCellularSpace>::getInstance()->check(L, -1);
                     }
                     else
                     {
@@ -807,7 +807,7 @@ QString luaGlobalAgent::pop(lua_State *luaL, QStringList& attribs)
             lua_gettable(luaL, cellTop);
 
             luaCell* cell;
-            cell =(luaCell*)Luna<luaCell>::check(L, -1);
+            cell = Luna<luaCell>::getInstance()->check(L, -1);
             lua_pop(luaL, 1); // lua_pushstring
 
             QString cellMsg = cell->pop(luaL, coordList);
@@ -880,7 +880,7 @@ QString luaGlobalAgent::pop(lua_State *luaL, QStringList& attribs)
                     //// Recupera os valores dos estados
                     //if (isudatatype(luaL, -1, "TeState"))
                     //{
-                    //    ControlMode*  lcm =(ControlMode*)Luna<luaControlMode>::check(L, -1);
+                    //    ControlMode*  lcm =(ControlMode*)Luna<luaControlMode>::getInstance()->check(L, -1);
                     //    QString state(lcm->getControlModeName().c_str());
 
                     //    bool containState = attribs.contains(state);

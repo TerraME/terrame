@@ -112,8 +112,8 @@ public:
     // return luaCell
     int addCell(lua_State *L) {
         double weight = luaL_checknumber(L, -1);
-        luaCellularSpace *cs = Luna<luaCellularSpace>::check(L, -2);
-        luaCellIndex *cI = Luna<luaCellIndex>::check(L, -3);
+        luaCellularSpace *cs = Luna<luaCellularSpace>::getInstance()->check(L, -2);
+        luaCellIndex *cI = Luna<luaCellIndex>::getInstance()->check(L, -3);
         CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
         luaCell *cell = ::findCell(cs, cellIndex);
         if (cell != NULL) {
@@ -126,7 +126,7 @@ public:
 
     // parameters: cell index
     int eraseCell(lua_State *L) {
-        luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
+        luaCellIndex *cI = Luna<luaCellIndex>::getInstance()->check(L, -1);
         CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
         CellNeighborhood::erase(cellIndex);
         return 0;
@@ -134,7 +134,7 @@ public:
     // parameters: cell index,
     // return weight
     int getCellWeight(lua_State *L) {
-        luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
+        luaCellIndex *cI = Luna<luaCellIndex>::getInstance()->check(L, -1);
         CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
         lua_pushnumber(L, CellNeighborhood::getWeight(cellIndex));
         return 1;
@@ -143,7 +143,7 @@ public:
     // parameters: cell index,
     // return luaCell
     int getCellNeighbor(lua_State *L) {
-        luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
+        luaCellIndex *cI = Luna<luaCellIndex>::getInstance()->check(L, -1);
         CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
         luaCell *cell =(luaCell*)(*CellNeighborhood::pImpl_)[cellIndex];
         if (cell) ::getReference(L, cell);
@@ -181,7 +181,7 @@ public:
     // parameters: cell index, weight
     int setCellWeight(lua_State *L) {
         double weight = luaL_checknumber(L, -1);
-        luaCellIndex *cI = Luna<luaCellIndex>::check(L, -2);
+        luaCellIndex *cI = Luna<luaCellIndex>::getInstance()->check(L, -2);
         CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
         CellNeighborhood::setWeight(cellIndex, weight);
         return 0;
@@ -416,7 +416,7 @@ public:
     int addCell(lua_State *L)
     {
         CellIndex indx;
-        luaCell *cell = Luna<luaCell>::check(L, -1);
+        luaCell *cell = Luna<luaCell>::getInstance()->check(L, -1);
         indx.second = luaL_checknumber(L, -2);
         indx.first = luaL_checknumber(L, -3);
         CellularSpace::add(indx, cell);
@@ -611,7 +611,7 @@ public:
     int isEmpty(lua_State *L) { lua_pushnumber(L, Scheduler::empty()); return 1; }
     //  int execute(lua_State *L) { Scheduler::execute(); return 0; }
     int add(lua_State *L) {
-        luaEvent* event = Luna<luaEvent>::check(L, -2);
+        luaEvent* event = Luna<luaEvent>::getInstance()->check(L, -2);
         luaMessage* message = Luna<luaMessage>::check(L, -1);
 
         Scheduler::add(*event, message);
@@ -662,7 +662,7 @@ public:
         void *ud;
         if ((ud = luaL_checkudata(L, -1, "TeState")) != NULL)
         {
-            ControlMode*  lcm =(ControlMode*)Luna<luaControlMode>::check(L, -1);
+            ControlMode*  lcm =(ControlMode*)Luna<luaControlMode>::getInstance()->check(L, -1);
             ControlMode &cm = *lcm;
             GlobalAgent::add(cm);
         }
@@ -680,7 +680,7 @@ public:
                 {
                     lua_pushstring(L, "cObj_");
                     lua_gettable(L, -2);
-                    luaCell *cell =(luaCell*)Luna<luaCell>::check(L, -1);
+                    luaCell *cell =(luaCell*)Luna<luaCell>::getInstance()->check(L, -1);
                     actRegion.add(indx, cell);
                     indx.first++;
                     lua_pop(L, 2);
@@ -702,7 +702,7 @@ public:
     }
 
     int execute(lua_State* L) {
-        luaEvent* ev = Luna<luaEvent>::check(L, -1);
+        luaEvent* ev = Luna<luaEvent>::getInstance()->check(L, -1);
         GlobalAgent::execute(*ev);
         return 0;
     }
@@ -742,7 +742,7 @@ public:
         if ((ud = luaL_checkudata(L, -1, "TeState")) != NULL)
         {
             //cout << "aqui" << endl;
-            ControlMode* lcm =(ControlMode*)Luna<luaControlMode>::check(L, -1);
+            ControlMode* lcm =(ControlMode*)Luna<luaControlMode>::getInstance()->check(L, -1);
             ControlMode &cm = *lcm;
             LocalAgent::add(cm);
         }
@@ -760,7 +760,7 @@ public:
                 {
                     lua_pushstring(L, "cObj_");
                     lua_gettable(L, -2);
-                    luaCell *cell =(luaCell*)Luna<luaCell>::check(L, -1);
+                    luaCell *cell =(luaCell*)Luna<luaCell>::getInstance()->check(L, -1);
                     actRegion.add(indx, cell);
                     indx.first++;
                     lua_pop(L, 2);
@@ -775,7 +775,7 @@ public:
     }
 
     int execute(lua_State* L) {
-        luaEvent* ev = Luna<luaEvent>::check(L, -1);
+        luaEvent* ev = Luna<luaEvent>::getInstance()->check(L, -1);
         LocalAgent::execute(*ev);
         return 0;
     }
@@ -982,14 +982,14 @@ public:
 
         if ((ud = luaL_checkudata(L, -1, "TeJump")) != NULL)
         {
-            luaJumpCondition* const jump = Luna<luaJumpCondition>::check(L, -1);
+            luaJumpCondition* const jump = Luna<luaJumpCondition>::getInstance()->check(L, -1);
             uniqueProcess.JumpCompositeInterf::add(jump);
         }
 		else
 		{
 			if ((ud = luaL_checkudata(L, -1, "TeFlow")) != NULL)
 			{
-				luaFlowCondition* const flow = Luna<luaFlowCondition>::check(L, -1);
+				luaFlowCondition* const flow = Luna<luaFlowCondition>::getInstance()->check(L, -1);
 				uniqueProcess.FlowCompositeInterf::add(flow);
 			}
 		}
@@ -998,14 +998,14 @@ public:
 
     int addJump(lua_State* L)
     {
-        luaJumpCondition* const jump = Luna<luaJumpCondition>::check(L, -1);
+        luaJumpCondition* const jump = Luna<luaJumpCondition>::getInstance()->check(L, -1);
         uniqueProcess.JumpCompositeInterf::add(jump);
         return 0;
     }
 
     int addFlow(lua_State* L)
     {
-        luaFlowCondition* const flow = Luna<luaFlowCondition>::check(L, -1);
+        luaFlowCondition* const flow = Luna<luaFlowCondition>::getInstance()->check(L, -1);
         uniqueProcess.FlowCompositeInterf::add(flow);
         return 0;
     }
@@ -1049,21 +1049,21 @@ public:
 		{
 			if ((ud = luaL_checkudata(L, -1, "TeCellularSpace")) != NULL)
 			{
-				CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
+				CellularSpace* pCS = Luna<luaCellularSpace>::getInstance()->check(L, -1);
 				Environment::add(*pCS);
 			}
 			else
 			{
 				if ((ud = luaL_checkudata(L, -1, "TeLocalAutomaton")) != NULL)
 				{
-					LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
+					LocalAgent* pAg = Luna<luaLocalAgent>::getInstance()->check(L, -1);
 					Environment::add(*pAg);
 				}
 				else
 				{
 					if ((ud = luaL_checkudata(L, -1, "TeGlobalAutomaton")) != NULL)
 					{
-						GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
+						GlobalAgent* pAg = Luna<luaGlobalAgent>::getInstance()->check(L, -1);
 						Environment::add(*pAg);
 					}
 					else
@@ -1071,7 +1071,7 @@ public:
 						if ((ud = luaL_checkudata(L, -1, "TeScale")) != NULL)
 						{
 							pair<float, Environment>  timeEnvPair;
-							Environment* pEnv = Luna<luaEnvironment>::check(L, -1);
+							Environment* pEnv = Luna<luaEnvironment>::getInstance()->check(L, -1);
 
 							timeEnvPair.first = pEnv->getTime();
 							timeEnvPair.second = *pEnv;
@@ -1099,21 +1099,21 @@ public:
     }
 
     int addCellularSpace(lua_State *L) {
-        CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
+        CellularSpace* pCS = Luna<luaCellularSpace>::getInstance()->check(L, -1);
         Environment::add(*pCS);
 
         return 0;
     }
 
     int addLocalAgent(lua_State *L) {
-        LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
+        LocalAgent* pAg = Luna<luaLocalAgent>::getInstance()->check(L, -1);
         Environment::add(*pAg);
 
         return 0;
     }
 
     int addGlobalAgent(lua_State *L) {
-        GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
+        GlobalAgent* pAg = Luna<luaGlobalAgent>::getInstance()->check(L, -1);
         Environment::add(*pAg);
 
         return 0;
@@ -1134,13 +1134,13 @@ public:
     }
     /*  // parameters: environment
   int addEnvironment(lua_State *L) {
-          luaEnvironment *env = Luna<luaEnvironment>::check(L, -1);
+          luaEnvironment *env = Luna<luaEnvironment>::getInstance()->check(L, -1);
         return 0;
   }
 
   // parameters: cellular space
   int addCellularSpace(lua_State *L) {
-          luaCellularSpace *cellSpace = Luna<luaCellularSpace>::check(L, -1);
+          luaCellularSpace *cellSpace = Luna<luaCellularSpace>::getInstance()->check(L, -1);
           return 0;
   }
 

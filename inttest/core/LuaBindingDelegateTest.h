@@ -21,44 +21,19 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-/*! \file luaRule.h
-    \brief This file definitions for the luaRule objects.
-        \author Tiago Garcia de Senna Carneiro
-*/
-#ifndef LUARULE_H
-#define LUARULE_H
+#include <gtest/gtest.h>
 
-/**
-* \brief
-*  Implementation for a luaRule object.
-*
-*/
-class luaRule
+class lua_State;
+#include "core/luaCell.h"
+#include "LuaBindingMock.h"
+
+class LuaBindingDelegateTest : public ::testing::Test
 {
-protected:
-    int ref; ///< The position of the object in the Lua stack
+	public:
+		void SetUp();
+		void TearDown();
 
-public:
-    /// Destructor
-    ~luaRule(void)
-    {
-        luaL_unref(L, LUA_REGISTRYINDEX, ref);
-    }
-
-    /// Registers the luaRule object in the Lua stack
-    int setReference(lua_State* L)
-    {
-        ref = luaL_ref(L, LUA_REGISTRYINDEX);
-        return 0;
-    }
-
-    /// Gets the luaRule object position in the Lua stack
-    int getReference(lua_State *L)
-    {
-        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-        return 1;
-    }
+	protected:
+		lua_State* L;
+		LuaBindingMock<luaCell>* bindmock;
 };
-
-
-#endif

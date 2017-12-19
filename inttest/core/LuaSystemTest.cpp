@@ -21,44 +21,29 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-/*! \file luaRule.h
-    \brief This file definitions for the luaRule objects.
-        \author Tiago Garcia de Senna Carneiro
-*/
-#ifndef LUARULE_H
-#define LUARULE_H
+#include "LuaSystemTest.h"
 
-/**
-* \brief
-*  Implementation for a luaRule object.
-*
-*/
-class luaRule
+#include "core/LuaSystem.cpp"
+#include "LuaApiMock.h"
+
+
+TEST_F(LuaSystemTest, SetAndGetLuaApi)
 {
-protected:
-    int ref; ///< The position of the object in the Lua stack
+	terrame::lua::LuaApi* luaApi = new LuaApiMock();
+	terrame::lua::LuaSystem::getInstance().setLuaApi(luaApi);
+	ASSERT_NO_THROW(terrame::lua::LuaSystem::getInstance().getLuaApi());
+	terrame::lua::LuaSystem::getInstance().destroy();
+}
 
-public:
-    /// Destructor
-    ~luaRule(void)
-    {
-        luaL_unref(L, LUA_REGISTRYINDEX, ref);
-    }
+TEST_F(LuaSystemTest, GetLuaApiWithoutSetIt)
+{
+	ASSERT_ANY_THROW(terrame::lua::LuaSystem::getInstance().getLuaApi());
+}
 
-    /// Registers the luaRule object in the Lua stack
-    int setReference(lua_State* L)
-    {
-        ref = luaL_ref(L, LUA_REGISTRYINDEX);
-        return 0;
-    }
-
-    /// Gets the luaRule object position in the Lua stack
-    int getReference(lua_State *L)
-    {
-        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-        return 1;
-    }
-};
-
-
-#endif
+TEST_F(LuaSystemTest, GetLuaApiAfterRemoveIt)
+{
+	terrame::lua::LuaApi* luaApi = new LuaApiMock();
+	terrame::lua::LuaSystem::getInstance().setLuaApi(luaApi);
+	terrame::lua::LuaSystem::getInstance().destroy();
+	ASSERT_ANY_THROW(terrame::lua::LuaSystem::getInstance().getLuaApi());
+}

@@ -21,44 +21,38 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-/*! \file luaRule.h
-    \brief This file definitions for the luaRule objects.
-        \author Tiago Garcia de Senna Carneiro
+/*!
+	\brief	LuaSystem is a Singleton to configure the Lua API used in the system.
+		\see	LuaApi inteface and LuaFacade classes.
 */
-#ifndef LUARULE_H
-#define LUARULE_H
 
-/**
-* \brief
-*  Implementation for a luaRule object.
-*
-*/
-class luaRule
+#ifndef LUA_SYSTEM_H
+#define LUA_SYSTEM_H
+
+#include "LuaApi.h"
+
+namespace terrame
 {
-protected:
-    int ref; ///< The position of the object in the Lua stack
+	namespace lua
+	{
+		class LuaSystem
+		{
+			public:
+				static LuaSystem& getInstance();
 
-public:
-    /// Destructor
-    ~luaRule(void)
-    {
-        luaL_unref(L, LUA_REGISTRYINDEX, ref);
-    }
+				void setLuaApi(terrame::lua::LuaApi* luaApi);
+				terrame::lua::LuaApi* getLuaApi();
+				void destroy();
 
-    /// Registers the luaRule object in the Lua stack
-    int setReference(lua_State* L)
-    {
-        ref = luaL_ref(L, LUA_REGISTRYINDEX);
-        return 0;
-    }
+			private:
+				terrame::lua::LuaApi* luaApi;
 
-    /// Gets the luaRule object position in the Lua stack
-    int getReference(lua_State *L)
-    {
-        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-        return 1;
-    }
-};
+				LuaSystem() {}
+				LuaSystem(const LuaSystem& old);
+				const LuaSystem &operator=(const LuaSystem& old);
+				~LuaSystem() {}
+		};
+	} // namespace lua
+} // namespace terrame
 
-
-#endif
+#endif // LUA_SYSTEM_H

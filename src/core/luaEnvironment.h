@@ -34,7 +34,7 @@ of this software and its documentation.
 #include "reference.h"
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaEnvironment object.
 *
 */

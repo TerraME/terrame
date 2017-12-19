@@ -23,7 +23,15 @@
 # of this software and its documentation.
 
 export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
-
+export LD_LIBRARY_PATH=$_TERRAME_INSTALL_PATH/bin
 export GTEST_COLOR=1
+
+echo "################################### Unit Testing ###################################"
 unittest
-exit $?
+utResult=$?
+
+echo "################################ Integration Testing ################################"
+inttest
+itResult=$?
+
+exit $(($utResult + $itResult))

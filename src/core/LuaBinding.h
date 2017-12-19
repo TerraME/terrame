@@ -21,44 +21,28 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-/*! \file luaRule.h
-    \brief This file definitions for the luaRule objects.
-        \author Tiago Garcia de Senna Carneiro
+/*!
+	\brief Abstract class that represents the communication with Lua.
 */
-#ifndef LUARULE_H
-#define LUARULE_H
 
-/**
-* \brief
-*  Implementation for a luaRule object.
-*
-*/
-class luaRule
+#ifndef LUA_BINDING_H
+#define LUA_BINDING_H
+
+class lua_State;
+
+namespace terrame
 {
-protected:
-    int ref; ///< The position of the object in the Lua stack
+	namespace lua
+	{
+		template <typename T>
+		class LuaBinding
+		{
+			public:
+				virtual T* check(lua_State *L, int narg) = 0;
+				virtual int setReference(lua_State* L) = 0;
+				virtual int getReference(lua_State* L) = 0;
+		};
+	} // namespace lua
+} // namespace terrame
 
-public:
-    /// Destructor
-    ~luaRule(void)
-    {
-        luaL_unref(L, LUA_REGISTRYINDEX, ref);
-    }
-
-    /// Registers the luaRule object in the Lua stack
-    int setReference(lua_State* L)
-    {
-        ref = luaL_ref(L, LUA_REGISTRYINDEX);
-        return 0;
-    }
-
-    /// Gets the luaRule object position in the Lua stack
-    int getReference(lua_State *L)
-    {
-        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-        return 1;
-    }
-};
-
-
-#endif
+#endif // LUA_BINDING_H

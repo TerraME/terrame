@@ -32,7 +32,7 @@ of this software and its documentation.
 
 
 /**
-* \brief  
+* \brief
 *  Implementation for a FlowCondition object.
 *
 */

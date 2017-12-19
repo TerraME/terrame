@@ -21,44 +21,34 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-/*! \file luaRule.h
-    \brief This file definitions for the luaRule objects.
-        \author Tiago Garcia de Senna Carneiro
-*/
-#ifndef LUARULE_H
-#define LUARULE_H
+#include <stdexcept>
 
-/**
-* \brief
-*  Implementation for a luaRule object.
-*
-*/
-class luaRule
+#include "LuaSystem.h"
+
+terrame::lua::LuaSystem& terrame::lua::LuaSystem::getInstance()
 {
-protected:
-    int ref; ///< The position of the object in the Lua stack
+	static terrame::lua::LuaSystem instance;
+	return instance;
+}
 
-public:
-    /// Destructor
-    ~luaRule(void)
-    {
-        luaL_unref(L, LUA_REGISTRYINDEX, ref);
-    }
+void terrame::lua::LuaSystem::setLuaApi(terrame::lua::LuaApi* luaApi)
+{
+	this->luaApi = luaApi;
+}
 
-    /// Registers the luaRule object in the Lua stack
-    int setReference(lua_State* L)
-    {
-        ref = luaL_ref(L, LUA_REGISTRYINDEX);
-        return 0;
-    }
+terrame::lua::LuaApi* terrame::lua::LuaSystem::getLuaApi()
+{
+	if(!luaApi)
+		throw std::runtime_error("Lua API is not set. Please, set it firstly.");
 
-    /// Gets the luaRule object position in the Lua stack
-    int getReference(lua_State *L)
-    {
-        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-        return 1;
-    }
-};
+	return luaApi;
+}
 
-
-#endif
+void terrame::lua::LuaSystem::destroy()
+{
+	if(luaApi)
+	{
+		delete luaApi;
+		luaApi = 0;
+	}
+}
