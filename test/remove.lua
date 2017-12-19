@@ -9,6 +9,8 @@ files = {
 	mdir.."packages/nodatadotlua/data.lua",
 	mdir.."packages/nofontdotlua/font.lua",
 	mdir.."packages/models/tests",
+	currentDir().."test.txt",
+	currentDir().."testDir",
 	currentDir().."onerror-file-1.txt",
 	currentDir().."twoerrors-file-1.txt",
 	currentDir().."twoerrors-file-2.txt",
