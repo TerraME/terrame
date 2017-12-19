@@ -160,11 +160,11 @@ void registerClasses()
 	Luna<luaMap>::getInstance()->setup(L);
 	Luna<luaChart>::getInstance()->setup(L);
 	Luna<luaSociety>::getInstance()->setup(L);
-    Luna<luaTextScreen>::getInstance()->setup(L);
-    Luna<luaTable>::getInstance()->setup(L);
-    Luna<luaLogFile>::getInstance()->setup(L);
-    Luna<luaTcpSender>::getInstance()->setup(L);
-    Luna<luaUdpSender>::getInstance()->setup(L);
+	Luna<luaTextScreen>::getInstance()->setup(L);
+	Luna<luaTable>::getInstance()->setup(L);
+	Luna<luaLogFile>::getInstance()->setup(L);
+	Luna<luaTcpSender>::getInstance()->setup(L);
+	Luna<luaUdpSender>::getInstance()->setup(L);
 }
 
 int cpp_runcommand(lua_State *L)

@@ -127,13 +127,14 @@ bool ObserverUDPSender::draw(QDataStream &state)
         str = QString("Warning: Reducing the datagram's size for %1 bytes.").arg(datagramSize);
         udpGUI->appendMessage(str);
 
-        if (execModes != Quiet)
+		if (execModes != Quiet)
 		{
 			terrame::lua::LuaSystem::getInstance().getLuaApi()->callWarning(L, str.toLatin1().constData());
-        }
-    }
-    qApp->processEvents();
-    return true;
+		}
+	}
+	
+	qApp->processEvents();
+	return true;
 }
 
 void ObserverUDPSender::run()
