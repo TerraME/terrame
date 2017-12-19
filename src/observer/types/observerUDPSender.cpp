@@ -132,7 +132,6 @@ bool ObserverUDPSender::draw(QDataStream &state)
 			terrame::lua::LuaSystem::getInstance().getLuaApi()->callWarning(L, str.toLatin1().constData());
 		}
 	}
-	
 	qApp->processEvents();
 	return true;
 }
