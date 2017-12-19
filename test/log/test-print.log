@@ -34,7 +34,7 @@ All 1 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 4 print calls were found in the tests.
 No assertError() calls have error messages pointing to internal files.
-No file was created along the tests.
+No file or directory was created along the tests.
 All 1 functions of the package were tested.
 No lines from the source code were verified.
 All 1 examples were successfully executed.

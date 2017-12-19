@@ -129,7 +129,7 @@ Logs were saved in '/Users/pedro/github/terrame-pedro/test/.terrametmp_J7U2u'.
 2 out of 29 tested functions create or update some global variable.
 2 print calls were found in the tests.
 2 assertError() calls have error messages pointing to an internal file (wrong level).
-2 files were created along the tests.
+2 files and/or directories were created along the tests.
 2 out of 19 source code functions were not tested.
 2 lines from the source code were not executed at least once.
 2 errors were found in the 3 examples.

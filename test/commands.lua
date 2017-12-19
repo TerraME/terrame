@@ -35,7 +35,7 @@ test = {
 	twodirectories = {arg = "-test", config = "twoDirectories.lua"},
 	pattern        = {arg = "-test", config = "pattern.lua"},
 	memory         = {arg = "-test", package = "memory"},
-	file		   = {arg = "-test", package = "file"},
+	file           = {arg = "-test", package = "file"},
 	noload         = {arg = "-test", package = "noload"},
 	print          = {arg = "-test", package = "print"},
 	tolerance      = {arg = "-test", package = "tolerance"},

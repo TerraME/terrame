@@ -96,7 +96,7 @@ One out of 25 tested functions does not exist in the source code of the package.
 One out of 25 tested functions creates or updates some global variable.
 One print call was found in the tests.
 One assertError() call has an error message pointing to an internal file (wrong level).
-One file was created along the tests.
+One file or directory was created along the tests.
 One out of 16 source code functions was not tested.
 One line from the source code was not executed at least once.
 One error was found in the 2 examples.

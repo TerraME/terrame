@@ -42,7 +42,7 @@ All 1 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
-No file was created along the tests.
+No file or directory was created along the tests.
 All 0 functions of the package were tested.
 No lines from the source code were verified.
 3 errors were found in the 5 examples.
