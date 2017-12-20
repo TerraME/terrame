@@ -1,36 +1,23 @@
-Using log directory '/Users/pedro/github/terrame-pedro/test/packages/examples/log/'
-Loading package 'examples'
+Using log directory 'C:/TerraME/bin/packages/file/log/'
+Loading package 'file'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
 Skip looking for lines of source code
-Testing tests/b.lua
-Testing a
+Testing tests/File.lua
+Testing createFile
+Directory 'testDir' was created along the test.
+File 'test.txt' was created along the test.
 Checking if all asserts were executed
 Checking if functions from source code were tested
-Checking a.lua
+Checking M.lua
 Skipping lines of source code check
 Testing examples
-Testing a
-Error: Strings do not match in file 'a.log' (line 2):
-Log file: '<end of file>'
-Test: 'def'
-Testing b
-Error: Strings do not match in file 'b.log' (line 3):
-Log file: 'ghi'
-Test: '<end of file>'
-Testing border
-Testing c
-Error: In file 'c.log', strings do not match (line 2):
-Log file: 'deff'
-Test: 'def'
-There are 1 characters different. The maximum tolerance is 0.
-Testing d
-Checking logs
+The package has no examples
+Skipping logs check
 
-Functional test report for package 'examples':
-Tests were executed in 0.28 seconds.
-Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_AiSCa/'.
+Functional test report for package 'file':
+Tests were executed in 0.62 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -42,10 +29,9 @@ All 1 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
-No file or directory was created along the tests.
+2 files and/or directories were created along the tests.
 All 0 functions of the package were tested.
 No lines from the source code were verified.
-3 errors were found in the 5 examples.
-No new log file was created.
-All log files were used in the tests.
-Summing up, 3 problems were found during the tests.
+The package has no examples.
+No log test was executed.
+Summing up, 2 problems were found during the tests.
