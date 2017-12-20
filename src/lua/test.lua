@@ -475,6 +475,10 @@ function _Gtme.executeTests(package, fileName)
 
 	local filesDir = {}
 
+	forEachDirectory(".", function(dir)
+		filesDir[dir:name()] = true
+	end)
+
 	forEachFile(".", function(file)
 		filesDir[file:name()] = true
 	end)
@@ -655,12 +659,23 @@ function _Gtme.executeTests(package, fileName)
 
 				print = _Gtme.print
 
+				forEachDirectory(".", function(dir)
+					if filesDir[dir:name()] == nil then
+						filesDir[dir:name()] = true
+
+						if not errors_in_tests then
+							printError("Directory '"..dir:name().."' was created along the test.")
+							ut.files_created = ut.files_created + 1
+						end
+					end
+				end)
+
 				forEachFile(".", function(file)
 					if filesDir[file:name()] == nil then
 						filesDir[file:name()] = true
 
 						if not errors_in_tests then
-							printError("File '"..file.."' was created along the test.")
+							printError("File '"..file:name().."' was created along the test.")
 							ut.files_created = ut.files_created + 1
 						end
 					end
@@ -1116,11 +1131,11 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	if ut.files_created == 1 then
-		printError("One file was created along the tests.")
+		printError("One file or directory was created along the tests.")
 	elseif ut.files_created > 1 then
-		printError(ut.files_created.." files were created along the tests.")
+		printError(ut.files_created.." files and/or directories were created along the tests.")
 	else
-		printNote("No file was created along the tests.")
+		printNote("No file or directory was created along the tests.")
 	end
 
 	if check_functions then

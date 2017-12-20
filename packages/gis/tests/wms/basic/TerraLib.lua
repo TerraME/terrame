@@ -59,5 +59,6 @@ return {
 		unitTest:assertEquals(layerInfo.srid, srid)
 
 		file:delete()
+		Directory("wms"):delete()
 	end
 }

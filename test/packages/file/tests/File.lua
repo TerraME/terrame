@@ -22,52 +22,23 @@
 --
 -------------------------------------------------------------------------------------------
 
-return {
-	Layer = function(unitTest)
-		local projName = "layer_wms_basic.tview"
+return{
+	createFile = function(unitTest)
+		local f = File("test.txt")
+		f:writeLine("...")
+		f:close()
 
-		local proj = Project {
-			file = projName,
-			clean = true
-		}
+		local d = Directory("testDir")
+		d:create()
 
-		local layerName = "WMS-Layer"
-		local service = "http://terrabrasilis.info/geoserver/ows"
-		local map = "Prodes_2013:LANDSAT2013"
-		local epsg = 29901
+		d = Directory("testDir/testDir2")
+		d:create()
 
-		local layer = Layer {
-			project = proj,
-			source = "wms",
-			name = layerName,
-			service = service,
-			map = map,
-			epsg = epsg
-		}
+		f = File(d.."test2.txt")
+		f:writeLine("...")
+		f:close()
 
-		unitTest:assertEquals(layer.name, layerName)
-		unitTest:assertEquals(layer.source, "wms")
-		unitTest:assertEquals(layer.service, service)
-		unitTest:assertEquals(layer.map, map)
-		unitTest:assertEquals(layer.epsg, epsg)
-
-		service = "http://www.geoservicos.inde.gov.br:80/geoserver/ows"
-		map = "MPOG:BASE_SPI_pol"
-		epsg = 4601
-
-		local layer2 = Layer {
-			project = proj,
-			source = "wms",
-			name = "AnotherWmsLayer",
-			service = service,
-			map = map,
-			epsg = epsg
-		}
-
-		unitTest:assertEquals(layer2.epsg, epsg)
-
-		File(projName):delete()
-		Directory("wms"):delete()
+		unitTest:assert(true)
 	end
 }
 
