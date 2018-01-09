@@ -26,14 +26,13 @@ return {
 	Layer = function(unitTest)
 		local projName = "layer_wms_alternative.tview"
 
-		local proj = Project {
+		local proj = Project{
 			file = projName,
 			clean = true
 		}
 
-
 		local error_func = function()
-			local layer = Layer {
+			Layer{
 				project = proj,
 				name = "WMS-Layer",
 				service = "http://terrabrasilis.info/geoserver/wwwms",

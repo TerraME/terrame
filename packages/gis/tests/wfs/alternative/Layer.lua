@@ -26,14 +26,13 @@ return {
 	Layer = function(unitTest)
 		local projName = "layer_wfs_alternative.tview"
 
-		local proj = Project {
+		local proj = Project{
 			file = projName,
 			clean = true
 		}
 
-
 		local error_func = function()
-			local layer = Layer {
+			Layer{
 				project = proj,
 				name = "WFS-Layer",
 				service = "http://terrabrasilis.info/geoserver/wwwfs",
