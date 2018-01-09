@@ -40,7 +40,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(error_func, "WMS server 'http://terrabrasilis.info/geoserver/wwwms' is unreachable.")
+		unitTest:assertError(error_func, "The URL 'http://terrabrasilis.info/geoserver/wwwms' is invalid.")
 
 		File(projName):delete()
 	end

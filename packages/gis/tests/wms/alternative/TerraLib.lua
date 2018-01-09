@@ -49,7 +49,7 @@ return {
 		local invalidUrl = function()
 			TerraLib().addWmsLayer(proj, layerName, conn, dataset)
 		end
-		unitTest:assertError(invalidUrl, "WMS server 'http://terrabrasilis.info/terraamazon/ow' is unreachable.")
+		unitTest:assertError(invalidUrl, "The URL 'http://terrabrasilis.info/terraamazon/ow' is invalid.")
 
 		conn.url = "http://terrabrasilis.info/terraamazon/ows"
 		dataset = "INVALID_DATASET"

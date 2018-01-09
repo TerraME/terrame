@@ -2145,7 +2145,7 @@ TerraLib_ = {
 										connect.query, connect.fragment, connect.directory, connect.format)
 
 		if not isValidDataSourceUri(connInfo, "WMS2") then
-			customError("WMS server '"..connect.url.."' is unreachable.")
+			customError("The URL '"..connect.url.."' is invalid.")
 		end
 
 		loadProject(project, project.file)
