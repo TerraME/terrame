@@ -67,7 +67,6 @@ return {
 		unitTest:assertEquals(layer2.epsg, epsg)
 
 		File(projName):delete()
-		Directory("wms"):delete()
 	end
 }
 
