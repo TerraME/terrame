@@ -6,7 +6,7 @@
 -- This framework is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU Lesser General Public
 -- License as published by the Free Software Foundation; either
--- version 2.3 of the License, or (at your option) any later version.
+-- version 2.1 of the License, or (at your option) any later version.
 
 -- You should have received a copy of the GNU Lesser General Public
 -- License along with this library.
@@ -23,42 +23,26 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	addWmsLayer = function(unitTest)
-		local title = "TerraLib Tests"
-		local author = "Avancini Rodrigo"
-		local file = File("terralib_wms_alt.tview")
-		local proj = {}
-		proj.file = file:name(true)
-		proj.title = title
-		proj.author = author
+	Layer = function(unitTest)
+		local projName = "layer_wms_alternative.tview"
 
-		file:deleteIfExists()
-
-		TerraLib().createProject(proj, {})
-
-		local layerName = "WMS-Layer"
-		local url = "http://terrabrasilis.info/terraamazon/ow"
-		local dataset = "IMG_02082016_321077D"
-		local directory = currentDir()
-		local conn = {
-			url = url,
-			directory = directory,
-			format = "jpeg"
+		local proj = Project{
+			file = projName,
+			clean = true
 		}
 
-		local invalidUrl = function()
-			TerraLib().addWmsLayer(proj, layerName, conn, dataset)
+		local error_func = function()
+			Layer{
+				project = proj,
+				name = "WMS-Layer",
+				service = "http://terrabrasilis.info/geoserver/wwwms",
+				map = "Prodes_2013:LANDSAT2013",
+			}
 		end
-		unitTest:assertError(invalidUrl, "The URL 'http://terrabrasilis.info/terraamazon/ow' is invalid.")
 
-		conn.url = "http://terrabrasilis.info/terraamazon/ows"
-		dataset = "INVALID_DATASET"
+		unitTest:assertError(error_func, "The URL 'http://terrabrasilis.info/geoserver/wwwms' is invalid.")
 
-		local invalidDataset = function()
-			TerraLib().addWmsLayer(proj, layerName, conn, dataset)
-		end
-		unitTest:assertError(invalidDataset,  "Map 'INVALID_DATASET' was not found in WMS server.")
-
-		file:delete()
+		File(projName):delete()
 	end
 }
+
