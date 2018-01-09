@@ -40,7 +40,6 @@ return {
 		if TerraLib().isValidWfsUrl(service) then
 			local layer = Layer {
 				project = proj,
-				source = "wfs",
 				name = layerName,
 				service = service,
 				feature = feature,
@@ -57,7 +56,6 @@ return {
 
 			local layer2 = Layer {
 				project = proj,
-				source = "wfs",
 				name = "AnotherWfsLayer",
 				service = service,
 				feature = feature,
@@ -87,7 +85,6 @@ return {
 
 		local prodes = Layer{
 			project = proj,
-			source = "wfs",
 			name = prodesName,
 			service = service,
 			feature = "reddpac:wfs_simus_prodes",
@@ -97,7 +94,6 @@ return {
 
 		local biomes = Layer{
 			project = proj,
-			source = "wfs",
 			name = biomesName,
 			service = service,
 			feature = "reddpac:wfs_biomes",

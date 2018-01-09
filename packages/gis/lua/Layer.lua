@@ -264,6 +264,15 @@ local function addLayer(self, data)
 		end
 	end
 
+	if type(data.service) == "string" then
+		local lower = string.lower(data.service)
+		if string.match(lower, "wms") then
+			defaultTableValue(data, "source", "wms")
+		elseif string.match(lower, "wfs") then
+			defaultTableValue(data, "source", "wfs")
+		end
+	end
+
 	mandatoryTableArgument(data, "source", "string")
 
 	if not isValidSource(data.source) then
@@ -1041,6 +1050,7 @@ metaTableLayer_ = {
 -- @arg data.input Name of the input layer whose coverage area will be used to create a
 -- cellular layer.
 -- @arg data.service A string with the description of a WFS or WMS location.
+-- When the string contains wms or wfs in its content, the argument source can be avoided.
 -- @arg data.feature A string with the name of the feature to be read from a WFS.
 -- @arg data.map A string with the name of the map to be read from a WMS.
 -- @arg data.format A string with the image format available in a WMS ("png", default).
