@@ -32,7 +32,7 @@ of this software and its documentation.
 #include "region.h"
 
 /**
-* \brief  
+* \brief
 *  CellIndex Region Type.
 *
 */

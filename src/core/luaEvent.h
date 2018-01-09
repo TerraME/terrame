@@ -39,7 +39,7 @@ extern "C"
 
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaEvent object.
 *
 */

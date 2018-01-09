@@ -34,6 +34,11 @@
 ##
 #
 
-python $HOME/Programs/cpplint/cpplint.py --filter=-whitespace/comments,-whitespace/tab,-whitespace/indent,-whitespace/braces,-build/namespaces,-build/header_guard,-whitespace/line_length,-readability/casting,-runtime/references,-build/include,-runtime/printf,-whitespace/newline,-runtime/explicit,-whitespace/parens,-runtime/int,-runtime/threadsafe --extensions=c,h,cpp `find "$_TERRAME_GIT_DIR/src/" -name *.h -o -name *.c*`
+cpplint --filter=-whitespace/comments,-whitespace/tab,-whitespace/indent,-whitespace/braces,-build/namespaces,-build/header_guard,-whitespace/line_length,-readability/casting,-runtime/references,-build/include,-runtime/printf,-whitespace/newline,-runtime/explicit,-whitespace/parens,-runtime/int,-runtime/threadsafe,-runtime/indentation_namespace --extensions=c,h,cpp --recursive "$_TERRAME_GIT_DIR/src/"
+RESULT1=$?
+cpplint --filter=-whitespace/tab,-whitespace/indent,-whitespace/braces,-build/header_guard,-whitespace/line_length,-build/include,-runtime/int --extensions=c,h,cpp --recursive "$_TERRAME_GIT_DIR/unittest/"
+RESULT2=$?
+cpplint --filter=-whitespace/tab,-whitespace/indent,-whitespace/braces,-build/header_guard,-whitespace/line_length,-build/include,-runtime/int,-build/c++11 --extensions=c,h,cpp --recursive "$_TERRAME_GIT_DIR/inttest/"
+RESULT3=$?
 
-exit $?
+exit $(($RESULT1 + $RESULT2 + $RESULT3))

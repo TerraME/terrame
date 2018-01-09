@@ -1,4 +1,4 @@
---[[ [previous](00-contents.lua) | [contents](00-contents.lua) | [next](Fire.lua) ]]
+--[[ [previous](02-growing-society.lua) | [contents](00-contents.lua) | [next](00-contents.lua) ]]
 
 Tub = Model{
     water = 40,

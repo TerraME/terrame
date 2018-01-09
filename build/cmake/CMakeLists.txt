@@ -120,7 +120,6 @@ endif()
 set(TERRAME_BIN_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TERRAME_BIN_DIR})
 
-
 #
 # including TerraME auxiliary macros and functions
 #
@@ -129,6 +128,13 @@ include(terrame-macros.cmake)
 add_subdirectory(terrame)
 
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${TERRAME_ABSOLUTE_ROOT_DIR};/")
+
+#
+# including TerraME C++ testing
+#
+if (NOT TERRAME_CREATE_INSTALLER)
+	add_subdirectory(testing)
+endif()
 
 #
 # CPack

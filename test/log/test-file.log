@@ -1,0 +1,37 @@
+Using log directory 'C:/TerraME/bin/packages/file/log/'
+Loading package 'file'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/File.lua
+Testing createFile
+Directory 'testDir' was created along the test.
+File 'test.txt' was created along the test.
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking M.lua
+Skipping lines of source code check
+Testing examples
+The package has no examples
+Skipping logs check
+
+Functional test report for package 'file':
+Tests were executed in 0.62 seconds.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or directories in directory 'tests'.
+All asserts were executed at least once.
+All 1 asserts were executed successfully.
+All 1 tested functions do not have any unexpected execution error.
+All 1 tested functions have at least one assert.
+All 1 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+2 files and/or directories were created along the tests.
+All 0 functions of the package were tested.
+No lines from the source code were verified.
+The package has no examples.
+No log test was executed.
+Summing up, 2 problems were found during the tests.

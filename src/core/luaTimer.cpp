@@ -77,8 +77,8 @@ int luaTimer::isEmpty(lua_State *L)
 /// parameters: luaEvent, luaMessage
 int luaTimer::add(lua_State *L)
 {
-    luaEvent* event = Luna<luaEvent>::check(L, -2);
-    luaMessage* message = Luna<luaMessage>::check(L, -1);
+    luaEvent* event = Luna<luaEvent>::getInstance()->check(L, -2);
+    luaMessage* message = Luna<luaMessage>::getInstance()->check(L, -1);
     Scheduler::add(*event, message);
     return 0;
 }
@@ -602,7 +602,7 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
 
                             if (isudatatype(luaL, -1, "TeEvent"))
                             {
-                                Event* ev =(Event*)Luna<luaEvent>::check(L, -1);
+                                Event* ev = Luna<luaEvent>::getInstance()->check(L, -1);
 
                                 double time = ev->getTime();
                                 minimumTime = min(minimumTime, time);

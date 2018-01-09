@@ -19,7 +19,7 @@ end)
 
 --[[
 It is important to note that the name of the argument in the second-order function
-does not change original the semantics of the function. For example, if we
+does not change the original semantics of the function. For example, if we
 erroneously declare the function with arguments named (value, position), the
 position will be stored in the argument value, while the value will be stored in
 the argument position, which can cause confusion in the source code. See the

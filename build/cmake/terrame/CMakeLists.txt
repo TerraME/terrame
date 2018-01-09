@@ -451,27 +451,28 @@ elseif(WIN32)
 
     set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
 
-	if (NOT TERRAME_CREATE_INSTALLER)
-		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
-				DESTINATION bin/packages
-				COMPONENT runtime
-				PATTERN "linux" EXCLUDE
-				PATTERN "mac" EXCLUDE
-			   )
-	else()
+	if(TERRAME_CREATE_INSTALLER)
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
 			DESTINATION bin/packages
 			COMPONENT runtime
 			PATTERN "log" EXCLUDE
 			PATTERN "test" EXCLUDE
 			PATTERN "tests" EXCLUDE
-			PATTERN "*.tview" EXCLUDE
-		)
+			PATTERN "*.tview" EXCLUDE)
 
 		install(DIRECTORY ${TERRAME_ABSOLUTE_ROOT_DIR}/ide/zerobrane/
 			DESTINATION bin/ide/zerobrane
-			COMPONENT runtime
-		)
+			COMPONENT runtime)
+
+		install(PROGRAMS ${TERRAME_ABSOLUTE_ROOT_DIR}/res/configure-zerobrane.bat
+			DESTINATION .
+			COMPONENT runtime)
+	else()
+		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
+				DESTINATION bin/packages
+				COMPONENT runtime
+				PATTERN "linux" EXCLUDE
+				PATTERN "mac" EXCLUDE)
 	endif()
 
 	set(QTLUA_LIBRARY_DLL ${QTLUA_INCLUDE_DIR}/../../lib/qtlua.dll)
@@ -635,11 +636,11 @@ else(UNIX)
 				PATTERN "tests" EXCLUDE
 				PATTERN "*.tview" EXCLUDE
 		)
-		
+
 		install(DIRECTORY ${TERRAME_ABSOLUTE_ROOT_DIR}/ide/zerobrane/
 			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/ide/zerobrane
 			COMPONENT runtime
-		)		
+		)
 	endif()
 
     install(DIRECTORY ${TERRALIB_DIR}/lib/

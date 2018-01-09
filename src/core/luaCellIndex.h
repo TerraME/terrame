@@ -37,7 +37,7 @@ extern "C"
 #include "reference.h"
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaCellIndex object.
 *
 */

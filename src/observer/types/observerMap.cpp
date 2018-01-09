@@ -36,8 +36,8 @@ of this software and its documentation.
 #include <QDebug>
 
 #include "../protocol/decoder/decoder.h"
-
 #include "visualArrangement.h"
+#include "core/LuaSystem.h"
 
 ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L;
@@ -631,11 +631,8 @@ ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
     QStringList teColorList = colorItemList.at(COLOR_).split(COMP_COLOR_SEP); //, QString::SkipEmptyParts); // lista com os componentes r, g, b
 
     if (colorItemList.size() < 4){
-        string err_out = string("Error: Could not infer legend.");
-        lua_getglobal(L, "customError");
-        lua_pushstring(L, err_out.c_str());
-        lua_pushnumber(L, 4);
-        lua_call(L, 2, 0);
+        string errOut("Error: Could not infer legend.");
+		terrame::lua::LuaSystem::getInstance().getLuaApi()->callWarning(L, errOut);
     }
 
     if (colorItemList.at(LABEL_) != ITEM_NULL)

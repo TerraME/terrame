@@ -26,6 +26,8 @@ of this software and its documentation.
 
 #include <lua.hpp>
 
+#include "LuaSystem.h"
+
 /// Class responsible for creating and manipulating references on the Lua Registry table
 // @DANIEL
 // Based on Curiously recurring template pattern - class Derived : public Reference<Derived>
@@ -38,20 +40,9 @@ class Reference
     // Create a weak table on the Lua Registry to hold all instances of a given derived class
     void createWeakTable(lua_State *L)
     {
-        // weaktable = {}
-        lua_newtable(L);
-
-        // mt = {__mode = "kv"}
-        lua_newtable(L);
-        lua_pushstring(L, "__mode");
-        lua_pushstring(L, "kv");
-        lua_rawset(L, -3);
-
-        // setmetatable(weaktable, mt)
-        lua_setmetatable(L, -2);
-
-        m_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+		m_ref = terrame::lua::LuaSystem::getInstance().getLuaApi()->createWeakTable(L);
     }
+
 public:
     /// Sets the reference for the Lua object using the cObj pointer.
     int setReference(lua_State *L)
@@ -83,7 +74,8 @@ public:
     }
 };
 
-template <typename T> int Reference<T>::m_ref = LUA_REFNIL;
+template <typename T>
+int Reference<T>::m_ref = LUA_REFNIL;
 
 #endif // REFFERENCE_H
 

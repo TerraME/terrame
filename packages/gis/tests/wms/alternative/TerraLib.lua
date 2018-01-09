@@ -60,5 +60,6 @@ return {
 		unitTest:assertError(invalidDataset,  "Map 'INVALID_DATASET' was not found in WMS server.")
 
 		file:delete()
+		Directory("wms"):delete()
 	end
 }

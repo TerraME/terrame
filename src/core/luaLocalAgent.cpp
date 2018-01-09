@@ -90,7 +90,7 @@ int luaLocalAgent::add(lua_State *L) {
     if (isudatatype(L, -1, "TeState"))
     {
         //cout << "aqui" << endl;
-        ControlMode* lcm =(ControlMode*)Luna<luaControlMode>::check(L, -1);
+        ControlMode* lcm = Luna<luaControlMode>::getInstance()->check(L, -1);
         ControlMode &cm = *lcm;
         LocalAgent::add(cm);
     }
@@ -98,7 +98,7 @@ int luaLocalAgent::add(lua_State *L) {
     {
         if (isudatatype(L, -1, "TeTrajectory"))
         {
-            luaRegion& actRegion = *((luaRegion*) Luna<luaTrajectory>::check(L, -1));
+            luaRegion& actRegion = *((luaRegion*) Luna<luaTrajectory>::getInstance()->check(L, -1));
             ActionRegionCompositeInterf& actRegions = luaLocalAgent::getActionRegions();
             actRegions.add(actRegion);
         }
@@ -109,7 +109,7 @@ int luaLocalAgent::add(lua_State *L) {
 /// Executes the luaLocalAgent object
 /// parameter: luaEvent
 int luaLocalAgent::execute(lua_State* L){
-    luaEvent* ev = Luna<luaEvent>::check(L, -1);
+    luaEvent* ev = Luna<luaEvent>::getInstance()->check(L, -1);
     LocalAgent::execute(*ev);
     return 0;
 }
@@ -200,7 +200,7 @@ int luaLocalAgent::createObserver(lua_State *L)
             // Recupero os estados do TeState
             if (isudatatype(luaL, -1, "TeState"))
             {
-                ControlMode*  lcm =(ControlMode*)Luna<luaControlMode>::check(L, -1);
+                ControlMode*  lcm = Luna<luaControlMode>::getInstance()->check(L, -1);
 
                 QString state, transition;
                 state.append(lcm->getControlModeName().c_str());
@@ -336,7 +336,7 @@ int luaLocalAgent::createObserver(lua_State *L)
                                 //lua_pushstring(luaL, "cObj_");
                                 //lua_gettable(luaL, cellTop);
 
-                                whereCell =(luaCell*)Luna<luaCell>::check(L, -1);
+                                whereCell = Luna<luaCell>::getInstance()->check(L, -1);
                                 // lua_pop(luaL, 1); // lua_pushstring
                             }
 
@@ -637,7 +637,7 @@ int luaLocalAgent::createObserver(lua_State *L)
                 {
                     if (isudatatype(luaL, -1, "TeCellularSpace"))
                     {
-                        cellSpace = Luna<luaCellularSpace>::check(L, -1);
+                        cellSpace = Luna<luaCellularSpace>::getInstance()->check(L, -1);
                     }
                     else
                     {
@@ -860,7 +860,7 @@ QString luaLocalAgent::pop(lua_State *luaL, QStringList& attribs)
                     lua_gettable(luaL, cellTop);
 
                     luaCell*  cell;
-                    cell =(luaCell*)Luna<luaCell>::check(L, -1);
+                    cell = Luna<luaCell>::getInstance()->check(L, -1);
                     lua_pop(luaL, 1); // lua_pushstring
 
                     // luaCell->popCell(...) requer uma celula no topo da pilha
@@ -984,7 +984,7 @@ QString luaLocalAgent::pop(lua_State *luaL, QStringList& attribs)
 
                     //if (isudatatype(luaL, -1, "TeState"))
                     //{
-                    //    ControlMode*  lcm =(ControlMode*)Luna<luaControlMode>::check(L, -1);
+                    //    ControlMode*  lcm =(ControlMode*)Luna<luaControlMode>::getInstance()->check(L, -1);
 
                     //    QString state(lcm->getControlModeName().c_str());
                     //    attrCounter++;

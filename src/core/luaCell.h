@@ -30,59 +30,32 @@ of this software and its documentation.
 
 #include "../observer/cellSubjectInterf.h"
 #include "luaLocalAgent.h"
-
-#include "reference.h"
-
-extern "C"
-{
-#include <lua.h>
-}
-#include "luna.h"
-
 // Raian: Tive que acrescentar este include para poder utilizar o CellularSpace nas
 // no observer do tipo Neighborhood.
 #include "luaCellularSpace.h"
+#include "LuaApi.h"
 
 //@Rodrigo /Antonio
 // class ServerSession;
 
 //////////////////////////////////////////////////////////////////////////////////////
 /**
-* \brief 
+* \brief
 *
-* Represents a set of Cells in the Lua runtime environment. 
+* Represents a set of Cells in the Lua runtime environment.
 *
 */
-class luaCell : public CellSubjectInterf, public Reference<luaCell>
+class luaCell : public CellSubjectInterf
 {
-    // @DANIEL:
-    // Movido para a classe Reference
-    // int ref; ///< The position of the object in the Lua stack
-    string objectId_; ///< luaCell identifier
-    NeighCmpstInterf::iterator it; ///< Neighborhood iterator.
-
-	CellIndex idx; //Raian: ?ndice da c?lula.
-
-    // Antonio - construtor
-    TypesOfSubjects subjectType;
-    lua_State *luaL; ///< Stores locally the lua stack location in memory
-    QStringList observedAttribs;
-
-    QString attrNeighName;
-
-    QString getAll(QDataStream& in, int obsId, QStringList& attribs);
-    QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
-
 public:
+    /// Constructor
+    luaCell(lua_State *L);
+
     ///< Data structure issued by Luna<T>
     static const char className[];
 
     ///< Data structure issued by Luna<T>
     static Luna<luaCell>::RegType methods[];
-
-public:
-    /// Constructor
-    luaCell(lua_State *L);
 
     /// Returns the current internal state of the LocalAgent (Automaton) within the cell and received as parameter
     int getCurrentStateName(lua_State *L);
@@ -144,12 +117,12 @@ public:
     // @DANIEL:
     // Movido para a classe Reference
     /// Registers the luaCell object in the Lua stack
-    //int setReference(lua_State* L);
+    int setReference(lua_State* L);
 
     // @DANIEL:
     // Movido para a classe Reference
     /// Gets the luaCell object reference
-    //int getReference(lua_State *L);
+    int getReference(lua_State *L);
 
     /// Gets the luaCell identifier
     int getID(lua_State *L);
@@ -195,6 +168,27 @@ public:
 
     /// Destroys the observer object instance
     int kill(lua_State *L);
+
+private:
+    // @DANIEL:
+    // Movido para a classe Reference
+    // int ref; ///< The position of the object in the Lua stack
+    string objectId_; ///< luaCell identifier
+    NeighCmpstInterf::iterator it; ///< Neighborhood iterator.
+
+	CellIndex idx; //Raian: ?ndice da c?lula.
+
+    // Antonio - construtor
+    TypesOfSubjects subjectType;
+    lua_State *luaL; ///< Stores locally the lua stack location in memory
+
+	terrame::lua::LuaApi* lua;
+
+    QStringList observedAttribs;
+    QString attrNeighName;
+
+    QString getAll(QDataStream& in, int obsId, QStringList& attribs);
+    QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
 };
 
 
