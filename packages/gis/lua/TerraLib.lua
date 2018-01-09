@@ -307,7 +307,7 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 			local capblts = client:getCapabilities()
 			local rootLayer = capblts.m_capability.m_layer
 			local wmsLayer = rootLayer:getLayerByDataSetName(dSetName)
-
+			Directory("wms"):delete()
 			if wmsLayer.m_title == "" then
 				binding.te.da.DataSourceManager.getInstance():detach(dsId)
 				ds:close()

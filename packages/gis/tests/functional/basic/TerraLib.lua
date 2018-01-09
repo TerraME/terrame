@@ -216,7 +216,6 @@ return {
 		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
 
 		File("webservice.tview"):delete()
-		Directory("wms"):delete()
 		-- // QGIS PROJECT
 	end,
 	openProject = function(unitTest)
