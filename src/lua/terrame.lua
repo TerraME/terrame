@@ -1177,6 +1177,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	dofile(path.."Utils.lua", _Gtme)
 	dofile(info_.path..s.."lua"..s.."utils.lua")
 	dofile(info_.path..s.."lua"..s.."configure.lua")
+	dofile(path.."Profiler.lua", _Gtme)
 
 	local infopath = _Gtme.Directory(info_.path)
 	if tostring(infopath) == tostring(_Gtme.currentDir()) then

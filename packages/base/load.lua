@@ -32,6 +32,7 @@ files = {
 	"OS.lua",
 	"VisualTable.lua",
 	"TextScreen.lua",
-	"Log.lua"
+	"Log.lua",
+	"Profiler.lua"
 }
 

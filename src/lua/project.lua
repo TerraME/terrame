@@ -307,7 +307,8 @@ function _Gtme.executeProjects(package)
 	end
 
 	print("\nProjects report for package '"..package.."':")
-	printNote("Projects were created in "..round(sessionInfo().time, 2).." seconds.")
+	local executionTime = _Gtme.Profiler():uptime()
+	printNote("Projects were created in "..executionTime..".")
 
 	if project_report.projects == 0 then
 		printNote("No project file was created.")
