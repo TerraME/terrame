@@ -361,17 +361,7 @@ function _Gtme.showDoc(package)
 		os.exit(1)
 	end
 
-	if _Gtme.sessionInfo().system ~= "windows" then
-		if _Gtme.runCommand("uname")[1] == "Darwin" then
-			_Gtme.runCommand("open "..docpath)
-		else
-			_Gtme.runCommand("xdg-open "..docpath)
-		end
-	else
-		docpath = "file:///".._Gtme.makePathCompatibleToAllOS(docpath)
-		docpath = string.gsub(docpath, "%s", "%%20")
-		os.execute("start "..docpath)
-	end
+	_Gtme.openWebpage(docpath)
 end
 
 function _Gtme.installRecursive(pkgfile)
