@@ -129,6 +129,24 @@ local function enableGraphics()
 	rawset(_G, "VisualTable", observers.VisualTable)
 end
 
+--- Opens a webpage in a Web Browser.
+-- @arg docpath A string with the webpage to be opened.
+-- @usage -- DONTRUN
+-- openWebpage("www.terrame.org")
+function openWebpage(docpath)
+	mandatoryArgument(1, "string", docpath)
+
+	if sessionInfo().system == "windows" then
+		docpath = "file:///".._Gtme.makePathCompatibleToAllOS(docpath) -- SKIP
+		docpath = string.gsub(docpath, "%s", "%%20") -- SKIP
+		os.execute("start "..docpath) -- SKIP
+	elseif runCommand("uname")[1] == "Darwin" then -- SKIP
+		runCommand("open "..docpath) -- SKIP
+	else
+		runCommand("xdg-open "..docpath) -- SKIP
+	end
+end
+
 --- Return information about the current execution. The result is a table
 -- with the values below. Some of them are read only, while others might
 -- be changed accordingly.
