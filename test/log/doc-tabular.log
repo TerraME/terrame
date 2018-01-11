@@ -33,7 +33,7 @@ Checking if all functions are documented
 Checking Utils.lua
 
 Documentation report for package 'tabular':
-Documentation was built in 0.36 seconds.
+Documentation was built in less than one second.
 2 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.

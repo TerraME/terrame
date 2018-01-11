@@ -9,7 +9,7 @@ File 'myfile.tview' was not created.
 Removing 'config.lua'
 
 Projects report for package 'wrongdata':
-Projects were created in 0.01 seconds.
+Projects were created in less than one second.
 One project file was created.
 No invalid .tview file was found in the package.
 One error was found while creating projects.

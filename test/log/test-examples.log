@@ -29,7 +29,7 @@ Testing d
 Checking logs
 
 Functional test report for package 'examples':
-Tests were executed in 0.28 seconds.
+Tests were executed in less than one second.
 Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_AiSCa/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.

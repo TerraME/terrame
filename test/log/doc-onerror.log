@@ -79,7 +79,7 @@ Function belong2 is not documented
 Checking if all Models are documented
 
 Documentation report for package 'onerror':
-Documentation was built in 0.78 seconds.
+Documentation was built in less than one second.
 5 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.

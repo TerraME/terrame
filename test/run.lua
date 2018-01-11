@@ -114,7 +114,9 @@ local function approximateLine(line)
 	if string.match(line, "Logs")                then return 120 end
 	if string.match(line, "Temporary")           then return 120 end
 	if string.match(line, "Directory")           then return 160 end
-	if string.match(line, "seconds")             then return   5 end
+	if string.match(line, "less than one")       then return  14 end
+	if string.match(line, "second")              then return  14 end
+	if string.match(line, "seconds")             then return  14 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "log")                 then return 120 end
 	if string.match(line, "Cannot open")         then return 320 end

@@ -21,7 +21,7 @@ Testing pr
 Checking logs
 
 Functional test report for package 'print':
-Tests were executed in 0.24 seconds.
+Tests were executed in less than one second.
 Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_dmFXh/'.
 2 print() calls were found when loading the package.
 No variable is overwritten when loading the package.

@@ -40,7 +40,7 @@ Checking data.lua
 Checking if all images are used
 
 Documentation report for package 'wrongdata':
-Documentation was built in 0.25 seconds.
+Documentation was built in less than one second.
 2 HTML files were created.
 One out of 1 files are not documented.
 All fields of 'description.lua' are correct.

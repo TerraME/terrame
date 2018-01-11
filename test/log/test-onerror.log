@@ -83,7 +83,7 @@ Checking logs
 File 'log/mac/chart_cell2.bmp' was not used by any assert.
 
 Functional test report for package 'onerror':
-Tests were executed in 2.51 seconds.
+Tests were executed in 2 seconds.
 Logs were saved in '/Users/pedro/github/terrame-pedro/test/.terrametmp_0gvMW'.
 One print() call was found when loading the package.
 One variable is overwritten when loading the package.

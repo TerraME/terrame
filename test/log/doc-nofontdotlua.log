@@ -29,7 +29,7 @@ Checking if all functions are documented
 Checking foo.lua
 
 Documentation report for package 'nofontdotlua':
-Documentation was built in 0.24 seconds.
+Documentation was built in less than one second.
 2 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.

@@ -76,7 +76,7 @@ function timeToString(t)
 		elseif seconds < 1 then
 			str = "less than one second"
 		else
-			str = str..seconds.." seconds"
+			str = str..string.format("%0.f seconds", seconds)
 		end
 	end
 
