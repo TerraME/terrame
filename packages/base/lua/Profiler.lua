@@ -178,7 +178,15 @@ Profiler_ = {
 
 		self.currentName = "main"
 		return self:uptime(block.name)
-	end
+	end,
+
+	--- Clean the Profiler, removing all blocks and restarting its execution time.
+	-- @usage Profiler():clean()
+	clean = function(self)
+		self.blocks = {}
+		self.currentName = nil
+		self:start("main")
+	end,
 }
 
 metaTableProfiler_ = {
@@ -203,4 +211,4 @@ function Profiler()
 	return data
 end
 
-Profiler():start("main")
+Profiler():clean()

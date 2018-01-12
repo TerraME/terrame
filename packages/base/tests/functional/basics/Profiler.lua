@@ -105,5 +105,18 @@ return{
 		unitTest:assertEquals(Profiler():current().name, "main")
 		Profiler().blocks["test1"] = nil
 		Profiler().blocks["test2"] = nil
+	end,
+	clean = function(unitTest)
+		local oldData = Profiler().blocks
+		Profiler():clean()
+		unitTest:assertEquals(Profiler():current().name, "main")
+		Profiler():clean()
+		Profiler():clean()
+		unitTest:assertEquals(Profiler():current().name, "main")
+		Profiler():start("test")
+		unitTest:assertEquals(Profiler():current().name, "test")
+		Profiler():clean()
+		unitTest:assertEquals(Profiler():current().name, "main")
+		Profiler().blocks = oldData
 	end
 }
