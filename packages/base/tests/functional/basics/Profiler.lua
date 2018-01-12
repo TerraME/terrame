@@ -48,6 +48,14 @@ return{
 		Profiler().blocks["test1"] = nil
 		Profiler().blocks["test2"] = nil
 	end,
+	current = function(unitTest)
+		local current = Profiler():current()
+		Profiler():start("test")
+		unitTest:assertEquals(Profiler():current().name, "test")
+		Profiler():stop()
+		unitTest:assertEquals(Profiler():current().name, current.name)
+		Profiler().blocks["test"] = nil
+	end,
 	uptime = function(unitTest)
 		local timeString, timeNumber = Profiler():uptime("main")
 		unitTest:assertType(timeString, "string")
@@ -63,7 +71,27 @@ return{
 		unitTest:assert(currentTime < stopTime)
 		delay(0.1)
 		_, currentTime = Profiler():uptime("test")
-		unitTest:assert(currentTime == stopTime)
+		unitTest:assertEquals(currentTime, stopTime)
+
+		Profiler().blocks["test"].startTime = 0
+		Profiler().blocks["test"].endTime = 3600
+		timeString = Profiler():uptime("test")
+		unitTest:assertEquals(timeString, "1 hour")
+		Profiler().blocks["test"].endTime = 7250
+		timeString = Profiler():uptime("test")
+		unitTest:assertEquals(timeString, "2 hours")
+		Profiler().blocks["test"].endTime = 86401
+		timeString = Profiler():uptime("test")
+		unitTest:assertEquals(timeString, "1 day")
+		Profiler().blocks["test"].endTime = 86465321
+		timeString = Profiler():uptime("test")
+		unitTest:assertEquals(timeString, "1000 days and 18 hours")
+		Profiler().blocks["test"].endTime = 60
+		timeString = Profiler():uptime("test")
+		unitTest:assertEquals(timeString, "1 minute")
+		Profiler().blocks["test"].endTime = 125
+		timeString = Profiler():uptime("test")
+		unitTest:assertEquals(timeString, "2 minutes and 5 seconds")
 		Profiler().blocks["test"] = nil
 	end,
 	stop = function(unitTest)
