@@ -83,6 +83,7 @@ local createBlock = function(name)
 		running = false,
 		startTime = sessionInfo().time,
 		count = 0,
+		steps = 0,
 		uptime = function(self)
 			if self.running then
 				return sessionInfo().time - self.startTime
@@ -97,7 +98,15 @@ local createBlock = function(name)
 				time = timeToString(self:uptime()), -- SKIP
 				average = timeToString(self:uptime() / self.count) -- SKIP
 			} -- SKIP
-		end
+		end,
+		eta = function(self)
+			if self.steps == 0 then
+				customError("'Profiler():steps(\""..self.name.."\")' must be set before calling 'Profiler():eta(\""..self.name.."\")'.")
+			end
+
+			local estimated = self:uptime() + (self.steps - self.count) * (self:uptime() / self.count)
+			return math.max(0, math.ceil(self.startTime + estimated - sessionInfo().time))
+		end,
 	}
 end
 
@@ -142,7 +151,7 @@ Profiler_ = {
 		optionalArgument("name", "string", name)
 		local block = self.blocks[name or self.currentName]
 		if not block then
-			customError(string.format("Block '%s' not found.", name))
+			customError(string.format("Block '%s' not found.", name or self.currentName))
 		end
 
 		return block.count
@@ -158,13 +167,13 @@ Profiler_ = {
 		optionalArgument("name", "string", name)
 		local block = self.blocks[name or self.currentName]
 		if not block then
-			customError(string.format("Block '%s' not found.", name))
+			customError(string.format("Block '%s' not found.", name or self.currentName))
 		end
 
 		local time = block:uptime()
 		return timeToString(time), time
 	end,
-	--- Stop to measure the time of a given block. It also returns Return how much time was spent with the block
+	--- Stop to measure the time of a given block. It also returns how much time was spent with the block
 	-- in two representations: a string with a human-like representation of the time and a number with the time in seconds.
 	-- @arg name A string with the block name. If the name is not informed, then it stops and return the uptime of the current block.
 	-- @usage Profiler():start("block")
@@ -181,7 +190,7 @@ Profiler_ = {
 			block.running = false
 			block.endTime = sessionInfo().time
 		elseif not block then
-			customError(string.format("Block '%s' not found.", name))
+			customError(string.format("Block '%s' not found.", name or self.currentName))
 		end
 
 		self.currentName = "main"
@@ -208,6 +217,43 @@ Profiler_ = {
 		end)
 
 		print("Total execution time: "..timeToString(total)) -- SKIP
+	end,
+
+	--- Define how many times a given block will be executed.
+	-- @arg name A string with the block name.
+	-- @arg quantity Number of steps a given block will execute.
+	-- @usage Profiler():start("block")
+	-- Profiler():steps("block", 5)
+	-- Profiler():stop("block")
+	steps = function(self, name, quantity)
+		mandatoryArgument("name", "string", name)
+		mandatoryArgument("quantity", "number", quantity)
+		integerArgument("quantity", quantity)
+		positiveArgument("quantity", quantity)
+		if not self.blocks[name] then -- allows to set steps before start (useful?)
+			self.blocks[name] = createBlock(name)
+		end
+
+		self.blocks[name].steps = quantity
+	end,
+
+	--- Estimate and return the time to execute all repetitions of a given block. It returns how much time was spent with the block
+	-- in two representations: a string with a human-like representation of the time and a number with the time in seconds.
+	-- @arg name A string with the block name. If the name is not informed, then it returns the "eta" of the current block.
+	-- @usage Profiler():steps("block", 5)
+	-- Profiler():start("block")
+	-- Profiler():stop("block")
+	-- eta = Profiler():eta("block")
+	-- print(eta.." left to finish all executions.")
+	eta = function(self, name)
+		optionalArgument("name", "string", name)
+		local block = self.blocks[name or self.currentName]
+		if not block then
+			customError(string.format("Block '%s' not found.", name or self.currentName))
+		end
+
+		local time = block:eta()
+		return timeToString(time), time
 	end
 }
 

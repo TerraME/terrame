@@ -121,5 +121,29 @@ return{
 	end,
 	report = function(unitTest)
 		unitTest:assert(true)
+	end,
+	steps = function(unitTest)
+		Profiler():start("test1")
+		Profiler():steps("test1", 5)
+		unitTest:assertEquals(Profiler():current().steps, 5)
+		Profiler():steps("test2", 5)
+		unitTest:assertEquals(Profiler():current().steps, 5)
+		Profiler():start("test2")
+		unitTest:assertEquals(Profiler():current().steps, 5)
+		Profiler():stop("test2")
+		unitTest:assertEquals(Profiler().blocks["test2"].steps, 5)
+		Profiler().blocks["test1"] = nil
+		Profiler().blocks["test2"] = nil
+	end,
+	eta = function(unitTest)
+		Profiler():steps("test", 1)
+		Profiler():start("test")
+		delay(0.1)
+		Profiler():stop("test")
+		local timeString, timeNumber = Profiler():eta("test")
+		unitTest:assertType(timeString, "string")
+		unitTest:assertType(timeNumber, "number")
+		unitTest:assertEquals(timeNumber, 0.1, 0.1)
+		Profiler().blocks["test"] = nil
 	end
 }

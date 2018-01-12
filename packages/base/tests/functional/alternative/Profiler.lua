@@ -85,5 +85,58 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Block 'test' not found.")
+	end,
+	steps = function(unitTest)
+		local error_func = function()
+			Profiler():steps()
+		end
+
+		unitTest:assertError(error_func, mandatoryArgumentMsg("name"))
+		error_func = function()
+			Profiler():steps(1, 1)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
+		error_func = function()
+			Profiler():steps("block")
+		end
+
+		unitTest:assertError(error_func, mandatoryArgumentMsg("quantity"))
+		error_func = function()
+			Profiler():steps("block", -1)
+		end
+
+		unitTest:assertError(error_func, positiveArgumentMsg("quantity", -1))
+		error_func = function()
+			Profiler():steps("block", 0)
+		end
+
+		unitTest:assertError(error_func, positiveArgumentMsg("quantity", 0))
+
+		error_func = function()
+			Profiler():steps("block", 1.1)
+		end
+
+		unitTest:assertError(error_func, integerArgumentMsg ("quantity", 1.1))
+	end,
+	eta = function(unitTest)
+		local error_func = function()
+			Profiler():eta(1)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
+		error_func = function()
+			Profiler():eta("block")
+		end
+
+		unitTest:assertError(error_func, "Block 'block' not found.")
+
+		error_func = function()
+			Profiler():eta("test")
+		end
+		Profiler():start("test")
+		unitTest:assertError(error_func, "'Profiler():steps(\"test\")' must be set before calling 'Profiler():eta(\"test\")'.")
+		Profiler():stop("test")
+		Profiler().blocks["test"] = nil
 	end
 }
