@@ -90,6 +90,14 @@ local createBlock = function(name)
 				return self.endTime - self.startTime
 			end
 		end,
+		report = function(self)
+			return { -- SKIP
+				name = self.name, -- SKIP
+				count = self.count, -- SKIP
+				time = timeToString(self:uptime()), -- SKIP
+				average = timeToString(self:uptime() / self.count) -- SKIP
+			} -- SKIP
+		end
 	}
 end
 
@@ -187,6 +195,20 @@ Profiler_ = {
 		self.currentName = nil
 		self:start("main")
 	end,
+
+	--- Show a report with the time and amount of times each block was executed.
+	-- @usage Profiler():report()
+	report = function(self)
+		local total = 0 -- SKIP
+		print(string.format("%-30s%-20s%-30s%-30s", "Block", "Count", "Time", "Average")) -- SKIP
+		forEachOrderedElement(self.blocks, function(_, block)
+			local report = block:report() -- SKIP
+			total = total + block:uptime() -- SKIP
+			print(string.format("%-30s%-20d%-30s%-30s", report.name, report.count, report.time, report.average)) -- SKIP
+		end)
+
+		print("Total execution time: "..timeToString(total)) -- SKIP
+	end
 }
 
 metaTableProfiler_ = {

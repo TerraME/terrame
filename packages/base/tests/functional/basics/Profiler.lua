@@ -118,5 +118,8 @@ return{
 		Profiler():clean()
 		unitTest:assertEquals(Profiler():current().name, "main")
 		Profiler().blocks = oldData
+	end,
+	report = function(unitTest)
+		unitTest:assert(true)
 	end
 }
