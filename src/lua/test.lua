@@ -188,7 +188,6 @@ local function buildLineTable(package)
 end
 
 function _Gtme.executeTests(package, fileName)
-	local _, initialTime = Profiler():uptime()
 	local s = sessionInfo().separator
 
 	local data
@@ -629,8 +628,6 @@ function _Gtme.executeTests(package, fileName)
 
 				local found_error = false
 
-				local _, testInitialTime = Profiler():uptime()
-
 				xpcall(function() tests[eachTest](ut) end, function(err)
 					ut.functions_with_error = ut.functions_with_error + 1
 					printError("Wrong execution, got:\n".._Gtme.traceback(err))
@@ -644,17 +641,9 @@ function _Gtme.executeTests(package, fileName)
 					ut.last_error = ""
 				end
 
+				local testFinalTime = Profiler():uptime()
 				if data.time then
-					local _, testFinalTime = Profiler():uptime()
-					local difference = round(testFinalTime - testInitialTime, 1)
-
-					local text = "Test executed in "..timeToString(difference).."."
-
-					if difference > 60 then
-						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-					elseif difference > 10 then
-						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-					end
+					_Gtme.print("Test executed in "..testFinalTime..".")
 				end
 
 				print = _Gtme.print
@@ -870,7 +859,7 @@ function _Gtme.executeTests(package, fileName)
 				_Gtme.loadedPackages = clone(loadedPackages)
 
 				local color = sessionInfo().color
-				local _, exampleInitialTime = Profiler():uptime()
+				Profiler():start("_examples")
 				local pe = _Gtme.printError
 
 				local myassert = function(observer, file, message)
@@ -976,18 +965,9 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				clean()
-
+				local exampleFinalTime = Profiler():stop("_examples")
 				if data.time then
-					local _, exampleFinalTime = Profiler():uptime()
-					local difference = round(exampleFinalTime - exampleInitialTime, 1)
-
-					local text = "Example executed in "..timeToString(difference).."."
-
-					if difference > 60 then
-						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-					elseif difference > 10 then
-						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
-					end
+					_Gtme.print("Example executed in "..exampleFinalTime..".")
 				end
 			end)
 		else
@@ -1016,7 +996,7 @@ function _Gtme.executeTests(package, fileName)
 		printWarning("Skipping logs check")
 	end
 
-	local _, finalTime = Profiler():uptime()
+	local finalTime = Profiler():uptime()
 
 	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
 	               -ut.logs - ut.package_functions
@@ -1029,7 +1009,7 @@ function _Gtme.executeTests(package, fileName)
 
 	print("\nFunctional test report for package '"..package.."':")
 
-	local text = "Tests were executed in "..timeToString(finalTime - initialTime).."."
+	local text = "Tests were executed in "..finalTime.."."
 	printNote(text)
 
 	if ut.logs > 0 then

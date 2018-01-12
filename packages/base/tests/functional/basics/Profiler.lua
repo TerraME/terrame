@@ -28,65 +28,54 @@ return{
 		local prof = Profiler()
 		unitTest:assertEquals(prof, Profiler())
 	end,
+	start = function(unitTest)
+		Profiler():start("test")
+		unitTest:assertEquals(Profiler():current().name, "test")
+		Profiler():stop("test")
+		Profiler().blocks["test"] = nil
+	end,
+	count = function(unitTest)
+		Profiler():start("test1")
+		unitTest:assertEquals(Profiler():count("test1"), 1)
+		Profiler():stop("test1")
+		Profiler():start("test2")
+		unitTest:assertEquals(Profiler():count("test1"), 1)
+		unitTest:assertEquals(Profiler():count("test2"), 1)
+		Profiler():stop("test2")
+		Profiler():start("test2")
+		unitTest:assertEquals(Profiler():count("test2"), 2)
+		Profiler():stop("test2")
+		Profiler().blocks["test1"] = nil
+		Profiler().blocks["test2"] = nil
+	end,
 	uptime = function(unitTest)
-		local _, startTime = Profiler():uptime()
-		local timeString, timeNumber = Profiler():uptime()
+		local timeString, timeNumber = Profiler():uptime("main")
 		unitTest:assertType(timeString, "string")
 		unitTest:assertType(timeNumber, "number")
-		unitTest:assert(table.pack(Profiler():uptime())[2] >= startTime)
+		Profiler():start("test")
+		local _, startTime = Profiler():uptime()
+		delay(0.1)
+		local _, currentTime = Profiler():uptime()
+		unitTest:assert(startTime < currentTime)
+		delay(0.1)
+		Profiler():stop("test")
+		local _, stopTime = Profiler():uptime("test")
+		unitTest:assert(currentTime < stopTime)
+		delay(0.1)
+		_, currentTime = Profiler():uptime("test")
+		unitTest:assert(currentTime == stopTime)
+		Profiler().blocks["test"] = nil
 	end,
-	timeToString = function(unitTest)
-		local t1 = 0
-		unitTest:assertEquals(timeToString(t1), "less than one second")
-		local t2 = 1
-		unitTest:assertEquals(timeToString(t2), "1 second")
-		local t3 = 2
-		unitTest:assertEquals(timeToString(t3), "2 seconds")
-		local t4 = 59
-		unitTest:assertEquals(timeToString(t4), "59 seconds")
-		local t5 = 60
-		unitTest:assertEquals(timeToString(t5), "1 minute")
-		local t6 = 61
-		unitTest:assertEquals(timeToString(t6), "1 minute and 1 second")
-		local t7 = 62
-		unitTest:assertEquals(timeToString(t7), "1 minute and 2 seconds")
-		local t8 = 300
-		unitTest:assertEquals(timeToString(t8), "5 minutes")
-		local t9 = 3599
-		unitTest:assertEquals(timeToString(t9), "59 minutes and 59 seconds")
-		local t10 = 3600
-		unitTest:assertEquals(timeToString(t10), "1 hour")
-		local t11 = 3601
-		unitTest:assertEquals(timeToString(t11), "1 hour")
-		local t12 = 3659
-		unitTest:assertEquals(timeToString(t12), "1 hour")
-		local t13 = 3660
-		unitTest:assertEquals(timeToString(t13), "1 hour and 1 minute")
-		local t14 = 3720
-		unitTest:assertEquals(timeToString(t14), "1 hour and 2 minutes")
-		local t15 = 7200
-		unitTest:assertEquals(timeToString(t15), "2 hours")
-		local t16 = 7259
-		unitTest:assertEquals(timeToString(t16), "2 hours")
-		local t17 = 7260
-		unitTest:assertEquals(timeToString(t17), "2 hours and 1 minute")
-		local t18 = 7320
-		unitTest:assertEquals(timeToString(t18), "2 hours and 2 minutes")
-		local t19 = 86399
-		unitTest:assertEquals(timeToString(t19), "23 hours and 59 minutes")
-		local t20 = 86400
-		unitTest:assertEquals(timeToString(t20), "1 day")
-		local t21 = 86401
-		unitTest:assertEquals(timeToString(t21), "1 day")
-		local t22 = 86460
-		unitTest:assertEquals(timeToString(t22), "1 day")
-		local t23 = 90000
-		unitTest:assertEquals(timeToString(t23), "1 day and 1 hour")
-		local t24 = 93600
-		unitTest:assertEquals(timeToString(t24), "1 day and 2 hours")
-		local t25 = 172800
-		unitTest:assertEquals(timeToString(t25), "2 days")
-		local t26 = 86465321
-		unitTest:assertEquals(timeToString(t26), "1000 days and 18 hours")
+	stop = function(unitTest)
+		Profiler():start("test1")
+		delay(0.1)
+		Profiler():start("test2")
+		local timeString, timeNumber = Profiler():stop("test1")
+		unitTest:assertType(timeString, "string")
+		unitTest:assertType(timeNumber, "number")
+		unitTest:assert(timeNumber > table.pack(Profiler():stop("test2"))[2])
+		unitTest:assertEquals(Profiler():current().name, "main")
+		Profiler().blocks["test1"] = nil
+		Profiler().blocks["test2"] = nil
 	end
 }

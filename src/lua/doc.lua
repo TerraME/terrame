@@ -374,8 +374,6 @@ local function getProjects(package, doc_report)
 end
 
 function _Gtme.executeDoc(package)
-	local _, initialTime = Profiler():uptime()
-
 	if not isLoaded("luadoc") then
 		import("luadoc")
 	end
@@ -1350,10 +1348,9 @@ function _Gtme.executeDoc(package)
 		end)
 	end
 
-	local _, finalTime = Profiler():uptime()
-
+	local finalTime = _Gtme.Profiler():uptime()
 	print("\nDocumentation report for package '"..package.."':")
-	printNote("Documentation was built in "..timeToString(finalTime - initialTime)..".")
+	printNote("Documentation was built in "..finalTime..".")
 
 	if doc_report.html_files == 1 then
 		printNote("One HTML file was created.")

@@ -23,14 +23,8 @@
 -------------------------------------------------------------------------------------------
 
 local instance = nil
-local START_TIME = sessionInfo().time
 
---- Function that returns the time in a higher-level representation.
--- @arg t The time in seconds.
--- @usage
--- local t = 3670
--- print(timeToString(t)) -- 1 hour and 1 minute
-function timeToString(t)
+local function timeToString(t)
 	mandatoryArgument(1, "number", t)
 	local seconds = t
 	local minutes = math.floor(t / 60);     seconds = math.floor(seconds % 60)
@@ -83,13 +77,107 @@ function timeToString(t)
 	return str
 end
 
+local createBlock = function(name)
+	return {
+		name = name,
+		running = false,
+		startTime = sessionInfo().time,
+		count = 0,
+		uptime = function(self)
+			if self.running then
+				return sessionInfo().time - self.startTime
+			else
+				return self.endTime - self.startTime
+			end
+		end,
+	}
+end
+
 Profiler_ = {
 	type_ = "Profiler",
-	--- Return the execution time since TerraME was started in two representations a string with human-like representation and a number with the time in seconds.
-	-- @usage elapsedTimeText, elapsedTimeNumber = Profiler():uptime()
-	uptime = function(self)
-		local difference = sessionInfo().time - self.startTime
-		return timeToString(difference), difference
+	blocks = {},
+	--- Create and start a new block.
+	-- @arg name A string with the block name.
+	-- @usage Profiler():start("block")
+	-- Profiler():stop("block")
+	start = function(self, name)
+		mandatoryArgument("name", "string", name)
+		local block = self.blocks[name]
+		if block and block.running then
+			customWarning(string.format("Block '%s' has already been started.", block.name))
+		elseif not block then
+			block = createBlock(name)
+			self.blocks[name] = block
+		end
+
+		if self.currentName and self.currentName ~= name then
+			self:stop(self.currentName)
+		end
+
+		self.currentName = name
+		block.count = block.count + 1
+		block.running = true
+	end,
+	--- Return the current block.
+	-- @usage Profiler():start("block")
+	-- print(Profiler():current().name) -- block
+	-- Profiler():stop("block")
+	current = function(self)
+		return self.blocks[self.currentName]
+	end,
+	--- Return how many times a given block has started.
+	-- @arg name A string with the block name. If the name is not informed, then it returns the count of the current block.
+	-- @usage Profiler():start("block")
+	-- print(Profiler():count("block")) -- 1
+	-- Profiler():stop("block")
+	count = function(self, name)
+		optionalArgument("name", "string", name)
+		local block = self.blocks[name or self.currentName]
+		if not block then
+			customError(string.format("Block '%s' not found.", name))
+		end
+
+		return block.count
+	end,
+	--- Return how much time was spent on the block.
+	-- It returns two representations: a string with a human-like representation of the time
+	-- and a number with the time in seconds.
+	-- @arg name A string with the block name. If the name is not informed, then it returns the uptime of the current block.
+	-- @usage Profiler():start("block")
+	-- Profiler():stop("block")
+	-- stringTime, numberTime = Profiler():uptime("block")
+	uptime = function(self, name)
+		optionalArgument("name", "string", name)
+		local block = self.blocks[name or self.currentName]
+		if not block then
+			customError(string.format("Block '%s' not found.", name))
+		end
+
+		local time = block:uptime()
+		return timeToString(time), time
+	end,
+	--- Stop to measure the time of a given block. It also returns Return how much time was spent with the block
+	-- in two representations: a string with a human-like representation of the time and a number with the time in seconds.
+	-- @arg name A string with the block name. If the name is not informed, then it stops and return the uptime of the current block.
+	-- @usage Profiler():start("block")
+	-- stringTime, numberTime = Profiler():stop("block")
+	stop = function(self, name)
+		optionalArgument("name", "string", name)
+		if (name == "main" or not name and self.currentName == "main") and getn(self.blocks) == 1 then
+			customWarning("The block 'main' cannot be stopped.")
+			return self:uptime(name)
+		end
+
+		local block = self.blocks[name or self.currentName]
+		if block and block.running then
+			block.running = false
+			block.endTime = sessionInfo().time
+		elseif not block then
+			customError(string.format("Block '%s' not found.", name))
+		end
+
+		self.currentName = "main"
+		return self:uptime(block.name)
 	end
 }
 
@@ -101,7 +189,9 @@ metaTableProfiler_ = {
 -- The user can inform Profiler how many times a block will execute. Thus it can estimate the time left to finish the execution of
 -- a block. This type also summaries all its measures and show a report containing how many times a block was executed, the time
 -- to execute all repetitions of this block and the average time of these repetitions.
--- @usage print(Profiler():uptime())
+-- @usage Profiler():start("test")
+-- Profiler():stop("test")
+-- Profiler():uptime("test")
 function Profiler()
 	if instance then
 		return instance
@@ -109,7 +199,8 @@ function Profiler()
 
 	local data = {}
 	setmetatable(data, metaTableProfiler_) -- SKIP
-	data.startTime = START_TIME -- SKIP
 	instance = data -- SKIP
 	return data
 end
+
+Profiler():start("main")
