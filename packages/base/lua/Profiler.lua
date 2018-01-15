@@ -209,11 +209,11 @@ Profiler_ = {
 	-- @usage Profiler():report()
 	report = function(self)
 		local total = 0 -- SKIP
-		print(string.format("%-30s%-20s%-30s%-30s", "Block", "Count", "Time", "Average")) -- SKIP
+		print(string.format("%-30s%-20s%-30s%s", "Block", "Count", "Time", "Average")) -- SKIP
 		forEachOrderedElement(self.blocks, function(_, block)
 			local report = block:report() -- SKIP
 			total = total + block:uptime() -- SKIP
-			print(string.format("%-30s%-20d%-30s%-30s", report.name, report.count, report.time, report.average)) -- SKIP
+			print(string.format("%-30s%-20d%-30s%s", report.name, report.count, report.time, report.average)) -- SKIP
 		end)
 
 		print("Total execution time: "..timeToString(total)) -- SKIP
