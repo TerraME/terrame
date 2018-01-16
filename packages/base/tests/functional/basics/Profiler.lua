@@ -29,12 +29,22 @@ return{
 		unitTest:assertEquals(prof, Profiler())
 	end,
 	start = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		Profiler():start("test")
 		unitTest:assertEquals(Profiler():current().name, "test")
-		Profiler():stop("test")
-		Profiler().blocks["test"] = nil
+		Profiler():start("test2")
+		unitTest:assertEquals(Profiler():current().name, "test2")
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	count = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		Profiler():start("test1")
 		unitTest:assertEquals(Profiler():count("test1"), 1)
 		Profiler():stop("test1")
@@ -45,18 +55,27 @@ return{
 		Profiler():start("test2")
 		unitTest:assertEquals(Profiler():count("test2"), 2)
 		Profiler():stop("test2")
-		Profiler().blocks["test1"] = nil
-		Profiler().blocks["test2"] = nil
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	current = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		local current = Profiler():current()
 		Profiler():start("test")
 		unitTest:assertEquals(Profiler():current().name, "test")
 		Profiler():stop()
 		unitTest:assertEquals(Profiler():current().name, current.name)
-		Profiler().blocks["test"] = nil
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	uptime = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		local timeString, timeNumber = Profiler():uptime("main")
 		unitTest:assertType(timeString, "string")
 		unitTest:assertType(timeNumber, "number")
@@ -92,9 +111,14 @@ return{
 		Profiler().blocks["test"].endTime = 125
 		timeString = Profiler():uptime("test")
 		unitTest:assertEquals(timeString, "2 minutes and 5 seconds")
-		Profiler().blocks["test"] = nil
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	stop = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		Profiler():start("test1")
 		delay(0.1)
 		Profiler():start("test2")
@@ -103,11 +127,22 @@ return{
 		unitTest:assertType(timeNumber, "number")
 		unitTest:assert(timeNumber > table.pack(Profiler():stop("test2"))[2])
 		unitTest:assertEquals(Profiler():current().name, "main")
-		Profiler().blocks["test1"] = nil
-		Profiler().blocks["test2"] = nil
+		Profiler():start("test1")
+		unitTest:assertEquals(Profiler():current().name, "test1")
+		Profiler():start("test2")
+		unitTest:assertEquals(Profiler():current().name, "test2")
+		Profiler():stop()
+		unitTest:assertEquals(Profiler():current().name, "test1")
+		Profiler():stop()
+		unitTest:assertEquals(Profiler():current().name, "main")
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	clean = function(unitTest)
-		local oldData = Profiler().blocks
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		Profiler():clean()
 		unitTest:assertEquals(Profiler():current().name, "main")
 		Profiler():clean()
@@ -117,12 +152,17 @@ return{
 		unitTest:assertEquals(Profiler():current().name, "test")
 		Profiler():clean()
 		unitTest:assertEquals(Profiler():current().name, "main")
-		Profiler().blocks = oldData
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	report = function(unitTest)
 		unitTest:assert(true)
 	end,
 	steps = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		Profiler():start("test1")
 		Profiler():steps("test1", 5)
 		unitTest:assertEquals(Profiler():current().steps, 5)
@@ -132,10 +172,14 @@ return{
 		unitTest:assertEquals(Profiler():current().steps, 5)
 		Profiler():stop("test2")
 		unitTest:assertEquals(Profiler().blocks["test2"].steps, 5)
-		Profiler().blocks["test1"] = nil
-		Profiler().blocks["test2"] = nil
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	eta = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		Profiler():steps("test", 1)
 		Profiler():start("test")
 		delay(0.1)
@@ -144,6 +188,7 @@ return{
 		unitTest:assertType(timeString, "string")
 		unitTest:assertType(timeNumber, "number")
 		unitTest:assertEquals(timeNumber, 0.1, 0.1)
-		Profiler().blocks["test"] = nil
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end
 }

@@ -24,6 +24,10 @@
 
 return{
 	start = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		local error_func = function()
 			Profiler():start()
 		end
@@ -37,12 +41,17 @@ return{
 			Profiler():start("test")
 			Profiler():start("test")
 			Profiler():stop("test")
-			Profiler().blocks["test"] = nil
 		end
 
-		unitTest:assertWarning(error_func, "Block 'test' has already been started.")
+		unitTest:assertWarning(error_func, "Block 'test' has already been started. Please, stop the block before re-start it.")
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	count = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		local error_func = function()
 			Profiler():count(1)
 		end
@@ -53,8 +62,14 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Block 'test' not found.")
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	uptime = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		local error_func = function()
 			Profiler():uptime(1)
 		end
@@ -66,9 +81,14 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Block 'test' not found.")
-		Profiler().blocks["test"] = nil
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	stop = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		local error_func = function()
 			Profiler():stop(1)
 		end
@@ -79,14 +99,24 @@ return{
 		end
 
 		unitTest:assertWarning(error_func, "The block 'main' cannot be stopped.")
+		error_func = function()
+			Profiler():stop()
+		end
 
+		unitTest:assertWarning(error_func, "The block 'main' cannot be stopped.")
 		error_func = function()
 			Profiler():stop("test")
 		end
 
 		unitTest:assertError(error_func, "Block 'test' not found.")
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	steps = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		local error_func = function()
 			Profiler():steps()
 		end
@@ -112,14 +142,19 @@ return{
 		end
 
 		unitTest:assertError(error_func, positiveArgumentMsg("quantity", 0))
-
 		error_func = function()
 			Profiler():steps("block", 1.1)
 		end
 
 		unitTest:assertError(error_func, integerArgumentMsg ("quantity", 1.1))
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end,
 	eta = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
 		local error_func = function()
 			Profiler():eta(1)
 		end
@@ -130,13 +165,12 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Block 'block' not found.")
-
 		error_func = function()
 			Profiler():eta("test")
 		end
 		Profiler():start("test")
 		unitTest:assertError(error_func, "'Profiler():steps(\"test\")' must be set before calling 'Profiler():eta(\"test\")'.")
-		Profiler():stop("test")
-		Profiler().blocks["test"] = nil
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
 	end
 }
