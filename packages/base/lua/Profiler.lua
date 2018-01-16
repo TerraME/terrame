@@ -79,9 +79,9 @@ end
 
 local createBlock = function(name)
 	return {
+		type_ = "Block",
 		name = name,
 		running = false,
-		startTime = sessionInfo().time,
 		count = 0,
 		steps = 0,
 		uptime = function(self)
@@ -107,6 +107,15 @@ local createBlock = function(name)
 			local estimated = self:uptime() + (self.steps - self.count) * (self:uptime() / self.count)
 			return math.max(0, math.ceil(self.startTime + estimated - sessionInfo().time))
 		end,
+		start = function(self)
+			self.startTime = sessionInfo().time
+			self.count = self.count + 1
+			self.running = true
+		end,
+		stop = function(self)
+			self.endTime = sessionInfo().time
+			self.running = false
+		end
 	}
 end
 
@@ -151,9 +160,7 @@ Profiler_ = {
 			self.blocks[name] = block
 		end
 
-		block.startTime = sessionInfo().time
-		block.count = block.count + 1
-		block.running = true
+		block:start()
 		Stack.push(self.stack, block)
 	end,
 	--- Return the current block.
@@ -217,8 +224,7 @@ Profiler_ = {
 		end
 
 		if block.running then
-			block.running = false
-			block.endTime = sessionInfo().time
+			block:stop()
 		end
 
 		local time = block:uptime()

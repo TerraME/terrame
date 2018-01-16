@@ -135,6 +135,14 @@ return{
 		unitTest:assertEquals(Profiler():current().name, "test1")
 		Profiler():stop()
 		unitTest:assertEquals(Profiler():current().name, "main")
+		Profiler():start("test1")
+		unitTest:assertEquals(Profiler():current().name, "test1")
+		Profiler():start("test2")
+		unitTest:assertEquals(Profiler():current().name, "test2")
+		Profiler():stop("test1")
+		unitTest:assertEquals(Profiler():current().name, "test2")
+		Profiler():stop()
+		unitTest:assertEquals(Profiler():current().name, "main")
 		Profiler().stack = oldStack
 		Profiler().blocks = oldBlocks
 	end,
