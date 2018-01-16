@@ -209,7 +209,7 @@ forEachOrderedElement(pkgs, function(package)
 
 	local docFinalTime, difference = profiler:stop("REPOSITORY_DOC_")
 
-	local text = "Projects created in "..docFinalTime
+	local text = "Documentation executed in "..docFinalTime
 
 	if difference > 30 then
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
@@ -236,7 +236,7 @@ forEachOrderedElement(pkgs, function(package)
 
 	local testFinalTime, difference = profiler:stop("REPOSITORY_TEST_")
 
-	local text = "Projects created in "..testFinalTime
+	local text = "Test executed in "..testFinalTime
 
 	if difference > 30 then
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
