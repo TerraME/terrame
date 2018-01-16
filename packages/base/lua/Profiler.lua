@@ -22,7 +22,7 @@
 --
 -------------------------------------------------------------------------------------------
 
-local instance = nil
+local instance
 
 local function timeToString(t)
 	mandatoryArgument(1, "number", t)
@@ -110,9 +110,32 @@ local createBlock = function(name)
 	}
 end
 
+local Stack = {
+	top = function(stack)
+		return stack[#stack]
+	end,
+	push = function(stack, value)
+		table.insert(stack, value)
+	end,
+	pop = function(stack)
+		local value = stack[#stack]
+		table.remove(stack)
+		return value
+	end,
+	remove = function(stack, value)
+		for i, v in pairs(stack) do
+			if v == value then
+				table.remove(stack, i)
+				break
+			end
+		end
+	end
+}
+
 Profiler_ = {
 	type_ = "Profiler",
 	blocks = {},
+	stack = {},
 	--- Create and start a new block.
 	-- @arg name A string with the block name.
 	-- @usage Profiler():start("block")
@@ -121,26 +144,24 @@ Profiler_ = {
 		mandatoryArgument("name", "string", name)
 		local block = self.blocks[name]
 		if block and block.running then
-			customWarning(string.format("Block '%s' has already been started.", block.name))
+			customWarning(string.format("Block '%s' has already been started. Please, stop the block before re-start it.", block.name))
+			stop(block.name)
 		elseif not block then
 			block = createBlock(name)
 			self.blocks[name] = block
 		end
 
-		if self.currentName and self.currentName ~= name then
-			self:stop(self.currentName)
-		end
-
-		self.currentName = name
+		block.startTime = sessionInfo().time
 		block.count = block.count + 1
 		block.running = true
+		Stack.push(self.stack, block)
 	end,
 	--- Return the current block.
 	-- @usage Profiler():start("block")
 	-- print(Profiler():current().name) -- block
 	-- Profiler():stop("block")
 	current = function(self)
-		return self.blocks[self.currentName]
+		return Stack.top(self.stack)
 	end,
 	--- Return how many times a given block has started.
 	-- @arg name A string with the block name. If the name is not informed, then it returns the count of the current block.
@@ -149,9 +170,9 @@ Profiler_ = {
 	-- Profiler():stop("block")
 	count = function(self, name)
 		optionalArgument("name", "string", name)
-		local block = self.blocks[name or self.currentName]
+		local block = self.blocks[name or self:current().name]
 		if not block then
-			customError(string.format("Block '%s' not found.", name or self.currentName))
+			customError(string.format("Block '%s' not found.", name))
 		end
 
 		return block.count
@@ -165,9 +186,9 @@ Profiler_ = {
 	-- stringTime, numberTime = Profiler():uptime("block")
 	uptime = function(self, name)
 		optionalArgument("name", "string", name)
-		local block = self.blocks[name or self.currentName]
+		local block = self.blocks[name or self:current().name]
 		if not block then
-			customError(string.format("Block '%s' not found.", name or self.currentName))
+			customError(string.format("Block '%s' not found.", name))
 		end
 
 		local time = block:uptime()
@@ -180,45 +201,48 @@ Profiler_ = {
 	-- stringTime, numberTime = Profiler():stop("block")
 	stop = function(self, name)
 		optionalArgument("name", "string", name)
-		if (name == "main" or not name and self.currentName == "main") and getn(self.blocks) == 1 then
+		if name == "main" or (not name and self:current() and self:current().name == "main") then
 			customWarning("The block 'main' cannot be stopped.")
 			return self:uptime(name)
 		end
 
-		local block = self.blocks[name or self.currentName]
-		if block and block.running then
-			block.running = false
-			block.endTime = sessionInfo().time
-		elseif not block then
-			customError(string.format("Block '%s' not found.", name or self.currentName))
+		local block
+		if not name then
+			block = Stack.pop(self.stack)
+		elseif self.blocks[name] then
+			block = self.blocks[name]
+			Stack.remove(self.stack, block)
+		else
+			customError(string.format("Block '%s' not found.", name))
 		end
 
-		self.currentName = "main"
-		return self:uptime(block.name)
-	end,
+		if block.running then
+			block.running = false
+			block.endTime = sessionInfo().time
+		end
 
+		local time = block:uptime()
+		return timeToString(time), time
+	end,
 	--- Clean the Profiler, removing all blocks and restarting its execution time.
 	-- @usage Profiler():clean()
 	clean = function(self)
 		self.blocks = {}
-		self.currentName = nil
+		self.stack = {}
 		self:start("main")
 	end,
-
 	--- Show a report with the time and amount of times each block was executed.
 	-- @usage Profiler():report()
 	report = function(self)
-		local total = 0 -- SKIP
 		print(string.format("%-30s%-20s%-30s%s", "Block", "Count", "Time", "Average")) -- SKIP
 		forEachOrderedElement(self.blocks, function(_, block)
 			local report = block:report() -- SKIP
-			total = total + block:uptime() -- SKIP
 			print(string.format("%-30s%-20d%-30s%s", report.name, report.count, report.time, report.average)) -- SKIP
 		end)
 
+		local _, total = self:uptime("main")
 		print("Total execution time: "..timeToString(total)) -- SKIP
 	end,
-
 	--- Define how many times a given block will be executed.
 	-- @arg name A string with the block name.
 	-- @arg quantity Number of steps a given block will execute.
@@ -236,7 +260,6 @@ Profiler_ = {
 
 		self.blocks[name].steps = quantity
 	end,
-
 	--- Estimate and return the time to execute all repetitions of a given block. It returns how much time was spent with the block
 	-- in two representations: a string with a human-like representation of the time and a number with the time in seconds.
 	-- @arg name A string with the block name. If the name is not informed, then it returns the "eta" of the current block.
@@ -247,9 +270,9 @@ Profiler_ = {
 	-- print(eta.." left to finish all executions.")
 	eta = function(self, name)
 		optionalArgument("name", "string", name)
-		local block = self.blocks[name or self.currentName]
+		local block = self.blocks[name or self:current().name]
 		if not block then
-			customError(string.format("Block '%s' not found.", name or self.currentName))
+			customError(string.format("Block '%s' not found.", name))
 		end
 
 		local time = block:eta()
