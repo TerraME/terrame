@@ -61,7 +61,7 @@ return{
 			Profiler():count("test")
 		end
 
-		unitTest:assertError(error_func, "Block 'test' not found.")
+		unitTest:assertError(error_func, "Block 'test' was not found.")
 		Profiler().stack = oldStack
 		Profiler().blocks = oldBlocks
 	end,
@@ -80,7 +80,7 @@ return{
 			Profiler():start("test")
 		end
 
-		unitTest:assertError(error_func, "Block 'test' not found.")
+		unitTest:assertError(error_func, "Block 'test' was not found.")
 		Profiler().stack = oldStack
 		Profiler().blocks = oldBlocks
 	end,
@@ -108,7 +108,7 @@ return{
 			Profiler():stop("test")
 		end
 
-		unitTest:assertError(error_func, "Block 'test' not found.")
+		unitTest:assertError(error_func, "Block 'test' was not found.")
 		Profiler().stack = oldStack
 		Profiler().blocks = oldBlocks
 	end,
@@ -164,7 +164,7 @@ return{
 			Profiler():eta("block")
 		end
 
-		unitTest:assertError(error_func, "Block 'block' not found.")
+		unitTest:assertError(error_func, "Block 'block' was not found.")
 		error_func = function()
 			Profiler():eta("test")
 		end

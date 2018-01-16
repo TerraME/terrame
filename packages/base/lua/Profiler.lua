@@ -179,7 +179,7 @@ Profiler_ = {
 		optionalArgument("name", "string", name)
 		local block = self.blocks[name or self:current().name]
 		if not block then
-			customError(string.format("Block '%s' not found.", name))
+			customError(string.format("Block '%s' was not found.", name))
 		end
 
 		return block.count
@@ -195,7 +195,7 @@ Profiler_ = {
 		optionalArgument("name", "string", name)
 		local block = self.blocks[name or self:current().name]
 		if not block then
-			customError(string.format("Block '%s' not found.", name))
+			customError(string.format("Block '%s' was not found.", name))
 		end
 
 		local time = block:uptime()
@@ -220,7 +220,7 @@ Profiler_ = {
 			block = self.blocks[name]
 			Stack.remove(self.stack, block)
 		else
-			customError(string.format("Block '%s' not found.", name))
+			customError(string.format("Block '%s' was not found.", name))
 		end
 
 		if block.running then
@@ -278,7 +278,7 @@ Profiler_ = {
 		optionalArgument("name", "string", name)
 		local block = self.blocks[name or self:current().name]
 		if not block then
-			customError(string.format("Block '%s' not found.", name))
+			customError(string.format("Block '%s' was not found.", name))
 		end
 
 		local time = block:eta()
@@ -305,7 +305,6 @@ function Profiler()
 	local data = {}
 	setmetatable(data, metaTableProfiler_) -- SKIP
 	instance = data -- SKIP
+	instance:clean()
 	return data
 end
-
-Profiler():clean()
