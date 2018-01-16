@@ -86,7 +86,7 @@ local createBlock = function(name)
 		steps = 0,
 		uptime = function(self)
 			if self.running then
-				return sessionInfo().time - self.startTime
+				return os.time() - self.startTime
 			else
 				return self.endTime - self.startTime
 			end
@@ -105,15 +105,15 @@ local createBlock = function(name)
 			end
 
 			local estimated = self:uptime() + (self.steps - self.count) * (self:uptime() / self.count)
-			return math.max(0, math.ceil(self.startTime + estimated - sessionInfo().time))
+			return math.max(0, math.ceil(self.startTime + estimated - os.time()))
 		end,
 		start = function(self)
-			self.startTime = sessionInfo().time
+			self.startTime = os.time()
 			self.count = self.count + 1
 			self.running = true
 		end,
 		stop = function(self)
-			self.endTime = sessionInfo().time
+			self.endTime = os.time()
 			self.running = false
 		end
 	}
