@@ -25,6 +25,7 @@
 local printError   = _Gtme.printError
 local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
+local profiler     = Profiler()
 
 -- find the directories inside a package that contain
 -- lua files, starting from package/tests
@@ -188,6 +189,7 @@ local function buildLineTable(package)
 end
 
 function _Gtme.executeTests(package, fileName)
+	profiler:start("_EXECUTE_TEST")
 	local s = sessionInfo().separator
 
 	local data
@@ -627,7 +629,7 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				local found_error = false
-
+				profiler:start("_TESTS")
 				xpcall(function() tests[eachTest](ut) end, function(err)
 					ut.functions_with_error = ut.functions_with_error + 1
 					printError("Wrong execution, got:\n".._Gtme.traceback(err))
@@ -641,9 +643,14 @@ function _Gtme.executeTests(package, fileName)
 					ut.last_error = ""
 				end
 
-				local testFinalTime = Profiler():uptime()
+				local testFinalTime, difference = profiler:stop("_TESTS")
 				if data.time then
-					_Gtme.print("Test executed in "..testFinalTime..".")
+					local text = "Tests executed in "..testFinalTime.."."
+					if difference > 60 then
+						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+					else
+						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+					end
 				end
 
 				print = _Gtme.print
@@ -859,7 +866,7 @@ function _Gtme.executeTests(package, fileName)
 				_Gtme.loadedPackages = clone(loadedPackages)
 
 				local color = sessionInfo().color
-				Profiler():start("_examples")
+				profiler:start("_EXAMPLES")
 				local pe = _Gtme.printError
 
 				local myassert = function(observer, file, message)
@@ -965,9 +972,14 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				clean()
-				local exampleFinalTime = Profiler():stop("_examples")
+				local exampleFinalTime, difference = profiler:stop("_EXAMPLES")
 				if data.time then
-					_Gtme.print("Example executed in "..exampleFinalTime..".")
+					local text = "Example executed in "..exampleFinalTime.."."
+					if difference > 60 then
+						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
+					else
+						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
+					end
 				end
 			end)
 		else
@@ -996,7 +1008,7 @@ function _Gtme.executeTests(package, fileName)
 		printWarning("Skipping logs check")
 	end
 
-	local finalTime = Profiler():uptime()
+	local finalTime = profiler:stop("_EXECUTE_TEST")
 
 	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
 	               -ut.logs - ut.package_functions

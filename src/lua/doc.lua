@@ -24,6 +24,7 @@
 
 local printError   = _Gtme.printError
 local printNote    = _Gtme.printNote
+local profiler     = _Gtme.Profiler()
 
 _Gtme.ignoredFile = function(fname)
 	local ignoredExtensions = {
@@ -374,6 +375,7 @@ local function getProjects(package, doc_report)
 end
 
 function _Gtme.executeDoc(package)
+	profiler:start("DOC_")
 	if not isLoaded("luadoc") then
 		import("luadoc")
 	end
@@ -1348,7 +1350,7 @@ function _Gtme.executeDoc(package)
 		end)
 	end
 
-	local finalTime = _Gtme.Profiler():uptime()
+	local finalTime = profiler:stop("DOC_")
 	print("\nDocumentation report for package '"..package.."':")
 	printNote("Documentation was built in "..finalTime..".")
 

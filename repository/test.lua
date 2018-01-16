@@ -3,7 +3,8 @@
 
 sessionInfo().fullTraceback = true
 
-local initialTime = os.time(os.date("*t"))
+local profiler = Profiler()
+profiler:start("REPOSITORY_")
 local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 local pkgDir = _Gtme.makePathCompatibleToAllOS(baseDir..s.."packages")
@@ -66,7 +67,9 @@ end)
 local function approximateLine(line)
 	if not line then return 0 end
 	
-	if string.match(line, "seconds")             then return  10 end
+	if string.match(line, "hour")                then return  22 end
+	if string.match(line, "minute")              then return  24 end
+	if string.match(line, "second")              then return  17 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "configuration file")  then return 120 end
 	if string.match(line, "Logs were saved")     then return 200 end
@@ -174,16 +177,15 @@ _Gtme.print("Creating projects for package 'gis'")
 runCommand("terrame -package gis -projects")
 
 forEachOrderedElement(pkgs, function(package)
-	local docInitialTime = os.time(os.date("*t"))
+	profiler:start("REPOSITORY_PROJECT_")
 
 	_Gtme.print("Creating projects for package '"..package.."'")
 	local command = "terrame -package "..package.." -projects"
 	runCommand(command)
 
-	local docFinalTime = os.time(os.date("*t"))
-	local difference = round(docFinalTime - docInitialTime, 1)
+	local proFinalTime, difference = profiler:stop("REPOSITORY_PROJECT_")
 
-	local text = "Projects created in "..difference.." seconds"
+	local text = "Projects created in "..proFinalTime
 
 	if difference > 300 then
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
@@ -194,7 +196,7 @@ end)
 
 _Gtme.printNote("Executing documentation")
 forEachOrderedElement(pkgs, function(package)
-	local docInitialTime = os.time(os.date("*t"))
+	profiler:start("REPOSITORY_DOC_")
 
 	if package == "rstats" then
 		_Gtme.printWarning("Skipping package '"..package.."'")
@@ -205,10 +207,9 @@ forEachOrderedElement(pkgs, function(package)
 	local command = "terrame -package "..package.." -doc"
 	execute(command, "doc-"..package..".log")
 
-	local docFinalTime = os.time(os.date("*t"))
-	local difference = round(docFinalTime - docInitialTime, 1)
+	local docFinalTime, difference = profiler:stop("REPOSITORY_DOC_")
 
-	local text = "Documentation executed in "..difference.." seconds"
+	local text = "Projects created in "..docFinalTime
 
 	if difference > 30 then
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
@@ -220,7 +221,7 @@ end)
 
 _Gtme.printNote("Executing tests")
 forEachOrderedElement(pkgs, function(package)
-	local testInitialTime = os.time(os.date("*t"))
+	profiler:start("REPOSITORY_TEST_")
 
 	if package == "rstats" then
 		_Gtme.printWarning("Skipping package '"..package.."'")
@@ -233,10 +234,9 @@ forEachOrderedElement(pkgs, function(package)
 
 	execute(command, "test-"..package..".log")
 
-	local testFinalTime = os.time(os.date("*t"))
-	local difference = round(testFinalTime - testInitialTime, 1)
+	local testFinalTime, difference = profiler:stop("REPOSITORY_TEST_")
 
-	local text = "Test executed in "..difference.." seconds"
+	local text = "Projects created in "..testFinalTime
 
 	if difference > 30 then
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
@@ -273,11 +273,11 @@ forEachOrderedElement(pkgs, function(package)
 	end
 end)
 
-local finalTime = os.time(os.date("*t"))
+local finalTime = profiler:stop("REPOSITORY_")
 
 print("\nRepository test report:")
 
-_Gtme.printNote("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
+_Gtme.printNote("Tests were executed in "..finalTime..".")
 _Gtme.printNote("The repository has "..report.packages.." packages.")
 
 if report.createdlogs == 0 then

@@ -24,6 +24,7 @@
 
 local printError = _Gtme.printError
 local printNote  = _Gtme.printNote
+local profiler   = Profiler()
 
 function _Gtme.getResolution(package, project)
 	if not isLoaded("gis") then
@@ -124,6 +125,7 @@ function _Gtme.executeProject(package, project, resolution)
 end
 
 function _Gtme.executeProjects(package)
+	profiler:start("PROJECT_")
 	printNote("Creating projects for package '"..package.."'")
 
 	local package_path = _Gtme.packageInfo(package).path
@@ -307,7 +309,7 @@ function _Gtme.executeProjects(package)
 	end
 
 	print("\nProjects report for package '"..package.."':")
-	local executionTime = _Gtme.Profiler():uptime()
+	local executionTime = profiler:stop("PROJECT_")
 	printNote("Projects were created in "..executionTime..".")
 
 	if project_report.projects == 0 then

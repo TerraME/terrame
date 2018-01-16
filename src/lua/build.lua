@@ -25,6 +25,7 @@
 local printError   = _Gtme.printError
 local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
+local profiler     = Profiler()
 
 local function rm(file)
 	if isDirectory(file) then
@@ -35,6 +36,7 @@ local function rm(file)
 end
 
 function _Gtme.buildPackage(package, config, clean)
+	profiler:start("BUILD_")
 	printNote("Building package '"..package.."'")
 
 	if not isLoaded("base") then
@@ -354,7 +356,7 @@ function _Gtme.buildPackage(package, config, clean)
 	currentdir:setCurrentDir()
 
 	print("\nBuild report for package '"..package.."':")
-	local executionTime = _Gtme.Profiler():uptime()
+	local executionTime = profiler:stop("BUILD_")
 	printNote("Package was built in "..executionTime..".")
 	printNote("Build created file '"..file.."'.")
 	printNote("Temporary files are saved in "..tostring(tmpdirectory))

@@ -3,6 +3,8 @@
 --
 -- Pedro R. Andrade
 
+local profiler = Profiler()
+
 removeIfExists = function(_, value)
 	if isDirectory(value) then
 		_Gtme.print("Removing '"..value.."'")
@@ -31,7 +33,7 @@ printTestOutput = function(result, line)
 	_Gtme.printNote("End of the test output")
 end
 
-initialTime = os.time(os.date("*t"))
+profiler:start("RUN_")
 local s = sessionInfo().separator
 
 initialDir = Directory(sessionInfo().currentFile)
@@ -114,9 +116,9 @@ local function approximateLine(line)
 	if string.match(line, "Logs")                then return 120 end
 	if string.match(line, "Temporary")           then return 120 end
 	if string.match(line, "Directory")           then return 160 end
-	if string.match(line, "less than one")       then return  14 end
-	if string.match(line, "second")              then return  14 end
-	if string.match(line, "seconds")             then return  14 end
+	if string.match(line, "hour")                then return  22 end
+	if string.match(line, "minute")              then return  24 end
+	if string.match(line, "second")              then return  17 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "log")                 then return 120 end
 	if string.match(line, "Cannot open")         then return 320 end
@@ -209,15 +211,13 @@ forEachOrderedElement(commands, function(idx, group)
 			_Gtme.printWarning(command)
 		end
 
-		local testInitialTime = os.time(os.date("*t"))
+		profiler:start("TEST_RUN_")
 
 		result, err = runCommand(command)
 
+		local testFinalTime, difference = profiler:stop("TEST_RUN_")
 		if time then
-			local testFinalTime = os.time(os.date("*t"))
-			local difference = round(testFinalTime - testInitialTime, 1)
-
-			local text = "Test executed in "..difference.." seconds"
+			local text = "Test executed in "..testFinalTime
 
 			if difference > 60 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
@@ -391,15 +391,13 @@ forEachOrderedElement(commands, function(idx, group)
 			_Gtme.printWarning(command)
 		end
 
-		local testInitialTime = os.time(os.date("*t"))
+		profiler:start("TEST_RUN_")
 
 		result, err = runCommand(command)
 
+		local testFinalTime, difference = profiler:stop("TEST_RUN_")
 		if time then
-			local testFinalTime = os.time(os.date("*t"))
-			local difference = round(testFinalTime - testInitialTime)
-
-			local text = "Test executed in "..difference.." seconds"
+			local text = "Test executed in "..testFinalTime
 
 			if difference > 60 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
@@ -583,7 +581,7 @@ forEachElement(directories, function(idx, value)
 	end)
 end)
 
-finalTime = os.time(os.date("*t"))
+local finalTime = profiler:stop("RUN_")
 
 _Gtme.printNote("Removing files")
 forEachElement(initialRemove.files, removeIfExists)
@@ -591,7 +589,7 @@ forEachElement(localRemove.files, removeIfExists)
 
 print("\nExecution test report:")
 
-_Gtme.printNote("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
+_Gtme.printNote("Tests were executed in "..finalTime..".")
 _Gtme.printNote("Results were saved in '"..tmpdirectory.."'.")
 
 if report.commandserrors == 0 then
