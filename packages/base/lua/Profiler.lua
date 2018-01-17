@@ -150,7 +150,7 @@ Profiler_ = {
 	-- @usage Profiler():start("block")
 	-- Profiler():stop("block")
 	start = function(self, name)
-		mandatoryArgument("name", "string", name)
+		mandatoryArgument(1, "string", name)
 		local block = self.blocks[name]
 		if block and block.running then
 			customWarning(string.format("Block '%s' has already been started. Please, stop the block before re-start it.", block.name))
@@ -176,7 +176,7 @@ Profiler_ = {
 	-- print(Profiler():count("block")) -- 1
 	-- Profiler():stop("block")
 	count = function(self, name)
-		optionalArgument("name", "string", name)
+		optionalArgument(1, "string", name)
 		local block = self.blocks[name or self:current().name]
 		if not block then
 			customError(string.format("Block '%s' was not found.", name))
@@ -192,7 +192,7 @@ Profiler_ = {
 	-- Profiler():stop("block")
 	-- stringTime, numberTime = Profiler():uptime("block")
 	uptime = function(self, name)
-		optionalArgument("name", "string", name)
+		optionalArgument(1, "string", name)
 		local block = self.blocks[name or self:current().name]
 		if not block then
 			customError(string.format("Block '%s' was not found.", name))
@@ -207,7 +207,7 @@ Profiler_ = {
 	-- @usage Profiler():start("block")
 	-- stringTime, numberTime = Profiler():stop("block")
 	stop = function(self, name)
-		optionalArgument("name", "string", name)
+		optionalArgument(1, "string", name)
 		if name == "main" or (not name and self:current() and self:current().name == "main") then
 			customWarning("The block 'main' cannot be stopped.")
 			return self:uptime(name)
@@ -231,7 +231,8 @@ Profiler_ = {
 		return timeToString(time), time
 	end,
 	--- Clean the Profiler, removing all blocks and restarting its execution time.
-	-- @usage Profiler():clean()
+	-- @usage -- DONTRUN
+	-- Profiler():clean()
 	clean = function(self)
 		self.blocks = {}
 		self.stack = {}
@@ -256,26 +257,27 @@ Profiler_ = {
 	-- Profiler():steps("block", 5)
 	-- Profiler():stop("block")
 	steps = function(self, name, quantity)
-		mandatoryArgument("name", "string", name)
-		mandatoryArgument("quantity", "number", quantity)
-		integerArgument("quantity", quantity)
-		positiveArgument("quantity", quantity)
+		mandatoryArgument(1, "string", name)
+		mandatoryArgument(2, "number", quantity)
+		integerArgument(2, quantity)
+		positiveArgument(2, quantity)
 		if not self.blocks[name] then -- allows to set steps before start (useful?)
 			self.blocks[name] = createBlock(name)
 		end
 
 		self.blocks[name].steps = quantity
 	end,
-	--- Estimate and return the time to execute all repetitions of a given block. It returns how much time was spent with the block
-	-- in two representations: a string with a human-like representation of the time and a number with the time in seconds.
+	--- Estimate and return the time to execute all repetitions of a given block. It returns in two representations:
+	-- a string with a human-like representation of the time and a number with the time in seconds.
 	-- @arg name A string with the block name. If the name is not informed, then it returns the "eta" of the current block.
 	-- @usage Profiler():steps("block", 5)
 	-- Profiler():start("block")
 	-- Profiler():stop("block")
-	-- eta = Profiler():eta("block")
-	-- print(eta.." left to finish all executions.")
+	-- eta_string, eta_number = Profiler():eta("block")
+	-- print(eta_string.." left...")
+	-- print(eta_number.." seconds to finish...")
 	eta = function(self, name)
-		optionalArgument("name", "string", name)
+		optionalArgument(1, "string", name)
 		local block = self.blocks[name or self:current().name]
 		if not block then
 			customError(string.format("Block '%s' was not found.", name))
@@ -296,7 +298,7 @@ metaTableProfiler_ = {
 -- to execute all repetitions of this block and the average time of these repetitions.
 -- @usage Profiler():start("test")
 -- Profiler():stop("test")
--- Profiler():uptime("test")
+-- print(Profiler():uptime("test"))
 function Profiler()
 	if instance then
 		return instance

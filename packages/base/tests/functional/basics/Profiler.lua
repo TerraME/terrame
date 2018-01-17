@@ -160,6 +160,8 @@ return{
 		unitTest:assertEquals(Profiler():current().name, "test")
 		Profiler():clean()
 		unitTest:assertEquals(Profiler():current().name, "main")
+		unitTest:assertNil(Profiler().blocks["test"])
+		unitTest:assert(not belong("test", Profiler().stack))
 		Profiler().stack = oldStack
 		Profiler().blocks = oldBlocks
 	end,

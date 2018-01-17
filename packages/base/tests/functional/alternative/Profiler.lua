@@ -31,12 +31,12 @@ return{
 		local error_func = function()
 			Profiler():start()
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("name"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 		error_func = function()
 			Profiler():start(1)
 		end
 
-		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 		error_func = function()
 			Profiler():start("test")
 			Profiler():start("test")
@@ -56,7 +56,7 @@ return{
 			Profiler():count(1)
 		end
 
-		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 		error_func = function()
 			Profiler():count("test")
 		end
@@ -74,10 +74,9 @@ return{
 			Profiler():uptime(1)
 		end
 
-		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 		error_func = function()
 			Profiler():uptime("test")
-			Profiler():start("test")
 		end
 
 		unitTest:assertError(error_func, "Block 'test' was not found.")
@@ -93,7 +92,7 @@ return{
 			Profiler():stop(1)
 		end
 
-		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 		error_func = function()
 			Profiler():stop("main")
 		end
@@ -121,32 +120,32 @@ return{
 			Profiler():steps()
 		end
 
-		unitTest:assertError(error_func, mandatoryArgumentMsg("name"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 		error_func = function()
 			Profiler():steps(1, 1)
 		end
 
-		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 		error_func = function()
 			Profiler():steps("block")
 		end
 
-		unitTest:assertError(error_func, mandatoryArgumentMsg("quantity"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 		error_func = function()
 			Profiler():steps("block", -1)
 		end
 
-		unitTest:assertError(error_func, positiveArgumentMsg("quantity", -1))
+		unitTest:assertError(error_func, positiveArgumentMsg(2, -1))
 		error_func = function()
 			Profiler():steps("block", 0)
 		end
 
-		unitTest:assertError(error_func, positiveArgumentMsg("quantity", 0))
+		unitTest:assertError(error_func, positiveArgumentMsg(2, 0))
 		error_func = function()
 			Profiler():steps("block", 1.1)
 		end
 
-		unitTest:assertError(error_func, integerArgumentMsg ("quantity", 1.1))
+		unitTest:assertError(error_func, integerArgumentMsg (2, 1.1))
 		Profiler().stack = oldStack
 		Profiler().blocks = oldBlocks
 	end,
@@ -159,7 +158,7 @@ return{
 			Profiler():eta(1)
 		end
 
-		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 1))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 		error_func = function()
 			Profiler():eta("block")
 		end
