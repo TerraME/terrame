@@ -22,6 +22,8 @@
 --
 -------------------------------------------------------------------------------------------
 
+local profiler = _Gtme.Profiler()
+
 local function upperFirst(str)
 	return str:gsub("^%l", string.upper)
 end
@@ -71,6 +73,7 @@ local function getLuaFiles(dirPath)
 end
 
 _Gtme.checkPackage = function(package, packagePath)
+	profiler:start("CHECK_")
 	_Gtme.printNote("Running code analyzer for package '"..package.."'")
 
 	local testsPath = Directory(packagePath.."tests")
@@ -158,7 +161,8 @@ _Gtme.checkPackage = function(package, packagePath)
 
 	_Gtme.printNote("\nCode analyzer report for package '"..package.."':")
 
-	_Gtme.printNote("Analysis executed in "..round(sessionInfo().time, 2).." seconds.")
+	local executionTime = profiler:stop("CHECK_")
+	_Gtme.printNote("Analysis executed in "..executionTime..".")
 
 	if totalFiles > 0 then
 		if totalFiles == 1 then

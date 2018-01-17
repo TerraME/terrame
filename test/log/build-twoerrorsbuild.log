@@ -39,7 +39,7 @@ Testing ipd
 Checking logs
 
 Functional test report for package 'twoerrorsbuild':
-Tests were executed in 1.08 seconds.
+Tests were executed in 1 second.
 Logs were saved in '.terrametmp_pecOc'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
@@ -108,7 +108,7 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'twoerrorsbuild':
-Documentation was built in 0.06 seconds.
+Documentation was built in less than one second.
 4 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
@@ -152,7 +152,7 @@ Creating file 'twoerrorsbuild_0.1.zip'
 Package 'twoerrorsbuild' successfully zipped
 
 Build report for package 'twoerrorsbuild':
-Package was built in 3.6 seconds.
+Package was built in 3 seconds.
 Build created file 'twoerrorsbuild_0.1.zip'.
 Temporary files are saved in .terrame_twoerrorsbuild_QByuK
 MD5 sum for the package is e751987346fd6b6da51d91b7f2b0fd40 *twoerrorsbuild_0.1.zip

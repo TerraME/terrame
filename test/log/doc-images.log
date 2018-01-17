@@ -53,7 +53,7 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'images':
-Documentation was built in 0.28 seconds.
+Documentation was built in less than one second.
 5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.

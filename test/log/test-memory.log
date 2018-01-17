@@ -25,7 +25,7 @@ The package has no examples
 Skipping logs check
 
 Functional test report for package 'memory':
-Tests were executed in 23.05 seconds.
+Tests were executed in 23 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.

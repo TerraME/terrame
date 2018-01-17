@@ -9,7 +9,7 @@ File 'data/myfile.tview' should not exist as there is no Lua script with this na
 Removing 'config.lua'
 
 Projects report for package 'buildunnecfiles':
-Projects were created in 0.0 seconds.
+Projects were created in less than one second.
 No project file was created.
 One invalid .tview file was found in the package.
 No error was found while creating projects.
@@ -49,7 +49,7 @@ Testing ipd
 Checking logs
 
 Functional test report for package 'buildunnecfiles':
-Tests were executed in 1.64 seconds.
+Tests were executed in 1 second.
 Logs were saved in '.terrametmp_gVcyl'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
@@ -118,7 +118,7 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'buildunnecfiles':
-Documentation was built in 1.53 seconds.
+Documentation was built in 1 second.
 6 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -170,7 +170,7 @@ Creating file 'buildunnecfiles_0.1.zip'
 Package 'buildunnecfiles' successfully zipped
 
 Build report for package 'buildunnecfiles':
-Package was built in 5.05 seconds.
+Package was built in 5 seconds.
 Build created file 'buildunnecfiles_0.1.zip'.
 Temporary files are saved in .terrame_buildunnecfiles_CDETI
 MD5 sum for the package is cdbd0c40523098f5109aa0e5d2c53ae5 *buildunnecfiles_0.1.zip

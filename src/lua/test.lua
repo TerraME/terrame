@@ -25,6 +25,7 @@
 local printError   = _Gtme.printError
 local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
+local profiler     = Profiler()
 
 -- find the directories inside a package that contain
 -- lua files, starting from package/tests
@@ -188,7 +189,7 @@ local function buildLineTable(package)
 end
 
 function _Gtme.executeTests(package, fileName)
-	local initialTime = sessionInfo().time
+	profiler:start("_EXECUTE_TEST")
 	local s = sessionInfo().separator
 
 	local data
@@ -628,9 +629,7 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				local found_error = false
-
-				local testInitialTime = os.clock()
-
+				profiler:start("_TESTS")
 				xpcall(function() tests[eachTest](ut) end, function(err)
 					ut.functions_with_error = ut.functions_with_error + 1
 					printError("Wrong execution, got:\n".._Gtme.traceback(err))
@@ -644,15 +643,12 @@ function _Gtme.executeTests(package, fileName)
 					ut.last_error = ""
 				end
 
+				local testFinalTime, difference = profiler:stop("_TESTS")
 				if data.time then
-					local testFinalTime = os.clock()
-					local difference = round(testFinalTime - testInitialTime, 1)
-
-					local text = "Test executed in "..difference.." seconds"
-
+					local text = "Tests executed in "..testFinalTime.."."
 					if difference > 60 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-					elseif difference > 10 then
+					else
 						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 					end
 				end
@@ -870,7 +866,7 @@ function _Gtme.executeTests(package, fileName)
 				_Gtme.loadedPackages = clone(loadedPackages)
 
 				local color = sessionInfo().color
-				local exampleInitialTime = os.clock()
+				profiler:start("_EXAMPLES")
 				local pe = _Gtme.printError
 
 				local myassert = function(observer, file, message)
@@ -976,16 +972,12 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				clean()
-
+				local exampleFinalTime, difference = profiler:stop("_EXAMPLES")
 				if data.time then
-					local exampleFinalTime = os.clock()
-					local difference = round(exampleFinalTime - exampleInitialTime, 1)
-
-					local text = "Example executed in "..difference.." seconds"
-
+					local text = "Example executed in "..exampleFinalTime.."."
 					if difference > 60 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-					elseif difference > 10 then
+					else
 						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 					end
 				end
@@ -1016,7 +1008,7 @@ function _Gtme.executeTests(package, fileName)
 		printWarning("Skipping logs check")
 	end
 
-	local finalTime = sessionInfo().time
+	local finalTime = profiler:stop("_EXECUTE_TEST")
 
 	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
 	               -ut.logs - ut.package_functions
@@ -1029,7 +1021,7 @@ function _Gtme.executeTests(package, fileName)
 
 	print("\nFunctional test report for package '"..package.."':")
 
-	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds."
+	local text = "Tests were executed in "..finalTime.."."
 	printNote(text)
 
 	if ut.logs > 0 then

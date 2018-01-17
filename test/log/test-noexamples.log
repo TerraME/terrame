@@ -15,7 +15,7 @@ The package has no examples
 Skipping logs check
 
 Functional test report for package 'noexamples':
-Tests were executed in 0.78 seconds.
+Tests were executed in less than one second.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.

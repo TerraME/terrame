@@ -21,6 +21,6 @@ Checking examples/foo.lua
 Line 6: Unused argument 'x'.
 
 Code analyzer report for package 'check':
-Analysis executed in 0.02 seconds.
+Analysis executed in less than one second.
 3 files were analysed.
 14 issues were found.

@@ -1,0 +1,6 @@
+Block                         Count               Time                          Average
+main                          1                   3 seconds                     3 seconds
+tLoop                         10                  less than one second          less than one second
+t1                            1                   2 seconds                     2 seconds
+t2                            2                   less than one second          less than one second
+Total execution time: 3 seconds

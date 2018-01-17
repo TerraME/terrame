@@ -113,7 +113,7 @@ Function getn2 is not documented
 Checking if all Models are documented
 
 Documentation report for package 'twoerrors':
-Documentation was built in 0.77 seconds.
+Documentation was built in less than one second.
 5 HTML files were created.
 All files are documented.
 2 problems were found in 'description.lua'.

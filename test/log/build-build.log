@@ -37,7 +37,7 @@ Testing ipd
 Checking logs
 
 Functional test report for package 'build':
-Tests were executed in 1.2 seconds.
+Tests were executed in 1 second.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.

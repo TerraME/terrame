@@ -18,7 +18,7 @@ Checking data.lua
 Checking if all images are used
 
 Documentation report for package 'nodatadotlua':
-Documentation was built in 0.2 seconds.
+Documentation was built in less than one second.
 One HTML file was created.
 One out of 1 files are not documented.
 All fields of 'description.lua' are correct.

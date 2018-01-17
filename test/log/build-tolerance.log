@@ -28,7 +28,7 @@ There are 6 characters different. The maximum tolerance is 2.2.
 Checking logs
 
 Functional test report for package 'tolerance':
-Tests were executed in 0.09 seconds.
+Tests were executed in less than one second.
 Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_UVg9f/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
@@ -80,7 +80,7 @@ Checking if all functions are documented
 Checking b.lua
 
 Documentation report for package 'tolerance':
-Documentation was built in 0.06 seconds.
+Documentation was built in less than one second.
 3 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -118,7 +118,7 @@ Creating file 'tolerance_0.1.zip'
 Package 'tolerance' successfully zipped
 
 Build report for package 'tolerance':
-Package was built in 0.59 seconds.
+Package was built in less than one second.
 Build created file 'tolerance_0.1.zip'.
 Temporary files are saved in /Users/pedro/github/terrame-pedro/test/packages/.terrame_tolerance_AjB2Q
 MD5 sum for the package is 69635db0bc481cf7f61f917fdc7924f9

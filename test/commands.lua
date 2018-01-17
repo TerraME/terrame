@@ -163,7 +163,8 @@ basic = {
 	scriptnoluafile     = {arg = filePath("agents.csv")},
 	tmp                 = {script = "tmp.lua"},
 	luacheck1           = {script = "luacheck.lua", arg = "-strict"},
-	luacheck2           = {script = "luacheck.lua", arg = "-debug"}
+	luacheck2           = {script = "luacheck.lua", arg = "-debug"},
+	profiler            = {script = "profiler.lua", arg = "-strict"}
 }
 
 observer = {

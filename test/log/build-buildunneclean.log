@@ -99,7 +99,7 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'buildunneclean':
-Documentation was built in 0.06 seconds.
+Documentation was built in less than one second.
 4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -149,7 +149,7 @@ Creating file 'buildunneclean_0.1.zip'
 Package 'buildunneclean' successfully zipped
 
 Build report for package 'buildunneclean':
-Package was built in 3.34 seconds.
+Package was built in 3 seconds.
 Build created file 'buildunneclean_0.1.zip'.
 Temporary files are saved in .terrame_buildunneclean_ZYXBy
 MD5 sum for the package is 2b9830f3e7394486140de0542d49e046 *buildunneclean_0.1.zip

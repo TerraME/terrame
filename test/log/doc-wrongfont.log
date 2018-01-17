@@ -41,7 +41,7 @@ Checking if all functions are documented
 Checking foo.lua
 
 Documentation report for package 'wrongfont':
-Documentation was built in 0.25 seconds.
+Documentation was built in less than one second.
 3 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
