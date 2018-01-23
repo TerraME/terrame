@@ -234,27 +234,6 @@ function delay(delay_s)
 	while os.time() <= time_to do end
 end
 
---- Convert the time in seconds to a more readable value. It returns a string in the format
--- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is
--- more than one day.
--- @arg s A number.
--- @usage print(elapsedTime(100)) -- 00:01:40
-function elapsedTime(s)
-	mandatoryArgument(1, "number", s)
-
-	local floor = math.floor
-	local seconds = s
-	local minutes = floor(s / 60);     seconds = floor(seconds % 60)
-	local hours = floor(minutes / 60); minutes = floor(minutes % 60)
-	local days = floor(hours / 24);    hours = floor(hours % 24)
-
-	if days > 0 then
-		return string.format("%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
-	else
-		return string.format("%02d:%02d:%02d", hours, minutes, seconds)
-	end
-end
-
 --- Second order function to traverse a Society, Group, or Cell, applying a function to each of
 -- its Agents. It returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.

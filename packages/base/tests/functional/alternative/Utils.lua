@@ -77,13 +77,6 @@ return{
 
 		unitTest:assertError(error_func, "You should provide the same number of differential equations and initial conditions.")
 	end,
-	elapsedTime = function(unitTest)
-		local error_func = function()
-			elapsedTime("2")
-		end
-
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "2"))
-	end,
 	forEachAgent = function(unitTest)
 		local a = Agent{value = 2}
 		local soc = Society{instance = a, quantity = 10}
