@@ -29,6 +29,7 @@ of this software and its documentation.
 #define LUACELL_H
 
 #include "../observer/cellSubjectInterf.h"
+#include "reference.h"
 #include "luaLocalAgent.h"
 // Raian: Tive que acrescentar este include para poder utilizar o CellularSpace nas
 // no observer do tipo Neighborhood.
@@ -45,7 +46,7 @@ of this software and its documentation.
 * Represents a set of Cells in the Lua runtime environment.
 *
 */
-class luaCell : public CellSubjectInterf
+class luaCell : public CellSubjectInterf, public Reference<luaCell>
 {
 public:
     /// Constructor
@@ -117,12 +118,12 @@ public:
     // @DANIEL:
     // Movido para a classe Reference
     /// Registers the luaCell object in the Lua stack
-    int setReference(lua_State* L);
+    //int setReference(lua_State* L);
 
     // @DANIEL:
     // Movido para a classe Reference
     /// Gets the luaCell object reference
-    int getReference(lua_State *L);
+    //int getReference(lua_State *L);
 
     /// Gets the luaCell identifier
     int getID(lua_State *L);

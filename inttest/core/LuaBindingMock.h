@@ -30,6 +30,4 @@ class LuaBindingMock : public terrame::lua::LuaBinding<T>
 {
 	public:
 		MOCK_METHOD2_T(check, T*(lua_State* L, int narg));
-		MOCK_METHOD1(setReference, int(lua_State* L));
-		MOCK_METHOD1(getReference, int(lua_State* L));
 };

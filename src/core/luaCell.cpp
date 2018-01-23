@@ -237,26 +237,6 @@ int luaCell::synchronize(lua_State *L) {
     return 0;
 }
 
-// @DANIEL:
-// Movido para a classe Reference
-/// Registers the luaCell object in the Lua stack
-int luaCell::setReference(lua_State* L)
-{
-    //ref = luaL_ref(L, LUA_REGISTRYINDEX);
-    //return 0;
-	return terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setReference(L);
-}
-
-// @DANIEL:
-// Movido para a classe Reference
-/// Gets the luaCell object reference
-int luaCell::getReference(lua_State *L)
-{
-//    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//    return 1;
-	return terrame::lua::LuaBindingDelegate<luaCell>::getInstance().getReference(L);
-}
-
 int luaCell::getID(lua_State *L)
 {
 	lua->pushString(L, objectId_);

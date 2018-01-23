@@ -57,18 +57,6 @@ namespace terrame
 					return binding->check(L, narg);
 				}
 
-				int setReference(lua_State *L)
-				{
-					checkBinding();
-					return binding->setReference(L);
-				}
-
-				int getReference(lua_State *L)
-				{
-					checkBinding();
-					return binding->getReference(L);
-				}
-
 				void dispose()
 				{
 					if(binding)
