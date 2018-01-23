@@ -39,8 +39,6 @@ namespace terrame
 		{
 			public:
 				virtual T* check(lua_State *L, int narg) = 0;
-				virtual int setReference(lua_State* L) = 0;
-				virtual int getReference(lua_State* L) = 0;
 		};
 	} // namespace lua
 } // namespace terrame

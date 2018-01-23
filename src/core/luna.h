@@ -63,7 +63,6 @@ public:
         luaL_newmetatable(L, T::className);
         int metatable = lua_gettop(L);
 
-		//
 		//lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
 		//lua_pushglobaltable(L);
 
@@ -124,33 +123,6 @@ public:
 
         return ud->pT;  // pointer to T object
     }
-
-	int setReference(lua_State* L)
-	{
-		if (m_ref == LUA_REFNIL)
-			m_ref = terrame::lua::LuaSystem::getInstance().getLuaApi()->createWeakTable(L); //createWeakTable(L);
-		// retrieves the container
-		lua_rawgeti(L, LUA_REGISTRYINDEX, m_ref);
-
-		// container[cObj] = lua_object
-		lua_pushvalue(L, -2);
-		lua_rawsetp(L, -2, this);
-		lua_pop(L, 2);
-
-		return 0;
-	}
-
-	int getReference(lua_State* L)
-	{
-		// retrieves the container
-		lua_rawgeti(L, LUA_REGISTRYINDEX, m_ref);
-
-		// container[cObj]
-		lua_rawgetp(L, -1, this);
-		lua_remove(L, -2);
-
-		return 1;
-	}
 
 private:
     // member function dispatcher

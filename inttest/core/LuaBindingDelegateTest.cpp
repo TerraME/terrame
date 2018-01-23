@@ -55,45 +55,7 @@ TEST_F(LuaBindingDelegateTest, Check)
 	delete bindmock;
 }
 
-TEST_F(LuaBindingDelegateTest, SetReference)
-{
-	bindmock = new LuaBindingMock<luaCell>();
-	terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setBinding(bindmock);
-
-	EXPECT_CALL(*bindmock, setReference(testing::_))
-		.Times(1)
-		.WillOnce(testing::Return(1));
-
-	ASSERT_EQ(terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setReference(L), 1);
-
-	delete bindmock;
-}
-
-TEST_F(LuaBindingDelegateTest, GetReference)
-{
-	bindmock = new LuaBindingMock<luaCell>();
-	terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setBinding(bindmock);
-
-	EXPECT_CALL(*bindmock, getReference(testing::_))
-		.Times(1)
-		.WillOnce(testing::Return(1));
-
-	ASSERT_EQ(terrame::lua::LuaBindingDelegate<luaCell>::getInstance().getReference(L), 1);
-
-	delete bindmock;
-}
-
 TEST_F(LuaBindingDelegateTest, CheckWithoutSetBinding)
 {
 	ASSERT_ANY_THROW(terrame::lua::LuaBindingDelegate<luaCell>::getInstance().check(L, 1));
-}
-
-TEST_F(LuaBindingDelegateTest, SetReferenceWithoutSetBinding)
-{
-	ASSERT_ANY_THROW(terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setReference(L));
-}
-
-TEST_F(LuaBindingDelegateTest, GetReferenceWithoutSetBinding)
-{
-	ASSERT_ANY_THROW(terrame::lua::LuaBindingDelegate<luaCell>::getInstance().getReference(L));
 }

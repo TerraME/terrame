@@ -446,13 +446,3 @@ QString luaNeighborhood::getChanges(QDataStream& in, int observerId, QStringList
 {
     return getAll(in, observerId, attribs);
 }
-
-int luaNeighborhood::setReference(lua_State* L)
-{
-	return terrame::lua::LuaBindingDelegate<luaNeighborhood>::getInstance().setReference(L);
-}
-
-int luaNeighborhood::getReference(lua_State *L)
-{
-	return terrame::lua::LuaBindingDelegate<luaNeighborhood>::getInstance().getReference(L);
-}

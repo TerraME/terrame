@@ -60,15 +60,27 @@ void LuaCellTest::TearDown()
 
 TEST_F(LuaCellTest, Constructor)
 {
-	LuaApiMock* luaApi = new LuaApiMock();
-	terrame::lua::LuaSystem::getInstance().setLuaApi(luaApi);
+	LuaApiMock* luaApiMock = new LuaApiMock();
+	terrame::lua::LuaSystem::getInstance().setLuaApi(luaApiMock);
+
+	EXPECT_CALL(*luaApiMock, getRefNilValue())
+		.Times(testing::AnyNumber())
+		.WillRepeatedly(testing::Return(-1));
+
 	luaCell* lc = new luaCell(L);
+
+	delete luaApiMock;
 }
 
 TEST_F(LuaCellTest, SetAndGetId)
 {
 	LuaApiMock* luaApiMock = new LuaApiMock();
 	terrame::lua::LuaSystem::getInstance().setLuaApi(luaApiMock);
+
+	EXPECT_CALL(*luaApiMock, getRefNilValue())
+		.Times(testing::AnyNumber())
+		.WillRepeatedly(testing::Return(-1));
+
 	luaCell* lc = new luaCell(L);
 
 	EXPECT_CALL(*luaApiMock, getStringAtTop(testing::_))
@@ -88,6 +100,10 @@ TEST_F(LuaCellTest, CreateObserverAndKill)
 	terrame::lua::LuaSystem::getInstance().setLuaApi(luaApiMock);
 	LuaBindingMock<luaCell>* bindMock = new LuaBindingMock<luaCell>();
 	terrame::lua::LuaBindingDelegate<luaCell>::getInstance().setBinding(bindMock);
+
+	EXPECT_CALL(*luaApiMock, getRefNilValue())
+		.Times(testing::AnyNumber())
+		.WillRepeatedly(testing::Return(-1));
 
 	luaCell* lc = new luaCell(L);
 
@@ -142,9 +158,8 @@ TEST_F(LuaCellTest, CreateObserverAndKill)
 	EXPECT_CALL(*luaApiMock, getTypeAt(testing::_, testing::_))
 		.Times(testing::AnyNumber());;
 
-	EXPECT_CALL(*bindMock, getReference(testing::_))
-		.Times(1)
-		.WillOnce(testing::Return(1));
+	EXPECT_CALL(*luaApiMock, getReference(testing::_, testing::_, testing::_))
+		.Times(1);
 
 	EXPECT_CALL(*luaApiMock, isStringAt(testing::_, -2))
 		.Times(testing::AnyNumber())

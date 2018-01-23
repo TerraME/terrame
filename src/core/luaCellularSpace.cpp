@@ -966,13 +966,3 @@ luaCell * findCell(luaCellularSpace* cs, CellIndex& cellIndex)
     if (it != cs->end()) return(luaCell*)it->second;
     return(luaCell*)0;
 }
-
-int luaCellularSpace::setReference(lua_State* L)
-{
-	return terrame::lua::LuaBindingDelegate<luaCellularSpace>::getInstance().setReference(L);
-}
-
-int luaCellularSpace::getReference(lua_State *L)
-{
-	return terrame::lua::LuaBindingDelegate<luaCellularSpace>::getInstance().getReference(L);
-}

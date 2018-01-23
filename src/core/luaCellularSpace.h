@@ -32,6 +32,7 @@ of this software and its documentation.
 #include <QString>
 
 #include "../observer/cellSpaceSubjectInterf.h"
+#include "reference.h"
 #include "luaCell.h"
 #include "LuaApi.h"
 
@@ -40,7 +41,7 @@ of this software and its documentation.
 *  Implementation for a luaCellularSpace object. It is integrated with TerraLib geographical databases.
 *
 */
-class luaCellularSpace : public CellSpaceSubjectInterf
+class luaCellularSpace : public CellSpaceSubjectInterf, public Reference<luaCellularSpace>
 {
 public:
     ///< Data structure issued by Luna<T>
@@ -101,12 +102,12 @@ public:
     /// Registers the luaCellularSpace object in the Lua stack
     // @DANIEL
     // Movido para Reference
-    int setReference(lua_State* L);
+    //int setReference(lua_State* L);
 
     /// Gets the luaCellularSpace object reference
     // @DANIEL
     // Movido para Reference
-    int getReference(lua_State *L);
+    //int getReference(lua_State *L);
 
     int setPort(lua_State* L);
 

@@ -34,6 +34,7 @@ of this software and its documentation.
 #include "luaCellIndex.h"
 #include "luaCell.h"
 #include "neighborhood.h"
+#include "reference.h"
 
 class luaCellularSpace;
 
@@ -42,7 +43,7 @@ class luaCellularSpace;
 *  Implementation for a luaNeighborhood object.
 *
 */
-class luaNeighborhood : public CellNeighborhood
+class luaNeighborhood : public CellNeighborhood, public Reference<luaNeighborhood>
 {
     CellNeighborhood::iterator it; ///< luaNeighboorhood interator
     // @DANIEL
@@ -78,7 +79,7 @@ public:
     /// Removes the luaNeighbor cell from the luaNeighborhood
 	/// parameters: cell.x, cell.y
 	/// \author Raian Vargas Maretto
-		int eraseNeighbor(lua_State *L);
+	int eraseNeighbor(lua_State *L);
 
     /// Adds a new luaNeighbor cell to the luaNeighborhood
     /// parameters: cell index,  cell, weight
@@ -116,13 +117,13 @@ public:
     /// Sets the luaNeighbor's weight receiving a reference to the luaNeighbor
 	/// parameters: cell.x, cell.y, weight
 	/// \author Raian Vargas Maretto
-		int setNeighWeight(lua_State *L);
+	int setNeighWeight(lua_State *L);
 
 	//Raian:
 	/// Gets the weight of a neighborhood relationship
 	/// parameters: cell.x, cell.y
 	/// \author Raian Vargas Maretto
-		int getNeighWeight(lua_State *L);
+	int getNeighWeight(lua_State *L);
 
     /// Sets the weight for the neighborhood relationship with the cell indexed by the coordenates
     /// received as parameter.
@@ -184,13 +185,13 @@ public:
     /// Registers the Lua object in the Lua stack, storing its reference
     // @DANIEL
     // Movido para Reference
-    int setReference(lua_State* L);
+    //int setReference(lua_State* L);
 
     /// Gets the luaNeighborhood object reference.
     /// no parameters
     // @DANIEL
     // Movido para Reference
-    int getReference(lua_State *L);
+    //int getReference(lua_State *L);
 
     //@RAIAN
         /// Gets the Neighborhood Parent, i. e., the "central" cell in the neighborhood graph.
