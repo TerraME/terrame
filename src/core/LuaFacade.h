@@ -68,6 +68,7 @@ namespace terrame
 				int getTopIndex(lua_State* L);
 				int nextAt(lua_State* L, int index);
 				int getTypeAt(lua_State* L, int index);
+				int getRefNilValue();
 
 				bool isStringAt(lua_State* L, int index);
 				bool isNumberAt(lua_State* L, int index);
@@ -93,6 +94,9 @@ namespace terrame
 				void callWarning(lua_State* L, const std::string& msg);
 
 				int createWeakTable(lua_State *L);
+
+				void setReference(lua_State* L, int ref, const void* p);
+				void getReference(lua_State* L, int ref, const void* p);
 
 				void stack(lua_State* L);
 

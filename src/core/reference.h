@@ -34,28 +34,20 @@ of this software and its documentation.
 template <class T>
 class Reference
 {
-    // Index for the table holding the objects on the Lua Registry
-    static int m_ref;
-
-    // Create a weak table on the Lua Registry to hold all instances of a given derived class
-    void createWeakTable(lua_State *L)
-    {
-		m_ref = terrame::lua::LuaSystem::getInstance().getLuaApi()->createWeakTable(L);
-    }
-
 public:
+
+	Reference()
+	{
+		m_ref = terrame::lua::LuaSystem::getInstance().getLuaApi()->getRefNilValue();		
+	}
+
     /// Sets the reference for the Lua object using the cObj pointer.
     int setReference(lua_State *L)
     {
-        if (m_ref == LUA_REFNIL)
-            createWeakTable(L);
-        // retrieves the container
-        lua_rawgeti(L, LUA_REGISTRYINDEX, m_ref);
+        if (m_ref == terrame::lua::LuaSystem::getInstance().getLuaApi()->getRefNilValue());
+            m_ref = terrame::lua::LuaSystem::getInstance().getLuaApi()->createWeakTable(L);
 
-        // container[cObj] = lua_object
-        lua_pushvalue(L, -2);
-        lua_rawsetp(L, -2, this);
-        lua_pop(L, 2);
+		terrame::lua::LuaSystem::getInstance().getLuaApi()->setReference(L, m_ref, this);
 
         return 0;
     }
@@ -63,19 +55,16 @@ public:
     /// Gets the lua object.
     int getReference(lua_State *L)
     {
-        // retrieves the container
-        lua_rawgeti(L, LUA_REGISTRYINDEX, m_ref);
-
-        // container[cObj]
-        lua_rawgetp(L, -1, this);
-        lua_remove(L, -2);
+		terrame::lua::LuaSystem::getInstance().getLuaApi()->getReference(L, m_ref, this);		
 
         return 1;
     }
-};
 
-template <typename T>
-int Reference<T>::m_ref = LUA_REFNIL;
+private:
+	// Index for the table holding the objects on the Lua Registry
+    int m_ref;
+	
+};
 
 #endif // REFFERENCE_H
 
