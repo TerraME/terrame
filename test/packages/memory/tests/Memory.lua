@@ -199,7 +199,7 @@ return{
 			end
 
 			unitTest:assertEquals(1, countCS) -- SKIP
-			unitTest:assertEquals(1, countCell) -- SKIP
+			unitTest:assertEquals(40000, countCell) -- SKIP
 			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
@@ -467,7 +467,7 @@ return{
 
 			unitTest:assertEquals(1, countTraj) -- SKIP
 			unitTest:assertEquals(1, countCS) -- SKIP
-			unitTest:assertEquals(1, countCell) -- SKIP
+			unitTest:assertEquals(100, countCell) -- SKIP
 			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 

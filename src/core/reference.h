@@ -35,17 +35,18 @@ template <class T>
 class Reference
 {
 public:
-
 	Reference()
 	{
-		m_ref = terrame::lua::LuaSystem::getInstance().getLuaApi()->getRefNilValue();		
+		m_ref = terrame::lua::LuaSystem::getInstance().getLuaApi()->getRefNilValue();
 	}
 
     /// Sets the reference for the Lua object using the cObj pointer.
     int setReference(lua_State *L)
     {
-        if (m_ref == terrame::lua::LuaSystem::getInstance().getLuaApi()->getRefNilValue());
+        if (m_ref == terrame::lua::LuaSystem::getInstance().getLuaApi()->getRefNilValue())
+		{
             m_ref = terrame::lua::LuaSystem::getInstance().getLuaApi()->createWeakTable(L);
+		}
 
 		terrame::lua::LuaSystem::getInstance().getLuaApi()->setReference(L, m_ref, this);
 
@@ -55,7 +56,7 @@ public:
     /// Gets the lua object.
     int getReference(lua_State *L)
     {
-		terrame::lua::LuaSystem::getInstance().getLuaApi()->getReference(L, m_ref, this);		
+		terrame::lua::LuaSystem::getInstance().getLuaApi()->getReference(L, m_ref, this);
 
         return 1;
     }
@@ -63,8 +64,6 @@ public:
 private:
 	// Index for the table holding the objects on the Lua Registry
     int m_ref;
-	
 };
 
 #endif // REFFERENCE_H
-

@@ -305,7 +305,7 @@ void terrame::lua::LuaFacade::getReference(lua_State* L, int ref, const void* p)
 {
     lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
     lua_rawgetp(L, -1, p);
-    lua_remove(L, -2);	
+    lua_remove(L, -2);
 }
 
 void terrame::lua::LuaFacade::stack(lua_State *L)
