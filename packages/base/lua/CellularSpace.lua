@@ -1703,11 +1703,12 @@ function CellularSpace(data)
 
 							quantity = quantity + mcell[attribute]
 						end)
+
 						return quantity
 					end
 				end
 			elseif mtype == "boolean" then
-					if data[attribute] then
+				if data[attribute] then
 					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
 					return
 				end
@@ -1719,6 +1720,7 @@ function CellularSpace(data)
 							quantity = quantity + 1
 						end
 					end)
+
 					return quantity
 				end
 			elseif mtype == "string" or (mtype == "Random" and (value.distrib == "categorical" or (value.distrib == "discrete" and type(value[1]) == "string"))) then
@@ -1737,6 +1739,7 @@ function CellularSpace(data)
 							result[mvalue] = 1
 						end
 					end)
+
 					return result
 				end
 			end
