@@ -114,13 +114,12 @@ local createBlock = function(name)
 			self.running = true
 		end,
 		stop = function(self)
-			if not self.running then
-				return self.endTime - self.startTime
+			if self.running then
+				self.endTime = os.time()
+				self.total = self.total + self.endTime - self.startTime
+				self.running = false
 			end
 
-			self.endTime = os.time()
-			self.total = self.total + self.endTime - self.startTime
-			self.running = false
 			return self.endTime - self.startTime
 		end
 	}
