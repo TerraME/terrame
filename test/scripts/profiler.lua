@@ -14,7 +14,7 @@ Profiler():stop("t1")
 Profiler():stop("t2")
 for _ = 1, 10 do
 	Profiler():start("tLoop")
-	sleep(0.1)
+	sleep(0.2)
 	Profiler():stop("tLoop")
 end
 

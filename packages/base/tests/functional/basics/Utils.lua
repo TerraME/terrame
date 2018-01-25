@@ -123,9 +123,6 @@ return{
 
 		unitTest:assert(t2 - t1 >= .5)
 	end,
-	elapsedTime = function(unitTest)
-		unitTest:assertType(elapsedTime(50), "string")
-	end,
 	equals = function(unitTest)
 		unitTest:assert(equals(2, 2.00000001))
 		unitTest:assert(not equals(2, 2.1))

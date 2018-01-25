@@ -84,11 +84,12 @@ local createBlock = function(name)
 		running = false,
 		count = 0,
 		steps = 0,
+		total = 0,
 		uptime = function(self)
 			if self.running then
-				return os.time() - self.startTime
+				return self.total + os.time() - self.startTime
 			else
-				return self.endTime - self.startTime
+				return self.total
 			end
 		end,
 		report = function(self)
@@ -96,7 +97,7 @@ local createBlock = function(name)
 				name = self.name, -- SKIP
 				count = self.count, -- SKIP
 				time = timeToString(self:uptime()), -- SKIP
-				average = timeToString(self:uptime() / self.count) -- SKIP
+				average = timeToString(self:uptime() / math.max(1, self.count)) -- SKIP
 			} -- SKIP
 		end,
 		eta = function(self)
@@ -113,8 +114,13 @@ local createBlock = function(name)
 			self.running = true
 		end,
 		stop = function(self)
-			self.endTime = os.time()
-			self.running = false
+			if self.running then
+				self.endTime = os.time()
+				self.total = self.total + self.endTime - self.startTime
+				self.running = false
+			end
+
+			return self.endTime - self.startTime
 		end
 	}
 end
@@ -184,7 +190,7 @@ Profiler_ = {
 
 		return block.count
 	end,
-	--- Return how much time was spent on the block.
+	--- Return how much time was spent on the block up to last stop.
 	-- It returns two representations: a string with a human-like representation of the time
 	-- and a number with the time in seconds.
 	-- @arg name A string with the block name. If the name is not informed, then it returns the uptime of the current block.
@@ -201,7 +207,7 @@ Profiler_ = {
 		local time = block:uptime()
 		return timeToString(time), time
 	end,
-	--- Stop to measure the time of a given block. It also returns how much time was spent with the block
+	--- Stop to measure the time of a given block. It also returns how much time was spent with the block since it was started.
 	-- in two representations: a string with a human-like representation of the time and a number with the time in seconds.
 	-- @arg name A string with the block name. If the name is not informed, then it stops and return the uptime of the current block.
 	-- @usage Profiler():start("block")
@@ -223,11 +229,7 @@ Profiler_ = {
 			customError(string.format("Block '%s' was not found.", name))
 		end
 
-		if block.running then
-			block:stop()
-		end
-
-		local time = block:uptime()
+		local time = block:stop()
 		return timeToString(time), time
 	end,
 	--- Clean the Profiler, removing all blocks and restarting its execution time.
@@ -247,8 +249,8 @@ Profiler_ = {
 			print(string.format("%-30s%-20d%-30s%s", report.name, report.count, report.time, report.average)) -- SKIP
 		end)
 
-		local _, total = self:uptime("main")
-		print("Total execution time: "..timeToString(total)) -- SKIP
+		local total = self:uptime("main")
+		print("Total execution time: "..total) -- SKIP
 	end,
 	--- Define how many times a given block will be executed.
 	-- @arg name A string with the block name.
