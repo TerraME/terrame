@@ -23,6 +23,47 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	attributeFill = function(unitTest)
+		local proj = {}
+		proj.file = "amazonia.tview"
+		proj.title = "TerraLib Tests"
+		proj.author = "Avancini Rodrigo"
+
+		File(proj.file):deleteIfExists()
+
+		TerraLib().createProject(proj, {})
+
+		local layerName1 = "ES"
+		local layerFile1 = filePath("test/limite_es_poly_wgs84.shp", "gis")
+		TerraLib().addShpLayer(proj, layerName1, layerFile1, nil, 29101)
+
+		local layerName2 = "PA"
+		local layerFile2 = filePath("test/limitePA_polyc_pol.shp", "gis")
+		TerraLib().addShpLayer(proj, layerName2, layerFile2, nil, 29101)
+
+		local clName = "esCs"
+		local clFile = File(clName..".shp")
+		clFile:deleteIfExists()
+
+		local resolution = 20e3
+		local mask = true
+		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, clFile, mask)
+
+		local operation = "distance"
+		local attribute = "pol"
+		local select = "FID"
+		local area = nil
+		local default = 0
+
+		local layersNotIntersect = function()
+			TerraLib().attributeFill(proj, layerName2, clName, nil, attribute, operation, select, area, default)
+		end
+
+		unitTest:assertError(layersNotIntersect, "The two layers do not intersect.")
+
+		proj.file:delete()
+		clFile:delete()
+	end,
 	createProject = function(unitTest)
 		local proj = {}
 		proj.file = "file.xml"
