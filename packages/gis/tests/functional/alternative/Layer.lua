@@ -957,8 +957,8 @@ return{
 
 		unitTest:assertError(op4NotAvailable, "The operation 'presence' is not available for layers with raster data.")
 
-		File(projName):deleteIfExists()
-		File(filePath1):deleteIfExists()
+		File(projName):delete()
+		File(filePath1):delete()
 	end,
 	simplify = function(unitTest)
 		local projName = "layer_func_alt.tview"

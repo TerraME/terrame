@@ -690,8 +690,10 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 		v2v:setParams(select, OperationMapper[operation], toDst)
 
 		local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
+
 		if err ~= "" then
-			customError(err) -- SKIP
+			binding.te.da.DataSourceManager.getInstance():detachAll()
+			customError(err)
 		end
 
 		propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
