@@ -54,7 +54,6 @@ class LuaApiMock : public terrame::lua::LuaApi
 		MOCK_METHOD1(getTopIndex, int(lua_State* L));
 		MOCK_METHOD2(nextAt, int(lua_State* L, int index));
 		MOCK_METHOD2(getTypeAt, int(lua_State* L, int index));
-		MOCK_METHOD0(getRefNilValue, int());
 
 		MOCK_METHOD2(isStringAt, bool(lua_State* L, int index));
 		MOCK_METHOD2(isNumberAt, bool(lua_State* L, int index));

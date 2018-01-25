@@ -67,7 +67,6 @@ namespace terrame
 				virtual int getTopIndex(lua_State* L) = 0;
 				virtual int nextAt(lua_State* L, int index) = 0;
 				virtual int getTypeAt(lua_State* L, int index) = 0;
-				virtual int getRefNilValue() = 0;
 
 				virtual bool isStringAt(lua_State* L, int index) = 0;
 				virtual bool isNumberAt(lua_State* L, int index) = 0;

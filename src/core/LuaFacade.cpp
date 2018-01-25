@@ -137,11 +137,6 @@ int terrame::lua::LuaFacade::getTypeAt(lua_State* L, int index)
 	return lua_type(L, index);
 }
 
-int terrame::lua::LuaFacade::getRefNilValue()
-{
-	return LUA_REFNIL;
-}
-
 bool terrame::lua::LuaFacade::isStringAt(lua_State* L, int index)
 {
 	return lua_type(L, index) == getStringType();
