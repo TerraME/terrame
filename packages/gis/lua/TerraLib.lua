@@ -658,6 +658,7 @@ end
 
 local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, area)
 	local propCreatedName
+	local err
 	do
 		local v2v = binding.te.attributefill.VectorToVectorMemory()
 		v2v:setInput(fromLayer, toLayer)
@@ -689,26 +690,28 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		v2v:setParams(select, OperationMapper[operation], toDst)
 
-		local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
+		err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
 
-		if err ~= "" then
-			binding.te.da.DataSourceManager.getInstance():detachAll()
-			customError(err)
+		if err == "" then
+			propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
+
+			if outType == "OGR" then
+				propCreatedName = getNormalizedName(propCreatedName)
+			end
+
+			propCreatedName = string.lower(propCreatedName)
 		end
-
-		propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
-
-		if outType == "OGR" then
-			propCreatedName = getNormalizedName(propCreatedName)
-		end
-
-		propCreatedName = string.lower(propCreatedName)
 
 		toDs:close()
 		outDs:close()
 	end
 
 	collectgarbage("collect")
+
+	if err ~= "" then
+		binding.te.da.DataSourceManager.getInstance():detachAll()
+		customError(err)
+	end
 
 	return propCreatedName
 end
