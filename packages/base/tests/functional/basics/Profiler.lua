@@ -93,24 +93,70 @@ return{
 		delay(0.1)
 		local _, uptime = Profiler():uptime("test")
 		unitTest:assertEquals(currentTime, uptime)
-		Profiler().blocks["test"].total = 3600
+		Profiler().blocks["test"].totalTime = 3600
 		timeString = Profiler():uptime("test")
 		unitTest:assertEquals(timeString, "1 hour")
-		Profiler().blocks["test"].total = 7250
+		Profiler().blocks["test"].totalTime = 7250
 		timeString = Profiler():uptime("test")
 		unitTest:assertEquals(timeString, "2 hours")
-		Profiler().blocks["test"].total = 86401
+		Profiler().blocks["test"].totalTime = 86401
 		timeString = Profiler():uptime("test")
 		unitTest:assertEquals(timeString, "1 day")
-		Profiler().blocks["test"].total = 86465321
+		Profiler().blocks["test"].totalTime = 86465321
 		timeString = Profiler():uptime("test")
 		unitTest:assertEquals(timeString, "1000 days and 18 hours")
-		Profiler().blocks["test"].total = 60
+		Profiler().blocks["test"].totalTime = 60
 		timeString = Profiler():uptime("test")
 		unitTest:assertEquals(timeString, "1 minute")
-		Profiler().blocks["test"].total = 125
+		Profiler().blocks["test"].totalTime = 125
 		timeString = Profiler():uptime("test")
 		unitTest:assertEquals(timeString, "2 minutes and 5 seconds")
+		Profiler().blocks["test"].totalTime = 0
+		timeString = Profiler():uptime("test")
+		unitTest:assertEquals(timeString, "less than one second")
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
+	end,
+	clock = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
+		local timeString, timeNumber = Profiler():clock("main")
+		unitTest:assertType(timeString, "string")
+		unitTest:assertType(timeNumber, "number")
+		Profiler():start("test")
+		local _, startTime = Profiler():clock()
+		delay(0.1)
+		Profiler():stop("test")
+		Profiler():start("test")
+		delay(0.1)
+		local _, currentTime = Profiler():clock()
+		unitTest:assert(startTime < currentTime)
+		local _, stopTime = Profiler():stop("test")
+		unitTest:assert(stopTime < currentTime)
+		_, currentTime = Profiler():clock("test")
+		delay(0.1)
+		local _, clock = Profiler():clock("test")
+		unitTest:assertEquals(currentTime, clock)
+		Profiler().blocks["test"].totalClock = 0.15
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "150 milliseconds")
+		Profiler().blocks["test"].totalClock = 0.9999
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "1 second")
+		Profiler().blocks["test"].totalClock = 0.999
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "999 milliseconds")
+		Profiler().blocks["test"].totalClock = 1
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "1 second")
+		Profiler().blocks["test"].totalClock = 0.001
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "1 millisecond")
+		Profiler().blocks["test"].totalClock = 0
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "0 milliseconds")
 		Profiler().stack = oldStack
 		Profiler().blocks = oldBlocks
 	end,
