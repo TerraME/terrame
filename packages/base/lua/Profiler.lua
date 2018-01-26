@@ -105,8 +105,7 @@ local createBlock = function(name)
 				customError("'Profiler():steps(\""..self.name.."\")' must be set before calling 'Profiler():eta(\""..self.name.."\")'.")
 			end
 
-			local estimated = self:uptime() + (self.steps - self.count) * (self:uptime() / self.count)
-			return math.max(0, math.ceil(self.startTime + estimated - os.time()))
+			return (self.steps - self.count) * (self:uptime() / math.max(1, self.count))
 		end,
 		start = function(self)
 			self.startTime = os.time()
