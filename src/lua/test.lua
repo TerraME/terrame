@@ -648,7 +648,7 @@ function _Gtme.executeTests(package, fileName)
 					local text = "Tests executed in "..testFinalTime.."."
 					if difference > 60 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-					else
+					elseif difference > 10 then
 						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 					end
 				end
@@ -977,7 +977,7 @@ function _Gtme.executeTests(package, fileName)
 					local text = "Example executed in "..exampleFinalTime.."."
 					if difference > 60 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-					else
+					elseif difference > 10 then
 						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 					end
 				end
