@@ -1350,7 +1350,7 @@ function _Gtme.executeDoc(package)
 		end)
 	end
 
-	local finalTime = profiler:stop("DOC_")
+	local finalTime = profiler:stop("DOC_").strTime
 	print("\nDocumentation report for package '"..package.."':")
 	printNote("Documentation was built in "..finalTime..".")
 

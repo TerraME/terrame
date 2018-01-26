@@ -140,7 +140,7 @@ local createBlock = function(name)
 				self.running = false
 			end
 
-			return self.endTime - self.startTime
+			return self.endTime - self.startTime, self.endClock - self.startClock
 		end
 	}
 end
@@ -233,7 +233,7 @@ Profiler_ = {
 	-- @arg name A string with the block name. If the name is not informed, then it returns the uptime of the current block.
 	-- @usage Profiler():start("block")
 	-- Profiler():stop("block")
-	-- stringTime, numberTime = Profiler():uptime("block")
+	-- stringTime, numberTime = Profiler():clock("block")
 	clock = function(self, name)
 		optionalArgument(1, "string", name)
 		local block = self.blocks[name or self:current().name]
@@ -244,11 +244,15 @@ Profiler_ = {
 		local time = block:clock()
 		return timeToString(time, true), time
 	end,
-	--- Stop to measure the time of a given block. It also returns how much time was spent with the block since it was started.
-	-- in two representations: a string with a human-like representation of the time and a number with the time in seconds.
+	--- Stop to measure the time of a given block and return how much time was spent with the block since it was started.
+	-- It returns a table with the spent time in seconds (time), a string with a human-like representation of the time (strTime),
+	-- spent time of CPU in high precision (clock), a string with a human-like representation of the time of CPU (strClock).
 	-- @arg name A string with the block name. If the name is not informed, then it stops and return the uptime of the current block.
 	-- @usage Profiler():start("block")
-	-- stringTime, numberTime = Profiler():stop("block")
+	-- time = Profiler():stop("block").time
+	-- clock = Profiler():stop("block").clock
+	-- strTime = Profiler():stop("block").strTime
+	-- strClock = Profiler():stop("block").strClock
 	stop = function(self, name)
 		optionalArgument(1, "string", name)
 		if name == "main" or (not name and self:current() and self:current().name == "main") then
@@ -266,8 +270,8 @@ Profiler_ = {
 			customError(string.format("Block '%s' was not found.", name))
 		end
 
-		local time = block:stop()
-		return timeToString(time), time
+		local time, clock = block:stop()
+		return {time = time, strTime = timeToString(time), clock = clock, strClock = timeToString(clock, true)}
 	end,
 	--- Clean the Profiler, removing all blocks and restarting its execution time.
 	-- @usage -- DONTRUN
