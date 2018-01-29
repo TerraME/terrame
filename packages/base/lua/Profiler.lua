@@ -66,7 +66,7 @@ local function timeToString(t, inMilliseconds)
 
 	if not hasDay and not hasHour and (seconds > 0 or not hasMin) then
 		if hasMin then str = str.." and " end
-		if seconds == 1 or (inMilliseconds and milliseconds > 999) then
+		if seconds == 1 or (inMilliseconds and milliseconds > 999 and milliseconds <= 1000) then -- values between 999.000 and 999.999
 			str = str.."1 second"
 		elseif seconds < 1 then
 			if inMilliseconds then

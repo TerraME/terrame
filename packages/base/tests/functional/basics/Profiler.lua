@@ -137,6 +137,24 @@ return{
 		delay(0.1)
 		local _, clock = Profiler():clock("test")
 		unitTest:assertEquals(currentTime, clock)
+		Profiler().blocks["test"].totalClock = 3600
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "1 hour")
+		Profiler().blocks["test"].totalClock = 7250
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "2 hours")
+		Profiler().blocks["test"].totalClock = 86401
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "1 day")
+		Profiler().blocks["test"].totalClock = 86465321
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "1000 days and 18 hours")
+		Profiler().blocks["test"].totalClock = 60
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "1 minute")
+		Profiler().blocks["test"].totalClock = 125
+		timeString = Profiler():clock("test")
+		unitTest:assertEquals(timeString, "2 minutes and 5 seconds")
 		Profiler().blocks["test"].totalClock = 0.15
 		timeString = Profiler():clock("test")
 		unitTest:assertEquals(timeString, "150 milliseconds")

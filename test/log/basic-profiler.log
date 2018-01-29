@@ -1,6 +1,6 @@
 Block          Count          Time                  Average                  Clock               Average
-main           1              4 seconds             4 seconds                4 seconds           1 second
+main           1              4 seconds             4 seconds                4 seconds           4 seconds
 tLoop          10             2 seconds             less than one second     2 seconds           200 milliseconds
-t1             1              2 seconds             2 seconds                2 seconds           1 second
+t1             1              2 seconds             2 seconds                2 seconds           2 seconds
 t2             2              1 second              less than one second     1 second            550 milliseconds
 Total execution time: 4 seconds
