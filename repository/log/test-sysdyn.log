@@ -106,7 +106,7 @@ All 15 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
-No file was created along the tests.
+No file or directory was created along the tests.
 All 15 functions of the package were tested.
 All lines from the source code were executed.
 All 7 examples were successfully executed.
