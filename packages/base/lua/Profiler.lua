@@ -24,12 +24,13 @@
 
 local instance
 
-local function timeToString(t)
+local function timeToString(t, inMilliseconds)
 	mandatoryArgument(1, "number", t)
 	local seconds = t
 	local minutes = math.floor(t / 60);     seconds = math.floor(seconds % 60)
 	local hours = math.floor(minutes / 60); minutes = math.floor(minutes % 60)
 	local days = math.floor(hours / 24);    hours = math.floor(hours % 24)
+	local milliseconds = round(t * 1000, 3)
 	local hasDay = false
 	local hasHour = false
 	local hasMin = false
@@ -65,10 +66,18 @@ local function timeToString(t)
 
 	if not hasDay and not hasHour and (seconds > 0 or not hasMin) then
 		if hasMin then str = str.." and " end
-		if seconds == 1 then
+		if seconds == 1 or (inMilliseconds and milliseconds > 999 and milliseconds <= 1000) then -- values between 999.000 and 999.999
 			str = str.."1 second"
 		elseif seconds < 1 then
-			str = "less than one second"
+			if inMilliseconds then
+				if milliseconds == 1 then
+					str = string.format("1 millisecond")
+				else
+					str = string.format("%0.f milliseconds", milliseconds)
+				end
+			else
+				str = "less than one second"
+			end
 		else
 			str = str..string.format("%0.f seconds", seconds)
 		end
@@ -84,12 +93,20 @@ local createBlock = function(name)
 		running = false,
 		count = 0,
 		steps = 0,
-		total = 0,
+		totalTime = 0,
+		totalClock = 0,
 		uptime = function(self)
 			if self.running then
-				return self.total + os.time() - self.startTime
+				return self.totalTime + os.time() - self.startTime
 			else
-				return self.total
+				return self.totalTime
+			end
+		end,
+		clock = function(self)
+			if self.running then
+				return self.totalClock + os.clock() - self.startClock
+			else
+				return self.totalClock
 			end
 		end,
 		report = function(self)
@@ -97,7 +114,9 @@ local createBlock = function(name)
 				name = self.name, -- SKIP
 				count = self.count, -- SKIP
 				time = timeToString(self:uptime()), -- SKIP
-				average = timeToString(self:uptime() / math.max(1, self.count)) -- SKIP
+				averageTime = timeToString(self:uptime() / math.max(1, self.count)), -- SKIP
+				clock = timeToString(self:clock()), -- SKIP
+				averageClock = timeToString(self:clock() / math.max(1, self.count), true) -- SKIP
 			} -- SKIP
 		end,
 		eta = function(self)
@@ -105,22 +124,24 @@ local createBlock = function(name)
 				customError("'Profiler():steps(\""..self.name.."\")' must be set before calling 'Profiler():eta(\""..self.name.."\")'.")
 			end
 
-			local estimated = self:uptime() + (self.steps - self.count) * (self:uptime() / self.count)
-			return math.max(0, math.ceil(self.startTime + estimated - os.time()))
+			return (self.steps - self.count) * (self:uptime() / math.max(1, self.count))
 		end,
 		start = function(self)
 			self.startTime = os.time()
+			self.startClock = os.clock()
 			self.count = self.count + 1
 			self.running = true
 		end,
 		stop = function(self)
 			if self.running then
 				self.endTime = os.time()
-				self.total = self.total + self.endTime - self.startTime
+				self.endClock = os.clock()
+				self.totalTime = self.totalTime + self.endTime - self.startTime
+				self.totalClock = self.totalClock + self.endClock - self.startClock
 				self.running = false
 			end
 
-			return self.endTime - self.startTime
+			return self.endTime - self.startTime, self.endClock - self.startClock
 		end
 	}
 end
@@ -207,11 +228,32 @@ Profiler_ = {
 		local time = block:uptime()
 		return timeToString(time), time
 	end,
-	--- Stop to measure the time of a given block. It also returns how much time was spent with the block since it was started.
-	-- in two representations: a string with a human-like representation of the time and a number with the time in seconds.
+	--- Return how much time of CPU was spent on the block up to last stop.
+	-- It returns two representations: a string with a human-like representation of the time
+	-- and a number with the time in seconds.
+	-- @arg name A string with the block name. If the name is not informed, then it returns the uptime of the current block.
+	-- @usage Profiler():start("block")
+	-- Profiler():stop("block")
+	-- stringTime, numberTime = Profiler():clock("block")
+	clock = function(self, name)
+		optionalArgument(1, "string", name)
+		local block = self.blocks[name or self:current().name]
+		if not block then
+			customError(string.format("Block '%s' was not found.", name))
+		end
+
+		local time = block:clock()
+		return timeToString(time, true), time
+	end,
+	--- Stop to measure the time of a given block and return how much time was spent with the block since it was started.
+	-- It returns a table with the spent time in seconds (time), a string with a human-like representation of the time (strTime),
+	-- spent time of CPU in high precision (clock), a string with a human-like representation of the time of CPU (strClock).
 	-- @arg name A string with the block name. If the name is not informed, then it stops and return the uptime of the current block.
 	-- @usage Profiler():start("block")
-	-- stringTime, numberTime = Profiler():stop("block")
+	-- time = Profiler():stop("block").time
+	-- clock = Profiler():stop("block").clock
+	-- strTime = Profiler():stop("block").strTime
+	-- strClock = Profiler():stop("block").strClock
 	stop = function(self, name)
 		optionalArgument(1, "string", name)
 		if name == "main" or (not name and self:current() and self:current().name == "main") then
@@ -229,8 +271,8 @@ Profiler_ = {
 			customError(string.format("Block '%s' was not found.", name))
 		end
 
-		local time = block:stop()
-		return timeToString(time), time
+		local time, clock = block:stop()
+		return {time = time, strTime = timeToString(time), clock = clock, strClock = timeToString(clock, true)}
 	end,
 	--- Clean the Profiler, removing all blocks and restarting its execution time.
 	-- @usage -- DONTRUN
@@ -243,10 +285,10 @@ Profiler_ = {
 	--- Show a report with the time and amount of times each block was executed.
 	-- @usage Profiler():report()
 	report = function(self)
-		print(string.format("%-30s%-20s%-30s%s", "Block", "Count", "Time", "Average")) -- SKIP
+		print(string.format("%-15s%-15s%-22s%-25s%-20s%s", "Block", "Count", "Time", "Average", "Clock", "Average")) -- SKIP
 		forEachOrderedElement(self.blocks, function(_, block)
 			local report = block:report() -- SKIP
-			print(string.format("%-30s%-20d%-30s%s", report.name, report.count, report.time, report.average)) -- SKIP
+			print(string.format("%-15s%-15d%-22s%-25s%-20s%s", report.name, report.count, report.time, report.averageTime, report.clock, report.averageClock)) -- SKIP
 		end)
 
 		local total = self:uptime("main")

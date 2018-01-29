@@ -643,7 +643,8 @@ function _Gtme.executeTests(package, fileName)
 					ut.last_error = ""
 				end
 
-				local testFinalTime, difference = profiler:stop("_TESTS")
+				local testFinalTime = profiler:stop("_TESTS").strClock
+				local difference = profiler:stop("_TESTS").clock
 				if data.time then
 					local text = "Tests executed in "..testFinalTime.."."
 					if difference > 60 then
@@ -972,7 +973,8 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				clean()
-				local exampleFinalTime, difference = profiler:stop("_EXAMPLES")
+				local exampleFinalTime = profiler:stop("_EXAMPLES").strClock
+				local difference = profiler:stop("_EXAMPLES").clock
 				if data.time then
 					local text = "Example executed in "..exampleFinalTime.."."
 					if difference > 60 then
@@ -1008,7 +1010,7 @@ function _Gtme.executeTests(package, fileName)
 		printWarning("Skipping logs check")
 	end
 
-	local finalTime = profiler:stop("_EXECUTE_TEST")
+	local finalTime = profiler:stop("_EXECUTE_TEST").strTime
 
 	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
 	               -ut.logs - ut.package_functions

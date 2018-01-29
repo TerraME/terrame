@@ -161,7 +161,7 @@ _Gtme.checkPackage = function(package, packagePath)
 
 	_Gtme.printNote("\nCode analyzer report for package '"..package.."':")
 
-	local executionTime = profiler:stop("CHECK_")
+	local executionTime = profiler:stop("CHECK_").strTime
 	_Gtme.printNote("Analysis executed in "..executionTime..".")
 
 	if totalFiles > 0 then

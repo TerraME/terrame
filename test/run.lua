@@ -118,7 +118,8 @@ local function approximateLine(line)
 	if string.match(line, "Directory")           then return 160 end
 	if string.match(line, "hour")                then return  22 end
 	if string.match(line, "minute")              then return  24 end
-	if string.match(line, "second")              then return  17 end
+	if string.match(line, "second")              then return  20 end
+	if string.match(line, "millisecond")         then return  25 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "log")                 then return 120 end
 	if string.match(line, "Cannot open")         then return 320 end
@@ -215,7 +216,8 @@ forEachOrderedElement(commands, function(idx, group)
 
 		result, err = runCommand(command)
 
-		local testFinalTime, difference = profiler:stop("TEST_RUN_")
+		local testFinalTime = profiler:stop("TEST_RUN_").strClock
+		local difference = profiler:stop("TEST_RUN_").clock
 		if time then
 			local text = "Test executed in "..testFinalTime
 
@@ -395,7 +397,8 @@ forEachOrderedElement(commands, function(idx, group)
 
 		result, err = runCommand(command)
 
-		local testFinalTime, difference = profiler:stop("TEST_RUN_")
+		local testFinalTime = profiler:stop("TEST_RUN_").strClock
+		local difference = profiler:stop("TEST_RUN_").clock
 		if time then
 			local text = "Test executed in "..testFinalTime
 
@@ -581,7 +584,7 @@ forEachElement(directories, function(idx, value)
 	end)
 end)
 
-local finalTime = profiler:stop("RUN_")
+local finalTime = profiler:stop("RUN_").strTime
 
 _Gtme.printNote("Removing files")
 forEachElement(initialRemove.files, removeIfExists)
