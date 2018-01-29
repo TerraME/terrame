@@ -215,7 +215,8 @@ forEachOrderedElement(commands, function(idx, group)
 
 		result, err = runCommand(command)
 
-		local testFinalTime, difference = profiler:stop("TEST_RUN_")
+		local testFinalTime = profiler:stop("TEST_RUN_").strClock
+		local difference = profiler:stop("TEST_RUN_").clock
 		if time then
 			local text = "Test executed in "..testFinalTime
 
@@ -395,7 +396,8 @@ forEachOrderedElement(commands, function(idx, group)
 
 		result, err = runCommand(command)
 
-		local testFinalTime, difference = profiler:stop("TEST_RUN_")
+		local testFinalTime = profiler:stop("TEST_RUN_").strClock
+		local difference = profiler:stop("TEST_RUN_").clock
 		if time then
 			local text = "Test executed in "..testFinalTime
 
@@ -581,7 +583,7 @@ forEachElement(directories, function(idx, value)
 	end)
 end)
 
-local finalTime = profiler:stop("RUN_")
+local finalTime = profiler:stop("RUN_").strTime
 
 _Gtme.printNote("Removing files")
 forEachElement(initialRemove.files, removeIfExists)
