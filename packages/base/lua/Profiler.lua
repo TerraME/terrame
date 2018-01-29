@@ -114,8 +114,9 @@ local createBlock = function(name)
 				name = self.name, -- SKIP
 				count = self.count, -- SKIP
 				time = timeToString(self:uptime()), -- SKIP
+				averageTime = timeToString(self:uptime() / math.max(1, self.count)), -- SKIP
 				clock = timeToString(self:clock()), -- SKIP
-				average = timeToString(self:clock() / math.max(1, self.count), true) -- SKIP
+				averageClock = timeToString(self:clock() / math.max(1, self.count), true) -- SKIP
 			} -- SKIP
 		end,
 		eta = function(self)
@@ -284,10 +285,10 @@ Profiler_ = {
 	--- Show a report with the time and amount of times each block was executed.
 	-- @usage Profiler():report()
 	report = function(self)
-		print(string.format("%-20s%-20s%-20s%-20s%s", "Block", "Count", "Time", "Clock", "Average")) -- SKIP
+		print(string.format("%-15s%-15s%-22s%-25s%-20s%s", "Block", "Count", "Time", "Average", "Clock", "Average")) -- SKIP
 		forEachOrderedElement(self.blocks, function(_, block)
 			local report = block:report() -- SKIP
-			print(string.format("%-20s%-20d%-20s%-20s%s", report.name, report.count, report.time, report.clock, report.average)) -- SKIP
+			print(string.format("%-15s%-15d%-22s%-25s%-20s%s", report.name, report.count, report.time, report.averageTime, report.clock, report.averageClock)) -- SKIP
 		end)
 
 		local total = self:uptime("main")
