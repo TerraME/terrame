@@ -118,7 +118,8 @@ local function approximateLine(line)
 	if string.match(line, "Directory")           then return 160 end
 	if string.match(line, "hour")                then return  22 end
 	if string.match(line, "minute")              then return  24 end
-	if string.match(line, "millisecond")         then return  17 end
+	if string.match(line, "second")              then return  20 end
+	if string.match(line, "millisecond")         then return  25 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "log")                 then return 120 end
 	if string.match(line, "Cannot open")         then return 320 end
