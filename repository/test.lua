@@ -183,7 +183,8 @@ forEachOrderedElement(pkgs, function(package)
 	local command = "terrame -package "..package.." -projects"
 	runCommand(command)
 
-	local proFinalTime, difference = profiler:stop("REPOSITORY_PROJECT_")
+	local proFinalTime = profiler:stop("REPOSITORY_PROJECT_").strTime
+	local difference = profiler:stop("REPOSITORY_PROJECT_").time
 
 	local text = "Projects created in "..proFinalTime
 
@@ -207,7 +208,8 @@ forEachOrderedElement(pkgs, function(package)
 	local command = "terrame -package "..package.." -doc"
 	execute(command, "doc-"..package..".log")
 
-	local docFinalTime, difference = profiler:stop("REPOSITORY_DOC_")
+	local docFinalTime = profiler:stop("REPOSITORY_DOC_").strTime
+	local difference = profiler:stop("REPOSITORY_DOC_").time
 
 	local text = "Documentation executed in "..docFinalTime
 
@@ -234,7 +236,8 @@ forEachOrderedElement(pkgs, function(package)
 
 	execute(command, "test-"..package..".log")
 
-	local testFinalTime, difference = profiler:stop("REPOSITORY_TEST_")
+	local testFinalTime = profiler:stop("REPOSITORY_TEST_").strTime
+	local difference = profiler:stop("REPOSITORY_TEST_").time
 
 	local text = "Test executed in "..testFinalTime
 
@@ -273,7 +276,7 @@ forEachOrderedElement(pkgs, function(package)
 	end
 end)
 
-local finalTime = profiler:stop("REPOSITORY_")
+local finalTime = profiler:stop("REPOSITORY_").strTime
 
 print("\nRepository test report:")
 
