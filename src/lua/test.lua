@@ -643,11 +643,10 @@ function _Gtme.executeTests(package, fileName)
 					ut.last_error = ""
 				end
 
-				local testFinalTime = profiler:stop("_TESTS").strClock
-				local difference = profiler:stop("_TESTS").clock
+				local testFinalTime = profiler:stop("_TESTS")
 				if data.time then
-					local text = "Tests executed in "..testFinalTime.."."
-					if difference > 60 then
+					local text = "Tests executed in "..testFinalTime.strClock.."."
+					if testFinalTime.clock > 60 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
 					else
 						_Gtme.print("\027[00;37;43m"..text.."\027[00m")
@@ -973,11 +972,10 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				clean()
-				local exampleFinalTime = profiler:stop("_EXAMPLES").strClock
-				local difference = profiler:stop("_EXAMPLES").clock
+				local exampleFinalTime = profiler:stop("_EXAMPLES")
 				if data.time then
-					local text = "Example executed in "..exampleFinalTime.."."
-					if difference > 60 then
+					local text = "Example executed in "..exampleFinalTime.strClock.."."
+					if exampleFinalTime.clock > 60 then
 						_Gtme.print("\027[00;37;41m"..text.."\027[00m")
 					else
 						_Gtme.print("\027[00;37;43m"..text.."\027[00m")

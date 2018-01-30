@@ -126,6 +126,13 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Block 'test' was not found.")
+		error_func = function()
+			Profiler():start("test")
+			Profiler():stop("test")
+			Profiler():stop("test")
+		end
+
+		unitTest:assertWarning(error_func, "Block 'test' has already been stopped.")
 		Profiler().stack = oldStack
 		Profiler().blocks = oldBlocks
 	end,
