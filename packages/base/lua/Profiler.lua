@@ -271,7 +271,7 @@ Profiler_ = {
 			customError(string.format("Block '%s' was not found.", name))
 		end
 
-		if block.running then
+		if not block.running then
 			customWarning("Block '"..block.name.."' has already been stopped.")
 		end
 
