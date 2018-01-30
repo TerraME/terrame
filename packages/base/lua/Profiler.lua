@@ -250,10 +250,11 @@ Profiler_ = {
 	-- spent time of CPU in high precision (clock), a string with a human-like representation of the time of CPU (strClock).
 	-- @arg name A string with the block name. If the name is not informed, then it stops and return the uptime of the current block.
 	-- @usage Profiler():start("block")
-	-- time = Profiler():stop("block").time
-	-- clock = Profiler():stop("block").clock
-	-- strTime = Profiler():stop("block").strTime
-	-- strClock = Profiler():stop("block").strClock
+	-- timeTable = Profiler():stop("block")
+	-- time = timeTable.time
+	-- clock = timeTable.clock
+	-- strTime = timeTable.strTime
+	-- strClock = timeTable.strClock
 	stop = function(self, name)
 		optionalArgument(1, "string", name)
 		if name == "main" or (not name and self:current() and self:current().name == "main") then
