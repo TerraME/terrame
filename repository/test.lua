@@ -183,14 +183,11 @@ forEachOrderedElement(pkgs, function(package)
 	local command = "terrame -package "..package.." -projects"
 	runCommand(command)
 
-	local proFinalTime = profiler:stop("REPOSITORY_PROJECT_").strTime
-	local difference = profiler:stop("REPOSITORY_PROJECT_").time
-
-	local text = "Projects created in "..proFinalTime
-
-	if difference > 300 then
+	local proFinalTime = profiler:stop("REPOSITORY_PROJECT_")
+	local text = "Projects created in "..proFinalTime.strTime
+	if proFinalTime.time > 300 then
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-	elseif difference > 30 then
+	elseif proFinalTime.time > 30 then
 		_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 	end
 end)
@@ -208,14 +205,11 @@ forEachOrderedElement(pkgs, function(package)
 	local command = "terrame -package "..package.." -doc"
 	execute(command, "doc-"..package..".log")
 
-	local docFinalTime = profiler:stop("REPOSITORY_DOC_").strTime
-	local difference = profiler:stop("REPOSITORY_DOC_").time
-
-	local text = "Documentation executed in "..docFinalTime
-
-	if difference > 30 then
+	local docFinalTime = profiler:stop("REPOSITORY_DOC_")
+	local text = "Documentation executed in "..docFinalTime.strTime
+	if docFinalTime.time > 30 then
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-	elseif difference > 10 then
+	elseif docFinalTime.time > 10 then
 		_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 	end
 
@@ -235,15 +229,12 @@ forEachOrderedElement(pkgs, function(package)
 	local command = "terrame -package "..package.." -test"
 
 	execute(command, "test-"..package..".log")
-
-	local testFinalTime = profiler:stop("REPOSITORY_TEST_").strTime
-	local difference = profiler:stop("REPOSITORY_TEST_").time
-
-	local text = "Test executed in "..testFinalTime
-
-	if difference > 30 then
+	
+	local testFinalTime = profiler:stop("REPOSITORY_TEST_")
+	local text = "Test executed in "..testFinalTime.strTime
+	if testFinalTime.time > 30 then
 		_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-	elseif difference > 10 then
+	elseif testFinalTime.time > 10 then
 		_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 	end
 end)

@@ -271,6 +271,10 @@ Profiler_ = {
 			customError(string.format("Block '%s' was not found.", name))
 		end
 
+		if block.running then
+			customWarning("Block '"..block.name.."' has already been stopped.")
+		end
+
 		local time, clock = block:stop()
 		return {time = time, strTime = timeToString(time), clock = clock, strClock = timeToString(clock, true)}
 	end,

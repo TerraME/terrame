@@ -216,14 +216,13 @@ forEachOrderedElement(commands, function(idx, group)
 
 		result, err = runCommand(command)
 
-		local testFinalTime = profiler:stop("TEST_RUN_").strClock
-		local difference = profiler:stop("TEST_RUN_").clock
+		local testFinalTime = profiler:stop("TEST_RUN_")
 		if time then
-			local text = "Test executed in "..testFinalTime
+			local text = "Test executed in "..testFinalTime.strClock
 
-			if difference > 60 then
+			if testFinalTime.clock > 60 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-			elseif difference > 10 then
+			elseif testFinalTime.clock > 10 then
 				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 			end
 		end
@@ -397,14 +396,13 @@ forEachOrderedElement(commands, function(idx, group)
 
 		result, err = runCommand(command)
 
-		local testFinalTime = profiler:stop("TEST_RUN_").strClock
-		local difference = profiler:stop("TEST_RUN_").clock
+		local testFinalTime = profiler:stop("TEST_RUN_")
 		if time then
-			local text = "Test executed in "..testFinalTime
+			local text = "Test executed in "..testFinalTime.strClock
 
-			if difference > 60 then
+			if testFinalTime.clock > 60 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-			elseif difference > 10 then
+			elseif testFinalTime.clock > 10 then
 				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 			end
 		end
