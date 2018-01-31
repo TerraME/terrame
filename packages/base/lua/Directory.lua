@@ -265,6 +265,11 @@ function Directory(data)
 
 	data.fullpath = _Gtme.makePathCompatibleToAllOS(data.fullpath)
 
+	local invalidChar = string.gsub(data.fullpath, "[^\33-\44\59-\64\91-\94\96\123-\125\127-\255]", "")
+	if #invalidChar ~= 0 then
+		customError("Directory path '"..data.fullpath.."' contains invalid character '"..invalidChar.."'.")
+	end
+
 	if data.fullpath:sub(-1) == "/" then
 		data.fullpath = data.fullpath:sub(1, -2)
 	end

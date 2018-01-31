@@ -153,7 +153,7 @@ File_ = {
 		if not belong(type(destination), {"Directory", "File"}) then
 			incompatibleTypeError(1, "Directory or File", destination)
 		end
-		
+
 		local stderr
 		if sessionInfo().system == "windows" then
 			stderr = "2>nul"
@@ -533,9 +533,15 @@ function File(data)
 		customError("Directory '"..dir.."' does not exist.")
 	end
 
-	local invalidChar = data.filename:find("[&*<>?|\"]")
-	if invalidChar then
-		customError("Filename '"..data.filename.."' cannot contain character '"..data.filename:sub(invalidChar, invalidChar).."'.")
+	local invalidCharIdx = data.filename:find("[&*<>?|\"]")
+	if invalidCharIdx then
+		customError("Filename '"..data.filename.."' cannot contain character '"..data.filename:sub(invalidCharIdx, invalidCharIdx).."'.")
+	end
+
+	local fileName = data:name()
+	local invalidChar = string.gsub(fileName, "[^\33-\44\58-\64\91-\94\96\123\125\127-\255]", "")
+	if #invalidChar ~= 0 then
+		customError("File name '"..fileName.."' contains invalid character '"..invalidChar.."'.")
 	end
 
 	if isDirectory(data.filename) then

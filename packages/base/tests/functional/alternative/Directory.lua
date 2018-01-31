@@ -64,6 +64,18 @@ return{
 		end
 
 		unitTest:assertError(blankSpaceError, "Directory path '/home/da ta/agents.csv' contains blank space.")
+
+		local invalidCharError = function()
+			Directory("C:/Usuários")
+		end
+
+		unitTest:assertError(invalidCharError, "Directory path 'C:/Usuários' contains invalid character 'á'.")
+
+		invalidCharError = function()
+			Directory("C:/Usuários/Ação")
+		end
+
+		unitTest:assertError(invalidCharError, "Directory path 'C:/Usuários/Ação' contains invalid character 'áçã'.")
 	end,
 	attributes = function(unitTest)
 		local dir = Directory("/my/path/my_dir")
