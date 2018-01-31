@@ -108,59 +108,6 @@ return {
 		unitTest:assertEquals(t.events[1].period, 5)
 		unitTest:assertEquals(t.events[1].priority, 4)
 	end,
-	addReplacement = function(unitTest)
-		local timer = Timer{}
-
-		local c = Cell{
-			dist = 1,
-			dist10 = 2,
-			dist20 = 3
-		}
-
-		local cs = CellularSpace{
-			xdim = 10,
-			instance = c
-		}
-
-		local ag = Agent{
-			dist = 1,
-			dist10 = 2,
-			dist20 = 3
-		}
-
-		local soc = Society{
-			quantity = 10,
-			instance = ag
-		}
-
-		timer:addReplacement{
-			target = cs,
-			select = {"dist10", "dist20"},
-			attribute = "dist",
-			time = {10, 20}
-		}
-
-		timer:addReplacement{
-			target = soc,
-			select = {"dist10", "dist20"},
-			attribute = "dist",
-			time = {10, 25}
-		}
-
-		unitTest:assertEquals(cs:dist(), 100)
-		unitTest:assertEquals(soc:dist(), 10)
-		unitTest:assertEquals(#timer, 4)
-
-		timer:run(13)
-		unitTest:assertEquals(cs:dist(), 200)
-		unitTest:assertEquals(soc:dist(), 20)
-		unitTest:assertEquals(#timer, 2)
-
-		timer:run(20)
-		unitTest:assertEquals(cs:dist(), 300)
-		unitTest:assertEquals(soc:dist(), 20)
-		unitTest:assertEquals(#timer, 1)
-	end,
 	clear = function(unitTest)
 		local timer = Timer{
 			Event{action = function() end},
