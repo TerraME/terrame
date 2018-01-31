@@ -153,8 +153,15 @@ File_ = {
 		if not belong(type(destination), {"Directory", "File"}) then
 			incompatibleTypeError(1, "Directory or File", destination)
 		end
+		
+		local stderr
+		if sessionInfo().system == "windows" then
+			stderr = "2>nul"
+		else
+			stderr = "2>/dev/null"
+		end
 
-		local result = os.execute("cp \""..self.."\" \""..destination.."\"")
+		local result = os.execute("cp \""..self.."\" \""..destination.."\" "..stderr)
 
 		if not result then
 			customError("Could not copy file to '"..destination.."'.")
