@@ -247,9 +247,14 @@ function Directory(data)
 	data.fullpath = data.name
 	data.name = nil
 
-	local invalidChar = data.fullpath:find("[*<>?|\"]")
-	if invalidChar then
-		customError("Directory name '"..data.fullpath.."' cannot contain character '"..data.fullpath:sub(invalidChar, invalidChar).."'.")
+	local invalidCharIdx = data.fullpath:find("[*<>?|\" ]")
+	if invalidCharIdx then
+		local invalidChar = data.fullpath:sub(invalidCharIdx, invalidCharIdx)
+		if invalidChar == " " then
+			customError("Directory path '"..data.fullpath.."' contains blank space.")
+		else
+			customError("Directory path '"..data.fullpath.."' cannot contain character '"..invalidChar.."'.")
+		end
 	end
 
 	if not (data.fullpath:match("\\") or data.fullpath:match("/")) then
