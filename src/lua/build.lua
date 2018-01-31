@@ -356,7 +356,7 @@ function _Gtme.buildPackage(package, config, clean)
 	currentdir:setCurrentDir()
 
 	print("\nBuild report for package '"..package.."':")
-	local executionTime = profiler:stop("BUILD_")
+	local executionTime = profiler:stop("BUILD_").strTime
 	printNote("Package was built in "..executionTime..".")
 	printNote("Build created file '"..file.."'.")
 	printNote("Temporary files are saved in "..tostring(tmpdirectory))

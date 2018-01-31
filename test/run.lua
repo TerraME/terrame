@@ -118,7 +118,8 @@ local function approximateLine(line)
 	if string.match(line, "Directory")           then return 160 end
 	if string.match(line, "hour")                then return  22 end
 	if string.match(line, "minute")              then return  24 end
-	if string.match(line, "second")              then return  17 end
+	if string.match(line, "second")              then return  20 end
+	if string.match(line, "millisecond")         then return  25 end
 	if string.match(line, "MD5")                 then return  70 end
 	if string.match(line, "log")                 then return 120 end
 	if string.match(line, "Cannot open")         then return 320 end
@@ -215,13 +216,13 @@ forEachOrderedElement(commands, function(idx, group)
 
 		result, err = runCommand(command)
 
-		local testFinalTime, difference = profiler:stop("TEST_RUN_")
+		local testFinalTime = profiler:stop("TEST_RUN_")
 		if time then
-			local text = "Test executed in "..testFinalTime
+			local text = "Test executed in "..testFinalTime.strClock
 
-			if difference > 60 then
+			if testFinalTime.clock > 60 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-			elseif difference > 10 then
+			elseif testFinalTime.clock > 10 then
 				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 			end
 		end
@@ -395,13 +396,13 @@ forEachOrderedElement(commands, function(idx, group)
 
 		result, err = runCommand(command)
 
-		local testFinalTime, difference = profiler:stop("TEST_RUN_")
+		local testFinalTime = profiler:stop("TEST_RUN_")
 		if time then
-			local text = "Test executed in "..testFinalTime
+			local text = "Test executed in "..testFinalTime.strClock
 
-			if difference > 60 then
+			if testFinalTime.clock > 60 then
 				_Gtme.print("\027[00;37;41m"..text.."\027[00m")
-			elseif difference > 10 then
+			elseif testFinalTime.clock > 10 then
 				_Gtme.print("\027[00;37;43m"..text.."\027[00m")
 			end
 		end
@@ -581,7 +582,7 @@ forEachElement(directories, function(idx, value)
 	end)
 end)
 
-local finalTime = profiler:stop("RUN_")
+local finalTime = profiler:stop("RUN_").strTime
 
 _Gtme.printNote("Removing files")
 forEachElement(initialRemove.files, removeIfExists)
