@@ -29,7 +29,6 @@
 #
 
 if(UNIX)
-
 	find_path(QWT_INCLUDE_DIR qwt.h
 	          PATHS /usr
 	                /usr/local
@@ -46,9 +45,7 @@ if(UNIX)
 	                   /usr/local/qwt
 	             PATH_SUFFIXES lib
 	             lib/qwt.framework)
-
 elseif(WIN32)
-
 	find_path(QWT_INCLUDE_DIR
 	          NAMES qwt.h
 	          PATH_SUFFIXES include
@@ -70,7 +67,6 @@ elseif(WIN32)
 	elseif(QWT_LIBRARY_DEBUG)
 		set(QWT_LIBRARY optimized ${QWT_LIBRARY_DEBUG} debug ${QWT_LIBRARY_DEBUG})
 	endif()
-
 endif()
 
 include(FindPackageHandleStandardArgs)

@@ -112,7 +112,7 @@ target_link_libraries(inttest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES}
                               ${QWT_LIBRARY})
 
 install(TARGETS inttest
-		RUNTIME DESTINATION bin
-		COMPONENT runtime)
+        RUNTIME DESTINATION bin
+        COMPONENT runtime)
 
 add_test(NAME inttest COMMAND inttest)

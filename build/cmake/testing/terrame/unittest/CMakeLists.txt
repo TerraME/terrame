@@ -49,7 +49,7 @@ add_executable(unittest ${TERRAME_UNITTEST_SRC_FILES}
 target_link_libraries(unittest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
 
 install(TARGETS unittest
-		RUNTIME DESTINATION bin
-		COMPONENT runtime)
+        RUNTIME DESTINATION bin
+        COMPONENT runtime)
 
 add_test(NAME unittest COMMAND unittest)
