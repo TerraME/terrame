@@ -143,17 +143,16 @@ if (APPLE)
 		set(MACOSX_BUNDLE_BUNDLE_VERSION ${TERRAME_STRING_VERSION})
 
 		install(PROGRAMS ${TERRAME_ABSOLUTE_ROOT_DIR}/res/terrame
-			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
-			PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-			COMPONENT runtime
-		)
+				DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+				PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+				COMPONENT runtime)
 
 		configure_file(${CMAKE_ROOT}/Modules/MacOSXBundleInfo.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
 
 		set(CPACK_PACKAGE_ICON "${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.icns")
 		set(CPACK_BUNDLE_NAME "TerraME")
 		set(CPACK_BUNDLE_ICON ${CPACK_PACKAGE_ICON})
-        set(CPACK_BUNDLE_STARTUP_COMMAND ${TERRAME_INSTALL_PREFIX}/bin/terrame) # TODO: REVIEW #1046
+		set(CPACK_BUNDLE_STARTUP_COMMAND ${TERRAME_INSTALL_PREFIX}/bin/terrame) # TODO: REVIEW #1046
 		set(CPACK_BUNDLE_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
 
 		set(TERRAME_APP_TYPE MACOSX_BUNDLE)
@@ -161,14 +160,14 @@ if (APPLE)
 endif()
 
 if (MINGW)
-    file(GLOB TERRAME_APP_ICON ${TERRAME_ABSOLUTE_ROOT_DIR}/res/resource.o)
+	file(GLOB TERRAME_APP_ICON ${TERRAME_ABSOLUTE_ROOT_DIR}/res/resource.o)
 elseif(MSVC)
 	file(GLOB TERRAME_APP_ICON ${TERRAME_ABSOLUTE_ROOT_DIR}/res/resource.rc)
 endif()
 
 # TODO: REVIEW
-# configure_file(${TERRAME_ABSOLUTE_ROOT_DIR}/src/Config.h.in
-               # ${CMAKE_BINARY_DIR}/terrame_config.h @ONLY)
+ #configure_file(${TERRAME_ABSOLUTE_ROOT_DIR}/src/Config.h.in
+			   # ${CMAKE_BINARY_DIR}/terrame_config.h @ONLY)
 
 #
 # first check of libraries
@@ -212,9 +211,9 @@ if (QTLUA_FOUND)
 	message("QtLua found!")
 	message("library: ${QTLUA_LIBRARY}")
 	message("include: ${QTLUA_INCLUDE_DIR}")
-    if (WIN32)
-        set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${QTLUA_LIBRARY})
-    endif()
+	if (WIN32)
+		set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${QTLUA_LIBRARY})
+	endif()
 endif()
 
 find_package(QtLua-extras REQUIRED)
@@ -222,16 +221,16 @@ if (QTLUAEXTRAS_FOUND)
 	message("QtLua-extras found!")
 	message("library: ${QTLUAEXTRAS_LIBRARY}")
 	message("include: ${QTLUAEXTRAS_INCLUDE_DIR}")
-    if (WIN32)
-        set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${QTLUAEXTRAS_LIBRARY})
-    endif()
+	if (WIN32)
+		set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${QTLUAEXTRAS_LIBRARY})
+	endif()
 endif()
 
 #
 # process TerraME configuration files
 #
-configure_file(${CMAKE_SOURCE_DIR}/terrameVersion.h.in
-                ${TERRAME_ABSOLUTE_ROOT_DIR}/src/core/terrameVersion.h @ONLY)
+configure_file( ${CMAKE_SOURCE_DIR}/terrameVersion.h.in
+				${TERRAME_ABSOLUTE_ROOT_DIR}/src/core/terrameVersion.h @ONLY)
 
 #Set include directories location
 include_directories(${TERRAME_SRC_DIR}
@@ -253,8 +252,7 @@ include_directories(${TERRAME_SRC_DIR}
 					${QWT_INCLUDE_DIR}
 					${LUA_INCLUDE_DIR}
 					${PROTOBUF_INCLUDE_DIR}
-					${Qt5Network_INCLUDE_DIRS} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS}
-				)
+					${Qt5Network_INCLUDE_DIRS} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS})
 
 set(TERRAME_OBSERVER_QRC_FILES ${TERRAME_SRC_DIR}/observer/observerResource.qrc)
 QT5_ADD_RESOURCES(TERRAME_OBSERVER_QRC_FILES_ADD ${TERRAME_OBSERVER_QRC_FILES})
@@ -287,8 +285,7 @@ set(TERRAME_FILES 	${TERRAME_CORE_SRC_FILES} ${TERRAME_CORE_HDR_FILES}
 					${TERRAME_OBSERVER_UDP_SENDER_SRC_FILES} ${TERRAME_OBSERVER_UDP_SENDER_HDR_FILES} ${TERRAME_OBSERVER_UDP_SENDER_UI_FILES}
 					${TERRAME_GEN_HDR_FILES}
 					${TERRAME_OBSERVER_QRC_FILES} ${TERRAME_OBSERVER_QRC_FILES_ADD}
-					${TERRAME_APP_ICON}
-					)
+					${TERRAME_APP_ICON})
 
 add_executable(terrame ${TERRAME_APP_TYPE} ${TERRAME_FILES} ${PROTO_SRCS} ${PROTO_HDRS})
 
@@ -298,14 +295,14 @@ target_link_libraries(terrame ${TERRAME_LIBRARIES})
 
 if (APPLE)
 	target_link_libraries(terrame ${_COREFOUNDATION_LIBRARY})
-    set_target_properties(terrame PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
+	set_target_properties(terrame PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
 endif()
 
 if (WIN32 AND MSVC)
-    set_target_properties(terrame PROPERTIES
-                        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${TERRAME_BIN_DIR}
-                        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${TERRAME_BIN_DIR}
-                       )
+	set_target_properties(	terrame PROPERTIES
+							RUNTIME_OUTPUT_DIRECTORY_DEBUG ${TERRAME_BIN_DIR}
+							RUNTIME_OUTPUT_DIRECTORY_RELEASE ${TERRAME_BIN_DIR})
+
 	set_target_properties(terrame PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
 	set_target_properties(terrame PROPERTIES RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
 	set_target_properties(terrame PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:CONSOLE")
@@ -316,11 +313,10 @@ endif()
 
 ## ------------------------------------- Set Installation procedure -------------------------------------------- ##
 install(TARGETS terrame
-        RUNTIME DESTINATION bin COMPONENT runtime
-        LIBRARY DESTINATION lib COMPONENT runtime
-        ARCHIVE DESTINATION lib COMPONENT runtime
-        BUNDLE DESTINATION . COMPONENT runtime
-       )
+		RUNTIME DESTINATION bin COMPONENT runtime
+		LIBRARY DESTINATION lib COMPONENT runtime
+		ARCHIVE DESTINATION lib COMPONENT runtime
+		BUNDLE DESTINATION . COMPONENT runtime)
 
 if (NOT DEFINED CMAKE_INSTALL_PREFIX)
 	set(CMAKE_INSTALL_PREFIX ${TERRAME_ABSOLUTE_ROOT_DIR}/install)
@@ -332,141 +328,123 @@ endif()
 		#)
 
 if (APPLE)
-    if (TERRAME_BUILD_AS_BUNDLE)
+	if (TERRAME_BUILD_AS_BUNDLE)
 		TmeInstallQtPlugins("qgif;qico;qjpeg;qmng;qtiff;qsvg;qsvgicon;qsqlite;qwindows;qcocoa")
 
 		file(WRITE  ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
-			"[Paths]\nBinaries = MacOS\nPlugins = qtplugins"
-		)
+			"[Paths]\nBinaries = MacOS\nPlugins = qtplugins")
 
-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
-			DESTINATION ${TERRAME_INSTALL_PREFIX}/Resources
-            COMPONENT runtime
-		)
+		install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
+				DESTINATION ${TERRAME_INSTALL_PREFIX}/Resources
+				COMPONENT runtime)
 
-        install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.icns
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/Resources/icon
-            COMPONENT runtime
-       )
+		install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.icns
+				DESTINATION ${TERRAME_INSTALL_PREFIX}/Resources/icon
+				COMPONENT runtime)
 
-        set(TERRAME_CURRENT_BINARY_DIR ${TERRAME_INSTALL_PREFIX}/MacOS)
+		set(TERRAME_CURRENT_BINARY_DIR ${TERRAME_INSTALL_PREFIX}/MacOS)
 
-    else()
-        set(TERRAME_CURRENT_BINARY_DIR bin)
+	else()
+		set(TERRAME_CURRENT_BINARY_DIR bin)
 
-        install(FILES ${TERRALIB_3RDPARTY_DIR}/lib/liblua.dylib
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
-            COMPONENT runtime)
-    endif()
+		install(FILES ${TERRALIB_3RDPARTY_DIR}/lib/liblua.dylib
+				DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
+				COMPONENT runtime)
+	endif()
 
-    install(DIRECTORY ${TERRALIB_DIR}/lib
-            DESTINATION ${TERRAME_INSTALL_PREFIX}
-            COMPONENT runtime
-            PATTERN "cmake" EXCLUDE
-           )
+	install(DIRECTORY ${TERRALIB_DIR}/lib
+			DESTINATION ${TERRAME_INSTALL_PREFIX}
+			COMPONENT runtime
+			PATTERN "cmake" EXCLUDE)
 
-    list(APPEND QTLUA_LIBS  ${TERRALIB_3RDPARTY_DIR}/lib/libqtluae.0.1.dylib
-                            ${TERRALIB_3RDPARTY_DIR}/lib/qtluae.dylib
-                            ${TERRALIB_3RDPARTY_DIR}/lib/libqtlua.dylib
-       )
+	list(APPEND QTLUA_LIBS  ${TERRALIB_3RDPARTY_DIR}/lib/libqtluae.0.1.dylib
+							${TERRALIB_3RDPARTY_DIR}/lib/qtluae.dylib
+							${TERRALIB_3RDPARTY_DIR}/lib/libqtlua.dylib)
 
-    install(FILES   ${QTLUA_LIBS}
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
-            COMPONENT runtime
-           )
+	install(FILES   ${QTLUA_LIBS}
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
+			COMPONENT runtime)
 
-    install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
-            COMPONENT runtime
-           )
+	install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
+			COMPONENT runtime)
 
-    set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
+	set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
 
-    install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
-            DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
-            COMPONENT runtime
-           )
+	install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
+			DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
+			COMPONENT runtime)
 
-    set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
+	set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
 
 	if (NOT TERRAME_CREATE_INSTALLER)
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}
 				DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
 				COMPONENT runtime
 				PATTERN "windows" EXCLUDE
-				PATTERN "linux" EXCLUDE
-		)
+				PATTERN "linux" EXCLUDE)
 	else()
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}
-			DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
-			COMPONENT runtime
-			PATTERN "log" EXCLUDE
-			PATTERN "test" EXCLUDE
-			PATTERN "tests" EXCLUDE
-			PATTERN "*.tview" EXCLUDE
-		)
+				DESTINATION ${TERRAME_CURRENT_BINARY_DIR}
+				COMPONENT runtime
+				PATTERN "log" EXCLUDE
+				PATTERN "test" EXCLUDE
+				PATTERN "tests" EXCLUDE
+				PATTERN "*.tview" EXCLUDE)
 
 		install(DIRECTORY ${TERRAME_ABSOLUTE_ROOT_DIR}/ide/zerobrane
-			DESTINATION ${TERRAME_INSTALL_PREFIX}/ide
-			COMPONENT runtime
-		)
+				DESTINATION ${TERRAME_INSTALL_PREFIX}/ide
+				COMPONENT runtime)
 	endif()
 
-#    install(DIRECTORY ${TERRALIB_DIR}/share/data
-#            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/data/
-#            COMPONENT runtime
-#           )
+#	install(DIRECTORY ${TERRALIB_DIR}/share/data
+#			DESTINATION ${TERRAME_INSTALL_PREFIX}/share/data/
+#			COMPONENT runtime)
 
-    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json
-            DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
-            COMPONENT runtime
-           )
+	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json
+			DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
+			COMPONENT runtime)
 
-    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins
-            DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
-            COMPONENT runtime
-           )
+	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins
+			DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
+			COMPONENT runtime)
 
-    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas
-            DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
-            COMPONENT runtime
-           )
+	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas
+			DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
+			COMPONENT runtime)
 
-    install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
-        DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share
-        COMPONENT runtime
-	)
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+			DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share
+			COMPONENT runtime)
 
-    install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck
-        DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
-        COMPONENT runtime
-	)
+	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
+			COMPONENT runtime)
 elseif(WIN32)
-    set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
+	set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
 
-    install(DIRECTORY ${TERRAME_LUA_SRC_DIR}/
-            DESTINATION bin/lua
-            COMPONENT runtime
-           )
+	install(DIRECTORY ${TERRAME_LUA_SRC_DIR}/
+			DESTINATION bin/lua
+			COMPONENT runtime)
 
-    set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
+	set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
 
 	if(TERRAME_CREATE_INSTALLER)
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
-			DESTINATION bin/packages
-			COMPONENT runtime
-			PATTERN "log" EXCLUDE
-			PATTERN "test" EXCLUDE
-			PATTERN "tests" EXCLUDE
-			PATTERN "*.tview" EXCLUDE)
+				DESTINATION bin/packages
+				COMPONENT runtime
+				PATTERN "log" EXCLUDE
+				PATTERN "test" EXCLUDE
+				PATTERN "tests" EXCLUDE
+				PATTERN "*.tview" EXCLUDE)
 
 		install(DIRECTORY ${TERRAME_ABSOLUTE_ROOT_DIR}/ide/zerobrane/
-			DESTINATION bin/ide/zerobrane
-			COMPONENT runtime)
+				DESTINATION bin/ide/zerobrane
+				COMPONENT runtime)
 
 		install(PROGRAMS ${TERRAME_ABSOLUTE_ROOT_DIR}/res/configure-zerobrane.bat
-			DESTINATION .
-			COMPONENT runtime)
+				DESTINATION .
+				COMPONENT runtime)
 	else()
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
 				DESTINATION bin/packages
@@ -478,14 +456,12 @@ elseif(WIN32)
 	set(QTLUA_LIBRARY_DLL ${QTLUA_INCLUDE_DIR}/../../lib/qtlua.dll)
 	install(FILES ${QTLUA_LIBRARY_DLL}
 			DESTINATION bin
-			COMPONENT runtime
-			)
+			COMPONENT runtime)
 
 	set(QTLUAEXTRAS_LIBRARY_DLL ${QTLUAEXTRAS_INCLUDE_DIR}/../../lib/qtluae.dll)
 	install(FILES ${QTLUAEXTRAS_LIBRARY_DLL}
 			DESTINATION bin
-			COMPONENT runtime
-			)
+			COMPONENT runtime)
 
 	list(APPEND MSYS_DEPENDENCIES 	${MSYS_DIR}/cp.exe
 									${MSYS_DIR}/ls.exe
@@ -501,59 +477,49 @@ elseif(WIN32)
 									${MSYS_DIR}/mv.exe
 	)
 
-    add_custom_command(
-		TARGET terrame
-		POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy "${MSYS_DIR}/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find.exe"
-		COMMAND ${CMAKE_COMMAND} -E rename "${CMAKE_INSTALL_PREFIX}/bin/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find-msys.exe"
-		COMMENT "Renamed bin/find.exe to bin/find-msys.exe..."
-		VERBATIM
-	)
+	add_custom_command( TARGET terrame
+						POST_BUILD
+						COMMAND ${CMAKE_COMMAND} -E copy "${MSYS_DIR}/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find.exe"
+						COMMAND ${CMAKE_COMMAND} -E rename "${CMAKE_INSTALL_PREFIX}/bin/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find-msys.exe"
+						COMMENT "Renamed bin/find.exe to bin/find-msys.exe..."
+						VERBATIM)
 
 	list(APPEND MSYS_DEPENDENCIES ${CMAKE_INSTALL_PREFIX}/bin/find-msys.exe)
 
 	install(FILES ${MSYS_DEPENDENCIES}
-		DESTINATION bin
-		COMPONENT runtime
-	)
+			DESTINATION bin
+			COMPONENT runtime)
 
 	install(DIRECTORY ${TERRALIB_DIR}/bin/
 			DESTINATION bin
-			COMPONENT runtime
-			)
+			COMPONENT runtime)
 
 	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/data/
 			DESTINATION bin/share/data
-			COMPONENT runtime
-			)
+			COMPONENT runtime)
 
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json/
 			DESTINATION bin/share/terralib/json
-			COMPONENT runtime
-			)
+			COMPONENT runtime)
 
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins/
 			DESTINATION bin/share/terralib/plugins
-			COMPONENT runtime
-			)
+			COMPONENT runtime)
 
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas/
 			DESTINATION bin/share/terralib/schemas
-			COMPONENT runtime
-			)
+			COMPONENT runtime)
 
 
 	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindowsd.dll
-		DESTINATION bin/platforms
-		COMPONENT runtime
-		CONFIGURATIONS Debug
-	)
+			DESTINATION bin/platforms
+			COMPONENT runtime
+			CONFIGURATIONS Debug)
 
 	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindows.dll
-		DESTINATION bin/platforms
-		COMPONENT runtime
-		CONFIGURATIONS Release
-	)
+			DESTINATION bin/platforms
+			COMPONENT runtime
+			CONFIGURATIONS Release)
 
 	list(APPEND TERRALIB_DEPENDENCIES	${TERRALIB_3RDPARTY_DIR}/lib/boost_chrono-mt.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/boost_date_time-mt.dll
@@ -583,50 +549,43 @@ elseif(WIN32)
 										${TERRALIB_3RDPARTY_DIR}/lib/ssleay32.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/xdrdll.dll
 										${TERRALIB_3RDPARTY_DIR}/lib/xerces-c_3_1.dll
-										${TERRALIB_3RDPARTY_DIR}/lib/xercesc_messages_3_1_1.dll
-		)
+										${TERRALIB_3RDPARTY_DIR}/lib/xercesc_messages_3_1_1.dll)
 
 	install(FILES ${TERRALIB_DEPENDENCIES}
-		DESTINATION bin
-		COMPONENT runtime
-		CONFIGURATIONS Release
-	)
+			DESTINATION bin
+			COMPONENT runtime
+			CONFIGURATIONS Release)
 
 	list(APPEND MSVC_DEPENDENCIES	${MSVC_REDIST_DIR}/msvcp120.dll
-									${MSVC_REDIST_DIR}/msvcr120.dll
-		)
+									${MSVC_REDIST_DIR}/msvcr120.dll)
 
 	install(FILES ${MSVC_DEPENDENCIES}
 			DESTINATION bin
-			COMPONENT runtime
-			)
+			COMPONENT runtime)
 
-	# install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.ico
-        # DESTINATION bin/
-		# COMPONENT runtime
-		#)
+	#install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.ico
+			#DESTINATION bin/
+			#COMPONENT runtime)
 
-    install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
-        DESTINATION bin/luacheck
-        COMPONENT runtime
-	)
+	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
+			DESTINATION bin/luacheck
+			COMPONENT runtime)
 else(UNIX)
-    set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
+	set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
 
-    install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
-            COMPONENT runtime
-    )
+	install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+			COMPONENT runtime)
 
-    set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
+	set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
 
 	if (NOT TERRAME_CREATE_INSTALLER)
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
 				DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/packages
 				COMPONENT runtime
 				PATTERN "windows" EXCLUDE
-				PATTERN "mac" EXCLUDE
-		)
+				PATTERN "mac" EXCLUDE)
+
 	else()
 		install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
 				DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/packages
@@ -634,123 +593,106 @@ else(UNIX)
 				PATTERN "log" EXCLUDE
 				PATTERN "test" EXCLUDE
 				PATTERN "tests" EXCLUDE
-				PATTERN "*.tview" EXCLUDE
-		)
+				PATTERN "*.tview" EXCLUDE)
 
 		install(DIRECTORY ${TERRAME_ABSOLUTE_ROOT_DIR}/ide/zerobrane/
-			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/ide/zerobrane
-			COMPONENT runtime
-		)
+				DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/ide/zerobrane
+				COMPONENT runtime)
 	endif()
 
-    install(DIRECTORY ${TERRALIB_DIR}/lib/
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
-            COMPONENT runtime
-            PATTERN "cmake" EXCLUDE
-    )
+	install(DIRECTORY ${TERRALIB_DIR}/lib/
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+			COMPONENT runtime
+			PATTERN "cmake" EXCLUDE)
 
-    list(APPEND QTLUAE_LIBS ${TERRALIB_3RDPARTY_DIR}/lib/libqtluae.so.0.1
-                            ${TERRALIB_3RDPARTY_DIR}/lib/qtluae.so)
+	list(APPEND QTLUAE_LIBS ${TERRALIB_3RDPARTY_DIR}/lib/libqtluae.so.0.1
+							${TERRALIB_3RDPARTY_DIR}/lib/qtluae.so)
 
-    install(FILES   ${QTLUAE_LIBS}
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
-            COMPONENT runtime
-    )
+	install(FILES ${QTLUAE_LIBS}
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+			COMPONENT runtime)
 
-	file(GLOB TERRAME_CORE_DEPENDENCIES
-		${TERRALIB_3RDPARTY_DIR}/lib/libqwt.so*
-		${TERRALIB_3RDPARTY_DIR}/lib/liblua.so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libqtlua.so*)
+	file(GLOB TERRAME_CORE_DEPENDENCIES	${TERRALIB_3RDPARTY_DIR}/lib/libqwt.so*
+										${TERRALIB_3RDPARTY_DIR}/lib/liblua.so*
+										${TERRALIB_3RDPARTY_DIR}/lib/libqtlua.so*)
 
-    install(FILES ${TERRAME_CORE_DEPENDENCIES}
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
-            COMPONENT runtime
-    )
+	install(FILES ${TERRAME_CORE_DEPENDENCIES}
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+			COMPONENT runtime)
 
-	file(GLOB Qt5_LIBS
-		${Qt5_DIR}/../../libQt5Network.so*
-		${Qt5_DIR}/../../libQt5Gui.so*
-		${Qt5_DIR}/../../libQt5Core.so*
-		${Qt5_DIR}/../../libQt5Widgets.so*
-		${Qt5_DIR}/../../libQt5PrintSupport.so*
-		${Qt5_DIR}/../../libQt5Svg.so*
-		${Qt5_DIR}/../../libQt5OpenGL.so*
-		${Qt5_DIR}/../../libQt5DBus.so*
-		${Qt5_DIR}/../../libicui18n.so*
-		${Qt5_DIR}/../../libicuuc.so*
-		${Qt5_DIR}/../../libicudata.so*
-		${Qt5_DIR}/../../libkmldom*so*
-		${Qt5_DIR}/../../libkmlengine*so*
-		${Qt5_DIR}/../../libkmlbase*so*
-		${Qt5_DIR}/../../libminizip*so*
-		${Qt5_DIR}/../../../liburiparser*so*)
+	file(GLOB Qt5_LIBS	${Qt5_DIR}/../../libQt5Network.so*
+						${Qt5_DIR}/../../libQt5Gui.so*
+						${Qt5_DIR}/../../libQt5Core.so*
+						${Qt5_DIR}/../../libQt5Widgets.so*
+						${Qt5_DIR}/../../libQt5PrintSupport.so*
+						${Qt5_DIR}/../../libQt5Svg.so*
+						${Qt5_DIR}/../../libQt5OpenGL.so*
+						${Qt5_DIR}/../../libQt5DBus.so*
+						${Qt5_DIR}/../../libicui18n.so*
+						${Qt5_DIR}/../../libicuuc.so*
+						${Qt5_DIR}/../../libicudata.so*
+						${Qt5_DIR}/../../libkmldom*so*
+						${Qt5_DIR}/../../libkmlengine*so*
+						${Qt5_DIR}/../../libkmlbase*so*
+						${Qt5_DIR}/../../libminizip*so*
+						${Qt5_DIR}/../../../liburiparser*so*)
 
-    install(FILES ${Qt5_LIBS}
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
-            COMPONENT runtime
-    )
+	install(FILES ${Qt5_LIBS}
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+			COMPONENT runtime)
 
 	install(FILES ${Qt5_DIR}/../../qt5/plugins/platforms/libqxcb.so
-		DESTINATION bin/platforms
-		COMPONENT runtime
-	)
+			DESTINATION bin/platforms
+			COMPONENT runtime)
 
-    install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
-            COMPONENT runtime
-    )
+	install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+			COMPONENT runtime)
 
-	file(GLOB TERRALIB_DEPENDENCIES
-		${TERRALIB_3RDPARTY_DIR}/lib/libboost_system.so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libboost_date_time.so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libboost_filesystem.so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libboost_thread.so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libboost_locale.so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libboost_regex.so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libboost_log.so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libboost_log_setup.so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libgeos*so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libproj*so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libxerces*so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libsz*so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libgeotiff*so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libjpeg*so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libpng*so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libspatialite*so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libfreexl*so*
-		${TERRALIB_3RDPARTY_DIR}/lib/libpcre*so*
-		${TERRALIB_3RDPARTY_DIR}/pgsql/lib/libpq*so*
-		${TERRALIB_3RDPARTY_DIR}/gdal2/lib/libgdal.so*)
+	file(GLOB TERRALIB_DEPENDENCIES	${TERRALIB_3RDPARTY_DIR}/lib/libboost_system.so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libboost_date_time.so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libboost_filesystem.so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libboost_thread.so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libboost_locale.so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libboost_regex.so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libboost_log.so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libboost_log_setup.so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libgeos*so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libproj*so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libxerces*so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libsz*so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libgeotiff*so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libjpeg*so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libpng*so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libspatialite*so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libfreexl*so*
+									${TERRALIB_3RDPARTY_DIR}/lib/libpcre*so*
+									${TERRALIB_3RDPARTY_DIR}/pgsql/lib/libpq*so*
+									${TERRALIB_3RDPARTY_DIR}/gdal2/lib/libgdal.so*)
 
-    install(FILES ${TERRALIB_DEPENDENCIES}
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
-            COMPONENT runtime
-    )
+	install(FILES ${TERRALIB_DEPENDENCIES}
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
+			COMPONENT runtime)
 
-    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
-            COMPONENT runtime
-    )
+	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
+			COMPONENT runtime)
 
-    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
-            COMPONENT runtime
-    )
+	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
+			COMPONENT runtime)
 
-    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
-            COMPONENT runtime
-	)
+	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
+			COMPONENT runtime)
 
-    install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
-        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share
-        COMPONENT runtime
-	)
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share
+			COMPONENT runtime)
 
-    install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
-        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/luacheck
-        COMPONENT runtime
-	)
+	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
+			DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/luacheck
+			COMPONENT runtime)
 endif()
 
 if (TERRAME_BUILD_AS_BUNDLE)

@@ -22,52 +22,49 @@
 ############################################################################################
 
 MACRO(TmeInstallPlugins plugins location)
+	set(_files)
 
-  set(_files)
+	foreach(plugin ${plugins})
+		get_target_property(_loc ${plugin} LOCATION)
+		list(APPEND _files ${_loc})
+	endforeach()
 
-  foreach(plugin ${plugins})
-    get_target_property(_loc ${plugin} LOCATION)
-    list(APPEND _files ${_loc})
-  endforeach()
-  
 	install(FILES ${_files}
-           DESTINATION "${TERRAME_INSTALL_PREFIX}/qtplugins/${location}"
-           CONFIGURATIONS Release
-           COMPONENT runtime)
-  
+		DESTINATION "${TERRAME_INSTALL_PREFIX}/qtplugins/${location}"
+		CONFIGURATIONS Release
+		COMPONENT runtime)
 ENDMACRO(TmeInstallPlugins)
 
-
 MACRO(TmeInstallQt5Plugins)
-  find_package(Qt5 COMPONENTS Sql Svg PrintSupport)
+	find_package(Qt5 COMPONENTS Sql Svg PrintSupport)
 
-# Installing image plugins
-  set(_plugins Qt5::QGifPlugin Qt5::QICOPlugin Qt5::QJpegPlugin Qt5::QMngPlugin Qt5::QTiffPlugin)
-  TmeInstallPlugins("${_plugins}" "imageformats")
-  
-# Installing svg plugins
-  set(_plugins Qt5::QSvgPlugin Qt5::QSvgIconPlugin)
-  TmeInstallPlugins("${_plugins}" "iconengines")
-    
-# Installing sql plugins
-  set(_plugins Qt5::QSQLiteDriverPlugin)
-  TmeInstallPlugins("${_plugins}" "sqldrivers")
+	# Installing image plugins
+	set(_plugins Qt5::QGifPlugin Qt5::QICOPlugin Qt5::QJpegPlugin Qt5::QMngPlugin Qt5::QTiffPlugin)
+	TmeInstallPlugins("${_plugins}" "imageformats")
 
-# Installing printer support plugin
-  if(WIN32)
-    set(_plugins Qt5::QWindowsPrinterSupportPlugin)
-    TmeInstallPlugins("${_plugins}" "printsupport")
-  endif()
-  
-# Installing platform plugins
-  if(WIN32)
-    set(_plugins Qt5::QWindowsIntegrationPlugin Qt5::QMinimalIntegrationPlugin)
-    TmeInstallPlugins("${_plugins}" "platforms")
-  elseif(APPLE)
-    set(_plugins Qt5::QCocoaIntegrationPlugin Qt5::QMinimalIntegrationPlugin)
-    TmeInstallPlugins("${_plugins}" "platforms")
-  endif()
-  
+	# Installing svg plugins
+	set(_plugins Qt5::QSvgPlugin Qt5::QSvgIconPlugin)
+	TmeInstallPlugins("${_plugins}" "iconengines")
+
+	# Installing sql plugins
+	set(_plugins Qt5::QSQLiteDriverPlugin)
+	TmeInstallPlugins("${_plugins}" "sqldrivers")
+
+	# Installing printer support plugin
+	if(WIN32)
+		set(_plugins Qt5::QWindowsPrinterSupportPlugin)
+		TmeInstallPlugins("${_plugins}" "printsupport")
+	endif()
+
+	# Installing platform plugins
+	if(WIN32)
+		set(_plugins Qt5::QWindowsIntegrationPlugin Qt5::QMinimalIntegrationPlugin)
+		TmeInstallPlugins("${_plugins}" "platforms")
+	elseif(APPLE)
+		set(_plugins Qt5::QCocoaIntegrationPlugin Qt5::QMinimalIntegrationPlugin)
+		TmeInstallPlugins("${_plugins}" "platforms")
+	endif()
+
 ENDMACRO(TmeInstallQt5Plugins)
 
 #
@@ -79,34 +76,33 @@ ENDMACRO(TmeInstallQt5Plugins)
 #
 MACRO(TmeInstallQtPlugins plgs)
 
-  if ("${QT_PLUGINS_DIR}" STREQUAL "")
-    set (QT_PLUGINS_DIR "${Qt5_DIR}/../../../plugins")
-  endif()
+	if("${QT_PLUGINS_DIR}" STREQUAL "")
+		set (QT_PLUGINS_DIR "${Qt5_DIR}/../../../plugins")
+	endif()
 
-  set (_regex_exp "")
+	set(_regex_exp "")
 
-  set( _first TRUE)
+	set(_first TRUE)
 
-  foreach(plg ${plgs})
-    if(NOT _first)
-      set (_regex_exp ${_regex_exp}|${plg})
-    else()
-      set (_regex_exp ${plg})
-      set (_first FALSE)
-    endif()
-  endforeach()
+	foreach(plg ${plgs})
+		if(NOT _first)
+			set (_regex_exp ${_regex_exp}|${plg})
+		else()
+			set(_regex_exp ${plg})
+			set(_first FALSE)
+		endif()
+	endforeach()
 
-  set (_regex_exp "(${_regex_exp})?(${CMAKE_SHARED_LIBRARY_SUFFIX})$")
+	set(_regex_exp "(${_regex_exp})?(${CMAKE_SHARED_LIBRARY_SUFFIX})$")
 
-  set (_dest "${TERRAME_INSTALL_PREFIX}/qtplugins")
+	set(_dest "${TERRAME_INSTALL_PREFIX}/qtplugins")
 
-  set (_plugin_dirs "imageformats;iconengines;platforms") #TODO(#1711)
+	set(_plugin_dirs "imageformats;iconengines;platforms") #TODO(#1711)
 
-  foreach(_plugin_dir ${_plugin_dirs})
-
-    install (DIRECTORY ${QT_PLUGINS_DIR}/${_plugin_dir}
-             DESTINATION ${_dest}  COMPONENT runtime
-             FILES_MATCHING REGEX "${_regex_exp}")
-  endforeach()
+	foreach(_plugin_dir ${_plugin_dirs})
+		install(DIRECTORY ${QT_PLUGINS_DIR}/${_plugin_dir}
+				DESTINATION ${_dest}  COMPONENT runtime
+				FILES_MATCHING REGEX "${_regex_exp}")
+	endforeach()
 
 ENDMACRO(TmeInstallQtPlugins)

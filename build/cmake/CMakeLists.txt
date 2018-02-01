@@ -33,13 +33,14 @@ project(terrame)
 set(TERRAME_VERSION_MAJOR 2)
 set(TERRAME_VERSION_MINOR 0)
 set(TERRAME_VERSION_PATCH 0)
-if (NOT DEFINED TERRAME_VERSION_PATCH)
+if(NOT DEFINED TERRAME_VERSION_PATCH)
 	set(TERRAME_VERSION_STATUS "" CACHE STRING "Define name of installer")
 endif()
+
 # for future use
 # set(TERRAME_BUILD_NUMBER "" CACHE STRING "Number of build in Jenkins")
 
-if (TERRAME_VERSION_STATUS STREQUAL "build")
+if(TERRAME_VERSION_STATUS STREQUAL "build")
 	set(TERRAME_VERSION_STATUS "${TERRAME_VERSION_STATUS}-${TERRAME_BUILD_NUMBER}")
 endif()
 
@@ -48,7 +49,7 @@ set(TERRAME_VERSION "0x020000")
 set(TERRAME_PKG_VERSION ${TERRAME_VERSION_MAJOR}.${TERRAME_VERSION_MINOR}.${TERRAME_VERSION_PATCH})
 
 # variables that controls what is built
-if (NOT DEFINED TERRAME_BUILD_AS_BUNDLE)
+if(NOT DEFINED TERRAME_BUILD_AS_BUNDLE)
 	set(TERRAME_BUILD_AS_BUNDLE 0 CACHE BOOL "If on, tells that the build will generate a bundle")
 endif()
 
@@ -63,17 +64,17 @@ set(TERRAME_SRC_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/src) # this is the directory wh
 set(CMAKE_MODULE_PATH ${TERRAME_ABSOLUTE_ROOT_DIR}/build/cmake/find) # this is the directory where additional scritps are located
 
 ## Sets type of build: Release or Debug
-if (NOT DEFINED CMAKE_BUILD_TYPE)
+if(NOT DEFINED CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_CXX_COMPILER MATCHES ".*clang") OR(CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -std=c++11")
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_CXX_COMPILER MATCHES ".*clang") OR(CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -std=c++11")
 endif()
 
 cmake_policy(SET CMP0020 NEW)
 
-if (CMAKE_VERSION VERSION_EQUAL "2.0.0" OR CMAKE_VERSION VERSION_GREATER "2.0.0")
+if(CMAKE_VERSION VERSION_EQUAL "2.0.0" OR CMAKE_VERSION VERSION_GREATER "2.0.0")
 	cmake_policy(SET CMP0007 NEW)
 	cmake_policy(SET CMP0026 OLD)
 	cmake_policy(SET CMP0042 NEW)
@@ -81,14 +82,14 @@ if (CMAKE_VERSION VERSION_EQUAL "2.0.0" OR CMAKE_VERSION VERSION_GREATER "2.0.0"
 	cmake_policy(SET CMP0045 OLD)
 endif()
 
-if (CMAKE_VERSION VERSION_EQUAL "3.1.0" OR CMAKE_VERSION VERSION_GREATER "3.1.0")
+if(CMAKE_VERSION VERSION_EQUAL "3.1.0" OR CMAKE_VERSION VERSION_GREATER "3.1.0")
 	cmake_policy(SET CMP0053 OLD)
 endif()
 
 #
 # Build will generate files into a single folder
 #
-if ((CMAKE_GENERATOR STREQUAL Xcode) OR MSVC)
+if((CMAKE_GENERATOR STREQUAL Xcode) OR MSVC)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -104,12 +105,12 @@ endif()
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-if (MSVC)
+if(MSVC)
 	set(CMAKE_DEBUG_POSTFIX "d")
 	add_definitions(/MP)
 endif()
 
-if (APPLE AND TERRAME_BUILD_AS_BUNDLE)
+if(APPLE AND TERRAME_BUILD_AS_BUNDLE)
 	set(CMAKE_INSTALL_NAME_DIR "@executable_path/../lib")
 	set(TERRAME_APP_TYPE MACOSX_BUNDLE)
 	set(TERRAME_INSTALL_PREFIX "terrame.app/Contents")
@@ -132,15 +133,15 @@ set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${TERRAME_ABSOLUTE_ROOT_DIR};/")
 #
 # including TerraME C++ testing
 #
-if (NOT TERRAME_CREATE_INSTALLER)
+if(NOT TERRAME_CREATE_INSTALLER)
 	add_subdirectory(testing)
 endif()
 
 #
 # CPack
 #
-configure_file(${CMAKE_SOURCE_DIR}/terrame-cpack-options.cmake.in
-               ${CMAKE_BINARY_DIR}/terrameCPackOptions.cmake @ONLY)
+configure_file( ${CMAKE_SOURCE_DIR}/terrame-cpack-options.cmake.in
+				${CMAKE_BINARY_DIR}/terrameCPackOptions.cmake @ONLY)
 
 set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_BINARY_DIR}/terrameCPackOptions.cmake)
 
