@@ -85,19 +85,20 @@ endif()
 set(_gmock_libpath_suffixes lib)
 if(MSVC)
 	if(GMOCK_MSVC_SEARCH STREQUAL "MD")
-	list(APPEND _gmock_libpath_suffixes
-		msvc/gmock-md/Debug
-		msvc/gmock-md/Release)
+		list(APPEND _gmock_libpath_suffixes
+			msvc/gmock-md/Debug
+			msvc/gmock-md/Release)
 	elseif(GMOCK_MSVC_SEARCH STREQUAL "MT")
-	list(APPEND _gmock_libpath_suffixes
-		msvc/gmock/Debug
-		msvc/gmock/Release)
+		list(APPEND _gmock_libpath_suffixes
+			msvc/gmock/Debug
+			msvc/gmock/Release)
 	endif()
 endif()
 
 find_path(GMOCK_INCLUDE_DIR gmock/gmock.h
-          HINTS $ENV{GMOCK_ROOT}/include
-                ${GMOCK_ROOT}/include)
+	HINTS 
+		$ENV{GMOCK_ROOT}/include
+		${GMOCK_ROOT}/include)
 
 mark_as_advanced(GMOCK_INCLUDE_DIR)
 
