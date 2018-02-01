@@ -70,12 +70,10 @@ endfunction()
 
 function(_gmock_find_library _name)
 	find_library(${_name}
-		NAMES ${ARGN}
-		HINTS
-			$ENV{GMOCK_ROOT}
-			${GMOCK_ROOT}
-		PATH_SUFFIXES ${_gmock_libpath_suffixes}
-	)
+	             NAMES ${ARGN}
+	             HINTS $ENV{GMOCK_ROOT}
+	                   ${GMOCK_ROOT}
+	             PATH_SUFFIXES ${_gmock_libpath_suffixes})
 	mark_as_advanced(${_name})
 endfunction()
 
@@ -98,24 +96,23 @@ if(MSVC)
 endif()
 
 find_path(GMOCK_INCLUDE_DIR gmock/gmock.h
-		HINTS
-		$ENV{GMOCK_ROOT}/include
-		${GMOCK_ROOT}/include)
+          HINTS $ENV{GMOCK_ROOT}/include
+                ${GMOCK_ROOT}/include)
 
 mark_as_advanced(GMOCK_INCLUDE_DIR)
 
 if(MSVC AND GMOCK_MSVC_SEARCH STREQUAL "MD")
 	# The provided /MD project files for Google Mock add -md suffixes to the
 	# library names.
-	_gmock_find_library(GMOCK_LIBRARY				gmock-md  gmock)
-	_gmock_find_library(GMOCK_LIBRARY_DEBUG			gmock-mdd gmockd)
-	_gmock_find_library(GMOCK_MAIN_LIBRARY			gmock_main-md  gmock_main)
-	_gmock_find_library(GMOCK_MAIN_LIBRARY_DEBUG	gmock_main-mdd gmock_maind)
+	_gmock_find_library(GMOCK_LIBRARY            gmock-md  gmock)
+	_gmock_find_library(GMOCK_LIBRARY_DEBUG      gmock-mdd gmockd)
+	_gmock_find_library(GMOCK_MAIN_LIBRARY       gmock_main-md  gmock_main)
+	_gmock_find_library(GMOCK_MAIN_LIBRARY_DEBUG gmock_main-mdd gmock_maind)
 else()
-	_gmock_find_library(GMOCK_LIBRARY				gmock)
-	_gmock_find_library(GMOCK_LIBRARY_DEBUG			gmockd)
-	_gmock_find_library(GMOCK_MAIN_LIBRARY			gmock_main)
-	_gmock_find_library(GMOCK_MAIN_LIBRARY_DEBUG	gmock_maind)
+	_gmock_find_library(GMOCK_LIBRARY            gmock)
+	_gmock_find_library(GMOCK_LIBRARY_DEBUG      gmockd)
+	_gmock_find_library(GMOCK_MAIN_LIBRARY       gmock_main)
+	_gmock_find_library(GMOCK_MAIN_LIBRARY_DEBUG gmock_maind)
 endif()
 
 include(FindPackageHandleStandardArgs)

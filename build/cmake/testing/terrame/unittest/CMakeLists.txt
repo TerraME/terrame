@@ -44,7 +44,7 @@ source_group("Source Files\\core" FILES ${TERRAME_UNITTEST_CORE_SRC_FILES})
 source_group("Header Files\\core" FILES ${TERRAME_UNITTEST_CORE_HDR_FILES})
 
 add_executable(unittest ${TERRAME_UNITTEST_SRC_FILES}
-						${TERRAME_UNITTEST_CORE_SRC_FILES} ${TERRAME_UNITTEST_CORE_HDR_FILES})
+                        ${TERRAME_UNITTEST_CORE_SRC_FILES} ${TERRAME_UNITTEST_CORE_HDR_FILES})
 
 target_link_libraries(unittest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
 

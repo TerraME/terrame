@@ -140,8 +140,8 @@ endif()
 #
 # CPack
 #
-configure_file( ${CMAKE_SOURCE_DIR}/terrame-cpack-options.cmake.in
-				${CMAKE_BINARY_DIR}/terrameCPackOptions.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/terrame-cpack-options.cmake.in
+               ${CMAKE_BINARY_DIR}/terrameCPackOptions.cmake @ONLY)
 
 set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_BINARY_DIR}/terrameCPackOptions.cmake)
 

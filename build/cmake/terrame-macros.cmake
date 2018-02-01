@@ -30,9 +30,9 @@ MACRO(TmeInstallPlugins plugins location)
 	endforeach()
 
 	install(FILES ${_files}
-		DESTINATION "${TERRAME_INSTALL_PREFIX}/qtplugins/${location}"
-		CONFIGURATIONS Release
-		COMPONENT runtime)
+	        DESTINATION "${TERRAME_INSTALL_PREFIX}/qtplugins/${location}"
+	        CONFIGURATIONS Release
+	        COMPONENT runtime)
 ENDMACRO(TmeInstallPlugins)
 
 MACRO(TmeInstallQt5Plugins)
@@ -101,8 +101,8 @@ MACRO(TmeInstallQtPlugins plgs)
 
 	foreach(_plugin_dir ${_plugin_dirs})
 		install(DIRECTORY ${QT_PLUGINS_DIR}/${_plugin_dir}
-				DESTINATION ${_dest}  COMPONENT runtime
-				FILES_MATCHING REGEX "${_regex_exp}")
+		        DESTINATION ${_dest}  COMPONENT runtime
+		        FILES_MATCHING REGEX "${_regex_exp}")
 	endforeach()
 
 ENDMACRO(TmeInstallQtPlugins)
