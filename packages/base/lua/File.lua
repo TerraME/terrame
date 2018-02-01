@@ -156,9 +156,9 @@ File_ = {
 
 		local stderr
 		if sessionInfo().system == "windows" then
-			stderr = "2>nul"
+			stderr = "2>nul" -- SKIP
 		else
-			stderr = "2>/dev/null"
+			stderr = "2>/dev/null" -- SKIP
 		end
 
 		local result = os.execute("cp \""..self.."\" \""..destination.."\" "..stderr)
