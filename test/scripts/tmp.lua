@@ -1,6 +1,6 @@
 file = io.open("mytmp.lua", "w")
 
-file:write("print(Directory{tmp = true}.name)")
+file:write("print(Directory{tmp = true}:name())")
 file:close()
 
 os.execute("terrame mytmp.lua > resp.txt")

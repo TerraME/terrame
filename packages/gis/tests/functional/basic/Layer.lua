@@ -276,7 +276,7 @@ return {
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
 
-		local dir = Directory("a b")
+		local dir = Directory("a-b")
 		dir:create()
 		local filePath8 = tostring(dir).."/cells8.shp"
 
@@ -291,7 +291,7 @@ return {
 
 		unitTest:assertEquals(filePath8, cl8.file)
 
-		local dir2 = Directory("a  b c")
+		local dir2 = Directory("a--b_c")
 		dir2:create()
 		local filePath9 = tostring(dir2).."/cells9.shp"
 

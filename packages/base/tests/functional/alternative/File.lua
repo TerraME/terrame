@@ -69,6 +69,12 @@ return{
 		end
 
 		unitTest:assertError(error_func, "'base' is a directory, and not a file.", 0, true)
+
+		local invalidChar = function()
+			File("ação.txt")
+		end
+
+		unitTest:assertError(invalidChar, "File name 'ação.txt' contains invalid character 'çã'.")
 	end,
 	attributes = function(unitTest)
 		local file = filePath("agents.csv", "base")
