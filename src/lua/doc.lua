@@ -161,19 +161,19 @@ local function getProjects(package, doc_report)
 
 		projects[currentProject] = {}
 
-        forEachOrderedElement(data, function(idx, value)
-            if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
+		forEachOrderedElement(data, function(idx, value)
+			if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
 
-            if type(value) == "string" then
-                value = File(value)
-            else
-                return
-            end
+			if type(value) == "string" then
+				value = File(value)
+			else
+				return
+			end
 
-            if idx ~= "file" and type(value) == "File" and value:exists() then
-                processLayer(idx, value)
-            end
-        end)
+			if idx ~= "file" and type(value) == "File" and value:exists() then
+				processLayer(idx, value)
+			end
+		end)
 
 		return filePath(currentProject, package)
 	end
