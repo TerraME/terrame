@@ -880,6 +880,59 @@ return{
 		layer3:delete()
 		layer4:delete()
 		layer5:delete()
+
+		local createProject = function()
+			local proj = gis.Project{
+				file = "cellspace_save_basic.tview",
+				clean = true,
+				author = "Avancini",
+				title = "CellularSpace"
+			}
+
+			return proj
+		end
+
+		local saveWithMissing = function()
+			local proj = createProject()
+
+			local layer = gis.Layer{
+				project = proj,
+				name = "CellsAmaz",
+				file = filePath("test/CellsAmaz.shp")
+			}
+
+			local currDir = {
+				file = "CellsAmaz.shp",
+				overwrite = true
+			}
+
+			layer:export(currDir)
+
+			local layerCd = gis.Layer{
+				project = proj,
+				name = "layerCd",
+				file = currDir.file
+			}
+
+			local cs = CellularSpace{
+				project = proj,
+				layer = layerCd.name,
+				missing = 0
+			}
+
+			cs:save(layerCd.name, "pointcount")
+
+			local newCs = CellularSpace{
+				file = currDir.file
+			}
+
+			unitTest:assertEquals(newCs:sample().pointcount, 0)
+
+			proj.file:delete()
+			currDir.file:delete()
+		end
+
+		saveWithMissing()
 	end,
 	synchronize = function(unitTest)
 		local gis = getPackage("gis")
