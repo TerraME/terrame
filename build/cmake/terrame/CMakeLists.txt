@@ -474,8 +474,7 @@ elseif(WIN32)
 	                              ${MSYS_DIR}/touch.exe
 	                              ${MSYS_DIR}/unzip.exe
 	                              ${MSYS_DIR}/zip.exe
-	                              ${MSYS_DIR}/mv.exe
-	)
+	                              ${MSYS_DIR}/mv.exe)
 
 	add_custom_command(TARGET terrame
 	                   POST_BUILD
@@ -509,7 +508,6 @@ elseif(WIN32)
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas/
 	        DESTINATION bin/share/terralib/schemas
 	        COMPONENT runtime)
-
 
 	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindowsd.dll
 	        DESTINATION bin/platforms

@@ -64,7 +64,6 @@ MACRO(TmeInstallQt5Plugins)
 		set(_plugins Qt5::QCocoaIntegrationPlugin Qt5::QMinimalIntegrationPlugin)
 		TmeInstallPlugins("${_plugins}" "platforms")
 	endif()
-
 ENDMACRO(TmeInstallQt5Plugins)
 
 #
@@ -75,7 +74,6 @@ ENDMACRO(TmeInstallQt5Plugins)
 # param plugs List of the names of plugins to be installed.
 #
 MACRO(TmeInstallQtPlugins plgs)
-
 	if("${QT_PLUGINS_DIR}" STREQUAL "")
 		set (QT_PLUGINS_DIR "${Qt5_DIR}/../../../plugins")
 	endif()
@@ -104,5 +102,4 @@ MACRO(TmeInstallQtPlugins plgs)
 		        DESTINATION ${_dest}  COMPONENT runtime
 		        FILES_MATCHING REGEX "${_regex_exp}")
 	endforeach()
-
 ENDMACRO(TmeInstallQtPlugins)
