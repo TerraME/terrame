@@ -698,188 +698,6 @@ return{
 	end,
 	save = function(unitTest)
 		local gis = getPackage("gis")
-		local projName = "cellspace_save_basic.tview"
-		local author = "Avancini"
-		local title = "Cellular Space"
-
-		local proj = gis.Project{
-			file = projName,
-			clean = true,
-			author = author,
-			title = title
-		}
-
-		local layerName1 = "Sampa"
-		gis.Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/sampa.shp", "gis")
-		}
-
-		local clName1 = "Sampa_Cells_DB"
-		local tName1 = "sampa_cells"
-
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
-		local password = getConfig().password
-		local database = "postgis_22_sample"
-
-		local layer1 = gis.Layer{
-			project = proj,
-			source = "postgis",
-			clean = true,
-			input = layerName1,
-			name = clName1,
-			resolution = 0.3,
-			password = password,
-			database = database,
-			table = tName1
-		}
-
-		local cs = CellularSpace{
-			layer = layer1,
-			geometry = false
-		}
-
-		unitTest:assertEquals(#cs, 303)
-
-		cs = CellularSpace{
-			project = proj,
-			layer = clName1
-		}
-
-		unitTest:assertEquals(#cs, 303)
-
-		forEachCell(cs, function(cell)
-			cell.t0 = 1000
-		end)
-
-		local cellSpaceLayerNameT0 = clName1.."_CellSpace_T0"
-
-		cs:save(cellSpaceLayerNameT0, "t0")
-
-		local layer2 = gis.Layer{
-			project = proj,
-			name = cellSpaceLayerNameT0
-		}
-
-		unitTest:assertEquals(layer2.source, "postgis")
-		unitTest:assertEquals(layer2.host, host)
-		unitTest:assertEquals(layer2.port, port)
-		unitTest:assertEquals(layer2.user, user)
-		unitTest:assertEquals(layer2.password, password)
-		unitTest:assertEquals(layer2.database, database)
-		unitTest:assertEquals(layer2.table, string.lower(cellSpaceLayerNameT0))
-
-		local cellSpaceLayerName = clName1.."_CellSpace"
-
-		cs:save(cellSpaceLayerName)
-
-		local layer3 = gis.Layer{
-			project = proj,
-			name = cellSpaceLayerName
-		}
-
-		unitTest:assertEquals(layer3.source, "postgis")
-		unitTest:assertEquals(layer3.host, host)
-		unitTest:assertEquals(layer3.port, port)
-		unitTest:assertEquals(layer3.user, user)
-		unitTest:assertEquals(layer3.password, password)
-		unitTest:assertEquals(layer3.database, database)
-		unitTest:assertEquals(layer3.table, string.lower(cellSpaceLayerName))
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cellSpaceLayerNameT0,
-			geometry = false
-		}
-
-		forEachCell(cs, function(cell)
-			unitTest:assertEquals(cell.t0, 1000)
-			cell.t0 = cell.t0 + 1000
-		end)
-
-		cs:save(cellSpaceLayerNameT0, "t0")
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cellSpaceLayerNameT0,
-			geometry = false
-		}
-
-		forEachCell(cs, function(cell)
-			unitTest:assertEquals(cell.t0, 2000)
-		end)
-
-		-- DOUBLE PRECISION TEST
-		local num = 0.123456789012345
-
-		forEachCell(cs, function(cell)
-			cell.number = num
-		end)
-
-		cs:save(cellSpaceLayerNameT0, "number")
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cellSpaceLayerNameT0,
-			geometry = false
-		}
-
-		forEachCell(cs, function(cell)
-			unitTest:assertEquals(cell.number, num)
-		end)
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cellSpaceLayerNameT0,
-			geometry = false
-		}
-
-		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
-		cs:save(cellSpaceLayerNameGeom)
-
-		local layer4 = gis.Layer{
-			project = proj,
-			name = cellSpaceLayerNameGeom
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cellSpaceLayerNameGeom
-		}
-
-		forEachCell(cs, function(cell)
-			unitTest:assertNotNil(cell.geom)
-		end)
-
-		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"
-		cs:save(cellSpaceLayerNameGeom2)
-
-		local layer5 = gis.Layer{
-			project = proj,
-			name = cellSpaceLayerNameGeom2
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cellSpaceLayerNameGeom2
-		}
-
-		forEachCell(cs, function(cell)
-			unitTest:assertNotNil(cell.geom)
-		end)
-
-		if File(projName):exists() then
-			File(projName):delete()
-		end
-
-		layer1:delete()
-		layer2:delete()
-		layer3:delete()
-		layer4:delete()
-		layer5:delete()
 
 		local createProject = function()
 			local proj = gis.Project{
@@ -891,6 +709,168 @@ return{
 
 			return proj
 		end
+
+		local createPostgisLayer = function(project, clName)
+			local layer = gis.Layer{
+				project = project,
+				name = "Sampa",
+				file = filePath("test/sampa.shp", "gis")
+			}
+
+			return gis.Layer{
+				project = project,
+				source = "postgis",
+				clean = true,
+				input = layer.name,
+				name = clName,
+				resolution = 0.3,
+				password = getConfig().password,
+				database = "postgis_22_sample"
+			}
+		end
+
+		local saveNewDataAndLayerPostgis = function()
+			local proj = createProject()
+			local clName1 = "Sampa_Cells_DB"
+
+			local layer1 = createPostgisLayer(proj, clName1)
+
+			local cs = CellularSpace{
+				layer = layer1,
+				geometry = false
+			}
+
+			unitTest:assertEquals(#cs, 303)
+
+			cs = CellularSpace{
+				project = proj,
+				layer = clName1
+			}
+
+			unitTest:assertEquals(#cs, 303)
+
+			forEachCell(cs, function(cell)
+				cell.t0 = 1000
+			end)
+
+			local cellSpaceLayerNameT0 = clName1.."_CellSpace_T0"
+
+			cs:save(cellSpaceLayerNameT0, "t0")
+
+			local layer2 = gis.Layer{
+				project = proj,
+				name = cellSpaceLayerNameT0
+			}
+
+			unitTest:assertEquals(layer2.table, string.lower(cellSpaceLayerNameT0))
+
+			local cs2 = CellularSpace{
+				project = proj,
+				layer = layer2.name
+			}
+
+			unitTest:assertEquals(cs2:sample().t0, 1000)
+
+			forEachCell(cs2, function(cell)
+				unitTest:assertEquals(cell.t0, 1000)
+				cell.t0 = cell.t0 + 1000
+			end)
+
+			cs2:save(cellSpaceLayerNameT0, "t0")
+
+			local cs3 = CellularSpace{
+				project = proj,
+				layer = cellSpaceLayerNameT0,
+				geometry = false
+			}
+
+			unitTest:assertEquals(cs3:sample().t0, 2000)
+
+			local cellSpaceLayerNameCopy = cellSpaceLayerNameT0.."_Copy"
+
+			cs3:save(cellSpaceLayerNameCopy)
+
+			local layer3 = gis.Layer{
+				project = proj,
+				name = cellSpaceLayerNameCopy
+			}
+
+			unitTest:assertEquals(layer3.table, string.lower(cellSpaceLayerNameCopy))
+
+			local cs4 = CellularSpace{
+				project = proj,
+				layer = cellSpaceLayerNameCopy,
+				geometry = false
+			}
+
+			unitTest:assertEquals(cs4:sample().t0, 2000)
+
+			proj.file:delete()
+			layer1:delete()
+			layer2:delete()
+			layer3:delete()
+		end
+
+		saveNewDataAndLayerPostgis()
+
+		local saveDoublePrecision = function()
+			local proj = createProject()
+			local layer = createPostgisLayer(proj, "SampaPg")
+
+			local cs = CellularSpace{
+				layer = layer
+			}
+
+			local num = 0.123456789012345
+
+			forEachCell(cs, function(cell)
+				cell.number = num
+			end)
+
+			cs:save(layer.name, "number")
+
+			local cs2 = CellularSpace{
+				layer = layer
+			}
+
+			unitTest:assertEquals(cs2:sample().number, num)
+
+			proj.file:delete()
+			layer:delete()
+		end
+
+		saveDoublePrecision()
+
+		local saveWithGeom = function()
+			local proj = createProject()
+			local clName = "SampaPg"
+			local layer = createPostgisLayer(proj, "SampaPg")
+
+			local cs = CellularSpace{
+				project = proj,
+				layer = layer.name,
+				geometry = false
+			}
+
+			local cellSpaceLayerNameGeom = clName.."_CellSpace_Geom"
+
+			cs:save(cellSpaceLayerNameGeom)
+
+			local cs1 = CellularSpace{
+				project = proj,
+				layer = cellSpaceLayerNameGeom
+			}
+
+			forEachCell(cs1, function(cell)
+				unitTest:assertNotNil(cell.geom)
+			end)
+
+			proj.file:delete()
+			layer:delete()
+			cs1.layer:delete()
+		end
+
+		saveWithGeom()
 
 		local saveWithMissing = function()
 			local proj = createProject()
@@ -929,7 +909,7 @@ return{
 			unitTest:assertEquals(newCs:sample().pointcount, 0)
 
 			proj.file:delete()
-			currDir.file:delete()
+			layerCd:delete()
 		end
 
 		saveWithMissing()
