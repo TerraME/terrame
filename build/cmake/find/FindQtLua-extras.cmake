@@ -29,8 +29,7 @@
 cmake_minimum_required(VERSION 3.0)
 # Find library - - tries to find *.a,*.so,*.dylib in paths hard-coded by the script
 
-find_library(QTLUAEXTRAS_LIBRARY
-	NAMES qtluae
+find_library(QTLUAEXTRAS_LIBRARY NAMES qtluae
 	PATHS /usr/lib 
 	      /usr/local/lib
 	      /opt/lib 

@@ -29,8 +29,7 @@
 cmake_minimum_required(VERSION 3.0)
 # Find library - - tries to find *.a,*.so,*.dylib in paths hard-coded by the script
 
-find_library(QTLUA_LIBRARY
-	NAMES qtlua
+find_library(QTLUA_LIBRARY NAMES qtlua
 	PATHS /usr/lib /usr/local/lib /opt/lib /opt/local/lib /usr/local/qtlua/lib)
 
 # Export include and library path for linking with other libraries

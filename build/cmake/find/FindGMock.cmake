@@ -95,10 +95,7 @@ if(MSVC)
 	endif()
 endif()
 
-find_path(GMOCK_INCLUDE_DIR gmock/gmock.h
-	HINTS 
-		$ENV{GMOCK_ROOT}/include
-		${GMOCK_ROOT}/include)
+find_path(GMOCK_INCLUDE_DIR gmock/gmock.h HINTS $ENV{GMOCK_ROOT}/include ${GMOCK_ROOT}/include)
 
 mark_as_advanced(GMOCK_INCLUDE_DIR)
 
@@ -121,7 +118,7 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(GMock DEFAULT_MSG GMOCK_LIBRARY GMOCK_INCLUDE_
 
 if(GMOCK_FOUND)
 	set(GMOCK_INCLUDE_DIRS ${GMOCK_INCLUDE_DIR})
-	_gmock_append_debugs(GMOCK_LIBRARIES      GMOCK_LIBRARY)
+	_gmock_append_debugs(GMOCK_LIBRARIES GMOCK_LIBRARY)
 	_gmock_append_debugs(GMOCK_MAIN_LIBRARIES GMOCK_MAIN_LIBRARY)
 	set(GMOCK_BOTH_LIBRARIES ${GMOCK_LIBRARIES} ${GMOCK_MAIN_LIBRARIES})
 endif()
