@@ -304,6 +304,48 @@ end
 
 		File("various.tview"):delete()
 		-- // QGIS PROJECT
+
+		-- Temporal Layers
+		local projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		    areas = packageInfo("gis").path.."/data/conservationAreas*.shp",
+		}
+
+		unitTest:assertType(projTemporal.areas_1961, "Layer")
+		unitTest:assertEquals(projTemporal.areas_1961.source, "shp")
+		unitTest:assertType(projTemporal.areas_1974, "Layer")
+		unitTest:assertEquals(projTemporal.areas_1974.source, "shp")
+		unitTest:assertType(projTemporal.areas_1979, "Layer")
+		unitTest:assertEquals(projTemporal.areas_1979.source, "shp")
+
+		projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		    areas = packageInfo("gis").path.."/data/conservation*Areas_1961.shp",
+		}
+
+		unitTest:assertEquals(projTemporal.areas.name, "areas")
+		unitTest:assertType(projTemporal.areas, "Layer")
+		unitTest:assertEquals(projTemporal.areas.source, "shp")
+
+		projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		    layer = packageInfo("gis").path.."/data/conservation*.shp",
+		}
+
+		unitTest:assertEquals(projTemporal.layerAreas_1961.name, "layerAreas_1961")
+		unitTest:assertType(projTemporal.layerAreas_1961, "Layer")
+		unitTest:assertEquals(projTemporal.layerAreas_1961.source, "shp")
+		unitTest:assertEquals(projTemporal.layerAreas_1974.name, "layerAreas_1974")
+		unitTest:assertType(projTemporal.layerAreas_1974, "Layer")
+		unitTest:assertEquals(projTemporal.layerAreas_1974.source, "shp")
+		unitTest:assertEquals(projTemporal.layerAreas_1979.name, "layerAreas_1979")
+		unitTest:assertType(projTemporal.layerAreas_1979, "Layer")
+		unitTest:assertEquals(projTemporal.layerAreas_1979.source, "shp")
+
+		File("temporal.tview"):delete()
 	end,
 	__tostring = function(unitTest)
 		local file = File("tostring.tview")

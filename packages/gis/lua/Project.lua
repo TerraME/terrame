@@ -106,11 +106,27 @@ function Project(data)
 		optionalTableArgument(data, "directory", "Directory")
 	end
 
+	local foundFiles = {}
 	forEachElement(data, function(idx, value)
 		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
 
 		if type(value) == "string" then
-			value = File(value)
+			local base, pattern = string.match(value, "(.*)%*(.*)")
+			if base then
+				data[idx] = nil
+				local dir = File(base..pattern):path()
+				local regex = "("..base.."(.*)"..pattern..")$"
+				forEachFile(Directory(dir), function(file)
+					local newFile, filePattern = string.match(tostring(file), regex)
+					if newFile then
+						foundFiles[idx..filePattern] = File(newFile)
+					end
+				end)
+
+				return
+			else
+				value = File(value)
+			end
 		end
 
 		if type(value) ~= "File" then
@@ -120,6 +136,10 @@ function Project(data)
 		if not value:exists() then
 			customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
 		end
+	end)
+
+	forEachElement(foundFiles, function(attr, file)
+		data[attr] = file
 	end)
 
 	if data.file:exists() and (data.file:extension() == "tview") then
