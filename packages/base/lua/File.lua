@@ -138,11 +138,12 @@ File_ = {
 		end
 	end,
 	--- Copy the file to a given destination.
-	-- @arg destination A Directory or a string with the destination path.
+	-- @arg destination A Directory or a string with the destination path. It can also be a File with the destination.
+	-- If the file to be copied is a shapefile, it also copies the respective dbf, shx, prj, and qix files if they exist.
 	-- @usage -- DONTRUN
 	-- path = Directory("c:/mypath")
 	-- file = File(path.."file.lua")
-	-- file:copy(path.."file2.lua") -- from c:/mypath/file.lua to c:/mypath/file2.lua
+	-- file:copy(File(path.."file2.lua")) -- from c:/mypath/file.lua to c:/mypath/file2.lua
 	copy = function(self, destination)
 		if not self:exists() then
 			customError("File '"..self.."' does not exist.")
@@ -161,8 +162,24 @@ File_ = {
 			stderr = "2>/dev/null" -- SKIP
 		end
 
-		local result = os.execute("cp \""..self.."\" \""..destination.."\" "..stderr)
+		local directory, name, extension = self:split()
+		if extension == "shp" then
+			local exts = {"shx", "dbf", "prj", "qix"}
+			forEachElement(exts, function(_, ext)
+				local file = File(directory..name.."."..ext)
+				if file:exists() then
+					local dest = destination
+					if type(destination) == "File" then
+						local destDir, destName = destination:split()
+						dest = File(destDir..destName.."."..ext)
+					end
 
+					file:copy(dest) -- rec call to copy .shx .dbf .prj and .qix
+				end
+			end)
+		end
+
+		local result = os.execute("cp \""..self.."\" \""..destination.."\" "..stderr)
 		if not result then
 			customError("Could not copy file to '"..destination.."'.")
 		end

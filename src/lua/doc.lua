@@ -1014,6 +1014,13 @@ function _Gtme.executeDoc(package)
 				end)
 
 				idx = idx + 1
+			elseif string.endswith(value.file[1], ".pgm") then
+				print("Processing '"..value.file[1].."'")
+				forEachElement(value.attributes, function(_, mvalue)
+					mvalue.type = "number"
+				end)
+
+				idx = idx + 1
 			end
 		end)
 

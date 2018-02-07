@@ -77,6 +77,22 @@ return{
 
 		unitTest:assert(file2:exists())
 		file2:delete()
+
+		local fileShp = filePath("amazonia.shp")
+		fileShp:copy(dir)
+		unitTest:assert(File(dir.."amazonia.shp"):exists())
+		unitTest:assert(File(dir.."amazonia.shx"):exists())
+		unitTest:assert(File(dir.."amazonia.dbf"):exists())
+		unitTest:assert(File(dir.."amazonia.qix"):exists())
+		unitTest:assert(File(dir.."amazonia.prj"):exists())
+
+		fileShp:copy(File(dir.."myshp.shp"))
+		unitTest:assert(File(dir.."myshp.shp"):exists())
+		unitTest:assert(File(dir.."myshp.shx"):exists())
+		unitTest:assert(File(dir.."myshp.dbf"):exists())
+		unitTest:assert(File(dir.."myshp.qix"):exists())
+		unitTest:assert(File(dir.."myshp.prj"):exists())
+
 		dir:delete()
 	end,
 	delete = function(unitTest)
