@@ -146,3 +146,90 @@ directory{
 	source = "TerraME team"
 }
 
+data{
+	file = "conservationAreas_1961.shp",
+	summary = "Federal and state conservation units. Each type of conservation unit has its own land use rules (http://www.mma.gov.br/informma/itemlist/category/34-unidades-de-conservacao), such as integral protection or sustainable use.",
+	source = "ICMBIO (http://www.icmbio.gov.br/portal/geoprocessamentos/51-menu-servicos/4004-downloads-mapa-tematico-e-dados-geoestatisticos-das-uc-s).",
+	reference = "http://inct.ccst.inpe.br/amazon/",
+	attributes = {
+		CoordRegio = "Name of Region Coordinators.",
+		IdUnidade = "Identifier of conservation unit.",
+		SiglaGrupo = "Group Identifier.",
+		UF = "Federative Units.",
+		administra = "Type of administration.",
+		anoCriacao = "Creation year.",
+		areaHa = "Area in hectare.",
+		atoLegal = "Legal creation date.",
+		biomaCRL = "Biome according to CRL.",
+		biomaIBGE = "Biome according to IBGE.",
+		categoria = "Category of conservation.",
+		codCat = "Code of Cat.",
+		codUso = "Code of Landu use.",
+		codigoCnuc = "Code of Cnuc.",
+		geometriaA = "Year of gemetry.",
+		municipios = "List of municipalities.",
+		nome = "Name of convervation unit.",
+		perimetroM = "Permiter in meters.",
+		sigla = "Conservation Acronym.",
+		tipo = "Type of convervation.",
+	}
+}
+
+data{
+	file = "conservationAreas_1974.shp",
+	summary = "Federal and state conservation units. Each type of conservation unit has its own land use rules (http://www.mma.gov.br/informma/itemlist/category/34-unidades-de-conservacao), such as integral protection or sustainable use.",
+	source = "ICMBIO (http://www.icmbio.gov.br/portal/geoprocessamentos/51-menu-servicos/4004-downloads-mapa-tematico-e-dados-geoestatisticos-das-uc-s).",
+	reference = "http://inct.ccst.inpe.br/amazon/",
+	attributes = {
+		CoordRegio = "Name of Region Coordinators.",
+		IdUnidade = "Identifier of conservation unit.",
+		SiglaGrupo = "Group Identifier.",
+		UF = "Federative Units.",
+		administra = "Type of administration.",
+		anoCriacao = "Creation year.",
+		areaHa = "Area in hectare.",
+		atoLegal = "Legal creation date.",
+		biomaCRL = "Biome according to CRL.",
+		biomaIBGE = "Biome according to IBGE.",
+		categoria = "Category of conservation.",
+		codCat = "Code of Cat.",
+		codUso = "Code of Landu use.",
+		codigoCnuc = "Code of Cnuc.",
+		geometriaA = "Year of gemetry.",
+		municipios = "List of municipalities.",
+		nome = "Name of convervation unit.",
+		perimetroM = "Permiter in meters.",
+		sigla = "Conservation Acronym.",
+		tipo = "Type of convervation.",
+	}
+}
+
+data{
+	file = "conservationAreas_1979.shp",
+	summary = "Federal and state conservation units. Each type of conservation unit has its own land use rules (http://www.mma.gov.br/informma/itemlist/category/34-unidades-de-conservacao), such as integral protection or sustainable use.",
+	source = "ICMBIO (http://www.icmbio.gov.br/portal/geoprocessamentos/51-menu-servicos/4004-downloads-mapa-tematico-e-dados-geoestatisticos-das-uc-s).",
+	reference = "http://inct.ccst.inpe.br/amazon/",
+	attributes = {
+		CoordRegio = "Name of Region Coordinators.",
+		IdUnidade = "Identifier of conservation unit.",
+		SiglaGrupo = "Group Identifier.",
+		UF = "Federative Units.",
+		administra = "Type of administration.",
+		anoCriacao = "Creation year.",
+		areaHa = "Area in hectare.",
+		atoLegal = "Legal creation date.",
+		biomaCRL = "Biome according to CRL.",
+		biomaIBGE = "Biome according to IBGE.",
+		categoria = "Category of conservation.",
+		codCat = "Code of Cat.",
+		codUso = "Code of Landu use.",
+		codigoCnuc = "Code of Cnuc.",
+		geometriaA = "Year of gemetry.",
+		municipios = "List of municipalities.",
+		nome = "Name of convervation unit.",
+		perimetroM = "Permiter in meters.",
+		sigla = "Conservation Acronym.",
+		tipo = "Type of convervation.",
+	}
+}
+
