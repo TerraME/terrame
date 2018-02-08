@@ -6,39 +6,45 @@ Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
 Looking for lines of source code
-Testing tests/core/alternative/GoodnessOfFit.lua
+Testing tests/abc/GoodnessOfFit.lua
+Testing multiLevel
+Checking if all asserts were executed
+Testing tests/alternative/GoodnessOfFit.lua
 Testing multiLevel
 Testing pixelByPixel
+Testing sumOfSquares
 Checking if all asserts were executed
-Testing tests/core/alternative/MultipleRuns.lua
+Testing tests/alternative/MultipleRuns.lua
 Testing MultipleRuns
 Checking if all asserts were executed
-Testing tests/core/alternative/SAMDE.lua
+Testing tests/alternative/SAMDE.lua
 Testing SAMDE
 Checking if all asserts were executed
-Testing tests/core/alternative/Utils.lua
+Testing tests/alternative/Utils.lua
 Testing checkParameterSingle
 Testing checkParametersRange
 Testing checkParametersSet
 Testing cloneValues
 Testing randomModel
 Checking if all asserts were executed
-Testing tests/core/basic/GoodnessOfFit.lua
+Testing tests/basic/GoodnessOfFit.lua
 Testing multiLevel
 Testing pixelByPixel
+Testing sumOfSquares
 Checking if all asserts were executed
-Testing tests/core/basic/MultipleRuns.lua
+Testing tests/basic/MultipleRuns.lua
 Testing MultipleRuns
 Checking if all asserts were executed
-Testing tests/core/basic/SAMDE.lua
+Testing tests/basic/SAMDE.lua
 Testing SAMDE
 Checking if all asserts were executed
-Testing tests/core/basic/Utils.lua
+Testing tests/basic/Utils.lua
 Testing checkParameterSingle
 Testing checkParametersRange
 Testing checkParametersSet
 Testing cloneValues
 Testing randomModel
+Testing timeToString
 Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking GoodnessOfFit.lua
@@ -52,9 +58,9 @@ Checking SAMDE.lua
 Checking Utils.lua
 Testing examples
 Testing broeke
+Testing costanza
 Testing daisy
 Testing fire-average
-Testing goodness-of-fit
 Testing moving-agents
 Testing sir-mr-campaign
 Testing sir-mr-probability
@@ -66,20 +72,20 @@ Testing yeast-samde
 Checking logs
 
 Functional test report for package 'calibration':
-Tests were executed in 136.96 seconds.
+Tests were executed in 5 minutes and 3 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 174 asserts were executed successfully.
-All 18 tested functions do not have any unexpected execution error.
-All 18 tested functions have at least one assert.
-All 18 tested functions exist in the source code of the package.
+All 346 asserts were executed successfully.
+All 22 tested functions do not have any unexpected execution error.
+All 22 tested functions have at least one assert.
+All 22 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No file or directory was created along the tests.
-All 9 functions of the package were tested.
+All 11 functions of the package were tested.
 All lines from the source code were executed.
 All 12 examples were successfully executed.
 No new log file was created.

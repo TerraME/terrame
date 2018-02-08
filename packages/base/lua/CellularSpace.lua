@@ -1290,11 +1290,10 @@ CellularSpace_ = {
 		end
 
 		if not self.project then
-			customError("The CellularSpace must have a valid Project. Please, check the documentation.")
+			customError("CellularSpace:save() only works properly when the CellularSpace is created from a project.")
 		end
 
 		local dset = gis.TerraLib().getDataSet(self.project, self.layer.name, self.missing)
-		-- TODO(#1793)
 		if not self.geometry then
 			for i = 0, #dset do
 				for k, v in pairs(dset[i]) do
