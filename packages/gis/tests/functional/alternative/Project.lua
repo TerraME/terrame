@@ -115,6 +115,8 @@ return{
 			}
 		end
 		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
+
+		File("temporal.tview"):deleteIfExists()
 	end
 }
 

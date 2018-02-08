@@ -371,7 +371,7 @@ end
 		unitTest:assertType(projTemporal.hidro_1977, "Layer")
 		unitTest:assertEquals(projTemporal.hidro_1977.source, "shp")
 
-		File("temporal.tview"):delete()
+		File("temporal.tview"):deleteIfExists()
 	end,
 	__tostring = function(unitTest)
 		local file = File("tostring.tview")

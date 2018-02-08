@@ -1140,7 +1140,7 @@ metaTableLayer_ = {
 function Layer(data)
 	verifyNamedTable(data)
 
-	mandatoryTableArgument(data, "name", "string")
+	optionalTableArgument(data, "name", "string")
 
 	if type(data.project) == "string" then
 		data.project = File(data.project)
@@ -1157,13 +1157,41 @@ function Layer(data)
 	end
 
 	mandatoryTableArgument(data, "project", "Project")
+	if data.file and type(data.file) == "string" then
+		local base, pattern = string.match(data.file, "(.*)%*(.*)")
+		if base then
+			local count = 0
+			local dir = File(base..pattern):path()
+			local regex = "("..string.gsub(base, "%.", "%%.").."(.*)"..string.gsub(pattern, "%.", "%%.")..")$"
+			forEachFile(Directory(dir), function(file)
+				local newFile, filePattern = string.match(tostring(file), regex)
+				if newFile then
+					local name = data.name
+					if name then
+						name = name..filePattern
+					else
+						local ret = {File(newFile):split()}
+						name = ret[2]
+					end
+
+					Layer{name = name, file = newFile, project = data.project}
+					count = count + 1
+				end
+			end)
+
+			if count == 0 then
+				customError("No results have been found to match the file pattern '"..data.file.."'.")
+			end
+
+			return nil
+		end
+	end
 
 	if getn(data) == 2 then
 		if not data.project.layers[data.name] then
 			local msg = "Layer '"..data.name.."' does not exist in Project '"..data.project.file.."'."
 			local sug = suggestion(data.name, data.project.layers)
 			msg = msg..suggestionMsg(sug)
-
 			customError(msg)
 		end
 

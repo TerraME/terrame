@@ -413,6 +413,37 @@ return{
 
 		File(projName):deleteIfExists()
 		File(shp1):deleteIfExists()
+
+		local projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		}
+
+		local patternFileError = function()
+			Layer{
+			    project = projTemporal,
+			    file = packageInfo("gis").path.."/data/conservation.shp*",
+			}
+		end
+		unitTest:assertError(patternFileError, "No results have been found to match the file pattern '"..packageInfo("gis").path.."/data/conservation.shp*".."'.")
+
+		patternFileError = function()
+			Layer{
+			    project = projTemporal,
+			    file = packageInfo("gis").path.."/data/conservation.*",
+			}
+		end
+		unitTest:assertError(patternFileError, "No results have been found to match the file pattern '"..packageInfo("gis").path.."/data/conservation.*".."'.")
+
+		patternFileError = function()
+			Layer{
+			    project = projTemporal,
+			    file = packageInfo("gis").path.."/data*/conservation*",
+			}
+		end
+		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
+
+		File("temporal.tview"):deleteIfExists()
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fillcells_alternative.tview"

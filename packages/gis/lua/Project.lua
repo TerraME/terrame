@@ -106,46 +106,22 @@ function Project(data)
 		optionalTableArgument(data, "directory", "Directory")
 	end
 
-	local foundFiles = {}
 	forEachElement(data, function(idx, value)
 		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
-
-		if type(value) == "string" then
-			local base, pattern = string.match(value, "(.*)%*(.*)")
-			if base then
-				data[idx] = nil
-				local count = 0
-				local dir = File(base..pattern):path()
-				local regex = "("..string.gsub(base, "%.", "%%.").."(.*)"..string.gsub(pattern, "%.", "%%.")..")$"
-				forEachFile(Directory(dir), function(file)
-					local newFile, filePattern = string.match(tostring(file), regex)
-					if newFile then
-						foundFiles[idx..filePattern] = File(newFile)
-						count = count + 1
-					end
-				end)
-
-				if count == 0 then
-					customError("No results have been found to match the file pattern '"..value.."'.")
-				end
-
-				return
+		local multipleFiles = type(value) == "string" and string.find(value, "%*")
+		if not multipleFiles then
+			if type(value) == "string" then
+				value = File(value)
 			end
 
-			value = File(value)
-		end
+			if type(value) ~= "File" then
+				incompatibleTypeError(idx, "File", value)
+			end
 
-		if type(value) ~= "File" then
-			incompatibleTypeError(idx, "File", value)
+			if not value:exists() then
+				customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
+			end
 		end
-
-		if not value:exists() then
-			customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
-		end
-	end)
-
-	forEachElement(foundFiles, function(attr, file)
-		data[attr] = file
 	end)
 
 	if data.file:exists() and (data.file:extension() == "tview") then
