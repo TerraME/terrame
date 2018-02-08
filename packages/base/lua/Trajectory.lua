@@ -299,7 +299,7 @@ Trajectory_ = {
 		elseif cs.file then
 			from.file = cs.file
 		else
-			customError("Target CellularSpace must come from a file or layer.")
+			customError("Trajectory:save() only works properly when the CellularSpace is created from a project.")
 		end
 
 		local to = {
