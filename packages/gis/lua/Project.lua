@@ -114,19 +114,25 @@ function Project(data)
 			local base, pattern = string.match(value, "(.*)%*(.*)")
 			if base then
 				data[idx] = nil
+				local count = 0
 				local dir = File(base..pattern):path()
-				local regex = "("..base.."(.*)"..pattern..")$"
+				local regex = "("..string.gsub(base, "%.", "%%.").."(.*)"..string.gsub(pattern, "%.", "%%.")..")$"
 				forEachFile(Directory(dir), function(file)
 					local newFile, filePattern = string.match(tostring(file), regex)
 					if newFile then
 						foundFiles[idx..filePattern] = File(newFile)
+						count = count + 1
 					end
 				end)
 
+				if count == 0 then
+					customError("No results have been found to match the file pattern '"..value.."'.")
+				end
+
 				return
-			else
-				value = File(value)
 			end
+
+			value = File(value)
 		end
 
 		if type(value) ~= "File" then

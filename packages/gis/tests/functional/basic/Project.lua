@@ -345,6 +345,32 @@ end
 		unitTest:assertType(projTemporal.layerAreas_1979, "Layer")
 		unitTest:assertEquals(projTemporal.layerAreas_1979.source, "shp")
 
+		projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		    hidro = packageInfo("gis").path.."/data/hidroeletricPlants*.shp",
+		    conservation = packageInfo("gis").path.."/data/conservationAreas*.shp",
+		}
+
+		unitTest:assertEquals(projTemporal.conservation_1961.name, "conservation_1961")
+		unitTest:assertType(projTemporal.conservation_1961, "Layer")
+		unitTest:assertEquals(projTemporal.conservation_1961.source, "shp")
+		unitTest:assertEquals(projTemporal.conservation_1974.name, "conservation_1974")
+		unitTest:assertType(projTemporal.conservation_1974, "Layer")
+		unitTest:assertEquals(projTemporal.conservation_1974.source, "shp")
+		unitTest:assertEquals(projTemporal.conservation_1979.name, "conservation_1979")
+		unitTest:assertType(projTemporal.conservation_1979, "Layer")
+		unitTest:assertEquals(projTemporal.conservation_1979.source, "shp")
+		unitTest:assertEquals(projTemporal.hidro_1970.name, "hidro_1970")
+		unitTest:assertType(projTemporal.hidro_1970, "Layer")
+		unitTest:assertEquals(projTemporal.hidro_1970.source, "shp")
+		unitTest:assertEquals(projTemporal.hidro_1975.name, "hidro_1975")
+		unitTest:assertType(projTemporal.hidro_1975, "Layer")
+		unitTest:assertEquals(projTemporal.hidro_1975.source, "shp")
+		unitTest:assertEquals(projTemporal.hidro_1977.name, "hidro_1977")
+		unitTest:assertType(projTemporal.hidro_1977, "Layer")
+		unitTest:assertEquals(projTemporal.hidro_1977.source, "shp")
+
 		File("temporal.tview"):delete()
 	end,
 	__tostring = function(unitTest)
