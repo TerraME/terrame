@@ -70,7 +70,7 @@ return{
 		local targetSourceError = function()
 			t1:save(file1)
 		end
-		unitTest:assertError(targetSourceError, "Target CellularSpace must come from a file or layer.")
+		unitTest:assertError(targetSourceError, "Trajectory:save() only works properly when the CellularSpace is created from a project.")
 	end
 }
 

@@ -300,12 +300,11 @@ _Gtme.configureZeroBrane = function()
 
 	require("qtluae")
 
-	local msg = "Some files will be copied. Please make sure Zerobrane is already closed, otherwise, it will overwrite such files."
-	local informativeMsg = "Please, close ZeroBrane before continue."
 	local MessageBox = qt.new_qobject(qt.meta.QMessageBox)
-	MessageBox.windowTitle = "Close ZeroBrane before continue."
-	MessageBox.text = msg
-	MessageBox.informativeText = informativeMsg
+	MessageBox.windowTitle = "Configuring ZeroBrane"
+	MessageBox.text = [[Some files will be copied. Please make sure Zerobrane is closed, ]]..
+		[[otherwise the files created by TerraME will be overwritten by ZeroBrane when you close it.]]
+	MessageBox.informativeText = "Close ZeroBrane before continue."
 	MessageBox.icon = 2
 	MessageBox.standardButtons = qtOk|qtCancel
 	local ret = MessageBox:exec()
