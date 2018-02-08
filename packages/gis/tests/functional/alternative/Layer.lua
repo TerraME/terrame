@@ -443,6 +443,51 @@ return{
 		end
 		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
 
+		patternFileError = function()
+			Layer{
+			    project = projTemporal,
+			    file = packageInfo("gis").path.."/data/conservationAreas*.shp",
+			    times = 1961
+			}
+		end
+		unitTest:assertError(patternFileError, incompatibleTypeMsg("times", "table", 1961))
+
+		patternFileError = function()
+			Layer{
+			    project = projTemporal,
+			    file = packageInfo("gis").path.."/data/conservationAreas*.shp",
+			    times = {1961, 1523}
+			}
+		end
+		unitTest:assertError(patternFileError, "File '"..packageInfo("gis").path.."/data/conservationAreas_1523.shp' does not exist.")
+
+		patternFileError = function()
+			Layer{
+			    project = projTemporal,
+			    file = packageInfo("gis").path.."/data/conservation.shp*",
+			    times = {1961, 1974}
+			}
+		end
+		unitTest:assertError(patternFileError, "File '"..packageInfo("gis").path.."/data/conservation.shp_1961' does not exist.")
+
+		patternFileError = function()
+			Layer{
+			    project = projTemporal,
+			    file = packageInfo("gis").path.."/data/conservation.*",
+			    times = {1961, 1974}
+			}
+		end
+		unitTest:assertError(patternFileError, "File '"..packageInfo("gis").path.."/data/conservation._1961".."' does not exist.")
+
+		patternFileError = function()
+			Layer{
+			    project = projTemporal,
+			    file = packageInfo("gis").path.."/data*/conservation*",
+			    times = {1961, 1974}
+			}
+		end
+		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
+
 		File("temporal.tview"):deleteIfExists()
 	end,
 	fill = function(unitTest)

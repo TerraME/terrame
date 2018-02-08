@@ -1139,9 +1139,7 @@ metaTableLayer_ = {
 -- }
 function Layer(data)
 	verifyNamedTable(data)
-
 	optionalTableArgument(data, "name", "string")
-
 	if type(data.project) == "string" then
 		data.project = File(data.project)
 	end
@@ -1160,26 +1158,37 @@ function Layer(data)
 	if data.file and type(data.file) == "string" then
 		local base, pattern = string.match(data.file, "(.*)%*(.*)")
 		if base then
-			local count = 0
-			local dir = File(base..pattern):path()
-			local regex = "("..string.gsub(base, "%.", "%%.").."(.*)"..string.gsub(pattern, "%.", "%%.")..")$"
-			forEachFile(Directory(dir), function(file)
-				local newFile, filePattern = string.match(tostring(file), regex)
-				if newFile then
-					local name = data.name
-					if name then
-						name = name..filePattern
-					else
-						local ret = {File(newFile):split()}
-						name = ret[2]
+			optionalTableArgument(data, "times", "table")
+			local foundFiles = {}
+			if data.times then
+				forEachElement(data.times, function(_, time)
+					local filePattern = "_"..time
+					table.insert(foundFiles, {file = File(base..filePattern..pattern), pattern = filePattern})
+				end)
+			else
+				local dir = File(base..pattern):path()
+				local regex = string.gsub(base, "%.", "%%.").."(.*)"..string.gsub(pattern, "%.", "%%.").."$"
+				forEachFile(Directory(dir), function(file)
+					local filePattern = string.match(tostring(file), regex)
+					if filePattern then
+						table.insert(foundFiles, {file = file, pattern = filePattern})
 					end
+				end)
+			end
 
-					Layer{name = name, file = newFile, project = data.project}
-					count = count + 1
+			forEachElement(foundFiles, function(_, element)
+				local name = data.name
+				if name then
+					name = name..element.pattern
+				else
+					local ret = {element.file:split()}
+					name = ret[2]
 				end
+
+				Layer{name = name, file = element.file, project = data.project}
 			end)
 
-			if count == 0 then
+			if #foundFiles == 0 then
 				customError("No results have been found to match the file pattern '"..data.file.."'.")
 			end
 
@@ -1187,6 +1196,7 @@ function Layer(data)
 		end
 	end
 
+	mandatoryTableArgument(data, "name", "string")
 	if getn(data) == 2 then
 		if not data.project.layers[data.name] then
 			local msg = "Layer '"..data.name.."' does not exist in Project '"..data.project.file.."'."
