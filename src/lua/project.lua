@@ -309,7 +309,7 @@ function _Gtme.executeProjects(package)
 	end
 
 	print("\nProjects report for package '"..package.."':")
-	local executionTime = profiler:stop("PROJECT_")
+	local executionTime = profiler:stop("PROJECT_").strTime
 	printNote("Projects were created in "..executionTime..".")
 
 	if project_report.projects == 0 then

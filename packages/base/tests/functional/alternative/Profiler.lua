@@ -83,6 +83,24 @@ return{
 		Profiler().stack = oldStack
 		Profiler().blocks = oldBlocks
 	end,
+	clock = function(unitTest)
+		local oldStack = Profiler().stack
+		local oldBlocks = Profiler().blocks
+		Profiler().stack = {oldBlocks["main"]}
+		Profiler().blocks = {main = oldBlocks["main"]}
+		local error_func = function()
+			Profiler():clock(1)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+		error_func = function()
+			Profiler():clock("test")
+		end
+
+		unitTest:assertError(error_func, "Block 'test' was not found.")
+		Profiler().stack = oldStack
+		Profiler().blocks = oldBlocks
+	end,
 	stop = function(unitTest)
 		local oldStack = Profiler().stack
 		local oldBlocks = Profiler().blocks
@@ -108,6 +126,13 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Block 'test' was not found.")
+		error_func = function()
+			Profiler():start("test")
+			Profiler():stop("test")
+			Profiler():stop("test")
+		end
+
+		unitTest:assertWarning(error_func, "Block 'test' has already been stopped.")
 		Profiler().stack = oldStack
 		Profiler().blocks = oldBlocks
 	end,

@@ -162,7 +162,7 @@ local function getProjects(package, doc_report)
 		projects[currentProject] = {}
 
 		forEachOrderedElement(data, function(idx, value)
-	        if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
+			if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
 
 			if type(value) == "string" then
 				value = File(value)
@@ -1014,6 +1014,13 @@ function _Gtme.executeDoc(package)
 				end)
 
 				idx = idx + 1
+			elseif string.endswith(value.file[1], ".pgm") then
+				print("Processing '"..value.file[1].."'")
+				forEachElement(value.attributes, function(_, mvalue)
+					mvalue.type = "number"
+				end)
+
+				idx = idx + 1
 			end
 		end)
 
@@ -1354,7 +1361,7 @@ function _Gtme.executeDoc(package)
 		end)
 	end
 
-	local finalTime = profiler:stop("DOC_")
+	local finalTime = profiler:stop("DOC_").strTime
 	print("\nDocumentation report for package '"..package.."':")
 	printNote("Documentation was built in "..finalTime..".")
 

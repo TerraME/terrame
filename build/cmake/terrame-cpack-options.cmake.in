@@ -78,7 +78,7 @@ if(CPACK_GENERATOR MATCHES "NSIS")
 	set(CPACK_NSIS_MUI_UNIICON @TERRAME_ABSOLUTE_ROOT_DIR@/res\\\\app.ico)
 	set(CPACK_NSIS_INSTALLED_ICON_NAME @TERRAME_ABSOLUTE_ROOT_DIR@/res\\\\app.ico)
 	set(CPACK_PACKAGE_ICON @TERRAME_ABSOLUTE_ROOT_DIR@/res\\\\app.png)
-	  
+
 	# set(CPACK_RESOURCE_FILE_README @TERRAME_ABSOLUTE_ROOT_DIR@/LICENSE)
 
 	set(CPACK_PACKAGE_INSTALL_DIRECTORY "TerraME")
@@ -91,18 +91,18 @@ if(CPACK_GENERATOR MATCHES "NSIS")
 	set(CPACK_NSIS_HELP_LINK "http://terrame.org")
 	set(CPACK_NSIS_URL_INFO_ABOUT "http://terrame.org")
 	set(CPACK_NSIS_CONTACT "pedro.andrade@inpe.br")
-	  
-	if(CMAKE_CL_64) 
+
+	if(CMAKE_CL_64)
+		set(CPACK_NSIS_INSTALL_ROOT "C:")
+		set(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
+	else()
 		set(CPACK_NSIS_INSTALL_ROOT "C:") 
-		set(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}") 
-	else() 
-		set(CPACK_NSIS_INSTALL_ROOT "C:") 
-		set(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}") 
-	endif() 
+		set(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
+	endif()
 
 	# To overwrite a previous installed version
 	set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY ${CPACK_PACKAGE_NAME}) 
-	  
+
 	set(shortCutName "TerraME")
 
 	set(CPACK_PACKAGE_EXECUTABLES "terrame;${shortCutName}")
@@ -114,14 +114,14 @@ if(CPACK_GENERATOR MATCHES "NSIS")
 		CreateShortCut \"$SMPROGRAMS\\$STARTMENU_FOLDER\\${shortCutName}.lnk\" \"$INSTDIR\\bin\\terrame.exe\"
 		"
 	)
-	
+
 	list(APPEND CPACK_NSIS_DELETE_ICONS_EXTRA 
 		# "Delete '\$SMPROGRAMS\\\\$MUI_TEMP\\\\${shortCutName}.lnk'" # TODO: REVIEW
 		"
 		Delete \"$DESKTOP\\${shortCutName}.lnk\";
 		Delete \"$SMPROGRAMS\\$STARTMENU_FOLDER\\${shortCutName}.lnk\"
 		"
-	)			
+	)
 
 	list(APPEND CPACK_NSIS_EXTRA_INSTALL_COMMANDS
 		"
@@ -138,4 +138,3 @@ if(CPACK_GENERATOR MATCHES "NSIS")
 		"
 	)
 endif()
-

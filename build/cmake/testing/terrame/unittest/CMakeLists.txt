@@ -24,11 +24,11 @@
 project(unittest)
 
 if(MSVC)
-  set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+	set(CMAKE_CXX_FLAGS_RELEASE "/MT")
 endif(MSVC)
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER MATCHES ".*clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif()
 
 include_directories(${TERRAME_ABSOLUTE_ROOT_DIR}/src)
@@ -44,12 +44,12 @@ source_group("Source Files\\core" FILES ${TERRAME_UNITTEST_CORE_SRC_FILES})
 source_group("Header Files\\core" FILES ${TERRAME_UNITTEST_CORE_HDR_FILES})
 
 add_executable(unittest ${TERRAME_UNITTEST_SRC_FILES}
-						${TERRAME_UNITTEST_CORE_SRC_FILES} ${TERRAME_UNITTEST_CORE_HDR_FILES})
+                        ${TERRAME_UNITTEST_CORE_SRC_FILES} ${TERRAME_UNITTEST_CORE_HDR_FILES})
 
 target_link_libraries(unittest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
 
 install(TARGETS unittest
-		RUNTIME DESTINATION bin
-		COMPONENT runtime)
+        RUNTIME DESTINATION bin
+        COMPONENT runtime)
 
 add_test(NAME unittest COMMAND unittest)

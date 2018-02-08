@@ -247,9 +247,14 @@ function Directory(data)
 	data.fullpath = data.name
 	data.name = nil
 
-	local invalidChar = data.fullpath:find("[*<>?|\"]")
-	if invalidChar then
-		customError("Directory name '"..data.fullpath.."' cannot contain character '"..data.fullpath:sub(invalidChar, invalidChar).."'.")
+	local invalidCharIdx = data.fullpath:find("[*<>?|\" ]")
+	if invalidCharIdx then
+		local invalidChar = data.fullpath:sub(invalidCharIdx, invalidCharIdx)
+		if invalidChar == " " then
+			customError("Directory path '"..data.fullpath.."' contains blank space.")
+		else
+			customError("Directory path '"..data.fullpath.."' cannot contain character '"..invalidChar.."'.")
+		end
 	end
 
 	if not (data.fullpath:match("\\") or data.fullpath:match("/")) then
@@ -259,6 +264,11 @@ function Directory(data)
 	end
 
 	data.fullpath = _Gtme.makePathCompatibleToAllOS(data.fullpath)
+
+	local invalidChar = string.gsub(data.fullpath, "[^\33-\44\59-\64\91-\94\96\123-\125\127-\255]", "")
+	if #invalidChar ~= 0 then
+		customError("Directory path '"..data.fullpath.."' contains invalid character '"..invalidChar.."'.")
+	end
 
 	if data.fullpath:sub(-1) == "/" then
 		data.fullpath = data.fullpath:sub(1, -2)
