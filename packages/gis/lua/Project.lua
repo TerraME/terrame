@@ -105,10 +105,12 @@ function Project(data)
 		optionalTableArgument(data, "directory", "Directory")
 	end
 
+	local multipleFiles = {}
 	forEachElement(data, function(idx, value)
 		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
-		local multipleFiles = type(value) == "string" and string.find(value, "%*")
-		if not multipleFiles then
+		if type(value) == "string" and string.find(value, "%*") then
+			table.insert(multipleFiles, idx)
+		else
 			if type(value) == "string" then
 				value = File(value)
 			end
@@ -136,7 +138,6 @@ function Project(data)
 	if data.directory then
 		forEachFile(data.directory, function(file)
 			local _, name, ext = file:split()
-
 			if belong(ext, {"shp", "tif"}) then
 				layers[name] = Layer{
 					project = data,
@@ -156,6 +157,12 @@ function Project(data)
 			name = idx,
 			file = value
 		}
+	end)
+
+	forEachElement(multipleFiles, function(_, idx)
+		if type(data[idx]) ~= "Layer" then -- remove multiple file from project
+			data[idx] = nil
+		end
 	end)
 
 	forEachElement(layers, function(idx, layer)

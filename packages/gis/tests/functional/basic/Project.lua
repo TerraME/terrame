@@ -309,20 +309,24 @@ end
 		local projTemporal = Project{
 		    file = "temporal.tview",
 		    clean = true,
-		    areas = packageInfo("gis").path.."/data/conservationAreas*.shp",
+		    areas = packageInfo("gis").data.."conservationAreas*.shp",
 		}
 
+		unitTest:assertNil(projTemporal.areas)
+		unitTest:assertEquals(projTemporal.areas_1961.name, "areas_1961")
 		unitTest:assertType(projTemporal.areas_1961, "Layer")
 		unitTest:assertEquals(projTemporal.areas_1961.source, "shp")
+		unitTest:assertEquals(projTemporal.areas_1974.name, "areas_1974")
 		unitTest:assertType(projTemporal.areas_1974, "Layer")
 		unitTest:assertEquals(projTemporal.areas_1974.source, "shp")
+		unitTest:assertEquals(projTemporal.areas_1979.name, "areas_1979")
 		unitTest:assertType(projTemporal.areas_1979, "Layer")
 		unitTest:assertEquals(projTemporal.areas_1979.source, "shp")
 
 		projTemporal = Project{
 		    file = "temporal.tview",
 		    clean = true,
-		    areas = packageInfo("gis").path.."/data/conservation*Areas_1961.shp",
+		    areas = packageInfo("gis").data.."conservation*Areas_1961.shp",
 		}
 
 		unitTest:assertEquals(projTemporal.areas.name, "areas")
@@ -332,9 +336,10 @@ end
 		projTemporal = Project{
 		    file = "temporal.tview",
 		    clean = true,
-		    layer = packageInfo("gis").path.."/data/conservation*.shp",
+		    layer = packageInfo("gis").data.."conservation*.shp",
 		}
 
+		unitTest:assertNil(projTemporal.layer)
 		unitTest:assertEquals(projTemporal.layerAreas_1961.name, "layerAreas_1961")
 		unitTest:assertType(projTemporal.layerAreas_1961, "Layer")
 		unitTest:assertEquals(projTemporal.layerAreas_1961.source, "shp")
@@ -348,10 +353,12 @@ end
 		projTemporal = Project{
 		    file = "temporal.tview",
 		    clean = true,
-		    hidro = packageInfo("gis").path.."/data/hidroeletricPlants*.shp",
-		    conservation = packageInfo("gis").path.."/data/conservationAreas*.shp",
+		    hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
+		    conservation = packageInfo("gis").data.."conservationAreas*.shp",
 		}
 
+		unitTest:assertNil(projTemporal.conservation)
+		unitTest:assertNil(projTemporal.hidro)
 		unitTest:assertEquals(projTemporal.conservation_1961.name, "conservation_1961")
 		unitTest:assertType(projTemporal.conservation_1961, "Layer")
 		unitTest:assertEquals(projTemporal.conservation_1961.source, "shp")
