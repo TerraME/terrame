@@ -19,6 +19,9 @@ File 'cabecadeboi-elevation.tif' is already documented in 'data.lua'
 File 'cabecadeboi-elevation.xml' is already documented in 'data.lua'
 File 'cabecadeboi.shp' does not need to be documented (a Lua file creates it)
 Project file 'cabecadeboi.tview' does not need to be documented (a Lua file creates it)
+File 'conservationAreas_1961.shp' is already documented in 'data.lua'
+File 'conservationAreas_1974.shp' is already documented in 'data.lua'
+File 'conservationAreas_1979.shp' is already documented in 'data.lua'
 File 'emas-accumulation.tif' is already documented in 'data.lua'
 File 'emas-accumulation.xml' is already documented in 'data.lua'
 File 'emas-firebreak.shp' is already documented in 'data.lua'
@@ -26,6 +29,9 @@ File 'emas-limit.shp' is already documented in 'data.lua'
 File 'emas-river.shp' is already documented in 'data.lua'
 File 'emas.shp' does not need to be documented (a Lua file creates it)
 Project file 'emas.tview' does not need to be documented (a Lua file creates it)
+File 'hidroeletricPlants_1970.shp' is already documented in 'data.lua'
+File 'hidroeletricPlants_1975.shp' is already documented in 'data.lua'
+File 'hidroeletricPlants_1977.shp' is already documented in 'data.lua'
 File 'itaituba-census.shp' is already documented in 'data.lua'
 File 'itaituba-deforestation.tif' is already documented in 'data.lua'
 File 'itaituba-deforestation.xml' is already documented in 'data.lua'
