@@ -1154,49 +1154,38 @@ function Layer(data)
 		}
 	end
 
-	mandatoryTableArgument(data, "project", "Project")
+	mandatoryTableArgument(data, "name", "string")
 	if data.file and type(data.file) == "string" then
 		local base, pattern = string.match(data.file, "(.*)%*(.*)")
 		if base then
 			optionalTableArgument(data, "times", "table")
-			local foundFiles = {}
+			local foundFiles = false
 			if data.times then
 				forEachElement(data.times, function(_, time)
 					local filePattern = "_"..time
-					table.insert(foundFiles, {file = File(base..filePattern..pattern), pattern = filePattern})
+					Layer{name = data.name..filePattern, file = File(base..filePattern..pattern), project = data.project}
+					foundFiles = true
 				end)
 			else
 				local dir = File(base..pattern):path()
 				local regex = string.gsub(base, "%.", "%%.").."(.*)"..string.gsub(pattern, "%.", "%%.").."$"
-				forEachFile(Directory(dir), function(file)
+				forEachFile(dir, function(file)
 					local filePattern = string.match(tostring(file), regex)
 					if filePattern then
-						table.insert(foundFiles, {file = file, pattern = filePattern})
+						Layer{name = data.name..filePattern, file = file, project = data.project}
+						foundFiles = true
 					end
 				end)
 			end
 
-			forEachElement(foundFiles, function(_, element)
-				local name = data.name
-				if name then
-					name = name..element.pattern
-				else
-					local ret = {element.file:split()}
-					name = ret[2]
-				end
-
-				Layer{name = name, file = element.file, project = data.project}
-			end)
-
-			if #foundFiles == 0 then
+			if not foundFiles then
 				customError("No results have been found to match the file pattern '"..data.file.."'.")
 			end
 
-			return nil
+			return
 		end
 	end
 
-	mandatoryTableArgument(data, "name", "string")
 	if getn(data) == 2 then
 		if not data.project.layers[data.name] then
 			local msg = "Layer '"..data.name.."' does not exist in Project '"..data.project.file.."'."

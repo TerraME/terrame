@@ -326,7 +326,8 @@ return {
 
 		Layer{
 			project = projTemporal,
-			file = packageInfo("gis").path.."/data/conservationAreas*.shp",
+			file = packageInfo("gis").data.."conservationAreas*.shp",
+			name = "conservationAreas"
 		}
 
 		unitTest:assertEquals(projTemporal.conservationAreas_1961.name, "conservationAreas_1961")
@@ -342,27 +343,11 @@ return {
 		projTemporal = Project{
 		    file = "temporal.tview",
 		    clean = true,
-		    areas = packageInfo("gis").path.."/data/conservationAreas*.shp",
-		}
-
-		unitTest:assertEquals(projTemporal.areas_1961.name, "areas_1961")
-		unitTest:assertType(projTemporal.areas_1961, "Layer")
-		unitTest:assertEquals(projTemporal.areas_1961.source, "shp")
-		unitTest:assertEquals(projTemporal.areas_1974.name, "areas_1974")
-		unitTest:assertType(projTemporal.areas_1974, "Layer")
-		unitTest:assertEquals(projTemporal.areas_1974.source, "shp")
-		unitTest:assertEquals(projTemporal.areas_1979.name, "areas_1979")
-		unitTest:assertType(projTemporal.areas_1979, "Layer")
-		unitTest:assertEquals(projTemporal.areas_1979.source, "shp")
-
-		projTemporal = Project{
-		    file = "temporal.tview",
-		    clean = true,
 		}
 
 		Layer{
 			project = projTemporal,
-			file = packageInfo("gis").path.."/data/conservation*Areas_1961.shp",
+			file = packageInfo("gis").data.."conservation*Areas_1961.shp",
 			name = "areas"
 		}
 
@@ -377,7 +362,7 @@ return {
 
 		Layer{
 			project = projTemporal,
-			file = packageInfo("gis").path.."/data/conservation*.shp",
+			file = packageInfo("gis").data.."conservation*.shp",
 			name = "layer"
 		}
 
@@ -398,13 +383,13 @@ return {
 
 		Layer{
 			project = projTemporal,
-			file = packageInfo("gis").path.."/data/conservationAreas*.shp",
+			file = packageInfo("gis").data.."conservationAreas*.shp",
 			name = "conservation"
 		}
 
 		Layer{
 			project = projTemporal,
-			file = packageInfo("gis").path.."/data/hidroeletricPlants*.shp",
+			file = packageInfo("gis").data.."hidroeletricPlants*.shp",
 			name = "hidro"
 		}
 
@@ -434,14 +419,14 @@ return {
 
 		Layer{
 			project = projTemporal,
-			file = packageInfo("gis").path.."/data/conservationAreas*.shp",
+			file = packageInfo("gis").data.."conservationAreas*.shp",
 			name = "conservation",
 			times = {1979, 1974}
 		}
 
 		Layer{
 			project = projTemporal,
-			file = packageInfo("gis").path.."/data/hidroeletricPlants*.shp",
+			file = packageInfo("gis").data.."hidroeletricPlants*.shp",
 			name = "hidro",
 			times = {1975, 1977}
 		}

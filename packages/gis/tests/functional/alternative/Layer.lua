@@ -422,23 +422,34 @@ return{
 		local patternFileError = function()
 			Layer{
 			    project = projTemporal,
-			    file = packageInfo("gis").path.."/data/conservation.shp*",
+			    file = packageInfo("gis").data.."conservationAreas*.shp",
 			}
 		end
-		unitTest:assertError(patternFileError, "No results have been found to match the file pattern '"..packageInfo("gis").path.."/data/conservation.shp*".."'.")
+		unitTest:assertError(patternFileError, mandatoryArgumentMsg("name"))
 
 		patternFileError = function()
 			Layer{
 			    project = projTemporal,
-			    file = packageInfo("gis").path.."/data/conservation.*",
+			    file = packageInfo("gis").data.."conservation.shp*",
+			    name = "conservation"
 			}
 		end
-		unitTest:assertError(patternFileError, "No results have been found to match the file pattern '"..packageInfo("gis").path.."/data/conservation.*".."'.")
+		unitTest:assertError(patternFileError, "No results have been found to match the file pattern '"..packageInfo("gis").data.."conservation.shp*".."'.")
+
+		patternFileError = function()
+			Layer{
+			    project = projTemporal,
+			    file = packageInfo("gis").data.."conservation.*",
+			    name = "conservation"
+			}
+		end
+		unitTest:assertError(patternFileError, "No results have been found to match the file pattern '"..packageInfo("gis").data.."conservation.*".."'.")
 
 		patternFileError = function()
 			Layer{
 			    project = projTemporal,
 			    file = packageInfo("gis").path.."/data*/conservation*",
+			    name = "conservation"
 			}
 		end
 		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
@@ -446,7 +457,8 @@ return{
 		patternFileError = function()
 			Layer{
 			    project = projTemporal,
-			    file = packageInfo("gis").path.."/data/conservationAreas*.shp",
+			    file = packageInfo("gis").data.."conservationAreas*.shp",
+			    name = "conservation",
 			    times = 1961
 			}
 		end
@@ -455,34 +467,38 @@ return{
 		patternFileError = function()
 			Layer{
 			    project = projTemporal,
-			    file = packageInfo("gis").path.."/data/conservationAreas*.shp",
+			    file = packageInfo("gis").data.."conservationAreas*.shp",
+			    name = "conservation",
 			    times = {1961, 1523}
 			}
 		end
-		unitTest:assertError(patternFileError, "File '"..packageInfo("gis").path.."/data/conservationAreas_1523.shp' does not exist.")
+		unitTest:assertError(patternFileError, "File '"..packageInfo("gis").data.."conservationAreas_1523.shp' does not exist.")
 
 		patternFileError = function()
 			Layer{
 			    project = projTemporal,
-			    file = packageInfo("gis").path.."/data/conservation.shp*",
+			    file = packageInfo("gis").data.."conservation.shp*",
+			    name = "conservation",
 			    times = {1961, 1974}
 			}
 		end
-		unitTest:assertError(patternFileError, "File '"..packageInfo("gis").path.."/data/conservation.shp_1961' does not exist.")
+		unitTest:assertError(patternFileError, "File '"..packageInfo("gis").data.."conservation.shp_1961' does not exist.")
 
 		patternFileError = function()
 			Layer{
 			    project = projTemporal,
-			    file = packageInfo("gis").path.."/data/conservation.*",
+			    file = packageInfo("gis").data.."conservation.*",
+			    name = "conservation",
 			    times = {1961, 1974}
 			}
 		end
-		unitTest:assertError(patternFileError, "File '"..packageInfo("gis").path.."/data/conservation._1961".."' does not exist.")
+		unitTest:assertError(patternFileError, "File '"..packageInfo("gis").data.."conservation._1961".."' does not exist.")
 
 		patternFileError = function()
 			Layer{
 			    project = projTemporal,
 			    file = packageInfo("gis").path.."/data*/conservation*",
+			    name = "conservation",
 			    times = {1961, 1974}
 			}
 		end
