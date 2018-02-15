@@ -109,7 +109,7 @@ function Project(data)
 	forEachElement(data, function(idx, value)
 		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
 		if type(value) == "string" and string.find(value, "%*") then
-			table.insert(multipleFiles, idx)
+			multipleFiles[idx] = value
 		else
 			if type(value) == "string" then
 				value = File(value)
@@ -148,6 +148,15 @@ function Project(data)
 		end)
 	end
 
+	forEachElement(multipleFiles, function(idx, value)
+		data[idx] = nil
+		layers[idx] = Layer{
+			project = data,
+			name = idx,
+			file = value
+		}
+	end)
+
 	forEachElement(data, function(idx, value)
 		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
 		if type(value) == "Layer" then return end
@@ -157,12 +166,6 @@ function Project(data)
 			name = idx,
 			file = value
 		}
-	end)
-
-	forEachElement(multipleFiles, function(_, idx)
-		if type(data[idx]) ~= "Layer" then -- remove multiple file from project
-			data[idx] = nil
-		end
 	end)
 
 	forEachElement(layers, function(idx, layer)

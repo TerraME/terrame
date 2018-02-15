@@ -434,7 +434,7 @@ return{
 			    name = "conservation"
 			}
 		end
-		unitTest:assertError(patternFileError, "No results have been found to match the file pattern '"..packageInfo("gis").data.."conservation.shp*".."'.")
+		unitTest:assertError(patternFileError, "No results have been found to match the pattern '"..packageInfo("gis").data.."conservation.shp*".."'.")
 
 		patternFileError = function()
 			Layer{
@@ -443,7 +443,7 @@ return{
 			    name = "conservation"
 			}
 		end
-		unitTest:assertError(patternFileError, "No results have been found to match the file pattern '"..packageInfo("gis").data.."conservation.*".."'.")
+		unitTest:assertError(patternFileError, "No results have been found to match the pattern '"..packageInfo("gis").data.."conservation.*".."'.")
 
 		patternFileError = function()
 			Layer{

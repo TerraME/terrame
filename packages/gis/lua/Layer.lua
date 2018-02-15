@@ -431,6 +431,27 @@ local function createFileFromInputData(input)
 	return file
 end
 
+local function extractMultiplesPattern(text)
+	return string.match(text, "(.*)%*(.*)")
+end
+
+local function findMultiples(base, pattern, list)
+	local regex = string.format("%s(.*)%s$", string.gsub(base, "%.", "%%."), string.gsub(pattern, "%.", "%%."))
+	local elements = {}
+	forEachElement(list, function(_, element)
+		local elementPattern = string.match(element, regex)
+		if elementPattern then
+			table.insert(elements, {pattern = elementPattern, name = element})
+		end
+	end)
+
+	if #elements == 0 then
+		customError("No results have been found to match the pattern '"..base.."*"..pattern.."'.")
+	end
+
+	return elements
+end
+
 Layer_ = {
 	type_ = "Layer",
 	--- Return a string with the representation of the layer. It can be "point", "polygon", "line", or "raster".
@@ -599,6 +620,23 @@ Layer_ = {
 		local project = self.project
 
 		if type(data.layer) == "string" then
+			if string.find(data.layer, "%*") then
+				local base, pattern = extractMultiplesPattern(data.layer)
+				local layers = {}
+				forEachElement(project.layers, function(layer)
+					table.insert(layers, layer)
+				end)
+
+				layers = findMultiples(base, pattern, layers)
+				forEachElement(layers, function(_, layer)
+					local newData = clone(data)
+					newData.layer = layer.name
+					self:fill(newData)
+				end)
+
+				return
+			end
+
 			data.layer = Layer{
 				project = self.project.file,
 				name = data.layer
@@ -1139,7 +1177,7 @@ metaTableLayer_ = {
 -- }
 function Layer(data)
 	verifyNamedTable(data)
-	optionalTableArgument(data, "name", "string")
+	mandatoryTableArgument(data, "name", "string")
 	if type(data.project) == "string" then
 		data.project = File(data.project)
 	end
@@ -1154,9 +1192,8 @@ function Layer(data)
 		}
 	end
 
-	mandatoryTableArgument(data, "name", "string")
 	if data.file and type(data.file) == "string" then
-		local base, pattern = string.match(data.file, "(.*)%*(.*)")
+		local base, pattern = extractMultiplesPattern(data.file)
 		if base then
 			optionalTableArgument(data, "times", "table")
 			local foundFiles = false
@@ -1167,19 +1204,16 @@ function Layer(data)
 					foundFiles = true
 				end)
 			else
-				local dir = File(base..pattern):path()
-				local regex = string.gsub(base, "%.", "%%.").."(.*)"..string.gsub(pattern, "%.", "%%.").."$"
-				forEachFile(dir, function(file)
-					local filePattern = string.match(tostring(file), regex)
-					if filePattern then
-						Layer{name = data.name..filePattern, file = file, project = data.project}
-						foundFiles = true
-					end
+				local dir = Directory(File(base..pattern):path())
+				local files = {}
+				forEachElement(dir:list(), function(_, file)
+					table.insert(files, dir..file)
 				end)
-			end
 
-			if not foundFiles then
-				customError("No results have been found to match the file pattern '"..data.file.."'.")
+				local files = findMultiples(base, pattern, files)
+				forEachElement(files, function(_, file)
+					Layer{name = data.name..file.pattern, file = File(file.name), project = data.project}
+				end)
 			end
 
 			return

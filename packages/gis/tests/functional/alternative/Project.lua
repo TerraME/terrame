@@ -96,7 +96,7 @@ return{
 			    layer = packageInfo("gis").path.."/data/conservation.shp*",
 			}
 		end
-		unitTest:assertError(patternFileError, "No results have been found to match the file pattern '"..packageInfo("gis").path.."/data/conservation.shp*".."'.")
+		unitTest:assertError(patternFileError, "No results have been found to match the pattern '"..packageInfo("gis").path.."/data/conservation.shp*".."'.")
 
 		patternFileError = function()
 			Project{
@@ -105,7 +105,7 @@ return{
 			    layer = packageInfo("gis").path.."/data/conservation.*",
 			}
 		end
-		unitTest:assertError(patternFileError, "No results have been found to match the file pattern '"..packageInfo("gis").path.."/data/conservation.*".."'.")
+		unitTest:assertError(patternFileError, "No results have been found to match the pattern '"..packageInfo("gis").path.."/data/conservation.*".."'.")
 
 		patternFileError = function()
 			Project{
