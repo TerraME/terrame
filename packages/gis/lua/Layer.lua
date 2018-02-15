@@ -1196,12 +1196,10 @@ function Layer(data)
 		local base, pattern = extractMultiplesPattern(data.file)
 		if base then
 			optionalTableArgument(data, "times", "table")
-			local foundFiles = false
 			if data.times then
 				forEachElement(data.times, function(_, time)
 					local filePattern = "_"..time
 					Layer{name = data.name..filePattern, file = File(base..filePattern..pattern), project = data.project}
-					foundFiles = true
 				end)
 			else
 				local dir = Directory(File(base..pattern):path())
@@ -1210,7 +1208,7 @@ function Layer(data)
 					table.insert(files, dir..file)
 				end)
 
-				local files = findMultiples(base, pattern, files)
+				files = findMultiples(base, pattern, files)
 				forEachElement(files, function(_, file)
 					Layer{name = data.name..file.pattern, file = File(file.name), project = data.project}
 				end)
