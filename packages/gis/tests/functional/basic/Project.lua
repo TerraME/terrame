@@ -326,16 +326,6 @@ end
 		projTemporal = Project{
 		    file = "temporal.tview",
 		    clean = true,
-		    areas = packageInfo("gis").data.."conservation*Areas_1961.shp",
-		}
-
-		unitTest:assertEquals(projTemporal.areas.name, "areas")
-		unitTest:assertType(projTemporal.areas, "Layer")
-		unitTest:assertEquals(projTemporal.areas.source, "shp")
-
-		projTemporal = Project{
-		    file = "temporal.tview",
-		    clean = true,
 		    layer = packageInfo("gis").data.."conservation*.shp",
 		}
 

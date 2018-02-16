@@ -116,6 +116,19 @@ return{
 		end
 		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
 
+		local projTemporal
+		patternFileError = function()
+			projTemporal = Project{
+			    file = "temporal.tview",
+			    clean = true,
+			    areas = packageInfo("gis").data.."conservation*Areas_1961.shp",
+			}
+		end
+
+		unitTest:assertWarning(patternFileError, "Only one resut has been found to match the pattern '"..packageInfo("gis").data.."conservation*Areas_1961.shp'.")
+		unitTest:assertEquals(projTemporal.areas.name, "areas")
+		unitTest:assertType(projTemporal.areas, "Layer")
+		unitTest:assertEquals(projTemporal.areas.source, "shp")
 		File("temporal.tview"):deleteIfExists()
 	end
 }

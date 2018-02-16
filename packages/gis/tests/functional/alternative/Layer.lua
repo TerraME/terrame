@@ -504,6 +504,39 @@ return{
 		end
 		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
 
+		local patternWarning = function()
+			Layer{
+				project = projTemporal,
+				file = packageInfo("gis").data.."conservation*Areas_1961.shp",
+				name = "areas"
+			}
+		end
+
+		unitTest:assertWarning(patternWarning, "Only one resut has been found to match the pattern '"..packageInfo("gis").data.."conservation*Areas_1961.shp'.")
+		unitTest:assertEquals(projTemporal.areas.name, "areas")
+		unitTest:assertType(projTemporal.areas, "Layer")
+		unitTest:assertEquals(projTemporal.areas.source, "shp")
+
+		projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		}
+
+		local timesWarning = function()
+			Layer{
+				project = projTemporal,
+				file = packageInfo("gis").data.."conservationAreas*.shp",
+				name = "conservation",
+				times = {1979}
+			}
+		end
+
+		unitTest:assertWarning(timesWarning, "Only one resut has been found to match the pattern '"..packageInfo("gis").data.."conservationAreas_1979.shp'.")
+		unitTest:assertNil(projTemporal.conservation_1961)
+		unitTest:assertNil(projTemporal.conservation_1974)
+		unitTest:assertEquals(projTemporal.conservation_1979.name, "conservation_1979")
+		unitTest:assertType(projTemporal.conservation_1979, "Layer")
+		unitTest:assertEquals(projTemporal.conservation_1979.source, "shp")
 		File("temporal.tview"):deleteIfExists()
 	end,
 	fill = function(unitTest)
@@ -1087,6 +1120,16 @@ return{
 		end
 
 		unitTest:assertError(temporalAttributeError, "No results have been found to match the pattern 'test*'.")
+
+		temporalAttributeError = function()
+			cl:fill{
+				attribute = "con",
+				operation = "area",
+				layer = "conservation*1961",
+			}
+		end
+
+		unitTest:assertWarning(temporalAttributeError, "Only one resut has been found to match the pattern 'conservation*1961'.")
 		File(filePath1):delete()
 		File("temporal.tview"):delete()
 	end,
