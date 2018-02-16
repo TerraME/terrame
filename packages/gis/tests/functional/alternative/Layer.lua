@@ -1051,6 +1051,44 @@ return{
 
 		File(projName):delete()
 		File(filePath1):delete()
+
+		local projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		    conservation = packageInfo("gis").data.."conservationAreas*.shp",
+		    hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
+		}
+
+		cl = Layer{
+			file = filePath1,
+			project = projTemporal,
+			source = "shp",
+			input = "hidro_1970",
+			name = "layer",
+			resolution = 30000
+		}
+
+		local temporalAttributeError = function()
+			cl:fill{
+				attribute = "conservation",
+				operation = "area",
+				layer = "conservation*",
+			}
+		end
+
+		unitTest:assertError(temporalAttributeError, "The attribute generated 'conservation_1961' has more than 10 characters.")
+
+		temporalAttributeError = function()
+			cl:fill{
+				attribute = "conservation",
+				operation = "area",
+				layer = "test*",
+			}
+		end
+
+		unitTest:assertError(temporalAttributeError, "No results have been found to match the pattern 'test*'.")
+		File(filePath1):delete()
+		File("temporal.tview"):delete()
 	end,
 	simplify = function(unitTest)
 		local projName = "layer_func_alt.tview"

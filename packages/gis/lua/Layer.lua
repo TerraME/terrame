@@ -438,7 +438,7 @@ end
 local function findMultiples(base, pattern, list)
 	local regex = string.format("%s(.*)%s$", string.gsub(base, "%.", "%%."), string.gsub(pattern, "%.", "%%."))
 	local elements = {}
-	forEachElement(list, function(_, element)
+	forEachOrderedElement(list, function(_, element)
 		local elementPattern = string.match(element, regex)
 		if elementPattern then
 			table.insert(elements, {pattern = elementPattern, name = element})
@@ -623,14 +623,22 @@ Layer_ = {
 			if string.find(data.layer, "%*") then
 				local base, pattern = extractMultiplesPattern(data.layer)
 				local layers = {}
-				forEachElement(project.layers, function(layer)
+				forEachOrderedElement(project.layers, function(layer)
 					table.insert(layers, layer)
 				end)
 
 				layers = findMultiples(base, pattern, layers)
-				forEachElement(layers, function(_, layer)
+				forEachOrderedElement(layers, function(_, layer)
+					local attr = data.attribute..layer.pattern
+					if #attr > 10 then
+						customError("The attribute generated '"..attr.."' has more than 10 characters.")
+					end
+				end)
+
+				forEachOrderedElement(layers, function(_, layer)
 					local newData = clone(data)
 					newData.layer = layer.name
+					newData.attribute = data.attribute..layer.pattern
 					self:fill(newData)
 				end)
 

@@ -773,6 +773,41 @@ return {
 
 		projName:delete()
 		File(filePath1):delete()
+
+		--TEMPORAL TESTS
+		local projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		    conservation = packageInfo("gis").data.."conservationAreas*.shp",
+		    hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
+		}
+
+		cl = Layer{
+			file = filePath1,
+			project = projTemporal,
+			source = "shp",
+			input = "hidro_1970",
+			name = "layer",
+			resolution = 30000
+		}
+
+		cl:fill{
+			attribute = "conserv",
+			operation = "area",
+			layer = "conservation_19*",
+		}
+
+		attrs = cl:attributes()
+		local found = 0
+		forEachElement(attrs, function(_, attr)
+			if belong(attr.name, {"conserv61", "conserv74", "conserv79"}) then
+				found = found + 1
+			end
+		end)
+
+		unitTest:assertEquals(found, 3)
+		File(filePath1):delete()
+		File("temporal.tview"):delete()
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_representation.tview"
