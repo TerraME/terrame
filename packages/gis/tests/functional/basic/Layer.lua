@@ -345,11 +345,6 @@ return {
 		    clean = true,
 		}
 
-		projTemporal = Project{
-		    file = "temporal.tview",
-		    clean = true,
-		}
-
 		Layer{
 			project = projTemporal,
 			file = packageInfo("gis").data.."conservation*.shp",
