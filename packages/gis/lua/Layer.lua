@@ -632,8 +632,8 @@ Layer_ = {
 				layers = findMultiples(base, pattern, layers)
 				forEachOrderedElement(layers, function(_, layer)
 					local attr = data.attribute..layer.pattern
-					if #attr > 10 then
-						customError("The attribute generated '"..attr.."' has more than 10 characters.")
+					if #attr > 10 and self.source == "shp" then
+						customError("The attribute '"..attr.."' to be created has more than 10 characters. Please shorten the attribute name.")
 					end
 				end)
 

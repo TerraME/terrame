@@ -1109,7 +1109,7 @@ return{
 			}
 		end
 
-		unitTest:assertError(temporalAttributeError, "The attribute generated 'conservation_1961' has more than 10 characters.")
+		unitTest:assertError(temporalAttributeError, "The attribute 'conservation_1961' to be created has more than 10 characters. Please shorten the attribute name.")
 
 		temporalAttributeError = function()
 			cl:fill{
