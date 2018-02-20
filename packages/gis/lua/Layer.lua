@@ -431,6 +431,29 @@ local function createFileFromInputData(input)
 	return file
 end
 
+local function extractMultiplesPattern(text)
+	return string.match(text, "(.*)%*(.*)")
+end
+
+local function findMultiples(base, pattern, list)
+	local regex = string.format("%s(.*)%s$", string.gsub(base, "%.", "%%."), string.gsub(pattern, "%.", "%%."))
+	local elements = {}
+	forEachOrderedElement(list, function(_, element)
+		local elementPattern = string.match(element, regex)
+		if elementPattern then
+			table.insert(elements, {pattern = elementPattern, name = element})
+		end
+	end)
+
+	if #elements == 0 then
+		customError("No results have been found to match the pattern '"..base.."*"..pattern.."'.")
+	elseif #elements == 1 then
+		customWarning("Only one resut has been found to match the pattern '"..base.."*"..pattern.."'.")
+	end
+
+	return elements
+end
+
 Layer_ = {
 	type_ = "Layer",
 	--- Return a string with the representation of the layer. It can be "point", "polygon", "line", or "raster".
@@ -599,6 +622,31 @@ Layer_ = {
 		local project = self.project
 
 		if type(data.layer) == "string" then
+			if string.find(data.layer, "%*") then
+				local base, pattern = extractMultiplesPattern(data.layer)
+				local layers = {}
+				forEachOrderedElement(project.layers, function(layer)
+					table.insert(layers, layer)
+				end)
+
+				layers = findMultiples(base, pattern, layers)
+				forEachOrderedElement(layers, function(_, layer)
+					local attr = data.attribute..layer.pattern
+					if #attr > 10 and self.source == "shp" then
+						customError("The attribute '"..attr.."' to be created has more than 10 characters. Please shorten the attribute name.")
+					end
+				end)
+
+				forEachOrderedElement(layers, function(_, layer)
+					local newData = clone(data)
+					newData.layer = layer.name
+					newData.attribute = data.attribute..layer.pattern
+					self:fill(newData)
+				end)
+
+				return
+			end
+
 			data.layer = Layer{
 				project = self.project.file,
 				name = data.layer
@@ -1139,9 +1187,7 @@ metaTableLayer_ = {
 -- }
 function Layer(data)
 	verifyNamedTable(data)
-
 	mandatoryTableArgument(data, "name", "string")
-
 	if type(data.project) == "string" then
 		data.project = File(data.project)
 	end
@@ -1156,14 +1202,41 @@ function Layer(data)
 		}
 	end
 
-	mandatoryTableArgument(data, "project", "Project")
+	if data.file and type(data.file) == "string" then
+		local base, pattern = extractMultiplesPattern(data.file)
+		if base then
+			optionalTableArgument(data, "times", "table")
+			if data.times then
+				if #data.times == 1 then
+					customWarning("Only one resut has been found to match the pattern '"..base.."_"..data.times[1]..pattern.."'.")
+				end
+
+				forEachElement(data.times, function(_, time)
+					local filePattern = "_"..time
+					Layer{name = data.name..filePattern, file = File(base..filePattern..pattern), project = data.project}
+				end)
+			else
+				local dir = Directory(File(base..pattern):path())
+				local files = {}
+				forEachElement(dir:list(), function(_, file)
+					table.insert(files, dir..file)
+				end)
+
+				files = findMultiples(base, pattern, files)
+				forEachElement(files, function(_, file)
+					Layer{name = data.name..file.pattern, file = File(file.name), project = data.project}
+				end)
+			end
+
+			return
+		end
+	end
 
 	if getn(data) == 2 then
 		if not data.project.layers[data.name] then
 			local msg = "Layer '"..data.name.."' does not exist in Project '"..data.project.file.."'."
 			local sug = suggestion(data.name, data.project.layers)
 			msg = msg..suggestionMsg(sug)
-
 			customError(msg)
 		end
 

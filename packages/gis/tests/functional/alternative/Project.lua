@@ -88,6 +88,48 @@ return{
 			Project{file = "foo.xml"}
 		end
 		unitTest:assertError(extError, "Project file extension must be '.tview' or '.qgs'.")
+
+		local patternFileError = function()
+			Project{
+			    file = "temporal.tview",
+			    clean = true,
+			    layer = packageInfo("gis").path.."/data/conservation.shp*",
+			}
+		end
+		unitTest:assertError(patternFileError, "No results have been found to match the pattern '"..packageInfo("gis").path.."/data/conservation.shp*".."'.")
+
+		patternFileError = function()
+			Project{
+			    file = "temporal.tview",
+			    clean = true,
+			    layer = packageInfo("gis").path.."/data/conservation.*",
+			}
+		end
+		unitTest:assertError(patternFileError, "No results have been found to match the pattern '"..packageInfo("gis").path.."/data/conservation.*".."'.")
+
+		patternFileError = function()
+			Project{
+			    file = "temporal.tview",
+			    clean = true,
+			    layer = packageInfo("gis").path.."/data*/conservation*",
+			}
+		end
+		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
+
+		local projTemporal
+		patternFileError = function()
+			projTemporal = Project{
+			    file = "temporal.tview",
+			    clean = true,
+			    areas = packageInfo("gis").data.."conservation*Areas_1961.shp",
+			}
+		end
+
+		unitTest:assertWarning(patternFileError, "Only one resut has been found to match the pattern '"..packageInfo("gis").data.."conservation*Areas_1961.shp'.")
+		unitTest:assertEquals(projTemporal.areas.name, "areas")
+		unitTest:assertType(projTemporal.areas, "Layer")
+		unitTest:assertEquals(projTemporal.areas.source, "shp")
+		File("temporal.tview"):deleteIfExists()
 	end
 }
 

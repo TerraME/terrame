@@ -146,3 +146,111 @@ directory{
 	source = "TerraME team"
 }
 
+data{
+	file = "conservationAreas_1961.shp",
+	summary = "Federal and state conservation units. Each type of conservation unit has its own land use rules (http://www.mma.gov.br/informma/itemlist/category/34-unidades-de-conservacao), such as integral protection or sustainable use.",
+	source = "ICMBIO (http://www.icmbio.gov.br/portal/geoprocessamentos/51-menu-servicos/4004-downloads-mapa-tematico-e-dados-geoestatisticos-das-uc-s).",
+	reference = "http://inct.ccst.inpe.br/amazon/",
+	attributes = {
+		CoordRegio = "Name of Region Coordinators.",
+		IdUnidade = "Identifier of conservation unit.",
+		UF = "Federative Units.",
+		anoCriacao = "Creation year.",
+		areaHa = "Area in hectare.",
+		biomaIBGE = "Biome according to IBGE.",
+		categoria = "Category of conservation.",
+		codigoCnuc = "Code of Cnuc.",
+		municipios = "List of municipalities.",
+		nome = "Name of convervation unit.",
+		tipo = "Type of convervation.",
+	}
+}
+
+data{
+	file = "conservationAreas_1974.shp",
+	summary = "Federal and state conservation units. Each type of conservation unit has its own land use rules (http://www.mma.gov.br/informma/itemlist/category/34-unidades-de-conservacao), such as integral protection or sustainable use.",
+	source = "ICMBIO (http://www.icmbio.gov.br/portal/geoprocessamentos/51-menu-servicos/4004-downloads-mapa-tematico-e-dados-geoestatisticos-das-uc-s).",
+	reference = "http://inct.ccst.inpe.br/amazon/",
+	attributes = {
+		CoordRegio = "Name of Region Coordinators.",
+		IdUnidade = "Identifier of conservation unit.",
+		UF = "Federative Units.",
+		anoCriacao = "Creation year.",
+		areaHa = "Area in hectare.",
+		biomaIBGE = "Biome according to IBGE.",
+		categoria = "Category of conservation.",
+		codigoCnuc = "Code of Cnuc.",
+		municipios = "List of municipalities.",
+		nome = "Name of convervation unit.",
+		tipo = "Type of convervation.",
+	}
+}
+
+data{
+	file = "conservationAreas_1979.shp",
+	summary = "Federal and state conservation units. Each type of conservation unit has its own land use rules (http://www.mma.gov.br/informma/itemlist/category/34-unidades-de-conservacao), such as integral protection or sustainable use.",
+	source = "ICMBIO (http://www.icmbio.gov.br/portal/geoprocessamentos/51-menu-servicos/4004-downloads-mapa-tematico-e-dados-geoestatisticos-das-uc-s).",
+	reference = "http://inct.ccst.inpe.br/amazon/",
+	attributes = {
+		CoordRegio = "Name of Region Coordinators.",
+		IdUnidade = "Identifier of conservation unit.",
+		UF = "Federative Units.",
+		anoCriacao = "Creation year.",
+		areaHa = "Area in hectare.",
+		biomaIBGE = "Biome according to IBGE.",
+		categoria = "Category of conservation.",
+		codigoCnuc = "Code of Cnuc.",
+		municipios = "List of municipalities.",
+		nome = "Name of convervation unit.",
+		tipo = "Type of convervation.",
+	}
+}
+
+data{
+	file = "hidroeletricPlants_1970.shp",
+	summary = "Hidroeletric plants in operation.",
+	source = "ANA (http://www.ana.gov.br).",
+	reference = "http://inct.ccst.inpe.br/amazon/",
+	attributes = {
+		AREA_DREN = "Drainage Area.",
+		DATA_ATUAL = "Text with the database creation date.",
+		NOME = "Name of the hidroeletric plant.",
+		RIO = "Name of the river.",
+		TIPO = "Type of hidroeletric plant.",
+		idUnico = "An unique identifier for hidroeletric plants.",
+		status = "The status of the hidroeletric plant.",
+	}
+}
+
+data{
+	file = "hidroeletricPlants_1975.shp",
+	summary = "Hidroeletric plants in operation.",
+	source = "ANA (http://www.ana.gov.br).",
+	reference = "http://inct.ccst.inpe.br/amazon/",
+	attributes = {
+		AREA_DREN = "Drainage Area.",
+		DATA_ATUAL = "Text with the database creation date.",
+		NOME = "Name of the hidroeletric plant.",
+		RIO = "Name of the river.",
+		TIPO = "Type of hidroeletric plant.",
+		idUnico = "An unique identifier for hidroeletric plants.",
+		status = "The status of the hidroeletric plant.",
+	}
+}
+
+data{
+	file = "hidroeletricPlants_1977.shp",
+	summary = "Hidroeletric plants in operation.",
+	source = "ANA (http://www.ana.gov.br).",
+	reference = "http://inct.ccst.inpe.br/amazon/",
+	attributes = {
+		AREA_DREN = "Drainage Area.",
+		DATA_ATUAL = "Text with the database creation date.",
+		NOME = "Name of the hidroeletric plant.",
+		RIO = "Name of the river.",
+		TIPO = "Type of hidroeletric plant.",
+		idUnico = "An unique identifier for hidroeletric plants.",
+		status = "The status of the hidroeletric plant.",
+	}
+}
+

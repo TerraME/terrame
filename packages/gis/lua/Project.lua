@@ -105,19 +105,23 @@ function Project(data)
 		optionalTableArgument(data, "directory", "Directory")
 	end
 
+	local multipleFiles = {}
 	forEachElement(data, function(idx, value)
 		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
+		if type(value) == "string" and string.find(value, "%*") then
+			multipleFiles[idx] = value
+		else
+			if type(value) == "string" then
+				value = File(value)
+			end
 
-		if type(value) == "string" then
-			value = File(value)
-		end
+			if type(value) ~= "File" then
+				incompatibleTypeError(idx, "File", value)
+			end
 
-		if type(value) ~= "File" then
-			incompatibleTypeError(idx, "File", value)
-		end
-
-		if not value:exists() then
-			customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
+			if not value:exists() then
+				customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
+			end
 		end
 	end)
 
@@ -134,7 +138,6 @@ function Project(data)
 	if data.directory then
 		forEachFile(data.directory, function(file)
 			local _, name, ext = file:split()
-
 			if belong(ext, {"shp", "tif"}) then
 				layers[name] = Layer{
 					project = data,
@@ -144,6 +147,15 @@ function Project(data)
 			end
 		end)
 	end
+
+	forEachElement(multipleFiles, function(idx, value)
+		data[idx] = nil
+		layers[idx] = Layer{
+			project = data,
+			name = idx,
+			file = value
+		}
+	end)
 
 	forEachElement(data, function(idx, value)
 		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
