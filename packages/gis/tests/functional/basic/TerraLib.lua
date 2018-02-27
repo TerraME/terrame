@@ -298,6 +298,29 @@ return {
 	geometry = function(unitTest)
 		-- Geometry tests is on functional/basic/Geometry.lua
 		unitTest:assert(true)
+	end,
+	removeLayer = function(unitTest)
+		local proj = Project{
+			file = "test.tview",
+			clean = true,
+			inputLayer = filePath("itaituba-localities.shp", "gis")
+		}
+
+		local layer = Layer{
+			input = "inputLayer",
+			project = proj,
+			file = "test.shp",
+			name = "testLayer",
+			resolution = 30000,
+			source = "shp"
+		}
+
+		unitTest:assertNotNil(proj.testLayer)
+		unitTest:assertNotNil(proj.layers.testLayer)
+		TerraLib().removeLayer(proj, layer.name)
+		unitTest:assertNil(proj.testLayer)
+		unitTest:assertNil(proj.layers.testLayer)
+		File("test.tview"):deleteIfExists()
 	end
 }
 
