@@ -879,6 +879,101 @@ source    string [shp]
 		unitTest:assertEquals(bbox.yMax, -2030571.5856793, 1.0e-7)
 
 		proj.file:delete()
+	end,
+	split = function(unitTest)
+		local proj = Project{
+		    file = "temporal.tview",
+		    conservation = packageInfo("gis").data.."conservationAreas*.shp",
+    		hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
+		    clean = true,
+		}
+
+		local layer = Layer{
+			file = "test.shp",
+			project = proj,
+			source = "shp",
+			input = "hidro_1970",
+			name = "layer",
+			resolution = 30000,
+			clean = true,
+		}
+
+		layer:fill{
+			attribute = "conserv_",
+			operation = "area",
+			layer = "conservation_19*",
+		}
+
+		layer:fill{
+			attribute = "hidro_",
+			operation = "distance",
+			layer = "hidro_19*",
+		}
+
+		layer:fill{
+			attribute = "hidro70",
+			operation = "distance",
+			layer = "hidro_1970",
+		}
+
+		layer:split()
+
+		local attributes = TerraLib().getPropertyNames(proj, "layer_61")
+		unitTest:assert(belong("conserv", attributes))
+		unitTest:assert(belong("hidro70", attributes))
+		unitTest:assert(belong("row", attributes))
+		unitTest:assert(belong("col", attributes))
+		unitTest:assert(belong("FID", attributes))
+		unitTest:assert(belong("id", attributes))
+
+		attributes = TerraLib().getPropertyNames(proj, "layer_70")
+		unitTest:assert(belong("hidro", attributes))
+		unitTest:assert(not belong("hidro70", attributes))
+		unitTest:assert(belong("row", attributes))
+		unitTest:assert(belong("col", attributes))
+		unitTest:assert(belong("FID", attributes))
+		unitTest:assert(belong("id", attributes))
+
+		attributes = TerraLib().getPropertyNames(proj, "layer_74")
+		unitTest:assert(belong("conserv", attributes))
+		unitTest:assert(not belong("hidro70", attributes))
+		unitTest:assert(belong("row", attributes))
+		unitTest:assert(belong("col", attributes))
+		unitTest:assert(belong("FID", attributes))
+		unitTest:assert(belong("id", attributes))
+
+		attributes = TerraLib().getPropertyNames(proj, "layer_75")
+		unitTest:assert(belong("hidro", attributes))
+		unitTest:assert(not belong("hidro70", attributes))
+		unitTest:assert(belong("row", attributes))
+		unitTest:assert(belong("col", attributes))
+		unitTest:assert(belong("FID", attributes))
+		unitTest:assert(belong("id", attributes))
+
+		attributes = TerraLib().getPropertyNames(proj, "layer_77")
+		unitTest:assert(belong("hidro", attributes))
+		unitTest:assert(not belong("hidro70", attributes))
+		unitTest:assert(belong("row", attributes))
+		unitTest:assert(belong("col", attributes))
+		unitTest:assert(belong("FID", attributes))
+		unitTest:assert(belong("id", attributes))
+
+		attributes = TerraLib().getPropertyNames(proj, "layer_79")
+		unitTest:assert(belong("conserv", attributes))
+		unitTest:assert(not belong("hidro70", attributes))
+		unitTest:assert(belong("row", attributes))
+		unitTest:assert(belong("col", attributes))
+		unitTest:assert(belong("FID", attributes))
+		unitTest:assert(belong("id", attributes))
+
+		File("temporal.tview"):deleteIfExists()
+		File("test.shp"):deleteIfExists()
+		File("layer_61.shp"):deleteIfExists()
+		File("layer_70.shp"):deleteIfExists()
+		File("layer_74.shp"):deleteIfExists()
+		File("layer_75.shp"):deleteIfExists()
+		File("layer_77.shp"):deleteIfExists()
+		File("layer_79.shp"):deleteIfExists()
 	end
 }
 

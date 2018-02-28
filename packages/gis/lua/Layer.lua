@@ -623,13 +623,13 @@ Layer_ = {
 
 		if type(data.layer) == "string" then
 			if string.find(data.layer, "%*") then
-				local base, pattern = extractMultiplesPattern(data.layer)
+				local prefix, sufix = extractMultiplesPattern(data.layer)
 				local layers = {}
 				forEachOrderedElement(project.layers, function(layer)
 					table.insert(layers, layer)
 				end)
 
-				layers = findMultiples(base, pattern, layers)
+				layers = findMultiples(prefix, sufix, layers)
 				forEachOrderedElement(layers, function(_, layer)
 					local attr = data.attribute..layer.pattern
 					if #attr > 10 and self.source == "shp" then
@@ -1061,6 +1061,77 @@ Layer_ = {
 		end
 
 		TerraLib().polygonize(rasterInfo, outInfo)
+	end,
+	--- Splits a temporal layer into multiple layers. It creates a 'layer_time' for each time available as attribute values 'attribute_time'.
+	-- @usage -- DONTRUN
+	-- layer:split()
+	split = function(self)
+		local temporalAttributes = {}
+		local startTime = math.huge
+		local nonTemporalAttributes = {}
+		local dataAttributes = {}
+		local isTemporal = false
+		forEachElement(self:attributes(), function(_, attr)
+			local prefix, sufix = string.match(attr.name, "(.+)_(%d+)")
+			if prefix and sufix then
+				isTemporal = true
+				if not temporalAttributes[sufix] then
+					temporalAttributes[sufix] = {}
+					startTime = math.min(startTime, tonumber(sufix))
+				end
+
+				table.insert(temporalAttributes[sufix], {prefix = prefix, sufix = sufix, name = attr.name})
+			elseif belong(attr.name, {"id", "col", "row", "FID", "OGR_GEOMETRY", "ogr_geometry"}) then
+				table.insert(dataAttributes, attr.name)
+			else
+				table.insert(nonTemporalAttributes, attr.name)
+			end
+		end)
+
+		if not isTemporal then
+			customError("No temporal attribute has been found.")
+		end
+
+		forEachElement(nonTemporalAttributes, function(_, attr)
+			table.insert(temporalAttributes[tostring(startTime)], {prefix = attr, sufix = "", name = attr})
+		end)
+
+		forEachElement(dataAttributes, function(_, attr)
+			forEachElement(temporalAttributes, function(time)
+			table.insert(temporalAttributes[time], {prefix = attr, sufix = "", name = attr})
+			end)
+		end)
+
+		forEachElement(temporalAttributes, function(time, attributeList)
+			local attrNames = {}
+			local mapAttributes = {}
+			forEachElement(attributeList, function(_, attr)
+				table.insert(attrNames, attr.prefix)
+				mapAttributes[attr.name] = attr.prefix
+			end)
+
+			local dset = TerraLib().getDataSet(self.project, self.name)
+			local toSet = {}
+			for i = 0, #dset do
+				toSet[i+1] = {}
+				for k, v in pairs(dset[i]) do
+					toSet[i+1][k] = nil
+					if mapAttributes[k] then
+						toSet[i+1][mapAttributes[k]] = v
+					end
+				end
+			end
+
+			local newLayerName = self.name.."_"..time
+			local fileName = newLayerName.."."..self.source
+			local tempLayer = "tmplyr_"..time
+			TerraLib().saveDataSet(self.project, self.name, toSet, tempLayer, attrNames)
+			local from = {project = self.project, layer = tempLayer}
+			local to = {file = fileName, type = self.source}
+			TerraLib().saveLayerAs(from, to, true, attrNames)
+			Layer{project = self.project, name = newLayerName, file = fileName}
+			TerraLib().removeLayer(self.project, tempLayer)
+		end)
 	end
 }
 

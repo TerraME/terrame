@@ -1262,6 +1262,21 @@ return{
 		unitTest:assertError(invalidEncoding, "Encoding 'latin2' is invalid.")
 
 		proj.file:delete()
+	end,
+	split = function(unitTest)
+		local proj = Project{
+		    file = "temporal.tview",
+		    conservation = packageInfo("gis").data.."conservationAreas*.shp",
+		    clean = true,
+		}
+
+		local notTemporal = function()
+			proj.conservation_1961:split()
+		end
+
+		unitTest:assertError(notTemporal, "No temporal attribute has been found.")
+
+		File("temporal.tview"):deleteIfExists()
 	end
 }
 
