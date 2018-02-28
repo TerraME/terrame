@@ -37,6 +37,7 @@ _Gtme.loadedFonts = {}
 _Gtme.createdObservers = {}
 _Gtme.fonts = {}
 _Gtme.print = print
+_Gtme.iowrite = io.write
 _Gtme.type = type
 
 print = function(obj, ...)
