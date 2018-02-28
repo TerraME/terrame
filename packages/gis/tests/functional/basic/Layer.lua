@@ -318,6 +318,120 @@ return {
 		File(filePath9):delete()
 		dir:delete()
 		dir2:delete()
+
+		local projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		}
+
+		Layer{
+			project = projTemporal,
+			file = packageInfo("gis").data.."conservationAreas*.shp",
+			name = "conservationAreas"
+		}
+
+		unitTest:assertEquals(projTemporal.conservationAreas_1961.name, "conservationAreas_1961")
+		unitTest:assertType(projTemporal.conservationAreas_1961, "Layer")
+		unitTest:assertEquals(projTemporal.conservationAreas_1961.source, "shp")
+		unitTest:assertEquals(projTemporal.conservationAreas_1974.name, "conservationAreas_1974")
+		unitTest:assertType(projTemporal.conservationAreas_1974, "Layer")
+		unitTest:assertEquals(projTemporal.conservationAreas_1974.source, "shp")
+		unitTest:assertEquals(projTemporal.conservationAreas_1979.name, "conservationAreas_1979")
+		unitTest:assertType(projTemporal.conservationAreas_1979, "Layer")
+		unitTest:assertEquals(projTemporal.conservationAreas_1979.source, "shp")
+
+		projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		}
+
+		Layer{
+			project = projTemporal,
+			file = packageInfo("gis").data.."conservation*.shp",
+			name = "layer"
+		}
+
+		unitTest:assertEquals(projTemporal.layerAreas_1961.name, "layerAreas_1961")
+		unitTest:assertType(projTemporal.layerAreas_1961, "Layer")
+		unitTest:assertEquals(projTemporal.layerAreas_1961.source, "shp")
+		unitTest:assertEquals(projTemporal.layerAreas_1974.name, "layerAreas_1974")
+		unitTest:assertType(projTemporal.layerAreas_1974, "Layer")
+		unitTest:assertEquals(projTemporal.layerAreas_1974.source, "shp")
+		unitTest:assertEquals(projTemporal.layerAreas_1979.name, "layerAreas_1979")
+		unitTest:assertType(projTemporal.layerAreas_1979, "Layer")
+		unitTest:assertEquals(projTemporal.layerAreas_1979.source, "shp")
+
+		projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		}
+
+		Layer{
+			project = projTemporal,
+			file = packageInfo("gis").data.."conservationAreas*.shp",
+			name = "conservation"
+		}
+
+		Layer{
+			project = projTemporal,
+			file = packageInfo("gis").data.."hidroeletricPlants*.shp",
+			name = "hidro"
+		}
+
+		unitTest:assertEquals(projTemporal.conservation_1961.name, "conservation_1961")
+		unitTest:assertType(projTemporal.conservation_1961, "Layer")
+		unitTest:assertEquals(projTemporal.conservation_1961.source, "shp")
+		unitTest:assertEquals(projTemporal.conservation_1974.name, "conservation_1974")
+		unitTest:assertType(projTemporal.conservation_1974, "Layer")
+		unitTest:assertEquals(projTemporal.conservation_1974.source, "shp")
+		unitTest:assertEquals(projTemporal.conservation_1979.name, "conservation_1979")
+		unitTest:assertType(projTemporal.conservation_1979, "Layer")
+		unitTest:assertEquals(projTemporal.conservation_1979.source, "shp")
+		unitTest:assertEquals(projTemporal.hidro_1970.name, "hidro_1970")
+		unitTest:assertType(projTemporal.hidro_1970, "Layer")
+		unitTest:assertEquals(projTemporal.hidro_1970.source, "shp")
+		unitTest:assertEquals(projTemporal.hidro_1975.name, "hidro_1975")
+		unitTest:assertType(projTemporal.hidro_1975, "Layer")
+		unitTest:assertEquals(projTemporal.hidro_1975.source, "shp")
+		unitTest:assertEquals(projTemporal.hidro_1977.name, "hidro_1977")
+		unitTest:assertType(projTemporal.hidro_1977, "Layer")
+		unitTest:assertEquals(projTemporal.hidro_1977.source, "shp")
+
+		projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		}
+
+		Layer{
+			project = projTemporal,
+			file = packageInfo("gis").data.."conservationAreas*.shp",
+			name = "conservation",
+			times = {1979, 1974}
+		}
+
+		Layer{
+			project = projTemporal,
+			file = packageInfo("gis").data.."hidroeletricPlants*.shp",
+			name = "hidro",
+			times = {1975, 1977}
+		}
+
+		unitTest:assertNil(projTemporal.conservation_1961)
+		unitTest:assertEquals(projTemporal.conservation_1974.name, "conservation_1974")
+		unitTest:assertType(projTemporal.conservation_1974, "Layer")
+		unitTest:assertEquals(projTemporal.conservation_1974.source, "shp")
+		unitTest:assertEquals(projTemporal.conservation_1979.name, "conservation_1979")
+		unitTest:assertType(projTemporal.conservation_1979, "Layer")
+		unitTest:assertEquals(projTemporal.conservation_1979.source, "shp")
+		unitTest:assertNil(projTemporal.hidro_1970)
+		unitTest:assertEquals(projTemporal.hidro_1975.name, "hidro_1975")
+		unitTest:assertType(projTemporal.hidro_1975, "Layer")
+		unitTest:assertEquals(projTemporal.hidro_1975.source, "shp")
+		unitTest:assertEquals(projTemporal.hidro_1977.name, "hidro_1977")
+		unitTest:assertType(projTemporal.hidro_1977, "Layer")
+		unitTest:assertEquals(projTemporal.hidro_1977.source, "shp")
+
+		File("temporal.tview"):deleteIfExists()
 	end,
 	delete = function(unitTest)
 		local projName = File("cellular_layer_del.tview")
@@ -644,6 +758,41 @@ return {
 
 		projName:delete()
 		File(filePath1):delete()
+
+		--TEMPORAL TESTS
+		local projTemporal = Project{
+		    file = "temporal.tview",
+		    clean = true,
+		    conservation = packageInfo("gis").data.."conservationAreas*.shp",
+		    hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
+		}
+
+		cl = Layer{
+			file = filePath1,
+			project = projTemporal,
+			source = "shp",
+			input = "hidro_1970",
+			name = "layer",
+			resolution = 30000
+		}
+
+		cl:fill{
+			attribute = "conserv",
+			operation = "area",
+			layer = "conservation_19*",
+		}
+
+		attrs = cl:attributes()
+		local found = 0
+		forEachElement(attrs, function(_, attr)
+			if belong(attr.name, {"conserv61", "conserv74", "conserv79"}) then
+				found = found + 1
+			end
+		end)
+
+		unitTest:assertEquals(found, 3)
+		File(filePath1):delete()
+		File("temporal.tview"):delete()
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_representation.tview"
