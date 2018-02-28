@@ -1185,6 +1185,16 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			os.exit(1)
 		end
 
+		if arguments and arguments[1] == "-ide" then
+			if not _Gtme.isLoaded("base") then
+				_Gtme.import("base")
+			end
+
+			local __cellEmpty = Cell{attrib = 1}
+			Chart{target = __cellEmpty}
+			clean()
+		end
+
 		dofile(info_.path..s.."lua"..s.."pmanager.lua")
 		dofile(info_.path..s.."lua"..s.."project.lua")
 		_Gtme.packageManager()

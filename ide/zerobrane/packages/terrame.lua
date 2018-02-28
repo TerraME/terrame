@@ -191,7 +191,7 @@ return {
 		elseif win then
 			cmd = terrame.."/terrame -ide"
 		else
-			cmd = terrame.."/terrame -color "
+			cmd = terrame.."/terrame"
 		end
 
 		ide:GetOutput():Erase()
