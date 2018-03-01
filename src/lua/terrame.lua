@@ -37,6 +37,7 @@ _Gtme.loadedFonts = {}
 _Gtme.createdObservers = {}
 _Gtme.fonts = {}
 _Gtme.print = print
+_Gtme.iowrite = io.write
 _Gtme.type = type
 
 print = function(obj, ...)
@@ -1183,6 +1184,16 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		if not _Gtme.Directory(info_.path.."/packages/base/doc"):exists() then
 			_Gtme.printError("TerraME does not have documentation. Please run 'terrame -doc' first.")
 			os.exit(1)
+		end
+
+		if arguments and arguments[1] == "-ide" then
+			if not _Gtme.isLoaded("base") then
+				_Gtme.import("base")
+			end
+
+			local __cellEmpty = Cell{attrib = 1}
+			Chart{target = __cellEmpty}
+			clean()
 		end
 
 		dofile(info_.path..s.."lua"..s.."pmanager.lua")

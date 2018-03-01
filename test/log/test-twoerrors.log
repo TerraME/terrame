@@ -40,8 +40,14 @@ Testing getExtension2
 Testing getn2
 Testing greaterByAttribute
 Testing greaterByCoord2
-Error: print() call detected with argument 'abcdef'
-Error: print() call detected with argument 'abcdef'
+Wrong execution, got:
+Error: print() detected in ...ub/terrame-pedro/test/packages/twoerrors/tests/Utils.lua (line 87): 'abcdef'
+Stack traceback:
+    File '...ub/terrame-pedro/test/packages/twoerrors/tests/Utils.lua', line 87, in main chunk
+Wrong execution, got:
+Error: print() detected in ...ub/terrame-pedro/test/packages/twoerrors/tests/Utils.lua (line 88): 'abcdef'
+Stack traceback:
+    File '...ub/terrame-pedro/test/packages/twoerrors/tests/Utils.lua', line 88, in main chunk
 Testing integrate2
 This function does not exist in the respective file in the source code.
 No asserts were found in the test.

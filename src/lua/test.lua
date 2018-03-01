@@ -348,6 +348,8 @@ function _Gtme.executeTests(package, fileName)
 		printError("Error: print() call detected with the following content: '"..table.concat({...}, "\t").."'")
 	end
 
+	io.write = print
+
 	local overwritten
 
 	xpcall(function() _, overwritten = _G.getPackage(package) end, function(err)
@@ -357,6 +359,7 @@ function _Gtme.executeTests(package, fileName)
 	end)
 
 	print = function() end
+	io.write = print
 
 	printNote("Looking for overwritten variables")
 	if package ~= "base" and overwritten then
@@ -423,6 +426,7 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	print = _Gtme.print
+	io.write = _Gtme.iowrite
 
 	local tf = testdirectories(baseDir, ut)
 
@@ -525,6 +529,8 @@ function _Gtme.executeTests(package, fileName)
 				printError("Error: print() call detected with the following content: '"..table.concat({...}, "\t").."'")
 			end
 
+			io.write = print
+
 			xpcall(function() tests = dofile(eachDirectory.."/"..eachFile) end, function(err)
 				if not printTesting then
 					printNote("Testing "..ut.current_file)
@@ -536,6 +542,7 @@ function _Gtme.executeTests(package, fileName)
 			end)
 
 			print = _Gtme.print
+			io.write = _Gtme.iowrite
 
 			local myAssertTable = assertTable(eachDirectory..s..eachFile)
 
@@ -625,8 +632,11 @@ function _Gtme.executeTests(package, fileName)
 				print = function(...)
 					ut.print_calls = ut.print_calls + 1
 					local info = debug.getinfo(2)
-					printError("Error: print() detected in "..info.short_src.." (line "..info.currentline.."): '"..table.concat({...}, "\t").."'")
+					local msg = "Error: print() detected in "..info.short_src.." (line "..info.currentline.."): '"..table.concat({...}, "\t").."'"
+					printError("Wrong execution, got:\n".._Gtme.traceback(msg))
 				end
+
+				io.write = print
 
 				local found_error = false
 				profiler:start("_TESTS")
@@ -654,6 +664,7 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				print = _Gtme.print
+				io.write = _Gtme.iowrite
 
 				forEachDirectory(".", function(dir)
 					if filesDir[dir:name()] == nil then
@@ -859,6 +870,8 @@ function _Gtme.executeTests(package, fileName)
 					logfile:write(tostring(x).."\n")
 				end
 
+				io.write = print
+
 				collectgarbage("collect")
 
 				ut.examples = ut.examples + 1
@@ -947,6 +960,7 @@ function _Gtme.executeTests(package, fileName)
 				end)
 
 				print = _Gtme.print
+				io.write = _Gtme.iowrite
 
 				if logfile ~= nil then
 					io.close(logfile)
