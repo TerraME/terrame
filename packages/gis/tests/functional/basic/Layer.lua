@@ -882,10 +882,10 @@ source    string [shp]
 	end,
 	split = function(unitTest)
 		local proj = Project{
-		    file = "temporal.tview",
-		    conservation = packageInfo("gis").data.."conservationAreas*.shp",
-    		hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
-		    clean = true,
+			file = "temporal.tview",
+			conservation = packageInfo("gis").data.."conservationAreas*.shp",
+			hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
+			clean = true,
 		}
 
 		local layer = Layer{

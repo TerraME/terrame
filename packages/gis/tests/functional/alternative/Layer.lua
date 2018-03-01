@@ -1265,9 +1265,9 @@ return{
 	end,
 	split = function(unitTest)
 		local proj = Project{
-		    file = "temporal.tview",
-		    conservation = packageInfo("gis").data.."conservationAreas*.shp",
-		    clean = true,
+			file = "temporal.tview",
+			conservation = packageInfo("gis").data.."conservationAreas*.shp",
+			clean = true,
 		}
 
 		local notTemporal = function()
