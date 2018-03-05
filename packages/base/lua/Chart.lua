@@ -445,8 +445,10 @@ function Chart(attrTab)
 	else
 		mandatoryTableArgument(attrTab, "target")
 
+		if type(attrTab.target) == "table" then attrTab.target = DataFrame(attrTab.target) end
+
 		if not belong(type(attrTab.target), {"Cell", "CellularSpace", "Agent", "Society", "DataFrame"}) and not isModel(attrTab.target) then
-			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, and instance of Model, got "..type(attrTab.target)..".")
+			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, DataFrame, and instance of Model, got "..type(attrTab.target)..".")
 		end
 	end
 
