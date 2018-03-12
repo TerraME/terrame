@@ -1156,10 +1156,6 @@ Layer_ = {
 			local prefix, sufix = string.match(layerName, "(.+)_(%d+)")
 			if prefix and sufix and prefix == newLayerName then
 				temporalLayers[layerName] = true
-				local layer = Layer{
-					name = layerName,
-					project = self.project
-				}
 				local attribs = TerraLib().getPropertyNames(self.project, layerName)
 				forEachElement(attribs, function(_, attribute)
 					if not attributes[attribute] then
@@ -1203,7 +1199,7 @@ Layer_ = {
 		local from = {project = self.project, layer = self.name}
 		-- a temp layer is needed because currently one can't remove attributes from a layer thus this layer holds only the desired attributes
 		local tempLayer = "_l_y_r_"
-		local tempFile = tempLayer.."."..self.source 
+		local tempFile = tempLayer.."."..self.source
 		local to = {file = tempFile, type = self.source}
 		TerraLib().saveLayerAs(from, to, true, nonTemporalAttributes)
 		Layer{project = self.project, file = tempFile, name = tempLayer}
@@ -1225,7 +1221,6 @@ Layer_ = {
 			end
 		end)
 
-		local fileName = newLayerName.."."..self.source
 		TerraLib().saveDataSet(self.project, tempLayer, toSet, newLayerName, attrs)
 		TerraLib().removeLayer(self.project, tempLayer)
 		return Layer{project = self.project, name = newLayerName}
