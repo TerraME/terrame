@@ -112,7 +112,17 @@ return{
 		c1:update(1)
 		unitTest:assertSnapshot(c1, "chart-table-xaxis-func.bmp", 0.03)
 
-		local t = DataFrame{
+		local t = {
+			value1 = {2, 2, 2},
+			value2 = {5, 5, 5}
+		}
+
+		c1 = Chart{
+			target = t,
+			select = "value1"
+		}
+
+		t = DataFrame{
 			value1 = {2, 2, 2},
 			value2 = {5, 5, 5}
 		}

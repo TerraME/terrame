@@ -959,10 +959,11 @@ Layer_ = {
 	end,
 	--- Create a new data simplifying its geometry.
 	-- The data will be created using the same data source layer.
+	-- This function uses Douclas-Peucker algorithm and currently works only for line data.
 	-- @arg data.output The data name that will be created.
-	-- @arg data.tolerance The tolerance is a distance that defines the threshold for vertices to be
-	-- considered "insignificant" for the general structure of the geometry.
-	-- The tolerance must be expressed in the same units as the projection of the input geometry.
+	-- @arg data.tolerance The maximum distance between the original curve and the simplified curve.
+	-- A given point is removed when the distances in a curve without it is less than the maximum distance.
+	-- The tolerance uses the same unit of the input geometry's projection.
 	-- @usage -- DONTRUN
 	-- layer:simplify{output = "layer_simplified", tolerance = 500}
 	simplify = function(self, data)

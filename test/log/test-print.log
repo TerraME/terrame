@@ -10,8 +10,14 @@ Testing tests/M.lua
 Error: print() call detected with the following content: '4	4'
 Error: print() call detected with the following content: '44'
 Testing abc
-Error: print() call detected with the following content: '5	5'
-Error: print() call detected with the following content: '55'
+Wrong execution, got:
+Error: print() detected in ...dro/github/terrame-pedro/test/packages/print/tests/M.lua (line 31): '5	5'
+Stack traceback:
+    File '...dro/github/terrame-pedro/test/packages/print/tests/M.lua', line 31, in main chunk
+Wrong execution, got:
+Error: print() detected in ...dro/github/terrame-pedro/test/packages/print/tests/M.lua (line 32): '55'
+Stack traceback:
+    File '...dro/github/terrame-pedro/test/packages/print/tests/M.lua', line 32, in main chunk
 Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking M.lua
