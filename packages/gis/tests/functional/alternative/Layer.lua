@@ -1277,6 +1277,28 @@ return{
 		unitTest:assertError(notTemporal, "No temporal attribute has been found.")
 
 		File("temporal.tview"):deleteIfExists()
+	end,
+	merge = function(unitTest)
+		local proj = Project{
+			file = "temporal.tview",
+			notTemporalLayer = packageInfo("gis").data.."conservationAreas_1961.shp",
+			conservation = packageInfo("gis").data.."conservationAreas*.shp",
+			clean = true,
+		}
+
+		local notTemporal = function()
+			proj.notTemporalLayer:merge()
+		end
+
+		unitTest:assertError(notTemporal, "Layer 'notTemporalLayer' is not a temporal layer.")
+
+		local notCompatible = function()
+			proj.conservation_1961:merge()
+		end
+
+		unitTest:assertError(notCompatible, "Layer 'conservation_1961' cannot merge with the layer 'conservation_1974'.")
+
+		File("temporal.tview"):deleteIfExists()
 	end
 }
 

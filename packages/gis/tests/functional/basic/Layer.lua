@@ -974,6 +974,85 @@ source    string [shp]
 		File("layer_75.shp"):deleteIfExists()
 		File("layer_77.shp"):deleteIfExists()
 		File("layer_79.shp"):deleteIfExists()
+	end,
+
+	merge = function(unitTest)
+		local proj = Project{
+			file = "temporal.tview",
+			conservation = packageInfo("gis").data.."conservationAreas*.shp",
+			clean = true,
+		}
+
+		local layer = Layer{
+			file = "test.shp",
+			project = proj,
+			source = "shp",
+			input = "conservation_1961",
+			name = "temporalLayer",
+			resolution = 30000,
+			clean = true,
+		}
+
+		layer:fill{
+			attribute = "conserv_",
+			operation = "area",
+			layer = "conservation_19*",
+		}
+
+		layer:split()
+		local areladyExistsLayer = function ()
+			proj.temporalLayer_61:merge()
+		end
+
+		unitTest:assertWarning(areladyExistsLayer, "Layer 'temporalLayer' already exisists.")
+
+		proj = Project{
+			file = "temporal2.tview",
+			temporalLayer_ = "temporalLayer_*.shp",
+			clean = true
+		}
+
+		unitTest:assertNil(proj.layers["temporalLayer"])
+		local mergedLayer = proj.temporalLayer_61:merge()
+		unitTest:assertNotNil(proj.layers["temporalLayer"])
+		unitTest:assertEquals(mergedLayer.name, "temporalLayer")
+		local attributes = TerraLib().getPropertyNames(proj, mergedLayer.name)
+		unitTest:assert(belong("FID", attributes))
+		unitTest:assert(belong("id", attributes))
+		unitTest:assert(belong("col", attributes))
+		unitTest:assert(belong("row", attributes))
+		unitTest:assert(belong("conserv_61", attributes))
+		unitTest:assert(belong("conserv_74", attributes))
+		unitTest:assert(belong("conserv_79", attributes))
+		unitTest:assert(not belong("conserv", attributes))
+		unitTest:assert(not belong("FID_61", attributes))
+		unitTest:assert(not belong("FID_74", attributes))
+		unitTest:assert(not belong("FID_79", attributes))
+		unitTest:assert(not belong("id_61", attributes))
+		unitTest:assert(not belong("id_74", attributes))
+		unitTest:assert(not belong("id_79", attributes))
+		unitTest:assert(not belong("col_61", attributes))
+		unitTest:assert(not belong("col_74", attributes))
+		unitTest:assert(not belong("col_79", attributes))
+		unitTest:assert(not belong("row_61", attributes))
+		unitTest:assert(not belong("row_74", attributes))
+		unitTest:assert(not belong("row_79", attributes))
+
+		local dSetRowMerged = TerraLib().getDataSet(proj, mergedLayer.name)[0]
+		local dSetRow61 = TerraLib().getDataSet(proj, "temporalLayer_61")[0]
+		local dSetRow74 = TerraLib().getDataSet(proj, "temporalLayer_74")[0]
+		local dSetRow79 = TerraLib().getDataSet(proj, "temporalLayer_79")[0]
+		unitTest:assertEquals(dSetRowMerged["conserv_61"], dSetRow61["conserv"])
+		unitTest:assertEquals(dSetRowMerged["conserv_74"], dSetRow74["conserv"])
+		unitTest:assertEquals(dSetRowMerged["conserv_79"], dSetRow79["conserv"])
+
+		File("temporal.tview"):deleteIfExists()
+		File("temporal2.tview"):deleteIfExists()
+		File("test.shp"):deleteIfExists()
+		File("temporalLayer.shp"):deleteIfExists()
+		File("temporalLayer_61.shp"):deleteIfExists()
+		File("temporalLayer_74.shp"):deleteIfExists()
+		File("temporalLayer_79.shp"):deleteIfExists()
 	end
 }
 

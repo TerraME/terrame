@@ -1124,7 +1124,8 @@ Layer_ = {
 
 			local newLayerName = self.name.."_"..time
 			local fileName = newLayerName.."."..self.source
-			local tempLayer = "tmplyr_"..time
+			-- a temp layer is needed because currently one can't remove attributes from a layer thus this layer holds only the desired attributes
+			local tempLayer = "_l_y_r_"
 			TerraLib().saveDataSet(self.project, self.name, toSet, tempLayer, attrNames)
 			local from = {project = self.project, layer = tempLayer}
 			local to = {file = fileName, type = self.source}
@@ -1132,6 +1133,101 @@ Layer_ = {
 			Layer{project = self.project, name = newLayerName, file = fileName}
 			TerraLib().removeLayer(self.project, tempLayer)
 		end)
+	end,
+	--- Merges every temporal layer from the layer's project into a single layer with all temporal attribute.
+	-- Atributes from temporal layers are created with the attribute name followed by the time from its layer.
+	-- Every temporal layer must have the same geometry.
+	-- @usage -- DONTRUN
+	-- layer:merge()
+	merge = function(self)
+		local newLayerName, time = string.match(self.name, "(.+)_(%d+)")
+		if not newLayerName or not time then
+			customError("Layer '"..self.name.."' is not a temporal layer.")
+		end
+
+		if self.project.layers[newLayerName] then
+			customWarning("Layer '"..newLayerName.."' already exisists.")
+		end
+
+		local temporalLayers = {}
+		local attributes = {}
+		forEachElement(self.project.layers, function(layerName)
+			local prefix, sufix = string.match(layerName, "(.+)_(%d+)")
+			if prefix and sufix and prefix == newLayerName then
+				temporalLayers[layerName] = true
+				local layer = Layer{
+					name = layerName,
+					project = self.project
+				}
+				local attribs = TerraLib().getPropertyNames(self.project, layerName)
+				forEachElement(attribs, function(_, attribute)
+					if not attributes[attribute] then
+						attributes[attribute] = {}
+					end
+
+					table.insert(attributes[attribute], {layer = layerName, time = sufix})
+				end)
+			end
+		end)
+
+		local dSetSize = #TerraLib().getDataSet(self.project, self.name)
+		forEachOrderedElement(temporalLayers, function(layer)
+			if dSetSize ~= #TerraLib().getDataSet(self.project, layer) then
+				customError("Layer '"..self.name.."' cannot merge with the layer '"..layer.."'.")
+			end
+		end)
+
+		local mapAttributes = {}
+		local nonTemporalAttributes = {}
+		forEachElement(attributes, function(attribute, layers)
+			if #layers == 1 or belong(attribute, {"id", "col", "row", "OGR_GEOMETRY","ogr_geometry", "FID"})  then
+				local layer = self.name
+				if not mapAttributes[layer] then
+					mapAttributes[layer] = {}
+				end
+
+				table.insert(nonTemporalAttributes, attribute)
+			else
+				forEachElement(layers, function(_, layerData)
+					local layer = layerData.layer
+					if not mapAttributes[layer] then
+						mapAttributes[layer] = {}
+					end
+
+					table.insert(mapAttributes[layer], {attributeName = attribute, newLayerAttributeName = attribute.."_"..layerData.time})
+				end)
+			end
+		end)
+
+		local from = {project = self.project, layer = self.name}
+		-- a temp layer is needed because currently one can't remove attributes from a layer thus this layer holds only the desired attributes
+		local tempLayer = "_l_y_r_"
+		local tempFile = tempLayer.."."..self.source 
+		local to = {file = tempFile, type = self.source}
+		TerraLib().saveLayerAs(from, to, true, nonTemporalAttributes)
+		Layer{project = self.project, file = tempFile, name = tempLayer}
+		local toSet = {}
+		local attrs = {}
+		forEachElement(mapAttributes, function(layer, mapAttribute)
+			local dset = TerraLib().getDataSet(self.project, layer)
+			for i = 0, #dset do
+				if not toSet[i+1] then
+					toSet[i+1] = {}
+				end
+
+				for _, attr in pairs(mapAttribute) do
+					toSet[i+1][attr.newLayerAttributeName] = dset[i][attr.attributeName]
+					if not belong(attr.newLayerAttributeName, attrs) then
+						table.insert(attrs, attr.newLayerAttributeName)
+					end
+				end
+			end
+		end)
+
+		local fileName = newLayerName.."."..self.source
+		TerraLib().saveDataSet(self.project, tempLayer, toSet, newLayerName, attrs)
+		TerraLib().removeLayer(self.project, tempLayer)
+		return Layer{project = self.project, name = newLayerName}
 	end
 }
 
