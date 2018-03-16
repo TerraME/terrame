@@ -761,10 +761,10 @@ return {
 
 		--TEMPORAL TESTS
 		local projTemporal = Project{
-		    file = "temporal.tview",
-		    clean = true,
-		    conservation = packageInfo("gis").data.."conservationAreas*.shp",
-		    hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
+			file = "temporal.tview",
+			clean = true,
+			conservation = packageInfo("gis").data.."conservationAreas*.shp",
+			hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
 		}
 
 		cl = Layer{
@@ -791,7 +791,100 @@ return {
 		end)
 
 		unitTest:assertEquals(found, 3)
+		cl = Layer{
+			file = "layer_split.shp",
+			project = projTemporal,
+			source = "shp",
+			input = "hidro_1970",
+			name = "layer_split",
+			clean = true,
+			resolution = 30000,
+		}
+
+		unitTest:assertNil(projTemporal["layer_split_1961"])
+		unitTest:assertNil(projTemporal["layer_split_1974"])
+		unitTest:assertNil(projTemporal["layer_split_1979"])
+
+		cl:fill{
+			attribute = "attr",
+			operation = "area",
+			layer = "conservation*",
+			split = true
+		}
+
+		unitTest:assertNotNil(projTemporal["layer_split_1961"])
+		unitTest:assertType(projTemporal["layer_split_1961"], "Layer")
+		unitTest:assert(belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split_1961")))
+		unitTest:assertNotNil(projTemporal["layer_split_1974"])
+		unitTest:assertType(projTemporal["layer_split_1974"], "Layer")
+		unitTest:assert(belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split_1974")))
+		unitTest:assertNotNil(projTemporal["layer_split_1979"])
+		unitTest:assertType(projTemporal["layer_split_1979"], "Layer")
+		unitTest:assert(belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split_1979")))
+		unitTest:assert(not belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split")))
+
+		cl:fill{
+			attribute = "attr2",
+			operation = "area",
+			layer = "conservation*",
+			split = true
+		}
+
+		unitTest:assertNotNil(projTemporal["layer_split_1961"])
+		unitTest:assertType(projTemporal["layer_split_1961"], "Layer")
+		unitTest:assert(belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split_1961")))
+		unitTest:assert(belong("attr2", TerraLib().getPropertyNames(projTemporal, "layer_split_1961")))
+		unitTest:assertNotNil(projTemporal["layer_split_1974"])
+		unitTest:assertType(projTemporal["layer_split_1974"], "Layer")
+		unitTest:assert(belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split_1974")))
+		unitTest:assert(belong("attr2", TerraLib().getPropertyNames(projTemporal, "layer_split_1974")))
+		unitTest:assertNotNil(projTemporal["layer_split_1979"])
+		unitTest:assertType(projTemporal["layer_split_1979"], "Layer")
+		unitTest:assert(belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split_1979")))
+		unitTest:assert(belong("attr2", TerraLib().getPropertyNames(projTemporal, "layer_split_1979")))
+		unitTest:assert(not belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split")))
+		unitTest:assert(not belong("attr2", TerraLib().getPropertyNames(projTemporal, "layer_split")))
+
+		File("temporal.tview"):delete()
+		projTemporal = Project{
+			file = "temporal.tview",
+			clean = true,
+			conservation = packageInfo("gis").data.."conservationAreas*.shp",
+			layer_split = "layer_split.shp"
+		}
+
+		cl = projTemporal.layer_split
+		cl:fill{
+			attribute = "attr3",
+			operation = "area",
+			layer = "conservation*",
+			split = true
+		}
+
+		unitTest:assertNotNil(projTemporal["layer_split_1961"])
+		unitTest:assertType(projTemporal["layer_split_1961"], "Layer")
+		unitTest:assert(belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split_1961")))
+		unitTest:assert(belong("attr2", TerraLib().getPropertyNames(projTemporal, "layer_split_1961")))
+		unitTest:assert(belong("attr3", TerraLib().getPropertyNames(projTemporal, "layer_split_1961")))
+		unitTest:assertNotNil(projTemporal["layer_split_1974"])
+		unitTest:assertType(projTemporal["layer_split_1974"], "Layer")
+		unitTest:assert(belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split_1974")))
+		unitTest:assert(belong("attr2", TerraLib().getPropertyNames(projTemporal, "layer_split_1974")))
+		unitTest:assert(belong("attr3", TerraLib().getPropertyNames(projTemporal, "layer_split_1974")))
+		unitTest:assertNotNil(projTemporal["layer_split_1979"])
+		unitTest:assertType(projTemporal["layer_split_1979"], "Layer")
+		unitTest:assert(belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split_1979")))
+		unitTest:assert(belong("attr2", TerraLib().getPropertyNames(projTemporal, "layer_split_1979")))
+		unitTest:assert(belong("attr3", TerraLib().getPropertyNames(projTemporal, "layer_split_1979")))
+		unitTest:assert(not belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split")))
+		unitTest:assert(not belong("attr2", TerraLib().getPropertyNames(projTemporal, "layer_split")))
+		unitTest:assert(not belong("attr3", TerraLib().getPropertyNames(projTemporal, "layer_split")))
+
 		File(filePath1):delete()
+		File("layer_split.shp"):delete()
+		File("layer_split_1961.shp"):delete()
+		File("layer_split_1974.shp"):delete()
+		File("layer_split_1979.shp"):delete()
 		File("temporal.tview"):delete()
 	end,
 	representation = function(unitTest)

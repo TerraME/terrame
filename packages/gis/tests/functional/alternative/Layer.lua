@@ -1130,8 +1130,38 @@ return{
 		end
 
 		unitTest:assertWarning(temporalAttributeError, "Only one resut has been found to match the pattern 'conservation*1961'.")
-		File(filePath1):delete()
-		File("temporal.tview"):delete()
+		local temporalSplitError = function()
+			cl:fill{
+				attribute = "con",
+				operation = "area",
+				layer = "conservation*",
+				split = "true"
+			}
+		end
+
+		unitTest:assertError(temporalSplitError, incompatibleTypeMsg("split", "boolean", "string"))
+		local temporalSplitAlreadyExistError = function()
+			cl:fill{
+				attribute = "con",
+				operation = "area",
+				layer = "conservation*",
+				split = true
+			}
+
+			cl:fill{
+				attribute = "con",
+				operation = "area",
+				layer = "conservation*",
+				split = true
+			}
+		end
+
+		unitTest:assertError(temporalSplitAlreadyExistError, "The attribute 'con' already exists in the Layer.")
+		File(filePath1):deleteIfExists()
+		File(clName1.."_1961.shp"):deleteIfExists()
+		File(clName1.."_1974.shp"):deleteIfExists()
+		File(clName1.."_1979.shp"):deleteIfExists()
+		File("temporal.tview"):deleteIfExists()
 	end,
 	simplify = function(unitTest)
 		local projName = "layer_func_alt.tview"
