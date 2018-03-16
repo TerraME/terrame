@@ -618,14 +618,7 @@ Layer_ = {
 	-- cl:fill{
 	--     attribute = "area",
 	--     operation = "coverage",
-	--     layer = "cover*",
-	-- }
-	--
-	-- cl:fill{
-	--     attribute = "area",
-	--     operation = "coverage",
-	--     layer = "cover*",
-	--     split = true
+	--     layer = "cover*", -- temporal representation
 	-- }
 	fill = function(self, data)
 		verifyNamedTable(data)
@@ -1166,9 +1159,9 @@ Layer_ = {
 			local dset = TerraLib().getDataSet(self.project, self.name)
 			local toSet = {}
 			for i = 0, #dset do
-				toSet[i+1] = {}
+				toSet[i + 1] = {}
 				for k, v in pairs(dset[i]) do
-					toSet[i+1][k] = nil
+					toSet[i + 1][k] = nil
 					if mapAttributes[k] then
 						toSet[i+1][mapAttributes[k]] = v
 					end
@@ -1222,7 +1215,7 @@ Layer_ = {
 		local dSetSize = #TerraLib().getDataSet(self.project, self.name)
 		forEachOrderedElement(temporalLayers, function(layer)
 			if dSetSize ~= #TerraLib().getDataSet(self.project, layer) then
-				customError("Layer '"..self.name.."' cannot merge with the layer '"..layer.."'.")
+				customError("Layer '"..self.name.."' cannot be merged with '"..layer.."' because they have different numbers.")
 			end
 		end)
 
@@ -1260,12 +1253,12 @@ Layer_ = {
 		forEachElement(mapAttributes, function(layer, mapAttribute)
 			local dset = TerraLib().getDataSet(self.project, layer)
 			for i = 0, #dset do
-				if not toSet[i+1] then
-					toSet[i+1] = {}
+				if not toSet[i + 1] then
+					toSet[i + 1] = {}
 				end
 
 				for _, attr in pairs(mapAttribute) do
-					toSet[i+1][attr.newLayerAttributeName] = dset[i][attr.attributeName]
+					toSet[i + 1][attr.newLayerAttributeName] = dset[i][attr.attributeName]
 					if not belong(attr.newLayerAttributeName, attrs) then
 						table.insert(attrs, attr.newLayerAttributeName)
 					end

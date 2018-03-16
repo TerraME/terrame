@@ -1068,7 +1068,6 @@ source    string [shp]
 		File("layer_77.shp"):deleteIfExists()
 		File("layer_79.shp"):deleteIfExists()
 	end,
-
 	merge = function(unitTest)
 		local proj = Project{
 			file = "temporal.tview",
