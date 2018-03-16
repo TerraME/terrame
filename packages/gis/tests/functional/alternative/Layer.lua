@@ -1158,9 +1158,9 @@ return{
 
 		unitTest:assertError(temporalSplitAlreadyExistError, "The attribute 'con' already exists in the Layer.")
 		File(filePath1):deleteIfExists()
-		File(clName1.."_1961.shp"):deleteIfExists()
-		File(clName1.."_1974.shp"):deleteIfExists()
-		File(clName1.."_1979.shp"):deleteIfExists()
+		File("layer_1961.shp"):deleteIfExists()
+		File("layer_1974.shp"):deleteIfExists()
+		File("layer_1979.shp"):deleteIfExists()
 		File("temporal.tview"):deleteIfExists()
 	end,
 	simplify = function(unitTest)
