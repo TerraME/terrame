@@ -1326,7 +1326,7 @@ return{
 			proj.conservation_1961:merge()
 		end
 
-		unitTest:assertError(notCompatible, "Layer 'conservation_1961' cannot be merged with 'conservation_1974' because they have different numbers.")
+		unitTest:assertError(notCompatible, "Layer 'conservation_1961' cannot be merged with 'conservation_1974' because they have different numbers of objects.")
 
 		File("temporal.tview"):deleteIfExists()
 	end
