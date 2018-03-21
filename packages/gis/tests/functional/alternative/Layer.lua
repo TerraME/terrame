@@ -1130,8 +1130,38 @@ return{
 		end
 
 		unitTest:assertWarning(temporalAttributeError, "Only one resut has been found to match the pattern 'conservation*1961'.")
-		File(filePath1):delete()
-		File("temporal.tview"):delete()
+		local temporalSplitError = function()
+			cl:fill{
+				attribute = "con",
+				operation = "area",
+				layer = "conservation*",
+				split = "true"
+			}
+		end
+
+		unitTest:assertError(temporalSplitError, incompatibleTypeMsg("split", "boolean", "string"))
+		local temporalSplitAlreadyExistError = function()
+			cl:fill{
+				attribute = "con",
+				operation = "area",
+				layer = "conservation*",
+				split = true
+			}
+
+			cl:fill{
+				attribute = "con",
+				operation = "area",
+				layer = "conservation*",
+				split = true
+			}
+		end
+
+		unitTest:assertError(temporalSplitAlreadyExistError, "The attribute 'con' already exists in the Layer.")
+		File(filePath1):deleteIfExists()
+		File("layer_1961.shp"):deleteIfExists()
+		File("layer_1974.shp"):deleteIfExists()
+		File("layer_1979.shp"):deleteIfExists()
+		File("temporal.tview"):deleteIfExists()
 	end,
 	simplify = function(unitTest)
 		local projName = "layer_func_alt.tview"
@@ -1262,6 +1292,43 @@ return{
 		unitTest:assertError(invalidEncoding, "Encoding 'latin2' is invalid.")
 
 		proj.file:delete()
+	end,
+	split = function(unitTest)
+		local proj = Project{
+			file = "temporal.tview",
+			conservation = packageInfo("gis").data.."conservationAreas*.shp",
+			clean = true,
+		}
+
+		local notTemporal = function()
+			proj.conservation_1961:split()
+		end
+
+		unitTest:assertError(notTemporal, "No temporal attribute has been found.")
+
+		File("temporal.tview"):deleteIfExists()
+	end,
+	merge = function(unitTest)
+		local proj = Project{
+			file = "temporal.tview",
+			notTemporalLayer = packageInfo("gis").data.."conservationAreas_1961.shp",
+			conservation = packageInfo("gis").data.."conservationAreas*.shp",
+			clean = true,
+		}
+
+		local notTemporal = function()
+			proj.notTemporalLayer:merge()
+		end
+
+		unitTest:assertError(notTemporal, "Layer 'notTemporalLayer' is not a temporal layer.")
+
+		local notCompatible = function()
+			proj.conservation_1961:merge()
+		end
+
+		unitTest:assertError(notCompatible, "Layer 'conservation_1961' cannot be merged with 'conservation_1974' because they have different numbers of objects.")
+
+		File("temporal.tview"):deleteIfExists()
 	end
 }
 
