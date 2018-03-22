@@ -57,12 +57,33 @@ UnitTest_ = {
 	wrong_file = 0,
 	last_error = "",
 	count_last = 0,
-	--- Check if a given value is true. In any other case (number, string, false, or nil)
+	--- Check if a given value is true or if a given function works properly. When using any other value as
+	-- argument (number, string, false, nil, etc.), it shows an error.
 	-- it generates an error.
 	-- @arg value Any value.
 	-- @usage unitTest = UnitTest{}
 	-- unitTest:assert(2 < 3)
 	assert = function(self, value)
+		if type(value) == "function" then
+			self.test = self.test + 1
+
+			local result = true
+
+			xpcall(value, function(err)
+				result = false -- SKIP (to test this line, run execution tests, package 'unittest')
+				self.fail = self.fail + 1 -- SKIP (to test this line, run execution tests, package 'unittest')
+
+				_Gtme.printError("Error in function that should execute properly.")
+				_Gtme.printError(_Gtme.traceback(err))
+			end)
+
+			if result then
+				self.success = self.success + 1
+			end
+
+			return
+		end
+
 		mandatoryArgument(1, "boolean", value)
 
 		self.test = self.test + 1

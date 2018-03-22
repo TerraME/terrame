@@ -43,13 +43,14 @@ return{
 		local fail1 = unitTest.fail
 
 		unitTest:assert(true)
+		unitTest:assert(function() end)
 
 		local suc2 = unitTest.success
 		local test2 = unitTest.test
 		local fail2 = unitTest.fail
 
-		unitTest:assertEquals(suc2, suc1 + 1)
-		unitTest:assertEquals(test2, test1 + 1)
+		unitTest:assertEquals(suc2, suc1 + 2)
+		unitTest:assertEquals(test2, test1 + 2)
 		unitTest:assertEquals(fail2, fail1)
 	end,
 	assertEquals = function(unitTest)

@@ -6,7 +6,7 @@ Looking for package functions
 Skip looking for lines of source code
 Testing tests/single.lua
 Testing fff
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Checking if functions from source code were tested
 Checking single.lua
 Skipping lines of source code check
@@ -19,7 +19,7 @@ Tests were executed in less than one second.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
-All asserts were executed at least once.
+Execution of all asserts was not verified.
 All 1 asserts were executed successfully.
 All 1 tested functions do not have any unexpected execution error.
 All 1 tested functions have at least one assert.

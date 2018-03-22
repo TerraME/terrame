@@ -187,7 +187,6 @@ return{
 		unitTest:assertEquals(test2, test1 + 2)
 		unitTest:assertEquals(fail2, fail1 + 2)
 	end,
-
 	assertType = function(unitTest)
 		local suc1 = unitTest.success
 		local test1 = unitTest.test
@@ -239,6 +238,26 @@ return{
 		unitTest:assertEquals(suc2, suc1)
 		unitTest:assertEquals(test2, test1 + 3)
 		unitTest:assertEquals(fail2, fail1 + 3)
+	end,
+	assert = function(unitTest)
+		local suc1 = unitTest.success
+		local test1 = unitTest.test
+		local fail1 = unitTest.fail
+
+		local func = function()
+			local value = 2 + false
+		end
+
+		unitTest:assert(func)
+
+		local suc2 = unitTest.success
+		local test2 = unitTest.test
+		local fail2 = unitTest.fail
+
+		-- THE TESTS BELOW SHOULD NOT FAIL
+		unitTest:assertEquals(suc2, suc1)
+		unitTest:assertEquals(test2, test1 + 1)
+		unitTest:assertEquals(fail2, fail1 + 1)
 	end
 }
 

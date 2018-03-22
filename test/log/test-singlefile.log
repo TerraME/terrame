@@ -7,7 +7,7 @@ Looking for package functions
 Skip looking for lines of source code
 Testing tests/functional/basic/Random.lua
 Testing random
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Checking if functions from source code were tested
 Skipping lines of source code check
 Skipping examples
@@ -18,7 +18,7 @@ Tests were executed in less than one second.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
-All asserts were executed at least once.
+Execution of all asserts was not verified.
 All 55 asserts were executed successfully.
 All 1 tested functions do not have any unexpected execution error.
 All 1 tested functions have at least one assert.
@@ -26,7 +26,7 @@ All 1 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
-No file was created along the tests.
+No file or directory was created along the tests.
 All 0 functions of the package were tested.
 No lines from the source code were verified.
 No examples were executed.

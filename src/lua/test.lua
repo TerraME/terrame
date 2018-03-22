@@ -746,7 +746,7 @@ function _Gtme.executeTests(package, fileName)
 			if #myTests > 0 then
 				if data.test or getn(data.notest) > 0 or errors_in_tests then
 					printWarning("Skip checking asserts")
-				else
+				elseif data.lines then
 					print("Checking if all asserts were executed")
 					forEachOrderedElement(myAssertTable, function(line, count)
 						if count == 0 then
@@ -754,6 +754,8 @@ function _Gtme.executeTests(package, fileName)
 							ut.asserts_not_executed = ut.asserts_not_executed + 1
 						end
 					end)
+				else
+					printWarning("Skip looking for asserts in tests")
 				end
 			end
 		end)
@@ -1070,7 +1072,7 @@ function _Gtme.executeTests(package, fileName)
 		printNote("There are no invalid files or directories in directory 'tests'.")
 	end
 
-	if data.test then -- asserts are not verified only when the user executes specific tests
+	if data.test or not data.lines then -- asserts are not verified only when the user executes specific tests
 		printWarning("Execution of all asserts was not verified.")
 	elseif ut.asserts_not_executed == 1 then
 		printError("One assert was not executed at least once.")

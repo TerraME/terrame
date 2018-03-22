@@ -1,9 +1,10 @@
+Loading configuration file '../config/all.lua'
 Using log directory '/Users/pedro/github/terrame-pedro/test/packages/unittest/log/'
 Loading package 'unittest'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Skip looking for lines of source code
+Looking for lines of source code
 Testing tests/UnitTest.lua
 Testing assert
 Error in function that should execute properly.
@@ -49,12 +50,12 @@ Testing assertSnapshot
 Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:178: Files 
   'log/mac/my-chart-1.png'
 and
-  '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_lCPhj/my-chart-1.png'
+  '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_JfYZA/my-chart-1.png'
 are different. The maximum tolerance is 0, but got 0.0029766666666667.
 Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:179: Files 
   'log/mac/my-chart-2.png'
 and
-  '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_lCPhj/my-chart-2.png'
+  '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_JfYZA/my-chart-2.png'
 are different. Image sizes are different: 600x500 (created) and 0x0 (log).
 Testing assertType
 Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:195: Test should be string got number.
@@ -66,24 +67,27 @@ Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:218: Test e
   "abc1"
 Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:219: Test should produce only one warning, got 'abc1' and 'abc2'.
 Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:227: Test should produce only one warning, got 'abc' at least twice.
-Skip looking for asserts in tests
+Checking if all asserts were executed
 Testing tests/a.lua
 Testing x
-Skip looking for asserts in tests
+Checking if all asserts were executed
+Assert in line 32 was not executed.
 Checking if functions from source code were tested
 Checking a.lua
-Skipping lines of source code check
+Checking lines of source code
+Checking a.lua
+Line 7 was not executed.
 Testing examples
 The package has no examples
 Checking logs
 
 Functional test report for package 'unittest':
-Tests were executed in 1 second.
-Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_lCPhj/'.
+Tests were executed in 17 seconds.
+Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_JfYZA/'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
-Execution of all asserts was not verified.
+One assert was not executed at least once.
 31 out of 61 asserts failed.
 All 10 tested functions do not have any unexpected execution error.
 All 10 tested functions have at least one assert.
@@ -93,8 +97,8 @@ No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No file or directory was created along the tests.
 All 1 functions of the package were tested.
-No lines from the source code were verified.
+One line from the source code was not executed at least once.
 The package has no examples.
 No new log file was created.
 All log files were used in the tests.
-Summing up, 31 problems were found during the tests.
+Summing up, 33 problems were found during the tests.
