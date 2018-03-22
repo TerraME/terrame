@@ -5,6 +5,12 @@ Looking for documented functions
 Looking for package functions
 Skip looking for lines of source code
 Testing tests/UnitTest.lua
+Testing assert
+Error in function that should execute properly.
+Error: attempt to perform arithmetic on a boolean value
+Stack traceback:
+    File '.../terrame-pedro/test/packages/unittest/tests/UnitTest.lua', line 248, in call to operator + (addition)
+    File '.../terrame-pedro/test/packages/unittest/tests/UnitTest.lua', line 251, in main chunk
 Testing assertEquals
 Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:34: Values should be equal, but got '2' and '3'. The maximum difference is 0, but got 1.
 Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:35: Values should be equal, but got '2' and '3'. The maximum difference is 0.5, but got 1.
@@ -51,15 +57,15 @@ and
   '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_lCPhj/my-chart-2.png'
 are different. Image sizes are different: 600x500 (created) and 0x0 (log).
 Testing assertType
-Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:196: Test should be string got number.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:195: Test should be string got number.
 Testing assertWarning
-Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:213: Error function called with argument 'abc' within UnitTest:assertWarning(). Please use UnitTest:assertError() instead.
-Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:219: Test expected:
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:212: Error function called with argument 'abc' within UnitTest:assertWarning(). Please use UnitTest:assertError() instead.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:218: Test expected:
   "abc"
   got:
   "abc1"
-Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:220: Test should produce only one warning, got 'abc1' and 'abc2'.
-Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:228: Test should produce only one warning, got 'abc' at least twice.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:219: Test should produce only one warning, got 'abc1' and 'abc2'.
+Error in .../terrame-pedro/test/packages/unittest/tests/UnitTest.lua:227: Test should produce only one warning, got 'abc' at least twice.
 Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking a.lua
@@ -75,10 +81,10 @@ No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-30 out of 56 asserts failed.
-All 8 tested functions do not have any unexpected execution error.
-All 8 tested functions have at least one assert.
-All 8 tested functions exist in the source code of the package.
+31 out of 60 asserts failed.
+All 9 tested functions do not have any unexpected execution error.
+All 9 tested functions have at least one assert.
+All 9 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
@@ -88,4 +94,4 @@ No lines from the source code were verified.
 The package has no examples.
 No new log file was created.
 All log files were used in the tests.
-Summing up, 30 problems were found during the tests.
+Summing up, 31 problems were found during the tests.
