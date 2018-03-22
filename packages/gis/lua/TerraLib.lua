@@ -953,6 +953,10 @@ local function removeLayer(project, layerName)
 	do
 		loadProject(project, project.file)
 		local layer = project.layers[layerName]
+		if not layer then
+			customError("Layer '"..layerName.."' not found.")
+		end
+
 		local id = layer:getDataSourceId()
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(id)
 		local dsetName = layer:getDataSetName()
@@ -961,6 +965,7 @@ local function removeLayer(project, layerName)
 		ds:dropDataSet(dsetName)
 		removeDataSource(project, id)
 		project.layers[layerName] = nil
+		project[layerName] = nil
 
 		saveProject(project, project.layers)
 		releaseProject(project)
@@ -3220,6 +3225,14 @@ TerraLib_ = {
 		dsInfo:setConnInfo(connInfo)
 
 		raster:polygonize(rasterInfo.band, dsInfo, layer:getSRID())
+	end,
+	--- Remove a given layer from a given project.
+	-- @arg project The name of the project.
+	-- @arg layerName The name of the layer to be removed.
+	-- @usage -- DONTRUN
+	-- removeLayer(project, layerName)
+	removeLayer = function(project, layerName)
+		removeLayer(project, layerName)
 	end
 }
 

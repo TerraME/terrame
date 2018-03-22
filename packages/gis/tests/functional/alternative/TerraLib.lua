@@ -307,5 +307,19 @@ return {
 		unitTest:assertError(invalidOutput, "Output type 'nc' is not supported.")
 
 		proj.file:delete()
+	end,
+	removeLayer = function(unitTest)
+		local proj = Project{
+			file = "test.tview",
+			clean = true,
+			inputLayer = filePath("itaituba-localities.shp", "gis")
+		}
+
+		local layerNotFound = function()
+			TerraLib().removeLayer(proj, "xxxx")
+		end
+
+		unitTest:assertError(layerNotFound, "Layer 'xxxx' not found.")
+		File("test.tview"):deleteIfExists()
 	end
 }
