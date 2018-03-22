@@ -516,14 +516,14 @@ Layer_ = {
 	-- from the reference layer. It sums the intersection areas of the object with all the polygons
 	-- of the reference layer. Because of that, if there is some overlay between the polygons of the
 	-- reference layer, it might create attribute values greater than one.
-	-- & attribute, layer & \
+	-- & attribute, layer & split \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income.
-	-- & attribute, layer, select  & area, missing, band, dummy, pixel  \
+	-- & attribute, layer, select  & area, missing, band, dummy, pixel, split  \
 	-- "count" & Number of objects that have some overlay with the cell.
-	-- & attribute, layer & dummy, pixel \
+	-- & attribute, layer & dummy, pixel, split \
 	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
@@ -535,32 +535,32 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & missing, band, pixel \
+	-- & attribute, layer, select & missing, band, pixel, split \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
 	-- centroid of the cell to the closest point, line, or border of a polygon.
-	-- & attribute, layer & \
+	-- & attribute, layer & split \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy, pixel \
+	-- attribute, layer, select & missing, band, dummy, pixel, split \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy, pixel \
+	-- attribute, layer, select & missing, band, dummy, pixel, split \
 	-- "mode" & More common qualitative value from the objects that have some intersection with
 	-- the cell, without taking into account their geometric properties. This operation creates an
 	-- attribute with string values. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select &
-	-- missing, band, dummy, pixel \
+	-- missing, band, dummy, pixel, split \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
-	-- & attribute, layer & \
+	-- & attribute, layer & split \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy, pixel \
+	-- attribute, layer, select & missing, band, dummy, pixel, split \
 	-- "sum" & Sum of quantitative values from objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, it
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
-	-- & attribute, layer, select & area, missing, band, dummy, pixel \
+	-- & attribute, layer, select & area, missing, band, dummy, pixel, split \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true),
 	-- or the weights are equal for each object with some overlap (false, missing value).
@@ -571,6 +571,10 @@ Layer_ = {
 	-- This value will be ignored by all operations as if it did not exist.
 	-- For example, in averages, dummy values will not be used in the sum nor to count the number of pixels.
 	-- Its default value is the result of Layer:dummy().
+	-- @arg data.split A boolean to determine if the fill will split the temporal data into different layers
+	-- with each new layer's name formed by the own Layer's name and the respective times as sufix.
+	-- The default value is false and, in this case, the temporal data will be filled in the own Layer
+	-- into different attributes though.
 	-- @arg data.pixel A string value indicating when a pixel is within a polygon. See the table below.
 	-- @tabular pixel Pixel & Description \
 	-- "centroid" (default) & A pixel is within a polygon if its centroid is within the polygon. It is recommended to
@@ -610,6 +614,12 @@ Layer_ = {
 	--     layer = "cover",
 	--     select = "cover2010"
 	-- }
+	--
+	-- cl:fill{
+	--     attribute = "area",
+	--     operation = "coverage",
+	--     layer = "cover*", -- temporal representation
+	-- }
 	fill = function(self, data)
 		verifyNamedTable(data)
 
@@ -623,26 +633,61 @@ Layer_ = {
 
 		if type(data.layer) == "string" then
 			if string.find(data.layer, "%*") then
-				local base, pattern = extractMultiplesPattern(data.layer)
+				local prefix, sufix = extractMultiplesPattern(data.layer)
 				local layers = {}
 				forEachOrderedElement(project.layers, function(layer)
 					table.insert(layers, layer)
 				end)
 
-				layers = findMultiples(base, pattern, layers)
-				forEachOrderedElement(layers, function(_, layer)
-					local attr = data.attribute..layer.pattern
-					if #attr > 10 and self.source == "shp" then
-						customError("The attribute '"..attr.."' to be created has more than 10 characters. Please shorten the attribute name.")
-					end
-				end)
+				layers = findMultiples(prefix, sufix, layers)
+				optionalTableArgument(data, "split", "boolean")
+				if data.split then
+					forEachOrderedElement(layers, function(_, layer)
+						local newLayerName = self.name..layer.pattern
+						local newLayer = self.project[newLayerName]
+						if not newLayer then
+							local newLayerFile = newLayerName.."."..self.source
+							if not File(newLayerFile):exists() then
+								local fromData = {
+									project = self.project,
+									layer = self.name
+								}
 
-				forEachOrderedElement(layers, function(_, layer)
-					local newData = clone(data)
-					newData.layer = layer.name
-					newData.attribute = data.attribute..layer.pattern
-					self:fill(newData)
-				end)
+								local toData = {
+									file = newLayerFile,
+									type = self.source
+								}
+
+								TerraLib().saveLayerAs(fromData, toData)
+							end
+
+							newLayer = Layer{
+								project = self.project,
+								name = newLayerName,
+								file = newLayerFile
+							}
+						end
+
+						local newData = clone(data)
+						newData.layer = layer.name
+						newData.split = nil
+						newLayer:fill(newData)
+					end)
+				else
+					forEachOrderedElement(layers, function(_, layer)
+						local attr = data.attribute..layer.pattern
+						if #attr > 10 and self.source == "shp" then
+							customError("The attribute '"..attr.."' to be created has more than 10 characters. Please shorten the attribute name.")
+						end
+					end)
+
+					forEachOrderedElement(layers, function(_, layer)
+						local newData = clone(data)
+						newData.layer = layer.name
+						newData.attribute = data.attribute..layer.pattern
+						self:fill(newData)
+					end)
+				end
 
 				return
 			end
@@ -1062,6 +1107,168 @@ Layer_ = {
 		end
 
 		TerraLib().polygonize(rasterInfo, outInfo)
+	end,
+	--- Splits a temporal layer into multiple layers. It creates a 'layer_time' for each time available as attribute values 'attribute_time'.
+	-- @usage -- DONTRUN
+	-- layer:split()
+	split = function(self)
+		local temporalAttributes = {}
+		local startTime = math.huge
+		local nonTemporalAttributes = {}
+		local dataAttributes = {}
+		local isTemporal = false
+		forEachElement(self:attributes(), function(_, attr)
+			local prefix, sufix = string.match(attr.name, "(.+)_(%d+)")
+			if prefix and sufix then
+				isTemporal = true
+				if not temporalAttributes[sufix] then
+					temporalAttributes[sufix] = {}
+					startTime = math.min(startTime, tonumber(sufix))
+				end
+
+				table.insert(temporalAttributes[sufix], {prefix = prefix, sufix = sufix, name = attr.name})
+			elseif belong(attr.name, {"id", "col", "row", "FID", "OGR_GEOMETRY", "ogr_geometry"}) then
+				table.insert(dataAttributes, attr.name)
+			else
+				table.insert(nonTemporalAttributes, attr.name)
+			end
+		end)
+
+		if not isTemporal then
+			customError("No temporal attribute has been found.")
+		end
+
+		forEachElement(nonTemporalAttributes, function(_, attr)
+			table.insert(temporalAttributes[tostring(startTime)], {prefix = attr, sufix = "", name = attr})
+		end)
+
+		forEachElement(dataAttributes, function(_, attr)
+			forEachElement(temporalAttributes, function(time)
+			table.insert(temporalAttributes[time], {prefix = attr, sufix = "", name = attr})
+			end)
+		end)
+
+		forEachElement(temporalAttributes, function(time, attributeList)
+			local attrNames = {}
+			local mapAttributes = {}
+			forEachElement(attributeList, function(_, attr)
+				table.insert(attrNames, attr.prefix)
+				mapAttributes[attr.name] = attr.prefix
+			end)
+
+			local dset = TerraLib().getDataSet(self.project, self.name)
+			local toSet = {}
+			for i = 0, #dset do
+				toSet[i + 1] = {}
+				for k, v in pairs(dset[i]) do
+					toSet[i + 1][k] = nil
+					if mapAttributes[k] then
+						toSet[i+1][mapAttributes[k]] = v
+					end
+				end
+			end
+
+			local newLayerName = self.name.."_"..time
+			local fileName = newLayerName.."."..self.source
+			-- a temp layer is needed because currently one can't remove attributes from a layer thus this layer holds only the desired attributes
+			local tempLayer = "_l_y_r_"
+			TerraLib().saveDataSet(self.project, self.name, toSet, tempLayer, attrNames)
+			local from = {project = self.project, layer = tempLayer}
+			local to = {file = fileName, type = self.source}
+			TerraLib().saveLayerAs(from, to, true, attrNames)
+			Layer{project = self.project, name = newLayerName, file = fileName}
+			TerraLib().removeLayer(self.project, tempLayer)
+		end)
+	end,
+	--- Merges every temporal layer from the layer's project into a single layer with all temporal attribute.
+	-- Atributes from temporal layers are created with the attribute name followed by the time from its layer.
+	-- Every temporal layer must have the same geometry.
+	-- @usage -- DONTRUN
+	-- layer:merge()
+	merge = function(self)
+		local newLayerName, time = string.match(self.name, "(.+)_(%d+)")
+		if not newLayerName or not time then
+			customError("Layer '"..self.name.."' is not a temporal layer.")
+		end
+
+		if self.project.layers[newLayerName] then
+			customWarning("Layer '"..newLayerName.."' already exisists.")
+		end
+
+		local temporalLayers = {}
+		local attributes = {}
+		forEachElement(self.project.layers, function(layerName)
+			local prefix, sufix = string.match(layerName, "(.+)_(%d+)")
+			if prefix and sufix and prefix == newLayerName then
+				temporalLayers[layerName] = true
+				local attribs = TerraLib().getPropertyNames(self.project, layerName)
+				forEachElement(attribs, function(_, attribute)
+					if not attributes[attribute] then
+						attributes[attribute] = {}
+					end
+
+					table.insert(attributes[attribute], {layer = layerName, time = sufix})
+				end)
+			end
+		end)
+
+		local dSetSize = #TerraLib().getDataSet(self.project, self.name)
+		forEachOrderedElement(temporalLayers, function(layer)
+			if dSetSize ~= #TerraLib().getDataSet(self.project, layer) then
+				customError("Layer '"..self.name.."' cannot be merged with '"..layer.."' because they have different numbers of objects.")
+			end
+		end)
+
+		local mapAttributes = {}
+		local nonTemporalAttributes = {}
+		forEachElement(attributes, function(attribute, layers)
+			if #layers == 1 or belong(attribute, {"id", "col", "row", "OGR_GEOMETRY","ogr_geometry", "FID"})  then
+				local layer = self.name
+				if not mapAttributes[layer] then
+					mapAttributes[layer] = {}
+				end
+
+				table.insert(nonTemporalAttributes, attribute)
+			else
+				forEachElement(layers, function(_, layerData)
+					local layer = layerData.layer
+					if not mapAttributes[layer] then
+						mapAttributes[layer] = {}
+					end
+
+					table.insert(mapAttributes[layer], {attributeName = attribute, newLayerAttributeName = attribute.."_"..layerData.time})
+				end)
+			end
+		end)
+
+		local from = {project = self.project, layer = self.name}
+		-- a temp layer is needed because currently one can't remove attributes from a layer thus this layer holds only the desired attributes
+		local tempLayer = "_l_y_r_"
+		local tempFile = tempLayer.."."..self.source
+		local to = {file = tempFile, type = self.source}
+		TerraLib().saveLayerAs(from, to, true, nonTemporalAttributes)
+		Layer{project = self.project, file = tempFile, name = tempLayer}
+		local toSet = {}
+		local attrs = {}
+		forEachElement(mapAttributes, function(layer, mapAttribute)
+			local dset = TerraLib().getDataSet(self.project, layer)
+			for i = 0, #dset do
+				if not toSet[i + 1] then
+					toSet[i + 1] = {}
+				end
+
+				for _, attr in pairs(mapAttribute) do
+					toSet[i + 1][attr.newLayerAttributeName] = dset[i][attr.attributeName]
+					if not belong(attr.newLayerAttributeName, attrs) then
+						table.insert(attrs, attr.newLayerAttributeName)
+					end
+				end
+			end
+		end)
+
+		TerraLib().saveDataSet(self.project, tempLayer, toSet, newLayerName, attrs)
+		TerraLib().removeLayer(self.project, tempLayer)
+		return Layer{project = self.project, name = newLayerName}
 	end
 }
 
