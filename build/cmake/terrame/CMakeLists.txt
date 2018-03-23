@@ -643,7 +643,7 @@ else(UNIX)
 	        DESTINATION bin/platforms
 	        COMPONENT runtime)
 
-	install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
+	install(FILES ${TERRALIB_DIR}/lib/terralib_mod_binding_lua.so
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
 	        COMPONENT runtime)
 
