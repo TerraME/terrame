@@ -365,10 +365,6 @@ if(APPLE)
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
 	        COMPONENT runtime)
 
-	install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
-	        DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
-	        COMPONENT runtime)
-
 	set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
 
 	install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
@@ -641,10 +637,6 @@ else(UNIX)
 
 	install(FILES ${Qt5_DIR}/../../qt5/plugins/platforms/libqxcb.so
 	        DESTINATION bin/platforms
-	        COMPONENT runtime)
-
-	install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
-	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
 	        COMPONENT runtime)
 
 	file(GLOB TERRALIB_DEPENDENCIES ${TERRALIB_3RDPARTY_DIR}/lib/libboost_system.so*
