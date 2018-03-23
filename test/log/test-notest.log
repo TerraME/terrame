@@ -19,7 +19,7 @@ Tests were executed in 1 second.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
-All asserts were executed at least once.
+Execution of all asserts was not verified.
 All 2 asserts were executed successfully.
 All 1 tested functions do not have any unexpected execution error.
 All 1 tested functions have at least one assert.
@@ -27,7 +27,7 @@ All 1 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
-No file was created along the tests.
+No file or directory was created along the tests.
 No source code functions were verified.
 No lines from the source code were verified.
 No examples were executed.

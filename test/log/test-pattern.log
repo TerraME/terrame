@@ -27,10 +27,10 @@ Testing reproduce
 Testing walk
 Testing walkIfEmpty
 Testing walkToEmpty
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/observer/alternative/Agent.lua
 Testing notify
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Skipping source code functions check
 Skipping lines of source code check
 Skipping examples
@@ -41,7 +41,7 @@ Tests were executed in 2 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
-All asserts were executed at least once.
+Execution of all asserts was not verified.
 All 72 asserts were executed successfully.
 All 21 tested functions do not have any unexpected execution error.
 All 21 tested functions have at least one assert.
@@ -49,7 +49,7 @@ All 21 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
-No file was created along the tests.
+No file or directory was created along the tests.
 No source code functions were verified.
 No lines from the source code were verified.
 No examples were executed.

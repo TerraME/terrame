@@ -18,7 +18,7 @@ Wrong execution, got:
 Error: print() detected in ...dro/github/terrame-pedro/test/packages/print/tests/M.lua (line 32): '55'
 Stack traceback:
     File '...dro/github/terrame-pedro/test/packages/print/tests/M.lua', line 32, in main chunk
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Checking if functions from source code were tested
 Checking M.lua
 Skipping lines of source code check
@@ -32,7 +32,7 @@ Logs were saved in '/Users/pedro/github/terrame-pedro/test/packages/.terrametmp_
 2 print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
-All asserts were executed at least once.
+Execution of all asserts was not verified.
 All 1 asserts were executed successfully.
 All 1 tested functions do not have any unexpected execution error.
 All 1 tested functions have at least one assert.

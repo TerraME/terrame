@@ -8,16 +8,16 @@ Found 6 extra functions in the documentation
 Skip looking for lines of source code
 Testing tests/internal/alternative/terrame.lua
 Testing verifyVersionDependency
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/internal/basic/terrame.lua
 Testing getVersion
 Testing insert
 Testing verifyVersionDependency
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/internal/basic/utils.lua
 Testing cleanErrorMessage
 Testing stringToLabel
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Skipping source code functions check
 Skipping lines of source code check
 Skipping examples
@@ -28,7 +28,7 @@ Tests were executed in less than one second.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
-All asserts were executed at least once.
+Execution of all asserts was not verified.
 All 37 asserts were executed successfully.
 All 6 tested functions do not have any unexpected execution error.
 All 6 tested functions have at least one assert.
@@ -36,7 +36,7 @@ All 6 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
-No file was created along the tests.
+No file or directory was created along the tests.
 No source code functions were verified.
 No lines from the source code were verified.
 No examples were executed.

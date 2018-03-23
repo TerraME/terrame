@@ -45,6 +45,7 @@ test = {
 	testnotest     = {arg = "-test", config = "testNoTest.lua"},
 	notest         = {arg = "-test", config = "noTest.lua"},
 	unittest       = {arg = "-test", package = "unittest"},
+	unittestall    = {arg = "-test", package = "unittest", config = "all.lua"},
 	singlefile     = {arg = "-test", config = "single.lua", package = "gis"}, -- file that does not belong to the source code
 }
 
