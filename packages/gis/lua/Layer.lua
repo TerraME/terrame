@@ -1309,7 +1309,7 @@ metaTableLayer_ = {
 -- When the string contains wms or wfs in its content, the argument source can be avoided.
 -- @arg data.feature A string with the name of the feature to be read from a WFS.
 -- @arg data.map A string with the name of the map to be read from a WMS. The map will be
--- saved in the current directory within wms subdirectory automatically created. 
+-- saved in the current directory within wms subdirectory automatically created.
 -- @arg data.format A string with the image format available in a WMS ("png", default).
 -- You can use another format if available in the WMS ("jpeg", "tiff", "geotiff", etc).
 -- @tabular source

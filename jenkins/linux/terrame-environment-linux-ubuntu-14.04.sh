@@ -121,4 +121,5 @@ valid $? "Error: Copying fail"
 
 echo ""
 echo ""
+cmake -version
 echo ""
