@@ -27,8 +27,8 @@ return {
 		local wmsDir = Directory("wms")
 		if wmsDir:exists() then
 			wmsDir:delete()
-		end	
-		
+		end
+
 		local title = "TerraLib Tests"
 		local author = "Avancini Rodrigo"
 		local file = File("terralib_wms_basic.tview")
