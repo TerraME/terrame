@@ -24,6 +24,11 @@
 
 return {
 	Layer = function(unitTest)
+		local wmsDir = Directory("wms")
+		if wmsDir:exists() then
+			wmsDir:delete()
+		end
+
 		local projName = "layer_wms_basic.tview"
 
 		local proj = Project {
@@ -67,6 +72,7 @@ return {
 		unitTest:assertEquals(layer2.epsg, epsg)
 
 		File(projName):delete()
+		wmsDir:delete()
 	end
 }
 

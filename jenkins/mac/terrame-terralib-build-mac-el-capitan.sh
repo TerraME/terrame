@@ -47,7 +47,7 @@
 #
 
 # Constants
-_TERRALIB_BRANCH=release-5.2
+_TERRALIB_BRANCH=release-5.3
 
 # Removing TerraLib Mod Binding Lua in order to re-generate folder if there is
 rm -rf $_TERRALIB_BUILD_BASE/solution $_TERRALIB_GIT_DIR $_TERRAME_BUILD_BASE/solution
@@ -71,6 +71,8 @@ cp $_TERRAME_GIT_DIR/jenkins/all/*.lua $_TERRAME_TEST_DIR
 cp $_TERRAME_GIT_DIR/build/scripts/mac/terralib-conf.* .
 # Copying TerraME compilation scripts to TerraME Solution folder
 cp $_TERRAME_GIT_DIR/build/scripts/mac/terrame-conf.* $_TERRAME_BUILD_BASE/solution
+
+cmake -version
 
 # Compile TerraLib
 ./terralib-conf.sh

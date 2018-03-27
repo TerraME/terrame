@@ -307,7 +307,7 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 			local capblts = client:getCapabilities()
 			local rootLayer = capblts.m_capability.m_layer
 			local wmsLayer = rootLayer:getLayerByDataSetName(dSetName)
-			Directory("wms"):delete()
+
 			if wmsLayer.m_title == "" then
 				binding.te.da.DataSourceManager.getInstance():detach(dsId)
 				ds:close()
@@ -405,6 +405,18 @@ local function releaseProject(project)
     binding.te.da.DataSourceManager.getInstance():detachAll()
 end
 
+local function castLayer(layer)
+	if layer:getType() == "DATASETLAYER" then
+		layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)
+	elseif layer:getType() == "OGCWMSLAYER" then
+		layer = binding.te.ws.ogc.wms.WMSLayer.toWmsLayer(layer)
+	else
+		customError("Layer '"..layer:getTitle().."'cannot be converted, its type '"..layer:getType().."'.") -- SKIP
+	end
+
+	return layer
+end
+
 local function saveProject(project, layers)
 	local file = tostring(project.file)
 	local _, fileName, ext = project.file:split()
@@ -417,7 +429,7 @@ local function saveProject(project, layers)
 	local i = 1
 
 	for _, v in pairs(layers) do
-		layersVector[i] = binding.te.map.DataSetLayer.toDataSetLayer(v)
+		layersVector[i] = castLayer(v)
 		i = i + 1
 	end
 
@@ -442,7 +454,7 @@ local function loadProject(project, file)
 
 	for i = 0, getn(layers) - 1 do
 		local layer = layers[i]
-		project.layers[layer:getTitle()] = layer
+		project.layers[layer:getTitle()] = castLayer(layer)
 	end
 end
 
@@ -521,17 +533,6 @@ local function dropDataSet(connInfo, dSetName, type)
 	end
 
 	collectgarbage("collect")
-end
-
-local function toDataSetLayer(layer)
-	if layer:getType() == "DATASETLAYER" then
-		layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)
-	else
-		-- TODO(avancinirodrigo): REVIEW OTHER LAYERS TYPES
-		customError("Layer '"..layer:getTitle().."'cannot be converted, (type '"..layer:getType().."').") -- SKIP
-	end
-
-	return layer
 end
 
 local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, type, mask)
@@ -722,8 +723,8 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 	do
 		local r2v = binding.te.attributefill.RasterToVector()
 
-		fromLayer = toDataSetLayer(fromLayer)
-		toLayer = toDataSetLayer(toLayer)
+		fromLayer = castLayer(fromLayer)
+		toLayer = castLayer(toLayer)
 
 		local rDs = binding.GetDs(fromLayer:getDataSourceId(), true)
 	    local rDSet = rDs:getDataSet(fromLayer:getDataSetName())
@@ -1028,7 +1029,7 @@ end
 local function getRasterFromLayer(project, layer)
 	loadProject(project, project.file)
 
-	layer = toDataSetLayer(layer)
+	layer = castLayer(layer)
 	local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
 	local connInfo = dsInfo:getConnInfo()
 	local dsType = dsInfo:getType()
@@ -1465,7 +1466,7 @@ local function createFromDataInfoToSaveAsByLayer(layer)
 	local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)
 	info.datasource = binding.GetDs(fromDsId, true)
 	info.datasource:setEncoding(layer:getEncoding())
-	layer = toDataSetLayer(layer)
+	layer = castLayer(layer)
 	info.dataset = layer:getDataSetName()
 	info.type = fromDsInfo:getType()
 	info.name = layer:getTitle()
@@ -2624,7 +2625,7 @@ TerraLib_ = {
 			loadProject(project, project.file)
 
 			local layer = project.layers[layerName]
-			layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)
+			layer = castLayer(layer)
 			local dseName = layer:getDataSetName()
 			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
 			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
@@ -2658,7 +2659,7 @@ TerraLib_ = {
 			loadProject(project, project.file)
 
 			local fromLayer = project.layers[fromLayerName]
-			fromLayer = toDataSetLayer(fromLayer)
+			fromLayer = castLayer(fromLayer)
 			local dseName = fromLayer:getDataSetName()
 			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
 			local connInfo = dsInfo:getConnInfo()
@@ -2828,7 +2829,7 @@ TerraLib_ = {
 		loadProject(project, project.file)
 
 		local layer = project.layers[layerName]
-		local dSetLayer = toDataSetLayer(layer)
+		local dSetLayer = castLayer(layer)
 		local dSetName = dSetLayer:getDataSetName()
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(dSetLayer:getDataSourceId())
 		local names
@@ -2857,7 +2858,7 @@ TerraLib_ = {
 		loadProject(project, project.file)
 
 		local layer = project.layers[layerName]
-		local dSetLayer = toDataSetLayer(layer)
+		local dSetLayer = castLayer(layer)
 		local dSetName = dSetLayer:getDataSetName()
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(dSetLayer:getDataSourceId())
 		local infos	= {}
@@ -3005,7 +3006,7 @@ TerraLib_ = {
 			loadProject(project, project.file)
 
 			local layer = project.layers[layerName]
-			layer = toDataSetLayer(layer)
+			layer = castLayer(layer)
 			local datasetName = layer:getDataSetName()
 			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
 			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
@@ -3046,7 +3047,7 @@ TerraLib_ = {
 			loadProject(project, project.file)
 
 			local layer = project.layers[fromLayerName]
-			layer = toDataSetLayer(layer)
+			layer = castLayer(layer)
 			local datasetName = layer:getDataSetName()
 			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
 			local fromType = dsInfo:getType()
