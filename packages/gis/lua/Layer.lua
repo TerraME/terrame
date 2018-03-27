@@ -1192,7 +1192,7 @@ Layer_ = {
 		end
 
 		if self.project.layers[newLayerName] then
-			customWarning("Layer '"..newLayerName.."' already exisists.")
+			customWarning("Layer '"..newLayerName.."' already exists.") -- SKIP
 		end
 
 		local temporalLayers = {}
@@ -1224,15 +1224,15 @@ Layer_ = {
 		forEachElement(attributes, function(attribute, layers)
 			if #layers == 1 or belong(attribute, {"id", "col", "row", "OGR_GEOMETRY","ogr_geometry", "FID"})  then
 				local layer = self.name
-				if not mapAttributes[layer] then
+				if not mapAttributes[layer] then -- SKIP
 					mapAttributes[layer] = {}
 				end
 
-				table.insert(nonTemporalAttributes, attribute)
+				table.insert(nonTemporalAttributes, attribute) -- SKIP
 			else
 				forEachElement(layers, function(_, layerData)
 					local layer = layerData.layer
-					if not mapAttributes[layer] then
+					if not mapAttributes[layer] then -- SKIP
 						mapAttributes[layer] = {}
 					end
 
@@ -1246,28 +1246,28 @@ Layer_ = {
 		local tempLayer = "_l_y_r_"
 		local tempFile = tempLayer.."."..self.source
 		local to = {file = tempFile, type = self.source}
-		TerraLib().saveLayerAs(from, to, true, nonTemporalAttributes)
+		TerraLib().saveLayerAs(from, to, true, nonTemporalAttributes) -- SKIP
 		Layer{project = self.project, file = tempFile, name = tempLayer}
 		local toSet = {}
 		local attrs = {}
 		forEachElement(mapAttributes, function(layer, mapAttribute)
 			local dset = TerraLib().getDataSet(self.project, layer)
 			for i = 0, #dset do
-				if not toSet[i + 1] then
+				if not toSet[i + 1] then -- SKIP
 					toSet[i + 1] = {}
 				end
 
 				for _, attr in pairs(mapAttribute) do
-					toSet[i + 1][attr.newLayerAttributeName] = dset[i][attr.attributeName]
-					if not belong(attr.newLayerAttributeName, attrs) then
-						table.insert(attrs, attr.newLayerAttributeName)
+					toSet[i + 1][attr.newLayerAttributeName] = dset[i][attr.attributeName] -- SKIP
+					if not belong(attr.newLayerAttributeName, attrs) then -- SKIP
+						table.insert(attrs, attr.newLayerAttributeName) -- SKIP
 					end
 				end
 			end
 		end)
 
-		TerraLib().saveDataSet(self.project, tempLayer, toSet, newLayerName, attrs)
-		TerraLib().removeLayer(self.project, tempLayer)
+		TerraLib().saveDataSet(self.project, tempLayer, toSet, newLayerName, attrs) -- SKIP
+		TerraLib().removeLayer(self.project, tempLayer) -- SKIP
 		return Layer{project = self.project, name = newLayerName}
 	end
 }
