@@ -69,7 +69,7 @@ cp terralib-conf.cmake $_TERRALIB_OUT_DIR
 cd $_TERRALIB_OUT_DIR
 
 # -----------------
-# Calling CMake: note that we are using a release configuration and Unix Makefiles generator
+# Calling CMake
 # -----------------
 cmake -G "Xcode" -C terralib-conf.cmake $_TERRALIB_GIT_DIR/build/cmake
 

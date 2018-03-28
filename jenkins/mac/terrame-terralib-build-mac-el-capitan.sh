@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
