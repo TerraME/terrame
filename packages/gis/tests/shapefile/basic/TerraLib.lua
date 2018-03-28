@@ -1017,458 +1017,508 @@ return {
 		unitTest:assert(true)
 	end,
 	saveDataSet = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
+		local createProject = function()
+			local proj = {
+				file = "saveDataSet-basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
 
-		File(proj.file):deleteIfExists()
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
 
-		TerraLib().createProject(proj, {})
+			return proj
+		end
 
-		-- // create a database
-		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("test/sampa.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName1, layerFile1)
+		local handlingCellularSpace = function()
+			local proj = createProject()
 
-		local clName1 = "SampaShpCells"
-		local resolution = 1
-		local mask = true
-		local cellsShp = File(clName1..".shp")
+			local layerName = "SampaShp"
+			local layerFile = filePath("test/sampa.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName, layerFile)
 
-		cellsShp:deleteIfExists()
+			local clName1 = "SampaShpCells"
+			local cellsShp = File(clName1..".shp")
+			local resolution = 1
+			local mask = true
+			cellsShp:deleteIfExists()
+			TerraLib().addShpCellSpaceLayer(proj, layerName, clName1, resolution, cellsShp, mask)
 
-		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
-
-		local dSet = TerraLib().getDataSet(proj, clName1)
-
-		unitTest:assertEquals(getn(dSet), 37)
-
-		for i = 0, getn(dSet) - 1 do
-			for k, v in pairs(dSet[i]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID"))
-				unitTest:assertNotNil(v)
+			local newLayerName = "New_Layer"
+			local dSet = TerraLib().getDataSet(proj, clName1)
+			local luaTable = {}
+			for i = 0, getn(dSet) - 1 do
+				local data = dSet[i]
+				data.attr1 = i
+				data.attr2 = "test"..i
+				data.attr3 = (i % 2) == 0
+				table.insert(luaTable, dSet[i])
 			end
-		end
 
-		local attrNames = TerraLib().getPropertyNames(proj, clName1)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("id", attrNames[1])
-		unitTest:assertEquals("col", attrNames[2])
-		unitTest:assertEquals("row", attrNames[3])
+			local nlFile = File(newLayerName..".shp")
+			nlFile:deleteIfExists()
 
-		local luaTable = {}
+			-- ADDING ALL SUPPORTED ATTRIBUTES
+			TerraLib().saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1", "attr2", "attr3"})
 
-		for i = 0, getn(dSet) - 1 do
-			local data = dSet[i]
-			data.attr1 = i
-			data.attr2 = "test"..i
-			data.attr3 = (i % 2) == 0
-			table.insert(luaTable, dSet[i])
-		end
+			local newDSet = TerraLib().getDataSet(proj, newLayerName)
+			unitTest:assertEquals(getn(newDSet), 37)
 
-		local newLayerName = "New_Layer"
-		local nlFile = File(newLayerName..".shp")
-		nlFile:deleteIfExists()
+			for i = 0, getn(newDSet) - 1 do
+				unitTest:assertEquals(newDSet[i].attr1, i)
+				for k, v in pairs(newDSet[i]) do
+					unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+									(k == "attr1") or (k == "attr2") or (k == "attr3"))
 
-		TerraLib().saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1", "attr2", "attr3"})
-
-		local newDSet = TerraLib().getDataSet(proj, newLayerName)
-		unitTest:assertEquals(getn(newDSet), 37)
-
-		for i = 0, getn(newDSet) - 1 do
-			unitTest:assertEquals(newDSet[i].attr1, i)
-			for k, v in pairs(newDSet[i]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-								(k == "attr1") or (k == "attr2") or (k == "attr3"))
-
-				if k == "attr1" then
-					unitTest:assertEquals(type(v), "number")
-				elseif k == "attr2" then
-					unitTest:assertEquals(type(v), "string")
-				elseif k == "attr3" then
-					unitTest:assertEquals(type(v), "string")
+					if k == "attr1" then
+						unitTest:assertEquals(type(v), "number")
+					elseif k == "attr2" then
+						unitTest:assertEquals(type(v), "string")
+					elseif k == "attr3" then
+						unitTest:assertEquals(type(v), "string") -- boolean is saved as string in shapefile
+					end
 				end
 			end
-		end
 
-		attrNames = TerraLib().getPropertyNames(proj, newLayerName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("id", attrNames[1])
-		unitTest:assertEquals("col", attrNames[2])
-		unitTest:assertEquals("row", attrNames[3])
-		unitTest:assertEquals("attr1", attrNames[4])
-		unitTest:assertEquals("attr2", attrNames[5])
-		unitTest:assertEquals("attr3", attrNames[6])
+			local attrNames = TerraLib().getPropertyNames(proj, newLayerName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("id", attrNames[1])
+			unitTest:assertEquals("col", attrNames[2])
+			unitTest:assertEquals("row", attrNames[3])
+			unitTest:assertEquals("attr1", attrNames[4])
+			unitTest:assertEquals("attr2", attrNames[5])
+			unitTest:assertEquals("attr3", attrNames[6])
 
-		TerraLib().saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1"})
-		newDSet = TerraLib().getDataSet(proj, newLayerName)
+			-- OVERWRITE LAYER
+			dSet = TerraLib().getDataSet(proj, clName1)
+			luaTable = {}
+			for i = 0, getn(dSet) - 1 do
+				local data = dSet[i]
+				data.attr1 = i
+				table.insert(luaTable, dSet[i])
+			end
 
-		unitTest:assertEquals(getn(newDSet), 37)
+			TerraLib().saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1"})
+			newDSet = TerraLib().getDataSet(proj, newLayerName)
 
-		for i = 0, getn(newDSet) - 1 do
-			unitTest:assertEquals(newDSet[i].attr1, i)
-			for k, v in pairs(newDSet[i]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-								(k == "attr1"))
+			unitTest:assertEquals(getn(newDSet), 37)
 
-				if k == "attr1" then
-					unitTest:assertEquals(type(v), "number")
+			for i = 0, getn(newDSet) - 1 do
+				unitTest:assertEquals(newDSet[i].attr1, i)
+				for k, v in pairs(newDSet[i]) do
+					unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+									(k == "attr1"))
+
+					if k == "attr1" then
+						unitTest:assertEquals(type(v), "number")
+					end
 				end
 			end
-		end
 
-		attrNames = TerraLib().getPropertyNames(proj, newLayerName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("id", attrNames[1])
-		unitTest:assertEquals("col", attrNames[2])
-		unitTest:assertEquals("row", attrNames[3])
-		unitTest:assertEquals("attr1", attrNames[4])
+			attrNames = TerraLib().getPropertyNames(proj, newLayerName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("id", attrNames[1])
+			unitTest:assertEquals("col", attrNames[2])
+			unitTest:assertEquals("row", attrNames[3])
+			unitTest:assertEquals("attr1", attrNames[4])
 
-		-- OVERWRITE CELLSPACE
-		TerraLib().saveDataSet(proj, clName1, luaTable, clName1, {"attr1"})
-		newDSet = TerraLib().getDataSet(proj, newLayerName)
+			-- OVERWRITE CELLSPACE
+			dSet = TerraLib().getDataSet(proj, clName1)
+			luaTable = {}
+			for i = 0, getn(dSet) - 1 do
+				local data = dSet[i]
+				data.attr1 = i
+				table.insert(luaTable, dSet[i])
+			end
 
-		unitTest:assertEquals(getn(newDSet), 37)
+			TerraLib().saveDataSet(proj, clName1, luaTable, clName1, {"attr1"})
+			newDSet = TerraLib().getDataSet(proj, newLayerName)
 
-		for i = 0, getn(newDSet) - 1 do
-			unitTest:assertEquals(newDSet[i].attr1, i)
-			for k, v in pairs(newDSet[i]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-								(k == "attr1"))
+			unitTest:assertEquals(getn(newDSet), 37)
 
-				if k == "attr1" then
-					unitTest:assertEquals(type(v), "number")
+			for i = 0, getn(newDSet) - 1 do
+				unitTest:assertEquals(newDSet[i].attr1, i)
+				for k, v in pairs(newDSet[i]) do
+					unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+									(k == "attr1"))
+
+					if k == "attr1" then
+						unitTest:assertEquals(type(v), "number")
+					end
 				end
 			end
-		end
 
-		attrNames = TerraLib().getPropertyNames(proj, newLayerName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("id", attrNames[1])
-		unitTest:assertEquals("col", attrNames[2])
-		unitTest:assertEquals("row", attrNames[3])
-		unitTest:assertEquals("attr1", attrNames[4])
+			attrNames = TerraLib().getPropertyNames(proj, newLayerName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("id", attrNames[1])
+			unitTest:assertEquals("col", attrNames[2])
+			unitTest:assertEquals("row", attrNames[3])
+			unitTest:assertEquals("attr1", attrNames[4])
+
+			File(newLayerName..".shp"):delete()
+			cellsShp:delete()
+			proj.file:delete()
+		end
 
 		-- SAVE POLYGONS, POINTS AND LINES THAT ARE NOT CELLSPACE SPACE
-		-- POLYGONS
-		local polName = "ES_Limit"
-		local polFile = filePath("test/limite_es_poly_wgs84.shp", "gis")
-		TerraLib().addShpLayer(proj, polName, polFile)
+		local handlingAttributesFromPolygonsData = function()
+			local proj = createProject()
+			local polName = "ES_Limit"
+			local polFile = filePath("test/limite_es_poly_wgs84.shp", "gis")
+			TerraLib().addShpLayer(proj, polName, polFile)
 
-		local fromData = {}
-		fromData.project = proj
-		fromData.layer = polName
+			local fromData = {project = proj, layer = polName}
+			local toData = {file = "limite_es_poly_wgs84-rep.shp", type = "shp", srid = 4326}
+			File(toData.file):deleteIfExists()
+			TerraLib().saveLayerAs(fromData, toData, true)
 
-		local toData = {}
-		toData.file = "limite_es_poly_wgs84-rep.shp"
-		toData.type = "shp"
-		toData.srid = 4326
-		File(toData.file):deleteIfExists()
+			local polDset = TerraLib().getDataSet(proj, polName)
+			local polLuaTable = {}
+			for i = 0, getn(polDset) - 1 do
+				local data = polDset[i]
+				data.attr1 = i
+				table.insert(polLuaTable, polDset[i])
+			end
 
-		TerraLib().saveLayerAs(fromData, toData, true)
+			polName = "ES_Limit_CurrDir"
+			polFile = File(toData.file)
+			TerraLib().addShpLayer(proj, polName, polFile)
 
-		local polDset = TerraLib().getDataSet(proj, polName)
-		local polLuaTable = {}
-		for i = 0, getn(polDset) - 1 do
-			local data = polDset[i]
-			data.attr1 = i
-			table.insert(polLuaTable, polDset[i])
+			local attrNames = TerraLib().getPropertyNames(proj, polName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("GM_LAYER", attrNames[1])
+			unitTest:assertEquals("GM_TYPE", attrNames[2])
+			unitTest:assertEquals("LAYER", attrNames[3])
+			unitTest:assertEquals("NM_ESTADO", attrNames[4])
+			unitTest:assertEquals("NM_REGIAO", attrNames[5])
+			unitTest:assertEquals("CD_GEOCUF", attrNames[6])
+			unitTest:assertEquals("NM_UF", attrNames[7])
+
+			local newPolName = "ES_Limit_New"
+			TerraLib().saveDataSet(proj, polName, polLuaTable, newPolName, {"attr1"})
+
+			local newPolDset = TerraLib().getDataSet(proj, newPolName)
+			unitTest:assertEquals(getn(newPolDset), 1)
+			unitTest:assertEquals(getn(newPolDset), getn(polDset))
+
+			attrNames = TerraLib().getPropertyNames(proj, newPolName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("GM_LAYER", attrNames[1])
+			unitTest:assertEquals("GM_TYPE", attrNames[2])
+			unitTest:assertEquals("LAYER", attrNames[3])
+			unitTest:assertEquals("NM_ESTADO", attrNames[4])
+			unitTest:assertEquals("NM_REGIAO", attrNames[5])
+			unitTest:assertEquals("CD_GEOCUF", attrNames[6])
+			unitTest:assertEquals("NM_UF", attrNames[7])
+			unitTest:assertEquals("attr1", attrNames[8])
+
+			polFile:delete()
+			File(newPolName..".shp"):delete()
+			proj.file:delete()
 		end
 
-		polName = "ES_Limit_CurrDir"
-		polFile = File(toData.file)
-		TerraLib().addShpLayer(proj, polName, polFile)
+		local handlingAttributesFromPointsData = function()
+			local proj = createProject()
+			local ptName = "BR_Ports"
+			local ptFile = filePath("test/ports.shp", "gis")
+			TerraLib().addShpLayer(proj, ptName, ptFile)
 
-		attrNames = TerraLib().getPropertyNames(proj, polName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("GM_LAYER", attrNames[1])
-		unitTest:assertEquals("GM_TYPE", attrNames[2])
-		unitTest:assertEquals("LAYER", attrNames[3])
-		unitTest:assertEquals("NM_ESTADO", attrNames[4])
-		unitTest:assertEquals("NM_REGIAO", attrNames[5])
-		unitTest:assertEquals("CD_GEOCUF", attrNames[6])
-		unitTest:assertEquals("NM_UF", attrNames[7])
+			local fromData = {project = proj, layer = ptName}
+			local toData = {file = "ports-rep.shp", type = "shp", srid = 4326}
+			File(toData.file):deleteIfExists()
+			TerraLib().saveLayerAs(fromData, toData, true)
 
-		local newPolName = "ES_Limit_New"
-		TerraLib().saveDataSet(proj, polName, polLuaTable, newPolName, {"attr1"})
+			local ptDset = TerraLib().getDataSet(proj, ptName, 0)
+			local ptLuaTable = {}
+			for i = 0, getn(ptDset) - 1 do
+				local data = ptDset[i]
+				data.attr1 = i
+				table.insert(ptLuaTable, ptDset[i])
+			end
 
-		local newPolDset = TerraLib().getDataSet(proj, newPolName)
-		unitTest:assertEquals(getn(newPolDset), 1)
-		unitTest:assertEquals(getn(newPolDset), getn(polDset))
+			ptName = "BR_Ports_CurrDir"
+			ptFile = File(toData.file)
+			TerraLib().addShpLayer(proj, ptName, ptFile)
 
-		attrNames = TerraLib().getPropertyNames(proj, newPolName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("GM_LAYER", attrNames[1])
-		unitTest:assertEquals("GM_TYPE", attrNames[2])
-		unitTest:assertEquals("LAYER", attrNames[3])
-		unitTest:assertEquals("NM_ESTADO", attrNames[4])
-		unitTest:assertEquals("NM_REGIAO", attrNames[5])
-		unitTest:assertEquals("CD_GEOCUF", attrNames[6])
-		unitTest:assertEquals("NM_UF", attrNames[7])
-		unitTest:assertEquals("attr1", attrNames[8])
+			local attrNames = TerraLib().getPropertyNames(proj, ptName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("tipo", attrNames[5])
+			unitTest:assertEquals("gestao", attrNames[10])
+			unitTest:assertEquals("pro_didade", attrNames[15])
+			unitTest:assertEquals("cep", attrNames[20])
+			unitTest:assertEquals("idr_rafica", attrNames[25])
+			unitTest:assertEquals("observacao", attrNames[30])
+			unitTest:assertEquals("cdc_troide", attrNames[32])
 
-		-- POINTS
-		local ptName = "BR_Ports"
-		local ptFile = filePath("test/ports.shp", "gis")
-		TerraLib().addShpLayer(proj, ptName, ptFile)
+			local newPtName = "BR_Ports_New"
+			TerraLib().saveDataSet(proj, ptName, ptLuaTable, newPtName, {"attr1"})
 
-		toData = {}
-		toData.file = "ports-rep.shp"
-		toData.type = "shp"
-		toData.srid = 4326
-		File(toData.file):deleteIfExists()
-		fromData.layer = ptName
-		TerraLib().saveLayerAs(fromData, toData, true)
+			local newPtDset = TerraLib().getDataSet(proj, newPtName, 0)
+			unitTest:assertEquals(getn(newPtDset), 8)
+			unitTest:assertEquals(getn(newPtDset), getn(ptDset))
 
-		local ptDset = TerraLib().getDataSet(proj, ptName, 0)
-		local ptLuaTable = {}
-		for i = 0, getn(ptDset) - 1 do
-			local data = ptDset[i]
-			data.attr1 = i
-			table.insert(ptLuaTable, ptDset[i])
+			attrNames = TerraLib().getPropertyNames(proj, newPtName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("tipo", attrNames[5])
+			unitTest:assertEquals("gestao", attrNames[10])
+			unitTest:assertEquals("pro_didade", attrNames[15])
+			unitTest:assertEquals("cep", attrNames[20])
+			unitTest:assertEquals("idr_rafica", attrNames[25])
+			unitTest:assertEquals("observacao", attrNames[30])
+			unitTest:assertEquals("cdc_troide", attrNames[32])
+			unitTest:assertEquals("attr1", attrNames[33])
+
+			ptFile:delete()
+			File(newPtName..".shp"):delete()
+			proj.file:delete()
 		end
 
-		ptName = "BR_Ports_CurrDir"
-		ptFile = File(toData.file)
-		TerraLib().addShpLayer(proj, ptName, ptFile)
+		local handlingAttributesFromLinesData = function()
+			local proj = createProject()
+			local lnName = "ES_Rails"
+			local lnFile = filePath("test/rails.shp", "gis")
+			TerraLib().addShpLayer(proj, lnName, lnFile)
 
-		attrNames = TerraLib().getPropertyNames(proj, ptName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("tipo", attrNames[5])
-		unitTest:assertEquals("gestao", attrNames[10])
-		unitTest:assertEquals("pro_didade", attrNames[15])
-		unitTest:assertEquals("cep", attrNames[20])
-		unitTest:assertEquals("idr_rafica", attrNames[25])
-		unitTest:assertEquals("observacao", attrNames[30])
-		unitTest:assertEquals("cdc_troide", attrNames[32])
+			local fromData = {project = proj, layer = lnName}
+			local toData = {file = "rails-rep.shp", type = "shp", srid = 4326}
+			File(toData.file):deleteIfExists()
+			TerraLib().saveLayerAs(fromData, toData, true)
 
-		local newPtName = "BR_Ports_New"
-		TerraLib().saveDataSet(proj, ptName, ptLuaTable, newPtName, {"attr1"})
+			local lnDset = TerraLib().getDataSet(proj, lnName, 0)
+			local lnLuaTable = {}
+			for i = 0, getn(lnDset) - 1 do
+				local data = lnDset[i]
+				data.attr1 = i
+				table.insert(lnLuaTable, lnDset[i])
+			end
 
-		local newPtDset = TerraLib().getDataSet(proj, newPtName, 0)
-		unitTest:assertEquals(getn(newPtDset), 8)
-		unitTest:assertEquals(getn(newPtDset), getn(ptDset))
+			lnName = "ES_Rails_CurrDir"
+			lnFile = File(toData.file)
+			TerraLib().addShpLayer(proj, lnName, lnFile)
 
-		attrNames = TerraLib().getPropertyNames(proj, newPtName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("tipo", attrNames[5])
-		unitTest:assertEquals("gestao", attrNames[10])
-		unitTest:assertEquals("pro_didade", attrNames[15])
-		unitTest:assertEquals("cep", attrNames[20])
-		unitTest:assertEquals("idr_rafica", attrNames[25])
-		unitTest:assertEquals("observacao", attrNames[30])
-		unitTest:assertEquals("cdc_troide", attrNames[32])
-		unitTest:assertEquals("attr1", attrNames[33])
+			local attrNames = TerraLib().getPropertyNames(proj, lnName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("OBSERVACAO", attrNames[3])
+			unitTest:assertEquals("PRODUTOS", attrNames[6])
+			unitTest:assertEquals("OPERADORA", attrNames[9])
+			unitTest:assertEquals("Bitola_Ext", attrNames[12])
+			unitTest:assertEquals("COD_PNV", attrNames[14])
 
-		-- LINES
-		local lnName = "ES_Rails"
-		local lnFile = filePath("test/rails.shp", "gis")
-		TerraLib().addShpLayer(proj, lnName, lnFile)
+			local newLnName = "ES_Rails_New"
+			TerraLib().saveDataSet(proj, lnName, lnLuaTable, newLnName, {"attr1"})
 
-		toData = {}
-		toData.file = "rails-rep.shp"
-		toData.type = "shp"
-		toData.srid = 4326
-		File(toData.file):deleteIfExists()
-		fromData.layer = lnName
-		TerraLib().saveLayerAs(fromData, toData, true)
+			local newLnDset = TerraLib().getDataSet(proj, newLnName, 0)
+			unitTest:assertEquals(getn(newLnDset), 182)
+			unitTest:assertEquals(getn(newLnDset), getn(lnDset))
 
-		local lnDset = TerraLib().getDataSet(proj, lnName, 0)
-		local lnLuaTable = {}
-		for i = 0, getn(lnDset) - 1 do
-			local data = lnDset[i]
-			data.attr1 = i
-			table.insert(lnLuaTable, lnDset[i])
+			attrNames = TerraLib().getPropertyNames(proj, newLnName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("OBSERVACAO", attrNames[3])
+			unitTest:assertEquals("PRODUTOS", attrNames[6])
+			unitTest:assertEquals("OPERADORA", attrNames[9])
+			unitTest:assertEquals("Bitola_Ext", attrNames[12])
+			unitTest:assertEquals("COD_PNV", attrNames[14])
+			unitTest:assertEquals("attr1", attrNames[15])
+
+			-- ADD NEW ATTRIBUTE AND UPDATE A OLD
+			lnLuaTable = {}
+			for i = 0, getn(lnDset) - 1 do
+				local data = lnDset[i]
+				data.attr1 = i + 1000
+				data.attr2 = "test"..i
+				data.attr3 = (i % 2) == 0
+				table.insert(lnLuaTable, lnDset[i])
+			end
+
+			TerraLib().saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
+			attrNames = TerraLib().getPropertyNames(proj, newLnName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("OBSERVACAO", attrNames[3])
+			unitTest:assertEquals("PRODUTOS", attrNames[6])
+			unitTest:assertEquals("OPERADORA", attrNames[9])
+			unitTest:assertEquals("Bitola_Ext", attrNames[12])
+			unitTest:assertEquals("COD_PNV", attrNames[14])
+			unitTest:assertEquals("attr1", attrNames[15])
+			unitTest:assertEquals("attr2", attrNames[16])
+			unitTest:assertEquals("attr3", attrNames[17])
+
+			-- ADD NEW ATTRIBUTE AND UPDATE THREE OLD
+			lnLuaTable = {}
+			for i = 0, getn(lnDset) - 1 do
+				local data = lnDset[i]
+				data.attr1 = i + 1000
+				data.attr2 = "test"..i
+				data.attr3 = (i % 2) == 0
+				data.attr4 = data.attr1 * 2
+				table.insert(lnLuaTable, lnDset[i])
+			end
+
+			TerraLib().saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3", "attr4"})
+			attrNames = TerraLib().getPropertyNames(proj, newLnName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("OBSERVACAO", attrNames[3])
+			unitTest:assertEquals("PRODUTOS", attrNames[6])
+			unitTest:assertEquals("OPERADORA", attrNames[9])
+			unitTest:assertEquals("Bitola_Ext", attrNames[12])
+			unitTest:assertEquals("COD_PNV", attrNames[14])
+			unitTest:assertEquals("attr1", attrNames[15])
+			unitTest:assertEquals("attr2", attrNames[16])
+			unitTest:assertEquals("attr3", attrNames[17])
+			unitTest:assertEquals("attr4", attrNames[18])
+
+			-- ONLY UPDATE SOME ATTRIBUTE
+			lnLuaTable = {}
+			for i = 0, getn(lnDset) - 1 do
+				local data = lnDset[i]
+				data.attr1 = i - 1000
+				table.insert(lnLuaTable, lnDset[i])
+			end
+
+			TerraLib().saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1"})
+			attrNames = TerraLib().getPropertyNames(proj, newLnName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("OBSERVACAO", attrNames[3])
+			unitTest:assertEquals("PRODUTOS", attrNames[6])
+			unitTest:assertEquals("OPERADORA", attrNames[9])
+			unitTest:assertEquals("Bitola_Ext", attrNames[12])
+			unitTest:assertEquals("COD_PNV", attrNames[14])
+			unitTest:assertEquals("attr1", attrNames[15])
+			unitTest:assertEquals("attr2", attrNames[16])
+			unitTest:assertEquals("attr3", attrNames[17])
+
+			-- UPDATE MORE ATTRIBUTES
+			lnLuaTable = {}
+			for i = 0, getn(lnDset) - 1 do
+				local data = lnDset[i]
+				data.attr1 = i + 5000
+				data.attr2 = i.."data.attr2"
+				data.attr3 = ((i % 2) == 0) and data.attr3
+				table.insert(lnLuaTable, lnDset[i])
+			end
+
+			TerraLib().saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
+			attrNames = TerraLib().getPropertyNames(proj, newLnName)
+			unitTest:assertEquals("FID", attrNames[0])
+			unitTest:assertEquals("OBSERVACAO", attrNames[3])
+			unitTest:assertEquals("PRODUTOS", attrNames[6])
+			unitTest:assertEquals("OPERADORA", attrNames[9])
+			unitTest:assertEquals("Bitola_Ext", attrNames[12])
+			unitTest:assertEquals("COD_PNV", attrNames[14])
+			unitTest:assertEquals("attr1", attrNames[15])
+			unitTest:assertEquals("attr2", attrNames[16])
+			unitTest:assertEquals("attr3", attrNames[17])
+			unitTest:assertEquals("attr4", attrNames[18])
+
+			lnFile:delete()
+			File(newLnName..".shp"):delete()
+			proj.file:delete()
 		end
 
-		lnName = "ES_Rails_CurrDir"
-		lnFile = File(toData.file)
-		TerraLib().addShpLayer(proj, lnName, lnFile)
+		local handlingIntegerAttributeValues = function()
+			local proj = createProject()
+			local amlName = "Amazonia"
+			local amlFile = filePath("test/municipiosAML_ok.shp", "gis")
+			TerraLib().addShpLayer(proj, amlName, amlFile)
 
-		attrNames = TerraLib().getPropertyNames(proj, lnName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("OBSERVACAO", attrNames[3])
-		unitTest:assertEquals("PRODUTOS", attrNames[6])
-		unitTest:assertEquals("OPERADORA", attrNames[9])
-		unitTest:assertEquals("Bitola_Ext", attrNames[12])
-		unitTest:assertEquals("COD_PNV", attrNames[14])
+			local amlCurrDirName = "AmlCurrDir"
+			local toData = {file = amlCurrDirName..".shp", type = "shp"}
+			local fromData = {project = proj, layer = amlName}
+			TerraLib().saveLayerAs(fromData, toData, true)
+			TerraLib().addShpLayer(proj, amlCurrDirName, File(toData.file))
 
-		local newLnName = "ES_Rails_New"
-		TerraLib().saveDataSet(proj, lnName, lnLuaTable, newLnName, {"attr1"})
+			local amlDset = TerraLib().getDataSet(proj, amlName, 0)
+			local amlLuaTable = {}
+			local sum1 = 0
+			for i = 0, getn(amlDset) - 1 do
+				local data = amlDset[i]
+				sum1 = sum1 + data.CODMESO
+				data.CODMESO = data.CODMESO * 2
+				table.insert(amlLuaTable, amlDset[i])
+			end
 
-		local newLnDset = TerraLib().getDataSet(proj, newLnName, 0)
-		unitTest:assertEquals(getn(newLnDset), 182)
-		unitTest:assertEquals(getn(newLnDset), getn(lnDset))
+			local amlCurrDirNameNew = "AmlCurrDirNew"
+			TerraLib().saveDataSet(proj, amlCurrDirName, amlLuaTable, amlCurrDirNameNew, {"CODMESO"})
 
-		attrNames = TerraLib().getPropertyNames(proj, newLnName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("OBSERVACAO", attrNames[3])
-		unitTest:assertEquals("PRODUTOS", attrNames[6])
-		unitTest:assertEquals("OPERADORA", attrNames[9])
-		unitTest:assertEquals("Bitola_Ext", attrNames[12])
-		unitTest:assertEquals("COD_PNV", attrNames[14])
-		unitTest:assertEquals("attr1", attrNames[15])
+			local amlDsetNew = TerraLib().getDataSet(proj, amlCurrDirNameNew, 0)
+			local sum2 = 0
+			for i = 0, getn(amlDsetNew) - 1 do
+				local data = amlDsetNew[i]
+				sum2 = sum2 + data.CODMESO
+			end
 
-		-- ADD NEW ATTRIBUTE AND UPDATE A OLD
-		lnLuaTable = {}
-		for i = 0, getn(lnDset) - 1 do
-			local data = lnDset[i]
-			data.attr1 = i + 1000
-			data.attr2 = "test"..i
-			data.attr3 = (i % 2) == 0
-			table.insert(lnLuaTable, lnDset[i])
+			unitTest:assertEquals(sum2, 2 * sum1)
+
+			local amlCurrDirNameNew2 = "AmlCurrDirNew2"
+			local amlCurrDirLuaTable = {}
+			for i = 0, getn(amlDsetNew) - 1 do
+				local data = amlDsetNew[i]
+				data.CODMESOBKP = data.CODMESO
+				data.CODMESO = data.CODMESO * 2
+				table.insert(amlCurrDirLuaTable, amlDsetNew[i])
+			end
+			TerraLib().saveDataSet(proj, amlCurrDirNameNew, amlCurrDirLuaTable, amlCurrDirNameNew2, {"CODMESO", "CODMESOBKP"})
+
+			local amlDsetNew2 = TerraLib().getDataSet(proj, amlCurrDirNameNew2, 0)
+			local sum3 = 0
+			local bkpSum = 0
+			for i = 0, getn(amlDsetNew2) - 1 do
+				local data = amlDsetNew2[i]
+				sum3 = sum3 + data.CODMESO
+				bkpSum = bkpSum + data.CODMESOBKP
+			end
+
+			unitTest:assertEquals(sum3, 4 * sum1)
+			unitTest:assertEquals(sum3, 2 * bkpSum)
+
+			-- Integer 64
+			local ptName = "BR_Ports"
+			local ptFile = filePath("test/ports.shp", "gis")
+			TerraLib().addShpLayer(proj, ptName, ptFile)
+
+			fromData = {project = proj, layer = ptName}
+			toData = {file = "ports-rep.shp", type = "shp", srid = 4326}
+			File(toData.file):deleteIfExists()
+			TerraLib().saveLayerAs(fromData, toData, true)
+
+			local ptNameCd = "BR_Ports_CurrDir"
+			local ptFileCd = File(toData.file)
+			TerraLib().addShpLayer(proj, ptNameCd, ptFileCd)
+
+			local ptDset = TerraLib().getDataSet(proj, ptNameCd, 0)
+			local ptLuaTable = {}
+			for i = 0, getn(ptDset) - 1 do
+				local data = ptDset[i]
+				data.numbkp = data.numero
+				data.numero = data.numero * 2
+				table.insert(ptLuaTable, ptDset[i])
+			end
+
+			TerraLib().saveDataSet(proj, ptNameCd, ptLuaTable, ptNameCd, {"numero", "numbkp"})
+			local ptDsetUp = TerraLib().getDataSet(proj, ptNameCd, 0)
+
+			local ptPropsInfo = TerraLib().getPropertyInfos(proj, ptNameCd)
+			unitTest:assertEquals(ptPropsInfo[18].name, "numero")
+			unitTest:assertEquals(ptPropsInfo[18].type, "integer 64")
+			local ptPropsInfoLastPos = getn(ptPropsInfo) - 2
+			unitTest:assertEquals(ptPropsInfo[ptPropsInfoLastPos].name, "numbkp")
+			unitTest:assertEquals(ptPropsInfo[ptPropsInfoLastPos].type, "double")
+
+			for i = 0, getn(ptDsetUp) - 1 do
+				unitTest:assertEquals(ptDsetUp[i].numero, ptDsetUp[i].numbkp * 2)
+			end
+
+			File(amlCurrDirName..".shp"):delete()
+			File(amlCurrDirNameNew..".shp"):delete()
+			File(amlCurrDirNameNew2..".shp"):delete()
+			ptFileCd:delete()
+			proj.file:delete()
 		end
 
-		TerraLib().saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
-		attrNames = TerraLib().getPropertyNames(proj, newLnName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("OBSERVACAO", attrNames[3])
-		unitTest:assertEquals("PRODUTOS", attrNames[6])
-		unitTest:assertEquals("OPERADORA", attrNames[9])
-		unitTest:assertEquals("Bitola_Ext", attrNames[12])
-		unitTest:assertEquals("COD_PNV", attrNames[14])
-		unitTest:assertEquals("attr1", attrNames[15])
-		unitTest:assertEquals("attr2", attrNames[16])
-		unitTest:assertEquals("attr3", attrNames[17])
-
-		-- ADD NEW ATTRIBUTE AND UPDATE THREE OLD
-		lnLuaTable = {}
-		for i = 0, getn(lnDset) - 1 do
-			local data = lnDset[i]
-			data.attr1 = i + 1000
-			data.attr2 = "test"..i
-			data.attr3 = (i % 2) == 0
-			data.attr4 = data.attr1 * 2
-			table.insert(lnLuaTable, lnDset[i])
-		end
-
-		TerraLib().saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3", "attr4"})
-		attrNames = TerraLib().getPropertyNames(proj, newLnName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("OBSERVACAO", attrNames[3])
-		unitTest:assertEquals("PRODUTOS", attrNames[6])
-		unitTest:assertEquals("OPERADORA", attrNames[9])
-		unitTest:assertEquals("Bitola_Ext", attrNames[12])
-		unitTest:assertEquals("COD_PNV", attrNames[14])
-		unitTest:assertEquals("attr1", attrNames[15])
-		unitTest:assertEquals("attr2", attrNames[16])
-		unitTest:assertEquals("attr3", attrNames[17])
-		unitTest:assertEquals("attr4", attrNames[18])
-
-		-- ONLY UPDATE SOME ATTRIBUTE
-		lnLuaTable = {}
-		for i = 0, getn(lnDset) - 1 do
-			local data = lnDset[i]
-			data.attr1 = i - 1000
-			table.insert(lnLuaTable, lnDset[i])
-		end
-
-		TerraLib().saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1"})
-		attrNames = TerraLib().getPropertyNames(proj, newLnName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("OBSERVACAO", attrNames[3])
-		unitTest:assertEquals("PRODUTOS", attrNames[6])
-		unitTest:assertEquals("OPERADORA", attrNames[9])
-		unitTest:assertEquals("Bitola_Ext", attrNames[12])
-		unitTest:assertEquals("COD_PNV", attrNames[14])
-		unitTest:assertEquals("attr1", attrNames[15])
-		unitTest:assertEquals("attr2", attrNames[16])
-		unitTest:assertEquals("attr3", attrNames[17])
-
-		-- UPDATE MORE ATTRIBUTES
-		lnLuaTable = {}
-		for i = 0, getn(lnDset) - 1 do
-			local data = lnDset[i]
-			data.attr1 = i + 5000
-			data.attr2 = i.."data.attr2"
-			data.attr3 = ((i % 2) == 0) and data.attr3
-			table.insert(lnLuaTable, lnDset[i])
-		end
-
-		TerraLib().saveDataSet(proj, newLnName, lnLuaTable, newLnName, {"attr1", "attr2", "attr3"})
-		attrNames = TerraLib().getPropertyNames(proj, newLnName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("OBSERVACAO", attrNames[3])
-		unitTest:assertEquals("PRODUTOS", attrNames[6])
-		unitTest:assertEquals("OPERADORA", attrNames[9])
-		unitTest:assertEquals("Bitola_Ext", attrNames[12])
-		unitTest:assertEquals("COD_PNV", attrNames[14])
-		unitTest:assertEquals("attr1", attrNames[15])
-		unitTest:assertEquals("attr2", attrNames[16])
-		unitTest:assertEquals("attr3", attrNames[17])
-		unitTest:assertEquals("attr4", attrNames[18])
-
-		-- CHANGING INTEGER DATA AND OVERWRITE LAYER
-		local amlName = "Amazonia"
-		local amlFile = filePath("test/municipiosAML_ok.shp", "gis")
-		TerraLib().addShpLayer(proj, amlName, amlFile)
-
-		local amlCurrDirName = "AmlCurrDir"
-		toData = {}
-		toData.file = amlCurrDirName..".shp"
-		toData.type = "shp"
-		fromData.layer = amlName
-		TerraLib().saveLayerAs(fromData, toData, true)
-		TerraLib().addShpLayer(proj, amlCurrDirName, File(toData.file))
-
-		local amlDset = TerraLib().getDataSet(proj, amlName, 0)
-		local amlLuaTable = {}
-		local sum1 = 0
-		for i = 0, getn(amlDset) - 1 do
-			local data = amlDset[i]
-			sum1 = sum1 + data.CODMESO
-			data.CODMESO = data.CODMESO * 2
-			table.insert(amlLuaTable, amlDset[i])
-		end
-
-		local amlCurrDirNameNew = "AmlCurrDirNew"
-		TerraLib().saveDataSet(proj, amlCurrDirName, amlLuaTable, amlCurrDirNameNew, {"CODMESO"})
-
-		local amlDsetNew = TerraLib().getDataSet(proj, amlCurrDirNameNew, 0)
-		local sum2 = 0
-		for i = 0, getn(amlDsetNew) - 1 do
-			local data = amlDsetNew[i]
-			sum2 = sum2 + data.CODMESO
-		end
-
-		unitTest:assertEquals(sum2, 2 * sum1)
-
-		-- CHANGING INTEGER AND CREATE A NEW LAYER
-		local amlCurrDirNameNew2 = "AmlCurrDirNew2"
-		local amlCurrDirLuaTable = {}
-		for i = 0, getn(amlDsetNew) - 1 do
-			local data = amlDsetNew[i]
-			data.CODMESOBKP = data.CODMESO
-			data.CODMESO = data.CODMESO * 2
-			table.insert(amlCurrDirLuaTable, amlDsetNew[i])
-		end
-		TerraLib().saveDataSet(proj, amlCurrDirNameNew, amlCurrDirLuaTable, amlCurrDirNameNew2, {"CODMESO", "CODMESOBKP"})
-
-		local amlDsetNew2 = TerraLib().getDataSet(proj, amlCurrDirNameNew2, 0)
-		local sum3 = 0
-		local bkpSum = 0
-		for i = 0, getn(amlDsetNew2) - 1 do
-			local data = amlDsetNew2[i]
-			sum3 = sum3 + data.CODMESO
-			bkpSum = bkpSum + data.CODMESOBKP
-		end
-
-		unitTest:assertEquals(sum3, 4 * sum1)
-		unitTest:assertEquals(sum3, 2 * bkpSum)
-
-		cellsShp:delete()
-		File(newLayerName..".shp"):delete()
-		polFile:delete()
-		File(newPolName..".shp"):delete()
-		ptFile:delete()
-		File(newPtName..".shp"):delete()
-		lnFile:delete()
-		File(newLnName..".shp"):delete()
-		File(amlCurrDirName..".shp"):delete()
-		File(amlCurrDirNameNew..".shp"):delete()
-		File(amlCurrDirNameNew2..".shp"):delete()
-		proj.file:delete()
+		unitTest:assert(handlingCellularSpace)
+		unitTest:assert(handlingAttributesFromPolygonsData)
+		unitTest:assert(handlingAttributesFromPointsData)
+		unitTest:assert(handlingAttributesFromLinesData)
+		unitTest:assert(handlingIntegerAttributeValues)
 	end,
 	getOGRByFilePath = function(unitTest)
 		local shpFile = filePath("test/sampa.shp", "gis")

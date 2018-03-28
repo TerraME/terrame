@@ -2665,7 +2665,9 @@ TerraLib_ = {
 			local connInfo = dsInfo:getConnInfo()
 			local fromType = dsInfo:getType()
 
-			if not toSetName then
+			if fromLayerName == toLayerName then
+				toSetName = dseName
+			elseif not toSetName then
 				toSetName = toLayerName
 			end
 
@@ -2682,7 +2684,7 @@ TerraLib_ = {
 				attrs = {}
 			end
 
-			if (dseName == toSetName) or (toLayerName == fromLayerName) then
+			if dseName == toSetName then
 				if #attrs > 0 then
 					if hasNewAttributeOnLayer(fromLayer, attrs) then
 						createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
