@@ -174,227 +174,115 @@ return{
 		unitTest:assertWarning(replaceWarn, "Function 'getNeighborhood()' from Cell is replaced in the instance.")
 		unitTest:assertEquals(cs:sample():getNeighborhood(), "neighbor")
 
-		-- Shapefile
-		local projName = "cellspace.tview"
-		local author = "Avancini"
-		local title = "Cellular Space"
-
 		local gis = getPackage("gis")
-
-		local proj = gis.Project{
-			file = projName,
-			clean = true,
-			author = author,
-			title = title
-		}
-
-		local layerName1 = "Sampa"
-
-		gis.Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/sampa.shp", "gis"),
-		}
-
-		local testDir = currentDir()
-		local shp1 = "sampa_cells.shp"
-		local filePath1 = testDir..shp1
-		local fn1 = File(filePath1):name()
-		fn1 = testDir..fn1
-
-		File(fn1):deleteIfExists()
-
-		local clName1 = "Sampa_Cells"
-		local layer = gis.Layer{
-			project = proj,
-			clean = true,
-			input = layerName1,
-			name = clName1,
-			resolution = 1,
-			file = filePath1
-		}
-
-		local geometryDefaultValue = function()
-			cs = CellularSpace{
-				project = projName,
-				layer = clName1,
-				geometry = true
+		local createProject = function()
+			return gis.Project{
+				file = "cellspace_basic.tview",
+				clean = true,
+				author = "Avancini",
+				title = "Cellular Space Tests"
 			}
 		end
-		unitTest:assertWarning(geometryDefaultValue, defaultValueMsg("geometry", true))
 
-		unitTest:assertEquals(File(projName), cs.project.file)
-		unitTest:assertType(cs.layer, "Layer")
+		local shapeFileTests = function()
+			local proj = createProject()
 
-		unitTest:assertEquals(proj.title, title)
-		unitTest:assertEquals(proj.author, author)
+			local layerName1 = "Sampa"
 
-		unitTest:assertEquals(layer.source, "shp")
-		unitTest:assertEquals(layer.file, filePath1)
-
-		cs = CellularSpace{
-			file = filePath1
-		}
-
-		unitTest:assert(#cs.cells > 0)
-
-		forEachCell(cs, function(c)
-			unitTest:assertNotNil(c.x)
-			unitTest:assertNotNil(c.y)
-		end)
-
-		cs = CellularSpace{
-			project = projName,
-			layer = clName1,
-			geometry = false
-		}
-
-		forEachCell(cs, function(c)
-			unitTest:assertNil(c.geom)
-			unitTest:assertNil(c.OGR_GEOMETRY)
-		end)
-
-		cs = CellularSpace{
-			project = projName,
-			layer = clName1,
-			geometry = false
-		}
-
-		forEachCell(cs, function(c)
-			unitTest:assertNil(c.geom)
-			unitTest:assertNil(c.OGR_GEOMETRY)
-		end)
-
-		File(projName):deleteIfExists()
-		File(fn1):deleteIfExists()
-
-		-- GeoJSON
-		author = "Carneiro Heitor"
-
-		projName = "geojson_cellspace.tview"
-		title = "GeoJSON Cellular Space"
-
-		proj = gis.Project{
-			file = projName,
-			clean = true,
-			author = author,
-			title = title
-		}
-
-		layerName1 = "GeoJSON_Sampa"
-
-		gis.Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/sampa.geojson", "gis")
-		}
-
-		cs = CellularSpace{
-			project = projName,
-			layer = layerName1
-		}
-
-		forEachCell(cs, function(c)
-			unitTest:assertEquals(c.CD_GEOCODU, "35")
-			unitTest:assertNotNil(c.NM_MICRO)
-		end)
-
-		local geojson1 = "geojson_sampa_cells.geojson"
-		filePath1 = testDir..geojson1
-
-		File(filePath1):deleteIfExists()
-
-		clName1 = "GeoJSON_Sampa_Cells"
-		layer = gis.Layer{
-			project = proj,
-			input = layerName1,
-			name = clName1,
-			resolution = 1,
-			file = filePath1
-		}
-
-		cs = CellularSpace{
-			project = projName,
-			layer = clName1
-		}
-
-		unitTest:assertEquals(projName, cs.project.file:name())
-		unitTest:assertType(cs.layer, "Layer")
-
-		unitTest:assertEquals(proj.title, title)
-		unitTest:assertEquals(proj.author, author)
-
-		unitTest:assertEquals(layer.source, "geojson")
-		unitTest:assertEquals(layer.file, filePath1)
-		unitTest:assert(#cs.cells > 0)
-
-		cs = CellularSpace{
-			file = filePath1
-		}
-
-		unitTest:assert(#cs.cells > 0)
-
-		forEachCell(cs, function(c)
-			unitTest:assertNotNil(c.x)
-			unitTest:assertNotNil(c.y)
-		end)
-
-		cs = CellularSpace{
-			project = projName,
-			layer = clName1
-		}
-
-		forEachCell(cs, function(c)
-			unitTest:assertNotNil(c.geom)
-			unitTest:assertNil(c.OGR_GEOMETRY)
-		end)
-
-		cs = CellularSpace{
-			project = projName,
-			layer = clName1,
-			geometry = false
-		}
-
-		forEachCell(cs, function(c)
-			unitTest:assertNil(c.geom)
-			unitTest:assertNil(c.OGR_GEOMETRY)
-		end)
-
-		File(projName):deleteIfExists()
-		File(geojson1):deleteIfExists()
-
-		if _Gtme.sessionInfo().system == "windows" then
-			-- Tif
-			projName = "tif_four_cellspace.tview"
-			title = "Tif Cellular Space"
-
-			proj = gis.Project{
-				file = projName,
-				clean = true,
-				author = author,
-				title = title
+			gis.Layer{
+				project = proj,
+				name = layerName1,
+				file = filePath("test/sampa.shp", "gis"),
 			}
 
-			layerName1 = "tif_one_Layer"
-			filePath1 = filePath("itaituba-elevation.tif", "gis")
+			local testDir = currentDir()
+			local shp1 = "sampa_cells.shp"
+			local filePath1 = testDir..shp1
+			local fn1 = File(filePath1):name()
+			fn1 = testDir..fn1
 
-			layer = gis.Layer{
+			File(fn1):deleteIfExists()
+
+			local clName1 = "Sampa_Cells"
+			local layer = gis.Layer{
+				project = proj,
+				clean = true,
+				input = layerName1,
+				name = clName1,
+				resolution = 1,
+				file = filePath1
+			}
+
+			local geometryDefaultValue = function()
+				cs = CellularSpace{
+					project = proj,
+					layer = clName1,
+					geometry = true
+				}
+			end
+			unitTest:assertWarning(geometryDefaultValue, defaultValueMsg("geometry", true))
+
+			unitTest:assertEquals(proj.file, cs.project.file)
+			unitTest:assertType(cs.layer, "Layer")
+			unitTest:assertEquals(layer.source, "shp")
+			unitTest:assertEquals(layer.file, filePath1)
+
+			cs = CellularSpace{
+				file = filePath1
+			}
+
+			unitTest:assert(#cs.cells > 0)
+
+			forEachCell(cs, function(c)
+				unitTest:assertNotNil(c.x)
+				unitTest:assertNotNil(c.y)
+			end)
+
+			cs = CellularSpace{
+				project = proj,
+				layer = clName1,
+				geometry = false
+			}
+
+			forEachCell(cs, function(c)
+				unitTest:assertNil(c.geom)
+				unitTest:assertNil(c.OGR_GEOMETRY)
+			end)
+
+			cs = CellularSpace{
+				project = proj,
+				layer = clName1,
+				geometry = false
+			}
+
+			forEachCell(cs, function(c)
+				unitTest:assertNil(c.geom)
+				unitTest:assertNil(c.OGR_GEOMETRY)
+			end)
+
+			proj.file:delete()
+			File(fn1):delete()
+		end
+
+		local tifTests = function()
+			local proj = createProject()
+
+			local layerName1 = "tif_one_Layer"
+			local filePath1 = filePath("itaituba-elevation.tif", "gis")
+
+			local layer = gis.Layer{
 				project = proj,
 				name = layerName1,
 				file = filePath1
 			}
 
-			cs = CellularSpace{
-				project = projName,
+			local cs = CellularSpace{
+				project = proj,
 				layer = layerName1
 			}
 
-			unitTest:assertEquals(projName, cs.project.file:name()) -- SKIP
+			unitTest:assertEquals(proj.file:name(), cs.project.file:name()) -- SKIP
 			unitTest:assertType(cs.layer, "Layer") -- SKIP
-
-			unitTest:assertEquals(proj.title, title) -- SKIP
-			unitTest:assertEquals(proj.author, author) -- SKIP
-
 			unitTest:assertEquals(layer.source, "tif") -- SKIP
 			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
 			unitTest:assertEquals(#cs, 17928) -- SKIP
@@ -404,23 +292,16 @@ return{
 			}
 
 			unitTest:assertEquals(#cs, 17928) -- SKIP
-			File(projName):deleteIfExists()
+			proj.file:delete()
+		end
 
-			-- NetCDF
-			projName = "nc_cellspace.tview"
-			title = "NC Cellular Space"
+		local netCdfTests = function()
+			local proj = createProject()
 
-			proj = gis.Project{
-				file = projName,
-				clean = true,
-				author = author,
-				title = title
-			}
+			local layerName1 = "NC_vegtype2000"
+			local filePath1 = filePath("test/vegtype_2000.nc", "gis")
 
-			layerName1 = "NC_vegtype2000"
-			filePath1 = filePath("test/vegtype_2000.nc", "gis")
-
-			layer = gis.Layer{
+			local layer = gis.Layer{
 				project = proj,
 				name = layerName1,
 				file = filePath1,
@@ -428,16 +309,12 @@ return{
 			}
 
 			cs = CellularSpace{
-				project = projName,
+				project = proj,
 				layer = layerName1
 			}
 
-			unitTest:assertEquals(projName, cs.project.file:name()) -- SKIP
+			unitTest:assertEquals(proj.file:name(), cs.project.file:name()) -- SKIP
 			unitTest:assertType(cs.layer, "Layer") -- SKIP
-
-			unitTest:assertEquals(proj.title, title) -- SKIP
-			unitTest:assertEquals(proj.author, author) -- SKIP
-
 			unitTest:assertEquals(layer.source, "nc") -- SKIP
 			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
 			unitTest:assertEquals(#cs.cells, 8904) -- SKIP
@@ -447,39 +324,28 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 8904) -- SKIP
-			File(projName):deleteIfExists()
+			proj.file:delete()
+		end
 
-			-- ASC
-			projName = "asc_cellspace.tview"
-			title = "Asc Cellular Space"
+		local ascTests = function()
+			local proj = createProject()
 
-			proj = gis.Project{
-				file = projName,
-				clean = true,
-				author = author,
-				title = title
-			}
+			local layerName1 = "ASC_biomassa-manaus"
+			local filePath1 = filePath("test/biomassa-manaus.asc", "gis")
 
-			layerName1 = "ASC_biomassa-manaus"
-			filePath1 = filePath("test/biomassa-manaus.asc", "gis")
-
-			layer = gis.Layer{
+			local layer = gis.Layer{
 				project = proj,
 				name = layerName1,
 				file = filePath1
 			}
 
-			cs = CellularSpace{
-				project = projName,
+			local cs = CellularSpace{
+				project = proj,
 				layer = layerName1
 			}
 
-			unitTest:assertEquals(projName, cs.project.file:name()) -- SKIP
+			unitTest:assertEquals(proj.file:name(), cs.project.file:name()) -- SKIP
 			unitTest:assertType(cs.layer, "Layer") -- SKIP
-
-			unitTest:assertEquals(proj.title, title) -- SKIP
-			unitTest:assertEquals(proj.author, author) -- SKIP
-
 			unitTest:assertEquals(layer.source, "asc") -- SKIP
 			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
@@ -489,8 +355,138 @@ return{
 			}
 
 			unitTest:assertEquals(#cs.cells, 9964) -- SKIP
-			File(projName):deleteIfExists()
+			proj.file:delete()
 		end
+
+		local geoJsonTests = function()
+			local projName = "geojson_cellspace.tview"
+			local proj = gis.Project{
+				file = projName,
+				clean = true,
+				author = "Carneiro Heitor",
+				title = "GeoJSON Cellular Space"
+			}
+
+			local gjLayerName = "GeoJSON_ES"
+			local esGjLayer = gis.Layer{
+				project = proj,
+				name = gjLayerName,
+				file = filePath("test/es_sirgas2000_5880.geojson", "gis")
+			}
+
+			local esGj = CellularSpace{
+				project = proj,
+				layer = gjLayerName
+			}
+
+			local esShp = CellularSpace{
+				project = proj,
+				layer = gjLayerName
+			}
+
+			local esShpLayer = gis.Layer {
+				project = proj,
+				name = "ESShp",
+				file = filePath("test/es_sirgas2000_5880.shp", "gis")
+			}
+
+			local esShp = CellularSpace {
+				project = proj,
+				layer = esShpLayer.name
+			}
+
+			unitTest:assertEquals(#esShp, #esGj)
+
+			for i = 0, #esShp - 1 do
+				local s = tostring(i)
+				unitTest:assertEquals(esShp:get(s).idh_POP, esGj:get(s).idh_POP)
+			end
+
+			local gjCsFile = File("gjSpCs.geojson")
+			gjCsFile:deleteIfExists()
+			local gjCsLayerName = "GeoJSON_ES_Cells"
+			local resolution = 20e3
+
+			local gjCsLayer = gis.Layer{
+				project = proj,
+				input = gjLayerName,
+				name = gjCsLayerName,
+				resolution = resolution,
+				file = gjCsFile
+			}
+
+			local esGjCs = CellularSpace{
+				project = proj,
+				layer = gjCsLayerName
+			}
+
+			unitTest:assertEquals(projName, esGjCs.project.file:name())
+			unitTest:assertType(esGjCs.layer, "Layer")
+			unitTest:assertEquals(gjCsLayer.source, "geojson")
+			unitTest:assertEquals(gjCsLayer.file, tostring(gjCsFile)) -- TODO(#2176)
+			unitTest:assert(#esGjCs.cells > 0)
+
+			forEachCell(esGjCs, function(c)
+				unitTest:assertNotNil(c.x)
+				unitTest:assertNotNil(c.y)
+				unitTest:assertNotNil(c.geom)
+			end)
+
+			local esShpCsLayer = gis.Layer{
+				project = proj,
+				input = esShpLayer.name,
+				name = "ES_Cells_Shp",
+				resolution = resolution,
+				file = "esShpCs.shp",
+				clean = true
+			}
+
+			local esShpCs = CellularSpace {
+				project = proj,
+				layer = esShpCsLayer.name
+			}
+
+			unitTest:assertEquals(#esGjCs, #esShpCs)
+
+			for i = 0, #esGjCs - 1 do
+				local s = tostring(i)
+				unitTest:assertEquals(esShpCs:get(s).id, esGjCs:get(s).id)
+			end
+
+			local gjCsWithoutProject = CellularSpace{
+				file = gjCsFile
+			}
+
+			unitTest:assert(#gjCsWithoutProject.cells > 0)
+
+			forEachCell(gjCsWithoutProject, function(c)
+				unitTest:assertNotNil(c.x)
+				unitTest:assertNotNil(c.y)
+				unitTest:assertNotNil(c.geom)
+			end)
+
+			local gjCsWithoutGeom = CellularSpace{
+				project = projName,
+				layer = gjCsLayerName,
+				geometry = false
+			}
+
+			forEachCell(gjCsWithoutGeom, function(c)
+				unitTest:assertNil(c.geom)
+			end)
+
+			gjCsFile:delete()
+			esShpCsLayer:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(shapeFileTests)
+		if _Gtme.sessionInfo().system == "windows" then
+			unitTest:assert(tifTests) -- SKIP
+			unitTest:assert(netCdfTests) -- SKIP
+			unitTest:assert(ascTests) -- SKIP
+		end
+		unitTest:assert(geoJsonTests)
 	end,
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

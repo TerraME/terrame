@@ -33,6 +33,31 @@ return {
 		unitTest:assertEquals(TerraLib().getVersion(), "5.3.1")
 	end,
 	createProject = function(unitTest)
+		local happyPath = function()
+			local title = "TerraLib Tests"
+			local author = "Carneiro Heitor"
+			local file = "myproject.tview"
+
+			local proj = {
+				file = file,
+				title = title,
+				author = author
+			}
+
+			File(proj.file):deleteIfExists()
+
+			TerraLib().createProject(proj, {})
+
+			unitTest:assert(proj.file:exists())
+			unitTest:assertEquals(proj.file:name(), file)
+			unitTest:assertEquals(proj.title, title)
+			unitTest:assertEquals(proj.author, author)
+
+			proj.file:delete()
+		end
+
+		unitTest:assert(happyPath)
+
 		-- QGIS PROJECT
 		-- shp
 		local proj = {

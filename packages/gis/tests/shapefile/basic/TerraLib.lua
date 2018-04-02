@@ -23,29 +23,6 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	createProject = function(unitTest)
-		local title = "TerraLib Tests"
-		local author = "Avancini Rodrigo"
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = title
-		proj.author = author
-
-		local file = File(proj.file)
-		file:deleteIfExists()
-
-		TerraLib().createProject(proj, {})
-		unitTest:assert(file:exists())
-		unitTest:assertEquals(proj.file:name(), "myproject.tview")
-		unitTest:assertEquals(proj.title, title)
-		unitTest:assertEquals(proj.author, author)
-
-		-- allow overwrite
-		TerraLib().createProject(proj, {})
-		unitTest:assert(proj.file:exists())
-
-		file:delete()
-	end,
 	addShpLayer = function(unitTest)
 		local proj = {}
 		proj.file = "myproject.tview"
