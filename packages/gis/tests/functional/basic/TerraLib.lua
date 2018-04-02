@@ -30,7 +30,7 @@ return {
 		unitTest:assertEquals(t1, t2)
 	end,
 	getVersion = function(unitTest)
-		unitTest:assertEquals(TerraLib().getVersion(), "5.2.2")
+		unitTest:assertEquals(TerraLib().getVersion(), "5.3.1")
 	end,
 	createProject = function(unitTest)
 		-- QGIS PROJECT
@@ -195,6 +195,11 @@ return {
 		proj.file = filePath("test/webservice.qgs", "gis")
 		TerraLib().createProject(proj)
 
+		local wmsDir = Directory("wms")
+		if wmsDir:exists() then
+			wmsDir:delete()
+		end
+
 		layerInfo = TerraLib().getLayerInfo(proj, "LANDSAT2013")
 		unitTest:assertEquals(layerInfo.name, "LANDSAT2013")
 		unitTest:assertEquals(layerInfo.rep, "raster")
@@ -215,6 +220,7 @@ return {
 		unitTest:assertEquals(layerInfo.dataset, "reddpac:LandCover2000")
 		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
 
+		wmsDir:delete()
 		File("webservice.tview"):delete()
 		-- // QGIS PROJECT
 	end,

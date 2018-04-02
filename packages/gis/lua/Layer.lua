@@ -1192,7 +1192,7 @@ Layer_ = {
 		end
 
 		if self.project.layers[newLayerName] then
-			customWarning("Layer '"..newLayerName.."' already exisists.")
+			customWarning("Layer '"..newLayerName.."' already exists.") -- SKIP
 		end
 
 		local temporalLayers = {}
@@ -1224,15 +1224,15 @@ Layer_ = {
 		forEachElement(attributes, function(attribute, layers)
 			if #layers == 1 or belong(attribute, {"id", "col", "row", "OGR_GEOMETRY","ogr_geometry", "FID"})  then
 				local layer = self.name
-				if not mapAttributes[layer] then
+				if not mapAttributes[layer] then -- SKIP
 					mapAttributes[layer] = {}
 				end
 
-				table.insert(nonTemporalAttributes, attribute)
+				table.insert(nonTemporalAttributes, attribute) -- SKIP
 			else
 				forEachElement(layers, function(_, layerData)
 					local layer = layerData.layer
-					if not mapAttributes[layer] then
+					if not mapAttributes[layer] then -- SKIP
 						mapAttributes[layer] = {}
 					end
 
@@ -1246,28 +1246,28 @@ Layer_ = {
 		local tempLayer = "_l_y_r_"
 		local tempFile = tempLayer.."."..self.source
 		local to = {file = tempFile, type = self.source}
-		TerraLib().saveLayerAs(from, to, true, nonTemporalAttributes)
+		TerraLib().saveLayerAs(from, to, true, nonTemporalAttributes) -- SKIP
 		Layer{project = self.project, file = tempFile, name = tempLayer}
 		local toSet = {}
 		local attrs = {}
 		forEachElement(mapAttributes, function(layer, mapAttribute)
 			local dset = TerraLib().getDataSet(self.project, layer)
 			for i = 0, #dset do
-				if not toSet[i + 1] then
+				if not toSet[i + 1] then -- SKIP
 					toSet[i + 1] = {}
 				end
 
 				for _, attr in pairs(mapAttribute) do
-					toSet[i + 1][attr.newLayerAttributeName] = dset[i][attr.attributeName]
-					if not belong(attr.newLayerAttributeName, attrs) then
-						table.insert(attrs, attr.newLayerAttributeName)
+					toSet[i + 1][attr.newLayerAttributeName] = dset[i][attr.attributeName] -- SKIP
+					if not belong(attr.newLayerAttributeName, attrs) then -- SKIP
+						table.insert(attrs, attr.newLayerAttributeName) -- SKIP
 					end
 				end
 			end
 		end)
 
-		TerraLib().saveDataSet(self.project, tempLayer, toSet, newLayerName, attrs)
-		TerraLib().removeLayer(self.project, tempLayer)
+		TerraLib().saveDataSet(self.project, tempLayer, toSet, newLayerName, attrs) -- SKIP
+		TerraLib().removeLayer(self.project, tempLayer) -- SKIP
 		return Layer{project = self.project, name = newLayerName}
 	end
 }
@@ -1287,7 +1287,7 @@ metaTableLayer_ = {
 -- Each Layer belongs to a Project.
 -- It is possible to use data stored in different data sources to create
 -- a Layer, or to create a cellular Layer from scratch. Cellular Layers
--- homogeneize the spatial representation of a given
+-- homogenize the spatial representation of a given
 -- model, making the model simpler and requiring less computational
 -- resources. Layer gets different arguments, depending on the task one needs
 -- to execute. See the table below.
@@ -1308,7 +1308,8 @@ metaTableLayer_ = {
 -- @arg data.service A string with the description of a WFS or WMS location.
 -- When the string contains wms or wfs in its content, the argument source can be avoided.
 -- @arg data.feature A string with the name of the feature to be read from a WFS.
--- @arg data.map A string with the name of the map to be read from a WMS.
+-- @arg data.map A string with the name of the map to be read from a WMS. The map will be
+-- saved in the current directory within wms subdirectory automatically created.
 -- @arg data.format A string with the image format available in a WMS ("png", default).
 -- You can use another format if available in the WMS ("jpeg", "tiff", "geotiff", etc).
 -- @tabular source

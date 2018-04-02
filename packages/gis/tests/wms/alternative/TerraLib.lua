@@ -54,11 +54,17 @@ return {
 		conn.url = "http://terrabrasilis.info/terraamazon/ows"
 		dataset = "INVALID_DATASET"
 
+		local wmsDir = Directory("wms")
+		if wmsDir:exists() then
+			wmsDir:delete()
+		end
+
 		local invalidDataset = function()
 			TerraLib().addWmsLayer(proj, layerName, conn, dataset)
 		end
 		unitTest:assertError(invalidDataset,  "Map 'INVALID_DATASET' was not found in WMS server.")
 
 		file:delete()
+		wmsDir:delete()
 	end
 }

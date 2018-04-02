@@ -24,6 +24,11 @@
 
 return {
 	addWmsLayer = function(unitTest)
+		local wmsDir = Directory("wms")
+		if wmsDir:exists() then
+			wmsDir:delete()
+		end
+
 		local title = "TerraLib Tests"
 		local author = "Avancini Rodrigo"
 		local file = File("terralib_wms_basic.tview")
@@ -59,5 +64,6 @@ return {
 		unitTest:assertEquals(layerInfo.srid, srid)
 
 		file:delete()
+		wmsDir:delete()
 	end
 }
