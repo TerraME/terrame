@@ -1693,137 +1693,170 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "Point")
 	end,
 	saveLayerAs = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-
-		File(proj.file):deleteIfExists()
-
-		TerraLib().createProject(proj, {})
-
-		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("test/sampa.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName1, layerFile1)
-
-		local fromData = {}
-		fromData.project = proj
-		fromData.layer = layerName1
-
-		local toData = {}
-
-		-- GEOJSON
-		toData.file = "shp2geojson.geojson"
-		toData.type = "geojson"
-		File(toData.file):deleteIfExists()
-
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		unitTest:assert(File(toData.file):exists())
-
-		-- OVERWRITE
-		local overwrite = true
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		unitTest:assert(File(toData.file):exists())
-
-		-- OVERWRITE AND CHANGE SRID
-		toData.srid = 4326
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		local layerName2 = "GJ"
-		TerraLib().addGeoJSONLayer(proj, layerName2, toData.file)
-		local info2 = TerraLib().getLayerInfo(proj, layerName2)
-		unitTest:assertEquals(info2.srid, toData.srid)
-
-		File(toData.file):delete()
-
-		-- SHP
-		toData.file = "shp2shp.shp"
-		toData.type = "shp"
-		File(toData.file):deleteIfExists()
-
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		unitTest:assert(File(toData.file):exists())
-
-		-- OVERWRITE AND CHANGE SRID
-		toData.srid = 4326
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		local layerName3 = "SHP"
-		TerraLib().addShpLayer(proj, layerName3, File(toData.file))
-		local info3 = TerraLib().getLayerInfo(proj, layerName3)
-		unitTest:assertEquals(info3.srid, toData.srid)
-
-		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE
-		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO"})
-		local dset3 = TerraLib().getDataSet(proj, layerName3)
-
-		unitTest:assertEquals(getn(dset3), 63)
-
-		for k, v in pairs(dset3[0]) do
-			unitTest:assert(((k == "FID") and (v == 0)) or ((k == "OGR_GEOMETRY") and (v ~= nil) ) or
-							((k == "NM_MICRO") and (v == "VOTUPORANGA")))
+		local sampaLayerName = "SampaShp"
+		local createProjectWithSampaLayer = function()
+			local proj = {
+				file = "savelayeras_shp_basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+			TerraLib().addShpLayer(proj, sampaLayerName, filePath("test/sampa.shp", "gis"))
+			return proj
 		end
 
-		File(toData.file):delete()
+		local shpToGeoJson = function()
+			local proj = createProjectWithSampaLayer()
+			local fromData = {project = proj, layer = sampaLayerName}
+			local toData = {file = "shp2geojson.geojson", type = "geojson"}
+			File(toData.file):deleteIfExists()
 
-		-- SAVE A DATA SUBSET
-		local dset1 = TerraLib().getDataSet(proj, layerName1)
-		local sjc
-		for i = 0, getn(dset1) - 1 do
-			if dset1[i].ID == 27 then
-				sjc = dset1[i]
+			TerraLib().saveLayerAs(fromData, toData)
+			unitTest:assert(File(toData.file):exists())
+
+			-- OVERWRITE
+			local overwrite = true
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			unitTest:assert(File(toData.file):exists())
+
+			-- OVERWRITE AND CHANGE SRID
+			toData.srid = 4326
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			local layerName2 = "GJ"
+			TerraLib().addGeoJSONLayer(proj, layerName2, toData.file)
+			local info2 = TerraLib().getLayerInfo(proj, layerName2)
+			unitTest:assertEquals(info2.srid, toData.srid)
+
+			File(toData.file):delete()
+			proj.file:delete()
+		end
+
+		local shpToShp = function()
+			local proj = createProjectWithSampaLayer()
+			local fromData = {project = proj, layer = sampaLayerName}
+			local toData = {file = "shp2shp.shp", type = "shp"}
+			File(toData.file):deleteIfExists()
+
+			TerraLib().saveLayerAs(fromData, toData)
+			unitTest:assert(File(toData.file):exists())
+
+			-- OVERWRITE AND CHANGE SRID
+			local overwrite = true
+			toData.srid = 4326
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			local layerName3 = "SHP"
+			TerraLib().addShpLayer(proj, layerName3, File(toData.file))
+			local info3 = TerraLib().getLayerInfo(proj, layerName3)
+			unitTest:assertEquals(info3.srid, toData.srid)
+
+			File(toData.file):delete()
+			proj.file:delete()
+		end
+
+		local saveJustOneProperty = function()
+			local proj = createProjectWithSampaLayer()
+			local fromData = {project = proj, layer = sampaLayerName}
+			local toData = {file = "shp2shp.shp", type = "shp"}
+			local overwrite = true
+
+			TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO"})
+
+			local layerName2 = "OneProp"
+			TerraLib().addShpLayer(proj, layerName2, File(toData.file))
+			local dset = TerraLib().getDataSet(proj, layerName2)
+
+			unitTest:assertEquals(getn(dset), 63)
+			for k, v in pairs(dset[0]) do
+				unitTest:assert(((k == "FID") and (v == 0)) or ((k == "OGR_GEOMETRY") and (v ~= nil) ) or
+								((k == "NM_MICRO") and (v == "VOTUPORANGA")))
 			end
+
+			File(toData.file):delete()
+			proj.file:delete()
 		end
 
-		local touches = {}
-		local j = 1
-		for i = 0, getn(dset1) - 1 do
-			if sjc.OGR_GEOMETRY:touches(dset1[i].OGR_GEOMETRY) then
-				touches[j] = dset1[i]
-				j = j + 1
+		-- SAVE DATA SUBSET TESTS
+		local createSubsetTable = function()
+			local proj = createProjectWithSampaLayer()
+			local dset1 = TerraLib().getDataSet(proj, sampaLayerName)
+			local sjc
+			for i = 0, getn(dset1) - 1 do
+				if dset1[i].ID == 27 then
+					sjc = dset1[i]
+				end
 			end
+
+			local touches = {}
+			local j = 1
+			for i = 0, getn(dset1) - 1 do
+				if sjc.OGR_GEOMETRY:touches(dset1[i].OGR_GEOMETRY) then
+					touches[j] = dset1[i]
+					j = j + 1
+				end
+			end
+
+			proj.file:delete()
+
+			return touches
 		end
 
-		toData.file = "touches_sjc.shp"
-		toData.srid = nil
+		local subset = createSubsetTable()
 
-		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+		local saveLayerSubset = function()
+			local proj = createProjectWithSampaLayer()
+			local fromData = {project = proj, layer = sampaLayerName}
+			local toData = {file = "touches_sjc.shp", type = "shp"}
+			local overwrite = true
 
-		local tchsSjc = TerraLib().getOGRByFilePath(toData.file)
+			TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, subset)
 
-		unitTest:assertEquals(getn(tchsSjc), 2)
-		unitTest:assertEquals(tchsSjc[0].ID, 55)
-		unitTest:assertEquals(tchsSjc[1].ID, 109)
+			local tchsSjc = TerraLib().getOGRByFilePath(toData.file)
 
-		File(toData.file):delete()
-		proj.file:delete()
+			unitTest:assertEquals(getn(tchsSjc), 2)
+			unitTest:assertEquals(tchsSjc[0].ID, 55)
+			unitTest:assertEquals(tchsSjc[1].ID, 109)
 
-		-- SAVE WITHOUT LAYER
-		fromData = {}
-		fromData.file = layerFile1
-		toData.file = "touches_sjc_2.shp"
+			File(toData.file):delete()
+			proj.file:delete()
+		end
 
-		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+		local saveSubsetWithoutLayer = function()
+			local fromData = {file = filePath("test/sampa.shp", "gis")}
+			local toData1 = {file = "touches_sjc_1.shp", type = "shp"}
+			local overwrite = true
 
-		local tchsSjc2 = TerraLib().getOGRByFilePath(toData.file)
+			-- Save just two
+			TerraLib().saveLayerAs(fromData, toData1, overwrite, {"NM_MICRO", "ID"}, subset)
 
-		unitTest:assertEquals(getn(tchsSjc2), 2)
-		unitTest:assertEquals(tchsSjc2[0].ID, 55)
-		unitTest:assertEquals(tchsSjc2[1].ID, 109)
+			local tchsSjc1 = TerraLib().getOGRByFilePath(toData1.file)
 
-		local toFile1 = toData.file
-		toData.file = "touches_sjc_3.shp"
+			unitTest:assertEquals(getn(tchsSjc1), 2)
+			unitTest:assertEquals(tchsSjc1[0].ID, 55)
+			unitTest:assertEquals(tchsSjc1[1].ID, 109)
 
-		TerraLib().saveLayerAs(fromData, toData, overwrite, nil, touches)
+			local toData2 = {file = "touches_sjc_2.shp", type = "shp"}
 
-		local tchsSjc3 = TerraLib().getOGRByFilePath(toData.file)
+			-- Save all
+			TerraLib().saveLayerAs(fromData, toData2, overwrite, nil, subset)
 
-		unitTest:assertEquals(getn(tchsSjc3), 2)
-		unitTest:assertEquals(tchsSjc3[1].FID, 1)
-		unitTest:assertEquals(tchsSjc3[1].ID, 109)
-		unitTest:assertEquals(tchsSjc3[1].NM_MICRO, "GUARULHOS")
-		unitTest:assertEquals(tchsSjc3[1].CD_GEOCODU, "35")
+			local tchsSjc2 = TerraLib().getOGRByFilePath(toData2.file)
 
-		File(toData.file):delete()
-		File(toFile1):delete()
+			unitTest:assertEquals(getn(tchsSjc2), 2)
+			unitTest:assertEquals(tchsSjc2[1].FID, 1)
+			unitTest:assertEquals(tchsSjc2[1].ID, 109)
+			unitTest:assertEquals(tchsSjc2[1].NM_MICRO, "GUARULHOS")
+			unitTest:assertEquals(tchsSjc2[1].CD_GEOCODU, "35")
+
+			File(toData1.file):delete()
+			File(toData2.file):delete()
+		end
+
+		unitTest:assert(shpToGeoJson)
+		unitTest:assert(shpToShp)
+		unitTest:assert(saveJustOneProperty)
+		unitTest:assert(saveLayerSubset)
+		unitTest:assert(saveSubsetWithoutLayer)
 	end,
 	getLayerSize = function(unitTest)
 		local proj = {}

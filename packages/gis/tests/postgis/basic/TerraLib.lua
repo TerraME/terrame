@@ -1792,22 +1792,18 @@ return {
 		TerraLib().dropPgDatabase(pgData)
 	end,
 	saveLayerAs = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-
-		File(proj.file):deleteIfExists()
-
-		TerraLib().createProject(proj, {})
-
-		local layerName1 = "Sampa"
-		local layerFile1 = filePath("test/sampa.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName1, layerFile1)
-
-		local fromData = {}
-		fromData.project = proj
-		fromData.layer = layerName1
+		local sampaLayerName = "SampaShp"
+		local createProjectWithSampaLayer = function()
+			local proj = {
+				file = "savelayeras_postgis_basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+			TerraLib().addShpLayer(proj, sampaLayerName, filePath("test/sampa.shp", "gis"))
+			return proj
+		end
 
 		-- POSTGIS
 		local host = "localhost"
@@ -1819,7 +1815,7 @@ return {
 		local tableName = "sampa"
 		local srid = 4019
 
-		local pgData = {
+		local spPgData = {
 			type = "postgis",
 			host = host,
 			port = port,
@@ -1831,172 +1827,256 @@ return {
 			srid = srid
 		}
 
-		local overwrite = true
-
-		TerraLib().saveLayerAs(fromData, pgData, overwrite)
-		local layerName2 = "PgLayer"
-		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
-
-		-- SHP
-		local toData = {}
-		toData.file = "postgis2shp.shp"
-		toData.type = "shp"
-		File(toData.file):deleteIfExists()
-		fromData.layer = layerName2
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		unitTest:assert(File(toData.file):exists())
-
-		-- OVERWRITE AND CHANGE SRID
-		toData.srid = 4326
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		local layerName3 = "PG2SHP"
-		TerraLib().addShpLayer(proj, layerName3, File(toData.file))
-		local info3 = TerraLib().getLayerInfo(proj, layerName3)
-		unitTest:assertEquals(info3.srid, toData.srid)
-
-		-- OVERWRITE POSTGIS AND CHANGE SRID
-		local info2 = TerraLib().getLayerInfo(proj, layerName2)
-		unitTest:assertEquals(info2.srid, 4019.0)
-		pgData.srid = 4326
-		fromData.layer = layerName1
-		TerraLib().saveLayerAs(fromData, pgData, overwrite)
-		info2 = TerraLib().getLayerInfo(proj, layerName2)
-		unitTest:assertEquals(info2.srid, 4326.0)
-
-		-- GEOJSON
-		toData.file = "postgis2geojson.geojson"
-		toData.type = "geojson"
-		File(toData.file):deleteIfExists()
-		fromData.layer = layerName2
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		unitTest:assert(File(toData.file):exists())
-
-		-- OVERWRITE AND CHANGE SRID
-		toData.srid = 4326
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		local layerName4 = "PG2GJ"
-		TerraLib().addGeoJSONLayer(proj, layerName4, File(toData.file))
-		local info4 = TerraLib().getLayerInfo(proj, layerName4)
-		unitTest:assertEquals(info4.srid, toData.srid)
-
-		-- OVERWRITE POSTGIS AND CHANGE SRID
-		local table1 = pgData.table
-		pgData.table = "ogrgeojson" -- TODO(#1243)
-		fromData.layer = layerName4
-		TerraLib().saveLayerAs(fromData, pgData, overwrite)
-
-		local layerName5 = "PgLayerGJ"
-		TerraLib().addPgLayer(proj, layerName5, pgData, nil, encoding)
-		local info5 = TerraLib().getLayerInfo(proj, layerName5)
-		unitTest:assertEquals(info5.srid, 4326.0)
-
-		pgData.srid = 2309
-		TerraLib().saveLayerAs(fromData, pgData, overwrite)
-		info5 = TerraLib().getLayerInfo(proj, layerName5)
-		unitTest:assertEquals(info5.srid, 2309.0)
-
-		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE FROM SHP
-		local table2 = pgData.table
-		pgData.table = "postgis2shp"
-		fromData.layer = layerName3
-		TerraLib().saveLayerAs(fromData, pgData, overwrite, {"nm_micro"})
-
-		local layerName6 = "SHP2PG"
-		TerraLib().addPgLayer(proj, layerName6, pgData, nil, encoding)
-		local dset6 = TerraLib().getDataSet(proj, layerName6)
-
-		unitTest:assertEquals(getn(dset6), 63)
-
-		for k, v in pairs(dset6[0]) do
-			unitTest:assert(((k == "fid") and (v == 0)) or ((k == "ogr_geometry") and (v ~= nil) ) or
-							((k == "nm_micro") and (v == "VOTUPORANGA")))
+		local exportToPostgis = function()
+			local proj = createProjectWithSampaLayer()
+			local fromData = {project = proj, layer = sampaLayerName}
+			local overwrite = true
+			TerraLib().saveLayerAs(fromData, spPgData, overwrite)
 		end
 
-		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE FROM GEOJSON
-		local table3 = pgData.table
-		pgData.table = "ogrgeojson"
-		fromData.layer = layerName4
-		TerraLib().saveLayerAs(fromData, pgData, overwrite, {"nm_micro", "id"})
+		exportToPostgis()
 
-		local layerName7 = "GJ2PG"
-		TerraLib().addPgLayer(proj, layerName7, pgData, nil, encoding)
-		local dset7 = TerraLib().getDataSet(proj, layerName7)
-
-		unitTest:assertEquals(getn(dset7), 63)
-
-		for k, v in pairs(dset7[0]) do
-			unitTest:assert(((k == "fid") and (v == 2)) or ((k == "ogr_geometry") and (v ~= nil) ) or
-							((k == "nm_micro") and (v == "VOTUPORANGA")) or ((k == "id") and (v == 2)))
+		local spPgLayerName = "SampaPg"
+		local createPgProject = function()
+			local proj = createProjectWithSampaLayer()
+			TerraLib().addPgLayer(proj, spPgLayerName, spPgData, nil, encoding)
+			return proj
 		end
 
-		-- SAVE A DATA SUBSET
-		local dset2 = TerraLib().getDataSet(proj, layerName2)
-		local sjc
-		for i = 0, getn(dset2) - 1 do
-			if dset2[i].id == 27 then
-				sjc = dset2[i]
+		local overwritePostgisFromShpAndChangeItsSrid = function()
+			local proj = createPgProject()
+			local fromData = {project = proj, layer = spPgLayerName}
+			local info2 = TerraLib().getLayerInfo(proj, spPgLayerName)
+			unitTest:assertEquals(info2.srid, 4019.0)
+
+			local sridBkp = spPgData.srid
+			spPgData.srid = 4326
+
+			fromData.layer = sampaLayerName
+			local overwrite = true
+			TerraLib().saveLayerAs(fromData, spPgData, overwrite)
+			info2 = TerraLib().getLayerInfo(proj, spPgLayerName)
+			unitTest:assertEquals(info2.srid, 4326.0)
+
+			proj.file:delete()
+			TerraLib().dropPgTable(spPgData)
+			spPgData.srid = sridBkp
+			exportToPostgis()
+		end
+
+		local postgisToShp = function()
+			local proj = createPgProject()
+			local fromData = {project = proj, layer = spPgLayerName}
+			local toData = {file = "postgis2shp.shp", type = "shp"}
+
+			local overwrite = true
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			unitTest:assert(File(toData.file):exists())
+
+			-- OVERWRITE AND CHANGE SRID
+			toData.srid = 4326
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			local layerName3 = "PG2SHP"
+			TerraLib().addShpLayer(proj, layerName3, File(toData.file))
+			local info3 = TerraLib().getLayerInfo(proj, layerName3)
+			unitTest:assertEquals(info3.srid, toData.srid)
+
+			proj.file:delete()
+			File(toData.file):delete()
+		end
+
+		local postgisToGeoJson = function()
+			local proj = createPgProject()
+			local fromData = {project = proj, layer = spPgLayerName}
+			local toData = {file = "postgis2geojson.geojson", type = "geojson"}
+			local overwrite = true
+
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			unitTest:assert(File(toData.file):exists())
+
+			-- OVERWRITE AND CHANGE SRID
+			toData.srid = 4326
+			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			local layerName4 = "PG2GJ"
+			TerraLib().addGeoJSONLayer(proj, layerName4, File(toData.file))
+			local info4 = TerraLib().getLayerInfo(proj, layerName4)
+			unitTest:assertEquals(info4.srid, toData.srid)
+
+			proj.file:delete()
+			File(toData.file):delete()
+		end
+
+		local overwritePostgisFromGeoJsonAndChangeItsSrid = function()
+			local proj = createPgProject()
+			local gjLayerName = "SampaGj"
+			TerraLib().addGeoJSONLayer(proj, gjLayerName, filePath("test/sampa.geojson", "gis"))
+			local fromData = {project = proj, layer = gjLayerName}
+
+			local tableBkp = spPgData.table
+			spPgData.table = "sampagj"
+			local sridBkp = spPgData.srid
+
+			local overwrite = true
+			TerraLib().saveLayerAs(fromData, spPgData, overwrite)
+
+			local layerName5 = "PgLayerGJ"
+			TerraLib().addPgLayer(proj, layerName5, spPgData, nil, encoding)
+			local info5 = TerraLib().getLayerInfo(proj, layerName5)
+			unitTest:assertEquals(info5.srid, 4019.0)
+
+			spPgData.srid = 2309
+			TerraLib().saveLayerAs(fromData, spPgData, overwrite)
+			info5 = TerraLib().getLayerInfo(proj, layerName5)
+			unitTest:assertEquals(info5.srid, 2309.0)
+
+			proj.file:delete()
+			TerraLib().dropPgTable(spPgData)
+			spPgData.table = tableBkp
+			spPgData.srid = sridBkp
+			exportToPostgis()
+		end
+
+		local saveJustOnePropertyFromShp = function()
+			local proj = createPgProject()
+			local fromData = {project = proj, layer = sampaLayerName}
+
+			local tableBkp = spPgData.table
+			spPgData.table = "shp2postgis"
+
+			local overwrite = true
+			TerraLib().saveLayerAs(fromData, spPgData, overwrite, {"nm_micro"})
+
+			local layerName6 = "SHP2PG"
+			TerraLib().addPgLayer(proj, layerName6, spPgData, nil, encoding)
+			local dset6 = TerraLib().getDataSet(proj, layerName6)
+
+			unitTest:assertEquals(getn(dset6), 63)
+
+			for k, v in pairs(dset6[0]) do
+				unitTest:assert(((k == "fid") and (v == 0)) or ((k == "ogr_geometry") and (v ~= nil) ) or
+								((k == "nm_micro") and (v == "VOTUPORANGA")))
 			end
+
+			proj.file:delete()
+			TerraLib().dropPgTable(spPgData)
+			spPgData.table = tableBkp
 		end
 
-		local touches = {}
-		local j = 1
-		for i = 0, getn(dset2) - 1 do
-			if sjc.ogr_geometry:touches(dset2[i].ogr_geometry) then
-				touches[j] = dset2[i]
-				j = j + 1
+		local saveTwoPropertiesFromGeoJson = function()
+			local proj = createPgProject()
+			local gjLayerName = "SampaGj"
+			TerraLib().addGeoJSONLayer(proj, gjLayerName, filePath("test/sampa.geojson", "gis"))
+			local fromData = {project = proj, layer = gjLayerName}
+
+			local tableBkp = spPgData.table
+			spPgData.table = "geojson2postgis"
+
+			local overwrite = true
+			TerraLib().saveLayerAs(fromData, spPgData, overwrite, {"nm_micro", "id"})
+
+			local layerName7 = "GJ2PG"
+			TerraLib().addPgLayer(proj, layerName7, spPgData, nil, encoding)
+			local dset7 = TerraLib().getDataSet(proj, layerName7)
+
+			unitTest:assertEquals(getn(dset7), 63)
+
+			for k, v in pairs(dset7[0]) do
+				unitTest:assert(((k == "fid") and (v == 2)) or ((k == "ogr_geometry") and (v ~= nil) ) or
+								((k == "nm_micro") and (v == "VOTUPORANGA")) or ((k == "id") and (v == 2)))
 			end
+
+			proj.file:delete()
+			TerraLib().dropPgTable(spPgData)
+			spPgData.table = tableBkp
 		end
 
-		local table4 = pgData.table
-		pgData.table = "touches_sjc"
-		pgData.srid = nil
-		fromData.layer = layerName2
-		TerraLib().saveLayerAs(fromData, pgData, overwrite, {"nm_micro", "id"}, touches)
+		-- SAVE DATA SUBSET TESTS
+		local createSubsetTable = function()
+			local proj = createPgProject()
+			local dset2 = TerraLib().getDataSet(proj, spPgLayerName)
+			local sjc
+			for i = 0, getn(dset2) - 1 do
+				if dset2[i].id == 27 then
+					sjc = dset2[i]
+				end
+			end
 
-		local layerName8 = "SJC"
-		TerraLib().addPgLayer(proj, layerName8, pgData, nil, encoding)
-		local tchsSjc = TerraLib().getDataSet(proj, layerName8)
+			local touches = {}
+			local j = 1
+			for i = 0, getn(dset2) - 1 do
+				if sjc.ogr_geometry:touches(dset2[i].ogr_geometry) then
+					touches[j] = dset2[i]
+					j = j + 1
+				end
+			end
 
-		unitTest:assertEquals(getn(tchsSjc), 2)
-		unitTest:assertEquals(tchsSjc[0].id, 55)
-		unitTest:assertEquals(tchsSjc[1].id, 109)
+			proj.file:delete()
 
-		-- SAVE WITHOUT LAYER
-		fromData = {}
-		fromData.file = layerFile1
-		local table5 = pgData.table
-		pgData.table = "touches_sjc_2"
-
-		for i = 1, #touches do
-			touches[i].FID = touches[i].fid
+			return touches
 		end
 
-		TerraLib().saveLayerAs(fromData, pgData, overwrite, {"NM_MICRO", "ID"}, touches)
+		local subset = createSubsetTable()
 
-		local layerName9 = "SJC2"
-		TerraLib().addPgLayer(proj, layerName9, pgData, nil, encoding)
-		local tchsSjc2 = TerraLib().getDataSet(proj, layerName9)
+		local saveLayerSubset = function()
+			local proj = createPgProject()
+			local fromData = {project = proj, layer = spPgLayerName}
 
-		unitTest:assertEquals(getn(tchsSjc2), 2)
-		unitTest:assertEquals(tchsSjc2[0].id, 55)
-		unitTest:assertEquals(tchsSjc2[1].id, 109)
+			local tableBkp = spPgData.table
+			spPgData.table = "touches_sjc"
 
-		TerraLib().dropPgTable(pgData)
-		pgData.table = table1
-		TerraLib().dropPgTable(pgData)
-		pgData.table = table2
-		TerraLib().dropPgTable(pgData)
-		pgData.table = table3
-		TerraLib().dropPgTable(pgData)
-		pgData.table = table4
-		TerraLib().dropPgTable(pgData)
-		pgData.table = table5
-		TerraLib().dropPgTable(pgData)
+			local overwrite = true
+			TerraLib().saveLayerAs(fromData, spPgData, overwrite, {"nm_micro", "id"}, subset)
 
-		File("postgis2shp.shp"):delete()
-		File("postgis2geojson.geojson"):delete()
+			local layerName8 = "SJC"
+			TerraLib().addPgLayer(proj, layerName8, spPgData, nil, encoding)
+			local tchsSjc = TerraLib().getDataSet(proj, layerName8)
 
-		proj.file:delete()
+			unitTest:assertEquals(getn(tchsSjc), 2)
+			unitTest:assertEquals(tchsSjc[0].id, 55)
+			unitTest:assertEquals(tchsSjc[1].id, 109)
+
+			proj.file:delete()
+			TerraLib().dropPgTable(spPgData)
+			spPgData.table = tableBkp
+		end
+
+		local saveSubsetWithoutLayer = function()
+			local fromData = {file = filePath("test/sampa.shp", "gis")}
+
+			local tableBkp = spPgData.table
+			spPgData.table = "touches_sjc"
+
+			for i = 1, #subset do
+				subset[i].FID = subset[i].fid
+			end
+
+			local overwrite = true
+			TerraLib().saveLayerAs(fromData, spPgData, overwrite, {"NM_MICRO", "ID"}, subset)
+
+			local proj = createPgProject()
+			local layerName9 = "SJC2"
+			TerraLib().addPgLayer(proj, layerName9, spPgData, nil, encoding)
+			local tchsSjc2 = TerraLib().getDataSet(proj, layerName9)
+
+			unitTest:assertEquals(getn(tchsSjc2), 2)
+			unitTest:assertEquals(tchsSjc2[0].id, 55)
+			unitTest:assertEquals(tchsSjc2[1].id, 109)
+
+			proj.file:delete()
+			TerraLib().dropPgTable(spPgData)
+			spPgData.table = tableBkp
+		end
+
+		unitTest:assert(overwritePostgisFromShpAndChangeItsSrid)
+		unitTest:assert(postgisToShp)
+		unitTest:assert(postgisToGeoJson)
+		unitTest:assert(overwritePostgisFromGeoJsonAndChangeItsSrid)
+		unitTest:assert(saveJustOnePropertyFromShp)
+		unitTest:assert(saveTwoPropertiesFromGeoJson)
+		unitTest:assert(saveLayerSubset)
+		unitTest:assert(saveSubsetWithoutLayer)
+
+		TerraLib().dropPgTable(spPgData)
 	end,
 	getLayerSize = function(unitTest)
 		local proj = {}
