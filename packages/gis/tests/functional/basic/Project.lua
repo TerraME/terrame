@@ -243,7 +243,7 @@ return {
 			directory = packageInfo("gis").data.."test"
 		}
 
-		unitTest:assertEquals(getn(proj.layers), 13)
+		unitTest:assertEquals(getn(proj.layers), 15)
 		file:deleteIfExists()
 
 		-- QGIS PROJECT

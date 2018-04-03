@@ -24,155 +24,157 @@
 
 return{
 	CellularSpace = function(unitTest)
-		Random{seed = 12345}
-		local cs = CellularSpace{xdim = 10}
+		local basicTests = function()
+			Random{seed = 12345}
+			local cs = CellularSpace{xdim = 10}
 
-		unitTest:assertType(cs, "CellularSpace")
-		unitTest:assertEquals(#cs, 100)
-		unitTest:assertEquals(10, cs.xdim)
-		unitTest:assertEquals(10, cs.ydim)
-		unitTest:assertType(cs:sample(), "Cell")
-		unitTest:assertType(cs.cells, "table")
+			unitTest:assertType(cs, "CellularSpace")
+			unitTest:assertEquals(#cs, 100)
+			unitTest:assertEquals(10, cs.xdim)
+			unitTest:assertEquals(10, cs.ydim)
+			unitTest:assertType(cs:sample(), "Cell")
+			unitTest:assertType(cs.cells, "table")
 
-		local cell = Cell{
-			defor = 1,
-			road = true,
-			cover = "pasture",
-			deforest = function(self) self.defor = self.defor + 1 end,
-			water = Random{1, 2, 3},
-			set = function() end
-		}
-
-		local replaceWarn = function()
-			cs = CellularSpace{
-				instance = cell,
-				xdim = 10,
-				set = 5
+			local cell = Cell{
+				defor = 1,
+				road = true,
+				cover = "pasture",
+				deforest = function(self) self.defor = self.defor + 1 end,
+				water = Random{1, 2, 3},
+				set = function() end
 			}
-		end
-		unitTest:assertWarning(replaceWarn, "Attribute 'set' will not be replaced by a summary function.")
-		unitTest:assertEquals(cs:defor(), 100)
-		unitTest:assertEquals(cs:road(), 100)
-		unitTest:assertEquals(cs:cover().pasture, 100)
-		unitTest:assertEquals(cs:water(), 218)
 
-		unitTest:assert(cs:deforest())
-		unitTest:assertEquals(cs:sample().defor, 2)
-
-		cell = Cell{
-			defor = 1,
-			deforest = function(self)
-				if self.x > 4 then
-					return false
-				end
-
-				self.defor = self.defor + 1
-			end,
-			init = function(self)
-				self.status = "forest"
-			end,
-			value = 4
-		}
-
-		replaceWarn = function()
-			cs = CellularSpace{
-				instance = cell,
-				xdim = 10,
-				status = 5
-			}
-		end
-		unitTest:assertWarning(replaceWarn, "Attribute 'status' will not be replaced by a summary function.")
-		unitTest:assertEquals(cs:defor(), 100)
-		unitTest:assert(not cs:deforest())
-		unitTest:assertEquals(cs:defor(), 150)
-
-
-		cell = Cell{
-			defor = 1,
-			deforest = function(self)
-				if self.x > 4 then
-					return false
-				end
-
-				self.defor = self.defor + 1
-			end,
-			value = 4
-		}
-
-		replaceWarn = function()
-			cs = CellularSpace{
-				instance = cell,
-				xdim = 10,
-				value = 5
-			}
-		end
-		unitTest:assertWarning(replaceWarn, "Attribute 'value' will not be replaced by a summary function.")
-		unitTest:assertEquals(cs:defor(), 100)
-		unitTest:assert(not cs:deforest())
-		unitTest:assertEquals(cs:defor(), 150)
-
-		cell = Cell{
-			defor = 1,
-			deforest = function(self)
-				if self.x > 4 then
-					return false
-				end
-
-				self.defor = self.defor + 1
-			end,
-			alive = true
-		}
-
-		replaceWarn = function()
-			cs = CellularSpace{
-				instance = cell,
-				xdim = 10,
-				alive = 5
-			}
-		end
-		unitTest:assertWarning(replaceWarn, "Attribute 'alive' will not be replaced by a summary function.")
-		unitTest:assertEquals(cs:defor(), 100)
-		unitTest:assert(not cs:deforest())
-		unitTest:assertEquals(cs:defor(), 150)
-
-		cell = Cell{
-			defor = 1,
-			deforest = function(self)
-				if self.x > 4 then
-					return false
-				end
-
-				self.defor = self.defor + 1
-			end,
-			status = "forest"
-		}
-
-		replaceWarn = function()
-			cs = CellularSpace{
-				instance = cell,
-				xdim = 10,
-				status = 5
-			}
-		end
-		unitTest:assertWarning(replaceWarn, "Attribute 'status' will not be replaced by a summary function.")
-		unitTest:assertEquals(cs:defor(), 100)
-		unitTest:assert(not cs:deforest())
-		unitTest:assertEquals(cs:defor(), 150)
-
-		cell = Cell{
-			getNeighborhood = function()
-				return "neighbor"
+			local replaceWarn = function()
+				cs = CellularSpace{
+					instance = cell,
+					xdim = 10,
+					set = 5
+				}
 			end
-		}
+			unitTest:assertWarning(replaceWarn, "Attribute 'set' will not be replaced by a summary function.")
+			unitTest:assertEquals(cs:defor(), 100)
+			unitTest:assertEquals(cs:road(), 100)
+			unitTest:assertEquals(cs:cover().pasture, 100)
+			unitTest:assertEquals(cs:water(), 218)
 
-		replaceWarn = function()
-			cs = CellularSpace{
-				instance = cell,
-				xdim = 10
+			unitTest:assert(cs:deforest())
+			unitTest:assertEquals(cs:sample().defor, 2)
+
+			cell = Cell{
+				defor = 1,
+				deforest = function(self)
+					if self.x > 4 then
+						return false
+					end
+
+					self.defor = self.defor + 1
+				end,
+				init = function(self)
+					self.status = "forest"
+				end,
+				value = 4
 			}
+
+			replaceWarn = function()
+				cs = CellularSpace{
+					instance = cell,
+					xdim = 10,
+					status = 5
+				}
+			end
+			unitTest:assertWarning(replaceWarn, "Attribute 'status' will not be replaced by a summary function.")
+			unitTest:assertEquals(cs:defor(), 100)
+			unitTest:assert(not cs:deforest())
+			unitTest:assertEquals(cs:defor(), 150)
+
+
+			cell = Cell{
+				defor = 1,
+				deforest = function(self)
+					if self.x > 4 then
+						return false
+					end
+
+					self.defor = self.defor + 1
+				end,
+				value = 4
+			}
+
+			replaceWarn = function()
+				cs = CellularSpace{
+					instance = cell,
+					xdim = 10,
+					value = 5
+				}
+			end
+			unitTest:assertWarning(replaceWarn, "Attribute 'value' will not be replaced by a summary function.")
+			unitTest:assertEquals(cs:defor(), 100)
+			unitTest:assert(not cs:deforest())
+			unitTest:assertEquals(cs:defor(), 150)
+
+			cell = Cell{
+				defor = 1,
+				deforest = function(self)
+					if self.x > 4 then
+						return false
+					end
+
+					self.defor = self.defor + 1
+				end,
+				alive = true
+			}
+
+			replaceWarn = function()
+				cs = CellularSpace{
+					instance = cell,
+					xdim = 10,
+					alive = 5
+				}
+			end
+			unitTest:assertWarning(replaceWarn, "Attribute 'alive' will not be replaced by a summary function.")
+			unitTest:assertEquals(cs:defor(), 100)
+			unitTest:assert(not cs:deforest())
+			unitTest:assertEquals(cs:defor(), 150)
+
+			cell = Cell{
+				defor = 1,
+				deforest = function(self)
+					if self.x > 4 then
+						return false
+					end
+
+					self.defor = self.defor + 1
+				end,
+				status = "forest"
+			}
+
+			replaceWarn = function()
+				cs = CellularSpace{
+					instance = cell,
+					xdim = 10,
+					status = 5
+				}
+			end
+			unitTest:assertWarning(replaceWarn, "Attribute 'status' will not be replaced by a summary function.")
+			unitTest:assertEquals(cs:defor(), 100)
+			unitTest:assert(not cs:deforest())
+			unitTest:assertEquals(cs:defor(), 150)
+
+			cell = Cell{
+				getNeighborhood = function()
+					return "neighbor"
+				end
+			}
+
+			replaceWarn = function()
+				cs = CellularSpace{
+					instance = cell,
+					xdim = 10
+				}
+			end
+			unitTest:assertWarning(replaceWarn, "Function 'getNeighborhood()' from Cell is replaced in the instance.")
+			unitTest:assertEquals(cs:sample():getNeighborhood(), "neighbor")
 		end
-		unitTest:assertWarning(replaceWarn, "Function 'getNeighborhood()' from Cell is replaced in the instance.")
-		unitTest:assertEquals(cs:sample():getNeighborhood(), "neighbor")
 
 		local gis = getPackage("gis")
 		local createProject = function()
@@ -213,6 +215,7 @@ return{
 				file = filePath1
 			}
 
+			local cs
 			local geometryDefaultValue = function()
 				cs = CellularSpace{
 					project = proj,
@@ -308,7 +311,7 @@ return{
 				epsg = 4326
 			}
 
-			cs = CellularSpace{
+			local cs = CellularSpace{
 				project = proj,
 				layer = layerName1
 			}
@@ -367,21 +370,10 @@ return{
 				title = "GeoJSON Cellular Space"
 			}
 
-			local gjLayerName = "GeoJSON_ES"
 			local esGjLayer = gis.Layer{
 				project = proj,
-				name = gjLayerName,
+				name = "GeoJSON_ES",
 				file = filePath("test/es_sirgas2000_5880.geojson", "gis")
-			}
-
-			local esGj = CellularSpace{
-				project = proj,
-				layer = gjLayerName
-			}
-
-			local esShp = CellularSpace{
-				project = proj,
-				layer = gjLayerName
 			}
 
 			local esShpLayer = gis.Layer {
@@ -393,6 +385,11 @@ return{
 			local esShp = CellularSpace {
 				project = proj,
 				layer = esShpLayer.name
+			}
+
+			local esGj = CellularSpace{
+				project = proj,
+				layer = esGjLayer.name
 			}
 
 			unitTest:assertEquals(#esShp, #esGj)
@@ -409,7 +406,7 @@ return{
 
 			local gjCsLayer = gis.Layer{
 				project = proj,
-				input = gjLayerName,
+				input = esGjLayer.name,
 				name = gjCsLayerName,
 				resolution = resolution,
 				file = gjCsFile
@@ -480,6 +477,7 @@ return{
 			proj.file:delete()
 		end
 
+		unitTest:assert(basicTests)
 		unitTest:assert(shapeFileTests)
 		if _Gtme.sessionInfo().system == "windows" then
 			unitTest:assert(tifTests) -- SKIP
