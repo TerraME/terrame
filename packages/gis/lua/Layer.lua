@@ -437,8 +437,8 @@ end
 
 local function findMultiples(base, pattern, list)
 	-- escape any "magic" Lua character
-	local prefix = string.gsub(base, "(%[%(%)%.%%%+%-%*%?%[%]%^%$)])", "%%%1")
-	local sufix = string.gsub(pattern, "(%[%(%)%.%%%+%-%*%?%[%]%^%$)])", "%%%1")
+	local prefix = string.gsub(base, "([%(%)%.%%%+%-%*%?%[%]%^%$)])", "%%%1")
+	local sufix = string.gsub(pattern, "([%(%)%.%%%+%-%*%?%[%]%^%$)])", "%%%1")
 	local regex = string.format("%s(.*)%s$", prefix, sufix)
 	local elements = {}
 	forEachOrderedElement(list, function(_, element)
