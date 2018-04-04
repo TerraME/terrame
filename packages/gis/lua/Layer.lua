@@ -1126,9 +1126,9 @@ Layer_ = {
 				isTemporal = true
 				if not temporalAttributes[sufix] then
 					temporalAttributes[sufix] = {}
-					startTime = math.min(startTime, tonumber(sufix))
 				end
 
+				startTime = math.min(startTime, tonumber(sufix))
 				table.insert(temporalAttributes[sufix], {prefix = prefix, sufix = sufix, name = attr.name})
 			elseif belong(attr.name, {"id", "col", "row", "FID", "OGR_GEOMETRY", "ogr_geometry"}) then
 				table.insert(dataAttributes, attr.name)
@@ -1147,7 +1147,7 @@ Layer_ = {
 
 		forEachElement(dataAttributes, function(_, attr)
 			forEachElement(temporalAttributes, function(time)
-			table.insert(temporalAttributes[time], {prefix = attr, sufix = "", name = attr})
+				table.insert(temporalAttributes[time], {prefix = attr, sufix = "", name = attr})
 			end)
 		end)
 
