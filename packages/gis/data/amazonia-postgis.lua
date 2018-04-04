@@ -53,6 +53,15 @@ if not getConfig() then
 	customError("You should provide connection information in a config.lua file.")
 end
 
+pgConnInfo = {
+	host = "localhost",
+	port = "5432",
+	user = "postgres",
+	password = getConfig().password,
+	database = "amazonia"
+}
+TerraLib().dropPgDatabase(pgConnInfo) -- TODO(#2184)
+
 amazoniaCells = Layer{
 	project = amazonia,
 	clean = true,
@@ -60,9 +69,9 @@ amazoniaCells = Layer{
 	name = "cells",
 	resolution = 50000,
 	source = "postgis",
-	password = getConfig().password,
-	database = "amazonia",
-	table = "amazonia"
+	password = pgConnInfo.password,
+	database = pgConnInfo.database,
+	table = "cells" -- TODO (#2031)
 }
 
 amazoniaCells:fill{
@@ -129,4 +138,6 @@ Map{
 	invert = true,
 	color = "YlGn"
 }
+
+TerraLib().dropPgDatabase(pgConnInfo)
 
