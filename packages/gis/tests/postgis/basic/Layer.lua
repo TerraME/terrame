@@ -178,7 +178,6 @@ return {
 		local newDbName = "new_pg_db_30032017"
 		pgData.database = newDbName
 		TerraLib().dropPgDatabase(pgData)
-		pgData.database = database
 
 		local clName4 = "New_Sampa_Cells"
 
@@ -293,6 +292,9 @@ return {
 		layer3:delete()
 		layer4:delete()
 		layer5:delete()
+
+		pgData.database = newDbName
+		TerraLib().dropPgDatabase(pgData)
 	end,
 	delete = function(unitTest)
 		local projName = "layer_delete_pgis.tview"
@@ -313,6 +315,16 @@ return {
 		local password = "postgres"
 		local database = "postgis_del"
 
+		local pgConnInfo = {
+			host = "localhost",
+			port = "5432",
+			user = "postgres",
+			password = password,
+			database = database
+		}
+
+		TerraLib().dropPgDatabase(pgConnInfo)
+
 		local clName1 = "Setores_Cells"
 		local layer = Layer{
 			project = proj,
@@ -325,10 +337,11 @@ return {
 			database = database
 		}
 
+		unitTest:assert(true)
+
 		proj.file:delete()
 		layer:delete()
-
-		unitTest:assert(true)
+		TerraLib().dropPgDatabase(pgConnInfo)
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_pgis.tview"
@@ -365,6 +378,16 @@ return {
 
 		local password = "postgres"
 		local database = "postgis_fill"
+
+		local pgConnInfo = {
+			host = "localhost",
+			port = "5432",
+			user = "postgres",
+			password = password,
+			database = database
+		}
+
+		TerraLib().dropPgDatabase(pgConnInfo)
 
 		clName1 = "Setores_Cells"
 
@@ -1220,6 +1243,7 @@ return {
 		unitTest:assertSnapshot(map, "tiff-average-nodata-pg.png")
 
 		File(projName):delete()
+		TerraLib().dropPgDatabase(pgConnInfo)
 	end,
 	projection = function(unitTest)
 		local projName = "layer_basic.tview"

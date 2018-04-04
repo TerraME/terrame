@@ -1778,11 +1778,6 @@ local function saveLayerAs(fromData, toData, attrs, values)
 		if toData.type == "OGR" then -- TODO(#1678)
 			addSpatialIndex(toDs, toDstName)
 		end
-
-		-- #875
-		-- if toData.type == "POSTGIS" then
-			-- toDs:renameDataSet(string.lower(fromData.dataset), toData.table)
-		-- end
 	end
 
 	collectgarbage("collect")
@@ -2524,7 +2519,9 @@ TerraLib_ = {
 			local outOverwrite = false
 			if out == nil then
 				outOverwrite = true
-				out = to.."_temp"
+				local rand = string.gsub(binding.GetRandomicId(), "-", "")
+				rand = string.sub(rand, 1, 5)
+				out = to.."_"..rand
 			end
 
 			local outDs
@@ -2579,31 +2576,36 @@ TerraLib_ = {
 				end
 			end
 
-			-- TODO: RENAME INSTEAD OUTPUT
-			-- #875
-			-- outDs:renameDataSet(outDSetName, "rename_test")
+			if outType == "POSTGIS" and outOverwrite then
+				to = string.lower(to)
+				dropDataSet(outConnInfo, to, outType)
+				outDs:renameDataSet(outDSetName, to)
 
-			local outLayer = createLayer(out, outDSetName, outConnInfo, outType, outSpatialIdx, toSrid)
-			project.layers[out] = outLayer
-
-			loadProject(project, project.file) -- TODO: IT NEED RELOAD (REVIEW)
-			saveProject(project, project.layers)
-			releaseProject(project)
-
-			-- TODO: REVIEW AFTER FIX #875
-			if outOverwrite then
-				local toConnInfo = toDsInfo:getConnInfo()
-				local toType = toDsInfo:getType()
-				local toSetName = nil
-
-				if toType == "OGR" then
-					local _, name = File(toConnInfo:host()..toConnInfo:path()):split()
-					toSetName = name
-				end
-
+				loadProject(project, project.file) -- TODO: WHY IS IT NEEDING RELOAD? (REVIEW)
+				releaseProject(project)
 				outDs:close()
-				overwriteLayer(project, out, to, toSetName, default)
-				removeLayer(project, out)
+			else -- TODO(#875): RENAME INSTEAD OUTPUT
+				local outLayer = createLayer(out, outDSetName, outConnInfo, outType, outSpatialIdx, toSrid)
+				project.layers[out] = outLayer
+
+				loadProject(project, project.file) -- TODO: WHY IS IT NEEDING RELOAD? (REVIEW)
+				saveProject(project, project.layers)
+				releaseProject(project)
+
+				if outOverwrite then
+					local toConnInfo = toDsInfo:getConnInfo()
+					local toType = toDsInfo:getType()
+					local toSetName = nil
+
+					if toType == "OGR" then
+						local _, name = File(toConnInfo:host()..toConnInfo:path()):split()
+						toSetName = name
+					end
+
+					outDs:close()
+					overwriteLayer(project, out, to, toSetName, default)
+					removeLayer(project, out)
+				end
 			end
 		end
 
