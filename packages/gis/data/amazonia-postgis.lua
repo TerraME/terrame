@@ -60,7 +60,7 @@ pgConnInfo = {
 	password = getConfig().password,
 	database = "amazonia"
 }
-TerraLib().dropPgDatabase(pgConnInfo) -- TODO(#2184)
+-- TerraLib().dropPgDatabase(pgConnInfo) -- TODO(#2184, #2185)
 
 amazoniaCells = Layer{
 	project = amazonia,
@@ -71,7 +71,7 @@ amazoniaCells = Layer{
 	source = "postgis",
 	password = pgConnInfo.password,
 	database = pgConnInfo.database,
-	table = "cells" -- TODO (#2031)
+	table = "cells" -- TODO (#2031, #2183)
 }
 
 amazoniaCells:fill{
@@ -138,6 +138,3 @@ Map{
 	invert = true,
 	color = "YlGn"
 }
-
-TerraLib().dropPgDatabase(pgConnInfo)
-
