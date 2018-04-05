@@ -104,79 +104,146 @@ return {
 		unitTest:assert(true)
 	end,
 	addPgCellSpaceLayer = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-
-		File(proj.file):deleteIfExists()
-
-		TerraLib().createProject(proj, {})
-
-		-- // create a database
-		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("test/sampa.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName1, layerFile1)
-		local layerInfo1 = TerraLib().getLayerInfo(proj, layerName1)
+		local createProject = function()
+			local proj = {
+				file = "addpgcellspacelayer_pg_basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+			return proj
+		end
 
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
-		local password = getConfig().password
+		local password = "postgres"
 		local database = "terralib_pg_test"
 		local encoding = "CP1252"
-		local tableName = "sampa_cells"
 
-		local pgData = {
-			type = "POSTGIS",
+		local creatingFromShape = function()
+			local proj = createProject()
+			local layerName1 = "SampaShp"
+			local layerFile1 = filePath("test/sampa.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName1, layerFile1)
+			local layerInfo1 = TerraLib().getLayerInfo(proj, layerName1)
+
+			local tableName = "sampa_cells"
+
+			local pgData = {
+				type = "POSTGIS",
+				host = host,
+				port = port,
+				user = user,
+				password = password,
+				database = database,
+				table = tableName,
+				encoding = encoding
+			}
+
+			TerraLib().dropPgDatabase(pgData)
+
+			local clName1 = "SampaPgCells"
+			local resolution = 1
+			local mask = true
+			TerraLib().addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
+
+			local layerInfo = TerraLib().getLayerInfo(proj, clName1)
+			unitTest:assertEquals(layerInfo.name, clName1)
+			unitTest:assertEquals(layerInfo.type, "POSTGIS")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
+			unitTest:assertEquals(layerInfo.host, host)
+			unitTest:assertEquals(layerInfo.port, port)
+			unitTest:assertEquals(layerInfo.user, user)
+			unitTest:assertEquals(layerInfo.password, password)
+			unitTest:assertEquals(layerInfo.database, database)
+			unitTest:assertEquals(layerInfo.table, tableName)
+			unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
+
+			-- NO MASK TEST
+			local clSet = TerraLib().getDataSet(proj, clName1)
+			unitTest:assertEquals(getn(clSet), 37)
+
+			clName1 = clName1.."_NoMask"
+			local pgData2 = pgData
+			pgData2.tableName = clName1
+
+			TerraLib().dropPgTable(pgData2)
+
+			mask = false
+			TerraLib().addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData2, mask)
+
+			clSet = TerraLib().getDataSet(proj, clName1)
+			unitTest:assertEquals(getn(clSet), 54)
+
+			proj.file:delete()
+			TerraLib().dropPgTable(pgData)
+			TerraLib().dropPgTable(pgData2)
+		end
+
+		local creatingFromTif = function()
+			local proj = createProject()
+
+			local layerName1 = "AmazoniaTif"
+			local layerFile1 = filePath("amazonia-prodes.tif", "gis")
+			TerraLib().addGdalLayer(proj, layerName1, layerFile1, 29191)
+
+			local tableName = "amzcs"
+
+			local pgData = {
+				type = "POSTGIS",
+				host = host,
+				port = port,
+				user = user,
+				password = password,
+				database = database,
+				table = tableName,
+				encoding = encoding
+			}
+
+			TerraLib().dropPgDatabase(pgData)
+
+			local clName1 = "Amazonia_PG_Cells"
+			local resolution = 3e5
+			local mask = true
+
+			local maskNotWork = function()
+				TerraLib().addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
+			end
+
+			unitTest:assertWarning(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
+
+			local layerInfo = TerraLib().getLayerInfo(proj, clName1)
+			unitTest:assertEquals(layerInfo.name, clName1)
+			unitTest:assertEquals(layerInfo.type, "POSTGIS")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
+			unitTest:assertEquals(layerInfo.host, host)
+			unitTest:assertEquals(layerInfo.port, port)
+			unitTest:assertEquals(layerInfo.user, user)
+			unitTest:assertEquals(layerInfo.password, password)
+			unitTest:assertEquals(layerInfo.database, database)
+			unitTest:assertEquals(layerInfo.table, tableName)
+
+			local clSet = TerraLib().getDataSet(proj, clName1)
+			unitTest:assertEquals(getn(clSet), 108)
+
+			TerraLib().dropPgTable(pgData)
+			proj.file:delete()
+		end
+
+		unitTest:assert(creatingFromShape)
+		unitTest:assert(creatingFromTif)
+
+		local pgConnInfo = {
 			host = host,
 			port = port,
 			user = user,
 			password = password,
-			database = database,
-			table = tableName,
-			encoding = encoding
+			database = database
 		}
 
-		TerraLib().dropPgDatabase(pgData)
-
-		local clName1 = "SampaPgCells"
-		local resolution = 1
-		local mask = true
-		TerraLib().addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
-
-		local layerInfo = TerraLib().getLayerInfo(proj, clName1)
-		unitTest:assertEquals(layerInfo.name, clName1)
-		unitTest:assertEquals(layerInfo.type, "POSTGIS")
-		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertEquals(layerInfo.host, host)
-		unitTest:assertEquals(layerInfo.port, port)
-		unitTest:assertEquals(layerInfo.user, user)
-		unitTest:assertEquals(layerInfo.password, password)
-		unitTest:assertEquals(layerInfo.database, database)
-		unitTest:assertEquals(layerInfo.table, tableName)
-		unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
-
-		-- NO MASK TEST
-		local clSet = TerraLib().getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 37)
-
-		clName1 = clName1.."_NoMask"
-		local pgData2 = pgData
-		pgData2.tableName = clName1
-
-		TerraLib().dropPgTable(pgData2)
-
-		mask = false
-		TerraLib().addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData2, mask)
-
-		clSet = TerraLib().getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 54)
-
-		proj.file:delete()
-		TerraLib().dropPgTable(pgData)
-		TerraLib().dropPgTable(pgData2)
-		TerraLib().dropPgDatabase(pgData)
+		TerraLib().dropPgDatabase(pgConnInfo)
 	end,
 	attributeFill = function(unitTest)
 		local proj = {}

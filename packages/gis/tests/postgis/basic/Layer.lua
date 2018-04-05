@@ -24,277 +24,291 @@
 
 return {
 	Layer = function(unitTest)
-		local projName = "layer_postgis_basic.tview"
+		local twoLayersInTheSameDb = function()
+			local projName = "layer_postgis_basic.tview"
+			local proj1 = Project{
+				file = projName,
+				clean = true
+			}
 
-		local proj1 = Project{
-			file = projName,
-			clean = true
-		}
+			local layerName1 = "Sampa"
 
-		local layerName1 = "Sampa"
-
-		local layer1 = Layer{
-			project = proj1,
-			name = layerName1,
-			file = filePath("test/sampa.shp", "gis")
-		}
-
-		unitTest:assertEquals(layer1.name, layerName1)
-
-		local host
-		local port
-		local password = getConfig().password
-		local database = "postgis_22_sample"
-		local tableName = "sampa"
-
-		local pgData = {
-			source = "postgis",
-			--host = host,
-			--port = port,
-			password = password,
-			database = database,
-			overwrite = true
-		}
-
-		layer1:export(pgData, true)
-
-		local layerName2 = "SampaDB"
-
-		local layer2 = Layer{
-			project = proj1,
-			source = "postgis",
-			name = layerName2,
-			-- host = host,
-			-- port = port,
-			password = password,
-			database = database,
-			table = tableName
-		}
-
-		unitTest:assertEquals(layer2.name, layerName2)
-
-		local layerName3 = "Another_SampaDB"
-
-		local layer3 = Layer{
-			project = proj1,
-			source = "postgis",
-			name = layerName3,
-			-- host = host,
-			-- port = port,
-			password = password,
-			database = database,
-			table = tableName
-		}
-
-		unitTest:assert(layer3.name ~= layer2.name)
-		unitTest:assertEquals(layer3.epsg, layer2.epsg)
-
-		File(projName):deleteIfExists()
-
-		projName = "cells_setores_2000.tview"
-
-		local proj = Project{
-			file = projName,
-			clean = true
-		}
-
-		layerName1 = "Sampa"
-		Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/sampa.shp", "gis")
-		}
-
-		local clName1 = "Sampa_Cells"
-		local tName1 = "add_cellslayer_basic"
-
-		host = "localhost"
-		port = "5432"
-		password = "postgres"
-		database = "postgis_22_sample"
-
-		pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			password = password,
-			database = database,
-			table = tName1,
-			user = "postgres"
-		}
-
-		local cl1 = Layer{
-			project = proj,
-			source = "postgis",
-			clean = true,
-			input = layerName1,
-			name = clName1,
-			resolution = 0.7,
-			password = password,
-			database = database,
-			table = tName1
-		}
-
-		unitTest:assertEquals(cl1.name, clName1)
-
-		local clName2 = "Another_Sampa_Cells"
-		local tName2 = "add_cellslayer_basic_another"
-
-		pgData.table = tName2
-
-		local cl2 = Layer{
-			project = proj,
-			source = "postgis",
-			input = layerName1,
-			clean = true,
-			name = clName2,
-			resolution = 0.7,
-			password = password,
-			database = database,
-			table = tName2
-		}
-
-		unitTest:assertEquals(cl2.name, clName2)
-
-		local clName3 = "Other_Sampa_Cells"
-		local tName3 = "add_cellslayer_basic_from_db"
-
-		pgData.table = tName3
-
-		local cl3 = Layer{
-			project = proj,
-			source = "postgis",
-			input = clName2,
-			name = clName3,
-			clean = true,
-			resolution = 0.7,
-			password = password,
-			database = database,
-			table = tName3
-		}
-
-		unitTest:assertEquals(cl3.name, clName3)
-
-		local newDbName = "new_pg_db_30032017"
-		pgData.database = newDbName
-		TerraLib().dropPgDatabase(pgData)
-
-		local clName4 = "New_Sampa_Cells"
-
-		local layer4 = Layer{
-			project = proj,
-			source = "postgis",
-			input = clName2,
-			name = clName4,
-			resolution = 0.7,
-			password = password,
-			database = newDbName
-		}
-
-		unitTest:assertEquals(layer4.source, "postgis")
-		unitTest:assertEquals(layer4.host, host)
-		unitTest:assertEquals(layer4.port, port)
-		unitTest:assertEquals(layer4.user, "postgres")
-		unitTest:assertEquals(layer4.password, password)
-		unitTest:assertEquals(layer4.database, newDbName)
-		unitTest:assertEquals(layer4.table, string.lower(clName4))
-
-		-- BOX TEST
-		local clSet = TerraLib().getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 68)
-
-		clName1 = clName1.."_Box"
-		local tName4 = string.lower(clName1)
-		pgData.table = tName4
-
-		local cl4
-		local unnecessaryArgument = function()
-			cl4 = Layer{
-				project = proj,
-				source = "postgis",
-				input = layerName1,
-				clean = true,
-				name = clName1,
-				resolution = 0.7,
-				box = true,
-				password = password,
-				database = database,
+			local layer1 = Layer{
+				project = proj1,
+				name = layerName1,
 				file = filePath("test/sampa.shp", "gis")
 			}
-		end
-		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("file"))
-		clSet = TerraLib().getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 104)
 
-		-- CHANGE EPSG
-		local layerName5 = "SampaDBNewSrid"
+			unitTest:assertEquals(layer1.name, layerName1)
 
-		local layer5
-		local indexUnnecessary = function()
-			layer5 = Layer{
-				project = proj,
+			local password = "postgres"
+			local database = "postgis_22_sample"
+			local tableName = "sampa"
+
+			local pgData = {
 				source = "postgis",
-				name = layerName5,
+				--host = host,
+				--port = port,
+				password = password,
+				database = database,
+				overwrite = true
+			}
+
+			layer1:export(pgData, true)
+
+			local layerName2 = "SampaDB"
+
+			local layer2 = Layer{
+				project = proj1,
+				source = "postgis",
+				name = layerName2,
 				-- host = host,
 				-- port = port,
 				password = password,
 				database = database,
-				table = tName1,
-				epsg = 29901,
-				index = true
+				table = tableName
 			}
+
+			unitTest:assertEquals(layer2.name, layerName2)
+
+			local layerName3 = "Another_SampaDB"
+
+			local layer3 = Layer{
+				project = proj1,
+				source = "postgis",
+				name = layerName3,
+				-- host = host,
+				-- port = port,
+				password = password,
+				database = database,
+				table = tableName
+			}
+
+			unitTest:assert(layer3.name ~= layer2.name)
+			unitTest:assertEquals(layer3.epsg, layer2.epsg)
+
+			pgData.host = "localhost"
+			pgData.port = 5432
+
+			File(projName):deleteIfExists()
+			layer3:delete()
 		end
-		unitTest:assertWarning(indexUnnecessary, unnecessaryArgumentMsg("index"))
-		unitTest:assertEquals(layer5.epsg, 29901.0)
-		unitTest:assert(layer5.epsg ~= layer4.epsg)
-		-- // CHANGE EPSG
 
-		-- #1152
-		-- local host = "localhost"
-		-- local port = "5432"
-		-- local password = "postgres"
-		-- local database = "postgis_22_sample"
-		-- local encoding = "CP1252"
-		-- local tableName = "prodes_pg_cells"
+		local creatingCellSpaceFromShp = function()
+			local projName = "cells_setores_2000.tview"
+			local proj = Project{
+				file = projName,
+				clean = true
+			}
 
-		-- local pgData = {
-			-- type = "POSTGIS",
-			-- host = host,
-			-- port = port,
-			-- password = password,
-			-- database = database,
-			-- table = tableName,
-			-- user = "postgis",
-			-- encoding = encoding
+			local layerName1 = "Sampa"
+			Layer{
+				project = proj,
+				name = layerName1,
+				file = filePath("test/sampa.shp", "gis")
+			}
 
-		-- }
+			local clName1 = "Sampa_Cells"
+			local tName1 = "add_cellslayer_basic"
 
-		-- local clName2 = "ProdesPg"
+			local host = "localhost"
+			local port = "5432"
+			local password = "postgres"
+			local database = "postgis_22_sample"
 
-		-- local layer2 = Layer{
-			-- project = proj,
-			-- source = "postgis",
-			-- clean = true,
-			-- input = layerName1
-			-- name = clName2,
-			-- resolution = 60e3,
-			-- password = password,
-			-- database = database,
-			-- table = tableName
-		-- }
+			local pgData = {
+				type = "POSTGIS",
+				host = host,
+				port = port,
+				password = password,
+				database = database,
+				table = tName1,
+				user = "postgres"
+			}
 
-		File(projName):delete()
-		cl1:delete()
-		cl2:delete()
-		cl3:delete()
-		cl4:delete()
-		layer2:delete()
-		layer3:delete()
-		layer4:delete()
-		layer5:delete()
+			local cl1 = Layer{
+				project = proj,
+				source = "postgis",
+				clean = true,
+				input = layerName1,
+				name = clName1,
+				resolution = 0.7,
+				password = password,
+				database = database,
+				table = tName1
+			}
 
-		pgData.database = newDbName
-		TerraLib().dropPgDatabase(pgData)
+			unitTest:assertEquals(cl1.name, clName1)
+
+			local clName2 = "Another_Sampa_Cells"
+			local tName2 = "add_cellslayer_basic_another"
+
+			pgData.table = tName2
+
+			local cl2 = Layer{
+				project = proj,
+				source = "postgis",
+				input = layerName1,
+				clean = true,
+				name = clName2,
+				resolution = 0.7,
+				password = password,
+				database = database,
+				table = tName2
+			}
+
+			unitTest:assertEquals(cl2.name, clName2)
+
+			local clName3 = "Other_Sampa_Cells"
+			local tName3 = "add_cellslayer_basic_from_db"
+
+			pgData.table = tName3
+
+			local cl3 = Layer{
+				project = proj,
+				source = "postgis",
+				input = clName2,
+				name = clName3,
+				clean = true,
+				resolution = 0.7,
+				password = password,
+				database = database,
+				table = tName3
+			}
+
+			unitTest:assertEquals(cl3.name, clName3)
+
+			local newDbName = "new_pg_db_30032017"
+			pgData.database = newDbName
+			TerraLib().dropPgDatabase(pgData)
+
+			local clName4 = "New_Sampa_Cells"
+
+			local cl4 = Layer{
+				project = proj,
+				source = "postgis",
+				input = clName2,
+				name = clName4,
+				resolution = 0.7,
+				password = password,
+				database = newDbName
+			}
+
+			unitTest:assertEquals(cl4.source, "postgis")
+			unitTest:assertEquals(cl4.host, host)
+			unitTest:assertEquals(cl4.port, port)
+			unitTest:assertEquals(cl4.user, "postgres")
+			unitTest:assertEquals(cl4.password, password)
+			unitTest:assertEquals(cl4.database, newDbName)
+			unitTest:assertEquals(cl4.table, string.lower(clName4))
+
+			-- BOX TEST
+			local clSet = TerraLib().getDataSet(proj, clName1)
+			unitTest:assertEquals(getn(clSet), 68)
+
+			local clName5 = clName1.."_Box"
+			local tName4 = string.lower(clName5)
+			pgData.table = tName4
+
+			local cl5
+			local unnecessaryArgument = function()
+				cl5 = Layer{
+					project = proj,
+					source = "postgis",
+					input = layerName1,
+					clean = true,
+					name = clName5,
+					resolution = 0.7,
+					box = true,
+					password = password,
+					database = database,
+					file = filePath("test/sampa.shp", "gis")
+				}
+			end
+			unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("file"))
+			clSet = TerraLib().getDataSet(proj, clName5)
+			unitTest:assertEquals(getn(clSet), 104)
+
+			-- CHANGE EPSG
+			local clName6 = "SampaDBNewSrid"
+
+			local cl6
+			local indexUnnecessary = function()
+				cl6 = Layer{
+					project = proj,
+					source = "postgis",
+					name = clName6,
+					-- host = host,
+					-- port = port,
+					password = password,
+					database = database,
+					table = tName1,
+					epsg = 29901,
+					index = true
+				}
+			end
+			unitTest:assertWarning(indexUnnecessary, unnecessaryArgumentMsg("index"))
+			unitTest:assertEquals(cl6.epsg, 29901.0)
+			unitTest:assert(cl6.epsg ~= cl4.epsg)
+
+			cl1:delete()
+			cl2:delete()
+			cl3:delete()
+			cl4:delete()
+			cl5:delete()
+			cl6:delete()
+			proj.file:delete()
+		end
+
+		local creatingCellSpaceFromTif = function()
+			local projName = "pg_layer_basic.tview"
+			local proj = Project{
+				file = projName,
+				clean = true
+			}
+
+			local layerName1 = "Amz"
+			Layer{
+				project = proj,
+				name = layerName1,
+				epsg = 29191,
+				file = filePath("amazonia-prodes.tif", "gis")
+			}
+
+			local host = "localhost"
+			local port = "5432"
+			local password = "postgres"
+			local database = "postgis_22_sample"
+			local tableName = "prodes_pg_cells"
+
+			local clName = "ProdesPg"
+			local cl = Layer{
+				project = proj,
+				source = "postgis",
+				clean = true,
+				input = layerName1,
+				name = clName,
+				resolution = 30e3,
+				password = password,
+				database = database,
+				table = tableName
+			}
+
+			unitTest:assertEquals(cl.source, "postgis")
+			unitTest:assertEquals(cl.host, host)
+			unitTest:assertEquals(cl.port, port)
+			unitTest:assertEquals(cl.user, "postgres")
+			unitTest:assertEquals(cl.password, password)
+			unitTest:assertEquals(cl.database, database)
+			unitTest:assertEquals(cl.table, tableName)
+
+			cl:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(twoLayersInTheSameDb)
+		unitTest:assert(creatingCellSpaceFromShp)
+		unitTest:assert(creatingCellSpaceFromTif)
 	end,
 	delete = function(unitTest)
 		local projName = "layer_delete_pgis.tview"

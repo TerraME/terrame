@@ -282,7 +282,7 @@ return {
 		unitTest:assertEquals(l2.epsg, 4326)
 		unitTest:assertEquals(File(l2.file):name(), "biomassa-manaus.asc")
 		unitTest:assertEquals(l2.source, "asc")
-		unitTest:assertNil(l2.encoding)
+		unitTest:assertEquals(l2.encoding, "latin1")
 
 		if _Gtme.sessionInfo().system == "windows" then
 			local l3 = Layer{

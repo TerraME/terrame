@@ -71,82 +71,122 @@ return {
 		-- // SPATIAL INDEX TEST
 	end,
 	addShpCellSpaceLayer = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
+		local createProject = function()
+			local proj = {
+				file = "addshpcellspacelayer_basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+			return proj
+		end
 
-		local file = File(proj.file)
-		file:deleteIfExists()
+		local creatingFromShape = function()
+			local proj = createProject()
+			local layerName1 = "SampaShp"
+			local layerFile1 = filePath("test/sampa.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName1, layerFile1)
+			local layerInfo1 = TerraLib().getLayerInfo(proj, layerName1)
 
-		TerraLib().createProject(proj, {})
+			local clName = "Sampa_Cells"
+			local shp1 = File(clName..".shp")
 
-		local layerName1 = "SampaShp"
-		local layerFile1 = filePath("test/sampa.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName1, layerFile1)
-		local layerInfo1 = TerraLib().getLayerInfo(proj, layerName1)
+			shp1:deleteIfExists()
 
-		local clName = "Sampa_Cells"
-		local shp1 = File(clName..".shp")
+			local resolution = 1
+			local mask = true
+			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 
-		shp1:deleteIfExists()
+			local layerInfo = TerraLib().getLayerInfo(proj, clName)
 
-		local resolution = 1
-		local mask = true
-		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+			unitTest:assertEquals(layerInfo.name, clName)
+			unitTest:assertEquals(layerInfo.file, tostring(shp1))
+			unitTest:assertEquals(layerInfo.type, "OGR")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
+			unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
 
-		local layerInfo = TerraLib().getLayerInfo(proj, clName)
+			-- NO MASK TEST
+			local clSet = TerraLib().getDataSet(proj, clName)
+			unitTest:assertEquals(getn(clSet), 37)
 
-		unitTest:assertEquals(layerInfo.name, clName)
-		unitTest:assertEquals(layerInfo.file, tostring(shp1))
-		unitTest:assertEquals(layerInfo.type, "OGR")
-		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
+			clName = clName.."_NoMask"
+			local shp2 = File(clName..".shp")
 
-		-- NO MASK TEST
-		local clSet = TerraLib().getDataSet(proj, clName)
-		unitTest:assertEquals(getn(clSet), 37)
+			shp2:deleteIfExists()
 
-		clName = clName.."_NoMask"
-		local shp2 = File(clName..".shp")
+			mask = false
+			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp2, mask)
 
-		shp2:deleteIfExists()
+			clSet = TerraLib().getDataSet(proj, clName)
+			unitTest:assertEquals(getn(clSet), 54)
+			-- // NO MASK TEST
 
-		mask = false
-		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp2, mask)
+			-- SPATIAL INDEX TEST
+			clName = "Sampa_Cells_NOSIDX"
+			local shp3 = File(clName..".shp")
+			local addSpatialIdx = false
 
-		clSet = TerraLib().getDataSet(proj, clName)
-		unitTest:assertEquals(getn(clSet), 54)
-		-- // NO MASK TEST
+			shp3:deleteIfExists()
 
-		-- SPATIAL INDEX TEST
-		clName = "Sampa_Cells_NOSIDX"
-		local shp3 = File(clName..".shp")
-		local addSpatialIdx = false
+			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp3, mask, addSpatialIdx)
+			local qixFile1 = string.gsub(tostring(shp3), ".shp", ".qix")
+			unitTest:assert(not File(qixFile1):exists())
 
-		shp3:deleteIfExists()
+			clName = "Sampa_Cells_SIDX"
+			local shp4 = File(clName..".shp")
+			addSpatialIdx = true
 
-		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp3, mask, addSpatialIdx)
-		local qixFile1 = string.gsub(tostring(shp3), ".shp", ".qix")
-		unitTest:assert(not File(qixFile1):exists())
+			shp4:deleteIfExists()
 
-		clName = "Sampa_Cells_SIDX"
-		local shp4 = File(clName..".shp")
-		addSpatialIdx = true
+			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp4, mask, addSpatialIdx)
+			local qixFile2 = string.gsub(tostring(shp4), ".shp", ".qix")
+			unitTest:assert(File(qixFile2):exists())
+			-- // SPATIAL INDEX TEST
 
-		shp4:deleteIfExists()
+			shp1:deleteIfExists()
+			shp2:deleteIfExists()
+			shp3:deleteIfExists()
+			shp4:deleteIfExists()
 
-		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp4, mask, addSpatialIdx)
-		local qixFile2 = string.gsub(tostring(shp4), ".shp", ".qix")
-		unitTest:assert(File(qixFile2):exists())
-		-- // SPATIAL INDEX TEST
+			proj.file:delete()
+		end
 
-		shp1:deleteIfExists()
-		shp2:deleteIfExists()
-		shp3:deleteIfExists()
-		shp4:deleteIfExists()
+		local creatingFromTif = function()
+			local proj = createProject()
+			local layerName1 = "AmazoniaTif"
+			local layerFile1 = filePath("amazonia-prodes.tif", "gis")
+			TerraLib().addGdalLayer(proj, layerName1, layerFile1)
 
-		file:delete()
+			local clName = "Amazonia_Cells"
+			local shp1 = File(clName..".shp")
+
+			shp1:deleteIfExists()
+
+			local resolution = 3e5
+			local mask = true
+
+			local maskNotWork = function()
+				TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
+			end
+			unitTest:assertWarning(maskNotWork, "The 'mask' not work to Raster, it was ignored.")
+
+			local layerInfo = TerraLib().getLayerInfo(proj, clName)
+
+			unitTest:assertEquals(layerInfo.name, clName)
+			unitTest:assertEquals(layerInfo.file, tostring(shp1))
+			unitTest:assertEquals(layerInfo.type, "OGR")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
+
+			local clSet = TerraLib().getDataSet(proj, clName)
+			unitTest:assertEquals(getn(clSet), 108)
+
+			shp1:deleteIfExists()
+			proj.file:delete()
+		end
+
+		unitTest:assert(creatingFromShape)
+		unitTest:assert(creatingFromTif)
 	end,
 	attributeFill = function(unitTest)
 		local proj = {}

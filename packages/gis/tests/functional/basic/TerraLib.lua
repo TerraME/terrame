@@ -161,7 +161,7 @@ return {
 		unitTest:assertEquals(layerInfo.srid, 29191)
 		unitTest:assertEquals(layerInfo.type, "GDAL")
 		unitTest:assertEquals(layerInfo.source, "tif")
-		unitTest:assertNil(layerInfo.encoding)
+		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
 
 		layerInfo = TerraLib().getLayerInfo(proj, "amazonia-roads")
 		unitTest:assertEquals(layerInfo.name, "amazonia-roads")
@@ -201,7 +201,7 @@ return {
 		unitTest:assertEquals(layerInfo.srid, 4326)
 		unitTest:assertEquals(layerInfo.type, "GDAL")
 		unitTest:assertEquals(layerInfo.source, "asc")
-		unitTest:assertNil(layerInfo.encoding)
+		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
 
 		if _Gtme.sessionInfo().system == "windows" then
 			layerInfo = TerraLib().getLayerInfo(proj, "vegtype_2000")
@@ -210,7 +210,7 @@ return {
 			unitTest:assertEquals(layerInfo.srid, 4326) -- SKIP
 			unitTest:assertEquals(layerInfo.type, "GDAL") -- SKIP
 			unitTest:assertEquals(layerInfo.source, "nc") -- SKIP
-			unitTest:assertNil(layerInfo.encoding) -- SKIP
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1") -- SKIP
 		end
 
 		File("various.tview"):delete()
@@ -233,7 +233,7 @@ return {
 		unitTest:assertEquals(layerInfo.source, "wms")
 		unitTest:assertEquals(layerInfo.url, "http://terrabrasilis.info/geoserver/ows")
 		unitTest:assertEquals(layerInfo.dataset, "Prodes_2013:LANDSAT2013")
-		unitTest:assertNil(layerInfo.encoding)
+		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
 
 		layerInfo = TerraLib().getLayerInfo(proj, "reddpac:LandCover2000")
 		unitTest:assertEquals(layerInfo.name, "reddpac:LandCover2000")

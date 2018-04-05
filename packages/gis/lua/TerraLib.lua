@@ -1981,6 +1981,7 @@ TerraLib_ = {
 		local info = {}
 		info.name = layer:getTitle()
 		info.srid = layer:getSRID()
+		info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		local dseName = layer:getDataSetName()
 
 		loadProject(project, project.file)
@@ -1998,12 +1999,10 @@ TerraLib_ = {
 			info.database = string.gsub(connInfo:path(), "/", "")
 			info.table = dseName
 			info.source = "postgis"
-			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "OGR" then
 			info.file = fixSpaceInPath(connInfo:host()..connInfo:path())
 			local file = File(info.file)
 			info.source = file:extension()
-			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "GDAL" then
 			info.file = fixSpaceInPath(connInfo:host()..connInfo:path())
 			local file = File(info.file)
@@ -2012,7 +2011,6 @@ TerraLib_ = {
 			info.url = connInfo:path()
 			info.source = "wfs"
 			info.dataset = dseName
-			info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
 		elseif type == "WMS2" then
 			local infos = binding.Expand(connInfo:query())
 			info.url = infos.URI
