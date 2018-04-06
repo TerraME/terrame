@@ -189,845 +189,891 @@ return {
 		unitTest:assert(creatingFromTif)
 	end,
 	attributeFill = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-
-		File(proj.file):deleteIfExists()
-
-		TerraLib().createProject(proj, {})
-
-		local layerName1 = "Para"
-		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName1, layerFile1)
-
-		local shp = {}
-
-		local clName = "Para_Cells"
-		shp[1] = clName..".shp"
-
-		File(shp[1]):deleteIfExists()
-
-		-- CREATE THE CELLULAR SPACE
-		local resolution = 5e5
-		local mask = true
-		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, File(shp[1]), mask)
-
-		local clSet = TerraLib().getDataSet(proj, clName)
-
-		unitTest:assertEquals(getn(clSet), 9)
-
-		for k, v in pairs(clSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID"))
-			unitTest:assertNotNil(v)
+		local createProject = function()
+			local proj = {
+				file = "attributefill_shp_basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+			return proj
 		end
 
-		local clLayerInfo = TerraLib().getLayerInfo(proj, clName)
+		local allSopportedOperationsToguether = function()
+			local proj = createProject()
 
-		unitTest:assertEquals(clLayerInfo.name, clName)
-		unitTest:assertEquals(clLayerInfo.file, currentDir()..shp[1])
-		unitTest:assertEquals(clLayerInfo.type, "OGR")
-		unitTest:assertEquals(clLayerInfo.rep, "polygon")
+			local layerName1 = "Para"
+			local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
-		-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
-		local layerName2 = "Protection_Unit"
-		local layerFile2 = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName2, layerFile2)
+			local shp = {}
 
-		-- SHAPE OUTPUT
-		-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
-		local presLayerName = clName.."_"..layerName2.."_Presence"
-		shp[2] = presLayerName..".shp"
+			local clName = "Para_Cells"
+			shp[1] = clName..".shp"
 
-		File(shp[2]):deleteIfExists()
+			File(shp[1]):deleteIfExists()
 
-		local operation = "presence"
-		local attribute = "presence"
-		local select = "FID"
-		local area = nil
-		local default = nil
-		TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
+			-- CREATE THE CELLULAR SPACE
+			local resolution = 5e5
+			local mask = true
+			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, File(shp[1]), mask)
 
-		local presSet = TerraLib().getDataSet(proj, presLayerName)
+			local clSet = TerraLib().getDataSet(proj, clName)
 
-		unitTest:assertEquals(getn(presSet), 9)
+			unitTest:assertEquals(getn(clSet), 9)
 
-		for k, v in pairs(presSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence"))
-			unitTest:assertNotNil(v)
-		end
-
-		local presLayerInfo = TerraLib().getLayerInfo(proj, presLayerName)
-		unitTest:assertEquals(presLayerInfo.name, presLayerName)
-		unitTest:assertEquals(presLayerInfo.file, currentDir()..shp[2])
-		unitTest:assertEquals(presLayerInfo.type, "OGR")
-		unitTest:assertEquals(presLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH PERCENTAGE TOTAL AREA OPERATION
-		local areaLayerName = clName.."_"..layerName2.."_Area"
-		shp[3] = areaLayerName..".shp"
-
-		File(shp[3]):deleteIfExists()
-
-		operation = "area"
-		attribute = "area_perce" -- the attribute must have 10 characters (ogr truncate)
-		select = "FID"
-		area = nil
-		default = 0
-		TerraLib().attributeFill(proj, layerName2, presLayerName, areaLayerName, attribute, operation, select, area, default)
-
-		local areaSet = TerraLib().getDataSet(proj, areaLayerName)
-
-		unitTest:assertEquals(getn(areaSet), 9)
-
-		for k, v in pairs(areaSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce"))
-			unitTest:assertNotNil(v)
-		end
-
-		local areaLayerInfo = TerraLib().getLayerInfo(proj, areaLayerName)
-		unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
-		unitTest:assertEquals(areaLayerInfo.file, currentDir()..shp[3])
-		unitTest:assertEquals(areaLayerInfo.type, "OGR")
-		unitTest:assertEquals(areaLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH COUNT OPERATION
-		local countLayerName = clName.."_"..layerName2.."_Count"
-		shp[4] = countLayerName..".shp"
-
-		File(shp[4]):deleteIfExists()
-
-		operation = "count"
-		attribute = "count"
-		select = "FID"
-		area = nil
-		default = 0
-		TerraLib().attributeFill(proj, layerName2, areaLayerName, countLayerName, attribute, operation, select, area, default)
-
-		local countSet = TerraLib().getDataSet(proj, countLayerName)
-
-		unitTest:assertEquals(getn(countSet), 9)
-
-		for k, v in pairs(countSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count"))
-			unitTest:assertNotNil(v)
-		end
-
-		local countLayerInfo = TerraLib().getLayerInfo(proj, countLayerName)
-		unitTest:assertEquals(countLayerInfo.name, countLayerName)
-		unitTest:assertEquals(countLayerInfo.file, currentDir()..shp[4])
-		unitTest:assertEquals(countLayerInfo.type, "OGR")
-		unitTest:assertEquals(countLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH DISTANCE OPERATION
-		local distLayerName = clName.."_"..layerName2.."_Distance"
-		shp[5] = distLayerName..".shp"
-
-		File(shp[5]):deleteIfExists()
-
-		operation = "distance"
-		attribute = "distance"
-		select = "FID"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName2, countLayerName, distLayerName, attribute, operation, select, area, default)
-
-		local distSet = TerraLib().getDataSet(proj, distLayerName)
-
-		unitTest:assertEquals(getn(distSet), 9)
-
-		for k, v in pairs(distSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance"))
-			unitTest:assertNotNil(v)
-		end
-
-		local distLayerInfo = TerraLib().getLayerInfo(proj, distLayerName)
-		unitTest:assertEquals(distLayerInfo.name, distLayerName)
-		unitTest:assertEquals(distLayerInfo.file, currentDir()..shp[5])
-		unitTest:assertEquals(distLayerInfo.type, "OGR")
-		unitTest:assertEquals(distLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION
-		local layerName3 = "Amazon_Munic"
-		local layerFile3 = filePath("test/municipiosAML_ok.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName3, layerFile3)
-
-		local minLayerName = clName.."_"..layerName3.."_Minimum"
-		shp[6] = minLayerName..".shp"
-
-		File(shp[6]):deleteIfExists()
-
-		operation = "minimum"
-		attribute = "minimum"
-		select = "POPULACAO_"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, distLayerName, minLayerName, attribute, operation, select, area, default)
-
-		local minSet = TerraLib().getDataSet(proj, minLayerName)
-
-		unitTest:assertEquals(getn(minSet), 9)
-
-		for k, v in pairs(minSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum"))
-			unitTest:assertNotNil(v)
-		end
-
-		local minLayerInfo = TerraLib().getLayerInfo(proj, minLayerName)
-		unitTest:assertEquals(minLayerInfo.name, minLayerName)
-		unitTest:assertEquals(minLayerInfo.file, currentDir()..shp[6])
-		unitTest:assertEquals(minLayerInfo.type, "OGR")
-		unitTest:assertEquals(minLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION
-		local maxLayerName = clName.."_"..layerName3.."_Maximum"
-		shp[7] = maxLayerName..".shp"
-
-		File(shp[7]):deleteIfExists()
-
-		operation = "maximum"
-		attribute = "maximum"
-		select = "POPULACAO_"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, minLayerName, maxLayerName, attribute, operation, select, area, default)
-
-		local maxSet = TerraLib().getDataSet(proj, maxLayerName)
-
-		unitTest:assertEquals(getn(maxSet), 9)
-
-		for k, v in pairs(maxSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum"))
-			unitTest:assertNotNil(v)
-		end
-
-		local maxLayerInfo = TerraLib().getLayerInfo(proj, maxLayerName)
-		unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
-		unitTest:assertEquals(maxLayerInfo.file, currentDir()..shp[7])
-		unitTest:assertEquals(maxLayerInfo.type, "OGR")
-		unitTest:assertEquals(maxLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION
-		local percLayerName = clName.."_"..layerName2.."_Percentage"
-		shp[8] = percLayerName..".shp"
-
-		File(shp[8]):deleteIfExists()
-
-		operation = "coverage"
-		attribute = "perc"
-		select = "ADMINISTRA"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName2, maxLayerName, percLayerName, attribute, operation, select, area, default)
-
-		local percentSet = TerraLib().getDataSet(proj, percLayerName, -1)
-
-		unitTest:assertEquals(getn(percentSet), 9)
-
-		local missCount = 0
-
-		for k, v in pairs(percentSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (k == "perc_0") or (k == "perc_1"))
-			unitTest:assertNotNil(v)
-
-			if string.match(k, "perc_") then
-				missCount = missCount + 1
+			for k, v in pairs(clSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID"))
+				unitTest:assertNotNil(v)
 			end
+
+			local clLayerInfo = TerraLib().getLayerInfo(proj, clName)
+
+			unitTest:assertEquals(clLayerInfo.name, clName)
+			unitTest:assertEquals(clLayerInfo.file, currentDir()..shp[1])
+			unitTest:assertEquals(clLayerInfo.type, "OGR")
+			unitTest:assertEquals(clLayerInfo.rep, "polygon")
+
+			-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
+			local layerName2 = "Protection_Unit"
+			local layerFile2 = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName2, layerFile2)
+
+			-- SHAPE OUTPUT
+			-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
+			local presLayerName = clName.."_"..layerName2.."_Presence"
+			shp[2] = presLayerName..".shp"
+
+			File(shp[2]):deleteIfExists()
+
+			local operation = "presence"
+			local attribute = "presence"
+			local select = "FID"
+			local area = nil
+			local default = nil
+			TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
+
+			local presSet = TerraLib().getDataSet(proj, presLayerName)
+
+			unitTest:assertEquals(getn(presSet), 9)
+
+			for k, v in pairs(presSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence"))
+				unitTest:assertNotNil(v)
+			end
+
+			local presLayerInfo = TerraLib().getLayerInfo(proj, presLayerName)
+			unitTest:assertEquals(presLayerInfo.name, presLayerName)
+			unitTest:assertEquals(presLayerInfo.file, currentDir()..shp[2])
+			unitTest:assertEquals(presLayerInfo.type, "OGR")
+			unitTest:assertEquals(presLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH PERCENTAGE TOTAL AREA OPERATION
+			local areaLayerName = clName.."_"..layerName2.."_Area"
+			shp[3] = areaLayerName..".shp"
+
+			File(shp[3]):deleteIfExists()
+
+			operation = "area"
+			attribute = "area_perce" -- the attribute must have 10 characters (ogr truncate)
+			select = "FID"
+			area = nil
+			default = 0
+			TerraLib().attributeFill(proj, layerName2, presLayerName, areaLayerName, attribute, operation, select, area, default)
+
+			local areaSet = TerraLib().getDataSet(proj, areaLayerName)
+
+			unitTest:assertEquals(getn(areaSet), 9)
+
+			for k, v in pairs(areaSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce"))
+				unitTest:assertNotNil(v)
+			end
+
+			local areaLayerInfo = TerraLib().getLayerInfo(proj, areaLayerName)
+			unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
+			unitTest:assertEquals(areaLayerInfo.file, currentDir()..shp[3])
+			unitTest:assertEquals(areaLayerInfo.type, "OGR")
+			unitTest:assertEquals(areaLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH COUNT OPERATION
+			local countLayerName = clName.."_"..layerName2.."_Count"
+			shp[4] = countLayerName..".shp"
+
+			File(shp[4]):deleteIfExists()
+
+			operation = "count"
+			attribute = "count"
+			select = "FID"
+			area = nil
+			default = 0
+			TerraLib().attributeFill(proj, layerName2, areaLayerName, countLayerName, attribute, operation, select, area, default)
+
+			local countSet = TerraLib().getDataSet(proj, countLayerName)
+
+			unitTest:assertEquals(getn(countSet), 9)
+
+			for k, v in pairs(countSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count"))
+				unitTest:assertNotNil(v)
+			end
+
+			local countLayerInfo = TerraLib().getLayerInfo(proj, countLayerName)
+			unitTest:assertEquals(countLayerInfo.name, countLayerName)
+			unitTest:assertEquals(countLayerInfo.file, currentDir()..shp[4])
+			unitTest:assertEquals(countLayerInfo.type, "OGR")
+			unitTest:assertEquals(countLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH DISTANCE OPERATION
+			local distLayerName = clName.."_"..layerName2.."_Distance"
+			shp[5] = distLayerName..".shp"
+
+			File(shp[5]):deleteIfExists()
+
+			operation = "distance"
+			attribute = "distance"
+			select = "FID"
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName2, countLayerName, distLayerName, attribute, operation, select, area, default)
+
+			local distSet = TerraLib().getDataSet(proj, distLayerName)
+
+			unitTest:assertEquals(getn(distSet), 9)
+
+			for k, v in pairs(distSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance"))
+				unitTest:assertNotNil(v)
+			end
+
+			local distLayerInfo = TerraLib().getLayerInfo(proj, distLayerName)
+			unitTest:assertEquals(distLayerInfo.name, distLayerName)
+			unitTest:assertEquals(distLayerInfo.file, currentDir()..shp[5])
+			unitTest:assertEquals(distLayerInfo.type, "OGR")
+			unitTest:assertEquals(distLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH MINIMUM OPERATION
+			local layerName3 = "Amazon_Munic"
+			local layerFile3 = filePath("test/municipiosAML_ok.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName3, layerFile3)
+
+			local minLayerName = clName.."_"..layerName3.."_Minimum"
+			shp[6] = minLayerName..".shp"
+
+			File(shp[6]):deleteIfExists()
+
+			operation = "minimum"
+			attribute = "minimum"
+			select = "POPULACAO_"
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName3, distLayerName, minLayerName, attribute, operation, select, area, default)
+
+			local minSet = TerraLib().getDataSet(proj, minLayerName)
+
+			unitTest:assertEquals(getn(minSet), 9)
+
+			for k, v in pairs(minSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum"))
+				unitTest:assertNotNil(v)
+			end
+
+			local minLayerInfo = TerraLib().getLayerInfo(proj, minLayerName)
+			unitTest:assertEquals(minLayerInfo.name, minLayerName)
+			unitTest:assertEquals(minLayerInfo.file, currentDir()..shp[6])
+			unitTest:assertEquals(minLayerInfo.type, "OGR")
+			unitTest:assertEquals(minLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION
+			local maxLayerName = clName.."_"..layerName3.."_Maximum"
+			shp[7] = maxLayerName..".shp"
+
+			File(shp[7]):deleteIfExists()
+
+			operation = "maximum"
+			attribute = "maximum"
+			select = "POPULACAO_"
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName3, minLayerName, maxLayerName, attribute, operation, select, area, default)
+
+			local maxSet = TerraLib().getDataSet(proj, maxLayerName)
+
+			unitTest:assertEquals(getn(maxSet), 9)
+
+			for k, v in pairs(maxSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum"))
+				unitTest:assertNotNil(v)
+			end
+
+			local maxLayerInfo = TerraLib().getLayerInfo(proj, maxLayerName)
+			unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
+			unitTest:assertEquals(maxLayerInfo.file, currentDir()..shp[7])
+			unitTest:assertEquals(maxLayerInfo.type, "OGR")
+			unitTest:assertEquals(maxLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION
+			local percLayerName = clName.."_"..layerName2.."_Percentage"
+			shp[8] = percLayerName..".shp"
+
+			File(shp[8]):deleteIfExists()
+
+			operation = "coverage"
+			attribute = "perc"
+			select = "ADMINISTRA"
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName2, maxLayerName, percLayerName, attribute, operation, select, area, default)
+
+			local percentSet = TerraLib().getDataSet(proj, percLayerName, -1)
+
+			unitTest:assertEquals(getn(percentSet), 9)
+
+			local missCount = 0
+
+			for k, v in pairs(percentSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (k == "perc_0") or (k == "perc_1"))
+				unitTest:assertNotNil(v)
+
+				if string.match(k, "perc_") then
+					missCount = missCount + 1
+				end
+			end
+
+			unitTest:assertEquals(missCount, 2)
+
+			local percLayerInfo = TerraLib().getLayerInfo(proj, percLayerName)
+			unitTest:assertEquals(percLayerInfo.name, percLayerName)
+			unitTest:assertEquals(percLayerInfo.file, currentDir()..shp[8])
+			unitTest:assertEquals(percLayerInfo.type, "OGR")
+			unitTest:assertEquals(percLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION
+			local stdevLayerName = clName.."_"..layerName3.."_Stdev"
+			shp[9] = stdevLayerName..".shp"
+
+			File(shp[9]):deleteIfExists()
+
+			operation = "stdev"
+			attribute = "stdev"
+			select = "POPULACAO_"
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName3, percLayerName, stdevLayerName, attribute, operation, select, area, default)
+
+			local stdevSet = TerraLib().getDataSet(proj, stdevLayerName, 0)
+
+			unitTest:assertEquals(getn(stdevSet), 9)
+
+			for k, v in pairs(stdevSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev"))
+				unitTest:assertNotNil(v)
+			end
+
+			local stdevLayerInfo = TerraLib().getLayerInfo(proj, stdevLayerName)
+			unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
+			unitTest:assertEquals(stdevLayerInfo.file, currentDir()..shp[9])
+			unitTest:assertEquals(stdevLayerInfo.type, "OGR")
+			unitTest:assertEquals(stdevLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
+			local meanLayerName = clName.."_"..layerName3.."_AvrgMean"
+			shp[10] = meanLayerName..".shp"
+
+			File(shp[10]):deleteIfExists()
+
+			operation = "average"
+			attribute = "mean"
+			select = "POPULACAO_"
+			area = false
+			default = nil
+			TerraLib().attributeFill(proj, layerName3, stdevLayerName, meanLayerName, attribute, operation, select, area, default)
+
+			local meanSet = TerraLib().getDataSet(proj, meanLayerName, 0)
+
+			unitTest:assertEquals(getn(meanSet), 9)
+
+			for k, v in pairs(meanSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean"))
+				unitTest:assertNotNil(v)
+			end
+
+			local meanLayerInfo = TerraLib().getLayerInfo(proj, meanLayerName)
+			unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
+			unitTest:assertEquals(meanLayerInfo.file, currentDir()..shp[10])
+			unitTest:assertEquals(meanLayerInfo.type, "OGR")
+			unitTest:assertEquals(meanLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
+			local weighLayerName = clName.."_"..layerName3.."_AvrgWeighted"
+			shp[11] = weighLayerName..".shp"
+
+			File(shp[11]):deleteIfExists()
+
+			operation = "average"
+			attribute = "weighted"
+			select = "POPULACAO_"
+			area = true
+			default = nil
+			TerraLib().attributeFill(proj, layerName3, meanLayerName, weighLayerName, attribute, operation, select, area, default)
+
+			local weighSet = TerraLib().getDataSet(proj, weighLayerName, 0)
+
+			unitTest:assertEquals(getn(weighSet), 9)
+
+			for k, v in pairs(weighSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted"))
+				unitTest:assertNotNil(v)
+			end
+
+			local weighLayerInfo = TerraLib().getLayerInfo(proj, weighLayerName)
+			unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
+			unitTest:assertEquals(weighLayerInfo.file, currentDir()..shp[11])
+			unitTest:assertEquals(weighLayerInfo.type, "OGR")
+			unitTest:assertEquals(weighLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH MAJORITY INTERSECTION OPERATION
+			local interLayerName = clName.."_"..layerName3.."_Intersection"
+			shp[12] = interLayerName..".shp"
+
+			File(shp[12]):deleteIfExists()
+
+			operation = "mode"
+			attribute = "majo_int"
+			select = "POPULACAO_"
+			area = true
+			default = nil
+			TerraLib().attributeFill(proj, layerName3, weighLayerName, interLayerName, attribute, operation, select, area, default)
+
+			local interSet = TerraLib().getDataSet(proj, interLayerName, 0)
+
+			unitTest:assertEquals(getn(interSet), 9)
+
+			for k, v in pairs(interSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int"))
+				unitTest:assertNotNil(v)
+			end
+
+			local interLayerInfo = TerraLib().getLayerInfo(proj, interLayerName)
+			unitTest:assertEquals(interLayerInfo.name, interLayerName)
+			unitTest:assertEquals(interLayerInfo.file, currentDir()..shp[12])
+			unitTest:assertEquals(interLayerInfo.type, "OGR")
+			unitTest:assertEquals(interLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH MAJORITY OCCURRENCE OPERATION
+			local occurLayerName = clName.."_"..layerName3.."_Occurence"
+			shp[13] = occurLayerName..".shp"
+
+			File(shp[13]):deleteIfExists()
+
+			operation = "mode"
+			attribute = "majo_occur"
+			select = "POPULACAO_"
+			area = false
+			default = nil
+			TerraLib().attributeFill(proj, layerName3, interLayerName, occurLayerName, attribute, operation, select, area, default)
+
+			local occurSet = TerraLib().getDataSet(proj, occurLayerName, 0)
+
+			unitTest:assertEquals(getn(occurSet), 9)
+
+			for k, v in pairs(occurSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur"))
+				unitTest:assertNotNil(v)
+			end
+
+			local occurLayerInfo = TerraLib().getLayerInfo(proj, occurLayerName)
+			unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
+			unitTest:assertEquals(occurLayerInfo.file, currentDir()..shp[13])
+			unitTest:assertEquals(occurLayerInfo.type, "OGR")
+			unitTest:assertEquals(occurLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH SUM OPERATION
+			local sumLayerName = clName.."_"..layerName3.."_Sum"
+			shp[14] = sumLayerName..".shp"
+
+			File(shp[14]):deleteIfExists()
+
+			operation = "sum"
+			attribute = "sum"
+			select = "POPULACAO_"
+			area = false
+			default = nil
+			TerraLib().attributeFill(proj, layerName3, occurLayerName, sumLayerName, attribute, operation, select, area, default)
+
+			local sumSet = TerraLib().getDataSet(proj, sumLayerName, 0)
+
+			unitTest:assertEquals(getn(sumSet), 9)
+
+			for k, v in pairs(sumSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum"))
+				unitTest:assertNotNil(v)
+			end
+
+			local sumLayerInfo = TerraLib().getLayerInfo(proj, sumLayerName)
+			unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
+			unitTest:assertEquals(sumLayerInfo.file, currentDir()..shp[14])
+			unitTest:assertEquals(sumLayerInfo.type, "OGR")
+			unitTest:assertEquals(sumLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH WEIGHTED SUM OPERATION
+			local wsumLayerName = clName.."_"..layerName3.."_Wsum"
+			shp[15] = wsumLayerName..".shp"
+
+			File(shp[15]):deleteIfExists()
+
+			operation = "sum"
+			attribute = "wsum"
+			select = "POPULACAO_"
+			area = true
+			default = nil
+			TerraLib().attributeFill(proj, layerName3, sumLayerName, wsumLayerName, attribute, operation, select, area, default)
+
+			local wsumSet = TerraLib().getDataSet(proj, wsumLayerName, 0)
+
+			unitTest:assertEquals(getn(wsumSet), 9)
+
+			for k, v in pairs(wsumSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum") or (k == "wsum"))
+				unitTest:assertNotNil(v)
+			end
+
+			local wsumLayerInfo = TerraLib().getLayerInfo(proj, wsumLayerName)
+			unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
+			unitTest:assertEquals(wsumLayerInfo.file, currentDir()..shp[15])
+			unitTest:assertEquals(wsumLayerInfo.type, "OGR")
+			unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
+
+			-- RASTER TESTS WITH SHAPE
+			-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
+			local layerName4 = "Prodes_PA"
+			local layerFile4 = filePath("test/prodes_polyc_10k.tif", "gis")
+			TerraLib().addGdalLayer(proj, layerName4, layerFile4, wsumLayerInfo.srid)
+
+			local percTifLayerName = clName.."_"..layerName4.."_RPercentage"
+			shp[16] = percTifLayerName..".shp"
+
+			File(shp[16]):deleteIfExists()
+
+			operation = "coverage"
+			attribute = "rpercentage"
+			select = 0
+			area = nil
+			default = nil
+
+			local attributeTruncateWarning = function()
+				TerraLib().attributeFill(proj, layerName4, wsumLayerName, percTifLayerName, attribute, operation, select, area, default)
+			end
+
+			unitTest:assertWarning(attributeTruncateWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'rpercentag'.")
+
+			percentSet = TerraLib().getDataSet(proj, percTifLayerName, 0)
+
+			unitTest:assertEquals(getn(percentSet), 9)
+
+			for k, v in pairs(percentSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+								(string.match(k, "rpercen_") ~= nil))
+				unitTest:assertNotNil(v)
+			end
+
+			local percTifLayerInfo = TerraLib().getLayerInfo(proj, percTifLayerName)
+			unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
+			unitTest:assertEquals(percTifLayerInfo.file, currentDir()..shp[16])
+			unitTest:assertEquals(percTifLayerInfo.type, "OGR")
+			unitTest:assertEquals(percTifLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION FROM RASTER
+			local rmeanLayerName = clName.."_"..layerName4.."_RMean"
+			shp[17] = rmeanLayerName..".shp"
+
+			File(shp[17]):deleteIfExists()
+
+			operation = "average"
+			attribute = "rmean"
+			select = 0
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName4, percTifLayerName, rmeanLayerName, attribute, operation, select, area, default)
+
+			local rmeanSet = TerraLib().getDataSet(proj, rmeanLayerName, 0)
+
+			unitTest:assertEquals(getn(rmeanSet), 9)
+
+			for k, v in pairs(rmeanSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+								(string.match(k, "rpercen_") ~= nil) or (k == "rmean"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rmeanLayerInfo = TerraLib().getLayerInfo(proj, rmeanLayerName)
+			unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
+			unitTest:assertEquals(rmeanLayerInfo.file, currentDir()..shp[17])
+			unitTest:assertEquals(rmeanLayerInfo.type, "OGR")
+			unitTest:assertEquals(rmeanLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH MINIMUM OPERATION FROM RASTER
+			local rminLayerName = clName.."_"..layerName4.."_RMinimum"
+			shp[18] = rminLayerName..".shp"
+
+			File(shp[18]):deleteIfExists()
+
+			operation = "minimum"
+			attribute = "rmin"
+			select = 0
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName4, rmeanLayerName, rminLayerName, attribute, operation, select, area, default)
+
+			local rminSet = TerraLib().getDataSet(proj, rminLayerName, 0)
+
+			unitTest:assertEquals(getn(rminSet), 9)
+
+			for k, v in pairs(rminSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+								(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rminLayerInfo = TerraLib().getLayerInfo(proj, rminLayerName)
+			unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
+			unitTest:assertEquals(rminLayerInfo.file, currentDir()..shp[18])
+			unitTest:assertEquals(rminLayerInfo.type, "OGR")
+			unitTest:assertEquals(rminLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION FROM RASTER
+			local rmaxLayerName = clName.."_"..layerName4.."_RMaximum"
+			shp[19] = rmaxLayerName..".shp"
+
+			File(shp[19]):deleteIfExists()
+
+			operation = "maximum"
+			attribute = "rmax"
+			select = 0
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName4, rminLayerName, rmaxLayerName, attribute, operation, select, area, default)
+
+			local rmaxSet = TerraLib().getDataSet(proj, rmaxLayerName, 0)
+
+			unitTest:assertEquals(getn(rmaxSet), 9)
+
+			for k, v in pairs(rmaxSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+								(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rmaxLayerInfo = TerraLib().getLayerInfo(proj, rmaxLayerName)
+			unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
+			unitTest:assertEquals(rmaxLayerInfo.file, currentDir()..shp[19])
+			unitTest:assertEquals(rmaxLayerInfo.type, "OGR")
+			unitTest:assertEquals(rmaxLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION FROM RASTER
+			local rstdevLayerName = clName.."_"..layerName4.."_RStdev"
+			shp[20] = rstdevLayerName..".shp"
+
+			File(shp[20]):deleteIfExists()
+
+			operation = "stdev"
+			attribute = "rstdev"
+			select = 0
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName4, rmaxLayerName, rstdevLayerName, attribute, operation, select, area, default)
+
+			local rstdevSet = TerraLib().getDataSet(proj, rstdevLayerName, 0)
+
+			unitTest:assertEquals(getn(rstdevSet), 9)
+
+			for k, v in pairs(rstdevSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+								(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
+								(k == "rstdev"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rstdevLayerInfo = TerraLib().getLayerInfo(proj, rstdevLayerName)
+			unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
+			unitTest:assertEquals(rstdevLayerInfo.file, currentDir()..shp[20])
+			unitTest:assertEquals(rstdevLayerInfo.type, "OGR")
+			unitTest:assertEquals(rstdevLayerInfo.rep, "polygon")
+
+			-- FILL CELLULAR SPACE WITH SUM OPERATION FROM RASTER
+			local rsumLayerName = clName.."_"..layerName4.."_RSum"
+			shp[21] = rsumLayerName..".shp"
+
+			File(shp[21]):deleteIfExists()
+
+			operation = "sum"
+			attribute = "rsum"
+			select = 0
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName4, rstdevLayerName, rsumLayerName, attribute, operation, select, area, default)
+
+			local rsumSet = TerraLib().getDataSet(proj, rsumLayerName, 0)
+
+			unitTest:assertEquals(getn(rsumSet), 9)
+
+			for k, v in pairs(rsumSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+								(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
+								(k == "rstdev") or (k == "rsum"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rsumLayerInfo = TerraLib().getLayerInfo(proj, rsumLayerName)
+			unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
+			unitTest:assertEquals(rsumLayerInfo.file, currentDir()..shp[21])
+			unitTest:assertEquals(rsumLayerInfo.type, "OGR")
+			unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
+
+			-- OVERWRITE OUTPUT
+			operation = "sum"
+			attribute = "rsum_over"
+			select = 0
+			area = nil
+			default = 0
+			TerraLib().attributeFill(proj, layerName4, rsumLayerName, nil, attribute, operation, select, area, default)
+
+			local rsumOverSet = TerraLib().getDataSet(proj, rsumLayerName, 0)
+
+			unitTest:assertEquals(getn(rsumOverSet), 9)
+
+			for k, v in pairs(rsumOverSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+								(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
+								(k == "rstdev") or (k == "rsum") or (k == "rsum_over"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rsumOverLayerInfo = TerraLib().getLayerInfo(proj, rsumLayerName)
+			unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
+			unitTest:assertEquals(rsumOverLayerInfo.file, currentDir()..shp[21])
+			unitTest:assertEquals(rsumOverLayerInfo.type, "OGR")
+			unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
+
+			-- RASTER NODATA
+			local nodataLayerName = clName.."_"..layerName4.."_ND"
+			shp[22] = nodataLayerName..".shp"
+
+			File(shp[22]):deleteIfExists()
+
+			operation = "average"
+			attribute = "aver_nd"
+			select = 0
+			area = nil
+			default = nil
+			local nodata = 256
+			TerraLib().attributeFill(proj, layerName4, rsumLayerName, nodataLayerName, attribute, operation, select, area, default, nil, nodata)
+
+			local ndSet = TerraLib().getDataSet(proj, nodataLayerName, 0)
+
+			unitTest:assertEquals(getn(ndSet), 9)
+
+			for k, v in pairs(ndSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+								(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
+								(k == "rstdev") or (k == "rsum") or (k == "rsum_over") or (k == "aver_nd"))
+				unitTest:assertNotNil(v)
+			end
+
+			local nodataLayerInfo = TerraLib().getLayerInfo(proj, nodataLayerName)
+			unitTest:assertEquals(nodataLayerInfo.name, nodataLayerName)
+			unitTest:assertEquals(nodataLayerInfo.file, currentDir()..shp[22])
+			unitTest:assertEquals(nodataLayerInfo.type, "OGR")
+			unitTest:assertEquals(nodataLayerInfo.rep, "polygon")
+
+			-- COVERAGE ATTRIBUTE + SELECTED WITH MORE THAN 10 CHARACTERS
+			local percLayerName2 = clName.."_"..layerName2.."_Percentage2"
+			shp[23] = percLayerName2..".shp"
+
+			File(shp[23]):deleteIfExists()
+
+			operation = "coverage"
+			attribute = "percentage"
+			select = "ADMINISTRA"
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName2, nodataLayerName, percLayerName2, attribute, operation, select, area, default)
+
+			local percentSet2 = TerraLib().getDataSet(proj, percLayerName2, 0)
+
+			unitTest:assertEquals(getn(percentSet2), 9)
+
+			unitTest:assertNotNil(percentSet2[0].percenta_0)
+			unitTest:assertNotNil(percentSet2[0].percenta_1)
+
+			-- COVERAGE ATTRIBUTE WITH 9 CHARACTERS
+			local percLayerName3 = clName.."_"..layerName2.."_Percentage3"
+			shp[24] = percLayerName3..".shp"
+
+			File(shp[24]):deleteIfExists()
+
+			operation = "coverage"
+			attribute = "ninechars"
+			select = "NOME"
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName2, percLayerName2, percLayerName3, attribute, operation, select, area, default)
+
+			local percentSet3 = TerraLib().getDataSet(proj, percLayerName3, 0)
+
+			unitTest:assertEquals(getn(percentSet3), 9)
+
+			unitTest:assertNotNil(percentSet3[0].nine_REBIO)
+			unitTest:assertNotNil(percentSet3[0].nine_PARES)
+			unitTest:assertNotNil(percentSet3[0].nine_PARNA)
+
+			-- FILL CELLULAR SPACE WITH COUNT OPERATION FROM RASTER
+			local rcountLayerName = clName.."_"..layerName4.."_RCount"
+			shp[25] = rcountLayerName..".shp"
+
+			File(shp[25]):deleteIfExists()
+
+			operation = "count"
+			attribute = "rcount"
+			select = 0
+			area = nil
+			default = nil
+			TerraLib().attributeFill(proj, layerName4, nodataLayerName, rcountLayerName, attribute, operation, select, area, default)
+
+			local rcountSet = TerraLib().getDataSet(proj, rcountLayerName, 0)
+
+			unitTest:assertEquals(getn(rcountSet), 9)
+
+			for k, v in pairs(rcountSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
+								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
+								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
+								(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
+								(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
+								(k == "rstdev") or (k == "rsum") or (k == "rsum_over") or (k == "aver_nd") or (k == "rcount"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rcountLayerInfo = TerraLib().getLayerInfo(proj, rcountLayerName)
+			unitTest:assertEquals(rcountLayerInfo.name, rcountLayerName)
+			unitTest:assertEquals(rcountLayerInfo.file, currentDir()..shp[25])
+			unitTest:assertEquals(rcountLayerInfo.type, "OGR")
+			unitTest:assertEquals(rcountLayerInfo.rep, "polygon")
+
+			for j = 1, #shp do
+				File(shp[j]):deleteIfExists()
+			end
+
+			proj.file:delete()
 		end
 
-		unitTest:assertEquals(missCount, 2)
-
-		local percLayerInfo = TerraLib().getLayerInfo(proj, percLayerName)
-		unitTest:assertEquals(percLayerInfo.name, percLayerName)
-		unitTest:assertEquals(percLayerInfo.file, currentDir()..shp[8])
-		unitTest:assertEquals(percLayerInfo.type, "OGR")
-		unitTest:assertEquals(percLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION
-		local stdevLayerName = clName.."_"..layerName3.."_Stdev"
-		shp[9] = stdevLayerName..".shp"
-
-		File(shp[9]):deleteIfExists()
-
-		operation = "stdev"
-		attribute = "stdev"
-		select = "POPULACAO_"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, percLayerName, stdevLayerName, attribute, operation, select, area, default)
-
-		local stdevSet = TerraLib().getDataSet(proj, stdevLayerName, 0)
-
-		unitTest:assertEquals(getn(stdevSet), 9)
-
-		for k, v in pairs(stdevSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev"))
-			unitTest:assertNotNil(v)
-		end
-
-		local stdevLayerInfo = TerraLib().getLayerInfo(proj, stdevLayerName)
-		unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
-		unitTest:assertEquals(stdevLayerInfo.file, currentDir()..shp[9])
-		unitTest:assertEquals(stdevLayerInfo.type, "OGR")
-		unitTest:assertEquals(stdevLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
-		local meanLayerName = clName.."_"..layerName3.."_AvrgMean"
-		shp[10] = meanLayerName..".shp"
-
-		File(shp[10]):deleteIfExists()
-
-		operation = "average"
-		attribute = "mean"
-		select = "POPULACAO_"
-		area = false
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, stdevLayerName, meanLayerName, attribute, operation, select, area, default)
-
-		local meanSet = TerraLib().getDataSet(proj, meanLayerName, 0)
-
-		unitTest:assertEquals(getn(meanSet), 9)
-
-		for k, v in pairs(meanSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean"))
-			unitTest:assertNotNil(v)
-		end
-
-		local meanLayerInfo = TerraLib().getLayerInfo(proj, meanLayerName)
-		unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
-		unitTest:assertEquals(meanLayerInfo.file, currentDir()..shp[10])
-		unitTest:assertEquals(meanLayerInfo.type, "OGR")
-		unitTest:assertEquals(meanLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
-		local weighLayerName = clName.."_"..layerName3.."_AvrgWeighted"
-		shp[11] = weighLayerName..".shp"
-
-		File(shp[11]):deleteIfExists()
-
-		operation = "average"
-		attribute = "weighted"
-		select = "POPULACAO_"
-		area = true
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, meanLayerName, weighLayerName, attribute, operation, select, area, default)
-
-		local weighSet = TerraLib().getDataSet(proj, weighLayerName, 0)
-
-		unitTest:assertEquals(getn(weighSet), 9)
-
-		for k, v in pairs(weighSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted"))
-			unitTest:assertNotNil(v)
-		end
-
-		local weighLayerInfo = TerraLib().getLayerInfo(proj, weighLayerName)
-		unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
-		unitTest:assertEquals(weighLayerInfo.file, currentDir()..shp[11])
-		unitTest:assertEquals(weighLayerInfo.type, "OGR")
-		unitTest:assertEquals(weighLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH MAJORITY INTERSECTION OPERATION
-		local interLayerName = clName.."_"..layerName3.."_Intersection"
-		shp[12] = interLayerName..".shp"
-
-		File(shp[12]):deleteIfExists()
-
-		operation = "mode"
-		attribute = "majo_int"
-		select = "POPULACAO_"
-		area = true
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, weighLayerName, interLayerName, attribute, operation, select, area, default)
-
-		local interSet = TerraLib().getDataSet(proj, interLayerName, 0)
-
-		unitTest:assertEquals(getn(interSet), 9)
-
-		for k, v in pairs(interSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int"))
-			unitTest:assertNotNil(v)
-		end
-
-		local interLayerInfo = TerraLib().getLayerInfo(proj, interLayerName)
-		unitTest:assertEquals(interLayerInfo.name, interLayerName)
-		unitTest:assertEquals(interLayerInfo.file, currentDir()..shp[12])
-		unitTest:assertEquals(interLayerInfo.type, "OGR")
-		unitTest:assertEquals(interLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH MAJORITY OCCURRENCE OPERATION
-		local occurLayerName = clName.."_"..layerName3.."_Occurence"
-		shp[13] = occurLayerName..".shp"
-
-		File(shp[13]):deleteIfExists()
-
-		operation = "mode"
-		attribute = "majo_occur"
-		select = "POPULACAO_"
-		area = false
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, interLayerName, occurLayerName, attribute, operation, select, area, default)
-
-		local occurSet = TerraLib().getDataSet(proj, occurLayerName, 0)
-
-		unitTest:assertEquals(getn(occurSet), 9)
-
-		for k, v in pairs(occurSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur"))
-			unitTest:assertNotNil(v)
-		end
-
-		local occurLayerInfo = TerraLib().getLayerInfo(proj, occurLayerName)
-		unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
-		unitTest:assertEquals(occurLayerInfo.file, currentDir()..shp[13])
-		unitTest:assertEquals(occurLayerInfo.type, "OGR")
-		unitTest:assertEquals(occurLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH SUM OPERATION
-		local sumLayerName = clName.."_"..layerName3.."_Sum"
-		shp[14] = sumLayerName..".shp"
-
-		File(shp[14]):deleteIfExists()
-
-		operation = "sum"
-		attribute = "sum"
-		select = "POPULACAO_"
-		area = false
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, occurLayerName, sumLayerName, attribute, operation, select, area, default)
-
-		local sumSet = TerraLib().getDataSet(proj, sumLayerName, 0)
-
-		unitTest:assertEquals(getn(sumSet), 9)
-
-		for k, v in pairs(sumSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum"))
-			unitTest:assertNotNil(v)
-		end
-
-		local sumLayerInfo = TerraLib().getLayerInfo(proj, sumLayerName)
-		unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
-		unitTest:assertEquals(sumLayerInfo.file, currentDir()..shp[14])
-		unitTest:assertEquals(sumLayerInfo.type, "OGR")
-		unitTest:assertEquals(sumLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH WEIGHTED SUM OPERATION
-		local wsumLayerName = clName.."_"..layerName3.."_Wsum"
-		shp[15] = wsumLayerName..".shp"
-
-		File(shp[15]):deleteIfExists()
-
-		operation = "sum"
-		attribute = "wsum"
-		select = "POPULACAO_"
-		area = true
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, sumLayerName, wsumLayerName, attribute, operation, select, area, default)
-
-		local wsumSet = TerraLib().getDataSet(proj, wsumLayerName, 0)
-
-		unitTest:assertEquals(getn(wsumSet), 9)
-
-		for k, v in pairs(wsumSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum"))
-			unitTest:assertNotNil(v)
-		end
-
-		local wsumLayerInfo = TerraLib().getLayerInfo(proj, wsumLayerName)
-		unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
-		unitTest:assertEquals(wsumLayerInfo.file, currentDir()..shp[15])
-		unitTest:assertEquals(wsumLayerInfo.type, "OGR")
-		unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
-
-		-- RASTER TESTS WITH SHAPE
-		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
-		local layerName4 = "Prodes_PA"
-		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "gis")
-		TerraLib().addGdalLayer(proj, layerName4, layerFile4, wsumLayerInfo.srid)
-
-		local percTifLayerName = clName.."_"..layerName4.."_RPercentage"
-		shp[16] = percTifLayerName..".shp"
-
-		File(shp[16]):deleteIfExists()
-
-		operation = "coverage"
-		attribute = "rpercentage"
-		select = 0
-		area = nil
-		default = nil
-
-		local attributeTruncateWarning = function()
-			TerraLib().attributeFill(proj, layerName4, wsumLayerName, percTifLayerName, attribute, operation, select, area, default)
-		end
-
-		unitTest:assertWarning(attributeTruncateWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'rpercentag'.")
-
-		percentSet = TerraLib().getDataSet(proj, percTifLayerName, 0)
-
-		unitTest:assertEquals(getn(percentSet), 9)
-
-		for k, v in pairs(percentSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
-							(string.match(k, "rpercen_") ~= nil))
-			unitTest:assertNotNil(v)
-		end
-
-		local percTifLayerInfo = TerraLib().getLayerInfo(proj, percTifLayerName)
-		unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
-		unitTest:assertEquals(percTifLayerInfo.file, currentDir()..shp[16])
-		unitTest:assertEquals(percTifLayerInfo.type, "OGR")
-		unitTest:assertEquals(percTifLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION FROM RASTER
-		local rmeanLayerName = clName.."_"..layerName4.."_RMean"
-		shp[17] = rmeanLayerName..".shp"
-
-		File(shp[17]):deleteIfExists()
-
-		operation = "average"
-		attribute = "rmean"
-		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, percTifLayerName, rmeanLayerName, attribute, operation, select, area, default)
-
-		local rmeanSet = TerraLib().getDataSet(proj, rmeanLayerName, 0)
-
-		unitTest:assertEquals(getn(rmeanSet), 9)
-
-		for k, v in pairs(rmeanSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
-							(string.match(k, "rpercen_") ~= nil) or (k == "rmean"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rmeanLayerInfo = TerraLib().getLayerInfo(proj, rmeanLayerName)
-		unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
-		unitTest:assertEquals(rmeanLayerInfo.file, currentDir()..shp[17])
-		unitTest:assertEquals(rmeanLayerInfo.type, "OGR")
-		unitTest:assertEquals(rmeanLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION FROM RASTER
-		local rminLayerName = clName.."_"..layerName4.."_RMinimum"
-		shp[18] = rminLayerName..".shp"
-
-		File(shp[18]):deleteIfExists()
-
-		operation = "minimum"
-		attribute = "rmin"
-		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, rmeanLayerName, rminLayerName, attribute, operation, select, area, default)
-
-		local rminSet = TerraLib().getDataSet(proj, rminLayerName, 0)
-
-		unitTest:assertEquals(getn(rminSet), 9)
-
-		for k, v in pairs(rminSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
-							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rminLayerInfo = TerraLib().getLayerInfo(proj, rminLayerName)
-		unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
-		unitTest:assertEquals(rminLayerInfo.file, currentDir()..shp[18])
-		unitTest:assertEquals(rminLayerInfo.type, "OGR")
-		unitTest:assertEquals(rminLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION FROM RASTER
-		local rmaxLayerName = clName.."_"..layerName4.."_RMaximum"
-		shp[19] = rmaxLayerName..".shp"
-
-		File(shp[19]):deleteIfExists()
-
-		operation = "maximum"
-		attribute = "rmax"
-		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, rminLayerName, rmaxLayerName, attribute, operation, select, area, default)
-
-		local rmaxSet = TerraLib().getDataSet(proj, rmaxLayerName, 0)
-
-		unitTest:assertEquals(getn(rmaxSet), 9)
-
-		for k, v in pairs(rmaxSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
-							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rmaxLayerInfo = TerraLib().getLayerInfo(proj, rmaxLayerName)
-		unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
-		unitTest:assertEquals(rmaxLayerInfo.file, currentDir()..shp[19])
-		unitTest:assertEquals(rmaxLayerInfo.type, "OGR")
-		unitTest:assertEquals(rmaxLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION FROM RASTER
-		local rstdevLayerName = clName.."_"..layerName4.."_RStdev"
-		shp[20] = rstdevLayerName..".shp"
-
-		File(shp[20]):deleteIfExists()
-
-		operation = "stdev"
-		attribute = "rstdev"
-		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, rmaxLayerName, rstdevLayerName, attribute, operation, select, area, default)
-
-		local rstdevSet = TerraLib().getDataSet(proj, rstdevLayerName, 0)
-
-		unitTest:assertEquals(getn(rstdevSet), 9)
-
-		for k, v in pairs(rstdevSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
-							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
-							(k == "rstdev"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rstdevLayerInfo = TerraLib().getLayerInfo(proj, rstdevLayerName)
-		unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
-		unitTest:assertEquals(rstdevLayerInfo.file, currentDir()..shp[20])
-		unitTest:assertEquals(rstdevLayerInfo.type, "OGR")
-		unitTest:assertEquals(rstdevLayerInfo.rep, "polygon")
-
-		-- FILL CELLULAR SPACE WITH SUM OPERATION FROM RASTER
-		local rsumLayerName = clName.."_"..layerName4.."_RSum"
-		shp[21] = rsumLayerName..".shp"
-
-		File(shp[21]):deleteIfExists()
-
-		operation = "sum"
-		attribute = "rsum"
-		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, rstdevLayerName, rsumLayerName, attribute, operation, select, area, default)
-
-		local rsumSet = TerraLib().getDataSet(proj, rsumLayerName, 0)
-
-		unitTest:assertEquals(getn(rsumSet), 9)
-
-		for k, v in pairs(rsumSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
-							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
-							(k == "rstdev") or (k == "rsum"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rsumLayerInfo = TerraLib().getLayerInfo(proj, rsumLayerName)
-		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumLayerInfo.file, currentDir()..shp[21])
-		unitTest:assertEquals(rsumLayerInfo.type, "OGR")
-		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
-
-		-- OVERWRITE OUTPUT
-		operation = "sum"
-		attribute = "rsum_over"
-		select = 0
-		area = nil
-		default = 0
-		TerraLib().attributeFill(proj, layerName4, rsumLayerName, nil, attribute, operation, select, area, default)
-
-		local rsumOverSet = TerraLib().getDataSet(proj, rsumLayerName, 0)
-
-		unitTest:assertEquals(getn(rsumOverSet), 9)
-
-		for k, v in pairs(rsumOverSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
-							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
-							(k == "rstdev") or (k == "rsum") or (k == "rsum_over"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rsumOverLayerInfo = TerraLib().getLayerInfo(proj, rsumLayerName)
-		unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumOverLayerInfo.file, currentDir()..shp[21])
-		unitTest:assertEquals(rsumOverLayerInfo.type, "OGR")
-		unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
-
-		-- RASTER NODATA
-		local nodataLayerName = clName.."_"..layerName4.."_ND"
-		shp[22] = nodataLayerName..".shp"
-
-		File(shp[22]):deleteIfExists()
-
-		operation = "average"
-		attribute = "aver_nd"
-		select = 0
-		area = nil
-		default = nil
-		local nodata = 256
-		TerraLib().attributeFill(proj, layerName4, rsumLayerName, nodataLayerName, attribute, operation, select, area, default, nil, nodata)
-
-		local ndSet = TerraLib().getDataSet(proj, nodataLayerName, 0)
-
-		unitTest:assertEquals(getn(ndSet), 9)
-
-		for k, v in pairs(ndSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
-							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
-							(k == "rstdev") or (k == "rsum") or (k == "rsum_over") or (k == "aver_nd"))
-			unitTest:assertNotNil(v)
-		end
-
-		local nodataLayerInfo = TerraLib().getLayerInfo(proj, nodataLayerName)
-		unitTest:assertEquals(nodataLayerInfo.name, nodataLayerName)
-		unitTest:assertEquals(nodataLayerInfo.file, currentDir()..shp[22])
-		unitTest:assertEquals(nodataLayerInfo.type, "OGR")
-		unitTest:assertEquals(nodataLayerInfo.rep, "polygon")
-
-		-- COVERAGE ATTRIBUTE + SELECTED WITH MORE THAN 10 CHARACTERS
-		local percLayerName2 = clName.."_"..layerName2.."_Percentage2"
-		shp[23] = percLayerName2..".shp"
-
-		File(shp[23]):deleteIfExists()
-
-		operation = "coverage"
-		attribute = "percentage"
-		select = "ADMINISTRA"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName2, nodataLayerName, percLayerName2, attribute, operation, select, area, default)
-
-		local percentSet2 = TerraLib().getDataSet(proj, percLayerName2, 0)
-
-		unitTest:assertEquals(getn(percentSet2), 9)
-
-		unitTest:assertNotNil(percentSet2[0].percenta_0)
-		unitTest:assertNotNil(percentSet2[0].percenta_1)
-
-		-- COVERAGE ATTRIBUTE WITH 9 CHARACTERS
-		local percLayerName3 = clName.."_"..layerName2.."_Percentage3"
-		shp[24] = percLayerName3..".shp"
-
-		File(shp[24]):deleteIfExists()
-
-		operation = "coverage"
-		attribute = "ninechars"
-		select = "NOME"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName2, percLayerName2, percLayerName3, attribute, operation, select, area, default)
-
-		local percentSet3 = TerraLib().getDataSet(proj, percLayerName3, 0)
-
-		unitTest:assertEquals(getn(percentSet3), 9)
-
-		unitTest:assertNotNil(percentSet3[0].nine_REBIO)
-		unitTest:assertNotNil(percentSet3[0].nine_PARES)
-		unitTest:assertNotNil(percentSet3[0].nine_PARNA)
-
-		-- FILL CELLULAR SPACE WITH COUNT OPERATION FROM RASTER
-		local rcountLayerName = clName.."_"..layerName4.."_RCount"
-		shp[25] = rcountLayerName..".shp"
-
-		File(shp[25]):deleteIfExists()
-
-		operation = "count"
-		attribute = "rcount"
-		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, nodataLayerName, rcountLayerName, attribute, operation, select, area, default)
-
-		local rcountSet = TerraLib().getDataSet(proj, rcountLayerName, 0)
-
-		unitTest:assertEquals(getn(rcountSet), 9)
-
-		for k, v in pairs(rcountSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
-							(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
-							(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
-							(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
-							(k == "majo_occur") or (k == "sum") or (k == "wsum") or (string.match(k, "rpercent_") ~= nil) or
-							(string.match(k, "rpercen_") ~= nil) or (k == "rmean") or (k == "rmin") or (k == "rmax") or
-							(k == "rstdev") or (k == "rsum") or (k == "rsum_over") or (k == "aver_nd") or (k == "rcount"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rcountLayerInfo = TerraLib().getLayerInfo(proj, rcountLayerName)
-		unitTest:assertEquals(rcountLayerInfo.name, rcountLayerName)
-		unitTest:assertEquals(rcountLayerInfo.file, currentDir()..shp[25])
-		unitTest:assertEquals(rcountLayerInfo.type, "OGR")
-		unitTest:assertEquals(rcountLayerInfo.rep, "polygon")
-
-		for j = 1, #shp do
-			File(shp[j]):deleteIfExists()
-		end
-
-		proj.file:delete()
+		-- local coverageWithPointsData = function() -- TODO(#995)
+			-- local proj = createProject()
+
+			-- local layerName1 = "Amz"
+			-- local layerFile1 = filePath("amazonia-limit.shp", "gis")
+			-- TerraLib().addShpLayer(proj, layerName1, layerFile1)
+
+			-- local clName = "Amz_Cells"
+			-- local clFile = File(clName..".shp")
+			-- clFile:deleteIfExists()
+			-- local resolution = 100e3
+			-- local mask = true
+			-- TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, clFile, mask)
+
+			-- local clSet = TerraLib().getDataSet(proj, clName)
+			-- unitTest:assertEquals(getn(clSet), 591) -- SKIP
+
+			-- local layerName2 = "Amz_Ports"
+			-- local layerFile2 = filePath("amazonia-ports.shp", "gis")
+			-- TerraLib().addShpLayer(proj, layerName2, layerFile2)
+
+			-- local clCoverLayerName = clName.."_"..layerName2.."_Cover"
+			-- local clCoverLayerFile = File(clCoverLayerName..".shp")
+			-- clCoverLayerFile:deleteIfExists()
+
+			-- operation = "coverage"
+			-- attribute = "cover"
+			-- select = "FID"
+			-- area = nil
+			-- default = nil
+			-- TerraLib().attributeFill(proj, layerName2, clName, clCoverLayerName, attribute, operation, select, area, default)
+
+			-- clFile:delete()
+			-- clCoverLayerFile:delete()
+			-- proj.file:delete()
+		-- end
+
+		unitTest:assert(allSopportedOperationsToguether)
+		-- unitTest:assert(coverageWithPointsData) -- SKIP -- TODO(#995)
 	end,
 	getDataSet = function(unitTest)
 		-- see in saveDataSet() test --
