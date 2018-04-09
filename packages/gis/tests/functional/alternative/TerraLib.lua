@@ -341,5 +341,7 @@ return {
 		end
 
 		unitTest:assertError(missingGeomError, "Data cannot be used, because it has missing geometry. Please, fix your data.")
+
+		proj.file:delete()
 	end
 }
