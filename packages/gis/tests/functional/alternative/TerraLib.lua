@@ -321,5 +321,25 @@ return {
 
 		unitTest:assertError(layerNotFound, "Layer 'xxxx' not found.")
 		File("test.tview"):deleteIfExists()
+	end,
+	getDataSet = function(unitTest)
+		local proj = {
+			file = "getdataset_func_basic.tview",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
+		}
+		File(proj.file):deleteIfExists()
+		TerraLib().createProject(proj, {})
+
+		local layerName1 = "Shp"
+		local layerFile1 = filePath("test/ParaRodovias2.shp", "gis")
+		TerraLib().addShpLayer(proj, layerName1, layerFile1)
+
+		local missingGeomError = function()
+			local missing = 0
+			TerraLib().getDataSet(proj, layerName1, missing)
+		end
+
+		unitTest:assertError(missingGeomError, "Data cannot be used, because it has missing geometry. Please, fix your data.")
 	end
 }
