@@ -22,10 +22,6 @@
 ############################################################################################
 
 # -----------------
-# Script for building TerraLib5 customized for TerraAmazon
-# -----------------
-
-# -----------------
 # Setting up the environment variables: change the values of the above
 # variables to reflect you environment.
 # -----------------
