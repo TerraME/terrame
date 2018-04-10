@@ -115,12 +115,13 @@ return {
 			file = filePath("test/biomassa-manaus.asc", "gis")
 		}
 
-		local expected = [[epsg     number [4326]
-file     string [biomassa-manaus.asc]
-name     string [Biomassa_layer]
-project  Project
-rep      string [raster]
-source   string [asc]
+		local expected = [[encoding  string [latin1]
+epsg      number [4326]
+file      string [biomassa-manaus.asc]
+name      string [Biomassa_layer]
+project   Project
+rep       string [raster]
+source    string [asc]
 ]]
 		unitTest:assertEquals(tostring(l), expected, 1, true)
 		projName:deleteIfExists()

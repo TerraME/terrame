@@ -22,10 +22,6 @@
 ############################################################################################
 
 # -----------------
-# Script for building TerraLib5 customized for TerraAmazon
-# -----------------
-
-# -----------------
 # Setting up the environment variables: change the values of the above
 # variables to reflect you environment.
 # -----------------
@@ -69,7 +65,7 @@ cp terralib-conf.cmake $_TERRALIB_OUT_DIR
 cd $_TERRALIB_OUT_DIR
 
 # -----------------
-# Calling CMake: note that we are using a release configuration and Unix Makefiles generator
+# Calling CMake
 # -----------------
 cmake -G "Xcode" -C terralib-conf.cmake $_TERRALIB_GIT_DIR/build/cmake
 

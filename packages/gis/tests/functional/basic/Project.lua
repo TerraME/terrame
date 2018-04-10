@@ -176,9 +176,7 @@ return {
 		unitTest:assertType(cover, "Layer")
 		unitTest:assertEquals(cover.rep, "raster")
 		unitTest:assertEquals(cover.source, "tif")
-if _Gtme.sessionInfo().system ~= "mac" then -- TODO(#1934)
-		unitTest:assertEquals(cover.epsg, proj5.cells.epsg) -- SKIP
-end
+		unitTest:assertEquals(cover.epsg, proj5.cells.epsg)
 		unitTest:assertType(proj5.river, "Layer")
 		unitTest:assertEquals(proj5.river.rep, "line")
 		unitTest:assertEquals(proj5.river.source, "shp")
@@ -191,13 +189,11 @@ end
 		unitTest:assertEquals(proj5.cells.rep, "polygon")
 		unitTest:assertEquals(proj5.cells.source, "shp")
 
-if _Gtme.sessionInfo().system ~= "mac" then -- TODO(#1934)
 		cl:fill{
 			operation = "maximum",
 			attribute = "maxcover",
 			layer = "cover"
 		}
-end
 
 		proj5 = Project{
 			file = file:name(true),
@@ -226,9 +222,8 @@ end
 		unitTest:assertEquals(proj5.cells.source, "shp")
 
 		local attrs = proj5.cells:attributes()
-if _Gtme.sessionInfo().system ~= "mac" then	-- TODO(#1934)
-		unitTest:assertEquals(attrs[5].name, "maxcover") -- SKIP
-end
+		unitTest:assertEquals(attrs[5].name, "maxcover")
+
 		proj5 = Project{
 			file = file:name(true),
 			clean = true,
@@ -248,7 +243,7 @@ end
 			directory = packageInfo("gis").data.."test"
 		}
 
-		unitTest:assertEquals(getn(proj.layers), 13)
+		unitTest:assertEquals(getn(proj.layers), 16)
 		file:deleteIfExists()
 
 		-- QGIS PROJECT
@@ -287,7 +282,7 @@ end
 		unitTest:assertEquals(l2.epsg, 4326)
 		unitTest:assertEquals(File(l2.file):name(), "biomassa-manaus.asc")
 		unitTest:assertEquals(l2.source, "asc")
-		unitTest:assertNil(l2.encoding)
+		unitTest:assertEquals(l2.encoding, "latin1")
 
 		if _Gtme.sessionInfo().system == "windows" then
 			local l3 = Layer{
