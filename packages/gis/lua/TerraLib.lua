@@ -814,7 +814,7 @@ local function createDataSetAdapted(dSet, missing)
 
 			if dSet:isNull(i) then
 				if type == binding.GEOMETRY_TYPE then
-					customError("Data cannot be used, because it has missing geometry. Please, fix your data.")
+					customError("Data cannot be loaded because it has a missing geometry. Please, fix your data.")
 				end
 
 				if missing then

@@ -340,7 +340,7 @@ return {
 			TerraLib().getDataSet(proj, layerName1, missing)
 		end
 
-		unitTest:assertError(missingGeomError, "Data cannot be used, because it has missing geometry. Please, fix your data.")
+		unitTest:assertError(missingGeomError, "Data cannot be loaded because it has a missing geometry. Please, fix your data.")
 
 		proj.file:delete()
 	end
