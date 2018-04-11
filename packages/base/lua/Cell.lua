@@ -263,8 +263,7 @@ Cell_ = {
 	-- print(id)
 	setId = function(self, id)
 		mandatoryArgument(1, "string", id)
-		self.id = id
-		self.cObj_:setID(self.id)
+		self.cObj_:setID(id)
 	end,
 	--- Synchronizes the Cell. TerraME can keep two copies of the attributes of a Cell in memory:
 	-- one stores the past values and the other stores the current (present) values. Synchronize
