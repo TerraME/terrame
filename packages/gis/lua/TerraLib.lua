@@ -801,6 +801,30 @@ local function isDataTypeBoolean(propType)
 	return propType == binding.BOOLEAN_TYPE
 end
 
+local function createRasterDataSet(raster)
+	local rows = raster:getNumberOfRows()
+	local columns = raster:getNumberOfColumns()
+	local bands = raster:getNumberOfBands()
+	local count = 0
+	local set = {}
+
+	for r = 0, rows - 1 do
+		for c = 0, columns - 1 do
+			local dat = {}
+			for b = 0, bands - 1 do
+				dat["b"..b] = raster:getValue(r, c, b)
+			end
+			dat.row = columns - 1 - c
+			dat.col = r
+
+			set[count] = dat
+			count = count + 1
+		end
+	end
+
+	return set
+end
+
 local function createDataSetAdapted(dSet, missing)
 	local count = 0
 	local numProps = dSet:getNumProperties()
@@ -814,7 +838,7 @@ local function createDataSetAdapted(dSet, missing)
 
 			if dSet:isNull(i) then
 				if type == binding.GEOMETRY_TYPE then
-					customError("Data cannot be loaded because it has a missing geometry. Please, fix your data.")
+					return nil, "Data cannot be loaded because it has a missing geometry. Please, fix your data."
 				end
 
 				if missing then
@@ -829,17 +853,7 @@ local function createDataSetAdapted(dSet, missing)
 			elseif type == binding.GEOMETRY_TYPE then
 				line[dSet:getPropertyName(i)] = dSet:getGeom(i)
 			elseif type == binding.RASTER_TYPE then
-				local raster = dSet:getRaster(i)
-				line.xdim = raster:getNumberOfRows()
-				line.ydim = raster:getNumberOfColumns()
-				line.name = raster:getName()
-				line.srid = raster:getSRID()
-				line.bands = raster:getNumberOfBands()
-				line.resolutionX = raster:getResolutionX()
-				line.resolutionY = raster:getResolutionY()
-				line.getValue = function(col, row, band)
-					return raster:getValue(col, row, band)
-				end
+				return createRasterDataSet(dSet:getRaster(i))
 			else
 				line[dSet:getPropertyName(i)] = dSet:getAsString(i)
 			end
@@ -2717,7 +2731,10 @@ TerraLib_ = {
 	-- local gdalFile = filePath("PRODES_5KM.tif", "gis")
 	-- dSet = TerraLib().getGdalByFilePath(tostring(gdalFile))
 	getGdalByFilePath = function(filePath)
-		local set
+		local set, err
+
+		local cache = getCache(filePath, missing)
+		if cache then return cache end
 
 		do
 			local connInfo = createFileConnInfo(filePath)
@@ -2725,12 +2742,17 @@ TerraLib_ = {
 			local file = File(filePath)
 			local dSetName = file:name(true)
 			local dSet = ds:getDataSet(dSetName)
-			set = createDataSetAdapted(dSet)
+			set, err = createDataSetAdapted(dSet)
 
+			addCache(set, filePath, missing)
 			ds:close()
 		end
 
 		collectgarbage("collect")
+
+		if not set then
+			customError(err)
+		end
 
 		return set
 	end,

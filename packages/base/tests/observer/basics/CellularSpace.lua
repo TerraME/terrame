@@ -24,234 +24,300 @@
 
 return{
 	CellularSpace = function(unitTest)
-		local cs = CellularSpace{
-			xdim = 10,
-			value = function() return 3 end
-		}
+		local basicTests = function()
+			local cs = CellularSpace{
+				xdim = 10,
+				value = function() return 3 end
+			}
 
-		local r = Random()
+			local r = Random()
 
-		forEachCell(cs, function(cell)
-			cell.value = r:number()
-		end)
+			forEachCell(cs, function(cell)
+				cell.value = r:number()
+			end)
 
-		Chart{target = cs, select = "value"}
+			Chart{target = cs, select = "value"}
 
-		local m = Map{
-			target = cs,
-			select = "value",
-			min = 0,
-			max = 1,
-			slices = 10,
-			color = "Blues"
-		}
+			local m = Map{
+				target = cs,
+				select = "value",
+				min = 0,
+				max = 1,
+				slices = 10,
+				color = "Blues"
+			}
 
-		unitTest:assertType(m, "Map")
+			unitTest:assertType(m, "Map")
 
-		cs:notify()
-		unitTest:assertSnapshot(m, "map_slices.bmp", 0.95)
+			cs:notify()
+			unitTest:assertSnapshot(m, "map_slices.bmp", 0.95)
 
-		local e = Event{action = function() end}[1]
+			local e = Event{action = function() end}[1]
 
-		cs:notify(e)
-		cs:notify()
+			cs:notify(e)
+			cs:notify()
 
-		local unit = Cell{
-			count = 0
-		}
+			local unit = Cell{
+				count = 0
+			}
 
-		local world = CellularSpace{
-			xdim = 10,
-			value = 10,
-			instance = unit
-		}
+			local world = CellularSpace{
+				xdim = 10,
+				value = 10,
+				instance = unit
+			}
 
-		local c = Chart{target = world}
+			local c = Chart{target = world}
 
-		unitTest:assertType(c, "Chart")
+			unitTest:assertType(c, "Chart")
 
-		world:notify(0)
+			world:notify(0)
 
-		local t = Timer{
-			Event{action = function(event)
-				world.value = world.value + 99
-				forEachCell(world, function(cell)
-					cell.count = cell.count + 1
-				end)
-				world:notify(event)
-			end}
-		}
+			local t = Timer{
+				Event{action = function(event)
+					world.value = world.value + 99
+					forEachCell(world, function(cell)
+						cell.count = cell.count + 1
+					end)
+					world:notify(event)
+				end}
+			}
 
-		local ts = TextScreen{target = world}
-		Log{target = world, file = "cellularspace.csv"}
-		local vt = VisualTable{target = world}
+			local ts = TextScreen{target = world}
+			Log{target = world, file = "cellularspace.csv"}
+			local vt = VisualTable{target = world}
 
-		t:run(30)
+			t:run(30)
 
-		unitTest:assertFile("cellularspace.csv")
+			unitTest:assertFile("cellularspace.csv")
 
-		world:notify()
+			world:notify()
 
-		-- the call to notify() above creates the file again.
-		-- remove the line below after refactoring observer.
-		File("cellularspace.csv"):deleteIfExists()
+			-- the call to notify() above creates the file again.
+			-- remove the line below after refactoring observer.
+			File("cellularspace.csv"):deleteIfExists()
 
-		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.23)
+			unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.23)
 
-		unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.1)
+			unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.1)
 
-		world = CellularSpace{
-			xdim = 10
-		}
+			world = CellularSpace{
+				xdim = 10
+			}
 
-		forEachCell(world, function(cell)
-			if math.random() > 0.6 then
-				cell.value = 1
-			else
-				cell.value = 0
-			end
-		end)
+			forEachCell(world, function(cell)
+				if math.random() > 0.6 then
+					cell.value = 1
+				else
+					cell.value = 0
+				end
+			end)
 
-		Map{
-			target = world,
-			select  = "value",
-			color  = {{0, 0, 0}, {255, 255, 255}},
-			min = 0,
-			max = 1,
-			slices = 2,
-		}
+			Map{
+				target = world,
+				select  = "value",
+				color  = {{0, 0, 0}, {255, 255, 255}},
+				min = 0,
+				max = 1,
+				slices = 2,
+			}
 
-		Map{
-			target = world,
-			select  = "value",
-			color  = {"blue", "red"},
-			min = 0,
-			max = 1,
-			slices = 2,
-		}
+			Map{
+				target = world,
+				select  = "value",
+				color  = {"blue", "red"},
+				min = 0,
+				max = 1,
+				slices = 2,
+			}
 
-		Map{
-			target = world,
-			select  = "value",
-			color  = {"blue", "red"},
-			min = 0,
-			slices = 10,
-			max = 1
-		}
+			Map{
+				target = world,
+				select  = "value",
+				color  = {"blue", "red"},
+				min = 0,
+				slices = 10,
+				max = 1
+			}
 
-		world:notify()
-		world:notify()
+			world:notify()
+			world:notify()
 
-		local projName = File("cellspace_basic_observer.tview")
+			local projName = File("cellspace_basic_observer.tview")
 
-		projName:deleteIfExists()
+			projName:deleteIfExists()
 
-		local author = "Avancini"
-		local title = "Cellular Space"
+			local author = "Avancini"
+			local title = "Cellular Space"
 
-        local gis = getPackage("gis")
+			local gis = getPackage("gis")
 
-		local proj = gis.Project{
-			file = projName:name(true),
-			clean = true,
-			author = author,
-			title = title
-		}
+			local proj = gis.Project{
+				file = projName:name(true),
+				clean = true,
+				author = author,
+				title = title
+			}
 
-		local layerName1 = "Sampa"
-		gis.Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/sampa.shp", "gis")
-		}
+			local layerName1 = "Sampa"
+			gis.Layer{
+				project = proj,
+				name = layerName1,
+				file = filePath("test/sampa.shp", "gis")
+			}
 
-		local shp1 = "sampa_cells.shp"
-		local filePath1 = currentDir()..shp1
+			local shp1 = "sampa_cells.shp"
+			local filePath1 = currentDir()..shp1
 
-		File(filePath1):deleteIfExists()
+			File(filePath1):deleteIfExists()
 
-		local clName1 = "Sampa_Cells"
-		gis.Layer{
-			project = proj,
-			input = layerName1,
-			name = clName1,
-			resolution = 1,
-			file = filePath1
-		}
+			local clName1 = "Sampa_Cells"
+			gis.Layer{
+				project = proj,
+				input = layerName1,
+				name = clName1,
+				resolution = 1,
+				file = filePath1
+			}
 
-		cs = CellularSpace{
-			project = projName:name(true),
-			layer = clName1
-		}
+			cs = CellularSpace{
+				project = projName:name(true),
+				layer = clName1
+			}
 
-		r = Random()
+			r = Random()
 
-		forEachCell(cs, function(cell)
-			cell.value = r:number()
-		end)
+			forEachCell(cs, function(cell)
+				cell.value = r:number()
+			end)
 
-		local map = Map{
-			target = cs,
-			select = "value",
-			min = 0,
-			max = 1,
-			slices = 10,
-			color = "Red"
-		}
+			local map = Map{
+				target = cs,
+				select = "value",
+				min = 0,
+				max = 1,
+				slices = 10,
+				color = "Red"
+			}
 
-		cs:notify()
+			cs:notify()
 
-		unitTest:assertSnapshot(map, "cellspace_map_project.bmp", 0.68)
+			unitTest:assertSnapshot(map, "cellspace_map_project.bmp", 0.68)
 
-		t = Timer{
-			Event{action = function(event)
-				forEachCell(cs, function(cell)
-					cell.count = cell.value + 1
-				end)
-				cs:notify(event)
-			end}
-		}
+			t = Timer{
+				Event{action = function(event)
+					forEachCell(cs, function(cell)
+						cell.count = cell.value + 1
+					end)
+					cs:notify(event)
+				end}
+			}
 
-		ts = TextScreen{target = cs}
-		vt = VisualTable{target = cs}
+			ts = TextScreen{target = cs}
+			vt = VisualTable{target = cs}
 
-		t:run(30)
+			t:run(30)
 
-		cs:notify()
+			cs:notify()
 
-		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.27)
-		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.15)
-		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
+			unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.27)
+			unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.15)
+			-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 
-		projName:deleteIfExists()
-		File(filePath1):deleteIfExists()
+			projName:deleteIfExists()
+			File(filePath1):deleteIfExists()
 
-		cs = CellularSpace{
-			xdim = 10,
-			ydim = 20,
-		}
+			cs = CellularSpace{
+				xdim = 10,
+				ydim = 20,
+			}
 
-		forEachCell(cs, function(cell)
-			cell.value = cell.x
-		end)
+			forEachCell(cs, function(cell)
+				cell.value = cell.x
+			end)
 
-		unitTest:assertEquals(cs.source, "virtual")
-		unitTest:assertEquals(cs.xMax, cs.xdim - 1)
-		unitTest:assertEquals(cs.yMax, cs.ydim - 1)
-		unitTest:assertEquals(#cs, cs.xdim * cs.ydim)
+			unitTest:assertEquals(cs.source, "virtual")
+			unitTest:assertEquals(cs.xMax, cs.xdim - 1)
+			unitTest:assertEquals(cs.yMax, cs.ydim - 1)
+			unitTest:assertEquals(#cs, cs.xdim * cs.ydim)
 
-		map = Map{
-			target = cs,
-			select = "value",
-			min = 0,
-			max = 10,
-			color = "Blues",
-			slices = 11
-		}
+			map = Map{
+				target = cs,
+				select = "value",
+				min = 0,
+				max = 10,
+				color = "Blues",
+				slices = 11
+			}
 
-		cs:notify()
-		unitTest:assertType(map, "Map")
-		unitTest:assertSnapshot(map, "map_virtual.bmp", 0.05)
+			cs:notify()
+			unitTest:assertType(map, "Map")
+			unitTest:assertSnapshot(map, "map_virtual.bmp", 0.05)
+		end
+
+		local creatingFromTif = function()
+			local cs = CellularSpace{
+				file = filePath("cabecadeboi-elevation.tif", "gis")
+			}
+
+			unitTest:assertEquals(#cs, 10000)
+
+			local map = Map{
+				target = cs,
+				select = "b0",
+				min = 0,
+				max = 260,
+				slices = 20,
+				color = "Grays"
+			}
+
+			unitTest:assertSnapshot(map, "cellspace_map_tif_basic.png")
+		end
+
+		local creatingFromAsc = function()
+			local cs = CellularSpace{
+				file = filePath("test/biomassa-manaus.asc", "gis")
+			}
+
+			unitTest:assertEquals(#cs, 9964)
+
+			local map = Map{
+				target = cs,
+				select = "b0",
+				min = 0,
+				max = 30000,
+				slices = 20,
+				color = "Grays"
+			}
+
+			unitTest:assertSnapshot(map, "cellspace_map_asc_basic.png")
+		end
+
+		local creatingFromNc = function()
+			local cs = CellularSpace{
+				file = filePath("test/vegtype_2000.nc", "gis")
+			}
+
+			unitTest:assertEquals(#cs, 8904) -- SKIP
+
+			local map = Map{
+				target = cs,
+				select = "b0",
+				min = 0,
+				max = 10,
+				slices = 10,
+				color = "Grays"
+			}
+
+			unitTest:assertSnapshot(map, "cellspace_map_nc_basic.png") -- SKIP
+		end
+
+		unitTest:assert(basicTests)
+		unitTest:assert(creatingFromTif)
+		unitTest:assert(creatingFromAsc)
+		if _Gtme.sessionInfo().system == "windows" then
+			unitTest:assert(creatingFromNc) -- SKIP
+		end
 	end,
 	notify = function(unitTest)
 		local r = Random()

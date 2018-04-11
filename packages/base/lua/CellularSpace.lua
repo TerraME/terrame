@@ -642,13 +642,10 @@ end
 
 local function loadOGR(self)
 	local dSet = gis.TerraLib().getOGRByFilePath(tostring(self.file), self.missing)
-
 	defaultTableValue(self, "geometry", true)
-
 	setCellsByTerraLibDataSet(self, dSet)
 
 	local file = self.file
-
 	self.layer = file:name()
 	self.cObj_:setLayer(self.layer)
 end
@@ -673,44 +670,18 @@ local function loadVirtual(self)
 	end
 end
 
-local function setRasterCells(self, dSet)
-	local set = dSet[0]
-
-	self.xdim = set.xdim -- SKIP -- TODO(#1306): raster are not tested on Linux.
-	self.ydim = set.ydim -- SKIP
-	self.name = set.name -- SKIP
-	self.epsg = set.srid -- SKIP
-	self.bands = set.bands -- SKIP
-	self.resolutionX = set.resolutionX -- SKIP
-	self.resolutionY = set.resolutionY -- SKIP
-
-	loadVirtual(self) -- SKIP
-
-	for _, cell in pairs(self.cells) do
-		for b = 0, self.bands - 1 do
-			cell[b] = set.getValue(cell.y, cell.x, b) -- SKIP
-		end
-	end
-end
-
 local function loadGdal(self)
-	local dSet = gis.TerraLib().getGdalByFilePath(tostring(self.file))
+	local dset = gis.TerraLib().getGdalByFilePath(tostring(self.file))
+	setCellsByTerraLibDataSet(self, dset)
 
-	setRasterCells(self, dSet) -- SKIP
-	self.layer = self.file:name() -- SKIP
-	self.cObj_:setLayer(self.layer) -- SKIP
-
-	return self
+	local file = self.file
+	self.layer = file:name()
+	self.cObj_:setLayer(self.layer)
 end
 
 local function loadLayer(self)
 	local dset = gis.TerraLib().getDataSet(self.project, self.layer.name, self.missing)
-
-	if self.layer.rep == "raster" then
-		setRasterCells(self, dset) -- SKIP
-	else
-		setCellsByTerraLibDataSet(self, dset)
-	end
+	setCellsByTerraLibDataSet(self, dset)
 end
 
 local CellularSpaceDrivers = {}

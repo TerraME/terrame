@@ -47,15 +47,55 @@ return {
 		proj.file:delete()
 	end,
 	getGdalByFilePath = function(unitTest)
-		local file = filePath("amazonia-prodes.tif", "gis")
+		local getTifDataSet = function()
+			local file = filePath("test/prodes_polyc_10k.tif", "gis")
+			local dSet = TerraLib().getGdalByFilePath(tostring(file))
 
-		local dSet = TerraLib().getGdalByFilePath(tostring(file))
-		for i = 0, #dSet do
-			for k, v in pairs(dSet[i]) do
-				unitTest:assert(belong(k, {"xdim", "ydim", "name", "srid", "bands",
-											"resolutionX", "resolutionY", "getValue"}))
-				unitTest:assertNotNil(v)
+			unitTest:assertEquals(getn(dSet), 20020)
+
+			for i = 0, getn(dSet) - 1 do
+				for k, v in pairs(dSet[i]) do
+					unitTest:assert(belong(k, {"b0", "col", "row"}))
+					unitTest:assertNotNil(v)
+					unitTest:assertType(v, "number")
+				end
 			end
+		end
+
+		local getAscDataSet = function()
+			local file = filePath("test/biomassa-manaus.asc", "gis")
+			local dSet = TerraLib().getGdalByFilePath(tostring(file))
+
+			unitTest:assertEquals(getn(dSet), 9964)
+
+			for i = 0, getn(dSet) - 1 do
+				for k, v in pairs(dSet[i]) do
+					unitTest:assert(belong(k, {"b0", "col", "row"}))
+					unitTest:assertNotNil(v)
+					unitTest:assertType(v, "number")
+				end
+			end
+		end
+
+		local getNcDataSet = function()
+			local file = filePath("test/vegtype_2000.nc", "gis")
+			local dSet = TerraLib().getGdalByFilePath(tostring(file))
+
+			unitTest:assertEquals(getn(dSet), 8904) -- SKIP
+
+			for i = 0, getn(dSet) - 1 do
+				for k, v in pairs(dSet[i]) do
+					unitTest:assert(belong(k, {"b0", "col", "row"})) -- SKIP
+					unitTest:assertNotNil(v) -- SKIP
+					unitTest:assertType(v, "number") -- SKIP
+				end
+			end
+		end
+
+		unitTest:assert(getTifDataSet)
+		unitTest:assert(getAscDataSet)
+		if _Gtme.sessionInfo().system == "windows" then
+			unitTest:assert(getNcDataSet) -- SKIP
 		end
 	end,
 	getNumOfBands = function(unitTest)
