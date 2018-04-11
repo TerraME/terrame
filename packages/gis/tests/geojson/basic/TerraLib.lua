@@ -23,29 +23,6 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	createProject = function(unitTest)
-		local title = "TerraLib Tests"
-		local author = "Carneiro Heitor"
-		local file = "mygeojsonproject.tview"
-		local proj = {}
-		proj.file = file
-		proj.title = title
-		proj.author = author
-
-		File(proj.file):deleteIfExists()
-
-		TerraLib().createProject(proj, {})
-		unitTest:assert(proj.file:exists())
-		unitTest:assertEquals(proj.file:name(), file)
-		unitTest:assertEquals(proj.title, title)
-		unitTest:assertEquals(proj.author, author)
-
-		-- allow overwrite
-		TerraLib().createProject(proj, {})
-		unitTest:assert(proj.file:exists())
-
-		proj.file:delete()
-	end,
 	addGeoJSONLayer = function(unitTest)
 		local title = "TerraLib Tests"
 		local author = "Carneiro Heitor"
@@ -87,7 +64,7 @@ return {
 		TerraLib().createProject(proj, {})
 
 		local layerName = "GeoJSONLayer"
-		local layerFile = filePath("test/Setores_Censitarios_2000_pol.geojson", "gis")
+		local layerFile = filePath("test/es_limit_sirgas2000_5880.geojson", "gis")
 		TerraLib().addGeoJSONLayer(proj, layerName, layerFile)
 		local layerInfo1 = TerraLib().getLayerInfo(proj, layerName)
 
@@ -96,7 +73,7 @@ return {
 
 		geojson1:deleteIfExists()
 
-		local resolution = 10000
+		local resolution = 20e3
 		local mask = true
 		TerraLib().addGeoJSONCellSpaceLayer(proj, layerName, clName, resolution, geojson1, mask)
 
@@ -110,7 +87,7 @@ return {
 
 		-- NO MASK TEST
 		local clSet = TerraLib().getDataSet(proj, clName)
-		unitTest:assertEquals(getn(clSet), 160)
+		unitTest:assertEquals(getn(clSet), 154)
 
 		clName = clName.."_NoMask"
 		local geojson2 = File(clName..".geojson")
@@ -121,7 +98,7 @@ return {
 		TerraLib().addGeoJSONCellSpaceLayer(proj, layerName, clName, resolution, geojson2, mask)
 
 		clSet = TerraLib().getDataSet(proj, clName)
-		unitTest:assertEquals(getn(clSet), 160)
+		unitTest:assertEquals(getn(clSet), 260)
 		-- // NO MASK TEST
 
 		unitTest:assertFile(geojson1)
@@ -378,5 +355,54 @@ return {
 
 		proj.file:delete()
 		outFile:delete()
+	end,
+	attributeFill = function(unitTest)
+		-- TODO (#2179)
+		-- local createProject = function()
+			-- local proj = {
+				-- file = "attributefill_geojson_basic.tview",
+				-- title = "TerraLib Tests",
+				-- author = "Avancini Rodrigo"
+			-- }
+			-- File(proj.file):deleteIfExists()
+			-- TerraLib().createProject(proj, {})
+			-- return proj
+		-- end
+
+		-- local allSupportedOperation = function()
+			-- local proj = createProject()
+
+			-- local layerName1 = "ES"
+			-- local layerFile1 = filePath("test/es_limit_sirgas2000_5880.geojson", "gis")
+			-- TerraLib().addGeoJSONLayer(proj, layerName1, layerFile1)
+
+			-- local files = {}
+
+			-- local clName = "ES_Cells"
+			-- files[1] = File(clName..".geojson")
+			-- files[1]:deleteIfExists()
+			-- local resolution = 20e3
+			-- local mask = true
+			-- TerraLib().addGeoJSONCellSpaceLayer(proj, layerName1, clName, resolution, files[1], mask)
+
+			-- local layerName2 = "Protection_Unit"
+			-- local layerFile2 = filePath("test/es_protected_areas_sirgas2000_5880.geojson", "gis")
+			-- TerraLib().addGeoJSONLayer(proj, layerName2, layerFile2)
+
+			-- local presLayerName = clName.."_"..layerName2.."_Presence"
+			-- files[2] = File(presLayerName..".geojson")
+			-- files[2]:deleteIfExists()
+
+			-- local operation = "presence"
+			-- local attribute = "presence"
+			-- local select = "FID"
+			-- local area = nil
+			-- local default = nil
+			-- TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
+		-- end
+
+		-- unitTest:assert(allSupportedOperation) -- SKIP
+
+		unitTest:assert(true)
 	end
 }
