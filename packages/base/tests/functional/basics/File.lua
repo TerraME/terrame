@@ -60,7 +60,9 @@ return{
 		local close = file:close()
 
 		unitTest:assert(close)
-		File(filename):deleteIfExists()
+		local result = File(filename):deleteIfExists()
+
+		unitTest:assertType(result, "File")
 	end,
 	copy = function(unitTest)
 		local dir = Directory("abcd123efg")
