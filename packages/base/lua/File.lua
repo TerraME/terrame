@@ -225,15 +225,20 @@ File_ = {
 		end
 	end,
 	--- Remove a file if it exists. It does not stop with an error when the file does not exist.
+	-- This function returns the File itself.
 	-- @usage filename = "myfile.txt"
 	-- file = File(filename)
 	-- file:writeLine("Some text..")
 	-- file:close()
 	-- file:deleteIfExists()
+	--
+	-- file = File(filename):deleteIfExists() -- ensure that "myfile.txt" does not exist when 'file' is created
 	deleteIfExists = function(self)
 		if self:exists() then
 			self:delete()
 		end
+
+		return self
 	end,
 	--- Return the path to the file.
 	-- @usage file = filePath("agents.csv", "base")

@@ -1080,7 +1080,7 @@ CellularSpace_ = {
 	-- print(cell.y)
 	--
 	-- cell = cs:get("5")
-	-- print(cell.id)
+	-- print(cell:getId())
 	get = function(self, xIndex, yIndex)
 		if type(xIndex) == "string" then
 			if yIndex ~= nil then
