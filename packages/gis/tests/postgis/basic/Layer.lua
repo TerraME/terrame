@@ -203,7 +203,7 @@ return {
 			unitTest:assertEquals(cl4.table, string.lower(clName4))
 
 			-- BOX TEST
-			local clSet = TerraLib().getDataSet(proj, clName1)
+			local clSet = TerraLib().getDataSet{project = proj, layer = clName1}
 			unitTest:assertEquals(getn(clSet), 68)
 
 			local clName5 = clName1.."_Box"
@@ -226,7 +226,7 @@ return {
 				}
 			end
 			unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("file"))
-			clSet = TerraLib().getDataSet(proj, clName5)
+			clSet = TerraLib().getDataSet{project = proj, layer = clName5}
 			unitTest:assertEquals(getn(clSet), 104)
 
 			-- CHANGE EPSG

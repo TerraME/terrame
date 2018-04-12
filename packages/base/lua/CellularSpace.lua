@@ -640,14 +640,32 @@ local function setCellsByTerraLibDataSet(self, dSet)
 	end
 end
 
-local function loadOGR(self)
-	local dSet = gis.TerraLib().getOGRByFilePath(tostring(self.file), self.missing)
-	defaultTableValue(self, "geometry", true)
-	setCellsByTerraLibDataSet(self, dSet)
+local function loadDataSet(self)
+	local dset
+	if self.project then
+		dset = gis.TerraLib().getDataSet{project = self.project,
+				layer = self.layer.name, missing = self.missing}
+	else --< file
+		dset = gis.TerraLib().getDataSet{file = tostring(self.file), missing = self.missing}
+		local file = self.file
+		self.layer = file:name()
+		self.cObj_:setLayer(self.layer)
+	end
 
-	local file = self.file
-	self.layer = file:name()
-	self.cObj_:setLayer(self.layer)
+	setCellsByTerraLibDataSet(self, dset)
+end
+
+local function loadVector(self)
+	defaultTableValue(self, "geometry", true)
+	loadDataSet(self)
+end
+
+local function loadRaster(self)
+	loadDataSet(self)
+end
+
+local function loadLayer(self)
+	loadDataSet(self)
 end
 
 local function loadVirtual(self)
@@ -670,20 +688,6 @@ local function loadVirtual(self)
 	end
 end
 
-local function loadGdal(self)
-	local dset = gis.TerraLib().getGdalByFilePath(tostring(self.file))
-	setCellsByTerraLibDataSet(self, dset)
-
-	local file = self.file
-	self.layer = file:name()
-	self.cObj_:setLayer(self.layer)
-end
-
-local function loadLayer(self)
-	local dset = gis.TerraLib().getDataSet(self.project, self.layer.name, self.missing)
-	setCellsByTerraLibDataSet(self, dset)
-end
-
 local CellularSpaceDrivers = {}
 
 local function registerCellularSpaceDriver(data)
@@ -703,7 +707,7 @@ end
 
 registerCellularSpaceDriver{
 	source = "shp",
-	load = loadOGR,
+	load = loadVector,
 	check = checkShape,
 	optional = "xy"
 }
@@ -742,23 +746,23 @@ registerCellularSpaceDriver{
 
 registerCellularSpaceDriver{
 	source = "geojson",
-	load = loadOGR,
+	load = loadVector,
 	optional = "xy"
 }
 
 registerCellularSpaceDriver{
 	source = "tif",
-	load = loadGdal
+	load = loadRaster
 }
 
 registerCellularSpaceDriver{
 	source = "nc",
-	load = loadGdal
+	load = loadRaster
 }
 
 registerCellularSpaceDriver{
 	source = "asc",
-	load = loadGdal
+	load = loadRaster
 }
 
 CellularSpace_ = {
@@ -1264,7 +1268,7 @@ CellularSpace_ = {
 			customError("CellularSpace:save() only works properly when the CellularSpace is created from a project.")
 		end
 
-		local dset = gis.TerraLib().getDataSet(self.project, self.layer.name, self.missing)
+		local dset = gis.TerraLib().getDataSet{project = self.project, layer = self.layer.name, missing = self.missing}
 		if not self.geometry then
 			for i = 0, #dset do
 				for k, v in pairs(dset[i]) do

@@ -103,7 +103,7 @@ return {
 		cellsShp:deleteIfExists()
 		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
 
-		local spDset = TerraLib().getDataSet(proj, clName1)
+		local spDset = TerraLib().getDataSet{project = proj, layer = clName1}
 
 		local luaTable = {}
 		for i = 0, getn(spDset) - 1 do
@@ -196,7 +196,7 @@ return {
 		end
 		unitTest:assertError(tifSaveError, "File extension 'tif' is not supported to save.")
 
-		local dset1 = TerraLib().getDataSet(proj, layerName1)
+		local dset1 = TerraLib().getDataSet{project = proj, layer = layerName1}
 		local sjc
 		for i = 0, getn(dset1) - 1 do
 			if dset1[i].ID == 27 then
@@ -337,7 +337,7 @@ return {
 
 		local missingGeomError = function()
 			local missing = 0
-			TerraLib().getDataSet(proj, layerName1, missing)
+			TerraLib().getDataSet{project = proj, layer = layerName1, missing = missing}
 		end
 
 		unitTest:assertError(missingGeomError, "Data cannot be loaded because it has a missing geometry. Please, fix your data.")

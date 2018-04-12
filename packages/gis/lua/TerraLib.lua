@@ -996,7 +996,7 @@ local function removeLayer(project, layerName)
 end
 
 local function overwriteLayer(project, fromName, toName, toSetName, default)
-	local fromDset = instance.getDataSet(project, fromName, default)
+	local fromDset = instance.getDataSet{project = project, layer = fromName, missing = default}
 
 	local luaTable = {}
 	for i = 0, #fromDset do
@@ -2471,7 +2471,7 @@ TerraLib_ = {
 	-- resolution = 60e3
 	-- TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, filePath1)
 	--
-	-- clSet = TerraLib().getDataSet(proj, clName)
+	-- clSet = TerraLib().getDataSet{project = proj, layer = clName}
 	--
 	-- layerName2 = "Protection_Unit"
 	-- layerFile2 = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
@@ -2628,31 +2628,67 @@ TerraLib_ = {
 		collectgarbage("collect")
 	end,
 	--- Returns a given dataset from a layer.
-	-- @arg project The name of the project.
-	-- @arg layerName Name of the layer to be read.
-	-- @arg missing A value to replace null values.
+	-- @arg data.project A project.
+	-- @arg data.layer A layer name.
+	-- @arg data.file A file path.
+	-- @arg data.missing A value to replace null values.
 	-- @usage -- DONTRUN
-	-- ds = TerraLib().getDataSet("myproject.tview", "mylayer")
-	getDataSet = function(project, layerName, missing)
+	-- dset = TerraLib().getDataSet{project = "myproject.tview", layer = "mylayer"}
+	getDataSet = function(data)
 		local set, err
+		local missing = data.missing
 
-		local cache = getCache(project, layerName, missing)
-		if cache then return cache end
+		if data.project then
+			local project = data.project
+			local layerName = data.layer
 
-		do
-			loadProject(project, project.file)
+			local cache = getCache(project, layerName, missing)
+			if cache then return cache end
 
-			local layer = project.layers[layerName]
-			layer = castLayer(layer)
-			local dseName = layer:getDataSetName()
-			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
-			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
-			local dse = ds:getDataSet(dseName)
+			do
+				loadProject(project, project.file)
 
-			set, err = createDataSetAdapted(dse, missing)
+				local layer = project.layers[layerName]
+				layer = castLayer(layer)
+				local dseName = layer:getDataSetName()
+				local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+				local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+				local dse = ds:getDataSet(dseName)
 
-			addCache(set, project, layerName, missing)
-			releaseProject(project)
+				set, err = createDataSetAdapted(dse, missing)
+
+				addCache(set, project, layerName, missing)
+				releaseProject(project)
+			end
+		else
+			local filePath = data.file
+
+			local cache = getCache(filePath, missing)
+			if cache then return cache end
+
+			local fileExt = string.lower(File(filePath):extension())
+			local connInfo = createFileConnInfo(filePath)
+			local dsType = SourceTypeMapper[fileExt]
+			local ds = makeAndOpenDataSource(connInfo, dsType)
+			local file = File(filePath)
+			local dSetName
+
+			if dsType == "OGR" then
+				if fileExt == "geojson" then
+					dSetName = "OGRGeoJSON"
+				else
+					local _, name = file:split()
+					dSetName = name
+				end
+			else --< GDAL
+				dSetName = file:name(true)
+			end
+
+			local dSet = ds:getDataSet(dSetName)
+			set, err = createDataSetAdapted(dSet, missing)
+
+			addCache(set, filePath, missing)
+			ds:close()
 		end
 
 		collectgarbage("collect")
@@ -2725,76 +2761,6 @@ TerraLib_ = {
 
 		collectgarbage("collect")
 	end,
-	--- Return the content of a GDAL file.
-	-- @arg filePath The path for the file to be loaded.
-	-- @usage -- DONTRUN
-	-- local gdalFile = filePath("PRODES_5KM.tif", "gis")
-	-- dSet = TerraLib().getGdalByFilePath(tostring(gdalFile))
-	getGdalByFilePath = function(filePath)
-		local set, err
-
-		local cache = getCache(filePath, missing)
-		if cache then return cache end
-
-		do
-			local connInfo = createFileConnInfo(filePath)
-			local ds = makeAndOpenDataSource(connInfo, "GDAL")
-			local file = File(filePath)
-			local dSetName = file:name(true)
-			local dSet = ds:getDataSet(dSetName)
-			set, err = createDataSetAdapted(dSet)
-
-			addCache(set, filePath, missing)
-			ds:close()
-		end
-
-		collectgarbage("collect")
-
-		if not set then
-			customError(err)
-		end
-
-		return set
-	end,
-	--- Return the content of an OGR file.
-	-- @arg filePath The path for the file to be loaded.
-	-- @arg missing A value to replace null values.
-	-- @usage -- DONTRUN
-	-- local shpFile = filePath("sampa.shp", "gis")
-	-- dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
-	getOGRByFilePath = function(filePath, missing)
-		local set, err
-
-		local cache = getCache(filePath, missing)
-		if cache then return cache end
-
-		do
-			local connInfo = createFileConnInfo(filePath)
-			local ds = makeAndOpenDataSource(connInfo, "OGR")
-			local dSetName
-			local file = File(filePath)
-			if string.lower(file:extension()) == "geojson" then
-				dSetName = "OGRGeoJSON"
-			else
-				local _, name = file:split()
-				dSetName = name
-			end
-
-			local dSet = ds:getDataSet(dSetName)
-			set, err = createDataSetAdapted(dSet, missing)
-
-			addCache(set, filePath, missing)
-			ds:close()
-		end
-
-		collectgarbage("collect")
-
-		if not set then
-			customError(err)
-		end
-
-		return set
-	end,
 	--- Returns the number of bands of some Raster.
 	-- @arg project The project.
 	-- @arg layerName The input layer name.
@@ -2814,7 +2780,7 @@ TerraLib_ = {
 	--- Returns the area of this envelope as measured in the spatial reference system of it.
 	-- @arg geom The geometry of the project.
 	-- @usage -- DONTRUN
-	-- local dSet = TerraLib().getDataSet(proj, clName1)
+	-- local dSet = TerraLib().getDataSet{project = proj, layer = clName1}
 	-- local area = TerraLib().getArea(dSet[0].OGR_GEOMETRY)
 	getArea = function(geom)
 		local geomType = geom:getGeometryType()
@@ -2914,7 +2880,7 @@ TerraLib_ = {
 	-- @arg fromGeom The geometry.
 	-- @arg toGeom The other geometry.
 	-- @usage -- DONTRUN
-	-- local dSet = TerraLib().getDataSet(proj, clName)
+	-- local dSet = TerraLib().getDataSet{project = proj, layer = clName1}
 	-- local dist = TerraLib().getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
 	getDistance = function(fromGeom, toGeom)
 		return fromGeom:distance(toGeom)
@@ -2923,7 +2889,7 @@ TerraLib_ = {
 	-- @arg geom A Geometry object.
 	-- @usage -- DONTRUN
 	-- shpPath = filePath("RODOVIAS_AMZ_lin.shp", "gis")
-	-- dSet = TerraLib().getOGRByFilePath(shpPath)
+	-- dSet = TerraLib().getDataSet{file = shpPath}
 	-- geom = dSet[1].OGR_GEOMETRY
 	-- geom = TerraLib().castGeomToSubtype(geom)
 	castGeomToSubtype = function(geom)

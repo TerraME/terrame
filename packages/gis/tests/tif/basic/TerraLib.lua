@@ -46,10 +46,10 @@ return {
 
 		proj.file:delete()
 	end,
-	getGdalByFilePath = function(unitTest)
+	getDataSet = function(unitTest)
 		local getTifDataSet = function()
 			local file = filePath("test/prodes_polyc_10k.tif", "gis")
-			local dSet = TerraLib().getGdalByFilePath(tostring(file))
+			local dSet = TerraLib().getDataSet{file = tostring(file)}
 
 			unitTest:assertEquals(getn(dSet), 20020)
 
@@ -64,7 +64,7 @@ return {
 
 		local getAscDataSet = function()
 			local file = filePath("test/biomassa-manaus.asc", "gis")
-			local dSet = TerraLib().getGdalByFilePath(tostring(file))
+			local dSet = TerraLib().getDataSet{file = tostring(file)}
 
 			unitTest:assertEquals(getn(dSet), 9964)
 
@@ -79,7 +79,7 @@ return {
 
 		local getNcDataSet = function()
 			local file = filePath("test/vegtype_2000.nc", "gis")
-			local dSet = TerraLib().getGdalByFilePath(tostring(file))
+			local dSet = TerraLib().getDataSet{file = tostring(file)}
 
 			unitTest:assertEquals(getn(dSet), 8904) -- SKIP
 
@@ -205,7 +205,7 @@ return {
 		local mask = false
 		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 
-		local dSet = TerraLib().getDataSet(proj, clName)
+		local dSet = TerraLib().getDataSet{project = proj, layer = clName}
 		local dist = TerraLib().getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
 
 		unitTest:assertEquals(dist, 3883297.5677895, 1.0e-7) -- SKIP

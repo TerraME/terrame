@@ -211,7 +211,7 @@ return {
 		unitTest:assertEquals(l3.name, clName3)
 
 		-- BOX TEST
-		local clSet = TerraLib().getDataSet(proj, clName1)
+		local clSet = TerraLib().getDataSet{project = proj, layer = clName1}
 		unitTest:assertEquals(getn(clSet), 68)
 
 		clName1 = clName1.."_Box"
@@ -228,7 +228,7 @@ return {
 			file = filePath4
 		}
 
-		clSet = TerraLib().getDataSet(proj, clName1)
+		clSet = TerraLib().getDataSet{project = proj, layer = clName1}
 		unitTest:assertEquals(getn(clSet), 104)
 
 		local filePath6 = "sampabox.shp"
