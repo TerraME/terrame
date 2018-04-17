@@ -4,6 +4,8 @@ Parsing 'data.lua'
 Processing lua files
 Checking directory 'data'
 Checking properties of data files
+Processing 'default.pgm'
+Processing 'small.pgm'
 Package has no fonts
 Parsing lua files
 Parsing lua/Ants.lua
@@ -104,7 +106,7 @@ Checking Utils.lua
 Checking if all Models are documented
 
 Documentation report for package 'logo':
-Documentation was built in 0.71 seconds.
+Documentation was built in 7 seconds.
 5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.

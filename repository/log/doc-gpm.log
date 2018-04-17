@@ -37,6 +37,7 @@ Testing fill
 Testing save
 Testing file lua/Network.lua
 Testing Network
+Skipping distances
 Checking calls to functions in @usage
 Checking lua/GPM.lua
 Checking lua/Network.lua
@@ -59,7 +60,7 @@ Checking GPM.lua
 Checking Network.lua
 
 Documentation report for package 'gpm':
-Documentation was built in 33.06 seconds.
+Documentation was built in 31 seconds.
 5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -67,17 +68,17 @@ No problems were found in the documentation of data.
 All projects were successfully processed.
 All descriptions end with a correct character.
 All source code lines starting with --- are valid.
-All 4 global functions of the package are documented.
+All 5 global functions of the package are documented.
 All functions of each file are declared only once.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 1 non-named arguments are documented.
+All 3 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 4 functions call themselves in their @usage.
-All 4 functions do not have any error in their @usage.
+All 5 functions call themselves in their @usage.
+All 5 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
