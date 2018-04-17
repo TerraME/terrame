@@ -86,8 +86,8 @@ return {
 		unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
 
 		-- NO MASK TEST
-		local clSet = TerraLib().getDataSet{project = proj, layer = clName}
-		unitTest:assertEquals(getn(clSet), 154)
+		local clSetSize = TerraLib().getLayerSize(proj, clName)
+		unitTest:assertEquals(clSetSize, 154)
 
 		clName = clName.."_NoMask"
 		local geojson2 = File(clName..".geojson")
@@ -97,8 +97,8 @@ return {
 		mask = false
 		TerraLib().addGeoJSONCellSpaceLayer(proj, layerName, clName, resolution, geojson2, mask)
 
-		clSet = TerraLib().getDataSet{project = proj, layer = clName}
-		unitTest:assertEquals(getn(clSet), 260)
+		clSetSize = TerraLib().getLayerSize(proj, clName)
+		unitTest:assertEquals(clSetSize, 260)
 		-- // NO MASK TEST
 
 		unitTest:assertFile(geojson1)
@@ -107,7 +107,7 @@ return {
 	end,
 	getDataSet = function(unitTest)
 		local shpFile = filePath("test/malha2015.geojson", "gis")
-		local dSet = TerraLib().getDataSet{file = tostring(shpFile)}
+		local dSet = TerraLib().getDataSet{file = shpFile}
 
 		unitTest:assertEquals(getn(dSet), 102)
 
@@ -207,7 +207,7 @@ return {
 		toData.srid = nil
 		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
 
-		local tchsSjc = TerraLib().getDataSet{file = toData.file}
+		local tchsSjc = TerraLib().getDataSet{file = File(toData.file)}
 
 		unitTest:assertEquals(getn(tchsSjc), 2)
 		unitTest:assertEquals(tchsSjc[0].ID, 55)
@@ -223,7 +223,7 @@ return {
 
 		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
 
-		local tchsSjc2 = TerraLib().getDataSet{file = toData.file}
+		local tchsSjc2 = TerraLib().getDataSet{file = File(toData.file)}
 
 		unitTest:assertEquals(getn(tchsSjc2), 2)
 		unitTest:assertEquals(tchsSjc2[0].ID, 55)
@@ -343,9 +343,9 @@ return {
 
 		local polyName = "Polygonized"
 		TerraLib().addGeoJSONLayer(proj, polyName, outFile)
-		local dset = TerraLib().getDataSet{project = proj, layer = polyName}
+		local dsetSize = TerraLib().getLayerSize(proj, polyName)
 
-		unitTest:assertEquals(getn(dset), 381)
+		unitTest:assertEquals(dsetSize, 381)
 
 		local attrNames = TerraLib().getPropertyNames(proj, polyName)
 		unitTest:assertEquals("FID", attrNames[0])

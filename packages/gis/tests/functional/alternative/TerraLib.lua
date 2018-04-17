@@ -221,6 +221,7 @@ return {
 		end
 
 		local pkSaveError = function()
+			local overwrite = true
 			TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
 		end
 		unitTest:assertError(pkSaveError,  "Primary key not found (sampa.shp, FID). Please, check your subset.")

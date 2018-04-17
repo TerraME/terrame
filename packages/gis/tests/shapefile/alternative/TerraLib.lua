@@ -145,7 +145,7 @@ return {
 		unitTest:assertError(missingError, "Data has a missing value in attribute 'perc_0'. Use argument 'missing' to set its value.")
 
 		local missingOgrError = function()
-			TerraLib().getDataSet{file = tostring(shp[3])}
+			TerraLib().getDataSet{file = shp[3]}
 		end
 
 		unitTest:assertError(missingOgrError, "Data has a missing value in attribute 'perc_0'. Use argument 'missing' to set its value.")

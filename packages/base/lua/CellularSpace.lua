@@ -646,7 +646,7 @@ local function loadDataSet(self)
 		dset = gis.TerraLib().getDataSet{project = self.project,
 				layer = self.layer.name, missing = self.missing}
 	else --< file
-		dset = gis.TerraLib().getDataSet{file = tostring(self.file), missing = self.missing}
+		dset = gis.TerraLib().getDataSet{file = self.file, missing = self.missing}
 		local file = self.file
 		self.layer = file:name()
 		self.cObj_:setLayer(self.layer)

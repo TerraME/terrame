@@ -162,8 +162,8 @@ return {
 			unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
 
 			-- NO MASK TEST
-			local clSet = TerraLib().getDataSet{project = proj, layer = clName1}
-			unitTest:assertEquals(getn(clSet), 37)
+			local clSetSize = TerraLib().getLayerSize(proj, clName1)
+			unitTest:assertEquals(clSetSize, 37)
 
 			clName1 = clName1.."_NoMask"
 			local pgData2 = pgData
@@ -174,8 +174,8 @@ return {
 			mask = false
 			TerraLib().addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData2, mask)
 
-			clSet = TerraLib().getDataSet{project = proj, layer = clName1}
-			unitTest:assertEquals(getn(clSet), 54)
+			clSetSize = TerraLib().getLayerSize(proj, clName1)
+			unitTest:assertEquals(clSetSize, 54)
 
 			proj.file:delete()
 			TerraLib().dropPgTable(pgData)
@@ -225,8 +225,8 @@ return {
 			unitTest:assertEquals(layerInfo.database, database)
 			unitTest:assertEquals(layerInfo.table, tableName)
 
-			local clSet = TerraLib().getDataSet{project = proj, layer = clName1}
-			unitTest:assertEquals(getn(clSet), 108)
+			local clSetSize = TerraLib().getLayerSize(proj, clName1)
+			unitTest:assertEquals(clSetSize, 108)
 
 			TerraLib().dropPgTable(pgData)
 			proj.file:delete()
@@ -1347,9 +1347,9 @@ return {
 		local newPolName = "ES_Limit_New"
 		TerraLib().saveDataSet(proj, polName, polLuaTable, newPolName, {"attr1"})
 
-		local newPolDset = TerraLib().getDataSet{project = proj, layer = newPolName}
-		unitTest:assertEquals(getn(newPolDset), 1)
-		unitTest:assertEquals(getn(newPolDset), getn(polDset))
+		local newPolDsetSize = TerraLib().getLayerSize(proj, newPolName)
+		unitTest:assertEquals(newPolDsetSize, 1)
+		unitTest:assertEquals(newPolDsetSize, getn(polDset))
 
 		attrNames = TerraLib().getPropertyNames(proj, newPolName)
 		unitTest:assertEquals("fid", attrNames[0])
@@ -1486,9 +1486,9 @@ return {
 		local newLnName = "ES_Rails_New"
 		TerraLib().saveDataSet(proj, lnName, lnLuaTable, newLnName, {"attr1"})
 
-		local newLnDset = TerraLib().getDataSet{project = proj, layer = newLnName, missing = 0}
-		unitTest:assertEquals(getn(newLnDset), 182)
-		unitTest:assertEquals(getn(newLnDset), getn(lnDset))
+		local newLnDsetSize = TerraLib().getLayerSize(proj, newLnName)
+		unitTest:assertEquals(newLnDsetSize, 182)
+		unitTest:assertEquals(newLnDsetSize, getn(lnDset))
 
 		attrNames = TerraLib().getPropertyNames(proj, newLnName)
 		unitTest:assertEquals("fid", attrNames[0])
@@ -2310,9 +2310,9 @@ return {
 
 		local polyName = "Polygonized"
 		TerraLib().addPgLayer(proj, polyName, outInfo, nil, outInfo.encoding)
-		local dset = TerraLib().getDataSet{project = proj, layer = polyName}
+		local dsetSize = TerraLib().getLayerSize(proj, polyName)
 
-		unitTest:assertEquals(getn(dset), 381)
+		unitTest:assertEquals(dsetSize, 381)
 
 		local attrNames = TerraLib().getPropertyNames(proj, polyName)
 		unitTest:assertEquals("id", attrNames[0])

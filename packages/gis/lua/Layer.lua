@@ -1215,9 +1215,9 @@ Layer_ = {
 			end
 		end)
 
-		local dSetSize = #TerraLib().getDataSet{project = self.project, layer = self.name}
+		local dSetSize = TerraLib().getLayerSize(self.project, self.name)
 		forEachOrderedElement(temporalLayers, function(layer)
-			if dSetSize ~= #TerraLib().getDataSet{project = self.project, layer = layer} then
+			if dSetSize ~= TerraLib().getLayerSize(self.project, layer) then
 				customError("Layer '"..self.name.."' cannot be merged with '"..layer.."' because they have different numbers of objects.")
 			end
 		end)

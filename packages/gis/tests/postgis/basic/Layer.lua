@@ -203,8 +203,8 @@ return {
 			unitTest:assertEquals(cl4.table, string.lower(clName4))
 
 			-- BOX TEST
-			local clSet = TerraLib().getDataSet{project = proj, layer = clName1}
-			unitTest:assertEquals(getn(clSet), 68)
+			local clSetSize = TerraLib().getLayerSize(proj, clName1)
+			unitTest:assertEquals(clSetSize, 68)
 
 			local clName5 = clName1.."_Box"
 			local tName4 = string.lower(clName5)
@@ -226,8 +226,8 @@ return {
 				}
 			end
 			unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("file"))
-			clSet = TerraLib().getDataSet{project = proj, layer = clName5}
-			unitTest:assertEquals(getn(clSet), 104)
+			clSetSize = TerraLib().getLayerSize(proj, clName5)
+			unitTest:assertEquals(clSetSize, 104)
 
 			-- CHANGE EPSG
 			local clName6 = "SampaDBNewSrid"

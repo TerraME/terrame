@@ -107,8 +107,8 @@ return {
 			unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
 
 			-- NO MASK TEST
-			local clSet = TerraLib().getDataSet{project = proj, layer = clName}
-			unitTest:assertEquals(getn(clSet), 37)
+			local clSetSize = TerraLib().getLayerSize(proj, clName)
+			unitTest:assertEquals(clSetSize, 37)
 
 			clName = clName.."_NoMask"
 			local shp2 = File(clName..".shp")
@@ -118,8 +118,8 @@ return {
 			mask = false
 			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp2, mask)
 
-			clSet = TerraLib().getDataSet{project = proj, layer = clName}
-			unitTest:assertEquals(getn(clSet), 54)
+			clSetSize = TerraLib().getLayerSize(proj, clName)
+			unitTest:assertEquals(clSetSize, 54)
 			-- // NO MASK TEST
 
 			-- SPATIAL INDEX TEST
@@ -178,8 +178,8 @@ return {
 			unitTest:assertEquals(layerInfo.type, "OGR")
 			unitTest:assertEquals(layerInfo.rep, "polygon")
 
-			local clSet = TerraLib().getDataSet{project = proj, layer = clName}
-			unitTest:assertEquals(getn(clSet), 108)
+			local clSetSize = TerraLib().getLayerSize(proj, clName)
+			unitTest:assertEquals(clSetSize, 108)
 
 			shp1:deleteIfExists()
 			proj.file:delete()
@@ -1256,9 +1256,9 @@ return {
 			local newPolName = "ES_Limit_New"
 			TerraLib().saveDataSet(proj, polName, polLuaTable, newPolName, {"attr1"})
 
-			local newPolDset = TerraLib().getDataSet{project = proj, layer = newPolName}
-			unitTest:assertEquals(getn(newPolDset), 1)
-			unitTest:assertEquals(getn(newPolDset), getn(polDset))
+			local newPolDsetSize = TerraLib().getLayerSize(proj, newPolName)
+			unitTest:assertEquals(newPolDsetSize, 1)
+			unitTest:assertEquals(newPolDsetSize, getn(polDset))
 
 			attrNames = TerraLib().getPropertyNames(proj, newPolName)
 			unitTest:assertEquals("FID", attrNames[0])
@@ -1312,9 +1312,9 @@ return {
 			local newPtName = "BR_Ports_New"
 			TerraLib().saveDataSet(proj, ptName, ptLuaTable, newPtName, {"attr1"})
 
-			local newPtDset = TerraLib().getDataSet{project = proj, layer = newPtName, missing = 0}
-			unitTest:assertEquals(getn(newPtDset), 8)
-			unitTest:assertEquals(getn(newPtDset), getn(ptDset))
+			local newPtDsetSize = TerraLib().getLayerSize(proj, newPtName)
+			unitTest:assertEquals(newPtDsetSize, 8)
+			unitTest:assertEquals(newPtDsetSize, getn(ptDset))
 
 			attrNames = TerraLib().getPropertyNames(proj, newPtName)
 			unitTest:assertEquals("FID", attrNames[0])
@@ -1366,9 +1366,9 @@ return {
 			local newLnName = "ES_Rails_New"
 			TerraLib().saveDataSet(proj, lnName, lnLuaTable, newLnName, {"attr1"})
 
-			local newLnDset = TerraLib().getDataSet{project = proj, layer = newLnName, missing = 0}
-			unitTest:assertEquals(getn(newLnDset), 182)
-			unitTest:assertEquals(getn(newLnDset), getn(lnDset))
+			local newLnDsetSize = TerraLib().getLayerSize(proj, newLnName)
+			unitTest:assertEquals(newLnDsetSize, 182)
+			unitTest:assertEquals(newLnDsetSize, getn(lnDset))
 
 			attrNames = TerraLib().getPropertyNames(proj, newLnName)
 			unitTest:assertEquals("FID", attrNames[0])
@@ -1581,7 +1581,7 @@ return {
 	end,
 	getDataSet = function(unitTest)
 		local shpFile = filePath("test/sampa.shp", "gis")
-		local dSet = TerraLib().getDataSet{file = tostring(shpFile)}
+		local dSet = TerraLib().getDataSet{file = shpFile}
 
 		unitTest:assertEquals(getn(dSet), 63)
 
@@ -1751,7 +1751,7 @@ return {
 	end,
 	castGeomToSubtype = function(unitTest)
 		local shpFile = filePath("test/sampa.shp", "gis")
-		local dSet = TerraLib().getDataSet{file = tostring(shpFile)}
+		local dSet = TerraLib().getDataSet{file = shpFile}
 		local geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPolygon")
@@ -1759,7 +1759,7 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "Polygon")
 
 		shpFile = filePath("amazonia-roads.shp", "gis")
-		dSet = TerraLib().getDataSet{file = tostring(shpFile)}
+		dSet = TerraLib().getDataSet{file = shpFile}
 		geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiLineString")
@@ -1767,7 +1767,7 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "LineString")
 
 		shpFile = filePath("test/prodes_points_10km_PA_pt.shp", "gis")
-		dSet = TerraLib().getDataSet{file = tostring(shpFile)}
+		dSet = TerraLib().getDataSet{file = shpFile}
 		geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")
@@ -1893,7 +1893,7 @@ return {
 
 			TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, subset)
 
-			local tchsSjc = TerraLib().getDataSet{file = toData.file}
+			local tchsSjc = TerraLib().getDataSet{file = File(toData.file)}
 
 			unitTest:assertEquals(getn(tchsSjc), 2)
 			unitTest:assertEquals(tchsSjc[0].ID, 55)
@@ -1911,7 +1911,7 @@ return {
 			-- Save just two
 			TerraLib().saveLayerAs(fromData, toData1, overwrite, {"NM_MICRO", "ID"}, subset)
 
-			local tchsSjc1 = TerraLib().getDataSet{file = toData1.file}
+			local tchsSjc1 = TerraLib().getDataSet{file = File(toData1.file)}
 
 			unitTest:assertEquals(getn(tchsSjc1), 2)
 			unitTest:assertEquals(tchsSjc1[0].ID, 55)
@@ -1922,7 +1922,7 @@ return {
 			-- Save all
 			TerraLib().saveLayerAs(fromData, toData2, overwrite, nil, subset)
 
-			local tchsSjc2 = TerraLib().getDataSet{file = toData2.file}
+			local tchsSjc2 = TerraLib().getDataSet{file = File(toData2.file)}
 
 			unitTest:assertEquals(getn(tchsSjc2), 2)
 			unitTest:assertEquals(tchsSjc2[1].FID, 1)
@@ -1996,8 +1996,8 @@ return {
 		TerraLib().douglasPeucker(proj, lnName, dpLayerName, 500)
 		TerraLib().addShpLayer(proj, dpLayerName, dpFile)
 
-		local dpSet = TerraLib().getDataSet{project = proj, layer = dpLayerName, missing = 0}
-		unitTest:assertEquals(getn(dpSet), 182)
+		local dpSetSize = TerraLib().getLayerSize(proj, dpLayerName)
+		unitTest:assertEquals(dpSetSize, 182)
 
 		local attrNames = TerraLib().getPropertyNames(proj, dpLayerName)
 		unitTest:assertEquals("FID", attrNames[0])
@@ -2043,9 +2043,9 @@ return {
 
 		local polyName = "Polygonized"
 		TerraLib().addShpLayer(proj, polyName, outFile)
-		local dset = TerraLib().getDataSet{project = proj, layer = polyName}
+		local dsetSize = TerraLib().getLayerSize(proj, polyName)
 
-		unitTest:assertEquals(getn(dset), 381)
+		unitTest:assertEquals(dsetSize, 381)
 
 		local attrNames = TerraLib().getPropertyNames(proj, polyName)
 		unitTest:assertEquals("FID", attrNames[0])
@@ -2054,5 +2054,11 @@ return {
 
 		proj.file:delete()
 		outFile:delete()
+	end,
+	getDataSetSize = function(unitTest)
+		local shpFile = filePath("test/es_sirgas2000_5880.shp", "gis")
+		local dsetSize = TerraLib().getDataSetSize(shpFile)
+
+		unitTest:assertEquals(dsetSize, 77)
 	end
 }

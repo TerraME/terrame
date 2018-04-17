@@ -801,65 +801,33 @@ local function isDataTypeBoolean(propType)
 	return propType == binding.BOOLEAN_TYPE
 end
 
-local function createRasterDataSet(raster)
-	local rows = raster:getNumberOfRows()
-	local columns = raster:getNumberOfColumns()
-	local bands = raster:getNumberOfBands()
-	local count = 0
-	local set = {}
-
-	for r = 0, rows - 1 do
-		for c = 0, columns - 1 do
-			local dat = {}
-			for b = 0, bands - 1 do
-				dat["b"..b] = raster:getValue(r, c, b)
-			end
-			dat.row = columns - 1 - c
-			dat.col = r
-
-			set[count] = dat
-			count = count + 1
-		end
+local function createDataSetAdapted(dSet, missing)
+	local set
+	local missValue = ""
+	if missing then
+		missValue = tostring(missing)
+	end
+	if dSet:getPropertyDataType(0) == binding.RASTER_TYPE  then
+		set = binding.getRasterAsTable(dSet)
+	else
+		set = binding.getDataSetAsTable(dSet, missValue)
 	end
 
-	return set
-end
+	if not set then
+		local numProps = dSet:getNumProperties()
+		while dSet:moveNext() do
+			for i = 0, numProps - 1 do
+				if dSet:isNull(i) then
+					if dSet:getPropertyDataType(i) == binding.GEOMETRY_TYPE then
+						return nil, "Data cannot be loaded because it has a missing geometry. Please, fix your data."
+					end
 
-local function createDataSetAdapted(dSet, missing)
-	local count = 0
-	local numProps = dSet:getNumProperties()
-	local set = {}
-	local precision = 15
-
-	while dSet:moveNext() do
-		local line = {}
-		for i = 0, numProps - 1 do
-			local type = dSet:getPropertyDataType(i)
-
-			if dSet:isNull(i) then
-				if type == binding.GEOMETRY_TYPE then
-					return nil, "Data cannot be loaded because it has a missing geometry. Please, fix your data."
+					if not missing then
+						return nil, "Data has a missing value in attribute '"..dSet:getPropertyName(i).."'. Use argument 'missing' to set its value."
+					end
 				end
-
-				if missing then
-					line[dSet:getPropertyName(i)] = missing
-				else
-					return nil, "Data has a missing value in attribute '"..dSet:getPropertyName(i).."'. Use argument 'missing' to set its value."
-				end
-			elseif isDataTypeNumber(type) then
-				line[dSet:getPropertyName(i)] = tonumber(dSet:getAsString(i, precision))
-			elseif type == binding.BOOLEAN_TYPE then
-				line[dSet:getPropertyName(i)] = dSet:getBool(i)
-			elseif type == binding.GEOMETRY_TYPE then
-				line[dSet:getPropertyName(i)] = dSet:getGeom(i)
-			elseif type == binding.RASTER_TYPE then
-				return createRasterDataSet(dSet:getRaster(i))
-			else
-				line[dSet:getPropertyName(i)] = dSet:getAsString(i)
 			end
 		end
-		set[count] = line
-		count = count + 1
 	end
 
 	return set
@@ -1902,6 +1870,61 @@ local function getLayerDataSourceInfo(project, layer)
 	return dsInfo
 end
 
+-- local function getDataSetFromLayer(project, layerName)
+	-- local dset
+	-- do
+		-- loadProject(project, project.file)
+		-- local layer = project.layers[layerName]
+		-- layer = castLayer(layer)
+		-- local dseName = layer:getDataSetName()
+		-- local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+		-- local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+		-- dset = ds:getDataSet(dseName)
+		-- releaseProject(project)
+	-- end
+
+	-- return dset
+-- end
+
+local function getDataSetFromFile(file)
+	local dset
+	do
+		local fileExt = string.lower(file:extension())
+		local dsType = SourceTypeMapper[fileExt]
+		local connInfo = createFileConnInfo(tostring(file))
+		local ds = makeAndOpenDataSource(connInfo, dsType)
+		local dSetName
+
+		if dsType == "OGR" then
+			if fileExt == "geojson" then
+				dSetName = "OGRGeoJSON"
+			else
+				local _, name = file:split()
+				dSetName = name
+			end
+		else --< GDAL
+			dSetName = file:name(true)
+		end
+
+		dset = ds:getDataSet(dSetName)
+
+		ds:close()
+	end
+
+	collectgarbage("collect")
+
+	return dset
+end
+
+local function getRasterByDataSet(dataset)
+	local rpos = binding.GetFirstPropertyPos(dataset, binding.RASTER_TYPE)
+	return dataset:getRaster(rpos)
+end
+
+local function getRasterSize(raster)
+	return raster:getNumberOfRows() * raster:getNumberOfColumns()
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 
@@ -2636,11 +2659,11 @@ TerraLib_ = {
 	-- dset = TerraLib().getDataSet{project = "myproject.tview", layer = "mylayer"}
 	getDataSet = function(data)
 		local set, err
-		local missing = data.missing
 
 		if data.project then
 			local project = data.project
 			local layerName = data.layer
+			local missing = data.missing
 
 			local cache = getCache(project, layerName, missing)
 			if cache then return cache end
@@ -2649,46 +2672,25 @@ TerraLib_ = {
 				loadProject(project, project.file)
 
 				local layer = project.layers[layerName]
-				layer = castLayer(layer)
+				--layer = castLayer(layer)
 				local dseName = layer:getDataSetName()
 				local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
 				local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
 				local dse = ds:getDataSet(dseName)
-
+				--local dse = getDataSetFromLayer(project, layerName)
 				set, err = createDataSetAdapted(dse, missing)
 
 				addCache(set, project, layerName, missing)
 				releaseProject(project)
 			end
 		else
-			local filePath = data.file
-
-			local cache = getCache(filePath, missing)
+			local cache = getCache(filePath, data.missing)
 			if cache then return cache end
 
-			local fileExt = string.lower(File(filePath):extension())
-			local connInfo = createFileConnInfo(filePath)
-			local dsType = SourceTypeMapper[fileExt]
-			local ds = makeAndOpenDataSource(connInfo, dsType)
-			local file = File(filePath)
-			local dSetName
+			local dset = getDataSetFromFile(data.file)
+			set, err = createDataSetAdapted(dset, data.missing)
 
-			if dsType == "OGR" then
-				if fileExt == "geojson" then
-					dSetName = "OGRGeoJSON"
-				else
-					local _, name = file:split()
-					dSetName = name
-				end
-			else --< GDAL
-				dSetName = file:name(true)
-			end
-
-			local dSet = ds:getDataSet(dSetName)
-			set, err = createDataSetAdapted(dSet, missing)
-
-			addCache(set, filePath, missing)
-			ds:close()
+			addCache(set, data.file, data.missing)
 		end
 
 		collectgarbage("collect")
@@ -3000,7 +3002,6 @@ TerraLib_ = {
 			loadProject(project, project.file)
 
 			local layer = project.layers[layerName]
-			layer = castLayer(layer)
 			local datasetName = layer:getDataSetName()
 			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
 			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
@@ -3010,9 +3011,8 @@ TerraLib_ = {
 			if dst:hasGeom() then
 				size = dataset:size()
 			else
-				local rpos = binding.GetFirstPropertyPos(dataset, binding.RASTER_TYPE)
-				local raster = dataset:getRaster(rpos)
-				size = raster:getNumberOfRows() * raster:getNumberOfColumns()
+				local raster = getRasterByDataSet(dataset)
+				size = getRasterSize(raster)
 			end
 
 			releaseProject(project)
@@ -3228,6 +3228,28 @@ TerraLib_ = {
 	-- removeLayer(project, layerName)
 	removeLayer = function(project, layerName)
 		removeLayer(project, layerName)
+	end,
+	--- Return the size of a dataset.
+	-- @arg file A file.
+	-- @usage -- DONTRUN
+	-- tifFile = filePath("prodes_polyc_10k.tif", "gis")
+	-- tifSize = TerraLib().getDataSetSize(tifFile)
+	getDataSetSize = function(file)
+		local size
+		local dset = getDataSetFromFile(file)
+
+		local fileExt = string.lower(file:extension())
+		local dsType = SourceTypeMapper[fileExt]
+		if dsType == "GDAL" then
+			local raster = getRasterByDataSet(dset)
+			size = getRasterSize(raster)
+		else
+			size = dset:size()
+		end
+
+		collectgarbage("collect")
+
+		return size
 	end
 }
 

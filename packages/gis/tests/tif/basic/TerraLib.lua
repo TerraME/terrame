@@ -49,7 +49,7 @@ return {
 	getDataSet = function(unitTest)
 		local getTifDataSet = function()
 			local file = filePath("test/prodes_polyc_10k.tif", "gis")
-			local dSet = TerraLib().getDataSet{file = tostring(file)}
+			local dSet = TerraLib().getDataSet{file = file}
 
 			unitTest:assertEquals(getn(dSet), 20020)
 
@@ -64,7 +64,7 @@ return {
 
 		local getAscDataSet = function()
 			local file = filePath("test/biomassa-manaus.asc", "gis")
-			local dSet = TerraLib().getDataSet{file = tostring(file)}
+			local dSet = TerraLib().getDataSet{file = file}
 
 			unitTest:assertEquals(getn(dSet), 9964)
 
@@ -79,7 +79,7 @@ return {
 
 		local getNcDataSet = function()
 			local file = filePath("test/vegtype_2000.nc", "gis")
-			local dSet = TerraLib().getDataSet{file = tostring(file)}
+			local dSet = TerraLib().getDataSet{file = file}
 
 			unitTest:assertEquals(getn(dSet), 8904) -- SKIP
 
@@ -266,6 +266,12 @@ return {
 		unitTest:assertEquals(size, 882875.0)
 
 		file:delete()
+	end,
+	getDataSetSize = function(unitTest)
+		local tifFile = filePath("test/prodes_polyc_10k.tif", "gis")
+		local dsetSize = TerraLib().getDataSetSize(tifFile)
+
+		unitTest:assertEquals(dsetSize, 20020)
 	end
 }
 
