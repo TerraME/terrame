@@ -1061,7 +1061,7 @@ function Society(data)
 				data:add(attributes)
 			end
 		else
-			local dSet = gis.TerraLib().getOGRByFilePath(tostring(data.file))
+			local dSet = gis.TerraLib().getDataSet{file = data.file}
 
 			for i = 0, #dSet do
 				data:add(dSet[i])
