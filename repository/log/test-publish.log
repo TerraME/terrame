@@ -1,9 +1,11 @@
+Using package's configuration file
+Loading configuration file '/Users/pedro/github/terrame-pedro/repository/publish/config.lua'
 Using log directory '/Users/pedro/github/terrame-pedro/repository/publish/log/'
 Loading package 'publish'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Skip looking for lines of source code
+Looking for lines of source code
 Testing tests/application/alternative/Application.lua
 Testing Application
 Checking if all asserts were executed
@@ -58,6 +60,7 @@ Checking if all asserts were executed
 Testing tests/functional/basic/View.lua
 Testing View
 Testing __tostring
+Testing loadColors
 Checking if all asserts were executed
 Testing tests/layout/alternative/Application.lua
 Testing Application
@@ -65,16 +68,19 @@ Checking if all asserts were executed
 Testing tests/layout/basic/Application.lua
 Testing Application
 Checking if all asserts were executed
-Testing tests/package/alternative/Application.lua
-Testing Application
-Checking if all asserts were executed
-Testing tests/package/basic/Application.lua
-Testing Application
-Checking if all asserts were executed
 Testing tests/project/alternative/Application.lua
 Testing Application
 Checking if all asserts were executed
 Testing tests/project/basic/Application.lua
+Testing Application
+Checking if all asserts were executed
+Testing tests/source/alternative/Application.lua
+Testing Application
+Checking if all asserts were executed
+Testing tests/wms/alternative/Application.lua
+Testing Application
+Checking if all asserts were executed
+Testing tests/wms/basic/Application.lua
 Testing Application
 Checking if all asserts were executed
 Checking if functions from source code were tested
@@ -84,31 +90,43 @@ Checking List.lua
 Checking Report.lua
 Checking Utils.lua
 Checking View.lua
-Skipping lines of source code check
+Checking lines of source code
+Checking Application.lua
+Checking Color.lua
+Checking List.lua
+Checking Report.lua
+Checking Utils.lua
+Checking View.lua
 Testing examples
 Testing arapiuns
 Testing brazil
 Testing caragua
 Testing emas
+Testing prodes-temporal
+Testing scenario-caragua
+Testing sp
+Testing temporal
+Testing vegetation
+Testing wmsbrazil
 Checking logs
 
 Functional test report for package 'publish':
-Tests were executed in 71.69 seconds.
+Tests were executed in 12 minutes and 11 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 861 asserts were executed successfully.
-All 33 tested functions do not have any unexpected execution error.
-All 33 tested functions have at least one assert.
-All 33 tested functions exist in the source code of the package.
+All 1078 asserts were executed successfully.
+All 35 tested functions do not have any unexpected execution error.
+All 35 tested functions have at least one assert.
+All 35 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No file or directory was created along the tests.
-All 16 functions of the package were tested.
-No lines from the source code were verified.
-All 4 examples were successfully executed.
+All 17 functions of the package were tested.
+All lines from the source code were executed.
+All 10 examples were successfully executed.
 No new log file was created.
 All log files were used in the tests.
 Summing up, all tests were successfully executed.

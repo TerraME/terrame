@@ -3,24 +3,32 @@ Loading package 'sci'
 Package has no data
 Package has no fonts
 Parsing lua files
+Parsing lua/Feedback.lua
 Parsing lua/Spline.lua
 Parsing examples
 Parsing examples/PredatorPreyFord.lua
 Parsing examples/SimpleSpline.lua
 Checking undocumented files
 Checking @usage definition
+Checking lua/Feedback.lua
 Checking lua/Spline.lua
 Testing @usage
+Testing file lua/Feedback.lua
+Testing decay
+Testing growth
 Testing file lua/Spline.lua
 Testing Spline
 Testing value
 Checking calls to functions in @usage
+Checking lua/Feedback.lua
 Checking lua/Spline.lua
 Checking undocumented arguments
+Checking lua/Feedback.lua
 Checking lua/Spline.lua
 Checking 'description.lua'
 Building and checking HTML files
 Building doc/index.html
+Building doc/files/Feedback.html
 Building doc/files/Spline.html
 Building doc/files/examples.html
 Checking images
@@ -28,27 +36,28 @@ Checking data.lua
 Checking examples
 Checking if all images are used
 Checking if all functions are documented
+Checking Feedback.lua
 Checking Spline.lua
 
 Documentation report for package 'sci':
-Documentation was built in 0.42 seconds.
-3 HTML files were created.
+Documentation was built in 18 seconds.
+4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
 All descriptions end with a correct character.
 All source code lines starting with --- are valid.
-All 2 global functions of the package are documented.
+All 4 global functions of the package are documented.
 All functions of each file are declared only once.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 1 non-named arguments are documented.
+All 5 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 2 functions call themselves in their @usage.
-All 2 functions do not have any error in their @usage.
+All 4 functions call themselves in their @usage.
+All 4 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.

@@ -8,40 +8,40 @@ Looking for package functions
 Skip looking for lines of source code
 Testing tests/Ants.lua
 Testing Ants
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/Disease.lua
 Testing Disease
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/GrowingSociety.lua
 Testing GrowingSociety
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/Heatbugs.lua
 Testing Heatbugs
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/Labyrinth.lua
 Testing Labyrinth
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/LifeCycle.lua
 Testing LifeCycle
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/Overpopulation.lua
 Testing Overpopulation
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/PredatorPrey.lua
 Testing PredatorPrey
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/Schelling.lua
 Testing Schelling
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/SingleAgent.lua
 Testing SingleAgent
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/Sugarscape.lua
 Testing Sugarscape
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Testing tests/Utils.lua
 Testing getLabyrinth
-Checking if all asserts were executed
+Skip looking for asserts in tests
 Checking if functions from source code were tested
 Checking Ants.lua
 Checking Disease.lua
@@ -63,11 +63,11 @@ Testing road
 Checking logs
 
 Functional test report for package 'logo':
-Tests were executed in 609.68 seconds.
+Tests were executed in 2 minutes and 6 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
-All asserts were executed at least once.
+Execution of all asserts was not verified.
 All 46 asserts were executed successfully.
 All 12 tested functions do not have any unexpected execution error.
 All 12 tested functions have at least one assert.
