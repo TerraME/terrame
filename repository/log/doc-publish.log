@@ -6,6 +6,7 @@ Processing 'arapiuns.lua'
 Processing 'brazil.lua'
 Processing 'caragua.lua'
 Processing 'emas.lua'
+Processing 'sp.lua'
 Checking directory 'data'
 Checking properties of data files
 Processing 'AllCmmTab_210316OK.shp'
@@ -14,6 +15,7 @@ Processing 'br_biomes.shp'
 Processing 'br_states.shp'
 Processing 'caragua.shp'
 Processing 'caragua_classes2010_regioes.shp'
+Processing 'caragua_classes2010_regioes.tif'
 Processing 'emas.shp'
 Processing 'occupational2010.shp'
 Processing 'regions.shp'
@@ -22,6 +24,11 @@ Processing 'simulation2025_lessgrowth.shp'
 Processing 'simulation2025_plusgrowth.shp'
 Processing 'simulation2025_poorer.shp'
 Processing 'simulation2025_richer_final.shp'
+Processing 'sp_municipalities.shp'
+Processing 'uc_federais_2001.shp'
+Processing 'uc_federais_2009.shp'
+Processing 'uc_federais_2016.shp'
+Processing 'vegtype_2000_5880.tif'
 Package has no fonts
 Parsing lua files
 Parsing lua/Application.lua
@@ -35,6 +42,12 @@ Parsing examples/arapiuns.lua
 Parsing examples/brazil.lua
 Parsing examples/caragua.lua
 Parsing examples/emas.lua
+Parsing examples/prodes-temporal.lua
+Parsing examples/scenario-caragua.lua
+Parsing examples/sp.lua
+Parsing examples/temporal.lua
+Parsing examples/vegetation.lua
+Parsing examples/wmsbrazil.lua
 Checking undocumented files
 Checking @usage definition
 Checking lua/Application.lua
@@ -61,6 +74,7 @@ Testing file lua/Utils.lua
 Testing link
 Testing file lua/View.lua
 Testing View
+Skipping loadColors
 Checking calls to functions in @usage
 Checking lua/Application.lua
 Checking lua/Color.lua
@@ -99,7 +113,7 @@ Checking Utils.lua
 Checking View.lua
 
 Documentation report for package 'publish':
-Documentation was built in 9.15 seconds.
+Documentation was built in 32 seconds.
 9 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -107,7 +121,7 @@ No problems were found in the documentation of data.
 All projects were successfully processed.
 All descriptions end with a correct character.
 All source code lines starting with --- are valid.
-All 11 global functions of the package are documented.
+All 12 global functions of the package are documented.
 All functions of each file are declared only once.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
@@ -116,11 +130,11 @@ No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 11 functions call themselves in their @usage.
-All 11 functions do not have any error in their @usage.
+All 12 functions call themselves in their @usage.
+All 12 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
-All 0 links were correctly built.
-All 4 examples are correctly documented.
+All 1 links were correctly built.
+All 10 examples are correctly documented.
 Summing up, all the documentation was successfully built.
