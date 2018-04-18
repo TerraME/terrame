@@ -211,8 +211,8 @@ return {
 		unitTest:assertEquals(l3.name, clName3)
 
 		-- BOX TEST
-		local clSet = TerraLib().getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 68)
+		local clSetSize = TerraLib().getLayerSize(proj, clName1)
+		unitTest:assertEquals(clSetSize, 68)
 
 		clName1 = clName1.."_Box"
 		local filePath4 = clName1..".shp"
@@ -228,8 +228,8 @@ return {
 			file = filePath4
 		}
 
-		clSet = TerraLib().getDataSet(proj, clName1)
-		unitTest:assertEquals(getn(clSet), 104)
+		clSetSize = TerraLib().getLayerSize(proj, clName1)
+		unitTest:assertEquals(clSetSize, 104)
 
 		local filePath6 = "sampabox.shp"
 		File(filePath6):deleteIfExists()

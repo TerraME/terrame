@@ -107,8 +107,8 @@ return {
 			unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
 
 			-- NO MASK TEST
-			local clSet = TerraLib().getDataSet(proj, clName)
-			unitTest:assertEquals(getn(clSet), 37)
+			local clSetSize = TerraLib().getLayerSize(proj, clName)
+			unitTest:assertEquals(clSetSize, 37)
 
 			clName = clName.."_NoMask"
 			local shp2 = File(clName..".shp")
@@ -118,8 +118,8 @@ return {
 			mask = false
 			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp2, mask)
 
-			clSet = TerraLib().getDataSet(proj, clName)
-			unitTest:assertEquals(getn(clSet), 54)
+			clSetSize = TerraLib().getLayerSize(proj, clName)
+			unitTest:assertEquals(clSetSize, 54)
 			-- // NO MASK TEST
 
 			-- SPATIAL INDEX TEST
@@ -178,8 +178,8 @@ return {
 			unitTest:assertEquals(layerInfo.type, "OGR")
 			unitTest:assertEquals(layerInfo.rep, "polygon")
 
-			local clSet = TerraLib().getDataSet(proj, clName)
-			unitTest:assertEquals(getn(clSet), 108)
+			local clSetSize = TerraLib().getLayerSize(proj, clName)
+			unitTest:assertEquals(clSetSize, 108)
 
 			shp1:deleteIfExists()
 			proj.file:delete()
@@ -219,7 +219,7 @@ return {
 			local mask = true
 			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, File(shp[1]), mask)
 
-			local clSet = TerraLib().getDataSet(proj, clName)
+			local clSet = TerraLib().getDataSet{project = proj, layer = clName}
 
 			unitTest:assertEquals(getn(clSet), 9)
 
@@ -254,7 +254,7 @@ return {
 			local default = nil
 			TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
 
-			local presSet = TerraLib().getDataSet(proj, presLayerName)
+			local presSet = TerraLib().getDataSet{project = proj, layer = presLayerName}
 
 			unitTest:assertEquals(getn(presSet), 9)
 
@@ -283,7 +283,7 @@ return {
 			default = 0
 			TerraLib().attributeFill(proj, layerName2, presLayerName, areaLayerName, attribute, operation, select, area, default)
 
-			local areaSet = TerraLib().getDataSet(proj, areaLayerName)
+			local areaSet = TerraLib().getDataSet{project = proj, layer = areaLayerName}
 
 			unitTest:assertEquals(getn(areaSet), 9)
 
@@ -312,7 +312,7 @@ return {
 			default = 0
 			TerraLib().attributeFill(proj, layerName2, areaLayerName, countLayerName, attribute, operation, select, area, default)
 
-			local countSet = TerraLib().getDataSet(proj, countLayerName)
+			local countSet = TerraLib().getDataSet{project = proj, layer = countLayerName}
 
 			unitTest:assertEquals(getn(countSet), 9)
 
@@ -341,7 +341,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName2, countLayerName, distLayerName, attribute, operation, select, area, default)
 
-			local distSet = TerraLib().getDataSet(proj, distLayerName)
+			local distSet = TerraLib().getDataSet{project = proj, layer = distLayerName}
 
 			unitTest:assertEquals(getn(distSet), 9)
 
@@ -374,7 +374,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName3, distLayerName, minLayerName, attribute, operation, select, area, default)
 
-			local minSet = TerraLib().getDataSet(proj, minLayerName)
+			local minSet = TerraLib().getDataSet{project = proj, layer = minLayerName}
 
 			unitTest:assertEquals(getn(minSet), 9)
 
@@ -404,7 +404,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName3, minLayerName, maxLayerName, attribute, operation, select, area, default)
 
-			local maxSet = TerraLib().getDataSet(proj, maxLayerName)
+			local maxSet = TerraLib().getDataSet{project = proj, layer = maxLayerName}
 
 			unitTest:assertEquals(getn(maxSet), 9)
 
@@ -434,7 +434,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName2, maxLayerName, percLayerName, attribute, operation, select, area, default)
 
-			local percentSet = TerraLib().getDataSet(proj, percLayerName, -1)
+			local percentSet = TerraLib().getDataSet{project = proj, layer = percLayerName, missing = -1}
 
 			unitTest:assertEquals(getn(percentSet), 9)
 
@@ -472,7 +472,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName3, percLayerName, stdevLayerName, attribute, operation, select, area, default)
 
-			local stdevSet = TerraLib().getDataSet(proj, stdevLayerName, 0)
+			local stdevSet = TerraLib().getDataSet{project = proj, layer = stdevLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(stdevSet), 9)
 
@@ -503,7 +503,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName3, stdevLayerName, meanLayerName, attribute, operation, select, area, default)
 
-			local meanSet = TerraLib().getDataSet(proj, meanLayerName, 0)
+			local meanSet = TerraLib().getDataSet{project = proj, layer = meanLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(meanSet), 9)
 
@@ -534,7 +534,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName3, meanLayerName, weighLayerName, attribute, operation, select, area, default)
 
-			local weighSet = TerraLib().getDataSet(proj, weighLayerName, 0)
+			local weighSet = TerraLib().getDataSet{project = proj, layer = weighLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(weighSet), 9)
 
@@ -565,7 +565,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName3, weighLayerName, interLayerName, attribute, operation, select, area, default)
 
-			local interSet = TerraLib().getDataSet(proj, interLayerName, 0)
+			local interSet = TerraLib().getDataSet{project = proj, layer = interLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(interSet), 9)
 
@@ -596,7 +596,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName3, interLayerName, occurLayerName, attribute, operation, select, area, default)
 
-			local occurSet = TerraLib().getDataSet(proj, occurLayerName, 0)
+			local occurSet = TerraLib().getDataSet{project = proj, layer = occurLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(occurSet), 9)
 
@@ -628,7 +628,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName3, occurLayerName, sumLayerName, attribute, operation, select, area, default)
 
-			local sumSet = TerraLib().getDataSet(proj, sumLayerName, 0)
+			local sumSet = TerraLib().getDataSet{project = proj, layer = sumLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(sumSet), 9)
 
@@ -660,7 +660,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName3, sumLayerName, wsumLayerName, attribute, operation, select, area, default)
 
-			local wsumSet = TerraLib().getDataSet(proj, wsumLayerName, 0)
+			local wsumSet = TerraLib().getDataSet{project = proj, layer = wsumLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(wsumSet), 9)
 
@@ -702,7 +702,7 @@ return {
 
 			unitTest:assertWarning(attributeTruncateWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'rpercentag'.")
 
-			percentSet = TerraLib().getDataSet(proj, percTifLayerName, 0)
+			percentSet = TerraLib().getDataSet{project = proj, layer = percTifLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(percentSet), 9)
 
@@ -735,7 +735,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName4, percTifLayerName, rmeanLayerName, attribute, operation, select, area, default)
 
-			local rmeanSet = TerraLib().getDataSet(proj, rmeanLayerName, 0)
+			local rmeanSet = TerraLib().getDataSet{project = proj, layer = rmeanLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(rmeanSet), 9)
 
@@ -768,7 +768,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName4, rmeanLayerName, rminLayerName, attribute, operation, select, area, default)
 
-			local rminSet = TerraLib().getDataSet(proj, rminLayerName, 0)
+			local rminSet = TerraLib().getDataSet{project = proj, layer = rminLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(rminSet), 9)
 
@@ -801,7 +801,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName4, rminLayerName, rmaxLayerName, attribute, operation, select, area, default)
 
-			local rmaxSet = TerraLib().getDataSet(proj, rmaxLayerName, 0)
+			local rmaxSet = TerraLib().getDataSet{project = proj, layer = rmaxLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(rmaxSet), 9)
 
@@ -834,7 +834,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName4, rmaxLayerName, rstdevLayerName, attribute, operation, select, area, default)
 
-			local rstdevSet = TerraLib().getDataSet(proj, rstdevLayerName, 0)
+			local rstdevSet = TerraLib().getDataSet{project = proj, layer = rstdevLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(rstdevSet), 9)
 
@@ -868,7 +868,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName4, rstdevLayerName, rsumLayerName, attribute, operation, select, area, default)
 
-			local rsumSet = TerraLib().getDataSet(proj, rsumLayerName, 0)
+			local rsumSet = TerraLib().getDataSet{project = proj, layer = rsumLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(rsumSet), 9)
 
@@ -897,7 +897,7 @@ return {
 			default = 0
 			TerraLib().attributeFill(proj, layerName4, rsumLayerName, nil, attribute, operation, select, area, default)
 
-			local rsumOverSet = TerraLib().getDataSet(proj, rsumLayerName, 0)
+			local rsumOverSet = TerraLib().getDataSet{project = proj, layer = rsumLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(rsumOverSet), 9)
 
@@ -932,7 +932,7 @@ return {
 			local nodata = 256
 			TerraLib().attributeFill(proj, layerName4, rsumLayerName, nodataLayerName, attribute, operation, select, area, default, nil, nodata)
 
-			local ndSet = TerraLib().getDataSet(proj, nodataLayerName, 0)
+			local ndSet = TerraLib().getDataSet{project = proj, layer = nodataLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(ndSet), 9)
 
@@ -966,7 +966,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName2, nodataLayerName, percLayerName2, attribute, operation, select, area, default)
 
-			local percentSet2 = TerraLib().getDataSet(proj, percLayerName2, 0)
+			local percentSet2 = TerraLib().getDataSet{project = proj, layer = percLayerName2, missing = 0}
 
 			unitTest:assertEquals(getn(percentSet2), 9)
 
@@ -986,7 +986,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName2, percLayerName2, percLayerName3, attribute, operation, select, area, default)
 
-			local percentSet3 = TerraLib().getDataSet(proj, percLayerName3, 0)
+			local percentSet3 = TerraLib().getDataSet{project = proj, layer = percLayerName3, missing = 0}
 
 			unitTest:assertEquals(getn(percentSet3), 9)
 
@@ -1007,7 +1007,7 @@ return {
 			default = nil
 			TerraLib().attributeFill(proj, layerName4, nodataLayerName, rcountLayerName, attribute, operation, select, area, default)
 
-			local rcountSet = TerraLib().getDataSet(proj, rcountLayerName, 0)
+			local rcountSet = TerraLib().getDataSet{project = proj, layer = rcountLayerName, missing = 0}
 
 			unitTest:assertEquals(getn(rcountSet), 9)
 
@@ -1075,10 +1075,6 @@ return {
 		unitTest:assert(allSopportedOperationsToguether)
 		-- unitTest:assert(coverageWithPointsData) -- SKIP -- TODO(#995)
 	end,
-	getDataSet = function(unitTest)
-		-- see in saveDataSet() test --
-		unitTest:assert(true)
-	end,
 	saveDataSet = function(unitTest)
 		local createProject = function()
 			local proj = {
@@ -1108,7 +1104,7 @@ return {
 			TerraLib().addShpCellSpaceLayer(proj, layerName, clName1, resolution, cellsShp, mask)
 
 			local newLayerName = "New_Layer"
-			local dSet = TerraLib().getDataSet(proj, clName1)
+			local dSet = TerraLib().getDataSet{project = proj, layer = clName1}
 			local luaTable = {}
 			for i = 0, getn(dSet) - 1 do
 				local data = dSet[i]
@@ -1124,7 +1120,7 @@ return {
 			-- ADDING ALL SUPPORTED ATTRIBUTES
 			TerraLib().saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1", "attr2", "attr3"})
 
-			local newDSet = TerraLib().getDataSet(proj, newLayerName)
+			local newDSet = TerraLib().getDataSet{project = proj, layer = newLayerName}
 			unitTest:assertEquals(getn(newDSet), 37)
 
 			for i = 0, getn(newDSet) - 1 do
@@ -1153,7 +1149,7 @@ return {
 			unitTest:assertEquals("attr3", attrNames[6])
 
 			-- OVERWRITE LAYER
-			dSet = TerraLib().getDataSet(proj, clName1)
+			dSet = TerraLib().getDataSet{project = proj, layer = clName1}
 			luaTable = {}
 			for i = 0, getn(dSet) - 1 do
 				local data = dSet[i]
@@ -1162,7 +1158,7 @@ return {
 			end
 
 			TerraLib().saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1"})
-			newDSet = TerraLib().getDataSet(proj, newLayerName)
+			newDSet = TerraLib().getDataSet{project = proj, layer = newLayerName}
 
 			unitTest:assertEquals(getn(newDSet), 37)
 
@@ -1186,7 +1182,7 @@ return {
 			unitTest:assertEquals("attr1", attrNames[4])
 
 			-- OVERWRITE CELLSPACE
-			dSet = TerraLib().getDataSet(proj, clName1)
+			dSet = TerraLib().getDataSet{project = proj, layer = clName1}
 			luaTable = {}
 			for i = 0, getn(dSet) - 1 do
 				local data = dSet[i]
@@ -1195,7 +1191,7 @@ return {
 			end
 
 			TerraLib().saveDataSet(proj, clName1, luaTable, clName1, {"attr1"})
-			newDSet = TerraLib().getDataSet(proj, newLayerName)
+			newDSet = TerraLib().getDataSet{project = proj, layer = newLayerName}
 
 			unitTest:assertEquals(getn(newDSet), 37)
 
@@ -1235,7 +1231,7 @@ return {
 			File(toData.file):deleteIfExists()
 			TerraLib().saveLayerAs(fromData, toData, true)
 
-			local polDset = TerraLib().getDataSet(proj, polName)
+			local polDset = TerraLib().getDataSet{project = proj, layer = polName}
 			local polLuaTable = {}
 			for i = 0, getn(polDset) - 1 do
 				local data = polDset[i]
@@ -1260,9 +1256,9 @@ return {
 			local newPolName = "ES_Limit_New"
 			TerraLib().saveDataSet(proj, polName, polLuaTable, newPolName, {"attr1"})
 
-			local newPolDset = TerraLib().getDataSet(proj, newPolName)
-			unitTest:assertEquals(getn(newPolDset), 1)
-			unitTest:assertEquals(getn(newPolDset), getn(polDset))
+			local newPolDsetSize = TerraLib().getLayerSize(proj, newPolName)
+			unitTest:assertEquals(newPolDsetSize, 1)
+			unitTest:assertEquals(newPolDsetSize, getn(polDset))
 
 			attrNames = TerraLib().getPropertyNames(proj, newPolName)
 			unitTest:assertEquals("FID", attrNames[0])
@@ -1291,7 +1287,7 @@ return {
 			File(toData.file):deleteIfExists()
 			TerraLib().saveLayerAs(fromData, toData, true)
 
-			local ptDset = TerraLib().getDataSet(proj, ptName, 0)
+			local ptDset = TerraLib().getDataSet{project = proj, layer = ptName, missing = 0}
 			local ptLuaTable = {}
 			for i = 0, getn(ptDset) - 1 do
 				local data = ptDset[i]
@@ -1316,9 +1312,9 @@ return {
 			local newPtName = "BR_Ports_New"
 			TerraLib().saveDataSet(proj, ptName, ptLuaTable, newPtName, {"attr1"})
 
-			local newPtDset = TerraLib().getDataSet(proj, newPtName, 0)
-			unitTest:assertEquals(getn(newPtDset), 8)
-			unitTest:assertEquals(getn(newPtDset), getn(ptDset))
+			local newPtDsetSize = TerraLib().getLayerSize(proj, newPtName)
+			unitTest:assertEquals(newPtDsetSize, 8)
+			unitTest:assertEquals(newPtDsetSize, getn(ptDset))
 
 			attrNames = TerraLib().getPropertyNames(proj, newPtName)
 			unitTest:assertEquals("FID", attrNames[0])
@@ -1347,7 +1343,7 @@ return {
 			File(toData.file):deleteIfExists()
 			TerraLib().saveLayerAs(fromData, toData, true)
 
-			local lnDset = TerraLib().getDataSet(proj, lnName, 0)
+			local lnDset = TerraLib().getDataSet{project = proj, layer = lnName, missing = 0}
 			local lnLuaTable = {}
 			for i = 0, getn(lnDset) - 1 do
 				local data = lnDset[i]
@@ -1370,9 +1366,9 @@ return {
 			local newLnName = "ES_Rails_New"
 			TerraLib().saveDataSet(proj, lnName, lnLuaTable, newLnName, {"attr1"})
 
-			local newLnDset = TerraLib().getDataSet(proj, newLnName, 0)
-			unitTest:assertEquals(getn(newLnDset), 182)
-			unitTest:assertEquals(getn(newLnDset), getn(lnDset))
+			local newLnDsetSize = TerraLib().getLayerSize(proj, newLnName)
+			unitTest:assertEquals(newLnDsetSize, 182)
+			unitTest:assertEquals(newLnDsetSize, getn(lnDset))
 
 			attrNames = TerraLib().getPropertyNames(proj, newLnName)
 			unitTest:assertEquals("FID", attrNames[0])
@@ -1489,7 +1485,7 @@ return {
 			TerraLib().saveLayerAs(fromData, toData, true)
 			TerraLib().addShpLayer(proj, amlCurrDirName, File(toData.file))
 
-			local amlDset = TerraLib().getDataSet(proj, amlName, 0)
+			local amlDset = TerraLib().getDataSet{project = proj, layer = amlName, missing = 0}
 			local amlLuaTable = {}
 			local sum1 = 0
 			for i = 0, getn(amlDset) - 1 do
@@ -1502,7 +1498,7 @@ return {
 			local amlCurrDirNameNew = "AmlCurrDirNew"
 			TerraLib().saveDataSet(proj, amlCurrDirName, amlLuaTable, amlCurrDirNameNew, {"CODMESO"})
 
-			local amlDsetNew = TerraLib().getDataSet(proj, amlCurrDirNameNew, 0)
+			local amlDsetNew = TerraLib().getDataSet{project = proj, layer = amlCurrDirNameNew, missing = 0}
 			local sum2 = 0
 			for i = 0, getn(amlDsetNew) - 1 do
 				local data = amlDsetNew[i]
@@ -1521,7 +1517,7 @@ return {
 			end
 			TerraLib().saveDataSet(proj, amlCurrDirNameNew, amlCurrDirLuaTable, amlCurrDirNameNew2, {"CODMESO", "CODMESOBKP"})
 
-			local amlDsetNew2 = TerraLib().getDataSet(proj, amlCurrDirNameNew2, 0)
+			local amlDsetNew2 = TerraLib().getDataSet{project = proj, layer = amlCurrDirNameNew2, missing = 0}
 			local sum3 = 0
 			local bkpSum = 0
 			for i = 0, getn(amlDsetNew2) - 1 do
@@ -1547,7 +1543,7 @@ return {
 			local ptFileCd = File(toData.file)
 			TerraLib().addShpLayer(proj, ptNameCd, ptFileCd)
 
-			local ptDset = TerraLib().getDataSet(proj, ptNameCd, 0)
+			local ptDset = TerraLib().getDataSet{project = proj, layer = ptNameCd, missing = 0}
 			local ptLuaTable = {}
 			for i = 0, getn(ptDset) - 1 do
 				local data = ptDset[i]
@@ -1557,7 +1553,7 @@ return {
 			end
 
 			TerraLib().saveDataSet(proj, ptNameCd, ptLuaTable, ptNameCd, {"numero", "numbkp"})
-			local ptDsetUp = TerraLib().getDataSet(proj, ptNameCd, 0)
+			local ptDsetUp = TerraLib().getDataSet{project = proj, layer = ptNameCd, missing = 0}
 
 			local ptPropsInfo = TerraLib().getPropertyInfos(proj, ptNameCd)
 			unitTest:assertEquals(ptPropsInfo[18].name, "numero")
@@ -1583,9 +1579,9 @@ return {
 		unitTest:assert(handlingAttributesFromLinesData)
 		unitTest:assert(handlingIntegerAttributeValues)
 	end,
-	getOGRByFilePath = function(unitTest)
+	getDataSet = function(unitTest)
 		local shpFile = filePath("test/sampa.shp", "gis")
-		local dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
+		local dSet = TerraLib().getDataSet{file = shpFile}
 
 		unitTest:assertEquals(getn(dSet), 63)
 
@@ -1622,7 +1618,7 @@ return {
 
 		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
 
-		local dSet = TerraLib().getDataSet(proj, clName1)
+		local dSet = TerraLib().getDataSet{project = proj, layer = clName1}
 		local area = TerraLib().getArea(dSet[0].OGR_GEOMETRY)
 		unitTest:assertEquals(type(area), "number")
 		unitTest:assertEquals(area, 1, 0.001)
@@ -1745,7 +1741,7 @@ return {
 		local mask = true
 		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 
-		local dSet = TerraLib().getDataSet(proj, clName)
+		local dSet = TerraLib().getDataSet{project = proj, layer = clName}
 		local dist = TerraLib().getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
 
 		unitTest:assertEquals(dist, 4.1231056256177, 1.0e-13)
@@ -1755,7 +1751,7 @@ return {
 	end,
 	castGeomToSubtype = function(unitTest)
 		local shpFile = filePath("test/sampa.shp", "gis")
-		local dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
+		local dSet = TerraLib().getDataSet{file = shpFile}
 		local geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPolygon")
@@ -1763,7 +1759,7 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "Polygon")
 
 		shpFile = filePath("amazonia-roads.shp", "gis")
-		dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
+		dSet = TerraLib().getDataSet{file = shpFile}
 		geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiLineString")
@@ -1771,7 +1767,7 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "LineString")
 
 		shpFile = filePath("test/prodes_points_10km_PA_pt.shp", "gis")
-		dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
+		dSet = TerraLib().getDataSet{file = shpFile}
 		geom = dSet[1].OGR_GEOMETRY
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")
@@ -1850,7 +1846,7 @@ return {
 
 			local layerName2 = "OneProp"
 			TerraLib().addShpLayer(proj, layerName2, File(toData.file))
-			local dset = TerraLib().getDataSet(proj, layerName2)
+			local dset = TerraLib().getDataSet{project = proj, layer = layerName2}
 
 			unitTest:assertEquals(getn(dset), 63)
 			for k, v in pairs(dset[0]) do
@@ -1865,7 +1861,7 @@ return {
 		-- SAVE DATA SUBSET TESTS
 		local createSubsetTable = function()
 			local proj = createProjectWithSampaLayer()
-			local dset1 = TerraLib().getDataSet(proj, sampaLayerName)
+			local dset1 = TerraLib().getDataSet{project = proj, layer = sampaLayerName}
 			local sjc
 			for i = 0, getn(dset1) - 1 do
 				if dset1[i].ID == 27 then
@@ -1897,7 +1893,7 @@ return {
 
 			TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, subset)
 
-			local tchsSjc = TerraLib().getOGRByFilePath(toData.file)
+			local tchsSjc = TerraLib().getDataSet{file = File(toData.file)}
 
 			unitTest:assertEquals(getn(tchsSjc), 2)
 			unitTest:assertEquals(tchsSjc[0].ID, 55)
@@ -1915,7 +1911,7 @@ return {
 			-- Save just two
 			TerraLib().saveLayerAs(fromData, toData1, overwrite, {"NM_MICRO", "ID"}, subset)
 
-			local tchsSjc1 = TerraLib().getOGRByFilePath(toData1.file)
+			local tchsSjc1 = TerraLib().getDataSet{file = File(toData1.file)}
 
 			unitTest:assertEquals(getn(tchsSjc1), 2)
 			unitTest:assertEquals(tchsSjc1[0].ID, 55)
@@ -1926,7 +1922,7 @@ return {
 			-- Save all
 			TerraLib().saveLayerAs(fromData, toData2, overwrite, nil, subset)
 
-			local tchsSjc2 = TerraLib().getOGRByFilePath(toData2.file)
+			local tchsSjc2 = TerraLib().getDataSet{file = File(toData2.file)}
 
 			unitTest:assertEquals(getn(tchsSjc2), 2)
 			unitTest:assertEquals(tchsSjc2[1].FID, 1)
@@ -1995,13 +1991,13 @@ return {
 		TerraLib().addShpLayer(proj, lnName, lnFile)
 
 		local dpLayerName = "ES_Rails_Peucker"
-		TerraLib().douglasPeucker(proj, lnName, dpLayerName, 500)
+		local dpFile = File(string.lower(dpLayerName)..".shp"):deleteIfExists()
 
-		local dpFile = File(string.lower(dpLayerName)..".shp")
+		TerraLib().douglasPeucker(proj, lnName, dpLayerName, 500)
 		TerraLib().addShpLayer(proj, dpLayerName, dpFile)
 
-		local dpSet = TerraLib().getDataSet(proj, dpLayerName, 0)
-		unitTest:assertEquals(getn(dpSet), 182)
+		local dpSetSize = TerraLib().getLayerSize(proj, dpLayerName)
+		unitTest:assertEquals(dpSetSize, 182)
 
 		local attrNames = TerraLib().getPropertyNames(proj, dpLayerName)
 		unitTest:assertEquals("FID", attrNames[0])
@@ -2047,9 +2043,9 @@ return {
 
 		local polyName = "Polygonized"
 		TerraLib().addShpLayer(proj, polyName, outFile)
-		local dset = TerraLib().getDataSet(proj, polyName)
+		local dsetSize = TerraLib().getLayerSize(proj, polyName)
 
-		unitTest:assertEquals(getn(dset), 381)
+		unitTest:assertEquals(dsetSize, 381)
 
 		local attrNames = TerraLib().getPropertyNames(proj, polyName)
 		unitTest:assertEquals("FID", attrNames[0])
@@ -2058,5 +2054,11 @@ return {
 
 		proj.file:delete()
 		outFile:delete()
+	end,
+	getDataSetSize = function(unitTest)
+		local shpFile = filePath("test/es_sirgas2000_5880.shp", "gis")
+		local dsetSize = TerraLib().getDataSetSize(shpFile)
+
+		unitTest:assertEquals(dsetSize, 77)
 	end
 }

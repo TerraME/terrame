@@ -48,7 +48,7 @@ data{
 -- Cabeca de Boi
 
 data{
-	file = {"cabecadeboi-elevation.tif", "cabecadeboi-elevation.xml"},
+	file = {"cabecadeboi-elevation.tif", "cabecadeboi-elevation.xml", "cabecadeboi-elevation.tif.aux.xml"},
 	summary = "Elevation data for the Cabeca de Boi region, in Minas Gerais state, Brazil.",
 	source = "SRTM",
 	attributes = {

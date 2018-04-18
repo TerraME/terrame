@@ -86,8 +86,8 @@ return {
 		unitTest:assertEquals(layerInfo.srid, layerInfo1.srid)
 
 		-- NO MASK TEST
-		local clSet = TerraLib().getDataSet(proj, clName)
-		unitTest:assertEquals(getn(clSet), 154)
+		local clSetSize = TerraLib().getLayerSize(proj, clName)
+		unitTest:assertEquals(clSetSize, 154)
 
 		clName = clName.."_NoMask"
 		local geojson2 = File(clName..".geojson")
@@ -97,17 +97,17 @@ return {
 		mask = false
 		TerraLib().addGeoJSONCellSpaceLayer(proj, layerName, clName, resolution, geojson2, mask)
 
-		clSet = TerraLib().getDataSet(proj, clName)
-		unitTest:assertEquals(getn(clSet), 260)
+		clSetSize = TerraLib().getLayerSize(proj, clName)
+		unitTest:assertEquals(clSetSize, 260)
 		-- // NO MASK TEST
 
 		unitTest:assertFile(geojson1)
 		unitTest:assertFile(geojson2)
 		proj.file:delete()
 	end,
-	getOGRByFilePath = function(unitTest)
+	getDataSet = function(unitTest)
 		local shpFile = filePath("test/malha2015.geojson", "gis")
-		local dSet = TerraLib().getOGRByFilePath(tostring(shpFile))
+		local dSet = TerraLib().getDataSet{file = shpFile}
 
 		unitTest:assertEquals(getn(dSet), 102)
 
@@ -173,7 +173,7 @@ return {
 		local layerFile3 = File(toData.file)
 		TerraLib().addGeoJSONLayer(proj, layerName3, layerFile3)
 
-		local dset3 = TerraLib().getDataSet(proj, layerName3)
+		local dset3 = TerraLib().getDataSet{project = proj, layer = layerName3}
 
 		unitTest:assertEquals(getn(dset3), 63)
 
@@ -186,7 +186,7 @@ return {
 		File(file1):delete()
 
 		-- SAVE A DATA SUBSET
-		local dset1 = TerraLib().getDataSet(proj, layerName1)
+		local dset1 = TerraLib().getDataSet{project = proj, layer = layerName1}
 		local sjc
 		for i = 0, getn(dset1) - 1 do
 			if dset1[i].ID == 27 then
@@ -207,7 +207,7 @@ return {
 		toData.srid = nil
 		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
 
-		local tchsSjc = TerraLib().getOGRByFilePath(toData.file)
+		local tchsSjc = TerraLib().getDataSet{file = File(toData.file)}
 
 		unitTest:assertEquals(getn(tchsSjc), 2)
 		unitTest:assertEquals(tchsSjc[0].ID, 55)
@@ -223,7 +223,7 @@ return {
 
 		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
 
-		local tchsSjc2 = TerraLib().getOGRByFilePath(toData.file)
+		local tchsSjc2 = TerraLib().getDataSet{file = File(toData.file)}
 
 		unitTest:assertEquals(getn(tchsSjc2), 2)
 		unitTest:assertEquals(tchsSjc2[0].ID, 55)
@@ -283,12 +283,11 @@ return {
 		TerraLib().addGeoJSONLayer(proj, lnName, lnFile)
 
 		local dpLayerName = "ES_Rails_Peucker"
+		local dpFile = File(string.lower(dpLayerName)..".geojson"):deleteIfExists()
 		TerraLib().douglasPeucker(proj, lnName, dpLayerName, 500)
-
-		local dpFile = File(string.lower(dpLayerName)..".geojson")
 		TerraLib().addGeoJSONLayer(proj, dpLayerName, dpFile)
 
-		local dpSet = TerraLib().getDataSet(proj, dpLayerName, -1)
+		local dpSet = TerraLib().getDataSet{project = proj, layer = dpLayerName, missing = -1}
 		unitTest:assertEquals(getn(dpSet), 182)
 
 		local missingCount = 0
@@ -344,9 +343,9 @@ return {
 
 		local polyName = "Polygonized"
 		TerraLib().addGeoJSONLayer(proj, polyName, outFile)
-		local dset = TerraLib().getDataSet(proj, polyName)
+		local dsetSize = TerraLib().getLayerSize(proj, polyName)
 
-		unitTest:assertEquals(getn(dset), 381)
+		unitTest:assertEquals(dsetSize, 381)
 
 		local attrNames = TerraLib().getPropertyNames(proj, polyName)
 		unitTest:assertEquals("FID", attrNames[0])

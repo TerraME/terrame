@@ -133,12 +133,13 @@ return {
 			}
 
 			unitTest:assertEquals( -- SKIP
-tostring(l), [[epsg     number [4326]
-file     string [vegtype_2000.nc]
-name     string [Vegtype_layer]
-project  Project
-rep      string [raster]
-source   string [nc]
+tostring(l), [[encoding  string [latin1]
+epsg      number [4326]
+file      string [vegtype_2000.nc]
+name      string [Vegtype_layer]
+project   Project
+rep       string [raster]
+source    string [nc]
 ]], 0, true)
 
 			File(projName):delete()

@@ -1159,7 +1159,7 @@ Layer_ = {
 				mapAttributes[attr.name] = attr.prefix
 			end)
 
-			local dset = TerraLib().getDataSet(self.project, self.name)
+			local dset = TerraLib().getDataSet{project = self.project, layer = self.name}
 			local toSet = {}
 			for i = 0, #dset do
 				toSet[i + 1] = {}
@@ -1215,9 +1215,9 @@ Layer_ = {
 			end
 		end)
 
-		local dSetSize = #TerraLib().getDataSet(self.project, self.name)
+		local dSetSize = TerraLib().getLayerSize(self.project, self.name)
 		forEachOrderedElement(temporalLayers, function(layer)
-			if dSetSize ~= #TerraLib().getDataSet(self.project, layer) then
+			if dSetSize ~= TerraLib().getLayerSize(self.project, layer) then
 				customError("Layer '"..self.name.."' cannot be merged with '"..layer.."' because they have different numbers of objects.")
 			end
 		end)
@@ -1254,7 +1254,7 @@ Layer_ = {
 		local toSet = {}
 		local attrs = {}
 		forEachElement(mapAttributes, function(layer, mapAttribute)
-			local dset = TerraLib().getDataSet(self.project, layer)
+			local dset = TerraLib().getDataSet{project = self.project, layer = layer}
 			for i = 0, #dset do
 				if not toSet[i + 1] then -- SKIP
 					toSet[i + 1] = {}

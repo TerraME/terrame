@@ -290,7 +290,7 @@ return {
 		local layerFile1 = filePath("itaituba-localities.shp", "gis")
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
-		local dSet = TerraLib().getDataSet(proj, layerName1)
+		local dSet = TerraLib().getDataSet{project = proj, layer = layerName1}
 
 		local areaWarn = function()
 			TerraLib().getArea(dSet[0].OGR_GEOMETRY)
