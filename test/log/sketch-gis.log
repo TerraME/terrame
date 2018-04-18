@@ -16,6 +16,7 @@ File 'amazonia.shp' does not need to be documented (a Lua file creates it)
 Project file 'amazonia.tview' does not need to be documented (a Lua file creates it)
 File 'cabecadeboi-box.shp' is already documented in 'data.lua'
 File 'cabecadeboi-elevation.tif' is already documented in 'data.lua'
+File 'cabecadeboi-elevation.tif.aux.xml' is already documented in 'data.lua'
 File 'cabecadeboi-elevation.xml' is already documented in 'data.lua'
 File 'cabecadeboi.shp' does not need to be documented (a Lua file creates it)
 Project file 'cabecadeboi.tview' does not need to be documented (a Lua file creates it)
