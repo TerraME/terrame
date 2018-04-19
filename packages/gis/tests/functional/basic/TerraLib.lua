@@ -30,7 +30,7 @@ return {
 		unitTest:assertEquals(t1, t2)
 	end,
 	getVersion = function(unitTest)
-		unitTest:assertEquals(TerraLib().getVersion(), "5.3.1")
+		unitTest:assertEquals(TerraLib().getVersion(), "5.3.2")
 	end,
 	createProject = function(unitTest)
 		local happyPath = function()
@@ -216,14 +216,14 @@ return {
 		File("various.tview"):delete()
 
 		-- web services
-		proj = {}
-		proj.file = filePath("test/webservice.qgs", "gis")
-		TerraLib().createProject(proj)
-
 		local wmsDir = Directory("wms")
 		if wmsDir:exists() then
 			wmsDir:delete()
 		end
+
+		proj = {}
+		proj.file = filePath("test/webservice.qgs", "gis")
+		TerraLib().createProject(proj)
 
 		layerInfo = TerraLib().getLayerInfo(proj, "LANDSAT2013")
 		unitTest:assertEquals(layerInfo.name, "LANDSAT2013")
