@@ -139,14 +139,13 @@ return {
 
 		-- getDataSet TEST
 		local missingError = function()
-			TerraLib().getDataSet(proj, percLayerName)
+			TerraLib().getDataSet{project = proj, layer = percLayerName}
 		end
 
 		unitTest:assertError(missingError, "Data has a missing value in attribute 'perc_0'. Use argument 'missing' to set its value.")
 
-		-- getOGRByFilePath TEST
 		local missingOgrError = function()
-			TerraLib().getOGRByFilePath(tostring(shp[3]))
+			TerraLib().getDataSet{file = shp[3]}
 		end
 
 		unitTest:assertError(missingOgrError, "Data has a missing value in attribute 'perc_0'. Use argument 'missing' to set its value.")

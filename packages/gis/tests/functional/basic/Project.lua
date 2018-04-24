@@ -294,7 +294,7 @@ return {
 			unitTest:assertEquals(l3.epsg, 4326) -- SKIP
 			unitTest:assertEquals(File(l3.file):name(), "vegtype_2000.nc") -- SKIP
 			unitTest:assertEquals(l3.source, "nc") -- SKIP
-			unitTest:assertNil(l3.encoding) -- SKIP
+			unitTest:assertEquals(l3.encoding, "latin1") -- SKIP
 		end
 
 		File("various.tview"):delete()

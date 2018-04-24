@@ -46,16 +46,56 @@ return {
 
 		proj.file:delete()
 	end,
-	getGdalByFilePath = function(unitTest)
-		local file = filePath("amazonia-prodes.tif", "gis")
+	getDataSet = function(unitTest)
+		local getTifDataSet = function()
+			local file = filePath("test/prodes_polyc_10k.tif", "gis")
+			local dSet = TerraLib().getDataSet{file = file}
 
-		local dSet = TerraLib().getGdalByFilePath(tostring(file))
-		for i = 0, #dSet do
-			for k, v in pairs(dSet[i]) do
-				unitTest:assert(belong(k, {"xdim", "ydim", "name", "srid", "bands",
-											"resolutionX", "resolutionY", "getValue"}))
-				unitTest:assertNotNil(v)
+			unitTest:assertEquals(getn(dSet), 20020)
+
+			for i = 0, getn(dSet) - 1 do
+				for k, v in pairs(dSet[i]) do
+					unitTest:assert(belong(k, {"b0", "col", "row"}))
+					unitTest:assertNotNil(v)
+					unitTest:assertType(v, "number")
+				end
 			end
+		end
+
+		local getAscDataSet = function()
+			local file = filePath("test/biomassa-manaus.asc", "gis")
+			local dSet = TerraLib().getDataSet{file = file}
+
+			unitTest:assertEquals(getn(dSet), 9964)
+
+			for i = 0, getn(dSet) - 1 do
+				for k, v in pairs(dSet[i]) do
+					unitTest:assert(belong(k, {"b0", "col", "row"}))
+					unitTest:assertNotNil(v)
+					unitTest:assertType(v, "number")
+				end
+			end
+		end
+
+		local getNcDataSet = function()
+			local file = filePath("test/vegtype_2000.nc", "gis")
+			local dSet = TerraLib().getDataSet{file = file}
+
+			unitTest:assertEquals(getn(dSet), 8904) -- SKIP
+
+			for i = 0, getn(dSet) - 1 do
+				for k, v in pairs(dSet[i]) do
+					unitTest:assert(belong(k, {"b0", "col", "row"})) -- SKIP
+					unitTest:assertNotNil(v) -- SKIP
+					unitTest:assertType(v, "number") -- SKIP
+				end
+			end
+		end
+
+		unitTest:assert(getTifDataSet)
+		unitTest:assert(getAscDataSet)
+		if _Gtme.sessionInfo().system == "windows" then
+			unitTest:assert(getNcDataSet) -- SKIP
 		end
 	end,
 	getNumOfBands = function(unitTest)
@@ -165,7 +205,7 @@ return {
 		local mask = false
 		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 
-		local dSet = TerraLib().getDataSet(proj, clName)
+		local dSet = TerraLib().getDataSet{project = proj, layer = clName}
 		local dist = TerraLib().getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
 
 		unitTest:assertEquals(dist, 3883297.5677895, 1.0e-7) -- SKIP
@@ -226,6 +266,12 @@ return {
 		unitTest:assertEquals(size, 882875.0)
 
 		file:delete()
+	end,
+	getDataSetSize = function(unitTest)
+		local tifFile = filePath("test/prodes_polyc_10k.tif", "gis")
+		local dsetSize = TerraLib().getDataSetSize(tifFile)
+
+		unitTest:assertEquals(dsetSize, 20020)
 	end
 }
 
