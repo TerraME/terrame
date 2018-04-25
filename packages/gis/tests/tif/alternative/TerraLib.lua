@@ -144,78 +144,107 @@ return {
 
 		proj.file:delete()
 	end,
-	saveLayerAs = function(unitTest)
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
+	saveDataAs = function(unitTest)
+		local usingProject = function()
+			local proj = {}
+			proj.file = "myproject.tview"
+			proj.title = "TerraLib Tests"
+			proj.author = "Avancini Rodrigo"
 
-		File(proj.file):deleteIfExists()
+			File(proj.file):deleteIfExists()
 
-		TerraLib().createProject(proj, {})
+			TerraLib().createProject(proj, {})
 
-		local layerName1 = "TifLayer"
-		local layerFile1 = filePath("test/cbers_rgb342_crop1.tif", "gis")
-		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
+			local layerName1 = "TifLayer"
+			local layerFile1 = filePath("test/cbers_rgb342_crop1.tif", "gis")
+			TerraLib().addGdalLayer(proj, layerName1, layerFile1)
 
-		local overwrite = true
+			local overwrite = true
 
-		local fromData = {}
-		fromData.project = proj
-		fromData.layer = layerName1
+			local fromData = {}
+			fromData.project = proj
+			fromData.layer = layerName1
 
-		-- SHP
-		local toData = {}
-		toData.file = "tif2shp.shp"
-		toData.type = "shp"
+			-- SHP
+			local toData = {}
+			toData.file = File("tif2shp.shp")
+			toData.type = "shp"
 
-		local tif2shpError = function()
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			local tif2shpError = function()
+				TerraLib().saveDataAs(fromData, toData, overwrite)
+			end
+			unitTest:assertError(tif2shpError, "Raster data 'TifLayer' cannot be saved as vectorial.")
+
+			-- GEOJSON
+			toData.file = File("tif2geojson.geojson")
+			toData.type = "geojson"
+
+			local tif2geojsonError = function()
+				TerraLib().saveDataAs(fromData, toData, overwrite)
+			end
+			unitTest:assertError(tif2geojsonError, "Raster data 'TifLayer' cannot be saved as vectorial.")
+
+			-- POSTGIS
+			local host = "localhost"
+			local port = "5432"
+			local user = "postgres"
+			local password = getConfig().password
+			local database = "postgis_22_sample"
+			local encoding = "CP1252"
+
+			local pgData = {
+				type = "postgis",
+				host = host,
+				port = port,
+				user = user,
+				password = password,
+				database = database,
+				encoding = encoding
+			}
+
+			local tif2postgisError = function()
+				TerraLib().saveDataAs(fromData, pgData, overwrite)
+			end
+			unitTest:assertError(tif2postgisError, "Raster data 'TifLayer' cannot be saved as vectorial.")
+
+			proj.file:delete()
 		end
-		unitTest:assertError(tif2shpError, "It was not possible save 'TifLayer' to vector data.")
 
-		-- GEOJSON
-		toData.file = "tif2geojson.geojson"
-		toData.type = "geojson"
+		local withoutProject = function()
+			local fromData = {file = filePath("test/prodes_polyc_10k.tif", "gis")}
+			local toData = {file = File("tif2shp.shp"), type = "shp"}
 
-		local tif2geojsonError = function()
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			local raster2vectorError = function()
+				TerraLib().saveDataAs(fromData, toData, true)
+			end
+
+			unitTest:assertError(raster2vectorError, "Raster data 'prodes_polyc_10k.tif' cannot be saved as vectorial.")
+
+			toData = {file = File("tif2png.png")}
+			TerraLib().saveDataAs(fromData, toData, true)
+
+			local alreadyExistsError = function()
+				TerraLib().saveDataAs(fromData, toData, false)
+			end
+
+			unitTest:assertError(alreadyExistsError, "File 'tif2png.png' already exists.")
+
+			toData.file:delete()
+
+			fromData = {file = filePath("test/es_limit_sirgas2000_5880.shp", "gis")}
+			toData = {file = File("shp2tif.tif"), type = "tif"}
+
+			local vector2rasterError = function()
+				TerraLib().saveDataAs(fromData, toData, true)
+			end
+
+			unitTest:assertError(vector2rasterError, "Vectorial data 'es_limit_sirgas2000_5880.shp' cannot be saved as raster.")
+
+
 		end
-		unitTest:assertError(tif2geojsonError, "It was not possible save 'TifLayer' to vector data.")
 
-		-- POSTGIS
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
-		local password = getConfig().password
-		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-
-		local pgData = {
-			type = "postgis",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			encoding = encoding
-		}
-
-		local tif2postgisError = function()
-			TerraLib().saveLayerAs(fromData, pgData, overwrite)
-		end
-		unitTest:assertError(tif2postgisError, "It was not possible save 'TifLayer' to postgis data.")
-
-		-- OVERWRITE
-		toData.file = "tif2tif.tif"
-		toData.type = "tif"
-
-		local tif2tifError = function()
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
-		end
-		unitTest:assertError(tif2tifError, "Raster data 'cbers_rgb342_crop1.tif' cannot be saved.")
-
-		proj.file:delete()
+		unitTest:assert(usingProject)
+		unitTest:assert(withoutProject)
 	end
 }
 

@@ -67,7 +67,7 @@ return {
 
 		proj.file:delete()
 	end,
-	saveLayerAs = function(unitTest)
+	saveDataAs = function(unitTest)
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -109,58 +109,58 @@ return {
 
 		local overwrite = true
 
-		TerraLib().saveLayerAs(fromData, pgData, overwrite)
+		TerraLib().saveDataAs(fromData, pgData, overwrite)
 		local layerName2 = "PgLayer"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
 		-- TIF
 		local toData = {}
-		toData.file = "postgis2tif.tif"
+		toData.file = File("postgis2tif.tif")
 		toData.type = "tif"
 		fromData.layer = layerName2
 
 		local postgis2tifWarn = function()
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			TerraLib().saveDataAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(postgis2tifWarn, "It was not possible save 'PgLayer' to raster data.")
+		unitTest:assertError(postgis2tifWarn, "Vectorial data 'PgLayer' cannot be saved as raster.")
 
 		-- OVERWRITE
 		overwrite = false
 
 		-- SHP
-		toData.file = "postgis2shp.shp"
+		toData.file = File("postgis2shp.shp")
 		toData.type = "shp"
-		File(toData.file):deleteIfExists()
+		toData.file:deleteIfExists()
 
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
+		TerraLib().saveDataAs(fromData, toData, overwrite)
 
 		local overwriteShpError = function()
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			TerraLib().saveDataAs(fromData, toData, overwrite)
 		end
 		unitTest:assertError(overwriteShpError, "File 'postgis2shp.shp' already exists.")
 
-		File(toData.file):delete()
+		toData.file:delete()
 
 		-- GEOJSON
-		toData.file = "postgis2geojson.geojson"
+		toData.file = File("postgis2geojson.geojson")
 		toData.type = "geojson"
-		File(toData.file):deleteIfExists()
+		toData.file:deleteIfExists()
 
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
+		TerraLib().saveDataAs(fromData, toData, overwrite)
 
 		local overwriteGeojsonError = function()
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			TerraLib().saveDataAs(fromData, toData, overwrite)
 		end
 		unitTest:assertError(overwriteGeojsonError, "File 'postgis2geojson.geojson' already exists.")
 
 		fromData.layer = layerName1
 
 		local overwritePgError = function()
-			TerraLib().saveLayerAs(fromData, pgData, overwrite)
+			TerraLib().saveDataAs(fromData, pgData, overwrite)
 		end
 		unitTest:assertError(overwritePgError, "Table 'limite_es_poly_wgs84' already exists in postgis database 'postgis_22_sample'.")
 
-		File(toData.file):delete()
+		toData.file:delete()
 
 		TerraLib().dropPgTable(pgData)
 		proj.file:delete()

@@ -64,7 +64,7 @@ return {
 			encoding = encoding
 		}
 
-		TerraLib().saveLayerAs(fromData, pgData, true)
+		TerraLib().saveDataAs(fromData, pgData, true)
 
 		local layerName2 = "SampaPg"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
@@ -1321,7 +1321,7 @@ return {
 		local polTable = "limite_es_poly_wgs84"
 		pgData.table = polTable
 
-		TerraLib().saveLayerAs(fromData, pgData, true)
+		TerraLib().saveDataAs(fromData, pgData, true)
 
 		local polDset = TerraLib().getDataSet{project = proj, layer = polName}
 		local polLuaTable = {}
@@ -1370,7 +1370,7 @@ return {
 		local ptTable = "ports"
 		pgData.table = ptTable
 		fromData.layer = ptName
-		TerraLib().saveLayerAs(fromData, pgData, true)
+		TerraLib().saveDataAs(fromData, pgData, true)
 
 		local ptDset = TerraLib().getDataSet{project = proj, layer = ptName, missing = 0}
 		local ptLuaTable = {}
@@ -1462,7 +1462,7 @@ return {
 		local lnTable = "rails"
 		pgData.table = lnTable
 		fromData.layer = lnName
-		TerraLib().saveLayerAs(fromData, pgData, true)
+		TerraLib().saveDataAs(fromData, pgData, true)
 
 		local lnDset = TerraLib().getDataSet{project = proj, layer = lnName, missing = 0}
 		local lnLuaTable = {}
@@ -1789,7 +1789,7 @@ return {
 			encoding = encoding
 		}
 
-		TerraLib().saveLayerAs(fromData, pgData, true)
+		TerraLib().saveDataAs(fromData, pgData, true)
 		local layerName2 = "PgLayer"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
@@ -1858,11 +1858,11 @@ return {
 		TerraLib().dropPgTable(pgData)
 		TerraLib().dropPgDatabase(pgData)
 	end,
-	saveLayerAs = function(unitTest)
+	saveDataAs = function(unitTest)
 		local sampaLayerName = "SampaShp"
 		local createProjectWithSampaLayer = function()
 			local proj = {
-				file = "savelayeras_postgis_basic.tview",
+				file = "saveDataAs_postgis_basic.tview",
 				title = "TerraLib Tests",
 				author = "Avancini Rodrigo"
 			}
@@ -1898,7 +1898,7 @@ return {
 			local proj = createProjectWithSampaLayer()
 			local fromData = {project = proj, layer = sampaLayerName}
 			local overwrite = true
-			TerraLib().saveLayerAs(fromData, spPgData, overwrite)
+			TerraLib().saveDataAs(fromData, spPgData, overwrite)
 		end
 
 		exportToPostgis()
@@ -1921,7 +1921,7 @@ return {
 
 			fromData.layer = sampaLayerName
 			local overwrite = true
-			TerraLib().saveLayerAs(fromData, spPgData, overwrite)
+			TerraLib().saveDataAs(fromData, spPgData, overwrite)
 			info2 = TerraLib().getLayerInfo(proj, spPgLayerName)
 			unitTest:assertEquals(info2.srid, 4326.0)
 
@@ -1934,43 +1934,43 @@ return {
 		local postgisToShp = function()
 			local proj = createPgProject()
 			local fromData = {project = proj, layer = spPgLayerName}
-			local toData = {file = "postgis2shp.shp", type = "shp"}
+			local toData = {file = File("postgis2shp.shp"), type = "shp"}
 
 			local overwrite = true
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
-			unitTest:assert(File(toData.file):exists())
+			TerraLib().saveDataAs(fromData, toData, overwrite)
+			unitTest:assert(toData.file:exists())
 
 			-- OVERWRITE AND CHANGE SRID
 			toData.srid = 4326
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			TerraLib().saveDataAs(fromData, toData, overwrite)
 			local layerName3 = "PG2SHP"
-			TerraLib().addShpLayer(proj, layerName3, File(toData.file))
+			TerraLib().addShpLayer(proj, layerName3, toData.file)
 			local info3 = TerraLib().getLayerInfo(proj, layerName3)
 			unitTest:assertEquals(info3.srid, toData.srid)
 
 			proj.file:delete()
-			File(toData.file):delete()
+			toData.file:delete()
 		end
 
 		local postgisToGeoJson = function()
 			local proj = createPgProject()
 			local fromData = {project = proj, layer = spPgLayerName}
-			local toData = {file = "postgis2geojson.geojson", type = "geojson"}
+			local toData = {file = File("postgis2geojson.geojson"), type = "geojson"}
 			local overwrite = true
 
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
-			unitTest:assert(File(toData.file):exists())
+			TerraLib().saveDataAs(fromData, toData, overwrite)
+			unitTest:assert(toData.file:exists())
 
 			-- OVERWRITE AND CHANGE SRID
 			toData.srid = 4326
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			TerraLib().saveDataAs(fromData, toData, overwrite)
 			local layerName4 = "PG2GJ"
-			TerraLib().addGeoJSONLayer(proj, layerName4, File(toData.file))
+			TerraLib().addGeoJSONLayer(proj, layerName4, toData.file)
 			local info4 = TerraLib().getLayerInfo(proj, layerName4)
 			unitTest:assertEquals(info4.srid, toData.srid)
 
 			proj.file:delete()
-			File(toData.file):delete()
+			toData.file:delete()
 		end
 
 		local overwritePostgisFromGeoJsonAndChangeItsSrid = function()
@@ -1984,7 +1984,7 @@ return {
 			local sridBkp = spPgData.srid
 
 			local overwrite = true
-			TerraLib().saveLayerAs(fromData, spPgData, overwrite)
+			TerraLib().saveDataAs(fromData, spPgData, overwrite)
 
 			local layerName5 = "PgLayerGJ"
 			TerraLib().addPgLayer(proj, layerName5, spPgData, nil, encoding)
@@ -1992,7 +1992,7 @@ return {
 			unitTest:assertEquals(info5.srid, 4019.0)
 
 			spPgData.srid = 2309
-			TerraLib().saveLayerAs(fromData, spPgData, overwrite)
+			TerraLib().saveDataAs(fromData, spPgData, overwrite)
 			info5 = TerraLib().getLayerInfo(proj, layerName5)
 			unitTest:assertEquals(info5.srid, 2309.0)
 
@@ -2011,7 +2011,7 @@ return {
 			spPgData.table = "shp2postgis"
 
 			local overwrite = true
-			TerraLib().saveLayerAs(fromData, spPgData, overwrite, {"nm_micro"})
+			TerraLib().saveDataAs(fromData, spPgData, overwrite, {"nm_micro"})
 
 			local layerName6 = "SHP2PG"
 			TerraLib().addPgLayer(proj, layerName6, spPgData, nil, encoding)
@@ -2039,7 +2039,7 @@ return {
 			spPgData.table = "geojson2postgis"
 
 			local overwrite = true
-			TerraLib().saveLayerAs(fromData, spPgData, overwrite, {"nm_micro", "id"})
+			TerraLib().saveDataAs(fromData, spPgData, overwrite, {"nm_micro", "id"})
 
 			local layerName7 = "GJ2PG"
 			TerraLib().addPgLayer(proj, layerName7, spPgData, nil, encoding)
@@ -2092,7 +2092,7 @@ return {
 			spPgData.table = "touches_sjc"
 
 			local overwrite = true
-			TerraLib().saveLayerAs(fromData, spPgData, overwrite, {"nm_micro", "id"}, subset)
+			TerraLib().saveDataAs(fromData, spPgData, overwrite, {"nm_micro", "id"}, subset)
 
 			local layerName8 = "SJC"
 			TerraLib().addPgLayer(proj, layerName8, spPgData, nil, encoding)
@@ -2118,7 +2118,7 @@ return {
 			end
 
 			local overwrite = true
-			TerraLib().saveLayerAs(fromData, spPgData, overwrite, {"NM_MICRO", "ID"}, subset)
+			TerraLib().saveDataAs(fromData, spPgData, overwrite, {"NM_MICRO", "ID"}, subset)
 
 			local proj = createPgProject()
 			local layerName9 = "SJC2"
@@ -2185,7 +2185,7 @@ return {
 
 		local overwrite = true
 
-		TerraLib().saveLayerAs(fromData, pgData, overwrite)
+		TerraLib().saveDataAs(fromData, pgData, overwrite)
 		local layerName2 = "PgLayer"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
@@ -2237,7 +2237,7 @@ return {
 		}
 
 		local overwrite = true
-		TerraLib().saveLayerAs(fromData, pgData, overwrite)
+		TerraLib().saveDataAs(fromData, pgData, overwrite)
 
 		local layerName2 = "ES_Rails_Pg"
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)

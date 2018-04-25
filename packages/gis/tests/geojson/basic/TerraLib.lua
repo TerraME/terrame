@@ -122,7 +122,7 @@ return {
 			end
 		end
 	end,
-	saveLayerAs = function(unitTest)
+	saveDataAs = function(unitTest)
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -142,35 +142,33 @@ return {
 
 		-- SHP
 		local toData = {}
-		toData.file = "geojson2shp.shp"
+		toData.file = File("geojson2shp.shp")
 		toData.type = "shp"
-		File(toData.file):deleteIfExists()
-
 		local overwrite = true
 
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		unitTest:assert(File(toData.file):exists())
+		TerraLib().saveDataAs(fromData, toData, overwrite)
+		unitTest:assert(toData.file:exists())
 
 		-- OVERWRITE
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
-		unitTest:assert(File(toData.file):exists())
+		TerraLib().saveDataAs(fromData, toData, overwrite)
+		unitTest:assert(toData.file:exists())
 
 		-- OVERWRITE AND CHANGE SRID
 		toData.srid = 4326
-		TerraLib().saveLayerAs(fromData, toData, overwrite)
+		TerraLib().saveDataAs(fromData, toData, overwrite)
 		local layerName2 = "SHP"
-		TerraLib().addShpLayer(proj, layerName2, File(toData.file))
+		TerraLib().addShpLayer(proj, layerName2, toData.file)
 		local info2 = TerraLib().getLayerInfo(proj, layerName2)
 		unitTest:assertEquals(info2.srid, toData.srid)
 
 		-- SAVE THE DATA WITH ONLY ONE ATTRIBUTE
 		local file1 = toData.file
-		toData.file = "gj2gj.geojson"
+		toData.file = File("gj2gj.geojson")
 		toData.type = "geojson"
-		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO"})
+		TerraLib().saveDataAs(fromData, toData, overwrite, {"NM_MICRO"})
 
 		local layerName3 = "GJ2GJ"
-		local layerFile3 = File(toData.file)
+		local layerFile3 = toData.file
 		TerraLib().addGeoJSONLayer(proj, layerName3, layerFile3)
 
 		local dset3 = TerraLib().getDataSet{project = proj, layer = layerName3}
@@ -182,8 +180,8 @@ return {
 							((k == "NM_MICRO") and (v == "VOTUPORANGA")))
 		end
 
-		File(toData.file):delete()
-		File(file1):delete()
+		toData.file:delete()
+		file1:delete()
 
 		-- SAVE A DATA SUBSET
 		local dset1 = TerraLib().getDataSet{project = proj, layer = layerName1}
@@ -203,33 +201,33 @@ return {
 			end
 		end
 
-		toData.file = "touches_sjc.geojson"
+		toData.file = File("touches_sjc.geojson")
 		toData.srid = nil
-		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+		TerraLib().saveDataAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
 
-		local tchsSjc = TerraLib().getDataSet{file = File(toData.file)}
+		local tchsSjc = TerraLib().getDataSet{file = toData.file}
 
 		unitTest:assertEquals(getn(tchsSjc), 2)
 		unitTest:assertEquals(tchsSjc[0].ID, 55)
 		unitTest:assertEquals(tchsSjc[1].ID, 109)
 
-		File(toData.file):delete()
+		toData.file:delete()
 		proj.file:delete()
 
 		-- SAVE WITHOUT LAYER
 		fromData = {}
 		fromData.file = layerFile1
-		toData.file = "touches_sjc_2.shp"
+		toData.file = File("touches_sjc_2.shp")
 
-		TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+		TerraLib().saveDataAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
 
-		local tchsSjc2 = TerraLib().getDataSet{file = File(toData.file)}
+		local tchsSjc2 = TerraLib().getDataSet{file = toData.file}
 
 		unitTest:assertEquals(getn(tchsSjc2), 2)
 		unitTest:assertEquals(tchsSjc2[0].ID, 55)
 		unitTest:assertEquals(tchsSjc2[1].ID, 109)
 
-		File(toData.file):delete()
+		toData.file:delete()
 	end,
 	getLayerSize = function(unitTest)
 		local proj = {}
@@ -272,14 +270,14 @@ return {
 		fromData.layer = lnName
 
 		local toData = {}
-		toData.file = "rails.geojson"
+		toData.file = File("rails.geojson")
 		toData.type = "geojson"
-		File(toData.file):deleteIfExists()
+		toData.file:deleteIfExists()
 
-		TerraLib().saveLayerAs(fromData, toData, true)
+		TerraLib().saveDataAs(fromData, toData, true)
 
 		lnName = "ES_Rails_CurrDir"
-		lnFile = File(toData.file)
+		lnFile = toData.file
 		TerraLib().addGeoJSONLayer(proj, lnName, lnFile)
 
 		local dpLayerName = "ES_Rails_Peucker"

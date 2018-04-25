@@ -23,7 +23,7 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	saveLayerAs = function(unitTest)
+	saveDataAs = function(unitTest)
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -43,15 +43,15 @@ return {
 
 		-- TIF
 		local toData = {}
-		toData.file = "geojson2tif.tif"
+		toData.file = File("geojson2tif.tif")
 		toData.type = "tif"
 
 		local overwrite = true
 
 		local geojson2tifError = function()
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			TerraLib().saveDataAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(geojson2tifError, "It was not possible save 'SampaGeoJson' to raster data.")
+		unitTest:assertError(geojson2tifError, "Vectorial data 'SampaGeoJson' cannot be saved as raster.")
 
 		proj.file:delete()
 	end

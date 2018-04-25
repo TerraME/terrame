@@ -105,7 +105,7 @@ return {
 			encoding = encoding
 		}
 
-		TerraLib().saveLayerAs(fromData, pgData, true)
+		TerraLib().saveDataAs(fromData, pgData, true)
 
 		local projPg = {}
 		projPg.file = filePath("test/sampapg.qgs", "gis")

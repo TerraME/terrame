@@ -656,12 +656,8 @@ Layer_ = {
 									layer = self.name
 								}
 
-								local toData = {
-									file = newLayerFile,
-									type = self.source
-								}
-
-								TerraLib().saveLayerAs(fromData, toData)
+								local toData = {file = File(newLayerFile)}
+								TerraLib().saveDataAs(fromData, toData)
 							end
 
 							newLayer = Layer{
@@ -982,13 +978,13 @@ Layer_ = {
 			checkSourceExtension(ext)
 
 			local toData = {
-				file = tostring(file),
+				file = file,
 				type = ext,
 				srid = data.epsg,
 				encoding = EncodingMapper[self.encoding]
 			}
 
-			TerraLib().saveLayerAs(fromData, toData, data.overwrite, data.select)
+			TerraLib().saveDataAs(fromData, toData, data.overwrite, data.select)
 		else
 			mandatoryTableArgument(data, "source", "string")
 			checkSourcePostgis(data.source)
@@ -1002,7 +998,7 @@ Layer_ = {
 			pgData.epsg = nil
 			pgData.encoding = EncodingMapper[self.encoding]
 
-			TerraLib().saveLayerAs(fromData, pgData, pgData.overwrite, data.select)
+			TerraLib().saveDataAs(fromData, pgData, pgData.overwrite, data.select)
 		end
 	end,
 	--- Create a new data simplifying its geometry.
@@ -1177,8 +1173,8 @@ Layer_ = {
 			local tempLayer = "_l_y_r_"
 			TerraLib().saveDataSet(self.project, self.name, toSet, tempLayer, attrNames)
 			local from = {project = self.project, layer = tempLayer}
-			local to = {file = fileName, type = self.source}
-			TerraLib().saveLayerAs(from, to, true, attrNames)
+			local to = {file = File(fileName), type = self.source}
+			TerraLib().saveDataAs(from, to, true, attrNames)
 			Layer{project = self.project, name = newLayerName, file = fileName}
 			TerraLib().removeLayer(self.project, tempLayer)
 		end)
@@ -1248,8 +1244,8 @@ Layer_ = {
 		-- a temp layer is needed because currently one can't remove attributes from a layer thus this layer holds only the desired attributes
 		local tempLayer = "_l_y_r_"
 		local tempFile = tempLayer.."."..self.source
-		local to = {file = tempFile, type = self.source}
-		TerraLib().saveLayerAs(from, to, true, nonTemporalAttributes) -- SKIP
+		local to = {file = File(tempFile), type = self.source}
+		TerraLib().saveDataAs(from, to, true, nonTemporalAttributes) -- SKIP
 		Layer{project = self.project, file = tempFile, name = tempLayer}
 		local toSet = {}
 		local attrs = {}

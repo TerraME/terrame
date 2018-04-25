@@ -272,6 +272,150 @@ return {
 		local dsetSize = TerraLib().getDataSetSize(tifFile)
 
 		unitTest:assertEquals(dsetSize, 20020)
+	end,
+	saveDataAs = function(unitTest)
+		local createProject = function()
+			local proj = {
+				file = "myproject.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+			return proj
+		end
+
+		local saveTifLayerAsTif = function()
+			local proj = createProject()
+			local layerName = "TifLayer"
+			local layerFile = filePath("test/cbers_rgb342_crop1.tif", "gis")
+			TerraLib().addGdalLayer(proj, layerName, layerFile)
+
+			local overwrite = true
+			local fromData = {project = proj, layer = layerName}
+			local toData = {file = File("tif2tif.tif"), type = "tif"}
+
+			TerraLib().saveDataAs(fromData, toData, overwrite)
+
+			local tifSet = TerraLib().getDataSet{project = proj, layer = layerName}
+			local outSet = TerraLib().getDataSet{file = toData.file}
+			unitTest:assert(toData.file:exists())
+			unitTest:assertEquals(getn(tifSet), getn(outSet))
+			unitTest:assertEquals(getn(tifSet), 882875)
+			unitTest:assertEquals(outSet[0].b0, 33)
+			unitTest:assertEquals(outSet[882874].b0, 41)
+			unitTest:assertEquals(outSet[0].b0, tifSet[0].b0)
+			unitTest:assertEquals(outSet[882874].b0, tifSet[882874].b0)
+
+			proj.file:delete()
+			toData.file:delete()
+		end
+
+		local saveTifLayerAsPng = function()
+			local proj = createProject()
+			local layerName = "TifLayer"
+			local layerFile = filePath("test/cbers_rgb342_crop1.tif", "gis")
+			TerraLib().addGdalLayer(proj, layerName, layerFile)
+
+			local overwrite = true
+			local fromData = {project = proj, layer = layerName}
+			local toData = {file = File("tif2png.png"), type = "png"}
+
+			TerraLib().saveDataAs(fromData, toData, overwrite)
+
+			local tifSet = TerraLib().getDataSet{project = proj, layer = layerName}
+			local outSet = TerraLib().getDataSet{file = toData.file}
+			unitTest:assert(toData.file:exists())
+			unitTest:assertEquals(getn(tifSet), getn(outSet))
+			unitTest:assertEquals(getn(tifSet), 882875)
+			unitTest:assertEquals(outSet[0].b0, 33)
+			unitTest:assertEquals(outSet[882874].b0, 41)
+			unitTest:assertEquals(outSet[0].b0, tifSet[0].b0)
+			unitTest:assertEquals(outSet[882874].b0, tifSet[882874].b0)
+
+			proj.file:delete()
+			toData.file:delete()
+		end
+
+		local saveTifLayerAsNc = function()
+			local proj = createProject()
+			local layerName = "TifLayer"
+			local layerFile = filePath("test/prodes_polyc_10k.tif", "gis")
+			TerraLib().addGdalLayer(proj, layerName, layerFile)
+
+			local overwrite = true
+			local fromData = {project = proj, layer = layerName}
+			local toData = {file = File("tif2nc.nc"), type = "nc"}
+
+			TerraLib().saveDataAs(fromData, toData, overwrite)
+
+			local tifSet = TerraLib().getDataSet{project = proj, layer = layerName} -- SKIP
+			local outSet = TerraLib().getDataSet{file = toData.file} -- SKIP
+			unitTest:assert(toData.file:exists()) -- SKIP
+			unitTest:assertEquals(getn(tifSet), getn(outSet)) -- SKIP
+			unitTest:assertEquals(getn(tifSet), 20020) -- SKIP
+			unitTest:assertEquals(outSet[0].b0, 255) -- SKIP
+			unitTest:assertEquals(outSet[20019].b0, 255) -- SKIP
+			unitTest:assertEquals(outSet[0].b0, tifSet[0].b0) -- SKIP
+			unitTest:assertEquals(outSet[20019].b0, tifSet[20019].b0) -- SKIP
+
+			proj.file:delete()
+			File(toData.file):delete()
+		end
+
+		-- local saveTifLayerAsAsc = function()
+			-- local proj = createProject()
+			-- local layerName = "TifLayer"
+			-- local layerFile = filePath("test/cbers_rgb342_crop1.tif", "gis")
+			-- TerraLib().addGdalLayer(proj, layerName, layerFile)
+
+			-- local overwrite = true
+			-- local fromData = {project = proj, layer = layerName}
+			-- local toData = {file = File("tif2nc.asc"), type = "asc"}
+
+			-- TerraLib().saveDataAs(fromData, toData, overwrite)
+
+			-- local tifSet = TerraLib().getDataSet{project = proj, layer = layerName} -- SKIP
+			-- local outSet = TerraLib().getDataSet{file = toData.file} -- SKIP
+			-- unitTest:assert(toData.file:exists()) -- SKIP
+			-- unitTest:assertEquals(getn(tifSet), getn(outSet)) -- SKIP
+			-- unitTest:assertEquals(getn(tifSet), 882875) -- SKIP
+			-- unitTest:assertEquals(outSet[0].b0, 33) -- SKIP
+			-- unitTest:assertEquals(outSet[882874].b0, 41) -- SKIP
+			-- unitTest:assertEquals(outSet[0].b0, tifSet[0].b0) -- SKIP
+			-- unitTest:assertEquals(outSet[882874].b0, tifSet[882874].b0) -- SKIP
+
+			-- proj.file:delete()
+			-- toData.file:delete()
+		-- end
+
+		local saveTifAsPng = function()
+			local fromData = {file = filePath("test/prodes_polyc_10k.tif", "gis")}
+			local toData = {file = File("tif2png.png"), type = "png"}
+			local overwrite = true
+
+			TerraLib().saveDataAs(fromData, toData, overwrite)
+
+			local tifSet = TerraLib().getDataSet{file = fromData.file}
+			local outSet = TerraLib().getDataSet{file = toData.file}
+			unitTest:assert(toData.file:exists())
+			unitTest:assertEquals(getn(tifSet), getn(outSet))
+			unitTest:assertEquals(getn(tifSet), 20020)
+			unitTest:assertEquals(outSet[0].b0, 255)
+			unitTest:assertEquals(outSet[20019].b0, 255)
+			unitTest:assertEquals(outSet[0].b0, tifSet[0].b0)
+			unitTest:assertEquals(outSet[20019].b0, tifSet[20019].b0)
+
+			toData.file:delete()
+		end
+
+		unitTest:assert(saveTifLayerAsTif)
+		unitTest:assert(saveTifLayerAsPng)
+		-- unitTest:assert(saveTifLayerAsAsc) -- SKIP -- TODO(): to .asc is not working
+		if _Gtme.sessionInfo().system == "windows" then
+			unitTest:assert(saveTifLayerAsNc) -- SKIP
+		end
+		unitTest:assert(saveTifAsPng)
 	end
 }
 
