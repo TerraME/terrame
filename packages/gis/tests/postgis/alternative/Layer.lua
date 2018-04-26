@@ -635,7 +635,7 @@ return {
 		unitTest:assertError(tableNotString, incompatibleTypeMsg("table", "string", 123))
 
 		data.table = tName1.."b"
-
+		data.encoding = "LATIN1"
 		TerraLib().dropPgTable(data)
 
 		local boxNonBoolean = function()
@@ -845,7 +845,13 @@ return {
 		end
 		unitTest:assertError(selectNoExist,  "There is no attribute 'uf' in 'setores'.")
 
-		proj.file:deleteIfExists()
+		local vec2rasError = function()
+			layer1:export{file = "pg2tif.tif"}
+		end
+
+		unitTest:assertError(vec2rasError, "Vetorial layer 'setores' cannot be exported as vectorial data.")
+
+		proj.file:delete()
 	end
 }
 

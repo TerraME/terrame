@@ -590,6 +590,43 @@ return {
 		unitTest:assertNil(l:dummy())
 
 		File(projName):delete()
+	end,
+	export = function(unitTest)
+		local proj = Project{
+			file = "export_tif_basic.tview",
+			author = "Avancini",
+			clean = true
+		}
+
+		local layer = Layer{
+			project = proj,
+			name = "Prodes",
+			file = filePath("test/prodes_polyc_10k.tif", "gis")
+		}
+
+		local toData = {file = File("tif2png.png"):deleteIfExists(), select = {"0", "1"}}
+		local selectUnnecessary = function()
+			layer:export(toData)
+		end
+
+		unitTest:assertWarning(selectUnnecessary, unnecessaryArgumentMsg("select"))
+		unitTest:assert(toData.file:exists())
+
+		local layer2 = Layer{
+			project = proj,
+			name = "Exported",
+			epsg = 5808,
+			file = toData.file
+		}
+
+		local toData2 = {file = File("png2tif.tif")}
+		layer2:export(toData2)
+
+		unitTest:assert(toData2.file:exists())
+
+		proj.file:delete()
+		toData.file:delete()
+		toData2.file:delete()
 	end
 }
 

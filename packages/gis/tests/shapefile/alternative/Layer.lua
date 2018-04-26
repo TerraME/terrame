@@ -57,6 +57,12 @@ return {
 
 		unitTest:assertError(selectWrongType, incompatibleTypeMsg("select", "table", true))
 
+		local vec2rasError = function()
+			layer1:export{file = "shp2tif.tif"}
+		end
+
+		unitTest:assertError(vec2rasError, "Vetorial layer 'setores' cannot be exported as vectorial data.")
+
 		proj.file:delete()
 	end
 }

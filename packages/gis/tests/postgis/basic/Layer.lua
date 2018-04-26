@@ -1455,6 +1455,7 @@ return {
 		proj.file:delete()
 
 		pgData.table = tableName
+		pgData.encoding = "LATIN1"
 		TerraLib().dropPgTable(pgData)
 	end,
 	simplify = function(unitTest)
@@ -1525,6 +1526,7 @@ return {
 		unitTest:assertEquals("cod_pnv", attrs[15].name)
 
 		pgData.table = tableName
+		pgData.encoding = "LATIN1"
 		TerraLib().dropPgTable(pgData)
 		pgData.table = outputName
 		TerraLib().dropPgTable(pgData)

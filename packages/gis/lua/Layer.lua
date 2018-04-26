@@ -34,7 +34,7 @@ local EncodingMapper = {
 }
 
 local function isValidSource(source)
-	return belong(source, {"tif", "shp", "postgis", "nc", "asc", "geojson", "wfs", "wms"})
+	return belong(source, {"tif", "shp", "postgis", "nc", "asc", "geojson", "wfs", "wms", "png"})
 end
 
 local function checkSourceExtension(ext)
@@ -56,7 +56,7 @@ local function checkEncodingExists(encoding)
 end
 
 local function isRasterSource(source)
-	return belong(source, {"tif", "nc", "asc"})
+	return belong(source, {"tif", "nc", "asc", "png", "wms"})
 end
 
 local function isValidName(name)
@@ -330,6 +330,12 @@ local function addLayer(self, data)
 			TerraLib().addGdalLayer(self, data.name, data.file, data.epsg) -- SKIP
 		end,
 		asc = function()
+			mandatoryTableArgument(data, "file", "File")
+			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
+
+			TerraLib().addGdalLayer(self, data.name, data.file, data.epsg)
+		end,
+		png = function()
 			mandatoryTableArgument(data, "file", "File")
 			verifyUnnecessaryArguments(data, {"name", "source", "file", "project", "epsg"})
 
@@ -971,35 +977,53 @@ Layer_ = {
 			layer = self.name
 		}
 
+		local toData = {}
+
 		if data.file then
-			verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "select"})
 			local file = createFileFromInputData(data.file)
 			local ext = file:extension()
 			checkSourceExtension(ext)
 
-			local toData = {
+			if isRasterSource(self.source) then
+				if isRasterSource(ext) then
+					verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite"})
+				else
+					customError("Raster layer '"..self.name
+								.."' cannot be exported as vectorial data. Please, use 'polygonize' function for it.")
+				end
+			elseif isRasterSource(ext) then
+				customError("Vetorial layer '"..self.name.."' cannot be exported as vectorial data.")
+			else
+				verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "select"})
+			end
+
+			toData = {
 				file = file,
 				type = ext,
 				srid = data.epsg,
 				encoding = EncodingMapper[self.encoding]
 			}
-
-			TerraLib().saveDataAs(fromData, toData, data.overwrite, data.select)
-		else
+		elseif isRasterSource(self.souce) then
+			customError("Raster layer '"..self.name
+						.."' cannot be exported as vectorial data. Please, use 'polygonize' function for it.")
+		else --< to data is postgis
 			mandatoryTableArgument(data, "source", "string")
 			checkSourcePostgis(data.source)
 			verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding",
 											"table", "epsg", "overwrite", "select"})
 			data.name = self.name
 			checkPostgisParams(data)
-			local pgData = data
-			pgData.type = "postgis"
-			pgData.srid = pgData.epsg
-			pgData.epsg = nil
-			pgData.encoding = EncodingMapper[self.encoding]
 
-			TerraLib().saveDataAs(fromData, pgData, pgData.overwrite, data.select)
+			for k, v in pairs(data) do
+				toData[k] = v
+			end
+
+			toData.type = "postgis"
+			toData.srid = toData.epsg
+			toData.encoding = EncodingMapper[self.encoding]
 		end
+
+		TerraLib().saveDataAs(fromData, toData, data.overwrite, data.select)
 	end,
 	--- Create a new data simplifying its geometry.
 	-- The data will be created using the same data source layer.
