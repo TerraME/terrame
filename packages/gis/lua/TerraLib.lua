@@ -1431,6 +1431,11 @@ local function createFromDataInfoToSaveAsByLayer(layer)
 	return info
 end
 
+local function getRasterByDataSet(dataset)
+	local rpos = binding.GetFirstPropertyPos(dataset, binding.RASTER_TYPE)
+	return dataset:getRaster(rpos)
+end
+
 local function createFromDataInfoToSaveAsByFile(file)
 	local info = {}
 	local connInfo = createFileConnInfo(tostring(file))
@@ -1455,6 +1460,9 @@ local function createFromDataInfoToSaveAsByFile(file)
 		info.name = info.dataset.."."..fileExt
 	else
 		info.name = info.dataset
+		local dset = info.datasource:getDataSet(info.dataset)
+		local raster = getRasterByDataSet(dset)
+		info.srid = raster:getSRID()
 	end
 
 	return info
@@ -1478,15 +1486,14 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 
 	if fromType == "GDAL" then
 		if toType == "GDAL" then
+			toDSetName = toData.file:name()
+
 			if toData.file:exists() then
 				if overwrite then
-					toDSetName = toData.file:name()
 					toData.file:delete() -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
 				else
 					errorMsg = "File '"..toData.file:name().."' already exists."
 				end
-			else
-				toDSetName = fromDSetName
 			end
 
 			if not errorMsg then
@@ -1519,16 +1526,15 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 				end
 			end
 		elseif toType == "OGR" then
+			local _, fn = toData.file:split()
+			toDSetName = fn
+
 			if toData.file:exists() then
 				if overwrite then
-					local _, fn = toData.file:split()
-					toDSetName = fn
 					toData.file:delete()
 				else
 					errorMsg = "File '"..toData.file:name().."' already exists."
 				end
-			else
-				toDSetName = fromDSetName
 			end
 
 			if not errorMsg then
@@ -1558,12 +1564,7 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 	end
 
 	if toData.srid then
-		if toType ~= "GDAL" then
 			info.srid = toData.srid
-		else
-			customWarning("It was not possible to change SRID from raster data.") -- #1485 -- SKIP
-			info.srid = fromData.srid -- SKIP
-		end
 	else
 		info.srid = fromData.srid
 	end
@@ -1749,15 +1750,10 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 	return true
 end
 
-local function getRasterByDataSet(dataset)
-	local rpos = binding.GetFirstPropertyPos(dataset, binding.RASTER_TYPE)
-	return dataset:getRaster(rpos)
-end
-
 local function saveRasterDataAs(fromData, toData)
 	local fromDSet = fromData.datasource:getDataSet(fromData.dataset)
 	local raster = getRasterByDataSet(fromDSet)
-	binding.CreateRasterOnFile(raster, tostring(toData.file))
+	binding.CreateRasterOnFile(raster, tostring(toData.file), toData.srid)
 end
 
 local function fixSpaceInPath(path)
@@ -2945,7 +2941,7 @@ TerraLib_ = {
 				saveVectorDataAs(fromDataToSave, toDataToSave, attrs, values)
 			end
 
-			-- If the data belongs a layer, it will be updated in the project
+			-- If the data already belongs a layer, it will be updated in the project
 			local toLayer = getLayerByDataSetName(project.layers, toDataToSave.dataset, toDataToSave.type)
 			if toLayer then
 				if toLayer:getSRID() ~= toDataToSave.srid then

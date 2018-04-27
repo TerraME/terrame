@@ -276,7 +276,7 @@ return {
 	saveDataAs = function(unitTest)
 		local createProject = function()
 			local proj = {
-				file = "myproject.tview",
+				file = "savedataas_tif_basic.tview",
 				title = "TerraLib Tests",
 				author = "Avancini Rodrigo"
 			}
@@ -285,7 +285,7 @@ return {
 			return proj
 		end
 
-		local saveTifLayerAsTif = function()
+		local saveTifLayerAsTifAndReproject = function()
 			local proj = createProject()
 			local layerName = "TifLayer"
 			local layerFile = filePath("test/cbers_rgb342_crop1.tif", "gis")
@@ -293,7 +293,7 @@ return {
 
 			local overwrite = true
 			local fromData = {project = proj, layer = layerName}
-			local toData = {file = File("tif2tif.tif"), type = "tif"}
+			local toData = {file = File("tif2tif.tif"), srid = 5880}
 
 			TerraLib().saveDataAs(fromData, toData, overwrite)
 
@@ -306,6 +306,14 @@ return {
 			unitTest:assertEquals(outSet[882874].b0, 41)
 			unitTest:assertEquals(outSet[0].b0, tifSet[0].b0)
 			unitTest:assertEquals(outSet[882874].b0, tifSet[882874].b0)
+
+			local outLayerName = "Saved"
+			TerraLib().addGdalLayer(proj, outLayerName, toData.file)
+
+			local tifInfo = TerraLib().getLayerInfo(proj, layerName)
+			local outInfo = TerraLib().getLayerInfo(proj, outLayerName)
+			unitTest:assert(tifInfo.srid ~= outInfo.srid)
+			unitTest:assertEquals(outInfo.srid, 5880)
 
 			proj.file:delete()
 			toData.file:delete()
@@ -360,7 +368,7 @@ return {
 			unitTest:assertEquals(outSet[20019].b0, tifSet[20019].b0) -- SKIP
 
 			proj.file:delete()
-			File(toData.file):delete()
+			toData.file:delete()
 		end
 
 		-- local saveTifLayerAsAsc = function()
@@ -389,7 +397,7 @@ return {
 			-- toData.file:delete()
 		-- end
 
-		local saveTifAsPng = function()
+		local saveTifAsPngAndOverwrite = function()
 			local fromData = {file = filePath("test/prodes_polyc_10k.tif", "gis")}
 			local toData = {file = File("tif2png.png"), type = "png"}
 			local overwrite = true
@@ -420,13 +428,13 @@ return {
 			toData.file:delete()
 		end
 
-		unitTest:assert(saveTifLayerAsTif)
+		unitTest:assert(saveTifLayerAsTifAndReproject)
 		unitTest:assert(saveTifLayerAsPng)
 		-- unitTest:assert(saveTifLayerAsAsc) -- SKIP -- TODO(): to .asc is not working
 		if _Gtme.sessionInfo().system == "windows" then
 			unitTest:assert(saveTifLayerAsNc) -- SKIP
 		end
-		unitTest:assert(saveTifAsPng)
+		unitTest:assert(saveTifAsPngAndOverwrite)
 	end
 }
 

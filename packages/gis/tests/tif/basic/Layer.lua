@@ -619,10 +619,21 @@ return {
 			file = toData.file
 		}
 
-		local toData2 = {file = File("png2tif.tif")}
+		local toData2 = {file = File("png2tif.tif"), epsg = 4326}
 		layer2:export(toData2)
 
 		unitTest:assert(toData2.file:exists())
+
+		local layer3 = Layer{
+			project = proj,
+			name = "Rexported",
+			file = toData2.file
+		}
+
+		unitTest:assert(layer.epsg ~= layer2.epsg)
+		unitTest:assert(layer3.epsg ~= layer2.epsg)
+		unitTest:assertEquals(layer2.epsg, 5808)
+		unitTest:assertEquals(layer3.epsg, 4326)
 
 		proj.file:delete()
 		toData.file:delete()
