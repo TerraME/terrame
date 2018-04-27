@@ -1511,9 +1511,7 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 								toData.password, toData.database, toData.encoding)
 			toDs = makeAndOpenDataSource(connInfo, "POSTGIS")
 
-			if not toDs then
-				errorMsg = "It was not possible save '"..fromData.name.."' to postgis data." -- #1363
-			elseif toDs:dataSetExists(toDSetName) then
+			if toDs:dataSetExists(toDSetName) then
 				if overwrite then
 					toDs:dropDataSet(toDSetName)
 				else

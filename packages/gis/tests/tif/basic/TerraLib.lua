@@ -406,6 +406,17 @@ return {
 			unitTest:assertEquals(outSet[0].b0, tifSet[0].b0)
 			unitTest:assertEquals(outSet[20019].b0, tifSet[20019].b0)
 
+			--<overwriting existing>--
+			TerraLib().saveDataAs(fromData, toData, overwrite)
+			outSet = TerraLib().getDataSet{file = toData.file}
+			unitTest:assert(toData.file:exists())
+			unitTest:assertEquals(getn(tifSet), getn(outSet))
+			unitTest:assertEquals(getn(tifSet), 20020)
+			unitTest:assertEquals(outSet[0].b0, 255)
+			unitTest:assertEquals(outSet[20019].b0, 255)
+			unitTest:assertEquals(outSet[0].b0, tifSet[0].b0)
+			unitTest:assertEquals(outSet[20019].b0, tifSet[20019].b0)
+
 			toData.file:delete()
 		end
 
