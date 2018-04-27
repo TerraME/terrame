@@ -992,7 +992,7 @@ Layer_ = {
 								.."' cannot be exported as vectorial data. Please, use 'polygonize' function for it.")
 				end
 			elseif isRasterSource(ext) then
-				customError("Vetorial layer '"..self.name.."' cannot be exported as vectorial data.")
+				customError("Vetorial layer '"..self.name.."' cannot be exported as raster data.")
 			else
 				verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "select"})
 			end
@@ -1003,7 +1003,7 @@ Layer_ = {
 				srid = data.epsg,
 				encoding = EncodingMapper[self.encoding]
 			}
-		elseif isRasterSource(self.souce) then
+		elseif isRasterSource(self.source) then
 			customError("Raster layer '"..self.name
 						.."' cannot be exported as vectorial data. Please, use 'polygonize' function for it.")
 		else --< to data is postgis

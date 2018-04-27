@@ -805,10 +805,8 @@ return {
 		end
 	end,
 	export = function(unitTest)
-		local projName = "layer_func_alt.tview"
-
 		local proj = Project {
-			file = projName,
+			file = "export_postgis_alt.tview",
 			clean = true
 		}
 
@@ -822,35 +820,78 @@ return {
 		}
 
 		local overwrite = true
-
-		local password = getConfig().password
+		local password = "postgres"
 		local database = "postgis_22_sample"
 
+		local pgSourceError = function()
+			local pgData = {
+				source = "postgi",
+				password = password,
+				database = database,
+				overwrite = overwrite
+			}
+
+			layer1:export(pgData)
+		end
+		unitTest:assertError(pgSourceError, "The only supported database is 'postgis'. Please, set source = \"postgis\".")
+
+		local selectNoExist = function()
+			local pgData = {
+				source = "postgis",
+				password = password,
+				database = database,
+				overwrite = overwrite,
+				select = {"uf"}
+			}
+			layer1:export(pgData)
+		end
+		unitTest:assertError(selectNoExist,  "There is no attribute 'uf' in 'setores'.")
+
+		local layer2 = Layer{
+			project = proj,
+			name = "Prodes",
+			file = filePath("test/prodes_polyc_10k.tif", "gis")
+		}
+
+		local ras2vecError = function()
+			local pgData = {
+				source = "postgis",
+				password = password,
+				database = database,
+				overwrite = overwrite
+			}
+			layer2:export(pgData)
+		end
+
+		unitTest:assertError(ras2vecError, "Raster layer 'Prodes' cannot be exported as vectorial data. Please, use 'polygonize' function for it.")
+
 		local pgData = {
-			source = "postgi",
+			source = "postgis",
 			password = password,
 			database = database,
 			overwrite = overwrite
 		}
 
-		local pgSourceError = function()
-			layer1:export(pgData)
-		end
-		unitTest:assertError(pgSourceError, "The only supported database is 'postgis'. Please, set source = \"postgis\".")
+		layer1:export(pgData)
 
-		pgData.select = {"uf"}
-		pgData.source = "postgis"
-		local selectNoExist = function()
-			layer1:export(pgData)
-		end
-		unitTest:assertError(selectNoExist,  "There is no attribute 'uf' in 'setores'.")
+		local layer3 = Layer{
+			project = proj,
+			source = "postgis",
+			name = "PgLayer",
+			password = password,
+			database = database,
+			table = string.lower(layer1.name)
+		}
 
 		local vec2rasError = function()
-			layer1:export{file = "pg2tif.tif"}
+			layer3:export{file = "pg2tif.tif"}
 		end
 
-		unitTest:assertError(vec2rasError, "Vetorial layer 'setores' cannot be exported as vectorial data.")
+		unitTest:assertError(vec2rasError, "Vetorial layer 'PgLayer' cannot be exported as raster data.")
 
+		pgData.encoding = "LATIN1"
+		pgData.table = layer3.table
+		TerraLib().dropPgTable(pgData)
 		proj.file:delete()
 	end
 }
