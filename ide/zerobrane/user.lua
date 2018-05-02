@@ -12,7 +12,7 @@ local luaspec = G.ide.specs.lua
 luaspec.keywords[3] = luaspec.keywords[3] .. [[
       Agent Automaton Cell CellularSpace Chart Choice Clock Directory Environment Event File Flow
       Group InternetSender Jump Layer Log Mandatory Map Model Neighborhood Project Random SocialNetwork Society
-      State TextScreen Timer Trajectory UnitTest VisualTable]]
+      State TextScreen Timer Trajectory UnitTest VisualTable Application View List Report GPM Network MultipleRuns SAMDE]]
 
 luaspec.keywords[4] = luaspec.keywords[4] .. [[
       forEachAgent forEachCell forEachCellPair forEachConnection forEachElement forEachNeighbor forEachNeighborhood
