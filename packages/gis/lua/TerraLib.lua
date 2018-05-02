@@ -148,6 +148,9 @@ local SourceTypeMapper = {
 	tif = "GDAL",
 	nc = "GDAL",
 	asc = "GDAL",
+	png = "GDAL",
+	jpeg = "GDAL",
+	jpg = "GDAL",
 	postgis = "POSTGIS",
 	wfs = "WFS",
 	wms = "WMS2"
@@ -1040,39 +1043,6 @@ local function getRasterFromLayer(project, layer)
 	return raster
 end
 
-local function createPgDataSourceToSaveAs(fromType, pgData)
-	local ds = nil
-
-	if (fromType == "OGR") or (fromType == "POSTGIS") then
-		local connInfo = createPgConnInfo(pgData.host, pgData.port, pgData.user, pgData.password, pgData.database, pgData.encoding)
-		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
-	end
-
-	return ds
-end
-
-local function createOgrDataSourceToSaveAs(fromType, fileData)
-	local ds = nil
-
-	if (fromType == "OGR") or (fromType == "POSTGIS") then
-		local connInfo = createFileConnInfo(tostring(fileData.file))
-		ds = makeAndOpenDataSource(connInfo, "OGR")
-	end
-
-	return ds
-end
-
--- local function createGdalDataSourceToSaveAs(fromType, fileData) -- TODO(#1364)
-	-- local ds = nil
-
-	-- if fromType == "GDAL" then -- SKIP
-		-- local connInfo = createFileConnInfo(tostring(fileData.dir))
-		-- ds = makeAndOpenDataSource(connInfo, "GDAL") -- SKIP
-	-- end
-
-	-- return ds
--- end
-
 local function isValidDataSourceUri(uri, type)
 	local ds = binding.te.da.DataSourceFactory.make(type, uri)
 	return ds:isValid()
@@ -1461,10 +1431,16 @@ local function createFromDataInfoToSaveAsByLayer(layer)
 	return info
 end
 
+local function getRasterByDataSet(dataset)
+	local rpos = binding.GetFirstPropertyPos(dataset, binding.RASTER_TYPE)
+	return dataset:getRaster(rpos)
+end
+
 local function createFromDataInfoToSaveAsByFile(file)
 	local info = {}
 	local connInfo = createFileConnInfo(tostring(file))
 	local fileExt = file:extension()
+	info.type = SourceTypeMapper[fileExt]
 
 	if fileExt == "shp" then
 		local _, fileName = file:split()
@@ -1472,92 +1448,100 @@ local function createFromDataInfoToSaveAsByFile(file)
 	elseif fileExt == "geojson" then
 		info.dataset = "OGRGeoJSON"
 	else
-		customError("File extension '"..fileExt.."' is not supported to save.")
+		info.dataset = file:name()
 	end
 
-	info.datasource = makeAndOpenDataSource(connInfo, "OGR")
-	info.type = "OGR"
-	local dst = info.datasource:getDataSetType(info.dataset)
-	local gp = binding.GetFirstGeomProperty(dst)
-	info.srid = gp:getSRID()
-	info.name = info.dataset.."."..fileExt
+	info.datasource = makeAndOpenDataSource(connInfo, info.type)
+
+	if info.type == "OGR" then
+		local dst = info.datasource:getDataSetType(info.dataset)
+		local gp = binding.GetFirstGeomProperty(dst)
+		info.srid = gp:getSRID()
+		info.name = info.dataset.."."..fileExt
+	else
+		info.name = info.dataset
+		local dset = info.datasource:getDataSet(info.dataset)
+		local raster = getRasterByDataSet(dset)
+		info.srid = raster:getSRID()
+	end
 
 	return info
 end
 
 local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 	local info = {}
-	local toType = SourceTypeMapper[toData.type]
 	local toDs
 	local toDSetName
 	local fromDSetName = fromData.dataset
 	local fromType = fromData.type
 	local errorMsg
 
-	if toType == "POSTGIS" then
-		if not toData.table then
-			toData.table = fromDSetName
-		end
+	local toType
+	if toData.type then
+		toType = SourceTypeMapper[toData.type]
+	else --< must be file
+		local fileExt = toData.file:extension()
+		toType = SourceTypeMapper[fileExt]
+	end
 
-		toData.table = string.lower(toData.table)
-		toDSetName = toData.table
-		toDs = createPgDataSourceToSaveAs(fromType, toData)
+	if fromType == "GDAL" then
+		if toType == "GDAL" then
+			toDSetName = toData.file:name()
 
-		if not toDs then
-			errorMsg = "It was not possible save '"..fromData.name.."' to postgis data." -- #1363
-		elseif toDs:dataSetExists(toDSetName) then
-			if overwrite then
-				toDs:dropDataSet(toDSetName)
-			else
-				errorMsg = "Table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
+			if toData.file:exists() then
+				if overwrite then
+					toData.file:delete() -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
+				else
+					errorMsg = "File '"..toData.file:name().."' already exists."
+				end
 			end
-		end
-	elseif toType == "OGR" then
-		if File(toData.file):exists() then
-			if overwrite then
-				local _, fn = File(toData.file):split()
-				toDSetName = fn
-				File(toData.file):delete() -- TODO(avancinirodrigo): it can be optimized by dropDataSet(), but now it doesn't work.
-			else
-				errorMsg = "File '"..toData.file.."' already exists."
+
+			if not errorMsg then
+				local connInfo = createFileConnInfo(tostring(toData.file))
+				toDs = makeAndOpenDataSource(connInfo, "GDAL")
+				info.file = toData.file
 			end
 		else
-			toDSetName = fromDSetName
+			errorMsg = "Raster data '"..fromData.name.."' cannot be saved as vector."
 		end
+	else --< vectorial data
+		if toType == "GDAL" then
+			errorMsg = "Vector data '"..fromData.name.."' cannot be saved as raster."
+		elseif toType == "POSTGIS" then
+			if not toData.table then
+				toData.table = fromDSetName
+			end
 
-		if not errorMsg then
-			toDs = createOgrDataSourceToSaveAs(fromType, toData)
-			if not toDs then
-				errorMsg = "It was not possible save '"..fromData.name.."' to vector data."
+			toData.table = string.lower(toData.table)
+			toDSetName = toData.table
+			local connInfo = createPgConnInfo(toData.host, toData.port, toData.user,
+								toData.password, toData.database, toData.encoding)
+			toDs = makeAndOpenDataSource(connInfo, "POSTGIS")
+
+			if toDs:dataSetExists(toDSetName) then
+				if overwrite then
+					toDs:dropDataSet(toDSetName)
+				else
+					errorMsg = "Table '"..toData.table.."' already exists in postgis database '"..toData.database.."'."
+				end
+			end
+		elseif toType == "OGR" then
+			local _, fn = toData.file:split()
+			toDSetName = fn
+
+			if toData.file:exists() then
+				if overwrite then
+					toData.file:delete()
+				else
+					errorMsg = "File '"..toData.file:name().."' already exists."
+				end
+			end
+
+			if not errorMsg then
+				local connInfo = createFileConnInfo(tostring(toData.file))
+				toDs = makeAndOpenDataSource(connInfo, "OGR")
 			end
 		end
-	elseif (toType == "GDAL") or (fromType == "GDAL") then
-		if fromType == "GDAL" then
-			errorMsg = "Raster data '"..fromDSetName.."' cannot be saved."
-		else
-			errorMsg = "It was not possible save '"..fromData.name.."' to raster data."
-		end
-		-- TODO(#1364)
-		-- toData.fileTif = fromDSetName
-		-- local file = File(toData.file)
-		-- toData.dir = Directory(file)
-		-- local fileCopy = toData.dir..toData.fileTif
-
-		-- if toData.file and (file:name(true) ~= fileTif) then
-			-- customWarning("It was not possible to convert '"..fromData.name.."' to '"..toData.file.."'.") -- #1364
-		-- end
-
-		-- toDs = createGdalDataSourceToSaveAs(fromType, toData)
-		-- toDSetName = toData.fileTif
-		-- if not toDs then
-			-- errorMsg = "It was not possible save '"..fromData.name.."' to raster data."
-		-- elseif toDs:dataSetExists(toDSetName) then
-			-- if overwrite then
-				-- toDs:dropDataSet(toDSetName)
-			-- else
-				-- errorMsg = "File '"..fileCopy.."' already exists." -- SKIP
-			-- end
-		-- end
 	end
 
 	if errorMsg then
@@ -1566,7 +1550,7 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 		end
 
 		fromData.datasource:close()
-		return false, errorMsg
+		customError(errorMsg)
 	end
 
 	info.dataset = toDSetName
@@ -1580,12 +1564,7 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 	end
 
 	if toData.srid then
-		if toType ~= "GDAL" then
 			info.srid = toData.srid
-		else
-			customWarning("It was not possible to change SRID from raster data.") -- #1485 -- SKIP
-			info.srid = fromData.srid -- SKIP
-		end
 	else
 		info.srid = fromData.srid
 	end
@@ -1597,7 +1576,7 @@ local function hasValuesSamePrimaryKey(values, pkName)
 	return values[1][pkName] ~= nil
 end
 
-local function saveLayerAs(fromData, toData, attrs, values)
+local function saveVectorDataAs(fromData, toData, attrs, values)
 	do
 		local fromDs = fromData.datasource
 
@@ -1771,6 +1750,12 @@ local function saveLayerAs(fromData, toData, attrs, values)
 	return true
 end
 
+local function saveRasterDataAs(fromData, toData)
+	local fromDSet = fromData.datasource:getDataSet(fromData.dataset)
+	local raster = getRasterByDataSet(fromDSet)
+	binding.CreateRasterOnFile(raster, tostring(toData.file), toData.srid)
+end
+
 local function fixSpaceInPath(path)
 	return string.gsub(path, "%%20", " ")
 end
@@ -1914,11 +1899,6 @@ local function getDataSetFromFile(file)
 	collectgarbage("collect")
 
 	return dset
-end
-
-local function getRasterByDataSet(dataset)
-	local rpos = binding.GetFirstPropertyPos(dataset, binding.RASTER_TYPE)
-	return dataset:getRaster(rpos)
 end
 
 local function getRasterSize(raster)
@@ -2946,22 +2926,22 @@ TerraLib_ = {
 	--     type = "geojson",
 	--     srid = 4326
 	-- }
-	-- TerraLib().saveLayerAs(fromData, toData, true, {"population", "ages"})
-	saveLayerAs = function(fromData, toData, overwrite, attrs, values)
+	-- TerraLib().saveDataAs(fromData, toData, true, {"population", "ages"})
+	saveDataAs = function(fromData, toData, overwrite, attrs, values)
 		if fromData.project then
 			local project = fromData.project
 			loadProject(project, project.file)
 			local layer = project.layers[fromData.layer]
 			local fromDataToSave = createFromDataInfoToSaveAsByLayer(layer)
-			local toDataToSave, err = createToDataInfoToSaveAs(toData, fromDataToSave, overwrite)
+			local toDataToSave = createToDataInfoToSaveAs(toData, fromDataToSave, overwrite)
 
-			if err then
-				customError(err)
+			if fromDataToSave.type == "GDAL" then
+				saveRasterDataAs(fromDataToSave, toDataToSave)
+			else
+				saveVectorDataAs(fromDataToSave, toDataToSave, attrs, values)
 			end
 
-			saveLayerAs(fromDataToSave, toDataToSave, attrs, values)
-
-			-- If the data belongs a layer, it will be updated in the project
+			-- If the data already belongs a layer, it will be updated in the project
 			local toLayer = getLayerByDataSetName(project.layers, toDataToSave.dataset, toDataToSave.type)
 			if toLayer then
 				if toLayer:getSRID() ~= toDataToSave.srid then
@@ -2973,13 +2953,13 @@ TerraLib_ = {
 			releaseProject(project)
 		elseif fromData.file then
 			local fromDataToSave = createFromDataInfoToSaveAsByFile(fromData.file)
-			local toDataToSave, err = createToDataInfoToSaveAs(toData, fromDataToSave, overwrite)
+			local toDataToSave = createToDataInfoToSaveAs(toData, fromDataToSave, overwrite)
 
-			if err then
-				customError(err)
+			if fromDataToSave.type == "GDAL" then
+				saveRasterDataAs(fromDataToSave, toDataToSave)
+			else
+				saveVectorDataAs(fromDataToSave, toDataToSave, attrs, values)
 			end
-
-			saveLayerAs(fromDataToSave, toDataToSave, attrs, values)
 		end
 
 		collectgarbage("collect")

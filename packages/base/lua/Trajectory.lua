@@ -302,13 +302,10 @@ Trajectory_ = {
 			customError("Trajectory:save() only works properly when the CellularSpace is created from a project.")
 		end
 
-		local to = {
-			file = tostring(file),
-			type = file:extension()
-		}
+		local to = {file = file}
 
 		local gis = getPackage("gis")
-		gis.TerraLib().saveLayerAs(from, to, false, attrs, self.cells)
+		gis.TerraLib().saveDataAs(from, to, false, attrs, self.cells)
 	end
 }
 
