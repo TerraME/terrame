@@ -122,7 +122,7 @@ return {
 		local postgis2tifWarn = function()
 			TerraLib().saveDataAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(postgis2tifWarn, "Vectorial data 'PgLayer' cannot be saved as raster.")
+		unitTest:assertError(postgis2tifWarn, "Vector data 'PgLayer' cannot be saved as raster.")
 
 		-- OVERWRITE
 		overwrite = false

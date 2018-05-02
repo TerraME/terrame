@@ -863,7 +863,7 @@ return {
 			layer2:export(pgData)
 		end
 
-		unitTest:assertError(ras2vecError, "Raster layer 'Prodes' cannot be exported as vectorial data. Please, use 'polygonize' function for it.")
+		unitTest:assertError(ras2vecError, "Raster layer 'Prodes' cannot be exported as vector data. Please, use 'polygonize' function instead.")
 
 		local pgData = {
 			source = "postgis",
@@ -887,7 +887,7 @@ return {
 			layer3:export{file = "pg2tif.tif"}
 		end
 
-		unitTest:assertError(vec2rasError, "Vetorial layer 'PgLayer' cannot be exported as raster data.")
+		unitTest:assertError(vec2rasError, "Vector layer 'PgLayer' cannot be exported as raster data.")
 
 		pgData.encoding = "LATIN1"
 		pgData.table = layer3.table

@@ -173,7 +173,7 @@ return {
 			local tif2shpError = function()
 				TerraLib().saveDataAs(fromData, toData, overwrite)
 			end
-			unitTest:assertError(tif2shpError, "Raster data 'TifLayer' cannot be saved as vectorial.")
+			unitTest:assertError(tif2shpError, "Raster data 'TifLayer' cannot be saved as vector.")
 
 			-- GEOJSON
 			toData.file = File("tif2geojson.geojson")
@@ -182,7 +182,7 @@ return {
 			local tif2geojsonError = function()
 				TerraLib().saveDataAs(fromData, toData, overwrite)
 			end
-			unitTest:assertError(tif2geojsonError, "Raster data 'TifLayer' cannot be saved as vectorial.")
+			unitTest:assertError(tif2geojsonError, "Raster data 'TifLayer' cannot be saved as vector.")
 
 			-- POSTGIS
 			local host = "localhost"
@@ -205,7 +205,7 @@ return {
 			local tif2postgisError = function()
 				TerraLib().saveDataAs(fromData, pgData, overwrite)
 			end
-			unitTest:assertError(tif2postgisError, "Raster data 'TifLayer' cannot be saved as vectorial.")
+			unitTest:assertError(tif2postgisError, "Raster data 'TifLayer' cannot be saved as vector.")
 
 			proj.file:delete()
 		end
@@ -218,7 +218,7 @@ return {
 				TerraLib().saveDataAs(fromData, toData, true)
 			end
 
-			unitTest:assertError(raster2vectorError, "Raster data 'prodes_polyc_10k.tif' cannot be saved as vectorial.")
+			unitTest:assertError(raster2vectorError, "Raster data 'prodes_polyc_10k.tif' cannot be saved as vector.")
 
 			toData = {file = File("tif2png.png")}
 			TerraLib().saveDataAs(fromData, toData, true)
@@ -238,7 +238,7 @@ return {
 				TerraLib().saveDataAs(fromData, toData, true)
 			end
 
-			unitTest:assertError(vector2rasterError, "Vectorial data 'es_limit_sirgas2000_5880.shp' cannot be saved as raster.")
+			unitTest:assertError(vector2rasterError, "Vector data 'es_limit_sirgas2000_5880.shp' cannot be saved as raster.")
 
 
 		end

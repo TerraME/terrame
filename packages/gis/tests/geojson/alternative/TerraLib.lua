@@ -51,7 +51,7 @@ return {
 		local geojson2tifError = function()
 			TerraLib().saveDataAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(geojson2tifError, "Vectorial data 'SampaGeoJson' cannot be saved as raster.")
+		unitTest:assertError(geojson2tifError, "Vector data 'SampaGeoJson' cannot be saved as raster.")
 
 		proj.file:delete()
 	end

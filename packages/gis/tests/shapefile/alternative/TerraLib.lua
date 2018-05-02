@@ -184,14 +184,14 @@ return {
 		local shp2tifError = function()
 			TerraLib().saveDataAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(shp2tifError, "Vectorial data 'SampaShp' cannot be saved as raster.")
+		unitTest:assertError(shp2tifError, "Vector data 'SampaShp' cannot be saved as raster.")
 
 		fromData = {file = layerFile1}
 
 		shp2tifError = function()
 			TerraLib().saveDataAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(shp2tifError, "Vectorial data 'sampa.shp' cannot be saved as raster.")
+		unitTest:assertError(shp2tifError, "Vector data 'sampa.shp' cannot be saved as raster.")
 
 		proj.file:delete()
 	end

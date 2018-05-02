@@ -1502,11 +1502,11 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 				info.file = toData.file
 			end
 		else
-			errorMsg = "Raster data '"..fromData.name.."' cannot be saved as vectorial."
+			errorMsg = "Raster data '"..fromData.name.."' cannot be saved as vector."
 		end
 	else --< vectorial data
 		if toType == "GDAL" then
-			errorMsg = "Vectorial data '"..fromData.name.."' cannot be saved as raster."
+			errorMsg = "Vector data '"..fromData.name.."' cannot be saved as raster."
 		elseif toType == "POSTGIS" then
 			if not toData.table then
 				toData.table = fromDSetName

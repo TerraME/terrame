@@ -219,7 +219,7 @@ return {
 			layer:export{file = "tif2shp.shp"}
 		end
 
-		unitTest:assertError(raster2VectorError, "Raster layer 'Prodes' cannot be exported as vectorial data. Please, use 'polygonize' function for it.")
+		unitTest:assertError(raster2VectorError, "Raster layer 'Prodes' cannot be exported as vector data. Please, use 'polygonize' function instead.")
 
 		proj.file:delete()
 	end
