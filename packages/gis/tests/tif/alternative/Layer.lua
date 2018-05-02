@@ -173,9 +173,6 @@ return {
 	end,
 	dummy = function(unitTest)
 		local projName = "layer_tif_nodata.tview"
-
-		File(projName):deleteIfExists()
-
 		local proj = Project{
 			file = projName,
 			clean = true
@@ -204,7 +201,27 @@ return {
 		unitTest:assertError(bandNoExists, "The only available band is '0'.")
 
 		File(projName):delete()
+	end,
+	export = function(unitTest)
+		local proj = Project{
+			file = "export_tif_alt.tview",
+			author = "Avancini",
+			clean = true
+		}
 
+		local layer = Layer{
+			project = proj,
+			name = "Prodes",
+			file = filePath("test/prodes_polyc_10k.tif", "gis")
+		}
+
+		local raster2VectorError = function()
+			layer:export{file = "tif2shp.shp"}
+		end
+
+		unitTest:assertError(raster2VectorError, "Raster layer 'Prodes' cannot be exported as vector data. Please, use 'polygonize' function instead.")
+
+		proj.file:delete()
 	end
 }
 

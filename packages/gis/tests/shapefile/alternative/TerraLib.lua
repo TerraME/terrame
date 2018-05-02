@@ -156,7 +156,7 @@ return {
 
 		proj.file:delete()
 	end,
-	saveLayerAs = function(unitTest)
+	saveDataAs = function(unitTest)
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -176,22 +176,22 @@ return {
 
 		-- TIF
 		local toData = {}
-		toData.file = "shp2tif.tif"
+		toData.file = File("shp2tif.tif")
 		toData.type = "tif"
 
 		local overwrite = true
 
 		local shp2tifError = function()
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			TerraLib().saveDataAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(shp2tifError, "It was not possible save 'SampaShp' to raster data.")
+		unitTest:assertError(shp2tifError, "Vector data 'SampaShp' cannot be saved as raster.")
 
-		fromData = {}
-		fromData.file = layerFile1
+		fromData = {file = layerFile1}
+
 		shp2tifError = function()
-			TerraLib().saveLayerAs(fromData, toData, overwrite)
+			TerraLib().saveDataAs(fromData, toData, overwrite)
 		end
-		unitTest:assertError(shp2tifError, "It was not possible save 'sampa.shp' to raster data.")
+		unitTest:assertError(shp2tifError, "Vector data 'sampa.shp' cannot be saved as raster.")
 
 		proj.file:delete()
 	end

@@ -156,7 +156,7 @@ return {
 		proj.file:delete()
 		cellsShp:delete()
 	end,
-	saveLayerAs = function(unitTest)
+	saveDataAs = function(unitTest)
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -175,26 +175,18 @@ return {
 		fromData.layer = layerName1
 
 		local toData = {}
-		toData.file = "shp2shp.shp"
+		toData.file = File("shp2shp.shp")
 		toData.type = "shp"
 
 		local attrNotExist = function()
-			TerraLib().saveLayerAs(fromData, toData, true, {"ATTR"})
+			TerraLib().saveDataAs(fromData, toData, true, {"ATTR"})
 		end
 		unitTest:assertError(attrNotExist, "There is no attribute 'ATTR' in 'SampaShp'.")
 
 		local attrsNotExist = function()
-			TerraLib().saveLayerAs(fromData, toData, true, {"ATTR1", "ATTR2", "ATTR3"})
+			TerraLib().saveDataAs(fromData, toData, true, {"ATTR1", "ATTR2", "ATTR3"})
 		end
 		unitTest:assertError(attrsNotExist,  "There are no attributes 'ATTR1', 'ATTR2' and 'ATTR3' in 'SampaShp'.")
-
-		fromData = {}
-		fromData.file = filePath("test/prodes_polyc_10k.tif", "gis")
-
-		local tifSaveError = function()
-			TerraLib().saveLayerAs(fromData, toData, true)
-		end
-		unitTest:assertError(tifSaveError, "File extension 'tif' is not supported to save.")
 
 		local dset1 = TerraLib().getDataSet{project = proj, layer = layerName1}
 		local sjc
@@ -213,8 +205,8 @@ return {
 			end
 		end
 
-		fromData.file = layerFile1
-		toData.file = "touches_sjc.shp"
+		fromData = {file = layerFile1}
+		toData = {file = File("touches_sjc.shp"), type = "shp"}
 
 		for i = 1, #touches do
 			touches[i].FID = nil
@@ -222,7 +214,7 @@ return {
 
 		local pkSaveError = function()
 			local overwrite = true
-			TerraLib().saveLayerAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
+			TerraLib().saveDataAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
 		end
 		unitTest:assertError(pkSaveError,  "Primary key not found (sampa.shp, FID). Please, check your subset.")
 
