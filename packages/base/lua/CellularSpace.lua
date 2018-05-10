@@ -664,6 +664,82 @@ local function loadRaster(self)
 	loadDataSet(self)
 end
 
+local rasterFileRef
+
+local function loadTifDirectory(self)
+	if #self.directory:list() == 0 then
+		customError("Directory '"..self.directory:name().."' is empty.")
+	end
+
+	local numberOfColumns
+	local numberOfRows
+	local resultSet
+	local tifCount = 0
+
+	forEachFile(self.directory, function(file)
+		if file:extension() == "tif" then
+			local info = gis.TerraLib().getRasterInfo(file)
+
+			if not numberOfColumns then
+				numberOfColumns = info.columns
+				numberOfRows = info.rows
+				rasterFileRef = file
+			end
+
+			if (numberOfColumns ~= info.columns) or (numberOfRows ~= info.rows) then
+				customError("Tif file '"..file:name().."' has a different number of columns or rows.")
+			end
+
+			local dset = gis.TerraLib().getDataSet{file = file, missing = self.missing}
+
+			local _, attrName = file:split()
+
+			if resultSet then
+				if info.bands > 1 then
+					for i = 0, getn(dset) - 1 do
+						for b = 0, info.bands - 1 do
+							resultSet[i][attrName.."b"..b] = dset[i]["b"..b]
+						end
+					end
+				else
+					for i = 0, getn(dset) - 1 do
+						resultSet[i][attrName] = dset[i].b0
+					end
+				end
+			else --< first time
+				resultSet = {}
+				if info.bands > 1 then
+					for i = 0, getn(dset) - 1 do
+						for b = 0, info.bands - 1 do
+							resultSet[i] = {}
+							resultSet[i].col = dset[i].col
+							resultSet[i].row = dset[i].row
+							resultSet[i][attrName.."b"..b] = dset[i]["b"..b]
+						end
+					end
+				else
+					for i = 0, getn(dset) - 1 do
+						resultSet[i] = {}
+						resultSet[i].col = dset[i].col
+						resultSet[i].row = dset[i].row
+						resultSet[i][attrName] = dset[i].b0
+					end
+				end
+			end
+
+			tifCount = tifCount + 1
+		end
+	end)
+
+	if not resultSet then
+		customError("There is no tif file in directory '"..self.directory:name().."/'.")
+	elseif tifCount == 1 then
+		customError("There is just one tif file on directory '"..self.directory:name().."/'. Please, see argument 'file' or 'layer' in documentation.")
+	end
+
+	setCellsByTerraLibDataSet(self, resultSet)
+end
+
 local function loadLayer(self)
 	loadDataSet(self)
 end
@@ -763,6 +839,13 @@ registerCellularSpaceDriver{
 registerCellularSpaceDriver{
 	source = "asc",
 	load = loadRaster
+}
+
+registerCellularSpaceDriver{
+	source = "directory",
+	load = loadTifDirectory,
+	extension = false,
+	compulsory = "directory"
 }
 
 CellularSpace_ = {
@@ -1218,15 +1301,20 @@ CellularSpace_ = {
 	sample = function(self)
 		return self.cells[Random():integer(1, #self)]
 	end,
-	--- Save the attributes of a CellularSpace into the same gis::Project it was loaded from.
-	-- @arg newLayerName Name of the gis::Layer to store the saved attributes.
-	-- If the original data comes from a shapefile, it will create another shapefile using
-	-- the name of the layer as file name and will save it in the same directory where the
+	--- Save the attributes of a CellularSpace into gis::Project or a tif file.
+	-- @arg newLayerNameOrFile Name of the gis::Layer or a tif file to store the saved attributes.
+	-- If the original data comes from a shapefile layer, it will create another shapefile using
+	-- the name of the new layer as file name and will save it in the same directory where the
 	-- original shapefile is stored. If the data comes from a PostGIS database, it
 	-- will create another table with name equals to the the layer's name.
-	-- @arg attrNames A vector with the names of the attributes to be saved. These
-	-- attributes should be only the attributes that were created or modified. The
-	-- other attributes of the layer will also be saved in the new output.
+	-- If the data come from a tif directory, it must be used a file with '.tif' extension.
+	-- @arg attrNames A vector with the names of the attributes to be saved.
+	-- If the data come from a layer, these attributes should be only the attributes
+	-- that were created or modified. The other attributes of the layer will also
+	-- be saved in the new output.
+	-- If the data come from a tif directory, it is only possible save one attribute at a time.
+	-- The attribute value saved will have the same type of the loaded tif files, it means, if
+	-- the tif is 8 bits the new tif will be 8 bits as well.
 	-- When saving a single attribute, you can use a string "attribute" instead of a table {"attribute"}.
 	-- @usage -- DONTRUN
 	-- import("gis")
@@ -1247,9 +1335,7 @@ CellularSpace_ = {
 	-- end)
 	--
 	-- cs:save("myamazonia", "distweight")
-	save = function(self, newLayerName, attrNames)
-		mandatoryArgument(1, "string", newLayerName)
-
+	save = function(self, newLayerNameOrFile, attrNames)
 		if (attrNames ~= nil) and (attrNames ~= "") then
 			if type(attrNames) == "string" then
 				attrNames = {attrNames}
@@ -1264,31 +1350,47 @@ CellularSpace_ = {
 			end
 		end
 
-		if not self.project then
-			customError("CellularSpace:save() only works properly when the CellularSpace is created from a project.")
-		end
+		if self.project then
+			local newLayerName = newLayerNameOrFile
+			mandatoryArgument(1, "string", newLayerName)
 
-		local dset = gis.TerraLib().getDataSet{project = self.project, layer = self.layer.name, missing = self.missing}
-		if not self.geometry then
-			for i = 0, #dset do
-				for k, v in pairs(dset[i]) do
-					if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
-						self.cells[i + 1][k] = v
+			local dset = gis.TerraLib().getDataSet{project = self.project, layer = self.layer.name, missing = self.missing}
+			if not self.geometry then
+				for i = 0, #dset do
+					for k, v in pairs(dset[i]) do
+						if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
+							self.cells[i + 1][k] = v
+						end
+					end
+				end
+			elseif dset[0].OGR_GEOMETRY or dset[0].ogr_geometry then
+				for i = 0, #dset do
+					for k, v in pairs(dset[i]) do
+						if (k == "OGR_GEOMETRY") or (k == "ogr_geometry") then
+							self.cells[i + 1].geom = nil
+							self.cells[i + 1][k] = v
+						end
 					end
 				end
 			end
-		elseif dset[0].OGR_GEOMETRY or dset[0].ogr_geometry then
-			for i = 0, #dset do
-				for k, v in pairs(dset[i]) do
-					if (k == "OGR_GEOMETRY") or (k == "ogr_geometry") then
-						self.cells[i + 1].geom = nil
-						self.cells[i + 1][k] = v
-					end
-				end
-			end
-		end
 
-		gis.TerraLib().saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
+			gis.TerraLib().saveDataSet(self.project, self.layer.name, self.cells, newLayerName, attrNames)
+		elseif self.directory then
+			local outFile = newLayerNameOrFile
+			mandatoryArgument(1, "File", outFile)
+
+			if getn(attrNames) == 1 then
+				local attrName
+				for _, v in pairs(attrNames) do
+					attrName = v
+				end
+				gis.TerraLib().saveRasterFromTable(self.cells, rasterFileRef, outFile, attrName)
+			else
+				customError("It is only possible to save one attribute at a time in tif directory CellularSpace.")
+			end
+		else
+			customError("CellularSpace should be created from a project or directory to allow save it.")
+		end
 	end,
 	--- Split the CellularSpace into a table of Trajectories according to a classification
 	-- strategy. The Trajectories will have empty intersection and union equal to the
@@ -1512,6 +1614,8 @@ metaTableCellularSpace_ = {
 -- load from a database. The default value is equal to xdim.
 -- @arg data.file A string with a file name (if it is stored in the current directory), or the complete
 -- path to a given file.
+-- @arg data.directory A directory. It opens a set of tif files using the file names as attribute names.
+-- The directory must have at least two tif files and the they must have the same number of columns and rows.
 -- @arg data.source A string with the name of the data source. It tries to infer the data source
 -- according to the arguments passed to the function.
 -- @tabular source
@@ -1569,44 +1673,57 @@ function CellularSpace(data)
 		data.file = File(data.file)
 	end
 
-	forEachOrderedElement(CellularSpaceDrivers, function(idx, value)
-		local all = true
+	if data.directory then
+		mandatoryTableArgument(data, "directory", "Directory")
+		if not data.source then
+			data.source = "directory"
+		else
+			customWarning("Argument 'source' is unnecessary.")
+			-- mandatoryTableArgument(data, "source", "string")
+			-- if data.source ~= "directory" then
+				-- customError("Argument 'source' must be 'directory'.")
+			-- end
+		end
+	else
+		forEachOrderedElement(CellularSpaceDrivers, function(idx, value)
+			local all = true
 
-		forEachElement(value.compulsory, function(_, mvalue)
-			if data[mvalue] == nil then
+			forEachElement(value.compulsory, function(_, mvalue)
+				if data[mvalue] == nil then
+					all = false
+				end
+			end)
+
+			if value.extension and (not data.file or (type(data.file) == "File" and data.file:extension() ~= idx)) then
 				all = false
+			end
+
+			if all then
+				table.insert(candidates, idx)
 			end
 		end)
 
-		if value.extension and (not data.file or (type(data.file) == "File" and data.file:extension() ~= idx)) then
-			all = false
-		end
+		if data.source == nil then
+			if #candidates == 0 then
+				customError("Not enough information to infer argument 'source'.")
+			elseif #candidates == 1 then
+				data.source = candidates[1]
+			else
+				local str = ""
+				forEachElement(candidates, function(_, value)
+					str = str.."'"..value.."', "
+				end)
 
-		if all then
-			table.insert(candidates, idx)
-		end
-	end)
+				str = string.sub(str, 1, -3).."."
 
-	if data.source == nil then
-		if #candidates == 0 then
-			customError("Not enough information to infer argument 'source'.")
-		elseif #candidates == 1 then
-			data.source = candidates[1]
+				customError("More than one candidate to argument 'source': "..str)
+			end
 		else
-			local str = ""
-			forEachElement(candidates, function(_, value)
-				str = str.."'"..value.."', "
-			end)
-
-			str = string.sub(str, 1, -3).."."
-
-			customError("More than one candidate to argument 'source': "..str)
-		end
-	else
-		if #candidates == 1 then
-			defaultTableValue(data, "source", candidates[1])
-		else
-			mandatoryTableArgument(data, "source", "string")
+			if #candidates == 1 then
+				defaultTableValue(data, "source", candidates[1])
+			else
+				mandatoryTableArgument(data, "source", "string")
+			end
 		end
 	end
 

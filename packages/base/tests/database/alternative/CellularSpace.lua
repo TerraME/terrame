@@ -40,7 +40,8 @@ return{
 			shp = true,
 			virtual = true,
 			tif = true,
-			proj = true
+			proj = true,
+			directory = true
 		}
 
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("post", "source", options))
@@ -203,6 +204,89 @@ return{
 		unitTest:assertError(missingLayerError, "Data has a missing value in attribute 'pointcount'. Use argument 'missing' to set its value.")
 
 		file:deleteIfExists()
+
+		local loadTifDirectory = function()
+			local dir = Directory("csdir")
+
+			if dir:exists() then
+				dir:delete()
+			end
+
+			dir:create()
+
+			local emptyDirectory = function()
+				CellularSpace{
+					directory = dir
+				}
+			end
+
+			unitTest:assertError(emptyDirectory, "Directory 'csdir' is empty.")
+
+			local proj = gis.Project{
+				file = "cellspace_alt.tview",
+				clean = true,
+				author = "Avancini"
+			}
+
+			local layer0 =  gis.Layer{
+				project = proj,
+				name = "Shp",
+				epsg = 5880,
+				file = filePath("cabecadeboi.shp", "gis")
+			}
+
+			local toData0 = {file = File(tostring(dir).."/cabecadeboi.shp"), overwrite = true}
+			layer0:export(toData0)
+
+			local noTifFound = function()
+				CellularSpace{
+					directory = dir
+				}
+			end
+
+			unitTest:assertError(noTifFound, "There is no tif file in directory 'csdir/'.")
+
+			local layer1 = gis.Layer{
+				project = proj,
+				name = "Tif1",
+				epsg = 5880,
+				file = filePath("cabecadeboi-elevation.tif", "gis")
+			}
+
+			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true}
+			layer1:export(toData1)
+
+			local oneTifFound = function()
+				CellularSpace{
+					directory = dir
+				}
+			end
+
+			unitTest:assertError(oneTifFound, "There is just one tif file on directory 'csdir/'. Please, see argument 'file' or 'layer' in documentation.")
+
+			local layer2 = gis.Layer{
+				project = proj,
+				name = "Tif2",
+				epsg = 5880,
+				file = filePath("emas-accumulation.tif", "gis")
+			}
+
+			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true}
+			layer2:export(toData2)
+
+			local difSizeError = function()
+				CellularSpace{
+					directory = dir
+				}
+			end
+
+			unitTest:assertError(difSizeError, "Tif file 'elevation2.tif' has a different number of columns or rows.")
+
+			dir:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(loadTifDirectory)
 	end,
 	loadNeighborhood = function(unitTest)
 		local cs = CellularSpace{
@@ -460,6 +544,55 @@ return{
 		-- unitTest:assertFile(projName) -- SKIP #TODO(#1242)
 		projName:deleteIfExists()
 		layer1:delete()
+
+		local saveTifDirectory = function()
+			local dir = Directory("csdir")
+
+			if dir:exists() then
+				dir:delete()
+			end
+
+			dir:create()
+
+			local proj = gis.Project{
+				file = "cellspace_basic.tview",
+				clean = true,
+				author = "Avancini"
+			}
+
+			local layer = gis.Layer{
+				project = proj,
+				name = "Tif",
+				epsg = 5880,
+				file = filePath("cabecadeboi-elevation.tif", "gis")
+			}
+
+			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true}
+			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true}
+			layer:export(toData1)
+			layer:export(toData2)
+
+			local cs = CellularSpace{
+				directory = dir
+			}
+
+			forEachCell(cs, function(cell)
+				cell.elevation3 = cell.elevation1 + cell.elevation2
+			end)
+
+			local outFile = File(tostring(dir).."/elevation3.tif"):deleteIfExists()
+
+			local saveMoreAttrError = function()
+				cs:save(outFile, {"elevation3", "elevation1"})
+			end
+
+			unitTest:assertError(saveMoreAttrError, "It is only possible to save one attribute at a time in tif directory CellularSpace.")
+
+			dir:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(saveTifDirectory)
 	end
 }
 

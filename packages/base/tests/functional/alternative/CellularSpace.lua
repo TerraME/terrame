@@ -722,7 +722,7 @@ return{
 			cs:save("Layer")
 		end
 
-		unitTest:assertError(saveNoProjectLoaded, "CellularSpace:save() only works properly when the CellularSpace is created from a project.")
+		unitTest:assertError(saveNoProjectLoaded, "CellularSpace should be created from a project or directory to allow save it.")
 	end,
 	split = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

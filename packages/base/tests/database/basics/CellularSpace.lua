@@ -261,6 +261,47 @@ return{
 		unitTest:assertType(cs:sample().maxSugar, "number")
 		unitTest:assertType(cs:sample().maxSugar, "number")
 		unitTest:assertType(cs:sample().maxSugar, "number")
+
+		local loadTifDirectory = function()
+			local dir = Directory("csdir")
+
+			if dir:exists() then
+				dir:delete()
+			end
+
+			dir:create()
+
+			local proj = gis.Project{
+				file = "cellspace_basic.tview",
+				clean = true,
+				author = "Avancini"
+			}
+
+			local layer = gis.Layer{
+				project = proj,
+				name = "Tif",
+				epsg = 5880,
+				file = filePath("cabecadeboi-elevation.tif", "gis")
+			}
+
+			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true}
+			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true}
+			layer:export(toData1)
+			layer:export(toData2)
+
+			local cs = CellularSpace{
+				directory = dir
+			}
+
+			forEachCell(cs, function(cell)
+				unitTest:assertEquals(cell.elevation1, cell.elevation2)
+			end)
+
+			dir:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(loadTifDirectory)
 	end,
 	loadNeighborhood = function(unitTest)
 		local cs1 = CellularSpace{
@@ -811,8 +852,6 @@ return{
 			layer3:delete()
 		end
 
-		saveNewDataAndLayerPostgis()
-
 		local saveDoublePrecision = function()
 			local proj = createProject()
 			local layer = createPostgisLayer(proj, "SampaPg")
@@ -838,8 +877,6 @@ return{
 			proj.file:delete()
 			layer:delete()
 		end
-
-		saveDoublePrecision()
 
 		local saveWithGeom = function()
 			local proj = createProject()
@@ -869,8 +906,6 @@ return{
 			layer:delete()
 			cs1.layer:delete()
 		end
-
-		saveWithGeom()
 
 		local saveWithMissing = function()
 			local proj = createProject()
@@ -912,7 +947,68 @@ return{
 			layerCd:delete()
 		end
 
-		saveWithMissing()
+		local saveTifDirectory = function()
+			local dir = Directory("csdir")
+
+			if dir:exists() then
+				dir:delete()
+			end
+
+			dir:create()
+
+			local proj = createProject()
+
+			local layer = gis.Layer{
+				project = proj,
+				name = "Tif",
+				epsg = 5880,
+				file = filePath("cabecadeboi-elevation.tif", "gis")
+			}
+
+			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true}
+			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true}
+			layer:export(toData1)
+			layer:export(toData2)
+
+			local cs = CellularSpace{
+				directory = dir
+			}
+
+			forEachCell(cs, function(cell)
+				cell.elevation3 = cell.elevation1 + cell.elevation2
+				cell.elevation4 = cell.elevation1 + 4
+			end)
+
+			local outFile1 = File(tostring(dir).."/elevation3.tif"):deleteIfExists()
+			local outFile2 = File(tostring(dir).."/elevation4.tif"):deleteIfExists()
+
+			cs:save(outFile1, "elevation3")
+			cs:save(outFile2, "elevation4")
+
+			local newCs1 = CellularSpace{file = outFile1}
+			local newCs2 = CellularSpace{file = outFile2}
+
+			unitTest:assertEquals(#newCs1, #cs)
+			unitTest:assertEquals(#newCs1, #newCs2)
+			unitTest:assertEquals(#newCs1, 10000)
+
+			for i = 0, #newCs1 - 1 do
+				local s = tostring(i)
+				unitTest:assertEquals(cs:get(s).elevation1, cs:get(s).elevation2)
+				unitTest:assertEquals(cs:get(s).elevation3, cs:get(s).elevation1 + cs:get(s).elevation2)
+				unitTest:assertEquals(newCs1:get(s).b0, (cs:get(s).elevation1 + cs:get(s).elevation2) % 256) --< 256 means 8 bits tif
+				unitTest:assertEquals(newCs2:get(s).b0, (cs:get(s).elevation1 + 4) % 256)
+			end
+
+			dir:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(saveNewDataAndLayerPostgis)
+		unitTest:assert(saveDoublePrecision)
+		unitTest:assert(saveWithGeom)
+		unitTest:assert(saveWithMissing)
+		unitTest:assert(saveTifDirectory)
 	end,
 	synchronize = function(unitTest)
 		local gis = getPackage("gis")
