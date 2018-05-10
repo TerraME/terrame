@@ -698,7 +698,7 @@ local function loadTifDirectory(self)
 				if info.bands > 1 then
 					for i = 0, getn(dset) - 1 do
 						for b = 0, info.bands - 1 do
-							resultSet[i][attrName.."b"..b] = dset[i]["b"..b]
+							resultSet[i][attrName.."b"..b] = dset[i]["b"..b] -- SKIP -- TODO: there is no data to test
 						end
 					end
 				else
@@ -712,9 +712,9 @@ local function loadTifDirectory(self)
 					for i = 0, getn(dset) - 1 do
 						for b = 0, info.bands - 1 do
 							resultSet[i] = {}
-							resultSet[i].col = dset[i].col
-							resultSet[i].row = dset[i].row
-							resultSet[i][attrName.."b"..b] = dset[i]["b"..b]
+							resultSet[i].col = dset[i].col  -- SKIP -- TODO: there is no data to test
+							resultSet[i].row = dset[i].row  -- SKIP
+							resultSet[i][attrName.."b"..b] = dset[i]["b"..b]  -- SKIP
 						end
 					end
 				else
@@ -1679,10 +1679,6 @@ function CellularSpace(data)
 			data.source = "directory"
 		else
 			customWarning("Argument 'source' is unnecessary.")
-			-- mandatoryTableArgument(data, "source", "string")
-			-- if data.source ~= "directory" then
-				-- customError("Argument 'source' must be 'directory'.")
-			-- end
 		end
 	else
 		forEachOrderedElement(CellularSpaceDrivers, function(idx, value)

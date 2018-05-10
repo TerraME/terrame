@@ -309,9 +309,16 @@ return{
 			layer:export(toData1)
 			layer:export(toData2)
 
-			local cs = CellularSpace{
-				directory = dir
-			}
+			local cs
+
+			local sourceUnnecessary = function()
+				cs = CellularSpace{
+					directory = dir,
+					source = "directory"
+				}
+			end
+
+			unitTest:assertWarning(sourceUnnecessary, "Argument 'source' is unnecessary.")
 
 			forEachCell(cs, function(cell)
 				unitTest:assertEquals(cell.elevation1, cell.elevation2)

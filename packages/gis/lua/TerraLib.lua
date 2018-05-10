@@ -3264,14 +3264,14 @@ TerraLib_ = {
 		return info
 	end,
 	--- Save a raster on file.
-	-- @rasterTable A table built from raster dataset.
-	-- @rasterFileRef The raster file that was used for build the raster table.
-	-- @outFile A file to save the raster.
-	-- @attribute A attribute from the table that its values will be saved on raster band 0.
-	-- @arg file A raster file.
+	-- @arg rasterTable A table built from raster dataset.
+	-- @arg rasterFileRef The raster file that was used for build the raster table.
+	-- @arg outFile A file to save the raster.
+	-- @arg attribute A attribute from the table that its values will be saved on raster band 0.
 	-- @usage -- DONTRUN
 	-- tifFile = filePath("prodes_polyc_10k.tif", "gis")
-	-- tifInfo = info = gis.TerraLib().getRasterInfo(file)
+	-- local outFile = File("newraster.tif"):deleteIfExists()
+	-- TerraLib().saveRasterFromTable(cs.cells, tifFile, outFile, "b0")
 	saveRasterFromTable = function(rasterTable, rasterFileRef, outFile, attribute)
 		do
 			local dset = getDataSetFromFile(rasterFileRef)
