@@ -1776,7 +1776,7 @@ return {
 		local sampaLayerName = "SampaShp"
 		local createProjectWithSampaLayer = function()
 			local proj = {
-				file = "saveDataAs_shp_basic.tview",
+				file = "savedataas_shp_basic.tview",
 				title = "TerraLib Tests",
 				author = "Avancini Rodrigo"
 			}

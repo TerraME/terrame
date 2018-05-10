@@ -176,34 +176,39 @@ return{
 		unitTest:assertError(missingNotNumber, incompatibleTypeMsg("missing", "number", "null"))
 
 		local gis = getPackage("gis")
-		local file = File("cellspace_alt.tview")
-		local author = "Avancini"
-		local title = "Cellular Space"
 
-		local proj = gis.Project{
-			file = tostring(file),
-			clean = true,
-			author = author,
-			title = title
-		}
+		local usingProject = function()
+			local file = File("cellspace_alt.tview")
+			local author = "Avancini"
+			local title = "Cellular Space"
 
-		local missLayerName = "CellsAmaz"
-		gis.Layer{
-			project = proj,
-			name = missLayerName,
-			file = filePath("test/CellsAmaz.shp")
-		}
-
-		local missingLayerError = function()
-			CellularSpace{
-				project = proj,
-				layer = missLayerName
+			local proj = gis.Project{
+				file = tostring(file),
+				clean = true,
+				author = author,
+				title = title
 			}
+
+			local missLayerName = "CellsAmaz"
+			gis.Layer{
+				project = proj,
+				name = missLayerName,
+				file = filePath("test/CellsAmaz.shp")
+			}
+
+			local missingLayerError = function()
+				CellularSpace{
+					project = proj,
+					layer = missLayerName
+				}
+			end
+
+			unitTest:assertError(missingLayerError, "Data has a missing value in attribute 'pointcount'. Use argument 'missing' to set its value.")
+
+			file:deleteIfExists()
 		end
 
-		unitTest:assertError(missingLayerError, "Data has a missing value in attribute 'pointcount'. Use argument 'missing' to set its value.")
-
-		file:deleteIfExists()
+		unitTest:assert(usingProject)
 
 		local loadTifDirectory = function()
 			local dir = Directory("csdir")
@@ -468,82 +473,87 @@ return{
 	save = function(unitTest)
 		local gis = getPackage("gis")
 
-		local projName = File("cellspace_save_alt.tview")
+		local usingProject = function()
+			local projName = File("cellspace_save_alt.tview")
 
-		local author = "Avancini"
-		local title = "Cellular Space"
+			local author = "Avancini"
+			local title = "Cellular Space"
 
-		projName:deleteIfExists()
+			projName:deleteIfExists()
 
-		local proj = gis.Project{
-			file = projName:name(true),
-			clean = true,
-			author = author,
-			title = title
-		}
+			local proj = gis.Project{
+				file = projName:name(true),
+				clean = true,
+				author = author,
+				title = title
+			}
 
-		local layerName1 = "Sampa"
-		gis.Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/sampa.shp", "gis")
-		}
+			local layerName1 = "Sampa"
+			gis.Layer{
+				project = proj,
+				name = layerName1,
+				file = filePath("test/sampa.shp", "gis")
+			}
 
-		local clName1 = "Sampa_Cells_DB"
-		local tName1 = "sampa_cells"
-		local password = getConfig().password
-		local database = "postgis_22_sample"
+			local clName1 = "Sampa_Cells_DB"
+			local tName1 = "sampa_cells"
+			local password = getConfig().password
+			local database = "postgis_22_sample"
 
-		local layer1 = gis.Layer{
-			project = proj,
-			source = "postgis",
-			input = layerName1,
-			clean = true,
-			name = clName1,
-			resolution = 0.3,
-			password = password,
-			database = database,
-			table = tName1
-		}
+			local layer1 = gis.Layer{
+				project = proj,
+				source = "postgis",
+				input = layerName1,
+				clean = true,
+				name = clName1,
+				resolution = 0.3,
+				password = password,
+				database = database,
+				table = tName1
+			}
 
-		local cs = CellularSpace{
-			project = proj,
-			layer = clName1
-		}
+			local cs = CellularSpace{
+				project = proj,
+				layer = clName1
+			}
 
-		forEachCell(cs, function(cell)
-			cell.t0 = 1000
-		end)
+			forEachCell(cs, function(cell)
+				cell.t0 = 1000
+			end)
 
-		local cellSpaceLayerName = clName1.."_CellSpace"
+			local cellSpaceLayerName = clName1.."_CellSpace"
 
-		local attrNotExists = function()
-			cs:save(cellSpaceLayerName, "t1")
+			local attrNotExists = function()
+				cs:save(cellSpaceLayerName, "t1")
+			end
+
+			unitTest:assertError(attrNotExists, "Attribute 't1' does not exist in the CellularSpace.")
+
+			local outLayerNotString = function()
+				cs:save(123, "t0")
+			end
+
+			unitTest:assertError(outLayerNotString, incompatibleTypeMsg("#1", "string", 123))
+
+			local attrNotStringOrTable = function()
+				cs:save(cellSpaceLayerName, 123)
+			end
+
+			unitTest:assertError(attrNotStringOrTable, "Incompatible types. Argument '#2' expected table or string.")
+
+			local outLayerMandatory = function()
+				cs:save()
+			end
+
+			unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
+
+			-- unitTest:assertFile(projName) -- SKIP #TODO(#1242)
+
+			projName:deleteIfExists()
+			layer1:delete()
 		end
 
-		unitTest:assertError(attrNotExists, "Attribute 't1' does not exist in the CellularSpace.")
-
-		local outLayerNotString = function()
-			cs:save(123, "t0")
-		end
-
-		unitTest:assertError(outLayerNotString, incompatibleTypeMsg("#1", "string", 123))
-
-		local attrNotStringOrTable = function()
-			cs:save(cellSpaceLayerName, 123)
-		end
-
-		unitTest:assertError(attrNotStringOrTable, "Incompatible types. Argument '#2' expected table or string.")
-
-		local outLayerMandatory = function()
-			cs:save()
-		end
-
-		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
-
-		-- unitTest:assertFile(projName) -- SKIP #TODO(#1242)
-		projName:deleteIfExists()
-		layer1:delete()
+		unitTest:assert(usingProject)
 
 		local saveTifDirectory = function()
 			local dir = Directory("csdir")
