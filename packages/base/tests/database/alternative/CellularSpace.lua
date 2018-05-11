@@ -267,7 +267,7 @@ return{
 				}
 			end
 
-			unitTest:assertError(oneTifFound, "There is just one tif file on directory 'csdir/'. Please, see argument 'file' or 'layer' in documentation.")
+			unitTest:assertError(oneTifFound, "There is just one tif file on directory 'csdir/'. Please use argument file or layer instead of directory.")
 
 			local layer2 = gis.Layer{
 				project = proj,
@@ -285,7 +285,7 @@ return{
 				}
 			end
 
-			unitTest:assertError(difSizeError, "Tif file 'elevation2.tif' has a different number of columns or rows.")
+			unitTest:assertError(difSizeError, "Tif files 'elevation1.tif' and 'elevation2.tif' have different sizes: 100x100 and 2323x2853.")
 
 			dir:delete()
 			proj.file:delete()
@@ -596,7 +596,7 @@ return{
 				cs:save(outFile, {"elevation3", "elevation1"})
 			end
 
-			unitTest:assertError(saveMoreAttrError, "It is only possible to save one attribute at a time in tif directory CellularSpace.")
+			unitTest:assertError(saveMoreAttrError, "It is only possible to save one attribute in each call to save() when working with tif files.")
 
 			dir:delete()
 			proj.file:delete()

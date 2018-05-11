@@ -687,7 +687,9 @@ local function loadTifDirectory(self)
 			end
 
 			if (numberOfColumns ~= info.columns) or (numberOfRows ~= info.rows) then
-				customError("Tif file '"..file:name().."' has a different number of columns or rows.")
+				customError("Tif files '"..rasterFileRef:name().."' and '"..file:name().."' have different sizes: "
+							..math.floor(numberOfColumns).."x"..math.floor(numberOfRows).." and "
+							..math.floor(info.columns).."x"..math.floor(info.rows)..".")
 			end
 
 			local dset = gis.TerraLib().getDataSet{file = file, missing = self.missing}
@@ -734,7 +736,7 @@ local function loadTifDirectory(self)
 	if not resultSet then
 		customError("There is no tif file in directory '"..self.directory:name().."/'.")
 	elseif tifCount == 1 then
-		customError("There is just one tif file on directory '"..self.directory:name().."/'. Please, see argument 'file' or 'layer' in documentation.")
+		customError("There is just one tif file on directory '"..self.directory:name().."/'. Please use argument file or layer instead of directory.")
 	end
 
 	setCellsByTerraLibDataSet(self, resultSet)
@@ -1386,10 +1388,10 @@ CellularSpace_ = {
 				end
 				gis.TerraLib().saveRasterFromTable(self.cells, rasterFileRef, outFile, attrName)
 			else
-				customError("It is only possible to save one attribute at a time in tif directory CellularSpace.")
+				customError("It is only possible to save one attribute in each call to save() when working with tif files.")
 			end
 		else
-			customError("CellularSpace should be created from a project or directory to allow save it.")
+			customError("CellularSpace should be created from a project or directory to allow saving it.")
 		end
 	end,
 	--- Split the CellularSpace into a table of Trajectories according to a classification
