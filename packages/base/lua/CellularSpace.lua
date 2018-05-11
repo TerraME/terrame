@@ -1617,7 +1617,7 @@ metaTableCellularSpace_ = {
 -- @arg data.file A string with a file name (if it is stored in the current directory), or the complete
 -- path to a given file.
 -- @arg data.directory A directory. It opens a set of tif files using the file names as attribute names.
--- The directory must have at least two tif files and the they must have the same number of columns and rows.
+-- The directory must contains at least two tif files and they must have the same number of columns and rows.
 -- @arg data.source A string with the name of the data source. It tries to infer the data source
 -- according to the arguments passed to the function.
 -- @tabular source
