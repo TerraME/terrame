@@ -24,243 +24,317 @@
 
 return{
 	CellularSpace = function(unitTest)
-		local cs = CellularSpace{
-			file = filePath("test/cabecadeboi900.shp"),
-			xy = {"Col", "Lin"},
-			as = {
-				height = "height_"
-			},
-			geometry = false
-		}
+		local usingShape = function()
+			local cs = CellularSpace{
+				file = filePath("test/cabecadeboi900.shp"),
+				xy = {"Col", "Lin"},
+				as = {
+					height = "height_"
+				},
+				geometry = false
+			}
 
-		unitTest:assertEquals("cabecadeboi900.shp", cs.layer)
-		unitTest:assertEquals(121, #cs.cells)
+			unitTest:assertEquals("cabecadeboi900.shp", cs.layer)
+			unitTest:assertEquals(121, #cs.cells)
 
-		for _ = 1, 5 do
-			local cell = cs:sample()
-			unitTest:assertType(cell.object_id0, "string")
-			unitTest:assertType(cell.x, "number")
-			unitTest:assertType(cell.y, "number")
-			unitTest:assertNotNil(cell.height)
-			unitTest:assertNil(cell.height_)
-			unitTest:assertNotNil(cell.soilWater)
-			unitTest:assertNil(cell.geom)
-		end
-
-		local cell = cs:get(0, 0)
-		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(0, cell.y)
-
-		cell = cs.cells[1]
-		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(0, cell.y)
-
-		cell = cs:get(0, 1)
-		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(1, cell.y)
-
-		cell = cs.cells[2]
-		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(1, cell.y)
-
-		cell = cs:get(0, 9)
-		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(9, cell.y)
-
-		cell = cs.cells[100]
-		unitTest:assertEquals(9, cell.x)
-		unitTest:assertEquals(0, cell.y)
-
-		cell = cs:get(0, 10)
-		unitTest:assertEquals(0, cell.x)
-		unitTest:assertEquals(10, cell.y)
-
-		cell = cs.cells[101]
-		unitTest:assertEquals(9, cell.x)
-		unitTest:assertEquals(1, cell.y)
-
-		cs = CellularSpace{
-			file = filePath("test/cabecadeboi900.shp"),
-			xy = function(mcell)
-				return mcell.Col, mcell.Lin
+			for _ = 1, 5 do
+				local cell = cs:sample()
+				unitTest:assertType(cell.object_id0, "string")
+				unitTest:assertType(cell.x, "number")
+				unitTest:assertType(cell.y, "number")
+				unitTest:assertNotNil(cell.height)
+				unitTest:assertNil(cell.height_)
+				unitTest:assertNotNil(cell.soilWater)
+				unitTest:assertNil(cell.geom)
 			end
-		}
 
-		unitTest:assertEquals("cabecadeboi900.shp", cs.layer)
-		unitTest:assertEquals(121, #cs.cells)
+			local cell = cs:get(0, 0)
+			unitTest:assertEquals(0, cell.x)
+			unitTest:assertEquals(0, cell.y)
 
-		for _ = 1, 5 do
-			local mcell = cs:sample()
-			unitTest:assertEquals(mcell.x, mcell.Col)
-			unitTest:assertEquals(mcell.y, mcell.Lin)
-		end
+			cell = cs.cells[1]
+			unitTest:assertEquals(0, cell.x)
+			unitTest:assertEquals(0, cell.y)
 
-		-- shp file
-		cs = CellularSpace{file = filePath("brazilstates.shp", "base")}
+			cell = cs:get(0, 1)
+			unitTest:assertEquals(0, cell.x)
+			unitTest:assertEquals(1, cell.y)
 
-		unitTest:assertNotNil(cs.cells[1])
-		unitTest:assertEquals(#cs.cells, 27)
-		unitTest:assertType(cs.cells[1], "Cell")
+			cell = cs.cells[2]
+			unitTest:assertEquals(0, cell.x)
+			unitTest:assertEquals(1, cell.y)
 
-		unitTest:assertEquals(cs.yMin, 0)
-		unitTest:assertEquals(cs.yMax, 0)
+			cell = cs:get(0, 9)
+			unitTest:assertEquals(0, cell.x)
+			unitTest:assertEquals(9, cell.y)
 
-		unitTest:assertEquals(cs.xMin, 0)
-		unitTest:assertEquals(cs.yMax, 0)
+			cell = cs.cells[100]
+			unitTest:assertEquals(9, cell.x)
+			unitTest:assertEquals(0, cell.y)
 
-		local valuesDefault = {
-			2300000,  12600000, 2700000,  6700000,  5200000,
-			16500000,  1900000,  5400000, 7400000,  3300000,
-			8700000,  13300000, 2600000, 1300000, 300000,
-			9600000, 4800000, 1600000, 33700000,  1000000,
-			2700000, 2800000, 300000, 500000,  1700000,
-			4300000,  2300000
-		}
+			cell = cs:get(0, 10)
+			unitTest:assertEquals(0, cell.x)
+			unitTest:assertEquals(10, cell.y)
 
-		for i = 1, 27 do
-			unitTest:assertEquals(valuesDefault[i], cs.cells[i].POPUL)
-		end
+			cell = cs.cells[101]
+			unitTest:assertEquals(9, cell.x)
+			unitTest:assertEquals(1, cell.y)
 
-		-- MISSING TEST
-		local missing = -1
-		cs = CellularSpace{
-			file = filePath("test/CellsAmaz.shp"),
-			missing = missing
-		}
+			cs = CellularSpace{
+				file = filePath("test/cabecadeboi900.shp"),
+				xy = function(mcell)
+					return mcell.Col, mcell.Lin
+				end
+			}
 
-		local missCount = 0
-		forEachCell(cs, function(c)
-			if c.pointcount == -1 then
-				missCount = missCount + 1
+			unitTest:assertEquals("cabecadeboi900.shp", cs.layer)
+			unitTest:assertEquals(121, #cs.cells)
+
+			for _ = 1, 5 do
+				local mcell = cs:sample()
+				unitTest:assertEquals(mcell.x, mcell.Col)
+				unitTest:assertEquals(mcell.y, mcell.Lin)
 			end
-		end)
 
-		unitTest:assertEquals(missCount, 156)
+			cs = CellularSpace{file = filePath("brazilstates.shp", "base")}
 
-		-- project
+			unitTest:assertNotNil(cs.cells[1])
+			unitTest:assertEquals(#cs.cells, 27)
+			unitTest:assertType(cs.cells[1], "Cell")
+
+			unitTest:assertEquals(cs.yMin, 0)
+			unitTest:assertEquals(cs.yMax, 0)
+
+			unitTest:assertEquals(cs.xMin, 0)
+			unitTest:assertEquals(cs.yMax, 0)
+
+			local valuesDefault = {
+				2300000,  12600000, 2700000,  6700000,  5200000,
+				16500000,  1900000,  5400000, 7400000,  3300000,
+				8700000,  13300000, 2600000, 1300000, 300000,
+				9600000, 4800000, 1600000, 33700000,  1000000,
+				2700000, 2800000, 300000, 500000,  1700000,
+				4300000,  2300000
+			}
+
+			for i = 1, 27 do
+				unitTest:assertEquals(valuesDefault[i], cs.cells[i].POPUL)
+			end
+		end
+
+		local missingWithShape = function()
+			local missing = -1
+			local cs = CellularSpace{
+				file = filePath("test/CellsAmaz.shp"),
+				missing = missing
+			}
+
+			local missCount = 0
+			forEachCell(cs, function(c)
+				if c.pointcount == -1 then
+					missCount = missCount + 1
+				end
+			end)
+
+			unitTest:assertEquals(missCount, 156)
+		end
+
 		local gis = getPackage("gis")
-		local projName = File("cellspace_basic.tview")
-		local author = "Avancini"
-		local title = "Cellular Space"
 
-		if projName:exists() then projName:delete() end
+		local usingProject = function()
+			local projName = File("cellspace_basic.tview")
+			local author = "Avancini"
+			local title = "Cellular Space"
 
-		local proj = gis.Project{
-			file = projName:name(true),
-			clean = true,
-			author = author,
-			title = title
-		}
+			if projName:exists() then projName:delete() end
 
-		local layerName1 = "Sampa"
+			local proj = gis.Project{
+				file = projName:name(true),
+				clean = true,
+				author = author,
+				title = title
+			}
 
-		gis.Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("test/sampa.shp", "gis")
-		}
+			local layerName1 = "Sampa"
 
-		local clName1 = "Sampa_Cells_DB"
-		local tName1 = "sampa_cells"
-		local password = getConfig().password
-		local database = "postgis_22_sample"
+			gis.Layer{
+				project = proj,
+				name = layerName1,
+				file = filePath("test/sampa.shp", "gis")
+			}
 
-		local layer1 = gis.Layer{
-			project = proj,
-			source = "postgis",
-			clean = true,
-			input = layerName1,
-			name = clName1,
-			resolution = 0.3,
-			password = password,
-			database = database,
-			table = tName1
-		}
+			local clName1 = "Sampa_Cells_DB"
+			local tName1 = "sampa_cells"
+			local password = getConfig().password
+			local database = "postgis_22_sample"
 
-		cs = CellularSpace{
-			project = projName:name(true),
-			layer = clName1
-		}
+			local layer1 = gis.Layer{
+				project = proj,
+				source = "postgis",
+				clean = true,
+				input = layerName1,
+				name = clName1,
+				resolution = 0.3,
+				password = password,
+				database = database,
+				table = tName1
+			}
 
-		forEachCell(cs, function(c)
-			unitTest:assertNotNil(c.geom)
-			unitTest:assertNil(c.OGR_GEOMETRY)
-		end)
+			local cs = CellularSpace{
+				project = projName:name(true),
+				layer = clName1
+			}
 
-		cs = CellularSpace{
-			project = "cellspace_basic",
-			layer = clName1,
-			geometry = false
-		}
+			forEachCell(cs, function(c)
+				unitTest:assertNotNil(c.geom)
+				unitTest:assertNil(c.OGR_GEOMETRY)
+			end)
 
-		forEachCell(cs, function(c)
-			unitTest:assertNil(c.geom)
-			unitTest:assertNil(c.OGR_GEOMETRY)
-		end)
+			cs = CellularSpace{
+				project = "cellspace_basic",
+				layer = clName1,
+				geometry = false
+			}
 
-		unitTest:assertEquals(303, #cs.cells)
-		-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
+			forEachCell(cs, function(c)
+				unitTest:assertNil(c.geom)
+				unitTest:assertNil(c.OGR_GEOMETRY)
+			end)
 
-		-- MISSING TEST
-		local missLayerName = "CellsAmaz"
-		gis.Layer{
-			project = proj,
-			name = missLayerName,
-			file = filePath("test/CellsAmaz.shp")
-		}
+			unitTest:assertEquals(303, #cs.cells)
+			-- unitTest:assertFile(projName:name(true)) -- SKIP #TODO(#1242)
 
-		cs = CellularSpace{
-			project = proj,
-			layer = missLayerName,
-			missing = missing
-		}
+			projName:delete()
+			layer1:delete()
+		end
 
-		missCount = 0
-		forEachCell(cs, function(c)
-			if c.pointcount == -1 then
-				missCount = missCount + 1
+		local missingWithLayer = function()
+			local projFile = File("cellspace_basic.tview"):deleteIfExists()
+			local author = "Avancini"
+			local title = "Cellular Space"
+
+			local proj = gis.Project{
+				file = projFile,
+				clean = true,
+				author = author,
+				title = title
+			}
+
+			local missLayerName = "CellsAmaz"
+			gis.Layer{
+				project = proj,
+				name = missLayerName,
+				file = filePath("test/CellsAmaz.shp")
+			}
+
+			local missing = -1
+			local cs = CellularSpace{
+				project = proj,
+				layer = missLayerName,
+				missing = missing
+			}
+
+			local missCount = 0
+			forEachCell(cs, function(c)
+				if c.pointcount == -1 then
+					missCount = missCount + 1
+				end
+			end)
+
+			unitTest:assertEquals(missCount, 156)
+
+			projFile:delete()
+		end
+
+		local usingPgm = function()
+			local cs = CellularSpace{
+				file = filePath("simple.pgm", "base")
+			}
+			unitTest:assertEquals(#cs, 100)
+
+			local pgmFile = filePath("test/error/pgm-invalid-max.pgm", "base")
+			local pgmWarn = function()
+				cs = CellularSpace{
+					file = pgmFile
+				}
 			end
-		end)
+			unitTest:assertWarning(pgmWarn, "File '"..pgmFile.."' does not have a maximum value declared.")
+			unitTest:assertEquals(#cs, 100)
 
-		unitTest:assertEquals(missCount, 156)
-
-		if projName:exists() then projName:delete() end
-
-		layer1:delete()
-
-		-- pgm file
-		cs = CellularSpace{
-			file = filePath("simple.pgm", "base")
-		}
-		unitTest:assertEquals(#cs, 100)
-
-		local pgmFile = filePath("test/error/pgm-invalid-max.pgm", "base")
-		local pgmWarn = function()
-			cs = CellularSpace{
-				file = pgmFile
-			}
+			pgmFile = filePath("test/error/pgm-invalid-size.pgm", "base")
+			local pgmWarn2 = function()
+				cs = CellularSpace{
+					file = pgmFile
+				}
+			end
+			unitTest:assertWarning(pgmWarn2, "Data from file '"..pgmFile.."' does not match declared size: expected '(2, 2)', got '(10, 10)'.")
+			unitTest:assertEquals(#cs, 100)
 		end
-		unitTest:assertWarning(pgmWarn, "File '"..pgmFile.."' does not have a maximum value declared.")
-		unitTest:assertEquals(#cs, 100)
 
-		pgmFile = filePath("test/error/pgm-invalid-size.pgm", "base")
-		local pgmWarn2 = function()
-			cs = CellularSpace{
-				file = pgmFile
-			}
+		local usingCsv = function()
+			local cs = CellularSpace{file = filePath("test/simple-cs.csv", "base"), sep = ";"}
+
+			unitTest:assertType(cs, "CellularSpace")
+			unitTest:assertEquals(400, #cs)
+
+			unitTest:assertType(cs:sample().maxSugar, "number")
+			unitTest:assertType(cs:sample().maxSugar, "number")
+			unitTest:assertType(cs:sample().maxSugar, "number")
 		end
-		unitTest:assertWarning(pgmWarn2, "Data from file '"..pgmFile.."' does not match declared size: expected '(2, 2)', got '(10, 10)'.")
-		unitTest:assertEquals(#cs, 100)
 
-		-- csv file
-		cs = CellularSpace{file = filePath("test/simple-cs.csv", "base"), sep = ";"}
+		local loadTifDirectory = function()
+			local dir = Directory("csdir")
 
-		unitTest:assertType(cs, "CellularSpace")
-		unitTest:assertEquals(400, #cs)
+			if dir:exists() then
+				dir:delete()
+			end
 
-		unitTest:assertType(cs:sample().maxSugar, "number")
-		unitTest:assertType(cs:sample().maxSugar, "number")
-		unitTest:assertType(cs:sample().maxSugar, "number")
+			dir:create()
+
+			local proj = gis.Project{
+				file = "cellspace_basic.tview",
+				clean = true,
+				author = "Avancini"
+			}
+
+			local layer = gis.Layer{
+				project = proj,
+				name = "Tif",
+				epsg = 5880,
+				file = filePath("cabecadeboi-elevation.tif", "gis")
+			}
+
+			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true}
+			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true}
+			layer:export(toData1)
+			layer:export(toData2)
+
+			local cs
+
+			local sourceUnnecessary = function()
+				cs = CellularSpace{
+					directory = dir,
+					source = "directory"
+				}
+			end
+
+			unitTest:assertWarning(sourceUnnecessary, "Argument 'source' is unnecessary.")
+
+			forEachCell(cs, function(cell)
+				unitTest:assertEquals(cell.elevation1, cell.elevation2)
+			end)
+
+			dir:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(usingShape)
+		unitTest:assert(missingWithShape)
+		unitTest:assert(usingProject)
+		unitTest:assert(missingWithLayer)
+		unitTest:assert(usingPgm)
+		unitTest:assert(usingCsv)
+		unitTest:assert(loadTifDirectory)
 	end,
 	loadNeighborhood = function(unitTest)
 		local cs1 = CellularSpace{
@@ -811,8 +885,6 @@ return{
 			layer3:delete()
 		end
 
-		saveNewDataAndLayerPostgis()
-
 		local saveDoublePrecision = function()
 			local proj = createProject()
 			local layer = createPostgisLayer(proj, "SampaPg")
@@ -838,8 +910,6 @@ return{
 			proj.file:delete()
 			layer:delete()
 		end
-
-		saveDoublePrecision()
 
 		local saveWithGeom = function()
 			local proj = createProject()
@@ -869,8 +939,6 @@ return{
 			layer:delete()
 			cs1.layer:delete()
 		end
-
-		saveWithGeom()
 
 		local saveWithMissing = function()
 			local proj = createProject()
@@ -912,7 +980,68 @@ return{
 			layerCd:delete()
 		end
 
-		saveWithMissing()
+		local saveTifDirectory = function()
+			local dir = Directory("csdir")
+
+			if dir:exists() then
+				dir:delete()
+			end
+
+			dir:create()
+
+			local proj = createProject()
+
+			local layer = gis.Layer{
+				project = proj,
+				name = "Tif",
+				epsg = 5880,
+				file = filePath("cabecadeboi-elevation.tif", "gis")
+			}
+
+			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true}
+			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true}
+			layer:export(toData1)
+			layer:export(toData2)
+
+			local cs = CellularSpace{
+				directory = dir
+			}
+
+			forEachCell(cs, function(cell)
+				cell.elevation3 = cell.elevation1 + cell.elevation2
+				cell.elevation4 = cell.elevation1 + 4
+			end)
+
+			local outFile1 = File(tostring(dir).."/elevation3.tif"):deleteIfExists()
+			local outFile2 = File(tostring(dir).."/elevation4.tif"):deleteIfExists()
+
+			cs:save(outFile1, "elevation3")
+			cs:save(outFile2, "elevation4")
+
+			local newCs1 = CellularSpace{file = outFile1}
+			local newCs2 = CellularSpace{file = outFile2}
+
+			unitTest:assertEquals(#newCs1, #cs)
+			unitTest:assertEquals(#newCs1, #newCs2)
+			unitTest:assertEquals(#newCs1, 10000)
+
+			for i = 0, #newCs1 - 1 do
+				local s = tostring(i)
+				unitTest:assertEquals(cs:get(s).elevation1, cs:get(s).elevation2)
+				unitTest:assertEquals(cs:get(s).elevation3, cs:get(s).elevation1 + cs:get(s).elevation2)
+				unitTest:assertEquals(newCs1:get(s).b0, (cs:get(s).elevation1 + cs:get(s).elevation2) % 256) --< 256 means 8 bits tif
+				unitTest:assertEquals(newCs2:get(s).b0, (cs:get(s).elevation1 + 4) % 256)
+			end
+
+			dir:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(saveNewDataAndLayerPostgis)
+		unitTest:assert(saveDoublePrecision)
+		unitTest:assert(saveWithGeom)
+		unitTest:assert(saveWithMissing)
+		unitTest:assert(saveTifDirectory)
 	end,
 	synchronize = function(unitTest)
 		local gis = getPackage("gis")

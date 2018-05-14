@@ -538,7 +538,7 @@ local function dropDataSet(connInfo, dSetName, type)
 	collectgarbage("collect")
 end
 
-local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, type, mask)
+local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, type, mask)
 	local cLId = binding.GetRandomicId()
 	local cellLayerInfo = binding.te.da.DataSourceInfo()
 
@@ -556,7 +556,7 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 
 	if mask then
 		if inputDsType:hasGeom() then
-			cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion,
+			cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
 										inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 			return
 		else
@@ -564,7 +564,7 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, con
 		end
 	end
 
-	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion,
+	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
 								inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 end
 
@@ -1465,6 +1465,8 @@ local function createFromDataInfoToSaveAsByFile(file)
 		info.srid = raster:getSRID()
 	end
 
+	collectgarbage("collect")
+
 	return info
 end
 
@@ -1751,9 +1753,13 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 end
 
 local function saveRasterDataAs(fromData, toData)
-	local fromDSet = fromData.datasource:getDataSet(fromData.dataset)
-	local raster = getRasterByDataSet(fromDSet)
-	binding.CreateRasterOnFile(raster, tostring(toData.file), toData.srid)
+	do
+		local fromDSet = fromData.datasource:getDataSet(fromData.dataset)
+		local raster = getRasterByDataSet(fromDSet)
+		binding.SaveRasterOnFile(raster, tostring(toData.file), toData.srid)
+	end
+
+	collectgarbage("collect")
 end
 
 local function fixSpaceInPath(path)
@@ -3230,6 +3236,57 @@ TerraLib_ = {
 		collectgarbage("collect")
 
 		return size
+	end,
+	--- Return the information of a raster.
+	-- @arg file A raster file.
+	-- @usage -- DONTRUN
+	-- tifFile = filePath("prodes_polyc_10k.tif", "gis")
+	-- tifInfo = info = gis.TerraLib().getRasterInfo(file)
+	getRasterInfo = function(file)
+		local fileExt = string.lower(file:extension())
+		local dsType = SourceTypeMapper[fileExt]
+		local info = {}
+		if dsType == "GDAL" then
+			local dset = getDataSetFromFile(file)
+			local raster = getRasterByDataSet(dset)
+			info.bands = raster:getNumberOfBands()
+			info.columns = raster:getNumberOfColumns()
+			info.rows = raster:getNumberOfRows()
+			info.resolutionX = raster:getResolutionX()
+			info.resolutionY = raster:getResolutionY()
+			info.srid = raster:getSRID()
+		else
+			customError("File '"..file:name().."' is not a raster.")
+		end
+
+		collectgarbage("collect")
+
+		return info
+	end,
+	--- Save a raster on file.
+	-- @arg rasterTable A table built from raster dataset.
+	-- @arg rasterFileRef The raster file that was used for build the raster table.
+	-- @arg outFile A file to save the raster.
+	-- @arg attribute A attribute from the table that its values will be saved on raster band 0.
+	-- @usage -- DONTRUN
+	-- tifFile = filePath("prodes_polyc_10k.tif", "gis")
+	-- local outFile = File("newraster.tif"):deleteIfExists()
+	-- TerraLib().saveRasterFromTable(cs.cells, tifFile, outFile, "b0")
+	saveRasterFromTable = function(rasterTable, rasterFileRef, outFile, attribute)
+		do
+			local dset = getDataSetFromFile(rasterFileRef)
+			local rasterRef = getRasterByDataSet(dset)
+			local rasterHandler = binding.te.rp.RasterHandler()
+			binding.CreateRasterOnFile(rasterRef, tostring(outFile), rasterHandler)
+			local rasterOut = rasterHandler:getRasterPtr()
+
+			for i = 1, #rasterTable do
+				local data = rasterTable[i]
+				rasterOut:getBand(0):setValue(data.col, data.row, data[attribute])
+			end
+		end
+
+		collectgarbage("collect")
 	end
 }
 

@@ -245,6 +245,14 @@ return {
 
 		unitTest:assert(usingProject)
 		unitTest:assert(withoutProject)
+	end,
+	getRasterInfo = function(unitTest)
+		local notRasterError = function()
+			local file = filePath("test/sampa.shp", "gis")
+			TerraLib().getRasterInfo(file)
+		end
+
+		unitTest:assertError(notRasterError, "File 'sampa.shp' is not a raster.")
 	end
 }
 

@@ -435,6 +435,42 @@ return {
 			unitTest:assert(saveTifLayerAsNc) -- SKIP
 		end
 		unitTest:assert(saveTifAsPngAndOverwrite)
+	end,
+	getRasterInfo = function(unitTest)
+		local file = filePath("test/prodes_polyc_10k.tif", "gis")
+		local info = TerraLib().getRasterInfo(file)
+		unitTest:assertEquals(info.bands, 1)
+		unitTest:assertEquals(info.columns, 143)
+		unitTest:assertEquals(info.rows, 140)
+		unitTest:assertEquals(info.resolutionX, 10000)
+		unitTest:assertEquals(info.resolutionY, 10000)
+		unitTest:assert(info.srid > 0)
+	end,
+	saveRasterFromTable = function(unitTest)
+		local fromData = {file = filePath("test/prodes_polyc_10k.tif", "gis")}
+		local toData = {file = File("prodes.tif"), srid = 5880}
+		local overwrite = true
+		TerraLib().saveDataAs(fromData, toData, overwrite)
+
+		local tifSet = TerraLib().getDataSet{file = toData.file}
+		local rasterTable = {}
+		for i = 0, getn(tifSet) - 1 do
+			local data = tifSet[i]
+			data.b0 = data.b0 + 5
+			table.insert(rasterTable, tifSet[i])
+		end
+
+		local outFile = File("newraster.tif"):deleteIfExists()
+		TerraLib().saveRasterFromTable(rasterTable, toData.file, outFile, "b0")
+
+		local outSet = TerraLib().getDataSet{file = outFile}
+
+		for i = 0, getn(outSet) - 1 do
+			unitTest:assertEquals(outSet[i].b0, tifSet[i].b0 % 256) --< 256 means 8 bits tif
+		end
+
+		toData.file:delete()
+		outFile:delete()
 	end
 }
 
