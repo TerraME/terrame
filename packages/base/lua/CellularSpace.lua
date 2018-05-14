@@ -1622,18 +1622,23 @@ metaTableCellularSpace_ = {
 -- according to the arguments passed to the function.
 -- @tabular source
 -- source & Description & Compulsory arguments & Optional arguments\
--- "pgm" & Load from a text file where Cells are stored as numbers with its attribute value.
--- & & sep, attrname, as \
+-- "asc" & Load an asc file. The name of the attribute will be b0. & file & as, ...\
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
 -- requires at least two attributes: x and y. & file & source, sep, as, geometry, ...\
 -- "directory" & Reads a set of tif files within a given directory. The name of the tif files will be
 -- the name of the attributes in the Cells. & directory & as, ...\
+-- "geojson" & Load a GeoJSON file. & file & as, ...\
+-- "nc" & Load a nc file. The name of the attribute will be b0. It only works in Windows. & file & \
+-- "pgm" & Load from a text file where Cells are stored as numbers with its attribute value.
+-- & & sep, attrname, as, ... \
 -- "proj" & Load from a layer within a GIS project. See the documentation of package gis for
 -- more information. & project, layer & source, geometry, as, missing, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and
 -- different extensions: .shp, .shx, and .dbf. The argument file must end with ".shp".
 -- As default, each Cell will have its (x, y) location according
 -- to the attributes (row, col) from the shapefile. & file & source, as, xy, missing, zero, geometry, ... \
+-- "tif" & Load a tif file. The name of the attributes will be b0, b1, etc., according to the number of
+-- bands in the file. & file & as, ... \
 -- "virtual" & Create a rectangular CellularSpace from scratch. Cells will be instantiated with
 -- only two attributes, x and y, starting from (0, 0). & xdim & ydim, as, geometry, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.
