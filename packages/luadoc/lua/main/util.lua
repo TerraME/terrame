@@ -252,7 +252,7 @@ function check_arguments(parsed_args, func, _, header, doc_report)
 		end
 	end
 	for _, arg in ipairs(unknown) do
-		local warning = "Unknown argument '%s' for '%s' used in the HTML table"
+		local warning = "Unknown argument '%s' for '%s' used in the @tabular"
 
 		if header then
 			warning = warning.." for '"..header.."'"
@@ -262,7 +262,7 @@ function check_arguments(parsed_args, func, _, header, doc_report)
 		doc_report.unknown_arg = doc_report.unknown_arg + 1
 	end
 	for _, arg in ipairs(unused) do
-		local warning = "Argument '%s' for '%s' is not used in the HTML table"
+		local warning = "Argument '%s' for '%s' is not used in the @tabular"
 
 		if header then
 			warning = warning.." for '"..header.."'"
