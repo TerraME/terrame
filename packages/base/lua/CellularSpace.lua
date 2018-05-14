@@ -1626,6 +1626,8 @@ metaTableCellularSpace_ = {
 -- & & sep, attrname, as \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
 -- requires at least two attributes: x and y. & file & source, sep, as, geometry, ...\
+-- "directory" & Reads a set of tif files within a given directory. The name of the tif files will be
+-- the name of the attributes in the Cells. & directory & as, ...\
 -- "proj" & Load from a layer within a GIS project. See the documentation of package gis for
 -- more information. & project, layer & source, geometry, as, missing, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and

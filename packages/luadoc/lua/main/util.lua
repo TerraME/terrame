@@ -231,11 +231,11 @@ function parse_tab(tab, func, filename, doc_report)
 		end
 	end
 	if is_strategy_table then
-		check_arguments(arguments, func, filename, doc_report)
+		check_arguments(arguments, func, filename, header[1], doc_report)
 	end	
 end
 
-function check_arguments(parsed_args, func, _, doc_report)
+function check_arguments(parsed_args, func, _, header, doc_report)
 	local unknown = {}
 	local unused = {}
 	
@@ -252,12 +252,22 @@ function check_arguments(parsed_args, func, _, doc_report)
 		end
 	end
 	for _, arg in ipairs(unknown) do
-		local warning = "Unknown argument '%s' in '%s'"
+		local warning = "Unknown argument '%s' for '%s' used in the HTML table"
+
+		if header then
+			warning = warning.." for '"..header.."'"
+		end
+
 		printError(warning:format(arg, func.name))
 		doc_report.unknown_arg = doc_report.unknown_arg + 1
 	end
 	for _, arg in ipairs(unused) do
-		local warning = "Argument '%s' in '%s' is not used in the HTML table"
+		local warning = "Argument '%s' for '%s' is not used in the HTML table"
+
+		if header then
+			warning = warning.." for '"..header.."'"
+		end
+
 		printError(warning:format(arg, func.name))
 		doc_report.unused_arg = doc_report.unused_arg + 1
 	end
