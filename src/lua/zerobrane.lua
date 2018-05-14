@@ -32,6 +32,7 @@ local qtNo = 2 ^ 16
 local qtCancel = 2 ^ 22
 local qtYesToAll = 32768
 local qtNoToAll = 131072
+local yesToAll = false
 
 local ide
 local zbpreferencespath
@@ -60,7 +61,7 @@ local function setZeroBranePreferences()
 
 	local file = File(ide.."/ZBPreferences")
 
-	if file:exists() then
+	if file:exists() and not yesToAll then
 		_Gtme.print("Overwriting ZeroBrane configuration file")
 		local msg = string.format("The configuration file '%s' already exists.", file:name())
 		local informativeMsg = "Do you want to overwrite it?"
@@ -205,30 +206,36 @@ end
 local function copyExamplesTutorials()
 	examples = Directory(path.."/terrame-examples")
 	local MessageBox = qt.new_qobject(qt.meta.QMessageBox)
-	MessageBox.informativeText = "Do you want to select another directory?"
-	MessageBox.windowTitle = "Do you want to select another directory?"
+	MessageBox.windowTitle = "Tutorial directory"
 	MessageBox.icon = 2
-	MessageBox.standardButtons = qtYes|qtNo
+	local ret
+
 	if examples:exists() then
-		MessageBox.text = "Directory '"..examples.."' already exists. All files and changes on this directory will be lost."
-		local ret = MessageBox:exec()
-		if ret == qtYes then
-			local dirname = qt.dialog.get_existing_directory("Select Directory", home)
-			if dirname and dirname ~= "" then
-				examples = Directory(dirname.."/terrame-examples")
-				path = dirname
-			end
+		MessageBox.text = "Directory '"..examples.."' already exists. Do you want to replace it?"
+		MessageBox.informativeText = "Replace (yes) or select another directory (no)"
+		MessageBox.standardButtons = qtYes|qtYesToAll|qtNo
+		ret = MessageBox:exec()
+
+		if ret == qtYesToAll then
+			yesToAll = true
 		end
 	else
 		MessageBox.text = "Files will be copied to directory '"..examples.."'"
-		local ret = MessageBox:exec()
-		if ret == qtYes then
-			local dirname = qt.dialog.get_existing_directory("Select Directory", home)
-			if dirname and dirname ~= "" then
-				examples = Directory(dirname.."/terrame-examples")
-				path = dirname
-			end
+		MessageBox.informativeText = "Copy to this directory (ok) or select another directory (no)"
+		MessageBox.standardButtons = qtOk|qtNo
+		ret = MessageBox:exec()
+	end
+
+	if ret == qtNo then
+		local dirname = qt.dialog.get_existing_directory("Select Directory", home)
+		if dirname == "" then
+			msg = "ZeroBrane configuration was aborted."
+			qt.dialog.msg_information(msg)
+			os.exit()
 		end
+
+		examples = Directory(dirname.."/terrame-examples")
+		path = dirname
 	end
 
 	os.execute("cp -r "..ide.."terrame-examples "..path)
@@ -260,7 +267,6 @@ local function updateConfigurationDirectory()
 		end
 
 		_Gtme.printNote("Copying packages")
-		local yesToAll = false
 		forEachFile(ide.."packages", function(file)
 			if File(packages.."/"..file:name()):exists() then
 				if yesToAll then

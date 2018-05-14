@@ -23,6 +23,9 @@ in the bottom.
 #Projects
 - [gis](gis-projects/00-contents.lua)
 
+#Web Applications
+- [publish](publish/00-contents.lua)
+
 ]]
 
 print("Hello world!")

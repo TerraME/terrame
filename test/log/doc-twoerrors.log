@@ -86,10 +86,10 @@ Error: Field 'date3' of 'description.lua' is unnecessary.
 Building and checking HTML files
 Building doc/index.html
 Building doc/files/Utils.html
-Unknown argument 'abc' in 'createNeighborhood2'
-Unknown argument 'abc2' in 'createNeighborhood2'
-Argument 'weight' in 'createNeighborhood2' is not used in the HTML table
-Argument 'wrap' in 'createNeighborhood2' is not used in the HTML table
+Unknown argument 'abc' for 'createNeighborhood2' used in the @tabular for 'Strategy'
+Unknown argument 'abc2' for 'createNeighborhood2' used in the @tabular for 'Strategy'
+Argument 'weight' for 'createNeighborhood2' is not used in the @tabular for 'Strategy'
+Argument 'wrap' for 'createNeighborhood2' is not used in the @tabular for 'Strategy'
 Invalid link to 'ErrorHandling'
 Invalid link to 'ErrorHandling'
 Building doc/files/examples.html

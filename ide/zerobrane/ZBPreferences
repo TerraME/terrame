@@ -8,7 +8,7 @@ h=821
 [package/core.filetree]
 mapped={}
 startfile={}
-extensionignore={["tme"]=true, ["tview"]=true, ["dbf"]=true, ["prj"]=true, ["qix"]=true, ["shp"]=true, ["shx"]=true}
+extensionignore={tme=true, tview=true, dbf=true, prj=true, qix=true, shp=true, shx=true, cpg=true}
 [package/core.outline]
 ignoredirs={}
 [package/core.markers]
