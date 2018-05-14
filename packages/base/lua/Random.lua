@@ -309,6 +309,7 @@ function Random(data)
 	switch(data, "distrib"):caseof{
 		bernoulli = function()
 			verifyUnnecessaryArguments(data, {"distrib", "p"})
+			mandatoryTableArgument(data, "p", "number")
 			local bd = TerraLib().random().BernoulliDistribution(getMT(), data.p)
 			data.sample = function() return bd() end
 		end,
