@@ -119,6 +119,43 @@ return{
 		cs:notify()
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_society_reproduce.bmp", 0.09)
+
+		local killingAgents = function()
+			singleFooAgent = Agent{
+				execute = function(self)
+					if Random{p = 0.05}:sample() then
+						self:reproduce()
+						self:die()
+					end
+				end
+			}
+
+			soc = Society{
+				instance = singleFooAgent,
+				quantity = 100
+			}
+
+			cs = CellularSpace{
+				xdim = 20
+			}
+
+			e = Environment{cs, soc}
+
+			e:createPlacement{max = 5}
+
+			m = Map{target = soc}
+
+			t = Timer{
+				Event{action = soc},
+				Event{action = m}
+			}
+
+			t:run(100)
+
+			unitTest:assertEquals(#soc, 100)
+		end
+
+		unitTest:assert(killingAgents)
 	end
 }
 
