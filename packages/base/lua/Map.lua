@@ -2211,7 +2211,7 @@ function Map(data)
 	if type(data.target) == "Society" then
 		forEachAgent(data.target, function(ag)
 			verify(ag.cObj_, "It is simple agent and it can not be observable.")
-			ag.cObj_:createObserver(observerType, {data.select}, observerParams)
+			data.target.observerId = ag.cObj_:createObserver(observerType, {data.select}, observerParams)
 		end)
 		data.target.observerdata_ = {observerType, {data.select}, observerParams}
 		data.background.target:notify()
