@@ -167,7 +167,7 @@ Society_ = {
 		if self.observerdata_ then
 			local mdata = self.observerdata_
 			agent.state_ = "alive"
-			agent.cObj_:createObserver(mdata[1], mdata[2], mdata[3])
+			self.observerId = agent.cObj_:createObserver(mdata[1], mdata[2], mdata[3])
 		end
 
 		return agent
@@ -633,7 +633,7 @@ Society_ = {
 				if v.id == arg.id and v == arg then
 					table.remove(self.agents, k)
 
-					return arg.cObj_:kill(-1)
+					return arg.cObj_:kill(self.observerId)
 				end
 			end
 
