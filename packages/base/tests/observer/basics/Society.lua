@@ -153,6 +153,7 @@ return{
 			t:run(100)
 
 			unitTest:assertEquals(#soc, 100)
+			unitTest:assertSnapshot(m, "map_society_die.png")
 		end
 
 		unitTest:assert(killingAgents)
