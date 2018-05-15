@@ -633,7 +633,11 @@ Society_ = {
 				if v.id == arg.id and v == arg then
 					table.remove(self.agents, k)
 
-					return arg.cObj_:kill(self.observerId)
+					if self.observerId then
+						return arg.cObj_:kill(self.observerId)
+					end
+
+					return true
 				end
 			end
 
