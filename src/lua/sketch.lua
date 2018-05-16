@@ -37,7 +37,7 @@ local function verifyTest(package, report)
 	local dir = Directory(testDir)
 
 	if not Directory(baseDir.."lua"):exists() then
-		_Gtme.print("Package '"..package.."' does not have source code")
+		_Gtme.printWarning("Package '"..package.."' does not have source code")
 		return
 	end
 
@@ -149,7 +149,7 @@ local function verifyModel(package, report)
 	local s = sessionInfo().separator
 
 	if not Directory(baseDir.."lua"):exists() then
-		_Gtme.print("Package '"..package.."' does not have source code")
+		_Gtme.printWarning("Package '"..package.."' does not have source code")
 		return
 	end
 
@@ -394,7 +394,7 @@ local function verifyFont(package, report)
 	local fontDir = baseDir.."font"
 
 	if not Directory(fontDir):exists() then
-		_Gtme.print("Package '"..package.."' does not have a font directory")
+		_Gtme.printWarning("Package '"..package.."' does not have a font directory")
 		return
 	end
 
