@@ -1,4 +1,4 @@
---[[ [previous](06-fill.lua) | [contents](00-contents.lua) | [next](08-document.lua)
+--[[ [previous](06-fill.lua) | [contents](00-contents.lua) | [next](00-contents.lua)
 
 To visualize the attributes created by Layer:fill(), it is necessary to create a
 CellularSpace.

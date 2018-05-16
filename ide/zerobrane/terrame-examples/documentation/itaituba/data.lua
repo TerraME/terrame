@@ -1,4 +1,4 @@
---[[ [previous](../08-document.lua) | [contents](../00-contents.lua) | [next](data/itaituba.lua)
+--[[ [previous](../00-contents.lua) | [contents](../00-contents.lua) | [next](data/itaituba.lua)
 
 This script cannot be run by itself. It contains the description of Itaituba data
 to be shown in the documentation. You can edit it to see that the content of the

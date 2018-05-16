@@ -1,6 +1,6 @@
 --[[ [previous](00-contents.lua) | [back to index](../welcome.lua) | [next](brazil/01-brazil-project.lua)
 
-# Publishing geospatial data as Google Maps applications
+# Google Maps Applications
 
 This tutorial presents the main concepts of package publish that
 allows one to create Google Maps applications to publish geospatial

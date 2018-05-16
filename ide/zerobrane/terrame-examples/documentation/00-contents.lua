@@ -1,7 +1,9 @@
---[[ [previous](07-visualize.lua) | [contents](00-contents.lua) | [next](itaituba/data.lua)
+--[[ [previous](../welcome.lua) | [contents](../welcome.lua) | [next](itaituba/data.lua)
 
-TerraME can use fill scripts to automatically document cellular layers.
-Additionally, it can help you to document your data. To accomplish that, it is
+# Documenting Geospatial Data
+
+TerraME can help you to document your data. Additionally, it can use fill scripts
+to automatically document cellular layers. To accomplish that, it is
 necessary to create a TerraME package to store data as well as scripts to create
 projects and cellular spaces. A package encapsulates all the data in a single
 directory and allows documentation of data and their attributes. It also
@@ -17,11 +19,16 @@ To create a data package it is necessary to execute the following steps:
    They will automatically be documented by TerraME.
 
 For example, there is a directory named itaituba, in same directory of this file
-(08-document.lua). See the location of this directory from the path shown in the
+(00-contents.lua). See the location of this directory from the path shown in the
 top of ZeroBrane Studio, with the currently opened file (this one). Directory
 itaituba contains the data used along this tutorial and a complete script that
 creates and fills a cellular space. The files are stored in data directory,
 together with itaituba.lua script. By clickin in next above, you will go through
 such files.
 
+(1) [data.lua](itaituba/data.lua)
+(2) [itaituba.lua](itaituba/data/itaituba.lua)
+(3) [description.lua](itaituba/description.lua)
+
 ]]
+
