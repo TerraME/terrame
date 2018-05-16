@@ -203,7 +203,7 @@
 									<%else%>
 										<% for j = 1, #data.attributes do %>
 											<% if data.bands then %>
-												<tr><td><%=data.attributes[j]%></td><td><%=data.dummy[j]%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
+												<tr><td><%=data.attributes[j]%></td><td><%=data.dummy[j]%></td><td><%=tostring(data.types[j])%></td><td><%=data.description[j]%></td></tr>
 											<% elseif type(data.attributes[j]) == "table" then %>
 												<tr><td><%=table.concat(data.attributes[j], ", ")%></td><td><%=tostring(data.types[j])%></td><td><%=data.description[j]%></td></tr>
 											

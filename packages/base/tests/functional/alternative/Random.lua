@@ -31,6 +31,12 @@ return{
 		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
+			Random{p = false}
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg("p", "number", false))
+
+		error_func = function()
 			Random{min = false}
 		end
 

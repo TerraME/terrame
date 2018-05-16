@@ -10,21 +10,20 @@ in the bottom.
 
 #Lessons
 - [Lua for TerraME](lua-introduction/00-contents.lua)
-- [Lua exercises](lua-exercises/00-contents.lua)
+- [Lua Exercises](lua-exercises/00-contents.lua)
 
-#Demos
+#Tutorials
 - [An Introduction to TerraME](introduction-to-terrame/00-contents.lua)
-- [Modeling paradigms](modeling-paradigms/00-contents.lua)
+- [Modeling Paradigms](modeling-paradigms/00-contents.lua)
+- [Multiple Simulations](calibration/00-contents.lua)
+- [Filling Cellular Spaces](gis/00-contents.lua)
+- [Documenting Geospatial Data](documentation/00-contents.lua)
+- [Google Maps Applications](publish/00-contents.lua)
 
-#Examples
+#Basic examples
 - [base](base-examples/00-contents.lua)
 - [gis](gis-examples/00-contents.lua)
-
-#Projects
-- [gis](gis-projects/00-contents.lua)
-
-#Web Applications
-- [publish](publish/00-contents.lua)
+- [projects](gis-projects/00-contents.lua)
 
 ]]
 

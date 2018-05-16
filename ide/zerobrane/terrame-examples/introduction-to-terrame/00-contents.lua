@@ -3,8 +3,7 @@
 # An Introduction to TerraME
 
 This page presents the models implemented in the tutorial
-_An Introduction to TerraME_, available at
-https://github.com/TerraME/terrame/wiki/Introduction.
+_An Introduction to TerraME_, available [here](https://github.com/TerraME/terrame/wiki/Introduction).
 
 (1)  [Random](01-random.lua)
 (2)  [Cell](02-cell.lua)

@@ -94,7 +94,7 @@
 						<table class="file_list">
 						<%for _, data in ipairs(mdata) do%>
 							<tr>
-								<td class="name"><a href = "#<%=data.file[1]%>"><%=data.title%></a></td>
+								<td class="name"><a href = "#<%=data.name%>"><%=data.title%></a></td>
 								<td class="summary"><%= data.shortsummary or "" %></td>
 							</tr>
 						<%end%>
@@ -115,10 +115,10 @@
 
 								<% if istview then %>
 									<%mlink = "<a href= \"../../data/"..data.file[1].."\">"..data.file[1].."</a>"%>
-									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=mlink%></h2></dt>
+									<dt<%=borderTop%>><h2 id = <%=data.name%>><%=mlink%></h2></dt>
 
 								<% else %>
-									<dt<%=borderTop%>><h2 id = <%=data.file[1]%>><%=data.title%></h2></dt>
+									<dt<%=borderTop%>><h2 id = <%=data.name%>><%=data.title%></h2></dt>
 								<% end %>
 
 								<% if data.image then %>
@@ -194,7 +194,7 @@
 									<%else%>
 										<% for j = 1, #data.attributes do %>
 											<% if data.bands then %>
-												<tr><td><%=data.attributes[j]%></td><td><%=data.dummy[j]%></td><td><%="\""..tostring(data.types[j]).."\""%></td><td><%=data.description[j]%></td></tr>
+												<tr><td><%=data.attributes[j]%></td><td><%=data.dummy[j]%></td><td><%=tostring(data.types[j])%></td><td><%=data.description[j]%></td></tr>
 											<% elseif type(data.attributes[j]) == "table" then %>
 												<tr><td><%=table.concat(data.attributes[j], ", ")%></td><td><%=tostring(data.types[j])%></td><td><%=data.description[j]%></td></tr>
 											
