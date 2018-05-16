@@ -143,6 +143,8 @@ local function getProjects(package, doc_report)
 
 		description = description.."."
 
+		if type(value) == "string" then value = File(value) end
+
 		projects[currentProject][idx] = {
 			file = value:name(),
 			description = description
@@ -166,8 +168,6 @@ local function getProjects(package, doc_report)
 
 			if type(value) == "string" then
 				value = File(value)
-			else
-				return
 			end
 
 			if idx ~= "file" and type(value) == "File" and value:exists() then
