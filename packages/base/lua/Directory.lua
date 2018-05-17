@@ -250,11 +250,7 @@ function Directory(data)
 	local invalidCharIdx = data.fullpath:find("[*<>?|\"]")
 	if invalidCharIdx then
 		local invalidChar = data.fullpath:sub(invalidCharIdx, invalidCharIdx)
-		if invalidChar == " " then
-			customError("Directory path '"..data.fullpath.."' contains blank space.")
-		else
-			customError("Directory path '"..data.fullpath.."' cannot contain character '"..invalidChar.."'.")
-		end
+		customError("Directory path '"..data.fullpath.."' cannot contain character '"..invalidChar.."'.")
 	end
 
 	if not (data.fullpath:match("\\") or data.fullpath:match("/")) then
