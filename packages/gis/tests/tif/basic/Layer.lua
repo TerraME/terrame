@@ -422,11 +422,7 @@ return {
 		File(projName):delete()
 
 		-- COUNT
-
-		os.execute("cp "..filePath("amazonia-indigenous.shp", "gis").." .")
-		os.execute("cp "..filePath("amazonia-indigenous.shx", "gis").." .")
-		os.execute("cp "..filePath("amazonia-indigenous.prj", "gis").." .")
-		os.execute("cp "..filePath("amazonia-indigenous.dbf", "gis").." .")
+		filePath("amazonia-indigenous.shp", "gis"):copy(currentDir())
 
 		proj = Project{
 			file = "fill_mcount.tview",

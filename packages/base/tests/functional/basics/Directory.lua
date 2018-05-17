@@ -101,6 +101,11 @@ return{
 		unitTest:assertEquals(attr, "directory")
 
 		unitTest:assert(dir:delete())
+
+		local blankSpaceDir = Directory(currentDir().."/da ta")
+		unitTest:assert(blankSpaceDir:create())
+		unitTest:assert(blankSpaceDir:exists())
+		unitTest:assert(blankSpaceDir:delete())
 	end,
 	delete = function(unitTest)
 		local dir = Directory("test_dir_delete")
