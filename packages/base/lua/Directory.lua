@@ -247,7 +247,7 @@ function Directory(data)
 	data.fullpath = data.name
 	data.name = nil
 
-	local invalidCharIdx = data.fullpath:find("[*<>?|\" ]")
+	local invalidCharIdx = data.fullpath:find("[*<>?|\"]")
 	if invalidCharIdx then
 		local invalidChar = data.fullpath:sub(invalidCharIdx, invalidCharIdx)
 		if invalidChar == " " then
@@ -281,7 +281,7 @@ function Directory(data)
 			_Gtme.tmpdirectory__ = {}
 		end
 
-		local cmd = runCommand("mktemp -d "..data.fullpath)[1]
+		local cmd = runCommand("mktemp -d \""..data.fullpath.."\"")[1]
 		table.insert(_Gtme.tmpdirectory__, data)
 
 		data.fullpath = cmd

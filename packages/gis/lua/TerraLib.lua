@@ -1070,8 +1070,12 @@ local function getLayerByDataSetName(layers, dsetName, type)
 	return nil
 end
 
+local function fixSpaceInPath(path)
+	return string.gsub(path, "%%20", " ")
+end
+
 local function swapFileConnInfo(connInfo, fileName)
-	local file = File(connInfo:host()..connInfo:path())
+	local file = File(fixSpaceInPath(connInfo:host()..connInfo:path()))
 	local outFile = file:path()..fileName.."."..file:extension()
 	return createFileConnInfo(outFile)
 end
@@ -1762,10 +1766,6 @@ local function saveRasterDataAs(fromData, toData)
 	collectgarbage("collect")
 end
 
-local function fixSpaceInPath(path)
-	return string.gsub(path, "%%20", " ")
-end
-
 -- debug function
 -- local function showUri(uri)
 	-- _Gtme.print("uri()", uri:uri())
@@ -1807,7 +1807,7 @@ local function createProjectFromQgis(project)
 		local uri = qgisLayer:getUri()
 
 		if uri:scheme() == "file" then
-			local file = File(uri:host()..uri:path())
+			local file = File(fixSpaceInPath(uri:host()..uri:path()))
 			local ext = file:extension()
 			if ext == "shp" then
 				instance.addShpLayer(project, qgisLayer:getName(), file, true, qgisLayer:getSrid())
@@ -2559,7 +2559,7 @@ TerraLib_ = {
 				outDSetName = string.lower(outDSetName)
 				outSpatialIdx = false -- TODO(#1678)
 			elseif outType == "OGR" then
-				local file = File(outConnInfo:host()..outConnInfo:path())
+				local file = File(fixSpaceInPath(outConnInfo:host()..outConnInfo:path()))
 				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
 				outConnInfo = binding.te.core.URI(createFileConnInfo(outDir..out..".shp"))
 				outSpatialIdx = true
@@ -2623,7 +2623,7 @@ TerraLib_ = {
 					local toSetName = nil
 
 					if toType == "OGR" then
-						local _, name = File(toConnInfo:host()..toConnInfo:path()):split()
+						local _, name = File(fixSpaceInPath(toConnInfo:host()..toConnInfo:path())):split()
 						toSetName = name
 					end
 

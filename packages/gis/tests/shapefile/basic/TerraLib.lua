@@ -207,10 +207,16 @@ return {
 			local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "gis")
 			TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
-			local shp = {}
+			local testDir = Directory(currentDir().."/attribute fill/") --<< blank space
+			if testDir:exists() then
+				testDir:delete()
+			end
+			testDir:create()
+			testDir = tostring(testDir).."/"
 
+			local shp = {}
 			local clName = "Para_Cells"
-			shp[1] = clName..".shp"
+			shp[1] = testDir..clName..".shp"
 
 			File(shp[1]):deleteIfExists()
 
@@ -231,7 +237,7 @@ return {
 			local clLayerInfo = TerraLib().getLayerInfo(proj, clName)
 
 			unitTest:assertEquals(clLayerInfo.name, clName)
-			unitTest:assertEquals(clLayerInfo.file, currentDir()..shp[1])
+			unitTest:assertEquals(clLayerInfo.file, shp[1])
 			unitTest:assertEquals(clLayerInfo.type, "OGR")
 			unitTest:assertEquals(clLayerInfo.rep, "polygon")
 
@@ -243,7 +249,7 @@ return {
 			-- SHAPE OUTPUT
 			-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
 			local presLayerName = clName.."_"..layerName2.."_Presence"
-			shp[2] = presLayerName..".shp"
+			shp[2] = testDir..presLayerName..".shp"
 
 			File(shp[2]):deleteIfExists()
 
@@ -266,13 +272,13 @@ return {
 
 			local presLayerInfo = TerraLib().getLayerInfo(proj, presLayerName)
 			unitTest:assertEquals(presLayerInfo.name, presLayerName)
-			unitTest:assertEquals(presLayerInfo.file, currentDir()..shp[2])
+			unitTest:assertEquals(presLayerInfo.file, shp[2])
 			unitTest:assertEquals(presLayerInfo.type, "OGR")
 			unitTest:assertEquals(presLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH PERCENTAGE TOTAL AREA OPERATION
 			local areaLayerName = clName.."_"..layerName2.."_Area"
-			shp[3] = areaLayerName..".shp"
+			shp[3] = testDir..areaLayerName..".shp"
 
 			File(shp[3]):deleteIfExists()
 
@@ -295,13 +301,13 @@ return {
 
 			local areaLayerInfo = TerraLib().getLayerInfo(proj, areaLayerName)
 			unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
-			unitTest:assertEquals(areaLayerInfo.file, currentDir()..shp[3])
+			unitTest:assertEquals(areaLayerInfo.file, shp[3])
 			unitTest:assertEquals(areaLayerInfo.type, "OGR")
 			unitTest:assertEquals(areaLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH COUNT OPERATION
 			local countLayerName = clName.."_"..layerName2.."_Count"
-			shp[4] = countLayerName..".shp"
+			shp[4] = testDir..countLayerName..".shp"
 
 			File(shp[4]):deleteIfExists()
 
@@ -324,13 +330,13 @@ return {
 
 			local countLayerInfo = TerraLib().getLayerInfo(proj, countLayerName)
 			unitTest:assertEquals(countLayerInfo.name, countLayerName)
-			unitTest:assertEquals(countLayerInfo.file, currentDir()..shp[4])
+			unitTest:assertEquals(countLayerInfo.file, shp[4])
 			unitTest:assertEquals(countLayerInfo.type, "OGR")
 			unitTest:assertEquals(countLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH DISTANCE OPERATION
 			local distLayerName = clName.."_"..layerName2.."_Distance"
-			shp[5] = distLayerName..".shp"
+			shp[5] = testDir..distLayerName..".shp"
 
 			File(shp[5]):deleteIfExists()
 
@@ -353,7 +359,7 @@ return {
 
 			local distLayerInfo = TerraLib().getLayerInfo(proj, distLayerName)
 			unitTest:assertEquals(distLayerInfo.name, distLayerName)
-			unitTest:assertEquals(distLayerInfo.file, currentDir()..shp[5])
+			unitTest:assertEquals(distLayerInfo.file, shp[5])
 			unitTest:assertEquals(distLayerInfo.type, "OGR")
 			unitTest:assertEquals(distLayerInfo.rep, "polygon")
 
@@ -363,7 +369,7 @@ return {
 			TerraLib().addShpLayer(proj, layerName3, layerFile3)
 
 			local minLayerName = clName.."_"..layerName3.."_Minimum"
-			shp[6] = minLayerName..".shp"
+			shp[6] = testDir..minLayerName..".shp"
 
 			File(shp[6]):deleteIfExists()
 
@@ -387,13 +393,13 @@ return {
 
 			local minLayerInfo = TerraLib().getLayerInfo(proj, minLayerName)
 			unitTest:assertEquals(minLayerInfo.name, minLayerName)
-			unitTest:assertEquals(minLayerInfo.file, currentDir()..shp[6])
+			unitTest:assertEquals(minLayerInfo.file, shp[6])
 			unitTest:assertEquals(minLayerInfo.type, "OGR")
 			unitTest:assertEquals(minLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION
 			local maxLayerName = clName.."_"..layerName3.."_Maximum"
-			shp[7] = maxLayerName..".shp"
+			shp[7] = testDir..maxLayerName..".shp"
 
 			File(shp[7]):deleteIfExists()
 
@@ -417,13 +423,13 @@ return {
 
 			local maxLayerInfo = TerraLib().getLayerInfo(proj, maxLayerName)
 			unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
-			unitTest:assertEquals(maxLayerInfo.file, currentDir()..shp[7])
+			unitTest:assertEquals(maxLayerInfo.file, shp[7])
 			unitTest:assertEquals(maxLayerInfo.type, "OGR")
 			unitTest:assertEquals(maxLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION
 			local percLayerName = clName.."_"..layerName2.."_Percentage"
-			shp[8] = percLayerName..".shp"
+			shp[8] = testDir..percLayerName..".shp"
 
 			File(shp[8]):deleteIfExists()
 
@@ -455,13 +461,13 @@ return {
 
 			local percLayerInfo = TerraLib().getLayerInfo(proj, percLayerName)
 			unitTest:assertEquals(percLayerInfo.name, percLayerName)
-			unitTest:assertEquals(percLayerInfo.file, currentDir()..shp[8])
+			unitTest:assertEquals(percLayerInfo.file, shp[8])
 			unitTest:assertEquals(percLayerInfo.type, "OGR")
 			unitTest:assertEquals(percLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION
 			local stdevLayerName = clName.."_"..layerName3.."_Stdev"
-			shp[9] = stdevLayerName..".shp"
+			shp[9] = testDir..stdevLayerName..".shp"
 
 			File(shp[9]):deleteIfExists()
 
@@ -486,13 +492,13 @@ return {
 
 			local stdevLayerInfo = TerraLib().getLayerInfo(proj, stdevLayerName)
 			unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
-			unitTest:assertEquals(stdevLayerInfo.file, currentDir()..shp[9])
+			unitTest:assertEquals(stdevLayerInfo.file, shp[9])
 			unitTest:assertEquals(stdevLayerInfo.type, "OGR")
 			unitTest:assertEquals(stdevLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
 			local meanLayerName = clName.."_"..layerName3.."_AvrgMean"
-			shp[10] = meanLayerName..".shp"
+			shp[10] = testDir..meanLayerName..".shp"
 
 			File(shp[10]):deleteIfExists()
 
@@ -517,13 +523,13 @@ return {
 
 			local meanLayerInfo = TerraLib().getLayerInfo(proj, meanLayerName)
 			unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
-			unitTest:assertEquals(meanLayerInfo.file, currentDir()..shp[10])
+			unitTest:assertEquals(meanLayerInfo.file, shp[10])
 			unitTest:assertEquals(meanLayerInfo.type, "OGR")
 			unitTest:assertEquals(meanLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
 			local weighLayerName = clName.."_"..layerName3.."_AvrgWeighted"
-			shp[11] = weighLayerName..".shp"
+			shp[11] = testDir..weighLayerName..".shp"
 
 			File(shp[11]):deleteIfExists()
 
@@ -548,13 +554,13 @@ return {
 
 			local weighLayerInfo = TerraLib().getLayerInfo(proj, weighLayerName)
 			unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
-			unitTest:assertEquals(weighLayerInfo.file, currentDir()..shp[11])
+			unitTest:assertEquals(weighLayerInfo.file, shp[11])
 			unitTest:assertEquals(weighLayerInfo.type, "OGR")
 			unitTest:assertEquals(weighLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH MAJORITY INTERSECTION OPERATION
 			local interLayerName = clName.."_"..layerName3.."_Intersection"
-			shp[12] = interLayerName..".shp"
+			shp[12] = testDir..interLayerName..".shp"
 
 			File(shp[12]):deleteIfExists()
 
@@ -579,13 +585,13 @@ return {
 
 			local interLayerInfo = TerraLib().getLayerInfo(proj, interLayerName)
 			unitTest:assertEquals(interLayerInfo.name, interLayerName)
-			unitTest:assertEquals(interLayerInfo.file, currentDir()..shp[12])
+			unitTest:assertEquals(interLayerInfo.file, shp[12])
 			unitTest:assertEquals(interLayerInfo.type, "OGR")
 			unitTest:assertEquals(interLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH MAJORITY OCCURRENCE OPERATION
 			local occurLayerName = clName.."_"..layerName3.."_Occurence"
-			shp[13] = occurLayerName..".shp"
+			shp[13] = testDir..occurLayerName..".shp"
 
 			File(shp[13]):deleteIfExists()
 
@@ -611,13 +617,13 @@ return {
 
 			local occurLayerInfo = TerraLib().getLayerInfo(proj, occurLayerName)
 			unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
-			unitTest:assertEquals(occurLayerInfo.file, currentDir()..shp[13])
+			unitTest:assertEquals(occurLayerInfo.file, shp[13])
 			unitTest:assertEquals(occurLayerInfo.type, "OGR")
 			unitTest:assertEquals(occurLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH SUM OPERATION
 			local sumLayerName = clName.."_"..layerName3.."_Sum"
-			shp[14] = sumLayerName..".shp"
+			shp[14] = testDir..sumLayerName..".shp"
 
 			File(shp[14]):deleteIfExists()
 
@@ -643,13 +649,13 @@ return {
 
 			local sumLayerInfo = TerraLib().getLayerInfo(proj, sumLayerName)
 			unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
-			unitTest:assertEquals(sumLayerInfo.file, currentDir()..shp[14])
+			unitTest:assertEquals(sumLayerInfo.file, shp[14])
 			unitTest:assertEquals(sumLayerInfo.type, "OGR")
 			unitTest:assertEquals(sumLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH WEIGHTED SUM OPERATION
 			local wsumLayerName = clName.."_"..layerName3.."_Wsum"
-			shp[15] = wsumLayerName..".shp"
+			shp[15] = testDir..wsumLayerName..".shp"
 
 			File(shp[15]):deleteIfExists()
 
@@ -675,7 +681,7 @@ return {
 
 			local wsumLayerInfo = TerraLib().getLayerInfo(proj, wsumLayerName)
 			unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
-			unitTest:assertEquals(wsumLayerInfo.file, currentDir()..shp[15])
+			unitTest:assertEquals(wsumLayerInfo.file, shp[15])
 			unitTest:assertEquals(wsumLayerInfo.type, "OGR")
 			unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
 
@@ -686,7 +692,7 @@ return {
 			TerraLib().addGdalLayer(proj, layerName4, layerFile4, wsumLayerInfo.srid)
 
 			local percTifLayerName = clName.."_"..layerName4.."_RPercentage"
-			shp[16] = percTifLayerName..".shp"
+			shp[16] = testDir..percTifLayerName..".shp"
 
 			File(shp[16]):deleteIfExists()
 
@@ -718,13 +724,13 @@ return {
 
 			local percTifLayerInfo = TerraLib().getLayerInfo(proj, percTifLayerName)
 			unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
-			unitTest:assertEquals(percTifLayerInfo.file, currentDir()..shp[16])
+			unitTest:assertEquals(percTifLayerInfo.file, shp[16])
 			unitTest:assertEquals(percTifLayerInfo.type, "OGR")
 			unitTest:assertEquals(percTifLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION FROM RASTER
 			local rmeanLayerName = clName.."_"..layerName4.."_RMean"
-			shp[17] = rmeanLayerName..".shp"
+			shp[17] = testDir..rmeanLayerName..".shp"
 
 			File(shp[17]):deleteIfExists()
 
@@ -751,13 +757,13 @@ return {
 
 			local rmeanLayerInfo = TerraLib().getLayerInfo(proj, rmeanLayerName)
 			unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
-			unitTest:assertEquals(rmeanLayerInfo.file, currentDir()..shp[17])
+			unitTest:assertEquals(rmeanLayerInfo.file, shp[17])
 			unitTest:assertEquals(rmeanLayerInfo.type, "OGR")
 			unitTest:assertEquals(rmeanLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH MINIMUM OPERATION FROM RASTER
 			local rminLayerName = clName.."_"..layerName4.."_RMinimum"
-			shp[18] = rminLayerName..".shp"
+			shp[18] = testDir..rminLayerName..".shp"
 
 			File(shp[18]):deleteIfExists()
 
@@ -784,13 +790,13 @@ return {
 
 			local rminLayerInfo = TerraLib().getLayerInfo(proj, rminLayerName)
 			unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
-			unitTest:assertEquals(rminLayerInfo.file, currentDir()..shp[18])
+			unitTest:assertEquals(rminLayerInfo.file, shp[18])
 			unitTest:assertEquals(rminLayerInfo.type, "OGR")
 			unitTest:assertEquals(rminLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION FROM RASTER
 			local rmaxLayerName = clName.."_"..layerName4.."_RMaximum"
-			shp[19] = rmaxLayerName..".shp"
+			shp[19] = testDir..rmaxLayerName..".shp"
 
 			File(shp[19]):deleteIfExists()
 
@@ -817,13 +823,13 @@ return {
 
 			local rmaxLayerInfo = TerraLib().getLayerInfo(proj, rmaxLayerName)
 			unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
-			unitTest:assertEquals(rmaxLayerInfo.file, currentDir()..shp[19])
+			unitTest:assertEquals(rmaxLayerInfo.file, shp[19])
 			unitTest:assertEquals(rmaxLayerInfo.type, "OGR")
 			unitTest:assertEquals(rmaxLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION FROM RASTER
 			local rstdevLayerName = clName.."_"..layerName4.."_RStdev"
-			shp[20] = rstdevLayerName..".shp"
+			shp[20] = testDir..rstdevLayerName..".shp"
 
 			File(shp[20]):deleteIfExists()
 
@@ -851,13 +857,13 @@ return {
 
 			local rstdevLayerInfo = TerraLib().getLayerInfo(proj, rstdevLayerName)
 			unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
-			unitTest:assertEquals(rstdevLayerInfo.file, currentDir()..shp[20])
+			unitTest:assertEquals(rstdevLayerInfo.file, shp[20])
 			unitTest:assertEquals(rstdevLayerInfo.type, "OGR")
 			unitTest:assertEquals(rstdevLayerInfo.rep, "polygon")
 
 			-- FILL CELLULAR SPACE WITH SUM OPERATION FROM RASTER
 			local rsumLayerName = clName.."_"..layerName4.."_RSum"
-			shp[21] = rsumLayerName..".shp"
+			shp[21] = testDir..rsumLayerName..".shp"
 
 			File(shp[21]):deleteIfExists()
 
@@ -885,7 +891,7 @@ return {
 
 			local rsumLayerInfo = TerraLib().getLayerInfo(proj, rsumLayerName)
 			unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
-			unitTest:assertEquals(rsumLayerInfo.file, currentDir()..shp[21])
+			unitTest:assertEquals(rsumLayerInfo.file, shp[21])
 			unitTest:assertEquals(rsumLayerInfo.type, "OGR")
 			unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
 
@@ -914,13 +920,13 @@ return {
 
 			local rsumOverLayerInfo = TerraLib().getLayerInfo(proj, rsumLayerName)
 			unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
-			unitTest:assertEquals(rsumOverLayerInfo.file, currentDir()..shp[21])
+			unitTest:assertEquals(rsumOverLayerInfo.file, shp[21])
 			unitTest:assertEquals(rsumOverLayerInfo.type, "OGR")
 			unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
 
 			-- RASTER NODATA
 			local nodataLayerName = clName.."_"..layerName4.."_ND"
-			shp[22] = nodataLayerName..".shp"
+			shp[22] = testDir..nodataLayerName..".shp"
 
 			File(shp[22]):deleteIfExists()
 
@@ -949,13 +955,13 @@ return {
 
 			local nodataLayerInfo = TerraLib().getLayerInfo(proj, nodataLayerName)
 			unitTest:assertEquals(nodataLayerInfo.name, nodataLayerName)
-			unitTest:assertEquals(nodataLayerInfo.file, currentDir()..shp[22])
+			unitTest:assertEquals(nodataLayerInfo.file, shp[22])
 			unitTest:assertEquals(nodataLayerInfo.type, "OGR")
 			unitTest:assertEquals(nodataLayerInfo.rep, "polygon")
 
 			-- COVERAGE ATTRIBUTE + SELECTED WITH MORE THAN 10 CHARACTERS
 			local percLayerName2 = clName.."_"..layerName2.."_Percentage2"
-			shp[23] = percLayerName2..".shp"
+			shp[23] = testDir..percLayerName2..".shp"
 
 			File(shp[23]):deleteIfExists()
 
@@ -975,7 +981,7 @@ return {
 
 			-- COVERAGE ATTRIBUTE WITH 9 CHARACTERS
 			local percLayerName3 = clName.."_"..layerName2.."_Percentage3"
-			shp[24] = percLayerName3..".shp"
+			shp[24] = testDir..percLayerName3..".shp"
 
 			File(shp[24]):deleteIfExists()
 
@@ -996,7 +1002,7 @@ return {
 
 			-- FILL CELLULAR SPACE WITH COUNT OPERATION FROM RASTER
 			local rcountLayerName = clName.."_"..layerName4.."_RCount"
-			shp[25] = rcountLayerName..".shp"
+			shp[25] = testDir..rcountLayerName..".shp"
 
 			File(shp[25]):deleteIfExists()
 
@@ -1024,7 +1030,7 @@ return {
 
 			local rcountLayerInfo = TerraLib().getLayerInfo(proj, rcountLayerName)
 			unitTest:assertEquals(rcountLayerInfo.name, rcountLayerName)
-			unitTest:assertEquals(rcountLayerInfo.file, currentDir()..shp[25])
+			unitTest:assertEquals(rcountLayerInfo.file, shp[25])
 			unitTest:assertEquals(rcountLayerInfo.type, "OGR")
 			unitTest:assertEquals(rcountLayerInfo.rep, "polygon")
 
@@ -1033,6 +1039,7 @@ return {
 			end
 
 			proj.file:delete()
+			Directory(testDir):delete()
 		end
 
 		-- local coverageWithPointsData = function() -- TODO(#995)
