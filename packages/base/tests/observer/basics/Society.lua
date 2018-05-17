@@ -140,7 +140,6 @@ return{
 			}
 
 			e = Environment{cs, soc}
-
 			e:createPlacement{max = 5}
 
 			m = Map{target = soc}
@@ -153,7 +152,7 @@ return{
 			t:run(100)
 
 			unitTest:assertEquals(#soc, 100)
-			unitTest:assertSnapshot(m, "map_society_die.png")
+			unitTest:assertSnapshot(m, "map_society_die.png", 0.02)
 		end
 
 		unitTest:assert(killingAgents)
