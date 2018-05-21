@@ -553,19 +553,31 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, conn
 	local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
 	local cellName = dSetName
 	local inputDsType = inputLayer:getSchema()
+	local errorMsg
 
 	if mask then
 		if inputDsType:hasGeom() then
-			cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
+			errorMsg = cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
 										inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
-			return
 		else
 			customWarning("The 'mask' not work to Raster, it was ignored.")
+			errorMsg = cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
+													inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 		end
+	else
+		errorMsg = cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
+												inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 	end
 
-	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
-								inputLayer:getExtent(), inputLayer:getSRID(), cLType)
+	if errorMsg ~= "" then
+		if (type == "POSTGIS") and (string.find(errorMsg, "invalid SRID")) then
+			customError("Layer '"..inputLayer:getTitle().."' has a invalid EPSG. "
+						.. "Please, set a valid projection, if it still doesn't work, "
+						.. "reproject the layer data.")
+		end
+
+		customError(errorMsg)
+	end
 end
 
 local function fixNameTo10Characters(name, property)
