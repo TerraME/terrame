@@ -483,6 +483,16 @@ Layer_ = {
 	delete = function(self)
 		deleteData(self)
 	end,
+	--- Drop a database.
+	-- @usage -- DONTRUN
+	-- layer:drop()
+	drop = function(self)
+		if self.database then
+			TerraLib().dropPgDatabase(self)
+		else
+			customError("Function 'drop' only works with PostGIS database.")
+		end
+	end,
 	--- Return the number of bands of a raster layer. If the layer does not have a raster representation
 	-- then it will stop with an error. The bands of the raster layer are named from zero to the number of
 	-- bands minus one.

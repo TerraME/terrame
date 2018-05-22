@@ -300,11 +300,11 @@ return {
 			cl2:delete()
 			cl3:delete()
 			cl4:delete()
+			cl4:drop()
 			cl5:delete()
 			cl6:delete()
 			cl7:delete()
 			proj.file:delete()
-			TerraLib().dropPgDatabase(pgData)
 		end
 
 		local creatingCellSpaceFromTif = function()
@@ -438,7 +438,7 @@ return {
 
 		proj.file:delete()
 		layer:delete()
-		TerraLib().dropPgDatabase(pgConnInfo)
+		layer:drop()
 	end,
 	fill = function(unitTest)
 		local projName = "cellular_layer_fill_pgis.tview"
@@ -1328,7 +1328,7 @@ return {
 		unitTest:assertSnapshot(map, "tiff-average-nodata-pg.png")
 
 		File(projName):delete()
-		TerraLib().dropPgDatabase(pgConnInfo)
+		cl:drop()
 	end,
 	projection = function(unitTest)
 		local projName = "layer_basic.tview"
@@ -1642,6 +1642,46 @@ return {
 		unitTest:assertEquals("value", attrs[2].name)
 
 		pgLayer:delete()
+		proj.file:delete()
+	end,
+	drop = function(unitTest)
+		local proj = Project{
+			file = "drop_pg_basic.tview",
+			clean = true
+		}
+
+		local l1 = Layer{
+			project = proj,
+			name = "Sampa",
+			file = filePath("test/sampa.shp", "gis")
+		}
+
+		local cl1 = Layer{
+			project = proj,
+			source = "postgis",
+			clean = true,
+			input = l1.name,
+			name = "SampaCells",
+			resolution = 0.7,
+			password = "postgres",
+			database = "drop_pg_test"
+		}
+
+		cl1:drop()
+
+		local checkDrop = function()
+			Layer{
+				project = proj,
+				source = "postgis",
+				name = "SPDrop",
+				password = "postgres",
+				database = "drop_pg_test",
+				table = cl1.table
+			}
+		end
+
+		unitTest:assertError(checkDrop, "Is not possible add the Layer. Table 'sampacells' does not exist.")
+		cl1:drop() --< TODO(#2222): remover after fix
 		proj.file:delete()
 	end
 }

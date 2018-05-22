@@ -893,6 +893,25 @@ return {
 		pgData.table = layer3.table
 		TerraLib().dropPgTable(pgData)
 		proj.file:delete()
+	end,
+	drop = function(unitTest)
+		local proj = Project {
+			file = "drop_pg_alt.tview",
+			clean = true
+		}
+
+		local l1 = Layer{
+			project = proj,
+			name = "Sampa",
+			file = filePath("test/sampa.shp", "gis")
+		}
+
+		local dropError = function()
+			l1:drop()
+		end
+
+		unitTest:assertError(dropError, "Function 'drop' only works with PostGIS database.")
+		proj.file:delete()
 	end
 }
 
