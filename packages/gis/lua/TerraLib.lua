@@ -576,7 +576,7 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, conn
 						.. "reproject the layer data.")
 		end
 
-		customError(errorMsg)
+		customError(errorMsg) -- SKIP
 	end
 end
 
