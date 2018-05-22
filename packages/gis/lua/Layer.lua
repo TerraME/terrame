@@ -107,8 +107,13 @@ end
 local function checkPostgisParams(data)
 	mandatoryTableArgument(data, "password", "string")
 	mandatoryTableArgument(data, "database", "string")
+	optionalTableArgument(data, "table", "string")
 
 	checkName(data.database, "Database")
+
+	if data.table then
+		data.table = string.lower(data.table)
+	end
 
 	if data.name then
 		defaultTableValue(data, "table", string.lower(data.name))

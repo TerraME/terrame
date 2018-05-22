@@ -2524,7 +2524,9 @@ TerraLib_ = {
 				end
 			end
 
-			if propertyExists(toDsInfo:getConnInfo(), toLayer:getDataSetName(), property, toDsInfo:getType()) then
+			local toDSetName = toLayer:getDataSetName()
+
+			if propertyExists(toDsInfo:getConnInfo(), toDSetName, property, toDsInfo:getType()) then
 				customError("The attribute '"..property.."' already exists in the Layer.")
 			end
 
@@ -2614,9 +2616,8 @@ TerraLib_ = {
 			end
 
 			if outType == "POSTGIS" and outOverwrite then
-				to = string.lower(to)
-				dropDataSet(outConnInfo, to, outType)
-				outDs:renameDataSet(outDSetName, to)
+				dropDataSet(outConnInfo, toDSetName, outType)
+				outDs:renameDataSet(outDSetName, toDSetName)
 
 				loadProject(project, project.file) -- TODO: WHY IS IT NEEDING RELOAD? (REVIEW)
 				releaseProject(project)

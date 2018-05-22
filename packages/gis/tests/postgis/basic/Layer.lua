@@ -207,9 +207,6 @@ return {
 			unitTest:assertEquals(clSetSize, 68)
 
 			local clName5 = clName1.."_Box"
-			local tName4 = string.lower(clName5)
-			pgData.table = tName4
-
 			local cl5
 			local unnecessaryArgument = function()
 				cl5 = Layer{
@@ -231,7 +228,6 @@ return {
 
 			-- CHANGE EPSG
 			local clName6 = "SampaDBNewSrid"
-
 			local cl6
 			local indexUnnecessary = function()
 				cl6 = Layer{
@@ -251,13 +247,64 @@ return {
 			unitTest:assertEquals(cl6.epsg, 29901.0)
 			unitTest:assert(cl6.epsg ~= cl4.epsg)
 
+			-- DEFAULT TABLE NAME
+			local clName7 = "DefaultTableName"
+			local cl7
+			local defaultTableName = function()
+				cl7 = Layer{
+					project = proj,
+					source = "postgis",
+					name = clName7,
+					password = password,
+					database = database,
+					table = clName7,
+					resolution = 0.7,
+					input = layerName1,
+					clean = true
+				}
+			end
+			unitTest:assertWarning(defaultTableName, defaultValueMsg("table", string.lower(clName7)))
+			unitTest:assertEquals(cl7.name, clName7)
+			unitTest:assertEquals(cl7.table, string.lower(clName7))
+
+			local cl8
+			defaultTableName = function()
+				cl8 = Layer{
+					project = proj,
+					source = "postgis",
+					name = tName1,
+					password = password,
+					database = database,
+					table = tName1,
+					epsg = 29901
+				}
+			end
+			unitTest:assertWarning(defaultTableName, defaultValueMsg("table", tName1))
+			unitTest:assertEquals(cl8.name, tName1)
+			unitTest:assertEquals(cl8.table, tName1)
+
+			local cl9 = Layer{
+				project = proj,
+				source = "postgis",
+				name = tName3,
+				password = password,
+				database = database,
+				epsg = 29901
+			}
+
+			unitTest:assertEquals(cl9.name, tName3)
+			unitTest:assertEquals(cl9.table, tName3)
+			--// DEFAULT TABLE NAME
+
 			cl1:delete()
 			cl2:delete()
 			cl3:delete()
 			cl4:delete()
 			cl5:delete()
 			cl6:delete()
+			cl7:delete()
 			proj.file:delete()
+			TerraLib().dropPgDatabase(pgData)
 		end
 
 		local creatingCellSpaceFromTif = function()
@@ -306,9 +353,45 @@ return {
 			proj.file:delete()
 		end
 
+		local creatingCellSpaceWithoutTableName = function()
+			local projName = "cells_pg_basic.tview"
+			local proj = Project{
+				file = projName,
+				clean = true
+			}
+
+			local layerName1 = "Sampa"
+			Layer{
+				project = proj,
+				name = layerName1,
+				file = filePath("test/sampa.shp", "gis")
+			}
+
+			local clName1 = "Sampa_Cells"
+			local password = "postgres"
+			local database = "postgis_22_sample"
+
+			local cl = Layer{
+				project = proj,
+				source = "postgis",
+				clean = true,
+				input = layerName1,
+				name = clName1,
+				resolution = 0.7,
+				password = password,
+				database = database
+			}
+
+			unitTest:assertEquals(cl.table, string.lower(clName1))
+
+			cl:delete()
+			proj.file:delete()
+		end
+
 		unitTest:assert(twoLayersInTheSameDb)
 		unitTest:assert(creatingCellSpaceFromShp)
 		unitTest:assert(creatingCellSpaceFromTif)
+		unitTest:assert(creatingCellSpaceWithoutTableName)
 	end,
 	delete = function(unitTest)
 		local projName = "layer_delete_pgis.tview"
@@ -382,14 +465,6 @@ return {
 			file = filePath("test/municipiosAML_ok.shp", "gis")
 		}
 
-		local clName1 = "CellsShp"
-
-		local shapes = {}
-
-		local shp0 = clName1..".shp"
-		table.insert(shapes, shp0)
-		File(shp0):deleteIfExists()
-
 		local password = "postgres"
 		local database = "postgis_fill"
 
@@ -403,7 +478,7 @@ return {
 
 		TerraLib().dropPgDatabase(pgConnInfo)
 
-		clName1 = "Setores_Cells"
+		local clName1 = "Setores_Cells"
 
 		local cl = Layer{
 			project = proj,
@@ -415,9 +490,6 @@ return {
 			password = password,
 			database = database
 		}
-
-		table.insert(shapes, "CellsAmaz.shp")
-		File("CellsAmaz.shp"):deleteIfExists()
 
 		local clamaz = Layer{
 			project = proj,
@@ -938,10 +1010,9 @@ return {
 			resolution = 200000,
 			clean = true,
 			password = password,
-			database = database
+			database = database,
+			table = "cs200km"
 		}
-
-		table.insert(shapes, "munic_cells.shp")
 
 		cl:fill{
 			operation = "coverage",
