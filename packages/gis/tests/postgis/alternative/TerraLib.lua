@@ -56,14 +56,7 @@ return {
 			TerraLib().addPgLayer(proj, layerName, pgData, nil, encoding)
 		end
 
-		if sessionInfo().system == "linux" then
-			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"postgres\"\n"..
-				"FATAL:  password authentication failed for user \"postgres\"\n.")
-		else
-			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"postgres\"\n.")
-		end
+		unitTest:assertError(passWrong, "Connection failed, invalid username or password.")
 
 		proj.file:delete()
 	end,

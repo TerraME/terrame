@@ -265,17 +265,7 @@ return {
 			}
 		end
 
-		if sessionInfo().system == "linux" then
-			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not translate host name \"inotexist\" to address: Name or service not known\n.", 16) -- the last paramerter is the difference related to system idiom
-		elseif sessionInfo().system == "mac" then
-			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not translate host name \"inotexist\" to address: nodename nor servname provided, or not known\n.")
-		else
-			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not translate host name \"inotexist\" to address: Unknown host\n.", 12)
-				-- it can also be "Unknown server error"
-		end
+		unitTest:assertError(hostNonExists, "Host 'inotexist' was not found.")
 
 		local wrongPort = 2345
 		local portWrong = function()
@@ -291,28 +281,7 @@ return {
 			}
 		end
 
-		if sessionInfo().system == "linux" then
-			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not connect to server: Connection refused\n"..
-				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n.", 16) -- the last paramerter is the difference related to system idiom
-		elseif sessionInfo().system == "mac" then
-			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not connect to server: Connection refused\n"..
-				"\tIs the server running on host \"localhost\" (::1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n"..
-				"could not connect to server: Connection refused\n"..
-				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n.")
-		else
-			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not connect to server: Connection refused (0x0000274D/10061)\n"..
-				"\tIs the server running on host \"localhost\" (::1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n"..
-				"could not connect to server: Connection refused (0x0000274D/10061)\n"..
-				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n.")
-		end
+		unitTest:assertError(portWrong,"Port '2345' is not configured to host 'localhost'.")
 
 		local nonuser = "usernotexists"
 		local userNotExists = function()
@@ -329,14 +298,7 @@ return {
 			}
 		end
 
-		if sessionInfo().system == "linux" then
-			unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"usernotexists\"\n"..
-				"FATAL:  password authentication failed for user \"usernotexists\"\n.")
-		else
-			unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"usernotexists\"\n.")
-		end
+		unitTest:assertError(userNotExists, "Connection failed, invalid username or password.")
 
 		local wrongPass
 		local passWrong
@@ -354,14 +316,7 @@ return {
 			}
 		end
 
-		if sessionInfo().system == "linux" then
-			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"postgres\"\n"..
-				"FATAL:  password authentication failed for user \"postgres\"\n.")
-		else
-			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"postgres\"\n.")
-		end
+		unitTest:assertError(passWrong, "Connection failed, invalid username or password.")
 
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
@@ -670,18 +625,7 @@ return {
 			}
 		end
 
-
-		if sessionInfo().system == "linux" then
-			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not translate host name \"inotexist\" to address: Name or service not known\n.", 16) -- the last paramerter is the difference related to system idiom
-		elseif sessionInfo().system == "mac" then
-			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not translate host name \"inotexist\" to address: nodename nor servname provided, or not known\n.")
-		else
-			unitTest:assertError(hostNonExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not translate host name \"inotexist\" to address: Unknown host\n.", 12)
-				-- it can also be "Unknown server error"
-		end
+		unitTest:assertError(hostNonExists, "Host 'inotexist' was not found.")
 
 		wrongPort = 2345
 		portWrong = function()
@@ -698,28 +642,7 @@ return {
 			}
 		end
 
-		if sessionInfo().system == "linux" then
-			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not connect to server: Connection refused\n"..
-				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n.", 8) -- the last paramerter is the difference related to system idiom
-		elseif sessionInfo().system == "mac" then
-			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not connect to server: Connection refused\n"..
-				"\tIs the server running on host \"localhost\" (::1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n"..
-				"could not connect to server: Connection refused\n"..
-				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n.")
-		else
-			unitTest:assertError(portWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"could not connect to server: Connection refused (0x0000274D/10061)\n"..
-				"\tIs the server running on host \"localhost\" (::1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n"..
-				"could not connect to server: Connection refused (0x0000274D/10061)\n"..
-				"\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n"..
-				"\tTCP/IP connections on port 2345?\n.")
-		end
+		unitTest:assertError(portWrong, "Port '2345' is not configured to host 'localhost'.")
 
 		nonuser = "usernotexists"
 		userNotExists = function()
@@ -736,14 +659,7 @@ return {
 			}
 		end
 
-		if sessionInfo().system == "linux" then
-			unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"usernotexists\"\n"..
-				"FATAL:  password authentication failed for user \"usernotexists\"\n.")
-		else
-			unitTest:assertError(userNotExists, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"usernotexists\"\n.")
-		end
+		unitTest:assertError(userNotExists, "Connection failed, invalid username or password.")
 
 		wrongPass = "passiswrong"
 		passWrong = function()
@@ -759,14 +675,7 @@ return {
 			}
 		end
 
-		if sessionInfo().system == "linux" then
-			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"postgres\"\n"..
-				"FATAL:  password authentication failed for user \"postgres\"\n.")
-		else
-			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"postgres\"\n.")
-		end
+		unitTest:assertError(passWrong, "Connection failed, invalid username or password.")
 
 		host = "localhost"
 		port = "5432"

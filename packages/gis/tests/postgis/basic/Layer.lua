@@ -1673,7 +1673,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(checkDrop, "It was not possible to create a connection to the given data source due to the following error: FATAL:  database \"drop_pg_test\" does not exist\n.")
+		unitTest:assertError(checkDrop, "Database 'drop_pg_test' does not exist.")
 		proj.file:delete()
 	end
 }
