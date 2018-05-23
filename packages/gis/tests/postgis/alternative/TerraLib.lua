@@ -203,6 +203,7 @@ return {
 		local clName1 = "Amazonia_PG_Cells"
 		local resolution = 3e5
 		local mask = false
+		TerraLib().dropPgTable(pgData)
 
 		local projectionError = function()
 			TerraLib().addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)

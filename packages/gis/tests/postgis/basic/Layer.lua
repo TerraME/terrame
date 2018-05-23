@@ -419,7 +419,6 @@ return {
 			password = password,
 			database = database
 		}
-
 		TerraLib().dropPgDatabase(pgConnInfo)
 
 		local clName1 = "Setores_Cells"
@@ -1523,11 +1522,8 @@ return {
 
 		File(geojson):delete()
 		File(shp):delete()
+		layer2:delete()
 		proj.file:delete()
-
-		pgData.table = tableName
-		pgData.encoding = "LATIN1"
-		TerraLib().dropPgTable(pgData)
 	end,
 	simplify = function(unitTest)
 		local projName = "layer_postgis_basic.tview"
@@ -1596,11 +1592,8 @@ return {
 		unitTest:assertEquals("bitola_ext", attrs[13].name)
 		unitTest:assertEquals("cod_pnv", attrs[15].name)
 
-		pgData.table = tableName
-		pgData.encoding = "LATIN1"
-		TerraLib().dropPgTable(pgData)
-		pgData.table = outputName
-		TerraLib().dropPgTable(pgData)
+		layer2:delete()
+		layer3:delete()
 		proj.file:delete()
 	end,
 	polygonize = function(unitTest)
@@ -1680,8 +1673,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(checkDrop, "Is not possible add the Layer. Table 'sampacells' does not exist.")
-		cl1:drop() --< TODO(#2222): remover after fix
+		unitTest:assertError(checkDrop, "It was not possible to create a connection to the given data source due to the following error: FATAL:  database \"drop_pg_test\" does not exist\n.")
 		proj.file:delete()
 	end
 }

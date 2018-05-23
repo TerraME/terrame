@@ -196,15 +196,18 @@ local function createPgDbIfNotExists(host, port, user, pass, database, encoding)
 end
 
 local function createPgConnInfo(host, port, user, pass, database, encoding)
-	createPgDbIfNotExists(host, port, user, pass, database, encoding)
-
-	return "pgsql://"..user..":"..pass.."@"..host..":"..port.."/"..database.."?"
+	local connInfo = "pgsql://"..user..":"..pass.."@"..host..":"..port.."/"..database.."?"
 				.."&PG_CLIENT_ENCODING="..encoding
 				.."&PG_CONNECT_TIMEOUT=10"
 				.."&PG_MAX_POOL_SIZE=4"
 				.."&PG_MIN_POOL_SIZE=2"
 				.."&PG_HIDE_SPATIAL_METADATA_TABLES=FALSE"
 				.."&PG_HIDE_RASTER_TABLES=FALSE"
+				.."&PG_CHECK_DB_EXISTENCE="..database
+
+	checkPgConnectParams(connInfo)
+
+	return connInfo
 end
 
 local function createWmsConnInfo(url, user, password, port, query, fragment, directory, format)
@@ -1532,6 +1535,8 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 
 			toData.table = string.lower(toData.table)
 			toDSetName = toData.table
+			createPgDbIfNotExists(toData.host, toData.port, toData.user, toData.password,
+								toData.database, toData.encoding)
 			local connInfo = createPgConnInfo(toData.host, toData.port, toData.user,
 								toData.password, toData.database, toData.encoding)
 			toDs = makeAndOpenDataSource(connInfo, "POSTGIS")
@@ -2364,6 +2369,8 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
+		createPgDbIfNotExists(data.host, data.port, data.user, data.password,
+							data.database, encoding)
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, encoding)
 		local srid = inputLayer:getSRID()
 
@@ -2412,8 +2419,17 @@ TerraLib_ = {
 	--
 	-- TerraLib().dropPgTable(pgData)
 	dropPgTable = function(data)
-		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
-		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
+		local connInfo = "pgsql://"..data.user..":"..data.password.."@"..data.host..":"..data.port.."/?"
+						.."&PG_CONNECT_TIMEOUT=10"
+						.."&PG_MAX_POOL_SIZE=4"
+						.."&PG_MIN_POOL_SIZE=2"
+						.."&PG_CHECK_DB_EXISTENCE="..data.database
+
+		if binding.te.da.DataSource.exists("POSTGIS", connInfo) then
+			connInfo = createPgConnInfo(data.host, data.port, data.user,
+									data.password, data.database, data.encoding)
+			dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
+		end
 	end,
 	--- Remove a PostreSQL database.
 	-- @arg data.host Name of the host.
@@ -3206,6 +3222,8 @@ TerraLib_ = {
 			local _, fileName = outInfo.file:split()
 			dseName = fileName
 		elseif type == "POSTGIS" then
+			createPgDbIfNotExists(outInfo.host, outInfo.port, outInfo.user, outInfo.password,
+								outInfo.database, outInfo.encoding)
 			connInfo = createPgConnInfo(outInfo.host, outInfo.port, outInfo.user,
 										outInfo.password, outInfo.database, outInfo.encoding)
 			dseName = outInfo.table

@@ -416,7 +416,8 @@ return {
 				resolution = 0.7,
 				password = password,
 				database = database,
-				table = tName1
+				table = tName1,
+				clean = true
 			}
 		end
 
@@ -889,9 +890,7 @@ return {
 
 		unitTest:assertError(vec2rasError, "Vector layer 'PgLayer' cannot be exported as raster data.")
 
-		pgData.encoding = "LATIN1"
-		pgData.table = layer3.table
-		TerraLib().dropPgTable(pgData)
+		layer3:delete()
 		proj.file:delete()
 	end,
 	drop = function(unitTest)
