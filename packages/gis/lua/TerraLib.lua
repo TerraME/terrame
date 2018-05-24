@@ -169,9 +169,9 @@ local function getPgErrorMessage(data, errorMsg)
 	elseif string.find(errorMsg, "could not translate host name") then
 		return "Host '"..data.host.."' was not found."
 	elseif string.find(errorMsg, "connections on port "..data.port) then
-		return "Port '"..data.port.."' is not configured to host '"..data.host.."'."
+		return "Port '"..data.port.."' is not available for host '"..data.host.."'."
 	elseif string.find(errorMsg, "password authentication failed for user") then
-		return "Connection failed, invalid username or password."
+		return "Connection failed due to invalid username or password."
 	elseif string.find(errorMsg, "database \""..data.database.."\" does not exist") then
 		return "Database '"..data.database.."' does not exist."
 	end

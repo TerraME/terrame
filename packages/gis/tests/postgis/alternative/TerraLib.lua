@@ -56,7 +56,7 @@ return {
 			TerraLib().addPgLayer(proj, layerName, pgData, nil, encoding)
 		end
 
-		unitTest:assertError(passWrong, "Connection failed, invalid username or password.")
+		unitTest:assertError(passWrong, "Connection failed due to invalid username or password.")
 
 		proj.file:delete()
 	end,

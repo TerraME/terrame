@@ -281,7 +281,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(portWrong,"Port '2345' is not configured to host 'localhost'.")
+		unitTest:assertError(portWrong, "Port '2345' is not available for host 'localhost'.")
 
 		local nonuser = "usernotexists"
 		local userNotExists = function()
@@ -298,7 +298,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(userNotExists, "Connection failed, invalid username or password.")
+		unitTest:assertError(userNotExists, "Connection failed due to invalid username or password.")
 
 		local wrongPass
 		local passWrong
@@ -316,7 +316,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(passWrong, "Connection failed, invalid username or password.")
+		unitTest:assertError(passWrong, "Connection failed due to invalid username or password.")
 
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
@@ -642,7 +642,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(portWrong, "Port '2345' is not configured to host 'localhost'.")
+		unitTest:assertError(portWrong, "Port '2345' is not available for host 'localhost'.")
 
 		nonuser = "usernotexists"
 		userNotExists = function()
@@ -659,7 +659,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(userNotExists, "Connection failed, invalid username or password.")
+		unitTest:assertError(userNotExists, "Connection failed due to invalid username or password.")
 
 		wrongPass = "passiswrong"
 		passWrong = function()
@@ -675,7 +675,7 @@ return {
 			}
 		end
 
-		unitTest:assertError(passWrong, "Connection failed, invalid username or password.")
+		unitTest:assertError(passWrong, "Connection failed due to invalid username or password.")
 
 		host = "localhost"
 		port = "5432"
@@ -818,7 +818,7 @@ return {
 			l1:drop()
 		end
 
-		unitTest:assertError(dropError, "Function 'drop' only works with PostGIS database.")
+		unitTest:assertError(dropError, "Function 'drop' only works with PostGIS layer.")
 		proj.file:delete()
 	end
 }
