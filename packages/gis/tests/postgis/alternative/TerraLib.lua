@@ -56,14 +56,7 @@ return {
 			TerraLib().addPgLayer(proj, layerName, pgData, nil, encoding)
 		end
 
-		if sessionInfo().system == "linux" then
-			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"postgres\"\n"..
-				"FATAL:  password authentication failed for user \"postgres\"\n.")
-		else
-			unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: ".. -- SKIP
-				"FATAL:  password authentication failed for user \"postgres\"\n.")
-		end
+		unitTest:assertError(passWrong, "Connection failed due to invalid username or password.")
 
 		proj.file:delete()
 	end,
@@ -164,5 +157,54 @@ return {
 
 		TerraLib().dropPgTable(pgData)
 		proj.file:delete()
+	end,
+	addPgCellSpaceLayer = function(unitTest)
+		local proj = {
+			file = "myproject.tview",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
+		}
+		File(proj.file):deleteIfExists()
+		TerraLib().createProject(proj, {})
+
+
+		local layerName1 = "AmazoniaTif"
+		local layerFile1 = filePath("amazonia-prodes.tif", "gis")
+		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
+
+		local tableName = "amzcs"
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tableName,
+			encoding = encoding
+		}
+
+		TerraLib().dropPgTable(pgData)
+
+		local clName1 = "Amazonia_PG_Cells"
+		local resolution = 3e5
+		local mask = false
+		TerraLib().dropPgTable(pgData)
+
+		local projectionError = function()
+			TerraLib().addPgCellSpaceLayer(proj, layerName1, clName1, resolution, pgData, mask)
+		end
+
+		unitTest:assertError(projectionError, "Layer 'AmazoniaTif' has a invalid EPSG. Please, set a valid projection, if it still doesn't work, reproject the layer data.")
+
+		proj.file:delete()
+		TerraLib().dropPgTable(pgData)
 	end
 }

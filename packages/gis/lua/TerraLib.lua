@@ -161,7 +161,25 @@ local function createFileConnInfo(filePath)
 	return connInfo
 end
 
-local function checkPgConnectParams(connInfo)
+local function getPgErrorMessage(data, errorMsg)
+	if string.find(errorMsg, "invalid SRID")then
+		return "Layer '"..data.layer.."' has a invalid EPSG. "
+					.. "Please, set a valid projection, if it still doesn't work, "
+					.. "reproject the layer data."
+	elseif string.find(errorMsg, "could not translate host name") then
+		return "Host '"..data.host.."' was not found."
+	elseif string.find(errorMsg, "connections on port "..data.port) then
+		return "Port '"..data.port.."' is not available for host '"..data.host.."'."
+	elseif string.find(errorMsg, "password authentication failed for user") then
+		return "Connection failed due to invalid username or password."
+	elseif string.find(errorMsg, "database \""..data.database.."\" does not exist") then
+		return "Database '"..data.database.."' does not exist."
+	end
+
+	return errorMsg -- SKIP
+end
+
+local function checkPgConnectParams(data, connInfo)
 	local msg
 
 	do
@@ -174,37 +192,42 @@ local function checkPgConnectParams(connInfo)
 	collectgarbage("collect")
 
 	if msg ~= "" then
-		customError(msg) -- SKIP
+		customError(getPgErrorMessage(data, msg)) -- SKIP
 	end
 end
 
-local function createPgDbIfNotExists(host, port, user, pass, database, encoding)
-	local connInfo = "pgsql://"..user..":"..pass.."@"..host..":"..port.."/?"
-					.."&PG_NEWDB_NAME="..database
-					.."&PG_NEWDB_OWNER="..user
+local function createPgDbIfNotExists(data, encoding)
+	local connInfo = "pgsql://"..data.user..":"..data.password.."@"
+					..data.host..":"..data.port.."/?"
+					.."&PG_NEWDB_NAME="..data.database
+					.."&PG_NEWDB_OWNER="..data.user
 					.."&PG_NEWDB_ENCODING="..encoding
 					.."&PG_CONNECT_TIMEOUT=10"
 					.."&PG_MAX_POOL_SIZE=4"
 					.."&PG_MIN_POOL_SIZE=2"
-					.."&PG_CHECK_DB_EXISTENCE="..database
+					.."&PG_CHECK_DB_EXISTENCE="..data.database
 
-	checkPgConnectParams(connInfo)
+	checkPgConnectParams(data, connInfo)
 
 	if not binding.te.da.DataSource.exists("POSTGIS", connInfo) then
 		binding.te.da.DataSource.create("POSTGIS", connInfo)
 	end
 end
 
-local function createPgConnInfo(host, port, user, pass, database, encoding)
-	createPgDbIfNotExists(host, port, user, pass, database, encoding)
-
-	return "pgsql://"..user..":"..pass.."@"..host..":"..port.."/"..database.."?"
+local function createPgConnInfo(data, encoding)
+	local connInfo = "pgsql://"..data.user..":"..data.password.."@"..data.host
+				..":"..data.port.."/"..data.database.."?"
 				.."&PG_CLIENT_ENCODING="..encoding
 				.."&PG_CONNECT_TIMEOUT=10"
 				.."&PG_MAX_POOL_SIZE=4"
 				.."&PG_MIN_POOL_SIZE=2"
 				.."&PG_HIDE_SPATIAL_METADATA_TABLES=FALSE"
 				.."&PG_HIDE_RASTER_TABLES=FALSE"
+				.."&PG_CHECK_DB_EXISTENCE="..data.database
+
+	checkPgConnectParams(data, connInfo)
+
+	return connInfo
 end
 
 local function createWmsConnInfo(url, user, password, port, query, fragment, directory, format)
@@ -553,19 +576,29 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, conn
 	local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
 	local cellName = dSetName
 	local inputDsType = inputLayer:getSchema()
+	local errorMsg
 
 	if mask then
 		if inputDsType:hasGeom() then
-			cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
+			errorMsg = cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
 										inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
-			return
 		else
 			customWarning("The 'mask' not work to Raster, it was ignored.")
+			errorMsg = cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
+													inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 		end
+	else
+		errorMsg = cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
+												inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 	end
 
-	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
-								inputLayer:getExtent(), inputLayer:getSRID(), cLType)
+	if errorMsg ~= "" then
+		if type == "POSTGIS" then
+			customError(getPgErrorMessage({layer = inputLayer:getTitle()}, errorMsg))
+		end
+
+		customError(errorMsg) -- SKIP
+	end
 end
 
 local function fixNameTo10Characters(name, property)
@@ -1520,8 +1553,8 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 
 			toData.table = string.lower(toData.table)
 			toDSetName = toData.table
-			local connInfo = createPgConnInfo(toData.host, toData.port, toData.user,
-								toData.password, toData.database, toData.encoding)
+			createPgDbIfNotExists(toData, toData.encoding)
+			local connInfo = createPgConnInfo(toData, toData.encoding)
 			toDs = makeAndOpenDataSource(connInfo, "POSTGIS")
 
 			if toDs:dataSetExists(toDSetName) then
@@ -2261,7 +2294,7 @@ TerraLib_ = {
 	--
 	-- TerraLib().addPgLayer(proj, "SampaPg", pgData)
 	addPgLayer = function(project, name, conn, srid, encoding)
-		local connInfo = createPgConnInfo(conn.host, conn.port, conn.user, conn.password, conn.database, encoding)
+		local connInfo = createPgConnInfo(conn, encoding)
 
 		loadProject(project, project.file)
 
@@ -2352,7 +2385,8 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
-		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, encoding)
+		createPgDbIfNotExists(data, encoding)
+		local connInfo = createPgConnInfo(data, encoding)
 		local srid = inputLayer:getSRID()
 
 		if not dataSetExists(connInfo, data.table, "POSTGIS") then
@@ -2400,8 +2434,16 @@ TerraLib_ = {
 	--
 	-- TerraLib().dropPgTable(pgData)
 	dropPgTable = function(data)
-		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
-		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
+		local connInfo = "pgsql://"..data.user..":"..data.password.."@"..data.host..":"..data.port.."/?"
+						.."&PG_CONNECT_TIMEOUT=10"
+						.."&PG_MAX_POOL_SIZE=4"
+						.."&PG_MIN_POOL_SIZE=2"
+						.."&PG_CHECK_DB_EXISTENCE="..data.database
+
+		if binding.te.da.DataSource.exists("POSTGIS", connInfo) then
+			connInfo = createPgConnInfo(data, data.encoding)
+			dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
+		end
 	end,
 	--- Remove a PostreSQL database.
 	-- @arg data.host Name of the host.
@@ -2512,7 +2554,9 @@ TerraLib_ = {
 				end
 			end
 
-			if propertyExists(toDsInfo:getConnInfo(), toLayer:getDataSetName(), property, toDsInfo:getType()) then
+			local toDSetName = toLayer:getDataSetName()
+
+			if propertyExists(toDsInfo:getConnInfo(), toDSetName, property, toDsInfo:getType()) then
 				customError("The attribute '"..property.."' already exists in the Layer.")
 			end
 
@@ -2602,9 +2646,8 @@ TerraLib_ = {
 			end
 
 			if outType == "POSTGIS" and outOverwrite then
-				to = string.lower(to)
-				dropDataSet(outConnInfo, to, outType)
-				outDs:renameDataSet(outDSetName, to)
+				dropDataSet(outConnInfo, toDSetName, outType)
+				outDs:renameDataSet(outDSetName, toDSetName)
 
 				loadProject(project, project.file) -- TODO: WHY IS IT NEEDING RELOAD? (REVIEW)
 				releaseProject(project)
@@ -3193,8 +3236,8 @@ TerraLib_ = {
 			local _, fileName = outInfo.file:split()
 			dseName = fileName
 		elseif type == "POSTGIS" then
-			connInfo = createPgConnInfo(outInfo.host, outInfo.port, outInfo.user,
-										outInfo.password, outInfo.database, outInfo.encoding)
+			createPgDbIfNotExists(outInfo, outInfo.encoding)
+			connInfo = createPgConnInfo(outInfo, outInfo.encoding)
 			dseName = outInfo.table
 		else
 			customError("Output type '"..outInfo.type.."' is not supported.")
