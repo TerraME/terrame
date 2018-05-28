@@ -633,7 +633,8 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 				end
 			end
 
-			if (string.len(newName) > 10) and (dsType ~= "POSTGIS") then
+			if (string.len(newName) > 10) and (dsType ~= "POSTGIS")
+					and (dSetName ~= "OGRGeoJSON") then
 				newName = fixNameTo10Characters(newName, property)
 			end
 
@@ -731,11 +732,6 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		if err == "" then
 			propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
-
-			if outType == "OGR" then
-				propCreatedName = getNormalizedName(propCreatedName)
-			end
-
 			propCreatedName = string.lower(propCreatedName)
 		end
 
@@ -2546,9 +2542,13 @@ TerraLib_ = {
 			local toDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
 			local outDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
 			local outType = outDsInfo:getType()
+			local outConnInfo = outDsInfo:getConnInfo()
+			local outFileExt
 
 			if outType == "OGR" then
-				if string.len(property) > 10 then
+				outFileExt = string.lower(File(fixSpaceInPath(outConnInfo:host()..outConnInfo:path())):extension())
+
+				if (string.len(property) > 10) and (outFileExt == "shp")  then
 					property = getNormalizedName(property)
 					customWarning("The 'attribute' lenght has more than 10 characters. It was truncated to '"..property.."'.")
 				end
@@ -2593,9 +2593,14 @@ TerraLib_ = {
 				out = to.."_"..rand
 			end
 
+			local outDSetName
+			if outFileExt == "geojson" then
+				outDSetName = "OGRGeoJSON"
+			else
+				outDSetName = out
+			end
+
 			local outDs
-			local outConnInfo = outDsInfo:getConnInfo()
-			local outDSetName = out
 			local propCreatedName
 			local outSpatialIdx
 
@@ -2605,7 +2610,7 @@ TerraLib_ = {
 			elseif outType == "OGR" then
 				local file = File(fixSpaceInPath(outConnInfo:host()..outConnInfo:path()))
 				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
-				outConnInfo = binding.te.core.URI(createFileConnInfo(outDir..out..".shp"))
+				outConnInfo = binding.te.core.URI(createFileConnInfo(outDir..out.."."..file:extension()))
 				outSpatialIdx = true
 			end
 
@@ -2622,7 +2627,9 @@ TerraLib_ = {
 			end
 
 			if outType == "OGR" then
-				propCreatedName = getNormalizedName(propCreatedName)
+				if outFileExt == "shp" then
+					propCreatedName = getNormalizedName(propCreatedName)
+				end
 			end
 
 			if (outType == "POSTGIS") and (type(select) == "string")  then
@@ -2671,7 +2678,14 @@ TerraLib_ = {
 					end
 
 					outDs:close()
-					overwriteLayer(project, out, to, toSetName, default)
+
+					if outFileExt == "geojson" then -- TODO(#2224)
+						local toFile = File(fixSpaceInPath(toConnInfo:host()..toConnInfo:path())):deleteIfExists()
+						os.execute("mv "..fixSpaceInPath(outConnInfo:host()..outConnInfo:path()).." "..toFile)
+					else
+						overwriteLayer(project, out, to, toSetName, default)
+					end
+
 					removeLayer(project, out)
 				end
 			end

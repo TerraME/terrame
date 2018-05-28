@@ -207,20 +207,30 @@ local function addCellularLayer(self, data)
 											data.file, not data.box, data.index)
 		end,
 		geojson = function()
-			mandatoryTableArgument(data, "file", "File") -- SKIP
+			mandatoryTableArgument(data, "file", "File")
+			defaultTableValue(data, "clean", false)
+			defaultTableValue(data, "index", true)
 
-			if repr == "raster" then -- SKIP
-				verifyUnnecessaryArguments(data, {"input", "name", "project", -- SKIP
-					"resolution", "file", "source"})
-				data.box = true -- SKIP
+			if repr == "raster" then
+				verifyUnnecessaryArguments(data, {"clean", "input", "name", "project",
+												"resolution", "file", "source", "index"})
+				data.box = true
 			else
-				defaultTableValue(data, "box", false) -- SKIP
-				verifyUnnecessaryArguments(data, {"box", "input", "name", "project", -- SKIP
-					"resolution", "file", "source"})
+				defaultTableValue(data, "box", false)
+				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project",
+												"resolution", "file", "source", "index"})
 			end
 
-			TerraLib().addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution, -- SKIP
-												data.file, not data.box) -- SKIP
+			if data.file:exists() then
+				if data.clean then
+					data.file:delete()
+				else
+					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
+				end
+			end
+
+			TerraLib().addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution,
+												data.file, not data.box, data.index)
 		end,
 		postgis = function()
 			checkPostgisParams(data)
