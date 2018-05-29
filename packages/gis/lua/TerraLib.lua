@@ -2681,7 +2681,7 @@ TerraLib_ = {
 
 					if outFileExt == "geojson" then -- TODO(#2224)
 						local toFile = File(fixSpaceInPath(toConnInfo:host()..toConnInfo:path())):deleteIfExists()
-						os.execute("mv "..fixSpaceInPath(outConnInfo:host()..outConnInfo:path()).." "..toFile)
+						os.execute("mv "..fixSpaceInPath(outConnInfo:host()..outConnInfo:path()).." "..toFile) -- SKIP
 					else
 						overwriteLayer(project, out, to, toSetName, default)
 					end

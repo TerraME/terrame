@@ -128,6 +128,30 @@ local function checkPostgisParams(data)
 	data.port = tostring(data.port)
 end
 
+local function checkCellularLayerOgrArguments(data, repr)
+	mandatoryTableArgument(data, "file", "File")
+	defaultTableValue(data, "clean", false)
+	defaultTableValue(data, "index", true)
+
+	if repr == "raster" then
+		verifyUnnecessaryArguments(data, {"clean", "input", "name", "project",
+										"resolution", "file", "source", "index"})
+		data.box = true
+	else
+		defaultTableValue(data, "box", false)
+		verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project",
+										"resolution", "file", "source", "index"})
+	end
+
+	if data.file:exists() then
+		if data.clean then
+			data.file:delete()
+		else
+			customError("File '"..data.file:name().."' already exists. Please set clean = true or remove it manually.")
+		end
+	end
+end
+
 local function addCellularLayer(self, data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source",
@@ -181,54 +205,12 @@ local function addCellularLayer(self, data)
 
 	switch(data, "source"):caseof{
 		shp = function()
-			mandatoryTableArgument(data, "file", "File")
-			defaultTableValue(data, "clean", false)
-			defaultTableValue(data, "index", true)
-
-			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"clean", "input", "name", "project",
-												"resolution", "file", "source", "index"})
-				data.box = true
-			else
-				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project",
-												"resolution", "file", "source", "index"})
-			end
-
-			if data.file:exists() then
-				if data.clean then
-					data.file:delete()
-				else
-					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
-				end
-			end
-
+			checkCellularLayerOgrArguments(data, repr)
 			TerraLib().addShpCellSpaceLayer(self, data.input, data.name, data.resolution,
 											data.file, not data.box, data.index)
 		end,
 		geojson = function()
-			mandatoryTableArgument(data, "file", "File")
-			defaultTableValue(data, "clean", false)
-			defaultTableValue(data, "index", true)
-
-			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"clean", "input", "name", "project",
-												"resolution", "file", "source", "index"})
-				data.box = true
-			else
-				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project",
-												"resolution", "file", "source", "index"})
-			end
-
-			if data.file:exists() then
-				if data.clean then
-					data.file:delete()
-				else
-					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
-				end
-			end
-
+			checkCellularLayerOgrArguments(data, repr)
 			TerraLib().addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution,
 												data.file, not data.box, data.index)
 		end,

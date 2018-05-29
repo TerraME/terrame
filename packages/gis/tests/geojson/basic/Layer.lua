@@ -23,6 +23,71 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	Layer = function(unitTest)
+		local creatingCellSpaceFromRaster = function()
+			local projName = "layer_basic_geojson.tview"
+
+			local proj = Project{
+				file = projName,
+				clean = true
+			}
+
+			local l1
+			local indexUnnecessary = function()
+				l1 = Layer{
+					project = proj,
+					name = "Prodes",
+					file = filePath("amazonia-prodes.tif", "gis"),
+					index = true
+				}
+			end
+			unitTest:assertWarning(indexUnnecessary, unnecessaryArgumentMsg("index"))
+
+			local cl1 = Layer{
+				project = proj,
+				input = l1.name,
+				clean = true,
+				name = "Prodes-Cells",
+				resolution = 60e3,
+				file = "prodes_cells.geojson"
+			}
+
+			unitTest:assertEquals(cl1.source, "geojson")
+			unitTest:assert(File(cl1.file):exists())
+
+			local cs1 = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			unitTest:assertEquals(#cs1, 2640)
+
+			-- CLEAN TEST
+			local cl2 = Layer{
+				project = proj,
+				input = l1.name,
+				clean = true,
+				name = "Prodes-Cells-2",
+				resolution = 60e3,
+				file = "prodes_cells.geojson"
+			}
+
+			unitTest:assertEquals(cl1.source, "geojson")
+			unitTest:assert(File(cl1.file):exists())
+
+			local cs2 = CellularSpace{
+				project = proj,
+				layer = cl2.name
+			}
+
+			unitTest:assertEquals(#cs2, 2640)
+
+			File(cl1.file):delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(creatingCellSpaceFromRaster)
+	end,
 	polygonize = function(unitTest)
 		local projFile = File("polygonize_basic_geojson.tview")
 
