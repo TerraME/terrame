@@ -1085,7 +1085,7 @@ return {
 	saveDataSet = function(unitTest)
 		local createProject = function()
 			local proj = {
-				file = "saveDataSet-basic.tview",
+				file = "savedataset-shp-basic.tview",
 				title = "TerraLib Tests",
 				author = "Avancini Rodrigo"
 			}

@@ -657,5 +657,90 @@ return {
 		end
 
 		unitTest:assert(allSupportedOperation)
+	end,
+	saveDataSet = function(unitTest)
+		local overwriteLayer = function()
+			local proj = {
+				file = "savedataset-geojson-basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+
+			local l1Name = "SampaShp"
+			local l1File = filePath("test/sampa.shp", "gis")
+			TerraLib().addShpLayer(proj, l1Name, l1File)
+
+			local cl1Name = "SampaCellsGjson"
+			local cl1File = File(cl1Name..".geojson"):deleteIfExists()
+			local resolution = 1
+			local mask = true
+			TerraLib().addGeoJSONCellSpaceLayer(proj, l1Name, cl1Name, resolution, cl1File, mask)
+
+			local dSet = TerraLib().getDataSet{project = proj, layer = cl1Name}
+			local luaTable = {}
+			for i = 0, getn(dSet) - 1 do
+				local data = dSet[i]
+				data.attr1 = i
+				data.attr2 = "test"..i
+				data.attr3 = (i % 2) == 0
+				table.insert(luaTable, dSet[i])
+			end
+
+			local cl2Name = "New"..cl1Name
+			local cl2File = File(cl2Name..".geojson"):deleteIfExists()  --< TODO(#2224)
+
+			-- ADDING ALL SUPPORTED ATTRIBUTE TYPES
+			TerraLib().saveDataSet(proj, cl1Name, luaTable, cl2Name, {"attr1", "attr2", "attr3"})
+
+			local propInfo = TerraLib().getPropertyInfos(proj, cl2Name)
+
+			unitTest:assertEquals(propInfo[0].name, "FID")
+			unitTest:assertEquals(propInfo[0].type, "integer 32")
+			unitTest:assertEquals(propInfo[1].name, "id")
+			unitTest:assertEquals(propInfo[1].type, "string")
+			unitTest:assertEquals(propInfo[2].name, "col")
+			unitTest:assertEquals(propInfo[2].type, "integer 32")
+			unitTest:assertEquals(propInfo[3].name, "row")
+			unitTest:assertEquals(propInfo[3].type, "integer 32")
+			unitTest:assertEquals(propInfo[4].name, "attr1")
+			unitTest:assertEquals(propInfo[4].type, "double")
+			unitTest:assertEquals(propInfo[5].name, "attr2")
+			unitTest:assertEquals(propInfo[5].type, "string")
+			unitTest:assertEquals(propInfo[6].name, "attr3")
+			unitTest:assertEquals(propInfo[6].type, "string")
+			unitTest:assertEquals(propInfo[7].name, "OGR_GEOMETRY")
+			unitTest:assertEquals(propInfo[7].type, "geometry")
+
+			-- OVERWRITE -- TODO(#2224)
+			-- dSet = TerraLib().getDataSet{project = proj, layer = cl2Name}
+			-- luaTable = {}
+			-- for i = 0, getn(dSet) - 1 do
+				-- local data = dSet[i]
+				-- data.attr4 = i
+				-- table.insert(luaTable, dSet[i])
+			-- end
+
+			-- TerraLib().saveDataSet(proj, cl2Name, luaTable, cl2Name, {"attr4"})
+
+			-- propInfo = TerraLib().getPropertyInfos(proj, cl2Name)
+
+			-- unitTest:assertEquals(propInfo[7].name, "attr4") -- SKIP
+			-- unitTest:assertEquals(propInfo[7].type, "double") -- SKIP
+
+			-- for i = 0, getn(propInfo) do
+				-- for k, v in pairs(propInfo[i]) do
+					-- _Gtme.print(k, v)
+				-- end
+			-- end
+
+			cl1File:delete()
+			cl2File:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(overwriteLayer)
 	end
 }

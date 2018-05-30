@@ -2795,7 +2795,13 @@ TerraLib_ = {
 				createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 
 				local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
-				local toLayer = createLayer(toLayerName, toSetName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
+
+				local toLayer
+				if dseName == "OGRGeoJSON" then
+					toLayer = createLayer(toLayerName, dseName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
+				else
+					toLayer = createLayer(toLayerName, toSetName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
+				end
 
 				project.layers[toLayerName] = toLayer
 				saveProject(project, project.layers)
