@@ -715,7 +715,6 @@ return {
 
 		table.insert(shapes, "munic_cells.shp")
 
-
 		local warning_function = function()
 			cl:fill{
 				operation = "coverage",

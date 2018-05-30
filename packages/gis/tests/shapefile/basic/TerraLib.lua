@@ -465,7 +465,7 @@ return {
 			unitTest:assertEquals(percLayerInfo.type, "OGR")
 			unitTest:assertEquals(percLayerInfo.rep, "polygon")
 
-			-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION
+			-- FILL CELLULAR SPACE WITH STANDARD DEVIATION OPERATION
 			local stdevLayerName = clName.."_"..layerName3.."_Stdev"
 			shp[9] = testDir..stdevLayerName..".shp"
 
@@ -1085,7 +1085,7 @@ return {
 	saveDataSet = function(unitTest)
 		local createProject = function()
 			local proj = {
-				file = "saveDataSet-basic.tview",
+				file = "savedataset-shp-basic.tview",
 				title = "TerraLib Tests",
 				author = "Avancini Rodrigo"
 			}
