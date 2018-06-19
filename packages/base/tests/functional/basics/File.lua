@@ -99,7 +99,7 @@ return{
 	end,
 	delete = function(unitTest)
 		local filepath = packageInfo().data.."test123"
-		os.execute("touch "..filepath)
+		os.execute("touch \""..filepath.."\"")
 
 		local file = File(filepath)
 		file:delete()
@@ -124,7 +124,7 @@ return{
 	end,
 	deleteIfExists = function(unitTest)
 		local filepath = packageInfo().data.."test123"
-		os.execute("touch "..filepath)
+		os.execute("touch \""..filepath.."\"")
 
 		local file = File(filepath)
 		file:deleteIfExists()
@@ -158,7 +158,7 @@ return{
 		unitTest:assert(file:hasExtension())
 
 		file = File(packageInfo("base").data.."file")
-		os.execute("touch "..tostring(file))
+		os.execute("touch \""..tostring(file).."\"")
 		unitTest:assert(not file:hasExtension())
 		file:delete()
 	end,

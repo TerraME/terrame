@@ -23,6 +23,71 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	Layer = function(unitTest)
+		local creatingCellSpaceFromRaster = function()
+			local projName = "layer_basic_geojson.tview"
+
+			local proj = Project{
+				file = projName,
+				clean = true
+			}
+
+			local l1
+			local indexUnnecessary = function()
+				l1 = Layer{
+					project = proj,
+					name = "Prodes",
+					file = filePath("amazonia-prodes.tif", "gis"),
+					index = true
+				}
+			end
+			unitTest:assertWarning(indexUnnecessary, unnecessaryArgumentMsg("index"))
+
+			local cl1 = Layer{
+				project = proj,
+				input = l1.name,
+				clean = true,
+				name = "Prodes-Cells",
+				resolution = 60e3,
+				file = "prodes_cells.geojson"
+			}
+
+			unitTest:assertEquals(cl1.source, "geojson")
+			unitTest:assert(File(cl1.file):exists())
+
+			local cs1 = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			unitTest:assertEquals(#cs1, 2640)
+
+			-- CLEAN TEST
+			local cl2 = Layer{
+				project = proj,
+				input = l1.name,
+				clean = true,
+				name = "Prodes-Cells-2",
+				resolution = 60e3,
+				file = "prodes_cells.geojson"
+			}
+
+			unitTest:assertEquals(cl1.source, "geojson")
+			unitTest:assert(File(cl1.file):exists())
+
+			local cs2 = CellularSpace{
+				project = proj,
+				layer = cl2.name
+			}
+
+			unitTest:assertEquals(#cs2, 2640)
+
+			File(cl1.file):delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(creatingCellSpaceFromRaster)
+	end,
 	polygonize = function(unitTest)
 		local projFile = File("polygonize_basic_geojson.tview")
 
@@ -52,5 +117,668 @@ return {
 
 		gjsonLayer:delete()
 		proj.file:delete()
+	end,
+	fill = function(unitTest)
+		local allSupportedOperation = function()
+			local proj = Project{
+				file = "fill_geojson_basic.tview",
+				clean = true,
+			}
+
+			local counties = Layer{
+				project = proj,
+				name = "Counties",
+				file = filePath("test/municipiosAML_ok.shp", "gis")
+			}
+
+			local files = {}
+
+			local countiesFileGjson = "municipiosAML_ok.geojson"
+			table.insert(files, countiesFileGjson)
+			counties:export{file = countiesFileGjson, overwrite = true}
+
+			local paLimit = Layer{
+				project = proj,
+				name = "PA-Limit",
+				file = filePath("test/limitePA_polyc_pol.shp", "gis")
+			}
+
+			local paLimitFileGjson = "limitePA_polyc_pol.geojson"
+			table.insert(files, paLimitFileGjson)
+			paLimit:export{file = paLimitFileGjson, overwrite = true}
+
+			local countiesGjson = Layer{
+				project = proj,
+				name = counties.name.."-GJson",
+				file = countiesFileGjson
+			}
+
+			local paLimitGjson = Layer{
+				project = proj,
+				name = paLimit.name.."-GJson",
+				file = paLimitFileGjson
+			}
+
+			local cl1Name = "csPA"
+			local cl1File = cl1Name..".geojson"
+			table.insert(files, cl1File)
+
+			local cl1 = Layer{
+				project = proj,
+				clean = true,
+				input = paLimitGjson.name,
+				name = cl1Name,
+				resolution = 70000,
+				file = files[3]
+			}
+
+			-- MODE
+			cl1:fill{
+				operation = "mode",
+				layer = countiesGjson.name,
+				attribute = "polmode",
+				select = "POPULACAO_"
+			}
+
+			local cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			local map = Map{
+				target = cs,
+				select = "polmode",
+				value = {"0", "53217", "37086", "14302"},
+				color = {"red", "green", "blue", "yellow"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-mode-geojson.png")
+
+			-- MODE (area = true)
+			cl1:fill{
+				operation = "mode",
+				layer = countiesGjson.name,
+				attribute = "polmode2",
+				select = "POPULACAO_",
+				area = true
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polmode2",
+				min = 0,
+				max = 1410000,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-mode-2-geojson.png")
+
+			local protect = Layer{
+				project = proj,
+				name = "Protect-Area",
+				file = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
+			}
+
+			local protectFileGjson = "BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.geojson"
+			protect:export{file = protectFileGjson, overwrite = true}
+			table.insert(files, protectFileGjson)
+
+			local protectGjson = Layer{
+				project = proj,
+				name = protect.name.."-GJson",
+				file = protectFileGjson
+			}
+
+			-- AREA
+			cl1:fill{
+				operation = "area",
+				layer = protectGjson,
+				attribute = "marea"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "marea",
+				min = 0,
+				max = 1,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-area-geojson.png")
+
+			local roads = Layer{
+				project = proj,
+				name = "Roads",
+				file = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
+			}
+
+			local roadsFileGjson = "BCIM_Trecho_RodoviarioLine_PA_polyc_lin.geojson"
+			roads:export{file = roadsFileGjson, overwrite = true}
+			table.insert(files, roadsFileGjson)
+
+			local roadsGjson = Layer{
+				project = proj,
+				name = roads.name.."-GJson",
+				file = roadsFileGjson
+			}
+
+			-- DISTANCE
+			cl1:fill{
+				operation = "distance",
+				layer = roadsGjson,
+				attribute = "lindist"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "lindist",
+				min = 0,
+				max = 200000,
+				slices = 8,
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "lines-distance-geojson.png")
+
+			cl1:fill{
+				operation = "distance",
+				layer = protectGjson,
+				attribute = "poldist"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "poldist",
+				min = 0,
+				max = 370000,
+				slices = 8,
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-distance-geojson.png")
+
+			-- PRESENCE
+			cl1:fill{
+				operation = "presence",
+				layer = roadsGjson,
+				attribute = "linpres"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "linpres",
+				value = {0, 1},
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "lines-presence-geojson.png")
+
+			cl1:fill{
+				operation = "presence",
+				layer = protectGjson,
+				attribute = "polpres"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polpres",
+				value = {0, 1},
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-presence-geojson.png")
+
+			local cl2Name = "csPALarge"
+			local cl2File = cl2Name..".geojson"
+			table.insert(files, cl2File)
+			local cl2 = Layer{
+				project = proj,
+				clean = true,
+				input = paLimitGjson.name,
+				name = cl2Name,
+				resolution = 100000,
+				file = cl2File
+			}
+
+			-- COUNT
+			cl2:fill{
+				operation = "count",
+				layer = roadsGjson,
+				attribute = "linecount"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl2.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "linecount",
+				min = 0,
+				max = 135,
+				slices = 10,
+				color = {"green", "blue"}
+			}
+
+			unitTest:assertSnapshot(map, "lines-count-geojson.png")
+
+			cl2:fill{
+				operation = "count",
+				layer = protectGjson,
+				attribute = "polcount"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl2.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polcount",
+				value = {0, 1, 2},
+				color = {"green", "red", "blue"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-count-geojson.png")
+
+			-- MAXIMUM
+			cl1:fill{
+				operation = "maximum",
+				layer = countiesGjson,
+				attribute = "polmax",
+				select = "POPULACAO_"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polmax",
+				min = 0,
+				max = 1450000,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-maximum-geojson.png")
+
+			-- MINIMUM
+			cl1:fill{
+				operation = "minimum",
+				layer = countiesGjson,
+				attribute = "polmin",
+				select = "POPULACAO_"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polmin",
+				min = 0,
+				max = 275000,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-minimum-geojson.png")
+
+			-- AVERAGE
+			cl1:fill{
+				operation = "average",
+				layer = countiesGjson,
+				attribute = "polavrg",
+				select = "POPULACAO_"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polavrg",
+				min = 0,
+				max = 311000,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-average-geojson.png")
+
+			-- STDEV
+			cl1:fill{
+				operation = "stdev",
+				layer = countiesGjson,
+				attribute = "stdev",
+				select = "POPULACAO_"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl1.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "stdev",
+				min = 0,
+				max = 550000,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-stdev-geojson.png")
+
+			local cl3Name = "CellsSet"
+			local cl3File = cl3Name..".geojson"
+			table.insert(files, cl3File)
+			local cl3 = Layer{
+				project = proj,
+				clean = true,
+				input = countiesGjson.name,
+				name = cl3Name,
+				resolution = 300000,
+				file = cl3File
+			}
+
+			-- SUM
+			cl3:fill{
+				operation = "sum",
+				layer = countiesGjson,
+				attribute = "polsuma",
+				select = "POPULACAO_",
+				area = true
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = countiesGjson.name
+			}
+
+			local sum1 = 0
+			forEachCell(cs, function(cell)
+				sum1 = sum1 + cell.POPULACAO_
+			end)
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl3.name
+			}
+
+			local sum2 = 0
+			forEachCell(cs, function(cell)
+				sum2 = sum2 + cell.polsuma
+			end)
+
+			-- unitTest:assertEquals(sum1, sum2, 1e-4) -- SKIP TODO(#2225)
+
+			map = Map{
+				target = cs,
+				select = "polsuma",
+				min = 0,
+				max = 4000000,
+				slices = 20,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-sum-area-geojson.png")
+
+			local sectors = Layer{
+				project = proj,
+				name = "Sectors",
+				file = filePath("itaituba-census.shp", "gis")
+			}
+
+			local sectorsFileGjson = "itaituba-census.geojson"
+			sectors:export{file = sectorsFileGjson, overwrite = true}
+			table.insert(files, sectorsFileGjson)
+
+			local sectorsGjson = Layer{
+				project = proj,
+				name = sectors.name.."-GJson",
+				file = sectorsFileGjson
+			}
+
+			local cl4Name = "CellsAvg"
+			local cl4File= cl4Name..".geojson"
+			table.insert(files, cl4File)
+			local cl4 = Layer{
+				project = proj,
+				clean = true,
+				input = sectorsGjson.name,
+				name = cl4Name,
+				resolution = 10000,
+				file = cl4File
+			}
+
+			-- AVERAGE (area = true)
+			cl4:fill{
+				operation = "average",
+				layer = sectorsGjson,
+				attribute = "polavg",
+				select = "dens_pop",
+				area = true
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl4.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polavg",
+				min = 0,
+				max = 36,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-average-area-geojson.png")
+
+			local cl5 = Layer{
+				project = proj,
+				resolution = 200000,
+				clean = true,
+				file = "CountiesCells.geojson",
+				name = "CountiesCells",
+				input = countiesGjson.name
+			}
+
+			table.insert(files, cl5.file)
+
+			local warn = function()
+				cl5:fill{
+					operation = "coverage",
+					layer = countiesGjson,
+					dummy = -1,
+					select = "CODMESO",
+					attribute = "meso"
+				}
+			end
+
+			unitTest:assertWarning(warn, unnecessaryArgumentMsg("dummy"))
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl5.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "meso_2",
+				color = "RdPu",
+				slices = 5
+			}
+
+			unitTest:assertSnapshot(map, "polygons-coverage-1-geojson.png")
+
+			map = Map{
+				target = cs,
+				select = "meso_3",
+				color = "RdPu",
+				slices = 5
+			}
+
+			unitTest:assertSnapshot(map, "polygons-coverage-2-geojson.png")
+
+			local amz = Layer{
+				project = proj,
+				name = "Amazonia",
+				file = filePath("amazonia-limit.shp", "gis")
+			}
+
+			local amzFileGjson = "amazonia-limit.geojson"
+			amz:export{file = amzFileGjson, overwrite = true}
+			table.insert(files, amzFileGjson)
+
+			local amzGjson = Layer{
+				project = proj,
+				name = amz.name.."-GJson",
+				file = amzFileGjson
+			}
+
+			local cl6 = Layer{
+				project = proj,
+				clean = true,
+				input = amzGjson.name,
+				name = "CellsAmaz",
+				resolution = 200000,
+				file = "CellsAmaz.geojson"
+			}
+
+			table.insert(files, cl6.file)
+
+			local ports = Layer{
+				project = proj,
+				name = "Ports",
+				file = filePath("amazonia-ports.shp", "gis")
+			}
+
+			local portsFileGjson = "amazonia-ports.geojson"
+			ports:export{file = portsFileGjson, overwrite = true}
+			table.insert(files, portsFileGjson)
+
+			local portsGjson = Layer{
+				project = proj,
+				name = ports.name.."-GJson",
+				file = portsFileGjson
+			}
+
+			-- DISTANCE
+			cl6:fill{
+				operation = "distance",
+				layer = portsGjson,
+				attribute = "pointdist"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl6.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "pointdist",
+				min = 0,
+				max = 2000000,
+				slices = 8,
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "points-distance-geojson.png")
+
+			-- PRESENCE
+			cl6:fill{
+				operation = "presence",
+				layer = portsGjson,
+				attribute = "pointpres"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl6.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "pointpres",
+				value = {0, 1},
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "points-presence-geojson.png")
+
+			-- COUNT
+			cl6:fill{
+				operation = "count",
+				layer = portsGjson,
+				attribute = "pointcount"
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl6.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "pointcount",
+				value = {0, 1, 2},
+				color = {"green", "red", "blue"}
+			}
+
+			unitTest:assertSnapshot(map, "points-count-geojson.png")
+
+			for i = 1, #files do
+				File(files[i]):delete()
+			end
+
+			proj.file:delete()
+		end
+
+		unitTest:assert(allSupportedOperation)
 	end
 }

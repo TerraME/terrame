@@ -34,7 +34,7 @@ return{
 		local baseInfo = packageInfo()
 		local s = sessionInfo().separator
 
-		os.execute("cp "..tlInfo.data.."amazonia.lua "..baseInfo.data)
+		File(tlInfo.data.."amazonia.lua"):copy(baseInfo.data)
 
 		error_func = function()
 			filePath("amazonia.tview")
@@ -60,7 +60,7 @@ return{
 
 		unitTest:assertError(error_func, "File 'data/test/braz.gdal' does not exist in package 'base'. Do you mean 'brazil.gal'?")
 
-		File(baseInfo.data.."amazonia.lua"):deleteIfExists()
+		File(baseInfo.data.."amazonia.lua"):delete()
 	end,
 	filesByExtension = function(unitTest)
 		local error_func = function()

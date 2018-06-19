@@ -242,7 +242,7 @@ local function copyExamplesTutorials()
 		path = dirname
 	end
 
-	os.execute("cp -r "..ide.."terrame-examples "..path)
+	os.execute("cp -r \""..ide.."terrame-examples\" \""..path.."\"")
 	copyPackage("base", examples)
 	copyPackage("gis", examples)
 end

@@ -107,8 +107,13 @@ end
 local function checkPostgisParams(data)
 	mandatoryTableArgument(data, "password", "string")
 	mandatoryTableArgument(data, "database", "string")
+	optionalTableArgument(data, "table", "string")
 
 	checkName(data.database, "Database")
+
+	if data.table then
+		data.table = string.lower(data.table)
+	end
 
 	if data.name then
 		defaultTableValue(data, "table", string.lower(data.name))
@@ -121,6 +126,30 @@ local function checkPostgisParams(data)
 	defaultTableValue(data, "user", "postgres")
 	defaultTableValue(data, "port", 5432)
 	data.port = tostring(data.port)
+end
+
+local function checkCellularLayerOgrArguments(data, repr)
+	mandatoryTableArgument(data, "file", "File")
+	defaultTableValue(data, "clean", false)
+	defaultTableValue(data, "index", true)
+
+	if repr == "raster" then
+		verifyUnnecessaryArguments(data, {"clean", "input", "name", "project",
+										"resolution", "file", "source", "index"})
+		data.box = true
+	else
+		defaultTableValue(data, "box", false)
+		verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project",
+										"resolution", "file", "source", "index"})
+	end
+
+	if data.file:exists() then
+		if data.clean then
+			data.file:delete()
+		else
+			customError("File '"..data.file:name().."' already exists. Please set clean = true or remove it manually.")
+		end
+	end
 end
 
 local function addCellularLayer(self, data)
@@ -176,46 +205,14 @@ local function addCellularLayer(self, data)
 
 	switch(data, "source"):caseof{
 		shp = function()
-			mandatoryTableArgument(data, "file", "File")
-			defaultTableValue(data, "clean", false)
-			defaultTableValue(data, "index", true)
-
-			if repr == "raster" then
-				verifyUnnecessaryArguments(data, {"clean", "input", "name", "project",
-												"resolution", "file", "source", "index"})
-				data.box = true
-			else
-				defaultTableValue(data, "box", false)
-				verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project",
-												"resolution", "file", "source", "index"})
-			end
-
-			if data.file:exists() then
-				if data.clean then
-					data.file:delete()
-				else
-					customError("File '"..data.file.."' already exists. Please set clean = true or remove it manually.")
-				end
-			end
-
+			checkCellularLayerOgrArguments(data, repr)
 			TerraLib().addShpCellSpaceLayer(self, data.input, data.name, data.resolution,
 											data.file, not data.box, data.index)
 		end,
 		geojson = function()
-			mandatoryTableArgument(data, "file", "File") -- SKIP
-
-			if repr == "raster" then -- SKIP
-				verifyUnnecessaryArguments(data, {"input", "name", "project", -- SKIP
-					"resolution", "file", "source"})
-				data.box = true -- SKIP
-			else
-				defaultTableValue(data, "box", false) -- SKIP
-				verifyUnnecessaryArguments(data, {"box", "input", "name", "project", -- SKIP
-					"resolution", "file", "source"})
-			end
-
-			TerraLib().addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution, -- SKIP
-												data.file, not data.box) -- SKIP
+			checkCellularLayerOgrArguments(data, repr)
+			TerraLib().addGeoJSONCellSpaceLayer(self, data.input, data.name, data.resolution,
+												data.file, not data.box, data.index)
 		end,
 		postgis = function()
 			checkPostgisParams(data)
@@ -477,6 +474,18 @@ Layer_ = {
 	-- layer:delete()
 	delete = function(self)
 		deleteData(self)
+	end,
+	--- Drop the database of the Layer.
+	-- This function only works when the layer is stored in a PostGIS table.
+	-- Note that it removes all tables within the database.
+	-- @usage -- DONTRUN
+	-- layer:drop()
+	drop = function(self)
+		if self.database then
+			TerraLib().dropPgDatabase(self)
+		else
+			customError("Function 'drop' only works with PostGIS layer.")
+		end
 	end,
 	--- Return the number of bands of a raster layer. If the layer does not have a raster representation
 	-- then it will stop with an error. The bands of the raster layer are named from zero to the number of

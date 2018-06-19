@@ -59,12 +59,6 @@ return{
 		end
 		unitTest:assertError(error_func, "'agents.csv' is a file, and not a directory.", 0, true)
 
-		local blankSpaceError = function()
-			Directory("/home/da ta/agents.csv")
-		end
-
-		unitTest:assertError(blankSpaceError, "Directory path '/home/da ta/agents.csv' contains blank space.")
-
 		local invalidCharError = function()
 			Directory("C:/Usuários")
 		end

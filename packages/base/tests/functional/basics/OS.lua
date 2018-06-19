@@ -41,7 +41,7 @@ return{
 		unitTest:assert(isFile(tostring(filePath("agents.csv"))))
 	end,
 	runCommand = function(unitTest)
-		local d, e = runCommand("ls "..packageInfo().data)
+		local d, e = runCommand("ls \""..packageInfo().data.."\"")
 		unitTest:assertEquals(#d, 33) -- 33 files
 		unitTest:assertEquals(#e, 0)
 	end,
