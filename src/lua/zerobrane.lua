@@ -147,9 +147,9 @@ local function createPackageIndex(packageName, packageExamplesPath, luaFiles, ti
 end
 
 local function copyPackage(packageName, examplesPath)
-	local subfolders = {"examples", "data"}
+	local subfolders = {examples = true, data = true}
 	_Gtme.printNote("Copying package "..packageName)
-	forEachElement(subfolders, function(_, subfolder)
+	forEachElement(subfolders, function(subfolder)
 		local packagePath = Directory(packageInfo(packageName).path.."/"..subfolder)
 		local folder = subfolder
 		if folder == "data" then
@@ -161,11 +161,15 @@ local function copyPackage(packageName, examplesPath)
 			outputDir:create()
 		end
 
-		runCommand("cp -r "..packagePath.."/*.{tme,lua} "..outputDir) -- suppress 'not found' errors
+		forEachFile(packagePath, function(file)
+			if file:hasExtension("tme") or file:hasExtension("lua") then
+				file:copy(outputDir)
+			end
+		end)
+
 		local files = outputDir:list()
 		local luaFiles = {}
 		if #files == 0 then -- delete folder if its empty
-			outputDir:delete()
 			return
 		end
 
