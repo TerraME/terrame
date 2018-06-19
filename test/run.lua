@@ -242,7 +242,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 		local logfile = File("log"..s..lfilename)
 		if not logfile:exists() then
-			_Gtme.printError("Creating log file '".._Gtme.makePathCompatibleToAllOS( "log"..s..lfilename.."'"))
+			_Gtme.printError("Creating log file '".._Gtme.makePathCompatibleToAllOS("log"..s..lfilename.."'"))
 			report.createdlogs = report.createdlogs + 1
 
 			forEachElement(result, function(_, value)
