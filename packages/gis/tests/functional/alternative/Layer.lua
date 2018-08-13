@@ -38,6 +38,12 @@ return{
 
 		unitTest:assertError(projNotExists, "Project file '"..File("myproj.tview").."' does not exist.")
 
+		local noProj = function()
+			Layer{file = "myfile.shp", name = "name"}
+		end
+
+		unitTest:assertError(noProj, mandatoryArgumentMsg("project"))
+
 		local projFile = File("proj_celllayer.tview")
 
 		projFile:deleteIfExists()

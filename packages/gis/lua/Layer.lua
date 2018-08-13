@@ -1429,11 +1429,15 @@ metaTableLayer_ = {
 function Layer(data)
 	verifyNamedTable(data)
 	mandatoryTableArgument(data, "name", "string")
-	if type(data.project) == "string" then
+
+	local pType = type(data.project)
+
+	if pType == "string" then
 		data.project = File(data.project)
+		pType = "File"
 	end
 
-	if type(data.project) == "File" then
+	if pType == "File" then
 		if not data.project:exists() then
 			customError("Project file '"..data.project.."' does not exist.")
 		end
@@ -1441,6 +1445,8 @@ function Layer(data)
 		data.project = Project{
 			file = data.project
 		}
+	elseif pType ~= "Project" then
+		mandatoryTableArgument(data, "project", "Project")
 	end
 
 	if data.file and type(data.file) == "string" then
