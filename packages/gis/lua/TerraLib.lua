@@ -592,7 +592,7 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, conn
 												inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 	end
 
-	if errorMsg ~= "" then
+	if errorMsg and errorMsg ~= "" then
 		if type == "POSTGIS" then
 			customError(getPgErrorMessage({layer = inputLayer:getTitle()}, errorMsg))
 		end

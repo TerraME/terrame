@@ -1434,7 +1434,10 @@ function Layer(data)
 
 	if pType == "string" then
 		data.project = File(data.project)
-	elseif pType == "File" then
+		pType = "File"
+	end
+
+	if pType == "File" then
 		if not data.project:exists() then
 			customError("Project file '"..data.project.."' does not exist.")
 		end
