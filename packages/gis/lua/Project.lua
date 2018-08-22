@@ -120,7 +120,14 @@ function Project(data)
 			end
 
 			if not value:exists() then
-				customError("Value of argument '"..idx.."' ('"..value.."') is not a valid file name.")
+				local suggest = suggestion(value:name(), Directory(value:path()):list())
+				local msg = "Value of argument '"..idx.."' ('"..value.."') is not a valid file name."
+				if suggest then
+					local suggestMsg = suggestionMsg(suggest)
+					msg = msg.." "..suggestMsg
+				end
+
+				customError(msg)
 			end
 		end
 	end)
