@@ -72,6 +72,12 @@ return{
 
 		unitTest:assertError(notFile, "Value of argument 'cean' ('/true.abc') is not a valid file name.", 3, true)
 
+		local notFileSuggestion = function()
+			Project{file = "myproj.tview", cean = filePath("amazonia-indigenous2.shp", "gis")}
+		end
+
+		unitTest:assertError(notFileSuggestion, "Value of argument 'cean' ('/true.abc') is not a valid file name. Do you mean 'amazonia-indigenous.shp'?", 3, true)
+
 		local directoryNotString = function()
 			Project{file = "myproj.tview", directory = 2}
 		end
