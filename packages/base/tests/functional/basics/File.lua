@@ -26,6 +26,13 @@ return{
 	File = function(unitTest)
 		local file = File("abc.txt")
 		unitTest:assertType(file, "File")
+
+		file = File("ação.txt")
+		if sessionInfo().system == "windows" then
+			unitTest:assert(tostring(file) ~= currentDir().."ação.txt") -- SKIP
+		end
+		local f2 = File("ação.txt")
+		unitTest:assertEquals(tostring(file), tostring(f2))
 	end,
 	__concat = function(unitTest)
 		local f = File("abcd1234")

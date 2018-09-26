@@ -107,7 +107,7 @@ void ChartPlot::mouseDoubleClickEvent(QMouseEvent *ev)
 void ChartPlot::exportChart(std::string file, string extension)
 {
 	QPixmap pixmap = grab();
-	pixmap.save(file.c_str(), extension.c_str());
+	pixmap.save(QString::fromLocal8Bit(file.c_str()), extension.c_str());
 }
 
 void ChartPlot::setInternalCurves(const QList<InternalCurve *> &interCurves)
