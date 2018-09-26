@@ -52,7 +52,7 @@ public:
 	int setObserver(lua_State* L);
 
 	/// destructor
-        ~luaTextScreen(void);
+	~luaTextScreen(void);
 
     int save(lua_State* L);
 
