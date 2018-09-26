@@ -1642,13 +1642,13 @@ end
 --- This function converts latin characters to hexadecimal code by the characters bytes.
 -- It is necessary to Windows OS works correctly with latin characters.
 -- Also, it is necessary to set Lua locale as the same as the system locale.
--- See os.setlocale() for more details. 
+-- See os.setlocale() for more details.
 -- The list of unicode characters can be found in
--- https://en.wikipedia.org/wiki/List_of_Unicode_characters
+-- https://en.wikipedia.org/wiki/List_of_Unicode_characters.
 -- @arg str A string.
 -- @usage --DONTRUN
--- print(replaceLatinCharacters(águia)) 
--- > \xE1guia  
+-- print(replaceLatinCharacters(águia))
+-- > \xE1guia
 function replaceLatinCharacters(str)
 	if not hasLatinCharacters(str) then
 		return str

@@ -48,8 +48,6 @@ return{
 
 		unitTest:assertError(error_func, "Directory '/my/path/' does not exist.")
 
-		local path = packageInfo("base").data
-
 		local filename = "file*"
 		error_func = function()
 			File(filename)

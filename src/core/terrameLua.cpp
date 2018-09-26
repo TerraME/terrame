@@ -219,7 +219,7 @@ int cpp_imagecompare(lua_State *L)
 {
     const char* s1 = lua_tostring(L, -1);
     const char* s2 = lua_tostring(L, -2);
-	
+
 	QString f1(QString::fromLocal8Bit(s1));
 	QString f2(QString::fromLocal8Bit(s2));
 
@@ -325,7 +325,7 @@ int cpp_getLocale(lua_State* L)
 {
 	std::locale loc("");
 	lua_pushstring(L, loc.name().c_str());
-	
+
 	return 1;
 }
 
