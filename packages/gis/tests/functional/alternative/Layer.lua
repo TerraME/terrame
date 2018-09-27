@@ -458,7 +458,7 @@ return{
 			    name = "conservation"
 			}
 		end
-		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
+		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' contains invalid character '*'.")
 
 		patternFileError = function()
 			Layer{
@@ -508,7 +508,7 @@ return{
 			    times = {1961, 1974}
 			}
 		end
-		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
+		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' contains invalid character '*'.")
 
 		local patternWarning = function()
 			Layer{

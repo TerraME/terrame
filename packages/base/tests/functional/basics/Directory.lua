@@ -106,6 +106,22 @@ return{
 		unitTest:assert(blankSpaceDir:create())
 		unitTest:assert(blankSpaceDir:exists())
 		unitTest:assert(blankSpaceDir:delete())
+
+		local validCharacterInDirName = function()
+			local d = Directory("dir++")
+			unitTest:assert(d:create())
+			unitTest:assert(d:delete())
+		end
+
+		unitTest:assert(validCharacterInDirName)
+
+		local latinCharacter = function()
+			local d = Directory("Ação")
+			unitTest:assert(d:create())
+			unitTest:assert(d:delete())
+		end
+
+		unitTest:assert(latinCharacter)
 	end,
 	delete = function(unitTest)
 		local dir = Directory("test_dir_delete")

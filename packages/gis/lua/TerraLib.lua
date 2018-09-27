@@ -306,6 +306,14 @@ local function addSpatialIndex(ds, dSetName)
 	ds:execute("CREATE SPATIAL INDEX ON "..dSetName)
 end
 
+local function toUtf8(str)
+	if sessionInfo().system == "windows" then
+		return binding.CharEncoding.toUTF8(str, binding.CharEncoding.getEncodingType("LATIN1"))
+	end
+
+	return binding.CharEncoding.toUTF8(str)
+end
+
 local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, encoding)
 	local layer
 	local sridReal = 0
@@ -327,8 +335,9 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 
 		if type == "WMS2" then
 			local uri = binding.te.core.URI(connInfo)
-			local infos = binding.Expand(uri:query())
-			local client = binding.te.ws.ogc.WMSClient(infos.USERDATADIR, infos.URI, infos.VERSION)
+			local info = binding.Expand(uri:query())
+			info.USERDATADIR = binding.URIDecode(info.USERDATADIR)
+			local client = binding.te.ws.ogc.WMSClient(toUtf8(info.USERDATADIR), info.URI, info.VERSION)
 			client:updateCapabilities()
 			local capblts = client:getCapabilities()
 			local rootLayer = capblts.m_capability.m_layer
@@ -342,8 +351,8 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 
 			local request = wmsLayer:createMapRequest()
 
-			if infos.FORMAT then
-				request.m_format = "image/"..infos.FORMAT
+			if info.FORMAT then
+				request.m_format = "image/"..info.FORMAT
 			end
 
 			local bbox = request.m_boundingBox
@@ -459,7 +468,7 @@ local function saveProject(project, layers)
 		i = i + 1
 	end
 
-	binding.SaveProject(file, project.author, project.title, layersVector)
+	binding.SaveProject(toUtf8(file), project.author, project.title, layersVector)
 end
 
 local function loadProject(project, file)
@@ -473,7 +482,7 @@ local function loadProject(project, file)
 		file = currentDir()..fileName..".tview"
 	end
 
-	local projMd = binding.LoadProject(tostring(file))
+	local projMd = binding.LoadProject(toUtf8(tostring(file)))
 	project.author = projMd.author
 	project.title = projMd.title
 	local layers = projMd:getLayers()
@@ -968,6 +977,15 @@ local function removeDataSource(project, dsId)
 	end
 end
 
+local function fixSpaceInPath(path)
+	return string.gsub(path, "%%20", " ")
+end
+
+local function getFileByUri(uri)
+	local path = binding.URIDecode(uri:path())
+	return File(fixSpaceInPath(uri:host()..path))
+end
+
 local function removeLayer(project, layerName)
 	do
 		loadProject(project, project.file)
@@ -979,7 +997,16 @@ local function removeLayer(project, layerName)
 		local id = layer:getDataSourceId()
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(id)
 		local dsetName = layer:getDataSetName()
-		local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+		local connInfo = dsInfo:getConnInfo()
+		local dsType = dsInfo:getType()
+
+		if (dsType == "OGR") or (dsType == "GDAL") then
+			local file = getFileByUri(connInfo)
+			connInfo = createFileConnInfo(tostring(file))
+			connInfo = toUtf8(connInfo)
+		end
+
+		local ds = makeAndOpenDataSource(connInfo, dsType)
 
 		ds:dropDataSet(dsetName)
 		removeDataSource(project, id)
@@ -1099,12 +1126,8 @@ local function getLayerByDataSetName(layers, dsetName, type)
 	return nil
 end
 
-local function fixSpaceInPath(path)
-	return string.gsub(path, "%%20", " ")
-end
-
 local function swapFileConnInfo(connInfo, fileName)
-	local file = File(fixSpaceInPath(connInfo:host()..connInfo:path()))
+	local file = getFileByUri(connInfo)
 	local outFile = file:path()..fileName.."."..file:extension()
 	return createFileConnInfo(outFile)
 end
@@ -1331,6 +1354,9 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 
 			if not errorMsg then
 				local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
+				if type(toConnInfo) == "string" then
+					toConnInfo = toUtf8(toConnInfo)
+				end
 				local toDs = makeAndOpenDataSource(toConnInfo, fromType)
 
 				-- Drop if exists
@@ -1357,9 +1383,10 @@ local function updateDataSet(fromLayer, toSet, attrs)
 	local errorMsg
 	do
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
-		local connInfo = dsInfo:getConnInfo()
+		local connInfo = dsInfo:getConnInfoAsString()
+		connInfo = binding.URIDecode(connInfo)
 		local fromType = dsInfo:getType()
-		local ds = makeAndOpenDataSource(connInfo, fromType)
+		local ds = makeAndOpenDataSource(toUtf8(connInfo), fromType)
 		local dsetName = fromLayer:getDataSetName()
 		local dse = ds:getDataSet(dsetName)
 
@@ -2034,6 +2061,11 @@ TerraLib_ = {
 	-- layerInfo = TerraLib().getLayerInfo(proj, "SampaPg")
 	getLayerInfo = function(project, layerName)
 		local layer = project.layers[layerName]
+
+		if not layer then
+			customError("Layer '"..layerName.."' doesn't exist.")
+		end
+
 		local info = {}
 		info.name = layer:getTitle()
 		info.srid = layer:getSRID()
@@ -2055,13 +2087,9 @@ TerraLib_ = {
 			info.database = string.gsub(connInfo:path(), "/", "")
 			info.table = dseName
 			info.source = "postgis"
-		elseif type == "OGR" then
-			info.file = fixSpaceInPath(connInfo:host()..connInfo:path())
-			local file = File(info.file)
-			info.source = file:extension()
-		elseif type == "GDAL" then
-			info.file = fixSpaceInPath(connInfo:host()..connInfo:path())
-			local file = File(info.file)
+		elseif (type == "OGR") or (type == "GDAL") then
+			local file = getFileByUri(connInfo)
+			info.file = tostring(file)
 			info.source = file:extension()
 		elseif type == "WFS" then
 			info.url = connInfo:path()
@@ -2341,6 +2369,7 @@ TerraLib_ = {
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
 		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
+
 		instance.addShpLayer(project, name, file, addSpatialIdx, srid, encoding)
 	end,
 	--- Add a new cellular layer to a PostgreSQL connection.
@@ -2546,7 +2575,7 @@ TerraLib_ = {
 			local outFileExt
 
 			if outType == "OGR" then
-				outFileExt = string.lower(File(fixSpaceInPath(outConnInfo:host()..outConnInfo:path())):extension())
+				outFileExt = string.lower(getFileByUri(outConnInfo):extension())
 
 				if (string.len(property) > 10) and (outFileExt == "shp")  then
 					property = getNormalizedName(property)
@@ -2608,9 +2637,11 @@ TerraLib_ = {
 				outDSetName = string.lower(outDSetName)
 				outSpatialIdx = false -- TODO(#1678)
 			elseif outType == "OGR" then
-				local file = File(fixSpaceInPath(outConnInfo:host()..outConnInfo:path()))
+				local file = getFileByUri(outConnInfo)
 				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
-				outConnInfo = binding.te.core.URI(createFileConnInfo(outDir..out.."."..file:extension()))
+				local outFileUri = createFileConnInfo(outDir..out.."."..file:extension())
+				outFileUri = toUtf8(outFileUri)
+				outConnInfo = binding.te.core.URI(outFileUri)
 				outSpatialIdx = true
 			end
 
@@ -2637,6 +2668,7 @@ TerraLib_ = {
 			end
 
 			outDs = makeAndOpenDataSource(outConnInfo, outType)
+
 			local attrsRenamed = {}
 
 			if operation == "coverage" then
@@ -2673,15 +2705,16 @@ TerraLib_ = {
 					local toSetName = nil
 
 					if toType == "OGR" then
-						local _, name = File(fixSpaceInPath(toConnInfo:host()..toConnInfo:path())):split()
+						local _, name = getFileByUri(toConnInfo):split()
 						toSetName = name
 					end
 
 					outDs:close()
 
 					if outFileExt == "geojson" then -- TODO(#2224)
-						local toFile = File(fixSpaceInPath(toConnInfo:host()..toConnInfo:path())):deleteIfExists()
-						os.execute("mv "..fixSpaceInPath(outConnInfo:host()..outConnInfo:path()).." "..toFile) -- SKIP
+						local toFile = getFileByUri(toConnInfo):deleteIfExists()
+						local outFile = getFileByUri(outConnInfo)
+						os.execute("mv "..outFile.." "..toFile) -- SKIP
 					else
 						overwriteLayer(project, out, to, toSetName, default)
 					end
@@ -2715,12 +2748,10 @@ TerraLib_ = {
 				loadProject(project, project.file)
 
 				local layer = project.layers[layerName]
-				--layer = castLayer(layer)
 				local dseName = layer:getDataSetName()
 				local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
 				local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
 				local dse = ds:getDataSet(dseName)
-				--local dse = getDataSetFromLayer(project, layerName)
 				set, err = createDataSetAdapted(dse, missing)
 
 				addCache(set, project, layerName, missing)
@@ -2793,16 +2824,13 @@ TerraLib_ = {
 				end
 			else
 				createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
-
 				local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
-
 				local toLayer
 				if dseName == "OGRGeoJSON" then
 					toLayer = createLayer(toLayerName, dseName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
 				else
 					toLayer = createLayer(toLayerName, toSetName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
 				end
-
 				project.layers[toLayerName] = toLayer
 				saveProject(project, project.layers)
 			end

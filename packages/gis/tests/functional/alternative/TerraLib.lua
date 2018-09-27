@@ -302,18 +302,26 @@ return {
 		proj.file:delete()
 	end,
 	removeLayer = function(unitTest)
-		local proj = Project{
-			file = "test.tview",
-			clean = true,
-			inputLayer = filePath("itaituba-localities.shp", "gis")
+		local proj = {
+			file = "removelayer_alt_func.tview",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
 		}
+
+		File(proj.file):deleteIfExists()
+		TerraLib().createProject(proj, {})
+
+		local layerName = "inputLayer"
+		local layerFile = filePath("itaituba-localities.shp", "gis")
+		TerraLib().addShpLayer(proj, layerName, layerFile)
 
 		local layerNotFound = function()
 			TerraLib().removeLayer(proj, "xxxx")
 		end
 
 		unitTest:assertError(layerNotFound, "Layer 'xxxx' not found.")
-		File("test.tview"):deleteIfExists()
+
+		proj.file:delete()
 	end,
 	getDataSet = function(unitTest)
 		local proj = {

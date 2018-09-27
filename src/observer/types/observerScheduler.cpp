@@ -317,7 +317,7 @@ void ObserverScheduler::closeEvent(QCloseEvent *event)
 void ObserverScheduler::save(std::string file, std::string extension)
 {
     QPixmap pixmap = grab();
-    pixmap.save(file.c_str(), extension.c_str());
+    pixmap.save(QString::fromLocal8Bit(file.c_str()), extension.c_str());
 }
 
 

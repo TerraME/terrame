@@ -21,6 +21,12 @@
 -- of this software and its documentation.
 --
 -------------------------------------------------------------------------------------------
+local function checkInvalidChars(fullpath)
+	local invalidChars = string.gsub(fullpath, "[^\34\42\60\62\63\124]", "")
+	if #invalidChars ~= 0 then
+		customError("Directory path '"..fullpath.."' contains invalid character '"..invalidChars.."'.")
+	end
+end
 
 Directory_ = {
 	type_ = "Directory",
@@ -247,11 +253,7 @@ function Directory(data)
 	data.fullpath = data.name
 	data.name = nil
 
-	local invalidCharIdx = data.fullpath:find("[*<>?|\"]")
-	if invalidCharIdx then
-		local invalidChar = data.fullpath:sub(invalidCharIdx, invalidCharIdx)
-		customError("Directory path '"..data.fullpath.."' cannot contain character '"..invalidChar.."'.")
-	end
+	checkInvalidChars(data.fullpath)
 
 	if not (data.fullpath:match("\\") or data.fullpath:match("/")) then
 		if data.fullpath == "." then data.fullpath = "" end
@@ -261,9 +263,8 @@ function Directory(data)
 
 	data.fullpath = _Gtme.makePathCompatibleToAllOS(data.fullpath)
 
-	local invalidChar = string.gsub(data.fullpath, "[^\33-\44\59-\64\91-\94\96\123-\125\127-\255]", "")
-	if #invalidChar ~= 0 then
-		customError("Directory path '"..data.fullpath.."' contains invalid character '"..invalidChar.."'.")
+	if sessionInfo().system == "windows" then
+		data.fullpath = replaceLatinCharacters(data.fullpath) --SKIP
 	end
 
 	if data.fullpath:sub(-1) == "/" then
@@ -280,7 +281,11 @@ function Directory(data)
 		local cmd = runCommand("mktemp -d \""..data.fullpath.."\"")[1]
 		table.insert(_Gtme.tmpdirectory__, data)
 
-		data.fullpath = cmd
+		if sessionInfo().system == "windows" then
+			data.fullpath = replaceLatinCharacters(cmd) --SKIP
+		else
+			data.fullpath = cmd --SKIP
+		end
 	end
 
 	if isFile(data.fullpath) then
