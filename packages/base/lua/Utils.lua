@@ -1648,7 +1648,7 @@ end
 -- @arg str A string.
 -- @usage --DONTRUN
 -- print(replaceLatinCharacters(águia))
--- > \xE1guia
+-- -- \xE1guia
 function replaceLatinCharacters(str)
 	if not hasLatinCharacters(str) then
 		return str
