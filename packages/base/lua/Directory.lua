@@ -264,7 +264,7 @@ function Directory(data)
 	data.fullpath = _Gtme.makePathCompatibleToAllOS(data.fullpath)
 
 	if sessionInfo().system == "windows" then
-		data.fullpath = replaceLatinCharacters(data.fullpath)
+		data.fullpath = replaceLatinCharacters(data.fullpath) --SKIP
 	end
 
 	if data.fullpath:sub(-1) == "/" then
@@ -282,9 +282,9 @@ function Directory(data)
 		table.insert(_Gtme.tmpdirectory__, data)
 
 		if sessionInfo().system == "windows" then
-			data.fullpath = replaceLatinCharacters(cmd)
+			data.fullpath = replaceLatinCharacters(cmd) --SKIP
 		else
-			data.fullpath = cmd
+			data.fullpath = cmd --SKIP
 		end
 	end
 

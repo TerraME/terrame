@@ -566,7 +566,7 @@ function File(data)
 	checkInvalidChars(data:name())
 
 	if sessionInfo().system == "windows" then
-		data.filename = replaceLatinCharacters(data.filename)
+		data.filename = replaceLatinCharacters(data.filename) --SKIP
 	end
 
 	if isDirectory(data.filename) then
