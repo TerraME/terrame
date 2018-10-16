@@ -59,7 +59,7 @@ echo.
 
 echo | set /p="Cofiguring Install Variables ... "<nul
 :: Where to install the third-parties
-set "TERRALIB_DEPENDENCIES_DIR=%_TERRALIB_TARGET_3RDPARTY_DIR%\5.2"
+set "TERRALIB_DEPENDENCIES_DIR=%_TERRALIB_TARGET_3RDPARTY_DIR%\5.4"
 
 :: Where is qmake.exe
 set "QMAKE_FILEPATH=%_QMAKE_DIR%"

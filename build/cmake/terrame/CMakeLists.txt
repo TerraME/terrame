@@ -658,7 +658,7 @@ else(UNIX)
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libfreexl*so*
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libpcre*so*
 	                                ${TERRALIB_3RDPARTY_DIR}/pgsql/lib/libpq*so*
-	                                ${TERRALIB_3RDPARTY_DIR}/gdal2/lib/libgdal.so*)
+	                                ${TERRALIB_3RDPARTY_DIR}/lib/libgdal.so*)
 
 	install(FILES ${TERRALIB_DEPENDENCIES}
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
@@ -676,7 +676,7 @@ else(UNIX)
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
 	        COMPONENT runtime)
 
-	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/gdal
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share
 	        COMPONENT runtime)
 

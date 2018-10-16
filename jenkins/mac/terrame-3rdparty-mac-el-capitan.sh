@@ -27,16 +27,16 @@
 #
 
 if [ -z "$_TERRALIB_TARGET_3RDPARTY_DIR" ]; then
-  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/5.2"
+  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/5.4"
 fi
 
 if [ -z "$_TERRAME_TARGET_3RDPARTY_DIR" ]; then
   export _TERRAME_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terrame/3rdparty"
 fi
 
-_TERRALIB_BRANCH="release-5.2"
+_TERRALIB_BRANCH="release-5.4"
 export _TERRALIB_3RDPARTY_NAME="terralib-3rdparty-macosx-el-capitan.tar.gz"
-export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/5.2/$_TERRALIB_3RDPARTY_NAME"
+export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_3RDPARTY_NAME"
 
 export PATH=$PATH:$_QT5_DIR:$_CMAKE_DIR
 
