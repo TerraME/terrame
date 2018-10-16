@@ -39,10 +39,12 @@ set(TERRALIB_BUILD_AS_BUNDLE OFF CACHE BOOL "If on, tells that the build will ge
 set(BUILD_TESTING OFF CACHE BOOL "Build testing?" FORCE)
 
 # Enabling modules
+set(TERRALIB_MOD_MNT_CORE_ENABLED ON CACHE BOOL "Build MNT Processing Core module?" FORCE)
 set(TERRALIB_MOD_BINDING_LUA_ENABLED ON CACHE BOOL "Build TerraLib bindings?" FORCE)
 set(TERRALIB_EXAMPLE_BINDING_LUA_ENABLED OFF CACHE BOOL "Build TerraLib bindings example?" FORCE)
 set(TERRALIB_DOXYGEN OFF CACHE BOOL  "Enable API documentation build?" FORCE)
 set(TERRALIB_LOGGER_ENABLED OFF CACHE BOOL  "Logger?" FORCE)
+set(TERRALIB_TRANSLATOR_ENABLED OFF CACHE BOOL "Enable translator support?" FORCE)
 set(TERRALIB_QTRANSLATION_ENABLED OFF CACHE BOOL "Enable translation for Qt Widgets?" FORCE)
 set(TERRALIB_MOD_WMS_QT_ENABLED OFF CACHE BOOL "Build the TerraLib Qt Web Map Service?" FORCE)
 set(TERRALIB_MOD_QT_WIDGETS_ENABLED OFF CACHE BOOL "Build Terralib Qt Widgets module?" FORCE)

@@ -409,7 +409,7 @@ if(APPLE)
 	        DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
 	        COMPONENT runtime)
 
-	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/gdal
 	        DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share
 	        COMPONENT runtime)
 
