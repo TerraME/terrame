@@ -550,8 +550,7 @@ elseif(WIN32)
 	        COMPONENT runtime
 	        CONFIGURATIONS Release)
 
-	list(APPEND MSVC_DEPENDENCIES ${MSVC_REDIST_DIR}/msvcp120.dll
-	                              ${MSVC_REDIST_DIR}/msvcr120.dll)
+	file(GLOB MSVC_DEPENDENCIES ${MSVC_REDIST_DIR}/*140.dll)
 
 	install(FILES ${MSVC_DEPENDENCIES}
 	        DESTINATION bin

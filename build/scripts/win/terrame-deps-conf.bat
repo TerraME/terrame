@@ -27,7 +27,7 @@ cd "build"
 mkdir "protobuf-build"
 cd "protobuf-build"
 
-cmake -G "Visual Studio 12 2013 Win64" -DCMAKE_BUILD_TYPE=%_BUILD_TYPE% -DCMAKE_INSTALL_PREFIX=..\..\install -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_WITH_ZLIB=OFF -Dprotobuf_BUILD_TESTS=OFF ..\..\protobuf\cmake
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=%_BUILD_TYPE% -DCMAKE_INSTALL_PREFIX=..\..\install -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_WITH_ZLIB=OFF -Dprotobuf_BUILD_TESTS=OFF ..\..\protobuf\cmake
 cmake --build . --target INSTALL --config %_BUILD_TYPE%
 
 cd %_ROOT_DIR%

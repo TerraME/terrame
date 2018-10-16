@@ -46,7 +46,7 @@ echo | set /p="Downloading TerraLib 3rdparty ... "<nul
 set "_CURL_DIR=C:\curl"
 set "PATH=%PATH%;%_CURL_DIR%"
 
-set "_TERRALIB_3RDPARTY_NAME=terralib-3rdparty-msvc12.zip"
+set "_TERRALIB_3RDPARTY_NAME=terralib-3rdparty-msvc17.zip"
 set "_TERRALIB_TARGET_URL=http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/%_TERRALIB_3RDPARTY_NAME%"
 
 curl -L -s -O %_TERRALIB_TARGET_URL%

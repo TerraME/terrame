@@ -36,8 +36,7 @@ set(CPACK_RESOURCE_FILE_LICENSE @TERRAME_ABSOLUTE_ROOT_DIR@/LICENSE)
 #
 # getting some variables from CMake
 #
-set(MSVC10 @MSVC10@)
-set(MSVC12 @MSVC12@)
+set(MSVC @MSVC@)
 set(CMAKE_CL_64 @CMAKE_CL_64@)
 set(APPLE @APPLE@)
 set(UNIX @UNIX@)
@@ -46,13 +45,7 @@ set(UNIX @UNIX@)
 # determining the binary package name depending on toolset used in the build
 #
 if(NOT DEFINED CPACK_SOURCE_PACKAGE_FILE_NAME)
-	if(MSVC10)
-		if(CMAKE_CL_64)
-			set(CPACK_PACKAGE_FILE_NAME "terrame-@TERRAME_VERSION_STRING@-win64")
-		else()
-			set(CPACK_PACKAGE_FILE_NAME "terrame-@TERRAME_VERSION_STRING@-win32")
-		endif()
-	elseif(MSVC12)
+	if(MSVC)
 		if(CMAKE_CL_64)
 			set(CPACK_PACKAGE_FILE_NAME "terrame-@TERRAME_VERSION_STRING@-win64")
 		else()

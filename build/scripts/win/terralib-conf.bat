@@ -64,7 +64,7 @@ cd %_TERRALIB_OUT_DIR%
 :: -----------------
 :: Calling CMake
 :: -----------------
-cmake -G "Visual Studio 12 2013 Win64" -C terralib-conf.cmake %_TERRALIB_GIT_DIR%/build/cmake
+cmake -G "Visual Studio 15 2017 Win64" -C terralib-conf.cmake %_TERRALIB_GIT_DIR%/build/cmake
 
 :: Building and installing
 cmake --build . --target INSTALL --config Release
