@@ -7,6 +7,10 @@
 -- infect in the next time step.
 -- @image sir-abm.png
 
+local function compare(a, b)
+	return tonumber(a.id) < tonumber(b.id)
+end
+
 Random{seed = 500}
 
 local p25 = Random{p = 0.25}
@@ -28,13 +32,21 @@ ag = Agent{
 	execute = function(self)
 		if self.state == "recovered" then return
 		elseif self.state == "infected" then
+			local conns = {}
 			forEachConnection(self, function(conn)
-				self:message{receiver = conn, delay = 1}
+				-- self:message{receiver = conn, delay = 1}
 				-- delay = 1 means that the agents will got sick only in
 				-- the end of the time step. It means that an agent that
 				-- got sick in a given time step cannot infect others in
 				-- the same time step.
+				table.insert(conns, conn)
 			end)
+
+			table.sort(conns, compare)
+
+			for i = 1, #conns do
+				self:message{receiver = conns[i], delay = 1}
+			end
 
 			if self.counter > 2 then
 				self.state = "recovered"
