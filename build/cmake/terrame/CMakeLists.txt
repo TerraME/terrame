@@ -409,7 +409,7 @@ if(APPLE)
 	        DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
 	        COMPONENT runtime)
 
-	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/gdal
 	        DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share
 	        COMPONENT runtime)
 
@@ -550,8 +550,7 @@ elseif(WIN32)
 	        COMPONENT runtime
 	        CONFIGURATIONS Release)
 
-	list(APPEND MSVC_DEPENDENCIES ${MSVC_REDIST_DIR}/msvcp120.dll
-	                              ${MSVC_REDIST_DIR}/msvcr120.dll)
+	file(GLOB MSVC_DEPENDENCIES ${MSVC_REDIST_DIR}/*140.dll)
 
 	install(FILES ${MSVC_DEPENDENCIES}
 	        DESTINATION bin
@@ -658,7 +657,7 @@ else(UNIX)
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libfreexl*so*
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libpcre*so*
 	                                ${TERRALIB_3RDPARTY_DIR}/pgsql/lib/libpq*so*
-	                                ${TERRALIB_3RDPARTY_DIR}/gdal2/lib/libgdal.so*)
+	                                ${TERRALIB_3RDPARTY_DIR}/lib/libgdal.so*)
 
 	install(FILES ${TERRALIB_DEPENDENCIES}
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
@@ -676,7 +675,7 @@ else(UNIX)
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
 	        COMPONENT runtime)
 
-	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/gdal
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share
 	        COMPONENT runtime)
 
