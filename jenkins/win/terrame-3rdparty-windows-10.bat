@@ -46,8 +46,8 @@ echo | set /p="Downloading TerraLib 3rdparty ... "<nul
 set "_CURL_DIR=C:\curl"
 set "PATH=%PATH%;%_CURL_DIR%"
 
-set "_TERRALIB_3RDPARTY_NAME=terralib-3rdparty-msvc12.zip"
-set "_TERRALIB_TARGET_URL=http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/%_TERRALIB_3RDPARTY_NAME%"
+set "_TERRALIB_3RDPARTY_NAME=terralib-3rdparty-msvc17.zip"
+set "_TERRALIB_TARGET_URL=http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/%_TERRALIB_VERSION%/%_TERRALIB_3RDPARTY_NAME%"
 
 curl -L -s -O %_TERRALIB_TARGET_URL%
 echo done.
@@ -59,7 +59,7 @@ echo.
 
 echo | set /p="Cofiguring Install Variables ... "<nul
 :: Where to install the third-parties
-set "TERRALIB_DEPENDENCIES_DIR=%_TERRALIB_TARGET_3RDPARTY_DIR%\5.2"
+set "TERRALIB_DEPENDENCIES_DIR=%_TERRALIB_TARGET_3RDPARTY_DIR%\5.4"
 
 :: Where is qmake.exe
 set "QMAKE_FILEPATH=%_QMAKE_DIR%"

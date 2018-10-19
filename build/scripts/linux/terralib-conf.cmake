@@ -39,6 +39,7 @@ set(TERRALIB_BUILD_AS_BUNDLE OFF CACHE BOOL "If on, tells that the build will ge
 set(BUILD_TESTING OFF CACHE BOOL "Build testing?" FORCE)
 
 # Enabling modules
+set(TERRALIB_MOD_MNT_CORE_ENABLED ON CACHE BOOL "Build MNT Processing Core module?" FORCE)
 set(TERRALIB_MOD_BINDING_LUA_ENABLED ON CACHE BOOL "Build TerraLib bindings?" FORCE)
 set(TERRALIB_EXAMPLE_BINDING_LUA_ENABLED OFF CACHE BOOL "Build TerraLib bindings example?" FORCE)
 set(TERRALIB_DOXYGEN OFF CACHE BOOL  "Enable API documentation build?" FORCE)

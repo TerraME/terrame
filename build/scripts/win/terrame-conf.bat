@@ -30,7 +30,7 @@ if "%_TERRALIB_3RDPARTY_DIR%" == "" (
 
 :: Checking terrame depends dir or setting default
 if "%_TERRAME_DEPENDS_DIR%" == "" (
-  set _TERRAME_DEPENDS_DIR=D:\terrame\dependencies\install
+  set _TERRAME_DEPENDS_DIR=D:\terrame\3rdparty\install
 )
 
 :: Checking terralib install dir or setting default
@@ -40,7 +40,7 @@ if "%_TERRALIB_MODULES_DIR%" == "" (
 
 :: Checking qt5 dir or setting default
 if "%_Qt5_DIR%" == "" (
-  set _Qt5_DIR=C:\Qt\5.5\msvc2013_64
+  set _Qt5_DIR=C:\Qt\5.11.2\msvc2017_64
 )
 
 :: Checking msys dir or setting default
@@ -87,7 +87,7 @@ cd %_TERRAME_OUT_DIR%
 :: -----------------
 :: Calling CMake
 :: -----------------
-cmake -G "Visual Studio 12 2013 Win64" -C terrame-conf.cmake %_TERRAME_GIT_DIR%/build/cmake
+cmake -G "Visual Studio 15 2017 Win64" -C terrame-conf.cmake %_TERRAME_GIT_DIR%/build/cmake
 
 :: Building and installing terrame
 cmake --build . --target INSTALL --config Release
