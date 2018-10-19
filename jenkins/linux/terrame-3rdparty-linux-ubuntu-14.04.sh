@@ -26,7 +26,7 @@
 #
 
 if [ -z "$_TERRALIB_TARGET_3RDPARTY_DIR" ]; then
-  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/5.2"
+  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/5.4"
 fi
 
 if [ -z "$_TERRAME_TARGET_3RDPARTY_DIR" ]; then
@@ -38,10 +38,11 @@ if [ -z "$_TERRALIB_3RDPARTY_NAME" ]; then
 fi
 
 # Defines TerraLib script version to prepare dependencies
-_TERRALIB_BRANCH="release-5.2"
+_TERRALIB_VERSION="5.4"
+_TERRALIB_BRANCH="release-$_TERRALIB_VERSION"
 
 if [ -z "$_TERRALIB_TARGET_URL" ]; then
-  export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_3RDPARTY_NAME"
+  export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/$_TERRALIB_3RDPARTY_NAME"
 fi
 
 #
