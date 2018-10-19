@@ -86,12 +86,8 @@ cd %_TERRALIB_3RDPARTY_NAME%
 dir
 echo.
 
-echo | set /p="Cofiguring Visual Studio ... "<nul
-call "%VCVARS_FILEPATH%\vcvarsall.bat %_config%"
-echo done.
-
 echo | set /p="Calling the script on TerraLib5 ... "<nul
-call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty.bat
+call %TERRALIB5_CODEBASE_PATH%\install\install-3rdparty-msvc17.bat
 echo done.
 echo.
 
