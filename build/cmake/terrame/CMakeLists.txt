@@ -550,15 +550,9 @@ elseif(WIN32)
 	        COMPONENT runtime
 	        CONFIGURATIONS Release)
 
-	file(GLOB MSVC_DEPENDENCIES ${MSVC_REDIST_DIR}/*140.dll)
-
 	install(FILES ${MSVC_DEPENDENCIES}
 	        DESTINATION bin
 	        COMPONENT runtime)
-
-	#install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.ico
-	        #DESTINATION bin/
-	        #COMPONENT runtime)
 
 	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
 	        DESTINATION bin/luacheck
@@ -685,6 +679,7 @@ else(UNIX)
 endif()
 
 if(TERRAME_BUILD_AS_BUNDLE)
+	include(InstallRequiredSystemLibraries)
 	configure_file(${terrame_SOURCE_DIR}/fixBundle.cmake.in ${terrame_BINARY_DIR}/fixBundle.cmake @ONLY)
 	install(SCRIPT ${CMAKE_BINARY_DIR}/fixBundle.cmake COMPONENT runtime)
 endif()
