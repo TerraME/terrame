@@ -534,7 +534,7 @@ sample   function
 			if sample > 15 or sample < 0 then print(sample) end
 		end
 
-		unitTest:assertEquals(sum / 5000, 0.9739, 0.001)
+		unitTest:assertEquals(sum / 5000, 1.0032177891723, 1e-13)
 
 		local weibull = Random{lambda = 2, k = 2}
 		sum = 0

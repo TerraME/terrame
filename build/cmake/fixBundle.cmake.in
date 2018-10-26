@@ -23,7 +23,7 @@
 #          Rodrigo Avancini
 #
 
-include (BundleUtilities) 
+include(BundleUtilities) 
 
 set(TERRAME_BUILD_AS_BUNDLE @TERRAME_BUILD_AS_BUNDLE@)
 
