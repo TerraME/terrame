@@ -88,17 +88,17 @@ return {
 		unitTest:assertEquals(pd(), 0.0)
 
 		local ed = TerraLib().random().ExponentialDistribution(mt, 1.0)
-		unitTest:assertEquals(tostring(ed()), "0.13710858059314")
-		unitTest:assertEquals(tostring(ed()), "0.36001274785589")
-		unitTest:assertEquals(tostring(ed()), "6.9491142873366")
-		unitTest:assertEquals(tostring(ed()), "0.15870959722628")
-		unitTest:assertEquals(tostring(ed()), "0.26930395767627")
+		unitTest:assertEquals(tostring(ed()), "0.65314414116404")
+		unitTest:assertEquals(tostring(ed()), "0.27995804155729")
+		unitTest:assertEquals(tostring(ed()), "0.70171066758756")
+		unitTest:assertEquals(tostring(ed()), "0.81248823021991")
+		unitTest:assertEquals(tostring(ed()), "1.9455296925014")
 
-		local betad = TerraLib().random().BetaDistribution(1, 6) -- TODO(#1971): checks this implementation
-		unitTest:assertEquals(tostring(betad(ed())), "0.016840606562261")
-		unitTest:assertEquals(tostring(betad(ed())), "0.1106351696161")
-		unitTest:assertEquals(tostring(betad(ed())), "0.03773881899383")
-		unitTest:assertEquals(tostring(betad(ed())), "0.10641247514753")
-		unitTest:assertEquals(tostring(betad(ed())), "0.087835072729868")
+		local betad = TerraLib().random().BetaDistribution(1, 6)
+		unitTest:assertEquals(tostring(betad(0.1)), "0.01740680614731")
+		unitTest:assertEquals(tostring(betad(0.25)), "0.046815707003063")
+		unitTest:assertEquals(tostring(betad(0.5)), "0.10910128185966")
+		unitTest:assertEquals(tostring(betad(0.75)), "0.2062994740159")
+		unitTest:assertEquals(tostring(betad(0.9)), "0.31870793094204")
 	end
 }

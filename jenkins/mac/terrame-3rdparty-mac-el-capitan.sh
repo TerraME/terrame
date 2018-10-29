@@ -62,7 +62,7 @@ echo ""
 
 echo -ne "Cleaning up old builds ... "
 rm -rf $_TERRAME_TARGET_3RDPARTY_DIR
-mkdir -p $_TERRAME_TARGET_3RDPARTY_DIR 
+mkdir -p $_TERRAME_TARGET_3RDPARTY_DIR
 cd $_TERRALIB_TARGET_3RDPARTY_DIR
 echo "done."
 

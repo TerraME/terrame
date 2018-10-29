@@ -21,7 +21,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
+#
 ## It performs TerraME TerraLib compilation on Linux Ubuntu 14.04 system
 #
 
@@ -111,11 +111,11 @@ echo -ne "Preparing to compilation ... "
 tar zxf protobuf-cpp-3.1.0.tar.gz
 valid_operation $? "Error: Could not extract protobuff"
 mv protobuf-3.1.0 protobuf
-valid_operation $? "Error: Could find 'protobuf' folder inside compressed protobuf"  
+valid_operation $? "Error: Could find 'protobuf' folder inside compressed protobuf"
 tar zxf 0.17.0.tar.gz
-valid_operation $? "Error: Could not extract Luacheck" 
+valid_operation $? "Error: Could not extract Luacheck"
 mv luacheck* luacheck
-valid_operation $? "Error: Could find luacheck inside luacheck compressed file" 
+valid_operation $? "Error: Could find luacheck inside luacheck compressed file"
 
 echo -ne "Compiling TerraME dependencies ... "
 ./terrame-deps-conf.sh
