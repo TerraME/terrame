@@ -63,7 +63,7 @@ return{
 	packageInfo = function(unitTest)
 		local r = packageInfo()
 
-		unitTest:assertEquals(r.version, "2.0.0-rc8")
+		unitTest:assertEquals(r.version, "2.0.0-rc9-dev")
 		unitTest:assertEquals(r.package, "base")
 		unitTest:assertEquals(r.url, "http://www.terrame.org")
 		unitTest:assertType(r.data, "Directory")
