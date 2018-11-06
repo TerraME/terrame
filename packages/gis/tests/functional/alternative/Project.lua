@@ -75,7 +75,7 @@ return{
 		local myfile = File("amazonia-indigenous.shp")
 		myfile:writeLine("abc")
 		myfile:close()
-		
+
 		local notFileSuggestion = function()
 			Project{file = "myproj.tview", cean = "amazonia-indigenous2.shp"}
 		end
