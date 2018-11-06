@@ -40,7 +40,7 @@ return{
 			Directory("abc\"")
 		end
 
-		unitTest:assertError(error_func, "Directory path 'abc\"' cannot contain character '\"'.")
+		unitTest:assertError(error_func, "Directory path 'abc\"' contains invalid character '\"'.")
 
 		error_func = function()
 			Directory{}
@@ -58,18 +58,6 @@ return{
 			Directory(packageInfo("base").path.."data/agents.csv")
 		end
 		unitTest:assertError(error_func, "'agents.csv' is a file, and not a directory.", 0, true)
-
-		local invalidCharError = function()
-			Directory("C:/Usuários")
-		end
-
-		unitTest:assertError(invalidCharError, "Directory path 'C:/Usuários' contains invalid character 'á'.")
-
-		invalidCharError = function()
-			Directory("C:/Usuários/Ação")
-		end
-
-		unitTest:assertError(invalidCharError, "Directory path 'C:/Usuários/Ação' contains invalid character 'áçã'.")
 	end,
 	attributes = function(unitTest)
 		local dir = Directory("/my/path/my_dir")

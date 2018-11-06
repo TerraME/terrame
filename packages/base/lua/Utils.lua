@@ -1609,3 +1609,64 @@ function vardump(o, indent)
 	return recursiveVardump(o, indent, {})
 end
 
+local LatinCharacterMapper = {
+	[128] = "\xC0",	[129] = "\xC1",	[130] = "\xC2",
+	[131] = "\xC3",	[132] = "\xC4",	[133] = "\xC5",
+	[134] = "\xC6",	[135] = "\xC7",	[136] = "\xC8",
+	[137] = "\xC9",	[138] = "\xCA",	[139] = "\xCB",
+	[140] = "\xCC",	[141] = "\xCD",	[142] = "\xCE",
+	[143] = "\xCF",	[144] = "\xD0",	[145] = "\xD1",
+	[146] = "\xD2",	[147] = "\xD3",	[148] = "\xD4",
+	[149] = "\xD5",	[150] = "\xD6",	[151] = "\xD7",
+	[152] = "\xD8",	[153] = "\xD9",	[154] = "\xDA",
+	[155] = "\xDB",	[156] = "\xDC",	[157] = "\xDD",
+	[158] = "\xDE",	[159] = "\xDF",	[160] = "\xE0",
+	[161] = "\xE1",	[162] = "\xE2",	[163] = "\xE3",
+	[164] = "\xE4",	[165] = "\xE5",	[166] = "\xE6",
+	[167] = "\xE7",	[168] = "\xE8",	[169] = "\xE9",
+	[170] = "\xEA",	[171] = "\xEB",	[172] = "\xEC",
+	[173] = "\xED",	[174] = "\xEE",	[175] = "\xEF",
+	[176] = "\xF0",	[177] = "\xF1",	[178] = "\xF2",
+	[179] = "\xF3",	[180] = "\xF4",	[181] = "\xF5",
+	[182] = "\xF6",	[183] = "\xF7",	[184] = "\xF8",
+	[185] = "\xF9",	[186] = "\xFA",	[187] = "\xFB",
+	[188] = "\xFC",	[189] = "\xFD",	[190] = "\xFE",
+	[191] = "\xFF"
+}
+
+local function hasLatinCharacters(str)
+	local latinChars = string.gsub(str, "[^\192-\255]", "")
+	return #latinChars > 0
+end
+
+--- This function converts latin characters to hexadecimal code by the characters bytes.
+-- It is necessary to Windows OS works correctly with latin characters.
+-- Also, it is necessary to set Lua locale as the same as the system locale.
+-- See os.setlocale() for more details.
+-- The list of unicode characters can be found in
+-- https://en.wikipedia.org/wiki/List_of_Unicode_characters.
+-- @arg str A string.
+-- @usage --DONTRUN
+-- print(replaceLatinCharacters(águia))
+-- -- \xE1guia
+function replaceLatinCharacters(str)
+	if not hasLatinCharacters(str) then
+		return str
+	end
+
+	local rep = ""
+
+	for c in string.gmatch(str, ".") do
+		local b = string.byte(c, 1, -1)
+		if b ~= 195 then
+			if LatinCharacterMapper[b] then
+				rep = rep..LatinCharacterMapper[b]
+			else
+				rep = rep..c
+			end
+		end
+	end
+
+	return rep
+end
+

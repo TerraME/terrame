@@ -42,19 +42,18 @@ local home
 if info_.system == "mac" then
 	ide = Directory(info_.path.."../ide/zerobrane")
 	home = os.getenv("HOME")
-	path = home
 	zbpreferencespath = os.getenv("HOME").."/Library/Preferences/ZeroBraneStudio Preferences"
 elseif info_.system == "windows" then
 	ide = Directory(info_.path.."/ide/zerobrane")
-	home = os.getenv("HOMEDRIVE").."/"..os.getenv("HOMEPATH")
-	path = os.getenv("appdata")
-	zbpreferencespath = os.getenv("appdata").."/ZeroBraneStudio.ini"
+	home = os.getenv("HOMEDRIVE").."\\"..os.getenv("HOMEPATH")
+	zbpreferencespath = os.getenv("APPDATA").."/ZeroBraneStudio.ini"
 else
 	ide = Directory(info_.path.."/ide/zerobrane")
 	home = os.getenv("HOME")
-	path = home
 	zbpreferencespath = os.getenv("HOME").."/.ZeroBraneStudio"
 end
+
+path = home
 
 local function setZeroBranePreferences()
 	_Gtme.printNote("Updating ZeroBrane preferences")
@@ -83,7 +82,8 @@ local function setZeroBranePreferences()
 	while line do
 		local value = string.gsub(line, "PATH", path.."/terrame-examples")
 		if info_.system == "windows" then
-			value = string.gsub(value, "\\", "\\\\")
+			value = _Gtme.makePathCompatibleToAllOS(value)
+			value = string.gsub(value, "/", "\\\\")
 		end
 		table.insert(output, value)
 		line = file:readLine()
@@ -334,4 +334,3 @@ _Gtme.configureZeroBrane = function()
 		qt.dialog.msg_critical(msg)
 	end
 end
-

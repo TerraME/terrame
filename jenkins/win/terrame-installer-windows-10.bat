@@ -42,7 +42,7 @@ rmdir %_TERRAME_OUT_DIR% /s /q
 call terrame-conf.bat
 
 :: Packing
-cpack -G NSIS -C Release --config CPackConfig.cmake
+cmake --build . --target PACKAGE --config Release
 copy terrame*.exe %WORKSPACE%
 
 exit %ERRORLEVEL%

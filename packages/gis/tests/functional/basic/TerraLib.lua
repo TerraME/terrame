@@ -30,7 +30,7 @@ return {
 		unitTest:assertEquals(t1, t2)
 	end,
 	getVersion = function(unitTest)
-		unitTest:assertEquals(TerraLib().getVersion(), "5.3.3")
+		unitTest:assertEquals(TerraLib().getVersion(), "5.4.1")
 	end,
 	createProject = function(unitTest)
 		local happyPath = function()
@@ -331,27 +331,36 @@ return {
 		unitTest:assert(true)
 	end,
 	removeLayer = function(unitTest)
-		local proj = Project{
-			file = "test.tview",
-			clean = true,
-			inputLayer = filePath("itaituba-localities.shp", "gis")
+		local proj = {
+			file = "removelayer_basic_func.tview",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
 		}
 
-		local layer = Layer{
-			input = "inputLayer",
-			project = proj,
-			file = "test.shp",
-			name = "testLayer",
-			resolution = 30000,
-			source = "shp"
-		}
+		File(proj.file):deleteIfExists()
+		TerraLib().createProject(proj, {})
 
-		unitTest:assertNotNil(proj.testLayer)
+		local layerName = "inputLayer"
+		local layerFile = filePath("itaituba-localities.shp", "gis")
+		TerraLib().addShpLayer(proj, layerName, layerFile)
+
+		local clName = "testLayer"
+		local cellsShp = File("test.shp")
+		local resolution = 30000
+		local mask = true
+		cellsShp:deleteIfExists()
+		TerraLib().addShpCellSpaceLayer(proj, layerName, clName, resolution, cellsShp, mask)
+
+		local info = TerraLib().getLayerInfo(proj, clName)
 		unitTest:assertNotNil(proj.layers.testLayer)
-		TerraLib().removeLayer(proj, layer.name)
-		unitTest:assertNil(proj.testLayer)
+		unitTest:assertEquals(info.name, clName)
+		unitTest:assertEquals(tostring(info.file), tostring(cellsShp))
+
+		TerraLib().removeLayer(proj, clName)
+
 		unitTest:assertNil(proj.layers.testLayer)
-		File("test.tview"):deleteIfExists()
+
+		proj.file:delete()
 	end
 }
 

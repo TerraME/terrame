@@ -120,7 +120,7 @@ return{
 			    layer = packageInfo("gis").path.."/data*/conservation*",
 			}
 		end
-		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' cannot contain character '*'.")
+		unitTest:assertError(patternFileError, "Directory path '"..packageInfo("gis").path.."/data*/".."' contains invalid character '*'.")
 
 		local projTemporal
 		patternFileError = function()

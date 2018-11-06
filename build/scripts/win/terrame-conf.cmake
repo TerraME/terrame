@@ -24,7 +24,7 @@
 set(CMAKE_BUILD_TYPE "Release" CACHE PATH "Build Type" FORCE)
 set(CMAKE_INSTALL_PREFIX "$ENV{_TERRAME_INSTALL_PATH}" CACHE PATH "Where to install TerraME?" FORCE)
 set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR};$ENV{_Qt5_DIR}/lib/cmake;$ENV{_TERRAME_DEPENDS_DIR};$ENV{_MSYS_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
-set(TERRAME_VERSION_STATUS "rc8" CACHE STRING "Define name of installer" FORCE)
+set(TERRAME_VERSION_STATUS "rc9-dev" CACHE STRING "Define name of installer" FORCE)
 
 set(TERRAME_BUILD_AS_BUNDLE $ENV{_TERRAME_BUILD_AS_BUNDLE} CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
 set(TERRAME_CREATE_INSTALLER $ENV{_TERRAME_CREATE_INSTALLER} CACHE BOOL "Create the installer" FORCE)
@@ -34,6 +34,4 @@ set(MSYS_DIR "$ENV{_MSYS_DIR}" CACHE PATH "MSYS directory" FORCE)
 set(TERRAME_DEPENDENCIES_DIR "$ENV{_TERRAME_DEPENDS_DIR}" CACHE PATH "TerraME dependencies" FORCE)
 set(TERRALIB_DIR "$ENV{_TERRALIB_MODULES_DIR}" CACHE PATH "TerraLib directory" FORCE)
 set(TERRALIB_3RDPARTY_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}" CACHE PATH "TerraLib 3rdparty directory" FORCE)
-set(MSVC_REDIST_DIR "C:/Program Files (x86)/Microsoft Visual Studio 12.0/VC/redist/x64/Microsoft.VC120.CRT" CACHE PATH "Visual Studio directories" FORCE)
-
 set(QWT_INCLUDE_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}/include/qwt" CACHE PATH "Qwt include" FORCE)

@@ -220,6 +220,6 @@ void ObserverTextScreen::save(std::string file, std::string extension)
 void ObserverTextScreen::saveAsImage(std::string file, std::string extension)
 {
       QPixmap pixmap = textEdit->grab();
-      pixmap.save(file.c_str(), extension.c_str());
+      pixmap.save(QString::fromLocal8Bit(file.c_str()), extension.c_str());
 }
 

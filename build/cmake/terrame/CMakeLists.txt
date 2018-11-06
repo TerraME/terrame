@@ -322,6 +322,8 @@ if(NOT DEFINED CMAKE_INSTALL_PREFIX)
 	set(CMAKE_INSTALL_PREFIX ${TERRAME_ABSOLUTE_ROOT_DIR}/install)
 endif()
 
+set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "runtime")
+
 # install(FILES ${PROTOBUF_INCLUDE_DIR}/../bin/*.dll
 		# DESTINATION bin/
 		# COMPONENT runtime
@@ -409,7 +411,7 @@ if(APPLE)
 	        DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share/terralib
 	        COMPONENT runtime)
 
-	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/gdal
 	        DESTINATION ${TERRAME_CURRENT_BINARY_DIR}/share
 	        COMPONENT runtime)
 
@@ -550,17 +552,6 @@ elseif(WIN32)
 	        COMPONENT runtime
 	        CONFIGURATIONS Release)
 
-	list(APPEND MSVC_DEPENDENCIES ${MSVC_REDIST_DIR}/msvcp120.dll
-	                              ${MSVC_REDIST_DIR}/msvcr120.dll)
-
-	install(FILES ${MSVC_DEPENDENCIES}
-	        DESTINATION bin
-	        COMPONENT runtime)
-
-	#install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.ico
-	        #DESTINATION bin/
-	        #COMPONENT runtime)
-
 	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
 	        DESTINATION bin/luacheck
 	        COMPONENT runtime)
@@ -658,7 +649,7 @@ else(UNIX)
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libfreexl*so*
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libpcre*so*
 	                                ${TERRALIB_3RDPARTY_DIR}/pgsql/lib/libpq*so*
-	                                ${TERRALIB_3RDPARTY_DIR}/gdal2/lib/libgdal.so*)
+	                                ${TERRALIB_3RDPARTY_DIR}/lib/libgdal.so*)
 
 	install(FILES ${TERRALIB_DEPENDENCIES}
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
@@ -676,7 +667,7 @@ else(UNIX)
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share/terralib
 	        COMPONENT runtime)
 
-	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/gdal2/share/gdal
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/gdal
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/share
 	        COMPONENT runtime)
 
@@ -686,6 +677,14 @@ else(UNIX)
 endif()
 
 if(TERRAME_BUILD_AS_BUNDLE)
+	include(InstallRequiredSystemLibraries)
+
+	if(WIN32)
+		install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+		DESTINATION bin
+		COMPONENT runtime)
+	endif()
+
 	configure_file(${terrame_SOURCE_DIR}/fixBundle.cmake.in ${terrame_BINARY_DIR}/fixBundle.cmake @ONLY)
 	install(SCRIPT ${CMAKE_BINARY_DIR}/fixBundle.cmake COMPONENT runtime)
 endif()

@@ -23,8 +23,7 @@
 #          Rodrigo Avancini
 #
 
-include (BundleUtilities) 
-include(InstallRequiredSystemLibraries)
+include(BundleUtilities) 
 
 set(TERRAME_BUILD_AS_BUNDLE @TERRAME_BUILD_AS_BUNDLE@)
 
@@ -36,7 +35,7 @@ if(APPLE AND TERRAME_BUILD_AS_BUNDLE)
 	set(TERRAME_PATHS "@Qt5_DIR@/../..;@TERRAME_DEPENDENCIES_DIR@/lib;@TERRALIB_3RDPARTY_DIR@/lib;@TERRAME_LIBRARIES@;@TERRALIB_DIR@/lib;@TERRALIB_DIR@/bin;/usr/local/lib;/usr/lib")
 elseif(WIN32)
 	set(TERRAME_APPLICATION ${CMAKE_INSTALL_PREFIX}/bin/terrame.exe)
-	set(TERRAME_PATHS "@Qt5_DIR@/../../../bin;@TERRAME_DEPENDENCIES_DIR@/bin;@TERRALIB_3RDPARTY_DIR@/lib;@TERRALIB_DIR@/lib;@MSVC_REDIST_DIR@")
+	set(TERRAME_PATHS "@Qt5_DIR@/../../../bin;@TERRAME_DEPENDENCIES_DIR@/bin;@TERRALIB_3RDPARTY_DIR@/lib;@TERRALIB_DIR@/lib;@CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS@")
 endif()
 
 if(APPLE AND TERRAME_BUILD_AS_BUNDLE)

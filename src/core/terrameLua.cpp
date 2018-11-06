@@ -170,19 +170,19 @@ void registerClasses()
 int cpp_runcommand(lua_State *L)
 {
     const char* command = lua_tostring(L, -1);
-
+	QString cmd = QString::fromLocal8Bit(command);
 	QProcess process;
-	process.start(command);
+	process.start(cmd);
 	process.waitForFinished(-1); // will wait forever until finished
 
-	QString out = process.readAllStandardOutput();
-	QString err = process.readAllStandardError();
+	QString out = QString::fromLocal8Bit(process.readAllStandardOutput());
+	QString err = QString::fromLocal8Bit(process.readAllStandardError());
 
     out.remove(QRegExp("[\\r]"));
     err.remove(QRegExp("[\\r]"));
 
-    lua_pushstring(L, out.toLatin1().constData());
-    lua_pushstring(L, err.toLatin1().constData());
+    lua_pushstring(L, out.toStdString().data());
+    lua_pushstring(L, err.toStdString().data());
 	return 2;
 }
 
@@ -220,7 +220,10 @@ int cpp_imagecompare(lua_State *L)
     const char* s1 = lua_tostring(L, -1);
     const char* s2 = lua_tostring(L, -2);
 
-	double result = comparePerPixel(s1, s2);
+	QString f1(QString::fromLocal8Bit(s1));
+	QString f2(QString::fromLocal8Bit(s2));
+
+	double result = comparePerPixel(f1, f2);
 
 	lua_pushnumber(L, result);
 	return 1;
@@ -308,12 +311,20 @@ int cpp_putenv(lua_State* L)
 int cpp_getOsName(lua_State* L)
 {
 	#ifdef _WIN64
-		lua_pushstring(L, "WINDOWS");
+		lua_pushstring(L, "windows");
 	#elif __APPLE__
-		lua_pushstring(L, "MAC");
+		lua_pushstring(L, "mac");
 	#elif __linux__
-		lua_pushstring(L, "LINUX");
+		lua_pushstring(L, "linux");
 	#endif
+
+	return 1;
+}
+
+int cpp_getLocale(lua_State* L)
+{
+	std::locale loc("");
+	lua_pushstring(L, loc.name().c_str());
 
 	return 1;
 }
@@ -429,6 +440,9 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_getOsName);
 	lua_setglobal(L, "cpp_getOsName");
+
+	lua_pushcfunction(L, cpp_getLocale);
+	lua_setglobal(L, "cpp_getLocale");
 
 	// Execute the lua files
 	if (argc < 2)

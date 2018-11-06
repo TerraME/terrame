@@ -1136,6 +1136,13 @@ function _Gtme.execConfigure(model, packageName)
 end
 
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
+	local osName = cpp_getOsName()
+	if osName == "windows" then
+		local locale = cpp_getLocale()
+		os.setlocale(locale, "collate")
+		os.setlocale(locale, "ctype")
+	end
+
 	info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
 		dbVersion = "1_3_1",
@@ -1148,7 +1155,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		fullTraceback = false,
 		autoclose = false,
 		time = os.clock(),
-		system = string.lower(cpp_getOsName()),
+		system = osName,
 		round = 1e-5
 	}
 

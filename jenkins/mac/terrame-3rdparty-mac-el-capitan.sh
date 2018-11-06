@@ -27,16 +27,17 @@
 #
 
 if [ -z "$_TERRALIB_TARGET_3RDPARTY_DIR" ]; then
-  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/5.2"
+  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/5.4"
 fi
 
 if [ -z "$_TERRAME_TARGET_3RDPARTY_DIR" ]; then
   export _TERRAME_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terrame/3rdparty"
 fi
 
-_TERRALIB_BRANCH="release-5.2"
+_TERRALIB_VERSION="5.4"
+_TERRALIB_BRANCH="release-$_TERRALIB_VERSION"
 export _TERRALIB_3RDPARTY_NAME="terralib-3rdparty-macosx-el-capitan.tar.gz"
-export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/5.2/$_TERRALIB_3RDPARTY_NAME"
+export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/$_TERRALIB_3RDPARTY_NAME"
 
 export PATH=$PATH:$_QT5_DIR:$_CMAKE_DIR
 
@@ -61,29 +62,27 @@ echo ""
 
 echo -ne "Cleaning up old builds ... "
 rm -rf $_TERRAME_TARGET_3RDPARTY_DIR
-# $_TERRALIB_TARGET_3RDPARTY_DIR 
-mkdir -p $_TERRAME_TARGET_3RDPARTY_DIR 
-# $_TERRALIB_TARGET_3RDPARTY_DIR
+mkdir -p $_TERRAME_TARGET_3RDPARTY_DIR
 cd $_TERRALIB_TARGET_3RDPARTY_DIR
 echo "done."
 
 echo ""
 
 echo -ne "Downloading TerraLib 3rdparty ... "
-# curl -L -O $_TERRALIB_TARGET_URL --silent
+curl -L -O $_TERRALIB_TARGET_URL --silent
 valid_operation $? "Error. Check $_TERRALIB_TARGET_URL"
 
 echo -ne "Cloning TerraLib ... "
-# rm -rf $_TERRALIB_GIT_DIR
-# mkdir $_TERRALIB_GIT_DIR
-# git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
+rm -rf $_TERRALIB_GIT_DIR
+mkdir $_TERRALIB_GIT_DIR
+git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR --quiet
 valid_operation $? "Error. Could not clone TerraLib $_TERRALIB_BRANCH" terralib
 
 # Configuring TerraLib 3rdparty compilation
-# cp -v $_TERRALIB_GIT_DIR/install/install-3rdparty-macosx-el-capitan.sh .
+cp -v $_TERRALIB_GIT_DIR/install/install-3rdparty-macosx-el-capitan.sh .
 
 echo -ne "Compiling TerraLib dependencies ... "
-# TERRALIB_DEPENDENCIES_DIR="$_TERRALIB_TARGET_3RDPARTY_DIR" ./install-3rdparty-macosx-el-capitan.sh
+TERRALIB_DEPENDENCIES_DIR="$_TERRALIB_TARGET_3RDPARTY_DIR/libs" ./install-3rdparty-macosx-el-capitan.sh
 valid_operation $? "Error: Could not finish TerraLib 3rdparty compilation"
 
 echo ""

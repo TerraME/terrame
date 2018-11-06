@@ -1161,6 +1161,13 @@ return{
 		end)
 
 		unitTest:assertEquals(count, 84)
+	end,
+	replaceLatinCharacters = function(unitTest)
+		local str = "action"
+		unitTest:assertEquals(replaceLatinCharacters(str), "action")
+
+		str = "ação"
+		unitTest:assertEquals(replaceLatinCharacters(str), "a\xE7\xE3o")
 	end
 }
 

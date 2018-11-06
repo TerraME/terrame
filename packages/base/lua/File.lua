@@ -74,6 +74,13 @@ local function parseLine(line, sep, cline)
 	return res
 end
 
+local function checkInvalidChars(filename)
+	local invalidChars = string.gsub(filename, "[^\34\42\47\58\60\62\63\92\124]", "")
+	if #invalidChars ~= 0 then
+		customError("File name '"..filename.."' contains invalid character '"..invalidChars.."'.")
+	end
+end
+
 File_ = {
 	type_ = "File",
 	--- Return a table with the file attributes corresponding to filepath (or nil followed by an error
@@ -202,6 +209,7 @@ File_ = {
 		local s = sessionInfo().separator
 
 		local result = os.execute("rm -f \""..self.filename.."\" 2> "..directory..s.."a.txt")
+
 		directory:delete()
 
 		if result ~= true then
@@ -555,15 +563,10 @@ function File(data)
 		customError("Directory '"..dir.."' does not exist.")
 	end
 
-	local invalidCharIdx = data.filename:find("[&*<>?|\"]")
-	if invalidCharIdx then
-		customError("Filename '"..data.filename.."' cannot contain character '"..data.filename:sub(invalidCharIdx, invalidCharIdx).."'.")
-	end
+	checkInvalidChars(data:name())
 
-	local fileName = data:name()
-	local invalidChar = string.gsub(fileName, "[^\33-\44\58-\64\91-\94\96\123\125\127-\255]", "")
-	if #invalidChar ~= 0 then
-		customError("File name '"..fileName.."' contains invalid character '"..invalidChar.."'.")
+	if sessionInfo().system == "windows" then
+		data.filename = replaceLatinCharacters(data.filename) --SKIP
 	end
 
 	if isDirectory(data.filename) then

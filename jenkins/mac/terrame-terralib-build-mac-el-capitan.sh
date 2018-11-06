@@ -47,7 +47,7 @@
 #
 
 # Constants
-_TERRALIB_BRANCH=release-5.3
+_TERRALIB_BRANCH=release-5.4
 
 # Removing TerraLib Mod Binding Lua in order to re-generate folder if there is
 rm -rf $_TERRALIB_BUILD_BASE/solution $_TERRALIB_GIT_DIR $_TERRAME_BUILD_BASE/solution
