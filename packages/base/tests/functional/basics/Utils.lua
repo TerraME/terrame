@@ -303,21 +303,31 @@ return{
 		local a = Agent{value = 2}
 		local soc = Society{instance = a, quantity = 10}
 
-		soc:createSocialNetwork{quantity = 3}
+		soc:createSocialNetwork{quantity = 7}
 
 		local count = 0
 		local r
 		local s = soc:sample()
+
+		local order = {}
 
 		r = forEachConnection(s, function(ag2, w, ag1)
 			unitTest:assertType(ag2, "Agent")
 			unitTest:assertEquals(ag1, s)
 			unitTest:assertType(w, "number")
 			count = count + 1
+			table.insert(order, ag2)
 		end)
 
 		unitTest:assert(r)
-		unitTest:assertEquals(count, 3)
+		unitTest:assertEquals(count, 7)
+
+		count = 1
+
+		forEachConnection(s, function(ag2)
+			unitTest:assertEquals(ag2, order[count])
+			count = count + 1
+		end)
 
 		count = 0
 		r = forEachConnection(s, function()
