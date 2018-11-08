@@ -28,10 +28,12 @@ export GTEST_COLOR=1
 
 echo "################################### Unit Testing ###################################"
 unittest
-utResult=$?
+RESULT=$?
 
 echo "################################ Integration Testing ################################"
-inttest
-itResult=$?
+core_itest
+RESULT=$(($? + $RESULT))
+qgis_itest
+RESULT=$(($? + $RESULT))
 
-exit $(($utResult + $itResult))
+exit $RESULT
