@@ -475,12 +475,10 @@ function forEachConnection(agent, name, _sof_)
 		customError("Agent does not have a SocialNetwork named '"..name.."'.")
 	end
 
-	for mname, connection in pairs(socialnetwork.connections) do
+	return forEachOrderedElement(socialnetwork.connections, function(mname, connection)
 		local weight = socialnetwork.weights[mname]
 		if _sof_(connection, weight, agent) == false then return false end
-	end
-
-	return true
+	end)
 end
 
 --- Second order function to traverse a given object, applying a function to each of its
