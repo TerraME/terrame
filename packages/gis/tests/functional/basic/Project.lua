@@ -259,7 +259,7 @@ return {
 					file = filePath("test/various.qgs", "gis")
 				}
 			end
-			unitTest:assertWarning(ncWarn, "Layer QGis ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
+			unitTest:assertWarning(ncWarn, "Layer QGIS ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
 		end
 
 		local l1 = Layer{
@@ -399,11 +399,11 @@ title   string [The Amazonia]
 			file = filePath("test/amazonia.qgs", "gis")
 		}
 
-		unitTest:assertEquals(tostring(qgisproj), [[author  string [QGis Project]
+		unitTest:assertEquals(tostring(qgisproj), [[author  string [QGIS Project]
 clean   boolean [false]
 file    File
 layers  named table of size 3
-title   string [QGis Project]
+title   string [QGIS Project]
 ]])
 
 		File("amazonia.tview"):delete()

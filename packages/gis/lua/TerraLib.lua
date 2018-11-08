@@ -31,6 +31,8 @@ local binding = _Gtme.terralib_mod_binding_lua
 local instance = nil
 local dataCache = makeWeakTable{}
 
+require("swig")
+
 local function getCache(level1, level2, level3)
 	-- level1 is compulsory. The other ones are optional.
 
@@ -1843,14 +1845,15 @@ local function splitString(str, delimiter)
 	return tokens
 end
 
-local function createProjectFromQgis(project)
-	local qgisProjInfo = binding.QgisProject.load(tostring(project.file))
-	local layers = qgisProjInfo:getLayers()
+local function createProjectFromQGis(project)
+	local qgis = swig.terrame.qgis
+	local qgp = qgis.QGis.getInstance():load(tostring(project.file))
+	local layers = qgp:layers()
 
-	project.title = qgisProjInfo:getTitle()
+	project.title = qgp.title
 
 	if project.title == "" then
-		project.title = "QGis Project"
+		project.title = "QGIS Project"
 	end
 
 	project.author = project.title
@@ -1860,23 +1863,23 @@ local function createProjectFromQgis(project)
 
 	for i = 0, getn(layers) - 1 do
 		local qgisLayer = layers[i]
-		local uri = qgisLayer:getUri()
+		local uri = qgisLayer.uri
 
 		if uri:scheme() == "file" then
 			local file = File(fixSpaceInPath(uri:host()..uri:path()))
 			local ext = file:extension()
 			if ext == "shp" then
-				instance.addShpLayer(project, qgisLayer:getName(), file, true, qgisLayer:getSrid())
+				instance.addShpLayer(project, qgisLayer.name, file, true, qgisLayer.srid)
 			elseif ext == "tif" then
-				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+				instance.addGdalLayer(project, qgisLayer.name, file, qgisLayer.srid)
 			elseif ext == "geojson" then
-				instance.addGeoJSONLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+				instance.addGeoJSONLayer(project, qgisLayer.name, file, qgisLayer.srid)
 			elseif (ext == "nc") and (_Gtme.sessionInfo().system == "windows") then -- TODO(#1302)
-				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid()) -- SKIP
+				instance.addGdalLayer(project, qgisLayer.name, file, qgisLayer.srid) -- SKIP
 			elseif ext == "asc" then
-				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+				instance.addGdalLayer(project, qgisLayer.name, file, qgisLayer.srid)
 			else -- TODO(#avancinirodrigo): there is no data to test this else in windows
-				customWarning("Layer QGis ignored '"..qgisLayer:getName().."'. Type '"..ext.."' is not supported.") -- SKIP
+				customWarning("Layer QGIS ignored '"..qgisLayer.name.."'. Type '"..ext.."' is not supported.") -- SKIP
 			end
 		elseif uri:scheme() == "pgsql" then
 			local conn = {
@@ -1889,9 +1892,9 @@ local function createProjectFromQgis(project)
 				encoding = "LATIN1"
 			}
 
-			instance.addPgLayer(project,  qgisLayer:getName(), conn, qgisLayer:getSrid(), conn.encoding)
+			instance.addPgLayer(project,  qgisLayer.name, conn, qgisLayer.srid, conn.encoding)
 		elseif uri:scheme() == "wfs" then
-			instance.addWfsLayer(project, qgisLayer:getName(), uri:path(), uri:query(), qgisLayer:getSrid())
+			instance.addWfsLayer(project, qgisLayer.name, uri:path(), uri:query(), qgisLayer.srid)
 		elseif uri:scheme() == "wms" then
 			local values = splitString(uri:query(), "&")
 			local format = splitString(values[1], "=")[2]
@@ -1903,9 +1906,9 @@ local function createProjectFromQgis(project)
 				directory = currentDir()
 			}
 
-			instance.addWmsLayer(project, qgisLayer:getName(), conn, layer, qgisLayer:getSrid())
+			instance.addWmsLayer(project, qgisLayer.name, conn, layer, qgisLayer.srid)
 		else -- TODO(avancinirodrigo): there is no data to test this else
-			customWarning("Layer QGis ignored '"..qgisLayer:getName().."'. Unsupported type.") -- SKIP
+			customWarning("Layer QGIS ignored '"..qgisLayer.name.."'. Unsupported type.") -- SKIP
 		end
 	end
 end
@@ -1999,7 +2002,7 @@ TerraLib_ = {
 		end
 
 		if project.file:extension() == "qgs" then
-			createProjectFromQgis(project)
+			createProjectFromQGis(project)
 		else
 			if not project.layers then
 				project.layers = layers

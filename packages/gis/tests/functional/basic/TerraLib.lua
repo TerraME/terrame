@@ -112,8 +112,8 @@ return {
 		project = TerraLib().createProject(projPg)
 
 		unitTest:assertEquals(projPg.file:name(), "sampapg.qgs")
-		unitTest:assertEquals(projPg.title, "QGis Project")
-		unitTest:assertEquals(projPg.author, "QGis Project")
+		unitTest:assertEquals(projPg.title, "QGIS Project")
+		unitTest:assertEquals(projPg.author, "QGIS Project")
 		unitTest:assert(File("sampapg.tview"):exists())
 		unitTest:assertEquals(getn(proj.layers), 1)
 
@@ -142,8 +142,8 @@ return {
 		TerraLib().createProject(proj)
 
 		unitTest:assertEquals(proj.file:name(), "amazonia.qgs")
-		unitTest:assertEquals(proj.title, "QGis Project")
-		unitTest:assertEquals(proj.author, "QGis Project")
+		unitTest:assertEquals(proj.title, "QGIS Project")
+		unitTest:assertEquals(proj.author, "QGIS Project")
 		unitTest:assert(File("amazonia.tview"):exists())
 		unitTest:assertEquals(getn(proj.layers), 3)
 
@@ -184,7 +184,7 @@ return {
 				TerraLib().createProject(proj)
 			end
 
-			unitTest:assertWarning(ncWarn, "Layer QGis ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
+			unitTest:assertWarning(ncWarn, "Layer QGIS ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
 		end
 
 		layerInfo = TerraLib().getLayerInfo(proj, "sampa")
