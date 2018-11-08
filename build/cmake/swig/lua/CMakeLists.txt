@@ -39,6 +39,8 @@ SWIG_ADD_LIBRARY(
 	SOURCES ${TERRAME_SWIG_SCRIPT_FILE}
 )
 
+target_include_directories(swig PUBLIC ${LUA_INCLUDE_DIR})
+
 SWIG_LINK_LIBRARIES(swig qgis ${LUA_LIBRARY})
 
 set_target_properties(swig PROPERTIES PREFIX "")
