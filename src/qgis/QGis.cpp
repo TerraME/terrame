@@ -40,7 +40,7 @@ terrame::qgis::QGis& terrame::qgis::QGis::getInstance()
 	return instance;
 }
 
-terrame::qgis::QGisProject terrame::qgis::QGis::load(const std::string& qgsfile) 
+terrame::qgis::QGisProject terrame::qgis::QGis::load(const std::string& qgsfile)
 {
 	if(!boost::filesystem::exists(qgsfile))
 	{
@@ -65,7 +65,7 @@ terrame::qgis::QGisProject terrame::qgis::QGis::load(const std::string& qgsfile)
 		xercesc::XMLPlatformUtils::Terminate();
 		throw std::runtime_error("Empty QGIS project.");
 	}
-		
+
 	QGisProject qgp;
 	qgp.file = qgsfile;
 	qgp.version = getVersion(root);
@@ -107,7 +107,7 @@ std::string terrame::qgis::QGis::getTitle(xercesc::DOMElement * root)
 
 bool terrame::qgis::QGis::isNodeValid(xercesc::DOMNode * node)
 {
-	return node->getNodeType() && 
+	return node->getNodeType() &&
 			(node->getNodeType() == xercesc::DOMNode::ELEMENT_NODE);
 }
 
@@ -122,13 +122,13 @@ std::string terrame::qgis::QGis::getElementContentAsString(xercesc::DOMElement* 
 	return value;
 }
 
-te::core::URI terrame::qgis::QGis::getElementContentAsUri(xercesc::DOMElement* element, 
-													const std::string& name, 
+te::core::URI terrame::qgis::QGis::getElementContentAsUri(xercesc::DOMElement* element,
+													const std::string& name,
 													const std::string& qgsfile)
 {
 	std::string content(getElementContentAsString(element, name));
 	boost::filesystem::path relativeTo(qgsfile);
-	
+
 	if (isDatabase(content))
 	{
 		return createDatabaseUri(content);
@@ -174,7 +174,7 @@ te::core::URI terrame::qgis::QGis::createDatabaseUri(const std::string & content
 	te::core::URI uri(uriStr);
 
 	if (!uri.isValid())
-		throw(std::runtime_error("Invalid QGIS database URI: '" 
+		throw(std::runtime_error("Invalid QGIS database URI: '"
 								+ uriStr + "'."));
 
 	return uri;
@@ -213,14 +213,14 @@ te::core::URI terrame::qgis::QGis::createWmsUri(const std::string & content)
 }
 
 std::map<std::string, std::string> terrame::qgis::QGis::createAttributesMap(
-													const std::string& content, 
+													const std::string& content,
 													const std::string& separator)
 {
 	boost::char_separator<char> sep(separator.c_str());
 	boost::tokenizer<boost::char_separator<char>> tokens(content, sep);
 	std::map<std::string, std::string> contents;
 
-	for (boost::tokenizer< boost::char_separator<char> >::iterator it = tokens.begin(); 
+	for (boost::tokenizer< boost::char_separator<char> >::iterator it = tokens.begin();
 		it != tokens.end(); it++)
 	{
 		std::string token(*it);
@@ -228,7 +228,7 @@ std::map<std::string, std::string> terrame::qgis::QGis::createAttributesMap(
 		if (token.find("=") != std::string::npos)
 		{
 			std::vector<std::string> values;
-			boost::split(values, token, boost::is_any_of("=")); 
+			boost::split(values, token, boost::is_any_of("="));
 			std::string key = values.at(0);
 			std::string value = values.at(1);
 			boost::replace_all(key, "'", "");

@@ -21,6 +21,15 @@
 # of this software and its documentation.
 ############################################################################################
 
+find_package(Lua REQUIRED)
+if(LUA_FOUND)
+	message("Lua found!")
+	message("library: ${LUA_LIBRARY}")
+	message("include: ${LUA_INCLUDE_DIR}")
+else()
+	message("Lua not found!")
+endif()
+
 file(GLOB TERRAME_SWIG_SCRIPT_FILE ${TERRAME_ABSOLUTE_ROOT_DIR}/src/swig/TerraMELua.i)
 
 include_directories(${TERRAME_ABSOLUTE_ROOT_DIR}/src)
@@ -38,8 +47,6 @@ SWIG_ADD_LIBRARY(
 	LANGUAGE lua
 	SOURCES ${TERRAME_SWIG_SCRIPT_FILE}
 )
-
-target_include_directories(swig PUBLIC ${LUA_INCLUDE_DIR})
 
 SWIG_LINK_LIBRARIES(swig qgis ${LUA_LIBRARY})
 

@@ -63,22 +63,22 @@ namespace terrame
 			int getVersion(xercesc::DOMElement* root);
 			std::string getTitle(xercesc::DOMElement* root);
 			bool isNodeValid(xercesc::DOMNode* node);
-			std::string getElementContentAsString(xercesc::DOMElement* element, 
+			std::string getElementContentAsString(xercesc::DOMElement* element,
 											const std::string& name);
-			te::core::URI getElementContentAsUri(xercesc::DOMElement* element, 
-											const std::string& name, 
+			te::core::URI getElementContentAsUri(xercesc::DOMElement* element,
+											const std::string& name,
 											const std::string& qgsfile);
 			te::core::URI createDatabaseUri(const std::string& content);
 			te::core::URI createWfsUri(const std::string& content);
 			te::core::URI createWmsUri(const std::string& content);
 			std::map<std::string, std::string> createAttributesMap(
-														const std::string& content, 
+														const std::string& content,
 														const std::string& separator);
 			bool isDatabase(const std::string& content);
 			bool isWfs(const std::string& content);
 			bool isWms(const std::string& content);
 		};
-	} 
+	}
 }
 
 #endif
