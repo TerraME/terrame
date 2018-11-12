@@ -1847,6 +1847,11 @@ end
 
 local function createProjectFromQGis(project)
 	local qgis = swig.terrame.qgis
+
+	if project.user and project.password then
+		qgis.QGis.getInstance():setPostgisRole(project.user, project.password)
+	end
+
 	local qgp = qgis.QGis.getInstance():load(tostring(project.file))
 	local layers = qgp:layers()
 

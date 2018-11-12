@@ -86,6 +86,14 @@ function Project(data)
 	defaultTableValue(data, "clean", false)
 	defaultTableValue(data, "title", "No title")
 	defaultTableValue(data, "author", "No author")
+	optionalTableArgument(data, "user", "string")
+	optionalTableArgument(data, "password", "string")
+
+	if data.user or data.password then
+		if not (data.user and data.password) then
+			customError("Both arguments 'user' and 'password' must be set.")
+		end
+	end
 
 	data.layers = {}
 
@@ -107,7 +115,7 @@ function Project(data)
 
 	local multipleFiles = {}
 	forEachElement(data, function(idx, value)
-		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
+		if belong(idx, {"clean", "file", "author", "title", "layers", "directory", "user", "password"}) then return end
 		if type(value) == "string" and string.find(value, "%*") then
 			multipleFiles[idx] = value
 		else
@@ -165,7 +173,7 @@ function Project(data)
 	end)
 
 	forEachElement(data, function(idx, value)
-		if belong(idx, {"clean", "file", "author", "title", "layers", "directory"}) then return end
+		if belong(idx, {"clean", "file", "author", "title", "layers", "directory", "user", "password"}) then return end
 		if type(value) == "Layer" then return end
 
 		layers[idx] = Layer{

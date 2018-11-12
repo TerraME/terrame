@@ -142,6 +142,21 @@ return{
 		unitTest:assertType(projTemporal.areas, "Layer")
 		unitTest:assertEquals(projTemporal.areas.source, "shp")
 		File("temporal.tview"):deleteIfExists()
+
+		local userNotString = function()
+			Project{file = "myproj.tview", user = 2}
+		end
+		unitTest:assertError(userNotString, incompatibleTypeMsg("user", "string", 2))
+
+		local passNotString = function()
+			Project{file = "myproj.tview", password = 2}
+		end
+		unitTest:assertError(passNotString, incompatibleTypeMsg("password", "string", 2))
+
+		local userAndPassError = function()
+			Project{file = "myproj.tview", password = "postgres"}
+		end
+		unitTest:assertError(userAndPassError, "Both arguments 'user' and 'password' must be set.")
 	end
 }
 

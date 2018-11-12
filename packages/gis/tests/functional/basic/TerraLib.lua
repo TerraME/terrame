@@ -58,196 +58,208 @@ return {
 
 		unitTest:assert(happyPath)
 
-		-- QGIS PROJECT
-		-- shp
-		local proj = {
-			file = filePath("test/sampa.qgs", "gis")
-		}
+		local version = ""
+		local QGisProjectTest = function()
+			-- shp
+			local proj = {
+				file = filePath("test/sampa"..version..".qgs", "gis")
+			}
 
-		TerraLib().createProject(proj)
-
-		unitTest:assertEquals(proj.file:name(), "sampa.qgs")
-		unitTest:assertEquals(proj.title, "Sampa QGis Project")
-		unitTest:assertEquals(proj.author, "Sampa QGis Project")
-		unitTest:assert(File("sampa.tview"):exists())
-		unitTest:assertNotNil(proj.layers)
-
-		local layerInfo = TerraLib().getLayerInfo(proj, "SP")
-
-		unitTest:assertEquals(layerInfo.name, "SP")
-		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertEquals(layerInfo.srid, 4019)
-		unitTest:assertEquals(layerInfo.type, "OGR")
-		unitTest:assertEquals(layerInfo.source, "shp")
-		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
-
-		-- postgis
-		local fromData = {}
-		fromData.project = proj
-		fromData.layer = "SP"
-
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
-		local password = "postgres"
-		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = "sampa"
-
-		local pgData = {
-			type = "postgis",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tableName,
-			encoding = encoding
-		}
-
-		TerraLib().saveDataAs(fromData, pgData, true)
-
-		local projPg = {}
-		projPg.file = filePath("test/sampapg.qgs", "gis")
-		project = TerraLib().createProject(projPg)
-
-		unitTest:assertEquals(projPg.file:name(), "sampapg.qgs")
-		unitTest:assertEquals(projPg.title, "QGIS Project")
-		unitTest:assertEquals(projPg.author, "QGIS Project")
-		unitTest:assert(File("sampapg.tview"):exists())
-		unitTest:assertEquals(getn(proj.layers), 1)
-
-		layerInfo = TerraLib().getLayerInfo(projPg, "SP")
-		unitTest:assertEquals(layerInfo.name, "SP")
-		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertEquals(layerInfo.srid, 4019)
-		unitTest:assertEquals(layerInfo.type, "POSTGIS")
-		unitTest:assertEquals(layerInfo.source, "postgis")
-		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
-		unitTest:assertEquals(layerInfo.database, database)
-		unitTest:assertEquals(layerInfo.password, password)
-		unitTest:assertEquals(layerInfo.host, host)
-		unitTest:assertEquals(layerInfo.user, user)
-		unitTest:assertEquals(layerInfo.port, port)
-		unitTest:assertEquals(layerInfo.table, tableName)
-
-		TerraLib().dropPgTable(pgData)
-		File("sampa.tview"):delete()
-		File("sampapg.tview"):delete()
-
-		-- three shps
-		proj = {}
-		proj.file = filePath("test/amazonia.qgs", "gis")
-
-		TerraLib().createProject(proj)
-
-		unitTest:assertEquals(proj.file:name(), "amazonia.qgs")
-		unitTest:assertEquals(proj.title, "QGIS Project")
-		unitTest:assertEquals(proj.author, "QGIS Project")
-		unitTest:assert(File("amazonia.tview"):exists())
-		unitTest:assertEquals(getn(proj.layers), 3)
-
-		layerInfo = TerraLib().getLayerInfo(proj, "amazonia-limit")
-		unitTest:assertEquals(layerInfo.name, "amazonia-limit")
-		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertEquals(layerInfo.srid, 29191)
-		unitTest:assertEquals(layerInfo.type, "OGR")
-		unitTest:assertEquals(layerInfo.source, "shp")
-		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
-
-		layerInfo = TerraLib().getLayerInfo(proj, "amazonia-prodes")
-		unitTest:assertEquals(layerInfo.name, "amazonia-prodes")
-		unitTest:assertEquals(layerInfo.rep, "raster")
-		unitTest:assertEquals(layerInfo.srid, 29191)
-		unitTest:assertEquals(layerInfo.type, "GDAL")
-		unitTest:assertEquals(layerInfo.source, "tif")
-		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
-
-		layerInfo = TerraLib().getLayerInfo(proj, "amazonia-roads")
-		unitTest:assertEquals(layerInfo.name, "amazonia-roads")
-		unitTest:assertEquals(layerInfo.rep, "line")
-		unitTest:assertEquals(layerInfo.srid, 29191)
-		unitTest:assertEquals(layerInfo.type, "OGR")
-		unitTest:assertEquals(layerInfo.source, "shp")
-		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
-
-		File("amazonia.tview"):delete()
-
-		-- various types
-		proj = {}
-		proj.file = filePath("test/various.qgs", "gis")
-
-		if _Gtme.sessionInfo().system == "windows" then
 			TerraLib().createProject(proj)
-		else
-			local ncWarn = function()
-				TerraLib().createProject(proj)
+
+			unitTest:assertEquals(proj.file:name(), "sampa"..version..".qgs")
+			unitTest:assertEquals(proj.title, "Sampa QGis Project")
+			unitTest:assertEquals(proj.author, "Sampa QGis Project")
+			unitTest:assert(File("sampa"..version..".tview"):exists())
+			unitTest:assertNotNil(proj.layers)
+
+			local layerInfo = TerraLib().getLayerInfo(proj, "SP")
+
+			unitTest:assertEquals(layerInfo.name, "SP")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
+			unitTest:assertEquals(layerInfo.srid, 4019)
+			unitTest:assertEquals(layerInfo.type, "OGR")
+			unitTest:assertEquals(layerInfo.source, "shp")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+
+			-- postgis
+			local fromData = {}
+			fromData.project = proj
+			fromData.layer = "SP"
+
+			local host = "localhost"
+			local port = "5432"
+			local user = "postgres"
+			local password = "postgres"
+			local database = "postgis_22_sample"
+			local encoding = "CP1252"
+			local tableName = "sampa"
+
+			local pgData = {
+				type = "postgis",
+				host = host,
+				port = port,
+				user = user,
+				password = password,
+				database = database,
+				table = tableName,
+				encoding = encoding
+			}
+
+			TerraLib().saveDataAs(fromData, pgData, true)
+
+			local projPg = {}
+			projPg.file = filePath("test/sampapg"..version..".qgs", "gis")
+
+			if version == "_v3" then
+				projPg.user = pgData.user
+				projPg.password = pgData.password
+				project = TerraLib().createProject(projPg)
+			else
+				project = TerraLib().createProject(projPg)
 			end
 
-			unitTest:assertWarning(ncWarn, "Layer QGIS ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
-		end
+			unitTest:assertEquals(projPg.file:name(), "sampapg"..version..".qgs")
+			unitTest:assertEquals(projPg.title, "QGIS Project")
+			unitTest:assertEquals(projPg.author, "QGIS Project")
+			unitTest:assert(File("sampapg"..version..".tview"):exists())
+			unitTest:assertEquals(getn(proj.layers), 1)
 
-		layerInfo = TerraLib().getLayerInfo(proj, "sampa")
-		unitTest:assertEquals(layerInfo.name, "sampa")
-		unitTest:assertEquals(layerInfo.rep, "polygon")
-		unitTest:assertEquals(layerInfo.srid, 4019)
-		unitTest:assertEquals(layerInfo.type, "OGR")
-		unitTest:assertEquals(layerInfo.source, "geojson")
-		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+			layerInfo = TerraLib().getLayerInfo(projPg, "SP")
+			unitTest:assertEquals(layerInfo.name, "SP")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
+			unitTest:assertEquals(layerInfo.srid, 4019)
+			unitTest:assertEquals(layerInfo.type, "POSTGIS")
+			unitTest:assertEquals(layerInfo.source, "postgis")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+			unitTest:assertEquals(layerInfo.database, database)
+			unitTest:assertEquals(layerInfo.password, password)
+			unitTest:assertEquals(layerInfo.host, host)
+			unitTest:assertEquals(layerInfo.user, user)
+			unitTest:assertEquals(layerInfo.port, port)
+			unitTest:assertEquals(layerInfo.table, tableName)
 
-		layerInfo = TerraLib().getLayerInfo(proj, "biomassa-manaus")
-		unitTest:assertEquals(layerInfo.name, "biomassa-manaus")
-		unitTest:assertEquals(layerInfo.rep, "raster")
-		unitTest:assertEquals(layerInfo.srid, 4326)
-		unitTest:assertEquals(layerInfo.type, "GDAL")
-		unitTest:assertEquals(layerInfo.source, "asc")
-		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+			TerraLib().dropPgTable(pgData)
+			File("sampa"..version..".tview"):delete()
+			File("sampapg"..version..".tview"):delete()
 
-		if _Gtme.sessionInfo().system == "windows" then
-			layerInfo = TerraLib().getLayerInfo(proj, "vegtype_2000")
-			unitTest:assertEquals(layerInfo.name, "vegtype_2000") -- SKIP
-			unitTest:assertEquals(layerInfo.rep, "raster") -- SKIP
-			unitTest:assertEquals(layerInfo.srid, 4326) -- SKIP
-			unitTest:assertEquals(layerInfo.type, "GDAL") -- SKIP
-			unitTest:assertEquals(layerInfo.source, "nc") -- SKIP
-			unitTest:assertEquals(layerInfo.encoding, "LATIN1") -- SKIP
-		end
+			-- three shps
+			proj = {}
+			proj.file = filePath("test/amazonia"..version..".qgs", "gis")
 
-		File("various.tview"):delete()
+			TerraLib().createProject(proj)
 
-		-- web services
-		local wmsDir = Directory("wms")
-		if wmsDir:exists() then
+			unitTest:assertEquals(proj.file:name(), "amazonia"..version..".qgs")
+			unitTest:assertEquals(proj.title, "QGIS Project")
+			unitTest:assertEquals(proj.author, "QGIS Project")
+			unitTest:assert(File("amazonia"..version..".tview"):exists())
+			unitTest:assertEquals(getn(proj.layers), 3)
+
+			layerInfo = TerraLib().getLayerInfo(proj, "amazonia-limit")
+			unitTest:assertEquals(layerInfo.name, "amazonia-limit")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
+			unitTest:assertEquals(layerInfo.srid, 29191)
+			unitTest:assertEquals(layerInfo.type, "OGR")
+			unitTest:assertEquals(layerInfo.source, "shp")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+
+			layerInfo = TerraLib().getLayerInfo(proj, "amazonia-prodes")
+			unitTest:assertEquals(layerInfo.name, "amazonia-prodes")
+			unitTest:assertEquals(layerInfo.rep, "raster")
+			unitTest:assertEquals(layerInfo.srid, 29191)
+			unitTest:assertEquals(layerInfo.type, "GDAL")
+			unitTest:assertEquals(layerInfo.source, "tif")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+
+			layerInfo = TerraLib().getLayerInfo(proj, "amazonia-roads")
+			unitTest:assertEquals(layerInfo.name, "amazonia-roads")
+			unitTest:assertEquals(layerInfo.rep, "line")
+			unitTest:assertEquals(layerInfo.srid, 29191)
+			unitTest:assertEquals(layerInfo.type, "OGR")
+			unitTest:assertEquals(layerInfo.source, "shp")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+
+			File("amazonia"..version..".tview"):delete()
+
+			-- various types
+			proj = {}
+			proj.file = filePath("test/various"..version..".qgs", "gis")
+
+			if _Gtme.sessionInfo().system == "windows" then
+				TerraLib().createProject(proj)
+			else
+				local ncWarn = function()
+					TerraLib().createProject(proj)
+				end
+
+				unitTest:assertWarning(ncWarn, "Layer QGIS ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
+			end
+
+			layerInfo = TerraLib().getLayerInfo(proj, "sampa")
+			unitTest:assertEquals(layerInfo.name, "sampa")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
+			unitTest:assertEquals(layerInfo.srid, 4019)
+			unitTest:assertEquals(layerInfo.type, "OGR")
+			unitTest:assertEquals(layerInfo.source, "geojson")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+
+			layerInfo = TerraLib().getLayerInfo(proj, "biomassa-manaus")
+			unitTest:assertEquals(layerInfo.name, "biomassa-manaus")
+			unitTest:assertEquals(layerInfo.rep, "raster")
+			unitTest:assertEquals(layerInfo.srid, 4326)
+			unitTest:assertEquals(layerInfo.type, "GDAL")
+			unitTest:assertEquals(layerInfo.source, "asc")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+
+			if _Gtme.sessionInfo().system == "windows" then
+				layerInfo = TerraLib().getLayerInfo(proj, "vegtype_2000")
+				unitTest:assertEquals(layerInfo.name, "vegtype_2000") -- SKIP
+				unitTest:assertEquals(layerInfo.rep, "raster") -- SKIP
+				unitTest:assertEquals(layerInfo.srid, 4326) -- SKIP
+				unitTest:assertEquals(layerInfo.type, "GDAL") -- SKIP
+				unitTest:assertEquals(layerInfo.source, "nc") -- SKIP
+				unitTest:assertEquals(layerInfo.encoding, "LATIN1") -- SKIP
+			end
+
+			File("various"..version..".tview"):delete()
+
+			-- web services
+			local wmsDir = Directory("wms")
+			if wmsDir:exists() then
+				wmsDir:delete()
+			end
+
+			proj = {}
+			proj.file = filePath("test/webservice"..version..".qgs", "gis")
+			TerraLib().createProject(proj)
+
+			layerInfo = TerraLib().getLayerInfo(proj, "LANDSAT2013")
+			unitTest:assertEquals(layerInfo.name, "LANDSAT2013")
+			unitTest:assertEquals(layerInfo.rep, "raster")
+			unitTest:assertEquals(layerInfo.srid, 4326)
+			unitTest:assertEquals(layerInfo.type, "WMS2")
+			unitTest:assertEquals(layerInfo.source, "wms")
+			unitTest:assertEquals(layerInfo.url, "http://terrabrasilis.info/geoserver/ows")
+			unitTest:assertEquals(layerInfo.dataset, "Prodes_2013:LANDSAT2013")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+
+			layerInfo = TerraLib().getLayerInfo(proj, "reddpac:LandCover2000")
+			unitTest:assertEquals(layerInfo.name, "reddpac:LandCover2000")
+			unitTest:assertEquals(layerInfo.rep, "surface")
+			unitTest:assertEquals(layerInfo.srid, 4326)
+			unitTest:assertEquals(layerInfo.type, "WFS")
+			unitTest:assertEquals(layerInfo.source, "wfs")
+			unitTest:assertEquals(layerInfo.url, "http://terrabrasilis.info/redd-pac/wfs")
+			unitTest:assertEquals(layerInfo.dataset, "reddpac:LandCover2000")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+
 			wmsDir:delete()
+			File("webservice"..version..".tview"):delete()
 		end
 
-		proj = {}
-		proj.file = filePath("test/webservice.qgs", "gis")
-		TerraLib().createProject(proj)
-
-		layerInfo = TerraLib().getLayerInfo(proj, "LANDSAT2013")
-		unitTest:assertEquals(layerInfo.name, "LANDSAT2013")
-		unitTest:assertEquals(layerInfo.rep, "raster")
-		unitTest:assertEquals(layerInfo.srid, 4326)
-		unitTest:assertEquals(layerInfo.type, "WMS2")
-		unitTest:assertEquals(layerInfo.source, "wms")
-		unitTest:assertEquals(layerInfo.url, "http://terrabrasilis.info/geoserver/ows")
-		unitTest:assertEquals(layerInfo.dataset, "Prodes_2013:LANDSAT2013")
-		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
-
-		layerInfo = TerraLib().getLayerInfo(proj, "reddpac:LandCover2000")
-		unitTest:assertEquals(layerInfo.name, "reddpac:LandCover2000")
-		unitTest:assertEquals(layerInfo.rep, "surface")
-		unitTest:assertEquals(layerInfo.srid, 4326)
-		unitTest:assertEquals(layerInfo.type, "WFS")
-		unitTest:assertEquals(layerInfo.source, "wfs")
-		unitTest:assertEquals(layerInfo.url, "http://terrabrasilis.info/redd-pac/wfs")
-		unitTest:assertEquals(layerInfo.dataset, "reddpac:LandCover2000")
-		unitTest:assertEquals(layerInfo.encoding, "LATIN1")
-
-		wmsDir:delete()
-		File("webservice.tview"):delete()
-		-- // QGIS PROJECT
+		unitTest:assert(QGisProjectTest)
+		version = "_v3"
+		unitTest:assert(QGisProjectTest)
 	end,
 	openProject = function(unitTest)
 		local proj = {

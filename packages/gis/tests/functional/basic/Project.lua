@@ -246,59 +246,64 @@ return {
 		unitTest:assertEquals(getn(proj.layers), 16)
 		file:deleteIfExists()
 
-		-- QGIS PROJECT
-		local qgisproj
+		local version = ""
+		local QGisProjectTest = function()
+			local qgisproj
 
-		if _Gtme.sessionInfo().system == "windows" then
-			qgisproj = Project {
-				file = filePath("test/various.qgs", "gis")
-			}
-		else
-			local ncWarn = function()
+			if _Gtme.sessionInfo().system == "windows" then
 				qgisproj = Project {
-					file = filePath("test/various.qgs", "gis")
+					file = filePath("test/various"..version..".qgs", "gis")
 				}
+			else
+				local ncWarn = function()
+					qgisproj = Project {
+						file = filePath("test/various"..version..".qgs", "gis")
+					}
+				end
+				unitTest:assertWarning(ncWarn, "Layer QGIS ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
 			end
-			unitTest:assertWarning(ncWarn, "Layer QGIS ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
-		end
 
-		local l1 = Layer{
-			project = qgisproj,
-			name = "sampa"
-		}
-		unitTest:assertEquals(l1.name, "sampa")
-		unitTest:assertEquals(l1.rep, "polygon")
-		unitTest:assertEquals(l1.epsg, 4019)
-		unitTest:assertEquals(File(l1.file):name(), "sampa.geojson")
-		unitTest:assertEquals(l1.source, "geojson")
-		unitTest:assertEquals(l1.encoding, "latin1")
-
-		local l2 = Layer{
-			project = qgisproj,
-			name = "biomassa-manaus"
-		}
-		unitTest:assertEquals(l2.name, "biomassa-manaus")
-		unitTest:assertEquals(l2.rep, "raster")
-		unitTest:assertEquals(l2.epsg, 4326)
-		unitTest:assertEquals(File(l2.file):name(), "biomassa-manaus.asc")
-		unitTest:assertEquals(l2.source, "asc")
-		unitTest:assertEquals(l2.encoding, "latin1")
-
-		if _Gtme.sessionInfo().system == "windows" then
-			local l3 = Layer{
+			local l1 = Layer{
 				project = qgisproj,
-				name = "vegtype_2000"
+				name = "sampa"
 			}
-			unitTest:assertEquals(l3.name, "vegtype_2000") -- SKIP
-			unitTest:assertEquals(l3.rep, "raster") -- SKIP
-			unitTest:assertEquals(l3.epsg, 4326) -- SKIP
-			unitTest:assertEquals(File(l3.file):name(), "vegtype_2000.nc") -- SKIP
-			unitTest:assertEquals(l3.source, "nc") -- SKIP
-			unitTest:assertEquals(l3.encoding, "latin1") -- SKIP
+			unitTest:assertEquals(l1.name, "sampa")
+			unitTest:assertEquals(l1.rep, "polygon")
+			unitTest:assertEquals(l1.epsg, 4019)
+			unitTest:assertEquals(File(l1.file):name(), "sampa.geojson")
+			unitTest:assertEquals(l1.source, "geojson")
+			unitTest:assertEquals(l1.encoding, "latin1")
+
+			local l2 = Layer{
+				project = qgisproj,
+				name = "biomassa-manaus"
+			}
+			unitTest:assertEquals(l2.name, "biomassa-manaus")
+			unitTest:assertEquals(l2.rep, "raster")
+			unitTest:assertEquals(l2.epsg, 4326)
+			unitTest:assertEquals(File(l2.file):name(), "biomassa-manaus.asc")
+			unitTest:assertEquals(l2.source, "asc")
+			unitTest:assertEquals(l2.encoding, "latin1")
+
+			if _Gtme.sessionInfo().system == "windows" then
+				local l3 = Layer{
+					project = qgisproj,
+					name = "vegtype_2000"
+				}
+				unitTest:assertEquals(l3.name, "vegtype_2000") -- SKIP
+				unitTest:assertEquals(l3.rep, "raster") -- SKIP
+				unitTest:assertEquals(l3.epsg, 4326) -- SKIP
+				unitTest:assertEquals(File(l3.file):name(), "vegtype_2000.nc") -- SKIP
+				unitTest:assertEquals(l3.source, "nc") -- SKIP
+				unitTest:assertEquals(l3.encoding, "latin1") -- SKIP
+			end
+
+			File("various"..version..".tview"):delete()
 		end
 
-		File("various.tview"):delete()
-		-- // QGIS PROJECT
+		unitTest:assert(QGisProjectTest)
+		version = "_v3"
+		unitTest:assert(QGisProjectTest)
 
 		-- Temporal Layers
 		local projTemporal = Project{

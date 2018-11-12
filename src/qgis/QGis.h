@@ -82,7 +82,7 @@ namespace terrame
 			bool isDatabase(const std::string& content);
 			bool isWfs(const std::string& content);
 			bool isWms(const std::string& content);
-			
+
 			std::string user;
 			std::string password;
 		};
