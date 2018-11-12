@@ -30,7 +30,7 @@ TEST_F(QGisTest, LoadEmptyQgsExceptionQGisV2)
 	std::string qgsfile(std::string(TERRAME_INTTEST_DATA_PATH) + "/empty.qgs");
 
 	try
-	{		
+	{
 		terrame::qgis::QGisProject qgp = terrame::qgis::QGis::getInstance().load(qgsfile);
 		FAIL();
 	}

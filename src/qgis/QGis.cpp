@@ -215,7 +215,7 @@ te::core::URI terrame::qgis::QGis::createWfsUri(const std::string& content)
 	return uri;
 }
 
-te::core::URI terrame::qgis::QGis::createWmsUri(const std::string & content)
+te::core::URI terrame::qgis::QGis::createWmsUri(const std::string& content)
 {
 	std::map<std::string, std::string> contents(createAttributesMap(content, "&"));
 	std::vector<std::string> format;

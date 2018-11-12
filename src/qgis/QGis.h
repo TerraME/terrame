@@ -86,7 +86,7 @@ namespace terrame
 			std::string user;
 			std::string password;
 		};
-	}
-}
+	} // namespace qgis
+} // namespace terrame
 
 #endif
