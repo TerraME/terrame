@@ -1,0 +1,537 @@
+<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
+<qgis version="3.4.1-Madeira" projectname="">
+  <homePath path=""/>
+  <title></title>
+  <autotransaction active="0"/>
+  <evaluateDefaultValues active="0"/>
+  <trust active="0"/>
+  <projectCrs>
+    <spatialrefsys>
+      <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+      <srsid>3452</srsid>
+      <srid>4326</srid>
+      <authid>EPSG:4326</authid>
+      <description>WGS 84</description>
+      <projectionacronym>longlat</projectionacronym>
+      <ellipsoidacronym>WGS84</ellipsoidacronym>
+      <geographicflag>true</geographicflag>
+    </spatialrefsys>
+  </projectCrs>
+  <layer-tree-group>
+    <customproperties/>
+    <layer-tree-layer name="reddpac:LandCover2000" expanded="1" id="reddpac_LandCover2000_7f4c2783_dcc0_450e_840b_ba43be18e0b7" checked="Qt::Checked" source=" restrictToRequestBBOX='1' srsname='EPSG:4326' typename='reddpac:LandCover2000' url='http://terrabrasilis.info/redd-pac/wfs' version='auto' table=&quot;&quot; sql=" providerKey="WFS">
+      <customproperties/>
+    </layer-tree-layer>
+    <layer-tree-layer name="LANDSAT2013" expanded="1" id="LANDSAT2013_3e8578be_fc9e_4a06_8af4_aca7b07ca503" checked="Qt::Checked" source="contextualWMSLegend=0&amp;crs=EPSG:4326&amp;dpiMode=7&amp;featureCount=10&amp;format=image/png&amp;layers=Prodes_2013:LANDSAT2013&amp;styles&amp;url=http://terrabrasilis.info/geoserver/ows" providerKey="wms">
+      <customproperties/>
+    </layer-tree-layer>
+    <custom-order enabled="0">
+      <item>LANDSAT2013_3e8578be_fc9e_4a06_8af4_aca7b07ca503</item>
+      <item>reddpac_LandCover2000_7f4c2783_dcc0_450e_840b_ba43be18e0b7</item>
+    </custom-order>
+  </layer-tree-group>
+  <snapping-settings enabled="0" unit="1" intersection-snapping="0" mode="2" tolerance="12" type="1">
+    <individual-layer-settings>
+      <layer-setting enabled="0" units="1" id="reddpac_LandCover2000_7f4c2783_dcc0_450e_840b_ba43be18e0b7" tolerance="12" type="1"/>
+    </individual-layer-settings>
+  </snapping-settings>
+  <relations/>
+  <mapcanvas annotationsVisible="1" name="theMapCanvas">
+    <units>degrees</units>
+    <extent>
+      <xmin>-76.00382433423573048</xmin>
+      <ymin>-19.05520325467370668</ymin>
+      <xmax>-41.72559429633489003</xmax>
+      <ymax>7.4680346647481386</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <projectModels/>
+  <legend updateDrawingOrder="true">
+    <legendlayer name="reddpac:LandCover2000" showFeatureCount="0" checked="Qt::Checked" open="true" drawingOrder="-1">
+      <filegroup hidden="false" open="true">
+        <legendlayerfile isInOverview="0" visible="1" layerid="reddpac_LandCover2000_7f4c2783_dcc0_450e_840b_ba43be18e0b7"/>
+      </filegroup>
+    </legendlayer>
+    <legendlayer name="LANDSAT2013" showFeatureCount="0" checked="Qt::Checked" open="true" drawingOrder="-1">
+      <filegroup hidden="false" open="true">
+        <legendlayerfile isInOverview="0" visible="1" layerid="LANDSAT2013_3e8578be_fc9e_4a06_8af4_aca7b07ca503"/>
+      </filegroup>
+    </legendlayer>
+  </legend>
+  <mapViewDocks/>
+  <mapViewDocks3D/>
+  <mapcanvas annotationsVisible="1" name="mAreaCanvas">
+    <units>degrees</units>
+    <extent>
+      <xmin>0</xmin>
+      <ymin>0</ymin>
+      <xmax>0</xmax>
+      <ymax>0</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <mapcanvas annotationsVisible="1" name="mAreaCanvas">
+    <units>degrees</units>
+    <extent>
+      <xmin>0</xmin>
+      <ymin>0</ymin>
+      <xmax>0</xmax>
+      <ymax>0</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <mapcanvas annotationsVisible="1" name="mAreaCanvas">
+    <units>degrees</units>
+    <extent>
+      <xmin>0</xmin>
+      <ymin>0</ymin>
+      <xmax>0</xmax>
+      <ymax>0</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <projectlayers>
+    <maplayer autoRefreshEnabled="0" refreshOnNotifyEnabled="0" maxScale="0" minScale="1e+08" autoRefreshTime="0" refreshOnNotifyMessage="" hasScaleBasedVisibilityFlag="0" styleCategories="AllStyleCategories" type="raster">
+      <extent>
+        <xmin>-75.18767599999999618</xmin>
+        <ymin>-18.42369758992556683</ymin>
+        <xmax>-42.54174263057062433</xmax>
+        <ymax>6.83652899999999963</ymax>
+      </extent>
+      <id>LANDSAT2013_3e8578be_fc9e_4a06_8af4_aca7b07ca503</id>
+      <datasource>contextualWMSLegend=0&amp;crs=EPSG:4326&amp;dpiMode=7&amp;featureCount=10&amp;format=image/png&amp;layers=Prodes_2013:LANDSAT2013&amp;styles&amp;url=http://terrabrasilis.info/geoserver/ows</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>LANDSAT2013</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type></type>
+        <title></title>
+        <abstract></abstract>
+        <links/>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <proj4></proj4>
+            <srsid>0</srsid>
+            <srid>0</srid>
+            <authid></authid>
+            <description></description>
+            <projectionacronym></projectionacronym>
+            <ellipsoidacronym></ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent/>
+      </resourceMetadata>
+      <provider>wms</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="0"/>
+      </noData>
+      <map-layer-style-manager current="padrão">
+        <map-layer-style name="padrão"/>
+      </map-layer-style-manager>
+      <flags>
+        <Identifiable>1</Identifiable>
+        <Removable>1</Removable>
+        <Searchable>1</Searchable>
+      </flags>
+      <customproperties>
+        <property value="Html" key="identify/format"/>
+      </customproperties>
+      <pipe>
+        <rasterrenderer band="1" opacity="1" alphaBand="-1" type="singlebandcolordata">
+          <rasterTransparency/>
+          <minMaxOrigin>
+            <limits>None</limits>
+            <extent>WholeRaster</extent>
+            <statAccuracy>Estimated</statAccuracy>
+            <cumulativeCutLower>0.02</cumulativeCutLower>
+            <cumulativeCutUpper>0.98</cumulativeCutUpper>
+            <stdDevFactor>2</stdDevFactor>
+          </minMaxOrigin>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeBlue="128" saturation="0" colorizeRed="255" colorizeGreen="128" grayscaleMode="0" colorizeOn="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer simplifyMaxScale="1" autoRefreshEnabled="0" refreshOnNotifyEnabled="0" simplifyDrawingHints="1" geometry="Polygon" maxScale="0" minScale="1e+08" simplifyAlgorithm="0" labelsEnabled="0" autoRefreshTime="0" refreshOnNotifyMessage="" hasScaleBasedVisibilityFlag="0" simplifyDrawingTol="1" styleCategories="AllStyleCategories" readOnly="0" type="vector" simplifyLocal="1">
+      <extent>
+        <xmin>-74.00004206891793501</xmin>
+        <ymin>-21.50002702002347377</ymin>
+        <xmax>-41.50005503865006062</xmax>
+        <ymax>5.24996200488929787</ymax>
+      </extent>
+      <id>reddpac_LandCover2000_7f4c2783_dcc0_450e_840b_ba43be18e0b7</id>
+      <datasource> restrictToRequestBBOX='1' srsname='EPSG:4326' typename='reddpac:LandCover2000' url='http://terrabrasilis.info/redd-pac/wfs' version='auto' table="" sql=</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>reddpac:LandCover2000</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type></type>
+        <title></title>
+        <abstract></abstract>
+        <links/>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <proj4></proj4>
+            <srsid>0</srsid>
+            <srid>0</srid>
+            <authid></authid>
+            <description></description>
+            <projectionacronym></projectionacronym>
+            <ellipsoidacronym></ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent/>
+      </resourceMetadata>
+      <provider encoding="System">WFS</provider>
+      <vectorjoins/>
+      <layerDependencies/>
+      <dataDependencies/>
+      <legend type="default-vector"/>
+      <expressionfields/>
+      <map-layer-style-manager current="padrão">
+        <map-layer-style name="padrão"/>
+      </map-layer-style-manager>
+      <auxiliaryLayer/>
+      <flags>
+        <Identifiable>1</Identifiable>
+        <Removable>1</Removable>
+        <Searchable>1</Searchable>
+      </flags>
+      <renderer-v2 symbollevels="0" forceraster="0" enableorderby="0" type="singleSymbol">
+        <symbols>
+          <symbol clip_to_extent="1" name="0" alpha="1" type="fill">
+            <layer enabled="1" pass="0" class="SimpleFill" locked="0">
+              <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+              <prop v="243,166,178,255" k="color"/>
+              <prop v="bevel" k="joinstyle"/>
+              <prop v="0,0" k="offset"/>
+              <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+              <prop v="MM" k="offset_unit"/>
+              <prop v="35,35,35,255" k="outline_color"/>
+              <prop v="solid" k="outline_style"/>
+              <prop v="0.26" k="outline_width"/>
+              <prop v="MM" k="outline_width_unit"/>
+              <prop v="solid" k="style"/>
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option value="" name="name" type="QString"/>
+                  <Option name="properties"/>
+                  <Option value="collection" name="type" type="QString"/>
+                </Option>
+              </data_defined_properties>
+            </layer>
+          </symbol>
+        </symbols>
+        <rotation/>
+        <sizescale/>
+      </renderer-v2>
+      <customproperties/>
+      <blendMode>0</blendMode>
+      <featureBlendMode>0</featureBlendMode>
+      <layerOpacity>1</layerOpacity>
+      <geometryOptions geometryPrecision="0" removeDuplicateNodes="0">
+        <activeChecks/>
+        <checkConfiguration/>
+      </geometryOptions>
+      <fieldConfiguration>
+        <field name="colrow">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="grd30">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="hru">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="forest2000">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="natlnd2000">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="grass2000">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="crplnd2000">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="othagri200">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="wetlnd2000">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="notrel2000">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+      </fieldConfiguration>
+      <aliases>
+        <alias index="0" name="" field="colrow"/>
+        <alias index="1" name="" field="grd30"/>
+        <alias index="2" name="" field="hru"/>
+        <alias index="3" name="" field="forest2000"/>
+        <alias index="4" name="" field="natlnd2000"/>
+        <alias index="5" name="" field="grass2000"/>
+        <alias index="6" name="" field="crplnd2000"/>
+        <alias index="7" name="" field="othagri200"/>
+        <alias index="8" name="" field="wetlnd2000"/>
+        <alias index="9" name="" field="notrel2000"/>
+      </aliases>
+      <excludeAttributesWMS/>
+      <excludeAttributesWFS/>
+      <defaults>
+        <default expression="" applyOnUpdate="0" field="colrow"/>
+        <default expression="" applyOnUpdate="0" field="grd30"/>
+        <default expression="" applyOnUpdate="0" field="hru"/>
+        <default expression="" applyOnUpdate="0" field="forest2000"/>
+        <default expression="" applyOnUpdate="0" field="natlnd2000"/>
+        <default expression="" applyOnUpdate="0" field="grass2000"/>
+        <default expression="" applyOnUpdate="0" field="crplnd2000"/>
+        <default expression="" applyOnUpdate="0" field="othagri200"/>
+        <default expression="" applyOnUpdate="0" field="wetlnd2000"/>
+        <default expression="" applyOnUpdate="0" field="notrel2000"/>
+      </defaults>
+      <constraints>
+        <constraint constraints="0" unique_strength="0" exp_strength="0" field="colrow" notnull_strength="0"/>
+        <constraint constraints="0" unique_strength="0" exp_strength="0" field="grd30" notnull_strength="0"/>
+        <constraint constraints="0" unique_strength="0" exp_strength="0" field="hru" notnull_strength="0"/>
+        <constraint constraints="0" unique_strength="0" exp_strength="0" field="forest2000" notnull_strength="0"/>
+        <constraint constraints="0" unique_strength="0" exp_strength="0" field="natlnd2000" notnull_strength="0"/>
+        <constraint constraints="0" unique_strength="0" exp_strength="0" field="grass2000" notnull_strength="0"/>
+        <constraint constraints="0" unique_strength="0" exp_strength="0" field="crplnd2000" notnull_strength="0"/>
+        <constraint constraints="0" unique_strength="0" exp_strength="0" field="othagri200" notnull_strength="0"/>
+        <constraint constraints="0" unique_strength="0" exp_strength="0" field="wetlnd2000" notnull_strength="0"/>
+        <constraint constraints="0" unique_strength="0" exp_strength="0" field="notrel2000" notnull_strength="0"/>
+      </constraints>
+      <constraintExpressions>
+        <constraint desc="" exp="" field="colrow"/>
+        <constraint desc="" exp="" field="grd30"/>
+        <constraint desc="" exp="" field="hru"/>
+        <constraint desc="" exp="" field="forest2000"/>
+        <constraint desc="" exp="" field="natlnd2000"/>
+        <constraint desc="" exp="" field="grass2000"/>
+        <constraint desc="" exp="" field="crplnd2000"/>
+        <constraint desc="" exp="" field="othagri200"/>
+        <constraint desc="" exp="" field="wetlnd2000"/>
+        <constraint desc="" exp="" field="notrel2000"/>
+      </constraintExpressions>
+      <expressionfields/>
+      <attributeactions>
+        <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
+      </attributeactions>
+      <attributetableconfig sortExpression="" sortOrder="0" actionWidgetStyle="dropDown">
+        <columns/>
+      </attributetableconfig>
+      <conditionalstyles>
+        <rowstyles/>
+        <fieldstyles/>
+      </conditionalstyles>
+      <editform tolerant="1"></editform>
+      <editforminit/>
+      <editforminitcodesource>0</editforminitcodesource>
+      <editforminitfilepath></editforminitfilepath>
+      <editforminitcode><![CDATA[]]></editforminitcode>
+      <featformsuppress>0</featformsuppress>
+      <editorlayout>generatedlayout</editorlayout>
+      <editable/>
+      <labelOnTop/>
+      <widgets/>
+      <previewExpression></previewExpression>
+      <mapTip></mapTip>
+    </maplayer>
+  </projectlayers>
+  <layerorder>
+    <layer id="LANDSAT2013_3e8578be_fc9e_4a06_8af4_aca7b07ca503"/>
+    <layer id="reddpac_LandCover2000_7f4c2783_dcc0_450e_840b_ba43be18e0b7"/>
+  </layerorder>
+  <properties>
+    <Paths>
+      <Absolute type="bool">false</Absolute>
+    </Paths>
+    <PAL>
+      <DrawRectOnly type="bool">false</DrawRectOnly>
+      <CandidatesPolygon type="int">30</CandidatesPolygon>
+      <ShowingAllLabels type="bool">false</ShowingAllLabels>
+      <DrawOutlineLabels type="bool">true</DrawOutlineLabels>
+      <ShowingPartialsLabels type="bool">true</ShowingPartialsLabels>
+      <CandidatesPoint type="int">16</CandidatesPoint>
+      <ShowingCandidates type="bool">false</ShowingCandidates>
+      <SearchMethod type="int">0</SearchMethod>
+      <CandidatesLine type="int">50</CandidatesLine>
+    </PAL>
+    <PositionPrecision>
+      <Automatic type="bool">true</Automatic>
+      <DecimalPlaces type="int">2</DecimalPlaces>
+    </PositionPrecision>
+    <Gui>
+      <CanvasColorBluePart type="int">255</CanvasColorBluePart>
+      <SelectionColorRedPart type="int">255</SelectionColorRedPart>
+      <CanvasColorGreenPart type="int">255</CanvasColorGreenPart>
+      <SelectionColorAlphaPart type="int">255</SelectionColorAlphaPart>
+      <CanvasColorRedPart type="int">255</CanvasColorRedPart>
+      <SelectionColorBluePart type="int">0</SelectionColorBluePart>
+      <SelectionColorGreenPart type="int">255</SelectionColorGreenPart>
+    </Gui>
+    <SpatialRefSys>
+      <ProjectionsEnabled type="int">1</ProjectionsEnabled>
+    </SpatialRefSys>
+    <Measurement>
+      <DistanceUnits type="QString"></DistanceUnits>
+      <AreaUnits type="QString"></AreaUnits>
+    </Measurement>
+    <Measure>
+      <Ellipsoid type="QString">WGS84</Ellipsoid>
+    </Measure>
+    <Legend>
+      <filterByMap type="bool">false</filterByMap>
+    </Legend>
+  </properties>
+  <visibility-presets/>
+  <transformContext/>
+  <projectMetadata>
+    <identifier></identifier>
+    <parentidentifier></parentidentifier>
+    <language></language>
+    <type></type>
+    <title></title>
+    <abstract></abstract>
+    <links/>
+    <author>Rodrigo Avancini</author>
+    <creation>2018-11-12T09:57:27</creation>
+  </projectMetadata>
+  <Annotations/>
+  <Layouts/>
+</qgis>

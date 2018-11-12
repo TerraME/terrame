@@ -56,10 +56,15 @@ namespace terrame
 		public:
 			static QGis& getInstance();
 			QGisProject load(const std::string& qgsfile);
+			void setPostgisRole(const std::string& user = "",
+								const std::string& password = "");
 
 		private:
-			QGis() {}
-			~QGis() {}
+			QGis(){}
+			QGis(const QGis&);
+			QGis& operator=(const QGis&);
+			~QGis(){}
+
 			int getVersion(xercesc::DOMElement* root);
 			std::string getTitle(xercesc::DOMElement* root);
 			bool isNodeValid(xercesc::DOMNode* node);
@@ -77,6 +82,9 @@ namespace terrame
 			bool isDatabase(const std::string& content);
 			bool isWfs(const std::string& content);
 			bool isWms(const std::string& content);
+			
+			std::string user;
+			std::string password;
 		};
 	}
 }

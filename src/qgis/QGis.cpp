@@ -47,6 +47,13 @@ terrame::qgis::QGisProject terrame::qgis::QGis::load(const std::string& qgsfile)
 		throw std::runtime_error("QGIS project file '" + qgsfile + "' not found.");
 	}
 
+	if (boost::algorithm::to_lower_copy(boost::filesystem::extension(qgsfile)) != ".qgs")
+	{
+		throw std::runtime_error("QGIS file extension must be '.qgs', but received '" 
+								+ boost::filesystem::extension(qgsfile) 
+								+ "'.");
+	}
+
 	xercesc::XMLPlatformUtils::Initialize();
 
 	xercesc::XercesDOMParser* parser = new xercesc::XercesDOMParser();
@@ -78,7 +85,7 @@ terrame::qgis::QGisProject terrame::qgis::QGis::load(const std::string& qgsfile)
 		QGisLayer* layer = new QGisLayer();
 		layer->name = getElementContentAsString(layerElement, "layername");
 		layer->srid = std::stoi(getElementContentAsString(layerElement, "srid"));
-		layer->uri = getElementContentAsUri(layerElement, "datasource", qgsfile);
+		layer->uri = getElementContentAsUri(layerElement, "datasource", qgsfile);		
 		qgp.layers.push_back(layer);
 	}
 
@@ -163,6 +170,20 @@ te::core::URI terrame::qgis::QGis::createDatabaseUri(const std::string & content
 	std::map<std::string, std::string> contents(createAttributesMap(content, " "));
 	std::vector<std::string> table;
 	boost::split(table, contents.at("table"), boost::is_any_of("."));
+	
+	if(contents.find("password") == contents.end())
+	{
+		
+		if ((this->password != "") && (this->user != ""))
+		{
+			contents.insert(std::pair<std::string, std::string>("password", this->password));
+			contents.insert(std::pair<std::string, std::string>("user", this->user));
+		}
+		else
+		{
+			throw std::runtime_error("QGIS Postgis user and password not found. Set its Role before load.");
+		}
+	} 
 
 	std::string uriStr("pgsql://" + contents.at("user") + ":"
 		+ contents.at("password") + "@"
@@ -174,8 +195,8 @@ te::core::URI terrame::qgis::QGis::createDatabaseUri(const std::string & content
 	te::core::URI uri(uriStr);
 
 	if (!uri.isValid())
-		throw(std::runtime_error("Invalid QGIS database URI: '"
-								+ uriStr + "'."));
+		throw std::runtime_error("Invalid QGIS database URI: '"
+								+ uriStr + "'.");
 
 	return uri;
 }
@@ -241,17 +262,24 @@ std::map<std::string, std::string> terrame::qgis::QGis::createAttributesMap(
 	return contents;
 }
 
-bool terrame::qgis::QGis::isDatabase(const std::string & content)
+bool terrame::qgis::QGis::isDatabase(const std::string& content)
 {
 	return boost::contains(content, "dbname");
 }
 
-bool terrame::qgis::QGis::isWfs(const std::string & content)
+bool terrame::qgis::QGis::isWfs(const std::string& content)
 {
 	return boost::contains(content, "typename");
 }
 
-bool terrame::qgis::QGis::isWms(const std::string & content)
+bool terrame::qgis::QGis::isWms(const std::string& content)
 {
 	return boost::contains(content, "contextualWMSLegend");
+}
+
+void terrame::qgis::QGis::setPostgisRole(const std::string& user, 
+										const std::string& password)
+{
+	this->user = user;
+	this->password = password;
 }
