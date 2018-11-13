@@ -173,7 +173,6 @@ te::core::URI terrame::qgis::QGis::createDatabaseUri(const std::string & content
 
 	if(contents.find("password") == contents.end())
 	{
-
 		if ((this->password != "") && (this->user != ""))
 		{
 			contents.insert(std::pair<std::string, std::string>("password", this->password));
@@ -253,7 +252,7 @@ std::map<std::string, std::string> terrame::qgis::QGis::createAttributesMap(
 			std::string key = values.at(0);
 			std::string value = values.at(1);
 			boost::replace_all(key, "'", "");
-			boost::replace_all(value,"'", "");
+			boost::replace_all(value, "'", "");
 			boost::replace_all(value, "\"", "");
 			contents.insert(std::pair<std::string, std::string>(key, value));
 		}
