@@ -21,10 +21,46 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#define TERRAME_QGIS_DLL_EXPORT
+#ifndef QGIS_PROJECT_H
+#define QGIS_PROJECT_H
 
-%{
-#include "qgis/QGisLayer.h"
-#include "qgis/QGisProject.h"
-#include "qgis/QGis.h"
-%}
+#include <string>
+#include <vector>
+
+#include "Config.h"
+#include "QGisLayer.h"
+
+namespace terrame
+{
+	namespace qgis
+	{
+		class TERRAME_QGIS_DLL_EXPORT QGisProject
+		{
+		public:
+			QGisProject();
+			virtual ~QGisProject();
+
+			std::string getFile();
+			void setFile(const std::string& filepath);
+			std::string getTitle();
+			void setTitle(const std::string& title);
+			std::string getAuthor();
+			void setAuthor(const std::string& author);
+			int getVersion();
+			void setVersion(int version);
+			void addLayer(terrame::qgis::QGisLayer* layer);
+			std::vector<terrame::qgis::QGisLayer*> getLayers() const;
+			bool hasLayer(const terrame::qgis::QGisLayer* layer);
+			terrame::qgis::QGisLayer* getLayerByName(const std::string& name);
+
+		private:
+			std::string file;
+			std::string title;
+			std::string author;
+			int version;
+			std::vector<QGisLayer*> layers;
+		};
+	} // namespace qgis
+} // namespace terrame
+
+#endif

@@ -21,6 +21,9 @@
 # of this software and its documentation.
 ############################################################################################
 
+add_definitions(-DBOOST_ALL_NO_LIB)
+find_package(Boost REQUIRED system filesystem)
+
 if(MSVC)
 	set(CMAKE_CXX_FLAGS_RELEASE "/MT")
 endif(MSVC)
@@ -29,7 +32,17 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER MA
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif()
 
-add_definitions(-DTERRAME_INTTEST_DATA_PATH="${TERRAME_ABSOLUTE_ROOT_DIR}/packages/gis/data/test")
+get_filename_component(TERRAME_INTTEST_DATA_ABSOLUTE_PATH
+                       "${CMAKE_INSTALL_PREFIX}/bin/qgistestdata"
+                       ABSOLUTE)
+add_definitions(-DTERRAME_INTTEST_DATA_PATH="${TERRAME_INTTEST_DATA_ABSOLUTE_PATH}")
+
+set(PKG_TEST_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages/gis/data/test/)
+
+get_filename_component(TERRAME_PKGTEST_DATA_ABSOLUTE_PATH
+                       "${PKG_TEST_DIR}"
+                       ABSOLUTE)
+add_definitions(-DTERRAME_PKGTEST_DATA_PATH="${TERRAME_PKGTEST_DATA_ABSOLUTE_PATH}")
 
 file(GLOB TERRAME_INTTEST_QGIS_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/qgis/*.cpp)
 file(GLOB TERRAME_INTTEST_QGIS_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/qgis/*.h)
@@ -45,4 +58,8 @@ install(TARGETS qgis_itest
         RUNTIME DESTINATION bin
         COMPONENT runtime)
 
+install(DIRECTORY ${PKG_TEST_DIR}
+		DESTINATION bin/qgistestdata
+		COMPONENT runtime)		
+		
 add_test(NAME qgis_itest COMMAND qgis_itest)

@@ -247,7 +247,7 @@ return {
 		file:deleteIfExists()
 
 		local version = ""
-		local QGisProjectTest = function()
+		local readQGisProject = function()
 			local qgisproj
 
 			if _Gtme.sessionInfo().system == "windows" then
@@ -301,9 +301,84 @@ return {
 			File("various"..version..".tview"):delete()
 		end
 
-		unitTest:assert(QGisProjectTest)
+		unitTest:assert(readQGisProject)
 		version = "_v3"
-		unitTest:assert(QGisProjectTest)
+		unitTest:assert(readQGisProject)
+
+		local insertNewLayerQgis = function()
+			local qgsfile = filePath("test/sampa_v3.qgs", "gis")
+			local spfile = filePath("test/sampa.shp", "gis")
+
+			qgsfile:copy(currentDir())
+			spfile:copy(currentDir())
+
+			local qgp = Project {
+				file = File("sampa_v3.qgs")
+			}
+
+			local l1 = Layer{
+				project = qgp,
+				name = "SP"
+			}
+
+			local cl1Name = "SPCells"
+
+			local cl1 = Layer{
+				project = qgp,
+				source = "shp",
+				clean = true,
+				input = l1.name,
+				name = cl1Name,
+				resolution = 1,
+				file = cl1Name..".shp",
+				index = false
+			}
+
+			local spgj = filePath("test/sampa.geojson", "gis")
+			spgj:copy(currentDir())
+
+			local l2 = Layer{
+				project = qgp,
+				name = "SPGJ",
+				file = File("sampa.geojson")
+			}
+
+			local qgp2 = Project {
+				file = File("sampa_v3.qgs")
+			}
+
+			local l3 = Layer{
+				project = qgp2,
+				name = "SPCells"
+			}
+
+			unitTest:assertEquals(l3.name, "SPCells")
+			unitTest:assertEquals(l3.rep, "polygon")
+			unitTest:assertEquals(l3.epsg, 4019)
+			unitTest:assertEquals(File(l3.file):name(), "SPCells.shp")
+			unitTest:assertEquals(l3.source, "shp")
+			unitTest:assertEquals(l3.encoding, "latin1")
+
+			local l4 = Layer{
+				project = qgp,
+				name = "SPGJ"
+			}
+
+			unitTest:assertEquals(l4.name, "SPGJ")
+			unitTest:assertEquals(l4.rep, "polygon")
+			unitTest:assertEquals(l4.epsg, 4019)
+			unitTest:assertEquals(File(l4.file):name(), "sampa.geojson")
+			unitTest:assertEquals(l4.source, "geojson")
+			unitTest:assertEquals(l4.encoding, "latin1")
+
+			qgp2.file:delete()
+			File("sampa_v3.tview"):delete()
+			cl1:delete()
+			l1:delete()
+			l2:delete()
+		end
+
+		unitTest:assert(insertNewLayerQgis)
 
 		-- Temporal Layers
 		local projTemporal = Project{

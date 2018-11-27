@@ -26,6 +26,7 @@ of this software and its documentation.
 %include <std_except.i>
 %include <std_string.i>
 %include <std_vector.i>
+%include <stl.i>
 %include <typemaps.i>
 
 %catches(std::exception);

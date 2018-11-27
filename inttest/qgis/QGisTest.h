@@ -23,8 +23,6 @@ of this library and its documentation.
 
 #include <gtest/gtest.h>
 
-class QGis;
-
 class QGisTest : public ::testing::Test
 {
 protected:

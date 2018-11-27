@@ -20,6 +20,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 ############################################################################################
+set(CMAKE_AUTOMOC ON)
 
 if(MSVC)
 	set(CMAKE_CXX_FLAGS_RELEASE "/MT")

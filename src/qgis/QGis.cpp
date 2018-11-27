@@ -23,16 +23,20 @@ of this software and its documentation.
 
 #include "QGis.h"
 
-#include <iostream>
 #include <stdexcept>
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/tokenizer.hpp>
+
+#include "QgsWriter.h"
+#include "Utils.h"
 
 terrame::qgis::QGis& terrame::qgis::QGis::getInstance()
 {
@@ -40,7 +44,7 @@ terrame::qgis::QGis& terrame::qgis::QGis::getInstance()
 	return instance;
 }
 
-terrame::qgis::QGisProject terrame::qgis::QGis::load(const std::string& qgsfile)
+terrame::qgis::QGisProject terrame::qgis::QGis::read(const std::string& qgsfile)
 {
 	if(!boost::filesystem::exists(qgsfile))
 	{
@@ -74,25 +78,48 @@ terrame::qgis::QGisProject terrame::qgis::QGis::load(const std::string& qgsfile)
 	}
 
 	QGisProject qgp;
-	qgp.file = qgsfile;
-	qgp.version = getVersion(root);
-	qgp.title = getTitle(root);
+	qgp.setFile(qgsfile);
+	qgp.setVersion(getVersion(root));
+	qgp.setTitle(getTitle(root));
 
 	xercesc::DOMNodeList* layersNode = root->getElementsByTagName(xercesc::XMLString::transcode("maplayer"));
 	for (unsigned int i = 0; i < layersNode->getLength(); i++)
 	{
 		xercesc::DOMElement* layerElement = dynamic_cast<xercesc::DOMElement*>(layersNode->item(i));
 		QGisLayer* layer = new QGisLayer();
-		layer->name = getElementContentAsString(layerElement, "layername");
-		layer->srid = std::stoi(getElementContentAsString(layerElement, "srid"));
-		layer->uri = getElementContentAsUri(layerElement, "datasource", qgsfile);
-		qgp.layers.push_back(layer);
+		layer->setName(getElementContentAsString(layerElement, "layername"));
+		layer->setSrid(std::stoi(getElementContentAsString(layerElement, "srid")));
+		layer->setUri(getElementContentAsUri(layerElement, "datasource", qgsfile));
+		qgp.addLayer(layer);
 	}
 
 	delete parser;
 	xercesc::XMLPlatformUtils::Terminate();
 
 	return qgp;
+}
+
+void terrame::qgis::QGis::write(const QGisProject& qgp, const std::string& qgsfile)
+{
+	if (boost::filesystem::exists(qgsfile))
+	{
+		QGisProject fileQgp = getInstance().read(qgsfile);
+		std::vector<QGisLayer*> layersInFile = fileQgp.getLayers();
+		std::vector<QGisLayer*> layersParam = qgp.getLayers();
+		std::vector<QGisLayer*> layersToAdd;
+		for (unsigned int i = 0; i < layersParam.size(); i++)
+		{
+			if(!fileQgp.hasLayer(layersParam.at(i)))
+			{
+				layersToAdd.push_back(layersParam.at(i));
+			}
+		}
+
+		if(layersToAdd.size() > 0)
+		{
+			writeLayers(fileQgp, qgsfile, layersToAdd);
+		}
+	}
 }
 
 int terrame::qgis::QGis::getVersion(xercesc::DOMElement* root)
@@ -134,7 +161,6 @@ te::core::URI terrame::qgis::QGis::getElementContentAsUri(xercesc::DOMElement* e
 													const std::string& qgsfile)
 {
 	std::string content(getElementContentAsString(element, name));
-	boost::filesystem::path relativeTo(qgsfile);
 
 	if (isDatabase(content))
 	{
@@ -150,19 +176,26 @@ te::core::URI terrame::qgis::QGis::getElementContentAsUri(xercesc::DOMElement* e
 	}
 	else
 	{
-		try
-		{
-			boost::filesystem::path dir(relativeTo.parent_path());
-			boost::filesystem::path canonic(boost::filesystem::canonical(content, dir));
-			return te::core::URI("file://" + canonic.string());
-		}
-		catch (const boost::filesystem::filesystem_error& e)
-		{
-			throw std::runtime_error(content + " - " + e.what());
-		}
+		return createFileUri(qgsfile, content);
 	}
 
 	return te::core::URI("");
+}
+
+te::core::URI terrame::qgis::QGis::createFileUri(const std::string& qgsfile,
+												const std::string& content)
+{
+	try
+	{
+		boost::filesystem::path relativeTo(qgsfile);
+		boost::filesystem::path dir(relativeTo.parent_path());
+		boost::filesystem::path canonic(boost::filesystem::canonical(content, dir));
+		return te::core::URI("file://" + canonic.string());
+	}
+	catch (const boost::filesystem::filesystem_error& e)
+	{
+		throw std::runtime_error(content + " - " + e.what());
+	}
 }
 
 te::core::URI terrame::qgis::QGis::createDatabaseUri(const std::string & content)
@@ -202,7 +235,8 @@ te::core::URI terrame::qgis::QGis::createDatabaseUri(const std::string & content
 
 te::core::URI terrame::qgis::QGis::createWfsUri(const std::string& content)
 {
-	std::map<std::string, std::string> contents(createAttributesMap(content, " "));
+	std::map<std::string, std::string> contents(
+							terrame::qgis::createAttributesMap(content, " "));
 
 	std::string uriStr("wfs:" + contents.at("url") + "?" + contents.at("typename"));
 
@@ -216,7 +250,8 @@ te::core::URI terrame::qgis::QGis::createWfsUri(const std::string& content)
 
 te::core::URI terrame::qgis::QGis::createWmsUri(const std::string& content)
 {
-	std::map<std::string, std::string> contents(createAttributesMap(content, "&"));
+	std::map<std::string, std::string> contents(
+								terrame::qgis::createAttributesMap(content, "&"));
 	std::vector<std::string> format;
 	boost::split(format, contents.at("format"), boost::is_any_of("/"));
 
@@ -232,35 +267,6 @@ te::core::URI terrame::qgis::QGis::createWmsUri(const std::string& content)
 	return uri;
 }
 
-std::map<std::string, std::string> terrame::qgis::QGis::createAttributesMap(
-													const std::string& content,
-													const std::string& separator)
-{
-	boost::char_separator<char> sep(separator.c_str());
-	boost::tokenizer<boost::char_separator<char>> tokens(content, sep);
-	std::map<std::string, std::string> contents;
-
-	for (boost::tokenizer< boost::char_separator<char> >::iterator it = tokens.begin();
-		it != tokens.end(); it++)
-	{
-		std::string token(*it);
-
-		if (token.find("=") != std::string::npos)
-		{
-			std::vector<std::string> values;
-			boost::split(values, token, boost::is_any_of("="));
-			std::string key = values.at(0);
-			std::string value = values.at(1);
-			boost::replace_all(key, "'", "");
-			boost::replace_all(value, "'", "");
-			boost::replace_all(value, "\"", "");
-			contents.insert(std::pair<std::string, std::string>(key, value));
-		}
-	}
-
-	return contents;
-}
-
 bool terrame::qgis::QGis::isDatabase(const std::string& content)
 {
 	return boost::contains(content, "dbname");
@@ -274,6 +280,12 @@ bool terrame::qgis::QGis::isWfs(const std::string& content)
 bool terrame::qgis::QGis::isWms(const std::string& content)
 {
 	return boost::contains(content, "contextualWMSLegend");
+}
+
+void terrame::qgis::QGis::writeLayers(const terrame::qgis::QGisProject& qgp, const std::string& qgsfile,
+										std::vector<QGisLayer*> layers)
+{
+	terrame::qgis::QgsWriter::getInstance().insert(qgp, layers, qgsfile);
 }
 
 void terrame::qgis::QGis::setPostgisRole(const std::string& user,

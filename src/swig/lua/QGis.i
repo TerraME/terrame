@@ -21,15 +21,6 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-%extend terrame::qgis::QGisProject
-{
-	std::vector<terrame::qgis::QGisLayer*> layers()
-	{
-		return $self->layers;
-	}
-
-}
-
 %typemap(out) std::vector<terrame::qgis::QGisLayer*>
 {
 	std::vector<terrame::qgis::QGisLayer*> layers = (std::vector<terrame::qgis::QGisLayer*>)$result;
@@ -49,5 +40,9 @@ of this software and its documentation.
 }
 
 %nspace terrame::qgis::QGis;
+%nspace terrame::qgis::QGisProject;
+%nspace terrame::qgis::QGisLayer;
 
 %include "qgis/QGis.h"
+%include "qgis/QGisProject.h"
+%include "qgis/QGisLayer.h"

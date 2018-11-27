@@ -172,6 +172,8 @@ endif()
 #
 # first check of libraries
 #
+set(CMAKE_AUTOMOC ON)
+
 find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets PrintSupport Network)
 if(Qt5_FOUND)
 	message("Qt5 found!")

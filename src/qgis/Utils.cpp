@@ -21,10 +21,35 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#define TERRAME_QGIS_DLL_EXPORT
+#include "Utils.h"
 
-%{
-#include "qgis/QGisLayer.h"
-#include "qgis/QGisProject.h"
-#include "qgis/QGis.h"
-%}
+#include <boost/tokenizer.hpp>
+#include <boost/algorithm/string.hpp>
+
+std::map<std::string, std::string> terrame::qgis::createAttributesMap(const std::string& content,
+																	const std::string& separator)
+{
+	boost::char_separator<char> sep(separator.c_str());
+	boost::tokenizer<boost::char_separator<char>> tokens(content, sep);
+	std::map<std::string, std::string> contents;
+
+	for (boost::tokenizer< boost::char_separator<char> >::iterator it = tokens.begin();
+		it != tokens.end(); it++)
+	{
+		std::string token(*it);
+
+		if (token.find("=") != std::string::npos)
+		{
+			std::vector<std::string> values;
+			boost::split(values, token, boost::is_any_of("="));
+			std::string key = values.at(0);
+			std::string value = values.at(1);
+			boost::replace_all(key, "'", "");
+			boost::replace_all(value, "'", "");
+			boost::replace_all(value, "\"", "");
+			contents.insert(std::pair<std::string, std::string>(key, value));
+		}
+	}
+
+	return contents;
+}

@@ -21,10 +21,18 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#define TERRAME_QGIS_DLL_EXPORT
+#ifndef QGIS_UTILS_H
+#define QGIS_UTILS_H
 
-%{
-#include "qgis/QGisLayer.h"
-#include "qgis/QGisProject.h"
-#include "qgis/QGis.h"
-%}
+#include <map>
+
+namespace terrame
+{
+	namespace qgis
+	{
+		std::map<std::string, std::string> createAttributesMap(const std::string& content,
+															const std::string& separator);
+	} // namespace qgis
+} // namespace terrame
+
+#endif

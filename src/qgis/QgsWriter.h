@@ -21,10 +21,41 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#define TERRAME_QGIS_DLL_EXPORT
+#ifndef QGS_WRITER_H
+#define QGS_WRITER_H
 
-%{
-#include "qgis/QGisLayer.h"
-#include "qgis/QGisProject.h"
-#include "qgis/QGis.h"
-%}
+class QDomDocument;
+class QDomElement;
+
+#include "QGisProject.h"
+#include "QGisLayer.h"
+
+namespace terrame
+{
+	namespace qgis
+	{
+		class QgsWriter
+		{
+		public:
+			static QgsWriter& getInstance();
+			void insert(const terrame::qgis::QGisProject& qgp,
+					const std::vector<terrame::qgis::QGisLayer*>& layers,
+					const std::string& qgsfile);
+
+		private:
+			QgsWriter() {}
+			QgsWriter(const QgsWriter&);
+			QgsWriter& operator=(const QgsWriter&);
+			~QgsWriter() {}
+
+			std::string getRelativePath(const std::string& path,
+											const std::string& relative);
+			int occurrences(const std::string& str, const std::string& substring);
+			QDomElement createElement(QDomDocument& document, const std::string& element,
+								const std::string& content);
+			std::string genLayerId(const terrame::qgis::QGisLayer* layer);
+		};
+	} // namespace qgis
+} // namespace terrame
+
+#endif

@@ -21,59 +21,69 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#ifndef QGIS_H
-#define QGIS_H
+#ifndef QGIS_LAYER_H
+#define QGIS_LAYER_H
 
 #include <string>
+#include <vector>
 
 #include <terralib/core.h>
-#include <xercesc/dom/DOMElement.hpp>
 
 #include "Config.h"
-#include "QGisProject.h"
-#include "QGisLayer.h"
 
 namespace terrame
 {
 	namespace qgis
 	{
-		class TERRAME_QGIS_DLL_EXPORT QGis
+		class TERRAME_QGIS_DLL_EXPORT QGisLayer
 		{
 		public:
-			static QGis& getInstance();
-			terrame::qgis::QGisProject read(const std::string& qgsfile);
-			void write(const terrame::qgis::QGisProject& qgp, const std::string& qgsfile);
-			void setPostgisRole(const std::string& user = "",
-								const std::string& password = "");
+			QGisLayer();
+			virtual ~QGisLayer();
+
+			std::string getName();
+			void setName(const std::string& name);
+			int getSrid();
+			void setSrid(int srid);
+			te::core::URI getUri();
+			void setUri(const te::core::URI& uri);
+			std::string getPath() const;
+			void setExtent(double xmin, double ymin, double xmax, double ymax);
+			void setSpatialRefSys(const std::string& proj4, const std::string& srsid,
+									const std::string& description);
+			void setProvider(const std::string& provider);
+			void setGeometry(const std::string& geometry);
+			void setType(const std::string& type);
+			void setAcronyms(const std::string& proj4);
+			std::string getProvider();
+			std::string getGeometry();
+			std::string getType();
+			double getXmin();
+			double getXmax();
+			double getYmin();
+			double getYmax();
+			std::string getProj4();
+			std::string getSrsid();
+			std::string getDescription();
+			std::string getProjectionAcronym();
+			std::string getEllipsoidAcronym();
+
+			bool equals(const QGisLayer* other);
 
 		private:
-			QGis(){}
-			QGis(const QGis&);
-			QGis& operator=(const QGis&);
-			~QGis(){}
+			std::string name;
+			int srid;
+			te::core::URI uri;
 
-			int getVersion(xercesc::DOMElement* root);
-			std::string getTitle(xercesc::DOMElement* root);
-			bool isNodeValid(xercesc::DOMNode* node);
-			std::string getElementContentAsString(xercesc::DOMElement* element,
-											const std::string& name);
-			te::core::URI getElementContentAsUri(xercesc::DOMElement* element,
-											const std::string& name,
-											const std::string& qgsfile);
-			te::core::URI createFileUri(const std::string& qgsfile,
-										const std::string& content);
-			te::core::URI createDatabaseUri(const std::string& content);
-			te::core::URI createWfsUri(const std::string& content);
-			te::core::URI createWmsUri(const std::string& content);
-
-			bool isDatabase(const std::string& content);
-			bool isWfs(const std::string& content);
-			bool isWms(const std::string& content);
-			void writeLayers(const QGisProject& qgp, const std::string& qgsfile,
-							std::vector<QGisLayer*> layers);
-
-			std::string user;
-			std::string password;
+			std::string provider;
+			std::string geometry;
+			std::string type;
+			double xmin, xmax, ymin, ymax;
+			std::string proj4;
+			std::string srsid;
+			std::string description;
+			std::string projectionAcronym;
+			std::string ellipsoidAcronym;
 		};
 	} // namespace qgis
 } // namespace terrame
