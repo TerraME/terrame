@@ -279,7 +279,7 @@ TEST_F(QGisTest, InsertOneFileLayerQGisV3)
 	newLayer->setUri(te::core::URI("file://" + fileLayer));
 	newQgp.addLayer(newLayer);
 
-	terrame::qgis::QGis::getInstance().write(newQgp, qgscopy);
+	terrame::qgis::QGis::getInstance().write(newQgp);
 
 	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);
 
@@ -316,7 +316,7 @@ TEST_F(QGisTest, InsertSubdirFileLayerQGisV3)
 	newLayer->setUri(te::core::URI("file://" + flcopy));
 	newQgp.addLayer(newLayer);
 
-	terrame::qgis::QGis::getInstance().write(newQgp, qgscopy);
+	terrame::qgis::QGis::getInstance().write(newQgp);
 
 	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);
 
@@ -338,18 +338,27 @@ TEST_F(QGisTest, InsertFileLayerOutDirTreeQGisV3)
 	terrame::qgis::QGisProject qgp = terrame::qgis::QGis::getInstance().read(qgscopy);
 
 	terrame::qgis::QGisProject newQgp = qgp;
-	terrame::qgis::QGisLayer* newLayer = new terrame::qgis::QGisLayer();
-	newLayer->setName("NewLayer");
-	newLayer->setSrid(5808);
+	terrame::qgis::QGisLayer* l1 = new terrame::qgis::QGisLayer();
+	l1->setName("NewLayer");
+	l1->setSrid(5808);
 	std::string fl(std::string(TERRAME_PKGTEST_DATA_PATH) + "/sampa.geojson");
-	newLayer->setUri(te::core::URI("file://" + fl));
-	newQgp.addLayer(newLayer);
+	l1->setUri(te::core::URI("file://" + fl));
+	newQgp.addLayer(l1);
 
-	terrame::qgis::QGis::getInstance().write(newQgp, qgscopy);
+	terrame::qgis::QGisLayer* l2 = new terrame::qgis::QGisLayer();
+	l2->setName("Tif");
+	l2->setSrid(5808);
+	std::string f2(std::string(TERRAME_PKGTEST_DATA_PATH) + "/prodes_polyc_10k.tif");
+	l2->setUri(te::core::URI("file://" + f2));
+	newQgp.addLayer(l2);
 
+	terrame::qgis::QGis::getInstance().write(newQgp);
 	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);
 
-	ASSERT_TRUE(qgp2.getLayerByName("NewLayer")->equals(newLayer));
+	ASSERT_TRUE(qgp2.getLayerByName("NewLayer")->equals(l1));
+	ASSERT_STREQ(fl.c_str(), qgp2.getLayerByName("NewLayer")->getPath().c_str());
+	ASSERT_TRUE(qgp2.getLayerByName("Tif")->equals(l2));
+	ASSERT_STREQ(f2.c_str(), qgp2.getLayerByName("Tif")->getPath().c_str());
 
 	boost::filesystem::remove(boost::filesystem::path(qgscopy));
 }

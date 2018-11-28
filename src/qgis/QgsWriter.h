@@ -39,8 +39,7 @@ namespace terrame
 		public:
 			static QgsWriter& getInstance();
 			void insert(const terrame::qgis::QGisProject& qgp,
-					const std::vector<terrame::qgis::QGisLayer*>& layers,
-					const std::string& qgsfile);
+					const std::vector<terrame::qgis::QGisLayer*>& layers);
 
 		private:
 			QgsWriter() {}

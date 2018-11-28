@@ -533,7 +533,7 @@ local function setQGisLayerAttributesToSave(qgp, layersToAdd)
 		qgisLayer:setExtent(bbox.xMin, bbox.yMax, bbox.xMax, bbox.yMax)
 
 		local projection = instance.getProjection(layer)
-		qgisLayer:setSpatialRefSys(projection.PROJ4, "" , projection.NAME)
+		qgisLayer:setSpatialRefSys(projection.PROJ4, projection.NAME)
 
 		qgisLayer:setProvider(dsInfo:getType())
 
@@ -560,7 +560,7 @@ local function saveQGisProject(qgsfile, projfile)
 
 	if #layersToAdd > 0 then
 		setQGisLayerAttributesToSave(qgp, layersToAdd)
-		qgis.QGis.getInstance():write(qgp, qgp:getFile())
+		qgis.QGis.getInstance():write(qgp)
 	end
 end
 

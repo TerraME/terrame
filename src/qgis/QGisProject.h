@@ -40,7 +40,7 @@ namespace terrame
 			QGisProject();
 			virtual ~QGisProject();
 
-			std::string getFile();
+			std::string getFile() const;
 			void setFile(const std::string& filepath);
 			std::string getTitle();
 			void setTitle(const std::string& title);

@@ -42,7 +42,7 @@ namespace terrame
 		public:
 			static QGis& getInstance();
 			terrame::qgis::QGisProject read(const std::string& qgsfile);
-			void write(const terrame::qgis::QGisProject& qgp, const std::string& qgsfile);
+			void write(const terrame::qgis::QGisProject& qgp);
 			void setPostgisRole(const std::string& user = "",
 								const std::string& password = "");
 
@@ -69,7 +69,7 @@ namespace terrame
 			bool isDatabase(const std::string& content);
 			bool isWfs(const std::string& content);
 			bool isWms(const std::string& content);
-			void writeLayers(const QGisProject& qgp, const std::string& qgsfile,
+			void writeLayers(const QGisProject& qgp,
 							std::vector<QGisLayer*> layers);
 
 			std::string user;

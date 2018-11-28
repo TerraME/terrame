@@ -49,7 +49,7 @@ namespace terrame
 			void setUri(const te::core::URI& uri);
 			std::string getPath() const;
 			void setExtent(double xmin, double ymin, double xmax, double ymax);
-			void setSpatialRefSys(const std::string& proj4, const std::string& srsid,
+			void setSpatialRefSys(const std::string& proj4,
 									const std::string& description);
 			void setProvider(const std::string& provider);
 			void setGeometry(const std::string& geometry);

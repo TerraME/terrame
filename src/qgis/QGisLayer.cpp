@@ -54,14 +54,14 @@ te::core::URI terrame::qgis::QGisLayer::getUri()
 	return uri;
 }
 
-void terrame::qgis::QGisLayer::setUri(const te::core::URI & uri)
+void terrame::qgis::QGisLayer::setUri(const te::core::URI& uri)
 {
 	this->uri = uri;
 }
 
 std::string terrame::qgis::QGisLayer::getPath() const
 {
-	return uri.host() + uri.path();
+	return boost::replace_all_copy(uri.host() + uri.path(), "\\", "/");
 }
 
 void terrame::qgis::QGisLayer::setExtent(double xmin, double ymin,
@@ -74,11 +74,10 @@ void terrame::qgis::QGisLayer::setExtent(double xmin, double ymin,
 }
 
 void terrame::qgis::QGisLayer::setSpatialRefSys(const std::string& proj4,
-											const std::string& srsid,
 											const std::string& description)
 {
 	this->proj4 = proj4;
-	this->srsid = srsid;
+	this->srsid = srid;
 	this->description = description;
 	setAcronyms(proj4);
 }

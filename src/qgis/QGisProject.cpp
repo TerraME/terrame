@@ -28,7 +28,7 @@ of this software and its documentation.
 terrame::qgis::QGisProject::QGisProject() {}
 terrame::qgis::QGisProject::~QGisProject() {}
 
-std::string terrame::qgis::QGisProject::getFile()
+std::string terrame::qgis::QGisProject::getFile() const
 {
 	return file;
 }

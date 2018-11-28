@@ -39,9 +39,10 @@ terrame::qgis::QgsWriter& terrame::qgis::QgsWriter::getInstance()
 }
 
 void terrame::qgis::QgsWriter::insert(const terrame::qgis::QGisProject& qgp,
-								const std::vector<terrame::qgis::QGisLayer*>& layers,
-								const std::string& qgsfile)
+								const std::vector<terrame::qgis::QGisLayer*>& layers)
 {
+	std::string qgsfile(qgp.getFile());
+
 	QDomDocument doc("QGIS");
 	QFile file(qgsfile.c_str());
 
@@ -147,7 +148,7 @@ std::string terrame::qgis::QgsWriter::getRelativePath(const std::string& path,
 	std::string winsep("..\\");
 	std::string unxsep("../");
 
-	if((occurrences(result, winsep) > 1) || (occurrences(result, unxsep) > 1))
+	if((occurrences(result, winsep) > 1) || (occurrences(result, unxsep) > 1) || result.empty())
 	{
 		return path;
 	}

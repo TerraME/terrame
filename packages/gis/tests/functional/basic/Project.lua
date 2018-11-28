@@ -301,10 +301,6 @@ return {
 			File("various"..version..".tview"):delete()
 		end
 
-		unitTest:assert(readQGisProject)
-		version = "_v3"
-		unitTest:assert(readQGisProject)
-
 		local insertNewLayerQgis = function()
 			local qgsfile = filePath("test/sampa_v3.qgs", "gis")
 			local spfile = filePath("test/sampa.shp", "gis")
@@ -343,6 +339,13 @@ return {
 				file = File("sampa.geojson")
 			}
 
+			Layer {
+				project = qgp,
+				name = "Tif",
+				file = File("emas-accumulation.tif"),
+				epsg = 4019
+			}
+
 			local qgp2 = Project {
 				file = File("sampa_v3.qgs")
 			}
@@ -360,7 +363,7 @@ return {
 			unitTest:assertEquals(l3.encoding, "latin1")
 
 			local l4 = Layer{
-				project = qgp,
+				project = qgp2,
 				name = "SPGJ"
 			}
 
@@ -371,12 +374,28 @@ return {
 			unitTest:assertEquals(l4.source, "geojson")
 			unitTest:assertEquals(l4.encoding, "latin1")
 
+			local l5 = Layer{
+				project = qgp2,
+				name = "Tif"
+			}
+
+			unitTest:assertEquals(l5.name, "Tif")
+			unitTest:assertEquals(l5.rep, "raster")
+			unitTest:assertEquals(l5.epsg, 4019)
+			unitTest:assertEquals(File(l5.file):name(), "emas-accumulation.tif")
+			unitTest:assertEquals(l5.source, "tif")
+			unitTest:assertEquals(l5.encoding, "latin1")
+
 			qgp2.file:delete()
 			File("sampa_v3.tview"):delete()
 			cl1:delete()
 			l1:delete()
 			l2:delete()
 		end
+
+		unitTest:assert(readQGisProject)
+		version = "_v3"
+		unitTest:assert(readQGisProject)
 
 		unitTest:assert(insertNewLayerQgis)
 

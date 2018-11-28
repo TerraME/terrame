@@ -99,11 +99,11 @@ terrame::qgis::QGisProject terrame::qgis::QGis::read(const std::string& qgsfile)
 	return qgp;
 }
 
-void terrame::qgis::QGis::write(const QGisProject& qgp, const std::string& qgsfile)
+void terrame::qgis::QGis::write(const QGisProject& qgp)
 {
-	if (boost::filesystem::exists(qgsfile))
+	if (boost::filesystem::exists(qgp.getFile()))
 	{
-		QGisProject fileQgp = getInstance().read(qgsfile);
+		QGisProject fileQgp = getInstance().read(qgp.getFile());
 		std::vector<QGisLayer*> layersInFile = fileQgp.getLayers();
 		std::vector<QGisLayer*> layersParam = qgp.getLayers();
 		std::vector<QGisLayer*> layersToAdd;
@@ -117,7 +117,7 @@ void terrame::qgis::QGis::write(const QGisProject& qgp, const std::string& qgsfi
 
 		if(layersToAdd.size() > 0)
 		{
-			writeLayers(fileQgp, qgsfile, layersToAdd);
+			writeLayers(fileQgp, layersToAdd);
 		}
 	}
 }
@@ -282,10 +282,10 @@ bool terrame::qgis::QGis::isWms(const std::string& content)
 	return boost::contains(content, "contextualWMSLegend");
 }
 
-void terrame::qgis::QGis::writeLayers(const terrame::qgis::QGisProject& qgp, const std::string& qgsfile,
+void terrame::qgis::QGis::writeLayers(const terrame::qgis::QGisProject& qgp,
 										std::vector<QGisLayer*> layers)
 {
-	terrame::qgis::QgsWriter::getInstance().insert(qgp, layers, qgsfile);
+	terrame::qgis::QgsWriter::getInstance().insert(qgp, layers);
 }
 
 void terrame::qgis::QGis::setPostgisRole(const std::string& user,
