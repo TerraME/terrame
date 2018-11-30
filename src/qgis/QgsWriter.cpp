@@ -89,8 +89,8 @@ void terrame::qgis::QgsWriter::insert(const terrame::qgis::QGisProject& qgp,
 		newMapLayer.setAttribute("simplifyAlgorithm", 0);
 		newMapLayer.setAttribute("minScale", "1e+08");
 		newMapLayer.setAttribute("labelsEnabled", 0);
-		std::string geom = layer.getGeometry();
-		if(geom == "vector")
+		std::string type = layer.getType();
+		if(type == "vector")
 		{
 			newMapLayer.setAttribute("geometry", layer.getGeometry().c_str());
 		}
@@ -123,6 +123,12 @@ void terrame::qgis::QgsWriter::insert(const terrame::qgis::QGisProject& qgp,
 		spatialRefSys.appendChild(createElement(doc, "geographicflag", "true"));
 		srs.appendChild(spatialRefSys);
 		newMapLayer.appendChild(srs);
+
+		QDomElement provider = doc.createElement("provider");
+		provider.setAttribute("encoding", "System");
+		QDomText providerText = doc.createTextNode(layer.getProvider().c_str());
+		provider.appendChild(providerText);
+		newMapLayer.appendChild(provider);
 
 		QDomElement layerElem = doc.createElement("layer");
 		layerElem.setAttribute("id", lid.c_str());

@@ -82,15 +82,25 @@ std::string terrame::qgis::QGisLayer::getPath() const
 	if(uri.scheme() == "pgsql")
 	{
 		return "dbname='" + boost::replace_all_copy(uri.path(), "/", "") + "'"
-				+ " host=" + uri.host() 
+				+ " host=" + uri.host()
 				+ " port=" + uri.port()
 				+ " user=" + uri.user()
 				+ " password=" + uri.password()
-				+ " sslmode=disable" 
+				+ " sslmode=disable"
 				+ " key='fid'"
 				+ " srid=" + std::to_string(srid)
 				+ " type=" + geometry
 				+ " table=" + dataset + " (ogr_geometry)"
+				+ " sql=";
+	}
+	else if(uri.scheme() == "WFS")
+	{
+		return std::string(" restrictToRequestBBOX='1'")
+				+ " srsname='EPSG:" + std::to_string(srid) + "'"
+				+ " typename='" + dataset + "'"
+				+ " url='" + uri.path() + "'"
+				+ " version='auto'"
+				+ " table=\"\""
 				+ " sql=";
 	}
 	else
@@ -123,6 +133,10 @@ void terrame::qgis::QGisLayer::setProvider(const std::string& provider)
 	{
 		this->provider = "postgres";
 	}
+	else if(provider == "WFS")
+	{
+		this->provider = provider;
+	}
 	else
 	{
 		this->provider = boost::algorithm::to_lower_copy(provider);
@@ -150,9 +164,13 @@ void terrame::qgis::QGisLayer::setAcronyms(const std::string& proj4)
 			projectionAcronym = map.at("+proj");
 		}
 
-		if (proj4.find("ellps") != std::string::npos)
+		if(proj4.find("ellps") != std::string::npos)
 		{
 			ellipsoidAcronym = map.at("+ellps");
+		}
+		else if (proj4.find("datum") != std::string::npos)
+		{
+			ellipsoidAcronym = map.at("+datum");
 		}
 	}
 }

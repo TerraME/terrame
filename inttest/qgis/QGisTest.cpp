@@ -404,3 +404,40 @@ TEST_F(QGisTest, InsertPosgisLayerQGisV3)
 
 	boost::filesystem::remove(boost::filesystem::path(qgscopy));
 }
+
+TEST_F(QGisTest, InsertWfsLayerQGisV3)
+{
+	std::string qgsfile(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa_v3.qgs");
+	std::string qgscopy(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa_v3_copy.qgs");
+	boost::filesystem::copy_file(boost::filesystem::path(qgsfile),
+		boost::filesystem::path(qgscopy),
+		boost::filesystem::copy_option::overwrite_if_exists);
+
+	terrame::qgis::QGisProject qgp = terrame::qgis::QGis::getInstance().read(qgscopy);
+
+	terrame::qgis::QGisLayer layer;
+	layer.setName("LayerWfs");
+	layer.setDataSetName("data:set");
+	layer.setSrid(4903);
+	layer.setExtent(1.5, 1.3, 1.9, 1.8);
+	layer.setGeometry("Polygon");
+	layer.setProvider("WFS");
+	layer.setSpatialRefSys("+proj=longlat +ellps=GRS80 +no_defs",
+		"Unknown datum based upon the GRS 1980 ellipsoid");
+	layer.setType("vector");
+	layer.setUri(te::core::URI("WFS:http://terrabrasilis.info/redd-pac/wfs"));
+
+	qgp.addLayer(layer);
+
+	terrame::qgis::QGis::getInstance().write(qgp);
+
+	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);
+
+	terrame::qgis::QGisLayer l2 = qgp2.getLayerByName("LayerWfs");
+	ASSERT_STREQ(l2.getName().c_str(), "LayerWfs");
+	ASSERT_EQ(l2.getSrid(), 4903);
+	ASSERT_STREQ(l2.getUri().path().c_str(), "http://terrabrasilis.info/redd-pac/wfs");
+	ASSERT_STREQ(l2.getUri().query().c_str(), "data:set");
+
+	boost::filesystem::remove(boost::filesystem::path(qgscopy));
+}
