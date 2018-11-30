@@ -27,23 +27,23 @@ of this library and its documentation.
 
 TEST_F(QGisLayerTest, CompareTwoLayers)
 {
-	terrame::qgis::QGisLayer* l1 = new terrame::qgis::QGisLayer();
-	l1->setName("Layer1");
-	l1->setSrid(5808);
+	terrame::qgis::QGisLayer l1;
+	l1.setName("Layer1");
+	l1.setSrid(5808);
 	std::string f1(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.geojson");
-	l1->setUri(te::core::URI("file://" + f1));
+	l1.setUri(te::core::URI("file://" + f1));
 
-	terrame::qgis::QGisLayer* l2 = new terrame::qgis::QGisLayer();
-	l2->setName("Layer2");
-	l2->setSrid(5909);
+	terrame::qgis::QGisLayer l2;
+	l2.setName("Layer2");
+	l2.setSrid(5909);
 	std::string f2(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.shp");
-	l2->setUri(te::core::URI("file://" + f2));
+	l2.setUri(te::core::URI("file://" + f2));
 
-	terrame::qgis::QGisLayer* l3 = new terrame::qgis::QGisLayer();
-	l3->setName("Layer2");
-	l3->setSrid(5909);
-	l3->setUri(te::core::URI("file://" + f2));
+	terrame::qgis::QGisLayer l3;
+	l3.setName("Layer2");
+	l3.setSrid(5909);
+	l3.setUri(te::core::URI("file://" + f2));
 
-	ASSERT_FALSE(l1->equals(l2));
-	ASSERT_TRUE(l2->equals(l3));
+	ASSERT_FALSE(l1.equals(l2));
+	ASSERT_TRUE(l2.equals(l3));
 }

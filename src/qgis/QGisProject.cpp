@@ -23,10 +23,18 @@ of this software and its documentation.
 
 #include "QGisProject.h"
 
-#include <boost/smart_ptr/make_unique.hpp>
-
 terrame::qgis::QGisProject::QGisProject() {}
+
 terrame::qgis::QGisProject::~QGisProject() {}
+
+terrame::qgis::QGisProject::QGisProject(const QGisProject& other)
+	: layers(other.layers)
+{
+	file = other.file;
+	title = other.title;
+	author = other.author;
+	version = other.version;
+}
 
 std::string terrame::qgis::QGisProject::getFile() const
 {
@@ -68,22 +76,21 @@ void terrame::qgis::QGisProject::setVersion(int version)
 	this->version = version;
 }
 
-void terrame::qgis::QGisProject::addLayer(terrame::qgis::QGisLayer* layer)
+void terrame::qgis::QGisProject::addLayer(const terrame::qgis::QGisLayer& layer)
 {
-	std::unique_ptr<QGisLayer> nl = boost::make_unique<QGisLayer>(*layer);
-	layers.push_back(nl.release());
+	layers.push_back(layer);
 }
 
-std::vector<terrame::qgis::QGisLayer*> terrame::qgis::QGisProject::getLayers() const
+std::vector<terrame::qgis::QGisLayer> terrame::qgis::QGisProject::getLayers() const
 {
 	return layers;
 }
 
-bool terrame::qgis::QGisProject::hasLayer(const terrame::qgis::QGisLayer* layer)
+bool terrame::qgis::QGisProject::hasLayer(const terrame::qgis::QGisLayer& layer)
 {
 	for (unsigned int i = 0; i < layers.size(); i++)
 	{
-		if (layers.at(i)->equals(layer))
+		if (layers.at(i).equals(layer))
 		{
 			return true;
 		}
@@ -91,15 +98,20 @@ bool terrame::qgis::QGisProject::hasLayer(const terrame::qgis::QGisLayer* layer)
 	return false;
 }
 
-terrame::qgis::QGisLayer* terrame::qgis::QGisProject::getLayerByName(const std::string& name)
+bool terrame::qgis::QGisProject::hasLayer(const std::string& name)
+{
+	return !getLayerByName(name).empty();
+}
+
+terrame::qgis::QGisLayer terrame::qgis::QGisProject::getLayerByName(const std::string& name)
 {
 	for(int i = 0; i < layers.size(); i++)
 	{
-		if(layers.at(i)->getName() == name)
+		if(layers.at(i).getName() == name)
 		{
 			return layers.at(i);
 		}
 	}
 
-	return nullptr;
+	return QGisLayer();
 }

@@ -396,7 +396,6 @@ return {
 		unitTest:assert(readQGisProject)
 		version = "_v3"
 		unitTest:assert(readQGisProject)
-
 		unitTest:assert(insertNewLayerQgis)
 
 		-- Temporal Layers

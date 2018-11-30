@@ -39,7 +39,7 @@ terrame::qgis::QgsWriter& terrame::qgis::QgsWriter::getInstance()
 }
 
 void terrame::qgis::QgsWriter::insert(const terrame::qgis::QGisProject& qgp,
-								const std::vector<terrame::qgis::QGisLayer*>& layers)
+								const std::vector<terrame::qgis::QGisLayer>& layers)
 {
 	std::string qgsfile(qgp.getFile());
 
@@ -62,15 +62,15 @@ void terrame::qgis::QgsWriter::insert(const terrame::qgis::QGisProject& qgp,
 
 	for(unsigned int i = 0; i < layers.size(); i++)
 	{
-		QGisLayer* layer = layers.at(i);
+		QGisLayer layer = layers.at(i);
 		QDomElement newLayerTree = doc.createElement("layer-tree-layer");
-		newLayerTree.setAttribute("name", layer->getName().c_str());
-		std::string relative(getRelativePath(layer->getPath(), qgsfile));
+		newLayerTree.setAttribute("name", layer.getName().c_str());
+		std::string relative(getRelativePath(layer.getPath(), qgsfile));
 		newLayerTree.setAttribute("source", relative.c_str());
 		newLayerTree.setAttribute("checked", "Qt::Checked");
 		std::string lid = genLayerId(layer);
 		newLayerTree.setAttribute("id", lid.c_str());
-		newLayerTree.setAttribute("providerKey", layer->getProvider().c_str());
+		newLayerTree.setAttribute("providerKey", layer.getProvider().c_str());
 		newLayerTree.setAttribute("expanded", 1);
 		layerTreeGroup.insertBefore(newLayerTree, customOrder);
 
@@ -78,7 +78,7 @@ void terrame::qgis::QgsWriter::insert(const terrame::qgis::QGisProject& qgp,
 
 		QDomElement newMapLayer = doc.createElement("maplayer");
 		newMapLayer.setAttribute("simplifyMaxScale", 1);
-		newMapLayer.setAttribute("type", layer->getType().c_str());
+		newMapLayer.setAttribute("type", layer.getType().c_str());
 		newMapLayer.setAttribute("simplifyLocal", 1);
 		newMapLayer.setAttribute("refreshOnNotifyEnabled", 0);
 		newMapLayer.setAttribute("simplifyDrawingHints", 1);
@@ -89,10 +89,10 @@ void terrame::qgis::QgsWriter::insert(const terrame::qgis::QGisProject& qgp,
 		newMapLayer.setAttribute("simplifyAlgorithm", 0);
 		newMapLayer.setAttribute("minScale", "1e+08");
 		newMapLayer.setAttribute("labelsEnabled", 0);
-		std::string geom = layer->getGeometry();
+		std::string geom = layer.getGeometry();
 		if(geom == "vector")
 		{
-			newMapLayer.setAttribute("geometry", layer->getGeometry().c_str());
+			newMapLayer.setAttribute("geometry", layer.getGeometry().c_str());
 		}
 		newMapLayer.setAttribute("refreshOnNotifyMessage", "");
 		newMapLayer.setAttribute("autoRefreshTime", 0);
@@ -101,25 +101,25 @@ void terrame::qgis::QgsWriter::insert(const terrame::qgis::QGisProject& qgp,
 		projectLayers.appendChild(newMapLayer);
 
 		QDomElement extent = doc.createElement("extent");
-		extent.appendChild(createElement(doc, "xmin", std::to_string(layer->getXmin())));
-		extent.appendChild(createElement(doc, "ymin", std::to_string(layer->getYmin())));
-		extent.appendChild(createElement(doc, "xmax", std::to_string(layer->getXmax())));
-		extent.appendChild(createElement(doc, "ymax", std::to_string(layer->getYmax())));
+		extent.appendChild(createElement(doc, "xmin", std::to_string(layer.getXmin())));
+		extent.appendChild(createElement(doc, "ymin", std::to_string(layer.getYmin())));
+		extent.appendChild(createElement(doc, "xmax", std::to_string(layer.getXmax())));
+		extent.appendChild(createElement(doc, "ymax", std::to_string(layer.getYmax())));
 		newMapLayer.appendChild(extent);
 
 		newMapLayer.appendChild(createElement(doc, "id", lid));
 		newMapLayer.appendChild(createElement(doc, "datasource", relative));
-		newMapLayer.appendChild(createElement(doc, "layername", layer->getName()));
+		newMapLayer.appendChild(createElement(doc, "layername", layer.getName()));
 
 		QDomElement srs = doc.createElement("srs");
 		QDomElement spatialRefSys = doc.createElement("spatialrefsys");
-		spatialRefSys.appendChild(createElement(doc, "proj4", layer->getProj4()));
-		spatialRefSys.appendChild(createElement(doc, "srsid", std::to_string(layer->getSrid())));
-		spatialRefSys.appendChild(createElement(doc, "srid", std::to_string(layer->getSrid())));
-		spatialRefSys.appendChild(createElement(doc, "authid", "EPSG:" + std::to_string(layer->getSrid())));
-		spatialRefSys.appendChild(createElement(doc, "description", layer->getDescription()));
-		spatialRefSys.appendChild(createElement(doc, "projectionacronym", layer->getProjectionAcronym()));
-		spatialRefSys.appendChild(createElement(doc, "ellipsoidacronym", layer->getEllipsoidAcronym()));
+		spatialRefSys.appendChild(createElement(doc, "proj4", layer.getProj4()));
+		spatialRefSys.appendChild(createElement(doc, "srsid", std::to_string(layer.getSrid())));
+		spatialRefSys.appendChild(createElement(doc, "srid", std::to_string(layer.getSrid())));
+		spatialRefSys.appendChild(createElement(doc, "authid", "EPSG:" + std::to_string(layer.getSrid())));
+		spatialRefSys.appendChild(createElement(doc, "description", layer.getDescription()));
+		spatialRefSys.appendChild(createElement(doc, "projectionacronym", layer.getProjectionAcronym()));
+		spatialRefSys.appendChild(createElement(doc, "ellipsoidacronym", layer.getEllipsoidAcronym()));
 		spatialRefSys.appendChild(createElement(doc, "geographicflag", "true"));
 		srs.appendChild(spatialRefSys);
 		newMapLayer.appendChild(srs);

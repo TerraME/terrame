@@ -25,20 +25,20 @@ of this library and its documentation.
 
 #include "qgis/QGisProject.h"
 
-TEST_F(QGisProjectTest, AddLayerTakeOwnership)
+TEST_F(QGisProjectTest, AddLayer)
 {
-	terrame::qgis::QGisLayer* l1 = new terrame::qgis::QGisLayer();
-	l1->setName("Layer1");
-	l1->setSrid(5808);
+	terrame::qgis::QGisLayer l1;
+	l1.setName("Layer1");
+	l1.setSrid(5808);
 	std::string f1(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.geojson");
-	l1->setUri(te::core::URI("file://" + f1));
+	l1.setUri(te::core::URI("file://" + f1));
 	terrame::qgis::QGisProject qgp;
 
 	qgp.addLayer(l1);
 
-	delete l1;
+	terrame::qgis::QGisLayer l2 = qgp.getLayerByName("Layer1");
 
-	terrame::qgis::QGisLayer* l2 = qgp.getLayerByName("Layer1");
-
-	ASSERT_STREQ(l2->getName().c_str(), "Layer1");
+	ASSERT_STREQ(l2.getName().c_str(), "Layer1");
 }
+
+

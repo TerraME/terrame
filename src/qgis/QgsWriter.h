@@ -39,7 +39,7 @@ namespace terrame
 		public:
 			static QgsWriter& getInstance();
 			void insert(const terrame::qgis::QGisProject& qgp,
-					const std::vector<terrame::qgis::QGisLayer*>& layers);
+					const std::vector<terrame::qgis::QGisLayer>& layers);
 
 		private:
 			QgsWriter() {}
@@ -52,7 +52,7 @@ namespace terrame
 			int occurrences(const std::string& str, const std::string& substring);
 			QDomElement createElement(QDomDocument& document, const std::string& element,
 								const std::string& content);
-			std::string genLayerId(const terrame::qgis::QGisLayer* layer);
+			std::string genLayerId(const terrame::qgis::QGisLayer& layer);
 		};
 	} // namespace qgis
 } // namespace terrame

@@ -39,6 +39,7 @@ namespace terrame
 		{
 		public:
 			QGisLayer();
+			QGisLayer(const QGisLayer& other);
 			virtual ~QGisLayer();
 
 			std::string getName();
@@ -67,8 +68,11 @@ namespace terrame
 			std::string getDescription();
 			std::string getProjectionAcronym();
 			std::string getEllipsoidAcronym();
+			void setDataSetName(const std::string& name);
+			std::string getDataSetName() const;
 
-			bool equals(const QGisLayer* other);
+			bool equals(const QGisLayer& other);
+			bool empty();
 
 		private:
 			std::string name;

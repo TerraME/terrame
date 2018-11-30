@@ -39,6 +39,22 @@ of this software and its documentation.
 	return 1;
 }
 
+%extend terrame::qgis::QGisProject
+{
+	std::vector<terrame::qgis::QGisLayer*> getLayers()
+	{
+		std::vector<terrame::qgis::QGisLayer*> layersPtr;
+		std::vector<terrame::qgis::QGisLayer> layers = $self->getLayers();
+
+		for(int i = 0; i < layers.size(); i++)
+		{
+			layersPtr.push_back(new terrame::qgis::QGisLayer(layers.at(i)));
+		}
+
+		return layersPtr;
+	}
+}
+
 %nspace terrame::qgis::QGis;
 %nspace terrame::qgis::QGisProject;
 %nspace terrame::qgis::QGisLayer;

@@ -38,6 +38,7 @@ namespace terrame
 		{
 		public:
 			QGisProject();
+			QGisProject(const QGisProject& other);
 			virtual ~QGisProject();
 
 			std::string getFile() const;
@@ -48,17 +49,18 @@ namespace terrame
 			void setAuthor(const std::string& author);
 			int getVersion();
 			void setVersion(int version);
-			void addLayer(terrame::qgis::QGisLayer* layer);
-			std::vector<terrame::qgis::QGisLayer*> getLayers() const;
-			bool hasLayer(const terrame::qgis::QGisLayer* layer);
-			terrame::qgis::QGisLayer* getLayerByName(const std::string& name);
+			void addLayer(const terrame::qgis::QGisLayer& layer);
+			std::vector<terrame::qgis::QGisLayer> getLayers() const;
+			bool hasLayer(const terrame::qgis::QGisLayer& layer);
+			bool hasLayer(const std::string& name);
+			terrame::qgis::QGisLayer getLayerByName(const std::string& name);
 
 		private:
 			std::string file;
 			std::string title;
 			std::string author;
 			int version;
-			std::vector<QGisLayer*> layers;
+			std::vector<QGisLayer> layers;
 		};
 	} // namespace qgis
 } // namespace terrame

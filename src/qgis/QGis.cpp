@@ -86,10 +86,10 @@ terrame::qgis::QGisProject terrame::qgis::QGis::read(const std::string& qgsfile)
 	for (unsigned int i = 0; i < layersNode->getLength(); i++)
 	{
 		xercesc::DOMElement* layerElement = dynamic_cast<xercesc::DOMElement*>(layersNode->item(i));
-		QGisLayer* layer = new QGisLayer();
-		layer->setName(getElementContentAsString(layerElement, "layername"));
-		layer->setSrid(std::stoi(getElementContentAsString(layerElement, "srid")));
-		layer->setUri(getElementContentAsUri(layerElement, "datasource", qgsfile));
+		QGisLayer layer;
+		layer.setName(getElementContentAsString(layerElement, "layername"));
+		layer.setSrid(std::stoi(getElementContentAsString(layerElement, "srid")));
+		layer.setUri(getElementContentAsUri(layerElement, "datasource", qgsfile));
 		qgp.addLayer(layer);
 	}
 
@@ -104,9 +104,9 @@ void terrame::qgis::QGis::write(const QGisProject& qgp)
 	if (boost::filesystem::exists(qgp.getFile()))
 	{
 		QGisProject fileQgp = getInstance().read(qgp.getFile());
-		std::vector<QGisLayer*> layersInFile = fileQgp.getLayers();
-		std::vector<QGisLayer*> layersParam = qgp.getLayers();
-		std::vector<QGisLayer*> layersToAdd;
+		std::vector<QGisLayer> layersInFile = fileQgp.getLayers();
+		std::vector<QGisLayer> layersParam = qgp.getLayers();
+		std::vector<QGisLayer> layersToAdd;
 		for (unsigned int i = 0; i < layersParam.size(); i++)
 		{
 			if(!fileQgp.hasLayer(layersParam.at(i)))
@@ -187,10 +187,17 @@ te::core::URI terrame::qgis::QGis::createFileUri(const std::string& qgsfile,
 {
 	try
 	{
-		boost::filesystem::path relativeTo(qgsfile);
-		boost::filesystem::path dir(relativeTo.parent_path());
-		boost::filesystem::path canonic(boost::filesystem::canonical(content, dir));
-		return te::core::URI("file://" + canonic.string());
+		if(boost::filesystem::is_regular_file(content))
+		{
+			return  te::core::URI("file://" + content);
+		}
+		else
+		{
+			boost::filesystem::path relativeTo(qgsfile);
+			boost::filesystem::path dir(relativeTo.parent_path());
+			boost::filesystem::path canonic(boost::filesystem::canonical(content, dir));
+			return te::core::URI("file://" + canonic.string());
+		}
 	}
 	catch (const boost::filesystem::filesystem_error& e)
 	{
@@ -283,7 +290,7 @@ bool terrame::qgis::QGis::isWms(const std::string& content)
 }
 
 void terrame::qgis::QGis::writeLayers(const terrame::qgis::QGisProject& qgp,
-										std::vector<QGisLayer*> layers)
+										const std::vector<QGisLayer>& layers)
 {
 	terrame::qgis::QgsWriter::getInstance().insert(qgp, layers);
 }

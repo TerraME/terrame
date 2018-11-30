@@ -27,6 +27,24 @@ of this software and its documentation.
 #include "Utils.h"
 
 terrame::qgis::QGisLayer::QGisLayer() {}
+
+terrame::qgis::QGisLayer::QGisLayer(const QGisLayer & other)
+{
+	name = other.name;
+	srid = other.srid;
+	uri = other.uri;
+	provider = other.provider;
+	geometry = other.geometry;
+	type = other.type;
+	setExtent(other.xmin, other.ymin, other.xmax, other.ymax);
+	proj4 = other.proj4;
+	srsid = other.srsid;
+	description = other.description;
+	projectionAcronym = other.projectionAcronym;
+	ellipsoidAcronym = other.ellipsoidAcronym;
+	dataset = other.dataset;
+}
+
 terrame::qgis::QGisLayer::~QGisLayer() {}
 
 std::string terrame::qgis::QGisLayer::getName()

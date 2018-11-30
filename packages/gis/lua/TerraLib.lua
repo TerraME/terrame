@@ -440,8 +440,7 @@ local function getPropertyPosition(dse, propName)
 	return nil
 end
 
-local function getLayerGeometry(layer, dsInfo)
-	local dseName = layer:getDataSetName()
+local function getLayerGeometry(dseName, dsInfo)
 	local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
 	local dst = ds:getDataSetType(dseName)
 
@@ -508,8 +507,7 @@ local function getLayersToAddFromQGis(qgp, layers)
 	local layersToAdd = {}
 
 	for _, l in pairs(layers) do
-		local layerToAdd = qgp:getLayerByName(l:getTitle())
-		if not layerToAdd then
+		if not qgp:hasLayer(l:getTitle()) then
 			table.insert(layersToAdd, l)
 		end
 	end
@@ -536,10 +534,13 @@ local function setQGisLayerAttributesToSave(qgp, layersToAdd)
 		qgisLayer:setSpatialRefSys(projection.PROJ4, projection.NAME)
 
 		qgisLayer:setProvider(dsInfo:getType())
-
-		local geom = getLayerGeometry(layer, dsInfo)
+		
+		local dseName = layer:getDataSetName()
+		qgisLayer:setDataSetName(dseName)
+		
+		local geom = getLayerGeometry(dseName, dsInfo)
 		if geom then
-			qgisLayer:setGeometry(getLayerGeometry(layer, dsInfo))
+			qgisLayer:setGeometry(geom)
 			qgisLayer:setType("vector")
 		else
 			qgisLayer:setType("raster")

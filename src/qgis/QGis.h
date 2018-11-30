@@ -70,7 +70,7 @@ namespace terrame
 			bool isWfs(const std::string& content);
 			bool isWms(const std::string& content);
 			void writeLayers(const QGisProject& qgp,
-							std::vector<QGisLayer*> layers);
+							const std::vector<QGisLayer>& layers);
 
 			std::string user;
 			std::string password;
