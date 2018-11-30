@@ -222,7 +222,7 @@ te::core::URI terrame::qgis::QGis::createDatabaseUri(const std::string & content
 		+ contents.at("host") + ":"
 		+ contents.at("port") + "/"
 		+ contents.at("dbname") + "?"
-		+ table.at(1));
+		+ ((table.size() == 1) ? table.at(0) : table.at(1)));
 
 	te::core::URI uri(uriStr);
 

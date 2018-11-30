@@ -61,7 +61,24 @@ void terrame::qgis::QGisLayer::setUri(const te::core::URI& uri)
 
 std::string terrame::qgis::QGisLayer::getPath() const
 {
-	return boost::replace_all_copy(uri.host() + uri.path(), "\\", "/");
+	if(uri.scheme() == "pgsql")
+	{
+		return "dbname='" + boost::replace_all_copy(uri.path(), "/", "") + "'"
+				+ " host=" + uri.host() 
+				+ " port=" + uri.port()
+				+ " user=" + uri.user()
+				+ " password=" + uri.password()
+				+ " sslmode=disable" 
+				+ " key='fid'"
+				+ " srid=" + std::to_string(srid)
+				+ " type=" + geometry
+				+ " table=" + dataset + " (ogr_geometry)"
+				+ " sql=";
+	}
+	else
+	{
+		return boost::replace_all_copy(uri.host() + uri.path(), "\\", "/");
+	}
 }
 
 void terrame::qgis::QGisLayer::setExtent(double xmin, double ymin,
@@ -84,7 +101,14 @@ void terrame::qgis::QGisLayer::setSpatialRefSys(const std::string& proj4,
 
 void terrame::qgis::QGisLayer::setProvider(const std::string& provider)
 {
-	this->provider = boost::algorithm::to_lower_copy(provider);
+	if(provider == "POSTGIS")
+	{
+		this->provider = "postgres";
+	}
+	else
+	{
+		this->provider = boost::algorithm::to_lower_copy(provider);
+	}
 }
 
 void terrame::qgis::QGisLayer::setGeometry(const std::string& geometry)
@@ -175,7 +199,22 @@ std::string terrame::qgis::QGisLayer::getEllipsoidAcronym()
 	return ellipsoidAcronym;
 }
 
-bool terrame::qgis::QGisLayer::equals(const terrame::qgis::QGisLayer* other)
+void terrame::qgis::QGisLayer::setDataSetName(const std::string & name)
 {
-	return this->name == other->name;
+	dataset = name;
+}
+
+std::string terrame::qgis::QGisLayer::getDataSetName() const
+{
+	return dataset;
+}
+
+bool terrame::qgis::QGisLayer::equals(const terrame::qgis::QGisLayer& other)
+{
+	return this->name == other.name;
+}
+
+bool terrame::qgis::QGisLayer::empty()
+{
+	return name.empty();
 }

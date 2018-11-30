@@ -25,7 +25,7 @@
 return {
 	Project = function(unitTest)
 		local version = ""
-		local QGisProjectTest = function()
+		local readQGisProject = function()
 			local proj = Project{
 				file = "project_pg_basic.tview",
 				clean = true
@@ -82,8 +82,77 @@ return {
 			proj.file:delete()
 		end
 
-		unitTest:assert(QGisProjectTest)
+		local insertNewLayerQgis = function()
+			local proj = Project{
+				file = "project_pg_basic.tview",
+				clean = true
+			}
+
+			local layerName = "Sampa"
+
+			local l1 = Layer{
+				project = proj,
+				name = layerName,
+				file = filePath("test/sampa.shp", "gis")
+			}
+
+			local password = "postgres"
+			local database = "postgis_22_sample"
+
+			local pgData = {
+				source = "postgis",
+				password = password,
+				database = database,
+				overwrite = true
+			}
+
+			l1:export(pgData, true)
+
+			local qgpfile = filePath("test/sampa_v3.qgs", "gis")
+			local spfile = filePath("test/sampa.shp", "gis")
+			qgpfile:copy(currentDir())
+			spfile:copy(currentDir())
+
+			local qgp = Project {
+				file = "sampa_v3.qgs",
+				user = "postgres",
+				password = "postgres"
+			}
+
+			local l2 = Layer{
+				project = qgp,
+				source = "postgis",
+				name = "LayerPG",
+				password = "postgres",
+				database = "postgis_22_sample",
+				table = "sampa"
+			}
+
+			local qgp2 =  Project{
+				file = "sampa_v3.qgs"
+			}
+
+			local l3 = Layer{
+				project = qgp2,
+				name = l2.name
+			}
+
+			unitTest:assertEquals(l3.source, "postgis")
+			unitTest:assertEquals(l3.host, "localhost")
+			unitTest:assertEquals(l3.port, "5432")
+			unitTest:assertEquals(l3.user, "postgres")
+			unitTest:assertEquals(l3.password, "postgres")
+			unitTest:assertEquals(l3.database, "postgis_22_sample")
+			unitTest:assertEquals(l3.table, "sampa")
+
+			qgpfile:delete()
+			l3:delete()
+			File("sampa_v3.tview")
+		end
+
+		unitTest:assert(readQGisProject)
 		version = "_v3"
-		unitTest:assert(QGisProjectTest)
+		unitTest:assert(readQGisProject)
+		unitTest:assert(insertNewLayerQgis)
 	end
 }

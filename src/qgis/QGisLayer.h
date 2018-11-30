@@ -84,6 +84,7 @@ namespace terrame
 			std::string description;
 			std::string projectionAcronym;
 			std::string ellipsoidAcronym;
+			std::string dataset;
 		};
 	} // namespace qgis
 } // namespace terrame

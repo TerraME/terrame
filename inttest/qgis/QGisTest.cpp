@@ -62,10 +62,10 @@ TEST_F(QGisTest, ReadOneFileLayerQGisV2)
 	ASSERT_STREQ(qgp.getTitle().c_str(), "Sampa QGis Project");
 	ASSERT_EQ(qgp.getLayers().size(), 1);
 
-	terrame::qgis::QGisLayer* layer = qgp.getLayers().at(0);
-	ASSERT_STREQ(layer->getName().c_str(), "SP");
-	ASSERT_EQ(layer->getSrid(), 4019);
-	ASSERT_STRNE(layer->getUri().path().c_str(), "");
+	terrame::qgis::QGisLayer layer = qgp.getLayers().at(0);
+	ASSERT_STREQ(layer.getName().c_str(), "SP");
+	ASSERT_EQ(layer.getSrid(), 4019);
+	ASSERT_STRNE(layer.getUri().path().c_str(), "");
 }
 
 TEST_F(QGisTest, ReadVariousFileLayerQGisV2)
@@ -76,22 +76,22 @@ TEST_F(QGisTest, ReadVariousFileLayerQGisV2)
 	ASSERT_EQ(qgp.getVersion(), 2);
 	ASSERT_STREQ(qgp.getTitle().c_str(), "");
 	ASSERT_EQ(qgp.getLayers().size(), 3);
-	terrame::qgis::QGisLayer* layer;
+	terrame::qgis::QGisLayer layer;
 
 	layer = qgp.getLayers().at(0);
-	ASSERT_STREQ(layer->getName().c_str(), "biomassa-manaus");
-	ASSERT_EQ(layer->getSrid(), 4326);
-	ASSERT_STRNE(layer->getUri().path().c_str(), "");
+	ASSERT_STREQ(layer.getName().c_str(), "biomassa-manaus");
+	ASSERT_EQ(layer.getSrid(), 4326);
+	ASSERT_STRNE(layer.getUri().path().c_str(), "");
 
 	layer = qgp.getLayers().at(1);
-	ASSERT_STREQ(layer->getName().c_str(), "sampa");
-	ASSERT_EQ(layer->getSrid(), 4019);
-	ASSERT_STRNE(layer->getUri().path().c_str(), "");
+	ASSERT_STREQ(layer.getName().c_str(), "sampa");
+	ASSERT_EQ(layer.getSrid(), 4019);
+	ASSERT_STRNE(layer.getUri().path().c_str(), "");
 
 	layer = qgp.getLayers().at(2);
-	ASSERT_STREQ(layer->getName().c_str(), "vegtype_2000");
-	ASSERT_EQ(layer->getSrid(), 4326);
-	ASSERT_STRNE(layer->getUri().path().c_str(), "");
+	ASSERT_STREQ(layer.getName().c_str(), "vegtype_2000");
+	ASSERT_EQ(layer.getSrid(), 4326);
+	ASSERT_STRNE(layer.getUri().path().c_str(), "");
 }
 
 TEST_F(QGisTest, ReadOnePosgisLayerQGisV2)
@@ -102,15 +102,15 @@ TEST_F(QGisTest, ReadOnePosgisLayerQGisV2)
 	ASSERT_EQ(qgp.getVersion(), 2);
 	ASSERT_EQ(qgp.getLayers().size(), 1);
 
-	terrame::qgis::QGisLayer* layer = qgp.getLayers().at(0);
-	ASSERT_STREQ(layer->getName().c_str(), "SP");
-	ASSERT_EQ(layer->getSrid(), 4019);
-	ASSERT_STREQ(layer->getUri().path().c_str(), "/postgis_22_sample");
-	ASSERT_STREQ(layer->getUri().host().c_str(), "localhost");
-	ASSERT_STREQ(layer->getUri().query().c_str(), "sampa");
-	ASSERT_STREQ(layer->getUri().user().c_str(), "postgres");
-	ASSERT_STREQ(layer->getUri().password().c_str(), "postgres");
-	ASSERT_STREQ(layer->getUri().port().c_str(), "5432");
+	terrame::qgis::QGisLayer layer = qgp.getLayers().at(0);
+	ASSERT_STREQ(layer.getName().c_str(), "SP");
+	ASSERT_EQ(layer.getSrid(), 4019);
+	ASSERT_STREQ(layer.getUri().path().c_str(), "/postgis_22_sample");
+	ASSERT_STREQ(layer.getUri().host().c_str(), "localhost");
+	ASSERT_STREQ(layer.getUri().query().c_str(), "sampa");
+	ASSERT_STREQ(layer.getUri().user().c_str(), "postgres");
+	ASSERT_STREQ(layer.getUri().password().c_str(), "postgres");
+	ASSERT_STREQ(layer.getUri().port().c_str(), "5432");
 }
 
 TEST_F(QGisTest, ReadWebLayerQGisV2)
@@ -121,19 +121,19 @@ TEST_F(QGisTest, ReadWebLayerQGisV2)
 	ASSERT_EQ(qgp.getVersion(), 2);
 	ASSERT_EQ(qgp.getLayers().size(), 2);
 
-	terrame::qgis::QGisLayer* layer = qgp.getLayers().at(0);
-	ASSERT_STREQ(layer->getName().c_str(), "LANDSAT2013");
-	ASSERT_EQ(layer->getSrid(), 4326);
-	ASSERT_STREQ(layer->getUri().path().c_str(), "http://terrabrasilis.info/geoserver/ows");
-	ASSERT_STREQ(layer->getUri().query().c_str(), "format=png&layers=Prodes_2013:LANDSAT2013");
-	ASSERT_STREQ(layer->getUri().scheme().c_str(), "wms");
+	terrame::qgis::QGisLayer layer = qgp.getLayers().at(0);
+	ASSERT_STREQ(layer.getName().c_str(), "LANDSAT2013");
+	ASSERT_EQ(layer.getSrid(), 4326);
+	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.info/geoserver/ows");
+	ASSERT_STREQ(layer.getUri().query().c_str(), "format=png&layers=Prodes_2013:LANDSAT2013");
+	ASSERT_STREQ(layer.getUri().scheme().c_str(), "wms");
 
 	layer = qgp.getLayers().at(1);
-	ASSERT_STREQ(layer->getName().c_str(), "reddpac:LandCover2000");
-	ASSERT_EQ(layer->getSrid(), 4326);
-	ASSERT_STREQ(layer->getUri().path().c_str(), "http://terrabrasilis.info/redd-pac/wfs");
-	ASSERT_STREQ(layer->getUri().query().c_str(), "reddpac:LandCover2000");
-	ASSERT_STREQ(layer->getUri().scheme().c_str(), "wfs");
+	ASSERT_STREQ(layer.getName().c_str(), "reddpac:LandCover2000");
+	ASSERT_EQ(layer.getSrid(), 4326);
+	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.info/redd-pac/wfs");
+	ASSERT_STREQ(layer.getUri().query().c_str(), "reddpac:LandCover2000");
+	ASSERT_STREQ(layer.getUri().scheme().c_str(), "wfs");
 }
 
 TEST_F(QGisTest, ReadOneFileLayerQGisV3)
@@ -145,10 +145,10 @@ TEST_F(QGisTest, ReadOneFileLayerQGisV3)
 	ASSERT_STREQ(qgp.getTitle().c_str(), "Sampa QGis Project");
 	ASSERT_EQ(qgp.getLayers().size(), 1);
 
-	terrame::qgis::QGisLayer* layer = qgp.getLayers().at(0);
-	ASSERT_STREQ(layer->getName().c_str(), "SP");
-	ASSERT_EQ(layer->getSrid(), 4019);
-	ASSERT_STRNE(layer->getUri().path().c_str(), "");
+	terrame::qgis::QGisLayer layer = qgp.getLayers().at(0);
+	ASSERT_STREQ(layer.getName().c_str(), "SP");
+	ASSERT_EQ(layer.getSrid(), 4019);
+	ASSERT_STRNE(layer.getUri().path().c_str(), "");
 }
 
 TEST_F(QGisTest, ReadQGisNotSupportedExtension)
@@ -178,22 +178,22 @@ TEST_F(QGisTest, ReadVariousFileLayerQGisV3)
 	ASSERT_EQ(qgp.getVersion(), 3);
 	ASSERT_STREQ(qgp.getTitle().c_str(), "");
 	ASSERT_EQ(qgp.getLayers().size(), 3);
-	terrame::qgis::QGisLayer* layer;
+	terrame::qgis::QGisLayer layer;
 
 	layer = qgp.getLayers().at(0);
-	ASSERT_STREQ(layer->getName().c_str(), "biomassa-manaus");
-	ASSERT_EQ(layer->getSrid(), 4326);
-	ASSERT_STRNE(layer->getUri().path().c_str(), "");
+	ASSERT_STREQ(layer.getName().c_str(), "biomassa-manaus");
+	ASSERT_EQ(layer.getSrid(), 4326);
+	ASSERT_STRNE(layer.getUri().path().c_str(), "");
 
 	layer = qgp.getLayers().at(1);
-	ASSERT_STREQ(layer->getName().c_str(), "sampa");
-	ASSERT_EQ(layer->getSrid(), 4019);
-	ASSERT_STRNE(layer->getUri().path().c_str(), "");
+	ASSERT_STREQ(layer.getName().c_str(), "sampa");
+	ASSERT_EQ(layer.getSrid(), 4019);
+	ASSERT_STRNE(layer.getUri().path().c_str(), "");
 
 	layer = qgp.getLayers().at(2);
-	ASSERT_STREQ(layer->getName().c_str(), "vegtype_2000");
-	ASSERT_EQ(layer->getSrid(), 4326);
-	ASSERT_STRNE(layer->getUri().path().c_str(), "");
+	ASSERT_STREQ(layer.getName().c_str(), "vegtype_2000");
+	ASSERT_EQ(layer.getSrid(), 4326);
+	ASSERT_STRNE(layer.getUri().path().c_str(), "");
 }
 
 TEST_F(QGisTest, ReadOnePosgisLayerQGisV3)
@@ -205,17 +205,16 @@ TEST_F(QGisTest, ReadOnePosgisLayerQGisV3)
 	ASSERT_EQ(qgp.getVersion(), 3);
 	ASSERT_EQ(qgp.getLayers().size(), 1);
 
-	terrame::qgis::QGisLayer* layer = qgp.getLayers().at(0);
-	ASSERT_STREQ(layer->getName().c_str(), "SP");
-	ASSERT_EQ(layer->getSrid(), 4019);
-	ASSERT_STREQ(layer->getUri().path().c_str(), "/postgis_22_sample");
-	ASSERT_STREQ(layer->getUri().host().c_str(), "localhost");
-	ASSERT_STREQ(layer->getUri().query().c_str(), "sampa");
-	ASSERT_STREQ(layer->getUri().user().c_str(), "postgres");
-	ASSERT_STREQ(layer->getUri().password().c_str(), "postgres");
-	ASSERT_STREQ(layer->getUri().port().c_str(), "5432");
+	terrame::qgis::QGisLayer layer = qgp.getLayers().at(0);
+	ASSERT_STREQ(layer.getName().c_str(), "SP");
+	ASSERT_EQ(layer.getSrid(), 4019);
+	ASSERT_STREQ(layer.getUri().path().c_str(), "/postgis_22_sample");
+	ASSERT_STREQ(layer.getUri().host().c_str(), "localhost");
+	ASSERT_STREQ(layer.getUri().query().c_str(), "sampa");
+	ASSERT_STREQ(layer.getUri().user().c_str(), "postgres");
+	ASSERT_STREQ(layer.getUri().password().c_str(), "postgres");
+	ASSERT_STREQ(layer.getUri().port().c_str(), "5432");
 }
-
 
 TEST_F(QGisTest, ReadOnePosgisLayerWithoutRoleQGisV3)
 {
@@ -245,19 +244,19 @@ TEST_F(QGisTest, ReadWebLayerQGisV3)
 	ASSERT_EQ(qgp.getVersion(), 3);
 	ASSERT_EQ(qgp.getLayers().size(), 2);
 
-	terrame::qgis::QGisLayer* layer = qgp.getLayers().at(0);
-	ASSERT_STREQ(layer->getName().c_str(), "LANDSAT2013");
-	ASSERT_EQ(layer->getSrid(), 4326);
-	ASSERT_STREQ(layer->getUri().path().c_str(), "http://terrabrasilis.info/geoserver/ows");
-	ASSERT_STREQ(layer->getUri().query().c_str(), "format=png&layers=Prodes_2013:LANDSAT2013");
-	ASSERT_STREQ(layer->getUri().scheme().c_str(), "wms");
+	terrame::qgis::QGisLayer layer = qgp.getLayers().at(0);
+	ASSERT_STREQ(layer.getName().c_str(), "LANDSAT2013");
+	ASSERT_EQ(layer.getSrid(), 4326);
+	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.info/geoserver/ows");
+	ASSERT_STREQ(layer.getUri().query().c_str(), "format=png&layers=Prodes_2013:LANDSAT2013");
+	ASSERT_STREQ(layer.getUri().scheme().c_str(), "wms");
 
 	layer = qgp.getLayers().at(1);
-	ASSERT_STREQ(layer->getName().c_str(), "reddpac:LandCover2000");
-	ASSERT_EQ(layer->getSrid(), 4326);
-	ASSERT_STREQ(layer->getUri().path().c_str(), "http://terrabrasilis.info/redd-pac/wfs");
-	ASSERT_STREQ(layer->getUri().query().c_str(), "reddpac:LandCover2000");
-	ASSERT_STREQ(layer->getUri().scheme().c_str(), "wfs");
+	ASSERT_STREQ(layer.getName().c_str(), "reddpac:LandCover2000");
+	ASSERT_EQ(layer.getSrid(), 4326);
+	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.info/redd-pac/wfs");
+	ASSERT_STREQ(layer.getUri().query().c_str(), "reddpac:LandCover2000");
+	ASSERT_STREQ(layer.getUri().scheme().c_str(), "wfs");
 }
 
 TEST_F(QGisTest, InsertOneFileLayerQGisV3)
@@ -272,18 +271,19 @@ TEST_F(QGisTest, InsertOneFileLayerQGisV3)
 	terrame::qgis::QGisProject qgp = terrame::qgis::QGis::getInstance().read(qgscopy);
 
 	terrame::qgis::QGisProject newQgp = qgp;
-	terrame::qgis::QGisLayer* newLayer = new terrame::qgis::QGisLayer();
-	newLayer->setName("NewLayer");
-	newLayer->setSrid(5808);
+	terrame::qgis::QGisLayer newLayer;
+	newLayer.setName("NewLayer");
+	newLayer.setSrid(5808);
 	std::string fileLayer(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.geojson");
-	newLayer->setUri(te::core::URI("file://" + fileLayer));
+	newLayer.setUri(te::core::URI("file://" + fileLayer));
 	newQgp.addLayer(newLayer);
 
 	terrame::qgis::QGis::getInstance().write(newQgp);
 
 	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);
 
-	ASSERT_TRUE(qgp2.getLayerByName("NewLayer") != nullptr);
+	ASSERT_NE(qgp.getLayers().size(), qgp2.getLayers().size());
+	//ASSERT_TRUE(qgp2.getLayerByName("NewLayer") != nullptr);
 
 	boost::filesystem::remove(boost::filesystem::path(qgscopy));
 }
@@ -310,17 +310,17 @@ TEST_F(QGisTest, InsertSubdirFileLayerQGisV3)
 	terrame::qgis::QGisProject qgp = terrame::qgis::QGis::getInstance().read(qgscopy);
 
 	terrame::qgis::QGisProject newQgp = qgp;
-	terrame::qgis::QGisLayer* newLayer = new terrame::qgis::QGisLayer();
-	newLayer->setName("NewLayer");
-	newLayer->setSrid(5808);
-	newLayer->setUri(te::core::URI("file://" + flcopy));
+	terrame::qgis::QGisLayer newLayer;
+	newLayer.setName("NewLayer");
+	newLayer.setSrid(5808);
+	newLayer.setUri(te::core::URI("file://" + flcopy));
 	newQgp.addLayer(newLayer);
 
 	terrame::qgis::QGis::getInstance().write(newQgp);
 
 	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);
 
-	ASSERT_TRUE(qgp2.getLayerByName("NewLayer")->equals(newLayer));
+	ASSERT_TRUE(qgp2.getLayerByName("NewLayer").equals(newLayer));
 
 	boost::filesystem::remove(boost::filesystem::path(qgscopy));
 	boost::filesystem::remove_all(sub2);
@@ -338,27 +338,69 @@ TEST_F(QGisTest, InsertFileLayerOutDirTreeQGisV3)
 	terrame::qgis::QGisProject qgp = terrame::qgis::QGis::getInstance().read(qgscopy);
 
 	terrame::qgis::QGisProject newQgp = qgp;
-	terrame::qgis::QGisLayer* l1 = new terrame::qgis::QGisLayer();
-	l1->setName("NewLayer");
-	l1->setSrid(5808);
+	terrame::qgis::QGisLayer l1;
+	l1.setName("NewLayer");
+	l1.setSrid(5808);
 	std::string fl(std::string(TERRAME_PKGTEST_DATA_PATH) + "/sampa.geojson");
-	l1->setUri(te::core::URI("file://" + fl));
+	l1.setUri(te::core::URI("file://" + fl));
 	newQgp.addLayer(l1);
 
-	terrame::qgis::QGisLayer* l2 = new terrame::qgis::QGisLayer();
-	l2->setName("Tif");
-	l2->setSrid(5808);
+	terrame::qgis::QGisLayer l2;
+	l2.setName("Tif");
+	l2.setSrid(5808);
 	std::string f2(std::string(TERRAME_PKGTEST_DATA_PATH) + "/prodes_polyc_10k.tif");
-	l2->setUri(te::core::URI("file://" + f2));
+	l2.setUri(te::core::URI("file://" + f2));
 	newQgp.addLayer(l2);
 
 	terrame::qgis::QGis::getInstance().write(newQgp);
 	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);
 
-	ASSERT_TRUE(qgp2.getLayerByName("NewLayer")->equals(l1));
-	ASSERT_STREQ(fl.c_str(), qgp2.getLayerByName("NewLayer")->getPath().c_str());
-	ASSERT_TRUE(qgp2.getLayerByName("Tif")->equals(l2));
-	ASSERT_STREQ(f2.c_str(), qgp2.getLayerByName("Tif")->getPath().c_str());
+	ASSERT_TRUE(qgp2.getLayerByName("NewLayer").equals(l1));
+	ASSERT_STREQ(fl.c_str(), qgp2.getLayerByName("NewLayer").getPath().c_str());
+	ASSERT_TRUE(qgp2.getLayerByName("Tif").equals(l2));
+	ASSERT_STREQ(f2.c_str(), qgp2.getLayerByName("Tif").getPath().c_str());
+
+	boost::filesystem::remove(boost::filesystem::path(qgscopy));
+}
+
+TEST_F(QGisTest, InsertPosgisLayerQGisV3)
+{
+	std::string qgsfile(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa_v3.qgs");
+	std::string qgscopy(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa_v3_copy.qgs");
+	boost::filesystem::copy_file(boost::filesystem::path(qgsfile),
+		boost::filesystem::path(qgscopy),
+		boost::filesystem::copy_option::overwrite_if_exists);
+
+	terrame::qgis::QGis::getInstance().setPostgisRole("postgres", "postgres");
+	terrame::qgis::QGisProject qgp = terrame::qgis::QGis::getInstance().read(qgscopy);	
+
+	terrame::qgis::QGisLayer layer;
+	layer.setName("LayerPg");
+	layer.setDataSetName("tablename");
+	layer.setSrid(4903);	
+	layer.setExtent(1.5, 1.3, 1.9, 1.8);
+	layer.setGeometry("Polygon");
+	layer.setProvider("postgres");
+	layer.setSpatialRefSys("+proj=longlat +ellps=GRS80 +no_defs", 
+							"Unknown datum based upon the GRS 1980 ellipsoid");
+	layer.setType("vector");
+	layer.setUri(te::core::URI("pgsql://postgres:postgres@localhost:5432/postgis_22_sample"));
+	
+	qgp.addLayer(layer);
+	
+	terrame::qgis::QGis::getInstance().write(qgp);
+
+	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);
+
+	terrame::qgis::QGisLayer l2 =  qgp2.getLayerByName("LayerPg");
+	ASSERT_STREQ(l2.getName().c_str(), "LayerPg");
+	ASSERT_EQ(l2.getSrid(), 4903);
+	ASSERT_STREQ(l2.getUri().path().c_str(), "/postgis_22_sample");
+	ASSERT_STREQ(l2.getUri().host().c_str(), "localhost");
+	ASSERT_STREQ(l2.getUri().query().c_str(), "tablename");
+	ASSERT_STREQ(l2.getUri().user().c_str(), "postgres");
+	ASSERT_STREQ(l2.getUri().password().c_str(), "postgres");
+	ASSERT_STREQ(l2.getUri().port().c_str(), "5432");
 
 	boost::filesystem::remove(boost::filesystem::path(qgscopy));
 }

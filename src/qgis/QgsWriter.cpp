@@ -177,12 +177,12 @@ QDomElement terrame::qgis::QgsWriter::createElement(QDomDocument& document,
 	return elem;
 }
 
-std::string terrame::qgis::QgsWriter::genLayerId(const terrame::qgis::QGisLayer* layer)
+std::string terrame::qgis::QgsWriter::genLayerId(const terrame::qgis::QGisLayer& layer)
 {
 	QString uuid = QUuid::createUuid().toString();
 	std::string id = uuid.mid(1, uuid.length() - 2).toStdString();
 	boost::replace_all(id, "-", "_");
-	boost::filesystem::path lpath(layer->getPath());
+	boost::filesystem::path lpath(layer.getDataSetName());
 
 	return lpath.stem().string() + "_" + id;
 }
