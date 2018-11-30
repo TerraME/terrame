@@ -372,22 +372,22 @@ TEST_F(QGisTest, InsertPosgisLayerQGisV3)
 		boost::filesystem::copy_option::overwrite_if_exists);
 
 	terrame::qgis::QGis::getInstance().setPostgisRole("postgres", "postgres");
-	terrame::qgis::QGisProject qgp = terrame::qgis::QGis::getInstance().read(qgscopy);	
+	terrame::qgis::QGisProject qgp = terrame::qgis::QGis::getInstance().read(qgscopy);
 
 	terrame::qgis::QGisLayer layer;
 	layer.setName("LayerPg");
 	layer.setDataSetName("tablename");
-	layer.setSrid(4903);	
+	layer.setSrid(4903);
 	layer.setExtent(1.5, 1.3, 1.9, 1.8);
 	layer.setGeometry("Polygon");
 	layer.setProvider("postgres");
-	layer.setSpatialRefSys("+proj=longlat +ellps=GRS80 +no_defs", 
+	layer.setSpatialRefSys("+proj=longlat +ellps=GRS80 +no_defs",
 							"Unknown datum based upon the GRS 1980 ellipsoid");
 	layer.setType("vector");
 	layer.setUri(te::core::URI("pgsql://postgres:postgres@localhost:5432/postgis_22_sample"));
-	
+
 	qgp.addLayer(layer);
-	
+
 	terrame::qgis::QGis::getInstance().write(qgp);
 
 	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);

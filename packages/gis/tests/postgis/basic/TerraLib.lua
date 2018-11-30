@@ -2467,7 +2467,7 @@ return {
 			File("sampa"..version..".tview"):delete()
 			File("sampapg"..version..".tview"):delete()
 		end
-		
+
 		local insertNewLayerQgis = function()
 			local qgsfile = filePath("test/sampa_v3.qgs", "gis")
 			local spfile = filePath("test/sampa.shp", "gis")
@@ -2478,7 +2478,7 @@ return {
 			local qgp = {
 				file = File("sampa_v3.qgs")
 			}
-		
+
 			local fromData = {}
 			fromData.project = qgp
 			fromData.layer = "SP"
@@ -2504,7 +2504,7 @@ return {
 
 			TerraLib().createProject(qgp)
 			TerraLib().saveDataAs(fromData, pgData, true)
-			
+
 			local layerName = "SampaPg"
 			TerraLib().addPgLayer(qgp, layerName, pgData, nil, encoding)
 
@@ -2534,12 +2534,12 @@ return {
 			File("sampa_v3.tview"):delete()
 			File("sampa.shp"):delete()
 			TerraLib().dropPgTable(pgData)
-		end		
+		end
 
 		unitTest:assert(readQGisProject)
 		version = "_v3"
 		unitTest:assert(readQGisProject)
-		
+
 		unitTest:assert(insertNewLayerQgis)
 	end
 }

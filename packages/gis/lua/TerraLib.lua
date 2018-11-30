@@ -534,10 +534,10 @@ local function setQGisLayerAttributesToSave(qgp, layersToAdd)
 		qgisLayer:setSpatialRefSys(projection.PROJ4, projection.NAME)
 
 		qgisLayer:setProvider(dsInfo:getType())
-		
+
 		local dseName = layer:getDataSetName()
 		qgisLayer:setDataSetName(dseName)
-		
+
 		local geom = getLayerGeometry(dseName, dsInfo)
 		if geom then
 			qgisLayer:setGeometry(geom)
