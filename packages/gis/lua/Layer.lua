@@ -263,9 +263,9 @@ local function addLayer(self, data)
 
 	if type(data.service) == "string" then
 		local lower = string.lower(data.service)
-		if string.match(lower, "wms") then
+		if string.match(lower, "wms") or data.map then
 			defaultTableValue(data, "source", "wms")
-		elseif string.match(lower, "wfs") then
+		elseif string.match(lower, "wfs") or data.feature then
 			defaultTableValue(data, "source", "wfs")
 		end
 	end
