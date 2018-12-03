@@ -103,6 +103,16 @@ std::string terrame::qgis::QGisLayer::getPath() const
 				+ " table=\"\""
 				+ " sql=";
 	}
+	else if(uri.scheme() == "wms")
+	{
+		std::map<std::string, std::string> info = te::core::Expand(uri.query());
+		return std::string("contextualWMSLegend=0&")
+				+ "&crs=EPSG:" + std::to_string(srid)
+				+ "&format=image/" + info["FORMAT"]
+				+ "&layers=" + dataset
+				+ "&styles"
+				+ "&url=" + info["URI"];
+	}
 	else
 	{
 		return boost::replace_all_copy(uri.host() + uri.path(), "\\", "/");
@@ -136,6 +146,10 @@ void terrame::qgis::QGisLayer::setProvider(const std::string& provider)
 	else if(provider == "WFS")
 	{
 		this->provider = provider;
+	}
+	else if (provider == "WMS2")
+	{
+		this->provider = "wms";
 	}
 	else
 	{

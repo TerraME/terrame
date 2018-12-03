@@ -201,7 +201,7 @@ te::core::URI terrame::qgis::QGis::createFileUri(const std::string& qgsfile,
 	}
 	catch (const boost::filesystem::filesystem_error& e)
 	{
-		throw std::runtime_error(content + " - " + e.what());
+		throw std::runtime_error("QGIS reading file problem: '" + content + "' - " + e.what());
 	}
 }
 
