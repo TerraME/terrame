@@ -68,6 +68,11 @@ return {
 	end,
 	createProject = function(unitTest)
 		local insertNewLayerQgis = function()
+			local wmsDir = Directory("wms")
+			if wmsDir:exists() then
+				wmsDir:delete()
+			end
+
 			local qgsfile = filePath("test/sampa_v3.qgs", "gis")
 			local spfile = filePath("test/sampa.shp", "gis")
 
@@ -110,6 +115,7 @@ return {
 			qgp.file:delete()
 			File("sampa_v3.tview"):delete()
 			File("sampa.shp"):delete()
+			wmsDir:delete()
 		end
 
 		unitTest:assert(insertNewLayerQgis)

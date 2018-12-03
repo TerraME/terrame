@@ -31,9 +31,7 @@ return {
 			spfile:copy(currentDir())
 
 			local qgp = Project {
-				file = "sampa_v3.qgs",
-				user = "postgres",
-				password = "postgres"
+				file = "sampa_v3.qgs"
 			}
 
 			local l2 = Layer{
@@ -60,7 +58,7 @@ return {
 			unitTest:assertEquals(l3.encoding, l2.encoding)
 
 			qgp.file:delete()
-			File("sampa_v3.tview")
+			File("sampa_v3.tview"):delete()
 			File("sampa.shp"):delete()
 		end
 

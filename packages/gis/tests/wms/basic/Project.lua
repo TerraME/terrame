@@ -25,6 +25,11 @@
 return {
 	Project = function(unitTest)
 		local insertNewLayerQgis = function()
+			local wmsDir = Directory("wms")
+			if wmsDir:exists() then
+				wmsDir:delete()
+			end
+
 			local qgpfile = filePath("test/sampa_v3.qgs", "gis")
 			local spfile = filePath("test/sampa.shp", "gis")
 			qgpfile:copy(currentDir())
@@ -58,8 +63,9 @@ return {
 			unitTest:assertEquals(l3.encoding, l2.encoding)
 
 			qgp.file:delete()
-			File("sampa_v3.tview")
+			File("sampa_v3.tview"):delete()
 			File("sampa.shp"):delete()
+			wmsDir:delete()
 		end
 
 		unitTest:assert(insertNewLayerQgis)

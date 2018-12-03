@@ -145,9 +145,11 @@ return {
 			unitTest:assertEquals(l3.database, "postgis_22_sample")
 			unitTest:assertEquals(l3.table, "sampa")
 
-			qgpfile:delete()
+			qgp.file:delete()
 			l3:delete()
-			File("sampa_v3.tview")
+			File("sampa_v3.tview"):delete()
+			File("sampa.shp"):delete()
+			proj.file:delete()
 		end
 
 		unitTest:assert(readQGisProject)

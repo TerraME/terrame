@@ -339,6 +339,9 @@ return {
 				file = File("sampa.geojson")
 			}
 
+			local fileTif = filePath("emas-accumulation.tif", "gis")
+			fileTif:copy(currentDir())
+
 			Layer {
 				project = qgp,
 				name = "Tif",
@@ -391,6 +394,7 @@ return {
 			cl1:delete()
 			l1:delete()
 			l2:delete()
+			l5:delete()
 		end
 
 		unitTest:assert(readQGisProject)
