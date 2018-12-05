@@ -198,10 +198,6 @@ return {
 			File("webservice"..version..".tview"):delete()
 		end
 
-		unitTest:assert(readQGisProject)
-		version = "_v3"
-		unitTest:assert(readQGisProject)
-
 		local insertNewLayerQgis = function()
 			local qgsfile = filePath("test/sampa_v3.qgs", "gis")
 			local spfile = filePath("test/sampa.shp", "gis")
@@ -243,7 +239,80 @@ return {
 			layerFile:delete()
 		end
 
+		local createQGisProject = function()
+			local spfile = filePath("test/sampa.shp", "gis")
+			spfile:copy(currentDir())
+
+			local qgp = {
+				file = File("create_func_v3.qgs")
+			}
+
+			qgp.file:deleteIfExists()
+			File("create_func_v3.tview"):deleteIfExists()
+
+			TerraLib().createProject(qgp)
+
+			local l1Name = "SP"
+			local l1File = File("sampa.shp")
+			TerraLib().addShpLayer(qgp, l1Name, l1File)
+
+			local qgp2 = {
+				file = qgp.file
+			}
+
+			TerraLib().createProject(qgp2)
+
+			local info = TerraLib().getLayerInfo(qgp2, l1Name)
+
+			unitTest:assertEquals(info.name, "SP")
+			unitTest:assertEquals(info.rep, "polygon")
+			unitTest:assertEquals(info.srid, 4019)
+			unitTest:assertEquals(File(info.file):name(), "sampa.shp")
+			unitTest:assertEquals(info.source, "shp")
+			unitTest:assertEquals(info.encoding, "LATIN1")
+
+			local gjsp = filePath("test/sampa.geojson", "gis")
+			gjsp:copy(currentDir())
+
+			local l2Name = "SPtoo"
+			local l2File = File("sampa.geojson")
+			TerraLib().addGeoJSONLayer(qgp2, l2Name, l2File)
+
+			local info2 = TerraLib().getLayerInfo(qgp2, l2Name)
+			unitTest:assertEquals(info2.name, "SPtoo")
+			unitTest:assertEquals(info2.rep, "polygon")
+			unitTest:assertEquals(info2.srid, 4019)
+			unitTest:assertEquals(File(info2.file):name(), "sampa.geojson")
+			unitTest:assertEquals(info2.source, "geojson")
+			unitTest:assertEquals(info2.encoding, "LATIN1")
+
+			local tif = filePath("test/prodes_polyc_10k.tif", "gis")
+			tif:copy(currentDir())
+
+			local l3Name = "Tif"
+			local l3File = File("prodes_polyc_10k.tif")
+			TerraLib().addGdalLayer(qgp2, l3Name, l3File, 4019)
+
+			local info3 = TerraLib().getLayerInfo(qgp2, l3Name)
+			unitTest:assertEquals(info3.name, "Tif")
+			unitTest:assertEquals(info3.rep, "raster")
+			unitTest:assertEquals(info3.srid, 4019)
+			unitTest:assertEquals(File(info3.file):name(), "prodes_polyc_10k.tif")
+			unitTest:assertEquals(info3.source, "tif")
+			unitTest:assertEquals(info3.encoding, "LATIN1")
+
+			qgp.file:delete()
+			File("create_func_v3.tview"):delete()
+			l1File:delete()
+			l2File:delete()
+			l3File:delete()
+		end
+
+		unitTest:assert(readQGisProject)
+		version = "_v3"
+		unitTest:assert(readQGisProject)
 		unitTest:assert(insertNewLayerQgis)
+		unitTest:assert(createQGisProject)
 	end,
 	openProject = function(unitTest)
 		local proj = {

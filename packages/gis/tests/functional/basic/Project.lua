@@ -397,10 +397,71 @@ return {
 			l5:delete()
 		end
 
+		local createQGisProject = function()
+			local spfile = filePath("test/sampa.shp", "gis")
+			spfile:copy(currentDir())
+
+			local qgp = Project {
+				file = File("create_func_v3.qgs")
+			}
+
+			local l1 = Layer{
+				project = qgp,
+				name = "SP",
+				file = File("sampa.shp")
+			}
+
+			local cl1Name = "SPCells"
+			local cl1 = Layer{
+				project = qgp,
+				source = "shp",
+				clean = true,
+				input = l1.name,
+				name = cl1Name,
+				resolution = 1,
+				file = cl1Name..".shp",
+				index = false
+			}
+
+			local qgp2 = Project {
+				file = qgp.file
+			}
+
+			local l2 = Layer{
+				project = qgp2,
+				name = cl1Name
+			}
+
+			unitTest:assertEquals(l2.name, cl1Name)
+			unitTest:assertEquals(l2.rep, "polygon")
+			unitTest:assertEquals(l2.epsg, 4019)
+			unitTest:assertEquals(File(l2.file):name(), "SPCells.shp")
+			unitTest:assertEquals(l2.source, "shp")
+			unitTest:assertEquals(l2.encoding, "latin1")
+
+			local l3 = Layer{
+				project = qgp2,
+				name = "SP"
+			}
+
+			unitTest:assertEquals(l3.name, "SP")
+			unitTest:assertEquals(l3.rep, "polygon")
+			unitTest:assertEquals(l3.epsg, 4019)
+			unitTest:assertEquals(File(l3.file):name(), "sampa.shp")
+			unitTest:assertEquals(l3.source, "shp")
+			unitTest:assertEquals(l3.encoding, "latin1")
+
+			qgp2.file:delete()
+			File("create_func_v3.tview"):delete()
+			cl1:delete()
+			l1:delete()
+		end
+
 		unitTest:assert(readQGisProject)
 		version = "_v3"
 		unitTest:assert(readQGisProject)
 		unitTest:assert(insertNewLayerQgis)
+		unitTest:assert(createQGisProject)
 
 		-- Temporal Layers
 		local projTemporal = Project{

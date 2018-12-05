@@ -69,8 +69,6 @@ namespace terrame
 			bool isDatabase(const std::string& content);
 			bool isWfs(const std::string& content);
 			bool isWms(const std::string& content);
-			void writeLayers(const QGisProject& qgp,
-							const std::vector<QGisLayer>& layers);
 
 			std::string user;
 			std::string password;

@@ -57,7 +57,7 @@ void terrame::qgis::QGisLayer::setName(const std::string& name)
 	this->name = name;
 }
 
-int terrame::qgis::QGisLayer::getSrid()
+int terrame::qgis::QGisLayer::getSrid() const
 {
 	return srid;
 }
@@ -67,7 +67,7 @@ void terrame::qgis::QGisLayer::setSrid(int srid)
 	this->srid = srid;
 }
 
-te::core::URI terrame::qgis::QGisLayer::getUri()
+te::core::URI terrame::qgis::QGisLayer::getUri() const
 {
 	return uri;
 }
@@ -204,27 +204,27 @@ std::string terrame::qgis::QGisLayer::getType()
 	return type;
 }
 
-double terrame::qgis::QGisLayer::getXmin()
+double terrame::qgis::QGisLayer::getXmin() const
 {
 	return xmin;
 }
 
-double terrame::qgis::QGisLayer::getXmax()
+double terrame::qgis::QGisLayer::getXmax() const
 {
 	return xmax;
 }
 
-double terrame::qgis::QGisLayer::getYmin()
+double terrame::qgis::QGisLayer::getYmin() const
 {
 	return ymin;
 }
 
-double terrame::qgis::QGisLayer::getYmax()
+double terrame::qgis::QGisLayer::getYmax() const
 {
 	return ymax;
 }
 
-std::string terrame::qgis::QGisLayer::getProj4()
+std::string terrame::qgis::QGisLayer::getProj4() const
 {
 	return proj4;
 }
@@ -234,17 +234,17 @@ std::string terrame::qgis::QGisLayer::getSrsid()
 	return srsid;
 }
 
-std::string terrame::qgis::QGisLayer::getDescription()
+std::string terrame::qgis::QGisLayer::getDescription() const
 {
 	return description;
 }
 
-std::string terrame::qgis::QGisLayer::getProjectionAcronym()
+std::string terrame::qgis::QGisLayer::getProjectionAcronym() const
 {
 	return projectionAcronym;
 }
 
-std::string terrame::qgis::QGisLayer::getEllipsoidAcronym()
+std::string terrame::qgis::QGisLayer::getEllipsoidAcronym() const
 {
 	return ellipsoidAcronym;
 }

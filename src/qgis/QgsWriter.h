@@ -37,22 +37,27 @@ namespace terrame
 		class QgsWriter
 		{
 		public:
-			static QgsWriter& getInstance();
-			void insert(const terrame::qgis::QGisProject& qgp,
+			void addLayers(const terrame::qgis::QGisProject& qgp,
 					const std::vector<terrame::qgis::QGisLayer>& layers);
+			void create(const terrame::qgis::QGisProject& qgp);
 
 		private:
-			QgsWriter() {}
-			QgsWriter(const QgsWriter&);
-			QgsWriter& operator=(const QgsWriter&);
-			~QgsWriter() {}
+			void addLayers(QDomDocument& doc,
+						const std::string& qgsfile,
+						const std::vector<terrame::qgis::QGisLayer>& layers);
 
 			std::string getRelativePath(const std::string& path,
 											const std::string& relative);
 			int occurrences(const std::string& str, const std::string& substring);
-			QDomElement createElement(QDomDocument& document, const std::string& element,
-								const std::string& content);
+			QDomElement createTextElement(QDomDocument& doc, const std::string& element,
+									const std::string& content);
+			QDomElement createSpatialRefSysElement(QDomDocument& doc, 
+											const terrame::qgis::QGisLayer& layer);			
+			QDomElement createExtentElement(QDomDocument& doc, 
+											const terrame::qgis::QGisLayer& layer);
 			std::string genLayerId(const terrame::qgis::QGisLayer& layer);
+			void save(QDomDocument& doc, const std::string& qgspath);
+			std::string toString(double number);
 		};
 	} // namespace qgis
 } // namespace terrame

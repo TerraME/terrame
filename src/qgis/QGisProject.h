@@ -43,7 +43,7 @@ namespace terrame
 
 			std::string getFile() const;
 			void setFile(const std::string& filepath);
-			std::string getTitle();
+			std::string getTitle() const;
 			void setTitle(const std::string& title);
 			std::string getAuthor();
 			void setAuthor(const std::string& author);

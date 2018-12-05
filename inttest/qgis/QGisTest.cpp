@@ -283,7 +283,6 @@ TEST_F(QGisTest, InsertOneFileLayerQGisV3)
 	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);
 
 	ASSERT_NE(qgp.getLayers().size(), qgp2.getLayers().size());
-	//ASSERT_TRUE(qgp2.getLayerByName("NewLayer") != nullptr);
 
 	boost::filesystem::remove(boost::filesystem::path(qgscopy));
 }
@@ -477,4 +476,37 @@ TEST_F(QGisTest, InsertWmsLayerQGisV3)
 	ASSERT_STREQ(l2.getUri().query().c_str(), "format=png&layers=data:set");
 
 	boost::filesystem::remove(boost::filesystem::path(qgscopy));
+}
+
+TEST_F(QGisTest, CreateQgsQGisV3)
+{
+	std::string qgsfile(boost::filesystem::current_path().string() + "/create_qgs_v3.qgs");
+
+	terrame::qgis::QGisProject newQgp;
+	newQgp.setFile(qgsfile);
+	newQgp.setTitle("QGIS Project");
+	terrame::qgis::QGisLayer layer;
+	layer.setName("NewLayer");
+	layer.setSrid(4019);
+	std::string fileLayer(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.geojson");
+	layer.setUri(te::core::URI("file://" + fileLayer));
+
+	layer.setDataSetName("sampa");
+	layer.setExtent(-53.11011153163347842f, -25.31232094931403509f,
+					-44.16136516442313109f, -19.77965579787450423f);
+	layer.setGeometry("Polygon");
+	layer.setProvider("OGR");
+	layer.setSpatialRefSys("+proj=longlat +ellps=GRS80 +no_defs",
+		"Unknown datum based upon the GRS 1980 ellipsoid");
+	layer.setType("vector");
+
+	newQgp.addLayer(layer);
+
+	terrame::qgis::QGis::getInstance().write(newQgp);
+
+	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgsfile);
+
+	ASSERT_EQ(qgp2.getLayers().size(), 1);
+
+	boost::filesystem::remove(boost::filesystem::path(qgsfile));
 }

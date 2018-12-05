@@ -44,9 +44,9 @@ namespace terrame
 
 			std::string getName();
 			void setName(const std::string& name);
-			int getSrid();
+			int getSrid() const;
 			void setSrid(int srid);
-			te::core::URI getUri();
+			te::core::URI getUri() const;
 			void setUri(const te::core::URI& uri);
 			std::string getPath() const;
 			void setExtent(double xmin, double ymin, double xmax, double ymax);
@@ -59,15 +59,15 @@ namespace terrame
 			std::string getProvider();
 			std::string getGeometry();
 			std::string getType();
-			double getXmin();
-			double getXmax();
-			double getYmin();
-			double getYmax();
-			std::string getProj4();
+			double getXmin() const;
+			double getXmax() const;
+			double getYmin() const;
+			double getYmax() const;
+			std::string getProj4() const;
 			std::string getSrsid();
-			std::string getDescription();
-			std::string getProjectionAcronym();
-			std::string getEllipsoidAcronym();
+			std::string getDescription() const;
+			std::string getProjectionAcronym() const;
+			std::string getEllipsoidAcronym() const;
 			void setDataSetName(const std::string& name);
 			std::string getDataSetName() const;
 

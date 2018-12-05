@@ -46,7 +46,7 @@ void terrame::qgis::QGisProject::setFile(const std::string & filepath)
 	this->file = filepath;
 }
 
-std::string terrame::qgis::QGisProject::getTitle()
+std::string terrame::qgis::QGisProject::getTitle() const
 {
 	return title;
 }
