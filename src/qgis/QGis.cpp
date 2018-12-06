@@ -35,6 +35,7 @@ of this software and its documentation.
 #include <boost/algorithm/string.hpp>
 #include <boost/tokenizer.hpp>
 
+#include "QgsReader.h"
 #include "QgsWriter.h"
 #include "Utils.h"
 
@@ -46,57 +47,9 @@ terrame::qgis::QGis& terrame::qgis::QGis::getInstance()
 
 terrame::qgis::QGisProject terrame::qgis::QGis::read(const std::string& qgsfile)
 {
-	if(!boost::filesystem::exists(qgsfile))
-	{
-		throw std::runtime_error("QGIS project file '" + qgsfile + "' not found.");
-	}
-
-	if (boost::algorithm::to_lower_copy(boost::filesystem::extension(qgsfile)) != ".qgs")
-	{
-		throw std::runtime_error("QGIS file extension must be '.qgs', but received '"
-								+ boost::filesystem::extension(qgsfile)
-								+ "'.");
-	}
-
-	xercesc::XMLPlatformUtils::Initialize();
-
-	xercesc::XercesDOMParser* parser = new xercesc::XercesDOMParser();
-	parser->setValidationScheme(xercesc::XercesDOMParser::Val_Never);
-	parser->setDoNamespaces(false);
-	parser->setDoSchema(false);
-	parser->setLoadExternalDTD(false);
-
-	parser->parse(qgsfile.c_str());
-	xercesc::DOMDocument* doc = parser->getDocument();
-	xercesc::DOMElement* root = doc->getDocumentElement();
-
-	if (!root)
-	{
-		delete parser;
-		xercesc::XMLPlatformUtils::Terminate();
-		throw std::runtime_error("Empty QGIS project.");
-	}
-
-	QGisProject qgp;
-	qgp.setFile(qgsfile);
-	qgp.setVersion(getVersion(root));
-	qgp.setTitle(getTitle(root));
-
-	xercesc::DOMNodeList* layersNode = root->getElementsByTagName(xercesc::XMLString::transcode("maplayer"));
-	for (unsigned int i = 0; i < layersNode->getLength(); i++)
-	{
-		xercesc::DOMElement* layerElement = dynamic_cast<xercesc::DOMElement*>(layersNode->item(i));
-		QGisLayer layer;
-		layer.setName(getElementContentAsString(layerElement, "layername"));
-		layer.setSrid(std::stoi(getElementContentAsString(layerElement, "srid")));
-		layer.setUri(getElementContentAsUri(layerElement, "datasource", qgsfile));
-		qgp.addLayer(layer);
-	}
-
-	delete parser;
-	xercesc::XMLPlatformUtils::Terminate();
-
-	return qgp;
+	QgsReader reader;
+	reader.setPostgisRole(user, password);
+	return reader.read(qgsfile);
 }
 
 void terrame::qgis::QGis::write(const QGisProject& qgp)
@@ -126,173 +79,6 @@ void terrame::qgis::QGis::write(const QGisProject& qgp)
 	{
 		writer.create(qgp);
 	}
-}
-
-int terrame::qgis::QGis::getVersion(xercesc::DOMElement* root)
-{
-	std::string ver = xercesc::XMLString::transcode(
-					root->getAttribute(xercesc::XMLString::transcode("version")));
-
-	return std::stoi(&ver.front());
-}
-
-std::string terrame::qgis::QGis::getTitle(xercesc::DOMElement * root)
-{
-	xercesc::DOMNodeList* nodeList = root->getElementsByTagName(
-							xercesc::XMLString::transcode("title"));
-	xercesc::DOMNode* node = nodeList->item(0);
-
-	return xercesc::XMLString::transcode(node->getTextContent());
-}
-
-bool terrame::qgis::QGis::isNodeValid(xercesc::DOMNode * node)
-{
-	return node->getNodeType() &&
-			(node->getNodeType() == xercesc::DOMNode::ELEMENT_NODE);
-}
-
-std::string terrame::qgis::QGis::getElementContentAsString(xercesc::DOMElement* element,
-															 const std::string& name)
-{
-	xercesc::DOMNodeList* node = element->getElementsByTagName(
-									xercesc::XMLString::transcode(name.c_str()));
-	xercesc::DOMElement* el = dynamic_cast<xercesc::DOMElement*>(node->item(0));
-	std::string value = xercesc::XMLString::transcode(el->getTextContent());
-
-	return value;
-}
-
-te::core::URI terrame::qgis::QGis::getElementContentAsUri(xercesc::DOMElement* element,
-													const std::string& name,
-													const std::string& qgsfile)
-{
-	std::string content(getElementContentAsString(element, name));
-
-	if (isDatabase(content))
-	{
-		return createDatabaseUri(content);
-	}
-	else if (isWfs(content))
-	{
-		return createWfsUri(content);
-	}
-	else if (isWms(content))
-	{
-		return createWmsUri(content);
-	}
-	else
-	{
-		return createFileUri(qgsfile, content);
-	}
-
-	return te::core::URI("");
-}
-
-te::core::URI terrame::qgis::QGis::createFileUri(const std::string& qgsfile,
-												const std::string& content)
-{
-	try
-	{
-		if(boost::filesystem::is_regular_file(content))
-		{
-			return  te::core::URI("file://" + content);
-		}
-		else
-		{
-			boost::filesystem::path relativeTo(qgsfile);
-			boost::filesystem::path dir(relativeTo.parent_path());
-			boost::filesystem::path canonic(boost::filesystem::canonical(content, dir));
-			return te::core::URI("file://" + canonic.string());
-		}
-	}
-	catch (const boost::filesystem::filesystem_error& e)
-	{
-		throw std::runtime_error("QGIS reading file problem: '" + content + "' - " + e.what());
-	}
-}
-
-te::core::URI terrame::qgis::QGis::createDatabaseUri(const std::string & content)
-{
-	std::map<std::string, std::string> contents(createAttributesMap(content, " "));
-	std::vector<std::string> table;
-	boost::split(table, contents.at("table"), boost::is_any_of("."));
-
-	if(contents.find("password") == contents.end())
-	{
-		if ((this->password != "") && (this->user != ""))
-		{
-			contents.insert(std::pair<std::string, std::string>("password", this->password));
-			contents.insert(std::pair<std::string, std::string>("user", this->user));
-		}
-		else
-		{
-			throw std::runtime_error("QGIS Postgis user and password not found. Set its Role before load.");
-		}
-	}
-
-	std::string uriStr("pgsql://" + contents.at("user") + ":"
-		+ contents.at("password") + "@"
-		+ contents.at("host") + ":"
-		+ contents.at("port") + "/"
-		+ contents.at("dbname") + "?"
-		+ ((table.size() == 1) ? table.at(0) : table.at(1)));
-
-	te::core::URI uri(uriStr);
-
-	if (!uri.isValid())
-		throw std::runtime_error("Invalid QGIS database URI: '"
-								+ uriStr + "'.");
-
-	return uri;
-}
-
-te::core::URI terrame::qgis::QGis::createWfsUri(const std::string& content)
-{
-	std::map<std::string, std::string> contents(
-							terrame::qgis::createAttributesMap(content, " "));
-
-	std::string uriStr("wfs:" + contents.at("url") + "?" + contents.at("typename"));
-
-	te::core::URI uri(uriStr);
-
-	if (!uri.isValid())
-		throw(std::runtime_error("Invalid QGIS WFS URI."));
-
-	return uri;
-}
-
-te::core::URI terrame::qgis::QGis::createWmsUri(const std::string& content)
-{
-	std::map<std::string, std::string> contents(
-								terrame::qgis::createAttributesMap(content, "&"));
-	std::vector<std::string> format;
-	boost::split(format, contents.at("format"), boost::is_any_of("/"));
-
-	std::string uriStr("wms:" + contents.at("url") + "?"
-		+ "format=" + format.at(1) + "&"
-		+ "layers=" + contents.at("layers"));
-
-	te::core::URI uri(uriStr);
-
-	if (!uri.isValid())
-		throw(std::runtime_error("Invalid QGIS WMS URI."));
-
-	return uri;
-}
-
-bool terrame::qgis::QGis::isDatabase(const std::string& content)
-{
-	return boost::contains(content, "dbname");
-}
-
-bool terrame::qgis::QGis::isWfs(const std::string& content)
-{
-	return boost::contains(content, "typename");
-}
-
-bool terrame::qgis::QGis::isWms(const std::string& content)
-{
-	return boost::contains(content, "contextualWMSLegend");
 }
 
 void terrame::qgis::QGis::setPostgisRole(const std::string& user,

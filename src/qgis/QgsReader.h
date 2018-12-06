@@ -21,15 +21,14 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#ifndef QGIS_H
-#define QGIS_H
+#ifndef QGS_READER_H
+#define QGS_READER_H
 
 #include <string>
 
 #include <terralib/core.h>
 #include <xercesc/dom/DOMElement.hpp>
 
-#include "Config.h"
 #include "QGisProject.h"
 #include "QGisLayer.h"
 
@@ -37,20 +36,31 @@ namespace terrame
 {
 	namespace qgis
 	{
-		class TERRAME_QGIS_DLL_EXPORT QGis
+		class QgsReader
 		{
 		public:
-			static QGis& getInstance();
 			terrame::qgis::QGisProject read(const std::string& qgsfile);
-			void write(const terrame::qgis::QGisProject& qgp);
 			void setPostgisRole(const std::string& user = "",
 								const std::string& password = "");
 
 		private:
-			QGis(){}
-			QGis(const QGis&);
-			QGis& operator=(const QGis&);
-			~QGis(){}
+			int getVersion(xercesc::DOMElement* root);
+			std::string getTitle(xercesc::DOMElement* root);
+			bool isNodeValid(xercesc::DOMNode* node);
+			std::string getElementContentAsString(xercesc::DOMElement* element,
+											const std::string& name);
+			te::core::URI getElementContentAsUri(xercesc::DOMElement* element,
+											const std::string& name,
+											const std::string& qgsfile);
+			te::core::URI createFileUri(const std::string& qgsfile,
+										const std::string& content);
+			te::core::URI createDatabaseUri(const std::string& content);
+			te::core::URI createWfsUri(const std::string& content);
+			te::core::URI createWmsUri(const std::string& content);
+
+			bool isDatabase(const std::string& content);
+			bool isWfs(const std::string& content);
+			bool isWms(const std::string& content);
 
 			std::string user;
 			std::string password;
