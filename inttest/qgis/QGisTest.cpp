@@ -38,7 +38,7 @@ TEST_F(QGisTest, ReadEmptyQgsExceptionQGisV2)
 	}
 	catch(const std::runtime_error& e)
 	{
-		ASSERT_STREQ(e.what(), "Empty QGIS project.");
+		ASSERT_STREQ(e.what(), "Failed to load QGIS project file for reading.");
 	}
 	catch(...)
 	{

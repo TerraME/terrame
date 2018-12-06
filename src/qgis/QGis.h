@@ -24,11 +24,6 @@ of this software and its documentation.
 #ifndef QGIS_H
 #define QGIS_H
 
-#include <string>
-
-#include <terralib/core.h>
-#include <xercesc/dom/DOMElement.hpp>
-
 #include "Config.h"
 #include "QGisProject.h"
 #include "QGisLayer.h"

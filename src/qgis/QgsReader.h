@@ -26,8 +26,9 @@ of this software and its documentation.
 
 #include <string>
 
+class QDomElement;
+
 #include <terralib/core.h>
-#include <xercesc/dom/DOMElement.hpp>
 
 #include "QGisProject.h"
 #include "QGisLayer.h"
@@ -44,12 +45,12 @@ namespace terrame
 								const std::string& password = "");
 
 		private:
-			int getVersion(xercesc::DOMElement* root);
-			std::string getTitle(xercesc::DOMElement* root);
-			bool isNodeValid(xercesc::DOMNode* node);
-			std::string getElementContentAsString(xercesc::DOMElement* element,
-											const std::string& name);
-			te::core::URI getElementContentAsUri(xercesc::DOMElement* element,
+			int getVersion(const QDomElement& root);				
+			std::string getElementContentAsString(const QDomElement& element,
+											const std::string& name);	
+			int getElementContentAsInt(const QDomElement& element,
+											const std::string& name);			
+			te::core::URI getElementContentAsUri(const QDomElement& element,
 											const std::string& name,
 											const std::string& qgsfile);
 			te::core::URI createFileUri(const std::string& qgsfile,

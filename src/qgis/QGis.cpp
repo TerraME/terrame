@@ -23,17 +23,7 @@ of this software and its documentation.
 
 #include "QGis.h"
 
-#include <stdexcept>
-
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/tokenizer.hpp>
 
 #include "QgsReader.h"
 #include "QgsWriter.h"

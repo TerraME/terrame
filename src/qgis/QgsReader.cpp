@@ -25,110 +25,89 @@ of this software and its documentation.
 
 #include <stdexcept>
 
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/tokenizer.hpp>
 
+#include <QDomElement>
+#include <QFile>
+
 #include "Utils.h"
 
-terrame::qgis::QGisProject terrame::qgis::QgsReader::read(const std::string& qgsfile)
+terrame::qgis::QGisProject terrame::qgis::QgsReader::read(const std::string& qgspath)
 {
-	if(!boost::filesystem::exists(qgsfile))
+	if (!boost::filesystem::exists(qgspath))
 	{
-		throw std::runtime_error("QGIS project file '" + qgsfile + "' not found.");
+		throw std::runtime_error("QGIS project file '" + qgspath + "' not found.");
 	}
 
-	if (boost::algorithm::to_lower_copy(boost::filesystem::extension(qgsfile)) != ".qgs")
+	if (boost::algorithm::to_lower_copy(boost::filesystem::extension(qgspath)) != ".qgs")
 	{
 		throw std::runtime_error("QGIS file extension must be '.qgs', but received '"
-								+ boost::filesystem::extension(qgsfile)
-								+ "'.");
+			+ boost::filesystem::extension(qgspath)
+			+ "'.");
 	}
 
-	xercesc::XMLPlatformUtils::Initialize();
+	QDomDocument doc;
 
-	xercesc::XercesDOMParser* parser = new xercesc::XercesDOMParser();
-	parser->setValidationScheme(xercesc::XercesDOMParser::Val_Never);
-	parser->setDoNamespaces(false);
-	parser->setDoSchema(false);
-	parser->setLoadExternalDTD(false);
-
-	parser->parse(qgsfile.c_str());
-	xercesc::DOMDocument* doc = parser->getDocument();
-	xercesc::DOMElement* root = doc->getDocumentElement();
-
-	if (!root)
+	QFile qgsfile(qgspath.c_str());
+	if (!qgsfile.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
-		delete parser;
-		xercesc::XMLPlatformUtils::Terminate();
-		throw std::runtime_error("Empty QGIS project.");
+		throw std::runtime_error("Failed to open QGIS project file for reading.");
 	}
+	
+	if(!doc.setContent(&qgsfile))
+	{
+		qgsfile.close();
+		throw std::runtime_error("Failed to load QGIS project file for reading.");
+	}
+
+	qgsfile.close();
+
+	QDomElement root = doc.firstChildElement();
 
 	QGisProject qgp;
-	qgp.setFile(qgsfile);
+	qgp.setFile(qgspath);
 	qgp.setVersion(getVersion(root));
-	qgp.setTitle(getTitle(root));
+	qgp.setTitle(getElementContentAsString(root, "title"));
 
-	xercesc::DOMNodeList* layersNode = root->getElementsByTagName(xercesc::XMLString::transcode("maplayer"));
-	for (unsigned int i = 0; i < layersNode->getLength(); i++)
+	QDomNodeList layers = root.elementsByTagName("maplayer");
+	for (unsigned int i = 0; i < layers.length(); i++)
 	{
-		xercesc::DOMElement* layerElement = dynamic_cast<xercesc::DOMElement*>(layersNode->item(i));
+		QDomElement layerElement = layers.item(i).toElement();
 		QGisLayer layer;
 		layer.setName(getElementContentAsString(layerElement, "layername"));
-		layer.setSrid(std::stoi(getElementContentAsString(layerElement, "srid")));
-		layer.setUri(getElementContentAsUri(layerElement, "datasource", qgsfile));
+		layer.setSrid(getElementContentAsInt(layerElement, "srid"));
+		layer.setUri(getElementContentAsUri(layerElement, "datasource", qgspath));
 		qgp.addLayer(layer);
 	}
-
-	delete parser;
-	xercesc::XMLPlatformUtils::Terminate();
 
 	return qgp;
 }
 
-int terrame::qgis::QgsReader::getVersion(xercesc::DOMElement* root)
+int terrame::qgis::QgsReader::getVersion(const QDomElement& root)
 {
-	std::string ver = xercesc::XMLString::transcode(
-					root->getAttribute(xercesc::XMLString::transcode("version")));
-
-	return std::stoi(&ver.front());
+	QString ver = root.attribute("version").at(0);
+	return ver.toInt();
 }
 
-std::string terrame::qgis::QgsReader::getTitle(xercesc::DOMElement* root)
-{
-	xercesc::DOMNodeList* nodeList = root->getElementsByTagName(
-							xercesc::XMLString::transcode("title"));
-	xercesc::DOMNode* node = nodeList->item(0);
-
-	return xercesc::XMLString::transcode(node->getTextContent());
+std::string terrame::qgis::QgsReader::getElementContentAsString(const QDomElement& element,
+															const std::string& name)
+{	
+	QDomNode node = element.elementsByTagName(name.c_str()).item(0);
+	return node.toElement().text().toStdString();
 }
 
-bool terrame::qgis::QgsReader::isNodeValid(xercesc::DOMNode* node)
+int terrame::qgis::QgsReader::getElementContentAsInt(const QDomElement& element,
+															const std::string& name)
 {
-	return node->getNodeType() &&
-			(node->getNodeType() == xercesc::DOMNode::ELEMENT_NODE);
+	QDomNode node = element.elementsByTagName(name.c_str()).item(0);
+	return node.toElement().text().toInt();
 }
 
-std::string terrame::qgis::QgsReader::getElementContentAsString(xercesc::DOMElement* element,
-															 const std::string& name)
-{
-	xercesc::DOMNodeList* node = element->getElementsByTagName(
-									xercesc::XMLString::transcode(name.c_str()));
-	xercesc::DOMElement* el = dynamic_cast<xercesc::DOMElement*>(node->item(0));
-	std::string value = xercesc::XMLString::transcode(el->getTextContent());
-
-	return value;
-}
-
-te::core::URI terrame::qgis::QgsReader::getElementContentAsUri(xercesc::DOMElement* element,
-													const std::string& name,
-													const std::string& qgsfile)
+te::core::URI terrame::qgis::QgsReader::getElementContentAsUri(const QDomElement& element,
+															const std::string& name,
+															const std::string& qgsfile)
 {
 	std::string content(getElementContentAsString(element, name));
 

@@ -23,7 +23,6 @@
 
 add_definitions(-DBOOST_ALL_NO_LIB)
 find_package(Boost REQUIRED system filesystem)
-find_package(Xerces)
 find_package(Qt5Xml REQUIRED)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -47,14 +46,12 @@ file(GLOB TERRAME_QGIS_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/src/qgis/*.h)
 
 add_library(qgis SHARED ${TERRAME_QGIS_SRC_FILES} ${TERRAME_QGIS_HDR_FILES})
 
-target_include_directories(qgis PUBLIC 	${TERRALIB_INCLUDE_DIR}
+target_include_directories(qgis PUBLIC ${TERRALIB_INCLUDE_DIR}
 										${Boost_INCLUDE_DIR}
-										${XERCES_INCLUDE_DIR}
 										${Qt5Xml_INCLUDE_DIRS})
 
-target_link_libraries(qgis 	${TERRALIB_CORE_LIBRARY}
+target_link_libraries(qgis ${TERRALIB_CORE_LIBRARY}
 							${TERRALIB_XML_LIBRARY}
-							${XERCES_LIBRARY}
 							${Boost_SYSTEM_LIBRARY}
 							${Boost_FILESYSTEM_LIBRARY}
 							Qt5::Xml)
