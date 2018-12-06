@@ -37,7 +37,7 @@ namespace terrame
 		class TERRAME_QGIS_DLL_EXPORT QGisProject
 		{
 		public:
-			QGisProject();
+			QGisProject(const std::string& qgspath);
 			QGisProject(const QGisProject& other);
 			virtual ~QGisProject();
 

@@ -555,8 +555,7 @@ local function saveQGisProject(qgsfile, projfile, title)
 	if File(qgsfile):exists() then
 		qgp = qgis.QGis.getInstance():read(qgsfile)
 	else
-		qgp = qgis.QGisProject()
-		qgp:setFile(qgsfile)
+		qgp = qgis.QGisProject(qgsfile)
 		qgp:setTitle(title)
 	end
 

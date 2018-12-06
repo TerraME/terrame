@@ -26,7 +26,16 @@ of this software and its documentation.
 
 #include "Utils.h"
 
+
 terrame::qgis::QGisLayer::QGisLayer() {}
+
+terrame::qgis::QGisLayer::QGisLayer(const std::string& name, int srid,
+								const te::core::URI& uri)
+{
+	this->name = name;
+	this->srid = srid;
+	this->uri = uri;
+}
 
 terrame::qgis::QGisLayer::QGisLayer(const QGisLayer & other)
 {
@@ -79,6 +88,11 @@ void terrame::qgis::QGisLayer::setUri(const te::core::URI& uri)
 
 std::string terrame::qgis::QGisLayer::getPath() const
 {
+	if(uri.uri().empty())
+	{
+		return "";
+	}
+
 	if(uri.scheme() == "pgsql")
 	{
 		return "dbname='" + boost::replace_all_copy(uri.path(), "/", "") + "'"

@@ -39,6 +39,8 @@ namespace terrame
 		{
 		public:
 			QGisLayer();
+			QGisLayer(const std::string& name, int srid,
+					const te::core::URI& uri);
 			QGisLayer(const QGisLayer& other);
 			virtual ~QGisLayer();
 

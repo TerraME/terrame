@@ -55,7 +55,7 @@ terrame::qgis::QGisProject terrame::qgis::QgsReader::read(const std::string& qgs
 	{
 		throw std::runtime_error("Failed to open QGIS project file for reading.");
 	}
-	
+
 	if(!doc.setContent(&qgsfile))
 	{
 		qgsfile.close();
@@ -66,8 +66,7 @@ terrame::qgis::QGisProject terrame::qgis::QgsReader::read(const std::string& qgs
 
 	QDomElement root = doc.firstChildElement();
 
-	QGisProject qgp;
-	qgp.setFile(qgspath);
+	QGisProject qgp(qgspath);
 	qgp.setVersion(getVersion(root));
 	qgp.setTitle(getElementContentAsString(root, "title"));
 
@@ -75,10 +74,10 @@ terrame::qgis::QGisProject terrame::qgis::QgsReader::read(const std::string& qgs
 	for (unsigned int i = 0; i < layers.length(); i++)
 	{
 		QDomElement layerElement = layers.item(i).toElement();
-		QGisLayer layer;
-		layer.setName(getElementContentAsString(layerElement, "layername"));
-		layer.setSrid(getElementContentAsInt(layerElement, "srid"));
-		layer.setUri(getElementContentAsUri(layerElement, "datasource", qgspath));
+		std::string name = getElementContentAsString(layerElement, "layername");
+		int srid = getElementContentAsInt(layerElement, "srid");
+		te::core::URI uri = getElementContentAsUri(layerElement, "datasource", qgspath);
+		QGisLayer layer(name, srid, uri);
 		qgp.addLayer(layer);
 	}
 
@@ -93,7 +92,7 @@ int terrame::qgis::QgsReader::getVersion(const QDomElement& root)
 
 std::string terrame::qgis::QgsReader::getElementContentAsString(const QDomElement& element,
 															const std::string& name)
-{	
+{
 	QDomNode node = element.elementsByTagName(name.c_str()).item(0);
 	return node.toElement().text().toStdString();
 }

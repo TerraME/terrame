@@ -45,11 +45,11 @@ namespace terrame
 								const std::string& password = "");
 
 		private:
-			int getVersion(const QDomElement& root);				
+			int getVersion(const QDomElement& root);
 			std::string getElementContentAsString(const QDomElement& element,
-											const std::string& name);	
+											const std::string& name);
 			int getElementContentAsInt(const QDomElement& element,
-											const std::string& name);			
+											const std::string& name);
 			te::core::URI getElementContentAsUri(const QDomElement& element,
 											const std::string& name,
 											const std::string& qgsfile);

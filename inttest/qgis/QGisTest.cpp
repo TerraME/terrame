@@ -482,15 +482,11 @@ TEST_F(QGisTest, CreateQgsQGisV3)
 {
 	std::string qgsfile(boost::filesystem::current_path().string() + "/create_qgs_v3.qgs");
 
-	terrame::qgis::QGisProject newQgp;
-	newQgp.setFile(qgsfile);
+	terrame::qgis::QGisProject newQgp(qgsfile);
 	newQgp.setTitle("QGIS Project");
-	terrame::qgis::QGisLayer layer;
-	layer.setName("NewLayer");
-	layer.setSrid(4019);
 	std::string fileLayer(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.geojson");
-	layer.setUri(te::core::URI("file://" + fileLayer));
 
+	terrame::qgis::QGisLayer layer("NewLayer", 4019, te::core::URI("file://" + fileLayer));
 	layer.setDataSetName("sampa");
 	layer.setExtent(-53.11011153163347842f, -25.31232094931403509f,
 					-44.16136516442313109f, -19.77965579787450423f);
@@ -510,3 +506,30 @@ TEST_F(QGisTest, CreateQgsQGisV3)
 
 	boost::filesystem::remove(boost::filesystem::path(qgsfile));
 }
+
+TEST_F(QGisTest, InsertLayerNoNamePathException)
+{
+	std::string qgsfile(boost::filesystem::current_path().string() + "/nonamepath.qgs");
+
+	terrame::qgis::QGisProject newQgp(qgsfile);
+	newQgp.setTitle("QGIS Project");
+
+	terrame::qgis::QGisLayer layer;
+
+	newQgp.addLayer(layer);
+
+	try
+	{
+		terrame::qgis::QGis::getInstance().write(newQgp);
+		FAIL();
+	}
+	catch (const std::runtime_error& e)
+	{
+		ASSERT_STREQ(e.what(), "Layer 'name' and 'uri' must be set to allow save it.");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}
+

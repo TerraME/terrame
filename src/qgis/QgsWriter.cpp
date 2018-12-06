@@ -59,7 +59,7 @@ void terrame::qgis::QgsWriter::create(const terrame::qgis::QGisProject& qgp)
 	qgis.setAttribute("version", "3.4.1-Madeira");
 	qgis.setAttribute("projectname", qgp.getTitle().c_str());
 	doc.appendChild(qgis);
-	
+
 	QDomElement homePath = doc.createElement("homePath");
 	homePath.setAttribute("path", "");
 	qgis.appendChild(homePath);
@@ -95,12 +95,12 @@ void terrame::qgis::QgsWriter::create(const terrame::qgis::QGisProject& qgp)
 	qgis.appendChild(projectLayers);
 	QDomElement layerOrder = doc.createElement("layerorder");
 	qgis.appendChild(layerOrder);
-	
+
 	addLayers(doc, qgp.getFile(), qgp.getLayers());
 	save(doc, qgp.getFile());
 }
 
-void terrame::qgis::QgsWriter::addLayers(QDomDocument& doc, 
+void terrame::qgis::QgsWriter::addLayers(QDomDocument& doc,
 									const std::string& qgsfile,
 									const std::vector<terrame::qgis::QGisLayer>& layers)
 {
@@ -114,8 +114,17 @@ void terrame::qgis::QgsWriter::addLayers(QDomDocument& doc,
 	{
 		QGisLayer layer = layers.at(i);
 		QDomElement newLayerTree = doc.createElement("layer-tree-layer");
-		newLayerTree.setAttribute("name", layer.getName().c_str());
-		std::string relative(getRelativePath(layer.getPath(), qgsfile));
+
+		std::string name = layer.getName();
+		std::string path = layer.getPath();
+
+		if(name.empty() || path.empty())
+		{
+			throw std::runtime_error("Layer 'name' and 'uri' must be set to allow save it.");
+		}
+
+		std::string relative(getRelativePath(path, qgsfile));
+		newLayerTree.setAttribute("name", name.c_str());
 		newLayerTree.setAttribute("source", relative.c_str());
 		newLayerTree.setAttribute("checked", "Qt::Checked");
 		std::string lid = genLayerId(layer);
@@ -210,12 +219,12 @@ QDomElement terrame::qgis::QgsWriter::createTextElement(QDomDocument& doc,
 	return elem;
 }
 
-QDomElement terrame::qgis::QgsWriter::createSpatialRefSysElement(QDomDocument& doc, 
+QDomElement terrame::qgis::QgsWriter::createSpatialRefSysElement(QDomDocument& doc,
 												const terrame::qgis::QGisLayer& layer)
 {
 	QDomElement spatialRefSys = doc.createElement("spatialrefsys");
 	spatialRefSys.appendChild(createTextElement(doc, "proj4", layer.getProj4()));
-	spatialRefSys.appendChild(createTextElement(doc, "srsid", std::to_string(layer.getSrid())));
+	spatialRefSys.appendChild(createTextElement(doc, "srsid", ""));
 	spatialRefSys.appendChild(createTextElement(doc, "srid", std::to_string(layer.getSrid())));
 	spatialRefSys.appendChild(createTextElement(doc, "authid", "EPSG:" + std::to_string(layer.getSrid())));
 	spatialRefSys.appendChild(createTextElement(doc, "description", layer.getDescription()));
@@ -226,7 +235,7 @@ QDomElement terrame::qgis::QgsWriter::createSpatialRefSysElement(QDomDocument& d
 	return spatialRefSys;
 }
 
-QDomElement terrame::qgis::QgsWriter::createExtentElement(QDomDocument& doc, 
+QDomElement terrame::qgis::QgsWriter::createExtentElement(QDomDocument& doc,
 													const terrame::qgis::QGisLayer& layer)
 {
 	QDomElement extent = doc.createElement("extent");
@@ -234,7 +243,7 @@ QDomElement terrame::qgis::QgsWriter::createExtentElement(QDomDocument& doc,
 	extent.appendChild(createTextElement(doc, "ymin", toString(layer.getYmin())));
 	extent.appendChild(createTextElement(doc, "xmax", toString(layer.getXmax())));
 	extent.appendChild(createTextElement(doc, "ymax", toString(layer.getYmax())));
-	
+
 	return extent;
 }
 

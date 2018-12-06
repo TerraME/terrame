@@ -23,7 +23,10 @@ of this software and its documentation.
 
 #include "QGisProject.h"
 
-terrame::qgis::QGisProject::QGisProject() {}
+terrame::qgis::QGisProject::QGisProject(const std::string& qgspath)
+{
+	this->file = qgspath;
+}
 
 terrame::qgis::QGisProject::~QGisProject() {}
 

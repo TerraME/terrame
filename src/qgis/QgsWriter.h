@@ -51,9 +51,9 @@ namespace terrame
 			int occurrences(const std::string& str, const std::string& substring);
 			QDomElement createTextElement(QDomDocument& doc, const std::string& element,
 									const std::string& content);
-			QDomElement createSpatialRefSysElement(QDomDocument& doc, 
-											const terrame::qgis::QGisLayer& layer);			
-			QDomElement createExtentElement(QDomDocument& doc, 
+			QDomElement createSpatialRefSysElement(QDomDocument& doc,
+											const terrame::qgis::QGisLayer& layer);
+			QDomElement createExtentElement(QDomDocument& doc,
 											const terrame::qgis::QGisLayer& layer);
 			std::string genLayerId(const terrame::qgis::QGisLayer& layer);
 			void save(QDomDocument& doc, const std::string& qgspath);

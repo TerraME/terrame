@@ -27,12 +27,9 @@ of this library and its documentation.
 
 TEST_F(QGisProjectTest, AddLayer)
 {
-	terrame::qgis::QGisLayer l1;
-	l1.setName("Layer1");
-	l1.setSrid(5808);
 	std::string f1(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.geojson");
-	l1.setUri(te::core::URI("file://" + f1));
-	terrame::qgis::QGisProject qgp;
+	terrame::qgis::QGisLayer l1("Layer1", 5808, te::core::URI("file://" + f1));
+	terrame::qgis::QGisProject qgp("");
 
 	qgp.addLayer(l1);
 
