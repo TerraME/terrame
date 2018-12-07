@@ -65,13 +65,20 @@ return {
 		clFile:delete()
 	end,
 	createProject = function(unitTest)
-		local proj = {}
-		proj.file = "file.xml"
 		local mandatoryExt = function()
+			local proj = {}
+			proj.file = "file.xml"
 			TerraLib().createProject(proj, {})
 		end
 
 		unitTest:assertError(mandatoryExt, "Please, the file extension must be '.tview' or '.qgs'.")
+
+		local repeatedQGisLayerName = function()
+			local qgp = {file = filePath("test/repeated_layer_names.qgs", "gis")}
+			TerraLib().createProject(qgp)
+		end
+
+		unitTest:assertError(repeatedQGisLayerName, "Layer names must be unique. Prease, verify layer 'sampa'.")
 	end,
 	openProject = function(unitTest)
 		local proj = {}
