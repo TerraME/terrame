@@ -21,5 +21,30 @@
 # of this software and its documentation.
 ############################################################################################
 
-add_subdirectory(core)
-add_subdirectory(qgis)
+project(core_utest)
+
+if(MSVC)
+	set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+endif(MSVC)
+
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER MATCHES ".*clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+endif()
+
+include_directories(${TERRAME_ABSOLUTE_ROOT_DIR}/src)
+include_directories(${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/terrame)
+include_directories(${GTEST_INCLUDE_DIRS} ${GMOCK_INCLUDE_DIRS})
+
+file(GLOB TERRAME_UNITTEST_CORE_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/core/*.cpp)
+file(GLOB TERRAME_UNITTEST_CORE_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/core/*.h)
+
+add_executable(core_utest ${TERRAME_UNITTEST_SRC_FILES}
+                        ${TERRAME_UNITTEST_CORE_SRC_FILES} ${TERRAME_UNITTEST_CORE_HDR_FILES})
+
+target_link_libraries(core_utest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
+
+install(TARGETS core_utest
+        RUNTIME DESTINATION bin
+        COMPONENT runtime)
+
+add_test(NAME core_utest COMMAND core_utest)

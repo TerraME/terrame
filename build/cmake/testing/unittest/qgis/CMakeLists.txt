@@ -21,5 +21,33 @@
 # of this software and its documentation.
 ############################################################################################
 
-add_subdirectory(core)
-add_subdirectory(qgis)
+add_definitions(-DBOOST_ALL_NO_LIB)
+find_package(Boost REQUIRED system filesystem)
+
+if(MSVC)
+	set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+endif(MSVC)
+
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER MATCHES ".*clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+endif()
+
+file(GLOB TERRAME_INTTEST_QGIS_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/qgis/*.cpp)
+file(GLOB TERRAME_INTTEST_QGIS_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/qgis/*.h)
+
+add_executable(qgis_utest ${TERRAME_INTTEST_QGIS_SRC_FILES} ${TERRAME_INTTEST_QGIS_HDR_FILES})
+
+target_include_directories(qgis_utest PUBLIC ${TERRAME_ABSOLUTE_ROOT_DIR}/src
+											${GTEST_INCLUDE_DIRS} ${GMOCK_INCLUDE_DIRS})
+
+target_link_libraries(qgis_utest qgis ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
+
+install(TARGETS qgis_utest
+        RUNTIME DESTINATION bin
+        COMPONENT runtime)
+
+install(DIRECTORY ${PKG_TEST_DIR}
+		DESTINATION bin/qgistestdata
+		COMPONENT runtime)
+
+add_test(NAME qgis_utest COMMAND qgis_utest)

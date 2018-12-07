@@ -21,29 +21,21 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
 
-#include "QGisLayerTest.h"
+#include "QGisProjectTest.h"
 
-#include "qgis/QGisLayer.h"
+#include "qgis/QGisProject.h"
 
-TEST_F(QGisLayerTest, CompareTwoLayers)
+TEST_F(QGisProjectTest, AddLayer)
 {
 	terrame::qgis::QGisLayer l1;
 	l1.setName("Layer1");
-	l1.setSrid(5808);
-	std::string f1(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.geojson");
-	l1.setUri(te::core::URI("file://" + f1));
+	terrame::qgis::QGisProject qgp("");
 
-	terrame::qgis::QGisLayer l2;
-	l2.setName("Layer2");
-	l2.setSrid(5909);
-	std::string f2(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.shp");
-	l2.setUri(te::core::URI("file://" + f2));
+	qgp.addLayer(l1);
 
-	terrame::qgis::QGisLayer l3;
-	l3.setName("Layer2");
-	l3.setSrid(5909);
-	l3.setUri(te::core::URI("file://" + f2));
+	terrame::qgis::QGisLayer l2 = qgp.getLayerByName("Layer1");
 
-	ASSERT_FALSE(l1.equals(l2));
-	ASSERT_TRUE(l2.equals(l3));
+	ASSERT_STREQ(l2.getName().c_str(), "Layer1");
 }
+
+

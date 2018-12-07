@@ -21,21 +21,21 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
 
-#include "QGisProjectTest.h"
+#include "QGisLayerTest.h"
 
-#include "qgis/QGisProject.h"
+#include "qgis/QGisLayer.h"
 
-TEST_F(QGisProjectTest, AddLayer)
+TEST_F(QGisLayerTest, CompareTwoLayers)
 {
-	std::string f1(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.geojson");
-	terrame::qgis::QGisLayer l1("Layer1", 5808, te::core::URI("file://" + f1));
-	terrame::qgis::QGisProject qgp("");
+	terrame::qgis::QGisLayer l1;
+	l1.setName("Layer1");
 
-	qgp.addLayer(l1);
+	terrame::qgis::QGisLayer l2;
+	l2.setName("Layer2");
 
-	terrame::qgis::QGisLayer l2 = qgp.getLayerByName("Layer1");
+	terrame::qgis::QGisLayer l3;
+	l3.setName("Layer2");
 
-	ASSERT_STREQ(l2.getName().c_str(), "Layer1");
+	ASSERT_FALSE(l1.equals(l2));
+	ASSERT_TRUE(l2.equals(l3));
 }
-
-
