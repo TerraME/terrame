@@ -139,6 +139,22 @@ if(NOT TERRAME_CREATE_INSTALLER)
 endif()
 
 #
+# creating bundle
+#
+if(TERRAME_BUILD_AS_BUNDLE)
+	include(InstallRequiredSystemLibraries)
+
+	if(WIN32)
+		install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+		DESTINATION bin
+		COMPONENT runtime)
+	endif()
+
+	configure_file(${terrame_SOURCE_DIR}/fixBundle.cmake.in ${terrame_BINARY_DIR}/fixBundle.cmake @ONLY)
+	install(SCRIPT ${CMAKE_BINARY_DIR}/fixBundle.cmake COMPONENT runtime)
+endif()
+
+#
 # CPack
 #
 configure_file(${CMAKE_SOURCE_DIR}/terrame-cpack-options.cmake.in

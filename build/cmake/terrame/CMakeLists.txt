@@ -677,16 +677,3 @@ else(UNIX)
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/luacheck
 	        COMPONENT runtime)
 endif()
-
-if(TERRAME_BUILD_AS_BUNDLE)
-	include(InstallRequiredSystemLibraries)
-
-	if(WIN32)
-		install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-		DESTINATION bin
-		COMPONENT runtime)
-	endif()
-
-	configure_file(${terrame_SOURCE_DIR}/fixBundle.cmake.in ${terrame_BINARY_DIR}/fixBundle.cmake @ONLY)
-	install(SCRIPT ${CMAKE_BINARY_DIR}/fixBundle.cmake COMPONENT runtime)
-endif()
