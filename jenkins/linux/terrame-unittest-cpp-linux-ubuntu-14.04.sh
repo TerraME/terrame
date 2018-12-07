@@ -26,6 +26,7 @@ export TME_PATH=$_TERRAME_INSTALL_PATH/bin
 export PATH=$PATH:$TME_PATH
 export LD_LIBRARY_PATH=$TME_PATH
 export GTEST_COLOR=1
+RESULT=0
 
 echo ""
 echo ""
