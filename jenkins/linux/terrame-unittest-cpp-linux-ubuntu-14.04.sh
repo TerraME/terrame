@@ -22,18 +22,25 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
-export LD_LIBRARY_PATH=$_TERRAME_INSTALL_PATH/bin
+export TME_PATH=$_TERRAME_INSTALL_PATH/bin
+export PATH=$PATH:$TME_PATH
+export LD_LIBRARY_PATH=$TME_PATH
 export GTEST_COLOR=1
 
+echo ""
+echo ""
 echo "################################### Unit Testing ###################################"
-unittest
-RESULT=$?
+for test in $TME_PATH/*_utest; do
+    $test
+	RESULT=$(($? + $RESULT))
+done
 
+echo ""
+echo ""
 echo "################################ Integration Testing ################################"
-core_itest
-RESULT=$(($? + $RESULT))
-qgis_itest
-RESULT=$(($? + $RESULT))
+for test in $TME_PATH/*_itest; do
+    $test
+	RESULT=$(($? + $RESULT))
+done
 
 exit $RESULT
