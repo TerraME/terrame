@@ -1934,7 +1934,7 @@ end
 
 local function checkIfLayerNamesAreUnique(layers)
 	if getn(layers) == 1 then return end
-	
+
 	for i = 0, getn(layers) - 1 do
 		local iname = layers[i]:getName()
 		for j = i + 1, getn(layers) - 1 do
@@ -1957,7 +1957,7 @@ local function createProjectFromQGis(project)
 	if project.file:exists() then
 		local qgp = qgis.QGis.getInstance():read(tostring(project.file))
 		local layers = qgp:getLayers()
-		
+
 		checkIfLayerNamesAreUnique(layers)
 
 		project.title = qgp:getTitle()
