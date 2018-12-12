@@ -720,15 +720,12 @@ return {
 		attrs = cl:attributes()
 		unitTest:assertEquals(attrs[#attrs].name, "mmaxttr")
 
-		areaUnnecessary = function()
-			cl:fill{
-				attribute = "ccvattr",
-				operation = "coverage",
-				layer = deforest,
-				area = 2
-			}
-		end
-		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		cl:fill{
+			attribute = "ccvattr",
+			operation = "coverage",
+			layer = deforest
+		}
+
 		attrs = cl:attributes()
 		unitTest:assertEquals(attrs[#attrs].name, "ccvatt_255")
 

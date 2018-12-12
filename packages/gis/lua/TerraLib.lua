@@ -77,6 +77,8 @@ local function addCache(value, level1, level2, level3)
 	dataCacheLevel2[level3] = value -- SKIP
 end
 
+-- Raster operations must be added in SWIG TerraLib AttributeFill.i
+-- on RasterToVector::setParams()
 local OperationMapper = {
 	value = binding.VALUE_OPERATION,
 	area = binding.PERCENT_TOTAL_AREA,
@@ -87,6 +89,7 @@ local OperationMapper = {
 	maximum = binding.MAX_VALUE,
 	mode = binding.MODE,
 	coverage = binding.PERCENT_EACH_CLASS,
+	total = binding.TOTAL_AREA_BY_CLASS,
 	stdev = binding.STANDARD_DEVIATION,
 	mean = binding.MEAN,
 	weighted = binding.WEIGHTED,
@@ -104,6 +107,7 @@ local VectorAttributeCreatedMapper = {
 	minimum = "min_val",
 	maximum = "max_val",
 	coverage = "percent_area_class",
+	total = "area",
 	stdev = "stand_dev",
 	mean = "mean",
 	weighted = "weigh_area",
@@ -119,6 +123,7 @@ local RasterAttributeCreatedMapper = {
 	maximum = "_Max_Value",
 	mode = "_Mode",
 	coverage = "",
+	total = "",
 	stdev = "_Standard_Deviation",
 	sum = "_Sum",
 	count = "_Count"
@@ -134,6 +139,7 @@ local OperationAvailablePerDataTypeMapper = {
 	maximum = 7,
 	mode = 7,
 	coverage = 5,
+	total = 5,
 	stdev = 6,
 	average = 6,
 	mean = 6,
@@ -830,6 +836,8 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 			if area then
 				operation = "wsum"
 			end
+		elseif (operation == "coverage") and area then
+			operation = "total"
 		end
 
 		local toDSetName = toLayer:getDataSetName()
@@ -860,7 +868,7 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 	return propCreatedName
 end
 
-local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, nodata, pixel)
+local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, nodata, pixel, area)
 	local propCreatedName
 
 	do
@@ -887,6 +895,8 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		if operation == "average" then
 			operation = "mean"
+		elseif (operation == "coverage") and area then
+			operation = "total"
 		end
 
 		r2v:setParams(select, OperationMapper[operation], pixel, false, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
@@ -2772,7 +2782,7 @@ TerraLib_ = {
 			if dseType:hasRaster() then
 				if pixel == nil then pixel = true end
 
-				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, nodata, pixel)
+				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, nodata, pixel, area)
 			else
 				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
 			end
@@ -2791,7 +2801,7 @@ TerraLib_ = {
 
 			local attrsRenamed = {}
 
-			if operation == "coverage" then
+			if (operation == "coverage") or (operation == "total") then
 				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, property)
 			else
 				outDs:renameProperty(outDSetName, propCreatedName, property)

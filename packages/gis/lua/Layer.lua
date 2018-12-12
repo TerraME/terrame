@@ -390,7 +390,11 @@ local function checkIfRasterBandExists(data)
 end
 
 local function checkRaster(data)
-	verifyUnnecessaryArguments(data, {"attribute", "band", "dummy", "missing", "layer", "operation", "pixel"})
+	if data.operation == "coverage" then
+		verifyUnnecessaryArguments(data, {"attribute", "band", "dummy", "missing", "layer", "operation", "pixel", "area"})
+	else
+		verifyUnnecessaryArguments(data, {"attribute", "band", "dummy", "missing", "layer", "operation", "pixel"})
+	end
 
 	defaultTableValue(data, "band", 0)
 	positiveTableArgument(data, "band", true)
@@ -542,18 +546,19 @@ Layer_ = {
 	-- & attribute, layer, select  & area, missing, band, dummy, pixel, split  \
 	-- "count" & Number of objects that have some overlay with the cell.
 	-- & attribute, layer & dummy, pixel, split \
-	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
+	-- "coverage" & Percentage or total area of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
 	-- value represent the different values in the input data.
 	-- The sum of the created attribute values for a given cell will range
-	-- from zero to one, according to the area of the cell covered by pixels.
+	-- from zero to one (default) or the total area (area = true), according to the area of the
+	-- cell covered by pixels.
 	-- Note that this operation does not use dummy value, therefore one attribute will also
 	-- be created for the dummy values.
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & missing, band, pixel, split \
+	-- & attribute, layer, select & area, missing, band, pixel, split \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
 	-- centroid of the cell to the closest point, line, or border of a polygon.
 	-- & attribute, layer & split \
@@ -817,16 +822,16 @@ Layer_ = {
 			end,
 			coverage = function()
 				if repr == "polygon" or repr == "surface" then
-					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select", "area"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation", "pixel"})
 					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
 				defaultTableValue(data, "missing", 0)
+				defaultTableValue(data, "area", false)
 			end,
 			presence = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then

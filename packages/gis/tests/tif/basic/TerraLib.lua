@@ -471,6 +471,62 @@ return {
 
 		toData.file:delete()
 		outFile:delete()
+	end,
+	attributeFill = function(unitTest)
+		local coverageTotalArea = function()
+			local proj = {
+				file = "attrfill-tif-basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+
+			local l1Name = "ES_Limit"
+			local l1File = filePath("test/limit_es_sirgas2000_5880.shp", "gis")
+			TerraLib().addShpLayer(proj, l1Name, l1File)
+
+			local l1Info = TerraLib().getLayerInfo(proj, l1Name)
+
+			local l2Name = "ES_Uses"
+			local l2File = filePath("test/es_class_sirgas2000_5880.tif", "gis")
+			TerraLib().addGdalLayer(proj, l2Name, l2File, l1Info.srid)
+
+			local csName = "Cells"
+			local csShp = File(csName..".shp")
+			local resolution = 50e3
+			local mask = true
+			csShp:deleteIfExists()
+			TerraLib().addShpCellSpaceLayer(proj, l1Name, csName, resolution, csShp, mask)
+
+			local l3Name = "cells_cov_total_area"
+			local l3File = File(l3Name..".shp")
+			local operation = "coverage"
+			local attribute = "area"
+			local select = 0
+			local area = true
+			local default = 0
+			local pixel = false
+			l3File:deleteIfExists()
+			TerraLib().attributeFill(proj, l2Name, csName, l3Name, attribute, operation, select, area, default, "raster", nil, pixel)
+
+			local l3Set = TerraLib().getDataSet{project = proj, layer = l3Name}
+
+			unitTest:assertEquals(l3Set[0].area_1, 0)
+			unitTest:assertEquals(l3Set[0].area_2, 0)
+			unitTest:assertEquals(l3Set[0].area_3, 10060186.678703, 1e-6)
+			unitTest:assertEquals(l3Set[0].area_4, 0)
+			unitTest:assertEquals(l3Set[0].area_5, 1076752402.7789, 1e-4)
+			unitTest:assertEquals(l3Set[0].area_6, 0)
+			unitTest:assertEquals(l3Set[0].area_7, 5811163.7336606, 1e-7)
+
+			csShp:delete()
+			l3File:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(coverageTotalArea)
 	end
 }
 

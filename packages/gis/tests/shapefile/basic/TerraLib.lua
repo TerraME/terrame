@@ -200,7 +200,7 @@ return {
 			return proj
 		end
 
-		local allSopportedOperationsToguether = function()
+		local allSupportedOperationTogether = function()
 			local proj = createProject()
 
 			local layerName1 = "Para"
@@ -1079,8 +1079,45 @@ return {
 			-- proj.file:delete()
 		-- end
 
-		unitTest:assert(allSopportedOperationsToguether)
+		local coverageTotalArea = function()
+			local proj = createProject()
+
+			local l1Name = "ES_Limit"
+			local l1File = filePath("test/limit_es_sirgas2000_5880.shp", "gis")
+			TerraLib().addShpLayer(proj, l1Name, l1File)
+
+			-- VectorToVector is generating but it is not correct
+			local l2Name = "ES_Protected"
+			local l2File = filePath("test/es-protected_areas_sirgas2000_5880.shp", "gis")
+			TerraLib().addShpLayer(proj, l2Name, l2File)
+
+			local csName = "Cells"
+			local csShp = File(csName..".shp")
+			local resolution = 50e3
+			local mask = true
+			csShp:deleteIfExists()
+			TerraLib().addShpCellSpaceLayer(proj, l1Name, csName, resolution, csShp, mask)
+
+			local l3Name = "cells_cov_total_area"
+			local l3File = File(l3Name..".shp")
+			local operation = "coverage"
+			local attribute = "area"
+			local select = "GRUPO4"
+			local area = true
+			local default = 0
+			l3File:deleteIfExists()
+			TerraLib().attributeFill(proj, l2Name, csName, l3Name, attribute, operation, select, area, default)
+
+			-- local l3Set = TerraLib().getDataSet{project = proj, layer = l3Name, missing = 0}
+
+			csShp:delete()
+			l3File:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(allSupportedOperationTogether)
 		-- unitTest:assert(coverageWithPointsData) -- SKIP -- TODO(#995)
+		unitTest:assert(coverageTotalArea)
 	end,
 	saveDataSet = function(unitTest)
 		local createProject = function()
