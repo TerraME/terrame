@@ -1788,7 +1788,7 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 
 		local fromDSetType = fromDs:getDataSetType(fromData.dataset)
 		local fromDSet = fromDs:getDataSet(fromData.dataset)
-		local converter = binding.te.da.DataSetTypeConverter(fromDSetType, fromDs:getCapabilities(), toDs:getEncoding())
+		local converter = binding.te.da.DataSetTypeConverter(fromDSetType, toDs:getCapabilities(), toDs:getEncoding())
 
 		local pkName = ""
 		local pk = fromDSetType:getPrimaryKey()

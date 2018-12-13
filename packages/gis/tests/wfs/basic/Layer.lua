@@ -83,22 +83,38 @@ return {
 		local epsg = 4601
 		local encoding = "utf8"
 
-		local prodes = Layer{
+		local prodesWfs = Layer{
 			project = proj,
-			name = prodesName,
+			name = "prodesWfs",
 			service = service,
 			feature = "reddpac:wfs_simus_prodes",
 			epsg = epsg,
 			encoding = encoding
 		}
 
-		local biomes = Layer{
+		prodesWfs:export{file = "prodes.shp", overwrite = true}
+
+		local prodes = Layer{
 			project = proj,
-			name = biomesName,
+			name = prodesName,
+			file = File("prodes.shp")
+		}
+
+		local biomesWfs = Layer{
+			project = proj,
+			name = "biomesWfs",
 			service = service,
 			feature = "reddpac:wfs_biomes",
 			epsg = epsg,
 			encoding = encoding
+		}
+
+		biomesWfs:export{file = "biomes.shp", overwrite = true}
+
+		local biomes = Layer{
+			project = proj,
+			name = biomesName,
+			file = File("biomes.shp")
 		}
 
 		local file = File("cells.shp")
@@ -176,6 +192,43 @@ return {
 
 		projName:delete()
 		file:delete()
+		prodes:delete()
+		biomes:delete()
+	end,
+	export = function(unitTest)
+		local exportToShp = function()
+			local proj = Project {
+				file = "layer_wfs_basic.tview",
+				clean = true
+			}
+
+			local prodesWfs = Layer{
+				project = proj,
+				name = "prodesWfs",
+				service = "http://terrabrasilis.info/redd-pac/wfs",
+				feature = "reddpac:wfs_simus_prodes"
+			}
+
+			prodesWfs:export{file = "prodes.shp", overwrite = true}
+
+			local prodesShp = Layer{
+				project = proj,
+				name = "prodesShp",
+				file = File("prodes.shp")
+			}
+
+			unitTest:assertEquals(prodesWfs.epsg, prodesShp.epsg)
+
+			local wfsAttrs = prodesWfs:attributes()
+			local shpAttrs = prodesShp:attributes()
+
+			unitTest:assertEquals(getn(wfsAttrs), getn(shpAttrs))
+
+			prodesShp:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(exportToShp)
 	end
 }
 
