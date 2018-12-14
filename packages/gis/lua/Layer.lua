@@ -890,7 +890,19 @@ Layer_ = {
 			end
 		end
 
-		TerraLib().attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.missing, repr, data.dummy, data.pixel)
+		TerraLib().attributeFill{
+			project = project,
+			from = data.layer.name,
+			to = self.name,
+			attribute = data.attribute,
+			operation = data.operation,
+			select = data.select,
+			area = data.area,
+			default = data.missing,
+			repr = repr,
+			nodata = data.dummy,
+			pixel = data.pixel
+		}
 	end,
 	--- Return the Layer's projection. It contains the name of the projection, its Geodetic
 	-- Identifier (EPSG), and

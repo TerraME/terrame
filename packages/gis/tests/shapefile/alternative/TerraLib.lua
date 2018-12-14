@@ -63,65 +63,143 @@ return {
 		local operation = "presence"
 		local attribute = "FID"
 		local select = "FID"
-		local area = nil
-		local default = nil
 
 		local attributeAlreadyExists = function()
-			TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = presLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 		end
 
 		unitTest:assertError(attributeAlreadyExists, "The attribute 'FID' already exists in the Layer.")
 
 		local meanTypeError = function()
-			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Mean", "mean", "mean", "NOME", area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = clName.."_Mean",
+				attribute = "mean",
+				operation = "mean",
+				select = "NOME"
+			}
 		end
 
 		unitTest:assertError(meanTypeError, "Operation 'mean' cannot be executed with an attribute of type string ('NOME').")
 
 		local sumTypeError = function()
-			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Sum", "sum", "sum", "NOME", area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = clName.."_Sum",
+				attribute = "sum",
+				operation = "sum",
+				select = "NOME"
+			}
 		end
 
 		unitTest:assertError(sumTypeError, "Operation 'sum' cannot be executed with an attribute of type string ('NOME').")
 
 		local wsumTypeError = function()
-			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Wsum", "wsum", "wsum", "NOME", area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = clName.."_Wsum",
+				attribute = "wsum",
+				operation = "wsum",
+				select = "NOME"
+			}
 		end
 
 		unitTest:assertError(wsumTypeError, "Operation 'wsum' cannot be executed with an attribute of type string ('NOME').")
 
 		local areaTypeError = function()
-			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Area", "area", "area", "NOME", area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = clName.."_Area",
+				attribute = "area",
+				operation = "area",
+				select = "NOME"
+			}
 		end
 
 		unitTest:assertError(areaTypeError, "Operation 'area' cannot be executed with an attribute of type string ('NOME').")
 
 		local stdevTypeError = function()
-			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Stdev", "stdev", "stdev", "NOME", area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = clName.."_Stdev",
+				attribute = "stdev",
+				operation = "stdev",
+				select = "NOME"
+			}
 		end
 
 		unitTest:assertError(stdevTypeError, "Operation 'stdev' cannot be executed with an attribute of type string ('NOME').")
 
 		local averageTypeError = function()
-			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Average", "average", "average", "NOME", area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = clName.."_Average",
+				attribute = "average",
+				operation = "average",
+				select = "NOME"
+			}
 		end
 
 		unitTest:assertError(averageTypeError, "Operation 'average' cannot be executed with an attribute of type string ('NOME').")
 
 		local weightedTypeError = function()
-			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Weighted", "weighted", "weighted", "NOME", area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = clName.."_Weighted",
+				attribute = "weighted",
+				operation = "weighted",
+				select = "NOME"
+			}
 		end
 
 		unitTest:assertError(weightedTypeError, "Operation 'weighted' cannot be executed with an attribute of type string ('NOME').")
 
 		local coverageTypeError = function()
-			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Coverage", "coverage", "coverage", "ANOCRIACAO", area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = clName.."_Coverage",
+				attribute = "coverage",
+				operation = "coverage",
+				select = "ANOCRIACAO"
+			}
 		end
 
 		unitTest:assertError(coverageTypeError, "Operation 'coverage' cannot be executed with an attribute of type real ('ANOCRIACAO').")
 
 		local intersectionTypeError = function()
-			TerraLib().attributeFill(proj, layerName2, clName, clName.."_Intersection", "intersec", "intersection", "ANOCRIACAO", area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = clName.."_Intersection",
+				attribute = "intersec",
+				operation = "intersection",
+				select = "ANOCRIACAO"
+			}
 		end
 
 		unitTest:assertError(intersectionTypeError, "Operation 'intersection' cannot be executed with an attribute of type real ('ANOCRIACAO').")
@@ -133,9 +211,16 @@ return {
 		operation = "coverage"
 		attribute = "perc"
 		select = "ADMINISTRA"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName2, clName, percLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName2,
+			to = clName,
+			out = percLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select,
+		}
 
 		-- getDataSet TEST
 		local missingError = function()

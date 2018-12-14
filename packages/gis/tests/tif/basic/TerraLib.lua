@@ -508,8 +508,21 @@ return {
 			local area = true
 			local default = 0
 			local pixel = false
+
 			l3File:deleteIfExists()
-			TerraLib().attributeFill(proj, l2Name, csName, l3Name, attribute, operation, select, area, default, "raster", nil, pixel)
+			TerraLib().attributeFill{
+				project = proj,
+				from = l2Name,
+				to = csName,
+				out = l3Name,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				area = area,
+				default = default,
+				repr = "raster",
+				pixel = pixel
+			}
 
 			local l3Set = TerraLib().getDataSet{project = proj, layer = l3Name}
 

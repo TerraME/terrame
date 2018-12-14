@@ -311,9 +311,16 @@ return {
 		local operation = "presence"
 		local attribute = "presence"
 		local select = "FID"
-		local area = nil
-		local default = nil
-		TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName2,
+			to = clName,
+			out = presLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local presSet = TerraLib().getDataSet{project = proj, layer = presLayerName}
 
@@ -344,9 +351,18 @@ return {
 		operation = "area"
 		attribute = "area_percent"
 		select = "FID"
-		area = nil
-		default = 0
-		TerraLib().attributeFill(proj, layerName2, presLayerName, areaLayerName, attribute, operation, select, area, default)
+		local default = 0
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName2,
+			to = presLayerName,
+			out = areaLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select,
+			default = default
+		}
 
 		local areaSet = TerraLib().getDataSet{project = proj, layer = areaLayerName}
 
@@ -378,9 +394,18 @@ return {
 		operation = "count"
 		attribute = "count"
 		select = "FID"
-		area = nil
 		default = 0
-		TerraLib().attributeFill(proj, layerName2, areaLayerName, countLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName2,
+			to = areaLayerName,
+			out = countLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select,
+			default = default
+		}
 
 		local countSet = TerraLib().getDataSet{project = proj, layer = countLayerName}
 
@@ -412,9 +437,16 @@ return {
 		operation = "distance"
 		attribute = "distance"
 		select = "FID"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName2, countLayerName, distLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName2,
+			to = countLayerName,
+			out = distLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local distSet = TerraLib().getDataSet{project = proj, layer = distLayerName}
 
@@ -451,9 +483,16 @@ return {
 		operation = "minimum"
 		attribute = "minimum"
 		select = "POPULACAO_"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, distLayerName, minLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName3,
+			to = distLayerName,
+			out = minLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local minSet = TerraLib().getDataSet{project = proj, layer = minLayerName}
 
@@ -486,9 +525,16 @@ return {
 		operation = "maximum"
 		attribute = "maximum"
 		select = "POPULACAO_"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, minLayerName, maxLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName3,
+			to = minLayerName,
+			out = maxLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local maxSet = TerraLib().getDataSet{project = proj, layer = maxLayerName}
 
@@ -521,9 +567,16 @@ return {
 		operation = "coverage"
 		attribute = "perc"
 		select = "ADMINISTRA"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName2, maxLayerName, percLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName2,
+			to = maxLayerName,
+			out = percLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local percentSet = TerraLib().getDataSet{project = proj, layer = percLayerName, missing = -1}
 
@@ -565,9 +618,16 @@ return {
 		operation = "stdev"
 		attribute = "stdev"
 		select = "POPULACAO_"
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, percLayerName, stdevLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName3,
+			to = percLayerName,
+			out = stdevLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local stdevSet = TerraLib().getDataSet{project = proj, layer = stdevLayerName, missing = 0}
 
@@ -601,9 +661,16 @@ return {
 		operation = "average"
 		attribute = "mean"
 		select = "POPULACAO_"
-		area = false
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, stdevLayerName, meanLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName3,
+			to = stdevLayerName,
+			out = meanLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local meanSet = TerraLib().getDataSet{project = proj, layer = meanLayerName, missing = 0}
 
@@ -637,9 +704,18 @@ return {
 		operation = "average"
 		attribute = "weighted"
 		select = "POPULACAO_"
-		area = true
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, meanLayerName, weighLayerName, attribute, operation, select, area, default)
+		local area = true
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName3,
+			to = meanLayerName,
+			out = weighLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select,
+			area = area
+		}
 
 		local weighSet = TerraLib().getDataSet{project = proj, layer = weighLayerName, missing = 0}
 
@@ -675,8 +751,17 @@ return {
 		attribute = "mode_int"
 		select = "POPULACAO_"
 		area = true
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, weighLayerName, interLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName3,
+			to = weighLayerName,
+			out = interLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select,
+			area = area
+		}
 
 		local interSet = TerraLib().getDataSet{project = proj, layer = interLayerName, missing = 0}
 
@@ -711,9 +796,16 @@ return {
 		operation = "mode"
 		attribute = "mode_occur"
 		select = "POPULACAO_"
-		area = false
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, interLayerName, occurLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName3,
+			to = interLayerName,
+			out = occurLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local occurSet = TerraLib().getDataSet{project = proj, layer = occurLayerName, missing = 0}
 
@@ -748,9 +840,16 @@ return {
 		operation = "sum"
 		attribute = "sum"
 		select = "POPULACAO_"
-		area = false
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, occurLayerName, sumLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName3,
+			to = occurLayerName,
+			out = sumLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local sumSet = TerraLib().getDataSet{project = proj, layer = sumLayerName, missing = 0}
 
@@ -787,8 +886,17 @@ return {
 		attribute = "wsum"
 		select = "POPULACAO_"
 		area = true
-		default = nil
-		TerraLib().attributeFill(proj, layerName3, sumLayerName, wsumLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName3,
+			to = sumLayerName,
+			out = wsumLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select,
+			area = area
+		}
 
 		local wsumSet = TerraLib().getDataSet{project = proj, layer = wsumLayerName, missing = 0}
 
@@ -829,9 +937,16 @@ return {
 		operation = "coverage"
 		attribute = "rperc"
 		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, wsumLayerName, percTifLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName4,
+			to = wsumLayerName,
+			out = percTifLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		percentSet = TerraLib().getDataSet{project = proj, layer = percTifLayerName, missing = 0}
 
@@ -867,9 +982,16 @@ return {
 		operation = "average"
 		attribute = "rmean"
 		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, percTifLayerName, rmeanLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName4,
+			to = percTifLayerName,
+			out = rmeanLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local rmeanSet = TerraLib().getDataSet{project = proj, layer = rmeanLayerName, missing = 0}
 
@@ -906,9 +1028,16 @@ return {
 		operation = "minimum"
 		attribute = "rmin"
 		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, rmeanLayerName, rminLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName4,
+			to = rmeanLayerName,
+			out = rminLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local rminSet = TerraLib().getDataSet{project = proj, layer = rminLayerName, missing = 0}
 
@@ -945,9 +1074,16 @@ return {
 		operation = "maximum"
 		attribute = "rmax"
 		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, rminLayerName, rmaxLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName4,
+			to = rminLayerName,
+			out = rmaxLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local rmaxSet = TerraLib().getDataSet{project = proj, layer = rmaxLayerName, missing = 0}
 
@@ -984,9 +1120,16 @@ return {
 		operation = "stdev"
 		attribute = "rstdev"
 		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, rmaxLayerName, rstdevLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName4,
+			to = rmaxLayerName,
+			out = rstdevLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local rstdevSet = TerraLib().getDataSet{project = proj, layer = rstdevLayerName, missing = 0}
 
@@ -1023,9 +1166,16 @@ return {
 		operation = "sum"
 		attribute = "rsum"
 		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, rstdevLayerName, rsumLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName4,
+			to = rstdevLayerName,
+			out = rsumLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local rsumSet = TerraLib().getDataSet{project = proj, layer = rsumLayerName, missing = 0}
 
@@ -1058,9 +1208,17 @@ return {
 		operation = "sum"
 		attribute = "rsum_over"
 		select = 0
-		area = nil
 		default = 0
-		TerraLib().attributeFill(proj, layerName4, rsumLayerName, nil, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName4,
+			to = rsumLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select,
+			default = default
+		}
 
 		local rsumOverSet = TerraLib().getDataSet{project = proj, layer = rsumLayerName, missing = 0}
 
@@ -1098,9 +1256,16 @@ return {
 		operation = "count"
 		attribute = "rcount"
 		select = 0
-		area = nil
-		default = nil
-		TerraLib().attributeFill(proj, layerName4, rsumLayerName, rcountLayerName, attribute, operation, select, area, default)
+
+		TerraLib().attributeFill{
+			project = proj,
+			from = layerName4,
+			to = rsumLayerName,
+			out = rcountLayerName,
+			attribute = attribute,
+			operation = operation,
+			select = select
+		}
 
 		local rcountSet = TerraLib().getDataSet{project = proj, layer = rcountLayerName, missing = 0}
 

@@ -2654,7 +2654,7 @@ TerraLib_ = {
 	-- @arg to Name of the reference layer with the elements to be copied to the output.
 	-- @arg out Name of the layer to be created with the output.
 	-- @arg area A boolean value indicating whether the area should be considered.
-	-- @arg property Name of the attribute to be created.
+	-- @arg attribute Name of the attribute to be created.
 	-- @arg default The default value.
 	-- @arg repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
 	-- @arg nodata A number used in raster data that represents no information in a pixel value.
@@ -2666,7 +2666,6 @@ TerraLib_ = {
 	--     title = "TerraLib Tests",
 	--     author = "Avancini Rodrigo"
 	-- }
-	--
 	--
 	-- TerraLib().createProject(proj, {})
 	--
@@ -2683,8 +2682,29 @@ TerraLib_ = {
 	-- layerFile2 = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
 	-- TerraLib().addShpLayer(proj, layerName2, layerFile2)
 	--
-	-- TerraLib().attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
-	attributeFill = function(project, from, to, out, property, operation, select, area, default, repr, nodata, pixel)
+	-- TerraLib().attributeFill{
+	--     project = proj,
+	--     from = layerName2,
+	--	   to = clName,
+	--	   out = presLayerName,
+	--	   attribute = "presence",
+	--	   operation = "presence",
+	--	   select = "FID"
+	-- }
+	attributeFill = function(data)
+		local project = data.project
+		local from = data.from
+		local to = data.to
+		local out = data.out
+		local attribute = data.attribute
+		local operation = data.operation
+		local select = data.select
+		local area = data.area
+		local default = data.default
+		local repr = data.repr
+		local nodata = data.nodata
+		local pixel = data.pixel
+
 		do
 			loadProject(project, project.file)
 
@@ -2707,16 +2727,16 @@ TerraLib_ = {
 			if outType == "OGR" then
 				outFileExt = string.lower(getFileByUri(outConnInfo):extension())
 
-				if (string.len(property) > 10) and (outFileExt == "shp")  then
-					property = getNormalizedName(property)
-					customWarning("The 'attribute' lenght has more than 10 characters. It was truncated to '"..property.."'.")
+				if (string.len(attribute) > 10) and (outFileExt == "shp")  then
+					attribute = getNormalizedName(attribute)
+					customWarning("The 'attribute' lenght has more than 10 characters. It was truncated to '"..attribute.."'.")
 				end
 			end
 
 			local toDSetName = toLayer:getDataSetName()
 
-			if propertyExists(toDsInfo:getConnInfo(), toDSetName, property, toDsInfo:getType()) then
-				customError("The attribute '"..property.."' already exists in the Layer.")
+			if propertyExists(toDsInfo:getConnInfo(), toDSetName, attribute, toDsInfo:getType()) then
+				customError("The attribute '"..attribute.."' already exists in the Layer.")
 			end
 
 			local fromConnInfo = fromDsInfo:getConnInfo()
@@ -2802,10 +2822,10 @@ TerraLib_ = {
 			local attrsRenamed = {}
 
 			if (operation == "coverage") or (operation == "total") then
-				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, property)
+				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, attribute)
 			else
-				outDs:renameProperty(outDSetName, propCreatedName, property)
-				attrsRenamed[property] = property
+				outDs:renameProperty(outDSetName, propCreatedName, attribute)
+				attrsRenamed[attribute] = attribute
 			end
 
 			if default then
