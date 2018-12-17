@@ -764,11 +764,12 @@ Layer_ = {
 			end,
 			distance = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "missing"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
+				defaultTableValue(data, "missing", 0)
 			end,
 			-- length = function() -- TODO(#795)
 				-- if repr == "line" then
