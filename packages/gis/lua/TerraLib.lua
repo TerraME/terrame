@@ -833,6 +833,7 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 		v2v:setInput(fromLayer, toLayer)
 
 		local outDs = v2v:createAndSetOutput(outDSetName, outType, outConnInfo)
+
 		local op = operation
 		if operation == "average" then
 			if area then
@@ -909,13 +910,14 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		r2v:setInput(raster, toLayer)
 
+		local op = operation
 		if operation == "average" then
-			operation = "mean"
+			op = "mean"
 		elseif (operation == "coverage") and area then
-			operation = "total"
+			op = "total"
 		end
 
-		r2v:setParams(select, OperationMapper[operation], pixel, false, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
+		r2v:setParams(select, OperationMapper[op], pixel, false, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
 
 		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
@@ -929,7 +931,7 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 			customError(err) -- SKIP
 		end
 
-		propCreatedName = "B"..select..RasterAttributeCreatedMapper[operation]
+		propCreatedName = "B"..select..RasterAttributeCreatedMapper[op]
 
 		if outType == "POSTGIS" then
 			propCreatedName = string.lower(propCreatedName)
