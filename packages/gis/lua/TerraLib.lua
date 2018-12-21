@@ -678,6 +678,16 @@ local function dropDataSet(connInfo, dSetName, type)
 	collectgarbage("collect")
 end
 
+local function createProgressViewer(msg)
+	local viewer = binding.te.common.LuaProgressViewer()
+	viewer:setMessage(msg)
+	return binding.te.common.ProgressManager.getInstance():addViewer(viewer)
+end
+
+local function finalizeProgressViewer(viewerId)
+	binding.te.common.ProgressManager.getInstance():removeViewer(viewerId)
+end
+
 local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, type, mask)
 	local cLId = binding.GetRandomicId()
 	local cellLayerInfo = binding.te.da.DataSourceInfo()
@@ -695,6 +705,8 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, conn
 	local inputDsType = inputLayer:getSchema()
 	local errorMsg
 
+	local viewerId = createProgressViewer("Creating '"..name.."' cellular space")
+
 	if mask then
 		if inputDsType:hasGeom() then
 			errorMsg = cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
@@ -708,6 +720,8 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, conn
 		errorMsg = cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
 												inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 	end
+
+	finalizeProgressViewer(viewerId)
 
 	if errorMsg and errorMsg ~= "" then
 		if type == "POSTGIS" then
@@ -819,25 +833,23 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 		v2v:setInput(fromLayer, toLayer)
 
 		local outDs = v2v:createAndSetOutput(outDSetName, outType, outConnInfo)
-
+		local op = operation
 		if operation == "average" then
 			if area then
-				operation = "weighted"
+				op = "weighted"
 			else
-				operation = "mean"
+				op = "mean"
 			end
 		elseif operation == "mode" then
 			if area then
-				operation = "intersection"
+				op = "intersection"
 			else
-				operation = "occurrence"
+				op = "occurrence"
 			end
-		elseif operation == "sum" then
-			if area then
-				operation = "wsum"
-			end
+		elseif (operation == "sum") and area then
+			op = "wsum"
 		elseif (operation == "coverage") and area then
-			operation = "total"
+			op = "total"
 		end
 
 		local toDSetName = toLayer:getDataSetName()
@@ -845,12 +857,16 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 		local toDs = makeAndOpenDataSource(toConnInfo:getConnInfo(), toConnInfo:getType())
 		local toDst = toDs:getDataSetType(toDSetName)
 
-		v2v:setParams(select, OperationMapper[operation], toDst)
+		v2v:setParams(select, OperationMapper[op], toDst)
 
-		err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
+		local viewerId = createProgressViewer("Processing '"..operation.."' operation")
+
+		err = v2v:exec() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
+
+		finalizeProgressViewer(viewerId)
 
 		if err == "" then
-			propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
+			propCreatedName = select.."_"..VectorAttributeCreatedMapper[op]
 			propCreatedName = string.lower(propCreatedName)
 		end
 
@@ -903,7 +919,12 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
-		local err = r2v:pRun()
+		local viewerId = createProgressViewer("Processing '"..operation.."' operation")
+
+		local err = r2v:exec()
+
+		finalizeProgressViewer(viewerId)
+
 		if err ~= "" then
 			customError(err) -- SKIP
 		end
@@ -1893,6 +1914,8 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 			dsetAdapted = binding.CreateAdapter(fromDSet, converter)
 		end
 
+		local viewerId = createProgressViewer("Exporting '"..fromData.name.."' data")
+
 		local transactor = toDs:getTransactor()
 		transactor:begin()
 		transactor:createDataSet(dstResult, {})
@@ -1900,6 +1923,8 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 		dsetAdapted:moveBeforeFirst()
 		transactor:add(toDstName, dsetAdapted)
 		transactor:commit()
+
+		finalizeProgressViewer(viewerId)
 
 		if toData.type == "OGR" then -- TODO(#1678)
 			addSpatialIndex(toDs, toDstName)
@@ -1913,9 +1938,13 @@ end
 
 local function saveRasterDataAs(fromData, toData)
 	do
+		local viewerId = createProgressViewer("Exporting '"..fromData.name.."' data")
+
 		local fromDSet = fromData.datasource:getDataSet(fromData.dataset)
 		local raster = getRasterByDataSet(fromDSet)
 		binding.SaveRasterOnFile(raster, tostring(toData.file), toData.srid)
+
+		finalizeProgressViewer(viewerId)
 	end
 
 	collectgarbage("collect")
