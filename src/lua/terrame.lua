@@ -56,7 +56,7 @@ function _Gtme.loadLibraryPath()
 		package.path = package.path..";"..dyldpath.."/?.lua;"
 	end
 
-	local ldpath = os.getenv("LD_LIBRARY_PATH")
+	local ldpath = os.getenv("TME_PATH")
 	if ldpath then
 		package.cpath = package.cpath..";"..ldpath.."/?.so"
 		package.path = package.path..";"..ldpath.."/?.lua;"
