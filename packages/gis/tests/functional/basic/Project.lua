@@ -246,59 +246,222 @@ return {
 		unitTest:assertEquals(getn(proj.layers), 16)
 		file:deleteIfExists()
 
-		-- QGIS PROJECT
-		local qgisproj
+		local version = ""
+		local readQGisProject = function()
+			local qgisproj
 
-		if _Gtme.sessionInfo().system == "windows" then
-			qgisproj = Project {
-				file = filePath("test/various.qgs", "gis")
-			}
-		else
-			local ncWarn = function()
+			if _Gtme.sessionInfo().system == "windows" then
 				qgisproj = Project {
-					file = filePath("test/various.qgs", "gis")
+					file = filePath("test/various"..version..".qgs", "gis")
 				}
+			else
+				local ncWarn = function()
+					qgisproj = Project {
+						file = filePath("test/various"..version..".qgs", "gis")
+					}
+				end
+				unitTest:assertWarning(ncWarn, "Layer QGIS ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
 			end
-			unitTest:assertWarning(ncWarn, "Layer QGis ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
-		end
 
-		local l1 = Layer{
-			project = qgisproj,
-			name = "sampa"
-		}
-		unitTest:assertEquals(l1.name, "sampa")
-		unitTest:assertEquals(l1.rep, "polygon")
-		unitTest:assertEquals(l1.epsg, 4019)
-		unitTest:assertEquals(File(l1.file):name(), "sampa.geojson")
-		unitTest:assertEquals(l1.source, "geojson")
-		unitTest:assertEquals(l1.encoding, "latin1")
-
-		local l2 = Layer{
-			project = qgisproj,
-			name = "biomassa-manaus"
-		}
-		unitTest:assertEquals(l2.name, "biomassa-manaus")
-		unitTest:assertEquals(l2.rep, "raster")
-		unitTest:assertEquals(l2.epsg, 4326)
-		unitTest:assertEquals(File(l2.file):name(), "biomassa-manaus.asc")
-		unitTest:assertEquals(l2.source, "asc")
-		unitTest:assertEquals(l2.encoding, "latin1")
-
-		if _Gtme.sessionInfo().system == "windows" then
-			local l3 = Layer{
+			local l1 = Layer{
 				project = qgisproj,
-				name = "vegtype_2000"
+				name = "sampa"
 			}
-			unitTest:assertEquals(l3.name, "vegtype_2000") -- SKIP
-			unitTest:assertEquals(l3.rep, "raster") -- SKIP
-			unitTest:assertEquals(l3.epsg, 4326) -- SKIP
-			unitTest:assertEquals(File(l3.file):name(), "vegtype_2000.nc") -- SKIP
-			unitTest:assertEquals(l3.source, "nc") -- SKIP
-			unitTest:assertEquals(l3.encoding, "latin1") -- SKIP
+			unitTest:assertEquals(l1.name, "sampa")
+			unitTest:assertEquals(l1.rep, "polygon")
+			unitTest:assertEquals(l1.epsg, 4019)
+			unitTest:assertEquals(File(l1.file):name(), "sampa.geojson")
+			unitTest:assertEquals(l1.source, "geojson")
+			unitTest:assertEquals(l1.encoding, "latin1")
+
+			local l2 = Layer{
+				project = qgisproj,
+				name = "biomassa-manaus"
+			}
+			unitTest:assertEquals(l2.name, "biomassa-manaus")
+			unitTest:assertEquals(l2.rep, "raster")
+			unitTest:assertEquals(l2.epsg, 4326)
+			unitTest:assertEquals(File(l2.file):name(), "biomassa-manaus.asc")
+			unitTest:assertEquals(l2.source, "asc")
+			unitTest:assertEquals(l2.encoding, "latin1")
+
+			if _Gtme.sessionInfo().system == "windows" then
+				local l3 = Layer{
+					project = qgisproj,
+					name = "vegtype_2000"
+				}
+				unitTest:assertEquals(l3.name, "vegtype_2000") -- SKIP
+				unitTest:assertEquals(l3.rep, "raster") -- SKIP
+				unitTest:assertEquals(l3.epsg, 4326) -- SKIP
+				unitTest:assertEquals(File(l3.file):name(), "vegtype_2000.nc") -- SKIP
+				unitTest:assertEquals(l3.source, "nc") -- SKIP
+				unitTest:assertEquals(l3.encoding, "latin1") -- SKIP
+			end
+
+			File("various"..version..".tview"):delete()
 		end
 
-		File("various.tview"):delete()
-		-- // QGIS PROJECT
+		local insertNewLayerQgis = function()
+			local qgsfile = filePath("test/sampa_v3.qgs", "gis")
+			local spfile = filePath("test/sampa.shp", "gis")
+
+			qgsfile:copy(currentDir())
+			spfile:copy(currentDir())
+
+			local qgp = Project {
+				file = File("sampa_v3.qgs")
+			}
+
+			local l1 = Layer{
+				project = qgp,
+				name = "SP"
+			}
+
+			local cl1Name = "SPCells"
+
+			local cl1 = Layer{
+				project = qgp,
+				source = "shp",
+				clean = true,
+				input = l1.name,
+				name = cl1Name,
+				resolution = 1,
+				file = cl1Name..".shp",
+				index = false
+			}
+
+			local spgj = filePath("test/sampa.geojson", "gis")
+			spgj:copy(currentDir())
+
+			local l2 = Layer{
+				project = qgp,
+				name = "SPGJ",
+				file = File("sampa.geojson")
+			}
+
+			local fileTif = filePath("emas-accumulation.tif", "gis")
+			fileTif:copy(currentDir())
+
+			Layer {
+				project = qgp,
+				name = "Tif",
+				file = File("emas-accumulation.tif"),
+				epsg = 4019
+			}
+
+			local qgp2 = Project {
+				file = File("sampa_v3.qgs")
+			}
+
+			local l3 = Layer{
+				project = qgp2,
+				name = "SPCells"
+			}
+
+			unitTest:assertEquals(l3.name, "SPCells")
+			unitTest:assertEquals(l3.rep, "polygon")
+			unitTest:assertEquals(l3.epsg, 4019)
+			unitTest:assertEquals(File(l3.file):name(), "SPCells.shp")
+			unitTest:assertEquals(l3.source, "shp")
+			unitTest:assertEquals(l3.encoding, "latin1")
+
+			local l4 = Layer{
+				project = qgp2,
+				name = "SPGJ"
+			}
+
+			unitTest:assertEquals(l4.name, "SPGJ")
+			unitTest:assertEquals(l4.rep, "polygon")
+			unitTest:assertEquals(l4.epsg, 4019)
+			unitTest:assertEquals(File(l4.file):name(), "sampa.geojson")
+			unitTest:assertEquals(l4.source, "geojson")
+			unitTest:assertEquals(l4.encoding, "latin1")
+
+			local l5 = Layer{
+				project = qgp2,
+				name = "Tif"
+			}
+
+			unitTest:assertEquals(l5.name, "Tif")
+			unitTest:assertEquals(l5.rep, "raster")
+			unitTest:assertEquals(l5.epsg, 4019)
+			unitTest:assertEquals(File(l5.file):name(), "emas-accumulation.tif")
+			unitTest:assertEquals(l5.source, "tif")
+			unitTest:assertEquals(l5.encoding, "latin1")
+
+			qgp2.file:delete()
+			File("sampa_v3.tview"):delete()
+			cl1:delete()
+			l1:delete()
+			l2:delete()
+			l5:delete()
+		end
+
+		local createQGisProject = function()
+			local spfile = filePath("test/sampa.shp", "gis")
+			spfile:copy(currentDir())
+
+			local qgp = Project {
+				file = File("create_func_v3.qgs")
+			}
+
+			local l1 = Layer{
+				project = qgp,
+				name = "SP",
+				file = File("sampa.shp")
+			}
+
+			local cl1Name = "SPCells"
+			local cl1 = Layer{
+				project = qgp,
+				source = "shp",
+				clean = true,
+				input = l1.name,
+				name = cl1Name,
+				resolution = 1,
+				file = cl1Name..".shp",
+				index = false
+			}
+
+			local qgp2 = Project {
+				file = qgp.file
+			}
+
+			local l2 = Layer{
+				project = qgp2,
+				name = cl1Name
+			}
+
+			unitTest:assertEquals(l2.name, cl1Name)
+			unitTest:assertEquals(l2.rep, "polygon")
+			unitTest:assertEquals(l2.epsg, 4019)
+			unitTest:assertEquals(File(l2.file):name(), "SPCells.shp")
+			unitTest:assertEquals(l2.source, "shp")
+			unitTest:assertEquals(l2.encoding, "latin1")
+
+			local l3 = Layer{
+				project = qgp2,
+				name = "SP"
+			}
+
+			unitTest:assertEquals(l3.name, "SP")
+			unitTest:assertEquals(l3.rep, "polygon")
+			unitTest:assertEquals(l3.epsg, 4019)
+			unitTest:assertEquals(File(l3.file):name(), "sampa.shp")
+			unitTest:assertEquals(l3.source, "shp")
+			unitTest:assertEquals(l3.encoding, "latin1")
+
+			qgp2.file:delete()
+			File("create_func_v3.tview"):delete()
+			cl1:delete()
+			l1:delete()
+		end
+
+		unitTest:assert(readQGisProject)
+		version = "_v3"
+		unitTest:assert(readQGisProject)
+		unitTest:assert(insertNewLayerQgis)
+		unitTest:assert(createQGisProject)
 
 		-- Temporal Layers
 		local projTemporal = Project{
@@ -399,11 +562,11 @@ title   string [The Amazonia]
 			file = filePath("test/amazonia.qgs", "gis")
 		}
 
-		unitTest:assertEquals(tostring(qgisproj), [[author  string [QGis Project]
+		unitTest:assertEquals(tostring(qgisproj), [[author  string [QGIS Project]
 clean   boolean [false]
 file    File
 layers  named table of size 3
-title   string [QGis Project]
+title   string [QGIS Project]
 ]])
 
 		File("amazonia.tview"):delete()

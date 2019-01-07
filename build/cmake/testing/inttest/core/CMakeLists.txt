@@ -20,8 +20,7 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 ############################################################################################
-
-project(inttest)
+set(CMAKE_AUTOMOC ON)
 
 if(MSVC)
 	set(CMAKE_CXX_FLAGS_RELEASE "/MT")
@@ -77,11 +76,9 @@ include_directories(${QWT_INCLUDE_DIR})
 find_package(Lua REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})
 
-file(GLOB TERRAME_INTTEST_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/*.cpp)
 file(GLOB TERRAME_INTTEST_CORE_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/core/*.cpp)
 file(GLOB TERRAME_INTTEST_CORE_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/core/*.h)
 
-source_group("Source Files" FILES ${TERRAME_INTTEST_SRC_FILES})
 source_group("Source Files\\core" FILES ${TERRAME_INTTEST_CORE_SRC_FILES})
 source_group("Header Files\\core" FILES ${TERRAME_INTTEST_CORE_HDR_FILES})
 
@@ -97,7 +94,7 @@ source_group("Header Files\\observer" FILES ${TERRAME_OBSERVER_TYPES_HDR_FILES} 
 source_group("UI Files\\observer" FILES ${TERRAME_OBSERVER_COMPONENTS_CONSOLE_UI_FILES} ${TERRAME_OBSERVER_COMPONENTS_PLAYER_UI_FILES}
                                         ${TERRAME_OBSERVER_COMPONENTS_RECEIVER_UI_FILES} ${TERRAME_OBSERVER_UDP_SENDER_UI_FILES})
 
-add_executable(inttest ${TERRAME_INTTEST_SRC_FILES}
+add_executable(core_itest ${TERRAME_INTTEST_SRC_FILES}
                        ${TERRAME_INTTEST_CORE_SRC_FILES} ${TERRAME_INTTEST_CORE_HDR_FILES}
                        ${TERRAME_OBSERVER_TYPES_SRC_FILES} ${TERRAME_OBSERVER_TYPES_HDR_FILES}
                        ${TERRAME_OBSERVER_COMPONENTS_SRC_FILES} ${TERRAME_OBSERVER_COMPONENTS_HDR_FILES}
@@ -107,12 +104,12 @@ add_executable(inttest ${TERRAME_INTTEST_SRC_FILES}
                        ${TERRAME_OBSERVER_UDP_SENDER_SRC_FILES} ${TERRAME_OBSERVER_UDP_SENDER_HDR_FILES}
                        ${TERRAME_GEN_HDR_FILES})
 
-target_link_libraries(inttest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES}
+target_link_libraries(core_itest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES}
                               ${Qt5Network_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
                               ${QWT_LIBRARY})
 
-install(TARGETS inttest
+install(TARGETS core_itest
         RUNTIME DESTINATION bin
         COMPONENT runtime)
 
-add_test(NAME inttest COMMAND inttest)
+add_test(NAME core_itest COMMAND core_itest)

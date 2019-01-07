@@ -43,7 +43,6 @@ return {
 
 		local layer = Layer {
 			project = proj,
-			source = "wms",
 			name = layerName,
 			service = service,
 			map = map,
@@ -57,12 +56,11 @@ return {
 		unitTest:assertEquals(layer.epsg, epsg)
 
 		service = "http://www.geoservicos.inde.gov.br:80/geoserver/ows"
-		map = "MPOG:BASE_SPI_pol"
+		map = "MPOG:BRA_AH070_N"
 		epsg = 4601
 
 		local layer2 = Layer {
 			project = proj,
-			source = "wms",
 			name = "AnotherWmsLayer",
 			service = service,
 			map = map,

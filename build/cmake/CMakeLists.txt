@@ -60,7 +60,7 @@ set(TERRAME_ABSOLUTE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 #
 add_definitions(-w -DTME_LUA_5_2 -DQWT_DLL -DTME_BLACK_BOARD -DTME_PROTOCOL_BUFFERS) #TODO: REVIEW
 
-set(TERRAME_SRC_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/src) # this is the directory where terralib sources will be located
+set(TERRAME_SRC_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/src) # this is the directory where terrame sources will be located
 set(CMAKE_MODULE_PATH ${TERRAME_ABSOLUTE_ROOT_DIR}/build/cmake/find) # this is the directory where additional scritps are located
 
 ## Sets type of build: Release or Debug
@@ -102,7 +102,6 @@ endif()
 #
 # global configurations
 #
-set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(MSVC)
@@ -127,6 +126,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TERRAME_BIN_DIR})
 include(terrame-macros.cmake)
 
 add_subdirectory(terrame)
+add_subdirectory(swig)
+add_subdirectory(qgis)
 
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${TERRAME_ABSOLUTE_ROOT_DIR};/")
 
@@ -135,6 +136,22 @@ set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${TERRAME_ABSOLUTE_ROOT_DIR};/")
 #
 if(NOT TERRAME_CREATE_INSTALLER)
 	add_subdirectory(testing)
+endif()
+
+#
+# creating bundle
+#
+if(TERRAME_BUILD_AS_BUNDLE)
+	include(InstallRequiredSystemLibraries)
+
+	if(WIN32)
+		install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+		DESTINATION bin
+		COMPONENT runtime)
+	endif()
+
+	configure_file(${terrame_SOURCE_DIR}/fixBundle.cmake.in ${terrame_BINARY_DIR}/fixBundle.cmake @ONLY)
+	install(SCRIPT ${CMAKE_BINARY_DIR}/fixBundle.cmake COMPONENT runtime)
 endif()
 
 #

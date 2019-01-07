@@ -21,7 +21,8 @@
 # of this software and its documentation.
 ############################################################################################
 
-project(unittest)
+add_definitions(-DBOOST_ALL_NO_LIB)
+find_package(Boost REQUIRED system filesystem)
 
 if(MSVC)
 	set(CMAKE_CXX_FLAGS_RELEASE "/MT")
@@ -31,25 +32,34 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER MA
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif()
 
-include_directories(${TERRAME_ABSOLUTE_ROOT_DIR}/src)
-include_directories(${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/terrame)
-include_directories(${GTEST_INCLUDE_DIRS} ${GMOCK_INCLUDE_DIRS})
+get_filename_component(TERRAME_INTTEST_DATA_ABSOLUTE_PATH
+                       "${CMAKE_INSTALL_PREFIX}/bin/qgistestdata"
+                       ABSOLUTE)
+add_definitions(-DTERRAME_INTTEST_DATA_PATH="${TERRAME_INTTEST_DATA_ABSOLUTE_PATH}")
 
-file(GLOB TERRAME_UNITTEST_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/*.cpp)
-file(GLOB TERRAME_UNITTEST_CORE_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/core/*.cpp)
-file(GLOB TERRAME_UNITTEST_CORE_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/core/*.h)
+set(PKG_TEST_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages/gis/data/test/)
 
-source_group("Source Files" FILES ${TERRAME_UNITTEST_SRC_FILES})
-source_group("Source Files\\core" FILES ${TERRAME_UNITTEST_CORE_SRC_FILES})
-source_group("Header Files\\core" FILES ${TERRAME_UNITTEST_CORE_HDR_FILES})
+get_filename_component(TERRAME_PKGTEST_DATA_ABSOLUTE_PATH
+                       "${PKG_TEST_DIR}"
+                       ABSOLUTE)
+add_definitions(-DTERRAME_PKGTEST_DATA_PATH="${TERRAME_PKGTEST_DATA_ABSOLUTE_PATH}")
 
-add_executable(unittest ${TERRAME_UNITTEST_SRC_FILES}
-                        ${TERRAME_UNITTEST_CORE_SRC_FILES} ${TERRAME_UNITTEST_CORE_HDR_FILES})
+file(GLOB TERRAME_INTTEST_QGIS_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/qgis/*.cpp)
+file(GLOB TERRAME_INTTEST_QGIS_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/qgis/*.h)
 
-target_link_libraries(unittest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
+add_executable(qgis_itest ${TERRAME_INTTEST_QGIS_SRC_FILES} ${TERRAME_INTTEST_QGIS_HDR_FILES})
 
-install(TARGETS unittest
+target_include_directories(qgis_itest PUBLIC ${TERRAME_ABSOLUTE_ROOT_DIR}/src
+											${GTEST_INCLUDE_DIRS} ${GMOCK_INCLUDE_DIRS})
+
+target_link_libraries(qgis_itest qgis ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
+
+install(TARGETS qgis_itest
         RUNTIME DESTINATION bin
         COMPONENT runtime)
 
-add_test(NAME unittest COMMAND unittest)
+install(DIRECTORY ${PKG_TEST_DIR}
+		DESTINATION bin/qgistestdata
+		COMPONENT runtime)		
+		
+add_test(NAME qgis_itest COMMAND qgis_itest)

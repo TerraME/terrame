@@ -2397,5 +2397,149 @@ return {
 
 		proj.file:delete()
 		TerraLib().dropPgTable(outInfo)
+	end,
+	createProject = function(unitTest)
+		local version = ""
+		local readQGisProject = function()
+			local proj = {
+				file = filePath("test/sampa"..version..".qgs", "gis")
+			}
+
+			TerraLib().createProject(proj)
+
+			local fromData = {}
+			fromData.project = proj
+			fromData.layer = "SP"
+
+			local host = "localhost"
+			local port = "5432"
+			local user = "postgres"
+			local password = "postgres"
+			local database = "postgis_22_sample"
+			local encoding = "CP1252"
+			local tableName = "sampa"
+
+			local pgData = {
+				type = "postgis",
+				host = host,
+				port = port,
+				user = user,
+				password = password,
+				database = database,
+				table = tableName,
+				encoding = encoding
+			}
+
+			TerraLib().saveDataAs(fromData, pgData, true)
+
+			local projPg = {}
+			projPg.file = filePath("test/sampapg"..version..".qgs", "gis")
+
+			if version == "_v3" then
+				projPg.user = pgData.user
+				projPg.password = pgData.password
+				project = TerraLib().createProject(projPg)
+			else
+				project = TerraLib().createProject(projPg)
+			end
+
+			unitTest:assertEquals(projPg.file:name(), "sampapg"..version..".qgs")
+			unitTest:assertEquals(projPg.title, "QGIS Project")
+			unitTest:assertEquals(projPg.author, "QGIS Project")
+			unitTest:assert(File("sampapg"..version..".tview"):exists())
+			unitTest:assertEquals(getn(proj.layers), 1)
+
+			local layerInfo = TerraLib().getLayerInfo(projPg, "SP")
+			unitTest:assertEquals(layerInfo.name, "SP")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
+			unitTest:assertEquals(layerInfo.srid, 4019)
+			unitTest:assertEquals(layerInfo.type, "POSTGIS")
+			unitTest:assertEquals(layerInfo.source, "postgis")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+			unitTest:assertEquals(layerInfo.database, database)
+			unitTest:assertEquals(layerInfo.password, password)
+			unitTest:assertEquals(layerInfo.host, host)
+			unitTest:assertEquals(layerInfo.user, user)
+			unitTest:assertEquals(layerInfo.port, port)
+			unitTest:assertEquals(layerInfo.table, tableName)
+
+			TerraLib().dropPgTable(pgData)
+			File("sampa"..version..".tview"):delete()
+			File("sampapg"..version..".tview"):delete()
+		end
+
+		local insertNewLayerQgis = function()
+			local qgsfile = filePath("test/sampa_v3.qgs", "gis")
+			local spfile = filePath("test/sampa.shp", "gis")
+
+			qgsfile:copy(currentDir())
+			spfile:copy(currentDir())
+
+			local qgp = {
+				file = File("sampa_v3.qgs")
+			}
+
+			local fromData = {}
+			fromData.project = qgp
+			fromData.layer = "SP"
+
+			local host = "localhost"
+			local port = "5432"
+			local user = "postgres"
+			local password = "postgres"
+			local database = "postgis_22_sample"
+			local encoding = "CP1252"
+			local tableName = "sampa"
+
+			local pgData = {
+				type = "postgis",
+				host = host,
+				port = port,
+				user = user,
+				password = password,
+				database = database,
+				table = tableName,
+				encoding = encoding
+			}
+
+			TerraLib().createProject(qgp)
+			TerraLib().saveDataAs(fromData, pgData, true)
+
+			local layerName = "SampaPg"
+			TerraLib().addPgLayer(qgp, layerName, pgData, nil, encoding)
+
+			local qgp2 = {
+				file = File("sampa_v3.qgs"),
+				user = user,
+				password = password
+			}
+
+			TerraLib().createProject(qgp2)
+
+			local layerInfo = TerraLib().getLayerInfo(qgp2, layerName)
+			unitTest:assertEquals(layerInfo.name, layerName)
+			unitTest:assertEquals(layerInfo.rep, "polygon")
+			unitTest:assertEquals(layerInfo.srid, 4019)
+			unitTest:assertEquals(layerInfo.type, "POSTGIS")
+			unitTest:assertEquals(layerInfo.source, "postgis")
+			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
+			unitTest:assertEquals(layerInfo.database, database)
+			unitTest:assertEquals(layerInfo.password, password)
+			unitTest:assertEquals(layerInfo.host, host)
+			unitTest:assertEquals(layerInfo.user, user)
+			unitTest:assertEquals(layerInfo.port, port)
+			unitTest:assertEquals(layerInfo.table, tableName)
+
+			qgp.file:delete()
+			File("sampa_v3.tview"):delete()
+			File("sampa.shp"):delete()
+			TerraLib().dropPgTable(pgData)
+		end
+
+		unitTest:assert(readQGisProject)
+		version = "_v3"
+		unitTest:assert(readQGisProject)
+
+		unitTest:assert(insertNewLayerQgis)
 	end
 }

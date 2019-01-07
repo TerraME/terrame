@@ -31,6 +31,8 @@ local binding = _Gtme.terralib_mod_binding_lua
 local instance = nil
 local dataCache = makeWeakTable{}
 
+require("swig")
+
 local function getCache(level1, level2, level3)
 	-- level1 is compulsory. The other ones are optional.
 
@@ -425,6 +427,33 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 	return layer
 end
 
+local function getPropertyPosition(dse, propName)
+	dse:moveFirst()
+	local numProps = dse:getNumProperties()
+
+	for i = 0, numProps - 1 do
+		if dse:getPropertyName(i) == propName then
+			return i
+		end
+	end
+
+	return nil
+end
+
+local function getLayerGeometry(dseName, dsInfo)
+	local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+	local dst = ds:getDataSetType(dseName)
+
+	if dst:hasGeom() then
+		local gp = binding.GetFirstGeomProperty(dst)
+		local dse = ds:getDataSet(dseName)
+		local gpos = getPropertyPosition(dse, gp:getName())
+		local geom = dse:getGeom(gpos)
+
+		return geom:getGeometryType()
+	end
+end
+
 local function releaseProject(project)
 	local removed = {}
 	for _, layer in pairs(project.layers) do
@@ -452,11 +481,102 @@ local function castLayer(layer)
 	return layer
 end
 
-local function saveProject(project, layers)
-	local file = tostring(project.file)
+local function loadProject(project, file)
 	local _, fileName, ext = project.file:split()
 
 	if ext == "qgs" then
+		file = currentDir()..fileName..".tview"
+	elseif not file:exists() then
+		customError("Could not read project file: "..file..".") -- SKIP
+	end
+
+	local projMd = binding.LoadProject(toUtf8(tostring(file)))
+	project.author = projMd.author
+	project.title = projMd.title
+	local layers = projMd:getLayers()
+
+	for i = 0, getn(layers) - 1 do
+		local layer = layers[i]
+		project.layers[layer:getTitle()] = castLayer(layer)
+	end
+end
+
+local function getLayersToAddFromQGis(qgp, layers)
+	local layersToAdd = {}
+
+	for _, l in pairs(layers) do
+		if not qgp:hasLayer(l:getTitle()) then
+			table.insert(layersToAdd, l)
+		end
+	end
+
+	return layersToAdd
+end
+
+local function setQGisLayerAttributesToSave(qgp, layersToAdd)
+	local qgis = swig.terrame.qgis
+	for i = 1, #layersToAdd do
+		local layer = layersToAdd[i]
+		local qgisLayer = qgis.QGisLayer()
+		qgisLayer:setName(layer:getTitle())
+		qgisLayer:setSrid(layer:getSRID())
+
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+		local connInfoUri = dsInfo:getConnInfo()
+		qgisLayer:setUri(connInfoUri)
+
+		local bbox = instance.getBoundingBox(layer)
+		qgisLayer:setExtent(bbox.xMin, bbox.yMax, bbox.xMax, bbox.yMax)
+
+		local projection = instance.getProjection(layer)
+		qgisLayer:setSpatialRefSys(projection.PROJ4, projection.NAME)
+
+		qgisLayer:setProvider(dsInfo:getType())
+
+		local dseName = layer:getDataSetName()
+		qgisLayer:setDataSetName(dseName)
+
+		local geom = getLayerGeometry(dseName, dsInfo)
+		if geom then
+			qgisLayer:setGeometry(geom)
+			qgisLayer:setType("vector")
+		else
+			qgisLayer:setType("raster")
+		end
+
+		qgp:addLayer(qgisLayer)
+	end
+end
+
+local function saveQGisProject(qgsfile, projfile, title)
+	local qgis = swig.terrame.qgis
+
+	local qgp
+	if File(qgsfile):exists() then
+		qgp = qgis.QGis.getInstance():read(qgsfile)
+	else
+		qgp = qgis.QGisProject(qgsfile)
+		qgp:setTitle(title)
+	end
+
+	local proj = {file = projfile, title = "", author = "", layers = {}}
+	loadProject(proj, projfile)
+
+	local layersToAdd = getLayersToAddFromQGis(qgp, proj.layers)
+
+	if #layersToAdd > 0 then
+		setQGisLayerAttributesToSave(qgp, layersToAdd)
+		qgis.QGis.getInstance():write(qgp)
+	end
+end
+
+local function saveProject(project, layers)
+	local file = tostring(project.file)
+	local _, fileName, ext = project.file:split()
+	local qgsfile
+
+	if ext == "qgs" then
+		qgsfile = file
 		file = currentDir()..fileName..".tview"
 	end
 
@@ -469,27 +589,9 @@ local function saveProject(project, layers)
 	end
 
 	binding.SaveProject(toUtf8(file), project.author, project.title, layersVector)
-end
 
-local function loadProject(project, file)
-	if not file:exists() then
-		customError("Could not read project file: "..file..".") -- SKIP
-	end
-
-	local _, fileName, ext = project.file:split()
-
-	if ext == "qgs" then
-		file = currentDir()..fileName..".tview"
-	end
-
-	local projMd = binding.LoadProject(toUtf8(tostring(file)))
-	project.author = projMd.author
-	project.title = projMd.title
-	local layers = projMd:getLayers()
-
-	for i = 0, getn(layers) - 1 do
-		local layer = layers[i]
-		project.layers[layer:getTitle()] = castLayer(layer)
+	if (ext == "qgs") and (#layersVector > 0) then
+		saveQGisProject(qgsfile, File(file), project.title)
 	end
 end
 
@@ -872,19 +974,6 @@ local function createDataSetAdapted(dSet, missing)
 	end
 
 	return set
-end
-
-local function getPropertyPosition(dse, propName)
-	dse:moveFirst()
-	local numProps = dse:getNumProperties()
-
-	for i = 0, numProps - 1 do
-		if dse:getPropertyName(i) == propName then
-			return i
-		end
-	end
-
-	return nil
 end
 
 local function getGeometryTypeName(geomType)
@@ -1843,70 +1932,101 @@ local function splitString(str, delimiter)
 	return tokens
 end
 
-local function createProjectFromQgis(project)
-	local qgisProjInfo = binding.QgisProject.load(tostring(project.file))
-	local layers = qgisProjInfo:getLayers()
-
-	project.title = qgisProjInfo:getTitle()
-
-	if project.title == "" then
-		project.title = "QGis Project"
-	end
-
-	project.author = project.title
-	project.layers = {}
-
-	saveProject(project, project.layers)
+local function checkIfLayerNamesAreUnique(layers)
+	if getn(layers) == 1 then return end
 
 	for i = 0, getn(layers) - 1 do
-		local qgisLayer = layers[i]
-		local uri = qgisLayer:getUri()
-
-		if uri:scheme() == "file" then
-			local file = File(fixSpaceInPath(uri:host()..uri:path()))
-			local ext = file:extension()
-			if ext == "shp" then
-				instance.addShpLayer(project, qgisLayer:getName(), file, true, qgisLayer:getSrid())
-			elseif ext == "tif" then
-				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
-			elseif ext == "geojson" then
-				instance.addGeoJSONLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
-			elseif (ext == "nc") and (_Gtme.sessionInfo().system == "windows") then -- TODO(#1302)
-				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid()) -- SKIP
-			elseif ext == "asc" then
-				instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
-			else -- TODO(#avancinirodrigo): there is no data to test this else in windows
-				customWarning("Layer QGis ignored '"..qgisLayer:getName().."'. Type '"..ext.."' is not supported.") -- SKIP
+		local iname = layers[i]:getName()
+		for j = i + 1, getn(layers) - 1 do
+			if iname == layers[j]:getName() then
+				customError("Layer names must be unique. Prease, verify layer '"..iname.."'.")
 			end
-		elseif uri:scheme() == "pgsql" then
-			local conn = {
-				host = uri:host(),
-				port = uri:port(),
-				user = uri:user(),
-				password = uri:password(),
-				database = string.gsub(uri:path(), "/", ""),
-				table = uri:query(),
-				encoding = "LATIN1"
-			}
-
-			instance.addPgLayer(project,  qgisLayer:getName(), conn, qgisLayer:getSrid(), conn.encoding)
-		elseif uri:scheme() == "wfs" then
-			instance.addWfsLayer(project, qgisLayer:getName(), uri:path(), uri:query(), qgisLayer:getSrid())
-		elseif uri:scheme() == "wms" then
-			local values = splitString(uri:query(), "&")
-			local format = splitString(values[1], "=")[2]
-			local layer = splitString(values[2], "=")[2]
-
-			local conn = {
-				url = uri:path(),
-				format = format,
-				directory = currentDir()
-			}
-
-			instance.addWmsLayer(project, qgisLayer:getName(), conn, layer, qgisLayer:getSrid())
-		else -- TODO(avancinirodrigo): there is no data to test this else
-			customWarning("Layer QGis ignored '"..qgisLayer:getName().."'. Unsupported type.") -- SKIP
 		end
+	end
+end
+
+local function createProjectFromQGis(project)
+	local qgis = swig.terrame.qgis
+
+	if project.user and project.password then
+		qgis.QGis.getInstance():setPostgisRole(project.user, project.password)
+	end
+
+	project.layers = {}
+
+	if project.file:exists() then
+		local qgp = qgis.QGis.getInstance():read(tostring(project.file))
+		local layers = qgp:getLayers()
+
+		checkIfLayerNamesAreUnique(layers)
+
+		project.title = qgp:getTitle()
+
+		if project.title == "" then
+			project.title = "QGIS Project"
+		end
+
+		project.author = project.title
+
+		saveProject(project, project.layers)
+
+		for i = 0, getn(layers) - 1 do
+			local qgisLayer = layers[i]
+			local uri = qgisLayer:getUri()
+
+			if uri:scheme() == "file" then
+				local file = File(fixSpaceInPath(uri:host()..uri:path()))
+				local ext = file:extension()
+				if ext == "shp" then
+					instance.addShpLayer(project, qgisLayer:getName(), file, true, qgisLayer:getSrid())
+				elseif ext == "tif" then
+					instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+				elseif ext == "geojson" then
+					instance.addGeoJSONLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+				elseif (ext == "nc") and (_Gtme.sessionInfo().system == "windows") then -- TODO(#1302)
+					instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid()) -- SKIP
+				elseif ext == "asc" then
+					instance.addGdalLayer(project, qgisLayer:getName(), file, qgisLayer:getSrid())
+				else -- TODO(#avancinirodrigo): there is no data to test this else in windows
+					customWarning("Layer QGIS ignored '"..qgisLayer:getName().."'. Type '"..ext.."' is not supported.") -- SKIP
+				end
+			elseif uri:scheme() == "pgsql" then
+				local conn = {
+					host = uri:host(),
+					port = uri:port(),
+					user = uri:user(),
+					password = uri:password(),
+					database = string.gsub(uri:path(), "/", ""),
+					table = uri:query(),
+					encoding = "LATIN1"
+				}
+
+				instance.addPgLayer(project,  qgisLayer:getName(), conn, qgisLayer:getSrid(), conn.encoding)
+			elseif uri:scheme() == "wfs" then
+				instance.addWfsLayer(project, qgisLayer:getName(), uri:path(), uri:query(), qgisLayer:getSrid())
+			elseif uri:scheme() == "wms" then
+				local values = splitString(uri:query(), "&")
+				local format = splitString(values[1], "=")[2]
+				local layer = splitString(values[2], "=")[2]
+
+				local conn = {
+					url = uri:path(),
+					format = format,
+					directory = currentDir()
+				}
+
+				instance.addWmsLayer(project, qgisLayer:getName(), conn, layer, qgisLayer:getSrid())
+			else -- TODO(avancinirodrigo): there is no data to test this else
+				customWarning("Layer QGIS ignored '"..qgisLayer:getName().."'. Unsupported type.") -- SKIP
+			end
+		end
+	else
+		if (not project.title) or (project.title == "") then
+			project.title = "QGIS Project"
+			project.author = "QGIS Project"
+		end
+
+		saveProject(project, project.layers)
 	end
 end
 
@@ -1999,7 +2119,7 @@ TerraLib_ = {
 		end
 
 		if project.file:extension() == "qgs" then
-			createProjectFromQgis(project)
+			createProjectFromQGis(project)
 		else
 			if not project.layers then
 				project.layers = layers

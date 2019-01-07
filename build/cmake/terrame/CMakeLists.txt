@@ -172,6 +172,8 @@ endif()
 #
 # first check of libraries
 #
+set(CMAKE_AUTOMOC ON)
+
 find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets PrintSupport Network)
 if(Qt5_FOUND)
 	message("Qt5 found!")
@@ -674,17 +676,4 @@ else(UNIX)
 	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin/luacheck
 	        COMPONENT runtime)
-endif()
-
-if(TERRAME_BUILD_AS_BUNDLE)
-	include(InstallRequiredSystemLibraries)
-
-	if(WIN32)
-		install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-		DESTINATION bin
-		COMPONENT runtime)
-	endif()
-
-	configure_file(${terrame_SOURCE_DIR}/fixBundle.cmake.in ${terrame_BINARY_DIR}/fixBundle.cmake @ONLY)
-	install(SCRIPT ${CMAKE_BINARY_DIR}/fixBundle.cmake COMPONENT runtime)
 endif()

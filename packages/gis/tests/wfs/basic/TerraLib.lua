@@ -77,5 +77,47 @@ return {
 		unitTest:assert(not TerraLib().isValidWfsUrl(url))
 
 		file:delete()
+	end,
+	createProject = function(unitTest)
+		local insertNewLayerQgis = function()
+			local qgsfile = filePath("test/sampa_v3.qgs", "gis")
+			local spfile = filePath("test/sampa.shp", "gis")
+
+			qgsfile:copy(currentDir())
+			spfile:copy(currentDir())
+
+			local qgp = {
+				file = File("sampa_v3.qgs")
+			}
+
+			TerraLib().createProject(qgp, {})
+
+			local layerName = "LayerWFS"
+			local url = "http://terrabrasilis.info/redd-pac/wfs"
+			local dataset = "reddpac:wfs_biomes"
+			local srid = 29901
+
+			TerraLib().addWfsLayer(qgp, layerName, url, dataset, srid, encoding)
+
+			local qgp2 = {
+				file = File("sampa_v3.qgs")
+			}
+
+			TerraLib().createProject(qgp2)
+
+			local layerInfo = TerraLib().getLayerInfo(qgp2, layerName)
+			unitTest:assertEquals(layerInfo.name, layerName)
+			unitTest:assertEquals(layerInfo.url, url)
+			unitTest:assertEquals(layerInfo.type, "WFS")
+			unitTest:assertEquals(layerInfo.source, "wfs")
+			unitTest:assertEquals(layerInfo.rep, "surface")
+			unitTest:assertEquals(layerInfo.srid, srid)
+
+			qgp.file:delete()
+			File("sampa_v3.tview"):delete()
+			File("sampa.shp"):delete()
+		end
+
+		unitTest:assert(insertNewLayerQgis)
 	end
 }
