@@ -1748,7 +1748,7 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 	end
 
 	if toData.srid then
-			info.srid = toData.srid
+		info.srid = toData.srid
 	else
 		info.srid = fromData.srid
 	end
@@ -1831,7 +1831,7 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 			for i = 0, numProps - 1 do
 				local propName = fromDSet:getPropertyName(i)
 				if not (pkName == propName) and not attrsToIn[propName] and
-					not (fromDSet:getPropertyDataType(i) == binding.GEOMETRY_TYPE) then
+						not (fromDSet:getPropertyDataType(i) == binding.GEOMETRY_TYPE) then
 					converter:remove(propName)
 				else
 					table.insert(attrsFilter, propName)
@@ -2678,18 +2678,18 @@ TerraLib_ = {
 		end
 	end,
 	--- Fill a given attribute in a layer.
-	-- @arg project The name of the project.
-	-- @arg operation Name of the operation.
-	-- @arg select The attribute to be used in the operation.
-	-- @arg from Name of the input layer with the data where the operations will take place.
-	-- @arg to Name of the reference layer with the elements to be copied to the output.
-	-- @arg out Name of the layer to be created with the output.
-	-- @arg area A boolean value indicating whether the area should be considered.
-	-- @arg attribute Name of the attribute to be created.
-	-- @arg default The default value.
-	-- @arg repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
-	-- @arg nodata A number used in raster data that represents no information in a pixel value.
-	-- @arg pixel A boolean value. If true, a pixel is considered within a polygon if they have some overlap.
+	-- @arg data.project The name of the project.
+	-- @arg data.operation Name of the operation.
+	-- @arg data.select The attribute to be used in the operation.
+	-- @arg data.from Name of the input layer with the data where the operations will take place.
+	-- @arg data.to Name of the reference layer with the elements to be copied to the output.
+	-- @arg data.out Name of the layer to be created with the output.
+	-- @arg data.area A boolean value indicating whether the area should be considered.
+	-- @arg data.attribute Name of the attribute to be created.
+	-- @arg data.default The default value.
+	-- @arg data.repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
+	-- @arg data.nodata A number used in raster data that represents no information in a pixel value.
+	-- @arg data.pixel A boolean value. If true, a pixel is considered within a polygon if they have some overlap.
 	-- If false, a pixel is within a polygon if its centroid is within the polygon.
 	-- @usage -- DONTRUN
 	-- proj = {
