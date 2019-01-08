@@ -3565,7 +3565,7 @@ TerraLib_ = {
 
 		collectgarbage("collect")
 	end,
-	--- Set progress viewer. 
+	--- Set progress viewer.
 	-- @arg visible A boolean that if true show the percetage progress of some functions.
 	-- @usage --DONTRUN
 	-- TerraLib().setProgressVisible(true)

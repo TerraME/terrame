@@ -224,7 +224,7 @@ local function addCellularLayer(self, data)
 
 			if repr == "raster" then
 				verifyUnnecessaryArguments(data, {"clean", "input", "name", "resolution", "source", -- SKIP
-										"project", "host", "port", "user", "password", "database", 
+										"project", "host", "port", "user", "password", "database",
 										"table", "progress"})
 				data.box = true -- SKIP
 			else
@@ -1059,8 +1059,8 @@ Layer_ = {
 		else --< to data is postgis
 			mandatoryTableArgument(data, "source", "string")
 			checkSourcePostgis(data.source)
-			verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", 
-											"port", "encoding", "table", "epsg", "overwrite", 
+			verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host",
+											"port", "encoding", "table", "epsg", "overwrite",
 											"select", "progress"})
 			data.name = self.name
 			checkPostgisParams(data)
