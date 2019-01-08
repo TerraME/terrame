@@ -30,6 +30,7 @@ end
 local binding = _Gtme.terralib_mod_binding_lua
 local instance = nil
 local dataCache = makeWeakTable{}
+local progress = false
 
 require("swig")
 
@@ -679,13 +680,17 @@ local function dropDataSet(connInfo, dSetName, type)
 end
 
 local function createProgressViewer(msg)
-	local viewer = binding.te.common.LuaProgressViewer()
-	viewer:setMessage(msg)
-	return binding.te.common.ProgressManager.getInstance():addViewer(viewer)
+	if progress then
+		local viewer = binding.te.common.LuaProgressViewer()
+		viewer:setMessage(msg)
+		return binding.te.common.ProgressManager.getInstance():addViewer(viewer)
+	end
 end
 
 local function finalizeProgressViewer(viewerId)
-	binding.te.common.ProgressManager.getInstance():removeViewer(viewerId)
+	if progress then
+		binding.te.common.ProgressManager.getInstance():removeViewer(viewerId)
+	end
 end
 
 local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, type, mask)
@@ -3559,6 +3564,14 @@ TerraLib_ = {
 		end
 
 		collectgarbage("collect")
+	end,
+	--- Set progress viewer. 
+	-- @arg visible A boolean that if true show the percetage progress of some functions.
+	-- @usage --DONTRUN
+	-- TerraLib().setProgressVisible(true)
+	-- TerraLib().attributeFill(...)
+	setProgressVisible = function(visible)
+		progress = visible
 	end
 }
 

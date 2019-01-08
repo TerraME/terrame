@@ -92,7 +92,8 @@ return {
 			input = layerName1,
 			name = clName1,
 			resolution = 20000,
-			file = clName1..".shp"
+			file = clName1..".shp",
+			progress = false
 		}
 
 		local modeTifLayerName = clName1.."_"..prodes.."_mode"

@@ -120,10 +120,11 @@ return{
 			source = "postgis",
 			password = getConfig().password,
 			database = "postgis_22_sample",
-			overwrite = true
+			overwrite = true,
+			progress = false
 		}
 
-		layer1:export(pgData, true)
+		layer1:export(pgData)
 
 		local layerName2 = "SampaDB"
 		local layer4 = gis.Layer{

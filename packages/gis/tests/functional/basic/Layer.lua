@@ -57,7 +57,8 @@ return {
 			name = clName1,
 			clean = true,
 			resolution = 0.3,
-			file = filePath1
+			file = filePath1,
+			progress = false
 		}
 
 		unitTest:assertEquals(projName, cl.project.file)
@@ -174,7 +175,8 @@ return {
 			input = layerName1,
 			name = clName1,
 			resolution = 0.7,
-			file = filePath1
+			file = filePath1,
+			progress = false
 		}
 
 		unitTest:assertEquals(l1.name, clName1)
@@ -190,7 +192,8 @@ return {
 			input = layerName2,
 			name = clName2,
 			resolution = 1,
-			file = filePath2
+			file = filePath2,
+			progress = false
 		}
 
 		unitTest:assertEquals(l2.name, clName2)
@@ -205,7 +208,8 @@ return {
 			input = layerName2,
 			name = clName3,
 			resolution = 0.7,
-			file = filePath3
+			file = filePath3,
+			progress = false
 		}
 
 		unitTest:assertEquals(l3.name, clName3)
@@ -225,7 +229,8 @@ return {
 			name = clName1,
 			resolution = 0.7,
 			box = true,
-			file = filePath4
+			file = filePath4,
+			progress = false
 		}
 
 		clSetSize = TerraLib().getLayerSize(proj, clName1)
@@ -241,7 +246,8 @@ return {
 				name = "cells3",
 				resolution = 0.7,
 				box = false,
-				file = filePath6
+				file = filePath6,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(boxDefaultError, defaultValueMsg("box", false))
@@ -257,7 +263,8 @@ return {
 				clean = true,
 				resolution = 0.7,
 				file = filePath5,
-				encoding = "utf8"
+				encoding = "utf8",
+				progress = false
 			}
 		end
 		unitTest:assertWarning(encodingUnnecessary, unnecessaryArgumentMsg("encoding"))
@@ -271,7 +278,8 @@ return {
 				name = "cells7",
 				clean = true,
 				resoltion = 200,
-				resolution = 0.7
+				resolution = 0.7,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
@@ -286,7 +294,8 @@ return {
 			file = filePath8,
 			name = "cells8",
 			clean = true,
-			resolution = 0.7
+			resolution = 0.7,
+			progress = false
 		}
 
 		unitTest:assertEquals(filePath8, cl8.file)
@@ -301,7 +310,8 @@ return {
 			file = filePath9,
 			name = "cells9",
 			clean = true,
-			resolution = 0.7
+			resolution = 0.7,
+			progress = false
 		}
 
 		unitTest:assertEquals(filePath9, cl9.file)
@@ -461,7 +471,8 @@ return {
 			name = clName1,
 			clean = true,
 			resolution = 0.3,
-			file = filePath1
+			file = filePath1,
+			progress = false
 		}
 
 		cl:delete()
@@ -493,7 +504,8 @@ return {
 			input = layerName1,
 			name = clName1,
 			resolution = 30000,
-			file = filePath1
+			file = filePath1,
+			progress = false
 		}
 
 		local presenceSelectUnnecessary = function()
@@ -501,7 +513,8 @@ return {
 				operation = "presence",
 				layer = localidades,
 				attribute = "presence",
-				select = "FID"
+				select = "FID",
+				progress = false
 			}
 		end
 		unitTest:assertWarning(presenceSelectUnnecessary, unnecessaryArgumentMsg("select"))
@@ -513,7 +526,8 @@ return {
 				attribute = "areattr",
 				operation = "area",
 				layer = layerName1,
-				select = "FID"
+				select = "FID",
+				progress = false
 			}
 		end
 		unitTest:assertWarning(areaSelectUnnecessary, unnecessaryArgumentMsg("select"))
@@ -525,7 +539,8 @@ return {
 				attribute = "counttr",
 				operation = "count",
 				layer = localidades,
-				select = "FID"
+				select = "FID",
+				progress = false
 			}
 		end
 		unitTest:assertWarning(countSelectUnnecessary, unnecessaryArgumentMsg("select"))
@@ -537,7 +552,8 @@ return {
 				attribute = "disttr",
 				operation = "distance",
 				layer = layerName1,
-				select = "FID"
+				select = "FID",
+				progress = false
 			}
 		end
 		unitTest:assertWarning(distanceSelectUnnecessary, unnecessaryArgumentMsg("select"))
@@ -550,7 +566,8 @@ return {
 				operation = "minimum",
 				layer = localidades,
 				select = "UCS_FATURA",
-				missin = 3
+				missin = 3,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
@@ -563,7 +580,8 @@ return {
 				operation = "maximum",
 				layer = localidades,
 				select = "UCS_FATURA",
-				missin = 3
+				missin = 3,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
@@ -576,7 +594,8 @@ return {
 				operation = "coverage",
 				layer = layerName1,
 				select = "FID",
-				missin = 3
+				missin = 3,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
@@ -589,7 +608,8 @@ return {
 				layer = localidades,
 				attribute = "stdev",
 				select = "UCS_FATURA",
-				missin = 3
+				missin = 3,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
@@ -602,7 +622,8 @@ return {
 				layer = localidades,
 				attribute = "mean",
 				select = "UCS_FATURA",
-				missin = 3
+				missin = 3,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
@@ -615,7 +636,8 @@ return {
 				layer = localidades,
 				attribute = "weighted",
 				select = "UCS_FATURA",
-				missin = 3
+				missin = 3,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
@@ -629,7 +651,8 @@ return {
 				layer = localidades,
 				attribute = "modttr",
 				select = "UCS_FATURA",
-				missin = 3
+				missin = 3,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
@@ -642,7 +665,8 @@ return {
 				layer = localidades,
 				attribute = "ucs_sum",
 				select = "UCS_FATURA",
-				missin = 3
+				missin = 3,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
@@ -656,7 +680,8 @@ return {
 				attribute = "wsum",
 				select = "UCS_FATURA",
 				area = true,
-				missin = 3
+				missin = 3,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("missin", "missing"))
@@ -668,7 +693,8 @@ return {
 				attribute = "max10allowed",
 				operation = "sum",
 				layer = layerName1,
-				select = "FID"
+				select = "FID",
+				progress = false
 			}
 		end
 		unitTest:assertWarning(normalizedNameWarning, "The 'attribute' lenght has more than 10 characters. It was truncated to 'max10allow'.")
@@ -689,7 +715,8 @@ return {
 				attribute = "argattr",
 				operation = "average",
 				layer = deforest,
-				area = 2
+				area = 2,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
@@ -701,7 +728,8 @@ return {
 				attribute = "mmittr",
 				operation = "minimum",
 				layer = deforest,
-				area = 2
+				area = 2,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
@@ -713,7 +741,8 @@ return {
 				attribute = "mmaxttr",
 				operation = "maximum",
 				layer = deforest,
-				area = 2
+				area = 2,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
@@ -723,7 +752,8 @@ return {
 		cl:fill{
 			attribute = "ccvattr",
 			operation = "coverage",
-			layer = deforest
+			layer = deforest,
+			progress = false
 		}
 
 		attrs = cl:attributes()
@@ -734,7 +764,8 @@ return {
 				attribute = "ssdvattr",
 				operation = "stdev",
 				layer = deforest,
-				area = 2
+				area = 2,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
@@ -746,7 +777,8 @@ return {
 				attribute = "ssuattr",
 				operation = "sum",
 				layer = deforest,
-				area = 2
+				area = 2,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(areaUnnecessary, unnecessaryArgumentMsg("area"))
@@ -770,13 +802,15 @@ return {
 			source = "shp",
 			input = "hidro_1970",
 			name = "layer",
-			resolution = 30000
+			resolution = 30000,
+			progress = false
 		}
 
 		cl:fill{
 			attribute = "conserv",
 			operation = "area",
 			layer = "conservation_19*",
+			progress = false
 		}
 
 		attrs = cl:attributes()
@@ -796,6 +830,7 @@ return {
 			name = "layer_split",
 			clean = true,
 			resolution = 30000,
+			progress = false
 		}
 
 		unitTest:assertNil(projTemporal["layer_split_1961"])
@@ -806,7 +841,8 @@ return {
 			attribute = "attr",
 			operation = "area",
 			layer = "conservation*",
-			split = true
+			split = true,
+			progress = false
 		}
 
 		unitTest:assertNotNil(projTemporal["layer_split_1961"])
@@ -824,7 +860,8 @@ return {
 			attribute = "attr2",
 			operation = "area",
 			layer = "conservation*",
-			split = true
+			split = true,
+			progress = false
 		}
 
 		unitTest:assertNotNil(projTemporal["layer_split_1961"])
@@ -855,7 +892,8 @@ return {
 			attribute = "attr3",
 			operation = "area",
 			layer = "conservation*",
-			split = true
+			split = true,
+			progress = false
 		}
 
 		unitTest:assertNotNil(projTemporal["layer_split_1961"])
@@ -986,24 +1024,28 @@ source    string [shp]
 			name = "layer",
 			resolution = 30000,
 			clean = true,
+			progress = false
 		}
 
 		layer:fill{
 			attribute = "conserv_",
 			operation = "area",
 			layer = "conservation_19*",
+			progress = false
 		}
 
 		layer:fill{
 			attribute = "hidro_",
 			operation = "distance",
 			layer = "hidro_19*",
+			progress = false
 		}
 
 		layer:fill{
 			attribute = "hidro70",
 			operation = "distance",
 			layer = "hidro_1970",
+			progress = false
 		}
 
 		layer:split()

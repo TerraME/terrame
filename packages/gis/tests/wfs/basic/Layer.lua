@@ -92,7 +92,7 @@ return {
 			encoding = encoding
 		}
 
-		prodesWfs:export{file = "prodes.shp", overwrite = true}
+		prodesWfs:export{file = "prodes.shp", overwrite = true, progress = false}
 
 		local prodes = Layer{
 			project = proj,
@@ -109,7 +109,7 @@ return {
 			encoding = encoding
 		}
 
-		biomesWfs:export{file = "biomes.shp", overwrite = true}
+		biomesWfs:export{file = "biomes.shp", overwrite = true, progress = false}
 
 		local biomes = Layer{
 			project = proj,
@@ -126,7 +126,8 @@ return {
 			name = "cells",
 			resolution = 8,
 			file = file,
-			index = false
+			index = false,
+			progress = false
 		}
 
 		unitTest:assertEquals(#cl1, 20)
@@ -141,20 +142,23 @@ return {
 		cl1:fill{
 			operation = "area",
 			layer = biomes,
-			attribute = "area"
+			attribute = "area",
+			progress = false
 		}
 
 		cl1:fill{
 			operation = "count",
 			layer = biomes,
-			attribute = "mcount"
+			attribute = "mcount",
+			progress = false
 		}
 
 		cl1:fill{
 			operation = "average", -- use average as well
 			attribute = "defor",
 			select = "desflorest",
-			layer = prodes
+			layer = prodes,
+			progress = false
 		}
 
 		local cs = CellularSpace{
@@ -209,7 +213,7 @@ return {
 				feature = "reddpac:wfs_simus_prodes"
 			}
 
-			prodesWfs:export{file = "prodes.shp", overwrite = true}
+			prodesWfs:export{file = "prodes.shp", overwrite = true, progress = false}
 
 			local prodesShp = Layer{
 				project = proj,

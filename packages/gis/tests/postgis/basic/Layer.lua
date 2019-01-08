@@ -51,7 +51,8 @@ return {
 				--port = port,
 				password = password,
 				database = database,
-				overwrite = true
+				overwrite = true,
+				progress = false
 			}
 
 			layer1:export(pgData, true)
@@ -135,7 +136,8 @@ return {
 				resolution = 0.7,
 				password = password,
 				database = database,
-				table = tName1
+				table = tName1,
+				progress = false
 			}
 
 			unitTest:assertEquals(cl1.name, clName1)
@@ -154,7 +156,8 @@ return {
 				resolution = 0.7,
 				password = password,
 				database = database,
-				table = tName2
+				table = tName2,
+				progress = false
 			}
 
 			unitTest:assertEquals(cl2.name, clName2)
@@ -173,7 +176,8 @@ return {
 				resolution = 0.7,
 				password = password,
 				database = database,
-				table = tName3
+				table = tName3,
+				progress = false
 			}
 
 			unitTest:assertEquals(cl3.name, clName3)
@@ -191,7 +195,8 @@ return {
 				name = clName4,
 				resolution = 0.7,
 				password = password,
-				database = newDbName
+				database = newDbName,
+				progress = false
 			}
 
 			unitTest:assertEquals(cl4.source, "postgis")
@@ -219,7 +224,8 @@ return {
 					box = true,
 					password = password,
 					database = database,
-					file = filePath("test/sampa.shp", "gis")
+					file = filePath("test/sampa.shp", "gis"),
+					progress = false
 				}
 			end
 			unitTest:assertWarning(unnecessaryArgument, unnecessaryArgumentMsg("file"))
@@ -260,7 +266,8 @@ return {
 					table = clName7,
 					resolution = 0.7,
 					input = layerName1,
-					clean = true
+					clean = true,
+					progress = false
 				}
 			end
 			unitTest:assertWarning(defaultTableName, defaultValueMsg("table", string.lower(clName7)))
@@ -338,7 +345,8 @@ return {
 				resolution = 30e3,
 				password = password,
 				database = database,
-				table = tableName
+				table = tableName,
+				progress = false
 			}
 
 			unitTest:assertEquals(cl.source, "postgis")
@@ -379,7 +387,8 @@ return {
 				name = clName1,
 				resolution = 0.7,
 				password = password,
-				database = database
+				database = database,
+				progress = false
 			}
 
 			unitTest:assertEquals(cl.table, string.lower(clName1))
@@ -430,7 +439,8 @@ return {
 			resolution = 5e3,
 			clean = true,
 			password = password,
-			database = database
+			database = database,
+			progress = false
 		}
 
 		unitTest:assert(true)
@@ -487,7 +497,8 @@ return {
 			resolution = 70000,
 			clean = true,
 			password = password,
-			database = database
+			database = database,
+			progress = false
 		}
 
 		local clamaz = Layer{
@@ -498,7 +509,8 @@ return {
 			resolution = 200000,
 			clean = true,
 			password = password,
-			database = database
+			database = database,
+			progress = false
 		}
 
 		-- MODE
@@ -506,7 +518,8 @@ return {
 			operation = "mode",
 			layer = municipios,
 			attribute = "polmode",
-			select = "POPULACAO_"
+			select = "POPULACAO_",
+			progress = false
 		}
 
 		local cs = CellularSpace{
@@ -540,7 +553,8 @@ return {
 			layer = municipios,
 			attribute = "polmode2",
 			select = "POPULACAO_",
-			area = true
+			area = true,
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -563,7 +577,8 @@ return {
 		cl:fill{
 			operation = "area",
 			layer = protecao,
-			attribute = "marea"
+			attribute = "marea",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -586,7 +601,8 @@ return {
 		cl:fill{
 			operation = "distance",
 			layer = rodovias,
-			attribute = "lindist"
+			attribute = "lindist",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -608,7 +624,8 @@ return {
 		cl:fill{
 			operation = "distance",
 			layer = protecao,
-			attribute = "poldist"
+			attribute = "poldist",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -630,7 +647,8 @@ return {
 		clamaz:fill{
 			operation = "distance",
 			layer = portos,
-			attribute = "pointdist"
+			attribute = "pointdist",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -653,7 +671,8 @@ return {
 		cl:fill{
 			operation = "presence",
 			layer = rodovias,
-			attribute = "linpres"
+			attribute = "linpres",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -673,7 +692,8 @@ return {
 		cl:fill{
 			operation = "presence",
 			layer = protecao,
-			attribute = "polpres"
+			attribute = "polpres",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -693,7 +713,8 @@ return {
 		clamaz:fill{
 			operation = "presence",
 			layer = portos,
-			attribute = "pointpres"
+			attribute = "pointpres",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -716,7 +737,8 @@ return {
 		clamaz:fill{
 			operation = "count",
 			layer = portos,
-			attribute = "pointcount"
+			attribute = "pointcount",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -741,13 +763,15 @@ return {
 			resolution = 100000,
 			clean = true,
 			password = password,
-			database = database
+			database = database,
+			progress = false
 		}
 
 		cl2:fill{
 			operation = "count",
 			layer = rodovias,
-			attribute = "linecount"
+			attribute = "linecount",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -769,7 +793,8 @@ return {
 		cl2:fill{
 			operation = "count",
 			layer = protecao,
-			attribute = "polcount"
+			attribute = "polcount",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -791,7 +816,8 @@ return {
 			operation = "maximum",
 			layer = municipios,
 			attribute = "polmax",
-			select = "POPULACAO_"
+			select = "POPULACAO_",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -815,7 +841,8 @@ return {
 			operation = "minimum",
 			layer = municipios,
 			attribute = "polmin",
-			select = "POPULACAO_"
+			select = "POPULACAO_",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -839,7 +866,8 @@ return {
 			operation = "average",
 			layer = municipios,
 			attribute = "polavrg",
-			select = "POPULACAO_"
+			select = "POPULACAO_",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -863,7 +891,8 @@ return {
 			operation = "stdev",
 			layer = municipios,
 			attribute = "stdev",
-			select = "POPULACAO_"
+			select = "POPULACAO_",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -901,7 +930,8 @@ return {
 			resolution = 300000,
 			clean = true,
 			password = password,
-			database = database
+			database = database,
+			progress = false
 		}
 
 		cl:fill{
@@ -909,7 +939,8 @@ return {
 			layer = "setores",
 			attribute = "polsuma",
 			select = "POPULACAO_",
-			area = true
+			area = true,
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -966,7 +997,8 @@ return {
 			resolution = 10000,
 			clean = true,
 			password = password,
-			database = database
+			database = database,
+			progress = false
 		}
 
 		cl:fill{
@@ -974,7 +1006,8 @@ return {
 			layer = "setores",
 			attribute = "polavg",
 			select = "dens_pop",
-			area = true
+			area = true,
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -1010,14 +1043,16 @@ return {
 			clean = true,
 			password = password,
 			database = database,
-			table = "cs200km"
+			table = "cs200km",
+			progress = false
 		}
 
 		cl:fill{
 			operation = "coverage",
 			layer = "cities",
 			select = "CODMESO",
-			attribute = "meso"
+			attribute = "meso",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -1086,7 +1121,8 @@ return {
 			resolution = 10000,
 			clean = true,
 			password = password,
-			database = database
+			database = database,
+			progress = false
 		}
 
 		-- MODE
@@ -1094,7 +1130,8 @@ return {
 		cl:fill{
 			operation = "mode",
 			attribute = "prod_mode",
-			layer = prodes
+			layer = prodes,
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -1127,7 +1164,8 @@ return {
 		cl:fill{
 			operation = "minimum",
 			attribute = "prod_min",
-			layer = altimetria
+			layer = altimetria,
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -1157,7 +1195,8 @@ return {
 		cl:fill{
 			operation = "maximum",
 			attribute = "prod_max",
-			layer = altimetria
+			layer = altimetria,
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -1187,7 +1226,8 @@ return {
 		cl:fill{
 			operation = "sum",
 			attribute = "prod_sum",
-			layer = altimetria
+			layer = altimetria,
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -1216,7 +1256,8 @@ return {
 		cl:fill{
 			operation = "coverage",
 			attribute = "cov",
-			layer = prodes
+			layer = prodes,
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -1259,7 +1300,8 @@ return {
 		cl:fill{
 			operation = "average",
 			layer = "altimetria",
-			attribute = "height"
+			attribute = "height",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -1283,7 +1325,8 @@ return {
 		cl:fill{
 			operation = "stdev",
 			layer = "altimetria",
-			attribute = "std"
+			attribute = "std",
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -1307,7 +1350,8 @@ return {
 			operation = "average",
 			layer = "altimetria",
 			attribute = "height_nd",
-			dummy = 256
+			dummy = 256,
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -1359,7 +1403,8 @@ return {
 			resolution = 5e3,
 			clean = true,
 			password = password,
-			database = database
+			database = database,
+			progress = false
 		}
 
 		unitTest:assertEquals(layer:projection(), "'SAD69 / UTM zone 21S', with EPSG: 29191 (PROJ4: '+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ')")
@@ -1396,7 +1441,8 @@ return {
 			resolution = 5e3,
 			clean = true,
 			password = password,
-			database = database
+			database = database,
+			progress = false
 		}
 
 		local propInfos = layer:attributes()
@@ -1440,7 +1486,8 @@ return {
 			password = password,
 			database = database,
 			overwrite = overwrite,
-			epsg = 4036
+			epsg = 4036,
+			progress = false
 		}
 
 		layer1:export(pgData)
@@ -1458,7 +1505,8 @@ return {
 		local geojson = "mg.geojson"
 		local data1 = {
 			file = geojson,
-			overwrite = overwrite
+			overwrite = overwrite,
+			progress = false
 		}
 
 		layer2:export(data1)
@@ -1481,7 +1529,8 @@ return {
 		local shp = "mg.shp"
 		local data2 = {
 			file = shp,
-			overwrite = overwrite
+			overwrite = overwrite,
+			progress = false
 		}
 
 		layer2:export(data2)
@@ -1551,7 +1600,8 @@ return {
 			password = password,
 			database = database,
 			overwrite = true,
-			epsg = 4036
+			epsg = 4036,
+			progress = false
 		}
 
 		layer1:export(pgData)
@@ -1657,7 +1707,8 @@ return {
 			name = "SampaCells",
 			resolution = 0.7,
 			password = "postgres",
-			database = "drop_pg_test"
+			database = "drop_pg_test",
+			progress = false
 		}
 
 		cl1:drop()

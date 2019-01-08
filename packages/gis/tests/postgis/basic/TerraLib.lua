@@ -104,6 +104,8 @@ return {
 		unitTest:assert(true)
 	end,
 	addPgCellSpaceLayer = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local createProject = function()
 			local proj = {
 				file = "addpgcellspacelayer_pg_basic.tview",
@@ -246,6 +248,8 @@ return {
 		TerraLib().dropPgDatabase(pgConnInfo)
 	end,
 	attributeFill = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -1348,6 +1352,8 @@ return {
 		unitTest:assert(true)
 	end,
 	saveDataSet = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {
 			file = "myproject.tview",
 			title = "TerraLib Tests",
@@ -1757,6 +1763,8 @@ return {
 		TerraLib().dropPgDatabase(pgData)
 	end,
 	getArea = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {
 			file = "myproject.tview",
 			title = "TerraLib Tests",
@@ -1814,6 +1822,8 @@ return {
 		TerraLib().dropPgDatabase(pgData)
 	end,
 	getProjection = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {
 			file = "myproject.tview",
 			title = "TerraLib Tests",
@@ -1865,6 +1875,8 @@ return {
 		TerraLib().dropPgDatabase(pgData)
 	end,
 	getPropertyNames = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {
 			file = "myproject.tview",
 			title = "TerraLib Tests",
@@ -1974,6 +1986,8 @@ return {
 		TerraLib().dropPgTable(pgData)
 	end,
 	getDistance = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -2024,6 +2038,8 @@ return {
 		TerraLib().dropPgDatabase(pgData)
 	end,
 	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local sampaLayerName = "SampaShp"
 		local createProjectWithSampaLayer = function()
 			local proj = {

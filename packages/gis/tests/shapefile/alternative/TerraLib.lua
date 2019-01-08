@@ -24,14 +24,16 @@
 
 return {
 	attributeFill = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 
 		File(proj.file):deleteIfExists()
-
 		TerraLib().createProject(proj, {})
+		TerraLib().setProgressVisible(false)
 
 		local layerName1 = "Para"
 		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "gis")
@@ -242,6 +244,8 @@ return {
 		proj.file:delete()
 	end,
 	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"

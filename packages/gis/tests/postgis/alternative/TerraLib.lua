@@ -61,6 +61,8 @@ return {
 		proj.file:delete()
 	end,
 	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"

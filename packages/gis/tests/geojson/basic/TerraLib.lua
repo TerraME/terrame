@@ -51,6 +51,8 @@ return {
 		proj.file:deleteIfExists()
 	end,
 	addGeoJSONCellSpaceLayer = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local title = "TerraLib Tests"
 		local author = "Carneiro Heitor"
 		local file = "mygeojsonproject.tview"
@@ -123,6 +125,8 @@ return {
 		end
 	end,
 	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -354,6 +358,8 @@ return {
 		outFile:delete()
 	end,
 	attributeFill = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		-- TODO (#2179)
 		local createProject = function()
 			local proj = {
@@ -784,6 +790,8 @@ return {
 		unitTest:assert(allSupportedOperation)
 	end,
 	saveDataSet = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local overwriteLayer = function()
 			local proj = {
 				file = "savedataset-geojson-basic.tview",

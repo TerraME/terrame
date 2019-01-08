@@ -53,7 +53,8 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 60e3,
-				file = filePath1
+				file = filePath1,
+				progress = false
 			}
 
 			unitTest:assertEquals(clName1, cl1.name) -- SKIP

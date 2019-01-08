@@ -240,7 +240,7 @@ return{
 				file = filePath("cabecadeboi.shp", "gis")
 			}
 
-			local toData0 = {file = File(tostring(dir).."/cabecadeboi.shp"), overwrite = true}
+			local toData0 = {file = File(tostring(dir).."/cabecadeboi.shp"), overwrite = true, progress = false}
 			layer0:export(toData0)
 
 			local noTifFound = function()
@@ -258,7 +258,7 @@ return{
 				file = filePath("cabecadeboi-elevation.tif", "gis")
 			}
 
-			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true}
+			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true, progress = false}
 			layer1:export(toData1)
 
 			local oneTifFound = function()
@@ -276,7 +276,7 @@ return{
 				file = filePath("emas-accumulation.tif", "gis")
 			}
 
-			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true}
+			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true, progress = false}
 			layer2:export(toData2)
 
 			local difSizeError = function()
@@ -509,7 +509,8 @@ return{
 				resolution = 0.3,
 				password = password,
 				database = database,
-				table = tName1
+				table = tName1,
+				progress = false
 			}
 
 			local cs = CellularSpace{
@@ -577,8 +578,8 @@ return{
 				file = filePath("cabecadeboi-elevation.tif", "gis")
 			}
 
-			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true}
-			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true}
+			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true, progress = false}
+			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true, progress = false}
 			layer:export(toData1)
 			layer:export(toData2)
 

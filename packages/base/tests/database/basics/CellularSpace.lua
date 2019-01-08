@@ -177,7 +177,8 @@ return{
 				resolution = 0.3,
 				password = password,
 				database = database,
-				table = tName1
+				table = tName1,
+				progress = false
 			}
 
 			local cs = CellularSpace{
@@ -304,8 +305,8 @@ return{
 				file = filePath("cabecadeboi-elevation.tif", "gis")
 			}
 
-			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true}
-			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true}
+			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true, progress = false}
+			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true, progress = false}
 			layer:export(toData1)
 			layer:export(toData2)
 
@@ -799,7 +800,8 @@ return{
 				name = clName,
 				resolution = 0.3,
 				password = getConfig().password,
-				database = "postgis_22_sample"
+				database = "postgis_22_sample",
+				progress = false
 			}
 		end
 
@@ -951,7 +953,8 @@ return{
 
 			local currDir = {
 				file = "CellsAmaz.shp",
-				overwrite = true
+				overwrite = true,
+				progress = false
 			}
 
 			layer:export(currDir)
@@ -998,8 +1001,8 @@ return{
 				file = filePath("cabecadeboi-elevation.tif", "gis")
 			}
 
-			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true}
-			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true}
+			local toData1 = {file = File(tostring(dir).."/elevation1.tif"), overwrite = true, progress = false}
+			local toData2 = {file = File(tostring(dir).."/elevation2.tif"), overwrite = true, progress = false}
 			layer:export(toData1)
 			layer:export(toData2)
 

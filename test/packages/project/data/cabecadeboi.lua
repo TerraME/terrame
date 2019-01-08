@@ -56,12 +56,14 @@ cl = Layer{
 	input = "box",
 	name = "cells",
 	resolution = 1600,
+	progress = false
 }
 
 cl:fill{
 	operation = "average",
 	layer = "elevation",
-	attribute = "height"
+	attribute = "height",
+	progress = false
 }
 
 cs = CellularSpace{

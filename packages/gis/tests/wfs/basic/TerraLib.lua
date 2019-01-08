@@ -121,6 +121,8 @@ return {
 		unitTest:assert(insertNewLayerQgis)
 	end,
 	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local saveAsShp = function()
 			local proj = {
 				file = "savedataas_wfs_basic.tview",

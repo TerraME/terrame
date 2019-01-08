@@ -947,7 +947,8 @@ return{
 		cl:fill{
 			operation = "presence",
 			layer = localidades,
-			attribute = "presence20"
+			attribute = "presence20",
+			progress = false
 		}
 
 		local normalizedTrucatedError = function()
@@ -1151,7 +1152,8 @@ return{
 				attribute = "con",
 				operation = "area",
 				layer = "conservation*",
-				split = true
+				split = true,
+				progress = false
 			}
 
 			cl:fill{

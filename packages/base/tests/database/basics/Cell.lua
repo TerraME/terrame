@@ -59,7 +59,8 @@ return{
 			input = layerName1,
 			name = clName1,
 			resolution = 100e3,
-			file = filePath1
+			file = filePath1,
+			progress = false
 		}
 
 		local cs = CellularSpace{
@@ -84,7 +85,8 @@ return{
 			resolution = 100e3,
 			password = password,
 			database = database,
-			clean = true
+			clean = true,
+			progress = false
 		}
 
 		cs = CellularSpace{
@@ -137,7 +139,8 @@ return{
 			input = layerName1,
 			name = clName1,
 			resolution = 100e3,
-			file = filePath1
+			file = filePath1,
+			progress = false
 		}
 
 		local cs = CellularSpace{
@@ -166,7 +169,8 @@ return{
 			resolution = 100e3,
 			password = password,
 			database = database,
-			clean = true
+			clean = true,
+			progress = false
 		}
 
 		cs = CellularSpace{

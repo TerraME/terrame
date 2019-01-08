@@ -68,7 +68,8 @@ return {
 			name = clName1,
 			resolution = 10e3,
 			file = clName1..".shp",
-			index = false
+			index = false,
+			progress = false
 		}
 
 		qixFile = string.gsub(cl1.file, ".shp", ".qix")
@@ -85,7 +86,8 @@ return {
 				name = clName2,
 				resolution = 9e3,
 				file = clName2..".shp",
-				index = true
+				index = true,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(indexWarn2, defaultValueMsg("index", true))
@@ -119,7 +121,8 @@ return {
 				name = clName3,
 				resolution = 50000,
 				file = clName3..".shp",
-				index = true
+				index = true,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(indexWarn, defaultValueMsg("index", true))
@@ -182,7 +185,8 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 70000,
-				file = clName1..".shp"
+				file = clName1..".shp",
+				progress = false
 			}
 
 			table.insert(shapes, "CellsAmaz.shp")
@@ -195,7 +199,8 @@ return {
 				input = amaz,
 				name = "CellsAmaz",
 				resolution = 200000,
-				file = "CellsAmaz.shp"
+				file = "CellsAmaz.shp",
+				progress = false
 			}
 
 			-- MODE
@@ -203,7 +208,8 @@ return {
 				operation = "mode",
 				layer = municipios,
 				attribute = "polmode",
-				select = "POPULACAO_"
+				select = "POPULACAO_",
+				progress = false
 			}
 
 			local cs = CellularSpace{
@@ -237,7 +243,8 @@ return {
 				layer = municipios,
 				attribute = "polmode2",
 				select = "POPULACAO_",
-				area = true
+				area = true,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -260,7 +267,8 @@ return {
 			cl:fill{
 				operation = "area",
 				layer = protecao,
-				attribute = "marea"
+				attribute = "marea",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -283,7 +291,8 @@ return {
 			cl:fill{
 				operation = "distance",
 				layer = rodovias,
-				attribute = "lindist"
+				attribute = "lindist",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -305,7 +314,8 @@ return {
 			cl:fill{
 				operation = "distance",
 				layer = protecao,
-				attribute = "poldist"
+				attribute = "poldist",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -327,7 +337,8 @@ return {
 			clamaz:fill{
 				operation = "distance",
 				layer = portos,
-				attribute = "pointdist"
+				attribute = "pointdist",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -350,7 +361,8 @@ return {
 			cl:fill{
 				operation = "presence",
 				layer = rodovias,
-				attribute = "linpres"
+				attribute = "linpres",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -370,7 +382,8 @@ return {
 			cl:fill{
 				operation = "presence",
 				layer = protecao,
-				attribute = "polpres"
+				attribute = "polpres",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -390,7 +403,8 @@ return {
 			clamaz:fill{
 				operation = "presence",
 				layer = portos,
-				attribute = "pointpres"
+				attribute = "pointpres",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -420,13 +434,15 @@ return {
 				input = layerName1,
 				name = clName2,
 				resolution = 100000,
-				file = clName2..".shp"
+				file = clName2..".shp",
+				progress = false
 			}
 
 			clamaz:fill{
 				operation = "count",
 				layer = portos,
-				attribute = "pointcount"
+				attribute = "pointcount",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -446,7 +462,8 @@ return {
 			cl2:fill{
 				operation = "count",
 				layer = rodovias,
-				attribute = "linecount"
+				attribute = "linecount",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -468,7 +485,8 @@ return {
 			cl2:fill{
 				operation = "count",
 				layer = protecao,
-				attribute = "polcount"
+				attribute = "polcount",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -490,7 +508,8 @@ return {
 				operation = "maximum",
 				layer = municipios,
 				attribute = "polmax",
-				select = "POPULACAO_"
+				select = "POPULACAO_",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -514,7 +533,8 @@ return {
 				operation = "minimum",
 				layer = municipios,
 				attribute = "polmin",
-				select = "POPULACAO_"
+				select = "POPULACAO_",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -538,7 +558,8 @@ return {
 				operation = "average",
 				layer = municipios,
 				attribute = "polavrg",
-				select = "POPULACAO_"
+				select = "POPULACAO_",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -562,7 +583,8 @@ return {
 				operation = "stdev",
 				layer = municipios,
 				attribute = "stdev",
-				select = "POPULACAO_"
+				select = "POPULACAO_",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -602,7 +624,8 @@ return {
 				input = "setores",
 				name = clName1,
 				resolution = 300000,
-				file = shp2
+				file = shp2,
+				progress = false
 			}
 
 			cl:fill{
@@ -610,7 +633,8 @@ return {
 				layer = "setores",
 				attribute = "polsuma",
 				select = "POPULACAO_",
-				area = true
+				area = true,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -670,7 +694,8 @@ return {
 				input = "setores",
 				name = clName1,
 				resolution = 10000,
-				file = shp3
+				file = shp3,
+				progress = false
 			}
 
 			cl:fill{
@@ -678,7 +703,8 @@ return {
 				layer = "setores",
 				attribute = "polavg",
 				select = "dens_pop",
-				area = true
+				area = true,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -711,7 +737,8 @@ return {
 				clean = true,
 				file = "munic_cells.shp",
 				name = "cells",
-				input = "cities"
+				input = "cities",
+				progress = false
 			}
 
 			table.insert(shapes, "munic_cells.shp")
@@ -722,7 +749,8 @@ return {
 					layer = "cities",
 					dummy = -1,
 					select = "CODMESO",
-					attribute = "meso"
+					attribute = "meso",
+					progress = false
 				}
 			end
 
@@ -783,14 +811,16 @@ return {
 				input = l1.name,
 				resolution = 1000,
 				file = "clip.shp",
-				clean = true
+				clean = true,
+				progress = false
 			}
 
 			cl:fill{
 				layer = l2.name,
 				operation = "distance",
 				attribute = "dist_f",
-				missing = -1
+				missing = -1,
+				progress = false
 			}
 
 			local cs = CellularSpace{
@@ -889,7 +919,8 @@ return {
 		local geojson = "setores.geojson"
 		local data1 = {
 			file = geojson,
-			overwrite = overwrite
+			overwrite = overwrite,
+			progress = false
 		}
 
 		layer:export(data1)
@@ -912,7 +943,8 @@ return {
 		local shp = "setores.shp"
 		local data2 = {
 			file = shp,
-			overwrite = overwrite
+			overwrite = overwrite,
+			progress = false
 		}
 
 		layer:export(data2)

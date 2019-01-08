@@ -49,7 +49,8 @@ return {
 				clean = true,
 				name = "Prodes-Cells",
 				resolution = 60e3,
-				file = "prodes_cells.geojson"
+				file = "prodes_cells.geojson",
+				progress = false
 			}
 
 			unitTest:assertEquals(cl1.source, "geojson")
@@ -69,7 +70,8 @@ return {
 				clean = true,
 				name = "Prodes-Cells-2",
 				resolution = 60e3,
-				file = "prodes_cells.geojson"
+				file = "prodes_cells.geojson",
+				progress = false
 			}
 
 			unitTest:assertEquals(cl1.source, "geojson")
@@ -135,7 +137,7 @@ return {
 
 			local countiesFileGjson = "municipiosAML_ok.geojson"
 			table.insert(files, countiesFileGjson)
-			counties:export{file = countiesFileGjson, overwrite = true}
+			counties:export{file = countiesFileGjson, overwrite = true, progress = false}
 
 			local paLimit = Layer{
 				project = proj,
@@ -145,7 +147,7 @@ return {
 
 			local paLimitFileGjson = "limitePA_polyc_pol.geojson"
 			table.insert(files, paLimitFileGjson)
-			paLimit:export{file = paLimitFileGjson, overwrite = true}
+			paLimit:export{file = paLimitFileGjson, overwrite = true, progress = false}
 
 			local countiesGjson = Layer{
 				project = proj,
@@ -169,7 +171,8 @@ return {
 				input = paLimitGjson.name,
 				name = cl1Name,
 				resolution = 70000,
-				file = files[3]
+				file = files[3],
+				progress = false
 			}
 
 			-- MODE
@@ -177,7 +180,8 @@ return {
 				operation = "mode",
 				layer = countiesGjson.name,
 				attribute = "polmode",
-				select = "POPULACAO_"
+				select = "POPULACAO_",
+				progress = false
 			}
 
 			local cs = CellularSpace{
@@ -200,7 +204,8 @@ return {
 				layer = countiesGjson.name,
 				attribute = "polmode2",
 				select = "POPULACAO_",
-				area = true
+				area = true,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -226,7 +231,7 @@ return {
 			}
 
 			local protectFileGjson = "BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.geojson"
-			protect:export{file = protectFileGjson, overwrite = true}
+			protect:export{file = protectFileGjson, overwrite = true, progress = false}
 			table.insert(files, protectFileGjson)
 
 			local protectGjson = Layer{
@@ -239,7 +244,8 @@ return {
 			cl1:fill{
 				operation = "area",
 				layer = protectGjson,
-				attribute = "marea"
+				attribute = "marea",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -265,7 +271,7 @@ return {
 			}
 
 			local roadsFileGjson = "BCIM_Trecho_RodoviarioLine_PA_polyc_lin.geojson"
-			roads:export{file = roadsFileGjson, overwrite = true}
+			roads:export{file = roadsFileGjson, overwrite = true, progress = false}
 			table.insert(files, roadsFileGjson)
 
 			local roadsGjson = Layer{
@@ -278,7 +284,8 @@ return {
 			cl1:fill{
 				operation = "distance",
 				layer = roadsGjson,
-				attribute = "lindist"
+				attribute = "lindist",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -300,7 +307,8 @@ return {
 			cl1:fill{
 				operation = "distance",
 				layer = protectGjson,
-				attribute = "poldist"
+				attribute = "poldist",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -323,7 +331,8 @@ return {
 			cl1:fill{
 				operation = "presence",
 				layer = roadsGjson,
-				attribute = "linpres"
+				attribute = "linpres",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -343,7 +352,8 @@ return {
 			cl1:fill{
 				operation = "presence",
 				layer = protectGjson,
-				attribute = "polpres"
+				attribute = "polpres",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -369,14 +379,16 @@ return {
 				input = paLimitGjson.name,
 				name = cl2Name,
 				resolution = 100000,
-				file = cl2File
+				file = cl2File,
+				progress = false
 			}
 
 			-- COUNT
 			cl2:fill{
 				operation = "count",
 				layer = roadsGjson,
-				attribute = "linecount"
+				attribute = "linecount",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -398,7 +410,8 @@ return {
 			cl2:fill{
 				operation = "count",
 				layer = protectGjson,
-				attribute = "polcount"
+				attribute = "polcount",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -420,7 +433,8 @@ return {
 				operation = "maximum",
 				layer = countiesGjson,
 				attribute = "polmax",
-				select = "POPULACAO_"
+				select = "POPULACAO_",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -444,7 +458,8 @@ return {
 				operation = "minimum",
 				layer = countiesGjson,
 				attribute = "polmin",
-				select = "POPULACAO_"
+				select = "POPULACAO_",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -468,7 +483,8 @@ return {
 				operation = "average",
 				layer = countiesGjson,
 				attribute = "polavrg",
-				select = "POPULACAO_"
+				select = "POPULACAO_",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -492,7 +508,8 @@ return {
 				operation = "stdev",
 				layer = countiesGjson,
 				attribute = "stdev",
-				select = "POPULACAO_"
+				select = "POPULACAO_",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -520,7 +537,8 @@ return {
 				input = countiesGjson.name,
 				name = cl3Name,
 				resolution = 300000,
-				file = cl3File
+				file = cl3File,
+				progress = false
 			}
 
 			-- SUM
@@ -529,7 +547,8 @@ return {
 				layer = countiesGjson,
 				attribute = "polsuma",
 				select = "POPULACAO_",
-				area = true
+				area = true,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -572,7 +591,7 @@ return {
 			}
 
 			local sectorsFileGjson = "itaituba-census.geojson"
-			sectors:export{file = sectorsFileGjson, overwrite = true}
+			sectors:export{file = sectorsFileGjson, overwrite = true, progress = false}
 			table.insert(files, sectorsFileGjson)
 
 			local sectorsGjson = Layer{
@@ -590,7 +609,8 @@ return {
 				input = sectorsGjson.name,
 				name = cl4Name,
 				resolution = 10000,
-				file = cl4File
+				file = cl4File,
+				progress = false
 			}
 
 			-- AVERAGE (area = true)
@@ -599,7 +619,8 @@ return {
 				layer = sectorsGjson,
 				attribute = "polavg",
 				select = "dens_pop",
-				area = true
+				area = true,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -624,7 +645,8 @@ return {
 				clean = true,
 				file = "CountiesCells.geojson",
 				name = "CountiesCells",
-				input = countiesGjson.name
+				input = countiesGjson.name,
+				progress = false
 			}
 
 			table.insert(files, cl5.file)
@@ -635,7 +657,8 @@ return {
 					layer = countiesGjson,
 					dummy = -1,
 					select = "CODMESO",
-					attribute = "meso"
+					attribute = "meso",
+					progress = false
 				}
 			end
 
@@ -671,7 +694,7 @@ return {
 			}
 
 			local amzFileGjson = "amazonia-limit.geojson"
-			amz:export{file = amzFileGjson, overwrite = true}
+			amz:export{file = amzFileGjson, overwrite = true, progress = false}
 			table.insert(files, amzFileGjson)
 
 			local amzGjson = Layer{
@@ -686,7 +709,8 @@ return {
 				input = amzGjson.name,
 				name = "CellsAmaz",
 				resolution = 200000,
-				file = "CellsAmaz.geojson"
+				file = "CellsAmaz.geojson",
+				progress = false
 			}
 
 			table.insert(files, cl6.file)
@@ -698,7 +722,7 @@ return {
 			}
 
 			local portsFileGjson = "amazonia-ports.geojson"
-			ports:export{file = portsFileGjson, overwrite = true}
+			ports:export{file = portsFileGjson, overwrite = true, progress = false}
 			table.insert(files, portsFileGjson)
 
 			local portsGjson = Layer{
@@ -711,7 +735,8 @@ return {
 			cl6:fill{
 				operation = "distance",
 				layer = portsGjson,
-				attribute = "pointdist"
+				attribute = "pointdist",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -734,7 +759,8 @@ return {
 			cl6:fill{
 				operation = "presence",
 				layer = portsGjson,
-				attribute = "pointpres"
+				attribute = "pointpres",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -755,7 +781,8 @@ return {
 			cl6:fill{
 				operation = "count",
 				layer = portsGjson,
-				attribute = "pointcount"
+				attribute = "pointcount",
+				progress = false
 			}
 
 			cs = CellularSpace{

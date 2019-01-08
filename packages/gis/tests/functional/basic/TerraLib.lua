@@ -396,6 +396,8 @@ return {
 		unitTest:assert(true)
 	end,
 	removeLayer = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {
 			file = "removelayer_basic_func.tview",
 			title = "TerraLib Tests",
@@ -426,6 +428,8 @@ return {
 		unitTest:assertNil(proj.layers.testLayer)
 
 		proj.file:delete()
+	end,
+	setProgressVisible = function(unitTest)
+		unitTest:assert(true)
 	end
 }
-

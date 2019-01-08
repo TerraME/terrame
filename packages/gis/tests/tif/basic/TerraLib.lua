@@ -183,6 +183,8 @@ return {
 		proj.file:delete()
 	end,
 	getDistance = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -274,6 +276,8 @@ return {
 		unitTest:assertEquals(dsetSize, 20020)
 	end,
 	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local createProject = function()
 			local proj = {
 				file = "savedataas_tif_basic.tview",
@@ -473,6 +477,8 @@ return {
 		outFile:delete()
 	end,
 	attributeFill = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local coverageTotalArea = function()
 			local proj = {
 				file = "attrfill-tif-basic.tview",

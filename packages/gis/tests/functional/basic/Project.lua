@@ -192,7 +192,8 @@ return {
 		cl:fill{
 			operation = "maximum",
 			attribute = "maxcover",
-			layer = "cover"
+			layer = "cover",
+			progress = false
 		}
 
 		proj5 = Project{

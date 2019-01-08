@@ -54,7 +54,8 @@ return {
 			input = layerName1,
 			name = clName1,
 			resolution = 60e3,
-			file = filePath1
+			file = filePath1,
+			progress = false
 		}
 
 		unitTest:assertEquals(clName1, cl1.name)
@@ -123,7 +124,8 @@ return {
 				input = layerName1,
 				name = clName1,
 				resolution = 5000,
-				file = clName1..".shp"
+				file = clName1..".shp",
+				progress = false
 			}
 
 			-- MODE
@@ -132,7 +134,8 @@ return {
 				operation = "mode",
 				attribute = "prod_mode",
 				layer = prodes,
-				missing = 1000
+				missing = 1000,
+				progress = false
 			}
 
 			local cs = CellularSpace{
@@ -163,7 +166,8 @@ return {
 				attribute = "prod_m_ov",
 				layer = prodes,
 				pixel = "overlap",
-				missing = 1000
+				missing = 1000,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -203,7 +207,8 @@ return {
 				input = layerName1,
 				name = clName2,
 				resolution = 10000,
-				file = clName2..".shp"
+				file = clName2..".shp",
+				progress = false
 			}
 
 			local warningFunc = function()
@@ -211,7 +216,8 @@ return {
 					operation = "minimum",
 					attribute = "prod_min",
 					layer = altimetria,
-					pixel = "centroid"
+					pixel = "centroid",
+					progress = false
 				}
 			end
 
@@ -244,7 +250,8 @@ return {
 			cl:fill{
 				operation = "maximum",
 				attribute = "prod_max",
-				layer = altimetria
+				layer = altimetria,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -274,7 +281,8 @@ return {
 			cl:fill{
 				operation = "sum",
 				attribute = "prod_sum",
-				layer = altimetria
+				layer = altimetria,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -303,7 +311,8 @@ return {
 			cl:fill{
 				operation = "coverage",
 				attribute = "cov",
-				layer = prodes
+				layer = prodes,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -347,7 +356,8 @@ return {
 					operation = "average",
 					layer = "altimetria",
 					attribute = "height",
-					dummy = altLayer:dummy()
+					dummy = altLayer:dummy(),
+					progress = false
 				}
 			end
 			unitTest:assertWarning(nodataDefaultWarn, defaultValueMsg("dummy", altLayer:dummy()))
@@ -373,7 +383,8 @@ return {
 			cl:fill{
 				operation = "stdev",
 				layer = "altimetria",
-				attribute = "std"
+				attribute = "std",
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -397,7 +408,8 @@ return {
 				operation = "average",
 				layer = "altimetria",
 				attribute = "height_nd",
-				dummy = 256
+				dummy = 256,
+				progress = false
 			}
 
 			cs = CellularSpace{
@@ -447,14 +459,16 @@ return {
 			protec:fill{
 				operation = "count",
 				attribute = "prod_count",
-				layer = prodes
+				layer = prodes,
+				progress = false
 			}
 
 			protec:fill{
 				operation = "count",
 				attribute = "prod_c_ov",
 				layer = prodes,
-				pixel = "overlap"
+				pixel = "overlap",
+				progress = false
 			}
 
 
@@ -497,14 +511,16 @@ return {
 				clean = true,
 				file = "csEs.shp",
 				name = "csEs",
-				input = "limit"
+				input = "limit",
+				progress = false
 			}
 
 			cl:fill{
 				operation = "coverage",
 				layer = "uses",
 				attribute = "area",
-				area = true
+				area = true,
+				progress = false
 			}
 
 			local cs = CellularSpace{
@@ -658,7 +674,7 @@ return {
 			file = filePath("test/prodes_polyc_10k.tif", "gis")
 		}
 
-		local toData = {file = File("tif2png.png"):deleteIfExists(), select = {"0", "1"}}
+		local toData = {file = File("tif2png.png"):deleteIfExists(), select = {"0", "1"}, progress = false}
 		local selectUnnecessary = function()
 			layer:export(toData)
 		end
@@ -673,7 +689,7 @@ return {
 			file = toData.file
 		}
 
-		local toData2 = {file = File("png2tif.tif"), epsg = 4326}
+		local toData2 = {file = File("png2tif.tif"), epsg = 4326, progress = false}
 		layer2:export(toData2)
 
 		unitTest:assert(toData2.file:exists())

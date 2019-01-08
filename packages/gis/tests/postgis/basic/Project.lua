@@ -46,10 +46,11 @@ return {
 				source = "postgis",
 				password = password,
 				database = database,
-				overwrite = true
+				overwrite = true,
+				progress = false
 			}
 
-			l1:export(pgData, true)
+			l1:export(pgData)
 
 			local qgisproj
 			if version == "_v3" then
@@ -103,10 +104,11 @@ return {
 				source = "postgis",
 				password = password,
 				database = database,
-				overwrite = true
+				overwrite = true,
+				progress = false
 			}
 
-			l1:export(pgData, true)
+			l1:export(pgData)
 
 			local qgpfile = filePath("test/sampa_v3.qgs", "gis")
 			local spfile = filePath("test/sampa.shp", "gis")

@@ -83,6 +83,8 @@ return {
 		end
 
 		local creatingFromShape = function()
+			TerraLib().setProgressVisible(false)
+
 			local proj = createProject()
 			local layerName1 = "SampaShp"
 			local layerFile1 = filePath("test/sampa.shp", "gis")
@@ -153,6 +155,8 @@ return {
 		end
 
 		local creatingFromTif = function()
+			TerraLib().setProgressVisible(false)
+
 			local proj = createProject()
 			local layerName1 = "AmazoniaTif"
 			local layerFile1 = filePath("amazonia-prodes.tif", "gis")
@@ -189,6 +193,8 @@ return {
 		unitTest:assert(creatingFromTif)
 	end,
 	attributeFill = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local createProject = function()
 			local proj = {
 				file = "attributefill_shp_basic.tview",
@@ -1317,6 +1323,8 @@ return {
 		unitTest:assert(coverageTotalArea)
 	end,
 	saveDataSet = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local createProject = function()
 			local proj = {
 				file = "savedataset-shp-basic.tview",
@@ -1835,6 +1843,8 @@ return {
 		end
 	end,
 	getArea = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -1958,6 +1968,8 @@ return {
 		proj.file:delete()
 	end,
 	getDistance = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -2014,6 +2026,8 @@ return {
 		unitTest:assertEquals(geom:getGeometryType(), "Point")
 	end,
 	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local sampaLayerName = "SampaShp"
 		local createProjectWithSampaLayer = function()
 			local proj = {
