@@ -50,7 +50,7 @@ return {
 			unitTest:assertEquals(layerInfo.url, url) -- SKIP
 			unitTest:assertEquals(layerInfo.type, "WFS") -- SKIP
 			unitTest:assertEquals(layerInfo.source, "wfs") -- SKIP
-			unitTest:assertEquals(layerInfo.rep, "surface") -- SKIP
+			unitTest:assertEquals(layerInfo.rep, "polygon") -- SKIP
 			unitTest:assertEquals(layerInfo.srid, srid) -- SKIP
 			unitTest:assertEquals(layerInfo.encoding, encoding) -- SKIP
 		else
@@ -97,7 +97,7 @@ return {
 			local dataset = "reddpac:wfs_biomes"
 			local srid = 29901
 
-			TerraLib().addWfsLayer(qgp, layerName, url, dataset, srid, encoding)
+			TerraLib().addWfsLayer(qgp, layerName, url, dataset, srid)
 
 			local qgp2 = {
 				file = File("sampa_v3.qgs")
@@ -110,7 +110,7 @@ return {
 			unitTest:assertEquals(layerInfo.url, url)
 			unitTest:assertEquals(layerInfo.type, "WFS")
 			unitTest:assertEquals(layerInfo.source, "wfs")
-			unitTest:assertEquals(layerInfo.rep, "surface")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
 			unitTest:assertEquals(layerInfo.srid, srid)
 
 			qgp.file:delete()

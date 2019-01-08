@@ -186,7 +186,7 @@ return {
 
 			layerInfo = TerraLib().getLayerInfo(proj, "reddpac:LandCover2000")
 			unitTest:assertEquals(layerInfo.name, "reddpac:LandCover2000")
-			unitTest:assertEquals(layerInfo.rep, "surface")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
 			unitTest:assertEquals(layerInfo.srid, 4326)
 			unitTest:assertEquals(layerInfo.type, "WFS")
 			unitTest:assertEquals(layerInfo.source, "wfs")
