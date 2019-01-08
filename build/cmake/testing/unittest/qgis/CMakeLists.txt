@@ -21,9 +21,6 @@
 # of this software and its documentation.
 ############################################################################################
 
-add_definitions(-DBOOST_ALL_NO_LIB)
-find_package(Boost REQUIRED system filesystem)
-
 if(MSVC)
 	set(CMAKE_CXX_FLAGS_RELEASE "/MT")
 endif(MSVC)
@@ -36,7 +33,7 @@ file(GLOB TERRAME_INTTEST_QGIS_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/q
 file(GLOB TERRAME_INTTEST_QGIS_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/unittest/qgis/*.h)
 
 if(UNIX)
-	set(CMAKE_INSTALL_RPATH "bin:\$ORIGIN:\$ORIGIN/bin")
+	set(CMAKE_INSTALL_RPATH "${TERRAME_INSTALL_PREFIX}/bin:\$ORIGIN:\$ORIGIN/bin")
 	set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
