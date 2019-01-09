@@ -54,7 +54,8 @@ itaitubaCells = Layer{
 	clean = true,
 	file = "itaituba.shp",
 	input = "census",
-	resolution = 5000
+	resolution = 5000,
+	progress = false
 }
 
 itaitubaCells:fill{
@@ -66,19 +67,22 @@ itaitubaCells:fill{
 itaitubaCells:fill{
 	operation = "coverage",
 	layer = "deforestation",
-	attribute = "defor"
+	attribute = "defor",
+	progress = false
 }
 
 itaitubaCells:fill{
 	operation = "distance",
 	layer = "roads",
-	attribute = "distroad"
+	attribute = "distroad",
+	progress = false
 }
 
 itaitubaCells:fill{
 	operation = "distance",
 	layer = "localities",
-	attribute = "distlocal"
+	attribute = "distlocal",
+	progress = false
 }
 
 itaitubaCells:fill{
@@ -86,7 +90,8 @@ itaitubaCells:fill{
 	layer = "census",
 	attribute = "population",
 	select = "population",
-	area = true
+	area = true,
+	progress = false
 }
 
 cell = Cell{

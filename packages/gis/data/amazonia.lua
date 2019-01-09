@@ -55,31 +55,36 @@ amazoniaCells = Layer{
 	clean = true,
 	input = "limit",
 	name = "cells",
-	resolution = 50000
+	resolution = 50000,
+	progress = false
 }
 
 amazoniaCells:fill{
 	operation = "coverage",
 	layer = "prodes",
-	attribute = "prodes"
+	attribute = "prodes",
+	progress = false
 }
 
 amazoniaCells:fill{
 	operation = "distance",
 	layer = "roads",
-	attribute = "distroads"
+	attribute = "distroads",
+	progress = false
 }
 
 amazoniaCells:fill{
 	operation = "distance",
 	layer = "ports",
-	attribute = "distports"
+	attribute = "distports",
+	progress = false
 }
 
 amazoniaCells:fill{
 	operation = "area",
 	layer = "protected",
-	attribute = "protected"
+	attribute = "protected",
+	progress = false
 }
 
 cs = CellularSpace{
