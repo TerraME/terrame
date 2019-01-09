@@ -519,7 +519,7 @@ return{
 			}
 		end
 
-		unitTest:assertWarning(patternWarning, "Only one resut has been found to match the pattern '"..packageInfo("gis").data.."conservation*Areas_1961.shp'.")
+		unitTest:assertWarning(patternWarning, "Only one result has been found to match the pattern '"..packageInfo("gis").data.."conservation*Areas_1961.shp'.")
 		unitTest:assertEquals(projTemporal.areas.name, "areas")
 		unitTest:assertType(projTemporal.areas, "Layer")
 		unitTest:assertEquals(projTemporal.areas.source, "shp")
@@ -538,7 +538,7 @@ return{
 			}
 		end
 
-		unitTest:assertWarning(timesWarning, "Only one resut has been found to match the pattern '"..packageInfo("gis").data.."conservationAreas_1979.shp'.")
+		unitTest:assertWarning(timesWarning, "Only one result has been found to match the pattern '"..packageInfo("gis").data.."conservationAreas_1979.shp'.")
 		unitTest:assertNil(projTemporal.conservation_1961)
 		unitTest:assertNil(projTemporal.conservation_1974)
 		unitTest:assertEquals(projTemporal.conservation_1979.name, "conservation_1979")
@@ -1131,15 +1131,6 @@ return{
 
 		unitTest:assertError(temporalAttributeError, "No results have been found to match the pattern 'test*'.")
 
-		temporalAttributeError = function()
-			cl:fill{
-				attribute = "con",
-				operation = "area",
-				layer = "conservation*1961",
-			}
-		end
-
-		unitTest:assertWarning(temporalAttributeError, "Only one resut has been found to match the pattern 'conservation*1961'.")
 		local temporalSplitError = function()
 			cl:fill{
 				attribute = "con",
@@ -1150,6 +1141,7 @@ return{
 		end
 
 		unitTest:assertError(temporalSplitError, incompatibleTypeMsg("split", "boolean", "string"))
+
 		local temporalSplitAlreadyExistError = function()
 			cl:fill{
 				attribute = "con",
@@ -1168,11 +1160,12 @@ return{
 		end
 
 		unitTest:assertError(temporalSplitAlreadyExistError, "The attribute 'con' already exists in the Layer.")
-		File(filePath1):deleteIfExists()
-		File("layer_1961.shp"):deleteIfExists()
-		File("layer_1974.shp"):deleteIfExists()
-		File("layer_1979.shp"):deleteIfExists()
-		File("temporal.tview"):deleteIfExists()
+
+		File(filePath1):delete()
+		File("layer_1961.shp"):delete()
+		File("layer_1974.shp"):delete()
+		File("layer_1979.shp"):delete()
+		File("temporal.tview"):delete()
 	end,
 	simplify = function(unitTest)
 		local projName = "layer_func_alt.tview"

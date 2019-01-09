@@ -813,6 +813,17 @@ return {
 			progress = false
 		}
 
+		local temporalAttributeWarn = function()
+			cl:fill{
+				attribute = "con",
+				operation = "area",
+				layer = "conservation*1961",
+				progress = false
+			}
+		end
+
+		unitTest:assertWarning(temporalAttributeWarn, "Only one result has been found to match the pattern 'conservation*1961'.")
+
 		attrs = cl:attributes()
 		local found = 0
 		forEachElement(attrs, function(_, attr)

@@ -465,7 +465,7 @@ local function findMultiples(base, pattern, list)
 	if #elements == 0 then
 		customError("No results have been found to match the pattern '"..base.."*"..pattern.."'.")
 	elseif #elements == 1 then
-		customWarning("Only one resut has been found to match the pattern '"..base.."*"..pattern.."'.")
+		customWarning("Only one result has been found to match the pattern '"..base.."*"..pattern.."'.")
 	end
 
 	return elements
@@ -1499,7 +1499,7 @@ function Layer(data)
 			optionalTableArgument(data, "times", "table")
 			if data.times then
 				if #data.times == 1 then
-					customWarning("Only one resut has been found to match the pattern '"..base.."_"..data.times[1]..pattern.."'.")
+					customWarning("Only one result has been found to match the pattern '"..base.."_"..data.times[1]..pattern.."'.")
 				end
 
 				forEachElement(data.times, function(_, time)
