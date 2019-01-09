@@ -592,10 +592,11 @@ else(UNIX)
 		        COMPONENT runtime)
 	endif()
 
-	install(DIRECTORY ${TERRALIB_DIR}/lib/
+	file(GLOB TERRALIB_MODULES ${TERRALIB_DIR}/lib/*terralib*)
+
+	install(FILES ${TERRALIB_MODULES}
 	        DESTINATION ${TERRAME_INSTALL_PREFIX}/bin
-	        COMPONENT runtime
-	        PATTERN "cmake" EXCLUDE)
+	        COMPONENT runtime)
 
 	list(APPEND QTLUAE_LIBS ${TERRALIB_3RDPARTY_DIR}/lib/libqtluae.so.0.1
 	                        ${TERRALIB_3RDPARTY_DIR}/lib/qtluae.so)

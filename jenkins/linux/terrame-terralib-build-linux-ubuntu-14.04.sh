@@ -84,7 +84,10 @@ elif [[ "$GIT_STATUS" = *"git pull"* ]]; then
 	rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua  $_TERRALIB_INSTALL_PATH
 	valid $? "Error: Cleaning fail"
 else
-	echo "Updating is not necessary!"
+	echo ""
+	echo "Updating is not necessary"
+	echo ""
+	rm -rf $_TERRALIB_INSTALL_PATH
 fi
 
 echo ""

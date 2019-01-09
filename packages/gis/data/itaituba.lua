@@ -61,7 +61,8 @@ itaitubaCells = Layer{
 itaitubaCells:fill{
 	operation = "average",
 	layer = "elevation",
-	attribute = "elevation"
+	attribute = "elevation",
+	progress = false
 }
 
 itaitubaCells:fill{

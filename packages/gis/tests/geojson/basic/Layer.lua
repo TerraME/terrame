@@ -196,7 +196,7 @@ return {
 				color = {"red", "green", "blue", "yellow"}
 			}
 
-			unitTest:assertSnapshot(map, "polygons-mode-geojson.png")
+			unitTest:assertSnapshot(map, "polygons-mode-geojson.png", 0.01)
 
 			-- MODE (area = true)
 			cl1:fill{
@@ -501,7 +501,7 @@ return {
 				color = {"red", "green"}
 			}
 
-			unitTest:assertSnapshot(map, "polygons-average-geojson.png")
+			unitTest:assertSnapshot(map, "polygons-average-geojson.png", 0.005)
 
 			-- STDEV
 			cl1:fill{
@@ -582,7 +582,7 @@ return {
 				color = {"red", "green"}
 			}
 
-			unitTest:assertSnapshot(map, "polygons-sum-area-geojson.png")
+			unitTest:assertSnapshot(map, "polygons-sum-area-geojson.png", 0.01)
 
 			local sectors = Layer{
 				project = proj,
@@ -685,7 +685,7 @@ return {
 				slices = 5
 			}
 
-			unitTest:assertSnapshot(map, "polygons-coverage-2-geojson.png")
+			unitTest:assertSnapshot(map, "polygons-coverage-2-geojson.png", 0.005)
 
 			local amz = Layer{
 				project = proj,
