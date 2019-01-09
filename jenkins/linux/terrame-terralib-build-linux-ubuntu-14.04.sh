@@ -85,8 +85,8 @@ elif [[ "$GIT_STATUS" = *"git pull"* ]]; then
 	valid $? "Error: Cleaning fail"
 else
 	echo ""
-	echo "Updating is not necessary"
 	echo ""
+	echo "Updating is not necessary"
 	rm -rf $_TERRALIB_INSTALL_PATH
 fi
 

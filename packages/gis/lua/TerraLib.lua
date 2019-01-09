@@ -682,14 +682,14 @@ end
 local function createProgressViewer(msg)
 	if progress then
 		local viewer = binding.te.common.LuaProgressViewer()
-		viewer:setMessage(msg)
+		viewer:setMessage(msg) -- SKIP
 		return binding.te.common.ProgressManager.getInstance():addViewer(viewer)
 	end
 end
 
 local function finalizeProgressViewer(viewerId)
 	if progress then
-		binding.te.common.ProgressManager.getInstance():removeViewer(viewerId)
+		binding.te.common.ProgressManager.getInstance():removeViewer(viewerId) -- SKIP
 	end
 end
 
@@ -2523,7 +2523,6 @@ TerraLib_ = {
 	-- TerraLib().addShpLayer(proj, layerName1, layerFile1)
 	--
 	--	TerraLib().addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
-
 	addShpCellSpaceLayer = function(project, inputLayerTitle, name, resolution, file, mask, addSpatialIdx)
 		loadProject(project, project.file)
 
