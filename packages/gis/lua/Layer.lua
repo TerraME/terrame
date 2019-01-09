@@ -545,14 +545,14 @@ Layer_ = {
 	-- from the reference layer. It sums the intersection areas of the object with all the polygons
 	-- of the reference layer. Because of that, if there is some overlay between the polygons of the
 	-- reference layer, it might create attribute values greater than one.
-	-- & attribute, layer & split \
+	-- & attribute, layer & progress, split \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income.
-	-- & attribute, layer, select  & area, missing, band, dummy, pixel, split  \
+	-- & attribute, layer, select  & area, missing, band, dummy, pixel, progress, split  \
 	-- "count" & Number of objects that have some overlay with the cell.
-	-- & attribute, layer & dummy, pixel, split \
+	-- & attribute, layer & dummy, pixel, progress, split \
 	-- "coverage" & Percentage or total area of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
@@ -565,32 +565,32 @@ Layer_ = {
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & area, missing, band, pixel, split \
+	-- & attribute, layer, select & area, missing, band, pixel, progress, split \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
 	-- centroid of the cell to the closest point, line, or border of a polygon.
-	-- & attribute, layer & split \
+	-- & attribute, layer & progress, split \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy, pixel, split \
+	-- attribute, layer, select & missing, band, dummy, pixel, progress, split \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy, pixel, split \
+	-- attribute, layer, select & missing, band, dummy, pixel, progress, split \
 	-- "mode" & More common qualitative value from the objects that have some intersection with
 	-- the cell, without taking into account their geometric properties. This operation creates an
 	-- attribute with string values. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select &
-	-- missing, band, dummy, pixel, split \
+	-- missing, band, dummy, pixel, progress, split \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
-	-- & attribute, layer & split \
+	-- & attribute, layer & progress, split \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy, pixel, split \
+	-- attribute, layer, select & missing, band, dummy, pixel, progress, split \
 	-- "sum" & Sum of quantitative values from objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, it
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
-	-- & attribute, layer, select & area, missing, band, dummy, pixel, split \
+	-- & attribute, layer, select & area, missing, band, dummy, pixel, progress, split \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true),
 	-- or the weights are equal for each object with some overlap (false, missing value).
@@ -605,7 +605,7 @@ Layer_ = {
 	-- with each new layer's name formed by the own Layer's name and the respective times as sufix.
 	-- The default value is false and, in this case, the temporal data will be filled in the own Layer
 	-- into different attributes though.
-	-- @arg data.progress A boolean which if true show the percentage progress of the filling.
+	-- @arg data.progress A boolean to set the progress viewer of the filling. Its default is true.
 	-- @arg data.pixel A string value indicating when a pixel is within a polygon. See the table below.
 	-- @tabular pixel Pixel & Description \
 	-- "centroid" (default) & A pixel is within a polygon if its centroid is within the polygon. It is recommended to

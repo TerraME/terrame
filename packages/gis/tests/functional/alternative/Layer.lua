@@ -269,7 +269,8 @@ return{
 			input = layerName1,
 			name = clName1,
 			resolution = 0.7,
-			file = shp1
+			file = shp1,
+			progress = false
 		}
 
 		local cellLayerAlreadyExists = function()
@@ -571,7 +572,8 @@ return{
 			input = layerName1,
 			name = clName1,
 			resolution = 30000,
-			file = filePath1
+			file = filePath1,
+			progress = false
 		}
 
 		local operationMandatory = function()
@@ -1105,7 +1107,8 @@ return{
 			source = "shp",
 			input = "hidro_1970",
 			name = "layer",
-			resolution = 30000
+			resolution = 30000,
+			progress = false
 		}
 
 		local temporalAttributeError = function()

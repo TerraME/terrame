@@ -141,7 +141,8 @@ return {
 			clean = true,
 			input = "limit",
 			name = "cells",
-			resolution = 2e3
+			resolution = 2e3,
+			progress = false
 		}
 
 		unitTest:assertType(cl, "Layer")
@@ -328,7 +329,8 @@ return {
 				name = cl1Name,
 				resolution = 1,
 				file = cl1Name..".shp",
-				index = false
+				index = false,
+				progress = false
 			}
 
 			local spgj = filePath("test/sampa.geojson", "gis")
@@ -421,7 +423,8 @@ return {
 				name = cl1Name,
 				resolution = 1,
 				file = cl1Name..".shp",
-				index = false
+				index = false,
+				progress = false
 			}
 
 			local qgp2 = Project {

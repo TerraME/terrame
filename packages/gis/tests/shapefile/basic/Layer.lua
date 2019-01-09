@@ -1005,7 +1005,8 @@ return {
 		local rails = "es_rails.shp"
 		local data1 = {
 			file = rails,
-			overwrite = true
+			overwrite = true,
+			progress = false
 		}
 
 		layer1:export(data1)
