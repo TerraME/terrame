@@ -21,42 +21,13 @@
 # of this software and its documentation.
 ############################################################################################
 
-add_definitions(-DBOOST_ALL_NO_LIB)
-find_package(Boost REQUIRED system filesystem)
-find_package(Qt5Xml REQUIRED)
+include(InstallRequiredSystemLibraries)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
+if(WIN32)
+	install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+	DESTINATION bin
+	COMPONENT runtime)
+endif()
 
-find_library(TERRALIB_CORE_LIBRARY
-			NAMES terralib_mod_core
-			PATHS ${TERRALIB_DIR}/lib)
-
-find_library(TERRALIB_XML_LIBRARY
-			NAMES terralib_mod_xml
-			PATHS ${TERRALIB_DIR}/lib)
-
-find_path(TERRALIB_INCLUDE_DIR terralib.h
-			HINTS ${TERRALIB_DIR}/include)
-
-set(TERRALIB_INCLUDE_DIR ${TERRALIB_DIR}/include)
-
-file(GLOB TERRAME_QGIS_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/src/qgis/*.cpp)
-file(GLOB TERRAME_QGIS_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/src/qgis/*.h)
-
-add_library(qgis SHARED ${TERRAME_QGIS_SRC_FILES} ${TERRAME_QGIS_HDR_FILES})
-
-target_include_directories(qgis PUBLIC ${TERRALIB_INCLUDE_DIR}
-										${Boost_INCLUDE_DIR}
-										${Qt5Xml_INCLUDE_DIRS})
-
-target_link_libraries(qgis ${TERRALIB_CORE_LIBRARY}
-							${TERRALIB_XML_LIBRARY}
-							${Boost_SYSTEM_LIBRARY}
-							${Boost_FILESYSTEM_LIBRARY}
-							Qt5::Xml)
-
-install(TARGETS qgis
-		RUNTIME DESTINATION ${TERRAME_DESTINATION_RUNTIME}
-        LIBRARY DESTINATION ${TERRAME_DESTINATION_LIBRARY}
-        COMPONENT runtime)
+configure_file(${terrame_SOURCE_DIR}/fixBundle.cmake.in ${terrame_BINARY_DIR}/fixBundle.cmake @ONLY)
+install(SCRIPT ${CMAKE_BINARY_DIR}/fixBundle.cmake COMPONENT runtime)

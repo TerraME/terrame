@@ -45,11 +45,11 @@ target_include_directories(qgis_utest PUBLIC ${TERRAME_ABSOLUTE_ROOT_DIR}/src
 target_link_libraries(qgis_utest qgis ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
 
 install(TARGETS qgis_utest
-        RUNTIME DESTINATION bin
+        RUNTIME DESTINATION ${TERRAME_DESTINATION_RUNTIME}
         COMPONENT runtime)
 
 install(DIRECTORY ${PKG_TEST_DIR}
-		DESTINATION bin/qgistestdata
+		DESTINATION ${TERRAME_DESTINATION_RUNTIME}/qgistestdata
 		COMPONENT runtime)
 
 add_test(NAME qgis_utest COMMAND qgis_utest)
