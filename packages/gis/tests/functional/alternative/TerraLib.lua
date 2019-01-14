@@ -24,13 +24,14 @@
 
 return {
 	attributeFill = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "amazonia.tview"
 		proj.title = "TerraLib Tests"
 		proj.author = "Avancini Rodrigo"
 
 		File(proj.file):deleteIfExists()
-
 		TerraLib().createProject(proj, {})
 
 		local layerName1 = "ES"
@@ -56,7 +57,16 @@ return {
 		local default = 0
 
 		local layersNotIntersect = function()
-			TerraLib().attributeFill(proj, layerName2, clName, nil, attribute, operation, select, area, default)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				area = area,
+				default = default
+			}
 		end
 
 		unitTest:assertError(layersNotIntersect, "The two layers do not intersect.")
@@ -164,6 +174,8 @@ return {
 		cellsShp:delete()
 	end,
 	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"

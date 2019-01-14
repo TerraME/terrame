@@ -186,7 +186,7 @@ return {
 
 			layerInfo = TerraLib().getLayerInfo(proj, "reddpac:LandCover2000")
 			unitTest:assertEquals(layerInfo.name, "reddpac:LandCover2000")
-			unitTest:assertEquals(layerInfo.rep, "surface")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
 			unitTest:assertEquals(layerInfo.srid, 4326)
 			unitTest:assertEquals(layerInfo.type, "WFS")
 			unitTest:assertEquals(layerInfo.source, "wfs")
@@ -396,6 +396,8 @@ return {
 		unitTest:assert(true)
 	end,
 	removeLayer = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {
 			file = "removelayer_basic_func.tview",
 			title = "TerraLib Tests",
@@ -426,6 +428,8 @@ return {
 		unitTest:assertNil(proj.layers.testLayer)
 
 		proj.file:delete()
+	end,
+	setProgressVisible = function(unitTest)
+		unitTest:assert(true)
 	end
 }
-

@@ -68,7 +68,8 @@ return {
 			name = clName1,
 			resolution = 10e3,
 			file = clName1..".shp",
-			index = false
+			index = false,
+			progress = false
 		}
 
 		qixFile = string.gsub(cl1.file, ".shp", ".qix")
@@ -85,7 +86,8 @@ return {
 				name = clName2,
 				resolution = 9e3,
 				file = clName2..".shp",
-				index = true
+				index = true,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(indexWarn2, defaultValueMsg("index", true))
@@ -119,7 +121,8 @@ return {
 				name = clName3,
 				resolution = 50000,
 				file = clName3..".shp",
-				index = true
+				index = true,
+				progress = false
 			}
 		end
 		unitTest:assertWarning(indexWarn, defaultValueMsg("index", true))
@@ -142,619 +145,701 @@ return {
 		proj.file:delete()
 	end,
 	fill = function(unitTest)
-		local projName = "cellular_layer_fill_shape.tview"
-		local layerName1 = "limitepa"
-		local protecao = "protecao"
-		local rodovias = "Rodovias"
-		local portos = "Portos"
-		local amaz = "limiteamaz"
-
-		local proj = Project{
-			file = projName,
-			clean = true,
-			[layerName1] = filePath("test/limitePA_polyc_pol.shp", "gis"),
-			[protecao] = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis"),
-			[rodovias] = filePath("test/BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "gis"),
-			[portos] = filePath("amazonia-ports.shp", "gis"),
-			[amaz] = filePath("amazonia-limit.shp", "gis")
-		}
-
-		local municipios = "municipios"
-		Layer{
-			project = proj,
-			name = municipios,
-			file = filePath("test/municipiosAML_ok.shp", "gis")
-		}
-
-		local clName1 = "CellsShp"
-
-		local shapes = {}
-
-		local shp0 = clName1..".shp"
-		table.insert(shapes, shp0)
-		File(shp0):deleteIfExists()
-
-		local cl = Layer{
-			project = proj,
-			source = "shp",
-			clean = true,
-			input = layerName1,
-			name = clName1,
-			resolution = 70000,
-			file = clName1..".shp"
-		}
-
-		table.insert(shapes, "CellsAmaz.shp")
-		File("CellsAmaz.shp"):deleteIfExists()
-
-		local clamaz = Layer{
-			project = proj,
-			source = "shp",
-			clean = true,
-			input = amaz,
-			name = "CellsAmaz",
-			resolution = 200000,
-			file = "CellsAmaz.shp"
-		}
-
-		-- MODE
-		cl:fill{
-			operation = "mode",
-			layer = municipios,
-			attribute = "polmode",
-			select = "POPULACAO_"
-		}
-
-		local cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		--[[
-		local unique = {}
-		forEachCell(cs, function(cell)
-			unique[cell.polmode] = true
-		end)
-
-		forEachElement(unique, function(idx)
-			print(idx)
-		end)
-		--]]
-
-		local map = Map{
-			target = cs,
-			select = "polmode",
-			value = {"0", "53217", "37086", "14302"},
-			color = {"red", "green", "blue", "yellow"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-mode.png")
-
-		-- MODE (area = true)
-		cl:fill{
-			operation = "mode",
-			layer = municipios,
-			attribute = "polmode2",
-			select = "POPULACAO_",
-			area = true
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "polmode2",
-			min = 0,
-			max = 1410000,
-			slices = 8,
-			color = {"red", "green"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-mode-2.png")
-
-		-- AREA
-		cl:fill{
-			operation = "area",
-			layer = protecao,
-			attribute = "marea"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "marea",
-			min = 0,
-			max = 1,
-			slices = 8,
-			color = {"red", "green"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-area.png", 0.05)
-
-		-- DISTANCE
-		cl:fill{
-			operation = "distance",
-			layer = rodovias,
-			attribute = "lindist"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "lindist",
-			min = 0,
-			max = 200000,
-			slices = 8,
-			color = {"green", "red"}
-		}
-
-		unitTest:assertSnapshot(map, "lines-distance.png")
-
-		cl:fill{
-			operation = "distance",
-			layer = protecao,
-			attribute = "poldist"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "poldist",
-			min = 0,
-			max = 370000,
-			slices = 8,
-			color = {"green", "red"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-distance.png")
-
-		clamaz:fill{
-			operation = "distance",
-			layer = portos,
-			attribute = "pointdist"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = clamaz.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "pointdist",
-			min = 0,
-			max = 2000000,
-			slices = 8,
-			color = {"green", "red"}
-		}
-
-		unitTest:assertSnapshot(map, "points-distance.png")
-
-		-- PRESENCE
-		cl:fill{
-			operation = "presence",
-			layer = rodovias,
-			attribute = "linpres"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "linpres",
-			value = {0, 1},
-			color = {"green", "red"}
-		}
-
-		unitTest:assertSnapshot(map, "lines-presence.png")
-
-		cl:fill{
-			operation = "presence",
-			layer = protecao,
-			attribute = "polpres"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "polpres",
-			value = {0, 1},
-			color = {"green", "red"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-presence.png")
-
-		clamaz:fill{
-			operation = "presence",
-			layer = portos,
-			attribute = "pointpres"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = clamaz.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "pointpres",
-			value = {0, 1},
-			color = {"green", "red"}
-		}
-
-		unitTest:assertSnapshot(map, "points-presence.png")
-
-		-- COUNT
-		local clName2 = "cells_large"
-
-		local shp1 = clName2..".shp"
-		table.insert(shapes, shp1)
-		File(shp1):deleteIfExists()
-
-		local cl2 = Layer{
-			project = proj,
-			source = "shp",
-			input = layerName1,
-			name = clName2,
-			resolution = 100000,
-			file = clName2..".shp"
-		}
-
-		clamaz:fill{
-			operation = "count",
-			layer = portos,
-			attribute = "pointcount"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = clamaz.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "pointcount",
-			value = {0, 1, 2},
-			color = {"green", "red", "blue"}
-		}
-
-		unitTest:assertSnapshot(map, "points-count.png")
-
-		cl2:fill{
-			operation = "count",
-			layer = rodovias,
-			attribute = "linecount"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl2.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "linecount",
-			min = 0,
-			max = 135,
-			slices = 10,
-			color = {"green", "blue"}
-		}
-
-		unitTest:assertSnapshot(map, "lines-count.png")
-
-		cl2:fill{
-			operation = "count",
-			layer = protecao,
-			attribute = "polcount"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl2.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "polcount",
-			value = {0, 1, 2},
-			color = {"green", "red", "blue"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-count.png")
-
-		-- MAXIMUM
-		cl:fill{
-			operation = "maximum",
-			layer = municipios,
-			attribute = "polmax",
-			select = "POPULACAO_"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "polmax",
-			min = 0,
-			max = 1450000,
-			slices = 8,
-			color = {"red", "green"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-maximum.png")
-
-		-- MINIMUM
-		cl:fill{
-			operation = "minimum",
-			layer = municipios,
-			attribute = "polmin",
-			select = "POPULACAO_"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "polmin",
-			min = 0,
-			max = 275000,
-			slices = 8,
-			color = {"red", "green"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-minimum.png")
-
-		-- AVERAGE
-		cl:fill{
-			operation = "average",
-			layer = municipios,
-			attribute = "polavrg",
-			select = "POPULACAO_"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "polavrg",
-			min = 0,
-			max = 311000,
-			slices = 8,
-			color = {"red", "green"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-average.png")
-
-		-- STDEV
-		cl:fill{
-			operation = "stdev",
-			layer = municipios,
-			attribute = "stdev",
-			select = "POPULACAO_"
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "stdev",
-			min = 0,
-			max = 550000,
-			slices = 8,
-			color = {"red", "green"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-stdev.png")
-
-		-- SUM
-		proj.file:delete()
-
-		proj = Project {
-			file = "sum_wba.tview",
-			clean = true,
-			setores = filePath("test/municipiosAML_ok.shp", "gis")
-		}
-
-		clName1 = "cells_set"
-		local shp2 = clName1..".shp"
-		table.insert(shapes, shp2)
-		File(shp2):deleteIfExists()
-
-		cl = Layer{
-			project = proj,
-			source = "shp",
-			clean = true,
-			input = "setores",
-			name = clName1,
-			resolution = 300000,
-			file = shp2
-		}
-
-		cl:fill{
-			operation = "sum",
-			layer = "setores",
-			attribute = "polsuma",
-			select = "POPULACAO_",
-			area = true
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = "setores"
-		}
-
-		local sum1 = 0
-		forEachCell(cs, function(cell)
-			sum1 = sum1 + cell.POPULACAO_
-		end)
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		local sum2 = 0
-		forEachCell(cs, function(cell)
-			sum2 = sum2 + cell.polsuma
-		end)
-
-		unitTest:assertEquals(sum1, sum2, 1e-4)
-
-		map = Map{
-			target = cs,
-			select = "polsuma",
-			min = 0,
-			max = 4000000,
-			slices = 20,
-			color = {"red", "green"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-sum-area.png")
-
-		-- AVERAGE (area = true)
-		proj.file:delete()
-
-		projName = "cellular_layer_fill_avg_area.tview"
-
-		proj = Project {
-			file = projName,
-			clean = true,
-			setores = filePath("itaituba-census.shp", "gis")
-		}
-
-		clName1 = "cells_avg_area"
-		local shp3 = clName1..".shp"
-		table.insert(shapes, shp3)
-
-		File(shp3):deleteIfExists()
-
-		cl = Layer{
-			project = proj,
-			source = "shp",
-			clean = true,
-			input = "setores",
-			name = clName1,
-			resolution = 10000,
-			file = shp3
-		}
-
-		cl:fill{
-			operation = "average",
-			layer = "setores",
-			attribute = "polavg",
-			select = "dens_pop",
-			area = true
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "polavg",
-			min = 0,
-			max = 36,
-			slices = 8,
-			color = {"red", "green"}
-		}
-
-		unitTest:assertSnapshot(map, "polygons-average-area.png")
-
-		proj.file:delete()
-
-		proj = Project{
-			file = "municipiosAML.tview",
-			clean = true,
-			cities = filePath("test/municipiosAML_ok.shp", "gis")
-		}
-
-		cl = Layer{
-			project = proj,
-			resolution = 200000,
-			clean = true,
-			file = "munic_cells.shp",
-			name = "cells",
-			input = "cities"
-		}
-
-		table.insert(shapes, "munic_cells.shp")
-
-		local warning_function = function()
-			cl:fill{
-				operation = "coverage",
-				layer = "cities",
-				dummy = -1,
-				select = "CODMESO",
-				attribute = "meso"
+		local allSupportedOperation = function()
+			local projName = "cellular_layer_fill_shape.tview"
+			local layerName1 = "limitepa"
+			local protecao = "protecao"
+			local rodovias = "Rodovias"
+			local portos = "Portos"
+			local amaz = "limiteamaz"
+
+			local proj = Project{
+				file = projName,
+				clean = true,
+				[layerName1] = filePath("test/limitePA_polyc_pol.shp", "gis"),
+				[protecao] = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis"),
+				[rodovias] = filePath("test/BCIM_Trecho_RodoviarioLine_PA_polyc_lin.shp", "gis"),
+				[portos] = filePath("amazonia-ports.shp", "gis"),
+				[amaz] = filePath("amazonia-limit.shp", "gis")
 			}
+
+			local municipios = "municipios"
+			Layer{
+				project = proj,
+				name = municipios,
+				file = filePath("test/municipiosAML_ok.shp", "gis")
+			}
+
+			local clName1 = "CellsShp"
+
+			local shapes = {}
+
+			local shp0 = clName1..".shp"
+			table.insert(shapes, shp0)
+			File(shp0):deleteIfExists()
+
+			local cl = Layer{
+				project = proj,
+				source = "shp",
+				clean = true,
+				input = layerName1,
+				name = clName1,
+				resolution = 70000,
+				file = clName1..".shp",
+				progress = false
+			}
+
+			table.insert(shapes, "CellsAmaz.shp")
+			File("CellsAmaz.shp"):deleteIfExists()
+
+			local clamaz = Layer{
+				project = proj,
+				source = "shp",
+				clean = true,
+				input = amaz,
+				name = "CellsAmaz",
+				resolution = 200000,
+				file = "CellsAmaz.shp",
+				progress = false
+			}
+
+			-- MODE
+			cl:fill{
+				operation = "mode",
+				layer = municipios,
+				attribute = "polmode",
+				select = "POPULACAO_",
+				progress = false
+			}
+
+			local cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			--[[
+			local unique = {}
+			forEachCell(cs, function(cell)
+				unique[cell.polmode] = true
+			end)
+
+			forEachElement(unique, function(idx)
+				print(idx)
+			end)
+			--]]
+
+			local map = Map{
+				target = cs,
+				select = "polmode",
+				value = {"0", "53217", "37086", "14302"},
+				color = {"red", "green", "blue", "yellow"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-mode.png")
+
+			-- MODE (area = true)
+			cl:fill{
+				operation = "mode",
+				layer = municipios,
+				attribute = "polmode2",
+				select = "POPULACAO_",
+				area = true,
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polmode2",
+				min = 0,
+				max = 1410000,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-mode-2.png")
+
+			-- AREA
+			cl:fill{
+				operation = "area",
+				layer = protecao,
+				attribute = "marea",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "marea",
+				min = 0,
+				max = 1,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-area.png", 0.05)
+
+			-- DISTANCE
+			cl:fill{
+				operation = "distance",
+				layer = rodovias,
+				attribute = "lindist",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "lindist",
+				min = 0,
+				max = 200000,
+				slices = 8,
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "lines-distance.png")
+
+			cl:fill{
+				operation = "distance",
+				layer = protecao,
+				attribute = "poldist",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "poldist",
+				min = 0,
+				max = 370000,
+				slices = 8,
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-distance.png")
+
+			clamaz:fill{
+				operation = "distance",
+				layer = portos,
+				attribute = "pointdist",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = clamaz.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "pointdist",
+				min = 0,
+				max = 2000000,
+				slices = 8,
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "points-distance.png")
+
+			-- PRESENCE
+			cl:fill{
+				operation = "presence",
+				layer = rodovias,
+				attribute = "linpres",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "linpres",
+				value = {0, 1},
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "lines-presence.png")
+
+			cl:fill{
+				operation = "presence",
+				layer = protecao,
+				attribute = "polpres",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polpres",
+				value = {0, 1},
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-presence.png")
+
+			clamaz:fill{
+				operation = "presence",
+				layer = portos,
+				attribute = "pointpres",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = clamaz.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "pointpres",
+				value = {0, 1},
+				color = {"green", "red"}
+			}
+
+			unitTest:assertSnapshot(map, "points-presence.png")
+
+			-- COUNT
+			local clName2 = "cells_large"
+
+			local shp1 = clName2..".shp"
+			table.insert(shapes, shp1)
+			File(shp1):deleteIfExists()
+
+			local cl2 = Layer{
+				project = proj,
+				source = "shp",
+				input = layerName1,
+				name = clName2,
+				resolution = 100000,
+				file = clName2..".shp",
+				progress = false
+			}
+
+			clamaz:fill{
+				operation = "count",
+				layer = portos,
+				attribute = "pointcount",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = clamaz.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "pointcount",
+				value = {0, 1, 2},
+				color = {"green", "red", "blue"}
+			}
+
+			unitTest:assertSnapshot(map, "points-count.png")
+
+			cl2:fill{
+				operation = "count",
+				layer = rodovias,
+				attribute = "linecount",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl2.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "linecount",
+				min = 0,
+				max = 135,
+				slices = 10,
+				color = {"green", "blue"}
+			}
+
+			unitTest:assertSnapshot(map, "lines-count.png")
+
+			cl2:fill{
+				operation = "count",
+				layer = protecao,
+				attribute = "polcount",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl2.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polcount",
+				value = {0, 1, 2},
+				color = {"green", "red", "blue"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-count.png")
+
+			-- MAXIMUM
+			cl:fill{
+				operation = "maximum",
+				layer = municipios,
+				attribute = "polmax",
+				select = "POPULACAO_",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polmax",
+				min = 0,
+				max = 1450000,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-maximum.png")
+
+			-- MINIMUM
+			cl:fill{
+				operation = "minimum",
+				layer = municipios,
+				attribute = "polmin",
+				select = "POPULACAO_",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polmin",
+				min = 0,
+				max = 275000,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-minimum.png")
+
+			-- AVERAGE
+			cl:fill{
+				operation = "average",
+				layer = municipios,
+				attribute = "polavrg",
+				select = "POPULACAO_",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polavrg",
+				min = 0,
+				max = 311000,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-average.png")
+
+			-- STDEV
+			cl:fill{
+				operation = "stdev",
+				layer = municipios,
+				attribute = "stdev",
+				select = "POPULACAO_",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "stdev",
+				min = 0,
+				max = 550000,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-stdev.png")
+
+			-- SUM
+			proj.file:delete()
+
+			proj = Project {
+				file = "sum_wba.tview",
+				clean = true,
+				setores = filePath("test/municipiosAML_ok.shp", "gis")
+			}
+
+			clName1 = "cells_set"
+			local shp2 = clName1..".shp"
+			table.insert(shapes, shp2)
+			File(shp2):deleteIfExists()
+
+			cl = Layer{
+				project = proj,
+				source = "shp",
+				clean = true,
+				input = "setores",
+				name = clName1,
+				resolution = 300000,
+				file = shp2,
+				progress = false
+			}
+
+			cl:fill{
+				operation = "sum",
+				layer = "setores",
+				attribute = "polsuma",
+				select = "POPULACAO_",
+				area = true,
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = "setores"
+			}
+
+			local sum1 = 0
+			forEachCell(cs, function(cell)
+				sum1 = sum1 + cell.POPULACAO_
+			end)
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			local sum2 = 0
+			forEachCell(cs, function(cell)
+				sum2 = sum2 + cell.polsuma
+			end)
+
+			unitTest:assertEquals(sum1, sum2, 1e-4)
+
+			map = Map{
+				target = cs,
+				select = "polsuma",
+				min = 0,
+				max = 4000000,
+				slices = 20,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-sum-area.png")
+
+			-- AVERAGE (area = true)
+			proj.file:delete()
+
+			projName = "cellular_layer_fill_avg_area.tview"
+
+			proj = Project {
+				file = projName,
+				clean = true,
+				setores = filePath("itaituba-census.shp", "gis")
+			}
+
+			clName1 = "cells_avg_area"
+			local shp3 = clName1..".shp"
+			table.insert(shapes, shp3)
+
+			File(shp3):deleteIfExists()
+
+			cl = Layer{
+				project = proj,
+				source = "shp",
+				clean = true,
+				input = "setores",
+				name = clName1,
+				resolution = 10000,
+				file = shp3,
+				progress = false
+			}
+
+			cl:fill{
+				operation = "average",
+				layer = "setores",
+				attribute = "polavg",
+				select = "dens_pop",
+				area = true,
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "polavg",
+				min = 0,
+				max = 36,
+				slices = 8,
+				color = {"red", "green"}
+			}
+
+			unitTest:assertSnapshot(map, "polygons-average-area.png")
+
+			proj.file:delete()
+
+			proj = Project{
+				file = "municipiosAML.tview",
+				clean = true,
+				cities = filePath("test/municipiosAML_ok.shp", "gis")
+			}
+
+			cl = Layer{
+				project = proj,
+				resolution = 200000,
+				clean = true,
+				file = "munic_cells.shp",
+				name = "cells",
+				input = "cities",
+				progress = false
+			}
+
+			table.insert(shapes, "munic_cells.shp")
+
+			local warning_function = function()
+				cl:fill{
+					operation = "coverage",
+					layer = "cities",
+					dummy = -1,
+					select = "CODMESO",
+					attribute = "meso",
+					progress = false
+				}
+			end
+
+			unitTest:assertWarning(warning_function, unnecessaryArgumentMsg("dummy"))
+
+			cs = CellularSpace{
+				project = proj,
+				layer = "cells"
+			}
+
+			map = Map{
+				target = cs,
+				select = "meso_2",
+				color = "RdPu",
+				slices = 5
+			}
+
+			unitTest:assertSnapshot(map, "polygons-coverage-1.png", 0.1)
+
+			map = Map{
+				target = cs,
+				select = "meso_3",
+				color = "RdPu",
+				slices = 5
+			}
+
+			unitTest:assertSnapshot(map, "polygons-coverage-2.png", 0.1)
+
+			proj.file:delete()
+
+			forEachElement(shapes, function(_, value)
+				File(value):delete()
+			end)
 		end
 
-		unitTest:assertWarning(warning_function, unnecessaryArgumentMsg("dummy"))
+		local distanceWithMissing = function()
+			local proj = Project{
+				file = "layer_shape_basic.tview",
+				clean = true
+			}
 
-		cs = CellularSpace{
-			project = proj,
-			layer = "cells"
-		}
+			local l1 = Layer{
+				project = proj,
+				name = "limit",
+				file = filePath("test/compartimento_clip.shp", "gis")
+			}
 
-		map = Map{
-			target = cs,
-			select = "meso_2",
-			color = "RdPu",
-			slices = 5
-		}
+			local l2 = Layer{
+				project = proj,
+				name = "layer2",
+				file = filePath("test/f_silva_clip.shp", "gis")
+			}
 
-		unitTest:assertSnapshot(map, "polygons-coverage-1.png", 0.1)
+			local cl = Layer{
+				project = proj,
+				source = "shp",
+				name = "cs",
+				input = l1.name,
+				resolution = 1000,
+				file = "clip.shp",
+				clean = true,
+				progress = false
+			}
 
-		map = Map{
-			target = cs,
-			select = "meso_3",
-			color = "RdPu",
-			slices = 5
-		}
+			cl:fill{
+				layer = l2.name,
+				operation = "distance",
+				attribute = "dist_f",
+				missing = -1,
+				progress = false
+			}
 
-		unitTest:assertSnapshot(map, "polygons-coverage-2.png", 0.1)
+			local cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
 
-		proj.file:delete()
+			forEachCell(cs, function(cell)
+				if cell.dist_f < 0 then
+					unitTest:assertEquals(cell.dist_f, -1)
+				end
+			end)
 
-		forEachElement(shapes, function(_, value)
-			File(value):delete()
-		end)
+			cl:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(allSupportedOperation)
+		unitTest:assert(distanceWithMissing)
 	end,
 	projection = function(unitTest)
 		local proj = Project {
@@ -834,7 +919,8 @@ return {
 		local geojson = "setores.geojson"
 		local data1 = {
 			file = geojson,
-			overwrite = overwrite
+			overwrite = overwrite,
+			progress = false
 		}
 
 		layer:export(data1)
@@ -857,7 +943,8 @@ return {
 		local shp = "setores.shp"
 		local data2 = {
 			file = shp,
-			overwrite = overwrite
+			overwrite = overwrite,
+			progress = false
 		}
 
 		layer:export(data2)
@@ -918,7 +1005,8 @@ return {
 		local rails = "es_rails.shp"
 		local data1 = {
 			file = rails,
-			overwrite = true
+			overwrite = true,
+			progress = false
 		}
 
 		layer1:export(data1)

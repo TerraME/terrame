@@ -51,6 +51,8 @@ return {
 		proj.file:deleteIfExists()
 	end,
 	addGeoJSONCellSpaceLayer = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local title = "TerraLib Tests"
 		local author = "Carneiro Heitor"
 		local file = "mygeojsonproject.tview"
@@ -123,6 +125,8 @@ return {
 		end
 	end,
 	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -354,6 +358,8 @@ return {
 		outFile:delete()
 	end,
 	attributeFill = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		-- TODO (#2179)
 		local createProject = function()
 			local proj = {
@@ -395,9 +401,16 @@ return {
 			local operation = "presence"
 			local attribute = "presence"
 			local select = "FID"
-			local area = nil
-			local default = nil
-			TerraLib().attributeFill(proj, layerName2, clName, presLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = presLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			local dset = TerraLib().getDataSet{project = proj, layer = presLayerName, missing = 0}
 
@@ -415,7 +428,16 @@ return {
 			operation = "area"
 			attribute = "percent"
 			select = "FID"
-			TerraLib().attributeFill(proj, layerName2, presLayerName, areaLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = presLayerName,
+				out = areaLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = areaLayerName, missing = 0}
 
@@ -433,7 +455,16 @@ return {
 			operation = "count"
 			attribute = "count"
 			select = "FID"
-			TerraLib().attributeFill(proj, layerName2, areaLayerName, countLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = areaLayerName,
+				out = countLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = countLayerName, missing = 0}
 
@@ -451,7 +482,16 @@ return {
 			operation = "distance"
 			attribute = "distance"
 			select = "FID"
-			TerraLib().attributeFill(proj, layerName2, countLayerName, distLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = countLayerName,
+				out = distLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = distLayerName, missing = 0}
 
@@ -469,7 +509,16 @@ return {
 			operation = "minimum"
 			attribute = "minimum"
 			select = "FID"
-			TerraLib().attributeFill(proj, layerName2, distLayerName, minLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = distLayerName,
+				out = minLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = minLayerName, missing = 0}
 
@@ -487,7 +536,16 @@ return {
 			operation = "maximum"
 			attribute = "maximum"
 			select = "FID"
-			TerraLib().attributeFill(proj, layerName2, minLayerName, maxLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = minLayerName,
+				out = maxLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = maxLayerName, missing = 0}
 
@@ -505,7 +563,16 @@ return {
 			operation = "coverage"
 			attribute = "coverage"
 			select = "ESFERA5"
-			TerraLib().attributeFill(proj, layerName2, maxLayerName, covLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = maxLayerName,
+				out = covLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = covLayerName, missing = 0}
 
@@ -525,7 +592,16 @@ return {
 			operation = "stdev"
 			attribute = "stdev"
 			select = "Shape_Area"
-			TerraLib().attributeFill(proj, layerName2, covLayerName, stdevLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = covLayerName,
+				out = stdevLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = stdevLayerName, missing = 0}
 
@@ -543,7 +619,16 @@ return {
 			operation = "average"
 			attribute = "mean"
 			select = "Shape_Area"
-			TerraLib().attributeFill(proj, layerName2, stdevLayerName, meanLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = stdevLayerName,
+				out = meanLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = meanLayerName, missing = 0}
 
@@ -561,8 +646,18 @@ return {
 			operation = "average"
 			attribute = "weighted_average"
 			select = "Shape_Area"
-			area = true
-			TerraLib().attributeFill(proj, layerName2, meanLayerName, weigLayerName, attribute, operation, select, area, default)
+			local area = true
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = meanLayerName,
+				out = weigLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				area = area
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = weigLayerName, missing = 0}
 
@@ -580,8 +675,16 @@ return {
 			operation = "mode"
 			attribute = "mode"
 			select = "ESFERA5"
-			area = false
-			TerraLib().attributeFill(proj, layerName2, weigLayerName, modeLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = weigLayerName,
+				out = modeLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = modeLayerName, missing = 0}
 
@@ -600,7 +703,17 @@ return {
 			attribute = "intersection"
 			select = "ESFERA5"
 			area = true
-			TerraLib().attributeFill(proj, layerName2, modeLayerName, inteLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = modeLayerName,
+				out = inteLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				area = area
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = inteLayerName, missing = 0}
 
@@ -618,8 +731,16 @@ return {
 			operation = "sum"
 			attribute = "sum"
 			select = "Shape_Area"
-			area = false
-			TerraLib().attributeFill(proj, layerName2, inteLayerName, sumLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = inteLayerName,
+				out = sumLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = sumLayerName, missing = 0}
 
@@ -638,7 +759,17 @@ return {
 			attribute = "wsum"
 			select = "Shape_Area"
 			area = true
-			TerraLib().attributeFill(proj, layerName2, sumLayerName, wsumLayerName, attribute, operation, select, area, default)
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = sumLayerName,
+				out = wsumLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				area = area
+			}
 
 			dset = TerraLib().getDataSet{project = proj, layer = wsumLayerName, missing = 0}
 
@@ -659,6 +790,8 @@ return {
 		unitTest:assert(allSupportedOperation)
 	end,
 	saveDataSet = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local overwriteLayer = function()
 			local proj = {
 				file = "savedataset-geojson-basic.tview",

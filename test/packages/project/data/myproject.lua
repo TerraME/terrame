@@ -13,6 +13,7 @@ cl1 = Layer{
 	clean = true,
 	file = "itaituba.shp",
 	input = "setores",
-	resolution = 40000
+	resolution = 40000,
+	progress = false
 }
 

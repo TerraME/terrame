@@ -50,7 +50,8 @@ return {
 			source = "postgis",
 			password = password,
 			database = database,
-			overwrite = true
+			overwrite = true,
+			progress = false
 		}
 
 		layer1:export(data)
@@ -689,7 +690,8 @@ return {
 			password = password,
 			database = database,
 			table = tName1,
-			clean = true
+			clean = true,
+			progress = false
 		}
 
 		local clName2 = "Another_Setores_Cells"
@@ -779,7 +781,8 @@ return {
 			source = "postgis",
 			password = password,
 			database = database,
-			overwrite = overwrite
+			overwrite = overwrite,
+			progress = false
 		}
 
 		layer1:export(pgData)

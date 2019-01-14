@@ -47,6 +47,11 @@ add_definitions(-DTERRAME_PKGTEST_DATA_PATH="${TERRAME_PKGTEST_DATA_ABSOLUTE_PAT
 file(GLOB TERRAME_INTTEST_QGIS_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/qgis/*.cpp)
 file(GLOB TERRAME_INTTEST_QGIS_HDR_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/inttest/qgis/*.h)
 
+if(UNIX)
+	set(CMAKE_INSTALL_RPATH "${TERRAME_INSTALL_PREFIX}/bin:\$ORIGIN:\$ORIGIN/bin")
+	set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif()
+
 add_executable(qgis_itest ${TERRAME_INTTEST_QGIS_SRC_FILES} ${TERRAME_INTTEST_QGIS_HDR_FILES})
 
 target_include_directories(qgis_itest PUBLIC ${TERRAME_ABSOLUTE_ROOT_DIR}/src
@@ -55,11 +60,11 @@ target_include_directories(qgis_itest PUBLIC ${TERRAME_ABSOLUTE_ROOT_DIR}/src
 target_link_libraries(qgis_itest qgis ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
 
 install(TARGETS qgis_itest
-        RUNTIME DESTINATION bin
+        RUNTIME DESTINATION ${TERRAME_DESTINATION_RUNTIME}
         COMPONENT runtime)
 
 install(DIRECTORY ${PKG_TEST_DIR}
-		DESTINATION bin/qgistestdata
+		DESTINATION ${TERRAME_DESTINATION_RUNTIME}/qgistestdata
 		COMPONENT runtime)		
 		
 add_test(NAME qgis_itest COMMAND qgis_itest)

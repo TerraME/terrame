@@ -49,6 +49,8 @@ return {
 		proj.file:delete()
 	end,
 	attributeFill = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local proj = {}
 		proj.file = "myproject.tview"
 		proj.title = "TerraLib Tests"
@@ -86,12 +88,19 @@ return {
 		local operation = "coverage"
 		local attribute = "rperc"
 		local select = 0
-		local area = nil
-		local default = nil
 		local repr = "raster"
 
 		local differentSrids = function()
-			TerraLib().attributeFill(proj, layerName2, clName, percTifLayerName, attribute, operation, select, area, default, repr)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = percTifLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				repr = repr
+			}
 		end
 
 		unitTest:assertError(differentSrids, "Layer projections are different: (Prodes_PA, 29100) and (Para_Cells, 29101). Please, reproject your data to the right one.")
@@ -101,7 +110,16 @@ return {
 
 		select = 5
 		local bandNoExists = function()
-			TerraLib().attributeFill(proj, layerName3, clName, percTifLayerName, attribute, operation, select, area, default, repr)
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName3,
+				to = clName,
+				out = percTifLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				repr = repr
+			}
 		end
 
 		unitTest:assertError(bandNoExists, "Selected band '"..select.."' does not exist in Layer '"..layerName3.."'.")
@@ -145,6 +163,8 @@ return {
 		proj.file:delete()
 	end,
 	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
 		local usingProject = function()
 			local proj = {}
 			proj.file = "myproject.tview"

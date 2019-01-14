@@ -62,11 +62,13 @@ echo "TerraLib GitLab environment"
 cd $_TERRALIB_GIT_DIR
 
 GIT_SSL_NO_VERIFY=true git fetch --progress --prune origin
+git remote update
 git status
+GIT_STATUS=$(git status)
 
 echo "Check if TerraLib must be updated"
 if [ -z "$ghprbActualCommit" ]; then
-	echo "Daily tests always update"
+	echo "Daily tests are always updated"
 	cd $_TERRALIB_BUILD_BASE
 
 	rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution $_TERRALIB_INSTALL_PATH
@@ -76,18 +78,16 @@ if [ -z "$ghprbActualCommit" ]; then
 	valid $? "Error: Cleaning fail"
 
 	git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR
-
-#elif [[ $(git status --porcelain) ]]; then TODO(#1994): this cmd is not working
-	#git pull
-	#if [ ! -z "$ghprbActualCommit" ]; then
+elif [[ "$GIT_STATUS" = *"git pull"* ]]; then
+	git pull
+	echo "Cleaning last install"
+	rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua  $_TERRALIB_INSTALL_PATH
+	valid $? "Error: Cleaning fail"
 else
-		git pull
-		echo "Cleaning last install"
-		rm -rf $_TERRALIB_OUT_DIR/terralib_mod_binding_lua  $_TERRALIB_INSTALL_PATH
-		valid $? "Error: Cleaning fail"
-	#fi
-#else
-#	echo "Not updated"
+	echo ""
+	echo ""
+	echo "Updating is not necessary"
+	rm -rf $_TERRALIB_INSTALL_PATH
 fi
 
 echo ""

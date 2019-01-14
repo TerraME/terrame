@@ -39,7 +39,6 @@ endif()
 
 # for future use
 # set(TERRAME_BUILD_NUMBER "" CACHE STRING "Number of build in Jenkins")
-
 if(TERRAME_VERSION_STATUS STREQUAL "build")
 	set(TERRAME_VERSION_STATUS "${TERRAME_VERSION_STATUS}-${TERRAME_BUILD_NUMBER}")
 endif()
@@ -125,6 +124,24 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TERRAME_BIN_DIR})
 #
 include(terrame-macros.cmake)
 
+#
+# installation paths
+#
+if(APPLE)
+	if(TERRAME_BUILD_AS_BUNDLE)
+		set(TERRAME_DESTINATION_RUNTIME ${TERRAME_INSTALL_PREFIX}/MacOS)
+	else()
+		set(TERRAME_DESTINATION_RUNTIME bin)
+	endif()
+	set(TERRAME_DESTINATION_LIBRARY ${TERRAME_INSTALL_PREFIX}/lib)
+elseif(WIN32)
+	set(TERRAME_DESTINATION_RUNTIME bin)
+	set(TERRAME_DESTINATION_LIBRARY bin)
+elseif(UNIX)
+	set(TERRAME_DESTINATION_RUNTIME ${TERRAME_INSTALL_PREFIX}/bin)
+	set(TERRAME_DESTINATION_LIBRARY ${TERRAME_INSTALL_PREFIX}/bin)	
+endif()
+
 add_subdirectory(terrame)
 add_subdirectory(swig)
 add_subdirectory(qgis)
@@ -142,16 +159,7 @@ endif()
 # creating bundle
 #
 if(TERRAME_BUILD_AS_BUNDLE)
-	include(InstallRequiredSystemLibraries)
-
-	if(WIN32)
-		install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-		DESTINATION bin
-		COMPONENT runtime)
-	endif()
-
-	configure_file(${terrame_SOURCE_DIR}/fixBundle.cmake.in ${terrame_BINARY_DIR}/fixBundle.cmake @ONLY)
-	install(SCRIPT ${CMAKE_BINARY_DIR}/fixBundle.cmake COMPONENT runtime)
+	add_subdirectory(fixbundle)
 endif()
 
 #

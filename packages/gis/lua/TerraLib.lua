@@ -30,6 +30,7 @@ end
 local binding = _Gtme.terralib_mod_binding_lua
 local instance = nil
 local dataCache = makeWeakTable{}
+local progress = false
 
 require("swig")
 
@@ -77,6 +78,8 @@ local function addCache(value, level1, level2, level3)
 	dataCacheLevel2[level3] = value -- SKIP
 end
 
+-- Raster operations must be added in SWIG TerraLib AttributeFill.i
+-- on RasterToVector::setParams()
 local OperationMapper = {
 	value = binding.VALUE_OPERATION,
 	area = binding.PERCENT_TOTAL_AREA,
@@ -87,6 +90,7 @@ local OperationMapper = {
 	maximum = binding.MAX_VALUE,
 	mode = binding.MODE,
 	coverage = binding.PERCENT_EACH_CLASS,
+	total = binding.TOTAL_AREA_BY_CLASS,
 	stdev = binding.STANDARD_DEVIATION,
 	mean = binding.MEAN,
 	weighted = binding.WEIGHTED,
@@ -104,6 +108,7 @@ local VectorAttributeCreatedMapper = {
 	minimum = "min_val",
 	maximum = "max_val",
 	coverage = "percent_area_class",
+	total = "area",
 	stdev = "stand_dev",
 	mean = "mean",
 	weighted = "weigh_area",
@@ -119,6 +124,7 @@ local RasterAttributeCreatedMapper = {
 	maximum = "_Max_Value",
 	mode = "_Mode",
 	coverage = "",
+	total = "",
 	stdev = "_Standard_Deviation",
 	sum = "_Sum",
 	count = "_Count"
@@ -134,6 +140,7 @@ local OperationAvailablePerDataTypeMapper = {
 	maximum = 7,
 	mode = 7,
 	coverage = 5,
+	total = 5,
 	stdev = 6,
 	average = 6,
 	mean = 6,
@@ -672,6 +679,20 @@ local function dropDataSet(connInfo, dSetName, type)
 	collectgarbage("collect")
 end
 
+local function createProgressViewer(msg)
+	if progress then
+		local viewer = binding.te.common.LuaProgressViewer()
+		viewer:setMessage(msg) -- SKIP
+		return binding.te.common.ProgressManager.getInstance():addViewer(viewer)
+	end
+end
+
+local function finalizeProgressViewer(viewerId)
+	if progress then
+		binding.te.common.ProgressManager.getInstance():removeViewer(viewerId) -- SKIP
+	end
+end
+
 local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, type, mask)
 	local cLId = binding.GetRandomicId()
 	local cellLayerInfo = binding.te.da.DataSourceInfo()
@@ -689,6 +710,8 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, conn
 	local inputDsType = inputLayer:getSchema()
 	local errorMsg
 
+	local viewerId = createProgressViewer("Creating '"..name.."' cellular space")
+
 	if mask then
 		if inputDsType:hasGeom() then
 			errorMsg = cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
@@ -702,6 +725,8 @@ local function createCellSpaceLayer(inputLayer, name, dSetName, resolution, conn
 		errorMsg = cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolution, resolution,
 												inputLayer:getExtent(), inputLayer:getSRID(), cLType)
 	end
+
+	finalizeProgressViewer(viewerId)
 
 	if errorMsg and errorMsg ~= "" then
 		if type == "POSTGIS" then
@@ -814,22 +839,23 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		local outDs = v2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
+		local op = operation
 		if operation == "average" then
 			if area then
-				operation = "weighted"
+				op = "weighted"
 			else
-				operation = "mean"
+				op = "mean"
 			end
 		elseif operation == "mode" then
 			if area then
-				operation = "intersection"
+				op = "intersection"
 			else
-				operation = "occurrence"
+				op = "occurrence"
 			end
-		elseif operation == "sum" then
-			if area then
-				operation = "wsum"
-			end
+		elseif (operation == "sum") and area then
+			op = "wsum"
+		elseif (operation == "coverage") and area then
+			op = "total"
 		end
 
 		local toDSetName = toLayer:getDataSetName()
@@ -837,12 +863,16 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 		local toDs = makeAndOpenDataSource(toConnInfo:getConnInfo(), toConnInfo:getType())
 		local toDst = toDs:getDataSetType(toDSetName)
 
-		v2v:setParams(select, OperationMapper[operation], toDst)
+		v2v:setParams(select, OperationMapper[op], toDst)
 
-		err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
+		local viewerId = createProgressViewer("Processing '"..operation.."' operation")
+
+		err = v2v:exec() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
+
+		finalizeProgressViewer(viewerId)
 
 		if err == "" then
-			propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
+			propCreatedName = select.."_"..VectorAttributeCreatedMapper[op]
 			propCreatedName = string.lower(propCreatedName)
 		end
 
@@ -860,7 +890,7 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 	return propCreatedName
 end
 
-local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, nodata, pixel)
+local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, nodata, pixel, area)
 	local propCreatedName
 
 	do
@@ -885,20 +915,28 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		r2v:setInput(raster, toLayer)
 
+		local op = operation
 		if operation == "average" then
-			operation = "mean"
+			op = "mean"
+		elseif (operation == "coverage") and area then
+			op = "total"
 		end
 
-		r2v:setParams(select, OperationMapper[operation], pixel, false, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
+		r2v:setParams(select, OperationMapper[op], pixel, false, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
 
 		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
-		local err = r2v:pRun()
+		local viewerId = createProgressViewer("Processing '"..operation.."' operation")
+
+		local err = r2v:exec()
+
+		finalizeProgressViewer(viewerId)
+
 		if err ~= "" then
 			customError(err) -- SKIP
 		end
 
-		propCreatedName = "B"..select..RasterAttributeCreatedMapper[operation]
+		propCreatedName = "B"..select..RasterAttributeCreatedMapper[op]
 
 		if outType == "POSTGIS" then
 			propCreatedName = string.lower(propCreatedName)
@@ -1715,7 +1753,7 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 	end
 
 	if toData.srid then
-			info.srid = toData.srid
+		info.srid = toData.srid
 	else
 		info.srid = fromData.srid
 	end
@@ -1778,7 +1816,7 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 
 		local fromDSetType = fromDs:getDataSetType(fromData.dataset)
 		local fromDSet = fromDs:getDataSet(fromData.dataset)
-		local converter = binding.te.da.DataSetTypeConverter(fromDSetType, fromDs:getCapabilities(), toDs:getEncoding())
+		local converter = binding.te.da.DataSetTypeConverter(fromDSetType, toDs:getCapabilities(), toDs:getEncoding())
 
 		local pkName = ""
 		local pk = fromDSetType:getPrimaryKey()
@@ -1798,7 +1836,7 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 			for i = 0, numProps - 1 do
 				local propName = fromDSet:getPropertyName(i)
 				if not (pkName == propName) and not attrsToIn[propName] and
-					not (fromDSet:getPropertyDataType(i) == binding.GEOMETRY_TYPE) then
+						not (fromDSet:getPropertyDataType(i) == binding.GEOMETRY_TYPE) then
 					converter:remove(propName)
 				else
 					table.insert(attrsFilter, propName)
@@ -1883,6 +1921,8 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 			dsetAdapted = binding.CreateAdapter(fromDSet, converter)
 		end
 
+		local viewerId = createProgressViewer("Exporting '"..fromData.name.."' data")
+
 		local transactor = toDs:getTransactor()
 		transactor:begin()
 		transactor:createDataSet(dstResult, {})
@@ -1890,6 +1930,8 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 		dsetAdapted:moveBeforeFirst()
 		transactor:add(toDstName, dsetAdapted)
 		transactor:commit()
+
+		finalizeProgressViewer(viewerId)
 
 		if toData.type == "OGR" then -- TODO(#1678)
 			addSpatialIndex(toDs, toDstName)
@@ -1903,9 +1945,13 @@ end
 
 local function saveRasterDataAs(fromData, toData)
 	do
+		local viewerId = createProgressViewer("Exporting '"..fromData.name.."' data")
+
 		local fromDSet = fromData.datasource:getDataSet(fromData.dataset)
 		local raster = getRasterByDataSet(fromDSet)
 		binding.SaveRasterOnFile(raster, tostring(toData.file), toData.srid)
+
+		finalizeProgressViewer(viewerId)
 	end
 
 	collectgarbage("collect")
@@ -2477,7 +2523,6 @@ TerraLib_ = {
 	-- TerraLib().addShpLayer(proj, layerName1, layerFile1)
 	--
 	--	TerraLib().addShpCellSpaceLayer(proj, layerName1, "Sampa_Cells", 0.7, currentDir())
-
 	addShpCellSpaceLayer = function(project, inputLayerTitle, name, resolution, file, mask, addSpatialIdx)
 		loadProject(project, project.file)
 
@@ -2637,18 +2682,18 @@ TerraLib_ = {
 		end
 	end,
 	--- Fill a given attribute in a layer.
-	-- @arg project The name of the project.
-	-- @arg operation Name of the operation.
-	-- @arg select The attribute to be used in the operation.
-	-- @arg from Name of the input layer with the data where the operations will take place.
-	-- @arg to Name of the reference layer with the elements to be copied to the output.
-	-- @arg out Name of the layer to be created with the output.
-	-- @arg area A boolean value indicating whether the area should be considered.
-	-- @arg property Name of the attribute to be created.
-	-- @arg default The default value.
-	-- @arg repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
-	-- @arg nodata A number used in raster data that represents no information in a pixel value.
-	-- @arg pixel A boolean value. If true, a pixel is considered within a polygon if they have some overlap.
+	-- @arg data.project The name of the project.
+	-- @arg data.operation Name of the operation.
+	-- @arg data.select The attribute to be used in the operation.
+	-- @arg data.from Name of the input layer with the data where the operations will take place.
+	-- @arg data.to Name of the reference layer with the elements to be copied to the output.
+	-- @arg data.out Name of the layer to be created with the output.
+	-- @arg data.area A boolean value indicating whether the area should be considered.
+	-- @arg data.attribute Name of the attribute to be created.
+	-- @arg data.default The default value.
+	-- @arg data.repr A string with the spatial representation of data ("raster", "polygon", "point", or "line").
+	-- @arg data.nodata A number used in raster data that represents no information in a pixel value.
+	-- @arg data.pixel A boolean value. If true, a pixel is considered within a polygon if they have some overlap.
 	-- If false, a pixel is within a polygon if its centroid is within the polygon.
 	-- @usage -- DONTRUN
 	-- proj = {
@@ -2656,7 +2701,6 @@ TerraLib_ = {
 	--     title = "TerraLib Tests",
 	--     author = "Avancini Rodrigo"
 	-- }
-	--
 	--
 	-- TerraLib().createProject(proj, {})
 	--
@@ -2673,8 +2717,29 @@ TerraLib_ = {
 	-- layerFile2 = filePath("BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
 	-- TerraLib().addShpLayer(proj, layerName2, layerFile2)
 	--
-	-- TerraLib().attributeFill(proj, layerName2, clName, presLayerName, "presence", "presence", "FID")
-	attributeFill = function(project, from, to, out, property, operation, select, area, default, repr, nodata, pixel)
+	-- TerraLib().attributeFill{
+	--     project = proj,
+	--     from = layerName2,
+	--	   to = clName,
+	--	   out = presLayerName,
+	--	   attribute = "presence",
+	--	   operation = "presence",
+	--	   select = "FID"
+	-- }
+	attributeFill = function(data)
+		local project = data.project
+		local from = data.from
+		local to = data.to
+		local out = data.out
+		local attribute = data.attribute
+		local operation = data.operation
+		local select = data.select
+		local area = data.area
+		local default = data.default
+		local repr = data.repr
+		local nodata = data.nodata
+		local pixel = data.pixel
+
 		do
 			loadProject(project, project.file)
 
@@ -2697,16 +2762,16 @@ TerraLib_ = {
 			if outType == "OGR" then
 				outFileExt = string.lower(getFileByUri(outConnInfo):extension())
 
-				if (string.len(property) > 10) and (outFileExt == "shp")  then
-					property = getNormalizedName(property)
-					customWarning("The 'attribute' lenght has more than 10 characters. It was truncated to '"..property.."'.")
+				if (string.len(attribute) > 10) and (outFileExt == "shp")  then
+					attribute = getNormalizedName(attribute)
+					customWarning("The 'attribute' lenght has more than 10 characters. It was truncated to '"..attribute.."'.")
 				end
 			end
 
 			local toDSetName = toLayer:getDataSetName()
 
-			if propertyExists(toDsInfo:getConnInfo(), toDSetName, property, toDsInfo:getType()) then
-				customError("The attribute '"..property.."' already exists in the Layer.")
+			if propertyExists(toDsInfo:getConnInfo(), toDSetName, attribute, toDsInfo:getType()) then
+				customError("The attribute '"..attribute.."' already exists in the Layer.")
 			end
 
 			local fromConnInfo = fromDsInfo:getConnInfo()
@@ -2772,7 +2837,7 @@ TerraLib_ = {
 			if dseType:hasRaster() then
 				if pixel == nil then pixel = true end
 
-				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, nodata, pixel)
+				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, nodata, pixel, area)
 			else
 				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
 			end
@@ -2791,11 +2856,11 @@ TerraLib_ = {
 
 			local attrsRenamed = {}
 
-			if operation == "coverage" then
-				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, property)
+			if (operation == "coverage") or (operation == "total") then
+				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, attribute)
 			else
-				outDs:renameProperty(outDSetName, propCreatedName, property)
-				attrsRenamed[property] = property
+				outDs:renameProperty(outDSetName, propCreatedName, attribute)
+				attrsRenamed[attribute] = attribute
 			end
 
 			if default then
@@ -3498,6 +3563,14 @@ TerraLib_ = {
 		end
 
 		collectgarbage("collect")
+	end,
+	--- Set progress viewer.
+	-- @arg visible A boolean that if true show the percetage progress of some functions.
+	-- @usage --DONTRUN
+	-- TerraLib().setProgressVisible(true)
+	-- TerraLib().attributeFill(...)
+	setProgressVisible = function(visible)
+		progress = visible
 	end
 }
 

@@ -137,7 +137,7 @@ return{
 			}
 		end
 
-		unitTest:assertWarning(patternFileError, "Only one resut has been found to match the pattern '"..packageInfo("gis").data.."conservation*Areas_1961.shp'.")
+		unitTest:assertWarning(patternFileError, "Only one result has been found to match the pattern '"..packageInfo("gis").data.."conservation*Areas_1961.shp'.")
 		unitTest:assertEquals(projTemporal.areas.name, "areas")
 		unitTest:assertType(projTemporal.areas, "Layer")
 		unitTest:assertEquals(projTemporal.areas.source, "shp")

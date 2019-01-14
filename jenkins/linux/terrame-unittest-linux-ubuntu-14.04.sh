@@ -42,7 +42,6 @@ echo ""
 # Exporting enviroment variables
 export TME_PATH=$_TERRAME_INSTALL_PATH/bin
 export PATH=$PATH:$TME_PATH
-export LD_LIBRARY_PATH=$TME_PATH
 
 # You may use $ghprbActualCommit for handling if job has triggered by CI event or daily timer.
 # In this way, if you need a specific configuration for CI execution, use this flag

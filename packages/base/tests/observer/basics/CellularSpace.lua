@@ -177,7 +177,8 @@ return{
 				input = layerName1,
 				name = clName1,
 				resolution = 1,
-				file = filePath1
+				file = filePath1,
+				progress = false
 			}
 
 			cs = CellularSpace{

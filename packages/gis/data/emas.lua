@@ -49,31 +49,36 @@ cl = Layer{
 	clean = true,
 	input = "limit",
 	name = "cells",
-	resolution = 500
+	resolution = 500,
+	progress = false
 }
 
 cl:fill{
 	operation = "presence",
 	attribute = "firebreak",
-	layer = "firebreak"
+	layer = "firebreak",
+	progress = false
 }
 
 cl:fill{
 	operation = "presence",
 	attribute = "river",
-	layer = "river"
+	layer = "river",
+	progress = false
 }
 
 cl:fill{
 	operation = "maximum",
 	attribute = "maxcover",
-	layer = "cover"
+	layer = "cover",
+	progress = false
 }
 
 cl:fill{
 	operation = "minimum",
 	attribute = "mincover",
-	layer = "cover"
+	layer = "cover",
+	progress = false
 }
 
 cs = CellularSpace{

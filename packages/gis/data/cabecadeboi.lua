@@ -55,14 +55,16 @@ cl = Layer{
 	file = "cabecadeboi.shp",
 	input = "box",
 	name = "cells",
-	resolution = 100
+	resolution = 100,
+	progress = false
 }
 
 cl:fill{
 	operation = "average",
 	layer = "elevation",
 	attribute = "height",
-	dummy = 300
+	dummy = 300,
+	progress = false
 }
 
 cs = CellularSpace{

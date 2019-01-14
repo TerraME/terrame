@@ -135,12 +135,12 @@ local function checkCellularLayerOgrArguments(data, repr)
 
 	if repr == "raster" then
 		verifyUnnecessaryArguments(data, {"clean", "input", "name", "project",
-										"resolution", "file", "source", "index"})
+										"resolution", "file", "source", "index", "progress"})
 		data.box = true
 	else
 		defaultTableValue(data, "box", false)
 		verifyUnnecessaryArguments(data, {"clean", "box", "input", "name", "project",
-										"resolution", "file", "source", "index"})
+										"resolution", "file", "source", "index", "progress"})
 	end
 
 	if data.file:exists() then
@@ -156,10 +156,11 @@ local function addCellularLayer(self, data)
 	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"box", "input", "name", "resolution", "file", "project", "source",
 	                                  "clean", "host", "port", "user", "password", "database", "table",
-									  "index"})
+									  "index", "progress"})
 
 	mandatoryTableArgument(data, "input", "string")
 	positiveTableArgument(data, "resolution")
+	defaultTableValue(data, "progress", true)
 
 	if type(data.file) == "string" then
 		data.file = File(data.file)
@@ -203,6 +204,8 @@ local function addCellularLayer(self, data)
 	local inputInfos = TerraLib().getLayerInfo(data.project, data.input)
 	local repr = inputInfos.rep
 
+	TerraLib().setProgressVisible(data.progress)
+
 	switch(data, "source"):caseof{
 		shp = function()
 			checkCellularLayerOgrArguments(data, repr)
@@ -221,12 +224,14 @@ local function addCellularLayer(self, data)
 
 			if repr == "raster" then
 				verifyUnnecessaryArguments(data, {"clean", "input", "name", "resolution", "source", -- SKIP
-										"project", "host", "port", "user", "password", "database", "table"})
+										"project", "host", "port", "user", "password", "database",
+										"table", "progress"})
 				data.box = true -- SKIP
 			else
 				defaultTableValue(data, "box", false)
 				verifyUnnecessaryArguments(data, {"box", "clean", "input", "name", "resolution", "source",
-										"project", "host", "port", "user", "password", "database", "table"})
+										"project", "host", "port", "user", "password", "database", "table",
+										"progress"})
 			end
 
 			if data.clean then
@@ -390,7 +395,13 @@ local function checkIfRasterBandExists(data)
 end
 
 local function checkRaster(data)
-	verifyUnnecessaryArguments(data, {"attribute", "band", "dummy", "missing", "layer", "operation", "pixel"})
+	if data.operation == "coverage" then
+		verifyUnnecessaryArguments(data, {"attribute", "band", "dummy", "missing", "layer",
+								"operation", "pixel", "area", "progress"})
+	else
+		verifyUnnecessaryArguments(data, {"attribute", "band", "dummy", "missing", "layer",
+								"operation", "pixel", "progress"})
+	end
 
 	defaultTableValue(data, "band", 0)
 	positiveTableArgument(data, "band", true)
@@ -454,7 +465,7 @@ local function findMultiples(base, pattern, list)
 	if #elements == 0 then
 		customError("No results have been found to match the pattern '"..base.."*"..pattern.."'.")
 	elseif #elements == 1 then
-		customWarning("Only one resut has been found to match the pattern '"..base.."*"..pattern.."'.")
+		customWarning("Only one result has been found to match the pattern '"..base.."*"..pattern.."'.")
 	end
 
 	return elements
@@ -534,51 +545,53 @@ Layer_ = {
 	-- from the reference layer. It sums the intersection areas of the object with all the polygons
 	-- of the reference layer. Because of that, if there is some overlay between the polygons of the
 	-- reference layer, it might create attribute values greater than one.
-	-- & attribute, layer & split \
+	-- & attribute, layer & progress, split \
 	-- "average" & Average of quantitative values from the objects that have some intersection
 	-- with the cell, without taking into account their geometric properties. When using argument
 	-- area, it computes the average weighted by the proportions of the respective intersection areas.
 	-- Useful to distribute atributes that represent averages, such as per capita income.
-	-- & attribute, layer, select  & area, missing, band, dummy, pixel, split  \
+	-- & attribute, layer, select  & area, missing, band, dummy, pixel, progress, split  \
 	-- "count" & Number of objects that have some overlay with the cell.
-	-- & attribute, layer & dummy, pixel, split \
-	-- "coverage" & Percentage of each qualitative value covering the cell, using polygons or
+	-- & attribute, layer & dummy, pixel, progress, split \
+	-- "coverage" & Percentage or total area of each qualitative value covering the cell, using polygons or
 	-- raster data. It creates one new attribute for each available value, in the form
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
 	-- value represent the different values in the input data.
 	-- The sum of the created attribute values for a given cell will range
-	-- from zero to one, according to the area of the cell covered by pixels.
+	-- from zero to one indicating the percentage of the cell covered by pixels of each class (default),
+	-- or the total area covered by each class, according to the area of a pixel in the
+	-- raster data (when using area = true).
 	-- Note that this operation does not use dummy value, therefore one attribute will also
 	-- be created for the dummy values.
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
 	-- it removes the characters after the tenth in the name. This function will stop with
 	-- an error if two attribute names in the output are the same.
-	-- & attribute, layer, select & missing, band, pixel, split \
+	-- & attribute, layer, select & area, missing, band, pixel, progress, split \
 	-- "distance" & Distance to the nearest object. The distance is computed from the
 	-- centroid of the cell to the closest point, line, or border of a polygon.
-	-- & attribute, layer & split \
+	-- & attribute, layer & progress, split \
 	-- "maximum" & Maximum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy, pixel, split \
+	-- attribute, layer, select & missing, band, dummy, pixel, progress, split \
 	-- "minimum" & Minimum quantitative value among the objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy, pixel, split \
+	-- attribute, layer, select & missing, band, dummy, pixel, progress, split \
 	-- "mode" & More common qualitative value from the objects that have some intersection with
 	-- the cell, without taking into account their geometric properties. This operation creates an
 	-- attribute with string values. Whenever there are two or more values with the same count, the resulting
 	-- value will contain all them separated by comma. When using argument area, it
 	-- uses the value of the object that has larger coverage. & attribute, layer, select &
-	-- missing, band, dummy, pixel, split \
+	-- missing, band, dummy, pixel, progress, split \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
-	-- & attribute, layer & split \
+	-- & attribute, layer & progress, split \
 	-- "stdev" & Standard deviation of quantitative values from objects that have some
 	-- intersection with the cell, without taking into account their geometric properties. &
-	-- attribute, layer, select & missing, band, dummy, pixel, split \
+	-- attribute, layer, select & missing, band, dummy, pixel, progress, split \
 	-- "sum" & Sum of quantitative values from objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, it
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
-	-- & attribute, layer, select & area, missing, band, dummy, pixel, split \
+	-- & attribute, layer, select & area, missing, band, dummy, pixel, progress, split \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true),
 	-- or the weights are equal for each object with some overlap (false, missing value).
@@ -593,6 +606,8 @@ Layer_ = {
 	-- with each new layer's name formed by the own Layer's name and the respective times as sufix.
 	-- The default value is false and, in this case, the temporal data will be filled in the own Layer
 	-- into different attributes though.
+	-- @arg data.progress A boolean value indicating whether progress will be shown while computing the operation.
+	-- The default value is true.
 	-- @arg data.pixel A string value indicating when a pixel is within a polygon. See the table below.
 	-- @tabular pixel Pixel & Description \
 	-- "centroid" (default) & A pixel is within a polygon if its centroid is within the polygon. It is recommended to
@@ -714,12 +729,14 @@ Layer_ = {
 			mandatoryTableArgument(data, "layer", "Layer")
 		end
 
+		defaultTableValue(data, "progress", true)
+
 		local repr = data.layer:representation()
 
 		switch(data, "operation"):caseof{
 			area = function()
 				if repr == "polygon" or repr == "surface" then
-					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "progress"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
@@ -730,10 +747,12 @@ Layer_ = {
 			average = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					if repr == "polygon" or repr == "surface" then
-						verifyUnnecessaryArguments(data, {"area", "attribute", "missing", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"area", "attribute", "missing", "layer",
+														"operation", "select", "progress"})
 						defaultTableValue(data, "area", false)
 					else
-						verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"attribute", "missing", "layer",
+														"operation", "select", "progress"})
 					end
 
 					mandatoryTableArgument(data, "select", "string")
@@ -747,7 +766,7 @@ Layer_ = {
 			end,
 			count = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "missing"})
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "missing", "progress"})
 					data.select = "FID"
 				elseif repr == "raster" then
 					checkRaster(data)
@@ -759,11 +778,13 @@ Layer_ = {
 			end,
 			distance = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "missing", "progress"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
+
+				defaultTableValue(data, "missing", 0)
 			end,
 			-- length = function() -- TODO(#795)
 				-- if repr == "line" then
@@ -776,10 +797,12 @@ Layer_ = {
 			mode = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
 					if repr == "polygon" or repr == "surface" then
-						verifyUnnecessaryArguments(data, {"area", "attribute", "missing", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"area", "attribute", "missing", "layer",
+														"operation", "select", "progress"})
 						defaultTableValue(data, "area", false)
 					else
-						verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
+						verifyUnnecessaryArguments(data, {"attribute", "missing", "layer",
+														"operation", "select", "progress"})
 					end
 
 					mandatoryTableArgument(data, "select", "string")
@@ -793,7 +816,8 @@ Layer_ = {
 			end,
 			maximum = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer",
+													"operation", "select", "progress"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					checkRaster(data)
@@ -805,7 +829,8 @@ Layer_ = {
 			end,
 			minimum = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer",
+													"operation", "select", "progress"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					checkRaster(data)
@@ -817,20 +842,21 @@ Layer_ = {
 			end,
 			coverage = function()
 				if repr == "polygon" or repr == "surface" then
-					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer",
+													"operation", "select", "area", "progress"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
-					verifyUnnecessaryArguments(data, {"attribute", "band", "missing", "layer", "operation", "pixel"})
 					checkRaster(data)
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
 
 				defaultTableValue(data, "missing", 0)
+				defaultTableValue(data, "area", false)
 			end,
 			presence = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "progress"})
 					data.select = "FID"
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
@@ -838,7 +864,8 @@ Layer_ = {
 			end,
 			stdev = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer",
+													"operation", "select", "progress"})
 					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					checkRaster(data)
@@ -850,7 +877,8 @@ Layer_ = {
 			end,
 			sum = function()
 				if belong(repr, {"point", "line", "polygon", "surface"}) then
-					verifyUnnecessaryArguments(data, {"area", "attribute", "missing", "layer", "operation", "select"})
+					verifyUnnecessaryArguments(data, {"area", "attribute", "missing", "layer",
+													"operation", "select", "progress"})
 					mandatoryTableArgument(data, "select", "string")
 					defaultTableValue(data, "area", false)
 				elseif repr == "raster" then
@@ -885,7 +913,21 @@ Layer_ = {
 			end
 		end
 
-		TerraLib().attributeFill(project, data.layer.name, self.name, nil, data.attribute, data.operation, data.select, data.area, data.missing, repr, data.dummy, data.pixel)
+		TerraLib().setProgressVisible(data.progress)
+
+		TerraLib().attributeFill{
+			project = project,
+			from = data.layer.name,
+			to = self.name,
+			attribute = data.attribute,
+			operation = data.operation,
+			select = data.select,
+			area = data.area,
+			default = data.missing,
+			repr = repr,
+			nodata = data.dummy,
+			pixel = data.pixel
+		}
 	end,
 	--- Return the Layer's projection. It contains the name of the projection, its Geodetic
 	-- Identifier (EPSG), and
@@ -955,6 +997,8 @@ Layer_ = {
 	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
 	-- @arg data.select  A vector with the names of the attributes to be saved. When saving a
 	-- single attribute, you can use a string "attribute" instead of a table {"attribute"}.
+	-- @arg data.progress A boolean value indicating whether progress will be shown while exporting the layer.
+	-- The default value is true.
 	-- @arg data.... Additional arguments related to where the output will be saved. These arguments
 	-- are the same for describing the data source when one creates a layer from a file or database.
 	-- @usage -- DONTRUN
@@ -970,6 +1014,7 @@ Layer_ = {
 		end
 
 		defaultTableValue(data, "overwrite", false)
+		defaultTableValue(data, "progress", true)
 
 		if type(data.file) == "string" then
 			data.file = File(data.file)
@@ -995,7 +1040,7 @@ Layer_ = {
 
 			if isRasterSource(self.source) then
 				if isRasterSource(ext) then
-					verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite"})
+					verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "progress"})
 				else
 					customError("Raster layer '"..self.name
 								.."' cannot be exported as vector data. Please, use 'polygonize' function instead.")
@@ -1003,7 +1048,7 @@ Layer_ = {
 			elseif isRasterSource(ext) then
 				customError("Vector layer '"..self.name.."' cannot be exported as raster data.")
 			else
-				verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "select"})
+				verifyUnnecessaryArguments(data, {"source", "file", "epsg", "overwrite", "select", "progress"})
 			end
 
 			toData = {
@@ -1018,8 +1063,9 @@ Layer_ = {
 		else --< to data is postgis
 			mandatoryTableArgument(data, "source", "string")
 			checkSourcePostgis(data.source)
-			verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host", "port", "encoding",
-											"table", "epsg", "overwrite", "select"})
+			verifyUnnecessaryArguments(data, {"source", "user", "password", "database", "host",
+											"port", "encoding", "table", "epsg", "overwrite",
+											"select", "progress"})
 			data.name = self.name
 			checkPostgisParams(data)
 
@@ -1032,6 +1078,7 @@ Layer_ = {
 			toData.encoding = EncodingMapper[self.encoding]
 		end
 
+		TerraLib().setProgressVisible(data.progress)
 		TerraLib().saveDataAs(fromData, toData, data.overwrite, data.select)
 	end,
 	--- Create a new data simplifying its geometry.
@@ -1380,6 +1427,8 @@ metaTableLayer_ = {
 -- @arg data.encoding A string value to set the character encoding.
 -- Supported encodings are "utf8", "cp1250", "cp1251", "cp1252", "cp1253", "cp1254", "cp1257", and "latin1".
 -- The default value is "latin1".
+-- @arg data.progress A boolean value indicating whether progress will be shown while creating the cellular space.
+-- The default value is true.
 -- @output epsg A number with its projection identifier.
 -- @usage -- DONTRUN
 -- import("gis")
@@ -1455,7 +1504,7 @@ function Layer(data)
 			optionalTableArgument(data, "times", "table")
 			if data.times then
 				if #data.times == 1 then
-					customWarning("Only one resut has been found to match the pattern '"..base.."_"..data.times[1]..pattern.."'.")
+					customWarning("Only one result has been found to match the pattern '"..base.."_"..data.times[1]..pattern.."'.")
 				end
 
 				forEachElement(data.times, function(_, time)

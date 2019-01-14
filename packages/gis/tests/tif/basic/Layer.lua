@@ -54,7 +54,8 @@ return {
 			input = layerName1,
 			name = clName1,
 			resolution = 60e3,
-			file = filePath1
+			file = filePath1,
+			progress = false
 		}
 
 		unitTest:assertEquals(clName1, cl1.name)
@@ -78,408 +79,481 @@ return {
 		proj.file:delete()
 	end,
 	fill = function(unitTest)
-		local projName = "layer_fill_tif.tview"
+		local allSupportedOperation = function()
+			local projName = "layer_fill_tif.tview"
 
-		local proj = Project{
-			file = projName,
-			clean = true
-		}
-
-		local layerName1 = "limiteitaituba"
-		local l1 = Layer{
-			project = proj,
-			name = layerName1,
-			file = filePath("itaituba-census.shp", "gis")
-		}
-
-		local prodes = "prodes"
-		Layer{
-			project = proj,
-			name = prodes,
-			file = filePath("itaituba-deforestation.tif", "gis"),
-			epsg = l1.epsg
-		}
-
-		local altimetria = "altimetria"
-		local altLayer = Layer{
-			project = proj,
-			name = altimetria,
-			file = filePath("itaituba-elevation.tif", "gis"),
-			epsg = l1.epsg
-		}
-
-		local clName1 = "CellsTif"
-
-		local shapes = {}
-
-		local shp1 = clName1..".shp"
-		File(shp1):deleteIfExists()
-		table.insert(shapes, shp1)
-
-		local cl = Layer{
-			project = proj,
-			source = "shp",
-			input = layerName1,
-			name = clName1,
-			resolution = 5000,
-			file = clName1..".shp"
-		}
-
-		-- MODE
-
-		cl:fill{
-			operation = "mode",
-			attribute = "prod_mode",
-			layer = prodes,
-			missing = 1000
-		}
-
-		local cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		local split = cs:split("prod_mode")
-
-		unitTest:assertEquals(getn(split), 3)
-		unitTest:assertEquals(#split["7"], 498)
-		unitTest:assertEquals(#split["87"], 102)
-		unitTest:assertEquals(#split["167"], 20)
-
-		unitTest:assertEquals(#cs, 498 + 102 + 20)
-
-		local map = Map{
-			target = cs,
-			select = "prod_mode",
-			value = {"7", "87", "167"},
-			color = {"red", "green", "blue"}
-		}
-
-		unitTest:assertSnapshot(map, "tiff-mode.png", 0.1)
-
-		cl:fill{
-			operation = "mode",
-			attribute = "prod_m_ov",
-			layer = prodes,
-			pixel = "overlap",
-			missing = 1000
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		split = cs:split("prod_m_ov")
-
-		unitTest:assertEquals(getn(split), 4)
-		unitTest:assertEquals(#split["7"], 497)
-		unitTest:assertEquals(#split["87"], 102)
-		unitTest:assertEquals(#split["7,87"], 1)
-		unitTest:assertEquals(#split["167"], 20)
-
-		unitTest:assertEquals(#cs, 497 + 102 + 1 + 20)
-
-		map = Map{
-			target = cs,
-			select = "prod_m_ov",
-			value = {"7", "87", "167", "7,87"},
-			color = {"red", "green", "blue", "black"}
-		}
-
-		unitTest:assertSnapshot(map, "tiff-mode-ov.png", 0.05)
-
-		-- MINIMUM
-
-		local clName2 = "itaituba2"
-		local shp2 = clName2..".shp"
-		File(shp2):deleteIfExists()
-		table.insert(shapes, shp2)
-
-		cl = Layer{
-			project = proj,
-			source = "shp",
-			input = layerName1,
-			name = clName2,
-			resolution = 10000,
-			file = clName2..".shp"
-		}
-
-		local warningFunc = function()
-			cl:fill{
-				operation = "minimum",
-				attribute = "prod_min",
-				layer = altimetria,
-				pixel = "centroid"
+			local proj = Project{
+				file = projName,
+				clean = true
 			}
-		end
 
-		unitTest:assertWarning(warningFunc, defaultValueMsg("pixel", "centroid"))
+			local layerName1 = "limiteitaituba"
+			local l1 = Layer{
+				project = proj,
+				name = layerName1,
+				file = filePath("itaituba-census.shp", "gis")
+			}
 
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
+			local prodes = "prodes"
+			Layer{
+				project = proj,
+				name = prodes,
+				file = filePath("itaituba-deforestation.tif", "gis"),
+				epsg = l1.epsg
+			}
 
-		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_min, "number")
-			unitTest:assert(cell.prod_min >= 0)
-			unitTest:assert(cell.prod_min <= 185)
-		end)
+			local altimetria = "altimetria"
+			local altLayer = Layer{
+				project = proj,
+				name = altimetria,
+				file = filePath("itaituba-elevation.tif", "gis"),
+				epsg = l1.epsg
+			}
 
-		map = Map{
-			target = cs,
-			select = "prod_min",
-			min = 0,
-			max = 255,
-			color = "RdPu",
-			slices = 10
-		}
+			local clName1 = "CellsTif"
 
-		unitTest:assertSnapshot(map, "tiff-min.png")
+			local shapes = {}
 
-		-- MAXIMUM
+			local shp1 = clName1..".shp"
+			File(shp1):deleteIfExists()
+			table.insert(shapes, shp1)
 
-		cl:fill{
-			operation = "maximum",
-			attribute = "prod_max",
-			layer = altimetria
-		}
+			local cl = Layer{
+				project = proj,
+				source = "shp",
+				input = layerName1,
+				name = clName1,
+				resolution = 5000,
+				file = clName1..".shp",
+				progress = false
+			}
 
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
+			-- MODE
 
-		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_max, "number")
-			unitTest:assert(cell.prod_max >= 7)
-			unitTest:assert(cell.prod_max <= 255)
-		end)
+			cl:fill{
+				operation = "mode",
+				attribute = "prod_mode",
+				layer = prodes,
+				missing = 1000,
+				progress = false
+			}
 
-		map = Map{
-			target = cs,
-			select = "prod_max",
-			min = 0,
-			max = 255,
-			color = "RdPu",
-			slices = 10
-		}
+			local cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
 
-		unitTest:assertSnapshot(map, "tiff-max.png")
+			local split = cs:split("prod_mode")
 
-		-- SUM
+			unitTest:assertEquals(getn(split), 3)
+			unitTest:assertEquals(#split["7"], 498)
+			unitTest:assertEquals(#split["87"], 102)
+			unitTest:assertEquals(#split["167"], 20)
 
-		cl:fill{
-			operation = "sum",
-			attribute = "prod_sum",
-			layer = altimetria
-		}
+			unitTest:assertEquals(#cs, 498 + 102 + 20)
 
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
+			local map = Map{
+				target = cs,
+				select = "prod_mode",
+				value = {"7", "87", "167"},
+				color = {"red", "green", "blue"}
+			}
 
-		forEachCell(cs, function(cell)
-			unitTest:assertType(cell.prod_sum, "number")
-			unitTest:assert(cell.prod_sum >= 0)
-		end)
+			unitTest:assertSnapshot(map, "tiff-mode.png", 0.1)
 
-		map = Map{
-			target = cs,
-			select = "prod_sum",
-			min = 0,
-			max = 24000,
-			color = "RdPu",
-			slices = 10
-		}
+			cl:fill{
+				operation = "mode",
+				attribute = "prod_m_ov",
+				layer = prodes,
+				pixel = "overlap",
+				missing = 1000,
+				progress = false
+			}
 
-		unitTest:assertSnapshot(map, "tiff-sum.png")
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
 
-		-- COVERAGE
+			split = cs:split("prod_m_ov")
 
-		cl:fill{
-			operation = "coverage",
-			attribute = "cov",
-			layer = prodes
-		}
+			unitTest:assertEquals(getn(split), 4)
+			unitTest:assertEquals(#split["7"], 497)
+			unitTest:assertEquals(#split["87"], 102)
+			unitTest:assertEquals(#split["7,87"], 1)
+			unitTest:assertEquals(#split["167"], 20)
 
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
+			unitTest:assertEquals(#cs, 497 + 102 + 1 + 20)
 
-		local cov = {7, 87, 167, 255}
+			map = Map{
+				target = cs,
+				select = "prod_m_ov",
+				value = {"7", "87", "167", "7,87"},
+				color = {"red", "green", "blue", "black"}
+			}
 
-		forEachCell(cs, function(cell)
-			local sum = 0
+			unitTest:assertSnapshot(map, "tiff-mode-ov.png", 0.05)
 
-			for i = 1, #cov do
-				unitTest:assertType(cell["cov_"..cov[i]], "number")
-				sum = sum + cell["cov_"..cov[i]]
+			-- MINIMUM
+
+			local clName2 = "itaituba2"
+			local shp2 = clName2..".shp"
+			File(shp2):deleteIfExists()
+			table.insert(shapes, shp2)
+
+			cl = Layer{
+				project = proj,
+				source = "shp",
+				input = layerName1,
+				name = clName2,
+				resolution = 10000,
+				file = clName2..".shp",
+				progress = false
+			}
+
+			local warningFunc = function()
+				cl:fill{
+					operation = "minimum",
+					attribute = "prod_min",
+					layer = altimetria,
+					pixel = "centroid",
+					progress = false
+				}
 			end
 
-			unitTest:assert(sum -0.1 <= 1) -- this should be 'sum <= 1' #1968
+			unitTest:assertWarning(warningFunc, defaultValueMsg("pixel", "centroid"))
 
-			--if math.abs(sum - 100) > 0.001 then
-			--	print(sum)
-			--end
-		end)
-
-		for i = 1, #cov do
-			local mmap = Map{
-				target = cs,
-				select = "cov_"..cov[i],
-				min = 0,
-				max = 1,
-				slices = 10,
-				color = "RdPu"
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
 			}
 
-			unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i]..".png", 0.1)
-		end
+			forEachCell(cs, function(cell)
+				unitTest:assertType(cell.prod_min, "number")
+				unitTest:assert(cell.prod_min >= 0)
+				unitTest:assert(cell.prod_min <= 185)
+			end)
 
-		-- AVERAGE
-		local nodataDefaultWarn = function()
+			map = Map{
+				target = cs,
+				select = "prod_min",
+				min = 0,
+				max = 255,
+				color = "RdPu",
+				slices = 10
+			}
+
+			unitTest:assertSnapshot(map, "tiff-min.png")
+
+			-- MAXIMUM
+
+			cl:fill{
+				operation = "maximum",
+				attribute = "prod_max",
+				layer = altimetria,
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			forEachCell(cs, function(cell)
+				unitTest:assertType(cell.prod_max, "number")
+				unitTest:assert(cell.prod_max >= 7)
+				unitTest:assert(cell.prod_max <= 255)
+			end)
+
+			map = Map{
+				target = cs,
+				select = "prod_max",
+				min = 0,
+				max = 255,
+				color = "RdPu",
+				slices = 10
+			}
+
+			unitTest:assertSnapshot(map, "tiff-max.png")
+
+			-- SUM
+
+			cl:fill{
+				operation = "sum",
+				attribute = "prod_sum",
+				layer = altimetria,
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			forEachCell(cs, function(cell)
+				unitTest:assertType(cell.prod_sum, "number")
+				unitTest:assert(cell.prod_sum >= 0)
+			end)
+
+			map = Map{
+				target = cs,
+				select = "prod_sum",
+				min = 0,
+				max = 24000,
+				color = "RdPu",
+				slices = 10
+			}
+
+			unitTest:assertSnapshot(map, "tiff-sum.png")
+
+			-- COVERAGE
+
+			cl:fill{
+				operation = "coverage",
+				attribute = "cov",
+				layer = prodes,
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			local cov = {7, 87, 167, 255}
+
+			forEachCell(cs, function(cell)
+				local sum = 0
+
+				for i = 1, #cov do
+					unitTest:assertType(cell["cov_"..cov[i]], "number")
+					sum = sum + cell["cov_"..cov[i]]
+				end
+
+				unitTest:assert(sum -0.1 <= 1) -- this should be 'sum <= 1' #1968
+
+				--if math.abs(sum - 100) > 0.001 then
+				--	print(sum)
+				--end
+			end)
+
+			for i = 1, #cov do
+				local mmap = Map{
+					target = cs,
+					select = "cov_"..cov[i],
+					min = 0,
+					max = 1,
+					slices = 10,
+					color = "RdPu"
+				}
+
+				unitTest:assertSnapshot(mmap, "tiff-cov-"..cov[i]..".png", 0.1)
+			end
+
+			-- AVERAGE
+			local nodataDefaultWarn = function()
+				cl:fill{
+					operation = "average",
+					layer = "altimetria",
+					attribute = "height",
+					dummy = altLayer:dummy(),
+					progress = false
+				}
+			end
+			unitTest:assertWarning(nodataDefaultWarn, defaultValueMsg("dummy", altLayer:dummy()))
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "height",
+				min = 0,
+				max = 255,
+				color = "RdPu",
+				slices = 7
+			}
+
+			unitTest:assertSnapshot(map, "tiff-average.png")
+
+			-- STDEV
+
+			cl:fill{
+				operation = "stdev",
+				layer = "altimetria",
+				attribute = "std",
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "std",
+				min = 0,
+				max = 80,
+				color = "RdPu",
+				slices = 7
+			}
+
+			unitTest:assertSnapshot(map, "tiff-std.png")
+
+			-- DUMMY
 			cl:fill{
 				operation = "average",
 				layer = "altimetria",
-				attribute = "height",
-				dummy = altLayer:dummy()
+				attribute = "height_nd",
+				dummy = 256,
+				progress = false
 			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			map = Map{
+				target = cs,
+				select = "height_nd",
+				min = 0,
+				max = 255,
+				color = "RdPu",
+				slices = 7
+			}
+
+			unitTest:assertSnapshot(map, "tiff-average-nodata.png")
+
+			forEachElement(shapes, function(_, value)
+				File(value):delete()
+			end)
+
+			File(projName):delete()
+
+			-- COUNT
+			filePath("amazonia-indigenous.shp", "gis"):copy(currentDir())
+
+			proj = Project{
+				file = "fill_mcount.tview",
+				clean = true,
+			}
+
+			local protec = Layer{
+				name = "protected",
+				project = proj,
+				epsg = 29191,
+				file = "amazonia-indigenous.shp"
+			}
+
+			prodes = Layer{
+				name = "prodes",
+				project = proj,
+				epsg = 29191,
+				file = filePath("amazonia-prodes.tif", "gis")
+			}
+
+			protec:fill{
+				operation = "count",
+				attribute = "prod_count",
+				layer = prodes,
+				progress = false
+			}
+
+			protec:fill{
+				operation = "count",
+				attribute = "prod_c_ov",
+				layer = prodes,
+				pixel = "overlap",
+				progress = false
+			}
+
+
+			cs = CellularSpace{
+				layer = protec
+			}
+
+			local sum = 0
+			local sum_ov = 0
+
+			unitTest:assertType(cs:sample().prod_count, "number")
+			unitTest:assertType(cs:sample().prod_c_ov, "number")
+
+			forEachCell(cs, function(cell)
+				sum = sum + cell.prod_count
+				sum_ov = sum_ov + cell.prod_c_ov
+
+				unitTest:assert(cell.prod_count >= 0 and cell.prod_count <= 3796)
+				unitTest:assert(cell.prod_c_ov >= 0 and cell.prod_c_ov <= 3989)
+			end)
+
+			unitTest:assertEquals(sum, 42844)
+			unitTest:assertEquals(sum_ov, 51116)
+
+			File("amazonia-indigenous.shp"):delete()
+			File("fill_mcount.tview"):delete()
 		end
-		unitTest:assertWarning(nodataDefaultWarn, defaultValueMsg("dummy", altLayer:dummy()))
 
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
+		local coverageTotalArea = function()
+			local proj = Project{
+				file = "layer_fill_shp_basic.tview",
+				clean = true,
+				limit = filePath("test/limit_es_sirgas2000_5880.shp", "gis"),
+				uses = filePath("test/es_class_sirgas2000_5880.tif", "gis")
+			}
 
-		map = Map{
-			target = cs,
-			select = "height",
-			min = 0,
-			max = 255,
-			color = "RdPu",
-			slices = 7
-		}
+			local cl = Layer {
+				project = proj,
+				resolution = 20e3,
+				clean = true,
+				file = "csEs.shp",
+				name = "csEs",
+				input = "limit",
+				progress = false
+			}
 
-		unitTest:assertSnapshot(map, "tiff-average.png")
+			cl:fill{
+				operation = "coverage",
+				layer = "uses",
+				attribute = "area",
+				area = true,
+				progress = false
+			}
 
-		-- STDEV
+			local cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
 
-		cl:fill{
-			operation = "stdev",
-			layer = "altimetria",
-			attribute = "std"
-		}
+			local cell = cs:get("3")
+			unitTest:assertEquals(cell.area_1, 0)
+			unitTest:assertEquals(cell.area_2, 57361809.758069, 1e-6)
+			unitTest:assertEquals(cell.area_3, 21744999.777569, 1e-6)
+			unitTest:assertEquals(cell.area_4, 118597728.67191, 1e-5)
+			unitTest:assertEquals(cell.area_5, 35804266.875135, 1e-6)
+			unitTest:assertEquals(cell.area_6, 0)
+			unitTest:assertEquals(cell.area_7, 1687112.0517079, 1e-7)
 
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
+			local map = Map{
+				target = cs,
+				select = "area_2",
+				min = 0,
+				max = 382e6,
+				color = "RdPu",
+				slices = 6
+			}
 
-		map = Map{
-			target = cs,
-			select = "std",
-			min = 0,
-			max = 80,
-			color = "RdPu",
-			slices = 7
-		}
+			unitTest:assertSnapshot(map, "coverage_total_area_2.png")
 
-		unitTest:assertSnapshot(map, "tiff-std.png")
+			cl:delete()
+			proj.file:delete()
+		end
 
-		-- DUMMY
-		cl:fill{
-			operation = "average",
-			layer = "altimetria",
-			attribute = "height_nd",
-			dummy = 256
-		}
-
-		cs = CellularSpace{
-			project = proj,
-			layer = cl.name
-		}
-
-		map = Map{
-			target = cs,
-			select = "height_nd",
-			min = 0,
-			max = 255,
-			color = "RdPu",
-			slices = 7
-		}
-
-		unitTest:assertSnapshot(map, "tiff-average-nodata.png")
-
-		forEachElement(shapes, function(_, value)
-			File(value):delete()
-		end)
-
-		File(projName):delete()
-
-		-- COUNT
-		filePath("amazonia-indigenous.shp", "gis"):copy(currentDir())
-
-		proj = Project{
-			file = "fill_mcount.tview",
-			clean = true,
-		}
-
-		local protec = Layer{
-		    name = "protected",
-		    project = proj,
-		    epsg = 29191,
-		    file = "amazonia-indigenous.shp"
-		}
-
-		prodes = Layer{
-		    name = "prodes",
-		    project = proj,
-		    epsg = 29191,
-		    file = filePath("amazonia-prodes.tif", "gis")
-		}
-
-		protec:fill{
-			operation = "count",
-			attribute = "prod_count",
-			layer = prodes
-		}
-
-		protec:fill{
-			operation = "count",
-			attribute = "prod_c_ov",
-			layer = prodes,
-			pixel = "overlap"
-		}
-
-
-		cs = CellularSpace{
-			layer = protec
-		}
-
-		local sum = 0
-		local sum_ov = 0
-
-		unitTest:assertType(cs:sample().prod_count, "number")
-		unitTest:assertType(cs:sample().prod_c_ov, "number")
-
-		forEachCell(cs, function(cell)
-			sum = sum + cell.prod_count
-			sum_ov = sum_ov + cell.prod_c_ov
-
-			unitTest:assert(cell.prod_count >= 0 and cell.prod_count <= 3796)
-			unitTest:assert(cell.prod_c_ov >= 0 and cell.prod_c_ov <= 3989)
-		end)
-
-		unitTest:assertEquals(sum, 42844)
-		unitTest:assertEquals(sum_ov, 51116)
-
-		File("amazonia-indigenous.shp"):delete()
-		File("fill_mcount.tview"):delete()
+		unitTest:assert(allSupportedOperation)
+		unitTest:assert(coverageTotalArea)
 	end,
 	representation = function(unitTest)
 		local projName = "layer_fill_tiff_repr.tview"
@@ -600,7 +674,7 @@ return {
 			file = filePath("test/prodes_polyc_10k.tif", "gis")
 		}
 
-		local toData = {file = File("tif2png.png"):deleteIfExists(), select = {"0", "1"}}
+		local toData = {file = File("tif2png.png"):deleteIfExists(), select = {"0", "1"}, progress = false}
 		local selectUnnecessary = function()
 			layer:export(toData)
 		end
@@ -615,7 +689,7 @@ return {
 			file = toData.file
 		}
 
-		local toData2 = {file = File("png2tif.tif"), epsg = 4326}
+		local toData2 = {file = File("png2tif.tif"), epsg = 4326, progress = false}
 		layer2:export(toData2)
 
 		unitTest:assert(toData2.file:exists())

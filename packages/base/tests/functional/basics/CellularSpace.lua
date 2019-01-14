@@ -212,7 +212,8 @@ return{
 				input = layerName1,
 				name = clName1,
 				resolution = 1,
-				file = filePath1
+				file = filePath1,
+				progress = false
 			}
 
 			local cs
@@ -409,7 +410,8 @@ return{
 				input = esGjLayer.name,
 				name = gjCsLayerName,
 				resolution = resolution,
-				file = gjCsFile
+				file = gjCsFile,
+				progress = false
 			}
 
 			local esGjCs = CellularSpace{
@@ -435,7 +437,8 @@ return{
 				name = "ES_Cells_Shp",
 				resolution = resolution,
 				file = "esShpCs.shp",
-				clean = true
+				clean = true,
+				progress = false
 			}
 
 			local esShpCs = CellularSpace {
@@ -1553,7 +1556,8 @@ ydim    number [20]
 			input = layerName1,
 			name = clName1,
 			resolution = 0.7,
-			file = filePath1
+			file = filePath1,
+			progress = false
 		}
 
 		local cs = CellularSpace{

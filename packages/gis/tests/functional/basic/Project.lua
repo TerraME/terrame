@@ -141,7 +141,8 @@ return {
 			clean = true,
 			input = "limit",
 			name = "cells",
-			resolution = 2e3
+			resolution = 2e3,
+			progress = false
 		}
 
 		unitTest:assertType(cl, "Layer")
@@ -192,7 +193,8 @@ return {
 		cl:fill{
 			operation = "maximum",
 			attribute = "maxcover",
-			layer = "cover"
+			layer = "cover",
+			progress = false
 		}
 
 		proj5 = Project{
@@ -243,7 +245,7 @@ return {
 			directory = packageInfo("gis").data.."test"
 		}
 
-		unitTest:assertEquals(getn(proj.layers), 16)
+		unitTest:assertEquals(getn(proj.layers), 21)
 		file:deleteIfExists()
 
 		local version = ""
@@ -327,7 +329,8 @@ return {
 				name = cl1Name,
 				resolution = 1,
 				file = cl1Name..".shp",
-				index = false
+				index = false,
+				progress = false
 			}
 
 			local spgj = filePath("test/sampa.geojson", "gis")
@@ -420,7 +423,8 @@ return {
 				name = cl1Name,
 				resolution = 1,
 				file = cl1Name..".shp",
-				index = false
+				index = false,
+				progress = false
 			}
 
 			local qgp2 = Project {

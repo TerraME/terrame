@@ -39,7 +39,6 @@ DEPENDS="$2"
 # Exporting terrame vars
 export TME_PATH="$_TERRAME_INSTALL_PATH/bin"
 export PATH=$PATH:$TME_PATH
-export LD_LIBRARY_PATH=$TME_PATH
 
 echo ""
 

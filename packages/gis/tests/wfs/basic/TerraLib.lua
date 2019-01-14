@@ -50,7 +50,7 @@ return {
 			unitTest:assertEquals(layerInfo.url, url) -- SKIP
 			unitTest:assertEquals(layerInfo.type, "WFS") -- SKIP
 			unitTest:assertEquals(layerInfo.source, "wfs") -- SKIP
-			unitTest:assertEquals(layerInfo.rep, "surface") -- SKIP
+			unitTest:assertEquals(layerInfo.rep, "polygon") -- SKIP
 			unitTest:assertEquals(layerInfo.srid, srid) -- SKIP
 			unitTest:assertEquals(layerInfo.encoding, encoding) -- SKIP
 		else
@@ -97,7 +97,7 @@ return {
 			local dataset = "reddpac:wfs_biomes"
 			local srid = 29901
 
-			TerraLib().addWfsLayer(qgp, layerName, url, dataset, srid, encoding)
+			TerraLib().addWfsLayer(qgp, layerName, url, dataset, srid)
 
 			local qgp2 = {
 				file = File("sampa_v3.qgs")
@@ -110,7 +110,7 @@ return {
 			unitTest:assertEquals(layerInfo.url, url)
 			unitTest:assertEquals(layerInfo.type, "WFS")
 			unitTest:assertEquals(layerInfo.source, "wfs")
-			unitTest:assertEquals(layerInfo.rep, "surface")
+			unitTest:assertEquals(layerInfo.rep, "polygon")
 			unitTest:assertEquals(layerInfo.srid, srid)
 
 			qgp.file:delete()
@@ -119,5 +119,53 @@ return {
 		end
 
 		unitTest:assert(insertNewLayerQgis)
+	end,
+	saveDataAs = function(unitTest)
+		TerraLib().setProgressVisible(false)
+
+		local saveAsShp = function()
+			local proj = {
+				file = "savedataas_wfs_basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+
+
+			local l1Name = "LayerWfs"
+			local url = "http://terrabrasilis.info/redd-pac/wfs"
+			local dataset = "reddpac:wfs_biomes"
+
+			TerraLib().addWfsLayer(proj, l1Name, url, dataset)
+
+			local fromData = {project = proj, layer = l1Name}
+			local toData = {file = File("wfs2shp.shp"), encoding = "UTF-8"}
+
+			TerraLib().saveDataAs(fromData, toData, true)
+
+			local l2Name = "LayerShp"
+			TerraLib().addShpLayer(proj, l2Name, toData.file)
+
+			local l1Props = TerraLib().getPropertyInfos(proj, l1Name)
+			local l2Props = TerraLib().getPropertyInfos(proj, l2Name)
+
+			unitTest:assertEquals(getn(l1Props), getn(l2Props))
+			unitTest:assertEquals(l1Props[0].name, l2Props[0].name)
+			unitTest:assertEquals(l1Props[1].name, l2Props[1].name)
+			unitTest:assertEquals(l1Props[2].name, l2Props[2].name)
+			unitTest:assertEquals(l1Props[3].name, l2Props[3].name)
+			unitTest:assertEquals(l1Props[4].name, l2Props[4].name)
+			unitTest:assertEquals(l1Props[5].name, l2Props[5].name)
+			unitTest:assertEquals(l1Props[6].name, l2Props[6].name)
+			unitTest:assertNil(l1Props[7])
+			unitTest:assertNil(l2Props[7])
+
+			toData.file:delete()
+			proj.file:delete()
+		end
+
+		unitTest:assert(saveAsShp)
 	end
 }

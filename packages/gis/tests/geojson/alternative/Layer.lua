@@ -44,7 +44,8 @@ return {
 				clean = true,
 				name = "Prodes-Cells",
 				resolution = 60e3,
-				file = "prodes_cells.geojson"
+				file = "prodes_cells.geojson",
+				progress = false
 			}
 
 			local errorMsg = function()
