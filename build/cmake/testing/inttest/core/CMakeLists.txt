@@ -114,7 +114,7 @@ target_link_libraries(core_itest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES}
                               ${QWT_LIBRARY})
 
 install(TARGETS core_itest
-        RUNTIME DESTINATION bin
+        RUNTIME DESTINATION ${TERRAME_DESTINATION_RUNTIME}
         COMPONENT runtime)
 
 add_test(NAME core_itest COMMAND core_itest)

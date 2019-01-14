@@ -60,11 +60,11 @@ target_include_directories(qgis_itest PUBLIC ${TERRAME_ABSOLUTE_ROOT_DIR}/src
 target_link_libraries(qgis_itest qgis ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
 
 install(TARGETS qgis_itest
-        RUNTIME DESTINATION bin
+        RUNTIME DESTINATION ${TERRAME_DESTINATION_RUNTIME}
         COMPONENT runtime)
 
 install(DIRECTORY ${PKG_TEST_DIR}
-		DESTINATION bin/qgistestdata
+		DESTINATION ${TERRAME_DESTINATION_RUNTIME}/qgistestdata
 		COMPONENT runtime)		
 		
 add_test(NAME qgis_itest COMMAND qgis_itest)

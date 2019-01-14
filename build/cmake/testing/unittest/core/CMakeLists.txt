@@ -44,7 +44,7 @@ add_executable(core_utest ${TERRAME_UNITTEST_SRC_FILES}
 target_link_libraries(core_utest ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
 
 install(TARGETS core_utest
-        RUNTIME DESTINATION bin
+        RUNTIME DESTINATION ${TERRAME_DESTINATION_RUNTIME}
         COMPONENT runtime)
 
 add_test(NAME core_utest COMMAND core_utest)
