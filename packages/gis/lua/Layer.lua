@@ -558,8 +558,9 @@ Layer_ = {
 	-- attribute.."_"..value, where attribute is the value passed as argument to fill and
 	-- value represent the different values in the input data.
 	-- The sum of the created attribute values for a given cell will range
-	-- from zero to one (default) or the total area (area = true), according to the area of the
-	-- cell covered by pixels.
+	-- from zero to one indicating the percentage of the cell covered by pixels of each class (default),
+	-- or the total area covered by each class, according to the area of a pixel in the
+	-- raster data (when using area = true).
 	-- Note that this operation does not use dummy value, therefore one attribute will also
 	-- be created for the dummy values.
 	-- When using shapefiles, keep in mind the total limit of ten characters, as
@@ -605,7 +606,8 @@ Layer_ = {
 	-- with each new layer's name formed by the own Layer's name and the respective times as sufix.
 	-- The default value is false and, in this case, the temporal data will be filled in the own Layer
 	-- into different attributes though.
-	-- @arg data.progress A boolean to set the progress viewer of the filling. Its default is true.
+	-- @arg data.progress A boolean value indicating whether progress will be shown while computing the operation.
+	-- The default value is true.
 	-- @arg data.pixel A string value indicating when a pixel is within a polygon. See the table below.
 	-- @tabular pixel Pixel & Description \
 	-- "centroid" (default) & A pixel is within a polygon if its centroid is within the polygon. It is recommended to
@@ -781,6 +783,7 @@ Layer_ = {
 				else
 					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
 				end
+
 				defaultTableValue(data, "missing", 0)
 			end,
 			-- length = function() -- TODO(#795)
@@ -994,7 +997,8 @@ Layer_ = {
 	-- @arg data.overwrite Indicates if the exported data will be overwritten, the default is false.
 	-- @arg data.select  A vector with the names of the attributes to be saved. When saving a
 	-- single attribute, you can use a string "attribute" instead of a table {"attribute"}.
-	-- @arg data.progress A boolean which if true show the percentage progress of the exporting.
+	-- @arg data.progress A boolean value indicating whether progress will be shown while exporting the layer.
+	-- The default value is true.
 	-- @arg data.... Additional arguments related to where the output will be saved. These arguments
 	-- are the same for describing the data source when one creates a layer from a file or database.
 	-- @usage -- DONTRUN
@@ -1423,7 +1427,8 @@ metaTableLayer_ = {
 -- @arg data.encoding A string value to set the character encoding.
 -- Supported encodings are "utf8", "cp1250", "cp1251", "cp1252", "cp1253", "cp1254", "cp1257", and "latin1".
 -- The default value is "latin1".
--- @arg data.progress A boolean which if true show the percentage progress of the cellular space creation.
+-- @arg data.progress A boolean value indicating whether progress will be shown while creating the cellular space.
+-- The default value is true.
 -- @output epsg A number with its projection identifier.
 -- @usage -- DONTRUN
 -- import("gis")

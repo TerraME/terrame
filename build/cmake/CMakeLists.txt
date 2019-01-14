@@ -39,7 +39,6 @@ endif()
 
 # for future use
 # set(TERRAME_BUILD_NUMBER "" CACHE STRING "Number of build in Jenkins")
-
 if(TERRAME_VERSION_STATUS STREQUAL "build")
 	set(TERRAME_VERSION_STATUS "${TERRAME_VERSION_STATUS}-${TERRAME_BUILD_NUMBER}")
 endif()
