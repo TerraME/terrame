@@ -1113,6 +1113,21 @@ local function getFileByUri(uri)
 	return File(fixSpaceInPath(uri:host()..path))
 end
 
+local function removeQGisLayer(qgsfile, layerName)
+	local qgis = swig.terrame.qgis
+	local qgp = qgis.QGis.getInstance():read(tostring(qgsfile))
+	local layers = qgp:getLayers()
+
+	for i = 0, getn(layers) - 1 do
+		local qgisLayer = layers[i]
+		if qgisLayer:getName() == layerName then
+			qgp:removeLayer(qgisLayer)
+			local qgp = qgis.QGis.getInstance():write(qgp)
+			return
+		end
+	end
+end
+
 local function removeLayer(project, layerName)
 	do
 		loadProject(project, project.file)
@@ -1120,6 +1135,10 @@ local function removeLayer(project, layerName)
 		if not layer then
 			customError("Layer '"..layerName.."' not found.")
 		end
+		
+		if project.file:extension() == "qgs" then
+			removeQGisLayer(project.file, layerName)
+		end		
 
 		local id = layer:getDataSourceId()
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(id)

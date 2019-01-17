@@ -1318,9 +1318,94 @@ return {
 			proj.file:delete()
 		end
 
+		local fillQGisProject = function()
+			local projFileName = "attributefill_shp_basic"
+			local proj = {
+				file = projFileName..".qgs"
+			}
+			File(proj.file):deleteIfExists()
+			File(projFileName..".tview"):deleteIfExists()
+			TerraLib().createProject(proj)
+
+			local layerName1 = "Para"
+			local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName1, layerFile1)
+
+			local clName = "Para_Cells"
+			local clFile = File(clName..".shp")
+
+			clFile:deleteIfExists()
+
+			-- CREATE THE CELLULAR SPACE
+			local resolution = 5e5
+			local mask = true
+			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, clFile, mask)
+
+			local clSet = TerraLib().getDataSet{project = proj, layer = clName}
+
+			unitTest:assertEquals(getn(clSet), 9)
+
+			for k, v in pairs(clSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID"))
+				unitTest:assertNotNil(v)
+			end
+
+			local clLayerInfo = TerraLib().getLayerInfo(proj, clName)
+
+			unitTest:assertEquals(clLayerInfo.name, clName)
+			unitTest:assertEquals(clLayerInfo.file, tostring(clFile))
+			unitTest:assertEquals(clLayerInfo.type, "OGR")
+			unitTest:assertEquals(clLayerInfo.rep, "polygon")
+
+			local layerName2 = "Protection_Unit"
+			local layerFile2 = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName2, layerFile2)
+
+			local presLayerName = clName.."_"..layerName2.."_Presence"
+			local presLayerFile = File(presLayerName..".shp")
+
+			presLayerFile:deleteIfExists()
+
+			local operation = "presence"
+			local attribute = "presence"
+			local select = "FID"
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = presLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local presSet = TerraLib().getDataSet{project = proj, layer = presLayerName}
+
+			unitTest:assertEquals(getn(presSet), 9)
+
+			for k, v in pairs(presSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "presence"))
+				unitTest:assertNotNil(v)
+			end
+
+			local presLayerInfo = TerraLib().getLayerInfo(proj, presLayerName)
+			unitTest:assertEquals(presLayerInfo.name, presLayerName)
+			unitTest:assertEquals(presLayerInfo.file, tostring(presLayerFile))
+			unitTest:assertEquals(presLayerInfo.type, "OGR")
+			unitTest:assertEquals(presLayerInfo.rep, "polygon")
+
+			File(projFileName..".qgs"):delete()
+			File(projFileName..".tview"):delete()
+			clFile:delete()
+			presLayerFile:delete()
+		end
+
 		unitTest:assert(allSupportedOperationTogether)
 		-- unitTest:assert(coverageWithPointsData) -- SKIP -- TODO(#995)
 		unitTest:assert(coverageTotalArea)
+		unitTest:assert(fillQGisProject)
 	end,
 	saveDataSet = function(unitTest)
 		TerraLib().setProgressVisible(false)

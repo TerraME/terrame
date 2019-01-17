@@ -50,8 +50,10 @@ namespace terrame
 			int getVersion();
 			void setVersion(int version);
 			void addLayer(const terrame::qgis::QGisLayer& layer);
+			void removeLayer(const terrame::qgis::QGisLayer& layer);
 			std::vector<terrame::qgis::QGisLayer> getLayers() const;
-			bool hasLayer(const terrame::qgis::QGisLayer& layer);
+			std::vector<terrame::qgis::QGisLayer> getLayersDiff(const QGisProject& other) const;
+			bool hasLayer(const terrame::qgis::QGisLayer& layer) const;
 			bool hasLayer(const std::string& name);
 			terrame::qgis::QGisLayer getLayerByName(const std::string& name);
 
