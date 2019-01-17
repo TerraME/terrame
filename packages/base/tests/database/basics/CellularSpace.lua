@@ -192,7 +192,7 @@ return{
 			end)
 
 			cs = CellularSpace{
-				project = "cellspace_basic",
+				project = "cellspace_basic.tview",
 				layer = clName1,
 				geometry = false
 			}

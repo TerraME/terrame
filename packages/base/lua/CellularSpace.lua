@@ -428,10 +428,6 @@ local function checkProject(self)
 			end
 
 			if type(self.project) == "File" then
-				if self.project:extension() ~= "tview" then
-					self.project = File(self.project..".tview")
-				end
-
 				if self.project:exists() then
 					self.project = gis.Project{
 						file = self.project
