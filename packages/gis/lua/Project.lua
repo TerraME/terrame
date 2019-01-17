@@ -97,7 +97,7 @@ function Project(data)
 
 	data.layers = {}
 
-	if data.file:exists() and data.clean and (data.file:extension() == "tview") then
+	if data.file:exists() and data.clean then
 		data.file:delete()
 
 		if data.file:exists() then
