@@ -1351,7 +1351,6 @@ return {
 			end
 
 			local clLayerInfo = TerraLib().getLayerInfo(proj, clName)
-
 			unitTest:assertEquals(clLayerInfo.name, clName)
 			unitTest:assertEquals(clLayerInfo.file, tostring(clFile))
 			unitTest:assertEquals(clLayerInfo.type, "OGR")
@@ -1361,11 +1360,6 @@ return {
 			local layerFile2 = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
 			TerraLib().addShpLayer(proj, layerName2, layerFile2)
 
-			local presLayerName = clName.."_"..layerName2.."_Presence"
-			local presLayerFile = File(presLayerName..".shp")
-
-			presLayerFile:deleteIfExists()
-
 			local operation = "presence"
 			local attribute = "presence"
 			local select = "FID"
@@ -1374,13 +1368,12 @@ return {
 				project = proj,
 				from = layerName2,
 				to = clName,
-				out = presLayerName,
 				attribute = attribute,
 				operation = operation,
 				select = select
 			}
 
-			local presSet = TerraLib().getDataSet{project = proj, layer = presLayerName}
+			local presSet = TerraLib().getDataSet{project = proj, layer = clName}
 
 			unitTest:assertEquals(getn(presSet), 9)
 
@@ -1390,16 +1383,9 @@ return {
 				unitTest:assertNotNil(v)
 			end
 
-			local presLayerInfo = TerraLib().getLayerInfo(proj, presLayerName)
-			unitTest:assertEquals(presLayerInfo.name, presLayerName)
-			unitTest:assertEquals(presLayerInfo.file, tostring(presLayerFile))
-			unitTest:assertEquals(presLayerInfo.type, "OGR")
-			unitTest:assertEquals(presLayerInfo.rep, "polygon")
-
 			File(projFileName..".qgs"):delete()
 			File(projFileName..".tview"):delete()
 			clFile:delete()
-			presLayerFile:delete()
 		end
 
 		unitTest:assert(allSupportedOperationTogether)
