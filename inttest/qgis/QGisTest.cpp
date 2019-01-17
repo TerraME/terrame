@@ -571,7 +571,7 @@ TEST_F(QGisTest, RemoveLayerOfNewProject)
 	terrame::qgis::QGis::getInstance().write(qgp2);
 
 	terrame::qgis::QGisProject qgp3 = terrame::qgis::QGis::getInstance().read(qgsfile);
-	
+
 	ASSERT_EQ(qgp3.getLayers().size(), 1);
 	ASSERT_TRUE(qgp3.getLayerByName(l1.getName()).empty());
 	ASSERT_STREQ(qgp3.getLayerByName(l2.getName()).getName().c_str(), l2.getName().c_str());

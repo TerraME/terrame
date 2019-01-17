@@ -479,12 +479,12 @@ return {
 			unitTest:assert(File(projFileName..".tview"):exists())
 			unitTest:assert(File(projFileName..".qgs"):exists())
 
-			local qgp = Project {
+			local qgp2 = Project {
 				file = projFileName..".qgs",
 				clean = true
 			}
 
-			unitTest:assertNil(qgp.layers[l1.name])
+			unitTest:assertNil(qgp2.layers[l1.name])
 			unitTest:assert(File(projFileName..".tview"):exists())
 			unitTest:assert(not File(projFileName..".qgs"):exists())
 

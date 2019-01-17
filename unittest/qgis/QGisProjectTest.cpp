@@ -71,8 +71,7 @@ TEST_F(QGisProjectTest, RemoveLayer)
 	qgp1.addLayer(l2);
 
 	qgp1.removeLayer(l1);
-	
+
 	ASSERT_EQ(qgp1.getLayers().size(), 1);
 	ASSERT_STREQ(qgp1.getLayerByName(l2.getName()).getName().c_str(), l2.getName().c_str());
 }
-

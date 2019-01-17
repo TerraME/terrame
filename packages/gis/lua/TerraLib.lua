@@ -1122,7 +1122,7 @@ local function removeQGisLayer(qgsfile, layerName)
 		local qgisLayer = layers[i]
 		if qgisLayer:getName() == layerName then
 			qgp:removeLayer(qgisLayer)
-			local qgp = qgis.QGis.getInstance():write(qgp)
+			qgis.QGis.getInstance():write(qgp)
 			return
 		end
 	end
@@ -1135,10 +1135,10 @@ local function removeLayer(project, layerName)
 		if not layer then
 			customError("Layer '"..layerName.."' not found.")
 		end
-		
+
 		if project.file:extension() == "qgs" then
 			removeQGisLayer(project.file, layerName)
-		end		
+		end
 
 		local id = layer:getDataSourceId()
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(id)
