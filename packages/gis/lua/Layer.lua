@@ -1247,6 +1247,7 @@ Layer_ = {
 				end
 			end
 
+			TerraLib().setProgressVisible(false)
 			local newLayerName = self.name.."_"..time
 			local fileName = newLayerName.."."..self.source
 			-- a temp layer is needed because currently one can't remove attributes from a layer thus this layer holds only the desired attributes
@@ -1320,6 +1321,7 @@ Layer_ = {
 			end
 		end)
 
+		TerraLib().setProgressVisible(false)
 		local from = {project = self.project, layer = self.name}
 		-- a temp layer is needed because currently one can't remove attributes from a layer thus this layer holds only the desired attributes
 		local tempLayer = "_l_y_r_"
