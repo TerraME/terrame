@@ -27,7 +27,7 @@
 import("gis")
 
 project = Project{
-	file = "emas.tview",
+	file = "emas.qgs",
 	clean = true,
 	author = "Almeida, R.",
 	title = "Emas database",

@@ -26,7 +26,7 @@
 
 import("gis")
 
-local projName = "cabecadeboi.tview"
+local projName = "cabecadeboi.qgs"
 
 local project = Project{
 	file = projName,
