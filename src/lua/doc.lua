@@ -343,8 +343,15 @@ local function getProjects(package, doc_report)
 
 	-- we need to execute this separately to guarantee that the outputs will be alphabetically ordered
 	forEachOrderedElement(projects, function(idx, proj)
-		local luaFile = string.sub(idx, 1, -6).."lua"
-		local shortsummary = "Automatically created TerraView project file"
+		local projFile = File(idx)
+		local _, projFileName = projFile:split()
+		local luaFile = projFileName..".lua"
+		local shortsummary
+		if projFile:extension() == "tview" then
+			shortsummary = "Automatically created TerraView project file"
+		else
+			shortsummary = "Automatically created QGIS project file"
+		end
 		local summary = shortsummary.." from <a href=\"../../data/"..luaFile.."\">"..luaFile.."</a>."
 		local mlayers = {}
 

@@ -319,7 +319,7 @@ local function verifyData(package, report)
 
 		if value then
 			_Gtme.print("File '"..idx.."' is already documented in 'data.lua'")
-		elseif extension == "tview" and File(dataDir..name..".lua"):exists() then
+		elseif belong(extension, {"tview", "qgs"}) and File(dataDir..name..".lua"):exists() then
 			_Gtme.print("Project file '"..idx.."' does not need to be documented (a Lua file creates it)")
 		elseif extension == "shp" and File(dataDir..name..".lua"):exists() then
 			_Gtme.print("File '"..idx.."' does not need to be documented (a Lua file creates it)")
