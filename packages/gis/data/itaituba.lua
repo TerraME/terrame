@@ -27,7 +27,7 @@
 import("gis")
 
 itaituba = Project{
-	file = "itaituba.qgs",
+	file = "itaituba.tview",
 	clean = true,
 	localities = filePath("itaituba-localities.shp", "gis"),
 	roads = filePath("itaituba-roads.shp", "gis"),

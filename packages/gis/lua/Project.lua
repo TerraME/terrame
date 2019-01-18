@@ -39,8 +39,6 @@ metaTableProject_ = {
 -- created in another software of TerraLib family.
 -- @arg data.file A base::File or a string with the file name to be used. If the
 -- file does not exist then it will be created. If it exists then it will be opened.
--- If this name does not ends with ".tview", this extension will be added to the name
--- of the file.
 -- @arg data.author An optional string with the name of the Project's author.
 -- @arg data.title An optional string with the title of the Project.
 -- @arg data.directory An optional Directory where shapefile(s) and/or tiff file(s) are stored. When
@@ -140,7 +138,7 @@ function Project(data)
 		end
 	end)
 
-	if data.file:exists() and (data.file:extension() == "tview") then
+	if data.file:exists() then
 		TerraLib().openProject(data, data.file)
 	else
 		TerraLib().createProject(data, data.layers)

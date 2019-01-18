@@ -344,10 +344,10 @@ local function getProjects(package, doc_report)
 	-- we need to execute this separately to guarantee that the outputs will be alphabetically ordered
 	forEachOrderedElement(projects, function(idx, proj)
 		local projFile = File(idx)
-		local _, projFileName = projFile:split()
+		local _, projFileName, projFileExt = projFile:split()
 		local luaFile = projFileName..".lua"
 		local shortsummary
-		if projFile:extension() == "tview" then
+		if projFileExt == "tview" then
 			shortsummary = "Automatically created TerraView project file"
 		else
 			shortsummary = "Automatically created QGIS project file"
