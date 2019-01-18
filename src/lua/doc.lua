@@ -378,6 +378,19 @@ local function getProjects(package, doc_report)
 	return output
 end
 
+local function removeTviewWhenQGisProject(df)
+	for i = 1, #df do
+		if df[i] and string.endswith(df[i], ".qgs") then
+			local _, fn = File(df[i]):split()
+			for j = 1, #df do
+				if df[j] == fn..".tview" then
+					df[j] = nil
+				end
+			end
+		end
+	end
+end
+
 function _Gtme.executeDoc(package)
 	profiler:start("DOC_")
 	if not isLoaded("luadoc") then
@@ -457,6 +470,8 @@ function _Gtme.executeDoc(package)
 	local mdirectory = {}
 	local filesdocumented = {}
 	local df = dataFiles(package)
+
+	removeTviewWhenQGisProject(df)
 
 	sessionInfo().mode = "strict"
 
@@ -679,7 +694,8 @@ function _Gtme.executeDoc(package)
 
 			local allAttributes = {}
 
-			if value.database or not string.endswith(value.file[1], ".tview") then
+			if value.database or not (string.endswith(value.file[1], ".tview")
+									or string.endswith(value.file[1], ".qgs")) then
 				forEachElement(value.attributes, function(idx)
 					if type(idx) == "table" then
 						forEachElement(idx, function(_, mvalue)
