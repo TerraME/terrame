@@ -588,7 +588,7 @@ TEST_F(QGisTest, RemoveLayerOfExistingProject)
 		boost::filesystem::path(qgscopy),
 		boost::filesystem::copy_option::overwrite_if_exists);
 
-	terrame::qgis::QGisProject qgp1 = terrame::qgis::QGis::getInstance().read(qgscopy);	
+	terrame::qgis::QGisProject qgp1 = terrame::qgis::QGis::getInstance().read(qgscopy);
 	terrame::qgis::QGisLayer l1 = qgp1.getLayerByName("sampa");
 
 	qgp1.removeLayer(l1);
