@@ -398,36 +398,75 @@ return {
 	removeLayer = function(unitTest)
 		TerraLib().setProgressVisible(false)
 
-		local proj = {
-			file = "removelayer_basic_func.tview",
-			title = "TerraLib Tests",
-			author = "Avancini Rodrigo"
-		}
+		local removeInTview = function()
+			local proj = {
+				file = "removelayer_basic_func.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
 
-		File(proj.file):deleteIfExists()
-		TerraLib().createProject(proj, {})
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
 
-		local layerName = "inputLayer"
-		local layerFile = filePath("itaituba-localities.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName, layerFile)
+			local layerName = "inputLayer"
+			local layerFile = filePath("itaituba-localities.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName, layerFile)
 
-		local clName = "testLayer"
-		local cellsShp = File("test.shp")
-		local resolution = 30000
-		local mask = true
-		cellsShp:deleteIfExists()
-		TerraLib().addShpCellSpaceLayer(proj, layerName, clName, resolution, cellsShp, mask)
+			local clName = "testLayer"
+			local cellsShp = File("test.shp")
+			local resolution = 30000
+			local mask = true
+			cellsShp:deleteIfExists()
+			TerraLib().addShpCellSpaceLayer(proj, layerName, clName, resolution, cellsShp, mask)
 
-		local info = TerraLib().getLayerInfo(proj, clName)
-		unitTest:assertNotNil(proj.layers.testLayer)
-		unitTest:assertEquals(info.name, clName)
-		unitTest:assertEquals(tostring(info.file), tostring(cellsShp))
+			local info = TerraLib().getLayerInfo(proj, clName)
+			unitTest:assertNotNil(proj.layers.testLayer)
+			unitTest:assertEquals(info.name, clName)
+			unitTest:assertEquals(tostring(info.file), tostring(cellsShp))
 
-		TerraLib().removeLayer(proj, clName)
+			TerraLib().removeLayer(proj, clName)
 
-		unitTest:assertNil(proj.layers.testLayer)
+			unitTest:assertNil(proj.layers.testLayer)
 
-		proj.file:delete()
+			proj.file:delete()
+		end
+
+		local removeInQgs = function()
+			local proj = {
+				file = "removelayer_basic_func.qgs",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+
+			local layerName = "inputLayer"
+			local layerFile = filePath("itaituba-localities.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName, layerFile)
+
+			local clName = "testLayer"
+			local cellsShp = File("test.shp")
+			local resolution = 30000
+			local mask = true
+			cellsShp:deleteIfExists()
+			TerraLib().addShpCellSpaceLayer(proj, layerName, clName, resolution, cellsShp, mask)
+
+			local info = TerraLib().getLayerInfo(proj, clName)
+			unitTest:assertNotNil(proj.layers.testLayer)
+			unitTest:assertEquals(info.name, clName)
+			unitTest:assertEquals(tostring(info.file), tostring(cellsShp))
+
+			TerraLib().removeLayer(proj, clName)
+
+			unitTest:assertNil(proj.layers.testLayer)
+
+			proj.file:delete()
+			File("removelayer_basic_func.tview"):delete()
+		end
+
+		unitTest:assert(removeInTview)
+		unitTest:assert(removeInQgs)
 	end,
 	setProgressVisible = function(unitTest)
 		unitTest:assert(true)
