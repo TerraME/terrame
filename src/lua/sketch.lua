@@ -223,7 +223,7 @@ local function verifyModel(package, report)
 end
 
 local function removeTviewWhenQGisProject(datafiles)
-	for k, v in pairs(datafiles) do
+	for k, _ in pairs(datafiles) do
 		if string.endswith(k, ".qgs") then
 			local _, fn = File(k):split()
 			datafiles[fn..".tview"] = nil
