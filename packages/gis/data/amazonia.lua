@@ -27,7 +27,7 @@
 import("gis")
 
 amazonia = Project{
-	file = "amazonia.tview",
+	file = "amazonia.qgs",
 	clean = true,
 	title = "Amazonia database",
 	ports = filePath("amazonia-ports.shp", "gis"),

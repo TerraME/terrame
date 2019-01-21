@@ -51,18 +51,17 @@ void terrame::qgis::QGis::write(const QGisProject& qgp)
 		QGisProject fileQgp = getInstance().read(qgp.getFile());
 		std::vector<QGisLayer> layersInFile = fileQgp.getLayers();
 		std::vector<QGisLayer> layersParam = qgp.getLayers();
-		std::vector<QGisLayer> layersToAdd;
-		for (unsigned int i = 0; i < layersParam.size(); i++)
-		{
-			if(!fileQgp.hasLayer(layersParam.at(i)))
-			{
-				layersToAdd.push_back(layersParam.at(i));
-			}
-		}
+		std::vector<QGisLayer> layersToAdd = fileQgp.getLayersDiff(qgp);
+		std::vector<QGisLayer> layersToRemove = qgp.getLayersDiff(fileQgp);
 
 		if(layersToAdd.size() > 0)
 		{
 			writer.addLayers(qgp, layersToAdd);
+		}
+
+		if(layersToRemove.size() > 0)
+		{
+			writer.removeLayers(qgp, layersToRemove);
 		}
 	}
 	else

@@ -73,7 +73,7 @@ namespace terrame
 			void setDataSetName(const std::string& name);
 			std::string getDataSetName() const;
 
-			bool equals(const QGisLayer& other);
+			bool equals(const QGisLayer& other) const;
 			bool empty();
 
 		private:

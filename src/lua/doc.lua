@@ -343,8 +343,15 @@ local function getProjects(package, doc_report)
 
 	-- we need to execute this separately to guarantee that the outputs will be alphabetically ordered
 	forEachOrderedElement(projects, function(idx, proj)
-		local luaFile = string.sub(idx, 1, -6).."lua"
-		local shortsummary = "Automatically created TerraView project file"
+		local projFile = File(idx)
+		local _, projFileName, projFileExt = projFile:split()
+		local luaFile = projFileName..".lua"
+		local shortsummary
+		if projFileExt == "tview" then
+			shortsummary = "Automatically created TerraView project file"
+		else
+			shortsummary = "Automatically created QGIS project file"
+		end
 		local summary = shortsummary.." from <a href=\"../../data/"..luaFile.."\">"..luaFile.."</a>."
 		local mlayers = {}
 
@@ -376,6 +383,24 @@ local function getProjects(package, doc_report)
 	import = oldImport
 
 	return output
+end
+
+local function removeTview(df, filepath)
+	local _, fn = File(filepath):split()
+	for i = 1, #df do
+		if df[i] == fn..".tview" then
+			df[i] = nil
+			return
+		end
+	end
+end
+
+local function removeTviewWhenQGisProject(df)
+	for i = 1, #df do
+		if df[i] and string.endswith(df[i], ".qgs") then
+			removeTview(df, df[i])
+		end
+	end
 end
 
 function _Gtme.executeDoc(package)
@@ -457,6 +482,8 @@ function _Gtme.executeDoc(package)
 	local mdirectory = {}
 	local filesdocumented = {}
 	local df = dataFiles(package)
+
+	removeTviewWhenQGisProject(df)
 
 	sessionInfo().mode = "strict"
 
@@ -679,7 +706,8 @@ function _Gtme.executeDoc(package)
 
 			local allAttributes = {}
 
-			if value.database or not string.endswith(value.file[1], ".tview") then
+			if value.database or not (string.endswith(value.file[1], ".tview")
+									or string.endswith(value.file[1], ".qgs")) then
 				forEachElement(value.attributes, function(idx)
 					if type(idx) == "table" then
 						forEachElement(idx, function(_, mvalue)

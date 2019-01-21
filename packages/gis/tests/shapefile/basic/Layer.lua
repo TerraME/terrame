@@ -726,7 +726,7 @@ return {
 			proj.file:delete()
 
 			proj = Project{
-				file = "municipiosAML.tview",
+				file = "municipiosAML.qgs",
 				clean = true,
 				cities = filePath("test/municipiosAML_ok.shp", "gis")
 			}
@@ -780,6 +780,7 @@ return {
 			unitTest:assertSnapshot(map, "polygons-coverage-2.png", 0.1)
 
 			proj.file:delete()
+			File("municipiosAML.tview"):delete()
 
 			forEachElement(shapes, function(_, value)
 				File(value):delete()

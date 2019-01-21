@@ -36,7 +36,7 @@
 				<div id="content">
 					<%
 					local function isProject(data)
-						return (type(data.file[1]) == "string" and data.file[1]:endswith(".tview"))
+						return (type(data.file[1]) == "string" and (data.file[1]:endswith(".tview") or data.file[1]:endswith(".qgs")))
 					end
 
 					doc.projectFiles = {}
@@ -100,9 +100,9 @@
 
 						<dl class="function">
 							<%for _, data in ipairs(mdata) do%>
-								<% istview = #data.file == 1 and string.endswith(data.file[1], "tview") %>
+								<% isproject = #data.file == 1 and (string.endswith(data.file[1], "tview") or string.endswith(data.file[1], "qgs")) %>
 
-								<% if istview then %>
+								<% if isproject then %>
 									<%mlink = "<a href= \"../../data/"..data.name.."\">"..data.file[1].."</a>"%>
 									<dt<%=borderTop%>><h2 id = <%=data.name%>><%=mlink%></h2></dt>
 
@@ -124,7 +124,7 @@
 
 								<ul><span class="arg_data">
 
-								<% if not istview then %>
+								<% if not isproject then %>
 									<%if #data.file == 1 then%>
 										<li><b>File: </b>
 									<% else %>
@@ -230,12 +230,12 @@
 						</dl>
 					<%end%>
 
-					<!-- tview -->
+					<!-- project -->
 					<%if #doc.projectFiles > 0 then%>
 						<h1>Projects</h1>
 						<%buildAttributes(doc.projectFiles, 0)%>
 					<%end%>
-					<!-- /tview -->
+					<!-- /project -->
 					<!-- data -->
 					<%if #doc.dataFiles > 0 then%>
 						<h1>Data</h1>

@@ -39,13 +39,17 @@ namespace terrame
 		public:
 			void addLayers(const terrame::qgis::QGisProject& qgp,
 					const std::vector<terrame::qgis::QGisLayer>& layers);
+			void removeLayers(const terrame::qgis::QGisProject& qgp,
+					const std::vector<terrame::qgis::QGisLayer>& layers);
 			void create(const terrame::qgis::QGisProject& qgp);
 
 		private:
 			void addLayers(QDomDocument& doc,
 						const std::string& qgsfile,
 						const std::vector<terrame::qgis::QGisLayer>& layers);
-
+			void removeLayers(QDomDocument& doc,
+						const std::vector<terrame::qgis::QGisLayer>& layers);
+			QDomDocument createDocument(const std::string& filepath);
 			std::string getRelativePath(const std::string& path,
 											const std::string& relative);
 			int occurrences(const std::string& str, const std::string& substring);

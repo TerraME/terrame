@@ -38,4 +38,40 @@ TEST_F(QGisProjectTest, AddLayer)
 	ASSERT_STREQ(l2.getName().c_str(), "Layer1");
 }
 
+TEST_F(QGisProjectTest, GetLayersDiff)
+{
+	terrame::qgis::QGisLayer l1;
+	l1.setName("Layer1");
+	terrame::qgis::QGisProject qgp1("");
+	qgp1.addLayer(l1);
 
+	terrame::qgis::QGisLayer l2;
+	l2.setName("Layer2");
+	terrame::qgis::QGisProject qgp2("");
+	qgp2.addLayer(l1);
+	qgp2.addLayer(l2);
+
+	std::vector<terrame::qgis::QGisLayer> layersDiff1 = qgp1.getLayersDiff(qgp2);
+
+	ASSERT_STREQ(layersDiff1.front().getName().c_str(), "Layer2");
+
+	std::vector<terrame::qgis::QGisLayer> layersDiff2 = qgp2.getLayersDiff(qgp1);
+
+	ASSERT_EQ(layersDiff2.size(), 0);
+}
+
+TEST_F(QGisProjectTest, RemoveLayer)
+{
+	terrame::qgis::QGisLayer l1;
+	l1.setName("Layer1");
+	terrame::qgis::QGisProject qgp1("");
+	terrame::qgis::QGisLayer l2;
+	l2.setName("Layer2");
+	qgp1.addLayer(l1);
+	qgp1.addLayer(l2);
+
+	qgp1.removeLayer(l1);
+
+	ASSERT_EQ(qgp1.getLayers().size(), 1);
+	ASSERT_STREQ(qgp1.getLayerByName(l2.getName()).getName().c_str(), l2.getName().c_str());
+}

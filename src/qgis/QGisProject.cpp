@@ -84,12 +84,39 @@ void terrame::qgis::QGisProject::addLayer(const terrame::qgis::QGisLayer& layer)
 	layers.push_back(layer);
 }
 
+void terrame::qgis::QGisProject::removeLayer(const terrame::qgis::QGisLayer& layer)
+{
+	for (unsigned int i = 0; i < layers.size(); i++)
+	{
+		if(layers.at(i).equals(layer))
+		{
+			layers.erase(layers.begin() + i);
+		}
+	}
+}
+
 std::vector<terrame::qgis::QGisLayer> terrame::qgis::QGisProject::getLayers() const
 {
 	return layers;
 }
 
-bool terrame::qgis::QGisProject::hasLayer(const terrame::qgis::QGisLayer& layer)
+std::vector<terrame::qgis::QGisLayer> terrame::qgis::QGisProject::getLayersDiff(const QGisProject& other) const
+{
+	std::vector<QGisLayer> olayers = other.getLayers();
+	std::vector<QGisLayer> layersDiff;
+
+	for (unsigned int i = 0; i < olayers.size(); i++)
+	{
+		if (!this->hasLayer(olayers.at(i)))
+		{
+			layersDiff.push_back(olayers.at(i));
+		}
+	}
+
+	return layersDiff;
+}
+
+bool terrame::qgis::QGisProject::hasLayer(const terrame::qgis::QGisLayer& layer) const
 {
 	for (unsigned int i = 0; i < layers.size(); i++)
 	{

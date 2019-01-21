@@ -461,11 +461,42 @@ return {
 			l1:delete()
 		end
 
+		local cleanQGisProject = function()
+			local projFileName = "project_func_clean"
+			local qgp = Project {
+				file = File(projFileName..".qgs")
+			}
+
+			unitTest:assert(File(projFileName..".tview"):exists())
+			unitTest:assert(not File(projFileName..".qgs"):exists())
+
+			local l1 = Layer{
+				project = qgp,
+				name = "SP",
+				file = filePath("test/sampa.shp", "gis")
+			}
+
+			unitTest:assert(File(projFileName..".tview"):exists())
+			unitTest:assert(File(projFileName..".qgs"):exists())
+
+			local qgp2 = Project {
+				file = projFileName..".qgs",
+				clean = true
+			}
+
+			unitTest:assertNil(qgp2.layers[l1.name])
+			unitTest:assert(File(projFileName..".tview"):exists())
+			unitTest:assert(not File(projFileName..".qgs"):exists())
+
+			File(projFileName..".tview"):delete()
+		end
+
 		unitTest:assert(readQGisProject)
 		version = "_v3"
 		unitTest:assert(readQGisProject)
 		unitTest:assert(insertNewLayerQgis)
 		unitTest:assert(createQGisProject)
+		unitTest:assert(cleanQGisProject)
 
 		-- Temporal Layers
 		local projTemporal = Project{

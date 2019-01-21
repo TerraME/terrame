@@ -533,3 +533,74 @@ TEST_F(QGisTest, InsertLayerNoNamePathException)
 	}
 }
 
+TEST_F(QGisTest, RemoveLayerOfNewProject)
+{
+	std::string qgsfile(boost::filesystem::current_path().string() + "/remove_layer.qgs");
+
+	terrame::qgis::QGisProject qgp1(qgsfile);
+	qgp1.setTitle("QGIS Project");
+	std::string f1(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.geojson");
+	terrame::qgis::QGisLayer l1("Layer1", 4019, te::core::URI("file://" + f1));
+	l1.setDataSetName("sampagj");
+	l1.setExtent(-53.11011153163347842f, -25.31232094931403509f,
+		-44.16136516442313109f, -19.77965579787450423f);
+	l1.setGeometry("Polygon");
+	l1.setProvider("OGR");
+	l1.setSpatialRefSys("+proj=longlat +ellps=GRS80 +no_defs",
+		"Unknown datum based upon the GRS 1980 ellipsoid");
+	l1.setType("vector");
+
+	std::string f2(std::string(TERRAME_INTTEST_DATA_PATH) + "/sampa.shp");
+	terrame::qgis::QGisLayer l2("Layer2", 4019, te::core::URI("file://" + f2));
+	l2.setDataSetName("sampashp");
+	l2.setExtent(-53.11011153163347842f, -25.31232094931403509f,
+		-44.16136516442313109f, -19.77965579787450423f);
+	l2.setGeometry("Polygon");
+	l2.setProvider("OGR");
+	l2.setSpatialRefSys("+proj=longlat +ellps=GRS80 +no_defs",
+		"Unknown datum based upon the GRS 1980 ellipsoid");
+	l2.setType("vector");
+
+	qgp1.addLayer(l1);
+	qgp1.addLayer(l2);
+	terrame::qgis::QGis::getInstance().write(qgp1);
+
+	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgsfile);
+	qgp2.removeLayer(l1);
+
+	terrame::qgis::QGis::getInstance().write(qgp2);
+
+	terrame::qgis::QGisProject qgp3 = terrame::qgis::QGis::getInstance().read(qgsfile);
+
+	ASSERT_EQ(qgp3.getLayers().size(), 1);
+	ASSERT_TRUE(qgp3.getLayerByName(l1.getName()).empty());
+	ASSERT_STREQ(qgp3.getLayerByName(l2.getName()).getName().c_str(), l2.getName().c_str());
+
+	boost::filesystem::remove(boost::filesystem::path(qgsfile));
+}
+
+TEST_F(QGisTest, RemoveLayerOfExistingProject)
+{
+	std::string qgsfile(std::string(TERRAME_INTTEST_DATA_PATH) + "/various_v3.qgs");
+	std::string qgscopy(std::string(TERRAME_INTTEST_DATA_PATH) + "/various_v3_copy.qgs");
+
+	boost::filesystem::copy_file(boost::filesystem::path(qgsfile),
+		boost::filesystem::path(qgscopy),
+		boost::filesystem::copy_option::overwrite_if_exists);
+
+	terrame::qgis::QGisProject qgp1 = terrame::qgis::QGis::getInstance().read(qgscopy);
+	terrame::qgis::QGisLayer l1 = qgp1.getLayerByName("sampa");
+
+	qgp1.removeLayer(l1);
+
+	terrame::qgis::QGis::getInstance().write(qgp1);
+
+	terrame::qgis::QGisProject qgp2 = terrame::qgis::QGis::getInstance().read(qgscopy);
+
+	ASSERT_EQ(qgp2.getLayers().size(), 2);
+	ASSERT_TRUE(qgp2.getLayerByName("sampa").empty());
+	ASSERT_STREQ(qgp2.getLayerByName("biomassa-manaus").getName().c_str(), "biomassa-manaus");
+	ASSERT_STREQ(qgp2.getLayerByName("vegtype_2000").getName().c_str(), "vegtype_2000");
+
+	boost::filesystem::remove(boost::filesystem::path(qgscopy));
+}

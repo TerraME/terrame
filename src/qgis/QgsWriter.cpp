@@ -35,18 +35,16 @@ of this software and its documentation.
 void terrame::qgis::QgsWriter::addLayers(const terrame::qgis::QGisProject& qgp,
 								const std::vector<terrame::qgis::QGisLayer>& layers)
 {
-	QDomDocument doc;
-	QFile qgsfile(qgp.getFile().c_str());
-
-	if (!qgsfile.open(QIODevice::ReadOnly | QIODevice::Text))
-	{
-		throw std::runtime_error("Problem to read QGIS file.");
-	}
-
-	doc.setContent(&qgsfile);
-	qgsfile.close();
-
+	QDomDocument doc = createDocument(qgp.getFile());
 	addLayers(doc, qgp.getFile(), layers);
+	save(doc, qgp.getFile());
+}
+
+void terrame::qgis::QgsWriter::removeLayers(const terrame::qgis::QGisProject& qgp,
+								const std::vector<terrame::qgis::QGisLayer>& layers)
+{
+	QDomDocument doc = createDocument(qgp.getFile());
+	removeLayers(doc, layers);
 	save(doc, qgp.getFile());
 }
 
@@ -179,6 +177,89 @@ void terrame::qgis::QgsWriter::addLayers(QDomDocument& doc,
 		layerElem.setAttribute("id", lid.c_str());
 		layerOrder.appendChild(layerElem);
 	}
+}
+
+void terrame::qgis::QgsWriter::removeLayers(QDomDocument& doc,
+								const std::vector<terrame::qgis::QGisLayer>& layers)
+{
+	QDomElement docElem = doc.documentElement();
+	QDomElement layerTreeGroup = docElem.firstChildElement("layer-tree-group");
+	QDomElement customOrder = layerTreeGroup.firstChildElement("custom-order");
+	QDomElement projectLayers = docElem.firstChildElement("projectlayers");
+	QDomElement legend = docElem.firstChildElement("legend");
+	QDomElement layerOrder = docElem.firstChildElement("layerorder");
+
+	for(unsigned int i = 0; i < layers.size(); i++)
+	{
+		QGisLayer layer = layers.at(i);
+		QDomNodeList layerTreeList = layerTreeGroup.elementsByTagName("layer-tree-layer");
+		QDomNodeList customOrderList = customOrder.elementsByTagName("item");
+		QDomNodeList projectLayersList = projectLayers.elementsByTagName("maplayer");
+		QDomNodeList legendList = legend.elementsByTagName("legendlayer");
+		QDomNodeList layerOrderList = layerOrder.elementsByTagName("layer");
+
+		QString layerId;
+
+		for(unsigned int j = 0; j < layerTreeList.size(); j++)
+		{
+			if(layerTreeList.at(j).toElement().attribute("name").toStdString() == layer.getName())
+			{
+				layerId = layerTreeList.at(j).toElement().attribute("id");
+				layerTreeGroup.removeChild(layerTreeList.at(j));
+			}
+		}
+
+		if(!layerId.isEmpty())
+		{
+			for (unsigned int j = 0; j < customOrderList.size(); j++)
+			{
+				if(customOrderList.at(j).toElement().text() == layerId)
+				{
+					customOrder.removeChild(customOrderList.at(j));
+				}
+			}
+
+			for (unsigned int j = 0; j < projectLayersList.size(); j++)
+			{
+				if(projectLayersList.at(j).firstChildElement("id").text() == layerId)
+				{
+					projectLayers.removeChild(projectLayersList.at(j));
+				}
+			}
+
+			for (unsigned int j = 0; j < legendList.size(); j++)
+			{
+				if (legendList.at(j).toElement().attribute("name").toStdString() == layer.getName())
+				{
+					legend.removeChild(legendList.at(j));
+				}
+			}
+
+			for (unsigned int j = 0; j < layerOrderList.size(); j++)
+			{
+				if (layerOrderList.at(j).toElement().attribute("id") == layerId)
+				{
+					layerOrder.removeChild(layerOrderList.at(j));
+				}
+			}
+		}
+	}
+}
+
+QDomDocument terrame::qgis::QgsWriter::createDocument(const std::string& filepath)
+{
+	QDomDocument doc;
+	QFile qgsfile(filepath.c_str());
+
+	if (!qgsfile.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		throw std::runtime_error("Problem to read QGIS file.");
+	}
+
+	doc.setContent(&qgsfile);
+	qgsfile.close();
+
+	return doc;
 }
 
 std::string terrame::qgis::QgsWriter::getRelativePath(const std::string& path,

@@ -273,7 +273,7 @@ std::string terrame::qgis::QGisLayer::getDataSetName() const
 	return dataset;
 }
 
-bool terrame::qgis::QGisLayer::equals(const terrame::qgis::QGisLayer& other)
+bool terrame::qgis::QGisLayer::equals(const terrame::qgis::QGisLayer& other) const
 {
 	return this->name == other.name;
 }

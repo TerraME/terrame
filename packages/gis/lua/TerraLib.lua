@@ -1113,12 +1113,31 @@ local function getFileByUri(uri)
 	return File(fixSpaceInPath(uri:host()..path))
 end
 
+local function removeQGisLayer(qgsfile, layerName)
+	local qgis = swig.terrame.qgis
+	local qgp = qgis.QGis.getInstance():read(tostring(qgsfile))
+	local layers = qgp:getLayers()
+
+	for i = 0, getn(layers) - 1 do
+		local qgisLayer = layers[i]
+		if qgisLayer:getName() == layerName then
+			qgp:removeLayer(qgisLayer)
+			qgis.QGis.getInstance():write(qgp)
+			return
+		end
+	end
+end
+
 local function removeLayer(project, layerName)
 	do
 		loadProject(project, project.file)
 		local layer = project.layers[layerName]
 		if not layer then
 			customError("Layer '"..layerName.."' not found.")
+		end
+
+		if project.file:extension() == "qgs" then
+			removeQGisLayer(project.file, layerName)
 		end
 
 		local id = layer:getDataSourceId()
@@ -2880,6 +2899,13 @@ TerraLib_ = {
 				local outLayer = createLayer(out, outDSetName, outConnInfo, outType, outSpatialIdx, toSrid)
 				project.layers[out] = outLayer
 
+				local projFileBkp
+				if project.file:extension() == "qgs" then
+					projFileBkp = project.file
+					local _, fn = project.file:split()
+					project.file = File(fn..".tview")
+				end
+
 				loadProject(project, project.file) -- TODO: WHY IS IT NEEDING RELOAD? (REVIEW)
 				saveProject(project, project.layers)
 				releaseProject(project)
@@ -2905,6 +2931,10 @@ TerraLib_ = {
 					end
 
 					removeLayer(project, out)
+
+					if projFileBkp then
+						project.file = projFileBkp
+					end
 				end
 			end
 		end

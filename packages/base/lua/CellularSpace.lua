@@ -428,10 +428,6 @@ local function checkProject(self)
 			end
 
 			if type(self.project) == "File" then
-				if self.project:extension() ~= "tview" then
-					self.project = File(self.project..".tview")
-				end
-
 				if self.project:exists() then
 					self.project = gis.Project{
 						file = self.project
@@ -1570,8 +1566,7 @@ metaTableCellularSpace_ = {
 -- @arg data.layer A string with the name of the layer stored in a GIS project,
 -- or a gis::Layer.
 -- @arg data.project A string with the name of the GIS project to be used.
--- If this name does not ends with ".tview", this extension will be added to the name
--- of the file. It can also be a gis::Project.
+-- It can also be a gis::Project.
 -- @arg data.missing An optional number that replaces all numeric attributes read from a data source
 -- that do not have any value. If this argument is not set and TerraME finds some attribute without
 -- a value, the simulation will stop with an error.

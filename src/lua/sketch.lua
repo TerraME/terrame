@@ -222,6 +222,15 @@ local function verifyModel(package, report)
 	end)
 end
 
+local function removeTviewWhenQGisProject(datafiles)
+	for k, _ in pairs(datafiles) do
+		if string.endswith(k, ".qgs") then
+			local _, fn = File(k):split()
+			datafiles[fn..".tview"] = nil
+		end
+	end
+end
+
 local function verifyData(package, report)
 	printNote("Verifying data files")
 
@@ -276,6 +285,8 @@ local function verifyData(package, report)
 		_Gtme.print("Creating 'data.lua'")
 	end
 
+	removeTviewWhenQGisProject(datafiles)
+
 	local mfile = io.open(datadotlua, "a")
 
 	local tl = getPackage("gis")
@@ -319,7 +330,7 @@ local function verifyData(package, report)
 
 		if value then
 			_Gtme.print("File '"..idx.."' is already documented in 'data.lua'")
-		elseif extension == "tview" and File(dataDir..name..".lua"):exists() then
+		elseif belong(extension, {"tview", "qgs"}) and File(dataDir..name..".lua"):exists() then
 			_Gtme.print("Project file '"..idx.."' does not need to be documented (a Lua file creates it)")
 		elseif extension == "shp" and File(dataDir..name..".lua"):exists() then
 			_Gtme.print("File '"..idx.."' does not need to be documented (a Lua file creates it)")

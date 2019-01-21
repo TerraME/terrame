@@ -790,7 +790,7 @@ return {
 
 		--TEMPORAL TESTS
 		local projTemporal = Project{
-			file = "temporal.tview",
+			file = "temporal.qgs",
 			clean = true,
 			conservation = packageInfo("gis").data.."conservationAreas*.shp",
 			hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
@@ -932,6 +932,7 @@ return {
 		File("layer_split_1974.shp"):delete()
 		File("layer_split_1979.shp"):delete()
 		File("temporal.tview"):delete()
+		File("temporal.qgs"):delete()
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_representation.tview"
@@ -1021,7 +1022,7 @@ source    string [shp]
 	end,
 	split = function(unitTest)
 		local proj = Project{
-			file = "temporal.tview",
+			file = "temporal.qgs",
 			conservation = packageInfo("gis").data.."conservationAreas*.shp",
 			hidro = packageInfo("gis").data.."hidroeletricPlants*.shp",
 			clean = true,
@@ -1109,94 +1110,97 @@ source    string [shp]
 		unitTest:assert(belong("FID", attributes))
 		unitTest:assert(belong("id", attributes))
 
-		File("temporal.tview"):deleteIfExists()
-		File("test.shp"):deleteIfExists()
-		File("layer_61.shp"):deleteIfExists()
-		File("layer_70.shp"):deleteIfExists()
-		File("layer_74.shp"):deleteIfExists()
-		File("layer_75.shp"):deleteIfExists()
-		File("layer_77.shp"):deleteIfExists()
-		File("layer_79.shp"):deleteIfExists()
+		File("temporal.tview"):delete()
+		File("temporal.qgs"):delete()
+		File("test.shp"):delete()
+		File("layer_61.shp"):delete()
+		File("layer_70.shp"):delete()
+		File("layer_74.shp"):delete()
+		File("layer_75.shp"):delete()
+		File("layer_77.shp"):delete()
+		File("layer_79.shp"):delete()
 	end,
 	merge = function(unitTest)
-		unitTest:assert(true)
-		-- TODO(#2167)
-		-- local proj = Project{
-			-- file = "temporal.tview",
-			-- conservation = packageInfo("gis").data.."conservationAreas*.shp",
-			-- clean = true,
-		-- }
+		local proj = Project{
+			file = "temporal.qgs",
+			conservation = packageInfo("gis").data.."conservationAreas*.shp",
+			clean = true,
+		}
 
-		-- local layer = Layer{
-			-- file = "test.shp",
-			-- project = proj,
-			-- source = "shp",
-			-- input = "conservation_1961",
-			-- name = "temporalLayer",
-			-- resolution = 30000,
-			-- clean = true,
-		-- }
+		local layer = Layer{
+			file = "test.shp",
+			project = proj,
+			source = "shp",
+			input = "conservation_1961",
+			name = "temporalLayer",
+			resolution = 30000,
+			clean = true,
+			progress = false,
+		}
 
-		-- layer:fill{
-			-- attribute = "conserv_",
-			-- operation = "area",
-			-- layer = "conservation_19*",
-		-- }
+		layer:fill{
+			attribute = "conserv_",
+			operation = "area",
+			layer = "conservation_19*",
+			progress = false
+		}
 
-		-- layer:split()
-		-- local areladyExistsLayer = function ()
-			-- proj.temporalLayer_61:merge()
-		-- end
+		layer:split()
+		local areladyExistsLayer = function ()
+			proj.temporalLayer_61:merge()
+		end
 
-		-- unitTest:assertWarning(areladyExistsLayer, "Layer 'temporalLayer' already exisists.") -- SKIP
+		unitTest:assertWarning(areladyExistsLayer, "Layer 'temporalLayer' already exists.") -- SKIP
 
-		-- proj = Project{
-			-- file = "temporal2.tview",
-			-- temporalLayer_ = "temporalLayer_*.shp",
-			-- clean = true
-		-- }
+		proj = Project{
+			file = "temporal2.qgs",
+			temporalLayer_ = "temporalLayer_*.shp",
+			clean = true
+		}
 
-		-- unitTest:assertNil(proj.layers["temporalLayer"]) -- SKIP
-		-- local mergedLayer = proj.temporalLayer_61:merge()
-		-- unitTest:assertNotNil(proj.layers["temporalLayer"]) -- SKIP
-		-- unitTest:assertEquals(mergedLayer.name, "temporalLayer") -- SKIP
-		-- local attributes = TerraLib().getPropertyNames(proj, mergedLayer.name)
-		-- unitTest:assert(belong("FID", attributes)) -- SKIP
-		-- unitTest:assert(belong("id", attributes)) -- SKIP
-		-- unitTest:assert(belong("col", attributes)) -- SKIP
-		-- unitTest:assert(belong("row", attributes)) -- SKIP
-		-- unitTest:assert(belong("conserv_61", attributes)) -- SKIP
-		-- unitTest:assert(belong("conserv_74", attributes)) -- SKIP
-		-- unitTest:assert(belong("conserv_79", attributes)) -- SKIP
-		-- unitTest:assert(not belong("conserv", attributes)) -- SKIP
-		-- unitTest:assert(not belong("FID_61", attributes)) -- SKIP
-		-- unitTest:assert(not belong("FID_74", attributes)) -- SKIP
-		-- unitTest:assert(not belong("FID_79", attributes)) -- SKIP
-		-- unitTest:assert(not belong("id_61", attributes)) -- SKIP
-		-- unitTest:assert(not belong("id_74", attributes)) -- SKIP
-		-- unitTest:assert(not belong("id_79", attributes)) -- SKIP
-		-- unitTest:assert(not belong("col_61", attributes)) -- SKIP
-		-- unitTest:assert(not belong("col_74", attributes)) -- SKIP
-		-- unitTest:assert(not belong("col_79", attributes)) -- SKIP
-		-- unitTest:assert(not belong("row_61", attributes)) -- SKIP
-		-- unitTest:assert(not belong("row_74", attributes)) -- SKIP
-		-- unitTest:assert(not belong("row_79", attributes)) -- SKIP
+		unitTest:assertNil(proj.layers["temporalLayer"])
+		local mergedLayer = proj.temporalLayer_61:merge()
+		unitTest:assertNotNil(proj.layers["temporalLayer"])
+		unitTest:assertEquals(mergedLayer.name, "temporalLayer")
+		local attributes = TerraLib().getPropertyNames(proj, mergedLayer.name)
+		unitTest:assert(belong("FID", attributes))
+		unitTest:assert(belong("id", attributes))
+		unitTest:assert(belong("col", attributes))
+		unitTest:assert(belong("row", attributes))
+		unitTest:assert(belong("conserv_61", attributes))
+		unitTest:assert(belong("conserv_74", attributes))
+		unitTest:assert(belong("conserv_79", attributes))
+		unitTest:assert(not belong("conserv", attributes))
+		unitTest:assert(not belong("FID_61", attributes))
+		unitTest:assert(not belong("FID_74", attributes))
+		unitTest:assert(not belong("FID_79", attributes))
+		unitTest:assert(not belong("id_61", attributes))
+		unitTest:assert(not belong("id_74", attributes))
+		unitTest:assert(not belong("id_79", attributes))
+		unitTest:assert(not belong("col_61", attributes))
+		unitTest:assert(not belong("col_74", attributes))
+		unitTest:assert(not belong("col_79", attributes))
+		unitTest:assert(not belong("row_61", attributes))
+		unitTest:assert(not belong("row_74", attributes))
+		unitTest:assert(not belong("row_79", attributes))
 
-		-- local dSetRowMerged = TerraLib().getDataSet(proj, mergedLayer.name)[0]
-		-- local dSetRow61 = TerraLib().getDataSet(proj, "temporalLayer_61")[0]
-		-- local dSetRow74 = TerraLib().getDataSet(proj, "temporalLayer_74")[0]
-		-- local dSetRow79 = TerraLib().getDataSet(proj, "temporalLayer_79")[0]
-		-- unitTest:assertEquals(dSetRowMerged["conserv_61"], dSetRow61["conserv"]) -- SKIP
-		-- unitTest:assertEquals(dSetRowMerged["conserv_74"], dSetRow74["conserv"]) -- SKIP
-		-- unitTest:assertEquals(dSetRowMerged["conserv_79"], dSetRow79["conserv"]) -- SKIP
+		local dSetRowMerged = TerraLib().getDataSet{project = proj, layer = mergedLayer.name}[0]
+		local dSetRow61 = TerraLib().getDataSet{project = proj, layer = "temporalLayer_61"}[0]
+		local dSetRow74 = TerraLib().getDataSet{project = proj, layer = "temporalLayer_74"}[0]
+		local dSetRow79 = TerraLib().getDataSet{project = proj, layer = "temporalLayer_79"}[0]
+		unitTest:assertEquals(dSetRowMerged["conserv_61"], dSetRow61["conserv"])
+		unitTest:assertEquals(dSetRowMerged["conserv_74"], dSetRow74["conserv"])
+		unitTest:assertEquals(dSetRowMerged["conserv_79"], dSetRow79["conserv"])
 
-		-- File("temporal.tview"):deleteIfExists()
-		-- File("temporal2.tview"):deleteIfExists()
-		-- File("test.shp"):deleteIfExists()
-		-- File("temporalLayer.shp"):deleteIfExists()
-		-- File("temporalLayer_61.shp"):deleteIfExists()
-		-- File("temporalLayer_74.shp"):deleteIfExists()
-		-- File("temporalLayer_79.shp"):deleteIfExists()
+		File("temporal.tview"):delete()
+		File("temporal.qgs"):delete()
+		File("temporal2.tview"):delete()
+		File("temporal2.qgs"):delete()
+		File("test.shp"):delete()
+		File("temporalLayer.shp"):delete()
+		File("temporalLayer_61.shp"):delete()
+		File("temporalLayer_74.shp"):delete()
+		File("temporalLayer_79.shp"):delete()
 	end
 }
 
