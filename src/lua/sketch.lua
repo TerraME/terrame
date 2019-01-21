@@ -222,6 +222,15 @@ local function verifyModel(package, report)
 	end)
 end
 
+local function removeTviewWhenQGisProject(datafiles)
+	for k, v in pairs(datafiles) do
+		if string.endswith(k, ".qgs") then
+			local _, fn = File(k):split()
+			datafiles[fn..".tview"] = nil
+		end
+	end
+end
+
 local function verifyData(package, report)
 	printNote("Verifying data files")
 
@@ -275,6 +284,8 @@ local function verifyData(package, report)
 	else
 		_Gtme.print("Creating 'data.lua'")
 	end
+
+	removeTviewWhenQGisProject(datafiles)
 
 	local mfile = io.open(datadotlua, "a")
 

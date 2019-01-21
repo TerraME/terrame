@@ -385,15 +385,20 @@ local function getProjects(package, doc_report)
 	return output
 end
 
+local function removeTview(df, filepath)
+	local _, fn = File(filepath):split()
+	for i = 1, #df do
+		if df[i] == fn..".tview" then
+			df[i] = nil
+			return
+		end
+	end
+end
+
 local function removeTviewWhenQGisProject(df)
 	for i = 1, #df do
 		if df[i] and string.endswith(df[i], ".qgs") then
-			local _, fn = File(df[i]):split()
-			for j = 1, #df do
-				if df[j] == fn..".tview" then
-					df[j] = nil
-				end
-			end
+			removeTview(df, df[i])
 		end
 	end
 end

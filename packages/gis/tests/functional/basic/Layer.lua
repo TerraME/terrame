@@ -1135,12 +1135,14 @@ source    string [shp]
 			name = "temporalLayer",
 			resolution = 30000,
 			clean = true,
+			progress = false,
 		}
 
 		layer:fill{
 			attribute = "conserv_",
 			operation = "area",
 			layer = "conservation_19*",
+			progress = false
 		}
 
 		layer:split()
