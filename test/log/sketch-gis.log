@@ -6,20 +6,20 @@ Directory 'test' is already documented in 'data.lua'
 File 'amazonia-indigenous.shp' is already documented in 'data.lua'
 File 'amazonia-limit.shp' is already documented in 'data.lua'
 File 'amazonia-ports.shp' is already documented in 'data.lua'
-Project file 'amazonia-postgis.tview' does not need to be documented (a Lua file creates it)
+Project file 'amazonia-postgis.qgs' does not need to be documented (a Lua file creates it)
 File 'amazonia-prodes.jgw' is already documented in 'data.lua'
 File 'amazonia-prodes.tif' is already documented in 'data.lua'
 File 'amazonia-prodes.tif.aux.xml' is already documented in 'data.lua'
 File 'amazonia-prodes.xml' is already documented in 'data.lua'
 File 'amazonia-roads.shp' is already documented in 'data.lua'
 File 'amazonia.shp' does not need to be documented (a Lua file creates it)
-Project file 'amazonia.tview' does not need to be documented (a Lua file creates it)
+Project file 'amazonia.qgs' does not need to be documented (a Lua file creates it)
 File 'cabecadeboi-box.shp' is already documented in 'data.lua'
 File 'cabecadeboi-elevation.tif' is already documented in 'data.lua'
 File 'cabecadeboi-elevation.tif.aux.xml' is already documented in 'data.lua'
 File 'cabecadeboi-elevation.xml' is already documented in 'data.lua'
 File 'cabecadeboi.shp' does not need to be documented (a Lua file creates it)
-Project file 'cabecadeboi.tview' does not need to be documented (a Lua file creates it)
+Project file 'cabecadeboi.qgs' does not need to be documented (a Lua file creates it)
 File 'conservationAreas_1961.shp' is already documented in 'data.lua'
 File 'conservationAreas_1974.shp' is already documented in 'data.lua'
 File 'conservationAreas_1979.shp' is already documented in 'data.lua'
@@ -29,7 +29,7 @@ File 'emas-firebreak.shp' is already documented in 'data.lua'
 File 'emas-limit.shp' is already documented in 'data.lua'
 File 'emas-river.shp' is already documented in 'data.lua'
 File 'emas.shp' does not need to be documented (a Lua file creates it)
-Project file 'emas.tview' does not need to be documented (a Lua file creates it)
+Project file 'emas.qgs' does not need to be documented (a Lua file creates it)
 File 'hidroeletricPlants_1970.shp' is already documented in 'data.lua'
 File 'hidroeletricPlants_1975.shp' is already documented in 'data.lua'
 File 'hidroeletricPlants_1977.shp' is already documented in 'data.lua'

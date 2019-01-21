@@ -138,7 +138,7 @@ function Project(data)
 		end
 	end)
 
-	if data.file:exists() then
+	if data.file:exists() and (data.file:extension() == "tview") then
 		TerraLib().openProject(data, data.file)
 	else
 		TerraLib().createProject(data, data.layers)
