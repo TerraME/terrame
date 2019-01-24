@@ -77,7 +77,8 @@ function Project(data)
 
 	mandatoryTableArgument(data, "file", "File")
 
-	if not ((data.file:extension() == "tview") or (data.file:extension() == "qgs")) then
+	local projExt = data.file:extension()
+	if not ((projExt == "tview") or (projExt == "qgs")) then
 		customError("Project file extension must be '.tview' or '.qgs'.")
 	end
 
@@ -138,7 +139,7 @@ function Project(data)
 		end
 	end)
 
-	if data.file:exists() and (data.file:extension() == "tview") then
+	if data.file:exists() then
 		TerraLib().openProject(data, data.file)
 	else
 		TerraLib().createProject(data, data.layers)

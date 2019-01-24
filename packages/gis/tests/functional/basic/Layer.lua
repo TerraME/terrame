@@ -1150,7 +1150,7 @@ source    string [shp]
 			proj.temporalLayer_61:merge()
 		end
 
-		unitTest:assertWarning(areladyExistsLayer, "Layer 'temporalLayer' already exists.") -- SKIP
+		unitTest:assertWarning(areladyExistsLayer, "Layer 'temporalLayer' already exists.")
 
 		proj = Project{
 			file = "temporal2.qgs",

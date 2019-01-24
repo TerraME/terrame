@@ -492,7 +492,10 @@ local function loadProject(project, file)
 	local _, fileName, ext = project.file:split()
 
 	if ext == "qgs" then
-		file = currentDir()..fileName..".tview"
+		file = File(currentDir()..fileName..".tview")
+		if not file:exists() then
+			instance.createProject(project)
+		end
 	elseif not file:exists() then
 		customError("Could not read project file: "..file..".") -- SKIP
 	end
@@ -2088,7 +2091,7 @@ local function createProjectFromQGis(project)
 	else
 		if (not project.title) or (project.title == "") then
 			project.title = "QGIS Project"
-			project.author = "QGIS Project"
+			project.author = "TerraME"
 		end
 
 		saveProject(project, project.layers)
