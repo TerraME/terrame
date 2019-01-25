@@ -223,7 +223,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
              {
              qDebug() << "\nclassName " << className;
              qDebug() << "attrib->getExhibitionName() " << attrib->getExhibitionName();
-             
+
              if ((attrib->getType() != TObsAgent)
              ||((className == attrib->getExhibitionName()) &&
             (! ObserverMap::existAgents(linkedSubjects))))
@@ -238,7 +238,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
              //        break;
              //    }
              //}
-             
+
              // Remove o atributo do mapa de atributos
              getMapAttributes()->take(attrib->getName());
              getPainterWidget()->setExistAgent(false);
