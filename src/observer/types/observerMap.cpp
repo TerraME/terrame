@@ -766,10 +766,10 @@ void ObserverMap::setupGUI()
     connect(butHand, SIGNAL(clicked()), this, SLOT(butHand_Clicked()));
 
     butZoomWindow = new QToolButton(frameTools);
-    butZoomWindow->setText("Window");
+    butZoomWindow->setText("Select");
     butZoomWindow->setIcon(QIcon(QPixmap(":/icons/zoomWindow.png")));
     butZoomWindow->setGeometry(5, 125, 20, 20);
-    butZoomWindow->setToolTip("Zoom window");
+    butZoomWindow->setToolTip("Select zoom");
     butZoomWindow->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     butZoomWindow->setCheckable(true);
     connect(butZoomWindow, SIGNAL(clicked()), this, SLOT(butZoomWindow_Clicked()));
@@ -819,6 +819,7 @@ void ObserverMap::setupGUI()
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 20, 190, 310);
     treeLayers->setHeaderLabel(tr("Legends"));
+	treeLayers->setStyleSheet("QTreeWidget {border: 1px solid lightGray;}");
     //treeLayers->setRootIsDecorated(false);
     //treeLayers->setAlternatingRowColors(true);
     connect(treeLayers, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
@@ -826,20 +827,23 @@ void ObserverMap::setupGUI()
     connect(treeLayers, SIGNAL(itemActivated(QTreeWidgetItem *, int)),
         this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 
-
-    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50,  QSizePolicy::Minimum,
-        QSizePolicy::Preferred);
-
     //--------------------------
-    QHBoxLayout *hLayoutZoom3 = new QHBoxLayout();
-    layoutTools->addItem(hLayoutZoom3);
+	QVBoxLayout *layoutToolsZoom = new QVBoxLayout();
+	QVBoxLayout *layoutToolsTree = new QVBoxLayout();
 
-    layoutTools->addItem(verticalSpacer);
+    layoutToolsZoom->addWidget(zoomComboBox);
+    layoutToolsZoom->addItem(hLayoutZoom1);
+    layoutToolsZoom->addItem(hLayoutZoom2);
 
-    layoutTools->addWidget(zoomComboBox);
-    layoutTools->addItem(hLayoutZoom1);
-    layoutTools->addItem(hLayoutZoom2);
-    layoutTools->addWidget(treeLayers);
+	QGroupBox* zoomBox = new QGroupBox("Zoom", frameTools);
+	QString boxStyle("QGroupBox {border: 1px solid lightGray; border-radius: 8px; margin-top: 8px;}");
+	boxStyle.append(" QGroupBox::title {subcontrol-origin: margin; left: 10px; padding: 0 5px 0 2px;}");
+	zoomBox->setStyleSheet(boxStyle);
+	zoomBox->setLayout(layoutToolsZoom);
+	layoutTools->addWidget(zoomBox);
+
+	layoutToolsTree->addWidget(treeLayers);
+	layoutTools->addItem(layoutToolsTree);
     //-------------------------
 
     QSplitter *splitter = new QSplitter(this);
