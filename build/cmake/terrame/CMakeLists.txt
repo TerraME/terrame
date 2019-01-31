@@ -559,6 +559,10 @@ elseif(WIN32)
 	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/luacheck
 	        COMPONENT runtime)
+
+	install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.ico
+	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}
+	        COMPONENT runtime)
 else(UNIX)
 	set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
 
