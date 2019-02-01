@@ -819,7 +819,7 @@ void ObserverMap::setupGUI()
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 20, 190, 310);
     treeLayers->setHeaderLabel(tr("Legends"));
-	treeLayers->setStyleSheet("QTreeWidget {border: 1px solid lightGray;}");
+    treeLayers->setStyleSheet("QTreeWidget {border: 1px solid lightGray;}");
     //treeLayers->setRootIsDecorated(false);
     //treeLayers->setAlternatingRowColors(true);
     connect(treeLayers, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
@@ -828,22 +828,22 @@ void ObserverMap::setupGUI()
         this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 
     //--------------------------
-	QVBoxLayout *layoutToolsZoom = new QVBoxLayout();
-	QVBoxLayout *layoutToolsTree = new QVBoxLayout();
+    QVBoxLayout *layoutToolsZoom = new QVBoxLayout();
+    QVBoxLayout *layoutToolsTree = new QVBoxLayout();
 
     layoutToolsZoom->addWidget(zoomComboBox);
     layoutToolsZoom->addItem(hLayoutZoom1);
     layoutToolsZoom->addItem(hLayoutZoom2);
 
-	QGroupBox* zoomBox = new QGroupBox("Zoom", frameTools);
-	QString boxStyle("QGroupBox {border: 1px solid lightGray; border-radius: 8px; margin-top: 8px;}");
-	boxStyle.append(" QGroupBox::title {subcontrol-origin: margin; left: 10px; padding: 0 5px 0 2px;}");
-	zoomBox->setStyleSheet(boxStyle);
-	zoomBox->setLayout(layoutToolsZoom);
-	layoutTools->addWidget(zoomBox);
+    QGroupBox* zoomBox = new QGroupBox("Zoom", frameTools);
+    QString boxStyle("QGroupBox {border: 1px solid lightGray; border-radius: 8px; margin-top: 8px;}");
+    boxStyle.append(" QGroupBox::title {subcontrol-origin: margin; left: 10px; padding: 0 5px 0 2px;}");
+    zoomBox->setStyleSheet(boxStyle);
+    zoomBox->setLayout(layoutToolsZoom);
+    layoutTools->addWidget(zoomBox);
 
-	layoutToolsTree->addWidget(treeLayers);
-	layoutTools->addItem(layoutToolsTree);
+    layoutToolsTree->addWidget(treeLayers);
+    layoutTools->addItem(layoutToolsTree);
     //-------------------------
 
     QSplitter *splitter = new QSplitter(this);
@@ -852,9 +852,9 @@ void ObserverMap::setupGUI()
     splitter->addWidget(scrollArea);
 	splitter->setTabOrder(frameTools, scrollArea);
 
-	QList<int> sizes;
-	sizes << 0 << splitter->maximumWidth();
-	splitter->setSizes(sizes);
+    QList<int> sizes;
+    sizes << 0 << splitter->maximumWidth();
+    splitter->setSizes(sizes);
 
     QHBoxLayout *layoutDefault = new QHBoxLayout(this);
     layoutDefault->setMargin(5);
