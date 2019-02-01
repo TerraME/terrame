@@ -788,6 +788,7 @@ local function quitButtonClicked()
 		Dialog:exec()
 	end
 
+	cpp_closeAllWidgets()
 	dialog:done(0)
 end
 

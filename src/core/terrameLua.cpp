@@ -329,6 +329,16 @@ int cpp_getLocale(lua_State* L)
 	return 1;
 }
 
+int cpp_closeAllWidgets(lua_State* L)
+{
+	foreach(QWidget *widget, QApplication::allWidgets())
+	{
+		widget->close();
+	}
+
+	return 0;
+}
+
 extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
@@ -443,6 +453,9 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_getLocale);
 	lua_setglobal(L, "cpp_getLocale");
+
+	lua_pushcfunction(L, cpp_closeAllWidgets);
+	lua_setglobal(L, "cpp_closeAllWidgets");
 
 	// Execute the lua files
 	if (argc < 2)

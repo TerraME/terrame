@@ -80,7 +80,7 @@ public:
 
     /**
      * Sets the chart title and the name of x and y axes
-     * \param title the chart title 
+     * \param title the chart title
      * \param xTitle the title to the x axis
      * \param yTitle the title to the y axis
      * \see QString

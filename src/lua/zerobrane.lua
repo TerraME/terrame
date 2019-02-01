@@ -188,7 +188,7 @@ local function copyPackage(packageName, examplesPath)
 			end
 
 			local newFileName = string.format("%02d-%s", index, fileName)
-			os.execute("mv "..outputDir.."/"..fileName.." "..outputDir.."/"..newFileName)
+			os.execute("mv \""..outputDir.."/"..fileName.."\" \""..outputDir.."/"..newFileName.."\"")
 			if string.endswith(newFileName, ".lua") then
 				table.insert(luaFiles, {indexed = newFileName, fileName = fileName})
 			end

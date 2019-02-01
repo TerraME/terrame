@@ -585,8 +585,8 @@ TEST_F(QGisTest, RemoveLayerOfExistingProject)
 	std::string qgscopy(std::string(TERRAME_INTTEST_DATA_PATH) + "/various_v3_copy.qgs");
 
 	boost::filesystem::copy_file(boost::filesystem::path(qgsfile),
-		boost::filesystem::path(qgscopy),
-		boost::filesystem::copy_option::overwrite_if_exists);
+	boost::filesystem::path(qgscopy),
+	boost::filesystem::copy_option::overwrite_if_exists);
 
 	terrame::qgis::QGisProject qgp1 = terrame::qgis::QGis::getInstance().read(qgscopy);
 	terrame::qgis::QGisLayer l1 = qgp1.getLayerByName("sampa");

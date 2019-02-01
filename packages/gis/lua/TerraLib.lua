@@ -293,26 +293,38 @@ local function makeAndOpenDataSource(connInfo, type)
 	return ds
 end
 
--- local function hasShapeFileSpatialIndex(shapeFile) -- TODO(#1678)
-	-- if string.find(tostring(shapeFile), "WFS:http://", 1, true) then
-		-- return false
-	-- end
+local function hasShapeFileSpatialIndex(shapeFile)
+	local qixFile = File(string.gsub(shapeFile, ".shp", ".qix"))
+	if qixFile:exists() then
+		return true
+	end
 
-	-- local qixFile = File(string.gsub(shapeFile, ".shp", ".qix"))
-	-- if qixFile:exists() then
-		-- return true
-	-- end
+	local sbnFile = File(string.gsub(shapeFile, ".shp", ".sbn"))
+	if sbnFile:exists() then
+		return true
+	end
 
-	-- local sbnFile = File(string.gsub(shapeFile, ".shp", ".sbn"))
-	-- if sbnFile:exists() then
-		-- return true
-	-- end
+	return false
+end
 
-	-- return false
--- end
+local function genRandomString(lenght)
+	local rand = string.gsub(binding.GetRandomicId(), "-", "")
+	return string.sub(rand, 1, lenght)
+end
 
-local function addSpatialIndex(ds, dSetName)
-	ds:execute("CREATE SPATIAL INDEX ON "..dSetName)
+local function addSpatialIndex(ds, dseName, dst, dsType, file)
+	if dsType == "OGR" then
+		if not hasShapeFileSpatialIndex(file) then
+			ds:execute("CREATE SPATIAL INDEX ON "..dseName)
+		end
+	elseif dsType == "POSTGIS" then
+		local transactor = ds:getTransactor()
+		local rand = genRandomString(8)
+		local spidx = binding.te.da.Index("spatialidx"..rand, binding.R_TREE_TYPE)
+		local gp = binding.GetFirstGeomProperty(dst)
+		spidx:add(transactor:getProperty(dseName, string.lower(gp:getName())))
+		transactor:addIndex(dseName, spidx, {})
+	end
 end
 
 local function toUtf8(str)
@@ -321,6 +333,25 @@ local function toUtf8(str)
 	end
 
 	return binding.CharEncoding.toUTF8(str)
+end
+
+local function fixSpaceInPath(path)
+	return string.gsub(path, "%%20", " ")
+end
+
+local function getFileByUri(uri)
+	local path = binding.URIDecode(uri:path())
+	return File(fixSpaceInPath(uri:host()..path))
+end
+
+local function getFilePathByConnInfo(connInfo, type)
+	local filepath
+	if type == "OGR" then
+		local uri = binding.te.core.URI(connInfo)
+		filepath = tostring(getFileByUri(uri))
+	end
+
+	return filepath
 end
 
 local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, encoding)
@@ -386,8 +417,9 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 				env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
 				sridReal = gp:getSRID()
 
-				if addSpatialIdx then -- and not hasShapeFileSpatialIndex(connInfo.URI) then -- TODO: check if is OGR resolve it
-					addSpatialIndex(ds, dSetName)
+				if addSpatialIdx then
+					local fileStr = getFilePathByConnInfo(connInfo, type)
+					addSpatialIndex(ds, dSetName, dSetType, type, fileStr)
 				end
 			elseif type == "GDAL"then
 				dSet = ds:getDataSet(dSetName)
@@ -492,7 +524,10 @@ local function loadProject(project, file)
 	local _, fileName, ext = project.file:split()
 
 	if ext == "qgs" then
-		file = currentDir()..fileName..".tview"
+		file = File(currentDir()..fileName..".tview")
+		if not file:exists() then
+			instance.createProject(project)
+		end
 	elseif not file:exists() then
 		customError("Could not read project file: "..file..".") -- SKIP
 	end
@@ -1104,15 +1139,6 @@ local function removeDataSource(project, dsId)
 	end
 end
 
-local function fixSpaceInPath(path)
-	return string.gsub(path, "%%20", " ")
-end
-
-local function getFileByUri(uri)
-	local path = binding.URIDecode(uri:path())
-	return File(fixSpaceInPath(uri:host()..path))
-end
-
 local function removeQGisLayer(qgsfile, layerName)
 	local qgis = swig.terrame.qgis
 	local qgp = qgis.QGis.getInstance():read(tostring(qgsfile))
@@ -1424,23 +1450,20 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 			-- Fix the primary key for postgis only
 			if fromType == "POSTGIS" then
 				local pk = newDst:getPrimaryKey()
-				local rand = string.gsub(binding.GetRandomicId(), "-", "")
-				rand = string.sub(rand, 1, 8)
+				local rand = genRandomString(8)
 
 				if pk then
-					newDst:removeIndex(pk:getName())
+					local numIdxs = dst:getNumberOfIndexes()
+					for i = 0, numIdxs - 1 do
+						local idx = dst:getIndex(i)
+						newDst:removeIndex(idx:getName())
+					end
+
 					local newPk = binding.te.da.PrimaryKey(newDst)
 					newPk:setName("pk"..rand)
 					pk = dst:getPrimaryKey()
 					local pkPos = getPropertyPosition(dse, pk:getPropertyName(0))
 					newPk:add(pk:getProperty(pkPos))
-
-					--local pkIdx = pk:getAssociatedIndex() -- TODO(#1678)
-					-- if pkIdx then
-						-- pkIdx:setName("idx"..rand)
-						--newDst:remove(pkIdx)
-						-- pk:setAssociatedIndex(pkIdx)
-					-- end
 				end
 			end
 
@@ -1514,6 +1537,8 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 				toDs:createDataSet(newDst)
 				newDse:moveBeforeFirst()
 				toDs:add(toSetName, newDse)
+				local toFileStr = getFilePathByConnInfo(toConnInfo, fromType)
+				addSpatialIndex(toDs, toSetName, newDst, fromType, toFileStr)
 			end
 		end
 	end
@@ -1764,6 +1789,7 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 	info.dataset = toDSetName
 	info.datasource = toDs
 	info.type = toType
+	info.file = toData.file
 
 	if toData.encoding then
 		toDs:setEncoding(binding.CharEncoding.getEncodingType(toData.encoding))
@@ -1879,23 +1905,8 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 		if toData.type == "POSTGIS" then
 			local pkToFix = dstResult:getPrimaryKey()
 			if pkToFix then
-				local rand = string.gsub(binding.GetRandomicId(), "-", "")
-				rand = string.sub(rand, 1, 8)
+				local rand = genRandomString(8)
 				pkToFix:setName("pk"..rand)
-
-				-- local pkIdx = pkToFix:getAssociatedIndex() TODO(#1678)
-				-- if pkIdx then
-					-- pkIdx:setName("idx"..rand)
-				-- else
-					-- local gp = binding.GetFirstGeomProperty(dstResult)
-					-- if gp then
-						-- local idx = binding.te.da.Index(dstResult)
-						-- idx:setName("idx"..rand)
-						-- idx:setIndexType(binding.R_TREE_TYPE)
-						-- idx:add(gp:clone())
-						-- pkToFix:setAssociatedIndex(idx)
-					-- end
-				-- end
 			end
 		end
 
@@ -1949,12 +1960,9 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 		dsetAdapted:moveBeforeFirst()
 		transactor:add(toDstName, dsetAdapted)
 		transactor:commit()
+		addSpatialIndex(toDs, toDstName, dstResult, toData.type, tostring(toData.file))
 
 		finalizeProgressViewer(viewerId)
-
-		if toData.type == "OGR" then -- TODO(#1678)
-			addSpatialIndex(toDs, toDstName)
-		end
 	end
 
 	collectgarbage("collect")
@@ -2088,7 +2096,7 @@ local function createProjectFromQGis(project)
 	else
 		if (not project.title) or (project.title == "") then
 			project.title = "QGIS Project"
-			project.author = "QGIS Project"
+			project.author = "TerraME"
 		end
 
 		saveProject(project, project.layers)
@@ -2510,7 +2518,7 @@ TerraLib_ = {
 		local layer
 
 		if dataSetExists(connInfo, conn.table, "POSTGIS") then
-			layer = createLayer(name, conn.table, connInfo, "POSTGIS", nil, srid, encoding)
+			layer = createLayer(name, conn.table, connInfo, "POSTGIS", true, srid, encoding)
 		else
 			releaseProject(project) -- SKIP
 			customError("Is not possible add the Layer. Table '"..conn.table.."' does not exist.")
@@ -2821,8 +2829,7 @@ TerraLib_ = {
 			local outOverwrite = false
 			if out == nil then
 				outOverwrite = true
-				local rand = string.gsub(binding.GetRandomicId(), "-", "")
-				rand = string.sub(rand, 1, 5)
+				local rand = genRandomString(5)
 				out = to.."_"..rand
 			end
 
@@ -2835,18 +2842,15 @@ TerraLib_ = {
 
 			local outDs
 			local propCreatedName
-			local outSpatialIdx
 
 			if outType == "POSTGIS" then
 				outDSetName = string.lower(outDSetName)
-				outSpatialIdx = false -- TODO(#1678)
 			elseif outType == "OGR" then
 				local file = getFileByUri(outConnInfo)
 				local outDir = _Gtme.makePathCompatibleToAllOS(file:path())
 				local outFileUri = createFileConnInfo(outDir..out.."."..file:extension())
 				outFileUri = toUtf8(outFileUri)
 				outConnInfo = binding.te.core.URI(outFileUri)
-				outSpatialIdx = true
 			end
 
 			dropDataSet(outConnInfo, outDSetName, outType)
@@ -2896,7 +2900,7 @@ TerraLib_ = {
 				releaseProject(project)
 				outDs:close()
 			else -- TODO(#875): RENAME INSTEAD OUTPUT
-				local outLayer = createLayer(out, outDSetName, outConnInfo, outType, outSpatialIdx, toSrid)
+				local outLayer = createLayer(out, outDSetName, outConnInfo, outType, true, toSrid)
 				project.layers[out] = outLayer
 
 				local projFileBkp

@@ -315,25 +315,45 @@ return {
 		unitTest:assert(createQGisProject)
 	end,
 	openProject = function(unitTest)
-		local proj = {
-			file = "myproject.tview",
-			title = "TerraLib Tests",
-			author = "Avancini Rodrigo"
-		}
+		local openTviewProject = function()
+			local proj = {
+				file = "myproject.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
 
-		File(proj.file):deleteIfExists()
+			File(proj.file):deleteIfExists()
 
-		TerraLib().createProject(proj, {})
+			TerraLib().createProject(proj, {})
 
-		local proj2 = {}
+			local proj2 = {}
 
-		TerraLib().openProject(proj2, proj.file)
+			TerraLib().openProject(proj2, proj.file)
 
-		unitTest:assertEquals(proj2.file, proj.file)
-		unitTest:assertEquals(proj2.title, proj.title)
-		unitTest:assertEquals(proj2.author, proj.author)
+			unitTest:assertEquals(proj2.file, proj.file)
+			unitTest:assertEquals(proj2.title, proj.title)
+			unitTest:assertEquals(proj2.author, proj.author)
 
-		proj.file:delete()
+			proj.file:delete()
+		end
+
+		local openQGisProject = function()
+			local proj = {
+				file = filePath("test/sampa_v3.qgs", "gis")
+			}
+
+			TerraLib().openProject(proj, proj.file)
+
+			unitTest:assertEquals(proj.file:name(), "sampa_v3.qgs")
+			unitTest:assertEquals(proj.title, "Sampa QGis Project")
+			unitTest:assertEquals(proj.author, "Sampa QGis Project")
+			unitTest:assert(File("sampa_v3.tview"):exists())
+
+			File("sampa_v3.tview"):delete()
+		end
+
+		unitTest:assert(openTviewProject)
+		unitTest:assert(openQGisProject)
 	end,
 	checkName = function(unitTest)
 		unitTest:assertEquals(TerraLib().checkName("count"), "Invalid name: using reserved word COUNT")

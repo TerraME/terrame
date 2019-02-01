@@ -1249,14 +1249,14 @@ Layer_ = {
 
 			TerraLib().setProgressVisible(false)
 			local newLayerName = self.name.."_"..time
-			local fileName = newLayerName.."."..self.source
+			local file = File(newLayerName.."."..self.source)
 			-- a temp layer is needed because currently one can't remove attributes from a layer thus this layer holds only the desired attributes
 			local tempLayer = "_l_y_r_"
 			TerraLib().saveDataSet(self.project, self.name, toSet, tempLayer, attrNames)
 			local from = {project = self.project, layer = tempLayer}
-			local to = {file = File(fileName), type = self.source}
+			local to = {file = file, type = self.source}
 			TerraLib().saveDataAs(from, to, true, attrNames)
-			Layer{project = self.project, name = newLayerName, file = fileName}
+			Layer{project = self.project, name = newLayerName, file = file}
 			TerraLib().removeLayer(self.project, tempLayer)
 		end)
 	end,
@@ -1325,8 +1325,8 @@ Layer_ = {
 		local from = {project = self.project, layer = self.name}
 		-- a temp layer is needed because currently one can't remove attributes from a layer thus this layer holds only the desired attributes
 		local tempLayer = "_l_y_r_"
-		local tempFile = tempLayer.."."..self.source
-		local to = {file = File(tempFile), type = self.source}
+		local tempFile = File(tempLayer.."."..self.source)
+		local to = {file = tempFile, type = self.source}
 		TerraLib().saveDataAs(from, to, true, nonTemporalAttributes) -- SKIP
 		Layer{project = self.project, file = tempFile, name = tempLayer}
 		local toSet = {}

@@ -269,6 +269,7 @@ return {
 				project = qgisproj,
 				name = "sampa"
 			}
+
 			unitTest:assertEquals(l1.name, "sampa")
 			unitTest:assertEquals(l1.rep, "polygon")
 			unitTest:assertEquals(l1.epsg, 4019)
