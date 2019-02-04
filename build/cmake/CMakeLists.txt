@@ -139,12 +139,14 @@ elseif(WIN32)
 	set(TERRAME_DESTINATION_LIBRARY bin)
 elseif(UNIX)
 	set(TERRAME_DESTINATION_RUNTIME ${TERRAME_INSTALL_PREFIX}/bin)
-	set(TERRAME_DESTINATION_LIBRARY ${TERRAME_INSTALL_PREFIX}/bin)	
+	set(TERRAME_DESTINATION_LIBRARY ${TERRAME_INSTALL_PREFIX}/bin)
 endif()
 
-add_subdirectory(terrame)
+set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME runtime)
+
 add_subdirectory(swig)
 add_subdirectory(qgis)
+add_subdirectory(terrame)
 
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${TERRAME_ABSOLUTE_ROOT_DIR};/")
 
