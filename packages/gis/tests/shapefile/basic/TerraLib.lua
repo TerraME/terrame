@@ -2384,5 +2384,40 @@ return {
 		local dsetSize = TerraLib().getDataSetSize(shpFile)
 
 		unitTest:assertEquals(dsetSize, 77)
+	end,
+	checkLayerGeometries = function(unitTest)
+		local proj = {
+			file = "check_layer_geometry.qgs",
+			title = "TerraLib Tests",
+			author = "Avancini Rodrigo"
+		}
+		File(proj.file):deleteIfExists()
+		TerraLib().createProject(proj)
+
+		local defectFile = filePath("test/biomassa.shp", "gis")
+		defectFile:copy(currentDir())
+
+		local l1Name = "DefectiveBio"
+		local l1File = File("biomassa.shp")
+		TerraLib().addShpLayer(proj, l1Name, l1File)
+
+		TerraLib().setProgressVisible(false)
+
+		local fix = true
+		local problems = TerraLib().checkLayerGeometries(proj, l1Name, fix)
+
+		unitTest:assertEquals(problems[1].pk.value, "404")
+		unitTest:assertEquals(problems[2].pk.value, "448")
+		unitTest:assertEquals(problems[3].pk.value, "607")
+		unitTest:assertEquals(problems[4].pk.value, "640")
+		unitTest:assertEquals(problems[5].pk.value, "763")
+
+		problems = TerraLib().checkLayerGeometries(proj, l1Name, fix)
+
+		unitTest:assertEquals(#problems, 0)
+
+		l1File:delete()
+		proj.file:delete()
+		File("check_layer_geometry.tview")
 	end
 }

@@ -1079,6 +1079,38 @@ return {
 
 		shpLayer:delete()
 		proj.file:delete()
+	end,
+	check = function(unitTest)
+		local proj = Project {
+			file = "check_geom.qgs",
+			clean = true
+		}
+
+		local defectFile = filePath("test/biomassa.shp", "gis")
+		defectFile:copy(currentDir())
+
+		local l1 = Layer{
+			project = proj,
+			name = "DefectBio",
+			file = "biomassa.shp"
+		}
+
+		local checkWarn = function()
+			unitTest:assert(not l1:check(true, false))
+		end
+
+		unitTest:assertWarning(checkWarn, [[The folling problems were found during checking layer geometries:
+1. FID 404: Self-intersection (5502300.9611873, 8212207.8945397).
+2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).
+3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).
+4. FID 640: Self-intersection (5494485.5853231, 8210317.9905857).
+5. FID 763: Self-intersection (5488464.5058169, 8212262.4394308).]])
+
+		unitTest:assert(l1:check(true, false))
+
+		l1:delete()
+		proj.file:delete()
+		File('check_geom.tview'):delete()
 	end
 }
 

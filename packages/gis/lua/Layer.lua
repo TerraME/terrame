@@ -471,6 +471,33 @@ local function findMultiples(base, pattern, list)
 	return elements
 end
 
+local function formatCheckGeometriesMsg(problems)
+	local errMsg
+
+	if #problems == 1 then
+		errMsg = "The folling problem was found during checking layer geometries:\n"
+	else
+		errMsg = "The folling problems were found during checking layer geometries:\n"
+	end
+
+	for i = 1, #problems do
+		local p = problems[i]
+		if p.pk then
+			errMsg = errMsg..i..". "..p.pk.name.." "..p.pk.value..": "..p.error
+					.." ("..p.coord.x..", "..p.coord.y..")."
+		else
+			errMsg = errMsg..i..". Problem: "..p.error
+					.." ("..p.coord.x..", "..p.coord.y..")."
+		end
+
+		if i < #problems then
+			errMsg = errMsg.."\n"
+		end
+	end
+
+	return errMsg
+end
+
 Layer_ = {
 	type_ = "Layer",
 	--- Return a string with the representation of the layer. It can be "point", "polygon", "line", or "raster".
@@ -1350,6 +1377,39 @@ Layer_ = {
 		TerraLib().saveDataSet(self.project, tempLayer, toSet, newLayerName, attrs) -- SKIP
 		TerraLib().removeLayer(self.project, tempLayer) -- SKIP
 		return Layer{project = self.project, name = newLayerName}
+	end,
+	--- Checks if data layer geometries are valid.
+	-- If some invalid geometry are found, a warning is show about the problem.
+	-- Return true if no problem is found.
+	-- @arg fix A boolean value which if true tries to fix the geometries problems found.
+	-- If not set, its value will be false.
+	-- If it is not possible fix the geometries a error will be show.
+	-- @arg progress A boolean value indicating whether progress will be shown while fixing the geometries.
+	-- @usage --DONTRUN
+	-- local layer = Layer{
+	--     project = proj,
+	--     name = "DefectBio",
+	--     file = "biomassa.shp"
+	-- }
+
+	-- if not layer:check() then
+	--     layer:check(true)
+	-- end
+	check = function(self, fix, progress)
+		optionalArgument(2, "boolean", fix)
+		if fix == nil then fix = false end
+		optionalArgument(3, "boolean", progress)
+		if progress == nil then progress = true end
+
+		TerraLib().setProgressVisible(progress)
+		local problems = TerraLib().checkLayerGeometries(self.project, self.name, fix)
+
+		if #problems > 0 then
+			customWarning(formatCheckGeometriesMsg(problems))
+			return false
+		end
+
+		return true
 	end
 }
 

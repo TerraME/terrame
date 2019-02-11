@@ -3605,6 +3605,80 @@ TerraLib_ = {
 	-- TerraLib().attributeFill(...)
 	setProgressVisible = function(visible)
 		progress = visible
+	end,
+	--- Checks if data layer geometries are valid.
+	-- If invalid geometries are found, it returns a list of the problems.
+	-- @arg project A project.
+	-- @arg layerName The name of the layer.
+	-- @arg fix A boolean value which if true tries to fix the geometries problems founded.
+	-- @usage --DONTRUN
+	-- local problems = TerraLib().checkLayerGeometries(self.project, self.name)
+	-- print(problems[1].error, problems[1].coord.x, problems[1].coord.y)
+	checkLayerGeometries = function(project, layerName, fix)
+		local problems = {}
+		local fixErrorMsg = ""
+
+		do
+			loadProject(project, project.file)
+
+			local layer = project.layers[layerName]
+			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+			local dseName = layer:getDataSetName()
+			local dse = ds:getDataSet(dseName)
+			local dst = ds:getDataSetType(dseName)
+			local oids = binding.te.da.ObjectIdSet():clone()
+
+			local pk = dst:getPrimaryKey()
+			local pkName
+			if pk then
+				pkName = pk:getPropertyName(0)
+				local pkPos = dst:getPropertyPosition(pkName)
+				local pkType = pk:getProperty(pkPos):getType()
+				oids:addProperty(pkName, pkPos, pkType)
+			end
+
+			if dst:hasGeom() then
+				local gp = binding.GetFirstGeomProperty(dst)
+				local gname = gp:getName()
+				local gpos = getPropertyPosition(dse, gname)
+
+				dse:moveBeforeFirst()
+				while dse:moveNext() do
+					local geom = dse:getGeom(gpos)
+					local err = binding.TopologyValidationError()
+					if not binding.CheckValidity(geom, err) then
+						if pk then
+							local oid = binding.te.da.ObjectId():clone()
+							oid:addValue(dse:getValue(pkName):clone())
+							oids:add(oid)
+							table.insert(problems, {pk = {name = pkName, value = dse:getAsString(pkName)},
+										error = err.m_message,
+										coord = {x = err.m_coordinate:getX(), y = err.m_coordinate:getY()}})
+						else
+							table.insert(problems, {error = err.m_message,
+										coord = {x = err.m_coordinate:getX(), y = err.m_coordinate:getY()}})
+						end
+					end
+				end
+
+				if fix and (#problems > 0) then
+					local viewerId = createProgressViewer("Fixing '"..layerName.."' geometries")
+					fixErrorMsg = binding.te.vp.MakeGeometryValid.makeValid(layer, dseName, oids)
+					finalizeProgressViewer(viewerId)
+				end
+			end
+
+			releaseProject(project)
+		end
+
+		collectgarbage("collect")
+
+		if string.len(fixErrorMsg) > 0 then
+			customError(fixErrorMsg)
+		end
+
+		return problems
 	end
 }
 
