@@ -839,8 +839,96 @@ return {
 			proj.file:delete()
 		end
 
+		local averageInvalidGeometries = function()
+			local proj = Project {
+				file = "average_invalid_geom.qgs",
+				clean = true
+			}
+
+			local csFile = filePath("test/cs2k_teste.shp", "gis")
+			csFile:copy(currentDir())
+
+			local cl = Layer{
+				project = proj,
+				name = "Cells",
+				file = "cs2k_teste.shp",
+			}
+
+			local defectFile = filePath("test/biomassa.shp", "gis")
+			defectFile:copy(currentDir())
+
+			local l1 = Layer{
+				project = proj,
+				name = "DefectBio",
+				file = "biomassa.shp"
+			}
+
+			cl:fill{
+				layer = l1.name,
+				operation = "average",
+				attribute = "agb1",
+				select = "ABG",
+				area = true,
+				missing = -999,
+				progress = false
+			}
+
+			local cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			forEachCell(cs, function(cell)
+				if cell.agb1 < 0 then
+					unitTest:assertEquals(cell.agb1, -999)
+				end
+			end)
+
+			unitTest:assertEquals(#cs, 212)
+
+			local checkWarn = function()
+				unitTest:assert(not l1:check(true, false))
+			end
+
+		unitTest:assertWarning(checkWarn, [[The following problems were found during checking layer geometries:
+1. FID 404: Self-intersection (5502300.9611873, 8212207.8945397).
+2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).
+3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).
+4. FID 640: Self-intersection (5494485.5853231, 8210317.9905857).
+5. FID 763: Self-intersection (5488464.5058169, 8212262.4394308).]])
+
+			cl:delete()
+			csFile:copy(currentDir())
+
+			cl:fill{
+				layer = l1.name,
+				operation = "average",
+				attribute = "agb2",
+				select = "ABG",
+				area = true,
+				progress = false
+			}
+
+			cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			unitTest:assertEquals(#cs, 221)
+
+			forEachCell(cs, function(cell)
+				unitTest:assert(cell.agb1 ~= -999)
+			end)
+
+			cl:delete()
+			l1:delete()
+			proj.file:delete()
+			File("average_invalid_geom.tview"):delete()
+		end
+
 		unitTest:assert(allSupportedOperation)
 		unitTest:assert(distanceWithMissing)
+		unitTest:assert(averageInvalidGeometries)
 	end,
 	projection = function(unitTest)
 		local proj = Project {
@@ -1099,7 +1187,7 @@ return {
 			unitTest:assert(not l1:check(true, false))
 		end
 
-		unitTest:assertWarning(checkWarn, [[The folling problems were found during checking layer geometries:
+		unitTest:assertWarning(checkWarn, [[The following problems were found during checking layer geometries:
 1. FID 404: Self-intersection (5502300.9611873, 8212207.8945397).
 2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).
 3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).
