@@ -2418,6 +2418,6 @@ return {
 
 		l1File:delete()
 		proj.file:delete()
-		File("check_layer_geometry.tview")
+		File("check_layer_geometry.tview"):delete()
 	end
 }

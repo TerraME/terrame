@@ -475,9 +475,9 @@ local function formatCheckGeometriesMsg(problems)
 	local errMsg
 
 	if #problems == 1 then
-		errMsg = "The folling problem was found during checking layer geometries:\n"
+		errMsg = "The following problem was found during checking layer geometries:\n"
 	else
-		errMsg = "The folling problems were found during checking layer geometries:\n"
+		errMsg = "The following problems were found during checking layer geometries:\n"
 	end
 
 	for i = 1, #problems do
@@ -1391,7 +1391,7 @@ Layer_ = {
 	--     name = "DefectBio",
 	--     file = "biomassa.shp"
 	-- }
-
+	--
 	-- if not layer:check() then
 	--     layer:check(true)
 	-- end
