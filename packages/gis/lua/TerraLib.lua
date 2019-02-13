@@ -3662,8 +3662,8 @@ TerraLib_ = {
 										error = err.m_message,
 										coord = {x = err.m_coordinate:getX(), y = err.m_coordinate:getY()}})
 						else
-							table.insert(problems, {error = err.m_message,
-										coord = {x = err.m_coordinate:getX(), y = err.m_coordinate:getY()}})
+							table.insert(problems, {error = err.m_message, --SKIP
+										coord = {x = err.m_coordinate:getX(), y = err.m_coordinate:getY()}}) --SKIP
 						end
 					end
 				end
@@ -3681,7 +3681,7 @@ TerraLib_ = {
 		collectgarbage("collect")
 
 		if string.len(fixErrorMsg) > 0 then
-			customError(fixErrorMsg)
+			customError(fixErrorMsg) --SKIP
 		end
 
 		return problems

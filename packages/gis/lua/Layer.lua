@@ -475,7 +475,7 @@ local function formatCheckGeometriesMsg(problems)
 	local errMsg
 
 	if #problems == 1 then
-		errMsg = "The following problem was found during checking layer geometries:\n"
+		errMsg = "The following problem was found during checking layer geometries:\n" --SKIP
 	else
 		errMsg = "The following problems were found during checking layer geometries:\n"
 	end
@@ -486,8 +486,8 @@ local function formatCheckGeometriesMsg(problems)
 			errMsg = errMsg..i..". "..p.pk.name.." "..p.pk.value..": "..p.error
 					.." ("..p.coord.x..", "..p.coord.y..")."
 		else
-			errMsg = errMsg..i..". Problem: "..p.error
-					.." ("..p.coord.x..", "..p.coord.y..")."
+			errMsg = errMsg..i..". Problem: "..p.error --SKIP
+					.." ("..p.coord.x..", "..p.coord.y..")." --SKIP
 		end
 
 		if i < #problems then
