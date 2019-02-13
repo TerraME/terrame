@@ -865,51 +865,51 @@ local function getNormalizedName(name)
 	return string.sub(name, 1, 10)
 end
 
-local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType,
-							outDSetName, area, attribute)
+local function vectorToVector(data)
 	local propCreatedName
 	local err
+
 	do
 		local v2v = binding.te.attributefill.VectorToVectorMemory()
-		v2v:setInput(fromLayer, toLayer)
+		v2v:setInput(data.from, data.to)
 
-		local outDs = v2v:createAndSetOutput(outDSetName, outType, outConnInfo)
+		local outDs = v2v:createAndSetOutput(data.out.dseName, data.out.type, data.out.connInfo)
 
-		local op = operation
-		if operation == "average" then
-			if area then
+		local op = data.operation
+		if data.operation == "average" then
+			if data.area then
 				op = "weighted"
 			else
 				op = "mean"
 			end
-		elseif operation == "mode" then
-			if area then
+		elseif data.operation == "mode" then
+			if data.area then
 				op = "intersection"
 			else
 				op = "occurrence"
 			end
-		elseif (operation == "sum") and area then
+		elseif (data.operation == "sum") and data.area then
 			op = "wsum"
-		elseif (operation == "coverage") and area then
+		elseif (data.operation == "coverage") and data.area then
 			op = "total"
 		end
 
-		local toDSetName = toLayer:getDataSetName()
-		local toConnInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
+		local toDSetName = data.to:getDataSetName()
+		local toConnInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(data.to:getDataSourceId())
 		local toDs = makeAndOpenDataSource(toConnInfo:getConnInfo(), toConnInfo:getType())
 		local toDst = toDs:getDataSetType(toDSetName)
 
-		v2v:setParams(select, OperationMapper[op], toDst)
+		v2v:setParams(data.select, OperationMapper[op], toDst)
 
-		local viewerId = createProgressViewer("Creating attribute '"..attribute
-												.."' using operation '"..operation.."'")
+		local viewerId = createProgressViewer("Creating attribute '"..data.attribute
+												.."' using operation '"..data.operation.."'")
 
 		err = v2v:exec() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
 
 		finalizeProgressViewer(viewerId)
 
 		if err == "" then
-			propCreatedName = select.."_"..VectorAttributeCreatedMapper[op]
+			propCreatedName = data.select.."_"..VectorAttributeCreatedMapper[op]
 			propCreatedName = string.lower(propCreatedName)
 		end
 
@@ -927,45 +927,44 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 	return propCreatedName
 end
 
-local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType,
-							outDSetName, nodata, pixel, area, attribute)
+local function rasterToVector(data)
 	local propCreatedName
 
 	do
 		local r2v = binding.te.attributefill.RasterToVector()
 
-		fromLayer = castLayer(fromLayer)
-		toLayer = castLayer(toLayer)
+		data.from = castLayer(data.from)
+		data.to = castLayer(data.to)
 
-		local rDs = binding.GetDs(fromLayer:getDataSourceId(), true)
-	    local rDSet = rDs:getDataSet(fromLayer:getDataSetName())
+		local rDs = binding.GetDs(data.from:getDataSourceId(), true)
+	    local rDSet = rDs:getDataSet(data.from:getDataSetName())
 		local rpos = binding.GetFirstPropertyPos(rDSet, binding.RASTER_TYPE)
 		local raster = rDSet:getRaster(rpos)
 
-		if nodata then
-			local bandObj = raster:getBand(select)
+		if data.nodata then
+			local bandObj = raster:getBand(data.select)
 			local bandProperty = bandObj:getProperty()
-			bandProperty.m_noDataValue = nodata
+			bandProperty.m_noDataValue = data.nodata
 		end
 
 		local grid = raster:getGrid()
-		grid:setSRID(fromLayer:getSRID())
+		grid:setSRID(data.from:getSRID())
 
-		r2v:setInput(raster, toLayer)
+		r2v:setInput(raster, data.to)
 
-		local op = operation
-		if operation == "average" then
+		local op = data.operation
+		if data.operation == "average" then
 			op = "mean"
-		elseif (operation == "coverage") and area then
+		elseif (data.operation == "coverage") and data.area then
 			op = "total"
 		end
 
-		r2v:setParams(select, OperationMapper[op], pixel, false, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
+		r2v:setParams(data.select, OperationMapper[op], data.pixel, false, true) -- TODO: ITERATOR BY BOX, TEXTURE, READALL PARAMS (REVIEW)
 
-		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
+		local outDs = r2v:createAndSetOutput(data.out.dseName, data.out.type, data.out.connInfo)
 
-		local viewerId = createProgressViewer("Creating attribute '"..attribute
-												.."' using operation '"..operation.."'")
+		local viewerId = createProgressViewer("Creating attribute '"..data.attribute
+												.."' using operation '"..data.operation.."'")
 
 		local err = r2v:exec()
 
@@ -975,9 +974,9 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 			customError(err) -- SKIP
 		end
 
-		propCreatedName = "B"..select..RasterAttributeCreatedMapper[op]
+		propCreatedName = "B"..data.select..RasterAttributeCreatedMapper[op]
 
-		if outType == "POSTGIS" then
+		if data.out.type == "POSTGIS" then
 			propCreatedName = string.lower(propCreatedName)
 		end
 
@@ -2864,11 +2863,14 @@ TerraLib_ = {
 			if dseType:hasRaster() then
 				if pixel == nil then pixel = true end
 
-				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType,
-												out, nodata, pixel, area, attribute)
+				propCreatedName = rasterToVector{from = fromLayer, to = toLayer, operation = operation,
+												out = {connInfo = outConnInfo, type = outType, dseName = out},
+												nodata = nodata, pixel = pixel, area = area,
+												attribute = attribute, select = select}
 			else
-				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType,
-												out, area, attribute)
+				propCreatedName = vectorToVector{from = fromLayer, to = toLayer, operation = operation,
+												out = {connInfo = outConnInfo, type = outType, dseName = out},
+												area = area, attribute = attribute, select = select}
 			end
 
 			if outType == "OGR" then
