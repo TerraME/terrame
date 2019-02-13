@@ -865,7 +865,8 @@ local function getNormalizedName(name)
 	return string.sub(name, 1, 10)
 end
 
-local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, area)
+local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType,
+							outDSetName, area, attribute)
 	local propCreatedName
 	local err
 	do
@@ -900,7 +901,8 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		v2v:setParams(select, OperationMapper[op], toDst)
 
-		local viewerId = createProgressViewer("Processing '"..operation.."' operation")
+		local viewerId = createProgressViewer("Creating attribute '"..attribute
+												.."' using operation '"..operation.."'")
 
 		err = v2v:exec() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
 
@@ -925,7 +927,8 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 	return propCreatedName
 end
 
-local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, nodata, pixel, area)
+local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType,
+							outDSetName, nodata, pixel, area, attribute)
 	local propCreatedName
 
 	do
@@ -961,7 +964,8 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 
 		local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
-		local viewerId = createProgressViewer("Processing '"..operation.."' operation")
+		local viewerId = createProgressViewer("Creating attribute '"..attribute
+												.."' using operation '"..operation.."'")
 
 		local err = r2v:exec()
 
@@ -2860,9 +2864,11 @@ TerraLib_ = {
 			if dseType:hasRaster() then
 				if pixel == nil then pixel = true end
 
-				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, nodata, pixel, area)
+				propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType,
+												out, nodata, pixel, area, attribute)
 			else
-				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
+				propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType,
+												out, area, attribute)
 			end
 
 			if outType == "OGR" then
