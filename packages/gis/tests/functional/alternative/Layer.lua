@@ -1363,7 +1363,6 @@ return{
 
 		l1:delete()
 		proj.file:delete()
-		File('check_geom.tview'):delete()
 	end
 }
 

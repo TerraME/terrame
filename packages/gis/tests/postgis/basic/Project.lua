@@ -149,7 +149,6 @@ return {
 
 			qgp.file:delete()
 			l3:delete()
-			File("sampa_v3.tview"):delete()
 			File("sampa.shp"):delete()
 			proj.file:delete()
 		end

@@ -1384,7 +1384,6 @@ return {
 			end
 
 			File(projFileName..".qgs"):delete()
-			File(projFileName..".tview"):delete()
 			clFile:delete()
 		end
 
@@ -2418,6 +2417,5 @@ return {
 
 		l1File:delete()
 		proj.file:delete()
-		File("check_layer_geometry.tview"):delete()
 	end
 }

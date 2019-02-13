@@ -780,7 +780,6 @@ return {
 			unitTest:assertSnapshot(map, "polygons-coverage-2.png", 0.1)
 
 			proj.file:delete()
-			File("municipiosAML.tview"):delete()
 
 			forEachElement(shapes, function(_, value)
 				File(value):delete()
@@ -923,7 +922,6 @@ return {
 			cl:delete()
 			l1:delete()
 			proj.file:delete()
-			File("average_invalid_geom.tview"):delete()
 		end
 
 		unitTest:assert(allSupportedOperation)
@@ -1198,7 +1196,6 @@ return {
 
 		l1:delete()
 		proj.file:delete()
-		File('check_geom.tview'):delete()
 	end
 }
 

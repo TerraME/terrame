@@ -63,7 +63,6 @@ return {
 			unitTest:assertEquals(l3.encoding, l2.encoding)
 
 			qgp.file:delete()
-			File("sampa_v3.tview"):delete()
 			File("sampa.shp"):delete()
 			wmsDir:delete()
 		end
