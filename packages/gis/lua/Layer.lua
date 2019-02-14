@@ -475,9 +475,9 @@ local function formatCheckGeometriesMsg(problems)
 	local errMsg
 
 	if #problems == 1 then
-		errMsg = "The following problem was found during checking layer geometries:\n" --SKIP
+		errMsg = "The following problem was found in the geometries:\n" --SKIP
 	else
-		errMsg = "The following problems were found during checking layer geometries:\n"
+		errMsg = "The following problems were found in the geometries:\n"
 	end
 
 	for i = 1, #problems do

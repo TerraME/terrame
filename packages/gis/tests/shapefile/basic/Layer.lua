@@ -889,7 +889,7 @@ return {
 				unitTest:assert(not l1:check(true, false))
 			end
 
-		unitTest:assertWarning(checkWarn, [[The following problems were found during checking layer geometries:
+		unitTest:assertWarning(checkWarn, [[The following problems were found in the geometries:
 1. FID 404: Self-intersection (5502300.9611873, 8212207.8945397).
 2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).
 3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).
@@ -1185,7 +1185,7 @@ return {
 			unitTest:assert(not l1:check(true, false))
 		end
 
-		unitTest:assertWarning(checkWarn, [[The following problems were found during checking layer geometries:
+		unitTest:assertWarning(checkWarn, [[The following problems were found in the geometries:
 1. FID 404: Self-intersection (5502300.9611873, 8212207.8945397).
 2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).
 3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).
