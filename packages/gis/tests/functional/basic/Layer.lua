@@ -931,7 +931,6 @@ return {
 		File("layer_split_1961.shp"):delete()
 		File("layer_split_1974.shp"):delete()
 		File("layer_split_1979.shp"):delete()
-		File("temporal.tview"):delete()
 		File("temporal.qgs"):delete()
 	end,
 	representation = function(unitTest)
@@ -1110,7 +1109,6 @@ source    string [shp]
 		unitTest:assert(belong("FID", attributes))
 		unitTest:assert(belong("id", attributes))
 
-		File("temporal.tview"):delete()
 		File("temporal.qgs"):delete()
 		File("test.shp"):delete()
 		File("layer_61.shp"):delete()
@@ -1192,9 +1190,7 @@ source    string [shp]
 		unitTest:assertEquals(dSetRowMerged["conserv_74"], dSetRow74["conserv"])
 		unitTest:assertEquals(dSetRowMerged["conserv_79"], dSetRow79["conserv"])
 
-		File("temporal.tview"):delete()
 		File("temporal.qgs"):delete()
-		File("temporal2.tview"):delete()
 		File("temporal2.qgs"):delete()
 		File("test.shp"):delete()
 		File("temporalLayer.shp"):delete()

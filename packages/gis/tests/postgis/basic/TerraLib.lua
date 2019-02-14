@@ -2712,7 +2712,6 @@ return {
 			unitTest:assertEquals(layerInfo.table, tableName)
 
 			qgp.file:delete()
-			File("sampa_v3.tview"):delete()
 			File("sampa.shp"):delete()
 			TerraLib().dropPgTable(pgData)
 		end

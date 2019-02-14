@@ -1333,6 +1333,36 @@ return{
 		unitTest:assertError(notCompatible, "Layer 'conservation_1961' cannot be merged with 'conservation_1974' because they have different numbers of objects.")
 
 		File("temporal.tview"):deleteIfExists()
+	end,
+	check = function(unitTest)
+		local proj = Project {
+			file = "check_geom.qgs",
+			clean = true
+		}
+
+		local defectFile = filePath("test/biomassa.shp", "gis")
+		defectFile:copy(currentDir())
+
+		local l1 = Layer{
+			project = proj,
+			name = "DefectBio",
+			file = "biomassa.shp"
+		}
+
+		local fixTypeError = function()
+			l1:check(1, false)
+		end
+
+		unitTest:assertError(fixTypeError, incompatibleTypeMsg(2, "boolean", 1))
+
+		local progressTypeError = function()
+			l1:check(true, "true")
+		end
+
+		unitTest:assertError(progressTypeError, incompatibleTypeMsg(3, "boolean", "true"))
+
+		l1:delete()
+		proj.file:delete()
 	end
 }
 

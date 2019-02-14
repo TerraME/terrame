@@ -245,7 +245,7 @@ return {
 			directory = packageInfo("gis").data.."test"
 		}
 
-		unitTest:assertEquals(getn(proj.layers), 21)
+		unitTest:assertEquals(getn(proj.layers), 23)
 		file:deleteIfExists()
 
 		local version = ""
@@ -394,7 +394,6 @@ return {
 			unitTest:assertEquals(l5.encoding, "latin1")
 
 			qgp2.file:delete()
-			File("sampa_v3.tview"):delete()
 			cl1:delete()
 			l1:delete()
 			l2:delete()
@@ -457,7 +456,6 @@ return {
 			unitTest:assertEquals(l3.encoding, "latin1")
 
 			qgp2.file:delete()
-			File("create_func_v3.tview"):delete()
 			cl1:delete()
 			l1:delete()
 		end

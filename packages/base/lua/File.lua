@@ -230,6 +230,9 @@ File_ = {
 			shx:deleteIfExists()
 			prj:deleteIfExists()
 			qix:deleteIfExists()
+		elseif self:extension() == "qgs" then
+			local tview = File(string.sub(self.filename, 1, -4).."tview")
+			tview:deleteIfExists()
 		end
 	end,
 	--- Remove a file if it exists. It does not stop with an error when the file does not exist.

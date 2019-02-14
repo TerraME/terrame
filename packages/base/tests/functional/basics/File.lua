@@ -105,29 +105,49 @@ return{
 		dir:delete()
 	end,
 	delete = function(unitTest)
-		local filepath = packageInfo().data.."test123"
-		os.execute("touch \""..filepath.."\"")
+		local deleteShp = function()
+			local filepath = packageInfo().data.."test123"
+			os.execute("touch \""..filepath.."\"")
 
-		local file = File(filepath)
-		file:delete()
+			local file = File(filepath)
+			file:delete()
 
-		unitTest:assert(not file:exists())
+			unitTest:assert(not file:exists())
 
-		os.execute("touch abc123.shp")
-		os.execute("touch abc123.shx")
-		os.execute("touch abc123.dbf")
-		os.execute("touch abc123.prj")
+			os.execute("touch abc123.shp")
+			os.execute("touch abc123.shx")
+			os.execute("touch abc123.dbf")
+			os.execute("touch abc123.prj")
 
-		File("abc123.shp"):delete()
+			File("abc123.shp"):delete()
 
-		unitTest:assert(not File("abc123.shp"):exists())
-		unitTest:assert(not File("abc123.shx"):exists())
-		unitTest:assert(not File("abc123.dbf"):exists())
-		unitTest:assert(not File("abc123.prj"):exists())
+			unitTest:assert(not File("abc123.shp"):exists())
+			unitTest:assert(not File("abc123.shx"):exists())
+			unitTest:assert(not File("abc123.dbf"):exists())
+			unitTest:assert(not File("abc123.prj"):exists())
 
-		os.execute("touch abc123.shp")
+			os.execute("touch abc123.shp")
 
-		File("abc123.shp"):delete()
+			File("abc123.shp"):delete()
+		end
+
+		local deleteQgs = function()
+			local qgs = File("delete.qgs")
+			local tview = File("delete.tview")
+
+			qgs:writeLine("qgs")
+			qgs:close()
+			tview:writeLine("tview")
+			tview:close()
+
+			qgs:delete()
+
+			unitTest:assert(not qgs:exists())
+			unitTest:assert(not tview:exists())
+		end
+
+		unitTest:assert(deleteShp)
+		unitTest:assert(deleteQgs)
 	end,
 	deleteIfExists = function(unitTest)
 		local filepath = packageInfo().data.."test123"

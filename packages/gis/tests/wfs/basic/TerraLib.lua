@@ -114,7 +114,6 @@ return {
 			unitTest:assertEquals(layerInfo.srid, srid)
 
 			qgp.file:delete()
-			File("sampa_v3.tview"):delete()
 			File("sampa.shp"):delete()
 		end
 

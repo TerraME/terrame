@@ -234,7 +234,6 @@ return {
 			unitTest:assertEquals(info.encoding, "LATIN1")
 
 			qgp.file:delete()
-			File("sampa_v3.tview"):delete()
 			File("sampa.shp"):delete()
 			layerFile:delete()
 		end
@@ -302,7 +301,6 @@ return {
 			unitTest:assertEquals(info3.encoding, "LATIN1")
 
 			qgp.file:delete()
-			File("create_func_v3.tview"):delete()
 			l1File:delete()
 			l2File:delete()
 			l3File:delete()
@@ -482,7 +480,6 @@ return {
 			unitTest:assertNil(proj.layers.testLayer)
 
 			proj.file:delete()
-			File("removelayer_basic_func.tview"):delete()
 		end
 
 		unitTest:assert(removeInTview)
