@@ -877,13 +877,16 @@ return {
 				layer = cl.name
 			}
 
+			local missCount = 0
 			forEachCell(cs, function(cell)
-				if cell.agb1 < 0 then
+				if cell.agb1 == -999 then
 					unitTest:assertEquals(cell.agb1, -999)
+					missCount = missCount + 1
 				end
 			end)
 
-			unitTest:assertEquals(#cs, 212)
+			unitTest:assertEquals(#cs, 221)
+			unitTest:assertEquals(missCount, 67)
 
 			local checkWarn = function()
 				unitTest:assert(not l1:check(true, false))
@@ -905,6 +908,7 @@ return {
 				attribute = "agb2",
 				select = "ABG",
 				area = true,
+				missing = -999,
 				progress = false
 			}
 
