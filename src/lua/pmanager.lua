@@ -771,7 +771,12 @@ local function quitButtonClicked()
 		qt.connect(OkButton, "clicked()", function()
 			forEachElement(checkBoxesFiles, function(idx, name)
 				if idx.checked then
-					File(name):delete()
+					local file = File(name)
+					if file:extension() == "tview" then
+						file:deleteIfExists()
+					else
+						file:delete()
+					end
 				end
 			end)
 
