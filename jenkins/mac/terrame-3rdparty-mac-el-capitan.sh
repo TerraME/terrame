@@ -36,7 +36,7 @@ fi
 
 _TERRALIB_VERSION="5.4"
 _TERRALIB_BRANCH="release-$_TERRALIB_VERSION"
-export _TERRALIB_3RDPARTY_NAME="terralib-3rdparty-macosx-el-capitan.tar.gz"
+export _TERRALIB_3RDPARTY_NAME="terralib-3rdparty-macos-sierra.tar.gz"
 export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/$_TERRALIB_3RDPARTY_NAME"
 
 export PATH=$PATH:$_QT5_DIR:$_CMAKE_DIR
@@ -79,10 +79,10 @@ git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terra
 valid_operation $? "Error. Could not clone TerraLib $_TERRALIB_BRANCH" terralib
 
 # Configuring TerraLib 3rdparty compilation
-cp -v $_TERRALIB_GIT_DIR/install/install-3rdparty-macosx-el-capitan.sh .
+cp -v $_TERRALIB_GIT_DIR/install/install-3rdparty-macos-sierra.sh .
 
 echo -ne "Compiling TerraLib dependencies ... "
-TERRALIB_DEPENDENCIES_DIR="$_TERRALIB_TARGET_3RDPARTY_DIR/libs" ./install-3rdparty-macosx-el-capitan.sh
+TERRALIB_DEPENDENCIES_DIR="$_TERRALIB_TARGET_3RDPARTY_DIR/libs" ./install-3rdparty-macos-sierra.sh
 valid_operation $? "Error: Could not finish TerraLib 3rdparty compilation"
 
 echo ""
