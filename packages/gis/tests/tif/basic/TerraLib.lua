@@ -545,7 +545,89 @@ return {
 			proj.file:delete()
 		end
 
+		local coverageWithDummy = function()
+			local proj = {
+				file = "attrfill-tif-basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+
+			local csFile = filePath("test/cs_cerrado_clip_29101.shp", "gis")
+			csFile:copy(currentDir())
+
+			local l1Name = "Cells"
+			local l1File = File("cs_cerrado_clip_29101.shp")
+			TerraLib().addShpLayer(proj, l1Name, l1File)
+
+			local l1Info = TerraLib().getLayerInfo(proj, l1Name)
+
+			local l2Name = "Prodes"
+			local l2File = filePath("test/prodes_cerrado_clip_nodata_100_proj_29101.tif", "gis")
+			TerraLib().addGdalLayer(proj, l2Name, l2File, l1Info.srid)
+
+			local l3Name = "cells_cov_dummy"
+			local l3File = File(l3Name..".shp")
+			local operation = "coverage"
+			local attribute = "cov"
+			local select = 0
+			local default = 0
+			local pixel = false
+			local nodata = TerraLib().getDummyValue(proj, l2Name, 0)
+
+			l3File:deleteIfExists()
+			TerraLib().attributeFill{
+				project = proj,
+				from = l2Name,
+				to = l1Name,
+				out = l3Name,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				area = area,
+				default = default,
+				repr = "raster",
+				pixel = pixel,
+				nodata = nodata
+			}
+
+			local l3Set = TerraLib().getDataSet{project = proj, layer = l3Name}
+
+			unitTest:assertNil(l3Set[0].cov_100)
+
+			local l4Name = "cells_cov_nodummy"
+			local l4File = File(l4Name..".shp")
+
+			l4File:deleteIfExists()
+			TerraLib().attributeFill{
+				project = proj,
+				from = l2Name,
+				to = l1Name,
+				out = l4Name,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				area = area,
+				default = default,
+				repr = "raster",
+				pixel = pixel,
+				nodata = 1000
+			}
+
+			local l4Set = TerraLib().getDataSet{project = proj, layer = l4Name}
+
+			unitTest:assertEquals(l4Set[0].cov_100, 0.90114464099896, 1e-14)
+
+			l1File:delete()
+			l3File:delete()
+			l4File:delete()
+			proj.file:delete()
+		end
+
 		unitTest:assert(coverageTotalArea)
+		unitTest:assert(coverageWithDummy)
 	end
 }
 

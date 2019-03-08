@@ -552,8 +552,59 @@ return {
 			proj.file:delete()
 		end
 
+		local coverageWithDummy = function()
+			local csFile = filePath("test/cs_cerrado_clip_29101.shp", "gis")
+			csFile:copy(currentDir())
+
+			local proj = Project{
+				file = "layer_fill_shp_basic.tview",
+				clean = true
+			}
+
+			local prodes = Layer {
+				project = proj,
+				name = "Prodes",
+				file = filePath("test/prodes_cerrado_clip_nodata_100_proj_29101.tif", "gis"),
+				epsg = 29101
+			}
+
+			local cl = Layer {
+				project = proj,
+				name = "Cells",
+				file = "cs_cerrado_clip_29101.shp"
+			}
+
+			cl:fill{
+				operation = "coverage",
+				layer = prodes.name,
+				attribute = "cov1",
+				progress = false
+			}
+
+			cl:fill{
+				operation = "coverage",
+				layer = prodes.name,
+				attribute = "cov2",
+				dummy = 1000,
+				progress = false
+			}
+
+			local cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			local cell = cs:get("3")
+			unitTest:assertNil(cell.cov1_100)
+			unitTest:assertEquals(cell.cov2_100, 0.65175164758932, 1e-14)
+
+			cl:delete()
+			proj.file:delete()
+		end
+
 		unitTest:assert(allSupportedOperation)
 		unitTest:assert(coverageTotalArea)
+		unitTest:assert(coverageWithDummy)
 	end,
 	representation = function(unitTest)
 		local projName = "layer_fill_tiff_repr.tview"
