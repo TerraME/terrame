@@ -722,9 +722,9 @@ local function createProgressViewer(msg)
 	end
 end
 
-local function finalizeProgressViewer(viewerId)
+local function finalizeProgressViewer() --(viewerId)
 	if progress then
-		binding.te.common.ProgressManager.getInstance():removeViewer(viewerId) -- SKIP
+		binding.te.common.ProgressManager.getInstance():clearAll() -- SKIP TODO: removeViewer(viewerId) seems not working
 	end
 end
 
@@ -3630,51 +3630,25 @@ TerraLib_ = {
 			loadProject(project, project.file)
 
 			local layer = project.layers[layerName]
-			local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
-			local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
-			local dseName = layer:getDataSetName()
-			local dse = ds:getDataSet(dseName)
-			local dst = ds:getDataSetType(dseName)
-			local oids = binding.te.da.ObjectIdSet():clone()
 
-			local pk = dst:getPrimaryKey()
-			local pkName
-			if pk then
-				pkName = pk:getPropertyName(0)
-				local pkPos = dst:getPropertyPosition(pkName)
-				local pkType = pk:getProperty(pkPos):getType()
-				oids:addProperty(pkName, pkPos, pkType)
+			local viewerId = createProgressViewer("Checking '"..layerName.."' geometries")
+			local geomError = binding.CheckLayerGeometries(layer)
+			finalizeProgressViewer(viewerId)
+
+			local problemsInfo = geomError:getProblems()
+
+			for i = 0, getn(problemsInfo) - 1 do
+				local problem = problemsInfo[i]
+				table.insert(problems, {pk = {name = problem.propertyName, value = problem.propertyValue},
+									error = problem.errorMsg,
+									coord = {x = problem.coordX, y = problem.coordY}})
 			end
 
-			if dst:hasGeom() then
-				local gp = binding.GetFirstGeomProperty(dst)
-				local gname = gp:getName()
-				local gpos = getPropertyPosition(dse, gname)
-
-				dse:moveBeforeFirst()
-				while dse:moveNext() do
-					local geom = dse:getGeom(gpos)
-					local err = binding.TopologyValidationError()
-					if not binding.CheckValidity(geom, err) then
-						if pk then
-							local oid = binding.te.da.ObjectId():clone()
-							oid:addValue(dse:getValue(pkName):clone())
-							oids:add(oid)
-							table.insert(problems, {pk = {name = pkName, value = dse:getAsString(pkName)},
-										error = err.m_message,
-										coord = {x = err.m_coordinate:getX(), y = err.m_coordinate:getY()}})
-						else
-							table.insert(problems, {error = err.m_message, --SKIP
-										coord = {x = err.m_coordinate:getX(), y = err.m_coordinate:getY()}}) --SKIP
-						end
-					end
-				end
-
-				if fix and (#problems > 0) then
-					local viewerId = createProgressViewer("Fixing '"..layerName.."' geometries")
-					fixErrorMsg = binding.te.vp.MakeGeometryValid.makeValid(layer, dseName, oids)
-					finalizeProgressViewer(viewerId)
-				end
+			if fix and (#problems > 0) then
+				viewerId = createProgressViewer("Fixing '"..layerName.."' geometries")
+				fixErrorMsg = binding.te.vp.MakeGeometryValid.makeValid(layer,
+								layer:getDataSetName(), geomError.objectIdSet)
+				finalizeProgressViewer(viewerId)
 			end
 
 			releaseProject(project)
