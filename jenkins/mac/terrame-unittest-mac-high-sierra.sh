@@ -23,26 +23,44 @@
 # of this software and its documentation.
 
 #
-## It performs a TerraME Repository Tests.
-##
+## It performs a TerraME functional test package
 #
 ## USAGE:
-## ./terrame-repository-test-mac-el-capitan.sh
+## ./terrame-unittest-linux-mac-high-sierra.sh PACKAGE_NAME
+##
+## WHERE:
+## PACKAGE_NAME - Represents a name of TerraME package to execute
+##
 #
 
+PACKAGE=$1
+
+# Exporting enviroment variables
 export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
 
-cd $_TERRAME_REPOSITORY_DIR
+cd $_TERRAME_TEST_DIR
 
 terrame -version
-terrame -color test.lua
+
+TERRAME_COMMANDS=""
+
+# Extra commands if package is gis
+if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
+	TERRAME_COMMANDS="-package $PACKAGE"
+else
+	PACKAGE="base"
+fi
+
+# Executing unittest
+terrame -color $TERRAME_COMMANDS -test test.lua
 RESULT=$?
 
 # Compressing Log
-LOG_NAME="repository-mac-$BUILD_NUMBER.tar.gz"
+LOG_NAME="unittest-mac-$PACKAGE-$BUILD_NUMBER.tar.gz"
 echo "Compressing $WORKSPACE/$LOG_NAME"
 tar -czf $WORKSPACE/$LOG_NAME .terrame*
 
+# Cleaning up
 rm -rf .terrame*
 
 exit $RESULT

@@ -1,4 +1,5 @@
-#!/bin/bash -l
+#!/bin/bash
+
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -21,31 +22,27 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
-## It performs a TerraME doc generation of a package.
-##
+#
+## It performs a TerraME test execution.
 #
 ## USAGE:
-## ./terrame-doc-mac-el-capitan.sh PACKAGE_NAME
-##
-## WHERE:
-## PACKAGE_NAME - Represents a name of TerraME package to execute
-##
+## ./terrame-test-execution-mac-high-sierra.sh
 #
 
-# Exporting context
+# Exporting enviroment variables
 export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
 
-cd $_TERRAME_TEST_DIR
+# Copying TerraME configuration
+cd $_TERRAME_EXECUTION_DIR
 
-TERRAME_COMMANDS=""
 terrame -version
-if [ "$1" != "" ] && [ "$1" != "base" ]; then
-  TERRAME_COMMANDS="-package $1"
-  terrame -color $TERRAME_COMMANDS -projects 2>/dev/null
-fi
+terrame -color run.lua
+RESULT=$?
 
-# Execute TerraME doc generation
-terrame -color $TERRAME_COMMANDS -doc 2> /dev/null
-# Retrieve TerraME exit code
-exit $?
+# Compressing Log
+LOG_NAME="execution-mac-$BUILD_NUMBER.tar.gz"
+echo "Compressing $WORKSPACE/$LOG_NAME"
+tar -czf $WORKSPACE/$LOG_NAME .terrame*
+rm -rf .terrame*
+
+exit $RESULT

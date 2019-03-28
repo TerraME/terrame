@@ -42,7 +42,7 @@
 ## sha1 (Injected by Jenkins on GitHub Pull Requests) (Optional) - Represents refspec Pull Request (origin/PR_ID/head)
 #
 ## USAGE:
-## ./terrame-terralib-build-mac-el-capitan.sh
+## ./terrame-terralib-build-mac-high-sierra.sh
 ##
 #
 

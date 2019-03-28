@@ -23,7 +23,7 @@
 # of this software and its documentation.
 
 #
-## It performs TerraME TerraLib compilation on MacOSX El Capitan system
+## It performs TerraME TerraLib compilation on MacOSX
 #
 
 if [ -z "$_TERRALIB_TARGET_3RDPARTY_DIR" ]; then
@@ -57,7 +57,7 @@ function valid_operation()
 
 
 echo ""
-echo "#### TerraME Dependencies Compilation on MacOSX El Capitan ####"
+echo "#### TerraME Dependencies Compilation on MacOSX ####"
 echo ""
 
 echo -ne "Cleaning up old builds ... "

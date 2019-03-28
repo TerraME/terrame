@@ -23,26 +23,26 @@
 # of this software and its documentation.
 
 #
-## It performs a TerraME test execution.
+## It performs a TerraME Repository Tests.
+##
 #
 ## USAGE:
-## ./terrame-test-execution-mac-el-capitan.sh
+## ./terrame-repository-test-mac-high-sierra.sh
 #
 
-# Exporting enviroment variables
 export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
 
-# Copying TerraME configuration
-cd $_TERRAME_EXECUTION_DIR
+cd $_TERRAME_REPOSITORY_DIR
 
 terrame -version
-terrame -color run.lua
+terrame -color test.lua
 RESULT=$?
 
 # Compressing Log
-LOG_NAME="execution-mac-$BUILD_NUMBER.tar.gz"
+LOG_NAME="repository-mac-$BUILD_NUMBER.tar.gz"
 echo "Compressing $WORKSPACE/$LOG_NAME"
 tar -czf $WORKSPACE/$LOG_NAME .terrame*
+
 rm -rf .terrame*
 
 exit $RESULT

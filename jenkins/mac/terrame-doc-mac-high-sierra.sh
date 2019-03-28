@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/bin/bash -l
 #
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 # Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -22,45 +21,31 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It performs a TerraME functional test package
+# 
+## It performs a TerraME doc generation of a package.
+##
 #
 ## USAGE:
-## ./terrame-unittest-linux-mac-el-capitan.sh PACKAGE_NAME
+## ./terrame-doc-mac-high-sierra.sh PACKAGE_NAME
 ##
 ## WHERE:
 ## PACKAGE_NAME - Represents a name of TerraME package to execute
 ##
 #
 
-PACKAGE=$1
-
-# Exporting enviroment variables
+# Exporting context
 export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
 
 cd $_TERRAME_TEST_DIR
 
-terrame -version
-
 TERRAME_COMMANDS=""
-
-# Extra commands if package is gis
-if [ "$PACKAGE" != "" ] && [ "$PACKAGE" != "base" ]; then
-	TERRAME_COMMANDS="-package $PACKAGE"
-else
-	PACKAGE="base"
+terrame -version
+if [ "$1" != "" ] && [ "$1" != "base" ]; then
+  TERRAME_COMMANDS="-package $1"
+  terrame -color $TERRAME_COMMANDS -projects 2>/dev/null
 fi
 
-# Executing unittest
-terrame -color $TERRAME_COMMANDS -test test.lua
-RESULT=$?
-
-# Compressing Log
-LOG_NAME="unittest-mac-$PACKAGE-$BUILD_NUMBER.tar.gz"
-echo "Compressing $WORKSPACE/$LOG_NAME"
-tar -czf $WORKSPACE/$LOG_NAME .terrame*
-
-# Cleaning up
-rm -rf .terrame*
-
-exit $RESULT
+# Execute TerraME doc generation
+terrame -color $TERRAME_COMMANDS -doc 2> /dev/null
+# Retrieve TerraME exit code
+exit $?
