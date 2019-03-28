@@ -22,60 +22,43 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It prepares a entire TerraME build process. Firstly, it prepares environment, cloning both TerraME and TerraLib.
-## After that, It copies required scripts to respective folders. Once done, it compiles TerraLib.
-## Jenkins will export variables defined in jenkins/linux for respective build type. If PR events, it uses VARIABLES-ci.
-## Otherwise, use VARIABLES-daily
-##
-#
-## VARIABLES:
-## _TERRAME_GIT_DIR - Path to TerraME clone
-## _TERRALIB_GIT_DIR - Path to TerraLib clone
-## _TERRAME_DEPENDS_DIR - Path to TerraME dependencies
-## _TERRALIB_INSTALL_PATH - Path to TerraLib Installation
-## _TERRALIB_3RDPARTY_DIR - Path to TerraLib dependencies
-## _TERRAME_TEST_DIR - Path where TerraME tests will execute.
-## _TERRAME_REPOSITORY_DIR - Path where TerraME repository test will execute
-## _TERRAME_EXECUTION_DIR - Path where TerraME test execution will run
-## ghprbActualCommit (Injected by Jenkins on GitHub Pull Requests) (Optional) - Git Commit hash
-## sha1 (Injected by Jenkins on GitHub Pull Requests) (Optional) - Represents refspec Pull Request (origin/PR_ID/head)
-#
-## USAGE:
-## ./terrame-terralib-build-mac-high-sierra.sh
-##
-#
-
-# Constants
-_TERRALIB_BRANCH=release-5.4
-
-# Removing TerraLib Mod Binding Lua in order to re-generate folder if there is
-rm -rf $_TERRALIB_BUILD_BASE/solution $_TERRALIB_GIT_DIR $_TERRAME_BUILD_BASE/solution
-rm -rf $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
 
 echo "### TerraLib ###"
+cd $_TERRALIB_BUILD_BASE
+rm -rf $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution $_TERRALIB_INSTALL_PATH
+mkdir $_TERRALIB_GIT_DIR $_TERRALIB_BUILD_BASE/solution
+
 git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git $_TERRALIB_GIT_DIR
 
-# Creating TerraME Test folders and TerraLib solution
-mkdir $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERRALIB_BUILD_BASE/solution $_TERRAME_BUILD_BASE/solution
+echo ""
+echo ""
+echo ""
+######################## TerraLib Environment
+echo "### TerraLib Environment ###"
+echo "Cleaning last config scripts"
+rm -rf $_TERRALIB_BUILD_BASE/solution/terralib-conf.*
 
-cd $_TERRALIB_BUILD_BASE/solution
+echo "Copying TerraLib compilation scripts to TerraLib Solution folder"
+cp $_TERRAME_GIT_DIR/build/scripts/mac/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
 
-# Copying TerraME Git Repository to Test Repository Folder
-cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR
-# Copying TerraME Git Test Execution to Test Execution Folder
-cp -r $_TERRAME_GIT_DIR/test/* $_TERRAME_EXECUTION_DIR
-# Copying TerraME test and config file to Test folder
-cp $_TERRAME_GIT_DIR/jenkins/all/*.lua $_TERRAME_TEST_DIR
-# Copying TerraME TerraLib compilation scripts to TerraLib solution folder
-cp $_TERRAME_GIT_DIR/build/scripts/mac/terralib-conf.* .
-# Copying TerraME compilation scripts to TerraME Solution folder
-cp $_TERRAME_GIT_DIR/build/scripts/mac/terrame-conf.* $_TERRAME_BUILD_BASE/solution
+echo ""
+echo ""
+echo ""
 
-cmake -version
+echo "### TerraLib Environment Finished ###"
 
-# Compile TerraLib
-./terralib-conf.sh
+echo ""
+echo ""
+echo ""
 
 # Returns a TerraLib compilation execution code in order to Jenkins be able to set build status
-exit $?
+echo "Compiling TerraLib"
+cd $_TERRALIB_BUILD_BASE/solution
+./terralib-conf.sh
+RESULT=$?
+
+echo ""
+echo ""
+echo ""
+
+exit $RESULT

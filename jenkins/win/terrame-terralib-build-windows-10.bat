@@ -33,7 +33,6 @@
 :: terrame-terralib-build-windows-10.bat
 ::
 
-:: Removing TerraLib Mod Binding Lua in order to re-generate folder if there is
 rmdir %_TERRALIB_GIT_DIR% /s /q
 mkdir %_TERRALIB_GIT_DIR%
 
