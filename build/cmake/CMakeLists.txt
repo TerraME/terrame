@@ -144,6 +144,8 @@ endif()
 
 set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME runtime)
 
+add_definitions(-DBOOST_ALL_NO_LIB)
+
 add_subdirectory(swig)
 add_subdirectory(qgis)
 add_subdirectory(terrame)

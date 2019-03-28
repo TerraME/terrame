@@ -21,7 +21,6 @@
 # of this software and its documentation.
 ############################################################################################
 
-add_definitions(-DBOOST_ALL_NO_LIB)
 find_package(Boost REQUIRED system filesystem)
 
 if(MSVC)
