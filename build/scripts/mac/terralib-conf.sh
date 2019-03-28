@@ -48,7 +48,7 @@ echo "$_TERRALIB_OUT_DIR"
 
 # Checking source code location
 if [ "$_TERRALIB_GIT_DIR" == "" ]; then
-  _TERRALIB_GIT_DIR="../../git/terralib5"
+  _TERRALIB_GIT_DIR="../../git/terralib"
 fi
 export _TERRALIB_GIT_DIR="$_TERRALIB_GIT_DIR"
 echo "$_TERRALIB_GIT_DIR"
