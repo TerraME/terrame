@@ -43,13 +43,13 @@ export _TERRAME_DEPENDS_DIR="$_TERRAME_DEPENDS_DIR"
 
 # Checking Terralib Modules Dir
 if [ "$_TERRALIB_MODULES_DIR" == "" ]; then
-  _TERRALIB_MODULES_DIR="/Users/developer/terralib/build-release/install"
+  _TERRALIB_MODULES_DIR="/Users/developer/terralib/solution/install"
 fi
 export _TERRALIB_MODULES_DIR="$_TERRALIB_MODULES_DIR"
 
 # Checking QT5 dir
 if [ "$_QT5_DIR" == "" ]; then
-  _QT5_DIR="/Users/developer/Qt/5.6/clang_64/lib/cmake"
+  _QT5_DIR="/Users/developer/Qt5.6.0/5.6/clang_64/lib/cmake"
 fi
 export _QT5_DIR="$_QT5_DIR"
 
