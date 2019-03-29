@@ -22,21 +22,17 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It performs a TerraME Repository Tests.
-##
-#
-## USAGE:
-## ./terrame-repository-test-mac-high-sierra.sh
-#
+echo ""
+echo ""
 
 export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
-
-cd $_TERRAME_REPOSITORY_DIR
 
 terrame -version
 terrame -color test.lua
 RESULT=$?
+
+echo ""
+echo ""
 
 # Compressing Log
 LOG_NAME="repository-mac-$BUILD_NUMBER.tar.gz"
@@ -44,5 +40,8 @@ echo "Compressing $WORKSPACE/$LOG_NAME"
 tar -czf $WORKSPACE/$LOG_NAME .terrame*
 
 rm -rf .terrame*
+
+echo ""
+echo ""
 
 exit $RESULT

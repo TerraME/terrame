@@ -22,14 +22,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It performs a TerraME Installer generation
-#
-## USAGE:
-## ./terrame-installer-linux-ubuntu-14.04.sh
-#
-
-echo ""
 echo ""
 echo ""
 
@@ -52,7 +44,6 @@ cpack -G TGZ -C Release --config ./CPackConfig.cmake
 cp --verbose terrame*.tar.gz $WORKSPACE
 RESULT=$?
 
-echo ""
 echo ""
 echo ""
 

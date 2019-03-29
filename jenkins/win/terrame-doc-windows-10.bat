@@ -20,13 +20,6 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 ::
-:: It generates a TerraME doc for a package
-::
-:: USAGE:
-:: terrame-doc-windows-10.bat PACKAGE_NAME
-::
-:: PACKAGE_NAME - Represents a name of TerraME package to execute
-::
 
 :: setting context
 set "TME_PATH=%_TERRAME_INSTALL_PATH%\bin"

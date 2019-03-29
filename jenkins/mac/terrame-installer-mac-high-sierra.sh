@@ -22,13 +22,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
-## It performs a TerraME Installer generation on MacOSX environment
-#
-## USAGE:
-## ./terrame-installer-linux-ubuntu-14.04.sh
-#
-
 export _TERRAME_CREATE_INSTALLER="ON"
 export _TERRAME_BUILD_AS_BUNDLE="ON"
 

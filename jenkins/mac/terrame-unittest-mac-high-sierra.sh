@@ -22,17 +22,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It performs a TerraME functional test package
-#
-## USAGE:
-## ./terrame-unittest-linux-mac-high-sierra.sh PACKAGE_NAME
-##
-## WHERE:
-## PACKAGE_NAME - Represents a name of TerraME package to execute
-##
-#
-
 PACKAGE=$1
 
 # Exporting enviroment variables

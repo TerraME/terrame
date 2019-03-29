@@ -22,17 +22,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It performs a TerraME code analysis of any package. For TerraME purporses, "base" and "gis" internal packages.
-## It may be useful for TerraME external packages.
-#
-## USAGE:
-## ./terrame-code-analysis-linux-ubuntu-14.04.sh PACKAGE_NAME DEPENDENCIES
-#
-## WHERE:
-## PACKAGE_NAME - Represents a name of TerraME package to execute
-#
-
 PACKAGE=$1
 DEPENDS="$2"
 
@@ -76,7 +65,6 @@ echo "Executing check"
 terrame -color $TERRAME_COMMANDS -check
 RESULT=$?
 
-echo ""
 echo ""
 echo ""
 

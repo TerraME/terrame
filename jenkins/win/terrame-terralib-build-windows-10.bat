@@ -20,19 +20,6 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-::
-:: It prepares a entire TerraME build process. Firstly, it prepares environment, cloning both TerraME and TerraLib.
-:: After that, It copies required scripts to respective folders. Once done, it compiles TerraLib.
-::
-:: VARIABLES:
-:: _TERRALIB_GIT_DIR - Path to TerraLib clone
-:: _TERRALIB_INSTALL_PATH - Path to TerraLib Installation
-:: _TERRALIB_3RDPARTY_DIR - Path to TerraLib dependencies
-::
-:: USAGE:
-:: terrame-terralib-build-windows-10.bat
-::
-
 rmdir %_TERRALIB_GIT_DIR% /s /q
 mkdir %_TERRALIB_GIT_DIR%
 

@@ -22,27 +22,26 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It performs a TerraME test execution.
-#
-## USAGE:
-## ./terrame-test-execution-mac-high-sierra.sh
-#
+echo ""
+echo ""
 
 # Exporting enviroment variables
 export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
 
-# Copying TerraME configuration
-cd $_TERRAME_EXECUTION_DIR
-
 terrame -version
 terrame -color run.lua
 RESULT=$?
+
+echo ""
+echo ""
 
 # Compressing Log
 LOG_NAME="execution-mac-$BUILD_NUMBER.tar.gz"
 echo "Compressing $WORKSPACE/$LOG_NAME"
 tar -czf $WORKSPACE/$LOG_NAME .terrame*
 rm -rf .terrame*
+
+echo ""
+echo ""
 
 exit $RESULT

@@ -20,12 +20,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# Usage: ./terrame-ci-package-unittest.sh COMMIT PACKAGE
-#
-# COMMIT - GitCommit
-# PACKAGE - TerraME Package name
-#
-
 COMMIT=$1
 PACKAGE=$2
 CONTEXT="Functional tests of package $PACKAGE"

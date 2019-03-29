@@ -22,20 +22,8 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It performs a TerraME functional test of any package. For TerraME purporses, "base" and "gis" internal packages.
-## It may be useful for TerraME external packages.
-#
-## USAGE:
-## ./terrame-unittest-linux-ubuntu-14.04.sh PACKAGE_NAME
-#
-## WHERE:
-## PACKAGE_NAME - Represents a name of TerraME package to execute
-#
-
 PACKAGE=$1
 
-echo ""
 echo ""
 echo ""
 
@@ -62,7 +50,6 @@ terrame -version
 
 echo ""
 echo ""
-echo ""
 
 TERRAME_COMMANDS=""
 # Extra commands if package is gis
@@ -87,14 +74,12 @@ fi
 
 echo ""
 echo ""
-echo ""
 
 # Compressing Log
 LOG_NAME="unittest-linux-$PACKAGE-$BUILD_NUMBER.tar.gz"
 echo "Compressing $WORKSPACE/$LOG_NAME"
 tar -czf $WORKSPACE/$LOG_NAME .terrame*
 
-echo ""
 echo ""
 echo ""
 

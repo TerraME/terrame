@@ -24,7 +24,6 @@
 
 echo ""
 echo ""
-echo ""
 ##################### TerraME Environment
 echo "### TerraME Environment ###"
 
@@ -44,10 +43,8 @@ cp $_TERRAME_GIT_DIR/jenkins/mac/terrame-test-execution-mac-high-sierra.sh $_TER
 echo "Copying TerraME test and config file to Test folder"
 cp $_TERRAME_GIT_DIR/jenkins/all/*.lua $_TERRAME_TEST_DIR
 cp $_TERRAME_GIT_DIR/jenkins/mac/terrame-unittest-mac-high-sierra.sh $_TERRAME_TEST_DIR
-cp $_TERRAME_GIT_DIR/jenkins/mac/terrame-code-analysis-mac-high-sierra.sh $_TERRAME_TEST_DIR
 cp $_TERRAME_GIT_DIR/jenkins/mac/terrame-doc-mac-high-sierra.sh $_TERRAME_TEST_DIR
 cp $_TERRAME_GIT_DIR/jenkins/mac/terrame-unittest-cpp-mac-high-sierra.sh $_TERRAME_TEST_DIR
-cp $_TERRAME_GIT_DIR/jenkins/mac/terrame-syntaxcheck-cpp-mac-high-sierra.sh $_TERRAME_TEST_DIR
 
 echo "Copying TerraME Git Repository to Test Repository Folder"
 cp -r $_TERRAME_GIT_DIR/repository/* $_TERRAME_REPOSITORY_DIR

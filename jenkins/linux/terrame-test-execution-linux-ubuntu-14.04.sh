@@ -22,14 +22,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It performs a TerraME test execution.
-#
-## USAGE:
-## ./terrame-test-execution-linux-ubuntu-14.04.sh
-#
-
-echo ""
 echo ""
 echo ""
 
@@ -43,7 +35,6 @@ RESULT=$?
 
 echo ""
 echo ""
-echo ""
 
 # Compressing Log
 LOG_NAME="execution-linux-$BUILD_NUMBER.tar.gz"
@@ -51,7 +42,6 @@ echo "Compressing $WORKSPACE/$LOG_NAME"
 tar -czf $WORKSPACE/$LOG_NAME .terrame*
 rm -rf .terrame*
 
-echo ""
 echo ""
 echo ""
 

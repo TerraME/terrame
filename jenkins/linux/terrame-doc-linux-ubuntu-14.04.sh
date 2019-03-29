@@ -22,18 +22,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It performs a TerraME doc generation of any package. For TerraME purporses, "base" and "gis" internal packages.
-## It may be useful for TerraME external packages.
-#
-## USAGE:
-## ./terrame-doc-linux-ubuntu-14.04.sh PACKAGE_NAME
-#
-## WHERE:
-## PACKAGE_NAME - Represents a name of TerraME package to execute
-##
-#
-
 echo ""
 echo ""
 
@@ -43,21 +31,15 @@ export PATH=$PATH:$TME_PATH
 
 TERRAME_COMMANDS=""
 terrame -version
-
 echo ""
 echo ""
-
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
   TERRAME_COMMANDS="-package $1"
   terrame -color $TERRAME_COMMANDS -projects 2>/dev/null
 fi
-
 # Execute TerraME doc generation
 terrame -color $TERRAME_COMMANDS -doc 2> /dev/null
 RESULT=$?
-
 echo ""
 echo ""
-echo ""
-
 exit $RESULT

@@ -1,4 +1,3 @@
-
 ::
 :: TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 :: Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
@@ -35,20 +34,14 @@ mkdir %_TERRAME_BUILD_BASE%\solution %_TERRAME_REPOSITORY_DIR% %_TERRAME_TEST_DI
 
 :: Copying TerraME compilation scripts to TerraME Solution directory
 xcopy %_TERRAME_GIT_DIR%\build\scripts\win\terrame-conf.* %_TERRAME_BUILD_BASE%\solution /i /h /e /y
-
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-build-windows-10.bat %_TERRAME_BUILD_BASE%\solution /i /h /e /y
-
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-installer-windows-10.bat %_TERRAME_BUILD_BASE%\solution /i /h /e /y
-
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-repository-test-windows-10.bat %_TERRAME_REPOSITORY_DIR% /i /h /e /y
-
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-test-execution-windows-10.bat %_TERRAME_EXECUTION_DIR% /i /h /e /y
 
 :: Copying TerraME test and config file to Test folder
 xcopy %_TERRAME_GIT_DIR%\jenkins\all\*.lua %_TERRAME_TEST_DIR% /i /h /e /y
-
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-unittest-windows-10.bat %_TERRAME_TEST_DIR% /i /h /e /y
-
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-doc-windows-10.bat %_TERRAME_TEST_DIR% /i /h /e /y
 
 :: Copying TerraME Git Repository to Test Repository Folder

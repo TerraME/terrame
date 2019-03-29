@@ -20,17 +20,6 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-:: 
-:: It performs a TerraME functional test of any package. For TerraME purporses, "base" and "gis" internal packages. 
-:: It may be useful for TerraME external packages.
-::
-:: USAGE:
-:: terrame-unittest-windows-10.bat PACKAGE_NAME
-::
-:: WHERE:
-:: PACKAGE_NAME - Represents a name of TerraME package to execute
-::
-
 set "PACKAGE=%1"
 
 :: Exporting enviroment variables

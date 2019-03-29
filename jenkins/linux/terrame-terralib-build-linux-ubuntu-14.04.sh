@@ -23,26 +23,6 @@
 # of this software and its documentation.
 
 #
-## It prepares a entire TerraME build process. Firstly, it prepares environment, cloning both TerraME and TerraLib.
-## After that, It copies required scripts to respective folders. Once done, it compiles TerraLib.
-#
-## VARIABLES:
-## _TERRAME_GIT_DIR - Path to TerraME clone
-## _TERRALIB_GIT_DIR - Path to TerraLib clone
-## _TERRAME_DEPENDS_DIR - Path to TerraME dependencies
-## _TERRALIB_INSTALL_PATH - Path to TerraLib Installation
-## _TERRALIB_3RDPARTY_DIR - Path to TerraLib dependencies
-## _TERRAME_TEST_DIR - Path where TerraME tests will execute.
-## _TERRAME_REPOSITORY_DIR - Path where TerraME repository test will execute
-## _TERRAME_EXECUTION_DIR - Path where TerraME test execution will run
-## ghprbActualCommit (Injected by Jenkins on GitHub Pull Requests) (Optional) - Git Commit hash
-## sha1 (Injected by Jenkins on GitHub Pull Requests) (Optional) - Represents refspec Pull Request (origin/PR_ID/head)
-#
-## USAGE:
-## ./terrame-terralib-build-linux-ubuntu-14.04.sh
-#
-
-#
 # Valid parameter val or abort script
 #
 function valid()
@@ -54,7 +34,6 @@ function valid()
 	fi
 }
 
-echo ""
 echo ""
 echo ""
 
@@ -92,7 +71,6 @@ fi
 
 echo ""
 echo ""
-echo ""
 ######################## TerraLib Environment
 echo "### TerraLib Environment ###"
 echo "Cleaning last config scripts"
@@ -110,8 +88,6 @@ echo ""
 tree -D -L 2 $_TERRALIB_BUILD_BASE
 
 echo "### TerraLib Environment Finished ###"
-
-echo ""
 echo ""
 echo ""
 
@@ -121,7 +97,6 @@ cd $_TERRALIB_BUILD_BASE/solution
 ./terralib-conf.sh
 RESULT=$?
 
-echo ""
 echo ""
 echo ""
 

@@ -22,18 +22,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It executes a static code inspection for TerraME C++ files
-##
-#
-## VARIABLES:
-## _TERRAME_GIT_DIR - Path to TerraME clone
-#
-## USAGE:
-## ./terrame-syntaxcheck-cpp-linux-ubuntu-14.04.sh
-##
-#
-
 cpplint --filter=-whitespace/comments,-whitespace/tab,-whitespace/indent,-whitespace/braces,-build/namespaces,-build/header_guard,-whitespace/line_length,-readability/casting,-runtime/references,-build/include,-runtime/printf,-whitespace/newline,-runtime/explicit,-whitespace/parens,-runtime/int,-runtime/threadsafe,-runtime/indentation_namespace --extensions=c,h,cpp --recursive "$_TERRAME_GIT_DIR/src/"
 RESULT1=$?
 cpplint --filter=-whitespace/tab,-whitespace/indent,-whitespace/braces,-build/header_guard,-whitespace/line_length,-build/include,-runtime/int --extensions=c,h,cpp --recursive "$_TERRAME_GIT_DIR/unittest/"

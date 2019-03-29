@@ -20,13 +20,6 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-::
-:: It performs a TerraME Installer generation
-::
-:: USAGE:
-:: terrame-installer-windows-10.bat
-::
-
 set "_TERRAME_CREATE_INSTALLER=ON"
 set "_TERRAME_BUILD_AS_BUNDLE=ON"
 

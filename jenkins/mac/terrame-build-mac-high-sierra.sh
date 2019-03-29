@@ -22,15 +22,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
-## It performs TerraME compilation. It does not create installer or even build as bundle.
-##
-#
-## USAGE:
-## ./terrame-build-linux-ubuntu-14.04.sh
-##
-#
-
 cd $_TERRAME_BUILD_BASE/solution
  
 # Turning OFF installer flags

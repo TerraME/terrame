@@ -20,15 +20,6 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-:: 
-:: It performs TerraME compilation. It does not create installer or even build as bundle.'
-::
-::
-:: USAGE:
-:: terrame-build-windows-10.bat
-::
-::
-
 :: Turning OFF installer flags
 set "_TERRAME_CREATE_INSTALLER=OFF"
 set "_TERRAME_BUILD_AS_BUNDLE=ON"

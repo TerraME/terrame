@@ -21,18 +21,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-# 
-## It performs a TerraME doc generation of a package.
-##
-#
-## USAGE:
-## ./terrame-doc-mac-high-sierra.sh PACKAGE_NAME
-##
-## WHERE:
-## PACKAGE_NAME - Represents a name of TerraME package to execute
-##
-#
-
 # Exporting context
 export PATH=$PATH:$_TERRAME_INSTALL_PATH/bin
 
@@ -40,11 +28,14 @@ cd $_TERRAME_TEST_DIR
 
 TERRAME_COMMANDS=""
 terrame -version
+echo ""
+echo ""
 if [ "$1" != "" ] && [ "$1" != "base" ]; then
   TERRAME_COMMANDS="-package $1"
   terrame -color $TERRAME_COMMANDS -projects 2>/dev/null
 fi
-
+echo ""
+echo ""
 # Execute TerraME doc generation
 terrame -color $TERRAME_COMMANDS -doc 2> /dev/null
 # Retrieve TerraME exit code

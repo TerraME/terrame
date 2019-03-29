@@ -20,13 +20,6 @@
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
 
-:: 
-:: It performs a TerraME test execution.
-::
-:: USAGE:
-:: terrame-test-execution-windows-10.bat
-::
-
 :: Exporting enviroment variables
 set "TME_PATH=%_TERRAME_INSTALL_PATH%\bin"
 set "PATH=%PATH%;%TME_PATH%"

@@ -22,10 +22,6 @@
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
 
-#
-## It performs TerraME TerraLib compilation on MacOSX
-#
-
 if [ -z "$_TERRALIB_TARGET_3RDPARTY_DIR" ]; then
   export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/5.4"
 fi
