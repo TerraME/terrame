@@ -30,7 +30,7 @@ return {
 		unitTest:assertEquals(t1, t2)
 	end,
 	getVersion = function(unitTest)
-		unitTest:assertEquals(TerraLib().getVersion(), "5.4.2")
+		unitTest:assertEquals(TerraLib().getVersion(), "5.5.0")
 	end,
 	createProject = function(unitTest)
 		local happyPath = function()

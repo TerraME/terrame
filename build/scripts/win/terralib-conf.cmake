@@ -35,6 +35,7 @@ set(TERRALIB_TRACK_3RDPARTY_DEPENDENCIES OFF CACHE BOOL "Track the 3rd-parties o
 set(TERRALIB_BUILD_AS_BUNDLE ON CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
 set(terralib4_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}/lib/cmake/terralib-4.2.2" CACHE PATH "TerraLib4?" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "Build testing?" FORCE)
+set(TERRALIB_TRANSLATOR_ENABLED OFF CACHE BOOL "Enable translator support?" FORCE)
 
 # Enabling modules
 set(TERRALIB_MOD_MNT_CORE_ENABLED ON CACHE BOOL "Build MNT Processing Core module?" FORCE)
