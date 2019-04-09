@@ -2021,6 +2021,14 @@ local function checkIfLayerNamesAreUnique(layers)
 	end
 end
 
+local function getWfsUri(uri)
+	local query = uri:query()
+	if string.len(query) > 0 then
+		return uri:path().."?"..query
+	end
+	return uri:path()
+end
+
 local function createProjectFromQGis(project)
 	local qgis = swig.terrame.qgis
 
@@ -2079,7 +2087,8 @@ local function createProjectFromQGis(project)
 
 				instance.addPgLayer(project,  qgisLayer:getName(), conn, qgisLayer:getSrid(), conn.encoding)
 			elseif uri:scheme() == "wfs" then
-				instance.addWfsLayer(project, qgisLayer:getName(), uri:path(), uri:query(), qgisLayer:getSrid())
+				instance.addWfsLayer(project, qgisLayer:getName(), getWfsUri(uri),
+									uri:fragment(), qgisLayer:getSrid())
 			elseif uri:scheme() == "wms" then
 				local values = splitString(uri:query(), "&")
 				local format = splitString(values[1], "=")[2]
@@ -2288,7 +2297,7 @@ TerraLib_ = {
 			info.file = tostring(file)
 			info.source = file:extension()
 		elseif type == "WFS" then
-			info.url = connInfo:path()
+			info.url = getWfsUri(connInfo)
 			info.source = "wfs"
 			info.dataset = dseName
 		elseif type == "WMS2" then

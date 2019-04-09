@@ -192,9 +192,7 @@ te::core::URI terrame::qgis::QgsReader::createWfsUri(const std::string& content)
 {
 	std::map<std::string, std::string> contents(
 							terrame::qgis::createAttributesMap(content, " "));
-
-	std::string uriStr("wfs:" + contents.at("url") + "?" + contents.at("typename"));
-
+	std::string uriStr("wfs:" + contents.at("url") + "#" + contents.at("typename"));
 	te::core::URI uri(uriStr);
 
 	if (!uri.isValid())

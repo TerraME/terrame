@@ -112,7 +112,7 @@ std::string terrame::qgis::QGisLayer::getPath() const
 		return std::string(" restrictToRequestBBOX='1'")
 				+ " srsname='EPSG:" + std::to_string(srid) + "'"
 				+ " typename='" + dataset + "'"
-				+ " url='" + uri.path() + "'"
+				+ " url='" + uri.path() + ((uri.query().empty()) ? "" : "?" + uri.query()) + "'"
 				+ " version='auto'"
 				+ " table=\"\""
 				+ " sql=";

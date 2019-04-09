@@ -33,7 +33,7 @@ std::map<std::string, std::string> terrame::qgis::createAttributesMap(const std:
 	boost::tokenizer<boost::char_separator<char>> tokens(content, sep);
 	std::map<std::string, std::string> contents;
 
-	for (boost::tokenizer< boost::char_separator<char> >::iterator it = tokens.begin();
+	for(boost::tokenizer< boost::char_separator<char> >::iterator it = tokens.begin();
 		it != tokens.end(); it++)
 	{
 		std::string token(*it);
@@ -44,6 +44,13 @@ std::map<std::string, std::string> terrame::qgis::createAttributesMap(const std:
 			boost::split(values, token, boost::is_any_of("="));
 			std::string key = values.at(0);
 			std::string value = values.at(1);
+			if(key == "url")
+			{
+				for (int i = 2; i < values.size(); i++)
+				{
+					value += "=" + values[i];
+				}
+			}
 			boost::replace_all(key, "'", "");
 			boost::replace_all(value, "'", "");
 			boost::replace_all(value, "\"", "");

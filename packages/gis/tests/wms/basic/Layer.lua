@@ -37,8 +37,8 @@ return {
 		}
 
 		local layerName = "WMS-Layer"
-		local service = "http://terrabrasilis.info/geoserver/ows"
-		local map = "Prodes_2013:LANDSAT2013"
+		local service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows"
+		local map = "prodes-legal-amz:temporal_mosaic_legal_amazon"
 		local epsg = 29901
 
 		local layer = Layer {
