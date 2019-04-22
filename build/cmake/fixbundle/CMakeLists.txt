@@ -25,8 +25,14 @@ include(InstallRequiredSystemLibraries)
 
 if(WIN32)
 	install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-	DESTINATION bin
-	COMPONENT runtime)
+	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}
+	        COMPONENT runtime
+			CONFIGURATIONS Release)
+			
+	install(FILES ${CMAKE_INSTALL_DEBUG_LIBRARIES}
+	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}
+	        COMPONENT runtime
+			CONFIGURATIONS Debug)
 endif()
 
 configure_file(${terrame_SOURCE_DIR}/fixBundle.cmake.in ${terrame_BINARY_DIR}/fixBundle.cmake @ONLY)

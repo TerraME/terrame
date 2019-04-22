@@ -190,10 +190,18 @@ endif()
 
 find_package(Lua REQUIRED)
 if(LUA_FOUND)
+	if(MSVC)
+		find_library(LUA_LIBRARY_DEBUG
+					NAMES luad
+					HINTS
+					ENV LUA_DIR
+					PATH_SUFFIXES lib)
+		set(LUA_LIBRARIES optimized ${LUA_LIBRARIES} debug ${LUA_LIBRARY_DEBUG})
+	endif()
 	message("Lua found!")
-	message("library: ${LUA_LIBRARY}")
+	message("libraries: ${LUA_LIBRARIES}")
 	message("include: ${LUA_INCLUDE_DIR}")
-	set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${LUA_LIBRARY})
+	set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${LUA_LIBRARIES})
 endif()
 
 find_package(Protobuf REQUIRED)
@@ -213,19 +221,18 @@ if(QTLUA_FOUND)
 	message("QtLua found!")
 	message("library: ${QTLUA_LIBRARY}")
 	message("include: ${QTLUA_INCLUDE_DIR}")
-	if(WIN32)
-		set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${QTLUA_LIBRARY})
-	endif()
 endif()
 
-find_package(QtLua-extras REQUIRED)
-if(QTLUAEXTRAS_FOUND)
-	message("QtLua-extras found!")
-	message("library: ${QTLUAEXTRAS_LIBRARY}")
-	message("include: ${QTLUAEXTRAS_INCLUDE_DIR}")
-	if(WIN32)
-		set(TERRAME_LIBRARIES ${TERRAME_LIBRARIES} ${QTLUAEXTRAS_LIBRARY})
-	endif()
+find_package(QtLuaExtras REQUIRED)
+if(QTLUA_EXTRAS_FOUND)
+	message("QtLuaExtras found!")
+	message("library: ${QTLUA_EXTRAS_LIBRARY}")
+	message("include: ${QTLUA_EXTRAS_INCLUDE_DIR}")
+endif()
+
+if(MSVC AND TERRAME_MEMORY_LEAK_DETECTOR)
+	find_package(VLD)
+	add_definitions(-DTERRAME_MEMORY_LEAK_DETECTOR)
 endif()
 
 #
@@ -329,11 +336,6 @@ if(NOT DEFINED CMAKE_INSTALL_PREFIX)
 	set(CMAKE_INSTALL_PREFIX ${TERRAME_ABSOLUTE_ROOT_DIR}/install)
 endif()
 
-# install(FILES ${PROTOBUF_INCLUDE_DIR}/../bin/*.dll
-		# DESTINATION bin/
-		# COMPONENT runtime
-		#)
-
 if(APPLE)
 	if(TERRAME_BUILD_AS_BUNDLE)
 		TmeInstallQtPlugins("qgif;qico;qjpeg;qmng;qtiff;qsvg;qsvgicon;qsqlite;qwindows;qcocoa")
@@ -397,10 +399,6 @@ if(APPLE)
 		        COMPONENT runtime)
 	endif()
 
-#	install(DIRECTORY ${TERRALIB_DIR}/share/data
-#			DESTINATION ${TERRAME_INSTALL_PREFIX}/share/data/
-#			COMPONENT runtime)
-
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share/terralib
 	        COMPONENT runtime)
@@ -453,13 +451,30 @@ elseif(WIN32)
 		        PATTERN "mac" EXCLUDE)
 	endif()
 
-	set(QTLUA_LIBRARY_DLL ${QTLUA_INCLUDE_DIR}/../../lib/qtlua.dll)
-	install(FILES ${QTLUA_LIBRARY_DLL}
+	install(FILES ${QTLUA_INCLUDE_DIR}/../lib/qtlua.dll
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
-	        COMPONENT runtime)
+	        COMPONENT runtime
+			CONFIGURATIONS Release)
 
-	set(QTLUAEXTRAS_LIBRARY_DLL ${QTLUAEXTRAS_INCLUDE_DIR}/../../lib/qtluae.dll)
-	install(FILES ${QTLUAEXTRAS_LIBRARY_DLL}
+	install(FILES ${QTLUA_INCLUDE_DIR}/../lib/qtluad.dll
+	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
+	        COMPONENT runtime
+			CONFIGURATIONS Debug)
+
+	set(QTLUA_EXTRAS_DLL ${CMAKE_INSTALL_PREFIX}/bin/qtluae.dll)
+
+	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+		get_filename_component(QTLUA_EXTRAS_DEBUG_DLL ${QTLUA_EXTRAS_INCLUDE_DIR}/../lib/qtluaed.dll ABSOLUTE)
+		add_custom_command(TARGET terrame
+							POST_BUILD
+							COMMAND ${CMAKE_COMMAND} -E copy "${QTLUA_EXTRAS_DEBUG_DLL}" "${CMAKE_INSTALL_PREFIX}/bin/qtluaed.dll"
+							COMMAND ${CMAKE_COMMAND} -E rename "${CMAKE_INSTALL_PREFIX}/bin/qtluaed.dll" "${CMAKE_INSTALL_PREFIX}/bin/qtluae.dll"
+							COMMENT "Renamed bin/qtluaed.dll to bin/qtluae.dll...\n"
+							VERBATIM)
+		set(QTLUA_EXTRAS_DLL ${CMAKE_INSTALL_PREFIX}/bin/qtluae.dll)
+	endif()
+
+	install(FILES ${QTLUA_EXTRAS_DLL}
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
 	        COMPONENT runtime)
 
@@ -480,7 +495,7 @@ elseif(WIN32)
 	                   POST_BUILD
 	                   COMMAND ${CMAKE_COMMAND} -E copy "${MSYS_DIR}/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find.exe"
 	                   COMMAND ${CMAKE_COMMAND} -E rename "${CMAKE_INSTALL_PREFIX}/bin/find.exe" "${CMAKE_INSTALL_PREFIX}/bin/find-msys.exe"
-	                   COMMENT "Renamed bin/find.exe to bin/find-msys.exe..."
+	                   COMMENT "Renamed bin/find.exe to bin/find-msys.exe...\n"
 	                   VERBATIM)
 
 	list(APPEND MSYS_DEPENDENCIES ${CMAKE_INSTALL_PREFIX}/bin/find-msys.exe)
@@ -564,7 +579,23 @@ elseif(WIN32)
 
 	install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}
-	        COMPONENT runtime)
+	        COMPONENT runtime
+			CONFIGURATIONS Release)
+
+	install(FILES ${CMAKE_INSTALL_DEBUG_LIBRARIES}
+	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}
+	        COMPONENT runtime
+			CONFIGURATIONS Debug)
+			
+	if(TERRAME_MEMORY_LEAK_DETECTOR)
+		set(VLD_DIR ${VLD_INCLUDE_DIR}/..)
+		install(FILES ${VLD_DIR}/bin/Win64/Microsoft.DTfW.DHL.manifest
+				DESTINATION ${TERRAME_DESTINATION_RUNTIME}
+				COMPONENT runtime)	
+		install(FILES ${VLD_DIR}/bin/Win64/dbghelp.dll
+				DESTINATION ${TERRAME_DESTINATION_RUNTIME}
+				COMPONENT runtime)				
+	endif()
 else(UNIX)
 	set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
 
