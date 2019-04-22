@@ -122,17 +122,18 @@ TEST_F(QGisTest, ReadWebLayerQGisV2)
 	ASSERT_EQ(qgp.getLayers().size(), 2);
 
 	terrame::qgis::QGisLayer layer = qgp.getLayers().at(0);
-	ASSERT_STREQ(layer.getName().c_str(), "LANDSAT2013");
+	ASSERT_STREQ(layer.getName().c_str(), "Cerrado States");
 	ASSERT_EQ(layer.getSrid(), 4326);
-	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.info/geoserver/ows");
-	ASSERT_STREQ(layer.getUri().query().c_str(), "format=png&layers=Prodes_2013:LANDSAT2013");
+	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.dpi.inpe.br/geoserver/ows");
+	ASSERT_STREQ(layer.getUri().query().c_str(), "format=png&layers=prodes-cerrado:estados");
 	ASSERT_STREQ(layer.getUri().scheme().c_str(), "wms");
 
 	layer = qgp.getLayers().at(1);
-	ASSERT_STREQ(layer.getName().c_str(), "reddpac:LandCover2000");
-	ASSERT_EQ(layer.getSrid(), 4326);
-	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.info/redd-pac/wfs");
-	ASSERT_STREQ(layer.getUri().query().c_str(), "reddpac:LandCover2000");
+	ASSERT_STREQ(layer.getName().c_str(), "prodes-legal-amz:brazilian_legal_amazon");
+	ASSERT_EQ(layer.getSrid(), 4674);
+	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.dpi.inpe.br/geoserver/ows");
+	ASSERT_STREQ(layer.getUri().query().c_str(), "version=2.0.0&");
+	ASSERT_STREQ(layer.getUri().fragment().c_str(), "prodes-legal-amz:brazilian_legal_amazon");
 	ASSERT_STREQ(layer.getUri().scheme().c_str(), "wfs");
 }
 
@@ -245,17 +246,18 @@ TEST_F(QGisTest, ReadWebLayerQGisV3)
 	ASSERT_EQ(qgp.getLayers().size(), 2);
 
 	terrame::qgis::QGisLayer layer = qgp.getLayers().at(0);
-	ASSERT_STREQ(layer.getName().c_str(), "LANDSAT2013");
+	ASSERT_STREQ(layer.getName().c_str(), "Cerrado States");
 	ASSERT_EQ(layer.getSrid(), 4326);
-	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.info/geoserver/ows");
-	ASSERT_STREQ(layer.getUri().query().c_str(), "format=png&layers=Prodes_2013:LANDSAT2013");
+	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.dpi.inpe.br/geoserver/ows");
+	ASSERT_STREQ(layer.getUri().query().c_str(), "format=png&layers=prodes-cerrado:estados");
 	ASSERT_STREQ(layer.getUri().scheme().c_str(), "wms");
 
 	layer = qgp.getLayers().at(1);
-	ASSERT_STREQ(layer.getName().c_str(), "reddpac:LandCover2000");
-	ASSERT_EQ(layer.getSrid(), 4326);
-	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.info/redd-pac/wfs");
-	ASSERT_STREQ(layer.getUri().query().c_str(), "reddpac:LandCover2000");
+	ASSERT_STREQ(layer.getName().c_str(), "prodes-legal-amz:brazilian_legal_amazon");
+	ASSERT_EQ(layer.getSrid(), 4674);
+	ASSERT_STREQ(layer.getUri().path().c_str(), "http://terrabrasilis.dpi.inpe.br/geoserver/ows");
+	ASSERT_STREQ(layer.getUri().query().c_str(), "version=2.0.0");
+	ASSERT_STREQ(layer.getUri().fragment().c_str(), "prodes-legal-amz:brazilian_legal_amazon");
 	ASSERT_STREQ(layer.getUri().scheme().c_str(), "wfs");
 }
 
@@ -424,7 +426,7 @@ TEST_F(QGisTest, InsertWfsLayerQGisV3)
 	layer.setSpatialRefSys("+proj=longlat +ellps=GRS80 +no_defs",
 		"Unknown datum based upon the GRS 1980 ellipsoid");
 	layer.setType("vector");
-	layer.setUri(te::core::URI("WFS:http://terrabrasilis.info/redd-pac/wfs"));
+	layer.setUri(te::core::URI("WFS:http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=2.0.0&"));
 
 	qgp.addLayer(layer);
 
@@ -435,8 +437,9 @@ TEST_F(QGisTest, InsertWfsLayerQGisV3)
 	terrame::qgis::QGisLayer l2 = qgp2.getLayerByName("LayerWfs");
 	ASSERT_STREQ(l2.getName().c_str(), "LayerWfs");
 	ASSERT_EQ(l2.getSrid(), 4903);
-	ASSERT_STREQ(l2.getUri().path().c_str(), "http://terrabrasilis.info/redd-pac/wfs");
-	ASSERT_STREQ(l2.getUri().query().c_str(), "data:set");
+	ASSERT_STREQ(l2.getUri().path().c_str(), "http://terrabrasilis.dpi.inpe.br/geoserver/ows");
+	ASSERT_STREQ(l2.getUri().query().c_str(), "service=wfs&version=2.0.0&");
+	ASSERT_STREQ(l2.getUri().fragment().c_str(), "data:set");
 
 	boost::filesystem::remove(boost::filesystem::path(qgscopy));
 }

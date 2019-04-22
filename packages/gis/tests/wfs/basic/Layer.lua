@@ -31,9 +31,9 @@ return {
 			clean = true
 		}
 
-		local layerName = "BAU"
-		local service = "http://terrabrasilis.info/redd-pac/wfs"
-		local feature = "reddpac:wfs_biomes"
+		local layerName = "Cerrado"
+		local service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=2.0.0&"
+		local feature = "prodes-cerrado:limite_cerrado"
 		local epsg = 4601
 		local encoding = "utf8"
 
@@ -61,7 +61,7 @@ return {
 				feature = feature,
 			}
 
-			unitTest:assertEquals(layer2.epsg, 4326) -- SKIP
+			unitTest:assertEquals(layer2.epsg, 4674) -- SKIP
 			unitTest:assertEquals(layer2.encoding, "latin1") -- SKIP
 		else
 			customError("WFS server '.."..service.."' is not responding, try again later.") -- SKIP
@@ -79,7 +79,7 @@ return {
 
 		local biomesName = "biomes"
 		local prodesName = "prodes"
-		local service = "http://terrabrasilis.info/redd-pac/wfs"
+		local service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=2.0.0&"
 		local epsg = 4601
 		local encoding = "utf8"
 
@@ -209,8 +209,8 @@ return {
 			local prodesWfs = Layer{
 				project = proj,
 				name = "prodesWfs",
-				service = "http://terrabrasilis.info/redd-pac/wfs",
-				feature = "reddpac:wfs_simus_prodes"
+				service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=2.0.0&",
+				feature = "prodes-cerrado:limite_cerrado"
 			}
 
 			prodesWfs:export{file = "prodes.shp", overwrite = true, progress = false}

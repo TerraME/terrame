@@ -42,8 +42,8 @@ return {
 		TerraLib().createProject(proj, {})
 
 		local layerName = "WMS-Layer"
-		local url = "http://terrabrasilis.info/geoserver/ows"
-		local dataset = "Auxiliares:Global Land Cover 2000"
+		local url = "http://terrabrasilis.dpi.inpe.br/geoserver/ows"
+		local dataset = "prodes-cerrado:temporal_mosaic_cerrado"
 		local directory = currentDir()
 		local srid = 29901
 
@@ -86,8 +86,8 @@ return {
 			TerraLib().createProject(qgp, {})
 
 			local layerName = "LayerWMS"
-			local url = "http://terrabrasilis.info/geoserver/ows"
-			local dataset = "Prodes_2013:LANDSAT2013"
+			local url = "http://terrabrasilis.dpi.inpe.br/geoserver/ows"
+			local dataset = "prodes-legal-amz:temporal_mosaic_legal_amazon"
 			local srid = 29901
 			local directory = currentDir()
 			local conn = {

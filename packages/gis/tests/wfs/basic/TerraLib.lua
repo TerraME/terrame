@@ -37,8 +37,8 @@ return {
 		TerraLib().createProject(proj, {})
 
 		local layerName = "WFS-Layer"
-		local url = "http://terrabrasilis.info/redd-pac/wfs"
-		local dataset = "reddpac:wfs_biomes"
+		local url = "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=2.0.0&"
+		local dataset = "prodes-cerrado:estados"
 		local srid = 29901
 		local encoding = "UTF-8"
 
@@ -93,8 +93,8 @@ return {
 			TerraLib().createProject(qgp, {})
 
 			local layerName = "LayerWFS"
-			local url = "http://terrabrasilis.info/redd-pac/wfs"
-			local dataset = "reddpac:wfs_biomes"
+			local url = "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=2.0.0&"
+			local dataset = "prodes-legal-amz:brazilian_legal_amazon"
 			local srid = 29901
 
 			TerraLib().addWfsLayer(qgp, layerName, url, dataset, srid)
@@ -134,8 +134,8 @@ return {
 
 
 			local l1Name = "LayerWfs"
-			local url = "http://terrabrasilis.info/redd-pac/wfs"
-			local dataset = "reddpac:wfs_biomes"
+			local url = "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=2.0.0&"
+			local dataset = "prodes-legal-amz:brazilian_legal_amazon"
 
 			TerraLib().addWfsLayer(proj, l1Name, url, dataset)
 
@@ -157,9 +157,8 @@ return {
 			unitTest:assertEquals(l1Props[3].name, l2Props[3].name)
 			unitTest:assertEquals(l1Props[4].name, l2Props[4].name)
 			unitTest:assertEquals(l1Props[5].name, l2Props[5].name)
-			unitTest:assertEquals(l1Props[6].name, l2Props[6].name)
-			unitTest:assertNil(l1Props[7])
-			unitTest:assertNil(l2Props[7])
+			unitTest:assertNil(l1Props[6])
+			unitTest:assertNil(l2Props[6])
 
 			toData.file:delete()
 			proj.file:delete()

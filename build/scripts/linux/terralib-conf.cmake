@@ -37,6 +37,7 @@ set(TERRALIB_BUILD_UNITTEST_ENABLED OFF CACHE BOOL "Build the unit tests?" FORCE
 set(TERRALIB_TRACK_3RDPARTY_DEPENDENCIES OFF CACHE BOOL "Track the 3rd-parties on instalation?" FORCE)
 set(TERRALIB_BUILD_AS_BUNDLE OFF CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "Build testing?" FORCE)
+set(TERRALIB_TRANSLATOR_ENABLED OFF CACHE BOOL "Enable translator support?" FORCE)
 
 # Enabling modules
 set(TERRALIB_MOD_MNT_CORE_ENABLED ON CACHE BOOL "Build MNT Processing Core module?" FORCE)

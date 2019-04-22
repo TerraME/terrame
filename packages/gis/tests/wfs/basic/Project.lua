@@ -37,8 +37,8 @@ return {
 			local l2 = Layer{
 				project = qgp,
 				name = "LayerWFS",
-				service = "http://terrabrasilis.info/redd-pac/wfs",
-				feature = "reddpac:wfs_biomes"
+				service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=2.0.0&",
+				feature = "prodes-legal-amz:brazilian_legal_amazon"
 			}
 
 			local qgp2 =  Project{

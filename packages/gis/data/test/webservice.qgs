@@ -1,14 +1,14 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis projectname="" version="2.18.0">
+<qgis projectname="" version="2.18.28">
   <title></title>
   <autotransaction active="0"/>
   <evaluateDefaultValues active="0"/>
   <layer-tree-group expanded="1" checked="Qt::Checked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="LANDSAT201320170814161519198" name="LANDSAT2013">
+    <layer-tree-layer expanded="1" providerKey="wms" checked="Qt::Checked" id="Cerrado_States20190409102911202" source="contextualWMSLegend=0&amp;crs=EPSG:4326&amp;dpiMode=7&amp;featureCount=10&amp;format=image/png&amp;layers=prodes-cerrado:estados&amp;styles=&amp;url=http://terrabrasilis.dpi.inpe.br/geoserver/ows" name="Cerrado States">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="reddpac_LandCover200020170724154939127" name="reddpac:LandCover2000">
+    <layer-tree-layer expanded="1" providerKey="WFS" checked="Qt::Checked" id="prodes_legal_amz_brazilian_legal_amazon20190409102746861" source=" restrictToRequestBBOX='1' srsname='EPSG:4674' typename='prodes-legal-amz:brazilian_legal_amazon' url='http://terrabrasilis.dpi.inpe.br/geoserver/ows?version=2.0.0&amp;' version='auto' table=&quot;&quot; sql=" name="prodes-legal-amz:brazilian_legal_amazon">
       <customproperties/>
     </layer-tree-layer>
   </layer-tree-group>
@@ -16,64 +16,63 @@
   <mapcanvas>
     <units>degrees</units>
     <extent>
-      <xmin>-74.97921218872072302</xmin>
-      <ymin>-34.72502251863480183</ymin>
-      <xmax>-33.85422286987308382</xmax>
-      <ymax>6.22496196031571003</ymax>
+      <xmin>-74.74195084141473444</xmin>
+      <ymin>-18.62461646175000141</ymin>
+      <xmax>-43.20084874148793119</xmax>
+      <ymax>5.85507479175002032</ymax>
     </extent>
     <rotation>0</rotation>
-    <projections>0</projections>
+    <projections>1</projections>
     <destinationsrs>
       <spatialrefsys>
-        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
-        <srsid>3452</srsid>
-        <srid>4326</srid>
-        <authid>EPSG:4326</authid>
-        <description>WGS 84</description>
+        <proj4>+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs</proj4>
+        <srsid>3517</srsid>
+        <srid>4674</srid>
+        <authid>EPSG:4674</authid>
+        <description>SIRGAS 2000</description>
         <projectionacronym>longlat</projectionacronym>
-        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <ellipsoidacronym>GRS80</ellipsoidacronym>
         <geographicflag>true</geographicflag>
       </spatialrefsys>
     </destinationsrs>
     <rendermaptile>0</rendermaptile>
     <layer_coordinate_transform_info>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4019" srcDatumTransform="-1" destDatumTransform="-1" layerid="sampa20170724153352835"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vegtype_200020170724153315917"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="biomassa_manaus20170724153344180"/>
+      <layer_coordinate_transform destAuthId="EPSG:4674" srcAuthId="EPSG:4674" srcDatumTransform="-1" destDatumTransform="-1" layerid="prodes_legal_amz_brazilian_legal_amazon20190409102746861"/>
+      <layer_coordinate_transform destAuthId="EPSG:4674" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="Cerrado_States20190409102911202"/>
     </layer_coordinate_transform_info>
   </mapcanvas>
   <layer-tree-canvas>
     <custom-order enabled="0">
-      <item>reddpac_LandCover200020170724154939127</item>
-      <item>LANDSAT201320170814161519198</item>
+      <item>prodes_legal_amz_brazilian_legal_amazon20190409102746861</item>
+      <item>Cerrado_States20190409102911202</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="LANDSAT2013" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Cerrado States" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="LANDSAT201320170814161519198" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="Cerrado_States20190409102911202" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="reddpac:LandCover2000" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="prodes-legal-amz:brazilian_legal_amazon" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="reddpac_LandCover200020170724154939127" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="prodes_legal_amz_brazilian_legal_amazon20190409102746861" visible="1"/>
       </filegroup>
     </legendlayer>
   </legend>
   <projectlayers>
     <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
       <extent>
-        <xmin>-75.18767599999999618</xmin>
-        <ymin>-18.42369758992556683</ymin>
-        <xmax>-42.54174263057062433</xmax>
-        <ymax>6.83652899999999963</ymax>
+        <xmin>-60.10992910267059841</xmin>
+        <ymin>-24.68511942560489913</ymin>
+        <xmax>-41.52247147727779719</xmax>
+        <ymax>-2.32670912054644985</ymax>
       </extent>
-      <id>LANDSAT201320170814161519198</id>
-      <datasource>contextualWMSLegend=0&amp;crs=EPSG:4326&amp;dpiMode=7&amp;featureCount=10&amp;format=image/png&amp;layers=Prodes_2013:LANDSAT2013&amp;styles=&amp;url=http://terrabrasilis.info/geoserver/ows</datasource>
+      <id>Cerrado_States20190409102911202</id>
+      <datasource>contextualWMSLegend=0&amp;crs=EPSG:4326&amp;dpiMode=7&amp;featureCount=10&amp;format=image/png&amp;layers=prodes-cerrado:estados&amp;styles=&amp;url=http://terrabrasilis.dpi.inpe.br/geoserver/ows</datasource>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>LANDSAT2013</layername>
+      <layername>Cerrado States</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
@@ -106,80 +105,46 @@
       </pipe>
       <blendMode>0</blendMode>
     </maplayer>
-    <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" readOnly="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+    <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <extent>
-        <xmin>-74.00004577636720171</xmin>
-        <ymin>-33.75002288818360086</ymin>
-        <xmax>-34.83338928222659803</xmax>
-        <ymax>5.24996232986450018</ymax>
+        <xmin>-73.99097221998790985</xmin>
+        <ymin>-18.04176667000000123</ymin>
+        <xmax>-43.95182736291476999</xmax>
+        <ymax>5.27222500000002015</ymax>
       </extent>
-      <id>reddpac_LandCover200020170724154939127</id>
-      <datasource> restrictToRequestBBOX='1' srsname='EPSG:4326' typename='reddpac:LandCover2000' url='http://terrabrasilis.info/redd-pac/wfs' version='auto' table="" sql=</datasource>
+      <id>prodes_legal_amz_brazilian_legal_amazon20190409102746861</id>
+      <datasource> restrictToRequestBBOX='1' srsname='EPSG:4674' typename='prodes-legal-amz:brazilian_legal_amazon' url='http://terrabrasilis.dpi.inpe.br/geoserver/ows?version=2.0.0&amp;' version='auto' table="" sql=</datasource>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>reddpac:LandCover2000</layername>
+      <layername>prodes-legal-amz:brazilian_legal_amazon</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
-          <srsid>3452</srsid>
-          <srid>4326</srid>
-          <authid>EPSG:4326</authid>
-          <description>WGS 84</description>
+          <proj4>+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs</proj4>
+          <srsid>3517</srsid>
+          <srid>4674</srid>
+          <authid>EPSG:4674</authid>
+          <description>SIRGAS 2000</description>
           <projectionacronym>longlat</projectionacronym>
-          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <ellipsoidacronym>GRS80</ellipsoidacronym>
           <geographicflag>true</geographicflag>
         </spatialrefsys>
       </srs>
-      <provider encoding="System">WFS</provider>
-      <previewExpression></previewExpression>
+      <provider encoding="UTF-8">WFS</provider>
       <vectorjoins/>
       <layerDependencies/>
       <expressionfields/>
-      <defaults>
-        <default field="colrow" expression=""/>
-        <default field="grd30" expression=""/>
-        <default field="hru" expression=""/>
-        <default field="forest2000" expression=""/>
-        <default field="natlnd2000" expression=""/>
-        <default field="grass2000" expression=""/>
-        <default field="crplnd2000" expression=""/>
-        <default field="othagri200" expression=""/>
-        <default field="wetlnd2000" expression=""/>
-        <default field="notrel2000" expression=""/>
-      </defaults>
       <map-layer-style-manager current="">
         <map-layer-style name=""/>
       </map-layer-style-manager>
       <edittypes>
-        <edittype widgetv2type="TextEdit" name="colrow">
+        <edittype widgetv2type="TextEdit" name="sprarea">
           <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="grd30">
+        <edittype widgetv2type="TextEdit" name="sprperimet">
           <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="hru">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="forest2000">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="natlnd2000">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="grass2000">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="crplnd2000">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="othagri200">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="wetlnd2000">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="notrel2000">
+        <edittype widgetv2type="TextEdit" name="sprclasse">
           <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
         </edittype>
       </edittypes>
@@ -188,7 +153,7 @@
           <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="89,112,161,255"/>
+              <prop k="color" v="213,25,210,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -209,7 +174,7 @@
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerTransparency>0</layerTransparency>
-      <displayfield>colrow</displayfield>
+      <displayfield>sprarea</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Rótulo"/>
@@ -231,29 +196,22 @@
         <multilineenabled fieldname="" on=""/>
         <selectedonly on=""/>
       </labelattributes>
-      <annotationform>.</annotationform>
+      <annotationform></annotationform>
       <aliases>
-        <alias field="colrow" index="0" name=""/>
-        <alias field="grd30" index="1" name=""/>
-        <alias field="hru" index="2" name=""/>
-        <alias field="forest2000" index="3" name=""/>
-        <alias field="natlnd2000" index="4" name=""/>
-        <alias field="grass2000" index="5" name=""/>
-        <alias field="crplnd2000" index="6" name=""/>
-        <alias field="othagri200" index="7" name=""/>
-        <alias field="wetlnd2000" index="8" name=""/>
-        <alias field="notrel2000" index="9" name=""/>
+        <alias field="sprarea" index="0" name=""/>
+        <alias field="sprperimet" index="1" name=""/>
+        <alias field="sprclasse" index="2" name=""/>
       </aliases>
       <excludeAttributesWMS/>
       <excludeAttributesWFS/>
       <attributeactions default="-1"/>
-      <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="158">
+      <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="175162936">
         <columns/>
       </attributetableconfig>
-      <editform>.</editform>
+      <editform></editform>
       <editforminit/>
       <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath>.</editforminitfilepath>
+      <editforminitfilepath></editforminitfilepath>
       <editforminitcode><![CDATA[]]></editforminitcode>
       <featformsuppress>0</featformsuppress>
       <editorlayout>generatedlayout</editorlayout>
@@ -262,6 +220,12 @@
         <rowstyles/>
         <fieldstyles/>
       </conditionalstyles>
+      <defaults>
+        <default field="sprarea" expression=""/>
+        <default field="sprperimet" expression=""/>
+        <default field="sprclasse" expression=""/>
+      </defaults>
+      <previewExpression></previewExpression>
     </maplayer>
   </projectlayers>
   <properties>
@@ -273,6 +237,7 @@
       <ProjectCRSProj4String type="QString">+proj=longlat +datum=WGS84 +no_defs</ProjectCRSProj4String>
       <ProjectCrs type="QString">EPSG:4326</ProjectCrs>
       <ProjectCRSID type="int">3452</ProjectCRSID>
+      <ProjectionsEnabled type="int">1</ProjectionsEnabled>
     </SpatialRefSys>
     <Paths>
       <Absolute type="bool">false</Absolute>

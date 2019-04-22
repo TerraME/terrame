@@ -51,7 +51,7 @@ return {
 		end
 		unitTest:assertError(invalidUrl, "The URL 'http://terrabrasilis.info/terraamazon/ow' is invalid.")
 
-		conn.url = "http://terrabrasilis.info/terraamazon/ows"
+		conn.url = "http://terrabrasilis.dpi.inpe.br/geoserver/ows"
 		dataset = "INVALID_DATASET"
 
 		local wmsDir = Directory("wms")

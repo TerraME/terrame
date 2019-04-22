@@ -23,15 +23,13 @@
 # of this software and its documentation.
 
 if [ -z "$_TERRALIB_TARGET_3RDPARTY_DIR" ]; then
-  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/5.4"
+  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/libs"
 fi
 
 if [ -z "$_TERRAME_TARGET_3RDPARTY_DIR" ]; then
   export _TERRAME_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terrame/3rdparty"
 fi
 
-_TERRALIB_VERSION="5.4"
-_TERRALIB_BRANCH="release-$_TERRALIB_VERSION"
 export _TERRALIB_3RDPARTY_NAME="terralib-3rdparty-macos-sierra.tar.gz"
 export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/$_TERRALIB_3RDPARTY_NAME"
 

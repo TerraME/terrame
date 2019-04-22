@@ -42,8 +42,8 @@ return {
 			local l2 = Layer{
 				project = qgp,
 				name = "LayerWMS",
-				service = "http://terrabrasilis.info/geoserver/ows",
-				map = "Prodes_2013:LANDSAT2013"
+				service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows",
+				map = "prodes-legal-amz:temporal_mosaic_legal_amazon"
 			}
 
 			local qgp2 =  Project{
