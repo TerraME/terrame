@@ -45,7 +45,7 @@ if "%_Qt5_DIR%" == "" (
 
 :: Checking msys dir or setting default
 if "%_MSYS_DIR%" == "" (
-  set _MSYS_DIR=C:\MinGW\msys\1.0\bin
+  set _MSYS_DIR=C:\msys64\usr\bin
 )
 
 :: Location to install TerraLib

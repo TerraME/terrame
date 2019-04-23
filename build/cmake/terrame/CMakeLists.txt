@@ -482,7 +482,7 @@ elseif(WIN32)
 	                              ${MSYS_DIR}/ls.exe
 	                              ${MSYS_DIR}/md5sum.exe
 	                              ${MSYS_DIR}/mktemp.exe
-	                              ${MSYS_DIR}/msys-1.0.dll
+	                              ${MSYS_DIR}/msys-2.0.dll
 	                              ${MSYS_DIR}/msys-iconv-2.dll
 	                              ${MSYS_DIR}/msys-intl-8.dll
 	                              ${MSYS_DIR}/rm.exe
