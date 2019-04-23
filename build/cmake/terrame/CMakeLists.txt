@@ -461,7 +461,7 @@ elseif(WIN32)
 	        COMPONENT runtime
 			CONFIGURATIONS Debug)
 
-	set(QTLUA_EXTRAS_DLL ${CMAKE_INSTALL_PREFIX}/bin/qtluae.dll)
+	set(QTLUA_EXTRAS_DLL ${QTLUA_EXTRAS_INCLUDE_DIR}/../lib/qtluae.dll)
 
 	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 		get_filename_component(QTLUA_EXTRAS_DEBUG_DLL ${QTLUA_EXTRAS_INCLUDE_DIR}/../lib/qtluaed.dll ABSOLUTE)
