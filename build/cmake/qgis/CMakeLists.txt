@@ -28,11 +28,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
 find_library(TERRALIB_CORE_LIBRARY
-			NAMES terralib_mod_core
+			NAMES terralib_mod_core terralib_mod_cored
 			PATHS ${TERRALIB_DIR}/lib)
 
 find_library(TERRALIB_XML_LIBRARY
-			NAMES terralib_mod_xml
+			NAMES terralib_mod_xml terralib_mod_xmld
 			PATHS ${TERRALIB_DIR}/lib)
 
 find_path(TERRALIB_INCLUDE_DIR terralib.h

@@ -23,8 +23,17 @@
 
 find_package(Lua REQUIRED)
 if(LUA_FOUND)
+	if(MSVC)
+		find_library(LUA_LIBRARY_DEBUG
+					NAMES luad
+					HINTS
+					ENV LUA_DIR
+					PATH_SUFFIXES lib)		
+		set(LUA_LIBRARIES optimized ${LUA_LIBRARIES} debug ${LUA_LIBRARY_DEBUG})
+		set(CMAKE_DEBUG_POSTFIX "")
+	endif()
 	message("Lua found!")
-	message("library: ${LUA_LIBRARY}")
+	message("libraries: ${LUA_LIBRARIES}")
 	message("include: ${LUA_INCLUDE_DIR}")
 else()
 	message("Lua not found!")
@@ -48,7 +57,7 @@ SWIG_ADD_LIBRARY(
 	SOURCES ${TERRAME_SWIG_SCRIPT_FILE}
 )
 
-SWIG_LINK_LIBRARIES(swig qgis ${LUA_LIBRARY})
+SWIG_LINK_LIBRARIES(swig qgis ${LUA_LIBRARIES})
 
 set_target_properties(swig PROPERTIES PREFIX "")
 

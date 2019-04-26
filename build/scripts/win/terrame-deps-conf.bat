@@ -20,17 +20,20 @@
 :: of this software and its documentation.
 
 set "_ROOT_DIR=%CD%"
-set "_BUILD_TYPE=Release"
 
 mkdir "build"
 cd "build"
 mkdir "protobuf-build"
 cd "protobuf-build"
 
+set "_BUILD_TYPE=Debug"
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=%_BUILD_TYPE% -DCMAKE_INSTALL_PREFIX=..\..\install -DCMAKE_DEBUG_POSTFIX="d" -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_WITH_ZLIB=OFF -Dprotobuf_BUILD_TESTS=OFF ..\..\protobuf\cmake
+cmake --build . --target INSTALL --config %_BUILD_TYPE%
+set "_BUILD_TYPE=Release"
 cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=%_BUILD_TYPE% -DCMAKE_INSTALL_PREFIX=..\..\install -Dprotobuf_BUILD_SHARED_LIBS=ON -Dprotobuf_WITH_ZLIB=OFF -Dprotobuf_BUILD_TESTS=OFF ..\..\protobuf\cmake
 cmake --build . --target INSTALL --config %_BUILD_TYPE%
 
 cd %_ROOT_DIR%
 
 mkdir %CD%\install\luacheck\src
-xcopy luacheck\src %CD%\install\luacheck\src /S /E
+xcopy luacheck\src %CD%\install\luacheck\src /S /E /Y

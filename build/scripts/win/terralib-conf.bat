@@ -48,6 +48,14 @@ if "%_TERRALIB_GIT_DIR%" == "" (
   set _TERRALIB_GIT_DIR=../../git/terralib
 )
 
+if "%_TERRALIB_BUILD_TYPE%" == "" (
+  set _TERRALIB_BUILD_TYPE=Release
+)
+
+if "%_TERRALIB_VLD_DIR%" == "" (
+  set "_TERRALIB_VLD_DIR=C:/Program Files (x86)/Visual Leak Detector"
+)
+
 :: -----------------
 :: Configuring output folder
 :: -----------------
@@ -67,4 +75,4 @@ cd %_TERRALIB_OUT_DIR%
 cmake -G "Visual Studio 15 2017 Win64" -C terralib-conf.cmake %_TERRALIB_GIT_DIR%/build/cmake
 
 :: Building and installing
-cmake --build . --target INSTALL --config Release
+cmake --build . --target INSTALL --config %_TERRALIB_BUILD_TYPE%

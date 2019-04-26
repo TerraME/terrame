@@ -40,12 +40,12 @@ if "%_TERRALIB_MODULES_DIR%" == "" (
 
 :: Checking qt5 dir or setting default
 if "%_Qt5_DIR%" == "" (
-  set _Qt5_DIR=C:\Qt\5.11.2\msvc2017_64
+  set _Qt5_DIR=C:\Qt\5.10.1\msvc2017_64
 )
 
 :: Checking msys dir or setting default
 if "%_MSYS_DIR%" == "" (
-  set _MSYS_DIR=C:\MinGW\msys\1.0\bin
+  set _MSYS_DIR=C:\msys64\usr\bin
 )
 
 :: Location to install TerraLib
@@ -71,6 +71,14 @@ if "%_TERRAME_CREATE_INSTALLER%" == "" (
   set _TERRAME_CREATE_INSTALLER=OFF
 )
 
+if "%_TERRAME_BUILD_TYPE%" == "" (
+  set _TERRAME_BUILD_TYPE=Release
+)
+
+if "%_TERRAME_VLD_DIR%" == "" (
+  set "_TERRAME_VLD_DIR=C:/Program Files (x86)/Visual Leak Detector"
+)
+
 :: -----------------
 :: Configuring output folder
 :: -----------------
@@ -90,4 +98,4 @@ cd %_TERRAME_OUT_DIR%
 cmake -G "Visual Studio 15 2017 Win64" -C terrame-conf.cmake %_TERRAME_GIT_DIR%/build/cmake
 
 :: Building and installing terrame
-cmake --build . --target INSTALL --config Release
+cmake --build . --target INSTALL --config %_TERRAME_BUILD_TYPE%

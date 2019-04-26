@@ -22,7 +22,7 @@
 
 # Main configurations
 set(CMAKE_INSTALL_PREFIX "$ENV{_TERRALIB_INSTALL_PATH}" CACHE PATH "Where to install TerraLib?" FORCE)
-set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR}" CACHE PATH "Where are the dependencies of TerraLib?" FORCE)
+set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR};$ENV{_TERRALIB_VLD_DIR}" CACHE PATH "Where are the dependencies of TerraLib?" FORCE)
 
 set(SWIG_EXECUTABLE "$ENV{_TERRALIB_3RDPARTY_DIR}/swig/swig.exe" CACHE FILEPATH "Where are the SWIG?" FORCE)
 set(TERRALIB_DIR_VAR_NAME "TME_PATH" CACHE STRING "Name of an environment variable with the base installation path of TerraLib")
@@ -35,7 +35,8 @@ set(TERRALIB_TRACK_3RDPARTY_DEPENDENCIES OFF CACHE BOOL "Track the 3rd-parties o
 set(TERRALIB_BUILD_AS_BUNDLE ON CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
 set(terralib4_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}/lib/cmake/terralib-4.2.2" CACHE PATH "TerraLib4?" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "Build testing?" FORCE)
-set(TERRALIB_TRANSLATOR_ENABLED OFF CACHE BOOL "Enable translator support?" FORCE)
+set(TERRALIB_LEAK_DETECTOR_ENABLED OFF CACHE BOOL "Enable Win Visual Leak Detector?" FORCE)
+set(USE_QT5 OFF CACHE BOOL "Disabled Qt" FORCE)
 
 # Enabling modules
 set(TERRALIB_MOD_MNT_CORE_ENABLED ON CACHE BOOL "Build MNT Processing Core module?" FORCE)

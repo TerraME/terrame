@@ -30,6 +30,7 @@ set(SWIG_EXECUTABLE "$ENV{_TERRALIB_3RDPARTY_DIR}/bin/swig" CACHE FILEPATH "Wher
 set(TERRALIB_DIR_VAR_NAME "TME_PATH" CACHE STRING "Name of an environment variable with the base installation path of TerraLib")
 set(BOOST_ROOT "$ENV{_TERRALIB_3RDPARTY_DIR}" CACHE PATH "Boost directory" FORCE)
 set(Qt5_DIR "" CACHE PATH "Disabled Qt" FORCE)
+set(USE_QT5 OFF CACHE BOOL "Disabled Qt" FORCE)
 
 # Specific configurations
 set(TERRALIB_BUILD_EXAMPLES_ENABLED OFF CACHE BOOL "Build the examples?" FORCE)

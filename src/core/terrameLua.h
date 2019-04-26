@@ -39,3 +39,7 @@ of this software and its documentation.
 
 #endif
 
+#ifdef TERRAME_MEMORY_LEAK_DETECTOR
+	#include <vld.h>
+#endif
+
