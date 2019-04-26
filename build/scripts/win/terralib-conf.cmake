@@ -36,6 +36,7 @@ set(TERRALIB_BUILD_AS_BUNDLE ON CACHE BOOL "If on, tells that the build will gen
 set(terralib4_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}/lib/cmake/terralib-4.2.2" CACHE PATH "TerraLib4?" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "Build testing?" FORCE)
 set(TERRALIB_LEAK_DETECTOR_ENABLED OFF CACHE BOOL "Enable Win Visual Leak Detector?" FORCE)
+set(USE_QT5 OFF CACHE BOOL "Disabled Qt" FORCE)
 
 # Enabling modules
 set(TERRALIB_MOD_MNT_CORE_ENABLED ON CACHE BOOL "Build MNT Processing Core module?" FORCE)

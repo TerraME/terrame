@@ -662,7 +662,10 @@ else(UNIX)
 	                   ${Qt5_DIR}/../../libkmlengine*so*
 	                   ${Qt5_DIR}/../../libkmlbase*so*
 	                   ${Qt5_DIR}/../../libminizip*so*
+	                   /lib/x86_64-linux-gnu/libpng*so*
 	                   ${Qt5_DIR}/../../../liburiparser*so*)
+					   
+	list(FILTER Qt5_LIBS EXCLUDE REGEX "libkml*_*")
 
 	install(FILES ${Qt5_LIBS}
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
@@ -691,7 +694,8 @@ else(UNIX)
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libfreexl*so*
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libpcre*so*
 	                                ${TERRALIB_3RDPARTY_DIR}/pgsql/lib/libpq*so*
-	                                ${TERRALIB_3RDPARTY_DIR}/lib/libgdal.so*)
+	                                ${TERRALIB_3RDPARTY_DIR}/lib/libgdal.so*
+	                                ${TERRALIB_3RDPARTY_DIR}/lib/libcurl*so*)
 
 	install(FILES ${TERRALIB_DEPENDENCIES}
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
