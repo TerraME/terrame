@@ -485,6 +485,7 @@ elseif(WIN32)
 	                              ${MSYS_DIR}/msys-2.0.dll
 	                              ${MSYS_DIR}/msys-iconv-2.dll
 	                              ${MSYS_DIR}/msys-intl-8.dll
+				      ${MSYS_DIR}/msys-bz2-1.dll
 	                              ${MSYS_DIR}/rm.exe
 	                              ${MSYS_DIR}/touch.exe
 	                              ${MSYS_DIR}/unzip.exe
