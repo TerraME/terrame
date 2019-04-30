@@ -72,10 +72,12 @@ curl -O $_TERRALIB_TARGET_URL
 valid_operation $? "Error. Check $_TERRALIB_TARGET_URL"
 
 echo -ne "Cloning TerraLib ... "
+rm -rf terralib
 git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git --quiet
 valid_operation $? "Error. Could not clone TerraLib $_TERRALIB_BRANCH"
 
 echo -ne "Cloning TerraME ... "
+rm -rf terrame
 git clone https://github.com/TerraME/terrame.git terrame --quiet
 valid_operation $? "Error: Could not download TerraME"
 
