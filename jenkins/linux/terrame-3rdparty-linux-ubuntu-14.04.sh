@@ -34,7 +34,11 @@ if [ -z "$_TERRALIB_3RDPARTY_NAME" ]; then
 fi
 
 if [ -z "$_TERRALIB_TARGET_URL" ]; then
-  export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/$_TERRALIB_3RDPARTY_NAME"
+  if [ -z "$_TERRALIB_VERSION" ]; then
+    export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/$_TERRALIB_3RDPARTY_NAME"
+  else
+    export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_3RDPARTY_NAME"
+  fi
 fi
 
 #
@@ -51,7 +55,6 @@ function valid_operation()
   fi
 }
 
-
 echo ""
 echo "#### TerraME Dependencies Compilation on Linux Ubuntu 14.04 ####"
 echo ""
@@ -65,14 +68,14 @@ valid_operation $? "Error: Could not enter $_TERRALIB_TARGET_3RDPARTY_DIR"
 echo ""
 
 echo -ne "Downloading TerraLib 3rdparty ... "
-curl -O $_TERRALIB_TARGET_URL --silent
+curl -O $_TERRALIB_TARGET_URL
 valid_operation $? "Error. Check $_TERRALIB_TARGET_URL"
 
-echo -ne "Downloading TerraLib ... "
+echo -ne "Cloning TerraLib ... "
 git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git --quiet
 valid_operation $? "Error. Could not clone TerraLib $_TERRALIB_BRANCH"
 
-echo -ne "Downloading TerraME ... "
+echo -ne "Cloning TerraME ... "
 git clone https://github.com/TerraME/terrame.git terrame --quiet
 valid_operation $? "Error: Could not download TerraME"
 
