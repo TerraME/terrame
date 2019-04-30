@@ -35,9 +35,9 @@ fi
 
 if [ -z "$_TERRALIB_TARGET_URL" ]; then
   if [ -z "$_TERRALIB_VERSION" ]; then
-    export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/$_TERRALIB_3RDPARTY_NAME"
-  else
     export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_3RDPARTY_NAME"
+  else
+	export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/$_TERRALIB_3RDPARTY_NAME"
   fi
 fi
 
@@ -67,7 +67,7 @@ valid $? "Error: Could not enter $_TERRALIB_TARGET_3RDPARTY_DIR"
 echo ""
 
 echo -ne "Downloading TerraLib 3rdparty ... "
-curl -L -O $_TERRALIB_TARGET_URL --silent
+curl -L -O $_TERRALIB_TARGET_URL
 valid $? "Error. Check $_TERRALIB_TARGET_URL"
 
 echo -ne "Cloning TerraLib ... "
@@ -80,6 +80,8 @@ cp terralib/install/install-3rdparty-linux-ubuntu-14.04.sh .
 
 # Configuring TerraME dependencies compilation
 cp terrame/build/scripts/linux/terrame-deps-conf.sh $_TERRAME_TARGET_3RDPARTY_DIR
+
+tree -D -L 2
 
 TERRALIB_DEPENDENCIES_DIR="$_TERRALIB_TARGET_3RDPARTY_DIR" ./install-3rdparty-linux-ubuntu-14.04.sh
 valid $? "Error: Could not finish TerraLib 3rdparty compilation."
