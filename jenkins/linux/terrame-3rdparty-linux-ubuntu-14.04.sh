@@ -44,7 +44,7 @@ fi
 #
 # Valid parameter val or abort script
 #
-function valid_operation()
+function valid()
 {
   if [ $1 -ne 0 ]; then
     echo $2
@@ -63,23 +63,18 @@ echo -ne "Cleaning up old builds ... "
 rm -rf $_TERRALIB_TARGET_3RDPARTY_DIR $_TERRAME_TARGET_3RDPARTY_DIR
 mkdir -p $_TERRALIB_TARGET_3RDPARTY_DIR $_TERRAME_TARGET_3RDPARTY_DIR
 cd $_TERRALIB_TARGET_3RDPARTY_DIR
-valid_operation $? "Error: Could not enter $_TERRALIB_TARGET_3RDPARTY_DIR"
+valid $? "Error: Could not enter $_TERRALIB_TARGET_3RDPARTY_DIR"
 
 echo ""
 
 echo -ne "Downloading TerraLib 3rdparty ... "
 curl -O $_TERRALIB_TARGET_URL
-valid_operation $? "Error. Check $_TERRALIB_TARGET_URL"
+valid $? "Error. Check $_TERRALIB_TARGET_URL"
 
 echo -ne "Cloning TerraLib ... "
 rm -rf terralib
 git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git --quiet
-valid_operation $? "Error. Could not clone TerraLib $_TERRALIB_BRANCH"
-
-echo -ne "Cloning TerraME ... "
-rm -rf terrame
-git clone https://github.com/TerraME/terrame.git terrame --quiet
-valid_operation $? "Error: Could not download TerraME"
+valid $? "Error. Could not clone TerraLib $_TERRALIB_BRANCH"
 
 # Configuring TerraLib 3rdparty compilation
 cp terralib/install/install-3rdparty-linux-ubuntu-14.04.sh .
@@ -88,7 +83,7 @@ cp terralib/install/install-3rdparty-linux-ubuntu-14.04.sh .
 cp terrame/build/scripts/linux/terrame-deps-conf.sh $_TERRAME_TARGET_3RDPARTY_DIR
 
 TERRALIB_DEPENDENCIES_DIR="$_TERRALIB_TARGET_3RDPARTY_DIR" ./install-3rdparty-linux-ubuntu-14.04.sh
-valid_operation $? "Error: Could not finish TerraLib 3rdparty compilation."
+valid $? "Error: Could not finish TerraLib 3rdparty compilation."
 
 echo ""
 echo ""
@@ -97,26 +92,26 @@ cd $_TERRAME_TARGET_3RDPARTY_DIR
 
 echo -ne "Downloading Protobuf ... "
 curl -L -O https://github.com/google/protobuf/releases/download/v3.1.0/protobuf-cpp-3.1.0.tar.gz --silent
-valid_operation $? "Error. Could not download 3rdparty"
+valid $? "Error. Could not download 3rdparty"
 
 echo -ne "Downloading Luacheck ... "
 curl -L -O https://github.com/mpeterv/luacheck/archive/0.17.0.tar.gz --silent
-valid_operation $? "Error: Could not download LuaCheck"
+valid $? "Error: Could not download LuaCheck"
 
 echo ""
 echo -ne "Preparing to compilation ... "
 tar zxf protobuf-cpp-3.1.0.tar.gz
-valid_operation $? "Error: Could not extract protobuff"
+valid $? "Error: Could not extract protobuff"
 mv protobuf-3.1.0 protobuf
-valid_operation $? "Error: Could find 'protobuf' folder inside compressed protobuf"
+valid $? "Error: Could find 'protobuf' folder inside compressed protobuf"
 tar zxf 0.17.0.tar.gz
-valid_operation $? "Error: Could not extract Luacheck"
+valid $? "Error: Could not extract Luacheck"
 mv luacheck* luacheck
-valid_operation $? "Error: Could find luacheck inside luacheck compressed file"
+valid $? "Error: Could find luacheck inside luacheck compressed file"
 
 echo -ne "Compiling TerraME dependencies ... "
 ./terrame-deps-conf.sh
-valid_operation $? "Error: Could not finish TerraME 3rdparty compilation."
+valid $? "Error: Could not finish TerraME 3rdparty compilation."
 
 echo ""
 echo "Finished"
