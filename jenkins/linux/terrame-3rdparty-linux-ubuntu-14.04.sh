@@ -67,7 +67,7 @@ valid $? "Error: Could not enter $_TERRALIB_TARGET_3RDPARTY_DIR"
 echo ""
 
 echo -ne "Downloading TerraLib 3rdparty ... "
-curl -O $_TERRALIB_TARGET_URL
+curl -L -O $_TERRALIB_TARGET_URL --silent
 valid $? "Error. Check $_TERRALIB_TARGET_URL"
 
 echo -ne "Cloning TerraLib ... "
