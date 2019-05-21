@@ -75,5 +75,4 @@ cd $_TERRALIB_OUT_DIR
 # -----------------
 cmake -G "Unix Makefiles" -C terralib-conf.cmake $_TERRALIB_GIT_DIR/build/cmake
 
-make -j4
-make install
+cmake --build . --target install --config Release 

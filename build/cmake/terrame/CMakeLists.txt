@@ -296,11 +296,6 @@ set(TERRAME_FILES ${TERRAME_CORE_SRC_FILES} ${TERRAME_CORE_HDR_FILES}
                   ${TERRAME_OBSERVER_QRC_FILES} ${TERRAME_OBSERVER_QRC_FILES_ADD}
                   ${TERRAME_APP_ICON})
 
-if(UNIX)
-	set(CMAKE_INSTALL_RPATH "${TERRAME_INSTALL_PREFIX}/bin:\$ORIGIN:\$ORIGIN/bin")
-	set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-endif()
-
 add_executable(terrame ${TERRAME_APP_TYPE} ${TERRAME_FILES} ${PROTO_SRCS} ${PROTO_HDRS})
 
 #qt5_use_modules(terrame Core Gui Widgets PrintSupport) #TODO: REVIEW
@@ -310,9 +305,7 @@ target_link_libraries(terrame ${TERRAME_LIBRARIES})
 if(APPLE)
 	target_link_libraries(terrame ${_COREFOUNDATION_LIBRARY})
 	set_target_properties(terrame PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
-endif()
-
-if(WIN32 AND MSVC)
+elseif(WIN32 AND MSVC)
 	set_target_properties(terrame PROPERTIES
 	                      RUNTIME_OUTPUT_DIRECTORY_DEBUG ${TERRAME_BIN_DIR}
 	                      RUNTIME_OUTPUT_DIRECTORY_RELEASE ${TERRAME_BIN_DIR})
@@ -587,15 +580,15 @@ elseif(WIN32)
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}
 	        COMPONENT runtime
 			CONFIGURATIONS Debug)
-			
+
 	if(TERRAME_MEMORY_LEAK_DETECTOR)
 		set(VLD_DIR ${VLD_INCLUDE_DIR}/..)
 		install(FILES ${VLD_DIR}/bin/Win64/Microsoft.DTfW.DHL.manifest
 				DESTINATION ${TERRAME_DESTINATION_RUNTIME}
-				COMPONENT runtime)	
+				COMPONENT runtime)
 		install(FILES ${VLD_DIR}/bin/Win64/dbghelp.dll
 				DESTINATION ${TERRAME_DESTINATION_RUNTIME}
-				COMPONENT runtime)				
+				COMPONENT runtime)
 	endif()
 else(UNIX)
 	set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
@@ -663,10 +656,16 @@ else(UNIX)
 	                   ${Qt5_DIR}/../../libkmlengine*so*
 	                   ${Qt5_DIR}/../../libkmlbase*so*
 	                   ${Qt5_DIR}/../../libminizip*so*
-	                   /lib/x86_64-linux-gnu/libpng*so*
+	                   ${Qt5_DIR}/../../libpng*so*
 	                   ${Qt5_DIR}/../../../liburiparser*so*)
-					   
-	list(FILTER Qt5_LIBS EXCLUDE REGEX "libkml*_*")
+
+	if(${TERRAME_UBUNTU_VERSION} STREQUAL "18")
+		file(GLOB Qt5_LIBS_UBUNTU_18 ${Qt5_DIR}/../../libQt5XcbQpa.so*
+									 ${Qt5_DIR}/../../libxcb-xinerama.so*
+									 ${Qt5_DIR}/../../libdouble-conversion.so*
+									 ${Qt5_DIR}/../../liburiparser*so*)
+		set(Qt5_LIBS ${Qt5_LIBS} ${Qt5_LIBS_UBUNTU_18})
+	endif()
 
 	install(FILES ${Qt5_LIBS}
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
@@ -696,7 +695,14 @@ else(UNIX)
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libpcre*so*
 	                                ${TERRALIB_3RDPARTY_DIR}/pgsql/lib/libpq*so*
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libgdal.so*
+	                                #${TERRALIB_3RDPARTY_DIR}/lib/libicui18n.so* TODO: check conflict with Qt's icu
+	                                #${TERRALIB_3RDPARTY_DIR}/lib/libicuuc.so*
 	                                ${TERRALIB_3RDPARTY_DIR}/lib/libcurl*so*)
+
+	if(${TERRAME_UBUNTU_VERSION} STREQUAL "18")
+		file(GLOB TERRALIB_DEPENDENCIES_UBUNTU_18 ${TERRALIB_3RDPARTY_DIR}/lib/libopenjp2*so*)
+		set(TERRALIB_DEPENDENCIES ${TERRALIB_DEPENDENCIES} ${TERRALIB_DEPENDENCIES_UBUNTU_18})
+	endif()
 
 	install(FILES ${TERRALIB_DEPENDENCIES}
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}

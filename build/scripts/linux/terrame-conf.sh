@@ -45,7 +45,7 @@ export _TERRAME_DEPENDS_DIR="$_TERRAME_DEPENDS_DIR"
 
 # Checking Terralib Modules Dir
 if [ "$_TERRALIB_MODULES_DIR" == "" ]; then
-  _TERRALIB_MODULES_DIR="/home/developer/terralib/build-cmake/install"
+  _TERRALIB_MODULES_DIR="/home/developer/terralib/solution/install"
 fi
 export _TERRALIB_MODULES_DIR="$_TERRALIB_MODULES_DIR"
 
@@ -85,6 +85,11 @@ if [ -z ${_TERRAME_CREATE_INSTALLER+x} ]; then
 fi
 export _TERRAME_CREATE_INSTALLER=$_TERRAME_CREATE_INSTALLER
 
+if [ "$_TERRAME_UBUNTU_VERSION" == "" ]; then
+  _TERRAME_UBUNTU_VERSION="14"
+fi
+export _TERRAME_UBUNTU_VERSION="$_TERRAME_UBUNTU_VERSION"
+
 # Configuring output folder
 mkdir -p $_TERRAME_OUT_DIR
 cp -rf terrame-conf.cmake $_TERRAME_OUT_DIR
@@ -95,5 +100,4 @@ cd $_TERRAME_OUT_DIR
 # Calling CMake
 cmake -G "Unix Makefiles" -C terrame-conf.cmake $_TERRAME_GIT_DIR/build/cmake
 
-make -j 4
-make install
+cmake --build . --target install --config Release 

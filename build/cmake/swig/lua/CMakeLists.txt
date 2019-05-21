@@ -28,7 +28,7 @@ if(LUA_FOUND)
 					NAMES luad
 					HINTS
 					ENV LUA_DIR
-					PATH_SUFFIXES lib)		
+					PATH_SUFFIXES lib)
 		set(LUA_LIBRARIES optimized ${LUA_LIBRARIES} debug ${LUA_LIBRARY_DEBUG})
 		set(CMAKE_DEBUG_POSTFIX "")
 	endif()

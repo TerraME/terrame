@@ -69,6 +69,12 @@ endif()
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER MATCHES ".*clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -std=c++11")
+	if(UNIX)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-rpath,\$ORIGIN -Wl,-rpath-link,\$ORIGIN")
+		if(${TERRAME_UBUNTU_VERSION} STREQUAL "18")
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--disable-new-dtags")
+		endif()
+	endif()
 endif()
 
 cmake_policy(SET CMP0020 NEW)
