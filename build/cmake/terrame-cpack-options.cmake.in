@@ -39,7 +39,7 @@ set(CPACK_RESOURCE_FILE_LICENSE @TERRAME_ABSOLUTE_ROOT_DIR@/LICENSE)
 set(MSVC @MSVC@)
 set(CMAKE_CL_64 @CMAKE_CL_64@)
 set(APPLE @APPLE@)
-set(UNIX @UNIX@)
+set(LINUX @LINUX@)
 
 #
 # determining the binary package name depending on toolset used in the build
@@ -53,7 +53,7 @@ if(NOT DEFINED CPACK_SOURCE_PACKAGE_FILE_NAME)
 		endif()
 	elseif(APPLE)
 		set(CPACK_PACKAGE_FILE_NAME "terrame-@TERRAME_VERSION_STRING@-macosx")
-	elseif(UNIX)
+	elseif(LINUX)
 		set(CPACK_PACKAGE_FILE_NAME "terrame-@TERRAME_VERSION_STRING@-ubuntu@TERRAME_UBUNTU_VERSION@")
 	else()
 		message(FATAL_ERROR "terrame ERROR: unknown platform for generating install package. See terralib-cpack-options.cmake.in for more details!")

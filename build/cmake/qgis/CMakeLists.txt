@@ -60,7 +60,7 @@ install(TARGETS qgis
         LIBRARY DESTINATION ${TERRAME_DESTINATION_LIBRARY}
         COMPONENT runtime)
 
-if(UNIX)
+if(LINUX)
 	file(GLOB Qt5Xml_LIBRARY ${Qt5_DIR}/../../libQt5Xml.so*)
 	install(FILES ${Qt5Xml_LIBRARY}
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
