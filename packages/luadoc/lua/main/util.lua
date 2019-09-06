@@ -139,7 +139,7 @@ end
 -- @arg mode mode of opening
 -- @return file handle
 
-function openFile (filename, mode)
+function openFile(filename, mode)
 	local f = io.open(filename, mode)
 	if f == nil then
 		filename = string.gsub(filename, "\\", "/")
