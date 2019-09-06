@@ -35,8 +35,9 @@
 
 				<div id="content">
 					<h1><%=file_doc.name:match("(.-)%.lua")%>
-					<% if #file_doc.functions > 0 then
-					  local constructor = file_doc.functions[file_doc.functions[1]]
+					<%local cpos = luadoc.find_constructor_position(file_doc.name, file_doc.functions)%>
+					<% if cpos then
+					  local constructor = file_doc.functions[file_doc.functions[cpos]]
 					  if constructor.inherits then%>
 					    (inherits <a href="<%=luadoc.symbol_link(constructor.inherits, doc, module_doc, file_doc, "files/.."..file_doc.name, "inherits", doc_report)%>">
 					      <%= constructor.inherits %></a>)
@@ -65,9 +66,9 @@
 					<%end%>
 
 					<%if #file_doc.functions > 0 then%>
-						<% if file_doc.functions[1] == file_doc.name:match("(.-)%.lua") then %>
-						<%=luadoc.include("function.lp", { doc=doc, file_doc=file_doc, func=file_doc.functions[file_doc.functions[1]], doc_report = doc_report })%>
-						<% table.remove(file_doc.functions, 1) %>
+						<% if cpos then %>
+						<%=luadoc.include("function.lp", { doc=doc, file_doc=file_doc, func=file_doc.functions[file_doc.functions[cpos]], doc_report = doc_report })%>
+						<% table.remove(file_doc.functions, cpos) %>
 						<% end %>
 
 						<%if #file_doc.functions > 0 then%>

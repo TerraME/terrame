@@ -111,7 +111,8 @@ function includeMod(template, env)
 		file_link = file_link,
 		symbol_link = symbol_link,
 		link_description = link_description,
-		module_link = module_link
+		module_link = module_link,
+		find_constructor_position = find_constructor_position
 	}
 
 	return lp.include(templatepath, env)
@@ -266,6 +267,14 @@ function symbol_link(symbol, doc, module_doc, file_doc, from, name, doc_report)
 	end
 
 	return href or "unresolved"
+end
+
+function find_constructor_position(filename, functions)
+	for i = 1, #functions do
+		if filename == functions[i]..".lua" then
+			return i
+		end
+	end
 end
 
 function link_description(description, doc, module_doc, file_doc, from, new_tab, name, doc_report)
