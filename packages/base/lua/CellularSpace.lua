@@ -1559,7 +1559,7 @@ metaTableCellularSpace_ = {
 -- If the Cells have attributes "row" and "col" (the name can be set by argument xy, as shown below),
 -- they can be used to CellularSpace:createNeighborhood()
 -- and to draw the CellularSpace in the screen by using a Map.
--- The Cell with lower (row, col) represents the bottom left location (see argument zero below).
+-- The Cell with lower (row, col) represents the upper left location (see argument zero below).
 -- See the table below with the description and the arguments of each data source.
 -- Calling Utils:forEachCell() traverses CellularSpaces.
 -- @arg data.sep A string with the file separator. The default value is ",".
