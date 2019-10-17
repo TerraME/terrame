@@ -450,10 +450,8 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 		end
 
 		layer:setSRID(sridReal)
-
-		binding.te.da.DataSourceManager.getInstance():detach(ds:getId())
-
 		ds:close()
+		binding.te.da.DataSourceManager.getInstance():detach(ds:getId())
 	end
 
 	collectgarbage("collect")
@@ -1182,8 +1180,6 @@ local function removeLayer(project, layerName)
 		end
 
 		local ds = makeAndOpenDataSource(connInfo, dsType)
-
-		ds:dropDataSet(dsetName)
 		removeDataSource(project, id)
 		project.layers[layerName] = nil
 		project[layerName] = nil
@@ -1191,6 +1187,7 @@ local function removeLayer(project, layerName)
 		saveProject(project, project.layers)
 		releaseProject(project)
 
+		ds:dropDataSet(dsetName)
 		ds:close()
 	end
 
@@ -1420,7 +1417,6 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 		local fromType = dsInfo:getType()
 		local ds = makeAndOpenDataSource(connInfo, fromType)
 		local dsetName = fromLayer:getDataSetName()
-		local dse = ds:getDataSet(dsetName)
 
 		-- Check new attributes
 		local attrsToIn = {}
@@ -1444,6 +1440,7 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 			errorMsg = createInvalidNamesErrorMsg(invalidNames)
 		else
 			-- Copy from dataset to new
+			local dse = ds:getDataSet(dsetName)
 			local dst = ds:getDataSetType(dsetName)
 			local newDst = ds:cloneDataSetType(dsetName)
 			newDst:setName(toSetName)
@@ -1548,9 +1545,7 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 
 	collectgarbage("collect")
 
-	if errorMsg then
-		customError(errorMsg)
-	end
+	return errorMsg
 end
 
 local function updateDataSet(fromLayer, toSet, attrs)
@@ -1580,9 +1575,7 @@ local function updateDataSet(fromLayer, toSet, attrs)
 
 	collectgarbage("collect")
 
-	if errorMsg then
-		customError(errorMsg)
-	end
+	return errorMsg
 end
 
 local function hasNewAttributeOnLayer(fromLayer, attrs)
@@ -1762,20 +1755,22 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 				end
 			end
 		elseif toType == "OGR" then
-			local _, fn = toData.file:split()
+			local _, fn, ext = toData.file:split()
+			local connInfo = createFileConnInfo(tostring(toData.file))
+			toDs = makeAndOpenDataSource(connInfo, "OGR")
 			toDSetName = fn
 
 			if toData.file:exists() then
 				if overwrite then
-					toData.file:delete()
+					if ext == "geojson" then
+						toDs:close()
+						toData.file:delete()
+					else
+						toDs:dropDataSet(toDSetName)
+					end
 				else
 					errorMsg = "File '"..toData.file:name().."' already exists."
 				end
-			end
-
-			if not errorMsg then
-				local connInfo = createFileConnInfo(tostring(toData.file))
-				toDs = makeAndOpenDataSource(connInfo, "OGR")
 			end
 		end
 	end
@@ -2787,6 +2782,7 @@ TerraLib_ = {
 			local toSrid = toLayer:getSRID()
 			if fromLayer:getSRID() ~= toSrid then
 				local fromSrid = fromLayer:getSRID()
+				releaseProject(project)
 				customError("Layer projections are different: ("..from..", "..string.format("%.0f", fromSrid)..") and ("
 								..to..", "..string.format("%.0f", toSrid).."). Please, reproject your data to the right one.")
 			end
@@ -2810,6 +2806,7 @@ TerraLib_ = {
 			local toDSetName = toLayer:getDataSetName()
 
 			if propertyExists(toDsInfo:getConnInfo(), toDSetName, attribute, toDsInfo:getType()) then
+				releaseProject(project)
 				customError("The attribute '"..attribute.."' already exists in the Layer.")
 			end
 
@@ -2818,6 +2815,7 @@ TerraLib_ = {
 			local fromDSetName = fromLayer:getDataSetName()
 
 			if not propertyExists(fromConnInfo, fromDSetName, select, fromType) then
+				releaseProject(project)
 				if repr == "raster" then
 					customError("Selected band '"..select.."' does not exist in Layer '"..from.."'.")
 				else
@@ -2834,7 +2832,7 @@ TerraLib_ = {
 				elseif isDataTypeString(propType) then
 					pt = "string"
 				end
-
+				releaseProject(project)
 				customError("Operation '"..operation.."' cannot be executed with an attribute of type "..pt.. " ('"..select.."').")
 			end
 
@@ -3021,6 +3019,8 @@ TerraLib_ = {
 	-- @usage -- DONTRUN
 	-- saveDataSet(project, fromLayerName, toSet, toName, attrs)
 	saveDataSet = function(project, fromLayerName, toSet, toLayerName, attrs, toSetName)
+		local error
+
 		do
 			loadProject(project, project.file)
 
@@ -3053,28 +3053,34 @@ TerraLib_ = {
 			if dseName == toSetName then
 				if #attrs > 0 then
 					if hasNewAttributeOnLayer(fromLayer, attrs) then
-						createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
+						error = createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 					else
-						updateDataSet(fromLayer, toSet, attrs)
+						error = updateDataSet(fromLayer, toSet, attrs)
 					end
 				end
 			else
-				createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
-				local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
-				local toLayer
-				if dseName == "OGRGeoJSON" then
-					toLayer = createLayer(toLayerName, dseName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
-				else
-					toLayer = createLayer(toLayerName, toSetName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
+				error = createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
+				if not error then
+					local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
+					local toLayer
+					if dseName == "OGRGeoJSON" then
+						toLayer = createLayer(toLayerName, dseName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
+					else
+						toLayer = createLayer(toLayerName, toSetName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
+					end
+					project.layers[toLayerName] = toLayer
+					saveProject(project, project.layers)
 				end
-				project.layers[toLayerName] = toLayer
-				saveProject(project, project.layers)
 			end
 
 			releaseProject(project)
 		end
 
 		collectgarbage("collect")
+
+		if error then
+			customError(error)
+		end
 	end,
 	--- Returns the number of bands of some Raster.
 	-- @arg project The project.
@@ -3422,7 +3428,7 @@ TerraLib_ = {
 						end
 					end
 
-					createDataSetFromLayer(layer,  toDSetName, toSet, {gname})
+					errorMsg = createDataSetFromLayer(layer,  toDSetName, toSet, {gname})
 				else
 					errorMsg = "This function works only with line and multi-line geometry."
 				end
@@ -3432,6 +3438,8 @@ TerraLib_ = {
 
 			releaseProject(project)
 		end
+
+		collectgarbage("collect")
 
 		if errorMsg then
 			customError(errorMsg)

@@ -1868,7 +1868,7 @@ return {
 
 		unitTest:assertEquals(prj.SRID, 29191.0)
 		unitTest:assertEquals(prj.NAME, "SAD69 / UTM zone 21S")
-		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs ")
+		unitTest:assertEquals(prj.PROJ4, "+proj=utm +zone=21 +south +ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0,0,0,0 +units=m +no_defs")
 
 		proj.file:delete()
 		TerraLib().dropPgTable(pgData)

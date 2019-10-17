@@ -1,11 +1,11 @@
 -------------------------------------------------------------------------------
 -- Doclet that generates HTML output. This doclet generates a set of html files
--- based on a group of templates. The main templates are: 
+-- based on a group of templates. The main templates are:
 -- <ul>
 -- <li>index.lp: index of modules and files;</li>
 -- <li>file.lp: documentation for a lua file;</li>
 -- <li>module.lp: documentation for a lua module;</li>
--- <li>function.lp: documentation for a lua function. This is a 
+-- <li>function.lp: documentation for a lua function. This is a
 -- sub-template used by the others.</li>
 -- </ul>
 --
@@ -77,16 +77,16 @@ end
 function includeMod(template, env)
 	-- template_dir is relative to package.path
 	local templatepath = options.template_dir .. template
-	
+
 	-- search using package.path (modified to search .lp instead of .lua
 
-	-- TODO: Verificar se compensa ter a possibilidade de se deixar os templates em outra pasta. 
+	-- TODO: Verificar se compensa ter a possibilidade de se deixar os templates em outra pasta.
 	-- Assim o usuario poderia ter seu próprio template
 
 	-- local search_path = string.gsub(package.path, "%.lua", "")
 	-- local templatepath = search(search_path, templatepath)
 	assert(templatepath, string.format("template '%s' not found", template))
-	
+
 	env = env or {}
 	env.table = table
 	env.io = io
@@ -111,7 +111,8 @@ function includeMod(template, env)
 		file_link = file_link,
 		symbol_link = symbol_link,
 		link_description = link_description,
-		module_link = module_link
+		module_link = module_link,
+		find_constructor_position = find_constructor_position
 	}
 
 	return lp.include(templatepath, env)
@@ -145,7 +146,7 @@ function module_link (modulename, doc, from)
 		-- printError(string.format("unresolved reference to module '%s'", modulename))
 		return
 	end
-	
+
 	local href = "modules/" .. modulename .. ".html"
 	string.gsub(from, "/", function () href = "../" .. href end)
 	return href
@@ -168,15 +169,15 @@ function file_func_link(symbol, doc, _, from, doc_report)
 		end
 		return "unresolved"
 	end
-	
+
 	local functions = doc.files[filename..".lua"]["functions"]
 	if filename ~= funcname and not functions[funcname] then
 		--print(string.format("%s: unresolved reference to %s",	file_doc.name, symbol))
 		return
 	end
-	
+
 	local href = "files/" .. filename .. ".html"
-	if filename ~= funcname then 
+	if filename ~= funcname then
 		href = href .. "#" .. funcname
 	end
 	string.gsub(from, "/", function() href = "../"..href end)
@@ -194,7 +195,7 @@ end
 function file_link(to, from)
 	assert(to)
 	from = from or ""
-	
+
 	local href = to
 	href = string.gsub(href, "lua$", "html")
 	href = string.gsub(href, "luadoc$", "html")
@@ -213,7 +214,7 @@ function link_to(fname, doc, module_doc, file_doc, from, kind)
 	assert(doc)
 	from = from or ""
 	kind = kind or "functions"
-	
+
 	if file_doc and file_doc[kind] then
 		for _, func_name in pairs(file_doc[kind]) do
 			if func_name == fname then
@@ -221,10 +222,10 @@ function link_to(fname, doc, module_doc, file_doc, from, kind)
 			end
 		end
 	end
-	
+
 	local _, _, modulename, mfname = string.find(fname, "^(.-)[%.%:]?([^%.%:]*)$")
 	assert(mfname)
-  
+
 	-- if mfname does not specify a module, use the module_doc
 	if string.len(modulename) == 0 and module_doc then
 		modulename = module_doc.name
@@ -235,13 +236,13 @@ function link_to(fname, doc, module_doc, file_doc, from, kind)
 		-- printError(string.format("Reference not found to function '%s' of module '%s'", mfname, modulename))
 		return
 	end
-	
+
 	for _, func_name in pairs(mmodule_doc[kind]) do
 		if func_name == mfname then
 			return module_link(modulename, doc, from) .. "#" .. mfname
 		end
 	end
-	
+
 	-- printError(string.format("Reference not found to function '%s' of module '%s'", mfname, modulename))
 end
 
@@ -251,9 +252,9 @@ function symbol_link(symbol, doc, module_doc, file_doc, from, name, doc_report)
 	assert(symbol)
 	assert(doc)
 	doc_report.links = doc_report.links + 1
-	local href = 
+	local href =
 		-- file_link(symbol, from) or
-		module_link(symbol, doc, from) or 
+		module_link(symbol, doc, from) or
 		file_func_link(symbol, doc, file_doc, from, doc_report) or
 		link_to(symbol, doc, module_doc, file_doc, from, "functions") or
 		link_to(symbol, doc, module_doc, file_doc, from, "tables")
@@ -268,6 +269,14 @@ function symbol_link(symbol, doc, module_doc, file_doc, from, name, doc_report)
 	return href or "unresolved"
 end
 
+function find_constructor_position(filename, functions)
+	for i = 1, #functions do
+		if filename == functions[i]..".lua" then
+			return i
+		end
+	end
+end
+
 function link_description(description, doc, module_doc, file_doc, from, new_tab, name, doc_report)
 	if new_tab then
 		types_linked = {}
@@ -277,7 +286,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 	local word_table = {}
 	local description_linked = description
 	local fname = string.match(file_doc.name, "(.-)%.lua")
-	
+
 	-- links for other packages
 	for package, mtype in string.gmatch(description, "(%w+)%:%:(%w+)") do
 		local anchor = "<a href=\"../../../"..package.."/doc/files/"..mtype..".html\">"..mtype.." ("..package.." package)</a>"
@@ -307,7 +316,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 		word_table[token] = #word_table
 		description_linked = string.gsub(description_linked, token, "$"..#word_table.."$", 1)
 	end
-	
+
 	--find types
 	for token in string.gmatch(description_linked, "[%a_]+") do
 		local type_name = string.gsub(token, "ies$", "y")
@@ -320,7 +329,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 			if type_name == fname or word_table[type_name] or types_linked[type_name] then
 				table.insert(word_table, token)
 			else
-				local href 
+				local href
 				if doc.files[file_name_link] then
 					href = file_link(file_name_link, from)
 				else
@@ -339,7 +348,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 	description_linked = string.gsub(description_linked,"%$(%d-)%$", function(key)
 		return word_table[tonumber(key)]
 	end)
-	
+
 	description_linked = httpLink(description_linked)
 
 	return description_linked
@@ -444,7 +453,7 @@ function start(doc, doc_report)
 
 		f:close()
 	end
-	
+
 	-- Process modules
 	if not options.nomodules then
 		for _, modulename in ipairs(doc.modules) do
@@ -453,7 +462,7 @@ function start(doc, doc_report)
 			local filename = out_module(modulename)
 			print(string.format("Building %s", makepath(filename)))
 			doc_report.html_files = doc_report.html_files + 1
-			
+
 			local f = util.openFile(filename, "w")
 			assert(f, string.format("Could not open %s for writing", filename))
 			io.output(f)
@@ -473,7 +482,7 @@ function start(doc, doc_report)
 				print(string.format("Building %s", makepath(short_filepath)))
 
 				doc_report.html_files = doc_report.html_files + 1
-				
+
 				local f = util.openFile(mfilepath, "w")
 				assert(f, string.format("Could not open %s for writing", short_filepath))
 				io.output(f)
@@ -533,7 +542,7 @@ function start(doc, doc_report)
 			if doc.files[filepath].type == "model" then
 				models = true
 			end
-		end	
+		end
 
 		if models then
 			doc_report.html_files = doc_report.html_files + 1
@@ -552,7 +561,7 @@ function start(doc, doc_report)
 	end
 
 	-- copy extra files
-	files = {"Ubuntu-L.ttf", "UbuntuMono-R.ttf", "Ubuntu-license.txt"} 
+	files = {"Ubuntu-L.ttf", "UbuntuMono-R.ttf", "Ubuntu-license.txt"}
 
 	forEachElement(files, function(_, file)
 		os.execute("cp '"..ppath.."/lua/doclet/html/"..file.."' '"..options.output_dir..file.."'")

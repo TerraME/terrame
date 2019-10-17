@@ -313,12 +313,74 @@ return{
 			unitTest:assertSnapshot(map, "cellspace_map_nc_basic.png") -- SKIP
 		end
 
+		local mapCoordinates = function()
+			local testMap = function(cs, x, y, imgSuffix)
+				local cell = cs:get(x, y)
+				if not cell then return end
+				cell.state = "selected"
+				local map = Map{
+					 target = cs,
+					 select = "state",
+					 grid = true,
+					 value = {"empty", "full", "selected"},
+					 color = {"gray", "black", "blue"}
+				}
+				unitTest:assertSnapshot(map, "cellspace_map_"..imgSuffix..".png") -- SKIP
+				cell.state = "full"
+			end
+
+			local testCoordinates = function(cs, suffix)
+				testMap(cs, cs.xMin, cs.yMin, suffix.."_min")
+				testMap(cs, cs.xMax, cs.yMax, suffix.."_max")
+				local cx = math.floor(cs.xMax/2)
+				local cy = math.floor(cs.yMax/2)
+				testMap(cs, cx, cy, suffix.."_center")
+				testMap(cs, cx, cy - 1, suffix.."_n")
+				testMap(cs, cx + 1, cy, suffix.."_e")
+				testMap(cs, cx, cy + 1, suffix.."_s")
+				testMap(cs, cx - 1, cy, suffix.."_w")
+				testMap(cs, cx + 1, cy - 1, suffix.."_ne")
+				testMap(cs, cx + 1, cy + 1, suffix.."_se")
+				testMap(cs, cx - 1, cy + 1, suffix.."_sw")
+				testMap(cs, cx - 1, cy - 1, suffix.."_nw")
+			end
+
+			local coordByXDim = function()
+				local cell = Cell{state = "empty"}
+				local cs = CellularSpace{xdim = 9, instance = cell}
+				testCoordinates(cs, "xdim")
+			end
+
+			local coordByVectorData = function()
+				local cs = CellularSpace{file = filePath("test/CellsAmaz.shp"), missing = 0}
+				forEachCell(cs, function(cell)
+					cell.state = "empty"
+				end)
+				testMap(cs, 2, 1, "vec_min")
+				testMap(cs, 11, 12, "vec_max")
+				testCoordinates(cs, "vec")
+			end
+
+			local coordByRasterData = function()
+				local cs = CellularSpace{file = filePath("test/prodes_polyc_10k.tif", "gis")}
+				forEachCell(cs, function(cell)
+					cell.state = "empty"
+				end)
+				testCoordinates(cs, "rst")
+			end
+
+			unitTest:assert(coordByXDim)
+			unitTest:assert(coordByVectorData)
+			unitTest:assert(coordByRasterData)
+		end
+
 		unitTest:assert(basicTests)
 		unitTest:assert(creatingFromTif)
 		unitTest:assert(creatingFromAsc)
 		if _Gtme.sessionInfo().system == "windows" then
 			unitTest:assert(creatingFromNc) -- SKIP
 		end
+		unitTest:assert(mapCoordinates)
 	end,
 	notify = function(unitTest)
 		local r = Random()

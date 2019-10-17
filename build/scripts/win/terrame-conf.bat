@@ -35,7 +35,7 @@ if "%_TERRAME_DEPENDS_DIR%" == "" (
 
 :: Checking terralib install dir or setting default
 if "%_TERRALIB_MODULES_DIR%" == "" (
-  set _TERRALIB_MODULES_DIR=D:\terralib\build-cmake\install
+  set _TERRALIB_MODULES_DIR=D:\terralib\solution\install
 )
 
 :: Checking qt5 dir or setting default
