@@ -79,7 +79,7 @@ return {
 
 		local biomesName = "biomes"
 		local prodesName = "prodes"
-		local service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=2.0.0&"
+		local service = "http://terrabrasilis.dpi.inpe.br/geoservices/redd-pac/ows?request=getcapabilities&service=wfs"
 		local epsg = 4601
 		local encoding = "utf8"
 
@@ -136,7 +136,7 @@ return {
 		unitTest:assertEquals(#attributes, 4)
 		unitTest:assertEquals(attributes[1].name, "FID")
 		unitTest:assertEquals(attributes[2].type, "string")
-		unitTest:assertEquals(cl1:projection(), "'Antigua 1943', with EPSG: 4601 (PROJ4: '+proj=longlat +ellps=clrk80 +towgs84=-255,-15,71,0,0,0,0 +no_defs ')")
+		unitTest:assertEquals(cl1:projection(), "'Antigua 1943', with EPSG: 4601 (PROJ4: '+proj=longlat +ellps=clrk80 +towgs84=-255,-15,71,0,0,0,0 +no_defs')")
 		unitTest:assertEquals(cl1:representation(), "polygon")
 
 		cl1:fill{
@@ -210,7 +210,7 @@ return {
 				project = proj,
 				name = "prodesWfs",
 				service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=2.0.0&",
-				feature = "prodes-cerrado:limite_cerrado"
+				feature = "prodes-legal-amz:brazilian_legal_amazon"
 			}
 
 			prodesWfs:export{file = "prodes.shp", overwrite = true, progress = false}
