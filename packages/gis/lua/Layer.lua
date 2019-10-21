@@ -550,14 +550,15 @@ Layer_ = {
 	-- Geometry & Using only geometry & Using attribute of objects with some overlap &
 	-- Using geometry and attribute \
 	-- Points & "count", "distance", "presence" &
-	-- "average", "mode", "maximum", "minimum", "stdev", "sum" & (none) \
+	-- "average", "mode", "maximum", "minimum", "stdev", "sum", "median" & (none) \
 	-- Lines & "count", "distance", "presence" &
-	-- "average", "mode", "maximum", "minimum", "stdev", "sum" & (none) \
+	-- "average", "mode", "maximum", "minimum", "stdev", "sum", "median" & (none) \
 	-- Polygons & "area", "count", "distance", "presence" &
-	-- "average", "mode", "maximum", "minimum", "stdev", "sum" &
+	-- "average", "mode", "maximum", "minimum", "stdev", "sum", "median" &
 	-- "average", "mode", "coverage", "sum" \
 	-- Raster & (none) &
-	-- "average", "mode", "maximum", "minimum", "coverage", "stdev", "sum", "count" &
+	-- "average", "mode", "maximum", "minimum", "coverage", "stdev", "sum", "count",
+	-- "median" &
 	-- (none) \
 	-- @arg data.operation The way to compute the attribute of each cell. When using raster
 	-- data, a pixel is considered within a given geometry if there is some intersection
@@ -619,6 +620,8 @@ Layer_ = {
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
 	-- & attribute, layer, select & area, missing, band, dummy, pixel, progress, split \
+	-- "median" & Median is the midpoint of a frequency distribution of observed values.
+	-- attribute, layer, select & missing, band, dummy, pixel, progress, split \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true),
 	-- or the weights are equal for each object with some overlap (false, missing value).
@@ -908,6 +911,19 @@ Layer_ = {
 													"operation", "select", "progress"})
 					mandatoryTableArgument(data, "select", "string")
 					defaultTableValue(data, "area", false)
+				elseif repr == "raster" then
+					checkRaster(data)
+				else
+					customError("The operation '"..data.operation.."' is not available for layers with "..repr.." data.") -- SKIP
+				end
+
+				defaultTableValue(data, "missing", 0)
+			end,
+			median = function()
+				if belong(repr, {"point", "line", "polygon", "surface"}) then
+					verifyUnnecessaryArguments(data, {"attribute", "missing", "layer",
+													"operation", "select", "progress"})
+					mandatoryTableArgument(data, "select", "string")
 				elseif repr == "raster" then
 					checkRaster(data)
 				else

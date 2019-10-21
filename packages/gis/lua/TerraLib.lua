@@ -97,7 +97,8 @@ local OperationMapper = {
 	intersection = binding.HIGHEST_INTERSECTION,
 	occurrence = binding.MODE,
 	sum = binding.SUM,
-	wsum = binding.WEIGHTED_SUM
+	wsum = binding.WEIGHTED_SUM,
+	median = binding.MEDIAN
 }
 
 local VectorAttributeCreatedMapper = {
@@ -115,7 +116,8 @@ local VectorAttributeCreatedMapper = {
 	intersection = "class_high_area",
 	occurrence = "mode",
 	sum = "sum_values",
-	wsum = "weigh_sum_area"
+	wsum = "weigh_sum_area",
+	median = "median"
 }
 
 local RasterAttributeCreatedMapper = {
@@ -127,7 +129,8 @@ local RasterAttributeCreatedMapper = {
 	total = "",
 	stdev = "_Standard_Deviation",
 	sum = "_Sum",
-	count = "_Count"
+	count = "_Count",
+	median = "_Median"
 }
 
 local OperationAvailablePerDataTypeMapper = {
@@ -148,7 +151,8 @@ local OperationAvailablePerDataTypeMapper = {
 	intersection = 5,
 	occurrence = 7,
 	sum = 6,
-	wsum = 6
+	wsum = 6,
+	median = 6
 }
 
 local SourceTypeMapper = {

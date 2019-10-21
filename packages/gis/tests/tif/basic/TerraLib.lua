@@ -626,8 +626,70 @@ return {
 			proj.file:delete()
 		end
 
+		local medianOperation = function()
+			local proj = {
+				file = "attrfill_tif_basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
+
+			local l1Name = "ES_Limit"
+			local l1File = filePath("test/limit_es_sirgas2000_5880.shp", "gis")
+			TerraLib().addShpLayer(proj, l1Name, l1File)
+
+			local l1Info = TerraLib().getLayerInfo(proj, l1Name)
+
+			local l2Name = "ES_Uses"
+			local l2File = filePath("test/es_class_sirgas2000_5880.tif", "gis")
+			TerraLib().addGdalLayer(proj, l2Name, l2File, l1Info.srid)
+
+			local csName = "Cells"
+			local csShp = File(csName..".shp")
+			local resolution = 20e3
+			local mask = true
+			csShp:deleteIfExists()
+			TerraLib().addShpCellSpaceLayer(proj, l1Name, csName, resolution, csShp, mask)
+
+			local l3Name = csName.."_Median"
+			local l3File = File(l3Name..".shp")
+			local operation = "median"
+			local attribute = "median"
+			local select = 0
+
+			l3File:deleteIfExists()
+			TerraLib().attributeFill{
+				project = proj,
+				from = l2Name,
+				to = csName,
+				out = l3Name,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local l3Set = TerraLib().getDataSet{project = proj, layer = l3Name}
+
+			for k, v in pairs(l3Set[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "median"))
+				unitTest:assertNotNil(v)
+			end
+
+			local ptPropsInfo = TerraLib().getPropertyInfos(proj, l3Name)
+			unitTest:assertEquals(ptPropsInfo[4].name, "median")
+			unitTest:assertEquals(ptPropsInfo[4].type, "double")
+
+			csShp:delete()
+			l3File:delete()
+			proj.file:delete()
+		end
+
 		unitTest:assert(coverageTotalArea)
 		unitTest:assert(coverageWithDummy)
+		unitTest:assert(medianOperation)
 	end
 }
 

@@ -1387,10 +1387,63 @@ return {
 			clFile:delete()
 		end
 
+		local medianOperation = function()
+			local proj = createProject()
+
+			local l1Name = "ES_Limit"
+			local l1File = filePath("test/limit_es_sirgas2000_5880.shp", "gis")
+			TerraLib().addShpLayer(proj, l1Name, l1File)
+
+			local l2Name = "ES_Protected"
+			local l2File = filePath("test/es-protected_areas_sirgas2000_5880.shp", "gis")
+			TerraLib().addShpLayer(proj, l2Name, l2File)
+
+			local csName = "Cells"
+			local csShp = File(csName..".shp")
+			local resolution = 20e3
+			local mask = true
+			csShp:deleteIfExists()
+			TerraLib().addShpCellSpaceLayer(proj, l1Name, csName, resolution, csShp, mask)
+
+			local l3Name = csName.."_Median"
+			local l3File = File(l3Name..".shp")
+			local operation = "median"
+			local attribute = "median"
+			local select = "Shape_Area"
+
+			l3File:deleteIfExists()
+			TerraLib().attributeFill{
+				project = proj,
+				from = l2Name,
+				to = csName,
+				out = l3Name,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local l3Set = TerraLib().getDataSet{project = proj, layer = l3Name, missing = 0}
+
+			for k, v in pairs(l3Set[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+								(k == "median"))
+				unitTest:assertNotNil(v)
+			end
+
+			local ptPropsInfo = TerraLib().getPropertyInfos(proj, l3Name)
+			unitTest:assertEquals(ptPropsInfo[4].name, "median")
+			unitTest:assertEquals(ptPropsInfo[4].type, "double")
+
+			csShp:delete()
+			l3File:delete()
+			proj.file:delete()
+		end
+
 		unitTest:assert(allSupportedOperationTogether)
 		-- unitTest:assert(coverageWithPointsData) -- SKIP -- TODO(#995)
 		unitTest:assert(coverageTotalArea)
 		unitTest:assert(fillQGisProject)
+		unitTest:assert(medianOperation)
 	end,
 	saveDataSet = function(unitTest)
 		TerraLib().setProgressVisible(false)
