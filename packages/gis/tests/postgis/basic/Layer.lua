@@ -1431,7 +1431,7 @@ return {
 		end
 
 		unitTest:assert(allSupportedOperationTogether)
-		if _Gtme.sessionInfo().system ~= "linux" then
+		if _Gtme.sessionInfo().system ~= "linux" then -- TODO(#2311)
 			unitTest:assert(medianOperation) -- SKIP
 		end
 	end,
